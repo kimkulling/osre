@@ -1,0 +1,17 @@
+before_install:
+  - yes | sudo add-apt-repository ppa:zoogie/sdl2-snapshots
+  - yes | sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update -qq
+install:
+  - sudo apt-get install cmake
+  - sudo apt-get install -qq libsdl2-dev gcc-4.8
+env:
+  - TRAVIS_NO_EXPORT=YES
+  - TRAVIS_NO_EXPORT=NO
+language: cpp
+compiler:
+  - gcc
+script: cmake -G "Unix Makefiles" && make
+
+
+

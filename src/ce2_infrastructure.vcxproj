@@ -1,0 +1,402 @@
+﻿<?xml version="1.0" encoding="Windows-1252"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|Win32">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|Win32">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGUID>{DF9F362C-49B0-4659-85BF-26D78B9B391B}</ProjectGUID>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>Win32</Platform>
+    <ProjectName>ce2_infrastructure</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+    <PropertyGroup>
+      <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\projects\osre\bin\Debug\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ce2_infrastructure.dir\Debug\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ce2_infrastructure</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.dll</TargetExt>
+      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\projects\osre\bin\Release\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ce2_infrastructure.dir\Release\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ce2_infrastructure</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.dll</TargetExt>
+      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:\projects\osre\bin\MinSizeRel\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">ce2_infrastructure.dir\MinSizeRel\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">ce2_infrastructure</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.dll</TargetExt>
+      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkIncremental>
+      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">true</GenerateManifest>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:\projects\osre\bin\RelWithDebInfo\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">ce2_infrastructure.dir\RelWithDebInfo\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">ce2_infrastructure</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.dll</TargetExt>
+      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</LinkIncremental>
+      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</GenerateManifest>
+    </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\projects\osre\include\osre;D:\projects\osre;D:\projects\osre\src\..\3dparty\cppcore\include;D:\projects\osre\src\..\3dparty\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;OSRE_BUILD;CMAKE_INTDIR="Debug";ce2_infrastructure_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;OSRE_BUILD;CMAKE_INTDIR=\"Debug\";ce2_infrastructure_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\projects\osre\include\osre;D:\projects\osre;D:\projects\osre\src\..\3dparty\cppcore\include;D:\projects\osre\src\..\3dparty\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\projects\osre\include\osre;D:\projects\osre;D:\projects\osre\src\..\3dparty\cppcore\include;D:\projects\osre\src\..\3dparty\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:X86 /debug %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;cppcore.lib;zlib.lib;Unzip.lib;Lua.lib;glew.lib;comctl32.lib;Winmm.lib;opengl32.lib;glu32.lib;SDL2.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:/projects/osre/lib;D:/projects/osre/lib/$(Configuration);D:/projects/osre/bin;D:/projects/osre/bin/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/projects/osre/lib/Debug/ce2_infrastructure.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/projects/osre/bin/Debug/ce2_infrastructure.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\projects\osre\include\osre;D:\projects\osre;D:\projects\osre\src\..\3dparty\cppcore\include;D:\projects\osre\src\..\3dparty\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;OSRE_BUILD;CMAKE_INTDIR="Release";ce2_infrastructure_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat></DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;OSRE_BUILD;CMAKE_INTDIR=\"Release\";ce2_infrastructure_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\projects\osre\include\osre;D:\projects\osre;D:\projects\osre\src\..\3dparty\cppcore\include;D:\projects\osre\src\..\3dparty\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\projects\osre\include\osre;D:\projects\osre;D:\projects\osre\src\..\3dparty\cppcore\include;D:\projects\osre\src\..\3dparty\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:X86 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;cppcore.lib;zlib.lib;Unzip.lib;Lua.lib;glew.lib;comctl32.lib;Winmm.lib;opengl32.lib;glu32.lib;SDL2.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:/projects/osre/lib;D:/projects/osre/lib/$(Configuration);D:/projects/osre/bin;D:/projects/osre/bin/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/projects/osre/lib/Release/ce2_infrastructure.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/projects/osre/bin/Release/ce2_infrastructure.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\projects\osre\include\osre;D:\projects\osre;D:\projects\osre\src\..\3dparty\cppcore\include;D:\projects\osre\src\..\3dparty\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;OSRE_BUILD;CMAKE_INTDIR="MinSizeRel";ce2_infrastructure_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat></DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;OSRE_BUILD;CMAKE_INTDIR=\"MinSizeRel\";ce2_infrastructure_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\projects\osre\include\osre;D:\projects\osre;D:\projects\osre\src\..\3dparty\cppcore\include;D:\projects\osre\src\..\3dparty\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\projects\osre\include\osre;D:\projects\osre;D:\projects\osre\src\..\3dparty\cppcore\include;D:\projects\osre\src\..\3dparty\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:X86 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;cppcore.lib;zlib.lib;Unzip.lib;Lua.lib;glew.lib;comctl32.lib;Winmm.lib;opengl32.lib;glu32.lib;SDL2.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:/projects/osre/lib;D:/projects/osre/lib/$(Configuration);D:/projects/osre/bin;D:/projects/osre/bin/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/projects/osre/lib/MinSizeRel/ce2_infrastructure.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/projects/osre/bin/MinSizeRel/ce2_infrastructure.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\projects\osre\include\osre;D:\projects\osre;D:\projects\osre\src\..\3dparty\cppcore\include;D:\projects\osre\src\..\3dparty\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;OSRE_BUILD;CMAKE_INTDIR="RelWithDebInfo";ce2_infrastructure_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;OSRE_BUILD;CMAKE_INTDIR=\"RelWithDebInfo\";ce2_infrastructure_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\projects\osre\include\osre;D:\projects\osre;D:\projects\osre\src\..\3dparty\cppcore\include;D:\projects\osre\src\..\3dparty\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\projects\osre\include\osre;D:\projects\osre;D:\projects\osre\src\..\3dparty\cppcore\include;D:\projects\osre\src\..\3dparty\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:X86 /debug %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;cppcore.lib;zlib.lib;Unzip.lib;Lua.lib;glew.lib;comctl32.lib;Winmm.lib;opengl32.lib;glu32.lib;SDL2.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:/projects/osre/lib;D:/projects/osre/lib/$(Configuration);D:/projects/osre/bin;D:/projects/osre/bin/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/projects/osre/lib/RelWithDebInfo/ce2_infrastructure.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/projects/osre/bin/RelWithDebInfo/ce2_infrastructure.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\projects\osre\src\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule D:/projects/osre/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -HD:/projects/osre -BD:/projects/osre --check-stamp-file D:\projects\osre\src\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:/projects/osre/src/CMakeLists.txt;D:\projects\osre\src\CMakeLists.txt;D:\projects\osre\src\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\projects\osre\src\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule D:/projects/osre/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -HD:/projects/osre -BD:/projects/osre --check-stamp-file D:\projects\osre\src\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:/projects/osre/src/CMakeLists.txt;D:\projects\osre\src\CMakeLists.txt;D:\projects\osre\src\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\projects\osre\src\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule D:/projects/osre/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -HD:/projects/osre -BD:/projects/osre --check-stamp-file D:\projects\osre\src\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:/projects/osre/src/CMakeLists.txt;D:\projects\osre\src\CMakeLists.txt;D:\projects\osre\src\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:\projects\osre\src\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule D:/projects/osre/src/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
+"C:\Program Files (x86)\CMake\bin\cmake.exe" -HD:/projects/osre -BD:/projects/osre --check-stamp-file D:\projects\osre\src\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:/projects/osre/src/CMakeLists.txt;D:\projects\osre\src\CMakeLists.txt;D:\projects\osre\src\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:\projects\osre\src\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\projects\osre\include\osre\Common\AbstractCodec.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Common\AbstractEventHandler.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Common\AbstractService.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Common\CodecRegistry.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Common\ColorRGBA.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Common\Event.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Common\EventTriggerer.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Common\Object.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Common\TObjPtr.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Platform\AbstractThread.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Platform\AbstractThreadEvent.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Platform\AbstractThreadFactory.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Platform\AbstractCriticalSection.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Platform\AtomicInt.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Platform\AbstractPlatformEventHandler.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Platform\AbstractRenderContext.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Platform\AbstractSurface.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Platform\AbstractTimer.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Platform\KeyTypes.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Platform\PluginType.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Platform\PlatformInterface.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Threading\AbstractTask.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Threading\AsyncTask.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Threading\TaskScheduler.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Threading\SystemTask.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Threading\TaskJob.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Threading\TaskGroup.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Threading\ThreadPool.h" />
+    <ClInclude Include="D:\projects\osre\include\osre\Threading\TAsyncQueue.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\PlatformPluginFactory.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\win32\Win32Atomic.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\win32\Win32Surface.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\win32\Win32Eventhandler.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\win32\Win32RenderContext.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\win32\Win32Timer.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\win32\Win32CriticalSection.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\win32\Win32Thread.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\win32\Win32ThreadEvent.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\win32\Win32ThreadFactory.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\sdl2\SDL2Atomic.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\sdl2\SDL2CriticalSection.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\sdl2\SDL2EventHandler.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\sdl2\SDL2Initializer.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\sdl2\SDL2Surface.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\sdl2\SDL2Timer.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\sdl2\SDL2RenderContext.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\sdl2\SDL2Thread.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\sdl2\SDL2ThreadEvent.h" />
+    <ClInclude Include="D:\projects\osre\src\Platform\sdl2\SDL2ThreadFactory.h" />
+    <ClInclude Include="D:\projects\osre\src\Threading\WorkerThread.h" />
+    <ClCompile Include="D:\projects\osre\src\Platform\AtomicInt.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\AbstractSurface.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\PlatformInterface.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\PlatformPluginFactory.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\win32\Win32Surface.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\win32\Win32Eventhandler.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\win32\Win32RenderContext.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\win32\Win32Timer.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\win32\Win32Thread.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\win32\Win32ThreadEvent.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\win32\Win32ThreadFactory.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\sdl2\SDL2EventHandler.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\sdl2\SDL2Initializer.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\sdl2\SDL2Surface.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\sdl2\SDL2Timer.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\sdl2\SDL2RenderContext.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\sdl2\SDL2Thread.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\sdl2\SDL2ThreadEvent.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Platform\sdl2\SDL2ThreadFactory.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Threading\AbstractTask.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Threading\AsyncTask.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Threading\IThreadFactory.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Threading\SystemTask.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Threading\TaskGroup.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Threading\TaskScheduler.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Threading\ThreadPool.cpp"  />
+    <ClCompile Include="D:\projects\osre\src\Threading\WorkerThread.cpp"  />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:/projects/osre/ZERO_CHECK.vcxproj">
+      <Project>D82EA374-64C2-48A0-8CD0-894CF732C160</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

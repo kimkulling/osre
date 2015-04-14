@@ -1,0 +1,127 @@
+/* ZFX Community Engine 2  (ZFXCE2)
+---------------------------------------------------------------------------------------------------
+Copyright (c) 2011-2015, ZFXCE2 Development Team
+All rights reserved.
+
+Redistribution and use of this software in source and binary forms,
+with or without modification, are permitted provided that the
+following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this list of conditions
+and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice, this list of conditions
+and the following disclaimer in the documentation and/or other materials provided with the
+distribution.
+
+* Neither the name of the ZFXCE2 team, nor the names of its contributors may be used to endorse or
+promote products derived from this software without specific prior written permission of the
+ZFXCE2 Development Team.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-------------------------------------------------------------------------------------------------*/
+#include <zfxce2/RenderSystem/RenderBackend/RenderBackendService.h>
+#include <zfxce2/RenderSystem/RenderBackend/RenderCommon.h>
+#include <zfxce2/Infrastructure/Properties/ConfigurationMap.h>
+#include <zfxce2/Infrastructure/Threading/SystemTask.h>
+
+#include "OGLRenderer/OGLRenderEventHandler.h"
+
+namespace ZFXCE2 {
+namespace RenderBackend {
+
+using namespace ::ZFXCE2::Core;
+using namespace ::ZFXCE2::Threading;
+using namespace ::ZFXCE2::Properties;
+
+//-------------------------------------------------------------------------------------------------
+RenderBackendService::RenderBackendService()
+: AbstractService( "renderbackend/renderbackendserver" )
+, m_RenderTaskPtr()
+, m_pConfigMap( nullptr )
+, m_ownConfig( false ) {
+    // empty
+}
+
+//-------------------------------------------------------------------------------------------------
+RenderBackendService::~RenderBackendService() {
+    if( m_ownConfig ) {
+        delete m_pConfigMap;
+        m_pConfigMap = nullptr;
+    }
+}
+
+//-------------------------------------------------------------------------------------------------
+bool RenderBackendService::onOpen() {
+    if (!m_pConfigMap) {
+        m_pConfigMap = new Properties::ConfigurationMap;
+        m_ownConfig = true;
+    }
+
+    if( !m_RenderTaskPtr.isValid() ) {
+        m_RenderTaskPtr.init( SystemTask::create( "render_task" ) );
+    }
+
+    m_RenderTaskPtr->start( nullptr );
+    m_RenderTaskPtr->attachEventHandler( new OGLRenderEventHandler );
+
+    return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+bool RenderBackendService::onClose() {
+    if( !m_RenderTaskPtr.isValid() ) {
+        return false;
+    }
+
+    if ( m_RenderTaskPtr->isRunning() ) {
+        m_RenderTaskPtr->detachEventHandler();        
+        m_RenderTaskPtr->stop();
+    }
+
+    return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+bool RenderBackendService::onUpdate( d32 timediff ) {
+    if ( !m_RenderTaskPtr.isValid() ) {
+        return false;
+    }
+    
+    // synchronizing event with render back-end
+    bool result( m_RenderTaskPtr->sendEvent( &OnRenderFrameEvent, nullptr ) );
+    m_RenderTaskPtr->await();
+
+    return result;
+}
+
+//-------------------------------------------------------------------------------------------------
+void RenderBackendService::setConfig( const ConfigurationMap *pConfiguration ) {
+    m_pConfigMap = pConfiguration;
+}
+
+//-------------------------------------------------------------------------------------------------
+const Properties::ConfigurationMap *RenderBackendService::getConfig() const {
+    return m_pConfigMap;
+}
+
+//-------------------------------------------------------------------------------------------------
+void RenderBackendService::sendEvent( const Event *pEvent, const EventData *pEventData ) {
+    if ( !m_RenderTaskPtr.isValid() ) {
+        return;
+    }
+
+    m_RenderTaskPtr->sendEvent( pEvent, pEventData );
+}
+
+//-------------------------------------------------------------------------------------------------
+
+} // Namespace RenderBackend
+} // Namespace ZFXCE2
