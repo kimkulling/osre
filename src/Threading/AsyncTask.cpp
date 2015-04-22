@@ -27,9 +27,9 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------------------------*/
-#include <osre2/Infrastructure/Threading/AsyncTask.h>
-#include <osre2/Infrastructure/Platform/AbstractThread.h>
-#include <osre2/Infrastructure/Platform/AbstractThreadEvent.h>
+#include <osre/Threading/AsyncTask.h>
+#include <osre/Platform/AbstractThread.h>
+#include <osre/Platform/AbstractThreadEvent.h>
 
 #include "WorkerThread.h"
 
@@ -47,24 +47,24 @@ AsyncTask::AsyncTask( const ce_string &name )
 , m_pThreadInstance( nullptr )
 , m_pTaskQueue( nullptr )
 , m_pFinishedEvent( nullptr ) {
-	// empty
+    // empty
 }
 
 //-------------------------------------------------------------------------------------------------
 AsyncTask::~AsyncTask() {
-	m_pThreadInstance = nullptr;
-	m_pFinishedEvent = nullptr;
-	m_pTaskQueue = nullptr;
+    m_pThreadInstance = nullptr;
+    m_pFinishedEvent = nullptr;
+    m_pTaskQueue = nullptr;
 }
 
 //-------------------------------------------------------------------------------------------------
 void AsyncTask::setWorkingMode( WorkingMode mode ) {
-	m_WorkingMode = mode;
+    m_WorkingMode = mode;
 }
 
 //-------------------------------------------------------------------------------------------------
 AsyncTask::WorkingMode AsyncTask::getWorkingMode() const {
-	return m_WorkingMode;
+    return m_WorkingMode;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -79,40 +79,40 @@ AsyncTask::BufferMode AsyncTask::getBufferMode() const {
 
 //-------------------------------------------------------------------------------------------------
 void AsyncTask::setThreadInstance( AbstractThread *pThreadInstance ) {
-	if ( m_pThreadInstance ) {
-		if ( AbstractThread::Running == m_pThreadInstance->getCurrentState() ) {
-			m_pThreadInstance->suspend();
-		}
-	}
+    if ( m_pThreadInstance ) {
+        if ( AbstractThread::Running == m_pThreadInstance->getCurrentState() ) {
+            m_pThreadInstance->suspend();
+        }
+    }
 
-	if ( pThreadInstance ) {
-		m_pThreadInstance = (WorkerThread*) pThreadInstance;
-		m_pTaskQueue = m_pThreadInstance->getTaskQueue();
-		m_pFinishedEvent = m_pThreadInstance->getFinishEvent();
-		ce_assert( nullptr != m_pTaskQueue );
-		ce_assert( nullptr != m_pFinishedEvent );
-	}
+    if ( pThreadInstance ) {
+        m_pThreadInstance = (WorkerThread*) pThreadInstance;
+        m_pTaskQueue = m_pThreadInstance->getTaskQueue();
+        m_pFinishedEvent = m_pThreadInstance->getFinishEvent();
+        ce_assert( nullptr != m_pTaskQueue );
+        ce_assert( nullptr != m_pFinishedEvent );
+    }
 }
 
 //-------------------------------------------------------------------------------------------------
 bool AsyncTask::preExecute() {
-	// Override me!
+    // Override me!
 
-	return AbstractTask::preExecute();
+    return AbstractTask::preExecute();
 }
 
 //-------------------------------------------------------------------------------------------------
 bool AsyncTask::execute() {
-	// Override me!
+    // Override me!
 
-	return true;
+    return true;
 }
 
 //-------------------------------------------------------------------------------------------------
 bool AsyncTask::postExecute() {
-	// Override me!
+    // Override me!
 
-	return AbstractTask::postExecute();
+    return AbstractTask::postExecute();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -122,14 +122,14 @@ void AsyncTask::onUpdate() {
 
 //-------------------------------------------------------------------------------------------------
 void AsyncTask::await() {
-	if ( m_pFinishedEvent ) {
-		m_pFinishedEvent->signal();
-	}
+    if ( m_pFinishedEvent ) {
+        m_pFinishedEvent->signal();
+    }
 }
 
 //-------------------------------------------------------------------------------------------------
 AsyncTask *AsyncTask::create( const ce_string &taskName ) {
-	return new AsyncTask( taskName );
+    return new AsyncTask( taskName );
 }
 
 //-------------------------------------------------------------------------------------------------

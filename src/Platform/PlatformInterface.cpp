@@ -47,10 +47,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <GL/glew.h>
 #include <SDL.h>
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace Platform {
 
 using namespace ::OSRE::Common;
+using namespace ::OSRE::Properties;
 
 PlatformInterface *PlatformInterface::s_instance( nullptr );
 
@@ -137,8 +138,8 @@ PluginType PlatformInterface::getOSPluginType() {
 }
 
 //-------------------------------------------------------------------------------------------------
-ce_string PlatformInterface::getOSPluginName( PluginType type ) {
-    ce_string name( "None" );
+String PlatformInterface::getOSPluginName( PluginType type ) {
+    String name( "None" );
     switch( type ) {
 #ifdef CE_WINDOWS
         case WindowsPlugin:
@@ -159,8 +160,8 @@ ce_string PlatformInterface::getOSPluginName( PluginType type ) {
 //-------------------------------------------------------------------------------------------------
 bool PlatformInterface::onOpen() {
     if( !m_pConfiguration ) {
-        ce_assert( nullptr != m_pConfiguration );
-        ce_debug( "Invalid pointer to configuration." );
+        assert( nullptr != m_pConfiguration );
+        osre_debug( "Invalid pointer to configuration." );
         return false;
     }
 

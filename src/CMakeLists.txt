@@ -121,6 +121,21 @@ IF( WIN32 )
 ENDIF( WIN32 )
 
 #==============================================================================
+# Properties
+#==============================================================================
+SET ( properties_inc
+    ${HEADER_PATH}/Properties/BasePropertyMap.h
+    ${HEADER_PATH}/Properties/IPropertyMap.h
+    ${HEADER_PATH}/Properties/Property.h
+    ${HEADER_PATH}/Properties/ConfigurationMap.h
+)
+SET ( properties_src
+    Properties/BasePropertyMap.cpp
+    Properties/ConfigurationMap.cpp
+    Properties/Property.cpp
+)
+
+#==============================================================================
 # Threading
 #==============================================================================
 SET( threading_src

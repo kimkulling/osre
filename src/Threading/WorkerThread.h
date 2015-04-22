@@ -27,15 +27,14 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------------------------*/
-#ifndef CE_INFRASTRUCTURE_THREADING_WORKERTHREAD_H_INC
-#define CE_INFRASTRUCTURE_THREADING_WORKERTHREAD_H_INC
+#pragma once
 
 #include <osre/Common/Types.h>
 #include <osre/Threading/TAsyncQueue.h>
 #include <osre/Common/Object.h>
 #include <osre/Platform/AbstractThread.h>
 
-namespace ZFXCE2 {
+namespace OSRE {
 
 namespace Platform {
     class AbstractThread;
@@ -87,5 +86,3 @@ private:
 
 } // Namespace Threading
 } // Namespace ZFXCE2
-
-#endif // CE_INFRASTRUCTURE_THREADING_WORKERTHREAD_H_INC

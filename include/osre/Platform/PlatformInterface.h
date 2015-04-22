@@ -69,7 +69,7 @@ struct SurfaceProperties;
 ///	You can use it to get notified, when you want to react onto a mouse click for instance. Just
 ///	overload the method onOSEvent with your own code.
 //-------------------------------------------------------------------------------------------------
-class DLL_EXPORT OSEventListener : public Common::Object {
+class OSEventListener : public Common::Object {
 public:
     ///	@brief	The class destructor, virtual.
     virtual ~OSEventListener() {
@@ -185,7 +185,7 @@ public:
 ///
 ///	@brief  This class encapsulates platform-specific details.
 //-------------------------------------------------------------------------------------------------
-class DLL_EXPORT PlatformInterface : public Common::AbstractService {
+class PlatformInterface : public Common::AbstractService {
 public:
     AbstractSurface *getRootSurface() const;
     static PlatformInterface *create( const Properties::ConfigurationMap *pConfiguration );
