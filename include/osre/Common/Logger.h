@@ -194,14 +194,14 @@ void fatalPrint( const String &file, int line, const String &message,
 const String DomainTag = "";
 
 //-------------------------------------------------------------------------------------------------
-///	@fn		ce_debug
+///	@fn		osre_debug
 ///	@brief	This helper macro will write the debug message into the logger.
 ///	@param	message		The message to log.
 //-------------------------------------------------------------------------------------------------
 #define osre_debug( message ) ::OSRE::Common::debugPrint(  __FILE__, __LINE__, message, DomainTag );
 
 //-------------------------------------------------------------------------------------------------
-///	@fn		ce_log
+///	@fn		osre_log
 ///	@brief	This helper macro will write the info message into the logger.
 ///	@param	message		The message to log.
 //-------------------------------------------------------------------------------------------------
@@ -215,7 +215,7 @@ const String DomainTag = "";
 #define osre_warn( message )  ::OSRE::Common::warnPrint(   __FILE__, __LINE__, message, DomainTag );
 
 //-------------------------------------------------------------------------------------------------
-///	@fn		ce_error
+///	@fn		osre_error
 ///	@brief	This helper macro will write a error into the logger.
 ///	@param	message		The warning to writhe into the log.
 //-------------------------------------------------------------------------------------------------

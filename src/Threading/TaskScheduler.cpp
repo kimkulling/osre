@@ -29,16 +29,16 @@ IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISI
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---------------------------------------------------------------------------------------------------
 */
-#include <osre2/Infrastructure/Threading/TaskScheduler.h>
-#include <osre2/Infrastructure/Threading/AsyncTask.h>
-#include <osre2/Infrastructure/Threading/ThreadPool.h>
-#include <osre2/Infrastructure/Debugging/ce_assert.h>
+#include <osre/Threading/TaskScheduler.h>
+#include <osre/Threading/AsyncTask.h>
+#include <osre/Threading/ThreadPool.h>
 
 #include "WorkerThread.h"
 
-#include <osre2/Infrastructure/Platform/PlatformInterface.h>
+#include <osre/Platform/PlatformInterface.h>
+#include <cassert>
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace Threading {
 
 TaskScheduler *TaskScheduler::s_pInstance = nullptr;
@@ -59,7 +59,7 @@ TaskScheduler::~TaskScheduler() {
 }
 
 //-------------------------------------------------------------------------------------------------
-AsyncTask *TaskScheduler::createTask( const ce_string &rTaskName ) {
+AsyncTask *TaskScheduler::createTask( const String &rTaskName ) {
 	AsyncTask *pTask = NULL;
 
 	return pTask;
@@ -67,27 +67,27 @@ AsyncTask *TaskScheduler::createTask( const ce_string &rTaskName ) {
 
 //-------------------------------------------------------------------------------------------------
 bool TaskScheduler::releaseTask( AsyncTask *pTask ) {
-	ce_assert( NULL != pTask );
+	assert( NULL != pTask );
 
 	return false;
 }
 
 //-------------------------------------------------------------------------------------------------
-AsyncTask *TaskScheduler::getTask( const ce_string &rTaskName ) const {
+AsyncTask *TaskScheduler::getTask( const String &rTaskName ) const {
 	return NULL;
 }
 
 //-------------------------------------------------------------------------------------------------
 bool TaskScheduler::dispatch( AsyncTask *pTask ) {
-	ce_assert( NULL != pTask );
-	ce_assert( NULL != m_pThreadPool );
+	assert( NULL != pTask );
+	assert( NULL != m_pThreadPool );
 
 	bool result = false;
 	if ( m_pThreadPool->getNumSuspendedThreads() > 0 ) {
 		result = run( pTask );
 	} else {
 		m_AsyncTaskQueue.enqueue( pTask );
-		ce_debug( "Task " + pTask->getName() + " is enqueued." );
+		osre_debug( "Task " + pTask->getName() + " is enqueued." );
 	}
 
 	return result;

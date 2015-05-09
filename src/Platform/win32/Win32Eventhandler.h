@@ -28,16 +28,15 @@ IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISI
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------------------------*/
 #pragma once
-#ifndef ZFXCE2_INFRASTRUCTURE_PLATFORM_WIN32EVENTHANDLER_H_INC
-#define ZFXCE2_INFRASTRUCTURE_PLATFORM_WIN32EVENTHANDLER_H_INC
 
-#include <osre2/Infrastructure/Platform/AbstractPlatformEventHandler.h>
-#include <cppCommon/Container/TArray.h>
+#include <osre/Platform/AbstractPlatformEventHandler.h>
+#include <cppcore/Container/TArray.h>
 
 #include <windows.h>
 #include <map>
 
-namespace ZFXCE2 {
+
+namespace OSRE {
 
 namespace Common {
     class Event;
@@ -58,7 +57,7 @@ struct IInputUpdate;
 ///
 ///	@brief  This class implements the win32-specific event handler for OS-events.
 //-------------------------------------------------------------------------------------------------
-class DLL_EXPORT Win32Eventhandler : public AbstractPlatformEventHandler {
+class Win32Eventhandler : public AbstractPlatformEventHandler {
 public:
     Win32Eventhandler();
     virtual ~Win32Eventhandler();
@@ -68,8 +67,8 @@ public:
     AbstractSurface *getRootSurface() const;
     void enablePolling( bool enabled );
     bool isPolling() const;
-    void registerEventListener( const CPPCommon::TArray<const Common::Event*> &rEvents, OSEventListener *pListener );
-    void unregisterEventListener( const CPPCommon::TArray<const Common::Event*> &rEvents, OSEventListener *pListener );
+    void registerEventListener( const CPPCore::TArray<const Common::Event*> &rEvents, OSEventListener *pListener );
+    void unregisterEventListener( const CPPCore::TArray<const Common::Event*> &rEvents, OSEventListener *pListener );
     static void registerEventServer( Win32Eventhandler *pServer, HWND hWnd );
     static void unregisterEventServer( Win32Eventhandler *pServer, HWND hWnd );
     static Win32Eventhandler *getInstance( HWND hWnd );
@@ -87,12 +86,9 @@ private:
     AbstractSurface *m_pRootSurface;
     bool m_shutdownRequested;
     bool m_isPolling;
-
 };
 
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace ZFXCE2
-
-#endif // ZFXCE2_INFRASTRUCTURE_PLATFORM_WIN32EVENTHANDLER_H_INC

@@ -39,11 +39,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <sstream>
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace Threading {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Threading::TAsyncQueue
+///	@class		::OSRE::Threading::TAsyncQueue
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This template class implements a thread-save queue.
@@ -68,7 +68,7 @@ public:
     
     ///	@brief	All enqueued items will be dequeued and stored in the list. The order of the items in
     ///			the queue will be not reordered.
-    void dequeueAll( CPPCommon::TList<T> &rData );
+    void dequeueAll( CPPCore::TList<T> &rData );
     
     ///	@brief	The queue event will be signaled.
     void signalEnqueuedItem();
@@ -95,7 +95,7 @@ private:
 private:
     Platform::AbstractCriticalSection *m_pCriticalSection;
     Platform::AbstractThreadEvent *m_pEnqueueEvent;
-    CPPCommon::TQueue<T> m_ItemQueue;
+    CPPCore::TQueue<T> m_ItemQueue;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -105,7 +105,7 @@ TAsyncQueue<T>::TAsyncQueue( Platform::AbstractThreadFactory *pThreadFactory )
 : m_pCriticalSection( nullptr )
 , m_pEnqueueEvent( nullptr )
 , m_ItemQueue() {
-    ce_assert( nullptr != pThreadFactory );
+    assert( nullptr != pThreadFactory );
   
     m_pCriticalSection = pThreadFactory->createCriticalSection();
     m_pEnqueueEvent = pThreadFactory->createThreadEvent();
@@ -115,7 +115,7 @@ TAsyncQueue<T>::TAsyncQueue( Platform::AbstractThreadFactory *pThreadFactory )
 template<class T>
 inline
 TAsyncQueue<T>::~TAsyncQueue() {
-    CPPCommon::TList<T> dummy;
+    CPPCore::TList<T> dummy;
     dequeueAll( dummy );
     
     delete m_pEnqueueEvent;
@@ -129,7 +129,7 @@ TAsyncQueue<T>::~TAsyncQueue() {
 template<class T>
 inline
 void TAsyncQueue<T>::enqueue( const T &item ) {
-    ce_assert( nullptr != m_pCriticalSection );
+    assert( nullptr != m_pCriticalSection );
 
     m_pCriticalSection->enter();
     
@@ -143,11 +143,11 @@ void TAsyncQueue<T>::enqueue( const T &item ) {
 template<class T>
 inline
 T TAsyncQueue<T>::dequeue() {
-    ce_assert( nullptr != m_pCriticalSection );
+    assert( nullptr != m_pCriticalSection );
     
     m_pCriticalSection->enter();
 
-    ce_assert( !m_ItemQueue.isEmpty() );
+    assert( !m_ItemQueue.isEmpty() );
     T item;	
     m_ItemQueue.dequeue( item );
     
@@ -159,8 +159,8 @@ T TAsyncQueue<T>::dequeue() {
 //-------------------------------------------------------------------------------------------------
 template<class T>
 inline
-void TAsyncQueue<T>::dequeueAll( CPPCommon::TList<T> &data ) {
-    ce_assert( nullptr != m_pCriticalSection );
+void TAsyncQueue<T>::dequeueAll( CPPCore::TList<T> &data ) {
+    assert( nullptr != m_pCriticalSection );
 
     if( !data.isEmpty( ) ) {
         data.clear( );
@@ -178,7 +178,7 @@ void TAsyncQueue<T>::dequeueAll( CPPCommon::TList<T> &data ) {
 template<class T>
 inline
 void TAsyncQueue<T>::signalEnqueuedItem() {
-    ce_assert( nullptr != m_pEnqueueEvent );
+    assert( nullptr != m_pEnqueueEvent );
 
     m_pEnqueueEvent->signal();
 }
@@ -187,7 +187,7 @@ void TAsyncQueue<T>::signalEnqueuedItem() {
 template<class T>
 inline
 ui32 TAsyncQueue<T>::size() {
-    ce_assert( nullptr != m_pCriticalSection );
+    assert( nullptr != m_pCriticalSection );
 
     m_pCriticalSection->enter( );
     const ui32 size = m_ItemQueue.size();
@@ -200,7 +200,7 @@ ui32 TAsyncQueue<T>::size() {
 template<class T>
 inline
 void TAsyncQueue<T>::awaitEnqueuedItem() {
-    ce_assert( nullptr != m_pEnqueueEvent );
+    assert( nullptr != m_pEnqueueEvent );
 
     if ( m_ItemQueue.isEmpty() ) {
         m_pEnqueueEvent->wait();
@@ -211,7 +211,7 @@ void TAsyncQueue<T>::awaitEnqueuedItem() {
 template<class T>
 inline
 bool TAsyncQueue<T>::isEmpty() {
-    ce_assert( nullptr != m_pCriticalSection );
+    assert( nullptr != m_pCriticalSection );
 
     m_pCriticalSection->enter();
     bool res = m_ItemQueue.isEmpty();
@@ -224,7 +224,7 @@ bool TAsyncQueue<T>::isEmpty() {
 template<class T>
 inline
 void TAsyncQueue<T>::clear() {
-    ce_assert( nullptr != m_pCriticalSection );
+    assert( nullptr != m_pCriticalSection );
 
     m_pCriticalSection->enter();
     

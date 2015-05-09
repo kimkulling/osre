@@ -1,5 +1,3 @@
-#pragma once
-
 /* ZFX Community Engine 2  (ZFXCE2)
 ---------------------------------------------------------------------------------------------------
 Copyright (c) 2011-2015, ZFXCE2 Development Team
@@ -29,13 +27,12 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT 
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------------------------*/
-#ifndef ZFXCE2_INFRASTRUCTURE_THREADING_ASYNCTASK_H_INC
-#define ZFXCE2_INFRASTRUCTURE_THREADING_ASYNCTASK_H_INC
+#pragma once
 
-#include <osre2/Infrastructure/Threading/AbstractTask.h>
-#include <osre2/Infrastructure/Threading/TAsyncQueue.h>
+#include <osre/Threading/AbstractTask.h>
+#include <osre/Threading/TAsyncQueue.h>
 
-namespace ZFXCE2 {
+namespace OSRE {
 
 namespace Platform {
     class AbstractThreadEvent;
@@ -51,11 +48,11 @@ class WorkerThread;
 ///
 ///	@brief  This task can be used to implement a async. handled task.
 //-------------------------------------------------------------------------------------------------
-class DLL_EXPORT AsyncTask : public AbstractTask {
+class AsyncTask : public AbstractTask {
 public:
     ///	@brief	The class constructor with the name of the task
     ///	@param	taskName	[in] The name for the task.
-    AsyncTask( const ce_string &taskName );
+    AsyncTask( const String &taskName );
 
     ///	@brief	The class destructor, virtual.
     virtual ~AsyncTask();
@@ -96,7 +93,7 @@ public:
     ///	@brief	The creation method.
     ///	@param	taskName	[in] The name for the new created task.
     ///	@return	A pointer showing to the new created task instance.
-    static AsyncTask *create( const ce_string &taskName );
+    static AsyncTask *create( const String &taskName );
 
 private:
     WorkingMode m_WorkingMode;
@@ -132,5 +129,3 @@ public:
 
 } // Namespace Threading
 } // Namespace ZFXCE2
-
-#endif // ZFXCE2_INFRASTRUCTURE_THREADING_ASYNCTASK_H_INC

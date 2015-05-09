@@ -27,16 +27,16 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------------------------*/
-#include <Code/Infrastructure/Platform/sdl2/SDL2EventHandler.h>
-#include <osre2/Infrastructure/Common/EventTriggerer.h>
-#include <osre2/Infrastructure/Platform/PlatformInterface.h>
+#include <src/Platform/sdl2/SDL2EventHandler.h>
+#include <osre/Common/EventTriggerer.h>
+#include <osre/Platform/PlatformInterface.h>
 
 #include <SDL.h>
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace Platform {
 
-using namespace ZFXCE2::Common;
+using namespace OSRE::Common;
 
 //-------------------------------------------------------------------------------------------------
 struct AbstractSDL2InputUpdate {
@@ -187,18 +187,18 @@ bool SDL2EventHandler::onEvent( const Event &event, const EventData *pEventData 
 }
 
 //-------------------------------------------------------------------------------------------------
-void SDL2EventHandler::registerEventListener( const CPPCommon::TArray<const Common::Event*> &events,
+void SDL2EventHandler::registerEventListener( const CPPCore::TArray<const Common::Event*> &events,
                                               OSEventListener *pListener ) {
-    ce_assert( nullptr != pListener );
+    assert( nullptr != pListener );
 
     m_pEventTriggerer->addEventListener( events, 
         Common::ceEventFunctor::Make( pListener, &OSEventListener::onOSEvent ) );
 }
 
 //-------------------------------------------------------------------------------------------------
-void SDL2EventHandler::unregisterEventListener( const CPPCommon::TArray<const Common::Event*> &events, 
+void SDL2EventHandler::unregisterEventListener( const CPPCore::TArray<const Common::Event*> &events,
                                                 OSEventListener *pListener ) {
-    ce_assert( nullptr != pListener );
+    assert( nullptr != pListener );
 
     m_pEventTriggerer->removeEventListener( events, 
         Common::ceEventFunctor::Make( pListener, &OSEventListener::onOSEvent ) );

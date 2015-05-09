@@ -27,21 +27,19 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------------------------*/
-#include <Code/Infrastructure/Platform/win32/Win32RenderContext.h>
-
+#include <src/Platform/win32/Win32RenderContext.h>
 #include <GL/glew.h>
-
-#include <osre2/Infrastructure/Common/Logger.h>
-#include <osre2/Infrastructure/Debugging/ce_assert.h>
-#include <osre2/Infrastructure/Platform/PlatformInterface.h>
-
-#include <code/Infrastructure/Platform/win32/Win32Surface.h>
-
 #include "GL/wglew.h"
+
+
+#include <osre/Common/Logger.h>
+#include <osre/Platform/PlatformInterface.h>
+#include <src/Platform/win32/Win32Surface.h>
+
 
 #include <iostream>
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
@@ -87,7 +85,7 @@ void APIENTRY DebugLog( GLenum source, GLenum type, GLuint id, GLenum severity, 
     }
     std::cout << std::endl;
     std::cout << "---------------------opengl-callback-end--------------" << std::endl;
-    ce_log( "DebugLog" );
+    osre_log( "DebugLog" );
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -106,12 +104,12 @@ Win32RenderContext::~Win32RenderContext( ) {
 bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
     Win32Surface *pWin32Surface = reinterpret_cast< Win32Surface* >( pSurface );
     if( !pWin32Surface ) {
-        ce_error( "Invalid pointer to window." );
+        osre_error( "Invalid pointer to window." );
         return false;
     }
     HDC dc = pWin32Surface->getDeviceContext();
     if( !dc ) {
-        ce_error( "Invalid device context." );
+        osre_error( "Invalid device context." );
         return false;
     }
 
@@ -127,33 +125,33 @@ bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
 
     i32 pixelFormat = ::ChoosePixelFormat( dc, &pfd );
     if( 0 == pixelFormat ) {
-        ce_error( "Invalid pixel format chosen." );
+        osre_error( "Invalid pixel format chosen." );
         return false;
     }
 
     BOOL bResult = ::SetPixelFormat( dc, pixelFormat, &pfd );
     if( FALSE == bResult ) {
-        ce_error( "Cannot set pixel format." );
+        osre_error( "Cannot set pixel format." );
         return false;
     }
 
     HGLRC tempContext = wglCreateContext( dc );
     bResult = wglMakeCurrent( dc, tempContext );
     if( FALSE == bResult ) {
-        ce_error( "wglMakeCurrent failed." );
+        osre_error( "wglMakeCurrent failed." );
         return false;
     }
 
     GLenum err = glewInit();
     if( GLEW_OK != err ) {
-        ce_error( "GLEW is not initialized!" );
+        osre_error( "GLEW is not initialized!" );
         return false;
     }
 
     int attribs[] = {
         WGL_CONTEXT_FLAGS_ARB,
 #ifdef _DEBUG
-#   ifdef CE_WINDOWS
+#   ifdef _WIN32
         WGL_CONTEXT_DEBUG_BIT_ARB,
 #   else
         0,
@@ -168,7 +166,7 @@ bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
     if( glDebugMessageCallback ){
         std::cout << "Register OpenGL debug callback " << std::endl;
         glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS );
-        glDebugMessageCallback( DebugLog, nullptr );
+        //glDebugMessageCallback( ::OSRE::Platform::DebugLog, nullptr );
         GLuint unusedIds = 0;
         glDebugMessageControl( GL_DONT_CARE,
             GL_DONT_CARE,
@@ -176,8 +174,7 @@ bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
             0,
             &unusedIds,
             true );
-    }
-    else {
+    } else {
         std::cout << "glDebugMessageCallback not available" << std::endl;
     }
 #endif
@@ -189,7 +186,7 @@ bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
         wglDeleteContext( tempContext );
         bResult = wglMakeCurrent( dc, rc );
         if( !bResult ) {
-            ce_error( "wglMakeCurrent failed." );
+            osre_error( "wglMakeCurrent failed." );
             return false;
         }
     }
@@ -205,8 +202,8 @@ bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
     // checking the supported GL version
     const char *GLVersionString = ( const char* ) glGetString( GL_VERSION );
     if( GLVersionString ) {
-        ce_string version( GLVersionString );
-        ce_log( version );
+        String version( GLVersionString );
+        osre_log( version );
     }
 
     // or better yet, use the GL4.x way to get the version number
@@ -251,7 +248,7 @@ bool Win32RenderContext::onActivate( ) {
     }
 
     if( FALSE == wglMakeCurrent( m_dc, m_rc ) ) {
-        ce_debug( "Error while update render context." );
+        osre_debug( "Error while update render context." );
         return false;
     }
     m_active = true;

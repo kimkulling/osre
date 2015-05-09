@@ -1,5 +1,3 @@
-#pragma once
-
 /* ZFX Community Engine 2  (ZFXCE2)
 ---------------------------------------------------------------------------------------------------
 Copyright (c) 2011-2015, ZFXCE2 Development Team
@@ -29,12 +27,11 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------------------------*/
-#ifndef ZFXCE2_INFRASTRUCTURE_PLATFORM_SDL2INITIALIZER_H_INC
-#define ZFXCE2_INFRASTRUCTURE_PLATFORM_SDL2INITIALIZER_H_INC
+#pragma once
 
-#include <osre2/Infrastructure/Platform/PluginType.h>
+#include <osre/Platform/PluginType.h>
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace Platform {
         
 //-------------------------------------------------------------------------------------------------
@@ -56,5 +53,3 @@ private:
 
 } // Namespace Threading
 } // Namespace ZFXCE2
-
-#endif // ZFXCE2_INFRASTRUCTURE_PLATFORM_SDL2INITIALIZER_H_INC

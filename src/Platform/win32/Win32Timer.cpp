@@ -29,7 +29,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------------------------*/
 #include "Win32Timer.h"
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
@@ -38,38 +38,38 @@ Win32Timer::Win32Timer()
 , m_globeTime()
 , m_globeFrequency()
 , m_LastTime( 0.0 ) {
-	::QueryPerformanceCounter( &m_globeTime );
-	::QueryPerformanceFrequency( &m_globeFrequency );
+    ::QueryPerformanceCounter( &m_globeTime );
+    ::QueryPerformanceFrequency( &m_globeFrequency );
 }
 
 //-------------------------------------------------------------------------------------------------
 Win32Timer::~Win32Timer() {
-	// empty
+    // empty
 }
 
 //-------------------------------------------------------------------------------------------------
 d32 Win32Timer::getCurrentSeconds() {
-	LARGE_INTEGER currentTime;
-	QueryPerformanceCounter( &currentTime );
-	const d32 secs = static_cast<d32>( ( currentTime.QuadPart - m_globeTime.QuadPart ) ) / static_cast<d32>(m_globeFrequency.QuadPart );
+    LARGE_INTEGER currentTime;
+    QueryPerformanceCounter( &currentTime );
+    const d32 secs = static_cast<d32>( ( currentTime.QuadPart - m_globeTime.QuadPart ) ) / static_cast<d32>(m_globeFrequency.QuadPart );
 
-	return secs;
+    return secs;
 }
 
 //-------------------------------------------------------------------------------------------------
 d32 Win32Timer::getTimeDiff() {
-	d32 currentTime = getCurrentSeconds();
-	if ( m_LastTime == 0.0 ) {
-		m_LastTime = currentTime;
-		return 0.0;
-	} else {
-		d32 diff( currentTime - m_LastTime );
+    d32 currentTime = getCurrentSeconds();
+    if ( m_LastTime == 0.0 ) {
+        m_LastTime = currentTime;
+        return 0.0;
+    } else {
+        d32 diff( currentTime - m_LastTime );
         if( diff > 1000.0 ) {
             diff = AbstractTimer::getRequestedTimeStep();
         }
         m_LastTime = currentTime;
-		return diff;
-	}
+        return diff;
+    }
 }
 
 //-------------------------------------------------------------------------------------------------

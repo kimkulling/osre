@@ -28,9 +28,9 @@ IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISI
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------------------------*/
 #include <osre/Platform/PlatformInterface.h>
-#include <osre/Common/EventTriggerer.h>
 #include <src/Platform/PlatformPluginFactory.h>
-
+#include <osre/Common/EventTriggerer.h>
+#include <osre/Properties/ConfigurationMap.h>
 #ifdef CE_WINDOWS
 #   include <src/Platform/win32/Win32Surface.h>
 #   include <src/Platform/win32/Win32Eventhandler.h>
@@ -186,11 +186,11 @@ bool PlatformInterface::onOpen() {
         polls = m_pConfiguration->get( ConfigurationMap::PollingMode ).getBool();
     }
 
-    ce_string appName = "ZFXCE2";
+    String appName = "ZFXCE2";
     m_type = static_cast<PluginType>( m_pConfiguration->get( ConfigurationMap::PlatformPlugin ).getInt( ) );
 
     PlatformPluginFactory::init( m_type );
-    ce_log( "Platform plugin created for " + PlatformInterface::getOSPluginName( m_type ) );
+    osre_log( "Platform plugin created for " + PlatformInterface::getOSPluginName( m_type ) );
 
     PlatformPluginFactory::createThreadFactory( m_type );
 
@@ -230,7 +230,7 @@ bool PlatformInterface::setupGfx( SurfaceProperties *props, bool polls ) {
     m_pRootSurface = PlatformPluginFactory::createSurface( m_type, props );
     if( !m_pRootSurface->create() ) {
         delete m_pRootSurface;
-        ce_error( "Error while creating platform root surface." );
+        osre_error( "Error while creating platform root surface." );
 
         m_pRootSurface = nullptr;
         return false;
@@ -239,7 +239,7 @@ bool PlatformInterface::setupGfx( SurfaceProperties *props, bool polls ) {
     // install the platform event handler
     m_pOSEventHandler = PlatformPluginFactory::createPlatformEventHandler( m_type, m_pRootSurface );
     if( !m_pOSEventHandler ) {
-        ce_error( "Error while creating platform event handler." );
+        osre_error( "Error while creating platform event handler." );
         m_pRootSurface->destroy();
         m_pRootSurface = nullptr;
         return false;

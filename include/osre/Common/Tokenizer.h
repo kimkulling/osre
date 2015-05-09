@@ -39,8 +39,8 @@ namespace Common {
 ///	parse a string from any source.
 ///	Here is a simple example:
 ///	@code
-///	ce_string tst = "/usr/bin/ls";
-///	TArray<ce_string> token;
+///	String tst = "/usr/bin/ls";
+///	TArray<String> token;
 ///	Tokenizer::tokenize( tst, token, "/" );
 ///	@endcode
 ///	This will return the strings usr, bin and ls.

@@ -35,10 +35,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace OSRE {
 namespace Threading {
 
-using namespace ZFXCE2::Platform;
+using namespace ::OSRE::Platform;
 
 //-------------------------------------------------------------------------------------------------
-WorkerThread::WorkerThread( const ce_string &name, ui32 stacksize ) 
+WorkerThread::WorkerThread( const String &name, ui32 stacksize ) 
 : m_pFinishEvent( nullptr )
 , m_pTaskQueue( nullptr ) {
     Platform::AbstractThreadFactory *pThreadFactory( Platform::AbstractThreadFactory::getInstance() );
@@ -47,7 +47,7 @@ WorkerThread::WorkerThread( const ce_string &name, ui32 stacksize )
         m_pFinishEvent = pThreadFactory->createThreadEvent();
         m_pImpl = pThreadFactory->createThread( name, stacksize );
     } else {
-        ce_error( "Invalid pointer to the thread factory." );
+        osre_error( "Invalid pointer to the thread factory." );
     }
 }
 
@@ -75,35 +75,35 @@ Threading::TAsyncQueue<AsyncTask*> *WorkerThread::getTaskQueue() const {
 
 //-------------------------------------------------------------------------------------------------
 bool WorkerThread::start( void *pData ) {
-    ce_assert( nullptr != m_pImpl );
+    assert( nullptr != m_pImpl );
 
     return m_pImpl->start( pData );
 }
 
 //-------------------------------------------------------------------------------------------------
 bool WorkerThread::stop() {
-    ce_assert( nullptr != m_pImpl );
+    assert( nullptr != m_pImpl );
 
     return m_pImpl->stop();
 }
 
 //-------------------------------------------------------------------------------------------------
 Platform::AbstractThread::ThreadState WorkerThread::getCurrentState( ) const {
-    ce_assert( nullptr != m_pImpl );
+    assert( nullptr != m_pImpl );
 
     return m_pImpl->getCurrentState();
 }
 
 //-------------------------------------------------------------------------------------------------
 void WorkerThread::suspend() {
-    ce_assert( nullptr != m_pImpl );
+    assert( nullptr != m_pImpl );
 
     m_pImpl->suspend();
 }
 
 //-------------------------------------------------------------------------------------------------
-const ce_string & WorkerThread::getName() const {
-    ce_assert( nullptr != m_pImpl );
+const String & WorkerThread::getName() const {
+    assert( nullptr != m_pImpl );
 
     return m_pImpl->getName();
 }

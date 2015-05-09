@@ -28,14 +28,12 @@ IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISI
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------------------------*/
 #pragma once
-#ifndef ZFXCE2_INFRASTRUCTURE_PLATFORM_WIN32RENDERCONTEXT_H_INC
-#define ZFXCE2_INFRASTRUCTURE_PLATFORM_WIN32RENDERCONTEXT_H_INC
 
-#include <osre2/Infrastructure/Platform/AbstractRenderContext.h>
+#include <osre/Platform/AbstractRenderContext.h>
 
 #include <windows.h>
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
@@ -66,6 +64,3 @@ private:
 
 } // Namespace Platform
 } // Namespace ZFXCE2
-
-
-#endif // ZFXCE2_INFRASTRUCTURE_PLATFORM_WIN32RENDERCONTEXT_H_INC

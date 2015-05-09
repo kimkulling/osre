@@ -27,15 +27,16 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------------------------*/
-#include <code/Infrastructure/Platform/win32/Win32Eventhandler.h>
-#include <code/Infrastructure/Platform/win32/Win32Surface.h>
-#include <osre2/Infrastructure/Common/EventTriggerer.h>
-#include <osre2/Infrastructure/Platform/PlatformInterface.h>
+#include <src/Platform/win32/Win32Eventhandler.h>
+#include <src/Platform/win32/Win32Surface.h>
 
-namespace ZFXCE2 {
+#include <osre/Platform/PlatformInterface.h>
+#include <osre/Common/EventTriggerer.h>
+
+namespace OSRE {
 namespace Platform {
 
-using namespace ZFXCE2::Common;
+using namespace ::OSRE::Common;
 
 std::map<HWND, Win32Eventhandler*> Win32Eventhandler::s_WindowsServerMap;
 
@@ -261,7 +262,7 @@ LRESULT Win32Eventhandler::winproc( HWND hWnd, UINT Message, WPARAM wParam, LPAR
             if( pEventHandler ) {
                 pEventHandler->onQuit();
             } else {
-                ce_error( "Nullptr to event handler detected." );
+                osre_error( "Nullptr to event handler detected." );
             }
             ::PostQuitMessage( NULL );
             return 1;
@@ -316,7 +317,7 @@ bool Win32Eventhandler::onQuit() {
 //-------------------------------------------------------------------------------------------------
 void Win32Eventhandler::setRootSurface( AbstractSurface *pSurface ) {
     if( !pSurface ) {
-        ce_debug( "Invalid window pointer." );
+        osre_debug( "Invalid window pointer." );
         return;
     }
 
@@ -356,16 +357,16 @@ bool Win32Eventhandler::isPolling( ) const {
 }
 
 //-------------------------------------------------------------------------------------------------
-void Win32Eventhandler::registerEventListener( const CPPCommon::TArray<const Common::Event*> &events, OSEventListener *pListener ) {
-    ce_assert( nullptr != m_pOSEventTriggerer );
+void Win32Eventhandler::registerEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener ) {
+    assert( nullptr != m_pOSEventTriggerer );
 
     m_pOSEventTriggerer->addEventListener( events, Common::ceEventFunctor::Make( pListener,
         &OSEventListener::onOSEvent ) );
 }
 
 //-------------------------------------------------------------------------------------------------
-void Win32Eventhandler::unregisterEventListener( const CPPCommon::TArray<const Common::Event*> &events, OSEventListener *pListener ) {
-    ce_assert( nullptr != m_pOSEventTriggerer );
+void Win32Eventhandler::unregisterEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener ) {
+    assert( nullptr != m_pOSEventTriggerer );
 
     m_pOSEventTriggerer->removeEventListener( events, Common::ceEventFunctor::Make( pListener,
         &OSEventListener::onOSEvent ) );

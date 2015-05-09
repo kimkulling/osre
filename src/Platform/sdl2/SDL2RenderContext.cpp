@@ -27,14 +27,14 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------------------------*/
-#include <Code/Infrastructure/Platform/sdl2/SDL2RenderContext.h>
-#include <Code/Infrastructure/Platform/sdl2/SDL2Surface.h>
-#include <osre2/Infrastructure/Common/Logger.h>
+#include <src/Platform/sdl2/SDL2RenderContext.h>
+#include <src/Platform/sdl2/SDL2Surface.h>
+#include <osre/Common/Logger.h>
 
 #include <SDL.h>
 #include <GL/glew.h>
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
@@ -54,27 +54,27 @@ SDL2RenderContext::~SDL2RenderContext( ) {
 //-------------------------------------------------------------------------------------------------
 bool SDL2RenderContext::onCreate( AbstractSurface *pSurface ) {
     if( !pSurface ) {
-        ce_error( "Surface pointer is a nullptr." );
+        osre_error( "Surface pointer is a nullptr." );
         return false;
     }
 
     m_pSurface = reinterpret_cast< SDL2Surface* >( pSurface );
     m_pContext = SDL_GL_CreateContext( m_pSurface->getSDLSurface() );
     if( !m_pContext ) {
-        ce_error( "Error while creating GL-context.!" );
+        osre_error( "Error while creating GL-context.!" );
         return false;
     }
     
     glewExperimental = GL_TRUE;
     GLenum err = glewInit();
     if( GLEW_OK != err ) {
-        ce_error( "GLEW is not initialized!" );
+        osre_error( "GLEW is not initialized!" );
         return false;
     }
 
     const GLubyte *version = glGetString( GL_VERSION );
-    ce_log( "OpenGL renderer initiated.")
-    ce_log( "Version : " + ce_string( (c8*) version ) );
+    osre_log( "OpenGL renderer initiated.")
+    osre_log( "Version : " + String( (c8*) version ) );
 
     return true;
 }
@@ -82,7 +82,7 @@ bool SDL2RenderContext::onCreate( AbstractSurface *pSurface ) {
 //-------------------------------------------------------------------------------------------------
 bool SDL2RenderContext::onDestroy( ) {
     if( !m_pContext ) {
-        ce_error( "Context pointer is a nullptr." );
+        osre_error( "Context pointer is a nullptr." );
         return false;
     }
 
@@ -95,7 +95,7 @@ bool SDL2RenderContext::onDestroy( ) {
 //-------------------------------------------------------------------------------------------------
 bool SDL2RenderContext::onUpdate( ) {
     if ( !m_isActive ) {
-        ce_debug( "No active render context." );
+        osre_debug( "No active render context." );
     }
     SDL_GL_SwapWindow( m_pSurface->getSDLSurface() );
 

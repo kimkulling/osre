@@ -161,7 +161,7 @@ private:
 /// @brief  Helper macro to create a macro from a given class.
 //-------------------------------------------------------------------------------------------------
 #define CREATE_SINGLETON( type )                    \
-    ce_assert( nullptr == s_pTypeInstance );        \
+    assert( nullptr == s_pTypeInstance );        \
     s_pTypeInstance = this;         
 
 //-------------------------------------------------------------------------------------------------
@@ -171,7 +171,7 @@ private:
 /// @brief  Helper macro to destroy a macro from a given class.
 //-------------------------------------------------------------------------------------------------
 #define DESTROY_SINGLETON( type )                   \
-    ce_assert( nullptr != s_pTypeInstance );        \
+    assert( nullptr != s_pTypeInstance );        \
     s_pTypeInstance = nullptr;         
 
 //-------------------------------------------------------------------------------------------------

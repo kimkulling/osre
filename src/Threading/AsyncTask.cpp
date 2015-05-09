@@ -33,13 +33,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "WorkerThread.h"
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace Threading {
 
-using namespace ZFXCE2::Platform;
+using namespace OSRE::Platform;
 
 //-------------------------------------------------------------------------------------------------
-AsyncTask::AsyncTask( const ce_string &name )
+AsyncTask::AsyncTask( const String &name )
 : AbstractTask( name )
 , m_WorkingMode( Async )
 , m_buffermode( SingleBuffer )
@@ -89,8 +89,8 @@ void AsyncTask::setThreadInstance( AbstractThread *pThreadInstance ) {
         m_pThreadInstance = (WorkerThread*) pThreadInstance;
         m_pTaskQueue = m_pThreadInstance->getTaskQueue();
         m_pFinishedEvent = m_pThreadInstance->getFinishEvent();
-        ce_assert( nullptr != m_pTaskQueue );
-        ce_assert( nullptr != m_pFinishedEvent );
+        assert( nullptr != m_pTaskQueue );
+        assert( nullptr != m_pFinishedEvent );
     }
 }
 
@@ -128,7 +128,7 @@ void AsyncTask::await() {
 }
 
 //-------------------------------------------------------------------------------------------------
-AsyncTask *AsyncTask::create( const ce_string &taskName ) {
+AsyncTask *AsyncTask::create( const String &taskName ) {
     return new AsyncTask( taskName );
 }
 

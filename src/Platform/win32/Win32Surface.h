@@ -29,12 +29,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre2/Common/Types.h>
-#include <osre2/Platform/AbstractSurface.h>
+#include <osre/Common/Types.h>
+#include <osre/Platform/AbstractSurface.h>
 
 #include <Windows.h>
 #include <Windowsx.h>
-
 
 namespace OSRE {
 namespace Platform {
@@ -45,7 +44,7 @@ namespace Platform {
 ///
 ///	@brief  This class implements the win32-specific surface.
 //-------------------------------------------------------------------------------------------------
-class DLL_EXPORT Win32Surface : public AbstractSurface {
+class Win32Surface : public AbstractSurface {
 public:
     /// The class constructor.
     Win32Surface( SurfaceProperties *pProperties );

@@ -31,7 +31,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <SDL.h>
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace Platform {
 
 bool SDL2Initializer::s_inited = false;

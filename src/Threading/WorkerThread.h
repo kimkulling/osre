@@ -55,7 +55,7 @@ class AsyncTask;
 class WorkerThread {
 public:
     ///	The class constructor with the name and the stack size.
-    WorkerThread(  const ce_string &name, ui32 stacksize );
+    WorkerThread(  const String &name, ui32 stacksize );
     /// The class destructor.
     ~WorkerThread();
     ///	returns the finished event.
@@ -71,7 +71,7 @@ public:
     /// The thread will be suspended.
     void suspend();
     /// The name of the thread will be returned.
-    const ce_string &getName() const;
+    const String &getName() const;
 
 protected:
     i32 run();

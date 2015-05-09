@@ -28,13 +28,11 @@ IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISI
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------------------------*/
 #pragma once
-#ifndef ZFXCE2_INFRASTRUCTURE_SYSTEM_WIN32TIMER_H_INC
-#define ZFXCE2_INFRASTRUCTURE_SYSTEM_WIN32TIMER_H_INC
 
-#include <osre2/Infrastructure/Platform/AbstractTimer.h>
+#include <osre/Platform/AbstractTimer.h>
 #include <windows.h>
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
@@ -43,7 +41,7 @@ namespace Platform {
 ///
 ///	@brief	This class implements a windows specific timer.
 //-------------------------------------------------------------------------------------------------
-class DLL_EXPORT Win32Timer : public AbstractTimer {
+class Win32Timer : public AbstractTimer {
 public:
 	///	The class constructor.
 	Win32Timer();
@@ -63,5 +61,3 @@ private:
 
 } // Namespace Platform
 } // Namespace ZFXCE2
-
-#endif // ZFXCE2_INFRASTRUCTURE_SYSTEM_WIN32TIMER_H_INC

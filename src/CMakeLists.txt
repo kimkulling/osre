@@ -61,12 +61,18 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/AbstractRenderContext.h
     ${HEADER_PATH}/Platform/AbstractSurface.h
     ${HEADER_PATH}/Platform/AbstractTimer.h
+    ${HEADER_PATH}/Platform/CPUInfo.h
+    ${HEADER_PATH}/Platform/SystemInfo.h
+    ${HEADER_PATH}/Platform/SystemUtils.h
     ${HEADER_PATH}/Platform/KeyTypes.h
     ${HEADER_PATH}/Platform/PluginType.h
     ${HEADER_PATH}/Platform/PlatformInterface.h
 )
 
 SET( platform_src
+    Platform/CPUInfo.cpp
+    Platform/SystemInfo.cpp
+    Platform/SystemUtils.cpp
     Platform/AtomicInt.cpp
     Platform/AbstractSurface.cpp
     Platform/PlatformInterface.cpp
@@ -235,7 +241,7 @@ ADD_LIBRARY( osre SHARED
         ${threading_impl_src}
 )
 
-target_link_libraries ( osre cppCommon zlib Unzip Lua glew ${platform_libs} )
+target_link_libraries ( osre cppcore zlib Unzip glew ${platform_libs} )
 set_target_properties(  osre PROPERTIES FOLDER Engine )
 
 #==============================================================================

@@ -191,7 +191,7 @@ bool Win32Surface::onDestroy( ) {
 bool Win32Surface::onUpdateProperies() {
     const ui32 flags( AbstractSurface::getFlags() );
     if( flags | SF_WinTitleDirty ) {
-        const ce_string &title(AbstractSurface::getProperties()->m_title );
+        const String &title(AbstractSurface::getProperties()->m_title );
         ::SetWindowText( getHWnd(), title.c_str() );   
     }
     AbstractSurface::setFlags( SF_PropertiesClean );

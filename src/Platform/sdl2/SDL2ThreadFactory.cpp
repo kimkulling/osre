@@ -33,7 +33,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "SDL2Thread.h"
 #include "SDL2Atomic.h"
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ SDL2ThreadFactory::~SDL2ThreadFactory( ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-AbstractThread *SDL2ThreadFactory::createThread( const ce_string &name, ui32 stacksize ) {
+AbstractThread *SDL2ThreadFactory::createThread( const String &name, ui32 stacksize ) {
     return new SDL2Thread( name, stacksize );
 }
 

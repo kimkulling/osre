@@ -33,7 +33,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Win32Thread.h"
 #include "Win32Atomic.h"
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ Win32ThreadFactory::~Win32ThreadFactory() {
 }
 
 //-------------------------------------------------------------------------------------------------
-AbstractThread *Win32ThreadFactory::createThread( const ce_string &name, ui32 stacksize ) {
+AbstractThread *Win32ThreadFactory::createThread( const String &name, ui32 stacksize ) {
     return new Win32Thread( name, stacksize );
 }
 

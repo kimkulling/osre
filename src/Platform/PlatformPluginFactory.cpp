@@ -30,18 +30,18 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <src/Platform/PlatformPluginFactory.h>
 #include <osre/Common/Logger.h>
 #ifdef _WIN32
-#   include <src/Infrastructure/Platform/win32/Win32Surface.h>
-#   include <src/Infrastructure/Platform/win32/Win32Eventhandler.h>
-#   include <src/Infrastructure/Platform/win32/Win32Timer.h>
-#   include <src/Infrastructure/Platform/win32/Win32RenderContext.h>
-#   include <src/Infrastructure//Platform/win32/Win32ThreadFactory.h>
+#   include <src/Platform/win32/Win32Surface.h>
+#   include <src/Platform/win32/Win32Eventhandler.h>
+#   include <src/Platform/win32/Win32Timer.h>
+#   include <src/Platform/win32/Win32RenderContext.h>
+#   include <src//Platform/win32/Win32ThreadFactory.h>
 #endif
-#include <src/Infrastructure/Platform/sdl2/SDL2Surface.h>
-#include <src/Infrastructure/Platform/sdl2/SDL2EventHandler.h>
-#include <src/Infrastructure/Platform/sdl2/SDL2RenderContext.h>
-#include <src/Infrastructure/Platform/sdl2/SDL2Timer.h>
-#include <src/Infrastructure/Platform/sdl2/SDL2ThreadFactory.h>
-#include <src/Infrastructure/Platform/sdl2/SDL2Initializer.h>
+#include <src/Platform/sdl2/SDL2Surface.h>
+#include <src/Platform/sdl2/SDL2EventHandler.h>
+#include <src/Platform/sdl2/SDL2RenderContext.h>
+#include <src/Platform/sdl2/SDL2Timer.h>
+#include <src/Platform/sdl2/SDL2ThreadFactory.h>
+#include <src/Platform/sdl2/SDL2Initializer.h>
 
 namespace OSRE {
 namespace Platform {
@@ -68,8 +68,8 @@ bool PlatformPluginFactory::release( PluginType type ) {
 AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler( PluginType type, AbstractSurface *rootSurface ) {
     AbstractPlatformEventHandler *pEventHandler( nullptr );
     switch( type ) {
-#ifdef CE_WINDOWS
-        case ZFXCE2::Platform::WindowsPlugin: {
+#ifdef _WIN32
+        case Platform::WindowsPlugin: {
                 Win32Surface *win32Surface = ( Win32Surface* ) rootSurface;
                 if( win32Surface ) {
                     pEventHandler = new Win32Eventhandler;
@@ -79,7 +79,7 @@ AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler(
             break;
 #endif // CE_WINDOWS
 
-        case ZFXCE2::Platform::SDL2Plugin:
+        case Platform::SDL2Plugin:
             pEventHandler = new SDL2EventHandler();
             break;
 
@@ -94,18 +94,18 @@ AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler(
 AbstractSurface *PlatformPluginFactory::createSurface( PluginType type, SurfaceProperties *pProps ) {
     AbstractSurface *pSurface( nullptr );
     switch( type ) {
-#ifdef CE_WINDOWS
-        case ZFXCE2::Platform::WindowsPlugin:
+#ifdef _WIN32
+        case Platform::WindowsPlugin:
             pSurface = new Win32Surface( pProps );
             break;
 #endif // CE_WINDOWS
 
-        case ZFXCE2::Platform::SDL2Plugin:
+        case Platform::SDL2Plugin:
             pSurface = new SDL2Surface( pProps );
             break;
 
         default:
-            ce_log( "Enum value not handled." );
+            osre_log( "Enum value not handled." );
             break;
     }
 
@@ -116,18 +116,18 @@ AbstractSurface *PlatformPluginFactory::createSurface( PluginType type, SurfaceP
 AbstractRenderContext *PlatformPluginFactory::createRenderContext( PluginType type ) {
     AbstractRenderContext *renderCtx( nullptr );
     switch( type ) {
-#ifdef CE_WINDOWS
-        case ZFXCE2::Platform::WindowsPlugin:
+#ifdef _WIN32
+        case Platform::WindowsPlugin:
             renderCtx = new Win32RenderContext();
             break;
 #endif // CE_WINDOWS
 
-        case ZFXCE2::Platform::SDL2Plugin:
+        case Platform::SDL2Plugin:
             renderCtx = new SDL2RenderContext();
             break;
 
         default:
-            ce_error( "Enum value not handled." );
+            osre_error( "Enum value not handled." );
             break;
     }
 
@@ -138,13 +138,13 @@ AbstractRenderContext *PlatformPluginFactory::createRenderContext( PluginType ty
 AbstractTimer *PlatformPluginFactory::createTimer( PluginType type ) {
     AbstractTimer *pTimer( nullptr );
     switch( type ) {
-#ifdef CE_WINDOWS
-        case ZFXCE2::Platform::WindowsPlugin:
+#ifdef _WIN32
+        case Platform::WindowsPlugin:
             pTimer = new Win32Timer();
             break;
 #endif
 
-        case ZFXCE2::Platform::SDL2Plugin:
+        case Platform::SDL2Plugin:
             pTimer = new SDL2Timer();
             break;
 
@@ -158,13 +158,13 @@ AbstractTimer *PlatformPluginFactory::createTimer( PluginType type ) {
 AbstractThreadFactory *PlatformPluginFactory::createThreadFactory( PluginType type ) {
     AbstractThreadFactory *instance( nullptr );
     switch( type ) {
-#ifdef CE_WINDOWS
-        case ZFXCE2::Platform::WindowsPlugin:
+#ifdef _WIN32
+        case Platform::WindowsPlugin:
         instance = new Win32ThreadFactory();
         break;
 #endif // CE_WINDOWS
 
-    case ZFXCE2::Platform::SDL2Plugin:
+    case Platform::SDL2Plugin:
         instance = new SDL2ThreadFactory();
         break;
 
@@ -172,7 +172,7 @@ AbstractThreadFactory *PlatformPluginFactory::createThreadFactory( PluginType ty
         break;
     }
 
-    ce_log( " set thread factory." );
+    osre_log( " set thread factory." );
     AbstractThreadFactory::setInstance( instance );
 
     return instance;
