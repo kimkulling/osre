@@ -26,3 +26,5 @@
 *.exe
 *.out
 *.app
+3dparty/glew/CMakeFiles/generate.stamp
+3dparty/glew/auto/src/header.html
