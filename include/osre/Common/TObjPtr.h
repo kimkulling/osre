@@ -20,8 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#ifndef OSRE_COMMON_TOBJPTR_H_INC
-#define OSRE_COMMON_TOBJPTR_H_INC
+#pragma once
 
 #include <osre/Common/Types.h>
 
@@ -241,5 +240,3 @@ bool TObjPtr<T>::operator != ( const TObjPtr<T> &rhs ) const {
 
 } // Namespace Common
 } // Namespace OSRE
-
-#endif // OSRE_COMMON_TOBJPTR_H_INC

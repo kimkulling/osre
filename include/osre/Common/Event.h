@@ -21,8 +21,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
-#ifndef OSRE_COMMON_EVENT_H_INC
-#define OSRE_COMMON_EVENT_H_INC
 
 #include <osre/Common/TFunctor.h>
 #include <osre/Common/StringUtils.h>
@@ -301,5 +299,3 @@ typedef Functor<void, const Event&, const EventData*> ceEventFunctor;
 
 } // Namespace Common
 } // Namespace ZFXCE2
-
-#endif // OSRE_COMMON_EVENT_H_INC

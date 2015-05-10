@@ -20,11 +20,9 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#ifndef OSRE_COMMON_OBJECT_H_INC
-#define OSRE_COMMON_OBJECT_H_INC
+#pragma once
 
 #include <osre/Common/Types.h>
-
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
@@ -79,5 +77,3 @@ private:
 
 } // Namespace Common
 } // Namespace ZFXCE2
-
-#endif // OSRE_COMMON_OBJECT_H_INC

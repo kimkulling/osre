@@ -20,8 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#ifndef OSRE_COMMON_LOGGER_H_INC
-#define OSRE_COMMON_LOGGER_H_INC
+#pragma once
 
 #include <osre/Common/Types.h>
 
@@ -229,5 +228,3 @@ const String DomainTag = "";
 #define osre_fatal( message ) ::OSRE::Common::fatalPrint( __FILE__, __LINE__, message, DomainTag );
 
 } // Namespace ZFXCE2
-
-#endif // OSRE_COMMON_LOGGER_H_INC

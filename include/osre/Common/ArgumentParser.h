@@ -20,8 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#ifndef OSRE_COMMON_ARGUMENTPARSER_H_INC
-#define OSRE_COMMON_ARGUMENTPARSER_H_INC
+#pragma once
 
 #include <osre/Common/Types.h>
 
@@ -141,5 +140,3 @@ void ArgumentParser::reset() {
 
 } // Namespace Common
 } // Namespace OSRE
-
-#endif // OSRE_COMMON_ARGUMENTPARSER_H_INC

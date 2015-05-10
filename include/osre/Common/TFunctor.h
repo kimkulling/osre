@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Types.h>
 
 namespace OSRE {
-    namespace Common {
+namespace Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::ZFXCE2::Common::FunctorImpl
