@@ -39,10 +39,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <zfxce2/Infrastructure/Core/Logger.h>
-#include <zfxce2/RenderSystem/RenderBackend/RenderCommon.h>
+#include <osre/Common/Logger.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace RenderBackend {
 
 class OGLShader;
@@ -59,19 +59,19 @@ static void checkOGLErrorState( const c8 *pFile, ui32 line ) {
         case GL_INVALID_ENUM:
             // An unacceptable value is specified for an enumerated argument. The offending command 
             // is ignored and has no other side effect than to set the error flag.
-            ::ZFXCE2::Core::errorPrint( pFile, line, "GL_INVALID_ENUM error." );
+            ::OSRE::Common::errorPrint( pFile, line, "GL_INVALID_ENUM error." );
             break;
 
         case GL_INVALID_VALUE:
             // A numeric argument is out of range. The offending command is ignored and has no other 
             // side effect than to set the error flag.
-            ::ZFXCE2::Core::errorPrint( pFile, line, "GL_INVALID_VALUE error." );
+            ::OSRE::Common::errorPrint( pFile, line, "GL_INVALID_VALUE error." );
             break;
 
         case GL_INVALID_OPERATION:
             //The specified operation is not allowed in the current state. The offending command is 
             //ignored and has no other side effect than to set the error flag.
-            ::ZFXCE2::Core::errorPrint( pFile, line, "GL_INVALID_OPERATION error." );
+            ::OSRE::Common::errorPrint( pFile, line, "GL_INVALID_OPERATION error." );
             break;
 
         case GL_INVALID_FRAMEBUFFER_OPERATION:
@@ -79,13 +79,13 @@ static void checkOGLErrorState( const c8 *pFile, ui32 line ) {
             // framebuffer is not framebuffer complete (i.e. the return value from glCheckFramebufferStatus is
             // not GL_FRAMEBUFFER_COMPLETE). The offending command is ignored and has no other side effect than
             // to set the error flag.
-            ::ZFXCE2::Core::errorPrint( pFile, line, "GL_INVALID_FRAMEBUFFER_OPERATION error." );
+            ::OSRE::Common::errorPrint( pFile, line, "GL_INVALID_FRAMEBUFFER_OPERATION error." );
             break;
 
         case GL_OUT_OF_MEMORY:
             // There is not enough memory left to execute the command. The state of the GL is undefined, except 
             // for the state of the error flags, after this error is recorded.
-            ::ZFXCE2::Core::errorPrint( pFile, line, "GL_OUT_OF_MEMORY error." );
+            ::OSRE::Common::errorPrint( pFile, line, "GL_OUT_OF_MEMORY error." );
             break;
 
         default:
@@ -126,7 +126,7 @@ struct OGLVertexArray {
 
 struct OGLTexture {
     GLuint m_textureId;
-    ce_string m_name;
+    String m_name;
     GLenum m_target;
     GLenum m_format;
     ui32 m_slot;
@@ -150,7 +150,7 @@ struct OGLRenderCmd {
 };
 
 struct OGLParameter {
-    ce_string      m_name;
+    String      m_name;
     GLint          m_loc;
     ParameterType  m_type;
     ParamDataBlob *m_data;

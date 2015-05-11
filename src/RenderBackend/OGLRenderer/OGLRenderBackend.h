@@ -1,46 +1,14 @@
 #pragma once
 
-/* ZFX Community Engine 2  (ZFXCE2)
----------------------------------------------------------------------------------------------------
-Copyright (c) 2011-2015, ZFXCE2 Development Team
-All rights reserved.
-
-Redistribution and use of this software in source and binary forms,
-with or without modification, are permitted provided that the
-following conditions are met:
-
-* Redistributions of source code must retain the above copyright notice, this list of conditions
-and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-and the following disclaimer in the documentation and/or other materials provided with the
-distribution.
-
-* Neither the name of the ZFXCE2 team, nor the names of its contributors may be used to endorse or
-promote products derived from this software without specific prior written permission of the
-ZFXCE2 Development Team.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
-IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
-OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
--------------------------------------------------------------------------------------------------*/
-#ifndef ZFXCE2_RS_RENDERBACKEND_OGLRENDERBACKEND_H_INC
-#define ZFXCE2_RS_RENDERBACKEND_OGLRENDERBACKEND_H_INC
-
 #include <cppcore/Container/TArray.h>
-#include <zfxce2/RenderSystem/RenderBackend/RenderBackendService.h>
-#include <zfxce2/RenderSystem/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 #include "OGLCommon.h"
 
 #include <map>
 
-namespace ZFXCE2 {
+namespace OSRE {
 
 namespace Platform {
     class AbstractRenderContext;
@@ -89,21 +57,21 @@ public:
     void bindVertexArray( OGLVertexArray *pVertexArray );
     void unbindVertexArray( OGLVertexArray *pVertexArray );
     void releaseAllVertexArrays();
-    OGLShader *createShader( const ce_string &name, Shader *pShader );
-    OGLShader *getShader( const ce_string &name );
+    OGLShader *createShader( const String &name, Shader *pShader );
+    OGLShader *getShader( const String &name );
     bool useShader( OGLShader *pShader );
     OGLShader *getActiveShader() const;
     bool releaseShader( OGLShader *pShader );
     void releaseAllShaders();
-    OGLTexture *createEmptyTexture( const ce_string &name, TextureTargetType target, ui32 width, ui32 height, ui32 channels );
+    OGLTexture *createEmptyTexture( const String &name, TextureTargetType target, ui32 width, ui32 height, ui32 channels );
     void updateTexture( OGLTexture *pOGLTextue, ui32 offsetX, ui32 offsetY, c8 *data, ui32 size );
-    OGLTexture *createTextureFromFile( const ce_string &name, const ce_string &filename );
-    OGLTexture *findTexture( const ce_string &name ) const;
+    OGLTexture *createTextureFromFile( const String &name, const String &filename );
+    OGLTexture *findTexture( const String &name ) const;
     bool bindTexture( OGLTexture *pOGLTextue, TextureStageType stageType );
     void releaseTexture( OGLTexture *pTexture );
     void releaseAllTextures();
-    OGLParameter *createParameter( const ce_string &name, ParameterType type, ParamDataBlob *blob, ui32 numItems );
-    OGLParameter *getParameter( const ce_string &name ) const;
+    OGLParameter *createParameter( const String &name, ParameterType type, ParamDataBlob *blob, ui32 numItems );
+    OGLParameter *getParameter( const String &name ) const;
     void setParameter( OGLParameter *param );
     void setParameter( OGLParameter **param, ui32 numParam );
     void releaseAllParameters();
@@ -121,7 +89,7 @@ private:
     CPPCore::TArray<OGLShader*>      m_shaders;
     CPPCore::TArray<OGLTexture*>     m_textures;
     CPPCore::TArray<ui32>            m_freeTexSlots;
-    std::map<ce_string, ui32>        m_texLookupMap;
+    std::map<String, ui32>        m_texLookupMap;
     CPPCore::TArray<OGLParameter*>   m_parameters;
     OGLShader                       *m_pShaderInUse;
     CPPCore::TArray<ui32>            m_freeBufferSlots;
@@ -132,5 +100,3 @@ private:
 
 } // Namespace RenderBackend
 } // Namespace ZFXCE2
-
-#endif // ZFXCE2_RS_RENDERBACKEND_OGLRENDERBACKEND_H_INC

@@ -7,6 +7,7 @@ INCLUDE_DIRECTORIES(
     ${HEADER_PATH}/include
     ../3dparty/cppcore/include
     ../3dparty/glew/include
+    ../3dparty/glm/
 )
 
 IF( WIN32 )
@@ -168,6 +169,33 @@ SET( threading_inc
 )
 
 #==============================================================================
+# RenderBackend
+#==============================================================================
+SET( renderbackend_src
+    RenderBackend/RenderBackendService.cpp
+    RenderBackend/Parameter.cpp
+)
+
+SET( renderbackend_oglrenderer_src
+    RenderBackend/OGLRenderer/OGLCommon.h
+    RenderBackend/OGLRenderer/OGLEnum.cpp
+    RenderBackend/OGLRenderer/OGLEnum.h
+    RenderBackend/OGLRenderer/OGLRenderBackend.cpp
+    RenderBackend/OGLRenderer/OGLRenderBackend.h
+    RenderBackend/OGLRenderer/RenderCmdBuffer.cpp
+    RenderBackend/OGLRenderer/RenderCmdBuffer.h
+    RenderBackend/OGLRenderer/OGLRenderEventHandler.cpp
+    RenderBackend/OGLRenderer/OGLRenderEventHandler.h
+    RenderBackend/OGLRenderer/OGLShader.cpp
+    RenderBackend/OGLRenderer/OGLShader.h
+)
+SET( renderbackend_inc
+    ${HEADER_PATH}/RenderBackend/Parameter.h
+    ${HEADER_PATH}/RenderBackend/RenderBackendService.h
+    ${HEADER_PATH}/RenderBackend/RenderCommon.h
+)
+
+#==============================================================================
 # Defined Source groups
 #==============================================================================
 SOURCE_GROUP( Common              FILES ${common_src} )
@@ -183,6 +211,8 @@ SOURCE_GROUP( Platform            FILES ${platform_src} )
 SOURCE_GROUP( Platform\\Win32     FILES ${platform_impl_src} )
 SOURCE_GROUP( Platform\\sdl2      FILES ${platform_sdl2_src} )
 SOURCE_GROUP( Properties          FILES ${properties_src} )
+SOURCE_GROUP( RenderBackend       FILES ${renderbackend_src} )
+SOURCE_GROUP( RenderBackend\\OGLRenderer       FILES ${renderbackend_oglrenderer_src} )
 SOURCE_GROUP( Resources           FILES ${resources_src} )
 SOURCE_GROUP( Scripting           FILES ${scripting_src} )
 SOURCE_GROUP( Threading           FILES ${threading_src} )
@@ -197,8 +227,9 @@ SOURCE_GROUP( Include\\Memory     FILES ${memory_inc} )
 SOURCE_GROUP( Include\\Properties FILES ${properties_inc} )
 SOURCE_GROUP( Include\\Platform   FILES ${platform_inc} )
 SOURCE_GROUP( Include\\Resources  FILES ${resources_inc} )
-SOURCE_GROUP( Include\\Scripting  FILES ${scripting_inc} )
-SOURCE_GROUP( Include\\Thread     FILES ${threading_inc} )
+SOURCE_GROUP( Include\\Scripting     FILES ${scripting_inc} )
+SOURCE_GROUP( Include\\Thread        FILES ${threading_inc} )
+SOURCE_GROUP( Include\\RenderBackend FILES ${renderbackend_inc} )
 
 #==============================================================================
 # Define the Infrastructure library
@@ -219,6 +250,7 @@ ADD_LIBRARY( osre SHARED
     ${resources_inc}
     ${scripting_inc}
     ${threading_inc}
+    ${renderbackend_inc}
     ${math_inc}
 
     ${Common_src}
@@ -236,12 +268,14 @@ ADD_LIBRARY( osre SHARED
         ${platform_sdl2_src}
     ${utils_src}
     ${resources_src}
+    ${renderbackend_src}
+        ${renderbackend_oglrenderer_src}
     ${scripting_src}
     ${threading_src}
         ${threading_impl_src}
 )
 
-target_link_libraries ( osre cppcore zlib Unzip glew ${platform_libs} )
+target_link_libraries ( osre cppcore zlib Unzip glew soil ${platform_libs} )
 set_target_properties(  osre PROPERTIES FOLDER Engine )
 
 #==============================================================================

@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGUID>{66DE29B7-30DC-4B12-9457-6EC495601704}</ProjectGUID>
+    <ProjectGUID>{0D7ACA96-413C-43D5-A0FD-26FA3197B5ED}</ProjectGUID>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
     <ProjectName>INSTALL</ProjectName>
@@ -65,7 +65,7 @@
     </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -87,7 +87,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -109,7 +109,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -131,7 +131,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -209,7 +209,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:/projects/osre/3dparty/zlib/ALL_BUILD.vcxproj">
-      <Project>8821E8F8-10F7-4BEA-BD29-DBE1332192FD</Project>
+      <Project>CE6D92C4-B131-487F-9CB2-C13F5656FAB3</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

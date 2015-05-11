@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGUID>{69FACEF2-BEDF-4B30-A507-9DF45E8C838A}</ProjectGUID>
+    <ProjectGUID>{3F74E919-339B-41ED-8BE2-4D07D5CCFEDD}</ProjectGUID>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
     <ProjectName>glew</ProjectName>
@@ -85,7 +85,7 @@
     </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Debug/</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsC</CompileAs>
@@ -102,10 +102,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;OSRE_BUILD_EXPORT;CMAKE_INTDIR=\"Debug\";glew_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -129,7 +129,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Release/</AssemblerListingLocation>
       <CompileAs>CompileAsC</CompileAs>
       <ExceptionHandling>
@@ -145,10 +145,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;OSRE_BUILD_EXPORT;CMAKE_INTDIR=\"Release\";glew_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -172,7 +172,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
       <CompileAs>CompileAsC</CompileAs>
       <ExceptionHandling>
@@ -188,10 +188,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;OSRE_BUILD_EXPORT;CMAKE_INTDIR=\"MinSizeRel\";glew_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -215,7 +215,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
       <CompileAs>CompileAsC</CompileAs>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -231,10 +231,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;OSRE_BUILD_EXPORT;CMAKE_INTDIR=\"RelWithDebInfo\";glew_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -321,7 +321,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:/projects/osre/ZERO_CHECK.vcxproj">
-      <Project>0C455462-90DC-4DB6-B082-EF4A2BB329F7</Project>
+      <Project>9BB27F3B-4F56-4C25-89E9-119E7FA45529</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

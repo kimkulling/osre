@@ -27,18 +27,19 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------------------------*/
-#include <Code/RenderSystem/RenderBackend/OGLRenderer/RenderCmdBuffer.h>
-#include <zfxce2/Infrastructure/Debugging/ce_assert.h>
-#include <zfxce2/Infrastructure/Platform/AbstractRenderContext.h>
+#include <src/RenderBackend/OGLRenderer/RenderCmdBuffer.h>
+#include <osre/Platform/AbstractRenderContext.h>
 
 #include "OGLCommon.h"
 #include "OGLRenderBackend.h"
 
-namespace ZFXCE2 {
+#include <cassert>
+
+namespace OSRE {
 namespace RenderBackend {
 
-using namespace ::ZFXCE2::Core;
-using namespace ::ZFXCE2::Platform;
+using namespace ::OSRE::Common;
+using namespace ::OSRE::Platform;
 
 //-------------------------------------------------------------------------------------------------
 RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *pRenderBackend, AbstractRenderContext *ctx )
@@ -49,8 +50,8 @@ RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *pRenderBackend, AbstractRend
 , m_primitives()
 , m_materials()
 , m_param( nullptr ) {
-    ce_assert( nullptr != m_pRenderBackend );
-    ce_assert( nullptr != m_pRenderCtx );
+    assert( nullptr != m_pRenderBackend );
+    assert( nullptr != m_pRenderCtx );
 
     m_param = new OGLParameter;
     m_param->m_name = "tex0";
@@ -91,7 +92,7 @@ void RenderCmdBuffer::enqueueRenderCmd( OGLRenderCmd *pOGLRenderCmd, EnqueueType
 
 //-------------------------------------------------------------------------------------------------
 bool RenderCmdBuffer::onPreRenderFrame() {
-    ce_assert( nullptr != m_pRenderBackend );
+    assert( nullptr != m_pRenderBackend );
 
     if( !m_pRenderCtx ) {
         return false;
@@ -111,7 +112,7 @@ bool RenderCmdBuffer::onPreRenderFrame() {
 
 //-------------------------------------------------------------------------------------------------
 bool RenderCmdBuffer::onRenderFrame( const EventData *pEventData ) {
-    ce_assert( nullptr != m_pRenderBackend );
+    assert( nullptr != m_pRenderBackend );
 
     for( ui32 i = 0; i < m_cmdbuffer.size(); ++i ) {
         OGLRenderCmd *pRenderCmd = m_cmdbuffer[ i ];
@@ -128,7 +129,7 @@ bool RenderCmdBuffer::onRenderFrame( const EventData *pEventData ) {
         } else if( pRenderCmd->m_type == SetRenderTargetCmd ) {
             onSetRenderTargetCmd( ( SetRenderTargetCmdData* ) pRenderCmd->m_pData );
         } else {
-            ce_error( "Unsupported render command type: " + pRenderCmd->m_type );
+            osre_error( "Unsupported render command type: " + pRenderCmd->m_type );
         }
     }
 

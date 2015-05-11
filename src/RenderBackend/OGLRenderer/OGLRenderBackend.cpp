@@ -32,36 +32,35 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "OGLCommon.h"
 #include "OGLEnum.h"
 
-#include <zfxce2/Infrastructure/Platform/AbstractRenderContext.h>
-#include <zfxce2/Infrastructure/Core/Logger.h>
-#include <zfxce2/Infrastructure/Debugging/ce_assert.h>
+#include <osre/Platform/AbstractRenderContext.h>
+#include <osre/Common/Logger.h>
 
 #include <cppcore/CPPCoreCommon.h>
 
 #include "SOIL.h"
 
 #include <iostream>
+#include <cassert>
 
-
-namespace ZFXCE2 {
+namespace OSRE {
 namespace RenderBackend {
 
 using namespace ::CPPCore;
 
-static const ce_string VertexAttribName      = "vVertex";
-static const ce_string NormalAttribName      = "vNormal";
-static const ce_string DiffuseColorAttribute = "vDiffuseColor";
-static const ce_string TexCoord0Attribute    = "TexCoord0Attribute";
+static const String VertexAttribName      = "vVertex";
+static const String NormalAttribName      = "vNormal";
+static const String DiffuseColorAttribute = "vDiffuseColor";
+static const String TexCoord0Attribute    = "TexCoord0Attribute";
 
 //-------------------------------------------------------------------------------------------------
 static bool setParameterInShader( OGLParameter *param, OGLShader *shader ) {
-    ce_assert( nullptr != param );
-    ce_assert( nullptr != shader );
+    assert( nullptr != param );
+    assert( nullptr != shader );
 
     if( NoneLocation == param->m_loc ) {
         param->m_loc = ( *shader )( param->m_name );
         if( NoneLocation == param->m_loc ) {
-            ce_debug( "Cannot location for parameter " + param->m_name + " in shader " + shader->getName() + "." );
+            osre_debug( "Cannot location for parameter " + param->m_name + " in shader " + shader->getName() + "." );
             return false;
         }
     }
@@ -211,7 +210,7 @@ OGLBuffer *OGLRenderBackend::createBuffer( BufferType type ) {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::bindBuffer( OGLBuffer *buffer ) {
-    ce_assert( nullptr != buffer );
+    assert( nullptr != buffer );
 
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, buffer->m_id );
@@ -219,7 +218,7 @@ void OGLRenderBackend::bindBuffer( OGLBuffer *buffer ) {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::bindBuffer( ui32 handle ) {
-    ce_assert( handle <= m_buffers.size() );
+    assert( handle <= m_buffers.size() );
 
     OGLBuffer *buf( m_buffers[ handle ] );
     if( nullptr != buf ) {
@@ -229,7 +228,7 @@ void OGLRenderBackend::bindBuffer( ui32 handle ) {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::unbindBuffer( OGLBuffer *buffer ) {
-    ce_assert( nullptr != buffer );
+    assert( nullptr != buffer );
 
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, 0 );
@@ -237,7 +236,7 @@ void OGLRenderBackend::unbindBuffer( OGLBuffer *buffer ) {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::bufferData( OGLBuffer *pBuffer, void *pData, ui32 size, BufferAccessType usage ) {
-    ce_assert( nullptr != pData );
+    assert( nullptr != pData );
 
     GLenum target = OGLEnum::getGLBufferType( pBuffer->m_type );
     glBufferData( target, size, pData, OGLEnum::getGLBufferAccessType( usage ) );
@@ -245,7 +244,7 @@ void OGLRenderBackend::bufferData( OGLBuffer *pBuffer, void *pData, ui32 size, B
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::releaseBuffer( OGLBuffer *pBuffer ) {
-    ce_assert( pBuffer->m_handle < m_buffers.size() );
+    assert( pBuffer->m_handle < m_buffers.size() );
 
     const ui32 slot = pBuffer->m_handle;
     glDeleteBuffers( 1, &pBuffer->m_id );
@@ -371,7 +370,7 @@ bool OGLRenderBackend::bindVertexAttributes( OGLVertexArray *va, OGLShader *shad
 
     for( ui32 i = 0; i < attributes.size(); ++i ) {
         const c8 *pAttribName = attributes[ i ]->m_pAttributeName;
-        ce_assert( nullptr != pAttribName );
+        assert( nullptr != pAttribName );
         const GLint loc = ( *shader )[ pAttribName ];
         if( -1 != loc ) {
             glEnableVertexAttribArray( loc );
@@ -410,7 +409,7 @@ void OGLRenderBackend::releaseAllVertexArrays( ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-OGLShader *OGLRenderBackend::createShader( const ce_string &name, Shader *pShaderInfo ) {
+OGLShader *OGLRenderBackend::createShader( const String &name, Shader *pShaderInfo ) {
     if( name.empty() ) {
         return nullptr;
     }
@@ -423,27 +422,27 @@ OGLShader *OGLRenderBackend::createShader( const ce_string &name, Shader *pShade
         if( !pShaderInfo->m_src[ SH_VertexShaderType ].empty() ) {
             result = pOGLShader->loadFromSource( SH_VertexShaderType, pShaderInfo->m_src[ SH_VertexShaderType ] );
             if( !result ) {
-                ce_error( "Error while compiling VertexShader." );
+                osre_error( "Error while compiling VertexShader." );
             }
         }
 
         if( !pShaderInfo->m_src[ SH_FragmentShaderType ].empty( ) ) {
             result = pOGLShader->loadFromSource( SH_FragmentShaderType, pShaderInfo->m_src[ SH_FragmentShaderType ] );
             if( !result ) {
-                ce_error( "Error while compiling FragmentShader." );
+                osre_error( "Error while compiling FragmentShader." );
             }
         }
 
         if( !pShaderInfo->m_src[ SH_GeometryShaderType ].empty( ) ) {
             result = pOGLShader->loadFromSource( SH_GeometryShaderType, pShaderInfo->m_src[ SH_GeometryShaderType ] );
             if( !result ) {
-                ce_error( "Error while compiling GeometryShader." );
+                osre_error( "Error while compiling GeometryShader." );
             }
         }
 
         result = pOGLShader->createAndLink();
         if( !result ) {
-            ce_error( "Error while linking shader" );
+            osre_error( "Error while linking shader" );
         }
     }
 
@@ -451,7 +450,7 @@ OGLShader *OGLRenderBackend::createShader( const ce_string &name, Shader *pShade
 }
 
 //-------------------------------------------------------------------------------------------------
-OGLShader *OGLRenderBackend::getShader( const ce_string &name ) {
+OGLShader *OGLRenderBackend::getShader( const String &name ) {
     if( name.empty() ) {
         return nullptr;
     }
@@ -530,10 +529,10 @@ void OGLRenderBackend::releaseAllShaders( ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-OGLTexture *OGLRenderBackend::createEmptyTexture( const ce_string &name, TextureTargetType target,
+OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTargetType target,
                                                   ui32 width, ui32 height, ui32 channels ) {
     if( name.empty() ) {
-        ce_debug( "Texture anme is empty." );
+        osre_debug( "Texture anme is empty." );
         return nullptr;
     }
 
@@ -582,20 +581,20 @@ OGLTexture *OGLRenderBackend::createEmptyTexture( const ce_string &name, Texture
 void OGLRenderBackend::updateTexture( OGLTexture *pOGLTextue, ui32 offsetX, ui32 offsetY, c8 *data,
                                       ui32 size ) {
     if( !pOGLTextue ) {
-        ce_error("Pointer to texture is a nullptr." );
+        osre_error( "Pointer to texture is a nullptr." );
         return;
     }
 
     const ui32 diffX( pOGLTextue->m_width - offsetX );
     const ui32 diffY( pOGLTextue->m_height - offsetY );
     const ui32 subSize( diffX * diffY * pOGLTextue->m_channels );
-    ce_assert( size < subSize );
+    assert( size < subSize );
     glTexSubImage2D( pOGLTextue->m_target, 0, offsetX, offsetY, pOGLTextue->m_width,
                      pOGLTextue->m_height, pOGLTextue->m_format, GL_UNSIGNED_BYTE, data );
 }
 
 //-------------------------------------------------------------------------------------------------
-OGLTexture *OGLRenderBackend::createTextureFromFile( const ce_string &name, const ce_string &filename ) {
+OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const String &filename ) {
     OGLTexture *pTexture( findTexture( name ) );
     if( pTexture ) {
         return pTexture;
@@ -605,7 +604,7 @@ OGLTexture *OGLRenderBackend::createTextureFromFile( const ce_string &name, cons
     i32 width( 0 ), height( 0 ), channels( 0 );
     GLubyte *pData = SOIL_load_image( filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO );
     if( !pData ) {
-        ce_debug( "Cannot load texture " + filename );
+        osre_debug( "Cannot load texture " + filename );
         return nullptr;
     }
 
@@ -633,12 +632,12 @@ OGLTexture *OGLRenderBackend::createTextureFromFile( const ce_string &name, cons
 }
 
 //-------------------------------------------------------------------------------------------------
-OGLTexture *OGLRenderBackend::findTexture( const ce_string &name ) const {
+OGLTexture *OGLRenderBackend::findTexture( const String &name ) const {
     if( name.empty() ) {
         return nullptr;
     }
 
-    std::map<ce_string, ui32>::const_iterator it( m_texLookupMap.find( name ) );
+    std::map<String, ui32>::const_iterator it( m_texLookupMap.find( name ) );
     if( it == m_texLookupMap.end() ) {
         return nullptr;
     }
@@ -670,7 +669,7 @@ void OGLRenderBackend::releaseTexture( OGLTexture *pTexture ) {
 
         m_freeTexSlots.add( pTexture->m_slot );
 
-        std::map<ce_string, ui32>::iterator it( m_texLookupMap.find( pTexture->m_name ) );
+        std::map<String, ui32>::iterator it( m_texLookupMap.find( pTexture->m_name ) );
         if( m_texLookupMap.end() != it ) {
             it = m_texLookupMap.erase( it );
         }
@@ -690,7 +689,7 @@ void OGLRenderBackend::releaseAllTextures( ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-OGLParameter *OGLRenderBackend::createParameter( const ce_string &name, ParameterType type, 
+OGLParameter *OGLRenderBackend::createParameter( const String &name, ParameterType type, 
                                                  ParamDataBlob *blob, ui32 numItems ) {
     OGLParameter *param = new OGLParameter;
     param->m_name       = name;
@@ -707,7 +706,7 @@ OGLParameter *OGLRenderBackend::createParameter( const ce_string &name, Paramete
 }
 
 //-------------------------------------------------------------------------------------------------
-OGLParameter *OGLRenderBackend::getParameter( const ce_string &name ) const {
+OGLParameter *OGLRenderBackend::getParameter( const String &name ) const {
     if( name.empty() ) {
         return nullptr;
     }
@@ -745,7 +744,7 @@ void OGLRenderBackend::setParameter( OGLParameter **param, ui32 numParam ) {
         OGLParameter *currentParam = param[ i ];
         if( currentParam ) {
             const bool success = setParameterInShader( currentParam ,m_pShaderInUse );
-            ce_validate( success, "Error setting parameter " + currentParam->m_name );
+//            osre_validate( success, "Error setting parameter " + currentParam->m_name );
         }
     }
 }
@@ -790,7 +789,7 @@ void OGLRenderBackend::render( ui32 primpGrpIdx, ui32 numInstances ) {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::renderFrame() {
-    ce_assert( nullptr != m_pRenderCtx );    
+    assert( nullptr != m_pRenderCtx );    
     
     m_pRenderCtx->update();
 }

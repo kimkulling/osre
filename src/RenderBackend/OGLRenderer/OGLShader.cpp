@@ -1,37 +1,8 @@
-/* ZFX Community Engine 2  (ZFXCE2)
----------------------------------------------------------------------------------------------------
-Copyright (c) 2011-2015, ZFXCE2 Development Team
-All rights reserved.
-
-Redistribution and use of this software in source and binary forms,
-with or without modification, are permitted provided that the
-following conditions are met:
-
-* Redistributions of source code must retain the above copyright notice, this list of conditions
-and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-and the following disclaimer in the documentation and/or other materials provided with the
-distribution.
-
-* Neither the name of the ZFXCE2 team, nor the names of its contributors may be used to endorse or
-promote products derived from this software without specific prior written permission of the
-ZFXCE2 Development Team.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
-IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
-OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
--------------------------------------------------------------------------------------------------*/
 #include "OGLShader.h"
 
-#include <zfxce2/Infrastructure/Core/Logger.h>
+#include <osre/Common/Logger.h>
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace RenderBackend {
 
 static const GLint ErrorId = -1;
@@ -53,7 +24,7 @@ static GLuint getOGLShaderType( ShaderType type ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-OGLShader::OGLShader( const ce_string &name )
+OGLShader::OGLShader( const String &name )
 : Object( name )
 , m_shaderprog( 0 )
 , m_numShader( 0 )
@@ -73,7 +44,7 @@ OGLShader::~OGLShader( ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLShader::loadFromSource( ShaderType type, const ce_string &src ) {
+bool OGLShader::loadFromSource( ShaderType type, const String &src ) {
     if ( src.empty() ) {
         return false;
     }
@@ -87,7 +58,7 @@ bool OGLShader::loadFromSource( ShaderType type, const ce_string &src ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLShader::loadFromFile( ShaderType type, const ce_string &file ) {
+bool OGLShader::loadFromFile( ShaderType type, const String &file ) {
     if ( file.empty() ) {
         return false;
     }
@@ -99,7 +70,7 @@ bool OGLShader::loadFromFile( ShaderType type, const ce_string &file ) {
 bool OGLShader::createAndLink() {
     m_shaderprog = glCreateProgram();
     if ( 0 == m_shaderprog ) {
-        ce_error( "Error while creating shader program." );
+        osre_error( "Error while creating shader program." );
         return false;
     }
     if ( 0 != m_shaders[ SH_VertexShaderType ] ) {
@@ -122,8 +93,8 @@ bool OGLShader::createAndLink() {
         GLchar *infoLog= new GLchar[infoLogLength];
         ::memset( infoLog, 0, infoLogLength );
         glGetProgramInfoLog( m_shaderprog, infoLogLength, NULL, infoLog);
-        ce_string error( infoLog );
-        ce_debug( "Link log: " + error + "\n" );
+        String error( infoLog );
+        osre_debug( "Link log: " + error + "\n" );
         delete [] infoLog;
         result = false;
     }
@@ -146,7 +117,7 @@ void OGLShader::addAttribute( const std::string& attribute ) {
     const GLint location = glGetAttribLocation( m_shaderprog, attribute.c_str( ) );
     m_attributeList[ attribute ] = location;
     if( ErrorId == location ) {
-        ce_debug( "Cannot find attribute " + attribute + " in shader." );
+        osre_debug( "Cannot find attribute " + attribute + " in shader." );
     }
 }
 
@@ -155,7 +126,7 @@ void OGLShader::addUniform( const std::string& uniform ) {
     const GLint location = glGetUniformLocation( m_shaderprog, uniform.c_str( ) );
     m_uniformLocationList[ uniform ] = location;
     if( ErrorId == location ) {
-        ce_debug( "Cannot find uniform variable " + uniform + " in shader." );
+        osre_debug( "Cannot find uniform variable " + uniform + " in shader." );
     }
 }
 

@@ -33,12 +33,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "OGLCommon.h"
 #include "RenderCmdBuffer.h"
 
-#include <zfxce2/Infrastructure/Core/Logger.h>
-#include <zfxce2/Infrastructure/Platform/PlatformInterface.h>
-#include <zfxce2/Infrastructure/Platform/AbstractSurface.h>
-#include <zfxce2/Infrastructure/Platform/PlatformInterface.h>
-#include <zfxce2/Infrastructure/Platform/AbstractRenderContext.h>
-#include <zfxce2/RenderSystem/RenderBackend/RenderCommon.h>
+#include <osre/Common/Logger.h>
+#include <osre/Platform/PlatformInterface.h>
+#include <osre/Platform/AbstractSurface.h>
+#include <osre/Platform/PlatformInterface.h>
+#include <osre/Platform/AbstractRenderContext.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -46,17 +46,17 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace RenderBackend {
 
-using namespace ::ZFXCE2::Core;
-using namespace ::ZFXCE2::Platform;
+using namespace ::OSRE::Common;
+using namespace ::OSRE::Platform;
 using namespace ::CPPCore;
 
 //-------------------------------------------------------------------------------------------------
 static void setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTexture*> &textures ) {
-    ce_assert( nullptr != mat );
-    ce_assert( nullptr != rb );
+    assert( nullptr != mat );
+    assert( nullptr != rb );
 
     const ui32 numTextures( mat->m_numTextures );
     if( 0 == numTextures ) {
@@ -76,9 +76,9 @@ static void setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTextur
 
 //-------------------------------------------------------------------------------------------------
 static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {
-    ce_assert( nullptr != eh  );
-    ce_assert( nullptr != material );
-    ce_assert( nullptr != rb );
+    assert( nullptr != eh  );
+    assert( nullptr != material );
+    assert( nullptr != rb );
 
     switch( material->m_type ) {
         case FlatShadingMaterial:
@@ -127,9 +127,9 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
 
 //-------------------------------------------------------------------------------------------------
 static void setupParameter( Geometry *geo, OGLRenderBackend *rb, OGLRenderEventHandler *ev ) {
-    ce_assert( nullptr != geo );
-    ce_assert( nullptr != rb );
-    ce_assert( nullptr != ev );
+    assert( nullptr != geo );
+    assert( nullptr != rb );
+    assert( nullptr != ev );
 
     if( !geo->m_pParameter ) {
         return;
@@ -157,9 +157,9 @@ static void setupParameter( Geometry *geo, OGLRenderBackend *rb, OGLRenderEventH
 
 //-------------------------------------------------------------------------------------------------
 static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLShader *oglShader ) {
-    ce_assert( nullptr != geo );
-    ce_assert( nullptr != rb );
-    ce_assert( nullptr != oglShader );
+    assert( nullptr != geo );
+    assert( nullptr != rb );
+    assert( nullptr != oglShader );
 
     BufferData *pVertices = geo->m_pVertexBuffer;
     OGLBuffer *pVB = rb->createBuffer( pVertices->m_type );
@@ -193,8 +193,8 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
 
 //-------------------------------------------------------------------------------------------------
 static void setupPrimDrawCmd( const TArray<ui32> &ids, OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {
-    ce_assert( nullptr != rb );
-    ce_assert( nullptr != eh );
+    assert( nullptr != rb );
+    assert( nullptr != eh );
 
     if( ids.isEmpty() ) {
         return;
@@ -215,9 +215,9 @@ static void setupPrimDrawCmd( const TArray<ui32> &ids, OGLRenderBackend *rb, OGL
 //-------------------------------------------------------------------------------------------------
 static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *geoInstanceData, 
                                    OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {
-    ce_assert( nullptr != geoInstanceData );
-    ce_assert( nullptr != rb );
-    ce_assert( nullptr != eh );
+    assert( nullptr != geoInstanceData );
+    assert( nullptr != rb );
+    assert( nullptr != eh );
 
     if( ids.isEmpty() ) {
         return;
@@ -299,7 +299,7 @@ void OGLRenderEventHandler::setActiveShader( OGLShader *oglShader ) {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderEventHandler::enqueueRenderCmd( OGLRenderCmd *oglRenderCmd ) {
-    ce_assert( nullptr != oglRenderCmd );
+    assert( nullptr != oglRenderCmd );
 
     m_renderCmdBuffer->enqueueRenderCmd( oglRenderCmd );
 }
@@ -318,7 +318,7 @@ bool OGLRenderEventHandler::onAttached( const EventData *evData ) {
 //-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onDetached( const EventData *evData ) {
     if( m_renderCmdBuffer ) {
-        ce_error( "Renderer not destroyed." );
+        osre_error( "Renderer not destroyed." );
         delete m_renderCmdBuffer;
         m_renderCmdBuffer = nullptr;
     }
@@ -368,7 +368,7 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *evData ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLRenderEventHandler::onDestroyRenderer( const Core::EventData * ) {
+bool OGLRenderEventHandler::onDestroyRenderer( const Common::EventData * ) {
     if ( !m_pRenderCtx ) {
         return false;
     }
@@ -392,13 +392,13 @@ bool OGLRenderEventHandler::onAttachView( const EventData * ) {
 bool OGLRenderEventHandler::onAttachGeo( const EventData *evData ) {
     AttachGeoEventData *attachSceneEvData = (AttachGeoEventData*) evData;
     if( !attachSceneEvData ) {
-        ce_debug( "AttachSceneEventData-pointer is a nullptr." );
+        osre_debug( "AttachSceneEventData-pointer is a nullptr." );
         return false;
     }
     
     Geometry *geo = attachSceneEvData->m_pGeometry;
     if( !geo ) {
-        ce_debug( "Geometry-pointer is a nullptr." );
+        osre_debug( "Geometry-pointer is a nullptr." );
         return false;
     }
 
@@ -415,7 +415,7 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *evData ) {
     // setup vertex array, vertex and index buffers
     m_pVertexArray = setupBuffers( geo, m_oglBackend, m_renderCmdBuffer->getActiveShader() );
     if( !m_pVertexArray ) {
-        ce_debug( "Vertex-Array-pointer is a nullptr." );
+        osre_debug( "Vertex-Array-pointer is a nullptr." );
         return false;
     }
     m_renderCmdBuffer->setVertexArray( m_pVertexArray );
@@ -446,7 +446,7 @@ bool OGLRenderEventHandler::onClearGeo( const EventData * ) {
 
 //-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onRenderFrame( const EventData *pEventData ) {
-    ce_assert( nullptr != m_oglBackend );
+    assert( nullptr != m_oglBackend );
 
     if ( !m_pRenderCtx ) {
         return false;

@@ -27,9 +27,9 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -------------------------------------------------------------------------------------------------*/
-#include <Code/RenderSystem/RenderBackend/OGLRenderer/OGLEnum.h>
+#include <src/RenderBackend/OGLRenderer/OGLEnum.h>
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace RenderBackend {
 
 //-------------------------------------------------------------------------------------------------
