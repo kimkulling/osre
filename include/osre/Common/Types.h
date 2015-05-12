@@ -53,7 +53,7 @@ namespace OSRE {
 #   define DLL_IS_EXPORT
 #endif
 
-#ifdef ZFXCE_BUILD
+#ifdef OSRE_BUILD_EXPORT
 #  define DLL_EXPORT TAG_DLL_EXPORT
 #else
 #  define DLL_EXPORT TAG_DLL_IMPORT

@@ -1,4 +1,6 @@
-﻿  adler32.c
+﻿  Building Custom Rule D:/projects/osre/3dparty/zlib/CMakeLists.txt
+  CMake does not need to re-run because D:\projects\osre\3dparty\zlib\CMakeFiles\generate.stamp is up-to-date.
+  adler32.c
   compress.c
   crc32.c
   deflate.c
