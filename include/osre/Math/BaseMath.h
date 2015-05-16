@@ -1,6 +1,6 @@
 #pragma once
 
-#include <OSRE/Common//Types.h>
+#include <osre/Common//Types.h>
 
 namespace OSRE {
 namespace Math {
