@@ -1,0 +1,13 @@
+﻿  AbstractRenderTest.cpp
+D:\projects\osre\include\osre/Common/Object.h(26): fatal error C1083: Datei (Include) kann nicht geöffnet werden: "cppcore/Container/TArray.h": No such file or directory
+  RenderTestSuite.cpp
+d:\projects\osre\test\rendertests\src\AbstractTestFixure.h(34): fatal error C1083: Datei (Include) kann nicht geöffnet werden: "zfxce2/Types.h": No such file or directory
+  BaseTriangleRenderTest.cpp
+D:\projects\osre\include\osre/Common/Object.h(26): fatal error C1083: Datei (Include) kann nicht geöffnet werden: "cppcore/Container/TArray.h": No such file or directory
+  BaseTextureRenderTest.cpp
+D:\projects\osre\include\osre/Common/Object.h(26): fatal error C1083: Datei (Include) kann nicht geöffnet werden: "cppcore/Container/TArray.h": No such file or directory
+  GeoInstanceRenderTest.cpp
+D:\projects\osre\include\osre/Common/Object.h(26): fatal error C1083: Datei (Include) kann nicht geöffnet werden: "cppcore/Container/TArray.h": No such file or directory
+  main.cpp
+D:\projects\osre\test\RenderTests\src\main.cpp(30): fatal error C1083: Datei (Include) kann nicht geöffnet werden: "zfxce2/Infrastructure/Core/Logger.h": No such file or directory
+  Code wird generiert...
