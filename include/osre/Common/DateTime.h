@@ -28,7 +28,7 @@ namespace OSRE {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Utils::DateTime
+///	@class		::OSRE::Common::DateTime
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	A utility class to manage dates and times.

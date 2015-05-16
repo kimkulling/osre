@@ -1,23 +1,4 @@
-﻿  AbstractRenderTest.cpp
-  BaseTextureRenderTest.cpp
-d:\projects\osre\test\rendertests\src\RenderTestUtils.h(38): warning C4316: 'OSRE::RenderTest::BaseTextureRenderTest' : Das auf dem Heap zugeordnete Objekt ist möglicherweise nicht 16 ausgerichtet
-          d:\projects\osre\test\rendertests\src\RenderTestUtils.h(37): Bei der Kompilierung der  Klassen-template der AutoAttach<OSRE::RenderTest::BaseTextureRenderTest>::AutoAttach(void)-Memberfunktion
-          D:\projects\osre\test\RenderTests\src\BaseTextureRenderTest.cpp(231): Siehe Verweis auf die Instanziierung der gerade kompilierten Funktions-template "AutoAttach<OSRE::RenderTest::BaseTextureRenderTest>::AutoAttach(void)".
-          D:\projects\osre\test\RenderTests\src\BaseTextureRenderTest.cpp(231): Siehe Verweis auf die Instanziierung der gerade kompilierten Klassen-template "AutoAttach<OSRE::RenderTest::BaseTextureRenderTest>".
-  BaseTriangleRenderTest.cpp
-d:\projects\osre\test\rendertests\src\RenderTestUtils.h(38): warning C4316: 'OSRE::RenderTest::BaseTriangleRenderTest' : Das auf dem Heap zugeordnete Objekt ist möglicherweise nicht 16 ausgerichtet
-          d:\projects\osre\test\rendertests\src\RenderTestUtils.h(37): Bei der Kompilierung der  Klassen-template der AutoAttach<OSRE::RenderTest::BaseTriangleRenderTest>::AutoAttach(void)-Memberfunktion
-          D:\projects\osre\test\RenderTests\src\BaseTriangleRenderTest.cpp(126): Siehe Verweis auf die Instanziierung der gerade kompilierten Funktions-template "AutoAttach<OSRE::RenderTest::BaseTriangleRenderTest>::AutoAttach(void)".
-          D:\projects\osre\test\RenderTests\src\BaseTriangleRenderTest.cpp(126): Siehe Verweis auf die Instanziierung der gerade kompilierten Klassen-template "AutoAttach<OSRE::RenderTest::BaseTriangleRenderTest>".
-  GeoInstanceRenderTest.cpp
-d:\projects\osre\test\rendertests\src\RenderTestUtils.h(38): warning C4316: 'OSRE::RenderTest::GeoInstanceRenderTest' : Das auf dem Heap zugeordnete Objekt ist möglicherweise nicht 16 ausgerichtet
-          d:\projects\osre\test\rendertests\src\RenderTestUtils.h(37): Bei der Kompilierung der  Klassen-template der AutoAttach<OSRE::RenderTest::GeoInstanceRenderTest>::AutoAttach(void)-Memberfunktion
-          D:\projects\osre\test\RenderTests\src\GeoInstanceRenderTest.cpp(163): Siehe Verweis auf die Instanziierung der gerade kompilierten Funktions-template "AutoAttach<OSRE::RenderTest::GeoInstanceRenderTest>::AutoAttach(void)".
-          D:\projects\osre\test\RenderTests\src\GeoInstanceRenderTest.cpp(163): Siehe Verweis auf die Instanziierung der gerade kompilierten Klassen-template "AutoAttach<OSRE::RenderTest::GeoInstanceRenderTest>".
-  RenderTestSuite.cpp
-  main.cpp
-  Code wird generiert...
-     Bibliothek "D:/projects/osre/lib/Debug/rendertest.lib" und Objekt "D:/projects/osre/lib/Debug/rendertest.exp" werden erstellt.
+﻿     Bibliothek "D:/projects/osre/lib/Debug/rendertest.lib" und Objekt "D:/projects/osre/lib/Debug/rendertest.exp" werden erstellt.
 AbstractRenderTest.obj : error LNK2019: Verweis auf nicht aufgelöstes externes Symbol ""public: __thiscall OSRE::IO::Uri::Uri(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (??0Uri@IO@OSRE@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)" in Funktion ""public: bool __thiscall OSRE::RenderTest::AbstractRenderTest::updateSnaptShot(void)" (?updateSnaptShot@AbstractRenderTest@RenderTest@OSRE@@QAE_NXZ)".
 AbstractRenderTest.obj : error LNK2019: Verweis auf nicht aufgelöstes externes Symbol ""public: __thiscall OSRE::IO::Uri::~Uri(void)" (??1Uri@IO@OSRE@@QAE@XZ)" in Funktion ""public: bool __thiscall OSRE::RenderTest::AbstractRenderTest::updateSnaptShot(void)" (?updateSnaptShot@AbstractRenderTest@RenderTest@OSRE@@QAE_NXZ)".
 AbstractRenderTest.obj : error LNK2019: Verweis auf nicht aufgelöstes externes Symbol ""public: class OSRE::IO::AbstractFileSystem * __thiscall OSRE::IO::IOService::getFileSystem(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)const " (?getFileSystem@IOService@IO@OSRE@@QBEPAVAbstractFileSystem@23@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)" in Funktion ""public: bool __thiscall OSRE::RenderTest::AbstractRenderTest::updateSnaptShot(void)" (?updateSnaptShot@AbstractRenderTest@RenderTest@OSRE@@QAE_NXZ)".

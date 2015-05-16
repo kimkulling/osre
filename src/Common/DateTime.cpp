@@ -31,7 +31,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <ctime>
 
-#include <Windows.h>
+#ifdef _WIN32
+#  include <Windows.h>
+#endif // _WIN32
 
 namespace OSRE {
     namespace Common {
