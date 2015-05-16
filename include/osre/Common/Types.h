@@ -36,11 +36,11 @@ namespace OSRE {
 #endif
 
 #ifdef OSRE_WINDOWS
-#  define TAG_DLL_EXPORT __declspec(dllexport)
-#  define TAG_DLL_IMPORT __declspec(dllimport )
+#  define OSRE_DLL_EXPORT __declspec(dllexport)
+#  define OSRE_DLL_IMPORT __declspec(dllimport )
 #else
-#  define TAG_DLL_EXPORT
-#  define TAG_DLL_IMPORT
+#  define OSRE_DLL_EXPORT
+#  define OSRE_DLL_IMPORT
 #endif 
 
 #ifdef OSRE_WINDOWS
