@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
-    namespace Common {
+namespace Common {
 
 //--------------------------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Common::ArgumentParser
@@ -40,7 +40,7 @@ namespace OSRE {
 ///	arg<numParameter>
 ///	@endcode
 //--------------------------------------------------------------------------------------------------------------------
-class ArgumentParser {
+class OSRE_DLL_EXPORT ArgumentParser {
 public:
     ///	@brief	The class constructor with arguments and the requested argument support.
     ///	@param	iArgc	The number of incoming arguments.

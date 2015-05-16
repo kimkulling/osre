@@ -36,7 +36,7 @@ namespace Common {
 /// A server provides services like a render interface for instance. To access a service you have 
 /// to open it at first and close it and the end. 
 //-------------------------------------------------------------------------------------------------
-class AbstractService : public Object {
+class OSRE_DLL_EXPORT AbstractService : public Object {
 public:
     ///	@brief	The class destructor, virtual.
     virtual ~AbstractService();

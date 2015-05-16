@@ -35,7 +35,7 @@ namespace Common {
 ///	to release it call release. Objects with a reference count of 0 will be destroyed.
 ///	You can assign an object name to the instance. 
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Object {
+class OSRE_DLL_EXPORT Object {
 public:
     ///	@brief	The class destructor, virtual.
     virtual ~Object();

@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
-class StringUtils {
+class OSRE_DLL_EXPORT StringUtils {
 public:
     static HashId hashName( char const *pIdentStr );
 };

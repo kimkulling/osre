@@ -37,7 +37,7 @@ const f32 COL_SHIFT = 255.0f;
 ///
 ///	The value is stored in one 32 bit DWORD ( for the Windows platform ).
 //-------------------------------------------------------------------------------------------------
-class ColorRGBA {
+class OSRE_DLL_EXPORT ColorRGBA {
 public:
     ///	@brief	The default class constructor.
     ColorRGBA();

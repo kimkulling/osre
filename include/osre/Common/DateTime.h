@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Types.h>
 
 namespace OSRE {
-    namespace Common {
+namespace Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::ZFXCE2::Utils::DateTime
@@ -33,7 +33,7 @@ namespace OSRE {
 ///
 ///	@brief	A utility class to manage dates and times.
 //-------------------------------------------------------------------------------------------------
-class DateTime {
+class OSRE_DLL_EXPORT DateTime {
 public:
     ///	@brief	The class default constructor.
     DateTime();

@@ -40,7 +40,7 @@ namespace Common {
 ///	You can also register a listener to a bundle of events. The event trigger will use a simple
 ///	functor as a listener implementation. 
 //-------------------------------------------------------------------------------------------------
-class EventTriggerer {
+class OSRE_DLL_EXPORT EventTriggerer {
 public:
     ///	@brief	The default class constructor.
     EventTriggerer();

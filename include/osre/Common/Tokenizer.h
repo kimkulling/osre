@@ -45,7 +45,7 @@ namespace Common {
 ///	@endcode
 ///	This will return the strings usr, bin and ls.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Tokenizer {
+class OSRE_DLL_EXPORT Tokenizer {
 public:
     ///	@brief	The class default constructor.
     Tokenizer();

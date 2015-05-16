@@ -32,7 +32,7 @@ namespace Common {
 ///
 ///	@brief  The abstract class describes the en- and decoding algorithm for a given file format.
 //-------------------------------------------------------------------------------------------------
-class AbstractCodec {
+class OSRE_DLL_EXPORT AbstractCodec {
 public:
     /// @brief  The class destructor, virtual
     virtual ~AbstractCodec();

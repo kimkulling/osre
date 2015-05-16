@@ -23,9 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/Types.h>
-
 #include <cppcore/Container/TArray.h>
-
 #include <sstream>
 
 namespace OSRE {
@@ -39,7 +37,7 @@ namespace Common {
 ///	or a log window in a GUI application. Implement the write message and attach a valid instance 
 ///	to the logger itself to use your own implementation.
 //-------------------------------------------------------------------------------------------------
-class AbstractLogStream {
+class OSRE_DLL_EXPORT AbstractLogStream {
 public:
     ///	@brief	The class destructor, virtual.
     virtual ~AbstractLogStream();
@@ -79,7 +77,7 @@ private:
 ///	supported modes are normal ( no debug and info messages ), verbose ( all messages will be
 ///	logged ) and debug ( the debug messages will be logged as well, be careful with this option ).
 //-------------------------------------------------------------------------------------------------
-class Logger {
+class OSRE_DLL_EXPORT Logger {
 public:
     ///	@enum	Severity
     ///	@brief	Describes the 

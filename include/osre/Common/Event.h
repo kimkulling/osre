@@ -28,7 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cassert>
 
 namespace OSRE {
-    namespace Common {
+namespace Common {
 
 class EventTriggerer;
 class Event;
@@ -50,7 +50,7 @@ class EventData;
 ///	@brief	The base class of zfxce2-events, describes type of an event. To create your own events
 ///	it is possible to build derives from the base class.
 //-------------------------------------------------------------------------------------------------
-class Event {
+class OSRE_DLL_EXPORT Event {
     friend class EventTriggerer;
 
 public:

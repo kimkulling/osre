@@ -39,7 +39,7 @@ class EventData;
 /// An event-handler is the way a user can set his own behavior of a task. Event sent to a task
 /// will be marshaled to all assigned event handlers, which is a derived class of IEventHandler.
 //-------------------------------------------------------------------------------------------------
-class AbstractEventHandler {
+class OSRE_DLL_EXPORT AbstractEventHandler {
 public:
     ///	@brief	The class destructor, virtual.
     virtual ~AbstractEventHandler();
