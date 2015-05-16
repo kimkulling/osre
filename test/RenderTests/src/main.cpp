@@ -52,17 +52,17 @@ int main( int argc, char *argv[] ) {
         mediaPath = argParser.getArgument( "media" );
     }
 
-    RenderTestSuite *pRenderTestSuite = RenderTestSuite::create( "tests", renderAPI );
+    RenderTestSuite *rtSuite = RenderTestSuite::create( "tests", renderAPI );
     RenderTestSuite::getInstance()->setRenderAPI( renderAPI );
     RenderTestSuite::getInstance( )->setMediaPath( mediaPath );
     
-    AbstractTimer *pTimer( pRenderTestSuite->getTimer() );
+    AbstractTimer *pTimer( rtSuite->getTimer() );
     if( !pTimer ) {
         return 1;
     }
 
-    while( pRenderTestSuite->update( pTimer->getTimeDiff( ) ) ) {
-        pRenderTestSuite->startTests();
+    while( rtSuite->update( pTimer->getTimeDiff( ) ) ) {
+        rtSuite->startTests();
     }
 
     RenderTestSuite::kill();
