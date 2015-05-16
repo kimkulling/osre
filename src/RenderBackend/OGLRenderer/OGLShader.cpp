@@ -145,4 +145,4 @@ GLint OGLShader::operator() ( const std::string &uniform ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderBackend
-} // Namespace ZFXCE2
+} // Namespace OSRE

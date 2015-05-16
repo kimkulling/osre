@@ -93,4 +93,4 @@ bool AbstractRenderContext::update() {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

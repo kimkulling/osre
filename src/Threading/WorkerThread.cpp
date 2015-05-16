@@ -135,4 +135,4 @@ i32 WorkerThread::run() {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
-} // Namespace ZFXCE2
+} // Namespace OSRE

@@ -321,4 +321,4 @@ SystemTask *SystemTask::create( const String &rTaskName ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
-} // Namespace ZFXCE2
+} // Namespace OSRE

@@ -89,4 +89,4 @@ SDL_Window *SDL2Surface::getSDLSurface( ) const {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

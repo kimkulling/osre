@@ -100,5 +100,5 @@ bool AbstractEventHandler::detach( const EventData *eventData ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Common
-} // Namespace ZFXCE2
+} // Namespace OSRE
 

@@ -146,4 +146,4 @@ AbstractThread::~AbstractThread() {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

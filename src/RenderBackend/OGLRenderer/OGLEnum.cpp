@@ -132,4 +132,4 @@ GLenum OGLEnum::getGLTextureParameterName( TextureParameterName name ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderBackend
-} // Namespace ZFXCE2
+} // Namespace OSRE

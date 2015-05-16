@@ -249,4 +249,4 @@ bool PlatformInterface::setupGfx( SurfaceProperties *props, bool polls ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

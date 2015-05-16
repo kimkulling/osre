@@ -95,4 +95,4 @@ void RenderBackendService::sendEvent( const Event *pEvent, const EventData *pEve
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderBackend
-} // Namespace ZFXCE2
+} // Namespace OSRE

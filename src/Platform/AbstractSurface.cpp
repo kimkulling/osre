@@ -93,4 +93,4 @@ SurfaceProperties *AbstractSurface::getProperties( ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

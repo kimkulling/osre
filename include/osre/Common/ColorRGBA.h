@@ -199,4 +199,4 @@ ColorRGBA &ColorRGBA::operator = ( const ColorRGBA &other ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Common
-} // Namespace ZFXCE2
+} // Namespace OSRE

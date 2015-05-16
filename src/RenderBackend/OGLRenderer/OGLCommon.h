@@ -202,6 +202,6 @@ struct DrawPrimitivesCmdData {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace RendeBackend
-} // Namespace ZFXCE2
+} // Namespace OSRE
 
 #endif // ZFXCE2_RS_RENDERBACKEND_OGLCOMMON_H_INC

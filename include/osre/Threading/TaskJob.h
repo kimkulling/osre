@@ -120,4 +120,4 @@ void TaskJob::clear() {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
-} // Namespace ZFXCE2
+} // Namespace OSRE

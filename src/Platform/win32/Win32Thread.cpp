@@ -286,4 +286,4 @@ void Win32Thread::setThreadName( const c8 *pName ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
-} // Namespace ZFXCE2
+} // Namespace OSRE

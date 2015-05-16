@@ -298,4 +298,4 @@ typedef Functor<void, const Event&, const EventData*> ceEventFunctor;
 //--------------------------------------------------------------------------------------------------------------------
 
 } // Namespace Common
-} // Namespace ZFXCE2
+} // Namespace OSRE

@@ -140,4 +140,4 @@ bool TaskScheduler::run( AsyncTask *pTask ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
-} // Namespace ZFXCE2
+} // Namespace OSRE

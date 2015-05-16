@@ -225,4 +225,4 @@ bool RenderCmdBuffer::onSetRenderTargetCmd( SetRenderTargetCmdData *pData ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderBackend
-} // Namespace ZFXCE2
+} // Namespace OSRE

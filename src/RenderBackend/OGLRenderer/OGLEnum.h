@@ -35,4 +35,4 @@ private:
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderBackend
-} // Namespace ZFXCE2
+} // Namespace OSRE

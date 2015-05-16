@@ -54,4 +54,4 @@ bool SDL2Initializer::release() {
 }
 
 } // Namespace Threading
-} // Namespace ZFXCE2
+} // Namespace OSRE

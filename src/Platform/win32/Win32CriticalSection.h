@@ -88,4 +88,4 @@ void Win32CriticalSection::leave() {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

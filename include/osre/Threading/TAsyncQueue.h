@@ -229,4 +229,4 @@ void TAsyncQueue<T>::clear() {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
-} // Namespace ZFXCE2
+} // Namespace OSRE

@@ -149,5 +149,5 @@ EmptyTask *EmptyTask::create() {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
-} // Namespace ZFXCE2
+} // Namespace OSRE
 

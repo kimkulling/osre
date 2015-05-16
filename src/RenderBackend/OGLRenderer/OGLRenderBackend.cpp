@@ -816,4 +816,4 @@ ui32 OGLRenderBackend::getVertexSize( VertexType vertextype ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderBackend
-} // Namespace ZFXCE2
+} // Namespace OSRE

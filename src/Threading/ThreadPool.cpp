@@ -131,4 +131,4 @@ void ThreadPool::releaseThread( WorkerThread *pThread ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
-} // Namespace ZFXCE2
+} // Namespace OSRE

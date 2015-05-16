@@ -195,4 +195,4 @@ bool Win32Surface::onUpdateProperies() {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

@@ -87,4 +87,4 @@ void SDL2CriticalSection::leave() {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

@@ -114,4 +114,4 @@ void AbstractPlatformEventHandler::switchEventDataList() {
 //-------------------------------------------------------------------------------------------------
 
 } // namespace Platform
-} // namespace ZFXCE2
+} // Namespace OSRE

@@ -110,4 +110,4 @@ AbstractTask *AbstractTask::getChildTask( ui32 idx ) const {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
-} // Namespace ZFXCE2
+} // Namespace OSRE

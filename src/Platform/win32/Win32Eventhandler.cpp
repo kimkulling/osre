@@ -368,4 +368,4 @@ void Win32Eventhandler::unregisterEventListener( const CPPCore::TArray<const Com
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

@@ -67,4 +67,4 @@ struct PlatformPluginFactory {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

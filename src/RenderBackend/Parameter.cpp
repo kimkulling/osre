@@ -93,4 +93,4 @@ Parameter *Parameter::create( const String &name, ParameterType type, ui32 array
 }
 
 } // Namespace RenderBackend
-} // Namespace ZFXCE2
+} // Namespace OSRE

@@ -53,12 +53,6 @@ namespace OSRE {
 #   define DLL_IS_EXPORT
 #endif
 
-#ifdef OSRE_BUILD_EXPORT
-#  define DLL_EXPORT TAG_DLL_EXPORT
-#else
-#  define DLL_EXPORT TAG_DLL_IMPORT
-#endif
-
 #if _MSC_VER >= 1200
 #  pragma warning( disable : 4006 ) // Ignore double defined symbols warning
 #  pragma warning( disable : 4786 )
@@ -66,6 +60,7 @@ namespace OSRE {
 #  pragma warning( disable : 4275 )
 #  pragma warning( disable : 4127 )	// Conditional expression is constant
 #  pragma warning( disable : 4100 )
+#  pragma warning( disable : 4201 ) // No standard extension
 #endif
 
         // Declares thread-local data

@@ -72,4 +72,4 @@ void SDL2ThreadEvent::waitForTimeout( ui32 ms ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
-} // Namespace ZFXCE2
+} // Namespace OSRE

@@ -63,4 +63,4 @@ AbstractAtomic *SDL2ThreadFactory::createAtomic( i32 val ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

@@ -58,4 +58,4 @@ AbstractThreadEvent::~AbstractThreadEvent( ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

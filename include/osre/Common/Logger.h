@@ -227,4 +227,4 @@ const String DomainTag = "";
 //-------------------------------------------------------------------------------------------------
 #define osre_fatal( message ) ::OSRE::Common::fatalPrint( __FILE__, __LINE__, message, DomainTag );
 
-} // Namespace ZFXCE2
+} // Namespace OSRE

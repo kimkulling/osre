@@ -252,4 +252,4 @@ bool Win32RenderContext::onActivate( ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

@@ -479,4 +479,4 @@ bool OGLRenderEventHandler::onUpdateParameter( const EventData *pEventData ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderBackend
-} // Namespace ZFXCE2
+} // Namespace OSRE

@@ -8,6 +8,8 @@ INCLUDE_DIRECTORIES(
     ../3dparty/cppcore/include
     ../3dparty/glew/include
     ../3dparty/glm/
+    ../3dparty/unzip/
+    ../3dparty/zlib/
 )
 
 IF( WIN32 )
@@ -36,6 +38,7 @@ SET( common_inc
     ${HEADER_PATH}/Common/TObjPtr.h
     ${HEADER_PATH}/Common/Tokenizer.h
     ${HEADER_PATH}/Common/Types.h
+    ${HEADER_PATH}/Common/TArea.h
 )
     
 SET( common_src
@@ -47,6 +50,42 @@ SET( common_src
     Common/Logger.cpp
     Common/Object.cpp
     Common/Tokenizer.cpp
+)
+
+#==============================================================================
+# IO
+#==============================================================================
+SET( io_src
+    IO/FileStream.cpp
+    IO/FileStream.h
+        IO/IOService.cpp
+    IO/LocaleFileSystem.cpp
+    IO/LocaleFileSystem.h
+    IO/Stream.cpp
+    IO/Uri.cpp
+    IO/ZipFileSystem.cpp
+    IO/ZipFileSystem.h
+    IO/ZipFileStream.cpp
+    IO/ZipFileStream.h
+    IO/IOSystemInfo.cpp
+)
+SET( io_inc
+    ${HEADER_PATH}/IO/Stream.h
+    ${HEADER_PATH}/IO/AbstractFileSystem.h
+        ${HEADER_PATH}/IO/IOService.h
+    ${HEADER_PATH}/IO/IOSystemInfo.h
+    ${HEADER_PATH}/IO/Uri.h
+)
+
+#==============================================================================
+# Math
+#==============================================================================
+SET( math_src
+    Math/BaseMath.cpp
+)
+SET( math_inc
+    ${HEADER_PATH}/Math/BaseMath.h
+    ${HEADER_PATH}/Math/TVector.h
 )
 
 #==============================================================================
@@ -143,6 +182,22 @@ SET ( properties_src
 )
 
 #==============================================================================
+# Scene
+#==============================================================================
+SET( scene_src
+    Scene/GeometryBuilder.cpp
+    Scene/Node.cpp
+    Scene/Stage.cpp
+    Scene/TrackBall.cpp
+)
+SET( scene_inc
+    ${HEADER_PATH}/Scene/GeometryBuilder.h
+    ${HEADER_PATH}/Scene/Node.h
+    ${HEADER_PATH}/Scene/Stage.h
+    ${HEADER_PATH}/Scene/TrackBall.h
+)
+
+#==============================================================================
 # Threading
 #==============================================================================
 SET( threading_src
@@ -214,7 +269,7 @@ SOURCE_GROUP( Properties          FILES ${properties_src} )
 SOURCE_GROUP( RenderBackend       FILES ${renderbackend_src} )
 SOURCE_GROUP( RenderBackend\\OGLRenderer       FILES ${renderbackend_oglrenderer_src} )
 SOURCE_GROUP( Resources           FILES ${resources_src} )
-SOURCE_GROUP( Scripting           FILES ${scripting_src} )
+SOURCE_GROUP( Scene               FILES ${scene_src} )
 SOURCE_GROUP( Threading           FILES ${threading_src} )
 SOURCE_GROUP( Include\\Common     FILES ${common_inc} )
 SOURCE_GROUP( Include\\Components FILES ${components_inc} )
@@ -227,7 +282,7 @@ SOURCE_GROUP( Include\\Memory     FILES ${memory_inc} )
 SOURCE_GROUP( Include\\Properties FILES ${properties_inc} )
 SOURCE_GROUP( Include\\Platform   FILES ${platform_inc} )
 SOURCE_GROUP( Include\\Resources  FILES ${resources_inc} )
-SOURCE_GROUP( Include\\Scripting     FILES ${scripting_inc} )
+SOURCE_GROUP( Include\\Scene      FILES ${scene_inc} )
 SOURCE_GROUP( Include\\Thread        FILES ${threading_inc} )
 SOURCE_GROUP( Include\\RenderBackend FILES ${renderbackend_inc} )
 
@@ -248,7 +303,7 @@ ADD_LIBRARY( osre SHARED
     ${properties_inc}
     ${platform_inc}
     ${resources_inc}
-    ${scripting_inc}
+    ${scene_inc}
     ${threading_inc}
     ${renderbackend_inc}
     ${math_inc}
@@ -270,7 +325,7 @@ ADD_LIBRARY( osre SHARED
     ${resources_src}
     ${renderbackend_src}
         ${renderbackend_oglrenderer_src}
-    ${scripting_src}
+    ${scene_src}
     ${threading_src}
         ${threading_impl_src}
 )

@@ -242,4 +242,4 @@ void SDL2Thread::setState( ThreadState newState ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

@@ -68,4 +68,4 @@ d32 Win32Timer::getTimeDiff() {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace System
-} // Namespace ZFXCE2
+} // Namespace OSRE

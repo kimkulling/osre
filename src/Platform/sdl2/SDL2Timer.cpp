@@ -62,4 +62,4 @@ d32 SDL2Timer::getTimeDiff( ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

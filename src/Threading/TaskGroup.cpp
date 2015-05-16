@@ -89,4 +89,4 @@ void TaskGroup::enqueue( AsyncTask *pTask ) {
 }
 
 } // Namespace Threading
-} // Namespace ZFXCE2
+} // Namespace OSRE

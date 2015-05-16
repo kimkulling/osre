@@ -74,4 +74,4 @@ HANDLE Win32ThreadEvent::getHandle() const {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace PLatform
-} // Namespace ZFXCE2
+} // Namespace OSRE

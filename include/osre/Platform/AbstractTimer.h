@@ -89,4 +89,4 @@ d32 AbstractTimer::getRequestedTimeStep() const {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

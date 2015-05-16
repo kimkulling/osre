@@ -52,4 +52,4 @@ AbstractThreadFactory *AbstractThreadFactory::getInstance() {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

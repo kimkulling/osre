@@ -174,4 +174,4 @@ AbstractThreadFactory *PlatformPluginFactory::createThreadFactory( PluginType ty
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE

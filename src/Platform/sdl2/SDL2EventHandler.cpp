@@ -225,4 +225,4 @@ bool SDL2EventHandler::onDetached( const Common::EventData *pEventData ) {
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
-} // Namespace ZFXCE2
+} // Namespace OSRE
