@@ -37,7 +37,7 @@ class AbstractThreadEvent;
 
 ///	Threads are OS-specific.
 //-------------------------------------------------------------------------------------------------
-class AbstractThread {
+class OSRE_EXPORT AbstractThread {
 public:
     ///	The function pointer for a user-specific thread-function.
     typedef ui32 (*threadfunc) ( void * );

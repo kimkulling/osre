@@ -33,7 +33,7 @@ namespace System {
 ///
 ///	@brief	This class offers some system-specific functions.
 //-------------------------------------------------------------------------------------------------
-class SystemUtils {
+class OSRE_EXPORT SystemUtils {
 public:
 	///	@brief	The class default constructor.
 	SystemUtils();

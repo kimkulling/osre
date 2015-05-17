@@ -15,7 +15,7 @@ enum ParameterType {
     PT_Mat4Array
 };
 
-struct ParamDataBlob {
+struct OSRE_EXPORT ParamDataBlob {
     void *m_data;
     ui32  m_size;
 
@@ -23,7 +23,7 @@ struct ParamDataBlob {
     static ParamDataBlob *create( ParameterType type, ui32 arraySize );
 };
 
-struct Parameter {
+struct OSRE_EXPORT Parameter {
     String     m_name;
     ParameterType m_type;
     ui32          m_numItems;

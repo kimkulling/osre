@@ -11,7 +11,7 @@ namespace IO {
 ///
 ///	@brief This helper class returns IO-specific system informations.
 //-------------------------------------------------------------------------------------------------
-class IOSystemInfo {
+class OSRE_EXPORT IOSystemInfo {
 public:
 	///	@brief	The class constructor.
 	IOSystemInfo();

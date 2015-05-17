@@ -41,7 +41,7 @@ class WorkerThread;
 ///
 ///	@brief  This task can be used to implement a async. handled task.
 //-------------------------------------------------------------------------------------------------
-class AsyncTask : public AbstractTask {
+class OSRE_EXPORT AsyncTask : public AbstractTask {
 public:
     ///	@brief	The class constructor with the name of the task
     ///	@param	taskName	[in] The name for the task.

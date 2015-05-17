@@ -46,7 +46,7 @@ enum TaskGroupState {
 ///
 ///	@brief 
 //-------------------------------------------------------------------------------------------------
-class TaskGroup {
+class OSRE_EXPORT TaskGroup {
 public:
 	TaskGroup( const String &groupName,  AsyncTask *pTask );
 	~TaskGroup();

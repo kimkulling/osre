@@ -37,7 +37,7 @@ namespace Common {
 ///	or a log window in a GUI application. Implement the write message and attach a valid instance 
 ///	to the logger itself to use your own implementation.
 //-------------------------------------------------------------------------------------------------
-class OSRE_DLL_EXPORT AbstractLogStream {
+class OSRE_EXPORT AbstractLogStream {
 public:
     ///	@brief	The class destructor, virtual.
     virtual ~AbstractLogStream();
@@ -77,7 +77,7 @@ private:
 ///	supported modes are normal ( no debug and info messages ), verbose ( all messages will be
 ///	logged ) and debug ( the debug messages will be logged as well, be careful with this option ).
 //-------------------------------------------------------------------------------------------------
-class OSRE_DLL_EXPORT Logger {
+class OSRE_EXPORT Logger {
 public:
     ///	@enum	Severity
     ///	@brief	Describes the 
@@ -165,23 +165,23 @@ private:
 };
 
 //-------------------------------------------------------------------------------------------------
-void debugPrint( const String &file, int line, const String &message,
+void OSRE_EXPORT debugPrint( const String &file, int line, const String &message,
     const String &domain = "" );
 
 //-------------------------------------------------------------------------------------------------
-void logPrint( const String &file, int line, const String &message,
+void OSRE_EXPORT logPrint( const String &file, int line, const String &message,
     const String &domain = "" );
 
 //-------------------------------------------------------------------------------------------------
-void warnPrint( const String &file, int line, const String &message,
+void OSRE_EXPORT warnPrint( const String &file, int line, const String &message,
     const String &domain = "" );
 
 //-------------------------------------------------------------------------------------------------
-void errorPrint( const String &file, int line, const String &message,
+void OSRE_EXPORT errorPrint( const String &file, int line, const String &message,
     const String &domain = "" );
 
 //-------------------------------------------------------------------------------------------------
-void fatalPrint( const String &file, int line, const String &message,
+void OSRE_EXPORT fatalPrint( const String &file, int line, const String &message,
     const String &domain = "" );
 
 //-------------------------------------------------------------------------------------------------

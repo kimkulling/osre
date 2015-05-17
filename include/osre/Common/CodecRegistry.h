@@ -36,7 +36,7 @@ class AbstractCodec;
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_DLL_EXPORT CodecRegistry {
+class OSRE_EXPORT CodecRegistry {
 public:
     static void registerCodec( AbstractCodec *newCodec );
     static AbstractCodec *getRegistryByExt( const String &ext );

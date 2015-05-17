@@ -33,7 +33,7 @@ namespace Platform {
 ///
 ///	@brief  This is the abstract base class for all atomic implementations.
 //-------------------------------------------------------------------------------------------------
-class AbstractAtomic {
+class OSRE_EXPORT AbstractAtomic {
 public:
     /// @brief  The class destructor, virtual.
     virtual ~AbstractAtomic();

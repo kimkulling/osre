@@ -40,7 +40,7 @@ namespace Common {
 ///	arg<numParameter>
 ///	@endcode
 //--------------------------------------------------------------------------------------------------------------------
-class OSRE_DLL_EXPORT ArgumentParser {
+class OSRE_EXPORT ArgumentParser {
 public:
     ///	@brief	The class constructor with arguments and the requested argument support.
     ///	@param	iArgc	The number of incoming arguments.

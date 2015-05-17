@@ -41,7 +41,7 @@ namespace Threading {
 ///	@brief This class implements a simple container for events as ids and the assigned data, which 
 ///	are implemented as subclasses from the Common::EventData class ( @see Common::EventData ).
 //-------------------------------------------------------------------------------------------------
-class TaskJob {
+class OSRE_EXPORT TaskJob {
 public:
     ///	@brief	The class constructor with the event and the event data.
     ///	@param	pEvent		[in] A pointer showing to the event.

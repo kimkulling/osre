@@ -62,7 +62,7 @@ struct SurfaceProperties;
 ///	You can use it to get notified, when you want to react onto a mouse click for instance. Just
 ///	overload the method onOSEvent with your own code.
 //-------------------------------------------------------------------------------------------------
-class OSEventListener : public Common::Object {
+class OSRE_EXPORT OSEventListener : public Common::Object {
 public:
     ///	@brief	The class destructor, virtual.
     virtual ~OSEventListener() {
@@ -97,7 +97,7 @@ DECL_EVENT( AppFocusEvent );
 ///
 ///	@brief	This class stored keyboard events.
 //-------------------------------------------------------------------------------------------------
-class KeyboardButtonEventData : public Common::EventData {
+class OSRE_EXPORT KeyboardButtonEventData : public Common::EventData {
 public:
     ///	@brief	The class constructor.
     ///	@param	down	[in] true, if button is pressed, false if button is releases.
@@ -121,7 +121,7 @@ public:
 ///
 ///	@brief	This class stores mouse button events.
 //-------------------------------------------------------------------------------------------------
-class MouseButtonEventData : public Common::EventData {
+class OSRE_EXPORT MouseButtonEventData : public Common::EventData {
 public:
     enum ButtonType {
         LeftButton = 0,
@@ -156,7 +156,7 @@ public:
 ///
 ///	@brief	This class stored mouse-move specific event data.
 //-------------------------------------------------------------------------------------------------
-class MouseMoveEventData : public Common::EventData {
+class OSRE_EXPORT MouseMoveEventData : public Common::EventData {
 public:
     ///	@brief	The class constructor.
     ///	@param	c		[in] The event trigger sender.
@@ -178,7 +178,7 @@ public:
 ///
 ///	@brief  This class encapsulates platform-specific details.
 //-------------------------------------------------------------------------------------------------
-class PlatformInterface : public Common::AbstractService {
+class OSRE_EXPORT PlatformInterface : public Common::AbstractService {
 public:
     AbstractSurface *getRootSurface() const;
     static PlatformInterface *create( const Properties::ConfigurationMap *pConfiguration );

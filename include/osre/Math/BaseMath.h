@@ -1,11 +1,11 @@
 #pragma once
 
-#include <osre/Common//Types.h>
+#include <osre/Common/Types.h>
 
 namespace OSRE {
 namespace Math {
 
-struct Quatf {
+ struct OSRE_EXPORT Quatf {
     float m_x, m_y, m_z, m_w;
 
     Quatf() 
@@ -27,7 +27,7 @@ struct Quatf {
 ///
 ///	@brief	This class offer base informations about the mathematical subsystem like precisions.
 //-------------------------------------------------------------------------------------------------
-class BaseMath {
+class OSRE_EXPORT BaseMath {
 public:
     ///	@brief	The default class constructor.
     BaseMath();

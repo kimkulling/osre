@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Types.h>
 
 namespace OSRE {
-    namespace Platform {
+namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
 ///	@struct		::ZFXCE2::Platform::SurfaceProperties
@@ -52,7 +52,7 @@ struct SurfaceProperties {
 ///
 ///	@brief  This abstract class declares the interface for a render surface.
 //-------------------------------------------------------------------------------------------------
-class AbstractSurface {
+class OSRE_EXPORT AbstractSurface {
 public:
     enum SurfaceFlagType {
         SF_PropertiesClean = 0,

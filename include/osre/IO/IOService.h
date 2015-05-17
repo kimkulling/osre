@@ -12,13 +12,18 @@ class AbstractFileSystem;
 class Uri;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::IO::IOServer
+///	@class		::OSRE::IO::IOService
 ///	@ingroup	Infrastructure
 ///
-///	@brief	This class implements the io-server, which offers access to all mounted file systems.
+///	@brief	This class implements the IO-server, which offers access to all mounted file systems.
 //-------------------------------------------------------------------------------------------------
-class IOService : public Common::AbstractService {
-    DECLARE_SINGLETON( IOService )
+class OSRE_EXPORT IOService : public Common::AbstractService {
+private:                                                                           
+    static IOService * s_instance;                                                
+public:
+    static IOService * getInstance() { return s_instance; }
+    static void   setInstance( IOService *pInstance ) { s_instance = pInstance; }
+//    DECLARE_SINGLETON( IOService )
 
 public:
     ///	@brief	The default class constructor.

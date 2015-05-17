@@ -43,7 +43,7 @@ DECL_EVENT( OnUpdateParameterEvent );
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class CreateRendererEventData : public Common::EventData {
+class OSRE_EXPORT CreateRendererEventData : public Common::EventData {
 public:
     CreateRendererEventData( Platform::AbstractSurface *pSurface )
     : EventData( OnCreateRendererEvent, nullptr )
@@ -60,7 +60,7 @@ public:
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class AttachViewEventData : public Common::EventData {
+class OSRE_EXPORT AttachViewEventData : public Common::EventData {
 public:
     AttachViewEventData()
     : EventData( OnAttachViewEvent, nullptr ) {
@@ -74,7 +74,7 @@ public:
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class AttachGeoEventData : public Common::EventData {
+class OSRE_EXPORT AttachGeoEventData : public Common::EventData {
 public:
     AttachGeoEventData()
     : EventData( OnAttachSceneEvent, nullptr )
@@ -97,7 +97,7 @@ public:
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class UpdateParameterEventData : public Common::EventData {
+class OSRE_EXPORT UpdateParameterEventData : public Common::EventData {
 public:
     UpdateParameterEventData()
     : EventData( OnUpdateParameterEvent, nullptr )
@@ -120,7 +120,7 @@ public:
 /// in its separate render system task. The render back-end handling is implemented by a 
 /// API-specific render event handler.
 //-------------------------------------------------------------------------------------------------
-class RenderBackendService : public Common::AbstractService {
+class OSRE_EXPORT RenderBackendService : public Common::AbstractService {
 public:
     /// @brief  The class constructor.
     RenderBackendService();

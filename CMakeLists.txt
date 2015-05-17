@@ -6,7 +6,6 @@ SET ( OSRE_VERSION_PATCH 0 )
 SET ( OSRE_VERSION ${OSRE_VERSION_MAJOR}.${OSRE_VERSION_MINOR}.${OSRE_VERSION_PATCH} )
 SET ( PROJECT_VERSION "${OSRE_VERSION}" )
 
-add_definitions( -DOSRE_BUILD_EXPORT )
 
 # Cache these to allow the user to override them manually.
 SET( LIB_INSTALL_DIR "lib" CACHE PATH

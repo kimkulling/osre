@@ -1,6 +1,8 @@
 #include "AbstractRenderTest.h"
 
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/IO/IOService.h>
+#include <osre/IO/Stream.h>
 #include <cassert>
 
 namespace OSRE {

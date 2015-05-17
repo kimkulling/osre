@@ -40,7 +40,7 @@ class CPUInfo;
 ///
 ///	@brief This class implements system-info services, that are platform specific.
 //-------------------------------------------------------------------------------------------------
-class SystemInfo {
+class OSRE_EXPORT SystemInfo {
 public:
     ///	@enum	Platform
     ///	@brief	This enum describes the platform.

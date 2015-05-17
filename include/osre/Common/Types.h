@@ -36,10 +36,10 @@ namespace OSRE {
 #endif
 
 #ifdef OSRE_WINDOWS
-#  define OSRE_DLL_EXPORT __declspec(dllexport)
-#  define OSRE_DLL_IMPORT __declspec(dllimport )
+#  define TAG_DLL_EXPORT __declspec(dllexport)
+#  define TAG_DLL_IMPORT __declspec(dllimport )
 #else
-#  define OSRE_DLL_EXPORT
+#  define OSRE_EXPORT
 #  define OSRE_DLL_IMPORT
 #endif 
 
@@ -47,10 +47,10 @@ namespace OSRE {
 #   ifdef OSRE_BUILD_EXPORT
 #       define OSRE_EXPORT TAG_DLL_EXPORT
 #   else
-#       define OSRE_IMPORT TAG_DLL_IMPORT
+#       define OSRE_EXPORT TAG_DLL_IMPORT
 #   endif
 #else
-#   define DLL_IS_EXPORT
+#   define OSRE_EXPORT
 #endif
 
 #if _MSC_VER >= 1200
@@ -64,7 +64,7 @@ namespace OSRE {
 #endif
 
         // Declares thread-local data
-#ifdef CE_WINDOWS
+#ifdef OSRE_WINDOWS
 #   define ThreadLocal __declspec(thread)
 #else
 #   define ThreadLocal __thread

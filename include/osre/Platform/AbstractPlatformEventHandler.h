@@ -40,7 +40,7 @@ typedef CPPCore::TList<Common::EventData*> EventDataList;
 ///
 ///	@brief  This abstract class defines the event handler for a platform event loop handler.
 //-------------------------------------------------------------------------------------------------
-class AbstractPlatformEventHandler : public Common::AbstractEventHandler {
+class OSRE_EXPORT AbstractPlatformEventHandler : public Common::AbstractEventHandler {
 public:
     virtual ~AbstractPlatformEventHandler();
     virtual void registerEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener ) = 0;

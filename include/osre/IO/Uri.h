@@ -15,7 +15,7 @@ namespace IO {
 ///
 ///	file://c:/texture-jpg
 //-------------------------------------------------------------------------------------------------
-class Uri {
+class OSRE_EXPORT Uri {
 public:
     ///	@brief	The default class constructor.
     Uri();

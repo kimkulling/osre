@@ -16,7 +16,7 @@ namespace Scene {
 ///
 ///	@brief  This class is used to create the geometry for base shapes like a triangle.
 //-------------------------------------------------------------------------------------------------
-class GeometryBuilder {
+class OSRE_EXPORT GeometryBuilder {
 public:
     /// @brief  The class constructor.
     GeometryBuilder();

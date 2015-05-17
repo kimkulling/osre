@@ -36,7 +36,7 @@ class WorkerThread;
 ///
 ///	@brief	This class stores a bundle of worker threads, which you can use to startup async tasks.
 //-------------------------------------------------------------------------------------------------
-class ThreadPool : public Common::Object {
+class OSRE_EXPORT ThreadPool : public Common::Object {
 public:
 	///	@brief	The class constructor.
 	///	@param	numThreads	[in] The number of threads to create.

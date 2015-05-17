@@ -33,7 +33,7 @@ namespace Platform  {
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class AbstractThreadEvent {
+class OSRE_EXPORT AbstractThreadEvent {
 public:
 	///	@brief	The class destructor, virtual.
 	virtual ~AbstractThreadEvent();

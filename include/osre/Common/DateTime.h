@@ -33,7 +33,7 @@ namespace Common {
 ///
 ///	@brief	A utility class to manage dates and times.
 //-------------------------------------------------------------------------------------------------
-class OSRE_DLL_EXPORT DateTime {
+class OSRE_EXPORT DateTime {
 public:
     ///	@brief	The class default constructor.
     DateTime();

@@ -19,7 +19,7 @@ namespace Scene {
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class Node : public Common::Object {
+class OSRE_EXPORT Node : public Common::Object{
 public:
     enum TraverseMode {
         FlatMode,

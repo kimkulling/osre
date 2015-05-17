@@ -35,7 +35,7 @@ class AbstractSurface;
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class AbstractRenderContext {
+class OSRE_EXPORT AbstractRenderContext {
 public:
     virtual ~AbstractRenderContext();
     bool create( AbstractSurface *pSurface );

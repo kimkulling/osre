@@ -52,7 +52,7 @@ namespace Threading {
 ///	job. TaskJobs will be queued and handled one after another. You can specify your own 
 ///	setup-method, if you want to add your own setup code.
 //-------------------------------------------------------------------------------------------------
-class AbstractTask : public Common::Object {
+class OSRE_EXPORT AbstractTask : public Common::Object {
 public:
     ///	@enum	WorkingMode
     ///	@brief	This enum describes the current working mode of the task. Tasks can be in a parallel

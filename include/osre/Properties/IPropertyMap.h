@@ -39,7 +39,7 @@ class Property;
 ///
 ///	@brief 
 //-------------------------------------------------------------------------------------------------
-class IPropertyMap {
+class OSRE_EXPORT IPropertyMap {
 public:
     virtual ~IPropertyMap();
     virtual void setProperty( ui32 id, const String &rName, const CPPCore::Variant &rValue ) = 0;

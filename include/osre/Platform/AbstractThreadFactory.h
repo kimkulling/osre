@@ -38,7 +38,7 @@ class AbstractAtomic;
 ///
 ///	@brief	This abstract interface declares the factory methods for any thread implementation.
 //-------------------------------------------------------------------------------------------------
-class AbstractThreadFactory : public Common::Object {
+class OSRE_EXPORT AbstractThreadFactory : public Common::Object {
 public:
     ///	@brief	The destructor, virtual.
     virtual ~AbstractThreadFactory();

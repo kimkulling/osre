@@ -33,7 +33,7 @@ namespace Platform {
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class AbstractCriticalSection {
+class OSRE_EXPORT AbstractCriticalSection {
 public:
 	///	@brief	The class destructor, virtual.
 	virtual ~AbstractCriticalSection();

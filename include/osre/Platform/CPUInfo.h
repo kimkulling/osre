@@ -50,7 +50,7 @@ enum CPUProp {
 ///
 ///	@brief 
 //-------------------------------------------------------------------------------------------------
-class CPUInfo {
+class OSRE_EXPORT CPUInfo {
 public:
 	///	@brief	The class default constructor.
 	CPUInfo();

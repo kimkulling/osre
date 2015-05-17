@@ -37,7 +37,7 @@ class IPropertyMap;
 ///
 ///	@brief
 //--------------------------------------------------------------------------------------------------------------------
-class ConfigurationMap {
+class OSRE_EXPORT ConfigurationMap {
 public:
     /// @enum   WorkingModeType
     ///	@brief  Enum to describe the requested working mode.

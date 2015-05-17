@@ -17,7 +17,7 @@ namespace Scene {
 ///
 ///	@brief	this class implements a simple trackball. You can use it to rotate a model.
 //-------------------------------------------------------------------------------------------------
-class TrackBall : public Platform::OSEventListener {
+class OSRE_EXPORT TrackBall : public Platform::OSEventListener {
 public:
     ///	@brief	The class constructor.
     ///	@param	objName		[in] The name for the instance.

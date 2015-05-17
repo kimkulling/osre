@@ -25,7 +25,7 @@ private:
     TransformBlockCache &operator = ( const TransformBlockCache & );
 };
 
-class Stage : public Common::Object {
+class OSRE_EXPORT Stage : public Common::Object {
 public:
     Stage( const String &name );
     virtual ~Stage();

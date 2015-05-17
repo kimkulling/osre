@@ -1,7 +1,5 @@
 #pragma once
 
-#include <osre/IO/IOService.h>
-#include <osre/IO/Stream.h>
 #include <osre/IO/AbstractFileSystem.h>
 
 namespace OSRE {

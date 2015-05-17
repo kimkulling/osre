@@ -46,7 +46,7 @@ class TaskJob;
 /// You can use a system task for a running service like an IO-task waiting in the background for any 
 /// loader jobs. The system-task will run all the time after starting it and awaits jobs.
 //-------------------------------------------------------------------------------------------------
-class SystemTask : public AbstractTask {
+class OSRE_EXPORT SystemTask : public AbstractTask {
     friend class TaskManager;
 
 public:

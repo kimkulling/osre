@@ -36,7 +36,7 @@ namespace Properties {
 ///	a property can be used to describe an arbitrary value which is supported by the 
 ///	ZFXCE2-environment. It has a value and an assigned name.
 //-------------------------------------------------------------------------------------------------
-class Property {
+class OSRE_EXPORT Property {
 public:
     static const ui32 NotSet = 999999999;
 

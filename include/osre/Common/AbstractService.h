@@ -36,7 +36,7 @@ namespace Common {
 /// A server provides services like a render interface for instance. To access a service you have 
 /// to open it at first and close it and the end. 
 //-------------------------------------------------------------------------------------------------
-class OSRE_DLL_EXPORT AbstractService : public Object {
+class OSRE_EXPORT AbstractService : public Object {
 public:
     ///	@brief	The class destructor, virtual.
     virtual ~AbstractService();
@@ -161,8 +161,8 @@ private:
 /// @brief  Helper macro to create a macro from a given class.
 //-------------------------------------------------------------------------------------------------
 #define CREATE_SINGLETON( type )                    \
-    assert( nullptr == s_pTypeInstance );        \
-    s_pTypeInstance = this;         
+    assert( nullptr == s_instance );        \
+    s_instance = this;         
 
 //-------------------------------------------------------------------------------------------------
 /// @def        ::ZFXCE2::Common::DESTROY_SINGLETON
@@ -171,8 +171,8 @@ private:
 /// @brief  Helper macro to destroy a macro from a given class.
 //-------------------------------------------------------------------------------------------------
 #define DESTROY_SINGLETON( type )                   \
-    assert( nullptr != s_pTypeInstance );        \
-    s_pTypeInstance = nullptr;         
+    assert( nullptr != s_instance );        \
+    s_instance = nullptr;         
 
 //-------------------------------------------------------------------------------------------------
 

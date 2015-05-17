@@ -1,6 +1,4 @@
-﻿  Building Custom Rule D:/projects/osre/3dparty/soil/CMakeLists.txt
-  CMake does not need to re-run because D:\projects\osre\3dparty\soil\CMakeFiles\generate.stamp is up-to-date.
-  image_DXT.c
+﻿  image_DXT.c
 D:\projects\osre\3dparty\soil\src\image_DXT.c(92): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
           C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): Siehe Deklaration von 'fopen'
   image_helper.c

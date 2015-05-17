@@ -40,7 +40,7 @@ class WorkerThread;
 ///	@brief	This class can be used to create and release async task instances. you can also use it 
 ///	to dispatch your worker task to a free worker thread.
 //-------------------------------------------------------------------------------------------------
-class TaskScheduler : public Common::Object {
+class OSRE_EXPORT TaskScheduler : public Common::Object {
 public:
 	///	@brief	The class destructor, virtual.
 	virtual ~TaskScheduler();

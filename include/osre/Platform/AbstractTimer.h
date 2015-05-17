@@ -40,7 +40,7 @@ namespace Platform {
 ///	@remark	If you are implementing your own timer be careful with the resolution of your selected
 ///	timer interface.
 //-------------------------------------------------------------------------------------------------
-class AbstractTimer : public Common::Object {
+class OSRE_EXPORT AbstractTimer : public Common::Object {
 public:
     ///	@brief	Destructor, virtual.
     virtual ~AbstractTimer();

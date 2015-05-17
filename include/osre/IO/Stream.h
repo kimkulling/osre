@@ -17,7 +17,7 @@ class Uri;
 /// Streams can be used to do any kind of input-output operations like reading stuff from the hard 
 /// disk or writing stuff into an archive.
 //-------------------------------------------------------------------------------------------------
-class Stream {
+class OSRE_EXPORT Stream {
 public:
     typedef ui32 Position;      ///< The current position.
     typedef ui32 Offset;        ///< The offset from the current position.

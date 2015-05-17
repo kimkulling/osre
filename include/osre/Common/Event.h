@@ -50,7 +50,7 @@ class EventData;
 ///	@brief	The base class of zfxce2-events, describes type of an event. To create your own events
 ///	it is possible to build derives from the base class.
 //-------------------------------------------------------------------------------------------------
-class OSRE_DLL_EXPORT Event {
+class OSRE_EXPORT Event {
     friend class EventTriggerer;
 
 public:

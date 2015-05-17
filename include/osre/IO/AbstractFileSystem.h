@@ -17,7 +17,7 @@ class Uri;
 ///	@brief	Abstract interface for all file system implementations. Use this interface to build your 
 ///	own file system implementations.
 //--------------------------------------------------------------------------------------------------
-class AbstractFileSystem {
+class OSRE_EXPORT AbstractFileSystem {
 public:
     typedef std::map<String, Stream*> StreamMap;
 
