@@ -32,3 +32,4 @@
 *.tlog
 *.log
 *.filters
+*.pdb
