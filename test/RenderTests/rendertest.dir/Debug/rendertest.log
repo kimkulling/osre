@@ -1,20 +1,19 @@
 ﻿  AbstractRenderTest.cpp
-  RenderTestSuite.cpp
-  BaseTriangleRenderTest.cpp
-d:\projects\osre\test\rendertests\src\RenderTestUtils.h(8): warning C4316: 'OSRE::RenderTest::BaseTriangleRenderTest' : Das auf dem Heap zugeordnete Objekt ist möglicherweise nicht 16 ausgerichtet
-          d:\projects\osre\test\rendertests\src\RenderTestUtils.h(7): Bei der Kompilierung der  Klassen-template der AutoAttach<OSRE::RenderTest::BaseTriangleRenderTest>::AutoAttach(void)-Memberfunktion
-          D:\projects\osre\test\RenderTests\src\BaseTriangleRenderTest.cpp(126): Siehe Verweis auf die Instanziierung der gerade kompilierten Funktions-template "AutoAttach<OSRE::RenderTest::BaseTriangleRenderTest>::AutoAttach(void)".
-          D:\projects\osre\test\RenderTests\src\BaseTriangleRenderTest.cpp(126): Siehe Verweis auf die Instanziierung der gerade kompilierten Klassen-template "AutoAttach<OSRE::RenderTest::BaseTriangleRenderTest>".
   BaseTextureRenderTest.cpp
 d:\projects\osre\test\rendertests\src\RenderTestUtils.h(8): warning C4316: 'OSRE::RenderTest::BaseTextureRenderTest' : Das auf dem Heap zugeordnete Objekt ist möglicherweise nicht 16 ausgerichtet
           d:\projects\osre\test\rendertests\src\RenderTestUtils.h(7): Bei der Kompilierung der  Klassen-template der AutoAttach<OSRE::RenderTest::BaseTextureRenderTest>::AutoAttach(void)-Memberfunktion
           D:\projects\osre\test\RenderTests\src\BaseTextureRenderTest.cpp(202): Siehe Verweis auf die Instanziierung der gerade kompilierten Funktions-template "AutoAttach<OSRE::RenderTest::BaseTextureRenderTest>::AutoAttach(void)".
           D:\projects\osre\test\RenderTests\src\BaseTextureRenderTest.cpp(202): Siehe Verweis auf die Instanziierung der gerade kompilierten Klassen-template "AutoAttach<OSRE::RenderTest::BaseTextureRenderTest>".
+  BaseTriangleRenderTest.cpp
+d:\projects\osre\test\rendertests\src\RenderTestUtils.h(8): warning C4316: 'OSRE::RenderTest::BaseTriangleRenderTest' : Das auf dem Heap zugeordnete Objekt ist möglicherweise nicht 16 ausgerichtet
+          d:\projects\osre\test\rendertests\src\RenderTestUtils.h(7): Bei der Kompilierung der  Klassen-template der AutoAttach<OSRE::RenderTest::BaseTriangleRenderTest>::AutoAttach(void)-Memberfunktion
+          D:\projects\osre\test\RenderTests\src\BaseTriangleRenderTest.cpp(126): Siehe Verweis auf die Instanziierung der gerade kompilierten Funktions-template "AutoAttach<OSRE::RenderTest::BaseTriangleRenderTest>::AutoAttach(void)".
+          D:\projects\osre\test\RenderTests\src\BaseTriangleRenderTest.cpp(126): Siehe Verweis auf die Instanziierung der gerade kompilierten Klassen-template "AutoAttach<OSRE::RenderTest::BaseTriangleRenderTest>".
   GeoInstanceRenderTest.cpp
 d:\projects\osre\test\rendertests\src\RenderTestUtils.h(8): warning C4316: 'OSRE::RenderTest::GeoInstanceRenderTest' : Das auf dem Heap zugeordnete Objekt ist möglicherweise nicht 16 ausgerichtet
           d:\projects\osre\test\rendertests\src\RenderTestUtils.h(7): Bei der Kompilierung der  Klassen-template der AutoAttach<OSRE::RenderTest::GeoInstanceRenderTest>::AutoAttach(void)-Memberfunktion
           D:\projects\osre\test\RenderTests\src\GeoInstanceRenderTest.cpp(163): Siehe Verweis auf die Instanziierung der gerade kompilierten Funktions-template "AutoAttach<OSRE::RenderTest::GeoInstanceRenderTest>::AutoAttach(void)".
           D:\projects\osre\test\RenderTests\src\GeoInstanceRenderTest.cpp(163): Siehe Verweis auf die Instanziierung der gerade kompilierten Klassen-template "AutoAttach<OSRE::RenderTest::GeoInstanceRenderTest>".
-  main.cpp
+  RenderTestSuite.cpp
   Code wird generiert...
   rendertest.vcxproj -> D:\projects\osre\bin\Debug\rendertest.exe
