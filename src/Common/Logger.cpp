@@ -254,7 +254,7 @@ void Logger::StdLogStream::write( const String &msg ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-void debugPrint( const String &file, int line, const String &msg, const String &domain ) {
+void debugPrint( const String &domain, const String &file, int line, const String &msg ) {
     String message;
     message += msg;
     message += " (";
@@ -268,7 +268,7 @@ void debugPrint( const String &file, int line, const String &msg, const String &
 }
 
 //-------------------------------------------------------------------------------------------------
-void logPrint( const String &file, int line, const String &message, const String &domain ) {
+void logPrint( const String &domain, const String &file, int line, const String &message ) {
     String msg;
     msg += file;
     msg += ", ";
@@ -284,7 +284,7 @@ void logPrint( const String &file, int line, const String &message, const String
 }
 
 //-------------------------------------------------------------------------------------------------
-void warnPrint( const String &file, int line, const String &message, const String &domain ) {
+void warnPrint( const String &domain, const String &file, int line, const String &message ) {
     String msg;
     msg += message;
     msg += " (";
@@ -298,7 +298,7 @@ void warnPrint( const String &file, int line, const String &message, const Strin
 }
 
 //-------------------------------------------------------------------------------------------------
-void errorPrint( const String &file, int line, const String &message, const String &domain ) {
+void errorPrint( const String &domain, const String &file, int line, const String &message ) {
     String msg;
     msg += message;
     msg += " (";
@@ -312,7 +312,7 @@ void errorPrint( const String &file, int line, const String &message, const Stri
 }
 
 //-------------------------------------------------------------------------------------------------
-void fatalPrint( const String &file, int line, const String &message, const String &domain ) {
+void fatalPrint( const String &domain,  const String &file, int line, const String &message ) {
     String msg;
     msg += message;
     msg += " (";

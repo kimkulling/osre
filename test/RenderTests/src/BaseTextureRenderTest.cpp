@@ -21,6 +21,8 @@ namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
+static const String Tag = "BasetexturerenderTest";
+
 const String VsSrc =
     "#version 400 core\n"
     "\n"
@@ -87,7 +89,7 @@ public:
     }
 
     virtual bool onCreate( RenderBackend::RenderBackendService *pRenderBackendSrv ) {
-        osre_debug( "BaseTextureRenderTest::onCreate" );
+        osre_debug( Tag, "BaseTextureRenderTest::onCreate" );
         pRenderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
@@ -180,7 +182,7 @@ public:
     }
 
     virtual bool onDestroy( RenderBackend::RenderBackendService *pRenderBackendSrv ) {
-        osre_debug( "BaseTextureRenderTest::onDestroy" );
+        osre_debug( Tag, "BaseTextureRenderTest::onDestroy" );
 
         return true;
     }

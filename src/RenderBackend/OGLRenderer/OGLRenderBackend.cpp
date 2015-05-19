@@ -53,7 +53,7 @@ static bool setParameterInShader( OGLParameter *param, OGLShader *shader ) {
     if( NoneLocation == param->m_loc ) {
         param->m_loc = ( *shader )( param->m_name );
         if( NoneLocation == param->m_loc ) {
-            osre_debug( "Cannot location for parameter " + param->m_name + " in shader " + shader->getName() + "." );
+            osre_debug( Tag, "Cannot location for parameter " + param->m_name + " in shader " + shader->getName() + "." );
             return false;
         }
     }
@@ -415,27 +415,27 @@ OGLShader *OGLRenderBackend::createShader( const String &name, Shader *pShaderIn
         if( !pShaderInfo->m_src[ SH_VertexShaderType ].empty() ) {
             result = pOGLShader->loadFromSource( SH_VertexShaderType, pShaderInfo->m_src[ SH_VertexShaderType ] );
             if( !result ) {
-                osre_error( "Error while compiling VertexShader." );
+                osre_error( Tag, "Error while compiling VertexShader." );
             }
         }
 
         if( !pShaderInfo->m_src[ SH_FragmentShaderType ].empty( ) ) {
             result = pOGLShader->loadFromSource( SH_FragmentShaderType, pShaderInfo->m_src[ SH_FragmentShaderType ] );
             if( !result ) {
-                osre_error( "Error while compiling FragmentShader." );
+                osre_error( Tag, "Error while compiling FragmentShader." );
             }
         }
 
         if( !pShaderInfo->m_src[ SH_GeometryShaderType ].empty( ) ) {
             result = pOGLShader->loadFromSource( SH_GeometryShaderType, pShaderInfo->m_src[ SH_GeometryShaderType ] );
             if( !result ) {
-                osre_error( "Error while compiling GeometryShader." );
+                osre_error( Tag, "Error while compiling GeometryShader." );
             }
         }
 
         result = pOGLShader->createAndLink();
         if( !result ) {
-            osre_error( "Error while linking shader" );
+            osre_error( Tag, "Error while linking shader" );
         }
     }
 
@@ -525,7 +525,7 @@ void OGLRenderBackend::releaseAllShaders( ) {
 OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTargetType target,
                                                   ui32 width, ui32 height, ui32 channels ) {
     if( name.empty() ) {
-        osre_debug( "Texture anme is empty." );
+        osre_debug( Tag, "Texture anme is empty." );
         return nullptr;
     }
 
@@ -574,7 +574,7 @@ OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTar
 void OGLRenderBackend::updateTexture( OGLTexture *pOGLTextue, ui32 offsetX, ui32 offsetY, c8 *data,
                                       ui32 size ) {
     if( !pOGLTextue ) {
-        osre_error( "Pointer to texture is a nullptr." );
+        osre_error( Tag, "Pointer to texture is a nullptr." );
         return;
     }
 
@@ -597,7 +597,7 @@ OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const S
     i32 width( 0 ), height( 0 ), channels( 0 );
     GLubyte *pData = SOIL_load_image( filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO );
     if( !pData ) {
-        osre_debug( "Cannot load texture " + filename );
+        osre_debug( Tag, "Cannot load texture " + filename );
         return nullptr;
     }
 

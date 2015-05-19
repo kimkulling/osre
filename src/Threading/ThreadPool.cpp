@@ -27,6 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Threading {
 
+static const String Tag = "ThreadPool";
+
 //-------------------------------------------------------------------------------------------------
 ///	The thread allocator template class, will offer the platform specific allocation.
 //-------------------------------------------------------------------------------------------------
@@ -79,7 +81,7 @@ ThreadPool::~ThreadPool() {
     for ( ui32 i=0; i<m_ThreadArray.size(); ++i ) {
         pThread = m_ThreadArray[ i ];
         if( Platform::AbstractThread::Running == pThread->getCurrentState( ) ) {
-            osre_debug( "Thread " + pThread->getName() + " is already running." );
+            osre_debug( Tag, "Thread " + pThread->getName() + " is already running." );
             pThread->stop();
         }
         delete pThread;

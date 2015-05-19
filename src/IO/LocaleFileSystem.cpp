@@ -41,6 +41,7 @@ using namespace ::OSRE::Common;
 using namespace ::CPPCore;
 
 static const String BaseFileSchema = "file";
+static const String Tag = "IOService";
 
 //-------------------------------------------------------------------------------------------------
 LocaleFileSystem::LocaleFileSystem() 
@@ -61,7 +62,7 @@ LocaleFileSystem::~LocaleFileSystem() {
 //-------------------------------------------------------------------------------------------------
 Stream *LocaleFileSystem::open( const Uri &file, Stream::AccessMode mode ) {
     if ( file.isEmpty() ) {
-        osre_debug( "Uri is empty." );
+        osre_debug( Tag, "Uri is empty." );
         return nullptr;
     }
 

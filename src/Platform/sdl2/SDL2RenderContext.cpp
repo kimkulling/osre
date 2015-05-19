@@ -30,6 +30,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
+static const String Tag = "SDL2RenderContext";
+
 //-------------------------------------------------------------------------------------------------
 SDL2RenderContext::SDL2RenderContext()
 : AbstractRenderContext()
@@ -47,27 +49,27 @@ SDL2RenderContext::~SDL2RenderContext( ) {
 //-------------------------------------------------------------------------------------------------
 bool SDL2RenderContext::onCreate( AbstractSurface *pSurface ) {
     if( !pSurface ) {
-        osre_error( "Surface pointer is a nullptr." );
+        osre_error( Tag, "Surface pointer is a nullptr." );
         return false;
     }
 
     m_pSurface = reinterpret_cast< SDL2Surface* >( pSurface );
     m_pContext = SDL_GL_CreateContext( m_pSurface->getSDLSurface() );
     if( !m_pContext ) {
-        osre_error( "Error while creating GL-context.!" );
+        osre_error( Tag, "Error while creating GL-context.!" );
         return false;
     }
     
     glewExperimental = GL_TRUE;
     GLenum err = glewInit();
     if( GLEW_OK != err ) {
-        osre_error( "GLEW is not initialized!" );
+        osre_error( Tag, "GLEW is not initialized!" );
         return false;
     }
 
     const GLubyte *version = glGetString( GL_VERSION );
-    osre_log( "OpenGL renderer initiated.")
-    osre_log( "Version : " + String( (c8*) version ) );
+    osre_log( Tag, "OpenGL renderer initiated.")
+    osre_log( Tag, "Version : " + String( (c8*) version ) );
 
     return true;
 }
@@ -75,7 +77,7 @@ bool SDL2RenderContext::onCreate( AbstractSurface *pSurface ) {
 //-------------------------------------------------------------------------------------------------
 bool SDL2RenderContext::onDestroy( ) {
     if( !m_pContext ) {
-        osre_error( "Context pointer is a nullptr." );
+        osre_error( Tag, "Context pointer is a nullptr." );
         return false;
     }
 
@@ -88,7 +90,7 @@ bool SDL2RenderContext::onDestroy( ) {
 //-------------------------------------------------------------------------------------------------
 bool SDL2RenderContext::onUpdate( ) {
     if ( !m_isActive ) {
-        osre_debug( "No active render context." );
+        osre_debug( Tag, "No active render context." );
     }
     SDL_GL_SwapWindow( m_pSurface->getSDLSurface() );
 

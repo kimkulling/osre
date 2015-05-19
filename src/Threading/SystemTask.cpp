@@ -40,6 +40,8 @@ namespace Threading {
 
 using namespace ::OSRE::Common;
 
+static const String Tag = "SystemTaskThread";
+
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Threading::TaskThread
 ///	@ingroup	Infrastructure
@@ -60,22 +62,22 @@ public:
 public:
     //---------------------------------------------------------------------------------------------
 #ifdef _WIN32
-    SystemTaskThread( const String &rThreadName, TAsyncQueue<const TaskJob*> *pJobQueue )
-    : Win32Thread( rThreadName, StackSize )
+    SystemTaskThread( const String &threadName, TAsyncQueue<const TaskJob*> *jobQueue )
+    : Win32Thread( threadName, StackSize )
 #else
-    SystemTaskThread( const String &rThreadName, TAsyncQueue<const TaskJob*> *pJobQueue )
-    : SDL2Thread( rThreadName, StackSize )
+    SystemTaskThread( const String &threadName, TAsyncQueue<const TaskJob*> *jobQueue )
+    : SDL2Thread( threadName, StackSize )
 #endif
     , m_pUpdateEvent( nullptr )
-    , m_pActiveJobQueue( pJobQueue )
+    , m_pActiveJobQueue( jobQueue )
     , m_pEventHandler( nullptr ) {
-        assert( nullptr != pJobQueue );
+        assert( nullptr != jobQueue );
 
         Platform::AbstractThreadFactory *pThreadFactory( Platform::AbstractThreadFactory::getInstance() );
         if ( pThreadFactory ) {
             m_pUpdateEvent = pThreadFactory->createThreadEvent();
         } else {
-            osre_error( "Invalid pointer to thread factory." );
+            osre_error( Tag, "Invalid pointer to thread factory." );
         }
     }
 
@@ -120,7 +122,7 @@ public:
 protected:
     //---------------------------------------------------------------------------------------------
     i32 run() {
-        osre_debug( "SystemThread::run" );
+        osre_debug( Tag, "SystemThread::run" );
         bool running = true;
         while ( running ) {
             m_pActiveJobQueue->awaitEnqueuedItem();
@@ -175,7 +177,7 @@ SystemTask::~SystemTask() {
 //-------------------------------------------------------------------------------------------------
 void SystemTask::setWorkingMode( AbstractTask::WorkingMode mode ) {
     if ( isRunning() ) {
-        osre_error( "The working mode cannot be chanced in a running task." );
+        osre_error( Tag, "The working mode cannot be chanced in a running task." );
         return;
     }
 
@@ -202,7 +204,7 @@ bool SystemTask::start( Platform::AbstractThread *pThread ) {
     // ensure task is not running
     if( nullptr != m_pTaskThread ) {
         if ( Platform::AbstractThread::Running == m_pTaskThread->getCurrentState() ) {
-            osre_debug( "Task " + getName() + " is already running." );
+            osre_debug( Tag, "Task " + getName() + " is already running." );
             return false;
         }
     }
@@ -221,9 +223,8 @@ bool SystemTask::start( Platform::AbstractThread *pThread ) {
 
 //-------------------------------------------------------------------------------------------------
 bool SystemTask::stop() {
-    // Ensure task is still running
     if ( Platform::AbstractThread::Running != m_pTaskThread->getCurrentState() ) {
-        osre_debug( "Task " + getName() + " is not running." );
+        osre_debug( Tag, "Task " + getName() + " is not running." );
         return false;
     }
 

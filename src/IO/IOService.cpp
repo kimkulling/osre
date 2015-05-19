@@ -38,6 +38,7 @@ namespace IO {
 using namespace OSRE::Common;
 IOService * IOService::s_instance = nullptr;
 
+static const String Tag = "IOService";
 
 //-------------------------------------------------------------------------------------------------
 static AbstractFileSystem *createFS( const Uri &file ) {
@@ -93,7 +94,7 @@ AbstractFileSystem *IOService::addFileSystem( const String &name, const Uri &fil
         if( fs ) {
             m_mountedMap[ name ] = fs;
         } else {
-            osre_debug("Cannot create file system " + file.getResource() );
+            osre_debug( Tag, "Cannot create file system " + file.getResource() );
         }
     }
 

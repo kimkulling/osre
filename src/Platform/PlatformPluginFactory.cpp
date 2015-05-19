@@ -39,6 +39,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
+static const String Tag = "PlatformPluginFactory";
+
 //-------------------------------------------------------------------------------------------------
 bool PlatformPluginFactory::init( PluginType type ) {
     static_cast< void >( createThreadFactory( type ) );
@@ -98,7 +100,7 @@ AbstractSurface *PlatformPluginFactory::createSurface( PluginType type, SurfaceP
             break;
 
         default:
-            osre_log( "Enum value not handled." );
+            osre_log( Tag, "Enum value not handled." );
             break;
     }
 
@@ -120,7 +122,7 @@ AbstractRenderContext *PlatformPluginFactory::createRenderContext( PluginType ty
             break;
 
         default:
-            osre_error( "Enum value not handled." );
+            osre_error( Tag, "Enum value not handled." );
             break;
     }
 
@@ -165,7 +167,7 @@ AbstractThreadFactory *PlatformPluginFactory::createThreadFactory( PluginType ty
         break;
     }
 
-    osre_log( " set thread factory." );
+    osre_log( Tag, "Set thread factory." );
     AbstractThreadFactory::setInstance( instance );
 
     return instance;

@@ -35,6 +35,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
+static const String Tag = "Win32RenderContext";
+
 //-------------------------------------------------------------------------------------------------
 void APIENTRY DebugLog( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
     const GLchar *msg, GLvoid *userParam ) {
@@ -78,7 +80,7 @@ void APIENTRY DebugLog( GLenum source, GLenum type, GLuint id, GLenum severity, 
     }
     std::cout << std::endl;
     std::cout << "---------------------opengl-callback-end--------------" << std::endl;
-    osre_log( "DebugLog" );
+    osre_log( Tag, "DebugLog" );
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -97,12 +99,12 @@ Win32RenderContext::~Win32RenderContext( ) {
 bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
     Win32Surface *pWin32Surface = reinterpret_cast< Win32Surface* >( pSurface );
     if( !pWin32Surface ) {
-        osre_error( "Invalid pointer to window." );
+        osre_error( Tag, "Invalid pointer to window." );
         return false;
     }
     HDC dc = pWin32Surface->getDeviceContext();
     if( !dc ) {
-        osre_error( "Invalid device context." );
+        osre_error( Tag, "Invalid device context." );
         return false;
     }
 
@@ -118,26 +120,26 @@ bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
 
     i32 pixelFormat = ::ChoosePixelFormat( dc, &pfd );
     if( 0 == pixelFormat ) {
-        osre_error( "Invalid pixel format chosen." );
+        osre_error( Tag, "Invalid pixel format chosen." );
         return false;
     }
 
     BOOL bResult = ::SetPixelFormat( dc, pixelFormat, &pfd );
     if( FALSE == bResult ) {
-        osre_error( "Cannot set pixel format." );
+        osre_error( Tag, "Cannot set pixel format." );
         return false;
     }
 
     HGLRC tempContext = wglCreateContext( dc );
     bResult = wglMakeCurrent( dc, tempContext );
     if( FALSE == bResult ) {
-        osre_error( "wglMakeCurrent failed." );
+        osre_error( Tag, "Calling wglMakeCurrent failed." );
         return false;
     }
 
     GLenum err = glewInit();
     if( GLEW_OK != err ) {
-        osre_error( "GLEW is not initialized!" );
+        osre_error( Tag, "GLEW is not initialized!" );
         return false;
     }
 
@@ -179,7 +181,7 @@ bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
         wglDeleteContext( tempContext );
         bResult = wglMakeCurrent( dc, rc );
         if( !bResult ) {
-            osre_error( "wglMakeCurrent failed." );
+            osre_error( Tag, "wglMakeCurrent failed." );
             return false;
         }
     }
@@ -196,7 +198,7 @@ bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
     const char *GLVersionString = ( const char* ) glGetString( GL_VERSION );
     if( GLVersionString ) {
         String version( GLVersionString );
-        osre_log( version );
+        osre_log( Tag, version );
     }
 
     // or better yet, use the GL4.x way to get the version number
@@ -241,7 +243,7 @@ bool Win32RenderContext::onActivate( ) {
     }
 
     if( FALSE == wglMakeCurrent( m_dc, m_rc ) ) {
-        osre_debug( "Error while update render context." );
+        osre_debug( Tag, "Error while update render context." );
         return false;
     }
     m_active = true;

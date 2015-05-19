@@ -35,6 +35,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
+static const String Tag = "SDL2Thread";
+
 //-------------------------------------------------------------------------------------------------
 SDL2Thread::SDL2Thread( const String &name, ui32 stacksize )
 :  m_thread( nullptr )
@@ -50,7 +52,7 @@ SDL2Thread::SDL2Thread( const String &name, ui32 stacksize )
 //-------------------------------------------------------------------------------------------------
 SDL2Thread::~SDL2Thread( ) {
     if ( Running == m_ThreadState ) {
-        osre_debug( "Thread " + getName() + " is still running." );
+        osre_debug( Tag, "Thread " + getName() + " is still running." );
         SDL2Thread::stop( );
     }
 }
@@ -58,7 +60,7 @@ SDL2Thread::~SDL2Thread( ) {
 //-------------------------------------------------------------------------------------------------
 bool SDL2Thread::start( void *pData ) {
     if ( Running == m_ThreadState ) {
-        osre_debug( "Thread " + getName() + " is already running." );
+        osre_debug( Tag, "Thread " + getName() + " is already running." );
         return false;
     }
     if ( !pData ) {
@@ -81,7 +83,7 @@ bool SDL2Thread::start( void *pData ) {
 //-------------------------------------------------------------------------------------------------
 bool SDL2Thread::stop( ) {
     if ( !Running == m_ThreadState ) {
-        osre_debug( "Thread " + getName() + " is not running." );
+        osre_debug( Tag, "Thread " + getName() + " is not running." );
         return false;
     }
 
@@ -108,7 +110,7 @@ SDL2Thread::ThreadState SDL2Thread::getCurrentState( ) const {
 bool SDL2Thread::suspend( ) {
     // check for a valid thread state
     if ( Running == m_ThreadState ) {
-        osre_debug( "Thread " + getName() + " is not running." );
+        osre_debug( Tag, "Thread " + getName() + " is not running." );
         return false;
     }
 
@@ -123,7 +125,7 @@ bool SDL2Thread::suspend( ) {
 bool SDL2Thread::resume( ) {
     // check for a valid thread state
     if ( Waiting != m_ThreadState ) {
-        osre_debug( "Thread " + getName() + " is not suspended." );
+        osre_debug( Tag, "Thread " + getName() + " is not suspended." );
         return false;
     }
 
@@ -158,7 +160,7 @@ ui32 SDL2Thread::getStackSize( ) const {
 //-------------------------------------------------------------------------------------------------
 void SDL2Thread::waitForTimeout( ui32 ms ) {
     if ( !m_pThreadSignal ) {
-        osre_debug( "Invalid pointer to thread signal." );
+        osre_debug( Tag, "Invalid pointer to thread signal." );
         return;
     } else {
         m_pThreadSignal->waitForTimeout( ms );
@@ -168,7 +170,7 @@ void SDL2Thread::waitForTimeout( ui32 ms ) {
 //-------------------------------------------------------------------------------------------------
 void SDL2Thread::wait( ) {
     if ( !m_pThreadSignal ) {
-        osre_debug( "Invalid pointer to thread signal." );
+        osre_debug( Tag, "Invalid pointer to thread signal." );
         return;
     } else {
         m_pThreadSignal->wait();
@@ -222,7 +224,7 @@ i32 SDL2Thread::sdl2threadfunc( void *data ) {
             retCode = instance->run();
         }
     } else {
-        osre_error( "Invalid thread data." );
+        osre_error( Tag, "Invalid thread data." );
     }
 
     return retCode;

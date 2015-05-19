@@ -26,6 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
+static const String Tag = "AbstractSurface";
+
 //-------------------------------------------------------------------------------------------------
 AbstractSurface::AbstractSurface( SurfaceProperties *properties )
 : m_flags( SF_PropertiesClean )
@@ -43,7 +45,7 @@ AbstractSurface::~AbstractSurface( ) {
 //-------------------------------------------------------------------------------------------------
 bool AbstractSurface::create( ) {
     if ( m_isCreated ) {
-        osre_warn( "Surfac already created." );
+        osre_warn( Tag, "Surface already created." );
         return true;
     }
 
@@ -55,7 +57,7 @@ bool AbstractSurface::create( ) {
 //-------------------------------------------------------------------------------------------------
 bool AbstractSurface::destroy( ) {
     if ( !m_isCreated ) {
-        osre_warn( "Surface not valid, cannot be destoyed." );
+        osre_warn( Tag, "Surface not valid, cannot be destoyed." );
         return false;
     }
     if ( onDestroy() ) {

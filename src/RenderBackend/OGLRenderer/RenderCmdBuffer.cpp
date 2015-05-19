@@ -120,7 +120,7 @@ bool RenderCmdBuffer::onRenderFrame( const EventData *pEventData ) {
         } else if( pRenderCmd->m_type == SetRenderTargetCmd ) {
             onSetRenderTargetCmd( ( SetRenderTargetCmdData* ) pRenderCmd->m_pData );
         } else {
-            osre_error( "Unsupported render command type: " + pRenderCmd->m_type );
+            osre_error( Tag, "Unsupported render command type: " + pRenderCmd->m_type );
         }
     }
 

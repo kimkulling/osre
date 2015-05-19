@@ -51,7 +51,8 @@ using namespace CPPCore;
 
 RenderTestSuite *RenderTestSuite::s_pInstance = nullptr;
 
-static const ui32 AllTestsDone = 999999;
+static const String Tag = "RenderTestSuite";
+static const ui32   AllTestsDone = 999999;
 
 //-------------------------------------------------------------------------------------------------
 class KeyboardEventListener : public Platform::OSEventListener {
@@ -75,7 +76,7 @@ public:
                 if( key == KEY_SPACE ) {
                     result = m_pTestSuite->requestNextTest( next );
                     if ( !result ) {
-                        osre_log( "All tests done." );
+                        osre_log( Tag, "All tests done." );
                     }
                 }
             }

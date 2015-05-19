@@ -28,6 +28,7 @@ namespace OSRE {
 namespace RenderBackend {
 
 static const GLint ErrorId = -1;
+static const String Tag = "OGLShader";
 
 //-------------------------------------------------------------------------------------------------
 static GLuint getOGLShaderType( ShaderType type ) {
@@ -92,7 +93,7 @@ bool OGLShader::loadFromFile( ShaderType type, const String &file ) {
 bool OGLShader::createAndLink() {
     m_shaderprog = glCreateProgram();
     if ( 0 == m_shaderprog ) {
-        osre_error( "Error while creating shader program." );
+        osre_error( Tag, "Error while creating shader program." );
         return false;
     }
     if ( 0 != m_shaders[ SH_VertexShaderType ] ) {
@@ -116,7 +117,7 @@ bool OGLShader::createAndLink() {
         ::memset( infoLog, 0, infoLogLength );
         glGetProgramInfoLog( m_shaderprog, infoLogLength, NULL, infoLog);
         String error( infoLog );
-        osre_debug( "Link log: " + error + "\n" );
+        osre_debug( Tag, "Link log: " + error + "\n" );
         delete [] infoLog;
         result = false;
     }
@@ -139,7 +140,7 @@ void OGLShader::addAttribute( const std::string& attribute ) {
     const GLint location = glGetAttribLocation( m_shaderprog, attribute.c_str( ) );
     m_attributeList[ attribute ] = location;
     if( ErrorId == location ) {
-        osre_debug( "Cannot find attribute " + attribute + " in shader." );
+        osre_debug( Tag, "Cannot find attribute " + attribute + " in shader." );
     }
 }
 
@@ -148,7 +149,7 @@ void OGLShader::addUniform( const std::string& uniform ) {
     const GLint location = glGetUniformLocation( m_shaderprog, uniform.c_str( ) );
     m_uniformLocationList[ uniform ] = location;
     if( ErrorId == location ) {
-        osre_debug( "Cannot find uniform variable " + uniform + " in shader." );
+        osre_debug( Tag, "Cannot find uniform variable " + uniform + " in shader." );
     }
 }
 

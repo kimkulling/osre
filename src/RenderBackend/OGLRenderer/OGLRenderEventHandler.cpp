@@ -311,7 +311,7 @@ bool OGLRenderEventHandler::onAttached( const EventData *evData ) {
 //-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onDetached( const EventData *evData ) {
     if( m_renderCmdBuffer ) {
-        osre_error( "Renderer not destroyed." );
+        osre_error( Tag, "Renderer not destroyed." );
         delete m_renderCmdBuffer;
         m_renderCmdBuffer = nullptr;
     }
@@ -385,13 +385,13 @@ bool OGLRenderEventHandler::onAttachView( const EventData * ) {
 bool OGLRenderEventHandler::onAttachGeo( const EventData *evData ) {
     AttachGeoEventData *attachSceneEvData = (AttachGeoEventData*) evData;
     if( !attachSceneEvData ) {
-        osre_debug( "AttachSceneEventData-pointer is a nullptr." );
+        osre_debug( Tag, "AttachSceneEventData-pointer is a nullptr." );
         return false;
     }
     
     Geometry *geo = attachSceneEvData->m_pGeometry;
     if( !geo ) {
-        osre_debug( "Geometry-pointer is a nullptr." );
+        osre_debug( Tag, "Geometry-pointer is a nullptr." );
         return false;
     }
 
@@ -408,7 +408,7 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *evData ) {
     // setup vertex array, vertex and index buffers
     m_pVertexArray = setupBuffers( geo, m_oglBackend, m_renderCmdBuffer->getActiveShader() );
     if( !m_pVertexArray ) {
-        osre_debug( "Vertex-Array-pointer is a nullptr." );
+        osre_debug( Tag, "Vertex-Array-pointer is a nullptr." );
         return false;
     }
     m_renderCmdBuffer->setVertexArray( m_pVertexArray );

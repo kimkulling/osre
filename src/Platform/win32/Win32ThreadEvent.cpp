@@ -27,6 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
+static const String Tag = "Win32ThreadEvent";
+
 //-------------------------------------------------------------------------------------------------
 Win32ThreadEvent::Win32ThreadEvent() 
 : m_EventHandle( nullptr ) {
@@ -45,7 +47,7 @@ Win32ThreadEvent::~Win32ThreadEvent() {
 //-------------------------------------------------------------------------------------------------
 void Win32ThreadEvent::signal() {
 	if ( !m_EventHandle ) {
-		osre_debug( "Signal handle is not valid." );
+		osre_debug( Tag, "Signal handle is not valid." );
 		return;
 	}
 

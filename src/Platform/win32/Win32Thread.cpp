@@ -34,6 +34,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
+static const String Tag = "Win32Thread";
+
 //-------------------------------------------------------------------------------------------------
 Win32Thread::Win32Thread(  const String &name, ui32 stacksize  ) 
 : m_ThreadHandle( NULL )
@@ -48,7 +50,7 @@ Win32Thread::Win32Thread(  const String &name, ui32 stacksize  )
 //-------------------------------------------------------------------------------------------------
 Win32Thread::~Win32Thread() {
     if ( Running == m_ThreadState ) {
-        osre_debug( "Thread " + getName() + " is still running." );
+        osre_debug( Tag, "Thread " + getName() + " is still running." );
         Win32Thread::stop();
     }
 }
@@ -56,7 +58,7 @@ Win32Thread::~Win32Thread() {
 //-------------------------------------------------------------------------------------------------
 bool Win32Thread::start( void *pData ) {
     if ( Running == m_ThreadState || m_ThreadHandle ) {
-        osre_debug( "Thread " + getName() + " is already running." );
+        osre_debug( Tag, "Thread " + getName() + " is already running." );
         return false;
     }
 
@@ -83,7 +85,7 @@ bool Win32Thread::start( void *pData ) {
 //-------------------------------------------------------------------------------------------------
 bool Win32Thread::stop() {
     if ( !Running == m_ThreadState ) {
-        osre_debug( "Thread " + getName() + " is not running." );
+        osre_debug( Tag, "Thread " + getName() + " is not running." );
         return false;
     }
 
@@ -115,7 +117,7 @@ Win32Thread::ThreadState Win32Thread::getCurrentState() const {
 bool Win32Thread::suspend() {
     // check for a valid thread state
     if ( !m_ThreadHandle || Running == m_ThreadState ) {
-        osre_debug( "Thread " + getName() + " is not running." );
+        osre_debug( Tag, "Thread " + getName() + " is not running." );
         return false;
     }
 
@@ -133,14 +135,14 @@ bool Win32Thread::suspend() {
 bool Win32Thread::resume() {
     // check for a valid thread state
     if ( !m_ThreadHandle || Waiting != m_ThreadState || New != m_ThreadState ) {
-        osre_debug( "Thread " + getName() + " is not suspended." );
+        osre_debug( Tag, "Thread " + getName() + " is not suspended." );
         return false;
     }
 
     // resume the thread
     DWORD retCode = ::ResumeThread( m_ThreadHandle );
     if( -1 == retCode ) {
-        osre_error( "Error while try to resume thread." );
+        osre_error( Tag, "Error while try to resume thread." );
         return false;
     }
 
@@ -174,7 +176,7 @@ ui32 Win32Thread::getStackSize() const {
 //-------------------------------------------------------------------------------------------------
 void Win32Thread::waitForTimeout( ui32 ms ) {
     if ( !m_pThreadSignal ) {
-        osre_debug( "Invalid pointer to thread signal." );
+        osre_debug( Tag, "Invalid pointer to thread signal." );
         return;
     } else {
         m_pThreadSignal->waitForTimeout( ms );
@@ -184,11 +186,10 @@ void Win32Thread::waitForTimeout( ui32 ms ) {
 //-------------------------------------------------------------------------------------------------
 void Win32Thread::wait() {
     if ( !m_pThreadSignal ) {
-        osre_debug( "Invalid pointer to thread signal." );
+        osre_debug( Tag, "Invalid pointer to thread signal." );
         return;
-    } else {
-        m_pThreadSignal->wait();
-    }
+    } 
+    m_pThreadSignal->wait();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -217,9 +218,8 @@ void Win32Thread::setPriority( Priority prio ) {
             break;
     }
 
-    // log errors
     if( !result ) {
-        osre_error( "Error while setting thread prio." );
+        osre_error( Tag, "Error while setting thread prio." );
     }
 }
 
@@ -235,15 +235,15 @@ const String &Win32Thread::getThreadName() const {
 
 //-------------------------------------------------------------------------------------------------
 ui32 WINAPI Win32Thread::ThreadFunc( LPVOID data ) {
-    Win32Thread *pThread = ( Win32Thread* ) data;
-    assert( NULL != pThread );
+    Win32Thread *thread = ( Win32Thread* ) data;
+    assert( NULL != thread );
 
-    setThreadName( pThread->getName().c_str() );
+    setThreadName( thread->getName().c_str() );
     SystemInfo::ThreadId id;
     id.Id = ::GetCurrentThreadId();
-    SystemInfo::registerThreadName( id, pThread->getName() );
+    SystemInfo::registerThreadName( id, thread->getName() );
 
-    pThread->run();
+    thread->run();
 
     return 0;
 }
@@ -260,8 +260,8 @@ void Win32Thread::setState( ThreadState newState ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-void Win32Thread::setThreadName( const c8 *pName ) {
-    if ( !pName )
+void Win32Thread::setThreadName( const c8 *name ) {
+    if ( !name )
         return;
 
     struct THREADNAME_INFO {
@@ -273,7 +273,7 @@ void Win32Thread::setThreadName( const c8 *pName ) {
 
     THREADNAME_INFO info;
     info.dwType     = 0x1000;
-    info.szName     = pName;
+    info.szName     = name;
     info.dwThreadID = ::GetCurrentThreadId();
     info.dwFlags    = 0;
     __try {

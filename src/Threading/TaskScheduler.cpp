@@ -34,6 +34,8 @@ namespace Threading {
 
 TaskScheduler *TaskScheduler::s_pInstance = nullptr;
 
+static const String Tag = "TaskScheduler";
+
 //-------------------------------------------------------------------------------------------------
 TaskScheduler::TaskScheduler() 
 : Object( "threading/taskscheduler" )
@@ -78,7 +80,7 @@ bool TaskScheduler::dispatch( AsyncTask *pTask ) {
 		result = run( pTask );
 	} else {
 		m_AsyncTaskQueue.enqueue( pTask );
-		osre_debug( "Task " + pTask->getName() + " is enqueued." );
+		osre_debug( Tag, "Task " + pTask->getName() + " is enqueued." );
 	}
 
 	return result;

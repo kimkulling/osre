@@ -33,6 +33,8 @@ using namespace ::OSRE::Common;
 
 std::map<HWND, Win32Eventhandler*> Win32Eventhandler::s_WindowsServerMap;
 
+static const String Tag = "Win32Eventhandler";
+
 //-------------------------------------------------------------------------------------------------
 struct IInputUpdate {
     ~IInputUpdate(){
@@ -255,7 +257,7 @@ LRESULT Win32Eventhandler::winproc( HWND hWnd, UINT Message, WPARAM wParam, LPAR
             if( pEventHandler ) {
                 pEventHandler->onQuit();
             } else {
-                osre_error( "Nullptr to event handler detected." );
+                osre_error( Tag, "Nullptr to event handler detected." );
             }
             ::PostQuitMessage( NULL );
             return 1;
@@ -310,7 +312,7 @@ bool Win32Eventhandler::onQuit() {
 //-------------------------------------------------------------------------------------------------
 void Win32Eventhandler::setRootSurface( AbstractSurface *pSurface ) {
     if( !pSurface ) {
-        osre_debug( "Invalid window pointer." );
+        osre_debug( Tag, "Invalid window pointer." );
         return;
     }
 

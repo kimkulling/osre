@@ -165,64 +165,62 @@ private:
 };
 
 //-------------------------------------------------------------------------------------------------
-void OSRE_EXPORT debugPrint( const String &file, int line, const String &message,
-    const String &domain = "" );
+void OSRE_EXPORT debugPrint( const String &domain, const String &file, int line, const String &message );
 
 //-------------------------------------------------------------------------------------------------
-void OSRE_EXPORT logPrint( const String &file, int line, const String &message,
-    const String &domain = "" );
+void OSRE_EXPORT logPrint( const String &domain, const String &file, int line, const String &message );
 
 //-------------------------------------------------------------------------------------------------
-void OSRE_EXPORT warnPrint( const String &file, int line, const String &message,
-    const String &domain = "" );
+void OSRE_EXPORT warnPrint( const String &domain, const String &file, int line, const String &message );
 
 //-------------------------------------------------------------------------------------------------
-void OSRE_EXPORT errorPrint( const String &file, int line, const String &message,
-    const String &domain = "" );
+void OSRE_EXPORT errorPrint( const String &domain, const String &file, int line, const String &message );
 
 //-------------------------------------------------------------------------------------------------
-void OSRE_EXPORT fatalPrint( const String &file, int line, const String &message,
-    const String &domain = "" );
+void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line, const String &message );
 
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 
-const String DomainTag = "";
-
 //-------------------------------------------------------------------------------------------------
 ///	@fn		osre_debug
 ///	@brief	This helper macro will write the debug message into the logger.
+/// @param  domain      The domain to log for.
 ///	@param	message		The message to log.
 //-------------------------------------------------------------------------------------------------
-#define osre_debug( message ) ::OSRE::Common::debugPrint(  __FILE__, __LINE__, message, DomainTag );
+#define osre_debug( domain, message ) ::OSRE::Common::debugPrint( domain, __FILE__, __LINE__, message );
 
 //-------------------------------------------------------------------------------------------------
 ///	@fn		osre_log
 ///	@brief	This helper macro will write the info message into the logger.
+/// @param  domain      The domain to log for.
 ///	@param	message		The message to log.
 //-------------------------------------------------------------------------------------------------
-#define osre_log( message )  ::OSRE::Common::logPrint(    __FILE__, __LINE__, message, DomainTag );
+#define osre_log( domain, message )  ::OSRE::Common::logPrint(  domain,  __FILE__, __LINE__, message );
 
 //-------------------------------------------------------------------------------------------------
 ///	@fn		ce_warn
 ///	@brief	This helper macro will write a warning into the logger.
+/// @param  domain      The domain to log for.
 ///	@param	message		The warning to writhe into the log.
 //-------------------------------------------------------------------------------------------------
-#define osre_warn( message )  ::OSRE::Common::warnPrint(   __FILE__, __LINE__, message, DomainTag );
+#define osre_warn( domain, message )  ::OSRE::Common::warnPrint(  domain, __FILE__, __LINE__, message );
 
 //-------------------------------------------------------------------------------------------------
 ///	@fn		osre_error
 ///	@brief	This helper macro will write a error into the logger.
+/// @param  domain      The domain to log for.
 ///	@param	message		The warning to writhe into the log.
 //-------------------------------------------------------------------------------------------------
-#define osre_error( message ) ::OSRE::Common::errorPrint(  __FILE__, __LINE__, message, DomainTag );
+#define osre_error( domain, message ) ::OSRE::Common::errorPrint( domain, __FILE__, __LINE__, message );
 
 //-------------------------------------------------------------------------------------------------
 ///	@fn		ce_fatal
 ///	@brief	This helper macro will write a fatal error into the logger.
+/// @param  domain      The domain to log for.
 ///	@param	message		The warning to writhe into the log.
 //-------------------------------------------------------------------------------------------------
-#define osre_fatal( message ) ::OSRE::Common::fatalPrint( __FILE__, __LINE__, message, DomainTag );
+#define osre_fatal( domain, message ) ::OSRE::Common::fatalPrint( domain,__FILE__, __LINE__, message );
 
 } // Namespace OSRE

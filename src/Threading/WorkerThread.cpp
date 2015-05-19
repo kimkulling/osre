@@ -30,6 +30,8 @@ namespace Threading {
 
 using namespace ::OSRE::Platform;
 
+static const String Tag = "WorkerThread";
+
 //-------------------------------------------------------------------------------------------------
 WorkerThread::WorkerThread( const String &name, ui32 stacksize ) 
 : m_pFinishEvent( nullptr )
@@ -40,7 +42,7 @@ WorkerThread::WorkerThread( const String &name, ui32 stacksize )
         m_pFinishEvent = pThreadFactory->createThreadEvent();
         m_pImpl = pThreadFactory->createThread( name, stacksize );
     } else {
-        osre_error( "Invalid pointer to the thread factory." );
+        osre_error( Tag, "Invalid pointer to the thread factory." );
     }
 }
 

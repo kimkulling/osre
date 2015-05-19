@@ -28,6 +28,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
+static const String Tag = "SDL2Surface";
+
 //-------------------------------------------------------------------------------------------------
 SDL2Surface::SDL2Surface( SurfaceProperties *props )
 : AbstractSurface( props )
@@ -57,7 +59,7 @@ bool SDL2Surface::onCreate() {
     m_surface = SDL_CreateWindow( "zfxce2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h,
                                   SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
     if( !m_surface ) {
-        osre_error( "Error while creating window." );
+        osre_error( Tag, "Error while creating window." );
         return false;
     }
     SDL_ShowWindow( m_surface );

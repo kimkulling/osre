@@ -35,6 +35,7 @@ namespace IO {
 using namespace ::CPPCore;
 
 static const String ZipSchema = "zip";
+static const String Tag = "ZipFileSystem";
 
 //-------------------------------------------------------------------------------------------------
 ZipFileSystem::ZipFileSystem( const Uri &archive ) 
@@ -103,7 +104,7 @@ void ZipFileSystem::close( Stream **ppZipFileStream ) {
 //-------------------------------------------------------------------------------------------------
 bool ZipFileSystem::fileExist( const Uri &file ) {
     if ( file.isEmpty() ) {
-        osre_debug( "Filename is empty." );
+        osre_debug( Tag, "Filename is empty." );
         return false;
     }
     

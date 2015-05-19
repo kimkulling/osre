@@ -55,6 +55,7 @@ static const String PlatformPluginName[ MaxPlugin ] = {
     "SDL2Plugin"
 };
 
+static const String Tag = "PlatformInterface";
 
 //-------------------------------------------------------------------------------------------------
 PlatformInterface::PlatformInterface( const ConfigurationMap *config )
@@ -154,7 +155,7 @@ String PlatformInterface::getOSPluginName( PluginType type ) {
 bool PlatformInterface::onOpen() {
     if( !m_pConfiguration ) {
         assert( nullptr != m_pConfiguration );
-        osre_debug( "Invalid pointer to configuration." );
+        osre_debug( Tag, "Invalid pointer to configuration." );
         return false;
     }
 
@@ -183,7 +184,7 @@ bool PlatformInterface::onOpen() {
     m_type = static_cast<PluginType>( m_pConfiguration->get( ConfigurationMap::PlatformPlugin ).getInt( ) );
 
     PlatformPluginFactory::init( m_type );
-    osre_log( "Platform plugin created for " + PlatformInterface::getOSPluginName( m_type ) );
+    osre_log( Tag, "Platform plugin created for " + PlatformInterface::getOSPluginName( m_type ) );
 
     PlatformPluginFactory::createThreadFactory( m_type );
 
@@ -223,7 +224,7 @@ bool PlatformInterface::setupGfx( SurfaceProperties *props, bool polls ) {
     m_pRootSurface = PlatformPluginFactory::createSurface( m_type, props );
     if( !m_pRootSurface->create() ) {
         delete m_pRootSurface;
-        osre_error( "Error while creating platform root surface." );
+        osre_error( Tag, "Error while creating platform root surface." );
 
         m_pRootSurface = nullptr;
         return false;
@@ -232,7 +233,7 @@ bool PlatformInterface::setupGfx( SurfaceProperties *props, bool polls ) {
     // install the platform event handler
     m_pOSEventHandler = PlatformPluginFactory::createPlatformEventHandler( m_type, m_pRootSurface );
     if( !m_pOSEventHandler ) {
-        osre_error( "Error while creating platform event handler." );
+        osre_error( Tag, "Error while creating platform event handler." );
         m_pRootSurface->destroy();
         m_pRootSurface = nullptr;
         return false;
