@@ -80,7 +80,7 @@ void APIENTRY DebugLog( GLenum source, GLenum type, GLuint id, GLenum severity, 
     }
     std::cout << std::endl;
     std::cout << "---------------------opengl-callback-end--------------" << std::endl;
-    osre_log( Tag, "DebugLog" );
+    osre_info( Tag, "DebugLog" );
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -198,7 +198,7 @@ bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
     const char *GLVersionString = ( const char* ) glGetString( GL_VERSION );
     if( GLVersionString ) {
         String version( GLVersionString );
-        osre_log( Tag, version );
+        osre_info( Tag, version );
     }
 
     // or better yet, use the GL4.x way to get the version number

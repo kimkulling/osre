@@ -116,6 +116,18 @@ void Logger::debug( const String &domain, const String &msg ) {
 }
 
 //-------------------------------------------------------------------------------------------------
+void Logger::info( const String &domain, const String &msg ) {
+    String logMsg;
+
+    logMsg += "Info: ";
+    logMsg += msg;
+
+    appendDomain( domain, logMsg );
+
+    print( logMsg );
+}
+
+//-------------------------------------------------------------------------------------------------
 void Logger::print( const String &msg, PrintMode mode ) {
     if ( msg.empty() ) {
         return;
@@ -265,6 +277,20 @@ void debugPrint( const String &domain, const String &file, int line, const Strin
     message += ss.str();
     message += ")";
     Logger::getInstance()->debug( domain, message );
+}
+
+//-------------------------------------------------------------------------------------------------
+void infoPrint( const String &domain, const String &file, int line, const String &msg ) {
+    String message;
+    message += msg;
+    message += " (";
+    message += file;
+    message += ", ";
+    std::stringstream ss;
+    ss << line;
+    message += ss.str();
+    message += ")";
+    Logger::getInstance()->info( domain, message );
 }
 
 //-------------------------------------------------------------------------------------------------

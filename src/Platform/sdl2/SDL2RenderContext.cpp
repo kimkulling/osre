@@ -68,8 +68,8 @@ bool SDL2RenderContext::onCreate( AbstractSurface *pSurface ) {
     }
 
     const GLubyte *version = glGetString( GL_VERSION );
-    osre_log( Tag, "OpenGL renderer initiated.")
-    osre_log( Tag, "Version : " + String( (c8*) version ) );
+    osre_info( Tag, "OpenGL renderer initiated.")
+    osre_info( Tag, "Version : " + String( (c8*) version ) );
 
     return true;
 }

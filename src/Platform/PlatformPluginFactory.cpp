@@ -100,7 +100,7 @@ AbstractSurface *PlatformPluginFactory::createSurface( PluginType type, SurfaceP
             break;
 
         default:
-            osre_log( Tag, "Enum value not handled." );
+            osre_info( Tag, "Enum value not handled." );
             break;
     }
 
@@ -167,7 +167,7 @@ AbstractThreadFactory *PlatformPluginFactory::createThreadFactory( PluginType ty
         break;
     }
 
-    osre_log( Tag, "Set thread factory." );
+    osre_info( Tag, "Set thread factory." );
     AbstractThreadFactory::setInstance( instance );
 
     return instance;

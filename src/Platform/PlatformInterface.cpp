@@ -184,7 +184,7 @@ bool PlatformInterface::onOpen() {
     m_type = static_cast<PluginType>( m_pConfiguration->get( ConfigurationMap::PlatformPlugin ).getInt( ) );
 
     PlatformPluginFactory::init( m_type );
-    osre_log( Tag, "Platform plugin created for " + PlatformInterface::getOSPluginName( m_type ) );
+    osre_info( Tag, "Platform plugin created for " + PlatformInterface::getOSPluginName( m_type ) );
 
     PlatformPluginFactory::createThreadFactory( m_type );
 

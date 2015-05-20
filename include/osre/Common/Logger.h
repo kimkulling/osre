@@ -119,6 +119,10 @@ public:
     ///	@param	rMessage	The message to log.
     void debug( const String &domain, const String &rMessage );
 
+    ///	@brief	Logs an info message.
+    ///	@param	rMessage	The message to log.
+    void info( const String &domain, const String &rMessage );
+
     ///	@brief	Logs a print message.
     ///	@param	rMessage	The message to log.
     void print( const String &rMessage, PrintMode mode = WithDateTime );
@@ -166,17 +170,9 @@ private:
 
 //-------------------------------------------------------------------------------------------------
 void OSRE_EXPORT debugPrint( const String &domain, const String &file, int line, const String &message );
-
-//-------------------------------------------------------------------------------------------------
-void OSRE_EXPORT logPrint( const String &domain, const String &file, int line, const String &message );
-
-//-------------------------------------------------------------------------------------------------
+void OSRE_EXPORT infoPrint( const String &domain, const String &file, int line, const String &message );
 void OSRE_EXPORT warnPrint( const String &domain, const String &file, int line, const String &message );
-
-//-------------------------------------------------------------------------------------------------
 void OSRE_EXPORT errorPrint( const String &domain, const String &file, int line, const String &message );
-
-//-------------------------------------------------------------------------------------------------
 void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line, const String &message );
 
 //-------------------------------------------------------------------------------------------------
@@ -197,7 +193,7 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 /// @param  domain      The domain to log for.
 ///	@param	message		The message to log.
 //-------------------------------------------------------------------------------------------------
-#define osre_log( domain, message )  ::OSRE::Common::logPrint(  domain,  __FILE__, __LINE__, message );
+#define osre_info( domain, message )  ::OSRE::Common::infoPrint(  domain,  __FILE__, __LINE__, message );
 
 //-------------------------------------------------------------------------------------------------
 ///	@fn		ce_warn
