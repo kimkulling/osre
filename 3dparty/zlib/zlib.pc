@@ -1,5 +1,5 @@
-prefix=C:/Program Files (x86)/osre
-exec_prefix=C:/Program Files (x86)/osre
+prefix=/usr/local
+exec_prefix=/usr/local
 libdir=
 sharedlibdir=
 includedir=

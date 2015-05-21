@@ -76,7 +76,7 @@ public:
                 if( key == KEY_SPACE ) {
                     result = m_pTestSuite->requestNextTest( next );
                     if ( !result ) {
-                        osre_log( Tag, "All tests done." );
+                        osre_info( Tag, "All tests done." );
                     }
                 }
             }
