@@ -1,5 +1,7 @@
-﻿  RenderTestSuite.cpp
-D:\projects\osre\test\RenderTests\src\RenderTestSuite.cpp(79): error C3861: "osre_log": Bezeichner wurde nicht gefunden.
+﻿  Building Custom Rule D:/projects/osre/test/RenderTests/CMakeLists.txt
+  CMake does not need to re-run because D:\projects\osre\test\RenderTests\CMakeFiles\generate.stamp is up-to-date.
+  AbstractRenderTest.cpp
+  RenderTestSuite.cpp
   BaseTriangleRenderTest.cpp
 d:\projects\osre\test\rendertests\src\RenderTestUtils.h(8): warning C4316: 'OSRE::RenderTest::BaseTriangleRenderTest' : Das auf dem Heap zugeordnete Objekt ist möglicherweise nicht 16 ausgerichtet
           d:\projects\osre\test\rendertests\src\RenderTestUtils.h(7): Bei der Kompilierung der  Klassen-template der AutoAttach<OSRE::RenderTest::BaseTriangleRenderTest>::AutoAttach(void)-Memberfunktion
@@ -13,7 +15,8 @@ d:\projects\osre\test\rendertests\src\RenderTestUtils.h(8): warning C4316: 'OSRE
   GeoInstanceRenderTest.cpp
 d:\projects\osre\test\rendertests\src\RenderTestUtils.h(8): warning C4316: 'OSRE::RenderTest::GeoInstanceRenderTest' : Das auf dem Heap zugeordnete Objekt ist möglicherweise nicht 16 ausgerichtet
           d:\projects\osre\test\rendertests\src\RenderTestUtils.h(7): Bei der Kompilierung der  Klassen-template der AutoAttach<OSRE::RenderTest::GeoInstanceRenderTest>::AutoAttach(void)-Memberfunktion
-          D:\projects\osre\test\RenderTests\src\GeoInstanceRenderTest.cpp(163): Siehe Verweis auf die Instanziierung der gerade kompilierten Funktions-template "AutoAttach<OSRE::RenderTest::GeoInstanceRenderTest>::AutoAttach(void)".
-          D:\projects\osre\test\RenderTests\src\GeoInstanceRenderTest.cpp(163): Siehe Verweis auf die Instanziierung der gerade kompilierten Klassen-template "AutoAttach<OSRE::RenderTest::GeoInstanceRenderTest>".
+          D:\projects\osre\test\RenderTests\src\GeoInstanceRenderTest.cpp(134): Siehe Verweis auf die Instanziierung der gerade kompilierten Funktions-template "AutoAttach<OSRE::RenderTest::GeoInstanceRenderTest>::AutoAttach(void)".
+          D:\projects\osre\test\RenderTests\src\GeoInstanceRenderTest.cpp(134): Siehe Verweis auf die Instanziierung der gerade kompilierten Klassen-template "AutoAttach<OSRE::RenderTest::GeoInstanceRenderTest>".
   main.cpp
   Code wird generiert...
+  rendertest.vcxproj -> D:\projects\osre\bin\Debug\rendertest.exe

@@ -76,6 +76,7 @@ endif()
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src )
 ADD_SUBDIRECTORY( test/RenderTests )
+ADD_SUBDIRECTORY( samples )
 ADD_SUBDIRECTORY( 3dparty/glew )
 ADD_SUBDIRECTORY( 3dparty/cppcore/build )
 ADD_SUBDIRECTORY( 3dparty/zlib )

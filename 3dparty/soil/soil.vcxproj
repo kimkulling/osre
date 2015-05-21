@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGUID>{5970CB8D-9A62-4521-9A9B-85404D8D8A1E}</ProjectGUID>
+    <ProjectGUID>{16710955-66FD-4923-AE3A-055D39B432A9}</ProjectGUID>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
     <ProjectName>soil</ProjectName>
@@ -262,7 +262,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:/projects/osre/ZERO_CHECK.vcxproj">
-      <Project>9BB27F3B-4F56-4C25-89E9-119E7FA45529</Project>
+      <Project>B93E408B-53B4-47DD-B2B2-C3AB29207410</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

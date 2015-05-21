@@ -10,4 +10,5 @@ struct AutoAttach {
     }
 };
 
-#define ATTACH_RENDERTEST( TestClass ) AutoAttach<TestClass> _##TestClass##_getInstance;
+#define ATTACH_RENDERTEST( TestClass ) \
+    AutoAttach<TestClass> _##TestClass##_getInstance;

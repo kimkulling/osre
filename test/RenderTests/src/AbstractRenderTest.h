@@ -6,7 +6,6 @@ namespace OSRE {
 
 namespace RenderBackend {
     class RenderBackendService;
-
     struct Material;
 }
 

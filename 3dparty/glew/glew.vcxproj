@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGUID>{3F74E919-339B-41ED-8BE2-4D07D5CCFEDD}</ProjectGUID>
+    <ProjectGUID>{038CA72F-798D-46EF-9BE6-BF90065F370C}</ProjectGUID>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
     <ProjectName>glew</ProjectName>
@@ -321,7 +321,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:/projects/osre/ZERO_CHECK.vcxproj">
-      <Project>9BB27F3B-4F56-4C25-89E9-119E7FA45529</Project>
+      <Project>B93E408B-53B4-47DD-B2B2-C3AB29207410</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
