@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "AbstractTestFixure.h"
 
 #include <cppcore/Container/TArray.h>
