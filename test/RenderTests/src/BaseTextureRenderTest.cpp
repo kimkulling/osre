@@ -149,7 +149,7 @@ public:
 
         pGeometry->m_pMaterial->m_numTextures = 1;
         pGeometry->m_pMaterial->m_pTextures = new Texture[ 1 ];
-#ifdef CE_WINDOWS
+#ifdef _WIN32
         pGeometry->m_pMaterial->m_pTextures[ 0 ].m_textureName = "../../Media/Models/Obj/SpiderTex.jpg";
 #else
         pGeometry->m_pMaterial->m_pTextures[ 0 ].m_textureName = "../Media/Models/Obj/SpiderTex.jpg";

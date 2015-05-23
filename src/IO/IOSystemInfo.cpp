@@ -46,7 +46,7 @@ IOSystemInfo::~IOSystemInfo() {
 
 //-------------------------------------------------------------------------------------------------
 String IOSystemInfo::getDirSeparator() {
-#ifdef CE_WINDOWS
+#ifdef OSRE_WINDOWS
     static String sep = "\\";
 #else
     static String sep = "/";
@@ -56,7 +56,7 @@ String IOSystemInfo::getDirSeparator() {
 
 //-------------------------------------------------------------------------------------------------
 String IOSystemInfo::getCurrentDirToken() {
-#ifdef CE_WINDOWS
+#ifdef OSRE_WINDOWS
     static String token = ".\\";
 #else
     static String token = "./";
@@ -70,7 +70,7 @@ String IOSystemInfo::getCurrentDirectory() {
     static const ui32 buffersize = 256;
     c8 buffer[buffersize];
     c8 *retPtr( nullptr );
-#ifndef CE_WINDOWS
+#ifndef OSRE_WINDOWS
     // POSIX call
     retPtr = ::getcwd( buffer, buffersize );
 #else

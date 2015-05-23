@@ -24,13 +24,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <src/Platform/PlatformPluginFactory.h>
 #include <osre/Common/EventTriggerer.h>
 #include <osre/Properties/ConfigurationMap.h>
-#ifdef CE_WINDOWS
+#ifdef OSRE_WINDOWS
 #   include <src/Platform/win32/Win32Surface.h>
 #   include <src/Platform/win32/Win32Eventhandler.h>
 #   include <src/Platform/win32/Win32Timer.h>
 #   include <src/Platform/win32/Win32RenderContext.h>
 #   include <src//Platform/win32/Win32ThreadFactory.h>
-#endif // CE_WINDOWS
+#endif // OSRE_WINDOWS
 #include <src/Platform/sdl2/SDL2Surface.h>
 #include <src/Platform/sdl2/SDL2EventHandler.h>
 #include <src/Platform/sdl2/SDL2RenderContext.h>
@@ -49,9 +49,9 @@ using namespace ::OSRE::Properties;
 PlatformInterface *PlatformInterface::s_instance( nullptr );
 
 static const String PlatformPluginName[ MaxPlugin ] = {
-#ifdef CE_WINDOWS
+#ifdef _WIN32
     "WindowsPlugin",
-#endif // CE_WINDOWS
+#endif // OSRE_WINDOWS
     "SDL2Plugin"
 };
 
@@ -61,11 +61,11 @@ static const String Tag = "PlatformInterface";
 PlatformInterface::PlatformInterface( const ConfigurationMap *config )
 : AbstractService( "platform/platforminterface" )
 , m_pConfiguration( config )
-#ifdef CE_WINDOWS
+#ifdef OSRE_WINDOWS
 , m_type( WindowsPlugin )
 #else
 , m_type( SDL2Plugin )
-#endif // CE_WINDOWS
+#endif // OSRE_WINDOWS
 , m_pRootSurface( nullptr )
 , m_pOSEventHandler( nullptr )
 , m_pTimer( nullptr ) {
@@ -124,22 +124,22 @@ AbstractTimer *PlatformInterface::getTimer() const {
 
 //-------------------------------------------------------------------------------------------------
 PluginType PlatformInterface::getOSPluginType() {
-#ifdef CE_WINDOWS
+#ifdef OSRE_WINDOWS
     return WindowsPlugin;
 #else 
     return SDL2Plugin;
-#endif // CE_WINDOWS
+#endif // OSRE_WINDOWS
 }
 
 //-------------------------------------------------------------------------------------------------
 String PlatformInterface::getOSPluginName( PluginType type ) {
     String name( "None" );
     switch( type ) {
-#ifdef CE_WINDOWS
+#ifdef OSRE_WINDOWS
         case WindowsPlugin:
             name = PlatformPluginName[ WindowsPlugin ];
             break;
-#endif // CE_WINDOWS
+#endif // OSRE_WINDOWS
 
         case SDL2Plugin:
             name = PlatformPluginName[ SDL2Plugin ];

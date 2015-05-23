@@ -102,10 +102,10 @@ bool LocaleFileSystem::fileExist( const Uri &filename ) {
 
     bool exists( false );
     FILE *pFileStream( nullptr );
-#ifdef CE_WINDOWS
+#ifdef OSRE_WINDOWS
     errno_t err = ::fopen_s( &pFileStream, filename.getAbsPath().c_str(), "r" );
     if ( 0 != err ) {
-        ce_debug( "Error while opening the file." );
+        osre_debug( Tag, "Error while opening the file." );
     }
 #else
     pFileStream = ::fopen(  filename.getAbsPath().c_str(), "r" );

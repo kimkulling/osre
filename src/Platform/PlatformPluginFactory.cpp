@@ -72,7 +72,7 @@ AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler(
                 }
             }
             break;
-#endif // CE_WINDOWS
+#endif // _WIN32
 
         case Platform::SDL2Plugin:
             pEventHandler = new SDL2EventHandler();
@@ -93,7 +93,7 @@ AbstractSurface *PlatformPluginFactory::createSurface( PluginType type, SurfaceP
         case Platform::WindowsPlugin:
             pSurface = new Win32Surface( pProps );
             break;
-#endif // CE_WINDOWS
+#endif // OSRE_WINDOWS
 
         case Platform::SDL2Plugin:
             pSurface = new SDL2Surface( pProps );
@@ -115,7 +115,7 @@ AbstractRenderContext *PlatformPluginFactory::createRenderContext( PluginType ty
         case Platform::WindowsPlugin:
             renderCtx = new Win32RenderContext();
             break;
-#endif // CE_WINDOWS
+#endif // OSRE_WINDOWS
 
         case Platform::SDL2Plugin:
             renderCtx = new SDL2RenderContext();
@@ -157,7 +157,7 @@ AbstractThreadFactory *PlatformPluginFactory::createThreadFactory( PluginType ty
         case Platform::WindowsPlugin:
         instance = new Win32ThreadFactory();
         break;
-#endif // CE_WINDOWS
+#endif // OSRE_WINDOWS
 
     case Platform::SDL2Plugin:
         instance = new SDL2ThreadFactory();

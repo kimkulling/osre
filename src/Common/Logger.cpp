@@ -25,9 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cassert>
 
-#ifdef CE_WINDOWS
-#  include "../Debugging/Win32/Win32DbgLogStream.h"
-#endif // CE_WINDOWS
+#ifdef OSRE_WINDOWS
+//#  include "../Debugging/Win32/Win32DbgLogStream.h"
+#endif // OSRE_WINDOWS
 
 #include <iostream>
 #include <sstream>
@@ -209,9 +209,9 @@ Logger::Logger() :
 {
     m_LogStreams.add( new StdLogStream );
 
-#ifdef CE_WINDOWS
-    m_LogStreams.add( new Debugging::Win32DbgLogStream );
-#endif // CE_WINDOWS
+#ifdef OSRE_WINDOWS
+//    m_LogStreams.add( new Debugging::Win32DbgLogStream );
+#endif // OSRE_WINDOWS
 
     print( Line, WhithoutDateTime );
     print( "New ZFXCE2 run." );

@@ -91,7 +91,7 @@ bool FileStream::open() {
     }
     assert( !modestr.empty() );
 
-#if defined(CE_WINDOWS) && !defined(__MINGW32__) && !defined (__MINGW64__)
+#if defined(OSRE_WINDOWS) && !defined(__MINGW32__) && !defined (__MINGW64__)
     errno_t err;
     err = ::fopen_s( &m_pFile, abspath.c_str(), modestr.c_str() );
     assert( 0 == err );
@@ -124,7 +124,7 @@ ui32 FileStream::getSize() {
 
     const String &abspath = m_Uri.getAbsPath();
 
-#ifdef CE_WINDOWS
+#ifdef OSRE_WINDOWS
     // Get the windows specific file-size
     struct __stat64 fileStat; 
     int err = _stat64(  abspath.c_str(), &fileStat ); 

@@ -72,7 +72,7 @@ void SystemInfo::getMemoryStatus( ui32 &totalPhysicMem, ui32 &memInUse ) {
     totalPhysicMem = 0;
     memInUse = 0;
 
-#ifdef CE_WINDOWS
+#ifdef OSRE_WINDOWS
     // windows specific memory statistics
     MEMORYSTATUSEX statex;
     statex.dwLength = sizeof( statex );
@@ -141,7 +141,7 @@ String SystemInfo::getCurrentThreadName() {
     threadId.Id = ::GetCurrentThreadId();
 #elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__) )
     threadId.Id = (unsigned long)SDL_ThreadID();
-#endif // CE_WINDOWS
+#endif // OSRE_WINDOWS
     return getThreadName( threadId );
 }
 

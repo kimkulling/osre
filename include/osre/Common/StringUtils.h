@@ -88,15 +88,15 @@ HashId StringUtils::hashName( char const *pIdentStr ) {
         s2 %= BASE;
     }
 
-#ifdef CE_WINDOWS
+#ifdef OSRE_WINDOWS
 #   pragma warning(push)
 #   pragma warning(disable : 4312)
-#endif // CE_WINDOWS
+#endif // OSRE_WINDOWS
     return static_cast<HashId>( (s2 << 16) | s1 );
 
-#ifdef CE_WINDOWS
+#ifdef OSRE_WINDOWS
 #   pragma warning(pop)
-#endif // CE_WINDOWS
+#endif // OSRE_WINDOWS
 #undef DO1
 #undef DO2
 #undef DO4

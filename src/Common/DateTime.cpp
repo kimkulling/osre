@@ -141,7 +141,7 @@ ui32 DateTime::getCurrentMilliseconds() const {
 DateTime DateTime::getCurrentUTCTime() {
     DateTime currentDateTime;
 
-#ifdef CE_WINDOWS
+#ifdef OSRE_WINDOWS
     SYSTEMTIME systemtime;
     ::GetSystemTime( &systemtime );
 

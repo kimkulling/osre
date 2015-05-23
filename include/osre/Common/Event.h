@@ -172,20 +172,15 @@ bool Event::operator == ( const Event &rhs ) const  {
 class EventData {
 public:
     ///	@brief	The class constructor with event and trigger.
-    ///	@param	rEvent		Owning event.
-    ///	@param	pTriggerer	Event-triggering instance.
-    EventData( const Event& rEvent, EventTriggerer *pTriggerer );
+    ///	@param	ev		[in] Owning event.
+    ///	@param	sender	[in] Event-triggering instance.
+    EventData( const Event &ev, EventTriggerer *sender );
     
     ///	@brief	The class copy constructor.
     ///	@param	other	Instance to copy from.
-    EventData( const EventData &other );
     
     ///	@brief The class destructor, virtual.
     virtual ~EventData();
-
-    ///	@brief	Copy an instance.
-    ///	@param	other	Instance to copy from.
-    void copy( const EventData &other );
 
     ///	@brief	Returns assigned event.
     ///	@return	Assigned event instance.
@@ -193,9 +188,12 @@ public:
 
     ///	@brief	Returns event-trigger instance.
     ///	@return	Pointer to assigned event instance.
-    EventTriggerer* getEventSource() const;
+    EventTriggerer* getEventSender() const;
 
+    ///	@brief  Adds another reference ownership.
     void get();
+
+    ///	@brief  Releases reference ownership, if no owners are there data will be deleted..
     void release();
 
     ///	@brief	Equal operator implementation.
@@ -203,8 +201,10 @@ public:
     ///	@return	true, if both instances are equal.
     bool operator == (const EventData &other) const;
 
-    ///	@brief	Assignment operator implementation.
-    EventData &operator = (const EventData &other);
+private:
+    EventData();
+    EventData( const EventData &other );
+    EventData &operator = ( const EventData &other );
 
 private:
     const Event& m_Event;
@@ -226,22 +226,8 @@ EventData::EventData(const Event& e, EventTriggerer* c) :
 
 //--------------------------------------------------------------------------------------------------------------------
 inline 
-EventData::EventData(const EventData &other) :
-    m_Event(other.m_Event)
-{
-    copy( other );
-}
-
-//--------------------------------------------------------------------------------------------------------------------
-inline 
 EventData::~EventData() {
     // empty
-}
-
-//--------------------------------------------------------------------------------------------------------------------
-inline 
-void EventData::copy( const EventData &other ) {
-    m_Source = other.m_Source;
 }
 
 //--------------------------------------------------------------------------------------------------------------------
@@ -252,7 +238,7 @@ const Event& EventData::getEvent() const {
 
 //--------------------------------------------------------------------------------------------------------------------
 inline 
-EventTriggerer* EventData::getEventSource() const  {
+EventTriggerer* EventData::getEventSender() const  {
     return m_Source; 
 }
 
@@ -277,18 +263,6 @@ void EventData::release() {
 inline bool 
 EventData::operator == (const EventData &other) const {
     return (m_Event == other.m_Event && m_Source == other.m_Source);
-}
-
-//--------------------------------------------------------------------------------------------------------------------
-inline 
-EventData &EventData::operator = (const EventData &other) {
-    if (other == *this) {
-        return *this;
-    }
-
-    copy( other );
-
-    return *this;
 }
 
 //--------------------------------------------------------------------------------------------------------------------

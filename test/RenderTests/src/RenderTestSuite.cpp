@@ -84,7 +84,7 @@ bool RenderTestSuite::setup() {
     pConfig->setString(Properties::ConfigurationMap::RenderAPI, "opengl");
     pConfig->setBool( Properties::ConfigurationMap::PollingMode, true );
 
-#ifdef CE_WINDOWS
+#ifdef OSRE_WINDOWS
     //pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
     pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast< i32 >( Platform::WindowsPlugin ) );
 #else

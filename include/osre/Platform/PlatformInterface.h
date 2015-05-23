@@ -134,15 +134,14 @@ public:
     ///	@param	down	[in] true, if the mouse button was pressed, false if the mouse button was
     ///					released.
     ///	@param	c		[in] The event trigger sender.
-    MouseButtonEventData( bool down, Common::EventTriggerer *c ) :
-        Common::EventData( down ? MouseButtonDownEvent : MouseButtonUpEvent, c ),
-        m_Button( 0 ),
-        m_AbsX( 0 ),
-        m_AbsY( 0 ),
-        m_Pressed( false )
-    {
+    MouseButtonEventData( bool down, Common::EventTriggerer *c ) 
+    : Common::EventData( down ? MouseButtonDownEvent : MouseButtonUpEvent, c )
+    , m_Button( 0 )
+    , m_AbsX( 0 )
+    , m_AbsY( 0 )
+    , m_Pressed( false ) {
             // empty
-        }
+    }
 
     ui32 m_Button;	///< pressed button (0=left, 1=middle, 2=right )
     i32 m_AbsX;		///< absolute X-position of the mouse cursor
