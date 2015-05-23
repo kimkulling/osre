@@ -28,7 +28,7 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@struct		::ZFXCE2::Platform::SurfaceProperties
+///	@struct		::OSRE::Platform::SurfaceProperties
 ///	@ingroup	Infrastructure
 ///
 ///	@brief  This struct stores all surface related information.
@@ -47,7 +47,7 @@ struct SurfaceProperties {
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Platform::AbstractSurface
+///	@class		::OSRE::Platform::AbstractSurface
 ///	@ingroup	Infrastructure
 ///
 ///	@brief  This abstract class declares the interface for a render surface.

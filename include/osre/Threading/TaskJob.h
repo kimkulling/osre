@@ -35,7 +35,7 @@ namespace Common {
 namespace Threading {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Threading::TaskJob
+///	@class		::OSRE::Threading::TaskJob
 ///	@ingroup	Infrastructure
 ///
 ///	@brief This class implements a simple container for events as ids and the assigned data, which 

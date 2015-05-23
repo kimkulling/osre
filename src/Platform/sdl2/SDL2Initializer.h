@@ -28,7 +28,7 @@ namespace OSRE {
 namespace Platform {
         
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Platform::SDL2Initializer
+///	@class		::OSRE::Platform::SDL2Initializer
 ///	@ingroup	Infrastructure
 ///
 ///	@brief

@@ -64,7 +64,7 @@ const String FsSrc =
 
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::RenderTest::BaseTextureRenderTest
+///	@class		::OSRE::RenderTest::BaseTextureRenderTest
 ///	@ingroup	Test
 ///
 ///	@brief  This class implements a simple texture render test.

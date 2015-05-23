@@ -33,7 +33,7 @@ namespace IO {
 class Uri;
 
 //--------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::IO::AbstractFileSystem
+///	@class		::OSRE::IO::AbstractFileSystem
 ///	@ingroup	Infrastructure
 ///	
 ///	@brief	Abstract interface for all file system implementations. Use this interface to build your 

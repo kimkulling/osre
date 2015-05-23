@@ -66,7 +66,7 @@ AbstractAtomic::~AbstractAtomic() {
 }
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Platform::AtomicInt
+///	@class		::OSRE::Platform::AtomicInt
 ///	@ingroup	Infrastructure
 ///
 ///	@brief  Implements the accessor for an atomic operation.

@@ -61,6 +61,7 @@ namespace OSRE {
 #  pragma warning( disable : 4127 )	// Conditional expression is constant
 #  pragma warning( disable : 4100 )
 #  pragma warning( disable : 4201 ) // No standard extension
+#  pragma warning( disable : 4316 )
 #endif
 
         // Declares thread-local data

@@ -44,8 +44,7 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		ZFXCE2::Platform::AtomicInt
-///	@ingroup	Infrastructure
+///	@class		::OSRE::Platform::AtomicInt
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------

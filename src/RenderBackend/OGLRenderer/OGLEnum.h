@@ -28,7 +28,7 @@ namespace OSRE {
 namespace RenderBackend {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::RenderBackend::OGLEnum
+///	@class		::OSRE::RenderBackend::OGLEnum
 ///	@ingroup	RenderSystem
 ///
 ///	@brief  This utility class implements the OpenGL enum lookup.

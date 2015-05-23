@@ -44,7 +44,7 @@ namespace Math {
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Math::BaseMath
+///	@class		::OSRE::Math::BaseMath
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This class offer base informations about the mathematical subsystem like precisions.
@@ -67,7 +67,7 @@ public:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@fn			::ZFXCE2::Math::ce_min
+///	@fn			::OSRE::Math::ce_min
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	Returns the minimal value.
@@ -81,7 +81,7 @@ T ce_min( T val1, T val2 ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-///	@fn			::ZFXCE2::Math::ce_max
+///	@fn			::OSRE::Math::ce_max
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	Returns the maximal value.

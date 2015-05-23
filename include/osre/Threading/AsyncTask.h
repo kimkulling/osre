@@ -36,7 +36,7 @@ namespace Threading {
 class WorkerThread;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Threading::AsyncTask
+///	@class		::OSRE::Threading::AsyncTask
 ///	@ingroup	Infrastructure
 ///
 ///	@brief  This task can be used to implement a async. handled task.
@@ -98,7 +98,7 @@ private:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Threading::EmptyTask
+///	@class		::OSRE::Threading::EmptyTask
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	An empty task as a placeholder.

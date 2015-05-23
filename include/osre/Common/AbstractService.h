@@ -29,7 +29,7 @@ namespace OSRE {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Common::AbstractService
+///	@class		::OSRE::Common::AbstractService
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This class is the base interface for all server classes.
@@ -133,7 +133,7 @@ bool AbstractService::update(  d32 timeDiff ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-/// @def        ::ZFXCE2::Common::DECLARE_SINGLETON
+/// @def        ::OSRE::Common::DECLARE_SINGLETON
 /// @ingroup    Infrastructure
 ///
 /// @brief  Helper macro to define a singleton and declare all needed methods.
@@ -146,7 +146,7 @@ public:                                                                         
 private:
 
 //-------------------------------------------------------------------------------------------------
-/// @def        ::ZFXCE2::Common::IMPLEMENT_SINGLETON
+/// @def        ::OSRE::Common::IMPLEMENT_SINGLETON
 /// @ingroup    Infrastructure
 ///
 /// @brief  Helper macro to define a singleton and implement all needed methods.
@@ -155,7 +155,7 @@ private:
     type * type::s_pTypeInstance = nullptr;
 
 //-------------------------------------------------------------------------------------------------
-/// @def        ::ZFXCE2::Common::CREATE_SINGLETON
+/// @def        ::OSRE::Common::CREATE_SINGLETON
 /// @ingroup    Infrastructure
 ///
 /// @brief  Helper macro to create a macro from a given class.
@@ -165,7 +165,7 @@ private:
     s_instance = this;         
 
 //-------------------------------------------------------------------------------------------------
-/// @def        ::ZFXCE2::Common::DESTROY_SINGLETON
+/// @def        ::OSRE::Common::DESTROY_SINGLETON
 /// @ingroup    Infrastructure
 ///
 /// @brief  Helper macro to destroy a macro from a given class.

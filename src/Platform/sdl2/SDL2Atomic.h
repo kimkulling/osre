@@ -32,7 +32,7 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Platform::SDL2Atomic
+///	@class		::OSRE::Platform::SDL2Atomic
 ///	@ingroup	Infrastructure
 ///
 ///	@brief  This class implements the atomic int based on SDL2.

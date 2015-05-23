@@ -30,7 +30,7 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Platform::SDL2Surface
+///	@class		::OSRE::Platform::SDL2Surface
 ///	@ingroup	Infrastructure
 ///
 ///	@brief

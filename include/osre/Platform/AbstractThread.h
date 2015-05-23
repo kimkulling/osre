@@ -30,7 +30,7 @@ namespace Platform {
 class AbstractThreadEvent;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Platform::IThread
+///	@class		::OSRE::Platform::IThread
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This abstract class declares the interface for a thread implementation.

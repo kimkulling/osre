@@ -31,7 +31,7 @@ namespace IO {
 class Uri;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::IO::Stream
+///	@class		::OSRE::IO::Stream
 ///	@ingroup	Infrastructure
 ///
 ///	@brief  This class declares the interface for a stream. 

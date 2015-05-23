@@ -32,7 +32,7 @@ namespace Platform {
 class SDL2ThreadEvent;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Platform::Win32Thread
+///	@class		::OSRE::Platform::Win32Thread
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This class implements a thread which uses the Win32-API.

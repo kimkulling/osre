@@ -34,7 +34,7 @@ namespace OSRE {
 namespace Scene {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Scene::TrackBall
+///	@class		::OSRE::Scene::TrackBall
 ///	@ingroup	Application
 ///
 ///	@brief	this class implements a simple trackball. You can use it to rotate a model.

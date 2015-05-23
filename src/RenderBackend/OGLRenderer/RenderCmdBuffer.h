@@ -52,7 +52,7 @@ struct PrimitiveGroup;
 struct Material;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::RenderBackend::RenderCmdBuffer
+///	@class		::OSRE::RenderBackend::RenderCmdBuffer
 ///	@ingroup	RenderSystem
 ///
 ///	@brief  This class is used to manage a render command buffer.

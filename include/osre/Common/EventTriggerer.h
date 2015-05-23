@@ -31,7 +31,7 @@ namespace OSRE {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Common::EventTriggerer
+///	@class		::OSRE::Common::EventTriggerer
 ///	@ingroup	Infrastructure
 ///
 /// @brief	Base class to trigger events.

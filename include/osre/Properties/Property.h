@@ -29,7 +29,7 @@ namespace OSRE {
 namespace Properties {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Properties::Property
+///	@class		::OSRE::Properties::Property
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This class implements a simple property.

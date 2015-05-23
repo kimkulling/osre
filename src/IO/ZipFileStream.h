@@ -30,7 +30,7 @@ namespace OSRE {
 namespace IO {
 
 //--------------------------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::IO::ZipFileStream
+///	@class		::OSRE::IO::ZipFileStream
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	File instance for files stored in a zip archive. 

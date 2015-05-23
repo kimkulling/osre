@@ -31,7 +31,7 @@ namespace Threading {
 class WorkerThread;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Threading::ThreadPool
+///	@class		::OSRE::Threading::ThreadPool
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This class stores a bundle of worker threads, which you can use to startup async tasks.

@@ -28,7 +28,7 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Platform::Win32ThreadFactory
+///	@class		::OSRE::Platform::Win32ThreadFactory
 ///	@ingroup	Infrastructure
 ///
 ///	@brief 

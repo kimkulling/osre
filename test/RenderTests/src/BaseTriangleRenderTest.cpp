@@ -69,7 +69,7 @@ const String FsSrc =
 
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::RenderTest::BaseTriangleRenderTest
+///	@class		::OSRE::RenderTest::BaseTriangleRenderTest
 ///	@ingroup	Test
 ///
 ///	@brief  This class implements a base triangle render test.

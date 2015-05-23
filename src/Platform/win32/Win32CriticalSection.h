@@ -29,8 +29,7 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		ZFXCE2::Threading::Win32CriticalSection
-///	@ingroup	Infrastructure
+///	@class		::OSRE::Threading::Win32CriticalSection
 ///
 ///	@brief  This class implements the win32-specific critical section.
 //-------------------------------------------------------------------------------------------------

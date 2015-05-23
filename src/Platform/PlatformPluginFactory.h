@@ -36,7 +36,7 @@ class AbstractThreadFactory;
 struct SurfaceProperties;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Platform::PlatformPluginFactory
+///	@class		::OSRE::Platform::PlatformPluginFactory
 ///	@ingroup	Infrastructure
 ///
 ///	@brief  This class is used to create all platform-specific instances.

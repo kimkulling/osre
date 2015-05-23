@@ -1,10 +1,10 @@
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
-    ../../3dparty/cppcore/include
-    ../../3dparty/glew/include
-    ../../3dparty/glm/
-    ../../3dparty/soil/src
-    .././
+    ../3dparty/cppcore/include
+    ../3dparty/glew/include
+    ../3dparty/glm/
+    ../3dparty/soil/src
+    ../
 )
 
 SET ( 00_helloworld_src

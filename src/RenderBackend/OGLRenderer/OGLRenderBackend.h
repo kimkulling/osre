@@ -49,7 +49,7 @@ struct Parameter;
 struct PrimitiveGroup;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::RenderBackend::OGLRenderBackend
+///	@class		::OSRE::RenderBackend::OGLRenderBackend
 ///	@ingroup	RenderSystem
 ///
 ///	@brief

@@ -32,7 +32,7 @@ namespace Platform {
 class SDL2Surface;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Platform::SDL2RenderContext
+///	@class		::OSRE::Platform::SDL2RenderContext
 ///	@ingroup	Infrastructure
 ///
 ///	@brief

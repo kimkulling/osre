@@ -28,7 +28,7 @@ namespace OSRE {
 namespace IO {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::IO::Uri
+///	@class		::OSRE::IO::Uri
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This class represents a URI ( see

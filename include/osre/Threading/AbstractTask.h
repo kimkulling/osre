@@ -41,7 +41,7 @@ namespace Platform {
 namespace Threading {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Threading::AbstractTask
+///	@class		::OSRE::Threading::AbstractTask
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This abstract interface-class declares a task. Tasks can be used to handle several 

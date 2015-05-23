@@ -28,7 +28,7 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@enum	::ZFXCE2::System::CPUProp
+///	@enum	::OSRE::System::CPUProp
 ///	@brief	Describes several properties of the CPU.
 //-------------------------------------------------------------------------------------------------
 enum CPUProp {
@@ -45,7 +45,7 @@ enum CPUProp {
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::System::CPUInfo
+///	@class		::OSRE::System::CPUInfo
 ///	@ingroup	Infrastructure
 ///
 ///	@brief 

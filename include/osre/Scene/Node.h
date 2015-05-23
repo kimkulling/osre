@@ -36,7 +36,7 @@ namespace RenderBackend {
 namespace Scene {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Scene::Node
+///	@class		::OSRE::Scene::Node
 ///	@ingroup	Application
 ///
 ///	@brief

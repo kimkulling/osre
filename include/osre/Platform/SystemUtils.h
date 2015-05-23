@@ -28,7 +28,7 @@ namespace OSRE {
 namespace System {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::System::SystemUtils
+///	@class		::OSRE::System::SystemUtils
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This class offers some system-specific functions.

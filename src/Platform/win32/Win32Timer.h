@@ -29,7 +29,7 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Platform::Win32Timer
+///	@class		::OSRE::Platform::Win32Timer
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This class implements a windows specific timer.

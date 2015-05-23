@@ -35,7 +35,7 @@ class Event;
 class EventData;
 
 //-------------------------------------------------------------------------------------------------
-///	@def		::ZFXCE2::Common::DECL_EVENT
+///	@def		::OSRE::Common::DECL_EVENT
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	Event type declaration helper macro. This is a shortcut to define global events like 
@@ -44,7 +44,7 @@ class EventData;
 #define DECL_EVENT( NAME ) const Common::Event NAME ( #NAME )
     
 //-------------------------------------------------------------------------------------------------
-/// @class		::ZFXCE2::Common::Event
+/// @class		::OSRE::Common::Event
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	The base class of zfxce2-events, describes type of an event. To create your own events

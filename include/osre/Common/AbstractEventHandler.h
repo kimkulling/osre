@@ -31,7 +31,7 @@ class Event;
 class EventData;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Common::AbstractEventHandler
+///	@class		::OSRE::Common::AbstractEventHandler
 ///	@ingroup	Infrastructure
 ///
 ///	@brief This abstract interface declares the way how events should be handled.

@@ -31,7 +31,7 @@ namespace OSRE {
 namespace IO {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::IO::ZipFileSystem
+///	@class		::OSRE::IO::ZipFileSystem
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	Class which implements access for Zip-archives. 

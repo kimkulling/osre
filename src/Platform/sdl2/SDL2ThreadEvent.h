@@ -31,7 +31,7 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Platform::SDL2ThreadEvent
+///	@class		::OSRE::Platform::SDL2ThreadEvent
 ///	@ingroup	Infrastructure
 ///
 ///	@brief

@@ -12,7 +12,7 @@ namespace RenderBackend {
 namespace RenderTest {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::RenderTest::AbstractRenderTest
+///	@class		::OSRE::RenderTest::AbstractRenderTest
 ///	@ingroup	RenderTest
 ///
 ///	@brief	The abstract base interface for a render test. Render tests shall be used to define a 

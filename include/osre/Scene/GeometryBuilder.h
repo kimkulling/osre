@@ -33,7 +33,7 @@ namespace RenderBackend {
 namespace Scene {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Scene::GeometryBuilder
+///	@class		::OSRE::Scene::GeometryBuilder
 ///	@ingroup	Application
 ///
 ///	@brief  This class is used to create the geometry for base shapes like a triangle.

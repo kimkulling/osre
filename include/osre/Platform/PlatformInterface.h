@@ -55,7 +55,7 @@ struct IInputUpdate;
 struct SurfaceProperties;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Interface::OSEventListener
+///	@class		::OSRE::Interface::OSEventListener
 ///	@ingroup	RenderSystem
 ///
 ///	@brief	This class declares the abstract interface for all operation system events.
@@ -173,7 +173,7 @@ public:
 
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Platform::PlatformInterface
+///	@class		::OSRE::Platform::PlatformInterface
 ///	@ingroup	Infrastructure
 ///
 ///	@brief  This class encapsulates platform-specific details.

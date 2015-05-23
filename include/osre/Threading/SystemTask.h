@@ -38,7 +38,7 @@ class SystemTaskThread;
 class TaskJob;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Threading::Task
+///	@class		::OSRE::Threading::Task
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This class implements a system task. 

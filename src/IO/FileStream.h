@@ -28,7 +28,7 @@ namespace OSRE {
 namespace IO {
 
 //--------------------------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::IO::FileStream
+///	@class		::OSRE::IO::FileStream
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This class implements the basic file operations like reading and writing data,

@@ -60,7 +60,7 @@ DECL_EVENT( OnRenderFrameEvent );
 DECL_EVENT( OnUpdateParameterEvent );
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::RenderBackend::CreateRendererEventData
+///	@class		::OSRE::RenderBackend::CreateRendererEventData
 ///	@ingroup	RenderSystem
 ///
 ///	@brief
@@ -77,7 +77,7 @@ public:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::RenderBackend::AttachViewEventData
+///	@class		::OSRE::RenderBackend::AttachViewEventData
 ///	@ingroup	RenderSystem
 ///
 ///	@brief
@@ -91,7 +91,7 @@ public:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::RenderBackend::AttachSceneEventData
+///	@class		::OSRE::RenderBackend::AttachSceneEventData
 ///	@ingroup	RenderSystem
 ///
 ///	@brief
@@ -114,7 +114,7 @@ public:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::RenderBackend::UpdateParameterEventData
+///	@class		::OSRE::RenderBackend::UpdateParameterEventData
 ///	@ingroup	RenderSystem
 ///
 ///	@brief
@@ -133,7 +133,7 @@ public:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::RenderBackend::RenderBackendServer
+///	@class		::OSRE::RenderBackend::RenderBackendServer
 ///	@ingroup	RenderSystem
 ///
 ///	@brief  This class implements the render back-end service.

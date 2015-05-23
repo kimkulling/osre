@@ -22,7 +22,7 @@ class AbstractRenderTest;
 class KeyboardEventListener;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::RenderTest::RenderTestSuite
+///	@class		::OSRE::RenderTest::RenderTestSuite
 ///	@ingroup	RenderTest
 ///
 ///	@brief 

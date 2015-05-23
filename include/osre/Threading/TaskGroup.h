@@ -41,7 +41,7 @@ enum TaskGroupState {
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Threading::TaskGroup
+///	@class		::OSRE::Threading::TaskGroup
 ///	@ingroup	Infrastructure
 ///
 ///	@brief 

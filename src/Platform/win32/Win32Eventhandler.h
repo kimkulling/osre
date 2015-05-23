@@ -45,7 +45,7 @@ class OSEventListener;
 struct IInputUpdate;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Platform::Win32Eventhandler
+///	@class		::OSRE::Platform::Win32Eventhandler
 ///	@ingroup	Infrastructure
 ///
 ///	@brief  This class implements the win32-specific event handler for OS-events.

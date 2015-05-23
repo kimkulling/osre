@@ -31,7 +31,7 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Platform::SDL2CriticalSection
+///	@class		::OSRE::Platform::SDL2CriticalSection
 ///	@ingroup	Infrastructure
 ///
 ///	@brief  This class implements the critical section based on SDL2.

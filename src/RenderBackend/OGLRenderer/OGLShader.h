@@ -33,7 +33,7 @@ namespace OSRE {
 namespace RenderBackend {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::RenderBackend::OGLShader
+///	@class		::OSRE::RenderBackend::OGLShader
 ///	@ingroup	RenderSystem
 ///
 ///	@brief  This class is used to implement a shader object for OpenGL. It combines the several

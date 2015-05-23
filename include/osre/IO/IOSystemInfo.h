@@ -28,7 +28,7 @@ namespace OSRE {
 namespace IO {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::IO::SystemInfo
+///	@class		::OSRE::IO::SystemInfo
 ///	@ingroup	Infrastructure
 ///
 ///	@brief This helper class returns IO-specific system informations.

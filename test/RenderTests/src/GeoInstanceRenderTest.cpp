@@ -58,7 +58,7 @@ const String FsSrc =
     "}\n";
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::RenderTest::GeoInstanceRenderTest
+///	@class		::OSRE::RenderTest::GeoInstanceRenderTest
 ///	@ingroup	Test
 ///
 ///	@brief

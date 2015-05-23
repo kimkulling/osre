@@ -6,7 +6,7 @@ namespace OSRE {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Core::TArea
+///	@class		::OSRE::Core::TArea
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This class describes a simple 2D rectangle area.

@@ -28,7 +28,7 @@ namespace OSRE {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Common::FunctorImpl
+///	@class		::OSRE::Common::FunctorImpl
 ///	@ingroup	Infrastructure
 ///	
 ///	@brief Base abstract interface of functor implementation
@@ -54,7 +54,7 @@ FunctorImpl<RET, P1, P2>::~FunctorImpl() {
 }
 
 //-------------------------------------------------------------------------------------------------
-/// @class		::ZFXCE2::Common::FunctorFunction
+/// @class		::OSRE::Common::FunctorFunction
 ///	@ingroup	Infrastructure
 ///
 /// @brief	This template class implements a binding to a function.
@@ -83,7 +83,7 @@ private:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Common::FunctorMember
+///	@class		::OSRE::Common::FunctorMember
 ///	@ingroup	Infrastructure
 ///
 /// @brief	Binding to a member with the class instance.
@@ -121,7 +121,7 @@ public:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Common::Functor
+///	@class		::OSRE::Common::Functor
 ///	@ingroup	Infrastructure
 ///
 /// @brief Functor implementation.

@@ -30,7 +30,7 @@ namespace OSRE {
 namespace Properties {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Properties::BasePropertyMap
+///	@class		::OSRE::Properties::BasePropertyMap
 ///	@ingroup	Infrastructure
 ///
 ///	@brief 

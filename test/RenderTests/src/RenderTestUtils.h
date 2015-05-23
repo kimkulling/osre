@@ -3,9 +3,10 @@
 #include "RenderTestSuite.h"
 
 template<class T>
-struct AutoAttach {
+class AutoAttach {
+public:
     AutoAttach() {
-        T *pInstance = new T;
+        T *pInstance = ::new T;
         OSRE::RenderTest::RenderTestSuite::getInstance()->attachRenderTest(pInstance);
     }
 };

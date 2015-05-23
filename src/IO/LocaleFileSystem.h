@@ -28,7 +28,7 @@ namespace OSRE {
 namespace IO {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::IO::BaseFileSystem
+///	@class		::OSRE::IO::BaseFileSystem
 ///	@ingroup	Infrastructure
 ///
 ///	@brief  This class implements a file system stored on a hard dick.

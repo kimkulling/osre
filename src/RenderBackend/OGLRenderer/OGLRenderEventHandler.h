@@ -59,7 +59,7 @@ struct SetRenderTargetCmdData;
 struct OGLParameter;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::RenderBackend::OGLRenderEventHandler
+///	@class		::OSRE::RenderBackend::OGLRenderEventHandler
 ///	@ingroup	RenderSystem
 ///
 ///	@brief  This class is used to handle all incoming events for the render back-end.

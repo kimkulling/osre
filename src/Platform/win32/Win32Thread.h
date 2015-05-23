@@ -32,7 +32,7 @@ namespace Platform {
 class Win32ThreadEvent;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Threading::Win32Thread
+///	@class		::OSRE::Threading::Win32Thread
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This class implements a thread which uses the Win32-API.

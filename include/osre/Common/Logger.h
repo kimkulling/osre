@@ -65,7 +65,7 @@ private:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Common::Logger
+///	@class		::OSRE::Common::Logger
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This class implements a simple logger. 
