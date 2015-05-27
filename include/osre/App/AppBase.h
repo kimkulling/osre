@@ -13,7 +13,7 @@ namespace App {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AppBase {
 public:
-    AppBase( i32 argc, c8 *argv[], const String &supportedArgs = "api" );
+    AppBase( i32 argc, c8 *argv[], const String &supportedArgs = "api", const String &desc = "The render API" );
     virtual ~AppBase();
     virtual bool create();
     virtual bool destroy();

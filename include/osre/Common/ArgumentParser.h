@@ -45,8 +45,9 @@ public:
     ///	@brief	The class constructor with arguments and the requested argument support.
     ///	@param	iArgc           [in] The number of incoming arguments.
     ///	@param	ppArgv          [in] The arguments itself.
-    ///	@param	supportedArgs   [in] Description of the supported arguments.
-    ArgumentParser( i32 iArgc, c8 *ppArgv[], const String &supportedArgs );
+    ///	@param	supportedArgs   [in] Description of the supported arguments, separated by :.
+    ///	@param  desc            [in] The argument description, separated by :.
+    ArgumentParser( i32 iArgc, c8 *ppArgv[], const String &supportedArgs, const String &desc );
     
     ///	@brief	The class destructor.
     ~ArgumentParser();
@@ -102,6 +103,9 @@ public:
     ///	@return	The blanked argument.
     String getBlankArgument( const String &arg );
 
+protected:
+    void setInvalid();
+
 private:
     ArgumentParser();
     ArgumentParser( const ArgumentParser & );
@@ -110,11 +114,12 @@ private:
 private:
     // struct to store a single argument in a container
     struct Argument {
-        String m_argument;	// The argument
-        ui32 m_numArgs;			// The number of expected arg's for it
+        String m_argument;	// The argument as a string.
+        String m_desc;      // The description for the argument ( used for help texts ).
+        ui32 m_numArgs;		// The number of expected arguments for it.
 
         Argument();
-        Argument( const String &arg, ui32 numArgs );
+        Argument( const String &arg, const String &desc, ui32 numArgs );
     };
 
     CPPCore::TArray<Argument> m_SupportedArguments;	// List with supported arguments

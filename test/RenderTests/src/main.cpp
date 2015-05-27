@@ -12,7 +12,7 @@ using namespace ::OSRE::RenderTest;
 using namespace ::OSRE::Platform;
 
 int main( int argc, char *argv[] ) {
-    Common::ArgumentParser argParser( argc, argv, "api:media" );
+    Common::ArgumentParser argParser( argc, argv, "api:media", "The render API:The media to load" );
     String renderAPI( "opengl" );
     if ( argParser.hasArgument( "api" ) ) {
         renderAPI = argParser.getArgument( "api" ); 

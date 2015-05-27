@@ -33,10 +33,10 @@ struct AppBase::Impl {
     RenderBackend::RenderBackendService *m_rbService;
 
     
-    Impl( i32 argc, c8 *argv[], const String &supportedArgs )
+    Impl( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
     : m_state( Uninited )
     , m_timediff( 0.0 )
-    , m_argParser( argc, argv, supportedArgs )
+    , m_argParser( argc, argv, supportedArgs, desc )
     , m_config()
     , m_platformInterface( nullptr )
     , m_timer( nullptr )
@@ -57,8 +57,8 @@ struct AppBase::Impl {
     }
 };
 
-AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs )
-: m_impl( new Impl( argc, argv, supportedArgs ) ) {
+AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
+: m_impl( new Impl( argc, argv, supportedArgs, desc ) ) {
     // empty
 }
 
@@ -76,6 +76,11 @@ bool AppBase::destroy() {
 }
 
 void AppBase::update() {
+    if( m_impl->m_state == Impl::Created ) {
+        m_impl->m_state = Impl::Running;
+        osre_debug(Tag, "Set application state to running." );
+    }
+
     m_impl->m_timediff = m_impl->m_timer->getTimeDiff();
 }
 
@@ -133,6 +138,7 @@ bool AppBase::onCreate() {
     m_impl->m_timer = Platform::PlatformInterface::getInstance()->getTimer();
 
     // set application state to Created
+    osre_debug( Tag, "Set application state to Created." );
     m_impl->m_state = Impl::Created;
     
     return true;
@@ -140,6 +146,7 @@ bool AppBase::onCreate() {
 
 bool AppBase::onDestroy() {
     if( m_impl->m_state != Impl::Running ) {
+        osre_debug( Tag, "AppBase::State not in proper state: Running." );
         return false;
     }
 
@@ -148,7 +155,10 @@ bool AppBase::onDestroy() {
         m_impl->m_platformInterface = nullptr;
     }
 
+
+    osre_debug( Tag, "Set application state to destroyed." );
     m_impl->m_state = Impl::Destroyed;
+    Logger::kill();
 
     return true;
 }

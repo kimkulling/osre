@@ -1,8 +1,2 @@
-﻿  AbstractRenderTest.cpp
-  RenderTestSuite.cpp
-  BaseTriangleRenderTest.cpp
-  BaseTextureRenderTest.cpp
-  GeoInstanceRenderTest.cpp
-  main.cpp
-  Code wird generiert...
+﻿  main.cpp
   rendertest.vcxproj -> D:\projects\osre\bin\Debug\rendertest.exe

@@ -37,34 +37,38 @@ static const String dummy = "";
 //--------------------------------------------------------------------------------------------------------------------
 ArgumentParser::Argument::Argument()
 : m_argument( "" )
+, m_desc( "" )
 , m_numArgs( 0 ) {
     // empty
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-ArgumentParser::Argument::Argument( const String &arg, ui32 numArgs )
+ArgumentParser::Argument::Argument( const String &arg, const String &desc, ui32 numArgs )
 : m_argument( arg )
+, m_desc( desc )
 , m_numArgs( numArgs ) {
     // empty
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedArgs )
+ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedArgs, const String &desc )
 : m_SupportedArguments()
 , m_StoredArguments()
 , m_CurrentIndex( 0 )
 , m_isValid( true ) {
     // Parse and store the expected arguments
     const ui32 optionLen = option.size();
-    TArray<String> extractedArgs;
+    TArray<String> extractedArgs, extractedDescs;
     Tokenizer::tokenize( supportedArgs, extractedArgs, ":" );
+    Tokenizer::tokenize( desc, extractedDescs, ":" );
     ui32 numParam( 0 );
     ui32 expectedArgc( 0 );
     for( ui32 i = 0; i<extractedArgs.size(); ++i ) {
         String arg = extractedArgs[ i ];
+        String desc = extractedDescs[ i ];
         if ( parseArgParameter( arg, numParam ) ) {
             expectedArgc += ( 1 + numParam );
-            m_SupportedArguments.add( Argument( getBlankArgument( arg ), numParam ) );
+            m_SupportedArguments.add( Argument( getBlankArgument( arg ), desc, numParam ) );
         }
     }
 
@@ -84,8 +88,7 @@ ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedA
                                 String tmpVal( ppArgv[ valIdx ] );
                                 String::size_type pos = tmpVal.find( option );
                                 if( pos != String::npos ) {
-                                    // Mark as invalid
-                                    m_isValid = false;
+                                    setInvalid();
                                     break;
                                 }
                             }
@@ -101,19 +104,17 @@ ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedA
                             }
                         } 
                     } else {
-                        // Mark as invalid
-                        m_isValid = false;
+                        setInvalid();
                     }
                 }
                 ++m_CurrentIndex;
             }
         }
     } else {
-        // Mark as invalid
-        m_isValid = false;
+        setInvalid();
     }
 
-    // Validate incoming arguments
+    // validate incoming arguments
     for ( ui32 i=1; i<static_cast<ui32>( argc ); ++i ) {
         String incomingArg( ppArgv[ i ] );
         String::size_type pos = incomingArg.find( "--" );
@@ -127,7 +128,7 @@ ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedA
                 }
             }
             if ( !supported ) {
-                m_isValid = false;
+                setInvalid();
                 break;
             }
         }
@@ -288,6 +289,11 @@ String ArgumentParser::getBlankArgument( const String &arg ) {
     }
 
     return blankArg;
+}
+
+//--------------------------------------------------------------------------------------------------------------------
+void ArgumentParser::setInvalid() {
+    m_isValid = false;
 }
 
 //--------------------------------------------------------------------------------------------------------------------
