@@ -48,7 +48,7 @@ struct AppBase::Impl {
         //pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
         m_config.setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast< i32 >( Platform::WindowsPlugin ) );
 #else
-        pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast< i32 >( Platform::SDL2Plugin ) );
+        m_config.setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast< i32 >( Platform::SDL2Plugin ) );
 #endif 
     }
 
