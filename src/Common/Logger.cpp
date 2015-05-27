@@ -204,9 +204,8 @@ void Logger::unregisterLogStream( AbstractLogStream *logStream ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-Logger::Logger() :
-    m_LogStreams()
-{
+Logger::Logger() 
+: m_LogStreams() {
     m_LogStreams.add( new StdLogStream );
 
 #ifdef OSRE_WINDOWS
@@ -214,14 +213,14 @@ Logger::Logger() :
 #endif // OSRE_WINDOWS
 
     print( Line, WhithoutDateTime );
-    print( "New ZFXCE2 run." );
+    print( "New OSRE run." );
     print( Line, WhithoutDateTime );
 }
 
 //-------------------------------------------------------------------------------------------------
 Logger::~Logger() {
     print( Line, WhithoutDateTime );
-    print( "ZFXCE2 run ended." );
+    print( "OSRE run ended." );
     print( Line, WhithoutDateTime );
 
     for ( ui32 i=0; i<m_LogStreams.size(); ++i ) {

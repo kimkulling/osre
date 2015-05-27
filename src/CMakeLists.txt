@@ -20,6 +20,17 @@ ELSE( WIN32 )
 ENDIF( WIN32 )
 
 #==============================================================================
+# App
+#==============================================================================
+SET( app_inc
+    ${HEADER_PATH}/App/AppBase.h
+)
+
+SET( app_src
+    App/AppBase.cpp
+)
+
+#==============================================================================
 # Common
 #==============================================================================
 SET( common_inc
@@ -123,6 +134,7 @@ SET( platform_src
 
 SET( platform_win32_src 
     Platform/win32/Win32Atomic.h
+    Platform/win32/Win32DbgLogStream.h
     Platform/win32/Win32Surface.cpp
     Platform/win32/Win32Surface.h
     Platform/win32/Win32Eventhandler.cpp
@@ -254,6 +266,7 @@ SET( renderbackend_inc
 #==============================================================================
 # Defined Source groups
 #==============================================================================
+SOURCE_GROUP( App                 FILES ${app_src} )
 SOURCE_GROUP( Common              FILES ${common_src} )
 SOURCE_GROUP( Components          FILES ${components_src} )
 SOURCE_GROUP( Debugging           FILES ${debugging_src} )
@@ -272,6 +285,7 @@ SOURCE_GROUP( RenderBackend\\OGLRenderer       FILES ${renderbackend_oglrenderer
 SOURCE_GROUP( Resources           FILES ${resources_src} )
 SOURCE_GROUP( Scene               FILES ${scene_src} )
 SOURCE_GROUP( Threading           FILES ${threading_src} )
+SOURCE_GROUP( Include\\App        FILES ${app_inc} )
 SOURCE_GROUP( Include\\Common     FILES ${common_inc} )
 SOURCE_GROUP( Include\\Components FILES ${components_inc} )
 SOURCE_GROUP( Include\\Debugging  FILES ${debugging_inc} )
@@ -291,6 +305,7 @@ SOURCE_GROUP( Include\\RenderBackend FILES ${renderbackend_inc} )
 # Define the Infrastructure library
 #==============================================================================
 ADD_LIBRARY( osre SHARED
+    ${app_inc}
     ${common_inc}
     ${common_src}
     ${Common_inc}
@@ -309,6 +324,7 @@ ADD_LIBRARY( osre SHARED
     ${renderbackend_inc}
     ${math_inc}
 
+    ${app_src}
     ${Common_src}
     ${components_src}
     ${debugging_src}

@@ -1,9 +1,30 @@
-#include <osre/Common/Types.h>
-#include <osre/Common/ArgumentParser.h>
+#include <osre/App/AppBase.h>
+#include <osre/Common/Logger.h>
 
 using namespace OSRE;
 
+// to identify local log entries 
+static const String Tag    = "HelloWorld"; 
+
 int main( int argc, char *argv[] )  {
-    Common::ArgumentParser argParser( argc, argv, "api:media" );
+    App::AppBase myApp( argc, argv );
+    String renderAPI( "opengl" );
+
+    if( !myApp.create() ) {
+        osre_error(Tag, "Cannot create ")
+        return 1;
+    }
+        
+    // handle events until application will be terminated
+    while( myApp.handleEvents() ) {
+        
+        // update application data
+        myApp.update();
+
+        // request next frame rendering
+        myApp.requestNextFrame();
+    }
+    myApp.destroy();
+
     return 0;
 }

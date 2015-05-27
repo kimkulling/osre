@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   include <src/Platform/win32/Win32Timer.h>
 #   include <src/Platform/win32/Win32RenderContext.h>
 #   include <src//Platform/win32/Win32ThreadFactory.h>
+#   include <src/Platform/win32/Win32DbgLogStream.h>
 #endif
 #include <src/Platform/sdl2/SDL2Surface.h>
 #include <src/Platform/sdl2/SDL2EventHandler.h>
@@ -172,6 +173,17 @@ AbstractThreadFactory *PlatformPluginFactory::createThreadFactory( PluginType ty
 
     return instance;
 }
+
+//-------------------------------------------------------------------------------------------------
+Common::AbstractLogStream *PlatformPluginFactory::createPlatformLogStream() {
+    Common::AbstractLogStream *stream( nullptr );
+#ifdef _WIN32
+    stream = new Win32DbgLogStream;
+#endif // OSRE_WINDOWS
+
+    return stream;
+}
+
 
 //-------------------------------------------------------------------------------------------------
 

@@ -22,57 +22,48 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Platform/PluginType.h>
+#include <osre/Common/Logger.h>
+#include <Windows.h>
 
 namespace OSRE {
-
-namespace Common {
-    class AbstractLogStream;
-}
-
 namespace Platform {
 
-class AbstractPlatformEventHandler;
-class AbstractSurface;
-class AbstractRenderContext;
-class AbstractTimer;
-class AbstractThreadFactory;
-
-struct SurfaceProperties;
-
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::PlatformPluginFactory
-///	@ingroup	Infrastructure
+///	@class		::OSRE::Platform::Win32DbgLogStream
+///	@ingroup	OSRE-Engine
 ///
-///	@brief  This class is used to create all platform-specific instances.
+///	@brief	This class implements a log-stream, which will be visible in the Windows-Debugger 
+///	output window.
 //-------------------------------------------------------------------------------------------------
-struct PlatformPluginFactory {
-    /// @brief  Will init the factory.
-    static bool init( PluginType type );
-
-    /// @brief  Will release the factory.
-    static bool release( PluginType type );
-
-    /// @brief  Creates a platform-specific event handler instance.
-    static AbstractPlatformEventHandler *createPlatformEventHandler( PluginType type, AbstractSurface *rootSurface );
-
-    /// @brief  Creates a platform-specific surface instance.
-    static AbstractSurface *createSurface( PluginType type, SurfaceProperties *pProps );
-
-    /// @brief  Creates a platform-specific render context.
-    static AbstractRenderContext *createRenderContext( PluginType type );
-
-    /// @brief  Creates a platform-specific timer instance.
-    static AbstractTimer *createTimer( PluginType type );
-
-    /// @brief  Creates a platform-specific thread factory instance.
-    static AbstractThreadFactory *createThreadFactory( PluginType type );
-
-    ///	@brief  Creates a platform-specific log stream, if any available.
-    static Common::AbstractLogStream *createPlatformLogStream();
+class Win32DbgLogStream : public Common::AbstractLogStream {
+public:
+    ///	Constructor.
+    Win32DbgLogStream();
+    ///	Destructor, non virtual.
+    ~Win32DbgLogStream();
+    ///	Writes the message into the debug output buffer.
+    void write( const String &msg );
 };
 
 //-------------------------------------------------------------------------------------------------
+inline
+Win32DbgLogStream::Win32DbgLogStream() {
+    // empty
+}
 
-} // Namespace Platform
-} // Namespace OSRE
+//-------------------------------------------------------------------------------------------------
+inline
+Win32DbgLogStream::~Win32DbgLogStream() {
+    // empty
+}
+
+//-------------------------------------------------------------------------------------------------
+inline
+void Win32DbgLogStream::write( const String &msg ) {
+    ::OutputDebugString( msg.c_str() );
+}
+
+//-------------------------------------------------------------------------------------------------
+
+} // Namespace Debugging
+} // Namespace ZFXCE2

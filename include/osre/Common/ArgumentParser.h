@@ -43,10 +43,10 @@ namespace Common {
 class OSRE_EXPORT ArgumentParser {
 public:
     ///	@brief	The class constructor with arguments and the requested argument support.
-    ///	@param	iArgc	The number of incoming arguments.
-    ///	@param	ppArgv	The arguments itself.
-    ///	@param	rSupportedArgs	Description of the supported arguments.
-    ArgumentParser( i32 iArgc, c8 *ppArgv[], const String &rSupportedArgs );
+    ///	@param	iArgc           [in] The number of incoming arguments.
+    ///	@param	ppArgv          [in] The arguments itself.
+    ///	@param	supportedArgs   [in] Description of the supported arguments.
+    ArgumentParser( i32 iArgc, c8 *ppArgv[], const String &supportedArgs );
     
     ///	@brief	The class destructor.
     ~ArgumentParser();
