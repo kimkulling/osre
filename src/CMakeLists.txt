@@ -215,24 +215,14 @@ SET( scene_inc
 #==============================================================================
 SET( threading_src
     Threading/AbstractTask.cpp
-    Threading/AsyncTask.cpp
     Threading/IThreadFactory.cpp
     Threading/SystemTask.cpp
-    Threading/TaskGroup.cpp
-    Threading/TaskScheduler.cpp
-    Threading/ThreadPool.cpp
-    Threading/WorkerThread.cpp
-    Threading/WorkerThread.h
 )
 
 SET( threading_inc
     ${HEADER_PATH}/Threading/AbstractTask.h
-    ${HEADER_PATH}/Threading/AsyncTask.h
-    ${HEADER_PATH}/Threading/TaskScheduler.h
     ${HEADER_PATH}/Threading/SystemTask.h
     ${HEADER_PATH}/Threading/TaskJob.h
-    ${HEADER_PATH}/Threading/TaskGroup.h
-    ${HEADER_PATH}/Threading/ThreadPool.h
     ${HEADER_PATH}/Threading/TAsyncQueue.h
 )
 

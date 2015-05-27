@@ -3,7 +3,6 @@
 #include <osre/Properties/ConfigurationMap.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractTimer.h>
-#include <osre/Threading/TaskScheduler.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
 // private includes
@@ -120,7 +119,7 @@ bool AppBase::onCreate() {
     }
 
     // create task manager
-    Threading::TaskScheduler::setInstance( Threading::TaskScheduler::create() );
+    //Threading::TaskScheduler::setInstance( Threading::TaskScheduler::create() );
 
     m_impl->m_rbService = new RenderBackend::RenderBackendService();
     if( !m_impl->m_rbService->open() ) {
@@ -128,7 +127,7 @@ bool AppBase::onCreate() {
         m_impl->m_rbService = nullptr;
     }
 
-    // enable render backend
+    // enable render-backend
     if( m_impl->m_platformInterface ) {
         RenderBackend::CreateRendererEventData *data = new RenderBackend::CreateRendererEventData( m_impl->m_platformInterface->getRootSurface() );
         m_impl->m_rbService->sendEvent( &RenderBackend::OnCreateRendererEvent, data );

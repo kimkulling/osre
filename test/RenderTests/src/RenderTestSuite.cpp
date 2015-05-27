@@ -2,7 +2,6 @@
 #include "AbstractRenderTest.h"
 
 #include <osre/Properties/ConfigurationMap.h>
-#include <osre/Threading/TaskScheduler.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractPlatformEventHandler.h>
@@ -100,7 +99,7 @@ bool RenderTestSuite::setup() {
     }
 
     // create the task manager
-    Threading::TaskScheduler::setInstance(Threading::TaskScheduler::create());
+    //Threading::TaskScheduler::setInstance(Threading::TaskScheduler::create());
 
     m_pRenderBackendServer = new RenderBackendService();
     if ( !m_pRenderBackendServer->open()) {
