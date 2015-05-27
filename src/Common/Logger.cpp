@@ -34,10 +34,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <iomanip>
 
 namespace OSRE {
-    namespace Common {
+namespace Common {
 
 static const String Line = \
-"==============================================================================";
+    "==============================================================================";
 
 //-------------------------------------------------------------------------------------------------
 static void appendDomain( const String &domain, String &logMsg ) {
