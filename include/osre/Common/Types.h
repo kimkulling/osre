@@ -64,11 +64,17 @@ namespace OSRE {
 #  pragma warning( disable : 4316 )
 #endif
 
-        // Declares thread-local data
+// Declares thread-local data
 #ifdef OSRE_WINDOWS
 #   define ThreadLocal __declspec(thread)
 #else
 #   define ThreadLocal __thread
+#endif
+
+// Platform-specific data types
+#if defined(__MINGW32__) || defined(__MINGW64__)
+#   include <stdio.h>
+    typedef int errno_t;
 #endif
 
 ///	The data type unsigned char, 1 byte long.
@@ -103,8 +109,10 @@ typedef double d32;
 ///	The data type Object id.
 typedef int ObjectId;
 
+///	The data type for strings
 typedef std::string String;
-
+/*
+/// A simple 2D-rectangle
 template<class T>
 struct TRect {
     T m_x, m_y, m_w, m_h;
@@ -113,12 +121,5 @@ struct TRect {
         return ( m_x == rhs.m_x && m_y == rhs.m_y && m_w == rhs.m_w && m_h == rhs.m_h );
     }
 };
-
-#if defined(__MINGW32__) || defined(__MINGW64__)
-
-#include <stdio.h>
-        typedef int errno_t;
-
-#endif
-
+*/
 } // Namespace OSRE

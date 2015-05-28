@@ -1,10 +1,8 @@
-﻿  Building Custom Rule D:/projects/osre/test/RenderTests/CMakeLists.txt
-  CMake does not need to re-run because D:\projects\osre\test\RenderTests\CMakeFiles\generate.stamp is up-to-date.
-  AbstractRenderTest.cpp
-  RenderTestSuite.cpp
-  BaseTriangleRenderTest.cpp
+﻿  AbstractRenderTest.cpp
   BaseTextureRenderTest.cpp
+  BaseTriangleRenderTest.cpp
   GeoInstanceRenderTest.cpp
+  RenderTestSuite.cpp
   main.cpp
   Code wird generiert...
   rendertest.vcxproj -> D:\projects\osre\bin\Debug\rendertest.exe
