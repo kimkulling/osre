@@ -25,6 +25,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <string>
 #include <string.h>
 #include <stdio.h>
+#include <cstddef>
+
+#ifndef _WIN32
+#  include <inttypes.h>
+#endif 
 
 namespace OSRE {
 
@@ -98,6 +103,16 @@ typedef unsigned short ui16;
 ///	The data type signed int, 4 byte long.
 typedef unsigned int ui32;
 
+///	The data type for signed and unsigned int 8 bytes long.
+#ifdef OSRE_WINDOWS
+typedef __int64           i64;
+typedef unsigned __int64  ui64;
+#else
+typedef int64_t           i64;
+typedef uint64_t          ui64;
+#endif
+
+/// The data type for hash ids.
 typedef unsigned long HashId;
 
 ///	The data type float, 4 byte long.
@@ -111,15 +126,5 @@ typedef int ObjectId;
 
 ///	The data type for strings
 typedef std::string String;
-/*
-/// A simple 2D-rectangle
-template<class T>
-struct TRect {
-    T m_x, m_y, m_w, m_h;
 
-    bool operator == ( const TRect<T> &rhs ) const {
-        return ( m_x == rhs.m_x && m_y == rhs.m_y && m_w == rhs.m_w && m_h == rhs.m_h );
-    }
-};
-*/
 } // Namespace OSRE
