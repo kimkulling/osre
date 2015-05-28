@@ -11,7 +11,7 @@ int main( int argc, char *argv[] )  {
     String renderAPI( "opengl" );
 
     if( !myApp.create() ) {
-        osre_error(Tag, "Cannot create ")
+        osre_error(Tag, "Cannot create application instance." );
         return 1;
     }
         

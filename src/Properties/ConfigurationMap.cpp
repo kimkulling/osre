@@ -152,7 +152,7 @@ void ConfigurationMap::initDefaults() {
     value.setInt( static_cast<i32>( GfxApp ) );
     m_pPropertyMap->setProperty( AppType, ConfigKeyStringTable[ AppName ], value );
 
-    windowsTitle.setString( "The ZFXCE2 experience" );
+    windowsTitle.setString( "The OSRE experience" );
     value.setInt( Platform::PlatformInterface::getOSPluginType( ) );
     m_pPropertyMap->setProperty( PlatformPlugin, ConfigKeyStringTable[ PlatformPlugin  ], value );
     m_pPropertyMap->setProperty( WindowsTitle, ConfigKeyStringTable[ WindowsTitle ], windowsTitle );

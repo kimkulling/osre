@@ -33,7 +33,6 @@ namespace Common {
 
 namespace Threading {
 
-class TaskManager;
 class SystemTaskThread;
 class TaskJob;
 
