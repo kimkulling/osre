@@ -90,6 +90,7 @@ public:
 
     virtual bool onCreate( RenderBackend::RenderBackendService *pRenderBackendSrv ) {
         osre_debug( Tag, "BaseTextureRenderTest::onCreate" );
+
         pRenderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
@@ -150,9 +151,9 @@ public:
         pGeometry->m_pMaterial->m_numTextures = 1;
         pGeometry->m_pMaterial->m_pTextures = new Texture[ 1 ];
 #ifdef _WIN32
-        pGeometry->m_pMaterial->m_pTextures[ 0 ].m_textureName = "../../Media/Models/Obj/SpiderTex.jpg";
+        pGeometry->m_pMaterial->m_pTextures[ 0 ].m_textureName = "../../media/Models/Obj/SpiderTex.jpg";
 #else
-        pGeometry->m_pMaterial->m_pTextures[ 0 ].m_textureName = "../Media/Models/Obj/SpiderTex.jpg";
+        pGeometry->m_pMaterial->m_pTextures[ 0 ].m_textureName = "../media/Models/Obj/SpiderTex.jpg";
 #endif
         pGeometry->m_pMaterial->m_pTextures[ 0 ].m_targetType = Texture2D;
         pGeometry->m_pMaterial->m_pTextures[ 0 ].m_width = 0;
