@@ -31,7 +31,7 @@ namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
 Win32ThreadFactory::Win32ThreadFactory() 
-: AbstractThreadFactory( "threading/win32threadfactory" ) {
+: AbstractThreadFactory( "platform/win32threadfactory" ) {
     // empty
 }
 
