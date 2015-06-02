@@ -56,7 +56,7 @@ bool SDL2Surface::onCreate() {
     
     ui32 w = prop->m_width;
     ui32 h = prop->m_height;
-    m_surface = SDL_CreateWindow( "zfxce2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h,
+    m_surface = SDL_CreateWindow( prop->m_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h,
                                   SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
     if( !m_surface ) {
         osre_error( Tag, "Error while creating window." );
