@@ -26,7 +26,7 @@ struct AppBase::Impl {
     State m_state;
     d32 m_timediff;
     ArgumentParser m_argParser;
-    Properties::ConfigurationMap m_config;
+    Properties::ConfigurationMap *m_config;
     Platform::PlatformInterface *m_platformInterface;
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
@@ -36,18 +36,19 @@ struct AppBase::Impl {
     : m_state( Uninited )
     , m_timediff( 0.0 )
     , m_argParser( argc, argv, supportedArgs, desc )
-    , m_config()
+    , m_config( nullptr )
     , m_platformInterface( nullptr )
     , m_timer( nullptr )
     , m_rbService( nullptr ) {
-        m_config.setString( Properties::ConfigurationMap::RenderAPI, "opengl" );
-        m_config.setBool( Properties::ConfigurationMap::PollingMode, true );
+        m_config = new Properties::ConfigurationMap;
+        m_config->setString( Properties::ConfigurationMap::RenderAPI, "opengl" );
+        m_config->setBool( Properties::ConfigurationMap::PollingMode, true );
 
 #ifdef OSRE_WINDOWS
         //pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
-        m_config.setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast< i32 >( Platform::WindowsPlugin ) );
+        m_config->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast< i32 >( Platform::WindowsPlugin ) );
 #else
-        m_config.setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast< i32 >( Platform::SDL2Plugin ) );
+        m_config->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast< i32 >( Platform::SDL2Plugin ) );
 #endif 
     }
 
@@ -66,8 +67,8 @@ AppBase::~AppBase() {
     m_impl = nullptr;
 }
 
-bool AppBase::create() {
-    return onCreate();
+bool AppBase::create( Properties::ConfigurationMap *config ) {
+    return onCreate( config  );
 }
 
 bool AppBase::destroy() {
@@ -98,14 +99,19 @@ bool AppBase::handleEvents() {
 
 }
 
-bool AppBase::onCreate() {
+bool AppBase::onCreate( Properties::ConfigurationMap *config ) {
     if( m_impl->m_state != Impl::Uninited ) {
         osre_debug( Tag, "AppBase::State not in proper state: Uninited." );
         return false;
     }
 
     // create the platform abstraction
-    m_impl->m_platformInterface = Platform::PlatformInterface::create( &m_impl->m_config );
+    if( nullptr != config ) {
+        delete m_impl->m_config;
+        m_impl->m_config = config;
+    }
+
+    m_impl->m_platformInterface = Platform::PlatformInterface::create( m_impl->m_config );
     if( m_impl->m_platformInterface ) {
         if( !m_impl->m_platformInterface->open() ) {
             return false;
@@ -117,9 +123,6 @@ bool AppBase::onCreate() {
     if( nullptr != stream ) {
         Logger::getInstance()->registerLogStream( stream );
     }
-
-    // create task manager
-    //Threading::TaskScheduler::setInstance( Threading::TaskScheduler::create() );
 
     m_impl->m_rbService = new RenderBackend::RenderBackendService();
     if( !m_impl->m_rbService->open() ) {

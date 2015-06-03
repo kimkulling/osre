@@ -201,7 +201,7 @@ private:
 
 private:
     static PlatformInterface *s_instance;
-    const Properties::ConfigurationMap *m_pConfiguration;
+    const Properties::ConfigurationMap *m_config;
     PluginType m_type;
     AbstractSurface *m_pRootSurface;
     AbstractPlatformEventHandler *m_pOSEventHandler;

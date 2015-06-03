@@ -93,3 +93,5 @@ ADD_SUBDIRECTORY( 3dparty/soil )
 #        COMMENT "Generating API documentation with Doxygen" VERBATIM
 #    )
 #ENDIF ( DOXYGEN_FOUND )
+
+set_target_properties(  cppcore PROPERTIES FOLDER ThirdParty )

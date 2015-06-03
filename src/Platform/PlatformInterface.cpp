@@ -60,7 +60,7 @@ static const String Tag = "PlatformInterface";
 //-------------------------------------------------------------------------------------------------
 PlatformInterface::PlatformInterface( const ConfigurationMap *config )
 : AbstractService( "platform/platforminterface" )
-, m_pConfiguration( config )
+, m_config( config )
 #ifdef OSRE_WINDOWS
 , m_type( WindowsPlugin )
 #else
@@ -74,13 +74,14 @@ PlatformInterface::PlatformInterface( const ConfigurationMap *config )
 
 //-------------------------------------------------------------------------------------------------
 PlatformInterface::~PlatformInterface() {
-    // empty
+    delete m_config;
+    m_config = nullptr;
 }
 
 //-------------------------------------------------------------------------------------------------
-PlatformInterface *PlatformInterface::create( const ConfigurationMap *pConfiguration ) {
+PlatformInterface *PlatformInterface::create( const ConfigurationMap *config ) {
     if( nullptr == s_instance ) {
-        s_instance = new PlatformInterface( pConfiguration );
+        s_instance = new PlatformInterface( config );
     }
 
     return s_instance;
@@ -153,14 +154,14 @@ String PlatformInterface::getOSPluginName( PluginType type ) {
 
 //-------------------------------------------------------------------------------------------------
 bool PlatformInterface::onOpen() {
-    if( !m_pConfiguration ) {
-        assert( nullptr != m_pConfiguration );
+    if( !m_config ) {
+        assert( nullptr != m_config );
         osre_debug( Tag, "Invalid pointer to configuration." );
         return false;
     }
 
     ConfigurationMap::WorkingModeType appType = 
-        ( ConfigurationMap::WorkingModeType ) m_pConfiguration->get( ConfigurationMap::AppType ).getInt();
+        ( ConfigurationMap::WorkingModeType ) m_config->get( ConfigurationMap::AppType ).getInt();
 
     SurfaceProperties *pProps( nullptr );
     bool polls( false );
@@ -168,20 +169,20 @@ bool PlatformInterface::onOpen() {
         // get the configuration values for the window
         pProps = new SurfaceProperties;
         bool fullscreen = false;
-        pProps->m_x = m_pConfiguration->get( ConfigurationMap::WinX ).getInt();
-        pProps->m_y = m_pConfiguration->get( ConfigurationMap::WinY ).getInt();
-        pProps->m_width = m_pConfiguration->get( ConfigurationMap::WinWidth ).getInt();
-        pProps->m_height = m_pConfiguration->get( ConfigurationMap::WinHeight ).getInt();
-        pProps->m_colordepth = m_pConfiguration->get( ConfigurationMap::BPP ).getInt();
-        pProps->m_depthbufferdepth = m_pConfiguration->get( ConfigurationMap::DepthBufferDepth ).getInt();
-        pProps->m_stencildepth = m_pConfiguration->get( ConfigurationMap::StencilBufferDepth ).getInt();
+        pProps->m_x = m_config->get( ConfigurationMap::WinX ).getInt();
+        pProps->m_y = m_config->get( ConfigurationMap::WinY ).getInt();
+        pProps->m_width = m_config->get( ConfigurationMap::WinWidth ).getInt();
+        pProps->m_height = m_config->get( ConfigurationMap::WinHeight ).getInt();
+        pProps->m_colordepth = m_config->get( ConfigurationMap::BPP ).getInt();
+        pProps->m_depthbufferdepth = m_config->get( ConfigurationMap::DepthBufferDepth ).getInt();
+        pProps->m_stencildepth = m_config->get( ConfigurationMap::StencilBufferDepth ).getInt();
         pProps->m_fullscreen = fullscreen;
-        pProps->m_title = m_pConfiguration->get( ConfigurationMap::WindowsTitle ).getString();
-        polls = m_pConfiguration->get( ConfigurationMap::PollingMode ).getBool();
+        pProps->m_title = m_config->get( ConfigurationMap::WindowsTitle ).getString();
+        polls = m_config->get( ConfigurationMap::PollingMode ).getBool();
     }
 
     String appName = "ZFXCE2";
-    m_type = static_cast<PluginType>( m_pConfiguration->get( ConfigurationMap::PlatformPlugin ).getInt( ) );
+    m_type = static_cast<PluginType>( m_config->get( ConfigurationMap::PlatformPlugin ).getInt( ) );
 
     PlatformPluginFactory::init( m_type );
     osre_info( Tag, "Platform plugin created for " + PlatformInterface::getOSPluginName( m_type ) );
