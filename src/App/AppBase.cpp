@@ -53,7 +53,7 @@ struct AppBase::Impl {
     }
 
     ~Impl(){
-        // empty
+        m_config = nullptr;
     }
 };
 
@@ -97,6 +97,14 @@ bool AppBase::handleEvents() {
 
     return m_impl->m_platformInterface->update( m_impl->m_timediff );
 
+}
+
+Properties::ConfigurationMap *AppBase::getConfig() const {
+    if( nullptr == m_impl ) {
+        return nullptr;
+    }
+
+    return m_impl->m_config;
 }
 
 bool AppBase::onCreate( Properties::ConfigurationMap *config ) {

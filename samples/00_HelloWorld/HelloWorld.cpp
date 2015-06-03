@@ -1,4 +1,5 @@
 #include <osre/App/AppBase.h>
+#include <osre/Properties/ConfigurationMap.h>
 #include <osre/Common/Logger.h>
 
 using namespace OSRE;
@@ -9,6 +10,8 @@ static const String Tag    = "HelloWorld";
 int main( int argc, char *argv[] )  {
     App::AppBase myApp( argc, argv );
     String renderAPI( "opengl" );
+
+    myApp.getConfig()->setString( Properties::ConfigurationMap::WindowsTitle, "HelloWorld!" );
 
     if( !myApp.create() ) {
         osre_error(Tag, "Cannot create application instance." );

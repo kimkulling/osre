@@ -25,6 +25,7 @@ public:
     virtual void update();
     virtual void requestNextFrame();
     virtual bool handleEvents();
+    virtual Properties::ConfigurationMap *getConfig() const;
 
 protected:
     virtual bool onCreate( Properties::ConfigurationMap *config );
