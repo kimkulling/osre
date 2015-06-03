@@ -142,7 +142,9 @@ void Logger::print( const String &msg, PrintMode mode ) {
     }
 
     logMsg += getThreadName();
-    logMsg += " )\n";
+    if( WithDateTime == mode ) {
+        logMsg += " )\n";
+    }
     for ( ui32 i=0; i<m_LogStreams.size(); ++i ) {
         AbstractLogStream *pStream = m_LogStreams[ i ];
         if ( pStream ) {
