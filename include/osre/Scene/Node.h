@@ -31,6 +31,7 @@ namespace OSRE {
 
 namespace RenderBackend {
     struct TransformBlock;
+    struct Geometry;
 }
 
 namespace Scene {
@@ -59,14 +60,17 @@ public:
     virtual ui32 getNumChilds() const;
     virtual Node *getChildAt( ui32 idx ) const;
     virtual void releaseChildren();
+    virtual void addGeometry( RenderBackend::Geometry *geo );
     virtual void setTransformBlock( RenderBackend::TransformBlock *transformBlock );
     virtual void setPosition( const glm::vec3 &pos );
     virtual const glm::vec4 &getPosition() const;
     virtual void setScale( const glm::vec3 &pos );
     virtual const glm::vec4 &getScale() const;
+    virtual void update();
 
 private:
     CPPCore::TArray<Node*> m_childs;
+    CPPCore::TArray<RenderBackend::Geometry*> m_geo;
     Node *m_parent;
     RenderBackend::TransformBlock *m_transform;
 };

@@ -31,6 +31,7 @@ static const glm::vec4 Dummy;
 Node::Node( const String &name, Node *parent )
 : Object( name )
 , m_childs()
+, m_geo()
 , m_parent( parent )
 , m_transform( nullptr ) {
     // empty
@@ -136,6 +137,10 @@ void Node::releaseChildren() {
     }
 }
 
+void Node::addGeometry( RenderBackend::Geometry *geo ) {
+    m_geo.add( geo );
+}
+
 void Node::setTransformBlock( RenderBackend::TransformBlock *transformBlock ) {
     if( nullptr != transformBlock ) {
         m_transform = transformBlock;
@@ -168,6 +173,10 @@ const glm::vec4 &Node::getScale() const {
     }
 
     return m_transform->m_scale;
+}
+
+void Node::update() {
+    // todo!
 }
 
 } // Namespace Scene

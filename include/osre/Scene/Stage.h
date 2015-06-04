@@ -56,6 +56,7 @@ public:
     virtual Node *addNode( const String &name, Node *parent );
     virtual Node *findNode( const String &name ) const;
     virtual void clear();
+    virtual void update();
     
 private:
     Node *m_root;

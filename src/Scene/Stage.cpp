@@ -94,5 +94,9 @@ void Stage::clear() {
     releaseChildNodes( m_root );
 }
 
+void Stage::update() {
+    // todo!
+}
+
 } // Namespace Scene
 } // namespace OSRE

@@ -44,10 +44,11 @@ enum BufferType {
     InstanceBuffer  ///< Instance buffer, will store instance-specific data.
 };
 
+/// @brief  This enum describes the supported access types for render buffers.
 enum BufferAccessType {
-    ReadOnly,
-    WriteOnly,
-    ReadWrite
+    ReadOnly,       ///< Read only access.
+    WriteOnly,      ///< Write only access.
+    ReadWrite       ///< Read and write access.
 };
 
 enum RenderCommandType {
