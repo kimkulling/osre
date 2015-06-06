@@ -25,16 +25,25 @@ public:
 
     }
 
-    virtual bool create( Properties::ConfigurationMap *config = nullptr ) {
+protected:
+    virtual bool onCreate( Properties::ConfigurationMap *config = nullptr ) {
         AppBase::getConfig()->setString( Properties::ConfigurationMap::WindowsTitle, "HelloWorld!" );
 
-        m_stage = new Scene::Stage( "HelloWorld" );
+        if( !AppBase::onCreate( config ) ) {
+            return false;
+        }
+
+        m_stage = AppBase::createStage( "HelloWorld" );
         Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
         Scene::GeometryBuilder myBuilder;
         RenderBackend::Geometry *geo = myBuilder.createTriangle();
         geoNode->addGeometry( geo );
 
-        return AppBase::create( config );
+        return true;
+    }
+
+    virtual void onUpdate()  {
+        m_stage->update();
     }
 };
 

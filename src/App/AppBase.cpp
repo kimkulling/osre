@@ -4,6 +4,7 @@
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractTimer.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/Scene/Stage.h>
 
 // private includes
 #include <src/Platform/PlatformPluginFactory.h>
@@ -30,7 +31,7 @@ struct AppBase::Impl {
     Platform::PlatformInterface *m_platformInterface;
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
-
+    Scene::Stage *m_stage;
     
     Impl( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
     : m_state( Uninited )
@@ -39,7 +40,8 @@ struct AppBase::Impl {
     , m_config( nullptr )
     , m_platformInterface( nullptr )
     , m_timer( nullptr )
-    , m_rbService( nullptr ) {
+    , m_rbService( nullptr )
+    , m_stage( nullptr ) {
         m_config = new Properties::ConfigurationMap;
         m_config->setString( Properties::ConfigurationMap::RenderAPI, "opengl" );
         m_config->setBool( Properties::ConfigurationMap::PollingMode, true );
@@ -82,6 +84,8 @@ void AppBase::update() {
     }
 
     m_impl->m_timediff = m_impl->m_timer->getTimeDiff();
+
+    onUpdate();
 }
 
 void AppBase::requestNextFrame() {
@@ -105,6 +109,16 @@ Properties::ConfigurationMap *AppBase::getConfig() const {
     }
 
     return m_impl->m_config;
+}
+
+Scene::Stage *AppBase::createStage( const String &name ) {
+    if( name.empty() ) {
+        return nullptr;
+    }
+
+    m_impl->m_stage = new Scene::Stage( "HelloWorld", m_impl->m_rbService );
+    
+    return m_impl->m_stage;
 }
 
 bool AppBase::onCreate( Properties::ConfigurationMap *config ) {
@@ -171,6 +185,10 @@ bool AppBase::onDestroy() {
     Logger::kill();
 
     return true;
+}
+
+void AppBase::onUpdate() {
+
 }
 
 }

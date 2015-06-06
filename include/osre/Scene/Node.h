@@ -32,6 +32,8 @@ namespace OSRE {
 namespace RenderBackend {
     struct TransformBlock;
     struct Geometry;
+
+    class RenderBackendService;
 }
 
 namespace Scene {
@@ -42,7 +44,7 @@ namespace Scene {
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Node : public Common::Object{
+class OSRE_EXPORT Node : public Common::Object {
 public:
     enum TraverseMode {
         FlatMode,
@@ -66,11 +68,11 @@ public:
     virtual const glm::vec4 &getPosition() const;
     virtual void setScale( const glm::vec3 &pos );
     virtual const glm::vec4 &getScale() const;
-    virtual void update();
+    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
 
 private:
     CPPCore::TArray<Node*> m_childs;
-    CPPCore::TArray<RenderBackend::Geometry*> m_geo;
+    CPPCore::TArray<RenderBackend::Geometry*> m_newGeo;
     Node *m_parent;
     RenderBackend::TransformBlock *m_transform;
 };

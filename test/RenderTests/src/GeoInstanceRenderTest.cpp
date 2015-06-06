@@ -87,12 +87,12 @@ public:
         attachGeoEvData->m_pGeometry = pGeometry;
 
         // use a default material
-        pGeometry->m_pMaterial = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
-        if( nullptr != pGeometry->m_pMaterial->m_pShader ) {
-            pGeometry->m_pMaterial->m_pShader->m_attributes.add( "vVertex" );
-            pGeometry->m_pMaterial->m_pShader->m_attributes.add( "vDiffuseColor" );
-            pGeometry->m_pMaterial->m_pShader->m_parameters.add( "M" );
-            pGeometry->m_pMaterial->m_pShader->m_parameters.add( "VP" );
+        pGeometry->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
+        if( nullptr != pGeometry->m_material->m_pShader ) {
+            pGeometry->m_material->m_pShader->m_attributes.add( "vVertex" );
+            pGeometry->m_material->m_pShader->m_attributes.add( "vDiffuseColor" );
+            pGeometry->m_material->m_pShader->m_parameters.add( "M" );
+            pGeometry->m_material->m_pShader->m_parameters.add( "VP" );
         }
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
@@ -114,7 +114,7 @@ public:
         ::memcpy( parameterM->m_data.m_data, glm::value_ptr( mat[ 0 ] ), sizeof( glm::mat4 ) * 4 );
         parameterMVP->m_next = parameterM;
 
-        pGeometry->m_pParameter = parameterMVP;
+        pGeometry->m_parameter = parameterMVP;
         pGeometry->m_numParameter += 2;
         
         rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );

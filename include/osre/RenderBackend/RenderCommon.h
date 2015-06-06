@@ -245,36 +245,36 @@ struct Transform {
 };
 
 struct Geometry {
-    Material       *m_pMaterial;
+    Material       *m_material;
     ui32            m_numParameter;
-    Parameter      *m_pParameter;
+    Parameter      *m_parameter;
     VertexType      m_vertextype;
-    BufferData     *m_pVertexBuffer;
+    BufferData     *m_vb;
     IndexType       m_indextype;
-    BufferData     *m_pIndexBuffer;
+    BufferData     *m_ib;
     ui32            m_numPrimGroups;
     PrimitiveGroup *m_pPrimGroups;
 
     Geometry()
-    : m_pMaterial( nullptr )
+    : m_material( nullptr )
     , m_numParameter( 0 )
-    , m_pParameter( nullptr )
-    , m_pVertexBuffer( nullptr )
-    , m_pIndexBuffer( nullptr )
+    , m_parameter( nullptr )
+    , m_vb( nullptr )
+    , m_ib( nullptr )
     , m_numPrimGroups( 0 )
     , m_pPrimGroups( nullptr ) {
         // empty
     }
 
     ~Geometry() {
-        delete m_pMaterial;
-        m_pMaterial = nullptr;
+        delete m_material;
+        m_material = nullptr;
 
-        delete m_pVertexBuffer;
-        m_pVertexBuffer = nullptr;
+        delete m_vb;
+        m_vb = nullptr;
 
-        delete m_pIndexBuffer;
-        m_pIndexBuffer = nullptr;
+        delete m_ib;
+        m_ib = nullptr;
         
         delete [] m_pPrimGroups;
         m_pPrimGroups = nullptr;

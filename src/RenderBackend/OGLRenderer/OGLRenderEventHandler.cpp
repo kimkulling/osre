@@ -124,13 +124,13 @@ static void setupParameter( Geometry *geo, OGLRenderBackend *rb, OGLRenderEventH
     assert( nullptr != rb );
     assert( nullptr != ev );
 
-    if( !geo->m_pParameter ) {
+    if( !geo->m_parameter ) {
         return;
     }
 
     OGLRenderCmd *setParameterCmd = new OGLRenderCmd;
     setParameterCmd->m_type = SetParameterCmd;
-    Parameter *currentParam( geo->m_pParameter );
+    Parameter *currentParam( geo->m_parameter );
     ::CPPCore::TArray<OGLParameter*> paramArray;
     SetParameterCmdData *paramData = new SetParameterCmdData;
     paramData->m_numParam = geo->m_numParameter;
@@ -154,11 +154,11 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
     assert( nullptr != rb );
     assert( nullptr != oglShader );
 
-    BufferData *pVertices = geo->m_pVertexBuffer;
+    BufferData *pVertices = geo->m_vb;
     OGLBuffer *pVB = rb->createBuffer( pVertices->m_type );
 
     // create index buffer
-    BufferData *pIndices = geo->m_pIndexBuffer;
+    BufferData *pIndices = geo->m_ib;
     OGLBuffer *pIB = rb->createBuffer( pIndices->m_type );
 
     OGLVertexArray *vertexArray = rb->createVertexArray();
@@ -403,7 +403,7 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *evData ) {
     }
 
     // create the default material
-    setupMaterial( geo->m_pMaterial, m_oglBackend, this );
+    setupMaterial( geo->m_material, m_oglBackend, this );
 
     // setup vertex array, vertex and index buffers
     m_pVertexArray = setupBuffers( geo, m_oglBackend, m_renderCmdBuffer->getActiveShader() );

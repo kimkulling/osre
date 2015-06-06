@@ -28,6 +28,8 @@ namespace OSRE {
 
 namespace RenderBackend {
     struct TransformBlock;
+
+    class RenderBackendService;
 }
 
 namespace Scene {
@@ -49,7 +51,7 @@ private:
 
 class OSRE_EXPORT Stage : public Common::Object {
 public:
-    Stage( const String &name );
+    Stage( const String &name, RenderBackend::RenderBackendService *rbService );
     virtual ~Stage();
     virtual void setRoot( Node *root );
     virtual Node *getRoot() const;
@@ -61,6 +63,7 @@ public:
 private:
     Node *m_root;
     TransformBlockCache m_transformBlocks;
+    RenderBackend::RenderBackendService *m_rbService;
 };
 
 } // Namespace Scene

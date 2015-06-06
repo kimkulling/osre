@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 
 namespace OSRE {
 namespace Scene {
@@ -32,6 +33,7 @@ TransformBlockCache::TransformBlockCache( ui32 numIniBlocks )
 , m_blocks( nullptr ) {
     if( 0 != m_numBlocks ) {
         m_blocks = new RenderBackend::TransformBlock[ m_numBlocks ];
+
     }
 }
 
@@ -48,10 +50,11 @@ static void releaseChildNodes( Node *node ) {
     }
 }
 
-Stage::Stage( const String &name )
+Stage::Stage( const String &name, RenderBackend::RenderBackendService *rbService )
     : Object( name )
     , m_root( nullptr )
-    , m_transformBlocks( 5 ) {
+    , m_transformBlocks( 5 )
+    , m_rbService( rbService ) {
     // empty
 }
 
@@ -95,7 +98,11 @@ void Stage::clear() {
 }
 
 void Stage::update() {
-    // todo!
+    if( nullptr == m_root ) {
+        return;
+    }
+
+    m_root->update( m_rbService );
 }
 
 } // Namespace Scene

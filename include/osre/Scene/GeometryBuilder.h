@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/Types.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 namespace OSRE {
 
@@ -45,6 +46,8 @@ public:
 
     /// @brief  The class destructor.
     ~GeometryBuilder();
+
+    RenderBackend::Geometry *createEmptyGeometry( RenderBackend::VertexType type );
 
     /// @brief  Will create a triangle geometry.
     /// @return The created geometry.

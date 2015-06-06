@@ -21,7 +21,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/GeometryBuilder.h>
-#include <osre/RenderBackend/RenderCommon.h>
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -35,6 +34,43 @@ namespace Scene {
 
 using namespace ::OSRE::RenderBackend;
 
+const String VsSrc =
+    "#version 400 core\n"
+    "\n"
+    "layout(location = 0) in vec3 vVertex;	      // object space vertex position\n"
+    "layout(location = 1) in vec3 vDiffuseColor;  // per-vertex colour\n"
+    "\n"
+    "// output from the vertex shader\n"
+    "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
+    "\n"
+    "// uniform\n"
+    "uniform mat4 MVP;	//combined modelview projection matrix\n"
+    "\n"
+    "void main()\n"
+    "{\n"
+    "    //assign the per-vertex color to vSmoothColor varying\n"
+    "    vSmoothColor = vec4(vDiffuseColor,1);\n"
+    "\n"
+    "    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
+    "    //vertex position\n"
+    "    gl_Position = MVP*vec4(vVertex,1);\n"
+    "}\n";
+
+const String FsSrc =
+    "#version 400 core\n"
+    "\n"
+    "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
+    "\n"
+    "//input form the vertex shader\n"
+    "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
+    "\n"
+    "void main()\n"
+    "{\n"
+    "    //set the interpolated color as the shader output\n"
+    "    vFragColor = vSmoothColor;\n"
+    "}\n";
+
+
 //-------------------------------------------------------------------------------------------------
 GeometryBuilder::GeometryBuilder() {
     // empty
@@ -46,10 +82,19 @@ GeometryBuilder::~GeometryBuilder() {
 }
 
 //-------------------------------------------------------------------------------------------------
+RenderBackend::Geometry *GeometryBuilder::createEmptyGeometry( RenderBackend::VertexType type ) {
+    Geometry *geo = new Geometry;
+    geo->m_vertextype = type;
+    geo->m_indextype = UnsignedShort;
+
+    return geo;
+}
+
+//-------------------------------------------------------------------------------------------------
 RenderBackend::Geometry *GeometryBuilder::createTriangle() {
-    Geometry *pGeometry = new Geometry;
-    pGeometry->m_vertextype = ColorVertex;
-    pGeometry->m_indextype = UnsignedShort;
+    Geometry *geo = new Geometry;
+    geo->m_vertextype = ColorVertex;
+    geo->m_indextype = UnsignedShort;
 
     // setup triangle vertices    
     static const ui32 NumVert = 3;
@@ -63,8 +108,8 @@ RenderBackend::Geometry *GeometryBuilder::createTriangle() {
     vertices[ 2 ].position = glm::vec3( 1, -1, 0 );
 
     ui32 size( sizeof( ColorVert ) * NumVert );
-    pGeometry->m_pVertexBuffer = BufferData::alloc( VertexBuffer, size, ReadOnly );
-    ::memcpy( pGeometry->m_pVertexBuffer->m_pData, vertices, size );
+    geo->m_vb = BufferData::alloc( VertexBuffer, size, ReadOnly );
+    ::memcpy( geo->m_vb->m_pData, vertices, size );
 
     // setup triangle indices
     static const ui32 NumIndices = 3;
@@ -74,17 +119,25 @@ RenderBackend::Geometry *GeometryBuilder::createTriangle() {
     indices[ 2 ] = 2;
     
     size = sizeof( GLushort ) * NumIndices;
-    pGeometry->m_pIndexBuffer = BufferData::alloc( IndexBuffer, size, ReadOnly );
-    ::memcpy( pGeometry->m_pIndexBuffer->m_pData, indices, size );
+    geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
+    ::memcpy( geo->m_ib->m_pData, indices, size );
 
-    pGeometry->m_numPrimGroups = 1;
-    pGeometry->m_pPrimGroups   = new PrimitiveGroup[ pGeometry->m_numPrimGroups ];
-    pGeometry->m_pPrimGroups[ 0 ].m_indexType     = UnsignedShort;
-    pGeometry->m_pPrimGroups[ 0 ].m_numPrimitives = 3 * pGeometry->m_numPrimGroups;
-    pGeometry->m_pPrimGroups[ 0 ].m_primitive     = TriangleList;
-    pGeometry->m_pPrimGroups[ 0 ].m_startIndex    = 0;
+    geo->m_numPrimGroups = 1;
+    geo->m_pPrimGroups   = new PrimitiveGroup[ geo->m_numPrimGroups ];
+    geo->m_pPrimGroups[ 0 ].m_indexType     = UnsignedShort;
+    geo->m_pPrimGroups[ 0 ].m_numPrimitives = 3 * geo->m_numPrimGroups;
+    geo->m_pPrimGroups[ 0 ].m_primitive     = TriangleList;
+    geo->m_pPrimGroups[ 0 ].m_startIndex    = 0;
 
-    return pGeometry;
+    geo->m_material = new Material;
+
+    geo->m_material->m_numTextures = 0;
+    geo->m_material->m_type = ShaderMaterial;
+    geo->m_material->m_pShader = new Shader;
+    geo->m_material->m_pShader->m_src[ SH_VertexShaderType ] = VsSrc;
+    geo->m_material->m_pShader->m_src[ SH_FragmentShaderType ] = FsSrc;
+
+    return geo;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -108,8 +161,8 @@ RenderBackend::Geometry *GeometryBuilder::createBox( f32 w, f32 h, f32 d ) {
     vertices[ 7 ].position = glm::vec3( x,     y + h, z + d );
 
     ui32 size( sizeof( ColorVert ) * NumVert );
-    pGeometry->m_pVertexBuffer = BufferData::alloc( VertexBuffer, size, ReadOnly );
-    ::memcpy( pGeometry->m_pVertexBuffer->m_pData, vertices, size );
+    pGeometry->m_vb = BufferData::alloc( VertexBuffer, size, ReadOnly );
+    ::memcpy( pGeometry->m_vb->m_pData, vertices, size );
 
     static const ui32 NumIndices = 36;
     GLushort  indices[ NumIndices ];
@@ -155,8 +208,8 @@ RenderBackend::Geometry *GeometryBuilder::createBox( f32 w, f32 h, f32 d ) {
     indices[ 34 ] = 1 + 33;
     indices[ 35 ] = 2 + 33;
     size = sizeof( GLushort ) * NumIndices;
-    pGeometry->m_pIndexBuffer = BufferData::alloc( IndexBuffer, size, ReadOnly );
-    ::memcpy( pGeometry->m_pIndexBuffer->m_pData, indices, size );
+    pGeometry->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
+    ::memcpy( pGeometry->m_ib->m_pData, indices, size );
 
     return pGeometry;
 }

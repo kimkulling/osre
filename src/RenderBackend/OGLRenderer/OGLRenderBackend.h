@@ -103,15 +103,15 @@ public:
     static ui32 getVertexSize( VertexType vertextype );
 
 private:
-    Platform::AbstractRenderContext *m_pRenderCtx;
+    Platform::AbstractRenderContext *m_renderCtx;
     CPPCore::TArray<OGLBuffer*>      m_buffers;
     CPPCore::TArray<OGLVertexArray*> m_vertexarrays;
     CPPCore::TArray<OGLShader*>      m_shaders;
     CPPCore::TArray<OGLTexture*>     m_textures;
     CPPCore::TArray<ui32>            m_freeTexSlots;
-    std::map<String, ui32>        m_texLookupMap;
+    std::map<String, ui32>           m_texLookupMap;
     CPPCore::TArray<OGLParameter*>   m_parameters;
-    OGLShader                       *m_pShaderInUse;
+    OGLShader                       *m_shaderInUse;
     CPPCore::TArray<ui32>            m_freeBufferSlots;
     CPPCore::TArray<OGLPrimGroup*>   m_primitives;
 };

@@ -4,6 +4,10 @@
 
 namespace OSRE {
 
+namespace Scene {
+    class Stage;
+}
+
 namespace Properties {
     class ConfigurationMap;
 }
@@ -26,11 +30,13 @@ public:
     virtual void requestNextFrame();
     virtual bool handleEvents();
     virtual Properties::ConfigurationMap *getConfig() const;
+    virtual Scene::Stage *createStage( const String &name );
 
 protected:
     virtual bool onCreate( Properties::ConfigurationMap *config );
     virtual bool onDestroy();
-        
+    virtual void onUpdate();
+
 private:
     struct Impl;
     Impl *m_impl;

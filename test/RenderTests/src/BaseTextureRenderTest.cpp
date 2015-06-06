@@ -112,13 +112,13 @@ public:
         vertices[ 2 ].tex0 = glm::vec2( 1, 0 );
         vertices[ 3 ].tex0 = glm::vec2( 1, 1 );
 
-        pGeometry->m_pVertexBuffer = new BufferData;
-        pGeometry->m_pVertexBuffer->m_size = sizeof( RenderVert ) * 4;
-        pGeometry->m_pVertexBuffer->m_access = ReadOnly;
-        pGeometry->m_pVertexBuffer->m_type = VertexBuffer;
+        pGeometry->m_vb = new BufferData;
+        pGeometry->m_vb->m_size = sizeof( RenderVert ) * 4;
+        pGeometry->m_vb->m_access = ReadOnly;
+        pGeometry->m_vb->m_type = VertexBuffer;
 
-        pGeometry->m_pVertexBuffer->m_pData = new uc8[ pGeometry->m_pVertexBuffer->m_size ];
-        ::memcpy( pGeometry->m_pVertexBuffer->m_pData, vertices, pGeometry->m_pVertexBuffer->m_size );
+        pGeometry->m_vb->m_pData = new uc8[ pGeometry->m_vb->m_size ];
+        ::memcpy( pGeometry->m_vb->m_pData, vertices, pGeometry->m_vb->m_size );
 
         // setup triangle indices
         indices[ 0 ] = 0;
@@ -129,38 +129,38 @@ public:
         indices[ 4 ] = 2;
         indices[ 5 ] = 3;
         
-        pGeometry->m_pIndexBuffer = new BufferData;
-        pGeometry->m_pIndexBuffer->m_size = sizeof( GLushort ) * 6;
-        pGeometry->m_pIndexBuffer->m_access = ReadOnly;
-        pGeometry->m_pIndexBuffer->m_type = IndexBuffer;
+        pGeometry->m_ib = new BufferData;
+        pGeometry->m_ib->m_size = sizeof( GLushort ) * 6;
+        pGeometry->m_ib->m_access = ReadOnly;
+        pGeometry->m_ib->m_type = IndexBuffer;
         
-        pGeometry->m_pIndexBuffer->m_pData = new uc8[ pGeometry->m_pIndexBuffer->m_size ];
-        ::memcpy( pGeometry->m_pIndexBuffer->m_pData, indices, pGeometry->m_pIndexBuffer->m_size );
+        pGeometry->m_ib->m_pData = new uc8[ pGeometry->m_ib->m_size ];
+        ::memcpy( pGeometry->m_ib->m_pData, indices, pGeometry->m_ib->m_size );
 
         attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_pGeometry = pGeometry;
 
         // use default material
-        pGeometry->m_pMaterial = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
-        if( nullptr != pGeometry->m_pMaterial->m_pShader ) {
-            pGeometry->m_pMaterial->m_pShader->m_attributes.add( "vVertex" );
-            pGeometry->m_pMaterial->m_pShader->m_attributes.add( "TexCoord0Attribute" );
-            pGeometry->m_pMaterial->m_pShader->m_parameters.add( "MVP" );
+        pGeometry->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
+        if( nullptr != pGeometry->m_material->m_pShader ) {
+            pGeometry->m_material->m_pShader->m_attributes.add( "vVertex" );
+            pGeometry->m_material->m_pShader->m_attributes.add( "TexCoord0Attribute" );
+            pGeometry->m_material->m_pShader->m_parameters.add( "MVP" );
         }
 
-        pGeometry->m_pMaterial->m_numTextures = 1;
-        pGeometry->m_pMaterial->m_pTextures = new Texture[ 1 ];
+        pGeometry->m_material->m_numTextures = 1;
+        pGeometry->m_material->m_pTextures = new Texture[ 1 ];
 #ifdef _WIN32
-        pGeometry->m_pMaterial->m_pTextures[ 0 ].m_textureName = "../../media/Models/Obj/SpiderTex.jpg";
+        pGeometry->m_material->m_pTextures[ 0 ].m_textureName = "../../media/Models/Obj/SpiderTex.jpg";
 #else
-        pGeometry->m_pMaterial->m_pTextures[ 0 ].m_textureName = "../media/Models/Obj/SpiderTex.jpg";
+        pGeometry->m_material->m_pTextures[ 0 ].m_textureName = "../media/Models/Obj/SpiderTex.jpg";
 #endif
-        pGeometry->m_pMaterial->m_pTextures[ 0 ].m_targetType = Texture2D;
-        pGeometry->m_pMaterial->m_pTextures[ 0 ].m_width = 0;
-        pGeometry->m_pMaterial->m_pTextures[ 0 ].m_height   = 0;
-        pGeometry->m_pMaterial->m_pTextures[ 0 ].m_channels = 0;
-        pGeometry->m_pMaterial->m_pTextures[ 0 ].m_pData    = nullptr;
-        pGeometry->m_pMaterial->m_pTextures[ 0 ].m_size     = 0;
+        pGeometry->m_material->m_pTextures[ 0 ].m_targetType = Texture2D;
+        pGeometry->m_material->m_pTextures[ 0 ].m_width = 0;
+        pGeometry->m_material->m_pTextures[ 0 ].m_height = 0;
+        pGeometry->m_material->m_pTextures[ 0 ].m_channels = 0;
+        pGeometry->m_material->m_pTextures[ 0 ].m_pData = nullptr;
+        pGeometry->m_material->m_pTextures[ 0 ].m_size = 0;
 
         pGeometry->m_numPrimGroups = 1;
         pGeometry->m_pPrimGroups = new PrimitiveGroup[ 1 ];
@@ -176,7 +176,7 @@ public:
         Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
         ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
         
-        pGeometry->m_pParameter = parameter;
+        pGeometry->m_parameter = parameter;
         pGeometry->m_numParameter++;
 
         return true;

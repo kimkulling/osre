@@ -46,12 +46,12 @@ BasePropertyMap::~BasePropertyMap() {
 }
 
 //-------------------------------------------------------------------------------------------------
-void BasePropertyMap::setProperty( ui32 id, const String &rName, const Variant &rValue ) {
+void BasePropertyMap::setProperty( ui32 id, const String &rName, const Variant &val ) {
     if ( hasProperty( id ) ) {
         removeProperty( id );
     }
     
-    Property *pProperty = new Property( id, "", rValue );
+    Property *pProperty = new Property( id, "", val );
     if ( !rName.empty() ) {
         pProperty->setPropertyName( rName );
     }

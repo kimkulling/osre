@@ -122,7 +122,7 @@ GLenum getGLTextureStage( TextureStageType texType ) {
 
 //-------------------------------------------------------------------------------------------------
 OGLRenderBackend::OGLRenderBackend( )
-: m_pRenderCtx( nullptr )
+: m_renderCtx( nullptr )
 , m_buffers()
 , m_vertexarrays()
 , m_shaders()
@@ -130,7 +130,7 @@ OGLRenderBackend::OGLRenderBackend( )
 , m_freeTexSlots()
 , m_texLookupMap()
 , m_parameters()
-, m_pShaderInUse( nullptr )
+, m_shaderInUse( nullptr )
 , m_freeBufferSlots()
 , m_primitives() {
     // empty
@@ -148,10 +148,10 @@ OGLRenderBackend::~OGLRenderBackend( ) {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::setRenderContext( Platform::AbstractRenderContext *renderCtx ) {
-    if ( m_pRenderCtx != renderCtx ) {
-        m_pRenderCtx = renderCtx;
-        if ( m_pRenderCtx ) {
-            m_pRenderCtx->activate();
+    if ( m_renderCtx != renderCtx ) {
+        m_renderCtx = renderCtx;
+        if ( m_renderCtx ) {
+            m_renderCtx->activate();
         }
     }
 }
@@ -460,29 +460,29 @@ OGLShader *OGLRenderBackend::getShader( const String &name ) {
 //-------------------------------------------------------------------------------------------------
 bool OGLRenderBackend::useShader( OGLShader *pShader ) {
     if( !pShader ) {
-        if( m_pShaderInUse ) {
-            m_pShaderInUse->unuse();
-            m_pShaderInUse = nullptr;
+        if( m_shaderInUse ) {
+            m_shaderInUse->unuse();
+            m_shaderInUse = nullptr;
             return true;
         }
         return false;
     }
 
-    if( m_pShaderInUse == pShader ) {
+    if( m_shaderInUse == pShader ) {
         return true;
     }
-    if( m_pShaderInUse ) {
-        m_pShaderInUse->unuse();
+    if( m_shaderInUse ) {
+        m_shaderInUse->unuse();
     }
-    m_pShaderInUse = pShader;
-    m_pShaderInUse->use();
+    m_shaderInUse = pShader;
+    m_shaderInUse->use();
 
     return true;
 }
 
 //-------------------------------------------------------------------------------------------------
 OGLShader *OGLRenderBackend::getActiveShader() const {
-    return m_pShaderInUse;
+    return m_shaderInUse;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -715,11 +715,11 @@ OGLParameter *OGLRenderBackend::getParameter( const String &name ) const {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::setParameter( OGLParameter *param ) {
-    if( !m_pShaderInUse ) {
+    if( !m_shaderInUse ) {
         return;
     }
 
-    setParameterInShader( param, m_pShaderInUse );
+    setParameterInShader( param, m_shaderInUse );
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -729,14 +729,14 @@ void OGLRenderBackend::releaseAllParameters() {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::setParameter( OGLParameter **param, ui32 numParam ) {
-    if( !m_pShaderInUse ) {
+    if( !m_shaderInUse ) {
         return;
     }
 
     for( ui32 i = 0; i < numParam; ++i ) {
         OGLParameter *currentParam = param[ i ];
         if( currentParam ) {
-            const bool success = setParameterInShader( currentParam ,m_pShaderInUse );
+            const bool success = setParameterInShader( currentParam ,m_shaderInUse );
 //            osre_validate( success, "Error setting parameter " + currentParam->m_name );
         }
     }
@@ -782,9 +782,9 @@ void OGLRenderBackend::render( ui32 primpGrpIdx, ui32 numInstances ) {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::renderFrame() {
-    assert( nullptr != m_pRenderCtx );    
+    assert( nullptr != m_renderCtx );    
     
-    m_pRenderCtx->update();
+    m_renderCtx->update();
 }
 
 //-------------------------------------------------------------------------------------------------

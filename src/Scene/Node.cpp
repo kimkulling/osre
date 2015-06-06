@@ -22,16 +22,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/Node.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 
 namespace OSRE {
 namespace Scene {
 
 static const glm::vec4 Dummy;
 
+using namespace RenderBackend;
+
 Node::Node( const String &name, Node *parent )
 : Object( name )
 , m_childs()
-, m_geo()
+, m_newGeo()
 , m_parent( parent )
 , m_transform( nullptr ) {
     // empty
@@ -138,7 +141,7 @@ void Node::releaseChildren() {
 }
 
 void Node::addGeometry( RenderBackend::Geometry *geo ) {
-    m_geo.add( geo );
+    m_newGeo.add( geo );
 }
 
 void Node::setTransformBlock( RenderBackend::TransformBlock *transformBlock ) {
@@ -175,8 +178,19 @@ const glm::vec4 &Node::getScale() const {
     return m_transform->m_scale;
 }
 
-void Node::update() {
-    // todo!
+void Node::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
+    if( !m_newGeo.isEmpty() ) {
+        RenderBackend::Geometry *geo( nullptr );
+        for( ui32 i = 0; i < m_newGeo.size(); ++i ) {
+            geo = m_newGeo[ i ];
+        }
+        renderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
+        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
+        attachGeoEvData->m_numGeo = m_newGeo.size();
+        attachGeoEvData->m_pGeometry = m_newGeo[0];
+
+        renderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+    }
 }
 
 } // Namespace Scene
