@@ -135,6 +135,12 @@ struct BufferData {
         // empty
     }
 
+    ~BufferData() {
+        delete [] m_pData;
+        m_pData = nullptr;
+        m_size = 0;
+    }
+
     static BufferData *alloc( BufferType type, ui32 m_size, BufferAccessType access ) {
         BufferData *buffer( new BufferData );
         buffer->m_size = m_size;
