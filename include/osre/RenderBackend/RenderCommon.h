@@ -171,13 +171,6 @@ struct PrimitiveGroup {
     }
 };
 
-enum ShaderType {
-    SH_VertexShaderType = 0,
-    SH_FragmentShaderType,
-    SH_GeometryShaderType
-};
-
-static const ui32 MaxShaderTypes = 3;
 
 enum MaterialType {
     FlatShadingMaterial,
@@ -210,10 +203,26 @@ struct Texture {
     }
 };
 
+enum ShaderType {
+    SH_VertexShaderType = 0,
+    SH_FragmentShaderType,
+    SH_GeometryShaderType
+};
+
+static const ui32 MaxShaderTypes = 3;
+
 struct Shader {
     CPPCore::TArray<String> m_parameters;
     CPPCore::TArray<String> m_attributes;
     String                  m_src[ MaxShaderTypes ];
+
+    Shader() {
+        // empty
+    }
+
+    ~Shader() {
+        // empty
+    }
 };
 
 struct Material {
@@ -247,6 +256,10 @@ struct Transform {
             m_translate[ i ] = 0.0f;
             m_scale[ i ] = 1.0f;
         }
+    }
+
+    ~Transform() {
+        // empty
     }
 };
 
@@ -294,6 +307,11 @@ struct GeoInstanceData {
         : m_data( nullptr ) {
         // empty
     }
+
+    ~GeoInstanceData() {
+        delete m_data;
+        m_data = nullptr;
+    }
 };
 
 struct RenderCommand {
@@ -310,6 +328,10 @@ struct TransformBlock {
     TransformBlock() {
         // empty
     }
+
+    ~TransformBlock() {
+        // empty
+    }
 };
 
 struct TransformMatrixBlock {
@@ -321,6 +343,10 @@ struct TransformMatrixBlock {
     : m_projection()
     , m_model()
     , m_view() {
+        // empty
+    }
+
+    ~TransformMatrixBlock() {
         // empty
     }
 
