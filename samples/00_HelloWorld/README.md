@@ -1,2 +1,2 @@
-# osre
-An open source render engine
+# Hello World
+This sample just shows a simple HelloWorld application.
