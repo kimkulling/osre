@@ -127,4 +127,9 @@ typedef int ObjectId;
 ///	The data type for strings
 typedef std::string String;
 
+///	@brief  Shortcut to avoid copy operations.
+#define OSRE_NON_COPYABLE( NAME ) \
+private: \
+    NAME( const NAME & );        \
+    NAME& operator = ( const NAME & );
 } // Namespace OSRE

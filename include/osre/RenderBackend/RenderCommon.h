@@ -169,6 +169,8 @@ struct PrimitiveGroup {
     ~PrimitiveGroup() {
         // empty
     }
+
+    OSRE_NON_COPYABLE( PrimitiveGroup )
 };
 
 
@@ -201,6 +203,8 @@ struct Texture {
         delete[] m_pData;
         m_pData = nullptr;
     }
+
+    OSRE_NON_COPYABLE( Texture )
 };
 
 enum ShaderType {
@@ -223,6 +227,8 @@ struct Shader {
     ~Shader() {
         // empty
     }
+
+    OSRE_NON_COPYABLE( Shader )
 };
 
 struct Material {
@@ -245,6 +251,8 @@ struct Material {
         delete [] m_pTextures;
         m_pTextures = nullptr;
     }
+
+    OSRE_NON_COPYABLE( Material )
 };
 
 struct Transform {
@@ -261,6 +269,8 @@ struct Transform {
     ~Transform() {
         // empty
     }
+
+    OSRE_NON_COPYABLE( Transform )
 };
 
 struct Geometry {
@@ -298,6 +308,8 @@ struct Geometry {
         delete [] m_pPrimGroups;
         m_pPrimGroups = nullptr;
     }
+
+    OSRE_NON_COPYABLE( Geometry )
 };
 
 struct GeoInstanceData {
@@ -312,11 +324,15 @@ struct GeoInstanceData {
         delete m_data;
         m_data = nullptr;
     }
+
+    OSRE_NON_COPYABLE( GeoInstanceData )
 };
 
 struct RenderCommand {
     RenderCommandType m_commandType;
     void             *m_pImpl;
+
+    OSRE_NON_COPYABLE( RenderCommand )
 };
 
 
@@ -332,6 +348,8 @@ struct TransformBlock {
     ~TransformBlock() {
         // empty
     }
+
+    OSRE_NON_COPYABLE( TransformBlock )
 };
 
 struct TransformMatrixBlock {
@@ -355,6 +373,8 @@ struct TransformMatrixBlock {
         m_model      = glm::mat4( 1.0f );
         m_view       = glm::mat4( 1.0f );
     }
+
+    OSRE_NON_COPYABLE( TransformMatrixBlock )
 };
 
 } // Namespace RenderBackend
