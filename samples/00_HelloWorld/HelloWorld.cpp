@@ -6,14 +6,24 @@
 #include <osre/Scene/Node.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 using namespace OSRE;
 using namespace OSRE::RenderBackend;
 
 // to identify local log entries 
 static const String Tag    = "HelloWorld"; 
 
+glm::mat4 P = glm::mat4( 1 );
+glm::mat4 M = glm::mat4( 1 );
+glm::mat4 V = glm::mat4( 1 );
+
 class HelloWorldApp : public App::AppBase {
     Scene::Stage *m_stage;
+    TransformMatrixBlock m_transformMatrix;
+
 public:
     HelloWorldApp( int argc, char *argv[] )
     : AppBase( argc, argv )
@@ -37,6 +47,22 @@ protected:
         Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
         Scene::GeometryBuilder myBuilder;
         RenderBackend::Geometry *geo = myBuilder.createTriangle();
+        if( nullptr != geo ) {
+            if( nullptr != geo->m_material->m_pShader ) {
+                geo->m_material->m_pShader->m_attributes.add( "vVertex" );
+                geo->m_material->m_pShader->m_attributes.add( "vDiffuseColor" );
+                geo->m_material->m_pShader->m_parameters.add( "MVP" );
+            }
+        }
+
+        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+
+        Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
+        ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
+
+        geo->m_parameter = parameter;
+        geo->m_numParameter++;
+
         geoNode->addGeometry( geo );
 
         return true;
@@ -54,9 +80,6 @@ int main( int argc, char *argv[] )  {
         return 1;
     }
     
-    //attachGeoEvData->m_numGeo = 1;
-    //attachGeoEvData->m_pGeometry = pGeometry;
-
     // handle events until application will be terminated
     while( myApp.handleEvents() ) {
         
