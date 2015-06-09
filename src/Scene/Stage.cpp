@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
+#include <osre/Scene/View.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
@@ -51,10 +52,11 @@ static void releaseChildNodes( Node *node ) {
 }
 
 Stage::Stage( const String &name, RenderBackend::RenderBackendService *rbService )
-    : Object( name )
-    , m_root( nullptr )
-    , m_transformBlocks( 5 )
-    , m_rbService( rbService ) {
+: Object( name )
+, m_root( nullptr )
+, m_views()
+, m_transformBlocks( 5 )
+, m_rbService( rbService ) {
     // empty
 }
 
@@ -91,6 +93,13 @@ Node *Stage::findNode( const String &name ) const {
 
     Node *myNode( m_root->findChild( name ) );
     return myNode;
+}
+
+View *Stage::addView( const String &name, Node *node ) {
+    View *view = new View( name );
+    m_views.add( view );
+
+    return view;
 }
 
 void Stage::clear() {

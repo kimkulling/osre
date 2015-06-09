@@ -70,7 +70,7 @@ SET( common_src
 SET( io_src
     IO/FileStream.cpp
     IO/FileStream.h
-        IO/IOService.cpp
+    IO/IOService.cpp
     IO/LocaleFileSystem.cpp
     IO/LocaleFileSystem.h
     IO/Stream.cpp
@@ -202,12 +202,14 @@ SET( scene_src
     Scene/Node.cpp
     Scene/Stage.cpp
     Scene/TrackBall.cpp
+    Scene/View.cpp
 )
 SET( scene_inc
     ${HEADER_PATH}/Scene/GeometryBuilder.h
     ${HEADER_PATH}/Scene/Node.h
     ${HEADER_PATH}/Scene/Stage.h
     ${HEADER_PATH}/Scene/TrackBall.h
+    ${HEADER_PATH}/Scene/View.h
 )
 
 #==============================================================================

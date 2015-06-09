@@ -35,6 +35,7 @@ namespace RenderBackend {
 namespace Scene {
 
 class Node;
+class View;
 
 struct TransformBlockCache {
     ui32 m_numBlocks;
@@ -57,11 +58,13 @@ public:
     virtual Node *getRoot() const;
     virtual Node *addNode( const String &name, Node *parent );
     virtual Node *findNode( const String &name ) const;
+    virtual View *addView( const String &name, Node *node );
     virtual void clear();
     virtual void update();
     
 private:
     Node *m_root;
+    CPPCore::TArray<View*> m_views;
     TransformBlockCache m_transformBlocks;
     RenderBackend::RenderBackendService *m_rbService;
 };
