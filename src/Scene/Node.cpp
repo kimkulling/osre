@@ -112,7 +112,6 @@ Node *Node::findChild( const String &name ) const {
     }
 
     return nullptr;
-
 }
 
 ui32 Node::getNumChilds() const {

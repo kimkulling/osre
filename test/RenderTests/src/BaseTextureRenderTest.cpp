@@ -191,9 +191,13 @@ public:
     virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *pRenderBackendSrv ) {
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
        
+        if( nullptr == m_mvpParam ) {
+            m_mvpParam = Parameter::create( "MVP", PT_Mat4 );
+        }
+
         UpdateParameterEventData *data( new UpdateParameterEventData );
         data->m_numParam = 1;
-        data->m_param = Parameter::create( "MVP", PT_Mat4 );
+        data->m_param = m_mvpParam;
         ::memcpy( data->m_param->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
 
         pRenderBackendSrv->sendEvent( &OnUpdateParameterEvent, data );

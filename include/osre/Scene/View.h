@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Object.h>
 #include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
 
 namespace OSRE {
     
@@ -39,12 +40,14 @@ class View : public Common::Object {
 public:
     View( const String &name );
     virtual ~View();
-    virtual void observedNode( Node *node );
+    virtual void observeNode( Node *node );
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
+    virtual void set( const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up );
 
 private:
     Node *m_node;
     glm::vec3 m_pos, m_lookAt, m_up;
+    glm::mat4 m_view, m_projection;
 };
 
 }

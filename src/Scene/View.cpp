@@ -22,6 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/View.h>
 #include <osre/Common/Logger.h>
+#include <osre/RenderBackend/Parameter.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace OSRE {
 namespace Scene {
@@ -33,7 +35,9 @@ View::View( const String &name )
 , m_node( nullptr )
 , m_pos( 1, 1, 1 )
 , m_lookAt( 0, 0, 0 )
-, m_up( 0, 0, 1 ){
+, m_up( 0, 0, 1 )
+, m_view()
+, m_projection() {
     // empty
 }
 
@@ -41,17 +45,18 @@ View::~View() {
 
 }
 
-void View::observedNode( Node *node ) {
-    if( nullptr == node ) {
-        osre_debug( Tag, "Pointer to node is nullptr." );
-        return;
-    }
-
+void View::observeNode( Node *node ) {
     m_node = node;
 }
 
 void View::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
+    m_view = glm::lookAt( m_pos, m_lookAt, m_up );
+}
 
+void View::set( const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up ) {
+    m_pos    = pos;
+    m_lookAt = view;
+    m_up     = up;
 }
 
 }
