@@ -232,6 +232,7 @@ SET( threading_inc
 # RenderBackend
 #==============================================================================
 SET( renderbackend_src
+    RenderBackend/FontBase.cpp
     RenderBackend/RenderBackendService.cpp
     RenderBackend/Parameter.cpp
 )
@@ -250,6 +251,7 @@ SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLShader.h
 )
 SET( renderbackend_inc
+    ${HEADER_PATH}/RenderBackend/FontBase.h
     ${HEADER_PATH}/RenderBackend/Parameter.h
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
