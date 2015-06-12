@@ -46,7 +46,7 @@ struct OSRE_EXPORT ParamDataBlob {
 };
 
 struct OSRE_EXPORT Parameter {
-    String     m_name;
+    String        m_name;
     ParameterType m_type;
     ui32          m_numItems;
     ParamDataBlob m_data;

@@ -98,9 +98,6 @@ bool RenderTestSuite::setup() {
         }
     }
 
-    // create the task manager
-    //Threading::TaskScheduler::setInstance(Threading::TaskScheduler::create());
-
     m_pRenderBackendServer = new RenderBackendService();
     if ( !m_pRenderBackendServer->open()) {
         m_pRenderBackendServer->release();
@@ -145,6 +142,7 @@ void RenderTestSuite::kill() {
         s_pInstance->teardown();
         delete s_pInstance;
         s_pInstance = nullptr;
+        Logger::kill();
     }
 }
 
