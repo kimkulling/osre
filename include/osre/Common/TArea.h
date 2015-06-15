@@ -7,7 +7,7 @@ namespace Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Core::TArea
-///	@ingroup	Infrastructure
+///	@ingroup    Engine
 ///
 ///	@brief	This class describes a simple 2D rectangle area.
 //-------------------------------------------------------------------------------------------------

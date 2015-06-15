@@ -30,6 +30,7 @@ namespace Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Common::IObject
+///	@ingroup    Engine
 ///
 ///	@brief	This base-class implements a simple reference counting. To get an ownership call get, 
 ///	to release it call release. Objects with a reference count of 0 will be destroyed.

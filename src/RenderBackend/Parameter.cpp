@@ -21,9 +21,12 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/Parameter.h>
+#include <osre/Common/Logger.h>
 
 namespace OSRE {
 namespace RenderBackend {
+
+static const String Tag = "Parameter";
 
 void *ParamDataBlob::getData() const {
     return m_data;
@@ -103,7 +106,7 @@ ui32 Parameter::getParamDataSize( ParameterType type, ui32 arraySize ) {
 
 Parameter *Parameter::create( const String &name, ParameterType type, ui32 arraySize ) {
     if( name.empty() ) {
-        osre_debug( "Empty name for parameter." );
+        osre_debug( Tag, "Empty name for parameter." );
         return nullptr;
     }
 

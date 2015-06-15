@@ -32,7 +32,7 @@ class EventData;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Common::AbstractEventHandler
-///	@ingroup	Infrastructure
+///	@ingroup    Engine
 ///
 ///	@brief This abstract interface declares the way how events should be handled.
 /// 

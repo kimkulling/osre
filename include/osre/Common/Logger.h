@@ -31,6 +31,7 @@ namespace Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Common::AbstractLogStream
+///	@ingroup    Engine
 ///
 ///	@brief	This pure abstract interface class declares the protocol for log-stream implementation.
 ///	You can use log streams to pipes logs to you preferred output device like a simple text-file 

@@ -29,7 +29,7 @@ namespace Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Common::FunctorImpl
-///	@ingroup	Infrastructure
+///	@ingroup    Engine
 ///	
 ///	@brief Base abstract interface of functor implementation
 //-------------------------------------------------------------------------------------------------

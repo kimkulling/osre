@@ -31,6 +31,7 @@ namespace Common {
 
 //--------------------------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Common::ArgumentParser
+///	@ingroup    Engine
 ///
 ///	@brief	Helper class to handle incoming arguments.
 ///

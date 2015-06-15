@@ -32,7 +32,7 @@ namespace Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Common::EventTriggerer
-///	@ingroup	Infrastructure
+///	@ingroup    Engine
 ///
 /// @brief	Base class to trigger events.
 ///

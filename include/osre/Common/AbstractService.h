@@ -30,7 +30,7 @@ namespace Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Common::AbstractService
-///	@ingroup	Infrastructure
+///	@ingroup    Engine
 ///
 ///	@brief	This class is the base interface for all server classes.
 /// A server provides services like a render interface for instance. To access a service you have 

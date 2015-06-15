@@ -36,7 +36,7 @@ class EventData;
 
 //-------------------------------------------------------------------------------------------------
 ///	@def		::OSRE::Common::DECL_EVENT
-///	@ingroup	Infrastructure
+///	@ingroup    Engine
 ///
 ///	@brief	Event type declaration helper macro. This is a shortcut to define global events like 
 ///	windows messages.

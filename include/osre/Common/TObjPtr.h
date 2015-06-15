@@ -29,7 +29,7 @@ namespace Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Common::TObjPtr
-///	@ingroup	Infrastructure
+///	@ingroup    Engine
 ///
 ///	@brief	This helper class stores any derived class from the ZFXCE specific base-class IObject.
 ///

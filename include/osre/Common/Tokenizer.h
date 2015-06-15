@@ -31,9 +31,9 @@ namespace Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Common::Tokenizer
-///	@ingroup	Infrastructure
+///	@ingroup    Engine
 ///
-///	@brief	This class implements a really simple tokenizer.
+///	@brief	This class implements a simple string tokenizer.
 ///
 ///	You can use it to split an arbitrary strings by self-defined separators. You can use it to
 ///	parse a string from any source.
