@@ -3,7 +3,7 @@
 #include "AbstractTestFixure.h"
 
 #include <cppcore/Container/TArray.h>
-#include <osre/Common/Types.h>
+#include <osre/Common/osre_common.h>
 
 namespace OSRE {
 

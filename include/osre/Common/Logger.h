@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Types.h>
+#include <osre/Common/osre_common.h>
 #include <cppcore/Container/TArray.h>
 #include <sstream>
 

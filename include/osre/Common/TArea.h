@@ -1,6 +1,6 @@
 #pragma once
 
-#include <osre/Common/Types.h>
+#include <osre/Common/osre_common.h>
 
 namespace OSRE {
 namespace Common {
