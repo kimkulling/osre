@@ -102,6 +102,10 @@ ui32 Parameter::getParamDataSize( ParameterType type, ui32 arraySize ) {
 }
 
 Parameter *Parameter::create( const String &name, ParameterType type, ui32 arraySize ) {
+    if( name.empty() ) {
+        return nullptr;
+    }
+
     Parameter *param = new Parameter;
     param->m_name = name;
     param->m_type = type;
