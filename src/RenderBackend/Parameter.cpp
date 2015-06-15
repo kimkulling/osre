@@ -32,27 +32,27 @@ void *ParamDataBlob::getData() const {
 ParamDataBlob *ParamDataBlob::create( ParameterType type, ui32 arraySize ) {
     ParamDataBlob *blob = new ParamDataBlob;
     switch( type ) {
-    case PT_Int:
-        blob->m_size = sizeof( i32 );
-        break;
-    case PT_Float:
-        blob->m_size = sizeof( f32 );
-        break;
-    case PT_Float2:
-        blob->m_size = sizeof( f32 ) * 2;
-        break;
-    case PT_Float3:
-        blob->m_size = sizeof( f32 ) * 3;
-        break;
-    case PT_Mat4:
-        blob->m_size = sizeof( f32 ) * 16;
-        break;
-    case PT_Mat4Array:
-        blob->m_size = sizeof( f32 ) * 16 * arraySize;
-        break;
-    default:
-        blob->m_size = 0;
-        break;
+        case PT_Int:
+            blob->m_size = sizeof( i32 );
+            break;
+        case PT_Float:
+            blob->m_size = sizeof( f32 );
+            break;
+        case PT_Float2:
+            blob->m_size = sizeof( f32 ) * 2;
+            break;
+        case PT_Float3:
+            blob->m_size = sizeof( f32 ) * 3;
+            break;
+        case PT_Mat4:
+            blob->m_size = sizeof( f32 ) * 16;
+            break;
+        case PT_Mat4Array:
+            blob->m_size = sizeof( f32 ) * 16 * arraySize;
+            break;
+        default:
+            blob->m_size = 0;
+            break;
     }
     blob->m_data = new uc8[ blob->m_size ];
     ::memset( blob->m_data, 0, blob->m_size );
@@ -103,6 +103,7 @@ ui32 Parameter::getParamDataSize( ParameterType type, ui32 arraySize ) {
 
 Parameter *Parameter::create( const String &name, ParameterType type, ui32 arraySize ) {
     if( name.empty() ) {
+        osre_debug( "Empty name for parameter." );
         return nullptr;
     }
 

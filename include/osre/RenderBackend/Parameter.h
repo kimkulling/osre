@@ -50,7 +50,7 @@ struct OSRE_EXPORT Parameter {
     ParameterType m_type;
     ui32          m_numItems;
     ParamDataBlob m_data;
-    Parameter    *m_next;
+    //Parameter    *m_next;
 
     Parameter();
     ~Parameter();
