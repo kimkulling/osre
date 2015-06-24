@@ -27,6 +27,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+class OGLRenderBackend;
+struct OGLTexture;
+
 //-------------------------------------------------------------------------------------------------
 ///	@class		FontBase
 ///	@ingroup	OSRE
@@ -39,9 +42,17 @@ public:
     virtual ~FontBase();
     virtual void setSize( ui32 size );
     virtual ui32 getSize() const;
+    virtual void setTextureName( const String &name );
+    virtual const String &getTextureName() const;
+    virtual void setAtlasCols( ui32 numCols );
+    virtual void setAtlasRows( ui32 numRows );
+    virtual bool load( OGLRenderBackend *rb );
 
 private:
     ui32 m_size;
+    String m_texName;
+    ui32 m_numCols, m_numRows;
+    OGLTexture *m_fontAtlas;
 };
 
 }

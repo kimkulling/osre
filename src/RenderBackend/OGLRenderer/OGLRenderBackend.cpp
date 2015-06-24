@@ -530,44 +530,44 @@ OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTar
     }
 
     // lookup for texture
-    OGLTexture *pTexture( findTexture( name ) );
-    if( pTexture ) {
-        return pTexture;
+    OGLTexture *tex( findTexture( name ) );
+    if( tex ) {
+        return tex;
     }
 
     // get texture slot
     ui32 slot( 0 );
     if( m_freeTexSlots.isEmpty() ) {
         slot = m_textures.size();
-        pTexture = new OGLTexture;
-        m_textures.add( pTexture );
+        tex = new OGLTexture;
+        m_textures.add( tex );
     } else {
         slot = m_freeTexSlots.back();
         m_freeTexSlots.removeBack();
-        pTexture = m_textures[ slot ];
+        tex = m_textures[ slot ];
     }
-    pTexture->m_slot = slot;
+    tex->m_slot = slot;
     m_texLookupMap[ name ] = slot;
 
     GLuint textureId;
     glGenTextures( 1, &textureId );
-    pTexture->m_textureId = textureId;
-    pTexture->m_name      = name;
-    pTexture->m_width     = static_cast< ui32 >( width );
-    pTexture->m_height    = static_cast< ui32 >( height );
-    pTexture->m_channels  = static_cast< ui32 >( channels );
-    pTexture->m_format    = GL_RGB;
+    tex->m_textureId = textureId;
+    tex->m_name      = name;
+    tex->m_width     = static_cast< ui32 >( width );
+    tex->m_height    = static_cast< ui32 >( height );
+    tex->m_channels  = static_cast< ui32 >( channels );
+    tex->m_format    = GL_RGB;
 
     glActiveTexture( GL_TEXTURE0 );
-    pTexture->m_target = OGLEnum::getGLTextureTarget( Texture2D );
-    glBindTexture( pTexture->m_target, textureId );
+    tex->m_target = OGLEnum::getGLTextureTarget( Texture2D );
+    glBindTexture( tex->m_target, textureId );
     
-    glTexParameteri( pTexture->m_target, OGLEnum::getGLTextureParameterName( TextureParamMinFilter ), GL_LINEAR );
-    glTexParameteri( pTexture->m_target, OGLEnum::getGLTextureParameterName( TextureParamMagFilter ), GL_LINEAR );
-    glTexParameteri( pTexture->m_target, OGLEnum::getGLTextureParameterName( TextureParamWrapS ), GL_CLAMP );
-    glTexParameteri( pTexture->m_target, OGLEnum::getGLTextureParameterName( TextureParamWrapT ), GL_CLAMP );
+    glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParamMinFilter ), GL_LINEAR );
+    glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParamMagFilter ), GL_LINEAR );
+    glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParamWrapS ), GL_CLAMP );
+    glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParamWrapT ), GL_CLAMP );
 
-    return pTexture;
+    return tex;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -595,8 +595,8 @@ OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const S
 
     // import the texture
     i32 width( 0 ), height( 0 ), channels( 0 );
-    GLubyte *pData = SOIL_load_image( filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO );
-    if( !pData ) {
+    GLubyte *data = SOIL_load_image( filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO );
+    if( !data ) {
         osre_debug( Tag, "Cannot load texture " + filename );
         return nullptr;
     }
@@ -607,9 +607,9 @@ OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const S
         i32 index1 = j * width * channels;
         i32 index2 = ( height - 1 - j ) * width * channels;
         for( i32 i = width*channels; i > 0; --i ) {
-            GLubyte temp = pData[ index1 ];
-            pData[index1] = pData[ index2 ];
-            pData[ index2 ] = temp;
+            GLubyte temp = data[ index1 ];
+            data[index1] = data[ index2 ];
+            data[ index2 ] = temp;
             ++index1;
             ++index2;
         }
@@ -617,9 +617,9 @@ OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const S
 
     // create texture and fill it
     pTexture = createEmptyTexture( name, Texture2D, width, height, channels );    
-    glTexImage2D( pTexture->m_target, 0, GL_RGB, width, height, 0, pTexture->m_format, GL_UNSIGNED_BYTE, pData );
+    glTexImage2D( pTexture->m_target, 0, GL_RGB, width, height, 0, pTexture->m_format, GL_UNSIGNED_BYTE, data );
 
-    SOIL_free_image_data( pData );
+    SOIL_free_image_data( data );
 
     return pTexture;
 }
@@ -656,9 +656,9 @@ void OGLRenderBackend::releaseTexture( OGLTexture *pTexture ) {
     if( m_textures[ pTexture->m_slot ] ) {
         glDeleteTextures( 1, &pTexture->m_textureId );
         pTexture->m_textureId = OGLNotSetId;
-        pTexture->m_width = 0;
-        pTexture->m_height = 0;
-        pTexture->m_channels = 0;
+        pTexture->m_width     = 0;
+        pTexture->m_height    = 0;
+        pTexture->m_channels  = 0;
 
         m_freeTexSlots.add( pTexture->m_slot );
 

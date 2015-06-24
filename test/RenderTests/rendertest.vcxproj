@@ -321,6 +321,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="D:\projects\osre\test\RenderTests\src\RenderTestSuite.cpp"  />
     <ClCompile Include="D:\projects\osre\test\RenderTests\src\BaseTriangleRenderTest.cpp"  />
     <ClCompile Include="D:\projects\osre\test\RenderTests\src\BaseTextureRenderTest.cpp"  />
+    <ClCompile Include="D:\projects\osre\test\RenderTests\src\DbgFontRenderTest.cpp"  />
     <ClCompile Include="D:\projects\osre\test\RenderTests\src\GeoInstanceRenderTest.cpp"  />
     <ClCompile Include="D:\projects\osre\test\RenderTests\src\main.cpp"  />
   </ItemGroup>

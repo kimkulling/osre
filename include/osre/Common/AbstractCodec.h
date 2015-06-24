@@ -25,6 +25,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 
 namespace OSRE {
+
+namespace IO {
+    class Stream;
+}
+
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
@@ -40,11 +45,11 @@ public:
 
     /// @brief  Will encode data.
     /// @return true in case of a success.
-    virtual bool encode();
+    virtual bool encode( IO::Stream *inStream );
 
     /// @brief  WIll decode data
     /// @return true in case of a success.
-    virtual bool decode();
+    virtual bool decode( IO::Stream *outStream );
 
     /// @brief  Returns the codec name.
     /// @return The codec name.

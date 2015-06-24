@@ -204,7 +204,7 @@ bool SystemTask::start( Platform::AbstractThread *pThread ) {
     // ensure task is not running
     if( nullptr != m_pTaskThread ) {
         if ( Platform::AbstractThread::Running == m_pTaskThread->getCurrentState() ) {
-            osre_debug( Tag, "Task " + getName() + " is already running." );
+            osre_debug( Tag, "Task " + Object::getName() + " is already running." );
             return false;
         }
     }

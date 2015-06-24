@@ -105,12 +105,12 @@ const Properties::ConfigurationMap *RenderBackendService::getConfig() const {
 }
 
 //-------------------------------------------------------------------------------------------------
-void RenderBackendService::sendEvent( const Event *pEvent, const EventData *pEventData ) {
+void RenderBackendService::sendEvent( const Event *pEvent, const EventData *eventData ) {
     if ( !m_RenderTaskPtr.isValid() ) {
         return;
     }
 
-    m_RenderTaskPtr->sendEvent( pEvent, pEventData );
+    m_RenderTaskPtr->sendEvent( pEvent, eventData );
 }
 
 //-------------------------------------------------------------------------------------------------

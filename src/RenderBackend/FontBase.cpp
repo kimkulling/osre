@@ -21,17 +21,22 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/FontBase.h>
+#include <src/RenderBackend/OGLRenderer/OGLRenderBackend.h>
 
 namespace OSRE {
 namespace RenderBackend {
  
 FontBase::FontBase( const String &name )
-: Object( name ) {
-
+: Object( name )
+, m_texName()
+, m_numCols( 0 )
+, m_numRows( 0 )
+, m_fontAtlas( nullptr ) {
+    // empty
 }
 
 FontBase::~FontBase() {
-
+    // empty
 }
     
 void FontBase::setSize( ui32 size ) {
@@ -40,6 +45,43 @@ void FontBase::setSize( ui32 size ) {
     
 ui32 FontBase::getSize() const {
     return m_size;
+}
+
+void FontBase::setTextureName( const String &name ) {
+    m_texName = name;
+}
+
+const String &FontBase::getTextureName() const {
+    return m_texName;
+}
+
+void FontBase::setAtlasCols( ui32 numCols ) {
+    m_numCols = numCols;
+}
+
+void FontBase::setAtlasRows( ui32 numRows ) {
+    m_numRows = numRows;
+}
+
+bool FontBase::load( OGLRenderBackend *rb ) {
+    if( m_texName.empty() || nullptr == rb ) {
+        return false;
+    }
+
+    const String texName( Object::getName() + "_font" );
+    if( nullptr != m_fontAtlas ) {
+        rb->releaseTexture( m_fontAtlas );
+        m_fontAtlas = nullptr;
+    }
+
+    m_fontAtlas = rb->createTextureFromFile( texName, m_texName );
+    if( nullptr == m_fontAtlas ) {
+        return false;
+    }
+    m_numRows = 16;
+    m_numCols = 16;
+
+    return true;
 }
 
 }

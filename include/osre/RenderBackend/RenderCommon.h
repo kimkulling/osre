@@ -180,7 +180,7 @@ enum MaterialType {
 };
 
 struct Texture {
-    String         m_textureName;
+    String            m_textureName;
     TextureTargetType m_targetType;
     ui32              m_size;
     uc8              *m_pData;

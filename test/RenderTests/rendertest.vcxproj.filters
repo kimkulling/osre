@@ -13,6 +13,9 @@
     <ClCompile Include="D:\projects\osre\test\RenderTests\src\BaseTextureRenderTest.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="D:\projects\osre\test\RenderTests\src\DbgFontRenderTest.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="D:\projects\osre\test\RenderTests\src\GeoInstanceRenderTest.cpp">
       <Filter>src</Filter>
     </ClCompile>

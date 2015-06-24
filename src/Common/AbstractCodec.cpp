@@ -38,12 +38,12 @@ AbstractCodec::~AbstractCodec() {
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-bool AbstractCodec::encode() {
+bool AbstractCodec::encode( IO::Stream * ) {
     return false;
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-bool AbstractCodec::decode() {
+bool AbstractCodec::decode( IO::Stream * ) {
     return false;
 }
 

@@ -14,6 +14,7 @@ SET ( rendertest_src
     src/RenderTestSuite.cpp
     src/BaseTriangleRenderTest.cpp
     src/BaseTextureRenderTest.cpp
+    src/DbgFontRenderTest.cpp
     src/GeoInstanceRenderTest.cpp
     src/RenderTestSuite.h
     src/RenderTestUtils.h

@@ -78,27 +78,27 @@ Parameter::~Parameter() {
 ui32 Parameter::getParamDataSize( ParameterType type, ui32 arraySize ) {
     ui32 size( 0 );
     switch( type ) {
-    case PT_Int:
-        size = sizeof( i32 );
-        break;
-    case PT_Float:
-        size = sizeof( f32 );
-        break;
-    case PT_Float2:
-        size = sizeof( f32 ) * 2;
-        break;
-    case PT_Float3:
-        size = sizeof( f32 ) * 3;
-        break;
-    case PT_Mat4:
-        size = sizeof( f32 ) * 16;
-        break;
-    case PT_Mat4Array:
-        size = sizeof( f32 ) * 16 * arraySize;
-        break;
+        case PT_Int:
+            size = sizeof( i32 );
+            break;
+        case PT_Float:
+            size = sizeof( f32 );
+            break;
+        case PT_Float2:
+            size = sizeof( f32 ) * 2;
+            break;
+        case PT_Float3:
+            size = sizeof( f32 ) * 3;
+            break;
+        case PT_Mat4:
+            size = sizeof( f32 ) * 16;
+            break;
+        case PT_Mat4Array:
+            size = sizeof( f32 ) * 16 * arraySize;
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 
     return size;
