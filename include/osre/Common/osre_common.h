@@ -127,6 +127,14 @@ typedef int ObjectId;
 ///	The data type for strings
 typedef std::string String;
 
+struct Handle {
+    int m_idx;
+
+    void init( int idx ) {
+        m_idx = idx;
+    }
+};
+
 ///	@brief  Shortcut to avoid copy operations.
 #define OSRE_NON_COPYABLE( NAME ) \
 private: \

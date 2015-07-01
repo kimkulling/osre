@@ -187,6 +187,7 @@ struct Texture {
     ui32              m_width;
     ui32              m_height;
     ui32              m_channels;
+    Handle            m_texHandle;
 
     Texture()
     : m_textureName( "" )
@@ -195,7 +196,8 @@ struct Texture {
     , m_pData( nullptr )
     , m_width( 0 )
     , m_height( 0 )
-    , m_channels( 0 ) {
+    , m_channels( 0 )
+    , m_texHandle() {
         // empty
     }
 

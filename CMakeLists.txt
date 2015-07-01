@@ -6,7 +6,6 @@ SET ( OSRE_VERSION_PATCH 0 )
 SET ( OSRE_VERSION ${OSRE_VERSION_MAJOR}.${OSRE_VERSION_MINOR}.${OSRE_VERSION_PATCH} )
 SET ( PROJECT_VERSION "${OSRE_VERSION}" )
 
-
 # Cache these to allow the user to override them manually.
 SET( LIB_INSTALL_DIR "lib" CACHE PATH
     "Path the built library files are installed to." )
@@ -76,6 +75,7 @@ endif()
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src )
 ADD_SUBDIRECTORY( test/RenderTests )
+ADD_SUBDIRECTORY( test/UnitTests )
 ADD_SUBDIRECTORY( samples )
 ADD_SUBDIRECTORY( 3dparty/glew )
 ADD_SUBDIRECTORY( 3dparty/cppcore/build )
