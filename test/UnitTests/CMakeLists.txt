@@ -1,17 +1,19 @@
+SET ( GTEST_PATH ../../3dparty/gmock-1.7.0/gtest/ )
+
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
     ../../3dparty/cppcore/include
     ../../3dparty/glew/include
     ../../3dparty/glm/
     ../../3dparty/soil/src
+    ${GTEST_PATH}
+    ${GTEST_PATH}/include
     .././
 )
 
 SET ( unittest_common_src
     src/Common/ObjectTest.cpp
 )
-
-SET ( GTEST_PATH ../../3dparty/gmock-1.7.0/gtest/ )
 
 SET ( gtest_src
     ${GTEST_PATH}/src/gtest-death-test.cc
