@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGUID>{6EF18C48-E564-41F9-BD5E-C08B360738A4}</ProjectGUID>
+    <ProjectGUID>{57E493D1-E2A1-46C3-AF30-8BC54CF7B0ED}</ProjectGUID>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
     <ProjectName>INSTALL</ProjectName>
@@ -209,7 +209,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:/projects/osre/3dparty/zlib/ALL_BUILD.vcxproj">
-      <Project>7AC8B569-3CAF-4E1C-B256-5E45593ED6D1</Project>
+      <Project>C9659835-C895-48DB-A69D-254B9428EB0F</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

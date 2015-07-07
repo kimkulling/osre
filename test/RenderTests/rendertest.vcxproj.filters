@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
-      <UniqueIdentifier>{92C22B21-F66B-4A61-9D3F-4A9C41EB9E7C}</UniqueIdentifier>
+      <UniqueIdentifier>{729CC604-51E2-4899-A6BB-06B938EEF334}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

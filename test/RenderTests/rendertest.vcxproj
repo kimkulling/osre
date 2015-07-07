@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGUID>{21A339ED-CF67-4F85-8933-75C3DD132108}</ProjectGUID>
+    <ProjectGUID>{BC4A858E-1800-4280-A93B-41424633FF8B}</ProjectGUID>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
     <ProjectName>rendertest</ProjectName>
@@ -327,25 +327,25 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:/projects/osre/3dparty/unzip/Unzip.vcxproj">
-      <Project>14CCB7E4-9E00-414F-9B05-5C222CEE4C4E</Project>
+      <Project>8ECAF4DC-D5B1-4CE0-A40A-DA388DD261DE</Project>
     </ProjectReference>
     <ProjectReference Include="D:/projects/osre/ZERO_CHECK.vcxproj">
-      <Project>B93E408B-53B4-47DD-B2B2-C3AB29207410</Project>
+      <Project>806BE5AD-171F-4FD2-812B-1305696DC583</Project>
     </ProjectReference>
     <ProjectReference Include="D:/projects/osre/3dparty/cppcore/build/cppcore.vcxproj">
-      <Project>31BE680E-BE4B-40A2-8865-A458424588B4</Project>
+      <Project>14B6D4EA-DB62-448D-9F66-22B4CCE9580B</Project>
     </ProjectReference>
     <ProjectReference Include="D:/projects/osre/3dparty/glew/glew.vcxproj">
-      <Project>038CA72F-798D-46EF-9BE6-BF90065F370C</Project>
+      <Project>0D177ED5-831E-406A-8A61-7C0A8259D317</Project>
     </ProjectReference>
     <ProjectReference Include="D:/projects/osre/src/osre.vcxproj">
-      <Project>690E37E6-860F-4A27-8D79-47AB11AF925E</Project>
+      <Project>167C6999-B516-42D9-9549-59589331DD6C</Project>
     </ProjectReference>
     <ProjectReference Include="D:/projects/osre/3dparty/soil/soil.vcxproj">
-      <Project>16710955-66FD-4923-AE3A-055D39B432A9</Project>
+      <Project>5592BFA7-C872-41A1-8581-0CC27FABDA87</Project>
     </ProjectReference>
     <ProjectReference Include="D:/projects/osre/3dparty/zlib/zlib.vcxproj">
-      <Project>18751C66-804A-4CE6-A00F-9C6565678F61</Project>
+      <Project>ACD81F65-2E66-4B16-9645-3EBEA2DD34F3</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGUID>{7AC8B569-3CAF-4E1C-B256-5E45593ED6D1}</ProjectGUID>
+    <ProjectGUID>{C9659835-C895-48DB-A69D-254B9428EB0F}</ProjectGUID>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
     <ProjectName>ALL_BUILD</ProjectName>
@@ -163,7 +163,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:/projects/osre/3dparty/zlib/zlib.vcxproj">
-      <Project>18751C66-804A-4CE6-A00F-9C6565678F61</Project>
+      <Project>ACD81F65-2E66-4B16-9645-3EBEA2DD34F3</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
