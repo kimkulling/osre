@@ -1,5 +1,9 @@
 SET ( GTEST_PATH ../../3dparty/gmock-1.7.0/gtest/ )
 
+if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
+    find_package(Threads)
+endif()
+
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
     ../../3dparty/cppcore/include
@@ -40,5 +44,11 @@ link_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdParty/glew/Release
 )
 
-target_link_libraries ( unittest osre ) 
+IF( WIN32 )
+    SET( platform_libs )
+ELSE( WIN32 )
+    SET( platform_libs pthread )
+ENDIF( WIN32 )
+
+target_link_libraries ( unittest osre ${platform_libs} ) 
 set_target_properties(  unittest PROPERTIES FOLDER Tests )
