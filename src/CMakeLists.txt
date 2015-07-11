@@ -65,6 +65,13 @@ SET( common_src
 )
 
 #==============================================================================
+# Debugging
+#==============================================================================
+SET( debugging_inc
+    ${HEADER_PATH}/Debugging/osre_debugging.h
+)
+
+#==============================================================================
 # IO
 #==============================================================================
 SET( io_src
@@ -232,6 +239,7 @@ SET( threading_inc
 # RenderBackend
 #==============================================================================
 SET( renderbackend_src
+    RenderBackend/DbgFontData.cpp
     RenderBackend/FontBase.cpp
     RenderBackend/RenderBackendService.cpp
     RenderBackend/Parameter.cpp
@@ -280,6 +288,7 @@ SOURCE_GROUP( Resources           FILES ${resources_src} )
 SOURCE_GROUP( Scene               FILES ${scene_src} )
 SOURCE_GROUP( Threading           FILES ${threading_src} )
 SOURCE_GROUP( Include\\App        FILES ${app_inc} )
+SOURCE_GROUP( Include\\Debugging  FILES ${debugging_inc} )
 SOURCE_GROUP( Include\\Common     FILES ${common_inc} )
 SOURCE_GROUP( Include\\Components FILES ${components_inc} )
 SOURCE_GROUP( Include\\Debugging  FILES ${debugging_inc} )
@@ -300,6 +309,7 @@ SOURCE_GROUP( Include\\RenderBackend FILES ${renderbackend_inc} )
 #==============================================================================
 ADD_LIBRARY( osre SHARED
     ${app_inc}
+    ${debugging_inc}
     ${common_inc}
     ${common_src}
     ${Common_inc}
