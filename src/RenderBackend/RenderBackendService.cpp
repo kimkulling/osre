@@ -106,11 +106,9 @@ const Properties::ConfigurationMap *RenderBackendService::getConfig() const {
 
 //-------------------------------------------------------------------------------------------------
 void RenderBackendService::sendEvent( const Event *pEvent, const EventData *eventData ) {
-    if ( !m_RenderTaskPtr.isValid() ) {
-        return;
+    if ( m_RenderTaskPtr.isValid() ) {
+        m_RenderTaskPtr->sendEvent( pEvent, eventData );
     }
-
-    m_RenderTaskPtr->sendEvent( pEvent, eventData );
 }
 
 //-------------------------------------------------------------------------------------------------
