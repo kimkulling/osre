@@ -83,7 +83,6 @@ public:
     ///	@brief	The assignment operator.
     ColorRGBA &operator = ( const ColorRGBA &rOther );
 
-private:
     f32 m_ColorValues[ 4 ];
 };
 
