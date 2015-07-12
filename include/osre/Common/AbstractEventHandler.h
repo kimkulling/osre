@@ -25,10 +25,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 
 namespace OSRE {
-    namespace Common {
+namespace Common {
 
-class Event;
-class EventData;
+struct Event;
+struct EventData;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Common::AbstractEventHandler

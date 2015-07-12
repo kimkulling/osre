@@ -31,8 +31,9 @@ namespace OSRE {
 namespace Common {
 
 class EventTriggerer;
-class Event;
-class EventData;
+
+struct Event;
+struct EventData;
 
 //-------------------------------------------------------------------------------------------------
 ///	@def		::OSRE::Common::DECL_EVENT
@@ -50,10 +51,9 @@ class EventData;
 ///	@brief	The base class of zfxce2-events, describes type of an event. To create your own events
 ///	it is possible to build derives from the base class.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Event {
+struct OSRE_EXPORT Event {
     friend class EventTriggerer;
 
-public:
     ///	@brief	the class constructor with description id.
     ///	@param	id	Id description, will be used to describe the event type.
     Event( const String &id );
@@ -88,15 +88,14 @@ public:
     ///	@return	true, if both instances are equal, else false.
     bool operator == (const Event &other) const;
 
-private:
-    Event( const Event & );
-    Event &operator = ( const Event & );
-
-private:
     ui32 m_NumRefs;
     String m_ID;
     HashId m_hash;
     const EventData *m_pEventData;
+
+private:
+    Event( const Event & );
+    Event &operator = ( const Event & );
 };
 
 //--------------------------------------------------------------------------------------------------------------------
@@ -169,8 +168,7 @@ bool Event::operator == ( const Event &rhs ) const  {
 ///	clicked or the current position of the mouse cursor. Each event data instance holds a reference 
 ///	to its assigned event-instance.
 //--------------------------------------------------------------------------------------------------------------------
-class EventData {
-public:
+struct EventData {
     ///	@brief	The class constructor with event and trigger.
     ///	@param	ev		[in] Owning event.
     ///	@param	sender	[in] Event-triggering instance.
@@ -203,8 +201,8 @@ public:
 
 private:
     EventData();
-    EventData( const EventData &other );
-    EventData &operator = ( const EventData &other );
+    EventData( const EventData & );
+    EventData &operator = ( const EventData & );
 
 private:
     const Event& m_Event;

@@ -65,7 +65,7 @@ DECL_EVENT( OnUpdateParameterEvent );
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT CreateRendererEventData : public Common::EventData {
+struct OSRE_EXPORT CreateRendererEventData : public Common::EventData {
 public:
     CreateRendererEventData( Platform::AbstractSurface *pSurface )
     : EventData( OnCreateRendererEvent, nullptr )
@@ -82,7 +82,7 @@ public:
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AttachViewEventData : public Common::EventData {
+struct OSRE_EXPORT AttachViewEventData : public Common::EventData {
 public:
     AttachViewEventData()
     : EventData( OnAttachViewEvent, nullptr ) {
@@ -96,7 +96,7 @@ public:
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AttachGeoEventData : public Common::EventData {
+struct OSRE_EXPORT AttachGeoEventData : public Common::EventData {
 public:
     AttachGeoEventData()
     : EventData( OnAttachSceneEvent, nullptr )
@@ -113,13 +113,16 @@ public:
     GeoInstanceData *m_geoInstanceData;
 };
 
+struct OSRE_EXPORT DgbTextEventData : public Common::EventData {
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::RenderBackend::UpdateParameterEventData
 ///	@ingroup	RenderSystem
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT UpdateParameterEventData : public Common::EventData {
+struct OSRE_EXPORT UpdateParameterEventData : public Common::EventData {
 public:
     UpdateParameterEventData()
     : EventData( OnUpdateParameterEvent, nullptr )
