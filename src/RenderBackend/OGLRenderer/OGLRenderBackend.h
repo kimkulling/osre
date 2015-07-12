@@ -100,6 +100,7 @@ public:
     void render( ui32 grimpGrpIdx );
     void render( ui32 primpGrpIdx, ui32 numInstances );
     void renderFrame();
+    void debugText( const String &msg );
     static ui32 getVertexSize( VertexType vertextype );
 
 private:

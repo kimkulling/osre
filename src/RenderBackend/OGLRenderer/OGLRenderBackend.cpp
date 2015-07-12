@@ -27,6 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Platform/AbstractRenderContext.h>
 #include <osre/Common/Logger.h>
+#include <osre/Common/ColorRGBA.h>
+#include <osre/Debugging/osre_debugging.h>
 
 #include <cppcore/CPPCoreCommon.h>
 
@@ -39,6 +41,10 @@ namespace OSRE {
 namespace RenderBackend {
 
 using namespace ::CPPCore;
+
+extern const unsigned char *glyph[];
+
+void DrawGlyph( const Common::ColorRGBA &col, int c );
 
 static const String VertexAttribName      = "vVertex";
 static const String NormalAttribName      = "vNormal";
@@ -737,7 +743,7 @@ void OGLRenderBackend::setParameter( OGLParameter **param, ui32 numParam ) {
         OGLParameter *currentParam = param[ i ];
         if( currentParam ) {
             const bool success = setParameterInShader( currentParam ,m_shaderInUse );
-//            osre_validate( success, "Error setting parameter " + currentParam->m_name );
+            //osre_validate( success, "Error setting parameter " + currentParam->m_name );
         }
     }
 }
@@ -764,7 +770,7 @@ void OGLRenderBackend::releaseAllPrimitiveGroups() {
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::render( ui32 primpGrpIdx ) {
     OGLPrimGroup *grp( m_primitives[ primpGrpIdx ] );
-    if( grp ) {
+    if( nullptr != grp ) {
         glDrawElements( grp->m_primitive, 
                         grp->m_numPrimitives, 
                         grp->m_indexType, 
@@ -785,6 +791,17 @@ void OGLRenderBackend::renderFrame() {
     assert( nullptr != m_renderCtx );    
     
     m_renderCtx->update();
+}
+
+void OGLRenderBackend::debugText( const String &msg ) {
+    if( msg.empty() ) {
+        return;
+    }
+
+    Common::ColorRGBA col( 1,1,1,1 );
+    for( ui32 i = 0; i < msg.size(); i++ ) {
+        DrawGlyph( col, msg[ i ] );
+    }
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -808,5 +825,25 @@ ui32 OGLRenderBackend::getVertexSize( VertexType vertextype ) {
 
 //-------------------------------------------------------------------------------------------------
 
+
+void DrawGlyph( const Common::ColorRGBA &col, int c )
+{
+    int i = 0;
+
+    while( glyph[ c ][ i ] != 0xff ) {
+        glBegin( GL_TRIANGLE_STRIP ); {
+            while( glyph[ c ][ i ] != 0xff ) {
+                glColor4f( col.m_ColorValues[ 0 ], col.m_ColorValues[ 1 ], col.m_ColorValues[ 2 ], col.m_ColorValues[ 3 ] );
+                glVertex2f( ( glyph[ c ][ i ] / 16 ) / 16.0f, ( glyph[ c ][ i ] % 16 ) / 16.0f );
+                i++;
+            }
+        }
+        glEnd();
+        i++;
+    }
+    glTranslatef( 1.0f, 0.0f, 0.0f );
+}
 } // Namespace RenderBackend
 } // Namespace OSRE
+
+

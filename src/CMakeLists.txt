@@ -239,6 +239,7 @@ SET( threading_inc
 # RenderBackend
 #==============================================================================
 SET( renderbackend_src
+    RenderBackend/DbgFontData.cpp
     RenderBackend/FontBase.cpp
     RenderBackend/RenderBackendService.cpp
     RenderBackend/Parameter.cpp

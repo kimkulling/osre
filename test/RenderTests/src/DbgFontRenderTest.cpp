@@ -23,11 +23,11 @@ public:
         return true;
     }
 
-    virtual bool onDestroy( RenderBackendService *pRenderBackendSrv ) {
+    virtual bool onDestroy( RenderBackendService *rbSrv ) {
         return true;
     }
 
-    virtual bool onRender( d32 timediff, RenderBackendService *pRenderBackendSrv ) {
+    virtual bool onRender( d32 timediff, RenderBackendService *rbSrv ) {
         return true;
     }
 

@@ -46,7 +46,7 @@ public:
     virtual const String &getTextureName() const;
     virtual void setAtlasCols( ui32 numCols );
     virtual void setAtlasRows( ui32 numRows );
-    virtual bool load( OGLRenderBackend *rb );
+    virtual bool loadFromStream( OGLRenderBackend *rb );
 
 private:
     ui32 m_size;
