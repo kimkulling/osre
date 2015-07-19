@@ -41,20 +41,22 @@ struct OSRE_EXPORT ParamDataBlob {
     void *m_data;
     ui32  m_size;
 
+    ParamDataBlob();
+    ~ParamDataBlob();
     void *getData() const;
+    void clear();
     static ParamDataBlob *create( ParameterType type, ui32 arraySize );
 };
 
 struct OSRE_EXPORT Parameter {
-    String        m_name;
-    ParameterType m_type;
-    ui32          m_numItems;
-    ParamDataBlob m_data;
-    Parameter    *m_next;
+    String         m_name;
+    ParameterType  m_type;
+    ui32           m_numItems;
+    ParamDataBlob  m_data;
+    Parameter     *m_next;
 
     Parameter();
     ~Parameter();
-
     static ui32 getParamDataSize( ParameterType type, ui32 arraySize );
     static Parameter *create( const String &name, ParameterType type, ui32 arraySize=1 );
 };

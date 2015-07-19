@@ -28,8 +28,24 @@ namespace RenderBackend {
 
 static const String Tag = "Parameter";
 
+ParamDataBlob::ParamDataBlob()
+: m_data( nullptr )
+, m_size( 0 ) {
+    // empty
+}
+
+ParamDataBlob::~ParamDataBlob() {
+    clear();
+}
+
 void *ParamDataBlob::getData() const {
     return m_data;
+}
+
+void ParamDataBlob::clear() {
+    delete[] m_data;
+    m_data = nullptr;
+    m_size = 0;
 }
 
 ParamDataBlob *ParamDataBlob::create( ParameterType type, ui32 arraySize ) {
