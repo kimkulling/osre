@@ -85,7 +85,7 @@ Stream::AccessMode Stream::getAccessMode() const {
 }
 
 //-------------------------------------------------------------------------------------------------
-ui32 Stream::getSize() {
+ui32 Stream::getSize() const {
 	return 0;
 }
 

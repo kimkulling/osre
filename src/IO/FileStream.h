@@ -54,7 +54,7 @@ public:
     /// Close the file.
     bool close();
     /// Returns file size.
-    ui32 getSize();
+    ui32 getSize() const;
     /// Reads from file.
     ui32 read( void *pBuffer, ui32 size );
     /// Writes into file.

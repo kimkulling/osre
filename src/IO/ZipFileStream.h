@@ -48,7 +48,7 @@ public:
 	///	Reads data from a file in a zip archive.
 	ui32 read( void *pBuffer, size_t size );
 	///	Returns the file size for a file stored in a zip archive.
-	ui32 getSize();
+	ui32 getSize() const;
 	///	Returns true, if the file is currently open.
 	bool isOpen() const;
 

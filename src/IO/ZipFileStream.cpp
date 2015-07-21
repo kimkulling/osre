@@ -91,7 +91,7 @@ ui32 ZipFileStream::read( void *pBuffer, size_t size ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-ui32 ZipFileStream::getSize() {
+ui32 ZipFileStream::getSize() const {
 	// get the filename
 	const String &abspath = getUri().getAbsPath();
 

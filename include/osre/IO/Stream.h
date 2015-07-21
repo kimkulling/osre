@@ -115,7 +115,7 @@ public:
     
     /// @brief  Returns the file size.
     /// @return The file size.
-    virtual ui32 getSize();
+    virtual ui32 getSize() const;
     
     /// @brief  Reads a given number of bytes from the buffer.
     /// @param  pBuffer         [in] The buffer to read in.

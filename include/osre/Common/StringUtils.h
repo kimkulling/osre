@@ -63,7 +63,7 @@ HashId StringUtils::hashName( char const *pIdentStr ) {
 #define DO8(buf,i)  DO4(buf,i); DO4(buf,i+4);
 #define DO16(buf)   DO8(buf,0); DO8(buf,8);
 
-    if (pIdentStr == NULL)
+    if (pIdentStr == nullptr )
         return 0L;
 
     unsigned long s1 = 0;

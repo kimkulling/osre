@@ -80,6 +80,7 @@ SET( io_src
     IO/IOService.cpp
     IO/LocaleFileSystem.cpp
     IO/LocaleFileSystem.h
+    IO/MemoryStream.h
     IO/Stream.cpp
     IO/Uri.cpp
     IO/ZipFileSystem.cpp

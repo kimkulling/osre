@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Common/ColorRGBA.h>
 #include <osre/Debugging/osre_debugging.h>
+#include <osre/io/Stream.h>
 
 #include <cppcore/CPPCoreCommon.h>
 
@@ -248,8 +249,8 @@ void OGLRenderBackend::releaseBuffer( OGLBuffer *pBuffer ) {
     const ui32 slot = pBuffer->m_handle;
     glDeleteBuffers( 1, &pBuffer->m_id );
     pBuffer->m_handle = OGLNotSetId;
-    pBuffer->m_type = EmptyBuffer;
-    pBuffer->m_id   = OGLNotSetId;
+    pBuffer->m_type   = EmptyBuffer;
+    pBuffer->m_id     = OGLNotSetId;
     m_freeBufferSlots.add( slot );
 }
 
@@ -277,12 +278,12 @@ bool OGLRenderBackend::createVertexAttribArray( VertexType type, OGLShader *pSha
     OGLVertexAttribute *pAttibute( nullptr );
     switch( type ) {
         case ColorVertex:
-            pAttibute = new OGLVertexAttribute;
+            pAttibute                   = new OGLVertexAttribute;
             pAttibute->m_pAttributeName = VertexAttribName.c_str();
-            pAttibute->m_index = ( ( *pShader )[ VertexAttribName ] );
-            pAttibute->m_size = 3;
-            pAttibute->m_type = GL_FLOAT;
-            pAttibute->m_ptr = 0;
+            pAttibute->m_index          = ( ( *pShader )[ VertexAttribName ] );
+            pAttibute->m_size           = 3;
+            pAttibute->m_type           = GL_FLOAT;
+            pAttibute->m_ptr            = 0;
             attributes.add( pAttibute );
 
             pAttibute = new OGLVertexAttribute;
@@ -594,9 +595,9 @@ void OGLRenderBackend::updateTexture( OGLTexture *pOGLTextue, ui32 offsetX, ui32
 
 //-------------------------------------------------------------------------------------------------
 OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const String &filename ) {
-    OGLTexture *pTexture( findTexture( name ) );
-    if( pTexture ) {
-        return pTexture;
+    OGLTexture *tex( findTexture( name ) );
+    if( tex ) {
+        return tex;
     }
 
     // import the texture
@@ -622,12 +623,32 @@ OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const S
     }
 
     // create texture and fill it
-    pTexture = createEmptyTexture( name, Texture2D, width, height, channels );    
-    glTexImage2D( pTexture->m_target, 0, GL_RGB, width, height, 0, pTexture->m_format, GL_UNSIGNED_BYTE, data );
+    tex = createEmptyTexture( name, Texture2D, width, height, channels );    
+    glTexImage2D( tex->m_target, 0, GL_RGB, width, height, 0, tex->m_format, GL_UNSIGNED_BYTE, data );
 
     SOIL_free_image_data( data );
 
-    return pTexture;
+    return tex;
+}
+
+//-------------------------------------------------------------------------------------------------
+OGLTexture *OGLRenderBackend::createTextureFromStream( const String &name, IO::Stream &stream, 
+                                                       ui32 width, ui32 height, ui32 channels ) {
+    OGLTexture *tex( findTexture( name ) );
+    if( tex ) {
+        return tex;
+    }
+
+    const ui32 size = stream.getSize();
+    uc8 *data = new uc8[ size ];
+    stream.read( data, size );
+
+    // create texture and fill it
+    tex = createEmptyTexture( name, Texture2D, width, height, channels );
+    glTexImage2D( tex->m_target, 0, GL_RGB, width, height, 0, tex->m_format, GL_UNSIGNED_BYTE, data );
+    delete [] data;
+
+    return tex;
 }
 
 //-------------------------------------------------------------------------------------------------

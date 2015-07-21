@@ -119,7 +119,7 @@ bool FileStream::close() {
 }
 
 //-------------------------------------------------------------------------------------------------
-ui32 FileStream::getSize() {	
+ui32 FileStream::getSize() const {	
     assert( !m_Uri.getAbsPath().empty() );
 
     const String &abspath = m_Uri.getAbsPath();

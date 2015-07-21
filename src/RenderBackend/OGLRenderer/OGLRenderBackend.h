@@ -30,6 +30,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+namespace IO {
+    class Stream;
+}
+
 namespace Platform {
     class AbstractRenderContext;
 }
@@ -86,6 +90,7 @@ public:
     OGLTexture *createEmptyTexture( const String &name, TextureTargetType target, ui32 width, ui32 height, ui32 channels );
     void updateTexture( OGLTexture *pOGLTextue, ui32 offsetX, ui32 offsetY, c8 *data, ui32 size );
     OGLTexture *createTextureFromFile( const String &name, const String &filename );
+    OGLTexture *createTextureFromStream( const String &name, IO::Stream &stream, ui32 width, ui32 height, ui32 channels );
     OGLTexture *findTexture( const String &name ) const;
     bool bindTexture( OGLTexture *pOGLTextue, TextureStageType stageType );
     void releaseTexture( OGLTexture *pTexture );

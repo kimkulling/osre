@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
     
 namespace Common {
-    class EventData;
+    struct EventData;
 }
 
 namespace Platform {
