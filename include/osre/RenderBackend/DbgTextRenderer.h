@@ -4,18 +4,21 @@
 
 namespace OSRE {
 namespace RenderBackend {
-        
+    
+struct BufferData;
+
 class DbgTextRenderer {
 public:
     DbgTextRenderer();
     ~DbgTextRenderer();
-    void setupTexture();
+    void setupVertexData();
     void setCursor( ui32  x, ui32 y );
     void setScale( ui32 sx, ui32 sy );
     void addText( const String &text );
     void drawText();
 
 private:
+    BufferData *m_data;
     String m_text;
 };
 

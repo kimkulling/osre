@@ -121,6 +121,60 @@ struct RenderVert {
     glm::vec2 tex0;
 };
 
+enum VertexAttribute {
+    Position = 0,   ///> "position"
+    Normal,         ///> "normal"
+    TexCoord0,      ///> "texcoord0"
+    TexCoord1,      ///> "texcoord1"
+    TexCoord2,      ///> "texcoord2"
+    TexCoord3,      ///> "texcoord3"
+    Tangent,        ///> "tangent
+    Binormal,       ///> "binormal"
+    Weights,        ///> "weights" (skin weights)
+    Indices,        ///> "indices" (skin indices)
+    Color0,         ///> "color0"
+    Color1,         ///> "color1"
+    Instance0,      ///> "instance0"
+    Instance1,      ///> "instance1"
+    Instance2,      ///> "instance2"
+    Instance3,      ///> "instance3"
+    NumVertexAttrs,
+    InvalidVertexAttr,
+};
+
+struct VertComponent {
+    VertexAttribute m_attrib;
+
+    VertComponent( VertexAttribute attrib ) 
+    : m_attrib( attrib ) {
+        // empty
+    }
+
+    ~VertComponent() {
+        // empty
+    }
+};
+
+struct VertexLayout {
+    CPPCore::TArray<VertComponent> m_components;
+    CPPCore::TArray<ui32>          m_offsets;
+
+    VertexLayout() 
+        : m_components()
+        , m_offsets() {
+        // empty
+    }
+    
+    ~VertexLayout() {
+        // empty
+    }
+    
+    void clear() {
+        m_components.clear();
+        m_offsets.clear();
+    }
+};
+
 struct BufferData {
     BufferType       m_type;
     void            *m_pData;
