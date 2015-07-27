@@ -23,7 +23,7 @@ SET ( rendertest_src
 
 SOURCE_GROUP( src          FILES ${rendertest_src} )
 
-ADD_EXECUTABLE( rendertest
+ADD_EXECUTABLE( osre_rendertest
     ${rendertest_src}
 )
 
@@ -32,5 +32,5 @@ link_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdParty/glew/Release
 )
 
-target_link_libraries ( rendertest osre ) 
-set_target_properties(  rendertest PROPERTIES FOLDER Tests )
+target_link_libraries ( osre_rendertest osre ) 
+set_target_properties(  osre_rendertest PROPERTIES FOLDER Tests )

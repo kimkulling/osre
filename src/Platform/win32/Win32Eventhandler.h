@@ -32,8 +32,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 namespace Common {
-    class Event;
-    class EventData;
+    struct Event;
+    struct EventData;
     class EventTriggerer;
 }
 

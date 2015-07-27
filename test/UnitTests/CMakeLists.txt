@@ -19,6 +19,10 @@ SET ( unittest_common_src
     src/Common/ObjectTest.cpp
 )
 
+SET ( unittest_rb_src
+    src/RenderBackend/RenderCommonTest.cpp
+)
+
 SET ( gtest_src
     ${GTEST_PATH}/src/gtest-death-test.cc
     ${GTEST_PATH}/src/gtest-filepath.cc
@@ -31,11 +35,13 @@ SET ( gtest_src
     ${GTEST_PATH}/src/gtest_main.cc
 )
 
-SOURCE_GROUP( src\\Common          FILES ${unittest_common_src} )
+SOURCE_GROUP( src\\Common         FILES ${unittest_common_src} )
+SOURCE_GROUP( src\\RenderBackend  FILES ${unittest_rb_src} )
 SOURCE_GROUP( src\\GTest          FILES ${gtest_src} )
 
-ADD_EXECUTABLE( unittest
+ADD_EXECUTABLE( osre_unittest
     ${unittest_common_src}
+    ${unittest_rb_src}
     ${gtest_src}
 )
 
@@ -50,5 +56,5 @@ ELSE( WIN32 )
     SET( platform_libs pthread )
 ENDIF( WIN32 )
 
-target_link_libraries ( unittest osre ${platform_libs} ) 
-set_target_properties(  unittest PROPERTIES FOLDER Tests )
+target_link_libraries ( osre_unittest osre ${platform_libs} ) 
+set_target_properties(  osre_unittest PROPERTIES FOLDER Tests )

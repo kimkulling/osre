@@ -139,14 +139,72 @@ enum VertexAttribute {
     Instance2,      ///> "instance2"
     Instance3,      ///> "instance3"
     NumVertexAttrs,
-    InvalidVertexAttr,
+    InvalidVertexAttr
 };
+
+enum VertexFormat {
+    Float,          ///< single component float, expanded to (x, 0, 0, 1)
+    Float2,         ///< 2-component float, expanded to (x, y, 0, 1)
+    Float3,         ///< 3-component float, expanded to (x, y, z, 1)
+    Float4,         ///< 4-component float
+    Byte4,          ///< 4-component float (-128.0f..+127.0f) mapped to byte (-128..+127)
+    UByte4,         ///< 4-component float (0.0f..255.0f) mapped to byte (0..255)
+    Short2,         ///< 2-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
+    Short4,         ///< 4-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
+    NumVertexFormats,       
+    InvalidVertexFormat, 
+};
+
+inline 
+ui32 getVertexFormatSize( VertexFormat format ) {
+    ui32 size( 0 );
+    switch( format ) {
+        case Float:
+            size = sizeof( f32 );
+            break;
+        case Float2:
+            size = sizeof( f32 )*2;
+            break;
+        case Float3:
+            size = sizeof( f32 )*3;
+            break;
+        case Float4:
+            size = sizeof( f32 )*4;
+            break;
+        case Byte4:
+            size = sizeof( c8 ) * 4;
+            break;
+        case UByte4:
+            size = sizeof( uc8 ) * 4;
+            break;
+        case Short2:
+            size = sizeof( ui16 ) * 2;
+            break;
+        case Short4:
+            size = sizeof( ui16 ) * 4;
+            break;
+        case NumVertexFormats:
+        case InvalidVertexFormat:
+            break;
+    }
+
+    return size;
+}
 
 struct VertComponent {
     VertexAttribute m_attrib;
+    VertexFormat m_format;
 
-    VertComponent( VertexAttribute attrib ) 
-    : m_attrib( attrib ) {
+    VertComponent()
+    : m_attrib( InvalidVertexAttr )
+    , m_format( InvalidVertexFormat ) {
+        // empty
+
+    }
+    
+    VertComponent( VertexAttribute attrib, VertexFormat format )
+    : m_attrib( attrib )
+    , m_format( InvalidVertexFormat ) {
         // empty
     }
 
@@ -158,10 +216,12 @@ struct VertComponent {
 struct VertexLayout {
     CPPCore::TArray<VertComponent> m_components;
     CPPCore::TArray<ui32>          m_offsets;
+    ui32                           m_currentOffset;
 
     VertexLayout() 
         : m_components()
-        , m_offsets() {
+        , m_offsets()
+        , m_currentOffset( 0 ) {
         // empty
     }
     
@@ -172,7 +232,26 @@ struct VertexLayout {
     void clear() {
         m_components.clear();
         m_offsets.clear();
+        m_currentOffset = 0;
     }
+    
+    VertexLayout &add( const VertComponent &comp ) {
+        m_components.add( comp );
+        const ui32 offset( getVertexFormatSize( comp.m_format ) );
+        m_offsets.add( m_currentOffset );
+        m_currentOffset += offset;
+
+        return *this;
+    }
+
+    VertComponent &getAt( ui32 idx ) const {
+        if( idx >= m_components.size() ) {
+            return VertComponent();
+        }
+
+        return m_components[ idx ];
+    }
+
 };
 
 struct BufferData {
