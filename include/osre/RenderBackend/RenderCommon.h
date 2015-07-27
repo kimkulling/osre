@@ -214,6 +214,8 @@ struct VertComponent {
 };
 
 struct VertexLayout {
+    static VertComponent ErrorComp;
+
     CPPCore::TArray<VertComponent> m_components;
     CPPCore::TArray<ui32>          m_offsets;
     ui32                           m_currentOffset;
@@ -246,12 +248,11 @@ struct VertexLayout {
 
     VertComponent &getAt( ui32 idx ) const {
         if( idx >= m_components.size() ) {
-            return VertComponent();
+            return ErrorComp;
         }
 
         return m_components[ idx ];
     }
-
 };
 
 struct BufferData {

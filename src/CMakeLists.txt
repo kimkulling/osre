@@ -244,6 +244,7 @@ SET( renderbackend_src
     RenderBackend/DbgFontData.cpp
     RenderBackend/FontBase.cpp
     RenderBackend/RenderBackendService.cpp
+    RenderBackend/RenderCommon.cpp
     RenderBackend/Parameter.cpp
 )
 
