@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Common/ColorRGBA.h>
 #include <osre/Debugging/osre_debugging.h>
-#include <osre/io/Stream.h>
+#include <osre/IO/Stream.h>
 
 #include <cppcore/CPPCoreCommon.h>
 
