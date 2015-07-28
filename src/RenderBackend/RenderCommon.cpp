@@ -27,5 +27,52 @@ namespace RenderBackend {
 
 VertComponent VertexLayout::ErrorComp;
 
+VertComponent::VertComponent( VertexAttribute attrib, VertexFormat format )
+    : m_attrib( attrib )
+    , m_format( InvalidVertexFormat ) {
+    // empty
+}
+
+VertComponent::~VertComponent() {
+    // empty
+}
+
+VertexLayout::VertexLayout()
+    : m_components()
+    , m_offsets()
+    , m_currentOffset( 0 ) {
+    // empty
+}
+
+VertexLayout::~VertexLayout() {
+    // empty
+}
+
+void VertexLayout::clear() {
+    m_components.clear();
+    m_offsets.clear();
+    m_currentOffset = 0;
+}
+
+VertexLayout &VertexLayout::add( VertComponent *comp ) {
+    if( nullptr == comp ) {
+        return *this;
+    }
+    m_components.add( comp );
+    const ui32 offset( getVertexFormatSize( comp->m_format ) );
+    m_offsets.add( m_currentOffset );
+    m_currentOffset += offset;
+
+    return *this;
+}
+
+VertComponent &VertexLayout::getAt( ui32 idx ) const {
+    if( idx >= m_components.size() ) {
+        return ErrorComp;
+    }
+
+    return *m_components[ idx ];
+}
+
 } // Namespace RenderBackend
 } // Namespace OSRE

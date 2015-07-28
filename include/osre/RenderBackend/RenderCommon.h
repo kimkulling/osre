@@ -191,9 +191,9 @@ ui32 getVertexFormatSize( VertexFormat format ) {
     return size;
 }
 
-struct VertComponent {
+struct OSRE_EXPORT VertComponent {
     VertexAttribute m_attrib;
-    VertexFormat m_format;
+    VertexFormat    m_format;
 
     VertComponent()
     : m_attrib( InvalidVertexAttr )
@@ -202,57 +202,21 @@ struct VertComponent {
 
     }
     
-    VertComponent( VertexAttribute attrib, VertexFormat format )
-    : m_attrib( attrib )
-    , m_format( InvalidVertexFormat ) {
-        // empty
-    }
-
-    ~VertComponent() {
-        // empty
-    }
+    VertComponent( VertexAttribute attrib, VertexFormat format );
+    ~VertComponent();
 };
 
-struct VertexLayout {
-    static VertComponent ErrorComp;
-
-    CPPCore::TArray<VertComponent> m_components;
+struct OSRE_EXPORT VertexLayout {
+    static VertComponent           ErrorComp;
+    CPPCore::TArray<VertComponent*> m_components;
     CPPCore::TArray<ui32>          m_offsets;
     ui32                           m_currentOffset;
 
-    VertexLayout() 
-        : m_components()
-        , m_offsets()
-        , m_currentOffset( 0 ) {
-        // empty
-    }
-    
-    ~VertexLayout() {
-        // empty
-    }
-    
-    void clear() {
-        m_components.clear();
-        m_offsets.clear();
-        m_currentOffset = 0;
-    }
-    
-    VertexLayout &add( const VertComponent &comp ) {
-        m_components.add( comp );
-        const ui32 offset( getVertexFormatSize( comp.m_format ) );
-        m_offsets.add( m_currentOffset );
-        m_currentOffset += offset;
-
-        return *this;
-    }
-
-    VertComponent &getAt( ui32 idx ) const {
-        if( idx >= m_components.size() ) {
-            return ErrorComp;
-        }
-
-        return m_components[ idx ];
-    }
+    VertexLayout();     
+    ~VertexLayout();
+    void clear();
+    VertexLayout &add( VertComponent *comp );
+    VertComponent &getAt( ui32 idx ) const;
 };
 
 struct BufferData {
