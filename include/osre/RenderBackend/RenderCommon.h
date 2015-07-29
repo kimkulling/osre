@@ -217,56 +217,31 @@ struct OSRE_EXPORT VertexLayout {
     void clear();
     VertexLayout &add( VertComponent *comp );
     VertComponent &getAt( ui32 idx ) const;
+
+    OSRE_NON_COPYABLE( VertexLayout );
 };
 
-struct BufferData {
+struct OSRE_EXPORT BufferData {
     BufferType       m_type;
     void            *m_pData;
     ui32             m_size;
     BufferAccessType m_access;
 
-    BufferData()
-    : m_type( EmptyBuffer )
-    , m_pData( nullptr )
-    , m_size( 0 )
-    , m_access( ReadOnly ) {
-        // empty
-    }
+    BufferData();
+    ~BufferData();
+    static BufferData *alloc( BufferType type, ui32 m_size, BufferAccessType access );
 
-    ~BufferData() {
-        delete [] m_pData;
-        m_pData = nullptr;
-        m_size = 0;
-    }
-
-    static BufferData *alloc( BufferType type, ui32 m_size, BufferAccessType access ) {
-        BufferData *buffer( new BufferData );
-        buffer->m_size = m_size;
-        buffer->m_access = access;
-        buffer->m_type = type;
-        buffer->m_pData = new uc8[ buffer->m_size ];
-
-        return buffer;
-    }
+    OSRE_NON_COPYABLE( BufferData );
 };
 
-struct PrimitiveGroup {
+struct OSRE_EXPORT PrimitiveGroup {
     PrimitiveType m_primitive;
     ui32          m_startIndex;
     ui32          m_numPrimitives;
     IndexType     m_indexType;
 
-    PrimitiveGroup()
-    : m_primitive( LineList )
-    , m_startIndex( 0 )
-    , m_numPrimitives( 0 )
-    , m_indexType( UnsignedShort ) {
-        // empty
-    }
-
-    ~PrimitiveGroup() {
-        // empty
-    }
+    PrimitiveGroup();
+    ~PrimitiveGroup();
 
     OSRE_NON_COPYABLE( PrimitiveGroup )
 };
@@ -277,7 +252,7 @@ enum MaterialType {
     ShaderMaterial
 };
 
-struct Texture {
+struct OSRE_EXPORT Texture {
     String            m_textureName;
     TextureTargetType m_targetType;
     ui32              m_size;
@@ -287,22 +262,8 @@ struct Texture {
     ui32              m_channels;
     Handle            m_texHandle;
 
-    Texture()
-    : m_textureName( "" )
-    , m_targetType( Texture2D )
-    , m_size( 0 )
-    , m_pData( nullptr )
-    , m_width( 0 )
-    , m_height( 0 )
-    , m_channels( 0 )
-    , m_texHandle() {
-        // empty
-    }
-
-    ~Texture() {
-        delete[] m_pData;
-        m_pData = nullptr;
-    }
+    Texture();
+    ~Texture();
 
     OSRE_NON_COPYABLE( Texture )
 };
@@ -315,65 +276,40 @@ enum ShaderType {
 
 static const ui32 MaxShaderTypes = 3;
 
-struct Shader {
+struct OSRE_EXPORT Shader {
     CPPCore::TArray<String> m_parameters;
     CPPCore::TArray<String> m_attributes;
     String                  m_src[ MaxShaderTypes ];
 
-    Shader() {
-        // empty
-    }
-
-    ~Shader() {
-        // empty
-    }
+    Shader();
+    ~Shader();
 
     OSRE_NON_COPYABLE( Shader )
 };
 
-struct Material {
+struct OSRE_EXPORT Material {
     MaterialType m_type;
     ui32         m_numTextures;
     Texture     *m_pTextures;
     Shader      *m_pShader;
 
-    Material()
-    : m_type( FlatShadingMaterial )
-    , m_numTextures( 0 )
-    , m_pTextures( nullptr )
-    , m_pShader( nullptr ) {
-        // empty
-    }
-
-    ~Material() {
-        m_pShader = nullptr;
-
-        delete [] m_pTextures;
-        m_pTextures = nullptr;
-    }
+    Material();
+    ~Material();
 
     OSRE_NON_COPYABLE( Material )
 };
 
-struct Transform {
+struct OSRE_EXPORT Transform {
     f32 m_translate[ 3 ];
     f32 m_scale[ 3 ];
 
-    Transform() {
-        for( ui32 i = 0; i < 3; ++i ) {
-            m_translate[ i ] = 0.0f;
-            m_scale[ i ] = 1.0f;
-        }
-    }
-
-    ~Transform() {
-        // empty
-    }
+    Transform();
+    ~Transform();
 
     OSRE_NON_COPYABLE( Transform )
 };
 
-struct Geometry {
+struct OSRE_EXPORT Geometry {
     Material       *m_material;
     ui32            m_numParameter;
     Parameter      *m_parameter;
@@ -384,46 +320,17 @@ struct Geometry {
     ui32            m_numPrimGroups;
     PrimitiveGroup *m_pPrimGroups;
 
-    Geometry()
-    : m_material( nullptr )
-    , m_numParameter( 0 )
-    , m_parameter( nullptr )
-    , m_vb( nullptr )
-    , m_ib( nullptr )
-    , m_numPrimGroups( 0 )
-    , m_pPrimGroups( nullptr ) {
-        // empty
-    }
-
-    ~Geometry() {
-        delete m_material;
-        m_material = nullptr;
-
-        delete m_vb;
-        m_vb = nullptr;
-
-        delete m_ib;
-        m_ib = nullptr;
-        
-        delete [] m_pPrimGroups;
-        m_pPrimGroups = nullptr;
-    }
+    Geometry();
+    ~Geometry();
 
     OSRE_NON_COPYABLE( Geometry )
 };
 
-struct GeoInstanceData {
+struct OSRE_EXPORT GeoInstanceData {
     BufferData *m_data;
 
-    GeoInstanceData()
-        : m_data( nullptr ) {
-        // empty
-    }
-
-    ~GeoInstanceData() {
-        delete m_data;
-        m_data = nullptr;
-    }
+    GeoInstanceData();
+    ~GeoInstanceData();
 
     OSRE_NON_COPYABLE( GeoInstanceData )
 };
@@ -436,43 +343,25 @@ struct RenderCommand {
 };
 
 
-struct TransformBlock {
+struct OSRE_EXPORT TransformBlock {
     glm::vec4 m_transform;
     glm::vec4 m_scale;
     glm::vec4 m_rotation;
 
-    TransformBlock() {
-        // empty
-    }
-
-    ~TransformBlock() {
-        // empty
-    }
+    TransformBlock();
+    ~TransformBlock();
 
     OSRE_NON_COPYABLE( TransformBlock )
 };
 
-struct TransformMatrixBlock {
+struct OSRE_EXPORT TransformMatrixBlock {
     glm::mat4 m_projection;
     glm::mat4 m_model;
     glm::mat4 m_view;
 
-    TransformMatrixBlock() 
-    : m_projection()
-    , m_model()
-    , m_view() {
-        // empty
-    }
-
-    ~TransformMatrixBlock() {
-        // empty
-    }
-
-    void init() {
-        m_projection = glm::mat4( 1.0f );
-        m_model      = glm::mat4( 1.0f );
-        m_view       = glm::mat4( 1.0f );
-    }
+    TransformMatrixBlock();
+    ~TransformMatrixBlock();
+    void init();
 
     OSRE_NON_COPYABLE( TransformMatrixBlock )
 };

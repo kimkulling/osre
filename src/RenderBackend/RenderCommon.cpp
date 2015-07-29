@@ -74,5 +74,154 @@ VertComponent &VertexLayout::getAt( ui32 idx ) const {
     return *m_components[ idx ];
 }
 
+BufferData::BufferData()
+: m_type( EmptyBuffer )
+, m_pData( nullptr )
+, m_size( 0 )
+, m_access( ReadOnly ) {
+    // empty
+}
+
+BufferData::~BufferData() {
+    delete[] m_pData;
+    m_pData = nullptr;
+    m_size = 0;
+}
+
+BufferData *BufferData::alloc( BufferType type, ui32 m_size, BufferAccessType access ) {
+    BufferData *buffer( new BufferData );
+    buffer->m_size = m_size;
+    buffer->m_access = access;
+    buffer->m_type = type;
+    buffer->m_pData = new uc8[ buffer->m_size ];
+
+    return buffer;
+}
+
+PrimitiveGroup::PrimitiveGroup()
+: m_primitive( LineList )
+, m_startIndex( 0 )
+, m_numPrimitives( 0 )
+, m_indexType( UnsignedShort ) {
+    // empty
+}
+
+PrimitiveGroup::~PrimitiveGroup() {
+    // empty
+}
+
+
+Texture::Texture()
+    : m_textureName( "" )
+    , m_targetType( Texture2D )
+    , m_size( 0 )
+    , m_pData( nullptr )
+    , m_width( 0 )
+    , m_height( 0 )
+    , m_channels( 0 )
+    , m_texHandle() {
+    // empty
+}
+
+Texture::~Texture() {
+    delete[] m_pData;
+    m_pData = nullptr;
+}
+
+Shader::Shader() {
+    // empty
+}
+
+Shader::~Shader() {
+    // empty
+}
+
+Material::Material()
+    : m_type( FlatShadingMaterial )
+    , m_numTextures( 0 )
+    , m_pTextures( nullptr )
+    , m_pShader( nullptr ) {
+    // empty
+}
+
+Material::~Material() {
+    m_pShader = nullptr;
+
+    delete[] m_pTextures;
+    m_pTextures = nullptr;
+}
+
+Transform::Transform() {
+    for( ui32 i = 0; i < 3; ++i ) {
+        m_translate[ i ] = 0.0f;
+        m_scale[ i ] = 1.0f;
+    }
+}
+
+Transform::~Transform() {
+    // empty
+}
+
+Geometry::Geometry()
+    : m_material( nullptr )
+    , m_numParameter( 0 )
+    , m_parameter( nullptr )
+    , m_vb( nullptr )
+    , m_ib( nullptr )
+    , m_numPrimGroups( 0 )
+    , m_pPrimGroups( nullptr ) {
+    // empty
+}
+
+Geometry::~Geometry() {
+    delete m_material;
+    m_material = nullptr;
+
+    delete m_vb;
+    m_vb = nullptr;
+
+    delete m_ib;
+    m_ib = nullptr;
+
+    delete[] m_pPrimGroups;
+    m_pPrimGroups = nullptr;
+}
+
+GeoInstanceData::GeoInstanceData()
+    : m_data( nullptr ) {
+    // empty
+}
+
+GeoInstanceData::~GeoInstanceData() {
+    delete m_data;
+    m_data = nullptr;
+}
+
+TransformBlock::TransformBlock() {
+    // empty
+}
+
+TransformBlock::~TransformBlock() {
+    // empty
+}
+
+TransformMatrixBlock::TransformMatrixBlock()
+    : m_projection()
+    , m_model()
+    , m_view() {
+    // empty
+}
+
+TransformMatrixBlock::~TransformMatrixBlock() {
+    // empty
+}
+
+void TransformMatrixBlock::init() {
+    m_projection = glm::mat4( 1.0f );
+    m_model = glm::mat4( 1.0f );
+    m_view = glm::mat4( 1.0f );
+}
+
+
 } // Namespace RenderBackend
 } // Namespace OSRE
