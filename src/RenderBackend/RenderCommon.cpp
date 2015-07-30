@@ -27,6 +27,13 @@ namespace RenderBackend {
 
 VertComponent VertexLayout::ErrorComp;
 
+VertComponent::VertComponent()
+: m_attrib( InvalidVertexAttr )
+, m_format( InvalidVertexFormat ) {
+    // empty
+
+}
+
 VertComponent::VertComponent( VertexAttribute attrib, VertexFormat format )
     : m_attrib( attrib )
     , m_format( InvalidVertexFormat ) {
@@ -49,9 +56,19 @@ VertexLayout::~VertexLayout() {
 }
 
 void VertexLayout::clear() {
-    m_components.clear();
+    if( !m_components.isEmpty() ) {
+        for( ui32 i = 0; i < m_components.size(); ++i ) {
+            delete m_components[ i ];
+        }
+        m_components.clear();
+    }
+
     m_offsets.clear();
     m_currentOffset = 0;
+}
+
+ui32 VertexLayout::size() const {
+    return m_components.size();
 }
 
 VertexLayout &VertexLayout::add( VertComponent *comp ) {

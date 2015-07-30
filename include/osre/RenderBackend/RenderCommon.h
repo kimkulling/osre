@@ -195,15 +195,11 @@ struct OSRE_EXPORT VertComponent {
     VertexAttribute m_attrib;
     VertexFormat    m_format;
 
-    VertComponent()
-    : m_attrib( InvalidVertexAttr )
-    , m_format( InvalidVertexFormat ) {
-        // empty
-
-    }
-    
+    VertComponent();    
     VertComponent( VertexAttribute attrib, VertexFormat format );
     ~VertComponent();
+
+    OSRE_NON_COPYABLE( VertComponent )
 };
 
 struct OSRE_EXPORT VertexLayout {
@@ -215,6 +211,7 @@ struct OSRE_EXPORT VertexLayout {
     VertexLayout();     
     ~VertexLayout();
     void clear();
+    ui32 size() const;
     VertexLayout &add( VertComponent *comp );
     VertComponent &getAt( ui32 idx ) const;
 
