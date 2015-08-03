@@ -35,8 +35,12 @@ class RenderCommonTest : public ::testing::Test {
 TEST_F( RenderCommonTest, createVertComponentTest ) {
     bool ok( true );
     try {
-        VertComponent comp;
-    } catch( ... ) {
+        VertComponent comp1;
+        VertComponent comp2( Position, Float3 );
+        EXPECT_EQ( Position, comp2.m_attrib );
+        EXPECT_EQ( Float3,   comp2.m_format );
+    }
+    catch( ... ) {
         ok = false;
     }
     EXPECT_TRUE( ok );
@@ -68,6 +72,26 @@ TEST_F( RenderCommonTest, clearCompVertexLayoutTest ) {
     EXPECT_EQ( 1, layout.numComponents() );
     layout.clear();
     EXPECT_EQ( 0, layout.numComponents() );
+}
+
+TEST_F( RenderCommonTest, sizeInBytesTest ) {
+    VertexLayout layout;
+    ui32 size( layout.sizeInBytes() );
+    EXPECT_EQ( 0, size );
+
+    VertComponent *comp1 = new VertComponent;
+    layout.add( comp1 );
+    size = layout.sizeInBytes();
+    EXPECT_EQ( 0, size );
+
+    layout.clear();
+    size = layout.sizeInBytes();
+    EXPECT_EQ( 0, size );
+
+    VertComponent *comp2 = new VertComponent( Position, Float3 );
+    layout.add( comp2 );
+    size = layout.sizeInBytes();
+    EXPECT_EQ( 12, size );
 }
 
 }

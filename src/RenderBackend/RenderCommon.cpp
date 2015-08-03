@@ -36,7 +36,7 @@ VertComponent::VertComponent()
 
 VertComponent::VertComponent( VertexAttribute attrib, VertexFormat format )
     : m_attrib( attrib )
-    , m_format( InvalidVertexFormat ) {
+    , m_format( format ) {
     // empty
 }
 
