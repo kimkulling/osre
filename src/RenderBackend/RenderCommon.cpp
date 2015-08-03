@@ -27,6 +27,35 @@ namespace RenderBackend {
 
 VertComponent VertexLayout::ErrorComp;
 
+/// @brief  The corresponding names for vertex components in a vertex layout
+static const String VertCompName[ NumVertexAttrs ] = {
+    "position",     ///< Position
+    "normal",       ///< Normal
+    "texcoord0",    ///< TexCoord0
+    "texcoord1",    ///< TexCoord1
+    "texcoord2",    ///< TexCoord2
+    "texcoord3",    ///< TexCoord3
+    "tangent",      ///< Tangent
+    "binormal",     ///< Binormal
+    "weights",      ///< Weights
+    "indices",      ///< Indices
+    "color0",       ///< Color0
+    "color1",       ///< Color1
+    "instance0",    ///< Instance0
+    "instance1",    ///< Instance1
+    "instance2",    ///< Instance2
+    "instance3"     ///< Instance3
+};
+
+static const String ErrorCmpName = "Error";
+
+const String &getVertCompName( VertexAttribute attrib ) {
+    if( attrib > Instance3 ) {
+        return ErrorCmpName;
+    }
+    return VertCompName[ attrib ];
+}
+
 VertComponent::VertComponent()
 : m_attrib( InvalidVertexAttr )
 , m_format( InvalidVertexFormat ) {

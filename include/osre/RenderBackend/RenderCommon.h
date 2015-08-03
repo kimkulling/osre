@@ -142,6 +142,8 @@ enum VertexAttribute {
     InvalidVertexAttr
 };
 
+OSRE_EXPORT const String &getVertCompName( VertexAttribute attrib );
+
 enum VertexFormat {
     Float,          ///< single component float, expanded to (x, 0, 0, 1)
     Float2,         ///< 2-component float, expanded to (x, y, 0, 1)
