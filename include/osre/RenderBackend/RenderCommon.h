@@ -203,15 +203,17 @@ struct OSRE_EXPORT VertComponent {
 };
 
 struct OSRE_EXPORT VertexLayout {
-    static VertComponent           ErrorComp;
+    static VertComponent            ErrorComp;
     CPPCore::TArray<VertComponent*> m_components;
-    CPPCore::TArray<ui32>          m_offsets;
-    ui32                           m_currentOffset;
+    CPPCore::TArray<ui32>           m_offsets;
+    ui32                            m_currentOffset;
+    ui32                            m_sizeInBytes;
 
     VertexLayout();     
     ~VertexLayout();
     void clear();
-    ui32 size() const;
+    ui32 numComponents() const;
+    ui32 sizeInBytes();
     VertexLayout &add( VertComponent *comp );
     VertComponent &getAt( ui32 idx ) const;
 

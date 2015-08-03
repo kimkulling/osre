@@ -56,18 +56,18 @@ TEST_F( RenderCommonTest, createVertexLayoutTest ) {
 TEST_F( RenderCommonTest, addCompVertexLayoutTest ) {
     VertComponent *comp = new VertComponent;
     VertexLayout layout;
-    EXPECT_EQ( 0, layout.size() );
+    EXPECT_EQ( 0, layout.numComponents() );
     layout.add( comp );
-    EXPECT_EQ( 1, layout.size() );
+    EXPECT_EQ( 1, layout.numComponents() );
 }
 
 TEST_F( RenderCommonTest, clearCompVertexLayoutTest ) {
     VertComponent *comp = new VertComponent;
     VertexLayout layout;
     layout.add( comp );
-    EXPECT_EQ( 1, layout.size() );
+    EXPECT_EQ( 1, layout.numComponents() );
     layout.clear();
-    EXPECT_EQ( 0, layout.size() );
+    EXPECT_EQ( 0, layout.numComponents() );
 }
 
 }

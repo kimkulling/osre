@@ -47,7 +47,8 @@ VertComponent::~VertComponent() {
 VertexLayout::VertexLayout()
     : m_components()
     , m_offsets()
-    , m_currentOffset( 0 ) {
+    , m_currentOffset( 0 )
+    , m_sizeInBytes( 0 ) {
     // empty
 }
 
@@ -67,7 +68,18 @@ void VertexLayout::clear() {
     m_currentOffset = 0;
 }
 
-ui32 VertexLayout::size() const {
+ui32 VertexLayout::sizeInBytes() {
+    if( 0 == m_sizeInBytes ) {
+        for( ui32 i = 0; i < m_components.size(); ++i ) {
+            const ui32 compSizeInBytes( getVertexFormatSize( m_components[ i ]->m_format ) );
+            m_sizeInBytes += compSizeInBytes;
+        }
+    }
+
+    return m_sizeInBytes;
+}
+
+ui32 VertexLayout::numComponents() const {
     return m_components.size();
 }
 

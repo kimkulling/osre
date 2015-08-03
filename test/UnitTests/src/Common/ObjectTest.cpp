@@ -57,7 +57,6 @@ TEST_F( ObjectTest, accessNameTest ) {
     String new_name( "new_huhu" );
     myObject.setName( new_name );
     EXPECT_EQ( new_name, myObject.getName() );
-
 }
 
 }
