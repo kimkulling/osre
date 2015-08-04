@@ -122,22 +122,22 @@ struct RenderVert {
 };
 
 enum VertexAttribute {
-    Position = 0,   ///> "position"
-    Normal,         ///> "normal"
-    TexCoord0,      ///> "texcoord0"
-    TexCoord1,      ///> "texcoord1"
-    TexCoord2,      ///> "texcoord2"
-    TexCoord3,      ///> "texcoord3"
-    Tangent,        ///> "tangent
-    Binormal,       ///> "binormal"
-    Weights,        ///> "weights" (skin weights)
-    Indices,        ///> "indices" (skin indices)
-    Color0,         ///> "color0"
-    Color1,         ///> "color1"
-    Instance0,      ///> "instance0"
-    Instance1,      ///> "instance1"
-    Instance2,      ///> "instance2"
-    Instance3,      ///> "instance3"
+    Position = 0,   ///< "position"
+    Normal,         ///< "normal"
+    TexCoord0,      ///< "texcoord0"
+    TexCoord1,      ///< "texcoord1"
+    TexCoord2,      ///< "texcoord2"
+    TexCoord3,      ///< "texcoord3"
+    Tangent,        ///< "tangent
+    Binormal,       ///< "binormal"
+    Weights,        ///< "weights" (skin weights)
+    Indices,        ///< "indices" (skin indices)
+    Color0,         ///< "color0"
+    Color1,         ///< "color1"
+    Instance0,      ///< "instance0"
+    Instance1,      ///< "instance1"
+    Instance2,      ///< "instance2"
+    Instance3,      ///< "instance3"
     NumVertexAttrs,
     InvalidVertexAttr
 };

@@ -101,7 +101,7 @@ TEST_F( RenderCommonTest, getVertCompNameTest ) {
 
     name = getVertCompName( InvalidVertexAttr );
     EXPECT_NE( 0, name.size() );
-    EXPECT_EQ("Error", name );
+    EXPECT_EQ( "Error", name );
 }
 
 }
