@@ -129,6 +129,56 @@ GLenum getGLTextureStage( TextureStageType texType ) {
 }
 
 //-------------------------------------------------------------------------------------------------
+static GLenum getOGLTypeForFormat( VertexFormat format ) {
+    switch( format ) {
+    case Float:
+    case Float2:
+    case Float3:
+    case Float4:
+        return GL_FLOAT;
+    case Byte4:
+        return GL_BYTE;
+    case UByte4:
+        return GL_UNSIGNED_BYTE;
+    case Short2:
+    case Short4:
+        return GL_SHORT;
+    case NumVertexFormats:
+    case InvalidVertexFormat:
+    default:
+        return GL_INVALID_ENUM;
+
+    }
+
+    return GL_INVALID_ENUM;
+}
+
+//-------------------------------------------------------------------------------------------------
+static ui32 getOGLSizeForFormat( VertexFormat format ) {
+    switch( format ) {
+    case Float:
+        return 1;
+    case Float2:
+    case Short2:
+        return 2;
+    case Float3:
+        return 3;
+    case Byte4:
+    case UByte4:
+    case Float4:
+    case Short4:
+        return 4;
+    case NumVertexFormats:
+    case InvalidVertexFormat:
+        return 0;
+    default:
+        break;
+    }
+
+    return 0;
+}
+
+//-------------------------------------------------------------------------------------------------
 OGLRenderBackend::OGLRenderBackend( )
 : m_renderCtx( nullptr )
 , m_buffers()
@@ -270,48 +320,74 @@ void OGLRenderBackend::releaseAllBuffers() {
 }
 
 //-------------------------------------------------------------------------------------------------
+bool OGLRenderBackend::createVertexCompArray( const VertexLayout *layout, OGLShader *shader, 
+                                              VertAttribArray &attributes ) {
+    if( nullptr == layout ) {
+        return false;
+    }
+
+    if( nullptr == shader ) {
+        return false;
+    }
+
+    ui32 index( 0 );
+    OGLVertexAttribute *attribute( nullptr );
+    for( ui32 i = 0; i < layout->numComponents(); i++ ) {
+        VertComponent &comp( layout->getAt( i ) );
+        attribute = new OGLVertexAttribute;
+        attribute->m_pAttributeName = getVertCompName( comp.m_attrib ).c_str();
+        attribute->m_index = ( ( *shader )[ attribute->m_pAttributeName ] );
+        attribute->m_size = getOGLSizeForFormat( comp.m_format );
+        attribute->m_type = getOGLTypeForFormat( comp.m_format );
+        attribute->m_ptr = (GLvoid*) index;
+        attributes.add( attribute );
+        index += attribute->m_size;
+    }
+}
+
+//-------------------------------------------------------------------------------------------------
 bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *pShader, 
-                                                TArray<OGLVertexAttribute*> &attributes ) {
+                                              VertAttribArray &attributes ) {
     if( !pShader ) {
         return false;
     }
 
-    OGLVertexAttribute *pAttibute( nullptr );
+    OGLVertexAttribute *attribute( nullptr );
     switch( type ) {
         case ColorVertex:
-            pAttibute                   = new OGLVertexAttribute;
-            pAttibute->m_pAttributeName = VertexAttribName.c_str();
-            pAttibute->m_index          = ( ( *pShader )[ VertexAttribName ] );
-            pAttibute->m_size           = 3;
-            pAttibute->m_type           = GL_FLOAT;
-            pAttibute->m_ptr            = 0;
-            attributes.add( pAttibute );
+            attribute                   = new OGLVertexAttribute;
+            attribute->m_pAttributeName = VertexAttribName.c_str();
+            attribute->m_index          = ( ( *pShader )[ VertexAttribName ] );
+            attribute->m_size           = 3;
+            attribute->m_type           = GL_FLOAT;
+            attribute->m_ptr            = 0;
+            attributes.add( attribute );
 
-            pAttibute = new OGLVertexAttribute;
-            pAttibute->m_pAttributeName = DiffuseColorAttribute.c_str( );
-            pAttibute->m_index = ( *pShader )[ DiffuseColorAttribute ];
-            pAttibute->m_size = 3;
-            pAttibute->m_type = GL_FLOAT;
-            pAttibute->m_ptr = ( const GLvoid* ) offsetof( ColorVert, color );
-            attributes.add( pAttibute );
+            attribute = new OGLVertexAttribute;
+            attribute->m_pAttributeName = DiffuseColorAttribute.c_str( );
+            attribute->m_index = ( *pShader )[ DiffuseColorAttribute ];
+            attribute->m_size = 3;
+            attribute->m_type = GL_FLOAT;
+            attribute->m_ptr = ( const GLvoid* ) offsetof( ColorVert, color );
+            attributes.add( attribute );
             break;
 
         case RenderVertex:
-            pAttibute = new OGLVertexAttribute;
-            pAttibute->m_pAttributeName = VertexAttribName.c_str();
-            pAttibute->m_index = ( ( *pShader )[ VertexAttribName ] );
-            pAttibute->m_size = 3;
-            pAttibute->m_type = GL_FLOAT;
-            pAttibute->m_ptr = 0;
-            attributes.add( pAttibute );
+            attribute = new OGLVertexAttribute;
+            attribute->m_pAttributeName = VertexAttribName.c_str();
+            attribute->m_index = ( ( *pShader )[ VertexAttribName ] );
+            attribute->m_size = 3;
+            attribute->m_type = GL_FLOAT;
+            attribute->m_ptr = 0;
+            attributes.add( attribute );
 
-            pAttibute = new OGLVertexAttribute;
-            pAttibute->m_pAttributeName = TexCoord0Attribute.c_str( );
-            pAttibute->m_index = ( *pShader )[ TexCoord0Attribute ];
-            pAttibute->m_size = 2;
-            pAttibute->m_type = GL_FLOAT;
-            pAttibute->m_ptr = ( const GLvoid* ) offsetof( RenderVert, tex0 );
-            attributes.add( pAttibute );
+            attribute = new OGLVertexAttribute;
+            attribute->m_pAttributeName = TexCoord0Attribute.c_str( );
+            attribute->m_index = ( *pShader )[ TexCoord0Attribute ];
+            attribute->m_size = 2;
+            attribute->m_type = GL_FLOAT;
+            attribute->m_ptr = ( const GLvoid* ) offsetof( RenderVert, tex0 );
+            attributes.add( attribute );
             break;
 
         default:
@@ -347,7 +423,7 @@ OGLVertexArray *OGLRenderBackend::createVertexArray() {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLRenderBackend::bindVertexAttribute( OGLVertexArray *va, OGLShader *shader, ui32 stride, GLint loc, OGLVertexAttribute* attrib ) {
+bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, ui32 stride, GLint loc, OGLVertexAttribute* attrib ) {
     if( nullptr == va || nullptr == shader || nullptr == attrib ) {
         return false;
     }
@@ -363,7 +439,7 @@ bool OGLRenderBackend::bindVertexAttribute( OGLVertexArray *va, OGLShader *shade
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLRenderBackend::bindVertexAttributes( OGLVertexArray *va, OGLShader *shader, ui32 stride, 
+bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, ui32 stride, 
                                              const TArray<OGLVertexAttribute*> &attributes ) {
     if( nullptr == va || nullptr == shader ) {
         return false;

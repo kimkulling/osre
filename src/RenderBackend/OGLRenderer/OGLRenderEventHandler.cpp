@@ -172,7 +172,7 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
     TArray<OGLVertexAttribute*> attributes;
     rb->createVertexCompArray( geo->m_vertextype, oglShader, attributes );
     const ui32 stride = OGLRenderBackend::getVertexSize( geo->m_vertextype );
-    rb->bindVertexAttributes( vertexArray, oglShader, stride, attributes );
+    rb->bindVertexLayout( vertexArray, oglShader, stride, attributes );
     rb->releaseVertexCompArray( attributes );
 
     // pass indices to element array buffer
