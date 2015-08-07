@@ -270,7 +270,7 @@ void OGLRenderBackend::releaseAllBuffers() {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLRenderBackend::createVertexAttribArray( VertexType type, OGLShader *pShader, 
+bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *pShader, 
                                                 TArray<OGLVertexAttribute*> &attributes ) {
     if( !pShader ) {
         return false;
@@ -322,7 +322,7 @@ bool OGLRenderBackend::createVertexAttribArray( VertexType type, OGLShader *pSha
 }
 
 //-------------------------------------------------------------------------------------------------
-void OGLRenderBackend::releasevertexAttribArray( TArray<OGLVertexAttribute*> &attributes ) {
+void OGLRenderBackend::releaseVertexCompArray( TArray<OGLVertexAttribute*> &attributes ) {
     if( attributes.isEmpty() ) {
         return;
     }

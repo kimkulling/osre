@@ -257,7 +257,7 @@ struct OSRE_EXPORT Texture {
     String            m_textureName;
     TextureTargetType m_targetType;
     ui32              m_size;
-    uc8              *m_pData;
+    uc8              *m_data;
     ui32              m_width;
     ui32              m_height;
     ui32              m_channels;

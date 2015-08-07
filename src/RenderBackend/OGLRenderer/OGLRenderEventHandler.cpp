@@ -170,10 +170,10 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
 
     // enable vertex attribute arrays
     TArray<OGLVertexAttribute*> attributes;
-    rb->createVertexAttribArray( geo->m_vertextype, oglShader, attributes );
+    rb->createVertexCompArray( geo->m_vertextype, oglShader, attributes );
     const ui32 stride = OGLRenderBackend::getVertexSize( geo->m_vertextype );
     rb->bindVertexAttributes( vertexArray, oglShader, stride, attributes );
-    rb->releasevertexAttribArray( attributes );
+    rb->releaseVertexCompArray( attributes );
 
     // pass indices to element array buffer
     rb->bindBuffer( pIB );

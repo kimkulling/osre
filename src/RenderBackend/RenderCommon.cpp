@@ -173,7 +173,7 @@ Texture::Texture()
     : m_textureName( "" )
     , m_targetType( Texture2D )
     , m_size( 0 )
-    , m_pData( nullptr )
+    , m_data( nullptr )
     , m_width( 0 )
     , m_height( 0 )
     , m_channels( 0 )
@@ -182,8 +182,8 @@ Texture::Texture()
 }
 
 Texture::~Texture() {
-    delete[] m_pData;
-    m_pData = nullptr;
+    delete[] m_data;
+    m_data = nullptr;
 }
 
 Shader::Shader() {

@@ -159,7 +159,7 @@ public:
         pGeometry->m_material->m_pTextures[ 0 ].m_width = 0;
         pGeometry->m_material->m_pTextures[ 0 ].m_height = 0;
         pGeometry->m_material->m_pTextures[ 0 ].m_channels = 0;
-        pGeometry->m_material->m_pTextures[ 0 ].m_pData = nullptr;
+        pGeometry->m_material->m_pTextures[ 0 ].m_data = nullptr;
         pGeometry->m_material->m_pTextures[ 0 ].m_size = 0;
 
         pGeometry->m_numPrimGroups = 1;

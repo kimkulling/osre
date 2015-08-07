@@ -72,8 +72,8 @@ public:
     void bufferData( OGLBuffer *pBuffer, void *pData, ui32 size, BufferAccessType usage );
     void releaseBuffer( OGLBuffer *pBuffer );
     void releaseAllBuffers();
-    bool createVertexAttribArray( VertexType type, OGLShader *pShader, CPPCore::TArray<OGLVertexAttribute*> &attributes );
-    void releasevertexAttribArray( CPPCore::TArray<OGLVertexAttribute*> &attributes );
+    bool createVertexCompArray( VertexType type, OGLShader *pShader, CPPCore::TArray<OGLVertexAttribute*> &attributes );
+    void releaseVertexCompArray( CPPCore::TArray<OGLVertexAttribute*> &attributes );
     OGLVertexArray *createVertexArray();
     bool bindVertexAttribute( OGLVertexArray *pVertexArray, OGLShader *pShader, ui32 stride, GLint loc, OGLVertexAttribute* attrib );
     bool bindVertexAttributes( OGLVertexArray *pVertexArray, OGLShader *pShader, ui32 stride, const CPPCore::TArray<OGLVertexAttribute*> &attributes );
