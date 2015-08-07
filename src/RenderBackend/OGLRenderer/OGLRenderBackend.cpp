@@ -47,12 +47,6 @@ extern const unsigned char *glyph[];
 
 void DrawGlyph( const Common::ColorRGBA &col, int c );
 
-static const String VertexAttribName      = "vVertex";
-static const String NormalAttribName      = "vNormal";
-static const String DiffuseColorAttribute = "vDiffuseColor";
-static const String TexCoord0Attribute    = "TexCoord0Attribute";
-
-
 //-------------------------------------------------------------------------------------------------
 static bool setParameterInShader( OGLParameter *param, OGLShader *shader ) {
     assert( nullptr != param );
@@ -356,16 +350,16 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *pShade
     switch( type ) {
         case ColorVertex:
             attribute                   = new OGLVertexAttribute;
-            attribute->m_pAttributeName = VertexAttribName.c_str();
-            attribute->m_index          = ( ( *pShader )[ VertexAttribName ] );
+            attribute->m_pAttributeName = getVertCompName( Position ).c_str();
+            attribute->m_index = ( ( *pShader )[ attribute->m_pAttributeName ] );
             attribute->m_size           = 3;
             attribute->m_type           = GL_FLOAT;
             attribute->m_ptr            = 0;
             attributes.add( attribute );
 
             attribute = new OGLVertexAttribute;
-            attribute->m_pAttributeName = DiffuseColorAttribute.c_str( );
-            attribute->m_index = ( *pShader )[ DiffuseColorAttribute ];
+            attribute->m_pAttributeName = getVertCompName( Color0 ).c_str();
+            attribute->m_index = ( *pShader )[ attribute->m_pAttributeName ];
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = ( const GLvoid* ) offsetof( ColorVert, color );
@@ -374,16 +368,16 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *pShade
 
         case RenderVertex:
             attribute = new OGLVertexAttribute;
-            attribute->m_pAttributeName = VertexAttribName.c_str();
-            attribute->m_index = ( ( *pShader )[ VertexAttribName ] );
+            attribute->m_pAttributeName = getVertCompName( Position ).c_str();
+            attribute->m_index = ( ( *pShader )[ attribute->m_pAttributeName ] );
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = 0;
             attributes.add( attribute );
 
             attribute = new OGLVertexAttribute;
-            attribute->m_pAttributeName = TexCoord0Attribute.c_str( );
-            attribute->m_index = ( *pShader )[ TexCoord0Attribute ];
+            attribute->m_pAttributeName = getVertCompName( TexCoord0 ).c_str();
+            attribute->m_index = ( *pShader )[ attribute->m_pAttributeName ];
             attribute->m_size = 2;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = ( const GLvoid* ) offsetof( RenderVert, tex0 );
