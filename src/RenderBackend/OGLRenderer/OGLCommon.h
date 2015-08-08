@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Common/osre_common.h>
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <glm/glm.hpp>

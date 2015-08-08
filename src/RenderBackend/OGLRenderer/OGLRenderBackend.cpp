@@ -125,23 +125,22 @@ GLenum getGLTextureStage( TextureStageType texType ) {
 //-------------------------------------------------------------------------------------------------
 static GLenum getOGLTypeForFormat( VertexFormat format ) {
     switch( format ) {
-    case Float:
-    case Float2:
-    case Float3:
-    case Float4:
-        return GL_FLOAT;
-    case Byte4:
-        return GL_BYTE;
-    case UByte4:
-        return GL_UNSIGNED_BYTE;
-    case Short2:
-    case Short4:
-        return GL_SHORT;
-    case NumVertexFormats:
-    case InvalidVertexFormat:
-    default:
-        return GL_INVALID_ENUM;
-
+        case Float:
+        case Float2:
+        case Float3:
+        case Float4:
+            return GL_FLOAT;
+        case Byte4:
+            return GL_BYTE;
+        case UByte4:
+            return GL_UNSIGNED_BYTE;
+        case Short2:
+        case Short4:
+            return GL_SHORT;
+        case NumVertexFormats:
+        case InvalidVertexFormat:
+        default:
+            break;
     }
 
     return GL_INVALID_ENUM;
@@ -150,23 +149,23 @@ static GLenum getOGLTypeForFormat( VertexFormat format ) {
 //-------------------------------------------------------------------------------------------------
 static ui32 getOGLSizeForFormat( VertexFormat format ) {
     switch( format ) {
-    case Float:
-        return 1;
-    case Float2:
-    case Short2:
-        return 2;
-    case Float3:
-        return 3;
-    case Byte4:
-    case UByte4:
-    case Float4:
-    case Short4:
-        return 4;
-    case NumVertexFormats:
-    case InvalidVertexFormat:
-        return 0;
-    default:
-        break;
+        case Float:
+            return 1;
+        case Float2:
+        case Short2:
+            return 2;
+        case Float3:
+            return 3;
+        case Byte4:
+        case UByte4:
+        case Float4:
+        case Short4:
+            return 4;
+        case NumVertexFormats:
+        case InvalidVertexFormat:
+            return 0;
+        default:
+            break;
     }
 
     return 0;
@@ -337,6 +336,8 @@ bool OGLRenderBackend::createVertexCompArray( const VertexLayout *layout, OGLSha
         attributes.add( attribute );
         index += attribute->m_size;
     }
+
+    return true;
 }
 
 //-------------------------------------------------------------------------------------------------

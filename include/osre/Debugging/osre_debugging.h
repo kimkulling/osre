@@ -30,9 +30,20 @@ static void handleFatal( const OSRE::String &file, int line, OSRE::String &msg )
     OSRE::Common::fatalPrint( "Assertion", file, line, msg );
 }
 
+static void handleAssert( const OSRE::String &file, int line, OSRE::String &msg ) {
+    handleFatal( file, line, msg );
+
+#ifdef OSRE_WINDOWS
+    __debugbreak();
+#endif
+
+}
+
 #ifdef _DEBUG
+#  define osre_assert( statement )        if ( !(statement) ) handleAssert( __FILE__, __LINE__,  msg );
 #  define osre_validate( statement, msg ) if ( !(statement) ) handleFatal( __FILE__, __LINE__,  msg );
 #else
+#  define osre_assert( statement )
 #  define osre_validate( statement, msg ) 
 #endif
 
