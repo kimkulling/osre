@@ -1,5 +1,5 @@
 #include <osre/App/AppBase.h>
-#include <osre/Properties/ConfigurationMap.h>
+#include <osre/Properties/Settings.h>
 #include <osre/Common/Logger.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/Stage.h>
@@ -36,8 +36,8 @@ public:
     }
 
 protected:
-    virtual bool onCreate( Properties::Setting *config = nullptr ) {
-        AppBase::getConfig()->setString( Properties::Setting::WindowsTitle, "HelloWorld!" );
+    virtual bool onCreate( Properties::Settings *config = nullptr ) {
+        AppBase::getConfig()->setString( Properties::Settings::WindowsTitle, "HelloWorld!" );
 
         if( !AppBase::onCreate( config ) ) {
             return false;

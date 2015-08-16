@@ -1,5 +1,5 @@
 #include <osre/Common/Logger.h>
-#include <osre/Properties/ConfigurationMap.h>
+#include <osre/Properties/Settings.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractTimer.h>
 #include <osre/Common/TObjPtr.h>

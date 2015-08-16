@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <src/Platform/PlatformPluginFactory.h>
 #include <osre/Common/EventTriggerer.h>
-#include <osre/Properties/ConfigurationMap.h>
+#include <osre/Properties/Settings.h>
 #ifdef OSRE_WINDOWS
 #   include <src/Platform/win32/Win32Surface.h>
 #   include <src/Platform/win32/Win32Eventhandler.h>
@@ -58,7 +58,7 @@ static const String PlatformPluginName[ MaxPlugin ] = {
 static const String Tag = "PlatformInterface";
 
 //-------------------------------------------------------------------------------------------------
-PlatformInterface::PlatformInterface( const Setting *config )
+PlatformInterface::PlatformInterface( const Settings *config )
 : AbstractService( "platform/platforminterface" )
 , m_config( config )
 #ifdef OSRE_WINDOWS
@@ -79,7 +79,7 @@ PlatformInterface::~PlatformInterface() {
 }
 
 //-------------------------------------------------------------------------------------------------
-PlatformInterface *PlatformInterface::create( const Setting *config ) {
+PlatformInterface *PlatformInterface::create( const Settings *config ) {
     if( nullptr == s_instance ) {
         s_instance = new PlatformInterface( config );
     }
@@ -160,29 +160,29 @@ bool PlatformInterface::onOpen() {
         return false;
     }
 
-    Setting::WorkingModeType appType = 
-        ( Setting::WorkingModeType ) m_config->get( Setting::AppType ).getInt();
+    Settings::WorkingModeType appType = 
+        ( Settings::WorkingModeType ) m_config->get( Settings::AppType ).getInt();
 
     SurfaceProperties *pProps( nullptr );
     bool polls( false );
-    if( appType == Setting::GfxApp ) {
+    if( appType == Settings::GfxApp ) {
         // get the configuration values for the window
         pProps = new SurfaceProperties;
         bool fullscreen = false;
-        pProps->m_x = m_config->get( Setting::WinX ).getInt();
-        pProps->m_y = m_config->get( Setting::WinY ).getInt();
-        pProps->m_width = m_config->get( Setting::WinWidth ).getInt();
-        pProps->m_height = m_config->get( Setting::WinHeight ).getInt();
-        pProps->m_colordepth = m_config->get( Setting::BPP ).getInt();
-        pProps->m_depthbufferdepth = m_config->get( Setting::DepthBufferDepth ).getInt();
-        pProps->m_stencildepth = m_config->get( Setting::StencilBufferDepth ).getInt();
+        pProps->m_x = m_config->get( Settings::WinX ).getInt();
+        pProps->m_y = m_config->get( Settings::WinY ).getInt();
+        pProps->m_width = m_config->get( Settings::WinWidth ).getInt();
+        pProps->m_height = m_config->get( Settings::WinHeight ).getInt();
+        pProps->m_colordepth = m_config->get( Settings::BPP ).getInt();
+        pProps->m_depthbufferdepth = m_config->get( Settings::DepthBufferDepth ).getInt();
+        pProps->m_stencildepth = m_config->get( Settings::StencilBufferDepth ).getInt();
         pProps->m_fullscreen = fullscreen;
-        pProps->m_title = m_config->get( Setting::WindowsTitle ).getString();
-        polls = m_config->get( Setting::PollingMode ).getBool();
+        pProps->m_title = m_config->get( Settings::WindowsTitle ).getString();
+        polls = m_config->get( Settings::PollingMode ).getBool();
     }
 
     String appName = "ZFXCE2";
-    m_type = static_cast<PluginType>( m_config->get( Setting::PlatformPlugin ).getInt( ) );
+    m_type = static_cast<PluginType>( m_config->get( Settings::PlatformPlugin ).getInt( ) );
 
     PlatformPluginFactory::init( m_type );
     osre_info( Tag, "Platform plugin created for " + PlatformInterface::getOSPluginName( m_type ) );
@@ -190,7 +190,7 @@ bool PlatformInterface::onOpen() {
     PlatformPluginFactory::createThreadFactory( m_type );
 
     bool result( true );
-    if( appType == Setting::GfxApp ) {
+    if( appType == Settings::GfxApp ) {
         result = setupGfx( pProps, polls );
     }
 

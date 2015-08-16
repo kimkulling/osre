@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Properties/ConfigurationMap.h>
+#include <osre/Properties/Settings.h>
 #include <osre/Threading/SystemTask.h>
 #include "OGLRenderer/OGLRenderEventHandler.h"
 
@@ -53,7 +53,7 @@ RenderBackendService::~RenderBackendService() {
 //-------------------------------------------------------------------------------------------------
 bool RenderBackendService::onOpen() {
     if (!m_pConfigMap) {
-        m_pConfigMap = new Properties::Setting;
+        m_pConfigMap = new Properties::Settings;
         m_ownConfig = true;
     }
 
@@ -95,12 +95,12 @@ bool RenderBackendService::onUpdate( d32 timediff ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-void RenderBackendService::setConfig( const Setting *pConfiguration ) {
+void RenderBackendService::setConfig( const Settings *pConfiguration ) {
     m_pConfigMap = pConfiguration;
 }
 
 //-------------------------------------------------------------------------------------------------
-const Properties::Setting *RenderBackendService::getConfig() const {
+const Properties::Settings *RenderBackendService::getConfig() const {
     return m_pConfigMap;
 }
 

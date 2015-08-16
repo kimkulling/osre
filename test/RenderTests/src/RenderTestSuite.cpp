@@ -1,7 +1,7 @@
 #include "RenderTestSuite.h"
 #include "AbstractRenderTest.h"
 
-#include <osre/Properties/ConfigurationMap.h>
+#include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractPlatformEventHandler.h>
@@ -79,15 +79,15 @@ RenderTestSuite *RenderTestSuite::getInstance() {
 //-------------------------------------------------------------------------------------------------
 bool RenderTestSuite::setup() {
     // get configuration parameter
-    Properties::Setting *pConfig = new Properties::Setting;
-    pConfig->setString( Properties::Setting::RenderAPI, "opengl" );
-    pConfig->setBool( Properties::Setting::PollingMode, true );
+    Properties::Settings *pConfig = new Properties::Settings;
+    pConfig->setString( Properties::Settings::RenderAPI, "opengl" );
+    pConfig->setBool( Properties::Settings::PollingMode, true );
 
 #ifdef OSRE_WINDOWS
     //pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
-    pConfig->setInt( Properties::Setting::PlatformPlugin, static_cast< i32 >( Platform::WindowsPlugin ) );
+    pConfig->setInt( Properties::Settings::PlatformPlugin, static_cast< i32 >( Platform::WindowsPlugin ) );
 #else
-    pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
+    pConfig->setInt( Properties::Settings::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
 #endif
 
     // create the platform abstraction

@@ -194,11 +194,11 @@ SET ( properties_inc
     ${HEADER_PATH}/Properties/BasePropertyMap.h
     ${HEADER_PATH}/Properties/IPropertyMap.h
     ${HEADER_PATH}/Properties/Property.h
-    ${HEADER_PATH}/Properties/ConfigurationMap.h
+    ${HEADER_PATH}/Properties/Settings.h
 )
 SET ( properties_src
     Properties/BasePropertyMap.cpp
-    Properties/ConfigurationMap.cpp
+    Properties/Settings.cpp
     Properties/Property.cpp
 )
 

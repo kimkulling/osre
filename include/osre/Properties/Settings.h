@@ -37,7 +37,7 @@ class IPropertyMap;
 ///
 ///	@brief
 //--------------------------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Setting {
+class OSRE_EXPORT Settings {
 public:
     /// @enum   WorkingModeType
     ///	@brief  Enum to describe the requested working mode.
@@ -70,10 +70,10 @@ public:
 
 public:
     ///	@brief	The default class constructor.
-    Setting();
+    Settings();
 
     ///	@brief	The class destructor.
-    ~Setting();
+    ~Settings();
 
     ///	@brief	The configuration map will be initiated by a given configuration file.
     ///	@param	initScriptFile		[in] The name of the init script file.
@@ -102,8 +102,8 @@ protected:
     void initDefaults();
 
 private: //	Copying is not allowed.
-    Setting( const Setting & );
-    Setting &operator = ( const Setting & );
+    Settings( const Settings & );
+    Settings &operator = ( const Settings & );
 
 private:
     Properties::IPropertyMap *m_pPropertyMap;

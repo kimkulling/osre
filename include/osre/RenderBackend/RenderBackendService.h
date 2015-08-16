@@ -33,7 +33,7 @@ namespace Platform {
 }
 
 namespace Properties {
-    class Setting;
+    class Settings;
 }
 
 namespace Threading {
@@ -155,11 +155,11 @@ public:
 
     /// @brief  Set the configuration for the render service.
     /// @param  pConfiguration  [in] The render configuration.
-    void setConfig( const Properties::Setting *pConfiguration );
+    void setConfig( const Properties::Settings *pConfiguration );
     
     /// @brief  Returns the render configuration.
     /// @return The render configuration.
-    const Properties::Setting *getConfig() const;
+    const Properties::Settings *getConfig() const;
     
     /// @brief  Will send a new event to the render system task.
     /// @param  pEvent      [in] The event identifier.
@@ -178,7 +178,7 @@ protected:
 
 private:
     Common::TObjPtr<Threading::SystemTask> m_RenderTaskPtr;
-    const Properties::Setting *m_pConfigMap;
+    const Properties::Settings *m_pConfigMap;
     bool m_ownConfig;
 };
 
