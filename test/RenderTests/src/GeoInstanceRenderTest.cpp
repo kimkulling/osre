@@ -25,8 +25,9 @@ using namespace ::OSRE::RenderBackend;
 const String VsSrc =
     "#version 400 core\n"
     "\n"
-    "layout(location = 0) in vec3 position;	      // object space vertex position\n"
-    "layout(location = 1) in vec3 color0;  // per-vertex colour\n"
+    "layout(location = 0) in vec3 position;	     // object space vertex position\n"
+    "layout(location = 1) in vec3 normal;	     // object space vertex normal\n"
+    "layout(location = 2) in vec3 color0;        // per-vertex colour\n"
     "\n"
     "// output from the vertex shader\n"
     "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
@@ -90,6 +91,7 @@ public:
         pGeometry->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
         if( nullptr != pGeometry->m_material->m_pShader ) {
             pGeometry->m_material->m_pShader->m_attributes.add( "position" );
+            pGeometry->m_material->m_pShader->m_attributes.add( "normal" );
             pGeometry->m_material->m_pShader->m_attributes.add( "color0" );
             pGeometry->m_material->m_pShader->m_parameters.add( "M" );
             pGeometry->m_material->m_pShader->m_parameters.add( "VP" );

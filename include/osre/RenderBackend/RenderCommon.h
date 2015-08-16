@@ -113,12 +113,20 @@ enum ClearBitType {
 
 struct ColorVert {
     glm::vec3 position;
+    glm::vec3 normal;
     glm::vec3 color;
+
+    static ui32 getNumAttributes();
+    static const String *getAttributes();
 };
 
 struct RenderVert {
     glm::vec3 position;
+    glm::vec3 normal;
     glm::vec2 tex0;
+
+    static ui32 getNumAttributes(); 
+    static const String *getAttributes();
 };
 
 enum VertexAttribute {
@@ -206,6 +214,7 @@ struct OSRE_EXPORT VertComponent {
 
 struct OSRE_EXPORT VertexLayout {
     static VertComponent            ErrorComp;
+    String                         *m_attributes;
     CPPCore::TArray<VertComponent*> m_components;
     CPPCore::TArray<ui32>           m_offsets;
     ui32                            m_currentOffset;
@@ -218,6 +227,7 @@ struct OSRE_EXPORT VertexLayout {
     ui32 sizeInBytes();
     VertexLayout &add( VertComponent *comp );
     VertComponent &getAt( ui32 idx ) const;
+    const String *getAttributes();
 
     OSRE_NON_COPYABLE( VertexLayout );
 };

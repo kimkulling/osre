@@ -43,9 +43,9 @@ class OSRE_EXPORT IOService : public Common::AbstractService {
 private:                                                                           
     static IOService * s_instance;                                                
 public:
-    static IOService * getInstance() { return s_instance; }
-    static void   setInstance( IOService *pInstance ) { s_instance = pInstance; }
-//    DECLARE_SINGLETON( IOService )
+/*    static IOService * getInstance() { return s_instance; }
+    static void   setInstance( IOService *pInstance ) { s_instance = pInstance; }*/
+    DECLARE_SINGLETON( IOService )
 
 public:
     ///	@brief	The default class constructor.

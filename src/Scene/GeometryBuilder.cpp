@@ -38,7 +38,8 @@ const String VsSrc =
     "#version 400 core\n"
     "\n"
     "layout(location = 0) in vec3 position;	      // object space vertex position\n"
-    "layout(location = 1) in vec3 color0;  // per-vertex colour\n"
+    "layout(location = 1) in vec3 normal;	            // object space vertex normal\n"
+    "layout(location = 2) in vec3 color0;  // per-vertex colour\n"
     "\n"
     "// output from the vertex shader\n"
     "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
@@ -138,8 +139,12 @@ RenderBackend::Geometry *GeometryBuilder::createTriangle() {
     geo->m_material->m_pShader->m_src[ SH_FragmentShaderType ] = FsSrc;
 
     if( nullptr != geo->m_material->m_pShader ) {
-        geo->m_material->m_pShader->m_attributes.add( "position" );
-        geo->m_material->m_pShader->m_attributes.add( "color0" );
+        ui32 numAttribs( ColorVert::getNumAttributes() );
+        const String *attribs( ColorVert::getAttributes() );
+        for( ui32 i = 0; i < numAttribs; ++i ) {
+            geo->m_material->m_pShader->m_attributes.add( attribs[ i ] );
+        }
+
         geo->m_material->m_pShader->m_parameters.add( "MVP" );
     }
 

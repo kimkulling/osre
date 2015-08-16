@@ -359,6 +359,14 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *pShade
             attributes.add( attribute );
 
             attribute = new OGLVertexAttribute;
+            attribute->m_pAttributeName = getVertCompName( Normal ).c_str();
+            attribute->m_index = ( *pShader )[ attribute->m_pAttributeName ];
+            attribute->m_size = 3;
+            attribute->m_type = GL_FLOAT;
+            attribute->m_ptr = ( const GLvoid* ) offsetof( ColorVert, normal );
+            attributes.add( attribute );
+
+            attribute = new OGLVertexAttribute;
             attribute->m_pAttributeName = getVertCompName( Color0 ).c_str();
             attribute->m_index = ( *pShader )[ attribute->m_pAttributeName ];
             attribute->m_size = 3;
@@ -374,6 +382,14 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *pShade
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = 0;
+            attributes.add( attribute );
+
+            attribute = new OGLVertexAttribute;
+            attribute->m_pAttributeName = getVertCompName( Normal ).c_str();
+            attribute->m_index = ( *pShader )[ attribute->m_pAttributeName ];
+            attribute->m_size = 3;
+            attribute->m_type = GL_FLOAT;
+            attribute->m_ptr = ( const GLvoid* ) offsetof( RenderVert, normal );
             attributes.add( attribute );
 
             attribute = new OGLVertexAttribute;

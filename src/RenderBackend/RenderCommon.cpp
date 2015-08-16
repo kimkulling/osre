@@ -49,6 +49,34 @@ static const String VertCompName[ NumVertexAttrs ] = {
 
 static const String ErrorCmpName = "Error";
 
+static const String ColorVertAttributes[ 3 ] = {
+    "position",
+    "normal",
+    "color0"
+};
+    
+ui32 ColorVert::getNumAttributes() {
+    return 3;
+}
+
+const String *ColorVert::getAttributes() {
+    return ColorVertAttributes;
+}
+
+static const String RenderVertAttributes[ 3 ] = {
+    "position",
+    "normal",
+    "tex0"
+};
+
+ui32 RenderVert::getNumAttributes() {
+    return 3;
+}
+
+const String *RenderVert::getAttributes() {
+    return RenderVertAttributes;
+}
+
 const String &getVertCompName( VertexAttribute attrib ) {
     if( attrib > Instance3 ) {
         return ErrorCmpName;
@@ -60,7 +88,6 @@ VertComponent::VertComponent()
 : m_attrib( InvalidVertexAttr )
 , m_format( InvalidVertexFormat ) {
     // empty
-
 }
 
 VertComponent::VertComponent( VertexAttribute attrib, VertexFormat format )
@@ -74,15 +101,17 @@ VertComponent::~VertComponent() {
 }
 
 VertexLayout::VertexLayout()
-    : m_components()
-    , m_offsets()
-    , m_currentOffset( 0 )
-    , m_sizeInBytes( 0 ) {
+: m_components()
+, m_attributes( nullptr )
+, m_offsets()
+, m_currentOffset( 0 )
+, m_sizeInBytes( 0 ) {
     // empty
 }
 
 VertexLayout::~VertexLayout() {
-    // empty
+    delete[] m_attributes;
+    m_attributes = nullptr;
 }
 
 void VertexLayout::clear() {
@@ -131,6 +160,23 @@ VertComponent &VertexLayout::getAt( ui32 idx ) const {
 
     return *m_components[ idx ];
 }
+
+const String *VertexLayout::getAttributes() {
+    if( m_components.isEmpty() ) {
+        return nullptr;
+    }
+    
+    if( nullptr == m_attributes ) {
+        const ui32 numAttributes( m_components.size() );
+        m_attributes = new String[ numAttributes ];
+        for( ui32 i = 0; i < m_components.size(); ++i )  {
+            m_attributes[ i ] = VertCompName[ m_components[ i ]->m_attrib ];
+        }
+    }
+    
+    return m_attributes;
+}
+
 
 BufferData::BufferData()
 : m_type( EmptyBuffer )
