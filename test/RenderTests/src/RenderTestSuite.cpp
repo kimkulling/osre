@@ -79,19 +79,19 @@ RenderTestSuite *RenderTestSuite::getInstance() {
 //-------------------------------------------------------------------------------------------------
 bool RenderTestSuite::setup() {
     // get configuration parameter
-    Properties::Settings *pConfig = new Properties::Settings;
-    pConfig->setString( Properties::Settings::RenderAPI, "opengl" );
-    pConfig->setBool( Properties::Settings::PollingMode, true );
+    Properties::Settings *settings = new Properties::Settings;
+    settings->setString( Properties::Settings::RenderAPI, "opengl" );
+    settings->setBool( Properties::Settings::PollingMode, true );
 
 #ifdef OSRE_WINDOWS
     //pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
-    pConfig->setInt( Properties::Settings::PlatformPlugin, static_cast< i32 >( Platform::WindowsPlugin ) );
+    settings->setInt( Properties::Settings::PlatformPlugin, static_cast< i32 >( Platform::WindowsPlugin ) );
 #else
-    pConfig->setInt( Properties::Settings::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
+    settings->setInt( Properties::Settings::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
 #endif
 
     // create the platform abstraction
-    m_pPlatformInterface = Platform::PlatformInterface::create( pConfig );
+    m_pPlatformInterface = Platform::PlatformInterface::create( settings );
     if( m_pPlatformInterface ) {
         if( !m_pPlatformInterface->open() ) {
             return false;
