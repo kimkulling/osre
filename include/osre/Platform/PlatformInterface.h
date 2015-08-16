@@ -41,7 +41,7 @@ namespace Common {
 }
 
 namespace Properties {
-    class ConfigurationMap;
+    class Setting;
 }
 
 namespace Platform {
@@ -180,7 +180,7 @@ public:
 class OSRE_EXPORT PlatformInterface : public Common::AbstractService {
 public:
     AbstractSurface *getRootSurface() const;
-    static PlatformInterface *create( const Properties::ConfigurationMap *pConfiguration );
+    static PlatformInterface *create( const Properties::Setting *pConfiguration );
     static void destroy();
     static PlatformInterface *getInstance();
     AbstractPlatformEventHandler *getPlatformEventHandler() const;
@@ -196,12 +196,12 @@ protected:
     virtual bool setupGfx( SurfaceProperties *props, bool polls );
 
 private:
-    PlatformInterface( const Properties::ConfigurationMap *pConfiguration );
+    PlatformInterface( const Properties::Setting *pConfiguration );
     virtual ~PlatformInterface();
 
 private:
     static PlatformInterface *s_instance;
-    const Properties::ConfigurationMap *m_config;
+    const Properties::Setting *m_config;
     PluginType m_type;
     AbstractSurface *m_pRootSurface;
     AbstractPlatformEventHandler *m_pOSEventHandler;

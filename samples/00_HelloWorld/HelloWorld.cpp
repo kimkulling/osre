@@ -36,8 +36,8 @@ public:
     }
 
 protected:
-    virtual bool onCreate( Properties::ConfigurationMap *config = nullptr ) {
-        AppBase::getConfig()->setString( Properties::ConfigurationMap::WindowsTitle, "HelloWorld!" );
+    virtual bool onCreate( Properties::Setting *config = nullptr ) {
+        AppBase::getConfig()->setString( Properties::Setting::WindowsTitle, "HelloWorld!" );
 
         if( !AppBase::onCreate( config ) ) {
             return false;

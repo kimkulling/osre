@@ -196,6 +196,9 @@ ui32 getVertexFormatSize( VertexFormat format ) {
         case NumVertexFormats:
         case InvalidVertexFormat:
             break;
+
+        default:
+            break;
     }
 
     return size;

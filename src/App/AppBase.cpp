@@ -27,7 +27,7 @@ struct AppBase::Impl {
     State m_state;
     d32 m_timediff;
     ArgumentParser m_argParser;
-    Properties::ConfigurationMap *m_config;
+    Properties::Setting *m_config;
     Platform::PlatformInterface *m_platformInterface;
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
@@ -42,15 +42,15 @@ struct AppBase::Impl {
     , m_timer( nullptr )
     , m_rbService( nullptr )
     , m_stage( nullptr ) {
-        m_config = new Properties::ConfigurationMap;
-        m_config->setString( Properties::ConfigurationMap::RenderAPI, "opengl" );
-        m_config->setBool( Properties::ConfigurationMap::PollingMode, true );
+        m_config = new Properties::Setting;
+        m_config->setString( Properties::Setting::RenderAPI, "opengl" );
+        m_config->setBool( Properties::Setting::PollingMode, true );
 
 #ifdef OSRE_WINDOWS
         //pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
-        m_config->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast< i32 >( Platform::WindowsPlugin ) );
+        m_config->setInt( Properties::Setting::PlatformPlugin, static_cast< i32 >( Platform::WindowsPlugin ) );
 #else
-        m_config->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast< i32 >( Platform::SDL2Plugin ) );
+        m_config->setInt( Properties::Setting::PlatformPlugin, static_cast< i32 >( Platform::SDL2Plugin ) );
 #endif 
     }
 
@@ -69,7 +69,7 @@ AppBase::~AppBase() {
     m_impl = nullptr;
 }
 
-bool AppBase::create( Properties::ConfigurationMap *config ) {
+bool AppBase::create( Properties::Setting *config ) {
     return onCreate( config  );
 }
 
@@ -103,7 +103,7 @@ bool AppBase::handleEvents() {
 
 }
 
-Properties::ConfigurationMap *AppBase::getConfig() const {
+Properties::Setting *AppBase::getConfig() const {
     if( nullptr == m_impl ) {
         return nullptr;
     }
@@ -121,7 +121,7 @@ Scene::Stage *AppBase::createStage( const String &name ) {
     return m_impl->m_stage;
 }
 
-bool AppBase::onCreate( Properties::ConfigurationMap *config ) {
+bool AppBase::onCreate( Properties::Setting *config ) {
     if( m_impl->m_state != Impl::Uninited ) {
         osre_debug( Tag, "AppBase::State not in proper state: Uninited." );
         return false;

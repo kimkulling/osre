@@ -79,13 +79,13 @@ RenderTestSuite *RenderTestSuite::getInstance() {
 //-------------------------------------------------------------------------------------------------
 bool RenderTestSuite::setup() {
     // get configuration parameter
-    Properties::ConfigurationMap *pConfig = new Properties::ConfigurationMap;
-    pConfig->setString(Properties::ConfigurationMap::RenderAPI, "opengl");
-    pConfig->setBool( Properties::ConfigurationMap::PollingMode, true );
+    Properties::Setting *pConfig = new Properties::Setting;
+    pConfig->setString( Properties::Setting::RenderAPI, "opengl" );
+    pConfig->setBool( Properties::Setting::PollingMode, true );
 
 #ifdef OSRE_WINDOWS
     //pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
-    pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast< i32 >( Platform::WindowsPlugin ) );
+    pConfig->setInt( Properties::Setting::PlatformPlugin, static_cast< i32 >( Platform::WindowsPlugin ) );
 #else
     pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
 #endif

@@ -53,7 +53,7 @@ RenderBackendService::~RenderBackendService() {
 //-------------------------------------------------------------------------------------------------
 bool RenderBackendService::onOpen() {
     if (!m_pConfigMap) {
-        m_pConfigMap = new Properties::ConfigurationMap;
+        m_pConfigMap = new Properties::Setting;
         m_ownConfig = true;
     }
 
@@ -95,12 +95,12 @@ bool RenderBackendService::onUpdate( d32 timediff ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-void RenderBackendService::setConfig( const ConfigurationMap *pConfiguration ) {
+void RenderBackendService::setConfig( const Setting *pConfiguration ) {
     m_pConfigMap = pConfiguration;
 }
 
 //-------------------------------------------------------------------------------------------------
-const Properties::ConfigurationMap *RenderBackendService::getConfig() const {
+const Properties::Setting *RenderBackendService::getConfig() const {
     return m_pConfigMap;
 }
 

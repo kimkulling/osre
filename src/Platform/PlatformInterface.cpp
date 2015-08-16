@@ -58,7 +58,7 @@ static const String PlatformPluginName[ MaxPlugin ] = {
 static const String Tag = "PlatformInterface";
 
 //-------------------------------------------------------------------------------------------------
-PlatformInterface::PlatformInterface( const ConfigurationMap *config )
+PlatformInterface::PlatformInterface( const Setting *config )
 : AbstractService( "platform/platforminterface" )
 , m_config( config )
 #ifdef OSRE_WINDOWS
@@ -79,7 +79,7 @@ PlatformInterface::~PlatformInterface() {
 }
 
 //-------------------------------------------------------------------------------------------------
-PlatformInterface *PlatformInterface::create( const ConfigurationMap *config ) {
+PlatformInterface *PlatformInterface::create( const Setting *config ) {
     if( nullptr == s_instance ) {
         s_instance = new PlatformInterface( config );
     }
@@ -160,29 +160,29 @@ bool PlatformInterface::onOpen() {
         return false;
     }
 
-    ConfigurationMap::WorkingModeType appType = 
-        ( ConfigurationMap::WorkingModeType ) m_config->get( ConfigurationMap::AppType ).getInt();
+    Setting::WorkingModeType appType = 
+        ( Setting::WorkingModeType ) m_config->get( Setting::AppType ).getInt();
 
     SurfaceProperties *pProps( nullptr );
     bool polls( false );
-    if( appType == ConfigurationMap::GfxApp ) {
+    if( appType == Setting::GfxApp ) {
         // get the configuration values for the window
         pProps = new SurfaceProperties;
         bool fullscreen = false;
-        pProps->m_x = m_config->get( ConfigurationMap::WinX ).getInt();
-        pProps->m_y = m_config->get( ConfigurationMap::WinY ).getInt();
-        pProps->m_width = m_config->get( ConfigurationMap::WinWidth ).getInt();
-        pProps->m_height = m_config->get( ConfigurationMap::WinHeight ).getInt();
-        pProps->m_colordepth = m_config->get( ConfigurationMap::BPP ).getInt();
-        pProps->m_depthbufferdepth = m_config->get( ConfigurationMap::DepthBufferDepth ).getInt();
-        pProps->m_stencildepth = m_config->get( ConfigurationMap::StencilBufferDepth ).getInt();
+        pProps->m_x = m_config->get( Setting::WinX ).getInt();
+        pProps->m_y = m_config->get( Setting::WinY ).getInt();
+        pProps->m_width = m_config->get( Setting::WinWidth ).getInt();
+        pProps->m_height = m_config->get( Setting::WinHeight ).getInt();
+        pProps->m_colordepth = m_config->get( Setting::BPP ).getInt();
+        pProps->m_depthbufferdepth = m_config->get( Setting::DepthBufferDepth ).getInt();
+        pProps->m_stencildepth = m_config->get( Setting::StencilBufferDepth ).getInt();
         pProps->m_fullscreen = fullscreen;
-        pProps->m_title = m_config->get( ConfigurationMap::WindowsTitle ).getString();
-        polls = m_config->get( ConfigurationMap::PollingMode ).getBool();
+        pProps->m_title = m_config->get( Setting::WindowsTitle ).getString();
+        polls = m_config->get( Setting::PollingMode ).getBool();
     }
 
     String appName = "ZFXCE2";
-    m_type = static_cast<PluginType>( m_config->get( ConfigurationMap::PlatformPlugin ).getInt( ) );
+    m_type = static_cast<PluginType>( m_config->get( Setting::PlatformPlugin ).getInt( ) );
 
     PlatformPluginFactory::init( m_type );
     osre_info( Tag, "Platform plugin created for " + PlatformInterface::getOSPluginName( m_type ) );
@@ -190,7 +190,7 @@ bool PlatformInterface::onOpen() {
     PlatformPluginFactory::createThreadFactory( m_type );
 
     bool result( true );
-    if( appType == ConfigurationMap::GfxApp ) {
+    if( appType == Setting::GfxApp ) {
         result = setupGfx( pProps, polls );
     }
 

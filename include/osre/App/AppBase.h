@@ -9,7 +9,7 @@ namespace Scene {
 }
 
 namespace Properties {
-    class ConfigurationMap;
+    class Setting;
 }
 
 namespace App {
@@ -24,16 +24,16 @@ class OSRE_EXPORT AppBase {
 public:
     AppBase( i32 argc, c8 *argv[], const String &supportedArgs = "api", const String &desc = "The render API" );
     virtual ~AppBase();
-    virtual bool create( Properties::ConfigurationMap *config = nullptr );
+    virtual bool create( Properties::Setting *config = nullptr );
     virtual bool destroy();
     virtual void update();
     virtual void requestNextFrame();
     virtual bool handleEvents();
-    virtual Properties::ConfigurationMap *getConfig() const;
+    virtual Properties::Setting *getConfig() const;
     virtual Scene::Stage *createStage( const String &name );
 
 protected:
-    virtual bool onCreate( Properties::ConfigurationMap *config );
+    virtual bool onCreate( Properties::Setting *config );
     virtual bool onDestroy();
     virtual void onUpdate();
 

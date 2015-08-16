@@ -30,7 +30,7 @@ namespace OSRE {
 namespace Properties {
 
 static const CPPCore::Variant EmptyVariant;
-static const String ConfigKeyStringTable[ ConfigurationMap::MaxKonfigKey ] = {
+static const String ConfigKeyStringTable[ Setting::MaxKonfigKey ] = {
     "AppName",
     "AppType",
     "PlatformPlugin",
@@ -50,7 +50,7 @@ static const String ConfigKeyStringTable[ ConfigurationMap::MaxKonfigKey ] = {
 };
 
 //--------------------------------------------------------------------------------------------------------------------
-ConfigurationMap::ConfigurationMap() 
+Setting::Setting() 
 : m_pPropertyMap( nullptr ) {
     m_pPropertyMap = new Properties::BasePropertyMap;
 
@@ -58,20 +58,20 @@ ConfigurationMap::ConfigurationMap()
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-ConfigurationMap::~ConfigurationMap() {
+Setting::~Setting() {
     delete m_pPropertyMap;
     m_pPropertyMap = nullptr;
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-bool ConfigurationMap::configure( const String &initScriptFile ) {
+bool Setting::configure( const String &initScriptFile ) {
     String filename( initScriptFile );
 
     return true;
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-bool ConfigurationMap::setString( ConfigurationMap::ConfigKey key, const String &strValue ) {
+bool Setting::setString( Setting::ConfigKey key, const String &strValue ) {
     if( strValue.empty( ) || key >= MaxKonfigKey || key < 0 ) {
         return false;
     }
@@ -84,7 +84,7 @@ bool ConfigurationMap::setString( ConfigurationMap::ConfigKey key, const String 
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-bool ConfigurationMap::setInt( ConfigKey key, i32 intValue ) {
+bool Setting::setInt( ConfigKey key, i32 intValue ) {
     if ( key >= MaxKonfigKey ) {
         return false;
     }
@@ -97,7 +97,7 @@ bool ConfigurationMap::setInt( ConfigKey key, i32 intValue ) {
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-bool ConfigurationMap::setBool( ConfigKey key, bool val ) {
+bool Setting::setBool( ConfigKey key, bool val ) {
     if ( key >= MaxKonfigKey ) {
         return false;
     }
@@ -110,7 +110,7 @@ bool ConfigurationMap::setBool( ConfigKey key, bool val ) {
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-bool ConfigurationMap::setFloat( ConfigKey key, f32 floatValue ) {
+bool Setting::setFloat( ConfigKey key, f32 floatValue ) {
     if ( key >= MaxKonfigKey ) {
         return false;
     }
@@ -122,7 +122,7 @@ bool ConfigurationMap::setFloat( ConfigKey key, f32 floatValue ) {
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-const CPPCore::Variant &ConfigurationMap::get( ConfigKey key ) const {
+const CPPCore::Variant &Setting::get( ConfigKey key ) const {
     Properties::Property *pProperty = m_pPropertyMap->getProperty( key );
     if( !pProperty ) {
         return EmptyVariant;
@@ -132,19 +132,19 @@ const CPPCore::Variant &ConfigurationMap::get( ConfigKey key ) const {
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-const String &ConfigurationMap::getKeyAsString( ConfigKey key ) const {
+const String &Setting::getKeyAsString( ConfigKey key ) const {
     return ConfigKeyStringTable[ key ];
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-void ConfigurationMap::clear() {
+void Setting::clear() {
     if ( nullptr != m_pPropertyMap ) {
         m_pPropertyMap->clear();
     }
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-void ConfigurationMap::initDefaults() {
+void Setting::initDefaults() {
     CPPCore::Variant appName, windowsTitle, renderAPI, value;
     appName.setString( "ZFXCE2 Application" );
     m_pPropertyMap->setProperty( AppName, ConfigKeyStringTable[ AppName ], appName );
