@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-#include <cassert>
+#include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
 
@@ -36,7 +36,7 @@ namespace Threading {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Threading::TaskJob
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief This class implements a simple container for events as ids and the assigned data, which 
 ///	are implemented as subclasses from the Common::EventData class ( @see Common::EventData ).
@@ -82,7 +82,7 @@ inline
 TaskJob::TaskJob( const Common::Event *pEvent, const Common::EventData *pEventData ) 
 : m_pEvent( pEvent )
 , m_pEventData( pEventData ) {
-    assert( nullptr != pEvent );
+    OSRE_ASSERT(nullptr != pEvent);
 }
 
 //-------------------------------------------------------------------------------------------------

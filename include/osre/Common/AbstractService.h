@@ -23,7 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/Object.h>
-#include <cassert>
+#include <osre/Debugging/osre_debugging.h>
+
 
 namespace OSRE {
 namespace Common {
@@ -91,7 +92,7 @@ AbstractService::AbstractService( const String &serverName )
 //-------------------------------------------------------------------------------------------------
 inline 
 AbstractService::~AbstractService() {
-    assert( !m_IsOpen );
+    OSRE_ASSERT(!m_IsOpen);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -161,7 +162,7 @@ private:
 /// @brief  Helper macro to create a macro from a given class.
 //-------------------------------------------------------------------------------------------------
 #define CREATE_SINGLETON( type )                    \
-    assert( nullptr == s_instance );        \
+    OSRE_ASSERT( nullptr == s_instance );        \
     s_instance = this;         
 
 //-------------------------------------------------------------------------------------------------
@@ -171,7 +172,7 @@ private:
 /// @brief  Helper macro to destroy a macro from a given class.
 //-------------------------------------------------------------------------------------------------
 #define DESTROY_SINGLETON( type )                   \
-    assert( nullptr != s_instance );        \
+    OSRE_ASSERT( nullptr != s_instance );        \
     s_instance = nullptr;         
 
 //-------------------------------------------------------------------------------------------------

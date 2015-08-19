@@ -24,8 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/TFunctor.h>
 #include <osre/Common/StringUtils.h>
+#include <osre/Debugging/osre_debugging.h>
 
-#include <cassert>
 
 namespace OSRE {
 namespace Common {
@@ -213,12 +213,11 @@ private:
 
 //--------------------------------------------------------------------------------------------------------------------
 inline 
-EventData::EventData(const Event& e, EventTriggerer* c) :
-    m_Event( e ),
-    m_Source( c ),
-    m_timestamp( 0.0 ),
-    m_numRefs( 1 )
-{
+EventData::EventData(const Event& e, EventTriggerer* c) 
+: m_Event( e )
+, m_Source( c )
+, m_timestamp( 0.0 )
+, m_numRefs( 1 ) {
     // empty
 }
 
