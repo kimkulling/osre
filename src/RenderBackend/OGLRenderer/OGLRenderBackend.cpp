@@ -852,7 +852,7 @@ void OGLRenderBackend::setParameter( OGLParameter **param, ui32 numParam ) {
         OGLParameter *currentParam = param[ i ];
         if( currentParam ) {
             const bool success = setParameterInShader( currentParam ,m_shaderInUse );
-            osre_validate( success, "Error setting parameter " + currentParam->m_name );
+//            osre_validate( success, "Error setting parameter " + currentParam->m_name );
         }
     }
 }

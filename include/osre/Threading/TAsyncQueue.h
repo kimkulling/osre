@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractCriticalSection.h>
 #include <osre/Platform/AbstractThreadEvent.h>
 #include <osre/Platform/AbstractThreadFactory.h>
+#include <osre/Debugging/osre_debugging.h>
 #include <osre/Common/Logger.h>
 
 #include <cppcore/Container/TQueue.h>
