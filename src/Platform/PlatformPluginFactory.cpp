@@ -83,6 +83,8 @@ AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler(
             break;
     }
 
+    OSRE_ASSERT(nullptr != pEventHandler);
+
     return pEventHandler;
 }
 
@@ -104,6 +106,7 @@ AbstractSurface *PlatformPluginFactory::createSurface( PluginType type, SurfaceP
             osre_info( Tag, "Enum value not handled." );
             break;
     }
+    OSRE_ASSERT( nullptr != pSurface);
 
     return pSurface;
 }
@@ -126,6 +129,7 @@ AbstractRenderContext *PlatformPluginFactory::createRenderContext( PluginType ty
             osre_error( Tag, "Enum value not handled." );
             break;
     }
+    OSRE_ASSERT(nullptr != renderCtx);
 
     return renderCtx;
 }

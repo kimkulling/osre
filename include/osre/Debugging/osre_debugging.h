@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Common/osre_common.h>
 
-static void handleFatal( const OSRE::String &file, int line, const char *msg ) {
+static void handleFatal(const OSRE::String &file, int line, const OSRE::String &msg) {
     OSRE::Common::fatalPrint( "Assertion", file, line, msg );
 }
 
@@ -41,9 +41,9 @@ static void handleAssert(const OSRE::String &file, int line, const char *msg) {
 
 #ifdef _DEBUG
 #  define OSRE_ASSERT( statement )        if ( !(statement) ) handleAssert( __FILE__, __LINE__,  #statement );
-#  define osre_validate( statement, msg ) if ( !(statement) ) handleFatal( __FILE__, __LINE__,  msg );
+#  define OSRE_VALIDATE( statement, msg ) if ( !(statement) ) handleFatal( __FILE__, __LINE__,  msg );
 #else
 #  define OSRE_ASSERT( statement )
-#  define osre_validate( statement, msg ) 
+#  define OSRE_VALIDATE( statement, msg ) 
 #endif
 

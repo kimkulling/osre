@@ -103,6 +103,7 @@ void EventTriggerer::addTriggerableEvent(const Event& ev) {
 
 //-------------------------------------------------------------------------------------------------
 void EventTriggerer::triggerEvent(const Event& ev, const EventData *data) {	
+    OSRE_ASSERT(0 != m_EventList.count(ev.getIDAsStr()));
     if ( 1 != m_EventList.count( ev.getIDAsStr() ) ) {
         return;
     }
