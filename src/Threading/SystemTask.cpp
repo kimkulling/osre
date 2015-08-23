@@ -69,14 +69,14 @@ public:
     SystemTaskThread( const String &threadName, TAsyncQueue<const TaskJob*> *jobQueue )
     : SDL2Thread( threadName, StackSize )
 #endif
-    , m_pUpdateEvent( nullptr )
-    , m_pActiveJobQueue( jobQueue )
-    , m_pEventHandler( nullptr ) {
+    , m_updateEvent( nullptr )
+    , m_activeJobQueue( jobQueue )
+    , m_eventHandler( nullptr ) {
         assert( nullptr != jobQueue );
 
         Platform::AbstractThreadFactory *pThreadFactory( Platform::AbstractThreadFactory::getInstance() );
         if ( pThreadFactory ) {
-            m_pUpdateEvent = pThreadFactory->createThreadEvent();
+            m_updateEvent = pThreadFactory->createThreadEvent();
         } else {
             osre_error( Tag, "Invalid pointer to thread factory." );
         }
@@ -84,40 +84,40 @@ public:
 
     //---------------------------------------------------------------------------------------------
     ~SystemTaskThread()	{
-        if ( m_pEventHandler ) {
-            m_pEventHandler->detach( nullptr );
+        if ( m_eventHandler ) {
+            m_eventHandler->detach( nullptr );
         }
 
-        delete m_pUpdateEvent;
-        m_pUpdateEvent = nullptr;
+        delete m_updateEvent;
+        m_updateEvent = nullptr;
     }
 
     //---------------------------------------------------------------------------------------------
     void setEventHandler( Common::AbstractEventHandler *eventHandler ) {
-        m_pEventHandler = eventHandler;
-        if ( m_pEventHandler ) {
-            m_pEventHandler->attach( nullptr );
+        m_eventHandler = eventHandler;
+        if ( m_eventHandler ) {
+            m_eventHandler->attach( nullptr );
         }
     }
 
     //---------------------------------------------------------------------------------------------
     Common::AbstractEventHandler *getEventHandler() const {
-        return m_pEventHandler;
+        return m_eventHandler;
     }
 
     //---------------------------------------------------------------------------------------------
     void setActiveJobQueue( Threading::TAsyncQueue<const TaskJob*> *pJobQueue ) {
-        m_pActiveJobQueue = pJobQueue;
+        m_activeJobQueue = pJobQueue;
     }
 
     //---------------------------------------------------------------------------------------------
     Threading::TAsyncQueue<const TaskJob*> *getActiveJobQueue() const {
-        return m_pActiveJobQueue;
+        return m_activeJobQueue;
     }
 
     //---------------------------------------------------------------------------------------------
     Platform::AbstractThreadEvent *getUpdateEvent() const {
-        return m_pUpdateEvent;
+        return m_updateEvent;
     }
 
 protected:
@@ -126,30 +126,30 @@ protected:
         osre_debug( Tag, "SystemThread::run" );
         bool running = true;
         while ( running ) {
-            m_pActiveJobQueue->awaitEnqueuedItem();
-            while ( !m_pActiveJobQueue->isEmpty() )	{
+            m_activeJobQueue->awaitEnqueuedItem();
+            while ( !m_activeJobQueue->isEmpty() )	{
                 // for debugging
 				if (DebugQueueSize) {
-					ui32 size = m_pActiveJobQueue->size();
+					ui32 size = m_activeJobQueue->size();
 					std::stringstream stream;
 					stream << "queue size = " << size << std::endl;
 					osre_debug(Tag, stream.str());
 				}
 
-                const TaskJob *pJob = m_pActiveJobQueue->dequeue();
+                const TaskJob *pJob = m_activeJobQueue->dequeue();
                 const Common::Event *pEvent = pJob->getEvent();
                 if ( !pEvent ) {
                     running = false;
                     assert( nullptr != pEvent );
                 }
 
-                if ( m_pEventHandler ) {
-                    m_pEventHandler->onEvent( *pEvent, pJob->getEventData() );
+                if ( m_eventHandler ) {
+                    m_eventHandler->onEvent( *pEvent, pJob->getEventData() );
                 }
             }
 
-			if (m_pUpdateEvent) {
-				m_pUpdateEvent->signal();
+			if (m_updateEvent) {
+				m_updateEvent->signal();
 			}
 
         }
@@ -158,9 +158,9 @@ protected:
     }
 
 private:
-    Platform::AbstractThreadEvent *m_pUpdateEvent;
-    Threading::TAsyncQueue<const TaskJob*> *m_pActiveJobQueue;
-    Common::AbstractEventHandler *m_pEventHandler;
+    Platform::AbstractThreadEvent *m_updateEvent;
+    Threading::TAsyncQueue<const TaskJob*> *m_activeJobQueue;
+    Common::AbstractEventHandler *m_eventHandler;
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -44,6 +44,6 @@ static void handleAssert(const OSRE::String &file, int line, const char *msg) {
 #  define OSRE_VALIDATE( statement, msg ) if ( !(statement) ) handleFatal( __FILE__, __LINE__,  msg );
 #else
 #  define OSRE_ASSERT( statement )
-#  define OSRE_VALIDATE( statement, msg ) 
+#  define OSRE_VALIDATE( statement, msg ) statement
 #endif
 

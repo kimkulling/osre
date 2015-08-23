@@ -86,8 +86,8 @@ ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedA
                             // Check the number of expected values for being a new option
                             for ( ui32 valIdx=m_CurrentIndex+1; valIdx<m_CurrentIndex+numValues+1; valIdx++ ) {
                                 String tmpVal( ppArgv[ valIdx ] );
-                                String::size_type pos = tmpVal.find( option );
-                                if( pos != String::npos ) {
+                                String::size_type pos1 = tmpVal.find( option );
+                                if( pos1 != String::npos ) {
                                     setInvalid();
                                     break;
                                 }

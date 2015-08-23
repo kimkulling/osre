@@ -1,45 +1,22 @@
-﻿Der Buildvorgang wurde am 23.08.2015 15:32:12 gestartet.
-     1>Projekt "D:\projects\osre\3dparty\zlib\zlib.vcxproj" auf Knoten "2", Rebuild Ziel(e).
-     1>CustomBuild:
-         Building Custom Rule D:/projects/osre/3dparty/zlib/CMakeLists.txt
-         CMake does not need to re-run because D:\projects\osre\3dparty\zlib\CMakeFiles\generate.stamp is up-to-date.
-       ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ID:\projects\osre\include /ID:\projects\osre\3dparty\glew\include /I"d:\projects\libs\sdl2\SDL2-2.0.3\include" /I"c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include" /ID:\projects\osre\3dparty\soil\src /I\usr\include\SDL2 /I\usr\include /ID:\projects\osre\3dparty\zlib /ID:\projects\osre /Zi /nologo /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D NO_FSEEKO /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"zlib.dir\Debug\\" /Fd"zlib.dir\Debug\zlib.pdb" /Gd /TC /analyze- /errorReport:prompt D:\projects\osre\3dparty\zlib\adler32.c D:\projects\osre\3dparty\zlib\compress.c D:\projects\osre\3dparty\zlib\crc32.c D:\projects\osre\3dparty\zlib\deflate.c D:\projects\osre\3dparty\zlib\gzclose.c D:\projects\osre\3dparty\zlib\gzlib.c D:\projects\osre\3dparty\zlib\gzread.c D:\projects\osre\3dparty\zlib\gzwrite.c D:\projects\osre\3dparty\zlib\inflate.c D:\projects\osre\3dparty\zlib\infback.c D:\projects\osre\3dparty\zlib\inftrees.c D:\projects\osre\3dparty\zlib\inffast.c D:\projects\osre\3dparty\zlib\trees.c D:\projects\osre\3dparty\zlib\uncompr.c D:\projects\osre\3dparty\zlib\zutil.c
-         adler32.c
-         compress.c
-         crc32.c
-         deflate.c
-         gzclose.c
-         gzlib.c
-         gzread.c
-         gzwrite.c
-         inflate.c
-         infback.c
-         inftrees.c
-         inffast.c
-         trees.c
-         uncompr.c
-         zutil.c
-         Code wird generiert...
-       Lib:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\Lib.exe /OUT:"D:\projects\osre\lib\Debug\zlibd.lib" /NOLOGO zlib.dir\Debug\adler32.obj
-         zlib.dir\Debug\compress.obj
-         zlib.dir\Debug\crc32.obj
-         zlib.dir\Debug\deflate.obj
-         zlib.dir\Debug\gzclose.obj
-         zlib.dir\Debug\gzlib.obj
-         zlib.dir\Debug\gzread.obj
-         zlib.dir\Debug\gzwrite.obj
-         zlib.dir\Debug\inflate.obj
-         zlib.dir\Debug\infback.obj
-         zlib.dir\Debug\inftrees.obj
-         zlib.dir\Debug\inffast.obj
-         zlib.dir\Debug\trees.obj
-         zlib.dir\Debug\uncompr.obj
-         zlib.dir\Debug\zutil.obj
-         zlib.vcxproj -> D:\projects\osre\lib\Debug\zlibd.lib
-     1>Die Erstellung von Projekt "D:\projects\osre\3dparty\zlib\zlib.vcxproj" ist abgeschlossen (Rebuild Ziel(e)).
-
-Der Buildvorgang wurde erfolgreich ausgeführt.
-
-Verstrichene Zeit 00:00:03.39
+﻿  Building Custom Rule D:/projects/osre/3dparty/zlib/CMakeLists.txt
+  CMake does not need to re-run because D:\projects\osre\3dparty\zlib\CMakeFiles\generate.stamp is up-to-date.
+  adler32.c
+  compress.c
+  crc32.c
+  deflate.c
+  gzclose.c
+  gzlib.c
+  gzread.c
+  gzwrite.c
+  inflate.c
+  infback.c
+  inftrees.c
+  inffast.c
+  trees.c
+  uncompr.c
+  zutil.c
+  Codeanalyse für C/C++ wird ausgeführt...
+  Code wird generiert...
+  zlib.vcxproj -> D:\projects\osre\lib\Debug\zlibd.lib
+d:\projects\osre\3dparty\zlib\trees.c(536): warning C6385: Lesen ungültiger Daten von "s->bl_count":  die lesbare Größe beträgt "32" Byte, es können jedoch "-2" Byte gelesen werden.
+d:\projects\osre\3dparty\zlib\trees.c(552): warning C6385: Lesen ungültiger Daten von "s->bl_count":  die lesbare Größe beträgt "32" Byte, es können jedoch "bits" Byte gelesen werden.

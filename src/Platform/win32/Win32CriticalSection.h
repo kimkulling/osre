@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Platform/AbstractCriticalSection.h>
+#include <osre/Debugging/osre_debugging.h>
 #include <windows.h>
 
 namespace OSRE {
@@ -53,7 +54,7 @@ private:
 //-------------------------------------------------------------------------------------------------
 inline
 Win32CriticalSection::Win32CriticalSection() {
-	InitializeCriticalSectionAndSpinCount( &m_CriticalSection, 1024 );
+	OSRE_VALIDATE( InitializeCriticalSectionAndSpinCount( &m_CriticalSection, 1024 ), "Error while InitializeCriticalSectionAndSpinCount" );
 }
 
 //-------------------------------------------------------------------------------------------------

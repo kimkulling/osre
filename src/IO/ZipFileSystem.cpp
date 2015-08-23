@@ -185,7 +185,6 @@ void ZipFileSystem::mapArchive() {
             
         // loop over all files
         while ( unzGoToNextFile( m_ZipFileHandle ) != UNZ_END_OF_LIST_OF_FILE )  {
-            c8 filename[ FileNameSize ];
             unzGetCurrentFileInfo( m_ZipFileHandle, NULL, filename, FileNameSize, NULL, 0, NULL, 0);
             m_FileList.push_back( filename );
             unzCloseCurrentFile( m_ZipFileHandle );

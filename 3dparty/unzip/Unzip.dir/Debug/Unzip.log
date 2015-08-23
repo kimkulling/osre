@@ -1,21 +1,13 @@
-﻿Der Buildvorgang wurde am 23.08.2015 15:32:15 gestartet.
-     1>Projekt "D:\projects\osre\3dparty\unzip\Unzip.vcxproj" auf Knoten "4", Rebuild Ziel(e).
-     1>CustomBuild:
-         Building Custom Rule D:/projects/osre/3dparty/unzip/CMakeLists.txt
-         CMake does not need to re-run because D:\projects\osre\3dparty\unzip\CMakeFiles\generate.stamp is up-to-date.
-       ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ID:\projects\osre\include /ID:\projects\osre\3dparty\glew\include /I"d:\projects\libs\sdl2\SDL2-2.0.3\include" /I"c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include" /ID:\projects\osre\3dparty\soil\src /I\usr\include\SDL2 /I\usr\include /ID:\projects\osre\3dparty\unzip\HEADER_PATH /ID:\projects\osre\3dparty\unzip\..\zlib /Zi /nologo /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Unzip.dir\Debug\\" /Fd"Unzip.dir\Debug\Unzip.pdb" /Gd /TC /analyze- /errorReport:prompt D:\projects\osre\3dparty\unzip\ioapi.c D:\projects\osre\3dparty\unzip\unzip.c
-         ioapi.c
-     1>D:\projects\osre\3dparty\unzip\ioapi.c(85): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
-         unzip.c
-         Code wird generiert...
-       Lib:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\Lib.exe /OUT:"D:\projects\osre\lib\Debug\Unzip.lib" /NOLOGO Unzip.dir\Debug\ioapi.obj
-         Unzip.dir\Debug\unzip.obj
-         Unzip.vcxproj -> D:\projects\osre\lib\Debug\Unzip.lib
-     1>Die Erstellung von Projekt "D:\projects\osre\3dparty\unzip\Unzip.vcxproj" ist abgeschlossen (Rebuild Ziel(e)).
-
-Der Buildvorgang wurde erfolgreich ausgeführt.
-
-Verstrichene Zeit 00:00:02.92
+﻿  Building Custom Rule D:/projects/osre/3dparty/unzip/CMakeLists.txt
+  CMake does not need to re-run because D:\projects\osre\3dparty\unzip\CMakeFiles\generate.stamp is up-to-date.
+  ioapi.c
+D:\projects\osre\3dparty\unzip\ioapi.c(85): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
+  unzip.c
+  Codeanalyse für C/C++ wird ausgeführt...
+  Code wird generiert...
+  Unzip.vcxproj -> D:\projects\osre\lib\Debug\Unzip.lib
+d:\projects\osre\3dparty\unzip\unzip.c(494): warning C6011: Dereferenzierender NULL-Zeiger "s". 
+d:\projects\osre\3dparty\unzip\unzip.c(1166): warning C6001: Nicht initialisierter Speicher "iSizeVar" wird verwendet.
+d:\projects\osre\3dparty\unzip\unzip.c(1094): warning C6001: Nicht initialisierter Speicher "offset_local_extrafield" wird verwendet.
+d:\projects\osre\3dparty\unzip\unzip.c(1095): warning C6001: Nicht initialisierter Speicher "size_local_extrafield" wird verwendet.
