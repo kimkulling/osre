@@ -42,6 +42,7 @@ using namespace ::OSRE::Common;
 
 static const String Tag = "SystemTaskThread";
 
+static bool DebugQueueSize = false;
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Threading::TaskThread
 ///	@ingroup	Infrastructure
@@ -92,8 +93,8 @@ public:
     }
 
     //---------------------------------------------------------------------------------------------
-    void setEventHandler( Common::AbstractEventHandler *pEventHandler ) {
-        m_pEventHandler = pEventHandler;
+    void setEventHandler( Common::AbstractEventHandler *eventHandler ) {
+        m_pEventHandler = eventHandler;
         if ( m_pEventHandler ) {
             m_pEventHandler->attach( nullptr );
         }
@@ -128,10 +129,12 @@ protected:
             m_pActiveJobQueue->awaitEnqueuedItem();
             while ( !m_pActiveJobQueue->isEmpty() )	{
                 // for debugging
-                //ui32 size = m_pActiveJobQueue->size();
-                //std::stringstream stream;
-                //stream << "queue size = " << size << std::endl;
-                //osre_debug( stream.str() );
+				if (DebugQueueSize) {
+					ui32 size = m_pActiveJobQueue->size();
+					std::stringstream stream;
+					stream << "queue size = " << size << std::endl;
+					osre_debug(Tag, stream.str());
+				}
 
                 const TaskJob *pJob = m_pActiveJobQueue->dequeue();
                 const Common::Event *pEvent = pJob->getEvent();
@@ -143,11 +146,12 @@ protected:
                 if ( m_pEventHandler ) {
                     m_pEventHandler->onEvent( *pEvent, pJob->getEventData() );
                 }
-
-                if ( m_pUpdateEvent ) {
-                    m_pUpdateEvent->signal();
-                }
             }
+
+			if (m_pUpdateEvent) {
+				m_pUpdateEvent->signal();
+			}
+
         }
 
         return 0;
@@ -165,7 +169,7 @@ SystemTask::SystemTask( const String &taskName )
 , m_WorkingMode( Async )
 , m_buffermode( SingleBuffer )
 , m_pTaskThread( nullptr )
-, m_pAsyncQueue( nullptr ) {
+, m_asyncQueue( nullptr ) {
     // empty
 }
 
@@ -210,9 +214,9 @@ bool SystemTask::start( Platform::AbstractThread *pThread ) {
     }
 
     // setup the thread context
-    m_pAsyncQueue = new Threading::TAsyncQueue<const TaskJob*>( Platform::AbstractThreadFactory::getInstance() );
+    m_asyncQueue = new Threading::TAsyncQueue<const TaskJob*>( Platform::AbstractThreadFactory::getInstance() );
     if ( !pThread ) {
-        m_pTaskThread = new SystemTaskThread( getName() + ".thread", m_pAsyncQueue );
+        m_pTaskThread = new SystemTaskThread( getName() + ".thread", m_asyncQueue );
     } else {
         m_pTaskThread = reinterpret_cast<SystemTaskThread*>( pThread );
     }
@@ -276,20 +280,20 @@ void SystemTask::detachEventHandler() {
 
 //-------------------------------------------------------------------------------------------------
 bool SystemTask::sendEvent( const Common::Event *pEvent, const Common::EventData *pEventData ) {
-    assert( nullptr != m_pAsyncQueue );
+    assert( nullptr != m_asyncQueue );
     assert( nullptr != pEvent );
 
     TaskJob *pTaskJob = new TaskJob( pEvent, pEventData );
-    m_pAsyncQueue->enqueue( pTaskJob );
+    m_asyncQueue->enqueue( pTaskJob );
 
     return true;
 }
 
 //-------------------------------------------------------------------------------------------------
 ui32 SystemTask::getEvetQueueSize() const {
-    assert( NULL != m_pAsyncQueue );
+    assert( NULL != m_asyncQueue );
 
-    return m_pAsyncQueue->size();
+    return m_asyncQueue->size();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -299,17 +303,17 @@ void SystemTask::onUpdate() {
     if ( !m_pTaskThread )
         return;
 
-    if ( !m_pAsyncQueue ) {
-        m_pAsyncQueue = m_pTaskThread->getActiveJobQueue();
+    if ( !m_asyncQueue ) {
+        m_asyncQueue = m_pTaskThread->getActiveJobQueue();
     }
 }
 
 //-------------------------------------------------------------------------------------------------
 void SystemTask::await() {
     if ( m_pTaskThread ) {
-        Platform::AbstractThreadEvent *pThreadEvent = m_pTaskThread->getUpdateEvent();
-        if ( pThreadEvent ) {
-            pThreadEvent->wait();
+        Platform::AbstractThreadEvent *threadEvent = m_pTaskThread->getUpdateEvent();
+        if ( threadEvent ) {
+            threadEvent->wait();
         }
     }
 }

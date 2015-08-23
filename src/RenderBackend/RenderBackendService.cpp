@@ -37,7 +37,7 @@ using namespace ::OSRE::Properties;
 RenderBackendService::RenderBackendService()
 : AbstractService( "renderbackend/renderbackendserver" )
 , m_RenderTaskPtr()
-, m_pConfigMap( nullptr )
+, m_settings( nullptr )
 , m_ownConfig( false ) {
     // empty
 }
@@ -45,15 +45,15 @@ RenderBackendService::RenderBackendService()
 //-------------------------------------------------------------------------------------------------
 RenderBackendService::~RenderBackendService() {
     if( m_ownConfig ) {
-        delete m_pConfigMap;
-        m_pConfigMap = nullptr;
+        delete m_settings;
+        m_settings = nullptr;
     }
 }
 
 //-------------------------------------------------------------------------------------------------
 bool RenderBackendService::onOpen() {
-    if (!m_pConfigMap) {
-        m_pConfigMap = new Properties::Settings;
+    if (!m_settings) {
+        m_settings = new Properties::Settings;
         m_ownConfig = true;
     }
 
@@ -96,12 +96,12 @@ bool RenderBackendService::onUpdate( d32 timediff ) {
 
 //-------------------------------------------------------------------------------------------------
 void RenderBackendService::setConfig( const Settings *pConfiguration ) {
-    m_pConfigMap = pConfiguration;
+    m_settings = pConfiguration;
 }
 
 //-------------------------------------------------------------------------------------------------
 const Properties::Settings *RenderBackendService::getConfig() const {
-    return m_pConfigMap;
+    return m_settings;
 }
 
 //-------------------------------------------------------------------------------------------------

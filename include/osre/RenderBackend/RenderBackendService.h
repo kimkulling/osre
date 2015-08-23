@@ -69,11 +69,11 @@ struct OSRE_EXPORT CreateRendererEventData : public Common::EventData {
 public:
     CreateRendererEventData( Platform::AbstractSurface *pSurface )
     : EventData( OnCreateRendererEvent, nullptr )
-    , m_pActiveSurface( pSurface ) {
+    , m_activeSurface( pSurface ) {
         // empty
     }
 
-    Platform::AbstractSurface *m_pActiveSurface;
+    Platform::AbstractSurface *m_activeSurface;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -178,7 +178,7 @@ protected:
 
 private:
     Common::TObjPtr<Threading::SystemTask> m_RenderTaskPtr;
-    const Properties::Settings *m_pConfigMap;
+    const Properties::Settings *m_settings;
     bool m_ownConfig;
 };
 

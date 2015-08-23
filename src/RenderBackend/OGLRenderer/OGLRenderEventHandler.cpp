@@ -325,7 +325,7 @@ bool OGLRenderEventHandler::onDetached( const EventData *evData ) {
 //-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onCreateRenderer( const EventData *evData ) {
     CreateRendererEventData *pCreateRendererEvData = (CreateRendererEventData*) evData;
-    AbstractSurface *pActiveSurface = pCreateRendererEvData->m_pActiveSurface;
+    AbstractSurface *pActiveSurface = pCreateRendererEvData->m_activeSurface;
     if( !pActiveSurface ) {
         return false;
     }

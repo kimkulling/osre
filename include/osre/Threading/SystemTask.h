@@ -112,7 +112,7 @@ private:
     BufferMode m_buffermode;
     SystemTaskThread *m_pTaskThread;
     typedef Threading::TAsyncQueue<const TaskJob*> TaskQueue;
-    TaskQueue *m_pAsyncQueue;
+    TaskQueue *m_asyncQueue;
 };
 
 //-------------------------------------------------------------------------------------------------

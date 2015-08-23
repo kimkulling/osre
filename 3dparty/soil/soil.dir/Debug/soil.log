@@ -1,45 +1,60 @@
-﻿  Building Custom Rule D:/projects/osre/3dparty/soil/CMakeLists.txt
-  CMake does not need to re-run because D:\projects\osre\3dparty\soil\CMakeFiles\generate.stamp is up-to-date.
-  image_DXT.c
-D:\projects\osre\3dparty\soil\src\image_DXT.c(92): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): Siehe Deklaration von 'fopen'
-  image_helper.c
-D:\projects\osre\3dparty\soil\src\image_helper.c(325): warning C4244: 'Initialisierung': Konvertierung von 'double' in 'float', möglicher Datenverlust
-D:\projects\osre\3dparty\soil\src\image_helper.c(366): warning C4244: '=': Konvertierung von 'double' in 'float', möglicher Datenverlust
-D:\projects\osre\3dparty\soil\src\image_helper.c(373): warning C4244: '=': Konvertierung von 'float' in 'int', möglicher Datenverlust
-D:\projects\osre\3dparty\soil\src\image_helper.c(415): warning C4244: '=': Konvertierung von 'double' in 'float', möglicher Datenverlust
-D:\projects\osre\3dparty\soil\src\image_helper.c(422): warning C4244: '=': Konvertierung von 'float' in 'int', möglicher Datenverlust
-  SOIL.c
-D:\projects\osre\3dparty\soil\src\SOIL.c(1719): warning C4018: '<=': Konflikt zwischen 'signed' und 'unsigned'
-D:\projects\osre\3dparty\soil\src\SOIL.c(1729): warning C4018: '<': Konflikt zwischen 'signed' und 'unsigned'
-D:\projects\osre\3dparty\soil\src\SOIL.c(1841): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): Siehe Deklaration von 'fopen'
-  stb_image_aug.c
-D:\projects\osre\3dparty\soil\src\stb_image_aug.c(177): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): Siehe Deklaration von 'fopen'
-D:\projects\osre\3dparty\soil\src\stb_image_aug.c(251): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): Siehe Deklaration von 'fopen'
-D:\projects\osre\3dparty\soil\src\stb_image_aug.c(303): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): Siehe Deklaration von 'fopen'
-D:\projects\osre\3dparty\soil\src\stb_image_aug.c(1557): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): Siehe Deklaration von 'fopen'
-D:\projects\osre\3dparty\soil\src\stb_image_aug.c(2394): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): Siehe Deklaration von 'fopen'
-D:\projects\osre\3dparty\soil\src\stb_image_aug.c(2709): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): Siehe Deklaration von 'fopen'
-D:\projects\osre\3dparty\soil\src\stb_image_aug.c(2995): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): Siehe Deklaration von 'fopen'
-D:\projects\osre\3dparty\soil\src\stb_image_aug.c(3209): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): Siehe Deklaration von 'fopen'
-D:\projects\osre\3dparty\soil\src\stb_image_aug.c(3548): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): Siehe Deklaration von 'fopen'
-D:\projects\osre\3dparty\soil\src\stb_image_aug.c(3644): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): Siehe Deklaration von 'fopen'
-d:\projects\osre\3dparty\soil\src\stbi_DDS_aug_c.h(362): warning C4018: '>': Konflikt zwischen 'signed' und 'unsigned'
-d:\projects\osre\3dparty\soil\src\stbi_DDS_aug_c.h(366): warning C4018: '>': Konflikt zwischen 'signed' und 'unsigned'
-d:\projects\osre\3dparty\soil\src\stbi_DDS_aug_c.h(390): warning C4018: '<': Konflikt zwischen 'signed' und 'unsigned'
-d:\projects\osre\3dparty\soil\src\stbi_DDS_aug_c.h(427): warning C4018: '<': Konflikt zwischen 'signed' und 'unsigned'
-d:\projects\osre\3dparty\soil\src\stbi_DDS_aug_c.h(498): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): Siehe Deklaration von 'fopen'
-  Code wird generiert...
-  soil.vcxproj -> D:\projects\osre\lib\Debug\soil.lib
+﻿Der Buildvorgang wurde am 23.08.2015 15:32:13 gestartet.
+     1>Projekt "D:\projects\osre\3dparty\soil\soil.vcxproj" auf Knoten "5", Rebuild Ziel(e).
+     1>CustomBuild:
+         Building Custom Rule D:/projects/osre/3dparty/soil/CMakeLists.txt
+         CMake does not need to re-run because D:\projects\osre\3dparty\soil\CMakeFiles\generate.stamp is up-to-date.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ID:\projects\osre\include /ID:\projects\osre\3dparty\glew\include /I"d:\projects\libs\sdl2\SDL2-2.0.3\include" /I"c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include" /ID:\projects\osre\3dparty\soil\src /I\usr\include\SDL2 /I\usr\include /Zi /nologo /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"soil.dir\Debug\\" /Fd"soil.dir\Debug\soil.pdb" /Gd /TC /analyze- /errorReport:prompt D:\projects\osre\3dparty\soil\src\image_DXT.c D:\projects\osre\3dparty\soil\src\image_helper.c D:\projects\osre\3dparty\soil\src\SOIL.c D:\projects\osre\3dparty\soil\src\stb_image_aug.c
+         image_DXT.c
+     1>D:\projects\osre\3dparty\soil\src\image_DXT.c(92): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
+         image_helper.c
+     1>D:\projects\osre\3dparty\soil\src\image_helper.c(325): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+     1>D:\projects\osre\3dparty\soil\src\image_helper.c(366): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+     1>D:\projects\osre\3dparty\soil\src\image_helper.c(373): warning C4244: "=": Konvertierung von "float" in "int", möglicher Datenverlust
+     1>D:\projects\osre\3dparty\soil\src\image_helper.c(415): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+     1>D:\projects\osre\3dparty\soil\src\image_helper.c(422): warning C4244: "=": Konvertierung von "float" in "int", möglicher Datenverlust
+         SOIL.c
+     1>D:\projects\osre\3dparty\soil\src\SOIL.c(1719): warning C4018: "<=": Konflikt zwischen "signed" und "unsigned"
+     1>D:\projects\osre\3dparty\soil\src\SOIL.c(1729): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+     1>D:\projects\osre\3dparty\soil\src\SOIL.c(1841): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
+         stb_image_aug.c
+     1>D:\projects\osre\3dparty\soil\src\stb_image_aug.c(177): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
+     1>D:\projects\osre\3dparty\soil\src\stb_image_aug.c(251): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
+     1>D:\projects\osre\3dparty\soil\src\stb_image_aug.c(303): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
+     1>D:\projects\osre\3dparty\soil\src\stb_image_aug.c(1557): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
+     1>D:\projects\osre\3dparty\soil\src\stb_image_aug.c(2394): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
+     1>D:\projects\osre\3dparty\soil\src\stb_image_aug.c(2709): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
+     1>D:\projects\osre\3dparty\soil\src\stb_image_aug.c(2995): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
+     1>D:\projects\osre\3dparty\soil\src\stb_image_aug.c(3209): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
+     1>D:\projects\osre\3dparty\soil\src\stb_image_aug.c(3548): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
+     1>D:\projects\osre\3dparty\soil\src\stb_image_aug.c(3644): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
+     1>d:\projects\osre\3dparty\soil\src\stbi_DDS_aug_c.h(362): warning C4018: ">": Konflikt zwischen "signed" und "unsigned"
+     1>d:\projects\osre\3dparty\soil\src\stbi_DDS_aug_c.h(366): warning C4018: ">": Konflikt zwischen "signed" und "unsigned"
+     1>d:\projects\osre\3dparty\soil\src\stbi_DDS_aug_c.h(390): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+     1>d:\projects\osre\3dparty\soil\src\stbi_DDS_aug_c.h(427): warning C4018: "<": Konflikt zwischen "signed" und "unsigned"
+     1>d:\projects\osre\3dparty\soil\src\stbi_DDS_aug_c.h(498): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
+         Code wird generiert...
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\Lib.exe /OUT:"D:\projects\osre\lib\Debug\soil.lib" /NOLOGO soil.dir\Debug\image_DXT.obj
+         soil.dir\Debug\image_helper.obj
+         soil.dir\Debug\SOIL.obj
+         soil.dir\Debug\stb_image_aug.obj
+         soil.vcxproj -> D:\projects\osre\lib\Debug\soil.lib
+     1>Die Erstellung von Projekt "D:\projects\osre\3dparty\soil\soil.vcxproj" ist abgeschlossen (Rebuild Ziel(e)).
+
+Der Buildvorgang wurde erfolgreich ausgeführt.
+
+Verstrichene Zeit 00:00:03.51
