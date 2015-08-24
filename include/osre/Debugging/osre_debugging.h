@@ -26,17 +26,29 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Common/osre_common.h>
 
+///
+///	@def	OSRE_ASSERT
+///	@brief	The Open-Source-rendering-Engine assert macro. The system will exit in case of an assertion. 
+///	        _Debug must be defined to have support. In release macro will be ignored.
+///	@param	statement	[in] The statement to validate. Must return true.
+///
+///	@def	OSRE_VALIDATE
+///	@brief	The Open-Source-rendering-Engine validation macro. _Debug must be defined to have support.
+///	        _Debug must be defined to have support. In release macro will be ignored.
+///	@param	statement	[in] The statement to validate. Must return true.
+///	@param	msg	        [in] The error message to show in case of an error.
+///
+
 static void handleFatal(const OSRE::String &file, int line, const OSRE::String &msg) {
-    OSRE::Common::fatalPrint( "Assertion", file, line, msg );
+    ::OSRE::Common::fatalPrint( "Assertion", file, line, msg );
 }
 
 static void handleAssert(const OSRE::String &file, int line, const char *msg) {
-    handleFatal( file, line, msg );
-
+    ::handleFatal( file, line, msg );
 #ifdef OSRE_WINDOWS
-    __debugbreak();
+    ::__debugbreak();
 #endif
-
+	::exit(1);
 }
 
 #ifdef _DEBUG
