@@ -35,6 +35,19 @@ class EventTriggerer;
 struct Event;
 struct EventData;
 
+struct ObjectId {
+	String m_id;
+	HashId m_hash;
+
+	ObjectId( const String &id ) : m_id( id ), m_hash( -1 ) {
+		m_hash = StringUtils::hashName( m_id.c_str() );
+	}
+
+	HashId getHash() const {
+		return m_hash;
+	}
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@def		::OSRE::Common::DECL_EVENT
 ///	@ingroup    Engine
