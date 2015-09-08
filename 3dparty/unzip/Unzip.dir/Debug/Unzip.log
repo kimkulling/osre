@@ -4,10 +4,5 @@
 D:\projects\osre\3dparty\unzip\ioapi.c(85): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
   unzip.c
-  Codeanalyse für C/C++ wird ausgeführt...
   Code wird generiert...
   Unzip.vcxproj -> D:\projects\osre\lib\Debug\Unzip.lib
-d:\projects\osre\3dparty\unzip\unzip.c(494): warning C6011: Dereferenzierender NULL-Zeiger "s". 
-d:\projects\osre\3dparty\unzip\unzip.c(1166): warning C6001: Nicht initialisierter Speicher "iSizeVar" wird verwendet.
-d:\projects\osre\3dparty\unzip\unzip.c(1094): warning C6001: Nicht initialisierter Speicher "offset_local_extrafield" wird verwendet.
-d:\projects\osre\3dparty\unzip\unzip.c(1095): warning C6001: Nicht initialisierter Speicher "size_local_extrafield" wird verwendet.

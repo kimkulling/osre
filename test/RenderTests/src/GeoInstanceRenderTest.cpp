@@ -55,7 +55,7 @@ const String VsSrc =
     "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
     "\n"
     "// uniform\n"
-    "uniform mat4 M[4];	// model matrix per instance\n"
+    "uniform mat4 M[25];	// model matrix per instance\n"
     "uniform mat4 VP;	// combined modelview projection matrix\n"
     "\n"
     "void main() {\n"
@@ -121,21 +121,34 @@ public:
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
 
-        static const ui32 NumInstances = 4;
+        static const ui32 NumInstances = 25;
         attachGeoEvData->m_numInstances = NumInstances;
-        glm::mat4 mat[ 4 ];
+        glm::mat4 mat[NumInstances];
         glm::mat4 scale = glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.1f ) );
         
+		auto idx(0);
+		auto x(-2.0f), y(-2.0f);
+		for (auto i = 0; i < 5; i++) {
+			x = -2.0f;
+			for (auto j = 0; j < 5; j++) {
+				mat[ idx ] = glm::translate( scale, glm::vec3( x, y, 0.f ) );
+				x += 2.0f;
+				++idx;
+			}
+			y += 2.0f;
+		}
+		/*
         mat[ 0 ] = glm::translate( scale, glm::vec3( -1.0f, -1.0f, 0.f ) );
         mat[ 1 ] = glm::translate( scale, glm::vec3(  1.0f, -1.0f, 0.f ) );
         mat[ 2 ] = glm::translate( scale, glm::vec3( -1.0f,  1.0f, 0.f ) );
         mat[ 3 ] = glm::translate( scale, glm::vec3(  1.0f,  1.0f, 0.f ) );
+		*/
         
         Parameter *parameterMVP = Parameter::create( "VP", PT_Mat4 );
         ::memcpy( parameterMVP->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view ), sizeof( glm::mat4 ) );
 
-        Parameter *parameterM = Parameter::create( "M", PT_Mat4Array, 4 );
-        ::memcpy( parameterM->m_data.m_data, glm::value_ptr( mat[ 0 ] ), sizeof( glm::mat4 ) * 4 );
+        Parameter *parameterM = Parameter::create( "M", PT_Mat4Array, NumInstances);
+        ::memcpy( parameterM->m_data.m_data, glm::value_ptr( mat[ 0 ] ), sizeof( glm::mat4 ) * NumInstances);
         parameterMVP->m_next = parameterM;
 
         pGeometry->m_parameter = parameterMVP;
