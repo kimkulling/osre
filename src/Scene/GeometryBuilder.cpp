@@ -142,10 +142,6 @@ RenderBackend::Geometry *GeometryBuilder::createTriangle() {
         ui32 numAttribs( ColorVert::getNumAttributes() );
         const String *attribs( ColorVert::getAttributes() );
         geo->m_material->m_pShader->m_attributes.add(attribs, numAttribs);
-        /*for( ui32 i = 0; i < numAttribs; ++i ) {
-            geo->m_material->m_pShader->m_attributes.add( attribs[ i ] );
-        }*/
-
         geo->m_material->m_pShader->m_parameters.add( "MVP" );
     }
 
