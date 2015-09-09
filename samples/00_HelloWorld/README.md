@@ -2,7 +2,33 @@
 This sample just shows a simple HelloWorld application. The creation of the render window and the base setup is included.
 
 ## The main application
+At first we are including all needed dependecies, use the OSRE namespace and the Renderbackend-namespace. The we will generate our simple model-, view- and projection-matrix.
+```cpp
+#include <osre/App/AppBase.h>
+#include <osre/Properties/Settings.h>
+#include <osre/Common/Logger.h>
+#include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/Stage.h>
+#include <osre/Scene/Node.h>
+#include <osre/RenderBackend/RenderCommon.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+using namespace OSRE;
+using namespace OSRE::RenderBackend;
+
+// to identify local log entries 
+static const String Tag    = "HelloWorld"; 
+
+glm::mat4 P = glm::mat4( 1 );
+glm::mat4 M = glm::mat4( 1 );
+glm::mat4 V = glm::mat4( 1 );
+```
+
 To start OSRE you cann use the base class for main applications. Just rderive from App::AppBase:
+
 ```cpp
 class HelloWorldApp : public App::AppBase {
     Scene::Stage *m_stage;
