@@ -179,16 +179,12 @@ const glm::vec4 &Node::getScale() const {
 
 void Node::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
     if( !m_newGeo.isEmpty() ) {
-        RenderBackend::Geometry *geo( nullptr );
-        for( ui32 i = 0; i < m_newGeo.size(); ++i ) {
-            geo = m_newGeo[ i ];
-        }
         renderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
         attachGeoEvData->m_numGeo = m_newGeo.size();
-        attachGeoEvData->m_pGeometry = m_newGeo[0];
-
+        attachGeoEvData->m_pGeometry = m_newGeo[ 0 ];
         renderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+		m_newGeo.resize( 0 );
     }
 }
 

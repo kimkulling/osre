@@ -48,11 +48,6 @@ protected:
         Scene::GeometryBuilder myBuilder;
         RenderBackend::Geometry *geo = myBuilder.createTriangle();
         if( nullptr != geo ) {
-            /*if( nullptr != geo->m_material->m_pShader ) {
-                geo->m_material->m_pShader->m_attributes.add( "vVertex" );
-                geo->m_material->m_pShader->m_attributes.add( "vDiffuseColor" );
-                geo->m_material->m_pShader->m_parameters.add( "MVP" );
-            }*/
 			m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
 
 			Parameter *parameter = Parameter::create("MVP", PT_Mat4);
