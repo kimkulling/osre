@@ -137,12 +137,6 @@ public:
 			}
 			y += 2.0f;
 		}
-		/*
-        mat[ 0 ] = glm::translate( scale, glm::vec3( -1.0f, -1.0f, 0.f ) );
-        mat[ 1 ] = glm::translate( scale, glm::vec3(  1.0f, -1.0f, 0.f ) );
-        mat[ 2 ] = glm::translate( scale, glm::vec3( -1.0f,  1.0f, 0.f ) );
-        mat[ 3 ] = glm::translate( scale, glm::vec3(  1.0f,  1.0f, 0.f ) );
-		*/
         
         Parameter *parameterMVP = Parameter::create( "VP", PT_Mat4 );
         ::memcpy( parameterMVP->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view ), sizeof( glm::mat4 ) );
