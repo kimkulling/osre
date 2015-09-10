@@ -1,5 +1,24 @@
 # osre
-An open source render engine
+An open source render engine. 
+
+# How to start
+## What you need to install
+- A Linux or Windows-PC with a more or less modern GPU
+- cmake ( see www.cmake.org )
+- SDL2.0 ( see https://www.libsdl.org/download-2.0.php )
+
+## How to build
+Clone the repo via git.
+> cd projects
+> git clone https://github.com/kimkulling/osre.git
+
+Generate a build environment of your choise:
+> cmake CMakeLists.txt
+
+for linux:
+> make
+
+for Windows: Use the generated Visual studio project files.
 
 # Samples
 ## Sample 1: Hello world
