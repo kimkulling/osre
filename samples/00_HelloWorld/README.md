@@ -12,6 +12,7 @@ At first we are including all needed dependecies, use the OSRE namespace and the
 #include <osre/Scene/Node.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
+// for the transform ops
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -21,10 +22,6 @@ using namespace OSRE::RenderBackend;
 
 // to identify local log entries 
 static const String Tag    = "HelloWorld"; 
-
-glm::mat4 P = glm::mat4( 1 );
-glm::mat4 M = glm::mat4( 1 );
-glm::mat4 V = glm::mat4( 1 );
 ```
 
 To start OSRE you cann use the base class for main applications. Just rderive from App::AppBase:
