@@ -16,10 +16,6 @@ using namespace OSRE::RenderBackend;
 // to identify local log entries 
 static const String Tag    = "HelloWorld"; 
 
-glm::mat4 P = glm::mat4( 1 );
-glm::mat4 M = glm::mat4( 1 );
-glm::mat4 V = glm::mat4( 1 );
-
 class HelloWorldApp : public App::AppBase {
     Scene::Stage *m_stage;
     TransformMatrixBlock m_transformMatrix;
