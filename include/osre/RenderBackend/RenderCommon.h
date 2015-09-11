@@ -244,6 +244,7 @@ struct OSRE_EXPORT BufferData {
     BufferData();
     ~BufferData();
     static BufferData *alloc( BufferType type, ui32 m_size, BufferAccessType access );
+	static void free( BufferData *data );
 
     OSRE_NON_COPYABLE( BufferData );
 };
@@ -378,6 +379,20 @@ struct OSRE_EXPORT TransformMatrixBlock {
     void init();
 
     OSRE_NON_COPYABLE( TransformMatrixBlock )
+};
+
+struct OSRE_EXPORT Viewport {
+	i32 m_x;
+	i32 m_y;
+	i32 m_w;
+	i32 m_h;
+
+	Viewport();
+	Viewport( i32 x, i32 y, i32 w, i32 h );
+	~Viewport();
+	bool operator == (const Viewport &rhs) const;
+	
+	OSRE_NON_COPYABLE( Viewport )
 };
 
 } // Namespace RenderBackend
