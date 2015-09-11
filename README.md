@@ -1,5 +1,9 @@
 # osre
-An open source render engine. 
+An experimental open source render engine. 
+
+# Supported platforms:
+- Windows
+- Linux
 
 # How to start
 ## What you need to install

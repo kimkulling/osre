@@ -2,7 +2,7 @@
   CMake does not need to re-run because D:\projects\osre\3dparty\unzip\CMakeFiles\generate.stamp is up-to-date.
   ioapi.c
 D:\projects\osre\3dparty\unzip\ioapi.c(85): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  C:\Program Files (x86)\Windows Kits\10\Include\10.0.10150.0\ucrt\stdio.h(205): note: Siehe Deklaration von "fopen"
+          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): Siehe Deklaration von 'fopen'
   unzip.c
   Code wird generiert...
   Unzip.vcxproj -> D:\projects\osre\lib\Debug\Unzip.lib

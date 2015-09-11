@@ -9,6 +9,7 @@ INCLUDE_DIRECTORIES(
 
 SET ( 00_helloworld_src
     00_HelloWorld/HelloWorld.cpp
+	00_HelloWorld/README.md
 )
 
 ADD_EXECUTABLE( HelloWorld

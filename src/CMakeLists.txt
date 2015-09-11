@@ -312,7 +312,8 @@ SOURCE_GROUP( Include\\RenderBackend FILES ${renderbackend_inc} )
 # Define the Infrastructure library
 #==============================================================================
 ADD_LIBRARY( osre SHARED
-    ${app_inc}
+    ../README.md
+	${app_inc}
     ${debugging_inc}
     ${common_inc}
     ${common_src}
