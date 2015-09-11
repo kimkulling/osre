@@ -104,5 +104,22 @@ TEST_F( RenderCommonTest, getVertCompNameTest ) {
     EXPECT_EQ( "Error", name );
 }
 
+TEST_F(RenderCommonTest, viewportTest) {
+	Viewport vp;
+	EXPECT_EQ( -1, vp.m_x );
+	EXPECT_EQ( -1, vp.m_y );
+	EXPECT_EQ( -1, vp.m_w );
+	EXPECT_EQ( -1, vp.m_h );
+
+	Viewport vp_set( 1, 2, 3, 4 );
+	EXPECT_EQ( 1, vp_set.m_x );
+	EXPECT_EQ( 2, vp_set.m_y );
+	EXPECT_EQ( 3, vp_set.m_w );
+	EXPECT_EQ( 4, vp_set.m_h );
+
+	Viewport vp_set2(1, 2, 3, 4);
+	EXPECT_EQ( vp_set, vp_set2 );
+}
+
 }
 }
