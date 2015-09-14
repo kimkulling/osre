@@ -71,6 +71,10 @@ SET( debugging_inc
     ${HEADER_PATH}/Debugging/osre_debugging.h
 )
 
+SET( debugging_src
+    Debugging/AssertHandler.cpp
+)
+
 #==============================================================================
 # IO
 #==============================================================================
