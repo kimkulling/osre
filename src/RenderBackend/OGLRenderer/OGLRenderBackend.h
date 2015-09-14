@@ -41,6 +41,7 @@ namespace Platform {
 namespace RenderBackend {
 
 class OGLShader;
+class DbgTextRenderer;
 
 struct OGLBuffer;
 struct OGLVertexArray;
@@ -114,7 +115,8 @@ public:
 
 private:
     Platform::AbstractRenderContext *m_renderCtx;
-    CPPCore::TArray<OGLBuffer*>      m_buffers;
+	DbgTextRenderer                 *m_dbgTextRenderer;
+	CPPCore::TArray<OGLBuffer*>      m_buffers;
     CPPCore::TArray<OGLVertexArray*> m_vertexarrays;
     CPPCore::TArray<OGLShader*>      m_shaders;
     CPPCore::TArray<OGLTexture*>     m_textures;

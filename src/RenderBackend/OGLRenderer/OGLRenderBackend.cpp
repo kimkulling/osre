@@ -174,6 +174,7 @@ static ui32 getOGLSizeForFormat( VertexFormat format ) {
 //-------------------------------------------------------------------------------------------------
 OGLRenderBackend::OGLRenderBackend( )
 : m_renderCtx( nullptr )
+, m_dbgTextRenderer( nullptr )
 , m_buffers()
 , m_vertexarrays()
 , m_shaders()
@@ -195,6 +196,9 @@ OGLRenderBackend::~OGLRenderBackend( ) {
     releaseAllBuffers();
     releaseAllParameters();
     releaseAllPrimitiveGroups();
+
+	delete m_dbgTextRenderer;
+	m_dbgTextRenderer = nullptr;
 }
 
 //-------------------------------------------------------------------------------------------------

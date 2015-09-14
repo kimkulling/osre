@@ -123,6 +123,7 @@ RenderBackend::Geometry *GeometryBuilder::createTriangle() {
     geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
     ::memcpy( geo->m_ib->m_pData, indices, size );
 
+	// setup primitives
     geo->m_numPrimGroups = 1;
     geo->m_pPrimGroups   = new PrimitiveGroup[ geo->m_numPrimGroups ];
     geo->m_pPrimGroups[ 0 ].m_indexType     = UnsignedShort;
@@ -130,14 +131,15 @@ RenderBackend::Geometry *GeometryBuilder::createTriangle() {
     geo->m_pPrimGroups[ 0 ].m_primitive     = TriangleList;
     geo->m_pPrimGroups[ 0 ].m_startIndex    = 0;
 
+	// setup material
     geo->m_material = new Material;
-
     geo->m_material->m_numTextures = 0;
     geo->m_material->m_type = ShaderMaterial;
     geo->m_material->m_pShader = new Shader;
     geo->m_material->m_pShader->m_src[ SH_VertexShaderType ] = VsSrc;
     geo->m_material->m_pShader->m_src[ SH_FragmentShaderType ] = FsSrc;
 
+	// setup shader attributes and variables
     if( nullptr != geo->m_material->m_pShader ) {
         ui32 numAttribs( ColorVert::getNumAttributes() );
         const String *attribs( ColorVert::getAttributes() );

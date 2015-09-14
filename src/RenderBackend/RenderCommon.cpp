@@ -202,6 +202,15 @@ BufferData *BufferData::alloc( BufferType type, ui32 m_size, BufferAccessType ac
     return buffer;
 }
 
+void BufferData::free( BufferData *data ) {
+	if (nullptr == data) {
+		return;
+	}
+
+	delete data;
+	data = nullptr;
+}
+
 PrimitiveGroup::PrimitiveGroup()
 : m_primitive( LineList )
 , m_startIndex( 0 )
@@ -326,6 +335,23 @@ void TransformMatrixBlock::init() {
     m_view = glm::mat4( 1.0f );
 }
 
+Viewport::Viewport() 
+: m_x(-1), m_y(-1), m_w(-1), m_h(-1) {
+	// empty
+}
+
+Viewport::Viewport(i32 x, i32 y, i32 w, i32 h )
+: m_x( x ), m_y( y ), m_w( w ), m_h( h ) {
+	// empty
+}
+
+Viewport::~Viewport() {
+	// empty
+}
+
+bool Viewport::operator == (const Viewport &rhs) const {
+	return ( m_x == rhs.m_x && m_y == rhs.m_y && m_w == rhs.m_w && m_h == rhs.m_h );
+}
 
 } // Namespace RenderBackend
 } // Namespace OSRE

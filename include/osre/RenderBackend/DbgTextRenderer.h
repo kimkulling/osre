@@ -13,14 +13,20 @@ public:
     ~DbgTextRenderer();
     void setupVertexData();
     void setCursor( ui32  x, ui32 y );
-    void setScale( ui32 sx, ui32 sy );
+    void setScale( i32 sx, i32 sy );
     void addText( const String &text );
+	void clear();
     void drawText();
 
 private:
     BufferData *m_data;
     String m_text;
+	bool m_dirty;
+	i32 m_xCursor;
+	i32 m_yCursor;
+	i32 m_sx;
+	i32 m_sy;
 };
 
-}
-}
+} // Namespace RenderBackend
+} // Namespace OSRE
