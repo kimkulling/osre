@@ -232,7 +232,7 @@ struct OSRE_EXPORT VertexLayout {
     VertComponent &getAt( ui32 idx ) const;
     const String *getAttributes();
 
-    OSRE_NON_COPYABLE( VertexLayout );
+    OSRE_NON_COPYABLE( VertexLayout )
 };
 
 struct OSRE_EXPORT BufferData {
@@ -246,7 +246,7 @@ struct OSRE_EXPORT BufferData {
     static BufferData *alloc( BufferType type, ui32 m_size, BufferAccessType access );
 	static void free( BufferData *data );
 
-    OSRE_NON_COPYABLE( BufferData );
+    OSRE_NON_COPYABLE( BufferData )
 };
 
 struct OSRE_EXPORT PrimitiveGroup {
@@ -260,7 +260,6 @@ struct OSRE_EXPORT PrimitiveGroup {
 
     OSRE_NON_COPYABLE( PrimitiveGroup )
 };
-
 
 enum MaterialType {
     FlatShadingMaterial,
@@ -397,3 +396,4 @@ struct OSRE_EXPORT Viewport {
 
 } // Namespace RenderBackend
 } // Namespace OSRE
+
