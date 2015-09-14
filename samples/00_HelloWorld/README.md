@@ -1,4 +1,5 @@
 # Hello World
+![HelloWorld](../../media/Images/HelloWorld.png)
 This sample just shows a simple HelloWorld application. The creation of the render window and the base setup is included.
 
 ## The main application
