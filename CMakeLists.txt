@@ -95,3 +95,4 @@ ADD_SUBDIRECTORY( 3dparty/soil )
 #ENDIF ( DOXYGEN_FOUND )
 
 set_target_properties(  cppcore PROPERTIES FOLDER ThirdParty )
+set_target_properties(  cppcore_unittest PROPERTIES FOLDER ThirdParty )
