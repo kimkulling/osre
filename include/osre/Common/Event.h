@@ -39,7 +39,9 @@ struct ObjectId {
 	String m_id;
 	HashId m_hash;
 
-	ObjectId( const String &id ) : m_id( id ), m_hash( -1 ) {
+	ObjectId( const String &id ) 
+	: m_id( id )
+	, m_hash( 0 ) {
 		m_hash = StringUtils::hashName( m_id.c_str() );
 	}
 
