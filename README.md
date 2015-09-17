@@ -24,6 +24,9 @@ for linux:
 
 for Windows: Use the generated Visual studio project files.
 
+## Get involved
+If you want to contribute just use the github project page or reach us under IRC: 
+server freenode, channel #osre.
 # Samples
 ## Sample 1: Hello world
 ### [01-helloworld](https://github.com/kimkulling/osre/blob/master/samples/00_HelloWorld/)
