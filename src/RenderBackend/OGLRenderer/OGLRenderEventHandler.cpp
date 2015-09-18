@@ -32,6 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractRenderContext.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/DbgTextRenderer.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -39,12 +40,38 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <vector>
+
 namespace OSRE {
 namespace RenderBackend {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::CPPCore;
+
+static const String VsSrc =
+	"layout(location = 0) in vec3 position;	      // object space vertex position\n"
+	"layout(location = 1) in vec3 normal;	            // object space vertex normal\n"
+	"layout(location = 2) in vec2 texcoord0;	        // texture coordinate\n"
+	"out vec2 vUV;\n"
+	"\n"
+	"void main() {\n"
+	"    vec3 vertexPosition_homoneneousspace = position;\n"
+	"    gl_Position = vec4(position, 1 );\n"
+	"    // UV of the vertex. No special space for this one.\n"
+	"    UV = texcoord0;\n"
+	"};\n";
+
+static const String FsSrc =
+	"in vec2 vUV;\n"
+	"// Output data\n"
+	"out vec4 vFragColor;\n"
+	"uniform sampler2D tex0;\n"
+
+	"void main() {\n"
+	"    vFragColor = texture( tex0, vUV );\n"
+	"};\n";
+
 
 //-------------------------------------------------------------------------------------------------
 static void setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTexture*> &textures ) {
@@ -239,6 +266,12 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
 }
 
 //-------------------------------------------------------------------------------------------------
+static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {
+	OGLRenderCmd *pRenderCmd = new OGLRenderCmd;
+	pRenderCmd->m_type = DrawTextCmd;
+}
+
+//-------------------------------------------------------------------------------------------------
 OGLRenderEventHandler::OGLRenderEventHandler( )
 : AbstractEventHandler()
 , m_oglBackend( nullptr )
@@ -278,7 +311,9 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *pEventDat
         result = onRenderFrame( pEventData );
     } else if( OnUpdateParameterEvent == ev ) {
         result = onUpdateParameter( pEventData );
-    }
+	} else if (OnRenderTextEvent == ev) {
+		result = onRenderText(pEventData);
+	}
 
     delete pEventData;
 
@@ -467,6 +502,21 @@ bool OGLRenderEventHandler::onUpdateParameter( const EventData *pEventData ) {
     }
 
     return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+bool  OGLRenderEventHandler::onRenderText( const Common::EventData *pEventData ) {
+	RenderTextEventData *data = ( RenderTextEventData* ) pEventData;
+	if ( nullptr == data) {
+		return false;
+	}
+
+
+	setupDrawTextCmd( data, m_oglBackend, this );
+
+	DrawTextCmdData *cmdData = new DrawTextCmdData;
+
+	return true;
 }
 
 //-------------------------------------------------------------------------------------------------

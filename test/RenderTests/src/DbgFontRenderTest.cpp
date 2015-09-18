@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderTestUtils.h"
 
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/Scene/GeometryBuilder.h>
 
 namespace OSRE {
 namespace RenderTest {
@@ -42,7 +43,13 @@ public:
     }
 
     virtual bool onCreate( RenderBackendService *rbSrv ) {
-        return true;
+		rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
+		Scene::GeometryBuilder builder;
+		RenderTextEventData *data = new RenderTextEventData;
+		//data->m_geo = builder.createTextBox( 10, 10, 10, "Hello, World!" );
+		//rbSrv->sendEvent( &OnRenderTextEvent, data );
+		
+		return true;
     }
 
     virtual bool onDestroy( RenderBackendService *rbSrv ) {

@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLShader.h"
 #include "OGLCommon.h"
 #include "OGLEnum.h"
-
+#include <osre/RenderBackend/DbgTextRenderer.h>
 #include <osre/Platform/AbstractRenderContext.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/ColorRGBA.h>
@@ -174,7 +174,6 @@ static ui32 getOGLSizeForFormat( VertexFormat format ) {
 //-------------------------------------------------------------------------------------------------
 OGLRenderBackend::OGLRenderBackend( )
 : m_renderCtx( nullptr )
-, m_dbgTextRenderer( nullptr )
 , m_buffers()
 , m_vertexarrays()
 , m_shaders()
@@ -196,9 +195,6 @@ OGLRenderBackend::~OGLRenderBackend( ) {
     releaseAllBuffers();
     releaseAllParameters();
     releaseAllPrimitiveGroups();
-
-	delete m_dbgTextRenderer;
-	m_dbgTextRenderer = nullptr;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -266,7 +262,7 @@ void OGLRenderBackend::bindBuffer( OGLBuffer *buffer ) {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::bindBuffer( ui32 handle ) {
-    assert( handle <= m_buffers.size() );
+    OSRE_ASSERT( handle <= m_buffers.size() );
 
     OGLBuffer *buf( m_buffers[ handle ] );
     if( nullptr != buf ) {
@@ -276,7 +272,7 @@ void OGLRenderBackend::bindBuffer( ui32 handle ) {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::unbindBuffer( OGLBuffer *buffer ) {
-    assert( nullptr != buffer );
+	OSRE_ASSERT( nullptr != buffer );
 
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, 0 );
@@ -284,7 +280,7 @@ void OGLRenderBackend::unbindBuffer( OGLBuffer *buffer ) {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::bufferData( OGLBuffer *pBuffer, void *pData, ui32 size, BufferAccessType usage ) {
-    assert( nullptr != pData );
+	OSRE_ASSERT( nullptr != pData );
 
     GLenum target = OGLEnum::getGLBufferType( pBuffer->m_type );
     glBufferData( target, size, pData, OGLEnum::getGLBufferAccessType( usage ) );
@@ -292,7 +288,7 @@ void OGLRenderBackend::bufferData( OGLBuffer *pBuffer, void *pData, ui32 size, B
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::releaseBuffer( OGLBuffer *pBuffer ) {
-    assert( pBuffer->m_handle < m_buffers.size() );
+	OSRE_ASSERT( pBuffer->m_handle < m_buffers.size() );
 
     const ui32 slot = pBuffer->m_handle;
     glDeleteBuffers( 1, &pBuffer->m_id );
@@ -903,18 +899,12 @@ void OGLRenderBackend::render( ui32 primpGrpIdx, ui32 numInstances ) {
 void OGLRenderBackend::renderFrame() {
     assert( nullptr != m_renderCtx );    
     
-    m_renderCtx->update();
+	m_renderCtx->update();
 }
 
-void OGLRenderBackend::debugText( const String &msg ) {
-    if( msg.empty() ) {
-        return;
-    }
-
-    Common::ColorRGBA col( 1,1,1,1 );
-    for( ui32 i = 0; i < msg.size(); i++ ) {
-        DrawGlyph( col, msg[ i ] );
-    }
+//-------------------------------------------------------------------------------------------------
+void OGLRenderBackend::selectFont(FontBase *font) {
+	// TODO!
 }
 
 //-------------------------------------------------------------------------------------------------

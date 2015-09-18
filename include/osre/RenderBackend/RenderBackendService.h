@@ -58,6 +58,7 @@ DECL_EVENT( OnClearSceneEvent );
 DECL_EVENT( OnDetachSceneEvent );
 DECL_EVENT( OnRenderFrameEvent );
 DECL_EVENT( OnUpdateParameterEvent );
+DECL_EVENT( OnRenderTextEvent);
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::RenderBackend::CreateRendererEventData
@@ -113,7 +114,14 @@ public:
     GeoInstanceData *m_geoInstanceData;
 };
 
-struct OSRE_EXPORT DgbTextEventData : public Common::EventData {
+struct OSRE_EXPORT RenderTextEventData : public Common::EventData {
+public:
+	RenderTextEventData()
+	: EventData(OnRenderTextEvent, nullptr) 
+	, m_geo ( nullptr ) {
+		// empty
+	}
+	Geometry *m_geo;
 };
 
 //-------------------------------------------------------------------------------------------------

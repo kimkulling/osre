@@ -56,6 +56,10 @@ public:
     /// @brief  Will create a box geometry.
     /// @return The created geometry.
     RenderBackend::Geometry *createBox( f32 w, f32 h, f32 d);
+
+
+	RenderBackend::Geometry *createTextBox( f32 x, f32 y, f32 size, const String &text );
+
 };
 
 //-------------------------------------------------------------------------------------------------

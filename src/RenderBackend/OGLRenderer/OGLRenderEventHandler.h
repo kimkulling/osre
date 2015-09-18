@@ -87,7 +87,8 @@ protected:
     virtual bool onClearGeo( const Common::EventData *pEventData );
     virtual bool onRenderFrame( const Common::EventData *pEventData );
     virtual bool onUpdateParameter( const Common::EventData *pEventData );
-    
+	virtual bool onRenderText(const Common::EventData *pEventData);
+
 private:
     OGLRenderBackend *m_oglBackend;
     RenderCmdBuffer *m_renderCmdBuffer;

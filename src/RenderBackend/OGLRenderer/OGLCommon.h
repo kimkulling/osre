@@ -134,6 +134,7 @@ enum OGLRenderCmdType {
     SetShaderCmd,
     DrawPrimitivesCmd,
     DrawPrimitivesInstancesCmd,
+	DrawTextCmd
 };
 
 struct OGLRenderCmd {
@@ -191,6 +192,12 @@ struct DrawPrimitivesCmdData {
     CPPCore::TArray<ui32> m_primitives;     ///<
 };
 
+struct DrawTextCmdData {
+	ui32 m_x;								///<
+	ui32 m_y;								///<
+	CPPCore::TArray<ui32> m_bufferHandles;  ///<
+	CPPCore::TArray<ui32> m_primitives;     ///<
+};
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace RendeBackend

@@ -21,10 +21,10 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <src/RenderBackend/OGLRenderer/RenderCmdBuffer.h>
+#include <osre/RenderBackend/DbgTextRenderer.h>
 #include <osre/Platform/AbstractRenderContext.h>
 #include "OGLCommon.h"
 #include "OGLRenderBackend.h"
-#include <cassert>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -57,7 +57,7 @@ RenderCmdBuffer::~RenderCmdBuffer() {
     m_pRenderBackend = nullptr;
     m_pRenderCtx = nullptr;
 
-    delete m_param;
+	delete m_param;
     m_param = nullptr;
 }
 
@@ -117,9 +117,11 @@ bool RenderCmdBuffer::onRenderFrame( const EventData *pEventData ) {
             onSetTextureStageCmd( ( SetTextureStageCmdData* ) pRenderCmd->m_pData );
         } else if( pRenderCmd->m_type == SetShaderCmd ) {
             onSetShaderStageCmd( ( SetShaderStageCmdData* ) pRenderCmd->m_pData );
-        } else if( pRenderCmd->m_type == SetRenderTargetCmd ) {
-            onSetRenderTargetCmd( ( SetRenderTargetCmdData* ) pRenderCmd->m_pData );
-        } else {
+		} else if (pRenderCmd->m_type == SetRenderTargetCmd) {
+			onSetRenderTargetCmd(( SetRenderTargetCmdData* ) pRenderCmd->m_pData);
+		} else if ( pRenderCmd->m_type = DrawTextCmd ) {
+			onRenderTextCmd( ( DrawTextCmdData* ) pRenderCmd->m_pData );
+		} else {
             osre_error( Tag, "Unsupported render command type: " + pRenderCmd->m_type );
         }
     }
@@ -168,9 +170,9 @@ bool RenderCmdBuffer::onSetParametersCmd( SetParameterCmdData *data ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *pData ) {
-    for( ui32 i = 0; i < pData->m_primitives.size(); ++i ) {
-        m_pRenderBackend->render( pData->m_primitives[ i ] );
+bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *data ) {
+    for( ui32 i = 0; i < data->m_primitives.size(); ++i ) {
+        m_pRenderBackend->render( data->m_primitives[ i ] );
     }
 
     return true;
@@ -209,8 +211,14 @@ bool RenderCmdBuffer::onSetShaderStageCmd( SetShaderStageCmdData *data ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool RenderCmdBuffer::onSetRenderTargetCmd( SetRenderTargetCmdData *pData ) {
+bool RenderCmdBuffer::onSetRenderTargetCmd( SetRenderTargetCmdData *data ) {
     return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+bool RenderCmdBuffer::onRenderTextCmd( DrawTextCmdData *data) {
+
+	return true;
 }
 
 //-------------------------------------------------------------------------------------------------

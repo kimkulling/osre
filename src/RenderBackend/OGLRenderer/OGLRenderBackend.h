@@ -41,7 +41,7 @@ namespace Platform {
 namespace RenderBackend {
 
 class OGLShader;
-class DbgTextRenderer;
+class FontBase;
 
 struct OGLBuffer;
 struct OGLVertexArray;
@@ -110,12 +110,12 @@ public:
     void render( ui32 grimpGrpIdx );
     void render( ui32 primpGrpIdx, ui32 numInstances );
     void renderFrame();
-    void debugText( const String &msg );
+	void selectFont(FontBase *font);
+	void debugText(const String &msg);
     static ui32 getVertexSize( VertexType vertextype );
 
 private:
     Platform::AbstractRenderContext *m_renderCtx;
-	DbgTextRenderer                 *m_dbgTextRenderer;
 	CPPCore::TArray<OGLBuffer*>      m_buffers;
     CPPCore::TArray<OGLVertexArray*> m_vertexarrays;
     CPPCore::TArray<OGLShader*>      m_shaders;

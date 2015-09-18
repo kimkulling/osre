@@ -7,10 +7,10 @@ namespace RenderBackend {
     
 struct BufferData;
 
-class DbgTextRenderer {
+class TextRenderer2D {
 public:
-    DbgTextRenderer();
-    ~DbgTextRenderer();
+    TextRenderer2D();
+    ~TextRenderer2D();
     void setupVertexData();
     void setCursor( ui32  x, ui32 y );
     void setScale( i32 sx, i32 sy );
