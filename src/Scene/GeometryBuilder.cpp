@@ -277,9 +277,10 @@ RenderBackend::Geometry *GeometryBuilder::createTextBox( f32 x, f32 y, f32 size,
 		}
 	}
 
+	ui32 sizevert = sizeof( RenderVert );
 	const ui32 vertSize( vertices.size() * sizeof( RenderVert ) );
 	BufferData *bufferData = BufferData::alloc( VertexBuffer, vertSize, ReadWrite );
-	::memcpy( bufferData, &vertices[ 0 ], vertSize );
+	::memcpy( bufferData->m_pData, &vertices[ 0 ], vertSize );
 
 	geo->m_numPrimGroups = 1;
 	geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
