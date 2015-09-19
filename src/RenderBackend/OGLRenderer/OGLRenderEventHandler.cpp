@@ -276,8 +276,8 @@ OGLRenderEventHandler::OGLRenderEventHandler( )
 : AbstractEventHandler()
 , m_oglBackend( nullptr )
 , m_renderCmdBuffer( nullptr )
-, m_pRenderCtx( nullptr )
-, m_pVertexArray( nullptr ) {
+, m_renderCtx( nullptr )
+, m_vertexArray( nullptr ) {
     // empty
 }
         
@@ -333,7 +333,7 @@ void OGLRenderEventHandler::enqueueRenderCmd( OGLRenderCmd *oglRenderCmd ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLRenderEventHandler::onAttached( const EventData *evData ) {
+bool OGLRenderEventHandler::onAttached( const EventData *eventData ) {
     if( nullptr != m_oglBackend ) {
         return false;
     }
@@ -344,7 +344,7 @@ bool OGLRenderEventHandler::onAttached( const EventData *evData ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLRenderEventHandler::onDetached( const EventData *evData ) {
+bool OGLRenderEventHandler::onDetached( const EventData *eventData ) {
     if( m_renderCmdBuffer ) {
         osre_error( Tag, "Renderer not destroyed." );
         delete m_renderCmdBuffer;
@@ -358,8 +358,8 @@ bool OGLRenderEventHandler::onDetached( const EventData *evData ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLRenderEventHandler::onCreateRenderer( const EventData *evData ) {
-    CreateRendererEventData *pCreateRendererEvData = (CreateRendererEventData*) evData;
+bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
+    CreateRendererEventData *pCreateRendererEvData = (CreateRendererEventData*) eventData;
     AbstractSurface *pActiveSurface = pCreateRendererEvData->m_activeSurface;
     if( !pActiveSurface ) {
         return false;
@@ -370,17 +370,17 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *evData ) {
     }
 
     bool result( false );
-    m_pRenderCtx = PlatformInterface::getInstance()->getRenderContext();
+    m_renderCtx = PlatformInterface::getInstance()->getRenderContext();
 
-    if( m_pRenderCtx ) {
-        result = m_pRenderCtx->create( pActiveSurface );
+    if( m_renderCtx ) {
+        result = m_renderCtx->create( pActiveSurface );
         if( !result ) {
             return false;
         }
     }
 
-    m_oglBackend->setRenderContext( m_pRenderCtx );
-    if ( !m_pRenderCtx ) {
+    m_oglBackend->setRenderContext( m_renderCtx );
+    if ( !m_renderCtx ) {
         return false;
     }
 
@@ -390,20 +390,20 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *evData ) {
     const ui32 h = pActiveSurface->getProperties()->m_height;
     m_oglBackend->setViewport( x, y, w, h );
 
-    m_renderCmdBuffer = new RenderCmdBuffer( m_oglBackend, m_pRenderCtx );
+    m_renderCmdBuffer = new RenderCmdBuffer( m_oglBackend, m_renderCtx );
 
     return true;
 }
 
 //-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onDestroyRenderer( const Common::EventData * ) {
-    if ( !m_pRenderCtx ) {
+    if ( !m_renderCtx ) {
         return false;
     }
 
-    m_pRenderCtx->destroy();
-    delete m_pRenderCtx;
-    m_pRenderCtx = nullptr;
+    m_renderCtx->destroy();
+    delete m_renderCtx;
+    m_renderCtx = nullptr;
 
     delete m_renderCmdBuffer;
     m_renderCmdBuffer = nullptr;
@@ -417,8 +417,8 @@ bool OGLRenderEventHandler::onAttachView( const EventData * ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLRenderEventHandler::onAttachGeo( const EventData *evData ) {
-    AttachGeoEventData *attachSceneEvData = (AttachGeoEventData*) evData;
+bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
+    AttachGeoEventData *attachSceneEvData = (AttachGeoEventData*) eventData;
     if( !attachSceneEvData ) {
         osre_debug( Tag, "AttachSceneEventData-pointer is a nullptr." );
         return false;
@@ -441,12 +441,12 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *evData ) {
     setupMaterial( geo->m_material, m_oglBackend, this );
 
     // setup vertex array, vertex and index buffers
-    m_pVertexArray = setupBuffers( geo, m_oglBackend, m_renderCmdBuffer->getActiveShader() );
-    if( !m_pVertexArray ) {
+    m_vertexArray = setupBuffers( geo, m_oglBackend, m_renderCmdBuffer->getActiveShader() );
+    if( !m_vertexArray ) {
         osre_debug( Tag, "Vertex-Array-pointer is a nullptr." );
         return false;
     }
-    m_renderCmdBuffer->setVertexArray( m_pVertexArray );
+    m_renderCmdBuffer->setVertexArray( m_vertexArray );
             
     // setup global parameter
     setupParameter( geo, m_oglBackend, this );
@@ -473,23 +473,23 @@ bool OGLRenderEventHandler::onClearGeo( const EventData * ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLRenderEventHandler::onRenderFrame( const EventData *pEventData ) {
+bool OGLRenderEventHandler::onRenderFrame( const EventData *eventData ) {
     assert( nullptr != m_oglBackend );
 
-    if ( !m_pRenderCtx ) {
+    if ( !m_renderCtx ) {
         return false;
     }
 
     m_renderCmdBuffer->onPreRenderFrame(); 
-    m_renderCmdBuffer->onRenderFrame( pEventData );
+    m_renderCmdBuffer->onRenderFrame( eventData );
     m_renderCmdBuffer->onPostRenderFrame();
 
     return true;
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLRenderEventHandler::onUpdateParameter( const EventData *pEventData ) {
-    UpdateParameterEventData *updateParamData = ( UpdateParameterEventData* ) pEventData;
+bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
+    UpdateParameterEventData *updateParamData = ( UpdateParameterEventData* ) eventData;
 
     if( updateParamData ) {
         for( ui32 i = 0; i < updateParamData->m_numParam; ++i ) {
@@ -505,8 +505,8 @@ bool OGLRenderEventHandler::onUpdateParameter( const EventData *pEventData ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool  OGLRenderEventHandler::onRenderText( const Common::EventData *pEventData ) {
-	RenderTextEventData *data = ( RenderTextEventData* ) pEventData;
+bool  OGLRenderEventHandler::onRenderText( const Common::EventData *eventData ) {
+	RenderTextEventData *data = ( RenderTextEventData* ) eventData;
 	if ( nullptr == data) {
 		return false;
 	}

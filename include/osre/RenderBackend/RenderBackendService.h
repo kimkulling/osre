@@ -62,7 +62,7 @@ DECL_EVENT( OnRenderTextEvent);
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::RenderBackend::CreateRendererEventData
-///	@ingroup	RenderSystem
+///	@ingroup	Engine
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ public:
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::RenderBackend::AttachViewEventData
-///	@ingroup	RenderSystem
+///	@ingroup	Engine
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
@@ -93,7 +93,7 @@ public:
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::RenderBackend::AttachSceneEventData
-///	@ingroup	RenderSystem
+///	@ingroup	Engine
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
@@ -114,19 +114,27 @@ public:
     GeoInstanceData *m_geoInstanceData;
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@class		::OSRE::RenderBackend::RenderTextEventData
+///	@ingroup	Engine
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT RenderTextEventData : public Common::EventData {
 public:
 	RenderTextEventData()
 	: EventData(OnRenderTextEvent, nullptr) 
-	, m_geo ( nullptr ) {
+	, m_geo( nullptr )
+	, m_text() {
 		// empty
 	}
 	Geometry *m_geo;
+	String m_text;
 };
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::RenderBackend::UpdateParameterEventData
-///	@ingroup	RenderSystem
+///	@ingroup	Engine
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
@@ -145,7 +153,7 @@ public:
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::RenderBackend::RenderBackendServer
-///	@ingroup	RenderSystem
+///	@ingroup	Engine
 ///
 ///	@brief  This class implements the render back-end service.
 ///

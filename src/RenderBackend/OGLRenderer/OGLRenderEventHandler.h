@@ -78,22 +78,32 @@ public:
     void enqueueRenderCmd( OGLRenderCmd *pOGLRenderCmd );
 
 protected:
-    virtual bool onAttached( const Common::EventData *pEventData );
-    virtual bool onDetached( const Common::EventData *pEventData );
-    virtual bool onCreateRenderer( const Common::EventData *pEventData );
-    virtual bool onDestroyRenderer( const Common::EventData *pEventData );
-    virtual bool onAttachView( const Common::EventData *pEventData );
-    virtual bool onAttachGeo( const Common::EventData *pEventData );
-    virtual bool onClearGeo( const Common::EventData *pEventData );
-    virtual bool onRenderFrame( const Common::EventData *pEventData );
-    virtual bool onUpdateParameter( const Common::EventData *pEventData );
-	virtual bool onRenderText(const Common::EventData *pEventData);
+	///	@brief	Callback for attaching the event handler.
+    virtual bool onAttached( const Common::EventData *eventData );
+	///	@brief	Callback for detaching the event handler.
+	virtual bool onDetached( const Common::EventData *eventData );
+	///	@brief	Callback for render backend creation.
+	virtual bool onCreateRenderer( const Common::EventData *eventData );
+	///	@brief	Callback for render backend destroying.
+	virtual bool onDestroyRenderer( const Common::EventData *eventData );
+	///	@brief	Callback for attaching a new view onto a stage.
+	virtual bool onAttachView( const Common::EventData *eventData );
+	///	@brief	Callback for attaching a new geometry into a stage.
+	virtual bool onAttachGeo( const Common::EventData *eventData );
+	///	@brief	Callback for clearing all geometry from a stage.
+	virtual bool onClearGeo( const Common::EventData *eventData );
+	///	@brief	Callback for the render frame.
+	virtual bool onRenderFrame( const Common::EventData *eventData );
+	///	@brief	Callback when parameter will be updated.
+	virtual bool onUpdateParameter( const Common::EventData *eventData );
+	///	@brief	Callback when a text will be rendered.
+	virtual bool onRenderText(const Common::EventData *eventData );
 
 private:
     OGLRenderBackend *m_oglBackend;
     RenderCmdBuffer *m_renderCmdBuffer;
-    Platform::AbstractRenderContext *m_pRenderCtx;
-    OGLVertexArray *m_pVertexArray;
+    Platform::AbstractRenderContext *m_renderCtx;
+    OGLVertexArray *m_vertexArray;
 };
 
 //-------------------------------------------------------------------------------------------------
