@@ -49,8 +49,8 @@ void DrawGlyph( const Common::ColorRGBA &col, int c );
 
 //-------------------------------------------------------------------------------------------------
 static bool setParameterInShader( OGLParameter *param, OGLShader *shader ) {
-    assert( nullptr != param );
-    assert( nullptr != shader );
+    OSRE_ASSERT( nullptr != param );
+	OSRE_ASSERT( nullptr != shader );
 
     if( NoneLocation == param->m_loc ) {
         param->m_loc = ( *shader )( param->m_name );
@@ -254,16 +254,12 @@ OGLBuffer *OGLRenderBackend::createBuffer( BufferType type ) {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::bindBuffer( OGLBuffer *buffer ) {
-    assert( nullptr != buffer );
-
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, buffer->m_id );
 }
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::bindBuffer( ui32 handle ) {
-    OSRE_ASSERT( handle <= m_buffers.size() );
-
     OGLBuffer *buf( m_buffers[ handle ] );
     if( nullptr != buf ) {
         bindBuffer( buf );
@@ -272,24 +268,18 @@ void OGLRenderBackend::bindBuffer( ui32 handle ) {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::unbindBuffer( OGLBuffer *buffer ) {
-	OSRE_ASSERT( nullptr != buffer );
-
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, 0 );
 }
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::bufferData( OGLBuffer *pBuffer, void *pData, ui32 size, BufferAccessType usage ) {
-	OSRE_ASSERT( nullptr != pData );
-
     GLenum target = OGLEnum::getGLBufferType( pBuffer->m_type );
     glBufferData( target, size, pData, OGLEnum::getGLBufferAccessType( usage ) );
 }
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::releaseBuffer( OGLBuffer *pBuffer ) {
-	OSRE_ASSERT( pBuffer->m_handle < m_buffers.size() );
-
     const ui32 slot = pBuffer->m_handle;
     glDeleteBuffers( 1, &pBuffer->m_id );
     pBuffer->m_handle = OGLNotSetId;
@@ -458,7 +448,7 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
 
     for( ui32 i = 0; i < attributes.size(); ++i ) {
         const c8 *pAttribName = attributes[ i ]->m_pAttributeName;
-        assert( nullptr != pAttribName );
+        OSRE_ASSERT( nullptr != pAttribName );
         const GLint loc = ( *shader )[ pAttribName ];
         if( -1 != loc ) {
             glEnableVertexAttribArray( loc );
@@ -498,7 +488,7 @@ void OGLRenderBackend::releaseAllVertexArrays( ) {
 
 //-------------------------------------------------------------------------------------------------
 OGLShader *OGLRenderBackend::createShader( const String &name, Shader *pShaderInfo ) {
-    if( name.empty() ) {
+	if( name.empty() ) {
         return nullptr;
     }
 
@@ -538,8 +528,8 @@ OGLShader *OGLRenderBackend::createShader( const String &name, Shader *pShaderIn
 }
 
 //-------------------------------------------------------------------------------------------------
-OGLShader *OGLRenderBackend::getShader( const String &name ) {
-    if( name.empty() ) {
+OGLShader *OGLRenderBackend::getShader( const String &name ) {	
+	if (name.empty()) {
         return nullptr;
     }
 
@@ -582,7 +572,9 @@ OGLShader *OGLRenderBackend::getActiveShader() const {
 
 //-------------------------------------------------------------------------------------------------
 bool OGLRenderBackend::releaseShader( OGLShader *pShader ) {
-    if( !pShader ) {
+	OSRE_ASSERT( nullptr != pShader );
+
+	if( !pShader ) {
         return false;
     }
 
@@ -619,7 +611,7 @@ void OGLRenderBackend::releaseAllShaders( ) {
 //-------------------------------------------------------------------------------------------------
 OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTargetType target,
                                                   ui32 width, ui32 height, ui32 channels ) {
-    if( name.empty() ) {
+	if( name.empty() ) {
         osre_debug( Tag, "Texture anme is empty." );
         return nullptr;
     }
@@ -666,19 +658,19 @@ OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTar
 }
 
 //-------------------------------------------------------------------------------------------------
-void OGLRenderBackend::updateTexture( OGLTexture *pOGLTextue, ui32 offsetX, ui32 offsetY, c8 *data,
+void OGLRenderBackend::updateTexture( OGLTexture *oglTextue, ui32 offsetX, ui32 offsetY, c8 *data,
                                       ui32 size ) {
-    if( !pOGLTextue ) {
+	if( !oglTextue ) {
         osre_error( Tag, "Pointer to texture is a nullptr." );
         return;
     }
 
-    const ui32 diffX( pOGLTextue->m_width - offsetX );
-    const ui32 diffY( pOGLTextue->m_height - offsetY );
-    const ui32 subSize( diffX * diffY * pOGLTextue->m_channels );
-    assert( size < subSize );
-    glTexSubImage2D( pOGLTextue->m_target, 0, offsetX, offsetY, pOGLTextue->m_width,
-                     pOGLTextue->m_height, pOGLTextue->m_format, GL_UNSIGNED_BYTE, data );
+    const ui32 diffX( oglTextue->m_width - offsetX );
+    const ui32 diffY( oglTextue->m_height - offsetY );
+    const ui32 subSize( diffX * diffY * oglTextue->m_channels );
+	OSRE_ASSERT( size < subSize );
+    glTexSubImage2D( oglTextue->m_target, 0, offsetX, offsetY, oglTextue->m_width,
+                     oglTextue->m_height, oglTextue->m_format, GL_UNSIGNED_BYTE, data );
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -741,7 +733,7 @@ OGLTexture *OGLRenderBackend::createTextureFromStream( const String &name, IO::S
 
 //-------------------------------------------------------------------------------------------------
 OGLTexture *OGLRenderBackend::findTexture( const String &name ) const {
-    if( name.empty() ) {
+	if( name.empty() ) {
         return nullptr;
     }
 
@@ -755,7 +747,7 @@ OGLTexture *OGLRenderBackend::findTexture( const String &name ) const {
 
 //-------------------------------------------------------------------------------------------------
 bool OGLRenderBackend::bindTexture( OGLTexture *pOGLTexture, TextureStageType stageType ) {
-    if( !pOGLTexture ) {
+	if( !pOGLTexture ) {
         return false;
     }
 
