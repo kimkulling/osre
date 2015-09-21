@@ -60,7 +60,7 @@ struct OGLParameter;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::RenderBackend::OGLRenderEventHandler
-///	@ingroup	RenderSystem
+///	@ingroup	Engine
 ///
 ///	@brief  This class is used to handle all incoming events for the render back-end.
 //-------------------------------------------------------------------------------------------------

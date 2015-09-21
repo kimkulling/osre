@@ -33,6 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractRenderContext.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/DbgTextRenderer.h>
+#include <osre/Debugging/osre_debugging.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -48,6 +49,8 @@ namespace RenderBackend {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::CPPCore;
+
+static const String Tag = "OGLRendeEventHandler";
 
 static const String VsSrc =
 	"layout(location = 0) in vec3 position;	      // object space vertex position\n"
@@ -75,8 +78,8 @@ static const String FsSrc =
 
 //-------------------------------------------------------------------------------------------------
 static void setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTexture*> &textures ) {
-    assert( nullptr != mat );
-    assert( nullptr != rb );
+    OSRE_ASSERT( nullptr != mat );
+	OSRE_ASSERT( nullptr != rb );
 
     const ui32 numTextures( mat->m_numTextures );
     if( 0 == numTextures ) {
@@ -96,9 +99,9 @@ static void setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTextur
 
 //-------------------------------------------------------------------------------------------------
 static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {
-    assert( nullptr != eh  );
-    assert( nullptr != material );
-    assert( nullptr != rb );
+	OSRE_ASSERT( nullptr != eh  );
+	OSRE_ASSERT( nullptr != material );
+	OSRE_ASSERT( nullptr != rb );
 
     switch( material->m_type ) {
         case FlatShadingMaterial:
@@ -147,9 +150,9 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
 
 //-------------------------------------------------------------------------------------------------
 static void setupParameter( Geometry *geo, OGLRenderBackend *rb, OGLRenderEventHandler *ev ) {
-    assert( nullptr != geo );
-    assert( nullptr != rb );
-    assert( nullptr != ev );
+	OSRE_ASSERT( nullptr != geo );
+	OSRE_ASSERT( nullptr != rb );
+	OSRE_ASSERT( nullptr != ev );
 
     if( !geo->m_parameter ) {
         return;
@@ -177,23 +180,33 @@ static void setupParameter( Geometry *geo, OGLRenderBackend *rb, OGLRenderEventH
 
 //-------------------------------------------------------------------------------------------------
 static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLShader *oglShader ) {
-    assert( nullptr != geo );
-    assert( nullptr != rb );
-    assert( nullptr != oglShader );
+	OSRE_ASSERT( nullptr != geo );
+	OSRE_ASSERT( nullptr != rb );
+	OSRE_ASSERT( nullptr != oglShader );
 
-    BufferData *pVertices = geo->m_vb;
-    OGLBuffer *pVB = rb->createBuffer( pVertices->m_type );
+    BufferData *vertices = geo->m_vb;
+	if (nullptr == vertices) {
+		osre_debug( Tag, "No vertex buffer data for setting up data." );
+		return nullptr;
+	}
+
+    OGLBuffer *pVB = rb->createBuffer( vertices->m_type );
 
     // create index buffer
-    BufferData *pIndices = geo->m_ib;
-    OGLBuffer *pIB = rb->createBuffer( pIndices->m_type );
+    BufferData *indices = geo->m_ib;
+	if (nullptr == indices) {
+		osre_debug( Tag, "No index buffer data for setting up data." );
+		return nullptr;
+	}
+
+    OGLBuffer *pIB = rb->createBuffer( indices->m_type );
 
     OGLVertexArray *vertexArray = rb->createVertexArray();
     rb->bindVertexArray( vertexArray );
 
     // pass triangle vertex to buffer object
     rb->bindBuffer( pVB );
-    rb->bufferData( pVB, pVertices->m_pData, pVertices->m_size, pVertices->m_access );
+    rb->bufferData( pVB, vertices->m_pData, vertices->m_size, vertices->m_access );
 
     // enable vertex attribute arrays
     TArray<OGLVertexAttribute*> attributes;
@@ -204,7 +217,7 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
 
     // pass indices to element array buffer
     rb->bindBuffer( pIB );
-    rb->bufferData( pIB, pIndices->m_pData, pIndices->m_size, pIndices->m_access );
+    rb->bufferData( pIB, indices->m_pData, indices->m_size, indices->m_access );
 
     rb->unbindVertexArray( vertexArray );
 
@@ -213,15 +226,14 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
 
 //-------------------------------------------------------------------------------------------------
 static void setupPrimDrawCmd( const TArray<ui32> &ids, OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {
-    assert( nullptr != rb );
-    assert( nullptr != eh );
+	OSRE_ASSERT( nullptr != rb );
+	OSRE_ASSERT( nullptr != eh );
 
     if( ids.isEmpty() ) {
         return;
     }
 
-    OGLRenderCmd *pRenderCmd     = new OGLRenderCmd;
-    pRenderCmd->m_type           = DrawPrimitivesCmd;
+	OGLRenderCmd *pRenderCmd = OGLRenderCmdAllocator::alloc( DrawPrimitivesCmd, nullptr );
     DrawPrimitivesCmdData *data = new DrawPrimitivesCmdData;
     data->m_primitives.reserve( ids.size() );
     for( ui32 i = 0; i < ids.size(); ++i ) {
@@ -235,17 +247,16 @@ static void setupPrimDrawCmd( const TArray<ui32> &ids, OGLRenderBackend *rb, OGL
 //-------------------------------------------------------------------------------------------------
 static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *geoInstanceData, 
                                    OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {
-    assert( nullptr != geoInstanceData );
-    assert( nullptr != rb );
-    assert( nullptr != eh );
+	OSRE_ASSERT( nullptr != geoInstanceData );
+	OSRE_ASSERT( nullptr != rb );
+	OSRE_ASSERT( nullptr != eh );
 
     if( ids.isEmpty() ) {
         return;
     }
 
     GeoInstanceData *instData( geoInstanceData->m_geoInstanceData );
-    OGLRenderCmd *pRenderCmd = new OGLRenderCmd;
-    pRenderCmd->m_type = DrawPrimitivesInstancesCmd;
+	OGLRenderCmd *pRenderCmd = OGLRenderCmdAllocator::alloc( DrawPrimitivesInstancesCmd, nullptr );
     if( nullptr != instData ) {
         if( nullptr != instData->m_data ) {
             OGLBuffer *instanceDataBuffer = rb->createBuffer( InstanceBuffer );
@@ -266,9 +277,17 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
 }
 
 //-------------------------------------------------------------------------------------------------
-static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {
-	OGLRenderCmd *pRenderCmd = new OGLRenderCmd;
-	pRenderCmd->m_type = DrawTextCmd;
+static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb, OGLRenderEventHandler *eh, OGLShader *oglShader ) {
+	OGLRenderCmd *pRenderCmd = OGLRenderCmdAllocator::alloc( DrawTextCmd, nullptr );
+
+	Geometry *geo( data->m_geo );
+	if (nullptr == geo) {
+		return;
+	}
+
+	setupMaterial( geo->m_material, rb, eh );
+	OGLVertexArray *vertexArray = setupBuffers( geo, rb, oglShader );
+
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -327,7 +346,7 @@ void OGLRenderEventHandler::setActiveShader( OGLShader *oglShader ) {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderEventHandler::enqueueRenderCmd( OGLRenderCmd *oglRenderCmd ) {
-    assert( nullptr != oglRenderCmd );
+	OSRE_ASSERT( nullptr != oglRenderCmd );
 
     m_renderCmdBuffer->enqueueRenderCmd( oglRenderCmd );
 }
@@ -474,7 +493,7 @@ bool OGLRenderEventHandler::onClearGeo( const EventData * ) {
 
 //-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onRenderFrame( const EventData *eventData ) {
-    assert( nullptr != m_oglBackend );
+	OSRE_ASSERT( nullptr != m_oglBackend );
 
     if ( !m_renderCtx ) {
         return false;
@@ -512,9 +531,7 @@ bool  OGLRenderEventHandler::onRenderText( const Common::EventData *eventData ) 
 	}
 
 
-	setupDrawTextCmd( data, m_oglBackend, this );
-
-	DrawTextCmdData *cmdData = new DrawTextCmdData;
+	setupDrawTextCmd( data, m_oglBackend, this, m_renderCmdBuffer->getActiveShader() );
 
 	return true;
 }

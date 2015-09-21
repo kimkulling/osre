@@ -47,6 +47,9 @@ extern const unsigned char *glyph[];
 
 void DrawGlyph( const Common::ColorRGBA &col, int c );
 
+static const GLuint NotInited = 99999999;
+static const String Tag = "OGLRenderBackend";
+
 //-------------------------------------------------------------------------------------------------
 static bool setParameterInShader( OGLParameter *param, OGLShader *shader ) {
     OSRE_ASSERT( nullptr != param );
@@ -176,6 +179,7 @@ OGLRenderBackend::OGLRenderBackend( )
 : m_renderCtx( nullptr )
 , m_buffers()
 , m_vertexarrays()
+, m_activeVertexArray( NotInited )
 , m_shaders()
 , m_textures()
 , m_freeTexSlots()
@@ -470,12 +474,20 @@ void OGLRenderBackend::destroyVertexArray( OGLVertexArray *pVertexArray ) {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::bindVertexArray( OGLVertexArray *pVertexArray ) {
-    glBindVertexArray( pVertexArray->m_id );
+	if (nullptr == pVertexArray) {
+		return;
+	}
+
+	if ( ( m_activeVertexArray == NotInited ) || ( m_activeVertexArray != pVertexArray->m_id) ){
+		m_activeVertexArray = pVertexArray->m_id;
+		glBindVertexArray( m_activeVertexArray );
+	}
 }
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::unbindVertexArray( OGLVertexArray *pVertexArray ) {
     glBindVertexArray( 0 );
+	m_activeVertexArray = NotInited;
 }
 
 //-------------------------------------------------------------------------------------------------

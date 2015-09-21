@@ -32,6 +32,8 @@ namespace RenderBackend {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 
+static const String Tag = "RenderCmdBuffer";
+
 //-------------------------------------------------------------------------------------------------
 RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *pRenderBackend, AbstractRenderContext *ctx )
 : m_pRenderBackend( pRenderBackend )
@@ -119,7 +121,7 @@ bool RenderCmdBuffer::onRenderFrame( const EventData *pEventData ) {
             onSetShaderStageCmd( ( SetShaderStageCmdData* ) pRenderCmd->m_pData );
 		} else if (pRenderCmd->m_type == SetRenderTargetCmd) {
 			onSetRenderTargetCmd(( SetRenderTargetCmdData* ) pRenderCmd->m_pData);
-		} else if ( pRenderCmd->m_type = DrawTextCmd ) {
+		} else if ( pRenderCmd->m_type == DrawTextCmd ) {
 			onRenderTextCmd( ( DrawTextCmdData* ) pRenderCmd->m_pData );
 		} else {
             osre_error( Tag, "Unsupported render command type: " + pRenderCmd->m_type );

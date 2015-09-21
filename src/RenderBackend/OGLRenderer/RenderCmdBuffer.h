@@ -55,7 +55,7 @@ struct Material;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::RenderBackend::RenderCmdBuffer
-///	@ingroup	RenderSystem
+///	@ingroup	Engine
 ///
 ///	@brief  This class is used to manage a render command buffer.
 //-------------------------------------------------------------------------------------------------

@@ -118,6 +118,7 @@ private:
     Platform::AbstractRenderContext *m_renderCtx;
 	CPPCore::TArray<OGLBuffer*>      m_buffers;
     CPPCore::TArray<OGLVertexArray*> m_vertexarrays;
+	GLuint                           m_activeVertexArray;
     CPPCore::TArray<OGLShader*>      m_shaders;
     CPPCore::TArray<OGLTexture*>     m_textures;
     CPPCore::TArray<ui32>            m_freeTexSlots;

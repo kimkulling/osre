@@ -34,7 +34,7 @@ namespace RenderBackend {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::RenderBackend::OGLShader
-///	@ingroup	RenderSystem
+///	@ingroup	Engine
 ///
 ///	@brief  This class is used to implement a shader object for OpenGL. It combines the several
 /// shader stages like vertex-, fragment or geometry-shader.
