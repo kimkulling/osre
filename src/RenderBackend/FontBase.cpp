@@ -31,7 +31,8 @@ FontBase::FontBase( const String &name )
 , m_texName()
 , m_numCols( 0 )
 , m_numRows( 0 )
-, m_fontAtlas( nullptr ) {
+, m_fontAtlas( nullptr )
+, m_uri() {
     // empty
 }
 
@@ -45,6 +46,11 @@ void FontBase::setSize( ui32 size ) {
     
 ui32 FontBase::getSize() const {
     return m_size;
+}
+
+void FontBase::setUri( const IO::Uri &uri ) {
+    m_uri = uri;
+    m_texName = m_uri.getResource();
 }
 
 void FontBase::setTextureName( const String &name ) {
@@ -64,17 +70,18 @@ void FontBase::setAtlasRows( ui32 numRows ) {
 }
 
 bool FontBase::loadFromStream( OGLRenderBackend *rb ) {
-    if( m_texName.empty() || nullptr == rb ) {
+    
+    if ( m_uri.isEmpty() || nullptr == rb ) {
         return false;
     }
 
-    const String texName( Object::getName() + "_font" );
+    const String texName( Object::getName() );
     if( nullptr != m_fontAtlas ) {
         rb->releaseTexture( m_fontAtlas );
         m_fontAtlas = nullptr;
     }
 
-    m_fontAtlas = rb->createTextureFromFile( texName, m_texName );
+    m_fontAtlas = rb->createTextureFromFile( m_texName, m_uri.getAbsPath() );
     if( nullptr == m_fontAtlas ) {
         return false;
     }

@@ -65,6 +65,7 @@ public:
         ClearColor,				///< The clear color.
         FullScreen,             ///< The option for full screen.
         PollingMode,            ///< Polling mode, true for polling requested.
+        DefaultFont,            ///< The default font for rendering.
         MaxKonfigKey			///< The upper limit.
     };
 

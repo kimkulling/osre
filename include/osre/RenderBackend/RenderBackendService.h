@@ -70,11 +70,13 @@ struct OSRE_EXPORT CreateRendererEventData : public Common::EventData {
 public:
     CreateRendererEventData( Platform::AbstractSurface *pSurface )
     : EventData( OnCreateRendererEvent, nullptr )
-    , m_activeSurface( pSurface ) {
+    , m_activeSurface( pSurface ) 
+    , m_defaultFont( "" ) {
         // empty
     }
 
     Platform::AbstractSurface *m_activeSurface;
+    String m_defaultFont;
 };
 
 //-------------------------------------------------------------------------------------------------

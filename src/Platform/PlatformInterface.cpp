@@ -124,6 +124,17 @@ AbstractTimer *PlatformInterface::getTimer() const {
 }
 
 //-------------------------------------------------------------------------------------------------
+const String &PlatformInterface::getDefaultFontName() const {
+    if ( nullptr == m_config ) {
+        static const String dummy( "none" );
+        return dummy;
+    }
+
+    static const String font( m_config->get( Settings::DefaultFont ).getString() );
+    return font;
+}
+
+//-------------------------------------------------------------------------------------------------
 PluginType PlatformInterface::getOSPluginType() {
 #ifdef OSRE_WINDOWS
     return WindowsPlugin;

@@ -49,7 +49,7 @@ extern const unsigned char *glyph[];
 void DrawGlyph( const Common::ColorRGBA &col, int c );
 
 static const GLuint NotInited = 99999999;
-static const String Tag = "OGLRenderBackend";
+static const String Tag       = "OGLRenderBackend";
 
 //-------------------------------------------------------------------------------------------------
 static bool setParameterInShader( OGLParameter *param, OGLShader *shader ) {
@@ -800,6 +800,7 @@ void OGLRenderBackend::releaseAllTextures( ) {
             releaseTexture( m_textures[ i ] );
         }
     }
+    m_freeTexSlots.clear();
     m_textures.clear();
     m_texLookupMap.clear();
 }
@@ -916,6 +917,7 @@ void OGLRenderBackend::renderFrame() {
 //-------------------------------------------------------------------------------------------------
 FontBase *OGLRenderBackend::createFont( const IO::Uri &font ) {
     FontBase *fontInst = new FontBase( font.getResource() );
+    fontInst->setUri( font );
     if ( fontInst->loadFromStream( this ) ) {
         m_fonts.add( fontInst );
         m_activeFont = fontInst;
@@ -933,6 +935,8 @@ void OGLRenderBackend::selectFont( FontBase *font ) {
 
     if ( nullptr != findFont( font->getTextureName() ) ) {
         m_activeFont = font;
+    } else {
+        osre_debug( Tag, "Cannot set font " + font->getName() + "." );
     }
 }
 

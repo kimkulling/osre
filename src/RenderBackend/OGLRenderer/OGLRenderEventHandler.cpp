@@ -34,6 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/DbgTextRenderer.h>
 #include <osre/Debugging/osre_debugging.h>
+#include <osre/IO/Uri.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -399,20 +400,20 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	
 	CreateRendererEventData *pCreateRendererEvData = ( CreateRendererEventData* ) eventData;
-    AbstractSurface *pActiveSurface = pCreateRendererEvData->m_activeSurface;
-    if( !pActiveSurface ) {
+    AbstractSurface *activeSurface = pCreateRendererEvData->m_activeSurface;
+    if( !activeSurface ) {
         return false;
     }
 
-    if( !pActiveSurface->create() ) {
+    if( !activeSurface->create() ) {
         return false;
     }
 
     bool result( false );
     m_renderCtx = PlatformInterface::getInstance()->getRenderContext();
 
-    if( m_renderCtx ) {
-        result = m_renderCtx->create( pActiveSurface );
+    if( nullptr !=  m_renderCtx ) {
+        result = m_renderCtx->create( activeSurface );
         if( !result ) {
             return false;
         }
@@ -423,12 +424,15 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
         return false;
     }
 
-    const ui32 x = pActiveSurface->getProperties()->m_x;
-    const ui32 y = pActiveSurface->getProperties()->m_y;
-    const ui32 w = pActiveSurface->getProperties()->m_width;
-    const ui32 h = pActiveSurface->getProperties()->m_height;
+    const ui32 x = activeSurface->getProperties()->m_x;
+    const ui32 y = activeSurface->getProperties()->m_y;
+    const ui32 w = activeSurface->getProperties()->m_width;
+    const ui32 h = activeSurface->getProperties()->m_height;
     m_oglBackend->setViewport( x, y, w, h );
 
+    const String defaultFont( PlatformInterface::getInstance()->getDefaultFontName() );
+    IO::Uri fontUri( "file://./" + defaultFont );
+    m_oglBackend->createFont( fontUri );
     m_renderCmdBuffer = new RenderCmdBuffer( m_oglBackend, m_renderCtx );
 
     return true;

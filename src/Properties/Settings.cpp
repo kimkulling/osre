@@ -46,7 +46,8 @@ static const String ConfigKeyStringTable[ Settings::MaxKonfigKey ] = {
     "StencilBufferDepth",
     "ClearColor",
     "Fullscreen",
-    "PollingMode"
+    "PollingMode",
+    "DefaultFont"
 };
 
 //--------------------------------------------------------------------------------------------------------------------
@@ -178,6 +179,9 @@ void Settings::initDefaults() {
     m_pPropertyMap->setProperty( ClearColor, ConfigKeyStringTable[ ClearColor ], value );
     value.setBool( false );
     m_pPropertyMap->setProperty( PollingMode,ConfigKeyStringTable[ PollingMode ], value );
+
+    value.setString( "buildin_arial.bmp" );
+    m_pPropertyMap->setProperty( DefaultFont, ConfigKeyStringTable[ DefaultFont ], value );
 }
 
 //--------------------------------------------------------------------------------------------------------------------

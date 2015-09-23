@@ -186,6 +186,7 @@ public:
     AbstractPlatformEventHandler *getPlatformEventHandler() const;
     AbstractRenderContext *getRenderContext() const;
     AbstractTimer *getTimer() const;
+    const String &getDefaultFontName() const;
     static PluginType getOSPluginType();
     static String getOSPluginName( PluginType type );
 

@@ -128,6 +128,7 @@ bool RenderTestSuite::setup() {
 
     if( m_pPlatformInterface ) {
         CreateRendererEventData *pData = new CreateRendererEventData( m_pPlatformInterface->getRootSurface() );
+        pData->m_defaultFont = m_pPlatformInterface->getDefaultFontName();
         m_pRenderBackendServer->sendEvent( &OnCreateRendererEvent, pData );
     }
 
