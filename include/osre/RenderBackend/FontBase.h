@@ -36,7 +36,7 @@ struct OGLTexture;
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class FontBase : Common::Object {
+class FontBase : public Common::Object {
 public:
     FontBase( const String &name );
     virtual ~FontBase();

@@ -71,7 +71,7 @@ public:
     /// The class destructor, virtual.
     virtual ~OGLRenderEventHandler();
     /// The OnEvent-callback.
-    virtual bool onEvent( const Common::Event &ev, const Common::EventData *pEventData );
+    virtual bool onEvent( const Common::Event &ev, const Common::EventData *pEventData ) override;
     /// Will set the active shader.
     void setActiveShader( OGLShader *pOGLShader );
     /// Will enqueue a new render command.
@@ -79,9 +79,9 @@ public:
 
 protected:
 	///	@brief	Callback for attaching the event handler.
-    virtual bool onAttached( const Common::EventData *eventData );
+    virtual bool onAttached( const Common::EventData *eventData ) override;
 	///	@brief	Callback for detaching the event handler.
-	virtual bool onDetached( const Common::EventData *eventData );
+	virtual bool onDetached( const Common::EventData *eventData ) override;
 	///	@brief	Callback for render backend creation.
 	virtual bool onCreateRenderer( const Common::EventData *eventData );
 	///	@brief	Callback for render backend destroying.

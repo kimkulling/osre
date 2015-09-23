@@ -257,6 +257,7 @@ RenderBackend::Geometry *GeometryBuilder::createTextBox( f32 x, f32 y, f32 size,
 
 	Geometry *geo = new Geometry;
 	std::vector<RenderVert> vertices;
+	std::vector<GLushort> indices;
 	for (ui32 i = 0; i <text.size(); i++) {
 		RenderVert vert[ 4 ];
 		vert[ 0 ].position = glm::vec3( x + i*size, y + size, 0 );
@@ -275,11 +276,31 @@ RenderBackend::Geometry *GeometryBuilder::createTextBox( f32 x, f32 y, f32 size,
 		for (ui32 j = 0; j < 4; j++) {
 			vertices.push_back( vert[ j ] );
 		}
+
+		// setup indices
+		static const ui32 NumIndices = 6;
+		GLushort  quad[ NumIndices ];
+		quad[ 0 ] = 0;
+		quad[ 1 ] = 1;
+		quad[ 2 ] = 2;
+
+		quad[ 0 ] = 2;
+		quad[ 1 ] = 3;
+		quad[ 2 ] = 1;
+
+		for (ui32 j = 0; j < 6; ++j) {
+			indices.push_back( quad[ i ] + (i*4) );
+		}
 	}
 
 	const ui32 vertSize( vertices.size() * sizeof( RenderVert ) );
 	BufferData *bufferData = BufferData::alloc( VertexBuffer, vertSize, ReadWrite );
 	::memcpy( bufferData->m_pData, &vertices[ 0 ], vertSize );
+	geo->m_vb = bufferData;
+
+	size = sizeof( GLushort ) * text.size() * 6;
+	geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
+	::memcpy( geo->m_ib->m_pData, &indices[ 0 ], size );
 
 	geo->m_numPrimGroups = 1;
 	geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];

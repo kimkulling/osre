@@ -219,6 +219,9 @@ bool RenderCmdBuffer::onSetRenderTargetCmd( SetRenderTargetCmdData *data ) {
 
 //-------------------------------------------------------------------------------------------------
 bool RenderCmdBuffer::onRenderTextCmd( DrawTextCmdData *data) {
+	for (ui32 i = 0; i < data->m_primitives.size(); ++i) {
+		m_pRenderBackend->render( data->m_primitives[ i ] );
+	}
 
 	return true;
 }

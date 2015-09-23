@@ -25,18 +25,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLCommon.h"
 #include "OGLEnum.h"
 #include <osre/RenderBackend/DbgTextRenderer.h>
+#include <osre/RenderBackend/FontBase.h>
 #include <osre/Platform/AbstractRenderContext.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/ColorRGBA.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Stream.h>
+#include <osre/IO/Uri.h>
 
 #include <cppcore/CPPCoreCommon.h>
 
 #include "SOIL.h"
 
 #include <iostream>
-#include <cassert>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -183,6 +184,8 @@ OGLRenderBackend::OGLRenderBackend( )
 , m_shaders()
 , m_textures()
 , m_freeTexSlots()
+, m_fonts()
+, m_activeFont( nullptr )
 , m_texLookupMap()
 , m_parameters()
 , m_shaderInUse( nullptr )
@@ -194,6 +197,7 @@ OGLRenderBackend::OGLRenderBackend( )
 //-------------------------------------------------------------------------------------------------
 OGLRenderBackend::~OGLRenderBackend( ) {
     releaseAllShaders();
+    releaseAllFonts();
     releaseAllTextures();
     releaseAllVertexArrays( );
     releaseAllBuffers();
@@ -894,21 +898,82 @@ void OGLRenderBackend::render( ui32 primpGrpIdx ) {
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::render( ui32 primpGrpIdx, ui32 numInstances ) {
     OGLPrimGroup *grp( m_primitives[ primpGrpIdx ] );
-    if (nullptr != grp) {
-        glDrawArraysInstanced( grp->m_primitive, grp->m_startIndex, grp->m_numPrimitives, numInstances );
+    if ( nullptr != grp ) {
+        glDrawArraysInstanced( grp->m_primitive, 
+                               grp->m_startIndex, 
+                               grp->m_numPrimitives, 
+                               numInstances );
     }
 }
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::renderFrame() {
-    assert( nullptr != m_renderCtx );    
+    OSRE_ASSERT( nullptr != m_renderCtx );    
     
 	m_renderCtx->update();
 }
 
 //-------------------------------------------------------------------------------------------------
-void OGLRenderBackend::selectFont(FontBase *font) {
-	// TODO!
+FontBase *OGLRenderBackend::createFont( const IO::Uri &font ) {
+    FontBase *fontInst = new FontBase( font.getResource() );
+    if ( fontInst->loadFromStream( this ) ) {
+        m_fonts.add( fontInst );
+        m_activeFont = fontInst;
+    }
+    
+    return fontInst;
+}
+
+//-------------------------------------------------------------------------------------------------
+void OGLRenderBackend::selectFont( FontBase *font ) {
+    if ( nullptr == font ) {
+        m_activeFont = nullptr;
+        return;
+    }
+
+    if ( nullptr != findFont( font->getTextureName() ) ) {
+        m_activeFont = font;
+    }
+}
+
+//-------------------------------------------------------------------------------------------------
+FontBase *OGLRenderBackend::findFont( const String &name ) const {
+    for (ui32 i = 0; i < m_fonts.size(); i++) {
+        FontBase *font( m_fonts[ i ] );
+        if ( font->getTextureName() == name) {
+            return font;
+        }
+    }
+
+    return nullptr;
+}
+
+//-------------------------------------------------------------------------------------------------
+bool OGLRenderBackend::relaseFont( FontBase *font ) {
+    if (nullptr == font) {
+        return false;
+    }
+
+    bool ok( false );
+    for ( ui32 i = 0; i < m_fonts.size(); i++) {
+        if (m_fonts[ i ] == font) {
+            m_fonts.remove( i );
+            ok = true;
+            break;
+        }
+    }
+
+    return ok;
+}
+
+//-------------------------------------------------------------------------------------------------
+void OGLRenderBackend::releaseAllFonts() {
+    for ( ui32 i = 0; i < m_fonts.size(); i++ ) {
+        if ( nullptr != m_fonts[ i ] ) {
+            m_fonts[ i ]->release();
+        }
+    }
+    m_fonts.clear();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -950,6 +1015,7 @@ void DrawGlyph( const Common::ColorRGBA &col, int c )
     }
     glTranslatef( 1.0f, 0.0f, 0.0f );
 }
+
 } // Namespace RenderBackend
 } // Namespace OSRE
 

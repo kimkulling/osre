@@ -256,7 +256,7 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
     }
 
     GeoInstanceData *instData( geoInstanceData->m_geoInstanceData );
-	OGLRenderCmd *pRenderCmd = OGLRenderCmdAllocator::alloc( DrawPrimitivesInstancesCmd, nullptr );
+	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( DrawPrimitivesInstancesCmd, nullptr );
     if( nullptr != instData ) {
         if( nullptr != instData->m_data ) {
             OGLBuffer *instanceDataBuffer = rb->createBuffer( InstanceBuffer );
@@ -271,23 +271,41 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
     for( ui32 i = 0; i < ids.size(); ++i ) {
         data->m_primitives.add( ids[ i ] );
     }
-    pRenderCmd->m_pData = static_cast< void* >( data );
+    renderCmd->m_pData = static_cast< void* >( data );
 
-    eh->enqueueRenderCmd( pRenderCmd );
+    eh->enqueueRenderCmd( renderCmd );
 }
 
 //-------------------------------------------------------------------------------------------------
 static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb, OGLRenderEventHandler *eh, OGLShader *oglShader ) {
-	OGLRenderCmd *pRenderCmd = OGLRenderCmdAllocator::alloc( DrawTextCmd, nullptr );
+	OSRE_ASSERT( nullptr != rb );
+	OSRE_ASSERT( nullptr != eh );
 
+	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( DrawTextCmd, nullptr );
 	Geometry *geo( data->m_geo );
-	if (nullptr == geo) {
+	if ( nullptr == geo ) {
 		return;
+	}
+
+	// register primitive groups to render
+	CPPCore::TArray<ui32> ids;
+	for (ui32 i = 0; i < geo->m_numPrimGroups; ++i) {
+		const ui32 primIdx( rb->addPrimitiveGroup( &geo->m_pPrimGroups[ i ] ) );
+		ids.add( primIdx );
 	}
 
 	setupMaterial( geo->m_material, rb, eh );
 	OGLVertexArray *vertexArray = setupBuffers( geo, rb, oglShader );
 
+	DrawTextCmdData *cmdData( new DrawTextCmdData );
+
+	cmdData->m_primitives.reserve( ids.size() );
+	for (ui32 i = 0; i < ids.size(); ++i) {
+		cmdData->m_primitives.add( ids[ i ] );
+	}
+	renderCmd->m_pData = static_cast< void* >( cmdData );
+	
+	eh->enqueueRenderCmd( renderCmd );
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -378,7 +396,9 @@ bool OGLRenderEventHandler::onDetached( const EventData *eventData ) {
 
 //-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
-    CreateRendererEventData *pCreateRendererEvData = (CreateRendererEventData*) eventData;
+	OSRE_ASSERT( nullptr != m_oglBackend );
+	
+	CreateRendererEventData *pCreateRendererEvData = ( CreateRendererEventData* ) eventData;
     AbstractSurface *pActiveSurface = pCreateRendererEvData->m_activeSurface;
     if( !pActiveSurface ) {
         return false;
@@ -416,7 +436,9 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
 
 //-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onDestroyRenderer( const Common::EventData * ) {
-    if ( !m_renderCtx ) {
+	OSRE_ASSERT( nullptr != m_oglBackend );
+	
+	if (!m_renderCtx) {
         return false;
     }
 
@@ -432,12 +454,16 @@ bool OGLRenderEventHandler::onDestroyRenderer( const Common::EventData * ) {
 
 //-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onAttachView( const EventData * ) {
-    return true;
+	OSRE_ASSERT( nullptr != m_oglBackend );
+	
+	return true;
 }
 
 //-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
-    AttachGeoEventData *attachSceneEvData = (AttachGeoEventData*) eventData;
+	OSRE_ASSERT( nullptr != m_oglBackend );
+	
+	AttachGeoEventData *attachSceneEvData = ( AttachGeoEventData* ) eventData;
     if( !attachSceneEvData ) {
         osre_debug( Tag, "AttachSceneEventData-pointer is a nullptr." );
         return false;
@@ -482,7 +508,9 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
 
 //-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onClearGeo( const EventData * ) {
-    m_oglBackend->releaseAllBuffers();
+	OSRE_ASSERT( nullptr != m_oglBackend );
+	
+	m_oglBackend->releaseAllBuffers();
     m_oglBackend->releaseAllShaders();
     m_oglBackend->releaseAllTextures();
     m_oglBackend->releaseAllParameters();
@@ -495,7 +523,8 @@ bool OGLRenderEventHandler::onClearGeo( const EventData * ) {
 bool OGLRenderEventHandler::onRenderFrame( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 
-    if ( !m_renderCtx ) {
+    if ( nullptr == m_renderCtx ) {
+		osre_debug( Tag, "Render context is nullptr." );
         return false;
     }
 
@@ -508,7 +537,9 @@ bool OGLRenderEventHandler::onRenderFrame( const EventData *eventData ) {
 
 //-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
-    UpdateParameterEventData *updateParamData = ( UpdateParameterEventData* ) eventData;
+	OSRE_ASSERT( nullptr != m_oglBackend );
+	
+	UpdateParameterEventData *updateParamData = ( UpdateParameterEventData* ) eventData;
 
     if( updateParamData ) {
         for( ui32 i = 0; i < updateParamData->m_numParam; ++i ) {
@@ -525,6 +556,8 @@ bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
 
 //-------------------------------------------------------------------------------------------------
 bool  OGLRenderEventHandler::onRenderText( const Common::EventData *eventData ) {
+	OSRE_ASSERT( nullptr != m_oglBackend );
+
 	RenderTextEventData *data = ( RenderTextEventData* ) eventData;
 	if ( nullptr == data) {
 		return false;

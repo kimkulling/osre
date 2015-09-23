@@ -32,6 +32,7 @@ namespace OSRE {
 
 namespace IO {
     class Stream;
+    class Uri;
 }
 
 namespace Platform {
@@ -110,8 +111,11 @@ public:
     void render( ui32 grimpGrpIdx );
     void render( ui32 primpGrpIdx, ui32 numInstances );
     void renderFrame();
-	void selectFont(FontBase *font);
-	void debugText(const String &msg);
+    FontBase *createFont( const IO::Uri &font );
+	void selectFont( FontBase *font );
+    FontBase *findFont( const String &name ) const;
+    bool relaseFont( FontBase *font );
+    void releaseAllFonts();
     static ui32 getVertexSize( VertexType vertextype );
 
 private:
@@ -122,6 +126,8 @@ private:
     CPPCore::TArray<OGLShader*>      m_shaders;
     CPPCore::TArray<OGLTexture*>     m_textures;
     CPPCore::TArray<ui32>            m_freeTexSlots;
+    CPPCore::TArray<FontBase*>       m_fonts;
+    FontBase                        *m_activeFont;
     std::map<String, ui32>           m_texLookupMap;
     CPPCore::TArray<OGLParameter*>   m_parameters;
     OGLShader                       *m_shaderInUse;
