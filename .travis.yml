@@ -11,7 +11,7 @@ env:
   - TRAVIS_NO_EXPORT=NO
 language: cpp
 compiler:
-  - gcc-4.8
+  - gcc
 script: cmake -G "Unix Makefiles" && make
 
 
