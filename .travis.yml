@@ -5,7 +5,7 @@ before_install:
 install:
   - sudo apt-get install cmake
   - sudo apt-get install -qq libsdl2-dev gcc-4.8
-  - export CXX="g++-4.8" CC="gcc-4
+  - export CXX="g++-4.8" CC="gcc-4.8"
 env:
   - TRAVIS_NO_EXPORT=YES
   - TRAVIS_NO_EXPORT=NO
