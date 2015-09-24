@@ -254,6 +254,7 @@ SET( renderbackend_src
 
 SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLCommon.h
+    RenderBackend/OGLRenderer/OGLCommon.cpp
     RenderBackend/OGLRenderer/OGLEnum.cpp
     RenderBackend/OGLRenderer/OGLEnum.h
     RenderBackend/OGLRenderer/OGLRenderBackend.cpp
@@ -317,7 +318,7 @@ SOURCE_GROUP( Include\\RenderBackend FILES ${renderbackend_inc} )
 #==============================================================================
 ADD_LIBRARY( osre SHARED
     ../README.md
-	${app_inc}
+    ${app_inc}
     ${debugging_inc}
     ${common_inc}
     ${common_src}
