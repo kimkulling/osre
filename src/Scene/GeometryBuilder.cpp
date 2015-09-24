@@ -258,6 +258,17 @@ RenderBackend::Geometry *GeometryBuilder::createTextBox( f32 x, f32 y, f32 size,
 	Geometry *geo = new Geometry;
 	std::vector<RenderVert> vertices;
 	std::vector<GLushort> indices;
+
+    static const ui32 NumIndices = 6;
+    GLushort  quad[ NumIndices ];
+    quad[ 0 ] = 0;
+    quad[ 1 ] = 1;
+    quad[ 2 ] = 2;
+
+    quad[ 0 ] = 2;
+    quad[ 1 ] = 3;
+    quad[ 2 ] = 1;
+
 	for (ui32 i = 0; i <text.size(); i++) {
 		RenderVert vert[ 4 ];
 		vert[ 0 ].position = glm::vec3( x + i*size, y + size, 0 );
@@ -278,16 +289,6 @@ RenderBackend::Geometry *GeometryBuilder::createTextBox( f32 x, f32 y, f32 size,
 		}
 
 		// setup indices
-		static const ui32 NumIndices = 6;
-		GLushort  quad[ NumIndices ];
-		quad[ 0 ] = 0;
-		quad[ 1 ] = 1;
-		quad[ 2 ] = 2;
-
-		quad[ 0 ] = 2;
-		quad[ 1 ] = 3;
-		quad[ 2 ] = 1;
-
 		for (ui32 j = 0; j < 6; ++j) {
 			indices.push_back( quad[ i ] + (i*4) );
 		}
@@ -318,7 +319,7 @@ RenderBackend::Geometry *GeometryBuilder::createTextBox( f32 x, f32 y, f32 size,
 	geo->m_material->m_pShader->m_src[ SH_FragmentShaderType ] = FsSrc;
 
 	// setup shader attributes and variables
-	if (nullptr != geo->m_material->m_pShader) {
+	if ( nullptr != geo->m_material->m_pShader) {
 		ui32 numAttribs( ColorVert::getNumAttributes() );
 		const String *attribs( ColorVert::getAttributes() );
 		geo->m_material->m_pShader->m_attributes.add( attribs, numAttribs );
