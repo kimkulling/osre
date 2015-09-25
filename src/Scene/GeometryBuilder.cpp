@@ -312,8 +312,18 @@ RenderBackend::Geometry *GeometryBuilder::createTextBox( f32 x, f32 y, f32 size,
 
 	// setup material
 	geo->m_material = new Material;
-	geo->m_material->m_numTextures = 0;
-	geo->m_material->m_type = ShaderMaterial;
+
+    
+    geo->m_material->m_numTextures = 1;
+    geo->m_material->m_pTextures = new Texture[ 1 ];
+#ifdef _WIN32
+    geo->m_material->m_pTextures[ 0 ].m_textureName = "../../media/Textures/Fonts/buildin_arial.bmp";
+#else
+    geo->m_material->m_pTextures[ 0 ].m_textureName = "../media/Textures/Fonts/buildin_arial.bmp";
+#endif
+
+    
+   	geo->m_material->m_type = ShaderMaterial;
 	geo->m_material->m_pShader = new Shader;
 	geo->m_material->m_pShader->m_src[ SH_VertexShaderType ] = VsSrc;
 	geo->m_material->m_pShader->m_src[ SH_FragmentShaderType ] = FsSrc;

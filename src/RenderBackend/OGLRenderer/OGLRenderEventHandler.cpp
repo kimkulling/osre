@@ -279,7 +279,8 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
 }
 
 //-------------------------------------------------------------------------------------------------
-static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb, OGLRenderEventHandler *eh, OGLShader *oglShader ) {
+static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb, 
+                              OGLRenderEventHandler *eh, OGLShader *oglShader ) {
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
 
@@ -565,7 +566,6 @@ bool  OGLRenderEventHandler::onRenderText( const Common::EventData *eventData ) 
 	if ( nullptr == data) {
 		return false;
 	}
-
 
 	setupDrawTextCmd( data, m_oglBackend, this, m_renderCmdBuffer->getActiveShader() );
 

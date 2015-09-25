@@ -46,7 +46,7 @@ public:
 		rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 		Scene::GeometryBuilder builder;
 		RenderTextEventData *data = new RenderTextEventData;
-		data->m_geo = builder.createTextBox( 10, 10, 10, "Hello, World!" );
+		data->m_geo = builder.createTextBox( -1, -1, 0.1f, "Hello, World!" );
 		rbSrv->sendEvent( &OnRenderTextEvent, data );
 		
 		return true;
