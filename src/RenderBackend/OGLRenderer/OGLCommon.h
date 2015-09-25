@@ -83,14 +83,13 @@ struct OGLTexture {
     ui32 m_channels;
 };
 
-enum OGLRenderCmdType {
+enum class OGLRenderCmdType {
     SetParameterCmd,
     SetRenderTargetCmd,
     SetTextureCmd,
     SetShaderCmd,
     DrawPrimitivesCmd,
-    DrawPrimitivesInstancesCmd,
-	DrawTextCmd
+    DrawPrimitivesInstancesCmd
 };
 
 struct OGLRenderCmd {
@@ -117,6 +116,7 @@ struct OGLRenderCmdAllocator {
 	}
 };
 
+///	@brief
 struct OGLParameter {
     String      m_name;
     GLint          m_loc;
@@ -133,6 +133,7 @@ struct OGLParameter {
     }
 };
 
+///	@brief
 struct OGLPrimGroup {
     GLenum m_primitive;
     ui32   m_startIndex;
@@ -140,40 +141,39 @@ struct OGLPrimGroup {
     GLenum m_indexType;
 };
 
+///	@brief
 struct SetParameterCmdData {
     OGLParameter **m_param;
     ui32 m_numParam;
 };
 
+///	@brief
 struct SetRenderTargetCmdData {
 };
 
+///	@brief
 struct SetTextureStageCmdData {
     CPPCore::TArray<OGLTexture*> m_textures;
 };
 
+///	@brief
 struct SetShaderStageCmdData {
     OGLShader *m_pShader;
 };
 
+///	@brief
 struct DrawInstancePrimitivesCmdData {
     ui32                  m_numInstances;   ///<
     CPPCore::TArray<ui32> m_bufferHandles;  ///<
     CPPCore::TArray<ui32> m_primitives;     ///<
 };
 
+///	@brief
 struct DrawPrimitivesCmdData {
 	OGLVertexArray       *m_vertexArray;    ///<
-	CPPCore::TArray<ui32> m_bufferHandles;  ///<
     CPPCore::TArray<ui32> m_primitives;     ///<
 };
 
-struct DrawTextCmdData {
-	ui32 m_x;								///<
-	ui32 m_y;								///<
-	CPPCore::TArray<ui32> m_bufferHandles;  ///<
-	CPPCore::TArray<ui32> m_primitives;     ///<
-};
 //-------------------------------------------------------------------------------------------------
 
 } // Namespace RendeBackend

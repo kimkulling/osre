@@ -121,8 +121,6 @@ bool RenderCmdBuffer::onRenderFrame( const EventData *pEventData ) {
             onSetShaderStageCmd( ( SetShaderStageCmdData* ) pRenderCmd->m_pData );
 		} else if (pRenderCmd->m_type == SetRenderTargetCmd) {
 			onSetRenderTargetCmd(( SetRenderTargetCmdData* ) pRenderCmd->m_pData);
-		} else if ( pRenderCmd->m_type == DrawTextCmd ) {
-			onRenderTextCmd( ( DrawTextCmdData* ) pRenderCmd->m_pData );
 		} else {
             osre_error( Tag, "Unsupported render command type: " + pRenderCmd->m_type );
         }
@@ -173,6 +171,7 @@ bool RenderCmdBuffer::onSetParametersCmd( SetParameterCmdData *data ) {
 
 //-------------------------------------------------------------------------------------------------
 bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *data ) {
+    m_pRenderBackend->bindVertexArray( data->m_vertexArray );
     for( ui32 i = 0; i < data->m_primitives.size(); ++i ) {
         m_pRenderBackend->render( data->m_primitives[ i ] );
     }
@@ -182,6 +181,7 @@ bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *data ) {
 
 //-------------------------------------------------------------------------------------------------
 bool RenderCmdBuffer::onDrawPrimitivesInstancesCmd( DrawInstancePrimitivesCmdData *data ) {
+    
     for( ui32 i = 0; i < data->m_primitives.size(); ++i ) {
         m_pRenderBackend->render( data->m_primitives[ i ], data->m_numInstances );
     }
@@ -215,15 +215,6 @@ bool RenderCmdBuffer::onSetShaderStageCmd( SetShaderStageCmdData *data ) {
 //-------------------------------------------------------------------------------------------------
 bool RenderCmdBuffer::onSetRenderTargetCmd( SetRenderTargetCmdData *data ) {
     return true;
-}
-
-//-------------------------------------------------------------------------------------------------
-bool RenderCmdBuffer::onRenderTextCmd( DrawTextCmdData *data) {
-	for (ui32 i = 0; i < data->m_primitives.size(); ++i) {
-		m_pRenderBackend->render( data->m_primitives[ i ] );
-	}
-
-	return true;
 }
 
 //-------------------------------------------------------------------------------------------------

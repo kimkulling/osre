@@ -113,7 +113,7 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
                 setupTextures( material, rb, textures );
                 if( !textures.isEmpty() ) {
                     OGLRenderCmd *pRenderCmd = new OGLRenderCmd;
-                    pRenderCmd->m_type = SetTextureCmd;
+                    pRenderCmd->m_type = OGLRenderCmdType::SetTextureCmd;
                     SetTextureStageCmdData *pData = new SetTextureStageCmdData;
                     pData->m_textures = textures;
                     pRenderCmd->m_pData = pData;
@@ -126,7 +126,7 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
                     data->m_pShader = pShader;
 
                     OGLRenderCmd *pRenderCmd = new OGLRenderCmd;
-                    pRenderCmd->m_type       = SetShaderCmd;
+                    pRenderCmd->m_type       = OGLRenderCmdType::SetShaderCmd;
                     pRenderCmd->m_pData      = data;
                     eh->enqueueRenderCmd( pRenderCmd );
 
@@ -160,7 +160,7 @@ static void setupParameter( Geometry *geo, OGLRenderBackend *rb, OGLRenderEventH
     }
 
     OGLRenderCmd *setParameterCmd = new OGLRenderCmd;
-    setParameterCmd->m_type = SetParameterCmd;
+    setParameterCmd->m_type = OGLRenderCmdType::SetParameterCmd;
     Parameter *currentParam( geo->m_parameter );
     ::CPPCore::TArray<OGLParameter*> paramArray;
     SetParameterCmdData *paramData = new SetParameterCmdData;
@@ -185,12 +185,12 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != oglShader );
 
+    // create vertex buffer
     BufferData *vertices = geo->m_vb;
 	if (nullptr == vertices) {
 		osre_debug( Tag, "No vertex buffer data for setting up data." );
 		return nullptr;
 	}
-
     OGLBuffer *pVB = rb->createBuffer( vertices->m_type );
 
     // create index buffer
@@ -226,7 +226,7 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
 }
 
 //-------------------------------------------------------------------------------------------------
-static void setupPrimDrawCmd( const TArray<ui32> &ids, OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {
+static void setupPrimDrawCmd( const TArray<ui32> &ids, OGLRenderBackend *rb, OGLRenderEventHandler *eh, OGLVertexArray *va ) {
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
 
@@ -234,8 +234,9 @@ static void setupPrimDrawCmd( const TArray<ui32> &ids, OGLRenderBackend *rb, OGL
         return;
     }
 
-	OGLRenderCmd *pRenderCmd = OGLRenderCmdAllocator::alloc( DrawPrimitivesCmd, nullptr );
+	OGLRenderCmd *pRenderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesCmd, nullptr );
     DrawPrimitivesCmdData *data = new DrawPrimitivesCmdData;
+    data->m_vertexArray = va;
     data->m_primitives.reserve( ids.size() );
     for( ui32 i = 0; i < ids.size(); ++i ) {
         data->m_primitives.add( ids[ i ] );
@@ -257,7 +258,7 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
     }
 
     GeoInstanceData *instData( geoInstanceData->m_geoInstanceData );
-	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( DrawPrimitivesInstancesCmd, nullptr );
+	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesInstancesCmd, nullptr );
     if( nullptr != instData ) {
         if( nullptr != instData->m_data ) {
             OGLBuffer *instanceDataBuffer = rb->createBuffer( InstanceBuffer );
@@ -282,7 +283,7 @@ static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb, O
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
 
-	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( DrawTextCmd, nullptr );
+	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesCmd, nullptr );
 	Geometry *geo( data->m_geo );
 	if ( nullptr == geo ) {
 		return;
@@ -296,11 +297,9 @@ static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb, O
 	}
 
 	setupMaterial( geo->m_material, rb, eh );
-	OGLVertexArray *vertexArray = setupBuffers( geo, rb, oglShader );
-
-	DrawTextCmdData *cmdData( new DrawTextCmdData );
-
-	cmdData->m_primitives.reserve( ids.size() );
+    DrawPrimitivesCmdData *cmdData( new DrawPrimitivesCmdData );
+    cmdData->m_vertexArray = setupBuffers( geo, rb, oglShader );
+    cmdData->m_primitives.reserve( ids.size() );
 	for (ui32 i = 0; i < ids.size(); ++i) {
 		cmdData->m_primitives.add( ids[ i ] );
 	}
@@ -502,7 +501,7 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
 
     // setup the draw calls
     if( 0 == attachSceneEvData->m_numInstances ) {
-        setupPrimDrawCmd( primGroups, m_oglBackend, this );
+        setupPrimDrawCmd( primGroups, m_oglBackend, this, m_vertexArray );
     } else {
         setupInstancedDrawCmd( primGroups, attachSceneEvData, m_oglBackend, this );
     }

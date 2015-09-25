@@ -96,7 +96,6 @@ protected:
     virtual bool onSetTextureStageCmd( SetTextureStageCmdData *pData );
     virtual bool onSetShaderStageCmd( SetShaderStageCmdData *pData );
     virtual bool onSetRenderTargetCmd( SetRenderTargetCmdData *pData );
-	virtual bool onRenderTextCmd(DrawTextCmdData *pData);
 
 private:
     OGLRenderBackend *m_pRenderBackend;
