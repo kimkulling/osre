@@ -109,20 +109,20 @@ bool RenderCmdBuffer::onRenderFrame( const EventData *pEventData ) {
 
     for( ui32 i = 0; i < m_cmdbuffer.size(); ++i ) {
         OGLRenderCmd *pRenderCmd = m_cmdbuffer[ i ];
-        if( pRenderCmd->m_type == SetParameterCmd ) {
+        if( pRenderCmd->m_type == OGLRenderCmdType::SetParameterCmd ) {
             onSetParametersCmd( ( SetParameterCmdData* ) pRenderCmd->m_pData );
-        } else if( pRenderCmd->m_type == DrawPrimitivesCmd ) {
+        } else if( pRenderCmd->m_type == OGLRenderCmdType::DrawPrimitivesCmd ) {
             onDrawPrimitivesCmd( ( DrawPrimitivesCmdData* ) pRenderCmd->m_pData );
-        } else if( pRenderCmd->m_type == DrawPrimitivesInstancesCmd ) {
+        } else if( pRenderCmd->m_type == OGLRenderCmdType::DrawPrimitivesInstancesCmd ) {
             onDrawPrimitivesInstancesCmd( ( DrawInstancePrimitivesCmdData* ) pRenderCmd->m_pData );
-        } else if( pRenderCmd->m_type == SetTextureCmd ) {
+        } else if( pRenderCmd->m_type == OGLRenderCmdType::SetTextureCmd ) {
             onSetTextureStageCmd( ( SetTextureStageCmdData* ) pRenderCmd->m_pData );
-        } else if( pRenderCmd->m_type == SetShaderCmd ) {
+        } else if( pRenderCmd->m_type == OGLRenderCmdType::SetShaderCmd ) {
             onSetShaderStageCmd( ( SetShaderStageCmdData* ) pRenderCmd->m_pData );
-		} else if (pRenderCmd->m_type == SetRenderTargetCmd) {
+		} else if (pRenderCmd->m_type == OGLRenderCmdType::SetRenderTargetCmd) {
 			onSetRenderTargetCmd(( SetRenderTargetCmdData* ) pRenderCmd->m_pData);
 		} else {
-            osre_error( Tag, "Unsupported render command type: " + pRenderCmd->m_type );
+            osre_error( Tag, "Unsupported render command type: " + static_cast<ui32>( pRenderCmd->m_type ) );
         }
     }
 
