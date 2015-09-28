@@ -75,26 +75,30 @@ const String FsSrc =
 
 
 static const String TextVsSrc =
-	"layout(location = 0) in vec3 position;	      // object space vertex position\n"
+    "#version 400 core\n"
+    "\n"
+    "layout(location = 0) in vec3 position;	      // object space vertex position\n"
 	"layout(location = 1) in vec3 normal;	            // object space vertex normal\n"
 	"layout(location = 2) in vec2 texcoord0;	        // texture coordinate\n"
-	"out vec2 vUV;\n"
+	"out vec2 UV;\n"
 	"\n"
 	"void main() {\n"
-	"    vec3 vertexPosition_homoneneousspace = position;\n"
-	"    gl_Position = vec4(position, 1 );\n"
+	"    gl_Position = vec4( position, 1 );\n"
 	"    // UV of the vertex. No special space for this one.\n"
 	"    UV = texcoord0;\n"
 	"};\n";
 
 static const String TextFsSrc =
-	"in vec2 vUV;\n"
+    "#version 400 core\n"
+    "\n"
+    "in vec2 UV;\n"
 	"// Output data\n"
 	"out vec4 vFragColor;\n"
 	"uniform sampler2D tex0;\n"
 
 	"void main() {\n"
-	"    vFragColor = texture( tex0, vUV );\n"
+    "    vFragColor =vec4(1,1,1,1 );\n"
+    "//    vFragColor = texture( tex0, UV );\n"
 	"};\n";
 
 //-------------------------------------------------------------------------------------------------
@@ -325,8 +329,8 @@ RenderBackend::Geometry *GeometryBuilder::createTextBox( f32 x, f32 y, f32 size,
     
    	geo->m_material->m_type = ShaderMaterial;
 	geo->m_material->m_pShader = new Shader;
-	geo->m_material->m_pShader->m_src[ SH_VertexShaderType ] = VsSrc;
-	geo->m_material->m_pShader->m_src[ SH_FragmentShaderType ] = FsSrc;
+	geo->m_material->m_pShader->m_src[ SH_VertexShaderType ]   = TextVsSrc;
+	geo->m_material->m_pShader->m_src[ SH_FragmentShaderType ] = TextFsSrc;
 
 	// setup shader attributes and variables
 	if ( nullptr != geo->m_material->m_pShader) {
