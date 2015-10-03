@@ -81,9 +81,11 @@ static const String TextVsSrc =
 	"layout(location = 1) in vec3 normal;	            // object space vertex normal\n"
 	"layout(location = 2) in vec2 texcoord0;	        // texture coordinate\n"
 	"out vec2 UV;\n"
+    "\n"
+    "uniform mat4 MVP;	//combined modelview projection matrix\n"
 	"\n"
 	"void main() {\n"
-	"    gl_Position = vec4( position, 1 );\n"
+	"    gl_Position = MVP*vec4( position, 1 );\n"
 	"    // UV of the vertex. No special space for this one.\n"
 	"    UV = texcoord0;\n"
 	"};\n";
@@ -97,7 +99,7 @@ static const String TextFsSrc =
 	"uniform sampler2D tex0;\n"
 
 	"void main() {\n"
-    "    vFragColor =vec4(1,1,1,1 );\n"
+    "    vFragColor = vec4(1,1,1,1 );\n"
     "//    vFragColor = texture( tex0, UV );\n"
 	"};\n";
 
@@ -173,6 +175,71 @@ RenderBackend::Geometry *GeometryBuilder::createTriangle() {
         ui32 numAttribs( ColorVert::getNumAttributes() );
         const String *attribs( ColorVert::getAttributes() );
         geo->m_material->m_pShader->m_attributes.add(attribs, numAttribs);
+        geo->m_material->m_pShader->m_parameters.add( "MVP" );
+    }
+
+    return geo;
+}
+
+//-------------------------------------------------------------------------------------------------
+RenderBackend::Geometry *GeometryBuilder::createQuad() {
+    Geometry *geo = new Geometry;
+    geo->m_vertextype = ColorVertex;
+    geo->m_indextype = UnsignedShort;
+
+    // setup triangle vertices    
+    static const ui32 NumVert = 4;
+    ColorVert vertices[ NumVert ];
+    vertices[ 0 ].color = glm::vec3( 1, 0, 0 );
+    vertices[ 1 ].color = glm::vec3( 0, 1, 0 );
+    vertices[ 2 ].color = glm::vec3( 0, 0, 1 );
+    vertices[ 3 ].color = glm::vec3( 1, 0, 0 );
+
+    vertices[ 0 ].position = glm::vec3( -1, -1, 0 );
+    vertices[ 1 ].position = glm::vec3( -1, 1, 0 );
+    vertices[ 2 ].position = glm::vec3( 1, -1, 0 );
+    vertices[ 3 ].position = glm::vec3( 1, 1, 0 );
+
+    ui32 size( sizeof( ColorVert ) * NumVert );
+    geo->m_vb = BufferData::alloc( VertexBuffer, size, ReadOnly );
+    ::memcpy( geo->m_vb->m_pData, vertices, size );
+
+    // setup triangle indices
+    static const ui32 NumIndices = 6;
+    GLushort  indices[ NumIndices ];
+    indices[ 0 ] = 0;
+    indices[ 1 ] = 1;
+    indices[ 2 ] = 2;
+
+    indices[ 3 ] = 1;
+    indices[ 4 ] = 2;
+    indices[ 5 ] = 3;
+
+    size = sizeof( GLushort ) * NumIndices;
+    geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
+    ::memcpy( geo->m_ib->m_pData, indices, size );
+
+    // setup primitives
+    geo->m_numPrimGroups = 1;
+    geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
+    geo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
+    geo->m_pPrimGroups[ 0 ].m_numPrimitives = NumIndices;
+    geo->m_pPrimGroups[ 0 ].m_primitive = TriangleList;
+    geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
+
+    // setup material
+    geo->m_material = new Material;
+    geo->m_material->m_numTextures = 0;
+    geo->m_material->m_type = ShaderMaterial;
+    geo->m_material->m_pShader = new Shader;
+    geo->m_material->m_pShader->m_src[ SH_VertexShaderType ] = VsSrc;
+    geo->m_material->m_pShader->m_src[ SH_FragmentShaderType ] = FsSrc;
+
+    // setup shader attributes and variables
+    if (nullptr != geo->m_material->m_pShader) {
+        ui32 numAttribs( ColorVert::getNumAttributes() );
+        const String *attribs( ColorVert::getAttributes() );
+        geo->m_material->m_pShader->m_attributes.add( attribs, numAttribs );
         geo->m_material->m_pShader->m_parameters.add( "MVP" );
     }
 
@@ -294,7 +361,7 @@ RenderBackend::Geometry *GeometryBuilder::createTextBox( f32 x, f32 y, f32 size,
 
 		// setup indices
 		for (ui32 j = 0; j < 6; ++j) {
-			indices.push_back( quad[ i ] + (i*4) );
+			indices.push_back( quad[ i ] + static_cast<GLushort>( (i*4) ) );
 		}
 	}
 
@@ -303,9 +370,9 @@ RenderBackend::Geometry *GeometryBuilder::createTextBox( f32 x, f32 y, f32 size,
 	::memcpy( bufferData->m_pData, &vertices[ 0 ], vertSize );
 	geo->m_vb = bufferData;
 
-	size = sizeof( GLushort ) * text.size() * 6;
-	geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
-	::memcpy( geo->m_ib->m_pData, &indices[ 0 ], size );
+	ui32 numBytes = sizeof( GLushort ) * text.size() * 6;
+	geo->m_ib = BufferData::alloc( IndexBuffer, numBytes, ReadOnly );
+	::memcpy( geo->m_ib->m_pData, &indices[ 0 ], numBytes );
 
 	geo->m_numPrimGroups = 1;
 	geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
