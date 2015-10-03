@@ -26,12 +26,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/GeometryBuilder.h>
 
+#include <GL/glew.h>
+#include <GL/gl.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 namespace OSRE {
 namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
 class DbgFontRenderTest : public AbstractRenderTest {
+    TransformMatrixBlock m_transformMatrix;
+
 public:
     DbgFontRenderTest()
     : AbstractRenderTest( "rendertest/dbgfontrendertest" ) {
@@ -46,7 +54,18 @@ public:
 		rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 		Scene::GeometryBuilder builder;
 		RenderTextEventData *data = new RenderTextEventData;
-		data->m_geo = builder.createTextBox( -1, -1, 0.1f, "Hello, World!" );
+        data->m_geo = builder.createQuad();
+
+        //data->m_geo = builder.createTextBox( -1, -1, 0.1f, "Hello, World!" );
+
+        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+
+        Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
+        ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
+
+        data->m_geo->m_parameter = parameter;
+        data->m_geo->m_numParameter++;
+
 		rbSrv->sendEvent( &OnRenderTextEvent, data );
 		
 		return true;

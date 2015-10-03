@@ -68,6 +68,7 @@ SET( common_src
 # Debugging
 #==============================================================================
 SET( debugging_inc
+    ${HEADER_PATH}/Debugging/AssertHandler.h
     ${HEADER_PATH}/Debugging/osre_debugging.h
 )
 

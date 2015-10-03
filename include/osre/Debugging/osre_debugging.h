@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cassert>
 #include <osre/Common/Logger.h>
 #include <osre/Common/osre_common.h>
+#include <osre/Debugging/AssertHandler.h>
 
 ///
 ///	@def	OSRE_ASSERT
@@ -38,22 +39,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ///	@param	statement	[in] The statement to validate. Must return true.
 ///	@param	msg	        [in] The error message to show in case of an error.
 ///
-
-static void handleFatal(const OSRE::String &file, int line, const OSRE::String &msg) {
-    ::OSRE::Common::fatalPrint( "Assertion", file, line, msg );
-}
-
-static void handleAssert(const OSRE::String &file, int line, const char *msg) {
-    ::handleFatal( file, line, msg );
-#ifdef OSRE_WINDOWS
-    ::__debugbreak();
-#endif
-	::exit(1);
-}
-
 #ifdef _DEBUG
-#  define OSRE_ASSERT( statement )        if ( !(statement) ) handleAssert( __FILE__, __LINE__,  #statement );
-#  define OSRE_VALIDATE( statement, msg ) if ( !(statement) ) handleFatal( __FILE__, __LINE__,  msg );
+#  define OSRE_ASSERT( statement )        if ( !(statement) ) ::OSRE::Debugging::handleAssert( __FILE__, __LINE__,  #statement );
+#  define OSRE_VALIDATE( statement, msg ) if ( !(statement) ) ::OSRE::Debugging::handleFatal( __FILE__, __LINE__,  msg );
 #else
 #  define OSRE_ASSERT( statement )
 #  define OSRE_VALIDATE( statement, msg ) statement

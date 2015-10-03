@@ -177,7 +177,6 @@ const String *VertexLayout::getAttributes() {
     return m_attributes;
 }
 
-
 BufferData::BufferData()
 : m_type( EmptyBuffer )
 , m_pData( nullptr )
@@ -222,7 +221,6 @@ PrimitiveGroup::PrimitiveGroup()
 PrimitiveGroup::~PrimitiveGroup() {
     // empty
 }
-
 
 Texture::Texture()
     : m_textureName( "" )
