@@ -189,7 +189,7 @@ void Win32Thread::wait() {
         osre_debug( Tag, "Invalid pointer to thread signal." );
         return;
     } 
-    m_pThreadSignal->wait();
+    m_pThreadSignal->waitForOne();
 }
 
 //-------------------------------------------------------------------------------------------------

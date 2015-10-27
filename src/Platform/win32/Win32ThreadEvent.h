@@ -44,7 +44,7 @@ public:
 	///	The event will be signaled.
 	void signal();
 	///	Wait until the event is signaled.
-	void wait();
+	void waitForOne();
 	///	Wait until the event is signaled until a given timeout.
 	void waitForTimeout( ui32 ms );
 	///	The handle of the event will be returned.

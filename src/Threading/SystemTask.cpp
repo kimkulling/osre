@@ -313,7 +313,7 @@ void SystemTask::await() {
     if ( m_pTaskThread ) {
         Platform::AbstractThreadEvent *threadEvent = m_pTaskThread->getUpdateEvent();
         if ( threadEvent ) {
-            threadEvent->wait();
+            threadEvent->waitForOne();
         }
     }
 }

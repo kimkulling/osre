@@ -55,7 +55,7 @@ void SDL2ThreadEvent::signal( ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-void SDL2ThreadEvent::wait( ) {
+void SDL2ThreadEvent::waitForOne( ) {
     m_bool = SDL_FALSE;
     SDL_LockMutex( m_lock );
     while( !m_bool ) {
@@ -63,6 +63,17 @@ void SDL2ThreadEvent::wait( ) {
     }
     SDL_UnlockMutex( m_lock );
 }
+
+//-------------------------------------------------------------------------------------------------
+void SDL2ThreadEvent::waitForAll() {
+    m_bool = SDL_FALSE;
+    SDL_LockMutex( m_lock );
+    while (!m_bool) {
+        SDL_CondWait( m_event, m_lock );
+    }
+    SDL_UnlockMutex( m_lock );
+}
+
 
 //-------------------------------------------------------------------------------------------------
 void SDL2ThreadEvent::waitForTimeout( ui32 ms ) {

@@ -173,7 +173,7 @@ void SDL2Thread::wait( ) {
         osre_debug( Tag, "Invalid pointer to thread signal." );
         return;
     } else {
-        m_pThreadSignal->wait();
+        m_pThreadSignal->waitForOne();
     }
 }
 

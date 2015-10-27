@@ -44,8 +44,10 @@ public:
     ~SDL2ThreadEvent( );
     ///	The event will be signaled.
     void signal();
-    ///	Wait until the event is signaled.
-    void wait();
+    /// Wait for one when signaled.
+    void waitForOne();
+    /// Wait for all when signaled.
+    void waitForAll();
     ///	Wait until the event is signaled until a given timeout.
     void waitForTimeout( ui32 ms );
 

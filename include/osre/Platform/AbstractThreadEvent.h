@@ -41,8 +41,11 @@ public:
 	///	@brief	Signals the class.
 	virtual void signal() = 0;
 
-	///	@brief	Waits until the class will be signaled.
-	virtual void wait() = 0;
+	///	@brief	Waits until one condition is signaled.
+	virtual void waitForOne() = 0;
+
+    ///	@brief	Waits until all conditions are signaled.
+    virtual void waitForAll() = 0;
 
 	///	@brief	Wait for a signal or the timeout has passed.
 	///	@param	ms	[in] The timeout in ms.

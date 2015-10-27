@@ -197,7 +197,7 @@ void TAsyncQueue<T>::awaitEnqueuedItem() {
     OSRE_ASSERT(nullptr != m_pEnqueueEvent);
 
     if ( m_ItemQueue.isEmpty() ) {
-        m_pEnqueueEvent->wait();
+        m_pEnqueueEvent->waitForOne();
     }
 }
 

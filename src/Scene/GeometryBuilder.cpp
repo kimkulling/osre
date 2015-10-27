@@ -383,8 +383,6 @@ RenderBackend::Geometry *GeometryBuilder::createTextBox( f32 x, f32 y, f32 size,
 
 	// setup material
 	geo->m_material = new Material;
-
-    
     geo->m_material->m_numTextures = 1;
     geo->m_material->m_pTextures = new Texture[ 1 ];
 #ifdef _WIN32

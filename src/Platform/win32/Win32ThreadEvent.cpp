@@ -55,7 +55,7 @@ void Win32ThreadEvent::signal() {
 }
 
 //-------------------------------------------------------------------------------------------------
-void Win32ThreadEvent::wait() {
+void Win32ThreadEvent::waitForOne() {
 	static_cast<void>( ::WaitForSingleObject( m_EventHandle, INFINITE ) );
 }
 
