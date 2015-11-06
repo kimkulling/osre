@@ -45,7 +45,9 @@ public:
 	void signal();
 	///	Wait until the event is signaled.
 	void waitForOne();
-	///	Wait until the event is signaled until a given timeout.
+    ///	Waits for all.
+    void waitForAll();
+    ///	Wait until the event is signaled until a given timeout.
 	void waitForTimeout( ui32 ms );
 	///	The handle of the event will be returned.
 	HANDLE getHandle() const;

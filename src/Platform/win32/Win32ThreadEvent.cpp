@@ -60,6 +60,11 @@ void Win32ThreadEvent::waitForOne() {
 }
 
 //-------------------------------------------------------------------------------------------------
+void Win32ThreadEvent::waitForAll() {
+    static_cast< void >( ::WaitForMultipleObjects( 1, &m_EventHandle, TRUE, INFINITE ) );
+}
+
+//-------------------------------------------------------------------------------------------------
 void Win32ThreadEvent::waitForTimeout( ui32 ms ) {
 	ui32 timeout = ms;
 	if ( 0 == ms ) {
