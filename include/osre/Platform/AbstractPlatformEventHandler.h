@@ -35,23 +35,47 @@ class OSEventListener;
 typedef CPPCore::TList<Common::EventData*> EventDataList;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		ZFXCE2::Platform::AbstractPlatformEventHandler
+///	@class		OSRE::Platform::AbstractPlatformEventHandler
 ///	@ingroup	Infrastructure
 ///
 ///	@brief  This abstract class defines the event handler for a platform event loop handler.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractPlatformEventHandler : public Common::AbstractEventHandler {
 public:
+    ///	@brief  The class destructor, virtual.
     virtual ~AbstractPlatformEventHandler();
+    
+    ///	@brief  Used to register a event listener.
+    ///	@param  events      List of events.
+    /// @param  pListener   The listener instance
     virtual void registerEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener ) = 0;
+    
+    ///	@brief  Used to unregister a event listener.
+    ///	@param  events      List of events.
+    /// @param  pListener   The listener instance
     virtual void unregisterEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener ) = 0;
+    
+    ///	@brief  Set the polling state.
+    ///	@param  enabled     true for enabling polling.
     virtual void enablePolling( bool enabled ) = 0;
 
 protected:
+    /// @brief  The class constructor.
     AbstractPlatformEventHandler();
+
+    ///	@brief  Will be called to process events.
+    /// @param  pTriggerer  The event trigger.
     void processEvents( Common::EventTriggerer *pTriggerer );
+    
+    ///	@brief  Returns the active event data list.
+    /// @return The active event data list.
     EventDataList *getActiveEventDataList();
+
+    ///	@brief  Returns the active event data list.
+    /// @return The pending event data list.
     EventDataList *getPendingEventDataList();
+    
+    ///	@brief  Toggles between the active and pending list.
     void switchEventDataList();
 
 private:
