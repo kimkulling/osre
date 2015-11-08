@@ -28,8 +28,8 @@ namespace OSRE {
 namespace Platform  {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		ZFXCE2::Platform::AbstractThreadEvent
-///	@ingroup	Infrastructure
+///	@class		::OSRE::Platform::AbstractThreadEvent
+///	@ingroup	Engine
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------

@@ -28,8 +28,8 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		ZFXCE2::Platform::AbstractTimer
-///	@ingroup	Infrastructure
+///	@class		::OSRE::Platform::AbstractTimer
+///	@ingroup	Engine
 ///
 ///	@brief This class declares the abstract interface for timer implementations.
 ///

@@ -29,7 +29,7 @@ namespace System {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::System::SystemUtils
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief	This class offers some system-specific functions.
 //-------------------------------------------------------------------------------------------------

@@ -34,7 +34,7 @@ class AbstractAtomic;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::IThreadFactory
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief	This abstract interface declares the factory methods for any thread implementation.
 //-------------------------------------------------------------------------------------------------

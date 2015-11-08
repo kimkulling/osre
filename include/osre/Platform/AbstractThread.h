@@ -31,7 +31,7 @@ class AbstractThreadEvent;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::IThread
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief	This abstract class declares the interface for a thread implementation.
 

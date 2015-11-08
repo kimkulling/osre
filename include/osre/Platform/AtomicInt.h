@@ -29,7 +29,7 @@ namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::AbstractAtomic
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief  This is the abstract base class for all atomic implementations.
 //-------------------------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ AbstractAtomic::~AbstractAtomic() {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::AtomicInt
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief  Implements the accessor for an atomic operation.
 //-------------------------------------------------------------------------------------------------

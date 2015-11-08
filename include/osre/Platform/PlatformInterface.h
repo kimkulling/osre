@@ -173,7 +173,7 @@ public:
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::PlatformInterface
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief  This class encapsulates platform-specific details.
 //-------------------------------------------------------------------------------------------------

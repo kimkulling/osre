@@ -29,7 +29,7 @@ namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
 ///	@struct		::OSRE::Platform::SurfaceProperties
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief  This struct stores all surface related information.
 //-------------------------------------------------------------------------------------------------

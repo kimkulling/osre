@@ -35,8 +35,8 @@ class OSEventListener;
 typedef CPPCore::TList<Common::EventData*> EventDataList;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		OSRE::Platform::AbstractPlatformEventHandler
-///	@ingroup	Infrastructure
+///	@class		::OSRE::Platform::AbstractPlatformEventHandler
+///	@ingroup	Engine
 ///
 ///	@brief  This abstract class defines the event handler for a platform event loop handler.
 //-------------------------------------------------------------------------------------------------
