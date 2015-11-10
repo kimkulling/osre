@@ -42,43 +42,40 @@ class DbgFontRenderTest : public AbstractRenderTest {
 
 public:
     DbgFontRenderTest()
-    : AbstractRenderTest( "rendertest/dbgfontrendertest" ) {
+        : AbstractRenderTest( "rendertest/DbgFontRenderTest" ) {
         // empty
     }
 
-    ~DbgFontRenderTest() {
-
+    virtual ~DbgFontRenderTest() {
+        // empty
     }
 
-    virtual bool onCreate( RenderBackendService *rbSrv ) {
-		rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
-		Scene::GeometryBuilder builder;
-		RenderTextEventData *data = new RenderTextEventData;
-        data->m_geo = builder.createQuad();
+    virtual bool onCreate( RenderBackend::RenderBackendService *pRenderBackendSrv ) {
+        pRenderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
+        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
-        //data->m_geo = builder.createTextBox( -1, -1, 0.1f, "Hello, World!" );
+        Scene::GeometryBuilder myBuilder;
+        Geometry *pGeometry = myBuilder.createQuad();
+        attachGeoEvData->m_numGeo = 1;
+        attachGeoEvData->m_pGeometry = pGeometry;
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
-
+        m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
         Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
         ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
 
-        data->m_geo->m_parameter = parameter;
-        data->m_geo->m_numParameter++;
+        pGeometry->m_parameter = parameter;
+        pGeometry->m_numParameter++;
 
-		rbSrv->sendEvent( &OnRenderTextEvent, data );
-		
-		return true;
-    }
+        pRenderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
-    virtual bool onDestroy( RenderBackendService *rbSrv ) {
         return true;
     }
 
-    virtual bool onRender( d32 timediff, RenderBackendService *rbSrv ) {
+    //---------------------------------------------------------------------------------------------
+    virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *pRenderBackendSrv ) {
         return true;
     }
-
 };
 
 ATTACH_RENDERTEST( DbgFontRenderTest )
