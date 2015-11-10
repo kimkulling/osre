@@ -114,7 +114,7 @@ GeometryBuilder::~GeometryBuilder() {
 }
 
 //-------------------------------------------------------------------------------------------------
-RenderBackend::Geometry *GeometryBuilder::createEmptyGeometry( RenderBackend::VertexType type ) {
+RenderBackend::Geometry *GeometryBuilder::allocEmptyGeometry( RenderBackend::VertexType type ) {
     Geometry *geo = new Geometry;
     geo->m_vertextype = type;
     geo->m_indextype = UnsignedShort;
@@ -123,7 +123,7 @@ RenderBackend::Geometry *GeometryBuilder::createEmptyGeometry( RenderBackend::Ve
 }
 
 //-------------------------------------------------------------------------------------------------
-RenderBackend::Geometry *GeometryBuilder::createTriangle() {
+RenderBackend::Geometry *GeometryBuilder::allocTriangles( ui32 numTriangles ) {
     Geometry *geo = new Geometry;
     geo->m_vertextype = ColorVertex;
     geo->m_indextype = UnsignedShort;
@@ -182,7 +182,7 @@ RenderBackend::Geometry *GeometryBuilder::createTriangle() {
 }
 
 //-------------------------------------------------------------------------------------------------
-RenderBackend::Geometry *GeometryBuilder::createQuad() {
+RenderBackend::Geometry *GeometryBuilder::allocQuads( ui32 numQuads ) {
     Geometry *geo = new Geometry;
     geo->m_vertextype = ColorVertex;
     geo->m_indextype = UnsignedShort;

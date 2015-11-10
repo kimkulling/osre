@@ -77,17 +77,17 @@ public:
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
         
         Scene::GeometryBuilder myBuilder;
-        Geometry *pGeometry = myBuilder.createTriangle();
+        Geometry *geo = myBuilder.allocTriangles( 1 );
         attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_pGeometry = pGeometry;
+        attachGeoEvData->m_pGeometry = geo;
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
 
         Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
         ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
 
-        pGeometry->m_parameter = parameter;
-        pGeometry->m_numParameter++;
+        geo->m_parameter = parameter;
+        geo->m_numParameter++;
 
         pRenderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 

@@ -47,13 +47,13 @@ public:
     /// @brief  The class destructor.
     ~GeometryBuilder();
 
-    RenderBackend::Geometry *createEmptyGeometry( RenderBackend::VertexType type );
+    RenderBackend::Geometry *allocEmptyGeometry( RenderBackend::VertexType type );
 
     /// @brief  Will create a triangle geometry.
     /// @return The created geometry.
-    RenderBackend::Geometry *createTriangle();
+    RenderBackend::Geometry *allocTriangles( ui32 numTriangles );
 
-    RenderBackend::Geometry *createQuad();
+    RenderBackend::Geometry *allocQuads( ui32 numTriangles );
 
     /// @brief  Will create a box geometry.
     /// @return The created geometry.

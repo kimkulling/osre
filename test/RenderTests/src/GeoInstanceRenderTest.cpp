@@ -104,19 +104,19 @@ public:
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         Scene::GeometryBuilder myBuilder;
-        Geometry *pGeometry = myBuilder.createTriangle();
+        Geometry *geo = myBuilder.allocTriangles( 1 );
 
         attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_pGeometry = pGeometry;
+        attachGeoEvData->m_pGeometry = geo;
 
         // use a default material
-        pGeometry->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
-        if( nullptr != pGeometry->m_material->m_pShader ) {
-            pGeometry->m_material->m_pShader->m_attributes.add( "position" );
-            pGeometry->m_material->m_pShader->m_attributes.add( "normal" );
-            pGeometry->m_material->m_pShader->m_attributes.add( "color0" );
-            pGeometry->m_material->m_pShader->m_parameters.add( "M" );
-            pGeometry->m_material->m_pShader->m_parameters.add( "VP" );
+        geo->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
+        if( nullptr != geo->m_material->m_pShader ) {
+            geo->m_material->m_pShader->m_attributes.add( "position" );
+            geo->m_material->m_pShader->m_attributes.add( "normal" );
+            geo->m_material->m_pShader->m_attributes.add( "color0" );
+            geo->m_material->m_pShader->m_parameters.add( "M" );
+            geo->m_material->m_pShader->m_parameters.add( "VP" );
         }
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
@@ -145,8 +145,8 @@ public:
         ::memcpy( parameterM->m_data.m_data, glm::value_ptr( mat[ 0 ] ), sizeof( glm::mat4 ) * NumInstances);
         parameterMVP->m_next = parameterM;
 
-        pGeometry->m_parameter = parameterMVP;
-        pGeometry->m_numParameter += 2;
+        geo->m_parameter = parameterMVP;
+        geo->m_numParameter += 2;
         
         rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 

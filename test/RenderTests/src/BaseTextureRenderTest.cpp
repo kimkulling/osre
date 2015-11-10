@@ -117,9 +117,9 @@ public:
         pRenderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
-        Geometry *pGeometry = new Geometry[ 1 ];
-        pGeometry->m_vertextype = RenderVertex;
-        pGeometry->m_indextype = UnsignedShort;
+        Geometry *geo = new Geometry[ 1 ];
+        geo->m_vertextype = RenderVertex;
+        geo->m_indextype = UnsignedShort;
 
         RenderVert vertices[ 4 ];
         GLushort indices[ 6 ];
@@ -135,13 +135,13 @@ public:
         vertices[ 2 ].tex0 = glm::vec2( 1, 0 );
         vertices[ 3 ].tex0 = glm::vec2( 1, 1 );
 
-        pGeometry->m_vb = new BufferData;
-        pGeometry->m_vb->m_size = sizeof( RenderVert ) * 4;
-        pGeometry->m_vb->m_access = ReadOnly;
-        pGeometry->m_vb->m_type = VertexBuffer;
+        geo->m_vb = new BufferData;
+        geo->m_vb->m_size = sizeof( RenderVert ) * 4;
+        geo->m_vb->m_access = ReadOnly;
+        geo->m_vb->m_type = VertexBuffer;
 
-        pGeometry->m_vb->m_pData = new uc8[ pGeometry->m_vb->m_size ];
-        ::memcpy( pGeometry->m_vb->m_pData, vertices, pGeometry->m_vb->m_size );
+        geo->m_vb->m_pData = new uc8[ geo->m_vb->m_size ];
+        ::memcpy( geo->m_vb->m_pData, vertices, geo->m_vb->m_size );
 
         // setup triangle indices
         indices[ 0 ] = 0;
@@ -152,46 +152,46 @@ public:
         indices[ 4 ] = 2;
         indices[ 5 ] = 3;
         
-        pGeometry->m_ib = new BufferData;
-        pGeometry->m_ib->m_size = sizeof( GLushort ) * 6;
-        pGeometry->m_ib->m_access = ReadOnly;
-        pGeometry->m_ib->m_type = IndexBuffer;
+        geo->m_ib = new BufferData;
+        geo->m_ib->m_size = sizeof( GLushort ) * 6;
+        geo->m_ib->m_access = ReadOnly;
+        geo->m_ib->m_type = IndexBuffer;
         
-        pGeometry->m_ib->m_pData = new uc8[ pGeometry->m_ib->m_size ];
-        ::memcpy( pGeometry->m_ib->m_pData, indices, pGeometry->m_ib->m_size );
+        geo->m_ib->m_pData = new uc8[ geo->m_ib->m_size ];
+        ::memcpy( geo->m_ib->m_pData, indices, geo->m_ib->m_size );
 
         attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_pGeometry = pGeometry;
+        attachGeoEvData->m_pGeometry = geo;
 
         // use default material
-        pGeometry->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
-        if( nullptr != pGeometry->m_material->m_pShader ) {
-            pGeometry->m_material->m_pShader->m_attributes.add( "position" );
-            pGeometry->m_material->m_pShader->m_attributes.add( "normal" );
-            pGeometry->m_material->m_pShader->m_attributes.add( "texcoord0" );
-            pGeometry->m_material->m_pShader->m_parameters.add( "MVP" );
+        geo->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
+        if( nullptr != geo->m_material->m_pShader ) {
+            geo->m_material->m_pShader->m_attributes.add( "position" );
+            geo->m_material->m_pShader->m_attributes.add( "normal" );
+            geo->m_material->m_pShader->m_attributes.add( "texcoord0" );
+            geo->m_material->m_pShader->m_parameters.add( "MVP" );
         }
 
-        pGeometry->m_material->m_numTextures = 1;
-        pGeometry->m_material->m_pTextures = new Texture[ 1 ];
+        geo->m_material->m_numTextures = 1;
+        geo->m_material->m_pTextures = new Texture[ 1 ];
 #ifdef _WIN32
-        pGeometry->m_material->m_pTextures[ 0 ].m_textureName = "../../media/Models/Obj/SpiderTex.jpg";
+        geo->m_material->m_pTextures[ 0 ].m_textureName = "../../media/Models/Obj/SpiderTex.jpg";
 #else
-        pGeometry->m_material->m_pTextures[ 0 ].m_textureName = "../media/Models/Obj/SpiderTex.jpg";
+        geo->m_material->m_pTextures[ 0 ].m_textureName = "../media/Models/Obj/SpiderTex.jpg";
 #endif
-        pGeometry->m_material->m_pTextures[ 0 ].m_targetType = Texture2D;
-        pGeometry->m_material->m_pTextures[ 0 ].m_width = 0;
-        pGeometry->m_material->m_pTextures[ 0 ].m_height = 0;
-        pGeometry->m_material->m_pTextures[ 0 ].m_channels = 0;
-        pGeometry->m_material->m_pTextures[ 0 ].m_data = nullptr;
-        pGeometry->m_material->m_pTextures[ 0 ].m_size = 0;
+        geo->m_material->m_pTextures[ 0 ].m_targetType = Texture2D;
+        geo->m_material->m_pTextures[ 0 ].m_width = 0;
+        geo->m_material->m_pTextures[ 0 ].m_height = 0;
+        geo->m_material->m_pTextures[ 0 ].m_channels = 0;
+        geo->m_material->m_pTextures[ 0 ].m_data = nullptr;
+        geo->m_material->m_pTextures[ 0 ].m_size = 0;
 
-        pGeometry->m_numPrimGroups = 1;
-        pGeometry->m_pPrimGroups = new PrimitiveGroup[ 1 ];
-        pGeometry->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
-        pGeometry->m_pPrimGroups[ 0 ].m_numPrimitives = 6;
-        pGeometry->m_pPrimGroups[ 0 ].m_primitive = TriangleList;
-        pGeometry->m_pPrimGroups[ 0 ].m_startIndex = 0;
+        geo->m_numPrimGroups = 1;
+        geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
+        geo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
+        geo->m_pPrimGroups[ 0 ].m_numPrimitives = 6;
+        geo->m_pPrimGroups[ 0 ].m_primitive = TriangleList;
+        geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
         pRenderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
@@ -200,8 +200,8 @@ public:
         Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
         ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
         
-        pGeometry->m_parameter = parameter;
-        pGeometry->m_numParameter++;
+        geo->m_parameter = parameter;
+        geo->m_numParameter++;
 
         return true;
     }
