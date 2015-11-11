@@ -91,7 +91,6 @@ bool Win32Thread::stop() {
 
     // Stop the thread
     if ( m_ThreadHandle != NULL ) {
-        ::TerminateThread( m_ThreadHandle, 0 );
         ::CloseHandle( m_ThreadHandle );
         m_ThreadHandle = NULL;
     }
