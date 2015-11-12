@@ -103,6 +103,7 @@ static const String TextFsSrc =
     "//    vFragColor = texture( tex0, UV );\n"
 	"};\n";
 
+
 //-------------------------------------------------------------------------------------------------
 GeometryBuilder::GeometryBuilder() {
     // empty
@@ -123,7 +124,33 @@ RenderBackend::Geometry *GeometryBuilder::allocEmptyGeometry( RenderBackend::Ver
 }
 
 //-------------------------------------------------------------------------------------------------
-RenderBackend::Geometry *GeometryBuilder::allocTriangles( ui32 numTriangles ) {
+BufferData *allocVertices( RenderBackend::VertexType type, ui32 numverts ) {
+    BufferData *data( nullptr );
+    ui32 size( 0 );
+    switch (type) {
+        case ColorVertex: {
+                ColorVert *colVerts = new ColorVert[ numverts ];
+                size = sizeof( ColorVert ) * numverts;
+                data = BufferData::alloc( VertexBuffer, size, ReadOnly );
+                ::memcpy( data, colVerts, size );
+            }
+            break;
+
+        case RenderVertex: {
+                RenderVert *renderVerts = new RenderVert[ numverts ];
+                size = sizeof( RenderVert ) * numverts;
+                ::memcpy( data, renderVerts, size );
+            }
+            break;
+        default:
+            break;
+    }
+
+    return data;
+}
+
+//-------------------------------------------------------------------------------------------------
+RenderBackend::Geometry *GeometryBuilder::allocTriangles( RenderBackend::VertexType type, ui32 numTriangles ) {
     Geometry *geo = new Geometry;
     geo->m_vertextype = ColorVertex;
     geo->m_indextype = UnsignedShort;
@@ -182,7 +209,7 @@ RenderBackend::Geometry *GeometryBuilder::allocTriangles( ui32 numTriangles ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-RenderBackend::Geometry *GeometryBuilder::allocQuads( ui32 numQuads ) {
+RenderBackend::Geometry *GeometryBuilder::allocQuads( RenderBackend::VertexType type, ui32 numQuads ) {
     Geometry *geo = new Geometry;
     geo->m_vertextype = ColorVertex;
     geo->m_indextype = UnsignedShort;
@@ -247,7 +274,7 @@ RenderBackend::Geometry *GeometryBuilder::allocQuads( ui32 numQuads ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-RenderBackend::Geometry *GeometryBuilder::createBox( f32 w, f32 h, f32 d ) {
+RenderBackend::Geometry *GeometryBuilder::createBox( RenderBackend::VertexType type, f32 w, f32 h, f32 d ) {
     Geometry *pGeometry = new Geometry;
     pGeometry->m_vertextype = ColorVertex;
     pGeometry->m_indextype  = UnsignedShort;
@@ -321,7 +348,7 @@ RenderBackend::Geometry *GeometryBuilder::createBox( f32 w, f32 h, f32 d ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-RenderBackend::Geometry *GeometryBuilder::createTextBox( f32 x, f32 y, f32 size, const String &text ) {
+RenderBackend::Geometry *GeometryBuilder::createTextBox( RenderBackend::VertexType type, f32 x, f32 y, f32 size, const String &text ) {
 	if ( text.empty() ) {
 		return nullptr;
 	}

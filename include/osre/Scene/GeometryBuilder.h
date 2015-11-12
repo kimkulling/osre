@@ -51,16 +51,16 @@ public:
 
     /// @brief  Will create a triangle geometry.
     /// @return The created geometry.
-    RenderBackend::Geometry *allocTriangles( ui32 numTriangles );
+    RenderBackend::Geometry *allocTriangles( RenderBackend::VertexType type, ui32 numTriangles );
 
-    RenderBackend::Geometry *allocQuads( ui32 numTriangles );
+    RenderBackend::Geometry *allocQuads( RenderBackend::VertexType type, ui32 numTriangles );
 
     /// @brief  Will create a box geometry.
     /// @return The created geometry.
-    RenderBackend::Geometry *createBox( f32 w, f32 h, f32 d);
+    RenderBackend::Geometry *createBox( RenderBackend::VertexType type, f32 w, f32 h, f32 d);
 
     ///	@brief
-	RenderBackend::Geometry *createTextBox( f32 x, f32 y, f32 size, const String &text );
+	RenderBackend::Geometry *createTextBox( RenderBackend::VertexType type, f32 x, f32 y, f32 size, const String &text );
 };
 
 //-------------------------------------------------------------------------------------------------
