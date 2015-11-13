@@ -124,51 +124,73 @@ RenderBackend::Geometry *GeometryBuilder::allocEmptyGeometry( RenderBackend::Ver
 }
 
 //-------------------------------------------------------------------------------------------------
-BufferData *allocVertices( RenderBackend::VertexType type, ui32 numverts ) {
+BufferData *allocVertices( VertexType type, ui32 numTriangles, ui32 numVerts, glm::vec3 *pos, glm::vec3 *col ) {
     BufferData *data( nullptr );
     ui32 size( 0 );
     switch (type) {
         case ColorVertex: {
-                ColorVert *colVerts = new ColorVert[ numverts ];
-                size = sizeof( ColorVert ) * numverts;
+                ColorVert *colVerts = new ColorVert[ numVerts * numTriangles ];
+                for ( ui32 i = 0; i < numTriangles; ++i) {
+                    if ( nullptr != pos) {
+                        for ( ui32 i = 0; i < numVerts; i++) {
+                            colVerts[ i ].position = pos[ i ];
+                        }
+                    }
+                    if ( nullptr != col) {
+                        for ( ui32 i = 0; i < numVerts; i++) {
+                            colVerts[ i ].color = col[ i ];
+                        }
+                    }
+                }
+                size = sizeof( ColorVert ) * numVerts * numTriangles;
                 data = BufferData::alloc( VertexBuffer, size, ReadOnly );
-                ::memcpy( data, colVerts, size );
+                ::memcpy( data->m_pData, colVerts, size );
             }
             break;
 
         case RenderVertex: {
-                RenderVert *renderVerts = new RenderVert[ numverts ];
-                size = sizeof( RenderVert ) * numverts;
-                ::memcpy( data, renderVerts, size );
+                RenderVert *renderVerts = new RenderVert[ numVerts * numTriangles ];
+                for (ui32 i = 0; i < numTriangles; ++i) {
+                    if ( nullptr != pos) {
+                        for ( ui32 i = 0; i < numVerts; i++) {
+                            renderVerts[ i ].position = pos[ i ];
+                        }
+                    }
+                }
+                size = sizeof( RenderVert ) * numVerts * numTriangles;
+                data = BufferData::alloc( VertexBuffer, size, ReadOnly );
+                ::memcpy( data->m_pData, renderVerts, size );
             }
             break;
+
         default:
             break;
     }
+
 
     return data;
 }
 
 //-------------------------------------------------------------------------------------------------
-RenderBackend::Geometry *GeometryBuilder::allocTriangles( RenderBackend::VertexType type, ui32 numTriangles ) {
+Geometry *GeometryBuilder::allocTriangles( VertexType type, ui32 numTriangles ) {
     Geometry *geo = new Geometry;
-    geo->m_vertextype = ColorVertex;
+    geo->m_vertextype = type;
     geo->m_indextype = UnsignedShort;
 
     // setup triangle vertices    
     static const ui32 NumVert = 3;
     ColorVert vertices[ NumVert ];
-    vertices[ 0 ].color = glm::vec3( 1, 0, 0 );
-    vertices[ 1 ].color = glm::vec3( 0, 1, 0 );
-    vertices[ 2 ].color = glm::vec3( 0, 0, 1 );
 
-    vertices[ 0 ].position = glm::vec3( -1, -1, 0 );
-    vertices[ 1 ].position = glm::vec3( 0, 1, 0 );
-    vertices[ 2 ].position = glm::vec3( 1, -1, 0 );
+    glm::vec3 col[ NumVert ];
+    col[ 0 ] = glm::vec3( 1, 0, 0 );
+    col[ 1 ] = glm::vec3( 0, 1, 0 );
+    col[ 2 ] = glm::vec3( 0, 0, 1 );
 
-    ui32 size( sizeof( ColorVert ) * NumVert );
-    geo->m_vb = BufferData::alloc( VertexBuffer, size, ReadOnly );
-    ::memcpy( geo->m_vb->m_pData, vertices, size );
+    glm::vec3 pos[ NumVert ];
+    pos[ 0 ] = glm::vec3( -1, -1, 0 );
+    pos[ 1 ] = glm::vec3( 0, 1, 0 );
+    pos[ 2 ] = glm::vec3( 1, -1, 0 );
+    geo->m_vb = allocVertices( geo->m_vertextype, numTriangles, NumVert, pos, col );
 
     // setup triangle indices
     static const ui32 NumIndices = 3;
@@ -177,7 +199,7 @@ RenderBackend::Geometry *GeometryBuilder::allocTriangles( RenderBackend::VertexT
     indices[ 1 ] = 1;
     indices[ 2 ] = 2;
     
-    size = sizeof( GLushort ) * NumIndices;
+    ui32 size = sizeof( GLushort ) * NumIndices;
     geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
     ::memcpy( geo->m_ib->m_pData, indices, size );
 
@@ -209,27 +231,31 @@ RenderBackend::Geometry *GeometryBuilder::allocTriangles( RenderBackend::VertexT
 }
 
 //-------------------------------------------------------------------------------------------------
-RenderBackend::Geometry *GeometryBuilder::allocQuads( RenderBackend::VertexType type, ui32 numQuads ) {
+Geometry *GeometryBuilder::allocQuads( VertexType type, ui32 numQuads ) {
     Geometry *geo = new Geometry;
-    geo->m_vertextype = ColorVertex;
+    geo->m_vertextype = type;
     geo->m_indextype = UnsignedShort;
 
     // setup triangle vertices    
     static const ui32 NumVert = 4;
-    ColorVert vertices[ NumVert ];
-    vertices[ 0 ].color = glm::vec3( 1, 0, 0 );
-    vertices[ 1 ].color = glm::vec3( 0, 1, 0 );
-    vertices[ 2 ].color = glm::vec3( 0, 0, 1 );
-    vertices[ 3 ].color = glm::vec3( 1, 0, 0 );
+//    ColorVert vertices[ NumVert ];
+    glm::vec3 col[ NumVert ];
+    col[ 0 ] = glm::vec3( 1, 0, 0 );
+    col[ 1 ] = glm::vec3( 0, 1, 0 );
+    col[ 2 ] = glm::vec3( 0, 0, 1 );
+    col[ 3 ] = glm::vec3( 1, 0, 0 );
 
-    vertices[ 0 ].position = glm::vec3( -1, -1, 0 );
-    vertices[ 1 ].position = glm::vec3( -1, 1, 0 );
-    vertices[ 2 ].position = glm::vec3( 1, -1, 0 );
-    vertices[ 3 ].position = glm::vec3( 1, 1, 0 );
+    glm::vec3 pos[ NumVert ];
+    pos[ 0 ] = glm::vec3( -1, -1, 0 );
+    pos[ 1 ] = glm::vec3( -1, 1, 0 );
+    pos[ 2 ] = glm::vec3( 1, -1, 0 );
+    pos[ 3 ] = glm::vec3( 1, 1, 0 );
 
-    ui32 size( sizeof( ColorVert ) * NumVert );
+    geo->m_vb = allocVertices( geo->m_vertextype, numQuads, NumVert, pos, col );
+
+    /*ui32 size( sizeof( ColorVert ) * NumVert );
     geo->m_vb = BufferData::alloc( VertexBuffer, size, ReadOnly );
-    ::memcpy( geo->m_vb->m_pData, vertices, size );
+    ::memcpy( geo->m_vb->m_pData, vertices, size );*/
 
     // setup triangle indices
     static const ui32 NumIndices = 6;
@@ -242,7 +268,7 @@ RenderBackend::Geometry *GeometryBuilder::allocQuads( RenderBackend::VertexType 
     indices[ 4 ] = 2;
     indices[ 5 ] = 3;
 
-    size = sizeof( GLushort ) * NumIndices;
+    ui32 size = sizeof( GLushort ) * NumIndices;
     geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
     ::memcpy( geo->m_ib->m_pData, indices, size );
 
@@ -274,7 +300,7 @@ RenderBackend::Geometry *GeometryBuilder::allocQuads( RenderBackend::VertexType 
 }
 
 //-------------------------------------------------------------------------------------------------
-RenderBackend::Geometry *GeometryBuilder::createBox( RenderBackend::VertexType type, f32 w, f32 h, f32 d ) {
+Geometry *GeometryBuilder::createBox( VertexType type, f32 w, f32 h, f32 d ) {
     Geometry *pGeometry = new Geometry;
     pGeometry->m_vertextype = ColorVertex;
     pGeometry->m_indextype  = UnsignedShort;
