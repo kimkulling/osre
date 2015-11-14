@@ -193,6 +193,17 @@ IF( WIN32 )
 ENDIF( WIN32 )
 
 #==============================================================================
+# Profiling
+#==============================================================================
+SET( profiling_inc
+    ${HEADER_PATH}/Profiling/FPSCounter.h 
+)
+
+SET( profiling_src
+    Profiling/FPSCounter.cpp
+)
+
+#==============================================================================
 # Properties
 #==============================================================================
 SET ( properties_inc
@@ -291,6 +302,7 @@ SOURCE_GROUP( Memory              FILES ${memory_src} )
 SOURCE_GROUP( Platform            FILES ${platform_src} )
 SOURCE_GROUP( Platform\\Win32     FILES ${platform_impl_src} )
 SOURCE_GROUP( Platform\\sdl2      FILES ${platform_sdl2_src} )
+SOURCE_GROUP( Profiling           FILES ${profiling_src} )
 SOURCE_GROUP( Properties          FILES ${properties_src} )
 SOURCE_GROUP( RenderBackend       FILES ${renderbackend_src} )
 SOURCE_GROUP( RenderBackend\\OGLRenderer       FILES ${renderbackend_oglrenderer_src} )
@@ -309,6 +321,7 @@ SOURCE_GROUP( Include\\Math       FILES ${math_inc} )
 SOURCE_GROUP( Include\\Memory     FILES ${memory_inc} )
 SOURCE_GROUP( Include\\Properties FILES ${properties_inc} )
 SOURCE_GROUP( Include\\Platform   FILES ${platform_inc} )
+SOURCE_GROUP( Include\\Profiling  FILES ${profiling_inc} )
 SOURCE_GROUP( Include\\Resources  FILES ${resources_inc} )
 SOURCE_GROUP( Include\\Scene      FILES ${scene_inc} )
 SOURCE_GROUP( Include\\Thread        FILES ${threading_inc} )
@@ -333,6 +346,7 @@ ADD_LIBRARY( osre SHARED
     ${utils_inc}
     ${properties_inc}
     ${platform_inc}
+    ${profiling_inc}
     ${resources_inc}
     ${scene_inc}
     ${threading_inc}
@@ -350,6 +364,7 @@ ADD_LIBRARY( osre SHARED
     ${system_src}
         ${system_impl_src}
     ${properties_src}
+    ${profiling_src}
     ${platform_src}
         ${platform_impl_src}
         ${platform_sdl2_src}

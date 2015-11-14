@@ -377,7 +377,8 @@ bool OGLRenderEventHandler::onAttached( const EventData *eventData ) {
     }
 
     m_oglBackend = new OGLRenderBackend;
-
+    m_oglBackend->setTimer( PlatformInterface::getInstance()->getTimer() );
+        
     return true;
 }
 

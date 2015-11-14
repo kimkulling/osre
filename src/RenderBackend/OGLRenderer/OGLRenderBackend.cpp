@@ -48,7 +48,7 @@ extern const unsigned char *glyph[];
 
 void DrawGlyph( const Common::ColorRGBA &col, int c );
 
-static const String Tag       = "OGLRenderBackend";
+static const String Tag = "OGLRenderBackend";
 
 //-------------------------------------------------------------------------------------------------
 static bool setParameterInShader( OGLParameter *param, OGLShader *shader ) {
@@ -189,7 +189,8 @@ OGLRenderBackend::OGLRenderBackend( )
 , m_parameters()
 , m_shaderInUse( nullptr )
 , m_freeBufferSlots()
-, m_primitives() {
+, m_primitives()
+, m_fpsCounter( nullptr ) {
     // empty
 }
 
@@ -202,6 +203,11 @@ OGLRenderBackend::~OGLRenderBackend( ) {
     releaseAllBuffers();
     releaseAllParameters();
     releaseAllPrimitiveGroups();
+}
+
+//-------------------------------------------------------------------------------------------------
+void OGLRenderBackend::setTimer( Platform::AbstractTimer *timer ) {
+    m_fpsCounter = new Profiling::FPSCounter( timer );
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -911,6 +917,9 @@ void OGLRenderBackend::renderFrame() {
     OSRE_ASSERT( nullptr != m_renderCtx );    
     
 	m_renderCtx->update();
+    if (nullptr != m_fpsCounter) {
+        ui32 fps = m_fpsCounter->getFPS();
+    }
 }
 
 //-------------------------------------------------------------------------------------------------

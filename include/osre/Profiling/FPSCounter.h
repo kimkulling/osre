@@ -22,39 +22,41 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "OGLCommon.h"
+#include <osre/Common/osre_common.h>
 
 namespace OSRE {
-namespace RenderBackend {
 
+// Forward declarations
+namespace Platform {
+    class AbstractTimer;
+}
+
+namespace Profiling {
+        
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderBackend::OGLEnum
+///	@class		::OSRE::Profiling::FPSCounter
 ///	@ingroup	Engine
 ///
-///	@brief  This utility class implements the OpenGL enum lookup.
+///	@brief
 //-------------------------------------------------------------------------------------------------
-class OGLEnum {
+class FPSCounter {
 public:
-    ///	@brief  Translates the buffer type to OpenGL.
-    static GLenum getGLBufferType( BufferType type );
-    ///	@brief  Translates the access type to OpenGL.
-    static GLenum getGLBufferAccessType( BufferAccessType type );
-    ///	@brief  Translates the primitive type to OpenGL.
-    static GLenum getGLPrimitiveType( PrimitiveType primType );
-    ///	@brief  Translates the index type to OpenGL.
-    static GLenum getGLIndexType( IndexType indexType );
-    ///	@brief  Translates the texture type to OpenGL.
-    static GLenum getGLTextureTarget( TextureTargetType type );
-    ///	@brief  Translates the texture parameter type to OpenGL.
-    static GLenum getGLTextureParameterName( TextureParameterName name );
+    ///	@brief  The class constructor.
+    /// @param  timer   [in] The timer instance.
+    FPSCounter( Platform::AbstractTimer  *timer );
+    
+    ///	@brief  The class destructor.
+    ~FPSCounter();
+
+    ///	@brief  Returns the counted frames per seconds.
+    /// @return The counted frames per second.
+    ui32 getFPS();
 
 private:
-    OGLEnum();
-    ~OGLEnum();
-    OGLEnum( const OGLEnum & );
+    Platform::AbstractTimer  *m_timer;
+    d32 m_timeDiff, m_lastTime;
+    ui32 m_fps;
 };
 
-//-------------------------------------------------------------------------------------------------
-
-} // Namespace RenderBackend
+} // Namespace Profiling
 } // Namespace OSRE

@@ -20,41 +20,37 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include "OGLCommon.h"
+#include <osre/Profiling/FPSCounter.h>
+#include <osre/Platform/AbstractTimer.h>
 
 namespace OSRE {
-namespace RenderBackend {
+namespace Profiling {
 
-//-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderBackend::OGLEnum
-///	@ingroup	Engine
-///
-///	@brief  This utility class implements the OpenGL enum lookup.
-//-------------------------------------------------------------------------------------------------
-class OGLEnum {
-public:
-    ///	@brief  Translates the buffer type to OpenGL.
-    static GLenum getGLBufferType( BufferType type );
-    ///	@brief  Translates the access type to OpenGL.
-    static GLenum getGLBufferAccessType( BufferAccessType type );
-    ///	@brief  Translates the primitive type to OpenGL.
-    static GLenum getGLPrimitiveType( PrimitiveType primType );
-    ///	@brief  Translates the index type to OpenGL.
-    static GLenum getGLIndexType( IndexType indexType );
-    ///	@brief  Translates the texture type to OpenGL.
-    static GLenum getGLTextureTarget( TextureTargetType type );
-    ///	@brief  Translates the texture parameter type to OpenGL.
-    static GLenum getGLTextureParameterName( TextureParameterName name );
+FPSCounter::FPSCounter( Platform::AbstractTimer *timer )
+: m_timer( timer )
+, m_timeDiff( 0.0 )
+, m_lastTime( 0.0 )
+, m_fps( 0 ) {
+    if (nullptr != m_timer) {
+        m_timeDiff = m_timer->getTimeDiff();
+    }
+}
 
-private:
-    OGLEnum();
-    ~OGLEnum();
-    OGLEnum( const OGLEnum & );
-};
+FPSCounter::~FPSCounter() {
+    // empty
+}
 
-//-------------------------------------------------------------------------------------------------
+ui32 FPSCounter::getFPS() {
+    m_timeDiff = m_timer->getTimeDiff();
+    m_lastTime += m_timeDiff;
+    m_fps++;
+    if (m_lastTime > 1.0) {
+        m_lastTime = 0.0;
+        m_fps = 0;
+    }
 
-} // Namespace RenderBackend
+    return m_fps;
+}
+
+} // Namespace Profiling
 } // Namespace OSRE

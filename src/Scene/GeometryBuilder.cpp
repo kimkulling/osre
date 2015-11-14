@@ -238,7 +238,6 @@ Geometry *GeometryBuilder::allocQuads( VertexType type, ui32 numQuads ) {
 
     // setup triangle vertices    
     static const ui32 NumVert = 4;
-//    ColorVert vertices[ NumVert ];
     glm::vec3 col[ NumVert ];
     col[ 0 ] = glm::vec3( 1, 0, 0 );
     col[ 1 ] = glm::vec3( 0, 1, 0 );
@@ -252,10 +251,6 @@ Geometry *GeometryBuilder::allocQuads( VertexType type, ui32 numQuads ) {
     pos[ 3 ] = glm::vec3( 1, 1, 0 );
 
     geo->m_vb = allocVertices( geo->m_vertextype, numQuads, NumVert, pos, col );
-
-    /*ui32 size( sizeof( ColorVert ) * NumVert );
-    geo->m_vb = BufferData::alloc( VertexBuffer, size, ReadOnly );
-    ::memcpy( geo->m_vb->m_pData, vertices, size );*/
 
     // setup triangle indices
     static const ui32 NumIndices = 6;

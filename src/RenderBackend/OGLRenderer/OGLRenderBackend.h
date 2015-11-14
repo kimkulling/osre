@@ -25,11 +25,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Profiling/FPSCounter.h>
 #include "OGLCommon.h"
 #include <map>
 
 namespace OSRE {
 
+// Forward declarations
 namespace IO {
     class Stream;
     class Uri;
@@ -37,6 +39,7 @@ namespace IO {
 
 namespace Platform {
     class AbstractRenderContext;
+    class AbstractTimer;
 }
 
 namespace RenderBackend {
@@ -56,7 +59,7 @@ struct PrimitiveGroup;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::RenderBackend::OGLRenderBackend
-///	@ingroup	RenderSystem
+///	@ingroup	Engine
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
@@ -67,6 +70,7 @@ public:
 public:
     OGLRenderBackend();
     ~OGLRenderBackend();
+    void setTimer( Platform::AbstractTimer *timer );
     void setRenderContext( Platform::AbstractRenderContext *pRenderCtx );
     void clearRenderTarget( ui32 targets );
     void setViewport( i32 x, i32 y, i32 w, i32 h );
@@ -133,6 +137,7 @@ private:
     OGLShader                       *m_shaderInUse;
     CPPCore::TArray<ui32>            m_freeBufferSlots;
     CPPCore::TArray<OGLPrimGroup*>   m_primitives;
+    Profiling::FPSCounter           *m_fpsCounter;
 };
 
 //-------------------------------------------------------------------------------------------------
