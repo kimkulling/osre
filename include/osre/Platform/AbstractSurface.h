@@ -48,7 +48,7 @@ struct SurfaceProperties {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::AbstractSurface
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief  This abstract class declares the interface for a render surface.
 //-------------------------------------------------------------------------------------------------

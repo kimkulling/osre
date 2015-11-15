@@ -25,7 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
         
-///	@enum	Key
 ///	@brief  This enum type is used to describe a key.
 enum Key {
     /// The keyboard sym's have been cleverly chosen to map to ASCII.

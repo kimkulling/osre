@@ -34,15 +34,15 @@ namespace Properties {
 class Property;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		ZFXCE2::Properties::IPropertyMap
-///	@ingroup	Infrastructure
+///	@class		::OSRE::Properties::IPropertyMap
+///	@ingroup	Engine
 ///
 ///	@brief 
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT IPropertyMap {
 public:
     virtual ~IPropertyMap();
-    virtual void setProperty( ui32 id, const String &rName, const CPPCore::Variant &rValue ) = 0;
+    virtual void setProperty( ui32 id, const String &rName, const CPPCore::Variant &value ) = 0;
     virtual void setProperty( ui32 id, Property *Property ) = 0;
     virtual bool hasProperty( ui32 id ) const = 0;
     virtual Property *getProperty( ui32 id ) const = 0;

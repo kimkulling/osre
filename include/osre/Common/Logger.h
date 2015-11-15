@@ -167,16 +167,17 @@ private:
 
     typedef CPPCore::TArray<AbstractLogStream*> LogStreamArray;
     LogStreamArray m_LogStreams;
+    ui32 m_intention;
 };
 
 //-------------------------------------------------------------------------------------------------
-void OSRE_EXPORT debugPrint( const String &domain, const String &file, int line, const String &message );
-void OSRE_EXPORT infoPrint( const String &domain, const String &file, int line, const String &message );
-void OSRE_EXPORT warnPrint( const String &domain, const String &file, int line, const String &message );
-void OSRE_EXPORT errorPrint( const String &domain, const String &file, int line, const String &message );
-void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line, const String &message );
+// Logger helper
+void OSRE_EXPORT debugPrint( const String &domain, const String &file, int line, const String &msg );
+void OSRE_EXPORT infoPrint( const String &domain, const String &file, int line, const String &msg );
+void OSRE_EXPORT warnPrint( const String &domain, const String &file, int line, const String &msg );
+void OSRE_EXPORT errorPrint( const String &domain, const String &file, int line, const String &msg );
+void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line, const String &msg );
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 
@@ -186,7 +187,7 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 /// @param  domain      The domain to log for.
 ///	@param	message		The message to log.
 //-------------------------------------------------------------------------------------------------
-#define osre_debug( domain, message ) ::OSRE::Common::debugPrint( domain, __FILE__, __LINE__, message );
+#define osre_debug( domain, msg ) ::OSRE::Common::debugPrint( domain, __FILE__, __LINE__, msg );
 
 //-------------------------------------------------------------------------------------------------
 ///	@fn		osre_log
@@ -194,7 +195,7 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 /// @param  domain      The domain to log for.
 ///	@param	message		The message to log.
 //-------------------------------------------------------------------------------------------------
-#define osre_info( domain, message )  ::OSRE::Common::infoPrint(  domain,  __FILE__, __LINE__, message );
+#define osre_info( domain, msg )  ::OSRE::Common::infoPrint(  domain,  __FILE__, __LINE__, msg );
 
 //-------------------------------------------------------------------------------------------------
 ///	@fn		ce_warn

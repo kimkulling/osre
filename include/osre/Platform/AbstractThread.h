@@ -42,7 +42,6 @@ public:
     ///	The function pointer for a user-specific thread-function.
     typedef ui32 (*threadfunc) ( void * );
 
-    ///	@enum	Priority
     ///	@brief	This enum describes the priority of the thread.
     enum Priority {
         Low,	///< Low prio thread.

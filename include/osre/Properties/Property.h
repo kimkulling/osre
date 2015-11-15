@@ -30,7 +30,7 @@ namespace Properties {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Properties::Property
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief	This class implements a simple property.
 ///	a property can be used to describe an arbitrary value which is supported by the 

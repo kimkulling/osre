@@ -76,5 +76,5 @@ const String &AbstractTestFixture::getName() const {
 
 //-------------------------------------------------------------------------------------------------
 
-}
-}
+} // Namespace RenderTest
+} // Namespace OSRE

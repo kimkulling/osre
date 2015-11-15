@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="D:\projects\osre\3dparty\glew\src\glew.c">
       <Filter>Source Files</Filter>
@@ -24,10 +24,10 @@
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{1CAE3A07-F1DA-4F80-A240-03B474C86003}</UniqueIdentifier>
+      <UniqueIdentifier>{2D0C1BD8-28B2-3445-A5B9-F683B0484B31}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{E2D63875-CB5D-4728-B90B-03C2425B72E2}</UniqueIdentifier>
+      <UniqueIdentifier>{454833EE-BC71-3357-A0E3-C82369EDA078}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

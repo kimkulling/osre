@@ -25,6 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/IO/IOService.h>
 #include <osre/IO/Stream.h>
+#include <osre/Common/Logger.h>
+
 #include <cassert>
 
 namespace OSRE {
@@ -47,13 +49,16 @@ AbstractRenderTest::~AbstractRenderTest() {
 //---------------------------------------------------------------------------------------------
 bool AbstractRenderTest::create( RenderBackendService *pRenderBackendSrv ) {
     assert( nullptr != pRenderBackendSrv );
-
+    
+    osre_info( m_RenderTestName, "=> Creating test." );
     return onCreate( pRenderBackendSrv );
 }
 
 //---------------------------------------------------------------------------------------------
 bool AbstractRenderTest::destroy( RenderBackendService *pRenderBackendSrv ) {
     assert( nullptr != pRenderBackendSrv );
+    
+    osre_info( m_RenderTestName, "<= Destroying test." );
 
     return onDestroy( pRenderBackendSrv );
 }

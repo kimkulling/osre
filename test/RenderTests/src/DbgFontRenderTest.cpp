@@ -55,7 +55,8 @@ public:
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         Scene::GeometryBuilder myBuilder;
-        Geometry *geo = myBuilder.allocQuads( ColorVertex, 1 );
+        Geometry *geo = myBuilder.allocTextBox( -1, -1, 1, "h" );
+        //Geometry *geo = myBuilder.allocQuads( ColorVertex, 1 );
         attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_pGeometry = geo;
 
@@ -72,7 +73,6 @@ public:
         return true;
     }
 
-    //---------------------------------------------------------------------------------------------
     virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *pRenderBackendSrv ) {
         return true;
     }

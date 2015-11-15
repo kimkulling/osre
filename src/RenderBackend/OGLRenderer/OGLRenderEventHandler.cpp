@@ -77,7 +77,6 @@ static const String FsSrc =
 	"};\n";
 
 
-//-------------------------------------------------------------------------------------------------
 static void setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTexture*> &textures ) {
     OSRE_ASSERT( nullptr != mat );
 	OSRE_ASSERT( nullptr != rb );
@@ -98,7 +97,6 @@ static void setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTextur
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {
 	OSRE_ASSERT( nullptr != eh  );
 	OSRE_ASSERT( nullptr != material );
@@ -149,7 +147,6 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 static void setupParameter( Geometry *geo, OGLRenderBackend *rb, OGLRenderEventHandler *ev ) {
 	OSRE_ASSERT( nullptr != geo );
 	OSRE_ASSERT( nullptr != rb );
@@ -179,7 +176,6 @@ static void setupParameter( Geometry *geo, OGLRenderBackend *rb, OGLRenderEventH
     ev->enqueueRenderCmd( setParameterCmd  );
 }
 
-//-------------------------------------------------------------------------------------------------
 static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLShader *oglShader ) {
 	OSRE_ASSERT( nullptr != geo );
 	OSRE_ASSERT( nullptr != rb );
@@ -225,7 +221,6 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
     return vertexArray;
 }
 
-//-------------------------------------------------------------------------------------------------
 static void setupPrimDrawCmd( const TArray<ui32> &ids, OGLRenderBackend *rb, OGLRenderEventHandler *eh, OGLVertexArray *va ) {
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
@@ -246,7 +241,6 @@ static void setupPrimDrawCmd( const TArray<ui32> &ids, OGLRenderBackend *rb, OGL
     eh->enqueueRenderCmd( pRenderCmd );
 }
 
-//-------------------------------------------------------------------------------------------------
 static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *geoInstanceData, 
                                    OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {
 	OSRE_ASSERT( nullptr != geoInstanceData );
@@ -278,7 +272,6 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
     eh->enqueueRenderCmd( renderCmd );
 }
 
-//-------------------------------------------------------------------------------------------------
 static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb, 
                               OGLRenderEventHandler *eh, OGLShader *oglShader ) {
 	OSRE_ASSERT( nullptr != rb );
@@ -309,7 +302,6 @@ static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb,
 	eh->enqueueRenderCmd( renderCmd );
 }
 
-//-------------------------------------------------------------------------------------------------
 OGLRenderEventHandler::OGLRenderEventHandler( )
 : AbstractEventHandler()
 , m_oglBackend( nullptr )
@@ -319,12 +311,10 @@ OGLRenderEventHandler::OGLRenderEventHandler( )
     // empty
 }
         
-//-------------------------------------------------------------------------------------------------
 OGLRenderEventHandler::~OGLRenderEventHandler( ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *pEventData ) {
     bool result( false );
     if ( OnAttachEventHandlerEvent == ev ) {
@@ -358,19 +348,16 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *pEventDat
     return result;
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderEventHandler::setActiveShader( OGLShader *oglShader ) {
     m_renderCmdBuffer->setActiveShader( oglShader );
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderEventHandler::enqueueRenderCmd( OGLRenderCmd *oglRenderCmd ) {
 	OSRE_ASSERT( nullptr != oglRenderCmd );
 
     m_renderCmdBuffer->enqueueRenderCmd( oglRenderCmd );
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onAttached( const EventData *eventData ) {
     if( nullptr != m_oglBackend ) {
         return false;
@@ -382,7 +369,6 @@ bool OGLRenderEventHandler::onAttached( const EventData *eventData ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onDetached( const EventData *eventData ) {
     if( m_renderCmdBuffer ) {
         osre_error( Tag, "Renderer not destroyed." );
@@ -396,7 +382,6 @@ bool OGLRenderEventHandler::onDetached( const EventData *eventData ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	
@@ -439,7 +424,6 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onDestroyRenderer( const Common::EventData * ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	

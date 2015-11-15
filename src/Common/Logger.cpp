@@ -37,7 +37,7 @@ namespace OSRE {
 namespace Common {
 
 static const String Line = \
-    "==============================================================================";
+    "====================================================================================================";
 
 //-------------------------------------------------------------------------------------------------
 static void appendDomain( const String &domain, String &logMsg ) {
@@ -79,7 +79,7 @@ Logger *Logger::s_pLogger = nullptr;
 
 //-------------------------------------------------------------------------------------------------
 Logger *Logger::create() {
-    if ( NULL == s_pLogger ) {
+    if ( nullptr == s_pLogger ) {
         s_pLogger = new Logger;
     }
 
@@ -88,7 +88,7 @@ Logger *Logger::create() {
 
 //-------------------------------------------------------------------------------------------------
 Logger *Logger::getInstance() {
-    if ( NULL == s_pLogger ) {
+    if ( nullptr == s_pLogger ) {
         static_cast<void>( Logger::create() );
     }
 
@@ -133,7 +133,19 @@ void Logger::print( const String &msg, PrintMode mode ) {
         return;
     }
 
+    if (msg.size() > 8) {
+        if (msg[ 6 ] == '<' && msg[ 7 ] == '=') {
+            m_intention -= 2;
+        }
+    }
+
     String logMsg;
+    if (0 != m_intention) {
+        for (ui32 i = 0; i < m_intention; i++) {
+            logMsg += " ";
+        }
+    }
+
     logMsg += msg;
     if( WithDateTime == mode ) {
         logMsg += " ( ";
@@ -152,6 +164,13 @@ void Logger::print( const String &msg, PrintMode mode ) {
             pStream->write( logMsg );
         }
     }
+
+    if (msg.size() > 8) {
+        if (msg[ 6 ] == '=' && msg[ 7 ] == '>') {
+            m_intention += 2;
+        }
+    }
+
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -208,7 +227,8 @@ void Logger::unregisterLogStream( AbstractLogStream *logStream ) {
 
 //-------------------------------------------------------------------------------------------------
 Logger::Logger() 
-: m_LogStreams() {
+: m_LogStreams()
+, m_intention( 0 ) {
     m_LogStreams.add( new StdLogStream );
 
 #ifdef OSRE_WINDOWS

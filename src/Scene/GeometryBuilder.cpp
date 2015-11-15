@@ -99,8 +99,8 @@ static const String TextFsSrc =
 	"uniform sampler2D tex0;\n"
 
 	"void main() {\n"
-    "    vFragColor = vec4(1,1,1,1 );\n"
-    "//    vFragColor = texture( tex0, UV );\n"
+    "//    vFragColor = vec4(1,1,1,1 );\n"
+    "    vFragColor = texture( tex0, UV );\n"
 	"};\n";
 
 
@@ -295,7 +295,7 @@ Geometry *GeometryBuilder::allocQuads( VertexType type, ui32 numQuads ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-Geometry *GeometryBuilder::createBox( VertexType type, f32 w, f32 h, f32 d ) {
+Geometry *GeometryBuilder::allocBox( VertexType type, f32 w, f32 h, f32 d ) {
     Geometry *pGeometry = new Geometry;
     pGeometry->m_vertextype = ColorVertex;
     pGeometry->m_indextype  = UnsignedShort;
@@ -369,10 +369,12 @@ Geometry *GeometryBuilder::createBox( VertexType type, f32 w, f32 h, f32 d ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-RenderBackend::Geometry *GeometryBuilder::createTextBox( RenderBackend::VertexType type, f32 x, f32 y, f32 size, const String &text ) {
+RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 size, const String &text ) {
 	if ( text.empty() ) {
 		return nullptr;
 	}
+
+//    allocQuads( RenderVertex, text.size() );
 
 	Geometry *geo = new Geometry;
 	std::vector<RenderVert> vertices;
@@ -384,9 +386,9 @@ RenderBackend::Geometry *GeometryBuilder::createTextBox( RenderBackend::VertexTy
     quad[ 1 ] = 1;
     quad[ 2 ] = 2;
 
-    quad[ 0 ] = 2;
-    quad[ 1 ] = 3;
-    quad[ 2 ] = 1;
+    quad[ 3 ] = 1;
+    quad[ 4 ] = 2;
+    quad[ 5 ] = 3;
 
 	for (ui32 i = 0; i <text.size(); i++) {
 		RenderVert vert[ 4 ];
@@ -403,12 +405,12 @@ RenderBackend::Geometry *GeometryBuilder::createTextBox( RenderBackend::VertexTy
 		vert[ 2 ].tex0 = glm::vec2( uv_x + 1.0f / 16.0f, 1.0f - ( uv_y + 1.0f / 16.0f ) );
 		vert[ 3 ].tex0 = glm::vec2( uv_x, 1.0f - ( uv_y + 1.0f / 16.0f ) );
 
-		for (ui32 j = 0; j < 4; j++) {
+		for ( ui32 j = 0; j < 4; j++ ) {
 			vertices.push_back( vert[ j ] );
 		}
 
 		// setup indices
-		for (ui32 j = 0; j < 6; ++j) {
+		for ( ui32 j = 0; j < NumIndices; j++ ) {
 			indices.push_back( quad[ i ] + static_cast<GLushort>( (i*4) ) );
 		}
 	}
@@ -447,8 +449,8 @@ RenderBackend::Geometry *GeometryBuilder::createTextBox( RenderBackend::VertexTy
 
 	// setup shader attributes and variables
 	if ( nullptr != geo->m_material->m_pShader) {
-		ui32 numAttribs( ColorVert::getNumAttributes() );
-		const String *attribs( ColorVert::getAttributes() );
+		ui32 numAttribs( RenderVert::getNumAttributes() );
+		const String *attribs( RenderVert::getAttributes() );
 		geo->m_material->m_pShader->m_attributes.add( attribs, numAttribs );
 		geo->m_material->m_pShader->m_parameters.add( "MVP" );
 	}

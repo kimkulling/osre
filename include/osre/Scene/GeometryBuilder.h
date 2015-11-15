@@ -57,10 +57,10 @@ public:
 
     /// @brief  Will create a box geometry.
     /// @return The created geometry.
-    RenderBackend::Geometry *createBox( RenderBackend::VertexType type, f32 w, f32 h, f32 d);
+    RenderBackend::Geometry *allocBox( RenderBackend::VertexType type, f32 w, f32 h, f32 d);
 
     ///	@brief
-	RenderBackend::Geometry *createTextBox( RenderBackend::VertexType type, f32 x, f32 y, f32 size, const String &text );
+	RenderBackend::Geometry *allocTextBox( f32 x, f32 y, f32 size, const String &text );
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -56,7 +56,7 @@ struct SurfaceProperties;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Interface::OSEventListener
-///	@ingroup	RenderSystem
+///	@ingroup	Engine
 ///
 ///	@brief	This class declares the abstract interface for all operation system events.
 ///	You can use it to get notified, when you want to react onto a mouse click for instance. Just
