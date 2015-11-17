@@ -75,31 +75,31 @@ bool AbstractLogStream::isActive() const {
 }
 
 //-------------------------------------------------------------------------------------------------
-Logger *Logger::s_pLogger = nullptr;
+Logger *Logger::s_logger = nullptr;
 
 //-------------------------------------------------------------------------------------------------
 Logger *Logger::create() {
-    if ( nullptr == s_pLogger ) {
-        s_pLogger = new Logger;
+    if ( nullptr == s_logger ) {
+        s_logger = new Logger;
     }
 
-    return s_pLogger;
+    return s_logger;
 }
 
 //-------------------------------------------------------------------------------------------------
 Logger *Logger::getInstance() {
-    if ( nullptr == s_pLogger ) {
+    if ( nullptr == s_logger ) {
         static_cast<void>( Logger::create() );
     }
 
-    return s_pLogger;
+    return s_logger;
 }
 
 //-------------------------------------------------------------------------------------------------
 void Logger::kill() {
-    if ( s_pLogger ) {
-        delete s_pLogger;
-        s_pLogger = nullptr;
+    if ( s_logger ) {
+        delete s_logger;
+        s_logger = nullptr;
     }
 }
 
@@ -150,18 +150,14 @@ void Logger::print( const String &msg, PrintMode mode ) {
     if( WithDateTime == mode ) {
         logMsg += " ( ";
         logMsg += this->getDateTime( );
-        logMsg += "| ";
-    }
-
-    logMsg += getThreadName();
-    if( WithDateTime == mode ) {
         logMsg += " )";
     }
+
     logMsg += " \n";
     for( ui32 i = 0; i<m_LogStreams.size(); ++i ) {
-        AbstractLogStream *pStream = m_LogStreams[ i ];
-        if ( pStream ) {
-            pStream->write( logMsg );
+        AbstractLogStream *stream = m_LogStreams[ i ];
+        if ( stream ) {
+            stream->write( logMsg );
         }
     }
 
@@ -189,6 +185,7 @@ void Logger::error( const String &domain, const String &msg ) {
     logMsg += "Err:  ";
     logMsg += msg;
     appendDomain( domain, logMsg );
+
     print( logMsg );
 }
 
@@ -204,7 +201,7 @@ void Logger::fatal( const String &domain, const String &msg ) {
 
 //-------------------------------------------------------------------------------------------------
 void Logger::registerLogStream( AbstractLogStream *pLogStream ) {
-    if ( NULL == pLogStream ) {
+    if ( nullptr == pLogStream ) {
         return;
     }
 
@@ -213,7 +210,7 @@ void Logger::registerLogStream( AbstractLogStream *pLogStream ) {
 
 //-------------------------------------------------------------------------------------------------
 void Logger::unregisterLogStream( AbstractLogStream *logStream ) {
-    if ( !logStream ) {
+    if ( nullptr != logStream ) {
         return;
     }
 
@@ -253,23 +250,18 @@ Logger::~Logger() {
 
 //-------------------------------------------------------------------------------------------------
 String Logger::getDateTime() {
+    static const ui32 Space = 2;
     DateTime currentDateTime = DateTime::getCurrentUTCTime();
     std::stringstream stream;
     stream.fill( '0' );
-    stream << std::setw ( 2 ) << currentDateTime.getCurrentMonth() << "." 
-           << std::setw ( 2 ) << currentDateTime.getCurrentDay() << "." 
-           << std::setw ( 4 ) << currentDateTime.getCurrentYear() << " " 
-           << std::setw ( 2 ) << currentDateTime.getCurrentHour() << ":" 
-           << std::setw ( 2 ) << currentDateTime.getCurrentMinute() << ":" 
-           << std::setw ( 2 ) << currentDateTime.getCurrentSeconds()<< " ";
+    stream << std::setw ( Space ) << currentDateTime.getCurrentMonth() << "."
+           << std::setw ( Space ) << currentDateTime.getCurrentDay() << "."
+           << std::setw ( Space*2 ) << currentDateTime.getCurrentYear() << " "
+           << std::setw ( Space ) << currentDateTime.getCurrentHour() << ":"
+           << std::setw ( Space ) << currentDateTime.getCurrentMinute() << ":"
+           << std::setw ( Space ) << currentDateTime.getCurrentSeconds()<< " ";
     
     return stream.str();
-}
-
-//-------------------------------------------------------------------------------------------------
-String Logger::getThreadName() {
-    const String name/* = System::SystemInfo::getCurrentThreadName()*/;
-    return name;
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -62,12 +62,16 @@ protected:
     AbstractLogStream();
 
 private:
+    AbstractLogStream( const AbstractLogStream  & );
+    AbstractLogStream &operator = ( const AbstractLogStream & );
+
+private:
     bool m_IsActive;
 };
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Common::Logger
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief	This class implements a simple logger. 
 ///
@@ -117,28 +121,28 @@ public:
     Severity getSeverity() const;
 
     ///	@brief	Logs a debug message.
-    ///	@param	rMessage	The message to log.
-    void debug( const String &domain, const String &rMessage );
+    ///	@param	msg	The message to log.
+    void debug( const String &domain, const String &msg );
 
     ///	@brief	Logs an info message.
-    ///	@param	rMessage	The message to log.
-    void info( const String &domain, const String &rMessage );
+    ///	@param	msg	The message to log.
+    void info( const String &domain, const String &msg );
 
     ///	@brief	Logs a print message.
     ///	@param	rMessage	The message to log.
     void print( const String &rMessage, PrintMode mode = WithDateTime );
 
     ///	@brief	Logs a warn message.
-    ///	@param	rMessage	The message to log.
-    void warn( const String &domain, const String &rMessage );
+    ///	@param	msg	The message to log.
+    void warn( const String &domain, const String &msg );
 
     ///	@brief	Logs a error message.
-    ///	@param	rMessage	The message to log.
-    void error( const String &domain, const String &rMessage );
+    ///	@param	msg	The message to log.
+    void error( const String &domain, const String &msg );
 
     ///	@brief	Logs a fatal error message.
-    ///	@param	rMessage	The message to log.
-    void fatal( const String &domain, const String &rMessage );
+    ///	@param	msg	The message to log.
+    void fatal( const String &domain, const String &msg );
 
     ///	@brief	Registers a new log stream.
     ///	@param	pLogStream	A pointer showing to the log stream.
@@ -152,18 +156,18 @@ private:
     Logger();
     ~Logger();
     String getDateTime();
-    String getThreadName();
 
 private:
     //	The Standard log stream.
     class StdLogStream : public AbstractLogStream {
     public:
+        ///
         StdLogStream();
         ~StdLogStream();
-        void write( const String &rMessage );
+        void write( const String &msg );
     };
 
-    static Logger *s_pLogger;
+    static Logger *s_logger;
 
     typedef CPPCore::TArray<AbstractLogStream*> LogStreamArray;
     LogStreamArray m_LogStreams;
