@@ -37,6 +37,12 @@ namespace Scene {
 class Node;
 class View;
 
+//-------------------------------------------------------------------------------------------------
+///	@class		::OSRE::Scene::TransformBlockCache
+///	@ingroup	Engine
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 struct TransformBlockCache {
     ui32 m_numBlocks;
     RenderBackend::TransformBlock *m_blocks;
@@ -50,6 +56,12 @@ private:
     TransformBlockCache &operator = ( const TransformBlockCache & );
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@class		::OSRE::Scene::Stage
+///	@ingroup	Engine
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Stage : public Common::Object {
 public:
     Stage( const String &name, RenderBackend::RenderBackendService *rbService );

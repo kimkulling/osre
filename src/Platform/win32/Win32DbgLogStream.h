@@ -30,7 +30,7 @@ namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::Win32DbgLogStream
-///	@ingroup	OSRE-Engine
+///	@ingroup	Engine
 ///
 ///	@brief	This class implements a log-stream, which will be visible in the Windows-Debugger 
 ///	output window.

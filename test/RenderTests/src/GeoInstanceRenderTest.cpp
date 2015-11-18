@@ -107,7 +107,7 @@ public:
         Geometry *geo = myBuilder.allocTriangles( ColorVertex, 1 );
 
         attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_pGeometry = geo;
+        attachGeoEvData->m_geo = geo;
 
         // use a default material
         geo->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );

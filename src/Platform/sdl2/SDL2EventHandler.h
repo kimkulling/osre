@@ -34,8 +34,8 @@ namespace Platform {
 struct AbstractSDL2InputUpdate;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		ZFXCE2::Platform::SDL2EventHandler
-///	@ingroup	Infrastructure
+///	@class		::OSRE::Platform::SDL2EventHandler
+///	@ingroup	Engine
 ///
 ///	@brief  
 //-------------------------------------------------------------------------------------------------

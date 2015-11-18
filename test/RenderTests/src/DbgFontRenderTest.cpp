@@ -58,7 +58,7 @@ public:
         Geometry *geo = myBuilder.allocTextBox( -1, -1, 1, "h" );
         //Geometry *geo = myBuilder.allocQuads( ColorVertex, 1 );
         attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_pGeometry = geo;
+        attachGeoEvData->m_geo = geo;
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );

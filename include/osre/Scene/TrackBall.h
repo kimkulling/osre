@@ -35,7 +35,7 @@ namespace Scene {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Scene::TrackBall
-///	@ingroup	Application
+///	@ingroup	Engine
 ///
 ///	@brief	this class implements a simple trackball. You can use it to rotate a model.
 //-------------------------------------------------------------------------------------------------

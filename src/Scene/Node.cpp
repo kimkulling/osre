@@ -182,7 +182,7 @@ void Node::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
         renderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
         attachGeoEvData->m_numGeo = m_newGeo.size();
-        attachGeoEvData->m_pGeometry = m_newGeo[ 0 ];
+        attachGeoEvData->m_geo = m_newGeo[ 0 ];
         renderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 		m_newGeo.resize( 0 );
     }

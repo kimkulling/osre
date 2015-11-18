@@ -29,7 +29,7 @@ namespace IO {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::IO::Uri
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief	This class represents a URI ( see
 ///	http://en.wikipedia.org/wiki/Uniform_Resource_Identifier ). You can use it to describe the

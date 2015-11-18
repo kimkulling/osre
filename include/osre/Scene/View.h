@@ -36,6 +36,12 @@ namespace Scene {
 
 class Node;
 
+//-------------------------------------------------------------------------------------------------
+///	@class		::OSRE::Scene::View
+///	@ingroup	Engine
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 class View : public Common::Object {
 public:
     View( const String &name );
@@ -50,5 +56,5 @@ private:
     glm::mat4 m_view, m_projection;
 };
 
-}
-}
+} // Namespace Scene
+} // namespace OSRE

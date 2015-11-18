@@ -33,7 +33,7 @@ class SDL2ThreadEvent;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::Win32Thread
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief	This class implements a thread which uses the Win32-API.
 //-------------------------------------------------------------------------------------------------

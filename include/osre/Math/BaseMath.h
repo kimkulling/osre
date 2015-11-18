@@ -45,7 +45,7 @@ namespace Math {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Math::BaseMath
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief	This class offer base informations about the mathematical subsystem like precisions.
 //-------------------------------------------------------------------------------------------------

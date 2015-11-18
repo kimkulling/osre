@@ -29,7 +29,7 @@ namespace IO {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::IO::SystemInfo
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief This helper class returns IO-specific system informations.
 //-------------------------------------------------------------------------------------------------

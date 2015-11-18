@@ -33,7 +33,7 @@ namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::SDL2Atomic
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief  This class implements the atomic int based on SDL2.
 //-------------------------------------------------------------------------------------------------

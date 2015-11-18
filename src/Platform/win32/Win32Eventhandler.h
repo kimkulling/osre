@@ -46,7 +46,8 @@ struct IInputUpdate;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::Win32Eventhandler
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
+
 ///
 ///	@brief  This class implements the win32-specific event handler for OS-events.
 //-------------------------------------------------------------------------------------------------

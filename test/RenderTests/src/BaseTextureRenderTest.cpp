@@ -160,7 +160,7 @@ public:
         ::memcpy( geo->m_ib->m_pData, indices, geo->m_ib->m_size );
 
         attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_pGeometry = geo;
+        attachGeoEvData->m_geo = geo;
 
         // use default material
         geo->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );

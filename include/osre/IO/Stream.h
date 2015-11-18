@@ -32,7 +32,7 @@ class Uri;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::IO::Stream
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief  This class declares the interface for a stream. 
 ///

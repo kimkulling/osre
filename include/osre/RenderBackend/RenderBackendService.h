@@ -104,14 +104,14 @@ public:
     AttachGeoEventData()
     : EventData( OnAttachSceneEvent, nullptr )
     , m_numGeo( 0 )
-    , m_pGeometry( nullptr )
+    , m_geo( nullptr )
     , m_numInstances( 0 )
     , m_geoInstanceData( nullptr ) {
         // empty
     }
 
     ui32 m_numGeo;
-    Geometry *m_pGeometry;
+    Geometry *m_geo;
     ui32 m_numInstances;
     GeoInstanceData *m_geoInstanceData;
 };

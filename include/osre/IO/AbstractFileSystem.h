@@ -34,7 +34,7 @@ class Uri;
 
 //--------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::IO::AbstractFileSystem
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///	
 ///	@brief	Abstract interface for all file system implementations. Use this interface to build your 
 ///	own file system implementations.

@@ -458,7 +458,7 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
         return false;
     }
     
-    Geometry *geo = attachSceneEvData->m_pGeometry;
+    Geometry *geo = attachSceneEvData->m_geo;
     if( !geo ) {
         osre_debug( Tag, "Geometry-pointer is a nullptr." );
         return false;

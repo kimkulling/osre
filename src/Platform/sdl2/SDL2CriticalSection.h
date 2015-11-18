@@ -32,7 +32,7 @@ namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::SDL2CriticalSection
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief  This class implements the critical section based on SDL2.
 //-------------------------------------------------------------------------------------------------
