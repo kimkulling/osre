@@ -55,7 +55,7 @@ public:
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         Scene::GeometryBuilder myBuilder;
-        Geometry *geo = myBuilder.allocTextBox( -1, -1, 1, "h" );
+        Geometry *geo = myBuilder.allocTextBox( -1, -1, 0.1, "h" );
         //Geometry *geo = myBuilder.allocQuads( ColorVertex, 1 );
         attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_geo = geo;

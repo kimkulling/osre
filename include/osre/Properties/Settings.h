@@ -32,10 +32,10 @@ namespace Properties {
 class IPropertyMap;
 
 //--------------------------------------------------------------------------------------------------------------------
-///	@class		ZFXCE2::Properties::ConfigurationMap
-///	@ingroup	Infrastructure
+///	@class		::OSRE::Properties::ConfigurationMap
+///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  This class is used to manage settings for the engine startup.
 //--------------------------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Settings {
 public:
@@ -99,12 +99,13 @@ public:
     ///	@brief	Clears the whole map.
     void clear();
 
+    Settings( const Settings & ) = delete;
+    Settings &operator = ( const Settings & ) = delete;
+
 protected:
     void initDefaults();
 
-private: //	Copying is not allowed.
-    Settings( const Settings & );
-    Settings &operator = ( const Settings & );
+private: 
 
 private:
     Properties::IPropertyMap *m_pPropertyMap;

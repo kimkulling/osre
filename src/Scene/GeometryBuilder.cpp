@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/GeometryBuilder.h>
+#include <osre/Common/Logger.h>
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -30,11 +31,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/gtx/string_cast.hpp>
 
 #include <vector>
+#include <sstream>
 
 namespace OSRE {
 namespace Scene {
 
 using namespace ::OSRE::RenderBackend;
+
+static const String Tag = "GeometryBuilder";
 
 const String VsSrc =
     "#version 400 core\n"
@@ -167,7 +171,6 @@ BufferData *allocVertices( VertexType type, ui32 numTriangles, ui32 numVerts, gl
             break;
     }
 
-
     return data;
 }
 
@@ -295,144 +298,73 @@ Geometry *GeometryBuilder::allocQuads( VertexType type, ui32 numQuads ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-Geometry *GeometryBuilder::allocBox( VertexType type, f32 w, f32 h, f32 d ) {
-    Geometry *pGeometry = new Geometry;
-    pGeometry->m_vertextype = ColorVertex;
-    pGeometry->m_indextype  = UnsignedShort;
-
-    static const ui32 NumVert = 8;
-
-    ColorVert vertices[ NumVert ];
-    f32 x(0.0f), y(0.0f), z( 0.0f );
-    vertices[ 0 ].position = glm::vec3( x,     y,     z );
-    vertices[ 1 ].position = glm::vec3( x + w, y,     z );
-    vertices[ 2 ].position = glm::vec3( x + w, y + h, z );
-    vertices[ 3 ].position = glm::vec3( x,     y + h, z );
-
-    vertices[ 4 ].position = glm::vec3( x,     y,     z + d );
-    vertices[ 5 ].position = glm::vec3( x + w, y,     z + d );
-    vertices[ 6 ].position = glm::vec3( x + w, y + h, z + d );
-    vertices[ 7 ].position = glm::vec3( x,     y + h, z + d );
-
-    ui32 size( sizeof( ColorVert ) * NumVert );
-    pGeometry->m_vb = BufferData::alloc( VertexBuffer, size, ReadOnly );
-    ::memcpy( pGeometry->m_vb->m_pData, vertices, size );
-
-    static const ui32 NumIndices = 36;
-    GLushort  indices[ NumIndices ];
-    indices[ 0 ] = 0;
-    indices[ 1 ] = 1;
-    indices[ 2 ] = 2;
-    indices[ 3 ] = 0+3;
-    indices[ 4 ] = 1+3;
-    indices[ 5 ] = 2+3;
-
-    indices[ 6 ] = 0+6;
-    indices[ 7 ] = 1+6;
-    indices[ 8 ] = 2+6;
-    indices[ 9 ] = 0+9;
-    indices[ 10 ] = 1+9;
-    indices[ 11 ] = 2+9;
-
-    indices[ 12 ] = 0+12;
-    indices[ 13 ] = 1+12;
-    indices[ 14 ] = 2+12;
-    indices[ 15 ] = 0+15;
-    indices[ 16 ] = 1+15;
-    indices[ 17 ] = 2+15;
-
-    indices[ 18 ] = 0+18;
-    indices[ 19 ] = 1 + 18;
-    indices[ 20 ] = 2 + 18;
-    indices[ 21 ] = 0+21;
-    indices[ 22 ] = 1 + 21;
-    indices[ 23 ] = 2 + 21;
-
-    indices[ 24 ] = 0+24;
-    indices[ 25 ] = 1 + 24;
-    indices[ 26 ] = 2 + 24;
-    indices[ 27 ] = 0+27;
-    indices[ 28 ] = 1 + 27;
-    indices[ 29 ] = 2 + 27;
-
-    indices[ 30 ] = 0+30;
-    indices[ 31 ] = 1 + 30;
-    indices[ 32 ] = 2 + 30;
-    indices[ 33 ] = 0+33;
-    indices[ 34 ] = 1 + 33;
-    indices[ 35 ] = 2 + 33;
-    size = sizeof( GLushort ) * NumIndices;
-    pGeometry->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
-    ::memcpy( pGeometry->m_ib->m_pData, indices, size );
-
-    return pGeometry;
-}
-
-//-------------------------------------------------------------------------------------------------
-RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 size, const String &text ) {
+RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 textSize, const String &text ) {
 	if ( text.empty() ) {
 		return nullptr;
 	}
 
-//    allocQuads( RenderVertex, text.size() );
+    Geometry *geo = new Geometry;
+    geo->m_vertextype = ColorVertex;
+    geo->m_indextype = UnsignedShort;
 
-	Geometry *geo = new Geometry;
-	std::vector<RenderVert> vertices;
-	std::vector<GLushort> indices;
+    // setup triangle vertices    
+    static const ui32 NumVert = 4;
+    glm::vec3 col[ NumVert ];
+    col[ 0 ] = glm::vec3( 1, 0, 0 );
+    col[ 1 ] = glm::vec3( 0, 1, 0 );
+    col[ 2 ] = glm::vec3( 0, 0, 1 );
+    col[ 3 ] = glm::vec3( 1, 0, 0 );
 
+    glm::vec3 pos[ NumVert ];
+    pos[ 0 ] = glm::vec3( -1, -1, 0 );
+    pos[ 1 ] = glm::vec3( -1, 1, 0 );
+    pos[ 2 ] = glm::vec3( 1, -1, 0 );
+    pos[ 3 ] = glm::vec3( 1, 1, 0 );
+
+    geo->m_vb = allocVertices( geo->m_vertextype, text.size(), NumVert, pos, col );
+
+    // setup triangle indices
     static const ui32 NumIndices = 6;
-    GLushort  quad[ NumIndices ];
-    quad[ 0 ] = 0;
-    quad[ 1 ] = 1;
-    quad[ 2 ] = 2;
+    GLushort  indices[ NumIndices ];
+    indices[ 0 ] = 0;
+    indices[ 1 ] = 1;
+    indices[ 2 ] = 2;
 
-    quad[ 3 ] = 1;
-    quad[ 4 ] = 2;
-    quad[ 5 ] = 3;
+    indices[ 3 ] = 1;
+    indices[ 4 ] = 2;
+    indices[ 5 ] = 3;
 
-	for (ui32 i = 0; i <text.size(); i++) {
-		RenderVert vert[ 4 ];
-		vert[ 0 ].position = glm::vec3( x + i*size, y + size, 0 );
-		vert[ 1 ].position = glm::vec3( x + i*size + size, y + size, 0 );
-		vert[ 2 ].position = glm::vec3( x + i*size + size, y, 0 );
-		vert[ 3 ].position = glm::vec3( x + i*size, y, 0 );
+    ui32 size = sizeof( GLushort ) * NumIndices;
+    geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
+    ::memcpy( geo->m_ib->m_pData, indices, size );
 
-		char character = text[ i ];
-		float uv_x = ( character % 16 ) / 16.0f;
-		float uv_y = ( character / 16 ) / 16.0f;
-		vert[ 0 ].tex0 = glm::vec2( uv_x, 1.0f - uv_y );
-		vert[ 1 ].tex0 = glm::vec2( uv_x + 1.0f / 16.0f, 1.0f - uv_y );
-		vert[ 2 ].tex0 = glm::vec2( uv_x + 1.0f / 16.0f, 1.0f - ( uv_y + 1.0f / 16.0f ) );
-		vert[ 3 ].tex0 = glm::vec2( uv_x, 1.0f - ( uv_y + 1.0f / 16.0f ) );
+    // setup primitives
+    geo->m_numPrimGroups = 1;
+    geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
+    geo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
+    geo->m_pPrimGroups[ 0 ].m_numPrimitives = 6 * geo->m_numPrimGroups;
+    geo->m_pPrimGroups[ 0 ].m_primitive = TriangleList;
+    geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
-		for ( ui32 j = 0; j < 4; j++ ) {
-			vertices.push_back( vert[ j ] );
-		}
+    // setup material
+    geo->m_material = new Material;
+    geo->m_material->m_numTextures = 0;
+    geo->m_material->m_type = ShaderMaterial;
+    geo->m_material->m_pShader = new Shader;
+    geo->m_material->m_pShader->m_src[ SH_VertexShaderType ] = VsSrc;
+    geo->m_material->m_pShader->m_src[ SH_FragmentShaderType ] = FsSrc;
 
-		// setup indices
-		for ( ui32 j = 0; j < NumIndices; j++ ) {
-			indices.push_back( quad[ i ] + static_cast<GLushort>( (i*4) ) );
-		}
-	}
+    // setup shader attributes and variables
+    if (nullptr != geo->m_material->m_pShader) {
+        ui32 numAttribs( ColorVert::getNumAttributes() );
+        const String *attribs( ColorVert::getAttributes() );
+        geo->m_material->m_pShader->m_attributes.add( attribs, numAttribs );
+        geo->m_material->m_pShader->m_parameters.add( "MVP" );
+    }
 
-	const ui32 vertSize( vertices.size() * sizeof( RenderVert ) );
-	BufferData *bufferData = BufferData::alloc( VertexBuffer, vertSize, ReadWrite );
-	::memcpy( bufferData->m_pData, &vertices[ 0 ], vertSize );
-	geo->m_vb = bufferData;
-
-	ui32 numBytes = sizeof( GLushort ) * text.size() * 6;
-	geo->m_ib = BufferData::alloc( IndexBuffer, numBytes, ReadOnly );
-	::memcpy( geo->m_ib->m_pData, &indices[ 0 ], numBytes );
-
-	geo->m_numPrimGroups = 1;
-	geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
-	geo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
-	geo->m_pPrimGroups[ 0 ].m_numPrimitives = text.size()*2;
-	geo->m_pPrimGroups[ 0 ].m_primitive = TriangleList;
-	geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
-
-	// setup material
-	geo->m_material = new Material;
+    return geo;
+    // setup material
+	/*geo->m_material = new Material;
     geo->m_material->m_numTextures = 1;
     geo->m_material->m_pTextures = new Texture[ 1 ];
 #ifdef _WIN32
@@ -444,18 +376,19 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 size,
     
    	geo->m_material->m_type = ShaderMaterial;
 	geo->m_material->m_pShader = new Shader;
+
 	geo->m_material->m_pShader->m_src[ SH_VertexShaderType ]   = TextVsSrc;
 	geo->m_material->m_pShader->m_src[ SH_FragmentShaderType ] = TextFsSrc;
 
 	// setup shader attributes and variables
 	if ( nullptr != geo->m_material->m_pShader) {
 		ui32 numAttribs( RenderVert::getNumAttributes() );
-		const String *attribs( RenderVert::getAttributes() );
+		const String *attribs( ColorVert::getAttributes() );
 		geo->m_material->m_pShader->m_attributes.add( attribs, numAttribs );
 		geo->m_material->m_pShader->m_parameters.add( "MVP" );
 	}
 
-	return geo;
+	return geo;*/
 }
 
 //-------------------------------------------------------------------------------------------------
