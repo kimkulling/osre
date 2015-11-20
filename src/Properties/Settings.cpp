@@ -165,7 +165,7 @@ void Settings::initDefaults() {
     m_pPropertyMap->setProperty( WinY, ConfigKeyStringTable[ WinY ], value );
     value.setInt( 800 );
     m_pPropertyMap->setProperty( WinWidth, ConfigKeyStringTable[ WinWidth ], value );
-    value.setInt( 600 );
+    value.setInt( 800 );
     m_pPropertyMap->setProperty( WinHeight, ConfigKeyStringTable[ WinHeight ], value );
     
     value.setInt( 2 );

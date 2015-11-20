@@ -141,8 +141,8 @@ BufferData *allocVertices( VertexType type, ui32 numTriangles, ui32 numVerts, gl
                         }
                     }
                     if ( nullptr != col) {
-                        for ( ui32 i = 0; i < numVerts; i++) {
-                            colVerts[ i ].color = col[ i ];
+                        for ( ui32 j = 0; j < numVerts; j++) {
+                            colVerts[ j ].color = col[ j ];
                         }
                     }
                 }
@@ -156,8 +156,8 @@ BufferData *allocVertices( VertexType type, ui32 numTriangles, ui32 numVerts, gl
                 RenderVert *renderVerts = new RenderVert[ numVerts * numTriangles ];
                 for (ui32 i = 0; i < numTriangles; ++i) {
                     if ( nullptr != pos) {
-                        for ( ui32 i = 0; i < numVerts; i++) {
-                            renderVerts[ i ].position = pos[ i ];
+                        for ( ui32 j = 0; j < numVerts; j++) {
+                            renderVerts[ j ].position = pos[ j ];
                         }
                     }
                 }
@@ -308,24 +308,21 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 textS
     geo->m_indextype = UnsignedShort;
 
     // setup triangle vertices    
-    static const ui32 NumVert = 4;
-    glm::vec3 col[ NumVert ];
+    static const ui32 NumQuadVert = 4;
+    glm::vec3 col[ NumQuadVert ];
     col[ 0 ] = glm::vec3( 1, 0, 0 );
     col[ 1 ] = glm::vec3( 0, 1, 0 );
     col[ 2 ] = glm::vec3( 0, 0, 1 );
     col[ 3 ] = glm::vec3( 1, 0, 0 );
 
-    glm::vec3 pos[ NumVert ];
-    pos[ 0 ] = glm::vec3( -1, -1, 0 );
-    pos[ 1 ] = glm::vec3( -1, 1, 0 );
-    pos[ 2 ] = glm::vec3( 1, -1, 0 );
+    glm::vec3 pos[ NumQuadVert ];
+    pos[ 0 ] = glm::vec3( 0, 0, 0 );
+    pos[ 1 ] = glm::vec3( 0, 1, 0 );
+    pos[ 2 ] = glm::vec3( 1, 0, 0 );
     pos[ 3 ] = glm::vec3( 1, 1, 0 );
 
-    geo->m_vb = allocVertices( geo->m_vertextype, text.size(), NumVert, pos, col );
-
-    // setup triangle indices
-    static const ui32 NumIndices = 6;
-    GLushort  indices[ NumIndices ];
+    static const ui32 NumQuadIndices = 6;
+    GLushort  indices[ NumQuadIndices ];
     indices[ 0 ] = 0;
     indices[ 1 ] = 1;
     indices[ 2 ] = 2;
@@ -334,9 +331,48 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 textS
     indices[ 4 ] = 2;
     indices[ 5 ] = 3;
 
-    ui32 size = sizeof( GLushort ) * NumIndices;
+
+    const ui32 NumTextVerts = NumQuadVert * text.size();
+    glm::vec3 *textPos = new glm::vec3[ NumTextVerts ];
+    glm::vec3 *colors = new glm::vec3[ NumTextVerts ];
+    GLushort *textIndices = new GLushort[ NumQuadIndices * text.size() ];
+
+    for (ui32 i = 0; i < text.size(); i++) {
+        textPos[ i ].x = pos[ 0 ].x + i*textSize;
+        textPos[ i ].y = pos[ 0 ].y;
+
+        textPos[ i + 1 ].x = pos[ 1 ].x + i*textSize;
+        textPos[ i + 1 ].y = pos[ 1 ].y + textSize;
+
+        textPos[ i + 2 ].x = pos[ 2 ].x + i*textSize + textSize;
+        textPos[ i + 2 ].y = pos[ 2 ].y;
+
+        textPos[ i + 3 ].x = pos[ 3 ].x + i*textSize + textSize;
+        textPos[ i + 3 ].y = pos[ 3 ].y + textSize;
+
+        colors[ i ] = col[ 0 ];
+        colors[ i+1 ] = col[ 1 ];
+        colors[ i+2 ] = col[ 2 ];
+        colors[ i+3 ] = col[ 3 ];
+        const ui32 IndexOffset( i * NumQuadIndices );
+        const ui32 VertexOffset( i * NumQuadVert );
+        textIndices[ 0 + IndexOffset ] = 0 + VertexOffset;
+        textIndices[ 1 + IndexOffset ] = 1 + VertexOffset;
+        textIndices[ 2 + IndexOffset ] = 2 + VertexOffset;
+
+        textIndices[ 3 + IndexOffset ] = 1 + VertexOffset;
+        textIndices[ 4 + IndexOffset ] = 2 + VertexOffset;
+        textIndices[ 5 + IndexOffset ] = 3 + VertexOffset;
+    }
+
+
+    geo->m_vb = allocVertices( geo->m_vertextype, text.size(), NumQuadVert, textPos, colors );
+
+    // setup triangle indices
+    ui32 size = sizeof( GLushort ) * 6 * text.size();
     geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
-    ::memcpy( geo->m_ib->m_pData, indices, size );
+    ::memcpy( geo->m_ib->m_pData, textIndices, size );
+
 
     // setup primitives
     geo->m_numPrimGroups = 1;
