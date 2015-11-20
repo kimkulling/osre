@@ -51,9 +51,9 @@ public:
 
     /// @brief  Will create a triangle geometry.
     /// @return The created geometry.
-    RenderBackend::Geometry *allocTriangles( RenderBackend::VertexType type, ui32 numTriangles );
+    RenderBackend::Geometry *allocTriangles( RenderBackend::VertexType type );
 
-    RenderBackend::Geometry *allocQuads( RenderBackend::VertexType type, ui32 numTriangles );
+    RenderBackend::Geometry *allocQuads( RenderBackend::VertexType type );
 
     ///	@brief
 	RenderBackend::Geometry *allocTextBox( f32 x, f32 y, f32 textSize, const String &text );

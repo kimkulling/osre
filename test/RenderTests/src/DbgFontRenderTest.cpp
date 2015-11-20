@@ -50,13 +50,12 @@ public:
         // empty
     }
 
-    virtual bool onCreate( RenderBackend::RenderBackendService *pRenderBackendSrv ) {
+    virtual bool onCreate( RenderBackendService *pRenderBackendSrv ) {
         pRenderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         Scene::GeometryBuilder myBuilder;
-        Geometry *geo = myBuilder.allocTextBox( -1, -1, 0.1, "h" );
-        //Geometry *geo = myBuilder.allocQuads( ColorVertex, 1 );
+        Geometry *geo = myBuilder.allocTextBox( -1, -1, 0.1f, "haha" );
         attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_geo = geo;
 

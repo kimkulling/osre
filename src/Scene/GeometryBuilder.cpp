@@ -108,17 +108,14 @@ static const String TextFsSrc =
 	"};\n";
 
 
-//-------------------------------------------------------------------------------------------------
 GeometryBuilder::GeometryBuilder() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 GeometryBuilder::~GeometryBuilder() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 RenderBackend::Geometry *GeometryBuilder::allocEmptyGeometry( RenderBackend::VertexType type ) {
     Geometry *geo = new Geometry;
     geo->m_vertextype = type;
@@ -127,41 +124,36 @@ RenderBackend::Geometry *GeometryBuilder::allocEmptyGeometry( RenderBackend::Ver
     return geo;
 }
 
-//-------------------------------------------------------------------------------------------------
-BufferData *allocVertices( VertexType type, ui32 numTriangles, ui32 numVerts, glm::vec3 *pos, glm::vec3 *col ) {
+BufferData *allocVertices( VertexType type, ui32 numVerts, glm::vec3 *pos, glm::vec3 *col ) {
     BufferData *data( nullptr );
     ui32 size( 0 );
     switch (type) {
         case ColorVertex: {
-                ColorVert *colVerts = new ColorVert[ numVerts * numTriangles ];
-                for ( ui32 i = 0; i < numTriangles; ++i) {
-                    if ( nullptr != pos) {
-                        for ( ui32 i = 0; i < numVerts; i++) {
-                            colVerts[ i ].position = pos[ i ];
-                        }
-                    }
-                    if ( nullptr != col) {
-                        for ( ui32 j = 0; j < numVerts; j++) {
-                            colVerts[ j ].color = col[ j ];
-                        }
+                ColorVert *colVerts = new ColorVert[ numVerts ];
+                if ( nullptr != pos) {
+                    for ( ui32 i = 0; i < numVerts; i++) {
+                        colVerts[ i ].position = pos[ i ];
                     }
                 }
-                size = sizeof( ColorVert ) * numVerts * numTriangles;
+                if ( nullptr != col) {
+                    for ( ui32 j = 0; j < numVerts; j++) {
+                        colVerts[ j ].color = col[ j ];
+                    }
+                }
+                size = sizeof( ColorVert ) * numVerts;
                 data = BufferData::alloc( VertexBuffer, size, ReadOnly );
                 ::memcpy( data->m_pData, colVerts, size );
             }
             break;
 
         case RenderVertex: {
-                RenderVert *renderVerts = new RenderVert[ numVerts * numTriangles ];
-                for (ui32 i = 0; i < numTriangles; ++i) {
-                    if ( nullptr != pos) {
-                        for ( ui32 j = 0; j < numVerts; j++) {
-                            renderVerts[ j ].position = pos[ j ];
-                        }
+                RenderVert *renderVerts = new RenderVert[ numVerts ];
+                if ( nullptr != pos) {
+                    for ( ui32 j = 0; j < numVerts; j++) {
+                        renderVerts[ j ].position = pos[ j ];
                     }
                 }
-                size = sizeof( RenderVert ) * numVerts * numTriangles;
+                size = sizeof( RenderVert ) * numVerts;
                 data = BufferData::alloc( VertexBuffer, size, ReadOnly );
                 ::memcpy( data->m_pData, renderVerts, size );
             }
@@ -174,8 +166,7 @@ BufferData *allocVertices( VertexType type, ui32 numTriangles, ui32 numVerts, gl
     return data;
 }
 
-//-------------------------------------------------------------------------------------------------
-Geometry *GeometryBuilder::allocTriangles( VertexType type, ui32 numTriangles ) {
+Geometry *GeometryBuilder::allocTriangles( VertexType type ) {
     Geometry *geo = new Geometry;
     geo->m_vertextype = type;
     geo->m_indextype = UnsignedShort;
@@ -193,7 +184,7 @@ Geometry *GeometryBuilder::allocTriangles( VertexType type, ui32 numTriangles ) 
     pos[ 0 ] = glm::vec3( -1, -1, 0 );
     pos[ 1 ] = glm::vec3( 0, 1, 0 );
     pos[ 2 ] = glm::vec3( 1, -1, 0 );
-    geo->m_vb = allocVertices( geo->m_vertextype, numTriangles, NumVert, pos, col );
+    geo->m_vb = allocVertices( geo->m_vertextype,  NumVert, pos, col );
 
     // setup triangle indices
     static const ui32 NumIndices = 3;
@@ -233,8 +224,7 @@ Geometry *GeometryBuilder::allocTriangles( VertexType type, ui32 numTriangles ) 
     return geo;
 }
 
-//-------------------------------------------------------------------------------------------------
-Geometry *GeometryBuilder::allocQuads( VertexType type, ui32 numQuads ) {
+Geometry *GeometryBuilder::allocQuads( VertexType type ) {
     Geometry *geo = new Geometry;
     geo->m_vertextype = type;
     geo->m_indextype = UnsignedShort;
@@ -253,7 +243,7 @@ Geometry *GeometryBuilder::allocQuads( VertexType type, ui32 numQuads ) {
     pos[ 2 ] = glm::vec3( 1, -1, 0 );
     pos[ 3 ] = glm::vec3( 1, 1, 0 );
 
-    geo->m_vb = allocVertices( geo->m_vertextype, numQuads, NumVert, pos, col );
+    geo->m_vb = allocVertices( geo->m_vertextype, NumVert, pos, col );
 
     // setup triangle indices
     static const ui32 NumIndices = 6;
@@ -297,7 +287,17 @@ Geometry *GeometryBuilder::allocQuads( VertexType type, ui32 numQuads ) {
     return geo;
 }
 
-//-------------------------------------------------------------------------------------------------
+static void dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset ) {
+    std::stringstream stream;
+    stream << std::endl;
+    stream << "i = " << i << " : " << textPos[ VertexOffset + 0 ].x << ", " << textPos[ VertexOffset + 0 ].y << std::endl;
+    stream << "i = " << i << " : " << textPos[ VertexOffset + 1 ].x << ", " << textPos[ VertexOffset + 1 ].y << std::endl;
+    stream << "i = " << i << " : " << textPos[ VertexOffset + 2 ].x << ", " << textPos[ VertexOffset + 2 ].y << std::endl;
+    stream << "i = " << i << " : " << textPos[ VertexOffset + 3 ].x << ", " << textPos[ VertexOffset + 3 ].y << std::endl;
+    osre_info( Tag, stream.str() );
+
+}
+
 RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 textSize, const String &text ) {
 	if ( text.empty() ) {
 		return nullptr;
@@ -317,9 +317,9 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 textS
 
     glm::vec3 pos[ NumQuadVert ];
     pos[ 0 ] = glm::vec3( 0, 0, 0 );
-    pos[ 1 ] = glm::vec3( 0, 1, 0 );
-    pos[ 2 ] = glm::vec3( 1, 0, 0 );
-    pos[ 3 ] = glm::vec3( 1, 1, 0 );
+    pos[ 1 ] = glm::vec3( 0, textSize, 0 );
+    pos[ 2 ] = glm::vec3( textSize, 0, 0 );
+    pos[ 3 ] = glm::vec3( textSize, textSize, 0 );
 
     static const ui32 NumQuadIndices = 6;
     GLushort  indices[ NumQuadIndices ];
@@ -338,24 +338,26 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 textS
     GLushort *textIndices = new GLushort[ NumQuadIndices * text.size() ];
 
     for (ui32 i = 0; i < text.size(); i++) {
-        textPos[ i ].x = pos[ 0 ].x + i*textSize;
-        textPos[ i ].y = pos[ 0 ].y;
-
-        textPos[ i + 1 ].x = pos[ 1 ].x + i*textSize;
-        textPos[ i + 1 ].y = pos[ 1 ].y + textSize;
-
-        textPos[ i + 2 ].x = pos[ 2 ].x + i*textSize + textSize;
-        textPos[ i + 2 ].y = pos[ 2 ].y;
-
-        textPos[ i + 3 ].x = pos[ 3 ].x + i*textSize + textSize;
-        textPos[ i + 3 ].y = pos[ 3 ].y + textSize;
-
-        colors[ i ] = col[ 0 ];
-        colors[ i+1 ] = col[ 1 ];
-        colors[ i+2 ] = col[ 2 ];
-        colors[ i+3 ] = col[ 3 ];
-        const ui32 IndexOffset( i * NumQuadIndices );
         const ui32 VertexOffset( i * NumQuadVert );
+        textPos[ VertexOffset + 0 ].x = pos[ 0 ].x + (i*textSize);
+        textPos[ VertexOffset + 0 ].y = pos[ 0 ].y;
+
+        textPos[ VertexOffset + 1 ].x = pos[ 1 ].x + (i*textSize);
+        textPos[ VertexOffset + 1 ].y = pos[ 1 ].y;
+
+        textPos[ VertexOffset + 2 ].x = pos[ 2 ].x + (i*textSize);
+        textPos[ VertexOffset + 2 ].y = pos[ 2 ].y;
+
+        textPos[ VertexOffset + 3 ].x = pos[ 3 ].x + (i*textSize);
+        textPos[ VertexOffset + 3 ].y = pos[ 3 ].y;
+
+        dumpTextBox( i, textPos, VertexOffset );
+
+        colors[ VertexOffset + 0 ] = col[ 0 ];
+        colors[ VertexOffset + 1 ] = col[ 1 ];
+        colors[ VertexOffset + 2 ] = col[ 2 ];
+        colors[ VertexOffset + 3 ] = col[ 3 ];
+        const ui32 IndexOffset( i * NumQuadIndices );
         textIndices[ 0 + IndexOffset ] = 0 + VertexOffset;
         textIndices[ 1 + IndexOffset ] = 1 + VertexOffset;
         textIndices[ 2 + IndexOffset ] = 2 + VertexOffset;
@@ -365,8 +367,7 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 textS
         textIndices[ 5 + IndexOffset ] = 3 + VertexOffset;
     }
 
-
-    geo->m_vb = allocVertices( geo->m_vertextype, text.size(), NumQuadVert, textPos, colors );
+    geo->m_vb = allocVertices( geo->m_vertextype, text.size() * NumQuadVert, textPos, colors );
 
     // setup triangle indices
     ui32 size = sizeof( GLushort ) * 6 * text.size();
@@ -375,7 +376,7 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 textS
 
 
     // setup primitives
-    geo->m_numPrimGroups = 1;
+    geo->m_numPrimGroups = text.size();
     geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
     geo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
     geo->m_pPrimGroups[ 0 ].m_numPrimitives = 6 * geo->m_numPrimGroups;
@@ -427,7 +428,6 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 textS
 	return geo;*/
 }
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Scene
 } // namespace OSRE
