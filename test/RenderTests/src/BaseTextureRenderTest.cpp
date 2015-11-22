@@ -50,7 +50,8 @@ const String VsSrc =
     "\n"
     "layout(location = 0) in vec3 position;	            // object space vertex position\n"
     "layout(location = 1) in vec3 normal;	            // object space vertex normal\n"
-    "layout(location = 2) in vec2 texcoord0;	        // texture coordinate\n"
+    "layout(location = 2) in vec3 color0;	            // object space vertex normal\n"
+    "layout(location = 3) in vec2 texcoord0;	        // texture coordinate\n"
     "\n"
     "//output from the vertex shader\n"
     "smooth out vec4 vSmoothColor\n;		            //smooth colour to fragment shader\n"
@@ -60,8 +61,8 @@ const String VsSrc =
     "uniform mat4 MVP;	                                //combined modelview projection matrix\n"
     "\n"
     "void main() {\n"
-    "    // assign the per-vertex colour to vSmoothColor varying\n"
-    "    vSmoothColor = vec4( 1,0,0,0);\n"
+    "    // assign the per-vertex color to vSmoothColor varying\n"
+    "    vSmoothColor = vec4(color0,1);\n"
     "\n"
     "    // get the clip space position by multiplying the combined MVP matrix with the object space\n"
     "    // vertex position\n"
@@ -167,6 +168,7 @@ public:
         if( nullptr != geo->m_material->m_pShader ) {
             geo->m_material->m_pShader->m_attributes.add( "position" );
             geo->m_material->m_pShader->m_attributes.add( "normal" );
+            geo->m_material->m_pShader->m_attributes.add( "color0" );
             geo->m_material->m_pShader->m_attributes.add( "texcoord0" );
             geo->m_material->m_pShader->m_parameters.add( "MVP" );
         }

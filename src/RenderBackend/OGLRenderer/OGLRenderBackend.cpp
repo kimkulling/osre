@@ -374,7 +374,7 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *pShade
             attribute->m_index = ( *pShader )[ attribute->m_pAttributeName ];
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
-            attribute->m_ptr = ( const GLvoid* ) offsetof( ColorVert, color );
+            attribute->m_ptr = ( const GLvoid* ) offsetof( ColorVert, color0 );
             attributes.add( attribute );
             break;
 
@@ -393,6 +393,14 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *pShade
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = ( const GLvoid* ) offsetof( RenderVert, normal );
+            attributes.add( attribute );
+
+            attribute = new OGLVertexAttribute;
+            attribute->m_pAttributeName = getVertCompName( Color0 ).c_str();
+            attribute->m_index = ( *pShader )[ attribute->m_pAttributeName ];
+            attribute->m_size = 3;
+            attribute->m_type = GL_FLOAT;
+            attribute->m_ptr = ( const GLvoid* ) offsetof( RenderVert, color0 );
             attributes.add( attribute );
 
             attribute = new OGLVertexAttribute;
@@ -437,7 +445,8 @@ OGLVertexArray *OGLRenderBackend::createVertexArray() {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, ui32 stride, GLint loc, OGLVertexAttribute* attrib ) {
+bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, ui32 stride, GLint loc, 
+                                         OGLVertexAttribute* attrib ) {
     if( nullptr == va || nullptr == shader || nullptr == attrib ) {
         return false;
     }
@@ -477,8 +486,12 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
 }
 
 //-------------------------------------------------------------------------------------------------
-void OGLRenderBackend::destroyVertexArray( OGLVertexArray *pVertexArray ) {
-    glDeleteVertexArrays( 1, &pVertexArray->m_id );
+void OGLRenderBackend::destroyVertexArray( OGLVertexArray *vertexArray ) {
+    if (nullptr == vertexArray) {
+        return;
+    }
+
+    glDeleteVertexArrays( 1, &vertexArray->m_id );
 }
 
 //-------------------------------------------------------------------------------------------------

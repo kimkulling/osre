@@ -114,7 +114,7 @@ enum ClearBitType {
 struct ColorVert {
     glm::vec3 position;
     glm::vec3 normal;
-    glm::vec3 color;
+    glm::vec3 color0;
 
     static ui32 getNumAttributes();
     static const String *getAttributes();
@@ -123,6 +123,7 @@ struct ColorVert {
 struct RenderVert {
     glm::vec3 position;
     glm::vec3 normal;
+    glm::vec3 color0;
     glm::vec2 tex0;
 
     static ui32 getNumAttributes(); 

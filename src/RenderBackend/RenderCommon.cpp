@@ -49,28 +49,33 @@ static const String VertCompName[ NumVertexAttrs ] = {
 
 static const String ErrorCmpName = "Error";
 
-static const String ColorVertAttributes[ 3 ] = {
+static const ui32 NumColorVertAttributes = 3;
+
+static const String ColorVertAttributes[ NumColorVertAttributes ] = {
     "position",
     "normal",
     "color0"
 };
     
 ui32 ColorVert::getNumAttributes() {
-    return 3;
+    return NumColorVertAttributes;
 }
 
 const String *ColorVert::getAttributes() {
     return ColorVertAttributes;
 }
 
-static const String RenderVertAttributes[ 3 ] = {
+static const ui32 NumRenderVertAttributes = 4;
+
+static const String RenderVertAttributes[ NumRenderVertAttributes ] = {
     "position",
     "normal",
-    "tex0"
+    "color0",
+    "texcoord0"
 };
 
 ui32 RenderVert::getNumAttributes() {
-    return 3;
+    return NumRenderVertAttributes;
 }
 
 const String *RenderVert::getAttributes() {

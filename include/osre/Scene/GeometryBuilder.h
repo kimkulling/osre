@@ -25,7 +25,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
+
 namespace OSRE {
+
 
 namespace RenderBackend {
     struct Geometry;
@@ -53,10 +59,19 @@ public:
     /// @return The created geometry.
     RenderBackend::Geometry *allocTriangles( RenderBackend::VertexType type );
 
+    ///	@brief
     RenderBackend::Geometry *allocQuads( RenderBackend::VertexType type );
 
     ///	@brief
 	RenderBackend::Geometry *allocTextBox( f32 x, f32 y, f32 textSize, const String &text );
+
+    ///	@brief  Allocates vertices into a buffer data.
+    /// @param  type        [in] The vertex type to create.
+    ///	@param  numVerts    [in] The number of vertices to create.
+    ///	@param  pos         [in] Pointer to array with vec3-positions, set to nullptr if nothing shall prepared
+    ///	@param  col1        [in] Pointer to array with vec3-diffuse colors, set to nullptr if nothing shall prepared
+    static RenderBackend::BufferData *allocVertices( RenderBackend::VertexType type, ui32 numVerts, ::glm::vec3 *pos, ::glm::vec3 *col1 );
+
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -25,10 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <GL/glew.h>
 #include <GL/gl.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/string_cast.hpp>
 
 #include <vector>
 #include <sstream>
@@ -78,6 +74,47 @@ const String FsSrc =
     "}\n";
 
 
+const String VsSrcRV =
+"#version 400 core\n"
+"\n"
+"layout(location = 0) in vec3 position;	      // object space vertex position\n"
+"layout(location = 1) in vec3 normal;	            // object space vertex normal\n"
+"layout(location = 2) in vec3 color0;  // per-vertex colour\n"
+"layout(location = 3) in vec3 texcoord0;  // per-vertex colour\n"
+"\n"
+"// output from the vertex shader\n"
+"smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
+"smooth out vec2 vUV;\n"
+"\n"
+"// uniform\n"
+"uniform mat4 MVP;	//combined modelview projection matrix\n"
+"\n"
+"void main()\n"
+"{\n"
+"    //assign the per-vertex color to vSmoothColor varying\n"
+"    vSmoothColor = vec4(color0,1);\n"
+"\n"
+"    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
+"    //vertex position\n"
+"    gl_Position = MVP*vec4(position,1);\n"
+"    vUV = texcoord0;\n"
+"}\n";
+
+const String FsSrcRV =
+"#version 400 core\n"
+"\n"
+"layout(location=0) out vec4 vFragColor; //fragment shader output\n"
+"\n"
+"//input form the vertex shader\n"
+"smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
+"smooth in vec2 vUV;\n"
+"\n"
+"void main()\n"
+"{\n"
+"    //set the interpolated color as the shader output\n"
+"    vFragColor = vSmoothColor;\n"
+"}\n";
+
 static const String TextVsSrc =
     "#version 400 core\n"
     "\n"
@@ -122,48 +159,6 @@ RenderBackend::Geometry *GeometryBuilder::allocEmptyGeometry( RenderBackend::Ver
     geo->m_indextype = UnsignedShort;
 
     return geo;
-}
-
-BufferData *allocVertices( VertexType type, ui32 numVerts, glm::vec3 *pos, glm::vec3 *col ) {
-    BufferData *data( nullptr );
-    ui32 size( 0 );
-    switch (type) {
-        case ColorVertex: {
-                ColorVert *colVerts = new ColorVert[ numVerts ];
-                if ( nullptr != pos) {
-                    for ( ui32 i = 0; i < numVerts; i++) {
-                        colVerts[ i ].position = pos[ i ];
-                    }
-                }
-                if ( nullptr != col) {
-                    for ( ui32 j = 0; j < numVerts; j++) {
-                        colVerts[ j ].color = col[ j ];
-                    }
-                }
-                size = sizeof( ColorVert ) * numVerts;
-                data = BufferData::alloc( VertexBuffer, size, ReadOnly );
-                ::memcpy( data->m_pData, colVerts, size );
-            }
-            break;
-
-        case RenderVertex: {
-                RenderVert *renderVerts = new RenderVert[ numVerts ];
-                if ( nullptr != pos) {
-                    for ( ui32 j = 0; j < numVerts; j++) {
-                        renderVerts[ j ].position = pos[ j ];
-                    }
-                }
-                size = sizeof( RenderVert ) * numVerts;
-                data = BufferData::alloc( VertexBuffer, size, ReadOnly );
-                ::memcpy( data->m_pData, renderVerts, size );
-            }
-            break;
-
-        default:
-            break;
-    }
-
-    return data;
 }
 
 Geometry *GeometryBuilder::allocTriangles( VertexType type ) {
@@ -295,16 +290,15 @@ static void dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset ) {
     stream << "i = " << i << " : " << textPos[ VertexOffset + 2 ].x << ", " << textPos[ VertexOffset + 2 ].y << std::endl;
     stream << "i = " << i << " : " << textPos[ VertexOffset + 3 ].x << ", " << textPos[ VertexOffset + 3 ].y << std::endl;
     osre_info( Tag, stream.str() );
-
 }
 
-RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 textSize, const String &text ) {
+RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text ) {
 	if ( text.empty() ) {
 		return nullptr;
 	}
 
     Geometry *geo = new Geometry;
-    geo->m_vertextype = ColorVertex;
+    geo->m_vertextype = RenderVertex;
     geo->m_indextype = UnsignedShort;
 
     // setup triangle vertices    
@@ -330,7 +324,6 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 textS
     indices[ 3 ] = 1;
     indices[ 4 ] = 2;
     indices[ 5 ] = 3;
-
 
     const ui32 NumTextVerts = NumQuadVert * text.size();
     glm::vec3 *textPos = new glm::vec3[ NumTextVerts ];
@@ -374,7 +367,6 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 textS
     geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
     ::memcpy( geo->m_ib->m_pData, textIndices, size );
 
-
     // setup primitives
     geo->m_numPrimGroups = text.size();
     geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
@@ -388,13 +380,13 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 textS
     geo->m_material->m_numTextures = 0;
     geo->m_material->m_type = ShaderMaterial;
     geo->m_material->m_pShader = new Shader;
-    geo->m_material->m_pShader->m_src[ SH_VertexShaderType ] = VsSrc;
-    geo->m_material->m_pShader->m_src[ SH_FragmentShaderType ] = FsSrc;
+    geo->m_material->m_pShader->m_src[ SH_VertexShaderType ] = VsSrcRV;
+    geo->m_material->m_pShader->m_src[ SH_FragmentShaderType ] = FsSrcRV;
 
     // setup shader attributes and variables
     if (nullptr != geo->m_material->m_pShader) {
-        ui32 numAttribs( ColorVert::getNumAttributes() );
-        const String *attribs( ColorVert::getAttributes() );
+        ui32 numAttribs( RenderVert::getNumAttributes() );
+        const String *attribs( RenderVert::getAttributes() );
         geo->m_material->m_pShader->m_attributes.add( attribs, numAttribs );
         geo->m_material->m_pShader->m_parameters.add( "MVP" );
     }
@@ -428,6 +420,55 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox(  f32 x, f32 y, f32 textS
 	return geo;*/
 }
 
+BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm::vec3 *pos, glm::vec3 *col1 ) {
+    BufferData *data( nullptr );
+    ui32 size( 0 );
+    switch (type) {
+        case ColorVertex: {
+            ColorVert *colVerts = new ColorVert[ numVerts ];
+            if (nullptr != pos) {
+                for (ui32 i = 0; i < numVerts; i++) {
+                    colVerts[ i ].position = pos[ i ];
+                }
+            }
+            if (nullptr != col1 ) {
+                for (ui32 j = 0; j < numVerts; j++) {
+                    colVerts[ j ].color0 = col1[ j ];
+                }
+            }
+            size = sizeof( ColorVert ) * numVerts;
+            data = BufferData::alloc( VertexBuffer, size, ReadOnly );
+            ::memcpy( data->m_pData, colVerts, size );
+            delete [] colVerts;
+        }
+        break;
+
+        case RenderVertex: {
+            RenderVert *renderVerts = new RenderVert[ numVerts ];
+            if (nullptr != pos) {
+                for (ui32 j = 0; j < numVerts; j++) {
+                    renderVerts[ j ].position = pos[ j ];
+                }
+            }
+            if (nullptr != col1) {
+                for (ui32 j = 0; j < numVerts; j++) {
+                    renderVerts[ j ].color0 = col1[ j ];
+                }
+            }
+            size = sizeof( RenderVert ) * numVerts;
+            data = BufferData::alloc( VertexBuffer, size, ReadOnly );
+            ::memcpy( data->m_pData, renderVerts, size );
+            delete [] renderVerts;
+
+        }
+        break;
+
+        default:
+            break;
+    }
+
+    return data;
+}
 
 } // Namespace Scene
 } // namespace OSRE
