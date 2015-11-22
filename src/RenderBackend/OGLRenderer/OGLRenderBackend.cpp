@@ -508,8 +508,16 @@ void OGLRenderBackend::bindVertexArray( OGLVertexArray *pVertexArray ) {
 
 //-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::unbindVertexArray( OGLVertexArray *pVertexArray ) {
+    if (nullptr == pVertexArray) {
+        return;
+    }
+    
+    if (pVertexArray->m_id != m_activeVertexArray) {
+        osre_debug( Tag, "Try to unbind wrong vertex array ( index mismatch )." );
+    }
+
     glBindVertexArray( 0 );
-	m_activeVertexArray = OGLNotSetId;
+    m_activeVertexArray = OGLNotSetId;
 }
 
 //-------------------------------------------------------------------------------------------------
