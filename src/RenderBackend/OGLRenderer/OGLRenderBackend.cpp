@@ -344,9 +344,9 @@ bool OGLRenderBackend::createVertexCompArray( const VertexLayout *layout, OGLSha
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *pShader, 
+bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *shader, 
                                               VertAttribArray &attributes ) {
-    if( !pShader ) {
+    if( !shader ) {
         return false;
     }
 
@@ -355,7 +355,7 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *pShade
         case ColorVertex:
             attribute                   = new OGLVertexAttribute;
             attribute->m_pAttributeName = getVertCompName( Position ).c_str();
-            attribute->m_index = ( ( *pShader )[ attribute->m_pAttributeName ] );
+            attribute->m_index = ( ( *shader )[ attribute->m_pAttributeName ] );
             attribute->m_size           = 3;
             attribute->m_type           = GL_FLOAT;
             attribute->m_ptr            = 0;
@@ -363,7 +363,7 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *pShade
 
             attribute = new OGLVertexAttribute;
             attribute->m_pAttributeName = getVertCompName( Normal ).c_str();
-            attribute->m_index = ( *pShader )[ attribute->m_pAttributeName ];
+            attribute->m_index = ( *shader )[ attribute->m_pAttributeName ];
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = ( const GLvoid* ) offsetof( ColorVert, normal );
@@ -371,7 +371,7 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *pShade
 
             attribute = new OGLVertexAttribute;
             attribute->m_pAttributeName = getVertCompName( Color0 ).c_str();
-            attribute->m_index = ( *pShader )[ attribute->m_pAttributeName ];
+            attribute->m_index = ( *shader )[ attribute->m_pAttributeName ];
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = ( const GLvoid* ) offsetof( ColorVert, color0 );
@@ -381,7 +381,7 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *pShade
         case RenderVertex:
             attribute = new OGLVertexAttribute;
             attribute->m_pAttributeName = getVertCompName( Position ).c_str();
-            attribute->m_index = ( ( *pShader )[ attribute->m_pAttributeName ] );
+            attribute->m_index = ( ( *shader )[ attribute->m_pAttributeName ] );
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = 0;
@@ -389,7 +389,7 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *pShade
 
             attribute = new OGLVertexAttribute;
             attribute->m_pAttributeName = getVertCompName( Normal ).c_str();
-            attribute->m_index = ( *pShader )[ attribute->m_pAttributeName ];
+            attribute->m_index = ( *shader )[ attribute->m_pAttributeName ];
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = ( const GLvoid* ) offsetof( RenderVert, normal );
@@ -397,7 +397,7 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *pShade
 
             attribute = new OGLVertexAttribute;
             attribute->m_pAttributeName = getVertCompName( Color0 ).c_str();
-            attribute->m_index = ( *pShader )[ attribute->m_pAttributeName ];
+            attribute->m_index = ( *shader )[ attribute->m_pAttributeName ];
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = ( const GLvoid* ) offsetof( RenderVert, color0 );
@@ -405,7 +405,7 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *pShade
 
             attribute = new OGLVertexAttribute;
             attribute->m_pAttributeName = getVertCompName( TexCoord0 ).c_str();
-            attribute->m_index = ( *pShader )[ attribute->m_pAttributeName ];
+            attribute->m_index = ( *shader )[ attribute->m_pAttributeName ];
             attribute->m_size = 2;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = ( const GLvoid* ) offsetof( RenderVert, tex0 );
@@ -495,24 +495,24 @@ void OGLRenderBackend::destroyVertexArray( OGLVertexArray *vertexArray ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-void OGLRenderBackend::bindVertexArray( OGLVertexArray *pVertexArray ) {
-	if (nullptr == pVertexArray) {
+void OGLRenderBackend::bindVertexArray( OGLVertexArray *vertexArray ) {
+	if (nullptr == vertexArray) {
 		return;
 	}
 
-	if ( ( m_activeVertexArray == OGLNotSetId ) || ( m_activeVertexArray != pVertexArray->m_id) ){
-		m_activeVertexArray = pVertexArray->m_id;
+	if ( ( m_activeVertexArray == OGLNotSetId ) || ( m_activeVertexArray != vertexArray->m_id) ){
+		m_activeVertexArray = vertexArray->m_id;
 		glBindVertexArray( m_activeVertexArray );
 	}
 }
 
 //-------------------------------------------------------------------------------------------------
-void OGLRenderBackend::unbindVertexArray( OGLVertexArray *pVertexArray ) {
-    if (nullptr == pVertexArray) {
+void OGLRenderBackend::unbindVertexArray( OGLVertexArray *vertexArray ) {
+    if (nullptr == vertexArray) {
         return;
     }
     
-    if (pVertexArray->m_id != m_activeVertexArray) {
+    if (vertexArray->m_id != m_activeVertexArray) {
         osre_debug( Tag, "Try to unbind wrong vertex array ( index mismatch )." );
     }
 
@@ -529,7 +529,7 @@ void OGLRenderBackend::releaseAllVertexArrays( ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-OGLShader *OGLRenderBackend::createShader( const String &name, Shader *pShaderInfo ) {
+OGLShader *OGLRenderBackend::createShader( const String &name, Shader *shaderInfo ) {
 	if( name.empty() ) {
         return nullptr;
     }
@@ -537,24 +537,24 @@ OGLShader *OGLRenderBackend::createShader( const String &name, Shader *pShaderIn
     OGLShader *pOGLShader = new OGLShader( name );
     m_shaders.add( pOGLShader );
 
-    if( pShaderInfo ) {
+    if( shaderInfo ) {
         bool result( false );
-        if( !pShaderInfo->m_src[ SH_VertexShaderType ].empty() ) {
-            result = pOGLShader->loadFromSource( SH_VertexShaderType, pShaderInfo->m_src[ SH_VertexShaderType ] );
+        if( !shaderInfo->m_src[ SH_VertexShaderType ].empty() ) {
+            result = pOGLShader->loadFromSource( SH_VertexShaderType, shaderInfo->m_src[ SH_VertexShaderType ] );
             if( !result ) {
                 osre_error( Tag, "Error while compiling VertexShader." );
             }
         }
 
-        if( !pShaderInfo->m_src[ SH_FragmentShaderType ].empty( ) ) {
-            result = pOGLShader->loadFromSource( SH_FragmentShaderType, pShaderInfo->m_src[ SH_FragmentShaderType ] );
+        if( !shaderInfo->m_src[ SH_FragmentShaderType ].empty( ) ) {
+            result = pOGLShader->loadFromSource( SH_FragmentShaderType, shaderInfo->m_src[ SH_FragmentShaderType ] );
             if( !result ) {
                 osre_error( Tag, "Error while compiling FragmentShader." );
             }
         }
 
-        if( !pShaderInfo->m_src[ SH_GeometryShaderType ].empty( ) ) {
-            result = pOGLShader->loadFromSource( SH_GeometryShaderType, pShaderInfo->m_src[ SH_GeometryShaderType ] );
+        if( !shaderInfo->m_src[ SH_GeometryShaderType ].empty( ) ) {
+            result = pOGLShader->loadFromSource( SH_GeometryShaderType, shaderInfo->m_src[ SH_GeometryShaderType ] );
             if( !result ) {
                 osre_error( Tag, "Error while compiling GeometryShader." );
             }
@@ -585,8 +585,8 @@ OGLShader *OGLRenderBackend::getShader( const String &name ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLRenderBackend::useShader( OGLShader *pShader ) {
-    if( !pShader ) {
+bool OGLRenderBackend::useShader( OGLShader *shader ) {
+    if( !shader ) {
         if( m_shaderInUse ) {
             m_shaderInUse->unuse();
             m_shaderInUse = nullptr;
@@ -595,13 +595,13 @@ bool OGLRenderBackend::useShader( OGLShader *pShader ) {
         return false;
     }
 
-    if( m_shaderInUse == pShader ) {
+    if( m_shaderInUse == shader ) {
         return true;
     }
     if( m_shaderInUse ) {
         m_shaderInUse->unuse();
     }
-    m_shaderInUse = pShader;
+    m_shaderInUse = shader;
     m_shaderInUse->use();
 
     return true;
@@ -613,10 +613,10 @@ OGLShader *OGLRenderBackend::getActiveShader() const {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLRenderBackend::releaseShader( OGLShader *pShader ) {
-	OSRE_ASSERT( nullptr != pShader );
+bool OGLRenderBackend::releaseShader( OGLShader *shader ) {
+	OSRE_ASSERT( nullptr != shader );
 
-	if( !pShader ) {
+	if( !shader ) {
         return false;
     }
 
@@ -624,7 +624,7 @@ bool OGLRenderBackend::releaseShader( OGLShader *pShader ) {
     ui32 idx( 0 );
     bool found( false  );
     for( ui32 i = 0; i < m_shaders.size(); ++i ) {
-        if( m_shaders[ i ] == pShader ) {
+        if( m_shaders[ i ] == shader ) {
             found = true;
             idx = i;
             break;
@@ -788,34 +788,34 @@ OGLTexture *OGLRenderBackend::findTexture( const String &name ) const {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool OGLRenderBackend::bindTexture( OGLTexture *pOGLTexture, TextureStageType stageType ) {
-	if( !pOGLTexture ) {
+bool OGLRenderBackend::bindTexture( OGLTexture *oglTexture, TextureStageType stageType ) {
+	if( !oglTexture ) {
         return false;
     }
 
     GLenum glStageType = getGLTextureStage( stageType );
     glActiveTexture( glStageType );
-    glBindTexture( pOGLTexture->m_target, pOGLTexture->m_textureId );
+    glBindTexture( oglTexture->m_target, oglTexture->m_textureId );
 
     return true;
 }
 
 //-------------------------------------------------------------------------------------------------
-void OGLRenderBackend::releaseTexture( OGLTexture *pTexture ) {
-    if( m_textures[ pTexture->m_slot ] ) {
-        glDeleteTextures( 1, &pTexture->m_textureId );
-        pTexture->m_textureId = OGLNotSetId;
-        pTexture->m_width     = 0;
-        pTexture->m_height    = 0;
-        pTexture->m_channels  = 0;
+void OGLRenderBackend::releaseTexture( OGLTexture *oglTexture ) {
+    if( m_textures[ oglTexture->m_slot ] ) {
+        glDeleteTextures( 1, &oglTexture->m_textureId );
+        oglTexture->m_textureId = OGLNotSetId;
+        oglTexture->m_width     = 0;
+        oglTexture->m_height    = 0;
+        oglTexture->m_channels  = 0;
 
-        m_freeTexSlots.add( pTexture->m_slot );
+        m_freeTexSlots.add( oglTexture->m_slot );
 
-        std::map<String, ui32>::iterator it( m_texLookupMap.find( pTexture->m_name ) );
+        std::map<String, ui32>::iterator it( m_texLookupMap.find( oglTexture->m_name ) );
         if( m_texLookupMap.end() != it ) {
             it = m_texLookupMap.erase( it );
         }
-        pTexture->m_slot = 0;
+        oglTexture->m_slot = 0;
     }
 }
 
