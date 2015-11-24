@@ -479,6 +479,9 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
                                    GL_FALSE,
                                    stride,
                                    attributes[ i ]->m_ptr );
+        } else {
+            String msg = "Cannot find " + String( pAttribName );
+            osre_debug( Tag, msg );
         }
     }
 
@@ -938,7 +941,7 @@ void OGLRenderBackend::renderFrame() {
     OSRE_ASSERT( nullptr != m_renderCtx );    
     
 	m_renderCtx->update();
-    if (nullptr != m_fpsCounter) {
+    if ( nullptr != m_fpsCounter ) {
         ui32 fps = m_fpsCounter->getFPS();
     }
 }

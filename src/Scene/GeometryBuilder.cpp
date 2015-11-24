@@ -75,45 +75,45 @@ const String FsSrc =
 
 
 const String VsSrcRV =
-"#version 400 core\n"
-"\n"
-"layout(location = 0) in vec3 position;	      // object space vertex position\n"
-"layout(location = 1) in vec3 normal;	            // object space vertex normal\n"
-"layout(location = 2) in vec3 color0;  // per-vertex colour\n"
-"layout(location = 3) in vec3 texcoord0;  // per-vertex colour\n"
-"\n"
-"// output from the vertex shader\n"
-"smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
-"smooth out vec2 vUV;\n"
-"\n"
-"// uniform\n"
-"uniform mat4 MVP;	//combined modelview projection matrix\n"
-"\n"
-"void main()\n"
-"{\n"
-"    //assign the per-vertex color to vSmoothColor varying\n"
-"    vSmoothColor = vec4(color0,1);\n"
-"\n"
-"    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
-"    //vertex position\n"
-"    gl_Position = MVP*vec4(position,1);\n"
-"    vUV = texcoord0;\n"
-"}\n";
+    "#version 400 core\n"
+    "\n"
+    "layout(location = 0) in vec3 position;	      // object space vertex position\n"
+    "layout(location = 1) in vec3 normal;	            // object space vertex normal\n"
+    "layout(location = 2) in vec3 color0;  // per-vertex colour\n"
+    "layout(location = 3) in vec2 texcoord0;  // per-vertex colour\n"
+    "\n"
+    "// output from the vertex shader\n"
+    "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
+    "smooth out vec2 vUV;\n"
+    "\n"
+    "// uniform\n"
+    "uniform mat4 MVP;	//combined modelview projection matrix\n"
+    "\n"
+    "void main()\n"
+    "{\n"
+    "    //assign the per-vertex color to vSmoothColor varying\n"
+    "    vSmoothColor = vec4(color0,1);\n"
+    "\n"
+    "    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
+    "    //vertex position\n"
+    "    gl_Position = MVP*vec4(position,1);\n"
+    "    vUV = texcoord0;\n"
+    "}\n";
 
 const String FsSrcRV =
-"#version 400 core\n"
-"\n"
-"layout(location=0) out vec4 vFragColor; //fragment shader output\n"
-"\n"
-"//input form the vertex shader\n"
-"smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
-"smooth in vec2 vUV;\n"
-"\n"
-"void main()\n"
-"{\n"
-"    //set the interpolated color as the shader output\n"
-"    vFragColor = vSmoothColor;\n"
-"}\n";
+    "#version 400 core\n"
+    "\n"
+    "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
+    "\n"
+    "//input form the vertex shader\n"
+    "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
+    "smooth in vec2 vUV;\n"
+    "\n"
+    "void main()\n"
+    "{\n"
+    "    //set the interpolated color as the shader output\n"
+    "    vFragColor = vSmoothColor;\n"
+    "}\n";
 
 static const String TextVsSrc =
     "#version 400 core\n"
@@ -377,7 +377,14 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSi
 
     // setup material
     geo->m_material = new Material;
-    geo->m_material->m_numTextures = 0;
+    geo->m_material->m_numTextures = 1;
+    geo->m_material->m_pTextures = new Texture[ 1 ];
+#ifdef _WIN32
+    geo->m_material->m_pTextures[ 0 ].m_textureName = "../../media/Textures/Fonts/buildin_arial.bmp";
+#else
+    geo->m_material->m_pTextures[ 0 ].m_textureName = "../media/Textures/Fonts/buildin_arial.bmp";
+#endif
+
     geo->m_material->m_type = ShaderMaterial;
     geo->m_material->m_pShader = new Shader;
     geo->m_material->m_pShader->m_src[ SH_VertexShaderType ] = VsSrcRV;
@@ -392,32 +399,6 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSi
     }
 
     return geo;
-    // setup material
-	/*geo->m_material = new Material;
-    geo->m_material->m_numTextures = 1;
-    geo->m_material->m_pTextures = new Texture[ 1 ];
-#ifdef _WIN32
-    geo->m_material->m_pTextures[ 0 ].m_textureName = "../../media/Textures/Fonts/buildin_arial.bmp";
-#else
-    geo->m_material->m_pTextures[ 0 ].m_textureName = "../media/Textures/Fonts/buildin_arial.bmp";
-#endif
-
-    
-   	geo->m_material->m_type = ShaderMaterial;
-	geo->m_material->m_pShader = new Shader;
-
-	geo->m_material->m_pShader->m_src[ SH_VertexShaderType ]   = TextVsSrc;
-	geo->m_material->m_pShader->m_src[ SH_FragmentShaderType ] = TextFsSrc;
-
-	// setup shader attributes and variables
-	if ( nullptr != geo->m_material->m_pShader) {
-		ui32 numAttribs( RenderVert::getNumAttributes() );
-		const String *attribs( ColorVert::getAttributes() );
-		geo->m_material->m_pShader->m_attributes.add( attribs, numAttribs );
-		geo->m_material->m_pShader->m_parameters.add( "MVP" );
-	}
-
-	return geo;*/
 }
 
 BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm::vec3 *pos, glm::vec3 *col1 ) {

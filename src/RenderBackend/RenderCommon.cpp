@@ -115,7 +115,7 @@ VertexLayout::VertexLayout()
 }
 
 VertexLayout::~VertexLayout() {
-    delete[] m_attributes;
+    delete [] m_attributes;
     m_attributes = nullptr;
 }
 
