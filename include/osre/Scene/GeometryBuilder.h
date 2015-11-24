@@ -53,25 +53,40 @@ public:
     /// @brief  The class destructor.
     ~GeometryBuilder();
 
+    /// @brief  Will allocate an empty geometry.
+    ///	@param  type        [in] The vertex type.
+    /// @return The created geometry.
     RenderBackend::Geometry *allocEmptyGeometry( RenderBackend::VertexType type );
 
-    /// @brief  Will create a triangle geometry.
+    /// @brief  Will allocate a triangle geometry.
+    ///	@param  type        [in] The vertex type.
     /// @return The created geometry.
     RenderBackend::Geometry *allocTriangles( RenderBackend::VertexType type );
 
-    ///	@brief
+    ///	@brief  Will allocate vertices for a quad primitive.
+    ///	@param  type        [in] The vertex type.
+    /// @return The created geometry.
     RenderBackend::Geometry *allocQuads( RenderBackend::VertexType type );
 
-    ///	@brief
-	RenderBackend::Geometry *allocTextBox( f32 x, f32 y, f32 textSize, const String &text );
+    ///	@brief  Will allocate vertices for a text-box.
+    /// @param  x           [in] Left position of the text box.
+    /// @param  y           [in] Upper position of the text box.
+    /// @param  textSize    [in] The size for a single glyph.
+    /// @param  text        [in] The text to render.
+    /// @return The created geometry.
+    RenderBackend::Geometry *allocTextBox( f32 x, f32 y, f32 textSize, const String &text );
 
     ///	@brief  Allocates vertices into a buffer data.
     /// @param  type        [in] The vertex type to create.
     ///	@param  numVerts    [in] The number of vertices to create.
     ///	@param  pos         [in] Pointer to array with vec3-positions, set to nullptr if nothing shall prepared
     ///	@param  col1        [in] Pointer to array with vec3-diffuse colors, set to nullptr if nothing shall prepared
+    /// @return The allocated buffer data.
     static RenderBackend::BufferData *allocVertices( RenderBackend::VertexType type, ui32 numVerts, ::glm::vec3 *pos, ::glm::vec3 *col1 );
 
+    /// No copying.
+    GeometryBuilder( const GeometryBuilder& ) = delete;
+    GeometryBuilder &operator = ( const GeometryBuilder& ) = delete;
 };
 
 //-------------------------------------------------------------------------------------------------
