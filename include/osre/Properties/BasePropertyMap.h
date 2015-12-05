@@ -44,44 +44,44 @@ public:
     ///	@param	rOther	The instance to copy from.
 
     ///	@brief	The class destructor.
-    ~BasePropertyMap();
+    virtual ~BasePropertyMap();
 
     ///	@brief	A new property will be set.
     /// @param  id          [in] The property id.
     ///	@param	name	    [in] The name of the property.
     ///	@param	value	    [in] The value of the property.
-    void setProperty( ui32 id, const String &name, const CPPCore::Variant &value );
+    virtual void setProperty(ui32 id, const String &name, const CPPCore::Variant &value);
 
     /// @brief  A new property will be set.
     /// @param  id          [in] The property id.
     /// @param  property    [in] a pointer showing to the new property.
-    void setProperty( ui32 id, Property *Property );
+    virtual void setProperty(ui32 id, Property *Property);
 
     ///	@brief	Returns true, if the name is stored as a property.
     /// @param  id          [in] The property id.
     ///	@return	true, if the property is there, false if not.
-    bool hasProperty( ui32 id ) const;
+    virtual bool hasProperty(ui32 id) const;
     
     ///	@brief	Returns the property assigned to the name.
     /// @param  id          [in] The property id.
     /// @return Pointer showing to the instance or nullptr if property was not found.
-    Property *getProperty(ui32 id) const;
+    virtual Property *getProperty(ui32 id) const;
 
     /// @brief  Removes a stored property.
     /// @param  id          [in] The property id.
     /// @return true, if deletion was successful.
-    bool removeProperty(ui32 id);
+    virtual bool removeProperty(ui32 id);
 
     /// @brief  Returns the number of properties in the map.
     /// @return The number of properties.
-    ui32 size() const;
+    virtual ui32 size() const;
 
     /// @brief  Returns true, if property is empty.
     /// @return true, when map is empty,
-    bool isEmpty() const;
+    virtual bool isEmpty() const;
 
     /// @brief  Clears the map.
-    void clear();
+    virtual void clear();
     
 private:
     BasePropertyMap(const BasePropertyMap &) = delete;
@@ -98,4 +98,3 @@ private:
 
 } // Namespace Properties
 } // Namespace OSRE
-
