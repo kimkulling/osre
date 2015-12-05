@@ -42,34 +42,51 @@ public:
 
     ///	@brief	The copy constructor.
     ///	@param	rOther	The instance to copy from.
-    BasePropertyMap( const BasePropertyMap &rOther );
 
-    ///	@brief	The destructor.
+    ///	@brief	The class destructor.
     ~BasePropertyMap();
 
     ///	@brief	A new property will be set.
-    ///	@param	rName	The name of the property.
-    ///	@param	rValue	The value of the property.
-    void setProperty( ui32 id, const String &rName, const CPPCore::Variant &rValue );
+    /// @param  id          [in] The property id.
+    ///	@param	name	    [in] The name of the property.
+    ///	@param	value	    [in] The value of the property.
+    void setProperty( ui32 id, const String &name, const CPPCore::Variant &value );
 
+    /// @brief  A new property will be set.
+    /// @param  id          [in] The property id.
+    /// @param  property    [in] a pointer showing to the new property.
     void setProperty( ui32 id, Property *Property );
 
     ///	@brief	Returns true, if the name is stored as a property.
-    ///	@param	rName	The name of the property.
+    /// @param  id          [in] The property id.
     ///	@return	true, if the property is there, false if not.
     bool hasProperty( ui32 id ) const;
     
     ///	@brief	Returns the property assigned to the name.
-    ///
-    Property *getProperty( ui32 id ) const;
-    bool removeProperty( ui32 id );
+    /// @param  id          [in] The property id.
+    /// @return Pointer showing to the instance or nullptr if property was not found.
+    Property *getProperty(ui32 id) const;
+
+    /// @brief  Removes a stored property.
+    /// @param  id          [in] The property id.
+    /// @return true, if deletion was successful.
+    bool removeProperty(ui32 id);
+
+    /// @brief  Returns the number of properties in the map.
+    /// @return The number of properties.
     ui32 size() const;
+
+    /// @brief  Returns true, if property is empty.
+    /// @return true, when map is empty,
     bool isEmpty() const;
+
+    /// @brief  Clears the map.
     void clear();
     
 private:
-    BasePropertyMap &operator = ( const BasePropertyMap &rOther );
-    bool operator == ( const BasePropertyMap &rOther ) const;
+    BasePropertyMap(const BasePropertyMap &) = delete;
+    BasePropertyMap &operator = (const BasePropertyMap &) = delete;
+    bool operator == ( const BasePropertyMap & ) const = delete;
 
 
 private:

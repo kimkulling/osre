@@ -108,9 +108,9 @@ protected:
     virtual ~SystemTask();
     
 private:
-    WorkingMode m_WorkingMode;
+    WorkingMode m_workingMode;
     BufferMode m_buffermode;
-    SystemTaskThread *m_pTaskThread;
+    SystemTaskThread *m_taskThread;
     typedef Threading::TAsyncQueue<const TaskJob*> TaskQueue;
     TaskQueue *m_asyncQueue;
 };

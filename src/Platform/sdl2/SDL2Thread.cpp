@@ -56,17 +56,17 @@ SDL2Thread::~SDL2Thread( ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool SDL2Thread::start( void *pData ) {
+bool SDL2Thread::start( void *data ) {
     if ( Running == AbstractThread::getCurrentState() ) {
         osre_debug( Tag, "Thread " + getName() + " is already running." );
         return false;
     }
-    if ( !pData ) {
-        pData = this;
+    if ( !data ) {
+        data = this;
     }
 
     bool result( true );
-    m_thread = SDL_CreateThread( SDL2Thread::sdl2threadfunc, getName( ).c_str( ), pData );
+    m_thread = SDL_CreateThread( SDL2Thread::sdl2threadfunc, getName( ).c_str( ), data );
     if( m_thread ) {
         setState( Running );
     } else {
@@ -102,7 +102,7 @@ bool SDL2Thread::stop( ) {
 //-------------------------------------------------------------------------------------------------
 bool SDL2Thread::suspend( ) {
     // check for a valid thread state
-    if (Running == AbstractThread::getCurrentState()) {
+    if ( Running == AbstractThread::getCurrentState() ) {
         osre_debug( Tag, "Thread " + getName() + " is not running." );
         return false;
     }

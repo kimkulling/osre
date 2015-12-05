@@ -105,8 +105,6 @@ public:
 protected:
     void initDefaults();
 
-private: 
-
 private:
     Properties::IPropertyMap *m_pPropertyMap;
 };
