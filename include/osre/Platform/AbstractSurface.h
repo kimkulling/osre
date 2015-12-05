@@ -34,16 +34,16 @@ namespace Platform {
 ///	@brief  This struct stores all surface related information.
 //-------------------------------------------------------------------------------------------------
 struct SurfaceProperties {
-    ui32 m_x;                   ///< Upper left x coordinate.
-    ui32 m_y;                   ///< Upper left y coordinate.
-    ui32 m_width;               ///< Width of the surface.
-    ui32 m_height;              ///< Height of the surface.
-    ui32 m_colordepth;          ///< Color depth.
-    ui32 m_depthbufferdepth;    ///< Z-Depth.
-    ui32 m_stencildepth;        ///< Stencil depth.
-    String m_title;             ///< Window title.
-    bool m_fullscreen;          ///< true for full screen.
-    bool m_open;                ///< Window is open flag.
+    ui32   m_x;                   ///< Upper left x coordinate.
+    ui32   m_y;                   ///< Upper left y coordinate.
+    ui32   m_width;               ///< Width of the surface.
+    ui32   m_height;              ///< Height of the surface.
+    ui32   m_colordepth;          ///< Color depth.
+    ui32   m_depthbufferdepth;    ///< Z-Depth.
+    ui32   m_stencildepth;        ///< Stencil depth.
+    String m_title;               ///< Window title.
+    bool   m_fullscreen;          ///< true for full screen.
+    bool   m_open;                ///< Window is open flag.
 };
 
 //-------------------------------------------------------------------------------------------------

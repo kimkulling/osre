@@ -49,7 +49,7 @@ using namespace ::OSRE::Properties;
 PlatformInterface *PlatformInterface::s_instance( nullptr );
 
 static const String PlatformPluginName[ MaxPlugin ] = {
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
     "WindowsPlugin",
 #endif // OSRE_WINDOWS
     "SDL2Plugin"
@@ -192,7 +192,7 @@ bool PlatformInterface::onOpen() {
         polls = m_config->get( Settings::PollingMode ).getBool();
     }
 
-    String appName = "ZFXCE2";
+    String appName = "OSRE Apllicaton";
     m_type = static_cast<PluginType>( m_config->get( Settings::PlatformPlugin ).getInt( ) );
 
     PlatformPluginFactory::init( m_type );

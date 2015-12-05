@@ -42,8 +42,7 @@ Win32Thread::Win32Thread(  const String &name, ui32 stacksize  )
 , m_pThreadSignal( NULL )
 , m_ThreadState( New )
 , m_Prio( Normal )
-, m_ThreadName( name )
-, m_StackSize( stacksize ) {
+, m_ThreadName( name ) {
     // empty
 }
 
@@ -68,7 +67,7 @@ bool Win32Thread::start( void *pData ) {
 
     m_pThreadSignal = new Win32ThreadEvent;
     m_ThreadHandle = (HANDLE) _beginthreadex( NULL,
-        m_StackSize,
+        1024*1024,
         Win32Thread::ThreadFunc,
         pData,
         NULL,
@@ -90,7 +89,8 @@ bool Win32Thread::stop() {
     }
 
     // Stop the thread
-    if ( m_ThreadHandle != NULL ) {
+    ::TerminateThread(m_ThreadHandle, 0);
+    if (m_ThreadHandle != NULL) {
         ::CloseHandle( m_ThreadHandle );
         m_ThreadHandle = NULL;
     }
@@ -105,11 +105,6 @@ bool Win32Thread::stop() {
     SystemInfo::unregisterThreadName( id );
 
     return true;
-}
-
-//-------------------------------------------------------------------------------------------------
-Win32Thread::ThreadState Win32Thread::getCurrentState() const {
-    return m_ThreadState;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -160,16 +155,6 @@ void Win32Thread::setName( const String &rName ) {
 //-------------------------------------------------------------------------------------------------
 const String &Win32Thread::getName() const {
     return m_ThreadName;
-}
-
-//-------------------------------------------------------------------------------------------------
-void Win32Thread::setStackSize( ui32 stacksize ) {
-    m_StackSize = stacksize;
-}
-
-//-------------------------------------------------------------------------------------------------
-ui32 Win32Thread::getStackSize() const {
-    return m_StackSize;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -242,9 +227,9 @@ ui32 WINAPI Win32Thread::ThreadFunc( LPVOID data ) {
     id.Id = ::GetCurrentThreadId();
     SystemInfo::registerThreadName( id, thread->getName() );
 
-    thread->run();
+    const i32 retCode( thread->run() );
 
-    return 0;
+    return retCode;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -252,10 +237,6 @@ i32 Win32Thread::run() {
     // Override me!
 
     return 0;
-}
-//-------------------------------------------------------------------------------------------------
-void Win32Thread::setState( ThreadState newState ) {
-    m_ThreadState = newState;
 }
 
 //-------------------------------------------------------------------------------------------------

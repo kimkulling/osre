@@ -38,7 +38,7 @@ class TaskJob;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Threading::Task
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief	This class implements a system task. 
 ///

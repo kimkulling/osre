@@ -70,7 +70,6 @@ void FontBase::setAtlasRows( ui32 numRows ) {
 }
 
 bool FontBase::loadFromStream( OGLRenderBackend *rb ) {
-    
     if ( m_uri.isEmpty() || nullptr == rb ) {
         return false;
     }

@@ -206,7 +206,9 @@ template<class T>
 inline
 bool TAsyncQueue<T>::isEmpty() {
     OSRE_ASSERT(nullptr != m_pCriticalSection);
-
+    if ( nullptr == m_pCriticalSection ) {
+        return false;
+    }
     m_pCriticalSection->enter();
     bool res = m_ItemQueue.isEmpty();
     m_pCriticalSection->leave();

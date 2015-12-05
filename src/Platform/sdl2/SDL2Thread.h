@@ -47,8 +47,6 @@ public:
     bool start(  void *pData );
     ///	Stops the thread, must be started before.
     bool stop();
-    ///	Returns the current state of the thread.
-    ThreadState getCurrentState() const;
     ///	The running thread will be suspended.
     bool suspend();
     ///	The suspended thread will be resumed.
@@ -57,10 +55,6 @@ public:
     void setName( const String &rName );
     ///	Returns the thread name.
     const String &getName() const;
-    ///	Sets a new stack size.
-    void setStackSize( ui32 stacksize );
-    ///	Returns the current thread size.
-    ui32 getStackSize() const;
     ///	Awaits a timeout.
     void waitForTimeout( ui32 ms );
     ///Awaits a signal.
@@ -79,16 +73,12 @@ protected:
     static int sdl2threadfunc( void *data );
     ///	Override this for your own thread function.
     virtual i32 run();
-    ///	Set the new state of the thread.
-    void setState( ThreadState newState );
 
 private:
     SDL_Thread *m_thread;
     SDL2ThreadEvent *m_pThreadSignal;
     Priority m_Prio;
-    ThreadState m_ThreadState;
     String m_ThreadName;
-    ui32 m_StackSize;
     unsigned long m_threadId;
 };
 

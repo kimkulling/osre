@@ -17,7 +17,7 @@ SET( BIN_INSTALL_DIR "bin" CACHE PATH
 INCLUDE_DIRECTORIES(
     include/
     3dparty/glew/include
-    d:/projects/libs/sdl2/SDL2-2.0.3/include
+    d:/projects/libs/SDL2-2.0.3/include
     c:/Users/kullingk/Desktop/projects/libs/SDL2-2.0.3/include
     3dparty/soil/src
     /usr/include/SDL2/
@@ -25,7 +25,7 @@ INCLUDE_DIRECTORIES(
 )
 
 link_directories(
-    d:/projects/libs/sdl2/SDL2-2.0.3/lib/x86
+    d:/projects/libs/SDL2-2.0.3/lib/x86
     ${CMAKE_HOME_DIRECTORY}/lib
     ${CMAKE_HOME_DIRECTORY}/bin
 )

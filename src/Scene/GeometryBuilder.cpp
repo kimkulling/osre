@@ -108,24 +108,31 @@ const String FsSrcRV =
     "//input form the vertex shader\n"
     "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
     "smooth in vec2 vUV;\n"
+    "uniform sampler2D tex0;\n"
     "\n"
     "void main()\n"
     "{\n"
     "    //set the interpolated color as the shader output\n"
-    "    vFragColor = vSmoothColor;\n"
+//    "    vFragColor = vSmoothColor;\n"
+    "    vFragColor = texture( tex0, vUV );\n"
     "}\n";
 
 static const String TextVsSrc =
     "#version 400 core\n"
     "\n"
-    "layout(location = 0) in vec3 position;	      // object space vertex position\n"
-	"layout(location = 1) in vec3 normal;	            // object space vertex normal\n"
-	"layout(location = 2) in vec2 texcoord0;	        // texture coordinate\n"
-	"out vec2 UV;\n"
+    "layout(location = 0) in vec3 position;	  // object space vertex position\n"
+    "layout(location = 1) in vec3 normal;	  // object space vertex normal\n"
+    "layout(location = 2) in vec3 color0;     // per-vertex colour\n"
+    "layout(location = 3) in vec2 texcoord0;  // per-vertex colour\n"
+    "\n"
+    "smooth out vec4 vSmoothColor;		      // smooth colour to fragment shader\n"
+    "out vec2 UV;\n"
     "\n"
     "uniform mat4 MVP;	//combined modelview projection matrix\n"
 	"\n"
 	"void main() {\n"
+    "    vSmoothColor = vec4(color0,1);\n"
+    "\n"
 	"    gl_Position = MVP*vec4( position, 1 );\n"
 	"    // UV of the vertex. No special space for this one.\n"
 	"    UV = texcoord0;\n"
@@ -136,6 +143,9 @@ static const String TextFsSrc =
     "\n"
     "in vec2 UV;\n"
 	"// Output data\n"
+    "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
+    "smooth in vec2 vUV;\n"
+
 	"out vec4 vFragColor;\n"
 	"uniform sampler2D tex0;\n"
 
@@ -328,10 +338,16 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSi
     const ui32 NumTextVerts = NumQuadVert * text.size();
     glm::vec3 *textPos = new glm::vec3[ NumTextVerts ];
     glm::vec3 *colors = new glm::vec3[ NumTextVerts ];
+	glm::vec2 *tex0 = new glm::vec2[ NumTextVerts ];
     GLushort *textIndices = new GLushort[ NumQuadIndices * text.size() ];
 
     for (ui32 i = 0; i < text.size(); i++) {
-        const ui32 VertexOffset( i * NumQuadVert );
+		c8 ch = text[i];
+		i32 column = (ch - ' ') % 16;
+        i32 row = (ch - ' ') / 16;
+        f32 s = column * 1.0f / 16.0f;
+        f32 t = (row+1) * 1.0f / 16.0f;
+		const ui32 VertexOffset( i * NumQuadVert );
         textPos[ VertexOffset + 0 ].x = pos[ 0 ].x + (i*textSize);
         textPos[ VertexOffset + 0 ].y = pos[ 0 ].y;
 
@@ -345,6 +361,19 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSi
         textPos[ VertexOffset + 3 ].y = pos[ 3 ].y;
 
         dumpTextBox( i, textPos, VertexOffset );
+
+		tex0[VertexOffset + 0].x = s;
+		tex0[VertexOffset + 0].y = 1.0 - t;
+
+		tex0[VertexOffset + 1].x = s;
+        tex0[VertexOffset + 1].y = 1.0 - t + 1.0f / 16.0f;
+
+		tex0[VertexOffset + 2].x = s + 1.0f/16.0f;
+        tex0[VertexOffset + 2].y = 1.0 - t;
+
+
+        tex0[VertexOffset + 3].x = s + 1.0f / 16.0f;
+        tex0[VertexOffset + 3].y = 1.0 - t + 1.0f / 16.0f;
 
         colors[ VertexOffset + 0 ] = col[ 0 ];
         colors[ VertexOffset + 1 ] = col[ 1 ];

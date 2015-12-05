@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -20,7 +20,6 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGUID>{042F12AB-B431-315C-BE1E-0657EA4E8591}</ProjectGUID>
-    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
     <ProjectName>INSTALL</ProjectName>
@@ -30,25 +29,25 @@
     <ConfigurationType>Utility</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -66,7 +65,7 @@
     </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -88,7 +87,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -110,7 +109,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -132,7 +131,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\sdl2\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>

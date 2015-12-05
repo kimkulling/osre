@@ -73,15 +73,15 @@ private:
     TaskJob &operator = ( const TaskJob & );
 
 private:
-    const Common::Event *m_pEvent;
-    const Common::EventData *m_pEventData;
+    const Common::Event *m_event;
+    const Common::EventData *m_eventData;
 };
 
 //-------------------------------------------------------------------------------------------------
 inline
 TaskJob::TaskJob( const Common::Event *pEvent, const Common::EventData *pEventData ) 
-: m_pEvent( pEvent )
-, m_pEventData( pEventData ) {
+: m_event( pEvent )
+, m_eventData( pEventData ) {
     OSRE_ASSERT(nullptr != pEvent);
 }
 
@@ -94,27 +94,27 @@ TaskJob::~TaskJob() {
 //-------------------------------------------------------------------------------------------------
 inline
 const Common::Event *TaskJob::getEvent() const {
-    return m_pEvent;
+    return m_event;
 }
 
 //-------------------------------------------------------------------------------------------------
 inline
 const Common::EventData *TaskJob::getEventData() const {
-    return m_pEventData;
+    return m_eventData;
 }
 
 //-------------------------------------------------------------------------------------------------
 inline
 void TaskJob::set(  const Common::Event *pEvent, const Common::EventData *pEventData ) {
-    m_pEvent = pEvent;
-    m_pEventData = pEventData;
+    m_event = pEvent;
+    m_eventData = pEventData;
 }
 
 //-------------------------------------------------------------------------------------------------
 inline
 void TaskJob::clear() {
-    m_pEvent = nullptr;
-    m_pEventData = nullptr;
+    m_event = nullptr;
+    m_eventData = nullptr;
 }
 
 //-------------------------------------------------------------------------------------------------

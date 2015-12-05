@@ -44,43 +44,35 @@ public:
     ///	The class destructor.
     virtual ~Win32Thread();
     ///	Starts the thread.
-    bool start(  void *pData );
+    virtual bool start(void *pData);
     ///	Stops the thread, must be started before.
-    bool stop();
-    ///	Returns the current state of the thread.
-    ThreadState getCurrentState() const;
+    virtual bool stop();
     ///	The running thread will be suspended.
-    bool suspend();
+    virtual bool suspend();
     ///	The suspended thread will be resumed.
-    bool resume();
+    virtual bool resume();
     ///	Assigns a new name to the thread.
-    void setName( const String &rName );
+    virtual void setName(const String &rName);
     ///	Returns the thread name.
-    const String &getName() const;
-    ///	Sets a new stack size.
-    void setStackSize( ui32 stacksize );
-    ///	Returns the current thread size.
-    ui32 getStackSize() const;
+    virtual const String &getName() const;
     ///	Awaits a timeout.
-    void waitForTimeout( ui32 ms );
+    virtual void waitForTimeout(ui32 ms);
     ///Awaits a signal.
-    void wait();
+    virtual void wait();
     ///	Returns a pointer showing to the assigned thread event.
-    AbstractThreadEvent *getThreadEvent() const;
+    virtual AbstractThreadEvent *getThreadEvent() const;
     ///	Assigns a new thread priority to the thread.
-    void setPriority( Priority prio );
+    virtual void setPriority(Priority prio);
     ///	Returns the current thread priority.
-    Priority getPriority() const;
+    virtual Priority getPriority() const;
     ///	Returns the name of the thread.
-    const String &getThreadName() const;
+    virtual const String &getThreadName() const;
 
 protected:
     ///	Override this for your own thread function.
     virtual i32 run();
-    ///	Set the new state of the thread.
-    void setState( ThreadState newState );
     ///	The Win32-specific thread function.
-    static ui32 WINAPI ThreadFunc( LPVOID data );
+    static ui32 WINAPI ThreadFunc(LPVOID data);
     ///	Will assign a thread name.
     static void setThreadName( const c8 *pName );
 
@@ -90,7 +82,6 @@ private:
     Priority m_Prio;
     ThreadState m_ThreadState;
     String m_ThreadName;
-    ui32 m_StackSize;
 };
 
 //-------------------------------------------------------------------------------------------------

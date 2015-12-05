@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Threading/SystemTask.h>
 #include <osre/Threading/TAsyncQueue.h>
 #include <osre/Threading/TaskJob.h>
+#include <osre/Platform/AtomicInt.h>
 #include <osre/Common/AbstractEventHandler.h>
 #include <osre/Common/Event.h>
 #include <cassert>
@@ -70,6 +71,7 @@ public:
     : SDL2Thread( threadName, StackSize )
 #endif
     , m_updateEvent( nullptr )
+    , m_reqStop( nullptr )
     , m_activeJobQueue( jobQueue )
     , m_eventHandler( nullptr ) {
         assert( nullptr != jobQueue );
@@ -77,6 +79,7 @@ public:
         Platform::AbstractThreadFactory *pThreadFactory( Platform::AbstractThreadFactory::getInstance() );
         if ( pThreadFactory ) {
             m_updateEvent = pThreadFactory->createThreadEvent();
+            m_reqStop = pThreadFactory->createAtomic( 0 );
         } else {
             osre_error( Tag, "Invalid pointer to thread factory." );
         }
@@ -98,6 +101,21 @@ public:
         if ( m_eventHandler ) {
             m_eventHandler->attach( nullptr );
         }
+    }
+    //---------------------------------------------------------------------------------------------
+    virtual bool stop() {
+        if (nullptr == m_reqStop) {
+#ifdef _WIN32
+            return Win32Thread::stop();
+#else
+            return SDL2Thread::stop();
+#endif
+        }
+
+        m_reqStop->incValue( 1 );
+        m_updateEvent->waitForOne();
+        AbstractThread::setState( AbstractThread::Terminated );
+        return true;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -136,15 +154,15 @@ protected:
 					osre_debug(Tag, stream.str());
 				}
 
-                const TaskJob *pJob = m_activeJobQueue->dequeue();
-                const Common::Event *pEvent = pJob->getEvent();
-                if ( !pEvent ) {
+                const TaskJob *job = m_activeJobQueue->dequeue();
+                const Common::Event *ev = job->getEvent();
+                if ( !ev ) {
                     running = false;
-                    assert( nullptr != pEvent );
+                    assert( nullptr != ev );
                 }
 
                 if ( m_eventHandler ) {
-                    m_eventHandler->onEvent( *pEvent, pJob->getEventData() );
+                    m_eventHandler->onEvent( *ev, job->getEventData() );
                 }
             }
 
@@ -152,6 +170,14 @@ protected:
 				m_updateEvent->signal();
 			}
 
+            i32 v(m_reqStop->getValue());
+            if ( v == 1 ) {
+                running = false;
+            }
+        }
+
+        if (m_updateEvent) {
+            m_updateEvent->signal();
         }
 
         return 0;
@@ -159,6 +185,7 @@ protected:
 
 private:
     Platform::AbstractThreadEvent *m_updateEvent;
+    Platform::AbstractAtomic *m_reqStop;
     Threading::TAsyncQueue<const TaskJob*> *m_activeJobQueue;
     Common::AbstractEventHandler *m_eventHandler;
 };

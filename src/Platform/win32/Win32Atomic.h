@@ -39,7 +39,6 @@ extern "C" long  __cdecl _InterlockedDecrement( long volatile* a_vpAddend );
 #pragma intrinsic (_InterlockedIncrement)
 #pragma intrinsic (_InterlockedDecrement)
 
-
 namespace OSRE {
 namespace Platform {
 

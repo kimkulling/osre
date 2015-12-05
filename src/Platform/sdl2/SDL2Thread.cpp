@@ -42,16 +42,14 @@ SDL2Thread::SDL2Thread( const String &name, ui32 stacksize )
 :  m_thread( nullptr )
 , m_pThreadSignal( nullptr )
 , m_Prio( Normal )
-, m_ThreadState( New )
 , m_ThreadName( name )
-, m_StackSize( stacksize )
 , m_threadId( 0 ) {
     // empty
 }
 
 //-------------------------------------------------------------------------------------------------
 SDL2Thread::~SDL2Thread( ) {
-    if ( Running == m_ThreadState ) {
+    if ( Running == AbstractThread::getCurrentState() ) {
         osre_debug( Tag, "Thread " + getName() + " is still running." );
         SDL2Thread::stop( );
     }
@@ -59,7 +57,7 @@ SDL2Thread::~SDL2Thread( ) {
 
 //-------------------------------------------------------------------------------------------------
 bool SDL2Thread::start( void *pData ) {
-    if ( Running == m_ThreadState ) {
+    if ( Running == AbstractThread::getCurrentState() ) {
         osre_debug( Tag, "Thread " + getName() + " is already running." );
         return false;
     }
@@ -82,7 +80,7 @@ bool SDL2Thread::start( void *pData ) {
 
 //-------------------------------------------------------------------------------------------------
 bool SDL2Thread::stop( ) {
-    if ( !Running == m_ThreadState ) {
+    if (!Running == AbstractThread::getCurrentState()) {
         osre_debug( Tag, "Thread " + getName() + " is not running." );
         return false;
     }
@@ -102,14 +100,9 @@ bool SDL2Thread::stop( ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-SDL2Thread::ThreadState SDL2Thread::getCurrentState( ) const {
-    return m_ThreadState;
-}
-
-//-------------------------------------------------------------------------------------------------
 bool SDL2Thread::suspend( ) {
     // check for a valid thread state
-    if ( Running == m_ThreadState ) {
+    if (Running == AbstractThread::getCurrentState()) {
         osre_debug( Tag, "Thread " + getName() + " is not running." );
         return false;
     }
@@ -124,7 +117,7 @@ bool SDL2Thread::suspend( ) {
 //-------------------------------------------------------------------------------------------------
 bool SDL2Thread::resume( ) {
     // check for a valid thread state
-    if ( Waiting != m_ThreadState ) {
+    if (Waiting != AbstractThread::getCurrentState()) {
         osre_debug( Tag, "Thread " + getName() + " is not suspended." );
         return false;
     }
@@ -145,16 +138,6 @@ void SDL2Thread::setName( const String &name ) {
 //-------------------------------------------------------------------------------------------------
 const String &SDL2Thread::getName( ) const {
     return m_ThreadName;
-}
-
-//-------------------------------------------------------------------------------------------------
-void SDL2Thread::setStackSize( ui32 stacksize ) {
-    m_StackSize = stacksize;
-}
-
-//-------------------------------------------------------------------------------------------------
-ui32 SDL2Thread::getStackSize( ) const {
-    return m_StackSize;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -235,10 +218,6 @@ i32 SDL2Thread::run( ) {
     // Override me!
 
     return 0;
-}
-//-------------------------------------------------------------------------------------------------
-void SDL2Thread::setState( ThreadState newState ) {
-    m_ThreadState = newState;
 }
 
 //-------------------------------------------------------------------------------------------------

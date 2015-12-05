@@ -78,7 +78,7 @@ public:
 
     ///	@brief	Returns the state of the thread.
     ///	@return	The current thread state.
-    virtual ThreadState getCurrentState() const = 0;
+    virtual ThreadState getCurrentState() const;
 
     ///	@brief	The thread will be suspended.
     ///	@return	true, if the suspend was successful, false if not.
@@ -95,14 +95,6 @@ public:
     ///	@brief	Returns the current name of the thread.
     ///	@return	The current name of the thread.
     virtual const String &getName() const = 0;
-
-    ///	@brief	Set the new stack size.
-    ///	@param	stacksize	The new stack size.
-    virtual void setStackSize( ui32 stacksize ) = 0;
-
-    ///	@brief	Returns the current stacksize.
-    ///	@return	The current stacksize of the thread.
-    virtual ui32 getStackSize() const = 0;
 
     ///	@brief	Waits until the thread is signaled by an event.
     ///	@param	ms				The timeout, set to 0 for infinite.
@@ -128,21 +120,54 @@ public:
     virtual const String &getThreadName() const = 0;
 
 protected:
+    /// @brief  The default constructor.
+    AbstractThread();
+
+    /// @brief  Hook to react on thread state changes.
+    virtual void onNewState();
+
     ///	@brief	Overwrite this for your own thread running method.
     virtual i32 run() = 0;
 
     ///	@brief	The new state will be set.
     ///	@param	newState	[in] The new state.
-    virtual void setState( ThreadState newState ) = 0;
+    virtual void setState( ThreadState newState );
+
+private:
+    ThreadState m_threadState;
+
 };
 
-//-------------------------------------------------------------------------------------------------
+inline
+AbstractThread::AbstractThread()
+: m_threadState( New ) {
+    // empty
+}
+
 inline
 AbstractThread::~AbstractThread() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
+inline
+void AbstractThread::onNewState() {
+    // override me!
+}
+
+inline
+AbstractThread::ThreadState AbstractThread::getCurrentState() const {
+    return m_threadState;
+}
+
+inline
+void AbstractThread::setState(ThreadState newState) {
+    if ( m_threadState == newState) {
+        return;
+    }
+
+    m_threadState = newState;
+    onNewState();
+}
 
 } // Namespace Platform
 } // Namespace OSRE
