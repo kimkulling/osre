@@ -208,7 +208,7 @@ SET( profiling_src
 #==============================================================================
 SET ( properties_inc
     ${HEADER_PATH}/Properties/BasePropertyMap.h
-    ${HEADER_PATH}/Properties/IPropertyMap.h
+    ${HEADER_PATH}/Properties/AbstractPropertyMap.h
     ${HEADER_PATH}/Properties/Property.h
     ${HEADER_PATH}/Properties/Settings.h
 )
