@@ -35,7 +35,7 @@ namespace Properties {
 ///
 ///	@brief 
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT BasePropertyMap : public IPropertyMap {
+class OSRE_EXPORT BasePropertyMap : public AbstractPropertyMap {
 public:
     ///	@brief	The default constructor.
     BasePropertyMap();

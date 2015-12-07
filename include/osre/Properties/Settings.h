@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Properties {
 
-class IPropertyMap;
+class AbstractPropertyMap;
 
 //--------------------------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Properties::ConfigurationMap
@@ -106,7 +106,7 @@ protected:
     void initDefaults();
 
 private:
-    Properties::IPropertyMap *m_pPropertyMap;
+    Properties::AbstractPropertyMap *m_pPropertyMap;
 };
 
 //--------------------------------------------------------------------------------------------------------------------

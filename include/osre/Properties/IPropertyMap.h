@@ -39,9 +39,9 @@ class Property;
 ///
 ///	@brief 
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT IPropertyMap {
+class OSRE_EXPORT AbstractPropertyMap {
 public:
-    virtual ~IPropertyMap();
+    virtual ~AbstractPropertyMap();
     virtual void setProperty( ui32 id, const String &rName, const CPPCore::Variant &value ) = 0;
     virtual void setProperty( ui32 id, Property *Property ) = 0;
     virtual bool hasProperty( ui32 id ) const = 0;
@@ -52,18 +52,18 @@ public:
     virtual void clear() = 0;
 
 protected:
-    IPropertyMap();
+    AbstractPropertyMap();
 };
 
 //-------------------------------------------------------------------------------------------------
 inline 
-IPropertyMap::IPropertyMap() {
+AbstractPropertyMap::AbstractPropertyMap() {
     // empty
 }
 
 //-------------------------------------------------------------------------------------------------
 inline 
-IPropertyMap::~IPropertyMap() {
+AbstractPropertyMap::~AbstractPropertyMap() {
     // empty
 }
 
