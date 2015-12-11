@@ -138,6 +138,7 @@ struct Handle {
 ///	@brief  Shortcut to avoid copy operations.
 #define OSRE_NON_COPYABLE( NAME ) \
 private: \
-    NAME( const NAME & );        \
-    NAME& operator = ( const NAME & );
+    NAME( const NAME & ) = delete;        \
+    NAME& operator = ( const NAME & ) = delete;
+
 } // Namespace OSRE
