@@ -87,8 +87,8 @@ private:
     TAsyncQueue &operator = ( const TAsyncQueue<T> & );
 
 private:
-    Platform::AbstractCriticalSection *m_pCriticalSection;
-    Platform::AbstractThreadEvent *m_pEnqueueEvent;
+    Platform::AbstractCriticalSection *m_criticalSection;
+    Platform::AbstractThreadEvent *m_enqueueEvent;
     CPPCore::TQueue<T> m_ItemQueue;
 };
 
@@ -96,13 +96,13 @@ private:
 template<class T>
 inline
 TAsyncQueue<T>::TAsyncQueue( Platform::AbstractThreadFactory *pThreadFactory )
-: m_pCriticalSection( nullptr )
-, m_pEnqueueEvent( nullptr )
+: m_criticalSection( nullptr )
+, m_enqueueEvent( nullptr )
 , m_ItemQueue() {
     OSRE_ASSERT(nullptr != pThreadFactory);
   
-    m_pCriticalSection = pThreadFactory->createCriticalSection();
-    m_pEnqueueEvent = pThreadFactory->createThreadEvent();
+    m_criticalSection = pThreadFactory->createCriticalSection();
+    m_enqueueEvent = pThreadFactory->createThreadEvent();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -112,40 +112,40 @@ TAsyncQueue<T>::~TAsyncQueue() {
     CPPCore::TList<T> dummy;
     dequeueAll( dummy );
     
-    delete m_pEnqueueEvent;
-    m_pEnqueueEvent = nullptr;
+    delete m_enqueueEvent;
+    m_enqueueEvent = nullptr;
 
-    delete m_pCriticalSection;
-    m_pCriticalSection = nullptr;
+    delete m_criticalSection;
+    m_criticalSection = nullptr;
 }
 
 //-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 void TAsyncQueue<T>::enqueue( const T &item ) {
-    assert( nullptr != m_pCriticalSection );
+    assert( nullptr != m_criticalSection );
 
-    m_pCriticalSection->enter();
+    m_criticalSection->enter();
     
     m_ItemQueue.enqueue( item );
     
-    m_pCriticalSection->leave();
-    m_pEnqueueEvent->signal();
+    m_criticalSection->leave();
+    m_enqueueEvent->signal();
 }
 
 //-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 T TAsyncQueue<T>::dequeue() {
-    OSRE_ASSERT(nullptr != m_pCriticalSection);
+    OSRE_ASSERT(nullptr != m_criticalSection);
     
-    m_pCriticalSection->enter();
+    m_criticalSection->enter();
 
     OSRE_ASSERT(!m_ItemQueue.isEmpty());
     T item;	
     m_ItemQueue.dequeue( item );
     
-    m_pCriticalSection->leave();
+    m_criticalSection->leave();
 
     return item;
 }
@@ -154,7 +154,7 @@ T TAsyncQueue<T>::dequeue() {
 template<class T>
 inline
 void TAsyncQueue<T>::dequeueAll( CPPCore::TList<T> &data ) {
-    OSRE_ASSERT(nullptr != m_pCriticalSection);
+    OSRE_ASSERT(nullptr != m_criticalSection);
 
     if( !data.isEmpty( ) ) {
         data.clear( );
@@ -162,9 +162,9 @@ void TAsyncQueue<T>::dequeueAll( CPPCore::TList<T> &data ) {
 
     while ( !isEmpty() ) {
         const T &ref( dequeue() );
-        m_pCriticalSection->enter();
+        m_criticalSection->enter();
         data.addBack( ref );
-        m_pCriticalSection->leave();
+        m_criticalSection->leave();
     }
 }
 
@@ -172,20 +172,20 @@ void TAsyncQueue<T>::dequeueAll( CPPCore::TList<T> &data ) {
 template<class T>
 inline
 void TAsyncQueue<T>::signalEnqueuedItem() {
-    OSRE_ASSERT(nullptr != m_pEnqueueEvent);
+    OSRE_ASSERT(nullptr != m_enqueueEvent);
 
-    m_pEnqueueEvent->signal();
+    m_enqueueEvent->signal();
 }
 
 //-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 ui32 TAsyncQueue<T>::size() {
-    OSRE_ASSERT(nullptr != m_pCriticalSection);
+    OSRE_ASSERT(nullptr != m_criticalSection);
 
-    m_pCriticalSection->enter( );
+    m_criticalSection->enter( );
     const ui32 size = m_ItemQueue.size();
-    m_pCriticalSection->leave();
+    m_criticalSection->leave();
 
     return size;
 }
@@ -194,10 +194,10 @@ ui32 TAsyncQueue<T>::size() {
 template<class T>
 inline
 void TAsyncQueue<T>::awaitEnqueuedItem() {
-    OSRE_ASSERT(nullptr != m_pEnqueueEvent);
+    OSRE_ASSERT(nullptr != m_enqueueEvent);
 
     if ( m_ItemQueue.isEmpty() ) {
-        m_pEnqueueEvent->waitForOne();
+        m_enqueueEvent->waitForOne();
     }
 }
 
@@ -205,13 +205,13 @@ void TAsyncQueue<T>::awaitEnqueuedItem() {
 template<class T>
 inline
 bool TAsyncQueue<T>::isEmpty() {
-    OSRE_ASSERT(nullptr != m_pCriticalSection);
-    if ( nullptr == m_pCriticalSection ) {
+    OSRE_ASSERT(nullptr != m_criticalSection);
+    if ( nullptr == m_criticalSection ) {
         return false;
     }
-    m_pCriticalSection->enter();
+    m_criticalSection->enter();
     bool res = m_ItemQueue.isEmpty();
-    m_pCriticalSection->leave();
+    m_criticalSection->leave();
 
     return res;
 }
@@ -220,13 +220,13 @@ bool TAsyncQueue<T>::isEmpty() {
 template<class T>
 inline
 void TAsyncQueue<T>::clear() {
-    OSRE_ASSERT(nullptr != m_pCriticalSection);
+    OSRE_ASSERT(nullptr != m_criticalSection);
 
-    m_pCriticalSection->enter();
+    m_criticalSection->enter();
     
     m_ItemQueue.clear();
     
-    m_pCriticalSection->leave();
+    m_criticalSection->leave();
 }
 
 //-------------------------------------------------------------------------------------------------
