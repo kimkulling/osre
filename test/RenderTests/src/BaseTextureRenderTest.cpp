@@ -100,7 +100,7 @@ class BaseTextureRenderTest : public AbstractRenderTest {
 public:
     BaseTextureRenderTest()
     : AbstractRenderTest( "rendertest/basetexturerendertest" )
-    , m_angle( 0.5f )
+    , m_angle( 0.02f )
     , m_transformMatrix()
     , m_mvpParam( nullptr ){
         // empty
@@ -175,6 +175,7 @@ public:
 
         geo->m_material->m_numTextures = 1;
         geo->m_material->m_pTextures = new Texture[ 1 ];
+
 #ifdef _WIN32
         geo->m_material->m_pTextures[ 0 ].m_textureName = "../../media/Models/Obj/SpiderTex.jpg";
 #else
