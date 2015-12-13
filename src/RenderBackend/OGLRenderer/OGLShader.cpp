@@ -30,7 +30,6 @@ namespace RenderBackend {
 static const GLint ErrorId = -1;
 static const String Tag    = "OGLShader";
 
-//-------------------------------------------------------------------------------------------------
 static GLuint getOGLShaderType( ShaderType type ) {
     switch( type ) {
         case SH_VertexShaderType:
@@ -46,7 +45,6 @@ static GLuint getOGLShaderType( ShaderType type ) {
     return 0;
 }
 
-//-------------------------------------------------------------------------------------------------
 OGLShader::OGLShader( const String &name )
 : Object( name )
 , m_shaderprog( 0 )
@@ -56,7 +54,6 @@ OGLShader::OGLShader( const String &name )
     ::memset( m_shaders, 0, sizeof( unsigned int ) * 3 );
 }
 
-//-------------------------------------------------------------------------------------------------
 OGLShader::~OGLShader( ) {
     for ( unsigned int i=0; i<3; ++i ) {
         if( m_shaders[ i ] ) {
@@ -66,7 +63,6 @@ OGLShader::~OGLShader( ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLShader::loadFromSource( ShaderType type, const String &src ) {
     if ( src.empty() ) {
         return false;
@@ -80,7 +76,6 @@ bool OGLShader::loadFromSource( ShaderType type, const String &src ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLShader::loadFromFile( ShaderType type, const String &file ) {
     if ( file.empty() ) {
         return false;
@@ -89,7 +84,6 @@ bool OGLShader::loadFromFile( ShaderType type, const String &file ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLShader::createAndLink() {
     m_shaderprog = glCreateProgram();
     if ( 0 == m_shaderprog ) {
@@ -125,17 +119,14 @@ bool OGLShader::createAndLink() {
     return result;
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLShader::use( ) {
     glUseProgram( m_shaderprog );
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLShader::unuse( ) {
     glUseProgram( 0 );
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLShader::addAttribute( const std::string& attribute ) {
     const GLint location = glGetAttribLocation( m_shaderprog, attribute.c_str( ) );
     m_attributeList[ attribute ] = location;
@@ -144,7 +135,6 @@ void OGLShader::addAttribute( const std::string& attribute ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLShader::addUniform( const std::string& uniform ) {
     const GLint location = glGetUniformLocation( m_shaderprog, uniform.c_str( ) );
     m_uniformLocationList[ uniform ] = location;
@@ -153,19 +143,15 @@ void OGLShader::addUniform( const std::string& uniform ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 GLint OGLShader::operator[] ( const std::string &attribute ) {
     const GLint loc( m_attributeList[ attribute ] );
     return loc;
 }
 
-//-------------------------------------------------------------------------------------------------
 GLint OGLShader::operator() ( const std::string &uniform ) {
     const GLint loc( m_uniformLocationList[ uniform ] );
     return loc;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderBackend
 } // Namespace OSRE

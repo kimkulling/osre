@@ -42,21 +42,56 @@ namespace RenderBackend {
 //-------------------------------------------------------------------------------------------------
 class OGLShader : public Common::Object {
 public:
+    /// @brief  The class constructor.
+    /// @param  name    [in9 The name for the shader.
     OGLShader( const String &name );
-    ~OGLShader();
+
+    /// @brief  The class destructor.
+    virtual ~OGLShader() override;
+    
+    /// @brief  Will load the shader type from a given string.
+    /// @param  type    [in] The shader type.
+    /// @param  src     [in] The shader source to compile.
+    /// @return true, if compile was successful, false in case of an error.
     bool loadFromSource( ShaderType type, const String &src );
-    bool loadFromFile( ShaderType type, const String &file );
+    
+    /// @brief
+    /// @param  type    [in] The shader type.
+    /// @param  file    [in] The file containing the source.
+    /// @return true, if compile was successful, false in case of an error.
+    bool loadFromFile(ShaderType type, const String &file);
+    
+    /// @brief  Will create and link a shader program.
+    /// @return true, if create & link was successful, false in case of an error.
     bool createAndLink();
+    
+    /// @brief  Will bind this program to the current render context.
     void use();
+
+    /// @brief  Will unbind this program to the current render context.
     void unuse();
+    
+    /// @brief  Adds a new attribute to the shader.
+    /// @param  attribute   [in] The name of the attribute.
     void addAttribute( const String& attribute );
-    void addUniform( const String& uniform );
-    GLint operator[] ( const String& attribute );
-    GLint operator() ( const String& uniform );
+    
+    /// @brief  Adds a new uniform to the shader.
+    /// @param  attribute   [in] The name of the uniform.
+    void addUniform(const String& uniform);
+    
+    /// @brief  returns the location of the attribute.
+    /// @param  attribute   [in] The name of the attribute.
+    /// @return Its location or -1 for an error.
+    GLint operator[] (const String& attribute);
+    
+    /// @brief  returns the location of the uniform.
+    /// @param  attribute   [in] The name of the uniform.
+    /// @return Its location or -1 for an error.
+    GLint operator() (const String& uniform);
 
 private:
-    OGLShader( const OGLShader & );
-    OGLShader &operator = ( const OGLShader & );
+    OGLShader( const OGLShader & ) = delete;
+    OGLShader &operator = ( const OGLShader & ) = delete;
 
 private:
     ui32 m_shaderprog;
@@ -65,8 +100,6 @@ private:
     std::map<String, GLint> m_attributeList;
     std::map<String, GLint> m_uniformLocationList;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderBackend
 } // Namespace OSRE

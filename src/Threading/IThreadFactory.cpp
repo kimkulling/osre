@@ -28,8 +28,8 @@ namespace Platform {
 AbstractThreadFactory *AbstractThreadFactory::s_pThreadFactory = nullptr;
 
 //-------------------------------------------------------------------------------------------------
-AbstractThreadFactory::AbstractThreadFactory(  const String &rFactoryName ) :
-	Object( rFactoryName )
+AbstractThreadFactory::AbstractThreadFactory(  const String &factoryName ) :
+	Object( factoryName )
 {
 	// empty
 }
