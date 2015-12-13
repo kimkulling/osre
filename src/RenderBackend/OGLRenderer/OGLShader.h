@@ -30,6 +30,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <map>
 
 namespace OSRE {
+
+namespace IO {
+    class Stream;
+}
+
 namespace RenderBackend {
 
 //-------------------------------------------------------------------------------------------------
@@ -59,8 +64,8 @@ public:
     /// @param  type    [in] The shader type.
     /// @param  file    [in] The file containing the source.
     /// @return true, if compile was successful, false in case of an error.
-    bool loadFromFile(ShaderType type, const String &file);
-    
+    bool loadFromFile(ShaderType type, IO::Stream &stream );
+
     /// @brief  Will create and link a shader program.
     /// @return true, if create & link was successful, false in case of an error.
     bool createAndLink();

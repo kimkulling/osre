@@ -25,7 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace IO {
 
-//-------------------------------------------------------------------------------------------------
 Uri::Uri() 
 : m_URI( "" )
 , m_Scheme( "" )
@@ -35,7 +34,6 @@ Uri::Uri()
 	// empty
 }
 
-//-------------------------------------------------------------------------------------------------
 Uri::Uri( const String &rhs )
 : m_URI( rhs )
 , m_Scheme( "" )
@@ -45,7 +43,6 @@ Uri::Uri( const String &rhs )
 	static_cast<void>( parse() );
 }
 
-//-------------------------------------------------------------------------------------------------
 Uri::Uri( const Uri &rhs ) 
 : m_URI( rhs.m_URI )
 , m_Scheme( rhs.m_Scheme )
@@ -55,12 +52,10 @@ Uri::Uri( const Uri &rhs )
 	// empty
 }
 
-//-------------------------------------------------------------------------------------------------
 Uri::~Uri() {
 	// empty
 }
 
-//-------------------------------------------------------------------------------------------------
 void Uri::setUri(  const String &uri ) {
 	if ( uri == m_URI ) {
 		return;
@@ -71,37 +66,30 @@ void Uri::setUri(  const String &uri ) {
 	static_cast<void>( parse() );
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &Uri::getUri() const {
 	return m_URI;
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &Uri::getScheme() const {
 	return m_Scheme;
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &Uri::getPath() const {
 	return m_Path;
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &Uri::getAbsPath() const {
 	return m_AbsPath;
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &Uri::getResource() const {
 	return m_Resource;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Uri::isEmpty() const {
 	return m_URI.empty();
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Uri::parse() {
 	if ( m_URI.empty() ) {
 		clear();
@@ -134,12 +122,10 @@ bool Uri::parse() {
 	return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Uri::isValid() const {
 	return !m_AbsPath.empty();
 }
 
-//-------------------------------------------------------------------------------------------------
 void Uri::clear() {
 	m_URI.clear();
 	m_Scheme.clear();
@@ -148,7 +134,6 @@ void Uri::clear() {
 	m_Resource.clear();
 }
 
-//-------------------------------------------------------------------------------------------------
 Uri &Uri::operator = ( const Uri &rhs ) {
 	if ( !( *this == rhs ) ) {
 		m_URI      = rhs.m_URI;
@@ -161,7 +146,6 @@ Uri &Uri::operator = ( const Uri &rhs ) {
 	return *this;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Uri::operator == ( const Uri &rhs ) const {
 	return (m_URI      == rhs.m_URI && 
 			m_Scheme   == rhs.m_Scheme && 
@@ -169,8 +153,6 @@ bool Uri::operator == ( const Uri &rhs ) const {
 			m_AbsPath  == rhs.m_AbsPath && 
 			m_Resource == rhs.m_Resource );
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace IO
 } // Namespace OSRE

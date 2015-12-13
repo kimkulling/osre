@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLShader.h"
 
 #include <osre/Common/Logger.h>
+#include <osre/IO/Stream.h>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -76,12 +77,23 @@ bool OGLShader::loadFromSource( ShaderType type, const String &src ) {
     return true;
 }
 
-bool OGLShader::loadFromFile( ShaderType type, const String &file ) {
-    if ( file.empty() ) {
+bool OGLShader::loadFromFile(ShaderType type, IO::Stream &stream ) {
+    if ( !stream.isOpen() ) {
         return false;
     }
 
-    return true;
+    ui32 filesize(stream.getSize());
+    if ( 0 == filesize ) {
+        return true;
+    }
+
+    c8 *data = new c8[ filesize ];
+    stream.read( data, filesize);
+    
+    const bool retCode( loadFromSource( type, String( data ) ) );
+    delete [] data;
+
+    return retCode;
 }
 
 bool OGLShader::createAndLink() {
