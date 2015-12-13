@@ -82,7 +82,7 @@ public:
     ///	@param  pos         [in] Pointer to array with vec3-positions, set to nullptr if nothing shall prepared
     ///	@param  col1        [in] Pointer to array with vec3-diffuse colors, set to nullptr if nothing shall prepared
     /// @return The allocated buffer data.
-    static RenderBackend::BufferData *allocVertices( RenderBackend::VertexType type, ui32 numVerts, ::glm::vec3 *pos, ::glm::vec3 *col1 );
+    static RenderBackend::BufferData *allocVertices(RenderBackend::VertexType type, ui32 numVerts, ::glm::vec3 *pos, ::glm::vec3 *col1, ::glm::vec2 *tex0);
 
     /// No copying.
     GeometryBuilder( const GeometryBuilder& ) = delete;

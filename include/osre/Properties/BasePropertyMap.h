@@ -84,10 +84,9 @@ public:
     virtual void clear();
     
 private:
-    BasePropertyMap(const BasePropertyMap &) = delete;
-    BasePropertyMap &operator = (const BasePropertyMap &) = delete;
+    BasePropertyMap( const BasePropertyMap & ) = delete;
+    BasePropertyMap &operator = ( const BasePropertyMap & ) = delete;
     bool operator == ( const BasePropertyMap & ) const = delete;
-
 
 private:
     typedef std::map<ui32, Property*> PropertyLookupMap;

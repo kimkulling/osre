@@ -126,7 +126,7 @@ static const String TextVsSrc =
     "layout(location = 3) in vec2 texcoord0;  // per-vertex colour\n"
     "\n"
     "smooth out vec4 vSmoothColor;		      // smooth colour to fragment shader\n"
-    "out vec2 UV;\n"
+    "out vec2 vUV;\n"
     "\n"
     "uniform mat4 MVP;	//combined modelview projection matrix\n"
 	"\n"
@@ -135,7 +135,7 @@ static const String TextVsSrc =
     "\n"
 	"    gl_Position = MVP*vec4( position, 1 );\n"
 	"    // UV of the vertex. No special space for this one.\n"
-	"    UV = texcoord0;\n"
+	"    vUV = texcoord0;\n"
 	"};\n";
 
 static const String TextFsSrc =
@@ -189,7 +189,7 @@ Geometry *GeometryBuilder::allocTriangles( VertexType type ) {
     pos[ 0 ] = glm::vec3( -1, -1, 0 );
     pos[ 1 ] = glm::vec3( 0, 1, 0 );
     pos[ 2 ] = glm::vec3( 1, -1, 0 );
-    geo->m_vb = allocVertices( geo->m_vertextype,  NumVert, pos, col );
+    geo->m_vb = allocVertices( geo->m_vertextype,  NumVert, pos, col, nullptr );
 
     // setup triangle indices
     static const ui32 NumIndices = 3;
@@ -248,7 +248,7 @@ Geometry *GeometryBuilder::allocQuads( VertexType type ) {
     pos[ 2 ] = glm::vec3( 1, -1, 0 );
     pos[ 3 ] = glm::vec3( 1, 1, 0 );
 
-    geo->m_vb = allocVertices( geo->m_vertextype, NumVert, pos, col );
+    geo->m_vb = allocVertices( geo->m_vertextype, NumVert, pos, col, nullptr );
 
     // setup triangle indices
     static const ui32 NumIndices = 6;
@@ -302,6 +302,16 @@ static void dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset ) {
     osre_info( Tag, stream.str() );
 }
 
+static void dumpTextTex0Box(ui32 i, glm::vec2 *tex0Pos, ui32 VertexOffset) {
+    std::stringstream stream;
+    stream << std::endl;
+    stream << "i = " << i << " : " << tex0Pos[VertexOffset + 0 ].x << ", " << tex0Pos[ VertexOffset + 0 ].y << std::endl;
+    stream << "i = " << i << " : " << tex0Pos[VertexOffset + 1 ].x << ", " << tex0Pos[ VertexOffset + 1 ].y << std::endl;
+    stream << "i = " << i << " : " << tex0Pos[VertexOffset + 2 ].x << ", " << tex0Pos[ VertexOffset + 2 ].y << std::endl;
+    stream << "i = " << i << " : " << tex0Pos[VertexOffset + 3 ].x << ", " << tex0Pos[ VertexOffset + 3 ].y << std::endl;
+    osre_info(Tag, stream.str());
+}
+
 RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text ) {
 	if ( text.empty() ) {
 		return nullptr;
@@ -341,12 +351,9 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSi
 	glm::vec2 *tex0 = new glm::vec2[ NumTextVerts ];
     GLushort *textIndices = new GLushort[ NumQuadIndices * text.size() ];
 
+    const f32 invCol = 1.f / 16.f;
+    const f32 invRow = 1.f / 16.f;
     for (ui32 i = 0; i < text.size(); i++) {
-		c8 ch = text[i];
-		i32 column = (ch - ' ') % 16;
-        i32 row = (ch - ' ') / 16;
-        f32 s = column * 1.0f / 16.0f;
-        f32 t = (row+1) * 1.0f / 16.0f;
 		const ui32 VertexOffset( i * NumQuadVert );
         textPos[ VertexOffset + 0 ].x = pos[ 0 ].x + (i*textSize);
         textPos[ VertexOffset + 0 ].y = pos[ 0 ].y;
@@ -360,8 +367,15 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSi
         textPos[ VertexOffset + 3 ].x = pos[ 3 ].x + (i*textSize);
         textPos[ VertexOffset + 3 ].y = pos[ 3 ].y;
 
-        dumpTextBox( i, textPos, VertexOffset );
+        //dumpTextBox( i, textPos, VertexOffset );
+        
+        const c8 ch = text[ i ];
+        const i32 column = (ch ) % 16;
+        const i32 row = (ch ) / 16;
+        const f32 s = column * invCol;
+        const f32 t = (row + 1) * invRow;
 
+        
 		tex0[VertexOffset + 0].x = s;
 		tex0[VertexOffset + 0].y = 1.0 - t;
 
@@ -370,11 +384,11 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSi
 
 		tex0[VertexOffset + 2].x = s + 1.0f/16.0f;
         tex0[VertexOffset + 2].y = 1.0 - t;
-
-
+       
         tex0[VertexOffset + 3].x = s + 1.0f / 16.0f;
         tex0[VertexOffset + 3].y = 1.0 - t + 1.0f / 16.0f;
-
+        
+        //dumpTextTex0Box(i, tex0, VertexOffset);
         colors[ VertexOffset + 0 ] = col[ 0 ];
         colors[ VertexOffset + 1 ] = col[ 1 ];
         colors[ VertexOffset + 2 ] = col[ 2 ];
@@ -389,7 +403,7 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSi
         textIndices[ 5 + IndexOffset ] = 3 + VertexOffset;
     }
 
-    geo->m_vb = allocVertices( geo->m_vertextype, text.size() * NumQuadVert, textPos, colors );
+    geo->m_vb = allocVertices( geo->m_vertextype, text.size() * NumQuadVert, textPos, colors, tex0 );
 
     // setup triangle indices
     ui32 size = sizeof( GLushort ) * 6 * text.size();
@@ -408,11 +422,19 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSi
     geo->m_material = new Material;
     geo->m_material->m_numTextures = 1;
     geo->m_material->m_pTextures = new Texture[ 1 ];
+    
 #ifdef _WIN32
     geo->m_material->m_pTextures[ 0 ].m_textureName = "../../media/Textures/Fonts/buildin_arial.bmp";
 #else
     geo->m_material->m_pTextures[ 0 ].m_textureName = "../media/Textures/Fonts/buildin_arial.bmp";
 #endif
+
+    geo->m_material->m_pTextures[0].m_targetType = Texture2D;
+    geo->m_material->m_pTextures[0].m_width = 0;
+    geo->m_material->m_pTextures[0].m_height = 0;
+    geo->m_material->m_pTextures[0].m_channels = 0;
+    geo->m_material->m_pTextures[0].m_data = nullptr;
+    geo->m_material->m_pTextures[0].m_size = 0;
 
     geo->m_material->m_type = ShaderMaterial;
     geo->m_material->m_pShader = new Shader;
@@ -430,7 +452,7 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSi
     return geo;
 }
 
-BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm::vec3 *pos, glm::vec3 *col1 ) {
+BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm::vec3 *pos, glm::vec3 *col1, glm::vec2 *tex0 ) {
     BufferData *data( nullptr );
     ui32 size( 0 );
     switch (type) {
@@ -465,6 +487,13 @@ BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm:
                     renderVerts[ j ].color0 = col1[ j ];
                 }
             }
+            if (nullptr != tex0) {
+                for (ui32 j = 0; j < numVerts; j++) {
+                    renderVerts[j].tex0 = tex0[j];
+                }
+
+            }
+
             size = sizeof( RenderVert ) * numVerts;
             data = BufferData::alloc( VertexBuffer, size, ReadOnly );
             ::memcpy( data->m_pData, renderVerts, size );
