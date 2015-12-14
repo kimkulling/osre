@@ -77,7 +77,7 @@ bool OGLShader::loadFromSource( ShaderType type, const String &src ) {
     return true;
 }
 
-bool OGLShader::loadFromFile(ShaderType type, IO::Stream &stream ) {
+bool OGLShader::loadFromFile( ShaderType type, IO::Stream &stream ) {
     if ( !stream.isOpen() ) {
         return false;
     }
