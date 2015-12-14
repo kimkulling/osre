@@ -312,6 +312,14 @@ static void dumpTextTex0Box(ui32 i, glm::vec2 *tex0Pos, ui32 VertexOffset) {
     osre_info(Tag, stream.str());
 }
 
+static bool isLineBreak(c8 c) {
+    if (c == '\n') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text ) {
 	if ( text.empty() ) {
 		return nullptr;
@@ -353,23 +361,31 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSi
 
     const f32 invCol = 1.f / 16.f;
     const f32 invRow = 1.f / 16.f;
+    ui32 textCol( 0 ), textRow( 0 );
     for (ui32 i = 0; i < text.size(); i++) {
-		const ui32 VertexOffset( i * NumQuadVert );
-        textPos[ VertexOffset + 0 ].x = pos[ 0 ].x + (i*textSize);
-        textPos[ VertexOffset + 0 ].y = pos[ 0 ].y;
+        const c8 ch = text[ i ];
+        if ( isLineBreak( ch ) ) {
+            textCol = 0;
+            textRow++;
+            continue;
+        }
+        
+        const ui32 VertexOffset( i * NumQuadVert );
+        const f32  rowHeight( -1.0f * textRow * textSize );
+        textPos[ VertexOffset + 0 ].x = pos[ 0 ].x + ( textCol*textSize );
+        textPos[ VertexOffset + 0 ].y = pos[ 0 ].y + rowHeight;
 
-        textPos[ VertexOffset + 1 ].x = pos[ 1 ].x + (i*textSize);
-        textPos[ VertexOffset + 1 ].y = pos[ 1 ].y;
+        textPos[ VertexOffset + 1 ].x = pos[ 1 ].x + ( textCol*textSize );
+        textPos[ VertexOffset + 1 ].y = pos[ 1 ].y + rowHeight;
 
-        textPos[ VertexOffset + 2 ].x = pos[ 2 ].x + (i*textSize);
-        textPos[ VertexOffset + 2 ].y = pos[ 2 ].y;
+        textPos[ VertexOffset + 2 ].x = pos[ 2 ].x + ( textCol*textSize );
+        textPos[ VertexOffset + 2 ].y = pos[ 2 ].y + rowHeight;
 
-        textPos[ VertexOffset + 3 ].x = pos[ 3 ].x + (i*textSize);
-        textPos[ VertexOffset + 3 ].y = pos[ 3 ].y;
+        textPos[ VertexOffset + 3 ].x = pos[ 3 ].x + ( textCol*textSize );
+        textPos[ VertexOffset + 3 ].y = pos[ 3 ].y + rowHeight;
 
         //dumpTextBox( i, textPos, VertexOffset );
         
-        const c8 ch = text[ i ];
         const i32 column = (ch ) % 16;
         const i32 row = (ch ) / 16;
         const f32 s = column * invCol;
@@ -401,6 +417,7 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSi
         textIndices[ 3 + IndexOffset ] = 1 + VertexOffset;
         textIndices[ 4 + IndexOffset ] = 2 + VertexOffset;
         textIndices[ 5 + IndexOffset ] = 3 + VertexOffset;
+        textCol++;
     }
 
     geo->m_vb = allocVertices( geo->m_vertextype, text.size() * NumQuadVert, textPos, colors, tex0 );
