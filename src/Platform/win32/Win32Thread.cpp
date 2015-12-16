@@ -241,8 +241,9 @@ i32 Win32Thread::run() {
 
 //-------------------------------------------------------------------------------------------------
 void Win32Thread::setThreadName( const c8 *name ) {
-    if ( !name )
+    if ( nullptr == name ) {
         return;
+    }
 
     struct THREADNAME_INFO {
         DWORD dwType;     // must be 0x1000

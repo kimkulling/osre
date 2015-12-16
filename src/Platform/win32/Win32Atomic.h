@@ -46,17 +46,36 @@ namespace Platform {
 ///	@class		::OSRE::Platform::AtomicInt
 /// @ingroup    Engine
 ///
-///	@brief
+///	@brief This class implements the atomic into with intrinsics from Win32-API. 
 //-------------------------------------------------------------------------------------------------
 class Win32Atomic : public AbstractAtomic {
 public:
+    /// @brief The class constructor.
+    /// @param val   [in] The initial vale.
     Win32Atomic( i32 val );
-    virtual ~Win32Atomic();
-    virtual void incValue( i32 value );
-    virtual void decValue( i32 value );
-    virtual i32 getValue( );
-    virtual i32 inc( );
-    virtual i32 dec( );
+    
+    /// @brief  The class destructor.
+    virtual ~Win32Atomic() override;
+
+    /// @brief Increments the value by the given value.
+    /// @param val   [in] The initial vale.
+    virtual void incValue( i32 value ) override;
+
+    /// @brief Decrements the value by the given value.
+    /// @param val   [in] The initial vale.
+    virtual void decValue( i32 value ) override;
+
+    /// @brief returns the current value.
+    /// @return The result.
+    virtual i32 getValue() override;
+
+    /// @brief Increments the value and returns the result.
+    /// @return The result.
+    virtual i32 inc() override;
+    
+    /// @brief Decrements the value and returns the result.
+    /// @return The result.
+    virtual i32 dec() override;
 
 private:
     mutable long m_value;
