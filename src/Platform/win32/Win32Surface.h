@@ -49,8 +49,11 @@ public:
     HDC getDeviceContext() const;
 
 protected:
+    /// The create callback implementation.
     virtual bool onCreate();
+    /// The destroy callback implementation.
     virtual bool onDestroy();
+    /// The updateProperties callback implementation.
     virtual bool onUpdateProperies();
 
 private:
