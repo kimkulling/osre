@@ -61,6 +61,7 @@ public:
     /// @param val   [in] The initial vale.
     virtual void incValue( i32 value ) override;
 
+
     /// @brief Decrements the value by the given value.
     /// @param val   [in] The initial vale.
     virtual void decValue( i32 value ) override;

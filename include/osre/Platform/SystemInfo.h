@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 #include <map>
 
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
     typedef unsigned long DWORD;
 #endif
 
@@ -89,7 +89,7 @@ private:
     static bool m_IsInited;
     static CPUInfo *m_pCPUInfo;
 
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
     typedef std::map<DWORD, String> ThreadNameMap;
 #else
     typedef std::map<ui32, String> ThreadNameMap;

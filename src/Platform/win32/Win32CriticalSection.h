@@ -37,16 +37,21 @@ namespace Platform {
 //-------------------------------------------------------------------------------------------------
 class Win32CriticalSection : public AbstractCriticalSection {
 public:
-	///	The class constructor.
+	/// @brief  The class constructor.
 	Win32CriticalSection();
-	///	The class destructor.
-	~Win32CriticalSection();
-	///	Enters the critical section.
-	void enter();
-	///	Tries to enter the critical section.
-	bool tryEnter();
-	///	Leaves the critical section.
-	void leave();
+	
+    /// @brief	The class destructor.
+	virtual ~Win32CriticalSection() final;
+	
+    /// @brief	Enters the critical section.
+	virtual void enter() final;
+	
+    ///	@brief  Tries to enter the critical section.
+    /// @return true, fi possible, false if not.
+	virtual bool tryEnter() final;
+	
+    ///  @brief  Leaves the critical section.
+	void leave() final;
 
 private:
 	CRITICAL_SECTION m_CriticalSection;

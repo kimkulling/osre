@@ -440,7 +440,7 @@ RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSi
     geo->m_material->m_numTextures = 1;
     geo->m_material->m_pTextures = new Texture[ 1 ];
     
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
     geo->m_material->m_pTextures[ 0 ].m_textureName = "../../media/Textures/Fonts/buildin_arial.bmp";
 #else
     geo->m_material->m_pTextures[ 0 ].m_textureName = "../media/Textures/Fonts/buildin_arial.bmp";

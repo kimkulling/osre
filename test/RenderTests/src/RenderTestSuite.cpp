@@ -155,6 +155,8 @@ bool RenderTestSuite::teardown() {
         m_pPlatformInterface = nullptr;
     }
 
+    osre_info( Tag, " RenderTestSuite::teardown()" );
+
     return true;
 }
 

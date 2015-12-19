@@ -176,7 +176,7 @@ public:
         geo->m_material->m_numTextures = 1;
         geo->m_material->m_pTextures = new Texture[ 1 ];
 
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
         geo->m_material->m_pTextures[ 0 ].m_textureName = "../../media/Models/Obj/SpiderTex.jpg";
 #else
         geo->m_material->m_pTextures[ 0 ].m_textureName = "../media/Models/Obj/SpiderTex.jpg";

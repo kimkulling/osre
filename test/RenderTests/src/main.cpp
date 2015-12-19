@@ -29,6 +29,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "RenderTestSuite.h"
 
+#include <iostream>
+
 using namespace ::OSRE;
 using namespace ::OSRE::RenderTest;
 using namespace ::OSRE::Platform;
@@ -58,7 +60,9 @@ int main( int argc, char *argv[] ) {
         rtSuite->startTests();
     }
 
+    //std::cout << "1" << std::endl;
     RenderTestSuite::kill();
+    std::cout << "2" << std::endl;
 
     return 0;
 }

@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Platform/CPUInfo.h>
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
 #  include <windows.h>
 #else
 #   include <unistd.h>
@@ -37,7 +37,7 @@ ui32 CPUInfo::m_NumCPUs   = 0;
 //-------------------------------------------------------------------------------------------------
 //	Looks for the CPU ids.
 //-------------------------------------------------------------------------------------------------
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
 static
 bool hasCPUId() {
     __asm {
@@ -241,7 +241,7 @@ bool CPUInfo::init() {
 //-------------------------------------------------------------------------------------------------
 bool CPUInfo::initCPUProperties() {
     m_CPUFlags = CPUID_None;
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
     if( !hasCPUId() ) {
         m_CPUFlags |= CPUID_Unsupported;
         return false;
@@ -249,8 +249,7 @@ bool CPUInfo::initCPUProperties() {
 
     if( isAMD() ) {
         m_CPUFlags |= CPUID_AMD;
-    }
-    else {
+    } else {
         m_CPUFlags |= CPUID_Intel;
     }
 

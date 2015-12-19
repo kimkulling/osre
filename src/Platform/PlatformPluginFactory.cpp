@@ -64,7 +64,7 @@ bool PlatformPluginFactory::release( PluginType type ) {
 AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler( PluginType type, AbstractSurface *rootSurface ) {
     AbstractPlatformEventHandler *pEventHandler( nullptr );
     switch( type ) {
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
         case Platform::WindowsPlugin: {
                 Win32Surface *win32Surface = ( Win32Surface* ) rootSurface;
                 if( win32Surface ) {
@@ -73,7 +73,7 @@ AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler(
                 }
             }
             break;
-#endif // _WIN32
+#endif // OSRE_WINDOWS
 
         case Platform::SDL2Plugin:
             pEventHandler = new SDL2EventHandler();
@@ -92,7 +92,7 @@ AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler(
 AbstractSurface *PlatformPluginFactory::createSurface( PluginType type, SurfaceProperties *pProps ) {
     AbstractSurface *pSurface( nullptr );
     switch( type ) {
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
         case Platform::WindowsPlugin:
             pSurface = new Win32Surface( pProps );
             break;
@@ -115,7 +115,7 @@ AbstractSurface *PlatformPluginFactory::createSurface( PluginType type, SurfaceP
 AbstractRenderContext *PlatformPluginFactory::createRenderContext( PluginType type ) {
     AbstractRenderContext *renderCtx( nullptr );
     switch( type ) {
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
         case Platform::WindowsPlugin:
             renderCtx = new Win32RenderContext();
             break;
@@ -138,7 +138,7 @@ AbstractRenderContext *PlatformPluginFactory::createRenderContext( PluginType ty
 AbstractTimer *PlatformPluginFactory::createTimer( PluginType type ) {
     AbstractTimer *pTimer( nullptr );
     switch( type ) {
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
         case Platform::WindowsPlugin:
             pTimer = new Win32Timer();
             break;
@@ -158,7 +158,7 @@ AbstractTimer *PlatformPluginFactory::createTimer( PluginType type ) {
 AbstractThreadFactory *PlatformPluginFactory::createThreadFactory( PluginType type ) {
     AbstractThreadFactory *instance( nullptr );
     switch( type ) {
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
         case Platform::WindowsPlugin:
         instance = new Win32ThreadFactory();
         break;
@@ -181,7 +181,7 @@ AbstractThreadFactory *PlatformPluginFactory::createThreadFactory( PluginType ty
 //-------------------------------------------------------------------------------------------------
 Common::AbstractLogStream *PlatformPluginFactory::createPlatformLogStream() {
     Common::AbstractLogStream *stream( nullptr );
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
     stream = new Win32DbgLogStream;
 #endif // OSRE_WINDOWS
 

@@ -146,7 +146,7 @@ bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
     int attribs[] = {
         WGL_CONTEXT_FLAGS_ARB,
 #ifdef _DEBUG
-#   ifdef _WIN32
+#   ifdef OSRE_WINDOWS
         WGL_CONTEXT_DEBUG_BIT_ARB,
 #   else
         0,

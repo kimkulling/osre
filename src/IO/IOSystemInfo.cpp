@@ -22,7 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/IO/IOSystemInfo.h>
 
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
+
 #  include <direct.h>
 #  include <stdio.h>
 #  include <stdlib.h>

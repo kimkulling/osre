@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Platform/SystemUtils.h>
 
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
 #   include <Windows.h>
 #else
 #   include <time.h>
@@ -47,7 +47,7 @@ void SystemUtils::sleep( ui32 ms ) {
 		return;
 	}
 
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
 	static_cast<void>( ::SleepEx( ms, TRUE ) );
 #else
 	timespec spec, rem;

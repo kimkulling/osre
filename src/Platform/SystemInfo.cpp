@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cassert>
 
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
 #    include <Windows.h>
 #else
 #   include <sys/time.h>
@@ -60,7 +60,7 @@ SystemInfo::~SystemInfo() {
 
 //-------------------------------------------------------------------------------------------------
 SystemInfo::Platform SystemInfo::getPlatform() {
-#if defined( _WIN32 )
+#if defined( OSRE_WINDOWS )
     return Win32;
 #elif defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
     return GNU_Linux;
@@ -137,7 +137,7 @@ String SystemInfo::getThreadName( const ThreadId &id ) {
 //-------------------------------------------------------------------------------------------------
 String SystemInfo::getCurrentThreadName() {
     ThreadId threadId;
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
     threadId.Id = ::GetCurrentThreadId();
 #elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) && defined(__MACH__) )
     threadId.Id = (unsigned long)SDL_ThreadID();
@@ -152,7 +152,7 @@ bool SystemInfo::init() {
     }
 
     // Get the system info
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
     SYSTEM_INFO systeminfo;
     ::GetSystemInfo( &systeminfo );
 #else

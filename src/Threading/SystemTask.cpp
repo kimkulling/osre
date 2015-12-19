@@ -299,6 +299,7 @@ void SystemTask::attachEventHandler( Common::AbstractEventHandler *pEventHandler
 void SystemTask::detachEventHandler() {
     OSRE_ASSERT(nullptr != m_taskThread);
 
+    std::cout<< "SystemTask::detachEventHandler" << std::endl;
     Common::AbstractEventHandler *pEH = m_taskThread->getEventHandler();
     if( pEH  ) {
         m_taskThread->setEventHandler( NULL );

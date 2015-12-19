@@ -133,7 +133,7 @@ const String &ZipFileSystem::getSchema() const {
 //-------------------------------------------------------------------------------------------------
 String ZipFileSystem::getWorkingDirectory() {
 
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
     return String( ".\\" );
 #else
     return String( "./" );

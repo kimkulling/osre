@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <cassert>
 
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
 #    include <windows.h>
 #else
 #   include <stdio.h>
@@ -152,7 +152,7 @@ String LocaleFileSystem::getWorkingDirectory() {
     static const ui32 Size = 256;
     char buffer[ Size ];
 
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
     GetCurrentDirectory( Size-1, buffer );
     workingDir = buffer;
 #else

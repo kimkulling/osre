@@ -2,9 +2,9 @@
 
 #include <ctime>
 
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
 #  include <Windows.h>
-#endif // _WIN32
+#endif // OSRE_WINDOWS
 
 namespace OSRE {
     namespace Common {
