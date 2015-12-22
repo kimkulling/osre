@@ -31,6 +31,7 @@ public:
     virtual bool handleEvents();
     virtual Properties::Settings *getSettings() const;
     virtual Scene::Stage *createStage( const String &name );
+    virtual bool activateStage( const String &name );
 
 protected:
     virtual bool onCreate( Properties::Settings *config );

@@ -335,7 +335,6 @@ struct OSRE_EXPORT StaticGeometry {
     ui32            m_numPrimGroups;
     PrimitiveGroup *m_pPrimGroups;
 
-
     static StaticGeometry *create();
     static void destroy( StaticGeometry *geo );
 

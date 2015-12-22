@@ -31,7 +31,8 @@ struct AppBase::Impl {
     Platform::PlatformInterface *m_platformInterface;
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
-    Scene::Stage *m_stage;
+    Scene::Stage *m_activeStage;
+    CPPCore::TArray<Scene::Stage*> m_stages;
     
     Impl( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
     : m_state( Uninited )
@@ -41,7 +42,7 @@ struct AppBase::Impl {
     , m_platformInterface( nullptr )
     , m_timer( nullptr )
     , m_rbService( nullptr )
-    , m_stage( nullptr ) {
+    , m_activeStage( nullptr ) {
         m_settings = new Properties::Settings;
         m_settings->setString( Properties::Settings::RenderAPI, "opengl" );
         m_settings->setBool( Properties::Settings::PollingMode, true );
@@ -116,9 +117,34 @@ Scene::Stage *AppBase::createStage( const String &name ) {
         return nullptr;
     }
 
-    m_impl->m_stage = new Scene::Stage( "HelloWorld", m_impl->m_rbService );
-    
-    return m_impl->m_stage;
+    Scene::Stage *stage( new Scene::Stage( "HelloWorld", m_impl->m_rbService ) );
+    if ( nullptr != stage ) {
+        m_impl->m_activeStage = stage;
+        m_impl->m_stages.add( stage );
+    }
+
+    return m_impl->m_activeStage;
+}
+
+bool AppBase::activateStage( const String &name ) {
+    if ( name.empty() ) {
+        return false;
+    }
+
+    if ( m_impl->m_activeStage->getName()==name ) {
+        return true;
+    }
+
+    bool success( false );
+    for ( ui32 i=0; i<m_impl->m_stages.size(); i++ ) {
+        if ( m_impl->m_stages[ i ]->getName()==name ) {
+            m_impl->m_activeStage = m_impl->m_stages[ i ];
+            success = true;
+            break;
+        }
+    }
+
+    return success;
 }
 
 bool AppBase::onCreate( Properties::Settings *config ) {
