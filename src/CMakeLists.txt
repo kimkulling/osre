@@ -31,6 +31,17 @@ SET( app_src
 )
 
 #==============================================================================
+# Assets
+#==============================================================================
+SET( assets_inc
+    ${HEADER_PATH}/Assets/AssetRegistry.h
+)
+
+SET( assets_src
+    Assets/AssetRegistry.cpp
+)
+
+#==============================================================================
 # Common
 #==============================================================================
 SET( common_inc
@@ -290,6 +301,7 @@ SET( renderbackend_inc
 # Defined Source groups
 #==============================================================================
 SOURCE_GROUP( App                 FILES ${app_src} )
+SOURCE_GROUP( Assets              FILES ${assets_src} )
 SOURCE_GROUP( Common              FILES ${common_src} )
 SOURCE_GROUP( Components          FILES ${components_src} )
 SOURCE_GROUP( Debugging           FILES ${debugging_src} )
@@ -310,6 +322,7 @@ SOURCE_GROUP( Resources           FILES ${resources_src} )
 SOURCE_GROUP( Scene               FILES ${scene_src} )
 SOURCE_GROUP( Threading           FILES ${threading_src} )
 SOURCE_GROUP( Include\\App        FILES ${app_inc} )
+SOURCE_GROUP( Include\\Assets     FILES ${assets_inc} )
 SOURCE_GROUP( Include\\Debugging  FILES ${debugging_inc} )
 SOURCE_GROUP( Include\\Common     FILES ${common_inc} )
 SOURCE_GROUP( Include\\Components FILES ${components_inc} )
@@ -333,6 +346,7 @@ SOURCE_GROUP( Include\\RenderBackend FILES ${renderbackend_inc} )
 ADD_LIBRARY( osre SHARED
     ../README.md
     ${app_inc}
+    ${assets_inc}
     ${debugging_inc}
     ${common_inc}
     ${common_src}
@@ -354,6 +368,7 @@ ADD_LIBRARY( osre SHARED
     ${math_inc}
 
     ${app_src}
+    ${assets_src}
     ${Common_src}
     ${components_src}
     ${debugging_src}

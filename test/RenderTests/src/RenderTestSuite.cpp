@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractPlatformEventHandler.h>
 #include <osre/Platform/AbstractTimer.h>
+#include <osre/Assets/AssetRegistry.h>
 
 #include <iostream>
 #include <cassert>
@@ -134,6 +135,11 @@ bool RenderTestSuite::setup() {
 
     m_pTimer = PlatformInterface::getInstance()->getTimer();
     
+    Assets::AssetRegistry *registry( Assets::AssetRegistry::create() );
+    if ( nullptr!=registry ) {
+        registry->registerAssetPath( "media", "../../media" );
+    }
+
     return true;
 }
 

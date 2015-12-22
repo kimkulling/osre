@@ -39,7 +39,6 @@ namespace Common {
 static const String Line = \
     "====================================================================================================";
 
-//-------------------------------------------------------------------------------------------------
 static void appendDomain( const String &domain, String &logMsg ) {
     if( !domain.empty() ) {
         logMsg += "( ";
@@ -48,36 +47,29 @@ static void appendDomain( const String &domain, String &logMsg ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractLogStream::AbstractLogStream() 
 : m_IsActive( true ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractLogStream::~AbstractLogStream() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 void AbstractLogStream::activate() {
     m_IsActive = true;
 }
 
-//-------------------------------------------------------------------------------------------------
 void AbstractLogStream::desactivate() {
     m_IsActive = false;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool AbstractLogStream::isActive() const {
     return m_IsActive;
 }
 
-//-------------------------------------------------------------------------------------------------
 Logger *Logger::s_logger = nullptr;
 
-//-------------------------------------------------------------------------------------------------
 Logger *Logger::create() {
     if ( nullptr == s_logger ) {
         s_logger = new Logger;
@@ -86,7 +78,6 @@ Logger *Logger::create() {
     return s_logger;
 }
 
-//-------------------------------------------------------------------------------------------------
 Logger *Logger::getInstance() {
     if ( nullptr == s_logger ) {
         static_cast<void>( Logger::create() );
@@ -95,7 +86,6 @@ Logger *Logger::getInstance() {
     return s_logger;
 }
 
-//-------------------------------------------------------------------------------------------------
 void Logger::kill() {
     if ( s_logger ) {
         delete s_logger;
@@ -103,7 +93,6 @@ void Logger::kill() {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void Logger::debug( const String &domain, const String &msg ) {
     String logMsg;
 
@@ -115,7 +104,6 @@ void Logger::debug( const String &domain, const String &msg ) {
     print( logMsg );
 }
 
-//-------------------------------------------------------------------------------------------------
 void Logger::info( const String &domain, const String &msg ) {
     String logMsg;
 
@@ -127,7 +115,6 @@ void Logger::info( const String &domain, const String &msg ) {
     print( logMsg );
 }
 
-//-------------------------------------------------------------------------------------------------
 void Logger::print( const String &msg, PrintMode mode ) {
     if ( msg.empty() ) {
         return;
@@ -169,7 +156,6 @@ void Logger::print( const String &msg, PrintMode mode ) {
 
 }
 
-//-------------------------------------------------------------------------------------------------
 void Logger::warn( const String &domain, const String &msg ) {
     String logMsg;
     logMsg += "Warn: ";
@@ -179,7 +165,6 @@ void Logger::warn( const String &domain, const String &msg ) {
     print( logMsg );
 }
 
-//-------------------------------------------------------------------------------------------------
 void Logger::error( const String &domain, const String &msg ) {
     String logMsg;
     logMsg += "Err:  ";
@@ -189,7 +174,6 @@ void Logger::error( const String &domain, const String &msg ) {
     print( logMsg );
 }
 
-//-------------------------------------------------------------------------------------------------
 void Logger::fatal( const String &domain, const String &msg ) {
     String logMsg;
     logMsg += "Fatal:";
@@ -199,7 +183,6 @@ void Logger::fatal( const String &domain, const String &msg ) {
     print( logMsg );
 }
 
-//-------------------------------------------------------------------------------------------------
 void Logger::registerLogStream( AbstractLogStream *pLogStream ) {
     if ( nullptr == pLogStream ) {
         return;
@@ -208,7 +191,6 @@ void Logger::registerLogStream( AbstractLogStream *pLogStream ) {
     m_LogStreams.add( pLogStream );
 }
 
-//-------------------------------------------------------------------------------------------------
 void Logger::unregisterLogStream( AbstractLogStream *logStream ) {
     if ( nullptr != logStream ) {
         return;
@@ -222,7 +204,6 @@ void Logger::unregisterLogStream( AbstractLogStream *logStream ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 Logger::Logger() 
 : m_LogStreams()
 , m_intention( 0 ) {
@@ -237,7 +218,6 @@ Logger::Logger()
     print( Line, WhithoutDateTime );
 }
 
-//-------------------------------------------------------------------------------------------------
 Logger::~Logger() {
     print( Line, WhithoutDateTime );
     print( "OSRE run ended." );
@@ -248,7 +228,6 @@ Logger::~Logger() {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 String Logger::getDateTime() {
     static const ui32 Space = 2;
     DateTime currentDateTime = DateTime::getCurrentUTCTime();
@@ -264,22 +243,18 @@ String Logger::getDateTime() {
     return stream.str();
 }
 
-//-------------------------------------------------------------------------------------------------
 Logger::StdLogStream::StdLogStream() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 Logger::StdLogStream::~StdLogStream() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 void Logger::StdLogStream::write( const String &msg ) {
     std::cout << msg;
 }
 
-//-------------------------------------------------------------------------------------------------
 void debugPrint( const String &domain, const String &file, int line, const String &msg ) {
     String message;
     message += msg;
@@ -293,7 +268,6 @@ void debugPrint( const String &domain, const String &file, int line, const Strin
     Logger::getInstance()->debug( domain, message );
 }
 
-//-------------------------------------------------------------------------------------------------
 void infoPrint( const String &domain, const String &file, int line, const String &msg ) {
     String message;
     message += msg;
@@ -307,7 +281,6 @@ void infoPrint( const String &domain, const String &file, int line, const String
     Logger::getInstance()->info( domain, message );
 }
 
-//-------------------------------------------------------------------------------------------------
 void logPrint( const String &domain, const String &file, int line, const String &message ) {
     String msg;
     msg += file;
@@ -323,7 +296,6 @@ void logPrint( const String &domain, const String &file, int line, const String 
     Logger::getInstance()->print( tmp );
 }
 
-//-------------------------------------------------------------------------------------------------
 void warnPrint( const String &domain, const String &file, int line, const String &message ) {
     String msg;
     msg += message;
@@ -337,7 +309,6 @@ void warnPrint( const String &domain, const String &file, int line, const String
     Logger::getInstance()->warn( domain, msg );
 }
 
-//-------------------------------------------------------------------------------------------------
 void errorPrint( const String &domain, const String &file, int line, const String &message ) {
     String msg;
     msg += message;
@@ -351,7 +322,6 @@ void errorPrint( const String &domain, const String &file, int line, const Strin
     Logger::getInstance()->error( domain, msg );
 }
 
-//-------------------------------------------------------------------------------------------------
 void fatalPrint( const String &domain,  const String &file, int line, const String &message ) {
     String msg;
     msg += message;
@@ -364,8 +334,6 @@ void fatalPrint( const String &domain,  const String &file, int line, const Stri
     msg += ")";
     Logger::getInstance()->fatal( domain, msg );
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 } // Namespace OSRE

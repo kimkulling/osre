@@ -172,17 +172,18 @@ public:
     virtual ~RenderBackendService();
 
     /// @brief  Set the configuration for the render service.
-    /// @param  pConfiguration  [in] The render configuration.
-    void setConfig( const Properties::Settings *pConfiguration );
+    /// @param  config          [in] The render configuration.
+    /// @param  moveOwnership   [in] true when ownership shall be moved.
+    void setSettings( const Properties::Settings *config, bool moveOwnership );
     
     /// @brief  Returns the render configuration.
     /// @return The render configuration.
-    const Properties::Settings *getConfig() const;
+    const Properties::Settings *getSettings() const;
     
     /// @brief  Will send a new event to the render system task.
-    /// @param  pEvent      [in] The event identifier.
-    /// @param  pEventData  [in] The event data.
-    void sendEvent( const Common::Event *pEvent, const Common::EventData *pEventData );
+    /// @param  ev          [in] The event identifier.
+    /// @param  eventData   [in] The event data.
+    void sendEvent( const Common::Event *ev, const Common::EventData *eventData );
 
 protected:
     /// @brief  The open callback.
@@ -195,12 +196,10 @@ protected:
     virtual bool onUpdate( d32 timediff );
 
 private:
-    Common::TObjPtr<Threading::SystemTask> m_RenderTaskPtr;
+    Common::TObjPtr<Threading::SystemTask> m_renderTaskPtr;
     const Properties::Settings *m_settings;
-    bool m_ownConfig;
+    bool m_ownsSettingsConfig;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderBackend
 } // Namespace OSRE

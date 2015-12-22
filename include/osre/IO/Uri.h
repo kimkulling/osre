@@ -35,7 +35,11 @@ namespace IO {
 ///	http://en.wikipedia.org/wiki/Uniform_Resource_Identifier ). You can use it to describe the
 ///	location of resources like:
 ///
-///	file://c:/texture-jpg
+///	file://c:/texture.jpg
+///
+/// For this example the schema is: file.
+/// For this example the path is c:/.
+/// For this example the resource name is texture.jpg.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Uri {
 public:
@@ -70,7 +74,7 @@ public:
     ///	@return	A string containing the path.
     const String &getPath() const;
 
-    ///	@brief	Returns the resource of the URI.
+    ///	@brief	Returns the resource name of the URI.
     ///	@return	A string containing the resource.
     const String &getAbsPath() const;
 

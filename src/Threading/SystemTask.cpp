@@ -115,6 +115,7 @@ public:
         m_reqStop->incValue( 1 );
         m_updateEvent->waitForOne();
         AbstractThread::setState( AbstractThread::Terminated );
+
         return true;
     }
 
@@ -280,24 +281,26 @@ bool SystemTask::execute() {
 }
 
 //-------------------------------------------------------------------------------------------------
-void SystemTask::setThreadInstance( Platform::AbstractThread *pThreadInstance ) {
-    if( Platform::AbstractThread::Running == m_taskThread->getCurrentState() ) {
-        m_taskThread->stop();
+void SystemTask::setThreadInstance( Platform::AbstractThread *threadInstance ) {
+    if ( nullptr != m_taskThread ) {
+        if( Platform::AbstractThread::Running == m_taskThread->getCurrentState() ) {
+            m_taskThread->stop();
+        }
     }
 
-    m_taskThread = reinterpret_cast<SystemTaskThread*>( pThreadInstance );
+    m_taskThread = reinterpret_cast<SystemTaskThread*>( threadInstance );
 }
 
 //-------------------------------------------------------------------------------------------------
 void SystemTask::attachEventHandler( Common::AbstractEventHandler *pEventHandler ) {
-    OSRE_ASSERT(nullptr != m_taskThread);
+    OSRE_ASSERT( nullptr != m_taskThread );
 
     m_taskThread->setEventHandler( pEventHandler );
 }
 
 //-------------------------------------------------------------------------------------------------
 void SystemTask::detachEventHandler() {
-    OSRE_ASSERT(nullptr != m_taskThread);
+    OSRE_ASSERT( nullptr != m_taskThread );
 
     std::cout<< "SystemTask::detachEventHandler" << std::endl;
     Common::AbstractEventHandler *pEH = m_taskThread->getEventHandler();

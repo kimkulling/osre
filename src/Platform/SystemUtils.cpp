@@ -31,17 +31,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace System {
 
-//-------------------------------------------------------------------------------------------------
 SystemUtils::SystemUtils() {
 	// empty
 }
 
-//-------------------------------------------------------------------------------------------------
 SystemUtils::~SystemUtils() {
 	// empty
 }
 
-//-------------------------------------------------------------------------------------------------
 void SystemUtils::sleep( ui32 ms ) {
 	if ( !ms ) {
 		return;
@@ -56,8 +53,6 @@ void SystemUtils::sleep( ui32 ms ) {
 	static_cast<void>( ::nanosleep( &spec, &rem ) );
 #endif
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace System
 } // Namespace OSRE

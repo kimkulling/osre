@@ -33,85 +33,81 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Threading;
 using namespace ::OSRE::Properties;
 
-//-------------------------------------------------------------------------------------------------
 RenderBackendService::RenderBackendService()
 : AbstractService( "renderbackend/renderbackendserver" )
-, m_RenderTaskPtr()
+, m_renderTaskPtr()
 , m_settings( nullptr )
-, m_ownConfig( false ) {
+, m_ownsSettingsConfig( false ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 RenderBackendService::~RenderBackendService() {
-    if( m_ownConfig ) {
+    if( m_ownsSettingsConfig ) {
         delete m_settings;
         m_settings = nullptr;
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 bool RenderBackendService::onOpen() {
-    if (!m_settings) {
+    if ( nullptr == m_settings ) {
         m_settings = new Properties::Settings;
-        m_ownConfig = true;
+        m_ownsSettingsConfig = true;
     }
 
-    if( !m_RenderTaskPtr.isValid() ) {
-        m_RenderTaskPtr.init( SystemTask::create( "render_task" ) );
+    if( !m_renderTaskPtr.isValid() ) {
+        m_renderTaskPtr.init( SystemTask::create( "render_task" ) );
     }
 
-    m_RenderTaskPtr->start( nullptr );
-    m_RenderTaskPtr->attachEventHandler( new OGLRenderEventHandler );
+    m_renderTaskPtr->start( nullptr );
+    m_renderTaskPtr->attachEventHandler( new OGLRenderEventHandler );
 
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool RenderBackendService::onClose() {
-    if( !m_RenderTaskPtr.isValid() ) {
+    if( !m_renderTaskPtr.isValid() ) {
         return false;
     }
 
-    if ( m_RenderTaskPtr->isRunning() ) {
-        m_RenderTaskPtr->detachEventHandler();        
-        m_RenderTaskPtr->stop();
+    if ( m_renderTaskPtr->isRunning() ) {
+        m_renderTaskPtr->detachEventHandler();        
+        m_renderTaskPtr->stop();
     }
 
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool RenderBackendService::onUpdate( d32 timediff ) {
-    if ( !m_RenderTaskPtr.isValid() ) {
+    if ( !m_renderTaskPtr.isValid() ) {
         return false;
     }
     
     // synchronizing event with render back-end
-    bool result( m_RenderTaskPtr->sendEvent( &OnRenderFrameEvent, nullptr ) );
-    m_RenderTaskPtr->await();
+    bool result( m_renderTaskPtr->sendEvent( &OnRenderFrameEvent, nullptr ) );
+    m_renderTaskPtr->await();
 
     return result;
 }
 
-//-------------------------------------------------------------------------------------------------
-void RenderBackendService::setConfig( const Settings *pConfiguration ) {
-    m_settings = pConfiguration;
+void RenderBackendService::setSettings( const Settings *config, bool moveOwnership ) {
+    if ( m_ownsSettingsConfig && m_settings != nullptr ) {
+        delete m_settings;
+        m_settings = nullptr;
+        m_ownsSettingsConfig = false;
+    }
+    m_settings = config;
+    m_ownsSettingsConfig = moveOwnership;
 }
 
-//-------------------------------------------------------------------------------------------------
-const Properties::Settings *RenderBackendService::getConfig() const {
+const Properties::Settings *RenderBackendService::getSettings() const {
     return m_settings;
 }
 
-//-------------------------------------------------------------------------------------------------
 void RenderBackendService::sendEvent( const Event *pEvent, const EventData *eventData ) {
-    if ( m_RenderTaskPtr.isValid() ) {
-        m_RenderTaskPtr->sendEvent( pEvent, eventData );
+    if ( m_renderTaskPtr.isValid() ) {
+        m_renderTaskPtr->sendEvent( pEvent, eventData );
     }
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderBackend
 } // Namespace OSRE
