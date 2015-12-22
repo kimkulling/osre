@@ -20,31 +20,70 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/Common/osre_common.h>
-#include <cppcore/Container/TArray.h>
+#include <osre/Assets/AssetRegistry.h>
+#include <osre/Common/StringUtils.h>
 
 namespace OSRE {
-namespace Common {
-        
-class AbstractCodec;
+namespace Assets {
 
-//-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::CodecRegistry
-///	@ingroup    Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT CodecRegistry {
-public:
-    static void registerCodec( AbstractCodec *newCodec );
-    static AbstractCodec *getRegistryByExt( const String &ext );
-    static void clear();
+using namespace ::OSRE::Common;
 
-private:
-    static CPPCore::TArray<AbstractCodec*> s_registry;
-};
-    
-} // Namespace Common
-} // Namespace OSRE
+AssetRegistry *AssetRegistry::s_instance( nullptr );
+
+AssetRegistry *AssetRegistry::create() {
+    if ( nullptr == s_instance ) {
+        s_instance = new AssetRegistry;
+    }
+
+    return s_instance;
+}
+
+void AssetRegistry::destroy() {
+    if ( nullptr==s_instance ) {
+        return;
+    }
+
+    delete s_instance;
+    s_instance = nullptr;
+}
+
+AssetRegistry *AssetRegistry::getInstance() {
+    return s_instance;
+}
+
+void AssetRegistry::registerAssetPath( const String &schema, const String &path ) {
+    ui32 hashId( StringUtils::hashName( schema.c_str() ) );
+    m_name2pathMap.insert( hashId, path );
+}
+
+static const String Dummy("");
+
+String AssetRegistry::getPath( const String &name ) const {
+    ui32 hashId( StringUtils::hashName(name.c_str() ) );
+    if ( !m_name2pathMap.hasKey( hashId ) ) {
+        return Dummy;
+    }
+
+    String path;
+    if ( m_name2pathMap.getValue( hashId, path ) ) {
+        return path;
+    }
+
+    return Dummy;
+}
+
+void AssetRegistry::clear() {
+    m_name2pathMap.clear();
+}
+
+AssetRegistry::AssetRegistry() 
+: m_name2pathMap() {
+    // empty
+}
+
+AssetRegistry::~AssetRegistry() {
+
+}
+
+}
+}

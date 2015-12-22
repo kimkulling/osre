@@ -23,28 +23,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-#include <cppcore/Container/TArray.h>
+#include <cppcore/Container/THashMap.h>
 
 namespace OSRE {
-namespace Common {
+namespace Assets {
         
-class AbstractCodec;
-
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::CodecRegistry
+///	@class      ::OSRE::Assets::AssetRegistry
 ///	@ingroup    Engine
 ///
-///	@brief
+///	@brief  
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT CodecRegistry {
+class OSRE_EXPORT AssetRegistry {
 public:
-    static void registerCodec( AbstractCodec *newCodec );
-    static AbstractCodec *getRegistryByExt( const String &ext );
-    static void clear();
+    static AssetRegistry *create();
+    static void destroy();
+    static AssetRegistry *getInstance();
+    void registerAssetPath( const String &schema, const String &path );
+    String getPath( const String &schema ) const;
+    void clear();
 
 private:
-    static CPPCore::TArray<AbstractCodec*> s_registry;
+    AssetRegistry();
+    ~AssetRegistry();
+
+private:
+    static AssetRegistry *s_instance;
+    typedef CPPCore::THashMap<ui32, String> Name2PathMap;
+    Name2PathMap m_name2pathMap;
 };
-    
-} // Namespace Common
+
+} // Namespace Assets
 } // Namespace OSRE

@@ -112,7 +112,6 @@ private:
     Event &operator = ( const Event & );
 };
 
-//--------------------------------------------------------------------------------------------------------------------
 inline 
 Event::Event( const String &id )
 : m_NumRefs( 1 )
@@ -122,43 +121,36 @@ Event::Event( const String &id )
     // empty
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline 
 Event::~Event() {
     // empty
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline 
 void Event::setEventData( const EventData *pData ) {
     m_pEventData = pData;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline 
 const EventData *Event::getEventData() const {
     return m_pEventData;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline 
 const String &Event::getIDAsStr() const {
     return m_ID;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline
 ui32 Event::getHash() const {
     return m_hash;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline 
 void Event::get() {
     ++m_NumRefs;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline 
 void Event::release() {
     --m_NumRefs;
@@ -167,15 +159,14 @@ void Event::release() {
     }
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline 
 bool Event::operator == ( const Event &rhs ) const  {
     return (m_ID == rhs.m_ID); 
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-///	@class		ZFXCE::Common::EventData
-///	@ingroup	Infrastructure
+///	@class		::OSRE::Common::EventData
+///	@ingroup	Engine
 ///
 ///	@brief	The base class for event specific data. For instance if you get a mouse event from your
 ///	input device the assigned event-data-instance will hold the assigned data like mouse button 
@@ -225,7 +216,6 @@ private:
     ui32 m_numRefs;
 };
 
-//--------------------------------------------------------------------------------------------------------------------
 inline 
 EventData::EventData(const Event& e, EventTriggerer* c) 
 : m_Event( e )
@@ -235,31 +225,26 @@ EventData::EventData(const Event& e, EventTriggerer* c)
     // empty
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline 
 EventData::~EventData() {
     // empty
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline 
 const Event& EventData::getEvent() const {
     return m_Event; 
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline 
 EventTriggerer* EventData::getEventSender() const  {
     return m_Source; 
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline 
 void EventData::get() {
     ++m_numRefs;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline 
 void EventData::release() {
     if ( m_numRefs ) {
@@ -270,17 +255,13 @@ void EventData::release() {
     }
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline bool 
 EventData::operator == (const EventData &other) const {
     return (m_Event == other.m_Event && m_Source == other.m_Source);
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 ///	Base event functor.
 typedef Functor<void, const Event&, const EventData*> ceEventFunctor;
-
-//--------------------------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 } // Namespace OSRE
