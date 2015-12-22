@@ -128,7 +128,7 @@ bool AppBase::onCreate( Properties::Settings *config ) {
     }
 
     // create the platform abstraction
-    if( nullptr != config ) {
+    if( nullptr != config && config != m_impl->m_settings ) {
         delete m_impl->m_settings;
         m_impl->m_settings = config;
     }
