@@ -278,7 +278,7 @@ Transform::~Transform() {
     // empty
 }
 
-Geometry::Geometry()
+StaticGeometry::StaticGeometry()
     : m_material( nullptr )
     , m_numParameter( 0 )
     , m_parameter( nullptr )
@@ -289,7 +289,7 @@ Geometry::Geometry()
     // empty
 }
 
-Geometry::~Geometry() {
+StaticGeometry::~StaticGeometry() {
     delete m_material;
     m_material = nullptr;
 
@@ -301,6 +301,14 @@ Geometry::~Geometry() {
 
     delete[] m_pPrimGroups;
     m_pPrimGroups = nullptr;
+}
+
+StaticGeometry *StaticGeometry::create() {
+    return new StaticGeometry;
+}
+
+void StaticGeometry::destroy( StaticGeometry *geo ) {
+    delete geo;
 }
 
 GeoInstanceData::GeoInstanceData()

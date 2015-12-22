@@ -80,7 +80,7 @@ void TextRenderer2D::setupVertexData() {
 		::memcpy( m_data->m_pData, &vertices[ 0 ], vertSize );
 	}
 
-	Geometry *geo = new Geometry;
+    StaticGeometry *geo = StaticGeometry::create();
 	geo->m_numPrimGroups = m_text.size()*2;
 	geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
 	geo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;

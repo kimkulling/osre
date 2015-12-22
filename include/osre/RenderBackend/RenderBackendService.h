@@ -43,7 +43,7 @@ namespace Threading {
 namespace RenderBackend {
 
 struct BufferData;
-struct Geometry;
+struct StaticGeometry;
 struct GeoInstanceData;
 struct Parameter;
 
@@ -111,7 +111,7 @@ public:
     }
 
     ui32 m_numGeo;
-    Geometry *m_geo;
+    StaticGeometry *m_geo;
     ui32 m_numInstances;
     GeoInstanceData *m_geoInstanceData;
 };
@@ -130,7 +130,7 @@ public:
 	, m_text() {
 		// empty
 	}
-	Geometry *m_geo;
+	StaticGeometry *m_geo;
 	String m_text;
 };
 

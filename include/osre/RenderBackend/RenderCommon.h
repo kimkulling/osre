@@ -324,7 +324,7 @@ struct OSRE_EXPORT Transform {
     OSRE_NON_COPYABLE( Transform )
 };
 
-struct OSRE_EXPORT Geometry {
+struct OSRE_EXPORT StaticGeometry {
     Material       *m_material;
     ui32            m_numParameter;
     Parameter      *m_parameter;
@@ -335,10 +335,15 @@ struct OSRE_EXPORT Geometry {
     ui32            m_numPrimGroups;
     PrimitiveGroup *m_pPrimGroups;
 
-    Geometry();
-    ~Geometry();
 
-    OSRE_NON_COPYABLE( Geometry )
+    static StaticGeometry *create();
+    static void destroy( StaticGeometry *geo );
+
+private:
+    StaticGeometry();
+    ~StaticGeometry();
+
+    OSRE_NON_COPYABLE( StaticGeometry )
 };
 
 struct OSRE_EXPORT GeoInstanceData {

@@ -139,7 +139,7 @@ void Node::releaseChildren() {
     }
 }
 
-void Node::addGeometry( RenderBackend::Geometry *geo ) {
+void Node::addGeometry( RenderBackend::StaticGeometry *geo ) {
     m_newGeo.add( geo );
 }
 

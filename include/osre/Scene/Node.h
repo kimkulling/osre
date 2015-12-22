@@ -31,7 +31,7 @@ namespace OSRE {
 
 namespace RenderBackend {
     struct TransformBlock;
-    struct Geometry;
+    struct StaticGeometry;
 
     class RenderBackendService;
 }
@@ -62,7 +62,7 @@ public:
     virtual ui32 getNumChilds() const;
     virtual Node *getChildAt( ui32 idx ) const;
     virtual void releaseChildren();
-    virtual void addGeometry( RenderBackend::Geometry *geo );
+    virtual void addGeometry( RenderBackend::StaticGeometry *geo );
     virtual void setTransformBlock( RenderBackend::TransformBlock *transformBlock );
     virtual void setPosition( const glm::vec3 &pos );
     virtual const glm::vec4 &getPosition() const;
@@ -72,7 +72,7 @@ public:
 
 private:
     CPPCore::TArray<Node*> m_childs;
-    CPPCore::TArray<RenderBackend::Geometry*> m_newGeo;
+    CPPCore::TArray<RenderBackend::StaticGeometry*> m_newGeo;
     Node *m_parent;
     RenderBackend::TransformBlock *m_transform;
 };

@@ -147,7 +147,7 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
     }
 }
 
-static void setupParameter( Geometry *geo, OGLRenderBackend *rb, OGLRenderEventHandler *ev ) {
+static void setupParameter( StaticGeometry *geo, OGLRenderBackend *rb, OGLRenderEventHandler *ev ) {
 	OSRE_ASSERT( nullptr != geo );
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != ev );
@@ -176,7 +176,7 @@ static void setupParameter( Geometry *geo, OGLRenderBackend *rb, OGLRenderEventH
     ev->enqueueRenderCmd( setParameterCmd  );
 }
 
-static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLShader *oglShader ) {
+static OGLVertexArray *setupBuffers( StaticGeometry *geo, OGLRenderBackend *rb, OGLShader *oglShader ) {
 	OSRE_ASSERT( nullptr != geo );
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != oglShader );
@@ -278,7 +278,7 @@ static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb,
 	OSRE_ASSERT( nullptr != eh );
 
 	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesCmd, nullptr );
-	Geometry *geo( data->m_geo );
+	StaticGeometry *geo( data->m_geo );
 	if ( nullptr == geo ) {
 		return;
 	}
@@ -458,7 +458,7 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
         return false;
     }
     
-    Geometry *geo = attachSceneEvData->m_geo;
+    StaticGeometry *geo = attachSceneEvData->m_geo;
     if( !geo ) {
         osre_debug( Tag, "Geometry-pointer is a nullptr." );
         return false;

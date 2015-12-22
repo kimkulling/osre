@@ -163,16 +163,16 @@ GeometryBuilder::~GeometryBuilder() {
     // empty
 }
 
-RenderBackend::Geometry *GeometryBuilder::allocEmptyGeometry( RenderBackend::VertexType type ) {
-    Geometry *geo = new Geometry;
+RenderBackend::StaticGeometry *GeometryBuilder::allocEmptyGeometry( RenderBackend::VertexType type ) {
+    StaticGeometry *geo = StaticGeometry::create();
     geo->m_vertextype = type;
     geo->m_indextype = UnsignedShort;
 
     return geo;
 }
 
-Geometry *GeometryBuilder::allocTriangles( VertexType type ) {
-    Geometry *geo = new Geometry;
+StaticGeometry *GeometryBuilder::allocTriangles( VertexType type ) {
+    StaticGeometry *geo = StaticGeometry::create();
     geo->m_vertextype = type;
     geo->m_indextype = UnsignedShort;
 
@@ -229,8 +229,8 @@ Geometry *GeometryBuilder::allocTriangles( VertexType type ) {
     return geo;
 }
 
-Geometry *GeometryBuilder::allocQuads( VertexType type ) {
-    Geometry *geo = new Geometry;
+StaticGeometry *GeometryBuilder::allocQuads( VertexType type ) {
+    StaticGeometry *geo = StaticGeometry::create();
     geo->m_vertextype = type;
     geo->m_indextype = UnsignedShort;
 
@@ -320,12 +320,12 @@ static bool isLineBreak(c8 c) {
     }
 }
 
-RenderBackend::Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text ) {
+RenderBackend::StaticGeometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text ) {
 	if ( text.empty() ) {
 		return nullptr;
 	}
 
-    Geometry *geo = new Geometry;
+    StaticGeometry *geo = StaticGeometry::create();
     geo->m_vertextype = RenderVertex;
     geo->m_indextype = UnsignedShort;
 
