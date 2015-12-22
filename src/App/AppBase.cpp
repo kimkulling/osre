@@ -205,6 +205,13 @@ bool AppBase::onDestroy() {
         m_impl->m_platformInterface = nullptr;
     }
 
+    for ( ui32 i=0; i<m_impl->m_stages.size(); i++ ) {
+        Scene::Stage *current( m_impl->m_stages[ i ] );
+        if ( nullptr == current ) {
+            continue;
+        }
+        current->release();
+    }
 
     osre_debug( Tag, "Set application state to destroyed." );
     m_impl->m_state = Impl::Destroyed;
