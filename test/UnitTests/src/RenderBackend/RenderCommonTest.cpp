@@ -97,10 +97,10 @@ TEST_F( RenderCommonTest, sizeInBytesTest ) {
 TEST_F( RenderCommonTest, getVertCompNameTest ) {
     String name;
     name = getVertCompName( Position );
-    EXPECT_NE( 0, name.size() );
+    EXPECT_NE( static_cast<ui32>( 0 ), name.size() );
 
     name = getVertCompName( InvalidVertexAttr );
-    EXPECT_NE( 0, name.size() );
+    EXPECT_NE( static_cast<ui32>( 0 ), name.size() );
     EXPECT_EQ( "Error", name );
 }
 
@@ -121,5 +121,5 @@ TEST_F(RenderCommonTest, viewportTest) {
 	EXPECT_EQ( vp_set, vp_set2 );
 }
 
-}
-}
+} // Namespace UnitTest
+} // Namespace OSRE

@@ -40,6 +40,7 @@ public:
 
     }
 };
+
 TEST_F( ObjectTest, createTest ) {
     bool ok( true );
     try {

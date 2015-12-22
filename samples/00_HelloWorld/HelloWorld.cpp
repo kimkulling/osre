@@ -47,18 +47,22 @@ public:
     HelloWorldApp( int argc, char *argv[] )
     : AppBase( argc, argv )
     , m_stage( nullptr ) {
-
+        // empty
     }
 
     virtual ~HelloWorldApp() {
-
+        // empty
     }
 
 protected:
-    virtual bool onCreate( Properties::Settings *config = nullptr ) {
-        AppBase::getConfig()->setString( Properties::Settings::WindowsTitle, "HelloWorld!" );
-
-        if( !AppBase::onCreate( config ) ) {
+    virtual bool onCreate( Properties::Settings *settings = nullptr ) {
+        Properties::Settings *baseSettings( AppBase::getSettings() );
+        if ( nullptr == baseSettings ) {
+            return false;
+        }
+        
+        baseSettings->setString( Properties::Settings::WindowsTitle, "HelloWorld!" );
+        if ( !AppBase::onCreate( baseSettings ) ) {
             return false;
         }
 

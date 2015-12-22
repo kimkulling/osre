@@ -29,7 +29,7 @@ public:
     virtual void update();
     virtual void requestNextFrame();
     virtual bool handleEvents();
-    virtual Properties::Settings *getConfig() const;
+    virtual Properties::Settings *getSettings() const;
     virtual Scene::Stage *createStage( const String &name );
 
 protected:

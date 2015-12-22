@@ -27,7 +27,7 @@ struct AppBase::Impl {
     State m_state;
     d32 m_timediff;
     ArgumentParser m_argParser;
-    Properties::Settings *m_config;
+    Properties::Settings *m_settings;
     Platform::PlatformInterface *m_platformInterface;
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
@@ -37,25 +37,25 @@ struct AppBase::Impl {
     : m_state( Uninited )
     , m_timediff( 0.0 )
     , m_argParser( argc, argv, supportedArgs, desc )
-    , m_config( nullptr )
+    , m_settings( nullptr )
     , m_platformInterface( nullptr )
     , m_timer( nullptr )
     , m_rbService( nullptr )
     , m_stage( nullptr ) {
-        m_config = new Properties::Settings;
-        m_config->setString( Properties::Settings::RenderAPI, "opengl" );
-        m_config->setBool( Properties::Settings::PollingMode, true );
+        m_settings = new Properties::Settings;
+        m_settings->setString( Properties::Settings::RenderAPI, "opengl" );
+        m_settings->setBool( Properties::Settings::PollingMode, true );
 
 #ifdef OSRE_WINDOWS
         //pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
-        m_config->setInt( Properties::Settings::PlatformPlugin, static_cast< i32 >( Platform::WindowsPlugin ) );
+        m_settings->setInt( Properties::Settings::PlatformPlugin, static_cast< i32 >( Platform::WindowsPlugin ) );
 #else
-        m_config->setInt( Properties::Settings::PlatformPlugin, static_cast< i32 >( Platform::SDL2Plugin ) );
+        m_settings->setInt( Properties::Settings::PlatformPlugin, static_cast< i32 >( Platform::SDL2Plugin ) );
 #endif 
     }
 
     ~Impl(){
-        m_config = nullptr;
+        m_settings = nullptr;
     }
 };
 
@@ -103,12 +103,12 @@ bool AppBase::handleEvents() {
 
 }
 
-Properties::Settings *AppBase::getConfig() const {
+Properties::Settings *AppBase::getSettings() const {
     if( nullptr == m_impl ) {
         return nullptr;
     }
 
-    return m_impl->m_config;
+    return m_impl->m_settings;
 }
 
 Scene::Stage *AppBase::createStage( const String &name ) {
@@ -129,11 +129,11 @@ bool AppBase::onCreate( Properties::Settings *config ) {
 
     // create the platform abstraction
     if( nullptr != config ) {
-        delete m_impl->m_config;
-        m_impl->m_config = config;
+        delete m_impl->m_settings;
+        m_impl->m_settings = config;
     }
 
-    m_impl->m_platformInterface = Platform::PlatformInterface::create( m_impl->m_config );
+    m_impl->m_platformInterface = Platform::PlatformInterface::create( m_impl->m_settings );
     if( m_impl->m_platformInterface ) {
         if( !m_impl->m_platformInterface->open() ) {
             return false;
