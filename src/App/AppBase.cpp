@@ -1,3 +1,25 @@
+/*-----------------------------------------------------------------------------------------------
+The MIT License (MIT)
+
+Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
 #include <osre/Common/ArgumentParser.h>
 #include <osre/Properties/Settings.h>
@@ -5,6 +27,7 @@
 #include <osre/Platform/AbstractTimer.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/Stage.h>
+#include <osre/Debugging/osre_debugging.h>
 
 // private includes
 #include <src/Platform/PlatformPluginFactory.h>
@@ -90,18 +113,21 @@ void AppBase::update() {
 }
 
 void AppBase::requestNextFrame() {
+    OSRE_ASSERT( nullptr != m_impl );
+
     m_impl->m_rbService->update( m_impl->m_timediff );
 
 }
 
 bool AppBase::handleEvents() {
+    OSRE_ASSERT( nullptr!=m_impl );
+
     if( nullptr == m_impl->m_platformInterface ) {
         osre_debug( Tag, "AppBase::PlatforInterface not in proper state: not nullptr." );
         return false;
     }
 
     return m_impl->m_platformInterface->update( m_impl->m_timediff );
-
 }
 
 Properties::Settings *AppBase::getSettings() const {
@@ -113,7 +139,9 @@ Properties::Settings *AppBase::getSettings() const {
 }
 
 Scene::Stage *AppBase::createStage( const String &name ) {
-    if( name.empty() ) {
+    OSRE_ASSERT( nullptr!=m_impl );
+
+    if ( name.empty() ) {
         return nullptr;
     }
 
@@ -127,17 +155,19 @@ Scene::Stage *AppBase::createStage( const String &name ) {
 }
 
 bool AppBase::activateStage( const String &name ) {
+    OSRE_ASSERT( nullptr!=m_impl );
+
     if ( name.empty() ) {
         return false;
     }
 
-    if ( m_impl->m_activeStage->getName()==name ) {
+    if ( m_impl->m_activeStage->getName() == name ) {
         return true;
     }
 
     bool success( false );
     for ( ui32 i=0; i<m_impl->m_stages.size(); i++ ) {
-        if ( m_impl->m_stages[ i ]->getName()==name ) {
+        if ( m_impl->m_stages[ i ]->getName() == name ) {
             m_impl->m_activeStage = m_impl->m_stages[ i ];
             success = true;
             break;
@@ -148,7 +178,9 @@ bool AppBase::activateStage( const String &name ) {
 }
 
 bool AppBase::onCreate( Properties::Settings *config ) {
-    if( m_impl->m_state != Impl::Uninited ) {
+    OSRE_ASSERT( nullptr!=m_impl );
+
+    if ( m_impl->m_state!=Impl::Uninited ) {
         osre_debug( Tag, "AppBase::State not in proper state: Uninited." );
         return false;
     }
@@ -172,6 +204,7 @@ bool AppBase::onCreate( Properties::Settings *config ) {
         Logger::getInstance()->registerLogStream( stream );
     }
 
+    // create the render backend
     m_impl->m_rbService = new RenderBackend::RenderBackendService();
     if( !m_impl->m_rbService->open() ) {
         m_impl->m_rbService->release();
@@ -195,7 +228,9 @@ bool AppBase::onCreate( Properties::Settings *config ) {
 }
 
 bool AppBase::onDestroy() {
-    if( m_impl->m_state != Impl::Running ) {
+    OSRE_ASSERT( nullptr!=m_impl );
+
+    if ( m_impl->m_state!=Impl::Running ) {
         osre_debug( Tag, "AppBase::State not in proper state: Running." );
         return false;
     }
@@ -221,8 +256,8 @@ bool AppBase::onDestroy() {
 }
 
 void AppBase::onUpdate() {
-
+    // override
 }
 
-}
-}
+} // Namespace App
+} // Namespace OSRE
