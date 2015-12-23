@@ -70,8 +70,7 @@ void TextRenderer2D::drawText() {
     }
 
 	if (m_dirty) {
-		setupVertexData();
-		m_dirty = false;
+        // TODO!
 	}
 }
 
