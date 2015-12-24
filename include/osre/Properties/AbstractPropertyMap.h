@@ -37,7 +37,9 @@ class Property;
 ///	@class		::OSRE::Properties::IPropertyMap
 ///	@ingroup	Engine
 ///
-///	@brief 
+///	@brief  The abstract base class for a property map. Property maps can be used to manage global 
+/// settings like resolution, the name of the application or the root media directory.
+/// Derivate cllasses from this if you want to implement your own setting property map.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractPropertyMap {
 public:
