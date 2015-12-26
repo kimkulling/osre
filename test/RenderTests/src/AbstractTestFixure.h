@@ -36,45 +36,53 @@ namespace RenderTest {
 /// To implement a new render test fixture you have to implement the setup and the teardown method. 
 /// Setup will be called before performing the fixture, teardown will be called to cleanup after the
 /// render test was executed.
+/// You can use a fixure to group tests.
 //-------------------------------------------------------------------------------------------------
 class AbstractTestFixture {
 public:
+    /// @brief  The setup method, will be called before the test execution of the fixure.
+    /// @return true if successful, false in case of an error.
     virtual bool setup() = 0;
+
+    /// @brief  The teardown method, will be called after the test execution of the fixure.
+    /// @return true if successful, false in case of an error.
     virtual bool teardown() = 0;
+
+    /// @brief  Returns the test fixure name.
+    /// @return The name of the test fixure.
     const String &getName() const;
 
 protected:
+    /// @brief  The class constructor.
+    /// @param  name        [in] The name of the test.
     AbstractTestFixture( const String &name );
+
+    /// @brief  The class destructor.
     virtual ~AbstractTestFixture();
 
 private:
-    AbstractTestFixture();
-    AbstractTestFixture( const AbstractTestFixture & );
+    AbstractTestFixture() = delete;
+    AbstractTestFixture( const AbstractTestFixture & ) = delete;
 
 private:
     String m_name;
 };
 
-//-------------------------------------------------------------------------------------------------
 inline
 AbstractTestFixture::AbstractTestFixture( const String &name )
 : m_name( name ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 AbstractTestFixture::~AbstractTestFixture() {
-
+    // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 const String &AbstractTestFixture::getName() const {
     return m_name;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderTest
 } // Namespace OSRE

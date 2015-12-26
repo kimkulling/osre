@@ -54,8 +54,8 @@ public:
     static RenderTestSuite *create(const String &suiteName, const String &renderAPI);
     static RenderTestSuite *getInstance();
     static void kill();
-    virtual bool setup();
-    virtual bool teardown();
+    virtual bool setup() final;
+    virtual bool teardown() final;
     void attachRenderTest(AbstractRenderTest *pRenderTest);
     ui32 getNumRenderTests() const;
     void startTests();
