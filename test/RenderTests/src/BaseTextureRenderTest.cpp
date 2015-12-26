@@ -176,11 +176,9 @@ public:
         geo->m_material->m_numTextures = 1;
         geo->m_material->m_pTextures = new Texture[ 1 ];
 
-#ifdef OSRE_WINDOWS
-        geo->m_material->m_pTextures[ 0 ].m_textureName = "../../media/Models/Obj/SpiderTex.jpg";
-#else
-        geo->m_material->m_pTextures[ 0 ].m_textureName = "../media/Models/Obj/SpiderTex.jpg";
-#endif
+        geo->m_material->m_pTextures[ 0 ].m_textureName = "SpiderTex";
+        geo->m_material->m_pTextures[ 0 ].m_loc = IO::Uri( "file://assets/Models/Obj/SpiderTex.jpg" );
+
         geo->m_material->m_pTextures[ 0 ].m_targetType = Texture2D;
         geo->m_material->m_pTextures[ 0 ].m_width = 0;
         geo->m_material->m_pTextures[ 0 ].m_height = 0;

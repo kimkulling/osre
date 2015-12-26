@@ -32,6 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Stream.h>
 #include <osre/IO/Uri.h>
+#include <osre/Assets/AssetRegistry.h>
 
 #include <cppcore/CPPCoreCommon.h>
 
@@ -45,8 +46,6 @@ namespace RenderBackend {
 using namespace ::CPPCore;
 
 extern const unsigned char *glyph[];
-
-void DrawGlyph( const Common::ColorRGBA &col, int c );
 
 static const String Tag = "OGLRenderBackend";
 
@@ -718,14 +717,14 @@ void OGLRenderBackend::updateTexture( OGLTexture *oglTextue, ui32 offsetX, ui32 
                      oglTextue->m_height, oglTextue->m_format, GL_UNSIGNED_BYTE, data );
 }
 
-//-------------------------------------------------------------------------------------------------
-OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const String &filename ) {
+OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const IO::Uri &fileloc ) {
     OGLTexture *tex( findTexture( name ) );
     if( tex ) {
         return tex;
     }
 
     // import the texture
+    const String filename = fileloc.getAbsPath()+fileloc.getResource();
     i32 width( 0 ), height( 0 ), channels( 0 );
     GLubyte *data = SOIL_load_image( filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO );
     if( !data ) {
@@ -756,7 +755,6 @@ OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const S
     return tex;
 }
 
-//-------------------------------------------------------------------------------------------------
 OGLTexture *OGLRenderBackend::createTextureFromStream( const String &name, IO::Stream &stream, 
                                                        ui32 width, ui32 height, ui32 channels ) {
     OGLTexture *tex( findTexture( name ) );
@@ -776,7 +774,6 @@ OGLTexture *OGLRenderBackend::createTextureFromStream( const String &name, IO::S
     return tex;
 }
 
-//-------------------------------------------------------------------------------------------------
 OGLTexture *OGLRenderBackend::findTexture( const String &name ) const {
 	if( name.empty() ) {
         return nullptr;
@@ -790,7 +787,6 @@ OGLTexture *OGLRenderBackend::findTexture( const String &name ) const {
     return m_textures[ it->second ];
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderBackend::bindTexture( OGLTexture *oglTexture, TextureStageType stageType ) {
 	if( !oglTexture ) {
         return false;
@@ -803,7 +799,6 @@ bool OGLRenderBackend::bindTexture( OGLTexture *oglTexture, TextureStageType sta
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::releaseTexture( OGLTexture *oglTexture ) {
     if( m_textures[ oglTexture->m_slot ] ) {
         glDeleteTextures( 1, &oglTexture->m_textureId );
@@ -822,7 +817,6 @@ void OGLRenderBackend::releaseTexture( OGLTexture *oglTexture ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::releaseAllTextures( ) {
     for( ui32 i = 0; i < m_textures.size(); ++i ) {
         if( m_textures[ i ]->m_textureId != OGLNotSetId ) {
@@ -834,7 +828,6 @@ void OGLRenderBackend::releaseAllTextures( ) {
     m_texLookupMap.clear();
 }
 
-//-------------------------------------------------------------------------------------------------
 OGLParameter *OGLRenderBackend::createParameter( const String &name, ParameterType type, 
                                                  ParamDataBlob *blob, ui32 numItems ) {
     OGLParameter *param = new OGLParameter;
@@ -851,7 +844,6 @@ OGLParameter *OGLRenderBackend::createParameter( const String &name, ParameterTy
     return param;
 }
 
-//-------------------------------------------------------------------------------------------------
 OGLParameter *OGLRenderBackend::getParameter( const String &name ) const {
     if( name.empty() ) {
         return nullptr;
@@ -866,7 +858,6 @@ OGLParameter *OGLRenderBackend::getParameter( const String &name ) const {
     return nullptr;
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::setParameter( OGLParameter *param ) {
     if( !m_shaderInUse ) {
         return;
@@ -875,12 +866,10 @@ void OGLRenderBackend::setParameter( OGLParameter *param ) {
     setParameterInShader( param, m_shaderInUse );
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::releaseAllParameters() {
     ContainerClear( m_parameters );
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::setParameter( OGLParameter **param, ui32 numParam ) {
     if( !m_shaderInUse ) {
         return;
@@ -895,7 +884,6 @@ void OGLRenderBackend::setParameter( OGLParameter **param, ui32 numParam ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 OGLRenderBackend::addPrimitiveGroup( PrimitiveGroup *grp ) {
     OGLPrimGroup *oglGrp    = new OGLPrimGroup;
     oglGrp->m_primitive     = OGLEnum::getGLPrimitiveType( grp->m_primitive );
@@ -909,12 +897,10 @@ ui32 OGLRenderBackend::addPrimitiveGroup( PrimitiveGroup *grp ) {
     return idx;
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::releaseAllPrimitiveGroups() {
     ContainerClear( m_primitives );
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::render( ui32 primpGrpIdx ) {
     OGLPrimGroup *grp( m_primitives[ primpGrpIdx ] );
     if( nullptr != grp ) {
@@ -925,7 +911,6 @@ void OGLRenderBackend::render( ui32 primpGrpIdx ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::render( ui32 primpGrpIdx, ui32 numInstances ) {
     OGLPrimGroup *grp( m_primitives[ primpGrpIdx ] );
     if ( nullptr != grp ) {
@@ -936,7 +921,6 @@ void OGLRenderBackend::render( ui32 primpGrpIdx, ui32 numInstances ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::renderFrame() {
     OSRE_ASSERT( nullptr != m_renderCtx );    
     
@@ -946,7 +930,6 @@ void OGLRenderBackend::renderFrame() {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 FontBase *OGLRenderBackend::createFont( const IO::Uri &font ) {
     FontBase *fontInst = new FontBase( font.getResource() );
     fontInst->setUri( font );
@@ -958,7 +941,6 @@ FontBase *OGLRenderBackend::createFont( const IO::Uri &font ) {
     return fontInst;
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::selectFont( FontBase *font ) {
     if ( nullptr == font ) {
         m_activeFont = nullptr;
@@ -972,7 +954,6 @@ void OGLRenderBackend::selectFont( FontBase *font ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 FontBase *OGLRenderBackend::findFont( const String &name ) const {
     for (ui32 i = 0; i < m_fonts.size(); i++) {
         FontBase *font( m_fonts[ i ] );
@@ -984,7 +965,6 @@ FontBase *OGLRenderBackend::findFont( const String &name ) const {
     return nullptr;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderBackend::relaseFont( FontBase *font ) {
     if (nullptr == font) {
         return false;
@@ -1002,7 +982,6 @@ bool OGLRenderBackend::relaseFont( FontBase *font ) {
     return ok;
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::releaseAllFonts() {
     for ( ui32 i = 0; i < m_fonts.size(); i++ ) {
         if ( nullptr != m_fonts[ i ] ) {
@@ -1012,7 +991,6 @@ void OGLRenderBackend::releaseAllFonts() {
     m_fonts.clear();
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 OGLRenderBackend::getVertexSize( VertexType vertextype ) {
     ui32 vertexSize( 0 );
     switch( vertextype ) {
@@ -1029,27 +1007,6 @@ ui32 OGLRenderBackend::getVertexSize( VertexType vertextype ) {
     }
 
     return vertexSize;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-
-void DrawGlyph( const Common::ColorRGBA &col, int c )
-{
-    int i = 0;
-
-    while( glyph[ c ][ i ] != 0xff ) {
-        glBegin( GL_TRIANGLE_STRIP ); {
-            while( glyph[ c ][ i ] != 0xff ) {
-                glColor4f( col.m_ColorValues[ 0 ], col.m_ColorValues[ 1 ], col.m_ColorValues[ 2 ], col.m_ColorValues[ 3 ] );
-                glVertex2f( ( glyph[ c ][ i ] / 16 ) / 16.0f, ( glyph[ c ][ i ] % 16 ) / 16.0f );
-                i++;
-            }
-        }
-        glEnd();
-        i++;
-    }
-    glTranslatef( 1.0f, 0.0f, 0.0f );
 }
 
 } // Namespace RenderBackend

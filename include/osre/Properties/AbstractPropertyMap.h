@@ -39,21 +39,51 @@ class Property;
 ///
 ///	@brief  The abstract base class for a property map. Property maps can be used to manage global 
 /// settings like resolution, the name of the application or the root media directory.
-/// Derivate cllasses from this if you want to implement your own setting property map.
+/// Derivate classes from this if you want to implement your own setting property map.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractPropertyMap {
 public:
+    /// @brief  The class destructor. 
     virtual ~AbstractPropertyMap();
+
+    /// @brief
+    /// @param
+    /// @param
+    /// @param
     virtual void setProperty( ui32 id, const String &rName, const CPPCore::Variant &value ) = 0;
+
+    /// @brief
+    /// @param
+    /// @param
     virtual void setProperty( ui32 id, Property *Property ) = 0;
+
+    /// @brief
+    /// @param
     virtual bool hasProperty( ui32 id ) const = 0;
+
+    /// @brief
+    /// @param
+    /// @return
     virtual Property *getProperty( ui32 id ) const = 0;
+
+    /// @brief
+    /// @param
+    /// @return
     virtual bool removeProperty( ui32 id ) = 0;
+
+    /// @brief
+    /// @return
     virtual ui32 size() const = 0;
+
+    /// @brief
+    /// @return
     virtual bool isEmpty() const = 0;
+
+    /// @brief
     virtual void clear() = 0;
 
 protected:
+    /// @brief
     AbstractPropertyMap();
 };
 

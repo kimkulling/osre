@@ -26,6 +26,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/THashMap.h>
 
 namespace OSRE {
+    
+namespace IO {
+    class Uri;
+}
+
 namespace Assets {
         
 //-------------------------------------------------------------------------------------------------
@@ -39,8 +44,10 @@ public:
     static AssetRegistry *create();
     static void destroy();
     static AssetRegistry *getInstance();
-    void registerAssetPath( const String &schema, const String &path );
-    String getPath( const String &schema ) const;
+    void registerAssetPath( const String &mount, const String &path );
+    bool hasPath( const String &mount ) const;
+    String getPath( const String &mount ) const;
+    String resolvePathFromUri( const IO::Uri &location );
     void clear();
 
 private:

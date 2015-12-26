@@ -80,7 +80,7 @@ bool FontBase::loadFromStream( OGLRenderBackend *rb ) {
         m_fontAtlas = nullptr;
     }
 
-    m_fontAtlas = rb->createTextureFromFile( m_texName, m_uri.getAbsPath() );
+    m_fontAtlas = rb->createTextureFromFile( m_texName, m_uri );
     if( nullptr == m_fontAtlas ) {
         return false;
     }

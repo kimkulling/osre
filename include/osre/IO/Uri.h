@@ -58,6 +58,8 @@ public:
     ///	@brief	The class destructor.
     ~Uri();
 
+    static String constructFromComps( const String &scheme, const String &path, const String &res );
+
     ///	@brief	Assigns a new uri string, the older data will be erased.
     ///	@param	uri			[in] The string with the URI.
     void setUri( const String &uri );
@@ -70,9 +72,13 @@ public:
     ///	@return	A string containing the scheme.
     const String &getScheme() const;
 
+    void setScheme( const String &scheme );
+
     ///	@brief	Returns the path of the URI.
     ///	@return	A string containing the path.
     const String &getPath() const;
+
+    void setPath( const String &path );
 
     ///	@brief	Returns the resource name of the URI.
     ///	@return	A string containing the resource.
@@ -81,6 +87,8 @@ public:
     ///	@brief	Returns the absolute path ( path + resource ) of the URI.
     ///	@return	A string containing the absolute path.
     const String &getResource() const;
+
+    void setResource( const String &res );
 
     ///	@brief	Returns true, if the scheme is empty.
     ///	@return	true, if the URI is empty, false if not.

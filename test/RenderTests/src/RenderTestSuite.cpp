@@ -128,16 +128,20 @@ bool RenderTestSuite::setup() {
     }
 
     if( m_pPlatformInterface ) {
-        CreateRendererEventData *pData = new CreateRendererEventData( m_pPlatformInterface->getRootSurface() );
-        pData->m_defaultFont = m_pPlatformInterface->getDefaultFontName();
-        m_pRenderBackendServer->sendEvent( &OnCreateRendererEvent, pData );
+        CreateRendererEventData *data = new CreateRendererEventData( m_pPlatformInterface->getRootSurface() );
+        data->m_defaultFont = m_pPlatformInterface->getDefaultFontName();
+        m_pRenderBackendServer->sendEvent( &OnCreateRendererEvent, data );
     }
 
     m_pTimer = PlatformInterface::getInstance()->getTimer();
     
     Assets::AssetRegistry *registry( Assets::AssetRegistry::create() );
     if ( nullptr!=registry ) {
-        registry->registerAssetPath( "media", "../../media" );
+#ifdef OSRE_WINDOWS
+        registry->registerAssetPath( "assets", "../../media" );
+#else
+        registry->registerAssetPath( "assets", "../media" );
+#endif 
     }
 
     return true;

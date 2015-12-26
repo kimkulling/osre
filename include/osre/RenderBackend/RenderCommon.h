@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/osre_common.h>
 #include <osre/RenderBackend/Parameter.h>
+#include <osre/IO/Uri.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -269,6 +270,7 @@ enum MaterialType {
 
 struct OSRE_EXPORT Texture {
     String            m_textureName;
+    IO::Uri           m_loc;
     TextureTargetType m_targetType;
     ui32              m_size;
     uc8              *m_data;

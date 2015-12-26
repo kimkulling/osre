@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Profiling/FPSCounter.h>
+
 #include "OGLCommon.h"
 #include <map>
 
@@ -99,7 +100,7 @@ public:
     void releaseAllShaders();
     OGLTexture *createEmptyTexture( const String &name, TextureTargetType target, ui32 width, ui32 height, ui32 channels );
     void updateTexture( OGLTexture *pOGLTextue, ui32 offsetX, ui32 offsetY, c8 *data, ui32 size );
-    OGLTexture *createTextureFromFile( const String &name, const String &filename );
+    OGLTexture *createTextureFromFile( const String &name, const IO::Uri &fileloc );
     OGLTexture *createTextureFromStream( const String &name, IO::Stream &stream, ui32 width, ui32 height, ui32 channels );
     OGLTexture *findTexture( const String &name ) const;
     bool bindTexture( OGLTexture *pOGLTextue, TextureStageType stageType );

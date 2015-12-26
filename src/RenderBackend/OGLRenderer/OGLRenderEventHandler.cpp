@@ -35,6 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/DbgTextRenderer.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Uri.h>
+#include <osre/Assets/AssetRegistry.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -89,7 +90,13 @@ static void setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTextur
     for( ui32 i = 0; i < numTextures; ++i ) {
         Texture &tex( mat->m_pTextures[ i ] );
         if( !tex.m_textureName.empty() ) {
-            OGLTexture *oglTexture = rb->createTextureFromFile( tex.m_textureName, tex.m_textureName );
+            String root = Assets::AssetRegistry::getInstance()->getPath( "media" );
+            String path = Assets::AssetRegistry::getInstance()->resolvePathFromUri( tex.m_loc );
+            
+            IO::Uri loc( tex.m_loc );
+            loc.setPath( path );
+
+            OGLTexture *oglTexture = rb->createTextureFromFile( tex.m_textureName, loc );
             if( oglTexture ) {
                 textures.add( oglTexture );
             }
@@ -417,7 +424,10 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
     m_oglBackend->setViewport( x, y, w, h );
 
     const String defaultFont( PlatformInterface::getInstance()->getDefaultFontName() );
-    IO::Uri fontUri( "file://./" + defaultFont );
+    IO::Uri fontUri( "file://assets/Textures/Fonts/" + defaultFont );
+    String root = Assets::AssetRegistry::getInstance()->getPath( "media" );
+    String path = Assets::AssetRegistry::getInstance()->resolvePathFromUri( fontUri );
+    fontUri.setPath( path );
     m_oglBackend->createFont( fontUri );
     m_renderCmdBuffer = new RenderCmdBuffer( m_oglBackend, m_renderCtx );
 

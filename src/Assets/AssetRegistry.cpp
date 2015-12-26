@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/Common/StringUtils.h>
+#include <osre/IO/Uri.h>
 
 namespace OSRE {
 namespace Assets {
@@ -51,15 +52,24 @@ AssetRegistry *AssetRegistry::getInstance() {
     return s_instance;
 }
 
-void AssetRegistry::registerAssetPath( const String &schema, const String &path ) {
-    ui32 hashId( StringUtils::hashName( schema.c_str() ) );
+void AssetRegistry::registerAssetPath( const String &mount, const String &path ) {
+    ui32 hashId( StringUtils::hashName( mount.c_str() ) );
     m_name2pathMap.insert( hashId, path );
+}
+
+bool AssetRegistry::hasPath( const String &mount ) const {
+    ui32 hashId( StringUtils::hashName( mount.c_str() ) );
+    if ( !m_name2pathMap.hasKey( hashId ) ) {
+        return false;
+    }
+
+    return true;
 }
 
 static const String Dummy("");
 
-String AssetRegistry::getPath( const String &name ) const {
-    ui32 hashId( StringUtils::hashName(name.c_str() ) );
+String AssetRegistry::getPath( const String &mount ) const {
+    ui32 hashId( StringUtils::hashName( mount.c_str() ) );
     if ( !m_name2pathMap.hasKey( hashId ) ) {
         return Dummy;
     }
@@ -70,6 +80,30 @@ String AssetRegistry::getPath( const String &name ) const {
     }
 
     return Dummy;
+}
+
+String AssetRegistry::resolvePathFromUri( const IO::Uri &location ) {
+    if ( location.isEmpty() ) {
+        return Dummy;
+    }
+
+    const String pathToCheck( location.getAbsPath() );
+    String absPath( pathToCheck );
+    String::size_type pos = pathToCheck.find( "/" );
+    String mountPoint = pathToCheck.substr( 0, pos );
+    if ( hasPath( mountPoint ) ) {
+        absPath = getPath( mountPoint );
+        if ( absPath[ absPath.size()-1 ]!='/' ) {
+            absPath += '/';
+        }
+        String::size_type endPos = pathToCheck.rfind( "/" );
+        absPath += pathToCheck.substr( pos+1, pathToCheck.size()-( pos + endPos-2 ));
+        if ( absPath[ absPath.size()-1 ]!='/' ) {
+            absPath += '/';
+        }
+    }
+    
+    return absPath;
 }
 
 void AssetRegistry::clear() {

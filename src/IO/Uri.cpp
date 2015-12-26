@@ -56,6 +56,11 @@ Uri::~Uri() {
 	// empty
 }
 
+String Uri::constructFromComps( const String &scheme, const String &path, const String &res ) {
+    const String uriText = scheme + "://" + path + res;
+    return uriText;
+}
+
 void Uri::setUri(  const String &uri ) {
 	if ( uri == m_URI ) {
 		return;
@@ -74,8 +79,23 @@ const String &Uri::getScheme() const {
 	return m_Scheme;
 }
 
+void Uri::setScheme( const String &scheme ) {
+    if ( m_Scheme != scheme ) {
+        m_Scheme = scheme;
+        m_URI = constructFromComps( m_Scheme, m_Path, m_Resource );
+    }
+}
+
 const String &Uri::getPath() const {
 	return m_Path;
+}
+
+void Uri::setPath( const String &path ) {
+    if ( m_Path != path ) {
+        m_Path = path;
+        m_AbsPath = path;
+        m_URI = constructFromComps( m_Scheme, m_Path, m_Resource );
+    }
 }
 
 const String &Uri::getAbsPath() const {
@@ -84,6 +104,13 @@ const String &Uri::getAbsPath() const {
 
 const String &Uri::getResource() const {
 	return m_Resource;
+}
+
+void Uri::setResource( const String &res ) {
+    if ( m_Resource != res ) {
+        m_Resource = res;
+        m_URI = constructFromComps( m_Scheme, m_Path, m_Resource );
+    }
 }
 
 bool Uri::isEmpty() const {

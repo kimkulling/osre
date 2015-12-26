@@ -113,7 +113,6 @@ const String FsSrcRV =
     "void main()\n"
     "{\n"
     "    //set the interpolated color as the shader output\n"
-//    "    vFragColor = vSmoothColor;\n"
     "    vFragColor = texture( tex0, vUV );\n"
     "}\n";
 
@@ -440,11 +439,8 @@ RenderBackend::StaticGeometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 
     geo->m_material->m_numTextures = 1;
     geo->m_material->m_pTextures = new Texture[ 1 ];
     
-#ifdef OSRE_WINDOWS
-    geo->m_material->m_pTextures[ 0 ].m_textureName = "../../media/Textures/Fonts/buildin_arial.bmp";
-#else
-    geo->m_material->m_pTextures[ 0 ].m_textureName = "../media/Textures/Fonts/buildin_arial.bmp";
-#endif
+    geo->m_material->m_pTextures[ 0 ].m_textureName = "buildin_arial";
+    geo->m_material->m_pTextures[ 0 ].m_loc = IO::Uri( "file://assets/Textures/Fonts/buildin_arial.bmp" );
 
     geo->m_material->m_pTextures[0].m_targetType = Texture2D;
     geo->m_material->m_pTextures[0].m_width = 0;
