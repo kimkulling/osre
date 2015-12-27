@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
+#include <osre/Assets/AssetRegistry.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
 #include <glm/glm.hpp>
@@ -61,6 +62,16 @@ protected:
             return false;
         }
         
+        Assets::AssetRegistry *registry( Assets::AssetRegistry::create() );
+        if ( nullptr!=registry ) {
+#ifdef OSRE_WINDOWS
+            registry->registerAssetPath( "assets", "../../media" );
+#else
+            registry->registerAssetPath( "assets", "../media" );
+#endif 
+        }
+
+
         baseSettings->setString( Properties::Settings::WindowsTitle, "HelloWorld!" );
         if ( !AppBase::onCreate( baseSettings ) ) {
             return false;
