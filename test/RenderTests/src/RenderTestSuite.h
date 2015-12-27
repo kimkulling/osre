@@ -76,7 +76,7 @@ private:
     RenderTestSuite();
     RenderTestSuite(const String &suiteName, const String &renderAPI);
     RenderTestSuite &operator = ( const RenderTestSuite & );
-    virtual ~RenderTestSuite();
+    virtual ~RenderTestSuite() final;
 
 private:
     static RenderTestSuite *s_pInstance;

@@ -48,7 +48,6 @@ struct SetTextureStageCmdData;
 struct SetShaderStageCmdData;
 struct SetRenderTargetCmdData;
 struct DrawTextCmdData;
-
 struct OGLParameter;
 struct PrimitiveGroup;
 struct Material;
@@ -57,52 +56,60 @@ struct Material;
 ///	@class		::OSRE::RenderBackend::RenderCmdBuffer
 ///	@ingroup	Engine
 ///
-///	@brief  This class is used to manage a render command buffer.
+///	@brief  This class is used to manage a render command buffer. Render command buffers are used 
+/// to store the list of render ops for rendering one single render frame.
 //-------------------------------------------------------------------------------------------------
 class RenderCmdBuffer {
 public:
     /// @brief  Describes the requested enqueue type.
     enum EnqueueType {
-        RCE_Back    ///< Enqueue render command at the end 
+        RCE_Back    ///< Enqueue render command at the end.
     };
 
 public:
     /// The class constructor.
-    RenderCmdBuffer( OGLRenderBackend *pRenderBackend, Platform::AbstractRenderContext *ctx );
+    RenderCmdBuffer( OGLRenderBackend *renderBackend, Platform::AbstractRenderContext *ctx );
     /// The class destructor.
     virtual ~RenderCmdBuffer();
     /// Will set the active vertex array object.
-    void setVertexArray( OGLVertexArray *pVertexArray );
+    void setVertexArray( OGLVertexArray *vertexArray );
     /// Will set the active shader.
-    void setActiveShader( OGLShader *pOGLShader );
-    ///
+    void setActiveShader( OGLShader *oglShader );
+    /// Will return the active shader.
     OGLShader *getActiveShader() const;
     /// Will enqueue a new render command.
-    void enqueueRenderCmd( OGLRenderCmd *pOGLRenderCmd, EnqueueType type = RCE_Back );
+    void enqueueRenderCmd( OGLRenderCmd *renderCmd, EnqueueType type = RCE_Back );
     /// The callback before rendering.
     bool onPreRenderFrame();
     /// The render callback.
-    bool onRenderFrame( const Common::EventData *pEventData );
+    bool onRenderFrame( const Common::EventData *eventData );
     /// The callback after rendering.
     bool onPostRenderFrame();
     /// The buffer and all attached commands will be cleared.
     void clear();
 
 protected:
+    /// The update parameter callback.
     virtual bool onUpdateParameter( const Common::EventData *pEventData );
+    /// The update parameter callback.
     virtual bool onSetParametersCmd( SetParameterCmdData *pData );
+    /// The draw primitive callback.
     virtual bool onDrawPrimitivesCmd( DrawPrimitivesCmdData *pData );
+    /// The draw primitive instances callback.
     virtual bool onDrawPrimitivesInstancesCmd( DrawInstancePrimitivesCmdData *data );
+    /// The set texture callback.
     virtual bool onSetTextureStageCmd( SetTextureStageCmdData *pData );
+    /// The set shader stage callback.
     virtual bool onSetShaderStageCmd( SetShaderStageCmdData *pData );
+    /// The set render target callback.
     virtual bool onSetRenderTargetCmd( SetRenderTargetCmdData *pData );
 
 private:
-    OGLRenderBackend *m_pRenderBackend;
-    Platform::AbstractRenderContext *m_pRenderCtx;
+    OGLRenderBackend *m_renderbackend;
+    Platform::AbstractRenderContext *m_renderCtx;
     CPPCore::TArray<OGLRenderCmd*> m_cmdbuffer;
-    OGLShader *m_pActiveShader;
-    OGLVertexArray *m_pVertexArray;
+    OGLShader *m_activeShader;
+    OGLVertexArray *m_vertexarray;
     CPPCore::TArray<PrimitiveGroup*> m_primitives;
     CPPCore::TArray<Material*> m_materials;
     OGLParameter *m_param;

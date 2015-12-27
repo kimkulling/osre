@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <src/RenderBackend/OGLRenderer/RenderCmdBuffer.h>
 #include <osre/RenderBackend/DbgTextRenderer.h>
 #include <osre/Platform/AbstractRenderContext.h>
+#include <osre/Debugging/osre_debugging.h>
 #include "OGLCommon.h"
 #include "OGLRenderBackend.h"
 
@@ -35,16 +36,16 @@ using namespace ::OSRE::Platform;
 static const String Tag = "RenderCmdBuffer";
 
 //-------------------------------------------------------------------------------------------------
-RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *pRenderBackend, AbstractRenderContext *ctx )
-: m_pRenderBackend( pRenderBackend )
-, m_pRenderCtx( ctx )
-, m_pActiveShader( nullptr )
-, m_pVertexArray( nullptr )
+RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRenderContext *ctx )
+: m_renderbackend( renderBackend )
+, m_renderCtx( ctx )
+, m_activeShader( nullptr )
+, m_vertexarray( nullptr )
 , m_primitives()
 , m_materials()
 , m_param( nullptr ) {
-    assert( nullptr != m_pRenderBackend );
-    assert( nullptr != m_pRenderCtx );
+    OSRE_ASSERT( nullptr!=m_renderbackend );
+    OSRE_ASSERT( nullptr!=m_renderCtx );
 
     m_param = new OGLParameter;
     m_param->m_name = "tex0";
@@ -56,48 +57,48 @@ RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *pRenderBackend, AbstractRend
 RenderCmdBuffer::~RenderCmdBuffer() {
     ContainerClear( m_cmdbuffer );
 
-    m_pRenderBackend = nullptr;
-    m_pRenderCtx = nullptr;
+    m_renderbackend = nullptr;
+    m_renderCtx = nullptr;
 
 	delete m_param;
     m_param = nullptr;
 }
 
 //-------------------------------------------------------------------------------------------------
-void RenderCmdBuffer::setVertexArray( OGLVertexArray *pVertexArray ) {
-    m_pVertexArray = pVertexArray;
+void RenderCmdBuffer::setVertexArray( OGLVertexArray *vertexArray ) {
+    m_vertexarray = vertexArray;
 }
 
 //-------------------------------------------------------------------------------------------------
-void RenderCmdBuffer::setActiveShader( OGLShader *pOGLShader ) {
-    m_pActiveShader = pOGLShader;
+void RenderCmdBuffer::setActiveShader( OGLShader *oglShader ) {
+    m_activeShader = oglShader;
 }
 
 //-------------------------------------------------------------------------------------------------
 OGLShader *RenderCmdBuffer::getActiveShader() const {
-    return m_pActiveShader;
+    return m_activeShader;
 }
 
 //-------------------------------------------------------------------------------------------------
-void RenderCmdBuffer::enqueueRenderCmd( OGLRenderCmd *pOGLRenderCmd, EnqueueType type ) {
-    m_cmdbuffer.add( pOGLRenderCmd );
+void RenderCmdBuffer::enqueueRenderCmd( OGLRenderCmd *renderCmd, EnqueueType type ) {
+    m_cmdbuffer.add( renderCmd );
 }
 
 //-------------------------------------------------------------------------------------------------
 bool RenderCmdBuffer::onPreRenderFrame() {
-    assert( nullptr != m_pRenderBackend );
+    OSRE_ASSERT( nullptr!=m_renderbackend );
 
-    if( !m_pRenderCtx ) {
+    if( !m_renderCtx ) {
         return false;
     }
 
-    m_pRenderCtx->activate();
-    m_pRenderBackend->clearRenderTarget( ColorBit | DepthBit );
+    m_renderCtx->activate();
+    m_renderbackend->clearRenderTarget( ColorBit | DepthBit );
     
     // use base shader
-    m_pRenderBackend->useShader( m_pActiveShader );
-    if( m_pVertexArray ) {
-        m_pRenderBackend->bindVertexArray( m_pVertexArray );
+    m_renderbackend->useShader( m_activeShader );
+    if( nullptr != m_vertexarray ) {
+        m_renderbackend->bindVertexArray( m_vertexarray );
     }
 
     return true;
@@ -105,7 +106,7 @@ bool RenderCmdBuffer::onPreRenderFrame() {
 
 //-------------------------------------------------------------------------------------------------
 bool RenderCmdBuffer::onRenderFrame( const EventData *pEventData ) {
-    assert( nullptr != m_pRenderBackend );
+    OSRE_ASSERT( nullptr!=m_renderbackend );
 
     for( ui32 i = 0; i < m_cmdbuffer.size(); ++i ) {
         OGLRenderCmd *pRenderCmd = m_cmdbuffer[ i ];
@@ -127,9 +128,9 @@ bool RenderCmdBuffer::onRenderFrame( const EventData *pEventData ) {
     }
 
     // unbind the shader
-    m_pRenderBackend->useShader( nullptr );
+    m_renderbackend->useShader( nullptr );
 
-    m_pRenderBackend->renderFrame();
+    m_renderbackend->renderFrame();
 
     return true;
 }
@@ -152,7 +153,7 @@ bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
 
     if( updateParamData ) {
         for( ui32 i = 0; i < updateParamData->m_numParam; ++i ) {
-            OGLParameter *oglParam = m_pRenderBackend->getParameter( updateParamData->m_param[ i ].m_name );
+            OGLParameter *oglParam = m_renderbackend->getParameter( updateParamData->m_param[ i ].m_name );
             if( oglParam ) {
                 ::memcpy( oglParam->m_data->getData(), updateParamData->m_param[ i ].m_data.getData(), updateParamData->m_param[ i ].m_data.m_size );
             }
@@ -164,16 +165,16 @@ bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
 
 //-------------------------------------------------------------------------------------------------
 bool RenderCmdBuffer::onSetParametersCmd( SetParameterCmdData *data ) {
-    m_pRenderBackend->setParameter( data->m_param, data->m_numParam );
+    m_renderbackend->setParameter( data->m_param, data->m_numParam );
 
     return true;
 }
 
 //-------------------------------------------------------------------------------------------------
 bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *data ) {
-    m_pRenderBackend->bindVertexArray( data->m_vertexArray );
+    m_renderbackend->bindVertexArray( data->m_vertexArray );
     for( ui32 i = 0; i < data->m_primitives.size(); ++i ) {
-        m_pRenderBackend->render( data->m_primitives[ i ] );
+        m_renderbackend->render( data->m_primitives[ i ] );
     }
 
     return true;
@@ -181,9 +182,10 @@ bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *data ) {
 
 //-------------------------------------------------------------------------------------------------
 bool RenderCmdBuffer::onDrawPrimitivesInstancesCmd( DrawInstancePrimitivesCmdData *data ) {
-    
+    OSRE_ASSERT( nullptr != m_renderbackend );
+
     for( ui32 i = 0; i < data->m_primitives.size(); ++i ) {
-        m_pRenderBackend->render( data->m_primitives[ i ], data->m_numInstances );
+        m_renderbackend->render( data->m_primitives[ i ], data->m_numInstances );
     }
 
     return true;
@@ -194,9 +196,9 @@ bool RenderCmdBuffer::onSetTextureStageCmd( SetTextureStageCmdData *data ) {
     for( ui32 i = 0; i < data->m_textures.size(); ++i ) {
         OGLTexture *pOGLTexture = data->m_textures[ i ];
         if( pOGLTexture ) {
-            m_pRenderBackend->bindTexture( pOGLTexture, TextureStage0 );
+            m_renderbackend->bindTexture( pOGLTexture, TextureStage0 );
             ::memcpy( m_param->m_data->getData(), &i, sizeof( ui32 ) );
-            m_pRenderBackend->setParameter( m_param );
+            m_renderbackend->setParameter( m_param );
         }
     }
 
@@ -206,7 +208,7 @@ bool RenderCmdBuffer::onSetTextureStageCmd( SetTextureStageCmdData *data ) {
 //-------------------------------------------------------------------------------------------------
 bool RenderCmdBuffer::onSetShaderStageCmd( SetShaderStageCmdData *data ) {
     if( data->m_pShader ) {
-        m_pRenderBackend->useShader( data->m_pShader );
+        m_renderbackend->useShader( data->m_pShader );
     }
 
     return true;
