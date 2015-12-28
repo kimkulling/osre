@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Debugging/osre_debugging.h>
+#include <osre/Assets/AssetRegistry.h>
 
 // private includes
 #include <src/Platform/PlatformPluginFactory.h>
@@ -191,6 +192,13 @@ bool AppBase::onCreate( Properties::Settings *config ) {
         m_impl->m_settings = config;
     }
 
+    // create the asset registry
+    Assets::AssetRegistry *registry( Assets::AssetRegistry::create() );
+    OSRE_ASSERT( nullptr!=registry );
+    if ( nullptr==registry ) {
+        osre_debug( Tag, "Cannot create asset registry." );
+    }
+
     m_impl->m_platformInterface = Platform::PlatformInterface::create( m_impl->m_settings );
     if( m_impl->m_platformInterface ) {
         if( !m_impl->m_platformInterface->open() ) {
@@ -234,6 +242,8 @@ bool AppBase::onDestroy() {
         osre_debug( Tag, "AppBase::State not in proper state: Running." );
         return false;
     }
+
+    Assets::AssetRegistry::destroy();
 
     if( m_impl->m_platformInterface ) {
         Platform::PlatformInterface::destroy();

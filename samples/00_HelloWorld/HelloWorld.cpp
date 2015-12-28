@@ -61,21 +61,17 @@ protected:
         if ( nullptr == baseSettings ) {
             return false;
         }
-        
-        Assets::AssetRegistry *registry( Assets::AssetRegistry::create() );
-        if ( nullptr!=registry ) {
-#ifdef OSRE_WINDOWS
-            registry->registerAssetPath( "assets", "../../media" );
-#else
-            registry->registerAssetPath( "assets", "../media" );
-#endif 
-        }
-
-
+       
         baseSettings->setString( Properties::Settings::WindowsTitle, "HelloWorld!" );
         if ( !AppBase::onCreate( baseSettings ) ) {
             return false;
         }
+
+#ifdef OSRE_WINDOWS
+        Assets::AssetRegistry::getInstance()->registerAssetPath( "assets", "../../media" );
+#else
+        Assets::AssetRegistry::getInstance()->registerAssetPath( "assets", "../media" );
+#endif 
 
         m_stage = AppBase::createStage( "HelloWorld" );
         Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
