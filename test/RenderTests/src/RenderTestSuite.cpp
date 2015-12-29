@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/Debugging/osre_debugging.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractPlatformEventHandler.h>
 #include <osre/Platform/AbstractTimer.h>
@@ -52,22 +53,22 @@ class KeyboardEventListener : public Platform::OSEventListener {
 public:
     KeyboardEventListener( RenderTestSuite *pRenderTestSuite )
     : OSEventListener( "rendertest/keyboardeventlistener" )
-    , m_pTestSuite( pRenderTestSuite ) {
-        assert( nullptr != pRenderTestSuite );
+    , m_testSuite( pRenderTestSuite ) {
+        OSRE_ASSERT( nullptr != pRenderTestSuite );
     }
 
     ~KeyboardEventListener() {
         // empty
     }
 
-    void onOSEvent( const Event &osEvent, const EventData *pData ) {
+    void onOSEvent( const Event &osEvent, const EventData *data ) {
          if( osEvent == KeyboardButtonDownEvent ) {
-            if( pData ) {
+            if( data ) {
                 bool result( false );
                 ui32 next( 0 );
-                Key key = reinterpret_cast< const KeyboardButtonEventData* >( pData )->m_Key;
+                Key key = reinterpret_cast< const KeyboardButtonEventData* >( data )->m_Key;
                 if( key == KEY_SPACE ) {
-                    result = m_pTestSuite->requestNextTest( next );
+                    result = m_testSuite->requestNextTest( next );
                     if ( !result ) {
                         osre_info( Tag, "All tests done." );
                     }
@@ -77,7 +78,7 @@ public:
     }
 
 private:
-    RenderTestSuite *m_pTestSuite;
+    RenderTestSuite *m_testSuite;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -172,7 +173,7 @@ bool RenderTestSuite::teardown() {
 
 //-------------------------------------------------------------------------------------------------
 void RenderTestSuite::kill() {
-    assert(NULL != s_pInstance);
+    OSRE_ASSERT( nullptr!=s_pInstance );
     if ( s_pInstance ) {
         s_pInstance->teardown();
         delete s_pInstance;
@@ -183,7 +184,7 @@ void RenderTestSuite::kill() {
 
 //-------------------------------------------------------------------------------------------------
 void RenderTestSuite::attachRenderTest( AbstractRenderTest *pRenderTest ) {
-    assert( nullptr != pRenderTest );
+    OSRE_ASSERT( nullptr!=pRenderTest );
 
     m_attachedRenderTests.add( pRenderTest );
 }
@@ -327,7 +328,7 @@ RenderTestSuite::RenderTestSuite( const String &suiteName, const String &renderA
 , m_pRenderBackendServer( nullptr )
 , m_renderAPI(renderAPI)
 , m_mediaPath() {
-    assert( !suiteName.empty() );
+    OSRE_ASSERT( !suiteName.empty() );
 }
 
 //-------------------------------------------------------------------------------------------------
