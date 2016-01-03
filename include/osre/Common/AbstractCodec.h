@@ -66,9 +66,9 @@ protected:
     AbstractCodec( const String &name, const String &ext );
 
 private:
-    AbstractCodec();
-    AbstractCodec( const AbstractCodec & );
-    AbstractCodec &operator = ( const AbstractCodec & );
+    AbstractCodec() = delete;
+    AbstractCodec( const AbstractCodec & ) = delete ;
+    AbstractCodec &operator = ( const AbstractCodec & ) = delete;
 
 private:
     const String m_name;

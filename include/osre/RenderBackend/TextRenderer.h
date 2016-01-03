@@ -20,59 +20,34 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/RenderBackend/DbgTextRenderer.h>
-#include <osre/RenderBackend/RenderCommon.h>
+#pragma once
 
-#include <vector>
+#include <osre/Common/osre_common.h>
 
 namespace OSRE {
 namespace RenderBackend {
+    
+struct BufferData;
 
-TextRenderer2D::TextRenderer2D()
-: m_data( nullptr )
-, m_text()
-, m_dirty( false )
-, m_xCursor( -1 )
-, m_yCursor( -1 )
-, m_sx( -1 )
-, m_sy( -1 ) {
-	// empty
-}
+class TextRenderer {
+public:
+    TextRenderer();
+    ~TextRenderer();
+    void setCursor( ui32  x, ui32 y );
+    void setScale( i32 sx, i32 sy );
+    void addText( const String &text );
+	void clear();
+    void drawText();
 
-TextRenderer2D::~TextRenderer2D() {
-	clear();
-}
-
-void TextRenderer2D::setCursor( ui32  x, ui32 y ) {
-	m_xCursor = x;
-	m_yCursor = y;
-}
-
-void TextRenderer2D::setScale( i32 sx, i32 sy ) {
-	m_sx = sx;
-	m_sy = sy;
-}
-
-void TextRenderer2D::addText( const String &text ) {
-    m_text += text;
-	m_dirty = true;
-}
-
-void TextRenderer2D::clear() {
-	m_text.clear();
-	BufferData::free(m_data);
-	m_data = nullptr;
-}
-
-void TextRenderer2D::drawText() {
-    if( m_text.empty() ) {
-        return;
-    }
-
-	if (m_dirty) {
-        // TODO!
-	}
-}
+private:
+    BufferData *m_data;
+    String m_text;
+	bool m_dirty;
+	i32 m_xCursor;
+	i32 m_yCursor;
+	i32 m_sx;
+	i32 m_sy;
+};
 
 } // Namespace RenderBackend
 } // Namespace OSRE

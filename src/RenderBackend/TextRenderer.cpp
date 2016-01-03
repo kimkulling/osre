@@ -20,34 +20,59 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
+#include <osre/RenderBackend/TextRenderer.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
-#include <osre/Common/osre_common.h>
+#include <vector>
 
 namespace OSRE {
 namespace RenderBackend {
-    
-struct BufferData;
 
-class TextRenderer2D {
-public:
-    TextRenderer2D();
-    ~TextRenderer2D();
-    void setCursor( ui32  x, ui32 y );
-    void setScale( i32 sx, i32 sy );
-    void addText( const String &text );
-	void clear();
-    void drawText();
+TextRenderer::TextRenderer()
+: m_data( nullptr )
+, m_text()
+, m_dirty( false )
+, m_xCursor( -1 )
+, m_yCursor( -1 )
+, m_sx( -1 )
+, m_sy( -1 ) {
+	// empty
+}
 
-private:
-    BufferData *m_data;
-    String m_text;
-	bool m_dirty;
-	i32 m_xCursor;
-	i32 m_yCursor;
-	i32 m_sx;
-	i32 m_sy;
-};
+TextRenderer::~TextRenderer() {
+	clear();
+}
+
+void TextRenderer::setCursor( ui32  x, ui32 y ) {
+	m_xCursor = x;
+	m_yCursor = y;
+}
+
+void TextRenderer::setScale( i32 sx, i32 sy ) {
+	m_sx = sx;
+	m_sy = sy;
+}
+
+void TextRenderer::addText( const String &text ) {
+    m_text += text;
+	m_dirty = true;
+}
+
+void TextRenderer::clear() {
+	m_text.clear();
+	BufferData::free(m_data);
+	m_data = nullptr;
+}
+
+void TextRenderer::drawText() {
+    if( m_text.empty() ) {
+        return;
+    }
+
+	if (m_dirty) {
+        // TODO!
+	}
+}
 
 } // Namespace RenderBackend
 } // Namespace OSRE

@@ -267,7 +267,7 @@ SET( threading_inc
 # RenderBackend
 #==============================================================================
 SET( renderbackend_src
-    RenderBackend/DbgTextRenderer.cpp
+    RenderBackend/TextRenderer.cpp
     RenderBackend/FontBase.cpp
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
@@ -289,7 +289,7 @@ SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLShader.h
 )
 SET( renderbackend_inc
-    ${HEADER_PATH}/RenderBackend/DbgTextRenderer.h
+    ${HEADER_PATH}/RenderBackend/TextRenderer.h
     ${HEADER_PATH}/RenderBackend/FontBase.h
     ${HEADER_PATH}/RenderBackend/Parameter.h
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
