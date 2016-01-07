@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLShader.h"
 #include "OGLCommon.h"
 #include "OGLEnum.h"
-#include <osre/RenderBackend/DbgTextRenderer.h>
+#include <osre/RenderBackend/TextRenderer.h>
 #include <osre/RenderBackend/FontBase.h>
 #include <osre/Platform/AbstractRenderContext.h>
 #include <osre/Common/Logger.h>
