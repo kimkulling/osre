@@ -30,8 +30,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-namespace OSRE {
+// Forward declarations
 
+namespace OSRE {
 
 namespace RenderBackend {
     struct StaticGeometry;
@@ -41,9 +42,10 @@ namespace Scene {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Scene::GeometryBuilder
-///	@ingroup	Application
+///	@ingroup	Engine
 ///
-///	@brief  This class is used to create the geometry for base shapes like a triangle.
+///	@brief  This class is used to create the static geometry for base shapes like a triangle or a 
+///	text box. 
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT GeometryBuilder {
 public:

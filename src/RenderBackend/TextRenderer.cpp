@@ -22,55 +22,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/TextRenderer.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Scene/GeometryBuilder.h>
 
 #include <vector>
 
 namespace OSRE {
 namespace RenderBackend {
 
+using namespace OSRE::Scene;
+
 TextRenderer::TextRenderer()
-: m_data( nullptr )
-, m_text()
-, m_dirty( false )
-, m_xCursor( -1 )
-, m_yCursor( -1 )
-, m_sx( -1 )
-, m_sy( -1 ) {
+: m_data( nullptr ) {
 	// empty
 }
 
 TextRenderer::~TextRenderer() {
-	clear();
 }
 
-void TextRenderer::setCursor( ui32  x, ui32 y ) {
-	m_xCursor = x;
-	m_yCursor = y;
-}
-
-void TextRenderer::setScale( i32 sx, i32 sy ) {
-	m_sx = sx;
-	m_sy = sy;
-}
-
-void TextRenderer::addText( const String &text ) {
-    m_text += text;
-	m_dirty = true;
-}
-
-void TextRenderer::clear() {
-	m_text.clear();
-	BufferData::free(m_data);
-	m_data = nullptr;
-}
-
-void TextRenderer::drawText() {
-    if( m_text.empty() ) {
-        return;
-    }
-
-	if (m_dirty) {
-        // TODO!
+void TextRenderer::drawText(f32 x, f32 y, f32 scale, const String &text, bool isDynamic ) {
+	GeometryBuilder geoBuilder;
+	if ( !isDynamic ) {
+		StaticGeometry *geo( geoBuilder.allocTextBox( x, y, scale, text ) );
 	}
 }
 
