@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractRenderContext.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/DbgTextRenderer.h>
+#include <osre/RenderBackend/TextRenderer.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Uri.h>
 #include <osre/Assets/AssetRegistry.h>
