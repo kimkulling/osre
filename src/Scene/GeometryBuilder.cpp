@@ -477,8 +477,8 @@ BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm:
                 }
             }
             if (nullptr != col1 ) {
-                for (ui32 j = 0; j < numVerts; j++) {
-                    colVerts[ j ].color0 = col1[ j ];
+                for (ui32 i = 0; i < numVerts; i++) {
+                    colVerts[ i ].color0 = col1[ i ];
                 }
             }
             size = sizeof( ColorVert ) * numVerts;
@@ -491,20 +491,19 @@ BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm:
         case RenderVertex: {
             RenderVert *renderVerts = new RenderVert[ numVerts ];
             if (nullptr != pos) {
-                for (ui32 j = 0; j < numVerts; j++) {
-                    renderVerts[ j ].position = pos[ j ];
+                for (ui32 i = 0; i < numVerts; i++) {
+                    renderVerts[ i ].position = pos[ i ];
                 }
             }
             if (nullptr != col1) {
-                for (ui32 j = 0; j < numVerts; j++) {
-                    renderVerts[ j ].color0 = col1[ j ];
+                for (ui32 i = 0; i < numVerts; i++) {
+                    renderVerts[ i ].color0 = col1[ i ];
                 }
             }
             if (nullptr != tex0) {
-                for (ui32 j = 0; j < numVerts; j++) {
-                    renderVerts[j].tex0 = tex0[j];
+                for (ui32 i = 0; i < numVerts; i++) {
+                    renderVerts[ i ].tex0 = tex0[ i ];
                 }
-
             }
 
             size = sizeof( RenderVert ) * numVerts;
