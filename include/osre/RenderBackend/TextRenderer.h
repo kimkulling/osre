@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2016 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -23,13 +23,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <cppcore/Container/THashMap.h>
 
 namespace OSRE {
 namespace RenderBackend {
     
 struct BufferData;
+struct StaticGeometry;
 
 class TextRenderer {
+public:
+    typedef CPPCore::THashMap<ui32, StaticGeometry*> TextHashMap;
+
 public:
     TextRenderer();
     ~TextRenderer();
@@ -37,6 +42,7 @@ public:
 
 private:
     BufferData *m_data;
+    TextHashMap m_textMap;
 };
 
 } // Namespace RenderBackend

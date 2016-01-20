@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2016 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -103,9 +103,11 @@ bool AppBase::destroy() {
 }
 
 void AppBase::update() {
+    OSRE_ASSERT( nullptr != m_impl );
+
     if( m_impl->m_state == Impl::Created ) {
         m_impl->m_state = Impl::Running;
-        osre_debug(Tag, "Set application state to running." );
+        osre_debug( Tag, "Set application state to running." );
     }
 
     m_impl->m_timediff = m_impl->m_timer->getTimeDiff();

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2016 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,7 +32,8 @@ namespace RenderBackend {
 using namespace OSRE::Scene;
 
 TextRenderer::TextRenderer()
-: m_data( nullptr ) {
+: m_data( nullptr )
+, m_textMap() {
 	// empty
 }
 
@@ -42,7 +43,14 @@ TextRenderer::~TextRenderer() {
 void TextRenderer::drawText(f32 x, f32 y, f32 scale, const String &text, bool isDynamic ) {
 	GeometryBuilder geoBuilder;
 	if ( !isDynamic ) {
-		StaticGeometry *geo( geoBuilder.allocTextBox( x, y, scale, text ) );
+        const ui32 hashId( CPPCore::Hash::toHash( text.c_str(), TextHashMap::InitSize ) );
+        StaticGeometry *geo( nullptr );
+        if ( !m_textMap.hasKey( hashId ) ) {
+            geo = geoBuilder.allocTextBox( x, y, scale, text );
+        } else {
+            m_textMap.getValue( hashId, geo );
+        }
+
 	}
 }
 
