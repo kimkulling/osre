@@ -50,7 +50,6 @@ void TextRenderer::drawText(f32 x, f32 y, f32 scale, const String &text, bool is
         } else {
             m_textMap.getValue( hashId, geo );
         }
-
 	}
 }
 

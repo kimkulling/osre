@@ -43,7 +43,7 @@ public:
     ///	@param	p1	Parameter 1.
     ///	@param	p2	Parameter 2.
     ///	@return	The return value.
-    virtual RET Call( P1 p1, P2 p2 ) const = 0;
+    virtual RET call( P1 p1, P2 p2 ) const = 0;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ FunctorImpl<RET, P1, P2>::~FunctorImpl() {
 
 //-------------------------------------------------------------------------------------------------
 /// @class		::OSRE::Common::FunctorFunction
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 /// @brief	This template class implements a binding to a function.
 //-------------------------------------------------------------------------------------------------
@@ -74,7 +74,7 @@ public:
     /// @brief Performs the binded function call
     ///	@param	p1	Parameter 1.
     ///	@param	p2	Parameter 1.
-    virtual RET Call( P1 p1, P2 p2 ) const {
+    virtual RET call( P1 p1, P2 p2 ) const {
         return m_Func(p1,p2);
     }
 
@@ -84,7 +84,7 @@ private:
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Common::FunctorMember
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 /// @brief	Binding to a member with the class instance.
 //-------------------------------------------------------------------------------------------------
@@ -100,9 +100,9 @@ public:
     ///	@param	( T::*func )	[in] The method pointer to call.
     ///	@param	P1				[in] Parameter one.
     ///	@param	P2				[in] Parameter two.
-    FunctorMember( T* obj, RET ( T::*func ) ( P1,P2 ) ) :
-            m_Func( func ),
-            m_Obj( obj ) {
+    FunctorMember( T* obj, RET ( T::*func ) ( P1,P2 ) ) 
+    : m_Func( func )
+    , m_Obj( obj ) {
         // empty
     }
 
@@ -115,14 +115,14 @@ public:
     ///	@param	P1		[in] Parameter one.
     ///	@param	P2		[in] Parameter two.
     ///	@return	The return value.
-    virtual RET Call(P1 p1, P2 p2) const {
+    virtual RET call(P1 p1, P2 p2) const {
         return ( m_Obj->*m_Func )( p1, p2 );
     }
 };
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Common::Functor
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 /// @brief Functor implementation.
 //-------------------------------------------------------------------------------------------------
@@ -130,25 +130,25 @@ template < class RET, class P1, class P2 >
 class Functor {
 public:
     /// @brief The class default constructor
-    Functor() :	
-            m_Data( NULL ), 
-            m_RefCounter( NULL ) {
+    Functor() 
+    : m_Data( nullptr )
+    , m_RefCounter( nullptr ) {
         // empty 
     }
     
     /// @brief The class copy constructor
-    Functor( const Functor& f ) :
-            m_Data( f.m_Data ), 
-            m_RefCounter( f.m_RefCounter ) {
-        ++(*m_RefCounter);
+    Functor( const Functor& f ) 
+    : m_data( f.m_data )
+    , m_refCounter( f.m_refCounter ) {
+        ++(*m_refCounter);
     }
 
     /// @brief The class destructor.
     virtual ~Functor() {
-        if ( 0L != m_RefCounter ) {
-            if (--(*m_RefCounter) <= 0 ) {
-                delete m_RefCounter;
-                delete m_Data;
+        if ( nullptr != m_refCounter ) {
+            if (--(*m_refCounter) <= 0 ) {
+                delete m_refCounter;
+                delete m_data;
             }
         }
     }
@@ -159,8 +159,8 @@ public:
     /// @return return type
     RET operator () (P1 p1, P2 p2) const {
         // Check for a valid this pointer
-        if (NULL != m_Data) {
-            return ( m_Data->Call( p1, p2 ) );
+        if ( nullptr != m_data) {
+            return ( m_data->call( p1, p2 ) );
         }
 
         // Just return the default
@@ -169,11 +169,11 @@ public:
 
     /// @brief == operator implementation
     bool operator == (const Functor& other) const {
-        return (m_Data == other.m_Data);
+        return (m_data == other.m_data);
     }
 
     /// @brief Binding to function by a function pointer
-    static Functor Make(RET (*func) (P1,P2)) {
+    static Functor make(RET (*func) (P1,P2)) {
         return Functor(new FunctorFunction<RET, P1, P2>(func));
     }
 
@@ -186,15 +186,15 @@ public:
 private:
     /// @brief The constructor with the functor.
     ///	@param	d	The functor.
-    Functor( FunctorImpl<RET, P1, P2>* d ) :
-            m_Data( d ),
-            m_RefCounter( new ui32( 1 ) ) {
+    Functor( FunctorImpl<RET, P1, P2>* d ) 
+    : m_data( d )
+    , m_refCounter( new ui32( 1 ) ) {
         // empty
     }
 
 private:
-    FunctorImpl<RET, P1, P2> *m_Data;
-    ui32* m_RefCounter;
+    FunctorImpl<RET, P1, P2> *m_data;
+    ui32* m_refCounter;
 };
 
 //-------------------------------------------------------------------------------------------------
