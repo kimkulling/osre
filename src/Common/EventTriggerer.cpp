@@ -43,8 +43,8 @@ EventTriggerer::~EventTriggerer() {
 
 //-------------------------------------------------------------------------------------------------
 void EventTriggerer::addEventListener( const Event& ev, const ceEventFunctor& func ) {
-    if ( 1 == m_EventList.count(ev.getIDAsStr() ) ) {
-        m_EventList[ ev.getIDAsStr() ].push_back(func);
+    if ( 1 == m_EventList.count(ev.getHash() ) ) {
+        m_EventList[ ev.getHash() ].push_back(func);
     }
 }
 
@@ -62,8 +62,8 @@ void EventTriggerer::addEventListener( const TArray<const Event*> &rEvents, cons
 
 //-------------------------------------------------------------------------------------------------
 void EventTriggerer::removeEventListener(const Event& ev, const ceEventFunctor& func) {
-    if ( 1 == m_EventList.count(ev.getIDAsStr() ) )	{
-        const String &id( ev.getIDAsStr() );
+    if ( 1 == m_EventList.count(ev.getHash() ) )	{
+        const ui32 id( ev.getHash() );
         FunctorList functorlist( m_EventList[ id ] );
         FunctorList::iterator it = find( functorlist.begin(), functorlist.end(), func );
         if ( it != functorlist.end() )	{
@@ -86,29 +86,29 @@ void EventTriggerer::removeEventListener( const TArray<const Event*> &events, co
 
 //-------------------------------------------------------------------------------------------------
 void EventTriggerer::removeAllEventListeners(const Event& ev) {
-    m_EventList[ ev.getIDAsStr() ].clear();
+    m_EventList[ ev.getHash() ].clear();
 }
 
 //-------------------------------------------------------------------------------------------------
 bool EventTriggerer::isEventTriggerable(const Event& ev) {
-    return (1 == m_EventList.count( ev.getIDAsStr() ) );
+    return (1 == m_EventList.count( ev.getHash() ) );
 }
 
 //-------------------------------------------------------------------------------------------------
 void EventTriggerer::addTriggerableEvent(const Event& ev) {
-    if ( m_EventList.count( ev.getIDAsStr() ) < 1 ) {
-        m_EventList[ev.m_ID].clear();
+    if ( m_EventList.count( ev.getHash() ) < 1 ) {
+        m_EventList[ ev.getHash() ].clear();
     }
 }
 
 //-------------------------------------------------------------------------------------------------
 void EventTriggerer::triggerEvent(const Event& ev, const EventData *data) {	
-    OSRE_ASSERT(0 != m_EventList.count(ev.getIDAsStr()));
-    if ( 1 != m_EventList.count( ev.getIDAsStr() ) ) {
+    OSRE_ASSERT( 0 != m_EventList.count( ev.getHash() ) );
+    if ( 1 != m_EventList.count( ev.getHash() ) ) {
         return;
     }
 
-    const String &id( ev.getIDAsStr() );
+    const ui32 &id( ev.getHash() );
     const FunctorList &functorlist( m_EventList[ id ] );
     for ( FunctorList::const_iterator it = functorlist.begin(); it !=functorlist.end(); ++it ) {
         (*it)(ev, data);

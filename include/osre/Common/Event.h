@@ -85,7 +85,7 @@ struct OSRE_EXPORT Event {
     
     ///	@brief	Returns event ID.
     ///	@return	Const reference to id.
-    const String &getIDAsStr() const;
+    //const String &getIDAsStr() const;
 
     /// @brief  Returns the hash id of the event id.
     /// @return The hash id.
@@ -102,67 +102,15 @@ struct OSRE_EXPORT Event {
     ///	@return	true, if both instances are equal, else false.
     bool operator == (const Event &other) const;
 
-    ui32 m_NumRefs;
-    String m_ID;
+    ui32 m_numRefs;
+    //String m_ID;
     HashId m_hash;
-    const EventData *m_pEventData;
+    const EventData *m_eventData;
 
 private:
-    Event( const Event & );
-    Event &operator = ( const Event & );
+    Event( const Event & ) = delete;
+    Event &operator = ( const Event & ) = delete;
 };
-
-inline 
-Event::Event( const String &id )
-: m_NumRefs( 1 )
-, m_ID( id )
-, m_hash( StringUtils::hashName( id.c_str() ) )
-, m_pEventData( nullptr ) {
-    // empty
-}
-
-inline 
-Event::~Event() {
-    // empty
-}
-
-inline 
-void Event::setEventData( const EventData *pData ) {
-    m_pEventData = pData;
-}
-
-inline 
-const EventData *Event::getEventData() const {
-    return m_pEventData;
-}
-
-inline 
-const String &Event::getIDAsStr() const {
-    return m_ID;
-}
-
-inline
-ui32 Event::getHash() const {
-    return m_hash;
-}
-
-inline 
-void Event::get() {
-    ++m_NumRefs;
-}
-
-inline 
-void Event::release() {
-    --m_NumRefs;
-    if ( 0 == m_NumRefs ) {
-        delete this;
-    }
-}
-
-inline 
-bool Event::operator == ( const Event &rhs ) const  {
-    return (m_ID == rhs.m_ID); 
-}
 
 //--------------------------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Common::EventData
@@ -205,9 +153,9 @@ struct EventData {
     bool operator == (const EventData &other) const;
 
 private:
-    EventData();
-    EventData( const EventData & );
-    EventData &operator = ( const EventData & );
+    EventData() = delete;
+    EventData( const EventData & ) = delete;
+    EventData &operator = ( const EventData & ) = delete;
 
 private:
     const Event& m_Event;
@@ -215,50 +163,6 @@ private:
     d32 m_timestamp;
     ui32 m_numRefs;
 };
-
-inline 
-EventData::EventData(const Event& e, EventTriggerer* c) 
-: m_Event( e )
-, m_Source( c )
-, m_timestamp( 0.0 )
-, m_numRefs( 1 ) {
-    // empty
-}
-
-inline 
-EventData::~EventData() {
-    // empty
-}
-
-inline 
-const Event& EventData::getEvent() const {
-    return m_Event; 
-}
-
-inline 
-EventTriggerer* EventData::getEventSender() const  {
-    return m_Source; 
-}
-
-inline 
-void EventData::get() {
-    ++m_numRefs;
-}
-
-inline 
-void EventData::release() {
-    if ( m_numRefs ) {
-        --m_numRefs;
-        if ( 0 == m_numRefs ) {
-            delete this;
-        }
-    }
-}
-
-inline bool 
-EventData::operator == (const EventData &other) const {
-    return (m_Event == other.m_Event && m_Source == other.m_Source);
-}
 
 ///	Base event functor.
 typedef Functor<void, const Event&, const EventData*> ceEventFunctor;

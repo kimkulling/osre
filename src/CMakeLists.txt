@@ -69,6 +69,7 @@ SET( common_src
     Common/ArgumentParser.cpp
     Common/CodecRegistry.cpp
     Common/DateTime.cpp
+    Common/Event.cpp
     Common/EventTriggerer.cpp
     Common/Logger.cpp
     Common/Object.cpp

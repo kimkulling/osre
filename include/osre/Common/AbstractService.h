@@ -25,7 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Object.h>
 #include <osre/Debugging/osre_debugging.h>
 
-
 namespace OSRE {
 namespace Common {
 
@@ -135,7 +134,7 @@ bool AbstractService::update(  d32 timeDiff ) {
 
 //-------------------------------------------------------------------------------------------------
 /// @def        ::OSRE::Common::DECLARE_SINGLETON
-/// @ingroup    Infrastructure
+/// @ingroup    Engine
 ///
 /// @brief  Helper macro to define a singleton and declare all needed methods.
 //-------------------------------------------------------------------------------------------------
@@ -148,7 +147,7 @@ private:
 
 //-------------------------------------------------------------------------------------------------
 /// @def        ::OSRE::Common::IMPLEMENT_SINGLETON
-/// @ingroup    Infrastructure
+/// @ingroup    Engine
 ///
 /// @brief  Helper macro to define a singleton and implement all needed methods.
 //-------------------------------------------------------------------------------------------------
@@ -157,21 +156,21 @@ private:
 
 //-------------------------------------------------------------------------------------------------
 /// @def        ::OSRE::Common::CREATE_SINGLETON
-/// @ingroup    Infrastructure
+/// @ingroup    Engine
 ///
 /// @brief  Helper macro to create a macro from a given class.
 //-------------------------------------------------------------------------------------------------
-#define CREATE_SINGLETON( type )                    \
+#define CREATE_SINGLETON( type )                 \
     OSRE_ASSERT( nullptr == s_instance );        \
     s_instance = this;         
 
 //-------------------------------------------------------------------------------------------------
 /// @def        ::OSRE::Common::DESTROY_SINGLETON
-/// @ingroup    Infrastructure
+/// @ingroup    Engine
 ///
 /// @brief  Helper macro to destroy a macro from a given class.
 //-------------------------------------------------------------------------------------------------
-#define DESTROY_SINGLETON( type )                   \
+#define DESTROY_SINGLETON( type )                \
     OSRE_ASSERT( nullptr != s_instance );        \
     s_instance = nullptr;         
 

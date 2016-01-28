@@ -82,7 +82,7 @@ public:
 
 private:
     typedef std::list<ceEventFunctor> FunctorList;
-    typedef std::map<String, FunctorList> FunctorMap;
+    typedef std::map<ui32, FunctorList> FunctorMap;
     FunctorMap m_EventList;
 };
 
