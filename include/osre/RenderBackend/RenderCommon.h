@@ -106,12 +106,6 @@ enum PrimitiveType {
     TriangleFan		///< A triangle fan.
 };
 
-enum ClearBitType {
-    ColorBit    = 1 << 0,
-    DepthBit    = 1 << 1,
-    StencilBit  = 1 << 2
-};
-
 struct ColorVert {
     glm::vec3 position;
     glm::vec3 normal;

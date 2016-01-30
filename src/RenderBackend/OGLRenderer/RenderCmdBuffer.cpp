@@ -51,6 +51,8 @@ RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRende
     m_param->m_name = "tex0";
     m_param->m_type = PT_Int;
     m_param->m_data = ParamDataBlob::create( PT_Int, 1 );
+
+    m_clearState.m_state = ClearState::ColorBit | ClearState::DepthBit;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -93,7 +95,7 @@ bool RenderCmdBuffer::onPreRenderFrame() {
     }
 
     m_renderCtx->activate();
-    m_renderbackend->clearRenderTarget( ColorBit | DepthBit );
+    m_renderbackend->clearRenderTarget( m_clearState );
     
     // use base shader
     m_renderbackend->useShader( m_activeShader );

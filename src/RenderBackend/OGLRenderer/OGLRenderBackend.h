@@ -47,6 +47,7 @@ namespace RenderBackend {
 
 class OGLShader;
 class FontBase;
+class ClearState;
 
 struct OGLBuffer;
 struct OGLVertexArray;
@@ -73,7 +74,7 @@ public:
     ~OGLRenderBackend();
     void setTimer( Platform::AbstractTimer *timer );
     void setRenderContext( Platform::AbstractRenderContext *pRenderCtx );
-    void clearRenderTarget( ui32 targets );
+    void clearRenderTarget( const ClearState &clearState );
     void setViewport( i32 x, i32 y, i32 w, i32 h );
     OGLBuffer *createBuffer( BufferType type );
     void bindBuffer( ui32 handle );

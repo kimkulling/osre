@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <cppcore/Container/TArray.h>
+#include <osre/RenderBackend/ClearState.h>
 
 namespace OSRE {
     
@@ -106,6 +107,7 @@ protected:
 
 private:
     OGLRenderBackend *m_renderbackend;
+    ClearState m_clearState;
     Platform::AbstractRenderContext *m_renderCtx;
     CPPCore::TArray<OGLRenderCmd*> m_cmdbuffer;
     OGLShader *m_activeShader;

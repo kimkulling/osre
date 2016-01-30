@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLEnum.h"
 #include <osre/RenderBackend/TextRenderer.h>
 #include <osre/RenderBackend/FontBase.h>
+#include <osre/RenderBackend/ClearState.h>
 #include <osre/Platform/AbstractRenderContext.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/ColorRGBA.h>
@@ -220,16 +221,16 @@ void OGLRenderBackend::setRenderContext( Platform::AbstractRenderContext *render
 }
 
 //-------------------------------------------------------------------------------------------------
-void OGLRenderBackend::clearRenderTarget( ui32 targets ) {
+void OGLRenderBackend::clearRenderTarget( const ClearState &clearState ) {
     GLbitfield glTarget( 0 );
 
-    if( targets & ColorBit ) {
+    if( clearState.m_state & ClearState::ColorBit ) {
         glTarget |= GL_COLOR_BUFFER_BIT;
     }
-    if( targets & DepthBit ) {
+    if( clearState.m_state & ClearState::DepthBit ) {
         glTarget |= GL_DEPTH_BUFFER_BIT;
     }
-    if( targets & StencilBit ) {
+    if( clearState.m_state & ClearState::StencilBit ) {
         glTarget |= GL_STENCIL_BUFFER_BIT;
     }
 
