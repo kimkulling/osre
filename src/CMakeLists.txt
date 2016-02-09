@@ -55,6 +55,7 @@ SET( common_inc
     ${HEADER_PATH}/Common/DateTime.h
     ${HEADER_PATH}/Common/Event.h
     ${HEADER_PATH}/Common/EventTriggerer.h
+    ${HEADER_PATH}/Common/Ids.h
     ${HEADER_PATH}/Common/Logger.h
     ${HEADER_PATH}/Common/Object.h
     ${HEADER_PATH}/Common/StringUtils.h
@@ -72,6 +73,7 @@ SET( common_src
     Common/DateTime.cpp
     Common/Event.cpp
     Common/EventTriggerer.cpp
+    Common/Ids.cpp
     Common/Logger.cpp
     Common/Object.cpp
     Common/Tokenizer.cpp
