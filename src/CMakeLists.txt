@@ -24,6 +24,7 @@ ENDIF( WIN32 )
 #==============================================================================
 SET( app_inc
     ${HEADER_PATH}/App/AppBase.h
+    ${HEADER_PATH}/App/ServiceProvider.h
 )
 
 SET( app_src
@@ -234,6 +235,7 @@ SET ( properties_src
 # Scene
 #==============================================================================
 SET( scene_src
+    Scene/Component.cpp
     Scene/GeometryBuilder.cpp
     Scene/Node.cpp
     Scene/Stage.cpp
@@ -241,6 +243,7 @@ SET( scene_src
     Scene/View.cpp
 )
 SET( scene_inc
+    ${HEADER_PATH}/Scene/Component.h
     ${HEADER_PATH}/Scene/GeometryBuilder.h
     ${HEADER_PATH}/Scene/Node.h
     ${HEADER_PATH}/Scene/Stage.h

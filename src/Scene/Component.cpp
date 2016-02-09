@@ -20,46 +20,50 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/RenderBackend/TextRenderer.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/Component.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
 namespace OSRE {
-namespace RenderBackend {
+namespace Scene {
+    
+using namespace OSRE::RenderBackend;
 
-using namespace OSRE::Scene;
+Component::Component() {
 
-TextRenderer::TextRenderer( RenderBackendService *rb )
-: m_data( nullptr )
-, m_textMap()
-, m_rb( rb ) {
-	// empty
 }
 
-TextRenderer::~TextRenderer() {
-    // empty
+Component::~Component() {
+
 }
 
-void TextRenderer::drawText(f32 x, f32 y, f32 scale, const String &text, bool isDynamic ) {
-	GeometryBuilder geoBuilder;
-	if ( !isDynamic ) {
-        const ui32 hashId( CPPCore::Hash::toHash( text.c_str(), TextHashMap::InitSize ) );
-        StaticGeometry *geo( nullptr );
-        if ( !m_textMap.hasKey( hashId ) ) {
-            geo = geoBuilder.allocTextBox( x, y, scale, text );
-            m_textMap.insert( hashId, geo );
-        } else {
-            m_textMap.getValue( hashId, geo );
-        }
+RenderComponent::RenderComponent()
+: Component()
+, m_newGeo() {
+
+}
+
+RenderComponent::~RenderComponent() {
+
+}
+
+void RenderComponent::update( RenderBackendService *renderBackendSrv ) {
+    if ( !m_newGeo.isEmpty() ) {
+        renderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-        Scene::GeometryBuilder myBuilder;
-        attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_geo = geo;
-
-        m_rb->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
-	}
+        attachGeoEvData->m_numGeo = m_newGeo.size();
+        attachGeoEvData->m_geo = m_newGeo[ 0 ];
+        renderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+        m_newGeo.resize( 0 );
+    }
 }
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+void RenderComponent::addStaticGeometry( RenderBackend::StaticGeometry *geo ) {
+    if ( nullptr == geo ) {
+        return;
+    }
+
+    m_newGeo.add( geo );
+}
+
+} // Namespace Scene
+} // namespace OSRE

@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/Node.h>
+#include <osre/Scene/Component.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
@@ -31,16 +32,23 @@ static const glm::vec4 Dummy;
 
 using namespace RenderBackend;
 
-Node::Node( const String &name, Node *parent )
+Node::Node( const String &name, bool renderEnabled, Node *parent )
 : Object( name )
 , m_childs()
-, m_newGeo()
+//, m_newGeo()
 , m_parent( parent )
-, m_transform( nullptr ) {
-    // empty
+, m_isActive( true )
+, m_transform( nullptr )
+, m_renderComp( nullptr ) {
+    if ( renderEnabled ) {
+        m_renderComp = new RenderComponent;
+    }
 }
 
 Node::~Node() {
+    delete m_renderComp;
+    m_renderComp = nullptr;
+
     if( !m_childs.isEmpty() ) {
         for( size_t i = 0; i < m_childs.size(); i++ ) {
             m_childs[ i ]->release();
@@ -140,7 +148,10 @@ void Node::releaseChildren() {
 }
 
 void Node::addGeometry( RenderBackend::StaticGeometry *geo ) {
-    m_newGeo.add( geo );
+    if ( nullptr != m_renderComp ) {
+        m_renderComp->addStaticGeometry( geo );
+    }
+    //m_newGeo.add( geo );
 }
 
 void Node::setTransformBlock( RenderBackend::TransformBlock *transformBlock ) {
@@ -178,14 +189,25 @@ const glm::vec4 &Node::getScale() const {
 }
 
 void Node::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
-    if( !m_newGeo.isEmpty() ) {
-        renderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
-        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-        attachGeoEvData->m_numGeo = m_newGeo.size();
-        attachGeoEvData->m_geo = m_newGeo[ 0 ];
-        renderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
-		m_newGeo.resize( 0 );
+    if ( nullptr != m_renderComp ) {
+        m_renderComp->update( renderBackendSrv );
     }
+}
+
+Component *Node::getComponent( ComponentType type ) const {
+    if ( RenderComponentType == type ) {
+        return m_renderComp;
+    }
+
+    return nullptr;
+}
+
+void Node::setActive( bool isActive ) {
+    m_isActive = isActive;
+}
+
+bool Node::isActive() const {
+    return m_isActive;
 }
 
 } // Namespace Scene

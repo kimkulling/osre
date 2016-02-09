@@ -20,46 +20,19 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/RenderBackend/TextRenderer.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/GeometryBuilder.h>
-#include <osre/RenderBackend/RenderBackendService.h>
+#pragma once
+
+#include <osre/Common/osre_common.h>
 
 namespace OSRE {
-namespace RenderBackend {
+namespace App {
 
-using namespace OSRE::Scene;
-
-TextRenderer::TextRenderer( RenderBackendService *rb )
-: m_data( nullptr )
-, m_textMap()
-, m_rb( rb ) {
-	// empty
+    class ServiceProvider {
+    public:
+        ServiceProvider();
+        ~ServiceProvider();
+    };
+}
 }
 
-TextRenderer::~TextRenderer() {
-    // empty
-}
 
-void TextRenderer::drawText(f32 x, f32 y, f32 scale, const String &text, bool isDynamic ) {
-	GeometryBuilder geoBuilder;
-	if ( !isDynamic ) {
-        const ui32 hashId( CPPCore::Hash::toHash( text.c_str(), TextHashMap::InitSize ) );
-        StaticGeometry *geo( nullptr );
-        if ( !m_textMap.hasKey( hashId ) ) {
-            geo = geoBuilder.allocTextBox( x, y, scale, text );
-            m_textMap.insert( hashId, geo );
-        } else {
-            m_textMap.getValue( hashId, geo );
-        }
-        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-        Scene::GeometryBuilder myBuilder;
-        attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_geo = geo;
-
-        m_rb->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
-	}
-}
-
-} // Namespace RenderBackend
-} // Namespace OSRE

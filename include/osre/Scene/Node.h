@@ -38,6 +38,9 @@ namespace RenderBackend {
 
 namespace Scene {
 
+class Component;
+class RenderComponent;
+
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Scene::Node
 ///	@ingroup	Engine
@@ -46,13 +49,17 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Node : public Common::Object {
 public:
+    enum ComponentType {
+        RenderComponentType
+    };
+
     enum TraverseMode {
         FlatMode,
         RecursiveMode
     };
 
 public:
-    Node( const String &name, Node *parent = nullptr );
+    Node( const String &name, bool renderEnabled, Node *parent = nullptr );
     virtual ~Node();
     virtual void setParent( Node *parent );
     virtual Node *getParent() const;
@@ -70,11 +77,17 @@ public:
     virtual const glm::vec4 &getScale() const;
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
 
+    Component *getComponent( ComponentType type ) const;
+    void setActive( bool isActive );
+    bool isActive() const;
+
 private:
     CPPCore::TArray<Node*> m_childs;
-    CPPCore::TArray<RenderBackend::StaticGeometry*> m_newGeo;
+//    CPPCore::TArray<RenderBackend::StaticGeometry*> m_newGeo;
     Node *m_parent;
+    bool m_isActive;
     RenderBackend::TransformBlock *m_transform;
+    RenderComponent *m_renderComp;
 };
 
 //-------------------------------------------------------------------------------------------------

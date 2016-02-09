@@ -20,46 +20,38 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/RenderBackend/TextRenderer.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/GeometryBuilder.h>
-#include <osre/RenderBackend/RenderBackendService.h>
+#pragma once
+
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
+    
 namespace RenderBackend {
-
-using namespace OSRE::Scene;
-
-TextRenderer::TextRenderer( RenderBackendService *rb )
-: m_data( nullptr )
-, m_textMap()
-, m_rb( rb ) {
-	// empty
+    class RenderBackendService;
+    
+    struct StaticGeometry;
 }
 
-TextRenderer::~TextRenderer() {
-    // empty
-}
+namespace Scene {
 
-void TextRenderer::drawText(f32 x, f32 y, f32 scale, const String &text, bool isDynamic ) {
-	GeometryBuilder geoBuilder;
-	if ( !isDynamic ) {
-        const ui32 hashId( CPPCore::Hash::toHash( text.c_str(), TextHashMap::InitSize ) );
-        StaticGeometry *geo( nullptr );
-        if ( !m_textMap.hasKey( hashId ) ) {
-            geo = geoBuilder.allocTextBox( x, y, scale, text );
-            m_textMap.insert( hashId, geo );
-        } else {
-            m_textMap.getValue( hashId, geo );
-        }
-        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-        Scene::GeometryBuilder myBuilder;
-        attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_geo = geo;
+class Component {
+public:
+    Component();
+    virtual ~Component();
+    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv ) = 0;
+};
 
-        m_rb->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
-	}
-}
+class RenderComponent : public Component {
+public:
+    RenderComponent();
+    virtual ~RenderComponent();
+    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+    void addStaticGeometry( RenderBackend::StaticGeometry *geo );
+
+private:
+    CPPCore::TArray<RenderBackend::StaticGeometry*> m_newGeo;
+};
+
+} // Namespace Scene
+} // namespace OSRE

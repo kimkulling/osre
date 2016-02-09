@@ -28,6 +28,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
     
+class RenderBackendService;
+
 struct BufferData;
 struct StaticGeometry;
 
@@ -36,13 +38,14 @@ public:
     typedef CPPCore::THashMap<ui32, StaticGeometry*> TextHashMap;
 
 public:
-    TextRenderer();
+    TextRenderer( RenderBackendService *rb );
     ~TextRenderer();
 	void drawText( f32 x, f32 y, f32 scale, const String &text, bool isDynamic );
 
 private:
     BufferData *m_data;
     TextHashMap m_textMap;
+    RenderBackendService *m_rb;
 };
 
 } // Namespace RenderBackend

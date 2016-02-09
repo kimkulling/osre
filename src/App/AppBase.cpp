@@ -148,7 +148,7 @@ Scene::Stage *AppBase::createStage( const String &name ) {
         return nullptr;
     }
 
-    Scene::Stage *stage( new Scene::Stage( "HelloWorld", m_impl->m_rbService ) );
+    Scene::Stage *stage( new Scene::Stage( name, m_impl->m_rbService ) );
     if ( nullptr != stage ) {
         m_impl->m_activeStage = stage;
         m_impl->m_stages.add( stage );

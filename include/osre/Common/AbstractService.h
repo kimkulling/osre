@@ -91,7 +91,7 @@ AbstractService::AbstractService( const String &serverName )
 //-------------------------------------------------------------------------------------------------
 inline 
 AbstractService::~AbstractService() {
-    OSRE_ASSERT(!m_IsOpen);
+    OSRE_ASSERT( !m_IsOpen );
 }
 
 //-------------------------------------------------------------------------------------------------

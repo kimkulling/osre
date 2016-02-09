@@ -50,8 +50,8 @@ public:
         // empty
     }
 
-    virtual bool onCreate( RenderBackendService *pRenderBackendSrv ) {
-        pRenderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
+    virtual bool onCreate( RenderBackendService *rb ) {
+        rb->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         Scene::GeometryBuilder myBuilder;
@@ -67,7 +67,7 @@ public:
         geo->m_parameter = parameter;
         geo->m_numParameter++;
 
-        pRenderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+        rb->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
         return true;
     }

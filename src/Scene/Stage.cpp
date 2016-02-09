@@ -77,7 +77,7 @@ Node *Stage::addNode( const String &name, Node *parent ) {
         return nullptr;
     }
 
-    Node *newNode = new Node( name, parent );
+    Node *newNode = new Node( name, true, parent );
     if( nullptr == parent ) {
         m_root = newNode;
         m_root->get();

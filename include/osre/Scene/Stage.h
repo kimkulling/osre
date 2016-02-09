@@ -51,9 +51,9 @@ struct TransformBlockCache {
     ~TransformBlockCache();
 
 private:
-    TransformBlockCache();
-    TransformBlockCache( const TransformBlockCache & );
-    TransformBlockCache &operator = ( const TransformBlockCache & );
+    TransformBlockCache() = delete;
+    TransformBlockCache( const TransformBlockCache & ) = delete;
+    TransformBlockCache &operator = ( const TransformBlockCache & ) = delete;
 };
 
 //-------------------------------------------------------------------------------------------------

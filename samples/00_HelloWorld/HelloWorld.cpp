@@ -56,6 +56,10 @@ public:
     }
 
 protected:
+    void createStaticText() {
+
+    }
+
     virtual bool onCreate( Properties::Settings *settings = nullptr ) {
         Properties::Settings *baseSettings( AppBase::getSettings() );
         if ( nullptr == baseSettings ) {
@@ -86,7 +90,7 @@ protected:
 			geo->m_parameter = parameter;
 			geo->m_numParameter++;
 
-			geoNode->addGeometry(geo);
+			geoNode->addGeometry( geo );
 		}
 
         return true;
