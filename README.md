@@ -1,5 +1,5 @@
-# osre
-An experimental open source render engine. 
+# OSRE - An Open Source Render Experience
+My own open source render engine. 
 
 # Supported platforms:
 - Windows
