@@ -30,10 +30,10 @@ namespace Platform {
 class AbstractThreadEvent;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::IThread
+///	@class		::OSRE::Platform::AbstractThread
 ///	@ingroup	Engine
 ///
-///	@brief	This abstract class declares the interface for a thread implementation.
+///	@brief	This abstract class declares the interface for a generic thread API.
 
 ///	Threads are OS-specific.
 //-------------------------------------------------------------------------------------------------
