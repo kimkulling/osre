@@ -135,6 +135,7 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/AbstractThread.h
     ${HEADER_PATH}/Platform/AbstractThreadEvent.h
     ${HEADER_PATH}/Platform/AbstractThreadFactory.h
+    ${HEADER_PATH}/Platform/AbstractThreadLocalStorage.h
     ${HEADER_PATH}/Platform/AbstractCriticalSection.h
     ${HEADER_PATH}/Platform/AtomicInt.h
     ${HEADER_PATH}/Platform/AbstractPlatformEventHandler.h
