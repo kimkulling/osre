@@ -30,10 +30,10 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		
-///	@ingroup	
+///	@class		::OSRE::Platform::Win32RenderContext
+///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  This class implements the Render Context API by using the Win32-API.
 //-------------------------------------------------------------------------------------------------
 class Win32RenderContext : public AbstractRenderContext {
 public:

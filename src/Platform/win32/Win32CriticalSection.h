@@ -30,7 +30,7 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Threading::Win32CriticalSection
+///	@class		::OSRE::Platform::Win32CriticalSection
 /// @ingroup    Engine
 ///
 ///	@brief  This class implements the win32-specific critical section.

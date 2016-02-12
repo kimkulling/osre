@@ -30,9 +30,9 @@ namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::Win32Timer
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
-///	@brief	This class implements a windows specific timer.
+///	@brief	This class implements the timer API by using the Win32-API.
 //-------------------------------------------------------------------------------------------------
 class Win32Timer : public AbstractTimer {
 public:

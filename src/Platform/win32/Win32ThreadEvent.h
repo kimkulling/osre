@@ -30,10 +30,10 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		ZFXCE2::Platform::ITaskManager
-///	@ingroup	Infrastructure
+///	@class		::OSRE::Platform::ITaskManager
+///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  This class implements the Thread Event API by using the Win32 API.
 //-------------------------------------------------------------------------------------------------
 class Win32ThreadEvent : public AbstractThreadEvent {
 public:

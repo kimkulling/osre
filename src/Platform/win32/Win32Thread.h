@@ -32,8 +32,8 @@ namespace Platform {
 class Win32ThreadEvent;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Threading::Win32Thread
-///	@ingroup	Infrastructure
+///	@class		::OSRE::Platform::Win32Thread
+///	@ingroup	Engine
 ///
 ///	@brief	This class implements a thread which uses the Win32-API.
 //-------------------------------------------------------------------------------------------------

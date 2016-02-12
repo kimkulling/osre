@@ -33,9 +33,9 @@ namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::Win32Surface
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
-///	@brief  This class implements the win32-specific surface.
+///	@brief  This class implements the surface API by using Win32-API.
 //-------------------------------------------------------------------------------------------------
 class Win32Surface : public AbstractSurface {
 public:
