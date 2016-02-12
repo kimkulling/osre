@@ -25,26 +25,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
         
-Ids *Ids::s_ids = nullptr;
-
-Ids *Ids::create( ui32 startId ) {
-    if ( nullptr == s_ids ) {
-        s_ids = new Ids( startId );
-    }
-    return s_ids;
+Ids::Ids( ui32 startId )
+    : m_freeIds()
+    , m_last( startId ) {
+    // empty
 }
 
-void Ids::destroy() {
-    if ( nullptr == s_ids ) {
-        return;
-    }
-
-    delete s_ids;
-    s_ids = nullptr;
-}
-
-Ids *Ids::getInstance() {
-    return s_ids;
+Ids::~Ids() {
+    // empty
 }
 
 ui32 Ids::getUniqueId() {
@@ -61,16 +49,6 @@ ui32 Ids::getUniqueId() {
 
 void Ids::releaseId( ui32 id ) {
     m_freeIds.add( id );
-}
-
-Ids::Ids( ui32 startId )
-: m_freeIds()
-, m_last( startId ) {
-    // empty
-}
-
-Ids::~Ids() {
-    // empty
 }
     
 }

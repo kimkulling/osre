@@ -26,25 +26,28 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
-    namespace Common {
+namespace Common {
 
+//-------------------------------------------------------------------------------------------------
+///	@class		::OSRE::Common::Ids
+///	@ingroup	Engine
+///
+///	@brief	This class the API for id container. You can use an id container to store unique ids.
+//-------------------------------------------------------------------------------------------------
 class Ids {
 public:
-    static Ids *create( ui32 startId );
-    static void destroy();
-    static Ids *getInstance();
+    Ids( ui32 startId );
+    ~Ids();
     ui32 getUniqueId();
     void releaseId( ui32 id );
 
 private:
-    Ids( ui32 startId );
-    ~Ids();
-
-private:
-    static Ids *s_ids;
     CPPCore::TArray<ui32> m_freeIds;
     ui32 m_last;
 
+private:
+    Ids( const Ids  & ) = delete;
+    Ids &operator = ( const Ids & ) = delete;
 };
 
 }
