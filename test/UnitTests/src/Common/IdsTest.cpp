@@ -21,43 +21,45 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
-
-#include <osre/Common/Object.h>
+#include <osre/Common/Ids.h>
 
 namespace OSRE {
 namespace UnitTest {
 
 using namespace ::OSRE::Common;
 
-class ObjectTest : public ::testing::Test {
+class IdsTest : public ::testing::Test {
     // empty
 };
 
-class TestObject : public Object {
-public:
-    TestObject( const String &name )
-        : Object( name ) {
-
-    }
-};
-
-TEST_F( ObjectTest, createTest ) {
+TEST_F( IdsTest, createTest ) {
     bool ok( true );
     try {
-        TestObject myObject( "huhu" );
-    } catch( ... ) {
+        Ids myIds( 0 );
+    } catch ( ... ) {
         ok = false;
     }
     EXPECT_TRUE( ok );
 }
 
-TEST_F( ObjectTest, accessNameTest ) {
-    String name( "huhu" );
-    TestObject myObject( name );
-    EXPECT_EQ( name, myObject.getName() );
-    String new_name( "new_huhu" );
-    myObject.setName( new_name );
-    EXPECT_EQ( new_name, myObject.getName() );
+TEST_F( IdsTest, allocIdsTest ) {
+    Ids myIds( 0 );
+
+    const ui32 id1 = myIds.getUniqueId();
+    const ui32 id2 = myIds.getUniqueId();
+    EXPECT_NE( id1, id2 );
+}
+
+TEST_F( IdsTest, releaseIdsTest ) {
+    Ids myIds( 0 );
+
+    const ui32 id1 = myIds.getUniqueId();
+    const ui32 id2 = myIds.getUniqueId();
+    EXPECT_NE( id1, id2 );
+
+    myIds.releaseId( id2 );
+    const ui32 id3 = myIds.getUniqueId();
+    EXPECT_EQ( id2, id3 );
 }
 
 } // Namespace UnitTest

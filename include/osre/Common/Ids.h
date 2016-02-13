@@ -34,7 +34,7 @@ namespace Common {
 ///
 ///	@brief	This class the API for id container. You can use an id container to store unique ids.
 //-------------------------------------------------------------------------------------------------
-class Ids {
+class OSRE_EXPORT Ids {
 public:
     Ids( ui32 startId );
     ~Ids();

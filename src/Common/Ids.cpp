@@ -37,8 +37,9 @@ Ids::~Ids() {
 
 ui32 Ids::getUniqueId() {
     if ( m_freeIds.isEmpty() ) {
+        ui32 id( m_last );
         m_last++;
-        return m_last;
+        return id;
     } 
 
     ui32 id( m_freeIds.back() );

@@ -18,6 +18,7 @@ INCLUDE_DIRECTORIES(
 SET ( unittest_common_src
     src/Common/ObjectTest.cpp
     src/Common/EventTest.cpp
+    src/Common/IdsTest.cpp
 )
 
 SET ( unittest_rb_src
