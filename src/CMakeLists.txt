@@ -202,6 +202,7 @@ SET( platform_sdl2_src
     Platform/sdl2/SDL2ThreadEvent.h
     Platform/sdl2/SDL2ThreadFactory.cpp
     Platform/sdl2/SDL2ThreadFactory.h
+    Platform/sdl2/SDL2ThreadLocalStorage.h
 )
 
 IF( WIN32 )
