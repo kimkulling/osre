@@ -41,6 +41,7 @@ public:
     virtual AbstractCriticalSection *createCriticalSection( );
     virtual AbstractThreadEvent *createThreadEvent();
     virtual AbstractAtomic *createAtomic( i32 val );
+    virtual AbstractThreadLocalStorage *createThreadLocalStorage();
 };
 
 //-------------------------------------------------------------------------------------------------

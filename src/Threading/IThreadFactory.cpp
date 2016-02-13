@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-AbstractThreadFactory *AbstractThreadFactory::s_pThreadFactory = nullptr;
+AbstractThreadFactory *AbstractThreadFactory::s_threadFactory = nullptr;
 
 //-------------------------------------------------------------------------------------------------
 AbstractThreadFactory::AbstractThreadFactory(  const String &factoryName ) :
@@ -41,12 +41,12 @@ AbstractThreadFactory::~AbstractThreadFactory() {
 
 //-------------------------------------------------------------------------------------------------
 void AbstractThreadFactory::setInstance( AbstractThreadFactory *pInstance ) {
-	s_pThreadFactory = pInstance;
+	s_threadFactory = pInstance;
 }
 
 //-------------------------------------------------------------------------------------------------
 AbstractThreadFactory *AbstractThreadFactory::getInstance() {
-	return s_pThreadFactory;
+	return s_threadFactory;
 }
 
 //-------------------------------------------------------------------------------------------------

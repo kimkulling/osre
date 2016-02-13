@@ -25,42 +25,39 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "SDL2ThreadEvent.h"
 #include "SDL2Thread.h"
 #include "SDL2Atomic.h"
+#include "SDL2ThreadLocalStorage.h"
 
 namespace OSRE {
 namespace Platform {
 
-//-------------------------------------------------------------------------------------------------
 SDL2ThreadFactory::SDL2ThreadFactory( )
 : AbstractThreadFactory( "platform/sdl2threadfactory" ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 SDL2ThreadFactory::~SDL2ThreadFactory( ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractThread *SDL2ThreadFactory::createThread( const String &name, ui32 stacksize ) {
     return new SDL2Thread( name, stacksize );
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractCriticalSection *SDL2ThreadFactory::createCriticalSection( ) {
     return new SDL2CriticalSection;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractThreadEvent *SDL2ThreadFactory::createThreadEvent( ) {
     return new SDL2ThreadEvent;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractAtomic *SDL2ThreadFactory::createAtomic( i32 val ) {
     return new SDL2Atomic( val );
 }
 
-//-------------------------------------------------------------------------------------------------
+AbstractThreadLocalStorage *SDL2ThreadFactory::createThreadLocalStorage() {
+    return new SDL2ThreadLocalStorage;
+}
 
 } // Namespace Platform
 } // Namespace OSRE

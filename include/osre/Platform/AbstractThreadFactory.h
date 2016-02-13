@@ -31,6 +31,7 @@ class AbstractCriticalSection;
 class AbstractThreadEvent;
 class AbstractThread;
 class AbstractAtomic;
+class AbstractThreadLocalStorage;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::IThreadFactory
@@ -43,6 +44,10 @@ public:
     ///	@brief	The destructor, virtual.
     virtual ~AbstractThreadFactory();
 
+    /// @brief  Creates a new thread instance.
+    /// @param  name        [in] The thread name.
+    /// @param  stacksize   [in9 The requested stack size.
+    /// @return A pointer showing to the new created thread instance.
     virtual AbstractThread *createThread( const String &name, ui32 stacksize ) = 0;
 
     ///	@brief	Creates a new critical section.
@@ -53,11 +58,19 @@ public:
     ///	@return	A pointer showing to the new thread event.
     virtual AbstractThreadEvent *createThreadEvent() = 0;
     
+    /// @brief  Creates a new atomic integer instance.
+    /// @param  val     [in] The initial integer value.
+    /// @return A pointer showing to the new instance.
     virtual AbstractAtomic *createAtomic( i32 val ) = 0;
+
+    /// @brief  Creates a new thread local storage instance.
+    /// @return The new instance.
+    virtual AbstractThreadLocalStorage *createThreadLocalStorage() = 0;
 
     ///	@brief	Installs a new thread factory instance.
     ///	@param	pInstance	[in] A pointer showing to the new thread factory instance.
     static void setInstance( AbstractThreadFactory *pInstance );
+
 
     ///	@brief	Returns the installed thread factory.
     ///	@return	A pointer showing to the installed thread factory, equal NULL if no one is installed.
@@ -69,7 +82,7 @@ protected:
     AbstractThreadFactory( const String &name );
 
 private:
-    static AbstractThreadFactory *s_pThreadFactory;
+    static AbstractThreadFactory *s_threadFactory;
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -25,42 +25,39 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Win32ThreadEvent.h"
 #include "Win32Thread.h"
 #include "Win32Atomic.h"
+#include "Win32ThreadLocalStorage.h"
 
 namespace OSRE {
 namespace Platform {
 
-//-------------------------------------------------------------------------------------------------
 Win32ThreadFactory::Win32ThreadFactory() 
 : AbstractThreadFactory( "platform/win32threadfactory" ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 Win32ThreadFactory::~Win32ThreadFactory() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractThread *Win32ThreadFactory::createThread( const String &name, ui32 stacksize ) {
     return new Win32Thread( name, stacksize );
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractCriticalSection *Win32ThreadFactory::createCriticalSection( ) {
     return new Win32CriticalSection;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractThreadEvent *Win32ThreadFactory::createThreadEvent() {
     return new Win32ThreadEvent;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractAtomic *Win32ThreadFactory::createAtomic( i32 val ) {
     return new Win32Atomic( val );
 }
 
-//-------------------------------------------------------------------------------------------------
+AbstractThreadLocalStorage *Win32ThreadFactory::createThreadLocalStorage() {
+    return new Win32ThreadLocalStorage;
+}
 
 } // Namespace Platform
 } // Namespace OSRE
