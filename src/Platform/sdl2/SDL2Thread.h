@@ -30,6 +30,7 @@ namespace OSRE {
 namespace Platform {
 
 class SDL2ThreadEvent;
+class SDL2ThreadLocalStorage;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::Win32Thread
@@ -68,6 +69,9 @@ public:
     ///	Returns the name of the thread.
     const String &getThreadName() const;
 
+    virtual AbstractThreadLocalStorage *getThreadLocalStorage() ;
+    virtual void setThreadLocalStorage( AbstractThreadLocalStorage *tls );
+
 protected:
     /// thread startup function
     static int sdl2threadfunc( void *data );
@@ -77,6 +81,7 @@ protected:
 private:
     SDL_Thread *m_thread;
     SDL2ThreadEvent *m_pThreadSignal;
+    SDL2ThreadLocalStorage *m_tls;
     Priority m_Prio;
     String m_ThreadName;
     unsigned long m_threadId;

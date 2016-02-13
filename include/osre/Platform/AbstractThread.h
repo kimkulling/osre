@@ -28,6 +28,7 @@ namespace OSRE {
 namespace Platform {
 
 class AbstractThreadEvent;
+class AbstractThreadLocalStorage;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::AbstractThread
@@ -118,6 +119,9 @@ public:
     ///	@brief	The assigned name of the thread will be returned.
     ///	@return	The assigned name of the thread.
     virtual const String &getThreadName() const = 0;
+
+    virtual AbstractThreadLocalStorage *getThreadLocalStorage() = 0;
+    virtual void setThreadLocalStorage( AbstractThreadLocalStorage *tls ) = 0;
 
 protected:
     /// @brief  The default constructor.

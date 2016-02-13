@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "SDL2Thread.h"
 #include "SDL2ThreadEvent.h"
 #include "SDL2CriticalSection.h"
+#include "SDL2ThreadLocalStorage.h"
 
 #include <osre/Platform/SystemInfo.h>
 #include <osre/Common/Logger.h>
@@ -43,7 +44,8 @@ SDL2Thread::SDL2Thread( const String &name, ui32 stacksize )
 , m_pThreadSignal( nullptr )
 , m_Prio( Normal )
 , m_ThreadName( name )
-, m_threadId( 0 ) {
+, m_threadId( 0 )
+, m_tls( nullptr ) {
     // empty
 }
 
@@ -178,6 +180,14 @@ SDL2Thread::Priority SDL2Thread::getPriority( ) const {
 //-------------------------------------------------------------------------------------------------
 const String &SDL2Thread::getThreadName() const {
     return m_ThreadName;
+}
+
+AbstractThreadLocalStorage *SDL2Thread::getThreadLocalStorage() {
+    return m_tls;
+}
+
+void SDL2Thread::setThreadLocalStorage( AbstractThreadLocalStorage *tls ) {
+    m_tls = ( SDL2ThreadLocalStorage*) tls;
 }
 
 //-------------------------------------------------------------------------------------------------

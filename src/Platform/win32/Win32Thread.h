@@ -30,6 +30,7 @@ namespace OSRE {
 namespace Platform {
 
 class Win32ThreadEvent;
+class Win32ThreadLocalStorage;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::Win32Thread
@@ -68,6 +69,9 @@ public:
     ///	Returns the name of the thread.
     virtual const String &getThreadName() const;
 
+    virtual AbstractThreadLocalStorage *getThreadLocalStorage();
+    virtual void setThreadLocalStorage( AbstractThreadLocalStorage *tls );
+
 protected:
     ///	Override this for your own thread function.
     virtual i32 run();
@@ -81,6 +85,7 @@ private:
     Win32ThreadEvent *m_pThreadSignal;
     Priority m_Prio;
     ThreadState m_ThreadState;
+    Win32ThreadLocalStorage *m_tls;
     String m_ThreadName;
 };
 

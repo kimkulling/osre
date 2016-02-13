@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Win32Thread.h"
 #include "Win32ThreadEvent.h"
 #include "Win32CriticalSection.h"
+#include "Win32ThreadLocalStorage.h"
 
 #include <osre/Platform/SystemInfo.h>
 #include <osre/Common/Logger.h>
@@ -36,17 +37,16 @@ namespace Platform {
 
 static const String Tag = "Win32Thread";
 
-//-------------------------------------------------------------------------------------------------
 Win32Thread::Win32Thread(  const String &name, ui32 stacksize  ) 
 : m_ThreadHandle( NULL )
 , m_pThreadSignal( NULL )
 , m_ThreadState( New )
 , m_Prio( Normal )
-, m_ThreadName( name ) {
+, m_ThreadName( name )
+, m_tls( nullptr ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 Win32Thread::~Win32Thread() {
     if ( Running == m_ThreadState ) {
         osre_debug( Tag, "Thread " + getName() + " is still running." );
@@ -54,7 +54,6 @@ Win32Thread::~Win32Thread() {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Win32Thread::start( void *pData ) {
     if ( Running == m_ThreadState || m_ThreadHandle ) {
         osre_debug( Tag, "Thread " + getName() + " is already running." );
@@ -81,7 +80,6 @@ bool Win32Thread::start( void *pData ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Win32Thread::stop() {
     if ( !Running == m_ThreadState ) {
         osre_debug( Tag, "Thread " + getName() + " is not running." );
@@ -107,7 +105,6 @@ bool Win32Thread::stop() {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Win32Thread::suspend() {
     // check for a valid thread state
     if ( !m_ThreadHandle || Running == m_ThreadState ) {
@@ -125,7 +122,6 @@ bool Win32Thread::suspend() {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Win32Thread::resume() {
     // check for a valid thread state
     if ( !m_ThreadHandle || Waiting != m_ThreadState || New != m_ThreadState ) {
@@ -145,19 +141,16 @@ bool Win32Thread::resume() {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 void Win32Thread::setName( const String &rName ) {
     assert( !rName.empty() );
 
     m_ThreadName = rName;
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &Win32Thread::getName() const {
     return m_ThreadName;
 }
 
-//-------------------------------------------------------------------------------------------------
 void Win32Thread::waitForTimeout( ui32 ms ) {
     if ( !m_pThreadSignal ) {
         osre_debug( Tag, "Invalid pointer to thread signal." );
@@ -167,7 +160,6 @@ void Win32Thread::waitForTimeout( ui32 ms ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void Win32Thread::wait() {
     if ( !m_pThreadSignal ) {
         osre_debug( Tag, "Invalid pointer to thread signal." );
@@ -176,12 +168,10 @@ void Win32Thread::wait() {
     m_pThreadSignal->waitForOne();
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractThreadEvent *Win32Thread::getThreadEvent() const {
     return m_pThreadSignal;
 }
 
-//-------------------------------------------------------------------------------------------------
 void Win32Thread::setPriority( Priority prio ) {
     m_Prio = prio;
     BOOL result( TRUE );
@@ -207,17 +197,22 @@ void Win32Thread::setPriority( Priority prio ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 Win32Thread::Priority Win32Thread::getPriority() const {
     return m_Prio;
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &Win32Thread::getThreadName() const {
     return m_ThreadName;
 }
 
-//-------------------------------------------------------------------------------------------------
+AbstractThreadLocalStorage *Win32Thread::getThreadLocalStorage() {
+    return m_tls;
+}
+
+void Win32Thread::setThreadLocalStorage( AbstractThreadLocalStorage *tls ) {
+    m_tls = ( Win32ThreadLocalStorage* )  tls;
+}
+
 ui32 WINAPI Win32Thread::ThreadFunc( LPVOID data ) {
     Win32Thread *thread = ( Win32Thread* ) data;
     assert( NULL != thread );
@@ -232,14 +227,12 @@ ui32 WINAPI Win32Thread::ThreadFunc( LPVOID data ) {
     return retCode;
 }
 
-//-------------------------------------------------------------------------------------------------
 i32 Win32Thread::run() {
     // Override me!
 
     return 0;
 }
 
-//-------------------------------------------------------------------------------------------------
 void Win32Thread::setThreadName( const c8 *name ) {
     if ( nullptr == name ) {
         return;
@@ -264,7 +257,6 @@ void Win32Thread::setThreadName( const c8 *name ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
 } // Namespace OSRE
