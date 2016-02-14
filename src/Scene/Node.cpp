@@ -35,7 +35,6 @@ using namespace RenderBackend;
 Node::Node( const String &name, bool renderEnabled, Node *parent )
 : Object( name )
 , m_childs()
-//, m_newGeo()
 , m_parent( parent )
 , m_isActive( true )
 , m_transform( nullptr )
@@ -151,7 +150,6 @@ void Node::addGeometry( RenderBackend::StaticGeometry *geo ) {
     if ( nullptr != m_renderComp ) {
         m_renderComp->addStaticGeometry( geo );
     }
-    //m_newGeo.add( geo );
 }
 
 void Node::setTransformBlock( RenderBackend::TransformBlock *transformBlock ) {

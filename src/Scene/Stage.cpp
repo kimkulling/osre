@@ -106,12 +106,34 @@ void Stage::clear() {
     releaseChildNodes( m_root );
 }
 
+static void updateNode( Node *current, bool traverse, RenderBackend::RenderBackendService *rb ) {
+    if ( nullptr == current ) {
+        return;
+    }
+    
+    // only update active nodes
+    if ( !current->isActive() ) {
+        return;
+    }
+
+    current->update( rb );
+ 
+    // traverse all children, if requested
+    if ( traverse ) {
+        const ui32 numChilds( current->getNumChilds() );
+        for ( ui32 i = 0; i < numChilds; ++i ) {
+            Node *child( current->getChildAt( i ) );
+            updateNode( child, traverse, rb );
+        }
+    }
+}
+
 void Stage::update() {
     if( nullptr == m_root ) {
         return;
     }
 
-    m_root->update( m_rbService );
+    updateNode( m_root, true, m_rbService );
 }
 
 } // Namespace Scene
