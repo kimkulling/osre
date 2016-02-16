@@ -37,7 +37,7 @@ Node::Node( const String &name, bool renderEnabled, Node *parent )
 , m_childs()
 , m_parent( parent )
 , m_isActive( true )
-, m_transform( nullptr )
+, m_localTransform( nullptr )
 , m_renderComp( nullptr ) {
     if ( renderEnabled ) {
         m_renderComp = new RenderComponent;
@@ -154,36 +154,36 @@ void Node::addGeometry( RenderBackend::StaticGeometry *geo ) {
 
 void Node::setTransformBlock( RenderBackend::TransformBlock *transformBlock ) {
     if( nullptr != transformBlock ) {
-        m_transform = transformBlock;
+        m_localTransform = transformBlock;
     }
 }
 
 void Node::setPosition( const glm::vec3 &pos ) {
-    if( nullptr != m_transform ) {
-        m_transform->m_transform = glm::vec4( pos, 1.0f );
+    if( nullptr != m_localTransform ) {
+        m_localTransform->m_transform = glm::vec4( pos, 1.0f );
     }
 }
 
 const glm::vec4 &Node::getPosition() const {
-    if( nullptr == m_transform ) {
+    if( nullptr == m_localTransform ) {
         return Dummy;
     }
 
-    return m_transform->m_transform;
+    return m_localTransform->m_transform;
 }
 
 void Node::setScale( const glm::vec3 &scale ) {
-    if( nullptr != m_transform ) {
-        m_transform->m_scale = glm::vec4( scale, 1.0f );;
+    if( nullptr != m_localTransform ) {
+        m_localTransform->m_scale = glm::vec4( scale, 1.0f );;
     }
 }
 
 const glm::vec4 &Node::getScale() const {
-    if( nullptr == m_transform ) {
+    if( nullptr == m_localTransform ) {
         return Dummy;
     }
 
-    return m_transform->m_scale;
+    return m_localTransform->m_scale;
 }
 
 void Node::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
