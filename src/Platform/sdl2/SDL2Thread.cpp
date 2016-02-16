@@ -42,7 +42,7 @@ static const String Tag = "SDL2Thread";
 SDL2Thread::SDL2Thread( const String &name, ui32 stacksize )
 :  m_thread( nullptr )
 , m_pThreadSignal( nullptr )
-, m_Prio( Normal )
+, m_Prio( Priority::Normal )
 , m_ThreadName( name )
 , m_threadId( 0 )
 , m_tls( nullptr ) {
@@ -51,7 +51,7 @@ SDL2Thread::SDL2Thread( const String &name, ui32 stacksize )
 
 //-------------------------------------------------------------------------------------------------
 SDL2Thread::~SDL2Thread( ) {
-    if ( Running == AbstractThread::getCurrentState() ) {
+    if ( ThreadState::Running == AbstractThread::getCurrentState() ) {
         osre_debug( Tag, "Thread " + getName() + " is still running." );
         SDL2Thread::stop( );
     }
@@ -59,7 +59,7 @@ SDL2Thread::~SDL2Thread( ) {
 
 //-------------------------------------------------------------------------------------------------
 bool SDL2Thread::start( void *data ) {
-    if ( Running == AbstractThread::getCurrentState() ) {
+    if ( ThreadState::Running == AbstractThread::getCurrentState() ) {
         osre_debug( Tag, "Thread " + getName() + " is already running." );
         return false;
     }
@@ -70,10 +70,10 @@ bool SDL2Thread::start( void *data ) {
     bool result( true );
     m_thread = SDL_CreateThread( SDL2Thread::sdl2threadfunc, getName( ).c_str( ), data );
     if( m_thread ) {
-        setState( Running );
+        setState( ThreadState::Running );
     } else {
         // cannot start thread, so it's terminated
-        setState( AbstractThread::Terminated );
+        setState( ThreadState::Terminated );
         result = false;
     }
 
@@ -82,7 +82,7 @@ bool SDL2Thread::start( void *data ) {
 
 //-------------------------------------------------------------------------------------------------
 bool SDL2Thread::stop( ) {
-    if (!Running == AbstractThread::getCurrentState()) {
+    if ( ThreadState::Running != AbstractThread::getCurrentState()) {
         osre_debug( Tag, "Thread " + getName() + " is not running." );
         return false;
     }
@@ -91,7 +91,7 @@ bool SDL2Thread::stop( ) {
     m_thread = nullptr;
 
     // update state and release signal
-    setState( Terminated );
+    setState( ThreadState::Terminated );
     delete m_pThreadSignal;
     m_pThreadSignal = nullptr;
 
@@ -104,14 +104,13 @@ bool SDL2Thread::stop( ) {
 //-------------------------------------------------------------------------------------------------
 bool SDL2Thread::suspend( ) {
     // check for a valid thread state
-    if ( Running == AbstractThread::getCurrentState() ) {
+    if ( ThreadState::Running == AbstractThread::getCurrentState() ) {
         osre_debug( Tag, "Thread " + getName() + " is not running." );
         return false;
     }
 
     // suspend the thread
-
-    setState( Suspended );
+    setState( ThreadState::Suspended );
 
     return true;
 }
@@ -119,13 +118,13 @@ bool SDL2Thread::suspend( ) {
 //-------------------------------------------------------------------------------------------------
 bool SDL2Thread::resume( ) {
     // check for a valid thread state
-    if (Waiting != AbstractThread::getCurrentState()) {
+    if ( ThreadState::Waiting != AbstractThread::getCurrentState()) {
         osre_debug( Tag, "Thread " + getName() + " is not suspended." );
         return false;
     }
 
     // resume the thread
-    setState( Running );
+    setState( ThreadState::Running );
 
     return true;
 }
@@ -196,13 +195,13 @@ i32 SDL2Thread::sdl2threadfunc( void *data ) {
     if( data ) {
         SDL2Thread *instance = ( SDL2Thread* ) data;
         switch( instance->getPriority() ) {
-            case Low:
+            case Priority::Low:
                 retCode = SDL_SetThreadPriority( SDL_THREAD_PRIORITY_LOW );
                 break;
-            case Normal:
+            case Priority::Normal:
                 retCode = SDL_SetThreadPriority( SDL_THREAD_PRIORITY_NORMAL );
                 break;
-            case High:
+            case Priority::High:
                 retCode = SDL_SetThreadPriority( SDL_THREAD_PRIORITY_HIGH );
                 break;
             default:

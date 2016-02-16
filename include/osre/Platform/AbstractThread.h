@@ -44,7 +44,7 @@ public:
     typedef ui32 (*threadfunc) ( void * );
 
     ///	@brief	This enum describes the priority of the thread.
-    enum Priority {
+    enum class Priority {
         Low,	///< Low prio thread.
         Normal,	///< Normal prio thread.
         High	///< High prio thread.
@@ -52,7 +52,7 @@ public:
 
     ///	@enum	ThreadState
     ///	@brief	Describes the current state of the thread.
-    enum ThreadState {
+    enum class ThreadState {
         New,			///< In new state, just created
         Running,		///< thread is currently running
         Waiting,		///< Awaits a signal
@@ -144,7 +144,7 @@ private:
 
 inline
 AbstractThread::AbstractThread()
-: m_threadState( New ) {
+: m_threadState( ThreadState::New ) {
     // empty
 }
 

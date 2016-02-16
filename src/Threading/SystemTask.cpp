@@ -120,7 +120,7 @@ public:
 
         m_reqStop->incValue( 1 );
         m_updateEvent->waitForOne();
-        AbstractThread::setState( AbstractThread::Terminated );
+        AbstractThread::setState( ThreadState::Terminated );
 
         return true;
     }
@@ -209,7 +209,7 @@ SystemTask::SystemTask( const String &taskName )
 
 //-------------------------------------------------------------------------------------------------
 SystemTask::~SystemTask() {
-    OSRE_ASSERT(!isRunning());
+    OSRE_ASSERT( !isRunning() );
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -241,7 +241,7 @@ SystemTask::BufferMode SystemTask::getBufferMode() const {
 bool SystemTask::start( AbstractThread *pThread ) {
     // ensure task is not running
     if( nullptr != m_taskThread ) {
-        if ( Platform::AbstractThread::Running == m_taskThread->getCurrentState() ) {
+        if ( AbstractThread::ThreadState::Running == m_taskThread->getCurrentState() ) {
             osre_debug( Tag, "Task " + Object::getName() + " is already running." );
             return false;
         }
@@ -261,7 +261,7 @@ bool SystemTask::start( AbstractThread *pThread ) {
 
 //-------------------------------------------------------------------------------------------------
 bool SystemTask::stop() {
-    if ( AbstractThread::Running != m_taskThread->getCurrentState() ) {
+    if ( AbstractThread::ThreadState::Running != m_taskThread->getCurrentState() ) {
         osre_debug( Tag, "Task " + getName() + " is not running." );
         return false;
     }
@@ -276,7 +276,7 @@ bool SystemTask::stop() {
 //-------------------------------------------------------------------------------------------------
 bool SystemTask::isRunning() const {
     if ( nullptr != m_taskThread ) {
-        return ( AbstractThread::Running == m_taskThread->getCurrentState() );
+        return ( AbstractThread::ThreadState::Running == m_taskThread->getCurrentState() );
     }
 
     return false;
@@ -290,7 +290,7 @@ bool SystemTask::execute() {
 //-------------------------------------------------------------------------------------------------
 void SystemTask::setThreadInstance( AbstractThread *threadInstance ) {
     if ( nullptr != m_taskThread ) {
-        if( Platform::AbstractThread::Running == m_taskThread->getCurrentState() ) {
+        if( Platform::AbstractThread::ThreadState::Running == m_taskThread->getCurrentState() ) {
             m_taskThread->stop();
         }
     }
@@ -329,14 +329,14 @@ bool SystemTask::sendEvent( const Event *ev, const EventData *eventData ) {
 
 //-------------------------------------------------------------------------------------------------
 ui32 SystemTask::getEvetQueueSize() const {
-    OSRE_ASSERT(NULL != m_asyncQueue);
+    OSRE_ASSERT( nullptr != m_asyncQueue);
 
     return m_asyncQueue->size();
 }
 
 //-------------------------------------------------------------------------------------------------
 void SystemTask::onUpdate() {
-    OSRE_ASSERT(NULL != m_taskThread);
+    OSRE_ASSERT( nullptr != m_taskThread);
 
     if ( !m_taskThread )
         return;

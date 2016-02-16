@@ -38,24 +38,25 @@ namespace Platform {
 static const String Tag = "Win32Thread";
 
 Win32Thread::Win32Thread(  const String &name, ui32 stacksize  ) 
-: m_ThreadHandle( NULL )
+: AbstractThread()
+, m_ThreadHandle( NULL )
 , m_pThreadSignal( NULL )
-, m_ThreadState( New )
-, m_Prio( Normal )
+, m_ThreadState( ThreadState::New )
+, m_Prio( Priority::Normal )
 , m_ThreadName( name )
 , m_tls( nullptr ) {
     // empty
 }
 
 Win32Thread::~Win32Thread() {
-    if ( Running == m_ThreadState ) {
+    if ( ThreadState::Running == m_ThreadState ) {
         osre_debug( Tag, "Thread " + getName() + " is still running." );
         Win32Thread::stop();
     }
 }
 
 bool Win32Thread::start( void *pData ) {
-    if ( Running == m_ThreadState || m_ThreadHandle ) {
+    if ( ThreadState::Running == m_ThreadState || m_ThreadHandle ) {
         osre_debug( Tag, "Thread " + getName() + " is already running." );
         return false;
     }
@@ -73,15 +74,15 @@ bool Win32Thread::start( void *pData ) {
         NULL );
 
     assert( NULL != m_ThreadHandle );
-    setPriority( Normal );
+    setPriority( Priority::Normal );
     resume();
-    setState( Running );
+    setState( ThreadState::Running );
 
     return true;
 }
 
 bool Win32Thread::stop() {
-    if ( !Running == m_ThreadState ) {
+    if ( ThreadState::Running != m_ThreadState ) {
         osre_debug( Tag, "Thread " + getName() + " is not running." );
         return false;
     }
@@ -94,7 +95,7 @@ bool Win32Thread::stop() {
     }
 
     // update state and release signal
-    setState( Terminated );
+    setState( ThreadState::Terminated );
     delete m_pThreadSignal;
     m_pThreadSignal = NULL;
 
@@ -107,7 +108,7 @@ bool Win32Thread::stop() {
 
 bool Win32Thread::suspend() {
     // check for a valid thread state
-    if ( !m_ThreadHandle || Running == m_ThreadState ) {
+    if ( !m_ThreadHandle || ThreadState::Running == m_ThreadState ) {
         osre_debug( Tag, "Thread " + getName() + " is not running." );
         return false;
     }
@@ -117,14 +118,14 @@ bool Win32Thread::suspend() {
     if ( -1 == retCode )
         return false;
 
-    setState( Suspended );
+    setState( ThreadState::Suspended );
 
     return true;
 }
 
 bool Win32Thread::resume() {
     // check for a valid thread state
-    if ( !m_ThreadHandle || Waiting != m_ThreadState || New != m_ThreadState ) {
+    if ( !m_ThreadHandle || ThreadState::Waiting != m_ThreadState || ThreadState::New != m_ThreadState ) {
         osre_debug( Tag, "Thread " + getName() + " is not suspended." );
         return false;
     }
@@ -136,7 +137,7 @@ bool Win32Thread::resume() {
         return false;
     }
 
-    setState( Running );
+    setState( ThreadState::Running );
 
     return true;
 }
@@ -176,15 +177,15 @@ void Win32Thread::setPriority( Priority prio ) {
     m_Prio = prio;
     BOOL result( TRUE );
     switch( m_Prio ) {
-        case Low:
+        case Priority::Low:
             result = ::SetThreadPriority( m_ThreadHandle, THREAD_PRIORITY_BELOW_NORMAL );
             break;
 
-        case Normal:
+        case Priority::Normal:
             result = ::SetThreadPriority( m_ThreadHandle, THREAD_PRIORITY_NORMAL );
             break;
 
-        case High:
+        case Priority::High:
             result = ::SetThreadPriority( m_ThreadHandle, THREAD_PRIORITY_ABOVE_NORMAL );
             break;
 
