@@ -83,7 +83,6 @@ public:
 
 private:
     CPPCore::TArray<Node*> m_childs;
-//    CPPCore::TArray<RenderBackend::StaticGeometry*> m_newGeo;
     Node *m_parent;
     bool m_isActive;
     RenderBackend::TransformBlock *m_transform;
