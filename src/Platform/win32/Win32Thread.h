@@ -68,8 +68,9 @@ public:
     virtual Priority getPriority() const;
     ///	Returns the name of the thread.
     virtual const String &getThreadName() const;
-
+    /// Returns the thread local storage instance.
     virtual AbstractThreadLocalStorage *getThreadLocalStorage();
+    /// Assigns a new thread local storage instance.
     virtual void setThreadLocalStorage( AbstractThreadLocalStorage *tls );
 
 protected:
