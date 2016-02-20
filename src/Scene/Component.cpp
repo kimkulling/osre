@@ -65,5 +65,23 @@ void RenderComponent::addStaticGeometry( RenderBackend::StaticGeometry *geo ) {
     m_newGeo.add( geo );
 }
 
+TransformComponent::TransformComponent()
+: Component()
+, m_localTransform( nullptr ) {
+
+}
+
+TransformComponent::~TransformComponent() {
+
+}
+
+void TransformComponent::update( RenderBackendService *renderBackendSrv ) {
+
+}
+
+void TransformComponent::setTransformBlock( TransformBlock *localTransform ) {
+    m_localTransform = localTransform;
+}
+
 } // Namespace Scene
 } // namespace OSRE

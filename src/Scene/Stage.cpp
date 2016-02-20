@@ -77,7 +77,7 @@ Node *Stage::addNode( const String &name, Node *parent ) {
         return nullptr;
     }
 
-    Node *newNode = new Node( name, true, parent );
+    Node *newNode = new Node( name, true, true, parent );
     if( nullptr == parent ) {
         m_root = newNode;
         m_root->get();
@@ -92,12 +92,20 @@ Node *Stage::findNode( const String &name ) const {
     }
 
     Node *myNode( m_root->findChild( name ) );
+ 
     return myNode;
 }
 
 View *Stage::addView( const String &name, Node *node ) {
-    View *view = new View( name );
+    if ( name.empty() ) {
+        return nullptr;
+    }
+
+    View *view( new View( name ) );
     m_views.add( view );
+    if ( nullptr != node ) {
+        view->observeNode( node );
+    }
 
     return view;
 }

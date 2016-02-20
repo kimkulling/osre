@@ -41,7 +41,7 @@ class AbstractThreadLocalStorage;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractThreadFactory : public Common::Object {
 public:
-    ///	@brief	The destructor, virtual.
+    ///	@brief	The class destructor, virtual.
     virtual ~AbstractThreadFactory();
 
     /// @brief  Creates a new thread instance.
@@ -70,7 +70,6 @@ public:
     ///	@brief	Installs a new thread factory instance.
     ///	@param	pInstance	[in] A pointer showing to the new thread factory instance.
     static void setInstance( AbstractThreadFactory *pInstance );
-
 
     ///	@brief	Returns the installed thread factory.
     ///	@return	A pointer showing to the installed thread factory, equal NULL if no one is installed.

@@ -32,21 +32,29 @@ static const glm::vec4 Dummy;
 
 using namespace RenderBackend;
 
-Node::Node( const String &name, bool renderEnabled, Node *parent )
+Node::Node( const String &name, bool transformEnabled, bool renderEnabled, Node *parent )
 : Object( name )
 , m_childs()
 , m_parent( parent )
 , m_isActive( true )
 , m_localTransform( nullptr )
-, m_renderComp( nullptr ) {
+, m_renderComp( nullptr )
+, m_transformComp( nullptr ) {
+    if ( transformEnabled ) {
+        m_transformComp = new TransformComponent;
+        m_components.add( m_transformComp );
+    }
     if ( renderEnabled ) {
         m_renderComp = new RenderComponent;
+        m_components.add( m_renderComp );
     }
 }
 
 Node::~Node() {
-    delete m_renderComp;
-    m_renderComp = nullptr;
+    for ( ui32 i = 0; i < m_components.size(); i++ ) {
+        delete m_components[ i ];
+    }
+    m_components.clear();
 
     if( !m_childs.isEmpty() ) {
         for( size_t i = 0; i < m_childs.size(); i++ ) {
@@ -92,7 +100,7 @@ bool Node::removeChild( const String &name, TraverseMode mode ) {
             }
         }
 
-        if( RecursiveMode == mode ) {
+        if( TraverseMode::RecursiveMode == mode ) {
             found = currentNode->removeChild( name, mode );
             if( found ) {
                 break;
@@ -187,14 +195,22 @@ const glm::vec4 &Node::getScale() const {
 }
 
 void Node::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
+    // at first we need to update the transformations
+    if ( nullptr != m_transformComp ) {
+        m_transformComp->update( renderBackendSrv );
+    }
+
+    // now e can render the scene
     if ( nullptr != m_renderComp ) {
         m_renderComp->update( renderBackendSrv );
     }
 }
 
 Component *Node::getComponent( ComponentType type ) const {
-    if ( RenderComponentType == type ) {
+    if ( ComponentType::RenderComponentType == type ) {
         return m_renderComp;
+    } else if ( ComponentType::TransformComponentType == type ) {
+        return m_transformComp;
     }
 
     return nullptr;

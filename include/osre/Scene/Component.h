@@ -30,15 +30,18 @@ namespace RenderBackend {
     class RenderBackendService;
     
     struct StaticGeometry;
+    struct TransformBlock;
 }
 
 namespace Scene {
 
 class Component {
 public:
-    Component();
     virtual ~Component();
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv ) = 0;
+
+protected:
+    Component();
 };
 
 class RenderComponent : public Component {
@@ -51,6 +54,18 @@ public:
 
 private:
     CPPCore::TArray<RenderBackend::StaticGeometry*> m_newGeo;
+};
+
+class TransformComponent : public Component {
+public:
+    TransformComponent();
+    virtual ~TransformComponent();
+    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
+
+    void setTransformBlock( RenderBackend::TransformBlock *localTransform );
+
+private:
+    RenderBackend::TransformBlock *m_localTransform;
 };
 
 } // Namespace Scene

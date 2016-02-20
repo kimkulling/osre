@@ -40,6 +40,7 @@ namespace Scene {
 
 class Component;
 class RenderComponent;
+class TransformComponent;
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Scene::Node
@@ -49,17 +50,18 @@ class RenderComponent;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Node : public Common::Object {
 public:
-    enum ComponentType {
-        RenderComponentType
+    enum class ComponentType {
+        RenderComponentType,
+        TransformComponentType
     };
 
-    enum TraverseMode {
+    enum class TraverseMode {
         FlatMode,
         RecursiveMode
     };
 
 public:
-    Node( const String &name, bool renderEnabled, Node *parent = nullptr );
+    Node( const String &name, bool transformEnabled, bool renderEnabled, Node *parent = nullptr );
     virtual ~Node();
     virtual void setParent( Node *parent );
     virtual Node *getParent() const;
@@ -87,6 +89,8 @@ private:
     bool m_isActive;
     RenderBackend::TransformBlock *m_localTransform;
     RenderComponent *m_renderComp;
+    TransformComponent *m_transformComp;
+    CPPCore::TArray<Component*> m_components;
 };
 
 //-------------------------------------------------------------------------------------------------
