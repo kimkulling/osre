@@ -1,9 +1,9 @@
 # OSRE - An Open Source Render Experience
-My own open source render engine. 
+My own open source render engine.
 
 # Supported platforms:
 - Windows
-- Linux
+- Linux ( [![Build Status](https://travis-ci.org/kimkulling/osre.png)](https://travis-ci.org/kimkulling/osre) )
 
 # How to start
 ## What you need to install
@@ -25,7 +25,7 @@ for linux:
 for Windows: Use the generated Visual studio project files.
 
 ## Get involved
-If you want to contribute just use the github project page or reach us under IRC: 
+If you want to contribute just use the github project page or reach us under IRC:
 server freenode, channel #osre.
 # Samples
 ## Sample 1: Hello world

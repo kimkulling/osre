@@ -142,6 +142,7 @@ private: \
     NAME& operator = ( const NAME & ) = delete;
 
 ///	@brief  Shortcut to get a OSRE-main function.
+/// 
 #define OSRE_MAIN( APPNAME ) \
 int main( int argc, char *argv[] )  { \
     APPNAME myApp( argc, argv ); \
