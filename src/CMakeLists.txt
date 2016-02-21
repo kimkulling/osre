@@ -24,7 +24,6 @@ ENDIF( WIN32 )
 #==============================================================================
 SET( app_inc
     ${HEADER_PATH}/App/AppBase.h
-    ${HEADER_PATH}/App/ServiceProvider.h
 )
 
 SET( app_src

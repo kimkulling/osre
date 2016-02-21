@@ -70,9 +70,6 @@ elseif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
     endif()
 endif()
 
-# Generate a pkg-config .pc for the OSRE library.
-#CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/osre.pc.in" "${PROJECT_BINARY_DIR}/osre.pc" @ONLY )
-#INSTALL( FILES "${PROJECT_BINARY_DIR}/osre.pc" DESTINATION ${LIB_INSTALL_DIR}/pkgconfig/ COMPONENT osre-dev)
 
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src )

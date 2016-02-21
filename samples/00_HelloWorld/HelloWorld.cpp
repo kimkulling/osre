@@ -101,7 +101,8 @@ protected:
     }
 };
 
-int main( int argc, char *argv[] )  {
+OSRE_MAIN( HelloWorldApp )
+/*int main( int argc, char *argv[] )  {
     HelloWorldApp myApp( argc, argv );
     if( !myApp.create() ) {
         osre_error(Tag, "Cannot create application instance." );
@@ -121,3 +122,4 @@ int main( int argc, char *argv[] )  {
 
     return 0;
 }
+*/

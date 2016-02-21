@@ -90,26 +90,6 @@ The onUpdate-callback will be called once per frame. We just updating the stage 
 In your main you just need to create the application instance and call create.
 Afterwards you enter the main loop, where you can react on events, update your app and request the rendering.
 ```cpp
-int main( int argc, char *argv[] )  {
-    HelloWorldApp myApp( argc, argv );
-    if( !myApp.create() ) {
-        osre_error(Tag, "Cannot create application instance." );
-        return 1;
-    }
-    
-    // handle events until application will be terminated
-    while( myApp.handleEvents() ) {
-        
-        // update application data
-        myApp.update();
-
-        // request next frame rendering
-        myApp.requestNextFrame();
-    }
-    myApp.destroy();
-
-    return 0;
-}
-
+OSRE_MAIN( HelloWorldApp )
 ```
 

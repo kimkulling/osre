@@ -65,10 +65,10 @@ ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedA
     ui32 expectedArgc( 0 );
     for( ui32 i = 0; i<extractedArgs.size(); ++i ) {
         String arg = extractedArgs[ i ];
-        String desc = extractedDescs[ i ];
+        String currentDesc = extractedDescs[ i ];
         if ( parseArgParameter( arg, numParam ) ) {
             expectedArgc += ( 1 + numParam );
-            m_SupportedArguments.add( Argument( getBlankArgument( arg ), desc, numParam ) );
+            m_SupportedArguments.add( Argument( getBlankArgument( arg ), currentDesc, numParam ) );
         }
     }
 
