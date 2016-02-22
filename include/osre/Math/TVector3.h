@@ -8,8 +8,8 @@ namespace OSRE {
 namespace Math {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Math::TVector3
-///	@ingroup	Infrastructure
+///	@class		::OSRE::Math::TVector3
+///	@ingroup	Engine
 ///
 ///	@brief This template implements a vector with the components x,y and z. 
 //-------------------------------------------------------------------------------------------------

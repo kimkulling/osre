@@ -60,9 +60,9 @@ struct ObjectId {
     
 //-------------------------------------------------------------------------------------------------
 /// @class		::OSRE::Common::Event
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
-///	@brief	The base class of zfxce2-events, describes type of an event. To create your own events
+///	@brief	The base class of osre-events, describes type of an event. To create your own events
 ///	it is possible to build derives from the base class.
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT Event {

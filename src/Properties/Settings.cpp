@@ -147,7 +147,7 @@ void Settings::clear() {
 //--------------------------------------------------------------------------------------------------------------------
 void Settings::initDefaults() {
     CPPCore::Variant appName, windowsTitle, renderAPI, value;
-    appName.setString( "ZFXCE2 Application" );
+    appName.setString( "OSRE Application" );
     m_pPropertyMap->setProperty( AppName, ConfigKeyStringTable[ AppName ], appName );
     
     value.setInt( static_cast<i32>( GfxApp ) );

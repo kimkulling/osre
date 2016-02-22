@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace Math {
 
 template<class T>
@@ -50,4 +50,4 @@ class TVec4 {
 };
 
 } // Namespace Math
-} // Namespace ZFXCE2
+} // Namespace OSRE

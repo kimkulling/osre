@@ -151,5 +151,5 @@ bool TArea<Type>::operator == ( const TArea<Type> &rhs ) const {
 
 //-------------------------------------------------------------------------------------------------
 
-} // Namespace Core
-} // Namespace ZFXCE2
+} // Namespace Common
+} // Namespace OSRE

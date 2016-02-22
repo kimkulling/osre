@@ -35,12 +35,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <zfxce2/Infrastructure/Math/TVector3.h>
 #include <cmath>
 
-namespace ZFXCE2 {
+namespace OSRE {
 namespace Math {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::ZFXCE2::Math::TVector4
-///	@ingroup	Infrastructure
+///	@class		::OSRE::Math::TVector4
+///	@ingroup	Engine
 ///
 ///	@brief This template implements a vector with the components x, y, z and w. 
 //-------------------------------------------------------------------------------------------------

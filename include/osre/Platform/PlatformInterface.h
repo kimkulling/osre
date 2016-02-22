@@ -55,7 +55,7 @@ struct IInputUpdate;
 struct SurfaceProperties;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Interface::OSEventListener
+///	@class		::OSRE::Platform::OSEventListener
 ///	@ingroup	Engine
 ///
 ///	@brief	This class declares the abstract interface for all operation system events.
@@ -92,8 +92,8 @@ DECL_EVENT( QuitEvent );
 DECL_EVENT( AppFocusEvent );
 
 //-------------------------------------------------------------------------------------------------
-///	@class		ZFXCE2::Interface::KeyboardButtonEventData
-///	@ingroup	RenderSystem
+///	@class		::OSRE::Platform::KeyboardButtonEventData
+///	@ingroup	Engine
 ///
 ///	@brief	This class stored keyboard events.
 //-------------------------------------------------------------------------------------------------
@@ -116,8 +116,8 @@ public:
 
 
 //-------------------------------------------------------------------------------------------------
-///	@class		ZFXCE2::Interface::MouseButtonEventData
-///	@ingroup	RenderSystem
+///	@class		::OSRE::Platform::MouseButtonEventData
+///	@ingroup	Engine
 ///
 ///	@brief	This class stores mouse button events.
 //-------------------------------------------------------------------------------------------------
@@ -150,8 +150,8 @@ public:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		ZFXCE2::Interface::MouseMoveEventData
-///	@ingroup	RenderSystem
+///	@class		::OSRE::Platform::MouseMoveEventData
+///	@ingroup	Engine
 ///
 ///	@brief	This class stored mouse-move specific event data.
 //-------------------------------------------------------------------------------------------------
