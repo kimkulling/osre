@@ -24,6 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/osre_common.h>
 
+#include <cmath>
+
 namespace OSRE {
 namespace Math {
 
