@@ -27,6 +27,10 @@ for Windows: Use the generated Visual studio project files.
 ## Get involved
 If you want to contribute just use the github project page or reach us under IRC:
 server freenode, channel #osre.
+
+## Reference doc
+Check our doxygen reference doc: http://kimkulling.github.io/osre/doc/html/index.html
+
 # Samples
 ## Sample 1: Hello world
 This example will show you how to create a windo and add a simple stage to it.
