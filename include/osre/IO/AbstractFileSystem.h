@@ -33,7 +33,6 @@ namespace IO {
 class Uri;
 
 //--------------------------------------------------------------------------------------------------
-///	@class		::OSRE::IO::AbstractFileSystem
 ///	@ingroup	Engine
 ///	
 ///	@brief	Abstract interface for all file system implementations. Use this interface to build your 

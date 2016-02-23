@@ -34,7 +34,6 @@ class AbstractFileSystem;
 class Uri;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::IO::IOService
 ///	@ingroup	Engine
 ///
 ///	@brief	This class implements the IO-server, which offers access to all mounted file systems.

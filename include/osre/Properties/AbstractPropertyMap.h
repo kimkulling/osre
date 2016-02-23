@@ -34,7 +34,6 @@ namespace Properties {
 class Property;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Properties::IPropertyMap
 ///	@ingroup	Engine
 ///
 ///	@brief  The abstract base class for a property map. Property maps can be used to manage global 
@@ -87,19 +86,15 @@ protected:
     AbstractPropertyMap();
 };
 
-//-------------------------------------------------------------------------------------------------
 inline 
 AbstractPropertyMap::AbstractPropertyMap() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 inline 
 AbstractPropertyMap::~AbstractPropertyMap() {
     // empty
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Properties
 } // Namespace OSRE

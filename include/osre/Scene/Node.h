@@ -43,7 +43,6 @@ class RenderComponent;
 class TransformComponent;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Scene::Node
 ///	@ingroup	Engine
 ///
 ///	@brief

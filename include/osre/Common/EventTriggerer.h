@@ -31,7 +31,6 @@ namespace OSRE {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::EventTriggerer
 ///	@ingroup    Engine
 ///
 /// @brief	Base class to trigger events.

@@ -61,7 +61,6 @@ DECL_EVENT( OnUpdateParameterEvent );
 DECL_EVENT( OnRenderTextEvent);
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderBackend::CreateRendererEventData
 ///	@ingroup	Engine
 ///
 ///	@brief
@@ -80,7 +79,6 @@ public:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderBackend::AttachViewEventData
 ///	@ingroup	Engine
 ///
 ///	@brief
@@ -94,7 +92,6 @@ public:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderBackend::AttachSceneEventData
 ///	@ingroup	Engine
 ///
 ///	@brief
@@ -117,7 +114,6 @@ public:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderBackend::RenderTextEventData
 ///	@ingroup	Engine
 ///
 ///	@brief
@@ -135,7 +131,6 @@ public:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderBackend::UpdateParameterEventData
 ///	@ingroup	Engine
 ///
 ///	@brief
@@ -154,7 +149,6 @@ public:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderBackend::RenderBackendServer
 ///	@ingroup	Engine
 ///
 ///	@brief  This class implements the render back-end service.

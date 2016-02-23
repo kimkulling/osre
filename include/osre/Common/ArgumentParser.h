@@ -30,7 +30,6 @@ namespace OSRE {
 namespace Common {
 
 //--------------------------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::ArgumentParser
 ///	@ingroup    Engine
 ///
 ///	@brief	Helper class to handle incoming arguments.
@@ -130,19 +129,16 @@ private:
     bool m_isValid;							        // The valid flag
 };
 
-//--------------------------------------------------------------------------------------------------------------------
 inline 
 bool ArgumentParser::hasSupportedArguments() const {
     return ( !m_SupportedArguments.isEmpty() );
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline
 void ArgumentParser::reset() {
     m_CurrentIndex = 0;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 } // Namespace OSRE

@@ -28,7 +28,6 @@ namespace OSRE {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::TArea
 ///	@ingroup    Engine
 ///
 ///	@brief	This class describes a simple 2D rectangle area.

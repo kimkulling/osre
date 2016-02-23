@@ -31,7 +31,6 @@ struct Event;
 struct EventData;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::AbstractEventHandler
 ///	@ingroup    Engine
 ///
 ///	@brief This abstract interface declares the way how events should be handled.
@@ -73,31 +72,26 @@ protected:
     virtual bool onDetached( const EventData *eventData ) = 0;
 };
 
-//-------------------------------------------------------------------------------------------------
 inline
 AbstractEventHandler::AbstractEventHandler() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 AbstractEventHandler::~AbstractEventHandler() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 bool AbstractEventHandler::attach( const EventData *eventData ) {
     return onAttached( eventData );
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 bool AbstractEventHandler::detach( const EventData *eventData ) {
     return onDetached( eventData );
 }
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 } // Namespace OSRE

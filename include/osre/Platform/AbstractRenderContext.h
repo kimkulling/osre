@@ -30,7 +30,6 @@ namespace Platform {
 class AbstractSurface;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::AbstractRenderContext
 ///	@ingroup	Engine
 ///
 ///	@brief
@@ -53,44 +52,35 @@ protected:
     AbstractRenderContext();
 };
 
-//-------------------------------------------------------------------------------------------------
 inline
 AbstractRenderContext::AbstractRenderContext( ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 AbstractRenderContext::~AbstractRenderContext( ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 bool AbstractRenderContext::create( AbstractSurface *pSurface ) {
     return onCreate( pSurface );
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 bool AbstractRenderContext::destroy() {
     return onDestroy();
 }
 
-
-//-------------------------------------------------------------------------------------------------
 inline
 bool AbstractRenderContext::activate() {
     return onActivate();
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 bool AbstractRenderContext::update() {
     return onUpdate();
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

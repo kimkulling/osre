@@ -35,7 +35,6 @@ namespace Platform {
 class CPUInfo;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::SystemInfo
 ///	@ingroup	Engine
 ///
 ///	@brief This class implements system-info services, that are platform specific.

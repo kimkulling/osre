@@ -35,7 +35,6 @@ namespace Common {
 namespace Threading {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Threading::TaskJob
 ///	@ingroup	Engine
 ///
 ///	@brief This class implements a simple container for events as ids and the assigned data, which 
@@ -77,7 +76,6 @@ private:
     const Common::EventData *m_eventData;
 };
 
-//-------------------------------------------------------------------------------------------------
 inline
 TaskJob::TaskJob( const Common::Event *pEvent, const Common::EventData *pEventData ) 
 : m_event( pEvent )
@@ -85,39 +83,32 @@ TaskJob::TaskJob( const Common::Event *pEvent, const Common::EventData *pEventDa
     OSRE_ASSERT(nullptr != pEvent);
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 TaskJob::~TaskJob() {
     clear();
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 const Common::Event *TaskJob::getEvent() const {
     return m_event;
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 const Common::EventData *TaskJob::getEventData() const {
     return m_eventData;
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 void TaskJob::set(  const Common::Event *pEvent, const Common::EventData *pEventData ) {
     m_event = pEvent;
     m_eventData = pEventData;
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 void TaskJob::clear() {
     m_event = nullptr;
     m_eventData = nullptr;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
 } // Namespace OSRE

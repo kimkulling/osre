@@ -28,7 +28,6 @@ namespace OSRE {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::FunctorImpl
 ///	@ingroup    Engine
 ///	
 ///	@brief Base abstract interface of functor implementation
@@ -54,7 +53,6 @@ FunctorImpl<RET, P1, P2>::~FunctorImpl() {
 }
 
 //-------------------------------------------------------------------------------------------------
-/// @class		::OSRE::Common::FunctorFunction
 ///	@ingroup	Engine
 ///
 /// @brief	This template class implements a binding to a function.
@@ -83,7 +81,6 @@ private:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::FunctorMember
 ///	@ingroup	Engine
 ///
 /// @brief	Binding to a member with the class instance.
@@ -121,7 +118,6 @@ public:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::Functor
 ///	@ingroup	Engine
 ///
 /// @brief Functor implementation.
@@ -196,8 +192,6 @@ private:
     FunctorImpl<RET, P1, P2> *m_data;
     ui32* m_refCounter;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 } // Namespace OSRE

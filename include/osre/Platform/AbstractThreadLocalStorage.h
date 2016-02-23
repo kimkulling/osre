@@ -28,7 +28,6 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::IThread
 ///	@ingroup	Engine
 ///
 ///	@brief	This abstract class declares the interface for a generic thread local storage API.

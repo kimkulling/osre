@@ -28,7 +28,6 @@ namespace OSRE {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::DateTime
 ///	@ingroup    Engine
 ///
 ///	@brief	A utility class to manage dates and times.

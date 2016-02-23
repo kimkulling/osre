@@ -35,7 +35,6 @@ class OSEventListener;
 typedef CPPCore::TList<Common::EventData*> EventDataList;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::AbstractPlatformEventHandler
 ///	@ingroup	Engine
 ///
 ///	@brief  This abstract class defines the event handler for a platform event loop handler.
@@ -86,7 +85,6 @@ private:
     ui32 m_activeList;
 };
 
-//-------------------------------------------------------------------------------------------------
 inline
 AbstractPlatformEventHandler::AbstractPlatformEventHandler( )
 : AbstractEventHandler()
@@ -94,13 +92,10 @@ AbstractPlatformEventHandler::AbstractPlatformEventHandler( )
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 AbstractPlatformEventHandler::~AbstractPlatformEventHandler( ) {
     // empty
 }
-
-//-------------------------------------------------------------------------------------------------
 inline
 void AbstractPlatformEventHandler::processEvents( Common::EventTriggerer *pTriggerer ) {
     EventDataList *pList = getActiveEventDataList();
@@ -113,14 +108,12 @@ void AbstractPlatformEventHandler::processEvents( Common::EventTriggerer *pTrigg
     switchEventDataList();
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 EventDataList *AbstractPlatformEventHandler::getActiveEventDataList() {
     EventDataList *pActiveEventQueue( &m_eventQueues[ m_activeList ] );
     return pActiveEventQueue;
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 EventDataList *AbstractPlatformEventHandler::getPendingEventDataList() {
     ui32 queueToProcess = ( m_activeList + 1 ) % numEventQueues;
@@ -129,13 +122,10 @@ EventDataList *AbstractPlatformEventHandler::getPendingEventDataList() {
     return pPendingEventQueue;
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 void AbstractPlatformEventHandler::switchEventDataList() {
     m_activeList = ( m_activeList + 1 ) % numEventQueues;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // namespace Platform
 } // Namespace OSRE

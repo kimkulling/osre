@@ -32,7 +32,6 @@ namespace Properties {
 class AbstractPropertyMap;
 
 //--------------------------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Properties::ConfigurationMap
 ///	@ingroup	Engine
 ///
 ///	@brief  This class is used to manage settings for the engine startup.
@@ -109,7 +108,6 @@ private:
     Properties::AbstractPropertyMap *m_pPropertyMap;
 };
 
-//--------------------------------------------------------------------------------------------------------------------
 
 } // Namespace Properties
 } // Namespace OSRE

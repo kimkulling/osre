@@ -26,7 +26,6 @@ namespace OSRE {
 namespace RenderBackend {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderBackend::BlendState
 ///	@ingroup	Engine
 ///
 ///	@brief  

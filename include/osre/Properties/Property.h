@@ -29,7 +29,6 @@ namespace OSRE {
 namespace Properties {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Properties::Property
 ///	@ingroup	Engine
 ///
 ///	@brief	This class implements a simple property.
@@ -61,7 +60,6 @@ private:
     CPPCore::Variant m_Value;
 };
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Properties
 } // Namespace OSRE

@@ -30,7 +30,6 @@ namespace OSRE {
 namespace Properties {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Properties::BasePropertyMap
 ///	@ingroup	Engine
 ///
 ///	@brief 
@@ -92,8 +91,6 @@ private:
     typedef std::map<ui32, Property*> PropertyLookupMap;
     PropertyLookupMap m_PropertyLookupMap;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Properties
 } // Namespace OSRE

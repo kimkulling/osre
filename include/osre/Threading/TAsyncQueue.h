@@ -37,7 +37,6 @@ namespace OSRE {
 namespace Threading {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Threading::TAsyncQueue
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This template class implements a thread-save queue.
@@ -92,7 +91,6 @@ private:
     CPPCore::TQueue<T> m_ItemQueue;
 };
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 TAsyncQueue<T>::TAsyncQueue( Platform::AbstractThreadFactory *pThreadFactory )
@@ -105,7 +103,6 @@ TAsyncQueue<T>::TAsyncQueue( Platform::AbstractThreadFactory *pThreadFactory )
     m_enqueueEvent = pThreadFactory->createThreadEvent();
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 TAsyncQueue<T>::~TAsyncQueue() {
@@ -119,7 +116,6 @@ TAsyncQueue<T>::~TAsyncQueue() {
     m_criticalSection = nullptr;
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 void TAsyncQueue<T>::enqueue( const T &item ) {
@@ -133,7 +129,6 @@ void TAsyncQueue<T>::enqueue( const T &item ) {
     m_enqueueEvent->signal();
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 T TAsyncQueue<T>::dequeue() {
@@ -150,7 +145,6 @@ T TAsyncQueue<T>::dequeue() {
     return item;
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 void TAsyncQueue<T>::dequeueAll( CPPCore::TList<T> &data ) {
@@ -168,7 +162,6 @@ void TAsyncQueue<T>::dequeueAll( CPPCore::TList<T> &data ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 void TAsyncQueue<T>::signalEnqueuedItem() {
@@ -177,7 +170,6 @@ void TAsyncQueue<T>::signalEnqueuedItem() {
     m_enqueueEvent->signal();
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 ui32 TAsyncQueue<T>::size() {
@@ -190,7 +182,6 @@ ui32 TAsyncQueue<T>::size() {
     return size;
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 void TAsyncQueue<T>::awaitEnqueuedItem() {
@@ -201,7 +192,6 @@ void TAsyncQueue<T>::awaitEnqueuedItem() {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 bool TAsyncQueue<T>::isEmpty() {
@@ -216,7 +206,6 @@ bool TAsyncQueue<T>::isEmpty() {
     return res;
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 void TAsyncQueue<T>::clear() {
@@ -228,8 +217,6 @@ void TAsyncQueue<T>::clear() {
     
     m_criticalSection->leave();
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
 } // Namespace OSRE

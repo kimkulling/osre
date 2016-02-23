@@ -30,7 +30,6 @@ namespace OSRE {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::Tokenizer
 ///	@ingroup    Engine
 ///
 ///	@brief	This class implements a simple string tokenizer.
@@ -91,7 +90,6 @@ private:
     CPPCore::TArray<String> m_Token;
 };
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 } // Namespace OSRE

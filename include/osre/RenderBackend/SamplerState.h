@@ -26,7 +26,6 @@ namespace OSRE {
 namespace RenderBackend {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderBackend::SamplerState
 ///	@ingroup	Engine
 ///
 ///	@brief  

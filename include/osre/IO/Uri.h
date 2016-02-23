@@ -28,7 +28,6 @@ namespace OSRE {
 namespace IO {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::IO::Uri
 ///	@ingroup	Engine
 ///
 ///	@brief	This class represents a URI ( see

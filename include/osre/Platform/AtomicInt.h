@@ -28,7 +28,6 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::AbstractAtomic
 ///	@ingroup	Engine
 ///
 ///	@brief  This is the abstract base class for all atomic implementations.
@@ -59,14 +58,12 @@ public:
     virtual i32 dec() = 0;
 };
 
-//-------------------------------------------------------------------------------------------------
 inline
 AbstractAtomic::~AbstractAtomic() {
     // empty
 }
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::AtomicInt
 ///	@ingroup	Engine
 ///
 ///	@brief  Implements the accessor for an atomic operation.
@@ -102,7 +99,6 @@ private:
     AbstractAtomic *m_pImpl;
 };
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

@@ -34,7 +34,6 @@ namespace Platform {
 namespace Profiling {
         
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Profiling::FPSCounter
 ///	@ingroup	Engine
 ///
 ///	@brief

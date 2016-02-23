@@ -28,7 +28,6 @@ namespace OSRE {
 namespace Platform  {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::AbstractThreadEvent
 ///	@ingroup	Engine
 ///
 ///	@brief
@@ -52,13 +51,11 @@ public:
 	virtual void waitForTimeout( ui32 ms ) = 0;
 };
 
-//-------------------------------------------------------------------------------------------------
 inline
 AbstractThreadEvent::~AbstractThreadEvent( ) {
 	// empty
 }
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

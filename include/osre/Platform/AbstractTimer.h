@@ -28,7 +28,6 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::AbstractTimer
 ///	@ingroup	Engine
 ///
 ///	@brief This class declares the abstract interface for timer implementations.
@@ -66,7 +65,6 @@ private:
     d32 m_reqTimeSlice;
 };
 
-//-------------------------------------------------------------------------------------------------
 inline
 AbstractTimer::AbstractTimer( const String &name, d32 reqTimeSlice )
 : Object( name )
@@ -74,19 +72,15 @@ AbstractTimer::AbstractTimer( const String &name, d32 reqTimeSlice )
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 AbstractTimer::~AbstractTimer() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 d32 AbstractTimer::getRequestedTimeStep() const {
     return m_reqTimeSlice;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

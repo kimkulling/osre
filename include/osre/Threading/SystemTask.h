@@ -37,7 +37,6 @@ class SystemTaskThread;
 class TaskJob;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Threading::Task
 ///	@ingroup	Engine
 ///
 ///	@brief	This class implements a system task. 
@@ -114,8 +113,6 @@ private:
     typedef Threading::TAsyncQueue<const TaskJob*> TaskQueue;
     TaskQueue *m_asyncQueue;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
 } // Namespace OSRE

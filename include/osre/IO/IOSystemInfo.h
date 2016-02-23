@@ -28,7 +28,6 @@ namespace OSRE {
 namespace IO {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::IO::SystemInfo
 ///	@ingroup	Engine
 ///
 ///	@brief This helper class returns IO-specific system informations.

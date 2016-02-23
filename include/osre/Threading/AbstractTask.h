@@ -42,7 +42,6 @@ namespace Platform {
 namespace Threading {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Threading::AbstractTask
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This abstract interface-class declares a task. Tasks can be used to handle several 
@@ -155,7 +154,6 @@ private:
     CPPCore::TArray<AbstractTask*> m_childTasks;
 };
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
 } // Namespace OSRE

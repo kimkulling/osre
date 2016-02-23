@@ -32,7 +32,6 @@ namespace OSRE {
 namespace Scene {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Scene::TrackBall
 ///	@ingroup	Engine
 ///
 ///	@brief	this class implements a simple trackball. You can use it to rotate a model.
@@ -69,7 +68,6 @@ private:
     Math::Vector3f m_StartVector, m_EndVector;
     Common::TArea<ui32> m_Dimension;
     Math::Quatf m_rotation;
-    //Math::Quaternionf m_Rotation;
     bool m_bLeftMButtonClicked;
     bool m_bMiddleClicked;
     bool m_bRightMButtonClicked;

@@ -29,7 +29,6 @@ namespace OSRE {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::AbstractService
 ///	@ingroup    Engine
 ///
 ///	@brief	This class is the base interface for all server classes.
@@ -80,7 +79,6 @@ private:
     bool m_IsOpen;
 };
 
-//-------------------------------------------------------------------------------------------------
 inline
 AbstractService::AbstractService( const String &serverName )
 : Object( serverName )
@@ -88,13 +86,11 @@ AbstractService::AbstractService( const String &serverName )
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 inline 
 AbstractService::~AbstractService() {
     OSRE_ASSERT( !m_IsOpen );
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 bool AbstractService::open() {
     if ( !m_IsOpen ) {
@@ -105,7 +101,6 @@ bool AbstractService::open() {
     return false;
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 bool AbstractService::close() {
     if ( m_IsOpen )	{
@@ -116,13 +111,12 @@ bool AbstractService::close() {
     return false;
 }
 
-//-------------------------------------------------------------------------------------------------
+
 inline
 bool AbstractService::isOpen() {
     return m_IsOpen;
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 bool AbstractService::update(  d32 timeDiff ) {
     if ( !isOpen() ) {
@@ -133,7 +127,6 @@ bool AbstractService::update(  d32 timeDiff ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-/// @def        ::OSRE::Common::DECLARE_SINGLETON
 /// @ingroup    Engine
 ///
 /// @brief  Helper macro to define a singleton and declare all needed methods.
@@ -146,7 +139,6 @@ public:                                                                         
 private:
 
 //-------------------------------------------------------------------------------------------------
-/// @def        ::OSRE::Common::IMPLEMENT_SINGLETON
 /// @ingroup    Engine
 ///
 /// @brief  Helper macro to define a singleton and implement all needed methods.
@@ -155,7 +147,6 @@ private:
     type * type::s_pTypeInstance = nullptr;
 
 //-------------------------------------------------------------------------------------------------
-/// @def        ::OSRE::Common::CREATE_SINGLETON
 /// @ingroup    Engine
 ///
 /// @brief  Helper macro to create a macro from a given class.
@@ -165,7 +156,6 @@ private:
     s_instance = this;         
 
 //-------------------------------------------------------------------------------------------------
-/// @def        ::OSRE::Common::DESTROY_SINGLETON
 /// @ingroup    Engine
 ///
 /// @brief  Helper macro to destroy a macro from a given class.

@@ -27,10 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-//-------------------------------------------------------------------------------------------------
-///	@enum	::OSRE::System::CPUProp
 ///	@brief	Describes several properties of the CPU.
-//-------------------------------------------------------------------------------------------------
 enum CPUProp {
 	CPUID_None							= 0x00000,
 	CPUID_Unsupported					= 0x00001,	//< unsupported (386/486)
@@ -45,7 +42,6 @@ enum CPUProp {
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::System::CPUInfo
 ///	@ingroup	Engine
 ///
 ///	@brief 
@@ -83,7 +79,6 @@ private:
 	static ui32 m_NumCPUs;
 };
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace System
 } // Namespace OSRE

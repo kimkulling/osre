@@ -34,7 +34,6 @@ namespace IO {
 namespace Assets {
         
 //-------------------------------------------------------------------------------------------------
-///	@class      ::OSRE::Assets::AssetRegistry
 ///	@ingroup    Engine
 ///
 ///	@brief  

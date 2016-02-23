@@ -29,7 +29,6 @@ namespace OSRE {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::IObject
 ///	@ingroup    Engine
 ///
 ///	@brief	This base-class implements a simple reference counting. To get an ownership call get, 

@@ -33,7 +33,6 @@ namespace IO {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class      ::OSRE::Common::AbstractCodec
 ///	@ingroup    Engine
 ///
 ///	@brief  The abstract class describes the en- and decoding algorithm for a given file format.

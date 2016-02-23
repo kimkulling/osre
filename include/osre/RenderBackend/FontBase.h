@@ -32,7 +32,6 @@ class OGLRenderBackend;
 struct OGLTexture;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		FontBase
 ///	@ingroup	Engine
 ///
 ///	@brief

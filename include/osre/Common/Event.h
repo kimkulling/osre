@@ -50,7 +50,6 @@ struct ObjectId {
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@def		::OSRE::Common::DECL_EVENT
 ///	@ingroup    Engine
 ///
 ///	@brief	Event type declaration helper macro. This is a shortcut to define global events like 
@@ -59,7 +58,6 @@ struct ObjectId {
 #define DECL_EVENT( NAME ) const Common::Event NAME ( #NAME )
     
 //-------------------------------------------------------------------------------------------------
-/// @class		::OSRE::Common::Event
 ///	@ingroup	Engine
 ///
 ///	@brief	The base class of osre-events, describes type of an event. To create your own events
@@ -113,7 +111,6 @@ private:
 };
 
 //--------------------------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::EventData
 ///	@ingroup	Engine
 ///
 ///	@brief	The base class for event specific data. For instance if you get a mouse event from your

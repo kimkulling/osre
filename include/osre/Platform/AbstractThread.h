@@ -31,7 +31,6 @@ class AbstractThreadEvent;
 class AbstractThreadLocalStorage;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::AbstractThread
 ///	@ingroup	Engine
 ///
 ///	@brief	This abstract class declares the interface for a generic thread API.

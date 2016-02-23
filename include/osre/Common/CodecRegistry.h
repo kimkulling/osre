@@ -31,7 +31,6 @@ namespace Common {
 class AbstractCodec;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::CodecRegistry
 ///	@ingroup    Engine
 ///
 ///	@brief

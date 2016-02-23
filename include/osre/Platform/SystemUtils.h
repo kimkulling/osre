@@ -28,7 +28,6 @@ namespace OSRE {
 namespace System {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::System::SystemUtils
 ///	@ingroup	Engine
 ///
 ///	@brief	This class offers some system-specific functions.

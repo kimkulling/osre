@@ -31,7 +31,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/gtx/string_cast.hpp>
 
 // Forward declarations
-
 namespace OSRE {
 
 namespace RenderBackend {
@@ -41,7 +40,6 @@ namespace RenderBackend {
 namespace Scene {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Scene::GeometryBuilder
 ///	@ingroup	Engine
 ///
 ///	@brief  This class is used to create the static geometry for base shapes like a triangle or a 

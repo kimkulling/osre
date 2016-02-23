@@ -28,7 +28,6 @@ namespace OSRE {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::TObjPtr
 ///	@ingroup    Engine
 ///
 ///	@brief	This helper class stores any derived class from the ZFXCE specific base-class IObject.
@@ -97,7 +96,6 @@ private:
 	T *m_pPtr;
 };
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 TObjPtr<T>::TObjPtr() 
@@ -105,7 +103,6 @@ TObjPtr<T>::TObjPtr()
 	// empty
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 TObjPtr<T>::TObjPtr( T *pPtr ) 
@@ -115,7 +112,6 @@ TObjPtr<T>::TObjPtr( T *pPtr )
 	}
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 TObjPtr<T>::TObjPtr( const TObjPtr<T> &other ) 
@@ -125,14 +121,12 @@ TObjPtr<T>::TObjPtr( const TObjPtr<T> &other )
 	}
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 TObjPtr<T>::~TObjPtr() {
 	clear();
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 void TObjPtr<T>::init( T *pPtr ) {
@@ -145,7 +139,6 @@ void TObjPtr<T>::init( T *pPtr ) {
 	}
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 void TObjPtr<T>::set( T *pPtr ) {
@@ -156,14 +149,12 @@ void TObjPtr<T>::set( T *pPtr ) {
 	}
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 T *TObjPtr<T>::getPtr() const {
 	return m_pPtr;
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 void TObjPtr<T>::clear() {
@@ -172,29 +163,24 @@ void TObjPtr<T>::clear() {
 		m_pPtr = nullptr;
 	}
 }
-
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 bool TObjPtr<T>::isValid() const {
 	return ( nullptr != m_pPtr );
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 T *TObjPtr<T>::operator -> () const {
 	return m_pPtr;
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 T &TObjPtr<T>::operator *() const {
 	return *m_pPtr;
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 TObjPtr<T> &TObjPtr<T>::operator = ( const TObjPtr<T> &other ) {
@@ -209,7 +195,6 @@ TObjPtr<T> &TObjPtr<T>::operator = ( const TObjPtr<T> &other ) {
 	return *this;
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 TObjPtr<T> &TObjPtr<T>::operator = ( T *pPtr ) {
@@ -222,21 +207,17 @@ TObjPtr<T> &TObjPtr<T>::operator = ( T *pPtr ) {
 	return *this;
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 bool TObjPtr<T>::operator == ( const TObjPtr<T> &rhs ) const {
 	return ( m_pPtr == rhs.m_pPtr );
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class T>
 inline
 bool TObjPtr<T>::operator != ( const TObjPtr<T> &rhs ) const {
 	return !( m_pPtr == rhs.m_pPtr );
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 } // Namespace OSRE

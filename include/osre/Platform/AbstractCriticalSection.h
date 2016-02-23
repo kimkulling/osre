@@ -28,7 +28,6 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::ICriticalSection
 ///	@ingroup	Engine
 ///
 ///	@brief
@@ -49,13 +48,11 @@ public:
 	virtual void leave() = 0;
 };
 
-//-------------------------------------------------------------------------------------------------
 inline
 AbstractCriticalSection::~AbstractCriticalSection( ) {
 	// empty
 }
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

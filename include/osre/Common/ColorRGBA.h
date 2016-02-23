@@ -30,7 +30,6 @@ namespace Common {
 const f32 COL_SHIFT = 255.0f;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::ColorRGBA
 ///	@ingroup    Engine
 ///
 ///	@brief This class implements a color in RGBA representation.

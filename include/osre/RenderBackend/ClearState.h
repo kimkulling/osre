@@ -28,7 +28,6 @@ namespace OSRE {
 namespace RenderBackend {
         
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderBackend::ClearState
 ///	@ingroup	Engine
 ///
 ///	@brief  

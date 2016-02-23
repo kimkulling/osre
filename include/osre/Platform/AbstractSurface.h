@@ -28,7 +28,6 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@struct		::OSRE::Platform::SurfaceProperties
 ///	@ingroup	Engine
 ///
 ///	@brief  This struct stores all surface related information.
@@ -47,7 +46,6 @@ struct SurfaceProperties {
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::AbstractSurface
 ///	@ingroup	Engine
 ///
 ///	@brief  This abstract class declares the interface for a render surface.
@@ -113,7 +111,6 @@ private:
     bool m_isCreated;
 };
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

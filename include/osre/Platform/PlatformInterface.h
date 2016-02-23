@@ -55,7 +55,6 @@ struct IInputUpdate;
 struct SurfaceProperties;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::OSEventListener
 ///	@ingroup	Engine
 ///
 ///	@brief	This class declares the abstract interface for all operation system events.
@@ -92,7 +91,6 @@ DECL_EVENT( QuitEvent );
 DECL_EVENT( AppFocusEvent );
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::KeyboardButtonEventData
 ///	@ingroup	Engine
 ///
 ///	@brief	This class stored keyboard events.
@@ -116,7 +114,6 @@ public:
 
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::MouseButtonEventData
 ///	@ingroup	Engine
 ///
 ///	@brief	This class stores mouse button events.
@@ -150,7 +147,6 @@ public:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::MouseMoveEventData
 ///	@ingroup	Engine
 ///
 ///	@brief	This class stored mouse-move specific event data.
@@ -172,7 +168,6 @@ public:
 
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::PlatformInterface
 ///	@ingroup	Engine
 ///
 ///	@brief  This class encapsulates platform-specific details.
@@ -210,7 +205,6 @@ private:
     AbstractTimer *m_pTimer;
 };
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

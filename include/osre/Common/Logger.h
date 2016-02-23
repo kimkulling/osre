@@ -30,7 +30,6 @@ namespace OSRE {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::AbstractLogStream
 ///	@ingroup    Engine
 ///
 ///	@brief	This pure abstract interface class declares the protocol for log-stream implementation.

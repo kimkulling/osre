@@ -34,7 +34,6 @@ class AbstractAtomic;
 class AbstractThreadLocalStorage;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::IThreadFactory
 ///	@ingroup	Engine
 ///
 ///	@brief	This abstract interface declares the factory methods for any thread implementation.
@@ -84,7 +83,6 @@ private:
     static AbstractThreadFactory *s_threadFactory;
 };
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE
