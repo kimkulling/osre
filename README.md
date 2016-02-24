@@ -17,9 +17,10 @@ Clone the repo via git from our project space on github.
 > git clone https://github.com/kimkulling/osre.git
 
 Now update all used submodule, which are usep by OSRE:
-> git submodule init
-> git submodule update -r
-
+'''
+git submodule init
+git submodule update -r
+'''
 Generate a build environment of your choise:
 > cmake CMakeLists.txt
 
