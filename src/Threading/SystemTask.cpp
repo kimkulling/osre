@@ -46,13 +46,22 @@ TaskJob *TaskJobAlloc( const Event *ev, const EventData *eventData ) {
     return new TaskJob( ev, eventData );
 }
 
+DECL_EVENT( OnStopSystemTaskEvent );
+
+struct OSRE_EXPORT StopSystemTaskEventData : public Common::EventData {
+public:
+    StopSystemTaskEventData()
+    : EventData( OnStopSystemTaskEvent, nullptr ) {
+        // empty
+    }
+};
+
 static const String Tag = "SystemTaskThread";
 
 static bool DebugQueueSize = false;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Threading::TaskThread
-///	@ingroup	Infrastructure
+///	@ingroup	Engine
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
@@ -77,7 +86,6 @@ public:
     : SDL2Thread( threadName, StackSize )
 #endif
     , m_updateEvent( nullptr )
-    , m_reqStop( nullptr )
     , m_activeJobQueue( jobQueue )
     , m_eventHandler( nullptr ) {
         OSRE_ASSERT(nullptr != jobQueue);
@@ -85,7 +93,6 @@ public:
         AbstractThreadFactory *threadFactory( AbstractThreadFactory::getInstance() );
         if ( threadFactory ) {
             m_updateEvent = threadFactory->createThreadEvent();
-            m_reqStop = threadFactory->createAtomic( 0 );
         } else {
             osre_error( Tag, "Invalid pointer to thread factory." );
         }
@@ -110,16 +117,6 @@ public:
     }
     //---------------------------------------------------------------------------------------------
     virtual bool stop() {
-        if (nullptr == m_reqStop) {
-#ifdef OSRE_WINDOWS
-            return Win32Thread::stop();
-#else
-            return SDL2Thread::stop();
-#endif
-        }
-
-        m_reqStop->incValue( 1 );
-        m_updateEvent->waitForOne();
         AbstractThread::setState( ThreadState::Terminated );
 
         return true;
@@ -148,6 +145,8 @@ public:
 protected:
     //---------------------------------------------------------------------------------------------
     i32 run() {
+        OSRE_ASSERT( nullptr != m_activeJobQueue );
+
         osre_debug( Tag, "SystemThread::run" );
         bool running = true;
         while ( running ) {
@@ -168,18 +167,17 @@ protected:
                     OSRE_ASSERT(nullptr != ev);
                 }
 
+                if ( OnStopSystemTaskEvent == *ev ) {
+                    osre_debug( Tag, "stop requested." );
+                    running = false;
+                }
                 if ( m_eventHandler ) {
                     m_eventHandler->onEvent( *ev, job->getEventData() );
                 }
             }
 
-			if (m_updateEvent) {
-				m_updateEvent->signal();
-			}
-
-            i32 v(m_reqStop->getValue());
-            if ( v == 1 ) {
-                running = false;
+            if ( m_updateEvent ) {
+                m_updateEvent->signal();
             }
         }
 
@@ -192,7 +190,6 @@ protected:
 
 private:
     Platform::AbstractThreadEvent *m_updateEvent;
-    Platform::AbstractAtomic *m_reqStop;
     Threading::TAsyncQueue<const TaskJob*> *m_activeJobQueue;
     Common::AbstractEventHandler *m_eventHandler;
 };
@@ -266,6 +263,7 @@ bool SystemTask::stop() {
         return false;
     }
 
+    sendEvent( &OnStopSystemTaskEvent, nullptr );
     m_taskThread->stop();
     delete m_taskThread;
     m_taskThread = nullptr;
