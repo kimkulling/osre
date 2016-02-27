@@ -36,8 +36,9 @@ using namespace ::OSRE::RenderBackend;
 
 static const String Tag = "GeometryBuilder";
 
+static const String GLSLVersionString_400 = "#version 400 core\n";
 const String VsSrc =
-    "#version 400 core\n"
+    GLSLVersionString_400 +
     "\n"
     "layout(location = 0) in vec3 position;	      // object space vertex position\n"
     "layout(location = 1) in vec3 normal;	            // object space vertex normal\n"
@@ -49,13 +50,11 @@ const String VsSrc =
     "// uniform\n"
     "uniform mat4 MVP;	//combined modelview projection matrix\n"
     "\n"
-    "void main()\n"
-    "{\n"
-    "    //assign the per-vertex color to vSmoothColor varying\n"
+    "void main() {\n"
+    "    // assign the per-vertex color to vSmoothColor varying\n"
     "    vSmoothColor = vec4(color0,1);\n"
-    "\n"
-    "    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
-    "    //vertex position\n"
+    "    // get the clip space position by multiplying the combined MVP matrix with the object space\n"
+    "    // vertex position\n"
     "    gl_Position = MVP*vec4(position,1);\n"
     "}\n";
 
@@ -67,12 +66,10 @@ const String FsSrc =
     "//input form the vertex shader\n"
     "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
     "\n"
-    "void main()\n"
-    "{\n"
-    "    //set the interpolated color as the shader output\n"
+    "void main() {\n"
+    "    // set the interpolated color as the shader output\n"
     "    vFragColor = vSmoothColor;\n"
     "}\n";
-
 
 const String VsSrcRV =
     "#version 400 core\n"
