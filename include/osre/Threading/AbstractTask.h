@@ -109,7 +109,9 @@ public:
     virtual void onUpdate() = 0;
 
     ///	@brief	Awaits an incoming signal.
-    virtual void await() = 0;
+    virtual void awaitUpdate() = 0;
+
+    virtual void awaitStop() = 0;
 
 public:
     /// @brief  Increments number of references.

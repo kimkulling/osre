@@ -76,7 +76,9 @@ public:
     virtual void onUpdate();
     
     ///	@brief	Overwritten, @see AbstractTask.
-    virtual void await();
+    virtual void awaitUpdate();
+
+    virtual void awaitStop();
 
     ///	@brief	An event handler will be attached.
     ///	@param	pEventHandler	[in] A pointer showing to the event handler to attach.

@@ -12,6 +12,7 @@ SET ( rendertest_src
     src/AbstractRenderTest.cpp
     src/AbstractRenderTest.h
     src/RenderTestSuite.cpp
+    src/PrimTypeRenderTest.cpp
     src/BaseTriangleRenderTest.cpp
     src/BaseTextureRenderTest.cpp
     src/DbgFontRenderTest.cpp

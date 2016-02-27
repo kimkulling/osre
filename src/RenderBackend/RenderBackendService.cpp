@@ -84,7 +84,7 @@ bool RenderBackendService::onUpdate( d32 timediff ) {
     
     // synchronizing event with render back-end
     bool result( m_renderTaskPtr->sendEvent( &OnRenderFrameEvent, nullptr ) );
-    m_renderTaskPtr->await();
+    m_renderTaskPtr->awaitUpdate();
 
     return result;
 }

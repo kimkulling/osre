@@ -77,7 +77,6 @@ public:
     };
 
 public:
-    //---------------------------------------------------------------------------------------------
 #ifdef OSRE_WINDOWS
     SystemTaskThread( const String &threadName, TAsyncQueue<const TaskJob*> *jobQueue )
     : Win32Thread( threadName, StackSize )
@@ -86,6 +85,7 @@ public:
     : SDL2Thread( threadName, StackSize )
 #endif
     , m_updateEvent( nullptr )
+    , m_stopEvent( nullptr )
     , m_activeJobQueue( jobQueue )
     , m_eventHandler( nullptr ) {
         OSRE_ASSERT(nullptr != jobQueue);
@@ -93,12 +93,12 @@ public:
         AbstractThreadFactory *threadFactory( AbstractThreadFactory::getInstance() );
         if ( threadFactory ) {
             m_updateEvent = threadFactory->createThreadEvent();
+            m_stopEvent = threadFactory->createThreadEvent();
         } else {
             osre_error( Tag, "Invalid pointer to thread factory." );
         }
     }
 
-    //---------------------------------------------------------------------------------------------
     ~SystemTaskThread()	{
         if ( m_eventHandler ) {
             m_eventHandler->detach( nullptr );
@@ -106,44 +106,45 @@ public:
 
         delete m_updateEvent;
         m_updateEvent = nullptr;
+
+        delete m_stopEvent;
+        m_stopEvent = nullptr;
     }
 
-    //---------------------------------------------------------------------------------------------
     void setEventHandler( AbstractEventHandler *eventHandler ) {
         m_eventHandler = eventHandler;
         if ( m_eventHandler ) {
             m_eventHandler->attach( nullptr );
-        }
+        } 
     }
-    //---------------------------------------------------------------------------------------------
+
     virtual bool stop() {
         AbstractThread::setState( ThreadState::Terminated );
 
         return true;
     }
 
-    //---------------------------------------------------------------------------------------------
     Common::AbstractEventHandler *getEventHandler() const {
         return m_eventHandler;
     }
 
-    //---------------------------------------------------------------------------------------------
     void setActiveJobQueue( Threading::TAsyncQueue<const TaskJob*> *pJobQueue ) {
         m_activeJobQueue = pJobQueue;
     }
 
-    //---------------------------------------------------------------------------------------------
     Threading::TAsyncQueue<const TaskJob*> *getActiveJobQueue() const {
         return m_activeJobQueue;
     }
 
-    //---------------------------------------------------------------------------------------------
     Platform::AbstractThreadEvent *getUpdateEvent() const {
         return m_updateEvent;
     }
 
+    Platform::AbstractThreadEvent *getStopEvent() const {
+        return m_stopEvent;
+    }
+
 protected:
-    //---------------------------------------------------------------------------------------------
     i32 run() {
         OSRE_ASSERT( nullptr != m_activeJobQueue );
 
@@ -171,6 +172,7 @@ protected:
                     osre_debug( Tag, "stop requested." );
                     running = false;
                 }
+
                 if ( m_eventHandler ) {
                     m_eventHandler->onEvent( *ev, job->getEventData() );
                 }
@@ -181,8 +183,8 @@ protected:
             }
         }
 
-        if (m_updateEvent) {
-            m_updateEvent->signal();
+        if (m_stopEvent) {
+            m_stopEvent->signal();
         }
 
         return 0;
@@ -190,11 +192,11 @@ protected:
 
 private:
     Platform::AbstractThreadEvent *m_updateEvent;
+    Platform::AbstractThreadEvent *m_stopEvent;
     Threading::TAsyncQueue<const TaskJob*> *m_activeJobQueue;
     Common::AbstractEventHandler *m_eventHandler;
 };
 
-//-------------------------------------------------------------------------------------------------
 SystemTask::SystemTask( const String &taskName )
 : AbstractTask( taskName )
 , m_workingMode( Async )
@@ -204,12 +206,10 @@ SystemTask::SystemTask( const String &taskName )
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 SystemTask::~SystemTask() {
     OSRE_ASSERT( !isRunning() );
 }
 
-//-------------------------------------------------------------------------------------------------
 void SystemTask::setWorkingMode( AbstractTask::WorkingMode mode ) {
     if ( isRunning() ) {
         osre_error( Tag, "The working mode cannot be chanced in a running task." );
@@ -219,22 +219,18 @@ void SystemTask::setWorkingMode( AbstractTask::WorkingMode mode ) {
     m_workingMode = mode;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractTask::WorkingMode SystemTask::getWorkingMode() const {
     return m_workingMode;
 }
 
-//-------------------------------------------------------------------------------------------------
 void SystemTask::setBufferMode( BufferMode buffermode ) {
     m_buffermode = buffermode;
 }
 
-//-------------------------------------------------------------------------------------------------
 SystemTask::BufferMode SystemTask::getBufferMode() const {
     return m_buffermode;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool SystemTask::start( AbstractThread *pThread ) {
     // ensure task is not running
     if( nullptr != m_taskThread ) {
@@ -247,7 +243,7 @@ bool SystemTask::start( AbstractThread *pThread ) {
     // setup the thread context
     m_asyncQueue = new Threading::TAsyncQueue<const TaskJob*>( Platform::AbstractThreadFactory::getInstance() );
     if ( !pThread ) {
-        m_taskThread = new SystemTaskThread( getName() + ".thread", m_asyncQueue );
+        m_taskThread = new SystemTaskThread( Object::getName() + ".thread", m_asyncQueue );
     } else {
         m_taskThread = reinterpret_cast<SystemTaskThread*>( pThread );
     }
@@ -256,22 +252,27 @@ bool SystemTask::start( AbstractThread *pThread ) {
     return ( m_taskThread->start( nullptr ) );
 }
 
-//-------------------------------------------------------------------------------------------------
 bool SystemTask::stop() {
     if ( AbstractThread::ThreadState::Running != m_taskThread->getCurrentState() ) {
         osre_debug( Tag, "Task " + getName() + " is not running." );
         return false;
     }
 
+    bool res( false );
+    AbstractThreadEvent *stopEvent = m_taskThread->getStopEvent();
     sendEvent( &OnStopSystemTaskEvent, nullptr );
-    m_taskThread->stop();
-    delete m_taskThread;
-    m_taskThread = nullptr;
+    
+    if ( nullptr != stopEvent ) {
+        stopEvent->waitForOne();
+        m_taskThread->stop();
+        delete m_taskThread;
+        m_taskThread = nullptr;
+        res = true;
+    }
 
-    return true;
+    return res;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool SystemTask::isRunning() const {
     if ( nullptr != m_taskThread ) {
         return ( AbstractThread::ThreadState::Running == m_taskThread->getCurrentState() );
@@ -280,41 +281,36 @@ bool SystemTask::isRunning() const {
     return false;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool SystemTask::execute() {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 void SystemTask::setThreadInstance( AbstractThread *threadInstance ) {
     if ( nullptr != m_taskThread ) {
         if( Platform::AbstractThread::ThreadState::Running == m_taskThread->getCurrentState() ) {
-            m_taskThread->stop();
+            osre_debug( Tag, "Stopping SystemTask before setting new thread." );
+            SystemTask::stop();
         }
     }
 
     m_taskThread = reinterpret_cast<SystemTaskThread*>( threadInstance );
 }
 
-//-------------------------------------------------------------------------------------------------
-void SystemTask::attachEventHandler( AbstractEventHandler *pEventHandler ) {
+void SystemTask::attachEventHandler( AbstractEventHandler *eventHandler ) {
     OSRE_ASSERT( nullptr != m_taskThread );
 
-    m_taskThread->setEventHandler( pEventHandler );
+    m_taskThread->setEventHandler( eventHandler );
 }
 
-//-------------------------------------------------------------------------------------------------
 void SystemTask::detachEventHandler() {
     OSRE_ASSERT( nullptr != m_taskThread );
 
-    std::cout<< "SystemTask::detachEventHandler" << std::endl;
-    Common::AbstractEventHandler *pEH = m_taskThread->getEventHandler();
-    if( pEH  ) {
+    Common::AbstractEventHandler *eh = m_taskThread->getEventHandler();
+    if( eh ) {
         m_taskThread->setEventHandler( NULL );
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 bool SystemTask::sendEvent( const Event *ev, const EventData *eventData ) {
     OSRE_ASSERT( nullptr != m_asyncQueue );
     OSRE_ASSERT( nullptr != ev );
@@ -325,41 +321,41 @@ bool SystemTask::sendEvent( const Event *ev, const EventData *eventData ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 SystemTask::getEvetQueueSize() const {
     OSRE_ASSERT( nullptr != m_asyncQueue);
 
     return m_asyncQueue->size();
 }
 
-//-------------------------------------------------------------------------------------------------
 void SystemTask::onUpdate() {
     OSRE_ASSERT( nullptr != m_taskThread);
 
-    if ( !m_taskThread )
-        return;
-
-    if ( !m_asyncQueue ) {
+    if ( nullptr == m_asyncQueue ) {
         m_asyncQueue = m_taskThread->getActiveJobQueue();
     }
 }
 
-//-------------------------------------------------------------------------------------------------
-void SystemTask::await() {
-    if ( m_taskThread ) {
+void SystemTask::awaitUpdate() {
+    if ( nullptr != m_taskThread ) {
         AbstractThreadEvent *threadEvent = m_taskThread->getUpdateEvent();
-        if ( threadEvent ) {
+        if ( nullptr != threadEvent ) {
             threadEvent->waitForOne();
         }
     }
 }
 
-//-------------------------------------------------------------------------------------------------
+void SystemTask::awaitStop() {
+    if ( nullptr != m_taskThread ) {
+        AbstractThreadEvent *threadEvent = m_taskThread->getStopEvent();
+        if ( nullptr != threadEvent ) {
+            threadEvent->waitForOne();
+        }
+    }
+}
+
 SystemTask *SystemTask::create( const String &taskName ) {
     return new SystemTask( taskName );
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
 } // Namespace OSRE
