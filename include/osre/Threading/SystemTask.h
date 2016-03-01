@@ -78,6 +78,7 @@ public:
     ///	@brief	Overwritten, @see AbstractTask.
     virtual void awaitUpdate();
 
+    /// @brief  Overwritten, @see AbstractTask.
     virtual void awaitStop();
 
     ///	@brief	An event handler will be attached.
