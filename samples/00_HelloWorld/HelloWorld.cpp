@@ -78,6 +78,8 @@ protected:
 #endif 
 
         m_stage = AppBase::createStage( "HelloWorld" );
+        AppBase::activateStage( m_stage->getName() );
+
         Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
         Scene::GeometryBuilder myBuilder;
         RenderBackend::StaticGeometry *geo = myBuilder.allocTriangles( ColorVertex );

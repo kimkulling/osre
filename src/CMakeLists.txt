@@ -244,6 +244,7 @@ SET( scene_src
     Scene/Stage.cpp
     Scene/TrackBall.cpp
     Scene/View.cpp
+    Scene/World.cpp
 )
 SET( scene_inc
     ${HEADER_PATH}/Scene/Component.h
@@ -252,6 +253,7 @@ SET( scene_inc
     ${HEADER_PATH}/Scene/Stage.h
     ${HEADER_PATH}/Scene/TrackBall.h
     ${HEADER_PATH}/Scene/View.h
+    ${HEADER_PATH}/Scene/World.h
 )
 
 #==============================================================================

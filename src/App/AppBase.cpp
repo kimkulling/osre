@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractTimer.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/Stage.h>
+#include <osre/Scene/World.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Assets/AssetRegistry.h>
 
@@ -55,8 +56,7 @@ struct AppBase::Impl {
     Platform::PlatformInterface *m_platformInterface;
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
-    Scene::Stage *m_activeStage;
-    CPPCore::TArray<Scene::Stage*> m_stages;
+    Scene::World *m_world;
     
     Impl( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
     : m_state( Uninited )
@@ -66,7 +66,7 @@ struct AppBase::Impl {
     , m_platformInterface( nullptr )
     , m_timer( nullptr )
     , m_rbService( nullptr )
-    , m_activeStage( nullptr ) {
+    , m_world( nullptr ) {
         m_settings = new Properties::Settings;
         m_settings->setString( Properties::Settings::RenderAPI, "opengl" );
         m_settings->setBool( Properties::Settings::PollingMode, true );
@@ -150,34 +150,20 @@ Scene::Stage *AppBase::createStage( const String &name ) {
 
     Scene::Stage *stage( new Scene::Stage( name, m_impl->m_rbService ) );
     if ( nullptr != stage ) {
-        m_impl->m_activeStage = stage;
-        m_impl->m_stages.add( stage );
+        m_impl->m_world->addStage( stage );
     }
 
-    return m_impl->m_activeStage;
+    return stage;
 }
 
 bool AppBase::activateStage( const String &name ) {
     OSRE_ASSERT( nullptr!=m_impl );
 
-    if ( name.empty() ) {
+    if ( nullptr == m_impl->m_world ) {
         return false;
     }
 
-    if ( m_impl->m_activeStage->getName() == name ) {
-        return true;
-    }
-
-    bool success( false );
-    for ( ui32 i=0; i<m_impl->m_stages.size(); i++ ) {
-        if ( m_impl->m_stages[ i ]->getName() == name ) {
-            m_impl->m_activeStage = m_impl->m_stages[ i ];
-            success = true;
-            break;
-        }
-    }
-
-    return success;
+    return m_impl->m_world->setActiveStage( name );
 }
 
 bool AppBase::onCreate( Properties::Settings *config ) {
@@ -230,6 +216,7 @@ bool AppBase::onCreate( Properties::Settings *config ) {
     // store timer instance
     m_impl->m_timer = Platform::PlatformInterface::getInstance()->getTimer();
 
+    m_impl->m_world = new Scene::World( "world" );
     // set application state to Created
     osre_debug( Tag, "Set application state to Created." );
     m_impl->m_state = Impl::Created;
@@ -252,13 +239,8 @@ bool AppBase::onDestroy() {
         m_impl->m_platformInterface = nullptr;
     }
 
-    for ( ui32 i=0; i<m_impl->m_stages.size(); i++ ) {
-        Scene::Stage *current( m_impl->m_stages[ i ] );
-        if ( nullptr == current ) {
-            continue;
-        }
-        current->release();
-    }
+    delete m_impl->m_world;
+    m_impl->m_world = nullptr;
 
     osre_debug( Tag, "Set application state to destroyed." );
     m_impl->m_state = Impl::Destroyed;
