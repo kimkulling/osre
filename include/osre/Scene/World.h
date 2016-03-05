@@ -36,6 +36,7 @@ public:
     void addStage( Stage *stage );
     bool setActiveStage( Stage *activeStage );
     bool setActiveStage( const String &stageName );
+    void update();
 
 private:
     struct Impl;

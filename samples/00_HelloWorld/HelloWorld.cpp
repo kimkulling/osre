@@ -86,7 +86,7 @@ protected:
         if( nullptr != geo ) {
 			m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
 
-			Parameter *parameter = Parameter::create("MVP", PT_Mat4);
+			Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
 			::memcpy(parameter->m_data.m_data, glm::value_ptr(m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model), sizeof(glm::mat4));
 
 			geo->m_parameter = parameter;
@@ -97,31 +97,6 @@ protected:
 
         return true;
     }
-
-    virtual void onUpdate()  {
-        m_stage->update();
-    }
 };
 
 OSRE_MAIN( HelloWorldApp )
-/*int main( int argc, char *argv[] )  {
-    HelloWorldApp myApp( argc, argv );
-    if( !myApp.create() ) {
-        osre_error(Tag, "Cannot create application instance." );
-        return 1;
-    }
-    
-    // handle events until application will be terminated
-    while( myApp.handleEvents() ) {
-        
-        // update application data
-        myApp.update();
-
-        // request next frame rendering
-        myApp.requestNextFrame();
-    }
-    myApp.destroy();
-
-    return 0;
-}
-*/

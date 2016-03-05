@@ -250,7 +250,7 @@ bool AppBase::onDestroy() {
 }
 
 void AppBase::onUpdate() {
-    // override
+    m_impl->m_world->update();
 }
 
 } // Namespace App

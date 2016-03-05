@@ -39,9 +39,9 @@ struct World::Impl {
     Stage *m_activeStage;
 
     Impl()
-        : m_stages()
-        , m_activeStage( nullptr ) {
-
+    : m_stages()
+    , m_activeStage( nullptr ) {
+        // empty
     }
 
     ~Impl() {
@@ -99,7 +99,7 @@ bool World::setActiveStage( const String &stageName ) {
     OSRE_ASSERT( nullptr != m_impl );
 
     const ui32 hash( StringUtils::hashName( stageName.c_str() ) );
-    if ( m_impl->m_lookupStates.hasKey( hash ) ) {
+    if ( !m_impl->m_lookupStates.hasKey( hash ) ) {
         return false;
     }
     
@@ -110,6 +110,14 @@ bool World::setActiveStage( const String &stageName ) {
     }
 
     return false;
+}
+
+void World::update() {
+    if ( nullptr == m_impl->m_activeStage ) {
+        return;
+    }
+
+    m_impl->m_activeStage->update();
 }
 
 } // Namespace Scene
