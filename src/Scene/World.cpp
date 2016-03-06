@@ -24,6 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/Stage.h>
 #include <osre/Common/StringUtils.h>
 #include <osre/Debugging/osre_debugging.h>
+#include <osre/Common/Ids.h>
+
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>
 
@@ -37,10 +39,12 @@ struct World::Impl {
     TArray<Stage*> m_stages;
     THashMap<ui32, Stage*> m_lookupStates;
     Stage *m_activeStage;
+    Ids m_ids;
 
     Impl()
     : m_stages()
-    , m_activeStage( nullptr ) {
+    , m_activeStage( nullptr )
+    , m_ids() {
         // empty
     }
 

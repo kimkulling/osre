@@ -250,6 +250,8 @@ bool AppBase::onDestroy() {
 }
 
 void AppBase::onUpdate() {
+    OSRE_ASSERT( nullptr != m_impl );
+
     m_impl->m_world->update();
 }
 

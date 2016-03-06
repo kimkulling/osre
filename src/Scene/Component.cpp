@@ -28,7 +28,8 @@ namespace Scene {
     
 using namespace OSRE::RenderBackend;
 
-Component::Component() {
+Component::Component( ui32 id ) :
+m_id( id ) {
 
 }
 
@@ -36,8 +37,8 @@ Component::~Component() {
 
 }
 
-RenderComponent::RenderComponent()
-: Component()
+RenderComponent::RenderComponent( ui32 id )
+: Component( id )
 , m_newGeo() {
 
 }
@@ -65,8 +66,8 @@ void RenderComponent::addStaticGeometry( RenderBackend::StaticGeometry *geo ) {
     m_newGeo.add( geo );
 }
 
-TransformComponent::TransformComponent()
-: Component()
+TransformComponent::TransformComponent( ui32 id )
+: Component( id )
 , m_localTransform( nullptr ) {
 
 }

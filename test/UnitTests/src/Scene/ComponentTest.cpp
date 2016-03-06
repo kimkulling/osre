@@ -21,47 +21,47 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
-#include <osre/Common/Ids.h>
+
+#include <osre/Scene/Component.h>
 
 namespace OSRE {
 namespace UnitTest {
+        
+using namespace ::OSRE::Scene;
 
-using namespace ::OSRE::Common;
-
-class IdsTest : public ::testing::Test {
+class ComponentTest : public ::testing::Test {
     // empty
 };
 
-TEST_F( IdsTest, createTest ) {
+class MockComponent : public Component {
+public:
+    MockComponent( ui32 id ) : Component( id ) {
+
+    }
+
+    ~MockComponent() {
+
+    }
+
+    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv ) {
+
+    }
+
+};
+
+TEST_F( ComponentTest, createTest ) {
     bool ok( true );
     try {
-        Ids myIds( 0 );
-        Ids myIdsStartingAtZero;
-    } catch ( ... ) {
+        MockComponent myComp( 0 );
+    }
+    catch ( ... ) {
         ok = false;
     }
     EXPECT_TRUE( ok );
 }
 
-TEST_F( IdsTest, allocIdsTest ) {
-    Ids myIds( 0 );
-
-    const ui32 id1 = myIds.getUniqueId();
-    const ui32 id2 = myIds.getUniqueId();
-    EXPECT_NE( id1, id2 );
+TEST_F( ComponentTest, accessIdTest ) {
 }
 
-TEST_F( IdsTest, releaseIdsTest ) {
-    Ids myIds( 0 );
-
-    const ui32 id1 = myIds.getUniqueId();
-    const ui32 id2 = myIds.getUniqueId();
-    EXPECT_NE( id1, id2 );
-
-    myIds.releaseId( id2 );
-    const ui32 id3 = myIds.getUniqueId();
-    EXPECT_EQ( id2, id3 );
 }
-
-} // Namespace UnitTest
-} // Namespace OSRE
+}

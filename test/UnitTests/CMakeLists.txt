@@ -25,6 +25,10 @@ SET ( unittest_rb_src
     src/RenderBackend/RenderCommonTest.cpp
 )
 
+SET ( unittest_scene_src
+    src/Scene/ComponentTest.cpp
+)
+
 SET ( gtest_src
     ${GTEST_PATH}/src/gtest-death-test.cc
     ${GTEST_PATH}/src/gtest-filepath.cc
@@ -39,11 +43,13 @@ SET ( gtest_src
 
 SOURCE_GROUP( src\\Common         FILES ${unittest_common_src} )
 SOURCE_GROUP( src\\RenderBackend  FILES ${unittest_rb_src} )
+SOURCE_GROUP( src\\Scene          FILES ${unittest_scene_src} )
 SOURCE_GROUP( src\\GTest          FILES ${gtest_src} )
 
 ADD_EXECUTABLE( osre_unittest
     ${unittest_common_src}
     ${unittest_rb_src}
+    ${unittest_scene_src}
     ${gtest_src}
 )
 

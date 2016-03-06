@@ -24,7 +24,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 namespace Common {
-        
+
+Ids::Ids()
+: m_freeIds()
+, m_last( 0 ) {
+    // empty
+}
+
 Ids::Ids( ui32 startId )
     : m_freeIds()
     , m_last( startId ) {

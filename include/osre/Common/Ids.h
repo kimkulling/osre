@@ -36,6 +36,7 @@ namespace Common {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Ids {
 public:
+    Ids();
     Ids( ui32 startId );
     ~Ids();
     ui32 getUniqueId();

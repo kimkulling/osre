@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Common/osre_common.h>
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
@@ -35,18 +36,33 @@ namespace RenderBackend {
 
 namespace Scene {
 
-class Component {
+class OSRE_EXPORT Component {
 public:
     virtual ~Component();
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv ) = 0;
+    void setId( ui32 id );
+    ui32 getId() const;
 
 protected:
-    Component();
+    Component( ui32 id );
+
+private:
+    ui32 m_id;
 };
 
-class RenderComponent : public Component {
+inline
+void Component::setId( ui32 id) {
+    m_id = id;
+}
+
+inline
+ui32 Component::getId() const {
+    return m_id;
+}
+
+class OSRE_EXPORT RenderComponent : public Component {
 public:
-    RenderComponent();
+    RenderComponent( ui32 id );
     virtual ~RenderComponent();
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
 
@@ -56,9 +72,9 @@ private:
     CPPCore::TArray<RenderBackend::StaticGeometry*> m_newGeo;
 };
 
-class TransformComponent : public Component {
+class OSRE_EXPORT TransformComponent : public Component {
 public:
-    TransformComponent();
+    TransformComponent( ui32 id );
     virtual ~TransformComponent();
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
 

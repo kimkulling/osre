@@ -41,11 +41,11 @@ Node::Node( const String &name, bool transformEnabled, bool renderEnabled, Node 
 , m_renderComp( nullptr )
 , m_transformComp( nullptr ) {
     if ( transformEnabled ) {
-        m_transformComp = new TransformComponent;
+        m_transformComp = new TransformComponent( 0 );
         m_components.add( m_transformComp );
     }
     if ( renderEnabled ) {
-        m_renderComp = new RenderComponent;
+        m_renderComp = new RenderComponent( 0 );
         m_components.add( m_renderComp );
     }
 }
