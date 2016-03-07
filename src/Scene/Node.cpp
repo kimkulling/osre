@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/Component.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/Common/Ids.h>
 
 namespace OSRE {
 namespace Scene {
@@ -32,20 +33,21 @@ static const glm::vec4 Dummy;
 
 using namespace RenderBackend;
 
-Node::Node( const String &name, bool transformEnabled, bool renderEnabled, Node *parent )
+Node::Node( const String &name, Common::Ids &ids, bool transformEnabled, bool renderEnabled, Node *parent )
 : Object( name )
 , m_childs()
 , m_parent( parent )
 , m_isActive( true )
 , m_localTransform( nullptr )
 , m_renderComp( nullptr )
-, m_transformComp( nullptr ) {
+, m_transformComp( nullptr )
+, m_ids( &ids ) {
     if ( transformEnabled ) {
-        m_transformComp = new TransformComponent( 0 );
+        m_transformComp = new TransformComponent( m_ids->getUniqueId() );
         m_components.add( m_transformComp );
     }
     if ( renderEnabled ) {
-        m_renderComp = new RenderComponent( 0 );
+        m_renderComp = new RenderComponent( m_ids->getUniqueId() );
         m_components.add( m_renderComp );
     }
 }

@@ -56,12 +56,14 @@ Stage::Stage( const String &name, RenderBackend::RenderBackendService *rbService
 , m_root( nullptr )
 , m_views()
 , m_transformBlocks( 5 )
-, m_rbService( rbService ) {
+, m_rbService( rbService )
+, m_ids( nullptr ) {
     // empty
 }
 
 Stage::~Stage() {
     releaseChildNodes( m_root );
+    m_ids = nullptr;
 }
 
 void Stage::setRoot( Node *root ) {
@@ -77,7 +79,7 @@ Node *Stage::addNode( const String &name, Node *parent ) {
         return nullptr;
     }
 
-    Node *newNode = new Node( name, true, true, parent );
+    Node *newNode = new Node( name, *m_ids, true, true, parent );
     if( nullptr == parent ) {
         m_root = newNode;
         m_root->get();
@@ -142,6 +144,10 @@ void Stage::update() {
     }
 
     updateNode( m_root, true, m_rbService );
+}
+
+void Stage::setIdContainer( Common::Ids &ids ) {
+    m_ids = &ids;
 }
 
 } // Namespace Scene

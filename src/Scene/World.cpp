@@ -85,6 +85,7 @@ void World::addStage( Stage *stage ) {
 
     m_impl->m_stages.add( stage );
     m_impl->m_lookupStates.insert( hash, stage );
+    stage->setIdContainer( m_impl->m_ids );
 }
 
 bool World::setActiveStage( Stage *activeStage ) {

@@ -26,6 +26,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+namespace Common {
+    class Ids;
+}
+
 namespace RenderBackend {
     struct TransformBlock;
 
@@ -71,12 +75,14 @@ public:
     virtual View *addView( const String &name, Node *node );
     virtual void clear();
     virtual void update();
+    virtual void setIdContainer( Common::Ids &ids );
     
 private:
     Node *m_root;
     CPPCore::TArray<View*> m_views;
     TransformBlockCache m_transformBlocks;
     RenderBackend::RenderBackendService *m_rbService;
+    Common::Ids *m_ids;
 };
 
 } // Namespace Scene

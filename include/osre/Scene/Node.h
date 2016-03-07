@@ -29,6 +29,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+namespace Common {
+    class Ids;
+}
+
 namespace RenderBackend {
     struct TransformBlock;
     struct StaticGeometry;
@@ -60,7 +64,7 @@ public:
     };
 
 public:
-    Node( const String &name, bool transformEnabled, bool renderEnabled, Node *parent = nullptr );
+    Node( const String &name, Common::Ids &ids, bool transformEnabled, bool renderEnabled, Node *parent = nullptr );
     virtual ~Node();
     virtual void setParent( Node *parent );
     virtual Node *getParent() const;
@@ -90,6 +94,7 @@ private:
     RenderComponent *m_renderComp;
     TransformComponent *m_transformComp;
     CPPCore::TArray<Component*> m_components;
+    Common::Ids *m_ids;
 };
 
 //-------------------------------------------------------------------------------------------------
