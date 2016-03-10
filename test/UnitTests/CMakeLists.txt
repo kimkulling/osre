@@ -27,6 +27,7 @@ SET ( unittest_rb_src
 
 SET ( unittest_scene_src
     src/Scene/ComponentTest.cpp
+    src/Scene/NodeTest
 )
 
 SET ( gtest_src

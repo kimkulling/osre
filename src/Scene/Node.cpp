@@ -50,6 +50,10 @@ Node::Node( const String &name, Common::Ids &ids, bool transformEnabled, bool re
         m_renderComp = new RenderComponent( m_ids->getUniqueId() );
         m_components.add( m_renderComp );
     }
+
+    if ( nullptr != m_parent ) {
+        m_parent->addChild( this );
+    }
 }
 
 Node::~Node() {
