@@ -47,7 +47,9 @@ class TransformComponent;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  This class is used to represents a simple node in the stage hierarchy. You can add  
+//  several functionalities by adding components to is. Each component implements functionality 
+/// like render geometry or transformation information.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Node : public Common::Object {
 public:
