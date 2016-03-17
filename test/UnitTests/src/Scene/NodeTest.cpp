@@ -49,6 +49,12 @@ protected:
         m_nodes.resize( 0 );
     }
 
+    Node *createNode( const String &name, Common::Ids &ids, bool transformEnabled, bool renderEnabled, Node *parent ) {
+        Node *n( new Node( name, ids, transformEnabled, renderEnabled, parent ) );
+        addNodeForRelease( n );
+        return n;
+    }
+
     void addNodeForRelease( Node *node ) {
         m_nodes.push_back( node );
     }
@@ -57,20 +63,17 @@ protected:
 TEST_F( NodeTest, createTest ) {
     bool ok( true );
     try {
-        Node *myNode_transform_render = new Node( "testnode1", *m_ids, true, true, nullptr );
+        Node *myNode_transform_render = createNode( "testnode1", *m_ids, true, true, nullptr );
         EXPECT_TRUE( nullptr != myNode_transform_render->getComponent( Node::ComponentType::TransformComponentType ) );
         EXPECT_TRUE( nullptr != myNode_transform_render->getComponent( Node::ComponentType::RenderComponentType ) );
-        addNodeForRelease( myNode_transform_render );
         
-        Node *myNode_transform = new Node( "testnode2", *m_ids, true, false, nullptr );
+        Node *myNode_transform = createNode( "testnode2", *m_ids, true, false, nullptr );
         EXPECT_TRUE( nullptr != myNode_transform->getComponent( Node::ComponentType::TransformComponentType ) );
         EXPECT_TRUE( nullptr == myNode_transform->getComponent( Node::ComponentType::RenderComponentType ) );
-        addNodeForRelease( myNode_transform );
 
-        Node *myNode = new Node( "testnode3", *m_ids, false, false, nullptr );
+        Node *myNode = createNode( "testnode3", *m_ids, false, false, nullptr );
         EXPECT_TRUE( nullptr == myNode->getComponent( Node::ComponentType::TransformComponentType ) );
         EXPECT_TRUE( nullptr == myNode->getComponent( Node::ComponentType::RenderComponentType ) );
-        addNodeForRelease( myNode );
     }
     catch ( ... ) {
         ok = false;
@@ -80,12 +83,9 @@ TEST_F( NodeTest, createTest ) {
 }
 
 TEST_F( NodeTest, accessChilds ) {
-    Node *parent = new Node( "parent", *m_ids, true, true, nullptr );
-    addNodeForRelease( parent );
-    Node *myNode1 = new Node( "testnode1", *m_ids, true, true, parent );
-    addNodeForRelease( myNode1 );
-    Node *myNode2 = new Node( "testnode2", *m_ids, true, true, parent );
-    addNodeForRelease( myNode2 );
+    Node *parent = createNode( "parent", *m_ids, true, true, nullptr );
+    Node *myNode1 = createNode( "testnode1", *m_ids, true, true, parent );
+    Node *myNode2 = createNode( "testnode2", *m_ids, true, true, parent );
 
     EXPECT_EQ( 2, parent->getNumChilds() );
     EXPECT_TRUE( nullptr != myNode1->getParent() );
@@ -106,6 +106,15 @@ TEST_F( NodeTest, accessChilds ) {
     ok = parent->removeChild( "testnode1", Node::TraverseMode::FlatMode );
     EXPECT_FALSE( ok );
 }
+
+TEST_F( NodeTest, activeTest ) {
+    Node *myNode = createNode( "parent", *m_ids, true, true, nullptr );
+    EXPECT_TRUE( myNode->isActive() );
+
+    myNode->setActive( false );
+    EXPECT_FALSE( myNode->isActive() );
+}
+
 
 }
 }
