@@ -22,11 +22,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/Component.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 namespace OSRE {
 namespace Scene {
     
 using namespace OSRE::RenderBackend;
+
+static const glm::vec4 Dummy;
 
 Component::Component( ui32 id ) :
 m_id( id ) {
@@ -82,6 +85,34 @@ void TransformComponent::update( RenderBackendService *renderBackendSrv ) {
 
 void TransformComponent::setTransformBlock( TransformBlock *localTransform ) {
     m_localTransform = localTransform;
+}
+
+void TransformComponent::setPosition( const glm::vec3 &pos ) {
+    if ( nullptr != m_localTransform ) {
+        m_localTransform->m_transform = glm::vec4( pos, 1.0f );
+    }
+}
+
+const glm::vec4 &TransformComponent::getPosition() const {
+    if ( nullptr == m_localTransform ) {
+        return Dummy;
+    }
+
+    return m_localTransform->m_transform;
+}
+
+void TransformComponent::setScale( const glm::vec3 &scale ) {
+    if ( nullptr != m_localTransform ) {
+        m_localTransform->m_scale = glm::vec4( scale, 1.0f );;
+    }
+}
+
+const glm::vec4 &TransformComponent::getScale() const {
+    if ( nullptr == m_localTransform ) {
+        return Dummy;
+    }
+
+    return m_localTransform->m_scale;
 }
 
 } // Namespace Scene

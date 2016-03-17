@@ -23,9 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/Object.h>
-
 #include <cppcore/Container/TArray.h>
-#include <glm/glm.hpp>
 
 namespace OSRE {
 
@@ -75,11 +73,6 @@ public:
     virtual Node *getChildAt( ui32 idx ) const;
     virtual void releaseChildren();
     virtual void addGeometry( RenderBackend::StaticGeometry *geo );
-    virtual void setTransformBlock( RenderBackend::TransformBlock *transformBlock );
-    virtual void setPosition( const glm::vec3 &pos );
-    virtual const glm::vec4 &getPosition() const;
-    virtual void setScale( const glm::vec3 &pos );
-    virtual const glm::vec4 &getScale() const;
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
 
     Component *getComponent( ComponentType type ) const;

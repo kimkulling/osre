@@ -29,8 +29,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Scene {
 
-static const glm::vec4 Dummy;
-
 using namespace RenderBackend;
 
 Node::Node( const String &name, Common::Ids &ids, bool transformEnabled, bool renderEnabled, Node *parent )
@@ -164,40 +162,6 @@ void Node::addGeometry( RenderBackend::StaticGeometry *geo ) {
     if ( nullptr != m_renderComp ) {
         m_renderComp->addStaticGeometry( geo );
     }
-}
-
-void Node::setTransformBlock( RenderBackend::TransformBlock *transformBlock ) {
-    if( nullptr != transformBlock ) {
-        m_localTransform = transformBlock;
-    }
-}
-
-void Node::setPosition( const glm::vec3 &pos ) {
-    if( nullptr != m_localTransform ) {
-        m_localTransform->m_transform = glm::vec4( pos, 1.0f );
-    }
-}
-
-const glm::vec4 &Node::getPosition() const {
-    if( nullptr == m_localTransform ) {
-        return Dummy;
-    }
-
-    return m_localTransform->m_transform;
-}
-
-void Node::setScale( const glm::vec3 &scale ) {
-    if( nullptr != m_localTransform ) {
-        m_localTransform->m_scale = glm::vec4( scale, 1.0f );;
-    }
-}
-
-const glm::vec4 &Node::getScale() const {
-    if( nullptr == m_localTransform ) {
-        return Dummy;
-    }
-
-    return m_localTransform->m_scale;
 }
 
 void Node::update( RenderBackend::RenderBackendService *renderBackendSrv ) {

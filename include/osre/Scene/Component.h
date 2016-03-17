@@ -25,6 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 #include <cppcore/Container/TArray.h>
 
+#include <glm/glm.hpp>
+
 namespace OSRE {
     
 namespace RenderBackend {
@@ -64,7 +66,7 @@ class OSRE_EXPORT RenderComponent : public Component {
 public:
     RenderComponent( ui32 id );
     virtual ~RenderComponent();
-    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
+    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
 
     void addStaticGeometry( RenderBackend::StaticGeometry *geo );
 
@@ -76,9 +78,13 @@ class OSRE_EXPORT TransformComponent : public Component {
 public:
     TransformComponent( ui32 id );
     virtual ~TransformComponent();
-    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
+    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
 
     void setTransformBlock( RenderBackend::TransformBlock *localTransform );
+    void setPosition( const glm::vec3 &pos );
+    const glm::vec4 &getPosition() const;
+    void setScale( const glm::vec3 &pos );
+    const glm::vec4 &getScale() const;
 
 private:
     RenderBackend::TransformBlock *m_localTransform;
