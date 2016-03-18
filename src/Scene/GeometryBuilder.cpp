@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/MaterialBuilder.h>
 #include <osre/Common/Logger.h>
 
 #include <GL/glew.h>
@@ -38,84 +39,8 @@ static const String Tag = "GeometryBuilder";
 
 static const String GLSLVersionString_400 = "#version 400 core\n";
 
-const String VsSrc =
-    GLSLVersionString_400 +
-    "\n"
-    "layout(location = 0) in vec3 position;	      // object space vertex position\n"
-    "layout(location = 1) in vec3 normal;	            // object space vertex normal\n"
-    "layout(location = 2) in vec3 color0;  // per-vertex colour\n"
-    "\n"
-    "// output from the vertex shader\n"
-    "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
-    "\n"
-    "// uniform\n"
-    "uniform mat4 MVP;	//combined modelview projection matrix\n"
-    "\n"
-    "void main() {\n"
-    "    // assign the per-vertex color to vSmoothColor varying\n"
-    "    vSmoothColor = vec4(color0,1);\n"
-    "    // get the clip space position by multiplying the combined MVP matrix with the object space\n"
-    "    // vertex position\n"
-    "    gl_Position = MVP*vec4(position,1);\n"
-    "}\n";
-
-const String FsSrc =
-    "#version 400 core\n"
-    "\n"
-    "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
-    "\n"
-    "//input form the vertex shader\n"
-    "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
-    "\n"
-    "void main() {\n"
-    "    // set the interpolated color as the shader output\n"
-    "    vFragColor = vSmoothColor;\n"
-    "}\n";
-
-const String VsSrcRV =
-    "#version 400 core\n"
-    "\n"
-    "layout(location = 0) in vec3 position;	      // object space vertex position\n"
-    "layout(location = 1) in vec3 normal;	            // object space vertex normal\n"
-    "layout(location = 2) in vec3 color0;  // per-vertex colour\n"
-    "layout(location = 3) in vec2 texcoord0;  // per-vertex colour\n"
-    "\n"
-    "// output from the vertex shader\n"
-    "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
-    "smooth out vec2 vUV;\n"
-    "\n"
-    "// uniform\n"
-    "uniform mat4 MVP;	//combined modelview projection matrix\n"
-    "\n"
-    "void main()\n"
-    "{\n"
-    "    //assign the per-vertex color to vSmoothColor varying\n"
-    "    vSmoothColor = vec4(color0,1);\n"
-    "\n"
-    "    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
-    "    //vertex position\n"
-    "    gl_Position = MVP*vec4(position,1);\n"
-    "    vUV = texcoord0;\n"
-    "}\n";
-
-const String FsSrcRV =
-    "#version 400 core\n"
-    "\n"
-    "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
-    "\n"
-    "//input form the vertex shader\n"
-    "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
-    "smooth in vec2 vUV;\n"
-    "uniform sampler2D tex0;\n"
-    "\n"
-    "void main()\n"
-    "{\n"
-    "    //set the interpolated color as the shader output\n"
-    "    vFragColor = texture( tex0, vUV );\n"
-    "}\n";
-
 static const String TextVsSrc =
-    "#version 400 core\n"
+    GLSLVersionString_400 +
     "\n"
     "layout(location = 0) in vec3 position;	  // object space vertex position\n"
     "layout(location = 1) in vec3 normal;	  // object space vertex normal\n"
@@ -230,20 +155,7 @@ StaticGeometry *GeometryBuilder::allocTriangles( VertexType type ) {
     geo->m_pPrimGroups[ 0 ].m_startIndex    = 0;
 
 	// setup material
-    geo->m_material = new Material;
-    geo->m_material->m_numTextures = 0;
-    geo->m_material->m_type = ShaderMaterial;
-    geo->m_material->m_pShader = new Shader;
-    geo->m_material->m_pShader->m_src[ SH_VertexShaderType ] = VsSrc;
-    geo->m_material->m_pShader->m_src[ SH_FragmentShaderType ] = FsSrc;
-
-	// setup shader attributes and variables
-    if( nullptr != geo->m_material->m_pShader ) {
-        ui32 numAttribs( ColorVert::getNumAttributes() );
-        const String *attribs( ColorVert::getAttributes() );
-        geo->m_material->m_pShader->m_attributes.add(attribs, numAttribs);
-        geo->m_material->m_pShader->m_parameters.add( "MVP" );
-    }
+    geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
     return geo;
 }
@@ -293,20 +205,7 @@ StaticGeometry *GeometryBuilder::allocQuads( VertexType type ) {
     geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
     // setup material
-    geo->m_material = new Material;
-    geo->m_material->m_numTextures = 0;
-    geo->m_material->m_type = ShaderMaterial;
-    geo->m_material->m_pShader = new Shader;
-    geo->m_material->m_pShader->m_src[ SH_VertexShaderType ] = VsSrc;
-    geo->m_material->m_pShader->m_src[ SH_FragmentShaderType ] = FsSrc;
-
-    // setup shader attributes and variables
-    if (nullptr != geo->m_material->m_pShader) {
-        ui32 numAttribs( ColorVert::getNumAttributes() );
-        const String *attribs( ColorVert::getAttributes() );
-        geo->m_material->m_pShader->m_attributes.add( attribs, numAttribs );
-        geo->m_material->m_pShader->m_parameters.add( "MVP" );
-    }
+    geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
     return geo;
 }
@@ -435,10 +334,11 @@ StaticGeometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const
     geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
     // setup material
-    geo->m_material = new Material;
+    geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( RenderVertex );
+
+    // setup the texture
     geo->m_material->m_numTextures = 1;
-    geo->m_material->m_pTextures = new Texture[ 1 ];
-    
+    geo->m_material->m_pTextures = new Texture[ 1 ];    
     geo->m_material->m_pTextures[ 0 ].m_textureName = "buildin_arial";
     geo->m_material->m_pTextures[ 0 ].m_loc = IO::Uri( "file://assets/Textures/Fonts/buildin_arial.bmp" );
 
@@ -448,19 +348,6 @@ StaticGeometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const
     geo->m_material->m_pTextures[0].m_channels = 0;
     geo->m_material->m_pTextures[0].m_data = nullptr;
     geo->m_material->m_pTextures[0].m_size = 0;
-
-    geo->m_material->m_type = ShaderMaterial;
-    geo->m_material->m_pShader = new Shader;
-    geo->m_material->m_pShader->m_src[ SH_VertexShaderType ] = VsSrcRV;
-    geo->m_material->m_pShader->m_src[ SH_FragmentShaderType ] = FsSrcRV;
-
-    // setup shader attributes and variables
-    if (nullptr != geo->m_material->m_pShader) {
-        ui32 numAttribs( RenderVert::getNumAttributes() );
-        const String *attribs( RenderVert::getAttributes() );
-        geo->m_material->m_pShader->m_attributes.add( attribs, numAttribs );
-        geo->m_material->m_pShader->m_parameters.add( "MVP" );
-    }
 
     return geo;
 }

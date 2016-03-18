@@ -56,17 +56,17 @@ public:
     /// @brief  Will allocate an empty geometry.
     ///	@param  type        [in] The vertex type.
     /// @return The created geometry.
-    RenderBackend::StaticGeometry *allocEmptyGeometry( RenderBackend::VertexType type );
+    static RenderBackend::StaticGeometry *allocEmptyGeometry( RenderBackend::VertexType type );
 
     /// @brief  Will allocate a triangle geometry.
     ///	@param  type        [in] The vertex type.
     /// @return The created geometry.
-    RenderBackend::StaticGeometry *allocTriangles( RenderBackend::VertexType type );
+    static RenderBackend::StaticGeometry *allocTriangles( RenderBackend::VertexType type );
 
     ///	@brief  Will allocate vertices for a quad primitive.
     ///	@param  type        [in] The vertex type.
     /// @return The created geometry.
-    RenderBackend::StaticGeometry *allocQuads( RenderBackend::VertexType type );
+    static RenderBackend::StaticGeometry *allocQuads( RenderBackend::VertexType type );
 
     ///	@brief  Will allocate vertices for a text-box.
     /// @param  x           [in] Left position of the text box.
@@ -74,7 +74,7 @@ public:
     /// @param  textSize    [in] The size for a single glyph.
     /// @param  text        [in] The text to render.
     /// @return The created geometry.
-    RenderBackend::StaticGeometry *allocTextBox( f32 x, f32 y, f32 textSize, const String &text );
+    static RenderBackend::StaticGeometry *allocTextBox( f32 x, f32 y, f32 textSize, const String &text );
 
     ///	@brief  Allocates vertices into a buffer data.
     /// @param  type        [in] The vertex type to create.
@@ -82,7 +82,8 @@ public:
     ///	@param  pos         [in] Pointer to array with vec3-positions, set to nullptr if nothing shall prepared
     ///	@param  col1        [in] Pointer to array with vec3-diffuse colors, set to nullptr if nothing shall prepared
     /// @return The allocated buffer data.
-    static RenderBackend::BufferData *allocVertices(RenderBackend::VertexType type, ui32 numVerts, ::glm::vec3 *pos, ::glm::vec3 *col1, ::glm::vec2 *tex0);
+    static RenderBackend::BufferData *allocVertices(RenderBackend::VertexType type, ui32 numVerts, ::glm::vec3 *pos, 
+        ::glm::vec3 *col1, ::glm::vec2 *tex0);
 
     /// No copying.
     GeometryBuilder( const GeometryBuilder& ) = delete;

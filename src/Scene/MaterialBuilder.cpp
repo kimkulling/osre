@@ -138,9 +138,16 @@ Material *MaterialBuilder::createBuildinMaterial( VertexType type ) {
 
     // setup shader attributes and variables
     if ( nullptr != mat->m_pShader ) {
-        ui32 numAttribs( ColorVert::getNumAttributes() );
-        const String *attribs( ColorVert::getAttributes() );
-        mat->m_pShader->m_attributes.add( attribs, numAttribs );
+        if ( type == ColorVertex ) {
+            ui32 numAttribs( ColorVert::getNumAttributes() );
+            const String *attribs( ColorVert::getAttributes() );
+            mat->m_pShader->m_attributes.add( attribs, numAttribs );
+        } else if ( type == RenderVertex ) {
+            ui32 numAttribs( RenderVert::getNumAttributes() );
+            const String *attribs( RenderVert::getAttributes() );
+            mat->m_pShader->m_attributes.add( attribs, numAttribs );
+        }
+         
         mat->m_pShader->m_parameters.add( "MVP" );
     }
 
