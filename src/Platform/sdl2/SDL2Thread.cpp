@@ -42,10 +42,10 @@ static const String Tag = "SDL2Thread";
 SDL2Thread::SDL2Thread( const String &name, ui32 stacksize )
 :  m_thread( nullptr )
 , m_pThreadSignal( nullptr )
+, m_tls( nullptr )
 , m_Prio( Priority::Normal )
 , m_ThreadName( name )
-, m_threadId( 0 )
-, m_tls( nullptr ) {
+, m_threadId( 0 ) {
     // empty
 }
 
