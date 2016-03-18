@@ -77,8 +77,8 @@ public:
         indices[ 2 ] = 1;
         indices[ 3 ] = 2;
 
-        indices[ 4 ] = 0;
-        indices[ 5 ] = 2;
+        indices[ 4 ] = 2;
+        indices[ 5 ] = 0;
 
         Scene::GeometryBuilder myBuilder;
         StaticGeometry *geo = myBuilder.allocEmptyGeometry( ColorVertex );
@@ -93,10 +93,10 @@ public:
         ::memcpy( geo->m_ib->m_pData, indices, size );
 
         // setup primitives
-        geo->m_numPrimGroups = 1;
+        geo->m_numPrimGroups = 3;
         geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
         geo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
-        geo->m_pPrimGroups[ 0 ].m_numPrimitives = 3 * geo->m_numPrimGroups;
+        geo->m_pPrimGroups[ 0 ].m_numPrimitives = 2 * geo->m_numPrimGroups;
         geo->m_pPrimGroups[ 0 ].m_primitive = LineList;
         geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 

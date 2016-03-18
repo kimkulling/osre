@@ -50,7 +50,6 @@ extern const unsigned char *glyph[];
 
 static const String Tag = "OGLRenderBackend";
 
-//-------------------------------------------------------------------------------------------------
 static bool setParameterInShader( OGLParameter *param, OGLShader *shader ) {
     OSRE_ASSERT( nullptr != param );
 	OSRE_ASSERT( nullptr != shader );
@@ -108,7 +107,6 @@ static bool setParameterInShader( OGLParameter *param, OGLShader *shader ) {
     return success;
 }
 
-//-------------------------------------------------------------------------------------------------
 GLenum getGLTextureStage( TextureStageType texType ) {
     switch( texType ) {
         case TextureStage0:
@@ -125,7 +123,6 @@ GLenum getGLTextureStage( TextureStageType texType ) {
     return GL_TEXTURE0;
 }
 
-//-------------------------------------------------------------------------------------------------
 static GLenum getOGLTypeForFormat( VertexFormat format ) {
     switch( format ) {
         case Float:
@@ -149,7 +146,6 @@ static GLenum getOGLTypeForFormat( VertexFormat format ) {
     return GL_INVALID_ENUM;
 }
 
-//-------------------------------------------------------------------------------------------------
 static ui32 getOGLSizeForFormat( VertexFormat format ) {
     switch( format ) {
         case Float:
@@ -174,7 +170,6 @@ static ui32 getOGLSizeForFormat( VertexFormat format ) {
     return 0;
 }
 
-//-------------------------------------------------------------------------------------------------
 OGLRenderBackend::OGLRenderBackend( )
 : m_renderCtx( nullptr )
 , m_buffers()
@@ -194,7 +189,6 @@ OGLRenderBackend::OGLRenderBackend( )
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 OGLRenderBackend::~OGLRenderBackend( ) {
     releaseAllShaders();
     releaseAllFonts();
@@ -205,12 +199,10 @@ OGLRenderBackend::~OGLRenderBackend( ) {
     releaseAllPrimitiveGroups();
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::setTimer( Platform::AbstractTimer *timer ) {
     m_fpsCounter = new Profiling::FPSCounter( timer );
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::setRenderContext( Platform::AbstractRenderContext *renderCtx ) {
     if ( m_renderCtx != renderCtx ) {
         m_renderCtx = renderCtx;
@@ -220,7 +212,6 @@ void OGLRenderBackend::setRenderContext( Platform::AbstractRenderContext *render
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::clearRenderTarget( const ClearState &clearState ) {
     GLbitfield glTarget( 0 );
 
@@ -237,12 +228,10 @@ void OGLRenderBackend::clearRenderTarget( const ClearState &clearState ) {
     glClear( glTarget );
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::setViewport( i32 x, i32 y, i32 w, i32 h ) {
     glViewport( x, y, w, h );
 }
 
-//-------------------------------------------------------------------------------------------------
 OGLBuffer *OGLRenderBackend::createBuffer( BufferType type ) {
     ui32 handle( OGLNotSetId );
     GLuint bufferId( OGLNotSetId );
@@ -265,13 +254,11 @@ OGLBuffer *OGLRenderBackend::createBuffer( BufferType type ) {
     return pBuf;
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::bindBuffer( OGLBuffer *buffer ) {
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, buffer->m_id );
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::bindBuffer( ui32 handle ) {
     OGLBuffer *buf( m_buffers[ handle ] );
     if( nullptr != buf ) {
@@ -279,19 +266,16 @@ void OGLRenderBackend::bindBuffer( ui32 handle ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::unbindBuffer( OGLBuffer *buffer ) {
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, 0 );
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::bufferData( OGLBuffer *pBuffer, void *pData, ui32 size, BufferAccessType usage ) {
     GLenum target = OGLEnum::getGLBufferType( pBuffer->m_type );
     glBufferData( target, size, pData, OGLEnum::getGLBufferAccessType( usage ) );
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::releaseBuffer( OGLBuffer *pBuffer ) {
     const ui32 slot = pBuffer->m_handle;
     glDeleteBuffers( 1, &pBuffer->m_id );
@@ -301,7 +285,6 @@ void OGLRenderBackend::releaseBuffer( OGLBuffer *pBuffer ) {
     m_freeBufferSlots.add( slot );
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::releaseAllBuffers() {
     for ( ui32 i=0; i<m_buffers.size(); ++i ) {
         OGLBuffer *pBuffer = m_buffers[ i ];
@@ -315,7 +298,6 @@ void OGLRenderBackend::releaseAllBuffers() {
     m_freeBufferSlots.clear();
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderBackend::createVertexCompArray( const VertexLayout *layout, OGLShader *shader, 
                                               VertAttribArray &attributes ) {
     if( nullptr == layout ) {
@@ -343,7 +325,6 @@ bool OGLRenderBackend::createVertexCompArray( const VertexLayout *layout, OGLSha
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *shader, 
                                               VertAttribArray &attributes ) {
     if( !shader ) {
@@ -419,7 +400,6 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *shader
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::releaseVertexCompArray( TArray<OGLVertexAttribute*> &attributes ) {
     if( attributes.isEmpty() ) {
         return;
@@ -433,7 +413,6 @@ void OGLRenderBackend::releaseVertexCompArray( TArray<OGLVertexAttribute*> &attr
     attributes.clear();
 }
 
-//-------------------------------------------------------------------------------------------------
 OGLVertexArray *OGLRenderBackend::createVertexArray() {
     OGLVertexArray *pVertexArray = new OGLVertexArray;
     glGenVertexArrays( 1, &pVertexArray->m_id );
@@ -444,7 +423,6 @@ OGLVertexArray *OGLRenderBackend::createVertexArray() {
     return pVertexArray;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, ui32 stride, GLint loc, 
                                          OGLVertexAttribute* attrib ) {
     if( nullptr == va || nullptr == shader || nullptr == attrib ) {
@@ -461,7 +439,6 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, ui32 stride, 
                                              const TArray<OGLVertexAttribute*> &attributes ) {
     if( nullptr == va || nullptr == shader ) {
@@ -488,7 +465,6 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::destroyVertexArray( OGLVertexArray *vertexArray ) {
     if (nullptr == vertexArray) {
         return;
@@ -497,7 +473,6 @@ void OGLRenderBackend::destroyVertexArray( OGLVertexArray *vertexArray ) {
     glDeleteVertexArrays( 1, &vertexArray->m_id );
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::bindVertexArray( OGLVertexArray *vertexArray ) {
 	if (nullptr == vertexArray) {
 		return;
@@ -509,7 +484,6 @@ void OGLRenderBackend::bindVertexArray( OGLVertexArray *vertexArray ) {
 	}
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::unbindVertexArray( OGLVertexArray *vertexArray ) {
     if (nullptr == vertexArray) {
         return;
@@ -523,7 +497,6 @@ void OGLRenderBackend::unbindVertexArray( OGLVertexArray *vertexArray ) {
     m_activeVertexArray = OGLNotSetId;
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::releaseAllVertexArrays( ) {
     for ( ui32 i=0; i<m_vertexarrays.size(); ++i ) {
         destroyVertexArray( m_vertexarrays[ i ] );
@@ -531,7 +504,6 @@ void OGLRenderBackend::releaseAllVertexArrays( ) {
     m_vertexarrays.clear();
 }
 
-//-------------------------------------------------------------------------------------------------
 OGLShader *OGLRenderBackend::createShader( const String &name, Shader *shaderInfo ) {
 	if( name.empty() ) {
         return nullptr;
@@ -572,7 +544,6 @@ OGLShader *OGLRenderBackend::createShader( const String &name, Shader *shaderInf
     return pOGLShader;
 }
 
-//-------------------------------------------------------------------------------------------------
 OGLShader *OGLRenderBackend::getShader( const String &name ) {	
 	if (name.empty()) {
         return nullptr;
@@ -587,7 +558,6 @@ OGLShader *OGLRenderBackend::getShader( const String &name ) {
     return nullptr;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderBackend::useShader( OGLShader *shader ) {
     if( !shader ) {
         if( m_shaderInUse ) {
@@ -610,12 +580,10 @@ bool OGLRenderBackend::useShader( OGLShader *shader ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 OGLShader *OGLRenderBackend::getActiveShader() const {
     return m_shaderInUse;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderBackend::releaseShader( OGLShader *shader ) {
 	OSRE_ASSERT( nullptr != shader );
 
@@ -643,7 +611,6 @@ bool OGLRenderBackend::releaseShader( OGLShader *shader ) {
     return found;
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::releaseAllShaders( ) {
     for( ui32 i = 0; i < m_shaders.size(); ++i ) {
         if( m_shaders[ i ] ) {
@@ -653,7 +620,6 @@ void OGLRenderBackend::releaseAllShaders( ) {
     m_shaders.clear();
 }
 
-//-------------------------------------------------------------------------------------------------
 OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTargetType target,
                                                   ui32 width, ui32 height, ui32 channels ) {
 	if( name.empty() ) {
@@ -702,7 +668,6 @@ OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTar
     return tex;
 }
 
-//-------------------------------------------------------------------------------------------------
 void OGLRenderBackend::updateTexture( OGLTexture *oglTextue, ui32 offsetX, ui32 offsetY, c8 *data,
                                       ui32 size ) {
 	if( !oglTextue ) {
