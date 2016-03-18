@@ -43,7 +43,7 @@ protected:
         delete m_ids;
         m_ids = nullptr;
 
-        for each ( Node *current in m_nodes ) {
+        for ( auto current : m_nodes ) {
             current->release();
         }
         m_nodes.resize( 0 );
