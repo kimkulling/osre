@@ -136,6 +136,14 @@ Material *MaterialBuilder::createBuildinMaterial( VertexType type ) {
     mat->m_pShader->m_src[ SH_VertexShaderType ] = vs;
     mat->m_pShader->m_src[ SH_FragmentShaderType ] = fs;
 
+    // setup shader attributes and variables
+    if ( nullptr != mat->m_pShader ) {
+        ui32 numAttribs( ColorVert::getNumAttributes() );
+        const String *attribs( ColorVert::getAttributes() );
+        mat->m_pShader->m_attributes.add( attribs, numAttribs );
+        mat->m_pShader->m_parameters.add( "MVP" );
+    }
+
     return mat;
 }
 

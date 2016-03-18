@@ -103,14 +103,6 @@ public:
         // setup material
         geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( ColorVertex );
 
-        // setup shader attributes and variables
-        if ( nullptr != geo->m_material->m_pShader ) {
-            ui32 numAttribs( ColorVert::getNumAttributes() );
-            const String *attribs( ColorVert::getAttributes() );
-            geo->m_material->m_pShader->m_attributes.add( attribs, numAttribs );
-            geo->m_material->m_pShader->m_parameters.add( "MVP" );
-        }
-
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
         Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
