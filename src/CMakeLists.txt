@@ -240,6 +240,7 @@ SET ( properties_src
 SET( scene_src
     Scene/Component.cpp
     Scene/GeometryBuilder.cpp
+    Scene/MaterialBuilder.cpp
     Scene/Node.cpp
     Scene/Stage.cpp
     Scene/TrackBall.cpp
@@ -249,6 +250,7 @@ SET( scene_src
 SET( scene_inc
     ${HEADER_PATH}/Scene/Component.h
     ${HEADER_PATH}/Scene/GeometryBuilder.h
+    ${HEADER_PATH}/Scene/MaterialBuilder.h
     ${HEADER_PATH}/Scene/Node.h
     ${HEADER_PATH}/Scene/Stage.h
     ${HEADER_PATH}/Scene/TrackBall.h

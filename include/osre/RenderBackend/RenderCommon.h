@@ -106,7 +106,7 @@ enum PrimitiveType {
     TriangleFan		///< A triangle fan.
 };
 
-struct ColorVert {
+struct OSRE_EXPORT ColorVert {
     glm::vec3 position;
     glm::vec3 normal;
     glm::vec3 color0;

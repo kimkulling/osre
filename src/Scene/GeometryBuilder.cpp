@@ -37,6 +37,7 @@ using namespace ::OSRE::RenderBackend;
 static const String Tag = "GeometryBuilder";
 
 static const String GLSLVersionString_400 = "#version 400 core\n";
+
 const String VsSrc =
     GLSLVersionString_400 +
     "\n"
@@ -151,6 +152,28 @@ static const String TextFsSrc =
 	"};\n";
 
 
+namespace intern {
+    static void dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset ) {
+        std::stringstream stream;
+        stream << std::endl;
+        stream << "i = " << i << " : " << textPos[ VertexOffset + 0 ].x << ", " << textPos[ VertexOffset + 0 ].y << std::endl;
+        stream << "i = " << i << " : " << textPos[ VertexOffset + 1 ].x << ", " << textPos[ VertexOffset + 1 ].y << std::endl;
+        stream << "i = " << i << " : " << textPos[ VertexOffset + 2 ].x << ", " << textPos[ VertexOffset + 2 ].y << std::endl;
+        stream << "i = " << i << " : " << textPos[ VertexOffset + 3 ].x << ", " << textPos[ VertexOffset + 3 ].y << std::endl;
+        osre_info( Tag, stream.str() );
+    }
+
+    static void dumpTextTex0Box( ui32 i, glm::vec2 *tex0Pos, ui32 VertexOffset ) {
+        std::stringstream stream;
+        stream << std::endl;
+        stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 0 ].x << ", " << tex0Pos[ VertexOffset + 0 ].y << std::endl;
+        stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 1 ].x << ", " << tex0Pos[ VertexOffset + 1 ].y << std::endl;
+        stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 2 ].x << ", " << tex0Pos[ VertexOffset + 2 ].y << std::endl;
+        stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 3 ].x << ", " << tex0Pos[ VertexOffset + 3 ].y << std::endl;
+        osre_info( Tag, stream.str() );
+    }
+}
+
 GeometryBuilder::GeometryBuilder() {
     // empty
 }
@@ -159,7 +182,7 @@ GeometryBuilder::~GeometryBuilder() {
     // empty
 }
 
-RenderBackend::StaticGeometry *GeometryBuilder::allocEmptyGeometry( RenderBackend::VertexType type ) {
+StaticGeometry *GeometryBuilder::allocEmptyGeometry( VertexType type ) {
     StaticGeometry *geo = StaticGeometry::create();
     geo->m_vertextype = type;
     geo->m_indextype = UnsignedShort;
@@ -288,26 +311,6 @@ StaticGeometry *GeometryBuilder::allocQuads( VertexType type ) {
     return geo;
 }
 
-static void dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset ) {
-    std::stringstream stream;
-    stream << std::endl;
-    stream << "i = " << i << " : " << textPos[ VertexOffset + 0 ].x << ", " << textPos[ VertexOffset + 0 ].y << std::endl;
-    stream << "i = " << i << " : " << textPos[ VertexOffset + 1 ].x << ", " << textPos[ VertexOffset + 1 ].y << std::endl;
-    stream << "i = " << i << " : " << textPos[ VertexOffset + 2 ].x << ", " << textPos[ VertexOffset + 2 ].y << std::endl;
-    stream << "i = " << i << " : " << textPos[ VertexOffset + 3 ].x << ", " << textPos[ VertexOffset + 3 ].y << std::endl;
-    osre_info( Tag, stream.str() );
-}
-
-static void dumpTextTex0Box(ui32 i, glm::vec2 *tex0Pos, ui32 VertexOffset) {
-    std::stringstream stream;
-    stream << std::endl;
-    stream << "i = " << i << " : " << tex0Pos[VertexOffset + 0 ].x << ", " << tex0Pos[ VertexOffset + 0 ].y << std::endl;
-    stream << "i = " << i << " : " << tex0Pos[VertexOffset + 1 ].x << ", " << tex0Pos[ VertexOffset + 1 ].y << std::endl;
-    stream << "i = " << i << " : " << tex0Pos[VertexOffset + 2 ].x << ", " << tex0Pos[ VertexOffset + 2 ].y << std::endl;
-    stream << "i = " << i << " : " << tex0Pos[VertexOffset + 3 ].x << ", " << tex0Pos[ VertexOffset + 3 ].y << std::endl;
-    osre_info(Tag, stream.str());
-}
-
 static bool isLineBreak(c8 c) {
     if (c == '\n') {
         return true;
@@ -316,7 +319,7 @@ static bool isLineBreak(c8 c) {
     }
 }
 
-RenderBackend::StaticGeometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text ) {
+StaticGeometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text ) {
 	if ( text.empty() ) {
 		return nullptr;
 	}
@@ -462,7 +465,8 @@ RenderBackend::StaticGeometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 
     return geo;
 }
 
-BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm::vec3 *pos, glm::vec3 *col1, glm::vec2 *tex0 ) {
+BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm::vec3 *pos, 
+                                            glm::vec3 *col1, glm::vec2 *tex0 ) {
     BufferData *data( nullptr );
     ui32 size( 0 );
     switch (type) {

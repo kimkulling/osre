@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <src/RenderBackend/OGLRenderer/OGLShader.h>
 #include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/MaterialBuilder.h>
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -58,10 +59,57 @@ public:
         rb->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
+        glm::vec3 col[ 3 ];
+        col[ 0 ] = glm::vec3( 1, 0, 0 );
+        col[ 1 ] = glm::vec3( 0, 1, 0 );
+        col[ 2 ] = glm::vec3( 0, 0, 1 );
+
+        glm::vec3 pos[ 3 ];
+        pos[ 0 ] = glm::vec3( -1, -1, 0 );
+        pos[ 1 ] = glm::vec3( 0, 1, 0 );
+        pos[ 2 ] = glm::vec3( 1, -1, 0 );
+
+        static const ui32 NumIndices = 6;
+        GLushort indices[ NumIndices ];
+        indices[ 0 ] = 0;
+        indices[ 1 ] = 1;
+
+        indices[ 2 ] = 1;
+        indices[ 3 ] = 2;
+
+        indices[ 4 ] = 0;
+        indices[ 5 ] = 2;
+
         Scene::GeometryBuilder myBuilder;
-        StaticGeometry *geo = myBuilder.allocTextBox( -1, -1, 0.1f, "Hello,\nworld!" );
+        StaticGeometry *geo = myBuilder.allocEmptyGeometry( ColorVertex );
+        geo->m_vb = Scene::GeometryBuilder::allocVertices( ColorVertex, 3, pos, col, nullptr );
+        geo->m_indextype = UnsignedShort;
+
         attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_geo = geo;
+
+        ui32 size = sizeof( GLushort ) * NumIndices;
+        geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
+        ::memcpy( geo->m_ib->m_pData, indices, size );
+
+        // setup primitives
+        geo->m_numPrimGroups = 1;
+        geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
+        geo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
+        geo->m_pPrimGroups[ 0 ].m_numPrimitives = 3 * geo->m_numPrimGroups;
+        geo->m_pPrimGroups[ 0 ].m_primitive = LineList;
+        geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
+
+        // setup material
+        geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( ColorVertex );
+
+        // setup shader attributes and variables
+        if ( nullptr != geo->m_material->m_pShader ) {
+            ui32 numAttribs( ColorVert::getNumAttributes() );
+            const String *attribs( ColorVert::getAttributes() );
+            geo->m_material->m_pShader->m_attributes.add( attribs, numAttribs );
+            geo->m_material->m_pShader->m_parameters.add( "MVP" );
+        }
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
