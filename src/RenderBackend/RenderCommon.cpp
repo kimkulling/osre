@@ -303,8 +303,8 @@ StaticGeometry::~StaticGeometry() {
     m_pPrimGroups = nullptr;
 }
 
-StaticGeometry *StaticGeometry::create() {
-    return new StaticGeometry;
+StaticGeometry *StaticGeometry::create( ui32 numGeo ) {
+    return new StaticGeometry[ numGeo ];
 }
 
 void StaticGeometry::destroy( StaticGeometry *geo ) {

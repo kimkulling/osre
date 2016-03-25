@@ -59,11 +59,24 @@ public:
         rb->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
+        // colors
         glm::vec3 col[ 3 ];
         col[ 0 ] = glm::vec3( 1, 0, 0 );
         col[ 1 ] = glm::vec3( 0, 1, 0 );
         col[ 2 ] = glm::vec3( 0, 0, 1 );
 
+        // point coordinates
+        glm::vec3 points[ 3 ];
+        points[ 0 ] = glm::vec3( -0.5, -0.5, 0 );
+        points[ 1 ] = glm::vec3(  0,    0.5, 0 );
+        points[ 2 ] = glm::vec3(  0.5, -0.5, 0 );
+        static const ui32 PtNumIndices = 3;
+        GLushort pt_indices[ PtNumIndices ];
+        pt_indices[ 0 ] = 0;
+        pt_indices[ 1 ] = 1;
+        pt_indices[ 2 ] = 2;
+
+        // line segment coordinates
         glm::vec3 pos[ 3 ];
         pos[ 0 ] = glm::vec3( -1, -1, 0 );
         pos[ 1 ] = glm::vec3( 0, 1, 0 );
@@ -80,36 +93,51 @@ public:
         indices[ 4 ] = 2;
         indices[ 5 ] = 0;
 
-        Scene::GeometryBuilder myBuilder;
-        StaticGeometry *geo = myBuilder.allocEmptyGeometry( ColorVertex );
-        geo->m_vb = Scene::GeometryBuilder::allocVertices( ColorVertex, 3, pos, col, nullptr );
-        geo->m_indextype = UnsignedShort;
+        attachGeoEvData->m_numGeo = 2;
+        attachGeoEvData->m_geo = Scene::GeometryBuilder::allocEmptyGeometry( ColorVertex, 2 ); 
+        StaticGeometry *ptGeo = &attachGeoEvData->m_geo[ 0 ];
+        ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( ColorVertex, 3, points, col, nullptr );
+        ptGeo->m_indextype = UnsignedShort;
+        ui32 pt_size = sizeof( GLushort ) * PtNumIndices;
+        ptGeo->m_ib = BufferData::alloc( IndexBuffer, pt_size, ReadOnly );
+        ::memcpy( ptGeo->m_ib->m_pData, pt_indices, pt_size );
+        
+        // setup primitives
+        ptGeo->m_numPrimGroups = 3;
+        ptGeo->m_pPrimGroups = new PrimitiveGroup[ ptGeo->m_numPrimGroups ];
+        ptGeo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
+        ptGeo->m_pPrimGroups[ 0 ].m_numPrimitives = ptGeo->m_numPrimGroups;
+        ptGeo->m_pPrimGroups[ 0 ].m_primitive = PointList;
+        ptGeo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
-        attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_geo = geo;
 
+        StaticGeometry *lineGeo = &attachGeoEvData->m_geo[ 1 ];
+        lineGeo->m_vb = Scene::GeometryBuilder::allocVertices( ColorVertex, 3, pos, col, nullptr );
+        lineGeo->m_indextype = UnsignedShort;
         ui32 size = sizeof( GLushort ) * NumIndices;
-        geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
-        ::memcpy( geo->m_ib->m_pData, indices, size );
+        lineGeo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
+        ::memcpy( lineGeo->m_ib->m_pData, indices, size );
 
         // setup primitives
-        geo->m_numPrimGroups = 3;
-        geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
-        geo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
-        geo->m_pPrimGroups[ 0 ].m_numPrimitives = 2 * geo->m_numPrimGroups;
-        geo->m_pPrimGroups[ 0 ].m_primitive = LineList;
-        geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
+        lineGeo->m_numPrimGroups = 3;
+        lineGeo->m_pPrimGroups = new PrimitiveGroup[ lineGeo->m_numPrimGroups ];
+        lineGeo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
+        lineGeo->m_pPrimGroups[ 0 ].m_numPrimitives = 2 * lineGeo->m_numPrimGroups;
+        lineGeo->m_pPrimGroups[ 0 ].m_primitive = LineList;
+        lineGeo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
         // setup material
-        geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( ColorVertex );
+        Material *mat = Scene::MaterialBuilder::createBuildinMaterial( ColorVertex );
+        ptGeo->m_material = mat;
+        lineGeo->m_material = mat;
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
         Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
         ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
 
-        geo->m_parameter = parameter;
-        geo->m_numParameter++;
+        lineGeo->m_parameter = parameter;
+        lineGeo->m_numParameter++;
 
         rb->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 

@@ -76,7 +76,6 @@ static const String TextFsSrc =
     "    vFragColor = texture( tex0, UV );\n"
 	"};\n";
 
-
 namespace intern {
     static void dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset ) {
         std::stringstream stream;
@@ -107,8 +106,8 @@ GeometryBuilder::~GeometryBuilder() {
     // empty
 }
 
-StaticGeometry *GeometryBuilder::allocEmptyGeometry( VertexType type ) {
-    StaticGeometry *geo = StaticGeometry::create();
+StaticGeometry *GeometryBuilder::allocEmptyGeometry( VertexType type, ui32 numGeo ) {
+    StaticGeometry *geo = StaticGeometry::create( numGeo );
     geo->m_vertextype = type;
     geo->m_indextype = UnsignedShort;
 
@@ -116,7 +115,7 @@ StaticGeometry *GeometryBuilder::allocEmptyGeometry( VertexType type ) {
 }
 
 StaticGeometry *GeometryBuilder::allocTriangles( VertexType type ) {
-    StaticGeometry *geo = StaticGeometry::create();
+    StaticGeometry *geo = StaticGeometry::create( 1 );
     geo->m_vertextype = type;
     geo->m_indextype = UnsignedShort;
 
@@ -161,7 +160,7 @@ StaticGeometry *GeometryBuilder::allocTriangles( VertexType type ) {
 }
 
 StaticGeometry *GeometryBuilder::allocQuads( VertexType type ) {
-    StaticGeometry *geo = StaticGeometry::create();
+    StaticGeometry *geo = StaticGeometry::create( 1 );
     geo->m_vertextype = type;
     geo->m_indextype = UnsignedShort;
 
@@ -223,7 +222,7 @@ StaticGeometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const
 		return nullptr;
 	}
 
-    StaticGeometry *geo = StaticGeometry::create();
+    StaticGeometry *geo = StaticGeometry::create( 1 );
     geo->m_vertextype = RenderVertex;
     geo->m_indextype = UnsignedShort;
 
@@ -398,7 +397,6 @@ BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm:
             data = BufferData::alloc( VertexBuffer, size, ReadOnly );
             ::memcpy( data->m_pData, renderVerts, size );
             delete [] renderVerts;
-
         }
         break;
 

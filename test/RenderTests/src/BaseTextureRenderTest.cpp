@@ -117,7 +117,7 @@ public:
         pRenderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
-        StaticGeometry *geo = StaticGeometry::create();
+        StaticGeometry *geo = StaticGeometry::create( 1 );
         geo->m_vertextype = RenderVertex;
         geo->m_indextype = UnsignedShort;
 

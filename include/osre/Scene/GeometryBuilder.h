@@ -56,7 +56,7 @@ public:
     /// @brief  Will allocate an empty geometry.
     ///	@param  type        [in] The vertex type.
     /// @return The created geometry.
-    static RenderBackend::StaticGeometry *allocEmptyGeometry( RenderBackend::VertexType type );
+    static RenderBackend::StaticGeometry *allocEmptyGeometry( RenderBackend::VertexType type, ui32 numGeo );
 
     /// @brief  Will allocate a triangle geometry.
     ///	@param  type        [in] The vertex type.
