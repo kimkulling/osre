@@ -110,7 +110,6 @@ public:
         ptGeo->m_pPrimGroups[ 0 ].m_primitive = PointList;
         ptGeo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
-
         StaticGeometry *lineGeo = &attachGeoEvData->m_geo[ 1 ];
         lineGeo->m_vb = Scene::GeometryBuilder::allocVertices( ColorVertex, 3, pos, col, nullptr );
         lineGeo->m_indextype = UnsignedShort;

@@ -190,7 +190,7 @@ static OGLVertexArray *setupBuffers( StaticGeometry *geo, OGLRenderBackend *rb, 
 
     // create vertex buffer
     BufferData *vertices = geo->m_vb;
-	if (nullptr == vertices) {
+	if ( nullptr == vertices ) {
 		osre_debug( Tag, "No vertex buffer data for setting up data." );
 		return nullptr;
 	}
@@ -198,7 +198,7 @@ static OGLVertexArray *setupBuffers( StaticGeometry *geo, OGLRenderBackend *rb, 
 
     // create index buffer
     BufferData *indices = geo->m_ib;
-	if (nullptr == indices) {
+	if ( nullptr == indices ) {
 		osre_debug( Tag, "No index buffer data for setting up data." );
 		return nullptr;
 	}
@@ -356,12 +356,18 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *pEventDat
 }
 
 void OGLRenderEventHandler::setActiveShader( OGLShader *oglShader ) {
+    if ( nullptr == m_renderCmdBuffer ) {
+        osre_error( Tag, "Renderer not up and running." );
+        return;
+    }
     m_renderCmdBuffer->setActiveShader( oglShader );
 }
 
 void OGLRenderEventHandler::enqueueRenderCmd( OGLRenderCmd *oglRenderCmd ) {
-	OSRE_ASSERT( nullptr != oglRenderCmd );
-
+    if ( nullptr == m_renderCmdBuffer ) {
+        osre_error( Tag, "Renderer not up and running." );
+        return;
+    }
     m_renderCmdBuffer->enqueueRenderCmd( oglRenderCmd );
 }
 
@@ -437,7 +443,7 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
 bool OGLRenderEventHandler::onDestroyRenderer( const Common::EventData * ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	
-	if (!m_renderCtx) {
+	if ( nullptr != m_renderCtx ) {
         return false;
     }
 
@@ -463,13 +469,13 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	
 	AttachGeoEventData *attachSceneEvData = ( AttachGeoEventData* ) eventData;
-    if( !attachSceneEvData ) {
+    if( nullptr == attachSceneEvData ) {
         osre_debug( Tag, "AttachSceneEventData-pointer is a nullptr." );
         return false;
     }
     
     StaticGeometry *geo = attachSceneEvData->m_geo;
-    if( !geo ) {
+    if( nullptr == geo ) {
         osre_debug( Tag, "Geometry-pointer is a nullptr." );
         return false;
     }
@@ -486,7 +492,7 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
 
     // setup vertex array, vertex and index buffers
     m_vertexArray = setupBuffers( geo, m_oglBackend, m_renderCmdBuffer->getActiveShader() );
-    if( !m_vertexArray ) {
+    if( nullptr == m_vertexArray ) {
         osre_debug( Tag, "Vertex-Array-pointer is a nullptr." );
         return false;
     }
