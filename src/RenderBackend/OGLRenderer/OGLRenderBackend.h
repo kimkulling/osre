@@ -90,6 +90,7 @@ public:
     bool bindVertexLayout( OGLVertexArray *pVertexArray, OGLShader *pShader, ui32 stride, GLint loc, OGLVertexAttribute* attrib );
     bool bindVertexLayout( OGLVertexArray *pVertexArray, OGLShader *pShader, ui32 stride, const CPPCore::TArray<OGLVertexAttribute*> &attributes );
     void destroyVertexArray( OGLVertexArray *pVertexArray );
+    OGLVertexArray *getVertexArraybyId( ui32 id ) const;
     void bindVertexArray( OGLVertexArray *pVertexArray );
     void unbindVertexArray( OGLVertexArray *pVertexArray );
     void releaseAllVertexArrays();

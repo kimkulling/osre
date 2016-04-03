@@ -236,20 +236,20 @@ static void setupPrimDrawCmd( const TArray<ui32> &ids, OGLRenderBackend *rb, OGL
         return;
     }
 
-	OGLRenderCmd *pRenderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesCmd, nullptr );
+	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesCmd, va->m_slot, nullptr );
     DrawPrimitivesCmdData *data = new DrawPrimitivesCmdData;
     data->m_vertexArray = va;
     data->m_primitives.reserve( ids.size() );
     for( ui32 i = 0; i < ids.size(); ++i ) {
         data->m_primitives.add( ids[ i ] );
     }
-    pRenderCmd->m_pData = static_cast< void* >( data );
+    renderCmd->m_pData = static_cast< void* >( data );
     
-    eh->enqueueRenderCmd( pRenderCmd );
+    eh->enqueueRenderCmd( renderCmd );
 }
 
 static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *geoInstanceData, 
-                                   OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {
+                                   OGLRenderBackend *rb, OGLRenderEventHandler *eh, OGLVertexArray *va ) {
 	OSRE_ASSERT( nullptr != geoInstanceData );
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
@@ -259,7 +259,7 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
     }
 
     GeoInstanceData *instData( geoInstanceData->m_geoInstanceData );
-	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesInstancesCmd, nullptr );
+	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesInstancesCmd, va->m_slot, nullptr );
     if( nullptr != instData ) {
         if( nullptr != instData->m_data ) {
             OGLBuffer *instanceDataBuffer = rb->createBuffer( InstanceBuffer );
@@ -280,11 +280,11 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
 }
 
 static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb, 
-                              OGLRenderEventHandler *eh, OGLShader *oglShader ) {
+                              OGLRenderEventHandler *eh, OGLShader *oglShader, OGLVertexArray *va ) {
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
 
-	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesCmd, nullptr );
+	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesCmd, va->m_slot, nullptr );
 	StaticGeometry *geo( data->m_geo );
 	if ( nullptr == geo ) {
 		return;
@@ -401,10 +401,12 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
 	CreateRendererEventData *pCreateRendererEvData = ( CreateRendererEventData* ) eventData;
     AbstractSurface *activeSurface = pCreateRendererEvData->m_activeSurface;
     if( !activeSurface ) {
+        osre_debug( Tag, "No active surface." );
         return false;
     }
 
     if( !activeSurface->create() ) {
+        osre_debug( Tag, "Cannot create active surface." );
         return false;
     }
 
@@ -414,6 +416,7 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
     if( nullptr !=  m_renderCtx ) {
         result = m_renderCtx->create( activeSurface );
         if( !result ) {
+            osre_debug( Tag, "Cannot create render context." );
             return false;
         }
     }
@@ -474,38 +477,40 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
         return false;
     }
     
-    StaticGeometry *geo = attachSceneEvData->m_geo;
-    if( nullptr == geo ) {
-        osre_debug( Tag, "Geometry-pointer is a nullptr." );
-        return false;
-    }
+    for ( ui32 geoIdx = 0; geoIdx < attachSceneEvData->m_numGeo; ++geoIdx ) {
+        StaticGeometry *geo = &attachSceneEvData->m_geo[ geoIdx ];
+        if ( nullptr == geo ) {
+            osre_debug( Tag, "Geometry-pointer is a nullptr." );
+            return false;
+        }
 
-    // register primitive groups to render
-    CPPCore::TArray<ui32> primGroups;
-    for( ui32 i = 0; i < geo->m_numPrimGroups; ++i ) {
-        const ui32 primIdx( m_oglBackend->addPrimitiveGroup( &geo->m_pPrimGroups[ i ] ) );
-        primGroups.add( primIdx );
-    }
+        // register primitive groups to render
+        CPPCore::TArray<ui32> primGroups;
+        for ( ui32 i = 0; i < geo->m_numPrimGroups; ++i ) {
+            const ui32 primIdx( m_oglBackend->addPrimitiveGroup( &geo->m_pPrimGroups[ i ] ) );
+            primGroups.add( primIdx );
+        }
 
-    // create the default material
-    setupMaterial( geo->m_material, m_oglBackend, this );
+        // create the default material
+        setupMaterial( geo->m_material, m_oglBackend, this );
 
-    // setup vertex array, vertex and index buffers
-    m_vertexArray = setupBuffers( geo, m_oglBackend, m_renderCmdBuffer->getActiveShader() );
-    if( nullptr == m_vertexArray ) {
-        osre_debug( Tag, "Vertex-Array-pointer is a nullptr." );
-        return false;
-    }
-    m_renderCmdBuffer->setVertexArray( m_vertexArray );
-            
-    // setup global parameter
-    setupParameter( geo, m_oglBackend, this );
+        // setup vertex array, vertex and index buffers
+        m_vertexArray = setupBuffers( geo, m_oglBackend, m_renderCmdBuffer->getActiveShader() );
+        if ( nullptr == m_vertexArray ) {
+            osre_debug( Tag, "Vertex-Array-pointer is a nullptr." );
+            return false;
+        }
+        m_renderCmdBuffer->setVertexArray( m_vertexArray );
 
-    // setup the draw calls
-    if( 0 == attachSceneEvData->m_numInstances ) {
-        setupPrimDrawCmd( primGroups, m_oglBackend, this, m_vertexArray );
-    } else {
-        setupInstancedDrawCmd( primGroups, attachSceneEvData, m_oglBackend, this );
+        // setup global parameter
+        setupParameter( geo, m_oglBackend, this );
+
+        // setup the draw calls
+        if ( 0 == attachSceneEvData->m_numInstances ) {
+            setupPrimDrawCmd( primGroups, m_oglBackend, this, m_vertexArray );
+        } else {
+            setupInstancedDrawCmd( primGroups, attachSceneEvData, m_oglBackend, this, m_vertexArray );
+        }
     }
 
     return true;
@@ -568,7 +573,7 @@ bool  OGLRenderEventHandler::onRenderText( const Common::EventData *eventData ) 
 		return false;
 	}
 
-	setupDrawTextCmd( data, m_oglBackend, this, m_renderCmdBuffer->getActiveShader() );
+	setupDrawTextCmd( data, m_oglBackend, this, m_renderCmdBuffer->getActiveShader(), m_vertexArray );
 
 	return true;
 }

@@ -206,7 +206,7 @@ void OGLRenderBackend::setTimer( Platform::AbstractTimer *timer ) {
 void OGLRenderBackend::setRenderContext( Platform::AbstractRenderContext *renderCtx ) {
     if ( m_renderCtx != renderCtx ) {
         m_renderCtx = renderCtx;
-        if ( m_renderCtx ) {
+        if ( nullptr != m_renderCtx ) {
             m_renderCtx->activate();
         }
     }
@@ -325,8 +325,7 @@ bool OGLRenderBackend::createVertexCompArray( const VertexLayout *layout, OGLSha
     return true;
 }
 
-bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *shader, 
-                                              VertAttribArray &attributes ) {
+bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *shader, VertAttribArray &attributes ) {
     if( !shader ) {
         return false;
     }
@@ -471,6 +470,15 @@ void OGLRenderBackend::destroyVertexArray( OGLVertexArray *vertexArray ) {
     }
 
     glDeleteVertexArrays( 1, &vertexArray->m_id );
+}
+
+OGLVertexArray *OGLRenderBackend::getVertexArraybyId( ui32 id ) const {
+    OGLVertexArray *va( nullptr );
+    if ( id < m_vertexarrays.size() ) {
+        va = m_vertexarrays[ id ];
+    }
+
+    return va;
 }
 
 void OGLRenderBackend::bindVertexArray( OGLVertexArray *vertexArray ) {

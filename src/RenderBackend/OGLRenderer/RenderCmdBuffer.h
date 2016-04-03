@@ -72,6 +72,8 @@ public:
     RenderCmdBuffer( OGLRenderBackend *renderBackend, Platform::AbstractRenderContext *ctx );
     /// The class destructor.
     virtual ~RenderCmdBuffer();
+    /// Will set the active vertex array object by its id.
+    void setVertexArray( ui32 id );
     /// Will set the active vertex array object.
     void setVertexArray( OGLVertexArray *vertexArray );
     /// Will set the active shader.

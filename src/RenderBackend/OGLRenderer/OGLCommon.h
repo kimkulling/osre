@@ -95,16 +95,18 @@ enum class OGLRenderCmdType {
 struct OGLRenderCmd {
     OGLRenderCmdType m_type;
 	ui32 m_id;
+    ui32 m_vaId;
     void *m_pData;
 };
 
 struct OGLRenderCmdAllocator {
 	static ui32 m_lastid;
 
-	static OGLRenderCmd *alloc( OGLRenderCmdType type, void *data ) {
+	static OGLRenderCmd *alloc( OGLRenderCmdType type, ui32 vaId, void *data ) {
 		OGLRenderCmd *cmd = new OGLRenderCmd;
-		cmd->m_type = type;
-		cmd->m_id = m_lastid;
+		cmd->m_type  = type;
+		cmd->m_id    = m_lastid;
+        cmd->m_vaId  = vaId;
 		cmd->m_pData = data;
 		m_lastid++;
 
