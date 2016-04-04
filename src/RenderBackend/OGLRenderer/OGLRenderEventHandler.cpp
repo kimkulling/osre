@@ -336,11 +336,11 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
     } else if( OnAttachViewEvent == ev ) {
         result = onAttachView( data );
     } else if ( OnDetachViewEvent == ev ) {
-        // todo!
+        result = onDetachView( data );
     } else if ( OnAttachSceneEvent == ev ) {
         result = onAttachGeo( data );
     } else if( OnDetachSceneEvent == ev ) {
-        // todo!
+        result = onDetachGeo( data );
     } else if ( OnClearSceneEvent == ev ) {
         result = onClearGeo( data );
     } else if( OnRenderFrameEvent == ev ) {
@@ -350,7 +350,6 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
 	} else if (OnRenderTextEvent == ev) {
 		result = onRenderText(data);
 	}
-
     delete data;
 
     return result;
@@ -467,6 +466,12 @@ bool OGLRenderEventHandler::onAttachView( const EventData * ) {
 	return true;
 }
 
+bool OGLRenderEventHandler::onDetachView( const EventData * ) {
+    OSRE_ASSERT( nullptr != m_oglBackend );
+
+    return true;
+}
+
 bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	
@@ -515,7 +520,12 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
+bool OGLRenderEventHandler::onDetachGeo( const EventData * ) {
+    OSRE_ASSERT( nullptr != m_oglBackend );
+
+    return true;
+}
+
 bool OGLRenderEventHandler::onClearGeo( const EventData * ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	

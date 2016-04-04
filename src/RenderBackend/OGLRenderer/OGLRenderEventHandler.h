@@ -88,9 +88,13 @@ protected:
 	virtual bool onDestroyRenderer( const Common::EventData *eventData );
 	///	@brief	Callback for attaching a new view onto a stage.
 	virtual bool onAttachView( const Common::EventData *eventData );
+    ///	@brief	Callback for detaching a new view onto a stage.
+    virtual bool onDetachView( const Common::EventData *eventData );
 	///	@brief	Callback for attaching a new geometry into a stage.
 	virtual bool onAttachGeo( const Common::EventData *eventData );
-	///	@brief	Callback for clearing all geometry from a stage.
+    ///	@brief	Callback for detaching existing geometry from a stage.
+    virtual bool onDetachGeo( const Common::EventData *eventData );
+    ///	@brief	Callback for clearing all geometry from a stage.
 	virtual bool onClearGeo( const Common::EventData *eventData );
 	///	@brief	Callback for the render frame.
 	virtual bool onRenderFrame( const Common::EventData *eventData );
