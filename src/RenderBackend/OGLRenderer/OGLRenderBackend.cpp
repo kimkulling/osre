@@ -430,10 +430,11 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
 
     glEnableVertexAttribArray( loc );
     glVertexAttribPointer( loc, attrib->m_size,
-        attrib->m_type,
-        GL_FALSE,
-        stride,
-        attrib->m_ptr );
+                           attrib->m_type,
+                           GL_FALSE,
+                           stride,
+                           attrib->m_ptr 
+                         );
 
     return true;
 }
@@ -454,7 +455,8 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
                                    attributes[ i ]->m_type,
                                    GL_FALSE,
                                    stride,
-                                   attributes[ i ]->m_ptr );
+                                   attributes[ i ]->m_ptr 
+                                 );
         } else {
             String msg = "Cannot find " + String( pAttribName );
             osre_debug( Tag, msg );
@@ -465,7 +467,7 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
 }
 
 void OGLRenderBackend::destroyVertexArray( OGLVertexArray *vertexArray ) {
-    if (nullptr == vertexArray) {
+    if ( nullptr == vertexArray ) {
         return;
     }
 

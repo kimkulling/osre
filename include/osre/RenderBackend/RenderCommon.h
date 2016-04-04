@@ -334,11 +334,11 @@ struct OSRE_EXPORT StaticGeometry {
     static StaticGeometry *create( ui32 numGeo );
     static void destroy( StaticGeometry *geo );
 
+    OSRE_NON_COPYABLE( StaticGeometry );
+
 private:
     StaticGeometry();
     ~StaticGeometry();
-
-    OSRE_NON_COPYABLE( StaticGeometry )
 };
 
 struct OSRE_EXPORT GeoInstanceData {

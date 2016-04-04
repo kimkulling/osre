@@ -114,10 +114,6 @@ bool RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
         OGLRenderCmd *renderCmd = m_cmdbuffer[ i ];
         OSRE_ASSERT( nullptr != renderCmd );
 
-        if ( renderCmd->m_vaId != m_vertexarray->m_slot ) {
-            setVertexArray( renderCmd->m_vaId );
-        }
-
         if( renderCmd->m_type == OGLRenderCmdType::SetParameterCmd ) {
             onSetParametersCmd( ( SetParameterCmdData* ) renderCmd->m_pData );
         } else if( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesCmd ) {
@@ -153,7 +149,6 @@ void RenderCmdBuffer::clear() {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
     UpdateParameterEventData *updateParamData = ( UpdateParameterEventData* ) data;
 
@@ -176,6 +171,8 @@ bool RenderCmdBuffer::onSetParametersCmd( SetParameterCmdData *data ) {
 }
 
 bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *data ) {
+    OSRE_ASSERT( nullptr != m_renderbackend );
+
     m_renderbackend->bindVertexArray( data->m_vertexArray );
     for( ui32 i = 0; i < data->m_primitives.size(); ++i ) {
         m_renderbackend->render( data->m_primitives[ i ] );
@@ -186,7 +183,8 @@ bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *data ) {
 
 bool RenderCmdBuffer::onDrawPrimitivesInstancesCmd( DrawInstancePrimitivesCmdData *data ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
-
+    
+    m_renderbackend->bindVertexArray( data->m_vertexArray );
     for( ui32 i = 0; i < data->m_primitives.size(); ++i ) {
         m_renderbackend->render( data->m_primitives[ i ], data->m_numInstances );
     }

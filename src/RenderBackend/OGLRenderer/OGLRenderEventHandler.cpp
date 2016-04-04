@@ -236,7 +236,7 @@ static void setupPrimDrawCmd( const TArray<ui32> &ids, OGLRenderBackend *rb, OGL
         return;
     }
 
-	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesCmd, va->m_slot, nullptr );
+	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesCmd, nullptr );
     DrawPrimitivesCmdData *data = new DrawPrimitivesCmdData;
     data->m_vertexArray = va;
     data->m_primitives.reserve( ids.size() );
@@ -259,7 +259,7 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
     }
 
     GeoInstanceData *instData( geoInstanceData->m_geoInstanceData );
-	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesInstancesCmd, va->m_slot, nullptr );
+	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesInstancesCmd, nullptr );
     if( nullptr != instData ) {
         if( nullptr != instData->m_data ) {
             OGLBuffer *instanceDataBuffer = rb->createBuffer( InstanceBuffer );
@@ -269,6 +269,7 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
     }
     
     DrawInstancePrimitivesCmdData *data = new DrawInstancePrimitivesCmdData;
+    data->m_vertexArray = va;
     data->m_numInstances = geoInstanceData->m_numInstances;
     data->m_primitives.reserve( ids.size() );
     for( ui32 i = 0; i < ids.size(); ++i ) {
@@ -284,7 +285,7 @@ static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb,
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
 
-	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesCmd, va->m_slot, nullptr );
+	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesCmd, nullptr );
 	StaticGeometry *geo( data->m_geo );
 	if ( nullptr == geo ) {
 		return;
@@ -322,35 +323,35 @@ OGLRenderEventHandler::~OGLRenderEventHandler( ) {
     // empty
 }
 
-bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *pEventData ) {
+bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
     bool result( false );
     if ( OnAttachEventHandlerEvent == ev ) {
-        result = onAttached( pEventData );
+        result = onAttached( data );
     } else if ( OnDetatachEventHandlerEvent == ev ) {
-        result = onDetached( pEventData );
+        result = onDetached( data );
     } else if ( OnCreateRendererEvent == ev ) {
-        result = onCreateRenderer( pEventData );
+        result = onCreateRenderer( data );
     } else if ( OnDestroyRendererEvent == ev ) {
-        result = onDestroyRenderer( pEventData );
+        result = onDestroyRenderer( data );
     } else if( OnAttachViewEvent == ev ) {
-        result = onAttachView( pEventData );
+        result = onAttachView( data );
     } else if ( OnDetachViewEvent == ev ) {
         // todo!
     } else if ( OnAttachSceneEvent == ev ) {
-        result = onAttachGeo( pEventData );
+        result = onAttachGeo( data );
     } else if( OnDetachSceneEvent == ev ) {
         // todo!
     } else if ( OnClearSceneEvent == ev ) {
-        result = onClearGeo( pEventData );
+        result = onClearGeo( data );
     } else if( OnRenderFrameEvent == ev ) {
-        result = onRenderFrame( pEventData );
+        result = onRenderFrame( data );
     } else if( OnUpdateParameterEvent == ev ) {
-        result = onUpdateParameter( pEventData );
+        result = onUpdateParameter( data );
 	} else if (OnRenderTextEvent == ev) {
-		result = onRenderText(pEventData);
+		result = onRenderText(data);
 	}
 
-    delete pEventData;
+    delete data;
 
     return result;
 }
@@ -460,14 +461,12 @@ bool OGLRenderEventHandler::onDestroyRenderer( const Common::EventData * ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onAttachView( const EventData * ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	
 	return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	
