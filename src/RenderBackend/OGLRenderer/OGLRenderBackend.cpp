@@ -214,7 +214,6 @@ void OGLRenderBackend::setRenderContext( Platform::AbstractRenderContext *render
 
 void OGLRenderBackend::clearRenderTarget( const ClearState &clearState ) {
     GLbitfield glTarget( 0 );
-
     if( clearState.m_state & ClearState::ColorBit ) {
         glTarget |= GL_COLOR_BUFFER_BIT;
     }
@@ -287,10 +286,10 @@ void OGLRenderBackend::releaseBuffer( OGLBuffer *pBuffer ) {
 
 void OGLRenderBackend::releaseAllBuffers() {
     for ( ui32 i=0; i<m_buffers.size(); ++i ) {
-        OGLBuffer *pBuffer = m_buffers[ i ];
-        if ( pBuffer ) {
-            if ( pBuffer->m_type != EmptyBuffer ) {
-                releaseBuffer( pBuffer );
+        OGLBuffer *buffer = m_buffers[ i ];
+        if ( nullptr != buffer ) {
+            if ( buffer->m_type != EmptyBuffer ) {
+                releaseBuffer( buffer );
             }
         }
     }
@@ -415,7 +414,7 @@ void OGLRenderBackend::releaseVertexCompArray( TArray<OGLVertexAttribute*> &attr
 OGLVertexArray *OGLRenderBackend::createVertexArray() {
     OGLVertexArray *pVertexArray = new OGLVertexArray;
     glGenVertexArrays( 1, &pVertexArray->m_id );
-    ui32 id = m_vertexarrays.size();
+    const ui32 id = m_vertexarrays.size();
     m_vertexarrays.add( pVertexArray );
     pVertexArray->m_slot = id;
 
@@ -472,6 +471,7 @@ void OGLRenderBackend::destroyVertexArray( OGLVertexArray *vertexArray ) {
     }
 
     glDeleteVertexArrays( 1, &vertexArray->m_id );
+    vertexArray->m_id = 99999999;
 }
 
 OGLVertexArray *OGLRenderBackend::getVertexArraybyId( ui32 id ) const {
@@ -847,20 +847,25 @@ void OGLRenderBackend::releaseAllParameters() {
 }
 
 void OGLRenderBackend::setParameter( OGLParameter **param, ui32 numParam ) {
-    if( !m_shaderInUse ) {
+    if( nullptr == m_shaderInUse ) {
         return;
     }
 
     for( ui32 i = 0; i < numParam; ++i ) {
         OGLParameter *currentParam = param[ i ];
         if( currentParam ) {
-            const bool success = setParameterInShader( currentParam ,m_shaderInUse );
+            const bool success( setParameterInShader( currentParam ,m_shaderInUse ) );
             OSRE_VALIDATE( success, "Error setting parameter " + currentParam->m_name );
         }
     }
 }
 
 ui32 OGLRenderBackend::addPrimitiveGroup( PrimitiveGroup *grp ) {
+    if ( nullptr == grp ) {
+        osre_error( Tag, "Group pointer is nullptr" );
+        return 9999999;
+    }
+
     OGLPrimGroup *oglGrp    = new OGLPrimGroup;
     oglGrp->m_primitive     = OGLEnum::getGLPrimitiveType( grp->m_primitive );
     oglGrp->m_indexType     = OGLEnum::getGLIndexType( grp->m_indexType );

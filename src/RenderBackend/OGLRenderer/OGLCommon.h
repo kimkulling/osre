@@ -38,7 +38,6 @@ namespace RenderBackend {
 class OGLShader;
 
 
-//-------------------------------------------------------------------------------------------------
 void checkOGLErrorState( const c8 *file, ui32 line );
 
 //-------------------------------------------------------------------------------------------------
@@ -69,7 +68,7 @@ struct OGLVertexAttribute {
 
 struct OGLVertexArray {
     GLuint m_id;
-    ui32 m_slot;
+    ui32   m_slot;
 };
 
 struct OGLTexture {
@@ -77,10 +76,10 @@ struct OGLTexture {
     String m_name;
     GLenum m_target;
     GLenum m_format;
-    ui32 m_slot;
-    ui32 m_width;
-    ui32 m_height;
-    ui32 m_channels;
+    ui32   m_slot;
+    ui32   m_width;
+    ui32   m_height;
+    ui32   m_channels;
 };
 
 enum class OGLRenderCmdType {
@@ -94,8 +93,8 @@ enum class OGLRenderCmdType {
 
 struct OGLRenderCmd {
     OGLRenderCmdType m_type;
-	ui32 m_id;
-    void *m_pData;
+	ui32             m_id;
+    void            *m_pData;
 };
 
 struct OGLRenderCmdAllocator {

@@ -79,8 +79,8 @@ public:
         // line segment coordinates
         glm::vec3 pos[ 3 ];
         pos[ 0 ] = glm::vec3( -1, -1, 0 );
-        pos[ 1 ] = glm::vec3( 0, 1, 0 );
-        pos[ 2 ] = glm::vec3( 1, -1, 0 );
+        pos[ 1 ] = glm::vec3(  0,  1, 0 );
+        pos[ 2 ] = glm::vec3(  1, -1, 0 );
 
         static const ui32 NumIndices = 6;
         GLushort indices[ NumIndices ];
@@ -93,8 +93,10 @@ public:
         indices[ 4 ] = 2;
         indices[ 5 ] = 0;
 
-        attachGeoEvData->m_numGeo = 2;
-        attachGeoEvData->m_geo = Scene::GeometryBuilder::allocEmptyGeometry( ColorVertex, 2 ); 
+        static ui32 NumGeo( 2 );
+        //attachGeoEvData->m_numGeo = 1;
+        attachGeoEvData->m_numGeo = NumGeo;
+        attachGeoEvData->m_geo = Scene::GeometryBuilder::allocEmptyGeometry( ColorVertex, NumGeo );
         StaticGeometry *ptGeo = &attachGeoEvData->m_geo[ 0 ];
         ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( ColorVertex, 3, points, col, nullptr );
         ptGeo->m_indextype = UnsignedShort;
@@ -103,10 +105,10 @@ public:
         ::memcpy( ptGeo->m_ib->m_pData, pt_indices, pt_size );
         
         // setup primitives
-        ptGeo->m_numPrimGroups = 3;
+        ptGeo->m_numPrimGroups = 1;
         ptGeo->m_pPrimGroups = new PrimitiveGroup[ ptGeo->m_numPrimGroups ];
         ptGeo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
-        ptGeo->m_pPrimGroups[ 0 ].m_numPrimitives = ptGeo->m_numPrimGroups;
+        ptGeo->m_pPrimGroups[ 0 ].m_numPrimitives = 3;
         ptGeo->m_pPrimGroups[ 0 ].m_primitive = PointList;
         ptGeo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
@@ -118,32 +120,30 @@ public:
         ::memcpy( lineGeo->m_ib->m_pData, indices, size );
 
         // setup primitives
-        lineGeo->m_numPrimGroups = 3;
+        lineGeo->m_numPrimGroups = 1;
         lineGeo->m_pPrimGroups = new PrimitiveGroup[ lineGeo->m_numPrimGroups ];
         lineGeo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
-        lineGeo->m_pPrimGroups[ 0 ].m_numPrimitives = 2 * lineGeo->m_numPrimGroups;
+        lineGeo->m_pPrimGroups[ 0 ].m_numPrimitives = 2 * 3;
         lineGeo->m_pPrimGroups[ 0 ].m_primitive = LineList;
         lineGeo->m_pPrimGroups[ 0 ].m_startIndex = 0;
-
+        
         // setup material
         Material *mat = Scene::MaterialBuilder::createBuildinMaterial( ColorVertex );
         ptGeo->m_material = mat;
         lineGeo->m_material = mat;
-
+        
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
         Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
         ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
-
+        ptGeo->m_parameter = parameter;
+        ptGeo->m_numParameter++;
+        
         lineGeo->m_parameter = parameter;
         lineGeo->m_numParameter++;
 
         rb->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
-        return true;
-    }
-
-    virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *pRenderBackendSrv ) {
         return true;
     }
 };

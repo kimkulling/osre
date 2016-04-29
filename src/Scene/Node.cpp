@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Scene {
 
-using namespace RenderBackend;
+using namespace ::OSRE::RenderBackend;
 
 Node::Node( const String &name, Common::Ids &ids, bool transformEnabled, bool renderEnabled, Node *parent )
 : Object( name )

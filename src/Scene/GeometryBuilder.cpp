@@ -326,7 +326,8 @@ StaticGeometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const
 
     // setup primitives
     geo->m_numPrimGroups = text.size();
-    geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
+//    geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
+    geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
     geo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
     geo->m_pPrimGroups[ 0 ].m_numPrimitives = 6 * geo->m_numPrimGroups;
     geo->m_pPrimGroups[ 0 ].m_primitive = TriangleList;

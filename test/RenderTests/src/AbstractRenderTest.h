@@ -73,18 +73,39 @@ public:
     ///	@return	The name of the render test.
     const String &getTestName() const;
 
+    /// @brief  Set the requested state for the test.
+    /// @param  state       [i] The new state to apply
     void setState( TestState state );
 
+    /// @brief  Returns true, if the requested state was already applied.
+    /// @return true, if state was already applied, false if not.
     bool hasState( TestState state ) const;
 
+    /// @brief  Creates a new material based on vertex- and fragment-shader.
+    /// @param  VsSrc       [in] The vertex-shader-code.
+    /// @param  FsSrc       [in] The fragment-shader-code.
+    /// @return The new created material.
     RenderBackend::Material *createMaterial( const String &VsSrc, const String &FsSrc );
 
 protected:
-    AbstractRenderTest( const String &rRenderTestName );
-    AbstractRenderTest &operator = ( const AbstractRenderTest &rOther );
-    virtual bool onCreate( RenderBackend::RenderBackendService *pRenderBackendSrv );
-    virtual bool onDestroy( RenderBackend::RenderBackendService *pRenderBackendSrv );
-    virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *pRenderBackendSrv ) = 0;
+    /// @brief  The class constructor.
+    /// @param  renderTestName  [in] The name for the render test.
+    AbstractRenderTest( const String &renderTestName );
+
+    /// @brief  The onCreate-callback.
+    /// @param  rb      [in9 The render backend to use.
+    virtual bool onCreate( RenderBackend::RenderBackendService *rb );
+
+    /// @brief  The onDestroy-callback.
+    /// @param  rb      [in9 The render backend to use.
+    virtual bool onDestroy( RenderBackend::RenderBackendService *rb );
+
+    /// @brief  The onRender-callback.
+    /// @param  rb      [in9 The render backend to use.
+    virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *rb );
+
+private:
+    AbstractRenderTest &operator = ( const AbstractRenderTest & ) = delete;
 
 private:
     const String m_RenderTestName;

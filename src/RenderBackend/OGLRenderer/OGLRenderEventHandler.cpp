@@ -203,7 +203,7 @@ static OGLVertexArray *setupBuffers( StaticGeometry *geo, OGLRenderBackend *rb, 
 		return nullptr;
 	}
 
-    OGLBuffer *pIB = rb->createBuffer( indices->m_type );
+    OGLBuffer *ib = rb->createBuffer( indices->m_type );
 
     OGLVertexArray *vertexArray = rb->createVertexArray();
     rb->bindVertexArray( vertexArray );
@@ -220,8 +220,8 @@ static OGLVertexArray *setupBuffers( StaticGeometry *geo, OGLRenderBackend *rb, 
     rb->releaseVertexCompArray( attributes );
 
     // pass indices to element array buffer
-    rb->bindBuffer( pIB );
-    rb->bufferData( pIB, indices->m_pData, indices->m_size, indices->m_access );
+    rb->bindBuffer( ib );
+    rb->bufferData( ib, indices->m_pData, indices->m_size, indices->m_access );
 
     rb->unbindVertexArray( vertexArray );
 
@@ -350,8 +350,7 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
 	} else if (OnRenderTextEvent == ev) {
 		result = onRenderText(data);
 	}
-    delete data;
-
+    
     return result;
 }
 
@@ -559,8 +558,7 @@ bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	
 	UpdateParameterEventData *updateParamData = ( UpdateParameterEventData* ) eventData;
-
-    if( updateParamData ) {
+    if( nullptr != updateParamData ) {
         for( ui32 i = 0; i < updateParamData->m_numParam; ++i ) {
             OGLParameter *oglParam = m_oglBackend->getParameter( updateParamData->m_param[ i ].m_name );
             if( oglParam ) {
@@ -580,9 +578,9 @@ bool  OGLRenderEventHandler::onRenderText( const Common::EventData *eventData ) 
 	RenderTextEventData *data = ( RenderTextEventData* ) eventData;
 	if ( nullptr == data) {
 		return false;
-	}
-
-	setupDrawTextCmd( data, m_oglBackend, this, m_renderCmdBuffer->getActiveShader(), m_vertexArray );
+    } else {
+        setupDrawTextCmd( data, m_oglBackend, this, m_renderCmdBuffer->getActiveShader(), m_vertexArray );
+    }
 
 	return true;
 }

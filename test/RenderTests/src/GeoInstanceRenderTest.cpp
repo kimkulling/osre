@@ -156,10 +156,6 @@ public:
     virtual bool onDestroy( RenderBackend::RenderBackendService *pRenderBackendSrv ) {
         return true;
     }
-
-    virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *pRenderBackendSrv ) {
-        return true;
-    }
 };
 
 ATTACH_RENDERTEST( GeoInstanceRenderTest )

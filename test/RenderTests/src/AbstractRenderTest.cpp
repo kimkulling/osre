@@ -34,19 +34,16 @@ namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
-//-------------------------------------------------------------------------------------------------
 AbstractRenderTest::AbstractRenderTest( const String &renderTestName )
 : m_RenderTestName( renderTestName )
 , m_State( 0 ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractRenderTest::~AbstractRenderTest() {
     // empty
 }
 
-//---------------------------------------------------------------------------------------------
 bool AbstractRenderTest::create( RenderBackendService *pRenderBackendSrv ) {
     assert( nullptr != pRenderBackendSrv );
     
@@ -54,7 +51,6 @@ bool AbstractRenderTest::create( RenderBackendService *pRenderBackendSrv ) {
     return onCreate( pRenderBackendSrv );
 }
 
-//---------------------------------------------------------------------------------------------
 bool AbstractRenderTest::destroy( RenderBackendService *pRenderBackendSrv ) {
     assert( nullptr != pRenderBackendSrv );
     
@@ -63,34 +59,32 @@ bool AbstractRenderTest::destroy( RenderBackendService *pRenderBackendSrv ) {
     return onDestroy( pRenderBackendSrv );
 }
 
-//---------------------------------------------------------------------------------------------
 bool AbstractRenderTest::render( d32 timediff, RenderBackendService *pRenderBackendSrv ) {
     assert( nullptr != pRenderBackendSrv );
 
     return onRender( timediff, pRenderBackendSrv );
 }
 
-//---------------------------------------------------------------------------------------------
-bool AbstractRenderTest::onCreate( RenderBackendService *pRenderBackendSrv ) {
+bool AbstractRenderTest::onCreate( RenderBackendService *rb ) {
     return true;
 }
 
-//---------------------------------------------------------------------------------------------
-bool AbstractRenderTest::onDestroy( RenderBackendService *pRenderBackendSrv ) {
+bool AbstractRenderTest::onDestroy( RenderBackendService *rv ) {
     return true;
 }
 
-//---------------------------------------------------------------------------------------------
+bool AbstractRenderTest::onRender( d32 timediff, RenderBackendService *rb ) {
+    return true;
+}
+
 void AbstractRenderTest::setup( RenderBackendService *pRenderBackendSrv ) {
     // empty
 }
 
-//---------------------------------------------------------------------------------------------
 void AbstractRenderTest::teardown( RenderBackendService *pRenderBackendSrv ) {
     // empty
 }
 
-//---------------------------------------------------------------------------------------------
 bool AbstractRenderTest::updateSnaptShot() {
     if( !AbstractRenderTest::hasState( AbstractRenderTest::ScreenShotGeneated ) ) {
         String name = getTestName();
@@ -102,10 +96,10 @@ bool AbstractRenderTest::updateSnaptShot() {
             return false;
         }
 
-        IO::Stream *pFileStream = pFS->open( screenshot, IO::Stream::WriteAccess );
-        if( pFileStream ) {
+        IO::Stream *fileStream = pFS->open( screenshot, IO::Stream::WriteAccess );
+        if( fileStream ) {
             //pRenderDevice->makeScreenshot( pFileStream );
-            pFS->close( &pFileStream );
+            pFS->close( &fileStream );
         }
         pFS->release();
 
@@ -115,17 +109,14 @@ bool AbstractRenderTest::updateSnaptShot() {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &AbstractRenderTest::getTestName() const {
     return m_RenderTestName;
 }
 
-//-------------------------------------------------------------------------------------------------
 void AbstractRenderTest::setState( TestState state ) {
     m_State |= state;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool AbstractRenderTest::hasState( TestState state ) const {
     if( m_State & state ) {
         return true;
@@ -134,9 +125,7 @@ bool AbstractRenderTest::hasState( TestState state ) const {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
-RenderBackend::Material *AbstractRenderTest::createMaterial( const String &VsSrc, 
-                                                             const String &FsSrc ) {
+RenderBackend::Material *AbstractRenderTest::createMaterial( const String &VsSrc, const String &FsSrc ) {
     Material *mat      = new Material;
     mat->m_numTextures = 0;
     mat->m_type        = ShaderMaterial;
@@ -146,8 +135,6 @@ RenderBackend::Material *AbstractRenderTest::createMaterial( const String &VsSrc
 
     return mat;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderTest
 } // Namespace OSRE

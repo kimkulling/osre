@@ -32,18 +32,44 @@ namespace RenderBackend {
 //-------------------------------------------------------------------------------------------------
 class BlendState {
 public:
+    enum class BlendFunc {
+        FuncNone,
+        FuncAdd,
+        FuncSubstract,
+        ReverseSubstract,
+        Min,
+        Max
+    };
+
+public:
     BlendState();
     ~BlendState();
+    void setBlendFunc( BlendFunc func );
+    BlendFunc getBlendFunc() const;
+
+private:
+    BlendFunc m_blendFunc;
 };
 
 inline
-BlendState::BlendState() {
+BlendState::BlendState() 
+: m_blendFunc( BlendFunc::FuncNone ) {
     // empty
 }
 
 inline
 BlendState::~BlendState() {
     // empty
+}
+
+void BlendState::setBlendFunc( BlendFunc func ) {
+    if ( func != m_blendFunc ) {
+        m_blendFunc = func;
+    }
+}
+
+BlendState::BlendFunc BlendState::getBlendFunc() const {
+    return m_blendFunc;
 }
 
 } // Namespace RenderBackend

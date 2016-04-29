@@ -92,11 +92,6 @@ public:
 
         return true;
     }
-
-    //---------------------------------------------------------------------------------------------
-    virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *pRenderBackendSrv ) {
-        return true;
-    }
 };
 
 ATTACH_RENDERTEST( BaseTriangleRenderTest )
