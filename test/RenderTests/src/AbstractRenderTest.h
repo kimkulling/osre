@@ -42,44 +42,37 @@ namespace RenderTest {
 //-------------------------------------------------------------------------------------------------
 class AbstractRenderTest {
 public:
-    /// @brief  This enum descripes the possible test states of the render test.
-    enum TestState {
-        ScreenShotGeneated = 0x01
-    };
-
-public:
     ///	@brief	Destructor, virtual.
     virtual ~AbstractRenderTest();
 
-    bool create( RenderBackend::RenderBackendService *pRenderBackendSrv );
-    bool destroy( RenderBackend::RenderBackendService *pRenderBackendSrv );
-    bool render( d32 timediff, RenderBackend::RenderBackendService *pRenderBackendSrv );
+    /// @brief  Will create the rendertest.
+    /// @param  rbSrv       [in] The render backend to use.
+    /// @return true if successful.
+    bool create( RenderBackend::RenderBackendService *rbSrv );
+    
+    /// @brief  Will destroy the rendertest.
+    /// @param  rbSrv       [in] The render backend to use.
+    /// @return true if successful.
+    bool destroy( RenderBackend::RenderBackendService *rbSrv );
+    
+    /// @brief  Will render the rendertest.
+    /// @param  timediff    [in] The timediff since the last frame.
+    /// @param  rbSrv       [in] The render backend to use.
+    /// @return true if successful.
+    bool render( d32 timediff, RenderBackend::RenderBackendService *rbSrv );
 
     ///	@brief	Will create the render data.
     ///	@return	true if creation was successful, false if not.
-    virtual void setup( RenderBackend::RenderBackendService *pRenderBackendSrv );
+    virtual void setup( RenderBackend::RenderBackendService *rbSrv );
 
     ///	@brief	Will destroy the render data.
     ///	@return	true if destroying was successful, false if not.
-    virtual void teardown( RenderBackend::RenderBackendService *pRenderBackendSrv );
-
-
-    ///	@brief	Will update a snapshot of the rendered test result.
-    ///	@return	true, if snapshot was generated.
-    bool updateSnaptShot();
+    virtual void teardown( RenderBackend::RenderBackendService *rbSrv );
 
 public:
     ///	@brief	Returns the name of the render test.
     ///	@return	The name of the render test.
     const String &getTestName() const;
-
-    /// @brief  Set the requested state for the test.
-    /// @param  state       [i] The new state to apply
-    void setState( TestState state );
-
-    /// @brief  Returns true, if the requested state was already applied.
-    /// @return true, if state was already applied, false if not.
-    bool hasState( TestState state ) const;
 
     /// @brief  Creates a new material based on vertex- and fragment-shader.
     /// @param  VsSrc       [in] The vertex-shader-code.
@@ -93,23 +86,26 @@ protected:
     AbstractRenderTest( const String &renderTestName );
 
     /// @brief  The onCreate-callback.
-    /// @param  rb      [in9 The render backend to use.
-    virtual bool onCreate( RenderBackend::RenderBackendService *rb );
+    /// @param  rbSrv   [in] The render backend to use.
+    /// @return true if successful.
+    virtual bool onCreate( RenderBackend::RenderBackendService *rbSrv );
 
     /// @brief  The onDestroy-callback.
-    /// @param  rb      [in9 The render backend to use.
-    virtual bool onDestroy( RenderBackend::RenderBackendService *rb );
+    /// @param  rbSrv   [in] The render backend to use.
+    /// @return true if successful.
+    virtual bool onDestroy( RenderBackend::RenderBackendService *rbSrv );
 
     /// @brief  The onRender-callback.
-    /// @param  rb      [in9 The render backend to use.
-    virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *rb );
+    /// @param  timediff    [in] The timediff since the last frame.
+    /// @param  rbSrv       [in] The render backend to use.
+    /// @return true if successful.
+    virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *rbSrv );
 
 private:
     AbstractRenderTest &operator = ( const AbstractRenderTest & ) = delete;
 
 private:
-    const String m_RenderTestName;
-    ui32 m_State;
+    const String m_renderTestName;
 };
 
 //-------------------------------------------------------------------------------------------------

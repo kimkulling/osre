@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/IOService.h>
 #include <osre/IO/Stream.h>
 #include <osre/Common/Logger.h>
+#include <osre/Debugging/osre_debugging.h>
 
 #include <cassert>
 
@@ -35,8 +36,7 @@ namespace RenderTest {
 using namespace ::OSRE::RenderBackend;
 
 AbstractRenderTest::AbstractRenderTest( const String &renderTestName )
-: m_RenderTestName( renderTestName )
-, m_State( 0 ) {
+: m_renderTestName( renderTestName ) {
     // empty
 }
 
@@ -45,22 +45,22 @@ AbstractRenderTest::~AbstractRenderTest() {
 }
 
 bool AbstractRenderTest::create( RenderBackendService *pRenderBackendSrv ) {
-    assert( nullptr != pRenderBackendSrv );
+    OSRE_ASSERT( nullptr != pRenderBackendSrv );
     
-    osre_info( m_RenderTestName, "=> Creating test." );
+    osre_info( m_renderTestName, "=> Creating test." );
     return onCreate( pRenderBackendSrv );
 }
 
 bool AbstractRenderTest::destroy( RenderBackendService *pRenderBackendSrv ) {
-    assert( nullptr != pRenderBackendSrv );
+    OSRE_ASSERT( nullptr != pRenderBackendSrv );
     
-    osre_info( m_RenderTestName, "<= Destroying test." );
+    osre_info( m_renderTestName, "<= Destroying test." );
 
     return onDestroy( pRenderBackendSrv );
 }
 
 bool AbstractRenderTest::render( d32 timediff, RenderBackendService *pRenderBackendSrv ) {
-    assert( nullptr != pRenderBackendSrv );
+    OSRE_ASSERT( nullptr != pRenderBackendSrv );
 
     return onRender( timediff, pRenderBackendSrv );
 }
@@ -85,44 +85,8 @@ void AbstractRenderTest::teardown( RenderBackendService *pRenderBackendSrv ) {
     // empty
 }
 
-bool AbstractRenderTest::updateSnaptShot() {
-    if( !AbstractRenderTest::hasState( AbstractRenderTest::ScreenShotGeneated ) ) {
-        String name = getTestName();
-        IO::Uri screenshot( "file://./" + name + ".jpg" );
-        IO::AbstractFileSystem *pFS = IO::IOService::getInstance()->getFileSystem( "file" );
-
-        if( !pFS ) {
-            AbstractRenderTest::setState( AbstractRenderTest::ScreenShotGeneated );
-            return false;
-        }
-
-        IO::Stream *fileStream = pFS->open( screenshot, IO::Stream::WriteAccess );
-        if( fileStream ) {
-            //pRenderDevice->makeScreenshot( pFileStream );
-            pFS->close( &fileStream );
-        }
-        pFS->release();
-
-        AbstractRenderTest::setState( AbstractRenderTest::ScreenShotGeneated );
-    }
-
-    return true;
-}
-
 const String &AbstractRenderTest::getTestName() const {
-    return m_RenderTestName;
-}
-
-void AbstractRenderTest::setState( TestState state ) {
-    m_State |= state;
-}
-
-bool AbstractRenderTest::hasState( TestState state ) const {
-    if( m_State & state ) {
-        return true;
-    } else {
-        return false;
-    }
+    return m_renderTestName;
 }
 
 RenderBackend::Material *AbstractRenderTest::createMaterial( const String &VsSrc, const String &FsSrc ) {
