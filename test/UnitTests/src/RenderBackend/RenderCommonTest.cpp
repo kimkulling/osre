@@ -121,5 +121,25 @@ TEST_F(RenderCommonTest, viewportTest) {
 	EXPECT_EQ( vp_set, vp_set2 );
 }
 
+TEST_F( RenderCommonTest, accessStaticGeometryTest ) {
+    StaticGeometry *geo = StaticGeometry::create( 1 );
+    EXPECT_NE( geo, nullptr );
+    StaticGeometry::destroy( &geo );
+    EXPECT_EQ( geo, nullptr );
+}
+
+TEST_F( RenderCommonTest, accessMaterialTest ) {
+    bool ok = true;
+    try {
+        Material *mat( new Material );
+        EXPECT_EQ( FlatShadingMaterial, mat->m_type );
+        EXPECT_EQ( mat->m_parameters, nullptr );
+        EXPECT_EQ( mat->m_numParameters, 0 );
+    } catch ( ... ) {
+        ok = false;
+    }
+    EXPECT_TRUE( ok );
+}
+
 } // Namespace UnitTest
 } // Namespace OSRE

@@ -228,14 +228,14 @@ PrimitiveGroup::~PrimitiveGroup() {
 }
 
 Texture::Texture()
-    : m_textureName( "" )
-    , m_targetType( Texture2D )
-    , m_size( 0 )
-    , m_data( nullptr )
-    , m_width( 0 )
-    , m_height( 0 )
-    , m_channels( 0 )
-    , m_texHandle() {
+: m_textureName( "" )
+, m_targetType( Texture2D )
+, m_size( 0 )
+, m_data( nullptr )
+, m_width( 0 )
+, m_height( 0 )
+, m_channels( 0 )
+, m_texHandle() {
     // empty
 }
 
@@ -253,10 +253,12 @@ Shader::~Shader() {
 }
 
 Material::Material()
-    : m_type( FlatShadingMaterial )
-    , m_numTextures( 0 )
-    , m_pTextures( nullptr )
-    , m_pShader( nullptr ) {
+: m_type( FlatShadingMaterial )
+, m_numTextures( 0 )
+, m_pTextures( nullptr )
+, m_pShader( nullptr )
+, m_numParameters( 0 )
+, m_parameters( nullptr ) {
     // empty
 }
 
@@ -280,8 +282,8 @@ Transform::~Transform() {
 
 StaticGeometry::StaticGeometry()
     : m_material( nullptr )
-    , m_numParameter( 0 )
-    , m_parameter( nullptr )
+//    , m_numParameter( 0 )
+//    , m_parameter( nullptr )
     , m_vb( nullptr )
     , m_ib( nullptr )
     , m_numPrimGroups( 0 )
@@ -307,8 +309,9 @@ StaticGeometry *StaticGeometry::create( ui32 numGeo ) {
     return new StaticGeometry[ numGeo ];
 }
 
-void StaticGeometry::destroy( StaticGeometry *geo ) {
-    delete geo;
+void StaticGeometry::destroy( StaticGeometry **geo ) {
+    delete [] *geo;
+    (*geo) = nullptr;
 }
 
 GeoInstanceData::GeoInstanceData()

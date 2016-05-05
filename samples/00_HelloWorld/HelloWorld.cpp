@@ -89,8 +89,9 @@ protected:
 			Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
 			::memcpy(parameter->m_data.m_data, glm::value_ptr(m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model), sizeof(glm::mat4));
 
-			geo->m_parameter = parameter;
-			geo->m_numParameter++;
+			geo->m_material->m_parameters = parameter;
+            geo->m_material->m_numParameters++;
+			//geo->m_numParameter++;
 
 			geoNode->addGeometry( geo );
 		}

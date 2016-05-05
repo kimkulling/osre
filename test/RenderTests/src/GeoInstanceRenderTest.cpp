@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2016 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -145,8 +145,8 @@ public:
         ::memcpy( parameterM->m_data.m_data, glm::value_ptr( mat[ 0 ] ), sizeof( glm::mat4 ) * NumInstances);
         parameterMVP->m_next = parameterM;
 
-        geo->m_parameter = parameterMVP;
-        geo->m_numParameter += 2;
+        geo->m_material->m_parameters = parameterMVP;
+        geo->m_material->m_numParameters += 2;
         
         rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 

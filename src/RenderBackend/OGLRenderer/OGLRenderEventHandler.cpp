@@ -154,27 +154,30 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
     }
 }
 
-static void setupParameter( StaticGeometry *geo, OGLRenderBackend *rb, OGLRenderEventHandler *ev ) {
-	OSRE_ASSERT( nullptr != geo );
+static void setupParameter( Material *mat, OGLRenderBackend *rb, OGLRenderEventHandler *ev ) {
+	OSRE_ASSERT( nullptr != mat );
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != ev );
 
-    if( !geo->m_parameter ) {
+    if( !mat->m_parameters ) {
         return;
     }
 
     OGLRenderCmd *setParameterCmd = new OGLRenderCmd;
     setParameterCmd->m_type = OGLRenderCmdType::SetParameterCmd;
-    Parameter *currentParam( geo->m_parameter );
+    Parameter *currentParam( mat->m_parameters );
     ::CPPCore::TArray<OGLParameter*> paramArray;
     SetParameterCmdData *paramData = new SetParameterCmdData;
-    paramData->m_numParam = geo->m_numParameter;
+    paramData->m_numParam = mat->m_numParameters;
     paramData->m_param = new OGLParameter*[ paramData->m_numParam ];
 
     ui32 i( 0 );
     while( currentParam ) {
-        OGLParameter *oglParam = rb->createParameter( currentParam->m_name, currentParam->m_type, 
-                                                      &currentParam->m_data, currentParam->m_numItems );
+        OGLParameter *oglParam = rb->getParameter( currentParam->m_name );
+        if ( nullptr == oglParam ) {
+            oglParam = rb->createParameter( currentParam->m_name, currentParam->m_type, &currentParam->m_data, currentParam->m_numItems );
+        }
+            
         currentParam = currentParam->m_next;
         paramData->m_param[ i ] = oglParam;
         i++;
@@ -506,7 +509,7 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
         m_renderCmdBuffer->setVertexArray( m_vertexArray );
 
         // setup global parameter
-        setupParameter( geo, m_oglBackend, this );
+        setupParameter( geo->m_material, m_oglBackend, this );
 
         // setup the draw calls
         if ( 0 == attachSceneEvData->m_numInstances ) {
@@ -537,7 +540,6 @@ bool OGLRenderEventHandler::onClearGeo( const EventData * ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onRenderFrame( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 
@@ -553,7 +555,6 @@ bool OGLRenderEventHandler::onRenderFrame( const EventData *eventData ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	
@@ -571,8 +572,7 @@ bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
-bool  OGLRenderEventHandler::onRenderText( const Common::EventData *eventData ) {
+bool  OGLRenderEventHandler::onRenderText( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 
 	RenderTextEventData *data = ( RenderTextEventData* ) eventData;
@@ -584,8 +584,6 @@ bool  OGLRenderEventHandler::onRenderText( const Common::EventData *eventData ) 
 
 	return true;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderBackend
 } // Namespace OSRE

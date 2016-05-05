@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2016 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -94,7 +94,6 @@ public:
         indices[ 5 ] = 0;
 
         static ui32 NumGeo( 2 );
-        //attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_numGeo = NumGeo;
         attachGeoEvData->m_geo = Scene::GeometryBuilder::allocEmptyGeometry( ColorVertex, NumGeo );
         StaticGeometry *ptGeo = &attachGeoEvData->m_geo[ 0 ];
@@ -136,11 +135,9 @@ public:
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
         Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
         ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
-        ptGeo->m_parameter = parameter;
-        ptGeo->m_numParameter++;
-        
-        lineGeo->m_parameter = parameter;
-        lineGeo->m_numParameter++;
+
+        mat->m_numParameters = 1;
+        mat->m_parameters = parameter;
 
         rb->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 

@@ -303,7 +303,8 @@ struct OSRE_EXPORT Material {
     ui32         m_numTextures;
     Texture     *m_pTextures;
     Shader      *m_pShader;
-
+    ui32         m_numParameters;
+    Parameter   *m_parameters;
     Material();
     ~Material();
 
@@ -322,8 +323,6 @@ struct OSRE_EXPORT Transform {
 
 struct OSRE_EXPORT StaticGeometry {
     Material       *m_material;
-    ui32            m_numParameter;
-    Parameter      *m_parameter;
     VertexType      m_vertextype;
     BufferData     *m_vb;
     IndexType       m_indextype;
@@ -332,7 +331,7 @@ struct OSRE_EXPORT StaticGeometry {
     PrimitiveGroup *m_pPrimGroups;
 
     static StaticGeometry *create( ui32 numGeo );
-    static void destroy( StaticGeometry *geo );
+    static void destroy( StaticGeometry **geo );
 
     OSRE_NON_COPYABLE( StaticGeometry );
 

@@ -812,7 +812,7 @@ OGLParameter *OGLRenderBackend::createParameter( const String &name, ParameterTy
     param->m_loc        = NoneLocation;
     param->m_numItems   = numItems;
     param->m_data       = ParamDataBlob::create( type, param->m_numItems );
-    if( blob ) {
+    if( nullptr != blob ) {
         ::memcpy( param->m_data->getData(), blob->getData(), blob->m_size );
     }
     m_parameters.add( param );
