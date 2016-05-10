@@ -61,15 +61,14 @@ protected:
     AbstractLogStream();
 
 private:
-    AbstractLogStream( const AbstractLogStream  & );
-    AbstractLogStream &operator = ( const AbstractLogStream & );
+    AbstractLogStream( const AbstractLogStream  & ) = delete;
+    AbstractLogStream &operator = ( const AbstractLogStream & ) = delete;
 
 private:
     bool m_IsActive;
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::Logger
 ///	@ingroup	Engine
 ///
 ///	@brief	This class implements a simple logger. 
@@ -160,7 +159,6 @@ private:
     //	The Standard log stream.
     class StdLogStream : public AbstractLogStream {
     public:
-        ///
         StdLogStream();
         ~StdLogStream();
         void write( const String &msg );
@@ -173,8 +171,7 @@ private:
     ui32 m_intention;
 };
 
-//-------------------------------------------------------------------------------------------------
-// Logger helper
+// Logger helper functions.
 void OSRE_EXPORT debugPrint( const String &domain, const String &file, int line, const String &msg );
 void OSRE_EXPORT infoPrint( const String &domain, const String &file, int line, const String &msg );
 void OSRE_EXPORT warnPrint( const String &domain, const String &file, int line, const String &msg );

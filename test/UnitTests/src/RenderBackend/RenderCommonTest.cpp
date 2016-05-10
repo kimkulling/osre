@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace OSRE {
 namespace UnitTest {
@@ -122,10 +123,22 @@ TEST_F(RenderCommonTest, viewportTest) {
 }
 
 TEST_F( RenderCommonTest, accessStaticGeometryTest ) {
-    StaticGeometry *geo = StaticGeometry::create( 1 );
+    StaticGeometry *geo( nullptr );
+    geo = StaticGeometry::create( 0 );
+    EXPECT_EQ( geo, nullptr );
+    geo = StaticGeometry::create( 1 );
     EXPECT_NE( geo, nullptr );
     StaticGeometry::destroy( &geo );
     EXPECT_EQ( geo, nullptr );
+}
+
+TEST_F( RenderCommonTest, accessTransformMatrixBlockTest ) {
+    TransformMatrixBlock block;
+    block.m_model = glm::translate( block.m_model, glm::vec3( 1, 2, 3 ) );
+    block.m_projection = glm::translate( block.m_model, glm::vec3( 1, 2, 3 ) );
+    block.m_view = glm::translate( block.m_model, glm::vec3( 1, 2, 3 ) );
+
+    block.init();
 }
 
 TEST_F( RenderCommonTest, accessMaterialTest ) {

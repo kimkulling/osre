@@ -43,9 +43,10 @@ RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRende
 , m_primitives()
 , m_materials()
 , m_param( nullptr ) {
-    OSRE_ASSERT( nullptr!=m_renderbackend );
-    OSRE_ASSERT( nullptr!=m_renderCtx );
+    OSRE_ASSERT( nullptr != m_renderbackend );
+    OSRE_ASSERT( nullptr != m_renderCtx );
 
+    // ???
     m_param = new OGLParameter;
     m_param->m_name = "tex0";
     m_param->m_type = PT_Int;
@@ -125,7 +126,7 @@ bool RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
         } else if( renderCmd->m_type == OGLRenderCmdType::SetShaderCmd ) {
             onSetShaderStageCmd( ( SetShaderStageCmdData* ) renderCmd->m_pData );
 		} else if (renderCmd->m_type == OGLRenderCmdType::SetRenderTargetCmd) {
-			onSetRenderTargetCmd(( SetRenderTargetCmdData* ) renderCmd->m_pData);
+			onSetRenderTargetCmd( ( SetRenderTargetCmdData* ) renderCmd->m_pData);
 		} else {
             osre_error( Tag, "Unsupported render command type: " + static_cast<ui32>( renderCmd->m_type ) );
         }
@@ -165,6 +166,8 @@ bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
 }
 
 bool RenderCmdBuffer::onSetParametersCmd( SetParameterCmdData *data ) {
+    OSRE_ASSERT( nullptr != m_renderbackend );
+
     m_renderbackend->setParameter( data->m_param, data->m_numParam );
 
     return true;
@@ -193,6 +196,8 @@ bool RenderCmdBuffer::onDrawPrimitivesInstancesCmd( DrawInstancePrimitivesCmdDat
 }
 
 bool RenderCmdBuffer::onSetTextureStageCmd( SetTextureStageCmdData *data ) {
+    OSRE_ASSERT( nullptr != m_renderbackend );
+
     for( ui32 i = 0; i < data->m_textures.size(); ++i ) {
         OGLTexture *pOGLTexture = data->m_textures[ i ];
         if( pOGLTexture ) {
@@ -206,6 +211,8 @@ bool RenderCmdBuffer::onSetTextureStageCmd( SetTextureStageCmdData *data ) {
 }
 
 bool RenderCmdBuffer::onSetShaderStageCmd( SetShaderStageCmdData *data ) {
+    OSRE_ASSERT( nullptr != m_renderbackend );
+
     if( data->m_pShader ) {
         m_renderbackend->useShader( data->m_pShader );
     }

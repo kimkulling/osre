@@ -21,11 +21,14 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Common/Logger.h>
 
 namespace OSRE {
 namespace RenderBackend {
 
 VertComponent VertexLayout::ErrorComp;
+
+static const String Tag = "RenderCommon";
 
 /// @brief  The corresponding names for vertex components in a vertex layout
 static const String VertCompName[ NumVertexAttrs ] = {
@@ -306,6 +309,10 @@ StaticGeometry::~StaticGeometry() {
 }
 
 StaticGeometry *StaticGeometry::create( ui32 numGeo ) {
+    if ( 0 == numGeo ) {
+        osre_debug( Tag, "Number of geo to create is zero." );
+        return nullptr;
+    }
     return new StaticGeometry[ numGeo ];
 }
 

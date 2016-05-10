@@ -46,8 +46,6 @@ namespace RenderBackend {
 
 using namespace ::CPPCore;
 
-extern const unsigned char *glyph[];
-
 static const String Tag = "OGLRenderBackend";
 
 static bool setParameterInShader( OGLParameter *param, OGLShader *shader ) {
@@ -103,7 +101,8 @@ static bool setParameterInShader( OGLParameter *param, OGLShader *shader ) {
             success = false;
             break;
     }
-    
+    CHECKOGLERRORSTATE();
+
     return success;
 }
 
@@ -256,6 +255,8 @@ OGLBuffer *OGLRenderBackend::createBuffer( BufferType type ) {
 void OGLRenderBackend::bindBuffer( OGLBuffer *buffer ) {
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, buffer->m_id );
+
+    CHECKOGLERRORSTATE();
 }
 
 void OGLRenderBackend::bindBuffer( ui32 handle ) {
@@ -263,6 +264,8 @@ void OGLRenderBackend::bindBuffer( ui32 handle ) {
     if( nullptr != buf ) {
         bindBuffer( buf );
     }
+
+    CHECKOGLERRORSTATE();
 }
 
 void OGLRenderBackend::unbindBuffer( OGLBuffer *buffer ) {
@@ -484,23 +487,28 @@ OGLVertexArray *OGLRenderBackend::getVertexArraybyId( ui32 id ) const {
 }
 
 void OGLRenderBackend::bindVertexArray( OGLVertexArray *vertexArray ) {
-	if (nullptr == vertexArray) {
-		return;
+	if ( nullptr == vertexArray ) {
+        osre_debug( Tag, "Pointer to vertex array is nullptr" );
+        return;
 	}
 
 	if ( ( m_activeVertexArray == OGLNotSetId ) || ( m_activeVertexArray != vertexArray->m_id) ){
 		m_activeVertexArray = vertexArray->m_id;
 		glBindVertexArray( m_activeVertexArray );
 	}
+    CHECKOGLERRORSTATE();
+
 }
 
 void OGLRenderBackend::unbindVertexArray( OGLVertexArray *vertexArray ) {
-    if (nullptr == vertexArray) {
+    if ( nullptr == vertexArray ) {
+        osre_debug( Tag, "Pointer to vertex array is nullptr" );
         return;
     }
     
-    if (vertexArray->m_id != m_activeVertexArray) {
+    if ( vertexArray->m_id != m_activeVertexArray ) {
         osre_debug( Tag, "Try to unbind wrong vertex array ( index mismatch )." );
+        return;
     }
 
     glBindVertexArray( 0 );
@@ -519,73 +527,74 @@ OGLShader *OGLRenderBackend::createShader( const String &name, Shader *shaderInf
         return nullptr;
     }
 
-    OGLShader *pOGLShader = new OGLShader( name );
-    m_shaders.add( pOGLShader );
-
+    OGLShader *oglShader = getShader( name );
+    if ( nullptr != oglShader ) {
+        return oglShader;
+    }
+    
+    oglShader = new OGLShader( name );
+    m_shaders.add( oglShader );
     if( shaderInfo ) {
         bool result( false );
         if( !shaderInfo->m_src[ SH_VertexShaderType ].empty() ) {
-            result = pOGLShader->loadFromSource( SH_VertexShaderType, shaderInfo->m_src[ SH_VertexShaderType ] );
+            result = oglShader->loadFromSource( SH_VertexShaderType, shaderInfo->m_src[ SH_VertexShaderType ] );
             if( !result ) {
                 osre_error( Tag, "Error while compiling VertexShader." );
             }
         }
 
         if( !shaderInfo->m_src[ SH_FragmentShaderType ].empty( ) ) {
-            result = pOGLShader->loadFromSource( SH_FragmentShaderType, shaderInfo->m_src[ SH_FragmentShaderType ] );
+            result = oglShader->loadFromSource( SH_FragmentShaderType, shaderInfo->m_src[ SH_FragmentShaderType ] );
             if( !result ) {
                 osre_error( Tag, "Error while compiling FragmentShader." );
             }
         }
 
         if( !shaderInfo->m_src[ SH_GeometryShaderType ].empty( ) ) {
-            result = pOGLShader->loadFromSource( SH_GeometryShaderType, shaderInfo->m_src[ SH_GeometryShaderType ] );
+            result = oglShader->loadFromSource( SH_GeometryShaderType, shaderInfo->m_src[ SH_GeometryShaderType ] );
             if( !result ) {
                 osre_error( Tag, "Error while compiling GeometryShader." );
             }
         }
 
-        result = pOGLShader->createAndLink();
+        result = oglShader->createAndLink();
         if( !result ) {
             osre_error( Tag, "Error while linking shader" );
         }
     }
 
-    return pOGLShader;
+    return oglShader;
 }
 
 OGLShader *OGLRenderBackend::getShader( const String &name ) {	
-	if (name.empty()) {
+	if ( name.empty() ) {
         return nullptr;
     }
 
+    OGLShader *shader( nullptr );
     for( ui32 i = 0; i < m_shaders.size(); ++i ) {
         if( m_shaders[ i ]->getName() == name ) {
-            return m_shaders[ i ];
+            shader = m_shaders[ i ];
+            break;
         }
     }
 
-    return nullptr;
+    return shader;
 }
 
 bool OGLRenderBackend::useShader( OGLShader *shader ) {
-    if( !shader ) {
-        if( m_shaderInUse ) {
-            m_shaderInUse->unuse();
-            m_shaderInUse = nullptr;
-            return true;
-        }
-        return false;
-    }
-
-    if( m_shaderInUse == shader ) {
+    if ( m_shaderInUse == shader ) {
         return true;
     }
-    if( m_shaderInUse ) {
+
+    if ( nullptr != m_shaderInUse ) {
         m_shaderInUse->unuse();
     }
+
     m_shaderInUse = shader;
-    m_shaderInUse->use();
+    if ( nullptr != m_shaderInUse ) {
+        m_shaderInUse->use();
+    }
 
     return true;
 }
@@ -595,9 +604,7 @@ OGLShader *OGLRenderBackend::getActiveShader() const {
 }
 
 bool OGLRenderBackend::releaseShader( OGLShader *shader ) {
-	OSRE_ASSERT( nullptr != shader );
-
-	if( !shader ) {
+	if( nullptr != shader ) {
         return false;
     }
 
@@ -835,7 +842,8 @@ OGLParameter *OGLRenderBackend::getParameter( const String &name ) const {
 }
 
 void OGLRenderBackend::setParameter( OGLParameter *param ) {
-    if( !m_shaderInUse ) {
+    if( nullptr == m_shaderInUse ) {
+        osre_debug( Tag, "Cannot set parameter, no shader in use." );
         return;
     }
 
@@ -992,5 +1000,3 @@ ui32 OGLRenderBackend::getVertexSize( VertexType vertextype ) {
 
 } // Namespace RenderBackend
 } // Namespace OSRE
-
-
