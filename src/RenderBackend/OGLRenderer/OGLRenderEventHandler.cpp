@@ -116,36 +116,29 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
         case ShaderMaterial: {
                 TArray<OGLTexture*> textures;
                 setupTextures( material, rb, textures );
+                OGLRenderCmd *renderMatCmd = new OGLRenderCmd;
+                renderMatCmd->m_type = OGLRenderCmdType::SetMaterialCmd;
+                SetMaterialStageCmdData *matData = new SetMaterialStageCmdData;
                 if( !textures.isEmpty() ) {
-                    OGLRenderCmd *pRenderCmd = new OGLRenderCmd;
-                    pRenderCmd->m_type = OGLRenderCmdType::SetTextureCmd;
-                    SetTextureStageCmdData *pData = new SetTextureStageCmdData;
-                    pData->m_textures = textures;
-                    pRenderCmd->m_pData = pData;
-                    eh->enqueueRenderCmd( pRenderCmd );
+                    matData->m_textures = textures;
                 }
 
-                OGLShader *pShader = rb->createShader( "mat", material->m_pShader );
-                if( pShader ) {
-                    SetShaderStageCmdData *data = new SetShaderStageCmdData;
-                    data->m_pShader = pShader;
-
-                    OGLRenderCmd *pRenderCmd = new OGLRenderCmd;
-                    pRenderCmd->m_type       = OGLRenderCmdType::SetShaderCmd;
-                    pRenderCmd->m_pData      = data;
-                    eh->enqueueRenderCmd( pRenderCmd );
-
+                OGLShader *shader = rb->createShader( "mat", material->m_pShader );
+                if ( nullptr != shader ) {
+                    matData->m_shader = shader;
                     for( ui32 i = 0; i < material->m_pShader->m_attributes.size(); i++ ) {
-                        pShader->addAttribute( material->m_pShader->m_attributes[ i ] );
+                        shader->addAttribute( material->m_pShader->m_attributes[ i ] );
                     }
 
                     for( ui32 i = 0; i < material->m_pShader->m_parameters.size(); i++ ) {
-                        pShader->addUniform( material->m_pShader->m_parameters[ i ] );
+                        shader->addUniform( material->m_pShader->m_parameters[ i ] );
                     }
 
                     // TODO: must be replaced by render command buffer
-                    eh->setActiveShader( pShader );
+                    eh->setActiveShader( shader );
                 }
+                renderMatCmd->m_pData = matData;
+                eh->enqueueRenderCmd( renderMatCmd );
             }
             break;
 
@@ -191,27 +184,24 @@ static OGLVertexArray *setupBuffers( StaticGeometry *geo, OGLRenderBackend *rb, 
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != oglShader );
 
-    // create vertex buffer
+    OGLVertexArray *vertexArray = rb->createVertexArray();
+    rb->bindVertexArray( vertexArray );
+
     BufferData *vertices = geo->m_vb;
 	if ( nullptr == vertices ) {
 		osre_debug( Tag, "No vertex buffer data for setting up data." );
 		return nullptr;
-	}
-    OGLBuffer *pVB = rb->createBuffer( vertices->m_type );
+    }
 
-    // create index buffer
     BufferData *indices = geo->m_ib;
-	if ( nullptr == indices ) {
-		osre_debug( Tag, "No index buffer data for setting up data." );
-		return nullptr;
-	}
+    if ( nullptr == indices ) {
+        osre_debug( Tag, "No index buffer data for setting up data." );
+        return nullptr;
+    }
 
-    OGLBuffer *ib = rb->createBuffer( indices->m_type );
+    // create vertex buffer and  and pass triangle vertex to buffer object
 
-    OGLVertexArray *vertexArray = rb->createVertexArray();
-    rb->bindVertexArray( vertexArray );
-
-    // pass triangle vertex to buffer object
+    OGLBuffer *pVB = rb->createBuffer( vertices->m_type );
     rb->bindBuffer( pVB );
     rb->bufferData( pVB, vertices->m_pData, vertices->m_size, vertices->m_access );
 
@@ -222,7 +212,8 @@ static OGLVertexArray *setupBuffers( StaticGeometry *geo, OGLRenderBackend *rb, 
     rb->bindVertexLayout( vertexArray, oglShader, stride, attributes );
     rb->releaseVertexCompArray( attributes );
 
-    // pass indices to element array buffer
+    // create index buffer and pass indices to element array buffer
+    OGLBuffer *ib = rb->createBuffer( indices->m_type );
     rb->bindBuffer( ib );
     rb->bufferData( ib, indices->m_pData, indices->m_size, indices->m_access );
 
@@ -506,7 +497,6 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
             osre_debug( Tag, "Vertex-Array-pointer is a nullptr." );
             return false;
         }
-        m_renderCmdBuffer->setVertexArray( m_vertexArray );
 
         // setup global parameter
         setupParameter( geo->m_material, m_oglBackend, this );

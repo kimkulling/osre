@@ -31,6 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations
 namespace IO {
     class Stream;
 }
@@ -82,7 +83,7 @@ public:
     
     /// @brief  Adds a new uniform to the shader.
     /// @param  attribute   [in] The name of the uniform.
-    void addUniform(const String& uniform);
+    void addUniform( const String& uniform );
     
     /// @brief  returns the location of the attribute.
     /// @param  attribute   [in] The name of the attribute.

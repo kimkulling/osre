@@ -47,6 +47,13 @@ public:
     static GLenum getGLTextureTarget( TextureTargetType type );
     ///	@brief  Translates the texture parameter type to OpenGL.
     static GLenum getGLTextureParameterName( TextureParameterName name );
+    /// @brief  Translates the texture state to the corresponding GLenum type.
+    static GLenum getGLTextureStage( TextureStageType texType );
+    /// @brief  Translates the vertex format type to the corresponding GLenum type.
+    static GLenum getOGLTypeForFormat( VertexFormat format );
+    /// @brief  Translates the vertex format type to the corresponding size.
+    static ui32 getOGLSizeForFormat( VertexFormat format );
+
 
 private:
     OGLEnum();

@@ -25,7 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-//-------------------------------------------------------------------------------------------------
 GLenum OGLEnum::getGLBufferType( BufferType type ) {
     switch( type ) {
         case VertexBuffer:
@@ -40,7 +39,6 @@ GLenum OGLEnum::getGLBufferType( BufferType type ) {
     return GL_ARRAY_BUFFER;
 }
 
-//-------------------------------------------------------------------------------------------------
 GLenum OGLEnum::getGLBufferAccessType( BufferAccessType type ) {
     switch( type ) {
         case ReadOnly:
@@ -53,7 +51,6 @@ GLenum OGLEnum::getGLBufferAccessType( BufferAccessType type ) {
     return GL_STATIC_DRAW;
 }
 
-//-------------------------------------------------------------------------------------------------
 GLenum OGLEnum::getGLPrimitiveType( PrimitiveType primType ) {
     switch( primType ) {
         case PointList:
@@ -75,7 +72,6 @@ GLenum OGLEnum::getGLPrimitiveType( PrimitiveType primType ) {
     return GL_TRIANGLES;
 }
 
-//-------------------------------------------------------------------------------------------------
 GLenum OGLEnum::getGLIndexType( IndexType indexType ) {
     switch( indexType ) {
         case UnsignedByte:
@@ -88,7 +84,6 @@ GLenum OGLEnum::getGLIndexType( IndexType indexType ) {
     return GL_UNSIGNED_SHORT;
 }
 
-//-------------------------------------------------------------------------------------------------
 GLenum OGLEnum::getGLTextureTarget( TextureTargetType type ) {
     switch( type ) {
         case Texture1D:
@@ -104,7 +99,6 @@ GLenum OGLEnum::getGLTextureTarget( TextureTargetType type ) {
     return GL_TEXTURE_2D;
 }
 
-//-------------------------------------------------------------------------------------------------
 GLenum OGLEnum::getGLTextureParameterName( TextureParameterName name ) {
     switch( name ) {
         case TextureParamMinFilter:
@@ -122,7 +116,68 @@ GLenum OGLEnum::getGLTextureParameterName( TextureParameterName name ) {
     return GL_TEXTURE_MIN_FILTER;
 }
 
-//-------------------------------------------------------------------------------------------------
+GLenum OGLEnum::getGLTextureStage( TextureStageType texType ) {
+    switch ( texType ) {
+        case TextureStage0:
+            return GL_TEXTURE0;
+        case TextureStage1:
+            return GL_TEXTURE1;
+        case TextureStage2:
+            return GL_TEXTURE2;
+        case TextureStage3:
+            return GL_TEXTURE3;
+        default:
+            break;
+    }
+    return GL_TEXTURE0;
+}
+
+GLenum OGLEnum::getOGLTypeForFormat( VertexFormat format ) {
+    switch ( format ) {
+        case Float:
+        case Float2:
+        case Float3:
+        case Float4:
+            return GL_FLOAT;
+        case Byte4:
+            return GL_BYTE;
+        case UByte4:
+            return GL_UNSIGNED_BYTE;
+        case Short2:
+        case Short4:
+            return GL_SHORT;
+        case NumVertexFormats:
+        case InvalidVertexFormat:
+        default:
+            break;
+    }
+
+    return GL_INVALID_ENUM;
+}
+
+ui32 OGLEnum::getOGLSizeForFormat( VertexFormat format ) {
+    switch ( format ) {
+        case Float:
+            return 1;
+        case Float2:
+        case Short2:
+            return 2;
+        case Float3:
+            return 3;
+        case Byte4:
+        case UByte4:
+        case Float4:
+        case Short4:
+            return 4;
+        case NumVertexFormats:
+        case InvalidVertexFormat:
+            return 0;
+        default:
+            break;
+    }
+
+    return 0;
+}
 
 } // Namespace RenderBackend
 } // Namespace OSRE

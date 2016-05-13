@@ -45,8 +45,7 @@ struct OGLRenderCmd;
 struct DrawPrimitivesCmdData;
 struct DrawInstancePrimitivesCmdData;
 struct SetParameterCmdData;
-struct SetTextureStageCmdData;
-struct SetShaderStageCmdData;
+struct SetMaterialStageCmdData;
 struct SetRenderTargetCmdData;
 struct DrawTextCmdData;
 struct OGLParameter;
@@ -72,10 +71,6 @@ public:
     RenderCmdBuffer( OGLRenderBackend *renderBackend, Platform::AbstractRenderContext *ctx );
     /// The class destructor.
     virtual ~RenderCmdBuffer();
-    /// Will set the active vertex array object by its id.
-    void setVertexArray( ui32 id );
-    /// Will set the active vertex array object.
-    void setVertexArray( OGLVertexArray *vertexArray );
     /// Will set the active shader.
     void setActiveShader( OGLShader *oglShader );
     /// Will return the active shader.
@@ -100,12 +95,10 @@ protected:
     virtual bool onDrawPrimitivesCmd( DrawPrimitivesCmdData *pData );
     /// The draw primitive instances callback.
     virtual bool onDrawPrimitivesInstancesCmd( DrawInstancePrimitivesCmdData *data );
-    /// The set texture callback.
-    virtual bool onSetTextureStageCmd( SetTextureStageCmdData *pData );
-    /// The set shader stage callback.
-    virtual bool onSetShaderStageCmd( SetShaderStageCmdData *pData );
     /// The set render target callback.
     virtual bool onSetRenderTargetCmd( SetRenderTargetCmdData *pData );
+    ///
+    virtual bool onSetMaterialStageCmd( SetMaterialStageCmdData *data );
 
 private:
     OGLRenderBackend *m_renderbackend;
@@ -113,7 +106,6 @@ private:
     Platform::AbstractRenderContext *m_renderCtx;
     CPPCore::TArray<OGLRenderCmd*> m_cmdbuffer;
     OGLShader *m_activeShader;
-    OGLVertexArray *m_vertexarray;
     CPPCore::TArray<PrimitiveGroup*> m_primitives;
     CPPCore::TArray<Material*> m_materials;
     OGLParameter *m_param;

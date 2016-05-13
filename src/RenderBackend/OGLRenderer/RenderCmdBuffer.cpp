@@ -39,7 +39,6 @@ RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRende
 : m_renderbackend( renderBackend )
 , m_renderCtx( ctx )
 , m_activeShader( nullptr )
-, m_vertexarray( nullptr )
 , m_primitives()
 , m_materials()
 , m_param( nullptr ) {
@@ -65,17 +64,6 @@ RenderCmdBuffer::~RenderCmdBuffer() {
     m_param = nullptr;
 }
 
-void RenderCmdBuffer::setVertexArray( ui32 id ) {
-    OGLVertexArray *va( m_renderbackend->getVertexArraybyId( id ) );
-    if ( nullptr != va ) {
-        setVertexArray( va );
-    }
-}
-
-void RenderCmdBuffer::setVertexArray( OGLVertexArray *vertexArray ) {
-    m_vertexarray = vertexArray;
-}
-
 void RenderCmdBuffer::setActiveShader( OGLShader *oglShader ) {
     m_activeShader = oglShader;
 }
@@ -98,12 +86,6 @@ bool RenderCmdBuffer::onPreRenderFrame() {
     m_renderCtx->activate();
     m_renderbackend->clearRenderTarget( m_clearState );
     
-    // use base shader
-    m_renderbackend->useShader( m_activeShader );
-    if( nullptr != m_vertexarray ) {
-        m_renderbackend->bindVertexArray( m_vertexarray );
-    }
-
     return true;
 }
 
@@ -121,13 +103,12 @@ bool RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
             onDrawPrimitivesCmd( ( DrawPrimitivesCmdData* ) renderCmd->m_pData );
         } else if( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesInstancesCmd ) {
             onDrawPrimitivesInstancesCmd( ( DrawInstancePrimitivesCmdData* ) renderCmd->m_pData );
-        } else if( renderCmd->m_type == OGLRenderCmdType::SetTextureCmd ) {
-            onSetTextureStageCmd( ( SetTextureStageCmdData* ) renderCmd->m_pData );
-        } else if( renderCmd->m_type == OGLRenderCmdType::SetShaderCmd ) {
-            onSetShaderStageCmd( ( SetShaderStageCmdData* ) renderCmd->m_pData );
-		} else if (renderCmd->m_type == OGLRenderCmdType::SetRenderTargetCmd) {
+		} else if ( renderCmd->m_type == OGLRenderCmdType::SetRenderTargetCmd) {
 			onSetRenderTargetCmd( ( SetRenderTargetCmdData* ) renderCmd->m_pData);
-		} else {
+        } else if ( renderCmd->m_type == OGLRenderCmdType::SetMaterialCmd ) {
+            onSetMaterialStageCmd( ( SetMaterialStageCmdData* ) renderCmd->m_pData );
+        }
+        else {
             osre_error( Tag, "Unsupported render command type: " + static_cast<ui32>( renderCmd->m_type ) );
         }
     }
@@ -195,32 +176,28 @@ bool RenderCmdBuffer::onDrawPrimitivesInstancesCmd( DrawInstancePrimitivesCmdDat
     return true;
 }
 
-bool RenderCmdBuffer::onSetTextureStageCmd( SetTextureStageCmdData *data ) {
+bool RenderCmdBuffer::onSetRenderTargetCmd( SetRenderTargetCmdData *data ) {
+    return true;
+}
+
+bool RenderCmdBuffer::onSetMaterialStageCmd( SetMaterialStageCmdData *data ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
 
-    for( ui32 i = 0; i < data->m_textures.size(); ++i ) {
+    if ( data->m_shader ) {
+        m_renderbackend->useShader( data->m_shader );
+    }
+
+    for ( ui32 i = 0; i < data->m_textures.size(); ++i ) {
         OGLTexture *pOGLTexture = data->m_textures[ i ];
-        if( pOGLTexture ) {
+        if ( pOGLTexture ) {
             m_renderbackend->bindTexture( pOGLTexture, TextureStage0 );
             ::memcpy( m_param->m_data->getData(), &i, sizeof( ui32 ) );
             m_renderbackend->setParameter( m_param );
         }
     }
 
-    return true;
-}
+    //m_renderbackend->setParameter( data->m_param, data->m_numParam );
 
-bool RenderCmdBuffer::onSetShaderStageCmd( SetShaderStageCmdData *data ) {
-    OSRE_ASSERT( nullptr != m_renderbackend );
-
-    if( data->m_pShader ) {
-        m_renderbackend->useShader( data->m_pShader );
-    }
-
-    return true;
-}
-
-bool RenderCmdBuffer::onSetRenderTargetCmd( SetRenderTargetCmdData *data ) {
     return true;
 }
 

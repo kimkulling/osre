@@ -85,8 +85,9 @@ struct OGLTexture {
 enum class OGLRenderCmdType {
     SetParameterCmd,
     SetRenderTargetCmd,
-    SetTextureCmd,
-    SetShaderCmd,
+    //SetTextureCmd,
+    //SetShaderCmd,
+    SetMaterialCmd,
     DrawPrimitivesCmd,
     DrawPrimitivesInstancesCmd
 };
@@ -147,18 +148,26 @@ struct SetParameterCmdData {
 };
 
 ///	@brief
+struct SetMaterialStageCmdData {
+    OGLParameter **m_param;
+    ui32 m_numParam;
+    OGLShader *m_shader;
+    CPPCore::TArray<OGLTexture*> m_textures;
+};
+
+///	@brief
 struct SetRenderTargetCmdData {
 };
 
 ///	@brief
-struct SetTextureStageCmdData {
+/*struct SetTextureStageCmdData {
     CPPCore::TArray<OGLTexture*> m_textures;
 };
 
 ///	@brief
 struct SetShaderStageCmdData {
     OGLShader *m_pShader;
-};
+};*/
 
 ///	@brief
 struct DrawInstancePrimitivesCmdData {

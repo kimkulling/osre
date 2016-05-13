@@ -106,69 +106,6 @@ static bool setParameterInShader( OGLParameter *param, OGLShader *shader ) {
     return success;
 }
 
-GLenum getGLTextureStage( TextureStageType texType ) {
-    switch( texType ) {
-        case TextureStage0:
-            return GL_TEXTURE0;
-        case TextureStage1:
-            return GL_TEXTURE1;
-        case TextureStage2:
-            return GL_TEXTURE2;
-        case TextureStage3:
-            return GL_TEXTURE3;
-        default:
-            break;
-    }
-    return GL_TEXTURE0;
-}
-
-static GLenum getOGLTypeForFormat( VertexFormat format ) {
-    switch( format ) {
-        case Float:
-        case Float2:
-        case Float3:
-        case Float4:
-            return GL_FLOAT;
-        case Byte4:
-            return GL_BYTE;
-        case UByte4:
-            return GL_UNSIGNED_BYTE;
-        case Short2:
-        case Short4:
-            return GL_SHORT;
-        case NumVertexFormats:
-        case InvalidVertexFormat:
-        default:
-            break;
-    }
-
-    return GL_INVALID_ENUM;
-}
-
-static ui32 getOGLSizeForFormat( VertexFormat format ) {
-    switch( format ) {
-        case Float:
-            return 1;
-        case Float2:
-        case Short2:
-            return 2;
-        case Float3:
-            return 3;
-        case Byte4:
-        case UByte4:
-        case Float4:
-        case Short4:
-            return 4;
-        case NumVertexFormats:
-        case InvalidVertexFormat:
-            return 0;
-        default:
-            break;
-    }
-
-    return 0;
-}
-
 OGLRenderBackend::OGLRenderBackend( )
 : m_renderCtx( nullptr )
 , m_buffers()
@@ -317,8 +254,8 @@ bool OGLRenderBackend::createVertexCompArray( const VertexLayout *layout, OGLSha
         attribute = new OGLVertexAttribute;
         attribute->m_pAttributeName = getVertCompName( comp.m_attrib ).c_str();
         attribute->m_index = ( ( *shader )[ attribute->m_pAttributeName ] );
-        attribute->m_size = getOGLSizeForFormat( comp.m_format );
-        attribute->m_type = getOGLTypeForFormat( comp.m_format );
+        attribute->m_size = OGLEnum::getOGLSizeForFormat( comp.m_format );
+        attribute->m_type = OGLEnum::getOGLTypeForFormat( comp.m_format );
         attribute->m_ptr = (GLvoid*) index;
         attributes.add( attribute );
         index += attribute->m_size;
@@ -775,7 +712,7 @@ bool OGLRenderBackend::bindTexture( OGLTexture *oglTexture, TextureStageType sta
         return false;
     }
 
-    GLenum glStageType = getGLTextureStage( stageType );
+    GLenum glStageType = OGLEnum::getGLTextureStage( stageType );
     glActiveTexture( glStageType );
     glBindTexture( oglTexture->m_target, oglTexture->m_textureId );
 
