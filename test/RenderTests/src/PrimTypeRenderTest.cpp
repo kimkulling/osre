@@ -96,6 +96,7 @@ public:
         static ui32 NumGeo( 2 );
         attachGeoEvData->m_numGeo = NumGeo;
         attachGeoEvData->m_geo = Scene::GeometryBuilder::allocEmptyGeometry( ColorVertex, NumGeo );
+        
         StaticGeometry *ptGeo = &attachGeoEvData->m_geo[ 0 ];
         ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( ColorVertex, 3, points, col, nullptr );
         ptGeo->m_indextype = UnsignedShort;
@@ -106,10 +107,7 @@ public:
         // setup primitives
         ptGeo->m_numPrimGroups = 1;
         ptGeo->m_pPrimGroups = new PrimitiveGroup[ ptGeo->m_numPrimGroups ];
-        ptGeo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
-        ptGeo->m_pPrimGroups[ 0 ].m_numPrimitives = 3;
-        ptGeo->m_pPrimGroups[ 0 ].m_primitive = PointList;
-        ptGeo->m_pPrimGroups[ 0 ].m_startIndex = 0;
+        ptGeo->m_pPrimGroups[ 0 ].init( UnsignedShort, 3, PointList, 0 );
 
         StaticGeometry *lineGeo = &attachGeoEvData->m_geo[ 1 ];
         lineGeo->m_vb = Scene::GeometryBuilder::allocVertices( ColorVertex, 3, pos, col, nullptr );
@@ -121,10 +119,7 @@ public:
         // setup primitives
         lineGeo->m_numPrimGroups = 1;
         lineGeo->m_pPrimGroups = new PrimitiveGroup[ lineGeo->m_numPrimGroups ];
-        lineGeo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
-        lineGeo->m_pPrimGroups[ 0 ].m_numPrimitives = 2 * 3;
-        lineGeo->m_pPrimGroups[ 0 ].m_primitive = LineList;
-        lineGeo->m_pPrimGroups[ 0 ].m_startIndex = 0;
+        lineGeo->m_pPrimGroups[ 0 ].init( UnsignedShort, 2*3, LineList, 0 );
         
         // setup material
         Material *mat = Scene::MaterialBuilder::createBuildinMaterial( ColorVertex );

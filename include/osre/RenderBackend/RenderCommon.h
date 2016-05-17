@@ -69,7 +69,7 @@ enum TextureTargetType {
 };
 
 enum TextureStageType {
-    TextureStage0,
+    TextureStage0 = 0,
     TextureStage1,
     TextureStage2,
     TextureStage3
@@ -253,6 +253,7 @@ struct OSRE_EXPORT PrimitiveGroup {
 
     PrimitiveGroup();
     ~PrimitiveGroup();
+    void init( IndexType indexType, ui32 numPrimitives, PrimitiveType primType, ui32 startIdx );
 
     OSRE_NON_COPYABLE( PrimitiveGroup )
 };

@@ -134,7 +134,7 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
                         shader->addUniform( material->m_pShader->m_parameters[ i ] );
                     }
 
-                    // TODO: must be replaced by render command buffer
+                    // for setting up all buffer objects
                     eh->setActiveShader( shader );
                 }
                 renderMatCmd->m_pData = matData;
@@ -186,7 +186,7 @@ static OGLVertexArray *setupBuffers( StaticGeometry *geo, OGLRenderBackend *rb, 
 
     OGLVertexArray *vertexArray = rb->createVertexArray();
     rb->bindVertexArray( vertexArray );
-
+    rb->useShader( oglShader );
     BufferData *vertices = geo->m_vb;
 	if ( nullptr == vertices ) {
 		osre_debug( Tag, "No vertex buffer data for setting up data." );
@@ -201,9 +201,9 @@ static OGLVertexArray *setupBuffers( StaticGeometry *geo, OGLRenderBackend *rb, 
 
     // create vertex buffer and  and pass triangle vertex to buffer object
 
-    OGLBuffer *pVB = rb->createBuffer( vertices->m_type );
-    rb->bindBuffer( pVB );
-    rb->bufferData( pVB, vertices->m_pData, vertices->m_size, vertices->m_access );
+    OGLBuffer *vb = rb->createBuffer( vertices->m_type );
+    rb->bindBuffer( vb );
+    rb->bufferData( vb, vertices->m_pData, vertices->m_size, vertices->m_access );
 
     // enable vertex attribute arrays
     TArray<OGLVertexAttribute*> attributes;
@@ -222,20 +222,20 @@ static OGLVertexArray *setupBuffers( StaticGeometry *geo, OGLRenderBackend *rb, 
     return vertexArray;
 }
 
-static void setupPrimDrawCmd( const TArray<ui32> &ids, OGLRenderBackend *rb, OGLRenderEventHandler *eh, OGLVertexArray *va ) {
+static void setupPrimDrawCmd( const TArray<ui32> &primGroups, OGLRenderBackend *rb, OGLRenderEventHandler *eh, OGLVertexArray *va ) {
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
 
-    if( ids.isEmpty() ) {
+    if( primGroups.isEmpty() ) {
         return;
     }
 
 	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesCmd, nullptr );
     DrawPrimitivesCmdData *data = new DrawPrimitivesCmdData;
     data->m_vertexArray = va;
-    data->m_primitives.reserve( ids.size() );
-    for( ui32 i = 0; i < ids.size(); ++i ) {
-        data->m_primitives.add( ids[ i ] );
+    data->m_primitives.reserve( primGroups.size() );
+    for( ui32 i = 0; i < primGroups.size(); ++i ) {
+        data->m_primitives.add( primGroups[ i ] );
     }
     renderCmd->m_pData = static_cast< void* >( data );
     
@@ -294,7 +294,7 @@ static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb,
 
 	setupMaterial( geo->m_material, rb, eh );
     DrawPrimitivesCmdData *cmdData( new DrawPrimitivesCmdData );
-    cmdData->m_vertexArray = setupBuffers( geo, rb, oglShader );
+    cmdData->m_vertexArray = setupBuffers( geo, rb, oglShader  );
     cmdData->m_primitives.reserve( ids.size() );
 	for (ui32 i = 0; i < ids.size(); ++i) {
 		cmdData->m_primitives.add( ids[ i ] );
@@ -509,6 +509,7 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
         }
     }
 
+    m_oglBackend->useShader( nullptr );
     return true;
 }
 

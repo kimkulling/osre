@@ -31,12 +31,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/ClearState.h>
 
 namespace OSRE {
 namespace RenderBackend {
 
+//  Forward declarations
 class OGLShader;
-
 
 void checkOGLErrorState( const c8 *file, ui32 line );
 
@@ -51,6 +52,7 @@ void checkOGLErrorState( const c8 *file, ui32 line );
 static const GLuint OGLNotSetId  = 999999;
 static const GLint  NoneLocation = -1;
 
+///	@brief
 struct OGLBuffer {
     ui32       m_handle;
     BufferType m_type;
@@ -58,6 +60,7 @@ struct OGLBuffer {
     ui32       m_size;
 };
 
+///	@brief
 struct OGLVertexAttribute {
     GLuint        m_index;
     const c8     *m_pAttributeName;
@@ -66,11 +69,23 @@ struct OGLVertexAttribute {
     const GLvoid *m_ptr;
 };
 
+///	@brief
 struct OGLVertexArray {
     GLuint m_id;
     ui32   m_slot;
+
+    OGLVertexArray()
+    : m_id( 0 )
+    , m_slot( 99999999 ) {
+        // empty
+    }
+    
+    ~OGLVertexArray() {
+        // empty
+    }
 };
 
+///	@brief
 struct OGLTexture {
     GLuint m_textureId;
     String m_name;
@@ -82,22 +97,23 @@ struct OGLTexture {
     ui32   m_channels;
 };
 
+///	@brief
 enum class OGLRenderCmdType {
     SetParameterCmd,
     SetRenderTargetCmd,
-    //SetTextureCmd,
-    //SetShaderCmd,
     SetMaterialCmd,
     DrawPrimitivesCmd,
     DrawPrimitivesInstancesCmd
 };
 
+///	@brief
 struct OGLRenderCmd {
     OGLRenderCmdType m_type;
 	ui32             m_id;
     void            *m_pData;
 };
 
+///	@brief
 struct OGLRenderCmdAllocator {
 	static ui32 m_lastid;
 
@@ -114,6 +130,10 @@ struct OGLRenderCmdAllocator {
 	static void free( OGLRenderCmd *cmd ) {
 		delete cmd;
 	}
+
+private:
+    OGLRenderCmdAllocator() = delete;
+    ~OGLRenderCmdAllocator() = delete;
 };
 
 ///	@brief
@@ -153,34 +173,35 @@ struct SetMaterialStageCmdData {
     ui32 m_numParam;
     OGLShader *m_shader;
     CPPCore::TArray<OGLTexture*> m_textures;
+
+    SetMaterialStageCmdData()
+    : m_param( nullptr )
+    , m_numParam( 0 )
+    , m_shader( nullptr )
+    , m_textures() {
+        // empty
+    }
+    ~SetMaterialStageCmdData() {
+        // empty
+    }
 };
 
 ///	@brief
 struct SetRenderTargetCmdData {
+    ClearState m_clearState;
 };
-
-///	@brief
-/*struct SetTextureStageCmdData {
-    CPPCore::TArray<OGLTexture*> m_textures;
-};
-
-///	@brief
-struct SetShaderStageCmdData {
-    OGLShader *m_pShader;
-};*/
 
 ///	@brief
 struct DrawInstancePrimitivesCmdData {
-    OGLVertexArray       *m_vertexArray;    ///<
-    ui32                  m_numInstances;   ///<
-    CPPCore::TArray<ui32> m_bufferHandles;  ///<
-    CPPCore::TArray<ui32> m_primitives;     ///<
+    OGLVertexArray        *m_vertexArray;    ///<
+    ui32                   m_numInstances;   ///<
+    CPPCore::TArray<ui32>  m_primitives;     ///<
 };
 
 ///	@brief
 struct DrawPrimitivesCmdData {
-	OGLVertexArray       *m_vertexArray;    ///<
-    CPPCore::TArray<ui32> m_primitives;     ///<
+	OGLVertexArray        *m_vertexArray;    ///<
+    CPPCore::TArray<ui32>  m_primitives;     ///<
 };
 
 //-------------------------------------------------------------------------------------------------

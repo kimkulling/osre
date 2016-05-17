@@ -80,10 +80,10 @@ ParamDataBlob *ParamDataBlob::create( ParameterType type, ui32 arraySize ) {
 }
 
 Parameter::Parameter()
-    : m_name( "" )
-    , m_type( PT_None )
-    , m_numItems( 1 )
-    , m_next( nullptr ) {
+: m_name( "" )
+, m_type( PT_None )
+, m_numItems( 1 )
+, m_next( nullptr ) {
     // empty
 }
 

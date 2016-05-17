@@ -62,7 +62,7 @@ struct Material;
 class RenderCmdBuffer {
 public:
     /// @brief  Describes the requested enqueue type.
-    enum EnqueueType {
+    enum class EnqueueType {
         RCE_Back    ///< Enqueue render command at the end.
     };
 
@@ -76,13 +76,13 @@ public:
     /// Will return the active shader.
     OGLShader *getActiveShader() const;
     /// Will enqueue a new render command.
-    void enqueueRenderCmd( OGLRenderCmd *renderCmd, EnqueueType type = RCE_Back );
+    void enqueueRenderCmd( OGLRenderCmd *renderCmd, EnqueueType type = EnqueueType::RCE_Back );
     /// The callback before rendering.
-    bool onPreRenderFrame();
+    void onPreRenderFrame();
     /// The render callback.
-    bool onRenderFrame( const Common::EventData *eventData );
+    void onRenderFrame( const Common::EventData *eventData );
     /// The callback after rendering.
-    bool onPostRenderFrame();
+    void onPostRenderFrame();
     /// The buffer and all attached commands will be cleared.
     void clear();
 

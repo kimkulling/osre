@@ -48,64 +48,6 @@ using namespace ::CPPCore;
 
 static const String Tag = "OGLRenderBackend";
 
-static bool setParameterInShader( OGLParameter *param, OGLShader *shader ) {
-    OSRE_ASSERT( nullptr != param );
-	OSRE_ASSERT( nullptr != shader );
-
-    if( NoneLocation == param->m_loc ) {
-        param->m_loc = ( *shader )( param->m_name );
-        if( NoneLocation == param->m_loc ) {
-            osre_debug( Tag, "Cannot location for parameter " + param->m_name + " in shader " + shader->getName() + "." );
-            return false;
-        }
-    }
-
-    bool success( true );
-    switch( param->m_type ) {
-        case PT_Int: {
-                GLint data;
-                ::memcpy( &data, param->m_data->getData(), sizeof( GLint ) );
-                glUniform1i( param->m_loc, data );
-            }
-            break;
-        case PT_Float: {
-                GLfloat value;
-                ::memcpy( &value, param->m_data->getData(), sizeof( GLfloat ) );
-                glUniform1f( param->m_loc, value );
-            }
-            break;
-        case PT_Float2: {
-                GLfloat value[ 2 ];
-                ::memcpy( &value[ 0 ], param->m_data->getData(), sizeof( GLfloat ) * 2 );
-                glUniform2f( param->m_loc, value[ 0 ], value[ 1 ] );
-            }
-            break;
-        case PT_Float3: {
-                GLfloat value[ 3 ];
-                ::memcpy( &value[ 0 ], param->m_data->getData(), sizeof( GLfloat ) * 3 );
-                glUniform3f( param->m_loc, value[ 0 ], value[ 1 ], value[ 2 ] );
-            }
-            break;
-        case PT_Mat4: {
-                glm::mat4 mat;
-                ::memcpy( &mat, param->m_data->getData(), sizeof( glm::mat4 ) );
-                glUniformMatrix4fv( param->m_loc, 1, GL_FALSE, glm::value_ptr( mat ) );
-            }
-            break;
-        case PT_Mat4Array: {
-                glUniformMatrix4fv( param->m_loc, param->m_numItems, GL_FALSE, ( f32* ) param->m_data->getData() );
-            }
-            break;
-
-        default:
-            success = false;
-            break;
-    }
-    CHECKOGLERRORSTATE();
-
-    return success;
-}
-
 OGLRenderBackend::OGLRenderBackend( )
 : m_renderCtx( nullptr )
 , m_buffers()
@@ -171,25 +113,29 @@ OGLBuffer *OGLRenderBackend::createBuffer( BufferType type ) {
     ui32 handle( OGLNotSetId );
     GLuint bufferId( OGLNotSetId );
     glGenBuffers( 1, &bufferId );
-    OGLBuffer *pBuf( nullptr );
+    OGLBuffer *buffer( nullptr );
     if ( m_freeBufferSlots.isEmpty() ) {
-        pBuf   = new OGLBuffer;
+        buffer = new OGLBuffer;
         handle = m_buffers.size();
-        m_buffers.add( pBuf );
+        m_buffers.add( buffer );
     } else {
         handle = m_freeBufferSlots.back();
-        pBuf   = m_buffers[ handle ];
+        buffer = m_buffers[ handle ];
         m_freeBufferSlots.removeBack();
     }
-    pBuf->m_handle = handle;
-    pBuf->m_type = type;
-    pBuf->m_id   = bufferId;
-    pBuf->m_size = 0;
+    buffer->m_handle = handle;
+    buffer->m_type = type;
+    buffer->m_id   = bufferId;
+    buffer->m_size = 0;
 
-    return pBuf;
+    return buffer;
 }
 
 void OGLRenderBackend::bindBuffer( OGLBuffer *buffer ) {
+    if ( nullptr == buffer ) {
+        osre_debug( Tag, "Pointer to buffer is nullptr" );
+        return;
+    }
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, buffer->m_id );
 
@@ -206,21 +152,33 @@ void OGLRenderBackend::bindBuffer( ui32 handle ) {
 }
 
 void OGLRenderBackend::unbindBuffer( OGLBuffer *buffer ) {
+    if ( nullptr == buffer ) {
+        osre_debug( Tag, "Pointer to buffer is nullptr" );
+        return;
+    }
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, 0 );
 }
 
-void OGLRenderBackend::bufferData( OGLBuffer *pBuffer, void *pData, ui32 size, BufferAccessType usage ) {
-    GLenum target = OGLEnum::getGLBufferType( pBuffer->m_type );
+void OGLRenderBackend::bufferData( OGLBuffer *buffer, void *pData, ui32 size, BufferAccessType usage ) {
+    if ( nullptr == buffer ) {
+        osre_debug( Tag, "Pointer to buffer is nullptr" );
+        return;
+    }
+    GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBufferData( target, size, pData, OGLEnum::getGLBufferAccessType( usage ) );
 }
 
-void OGLRenderBackend::releaseBuffer( OGLBuffer *pBuffer ) {
-    const ui32 slot = pBuffer->m_handle;
-    glDeleteBuffers( 1, &pBuffer->m_id );
-    pBuffer->m_handle = OGLNotSetId;
-    pBuffer->m_type   = EmptyBuffer;
-    pBuffer->m_id     = OGLNotSetId;
+void OGLRenderBackend::releaseBuffer( OGLBuffer *buffer ) {
+    if ( nullptr == buffer ) {
+        osre_debug( Tag, "Pointer to buffer is nullptr" );
+        return;
+    }
+    const ui32 slot = buffer->m_handle;
+    glDeleteBuffers( 1, &buffer->m_id );
+    buffer->m_handle = OGLNotSetId;
+    buffer->m_type   = EmptyBuffer;
+    buffer->m_id     = OGLNotSetId;
     m_freeBufferSlots.add( slot );
 }
 
@@ -339,26 +297,24 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *shader
 }
 
 void OGLRenderBackend::releaseVertexCompArray( TArray<OGLVertexAttribute*> &attributes ) {
-    if( attributes.isEmpty() ) {
-        return;
-    }
-
-    for( ui32 i = 0; i < attributes.size(); ++i ) {
-        if( attributes[ i ] ) {
-            delete attributes[ i ];
+    if( !attributes.isEmpty() ) {
+        for ( ui32 i = 0; i < attributes.size(); ++i ) {
+            if ( nullptr != attributes[ i ] ) {
+                delete attributes[ i ];
+            }
         }
+        attributes.clear();
     }
-    attributes.clear();
 }
 
 OGLVertexArray *OGLRenderBackend::createVertexArray() {
-    OGLVertexArray *pVertexArray = new OGLVertexArray;
-    glGenVertexArrays( 1, &pVertexArray->m_id );
+    OGLVertexArray *vertexArray = new OGLVertexArray;
+    glGenVertexArrays( 1, &vertexArray->m_id );
     const ui32 id = m_vertexarrays.size();
-    m_vertexarrays.add( pVertexArray );
-    pVertexArray->m_slot = id;
+    m_vertexarrays.add( vertexArray );
+    vertexArray->m_slot = id;
 
-    return pVertexArray;
+    return vertexArray;
 }
 
 bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, ui32 stride, GLint loc, 
@@ -385,9 +341,9 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
     }
 
     for( ui32 i = 0; i < attributes.size(); ++i ) {
-        const c8 *pAttribName = attributes[ i ]->m_pAttributeName;
-        OSRE_ASSERT( nullptr != pAttribName );
-        const GLint loc = ( *shader )[ pAttribName ];
+        const c8 *attribName = attributes[ i ]->m_pAttributeName;
+        OSRE_ASSERT( nullptr != attribName );
+        const GLint loc = ( *shader )[ attribName ];
         if( -1 != loc ) {
             glEnableVertexAttribArray( loc );
             glVertexAttribPointer( loc, attributes[ i ]->m_size,
@@ -397,7 +353,7 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
                                    attributes[ i ]->m_ptr 
                                  );
         } else {
-            String msg = "Cannot find " + String( pAttribName );
+            String msg = "Cannot find " + String( attribName );
             osre_debug( Tag, msg );
         }
     }
@@ -434,7 +390,6 @@ void OGLRenderBackend::bindVertexArray( OGLVertexArray *vertexArray ) {
 		glBindVertexArray( m_activeVertexArray );
 	}
     CHECKOGLERRORSTATE();
-
 }
 
 void OGLRenderBackend::unbindVertexArray( OGLVertexArray *vertexArray ) {
@@ -520,14 +475,17 @@ OGLShader *OGLRenderBackend::getShader( const String &name ) {
 }
 
 bool OGLRenderBackend::useShader( OGLShader *shader ) {
+    // shader already in use
     if ( m_shaderInUse == shader ) {
         return true;
     }
 
+    // unuse an older shader 
     if ( nullptr != m_shaderInUse ) {
         m_shaderInUse->unuse();
     }
 
+    // 
     m_shaderInUse = shader;
     if ( nullptr != m_shaderInUse ) {
         m_shaderInUse->use();
@@ -567,7 +525,10 @@ bool OGLRenderBackend::releaseShader( OGLShader *shader ) {
 
 void OGLRenderBackend::releaseAllShaders( ) {
     for( ui32 i = 0; i < m_shaders.size(); ++i ) {
-        if( m_shaders[ i ] ) {
+        if( nullptr != m_shaders[ i ] ) {
+            if ( m_shaderInUse == m_shaders[ i ] ) {
+                useShader( nullptr );
+            }
             delete m_shaders[ i ];
         }
     }
@@ -779,12 +740,75 @@ OGLParameter *OGLRenderBackend::getParameter( const String &name ) const {
 }
 
 void OGLRenderBackend::setParameter( OGLParameter *param ) {
+    OSRE_ASSERT( nullptr != param );
     if( nullptr == m_shaderInUse ) {
         osre_debug( Tag, "Cannot set parameter, no shader in use." );
         return;
     }
 
-    setParameterInShader( param, m_shaderInUse );
+    OGLShader *shader( m_shaderInUse );
+    if ( nullptr == m_shaderInUse ) {
+        return;
+    }
+
+    if ( NoneLocation == param->m_loc ) {
+        param->m_loc = ( *shader )( param->m_name );
+        if ( NoneLocation == param->m_loc ) {
+            osre_debug( Tag, "Cannot location for parameter " + param->m_name + " in shader " + shader->getName() + "." );
+            return;
+        }
+    }
+
+    switch ( param->m_type ) {
+        case PT_Int: 
+        {
+            GLint data;
+            ::memcpy( &data, param->m_data->getData(), sizeof( GLint ) );
+            glUniform1i( param->m_loc, data );
+        }
+        break;
+    
+        case PT_Float: 
+        {
+            GLfloat value;
+            ::memcpy( &value, param->m_data->getData(), sizeof( GLfloat ) );
+            glUniform1f( param->m_loc, value );
+        }
+        break;
+
+        case PT_Float2: 
+        {
+            GLfloat value[ 2 ];
+            ::memcpy( &value[ 0 ], param->m_data->getData(), sizeof( GLfloat ) * 2 );
+            glUniform2f( param->m_loc, value[ 0 ], value[ 1 ] );
+        }
+        break;
+
+        case PT_Float3: 
+        {
+            GLfloat value[ 3 ];
+            ::memcpy( &value[ 0 ], param->m_data->getData(), sizeof( GLfloat ) * 3 );
+            glUniform3f( param->m_loc, value[ 0 ], value[ 1 ], value[ 2 ] );
+        }
+        break;
+    
+        case PT_Mat4: {
+            glm::mat4 mat;
+            ::memcpy( &mat, param->m_data->getData(), sizeof( glm::mat4 ) );
+            glUniformMatrix4fv( param->m_loc, 1, GL_FALSE, glm::value_ptr( mat ) );
+        }
+        break;
+
+        case PT_Mat4Array: 
+        {
+            glUniformMatrix4fv( param->m_loc, param->m_numItems, GL_FALSE, ( f32* ) param->m_data->getData() );
+        }
+        break;
+
+        default:
+            break;
+    }
+    CHECKOGLERRORSTATE();
 }
 
 void OGLRenderBackend::releaseAllParameters() {
@@ -798,9 +822,8 @@ void OGLRenderBackend::setParameter( OGLParameter **param, ui32 numParam ) {
 
     for( ui32 i = 0; i < numParam; ++i ) {
         OGLParameter *currentParam = param[ i ];
-        if( currentParam ) {
-            const bool success( setParameterInShader( currentParam ,m_shaderInUse ) );
-            OSRE_VALIDATE( success, "Error setting parameter " + currentParam->m_name );
+        if( nullptr != currentParam ) {
+            setParameter( currentParam );
         }
     }
 }
@@ -881,14 +904,15 @@ void OGLRenderBackend::selectFont( FontBase *font ) {
 }
 
 FontBase *OGLRenderBackend::findFont( const String &name ) const {
+    FontBase *font( nullptr );
     for (ui32 i = 0; i < m_fonts.size(); i++) {
-        FontBase *font( m_fonts[ i ] );
-        if ( font->getTextureName() == name) {
-            return font;
+        if ( m_fonts[ i ]->getTextureName() == name) {
+            font = m_fonts[ i ];
+            break;
         }
     }
 
-    return nullptr;
+    return font;
 }
 
 bool OGLRenderBackend::relaseFont( FontBase *font ) {
@@ -900,6 +924,7 @@ bool OGLRenderBackend::relaseFont( FontBase *font ) {
     for ( ui32 i = 0; i < m_fonts.size(); i++) {
         if (m_fonts[ i ] == font) {
             m_fonts.remove( i );
+            font->release();
             ok = true;
             break;
         }

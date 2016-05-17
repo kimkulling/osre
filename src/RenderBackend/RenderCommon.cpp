@@ -230,6 +230,13 @@ PrimitiveGroup::~PrimitiveGroup() {
     // empty
 }
 
+void PrimitiveGroup::init( IndexType indexType, ui32 numPrimitives, PrimitiveType primType, ui32 startIdx ) {
+    m_indexType = indexType;
+    m_numPrimitives = numPrimitives;
+    m_primitive = primType;
+    m_startIndex = startIdx;
+}
+
 Texture::Texture()
 : m_textureName( "" )
 , m_targetType( Texture2D )
@@ -284,13 +291,11 @@ Transform::~Transform() {
 }
 
 StaticGeometry::StaticGeometry()
-    : m_material( nullptr )
-//    , m_numParameter( 0 )
-//    , m_parameter( nullptr )
-    , m_vb( nullptr )
-    , m_ib( nullptr )
-    , m_numPrimGroups( 0 )
-    , m_pPrimGroups( nullptr ) {
+: m_material( nullptr )
+, m_vb( nullptr )
+, m_ib( nullptr )
+, m_numPrimGroups( 0 )
+, m_pPrimGroups( nullptr ) {
     // empty
 }
 
