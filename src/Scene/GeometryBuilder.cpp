@@ -108,8 +108,11 @@ GeometryBuilder::~GeometryBuilder() {
 
 StaticGeometry *GeometryBuilder::allocEmptyGeometry( VertexType type, ui32 numGeo ) {
     StaticGeometry *geo = StaticGeometry::create( numGeo );
-    geo->m_vertextype = type;
-    geo->m_indextype = UnsignedShort;
+    for ( ui32 i = 0; i < numGeo; i++ ) {
+        geo[ i ].m_vertextype = type;
+        geo[ i ].m_indextype = UnsignedShort;
+
+    }
 
     return geo;
 }

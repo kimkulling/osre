@@ -110,7 +110,7 @@ void OGLRenderBackend::setViewport( i32 x, i32 y, i32 w, i32 h ) {
 }
 
 OGLBuffer *OGLRenderBackend::createBuffer( BufferType type ) {
-    ui32 handle( OGLNotSetId );
+     ui32 handle( OGLNotSetId );
     GLuint bufferId( OGLNotSetId );
     glGenBuffers( 1, &bufferId );
     OGLBuffer *buffer( nullptr );

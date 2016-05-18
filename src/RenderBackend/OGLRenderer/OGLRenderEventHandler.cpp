@@ -184,9 +184,10 @@ static OGLVertexArray *setupBuffers( StaticGeometry *geo, OGLRenderBackend *rb, 
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != oglShader );
 
+    rb->useShader( oglShader );
+
     OGLVertexArray *vertexArray = rb->createVertexArray();
     rb->bindVertexArray( vertexArray );
-    rb->useShader( oglShader );
     BufferData *vertices = geo->m_vb;
 	if ( nullptr == vertices ) {
 		osre_debug( Tag, "No vertex buffer data for setting up data." );
