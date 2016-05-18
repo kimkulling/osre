@@ -45,5 +45,15 @@ TEST_F( GeometryBuilderTest, allocEmptyGeometryTest ) {
     StaticGeometry::destroy( &geoArray );
 }
 
+TEST_F( GeometryBuilderTest, allocTrianglesTest ) {
+    StaticGeometry *geo = Scene::GeometryBuilder::allocTriangles( ColorVertex );
+    EXPECT_NE( geo, nullptr );
+    EXPECT_EQ( geo->m_vertextype, ColorVertex );
+    EXPECT_NE( geo->m_vb, nullptr );
+    EXPECT_NE( geo->m_ib, nullptr );
+    EXPECT_NE( geo->m_material, nullptr );
+    StaticGeometry::destroy( &geo );
+}
+
 } // Namespace UnitTest
 } // Namespace OSRE
