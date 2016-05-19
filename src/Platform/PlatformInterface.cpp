@@ -57,7 +57,6 @@ static const String PlatformPluginName[ MaxPlugin ] = {
 
 static const String Tag = "PlatformInterface";
 
-//-------------------------------------------------------------------------------------------------
 PlatformInterface::PlatformInterface( const Settings *config )
 : AbstractService( "platform/platforminterface" )
 , m_config( config )
@@ -72,13 +71,11 @@ PlatformInterface::PlatformInterface( const Settings *config )
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 PlatformInterface::~PlatformInterface() {
     delete m_config;
     m_config = nullptr;
 }
 
-//-------------------------------------------------------------------------------------------------
 PlatformInterface *PlatformInterface::create( const Settings *config ) {
     if( nullptr == s_instance ) {
         s_instance = new PlatformInterface( config );
@@ -87,7 +84,6 @@ PlatformInterface *PlatformInterface::create( const Settings *config ) {
     return s_instance;
 }
 
-//-------------------------------------------------------------------------------------------------
 void PlatformInterface::destroy( ) {
     if( nullptr == s_instance ) {
         return;
@@ -98,32 +94,30 @@ void PlatformInterface::destroy( ) {
     s_instance = nullptr;
 }
 
-//-------------------------------------------------------------------------------------------------
 PlatformInterface *PlatformInterface::getInstance( ) {
     return s_instance;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractPlatformEventHandler *PlatformInterface::getPlatformEventHandler() const {
     return m_pOSEventHandler;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractRenderContext *PlatformInterface::getRenderContext() const {
     return m_pRenderContext;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractSurface *PlatformInterface::getRootSurface() const {
     return m_pRootSurface;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractTimer *PlatformInterface::getTimer() const {
     return m_pTimer;
 }
 
-//-------------------------------------------------------------------------------------------------
+AbstractDynamicLoader *PlatformInterface::getDynamicLoader() const {
+
+}
+
 const String &PlatformInterface::getDefaultFontName() const {
     if ( nullptr == m_config ) {
         static const String dummy( "none" );

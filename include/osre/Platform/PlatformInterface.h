@@ -36,6 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations
 namespace Common {
     class EventTriggerer;
 }
@@ -50,10 +51,20 @@ class AbstractSurface;
 class AbstractTimer;
 class AbstractPlatformEventHandler;
 class AbstractRenderContext;
+class AbstractDynamicLoader;
 
 struct IInputUpdate;
 struct SurfaceProperties;
 
+class AbstractDynamicLoader {
+public:
+    virtual ~AbstractDynamicLoader();
+    virtual void load() = 0;
+    virtual void unload() = 0;
+
+protected:
+    AbstractDynamicLoader();
+};
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -181,6 +192,7 @@ public:
     AbstractPlatformEventHandler *getPlatformEventHandler() const;
     AbstractRenderContext *getRenderContext() const;
     AbstractTimer *getTimer() const;
+    AbstractDynamicLoader *getDynamicLoader() const;
     const String &getDefaultFontName() const;
     static PluginType getOSPluginType();
     static String getOSPluginName( PluginType type );
