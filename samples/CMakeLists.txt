@@ -33,4 +33,4 @@ target_link_libraries ( HelloWorld osre )
 #target_link_libraries ( ModelLoading osre ) 
 
 set_target_properties(  HelloWorld PROPERTIES FOLDER Samples )
-set_target_properties(  ModelLoading PROPERTIES FOLDER Samples )
+#set_target_properties(  ModelLoading PROPERTIES FOLDER Samples )
