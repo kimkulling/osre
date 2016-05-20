@@ -67,7 +67,8 @@ PlatformInterface::PlatformInterface( const Settings *config )
 #endif // OSRE_WINDOWS
 , m_pRootSurface( nullptr )
 , m_pOSEventHandler( nullptr )
-, m_pTimer( nullptr ) {
+, m_pTimer( nullptr )
+, m_dynLoader( nullptr ) {
     // empty
 }
 
@@ -115,7 +116,7 @@ AbstractTimer *PlatformInterface::getTimer() const {
 }
 
 AbstractDynamicLoader *PlatformInterface::getDynamicLoader() const {
-
+    return m_dynLoader;
 }
 
 const String &PlatformInterface::getDefaultFontName() const {
@@ -128,7 +129,6 @@ const String &PlatformInterface::getDefaultFontName() const {
     return font;
 }
 
-//-------------------------------------------------------------------------------------------------
 PluginType PlatformInterface::getOSPluginType() {
 #ifdef OSRE_WINDOWS
     return WindowsPlugin;
@@ -137,7 +137,6 @@ PluginType PlatformInterface::getOSPluginType() {
 #endif // OSRE_WINDOWS
 }
 
-//-------------------------------------------------------------------------------------------------
 String PlatformInterface::getOSPluginName( PluginType type ) {
     String name( "None" );
     switch( type ) {
@@ -157,7 +156,6 @@ String PlatformInterface::getOSPluginName( PluginType type ) {
     return name;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool PlatformInterface::onOpen() {
     if( !m_config ) {
         assert( nullptr != m_config );
@@ -186,11 +184,13 @@ bool PlatformInterface::onOpen() {
         polls = m_config->get( Settings::PollingMode ).getBool();
     }
 
-    String appName = "OSRE Apllicaton";
+    String appName = "OSRE Applicaton";
     m_type = static_cast<PluginType>( m_config->get( Settings::PlatformPlugin ).getInt( ) );
 
     PlatformPluginFactory::init( m_type );
     osre_info( Tag, "Platform plugin created for " + PlatformInterface::getOSPluginName( m_type ) );
+
+    m_dynLoader = PlatformPluginFactory::createDynmicLoader( m_type );
 
     PlatformPluginFactory::createThreadFactory( m_type );
 

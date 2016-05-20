@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   include <src/Platform/win32/Win32RenderContext.h>
 #   include <src//Platform/win32/Win32ThreadFactory.h>
 #   include <src/Platform/win32/Win32DbgLogStream.h>
+#   include <src/Platform/win32/Win32DynamicLoader.h>
 #endif
 #include <src/Platform/sdl2/SDL2Surface.h>
 #include <src/Platform/sdl2/SDL2EventHandler.h>
@@ -188,8 +189,25 @@ Common::AbstractLogStream *PlatformPluginFactory::createPlatformLogStream() {
     return stream;
 }
 
+AbstractDynamicLoader *PlatformPluginFactory::createDynmicLoader( PluginType type ) {
+    AbstractDynamicLoader *dynloader( nullptr );
+    switch ( type ) {
+#ifdef OSRE_WINDOWS
+        case Platform::WindowsPlugin:
+            dynloader = new Win32DynamicLoader;
+            break;
+#endif // OSRE_WINDOWS
 
-//-------------------------------------------------------------------------------------------------
+        case Platform::SDL2Plugin:
+            //dynloader = new SDL2ThreadFactory();
+            break;
+
+    default:
+        break;
+    }
+
+    return dynloader;
+}
 
 } // Namespace Platform
 } // Namespace OSRE

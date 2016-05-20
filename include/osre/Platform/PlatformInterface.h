@@ -215,6 +215,7 @@ private:
     AbstractPlatformEventHandler *m_pOSEventHandler;
     AbstractRenderContext *m_pRenderContext;
     AbstractTimer *m_pTimer;
+    AbstractDynamicLoader *m_dynLoader;
 };
 
 

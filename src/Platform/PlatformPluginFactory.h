@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations
 namespace Common {
     class AbstractLogStream;
 }
@@ -37,6 +38,7 @@ class AbstractSurface;
 class AbstractRenderContext;
 class AbstractTimer;
 class AbstractThreadFactory;
+class AbstractDynamicLoader;
 
 struct SurfaceProperties;
 
@@ -70,6 +72,9 @@ struct PlatformPluginFactory {
 
     ///	@brief  Creates a platform-specific log stream, if any available.
     static Common::AbstractLogStream *createPlatformLogStream();
+
+    ///	@brief  Creates a platform-specific dynamic-library loader.
+    static AbstractDynamicLoader *createDynmicLoader( PluginType type );
 };
 
 //-------------------------------------------------------------------------------------------------

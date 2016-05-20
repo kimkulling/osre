@@ -22,44 +22,64 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Logger.h>
-#include <Windows.h>
+#include <osre/Common/osre_common.h>
 
 namespace OSRE {
 namespace Platform {
 
+/// @brief  A lib handle.
+struct LibHandle {
+    void *m_handle; ///< The lib handle.
+
+    LibHandle()
+    : m_handle( nullptr ) {
+        // empty
+    }
+};
+
 //-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
+/// @ingroup    Engine
 ///
-///	@brief	This class implements a log-stream, which will be visible in the Windows-Debugger 
-///	output window.
+///	@brief  This class declares the abstract interface for dynamic library loaders.
 //-------------------------------------------------------------------------------------------------
-class Win32DbgLogStream : public Common::AbstractLogStream {
+class AbstractDynamicLoader {
 public:
-    ///	Constructor.
-    Win32DbgLogStream();
-    ///	Destructor, non virtual.
-    ~Win32DbgLogStream();
-    ///	Writes the message into the debug output buffer.
-    void write( const String &msg );
+    /// @brief  The class destructor.
+    virtual ~AbstractDynamicLoader();
+
+    /// @brief  Loads a dynamic library.
+    /// @param  libName     [in] The name of the lib.
+    /// @return The lib handle or nullptr if dynamic library wasn't loaded.
+    virtual LibHandle *load( const c8 *libName ) = 0;
+
+    /// @brief  Performs a lookup, if the library was already loaded.
+    /// @param  libName     [in] The name of the lib.
+    /// @return The lib handle or nullptr if the dynamic library wasn't loaded.
+    virtual LibHandle *lookupLib( const c8 *libName ) = 0;
+    
+    /// @brief  Unloads a loaded dynamic library.
+    /// @param  libName     [in] The name of the lib.
+    virtual void unload( const c8 *libName ) = 0;
+
+    /// @brief  Loads a function from a dynamic library
+    /// @param  name    [in] The function name to search for,
+    /// @return The function pointer or nullptr, if the function was not found.
+    virtual void *loadFunction( const char *name ) = 0;
+
+protected:
+    /// @brief  The class constructor.
+    AbstractDynamicLoader();
 };
 
 inline
-Win32DbgLogStream::Win32DbgLogStream() {
+AbstractDynamicLoader::AbstractDynamicLoader() {
     // empty
 }
 
 inline
-Win32DbgLogStream::~Win32DbgLogStream() {
+AbstractDynamicLoader::~AbstractDynamicLoader() {
     // empty
 }
 
-inline
-void Win32DbgLogStream::write( const String &msg ) {
-    if ( !msg.empty() ) {
-        ::OutputDebugString( msg.c_str() );
-    }
-}
-
-} // Namespace Platform
+} // namespace Platform
 } // Namespace OSRE

@@ -22,44 +22,37 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Logger.h>
-#include <Windows.h>
+#include <osre/Platform/AbstractDynamicLoader.h>
+#include <cppcore/Container/THashMap.h>
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
+/// @ingroup    Engine
 ///
-///	@brief	This class implements a log-stream, which will be visible in the Windows-Debugger 
-///	output window.
+///	@brief  This class implements the win32-specific dynamic-library loader.
 //-------------------------------------------------------------------------------------------------
-class Win32DbgLogStream : public Common::AbstractLogStream {
+class Win32DynamicLoader : public AbstractDynamicLoader {
 public:
-    ///	Constructor.
-    Win32DbgLogStream();
-    ///	Destructor, non virtual.
-    ~Win32DbgLogStream();
-    ///	Writes the message into the debug output buffer.
-    void write( const String &msg );
+    /// The class constructor.
+    Win32DynamicLoader();
+    /// The class destructor, virtual.
+    virtual ~Win32DynamicLoader();
+    /// Loads a dll.
+    virtual LibHandle *load( const c8 *libName ) override;
+    /// Performs a lookup for a dll.
+    virtual LibHandle *lookupLib( const c8 *libName ) override;
+    /// Unloads a loaded dll.
+    virtual void unload( const c8 *libName ) override;
+    /// Loads the function symbol from a dll.
+    virtual void *loadFunction( const char *name ) override;
+
+private:
+    CPPCore::THashMap<ui32, LibHandle*> m_libmap;
+    CPPCore::TArray<LibHandle*> m_handles;
 };
 
-inline
-Win32DbgLogStream::Win32DbgLogStream() {
-    // empty
-}
-
-inline
-Win32DbgLogStream::~Win32DbgLogStream() {
-    // empty
-}
-
-inline
-void Win32DbgLogStream::write( const String &msg ) {
-    if ( !msg.empty() ) {
-        ::OutputDebugString( msg.c_str() );
-    }
-}
-
-} // Namespace Platform
+} // namespace Platform
 } // Namespace OSRE

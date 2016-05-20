@@ -180,6 +180,8 @@ SET( platform_win32_src
     Platform/win32/Win32ThreadFactory.h
     Platform/win32/Win32Timer.cpp
     Platform/win32/Win32Timer.h
+	Platform/win32/Win32DynamicLoader.cpp
+	Platform/win32/Win32DynamicLoader.h
 )
 
 SET( platform_sdl2_src
@@ -202,6 +204,8 @@ SET( platform_sdl2_src
     Platform/sdl2/SDL2ThreadFactory.cpp
     Platform/sdl2/SDL2ThreadFactory.h
     Platform/sdl2/SDL2ThreadLocalStorage.h
+	Platform/sdl2/SDL2DynamicLoader.cpp
+	Platform/sdl2/SDL2DynamicLoader.h
 )
 
 IF( WIN32 )
