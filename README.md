@@ -34,6 +34,10 @@ for Windows: Use the generated Visual studio project files.
 If you want to contribute just use the github project page or reach us under IRC:
 server freenode, channel #osre.
 
+## What is cooking
+If you want to see what is currently under development or what is planned next you can take a look into our planning board: 
+[OSRE Planning Board](https://trello.com/b/AJEAv98P/osre)
+
 ## Reference doc
 Check our doxygen reference doc: http://kimkulling.github.io/osre/doc/html/index.html
 
