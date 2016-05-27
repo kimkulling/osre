@@ -31,69 +31,44 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-struct VlkQueueParameters {
-    VkQueue m_handle;
-    ui32    m_familyIndex;
+// Forward declarations
+class VlkRenderBackend;
 
-    VlkQueueParameters()
-    : m_handle( VK_NULL_HANDLE )
-    , m_familyIndex( 0 ) {
-        // empty
-    }
-};
-
-struct VlkImageParameters {
-    VkImage     m_handle;
-    VkImageView m_imageView;
-
-    VlkImageParameters()
-    : m_handle( VK_NULL_HANDLE )
-    , m_imageView( VK_NULL_HANDLE ) {
-        // empty
-    }
-};
-
-struct VlkSwapChainParameters {
-    VkSwapchainKHR                      m_handle;
-    VkFormat                            m_format;
-    CPPCore::TArray<VlkImageParameters> m_images;
-    VkExtent2D                          m_extent;
-
-    VlkSwapChainParameters() 
-    : m_handle( VK_NULL_HANDLE )
-    , m_format( VK_FORMAT_UNDEFINED )
-    , m_images()
-    , m_extent() {
-        // empty
-    }
-};
-
-struct VlkCommonParameters {
-    VkInstance                    m_instance;
-    VkPhysicalDevice              m_physicalDevice;
-    VkDevice                      m_device;
-    VlkQueueParameters               m_graphicsQueue;
-    VlkQueueParameters               m_presentQueue;
-    VkSurfaceKHR                  m_presentationSurface;
-    VlkSwapChainParameters           m_swapChain;
-
-    VlkCommonParameters()
-    : m_instance( VK_NULL_HANDLE )
-    , m_physicalDevice( VK_NULL_HANDLE )
-    , m_device( VK_NULL_HANDLE )
-    , m_graphicsQueue()
-    , m_presentQueue()
-    , m_presentationSurface( VK_NULL_HANDLE )
-    , m_swapChain() {
-        // empty
-    }
-};
 
 class VlkRenderEventHandler : public Common::AbstractEventHandler {
 public:
     VlkRenderEventHandler();
     virtual ~VlkRenderEventHandler();
     virtual bool onEvent( const Common::Event &ev, const Common::EventData *eventData ) override;
+
+protected:
+    ///	@brief	Callback for attaching the event handler.
+    virtual bool onAttached( const Common::EventData *eventData ) override;
+    ///	@brief	Callback for detaching the event handler.
+    virtual bool onDetached( const Common::EventData *eventData ) override;
+    ///	@brief	Callback for render backend creation.
+    virtual bool onCreateRenderer( const Common::EventData *eventData );
+    ///	@brief	Callback for render backend destroying.
+    virtual bool onDestroyRenderer( const Common::EventData *eventData );
+    ///	@brief	Callback for attaching a new view onto a stage.
+    virtual bool onAttachView( const Common::EventData *eventData );
+    ///	@brief	Callback for detaching a new view onto a stage.
+    virtual bool onDetachView( const Common::EventData *eventData );
+    ///	@brief	Callback for attaching a new geometry into a stage.
+    virtual bool onAttachGeo( const Common::EventData *eventData );
+    ///	@brief	Callback for detaching existing geometry from a stage.
+    virtual bool onDetachGeo( const Common::EventData *eventData );
+    ///	@brief	Callback for clearing all geometry from a stage.
+    virtual bool onClearGeo( const Common::EventData *eventData );
+    ///	@brief	Callback for the render frame.
+    virtual bool onRenderFrame( const Common::EventData *eventData );
+    ///	@brief	Callback when parameter will be updated.
+    virtual bool onUpdateParameter( const Common::EventData *eventData );
+    ///	@brief	Callback when a text will be rendered.
+    virtual bool onRenderText( const Common::EventData *eventData );
+
+private:
+    VlkRenderBackend *m_vlkBackend;
 };
 
 } // Namespace RenderBackend

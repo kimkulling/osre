@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "VlkRenderEventHandler.h"
+#include "VlkRenderBackend.h"
 
 namespace OSRE {
 namespace RenderBackend {
@@ -28,7 +29,8 @@ namespace RenderBackend {
 using namespace ::OSRE::Common;
 
 VlkRenderEventHandler::VlkRenderEventHandler()
-: AbstractEventHandler() {
+: AbstractEventHandler()
+, m_vlkBackend( nullptr ) {
     // empty
 }
 
@@ -40,5 +42,58 @@ bool VlkRenderEventHandler::onEvent( const Event &ev, const EventData *eventData
     return true;
 }
  
+bool VlkRenderEventHandler::onAttached( const Common::EventData *eventData ) {
+    return true;
+}
+
+bool VlkRenderEventHandler::onDetached( const Common::EventData *eventData ) {
+    return true;
+}
+
+bool VlkRenderEventHandler::onCreateRenderer( const Common::EventData *eventData ) {
+    m_vlkBackend = new VlkRenderBackend;
+    return true;
+}
+
+bool VlkRenderEventHandler::onDestroyRenderer( const Common::EventData *eventData ) {
+    delete m_vlkBackend;
+    m_vlkBackend = nullptr;
+
+    return true;
+
+}
+
+bool VlkRenderEventHandler::onAttachView( const Common::EventData *eventData ) {
+    return true;
+}
+
+bool VlkRenderEventHandler::onDetachView( const Common::EventData *eventData ) {
+    return true;
+}
+
+bool VlkRenderEventHandler::onAttachGeo( const Common::EventData *eventData ) {
+    return true;
+}
+
+bool VlkRenderEventHandler::onDetachGeo( const Common::EventData *eventData ) {
+    return true;
+}
+
+bool VlkRenderEventHandler::onClearGeo( const Common::EventData *eventData ) {
+    return true;
+}
+
+bool VlkRenderEventHandler::onRenderFrame( const Common::EventData *eventData ) {
+    return true;
+}
+
+bool VlkRenderEventHandler::onUpdateParameter( const Common::EventData *eventData ) {
+    return true;
+}
+
+bool VlkRenderEventHandler::onRenderText( const Common::EventData *eventData ) {
+    return true;
+}
+
 } // Namespace RenderBackend
 } // Namespace OSRE
