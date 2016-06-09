@@ -29,7 +29,6 @@ namespace OSRE {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Common::Ids
 ///	@ingroup	Engine
 ///
 ///	@brief	This class the API for id container. You can use an id container to store unique ids.
@@ -47,9 +46,9 @@ private:
     ui32 m_last;
 
 private:
-    Ids( const Ids  & ) = delete;
+    Ids( const Ids & ) = delete;
     Ids &operator = ( const Ids & ) = delete;
 };
 
-}
-}
+} // Namespace Common
+} // Namespace OSRE

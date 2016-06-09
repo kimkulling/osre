@@ -305,6 +305,9 @@ SET( renderbackend_oglrenderer_src
 )
 
 SET( renderbackend_vulkanrenderer_src
+	RenderBackend/VulkanRenderer/VlkFunctions.h
+	RenderBackend/VulkanRenderer/VlkFunctions.cpp
+	RenderBackend/VulkanRenderer/VlkExportedFunctions.h
 	RenderBackend/VulkanRenderer/VlkCommon.h
 	RenderBackend/VulkanRenderer/VlkRenderBackend.cpp
 	RenderBackend/VulkanRenderer/VlkRenderBackend.h

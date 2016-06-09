@@ -34,7 +34,6 @@ class AbstractThreadLocalStorage;
 ///	@ingroup	Engine
 ///
 ///	@brief	This abstract class declares the interface for a generic thread API.
-
 ///	Threads are OS-specific.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractThread {
