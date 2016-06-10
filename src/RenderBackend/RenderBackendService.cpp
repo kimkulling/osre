@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/Threading/SystemTask.h>
 #include "OGLRenderer/OGLRenderEventHandler.h"
+#include "VulkanRenderer/VlkRenderEventHandler.h"
 
 namespace OSRE {
 namespace RenderBackend {
@@ -32,6 +33,8 @@ namespace RenderBackend {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Threading;
 using namespace ::OSRE::Properties;
+
+static const String Tag = "RenderBackendService";
 
 RenderBackendService::RenderBackendService()
 : AbstractService( "renderbackend/renderbackendserver" )
@@ -58,10 +61,19 @@ bool RenderBackendService::onOpen() {
         m_renderTaskPtr.init( SystemTask::create( "render_task" ) );
     }
 
+    bool ok( true );
     m_renderTaskPtr->start( nullptr );
-    m_renderTaskPtr->attachEventHandler( new OGLRenderEventHandler );
+    String api = m_settings->get( Settings::RenderAPI ).getString();
+    if ( api == "opengl" ) {
+        m_renderTaskPtr->attachEventHandler( new OGLRenderEventHandler );
+    } else if ( api == "vulkan" ) {
+        m_renderTaskPtr->attachEventHandler( new VlkRenderEventHandler );
+    } else {
+        osre_error( Tag, "Requested render-api unknown: " + api );
+        ok = false;
+    }
 
-    return true;
+    return ok;
 }
 
 bool RenderBackendService::onClose() {

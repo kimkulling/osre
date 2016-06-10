@@ -37,7 +37,8 @@ using namespace ::OSRE::Platform;
 
 int main( int argc, char *argv[] ) {
     Common::ArgumentParser argParser( argc, argv, "api:media", "The render API:The media to load" );
-    String renderAPI( "opengl" );
+//    String renderAPI( "opengl" );
+    String renderAPI( "vulkan" );
     if ( argParser.hasArgument( "api" ) ) {
         renderAPI = argParser.getArgument( "api" ); 
     }

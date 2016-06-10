@@ -121,6 +121,7 @@ bool RenderTestSuite::setup( const String &API ) {
     }
 
     m_pRenderBackendServer = new RenderBackendService();
+    m_pRenderBackendServer->setSettings( settings, false );
     if ( !m_pRenderBackendServer->open()) {
         m_pRenderBackendServer->release();
         m_pRenderBackendServer = nullptr;
