@@ -94,8 +94,8 @@ AbstractService::~AbstractService() {
 inline
 bool AbstractService::open() {
     if ( !m_IsOpen ) {
-        m_IsOpen = true;
-        return onOpen();
+        m_IsOpen = onOpen();
+        return m_IsOpen;
     }
 
     return false;
