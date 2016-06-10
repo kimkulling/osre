@@ -42,7 +42,7 @@ class AbstractTestFixture {
 public:
     /// @brief  The setup method, will be called before the test execution of the fixure.
     /// @return true if successful, false in case of an error.
-    virtual bool setup() = 0;
+    virtual bool setup( const String &API ) = 0;
 
     /// @brief  The teardown method, will be called after the test execution of the fixure.
     /// @return true if successful, false in case of an error.

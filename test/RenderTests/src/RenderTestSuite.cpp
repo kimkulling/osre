@@ -37,24 +37,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderTest {
 
-using namespace OSRE::Common;
-using namespace OSRE::RenderBackend;
-using namespace OSRE::Platform;
+using namespace ::OSRE::Common;
+using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Platform;
+using namespace ::CPPCore;
 
-using namespace CPPCore;
-
+// static member initialization
 RenderTestSuite *RenderTestSuite::s_pInstance = nullptr;
+static const     String Tag                   = "RenderTestSuite";
+static const     ui32 AllTestsDone            = 999999;
 
-static const String Tag = "RenderTestSuite";
-static const ui32   AllTestsDone = 999999;
-
-//-------------------------------------------------------------------------------------------------
+// our base keyboard event listener, for switching to the next test case
 class KeyboardEventListener : public Platform::OSEventListener {
 public:
-    KeyboardEventListener( RenderTestSuite *pRenderTestSuite )
+    KeyboardEventListener( RenderTestSuite *renderTestSuite )
     : OSEventListener( "rendertest/keyboardeventlistener" )
-    , m_testSuite( pRenderTestSuite ) {
-        OSRE_ASSERT( nullptr != pRenderTestSuite );
+    , m_testSuite( renderTestSuite ) {
+        OSRE_ASSERT( nullptr != renderTestSuite );
     }
 
     ~KeyboardEventListener() {
@@ -81,30 +80,29 @@ private:
     RenderTestSuite *m_testSuite;
 };
 
-//-------------------------------------------------------------------------------------------------
-RenderTestSuite *RenderTestSuite::create(const String &suiteName, const String &renderAPI ) {
+RenderTestSuite *RenderTestSuite::create(const String &suiteName ) {
     if (!s_pInstance) {
-        s_pInstance = new RenderTestSuite(suiteName, renderAPI);
-        s_pInstance->setup();
+        s_pInstance = new RenderTestSuite( suiteName );
     }
 
     return s_pInstance;
 }
 
-//-------------------------------------------------------------------------------------------------
 RenderTestSuite *RenderTestSuite::getInstance() {
     if (!s_pInstance) {
-        static_cast<void>( RenderTestSuite::create("tests", "opengl") );
+        // in case of an invalid call use opengl backend as the fallback
+        static_cast<void>( RenderTestSuite::create("tests" ) );
+        osre_error( Tag, "RenderTestSuite::getInstance called before RenderTestSuite::create, using fallback backend" );
     }
 
     return s_pInstance;
 }
 
-//-------------------------------------------------------------------------------------------------
-bool RenderTestSuite::setup() {
+bool RenderTestSuite::setup( const String &API ) {
     // get configuration parameter
+    setRenderAPI( API );
     Properties::Settings *settings = new Properties::Settings;
-    settings->setString( Properties::Settings::RenderAPI, "opengl" );
+    settings->setString( Properties::Settings::RenderAPI, m_renderAPI );
     settings->setBool( Properties::Settings::PollingMode, true );
 
 #ifdef OSRE_WINDOWS
@@ -148,7 +146,6 @@ bool RenderTestSuite::setup() {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool RenderTestSuite::teardown() {
     if( m_pRenderBackendServer ) {
         m_pRenderBackendServer->close();
@@ -171,7 +168,6 @@ bool RenderTestSuite::teardown() {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 void RenderTestSuite::kill() {
     OSRE_ASSERT( nullptr!=s_pInstance );
     if ( s_pInstance ) {
@@ -182,26 +178,22 @@ void RenderTestSuite::kill() {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void RenderTestSuite::attachRenderTest( AbstractRenderTest *pRenderTest ) {
     OSRE_ASSERT( nullptr!=pRenderTest );
 
     m_attachedRenderTests.add( pRenderTest );
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 RenderTestSuite::getNumRenderTests() const {
     return m_attachedRenderTests.size();
 }
 
-//-------------------------------------------------------------------------------------------------
 void RenderTestSuite::startTests() {
     if (m_attachedRenderTests.isEmpty()) {
         return;
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void RenderTestSuite::showTestReport() {
     if (m_FailureLog.isEmpty()) {
         return;
@@ -214,32 +206,26 @@ void RenderTestSuite::showTestReport() {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void RenderTestSuite::setRenderAPI(const String &renderAPI) {
     m_renderAPI = renderAPI;
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &RenderTestSuite::getRenderAPI() const {
     return m_renderAPI;
 }
 
-//-------------------------------------------------------------------------------------------------
 void RenderTestSuite::setMediaPath( const String &mediaPath ) {
     m_mediaPath = mediaPath;
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &RenderTestSuite::getMediaPath() const {
     return m_mediaPath;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractTimer *RenderTestSuite::getTimer() const {
     return m_pTimer;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool RenderTestSuite::update( d32 timediff ) {
     if( !m_pPlatformInterface ) {
         return false;
@@ -288,14 +274,12 @@ bool RenderTestSuite::update( d32 timediff ) {
     return false;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool RenderTestSuite::clearTestEnv() {
     m_pRenderBackendServer->sendEvent( &OnClearSceneEvent, nullptr );
 
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool RenderTestSuite::requestNextTest( ui32 &next ) {
     ++m_activeTestIdx;
     if( m_activeTestIdx >= m_attachedRenderTests.size() ) {
@@ -308,15 +292,13 @@ bool RenderTestSuite::requestNextTest( ui32 &next ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 void RenderTestSuite::addFailureLog( const String &logEntry ) {
     if (!logEntry.empty()) {
         m_FailureLog.add(logEntry);
     }
 }
 
-//-------------------------------------------------------------------------------------------------
-RenderTestSuite::RenderTestSuite( const String &suiteName, const String &renderAPI )
+RenderTestSuite::RenderTestSuite( const String &suiteName )
 : AbstractTestFixture( suiteName )
 , m_pActiveRenderTest( nullptr )
 , m_activeTestIdx( 0 )
@@ -326,12 +308,11 @@ RenderTestSuite::RenderTestSuite( const String &suiteName, const String &renderA
 , m_pListener( nullptr )
 , m_pTimer( nullptr )
 , m_pRenderBackendServer( nullptr )
-, m_renderAPI(renderAPI)
+, m_renderAPI( "none" )
 , m_mediaPath() {
     OSRE_ASSERT( !suiteName.empty() );
 }
 
-//-------------------------------------------------------------------------------------------------
 RenderTestSuite::~RenderTestSuite() {
     delete m_pListener;
     m_pListener = nullptr;
@@ -340,8 +321,6 @@ RenderTestSuite::~RenderTestSuite() {
         delete m_attachedRenderTests[ i ];
     }
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderTest
 } // Namespace OSRE

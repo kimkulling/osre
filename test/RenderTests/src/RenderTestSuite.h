@@ -52,10 +52,10 @@ class KeyboardEventListener;
 //-------------------------------------------------------------------------------------------------
 class RenderTestSuite : public AbstractTestFixture {
 public:
-    static RenderTestSuite *create(const String &suiteName, const String &renderAPI);
+    static RenderTestSuite *create(const String &suiteName );
     static RenderTestSuite *getInstance();
     static void kill();
-    virtual bool setup() final;
+    virtual bool setup( const String &API ) final;
     virtual bool teardown() final;
     void attachRenderTest(AbstractRenderTest *pRenderTest);
     ui32 getNumRenderTests() const;
@@ -75,7 +75,7 @@ protected:
 
 private:
     RenderTestSuite();
-    RenderTestSuite(const String &suiteName, const String &renderAPI);
+    RenderTestSuite(const String &suiteName );
     RenderTestSuite &operator = ( const RenderTestSuite & );
     virtual ~RenderTestSuite() final;
 

@@ -47,7 +47,8 @@ int main( int argc, char *argv[] ) {
         mediaPath = argParser.getArgument( "media" );
     }
 
-    RenderTestSuite *rtSuite = RenderTestSuite::create( "tests", renderAPI );
+    RenderTestSuite *rtSuite = RenderTestSuite::create( "tests" );
+    rtSuite->setup( renderAPI );
     RenderTestSuite::getInstance()->setRenderAPI( renderAPI );
     RenderTestSuite::getInstance( )->setMediaPath( mediaPath );
     

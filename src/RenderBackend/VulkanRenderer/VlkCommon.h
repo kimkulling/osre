@@ -60,10 +60,10 @@ struct VlkSwapChainParameters {
     VkExtent2D                          m_extent;
 
     VlkSwapChainParameters()
-        : m_handle( VK_NULL_HANDLE )
-        , m_format( VK_FORMAT_UNDEFINED )
-        , m_images()
-        , m_extent() {
+    : m_handle( VK_NULL_HANDLE )
+    , m_format( VK_FORMAT_UNDEFINED )
+    , m_images()
+    , m_extent() {
         // empty
     }
 };
