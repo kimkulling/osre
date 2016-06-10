@@ -76,26 +76,26 @@ protected:
     virtual bool onUpdate( d32 timediff ) = 0;
 
 private:
-    bool m_IsOpen;
+    bool m_isOpen;
 };
 
 inline
 AbstractService::AbstractService( const String &serverName )
 : Object( serverName )
-, m_IsOpen( false ) {
+, m_isOpen( false ) {
     // empty
 }
 
 inline 
 AbstractService::~AbstractService() {
-    OSRE_ASSERT( !m_IsOpen );
+    OSRE_ASSERT( !m_isOpen );
 }
 
 inline
 bool AbstractService::open() {
-    if ( !m_IsOpen ) {
-        m_IsOpen = onOpen();
-        return m_IsOpen;
+    if ( !m_isOpen ) {
+        m_isOpen = onOpen();
+        return m_isOpen;
     }
 
     return false;
@@ -103,18 +103,17 @@ bool AbstractService::open() {
 
 inline
 bool AbstractService::close() {
-    if ( m_IsOpen )	{
-        m_IsOpen = false;
+    if ( m_isOpen )	{
+        m_isOpen = false;
         return onClose();
     }
 
     return false;
 }
 
-
 inline
 bool AbstractService::isOpen() {
-    return m_IsOpen;
+    return m_isOpen;
 }
 
 inline
