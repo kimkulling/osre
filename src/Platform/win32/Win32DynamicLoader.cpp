@@ -35,7 +35,8 @@ using namespace ::OSRE::Common;
 Win32DynamicLoader::Win32DynamicLoader()
 : AbstractDynamicLoader()
 , m_libmap()
-, m_handles() {
+, m_handles()
+, m_activeLib( nullptr ) {
     // empty
 }
 
@@ -65,6 +66,8 @@ LibHandle *Win32DynamicLoader::load( const c8 *libName ) {
         m_libmap.insert( key, libHandle );
     }
 
+    m_activeLib = libHandle;
+
     return libHandle;
 }
     
@@ -78,6 +81,7 @@ LibHandle *Win32DynamicLoader::lookupLib( const c8 *libName ) {
     if ( m_libmap.hasKey( key ) ) {
         m_libmap.getValue( key, libHandle );
     }
+    m_activeLib = libHandle;
 
     return libHandle;
 }
@@ -97,6 +101,9 @@ void Win32DynamicLoader::unload( const c8 *libName ) {
 }
     
 void *Win32DynamicLoader::loadFunction( const char *name ) {
+
+    ::GetProcAddress( ( HMODULE ) m_activeLib->m_handle, name );
+
     return nullptr;
 }
 

@@ -56,15 +56,6 @@ class AbstractDynamicLoader;
 struct IInputUpdate;
 struct SurfaceProperties;
 
-class AbstractDynamicLoader {
-public:
-    virtual ~AbstractDynamicLoader();
-    virtual void load() = 0;
-    virtual void unload() = 0;
-
-protected:
-    AbstractDynamicLoader();
-};
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///

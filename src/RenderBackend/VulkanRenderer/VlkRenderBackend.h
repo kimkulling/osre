@@ -28,16 +28,29 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
+
+namespace Platform {
+    struct LibHandle;
+}
+
 namespace RenderBackend {
 
 class VlkRenderBackend {
+    enum class State {
+        Uninitialized = 0,
+        Initialized
+    };
+
 public:
     VlkRenderBackend();
     ~VlkRenderBackend();
+    bool create();
     VkDevice getDevice() const;
     const VlkSwapChainParameters getSwapChain() const;
 
 private:
+    bool loadVulkanLib();
+    bool loadExportedEntryPoints();
     bool createRenderPass();
     bool createFramebuffers();
 
@@ -50,6 +63,8 @@ private:
     VkSemaphore                      m_renderingFinishedSemaphore;
     VkCommandPool                    m_graphicsCommandPool;
     CPPCore::TArray<VkCommandBuffer> m_graphicsCommandBuffers;
+    Platform::LibHandle             *m_handle;
+    State                            m_state;
 };
 
 } // Namespace RenderBackend

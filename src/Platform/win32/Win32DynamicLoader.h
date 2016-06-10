@@ -52,6 +52,7 @@ public:
 private:
     CPPCore::THashMap<ui32, LibHandle*> m_libmap;
     CPPCore::TArray<LibHandle*> m_handles;
+    LibHandle *m_activeLib;
 };
 
 } // namespace Platform

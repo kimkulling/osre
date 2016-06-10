@@ -52,6 +52,10 @@ bool VlkRenderEventHandler::onDetached( const Common::EventData *eventData ) {
 
 bool VlkRenderEventHandler::onCreateRenderer( const Common::EventData *eventData ) {
     m_vlkBackend = new VlkRenderBackend;
+    if ( !m_vlkBackend->create() ) {
+        return false;
+    }
+
     return true;
 }
 
@@ -60,7 +64,6 @@ bool VlkRenderEventHandler::onDestroyRenderer( const Common::EventData *eventDat
     m_vlkBackend = nullptr;
 
     return true;
-
 }
 
 bool VlkRenderEventHandler::onAttachView( const Common::EventData *eventData ) {

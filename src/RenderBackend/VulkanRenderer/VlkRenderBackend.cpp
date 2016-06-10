@@ -23,16 +23,61 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "VlkRenderBackend.h"
 #include "VlkFunctions.h"
 
+#include <osre/Platform/PlatformInterface.h>
+#include <osre/Platform/AbstractDynamicLoader.h>
+
 namespace OSRE {
 namespace RenderBackend {
 
+using namespace ::OSRE::Platform;
+
+static const String Tag     = "VlkRenderBackend";
+static const String LibName = "vulkan-1.dll";
+
+static AbstractDynamicLoader *getDynLoader() {
+    AbstractDynamicLoader *dynLoader( PlatformInterface::getInstance()->getDynamicLoader() );
+    if ( nullptr == dynLoader ) {
+        osre_error( Tag, "No instance to dynloader." );
+        return nullptr;
+    }
+
+    return dynLoader;
+}
+
 VlkRenderBackend::VlkRenderBackend()
-: m_vulkan() {
+: m_vulkan()
+, m_handle( nullptr )
+, m_state( State::Uninitialized ) {
     // empty
 }
 
 VlkRenderBackend::~VlkRenderBackend() {
-    // empty
+    if ( m_state == State::Initialized ) {
+        AbstractDynamicLoader *dynLoader( getDynLoader() );
+        dynLoader->unload( LibName.c_str() );
+        m_handle = nullptr;
+        m_state = State::Uninitialized;
+    }
+}
+
+bool VlkRenderBackend::create() {
+    if ( m_state == State::Initialized ) {
+        return true;
+    }
+
+    if ( !loadVulkanLib() ) {
+        osre_error( Tag, "Error while loading vulkan lib." );
+        return false;
+    }
+
+    if ( !loadExportedEntryPoints() ) {
+        osre_error( Tag, "Error while loading vulkan function enty points." );
+        return false;
+    }
+
+    m_state = State::Initialized;
+
+    return true;
 }
 
 VkDevice VlkRenderBackend::getDevice() const {
@@ -43,11 +88,50 @@ const VlkSwapChainParameters VlkRenderBackend::getSwapChain() const {
     return m_vulkan.m_swapChain;
 }
 
+bool VlkRenderBackend::loadVulkanLib() {
+    AbstractDynamicLoader *dynLoader( getDynLoader() );
+    if ( nullptr == dynLoader ) {
+        return false;
+    }
+
+    m_handle = dynLoader->load( LibName.c_str() );
+    if ( nullptr == m_handle ) {
+        osre_debug( Tag, "Cannot load vulkan lib." );
+        return false;
+    }
+
+    return true;
+}
+
+bool VlkRenderBackend::loadExportedEntryPoints() {
+    // get dynamic lib lader instance from platform interface
+    AbstractDynamicLoader *dynLoader( getDynLoader() );
+    if ( nullptr == dynLoader ) {
+        return false;
+    }
+
+    // select vulkan lib for lookup
+    if ( nullptr == dynLoader->lookupLib( LibName.c_str() ) ) {
+        return false;
+    }
+
+    // load all entry points from lib
+#define VK_EXPORTED_FUNCTION( fun )                                             \
+    if( !(fun = (PFN_##fun)dynLoader->loadFunction( #fun )) ) {                 \
+        osre_error( Tag, "Could not load exported function: " + #fun + "!" );   \
+        return false;                                                           \
+    }
+
+#include "VlkExportedFunctions.h"
+
+    return true;
+}
+
 bool VlkRenderBackend::createRenderPass() {
     VkAttachmentDescription attachment_descriptions[] = {
         {
             0,                                          // VkAttachmentDescriptionFlags   flags
-            getSwapChain().m_format,                      // VkFormat                       format
+            getSwapChain().m_format,                    // VkFormat                       format
             VK_SAMPLE_COUNT_1_BIT,                      // VkSampleCountFlagBits          samples
             VK_ATTACHMENT_LOAD_OP_CLEAR,                // VkAttachmentLoadOp             loadOp
             VK_ATTACHMENT_STORE_OP_STORE,               // VkAttachmentStoreOp            storeOp
@@ -124,5 +208,6 @@ bool VlkRenderBackend::createFramebuffers() {
     }
     return true;
 }
+
 } // Namespace RenderBackend
 } // Namespace OSRE
