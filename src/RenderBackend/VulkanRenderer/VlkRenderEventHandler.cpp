@@ -38,7 +38,36 @@ VlkRenderEventHandler::~VlkRenderEventHandler() {
     // empty
 }
 
-bool VlkRenderEventHandler::onEvent( const Event &ev, const EventData *eventData ) {
+bool VlkRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
+    bool result( false );
+    if ( OnAttachEventHandlerEvent == ev ) {
+        result = onAttached( data );
+    } else if ( OnDetatachEventHandlerEvent == ev ) {
+        result = onDetached( data );
+    } else if ( OnCreateRendererEvent == ev ) {
+        result = onCreateRenderer( data );
+    } else if ( OnDestroyRendererEvent == ev ) {
+        result = onDestroyRenderer( data );
+    } else if ( OnAttachViewEvent == ev ) {
+        result = onAttachView( data );
+    } else if ( OnDetachViewEvent == ev ) {
+        result = onDetachView( data );
+    } else if ( OnAttachSceneEvent == ev ) {
+        result = onAttachGeo( data );
+    } else if ( OnDetachSceneEvent == ev ) {
+        result = onDetachGeo( data );
+    } else if ( OnClearSceneEvent == ev ) {
+        result = onClearGeo( data );
+    } else if ( OnRenderFrameEvent == ev ) {
+        result = onRenderFrame( data );
+    } else if ( OnUpdateParameterEvent == ev ) {
+        result = onUpdateParameter( data );
+    } else if ( OnRenderTextEvent == ev ) {
+        result = onRenderText( data );
+    }
+
+    return result;
+
     return true;
 }
  
