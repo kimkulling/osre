@@ -304,6 +304,14 @@ SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLShader.h
 )
 
+if( NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*" )
+	if( WIN32 )
+		set( USE_PLATFORM "VK_USE_PLATFORM_WIN32_KHR" )
+	elseif( UNIX )
+		set( USE_PLATFORM "VK_USE_PLATFORM_XCB_KHR" )
+	endif()
+endif()
+
 SET( renderbackend_vulkanrenderer_src
 	RenderBackend/VulkanRenderer/VlkFunctions.h
 	RenderBackend/VulkanRenderer/VlkFunctions.cpp

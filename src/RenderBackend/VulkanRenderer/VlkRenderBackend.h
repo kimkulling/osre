@@ -51,6 +51,14 @@ public:
 private:
     bool loadVulkanLib();
     bool loadExportedEntryPoints();
+    bool createInstance();
+    bool loadInstanceLevelEntryPoints();
+    bool createPresentationSurface();
+    bool createDevice();
+    bool loadDeviceLevelEntryPoints();
+    bool getDeviceQueue();
+    bool createSwapChain();
+    bool loadGlobalLevelEntryPoints();
     bool createRenderPass();
     bool createFramebuffers();
 

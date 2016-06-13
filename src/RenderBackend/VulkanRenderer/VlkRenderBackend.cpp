@@ -75,6 +75,35 @@ bool VlkRenderBackend::create() {
         return false;
     }
 
+    if ( !loadGlobalLevelEntryPoints() ) {
+        osre_error( Tag, "Error while loading global level entry points." );
+        return false;
+    }
+
+    if ( !createInstance() ) {
+        return false;
+    }
+    
+    if ( !loadInstanceLevelEntryPoints() ) {
+        return false;
+    }
+
+    if ( !createPresentationSurface() ) {
+        return false;
+    }
+    if ( !createDevice() ) {
+        return false;
+    }
+    if ( !loadDeviceLevelEntryPoints() ) {
+        return false;
+    }
+    if ( !getDeviceQueue() ) {
+        return false;
+    }
+    if ( !createSwapChain() ) {
+        return false;
+    }
+
     m_state = State::Initialized;
 
     return true;
@@ -125,6 +154,172 @@ bool VlkRenderBackend::loadExportedEntryPoints() {
 #include "VlkExportedFunctions.h"
 
     return true;
+}
+
+bool VlkRenderBackend::loadGlobalLevelEntryPoints() {
+#define VK_GLOBAL_LEVEL_FUNCTION( fun )                                            \
+    if( !(fun = (PFN_##fun)vkGetInstanceProcAddr( nullptr, #fun )) ) {             \
+        osre_error( Tag, "Could not load global level function: " + #fun + "!" );  \
+        return false;                                                              \
+    }
+
+#include "VlkExportedFunctions.h"
+
+    return true;
+}
+
+static bool checkExtensionAvailability( const char *extName, const CPPCore::TArray<VkExtensionProperties> &availableExt ) {
+    for ( size_t i = 0; i < availableExt.size(); ++i ) {
+        if ( strcmp( availableExt[ i ].extensionName, extName ) == 0 ) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool VlkRenderBackend::createInstance() {
+    ui32 extCount( 0 );
+    if ( ( vkEnumerateInstanceExtensionProperties( nullptr, &extCount, nullptr ) != VK_SUCCESS ) || ( 0 == extCount ) ) {
+        osre_error( Tag, "Error occurred during instance extensions enumeration!" );
+        return false;
+    }
+    
+    CPPCore::TArray<VkExtensionProperties> availableExt( extCount );
+    if ( vkEnumerateInstanceExtensionProperties( nullptr, &extCount, &availableExt[ 0 ] ) != VK_SUCCESS ) {
+        osre_error( Tag, "Error occurred during instance extensions enumeration!" );
+        return false;
+    }
+
+    CPPCore::TArray<const char*> extensions;
+    extensions.add( VK_KHR_SURFACE_EXTENSION_NAME );
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+    extensions.add( VK_KHR_WIN32_SURFACE_EXTENSION_NAME );
+#elif defined(VK_USE_PLATFORM_XCB_KHR)
+    extensions.add( VK_KHR_XCB_SURFACE_EXTENSION_NAME );
+#elif defined(VK_USE_PLATFORM_XLIB_KHR)
+    extensions.add( VK_KHR_XLIB_SURFACE_EXTENSION_NAME );
+#endif
+
+    for ( size_t i = 0; i < extensions.size(); ++i ) {
+        if ( !checkExtensionAvailability( extensions[ i ], availableExt ) ) {
+            osre_error( Tag, "Could not find instance extension named \"" + String( extensions[ i ] ) + "\"!" );
+            return false;
+        }
+    }
+
+    VkApplicationInfo application_info = {
+        VK_STRUCTURE_TYPE_APPLICATION_INFO,             // VkStructureType            sType
+        nullptr,                                        // const void                *pNext
+        "API without Secrets: Introduction to Vulkan",  // const char                *pApplicationName
+        VK_MAKE_VERSION( 1, 0, 0 ),                     // uint32_t                   applicationVersion
+        "Vulkan Tutorial by Intel",                     // const char                *pEngineName
+        VK_MAKE_VERSION( 1, 0, 0 ),                     // uint32_t                   engineVersion
+        VK_API_VERSION                                  // uint32_t                   apiVersion
+    };
+
+    VkInstanceCreateInfo instance_create_info = {
+        VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,         // VkStructureType            sType
+        nullptr,                                        // const void                *pNext
+        0,                                              // VkInstanceCreateFlags      flags
+        &application_info,                              // const VkApplicationInfo   *pApplicationInfo
+        0,                                              // uint32_t                   enabledLayerCount
+        nullptr,                                        // const char * const        *ppEnabledLayerNames
+        static_cast< uint32_t >( extensions.size() ),   // uint32_t                   enabledExtensionCount
+        &extensions[ 0 ]                                // const char * const        *ppEnabledExtensionNames
+    };
+
+    if ( vkCreateInstance( &instance_create_info, nullptr, &m_vulkan.m_instance ) != VK_SUCCESS ) {
+        osre_error( Tag, "Could not create Vulkan instance!" );
+        return false;
+    }
+
+    return true;
+
+}
+
+bool VlkRenderBackend::loadInstanceLevelEntryPoints() {
+    // get dynamic lib lader instance from platform interface
+    AbstractDynamicLoader *dynLoader( getDynLoader() );
+    if ( nullptr == dynLoader ) {
+        return false;
+    }
+
+    // select vulkan lib for lookup
+    if ( nullptr == dynLoader->lookupLib( LibName.c_str() ) ) {
+        return false;
+    }
+
+#define VK_INSTANCE_LEVEL_FUNCTION( fun )                                             \
+    if( !(fun = (PFN_##fun)dynLoader->loadFunction( m_vulkan.m_instance, #fun )) ) {  \
+        osre_error( Tag, "Could not load instance level function: " + #fun + "!" );   \
+        return false;                                                                 \
+    }
+
+#include "VlkExportedFunctions.h"
+
+    return false;
+}
+
+//#define VK_USE_PLATFORM_WIN32_KHR 1 
+bool VlkRenderBackend::createPresentationSurface() {
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+    VkWin32SurfaceCreateInfoKHR surface_create_info = {
+        VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,  // VkStructureType                  sType
+        nullptr,                                          // const void                      *pNext
+        0,                                                // VkWin32SurfaceCreateFlagsKHR     flags
+        Window.Instance,                                  // HINSTANCE                        hinstance
+        Window.Handle                                     // HWND                             hwnd
+    };
+
+    if ( vkCreateWin32SurfaceKHR( m_vulkan.m_instance, &surface_create_info, nullptr, &Vulkan.PresentationSurface ) == VK_SUCCESS ) {
+        return true;
+    }
+
+#elif defined(VK_USE_PLATFORM_XCB_KHR)
+    VkXcbSurfaceCreateInfoKHR surface_create_info = {
+        VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR,    // VkStructureType                  sType
+        nullptr,                                          // const void                      *pNext
+        0,                                                // VkXcbSurfaceCreateFlagsKHR       flags
+        Window.Connection,                                // xcb_connection_t*                connection
+        Window.Handle                                     // xcb_window_t                     window
+    };
+
+    if ( vkCreateXcbSurfaceKHR( m_vulkan.m_instance, &surface_create_info, nullptr, &Vulkan.PresentationSurface ) == VK_SUCCESS ) {
+        return true;
+    }
+
+#elif defined(VK_USE_PLATFORM_XLIB_KHR)
+    VkXlibSurfaceCreateInfoKHR surface_create_info = {
+        VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR,   // VkStructureType                sType
+        nullptr,                                          // const void                    *pNext
+        0,                                                // VkXlibSurfaceCreateFlagsKHR    flags
+        Window.DisplayPtr,                                // Display                       *dpy
+        Window.Handle                                     // Window                         window
+    };
+    if ( vkCreateXlibSurfaceKHR( m_vulkan.m_instance, &surface_create_info, nullptr, &Vulkan.PresentationSurface ) == VK_SUCCESS ) {
+        return true;
+    }
+
+#endif
+    osre_error( Tag, "Could not create presentation surface!" );
+
+    return false;
+}
+
+bool VlkRenderBackend::createDevice() {
+    return false;
+}
+
+bool VlkRenderBackend::loadDeviceLevelEntryPoints() {
+    return false;
+}
+
+bool VlkRenderBackend::getDeviceQueue() {
+    return false;
+}
+
+bool VlkRenderBackend::createSwapChain() {
+    return false;
 }
 
 bool VlkRenderBackend::createRenderPass() {

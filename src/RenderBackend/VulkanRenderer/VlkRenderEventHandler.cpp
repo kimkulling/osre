@@ -67,8 +67,6 @@ bool VlkRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
     }
 
     return result;
-
-    return true;
 }
  
 bool VlkRenderEventHandler::onAttached( const Common::EventData *eventData ) {

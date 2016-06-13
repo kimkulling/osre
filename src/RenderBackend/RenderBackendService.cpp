@@ -115,9 +115,9 @@ const Properties::Settings *RenderBackendService::getSettings() const {
     return m_settings;
 }
 
-void RenderBackendService::sendEvent( const Event *pEvent, const EventData *eventData ) {
+void RenderBackendService::sendEvent( const Event *ev, const EventData *eventData ) {
     if ( m_renderTaskPtr.isValid() ) {
-        m_renderTaskPtr->sendEvent( pEvent, eventData );
+        m_renderTaskPtr->sendEvent( ev, eventData );
     }
 }
 
