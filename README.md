@@ -30,12 +30,21 @@ for linux:
 
 for Windows: Use the generated Visual studio project files.
 
+## Supported features at the moment
+- OpenGL-4.3 renderer
+   + Multithreaded rendnering via separate render-thread
+   + Primitive rendering
+   + Texture mapping
+   + Instanced rendering
+   + Font rendering
+
 ## Get involved
 If you want to contribute just use the github project page or reach us under IRC:
 server freenode, channel #osre.
 
 ## What is cooking
-If you want to see what is currently under development or what is planned next you can take a look into our planning board: 
+- Working on Vulkan support
+- If you want to see what is currently under development or what is planned next you can take a look into our planning board: 
 [OSRE Planning Board](https://trello.com/b/AJEAv98P/osre)
 
 ## Reference doc
