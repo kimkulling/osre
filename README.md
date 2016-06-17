@@ -30,7 +30,7 @@ for linux:
 
 for Windows: Use the generated Visual studio project files.
 
-## Supported features at the moment
+## Featurelist
 - OpenGL-4.3 renderer
    + Multithreaded rendnering via separate render-thread
    + Primitive rendering
