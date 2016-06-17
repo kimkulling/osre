@@ -65,11 +65,11 @@ elseif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
                 OUTPUT_VARIABLE GCC_VERSION)
     if (GCC_VERSION VERSION_EQUAL 4.6 )
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -pedantic -std=c++0x")
-    elseif ( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -Wall -Wno-long-long -pedantic -std=c++11" )
     else()
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-long-long -pedantic -std=gnu++11")
     endif()
+elseif ( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -Wall -Wno-long-long -pedantic -std=c++11" )
 endif()
 
 
