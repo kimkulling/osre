@@ -68,6 +68,8 @@ VK_GLOBAL_LEVEL_FUNCTION( vkEnumerateInstanceExtensionProperties )
 #define VK_INSTANCE_LEVEL_FUNCTION( fun )
 #endif
 
+#define USE_SWAPCHAIN_EXTENSIONS
+
 // Tutorial 01
 VK_INSTANCE_LEVEL_FUNCTION( vkEnumeratePhysicalDevices )
 VK_INSTANCE_LEVEL_FUNCTION( vkGetPhysicalDeviceProperties )

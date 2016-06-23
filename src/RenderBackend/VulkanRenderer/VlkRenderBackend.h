@@ -61,6 +61,7 @@ private:
     bool loadGlobalLevelEntryPoints();
     bool createRenderPass();
     bool createFramebuffers();
+    bool checkPhysicalDeviceProperties( VkPhysicalDevice physical_device, uint32_t &selected_graphics_queue_family_index, uint32_t &selected_present_queue_family_index );
 
 private:
     VlkCommonParameters              m_vulkan;

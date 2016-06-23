@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+using namespace ::CPPCore;
 using namespace ::OSRE::Platform;
 
 static const String Tag     = "VlkRenderBackend";
@@ -133,7 +134,7 @@ bool VlkRenderBackend::loadVulkanLib() {
 }
 
 bool VlkRenderBackend::loadExportedEntryPoints() {
-    // get dynamic lib lader instance from platform interface
+    // get dynamic lib loader instance from platform interface
     AbstractDynamicLoader *dynLoader( getDynLoader() );
     if ( nullptr == dynLoader ) {
         return false;
@@ -238,7 +239,7 @@ bool VlkRenderBackend::createInstance() {
 }
 
 bool VlkRenderBackend::loadInstanceLevelEntryPoints() {
-    // get dynamic lib lader instance from platform interface
+    // get dynamic lib loader instance from platform interface
     AbstractDynamicLoader *dynLoader( getDynLoader() );
     if ( nullptr == dynLoader ) {
         return false;
@@ -307,7 +308,79 @@ bool VlkRenderBackend::createPresentationSurface() {
 }
 
 bool VlkRenderBackend::createDevice() {
-    return false;
+    ui32 numDevices( 0 );
+    if ( ( vkEnumeratePhysicalDevices( m_vulkan.m_instance, &numDevices, nullptr ) != VK_SUCCESS ) || ( numDevices == 0 ) ) {
+        osre_error( Tag, "Error occurred during physical devices enumeration!" );
+        return false;
+    }
+
+    TArray<VkPhysicalDevice> physicalDevices( numDevices );
+    if ( vkEnumeratePhysicalDevices( m_vulkan.m_instance, &numDevices, &physicalDevices[ 0 ] ) != VK_SUCCESS ) {
+        osre_error( Tag, "Error occurred during physical devices enumeration!" );
+        return false;
+    }
+
+    ui32 selected_graphics_queue_family_index = UINT32_MAX;
+    ui32 selected_present_queue_family_index = UINT32_MAX;
+    for ( ui32 i = 0; i < numDevices; ++i ) {
+        if ( checkPhysicalDeviceProperties( physicalDevices[ i ], selected_graphics_queue_family_index, selected_present_queue_family_index ) ) {
+            m_vulkan.m_physicalDevice = physicalDevices[ i ];
+        }
+    }
+    if ( m_vulkan.m_physicalDevice == VK_NULL_HANDLE ) {
+        osre_error( Tag, "Could not select physical device based on the chosen properties!" );
+        return false;
+    }
+
+    TArray<VkDeviceQueueCreateInfo> queue_create_infos;
+    TArray<f32> queue_priorities;
+    queue_priorities.add( 1.0f );
+
+    queue_create_infos.add( {
+        VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,       // VkStructureType              sType
+        nullptr,                                          // const void                  *pNext
+        0,                                                // VkDeviceQueueCreateFlags     flags
+        selected_graphics_queue_family_index,             // uint32_t                     queueFamilyIndex
+        static_cast< uint32_t >( queue_priorities.size() ),   // uint32_t                     queueCount
+        &queue_priorities[ 0 ]                              // const float                 *pQueuePriorities
+    } );
+
+    if ( selected_graphics_queue_family_index != selected_present_queue_family_index ) {
+        queue_create_infos.add( {
+            VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,     // VkStructureType              sType
+            nullptr,                                        // const void                  *pNext
+            0,                                              // VkDeviceQueueCreateFlags     flags
+            selected_present_queue_family_index,            // uint32_t                     queueFamilyIndex
+            static_cast< uint32_t >( queue_priorities.size() ), // uint32_t                     queueCount
+            &queue_priorities[ 0 ]                            // const float                 *pQueuePriorities
+        } );
+    }
+
+    TArray<const char*> extensions;
+    extensions.add( VK_KHR_SWAPCHAIN_EXTENSION_NAME );
+
+    VkDeviceCreateInfo device_create_info = {
+        VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,             // VkStructureType                    sType
+        nullptr,                                          // const void                        *pNext
+        0,                                                // VkDeviceCreateFlags                flags
+        static_cast< uint32_t >( queue_create_infos.size() ), // uint32_t                           queueCreateInfoCount
+        &queue_create_infos[ 0 ],                           // const VkDeviceQueueCreateInfo     *pQueueCreateInfos
+        0,                                                // uint32_t                           enabledLayerCount
+        nullptr,                                          // const char * const                *ppEnabledLayerNames
+        static_cast< uint32_t >( extensions.size() ),         // uint32_t                           enabledExtensionCount
+        &extensions[ 0 ],                                   // const char * const                *ppEnabledExtensionNames
+        nullptr                                           // const VkPhysicalDeviceFeatures    *pEnabledFeatures
+    };
+
+    if ( vkCreateDevice( m_vulkan.m_physicalDevice, &device_create_info, nullptr, &m_vulkan.m_device ) != VK_SUCCESS ) {
+        osre_error( Tag, "Could not create Vulkan device!" );
+        return false;
+    }
+    
+    m_vulkan.m_graphicsQueue.m_familyIndex = selected_graphics_queue_family_index;
+    m_vulkan.m_presentQueue.m_familyIndex = selected_present_queue_family_index;
+
+    return true;
 }
 
 bool VlkRenderBackend::loadDeviceLevelEntryPoints() {
@@ -397,10 +470,114 @@ bool VlkRenderBackend::createFramebuffers() {
         };
 
         if ( vkCreateFramebuffer( getDevice(), &framebuffer_create_info, nullptr, &m_framebuffers[ i ] ) != VK_SUCCESS ) {
-            //std::cout << "Could not create a framebuffer!" << std::endl;
+            osre_error( Tag, "Could not create a framebuffer!" );
             return false;
         }
     }
+    return true;
+}
+
+bool VlkRenderBackend::checkPhysicalDeviceProperties( VkPhysicalDevice physical_device, uint32_t &selected_graphics_queue_family_index, uint32_t &selected_present_queue_family_index ) {
+    ui32 extensionsCount( 0 );
+    if ( ( vkEnumerateDeviceExtensionProperties( physical_device, nullptr, &extensionsCount, nullptr ) != VK_SUCCESS ) || ( extensionsCount == 0 ) ) {
+        std::stringstream stream;
+        stream << physical_device;
+        osre_error( Tag, String("Error occurred during physical device ") + stream.str() + String(" extensions enumeration!" ) );
+        return false;
+    }
+
+    TArray<VkExtensionProperties> available_extensions( extensionsCount );
+    if ( vkEnumerateDeviceExtensionProperties( physical_device, nullptr, &extensionsCount, &available_extensions[ 0 ] ) != VK_SUCCESS ) {
+        std::stringstream stream;
+        stream << physical_device;
+        osre_error( Tag, "Error occurred during physical device " + stream.str() + " extensions enumeration!" );
+        return false;
+    }
+
+    TArray<const char*> device_extensions;
+    device_extensions.add( VK_KHR_SWAPCHAIN_EXTENSION_NAME );
+
+    for ( size_t i = 0; i < device_extensions.size(); ++i ) {
+        if ( !checkExtensionAvailability( device_extensions[ i ], available_extensions ) ) {
+            std::stringstream stream;
+            stream << physical_device;
+            osre_error( Tag, "Physical device " + stream.str() + " doesn't support extension named \"" + device_extensions[ i ] + "\"!" );
+            return false;
+        }
+    }
+
+    VkPhysicalDeviceProperties device_properties;
+    VkPhysicalDeviceFeatures   device_features;
+
+    vkGetPhysicalDeviceProperties( physical_device, &device_properties );
+    vkGetPhysicalDeviceFeatures( physical_device, &device_features );
+
+    uint32_t major_version = VK_VERSION_MAJOR( device_properties.apiVersion );
+
+    if ( ( major_version < 1 ) &&
+        ( device_properties.limits.maxImageDimension2D < 4096 ) ) {
+        std::stringstream stream;
+        stream << physical_device;
+        osre_error( Tag, "Physical device " + stream.str() + " doesn't support required parameters!" );
+        return false;
+    }
+
+    uint32_t queue_families_count = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties( physical_device, &queue_families_count, nullptr );
+    if ( queue_families_count == 0 ) {
+        std::stringstream stream;
+        stream << physical_device;
+        osre_error( Tag, "Physical device " + stream.str() + " doesn't have any queue families!" );
+        return false;
+    }
+
+    TArray<VkQueueFamilyProperties>  queue_family_properties( queue_families_count );
+    TArray<VkBool32>                 queue_present_support( queue_families_count );
+
+    vkGetPhysicalDeviceQueueFamilyProperties( physical_device, &queue_families_count, &queue_family_properties[ 0 ] );
+
+    ui32 graphics_queue_family_index = UINT32_MAX;
+    ui32 present_queue_family_index = UINT32_MAX;
+
+    for ( ui32 i = 0; i < queue_families_count; ++i ) {
+        vkGetPhysicalDeviceSurfaceSupportKHR( physical_device, i, m_vulkan.m_presentationSurface, &queue_present_support[ i ] );
+
+        if ( ( queue_family_properties[ i ].queueCount > 0 ) &&
+            ( queue_family_properties[ i ].queueFlags & VK_QUEUE_GRAPHICS_BIT ) ) {
+            // Select first queue that supports graphics
+            if ( graphics_queue_family_index == UINT32_MAX ) {
+                graphics_queue_family_index = i;
+            }
+
+            // If there is queue that supports both graphics and present - prefer it
+            if ( queue_present_support[ i ] ) {
+                selected_graphics_queue_family_index = i;
+                selected_present_queue_family_index = i;
+                return true;
+            }
+        }
+    }
+
+    // We don't have queue that supports both graphics and present so we have to use separate queues
+    for ( ui32 i = 0; i < queue_families_count; ++i ) {
+        if ( queue_present_support[ i ] ) {
+            present_queue_family_index = i;
+            break;
+        }
+    }
+
+    // If this device doesn't support queues with graphics and present capabilities don't use it
+    if ( ( graphics_queue_family_index == UINT32_MAX ) ||
+        ( present_queue_family_index == UINT32_MAX ) ) {
+        std::stringstream stream;
+        stream << physical_device;
+        osre_error( Tag, "Could not find queue families with required properties on physical device " + stream.str() + "!" );
+        return false;
+    }
+
+    selected_graphics_queue_family_index = graphics_queue_family_index;
+    selected_present_queue_family_index = present_queue_family_index;
+    
     return true;
 }
 
