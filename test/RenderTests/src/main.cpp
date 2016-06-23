@@ -37,7 +37,7 @@ using namespace ::OSRE::Platform;
 
 int main( int argc, char *argv[] ) {
     Common::ArgumentParser argParser( argc, argv, "api:media", "The render API:The media to load" );
-    static const String renderAPI( "opengl" );
+     String renderAPI( "opengl" );
 //    String renderAPI( "vulkan" );
     if ( argParser.hasArgument( "api" ) ) {
         renderAPI = argParser.getArgument( "api" ); 
@@ -62,9 +62,7 @@ int main( int argc, char *argv[] ) {
         rtSuite->startTests();
     }
 
-    //std::cout << "1" << std::endl;
     RenderTestSuite::kill();
-    std::cout << "2" << std::endl;
 
     return 0;
 }
