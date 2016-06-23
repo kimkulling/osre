@@ -49,6 +49,9 @@ struct SurfaceProperties {
 ///	@ingroup	Engine
 ///
 ///	@brief  This abstract class declares the interface for a render surface.
+/// 
+/// A render surface could be a window on a desktop system for instance or a rectangle on an 
+/// embedded device.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractSurface {
 public:
