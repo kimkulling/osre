@@ -166,21 +166,22 @@ bool PlatformInterface::onOpen() {
     Settings::WorkingModeType appType = 
         ( Settings::WorkingModeType ) m_config->get( Settings::AppType ).getInt();
 
-    SurfaceProperties *pProps( nullptr );
+    SurfaceProperties *props( nullptr );
     bool polls( false );
     if( appType == Settings::GfxApp ) {
         // get the configuration values for the window
-        pProps = new SurfaceProperties;
+        props = new SurfaceProperties;
         bool fullscreen = false;
-        pProps->m_x = m_config->get( Settings::WinX ).getInt();
-        pProps->m_y = m_config->get( Settings::WinY ).getInt();
-        pProps->m_width = m_config->get( Settings::WinWidth ).getInt();
-        pProps->m_height = m_config->get( Settings::WinHeight ).getInt();
-        pProps->m_colordepth = m_config->get( Settings::BPP ).getInt();
-        pProps->m_depthbufferdepth = m_config->get( Settings::DepthBufferDepth ).getInt();
-        pProps->m_stencildepth = m_config->get( Settings::StencilBufferDepth ).getInt();
-        pProps->m_fullscreen = fullscreen;
-        pProps->m_title = m_config->get( Settings::WindowsTitle ).getString();
+        props->m_x = m_config->get( Settings::WinX ).getInt();
+        props->m_y = m_config->get( Settings::WinY ).getInt();
+        props->m_width = m_config->get( Settings::WinWidth ).getInt();
+        props->m_height = m_config->get( Settings::WinHeight ).getInt();
+        props->m_colordepth = m_config->get( Settings::BPP ).getInt();
+        props->m_depthbufferdepth = m_config->get( Settings::DepthBufferDepth ).getInt();
+        props->m_stencildepth = m_config->get( Settings::StencilBufferDepth ).getInt();
+        props->m_fullscreen = fullscreen;
+        props->m_resizable = m_config->get( Settings::WindowsResizable ).getBool();
+        props->m_title = m_config->get( Settings::WindowsTitle ).getString();
         polls = m_config->get( Settings::PollingMode ).getBool();
     }
 
@@ -196,7 +197,7 @@ bool PlatformInterface::onOpen() {
 
     bool result( true );
     if( appType == Settings::GfxApp ) {
-        result = setupGfx( pProps, polls );
+        result = setupGfx( props, polls );
     }
 
     return result;

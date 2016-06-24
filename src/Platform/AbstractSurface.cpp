@@ -28,7 +28,6 @@ namespace Platform {
 
 static const String Tag = "AbstractSurface";
 
-//-------------------------------------------------------------------------------------------------
 AbstractSurface::AbstractSurface( SurfaceProperties *properties )
 : m_flags( SF_PropertiesClean )
 , m_pProperties( properties )
@@ -36,13 +35,11 @@ AbstractSurface::AbstractSurface( SurfaceProperties *properties )
     // empty    
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractSurface::~AbstractSurface( ) {
     delete m_pProperties;
     m_pProperties = nullptr;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool AbstractSurface::create( ) {
     if ( m_isCreated ) {
         osre_warn( Tag, "Surface already created." );
@@ -54,7 +51,6 @@ bool AbstractSurface::create( ) {
     return m_isCreated;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool AbstractSurface::destroy( ) {
     if ( !m_isCreated ) {
         osre_warn( Tag, "Surface not valid, cannot be destoyed." );
@@ -67,32 +63,28 @@ bool AbstractSurface::destroy( ) {
     return ( false == m_isCreated );
 }
 
-//-------------------------------------------------------------------------------------------------
 bool AbstractSurface::updateProperties() {
     return onUpdateProperies();
 }
 
-//-------------------------------------------------------------------------------------------------
 void AbstractSurface::setFlags( SurfaceFlagType flags ) {
+    if ( m_flags == flags ) {
+        return;
+    }
     m_flags = flags;
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 AbstractSurface::getFlags() const {
     return m_flags;
 }
 
-//-------------------------------------------------------------------------------------------------
 void AbstractSurface::setProperties( SurfaceProperties *pProperties ) {
     m_pProperties = pProperties;
 }
 
-//-------------------------------------------------------------------------------------------------
 SurfaceProperties *AbstractSurface::getProperties( ) {
     return m_pProperties;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

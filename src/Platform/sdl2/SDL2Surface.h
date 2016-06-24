@@ -41,14 +41,16 @@ public:
     SDL2Surface( SurfaceProperties *props );
     /// The class destructor, virtual.
     virtual ~SDL2Surface();
+    /// Will return a pointer showing to the SDL_Window.
+    SDL_Window *getSDLSurface() const;
+
+protected:
     /// The onCreate callback implementation.
     virtual bool onCreate();
     /// The onDestroy callback implementation.
     virtual bool onDestroy();
     /// The onUpdateProperies callback implementation.
     virtual bool onUpdateProperies();
-    /// Will return a pointer showing to the SDL_Window.
-    SDL_Window *getSDLSurface() const;
 
 private:
     SDL_Window *m_surface;

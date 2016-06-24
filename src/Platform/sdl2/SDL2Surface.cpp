@@ -30,19 +30,20 @@ namespace Platform {
 
 static const String Tag = "SDL2Surface";
 
-//-------------------------------------------------------------------------------------------------
 SDL2Surface::SDL2Surface( SurfaceProperties *props )
 : AbstractSurface( props )
 , m_surface( nullptr ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 SDL2Surface::~SDL2Surface( ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
+SDL_Window *SDL2Surface::getSDLSurface() const {
+    return m_surface;
+}
+
 bool SDL2Surface::onCreate() {
     // Turn on double buffering with a 24bit Z buffer
     SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
@@ -54,10 +55,18 @@ bool SDL2Surface::onCreate() {
         return false;
     }
     
-    ui32 w = prop->m_width;
-    ui32 h = prop->m_height;
-    m_surface = SDL_CreateWindow( prop->m_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h,
-                                  SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+    const ui32 w( prop->m_width );
+    const ui32 h( prop->m_height );
+    ui32 sdl2Flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
+    if ( prop->m_resizable ) {
+        sdl2Flags |= SDL_WINDOW_RESIZABLE;
+    }
+        
+    m_surface = SDL_CreateWindow( prop->m_title.c_str(), 
+                                  SDL_WINDOWPOS_CENTERED, 
+                                  SDL_WINDOWPOS_CENTERED, 
+                                  w, h,
+                                  sdl2Flags );
     if( !m_surface ) {
         osre_error( Tag, "Error while creating window." );
         return false;
@@ -67,7 +76,6 @@ bool SDL2Surface::onCreate() {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool SDL2Surface::onDestroy( ) {
     if( !m_surface ) {
         return false;
@@ -78,17 +86,10 @@ bool SDL2Surface::onDestroy( ) {
 
     return true;
 }
-//-------------------------------------------------------------------------------------------------
+
 bool SDL2Surface::onUpdateProperies() {
     return true;
 }
-
-//-------------------------------------------------------------------------------------------------
-SDL_Window *SDL2Surface::getSDLSurface( ) const {
-    return m_surface;
-}
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

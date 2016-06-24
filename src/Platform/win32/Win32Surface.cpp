@@ -26,7 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
     
-//-------------------------------------------------------------------------------------------------
 Win32Surface::Win32Surface( SurfaceProperties *pProperties )
 : AbstractSurface( pProperties )
 , m_hInstance( nullptr )
@@ -35,38 +34,34 @@ Win32Surface::Win32Surface( SurfaceProperties *pProperties )
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 Win32Surface::~Win32Surface( ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 HWND Win32Surface::getHWnd( ) const {
     return m_wnd;
 }
 
-//-------------------------------------------------------------------------------------------------
 HDC Win32Surface::getDeviceContext( ) const {
     return m_dc;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Win32Surface::onCreate( ) {
-    SurfaceProperties *pProp = getProperties();
-    if( !pProp ) {
+    SurfaceProperties *prop = getProperties();
+    if( !prop ) {
         return false;
     }
 
     WNDCLASS sWC;
     DWORD dwExStyle( 0 ), dwStyle( 0 );
     RECT clientSize;
-    clientSize.left = pProp->m_x;
-    clientSize.top = pProp->m_y;
-    clientSize.right = pProp->m_x + pProp->m_width;
-    clientSize.bottom = pProp->m_y + pProp->m_height;
+    clientSize.left = prop->m_x;
+    clientSize.top = prop->m_y;
+    clientSize.right = prop->m_x + prop->m_width;
+    clientSize.bottom = prop->m_y + prop->m_height;
 
     DWORD style = WS_POPUP;
-    if( !pProp->m_fullscreen ) {
+    if( !prop->m_fullscreen ) {
         style = WS_SYSMENU | WS_BORDER | WS_CAPTION | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
     }
 
@@ -74,8 +69,8 @@ bool Win32Surface::onCreate( ) {
     const ui32 realWidth = clientSize.right - clientSize.left;
     const ui32 realHeight = clientSize.bottom - clientSize.top;
 
-    ui32 cx = pProp->m_width / 2;
-    ui32 cy = pProp->m_height / 2;
+    ui32 cx = prop->m_width / 2;
+    ui32 cy = prop->m_height / 2;
     m_hInstance = ::GetModuleHandle( NULL );
     sWC.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
     sWC.lpfnWndProc = ( WNDPROC ) Win32Eventhandler::winproc;
@@ -86,37 +81,43 @@ bool Win32Surface::onCreate( ) {
     sWC.hCursor = ::LoadCursor( NULL, IDC_ARROW );
     sWC.hbrBackground = ( HBRUSH )::GetStockObject( BLACK_BRUSH );
     sWC.lpszMenuName = NULL;
-    sWC.lpszClassName = pProp->m_title.c_str();
+    sWC.lpszClassName = prop->m_title.c_str();
     if( !::RegisterClass( &sWC ) )
         return false;
 
-    if( pProp->m_fullscreen ) {
+    if( prop->m_fullscreen ) {
         DEVMODE dmScreenSettings;
         ::memset( &dmScreenSettings, 0, sizeof( dmScreenSettings ) );
         dmScreenSettings.dmSize = sizeof( dmScreenSettings );
         dmScreenSettings.dmPelsWidth = realWidth;
         dmScreenSettings.dmPelsHeight = realHeight;
-        dmScreenSettings.dmBitsPerPel = pProp->m_colordepth;
+        dmScreenSettings.dmBitsPerPel = prop->m_colordepth;
         dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
         if( ::ChangeDisplaySettings( &dmScreenSettings, CDS_FULLSCREEN ) != DISP_CHANGE_SUCCESSFUL ) {
             ::MessageBox( NULL, "Cannot change to full-screen mode",
                 "Error", MB_OK | MB_ICONEXCLAMATION );
-            pProp->m_fullscreen = false;
+            prop->m_fullscreen = false;
         } else {
             dwExStyle = WS_EX_APPWINDOW;
             dwStyle = WS_POPUP;
             ::ShowCursor( false );
         }
     } else {
-        dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;                                  // Window Ext. Style
-        dwStyle = WS_SYSMENU | WS_BORDER | WS_CAPTION | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;// Windows Style
+        // Window Ext. Style
+        dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
+        
+        // Windows Style
+        dwStyle = WS_SYSMENU | WS_BORDER | WS_CAPTION | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+        if ( prop->m_resizable ) {
+            dwStyle |= WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SIZEBOX ;
+        }
     }
 
     m_wnd = ::CreateWindowEx( dwExStyle,
-        pProp->m_title.c_str(),
-        pProp->m_title.c_str(),
+        prop->m_title.c_str(),
+        prop->m_title.c_str(),
         dwStyle | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
-        pProp->m_x, pProp->m_y,
+        prop->m_x, prop->m_y,
         realWidth, realHeight,
         NULL, NULL,
         m_hInstance,
@@ -138,12 +139,11 @@ bool Win32Surface::onCreate( ) {
     ::SetForegroundWindow( m_wnd );
     ::SetFocus( m_wnd );
     ::SetCursorPos( cx, cy );
-    pProp->m_open = true;
+    prop->m_open = true;
 
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Win32Surface::onDestroy( ) {
     SurfaceProperties *pProp = getProperties();
     if( !pProp ) {
@@ -154,8 +154,9 @@ bool Win32Surface::onDestroy( ) {
         return false;
     }
 
-    if( !pProp->m_fullscreen )
+    if ( !pProp->m_fullscreen ) {
         ::ChangeDisplaySettings( NULL, 0 );
+    }
 
     if( m_dc && !::ReleaseDC( m_wnd, m_dc ) ) {
         MessageBox( NULL, "Cannot release the device context.",
@@ -180,7 +181,6 @@ bool Win32Surface::onDestroy( ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Win32Surface::onUpdateProperies() {
     const ui32 flags( AbstractSurface::getFlags() );
     if( flags | SF_WinTitleDirty ) {
@@ -191,8 +191,6 @@ bool Win32Surface::onUpdateProperies() {
 
     return true;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

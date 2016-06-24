@@ -50,11 +50,11 @@ public:
 
 protected:
     /// The create callback implementation.
-    virtual bool onCreate();
+    virtual bool onCreate() override;
     /// The destroy callback implementation.
-    virtual bool onDestroy();
+    virtual bool onDestroy() override;
     /// The updateProperties callback implementation.
-    virtual bool onUpdateProperies();
+    virtual bool onUpdateProperies() override;
 
 private:
     HINSTANCE m_hInstance;

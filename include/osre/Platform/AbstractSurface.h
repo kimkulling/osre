@@ -42,6 +42,7 @@ struct SurfaceProperties {
     ui32   m_stencildepth;        ///< Stencil depth.
     String m_title;               ///< Window title.
     bool   m_fullscreen;          ///< true for full screen.
+    bool   m_resizable;           ///< true, if window wan be resized.
     bool   m_open;                ///< Window is open flag.
 };
 
@@ -105,7 +106,7 @@ protected:
     /// @brief  Callback to override on destroying.
     virtual bool onDestroy() = 0;
     
-    /// @brief  Callback to override on updating.
+    /// @brief  Callback to override on updates.
     virtual bool onUpdateProperies() = 0;
 
 private:

@@ -24,10 +24,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/BasePropertyMap.h>
 #include <osre/Properties/Property.h>
 #include <osre/Platform/PlatformInterface.h>
+#include <osre/Platform/AbstractSurface.h>
 #include <cppcore/Common/Variant.h>
 
 namespace OSRE {
 namespace Properties {
+
+using namespace ::OSRE::Platform;
 
 static const CPPCore::Variant EmptyVariant;
 static const String ConfigKeyStringTable[ Settings::MaxKonfigKey ] = {
@@ -46,6 +49,7 @@ static const String ConfigKeyStringTable[ Settings::MaxKonfigKey ] = {
     "StencilBufferDepth",
     "ClearColor",
     "Fullscreen",
+    "WindowsResizable",
     "PollingMode",
     "DefaultFont"
 };
@@ -167,7 +171,10 @@ void Settings::initDefaults() {
     m_pPropertyMap->setProperty( WinWidth, ConfigKeyStringTable[ WinWidth ], value );
     value.setInt( 800 );
     m_pPropertyMap->setProperty( WinHeight, ConfigKeyStringTable[ WinHeight ], value );
-    
+
+    value.setBool( true );
+    m_pPropertyMap->setProperty( WindowsResizable, ConfigKeyStringTable[ WindowsResizable ], value );
+
     value.setInt( 2 );
     m_pPropertyMap->setProperty( FSAA, ConfigKeyStringTable[ FSAA ], value );
     value.setInt( 16 );
@@ -178,7 +185,7 @@ void Settings::initDefaults() {
     value.setFloat4( 0, 0,0 ,0 );
     m_pPropertyMap->setProperty( ClearColor, ConfigKeyStringTable[ ClearColor ], value );
     value.setBool( false );
-    m_pPropertyMap->setProperty( PollingMode,ConfigKeyStringTable[ PollingMode ], value );
+    m_pPropertyMap->setProperty( PollingMode, ConfigKeyStringTable[ PollingMode ], value );
 
     value.setString( "buildin_arial.bmp" );
     m_pPropertyMap->setProperty( DefaultFont, ConfigKeyStringTable[ DefaultFont ], value );
