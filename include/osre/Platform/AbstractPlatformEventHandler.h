@@ -97,29 +97,39 @@ AbstractPlatformEventHandler::~AbstractPlatformEventHandler( ) {
     // empty
 }
 inline
-void AbstractPlatformEventHandler::processEvents( Common::EventTriggerer *pTriggerer ) {
-    EventDataList *pList = getActiveEventDataList();
-    while( !pList->isEmpty() ) {
-        Common::EventData *pEventData = pList->front();
-        pTriggerer->triggerEvent( pEventData->getEvent(), pEventData );
-        pList->removeFront();
-        pEventData->release();
+void AbstractPlatformEventHandler::processEvents( Common::EventTriggerer *triggerer ) {
+    if ( nullptr == triggerer ) {
+        return;
+    }
+
+    EventDataList *theList = getActiveEventDataList();
+    if ( nullptr == theList ) {
+        return;
+    }
+
+    while( !theList->isEmpty() ) {
+        Common::EventData *eventData = theList->front();
+        if ( nullptr != eventData ) {
+            triggerer->triggerEvent( eventData->getEvent(), eventData );
+            theList->removeFront();
+            eventData->release();
+        }
     }
     switchEventDataList();
 }
 
 inline
 EventDataList *AbstractPlatformEventHandler::getActiveEventDataList() {
-    EventDataList *pActiveEventQueue( &m_eventQueues[ m_activeList ] );
-    return pActiveEventQueue;
+    EventDataList *activeEventQueue( &m_eventQueues[ m_activeList ] );
+    return activeEventQueue;
 }
 
 inline
 EventDataList *AbstractPlatformEventHandler::getPendingEventDataList() {
     ui32 queueToProcess = ( m_activeList + 1 ) % numEventQueues;
     m_eventQueues[ queueToProcess ].clear( );
-    EventDataList *pPendingEventQueue( &m_eventQueues[ queueToProcess ] );
-    return pPendingEventQueue;
+    EventDataList *pendingEventQueue( &m_eventQueues[ queueToProcess ] );
+    return pendingEventQueue;
 }
 
 inline
@@ -127,5 +137,5 @@ void AbstractPlatformEventHandler::switchEventDataList() {
     m_activeList = ( m_activeList + 1 ) % numEventQueues;
 }
 
-} // namespace Platform
+} // Namespace Platform
 } // Namespace OSRE
