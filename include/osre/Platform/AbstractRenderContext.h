@@ -63,8 +63,8 @@ AbstractRenderContext::~AbstractRenderContext( ) {
 }
 
 inline
-bool AbstractRenderContext::create( AbstractSurface *pSurface ) {
-    return onCreate( pSurface );
+bool AbstractRenderContext::create( AbstractSurface *surface ) {
+    return onCreate( surface );
 }
 
 inline
