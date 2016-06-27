@@ -62,6 +62,7 @@ void AbstractDynamicLoader::addLib( const String &libName, LibHandle *libHandle 
     m_handles.add( libHandle );
     ui32 key( Common::StringUtils::hashName( libName.c_str() ) );
     m_libmap.insert( key, libHandle );
+    setActiveLib( libHandle );
 }
 
 void AbstractDynamicLoader::removeLib( const String &libName ) {
@@ -69,11 +70,16 @@ void AbstractDynamicLoader::removeLib( const String &libName ) {
     if ( m_libmap.hasKey( key ) ) {
         LibHandle *libHandle( nullptr );
         m_libmap.getValue( key, libHandle );
-        if ( -1 != libHandle->m_index ) {
-            m_handles[ static_cast< size_t >( libHandle->m_index ) ] = nullptr;
+        if ( nullptr != libHandle ) {
+            if ( -1 != libHandle->m_index ) {
+                m_handles[ static_cast<size_t>( libHandle->m_index ) ] = nullptr;
+                if ( libHandle == getActiveLib() ) {
+                    setActiveLib( nullptr );
+                }
+                m_libmap.remove( key );
+                delete libHandle;
+            }
         }
-        m_libmap.remove( key );
-        delete libHandle;
     }
 }
 
