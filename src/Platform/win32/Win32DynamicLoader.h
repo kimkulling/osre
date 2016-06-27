@@ -23,8 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Platform/AbstractDynamicLoader.h>
-#include <cppcore/Container/THashMap.h>
-#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
 namespace Platform {
@@ -41,18 +39,13 @@ public:
     /// The class destructor, virtual.
     virtual ~Win32DynamicLoader();
     /// Loads a dll.
-    virtual LibHandle *load( const c8 *libName ) override;
+    virtual LibHandle *load( const String &libName ) override;
     /// Performs a lookup for a dll.
-    virtual LibHandle *lookupLib( const c8 *libName ) override;
+    virtual LibHandle *lookupLib( const String &libName ) override;
     /// Unloads a loaded dll.
-    virtual void unload( const c8 *libName ) override;
+    virtual void unload( const String &libName ) override;
     /// Loads the function symbol from a dll.
-    virtual void *loadFunction( const char *name ) override;
-
-private:
-    CPPCore::THashMap<ui32, LibHandle*> m_libmap;
-    CPPCore::TArray<LibHandle*> m_handles;
-    LibHandle *m_activeLib;
+    virtual void *loadFunction( const String &name ) override;
 };
 
 } // namespace Platform

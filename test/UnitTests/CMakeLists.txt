@@ -22,6 +22,10 @@ SET ( unittest_common_src
     src/Common/IdsTest.cpp
 )
 
+SET( unittest_platform_src
+	src/Platform/AbstractDynamicLoaderTest.cpp
+)
+
 SET ( unittest_rb_src
     src/RenderBackend/RenderCommonTest.cpp
 )
@@ -45,13 +49,15 @@ SET ( gtest_src
 )
 
 SOURCE_GROUP( src\\Common         FILES ${unittest_common_src} )
+SOURCE_GROUP( src\\Platform       FILES ${unittest_platform_src})
 SOURCE_GROUP( src\\RenderBackend  FILES ${unittest_rb_src} )
 SOURCE_GROUP( src\\Scene          FILES ${unittest_scene_src} )
 SOURCE_GROUP( src\\GTest          FILES ${gtest_src} )
 
 ADD_EXECUTABLE( osre_unittest
     ${unittest_common_src}
-    ${unittest_rb_src}
+	${unittest_platform_src}    
+	${unittest_rb_src}
     ${unittest_scene_src}
     ${gtest_src}
 )

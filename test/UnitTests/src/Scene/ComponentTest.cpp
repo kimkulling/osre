@@ -63,5 +63,5 @@ TEST_F( ComponentTest, createTest ) {
 TEST_F( ComponentTest, accessIdTest ) {
 }
 
-}
-}
+} // Namespace UnitTest
+} // Namespace OSRE

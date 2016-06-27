@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Win32DynamicLoader.h"
-#include <osre/Common/StringUtils.h>
 
 #include <windows.h>
 
@@ -33,78 +32,50 @@ namespace Platform {
 using namespace ::OSRE::Common;
 
 Win32DynamicLoader::Win32DynamicLoader()
-: AbstractDynamicLoader()
-, m_libmap()
-, m_handles()
-, m_activeLib( nullptr ) {
+: AbstractDynamicLoader() {
     // empty
 }
 
 Win32DynamicLoader::~Win32DynamicLoader() {
-    for ( ui32 i = 0; i < m_handles.size(); i++ ) {
-        delete m_handles[ i ];
-    }
-    m_libmap.clear();
 }
 
-LibHandle *Win32DynamicLoader::load( const c8 *libName ) {
-    if ( nullptr == libName ) {
+LibHandle *Win32DynamicLoader::load( const String &libName ) {
+    if ( libName.empty() ) {
         return nullptr;
     }
-    
+
     LibHandle *libHandle( lookupLib( libName ) );
     if ( nullptr != libHandle ) {
         return libHandle;
     }
 
-    HMODULE handle = ::LoadLibrary( libName );
+    HMODULE handle = ::LoadLibrary( libName.c_str() );
     if ( NULL != handle ) {
         libHandle = new LibHandle;
-        m_handles.add( libHandle );
         libHandle->m_handle = ( void* ) handle;
-        ui32 key( StringUtils::hashName( libName ) );
-        m_libmap.insert( key, libHandle );
+        AbstractDynamicLoader::addLib( libName, libHandle );
+        AbstractDynamicLoader::setActiveLib( libHandle );
     }
-
-    m_activeLib = libHandle;
 
     return libHandle;
 }
     
-LibHandle *Win32DynamicLoader::lookupLib( const c8 *libName ) {
-    if ( nullptr == libName ) {
+LibHandle *Win32DynamicLoader::lookupLib( const String &libName ) {
+    LibHandle *libHandle( AbstractDynamicLoader::findLib( libName ) );
+    AbstractDynamicLoader::setActiveLib( libHandle );
+
+    return libHandle;
+}
+
+void Win32DynamicLoader::unload( const String &libName ) {
+    AbstractDynamicLoader::removeLib( libName );
+}
+    
+void *Win32DynamicLoader::loadFunction( const String &libName ) {
+    if ( libName.empty() ) {
         return nullptr;
     }
-
-    LibHandle *libHandle( nullptr );
-    const ui32 key( StringUtils::hashName( libName ) );
-    if ( m_libmap.hasKey( key ) ) {
-        m_libmap.getValue( key, libHandle );
-    }
-    m_activeLib = libHandle;
-
-    return libHandle;
-}
-
-void Win32DynamicLoader::unload( const c8 *libName ) {
-    if ( nullptr == libName ) {
-        return;
-    }
-
-    const ui32 key( StringUtils::hashName( libName ) );
-    if ( m_libmap.hasKey( key ) ) {
-        LibHandle *libHandle( nullptr );
-        m_libmap.getValue( key, libHandle );
-        m_libmap.remove( key );
-        delete libHandle;
-    }
-}
-    
-void *Win32DynamicLoader::loadFunction( const char *name ) {
-
-    ::GetProcAddress( ( HMODULE ) m_activeLib->m_handle, name );
-
-    return nullptr;
+    return ::GetProcAddress( ( HMODULE ) getActiveLib()->m_handle, libName.c_str() );
 }
 
 } // Namespace Platform

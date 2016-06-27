@@ -158,6 +158,7 @@ SET( platform_src
     Platform/PlatformInterface.cpp
     Platform/PlatformPluginFactory.cpp
     Platform/PlatformPluginFactory.h
+	Platform/AbstractDynamicLoader.cpp
 )
 
 SET( platform_win32_src 
