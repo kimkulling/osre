@@ -1,4 +1,6 @@
 # OSRE - An Open Source Render Experience
+
+[![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Another open-source render experience. feel free to play around with it!
 
 # Supported platforms:
