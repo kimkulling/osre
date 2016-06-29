@@ -22,6 +22,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#ifdef _WIN32
+#  define VK_USE_PLATFORM_WIN32_KHR 1 
+#else
+#  define  VK_USE_PLATFORM_XCB_KHR 1
+#endif
+
 #include "vulkan.h"
 #include "VlkCommon.h"
 
@@ -65,6 +71,7 @@ private:
 
 private:
     VlkCommonParameters              m_vulkan;
+    VlkWindowParameters              m_window;
     VkRenderPass                     m_renderPass;
     CPPCore::TArray<VkFramebuffer>   m_framebuffers;
     VkPipeline                       m_graphicsPipeline;

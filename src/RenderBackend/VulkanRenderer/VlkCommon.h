@@ -25,7 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 
 #include "vulkan.h"
-
+#ifdef _WIN32
+#include <windows.h>
+#endif
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
@@ -36,8 +38,8 @@ struct VlkQueueParameters {
     ui32    m_familyIndex;
 
     VlkQueueParameters()
-        : m_handle( VK_NULL_HANDLE )
-        , m_familyIndex( 0 ) {
+    : m_handle( VK_NULL_HANDLE )
+    , m_familyIndex( 0 ) {
         // empty
     }
 };
@@ -47,8 +49,8 @@ struct VlkImageParameters {
     VkImageView m_imageView;
 
     VlkImageParameters()
-        : m_handle( VK_NULL_HANDLE )
-        , m_imageView( VK_NULL_HANDLE ) {
+    : m_handle( VK_NULL_HANDLE )
+    , m_imageView( VK_NULL_HANDLE ) {
         // empty
     }
 };
@@ -87,6 +89,38 @@ struct VlkCommonParameters {
     , m_swapChain() {
         // empty
     }
+};
+
+struct VlkWindowParameters {
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+    HINSTANCE           m_instance;
+    HWND                m_handle;
+
+    VlkWindowParameters() :
+        m_instance(),
+        m_handle() {
+    }
+
+#elif defined(VK_USE_PLATFORM_XCB_KHR)
+    xcb_connection_t   *m_connection;
+    xcb_window_t        m_handle;
+
+    WindowParameters() :
+        m_connection(),
+        m_handle() {
+    }
+
+#elif defined(VK_USE_PLATFORM_XLIB_KHR)
+    Display            *m_displayPtr;
+    Window              m_handle;
+
+    WindowParameters() 
+    : m_displayPtr()
+    , m_handle() {
+        // empty
+    }
+
+#endif
 };
 
 #define VK_EXPORTED_FUNCTION( fun ) extern PFN_##fun fun;

@@ -13,6 +13,15 @@ INCLUDE_DIRECTORIES(
     ../3dparty/zlib/
 )
 
+# For Vulkan support
+if( NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*" )
+	if( WIN32 )
+		set( USE_PLATFORM "VK_USE_PLATFORM_WIN32_KHR" )
+	elseif( UNIX )
+		set( USE_PLATFORM "VK_USE_PLATFORM_XCB_KHR" )
+	endif()
+endif()
+
 IF( WIN32 )
     SET( platform_libs comctl32.lib Winmm.lib opengl32.lib glu32.lib SDL2 )
 ELSE( WIN32 )
@@ -316,7 +325,7 @@ endif()
 SET( renderbackend_vulkanrenderer_src
 	RenderBackend/VulkanRenderer/VlkFunctions.h
 	RenderBackend/VulkanRenderer/VlkFunctions.cpp
-	RenderBackend/VulkanRenderer/VlkExportedFunctions.h
+	RenderBackend/VulkanRenderer/VlkExportedFunctions.inl
 	RenderBackend/VulkanRenderer/VlkCommon.h
 	RenderBackend/VulkanRenderer/VlkRenderBackend.cpp
 	RenderBackend/VulkanRenderer/VlkRenderBackend.h
@@ -379,6 +388,8 @@ SOURCE_GROUP( Include\\Resources  FILES ${resources_inc} )
 SOURCE_GROUP( Include\\Scene      FILES ${scene_inc} )
 SOURCE_GROUP( Include\\Thread        FILES ${threading_inc} )
 SOURCE_GROUP( Include\\RenderBackend FILES ${renderbackend_inc} )
+
+add_definitions( -D${USE_PLATFORM} )
 
 #==============================================================================
 # Define the Infrastructure library

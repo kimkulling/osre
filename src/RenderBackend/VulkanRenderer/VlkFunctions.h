@@ -30,7 +30,7 @@ namespace RenderBackend {
 #define VK_INSTANCE_LEVEL_FUNCTION( fun ) extern PFN_##fun fun;
 #define VK_DEVICE_LEVEL_FUNCTION( fun ) extern PFN_##fun fun;
 
-#include "VlkExportedFunctions.h"
+#include "VlkExportedFunctions.inl"
 
-}
-}
+} // Namespace RenderBackend
+} // Namespace OSRE

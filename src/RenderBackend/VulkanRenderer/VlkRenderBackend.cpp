@@ -147,12 +147,12 @@ bool VlkRenderBackend::loadExportedEntryPoints() {
 
     // load all entry points from lib
 #define VK_EXPORTED_FUNCTION( fun )                                             \
-    if( !(fun = (PFN_##fun)dynLoader->loadFunction( #fun )) ) {                 \
-        osre_error( Tag, "Could not load exported function: " + #fun + "!" );   \
+    if( !(fun = (PFN_##fun) dynLoader->loadFunction( #fun )) ) {                 \
+        osre_error( Tag, "Could not load exported function: " + String( #fun ) + "!" );   \
         return false;                                                           \
     }
 
-#include "VlkExportedFunctions.h"
+#include "VlkExportedFunctions.inl"
 
     return true;
 }
@@ -160,11 +160,11 @@ bool VlkRenderBackend::loadExportedEntryPoints() {
 bool VlkRenderBackend::loadGlobalLevelEntryPoints() {
 #define VK_GLOBAL_LEVEL_FUNCTION( fun )                                            \
     if( !(fun = (PFN_##fun)vkGetInstanceProcAddr( nullptr, #fun )) ) {             \
-        osre_error( Tag, "Could not load global level function: " + #fun + "!" );  \
+        osre_error( Tag, "Could not load global level function: " + String( #fun ) + "!" );  \
         return false;                                                              \
     }
 
-#include "VlkExportedFunctions.h"
+#include "VlkExportedFunctions.inl"
 
     return true;
 }
@@ -251,28 +251,27 @@ bool VlkRenderBackend::loadInstanceLevelEntryPoints() {
     }
 
 #define VK_INSTANCE_LEVEL_FUNCTION( fun )                                             \
-    if( !(fun = (PFN_##fun)dynLoader->loadFunction( m_vulkan.m_instance, #fun )) ) {  \
-        osre_error( Tag, "Could not load instance level function: " + #fun + "!" );   \
+    if( !(fun = (PFN_##fun)dynLoader->loadFunction( #fun )) ) {  \
+        osre_error( Tag, "Could not load instance level function: " + String( #fun ) + "!" );   \
         return false;                                                                 \
     }
 
-#include "VlkExportedFunctions.h"
+#include "VlkExportedFunctions.inl"
 
-    return false;
+    return true;
 }
 
-//#define VK_USE_PLATFORM_WIN32_KHR 1 
 bool VlkRenderBackend::createPresentationSurface() {
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
     VkWin32SurfaceCreateInfoKHR surface_create_info = {
         VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,  // VkStructureType                  sType
         nullptr,                                          // const void                      *pNext
         0,                                                // VkWin32SurfaceCreateFlagsKHR     flags
-        Window.Instance,                                  // HINSTANCE                        hinstance
-        Window.Handle                                     // HWND                             hwnd
+        m_window.m_instance,                                  // HINSTANCE                        hinstance
+        m_window.m_handle                                     // HWND                             hwnd
     };
 
-    if ( vkCreateWin32SurfaceKHR( m_vulkan.m_instance, &surface_create_info, nullptr, &Vulkan.PresentationSurface ) == VK_SUCCESS ) {
+    if ( vkCreateWin32SurfaceKHR( m_vulkan.m_instance, &surface_create_info, nullptr, &m_vulkan.m_presentationSurface ) == VK_SUCCESS ) {
         return true;
     }
 
