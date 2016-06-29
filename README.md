@@ -4,8 +4,11 @@
 Another open-source render experience. feel free to play around with it!
 
 # Supported platforms:
-- Windows: OpenGL-renderbackend
-- Linux ( [![Build Status](https://travis-ci.org/kimkulling/osre.png)](https://travis-ci.org/kimkulling/osre) ): OpenGL-renderbackend
+- Windows: 
+  + OpenGL-Renderbackend
+  + Vulkan-Renderbackend
+- Linux ( [![Build Status](https://travis-ci.org/kimkulling/osre.png)](https://travis-ci.org/kimkulling/osre) ): 
+  + OpenGL-renderbackend
 
 # How to start
 ## What you need to install
