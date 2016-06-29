@@ -33,12 +33,15 @@ for linux:
 for Windows: Use the generated Visual studio project files.
 
 ## Featurelist
-- OpenGL-4.3 renderer
+- OpenGL4.x-Renderer:
    + Multithreaded rendnering via separate render-thread
    + Primitive rendering
    + Texture mapping
    + Instanced rendering
    + Font rendering
+
+- Vulkan-Renderer:
+   + Experimental
 
 ## Get involved
 If you want to contribute just use the github project page or reach us under IRC:
@@ -56,3 +59,13 @@ Check our doxygen reference doc: http://kimkulling.github.io/osre/doc/html/index
 ## Sample 1: Hello world
 This example will show you how to create a windo and add a simple stage to it.
 ### [01-helloworld](https://github.com/kimkulling/osre/blob/master/samples/00_HelloWorld/)
+
+# Running the render-tests
+After building the engine you can find the render-tests in the binary-folder. To run the tests just run:
+- for Windows:
+> .\osre-rendertest.exe
+
+- for Linux:
+> ./osre-rendertest
+
+You can terminate the current test-fixure by pressing any key...
