@@ -43,7 +43,6 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::AtomicInt
 /// @ingroup    Engine
 ///
 ///	@brief This class implements the atomic into with intrinsics from Win32-API. 
@@ -82,50 +81,41 @@ private:
     mutable long m_value;
 };
 
-//-------------------------------------------------------------------------------------------------
 inline
 Win32Atomic::Win32Atomic( i32 val ) 
 : m_value( val ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 Win32Atomic::~Win32Atomic( ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 void Win32Atomic::incValue( i32 value ) {
     static_cast< void >( _InterlockedExchangeAdd( &m_value, value ) );
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 void Win32Atomic::decValue( i32 value ) {
     static_cast< void >( _InterlockedExchangeAdd( &m_value, -1 * value ) );
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 i32 Win32Atomic::getValue( ) {
     return _InterlockedExchangeAdd( &m_value, 0 );
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 i32 Win32Atomic::inc() {
     return _InterlockedIncrement( &m_value );
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 i32 Win32Atomic::dec() {
     return _InterlockedDecrement( &m_value );
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE
