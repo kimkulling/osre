@@ -22,11 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#ifdef _WIN32
-#  define VK_USE_PLATFORM_WIN32_KHR 1 
-#else
-#  define  VK_USE_PLATFORM_XCB_KHR 1
-#endif
+#include <osre/Common/osre_common.h>
 
 #include "vulkan.h"
 #include "VlkCommon.h"
@@ -35,8 +31,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations
 namespace Platform {
     struct LibHandle;
+
+    class AbstractSurface;
 }
 
 namespace RenderBackend {
@@ -50,7 +49,7 @@ class VlkRenderBackend {
 public:
     VlkRenderBackend();
     ~VlkRenderBackend();
-    bool create();
+    bool create( Platform::AbstractSurface *rootSurface );
     VkDevice getDevice() const;
     const VlkSwapChainParameters getSwapChain() const;
 
@@ -64,6 +63,7 @@ private:
     bool loadDeviceLevelEntryPoints();
     bool getDeviceQueue();
     bool createSwapChain();
+    bool createSwapChainImageViews();
     bool loadGlobalLevelEntryPoints();
     bool createRenderPass();
     bool createFramebuffers();

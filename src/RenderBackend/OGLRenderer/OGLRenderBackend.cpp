@@ -78,7 +78,9 @@ OGLRenderBackend::~OGLRenderBackend( ) {
 }
 
 void OGLRenderBackend::setTimer( Platform::AbstractTimer *timer ) {
-    m_fpsCounter = new Profiling::FPSCounter( timer );
+    if ( nullptr == m_fpsCounter ) {
+        m_fpsCounter = new Profiling::FPSCounter( timer );
+    }
 }
 
 void OGLRenderBackend::setRenderContext( Platform::AbstractRenderContext *renderCtx ) {

@@ -46,6 +46,10 @@ HDC Win32Surface::getDeviceContext( ) const {
     return m_dc;
 }
 
+HINSTANCE Win32Surface::getModuleHandle() const {
+    return m_hInstance;
+}
+
 bool Win32Surface::onCreate( ) {
     SurfaceProperties *prop = getProperties();
     if( !prop ) {

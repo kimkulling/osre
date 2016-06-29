@@ -143,7 +143,5 @@ private:
     Profiling::FPSCounter           *m_fpsCounter;
 };
 
-//-------------------------------------------------------------------------------------------------
-
 } // Namespace RenderBackend
 } // Namespace OSRE

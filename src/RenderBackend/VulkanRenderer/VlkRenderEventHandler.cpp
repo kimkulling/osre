@@ -23,10 +23,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "VlkRenderEventHandler.h"
 #include "VlkRenderBackend.h"
 
+#include <osre/Platform/PlatformInterface.h>
+
 namespace OSRE {
 namespace RenderBackend {
 
 using namespace ::OSRE::Common;
+using namespace ::OSRE::Platform;
 
 VlkRenderEventHandler::VlkRenderEventHandler()
 : AbstractEventHandler()
@@ -79,7 +82,12 @@ bool VlkRenderEventHandler::onDetached( const Common::EventData *eventData ) {
 
 bool VlkRenderEventHandler::onCreateRenderer( const Common::EventData *eventData ) {
     m_vlkBackend = new VlkRenderBackend;
-    if ( !m_vlkBackend->create() ) {
+    AbstractSurface *surface( PlatformInterface::getInstance()->getRootSurface() );
+    if ( nullptr == surface ) {
+        return false;
+    }
+    
+    if ( !m_vlkBackend->create( surface ) ) {
         return false;
     }
 

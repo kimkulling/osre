@@ -47,6 +47,8 @@ public:
     HWND getHWnd() const;
     /// Returns the device context.
     HDC getDeviceContext() const;
+    /// Returns the module handle of the window.
+    HINSTANCE getModuleHandle() const;
 
 protected:
     /// The create callback implementation.

@@ -25,9 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 
 #include "vulkan.h"
-#ifdef _WIN32
-#include <windows.h>
-#endif
+#ifdef OSRE_WINDOWS
+#  include <windows.h>
+#endif // OSRE_WINDOWS
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
