@@ -689,7 +689,7 @@ bool VlkRenderBackend::createRenderPass() {
             VK_ATTACHMENT_STORE_OP_STORE,               // VkAttachmentStoreOp            storeOp
             VK_ATTACHMENT_LOAD_OP_DONT_CARE,            // VkAttachmentLoadOp             stencilLoadOp
             VK_ATTACHMENT_STORE_OP_DONT_CARE,           // VkAttachmentStoreOp            stencilStoreOp
-            VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,            // VkImageLayout                  initialLayout;
+            VK_IMAGE_LAYOUT_UNDEFINED,                  // VkImageLayout                  initialLayout;
             VK_IMAGE_LAYOUT_PRESENT_SRC_KHR             // VkImageLayout                  finalLayout
         }
     };
@@ -729,10 +729,9 @@ bool VlkRenderBackend::createRenderPass() {
     };
 
     if ( vkCreateRenderPass( getDevice(), &render_pass_create_info, nullptr, &/*m_vulkan.*/m_renderPass ) != VK_SUCCESS ) {
-        //std::cout << "Could not create render pass!" << std::endl;
+        osre_error( Tag, "Could not create render pass!" );
         return false;
     }
-
     return true;
 }
 
@@ -766,7 +765,7 @@ bool VlkRenderBackend::checkPhysicalDeviceProperties( VkPhysicalDevice physical_
     if ( ( vkEnumerateDeviceExtensionProperties( physical_device, nullptr, &extensionsCount, nullptr ) != VK_SUCCESS ) || ( extensionsCount == 0 ) ) {
         std::stringstream stream;
         stream << physical_device;
-        osre_error( Tag, String("Error occurred during physical device ") + stream.str() + String(" extensions enumeration!" ) );
+        osre_error( Tag, String( "Error occurred during physical device " ) + stream.str() + String(" extensions enumeration!" ) );
         return false;
     }
 
@@ -796,8 +795,7 @@ bool VlkRenderBackend::checkPhysicalDeviceProperties( VkPhysicalDevice physical_
     vkGetPhysicalDeviceProperties( physical_device, &device_properties );
     vkGetPhysicalDeviceFeatures( physical_device, &device_features );
 
-    uint32_t major_version = VK_VERSION_MAJOR( device_properties.apiVersion );
-
+    uint32_t major_version( VK_VERSION_MAJOR( device_properties.apiVersion ) );
     if ( ( major_version < 1 ) &&
         ( device_properties.limits.maxImageDimension2D < 4096 ) ) {
         std::stringstream stream;
@@ -817,15 +815,12 @@ bool VlkRenderBackend::checkPhysicalDeviceProperties( VkPhysicalDevice physical_
 
     TArray<VkQueueFamilyProperties>  queue_family_properties( queue_families_count );
     TArray<VkBool32>                 queue_present_support( queue_families_count );
-
     vkGetPhysicalDeviceQueueFamilyProperties( physical_device, &queue_families_count, &queue_family_properties[ 0 ] );
-
     ui32 graphics_queue_family_index = UINT32_MAX;
     ui32 present_queue_family_index = UINT32_MAX;
 
     for ( ui32 i = 0; i < queue_families_count; ++i ) {
         vkGetPhysicalDeviceSurfaceSupportKHR( physical_device, i, m_vulkan.m_presentationSurface, &queue_present_support[ i ] );
-
         if ( ( queue_family_properties[ i ].queueCount > 0 ) &&
             ( queue_family_properties[ i ].queueFlags & VK_QUEUE_GRAPHICS_BIT ) ) {
             // Select first queue that supports graphics
