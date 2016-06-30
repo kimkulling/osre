@@ -735,20 +735,19 @@ bool VlkRenderBackend::createRenderPass() {
     return true;
 }
 
-bool VlkRenderBackend::createFramebuffers() {
+bool VlkRenderBackend::createFramebuffers( ui32 width, ui32 height ) {
     const CPPCore::TArray<VlkImageParameters> &swap_chain_images = getSwapChain().m_images;
     m_framebuffers.resize( swap_chain_images.size() );
-
     for ( size_t i = 0; i < swap_chain_images.size(); ++i ) {
         VkFramebufferCreateInfo framebuffer_create_info = {
             VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,  // VkStructureType                sType
             nullptr,                                    // const void                    *pNext
             0,                                          // VkFramebufferCreateFlags       flags
-            m_renderPass,                          // VkRenderPass                   renderPass
+            m_renderPass,                               // VkRenderPass                   renderPass
             1,                                          // uint32_t                       attachmentCount
-            &swap_chain_images[ i ].m_imageView,            // const VkImageView             *pAttachments
-            300,                                        // uint32_t                       width
-            300,                                        // uint32_t                       height
+            &swap_chain_images[ i ].m_imageView,        // const VkImageView             *pAttachments
+            width,                                      // uint32_t                       width
+            height,                                     // uint32_t                       height
             1                                           // uint32_t                       layers
         };
 
@@ -846,8 +845,7 @@ bool VlkRenderBackend::checkPhysicalDeviceProperties( VkPhysicalDevice physical_
     }
 
     // If this device doesn't support queues with graphics and present capabilities don't use it
-    if ( ( graphics_queue_family_index == UINT32_MAX ) ||
-        ( present_queue_family_index == UINT32_MAX ) ) {
+    if ( ( graphics_queue_family_index == UINT32_MAX ) || ( present_queue_family_index == UINT32_MAX ) ) {
         std::stringstream stream;
         stream << physical_device;
         osre_error( Tag, "Could not find queue families with required properties on physical device " + stream.str() + "!" );

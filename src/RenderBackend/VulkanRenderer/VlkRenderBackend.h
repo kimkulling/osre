@@ -66,7 +66,7 @@ private:
     bool createSwapChainImageViews();
     bool loadGlobalLevelEntryPoints();
     bool createRenderPass();
-    bool createFramebuffers();
+    bool createFramebuffers( ui32 width, ui32 height );
     bool checkPhysicalDeviceProperties( VkPhysicalDevice physical_device, uint32_t &selected_graphics_queue_family_index, uint32_t &selected_present_queue_family_index );
 
 private:
