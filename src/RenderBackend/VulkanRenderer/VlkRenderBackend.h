@@ -38,7 +38,13 @@ namespace Platform {
     class AbstractSurface;
 }
 
+namespace IO {
+    class Stream;
+}
+
 namespace RenderBackend {
+
+struct VlkShaderModule;
 
 class VlkRenderBackend {
     enum class State {
@@ -52,6 +58,14 @@ public:
     bool create( Platform::AbstractSurface *rootSurface );
     VkDevice getDevice() const;
     const VlkSwapChainParameters getSwapChain() const;
+    bool createRenderPass();
+    bool createFramebuffers( ui32 width, ui32 height );
+    bool createPipeline();
+    bool createSemaphores();
+    bool createCommandBuffers();
+    bool recordCommandBuffers();
+    VlkShaderModule *createShaderModuleFromSrc( const String &src );
+    VlkShaderModule *createShaderModuleFromFile( IO::Stream &stream );
 
 private:
     bool loadVulkanLib();
@@ -65,22 +79,21 @@ private:
     bool createSwapChain();
     bool createSwapChainImageViews();
     bool loadGlobalLevelEntryPoints();
-    bool createRenderPass();
-    bool createFramebuffers( ui32 width, ui32 height );
     bool checkPhysicalDeviceProperties( VkPhysicalDevice physical_device, uint32_t &selected_graphics_queue_family_index, uint32_t &selected_present_queue_family_index );
 
 private:
-    VlkCommonParameters              m_vulkan;
-    VlkWindowParameters              m_window;
-    VkRenderPass                     m_renderPass;
-    CPPCore::TArray<VkFramebuffer>   m_framebuffers;
-    VkPipeline                       m_graphicsPipeline;
-    VkSemaphore                      m_imageAvailableSemaphore;
-    VkSemaphore                      m_renderingFinishedSemaphore;
-    VkCommandPool                    m_graphicsCommandPool;
-    CPPCore::TArray<VkCommandBuffer> m_graphicsCommandBuffers;
-    Platform::LibHandle             *m_handle;
-    State                            m_state;
+    VlkCommonParameters               m_vulkan;
+    VlkWindowParameters               m_window;
+    VkRenderPass                      m_renderPass;
+    CPPCore::TArray<VkFramebuffer>    m_framebuffers;
+    VkPipeline                        m_graphicsPipeline;
+    VkSemaphore                       m_imageAvailableSemaphore;
+    VkSemaphore                       m_renderingFinishedSemaphore;
+    VkCommandPool                     m_graphicsCommandPool;
+    CPPCore::TArray<VkCommandBuffer>  m_graphicsCommandBuffers;
+    CPPCore::TArray<VlkShaderModule*> m_shaderModules;
+    Platform::LibHandle              *m_handle;
+    State                             m_state;
 };
 
 } // Namespace RenderBackend
