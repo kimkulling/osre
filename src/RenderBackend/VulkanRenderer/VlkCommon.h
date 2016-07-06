@@ -105,7 +105,7 @@ struct VlkWindowParameters {
     xcb_connection_t   *m_connection;
     xcb_window_t        m_handle;
 
-    WindowParameters() :
+    VlkWindowParameters() :
         m_connection(),
         m_handle() {
     }
@@ -114,7 +114,7 @@ struct VlkWindowParameters {
     Display            *m_displayPtr;
     Window              m_handle;
 
-    WindowParameters() 
+    VlkWindowParameters()
     : m_displayPtr()
     , m_handle() {
         // empty

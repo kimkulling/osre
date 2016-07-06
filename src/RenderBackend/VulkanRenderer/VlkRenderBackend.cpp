@@ -604,11 +604,11 @@ bool VlkRenderBackend::createPresentationSurface() {
         VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR,    // VkStructureType                  sType
         nullptr,                                          // const void                      *pNext
         0,                                                // VkXcbSurfaceCreateFlagsKHR       flags
-        Window.Connection,                                // xcb_connection_t*                connection
-        Window.Handle                                     // xcb_window_t                     window
+        m_window.m_connection,                            // xcb_connection_t*                connection
+        m_window.m_handle                                 // xcb_window_t                     window
     };
 
-    if ( vkCreateXcbSurfaceKHR( m_vulkan.m_instance, &surface_create_info, nullptr, &Vulkan.PresentationSurface ) == VK_SUCCESS ) {
+    if ( vkCreateXcbSurfaceKHR( m_vulkan.m_instance, &surface_create_info, nullptr, &m_vulkan.m_presentationSurface ) == VK_SUCCESS ) {
         return true;
     }
 
