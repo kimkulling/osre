@@ -73,9 +73,9 @@ struct AppBase::Impl {
 
 #ifdef OSRE_WINDOWS
         //pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
-        m_settings->setInt( Properties::Settings::PlatformPlugin, static_cast< i32 >( Platform::WindowsPlugin ) );
+        m_settings->setInt( Properties::Settings::PlatformPlugin, static_cast< i32 >( Platform::PluginType::WindowsPlugin ) );
 #else
-        m_settings->setInt( Properties::Settings::PlatformPlugin, static_cast< i32 >( Platform::SDL2Plugin ) );
+        m_settings->setInt( Properties::Settings::PlatformPlugin, static_cast< i32 >( Platform::PluginType::SDL2Plugin ) );
 #endif 
     }
 

@@ -61,9 +61,9 @@ SystemInfo::~SystemInfo() {
 //-------------------------------------------------------------------------------------------------
 SystemInfo::Platform SystemInfo::getPlatform() {
 #if defined( OSRE_WINDOWS )
-    return Win32;
+    return Platform::Win32;
 #elif defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
-    return GNU_Linux;
+    return Platform::GNU_Linux;
 #endif
 }
 

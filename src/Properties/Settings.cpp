@@ -148,6 +148,17 @@ void Settings::clear() {
     }
 }
 
+static i32 
+mapPLatformtype2Int( PluginType type ) {
+    if ( PluginType::WindowsPlugin == type ) {
+        return 0;
+    } else if ( PluginType::SDL2Plugin == type ) {
+        return 1;
+    }
+
+    return -1;
+}
+
 //--------------------------------------------------------------------------------------------------------------------
 void Settings::initDefaults() {
     CPPCore::Variant appName, windowsTitle, renderAPI, value;
@@ -158,7 +169,8 @@ void Settings::initDefaults() {
     m_pPropertyMap->setProperty( AppType, ConfigKeyStringTable[ AppName ], value );
 
     windowsTitle.setString( "The OSRE experience" );
-    value.setInt( Platform::PlatformInterface::getOSPluginType( ) );
+    const i32 pluginType( mapPLatformtype2Int( Platform::PlatformInterface::getOSPluginType() ) );
+    value.setInt( pluginType );
     m_pPropertyMap->setProperty( PlatformPlugin, ConfigKeyStringTable[ PlatformPlugin  ], value );
     m_pPropertyMap->setProperty( WindowsTitle, ConfigKeyStringTable[ WindowsTitle ], windowsTitle );
     renderAPI.setString( "opengl" );

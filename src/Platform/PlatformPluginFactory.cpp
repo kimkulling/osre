@@ -37,6 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <src/Platform/sdl2/SDL2Timer.h>
 #include <src/Platform/sdl2/SDL2ThreadFactory.h>
 #include <src/Platform/sdl2/SDL2Initializer.h>
+#include <src/Platform/sdl2/SDL2DynamicLoader.h>
 
 namespace OSRE {
 namespace Platform {
@@ -46,7 +47,7 @@ static const String Tag = "PlatformPluginFactory";
 //-------------------------------------------------------------------------------------------------
 bool PlatformPluginFactory::init( PluginType type ) {
     static_cast< void >( createThreadFactory( type ) );
-    if( type == SDL2Plugin ) {
+    if ( type == PluginType::SDL2Plugin ) {
         return SDL2Initializer::init();
     }
 
@@ -55,7 +56,7 @@ bool PlatformPluginFactory::init( PluginType type ) {
 
 //-------------------------------------------------------------------------------------------------
 bool PlatformPluginFactory::release( PluginType type ) {
-    if( type == SDL2Plugin ) {
+    if( type == PluginType::SDL2Plugin ) {
         return SDL2Initializer::release();
     }
     return true;
@@ -66,7 +67,7 @@ AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler(
     AbstractPlatformEventHandler *pEventHandler( nullptr );
     switch( type ) {
 #ifdef OSRE_WINDOWS
-        case Platform::WindowsPlugin: {
+        case Platform::PluginType::WindowsPlugin: {
                 Win32Surface *win32Surface = ( Win32Surface* ) rootSurface;
                 if( win32Surface ) {
                     pEventHandler = new Win32Eventhandler;
@@ -76,7 +77,7 @@ AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler(
             break;
 #endif // OSRE_WINDOWS
 
-        case Platform::SDL2Plugin:
+        case Platform::PluginType::SDL2Plugin:
             pEventHandler = new SDL2EventHandler();
             break;
 
@@ -94,12 +95,12 @@ AbstractSurface *PlatformPluginFactory::createSurface( PluginType type, SurfaceP
     AbstractSurface *pSurface( nullptr );
     switch( type ) {
 #ifdef OSRE_WINDOWS
-        case Platform::WindowsPlugin:
+        case Platform::PluginType::WindowsPlugin:
             pSurface = new Win32Surface( pProps );
             break;
 #endif // OSRE_WINDOWS
 
-        case Platform::SDL2Plugin:
+        case Platform::PluginType::SDL2Plugin:
             pSurface = new SDL2Surface( pProps );
             break;
 
@@ -117,12 +118,12 @@ AbstractRenderContext *PlatformPluginFactory::createRenderContext( PluginType ty
     AbstractRenderContext *renderCtx( nullptr );
     switch( type ) {
 #ifdef OSRE_WINDOWS
-        case Platform::WindowsPlugin:
+        case Platform::PluginType::WindowsPlugin:
             renderCtx = new Win32RenderContext();
             break;
 #endif // OSRE_WINDOWS
 
-        case Platform::SDL2Plugin:
+        case Platform::PluginType::SDL2Plugin:
             renderCtx = new SDL2RenderContext();
             break;
 
@@ -140,12 +141,12 @@ AbstractTimer *PlatformPluginFactory::createTimer( PluginType type ) {
     AbstractTimer *pTimer( nullptr );
     switch( type ) {
 #ifdef OSRE_WINDOWS
-        case Platform::WindowsPlugin:
+        case Platform::PluginType::WindowsPlugin:
             pTimer = new Win32Timer();
             break;
 #endif
 
-        case Platform::SDL2Plugin:
+        case Platform::PluginType::SDL2Plugin:
             pTimer = new SDL2Timer();
             break;
 
@@ -160,12 +161,12 @@ AbstractThreadFactory *PlatformPluginFactory::createThreadFactory( PluginType ty
     AbstractThreadFactory *instance( nullptr );
     switch( type ) {
 #ifdef OSRE_WINDOWS
-        case Platform::WindowsPlugin:
+    case Platform::PluginType::WindowsPlugin:
         instance = new Win32ThreadFactory();
         break;
 #endif // OSRE_WINDOWS
 
-    case Platform::SDL2Plugin:
+    case Platform::PluginType::SDL2Plugin:
         instance = new SDL2ThreadFactory();
         break;
 
@@ -179,7 +180,6 @@ AbstractThreadFactory *PlatformPluginFactory::createThreadFactory( PluginType ty
     return instance;
 }
 
-//-------------------------------------------------------------------------------------------------
 Common::AbstractLogStream *PlatformPluginFactory::createPlatformLogStream() {
     Common::AbstractLogStream *stream( nullptr );
 #ifdef OSRE_WINDOWS
@@ -193,13 +193,13 @@ AbstractDynamicLoader *PlatformPluginFactory::createDynmicLoader( PluginType typ
     AbstractDynamicLoader *dynloader( nullptr );
     switch ( type ) {
 #ifdef OSRE_WINDOWS
-        case Platform::WindowsPlugin:
+        case Platform::PluginType::WindowsPlugin:
             dynloader = new Win32DynamicLoader;
             break;
 #endif // OSRE_WINDOWS
 
-        case Platform::SDL2Plugin:
-            //dynloader = new SDL2ThreadFactory();
+        case Platform::PluginType::SDL2Plugin:
+            dynloader = new SDL2DynamicLoader();
             break;
 
     default:

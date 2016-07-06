@@ -48,7 +48,7 @@ using namespace ::OSRE::Properties;
 
 PlatformInterface *PlatformInterface::s_instance( nullptr );
 
-static const String PlatformPluginName[ MaxPlugin ] = {
+static const String PlatformPluginName[ static_cast<i32>( PluginType::MaxPlugin ) ] = {
 #ifdef OSRE_WINDOWS
     "WindowsPlugin",
 #endif // OSRE_WINDOWS
@@ -61,9 +61,9 @@ PlatformInterface::PlatformInterface( const Settings *config )
 : AbstractService( "platform/platforminterface" )
 , m_config( config )
 #ifdef OSRE_WINDOWS
-, m_type( WindowsPlugin )
+, m_type( PluginType::WindowsPlugin )
 #else
-, m_type( SDL2Plugin )
+, m_type( PluginType::SDL2Plugin )
 #endif // OSRE_WINDOWS
 , m_pRootSurface( nullptr )
 , m_pOSEventHandler( nullptr )
@@ -131,9 +131,9 @@ const String &PlatformInterface::getDefaultFontName() const {
 
 PluginType PlatformInterface::getOSPluginType() {
 #ifdef OSRE_WINDOWS
-    return WindowsPlugin;
+    return PluginType::WindowsPlugin;
 #else 
-    return SDL2Plugin;
+    return PluginType::SDL2Plugin;
 #endif // OSRE_WINDOWS
 }
 
@@ -141,13 +141,13 @@ String PlatformInterface::getOSPluginName( PluginType type ) {
     String name( "None" );
     switch( type ) {
 #ifdef OSRE_WINDOWS
-        case WindowsPlugin:
-            name = PlatformPluginName[ WindowsPlugin ];
+        case PluginType::WindowsPlugin:
+            name = PlatformPluginName[ static_cast<i32>( PluginType::WindowsPlugin ) ];
             break;
 #endif // OSRE_WINDOWS
 
-        case SDL2Plugin:
-            name = PlatformPluginName[ SDL2Plugin ];
+        case PluginType::SDL2Plugin:
+            name = PlatformPluginName[ static_cast<i32>( PluginType::SDL2Plugin ) ];
             break;
         default:
             break;

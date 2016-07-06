@@ -96,8 +96,6 @@ bool VlkRenderEventHandler::onCreateRenderer( const Common::EventData *eventData
         return false;
     }
 
-    
-    
     if ( !m_vlkBackend->createFramebuffers( surface->getProperties()->m_width, surface->getProperties()->m_height ) ) {
         return false;
     }

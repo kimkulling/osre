@@ -43,11 +43,12 @@ class OSRE_EXPORT SystemInfo {
 public:
     ///	@enum	Platform
     ///	@brief	This enum describes the platform.
-    enum Platform {
+    enum class Platform {
         Win32,		///< Windows platform, 32 bit
-        GNU_Linux	///< GNU linux platform.
+        GNU_Linux	///< GNU Linux platform.
     };
 
+    /// Manages platform-independent thread id
     struct ThreadId {
         unsigned long Id;
     };
@@ -81,8 +82,8 @@ protected:
     static bool init();
 
 private:
-    SystemInfo( const SystemInfo & );
-    SystemInfo &operator = ( const SystemInfo & );
+    SystemInfo( const SystemInfo & ) = delete;
+    SystemInfo &operator = ( const SystemInfo & ) = delete;
 
 private:
     static bool m_IsInited;
@@ -96,7 +97,5 @@ private:
     static ThreadNameMap s_threadNames;
 };
 
-//-------------------------------------------------------------------------------------------------
-
-} // Namespace System
+} // Namespace Platform
 } // Namespace OSRE
