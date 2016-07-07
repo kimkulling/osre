@@ -149,13 +149,18 @@ void Settings::clear() {
 }
 
 static i32 
-mapPLatformtype2Int( PluginType type ) {
+mapPlatformtype2Int( PluginType type ) {
+#ifdef OSRE_WINDOWS
     if ( PluginType::WindowsPlugin == type ) {
         return 0;
     } else if ( PluginType::SDL2Plugin == type ) {
         return 1;
     }
-
+#elif defined(OSRE_GNU_LINUX)
+    if ( PluginType::SDL2Plugin == type ) {
+            return 1;
+    }
+#endif
     return -1;
 }
 
@@ -169,7 +174,7 @@ void Settings::initDefaults() {
     m_pPropertyMap->setProperty( AppType, ConfigKeyStringTable[ AppName ], value );
 
     windowsTitle.setString( "The OSRE experience" );
-    const i32 pluginType( mapPLatformtype2Int( Platform::PlatformInterface::getOSPluginType() ) );
+    const i32 pluginType( mapPlatformtype2Int( Platform::PlatformInterface::getOSPluginType() ) );
     value.setInt( pluginType );
     m_pPropertyMap->setProperty( PlatformPlugin, ConfigKeyStringTable[ PlatformPlugin  ], value );
     m_pPropertyMap->setProperty( WindowsTitle, ConfigKeyStringTable[ WindowsTitle ], windowsTitle );
