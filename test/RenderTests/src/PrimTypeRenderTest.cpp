@@ -102,7 +102,8 @@ public:
         ptGeo->m_indextype = UnsignedShort;
         ui32 pt_size = sizeof( GLushort ) * PtNumIndices;
         ptGeo->m_ib = BufferData::alloc( IndexBuffer, pt_size, ReadOnly );
-        ::memcpy( ptGeo->m_ib->m_pData, pt_indices, pt_size );
+        ptGeo->m_ib->copyFrom( pt_indices, pt_size );
+        //::memcpy( ptGeo->m_ib->m_pData, pt_indices, pt_size );
         
         // setup primitives
         ptGeo->m_numPrimGroups = 1;
@@ -114,7 +115,8 @@ public:
         lineGeo->m_indextype = UnsignedShort;
         ui32 size = sizeof( GLushort ) * NumIndices;
         lineGeo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
-        ::memcpy( lineGeo->m_ib->m_pData, indices, size );
+        lineGeo->m_ib->copyFrom( indices, size );
+        //::memcpy( lineGeo->m_ib->m_pData, indices, size );
 
         // setup primitives
         lineGeo->m_numPrimGroups = 1;

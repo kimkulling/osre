@@ -34,7 +34,6 @@ namespace RenderBackend {
 namespace RenderTest {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderTest::AbstractRenderTest
 ///	@ingroup	RenderTest
 ///
 ///	@brief	The abstract base interface for a render test. Render tests shall be used to define a 
@@ -107,8 +106,6 @@ private:
 private:
     const String m_renderTestName;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderTest
 } // Namespace OSRE

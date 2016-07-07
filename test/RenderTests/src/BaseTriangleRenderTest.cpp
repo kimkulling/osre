@@ -96,7 +96,5 @@ public:
 
 ATTACH_RENDERTEST( BaseTriangleRenderTest )
 
-//-------------------------------------------------------------------------------------------------
-
 } // Namespace RenderTest
 } // Namespace OSRE

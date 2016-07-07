@@ -204,7 +204,7 @@ static OGLVertexArray *setupBuffers( StaticGeometry *geo, OGLRenderBackend *rb, 
 
     OGLBuffer *vb = rb->createBuffer( vertices->m_type );
     rb->bindBuffer( vb );
-    rb->bufferData( vb, vertices->m_pData, vertices->m_size, vertices->m_access );
+    rb->bufferData( vb, vertices->m_data, vertices->m_size, vertices->m_access );
 
     // enable vertex attribute arrays
     TArray<OGLVertexAttribute*> attributes;
@@ -216,7 +216,7 @@ static OGLVertexArray *setupBuffers( StaticGeometry *geo, OGLRenderBackend *rb, 
     // create index buffer and pass indices to element array buffer
     OGLBuffer *ib = rb->createBuffer( indices->m_type );
     rb->bindBuffer( ib );
-    rb->bufferData( ib, indices->m_pData, indices->m_size, indices->m_access );
+    rb->bufferData( ib, indices->m_data, indices->m_size, indices->m_access );
 
     rb->unbindVertexArray( vertexArray );
 
@@ -259,7 +259,7 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
         if( nullptr != instData->m_data ) {
             OGLBuffer *instanceDataBuffer = rb->createBuffer( InstanceBuffer );
             rb->bindBuffer( instanceDataBuffer );
-            rb->bufferData( instanceDataBuffer, instData->m_data->m_pData, instData->m_data->m_size, instData->m_data->m_access );
+            rb->bufferData( instanceDataBuffer, instData->m_data->m_data, instData->m_data->m_size, instData->m_data->m_access );
         }
     }
     

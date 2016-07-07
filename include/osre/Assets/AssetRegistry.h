@@ -32,8 +32,19 @@ namespace IO {
     class Uri;
 }
 
+namespace RenderBackend {
+    struct BufferData;
+}
+
 namespace Assets {
         
+class AssetData {
+public:
+    AssetData();
+    ~AssetData();
+    void addBuffer( RenderBackend::BufferData *buffer );
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///

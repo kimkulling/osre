@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <src/Platform/PlatformPluginFactory.h>
 #include <osre/Common/Logger.h>
-#ifdef _WIN32
+#ifdef OSRE_WINDOWS
 #   include <src/Platform/win32/Win32Surface.h>
 #   include <src/Platform/win32/Win32Eventhandler.h>
 #   include <src/Platform/win32/Win32Timer.h>
@@ -44,7 +44,6 @@ namespace Platform {
 
 static const String Tag = "PlatformPluginFactory";
 
-//-------------------------------------------------------------------------------------------------
 bool PlatformPluginFactory::init( PluginType type ) {
     static_cast< void >( createThreadFactory( type ) );
     if ( type == PluginType::SDL2Plugin ) {
@@ -54,7 +53,6 @@ bool PlatformPluginFactory::init( PluginType type ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool PlatformPluginFactory::release( PluginType type ) {
     if( type == PluginType::SDL2Plugin ) {
         return SDL2Initializer::release();
@@ -62,58 +60,55 @@ bool PlatformPluginFactory::release( PluginType type ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler( PluginType type, AbstractSurface *rootSurface ) {
-    AbstractPlatformEventHandler *pEventHandler( nullptr );
+    AbstractPlatformEventHandler *eventHandler( nullptr );
     switch( type ) {
 #ifdef OSRE_WINDOWS
         case Platform::PluginType::WindowsPlugin: {
                 Win32Surface *win32Surface = ( Win32Surface* ) rootSurface;
                 if( win32Surface ) {
-                    pEventHandler = new Win32Eventhandler;
-                    Win32Eventhandler::registerEventServer( ( Win32Eventhandler* ) pEventHandler, win32Surface->getHWnd() );
+                    eventHandler = new Win32Eventhandler;
+                    Win32Eventhandler::registerEventServer( ( Win32Eventhandler* ) eventHandler, win32Surface->getHWnd() );
                 }
             }
             break;
 #endif // OSRE_WINDOWS
 
         case Platform::PluginType::SDL2Plugin:
-            pEventHandler = new SDL2EventHandler();
+            eventHandler = new SDL2EventHandler();
             break;
 
         default:
             break;
     }
 
-    OSRE_ASSERT(nullptr != pEventHandler);
+    OSRE_ASSERT(nullptr != eventHandler);
 
-    return pEventHandler;
+    return eventHandler;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractSurface *PlatformPluginFactory::createSurface( PluginType type, SurfaceProperties *pProps ) {
-    AbstractSurface *pSurface( nullptr );
+    AbstractSurface *surface( nullptr );
     switch( type ) {
 #ifdef OSRE_WINDOWS
         case Platform::PluginType::WindowsPlugin:
-            pSurface = new Win32Surface( pProps );
+            surface = new Win32Surface( pProps );
             break;
 #endif // OSRE_WINDOWS
 
         case Platform::PluginType::SDL2Plugin:
-            pSurface = new SDL2Surface( pProps );
+            surface = new SDL2Surface( pProps );
             break;
 
         default:
             osre_info( Tag, "Enum value not handled." );
             break;
     }
-    OSRE_ASSERT( nullptr != pSurface);
+    OSRE_ASSERT( nullptr != surface);
 
-    return pSurface;
+    return surface;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractRenderContext *PlatformPluginFactory::createRenderContext( PluginType type ) {
     AbstractRenderContext *renderCtx( nullptr );
     switch( type ) {
@@ -136,42 +131,40 @@ AbstractRenderContext *PlatformPluginFactory::createRenderContext( PluginType ty
     return renderCtx;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractTimer *PlatformPluginFactory::createTimer( PluginType type ) {
-    AbstractTimer *pTimer( nullptr );
+    AbstractTimer *timer( nullptr );
     switch( type ) {
 #ifdef OSRE_WINDOWS
         case Platform::PluginType::WindowsPlugin:
-            pTimer = new Win32Timer();
+            timer = new Win32Timer();
             break;
 #endif
 
         case Platform::PluginType::SDL2Plugin:
-            pTimer = new SDL2Timer();
+            timer = new SDL2Timer();
             break;
 
         default:
             break;
     }
-    return pTimer;
+    return timer;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractThreadFactory *PlatformPluginFactory::createThreadFactory( PluginType type ) {
     AbstractThreadFactory *instance( nullptr );
     switch( type ) {
 #ifdef OSRE_WINDOWS
-    case Platform::PluginType::WindowsPlugin:
-        instance = new Win32ThreadFactory();
-        break;
+        case Platform::PluginType::WindowsPlugin:
+            instance = new Win32ThreadFactory();
+            break;
 #endif // OSRE_WINDOWS
 
-    case Platform::PluginType::SDL2Plugin:
-        instance = new SDL2ThreadFactory();
-        break;
+        case Platform::PluginType::SDL2Plugin:
+            instance = new SDL2ThreadFactory();
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 
     osre_info( Tag, "Set thread factory." );

@@ -28,7 +28,6 @@ namespace OSRE {
 namespace RenderTest {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderTest::AbstractTestFixure
 ///	@ingroup	Test
 ///
 ///	@brief  This class is the abstract base class for all render test fixture.

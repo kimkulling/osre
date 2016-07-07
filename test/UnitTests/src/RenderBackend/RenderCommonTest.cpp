@@ -122,6 +122,27 @@ TEST_F(RenderCommonTest, viewportTest) {
 	EXPECT_EQ( vp_set, vp_set2 );
 }
 
+TEST_F( RenderCommonTest, allocBufferDataTest ) {
+    BufferData *data( BufferData::alloc( VertexBuffer, 100, ReadWrite ) );
+    EXPECT_NE( data, nullptr );
+    EXPECT_EQ( data->m_access, ReadWrite );
+    EXPECT_EQ( data->m_size, 100 );
+    EXPECT_EQ( data->m_type, VertexBuffer );
+
+    BufferData::free( data );
+}
+
+TEST_F( RenderCommonTest, copyBufferDataTest ) {
+    BufferData *data( BufferData::alloc( VertexBuffer, 100, ReadWrite ) );
+
+    static const ui32 size = 100;
+    static const unsigned char Value = 9;
+    void *buffer( new unsigned char[ size ] );
+    ::memset( buffer, Value, size );
+    data->copyFrom( buffer, size );
+    BufferData::free( data );
+}
+
 TEST_F( RenderCommonTest, accessStaticGeometryTest ) {
     StaticGeometry *geo( nullptr );
     geo = StaticGeometry::create( 0 );

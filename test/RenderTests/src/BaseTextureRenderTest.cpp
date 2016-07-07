@@ -135,13 +135,8 @@ public:
         vertices[ 2 ].tex0 = glm::vec2( 1, 0 );
         vertices[ 3 ].tex0 = glm::vec2( 1, 1 );
 
-        geo->m_vb = new BufferData;
-        geo->m_vb->m_size = sizeof( RenderVert ) * 4;
-        geo->m_vb->m_access = ReadOnly;
-        geo->m_vb->m_type = VertexBuffer;
-
-        geo->m_vb->m_pData = new uc8[ geo->m_vb->m_size ];
-        ::memcpy( geo->m_vb->m_pData, vertices, geo->m_vb->m_size );
+        geo->m_vb = BufferData::alloc( VertexBuffer, sizeof( RenderVert ) * 4, ReadOnly );
+        geo->m_vb->copyFrom( vertices, geo->m_vb->m_size );
 
         // setup triangle indices
         indices[ 0 ] = 0;
@@ -152,13 +147,8 @@ public:
         indices[ 4 ] = 2;
         indices[ 5 ] = 3;
         
-        geo->m_ib = new BufferData;
-        geo->m_ib->m_size = sizeof( GLushort ) * 6;
-        geo->m_ib->m_access = ReadOnly;
-        geo->m_ib->m_type = IndexBuffer;
-        
-        geo->m_ib->m_pData = new uc8[ geo->m_ib->m_size ];
-        ::memcpy( geo->m_ib->m_pData, indices, geo->m_ib->m_size );
+        geo->m_ib = BufferData::alloc( IndexBuffer, sizeof( GLushort ) * 6, ReadOnly );        
+        geo->m_ib->copyFrom( indices, geo->m_ib->m_size );
 
         attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_geo = geo;

@@ -233,7 +233,7 @@ struct OSRE_EXPORT VertexLayout {
 
 struct OSRE_EXPORT BufferData {
     BufferType       m_type;
-    void            *m_pData;
+    void            *m_data;
     ui32             m_size;
     BufferAccessType m_access;
 
@@ -241,6 +241,7 @@ struct OSRE_EXPORT BufferData {
     ~BufferData();
     static BufferData *alloc( BufferType type, ui32 m_size, BufferAccessType access );
 	static void free( BufferData *data );
+    void copyFrom( void *data, ui32 size );
 
     OSRE_NON_COPYABLE( BufferData )
 };

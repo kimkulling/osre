@@ -187,35 +187,46 @@ const String *VertexLayout::getAttributes() {
 
 BufferData::BufferData()
 : m_type( EmptyBuffer )
-, m_pData( nullptr )
+, m_data( nullptr )
 , m_size( 0 )
 , m_access( ReadOnly ) {
     // empty
 }
 
 BufferData::~BufferData() {
-    delete[] m_pData;
-    m_pData = nullptr;
+    delete[] m_data;
+    m_data = nullptr;
     m_size = 0;
 }
 
-BufferData *BufferData::alloc( BufferType type, ui32 m_size, BufferAccessType access ) {
+BufferData*
+BufferData::alloc( BufferType type, ui32 m_size, BufferAccessType access ) {
     BufferData *buffer( new BufferData );
     buffer->m_size = m_size;
     buffer->m_access = access;
     buffer->m_type = type;
-    buffer->m_pData = new uc8[ buffer->m_size ];
+    buffer->m_data = new uc8[ buffer->m_size ];
 
     return buffer;
 }
 
-void BufferData::free( BufferData *data ) {
+void 
+BufferData::free( BufferData *data ) {
 	if (nullptr == data) {
 		return;
 	}
 
 	delete data;
 	data = nullptr;
+}
+
+void 
+BufferData::copyFrom( void *data, ui32 size ) {
+    if ( nullptr == data ) {
+        return;
+    }
+    m_size = size;
+    ::memcpy( m_data, data, size );
 }
 
 PrimitiveGroup::PrimitiveGroup()

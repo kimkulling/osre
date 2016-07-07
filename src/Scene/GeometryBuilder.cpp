@@ -146,7 +146,7 @@ StaticGeometry *GeometryBuilder::allocTriangles( VertexType type ) {
     
     ui32 size = sizeof( GLushort ) * NumIndices;
     geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
-    ::memcpy( geo->m_ib->m_pData, indices, size );
+    ::memcpy( geo->m_ib->m_data, indices, size );
 
 	// setup primitives
     geo->m_numPrimGroups = 1;
@@ -196,7 +196,7 @@ StaticGeometry *GeometryBuilder::allocQuads( VertexType type ) {
 
     ui32 size = sizeof( GLushort ) * NumIndices;
     geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
-    ::memcpy( geo->m_ib->m_pData, indices, size );
+    ::memcpy( geo->m_ib->m_data, indices, size );
 
     // setup primitives
     geo->m_numPrimGroups = 1;
@@ -325,7 +325,7 @@ StaticGeometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const
     // setup triangle indices
     ui32 size = sizeof( GLushort ) * 6 * text.size();
     geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
-    ::memcpy( geo->m_ib->m_pData, textIndices, size );
+    ::memcpy( geo->m_ib->m_data, textIndices, size );
 
     // setup primitives
     geo->m_numPrimGroups = text.size();
@@ -374,7 +374,7 @@ BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm:
             }
             size = sizeof( ColorVert ) * numVerts;
             data = BufferData::alloc( VertexBuffer, size, ReadOnly );
-            ::memcpy( data->m_pData, colVerts, size );
+            ::memcpy( data->m_data, colVerts, size );
             delete [] colVerts;
         }
         break;
@@ -399,7 +399,7 @@ BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm:
 
             size = sizeof( RenderVert ) * numVerts;
             data = BufferData::alloc( VertexBuffer, size, ReadOnly );
-            ::memcpy( data->m_pData, renderVerts, size );
+            ::memcpy( data->m_data, renderVerts, size );
             delete [] renderVerts;
         }
         break;
