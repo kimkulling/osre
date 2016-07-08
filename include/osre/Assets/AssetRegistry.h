@@ -29,6 +29,7 @@ namespace OSRE {
     
 // Forward declarations
 namespace IO {
+    class Stream;
     class Uri;
 }
 
@@ -42,7 +43,17 @@ class AssetData {
 public:
     AssetData();
     ~AssetData();
-    void addBuffer( RenderBackend::BufferData *buffer );
+    bool read( IO::Stream &stream );
+    bool write( IO::Stream &stream );
+    bool isLoaded() const;
+
+private:
+    struct Chunk {
+        ui32 m_offset;
+        ui32 m_id;
+        ui32 m_size;
+        uc8 *m_data;
+    };
 };
 
 //-------------------------------------------------------------------------------------------------
