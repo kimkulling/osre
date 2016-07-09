@@ -6,11 +6,11 @@ add_definitions( -DOSRE_BUILD_EXPORT )
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
     ${HEADER_PATH}/include
-    ../3dparty/cppcore/include
-    ../3dparty/glew/include
-    ../3dparty/glm/
-    ../3dparty/unzip/
-    ../3dparty/zlib/
+    ../../3dparty/cppcore/include
+    ../../3dparty/glew/include
+    ../../3dparty/glm/
+    ../../3dparty/unzip/
+    ../../3dparty/zlib/
 )
 
 # For Vulkan support
@@ -395,7 +395,7 @@ add_definitions( -D${USE_PLATFORM} )
 # Define the Infrastructure library
 #==============================================================================
 ADD_LIBRARY( osre SHARED
-    ../README.md
+    ../../README.md
     ${app_inc}
     ${assets_inc}
     ${debugging_inc}

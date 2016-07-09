@@ -29,9 +29,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Debugging/osre_debugging.h>
 
 #ifdef OSRE_WINDOWS
-#   include <src/Platform/win32/Win32Thread.h>
+#   include <src/Engine/Platform/win32/Win32Thread.h>
 #else
-#   include <src/Platform/sdl2/SDL2Thread.h>
+#   include <src/Engine/Platform/sdl2/SDL2Thread.h>
 #endif
 
 #include <sstream>

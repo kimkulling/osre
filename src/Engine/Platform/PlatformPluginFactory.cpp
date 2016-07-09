@@ -20,24 +20,24 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <src/Platform/PlatformPluginFactory.h>
+#include <src/Engine/Platform/PlatformPluginFactory.h>
 #include <osre/Common/Logger.h>
 #ifdef OSRE_WINDOWS
-#   include <src/Platform/win32/Win32Surface.h>
-#   include <src/Platform/win32/Win32Eventhandler.h>
-#   include <src/Platform/win32/Win32Timer.h>
-#   include <src/Platform/win32/Win32RenderContext.h>
-#   include <src//Platform/win32/Win32ThreadFactory.h>
-#   include <src/Platform/win32/Win32DbgLogStream.h>
-#   include <src/Platform/win32/Win32DynamicLoader.h>
+#   include <src/Engine/Platform/win32/Win32Surface.h>
+#   include <src/Engine/Platform/win32/Win32Eventhandler.h>
+#   include <src/Engine//Platform/win32/Win32Timer.h>
+#   include <src/Engine//Platform/win32/Win32RenderContext.h>
+#   include <src/Engine/Platform/win32/Win32ThreadFactory.h>
+#   include <src/Engine/Platform/win32/Win32DbgLogStream.h>
+#   include <src/Engine/Platform/win32/Win32DynamicLoader.h>
 #endif
-#include <src/Platform/sdl2/SDL2Surface.h>
-#include <src/Platform/sdl2/SDL2EventHandler.h>
-#include <src/Platform/sdl2/SDL2RenderContext.h>
-#include <src/Platform/sdl2/SDL2Timer.h>
-#include <src/Platform/sdl2/SDL2ThreadFactory.h>
-#include <src/Platform/sdl2/SDL2Initializer.h>
-#include <src/Platform/sdl2/SDL2DynamicLoader.h>
+#include <src/Engine/Platform/sdl2/SDL2Surface.h>
+#include <src/Engine/Platform/sdl2/SDL2EventHandler.h>
+#include <src/Engine/Platform/sdl2/SDL2RenderContext.h>
+#include <src/Engine/Platform/sdl2/SDL2Timer.h>
+#include <src/Engine/Platform/sdl2/SDL2ThreadFactory.h>
+#include <src/Engine/Platform/sdl2/SDL2Initializer.h>
+#include <src/Engine/Platform/sdl2/SDL2DynamicLoader.h>
 
 namespace OSRE {
 namespace Platform {

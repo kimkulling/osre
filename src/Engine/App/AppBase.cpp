@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/AssetRegistry.h>
 
 // private includes
-#include <src/Platform/PlatformPluginFactory.h>
+#include <src/Engine/Platform/PlatformPluginFactory.h>
 
 namespace OSRE {
 namespace App {

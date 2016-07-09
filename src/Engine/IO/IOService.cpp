@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/IOService.h>
 #include <osre/Common/Tokenizer.h>
 #include <osre/Common/Logger.h>
-#include <src/IO/ZipFileSystem.h>
+#include <src/Engine/IO/ZipFileSystem.h>
 
 #include "LocaleFileSystem.h"
 

@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/FontBase.h>
-#include <src/RenderBackend/OGLRenderer/OGLRenderBackend.h>
+#include <src/Engine/RenderBackend/OGLRenderer/OGLRenderBackend.h>
 
 namespace OSRE {
 namespace RenderBackend {

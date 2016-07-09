@@ -21,21 +21,21 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Platform/PlatformInterface.h>
-#include <src/Platform/PlatformPluginFactory.h>
+#include <src/Engine/Platform/PlatformPluginFactory.h>
 #include <osre/Common/EventTriggerer.h>
 #include <osre/Properties/Settings.h>
 #ifdef OSRE_WINDOWS
-#   include <src/Platform/win32/Win32Surface.h>
-#   include <src/Platform/win32/Win32Eventhandler.h>
-#   include <src/Platform/win32/Win32Timer.h>
-#   include <src/Platform/win32/Win32RenderContext.h>
-#   include <src//Platform/win32/Win32ThreadFactory.h>
+#   include <src/Engine/Platform/win32/Win32Surface.h>
+#   include <src/Engine/Platform/win32/Win32Eventhandler.h>
+#   include <src/Engine/Platform/win32/Win32Timer.h>
+#   include <src/Engine/Platform/win32/Win32RenderContext.h>
+#   include <src/Engine/Platform/win32/Win32ThreadFactory.h>
 #endif // OSRE_WINDOWS
-#include <src/Platform/sdl2/SDL2Surface.h>
-#include <src/Platform/sdl2/SDL2EventHandler.h>
-#include <src/Platform/sdl2/SDL2RenderContext.h>
-#include <src/Platform/sdl2/SDL2Timer.h>
-#include <src/Platform/sdl2/SDL2ThreadFactory.h>
+#include <src/Engine/Platform/sdl2/SDL2Surface.h>
+#include <src/Engine/Platform/sdl2/SDL2EventHandler.h>
+#include <src/Engine/Platform/sdl2/SDL2RenderContext.h>
+#include <src/Engine/Platform/sdl2/SDL2Timer.h>
+#include <src/Engine/Platform/sdl2/SDL2ThreadFactory.h>
 
 #include <GL/glew.h>
 #include <SDL.h>
