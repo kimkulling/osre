@@ -55,7 +55,7 @@ namespace OSRE {
 #       define OSRE_EXPORT TAG_DLL_IMPORT
 #   endif
 #else
-#   define OSRE_EXPORT
+#   define OSRE_EXPORT  __attribute__ ((visibility("default")))
 #endif
 
 #if _MSC_VER >= 1200
