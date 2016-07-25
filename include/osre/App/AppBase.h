@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations
 namespace Scene {
     class Stage;
 }
@@ -37,7 +38,6 @@ namespace Properties {
 namespace App {
         
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::App::AppBase
 ///	@ingroup	Engine
 ///
 ///	@brief  This class implements the basics for a new OSRE-application. It helps you to 

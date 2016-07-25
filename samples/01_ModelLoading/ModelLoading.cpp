@@ -37,21 +37,21 @@ using namespace OSRE;
 using namespace OSRE::RenderBackend;
 
 // To identify local log entries 
-static const String Tag    = "HelloWorld"; 
+static const String Tag = "ModelLoadingApp"; 
 
 // The example application, will create the render environment and render a simple triangle onto it
-class HelloWorldApp : public App::AppBase {
+class ModelLoadingApp : public App::AppBase {
     Scene::Stage *m_stage;
     TransformMatrixBlock m_transformMatrix;
 
 public:
-    HelloWorldApp( int argc, char *argv[] )
+    ModelLoadingApp( int argc, char *argv[] )
     : AppBase( argc, argv )
     , m_stage( nullptr ) {
         // empty
     }
 
-    virtual ~HelloWorldApp() {
+    virtual ~ModelLoadingApp() {
         // empty
     }
 
@@ -100,4 +100,4 @@ protected:
     }
 };
 
-OSRE_MAIN( HelloWorldApp )
+OSRE_MAIN( ModelLoadingApp )

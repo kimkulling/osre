@@ -59,6 +59,6 @@ void View::set( const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up
     m_up     = up;
 }
 
-}
-}
+} // Namespace Scene
+} // Namespace OSRE
 

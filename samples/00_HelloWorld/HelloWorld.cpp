@@ -33,11 +33,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-using namespace OSRE;
-using namespace OSRE::RenderBackend;
+using namespace ::OSRE;
+using namespace ::OSRE::RenderBackend;
 
 // To identify local log entries 
-static const String Tag    = "HelloWorld"; 
+static const String Tag = "HelloWorldApp"; 
 
 // The example application, will create the render environment and render a simple triangle onto it
 class HelloWorldApp : public App::AppBase {
@@ -91,8 +91,6 @@ protected:
 
 			geo->m_material->m_parameters = parameter;
             geo->m_material->m_numParameters++;
-			//geo->m_numParameter++;
-
 			geoNode->addGeometry( geo );
 		}
 

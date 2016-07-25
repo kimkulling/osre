@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2016 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,54 +20,29 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/Common/osre_common.h>
-#include <cppcore/Container/THashMap.h>
+#include <gtest/gtest.h>
+#include <osre/Common/ArgumentParser.h>
 
 namespace OSRE {
-    
-// Forward declarations
-namespace IO {
-    class Stream;
-    class Uri;
-}
+namespace UnitTest {
 
-namespace RenderBackend {
-    struct BufferData;
-}
+using namespace ::OSRE::Common;
 
-namespace Scene {
-    class World;
-}
-
-namespace Assets {
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup    Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AssetRegistry {
-public:
-    static AssetRegistry *create();
-    static void destroy();
-    static AssetRegistry *getInstance();
-    void registerAssetPath( const String &mount, const String &path );
-    bool hasPath( const String &mount ) const;
-    String getPath( const String &mount ) const;
-    String resolvePathFromUri( const IO::Uri &location );
-    void clear();
-
-private:
-    AssetRegistry();
-    ~AssetRegistry();
-
-private:
-    static AssetRegistry *s_instance;
-    typedef CPPCore::THashMap<ui32, String> Name2PathMap;
-    Name2PathMap m_name2pathMap;
+class ArgumentParserTest : public ::testing::Test {
+    // empty
 };
 
-} // Namespace Assets
-} // Namespace OSRE
+TEST_F( ArgumentParserTest, createTest ) {
+    bool ok( true );
+    try {
+        i32 argc = 2;
+        c8 *ppArgv[] = { "testApp", "api" };
+        ArgumentParser testParser( argc, ppArgv, "api", "bla" );
+    } catch( ... ) {
+        ok = false;
+    }
+    EXPECT_TRUE( ok );
+}
+
+}
+}

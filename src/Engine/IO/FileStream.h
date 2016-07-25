@@ -59,6 +59,14 @@ public:
     ui32 read( void *pBuffer, ui32 size );
     /// Writes into file.
     ui32 write( const void *pBuffer, ui32 size );
+    /// Reads a single integer value.
+    ui32 readI32( i32 &value );
+    /// Writes a single integer value.
+    ui32 writeI32( i32 value );
+    /// Reads a single unsigned integer value.
+    ui32 readUI32( ui32 &value );
+    /// Writes a single unsigned integer value.
+    ui32 writeUI32( ui32 value );
     /// Moves to given position.
     Position seek( Offset offset, Origin origin );
     /// Position in the file.

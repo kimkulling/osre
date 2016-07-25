@@ -34,7 +34,6 @@ TransformBlockCache::TransformBlockCache( ui32 numIniBlocks )
 , m_blocks( nullptr ) {
     if( 0 != m_numBlocks ) {
         m_blocks = new RenderBackend::TransformBlock[ m_numBlocks ];
-
     }
 }
 
@@ -138,7 +137,7 @@ static void updateNode( Node *current, bool traverse, RenderBackend::RenderBacke
     }
 }
 
-void Stage::update() {
+void Stage::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
     if( nullptr == m_root ) {
         return;
     }

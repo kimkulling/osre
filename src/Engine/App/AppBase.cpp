@@ -119,7 +119,6 @@ void AppBase::requestNextFrame() {
     OSRE_ASSERT( nullptr != m_impl );
 
     m_impl->m_rbService->update( m_impl->m_timediff );
-
 }
 
 bool AppBase::handleEvents() {
@@ -187,6 +186,7 @@ bool AppBase::onCreate( Properties::Settings *config ) {
         osre_debug( Tag, "Cannot create asset registry." );
     }
 
+    // create the platform interface instance
     m_impl->m_platformInterface = Platform::PlatformInterface::create( m_impl->m_settings );
     if( m_impl->m_platformInterface ) {
         if( !m_impl->m_platformInterface->open() ) {
@@ -212,12 +212,12 @@ bool AppBase::onCreate( Properties::Settings *config ) {
         RenderBackend::CreateRendererEventData *data = new RenderBackend::CreateRendererEventData( m_impl->m_platformInterface->getRootSurface() );
         m_impl->m_rbService->sendEvent( &RenderBackend::OnCreateRendererEvent, data );
     }
-
-    // store timer instance
     m_impl->m_timer = Platform::PlatformInterface::getInstance()->getTimer();
 
+    // create our world
     m_impl->m_world = new Scene::World( "world" );
-    // set application state to Created
+    
+    // set application state to "Created"
     osre_debug( Tag, "Set application state to Created." );
     m_impl->m_state = Impl::Created;
     
@@ -252,7 +252,7 @@ bool AppBase::onDestroy() {
 void AppBase::onUpdate() {
     OSRE_ASSERT( nullptr != m_impl );
 
-    m_impl->m_world->update();
+    m_impl->m_world->update( m_impl->m_rbService );
 }
 
 } // Namespace App

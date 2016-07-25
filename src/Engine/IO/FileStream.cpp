@@ -22,57 +22,50 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "FileStream.h"
 
-#include <cassert>
+#include <osre/Debugging/osre_debugging.h>
 #include <sys/types.h> 
 #include <sys/stat.h> 
 
 namespace OSRE {
 namespace IO {
 
-//-------------------------------------------------------------------------------------------------
 FileStream::FileStream() 
 : Stream()
 , m_pFile( nullptr ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 FileStream::FileStream( const Uri &uri, AccessMode requestedAccess ) 
 : Stream( uri, requestedAccess )
 , m_pFile( nullptr ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 FileStream::~FileStream() {
     if ( isOpen() )	{
         this->close();
     }
 }
 
-//-------------------------------------------------------------------------------------------------
-bool FileStream::canRead() const {
+bool 
+FileStream::canRead() const {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool FileStream::canWrite() const {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool FileStream::canSeek() const {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool FileStream::open() {
     if ( isOpen() ) {
         return false;
     }
 
-    assert( nullptr == m_pFile );
-
+    OSRE_ASSERT( nullptr == m_pFile );
     const String &abspath = m_Uri.getAbsPath();
     String modestr;
     AccessMode mode = getAccessMode();
@@ -89,12 +82,12 @@ bool FileStream::open() {
     } else if ( AppendAccess == mode ) {
         modestr = "ra";
     }
-    assert( !modestr.empty() );
+    OSRE_ASSERT( !modestr.empty() );
 
 #if defined(OSRE_WINDOWS) && !defined(__MINGW32__) && !defined (__MINGW64__)
     errno_t err;
     err = ::fopen_s( &m_pFile, abspath.c_str(), modestr.c_str() );
-    assert( 0 == err );
+    OSRE_ASSERT( 0 == err );
 #else
     m_pFile = ::fopen( abspath.c_str(), modestr.c_str() );
 #endif 
@@ -102,13 +95,12 @@ bool FileStream::open() {
     return ( nullptr != m_pFile );
 }
 
-//-------------------------------------------------------------------------------------------------
 bool FileStream::close() {
     if ( !isOpen() ) {
         return false;
     }
 
-    assert( nullptr != m_pFile );
+    OSRE_ASSERT( nullptr != m_pFile );
     if ( m_pFile ) {
         ::fclose( m_pFile );
         m_pFile = nullptr;
@@ -118,33 +110,30 @@ bool FileStream::close() {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 FileStream::getSize() const {	
-    assert( !m_Uri.getAbsPath().empty() );
+    OSRE_ASSERT( !m_Uri.getAbsPath().empty() );
 
-    const String &abspath = m_Uri.getAbsPath();
-
+    const String &abspath( m_Uri.getAbsPath() );
 #ifdef OSRE_WINDOWS
     // Get the windows specific file-size
     struct __stat64 fileStat; 
     int err = _stat64(  abspath.c_str(), &fileStat ); 
     if ( 0 != err ) {
         return 0;
-    } else {
-        return ( static_cast<ui32>( fileStat.st_size ) ); 
     }
 
+    return ( static_cast<ui32>( fileStat.st_size ) ); 
 #else
     // For unix
     struct stat fileStat; 
     int err = stat( abspath.c_str(), &fileStat ); 
-    if ( 0 != err ) 
-        return 0; 
+    if ( 0 != err ) {
+        return 0;
+    }
     return  static_cast<ui32>( fileStat.st_size ); 
 #endif
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 FileStream::read( void *pBuffer, ui32 size ) {
     if ( !pBuffer  || 0 == size ) {
         return 0;
@@ -154,34 +143,67 @@ ui32 FileStream::read( void *pBuffer, ui32 size ) {
         return 0;
     }
     
-    assert( nullptr != m_pFile );
+    OSRE_ASSERT( nullptr != m_pFile );
     if ( m_pFile ) {
         return ( static_cast<ui32>( ::fread( pBuffer, sizeof( uc8 ), size , m_pFile ) ) );
-    } else {
-        return 0;
-    }
+    } 
+    return 0;
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 FileStream::write( const void *pBuffer, ui32 size ) {
-    assert( nullptr != pBuffer );
+    OSRE_ASSERT( nullptr != pBuffer );
     if ( !isOpen() || 0 == size || !pBuffer ) {
         return 0;
     }
 
-    assert( nullptr != m_pFile );
+    OSRE_ASSERT( nullptr != m_pFile );
     if ( m_pFile ) {
         return ( static_cast<ui32>( ::fwrite( pBuffer, sizeof( c8 ), size, m_pFile ) ) );
-    } else {
-        return 0;
-    }
+    } 
+      
+    return 0;
 }
 
-//-------------------------------------------------------------------------------------------------
-FileStream::Position FileStream::seek( Offset offset, Origin origin ) {
-    assert( nullptr != m_pFile );
+ui32 FileStream::readI32( i32 &value ) {
+    OSRE_ASSERT( nullptr != m_pFile );
+    if ( m_pFile ) {
+        return ( static_cast< ui32 >( ::fread( &value, sizeof( i32 ), 1, m_pFile ) ) );
+    }
 
-    i32 originValue = 0;
+    return 0;
+}
+
+ui32 FileStream::writeI32( i32 value ) {
+    OSRE_ASSERT( nullptr != m_pFile );
+    if ( m_pFile ) {
+        return ( static_cast< ui32 >( ::fwrite( &value, sizeof( i32 ), 1, m_pFile ) ) );
+    }
+    
+    return 0;
+}
+
+ui32 FileStream::readUI32( ui32 &value ) {
+    OSRE_ASSERT( nullptr != m_pFile );
+    if ( m_pFile ) {
+        return ( static_cast< ui32 >( ::fread( &value, sizeof( ui32 ), 1, m_pFile ) ) );
+    }
+
+    return 0;
+}
+
+ui32 FileStream::writeUI32( ui32 value ) {
+    OSRE_ASSERT( nullptr != m_pFile );
+    if ( m_pFile ) {
+        return ( static_cast< ui32 >( ::fwrite( &value, sizeof( ui32 ), 1, m_pFile ) ) );
+    }
+
+    return 0;
+}
+
+FileStream::Position FileStream::seek( Offset offset, Origin origin ) {
+    OSRE_ASSERT( nullptr != m_pFile );
+
+    i32 originValue( 0 );
     if ( origin == Current ) {
         originValue = SEEK_CUR;
     } else {
@@ -189,27 +211,23 @@ FileStream::Position FileStream::seek( Offset offset, Origin origin ) {
     }
     if ( m_pFile ) {
         return ::fseek( m_pFile, offset, originValue );
-    } else {
-        return 0;
-    }
+    } 
+      
+    return 0;
 }
 
-//-------------------------------------------------------------------------------------------------
 FileStream::Position FileStream::tell() {
-    assert( nullptr != m_pFile );
+    OSRE_ASSERT( nullptr != m_pFile );
     if ( m_pFile ) {
         return ( ::ftell( m_pFile ) );
-    } else {
-        return 0;
     }
+     
+    return 0;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool FileStream::isOpen() const {
-    return ( m_pFile != NULL );
+    return ( m_pFile != nullptr );
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace IO
 } // Namespace OSRE

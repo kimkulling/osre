@@ -34,7 +34,6 @@ static const c8 tokenArgIn    = '<';
 static const c8 tokenArgOut   = '>';
 static const String dummy = "";
 
-//--------------------------------------------------------------------------------------------------------------------
 ArgumentParser::Argument::Argument()
 : m_argument( "" )
 , m_desc( "" )
@@ -42,7 +41,6 @@ ArgumentParser::Argument::Argument()
     // empty
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 ArgumentParser::Argument::Argument( const String &arg, const String &desc, ui32 numArgs )
 : m_argument( arg )
 , m_desc( desc )
@@ -50,7 +48,6 @@ ArgumentParser::Argument::Argument( const String &arg, const String &desc, ui32 
     // empty
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedArgs, const String &desc )
 : m_SupportedArguments()
 , m_StoredArguments()
@@ -115,7 +112,7 @@ ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedA
     }
 
     // validate incoming arguments
-    for ( ui32 i=1; i<static_cast<ui32>( argc ); ++i ) {
+    /*for ( ui32 i=1; i<static_cast<ui32>( argc ); ++i ) {
         String incomingArg( ppArgv[ i ] );
         String::size_type pos = incomingArg.find( "--" );
         if( String::npos != pos ) {
@@ -132,16 +129,17 @@ ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedA
                 break;
             }
         }
+    }*/
+    if ( !validateArguments( argc, ppArgv ) ) {
+        setInvalid();
     }
     m_CurrentIndex = 0;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 ArgumentParser::~ArgumentParser() {
     // empty
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 bool ArgumentParser::getNext( String &arg, String &value ) {
     if ( m_SupportedArguments.isEmpty() || m_StoredArguments.isEmpty() || 
         m_CurrentIndex >= m_SupportedArguments.size() ) {
@@ -155,7 +153,6 @@ bool ArgumentParser::getNext( String &arg, String &value ) {
     return true;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 void ArgumentParser::clear() {
     m_SupportedArguments.clear();
     m_detectedArgs.clear();
@@ -164,7 +161,6 @@ void ArgumentParser::clear() {
     m_isValid = true;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 bool ArgumentParser::isSupported( const String &arg ) const {
     bool res( false );
     for ( ui32 index = 0; index < m_SupportedArguments.size(); ++index ) {
@@ -177,7 +173,6 @@ bool ArgumentParser::isSupported( const String &arg ) const {
     return res;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 ui32 ArgumentParser::getNumValues( const String &rArgument ) const {
     if ( rArgument.empty() ) {
         return 0;
@@ -194,7 +189,6 @@ ui32 ArgumentParser::getNumValues( const String &rArgument ) const {
     return numValues;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 const String &ArgumentParser::getArgument( const String &arg ) const {
     if ( arg.empty() ) {
         return dummy;
@@ -209,7 +203,6 @@ const String &ArgumentParser::getArgument( const String &arg ) const {
     return dummy;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 bool ArgumentParser::hasArgument( const String &arg ) const {
     bool result( false );
     for ( ui32 idx=0; idx<m_detectedArgs.size(); ++idx ) {
@@ -223,12 +216,10 @@ bool ArgumentParser::hasArgument( const String &arg ) const {
     return result;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 bool ArgumentParser::hasValidArgs() const {
     return m_isValid;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 bool ArgumentParser::parseArgParameter( const String &arg, ui32 &numPara ) {
     if ( arg.empty() ) {
         return true;
@@ -266,7 +257,6 @@ bool ArgumentParser::parseArgParameter( const String &arg, ui32 &numPara ) {
     return true;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 String ArgumentParser::getBlankArgument( const String &arg ) {
     String blankArg( "" );
 
@@ -291,12 +281,33 @@ String ArgumentParser::getBlankArgument( const String &arg ) {
     return blankArg;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
+bool ArgumentParser::validateArguments( i32 argc, c8 *ppArgv[] ) {
+    bool valid( true );
+    for ( ui32 i = 1; i < static_cast< ui32 >( argc ); ++i ) {
+        String incomingArg( ppArgv[ i ] );
+        String::size_type pos = incomingArg.find( "--" );
+        if ( String::npos != pos ) {
+            bool supported( false );
+            for ( ui32 j = 0; j < m_SupportedArguments.size(); ++j ) {
+                const String searchFor( "--" + m_SupportedArguments[ j ].m_argument );
+                if ( incomingArg == searchFor ) {
+                    supported = true;
+                    break;
+                }
+            }
+            if ( !supported ) {
+                valid = false;
+                break;
+            }
+        }
+    }
+
+    return valid;
+}
+
 void ArgumentParser::setInvalid() {
     m_isValid = false;
 }
-
-//--------------------------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 } // Namespace OSRE
