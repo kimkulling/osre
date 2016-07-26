@@ -46,13 +46,13 @@ TEST_F( EventTest, calculateHashFromEventNameTest ) {
     const String name( "test_event" );
     Event myEvent( name );
     const ui32 hash( myEvent.getHash() );
-    EXPECT_NE( 0, hash );
+    EXPECT_NE( hash, (ui32) 0 );
 
     const String empty_name( "" );
     Event myEvent1( empty_name );
 
     const ui32 hash_empty( myEvent1.getHash() );
-    EXPECT_EQ( 0, hash_empty );
+    EXPECT_EQ( hash_empty, (ui32) 0  );
 }
 
 } // Namespace UnitTest

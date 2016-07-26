@@ -74,7 +74,7 @@ public:
     virtual Node *findNode( const String &name ) const;
     virtual View *addView( const String &name, Node *node );
     virtual void clear();
-    virtual void update();
+    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
     virtual void setIdContainer( Common::Ids &ids );
     
 private:

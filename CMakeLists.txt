@@ -74,7 +74,8 @@ endif()
 
 
 # Include all sub directories of the engine code component
-ADD_SUBDIRECTORY( src )
+ADD_SUBDIRECTORY( src/Engine )
+ADD_SUBDIRECTORY( src/Editor )
 ADD_SUBDIRECTORY( test/RenderTests )
 ADD_SUBDIRECTORY( test/UnitTests )
 ADD_SUBDIRECTORY( samples )

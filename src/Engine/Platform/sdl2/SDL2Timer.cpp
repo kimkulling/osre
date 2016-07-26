@@ -20,54 +20,46 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
+#include <src/Engine/Platform/sdl2/SDL2Timer.h>
 
-#include <osre/Common/osre_common.h>
-#include <cppcore/Container/THashMap.h>
+#include <SDL.h>
 
 namespace OSRE {
-    
-// Forward declarations
-namespace IO {
-    class Stream;
-    class Uri;
-}
+namespace Platform {
 
-namespace RenderBackend {
-    struct BufferData;
-}
-
-namespace Scene {
-    class World;
-}
-
-namespace Assets {
+static d32 InvSecToMSec = 1.0/1000.0;
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup    Engine
-///
-///	@brief  
+SDL2Timer::SDL2Timer()
+: AbstractTimer( "platform/sdl2timer" )
+, m_lasttick( 0 ){
+    // empty
+}
+
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AssetRegistry {
-public:
-    static AssetRegistry *create();
-    static void destroy();
-    static AssetRegistry *getInstance();
-    void registerAssetPath( const String &mount, const String &path );
-    bool hasPath( const String &mount ) const;
-    String getPath( const String &mount ) const;
-    String resolvePathFromUri( const IO::Uri &location );
-    void clear();
+SDL2Timer::~SDL2Timer( ) {
 
-private:
-    AssetRegistry();
-    ~AssetRegistry();
+}
 
-private:
-    static AssetRegistry *s_instance;
-    typedef CPPCore::THashMap<ui32, String> Name2PathMap;
-    Name2PathMap m_name2pathMap;
-};
+//-------------------------------------------------------------------------------------------------
+d32 SDL2Timer::getCurrentSeconds( ) {
+    m_lasttick = ( ( d32 ) SDL_GetTicks() ) * InvSecToMSec;
+    return (  m_lasttick ) ;
+}
 
-} // Namespace Assets
+//-------------------------------------------------------------------------------------------------
+d32 SDL2Timer::getTimeDiff( ) {
+    d32 last( m_lasttick );
+    d32 current = getCurrentSeconds();
+    d32 diff = current - last;
+    if( diff > 1000.0 ) {
+        return AbstractTimer::getRequestedTimeStep();
+    } else {
+        return current - last;
+    }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+} // Namespace Platform
 } // Namespace OSRE

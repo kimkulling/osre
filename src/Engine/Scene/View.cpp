@@ -20,54 +20,45 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/Common/osre_common.h>
-#include <cppcore/Container/THashMap.h>
+#include <osre/Scene/View.h>
+#include <osre/Common/Logger.h>
+#include <osre/RenderBackend/Parameter.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace OSRE {
-    
-// Forward declarations
-namespace IO {
-    class Stream;
-    class Uri;
-}
-
-namespace RenderBackend {
-    struct BufferData;
-}
-
 namespace Scene {
-    class World;
+
+static const String Tag = "View";
+
+View::View( const String &name ) 
+: Object( name )
+, m_node( nullptr )
+, m_pos( 1, 1, 1 )
+, m_lookAt( 0, 0, 0 )
+, m_up( 0, 0, 1 )
+, m_view()
+, m_projection() {
+    // empty
 }
 
-namespace Assets {
+View::~View() {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup    Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AssetRegistry {
-public:
-    static AssetRegistry *create();
-    static void destroy();
-    static AssetRegistry *getInstance();
-    void registerAssetPath( const String &mount, const String &path );
-    bool hasPath( const String &mount ) const;
-    String getPath( const String &mount ) const;
-    String resolvePathFromUri( const IO::Uri &location );
-    void clear();
+}
 
-private:
-    AssetRegistry();
-    ~AssetRegistry();
+void View::observeNode( Node *node ) {
+    m_node = node;
+}
 
-private:
-    static AssetRegistry *s_instance;
-    typedef CPPCore::THashMap<ui32, String> Name2PathMap;
-    Name2PathMap m_name2pathMap;
-};
+void View::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
+    m_view = glm::lookAt( m_pos, m_lookAt, m_up );
+}
 
-} // Namespace Assets
+void View::set( const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up ) {
+    m_pos    = pos;
+    m_lookAt = view;
+    m_up     = up;
+}
+
+} // Namespace Scene
 } // Namespace OSRE
+

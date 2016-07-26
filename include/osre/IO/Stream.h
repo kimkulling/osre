@@ -128,6 +128,12 @@ public:
     /// @return The number of written bytes.
     virtual ui32 write( const void *pBuffer, ui32 size );
     
+    virtual ui32 readI32( i32 &value );
+    virtual ui32 writeI32( i32 value );
+
+    virtual ui32 readUI32( ui32 &value );
+    virtual ui32 writeUI32( ui32 value );
+
     /// @brief  Moves to the current position.
     /// @param  offset          [in] The offset.
     /// @param  origin          [in] The origin.

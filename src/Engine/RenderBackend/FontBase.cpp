@@ -20,54 +20,75 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/Common/osre_common.h>
-#include <cppcore/Container/THashMap.h>
+#include <osre/RenderBackend/FontBase.h>
+#include <src/Engine/RenderBackend/OGLRenderer/OGLRenderBackend.h>
 
 namespace OSRE {
-    
-// Forward declarations
-namespace IO {
-    class Stream;
-    class Uri;
-}
-
 namespace RenderBackend {
-    struct BufferData;
+ 
+FontBase::FontBase( const String &name )
+: Object( name )
+, m_texName()
+, m_numCols( 0 )
+, m_numRows( 0 )
+, m_fontAtlas( nullptr )
+, m_uri() {
+    // empty
 }
 
-namespace Scene {
-    class World;
+FontBase::~FontBase() {
+    // empty
+}
+    
+void FontBase::setSize( ui32 size ) {
+    m_size = size;
+}
+    
+ui32 FontBase::getSize() const {
+    return m_size;
 }
 
-namespace Assets {
+void FontBase::setUri( const IO::Uri &uri ) {
+    m_uri = uri;
+    m_texName = m_uri.getResource();
+}
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup    Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AssetRegistry {
-public:
-    static AssetRegistry *create();
-    static void destroy();
-    static AssetRegistry *getInstance();
-    void registerAssetPath( const String &mount, const String &path );
-    bool hasPath( const String &mount ) const;
-    String getPath( const String &mount ) const;
-    String resolvePathFromUri( const IO::Uri &location );
-    void clear();
+void FontBase::setTextureName( const String &name ) {
+    m_texName = name;
+}
 
-private:
-    AssetRegistry();
-    ~AssetRegistry();
+const String &FontBase::getTextureName() const {
+    return m_texName;
+}
 
-private:
-    static AssetRegistry *s_instance;
-    typedef CPPCore::THashMap<ui32, String> Name2PathMap;
-    Name2PathMap m_name2pathMap;
-};
+void FontBase::setAtlasCols( ui32 numCols ) {
+    m_numCols = numCols;
+}
 
-} // Namespace Assets
-} // Namespace OSRE
+void FontBase::setAtlasRows( ui32 numRows ) {
+    m_numRows = numRows;
+}
+
+bool FontBase::loadFromStream( OGLRenderBackend *rb ) {
+    if ( m_uri.isEmpty() || nullptr == rb ) {
+        return false;
+    }
+
+    const String texName( Object::getName() );
+    if( nullptr != m_fontAtlas ) {
+        rb->releaseTexture( m_fontAtlas );
+        m_fontAtlas = nullptr;
+    }
+
+    m_fontAtlas = rb->createTextureFromFile( m_texName, m_uri );
+    if( nullptr == m_fontAtlas ) {
+        return false;
+    }
+    m_numRows = 16;
+    m_numCols = 16;
+
+    return true;
+}
+
+}
+}

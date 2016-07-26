@@ -25,9 +25,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Object.h>
 
 namespace OSRE {
+
+// Forward declarations
+namespace RenderBackend {
+    class RenderBackendService;
+}
+
 namespace Scene {
 
 class Stage;
+class View;
 
 class World : public Common::Object {
 public:
@@ -36,7 +43,10 @@ public:
     void addStage( Stage *stage );
     bool setActiveStage( Stage *activeStage );
     bool setActiveStage( const String &stageName );
-    void update();
+    void addView( View *view );
+    bool setActiveView( View *activeView );
+    bool setActiveView( const String &viewName );
+    void update( RenderBackend::RenderBackendService *rbService );
 
 private:
     struct Impl;

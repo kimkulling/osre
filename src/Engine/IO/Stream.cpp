@@ -20,54 +20,106 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/Common/osre_common.h>
-#include <cppcore/Container/THashMap.h>
+#include <osre/IO/Stream.h>
 
 namespace OSRE {
-    
-// Forward declarations
 namespace IO {
-    class Stream;
-    class Uri;
+
+Stream::Stream() 
+: m_Uri()
+, m_AccessMode() {
+	// empty
 }
 
-namespace RenderBackend {
-    struct BufferData;
+Stream::Stream( const Uri &uri, AccessMode mode ) 
+: m_Uri( uri)
+, m_AccessMode( mode ) {
+	// empty
 }
 
-namespace Scene {
-    class World;
+Stream::~Stream() {
+	// empty
 }
 
-namespace Assets {
+void Stream::setUri( const Uri &rURI ) {
+	m_Uri = rURI;
+}
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup    Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AssetRegistry {
-public:
-    static AssetRegistry *create();
-    static void destroy();
-    static AssetRegistry *getInstance();
-    void registerAssetPath( const String &mount, const String &path );
-    bool hasPath( const String &mount ) const;
-    String getPath( const String &mount ) const;
-    String resolvePathFromUri( const IO::Uri &location );
-    void clear();
+const Uri &Stream::getUri() const {
+	return m_Uri;
+}
 
-private:
-    AssetRegistry();
-    ~AssetRegistry();
+bool Stream::canRead() const {
+	return false;
+}
 
-private:
-    static AssetRegistry *s_instance;
-    typedef CPPCore::THashMap<ui32, String> Name2PathMap;
-    Name2PathMap m_name2pathMap;
-};
+bool Stream::canWrite() const {
+	return false;
+}
 
-} // Namespace Assets
+bool Stream::canSeek() const {
+	return false;
+}
+
+bool Stream::canBeMapped() const {
+	return false;
+}
+
+void Stream::setAccessMode( AccessMode accessMode ) {
+	m_AccessMode = accessMode;
+}
+
+Stream::AccessMode Stream::getAccessMode() const {
+	return m_AccessMode;
+}
+
+ui32 Stream::getSize() const {
+	return 0;
+}
+
+ui32 Stream::read( void *pBuffer, ui32 size ) {
+	return 0;
+}
+
+ui32 Stream::write( const void *pBuffer, ui32 size ) {
+	return 0;
+}
+
+ui32 Stream::readI32( i32 &value ) {
+    return 0;
+}
+
+ui32 Stream::writeI32( i32 value ) {
+    return 0;
+}
+
+ui32 Stream::readUI32( ui32 &value ) {
+    return 0;
+}
+
+ui32 Stream::writeUI32( ui32 value ) {
+    return 0;
+}
+
+Stream::Position Stream::seek( Offset offset, Origin origin ) {
+	return 0;
+}
+
+Stream::Position Stream::tell() {
+	return 0;
+}
+
+bool Stream::isOpen() const {
+	return false;
+}
+
+bool Stream::open() {
+	return false;
+}
+
+bool Stream::close() {
+	return false;
+}
+
+} // Namespace IO
 } // Namespace OSRE

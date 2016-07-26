@@ -125,7 +125,16 @@ typedef int ObjectId;
 typedef std::string String;
 
 struct Handle {
-    int m_idx;
+    i32 m_idx;
+
+    Handle()
+    : m_idx( -1 ) {
+        // empty
+    }
+
+    Handle( i32 idx ) {
+        init( idx );
+    }
 
     void init( int idx ) {
         m_idx = idx;
@@ -140,19 +149,19 @@ private: \
 
 ///	@brief  Shortcut to get a OSRE-main function.
 /// 
-#define OSRE_MAIN( APPNAME ) \
+#define OSRE_MAIN( APPNAME )          \
 int main( int argc, char *argv[] )  { \
-    APPNAME myApp( argc, argv ); \
-    if ( !myApp.create() ) { \
-        return 1; \
-    } \
-    while ( myApp.handleEvents() ) { \
-        myApp.update(); \
-        myApp.requestNextFrame();\
-    }\
-    myApp.destroy();\
-\
-    return 0;\
+    APPNAME myApp( argc, argv );      \
+    if ( !myApp.create() ) {          \
+        return 1;                     \
+    }                                 \
+    while ( myApp.handleEvents() ) {  \
+        myApp.update();               \
+        myApp.requestNextFrame();     \
+    }                                 \
+    myApp.destroy();                  \
+                                      \
+    return 0;                         \
 }
 
 } // Namespace OSRE
