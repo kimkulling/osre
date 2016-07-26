@@ -36,7 +36,7 @@ TEST_F( ArgumentParserTest, createTest ) {
     bool ok( true );
     try {
         i32 argc = 2;
-        c8 *ppArgv[] = { "testApp", "api" };
+        c8 *ppArgv[] = { "testApp", "--api" };
         ArgumentParser testParser( argc, ppArgv, "api", "bla" );
     } catch( ... ) {
         ok = false;
@@ -44,5 +44,15 @@ TEST_F( ArgumentParserTest, createTest ) {
     EXPECT_TRUE( ok );
 }
 
+TEST_F( ArgumentParserTest, parseArgTest ) {
+    static const String SupportedArgs = "help:api:gen_project:asset_path";
+    static const String Descs = "Shows the help:The render API:Generates a template project:Path to media";
+
+    i32 argc = 2;
+    c8 *ppArgv[] = { "testApp", "--api" };
+    ArgumentParser testParser( argc, ppArgv, SupportedArgs, Descs );
+    EXPECT_TRUE( testParser.hasValidArgs() );
+
+}
 }
 }

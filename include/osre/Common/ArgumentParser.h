@@ -56,6 +56,10 @@ public:
     ///	@return	true, if arguments are supported.
     bool hasSupportedArguments() const;
 
+    /// @brief  Will show the help.
+    /// @return The help string;
+    String showHelp();
+
     ///	@brief	Returns next argument and its content.
     ///	@param	arg     	[in] Next argument.
     ///	@param	value		[in] Content of argument.

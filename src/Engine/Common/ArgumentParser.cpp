@@ -69,67 +69,44 @@ ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedA
         }
     }
 
-    // The number of arguments is right, parse the arguments
-    if ( expectedArgc <= static_cast<ui32>( argc-1 ) ) {
-        if ( argc > 1 )	{
-            while ( m_CurrentIndex < static_cast<ui32>( argc - 1 ) ) {
-                String argument( ppArgv[ m_CurrentIndex ] );
-                const String::size_type pos = argument.find( option );
-                if( String::npos != pos ) {
-                    argument = argument.substr( pos+optionLen, argument.size() - (pos+optionLen) );
-                    if ( isSupported( argument ) ) {
-                        const ui32 numValues = getNumValues( argument );
-                        if ( numValues ) {
-                            // Check the number of expected values for being a new option
-                            for ( ui32 valIdx=m_CurrentIndex+1; valIdx<m_CurrentIndex+numValues+1; valIdx++ ) {
-                                String tmpVal( ppArgv[ valIdx ] );
-                                String::size_type pos1 = tmpVal.find( option );
-                                if( pos1 != String::npos ) {
-                                    setInvalid();
-                                    break;
-                                }
+    if ( argc > 1 )	{
+        while ( m_CurrentIndex < static_cast<ui32>( argc ) ) {
+            String argument( ppArgv[ m_CurrentIndex ] );
+            const String::size_type pos = argument.find( option );
+            if( String::npos != pos ) {
+                argument = argument.substr( pos+optionLen, argument.size() - (pos+optionLen) );
+                if ( isSupported( argument ) ) {
+                    const ui32 numValues = getNumValues( argument );
+                    if ( numValues ) {
+                        // Check the number of expected values for being a new option
+                        for ( ui32 valIdx=m_CurrentIndex+1; valIdx<m_CurrentIndex+numValues+1; valIdx++ ) {
+                            String tmpVal( ppArgv[ valIdx ] );
+                            String::size_type pos1 = tmpVal.find( option );
+                            if( pos1 != String::npos ) {
+                                setInvalid();
+                                break;
                             }
                         }
-
-                        // Store the data if its valid
-                        if ( m_isValid ) {
-                            if ( ( m_CurrentIndex + 1 ) < static_cast<ui32>( argc ) ) {
-                                ++m_CurrentIndex;
-                                m_detectedArgs.add( argument );
-                                String content( ppArgv[ m_CurrentIndex ] );
-                                m_StoredArguments.add( content );
-                            }
-                        } 
-                    } else {
-                        setInvalid();
                     }
+
+                    // Store the data if its valid
+                    if ( m_isValid ) {
+                        if ( ( m_CurrentIndex + 1 ) < static_cast<ui32>( argc ) ) {
+                            ++m_CurrentIndex;
+                            m_detectedArgs.add( argument );
+                            String content( ppArgv[ m_CurrentIndex ] );
+                            m_StoredArguments.add( content );
+                        }
+                    } 
+                } else {
+                    setInvalid();
                 }
-                ++m_CurrentIndex;
             }
+            ++m_CurrentIndex;
         }
-    } else {
-        setInvalid();
     }
 
     // validate incoming arguments
-    /*for ( ui32 i=1; i<static_cast<ui32>( argc ); ++i ) {
-        String incomingArg( ppArgv[ i ] );
-        String::size_type pos = incomingArg.find( "--" );
-        if( String::npos != pos ) {
-            bool supported( false );
-            for ( ui32 j=0; j<m_SupportedArguments.size(); ++j ) {
-                const String searchFor( "--" + m_SupportedArguments[ j ].m_argument );
-                if ( incomingArg == searchFor ) {
-                    supported = true;
-                    break;
-                }
-            }
-            if ( !supported ) {
-                setInvalid();
-                break;
-            }
-        }
-    }*/
     if ( !validateArguments( argc, ppArgv ) ) {
         setInvalid();
     }
@@ -138,6 +115,30 @@ ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedA
 
 ArgumentParser::~ArgumentParser() {
     // empty
+}
+
+String ArgumentParser::showHelp() {
+    if ( m_SupportedArguments.isEmpty() ) {
+        return String( "" );
+    }
+
+    String helpMsg;
+    for ( ui32 i = 0; i < m_SupportedArguments.size(); i++ ) {
+        Argument argument = m_SupportedArguments[ i ];
+        const String arg = argument.m_argument;
+        const String desc = argument.m_desc;
+        const ui32 numargs = argument.m_numArgs;
+
+        helpMsg += arg + "\t:";
+        helpMsg += desc;
+        if ( numargs > 0 ) {
+            helpMsg += "\n\tNumber of arguments: ";
+            c8 buffer[ 512 ];
+            ::memset( buffer, '\0', 512 );
+            sprintf( buffer, "%d", numargs );
+            helpMsg += String( buffer );
+        }
+    }
 }
 
 bool ArgumentParser::getNext( String &arg, String &value ) {

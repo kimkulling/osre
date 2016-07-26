@@ -255,5 +255,9 @@ void AppBase::onUpdate() {
     m_impl->m_world->update( m_impl->m_rbService );
 }
 
+ArgumentParser &AppBase::getArgumentParser() const {
+    return m_impl->m_argParser;
+}
+
 } // Namespace App
 } // Namespace OSRE
