@@ -48,6 +48,21 @@ ArgumentParser::Argument::Argument( const String &arg, const String &desc, ui32 
     // empty
 }
 
+static void parseExpectedArgs( const String &userDefinedArgs, const String &desc, CPPCore::TArray<ArgumentParser::Argument> &supportedArgs ) {
+    TArray<String> extractedArgs, extractedDescs;
+    Tokenizer::tokenize( userDefinedArgs, extractedArgs, ":" );
+    Tokenizer::tokenize( desc, extractedDescs, ":" );
+    ui32 numParam( 0 );
+    for ( ui32 i = 0; i < extractedArgs.size(); ++i ) {
+        String arg = extractedArgs[ i ];
+        String currentDesc = extractedDescs[ i ];
+        if ( ArgumentParser::parseArgParameter( arg, numParam ) ) {
+            supportedArgs.add( ArgumentParser::Argument( ArgumentParser::getBlankArgument( arg ), currentDesc, numParam ) );
+        }
+    }
+
+}
+
 ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedArgs, const String &desc )
 : m_SupportedArguments()
 , m_StoredArguments()
@@ -55,19 +70,18 @@ ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedA
 , m_isValid( true ) {
     // Parse and store the expected arguments
     const ui32 optionLen = option.size();
-    TArray<String> extractedArgs, extractedDescs;
+    parseExpectedArgs( supportedArgs, desc, m_SupportedArguments );
+    /*TArray<String> extractedArgs, extractedDescs;
     Tokenizer::tokenize( supportedArgs, extractedArgs, ":" );
     Tokenizer::tokenize( desc, extractedDescs, ":" );
     ui32 numParam( 0 );
-    ui32 expectedArgc( 0 );
     for( ui32 i = 0; i<extractedArgs.size(); ++i ) {
         String arg = extractedArgs[ i ];
         String currentDesc = extractedDescs[ i ];
         if ( parseArgParameter( arg, numParam ) ) {
-            expectedArgc += ( 1 + numParam );
             m_SupportedArguments.add( Argument( getBlankArgument( arg ), currentDesc, numParam ) );
         }
-    }
+    }*/
 
     if ( argc > 1 )	{
         while ( m_CurrentIndex < static_cast<ui32>( argc ) ) {
