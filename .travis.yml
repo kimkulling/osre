@@ -14,7 +14,7 @@ env:
 language: cpp
 compiler:
   - gcc
-  - clang
+#  - clang
 script: cmake -G "Unix Makefiles" && make
 
 
