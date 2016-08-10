@@ -34,16 +34,29 @@ class EventTriggerer;
 struct Event;
 struct EventData;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Engine
+///
+///	@brief	An object id, stores the hash id coing from a name as a string.
+//-------------------------------------------------------------------------------------------------
 struct ObjectId {
 	String m_id;
 	HashId m_hash;
 
+    /// @brief  The class constructor.
+    /// @param  id  [in] The object name.
 	ObjectId( const String &id ) 
 	: m_id( id )
 	, m_hash( 0 ) {
 		m_hash = StringUtils::hashName( m_id.c_str() );
 	}
 
+    /// @brief  The class destructor.
+    ~ObjectId() {
+        // empty
+    }
+
+    /// @brief  The hash value getter.
 	HashId getHash() const {
 		return m_hash;
 	}
@@ -81,10 +94,6 @@ struct OSRE_EXPORT Event {
     ///	@return	Pointer to assigned event data instance.
     const EventData *getEventData() const;
     
-    ///	@brief	Returns event ID.
-    ///	@return	Const reference to id.
-    //const String &getIDAsStr() const;
-
     /// @brief  Returns the hash id of the event id.
     /// @return The hash id.
     ui32 getHash() const;
@@ -101,7 +110,6 @@ struct OSRE_EXPORT Event {
     bool operator == (const Event &other) const;
 
     ui32 m_numRefs;
-    //String m_ID;
     HashId m_hash;
     const EventData *m_eventData;
 

@@ -28,7 +28,6 @@ namespace Common {
         
 Event::Event( const String &id )
 : m_numRefs( 1 )
-//, m_ID( id )
 , m_hash( StringUtils::hashName( id.c_str() ) )
 , m_eventData( nullptr ) {
     // empty
@@ -45,10 +44,6 @@ void Event::setEventData( const EventData *pData ) {
 const EventData *Event::getEventData() const {
     return m_eventData;
 }
-
-/*const String &Event::getIDAsStr() const {
-    return m_ID;
-}*/
 
 ui32 Event::getHash() const {
     return m_hash;
