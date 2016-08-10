@@ -25,24 +25,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
-//-------------------------------------------------------------------------------------------------
 Object::Object( const String &objectName )
-: m_ObjectName( objectName )
+: m_objectName( objectName )
 , m_Refcount( 1 ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 Object::~Object() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 void Object::get() {
     ++m_Refcount;
 }
 
-//-------------------------------------------------------------------------------------------------
 void Object::release() {
     if( m_Refcount > 0 ) {
         --m_Refcount;
@@ -52,24 +48,20 @@ void Object::release() {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 Object::getNumRefs() const {
     return m_Refcount;
 }
 
-//-------------------------------------------------------------------------------------------------
 void Object::setName( const String &objName ) {
-    if( m_ObjectName != objName ) {
-        m_ObjectName = objName;
+    if( m_objectName != objName ) {
+        m_objectName = objName;
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &Object::getName() const {
-    return m_ObjectName;
+    return m_objectName;
 }
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 } // Namespace OSRE

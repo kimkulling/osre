@@ -60,7 +60,6 @@ struct Parameter;
 struct PrimitiveGroup;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderBackend::OGLRenderBackend
 ///	@ingroup	Engine
 ///
 ///	@brief

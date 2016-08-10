@@ -23,38 +23,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <cppcore/Container/THashMap.h>
 
 namespace OSRE {
-
-// Forward declarations
-namespace Platform {
-    class AbstractTimer;
-}
-
 namespace Profiling {
         
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT FPSCounter {
+class OSRE_EXPORT PerformanceCounters {
 public:
-    ///	@brief  The class constructor.
-    /// @param  timer   [in] The timer instance.
-    FPSCounter( Platform::AbstractTimer  *timer );
-    
-    ///	@brief  The class destructor.
-    ~FPSCounter();
-
-    ///	@brief  Returns the counted frames per seconds.
-    /// @return The counted frames per second.
-    ui32 getFPS();
+    static bool create();
+    static bool destroy();
+    static bool registerCounter( const String &name );
+    static bool unregisterCounter( const String &name );
+    static bool addValueToCounter( const String &name, ui32 value );
+    static bool queryCounter( const String &name, ui32 &counterValue );
 
 private:
-    Platform::AbstractTimer  *m_timer;
-    d32 m_timeDiff, m_lastTime;
-    ui32 m_fps;
+    PerformanceCounters();
+    ~PerformanceCounters();
+
+private:
+    struct CounterMeasure {
+        ui32 m_count;
+    };
+    static PerformanceCounters *s_instance;
+    CPPCore::THashMap<ui32, CounterMeasure*> m_counters;
 };
 
 } // Namespace Profiling

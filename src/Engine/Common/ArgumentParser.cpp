@@ -71,18 +71,6 @@ ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedA
     // Parse and store the expected arguments
     const ui32 optionLen = option.size();
     parseExpectedArgs( supportedArgs, desc, m_SupportedArguments );
-    /*TArray<String> extractedArgs, extractedDescs;
-    Tokenizer::tokenize( supportedArgs, extractedArgs, ":" );
-    Tokenizer::tokenize( desc, extractedDescs, ":" );
-    ui32 numParam( 0 );
-    for( ui32 i = 0; i<extractedArgs.size(); ++i ) {
-        String arg = extractedArgs[ i ];
-        String currentDesc = extractedDescs[ i ];
-        if ( parseArgParameter( arg, numParam ) ) {
-            m_SupportedArguments.add( Argument( getBlankArgument( arg ), currentDesc, numParam ) );
-        }
-    }*/
-
     if ( argc > 1 )	{
         while ( m_CurrentIndex < static_cast<ui32>( argc ) ) {
             String argument( ppArgv[ m_CurrentIndex ] );

@@ -65,11 +65,11 @@ protected:
 
 private: 
     Object();
-    Object( const Object & );
-    Object &operator = ( const Object & );
+    Object( const Object & ) = delete;
+    Object &operator = ( const Object & ) = delete;
 
 private:
-    String m_ObjectName;
+    String m_objectName;
     ui32 m_Refcount;
 };
 

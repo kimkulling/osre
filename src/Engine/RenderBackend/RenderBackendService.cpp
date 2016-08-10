@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Properties/Settings.h>
+#include <osre/Profiling/PerformanceCounters.h>
 #include <osre/Threading/SystemTask.h>
 #include "OGLRenderer/OGLRenderEventHandler.h"
 #include "VulkanRenderer/VlkRenderEventHandler.h"
@@ -73,6 +74,11 @@ bool RenderBackendService::onOpen() {
         ok = false;
     }
 
+    if ( !Profiling::PerformanceCounters::create() ) {
+        osre_error( Tag, "Error while creating performance counters." );
+        ok = false;
+    }
+
     return ok;
 }
 
@@ -86,7 +92,12 @@ bool RenderBackendService::onClose() {
         m_renderTaskPtr->stop();
     }
 
-    return true;
+    bool ok( Profiling::PerformanceCounters::destroy() );
+    if ( !ok ) {
+        osre_error( Tag, "Error while destroying performance counters." );
+    }
+
+    return ok;
 }
 
 bool RenderBackendService::onUpdate( d32 timediff ) {

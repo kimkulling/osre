@@ -20,42 +20,48 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/Common/osre_common.h>
+#include <gtest/gtest.h>
+#include <osre/Profiling/PerformanceCounters.h>
 
 namespace OSRE {
+namespace UnitTest {
 
-// Forward declarations
-namespace Platform {
-    class AbstractTimer;
-}
+using namespace ::OSRE::Profiling;
 
-namespace Profiling {
-        
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT FPSCounter {
-public:
-    ///	@brief  The class constructor.
-    /// @param  timer   [in] The timer instance.
-    FPSCounter( Platform::AbstractTimer  *timer );
-    
-    ///	@brief  The class destructor.
-    ~FPSCounter();
-
-    ///	@brief  Returns the counted frames per seconds.
-    /// @return The counted frames per second.
-    ui32 getFPS();
-
-private:
-    Platform::AbstractTimer  *m_timer;
-    d32 m_timeDiff, m_lastTime;
-    ui32 m_fps;
+class PerformanceCountersTest : public ::testing::Test {
 };
 
-} // Namespace Profiling
+TEST_F( PerformanceCountersTest, createTest ) {
+    bool ok( true );
+    ok = PerformanceCounters::create();
+    EXPECT_TRUE( ok );
+    ok = PerformanceCounters::create();
+    EXPECT_FALSE( ok );
+    ok = PerformanceCounters::destroy();
+    EXPECT_TRUE( ok );
+    ok = PerformanceCounters::destroy();
+    EXPECT_FALSE( ok );
+}
+
+TEST_F( PerformanceCountersTest, regiserCounterTest ) {
+    bool ok = PerformanceCounters::create();
+
+    ui32 v( 0 );
+    ok = PerformanceCounters::queryCounter( "test", v );
+    EXPECT_FALSE( ok );
+
+    ok = PerformanceCounters::registerCounter( "test" );
+    EXPECT_TRUE( ok );
+
+    ok = PerformanceCounters::queryCounter( "test", v );
+    EXPECT_TRUE( ok );
+
+    ok = PerformanceCounters::unregisterCounter( "test" );
+    EXPECT_TRUE( ok );
+
+    ok = PerformanceCounters::unregisterCounter( "test" );
+    EXPECT_FALSE( ok );
+}
+
+} // Namespace UnitTest
 } // Namespace OSRE

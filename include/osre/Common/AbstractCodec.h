@@ -46,7 +46,7 @@ public:
     /// @return true in case of a success.
     virtual bool encode( IO::Stream *inStream );
 
-    /// @brief  WIll decode data
+    /// @brief  Will decode data
     /// @return true in case of a success.
     virtual bool decode( IO::Stream *outStream );
 
