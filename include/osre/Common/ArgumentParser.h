@@ -42,6 +42,17 @@ namespace Common {
 //--------------------------------------------------------------------------------------------------------------------
 class OSRE_EXPORT ArgumentParser {
 public:
+    // struct to store a single argument in a container
+    struct Argument {
+        String m_argument;	// The argument as a string.
+        String m_desc;      // The description for the argument ( used for help texts ).
+        ui32 m_numArgs;		// The number of expected arguments for it.
+
+        Argument();
+        Argument( const String &arg, const String &desc, ui32 numArgs );
+    };
+
+public:
     ///	@brief	The class constructor with arguments and the requested argument support.
     ///	@param	argc            [in] The number of incoming arguments.
     ///	@param	ppArgv          [in] The arguments itself.
@@ -55,6 +66,10 @@ public:
     ///	@brief	Returns true, if any arguments are supported
     ///	@return	true, if arguments are supported.
     bool hasSupportedArguments() const;
+
+    /// @brief  Will show the help.
+    /// @return The help string;
+    String showHelp();
 
     ///	@brief	Returns next argument and its content.
     ///	@param	arg     	[in] Next argument.
@@ -96,12 +111,12 @@ public:
     ///	@param	arg			[in] The argument to parse.
     ///	@param	numParam	[out] The number of parameter, which will be expected.
     ///	@return	Will return true, if the syntax is valid, false if not.
-    bool parseArgParameter( const String &arg, ui32 &numPara );
+    static bool parseArgParameter( const String &arg, ui32 &numPara );
 
     ///	@brief	Returns a blanked argument.
     ///	@param	arg	[in] The argument definition in the expected form arg<numParam>;
     ///	@return	The blanked argument.
-    String getBlankArgument( const String &arg );
+    static String getBlankArgument( const String &arg );
 
 protected:
     bool validateArguments( i32 iArgc, c8 *ppArgv[] );
@@ -113,16 +128,6 @@ private:
     ArgumentParser &operator = ( const ArgumentParser & );
 
 private:
-    // struct to store a single argument in a container
-    struct Argument {
-        String m_argument;	// The argument as a string.
-        String m_desc;      // The description for the argument ( used for help texts ).
-        ui32 m_numArgs;		// The number of expected arguments for it.
-
-        Argument();
-        Argument( const String &arg, const String &desc, ui32 numArgs );
-    };
-
     CPPCore::TArray<Argument> m_SupportedArguments;	// List with supported arguments
     CPPCore::TArray<String> m_detectedArgs;		// List with detected arguments
     CPPCore::TArray<String> m_StoredArguments;	// List with store arguments

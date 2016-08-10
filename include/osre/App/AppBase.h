@@ -27,6 +27,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 // Forward declarations
+namespace Common {
+    class ArgumentParser;
+}
+
 namespace Scene {
     class Stage;
 }
@@ -101,6 +105,8 @@ protected:
 
     /// @brief  The onUpdate callback, override this for your own update stuff.
     virtual void onUpdate();
+
+    Common::ArgumentParser &getArgumentParser() const;
 
 private:
     struct Impl;
