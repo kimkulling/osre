@@ -52,6 +52,11 @@ public:
     ui32 getFPS();
 
 private:
+    FPSCounter() = delete;
+    FPSCounter( const FPSCounter & ) = delete;
+    FPSCounter & operator = ( const FPSCounter & ) = delete;
+
+private:
     Platform::AbstractTimer  *m_timer;
     d32 m_timeDiff, m_lastTime;
     ui32 m_fps;
