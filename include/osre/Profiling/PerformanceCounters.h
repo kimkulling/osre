@@ -34,6 +34,8 @@ public:
     static bool destroy();
     static bool registerCounter( const String &name );
     static bool unregisterCounter( const String &name );
+    static bool setCounter( const String &name, ui32 value );
+    static bool resetCounter( const String &name );
     static bool addValueToCounter( const String &name, ui32 value );
     static bool queryCounter( const String &name, ui32 &counterValue );
 
@@ -44,6 +46,9 @@ private:
 private:
     struct CounterMeasure {
         ui32 m_count;
+
+        CounterMeasure();
+        ~CounterMeasure();
     };
     static PerformanceCounters *s_instance;
     CPPCore::THashMap<ui32, CounterMeasure*> m_counters;

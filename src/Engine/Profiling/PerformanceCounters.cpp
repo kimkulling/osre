@@ -30,6 +30,15 @@ using namespace ::OSRE::Common;
 
 PerformanceCounters *PerformanceCounters::s_instance = nullptr;
 
+PerformanceCounters::CounterMeasure::CounterMeasure()
+: m_count( 0 ) {
+    // empty
+}
+
+PerformanceCounters::CounterMeasure::~CounterMeasure() {
+    // empty
+}
+
 PerformanceCounters::PerformanceCounters()
 : m_counters() {
 
@@ -85,7 +94,36 @@ bool PerformanceCounters::unregisterCounter( const String &name ) {
         return false;
     }
 
+    CounterMeasure *cm( nullptr );
+    s_instance->m_counters.getValue( hash, cm );
+
+    if ( nullptr == cm ) {
+        return false;
+    } else {
+        delete cm;
+    }
+
     return s_instance->m_counters.remove( hash );
+}
+
+bool PerformanceCounters::setCounter( const String &name, ui32 value ) {
+    if ( nullptr == s_instance ) {
+        return false;
+    }
+
+    const ui32 hash( StringUtils::hashName( name.c_str() ) );
+    if ( !s_instance->m_counters.hasKey( hash ) ) {
+        return false;
+    }
+    CounterMeasure *cm( nullptr );
+    s_instance->m_counters.getValue( hash, cm );
+    cm->m_count = value;
+
+    return true;
+}
+
+bool PerformanceCounters::resetCounter( const String &name ) {
+    return setCounter( name, 0 );
 }
 
 bool PerformanceCounters::addValueToCounter( const String &name, ui32 value ) {

@@ -29,7 +29,10 @@ namespace UnitTest {
 using namespace ::OSRE::Profiling;
 
 class PerformanceCountersTest : public ::testing::Test {
+    // empty
 };
+
+static const String TestKey = "test";
 
 TEST_F( PerformanceCountersTest, createTest ) {
     bool ok( true );
@@ -43,24 +46,64 @@ TEST_F( PerformanceCountersTest, createTest ) {
     EXPECT_FALSE( ok );
 }
 
-TEST_F( PerformanceCountersTest, regiserCounterTest ) {
+TEST_F( PerformanceCountersTest, registerCounterTest ) {
     bool ok = PerformanceCounters::create();
 
     ui32 v( 0 );
-    ok = PerformanceCounters::queryCounter( "test", v );
+    ok = PerformanceCounters::queryCounter( TestKey, v );
     EXPECT_FALSE( ok );
 
-    ok = PerformanceCounters::registerCounter( "test" );
+    ok = PerformanceCounters::registerCounter( TestKey );
     EXPECT_TRUE( ok );
 
-    ok = PerformanceCounters::queryCounter( "test", v );
+    ok = PerformanceCounters::queryCounter( TestKey, v );
+    EXPECT_TRUE( ok );
+    EXPECT_EQ( v, 0 );
+
+    ok = PerformanceCounters::unregisterCounter( TestKey );
     EXPECT_TRUE( ok );
 
-    ok = PerformanceCounters::unregisterCounter( "test" );
-    EXPECT_TRUE( ok );
-
-    ok = PerformanceCounters::unregisterCounter( "test" );
+    ok = PerformanceCounters::unregisterCounter( TestKey );
     EXPECT_FALSE( ok );
+
+    ok = PerformanceCounters::destroy();
+    EXPECT_TRUE( ok );
+}
+
+TEST_F( PerformanceCountersTest, setCounterTest ) {
+    bool ok = PerformanceCounters::create();
+
+    ok = PerformanceCounters::registerCounter( TestKey );
+    EXPECT_TRUE( ok );
+
+    PerformanceCounters::addValueToCounter( TestKey, 10 );
+    EXPECT_TRUE( ok );
+
+    ui32 v( 0 );
+    ok = PerformanceCounters::queryCounter( TestKey, v );
+    EXPECT_TRUE( ok );
+    EXPECT_EQ( v, 10 );
+
+    ok = PerformanceCounters::destroy();
+    EXPECT_TRUE( ok );
+}
+
+TEST_F( PerformanceCountersTest, resetCounterTest ) {
+    bool ok = PerformanceCounters::create();
+
+    ok = PerformanceCounters::registerCounter( TestKey );
+    EXPECT_TRUE( ok );
+
+    PerformanceCounters::addValueToCounter( TestKey, 10 );
+    EXPECT_TRUE( ok );
+
+    ui32 v( 0 );
+    ok = PerformanceCounters::queryCounter( TestKey, v );
+    EXPECT_EQ( v, 10 );
+
+    PerformanceCounters::resetCounter( "test" );
+    ok = PerformanceCounters::destroy();
+    EXPECT_TRUE( ok );
 }
 
 } // Namespace UnitTest
