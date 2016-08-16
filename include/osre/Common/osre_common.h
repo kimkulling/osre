@@ -38,6 +38,7 @@ namespace OSRE {
 #   define _CRT_SECURE_NO_WARNINGS
 #elif defined(__gnu_linux__)
 #   define OSRE_GNU_LINUX
+#elif defined(__APPLE__) || defined (__MACH__)
 #endif
 
 #ifdef OSRE_WINDOWS

@@ -50,12 +50,12 @@ public:
         // empty
     }
 
-    virtual bool onCreate( RenderBackendService *rb ) {
+    virtual bool onCreate( RenderBackendService *rb ) override {
         rb->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         Scene::GeometryBuilder myBuilder;
-        StaticGeometry *geo = myBuilder.allocTextBox( -1, -1, 0.1f, "Hello,\nworld!" );
+        StaticGeometry *geo = myBuilder.allocTextBox( -1, -1, 0.1f, "Hello,\nworld!\nxx" );
         attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_geo = geo;
 
@@ -71,6 +71,11 @@ public:
 
         return true;
     }
+
+    virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *rbSrv ) override {
+        return true;
+    }
+
 };
 
 ATTACH_RENDERTEST( DbgFontRenderTest )

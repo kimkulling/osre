@@ -28,12 +28,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/FontBase.h>
 #include <osre/RenderBackend/ClearState.h>
 #include <osre/Platform/AbstractRenderContext.h>
+#include <osre/Profiling/PerformanceCounters.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/ColorRGBA.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Stream.h>
 #include <osre/IO/Uri.h>
 #include <osre/Assets/AssetRegistry.h>
+#include <osre/Profiling/PerformanceCounters.h>
 
 #include <cppcore/CPPCoreCommon.h>
 
@@ -173,7 +175,7 @@ void OGLRenderBackend::bufferData( OGLBuffer *buffer, void *pData, ui32 size, Bu
 
 void OGLRenderBackend::releaseBuffer( OGLBuffer *buffer ) {
     if ( nullptr == buffer ) {
-        osre_debug( Tag, "Pointer to buffer is nullptr" );
+        osre_debug( Tag, "Pointer to buffer instance is nullptr" );
         return;
     }
     const ui32 slot = buffer->m_handle;
@@ -197,13 +199,14 @@ void OGLRenderBackend::releaseAllBuffers() {
     m_freeBufferSlots.clear();
 }
 
-bool OGLRenderBackend::createVertexCompArray( const VertexLayout *layout, OGLShader *shader, 
-                                              VertAttribArray &attributes ) {
+bool OGLRenderBackend::createVertexCompArray( const VertexLayout *layout, OGLShader *shader, VertAttribArray &attributes ) {
     if( nullptr == layout ) {
+        osre_debug( Tag, "Pointer to layout instance is nullptr" );
         return false;
     }
 
     if( nullptr == shader ) {
+        osre_debug( Tag, "Pointer to shader instance is nullptr" );
         return false;
     }
 
@@ -225,7 +228,8 @@ bool OGLRenderBackend::createVertexCompArray( const VertexLayout *layout, OGLSha
 }
 
 bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *shader, VertAttribArray &attributes ) {
-    if( !shader ) {
+    if( nullptr == shader ) {
+        osre_debug( Tag, "Pointer to shader instance is nullptr" );
         return false;
     }
 
@@ -418,6 +422,7 @@ void OGLRenderBackend::releaseAllVertexArrays( ) {
 
 OGLShader *OGLRenderBackend::createShader( const String &name, Shader *shaderInfo ) {
 	if( name.empty() ) {
+        osre_debug( Tag, "Name for shader is nullptr" );
         return nullptr;
     }
 
@@ -877,7 +882,8 @@ void OGLRenderBackend::renderFrame() {
     
 	m_renderCtx->update();
     if ( nullptr != m_fpsCounter ) {
-        ui32 fps = m_fpsCounter->getFPS();
+        const ui32 fps = m_fpsCounter->getFPS();
+        Profiling::PerformanceCounters::setCounter( "fps", fps );
     }
 }
 

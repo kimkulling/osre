@@ -74,11 +74,6 @@ bool RenderBackendService::onOpen() {
         ok = false;
     }
 
-    if ( !Profiling::PerformanceCounters::create() ) {
-        osre_error( Tag, "Error while creating performance counters." );
-        ok = false;
-    }
-
     return ok;
 }
 
@@ -92,12 +87,7 @@ bool RenderBackendService::onClose() {
         m_renderTaskPtr->stop();
     }
 
-    bool ok( Profiling::PerformanceCounters::destroy() );
-    if ( !ok ) {
-        osre_error( Tag, "Error while destroying performance counters." );
-    }
-
-    return ok;
+    return true;
 }
 
 bool RenderBackendService::onUpdate( d32 timediff ) {

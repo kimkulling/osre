@@ -336,13 +336,14 @@ SET( renderbackend_vulkanrenderer_src
 )
 
 SET( renderbackend_inc
-    ${HEADER_PATH}/RenderBackend/BlendState.h
+	${HEADER_PATH}/RenderBackend/BlendState.h
     ${HEADER_PATH}/RenderBackend/ClearState.h
     ${HEADER_PATH}/RenderBackend/SamplerState.h
     ${HEADER_PATH}/RenderBackend/StencilState.h
     ${HEADER_PATH}/RenderBackend/TextRenderer.h
     ${HEADER_PATH}/RenderBackend/FontBase.h
     ${HEADER_PATH}/RenderBackend/Parameter.h
+    ${HEADER_PATH}/RenderBackend/Pipeline.h
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
 )

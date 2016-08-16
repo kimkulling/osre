@@ -342,6 +342,26 @@ private:
     ~StaticGeometry();
 };
 
+struct OSRE_EXPORT DynamicGeometry {
+    Material       *m_material;
+    VertexType      m_vertextype;
+    BufferData     *m_vb;
+    IndexType       m_indextype;
+    BufferData     *m_ib;
+    ui32            m_numPrimGroups;
+    PrimitiveGroup *m_pPrimGroups;
+    ui32            m_id;
+
+    static DynamicGeometry *create( ui32 numGeo );
+    static void destroy( DynamicGeometry **geo );
+
+    OSRE_NON_COPYABLE( DynamicGeometry )
+
+private:
+    DynamicGeometry();
+    ~DynamicGeometry();
+};
+
 struct OSRE_EXPORT GeoInstanceData {
     BufferData *m_data;
 

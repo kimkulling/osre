@@ -20,43 +20,21 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Common/Ids.h>
+#pragma once
+
+#include <osre/RenderBackend/BlendState.h>
+#include <osre/RenderBackend/SamplerState.h>
+#include <osre/RenderBackend/ClearState.h>
+#include <osre/RenderBackend/SamplerState.h>
 
 namespace OSRE {
-namespace Common {
+    namespace RenderBackend {
+        class Pipeline {
+        public:
+            Pipeline();
+            ~Pipeline();
 
-Ids::Ids()
-: m_freeIds()
-, m_last( 0 ) {
-    // empty
-}
-
-Ids::Ids( ui32 startId )
-: m_freeIds()
-, m_last( startId ) {
-    // empty
-}
-
-Ids::~Ids() {
-    // empty
-}
-
-ui32 Ids::getUniqueId() {
-    if ( m_freeIds.isEmpty() ) {
-        ui32 id( m_last );
-        m_last++;
-        return id;
-    } 
-
-    ui32 id( m_freeIds.back() );
-    m_freeIds.removeBack();
-
-    return id;
-}
-
-void Ids::releaseId( ui32 id ) {
-    m_freeIds.add( id );
-}
-    
-}
+        private:
+        };
+    }
 }

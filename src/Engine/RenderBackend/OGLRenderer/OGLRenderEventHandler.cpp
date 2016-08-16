@@ -31,6 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractSurface.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractRenderContext.h>
+#include <osre/Profiling/PerformanceCounters.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/TextRenderer.h>
 #include <osre/Debugging/osre_debugging.h>
@@ -276,7 +277,8 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
 }
 
 static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb, 
-                              OGLRenderEventHandler *eh, OGLShader *oglShader, OGLVertexArray *va ) {
+                              OGLRenderEventHandler *eh, OGLShader *oglShader,
+                              OGLVertexArray *va ) {
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
 
@@ -434,6 +436,14 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
     m_oglBackend->createFont( fontUri );
     m_renderCmdBuffer = new RenderCmdBuffer( m_oglBackend, m_renderCtx );
 
+    bool ok( Profiling::PerformanceCounters::create() );
+    if ( !ok ) {
+        osre_error( Tag, "Error while destroying performance counters." );
+        return false;
+    }
+
+    Profiling::PerformanceCounters::registerCounter( "fps" );
+
     return true;
 }
 
@@ -442,6 +452,11 @@ bool OGLRenderEventHandler::onDestroyRenderer( const Common::EventData * ) {
 	
 	if ( nullptr != m_renderCtx ) {
         return false;
+    }
+
+    bool ok( Profiling::PerformanceCounters::destroy() );
+    if ( !ok ) {
+        osre_error( Tag, "Error while destroying performance counters." );
     }
 
     m_renderCtx->destroy();
@@ -511,6 +526,7 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
     }
 
     m_oglBackend->useShader( nullptr );
+
     return true;
 }
 

@@ -71,10 +71,6 @@ public:
     ///	@return	true, if the thread was stopped, false if not.
     virtual bool stop() = 0;
 
-    ///	@brief	The running state of the thread will be returned.
-    ///	@return	true, if the thread is in running-state. false if the thread is in stop-state.
-    //virtual bool isRunning() = 0;
-
     ///	@brief	Returns the state of the thread.
     ///	@return	The current thread state.
     virtual ThreadState getCurrentState() const;
@@ -137,7 +133,6 @@ protected:
 
 private:
     ThreadState m_threadState;
-
 };
 
 inline

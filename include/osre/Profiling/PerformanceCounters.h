@@ -28,15 +28,36 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Profiling {
         
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  This class is used to set performance counters like FPS. You can register your own 
+/// counters as well.
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT PerformanceCounters {
 public:
+    /// @brief  
     static bool create();
+
+    /// @brief  
     static bool destroy();
+
+    /// @brief  
     static bool registerCounter( const String &name );
+
+    /// @brief  
     static bool unregisterCounter( const String &name );
+
+    /// @brief  
     static bool setCounter( const String &name, ui32 value );
+
+    /// @brief  
     static bool resetCounter( const String &name );
+
+    /// @brief  
     static bool addValueToCounter( const String &name, ui32 value );
+
+    /// @brief  
     static bool queryCounter( const String &name, ui32 &counterValue );
 
 private:

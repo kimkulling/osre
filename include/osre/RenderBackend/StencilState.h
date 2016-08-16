@@ -22,6 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Common/osre_common.h>
+
 namespace OSRE {
 namespace RenderBackend {
 
@@ -32,18 +34,108 @@ namespace RenderBackend {
 //-------------------------------------------------------------------------------------------------
 class StencilState {
 public:
+    /// @brief  
+    enum class StencilFunc {
+        Never,
+        Always,
+        Equal,
+        NotEqual,
+        Less,
+        LEqual,
+        GEqual,
+        Greater
+    };
+
+    /// @brief  
+    enum class StencilOp {
+        Keep,
+        Zero,
+        Replace,
+        Incr,
+        IncrWrap,
+        Decr,
+        DecrWrap,
+        Invert
+    };
+
+public:
     StencilState();
     ~StencilState();
+    void setStencilFunc( StencilFunc, i32 ref, c8 mask );
+    StencilFunc getStencilFunc() const;
+    i32 getStencilFuncRef() const;
+    c8 getStencilFuncMask() const;
+    void setStencilOp( StencilOp sFail, StencilOp dpFail, StencilOp dppass );
+    StencilOp getStencilOpSFail() const;
+    StencilOp getStencilOpDPFail() const;
+    StencilOp getStencilOpDPPass() const;
+
+private:
+    StencilFunc m_stencilFunc;
+    i32 m_stencilFuncRef;
+    c8 m_stencilFuncMask;
+    StencilOp m_sFail;
+    StencilOp m_dpFail;
+    StencilOp m_dpPass
 };
 
 inline
-StencilState::StencilState() {
+StencilState::StencilState()
+: m_stencilFunc( StencilFunc::Never )
+, m_stencilFuncRef( 1 )
+, m_stencilFuncMask( 0xFF )
+, m_sFail( StencilOp::Keep )
+, m_dpFail( StencilOp::Keep )
+, m_dpPass( StencilOp::Keep ) {
     // empty
 }
 
 inline
 StencilState::~StencilState() {
     // empty
+}
+
+inline
+void StencilState::setStencilFunc( StencilFunc func, i32 ref, c8 mask ) {
+    m_stencilFunc = func;
+    m_stencilFuncRef = ref;
+    m_stencilFuncMask = mask;
+}
+inline
+StencilState::StencilFunc StencilState::getStencilFunc() const {
+    return m_stencilFunc;
+}
+
+inline
+i32 StencilState::getStencilFuncRef() const {
+    return m_stencilFuncRef;
+}
+
+inline
+c8 StencilState::getStencilFuncMask() const {
+    return m_stencilFuncMask;
+}
+
+inline
+void StencilState::setStencilOp( StencilOp sFail, StencilOp dpFail, StencilOp dpPass ) {
+    m_sFail = sFail;
+    m_dpFail = dpFail;
+    m_dpPass = dpPass;
+}
+
+inline
+StencilState::StencilOp StencilState::getStencilOpSFail() const {
+    return m_sFail;
+}
+
+inline
+StencilState::StencilOp StencilState::getStencilOpDPFail() const {
+    return m_dpFail;
+}
+
+inline
+StencilState::StencilOp StencilState::getStencilOpDPPass() const {
+    return m_dpPass;
 }
 
 } // Namespace RenderBackend

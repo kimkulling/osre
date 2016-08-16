@@ -32,6 +32,7 @@ namespace RenderBackend {
 //-------------------------------------------------------------------------------------------------
 class BlendState {
 public:
+    /// @brief  
     enum class BlendFunc {
         FuncNone,
         FuncAdd,
@@ -62,12 +63,14 @@ BlendState::~BlendState() {
     // empty
 }
 
+inline
 void BlendState::setBlendFunc( BlendFunc func ) {
     if ( func != m_blendFunc ) {
         m_blendFunc = func;
     }
 }
 
+inline
 BlendState::BlendFunc BlendState::getBlendFunc() const {
     return m_blendFunc;
 }

@@ -199,8 +199,7 @@ BufferData::~BufferData() {
     m_size = 0;
 }
 
-BufferData*
-BufferData::alloc( BufferType type, ui32 m_size, BufferAccessType access ) {
+BufferData* BufferData::alloc( BufferType type, ui32 m_size, BufferAccessType access ) {
     BufferData *buffer( new BufferData );
     buffer->m_size = m_size;
     buffer->m_access = access;
@@ -210,8 +209,7 @@ BufferData::alloc( BufferType type, ui32 m_size, BufferAccessType access ) {
     return buffer;
 }
 
-void 
-BufferData::free( BufferData *data ) {
+void BufferData::free( BufferData *data ) {
 	if (nullptr == data) {
 		return;
 	}
@@ -220,8 +218,7 @@ BufferData::free( BufferData *data ) {
 	data = nullptr;
 }
 
-void 
-BufferData::copyFrom( void *data, ui32 size ) {
+void BufferData::copyFrom( void *data, ui32 size ) {
     if ( nullptr == data ) {
         return;
     }
@@ -326,7 +323,7 @@ StaticGeometry::~StaticGeometry() {
 
 StaticGeometry *StaticGeometry::create( ui32 numGeo ) {
     if ( 0 == numGeo ) {
-        osre_debug( Tag, "Number of geo to create is zero." );
+        osre_debug( Tag, "Number of static geo to create is zero." );
         return nullptr;
     }
     return new StaticGeometry[ numGeo ];
@@ -337,8 +334,35 @@ void StaticGeometry::destroy( StaticGeometry **geo ) {
     (*geo) = nullptr;
 }
 
+DynamicGeometry::DynamicGeometry() 
+: m_material( nullptr )
+, m_vb( nullptr )
+, m_ib( nullptr )
+, m_numPrimGroups( 0 )
+, m_pPrimGroups( nullptr )
+, m_id( 0 ) {        
+    // empty
+}
+
+DynamicGeometry::~DynamicGeometry() {
+    // empty
+}
+
+DynamicGeometry *DynamicGeometry::create( ui32 numGeo ) {
+    if ( 0 == numGeo ) {
+        osre_debug( Tag, "Number of dynamic geo to create is zero." );
+        return nullptr;
+    }
+    return new DynamicGeometry[ numGeo ];
+}
+
+void DynamicGeometry::destroy( DynamicGeometry **geo ) {
+    delete[] * geo;
+    ( *geo ) = nullptr;
+}
+
 GeoInstanceData::GeoInstanceData()
-    : m_data( nullptr ) {
+: m_data( nullptr ) {
     // empty
 }
 
@@ -356,9 +380,9 @@ TransformBlock::~TransformBlock() {
 }
 
 TransformMatrixBlock::TransformMatrixBlock()
-    : m_projection()
-    , m_model()
-    , m_view() {
+: m_projection()
+, m_model()
+, m_view() {
     // empty
 }
 
@@ -373,12 +397,18 @@ void TransformMatrixBlock::init() {
 }
 
 Viewport::Viewport() 
-: m_x(-1), m_y(-1), m_w(-1), m_h(-1) {
+: m_x(-1)
+, m_y(-1)
+, m_w(-1)
+, m_h(-1) {
 	// empty
 }
 
 Viewport::Viewport(i32 x, i32 y, i32 w, i32 h )
-: m_x( x ), m_y( y ), m_w( w ), m_h( h ) {
+: m_x( x )
+, m_y( y )
+, m_w( w )
+, m_h( h ) {
 	// empty
 }
 

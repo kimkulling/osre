@@ -127,6 +127,7 @@ public:
 	, m_text() {
 		// empty
 	}
+
 	StaticGeometry *m_geo;
 	String m_text;
 };
