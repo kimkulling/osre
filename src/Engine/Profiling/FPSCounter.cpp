@@ -21,18 +21,22 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Profiling/FPSCounter.h>
+#include <osre/Common/Logger.h>
 #include <osre/Platform/AbstractTimer.h>
 
 namespace OSRE {
 namespace Profiling {
 
+using namespace ::OSRE::Common;
+static const String Tag = "FPSCounter";
+
 FPSCounter::FPSCounter( Platform::AbstractTimer *timer )
-: m_timer( timer )
+: m_timerPtr( timer )
 , m_timeDiff( 0.0 )
 , m_lastTime( 0.0 )
 , m_fps( 0 ) {
-    if (nullptr != m_timer) {
-        m_timeDiff = m_timer->getTimeDiff();
+    if ( m_timerPtr.isValid() ) {
+        m_timeDiff = m_timerPtr->getTimeDiff();
     }
 }
 
@@ -41,7 +45,11 @@ FPSCounter::~FPSCounter() {
 }
 
 ui32 FPSCounter::getFPS() {
-    m_timeDiff = m_timer->getTimeDiff();
+    if ( !m_timerPtr.isValid() ) {
+        osre_debug( Tag, "No valid timer instance." );
+        return 0;
+    }
+    m_timeDiff = m_timerPtr->getTimeDiff();
     m_lastTime += m_timeDiff;
     m_fps++;
     if (m_lastTime > 1.0) {

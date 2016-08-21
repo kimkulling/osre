@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <osre/Common/TObjPtr.h>
 
 namespace OSRE {
 
@@ -57,7 +58,7 @@ private:
     FPSCounter & operator = ( const FPSCounter & ) = delete;
 
 private:
-    Platform::AbstractTimer  *m_timer;
+    Common::TObjPtr<Platform::AbstractTimer>  m_timerPtr;
     d32 m_timeDiff, m_lastTime;
     ui32 m_fps;
 };
