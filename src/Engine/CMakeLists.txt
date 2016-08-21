@@ -299,6 +299,7 @@ SET( renderbackend_src
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
     RenderBackend/Parameter.cpp
+	RenderBackend/Pipeline.cpp
 )
 
 SET( renderbackend_oglrenderer_src

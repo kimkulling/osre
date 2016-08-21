@@ -39,6 +39,9 @@ namespace OSRE {
 #elif defined(__gnu_linux__)
 #   define OSRE_GNU_LINUX
 #elif defined(__APPLE__) || defined (__MACH__)
+
+#elif defined(__ANDROID__)
+#   define OSRE_ANDROID
 #endif
 
 #ifdef OSRE_WINDOWS

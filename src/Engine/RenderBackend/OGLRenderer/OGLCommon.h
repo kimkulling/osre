@@ -181,6 +181,7 @@ struct SetMaterialStageCmdData {
     , m_textures() {
         // empty
     }
+
     ~SetMaterialStageCmdData() {
         // empty
     }
@@ -203,8 +204,6 @@ struct DrawPrimitivesCmdData {
 	OGLVertexArray        *m_vertexArray;    ///<
     CPPCore::TArray<ui32>  m_primitives;     ///<
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace RendeBackend
 } // Namespace OSRE

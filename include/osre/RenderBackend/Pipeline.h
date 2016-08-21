@@ -28,13 +28,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/SamplerState.h>
 
 namespace OSRE {
-    namespace RenderBackend {
-        class Pipeline {
-        public:
-            Pipeline();
-            ~Pipeline();
+namespace RenderBackend {
 
-        private:
-        };
-    }
+class Pipeline {
+public:
+    Pipeline();
+    ~Pipeline();
+
+private:
+};
+
+}
 }
