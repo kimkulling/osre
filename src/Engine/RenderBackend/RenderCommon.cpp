@@ -31,7 +31,7 @@ VertComponent VertexLayout::ErrorComp;
 static const String Tag = "RenderCommon";
 
 /// @brief  The corresponding names for vertex components in a vertex layout
-static const String VertCompName[ VertexAttribute::NumVertexAttrs ] = {
+static const String VertCompName[ static_cast<int>(VertexAttribute::NumVertexAttrs) ] = {
     "position",     ///< Position
     "normal",       ///< Normal
     "texcoord0",    ///< TexCoord0
