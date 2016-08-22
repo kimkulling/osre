@@ -112,6 +112,7 @@ enum class PrimitiveType {
     TriangleFan		///< A triangle fan.
 };
 
+///	@brief
 struct OSRE_EXPORT ColorVert {
     glm::vec3 position;
     glm::vec3 normal;
@@ -121,6 +122,7 @@ struct OSRE_EXPORT ColorVert {
     static const String *getAttributes();
 };
 
+///	@brief
 struct RenderVert {
     glm::vec3 position;
     glm::vec3 normal;
@@ -131,6 +133,7 @@ struct RenderVert {
     static const String *getAttributes();
 };
 
+///	@brief
 enum class VertexAttribute : int {
     Position = 0,   ///< "position"
     Normal,         ///< "normal"
@@ -154,6 +157,7 @@ enum class VertexAttribute : int {
 
 OSRE_EXPORT const String &getVertCompName( VertexAttribute attrib );
 
+///	@brief
 enum class VertexFormat : int {
     Float,          ///< single component float, expanded to (x, 0, 0, 1)
     Float2,         ///< 2-component float, expanded to (x, y, 0, 1)
@@ -167,7 +171,8 @@ enum class VertexFormat : int {
     InvalidVertexFormat, 
 };
 
-inline 
+///	@brief
+inline
 ui32 getVertexFormatSize( VertexFormat format ) {
     ui32 size( 0 );
     switch( format ) {
@@ -206,6 +211,7 @@ ui32 getVertexFormatSize( VertexFormat format ) {
     return size;
 }
 
+///	@brief
 struct OSRE_EXPORT VertComponent {
     VertexAttribute m_attrib;
     VertexFormat    m_format;
@@ -217,6 +223,7 @@ struct OSRE_EXPORT VertComponent {
     OSRE_NON_COPYABLE( VertComponent )
 };
 
+///	@brief
 struct OSRE_EXPORT VertexLayout {
     static VertComponent            ErrorComp;
     String                         *m_attributes;
@@ -237,6 +244,7 @@ struct OSRE_EXPORT VertexLayout {
     OSRE_NON_COPYABLE( VertexLayout )
 };
 
+///	@brief
 struct OSRE_EXPORT BufferData {
     BufferType       m_type;
     void            *m_data;
@@ -252,6 +260,7 @@ struct OSRE_EXPORT BufferData {
     OSRE_NON_COPYABLE( BufferData )
 };
 
+///	@brief
 struct OSRE_EXPORT PrimitiveGroup {
     PrimitiveType m_primitive;
     ui32          m_startIndex;
@@ -265,11 +274,13 @@ struct OSRE_EXPORT PrimitiveGroup {
     OSRE_NON_COPYABLE( PrimitiveGroup )
 };
 
+///	@brief
 enum class MaterialType {
     FlatShadingMaterial,
     ShaderMaterial
 };
 
+///	@brief
 struct OSRE_EXPORT Texture {
     String            m_textureName;
     IO::Uri           m_loc;
@@ -287,6 +298,7 @@ struct OSRE_EXPORT Texture {
     OSRE_NON_COPYABLE( Texture )
 };
 
+///	@brief
 enum class ShaderType : int {
     SH_VertexShaderType = 0,
     SH_FragmentShaderType,
@@ -295,6 +307,7 @@ enum class ShaderType : int {
 
 static const ui32 MaxShaderTypes = 3;
 
+///	@brief
 struct OSRE_EXPORT Shader {
     CPPCore::TArray<String> m_parameters;
     CPPCore::TArray<String> m_attributes;
@@ -306,6 +319,7 @@ struct OSRE_EXPORT Shader {
     OSRE_NON_COPYABLE( Shader )
 };
 
+///	@brief
 struct OSRE_EXPORT Material {
     MaterialType m_type;
     ui32         m_numTextures;
@@ -319,6 +333,7 @@ struct OSRE_EXPORT Material {
     OSRE_NON_COPYABLE( Material )
 };
 
+///	@brief
 struct OSRE_EXPORT Transform {
     f32 m_translate[ 3 ];
     f32 m_scale[ 3 ];
@@ -329,6 +344,7 @@ struct OSRE_EXPORT Transform {
     OSRE_NON_COPYABLE( Transform )
 };
 
+///	@brief
 struct OSRE_EXPORT Geometry {
     Material       *m_material;
     VertexType      m_vertextype;
@@ -401,6 +417,14 @@ struct OSRE_EXPORT Viewport {
 	bool operator == (const Viewport &rhs) const;
 	
 	OSRE_NON_COPYABLE( Viewport )
+};
+
+struct Canvas {
+    ui32 m_x;
+    ui32 m_y;
+    ui32 m_width;
+    ui32 m_height;
+    ui32 m_z;
 };
 
 } // Namespace RenderBackend

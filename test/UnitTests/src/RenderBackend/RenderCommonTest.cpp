@@ -143,7 +143,7 @@ TEST_F( RenderCommonTest, copyBufferDataTest ) {
     BufferData::free( data );
 }
 
-TEST_F( RenderCommonTest, accessStaticGeometryTest ) {
+TEST_F( RenderCommonTest, accessGeometryTest ) {
     Geometry *geo( nullptr );
     geo = Geometry::create( 0 );
     EXPECT_EQ( geo, nullptr );
@@ -151,6 +151,20 @@ TEST_F( RenderCommonTest, accessStaticGeometryTest ) {
     EXPECT_NE( geo, nullptr );
     Geometry::destroy( &geo );
     EXPECT_EQ( geo, nullptr );
+}
+
+TEST_F( RenderCommonTest, geometryIdTest ) {
+    static const ui32 NumGeo = 10;
+    ui32 ids[ NumGeo ];
+    ::memset( ids, 0, sizeof( ui32 ) * NumGeo );
+    Geometry *geo = Geometry::create( NumGeo );
+    ui32 oldId( geo[ 0 ].m_id );
+    for ( ui32 i = 1; i < NumGeo; i++ ) {
+        ui32 id( geo[ i ].m_id );
+        EXPECT_EQ( id, oldId + 1 );
+        oldId = id;
+    }
+    Geometry::destroy( &geo );
 }
 
 TEST_F( RenderCommonTest, accessTransformMatrixBlockTest ) {

@@ -129,9 +129,20 @@ OGLBuffer *OGLRenderBackend::createBuffer( BufferType type ) {
     }
     buffer->m_handle = handle;
     buffer->m_type = type;
-    buffer->m_id   = bufferId;
+    buffer->m_oglId   = bufferId;
     buffer->m_size = 0;
 
+    return buffer;
+}
+
+OGLBuffer *OGLRenderBackend::getBufferById( ui32 id ) {
+    OGLBuffer *buffer( nullptr );
+    for ( ui32 i = 0; i < m_buffers.size(); i++ ) {
+        if ( m_buffers[ i ]->m_id == id ) {
+            buffer = m_buffers[ i ];
+            break;
+        }
+    }
     return buffer;
 }
 
@@ -141,7 +152,7 @@ void OGLRenderBackend::bindBuffer( OGLBuffer *buffer ) {
         return;
     }
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
-    glBindBuffer( target, buffer->m_id );
+    glBindBuffer( target, buffer->m_oglId );
 
     CHECKOGLERRORSTATE();
 }
@@ -164,13 +175,13 @@ void OGLRenderBackend::unbindBuffer( OGLBuffer *buffer ) {
     glBindBuffer( target, 0 );
 }
 
-void OGLRenderBackend::bufferData( OGLBuffer *buffer, void *pData, ui32 size, BufferAccessType usage ) {
+void OGLRenderBackend::bufferData( OGLBuffer *buffer, void *data, ui32 size, BufferAccessType usage ) {
     if ( nullptr == buffer ) {
         osre_debug( Tag, "Pointer to buffer is nullptr" );
         return;
     }
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
-    glBufferData( target, size, pData, OGLEnum::getGLBufferAccessType( usage ) );
+    glBufferData( target, size, data, OGLEnum::getGLBufferAccessType( usage ) );
 }
 
 void OGLRenderBackend::releaseBuffer( OGLBuffer *buffer ) {
@@ -179,10 +190,10 @@ void OGLRenderBackend::releaseBuffer( OGLBuffer *buffer ) {
         return;
     }
     const ui32 slot = buffer->m_handle;
-    glDeleteBuffers( 1, &buffer->m_id );
+    glDeleteBuffers( 1, &buffer->m_oglId );
     buffer->m_handle = OGLNotSetId;
     buffer->m_type   = BufferType::EmptyBuffer;
-    buffer->m_id     = OGLNotSetId;
+    buffer->m_oglId     = OGLNotSetId;
     m_freeBufferSlots.add( slot );
 }
 

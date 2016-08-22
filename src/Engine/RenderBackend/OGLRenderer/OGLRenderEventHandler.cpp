@@ -548,6 +548,31 @@ bool OGLRenderEventHandler::onClearGeo( const EventData * ) {
     return true;
 }
 
+bool OGLRenderEventHandler::onUpdateGeo( const EventData *eventData ) {
+    OSRE_ASSERT( nullptr != m_oglBackend );
+
+    if ( nullptr == m_renderCtx ) {
+        osre_debug( Tag, "Render context is nullptr." );
+        return false;
+    }
+
+    UpdateGeoEventData *updateSceneEvData = ( UpdateGeoEventData* ) eventData;
+    if ( nullptr == updateSceneEvData ) {
+        osre_debug( Tag, "UpdateGeoEventData-pointer is a nullptr." );
+        return false;
+    }
+
+    for ( ui32 i = 0; i < updateSceneEvData->m_numGeo; i++ ) {
+        Geometry *geo( &updateSceneEvData->m_geo[ i ] );
+        OGLBuffer *buffer( m_oglBackend->getBufferById( geo->m_id ) );
+        if ( nullptr != buffer ) {
+            m_oglBackend->bindBuffer( buffer );
+            m_oglBackend->bufferData( buffer, geo->m_vb->m_data, geo->m_vb->m_size, geo->m_vb->m_access );
+            m_oglBackend->unbindBuffer( buffer );
+        }
+    }
+}
+
 bool OGLRenderEventHandler::onRenderFrame( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 
@@ -571,7 +596,8 @@ bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
         for( ui32 i = 0; i < updateParamData->m_numParam; ++i ) {
             OGLParameter *oglParam = m_oglBackend->getParameter( updateParamData->m_param[ i ].m_name );
             if( oglParam ) {
-                ::memcpy( oglParam->m_data->getData(), updateParamData->m_param[ i ].m_data.getData(), 
+                ::memcpy( oglParam->m_data->getData(), 
+                          updateParamData->m_param[ i ].m_data.getData(), 
                           updateParamData->m_param[ i ].m_data.m_size );
             }
         }
@@ -580,7 +606,7 @@ bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
     return true;
 }
 
-bool  OGLRenderEventHandler::onRenderText( const EventData *eventData ) {
+bool OGLRenderEventHandler::onRenderText( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 
 	RenderTextEventData *data = ( RenderTextEventData* ) eventData;

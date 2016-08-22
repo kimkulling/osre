@@ -22,13 +22,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Common/Logger.h>
+#include <osre/Common/Ids.h>
 
 namespace OSRE {
 namespace RenderBackend {
 
+using namespace ::OSRE::Common;
+
 VertComponent VertexLayout::ErrorComp;
 
 static const String Tag = "RenderCommon";
+
+static Ids s_Ids;
 
 /// @brief  The corresponding names for vertex components in a vertex layout
 static const String VertCompName[ static_cast<int>(VertexAttribute::NumVertexAttrs) ] = {
@@ -99,8 +104,8 @@ VertComponent::VertComponent()
 }
 
 VertComponent::VertComponent( VertexAttribute attrib, VertexFormat format )
-    : m_attrib( attrib )
-    , m_format( format ) {
+: m_attrib( attrib )
+, m_format( format ) {
     // empty
 }
 
@@ -303,7 +308,8 @@ Geometry::Geometry()
 , m_vb( nullptr )
 , m_ib( nullptr )
 , m_numPrimGroups( 0 )
-, m_pPrimGroups( nullptr ) {
+, m_pPrimGroups( nullptr )
+, m_id( 99999999 ) {
     // empty
 }
 
@@ -317,8 +323,10 @@ Geometry::~Geometry() {
     delete m_ib;
     m_ib = nullptr;
 
-    delete[] m_pPrimGroups;
+    delete [] m_pPrimGroups;
     m_pPrimGroups = nullptr;
+
+    s_Ids.releaseId( m_id );
 }
 
 Geometry *Geometry::create( ui32 numGeo ) {
@@ -326,7 +334,11 @@ Geometry *Geometry::create( ui32 numGeo ) {
         osre_debug( Tag, "Number of static geo to create is zero." );
         return nullptr;
     }
-    return new Geometry[ numGeo ];
+    Geometry *geoArray( new Geometry[ numGeo ] );
+    for ( ui32 i = 0; i < numGeo; i++ ) {
+        geoArray[ i ].m_id = s_Ids.getUniqueId();
+    }
+    return geoArray;
 }
 
 void Geometry::destroy( Geometry **geo ) {

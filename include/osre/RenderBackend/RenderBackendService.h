@@ -48,6 +48,7 @@ struct Geometry;
 struct GeoInstanceData;
 struct Parameter;
 
+// Event declarations
 DECL_EVENT( OnAttachEventHandlerEvent );
 DECL_EVENT( OnDetatachEventHandlerEvent );
 DECL_EVENT( OnCreateRendererEvent );
@@ -55,6 +56,7 @@ DECL_EVENT( OnDestroyRendererEvent );
 DECL_EVENT( OnAttachViewEvent );
 DECL_EVENT( OnDetachViewEvent );
 DECL_EVENT( OnAttachSceneEvent );
+DECL_EVENT( OnUpdateGeoEvent );
 DECL_EVENT( OnClearSceneEvent );
 DECL_EVENT( OnDetachSceneEvent );
 DECL_EVENT( OnRenderFrameEvent );
@@ -67,7 +69,6 @@ DECL_EVENT( OnRenderTextEvent);
 ///	@brief
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT CreateRendererEventData : public Common::EventData {
-public:
     CreateRendererEventData( Platform::AbstractSurface *pSurface )
     : EventData( OnCreateRendererEvent, nullptr )
     , m_activeSurface( pSurface ) 
@@ -85,7 +86,6 @@ public:
 ///	@brief
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT AttachViewEventData : public Common::EventData {
-public:
     AttachViewEventData()
     : EventData( OnAttachViewEvent, nullptr ) {
         // empty
@@ -98,7 +98,6 @@ public:
 ///	@brief
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT AttachGeoEventData : public Common::EventData {
-public:
     AttachGeoEventData()
     : EventData( OnAttachSceneEvent, nullptr )
     , m_numGeo( 0 )
@@ -119,8 +118,24 @@ public:
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
+struct OSRE_EXPORT UpdateGeoEventData : public Common::EventData {
+    UpdateGeoEventData() 
+    : EventData( OnUpdateGeoEvent, nullptr )
+    , m_numGeo( 0 )
+    , m_geo( nullptr ) {
+        // empty
+    }
+    
+    ui32 m_numGeo;
+    Geometry *m_geo;
+};
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT RenderTextEventData : public Common::EventData {
-public:
 	RenderTextEventData()
 	: EventData(OnRenderTextEvent, nullptr) 
 	, m_geo( nullptr )
@@ -138,7 +153,6 @@ public:
 ///	@brief
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT UpdateParameterEventData : public Common::EventData {
-public:
     UpdateParameterEventData()
     : EventData( OnUpdateParameterEvent, nullptr )
     , m_numParam( 0 )

@@ -97,7 +97,9 @@ protected:
     virtual bool onDetachGeo( const Common::EventData *eventData );
     ///	@brief	Callback for clearing all geometry from a stage.
 	virtual bool onClearGeo( const Common::EventData *eventData );
-	///	@brief	Callback for the render frame.
+    ///	@brief	Callback for updating all geometry from a stage.
+    virtual bool onUpdateGeo( const Common::EventData *eventData );
+    ///	@brief	Callback for the render frame.
 	virtual bool onRenderFrame( const Common::EventData *eventData );
 	///	@brief	Callback when parameter will be updated.
 	virtual bool onUpdateParameter( const Common::EventData *eventData );

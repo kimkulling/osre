@@ -56,7 +56,8 @@ static const GLint  NoneLocation = -1;
 struct OGLBuffer {
     ui32       m_handle;
     BufferType m_type;
-    GLuint     m_id;
+    GLuint     m_oglId;
+    ui32       m_id;
     ui32       m_size;
 };
 
