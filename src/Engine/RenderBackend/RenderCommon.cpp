@@ -31,8 +31,10 @@ using namespace ::OSRE::Common;
 
 VertComponent VertexLayout::ErrorComp;
 
+// The log tag for messages
 static const String Tag = "RenderCommon";
 
+// Id container used for geometries
 static Ids s_Ids;
 
 /// @brief  The corresponding names for vertex components in a vertex layout
@@ -57,8 +59,8 @@ static const String VertCompName[ static_cast<int>(VertexAttribute::NumVertexAtt
 
 static const String ErrorCmpName = "Error";
 
+// List of attributes for color vertices
 static const ui32 NumColorVertAttributes = 3;
-
 static const String ColorVertAttributes[ NumColorVertAttributes ] = {
     "position",
     "normal",
@@ -73,8 +75,8 @@ const String *ColorVert::getAttributes() {
     return ColorVertAttributes;
 }
 
+// List of attributes for render vertices
 static const ui32 NumRenderVertAttributes = 4;
-
 static const String RenderVertAttributes[ NumRenderVertAttributes ] = {
     "position",
     "normal",
