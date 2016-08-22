@@ -37,9 +37,9 @@ TEST_F( RenderCommonTest, createVertComponentTest ) {
     bool ok( true );
     try {
         VertComponent comp1;
-        VertComponent comp2( Position, Float3 );
-        EXPECT_EQ( Position, comp2.m_attrib );
-        EXPECT_EQ( Float3,   comp2.m_format );
+        VertComponent comp2( VertexAttribute::Position, VertexFormat::Float3 );
+        EXPECT_EQ( VertexAttribute::Position, comp2.m_attrib );
+        EXPECT_EQ( VertexFormat::Float3,   comp2.m_format );
     }
     catch( ... ) {
         ok = false;
@@ -89,7 +89,7 @@ TEST_F( RenderCommonTest, sizeInBytesTest ) {
     size = layout.sizeInBytes();
     EXPECT_EQ( 0, size );
 
-    VertComponent *comp2 = new VertComponent( Position, Float3 );
+    VertComponent *comp2 = new VertComponent( VertexAttribute::Position, VertexFormat::Float3 );
     layout.add( comp2 );
     size = layout.sizeInBytes();
     EXPECT_EQ( 12, size );
@@ -97,10 +97,10 @@ TEST_F( RenderCommonTest, sizeInBytesTest ) {
 
 TEST_F( RenderCommonTest, getVertCompNameTest ) {
     String name;
-    name = getVertCompName( Position );
+    name = getVertCompName( VertexAttribute::Position );
     EXPECT_NE( static_cast<ui32>( 0 ), name.size() );
 
-    name = getVertCompName( InvalidVertexAttr );
+    name = getVertCompName( VertexAttribute::InvalidVertexAttr );
     EXPECT_NE( static_cast<ui32>( 0 ), name.size() );
     EXPECT_EQ( "Error", name );
 }
@@ -123,17 +123,17 @@ TEST_F(RenderCommonTest, viewportTest) {
 }
 
 TEST_F( RenderCommonTest, allocBufferDataTest ) {
-    BufferData *data( BufferData::alloc( VertexBuffer, 100, ReadWrite ) );
+    BufferData *data( BufferData::alloc( BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite ) );
     EXPECT_NE( data, nullptr );
-    EXPECT_EQ( data->m_access, ReadWrite );
+    EXPECT_EQ( data->m_access, BufferAccessType::ReadWrite );
     EXPECT_EQ( data->m_size, 100 );
-    EXPECT_EQ( data->m_type, VertexBuffer );
+    EXPECT_EQ( data->m_type, BufferType::VertexBuffer );
 
     BufferData::free( data );
 }
 
 TEST_F( RenderCommonTest, copyBufferDataTest ) {
-    BufferData *data( BufferData::alloc( VertexBuffer, 100, ReadWrite ) );
+    BufferData *data( BufferData::alloc( BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite ) );
 
     static const ui32 size = 100;
     static const unsigned char Value = 9;
@@ -144,12 +144,12 @@ TEST_F( RenderCommonTest, copyBufferDataTest ) {
 }
 
 TEST_F( RenderCommonTest, accessStaticGeometryTest ) {
-    StaticGeometry *geo( nullptr );
-    geo = StaticGeometry::create( 0 );
+    Geometry *geo( nullptr );
+    geo = Geometry::create( 0 );
     EXPECT_EQ( geo, nullptr );
-    geo = StaticGeometry::create( 1 );
+    geo = Geometry::create( 1 );
     EXPECT_NE( geo, nullptr );
-    StaticGeometry::destroy( &geo );
+    Geometry::destroy( &geo );
     EXPECT_EQ( geo, nullptr );
 }
 
@@ -166,7 +166,7 @@ TEST_F( RenderCommonTest, accessMaterialTest ) {
     bool ok = true;
     try {
         Material *mat( new Material );
-        EXPECT_EQ( FlatShadingMaterial, mat->m_type );
+        EXPECT_EQ( MaterialType::FlatShadingMaterial, mat->m_type );
         EXPECT_EQ( mat->m_parameters, nullptr );
         EXPECT_EQ( mat->m_numParameters, 0 );
     } catch ( ... ) {

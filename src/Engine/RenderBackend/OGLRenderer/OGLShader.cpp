@@ -33,11 +33,11 @@ static const String Tag    = "OGLShader";
 
 static GLuint getOGLShaderType( ShaderType type ) {
     switch( type ) {
-        case SH_VertexShaderType:
+        case ShaderType::SH_VertexShaderType:
             return GL_VERTEX_SHADER;
-        case SH_FragmentShaderType:
+        case ShaderType::SH_FragmentShaderType:
             return GL_FRAGMENT_SHADER;
-        case SH_GeometryShaderType:
+        case ShaderType::SH_GeometryShaderType:
             return GL_GEOMETRY_SHADER;
         default:
            break;
@@ -69,7 +69,7 @@ bool OGLShader::loadFromSource( ShaderType type, const String &src ) {
         return false;
     }
     GLuint shader = glCreateShader( getOGLShaderType( type ) );
-    m_shaders[ type ] = shader;
+    m_shaders[ static_cast<int>( type ) ] = shader;
 
     const char *tmp = src.c_str();
     glShaderSource( shader, 1, &tmp, nullptr );
@@ -102,14 +102,14 @@ bool OGLShader::createAndLink() {
         osre_error( Tag, "Error while creating shader program." );
         return false;
     }
-    if ( 0 != m_shaders[ SH_VertexShaderType ] ) {
-        glAttachShader( m_shaderprog, m_shaders[ SH_VertexShaderType ] );
+    if ( 0 != m_shaders[ static_cast<int>( ShaderType::SH_VertexShaderType ) ] ) {
+        glAttachShader( m_shaderprog, m_shaders[ static_cast<int>( ShaderType::SH_VertexShaderType  )] );
     }
-    if ( 0 != m_shaders[ SH_FragmentShaderType ] ) {
-        glAttachShader( m_shaderprog, m_shaders[ SH_FragmentShaderType ] );
+    if ( 0 != m_shaders[ static_cast<int>( ShaderType::SH_FragmentShaderType ) ] ) {
+        glAttachShader( m_shaderprog, m_shaders[ static_cast<int>( ShaderType::SH_FragmentShaderType ) ] );
     }
-    if ( 0 != m_shaders[ SH_GeometryShaderType ] ) {
-        glAttachShader( m_shaderprog, m_shaders[ SH_GeometryShaderType ] );
+    if ( 0 != m_shaders[ static_cast<int>( ShaderType::SH_GeometryShaderType  ) ] ) {
+        glAttachShader( m_shaderprog, m_shaders[ static_cast<int>( ShaderType::SH_GeometryShaderType ) ] );
     }
 
     bool result( true );

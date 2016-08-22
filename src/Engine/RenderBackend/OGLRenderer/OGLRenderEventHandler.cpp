@@ -111,10 +111,10 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
 	OSRE_ASSERT( nullptr != rb );
 
     switch( material->m_type ) {
-        case FlatShadingMaterial:
+        case MaterialType::FlatShadingMaterial:
             break;
 
-        case ShaderMaterial: {
+        case MaterialType::ShaderMaterial: {
                 TArray<OGLTexture*> textures;
                 setupTextures( material, rb, textures );
                 OGLRenderCmd *renderMatCmd = new OGLRenderCmd;
@@ -180,7 +180,7 @@ static void setupParameter( Material *mat, OGLRenderBackend *rb, OGLRenderEventH
     ev->enqueueRenderCmd( setParameterCmd  );
 }
 
-static OGLVertexArray *setupBuffers( StaticGeometry *geo, OGLRenderBackend *rb, OGLShader *oglShader ) {
+static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLShader *oglShader ) {
 	OSRE_ASSERT( nullptr != geo );
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != oglShader );
@@ -258,7 +258,7 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
 	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesInstancesCmd, nullptr );
     if( nullptr != instData ) {
         if( nullptr != instData->m_data ) {
-            OGLBuffer *instanceDataBuffer = rb->createBuffer( InstanceBuffer );
+            OGLBuffer *instanceDataBuffer = rb->createBuffer( BufferType::InstanceBuffer );
             rb->bindBuffer( instanceDataBuffer );
             rb->bufferData( instanceDataBuffer, instData->m_data->m_data, instData->m_data->m_size, instData->m_data->m_access );
         }
@@ -283,7 +283,7 @@ static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb,
 	OSRE_ASSERT( nullptr != eh );
 
 	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesCmd, nullptr );
-	StaticGeometry *geo( data->m_geo );
+	Geometry *geo( data->m_geo );
 	if ( nullptr == geo ) {
 		return;
 	}
@@ -491,7 +491,7 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
     }
     
     for ( ui32 geoIdx = 0; geoIdx < attachSceneEvData->m_numGeo; ++geoIdx ) {
-        StaticGeometry *geo = &attachSceneEvData->m_geo[ geoIdx ];
+        Geometry *geo = &attachSceneEvData->m_geo[ geoIdx ];
         if ( nullptr == geo ) {
             osre_debug( Tag, "Geometry-pointer is a nullptr." );
             return false;

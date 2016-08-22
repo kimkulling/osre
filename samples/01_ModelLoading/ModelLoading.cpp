@@ -82,7 +82,7 @@ protected:
 
         Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
         Scene::GeometryBuilder myBuilder;
-        RenderBackend::StaticGeometry *geo = myBuilder.allocTriangles( ColorVertex );
+        RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex );
         if( nullptr != geo ) {
 			m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
 

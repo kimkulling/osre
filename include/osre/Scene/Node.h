@@ -33,7 +33,7 @@ namespace Common {
 
 namespace RenderBackend {
     struct TransformBlock;
-    struct StaticGeometry;
+    struct Geometry;
 
     class RenderBackendService;
 }
@@ -74,7 +74,7 @@ public:
     virtual ui32 getNumChilds() const;
     virtual Node *getChildAt( ui32 idx ) const;
     virtual void releaseChildren();
-    virtual void addGeometry( RenderBackend::StaticGeometry *geo );
+    virtual void addGeometry( RenderBackend::Geometry *geo );
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
 
     Component *getComponent( ComponentType type ) const;

@@ -38,7 +38,7 @@ struct Parameter;
 static const i32 UnsetHandle = -1;
 
 ///	@brief  This enum describes the usage of a buffer object.
-enum BufferType {
+enum class BufferType {
     EmptyBuffer,    ///< Empty buffer, no special use.
     VertexBuffer,   ///< Vertex buffer, stores vertex data inside.
     IndexBuffer,    ///< Index buffer, stores indices inside.
@@ -46,43 +46,49 @@ enum BufferType {
 };
 
 /// @brief  This enum describes the supported access types for render buffers.
-enum BufferAccessType {
+enum class BufferAccessType {
     ReadOnly,       ///< Read only access.
     WriteOnly,      ///< Write only access.
     ReadWrite       ///< Read and write access.
 };
 
-enum RenderCommandType {
+///	@brief
+enum class RenderCommandType {
     NoOpCmd,
     RenderView3DCmd
 };
 
-enum VertexType {
+///	@brief
+enum class VertexType {
     ColorVertex,
     RenderVertex
 };
 
-enum TextureTargetType {
+///	@brief
+enum class TextureTargetType {
     Texture1D,
     Texture2D,
     Texture3D
 };
 
-enum TextureStageType {
+///	@brief
+enum class TextureStageType {
     TextureStage0 = 0,
     TextureStage1,
     TextureStage2,
     TextureStage3
 };
 
-enum TextureParameterName {
+///	@brief
+enum class TextureParameterName {
     TextureParamMinFilter = 0,
     TextureParamMagFilter,
     TextureParamWrapS,
     TextureParamWrapT
 };
 
-enum TextureParameterType {
+///	@brief
+enum class TextureParameterType {
     TexturePTNearest = 0,
     TexturePTLinear,
     TexturePTClamp,
@@ -91,13 +97,13 @@ enum TextureParameterType {
 };
 
 ///	@brief
-enum IndexType {
+enum class IndexType {
     UnsignedByte,   ///<
     UnsignedShort   ///<
 };
 
 ///	@brief
-enum PrimitiveType {
+enum class PrimitiveType {
     PointList,		///< A list of points, one index per point.
     LineList,		///< A list of separate lines, 2 indices per line.
     LineStrip,		///< A line strip, Start and end-index and all indices between.
@@ -125,7 +131,7 @@ struct RenderVert {
     static const String *getAttributes();
 };
 
-enum VertexAttribute {
+enum class VertexAttribute : int {
     Position = 0,   ///< "position"
     Normal,         ///< "normal"
     TexCoord0,      ///< "texcoord0"
@@ -148,7 +154,7 @@ enum VertexAttribute {
 
 OSRE_EXPORT const String &getVertCompName( VertexAttribute attrib );
 
-enum VertexFormat {
+enum class VertexFormat : int {
     Float,          ///< single component float, expanded to (x, 0, 0, 1)
     Float2,         ///< 2-component float, expanded to (x, y, 0, 1)
     Float3,         ///< 3-component float, expanded to (x, y, z, 1)
@@ -165,32 +171,32 @@ inline
 ui32 getVertexFormatSize( VertexFormat format ) {
     ui32 size( 0 );
     switch( format ) {
-        case Float:
+        case VertexFormat::Float:
             size = sizeof( f32 );
             break;
-        case Float2:
+        case VertexFormat::Float2:
             size = sizeof( f32 )*2;
             break;
-        case Float3:
+        case VertexFormat::Float3:
             size = sizeof( f32 )*3;
             break;
-        case Float4:
+        case VertexFormat::Float4:
             size = sizeof( f32 )*4;
             break;
-        case Byte4:
+        case VertexFormat::Byte4:
             size = sizeof( c8 ) * 4;
             break;
-        case UByte4:
+        case VertexFormat::UByte4:
             size = sizeof( uc8 ) * 4;
             break;
-        case Short2:
+        case VertexFormat::Short2:
             size = sizeof( ui16 ) * 2;
             break;
-        case Short4:
+        case VertexFormat::Short4:
             size = sizeof( ui16 ) * 4;
             break;
-        case NumVertexFormats:
-        case InvalidVertexFormat:
+        case VertexFormat::NumVertexFormats:
+        case VertexFormat::InvalidVertexFormat:
             break;
 
         default:
@@ -259,7 +265,7 @@ struct OSRE_EXPORT PrimitiveGroup {
     OSRE_NON_COPYABLE( PrimitiveGroup )
 };
 
-enum MaterialType {
+enum class MaterialType {
     FlatShadingMaterial,
     ShaderMaterial
 };
@@ -281,7 +287,7 @@ struct OSRE_EXPORT Texture {
     OSRE_NON_COPYABLE( Texture )
 };
 
-enum ShaderType {
+enum class ShaderType : int {
     SH_VertexShaderType = 0,
     SH_FragmentShaderType,
     SH_GeometryShaderType
@@ -323,26 +329,7 @@ struct OSRE_EXPORT Transform {
     OSRE_NON_COPYABLE( Transform )
 };
 
-struct OSRE_EXPORT StaticGeometry {
-    Material       *m_material;
-    VertexType      m_vertextype;
-    BufferData     *m_vb;
-    IndexType       m_indextype;
-    BufferData     *m_ib;
-    ui32            m_numPrimGroups;
-    PrimitiveGroup *m_pPrimGroups;
-
-    static StaticGeometry *create( ui32 numGeo );
-    static void destroy( StaticGeometry **geo );
-
-    OSRE_NON_COPYABLE( StaticGeometry )
-
-private:
-    StaticGeometry();
-    ~StaticGeometry();
-};
-
-struct OSRE_EXPORT DynamicGeometry {
+struct OSRE_EXPORT Geometry {
     Material       *m_material;
     VertexType      m_vertextype;
     BufferData     *m_vb;
@@ -352,14 +339,14 @@ struct OSRE_EXPORT DynamicGeometry {
     PrimitiveGroup *m_pPrimGroups;
     ui32            m_id;
 
-    static DynamicGeometry *create( ui32 numGeo );
-    static void destroy( DynamicGeometry **geo );
+    static Geometry *create( ui32 numGeo );
+    static void destroy( Geometry **geo );
 
-    OSRE_NON_COPYABLE( DynamicGeometry )
+    OSRE_NON_COPYABLE( Geometry )
 
 private:
-    DynamicGeometry();
-    ~DynamicGeometry();
+    Geometry();
+    ~Geometry();
 };
 
 struct OSRE_EXPORT GeoInstanceData {

@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 namespace RenderBackend {
-    struct StaticGeometry;
+    struct Geometry;
 }
 
 namespace Scene {
@@ -56,17 +56,17 @@ public:
     /// @brief  Will allocate an empty geometry.
     ///	@param  type        [in] The vertex type.
     /// @return The created geometry.
-    static RenderBackend::StaticGeometry *allocEmptyGeometry( RenderBackend::VertexType type, ui32 numGeo );
+    static RenderBackend::Geometry *allocEmptyGeometry( RenderBackend::VertexType type, ui32 numGeo );
 
     /// @brief  Will allocate a triangle geometry.
     ///	@param  type        [in] The vertex type.
     /// @return The created geometry.
-    static RenderBackend::StaticGeometry *allocTriangles( RenderBackend::VertexType type );
+    static RenderBackend::Geometry *allocTriangles( RenderBackend::VertexType type );
 
     ///	@brief  Will allocate vertices for a quad primitive.
     ///	@param  type        [in] The vertex type.
     /// @return The created geometry.
-    static RenderBackend::StaticGeometry *allocQuads( RenderBackend::VertexType type );
+    static RenderBackend::Geometry *allocQuads( RenderBackend::VertexType type );
 
     ///	@brief  Will allocate vertices for a text-box.
     /// @param  x           [in] Left position of the text box.
@@ -74,7 +74,7 @@ public:
     /// @param  textSize    [in] The size for a single glyph.
     /// @param  text        [in] The text to render.
     /// @return The created geometry.
-    static RenderBackend::StaticGeometry *allocTextBox( f32 x, f32 y, f32 textSize, const String &text );
+    static RenderBackend::Geometry *allocTextBox( f32 x, f32 y, f32 textSize, const String &text );
 
     ///	@brief  Allocates vertices into a buffer data.
     /// @param  type        [in] The vertex type to create.

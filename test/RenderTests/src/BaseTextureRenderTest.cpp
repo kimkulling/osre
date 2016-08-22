@@ -117,9 +117,9 @@ public:
         pRenderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
-        StaticGeometry *geo = StaticGeometry::create( 1 );
-        geo->m_vertextype = RenderVertex;
-        geo->m_indextype = UnsignedShort;
+        Geometry *geo = Geometry::create( 1 );
+        geo->m_vertextype = VertexType::RenderVertex;
+        geo->m_indextype = IndexType::UnsignedShort;
 
         RenderVert vertices[ 4 ];
         GLushort indices[ 6 ];
@@ -135,7 +135,7 @@ public:
         vertices[ 2 ].tex0 = glm::vec2( 1, 0 );
         vertices[ 3 ].tex0 = glm::vec2( 1, 1 );
 
-        geo->m_vb = BufferData::alloc( VertexBuffer, sizeof( RenderVert ) * 4, ReadOnly );
+        geo->m_vb = BufferData::alloc( BufferType::VertexBuffer, sizeof( RenderVert ) * 4, BufferAccessType::ReadOnly );
         geo->m_vb->copyFrom( vertices, geo->m_vb->m_size );
 
         // setup triangle indices
@@ -147,7 +147,7 @@ public:
         indices[ 4 ] = 2;
         indices[ 5 ] = 3;
         
-        geo->m_ib = BufferData::alloc( IndexBuffer, sizeof( GLushort ) * 6, ReadOnly );        
+        geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( GLushort ) * 6, BufferAccessType::ReadOnly );        
         geo->m_ib->copyFrom( indices, geo->m_ib->m_size );
 
         attachGeoEvData->m_numGeo = 1;
@@ -169,7 +169,7 @@ public:
         geo->m_material->m_pTextures[ 0 ].m_textureName = "SpiderTex";
         geo->m_material->m_pTextures[ 0 ].m_loc = IO::Uri( "file://assets/Models/Obj/SpiderTex.jpg" );
 
-        geo->m_material->m_pTextures[ 0 ].m_targetType = Texture2D;
+        geo->m_material->m_pTextures[ 0 ].m_targetType = TextureTargetType::Texture2D;
         geo->m_material->m_pTextures[ 0 ].m_width = 0;
         geo->m_material->m_pTextures[ 0 ].m_height = 0;
         geo->m_material->m_pTextures[ 0 ].m_channels = 0;
@@ -178,9 +178,9 @@ public:
 
         geo->m_numPrimGroups = 1;
         geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
-        geo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
+        geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
         geo->m_pPrimGroups[ 0 ].m_numPrimitives = 6;
-        geo->m_pPrimGroups[ 0 ].m_primitive = TriangleList;
+        geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
         geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
         pRenderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );

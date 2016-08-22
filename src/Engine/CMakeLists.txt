@@ -448,7 +448,7 @@ ADD_LIBRARY( osre SHARED
         ${threading_impl_src}
 )
 
-target_link_libraries ( osre cppcore zlib Unzip glew soil ${platform_libs} )
+target_link_libraries ( osre cppcore zlib Unzip glew soil ${platform_libs} freetype )
 set_target_properties(  osre PROPERTIES FOLDER Engine )
 
 #==============================================================================

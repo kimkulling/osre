@@ -95,36 +95,35 @@ public:
 
         static ui32 NumGeo( 2 );
         attachGeoEvData->m_numGeo = NumGeo;
-        attachGeoEvData->m_geo = Scene::GeometryBuilder::allocEmptyGeometry( ColorVertex, NumGeo );
+        attachGeoEvData->m_geo = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, NumGeo );
         
-        StaticGeometry *ptGeo = &attachGeoEvData->m_geo[ 0 ];
-        ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( ColorVertex, 3, points, col, nullptr );
-        ptGeo->m_indextype = UnsignedShort;
+        Geometry *ptGeo = &attachGeoEvData->m_geo[ 0 ];
+        ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, points, col, nullptr );
+        ptGeo->m_indextype = IndexType::UnsignedShort;
         ui32 pt_size = sizeof( GLushort ) * PtNumIndices;
-        ptGeo->m_ib = BufferData::alloc( IndexBuffer, pt_size, ReadOnly );
+        ptGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, BufferAccessType::ReadOnly );
         ptGeo->m_ib->copyFrom( pt_indices, pt_size );
         //::memcpy( ptGeo->m_ib->m_pData, pt_indices, pt_size );
         
         // setup primitives
         ptGeo->m_numPrimGroups = 1;
         ptGeo->m_pPrimGroups = new PrimitiveGroup[ ptGeo->m_numPrimGroups ];
-        ptGeo->m_pPrimGroups[ 0 ].init( UnsignedShort, 3, PointList, 0 );
+        ptGeo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, 3, PrimitiveType::PointList, 0 );
 
-        StaticGeometry *lineGeo = &attachGeoEvData->m_geo[ 1 ];
-        lineGeo->m_vb = Scene::GeometryBuilder::allocVertices( ColorVertex, 3, pos, col, nullptr );
-        lineGeo->m_indextype = UnsignedShort;
+        Geometry *lineGeo = &attachGeoEvData->m_geo[ 1 ];
+        lineGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr );
+        lineGeo->m_indextype = IndexType::UnsignedShort;
         ui32 size = sizeof( GLushort ) * NumIndices;
-        lineGeo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
+        lineGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
         lineGeo->m_ib->copyFrom( indices, size );
-        //::memcpy( lineGeo->m_ib->m_pData, indices, size );
 
         // setup primitives
         lineGeo->m_numPrimGroups = 1;
         lineGeo->m_pPrimGroups = new PrimitiveGroup[ lineGeo->m_numPrimGroups ];
-        lineGeo->m_pPrimGroups[ 0 ].init( UnsignedShort, 2*3, LineList, 0 );
+        lineGeo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, 2*3, PrimitiveType::LineList, 0 );
         
         // setup material
-        Material *mat = Scene::MaterialBuilder::createBuildinMaterial( ColorVertex );
+        Material *mat = Scene::MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
         ptGeo->m_material = mat;
         lineGeo->m_material = mat;
         

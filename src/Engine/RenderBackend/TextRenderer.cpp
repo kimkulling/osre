@@ -45,7 +45,7 @@ void TextRenderer::drawText(f32 x, f32 y, f32 scale, const String &text, bool is
 	GeometryBuilder geoBuilder;
 	if ( !isDynamic ) {
         const ui32 hashId( CPPCore::Hash::toHash( text.c_str(), TextHashMap::InitSize ) );
-        StaticGeometry *geo( nullptr );
+        Geometry *geo( nullptr );
         if ( !m_textMap.hasKey( hashId ) ) {
             geo = geoBuilder.allocTextBox( x, y, scale, text );
             m_textMap.insert( hashId, geo );

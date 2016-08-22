@@ -114,7 +114,7 @@ void OGLRenderBackend::setViewport( i32 x, i32 y, i32 w, i32 h ) {
 }
 
 OGLBuffer *OGLRenderBackend::createBuffer( BufferType type ) {
-     ui32 handle( OGLNotSetId );
+    ui32 handle( OGLNotSetId );
     GLuint bufferId( OGLNotSetId );
     glGenBuffers( 1, &bufferId );
     OGLBuffer *buffer( nullptr );
@@ -181,7 +181,7 @@ void OGLRenderBackend::releaseBuffer( OGLBuffer *buffer ) {
     const ui32 slot = buffer->m_handle;
     glDeleteBuffers( 1, &buffer->m_id );
     buffer->m_handle = OGLNotSetId;
-    buffer->m_type   = EmptyBuffer;
+    buffer->m_type   = BufferType::EmptyBuffer;
     buffer->m_id     = OGLNotSetId;
     m_freeBufferSlots.add( slot );
 }
@@ -190,7 +190,7 @@ void OGLRenderBackend::releaseAllBuffers() {
     for ( ui32 i=0; i<m_buffers.size(); ++i ) {
         OGLBuffer *buffer = m_buffers[ i ];
         if ( nullptr != buffer ) {
-            if ( buffer->m_type != EmptyBuffer ) {
+            if ( buffer->m_type != BufferType::EmptyBuffer ) {
                 releaseBuffer( buffer );
             }
         }
@@ -235,9 +235,9 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *shader
 
     OGLVertexAttribute *attribute( nullptr );
     switch( type ) {
-        case ColorVertex:
+        case VertexType::ColorVertex:
             attribute                   = new OGLVertexAttribute;
-            attribute->m_pAttributeName = getVertCompName( Position ).c_str();
+            attribute->m_pAttributeName = getVertCompName( VertexAttribute::Position ).c_str();
             attribute->m_index = ( ( *shader )[ attribute->m_pAttributeName ] );
             attribute->m_size           = 3;
             attribute->m_type           = GL_FLOAT;
@@ -245,7 +245,7 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *shader
             attributes.add( attribute );
 
             attribute = new OGLVertexAttribute;
-            attribute->m_pAttributeName = getVertCompName( Normal ).c_str();
+            attribute->m_pAttributeName = getVertCompName( VertexAttribute::Normal ).c_str();
             attribute->m_index = ( *shader )[ attribute->m_pAttributeName ];
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
@@ -253,7 +253,7 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *shader
             attributes.add( attribute );
 
             attribute = new OGLVertexAttribute;
-            attribute->m_pAttributeName = getVertCompName( Color0 ).c_str();
+            attribute->m_pAttributeName = getVertCompName( VertexAttribute::Color0 ).c_str();
             attribute->m_index = ( *shader )[ attribute->m_pAttributeName ];
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
@@ -261,9 +261,9 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *shader
             attributes.add( attribute );
             break;
 
-        case RenderVertex:
+        case VertexType::RenderVertex:
             attribute = new OGLVertexAttribute;
-            attribute->m_pAttributeName = getVertCompName( Position ).c_str();
+            attribute->m_pAttributeName = getVertCompName( VertexAttribute::Position ).c_str();
             attribute->m_index = ( ( *shader )[ attribute->m_pAttributeName ] );
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
@@ -271,7 +271,7 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *shader
             attributes.add( attribute );
 
             attribute = new OGLVertexAttribute;
-            attribute->m_pAttributeName = getVertCompName( Normal ).c_str();
+            attribute->m_pAttributeName = getVertCompName( VertexAttribute::Normal ).c_str();
             attribute->m_index = ( *shader )[ attribute->m_pAttributeName ];
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
@@ -279,7 +279,7 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *shader
             attributes.add( attribute );
 
             attribute = new OGLVertexAttribute;
-            attribute->m_pAttributeName = getVertCompName( Color0 ).c_str();
+            attribute->m_pAttributeName = getVertCompName( VertexAttribute::Color0 ).c_str();
             attribute->m_index = ( *shader )[ attribute->m_pAttributeName ];
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
@@ -287,7 +287,7 @@ bool OGLRenderBackend::createVertexCompArray( VertexType type, OGLShader *shader
             attributes.add( attribute );
 
             attribute = new OGLVertexAttribute;
-            attribute->m_pAttributeName = getVertCompName( TexCoord0 ).c_str();
+            attribute->m_pAttributeName = getVertCompName( VertexAttribute::TexCoord0 ).c_str();
             attribute->m_index = ( *shader )[ attribute->m_pAttributeName ];
             attribute->m_size = 2;
             attribute->m_type = GL_FLOAT;
@@ -435,22 +435,22 @@ OGLShader *OGLRenderBackend::createShader( const String &name, Shader *shaderInf
     m_shaders.add( oglShader );
     if( shaderInfo ) {
         bool result( false );
-        if( !shaderInfo->m_src[ SH_VertexShaderType ].empty() ) {
-            result = oglShader->loadFromSource( SH_VertexShaderType, shaderInfo->m_src[ SH_VertexShaderType ] );
+        if( !shaderInfo->m_src[ static_cast<int>( ShaderType::SH_VertexShaderType ) ].empty() ) {
+            result = oglShader->loadFromSource( ShaderType::SH_VertexShaderType, shaderInfo->m_src[ static_cast<int>( ShaderType::SH_VertexShaderType ) ] );
             if( !result ) {
                 osre_error( Tag, "Error while compiling VertexShader." );
             }
         }
 
-        if( !shaderInfo->m_src[ SH_FragmentShaderType ].empty( ) ) {
-            result = oglShader->loadFromSource( SH_FragmentShaderType, shaderInfo->m_src[ SH_FragmentShaderType ] );
+        if( !shaderInfo->m_src[ static_cast<int>( ShaderType::SH_FragmentShaderType ) ].empty( ) ) {
+            result = oglShader->loadFromSource( ShaderType::SH_FragmentShaderType, shaderInfo->m_src[ static_cast<int>( ShaderType::SH_FragmentShaderType ) ] );
             if( !result ) {
                 osre_error( Tag, "Error while compiling FragmentShader." );
             }
         }
 
-        if( !shaderInfo->m_src[ SH_GeometryShaderType ].empty( ) ) {
-            result = oglShader->loadFromSource( SH_GeometryShaderType, shaderInfo->m_src[ SH_GeometryShaderType ] );
+        if( !shaderInfo->m_src[ static_cast<int>( ShaderType::SH_GeometryShaderType ) ].empty( ) ) {
+            result = oglShader->loadFromSource( ShaderType::SH_GeometryShaderType, shaderInfo->m_src[ static_cast<int>( ShaderType::SH_GeometryShaderType ) ] );
             if( !result ) {
                 osre_error( Tag, "Error while compiling GeometryShader." );
             }
@@ -579,13 +579,13 @@ OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTar
     tex->m_format    = GL_RGB;
 
     glActiveTexture( GL_TEXTURE0 );
-    tex->m_target = OGLEnum::getGLTextureTarget( Texture2D );
+    tex->m_target = OGLEnum::getGLTextureTarget( TextureTargetType::Texture2D );
     glBindTexture( tex->m_target, textureId );
     
-    glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParamMinFilter ), GL_LINEAR );
-    glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParamMagFilter ), GL_LINEAR );
-    glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParamWrapS ), GL_CLAMP );
-    glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParamWrapT ), GL_CLAMP );
+    glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParameterName::TextureParamMinFilter ), GL_LINEAR );
+    glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParameterName::TextureParamMagFilter ), GL_LINEAR );
+    glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParameterName::TextureParamWrapS ), GL_CLAMP );
+    glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParameterName::TextureParamWrapT ), GL_CLAMP );
 
     return tex;
 }
@@ -635,7 +635,7 @@ OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const I
     }
 
     // create texture and fill it
-    tex = createEmptyTexture( name, Texture2D, width, height, channels );    
+    tex = createEmptyTexture( name, TextureTargetType::Texture2D, width, height, channels );
     glTexImage2D( tex->m_target, 0, GL_RGB, width, height, 0, tex->m_format, GL_UNSIGNED_BYTE, data );
 
     SOIL_free_image_data( data );
@@ -655,7 +655,7 @@ OGLTexture *OGLRenderBackend::createTextureFromStream( const String &name, IO::S
     stream.read( data, size );
 
     // create texture and fill it
-    tex = createEmptyTexture( name, Texture2D, width, height, channels );
+    tex = createEmptyTexture( name, TextureTargetType::Texture2D, width, height, channels );
     glTexImage2D( tex->m_target, 0, GL_RGB, width, height, 0, tex->m_format, GL_UNSIGNED_BYTE, data );
     delete [] data;
 
@@ -953,11 +953,11 @@ void OGLRenderBackend::releaseAllFonts() {
 ui32 OGLRenderBackend::getVertexSize( VertexType vertextype ) {
     ui32 vertexSize( 0 );
     switch( vertextype ) {
-        case ColorVertex:
+        case VertexType::ColorVertex:
             vertexSize = sizeof( ColorVert );
             break;
 
-        case RenderVertex:
+        case VertexType::RenderVertex:
             vertexSize = sizeof( RenderVert );
             break;
 

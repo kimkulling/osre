@@ -31,11 +31,11 @@ namespace RenderBackend {
 class RenderBackendService;
 
 struct BufferData;
-struct StaticGeometry;
+struct Geometry;
 
 class TextRenderer {
 public:
-    typedef CPPCore::THashMap<ui32, StaticGeometry*> TextHashMap;
+    typedef CPPCore::THashMap<ui32, Geometry*> TextHashMap;
 
 public:
     TextRenderer( RenderBackendService *rb );

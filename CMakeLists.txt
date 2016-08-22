@@ -84,6 +84,8 @@ ADD_SUBDIRECTORY( 3dparty/cppcore/build )
 ADD_SUBDIRECTORY( 3dparty/zlib )
 ADD_SUBDIRECTORY( 3dparty/unzip )
 ADD_SUBDIRECTORY( 3dparty/soil )
+ADD_SUBDIRECTORY( 3dparty/freetype )
+
 
 # Include the doc component.
 #ADD_SUBDIRECTORY( Doc )

@@ -92,10 +92,10 @@ const String &AbstractRenderTest::getTestName() const {
 RenderBackend::Material *AbstractRenderTest::createMaterial( const String &VsSrc, const String &FsSrc ) {
     Material *mat      = new Material;
     mat->m_numTextures = 0;
-    mat->m_type        = ShaderMaterial;
+    mat->m_type        = MaterialType::ShaderMaterial;
     mat->m_pShader     = new Shader;
-    mat->m_pShader->m_src[ SH_VertexShaderType ] = VsSrc;
-    mat->m_pShader->m_src[ SH_FragmentShaderType ] = FsSrc;
+    mat->m_pShader->m_src[ static_cast<int>( ShaderType::SH_VertexShaderType ) ] = VsSrc;
+    mat->m_pShader->m_src[ static_cast<int>( ShaderType::SH_FragmentShaderType ) ] = FsSrc;
 
     return mat;
 }

@@ -31,7 +31,7 @@ VertComponent VertexLayout::ErrorComp;
 static const String Tag = "RenderCommon";
 
 /// @brief  The corresponding names for vertex components in a vertex layout
-static const String VertCompName[ NumVertexAttrs ] = {
+static const String VertCompName[ VertexAttribute::NumVertexAttrs ] = {
     "position",     ///< Position
     "normal",       ///< Normal
     "texcoord0",    ///< TexCoord0
@@ -86,15 +86,15 @@ const String *RenderVert::getAttributes() {
 }
 
 const String &getVertCompName( VertexAttribute attrib ) {
-    if( attrib > Instance3 ) {
+    if( attrib > VertexAttribute::Instance3 ) {
         return ErrorCmpName;
     }
-    return VertCompName[ attrib ];
+    return VertCompName[ static_cast<int>(attrib) ];
 }
 
 VertComponent::VertComponent()
-: m_attrib( InvalidVertexAttr )
-, m_format( InvalidVertexFormat ) {
+: m_attrib( VertexAttribute::InvalidVertexAttr )
+, m_format( VertexFormat::InvalidVertexFormat ) {
     // empty
 }
 
@@ -178,7 +178,7 @@ const String *VertexLayout::getAttributes() {
         const ui32 numAttributes( m_components.size() );
         m_attributes = new String[ numAttributes ];
         for( ui32 i = 0; i < m_components.size(); ++i )  {
-            m_attributes[ i ] = VertCompName[ m_components[ i ]->m_attrib ];
+            m_attributes[ i ] = VertCompName[ static_cast<int>( m_components[ i ]->m_attrib  ) ];
         }
     }
     
@@ -186,10 +186,10 @@ const String *VertexLayout::getAttributes() {
 }
 
 BufferData::BufferData()
-: m_type( EmptyBuffer )
+: m_type( BufferType::EmptyBuffer )
 , m_data( nullptr )
 , m_size( 0 )
-, m_access( ReadOnly ) {
+, m_access( BufferAccessType::ReadOnly ) {
     // empty
 }
 
@@ -227,10 +227,10 @@ void BufferData::copyFrom( void *data, ui32 size ) {
 }
 
 PrimitiveGroup::PrimitiveGroup()
-: m_primitive( LineList )
+: m_primitive( PrimitiveType::LineList )
 , m_startIndex( 0 )
 , m_numPrimitives( 0 )
-, m_indexType( UnsignedShort ) {
+, m_indexType( IndexType::UnsignedShort ) {
     // empty
 }
 
@@ -247,7 +247,7 @@ void PrimitiveGroup::init( IndexType indexType, ui32 numPrimitives, PrimitiveTyp
 
 Texture::Texture()
 : m_textureName( "" )
-, m_targetType( Texture2D )
+, m_targetType( TextureTargetType::Texture2D )
 , m_size( 0 )
 , m_data( nullptr )
 , m_width( 0 )
@@ -271,7 +271,7 @@ Shader::~Shader() {
 }
 
 Material::Material()
-: m_type( FlatShadingMaterial )
+: m_type( MaterialType::FlatShadingMaterial )
 , m_numTextures( 0 )
 , m_pTextures( nullptr )
 , m_pShader( nullptr )
@@ -298,7 +298,7 @@ Transform::~Transform() {
     // empty
 }
 
-StaticGeometry::StaticGeometry()
+Geometry::Geometry()
 : m_material( nullptr )
 , m_vb( nullptr )
 , m_ib( nullptr )
@@ -307,7 +307,7 @@ StaticGeometry::StaticGeometry()
     // empty
 }
 
-StaticGeometry::~StaticGeometry() {
+Geometry::~Geometry() {
     delete m_material;
     m_material = nullptr;
 
@@ -321,44 +321,17 @@ StaticGeometry::~StaticGeometry() {
     m_pPrimGroups = nullptr;
 }
 
-StaticGeometry *StaticGeometry::create( ui32 numGeo ) {
+Geometry *Geometry::create( ui32 numGeo ) {
     if ( 0 == numGeo ) {
         osre_debug( Tag, "Number of static geo to create is zero." );
         return nullptr;
     }
-    return new StaticGeometry[ numGeo ];
+    return new Geometry[ numGeo ];
 }
 
-void StaticGeometry::destroy( StaticGeometry **geo ) {
+void Geometry::destroy( Geometry **geo ) {
     delete [] *geo;
     (*geo) = nullptr;
-}
-
-DynamicGeometry::DynamicGeometry() 
-: m_material( nullptr )
-, m_vb( nullptr )
-, m_ib( nullptr )
-, m_numPrimGroups( 0 )
-, m_pPrimGroups( nullptr )
-, m_id( 0 ) {        
-    // empty
-}
-
-DynamicGeometry::~DynamicGeometry() {
-    // empty
-}
-
-DynamicGeometry *DynamicGeometry::create( ui32 numGeo ) {
-    if ( 0 == numGeo ) {
-        osre_debug( Tag, "Number of dynamic geo to create is zero." );
-        return nullptr;
-    }
-    return new DynamicGeometry[ numGeo ];
-}
-
-void DynamicGeometry::destroy( DynamicGeometry **geo ) {
-    delete[] * geo;
-    ( *geo ) = nullptr;
 }
 
 GeoInstanceData::GeoInstanceData()

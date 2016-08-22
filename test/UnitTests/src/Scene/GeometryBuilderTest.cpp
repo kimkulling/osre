@@ -35,24 +35,24 @@ class GeometryBuilderTest : public ::testing::Test {
 };
 
 TEST_F( GeometryBuilderTest, allocEmptyGeometryTest ) {
-    StaticGeometry *geoArray = Scene::GeometryBuilder::allocEmptyGeometry( ColorVertex, 2 );
+    Geometry *geoArray = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, 2 );
     EXPECT_NE( geoArray, nullptr );
 
     for ( ui32 i = 0; i < 2; i++ ) {
-        StaticGeometry &currentGeo( geoArray[ i ] );
-        EXPECT_EQ( currentGeo.m_vertextype, ColorVertex );
+        Geometry &currentGeo( geoArray[ i ] );
+        EXPECT_EQ( currentGeo.m_vertextype, VertexType::ColorVertex );
     }
-    StaticGeometry::destroy( &geoArray );
+    Geometry::destroy( &geoArray );
 }
 
 TEST_F( GeometryBuilderTest, allocTrianglesTest ) {
-    StaticGeometry *geo = Scene::GeometryBuilder::allocTriangles( ColorVertex );
+    Geometry *geo = Scene::GeometryBuilder::allocTriangles( VertexType::ColorVertex );
     EXPECT_NE( geo, nullptr );
-    EXPECT_EQ( geo->m_vertextype, ColorVertex );
+    EXPECT_EQ( geo->m_vertextype, VertexType::ColorVertex );
     EXPECT_NE( geo->m_vb, nullptr );
     EXPECT_NE( geo->m_ib, nullptr );
     EXPECT_NE( geo->m_material, nullptr );
-    StaticGeometry::destroy( &geo );
+    Geometry::destroy( &geo );
 }
 
 } // Namespace UnitTest

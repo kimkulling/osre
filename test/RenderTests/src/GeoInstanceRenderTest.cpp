@@ -104,7 +104,7 @@ public:
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         Scene::GeometryBuilder myBuilder;
-        StaticGeometry *geo = myBuilder.allocTriangles( ColorVertex );
+        Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex );
 
         attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_geo = geo;
@@ -159,8 +159,6 @@ public:
 };
 
 ATTACH_RENDERTEST( GeoInstanceRenderTest )
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderTest
 } // Namespace OSRE

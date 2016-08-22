@@ -117,12 +117,12 @@ MaterialBuilder::~MaterialBuilder() {
 Material *MaterialBuilder::createBuildinMaterial( VertexType type ) {
     Material *mat = new Material;
     mat->m_numTextures = 0;
-    mat->m_type = ShaderMaterial;
+    mat->m_type = MaterialType::ShaderMaterial;
     String vs, fs;
-    if ( type == ColorVertex ) {
+    if ( type == VertexType::ColorVertex ) {
         vs = VsSrc;
         fs = FsSrc;
-    } else if ( type == RenderVertex ) {
+    } else if ( type == VertexType::RenderVertex ) {
         vs = VsSrcRV;
         fs = FsSrcRV;
     }
@@ -133,16 +133,16 @@ Material *MaterialBuilder::createBuildinMaterial( VertexType type ) {
     }
 
     mat->m_pShader = new Shader;
-    mat->m_pShader->m_src[ SH_VertexShaderType ] = vs;
-    mat->m_pShader->m_src[ SH_FragmentShaderType ] = fs;
+    mat->m_pShader->m_src[ static_cast<int>( ShaderType::SH_VertexShaderType ) ] = vs;
+    mat->m_pShader->m_src[ static_cast<int>( ShaderType::SH_FragmentShaderType ) ] = fs;
 
     // setup shader attributes and variables
     if ( nullptr != mat->m_pShader ) {
-        if ( type == ColorVertex ) {
+        if ( type == VertexType::ColorVertex ) {
             ui32 numAttribs( ColorVert::getNumAttributes() );
             const String *attribs( ColorVert::getAttributes() );
             mat->m_pShader->m_attributes.add( attribs, numAttribs );
-        } else if ( type == RenderVertex ) {
+        } else if ( type == VertexType::RenderVertex ) {
             ui32 numAttribs( RenderVert::getNumAttributes() );
             const String *attribs( RenderVert::getAttributes() );
             mat->m_pShader->m_attributes.add( attribs, numAttribs );

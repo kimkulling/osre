@@ -61,7 +61,7 @@ void RenderComponent::update( RenderBackendService *renderBackendSrv ) {
     }
 }
 
-void RenderComponent::addStaticGeometry( RenderBackend::StaticGeometry *geo ) {
+void RenderComponent::addStaticGeometry( RenderBackend::Geometry *geo ) {
     if ( nullptr == geo ) {
         return;
     }

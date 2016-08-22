@@ -32,7 +32,7 @@ namespace OSRE {
 namespace RenderBackend {
     class RenderBackendService;
     
-    struct StaticGeometry;
+    struct Geometry;
     struct TransformBlock;
 }
 
@@ -68,10 +68,10 @@ public:
     virtual ~RenderComponent();
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
 
-    void addStaticGeometry( RenderBackend::StaticGeometry *geo );
+    void addStaticGeometry( RenderBackend::Geometry *geo );
 
 private:
-    CPPCore::TArray<RenderBackend::StaticGeometry*> m_newGeo;
+    CPPCore::TArray<RenderBackend::Geometry*> m_newGeo;
 };
 
 class OSRE_EXPORT TransformComponent : public Component {

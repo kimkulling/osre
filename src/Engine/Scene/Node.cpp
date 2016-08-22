@@ -158,7 +158,7 @@ void Node::releaseChildren() {
     }
 }
 
-void Node::addGeometry( RenderBackend::StaticGeometry *geo ) {
+void Node::addGeometry( RenderBackend::Geometry *geo ) {
     if ( nullptr != m_renderComp ) {
         m_renderComp->addStaticGeometry( geo );
     }

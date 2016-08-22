@@ -55,7 +55,7 @@ public:
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         Scene::GeometryBuilder myBuilder;
-        StaticGeometry *geo = myBuilder.allocTextBox( -1, -1, 0.1f, "Hello,\nworld!\nxx" );
+        Geometry *geo = myBuilder.allocTextBox( -1, -1, 0.1f, "Hello,\nworld!\nxx" );
         attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_geo = geo;
 

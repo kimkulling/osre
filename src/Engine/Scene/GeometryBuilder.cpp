@@ -106,21 +106,21 @@ GeometryBuilder::~GeometryBuilder() {
     // empty
 }
 
-StaticGeometry *GeometryBuilder::allocEmptyGeometry( VertexType type, ui32 numGeo ) {
-    StaticGeometry *geo = StaticGeometry::create( numGeo );
+Geometry *GeometryBuilder::allocEmptyGeometry( VertexType type, ui32 numGeo ) {
+    Geometry *geo = Geometry::create( numGeo );
     for ( ui32 i = 0; i < numGeo; i++ ) {
         geo[ i ].m_vertextype = type;
-        geo[ i ].m_indextype = UnsignedShort;
+        geo[ i ].m_indextype = IndexType::UnsignedShort;
 
     }
 
     return geo;
 }
 
-StaticGeometry *GeometryBuilder::allocTriangles( VertexType type ) {
-    StaticGeometry *geo = StaticGeometry::create( 1 );
+Geometry *GeometryBuilder::allocTriangles( VertexType type ) {
+    Geometry *geo = Geometry::create( 1 );
     geo->m_vertextype = type;
-    geo->m_indextype = UnsignedShort;
+    geo->m_indextype = IndexType::UnsignedShort;
 
     // setup triangle vertices    
     static const ui32 NumVert = 3;
@@ -145,15 +145,15 @@ StaticGeometry *GeometryBuilder::allocTriangles( VertexType type ) {
     indices[ 2 ] = 2;
     
     ui32 size = sizeof( GLushort ) * NumIndices;
-    geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
+    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
     ::memcpy( geo->m_ib->m_data, indices, size );
 
 	// setup primitives
     geo->m_numPrimGroups = 1;
     geo->m_pPrimGroups   = new PrimitiveGroup[ geo->m_numPrimGroups ];
-    geo->m_pPrimGroups[ 0 ].m_indexType     = UnsignedShort;
+    geo->m_pPrimGroups[ 0 ].m_indexType     = IndexType::UnsignedShort;
     geo->m_pPrimGroups[ 0 ].m_numPrimitives = 3 * geo->m_numPrimGroups;
-    geo->m_pPrimGroups[ 0 ].m_primitive     = TriangleList;
+    geo->m_pPrimGroups[ 0 ].m_primitive     = PrimitiveType::TriangleList;
     geo->m_pPrimGroups[ 0 ].m_startIndex    = 0;
 
 	// setup material
@@ -162,10 +162,10 @@ StaticGeometry *GeometryBuilder::allocTriangles( VertexType type ) {
     return geo;
 }
 
-StaticGeometry *GeometryBuilder::allocQuads( VertexType type ) {
-    StaticGeometry *geo = StaticGeometry::create( 1 );
+Geometry *GeometryBuilder::allocQuads( VertexType type ) {
+    Geometry *geo = Geometry::create( 1 );
     geo->m_vertextype = type;
-    geo->m_indextype = UnsignedShort;
+    geo->m_indextype = IndexType::UnsignedShort;
 
     // setup triangle vertices    
     static const ui32 NumVert = 4;
@@ -195,15 +195,15 @@ StaticGeometry *GeometryBuilder::allocQuads( VertexType type ) {
     indices[ 5 ] = 3;
 
     ui32 size = sizeof( GLushort ) * NumIndices;
-    geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
+    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
     ::memcpy( geo->m_ib->m_data, indices, size );
 
     // setup primitives
     geo->m_numPrimGroups = 1;
     geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
-    geo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
+    geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
     geo->m_pPrimGroups[ 0 ].m_numPrimitives = 6 * geo->m_numPrimGroups;
-    geo->m_pPrimGroups[ 0 ].m_primitive = TriangleList;
+    geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
     geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
     // setup material
@@ -220,14 +220,14 @@ static bool isLineBreak(c8 c) {
     }
 }
 
-StaticGeometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text ) {
+Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text ) {
 	if ( text.empty() ) {
 		return nullptr;
 	}
 
-    StaticGeometry *geo = StaticGeometry::create( 1 );
-    geo->m_vertextype = RenderVertex;
-    geo->m_indextype = UnsignedShort;
+    Geometry *geo = Geometry::create( 1 );
+    geo->m_vertextype = VertexType::RenderVertex;
+    geo->m_indextype = IndexType::UnsignedShort;
 
     // setup triangle vertices    
     static const ui32 NumQuadVert = 4;
@@ -324,20 +324,20 @@ StaticGeometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const
 
     // setup triangle indices
     ui32 size = sizeof( GLushort ) * 6 * text.size();
-    geo->m_ib = BufferData::alloc( IndexBuffer, size, ReadOnly );
+    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
     ::memcpy( geo->m_ib->m_data, textIndices, size );
 
     // setup primitives
     geo->m_numPrimGroups = text.size();
 //    geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
     geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
-    geo->m_pPrimGroups[ 0 ].m_indexType = UnsignedShort;
+    geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
     geo->m_pPrimGroups[ 0 ].m_numPrimitives = 6 * geo->m_numPrimGroups;
-    geo->m_pPrimGroups[ 0 ].m_primitive = TriangleList;
+    geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
     geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
     // setup material
-    geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( RenderVertex );
+    geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( VertexType::RenderVertex );
 
     // setup the texture
     geo->m_material->m_numTextures = 1;
@@ -345,7 +345,7 @@ StaticGeometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const
     geo->m_material->m_pTextures[ 0 ].m_textureName = "buildin_arial";
     geo->m_material->m_pTextures[ 0 ].m_loc = IO::Uri( "file://assets/Textures/Fonts/buildin_arial.bmp" );
 
-    geo->m_material->m_pTextures[0].m_targetType = Texture2D;
+    geo->m_material->m_pTextures[0].m_targetType = TextureTargetType::Texture2D;
     geo->m_material->m_pTextures[0].m_width = 0;
     geo->m_material->m_pTextures[0].m_height = 0;
     geo->m_material->m_pTextures[0].m_channels = 0;
@@ -360,7 +360,7 @@ BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm:
     BufferData *data( nullptr );
     ui32 size( 0 );
     switch (type) {
-        case ColorVertex: {
+        case VertexType::ColorVertex: {
             ColorVert *colVerts = new ColorVert[ numVerts ];
             if (nullptr != pos) {
                 for (ui32 i = 0; i < numVerts; i++) {
@@ -373,13 +373,13 @@ BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm:
                 }
             }
             size = sizeof( ColorVert ) * numVerts;
-            data = BufferData::alloc( VertexBuffer, size, ReadOnly );
+            data = BufferData::alloc( BufferType::VertexBuffer, size, BufferAccessType::ReadOnly );
             ::memcpy( data->m_data, colVerts, size );
             delete [] colVerts;
         }
         break;
 
-        case RenderVertex: {
+        case VertexType::RenderVertex: {
             RenderVert *renderVerts = new RenderVert[ numVerts ];
             if (nullptr != pos) {
                 for (ui32 i = 0; i < numVerts; i++) {
@@ -398,7 +398,7 @@ BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm:
             }
 
             size = sizeof( RenderVert ) * numVerts;
-            data = BufferData::alloc( VertexBuffer, size, ReadOnly );
+            data = BufferData::alloc( BufferType::VertexBuffer, size, BufferAccessType::ReadOnly );
             ::memcpy( data->m_data, renderVerts, size );
             delete [] renderVerts;
         }
