@@ -374,14 +374,6 @@ struct OSRE_EXPORT GeoInstanceData {
     OSRE_NON_COPYABLE( GeoInstanceData )
 };
 
-struct RenderCommand {
-    RenderCommandType m_commandType;
-    void             *m_pImpl;
-
-    OSRE_NON_COPYABLE( RenderCommand )
-};
-
-
 struct OSRE_EXPORT TransformBlock {
     glm::vec4 m_transform;
     glm::vec4 m_scale;

@@ -53,7 +53,6 @@ struct OGLBuffer;
 struct OGLVertexArray;
 struct OGLVertexAttribute;
 struct OGLTexture;
-struct RenderCommand;
 struct RenderCmdData3DView;
 struct Shader;
 struct Parameter;

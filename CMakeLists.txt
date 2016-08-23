@@ -100,3 +100,6 @@ ADD_SUBDIRECTORY( 3dparty/freetype )
 
 set_target_properties(  cppcore PROPERTIES FOLDER ThirdParty )
 set_target_properties(  cppcore_unittest PROPERTIES FOLDER ThirdParty )
+set_target_properties(  freetype PROPERTIES FOLDER ThirdParty )
+set_target_properties(  dist PROPERTIES FOLDER ThirdParty )
+

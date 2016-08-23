@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2016 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -36,30 +36,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using namespace ::OSRE;
 using namespace ::OSRE::RenderBackend;
 
-// To identify local log entries 
+// To identify local log entries we will define this tag.
 static const String Tag = "HelloWorldApp"; 
 
-// The example application, will create the render environment and render a simple triangle onto it
+/// The example application, will create the render environment and render a simple triangle onto it
 class HelloWorldApp : public App::AppBase {
+    /// The main state, is used to describe a scene to render
     Scene::Stage *m_stage;
+    /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock m_transformMatrix;
 
 public:
+    /// The class constructor with the incoming arguments from the command line.
     HelloWorldApp( int argc, char *argv[] )
     : AppBase( argc, argv )
     , m_stage( nullptr ) {
         // empty
     }
 
+    /// The class destructor.
     virtual ~HelloWorldApp() {
         // empty
     }
 
 protected:
-    void createStaticText() {
-
-    }
-
     virtual bool onCreate( Properties::Settings *settings = nullptr ) {
         Properties::Settings *baseSettings( AppBase::getSettings() );
         if ( nullptr == baseSettings ) {
@@ -98,4 +98,5 @@ protected:
     }
 };
 
+/// Will generate the main function.
 OSRE_MAIN( HelloWorldApp )
