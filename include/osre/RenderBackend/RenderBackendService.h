@@ -61,6 +61,7 @@ DECL_EVENT( OnClearSceneEvent );
 DECL_EVENT( OnDetachSceneEvent );
 DECL_EVENT( OnRenderFrameEvent );
 DECL_EVENT( OnUpdateParameterEvent );
+DECL_EVENT( OnRenderDbgTextEvent );
 DECL_EVENT( OnRenderTextEvent);
 
 //-------------------------------------------------------------------------------------------------
@@ -135,16 +136,32 @@ struct OSRE_EXPORT UpdateGeoEventData : public Common::EventData {
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-struct OSRE_EXPORT RenderTextEventData : public Common::EventData {
-	RenderTextEventData()
-	: EventData(OnRenderTextEvent, nullptr) 
-	, m_geo( nullptr )
-	, m_text() {
+struct OSRE_EXPORT RenderDbgTextEventData : public Common::EventData {
+    RenderDbgTextEventData()
+	: EventData( OnRenderDbgTextEvent, nullptr) 
+	, m_text()
+    , m_x( 0 )
+    , m_y( 0 ) {
 		// empty
 	}
 
-	Geometry *m_geo;
 	String m_text;
+    ui32 m_x, m_y;
+    ui32 m_size;
+};
+
+struct OSRE_EXPORT RenderTextEventData : public Common::EventData {
+    RenderTextEventData()
+    : EventData( OnRenderTextEvent, nullptr ) 
+    , m_text()
+    , m_x( 0 )
+    , m_y( 0 ) {
+        // empty
+    }
+
+    String m_text;
+    ui32 m_x, m_y;
+    ui32 m_size;
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -276,40 +276,10 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
     eh->enqueueRenderCmd( renderCmd );
 }
 
-static void setupDrawTextCmd( RenderTextEventData *data, OGLRenderBackend *rb, 
-                              OGLRenderEventHandler *eh, OGLShader *oglShader,
-                              OGLVertexArray *va ) {
-	OSRE_ASSERT( nullptr != rb );
-	OSRE_ASSERT( nullptr != eh );
-
-	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesCmd, nullptr );
-	Geometry *geo( data->m_geo );
-	if ( nullptr == geo ) {
-		return;
-	}
-
-	// register primitive groups to render
-	CPPCore::TArray<ui32> ids;
-	for (ui32 i = 0; i < geo->m_numPrimGroups; ++i) {
-		const ui32 primIdx( rb->addPrimitiveGroup( &geo->m_pPrimGroups[ i ] ) );
-		ids.add( primIdx );
-	}
-
-	setupMaterial( geo->m_material, rb, eh );
-    DrawPrimitivesCmdData *cmdData( new DrawPrimitivesCmdData );
-    cmdData->m_vertexArray = setupBuffers( geo, rb, oglShader  );
-    cmdData->m_primitives.reserve( ids.size() );
-	for (ui32 i = 0; i < ids.size(); ++i) {
-		cmdData->m_primitives.add( ids[ i ] );
-	}
-	renderCmd->m_pData = static_cast< void* >( cmdData );
-	
-	eh->enqueueRenderCmd( renderCmd );
-}
-
 OGLRenderEventHandler::OGLRenderEventHandler( )
 : AbstractEventHandler()
 , m_oglBackend( nullptr )
+, m_textRenderer( nullptr )
 , m_renderCmdBuffer( nullptr )
 , m_renderCtx( nullptr )
 , m_vertexArray( nullptr ) {
@@ -344,7 +314,9 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
         result = onRenderFrame( data );
     } else if( OnUpdateParameterEvent == ev ) {
         result = onUpdateParameter( data );
-	} else if (OnRenderTextEvent == ev) {
+    } else if ( OnRenderDbgTextEvent == ev ) {
+        result = onRenderDbgText( data );
+    } else if ( OnRenderTextEvent == ev ) {
 		result = onRenderText(data);
 	}
     
@@ -443,6 +415,8 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
     }
 
     Profiling::PerformanceCounters::registerCounter( "fps" );
+
+    m_textRenderer = new TextRenderer( m_oglBackend );
 
     return true;
 }
@@ -606,16 +580,13 @@ bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
     return true;
 }
 
+bool OGLRenderEventHandler::onRenderDbgText( const EventData *eventData ) {
+    OSRE_ASSERT( nullptr != m_oglBackend );
+    return true;
+}
+
 bool OGLRenderEventHandler::onRenderText( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
-
-	RenderTextEventData *data = ( RenderTextEventData* ) eventData;
-	if ( nullptr == data) {
-		return false;
-    } else {
-        setupDrawTextCmd( data, m_oglBackend, this, m_renderCmdBuffer->getActiveShader(), m_vertexArray );
-    }
-
 	return true;
 }
 
