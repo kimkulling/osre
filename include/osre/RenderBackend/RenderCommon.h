@@ -53,12 +53,6 @@ enum class BufferAccessType {
 };
 
 ///	@brief
-enum class RenderCommandType {
-    NoOpCmd,
-    RenderView3DCmd
-};
-
-///	@brief
 enum class VertexType {
     ColorVertex,
     RenderVertex
