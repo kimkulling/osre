@@ -33,7 +33,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractRenderContext.h>
 #include <osre/Profiling/PerformanceCounters.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/TextRenderer.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Uri.h>
 #include <osre/Assets/AssetRegistry.h>
@@ -279,7 +278,6 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
 OGLRenderEventHandler::OGLRenderEventHandler( )
 : AbstractEventHandler()
 , m_oglBackend( nullptr )
-, m_textRenderer( nullptr )
 , m_renderCmdBuffer( nullptr )
 , m_renderCtx( nullptr )
 , m_vertexArray( nullptr ) {
@@ -312,14 +310,9 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
         result = onClearGeo( data );
     } else if( OnRenderFrameEvent == ev ) {
         result = onRenderFrame( data );
-    } else if( OnUpdateParameterEvent == ev ) {
+    } else if ( OnUpdateParameterEvent == ev ) {
         result = onUpdateParameter( data );
-    } else if ( OnRenderDbgTextEvent == ev ) {
-        result = onRenderDbgText( data );
-    } else if ( OnRenderTextEvent == ev ) {
-		result = onRenderText(data);
-	}
-    
+    }
     return result;
 }
 
@@ -415,8 +408,6 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
     }
 
     Profiling::PerformanceCounters::registerCounter( "fps" );
-
-    m_textRenderer = new TextRenderer( m_oglBackend );
 
     return true;
 }
@@ -578,16 +569,6 @@ bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
     }
 
     return true;
-}
-
-bool OGLRenderEventHandler::onRenderDbgText( const EventData *eventData ) {
-    OSRE_ASSERT( nullptr != m_oglBackend );
-    return true;
-}
-
-bool OGLRenderEventHandler::onRenderText( const EventData *eventData ) {
-	OSRE_ASSERT( nullptr != m_oglBackend );
-	return true;
 }
 
 } // Namespace RenderBackend

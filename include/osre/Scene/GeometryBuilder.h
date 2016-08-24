@@ -76,6 +76,8 @@ public:
     /// @return The created geometry.
     static RenderBackend::Geometry *allocTextBox( f32 x, f32 y, f32 textSize, const String &text );
 
+    static void updateTextBox( RenderBackend::Geometry *geo, f32 textSize, const String &text, bool resize );
+
     ///	@brief  Allocates vertices into a buffer data.
     /// @param  type        [in] The vertex type to create.
     ///	@param  numVerts    [in] The number of vertices to create.
@@ -85,12 +87,12 @@ public:
     static RenderBackend::BufferData *allocVertices(RenderBackend::VertexType type, ui32 numVerts, ::glm::vec3 *pos, 
         ::glm::vec3 *col1, ::glm::vec2 *tex0);
 
+    static void updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, RenderBackend::BufferData *vb );
+
     /// No copying.
     GeometryBuilder( const GeometryBuilder& ) = delete;
     GeometryBuilder &operator = ( const GeometryBuilder& ) = delete;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Scene
 } // namespace OSRE

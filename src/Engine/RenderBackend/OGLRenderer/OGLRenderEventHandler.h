@@ -46,7 +46,6 @@ class OGLRenderContext;
 class OGLRenderBackend;
 class OGLShader;
 class RenderCmdBuffer;
-class TextRenderer;
 
 struct Vertex;
 struct OGLVertexArray;
@@ -61,7 +60,6 @@ struct SetRenderTargetCmdData;
 struct OGLParameter;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderBackend::OGLRenderEventHandler
 ///	@ingroup	Engine
 ///
 ///	@brief  This class is used to handle all incoming events for the render back-end.
@@ -104,14 +102,9 @@ protected:
 	virtual bool onRenderFrame( const Common::EventData *eventData );
 	///	@brief	Callback when parameter will be updated.
 	virtual bool onUpdateParameter( const Common::EventData *eventData );
-    ///	@brief	Callback when a debug text will be rendered.
-    virtual bool onRenderDbgText( const Common::EventData *eventData );
-    ///	@brief	Callback when a text will be rendered.
-	virtual bool onRenderText(const Common::EventData *eventData );
 
 private:
     OGLRenderBackend *m_oglBackend;
-    TextRenderer *m_textRenderer;
     RenderCmdBuffer *m_renderCmdBuffer;
     Platform::AbstractRenderContext *m_renderCtx;
     OGLVertexArray *m_vertexArray;

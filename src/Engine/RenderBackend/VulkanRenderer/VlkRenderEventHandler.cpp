@@ -66,8 +66,6 @@ bool VlkRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
         result = onRenderFrame( data );
     } else if ( OnUpdateParameterEvent == ev ) {
         result = onUpdateParameter( data );
-    } else if ( OnRenderTextEvent == ev ) {
-        result = onRenderText( data );
     }
 
     return result;

@@ -80,20 +80,20 @@ namespace intern {
     static void dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset ) {
         std::stringstream stream;
         stream << std::endl;
-        stream << "i = " << i << " : " << textPos[ VertexOffset + 0 ].x << ", " << textPos[ VertexOffset + 0 ].y << std::endl;
-        stream << "i = " << i << " : " << textPos[ VertexOffset + 1 ].x << ", " << textPos[ VertexOffset + 1 ].y << std::endl;
-        stream << "i = " << i << " : " << textPos[ VertexOffset + 2 ].x << ", " << textPos[ VertexOffset + 2 ].y << std::endl;
-        stream << "i = " << i << " : " << textPos[ VertexOffset + 3 ].x << ", " << textPos[ VertexOffset + 3 ].y << std::endl;
+        stream << "i = " << i << " : " << textPos[ VertexOffset + 0 ].x << ", " << textPos[ VertexOffset + 0 ].y << "\n";
+        stream << "i = " << i << " : " << textPos[ VertexOffset + 1 ].x << ", " << textPos[ VertexOffset + 1 ].y << "\n";
+        stream << "i = " << i << " : " << textPos[ VertexOffset + 2 ].x << ", " << textPos[ VertexOffset + 2 ].y << "\n";
+        stream << "i = " << i << " : " << textPos[ VertexOffset + 3 ].x << ", " << textPos[ VertexOffset + 3 ].y << "\n";
         osre_info( Tag, stream.str() );
     }
 
     static void dumpTextTex0Box( ui32 i, glm::vec2 *tex0Pos, ui32 VertexOffset ) {
         std::stringstream stream;
         stream << std::endl;
-        stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 0 ].x << ", " << tex0Pos[ VertexOffset + 0 ].y << std::endl;
-        stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 1 ].x << ", " << tex0Pos[ VertexOffset + 1 ].y << std::endl;
-        stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 2 ].x << ", " << tex0Pos[ VertexOffset + 2 ].y << std::endl;
-        stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 3 ].x << ", " << tex0Pos[ VertexOffset + 3 ].y << std::endl;
+        stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 0 ].x << ", " << tex0Pos[ VertexOffset + 0 ].y << "\n";
+        stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 1 ].x << ", " << tex0Pos[ VertexOffset + 1 ].y << "\n";
+        stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 2 ].x << ", " << tex0Pos[ VertexOffset + 2 ].y << "\n";
+        stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 3 ].x << ", " << tex0Pos[ VertexOffset + 3 ].y << "\n";
         osre_info( Tag, stream.str() );
     }
 }
@@ -220,6 +220,13 @@ static bool isLineBreak(c8 c) {
     }
 }
 
+static const ui32 NumQuadVert = 4;
+
+static ui32 getNumTextVerts( const String &text ) {
+    const ui32 NumTextVerts = NumQuadVert * text.size();
+    return NumTextVerts;
+}
+
 Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text ) {
 	if ( text.empty() ) {
 		return nullptr;
@@ -230,7 +237,6 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     geo->m_indextype = IndexType::UnsignedShort;
 
     // setup triangle vertices    
-    static const ui32 NumQuadVert = 4;
     glm::vec3 col[ NumQuadVert ];
     col[ 0 ] = glm::vec3( 1, 0, 0 );
     col[ 1 ] = glm::vec3( 0, 1, 0 );
@@ -293,16 +299,16 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
 
         
 		tex0[VertexOffset + 0].x = s;
-		tex0[VertexOffset + 0].y = 1.0 - t;
+		tex0[VertexOffset + 0].y = 1.0f - t;
 
 		tex0[VertexOffset + 1].x = s;
-        tex0[VertexOffset + 1].y = 1.0 - t + 1.0f / 16.0f;
+        tex0[VertexOffset + 1].y = 1.0f - t + 1.0f / 16.0f;
 
 		tex0[VertexOffset + 2].x = s + 1.0f/16.0f;
-        tex0[VertexOffset + 2].y = 1.0 - t;
+        tex0[VertexOffset + 2].y = 1.0f - t;
        
         tex0[VertexOffset + 3].x = s + 1.0f / 16.0f;
-        tex0[VertexOffset + 3].y = 1.0 - t + 1.0f / 16.0f;
+        tex0[VertexOffset + 3].y = 1.0f - t + 1.0f / 16.0f;
         
         //dumpTextTex0Box(i, tex0, VertexOffset);
         colors[ VertexOffset + 0 ] = col[ 0 ];
@@ -329,7 +335,6 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
 
     // setup primitives
     geo->m_numPrimGroups = text.size();
-//    geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
     geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
     geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
     geo->m_pPrimGroups[ 0 ].m_numPrimitives = 6 * geo->m_numPrimGroups;
@@ -353,6 +358,60 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     geo->m_material->m_pTextures[0].m_size = 0;
 
     return geo;
+}
+
+void GeometryBuilder::updateTextBox( RenderBackend::Geometry *geo, f32 textSize, const String &text, bool resize ) {
+    ui32 numTextVerts( getNumTextVerts( text ) );
+    glm::vec2 *tex0 = new glm::vec2[ numTextVerts ];
+
+    // setup triangle vertices    
+    glm::vec3 col[ NumQuadVert ];
+    col[ 0 ] = glm::vec3( 1, 0, 0 );
+    col[ 1 ] = glm::vec3( 0, 1, 0 );
+    col[ 2 ] = glm::vec3( 0, 0, 1 );
+    col[ 3 ] = glm::vec3( 1, 0, 0 );
+
+    glm::vec3 pos[ NumQuadVert ];
+    pos[ 0 ] = glm::vec3( 0, 0, 0 );
+    pos[ 1 ] = glm::vec3( 0, textSize, 0 );
+    pos[ 2 ] = glm::vec3( textSize, 0, 0 );
+    pos[ 3 ] = glm::vec3( textSize, textSize, 0 );
+
+    const f32 invCol = 1.f / 16.f;
+    const f32 invRow = 1.f / 16.f;
+    ui32 textCol( 0 ), textRow( 0 );
+    for ( ui32 i = 0; i < text.size(); i++ ) {
+        const c8 ch = text[ i ];
+        if ( isLineBreak( ch ) ) {
+            textCol = 0;
+            textRow++;
+            continue;
+        }
+
+        const ui32 VertexOffset( i * NumQuadVert );
+        const f32  rowHeight( -1.0f * textRow * textSize );
+
+        const i32 column = ( ch ) % 16;
+        const i32 row = ( ch ) / 16;
+        const f32 s = column * invCol;
+        const f32 t = ( row + 1 ) * invRow;
+
+
+        tex0[ VertexOffset + 0 ].x = s;
+        tex0[ VertexOffset + 0 ].y = 1.0f - t;
+
+        tex0[ VertexOffset + 1 ].x = s;
+        tex0[ VertexOffset + 1 ].y = 1.0f - t + 1.0f / 16.0f;
+
+        tex0[ VertexOffset + 2 ].x = s + 1.0f / 16.0f;
+        tex0[ VertexOffset + 2 ].y = 1.0f - t;
+
+        tex0[ VertexOffset + 3 ].x = s + 1.0f / 16.0f;
+        tex0[ VertexOffset + 3 ].y = 1.0f - t + 1.0f / 16.0f;
+    }
+
+    updateTextVertices(  numTextVerts, tex0, geo->m_vb );
+    delete[] tex0;
 }
 
 BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm::vec3 *pos, 
@@ -409,6 +468,16 @@ BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm:
     }
 
     return data;
+}
+
+void GeometryBuilder::updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, BufferData *vb ) {
+    RenderVert *vert = new RenderVert[ numVerts ];
+    ::memcpy( &vert[ 0 ].position, vb->m_data, vb->m_size );
+    for ( ui32 i = 0; i < numVerts; i++ ) {
+        vert[ i ].tex0 = tex0[ i ];
+    }
+    ::memcpy( vb->m_data, vert, vb->m_size );
+    delete[] vert;
 }
 
 } // Namespace Scene

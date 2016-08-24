@@ -254,7 +254,8 @@ SET ( properties_src
 # Scene
 #==============================================================================
 SET( scene_src
-    Scene/Component.cpp
+    Scene/DbgRenderer.cpp
+	Scene/Component.cpp
     Scene/GeometryBuilder.cpp
     Scene/MaterialBuilder.cpp
     Scene/Node.cpp
@@ -264,6 +265,7 @@ SET( scene_src
     Scene/World.cpp
 )
 SET( scene_inc
+	${HEADER_PATH}/Scene/DbgRenderer.h
     ${HEADER_PATH}/Scene/Component.h
     ${HEADER_PATH}/Scene/GeometryBuilder.h
     ${HEADER_PATH}/Scene/MaterialBuilder.h
@@ -294,7 +296,6 @@ SET( threading_inc
 # RenderBackend
 #==============================================================================
 SET( renderbackend_src
-    RenderBackend/TextRenderer.cpp
     RenderBackend/FontBase.cpp
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
@@ -341,7 +342,6 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/ClearState.h
     ${HEADER_PATH}/RenderBackend/SamplerState.h
     ${HEADER_PATH}/RenderBackend/StencilState.h
-    ${HEADER_PATH}/RenderBackend/TextRenderer.h
     ${HEADER_PATH}/RenderBackend/FontBase.h
     ${HEADER_PATH}/RenderBackend/Parameter.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
