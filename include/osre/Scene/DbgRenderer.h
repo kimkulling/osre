@@ -21,7 +21,7 @@ namespace Scene {
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class DbgRenderer {
+class OSRE_EXPORT DbgRenderer {
 public:
     void renderDbgText( ui32 x, ui32 y, ui32 id, const String &text );
 

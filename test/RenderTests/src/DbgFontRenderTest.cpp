@@ -25,12 +25,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/DbgRenderer.h>
 
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include <iomanip>
 
 namespace OSRE {
 namespace RenderTest {
@@ -39,10 +42,12 @@ using namespace ::OSRE::RenderBackend;
 
 class DbgFontRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
+    ui32 m_frameCount;
 
 public:
     DbgFontRenderTest()
-        : AbstractRenderTest( "rendertest/DbgFontRenderTest" ) {
+        : AbstractRenderTest( "rendertest/DbgFontRenderTest" )
+        , m_frameCount( 0 ) {
         // empty
     }
 
@@ -53,26 +58,18 @@ public:
     virtual bool onCreate( RenderBackendService *rb ) override {
         rb->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-
-        Scene::GeometryBuilder myBuilder;
-        Geometry *geo = myBuilder.allocTextBox( -1, -1, 0.1f, "Hello,\nworld!\nxx" );
-        attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_geo = geo;
-
-        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
-        m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
-        Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
-        ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
-
-        geo->m_material->m_parameters = parameter;
-        geo->m_material->m_numParameters++;
-
-        rb->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+        
+//        Scene::DbgRenderer::getInstance()->renderDbgText( -1, -1, 1, "Hello, \nworld!" );
+        Scene::DbgRenderer::getInstance()->renderDbgText( -1, -1, 1, "XXX" );
 
         return true;
     }
 
     virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *rbSrv ) override {
+        m_frameCount++;
+        std::stringstream stream;
+        stream << std::setfill( '0' ) << std::setw( 3 ) << m_frameCount;
+        Scene::DbgRenderer::getInstance()->renderDbgText( 10, 10, 1, stream.str() );
         return true;
     }
 

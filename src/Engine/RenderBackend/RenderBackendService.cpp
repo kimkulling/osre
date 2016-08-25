@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/Profiling/PerformanceCounters.h>
 #include <osre/Threading/SystemTask.h>
+#include <osre/Scene/DbgRenderer.h>
 #include "OGLRenderer/OGLRenderEventHandler.h"
 #include "VulkanRenderer/VlkRenderEventHandler.h"
 
@@ -62,8 +63,11 @@ bool RenderBackendService::onOpen() {
         m_renderTaskPtr.init( SystemTask::create( "render_task" ) );
     }
 
+    // Run the render task
     bool ok( true );
     m_renderTaskPtr->start( nullptr );
+    
+    // Create render event handler for backend 
     String api = m_settings->get( Settings::RenderAPI ).getString();
     if ( api == "opengl" ) {
         m_renderTaskPtr->attachEventHandler( new OGLRenderEventHandler );
@@ -71,6 +75,12 @@ bool RenderBackendService::onOpen() {
         m_renderTaskPtr->attachEventHandler( new VlkRenderEventHandler );
     } else {
         osre_error( Tag, "Requested render-api unknown: " + api );
+        ok = false;
+    }
+
+    // Create debug renderer
+    if ( !Scene::DbgRenderer::create( this ) ) {
+        osre_error( Tag, "Cannot create Debug renderer" );
         ok = false;
     }
 
@@ -82,6 +92,9 @@ bool RenderBackendService::onClose() {
         return false;
     }
 
+    if ( !Scene::DbgRenderer::destroy() ) {
+        osre_error( Tag, "Cannot destroy Debug renderer" );
+    }
     if ( m_renderTaskPtr->isRunning() ) {
         m_renderTaskPtr->detachEventHandler();        
         m_renderTaskPtr->stop();

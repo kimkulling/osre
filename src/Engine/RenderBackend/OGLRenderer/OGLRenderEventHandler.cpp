@@ -203,6 +203,7 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
     // create vertex buffer and  and pass triangle vertex to buffer object
 
     OGLBuffer *vb = rb->createBuffer( vertices->m_type );
+    vb->m_geoId = geo->m_id;
     rb->bindBuffer( vb );
     rb->bufferData( vb, vertices->m_data, vertices->m_size, vertices->m_access );
 
@@ -215,6 +216,7 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
 
     // create index buffer and pass indices to element array buffer
     OGLBuffer *ib = rb->createBuffer( indices->m_type );
+    ib->m_geoId = geo->m_id;
     rb->bindBuffer( ib );
     rb->bufferData( ib, indices->m_data, indices->m_size, indices->m_access );
 
@@ -302,8 +304,11 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
         result = onAttachView( data );
     } else if ( OnDetachViewEvent == ev ) {
         result = onDetachView( data );
-    } else if ( OnAttachSceneEvent == ev ) {
+    }
+    else if ( OnAttachSceneEvent == ev ) {
         result = onAttachGeo( data );
+    } else if ( OnUpdateGeoEvent == ev ) {
+        result = onUpdateGeo( data );
     } else if( OnDetachSceneEvent == ev ) {
         result = onDetachGeo( data );
     } else if ( OnClearSceneEvent == ev ) {

@@ -57,7 +57,7 @@ struct OGLBuffer {
     ui32       m_handle;
     BufferType m_type;
     GLuint     m_oglId;
-    ui32       m_id;
+    ui32       m_geoId;
     ui32       m_size;
 };
 

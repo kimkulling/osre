@@ -471,7 +471,12 @@ BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm:
 }
 
 void GeometryBuilder::updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, BufferData *vb ) {
+    if ( nullptr == tex0 || nullptr == vb ) {
+        return;
+    }
+
     RenderVert *vert = new RenderVert[ numVerts ];
+    const size_t vertsSize( sizeof( RenderVert ) * numVerts );
     ::memcpy( &vert[ 0 ].position, vb->m_data, vb->m_size );
     for ( ui32 i = 0; i < numVerts; i++ ) {
         vert[ i ].tex0 = tex0[ i ];
@@ -481,4 +486,4 @@ void GeometryBuilder::updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, Buff
 }
 
 } // Namespace Scene
-} // namespace OSRE
+} // Namespace OSRE

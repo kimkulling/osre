@@ -134,10 +134,10 @@ OGLBuffer *OGLRenderBackend::createBuffer( BufferType type ) {
     return buffer;
 }
 
-OGLBuffer *OGLRenderBackend::getBufferById( ui32 id ) {
+OGLBuffer *OGLRenderBackend::getBufferById( ui32 geoId ) {
     OGLBuffer *buffer( nullptr );
     for ( ui32 i = 0; i < m_buffers.size(); i++ ) {
-        if ( m_buffers[ i ]->m_id == id ) {
+        if ( m_buffers[ i ]->m_geoId == geoId ) {
             buffer = m_buffers[ i ];
             break;
         }

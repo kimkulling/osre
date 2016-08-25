@@ -51,7 +51,7 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
 
     if ( !m_textBoxes.hasKey( id ) ) {
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-        Geometry *geo = GeometryBuilder::allocTextBox( -1, -1, 0.1f, text );
+        Geometry *geo = GeometryBuilder::allocTextBox( 0, 0, 0.1f, text );
         
         DbgTextEntry *entry( new DbgTextEntry );
         entry->m_geo = geo;
@@ -64,10 +64,13 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
         Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
-        ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
+        const float *mvpData( glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ) );
+        ::memcpy( parameter->m_data.m_data, mvpData, sizeof( glm::mat4 ) );
 
         geo->m_material->m_parameters = parameter;
         geo->m_material->m_numParameters++;
+
+        m_rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
     } else {
         DbgTextEntry *entry( nullptr );
@@ -77,6 +80,7 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
             }
             
             UpdateGeoEventData *updateGeoEvData( new UpdateGeoEventData );
+            updateGeoEvData->m_numGeo = 1;
             if ( text.size() > entry->m_text.size() ) {
                 Geometry *geo = GeometryBuilder::allocTextBox( -1, -1, 0.1f, text );
                 updateGeoEvData->m_geo = geo;
