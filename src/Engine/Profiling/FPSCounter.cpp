@@ -34,7 +34,8 @@ FPSCounter::FPSCounter( Platform::AbstractTimer *timer )
 : m_timerPtr( timer )
 , m_timeDiff( 0.0 )
 , m_lastTime( 0.0 )
-, m_fps( 0 ) {
+, m_fps( 0 )
+, m_lastFPS( 0 ) {
     if ( m_timerPtr.isValid() ) {
         m_timeDiff = m_timerPtr->getTimeDiff();
     }
@@ -54,10 +55,11 @@ ui32 FPSCounter::getFPS() {
     m_fps++;
     if (m_lastTime > 1.0) {
         m_lastTime = 0.0;
+        m_lastFPS = m_fps;
         m_fps = 0;
     }
 
-    return m_fps;
+    return m_lastFPS;
 }
 
 } // Namespace Profiling

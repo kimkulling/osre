@@ -37,7 +37,7 @@ namespace Profiling {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  This class implements a simple frames-per-second counter.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT FPSCounter {
 public:
@@ -60,7 +60,7 @@ private:
 private:
     Common::TObjPtr<Platform::AbstractTimer>  m_timerPtr;
     d32 m_timeDiff, m_lastTime;
-    ui32 m_fps;
+    ui32 m_fps, m_lastFPS;
 };
 
 } // Namespace Profiling
