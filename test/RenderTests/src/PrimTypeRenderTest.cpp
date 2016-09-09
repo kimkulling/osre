@@ -20,7 +20,6 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-
 #include "AbstractRenderTest.h"
 #include "RenderTestUtils.h"
 
@@ -98,12 +97,11 @@ public:
         attachGeoEvData->m_geo = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, NumGeo );
         
         Geometry *ptGeo = &attachGeoEvData->m_geo[ 0 ];
-        ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, points, col, nullptr );
+        ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, points, col, nullptr, BufferAccessType::ReadOnly );
         ptGeo->m_indextype = IndexType::UnsignedShort;
         ui32 pt_size = sizeof( GLushort ) * PtNumIndices;
         ptGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, BufferAccessType::ReadOnly );
         ptGeo->m_ib->copyFrom( pt_indices, pt_size );
-        //::memcpy( ptGeo->m_ib->m_pData, pt_indices, pt_size );
         
         // setup primitives
         ptGeo->m_numPrimGroups = 1;
@@ -111,7 +109,7 @@ public:
         ptGeo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, 3, PrimitiveType::PointList, 0 );
 
         Geometry *lineGeo = &attachGeoEvData->m_geo[ 1 ];
-        lineGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr );
+        lineGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly );
         lineGeo->m_indextype = IndexType::UnsignedShort;
         ui32 size = sizeof( GLushort ) * NumIndices;
         lineGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
