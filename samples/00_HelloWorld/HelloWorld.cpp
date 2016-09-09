@@ -24,17 +24,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/Common/Logger.h>
 #include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/DbgRenderer.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Profiling/PerformanceCounters.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <iostream>
+#include <iomanip>
+
 using namespace ::OSRE;
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Properties;
 
 // To identify local log entries we will define this tag.
 static const String Tag = "HelloWorldApp"; 
@@ -60,8 +66,8 @@ public:
     }
 
 protected:
-    virtual bool onCreate( Properties::Settings *settings = nullptr ) {
-        Properties::Settings *baseSettings( AppBase::getSettings() );
+    virtual bool onCreate( Settings *settings = nullptr ) override {
+        Settings *baseSettings( AppBase::getSettings() );
         if ( nullptr == baseSettings ) {
             return false;
         }
@@ -82,7 +88,7 @@ protected:
 
         Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
         Scene::GeometryBuilder myBuilder;
-        RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex );
+        RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
         if( nullptr != geo ) {
 			m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
 
@@ -95,6 +101,15 @@ protected:
 		}
 
         return true;
+    }
+
+    virtual void onUpdate() override {
+        ui32 fps( 0 );
+        Profiling::PerformanceCounters::queryCounter( "fps", fps );
+        std::stringstream stream;
+        stream << std::setfill( '0' ) << std::setw( 2 ) << fps;
+        Scene::DbgRenderer::getInstance()->renderDbgText( 10, 10, 1, stream.str() );
+
     }
 };
 

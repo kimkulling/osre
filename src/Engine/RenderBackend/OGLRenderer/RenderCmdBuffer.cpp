@@ -75,7 +75,9 @@ void RenderCmdBuffer::enqueueRenderCmd( OGLRenderCmd *renderCmd, EnqueueType typ
     if ( nullptr == renderCmd ) {
         return;
     }
-    
+    if ( nullptr == renderCmd->m_pData ) {
+        osre_debug( Tag, "Nullptr in rener command data detected." );
+    }
     if ( EnqueueType::RCE_Back == type  ) {
         m_cmdbuffer.add( renderCmd );
     }
@@ -121,7 +123,7 @@ void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
 void RenderCmdBuffer::onPostRenderFrame() {
     OSRE_ASSERT( nullptr != m_renderbackend );
 
-    // unbind all active shader instances
+    // unbind the active shader
     m_renderbackend->useShader( nullptr );
 }
 

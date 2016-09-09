@@ -52,6 +52,8 @@ static const String Tag = "OGLRenderBackend";
 OGLRenderBackend::OGLRenderBackend( )
 : m_renderCtx( nullptr )
 , m_buffers()
+, m_activeVB( 9999999 )
+, m_activeIB( 9999999 )
 , m_vertexarrays()
 , m_activeVertexArray( OGLNotSetId )
 , m_shaders()
@@ -150,10 +152,23 @@ void OGLRenderBackend::bindBuffer( OGLBuffer *buffer ) {
         osre_debug( Tag, "Pointer to buffer is nullptr" );
         return;
     }
+
+    /*if ( BufferType::VertexBuffer == buffer->m_type ) {
+        if ( m_activeVB == buffer->m_oglId ) {
+            return;
+        }
+        m_activeVB = buffer->m_oglId;
+    } else if ( BufferType::IndexBuffer == buffer->m_type ) {
+        if ( m_activeIB == buffer->m_oglId ) {
+            return;
+        }
+        m_activeIB = buffer->m_oglId;
+    }*/
+ 
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, buffer->m_oglId );
 
-    CHECKOGLERRORSTATE();
+    //CHECKOGLERRORSTATE();
 }
 
 void OGLRenderBackend::bindBuffer( ui32 handle ) {
@@ -161,8 +176,6 @@ void OGLRenderBackend::bindBuffer( ui32 handle ) {
     if( nullptr != buf ) {
         bindBuffer( buf );
     }
-
-    CHECKOGLERRORSTATE();
 }
 
 void OGLRenderBackend::unbindBuffer( OGLBuffer *buffer ) {
@@ -170,8 +183,12 @@ void OGLRenderBackend::unbindBuffer( OGLBuffer *buffer ) {
         osre_debug( Tag, "Pointer to buffer is nullptr" );
         return;
     }
+    m_activeVB = 99999999;
+    m_activeIB = 99999999;
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, 0 );
+
+    //CHECKOGLERRORSTATE();
 }
 
 void OGLRenderBackend::bufferData( OGLBuffer *buffer, void *data, ui32 size, BufferAccessType usage ) {
@@ -181,6 +198,8 @@ void OGLRenderBackend::bufferData( OGLBuffer *buffer, void *data, ui32 size, Buf
     }
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBufferData( target, size, data, OGLEnum::getGLBufferAccessType( usage ) );
+    
+    //CHECKOGLERRORSTATE();
 }
 
 void OGLRenderBackend::releaseBuffer( OGLBuffer *buffer ) {
@@ -728,7 +747,15 @@ void OGLRenderBackend::releaseAllTextures( ) {
 
 OGLParameter *OGLRenderBackend::createParameter( const String &name, ParameterType type, 
                                                  ParamDataBlob *blob, ui32 numItems ) {
-    OGLParameter *param = new OGLParameter;
+    
+    // Check if the parameter is already there
+    OGLParameter *param = getParameter( name );
+    if ( nullptr != param ) {
+        return param;
+    }
+
+    // We need to create it 
+    param               = new OGLParameter;
     param->m_name       = name;
     param->m_type       = type;
     param->m_loc        = NoneLocation;
@@ -757,7 +784,11 @@ OGLParameter *OGLRenderBackend::getParameter( const String &name ) const {
 }
 
 void OGLRenderBackend::setParameter( OGLParameter *param ) {
-    OSRE_ASSERT( nullptr != param );
+    if ( nullptr == param ) {
+        osre_debug( Tag, "Cannot set parameter, invalid param pointer." );
+        return;
+
+    }
     if( nullptr == m_shaderInUse ) {
         osre_debug( Tag, "Cannot set parameter, no shader in use." );
         return;

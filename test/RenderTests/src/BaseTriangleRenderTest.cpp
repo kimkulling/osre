@@ -76,7 +76,7 @@ public:
         pRenderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
         
-        Geometry *geo = Scene::GeometryBuilder::allocTriangles( VertexType::ColorVertex );
+        Geometry *geo = Scene::GeometryBuilder::allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
         attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_geo = geo;
 

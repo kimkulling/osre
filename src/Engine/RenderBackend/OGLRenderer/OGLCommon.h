@@ -47,7 +47,11 @@ void checkOGLErrorState( const c8 *file, ui32 line );
 ///
 /// @brief  This macro will check the OpenGL-error state and write a message into the log.
 //-------------------------------------------------------------------------------------------------
-#define CHECKOGLERRORSTATE() checkOGLErrorState( __FILE__, __LINE__ )
+#ifdef _DEBUG
+#   define CHECKOGLERRORSTATE() checkOGLErrorState( __FILE__, __LINE__ )
+#else
+#   define CHECKOGLERRORSTATE()
+#endif // _DEBUG
 
 static const GLuint OGLNotSetId  = 999999;
 static const GLint  NoneLocation = -1;

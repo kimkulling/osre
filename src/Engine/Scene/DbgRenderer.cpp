@@ -1,5 +1,6 @@
 #include <osre/Scene/DbgRenderer.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <glm/glm.hpp>
@@ -51,7 +52,7 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
 
     if ( !m_textBoxes.hasKey( id ) ) {
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-        Geometry *geo = GeometryBuilder::allocTextBox( 0, 0, 0.1f, text );
+        Geometry *geo = GeometryBuilder::allocTextBox( 0, 0, 0.1f, text, BufferAccessType::ReadWrite );
         
         DbgTextEntry *entry( new DbgTextEntry );
         entry->m_geo = geo;
@@ -82,7 +83,7 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
             UpdateGeoEventData *updateGeoEvData( new UpdateGeoEventData );
             updateGeoEvData->m_numGeo = 1;
             if ( text.size() > entry->m_text.size() ) {
-                Geometry *geo = GeometryBuilder::allocTextBox( -1, -1, 0.1f, text );
+                Geometry *geo = GeometryBuilder::allocTextBox( -1, -1, 0.1f, text, BufferAccessType::ReadWrite );
                 updateGeoEvData->m_geo = geo;
             } else {
                 GeometryBuilder::updateTextBox( entry->m_geo, 0.1f, text, false );

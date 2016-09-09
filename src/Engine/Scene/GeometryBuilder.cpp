@@ -111,13 +111,12 @@ Geometry *GeometryBuilder::allocEmptyGeometry( VertexType type, ui32 numGeo ) {
     for ( ui32 i = 0; i < numGeo; i++ ) {
         geo[ i ].m_vertextype = type;
         geo[ i ].m_indextype = IndexType::UnsignedShort;
-
     }
 
     return geo;
 }
 
-Geometry *GeometryBuilder::allocTriangles( VertexType type ) {
+Geometry *GeometryBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
     Geometry *geo = Geometry::create( 1 );
     geo->m_vertextype = type;
     geo->m_indextype = IndexType::UnsignedShort;
@@ -135,7 +134,7 @@ Geometry *GeometryBuilder::allocTriangles( VertexType type ) {
     pos[ 0 ] = glm::vec3( -1, -1, 0 );
     pos[ 1 ] = glm::vec3( 0, 1, 0 );
     pos[ 2 ] = glm::vec3( 1, -1, 0 );
-    geo->m_vb = allocVertices( geo->m_vertextype,  NumVert, pos, col, nullptr );
+    geo->m_vb = allocVertices( geo->m_vertextype,  NumVert, pos, col, nullptr, access );
 
     // setup triangle indices
     static const ui32 NumIndices = 3;
@@ -145,7 +144,7 @@ Geometry *GeometryBuilder::allocTriangles( VertexType type ) {
     indices[ 2 ] = 2;
     
     ui32 size = sizeof( GLushort ) * NumIndices;
-    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
+    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, access );
     ::memcpy( geo->m_ib->m_data, indices, size );
 
 	// setup primitives
@@ -162,7 +161,7 @@ Geometry *GeometryBuilder::allocTriangles( VertexType type ) {
     return geo;
 }
 
-Geometry *GeometryBuilder::allocQuads( VertexType type ) {
+Geometry *GeometryBuilder::allocQuads( VertexType type, BufferAccessType access ) {
     Geometry *geo = Geometry::create( 1 );
     geo->m_vertextype = type;
     geo->m_indextype = IndexType::UnsignedShort;
@@ -181,7 +180,7 @@ Geometry *GeometryBuilder::allocQuads( VertexType type ) {
     pos[ 2 ] = glm::vec3( 1, -1, 0 );
     pos[ 3 ] = glm::vec3( 1, 1, 0 );
 
-    geo->m_vb = allocVertices( geo->m_vertextype, NumVert, pos, col, nullptr );
+    geo->m_vb = allocVertices( geo->m_vertextype, NumVert, pos, col, nullptr, access );
 
     // setup triangle indices
     static const ui32 NumIndices = 6;
@@ -227,7 +226,7 @@ static ui32 getNumTextVerts( const String &text ) {
     return NumTextVerts;
 }
 
-Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text ) {
+Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access ) {
 	if ( text.empty() ) {
 		return nullptr;
 	}
@@ -326,7 +325,7 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
         textCol++;
     }
 
-    geo->m_vb = allocVertices( geo->m_vertextype, text.size() * NumQuadVert, textPos, colors, tex0 );
+    geo->m_vb = allocVertices( geo->m_vertextype, text.size() * NumQuadVert, textPos, colors, tex0, access );
 
     // setup triangle indices
     ui32 size = sizeof( GLushort ) * 6 * text.size();
@@ -415,7 +414,7 @@ void GeometryBuilder::updateTextBox( RenderBackend::Geometry *geo, f32 textSize,
 }
 
 BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm::vec3 *pos, 
-                                            glm::vec3 *col1, glm::vec2 *tex0 ) {
+                                            glm::vec3 *col1, glm::vec2 *tex0, BufferAccessType access ) {
     BufferData *data( nullptr );
     ui32 size( 0 );
     switch (type) {
@@ -432,7 +431,7 @@ BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm:
                 }
             }
             size = sizeof( ColorVert ) * numVerts;
-            data = BufferData::alloc( BufferType::VertexBuffer, size, BufferAccessType::ReadOnly );
+            data = BufferData::alloc( BufferType::VertexBuffer, size, access );
             ::memcpy( data->m_data, colVerts, size );
             delete [] colVerts;
         }

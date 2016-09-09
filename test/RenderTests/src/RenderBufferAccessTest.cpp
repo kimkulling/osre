@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 #include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/MaterialBuilder.h>
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -86,16 +87,16 @@ const String FsSrc =
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class GeoInstanceRenderTest : public AbstractRenderTest {
+class RenderBufferAccessTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
 
 public:
-    GeoInstanceRenderTest()
-        : AbstractRenderTest( "rendertest/geoinstancerendertest" ) {
+    RenderBufferAccessTest()
+        : AbstractRenderTest( "rendertest/RenderBufferAccessTest" ) {
         // empty
-    } 
+    }
 
-    virtual ~GeoInstanceRenderTest() {
+    virtual ~RenderBufferAccessTest() {
         // empty
     }
 
@@ -103,51 +104,51 @@ public:
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
-        Scene::GeometryBuilder myBuilder;
-        Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
+        // colors
+        glm::vec3 col[ 3 ];
+        col[ 0 ] = glm::vec3( 1, 0, 0 );
+        col[ 1 ] = glm::vec3( 0, 1, 0 );
+        col[ 2 ] = glm::vec3( 0, 0, 1 );
 
-        attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_geo = geo;
+        // point coordinates
+        glm::vec3 points[ 3 ];
+        points[ 0 ] = glm::vec3( -0.5, -0.5, 0 );
+        points[ 1 ] = glm::vec3( 0, 0.5, 0 );
+        points[ 2 ] = glm::vec3( 0.5, -0.5, 0 );
+        static const ui32 PtNumIndices = 3;
+        GLushort pt_indices[ PtNumIndices ];
+        pt_indices[ 0 ] = 0;
+        pt_indices[ 1 ] = 1;
+        pt_indices[ 2 ] = 2;
 
-        // use a default material
-        geo->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
-        if( nullptr != geo->m_material->m_pShader ) {
-            geo->m_material->m_pShader->m_attributes.add( "position" );
-            geo->m_material->m_pShader->m_attributes.add( "normal" );
-            geo->m_material->m_pShader->m_attributes.add( "color0" );
-            geo->m_material->m_pShader->m_parameters.add( "M" );
-            geo->m_material->m_pShader->m_parameters.add( "VP" );
-        }
+        static ui32 NumGeo( 1 );
+        attachGeoEvData->m_numGeo = NumGeo;
+        attachGeoEvData->m_geo = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, NumGeo );
+
+        Geometry *ptGeo = &attachGeoEvData->m_geo[ 0 ];
+        ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, points, col, nullptr, BufferAccessType::ReadOnly );
+        ptGeo->m_indextype = IndexType::UnsignedShort;
+        ui32 pt_size = sizeof( GLushort ) * PtNumIndices;
+        ptGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, BufferAccessType::ReadOnly );
+        ptGeo->m_ib->copyFrom( pt_indices, pt_size );
+
+        // setup primitives
+        ptGeo->m_numPrimGroups = 1;
+        ptGeo->m_pPrimGroups = new PrimitiveGroup[ ptGeo->m_numPrimGroups ];
+        ptGeo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, 3, PrimitiveType::PointList, 0 );
+
+        // setup material
+        Material *mat = Scene::MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
+        ptGeo->m_material = mat;
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+        m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
+        Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
+        ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
 
-        static const ui32 NumInstances = 25;
-        attachGeoEvData->m_numInstances = NumInstances;
-        glm::mat4 mat[NumInstances];
-        glm::mat4 scale = glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.1f ) );
-        
-		auto idx(0);
-		auto x(-2.0f), y(-2.0f);
-		for (auto i = 0; i < 5; i++) {
-			x = -2.0f;
-			for (auto j = 0; j < 5; j++) {
-				mat[ idx ] = glm::translate( scale, glm::vec3( x, y, 0.f ) );
-				x += 2.0f;
-				++idx;
-			}
-			y += 2.0f;
-		}
-        
-        Parameter *parameterMVP = Parameter::create( "VP", PT_Mat4 );
-        ::memcpy( parameterMVP->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view ), sizeof( glm::mat4 ) );
+        mat->m_numParameters = 1;
+        mat->m_parameters = parameter;
 
-        Parameter *parameterM = Parameter::create( "M", PT_Mat4Array, NumInstances);
-        ::memcpy( parameterM->m_data.m_data, glm::value_ptr( mat[ 0 ] ), sizeof( glm::mat4 ) * NumInstances);
-        parameterMVP->m_next = parameterM;
-
-        geo->m_material->m_parameters = parameterMVP;
-        geo->m_material->m_numParameters += 2;
-        
         rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
         return true;
@@ -158,7 +159,7 @@ public:
     }
 };
 
-ATTACH_RENDERTEST( GeoInstanceRenderTest )
+ATTACH_RENDERTEST( RenderBufferAccessTest )
 
 } // Namespace RenderTest
 } // Namespace OSRE

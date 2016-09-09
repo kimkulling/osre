@@ -46,7 +46,7 @@ TEST_F( GeometryBuilderTest, allocEmptyGeometryTest ) {
 }
 
 TEST_F( GeometryBuilderTest, allocTrianglesTest ) {
-    Geometry *geo = Scene::GeometryBuilder::allocTriangles( VertexType::ColorVertex );
+    Geometry *geo = Scene::GeometryBuilder::allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
     EXPECT_NE( geo, nullptr );
     EXPECT_EQ( geo->m_vertextype, VertexType::ColorVertex );
     EXPECT_NE( geo->m_vb, nullptr );

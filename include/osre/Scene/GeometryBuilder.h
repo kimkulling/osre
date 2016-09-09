@@ -61,12 +61,12 @@ public:
     /// @brief  Will allocate a triangle geometry.
     ///	@param  type        [in] The vertex type.
     /// @return The created geometry.
-    static RenderBackend::Geometry *allocTriangles( RenderBackend::VertexType type );
+    static RenderBackend::Geometry *allocTriangles( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
 
     ///	@brief  Will allocate vertices for a quad primitive.
     ///	@param  type        [in] The vertex type.
     /// @return The created geometry.
-    static RenderBackend::Geometry *allocQuads( RenderBackend::VertexType type );
+    static RenderBackend::Geometry *allocQuads( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
 
     ///	@brief  Will allocate vertices for a text-box.
     /// @param  x           [in] Left position of the text box.
@@ -74,7 +74,7 @@ public:
     /// @param  textSize    [in] The size for a single glyph.
     /// @param  text        [in] The text to render.
     /// @return The created geometry.
-    static RenderBackend::Geometry *allocTextBox( f32 x, f32 y, f32 textSize, const String &text );
+    static RenderBackend::Geometry *allocTextBox( f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access );
 
     static void updateTextBox( RenderBackend::Geometry *geo, f32 textSize, const String &text, bool resize );
 
@@ -85,7 +85,7 @@ public:
     ///	@param  col1        [in] Pointer to array with vec3-diffuse colors, set to nullptr if nothing shall prepared
     /// @return The allocated buffer data.
     static RenderBackend::BufferData *allocVertices(RenderBackend::VertexType type, ui32 numVerts, ::glm::vec3 *pos, 
-        ::glm::vec3 *col1, ::glm::vec2 *tex0);
+        ::glm::vec3 *col1, ::glm::vec2 *tex0, RenderBackend::BufferAccessType access );
 
     static void updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, RenderBackend::BufferData *vb );
 

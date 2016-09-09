@@ -304,8 +304,7 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
         result = onAttachView( data );
     } else if ( OnDetachViewEvent == ev ) {
         result = onDetachView( data );
-    }
-    else if ( OnAttachSceneEvent == ev ) {
+    } else if ( OnAttachSceneEvent == ev ) {
         result = onAttachGeo( data );
     } else if ( OnUpdateGeoEvent == ev ) {
         result = onUpdateGeo( data );
@@ -541,6 +540,8 @@ bool OGLRenderEventHandler::onUpdateGeo( const EventData *eventData ) {
             m_oglBackend->unbindBuffer( buffer );
         }
     }
+
+    return true;
 }
 
 bool OGLRenderEventHandler::onRenderFrame( const EventData *eventData ) {

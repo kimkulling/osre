@@ -107,7 +107,7 @@ public:
     bool bindTexture( OGLTexture *pOGLTextue, TextureStageType stageType );
     void releaseTexture( OGLTexture *pTexture );
     void releaseAllTextures();
-    OGLParameter *createParameter( const String &name, ParameterType type, ParamDataBlob *blob, ui32 numItems );
+    OGLParameter *createParameter( const String &name, ParameterType type, ParamDataBlob *blob, ui32 numItems );    
     OGLParameter *getParameter( const String &name ) const;
     void setParameter( OGLParameter *param );
     void setParameter( OGLParameter **param, ui32 numParam );
@@ -126,7 +126,9 @@ public:
 
 private:
     Platform::AbstractRenderContext *m_renderCtx;
-	CPPCore::TArray<OGLBuffer*>      m_buffers;
+    CPPCore::TArray<OGLBuffer*>      m_buffers;
+    GLuint                           m_activeVB;
+    GLuint                           m_activeIB;
     CPPCore::TArray<OGLVertexArray*> m_vertexarrays;
 	GLuint                           m_activeVertexArray;
     CPPCore::TArray<OGLShader*>      m_shaders;

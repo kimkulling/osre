@@ -33,8 +33,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-using namespace OSRE;
-using namespace OSRE::RenderBackend;
+using namespace ::OSRE;
+using namespace ::OSRE::RenderBackend;
 
 // To identify local log entries 
 static const String Tag = "ModelLoadingApp"; 
@@ -82,7 +82,7 @@ protected:
 
         Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
         Scene::GeometryBuilder myBuilder;
-        RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex );
+        RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
         if( nullptr != geo ) {
 			m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
 
