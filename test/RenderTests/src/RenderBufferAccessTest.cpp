@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
-
+#include <cppcore/Random/RandomGenerator.h>
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <glm/glm.hpp>
@@ -105,37 +105,42 @@ public:
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         // colors
-        glm::vec3 col[ 3 ];
-        col[ 0 ] = glm::vec3( 1, 0, 0 );
-        col[ 1 ] = glm::vec3( 0, 1, 0 );
-        col[ 2 ] = glm::vec3( 0, 0, 1 );
+        static const ui32 NumPts = 1000;
+        glm::vec3 col[ NumPts ];
+        glm::vec3 points[ NumPts ];
+        CPPCore::RandomGenerator generator;
+        for ( ui32 i = 0; i < NumPts; i++ ) {
+            const f32 r = static_cast< f32 >( generator.get( 1, 100 ) ) / 100.0f;
+            const f32 g = static_cast< f32 >( generator.get( 1, 100 ) ) / 100.0f;
+            const f32 b = static_cast< f32 >( generator.get( 1, 100 ) ) / 100.0f;
+            col[ i ] = glm::vec3( r, g, b );
 
-        // point coordinates
-        glm::vec3 points[ 3 ];
-        points[ 0 ] = glm::vec3( -0.5, -0.5, 0 );
-        points[ 1 ] = glm::vec3( 0, 0.5, 0 );
-        points[ 2 ] = glm::vec3( 0.5, -0.5, 0 );
-        static const ui32 PtNumIndices = 3;
-        GLushort pt_indices[ PtNumIndices ];
-        pt_indices[ 0 ] = 0;
-        pt_indices[ 1 ] = 1;
-        pt_indices[ 2 ] = 2;
+            const f32 x = static_cast< f32 >( generator.get( 0, 400 )-200 ) / 100.0f;
+            const f32 y = static_cast< f32 >( generator.get( 0, 400 )-200 ) / 100.0f;
+            const f32 z = static_cast< f32 >( generator.get( 0, 400 )-200 ) / 100.0f;
+            points[ i ] = glm::vec3( x, y, z );
+        }
 
-        static ui32 NumGeo( 1 );
+        GLushort pt_indices[ NumPts ];
+        for ( ui32 i = 0; i < NumPts; i++ ) {
+            pt_indices[ i ] = static_cast<GLushort>( i );
+        }
+
+        static const ui32 NumGeo( 1 );
         attachGeoEvData->m_numGeo = NumGeo;
         attachGeoEvData->m_geo = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, NumGeo );
 
         Geometry *ptGeo = &attachGeoEvData->m_geo[ 0 ];
-        ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, points, col, nullptr, BufferAccessType::ReadOnly );
+        ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, NumPts, points, col, nullptr, BufferAccessType::ReadOnly );
         ptGeo->m_indextype = IndexType::UnsignedShort;
-        ui32 pt_size = sizeof( GLushort ) * PtNumIndices;
+        ui32 pt_size = sizeof( GLushort ) * NumPts;
         ptGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, BufferAccessType::ReadOnly );
         ptGeo->m_ib->copyFrom( pt_indices, pt_size );
 
         // setup primitives
         ptGeo->m_numPrimGroups = 1;
         ptGeo->m_pPrimGroups = new PrimitiveGroup[ ptGeo->m_numPrimGroups ];
-        ptGeo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, 3, PrimitiveType::PointList, 0 );
+        ptGeo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, NumPts, PrimitiveType::PointList, 0 );
 
         // setup material
         Material *mat = Scene::MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
