@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "VlkFunctions.h"
 
 #include <osre/IO/Stream.h>
+#include <osre/IO/IOService.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractDynamicLoader.h>
 #ifdef OSRE_WINDOWS
@@ -37,6 +38,7 @@ namespace RenderBackend {
 
 using namespace ::CPPCore;
 using namespace ::OSRE::Platform;
+using namespace ::OSRE::IO;
 
 static const String Tag     = "VlkRenderBackend";
 static const String LibName = "vulkan-1.dll";
@@ -55,6 +57,7 @@ VlkRenderBackend::VlkRenderBackend()
 : m_vulkan()
 , m_window()
 , m_graphicsCommandPool()
+, m_pipelineLayout( nullptr )
 , m_graphicsCommandBuffers()
 , m_shaderModules()
 , m_handle( nullptr )
@@ -218,26 +221,11 @@ bool VlkRenderBackend::createFramebuffers( ui32 width, ui32 height ) {
     return true;
 }
 
-static const String VS =
-    "#version 400\n"
-    "\n"
-    "void main() {\n"
-    "    vec2 pos[ 3 ] = vec2[ 3 ]( vec2( -0.7, 0.7 ), vec2( 0.7, 0.7 ), vec2( 0.0, -0.7 ) );\n"
-    "    gl_Position = vec4( pos[ gl_VertexIndex ], 0.0, 1.0 );\n"
-    "}\n";
-static const String FS =
-    "#version 400\n"
-    "\n"
-    "layout( location = 0 ) out vec4 out_Color;\n"
-    "\n"
-    "void main() {\n"
-    "    out_Color = vec4( 0.0, 0.4, 1.0, 1.0 );\n"
-    "}\n";
-
 bool VlkRenderBackend::createPipeline() {
-    /*Tools::AutoDeleter<VkShaderModule, PFN_vkDestroyShaderModule> vertex_shader_module = createShaderModuleFromSrc( VS );
-    Tools::AutoDeleter<VkShaderModule, PFN_vkDestroyShaderModule> fragment_shader_module = CreateShaderModule( "Data03/frag.spv" );
-
+    Stream *vsStream( IOService::getInstance()->openStream( Uri( "Data03/vert.spv" ), Stream::ReadAccessBinary ) );
+    VlkShaderModule *vertex_shader_module = createShaderModule( *vsStream );
+    Stream *fsStream( IOService::getInstance()->openStream( Uri( "Data03/frag.spv" ), Stream::ReadAccessBinary ) );
+    VlkShaderModule *fragment_shader_module = createShaderModule( *fsStream );
     if ( !vertex_shader_module || !fragment_shader_module ) {
         return false;
     }
@@ -248,22 +236,22 @@ bool VlkRenderBackend::createPipeline() {
         nullptr,                                                    // const void                                    *pNext
         0,                                                          // VkPipelineShaderStageCreateFlags               flags
         VK_SHADER_STAGE_VERTEX_BIT,                                 // VkShaderStageFlagBits                          stage
-        vertex_shader_module.Get(),                                 // VkShaderModule                                 module
+        vertex_shader_module->m_module,                             // VkShaderModule                                 module
         "main",                                                     // const char                                    *pName
         nullptr                                                     // const VkSpecializationInfo                    *pSpecializationInfo
     };
-    shader_stage_create_infos.add()
+    shader_stage_create_infos.add( vs );
+    VkPipelineShaderStageCreateInfo fs = {
         // Fragment shader
-        {
-            VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,        // VkStructureType                                sType
-            nullptr,                                                    // const void                                    *pNext
-            0,                                                          // VkPipelineShaderStageCreateFlags               flags
-            VK_SHADER_STAGE_FRAGMENT_BIT,                               // VkShaderStageFlagBits                          stage
-            fragment_shader_module.Get(),                               // VkShaderModule                                 module
-            "main",                                                     // const char                                    *pName
-            nullptr                                                     // const VkSpecializationInfo                    *pSpecializationInfo
-        }
+        VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,        // VkStructureType                                sType
+        nullptr,                                                    // const void                                    *pNext
+        0,                                                          // VkPipelineShaderStageCreateFlags               flags
+        VK_SHADER_STAGE_FRAGMENT_BIT,                               // VkShaderStageFlagBits                          stage
+        fragment_shader_module->m_module,                               // VkShaderModule                                 module
+        "main",                                                     // const char                                    *pName
+        nullptr                                                     // const VkSpecializationInfo                    *pSpecializationInfo
     };
+    shader_stage_create_infos.add( fs );
 
     VkPipelineVertexInputStateCreateInfo vertex_input_state_create_info = {
         VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,    // VkStructureType                                sType
@@ -364,8 +352,8 @@ bool VlkRenderBackend::createPipeline() {
         { 0.0f, 0.0f, 0.0f, 0.0f }                                    // float                                          blendConstants[4]
     };
 
-    Tools::AutoDeleter<VkPipelineLayout, PFN_vkDestroyPipelineLayout> pipeline_layout = CreatePipelineLayout();
-    if ( !pipeline_layout ) {
+    m_pipelineLayout = createPipelineLayout();
+    if ( nullptr == m_pipelineLayout ) {
         return false;
     }
 
@@ -384,22 +372,35 @@ bool VlkRenderBackend::createPipeline() {
         nullptr,                                                      // const VkPipelineDepthStencilStateCreateInfo   *pDepthStencilState
         &color_blend_state_create_info,                               // const VkPipelineColorBlendStateCreateInfo     *pColorBlendState
         nullptr,                                                      // const VkPipelineDynamicStateCreateInfo        *pDynamicState
-        pipeline_layout.Get(),                                        // VkPipelineLayout                               layout
-        Vulkan.RenderPass,                                            // VkRenderPass                                   renderPass
+        m_pipelineLayout->m_pipelineLayout,                           // VkPipelineLayout                               layout
+        m_renderPass,                                                 // VkRenderPass                                   renderPass
         0,                                                            // uint32_t                                       subpass
         VK_NULL_HANDLE,                                               // VkPipeline                                     basePipelineHandle
         -1                                                            // int32_t                                        basePipelineIndex
     };
 
-    if ( vkCreateGraphicsPipelines( getDevice(), VK_NULL_HANDLE, 1, &pipeline_create_info, nullptr, &Vulkan.GraphicsPipeline ) != VK_SUCCESS ) {
-        std::cout << "Could not create graphics pipeline!" << std::endl;
+    if ( vkCreateGraphicsPipelines( getDevice(), VK_NULL_HANDLE, 1, &pipeline_create_info, nullptr, &m_graphicsPipeline ) != VK_SUCCESS ) {
+        osre_error( Tag, "Could not create  graphics pipeline!" );
         return false;
     }
-    return true;*/
     return false;
 }
 
 bool VlkRenderBackend::createSemaphores() {
+    /*VkSemaphoreCreateInfo semaphore_create_info = {
+        VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,      // VkStructureType          sType
+        nullptr,                                      // const void*              pNext
+        0                                             // VkSemaphoreCreateFlags   flags
+    };
+
+    if ( ( vkCreateSemaphore( getDevice(), &semaphore_create_info, nullptr, &Vulkan.ImageAvailableSemaphore ) != VK_SUCCESS ) ||
+        ( vkCreateSemaphore( GetDevice(), &semaphore_create_info, nullptr, &Vulkan.RenderingFinishedSemaphore ) != VK_SUCCESS ) ) {
+        std::cout << "Could not create semaphores!" << std::endl;
+        return false;
+    }
+
+    return true;*/
+
     return false;
 }
 
@@ -409,38 +410,6 @@ bool VlkRenderBackend::createCommandBuffers() {
 
 bool VlkRenderBackend::recordCommandBuffers() {
     return false;
-}
-
-VlkShaderModule *VlkRenderBackend::createShaderModuleFromSrc( const String &src ) {
-    VkShaderModuleCreateInfo shader_module_create_info = {
-        VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,    // VkStructureType                sType
-        nullptr,                                        // const void                    *pNext
-        0,                                              // VkShaderModuleCreateFlags      flags
-        src.size(),                                    // size_t                         codeSize
-        reinterpret_cast< const uint32_t* >( &src[ 0 ] )     // const uint32_t                *pCode
-    };
-    VlkShaderModule *mod( new VlkShaderModule );
-    VkShaderModule shader_module;
-    if ( vkCreateShaderModule( getDevice(), &shader_module_create_info, nullptr, &mod->m_module ) != VK_SUCCESS ) {
-        osre_error( Tag, "Could not create shader module." );
-        return nullptr;
-    } 
-    m_shaderModules.add( mod );
-
-    return mod;
-}
-
-VlkShaderModule *VlkRenderBackend::createShaderModuleFromFile( IO::Stream &stream ) {
-    ui32 size( stream.getSize() );
-    if ( 0 == size ) {
-        return nullptr;
-    }
-
-    TArray<c8> buffer;
-    buffer.resize( size );
-    stream.read( &buffer[ 0 ], size );
-    String src( &buffer[ 0 ], size );
-    return createShaderModuleFromSrc( src );
 }
 
 bool VlkRenderBackend::loadVulkanLib() {
@@ -1085,6 +1054,57 @@ bool VlkRenderBackend::checkPhysicalDeviceProperties( VkPhysicalDevice physical_
     selected_present_queue_family_index = present_queue_family_index;
     
     return true;
+}
+
+VlkPipelineLayout *VlkRenderBackend::createPipelineLayout() {
+    VkPipelineLayoutCreateInfo layout_create_info = {
+        VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,  // VkStructureType                sType
+        nullptr,                                        // const void                    *pNext
+        0,                                              // VkPipelineLayoutCreateFlags    flags
+        0,                                              // uint32_t                       setLayoutCount
+        nullptr,                                        // const VkDescriptorSetLayout   *pSetLayouts
+        0,                                              // uint32_t                       pushConstantRangeCount
+        nullptr                                         // const VkPushConstantRange     *pPushConstantRanges
+    };
+
+    VkPipelineLayout pipeline_layout;
+    if ( vkCreatePipelineLayout( getDevice(), &layout_create_info, nullptr, &pipeline_layout ) != VK_SUCCESS ) {
+        osre_error( Tag, "Could not create pipeline layout!" );
+        return nullptr;
+    }
+
+    VlkPipelineLayout *pipelineLayout( new VlkPipelineLayout );
+    pipelineLayout->m_pipelineLayout = pipeline_layout;
+    m_pipelineLayouts.add( pipelineLayout );
+
+    return pipelineLayout;
+
+}
+
+VlkShaderModule *VlkRenderBackend::createShaderModule( IO::Stream &stream ) {
+    const ui32 size( stream.getSize() );
+    if ( 0 == size ) {
+        return nullptr;
+    }
+
+    uc8 *buffer = new uc8[ stream.getSize() ];
+    stream.read( buffer, size );
+    VkShaderModuleCreateInfo shader_module_create_info = {
+        VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,     // VkStructureType                sType
+        nullptr,                                         // const void                    *pNext
+        0,                                               // VkShaderModuleCreateFlags      flags
+        size,                                            // size_t                         codeSize
+        reinterpret_cast< const uint32_t* >( &buffer )   // const uint32_t                *pCode
+    };
+    VlkShaderModule *mod( new VlkShaderModule );
+    VkShaderModule shader_module;
+    if ( vkCreateShaderModule( getDevice(), &shader_module_create_info, nullptr, &mod->m_module ) != VK_SUCCESS ) {
+        osre_error( Tag, "Could not create shader module." );
+        return nullptr;
+    }
+    m_shaderModules.add( mod );
+
+    return mod;
 }
 
 } // Namespace RenderBackend

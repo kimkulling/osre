@@ -123,15 +123,20 @@ struct VlkWindowParameters {
 #endif
 };
 
-struct VlkShader {
-    VlkShader() {
+struct VlkShaderModule {
+    VkShaderModule m_module;
+    VlkShaderModule() 
+    : m_module() {
         // empty
     }
 };
 
-struct VlkShaderModule {
-    VkShaderModule m_module;
-    VlkShaderModule() : m_module() {}
+struct VlkPipelineLayout {
+    VkPipelineLayout m_pipelineLayout;
+    VlkPipelineLayout()
+    : m_pipelineLayout() {
+        // empty
+    }
 };
 
 #define VK_EXPORTED_FUNCTION( fun ) extern PFN_##fun fun;

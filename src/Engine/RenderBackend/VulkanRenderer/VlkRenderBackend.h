@@ -64,8 +64,8 @@ public:
     bool createSemaphores();
     bool createCommandBuffers();
     bool recordCommandBuffers();
-    VlkShaderModule *createShaderModuleFromSrc( const String &src );
-    VlkShaderModule *createShaderModuleFromFile( IO::Stream &stream );
+    VlkShaderModule *createShaderModule( IO::Stream &file );
+    VlkPipelineLayout *createPipelineLayout();
 
 private:
     bool loadVulkanLib();
@@ -82,18 +82,20 @@ private:
     bool checkPhysicalDeviceProperties( VkPhysicalDevice physical_device, uint32_t &selected_graphics_queue_family_index, uint32_t &selected_present_queue_family_index );
 
 private:
-    VlkCommonParameters               m_vulkan;
-    VlkWindowParameters               m_window;
-    VkRenderPass                      m_renderPass;
-    CPPCore::TArray<VkFramebuffer>    m_framebuffers;
-    VkPipeline                        m_graphicsPipeline;
-    VkSemaphore                       m_imageAvailableSemaphore;
-    VkSemaphore                       m_renderingFinishedSemaphore;
-    VkCommandPool                     m_graphicsCommandPool;
-    CPPCore::TArray<VkCommandBuffer>  m_graphicsCommandBuffers;
-    CPPCore::TArray<VlkShaderModule*> m_shaderModules;
-    Platform::LibHandle              *m_handle;
-    State                             m_state;
+    VlkCommonParameters                 m_vulkan;
+    VlkWindowParameters                 m_window;
+    VkRenderPass                        m_renderPass;
+    CPPCore::TArray<VkFramebuffer>      m_framebuffers;
+    VkPipeline                          m_graphicsPipeline;
+    VkSemaphore                         m_imageAvailableSemaphore;
+    VkSemaphore                         m_renderingFinishedSemaphore;
+    VkCommandPool                       m_graphicsCommandPool;
+    VlkPipelineLayout                  *m_pipelineLayout;
+    CPPCore::TArray<VkCommandBuffer>    m_graphicsCommandBuffers;
+    CPPCore::TArray<VlkShaderModule*>   m_shaderModules;
+    CPPCore::TArray<VlkPipelineLayout*> m_pipelineLayouts;
+    Platform::LibHandle                *m_handle;
+    State                               m_state;
 };
 
 } // Namespace RenderBackend

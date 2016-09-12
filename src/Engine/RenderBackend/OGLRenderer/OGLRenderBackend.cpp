@@ -787,22 +787,22 @@ void OGLRenderBackend::setParameter( OGLParameter *param ) {
     if ( nullptr == param ) {
         osre_debug( Tag, "Cannot set parameter, invalid param pointer." );
         return;
-
     }
+
     if( nullptr == m_shaderInUse ) {
         osre_debug( Tag, "Cannot set parameter, no shader in use." );
         return;
     }
 
     OGLShader *shader( m_shaderInUse );
-    if ( nullptr == m_shaderInUse ) {
-        return;
-    }
-
     if ( NoneLocation == param->m_loc ) {
         param->m_loc = ( *shader )( param->m_name );
         if ( NoneLocation == param->m_loc ) {
-            osre_debug( Tag, "Cannot location for parameter " + param->m_name + " in shader " + shader->getName() + "." );
+            osre_debug( Tag, "Cannot location for parameter " 
+                + param->m_name 
+                + " in shader " 
+                + shader->getName() 
+                + "." );
             return;
         }
     }
