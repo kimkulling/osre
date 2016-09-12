@@ -745,9 +745,7 @@ void OGLRenderBackend::releaseAllTextures( ) {
     m_texLookupMap.clear();
 }
 
-OGLParameter *OGLRenderBackend::createParameter( const String &name, ParameterType type, 
-                                                 ParamDataBlob *blob, ui32 numItems ) {
-    
+OGLParameter *OGLRenderBackend::createParameter( const String &name, ParameterType type,  ParamDataBlob *blob, ui32 numItems ) {    
     // Check if the parameter is already there
     OGLParameter *param = getParameter( name );
     if ( nullptr != param ) {
@@ -762,7 +760,9 @@ OGLParameter *OGLRenderBackend::createParameter( const String &name, ParameterTy
     param->m_numItems   = numItems;
     param->m_data       = ParamDataBlob::create( type, param->m_numItems );
     if( nullptr != blob ) {
-        ::memcpy( param->m_data->getData(), blob->getData(), blob->m_size );
+        if ( 0 != blob->m_size ) {
+            ::memcpy( param->m_data->getData(), blob->getData(), blob->m_size );
+        }
     }
     m_parameters.add( param );
 
