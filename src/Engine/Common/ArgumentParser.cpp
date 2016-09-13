@@ -141,6 +141,8 @@ String ArgumentParser::showHelp() {
             helpMsg += String( buffer );
         }
     }
+
+    return helpMsg;
 }
 
 bool ArgumentParser::getNext( String &arg, String &value ) {
