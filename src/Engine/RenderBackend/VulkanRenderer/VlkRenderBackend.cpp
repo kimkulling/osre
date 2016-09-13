@@ -416,7 +416,100 @@ bool VlkRenderBackend::createCommandBuffers() {
 }
 
 bool VlkRenderBackend::recordCommandBuffers() {
-    return false;
+    VkCommandBufferBeginInfo graphics_commandd_buffer_begin_info = {
+        VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,    // VkStructureType                        sType
+        nullptr,                                        // const void                            *pNext
+        VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT,   // VkCommandBufferUsageFlags              flags
+        nullptr                                         // const VkCommandBufferInheritanceInfo  *pInheritanceInfo
+    };
+
+    VkImageSubresourceRange image_subresource_range = {
+        VK_IMAGE_ASPECT_COLOR_BIT,                      // VkImageAspectFlags             aspectMask
+        0,                                              // uint32_t                       baseMipLevel
+        1,                                              // uint32_t                       levelCount
+        0,                                              // uint32_t                       baseArrayLayer
+        1                                               // uint32_t                       layerCount
+    };
+
+    VkClearValue clear_value = {
+        { 1.0f, 0.8f, 0.4f, 0.0f },                     // VkClearColorValue              color
+    };
+
+    const CPPCore::TArray<VlkImageParameters>& swap_chain_images = getSwapChain().m_images;
+
+    for ( size_t i = 0; i < m_graphicsCommandBuffers.size(); ++i ) {
+        vkBeginCommandBuffer( m_graphicsCommandBuffers[ i ], &graphics_commandd_buffer_begin_info );
+
+        if ( getPresentQueue().m_handle != getGraphicsQueue().m_handle ) {
+            VkImageMemoryBarrier barrier_from_present_to_draw = {
+                VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,     // VkStructureType                sType
+                nullptr,                                    // const void                    *pNext
+                VK_ACCESS_MEMORY_READ_BIT,                  // VkAccessFlags                  srcAccessMask
+                VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,       // VkAccessFlags                  dstAccessMask
+                VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,            // VkImageLayout                  oldLayout
+                VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,            // VkImageLayout                  newLayout
+                getPresentQueue().m_familyIndex,            // uint32_t                       srcQueueFamilyIndex
+                getGraphicsQueue().m_familyIndex,           // uint32_t                       dstQueueFamilyIndex
+                swap_chain_images[ i ].m_handle,            // VkImage                        image
+                image_subresource_range                     // VkImageSubresourceRange        subresourceRange
+            };
+            vkCmdPipelineBarrier( m_graphicsCommandBuffers[ i ], 
+                VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, 
+                VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, 0, 0, nullptr, 0, nullptr, 1, 
+                &barrier_from_present_to_draw );
+        }
+
+        VkRenderPassBeginInfo render_pass_begin_info = {
+            VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,     // VkStructureType                sType
+            nullptr,                                      // const void                    *pNext
+            m_renderPass,                                 // VkRenderPass                   renderPass
+            m_framebuffers[ i ],                          // VkFramebuffer                  framebuffer
+            {                                             // VkRect2D                       renderArea
+                {                                         // VkOffset2D                     offset
+                    0,                                    // int32_t                        x
+                    0                                     // int32_t                        y
+                },
+                {                                         // VkExtent2D                     extent
+                    300,                                  // int32_t                        width
+                    300,                                  // int32_t                        height
+                }
+            },
+            1,                                            // uint32_t                       clearValueCount
+            &clear_value                                  // const VkClearValue            *pClearValues
+        };
+
+        vkCmdBeginRenderPass( m_graphicsCommandBuffers[ i ], &render_pass_begin_info, VK_SUBPASS_CONTENTS_INLINE );
+
+        vkCmdBindPipeline( m_graphicsCommandBuffers[ i ], VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline );
+
+        vkCmdDraw( m_graphicsCommandBuffers[ i ], 3, 1, 0, 0 );
+
+        vkCmdEndRenderPass( m_graphicsCommandBuffers[ i ] );
+
+        if ( getGraphicsQueue().m_handle != getPresentQueue().m_handle ) {
+            VkImageMemoryBarrier barrier_from_draw_to_present = {
+                VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,       // VkStructureType              sType
+                nullptr,                                      // const void                  *pNext
+                VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,         // VkAccessFlags                srcAccessMask
+                VK_ACCESS_MEMORY_READ_BIT,                    // VkAccessFlags                dstAccessMask
+                VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,              // VkImageLayout                oldLayout
+                VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,              // VkImageLayout                newLayout
+                getGraphicsQueue().m_familyIndex,             // uint32_t                     srcQueueFamilyIndex
+                getPresentQueue().m_familyIndex,              // uint32_t                     dstQueueFamilyIndex
+                swap_chain_images[ i ].m_handle,              // VkImage                      image
+                image_subresource_range                       // VkImageSubresourceRange      subresourceRange
+            };
+            vkCmdPipelineBarrier( m_graphicsCommandBuffers[ i ],
+                VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, 
+                VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
+                0, 0, nullptr, 0, nullptr, 1, &barrier_from_draw_to_present );
+        }
+        if ( vkEndCommandBuffer( m_graphicsCommandBuffers[ i ] ) != VK_SUCCESS ) {
+            osre_error( Tag, "Could not record command buffer!" );
+            return false;
+        }
+    }
+    return true;
 }
 
 bool VlkRenderBackend::loadVulkanLib() {
@@ -716,6 +809,9 @@ const VlkQueueParameters &VlkRenderBackend::getGraphicsQueue() const {
     return m_vulkan.m_graphicsQueue;
 }
 
+const VlkQueueParameters &VlkRenderBackend::getPresentQueue() const {
+    return m_vulkan.m_presentQueue;
+}
 
 static ui32 getSwapChainNumImages( VkSurfaceCapabilitiesKHR &surface_capabilities ) {
     // Set of images defined in a swap chain may not always be available for application to render to:

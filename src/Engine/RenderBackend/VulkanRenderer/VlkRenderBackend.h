@@ -76,6 +76,7 @@ private:
     bool loadDeviceLevelEntryPoints();
     bool getDeviceQueue();
     const VlkQueueParameters &getGraphicsQueue() const;
+    const VlkQueueParameters &getPresentQueue() const;
     bool createSwapChain();
     bool createSwapChainImageViews();
     bool loadGlobalLevelEntryPoints();
