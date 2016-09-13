@@ -137,10 +137,6 @@ VkDevice VlkRenderBackend::getDevice() const {
     return m_vulkan.m_device;
 }
 
-const VlkSwapChainParameters VlkRenderBackend::getSwapChain() const {
-    return m_vulkan.m_swapChain;
-}
-
 bool VlkRenderBackend::createRenderPass() {
     VkAttachmentDescription attachment_descriptions[] = {
         {
@@ -387,25 +383,36 @@ bool VlkRenderBackend::createPipeline() {
 }
 
 bool VlkRenderBackend::createSemaphores() {
-    /*VkSemaphoreCreateInfo semaphore_create_info = {
+    VkSemaphoreCreateInfo semaphore_create_info = {
         VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,      // VkStructureType          sType
         nullptr,                                      // const void*              pNext
         0                                             // VkSemaphoreCreateFlags   flags
     };
 
-    if ( ( vkCreateSemaphore( getDevice(), &semaphore_create_info, nullptr, &Vulkan.ImageAvailableSemaphore ) != VK_SUCCESS ) ||
-        ( vkCreateSemaphore( GetDevice(), &semaphore_create_info, nullptr, &Vulkan.RenderingFinishedSemaphore ) != VK_SUCCESS ) ) {
-        std::cout << "Could not create semaphores!" << std::endl;
+    if ( ( vkCreateSemaphore( getDevice(), &semaphore_create_info, nullptr, &m_imageAvailableSemaphore ) != VK_SUCCESS ) ||
+        ( vkCreateSemaphore( getDevice(), &semaphore_create_info, nullptr, &m_renderingFinishedSemaphore ) != VK_SUCCESS ) ) {
+        osre_error( Tag, "Could not create semaphores!" );
         return false;
     }
 
-    return true;*/
-
-    return false;
+    return true;
 }
 
 bool VlkRenderBackend::createCommandBuffers() {
-    return false;
+    if ( !createCommandPool( getGraphicsQueue().m_familyIndex, &m_graphicsCommandPool ) ) {
+        osre_error( Tag, "Could not create command pool!" );
+        return false;
+    }
+
+    uint32_t image_count = static_cast< uint32_t >( getSwapChain().m_images.size() );
+    m_graphicsCommandBuffers.resize( image_count, VK_NULL_HANDLE );
+
+    if ( !allocateCommandBuffers( m_graphicsCommandPool, image_count, &m_graphicsCommandBuffers[ 0 ] ) ) {
+        osre_error( Tag, "Could not allocate command buffers!" );
+        return false;
+    }
+
+    return true;
 }
 
 bool VlkRenderBackend::recordCommandBuffers() {
@@ -704,6 +711,11 @@ bool VlkRenderBackend::getDeviceQueue() {
     vkGetDeviceQueue( m_vulkan.m_device, m_vulkan.m_presentQueue.m_familyIndex, 0, &m_vulkan.m_presentQueue.m_handle );
     return true;
 }
+
+const VlkQueueParameters &VlkRenderBackend::getGraphicsQueue() const {
+    return m_vulkan.m_graphicsQueue;
+}
+
 
 static ui32 getSwapChainNumImages( VkSurfaceCapabilitiesKHR &surface_capabilities ) {
     // Set of images defined in a swap chain may not always be available for application to render to:
@@ -1105,6 +1117,41 @@ VlkShaderModule *VlkRenderBackend::createShaderModule( IO::Stream &stream ) {
     m_shaderModules.add( mod );
 
     return mod;
+}
+
+bool VlkRenderBackend::createCommandPool( uint32_t queue_family_index, VkCommandPool *pool ) {
+    VkCommandPoolCreateInfo cmd_pool_create_info = {
+        VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,     // VkStructureType                sType
+        nullptr,                                        // const void                    *pNext
+        0,                                              // VkCommandPoolCreateFlags       flags
+        queue_family_index                              // uint32_t                       queueFamilyIndex
+    };
+
+    if ( vkCreateCommandPool( getDevice(), &cmd_pool_create_info, nullptr, pool ) != VK_SUCCESS ) {
+        return false;
+    }
+
+    return true;
+}
+
+const VlkSwapChainParameters &VlkRenderBackend::getSwapChain() const {
+    return m_vulkan.m_swapChain;
+}
+
+bool VlkRenderBackend::allocateCommandBuffers( VkCommandPool pool, uint32_t count, VkCommandBuffer *command_buffers ) {
+    VkCommandBufferAllocateInfo command_buffer_allocate_info = {
+        VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO, // VkStructureType                sType
+        nullptr,                                        // const void                    *pNext
+        pool,                                           // VkCommandPool                  commandPool
+        VK_COMMAND_BUFFER_LEVEL_PRIMARY,                // VkCommandBufferLevel           level
+        count                                           // uint32_t                       bufferCount
+    };
+
+    if ( vkAllocateCommandBuffers( getDevice(), &command_buffer_allocate_info, command_buffers ) != VK_SUCCESS ) {
+        return false;
+    }
+
+    return true;
 }
 
 } // Namespace RenderBackend

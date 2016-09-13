@@ -97,15 +97,19 @@ bool VlkRenderEventHandler::onCreateRenderer( const Common::EventData *eventData
     if ( !m_vlkBackend->createFramebuffers( surface->getProperties()->m_width, surface->getProperties()->m_height ) ) {
         return false;
     }
+    
     if ( !m_vlkBackend->createPipeline() ) {
         return false;
     }
+    
     if ( !m_vlkBackend->createSemaphores() ) {
         return false;
     }
+    
     if ( !m_vlkBackend->createCommandBuffers() ) {
         return false;
     }
+    
     if ( !m_vlkBackend->recordCommandBuffers() ) {
         return false;
     }

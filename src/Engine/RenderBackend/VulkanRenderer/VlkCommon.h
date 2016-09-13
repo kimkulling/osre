@@ -74,10 +74,10 @@ struct VlkCommonParameters {
     VkInstance                    m_instance;
     VkPhysicalDevice              m_physicalDevice;
     VkDevice                      m_device;
-    VlkQueueParameters               m_graphicsQueue;
-    VlkQueueParameters               m_presentQueue;
+    VlkQueueParameters            m_graphicsQueue;
+    VlkQueueParameters            m_presentQueue;
     VkSurfaceKHR                  m_presentationSurface;
-    VlkSwapChainParameters           m_swapChain;
+    VlkSwapChainParameters        m_swapChain;
 
     VlkCommonParameters()
     : m_instance( VK_NULL_HANDLE )

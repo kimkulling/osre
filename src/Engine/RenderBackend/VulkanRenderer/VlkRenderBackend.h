@@ -57,7 +57,6 @@ public:
     ~VlkRenderBackend();
     bool create( Platform::AbstractSurface *rootSurface );
     VkDevice getDevice() const;
-    const VlkSwapChainParameters getSwapChain() const;
     bool createRenderPass();
     bool createFramebuffers( ui32 width, ui32 height );
     bool createPipeline();
@@ -76,10 +75,14 @@ private:
     bool createDevice();
     bool loadDeviceLevelEntryPoints();
     bool getDeviceQueue();
+    const VlkQueueParameters &getGraphicsQueue() const;
     bool createSwapChain();
     bool createSwapChainImageViews();
     bool loadGlobalLevelEntryPoints();
     bool checkPhysicalDeviceProperties( VkPhysicalDevice physical_device, uint32_t &selected_graphics_queue_family_index, uint32_t &selected_present_queue_family_index );
+    bool createCommandPool( uint32_t queue_family_index, VkCommandPool *pool );
+    const VlkSwapChainParameters &getSwapChain() const;
+    bool allocateCommandBuffers( VkCommandPool pool, uint32_t count, VkCommandBuffer *command_buffers );
 
 private:
     VlkCommonParameters                 m_vulkan;
