@@ -145,6 +145,10 @@ void IOService::closeStream( Stream **ppStream ) {
 
 //-------------------------------------------------------------------------------------------------
 AbstractFileSystem *IOService::getFileSystem( const String &schema ) const {
+    if ( m_mountedMap.empty() ) {
+        return nullptr;
+    }
+
     MountedMap::const_iterator it = m_mountedMap.find( schema );
     if ( m_mountedMap.end() != it ) {
         return it->second;

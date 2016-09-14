@@ -133,7 +133,10 @@ bool AbstractService::update(  d32 timeDiff ) {
 #define DECLARE_SINGLETON( type )                                                 \
 public:                                                                           \
     static type * s_pTypeInstance;                                                \
-    static type * getInstance() { return s_pTypeInstance; }                       \
+    static type * getInstance() {                                                 \
+        OSRE_ASSERT( nullptr != s_pTypeInstance );                                \
+        return s_pTypeInstance;                                                   \
+    }                                                                             \
     static void   setInstance( type *pInstance ) { s_pTypeInstance = pInstance; } \
 private:
 

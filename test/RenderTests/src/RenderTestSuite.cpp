@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractPlatformEventHandler.h>
 #include <osre/Platform/AbstractTimer.h>
 #include <osre/Assets/AssetRegistry.h>
+#include <osre/IO/IOService.h>
 
 #include <iostream>
 #include <cassert>
@@ -120,6 +121,13 @@ bool RenderTestSuite::setup( const String &API ) {
         }
     }
 
+    IO::IOService *ioSrv = IO::IOService::create();
+    if ( !ioSrv->open() ) {
+        ioSrv->release();
+        return false;
+    }
+    IO::IOService::setInstance( ioSrv );
+
     m_pRenderBackendServer = new RenderBackendService();
     m_pRenderBackendServer->setSettings( settings, false );
     if ( !m_pRenderBackendServer->open()) {
@@ -153,6 +161,8 @@ bool RenderTestSuite::teardown() {
         m_pRenderBackendServer->release();
         m_pRenderBackendServer = nullptr;
     }
+
+    IO::IOService::getInstance()->release();
 
     if ( m_pTimer ) {
         m_pTimer->release();
