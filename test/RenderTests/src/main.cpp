@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2016 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -37,8 +37,8 @@ using namespace ::OSRE::Platform;
 
 int main( int argc, char *argv[] ) {
     Common::ArgumentParser argParser( argc, argv, "api:media", "The render API:The media to load" );
-    //String renderAPI( "opengl" );
-    String renderAPI( "vulkan" );
+    String renderAPI( "opengl" );
+    //String renderAPI( "vulkan" );
     if ( argParser.hasArgument( "api" ) ) {
         renderAPI = argParser.getArgument( "api" ); 
     }
