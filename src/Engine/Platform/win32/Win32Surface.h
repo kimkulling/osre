@@ -32,7 +32,6 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::Win32Surface
 ///	@ingroup	Engine
 ///
 ///	@brief  This class implements the surface API by using Win32-API.
@@ -40,7 +39,7 @@ namespace Platform {
 class Win32Surface : public AbstractSurface {
 public:
     /// The class constructor.
-    Win32Surface( SurfaceProperties *pProperties );
+    Win32Surface( SurfaceProperties *properties );
     /// The class destructor, virtual.
     virtual ~Win32Surface();
     /// Returns the windows handle.

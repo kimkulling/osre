@@ -39,7 +39,6 @@ namespace IO {
 namespace RenderBackend {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderBackend::OGLShader
 ///	@ingroup	Engine
 ///
 ///	@brief  This class is used to implement a shader object for OpenGL. It combines the several

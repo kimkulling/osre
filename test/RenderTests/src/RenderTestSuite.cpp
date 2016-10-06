@@ -162,6 +162,7 @@ bool RenderTestSuite::teardown() {
         m_pRenderBackendServer = nullptr;
     }
 
+    IO::IOService::getInstance()->close();
     IO::IOService::getInstance()->release();
 
     if ( m_pTimer ) {

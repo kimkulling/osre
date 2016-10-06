@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <functional>
 
 #include "vulkan.h"
 #ifdef OSRE_WINDOWS
@@ -32,6 +33,69 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 namespace RenderBackend {
+
+template <typename T>
+class VlkDeleter {
+public:
+    VlkDeleter() 
+    : VlkDeleter( [] ( T, VkAllocationCallbacks* ) {} ) {
+        // empty
+    }
+
+    VlkDeleter( std::function<void( T, VkAllocationCallbacks* )> deletef ) {
+        this->m_deleter = [=] ( T obj ) { 
+            deletef( obj, nullptr ); 
+        };
+    }
+
+    VlkDeleter( const VlkDeleter<VkInstance>& instance, std::function<void( VkInstance, T, VkAllocationCallbacks* )> deletef ) {
+        this->m_deleter = [&instance, deletef] ( T obj ) { deletef( instance, obj, nullptr ); };
+    }
+
+    VlkDeleter( const VlkDeleter<VkDevice>& device, std::function<void( VkDevice, T, VkAllocationCallbacks* )> deletef ) {
+        this->m_deleter = [&device, deletef] ( T obj ) { deletef( device, obj, nullptr ); };
+    }
+
+    ~VlkDeleter() {
+        cleanup();
+    }
+
+    const T* operator &() const {
+        return &m_object;
+    }
+
+    T* replace() {
+        cleanup();
+        return &m_object;
+    }
+
+    operator T() const {
+        return m_object;
+    }
+
+    void operator=( T rhs ) {
+        if ( rhs != m_object ) {
+            cleanup();
+            m_object = rhs;
+        }
+    }
+
+    template<typename V>
+    bool operator==( V rhs ) {
+        return m_object == T( rhs );
+    }
+
+private:
+    T m_object{ VK_NULL_HANDLE };
+    std::function<void( T )> m_deleter;
+
+    void cleanup() {
+        if ( m_object != VK_NULL_HANDLE ) {
+            m_deleter( m_object );
+        }
+        m_object = VK_NULL_HANDLE;
+    }
+};
 
 struct VlkQueueParameters {
     VkQueue m_handle;
@@ -125,6 +189,7 @@ struct VlkWindowParameters {
 
 struct VlkShaderModule {
     VkShaderModule m_module;
+    
     VlkShaderModule() 
     : m_module() {
         // empty
@@ -133,8 +198,27 @@ struct VlkShaderModule {
 
 struct VlkPipelineLayout {
     VkPipelineLayout m_pipelineLayout;
+    
     VlkPipelineLayout()
     : m_pipelineLayout() {
+        // empty
+    }
+};
+
+struct VlkCommandBuffer {
+    VkCommandBuffer m_commmandBuffer;
+    
+    VlkCommandBuffer()
+    : m_commmandBuffer() {
+        // empty
+    }
+};
+
+struct VlkQueue {
+    VkQueue m_queue;
+
+    VlkQueue()
+    : m_queue() {
         // empty
     }
 };

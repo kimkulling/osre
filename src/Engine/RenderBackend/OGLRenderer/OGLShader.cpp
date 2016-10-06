@@ -139,7 +139,7 @@ void OGLShader::unuse( ) {
     glUseProgram( 0 );
 }
 
-void OGLShader::addAttribute( const std::string& attribute ) {
+void OGLShader::addAttribute( const String& attribute ) {
     const GLint location = glGetAttribLocation( m_shaderprog, attribute.c_str( ) );
     m_attributeList[ attribute ] = location;
     if( ErrorId == location ) {
@@ -147,7 +147,7 @@ void OGLShader::addAttribute( const std::string& attribute ) {
     }
 }
 
-void OGLShader::addUniform( const std::string& uniform ) {
+void OGLShader::addUniform( const String& uniform ) {
     const GLint location = glGetUniformLocation( m_shaderprog, uniform.c_str( ) );
     m_uniformLocationList[ uniform ] = location;
     if( ErrorId == location ) {
@@ -155,12 +155,12 @@ void OGLShader::addUniform( const std::string& uniform ) {
     }
 }
 
-GLint OGLShader::operator[] ( const std::string &attribute ) {
+GLint OGLShader::operator[] ( const String &attribute ) {
     const GLint loc( m_attributeList[ attribute ] );
     return loc;
 }
 
-GLint OGLShader::operator() ( const std::string &uniform ) {
+GLint OGLShader::operator() ( const String &uniform ) {
     const GLint loc( m_uniformLocationList[ uniform ] );
     return loc;
 }

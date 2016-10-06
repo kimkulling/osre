@@ -118,6 +118,8 @@ VK_DEVICE_LEVEL_FUNCTION( vkCmdPipelineBarrier )
 VK_DEVICE_LEVEL_FUNCTION( vkCmdClearColorImage )
 VK_DEVICE_LEVEL_FUNCTION( vkEndCommandBuffer )
 VK_DEVICE_LEVEL_FUNCTION( vkQueueSubmit )
+VK_DEVICE_LEVEL_FUNCTION( vkQueueWaitIdle )
+
 VK_DEVICE_LEVEL_FUNCTION( vkFreeCommandBuffers )
 VK_DEVICE_LEVEL_FUNCTION( vkDestroyCommandPool )
 VK_DEVICE_LEVEL_FUNCTION( vkDestroySemaphore )

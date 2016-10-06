@@ -41,7 +41,11 @@ using namespace ::OSRE::Platform;
 using namespace ::OSRE::IO;
 
 static const String Tag     = "VlkRenderBackend";
+#ifdef OSRE_WINDOWS
 static const String LibName = "vulkan-1.dll";
+#else
+static const String LibName = "libvulkan-1.so";
+#endif
 
 static AbstractDynamicLoader *getDynLoader() {
     AbstractDynamicLoader *dynLoader( PlatformInterface::getInstance()->getDynamicLoader() );
@@ -512,6 +516,28 @@ bool VlkRenderBackend::recordCommandBuffers() {
     return true;
 }
 
+bool VlkRenderBackend::flushCommandBuffer( VlkCommandBuffer &buffer, VlkQueue &queue, bool free ) {
+    if ( buffer.m_commmandBuffer == VK_NULL_HANDLE ) {
+        return false;
+    }
+
+    vkEndCommandBuffer( buffer.m_commmandBuffer );
+
+    VkSubmitInfo submitInfo = {};
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &buffer.m_commmandBuffer;
+
+    vkQueueSubmit( queue.m_queue, 1, &submitInfo, VK_NULL_HANDLE );
+    vkQueueWaitIdle( queue.m_queue );
+
+    if ( free ) {
+        vkFreeCommandBuffers( getDevice(), m_graphicsCommandPool, 1, &buffer.m_commmandBuffer );
+    }
+
+    return true;
+}
+
 bool VlkRenderBackend::loadVulkanLib() {
     AbstractDynamicLoader *dynLoader( getDynLoader() );
     if ( nullptr == dynLoader ) {
@@ -890,7 +916,7 @@ static VkImageUsageFlags getSwapChainUsageFlags( VkSurfaceCapabilitiesKHR &surfa
 }
 
 static VkSurfaceTransformFlagBitsKHR getSwapChainTransform( VkSurfaceCapabilitiesKHR &surface_capabilities ) {
-    // Sometimes images must be transformed before they are presented (i.e. due to device's orienation
+    // Sometimes images must be transformed before they are presented (i.e. due to device's orientation
     // being other than default orientation)
     // If the specified transform is other than current transform, presentation engine will transform image
     // during presentation operation; this operation may hit performance on some platforms
@@ -984,7 +1010,7 @@ bool VlkRenderBackend::createSwapChain() {
         VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,  // VkStructureType                sType
         nullptr,                                      // const void                    *pNext
         0,                                            // VkSwapchainCreateFlagsKHR      flags
-        m_vulkan.m_presentationSurface,                   // VkSurfaceKHR                   surface
+        m_vulkan.m_presentationSurface,                   // VkSurfaceKHR               surface
         desired_number_of_images,                     // uint32_t                       minImageCount
         desired_format.format,                        // VkFormat                       imageFormat
         desired_format.colorSpace,                    // VkColorSpaceKHR                imageColorSpace
@@ -1032,7 +1058,7 @@ bool VlkRenderBackend::createSwapChain() {
     return createSwapChainImageViews();
 }
 
-bool  VlkRenderBackend::createSwapChainImageViews() {
+bool VlkRenderBackend::createSwapChainImageViews() {
     for ( size_t i = 0; i < m_vulkan.m_swapChain.m_images.size(); ++i ) {
         VkImageViewCreateInfo image_view_create_info = {
             VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,    // VkStructureType                sType
@@ -1040,19 +1066,19 @@ bool  VlkRenderBackend::createSwapChainImageViews() {
             0,                                           // VkImageViewCreateFlags         flags
             m_vulkan.m_swapChain.m_images[ i ].m_handle, // VkImage                        image
             VK_IMAGE_VIEW_TYPE_2D,                       // VkImageViewType                viewType
-            getSwapChain().m_format,                       // VkFormat                       format
+            getSwapChain().m_format,                     // VkFormat                     format
             {                                            // VkComponentMapping             components
-                VK_COMPONENT_SWIZZLE_IDENTITY,              // VkComponentSwizzle             r
-                VK_COMPONENT_SWIZZLE_IDENTITY,              // VkComponentSwizzle             g
-                VK_COMPONENT_SWIZZLE_IDENTITY,              // VkComponentSwizzle             b
-                VK_COMPONENT_SWIZZLE_IDENTITY               // VkComponentSwizzle             a
+                VK_COMPONENT_SWIZZLE_IDENTITY,           // VkComponentSwizzle          r
+                VK_COMPONENT_SWIZZLE_IDENTITY,           // VkComponentSwizzle          g
+                VK_COMPONENT_SWIZZLE_IDENTITY,           // VkComponentSwizzle          b
+                VK_COMPONENT_SWIZZLE_IDENTITY            // VkComponentSwizzle             a
             },
-            {                                           // VkImageSubresourceRange        subresourceRange
-                VK_IMAGE_ASPECT_COLOR_BIT,                  // VkImageAspectFlags             aspectMask
-                0,                                          // uint32_t                       baseMipLevel
-                1,                                          // uint32_t                       levelCount
-                0,                                          // uint32_t                       baseArrayLayer
-                1                                           // uint32_t                       layerCount
+            {                                            // VkImageSubresourceRange        subresourceRange
+                VK_IMAGE_ASPECT_COLOR_BIT,               // VkImageAspectFlags             aspectMask
+                0,                                       // uint32_t                       baseMipLevel
+                1,                                       // uint32_t                       levelCount
+                0,                                       // uint32_t                       baseArrayLayer
+                1                                        // uint32_t                       layerCount
             }
         };
 

@@ -63,6 +63,7 @@ public:
     bool createSemaphores();
     bool createCommandBuffers();
     bool recordCommandBuffers();
+    bool flushCommandBuffer( VlkCommandBuffer &buffer, VlkQueue &queue, bool free );
     VlkShaderModule *createShaderModule( IO::Stream &file );
     VlkPipelineLayout *createPipelineLayout();
 
