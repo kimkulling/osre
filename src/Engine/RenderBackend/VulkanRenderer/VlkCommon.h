@@ -135,7 +135,7 @@ struct VlkSwapChainParameters {
 };
 
 struct VlkCommonParameters {
-    VkInstance                    m_instance;
+    VlkDeleter<VkInstance>        m_instance{ vkDestroyInstance };
     VkPhysicalDevice              m_physicalDevice;
     VkDevice                      m_device;
     VlkQueueParameters            m_graphicsQueue;

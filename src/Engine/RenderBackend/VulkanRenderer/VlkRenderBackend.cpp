@@ -631,9 +631,9 @@ bool VlkRenderBackend::createInstance() {
     VkApplicationInfo application_info = {
         VK_STRUCTURE_TYPE_APPLICATION_INFO,             // VkStructureType            sType
         nullptr,                                        // const void                *pNext
-        "API without Secrets: Introduction to Vulkan",  // const char                *pApplicationName
+        "OSRE-Vulkan-Renderer",                         // const char                *pApplicationName
         VK_MAKE_VERSION( 1, 0, 0 ),                     // uint32_t                   applicationVersion
-        "Vulkan Tutorial by Intel",                     // const char                *pEngineName
+        "OSRE Vulkan Renderer",                         // const char                *pEngineName
         VK_MAKE_VERSION( 1, 0, 0 ),                     // uint32_t                   engineVersion
         VK_API_VERSION                                  // uint32_t                   apiVersion
     };
@@ -649,7 +649,7 @@ bool VlkRenderBackend::createInstance() {
         &extensions[ 0 ]                                // const char * const        *ppEnabledExtensionNames
     };
 
-    if ( vkCreateInstance( &instance_create_info, nullptr, &m_vulkan.m_instance ) != VK_SUCCESS ) {
+    if ( vkCreateInstance( &instance_create_info, nullptr, m_vulkan.m_instance.replace() ) != VK_SUCCESS ) {
         osre_error( Tag, "Could not create Vulkan instance!" );
         return false;
     }
