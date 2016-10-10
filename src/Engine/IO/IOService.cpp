@@ -35,7 +35,7 @@ namespace OSRE {
 namespace IO {
 
 using namespace OSRE::Common;
-IOService * IOService::s_instance = nullptr;
+//IOService * IOService::s_instance = nullptr;
 
 static const String Tag = "IOService";
 

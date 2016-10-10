@@ -132,12 +132,12 @@ bool AbstractService::update(  d32 timeDiff ) {
 //-------------------------------------------------------------------------------------------------
 #define DECLARE_SINGLETON( type )                                                 \
 public:                                                                           \
-    static type * s_pTypeInstance;                                                \
+    static type * s_instance;                                                \
     static type * getInstance() {                                                 \
-        OSRE_ASSERT( nullptr != s_pTypeInstance );                                \
-        return s_pTypeInstance;                                                   \
+        OSRE_ASSERT( nullptr != s_instance );                                \
+        return s_instance;                                                   \
     }                                                                             \
-    static void   setInstance( type *pInstance ) { s_pTypeInstance = pInstance; } \
+    static void setInstance( type *instance ) { s_instance = instance; } \
 private:
 
 //-------------------------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ private:
 /// @brief  Helper macro to define a singleton and implement all needed methods.
 //-------------------------------------------------------------------------------------------------
 #define IMPLEMENT_SINGLETON( type )                 \
-    type * type::s_pTypeInstance = nullptr;
+    type * type::s_instance( nullptr );
 
 //-------------------------------------------------------------------------------------------------
 /// @ingroup    Engine

@@ -40,7 +40,7 @@ class Uri;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT IOService : public Common::AbstractService {
 private:                                                                           
-    static IOService * s_instance;                                                
+//    static IOService * s_instance;                                                
 public:
     DECLARE_SINGLETON( IOService )
 
