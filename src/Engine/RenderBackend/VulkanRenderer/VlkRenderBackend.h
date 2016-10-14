@@ -66,6 +66,7 @@ public:
     bool flushCommandBuffer( VlkCommandBuffer &buffer, VlkQueue &queue, bool free );
     VlkShaderModule *createShaderModule( IO::Stream &file );
     VlkPipelineLayout *createPipelineLayout();
+    const CPPCore::TArray<VkExtensionProperties> &getExtensions() const;
 
 private:
     bool loadVulkanLib();
@@ -87,20 +88,21 @@ private:
     bool allocateCommandBuffers( VkCommandPool pool, uint32_t count, VkCommandBuffer *command_buffers );
 
 private:
-    VlkCommonParameters                 m_vulkan;
-    VlkWindowParameters                 m_window;
-    VkRenderPass                        m_renderPass;
-    CPPCore::TArray<VkFramebuffer>      m_framebuffers;
-    VkPipeline                          m_graphicsPipeline;
-    VkSemaphore                         m_imageAvailableSemaphore;
-    VkSemaphore                         m_renderingFinishedSemaphore;
-    VkCommandPool                       m_graphicsCommandPool;
-    VlkPipelineLayout                  *m_pipelineLayout;
-    CPPCore::TArray<VkCommandBuffer>    m_graphicsCommandBuffers;
-    CPPCore::TArray<VlkShaderModule*>   m_shaderModules;
-    CPPCore::TArray<VlkPipelineLayout*> m_pipelineLayouts;
-    Platform::LibHandle                *m_handle;
-    State                               m_state;
+    VlkCommonParameters                    m_vulkan;
+    CPPCore::TArray<VkExtensionProperties> m_extensionProperties;
+    VlkWindowParameters                    m_window;
+    VkRenderPass                           m_renderPass;
+    CPPCore::TArray<VkFramebuffer>         m_framebuffers;
+    VkPipeline                             m_graphicsPipeline;
+    VkSemaphore                            m_imageAvailableSemaphore;
+    VkSemaphore                            m_renderingFinishedSemaphore;
+    VkCommandPool                          m_graphicsCommandPool;
+    VlkPipelineLayout                     *m_pipelineLayout;
+    CPPCore::TArray<VkCommandBuffer>       m_graphicsCommandBuffers;
+    CPPCore::TArray<VlkShaderModule*>      m_shaderModules;
+    CPPCore::TArray<VlkPipelineLayout*>    m_pipelineLayouts;
+    Platform::LibHandle                   *m_handle;
+    State                                  m_state;
 };
 
 } // Namespace RenderBackend

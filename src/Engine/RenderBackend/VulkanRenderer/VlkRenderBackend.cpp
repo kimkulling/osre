@@ -59,6 +59,7 @@ static AbstractDynamicLoader *getDynLoader() {
 
 VlkRenderBackend::VlkRenderBackend()
 : m_vulkan()
+, m_extensionProperties()
 , m_window()
 , m_graphicsCommandPool()
 , m_pipelineLayout( nullptr )
@@ -654,6 +655,12 @@ bool VlkRenderBackend::createInstance() {
         return false;
     }
 
+    // enumerate all extensions
+    ui32 extensionCount = 0;
+    vkEnumerateInstanceExtensionProperties( nullptr, &extensionCount, nullptr );
+    m_extensionProperties.resize( extensionCount );
+    vkEnumerateInstanceExtensionProperties( nullptr, &extensionCount, &m_extensionProperties[0] );
+
     return true;
 }
 
@@ -790,7 +797,7 @@ bool VlkRenderBackend::createDevice() {
         nullptr                                               // const VkPhysicalDeviceFeatures    *pEnabledFeatures
     };
 
-    if ( vkCreateDevice( m_vulkan.m_physicalDevice, &device_create_info, nullptr, &m_vulkan.m_device ) != VK_SUCCESS ) {
+    if ( vkCreateDevice( m_vulkan.m_physicalDevice, &device_create_info, nullptr, m_vulkan.m_device.replace() ) != VK_SUCCESS ) {
         osre_error( Tag, "Could not create Vulkan device!" );
         return false;
     }
@@ -1212,7 +1219,10 @@ VlkPipelineLayout *VlkRenderBackend::createPipelineLayout() {
     m_pipelineLayouts.add( pipelineLayout );
 
     return pipelineLayout;
+}
 
+const CPPCore::TArray<VkExtensionProperties> &VlkRenderBackend::getExtensions()  const {
+    return m_extensionProperties;
 }
 
 VlkShaderModule *VlkRenderBackend::createShaderModule( IO::Stream &stream ) {

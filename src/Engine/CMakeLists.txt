@@ -281,7 +281,7 @@ SET( scene_inc
 #==============================================================================
 SET( threading_src
     Threading/AbstractTask.cpp
-    Threading/IThreadFactory.cpp
+    Threading/AbstractThreadFactory.cpp
     Threading/SystemTask.cpp
 )
 
