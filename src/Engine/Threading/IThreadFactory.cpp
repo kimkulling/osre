@@ -27,29 +27,22 @@ namespace Platform {
 
 AbstractThreadFactory *AbstractThreadFactory::s_threadFactory = nullptr;
 
-//-------------------------------------------------------------------------------------------------
-AbstractThreadFactory::AbstractThreadFactory(  const String &factoryName ) :
-	Object( factoryName )
-{
+AbstractThreadFactory::AbstractThreadFactory(  const String &factoryName ) 
+: Object( factoryName ) {
 	// empty
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractThreadFactory::~AbstractThreadFactory() {
 	// empty
 }
 
-//-------------------------------------------------------------------------------------------------
 void AbstractThreadFactory::setInstance( AbstractThreadFactory *pInstance ) {
 	s_threadFactory = pInstance;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractThreadFactory *AbstractThreadFactory::getInstance() {
 	return s_threadFactory;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE
