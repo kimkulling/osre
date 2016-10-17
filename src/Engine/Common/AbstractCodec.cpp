@@ -25,39 +25,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
     
-//--------------------------------------------------------------------------------------------------------------------
 AbstractCodec::AbstractCodec( const String &name, const String &ext )
 : m_name( name )
 , m_ext( ext ) {
     // empty
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 AbstractCodec::~AbstractCodec() {
     // empty
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 bool AbstractCodec::encode( IO::Stream * ) {
     return false;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 bool AbstractCodec::decode( IO::Stream * ) {
     return false;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 const String &AbstractCodec::getCodecName() const {
     return m_name;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 const String &AbstractCodec::getCodecExt() const {
     return m_ext;
 }
-
-//--------------------------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 } // Namespace OSRE

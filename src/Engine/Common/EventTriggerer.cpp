@@ -30,38 +30,33 @@ namespace Common {
 using namespace ::std;
 using namespace ::CPPCore;
 
-//-------------------------------------------------------------------------------------------------
 EventTriggerer::EventTriggerer() 
 : m_EventList() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 EventTriggerer::~EventTriggerer() {	
     clear();
 }
 
-//-------------------------------------------------------------------------------------------------
-void EventTriggerer::addEventListener( const Event& ev, const ceEventFunctor& func ) {
+void EventTriggerer::addEventListener( const Event& ev, const EventFunctor& func ) {
     if ( 1 == m_EventList.count(ev.getHash() ) ) {
         m_EventList[ ev.getHash() ].push_back(func);
     }
 }
 
-//-------------------------------------------------------------------------------------------------
-void EventTriggerer::addEventListener( const TArray<const Event*> &rEvents, const ceEventFunctor &func ) {
-    if ( rEvents.isEmpty() ) {
+void EventTriggerer::addEventListener( const TArray<const Event*> &events, const EventFunctor &func ) {
+    if ( events.isEmpty() ) {
         return;
     }
 
-    for ( ui32 i=0; i<rEvents.size(); ++i ) {
-        const Event &rEvent = *rEvents[ i ];
+    for ( ui32 i=0; i<events.size(); ++i ) {
+        const Event &rEvent = *events[ i ];
         addEventListener( rEvent, func );
     }
 }
 
-//-------------------------------------------------------------------------------------------------
-void EventTriggerer::removeEventListener(const Event& ev, const ceEventFunctor& func) {
+void EventTriggerer::removeEventListener(const Event& ev, const EventFunctor& func) {
     if ( 1 == m_EventList.count(ev.getHash() ) )	{
         const ui32 id( ev.getHash() );
         FunctorList functorlist( m_EventList[ id ] );
@@ -72,8 +67,7 @@ void EventTriggerer::removeEventListener(const Event& ev, const ceEventFunctor& 
     }
 }
 
-//-------------------------------------------------------------------------------------------------
-void EventTriggerer::removeEventListener( const TArray<const Event*> &events, const ceEventFunctor &func ) {
+void EventTriggerer::removeEventListener( const TArray<const Event*> &events, const EventFunctor &func ) {
     if ( events.isEmpty() ) {
         return;
     }
@@ -84,26 +78,23 @@ void EventTriggerer::removeEventListener( const TArray<const Event*> &events, co
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void EventTriggerer::removeAllEventListeners(const Event& ev) {
     m_EventList[ ev.getHash() ].clear();
 }
 
-//-------------------------------------------------------------------------------------------------
 bool EventTriggerer::isEventTriggerable(const Event& ev) {
     return (1 == m_EventList.count( ev.getHash() ) );
 }
 
-//-------------------------------------------------------------------------------------------------
 void EventTriggerer::addTriggerableEvent(const Event& ev) {
     if ( m_EventList.count( ev.getHash() ) < 1 ) {
         m_EventList[ ev.getHash() ].clear();
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void EventTriggerer::triggerEvent(const Event& ev, const EventData *data) {	
     OSRE_ASSERT( 0 != m_EventList.count( ev.getHash() ) );
+
     if ( 1 != m_EventList.count( ev.getHash() ) ) {
         return;
     }
@@ -115,7 +106,6 @@ void EventTriggerer::triggerEvent(const Event& ev, const EventData *data) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void EventTriggerer::clear() {
     FunctorMap::iterator it( m_EventList.begin() );
     for ( ; it != m_EventList.end(); ++it ) {
@@ -124,8 +114,6 @@ void EventTriggerer::clear() {
     }
     m_EventList.clear();
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 } // Namespace OSRE

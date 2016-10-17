@@ -256,6 +256,8 @@ void AppBase::onUpdate() {
 }
 
 ArgumentParser &AppBase::getArgumentParser() const {
+    OSRE_ASSERT( nullptr != m_impl );
+
     return m_impl->m_argParser;
 }
 

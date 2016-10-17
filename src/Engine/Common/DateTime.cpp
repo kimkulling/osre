@@ -7,9 +7,8 @@
 #endif // OSRE_WINDOWS
 
 namespace OSRE {
-    namespace Common {
+namespace Common {
 
-//-------------------------------------------------------------------------------------------------
 DateTime::DateTime()
 : m_Year( 0 )
 , m_Month( 0 )
@@ -21,7 +20,6 @@ DateTime::DateTime()
 
 }
 
-//-------------------------------------------------------------------------------------------------
 DateTime::DateTime( ui32 year, ui32 month, ui32 day, ui32 hour, ui32 minute, ui32 seconds, ui32 ms )
 : m_Year( year )
 , m_Month( month )
@@ -33,82 +31,66 @@ DateTime::DateTime( ui32 year, ui32 month, ui32 day, ui32 hour, ui32 minute, ui3
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 DateTime::~DateTime() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 void DateTime::setCurrentYear( ui32 year ) {
     m_Year = year;
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 DateTime::getCurrentYear() const {
     return m_Year;
 }
 
-//-------------------------------------------------------------------------------------------------
 void DateTime::setCurrentMonth( ui32 month ) {
     m_Month = month;
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 DateTime::getCurrentMonth() const {
     return m_Month;
 }
 
-//-------------------------------------------------------------------------------------------------
 void DateTime::setCurrentDay( ui32 day ) {
     m_Day = day;
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 DateTime::getCurrentDay() const {
     return m_Day;
 }
 
-//-------------------------------------------------------------------------------------------------
 void DateTime::setCurrentHour( ui32 hour ) {
     m_Hour = hour;
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 DateTime::getCurrentHour() const {
     return m_Hour;
 }
 
-//-------------------------------------------------------------------------------------------------
 void DateTime::setCurrentMinute( ui32 minute ) {
     m_Minute = minute;
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 DateTime::getCurrentMinute() const {
     return m_Minute;
 }
 
-//-------------------------------------------------------------------------------------------------
 void DateTime::setCurrentSeconds( ui32 seconds ) {
     m_Seconds = seconds;
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 DateTime::getCurrentSeconds() const {
     return m_Seconds;
 }
 
-//-------------------------------------------------------------------------------------------------
 void DateTime::setCurrentMilliseconds( ui32 ms ) {
     m_Milliseconds = ms;
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 DateTime::getCurrentMilliseconds() const {
     return m_Milliseconds;
 }
 
-//-------------------------------------------------------------------------------------------------
 DateTime DateTime::getCurrentUTCTime() {
     DateTime currentDateTime;
 
@@ -139,8 +121,6 @@ DateTime DateTime::getCurrentUTCTime() {
 
     return currentDateTime;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 } // Namespace OSRE

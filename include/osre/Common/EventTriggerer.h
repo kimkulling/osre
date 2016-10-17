@@ -50,14 +50,14 @@ public:
     ///	@brief	Add an listener for an event
     ///	@param	ev	Reference to listened event
     ///	@param	func	Reference to called functor
-    void addEventListener( const Event& ev, const ceEventFunctor &func );
-    void addEventListener( const CPPCore::TArray<const Event*> &rEvents, const ceEventFunctor &func );
+    void addEventListener( const Event& ev, const EventFunctor &func );
+    void addEventListener( const CPPCore::TArray<const Event*> &rEvents, const EventFunctor &func );
 
     ///	@brief Remove an listener for an event
     ///	@param ev	Reference to event
     ///	@param func	Reference to functor
-    void removeEventListener( const Event& ev, const ceEventFunctor& func);
-    void removeEventListener( const CPPCore::TArray<const Event*> &rEvents, const ceEventFunctor &func );
+    void removeEventListener( const Event& ev, const EventFunctor& func);
+    void removeEventListener( const CPPCore::TArray<const Event*> &rEvents, const EventFunctor &func );
 
     ///	@brief Remove all listener from the trigger.
     ///	@param	ev	Event which triggers are connected to.
@@ -80,7 +80,7 @@ public:
     void clear();
 
 private:
-    typedef std::list<ceEventFunctor> FunctorList;
+    typedef std::list<EventFunctor> FunctorList;
     typedef std::map<ui32, FunctorList> FunctorMap;
     FunctorMap m_EventList;
 };

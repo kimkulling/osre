@@ -60,7 +60,6 @@ static void parseExpectedArgs( const String &userDefinedArgs, const String &desc
             supportedArgs.add( ArgumentParser::Argument( ArgumentParser::getBlankArgument( arg ), currentDesc, numParam ) );
         }
     }
-
 }
 
 ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedArgs, const String &desc )
@@ -178,14 +177,14 @@ bool ArgumentParser::isSupported( const String &arg ) const {
     return res;
 }
 
-ui32 ArgumentParser::getNumValues( const String &rArgument ) const {
-    if ( rArgument.empty() ) {
+ui32 ArgumentParser::getNumValues( const String &argument ) const {
+    if ( argument.empty() ) {
         return 0;
     }
 
     ui32 numValues( 0 );
     for ( ui32 index = 0; index < m_SupportedArguments.size(); ++index ) {
-        if ( m_SupportedArguments[ index ].m_argument == rArgument ) {
+        if ( m_SupportedArguments[ index ].m_argument == argument ) {
             numValues = m_SupportedArguments[ index ].m_numArgs;
             break;
         }
@@ -208,10 +207,10 @@ const String &ArgumentParser::getArgument( const String &arg ) const {
     return dummy;
 }
 
-bool ArgumentParser::hasArgument( const String &arg ) const {
+bool ArgumentParser::hasArgument( const String &argument ) const {
     bool result( false );
     for ( ui32 idx=0; idx<m_detectedArgs.size(); ++idx ) {
-        if ( m_detectedArgs[ idx ] == arg ) {
+        if ( m_detectedArgs[ idx ] == argument ) {
             if ( !m_StoredArguments[ idx ].empty() )  {
                 result = true;
             }
@@ -225,22 +224,22 @@ bool ArgumentParser::hasValidArgs() const {
     return m_isValid;
 }
 
-bool ArgumentParser::parseArgParameter( const String &arg, ui32 &numPara ) {
-    if ( arg.empty() ) {
+bool ArgumentParser::parseArgParameter( const String &argument, ui32 &numPara ) {
+    if ( argument.empty() ) {
         return true;
     }
 
     String paraStr( "" );
     bool paraDefOpen( false );
-    for ( ui32 i=0; i<arg.size(); i++ ) {
-        if ( arg[ i ] == tokenArgIn ) {
+    for ( ui32 i=0; i<argument.size(); i++ ) {
+        if ( argument[ i ] == tokenArgIn ) {
             if ( paraDefOpen ) {
                 numPara = 0;
                 return false;
             } else {
                 paraDefOpen = true;
             }
-        } else if ( arg[ i ] == tokenArgOut ) {
+        } else if ( argument[ i ] == tokenArgOut ) {
             if ( !paraDefOpen ) {
                 numPara = 0;
                 return false;
@@ -249,7 +248,7 @@ bool ArgumentParser::parseArgParameter( const String &arg, ui32 &numPara ) {
             }
 
         } else if ( paraDefOpen ) {
-            paraStr += arg[ i ];
+            paraStr += argument[ i ];
         }
     }
 
@@ -262,24 +261,24 @@ bool ArgumentParser::parseArgParameter( const String &arg, ui32 &numPara ) {
     return true;
 }
 
-String ArgumentParser::getBlankArgument( const String &arg ) {
+String ArgumentParser::getBlankArgument( const String &argument ) {
     String blankArg( "" );
 
     // Empty, return it
-    if ( arg.empty() ) {
+    if ( argument.empty() ) {
         return blankArg;
     }
 
     // Check if any token for parameter definition is there
-    String::size_type pos = arg.find( tokenArgIn );
+    String::size_type pos = argument.find( tokenArgIn );
     if( String::npos == pos ) {
-        return arg;
+        return argument;
     }
 
     // Clean from parameter-specific token
     ui32 i( 0 );
-    while ( arg[ i ] != tokenArgIn ) {
-        blankArg += arg[ i ];
+    while ( argument[ i ] != tokenArgIn ) {
+        blankArg += argument[ i ];
         ++i;
     }
 

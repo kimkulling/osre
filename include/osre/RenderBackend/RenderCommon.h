@@ -35,7 +35,8 @@ namespace RenderBackend {
 
 struct Parameter;
 
-static const i32 UnsetHandle = -1;
+static const i32  UnsetHandle = -1;
+static const ui32 MaxEntNameLen = 256;
 
 ///	@brief  This enum describes the usage of a buffer object.
 enum class BufferType {
@@ -205,6 +206,16 @@ ui32 getVertexFormatSize( VertexFormat format ) {
     return size;
 }
 
+struct ExtensionProperty {
+    c8   m_extensionName[ MaxEntNameLen ];
+    ui32 m_version;
+
+    ExtensionProperty() {
+        ::memset( m_extensionName, '\0', sizeof( c8 ) * MaxEntNameLen );
+        m_version = 0;
+    }
+};
+
 ///	@brief
 struct OSRE_EXPORT VertComponent {
     VertexAttribute m_attrib;
@@ -321,6 +332,7 @@ struct OSRE_EXPORT Material {
     Shader      *m_pShader;
     ui32         m_numParameters;
     Parameter   *m_parameters;
+    
     Material();
     ~Material();
 

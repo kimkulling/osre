@@ -170,7 +170,7 @@ private:
 };
 
 ///	Base event functor.
-typedef Functor<void, const Event&, const EventData*> ceEventFunctor;
+typedef Functor<void, const Event&, const EventData*> EventFunctor;
 
 } // Namespace Common
 } // Namespace OSRE

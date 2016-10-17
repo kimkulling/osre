@@ -355,7 +355,7 @@ bool Win32Eventhandler::isPolling( ) const {
 void Win32Eventhandler::registerEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener ) {
     assert( nullptr != m_pOSEventTriggerer );
 
-    m_pOSEventTriggerer->addEventListener( events, Common::ceEventFunctor::Make( pListener,
+    m_pOSEventTriggerer->addEventListener( events, Common::EventFunctor::Make( pListener,
         &OSEventListener::onOSEvent ) );
 }
 
@@ -363,7 +363,7 @@ void Win32Eventhandler::registerEventListener( const CPPCore::TArray<const Commo
 void Win32Eventhandler::unregisterEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener ) {
     assert( nullptr != m_pOSEventTriggerer );
 
-    m_pOSEventTriggerer->removeEventListener( events, Common::ceEventFunctor::Make( pListener,
+    m_pOSEventTriggerer->removeEventListener( events, Common::EventFunctor::Make( pListener,
         &OSEventListener::onOSEvent ) );
 }
 

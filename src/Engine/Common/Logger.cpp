@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cassert>
 
 #ifdef OSRE_WINDOWS
-//#  include "../Debugging/Win32/Win32DbgLogStream.h"
+#  include <src/Engine/Platform/win32/Win32DbgLogStream.h>
 #endif // OSRE_WINDOWS
 
 #include <iostream>
@@ -210,7 +210,7 @@ Logger::Logger()
     m_LogStreams.add( new StdLogStream );
 
 #ifdef OSRE_WINDOWS
-//    m_LogStreams.add( new Debugging::Win32DbgLogStream );
+    m_LogStreams.add( new Platform::Win32DbgLogStream );
 #endif // OSRE_WINDOWS
 
     print( Line, WhithoutDateTime );

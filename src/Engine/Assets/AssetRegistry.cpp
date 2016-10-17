@@ -32,7 +32,7 @@ namespace Assets {
 using namespace ::OSRE::Common;
 
 AssetRegistry *AssetRegistry::s_instance( nullptr );
-static const String Tag = "AssetRegistry";
+static const   String Tag = "AssetRegistry";
 
 AssetRegistry *AssetRegistry::create() {
     if ( nullptr == s_instance ) {
@@ -56,12 +56,12 @@ AssetRegistry *AssetRegistry::getInstance() {
 }
 
 void AssetRegistry::registerAssetPath( const String &mount, const String &path ) {
-    ui32 hashId( StringUtils::hashName( mount.c_str() ) );
+    const ui32 hashId( StringUtils::hashName( mount.c_str() ) );
     m_name2pathMap.insert( hashId, path );
 }
 
 bool AssetRegistry::hasPath( const String &mount ) const {
-    ui32 hashId( StringUtils::hashName( mount.c_str() ) );
+    const ui32 hashId( StringUtils::hashName( mount.c_str() ) );
     if ( !m_name2pathMap.hasKey( hashId ) ) {
         return false;
     }
@@ -72,7 +72,7 @@ bool AssetRegistry::hasPath( const String &mount ) const {
 static const String Dummy("");
 
 String AssetRegistry::getPath( const String &mount ) const {
-    ui32 hashId( StringUtils::hashName( mount.c_str() ) );
+    const ui32 hashId( StringUtils::hashName( mount.c_str() ) );
     if ( !m_name2pathMap.hasKey( hashId ) ) {
         return Dummy;
     }
@@ -122,5 +122,5 @@ AssetRegistry::~AssetRegistry() {
 
 }
 
-}
-}
+} // Namespace Assets
+} // Namespace OSRE

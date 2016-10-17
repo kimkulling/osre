@@ -185,7 +185,7 @@ void SDL2EventHandler::registerEventListener( const CPPCore::TArray<const Common
     assert( nullptr != pListener );
 
     m_pEventTriggerer->addEventListener( events, 
-        Common::ceEventFunctor::Make( pListener, &OSEventListener::onOSEvent ) );
+        Common::EventFunctor::Make( pListener, &OSEventListener::onOSEvent ) );
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -194,7 +194,7 @@ void SDL2EventHandler::unregisterEventListener( const CPPCore::TArray<const Comm
     assert( nullptr != pListener );
 
     m_pEventTriggerer->removeEventListener( events, 
-        Common::ceEventFunctor::Make( pListener, &OSEventListener::onOSEvent ) );
+        Common::EventFunctor::Make( pListener, &OSEventListener::onOSEvent ) );
 }
         
 //-------------------------------------------------------------------------------------------------
