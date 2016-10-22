@@ -60,6 +60,5 @@ private:
     CPPCore::Variant m_Value;
 };
 
-
 } // Namespace Properties
 } // Namespace OSRE

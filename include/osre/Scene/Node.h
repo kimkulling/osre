@@ -24,11 +24,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Object.h>
 #include <cppcore/Container/TArray.h>
+#include <cppcore/Container/THashMap.h>
 
 namespace OSRE {
 
 namespace Common {
     class Ids;
+}
+
+namespace Properties {
+    class Property;
 }
 
 namespace RenderBackend {
@@ -80,6 +85,8 @@ public:
     Component *getComponent( ComponentType type ) const;
     void setActive( bool isActive );
     bool isActive() const;
+    void setProperty( Properties::Property *prop );
+    Properties::Property *getProperty(const String name) const;
 
 private:
     CPPCore::TArray<Node*> m_childs;
@@ -90,9 +97,8 @@ private:
     TransformComponent *m_transformComp;
     CPPCore::TArray<Component*> m_components;
     Common::Ids *m_ids;
+    CPPCore::THashMap<ui32, Properties::Property*> m_propMap;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Scene
 } // namespace OSRE

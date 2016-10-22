@@ -25,11 +25,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/Ids.h>
+#include <osre/Common/StringUtils.h>
+#include <osre/Properties/Property.h>
 
 namespace OSRE {
 namespace Scene {
 
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Common;
 
 Node::Node( const String &name, Common::Ids &ids, bool transformEnabled, bool renderEnabled, Node *parent )
 : Object( name )
@@ -39,7 +42,8 @@ Node::Node( const String &name, Common::Ids &ids, bool transformEnabled, bool re
 , m_localTransform( nullptr )
 , m_renderComp( nullptr )
 , m_transformComp( nullptr )
-, m_ids( &ids ) {
+, m_ids( &ids )
+, m_propMap() {
     if ( transformEnabled ) {
         m_transformComp = new TransformComponent( m_ids->getUniqueId() );
         m_components.add( m_transformComp );
@@ -192,6 +196,25 @@ void Node::setActive( bool isActive ) {
 
 bool Node::isActive() const {
     return m_isActive;
+}
+
+void Node::setProperty( Properties::Property *prop) {
+    const ui32 hashId( StringUtils::hashName( prop->getPropertyName().c_str() ) );
+    m_propMap.insert( hashId, prop );
+}
+
+Properties::Property *Node::getProperty(const String name) const {
+    const ui32 hashId( StringUtils::hashName( name.c_str() ) );
+    if (!m_propMap.hasKey( hashId ) ) {
+        return nullptr;
+    }
+
+    Properties::Property *prop(nullptr);
+    if (m_propMap.getValue(hashId, prop )) {
+        return prop;
+    }
+
+    return nullptr;
 }
 
 } // Namespace Scene

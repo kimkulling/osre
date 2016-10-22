@@ -22,30 +22,28 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Properties/BasePropertyMap.h>
 #include <osre/Properties/Property.h>
+#include <osre/Debugging/osre_debugging.h>
 
 #include <cassert>
 
 namespace OSRE {
 namespace Properties {
 
-using namespace CPPCore;
+using namespace ::CPPCore;
 
-//-------------------------------------------------------------------------------------------------
 BasePropertyMap::BasePropertyMap() 
 : m_PropertyLookupMap() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 BasePropertyMap::~BasePropertyMap() {
     for ( PropertyLookupMap::iterator it = m_PropertyLookupMap.begin(); it != m_PropertyLookupMap.end(); 
           ++it )	{
-        assert( nullptr != it->second );
+        OSRE_ASSERT( nullptr != it->second );
         delete it->second;
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void BasePropertyMap::setProperty( ui32 id, const String &rName, const Variant &val ) {
     if ( hasProperty( id ) ) {
         removeProperty( id );
@@ -58,9 +56,8 @@ void BasePropertyMap::setProperty( ui32 id, const String &rName, const Variant &
     m_PropertyLookupMap[ id ] = pProperty;
 }
 
-//-------------------------------------------------------------------------------------------------
 void BasePropertyMap::setProperty( ui32 id, Property *pProperty ) {
-    assert( NULL != pProperty );
+    OSRE_ASSERT( NULL != pProperty );
 
     if ( hasProperty( id ) ) {
         removeProperty( id );
@@ -69,7 +66,6 @@ void BasePropertyMap::setProperty( ui32 id, Property *pProperty ) {
     m_PropertyLookupMap[ id ] = pProperty;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool BasePropertyMap::hasProperty( ui32 id ) const {
     if ( Property::NotSet == id ) {
         return false;
@@ -83,7 +79,6 @@ bool BasePropertyMap::hasProperty( ui32 id ) const {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 Property *BasePropertyMap::getProperty( ui32 id ) const {
     if ( Property::NotSet == id ) {
         return nullptr;
@@ -97,7 +92,6 @@ Property *BasePropertyMap::getProperty( ui32 id ) const {
     return it->second;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool BasePropertyMap::removeProperty( ui32 id ) {
     PropertyLookupMap::iterator it = m_PropertyLookupMap.find( id );
     if ( m_PropertyLookupMap.end() == it ) {
@@ -109,25 +103,20 @@ bool BasePropertyMap::removeProperty( ui32 id ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 BasePropertyMap::size() const {
     return static_cast<ui32>( m_PropertyLookupMap.size() );
 }
 
-//-------------------------------------------------------------------------------------------------
 bool BasePropertyMap::isEmpty() const {
     return m_PropertyLookupMap.empty();
 }
 
-//-------------------------------------------------------------------------------------------------
 void BasePropertyMap::clear() {
     for ( PropertyLookupMap::iterator it = m_PropertyLookupMap.begin(); it != m_PropertyLookupMap.end(); ++it ) {
         delete it->second;
     }
     m_PropertyLookupMap.clear();
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Properties
 } // Namespace OSRE
