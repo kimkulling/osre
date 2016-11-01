@@ -27,7 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Properties {
 
-//-------------------------------------------------------------------------------------------------
 Property::Property( ui32 id, const String &name, const CPPCore::Variant &value ) 
 : m_Id( id )
 , m_Name( name )
@@ -35,7 +34,6 @@ Property::Property( ui32 id, const String &name, const CPPCore::Variant &value )
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 Property::Property( const Property &rhs ) 
 : m_Id( rhs.m_Id )
 , m_Name( rhs.m_Name )
@@ -43,44 +41,36 @@ Property::Property( const Property &rhs )
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 Property::~Property() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 void Property::setPropertyName( const String &name ) {
     m_Name = name;
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &Property::getPropertyName() const {
     return m_Name;
 }
 
-//-------------------------------------------------------------------------------------------------
 void Property::set( ui32 id, const String &rName, const CPPCore::Variant &value ) {
     m_Id = id;
     m_Name = rName;
     m_Value = value;
 }
 
-//-------------------------------------------------------------------------------------------------
-void Property::setPropertyId( ui32 id ) {
+void Property::setPropertyId(ui32 id) {
     m_Id = id;
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 Property::getPropertyId() const {
     return m_Id;
 }
 
-//-------------------------------------------------------------------------------------------------
 const CPPCore::Variant &Property::getValue( ) const {
     return m_Value;
 }
 
-//-------------------------------------------------------------------------------------------------
 Property &Property::operator = ( const Property &rhs ) {
     if ( rhs == *this ) {
         return *this;
@@ -92,12 +82,9 @@ Property &Property::operator = ( const Property &rhs ) {
     return *this;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Property::operator == ( const Property &rhs ) const {
     return ( m_Id == rhs.m_Id && m_Value == rhs.m_Value );
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Properties
 } // Namespace OSRE

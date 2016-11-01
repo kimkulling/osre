@@ -33,7 +33,7 @@ namespace Properties {
 using namespace ::OSRE::Platform;
 
 static const CPPCore::Variant EmptyVariant;
-static const String ConfigKeyStringTable[ Settings::MaxKonfigKey ] = {
+static const String           ConfigKeyStringTable[ Settings::MaxKonfigKey ] = {
     "AppName",
     "AppType",
     "PlatformPlugin",
@@ -54,7 +54,6 @@ static const String ConfigKeyStringTable[ Settings::MaxKonfigKey ] = {
     "DefaultFont"
 };
 
-//--------------------------------------------------------------------------------------------------------------------
 Settings::Settings() 
 : m_pPropertyMap( nullptr ) {
     m_pPropertyMap = new Properties::BasePropertyMap;
@@ -62,20 +61,17 @@ Settings::Settings()
     initDefaults();
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 Settings::~Settings() {
     delete m_pPropertyMap;
     m_pPropertyMap = nullptr;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 bool Settings::configure( const String &initScriptFile ) {
     String filename( initScriptFile );
 
     return true;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 bool Settings::setString( Settings::ConfigKey key, const String &strValue ) {
     if( strValue.empty( ) || key >= MaxKonfigKey || key < 0 ) {
         return false;
@@ -88,7 +84,6 @@ bool Settings::setString( Settings::ConfigKey key, const String &strValue ) {
     return true;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 bool Settings::setInt( ConfigKey key, i32 intValue ) {
     if ( key >= MaxKonfigKey ) {
         return false;
@@ -101,7 +96,6 @@ bool Settings::setInt( ConfigKey key, i32 intValue ) {
     return true;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 bool Settings::setBool( ConfigKey key, bool val ) {
     if ( key >= MaxKonfigKey ) {
         return false;
@@ -114,7 +108,6 @@ bool Settings::setBool( ConfigKey key, bool val ) {
     return true;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 bool Settings::setFloat( ConfigKey key, f32 floatValue ) {
     if ( key >= MaxKonfigKey ) {
         return false;
@@ -126,7 +119,6 @@ bool Settings::setFloat( ConfigKey key, f32 floatValue ) {
     return true;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 const CPPCore::Variant &Settings::get( ConfigKey key ) const {
     Properties::Property *pProperty = m_pPropertyMap->getProperty( key );
     if( !pProperty ) {
@@ -136,20 +128,17 @@ const CPPCore::Variant &Settings::get( ConfigKey key ) const {
     return pProperty->getValue();
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 const String &Settings::getKeyAsString( ConfigKey key ) const {
     return ConfigKeyStringTable[ key ];
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 void Settings::clear() {
     if ( nullptr != m_pPropertyMap ) {
         m_pPropertyMap->clear();
     }
 }
 
-static i32 
-mapPlatformtype2Int( PluginType type ) {
+static i32 mapPlatformtype2Int( PluginType type ) {
 #ifdef OSRE_WINDOWS
     if ( PluginType::WindowsPlugin == type ) {
         return 0;
@@ -164,7 +153,6 @@ mapPlatformtype2Int( PluginType type ) {
     return -1;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 void Settings::initDefaults() {
     CPPCore::Variant appName, windowsTitle, renderAPI, value;
     appName.setString( "OSRE Application" );
@@ -207,8 +195,6 @@ void Settings::initDefaults() {
     value.setString( "buildin_arial.bmp" );
     m_pPropertyMap->setProperty( DefaultFont, ConfigKeyStringTable[ DefaultFont ], value );
 }
-
-//--------------------------------------------------------------------------------------------------------------------
 
 } // Namespace Properties
 } // Namespace OSRE
