@@ -28,7 +28,6 @@ namespace OSRE {
 namespace IO {
 
 //--------------------------------------------------------------------------------------------------------------------
-///	@class		::OSRE::IO::FileStream
 ///	@ingroup	Infrastructure
 ///
 ///	@brief	This class implements the basic file operations like reading and writing data,
@@ -77,8 +76,6 @@ public:
 private:
     FILE *m_pFile;
 };
-
-//--------------------------------------------------------------------------------------------------------------------
 
 } // Namespace IO
 } // Namespace OSRE

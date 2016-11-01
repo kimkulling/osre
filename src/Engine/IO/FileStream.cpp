@@ -69,17 +69,17 @@ bool FileStream::open() {
     const String &abspath = m_Uri.getAbsPath();
     String modestr;
     AccessMode mode = getAccessMode();
-    if ( ReadAccessBinary == mode ) {
+    if ( AccessMode::ReadAccessBinary == mode ) {
         modestr = "rb";
-    } else if ( WriteAccessBinary == mode ) {
+    } else if ( AccessMode::WriteAccessBinary == mode ) {
         modestr = "wb";
-    } else if ( ReadAccess == mode ) {
+    } else if ( AccessMode::ReadAccess == mode ) {
         modestr = "r";
-    } else if ( WriteAccess == mode ) {
+    } else if ( AccessMode::WriteAccess == mode ) {
         modestr = "w";
-    } else if ( ReadWriteAccess == mode ) {
+    } else if ( AccessMode::ReadWriteAccess == mode ) {
         modestr = "r+";
-    } else if ( AppendAccess == mode ) {
+    } else if ( AccessMode::AppendAccess == mode ) {
         modestr = "ra";
     }
     OSRE_ASSERT( !modestr.empty() );
@@ -204,7 +204,7 @@ FileStream::Position FileStream::seek( Offset offset, Origin origin ) {
     OSRE_ASSERT( nullptr != m_pFile );
 
     i32 originValue( 0 );
-    if ( origin == Current ) {
+    if ( origin == Stream::Origin::Current ) {
         originValue = SEEK_CUR;
     } else {
         originValue = SEEK_SET;

@@ -223,9 +223,9 @@ bool VlkRenderBackend::createFramebuffers( ui32 width, ui32 height ) {
 }
 
 bool VlkRenderBackend::createPipeline() {
-    Stream *vsStream( IOService::getInstance()->openStream( Uri( "Data03/vert.spv" ), Stream::ReadAccessBinary ) );
+    Stream *vsStream( IOService::getInstance()->openStream( Uri( "Data03/vert.spv" ), Stream::AccessMode::ReadAccessBinary ) );
     VlkShaderModule *vertex_shader_module = createShaderModule( *vsStream );
-    Stream *fsStream( IOService::getInstance()->openStream( Uri( "Data03/frag.spv" ), Stream::ReadAccessBinary ) );
+    Stream *fsStream( IOService::getInstance()->openStream( Uri( "Data03/frag.spv" ), Stream::AccessMode::ReadAccessBinary ) );
     VlkShaderModule *fragment_shader_module = createShaderModule( *fsStream );
     if ( !vertex_shader_module || !fragment_shader_module ) {
         return false;

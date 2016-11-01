@@ -106,6 +106,8 @@ protected:
     /// @brief  The onUpdate callback, override this for your own update stuff.
     virtual void onUpdate();
 
+    /// @brief  Argument parser getter.
+    /// @return The argument parser.
     Common::ArgumentParser &getArgumentParser() const;
 
 private:

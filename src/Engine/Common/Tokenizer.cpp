@@ -29,47 +29,40 @@ using namespace ::CPPCore;
 
 static const String EmptyToken = "";
 
-//-------------------------------------------------------------------------------------------------
 Tokenizer::Tokenizer() 
 : m_Token() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 Tokenizer::Tokenizer( const Tokenizer &rhs ) 
 : m_Token( rhs.m_Token ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 Tokenizer::~Tokenizer() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 Tokenizer::getNumOfToken() const {
     return m_Token.size();
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &Tokenizer::getTokenAt( ui32 index ) const {
-    if ( m_Token.isEmpty() || m_Token.size() >= index )
+    if ( m_Token.isEmpty() || m_Token.size() >= index ) {
         return EmptyToken;
+    }
 
     return m_Token[ index ];
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Tokenizer::isEmpty() const {
     return m_Token.isEmpty();
 }
 
-//-------------------------------------------------------------------------------------------------
 void Tokenizer::clear() {
     m_Token.clear();
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 Tokenizer::tokenize( const String& str, TArray<String>& tokens, const String& delimiters ) {
     // Skip delimiters at beginning.
     String::size_type lastPos = str.find_first_not_of( delimiters, 0 );
@@ -92,7 +85,7 @@ ui32 Tokenizer::tokenize( const String& str, TArray<String>& tokens, const Strin
 
     return static_cast<ui32>( tokens.size() );
 }
-//-------------------------------------------------------------------------------------------------
+
 ui32 Tokenizer::tokenize( const String& str, const String& delimiters ) {
     if( !m_Token.isEmpty() ) {
         m_Token.resize( 0 );
@@ -102,8 +95,6 @@ ui32 Tokenizer::tokenize( const String& str, const String& delimiters ) {
     
     return m_Token.size();
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 } // Namespace OSRE

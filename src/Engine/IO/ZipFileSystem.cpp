@@ -60,7 +60,7 @@ ZipFileSystem::~ZipFileSystem() {
 
 //-------------------------------------------------------------------------------------------------
 Stream *ZipFileSystem::open( const Uri &file, Stream::AccessMode mode ) {
-    if ( !isOpened() || mode != Stream::ReadAccess ) {
+    if ( !isOpened() || mode != Stream::AccessMode::ReadAccess ) {
         return nullptr;
     }
     
@@ -122,7 +122,7 @@ Stream *ZipFileSystem::find( const Uri &file, Stream::AccessMode mode, CPPCore::
         return nullptr;
     }
 
-    return this->open( file, Stream::ReadAccess );
+    return this->open( file, Stream::AccessMode::ReadAccess );
 }
 
 //-------------------------------------------------------------------------------------------------

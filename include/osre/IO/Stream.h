@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace IO {
 
+// Forward declarations
 class Uri;
 
 //-------------------------------------------------------------------------------------------------
@@ -44,7 +45,7 @@ public:
     typedef ui32 Offset;        ///< The offset from the current position.
     
     /// @brief  Enumerates the type of access.
-    enum AccessMode	{
+    enum class AccessMode	{
         ReadAccess,             ///< Read-only access.
         WriteAccess,            ///< Write-access.
         ReadAccessBinary,       ///< Read-access in binary mode.
@@ -54,14 +55,14 @@ public:
     };
 
     /// @brief  Enumerates the requested file position
-    enum Origin	{
+    enum class Origin	{
         Begin,      ///< Begin of the file.
         Current,    ///< Current position
         End         ///< End of the file.
     };
 
 public:
-    ///	@brief	The class default constructor.
+    ///	@brief	The default class constructor.
     Stream();
 
     ///	@brief	The class constructor with the uri and the access type.
@@ -116,23 +117,57 @@ public:
     /// @return The file size.
     virtual ui32 getSize() const;
     
-    /// @brief  Reads a given number of bytes from the buffer.
-    /// @param  pBuffer         [in] The buffer to read in.
+    /// @brief  Reads a given number of bytes from the stream.
+    /// @param  buffer          [in] The buffer to read in.
     /// @param  size            [in] The number of bytes to read.
     /// @return The number of read bytes.
-    virtual ui32 read( void *pBuffer, ui32 size );
+    virtual ui32 read( void *buffer, ui32 size );
     
-    /// @brief  Writes a given number of bytes into the buffer.
-    /// @param  pBuffer         [in] The buffer to write.
+    /// @brief  Writes a given number of bytes into the stream.
+    /// @param  buffer          [out] The buffer to write.
     /// @param  size            [in] The number of bytes to write.
     /// @return The number of written bytes.
-    virtual ui32 write( const void *pBuffer, ui32 size );
+    virtual ui32 write( const void *buffer, ui32 size );
     
+    /// @brief  Reads a given i32 value.
+    /// @param  value       [out] The i32-value to read-
+    /// @return The number of written bytes.
     virtual ui32 readI32( i32 &value );
+
+    /// @brief  Writes a given i32 value into the stream.
+    /// @param  value       [in] The i32-value to write.
+    /// @return The number of written bytes.
     virtual ui32 writeI32( i32 value );
 
+    /// @brief  Reads a given ui32 value.
+    /// @param  value       [out] The ui32-value to read.
+    /// @return The number of read bytes.
     virtual ui32 readUI32( ui32 &value );
+
+    /// @brief  Writes a given ui32 value into the stream.
+    /// @param  value       [in] The ui32-value to write.
+    /// @return The number of written bytes.
     virtual ui32 writeUI32( ui32 value );
+
+    /// @brief  Reads a given f32 value.
+    /// @param  value       [out] The f32-value to read.
+    /// @return The number of read bytes.
+    virtual ui32 readF32( f32 &value );
+
+    /// @brief  Writes a given f32 value into the stream.
+    /// @param  value       [in] The f32-value to write.
+    /// @return The number of written bytes.
+    virtual ui32 writeF32( f32 value );
+
+    /// @brief  Reads a given d32 value.
+    /// @param  value       [out] The d32-value to read.
+    /// @return The number of read bytes.
+    virtual ui32 readD32( d32 &value );
+
+    /// @brief  Writes a given d32 value into the stream.
+    /// @param  value       [in] The d32-value to write.
+    /// @return The number of written bytes.
+    virtual ui32 writeD32( d32 value );
 
     /// @brief  Moves to the current position.
     /// @param  offset          [in] The offset.
@@ -152,8 +187,6 @@ public:
     Uri m_Uri;
     AccessMode m_AccessMode;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace IO
 } // Namespace OSRE

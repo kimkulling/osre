@@ -31,16 +31,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace IO {
 
-//-------------------------------------------------------------------------------------------------
-ZipFileStream::ZipFileStream( const Uri &rURI, unzFile zipFile ) :
-	Stream( rURI , ReadAccess ),
-	m_zipFile( zipFile ),
-	m_bDirty( true )
-{
+ZipFileStream::ZipFileStream( const Uri &uri, unzFile zipFile ) 
+: Stream( uri , AccessMode::ReadAccess )
+, m_zipFile( zipFile )
+, m_bDirty( true ) {
 	assert( NULL != zipFile );
 }
 
-//-------------------------------------------------------------------------------------------------
 ZipFileStream::~ZipFileStream() {
 	if ( NULL != m_zipFile ) {
 		unzClose( m_zipFile );
@@ -48,19 +45,18 @@ ZipFileStream::~ZipFileStream() {
 	}
 }
 
-//-------------------------------------------------------------------------------------------------
 bool ZipFileStream::canRead() const {
 	return true;
 }
 
-//-------------------------------------------------------------------------------------------------
-ui32 ZipFileStream::read( void *pBuffer, size_t size ) {
-	assert( NULL != pBuffer );
+ui32 ZipFileStream::read( void *buffer, size_t size ) {
+	assert( NULL != buffer );
 	assert( NULL != m_zipFile );
 	
 	ui32 filesize = 0;
-	if ( 0 == size)
-		return filesize;
+    if ( 0 == size ) {
+        return filesize;
+    }
 
 	if ( NULL != m_zipFile ) {
 		// get the filename
@@ -77,7 +73,7 @@ ui32 ZipFileStream::read( void *pBuffer, size_t size ) {
 			// you need to mark the last character with '\0', so add 
 			// another character
 			unzOpenCurrentFile( m_zipFile );
-			i32 bytesRead = unzReadCurrentFile( m_zipFile, pBuffer, fileInfo.uncompressed_size);
+			i32 bytesRead = unzReadCurrentFile( m_zipFile, buffer, fileInfo.uncompressed_size);
 			if ( bytesRead < 0 || bytesRead != (i32) fileInfo.uncompressed_size ) {
 				return filesize;
 			}
@@ -90,7 +86,6 @@ ui32 ZipFileStream::read( void *pBuffer, size_t size ) {
 	return filesize;
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 ZipFileStream::getSize() const {
 	// get the filename
 	const String &abspath = getUri().getAbsPath();
@@ -105,12 +100,9 @@ ui32 ZipFileStream::getSize() const {
 	return 0;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool ZipFileStream::isOpen() const {
 	return ( NULL != m_zipFile );
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace IO
 } // Namespace OSRE
