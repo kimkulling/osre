@@ -58,5 +58,5 @@ void Ids::releaseId( ui32 id ) {
     m_freeIds.add( id );
 }
     
-}
-}
+} // Namespace Common
+} // Namespace OSRE

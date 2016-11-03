@@ -42,12 +42,13 @@ Component::~Component() {
 
 RenderComponent::RenderComponent( ui32 id )
 : Component( id )
-, m_newGeo() {
-
+, m_newGeo()
+, m_isShadowCaster( false ) {
+    // empty
 }
 
 RenderComponent::~RenderComponent() {
-
+    // empty
 }
 
 void RenderComponent::update( RenderBackendService *renderBackendSrv ) {
@@ -59,6 +60,14 @@ void RenderComponent::update( RenderBackendService *renderBackendSrv ) {
         renderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
         m_newGeo.resize( 0 );
     }
+}
+
+bool RenderComponent::isShadowCaster() const {
+    return m_isShadowCaster;
+}
+
+void RenderComponent::setShadowCaster(bool isShadowCaster) {
+    m_isShadowCaster = isShadowCaster;
 }
 
 void RenderComponent::addStaticGeometry( RenderBackend::Geometry *geo ) {

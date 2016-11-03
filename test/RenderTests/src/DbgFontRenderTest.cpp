@@ -57,7 +57,6 @@ public:
 
     virtual bool onCreate( RenderBackendService *rb ) override {
         rb->sendEvent( &OnAttachViewEvent, nullptr );
-        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
         
 //        Scene::DbgRenderer::getInstance()->renderDbgText( -1, -1, 1, "Hello, \nworld!" );
         Scene::DbgRenderer::getInstance()->renderDbgText( -1, -1, 1, "XXX" );
@@ -77,5 +76,5 @@ public:
 
 ATTACH_RENDERTEST( DbgFontRenderTest )
 
-}
-}
+} // Namespace RenderTest
+} // Namespace OSRE

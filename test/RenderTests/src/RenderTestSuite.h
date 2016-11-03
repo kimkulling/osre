@@ -45,7 +45,6 @@ class AbstractRenderTest;
 class KeyboardEventListener;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderTest::RenderTestSuite
 ///	@ingroup	RenderTest
 ///
 ///	@brief 
@@ -92,8 +91,6 @@ private:
     String m_renderAPI;
     String m_mediaPath;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderTest
 } // Namespace OSRE

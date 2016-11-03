@@ -35,10 +35,22 @@ namespace Common {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Ids {
 public:
+    /// @brief  The default class constructor.
     Ids();
+
+    /// @brief  The class constructor with the start id.
+    /// @param  startId     [in] The start id.
     Ids( ui32 startId );
+
+    /// @brief  The class destructor.
     ~Ids();
+
+    /// @brief  Returns an unique id.
+    /// @return The unique id.
     ui32 getUniqueId();
+
+    /// @brief  Will release a unique id.
+    /// @param  id      [in] The unique id to release.
     void releaseId( ui32 id );
 
 private:

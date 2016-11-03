@@ -43,12 +43,13 @@ const String API_Arg = "api";
 const String Tag     = "AppBase";
 
 struct AppBase::Impl {
-    enum State {
+    enum class State {
         Uninited,
         Created,
         Running,
         Destroyed
     };
+
     State m_state;
     d32 m_timediff;
     ArgumentParser m_argParser;
@@ -59,7 +60,7 @@ struct AppBase::Impl {
     Scene::World *m_world;
     
     Impl( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
-    : m_state( Uninited )
+    : m_state( State::Uninited )
     , m_timediff( 0.0 )
     , m_argParser( argc, argv, supportedArgs, desc )
     , m_settings( nullptr )
@@ -105,8 +106,8 @@ bool AppBase::destroy() {
 void AppBase::update() {
     OSRE_ASSERT( nullptr != m_impl );
 
-    if( m_impl->m_state == Impl::Created ) {
-        m_impl->m_state = Impl::Running;
+    if( m_impl->m_state == Impl::State::Created ) {
+        m_impl->m_state = Impl::State::Running;
         osre_debug( Tag, "Set application state to running." );
     }
 
@@ -168,7 +169,7 @@ bool AppBase::activateStage( const String &name ) {
 bool AppBase::onCreate( Properties::Settings *config ) {
     OSRE_ASSERT( nullptr!=m_impl );
 
-    if ( m_impl->m_state!=Impl::Uninited ) {
+    if ( m_impl->m_state!=Impl::State::Uninited ) {
         osre_debug( Tag, "AppBase::State not in proper state: Uninited." );
         return false;
     }
@@ -219,7 +220,7 @@ bool AppBase::onCreate( Properties::Settings *config ) {
     
     // set application state to "Created"
     osre_debug( Tag, "Set application state to Created." );
-    m_impl->m_state = Impl::Created;
+    m_impl->m_state = Impl::State::Created;
     
     return true;
 }
@@ -227,7 +228,7 @@ bool AppBase::onCreate( Properties::Settings *config ) {
 bool AppBase::onDestroy() {
     OSRE_ASSERT( nullptr!=m_impl );
 
-    if ( m_impl->m_state!=Impl::Running ) {
+    if ( m_impl->m_state != Impl::State::Running ) {
         osre_debug( Tag, "AppBase::State not in proper state: Running." );
         return false;
     }
@@ -243,7 +244,7 @@ bool AppBase::onDestroy() {
     m_impl->m_world = nullptr;
 
     osre_debug( Tag, "Set application state to destroyed." );
-    m_impl->m_state = Impl::Destroyed;
+    m_impl->m_state = Impl::State::Destroyed;
     Logger::kill();
 
     return true;

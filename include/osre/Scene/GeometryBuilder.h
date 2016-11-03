@@ -76,6 +76,11 @@ public:
     /// @return The created geometry.
     static RenderBackend::Geometry *allocTextBox( f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access );
 
+    /// @brief  Will update the vertices of a text box.
+    /// @param  geo         [inout] The geometry to update.
+    /// @param  textSize    [in] The new text size.
+    /// @param  text        [in] The updated text.
+    /// @param  resize      [in] The resize flag, true for resize of text-box requested.
     static void updateTextBox( RenderBackend::Geometry *geo, f32 textSize, const String &text, bool resize );
 
     ///	@brief  Allocates vertices into a buffer data.

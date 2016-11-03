@@ -82,17 +82,15 @@ private:
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Logger {
 public:
-    ///	@enum	Severity
     ///	@brief	Describes the 
-    enum Severity {
+    enum class Severity {
         Normal,		///< Only warnings and errors will be logged.
         Verbose,	///< Normal messages will be logged as well.
         Debug		///< All debug messages will be logged as well.
     };
 
-    ///	@enum	PrintMode
     ///	@brief	Describes the mode for prints into the active log stream.
-    enum PrintMode {
+    enum class PrintMode {
         WithDateTime,		///< A dateTime string will put be in front of the entry.
         WhithoutDateTime	///< No DateTime will be there.
     };
@@ -128,7 +126,7 @@ public:
 
     ///	@brief	Logs a print message.
     ///	@param	rMessage	The message to log.
-    void print( const String &rMessage, PrintMode mode = WithDateTime );
+    void print( const String &rMessage, PrintMode mode = PrintMode::WithDateTime );
 
     ///	@brief	Logs a warn message.
     ///	@param	msg	The message to log.

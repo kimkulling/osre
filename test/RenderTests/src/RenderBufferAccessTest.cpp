@@ -89,6 +89,10 @@ const String FsSrc =
 //-------------------------------------------------------------------------------------------------
 class RenderBufferAccessTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
+    static const ui32 NumPts = 1000;
+    glm::vec3 m_col[NumPts];
+    glm::vec3 m_pos[NumPts];
+    Geometry *m_ptGeo;
 
 public:
     RenderBufferAccessTest()
@@ -104,21 +108,17 @@ public:
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
-        // colors
-        static const ui32 NumPts = 1000;
-        glm::vec3 col[ NumPts ];
-        glm::vec3 points[ NumPts ];
         CPPCore::RandomGenerator generator;
         for ( ui32 i = 0; i < NumPts; i++ ) {
             const f32 r = static_cast< f32 >( generator.get( 1, 100 ) ) / 100.0f;
             const f32 g = static_cast< f32 >( generator.get( 1, 100 ) ) / 100.0f;
             const f32 b = static_cast< f32 >( generator.get( 1, 100 ) ) / 100.0f;
-            col[ i ] = glm::vec3( r, g, b );
+            m_col[ i ] = glm::vec3( r, g, b );
 
             const f32 x = static_cast< f32 >( generator.get( 0, 400 )-200 ) / 100.0f;
             const f32 y = static_cast< f32 >( generator.get( 0, 400 )-200 ) / 100.0f;
             const f32 z = static_cast< f32 >( generator.get( 0, 400 )-200 ) / 100.0f;
-            points[ i ] = glm::vec3( x, y, z );
+            m_pos[ i ] = glm::vec3( x, y, z );
         }
 
         GLushort pt_indices[ NumPts ];
@@ -130,21 +130,21 @@ public:
         attachGeoEvData->m_numGeo = NumGeo;
         attachGeoEvData->m_geo = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, NumGeo );
 
-        Geometry *ptGeo = &attachGeoEvData->m_geo[ 0 ];
-        ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, NumPts, points, col, nullptr, BufferAccessType::ReadOnly );
-        ptGeo->m_indextype = IndexType::UnsignedShort;
+        m_ptGeo = &attachGeoEvData->m_geo[ 0 ];
+        m_ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, NumPts, m_pos, m_col, nullptr, BufferAccessType::ReadOnly );
+        m_ptGeo->m_indextype = IndexType::UnsignedShort;
         ui32 pt_size = sizeof( GLushort ) * NumPts;
-        ptGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, BufferAccessType::ReadOnly );
-        ptGeo->m_ib->copyFrom( pt_indices, pt_size );
+        m_ptGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, BufferAccessType::ReadOnly );
+        m_ptGeo->m_ib->copyFrom( pt_indices, pt_size );
 
         // setup primitives
-        ptGeo->m_numPrimGroups = 1;
-        ptGeo->m_pPrimGroups = new PrimitiveGroup[ ptGeo->m_numPrimGroups ];
-        ptGeo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, NumPts, PrimitiveType::PointList, 0 );
+        m_ptGeo->m_numPrimGroups = 1;
+        m_ptGeo->m_pPrimGroups = new PrimitiveGroup[ m_ptGeo->m_numPrimGroups ];
+        m_ptGeo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, NumPts, PrimitiveType::PointList, 0 );
 
         // setup material
         Material *mat = Scene::MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
-        ptGeo->m_material = mat;
+        m_ptGeo->m_material = mat;
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
@@ -156,6 +156,29 @@ public:
 
         rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
+        return true;
+    }
+
+    virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *rbSrv) {
+        CPPCore::RandomGenerator generator;
+        for (ui32 i = 0; i < NumPts; i++) {
+            const f32 x = static_cast<f32>(generator.get(0, 1) - 2) / 100.0f;
+            const f32 y = static_cast<f32>(generator.get(0, 1) - 2) / 100.0f;
+            const f32 z = static_cast<f32>(generator.get(0, 1) - 2) / 100.0f;
+            m_pos[ i ] += glm::vec3(x, y, z);
+        }
+
+        ui32 offset( 0 );
+        for (ui32 i = 0; i < NumPts; i++) {
+            uc8 *ptr = (uc8*) m_ptGeo->m_vb->m_data;
+            ::memcpy( &ptr[offset], &m_pos[ i ], sizeof(glm::vec3));
+            offset += sizeof( ColorVert );
+        }
+
+        UpdateGeoEventData *updateGeoEvData( new UpdateGeoEventData );
+        updateGeoEvData->m_numGeo = 1;
+        updateGeoEvData->m_geo = m_ptGeo;
+        rbSrv->sendEvent( &OnUpdateGeoEvent, updateGeoEvData );
         return true;
     }
 

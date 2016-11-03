@@ -141,5 +141,5 @@ public:
 
 ATTACH_RENDERTEST( PrimTypeRenderTest )
 
-}
-}
+} // Namespace RenderTest
+} // Namespace OSRE

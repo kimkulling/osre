@@ -134,7 +134,7 @@ void Logger::print( const String &msg, PrintMode mode ) {
     }
 
     logMsg += msg;
-    if( WithDateTime == mode ) {
+    if ( PrintMode::WithDateTime == mode ) {
         logMsg += " ( ";
         logMsg += this->getDateTime( );
         logMsg += " )";
@@ -213,15 +213,15 @@ Logger::Logger()
     m_LogStreams.add( new Platform::Win32DbgLogStream );
 #endif // OSRE_WINDOWS
 
-    print( Line, WhithoutDateTime );
+    print( Line, PrintMode::WhithoutDateTime );
     print( "New OSRE run." );
-    print( Line, WhithoutDateTime );
+    print( Line, PrintMode::WhithoutDateTime );
 }
 
 Logger::~Logger() {
-    print( Line, WhithoutDateTime );
+    print( Line, PrintMode::WhithoutDateTime );
     print( "OSRE run ended." );
-    print( Line, WhithoutDateTime );
+    print( Line, PrintMode::WhithoutDateTime );
 
     for ( ui32 i=0; i<m_LogStreams.size(); ++i ) {
         delete m_LogStreams[ i ];
