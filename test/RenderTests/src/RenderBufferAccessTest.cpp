@@ -35,6 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <iostream>
 
 #ifdef OSRE_WINDOWS
 #   include "GL/wglew.h"
@@ -162,9 +163,9 @@ public:
     virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *rbSrv) {
         CPPCore::RandomGenerator generator;
         for (ui32 i = 0; i < NumPts; i++) {
-            const f32 x = static_cast<f32>(generator.get(0, 1) - 2) / 100.0f;
-            const f32 y = static_cast<f32>(generator.get(0, 1) - 2) / 100.0f;
-            const f32 z = static_cast<f32>(generator.get(0, 1) - 2) / 100.0f;
+            const f32 x = static_cast<f32>(generator.get(-10, 10) ) / 100.0f;
+            const f32 y = static_cast<f32>(generator.get(-10, 10) ) / 100.0f;
+            const f32 z = static_cast<f32>(generator.get(-10, 10) ) / 100.0f;
             m_pos[ i ] += glm::vec3(x, y, z);
         }
 
@@ -179,6 +180,7 @@ public:
         updateGeoEvData->m_numGeo = 1;
         updateGeoEvData->m_geo = m_ptGeo;
         rbSrv->sendEvent( &OnUpdateGeoEvent, updateGeoEvData );
+        
         return true;
     }
 
