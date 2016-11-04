@@ -6,6 +6,8 @@
 namespace OSRE {
 namespace Assets {
 
+using namespace ::OSRE::IO;
+
 static const String Tag = "AssetData";
 
 static const i32 HeaderId = 0;
@@ -22,6 +24,7 @@ bool AssetData::checkReadState( IO::Stream &stream ) {
         osre_debug( Tag, "Stream is not in read state." );
         return false;
     }
+
     return true;
 }
 
@@ -30,10 +33,12 @@ bool AssetData::checkWriteState( IO::Stream &stream ) {
         osre_debug( Tag, "Stream is not open." );
         return false;
     }
+
     if ( !stream.canWrite() ) {
         osre_debug( Tag, "Stream is not in write state." );
         return false;
     }
+
     return true;
 }
 
@@ -67,7 +72,7 @@ ui32 AssetData::writeChunkData( IO::Stream &stream, ui32 offset, i32 id, uc8 *bu
 }
 
 bool AssetData::readHeader( IO::Stream &stream ) {
-    ui32 offset( stream.seek( 0, IO::Stream::Begin ) );
+    ui32 offset( stream.seek( 0, IO::Stream::Origin::Begin ) );
     c8 bufferMagic[ 4 ];
     offset += stream.read( bufferMagic, sizeof( c8 ) * 4 );
     if ( 0 == strncmp( bufferMagic, MagicOSRE, strlen( MagicOSRE ) ) ) {
@@ -91,7 +96,7 @@ bool AssetData::readHeader( IO::Stream &stream ) {
 }
 
 bool AssetData::writeHeader( IO::Stream &stream ) {
-    ui32 offset( stream.seek( 0, IO::Stream::Begin ) );
+    ui32 offset( stream.seek( 0, Stream::Origin::Begin ) );
     offset = stream.write( MagicOSRE, sizeof( uc8 ) * 4 );
     offset = stream.writeI32( Version );
 

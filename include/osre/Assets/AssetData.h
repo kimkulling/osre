@@ -20,14 +20,20 @@ namespace Scene {
 
 namespace Assets {
 
-//--------
-//  + Magic number
-//  + Version id
-//---
-//  Dictionary chunk
-//  + Number of chunks
-//-----
-//-----
+//------------------------------------
+// Header
+//------------------------------------
+// + Magic number
+// + Version id
+//------------------------------------
+// Dictionary chunk
+// + Number of chunks
+// + ChunkId
+// + Offset
+// ...
+//------------------------------------
+// Chunks
+//------------------------------------
 class AssetData {
 public:
     struct Chunk {

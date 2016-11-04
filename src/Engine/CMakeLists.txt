@@ -44,10 +44,12 @@ SET( app_src
 #==============================================================================
 SET( assets_inc
     ${HEADER_PATH}/Assets/AssetRegistry.h
+    ${HEADER_PATH}/Assets/AssetData.h
 )
 
 SET( assets_src
     Assets/AssetRegistry.cpp
+    Assets/AssetData.cpp
 )
 
 #==============================================================================
