@@ -10,10 +10,31 @@ using namespace ::OSRE::IO;
 
 static const String Tag = "AssetData";
 
-static const i32 HeaderId = 0;
-static const i32 DictId = 1;
+static const i32 HeaderId    = 0;
+static const i32 DictId      = 1;
 static const c8  MagicOSRE[] = "OSRE";
-static const i32 Version = 1;
+static const i32 Version     = 1;
+
+AssetData::Chunk::Chunk()
+: m_id(-1)
+, m_size(0)
+, m_data(nullptr) {
+    // empty
+}
+
+AssetData::Chunk::~Chunk() {
+    // empty
+}
+
+AssetData::AssetDataDict::AssetDataDict()
+: m_numEntries( 0 )
+, m_entries(nullptr) {
+    // empty
+}
+
+AssetData::AssetDataDict::~AssetDataDict() {
+    m_entries = nullptr;
+}
 
 bool AssetData::checkReadState( IO::Stream &stream ) {
     if ( !stream.isOpen() ) {
@@ -88,8 +109,8 @@ bool AssetData::readHeader( IO::Stream &stream ) {
     // read dict chunk 
     AssetDataDict dict;
     offset = readDict( stream, dict );
-    for ( ui32 i = 0; i < dict.m_numChunks; i++ ) {
-
+    for ( ui32 i = 0; i < dict.m_numEntries; i++ ) {
+        DictEntry &entry = dict.m_entries[ i ];
     }
 
     return false;
@@ -108,7 +129,9 @@ ui32 AssetData::readDict( IO::Stream &stream, AssetDataDict &dict ) {
     i32 id( -1 );
     uc8 *buffer( nullptr );
     ui32 offset = readChunkData( stream, offset, id, buffer, size );
-    ::memcpy( &dict.m_numChunks, buffer, sizeof( ui32 ) );
+    ::memcpy( &dict.m_numEntries, buffer, sizeof( ui32 ) );
+    // TODO!
+    //dict.m_entries = buffer;
 
     return 0;
 }

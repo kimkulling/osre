@@ -20,7 +20,7 @@ namespace Scene {
 
 namespace Assets {
 
-//------------------------------------
+//====================================
 // Header
 //------------------------------------
 // + Magic number
@@ -37,13 +37,28 @@ namespace Assets {
 class AssetData {
 public:
     struct Chunk {
-        i32 m_id;
+        i32  m_id;
         ui32 m_size;
         uc8 *m_data;
+
+        Chunk();
+        ~Chunk();
+    };
+
+    struct DictEntry {
+        ui32 m_id;
+        ui32 m_offset;
+
+        DictEntry();
+        ~DictEntry();
     };
 
     struct AssetDataDict {
-        ui32 m_numChunks;
+        ui32 m_numEntries;
+        DictEntry *m_entries;
+
+        AssetDataDict();
+        ~AssetDataDict();
     };
     
 public:
