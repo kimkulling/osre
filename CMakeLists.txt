@@ -74,7 +74,7 @@ elseif ( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -Wall -Wno-long-long -pedantic -std=c++11" )
 endif()
 
-
+SET( BUILD_SHARED_LIBS OFF )
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
 ADD_SUBDIRECTORY( src/Editor )
@@ -87,6 +87,7 @@ ADD_SUBDIRECTORY( 3dparty/zlib )
 ADD_SUBDIRECTORY( 3dparty/unzip )
 ADD_SUBDIRECTORY( 3dparty/soil )
 ADD_SUBDIRECTORY( 3dparty/freetype )
+ADD_SUBDIRECTORY( 3dparty/assimp )
 
 
 # Include the doc component.
@@ -104,4 +105,5 @@ set_target_properties(  cppcore PROPERTIES FOLDER ThirdParty )
 set_target_properties(  cppcore_unittest PROPERTIES FOLDER ThirdParty )
 set_target_properties(  freetype PROPERTIES FOLDER ThirdParty )
 set_target_properties(  dist PROPERTIES FOLDER ThirdParty )
-
+set_target_properties(  assimp PROPERTIES FOLDER ThirdParty )
+set_target_properties(  zlibstatic PROPERTIES FOLDER ThirdParty )

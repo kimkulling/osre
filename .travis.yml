@@ -15,7 +15,4 @@ language: cpp
 compiler:
   - gcc
 #  - clang
-script: cmake -G "Unix Makefiles" && make
-
-
-
+script: cmake -DASSIMP_BUILD_ASSIMP_TOOLS=OFF -G "Unix Makefiles" && make
