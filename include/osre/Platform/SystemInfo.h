@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <osre/Platform/AbstractThread.h>
 #include <map>
 
 #ifdef OSRE_WINDOWS
@@ -46,11 +47,6 @@ public:
     enum class Platform {
         Win32,		///< Windows platform, 32 bit
         GNU_Linux	///< GNU Linux platform.
-    };
-
-    /// Manages platform-independent thread id
-    struct ThreadId {
-        unsigned long Id;
     };
 
 public:

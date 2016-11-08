@@ -33,7 +33,6 @@ class SDL2ThreadEvent;
 class SDL2ThreadLocalStorage;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::Win32Thread
 ///	@ingroup	Engine
 ///
 ///	@brief	This class implements a thread which uses the Win32-API.
@@ -68,9 +67,14 @@ public:
     Priority getPriority() const;
     ///	Returns the name of the thread.
     const String &getThreadName() const;
-
-    virtual AbstractThreadLocalStorage *getThreadLocalStorage() ;
+    /// Will return the thread local storage.
+    virtual AbstractThreadLocalStorage *getThreadLocalStorage();
+    /// Will assign a thread local storage.
     virtual void setThreadLocalStorage( AbstractThreadLocalStorage *tls );
+    /// Will set the thread id.
+    virtual void setThreadId(const ThreadId &id);
+    /// Will return the thread id.
+    virtual ThreadId getThreadId();
 
 protected:
     /// thread startup function
@@ -84,7 +88,7 @@ private:
     SDL2ThreadLocalStorage *m_tls;
     Priority m_Prio;
     String m_ThreadName;
-    unsigned long m_threadId;
+    ThreadId m_id;
 };
 
 //-------------------------------------------------------------------------------------------------

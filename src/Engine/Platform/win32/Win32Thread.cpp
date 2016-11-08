@@ -99,9 +99,7 @@ bool Win32Thread::stop() {
     delete m_pThreadSignal;
     m_pThreadSignal = NULL;
 
-    SystemInfo::ThreadId id;
-    id.Id = ::GetCurrentThreadId();
-    SystemInfo::unregisterThreadName( id );
+    SystemInfo::unregisterThreadName( m_id );
 
     return true;
 }
@@ -216,16 +214,26 @@ void Win32Thread::setThreadLocalStorage( AbstractThreadLocalStorage *tls ) {
 
 ui32 WINAPI Win32Thread::ThreadFunc( LPVOID data ) {
     Win32Thread *thread = ( Win32Thread* ) data;
-    assert( NULL != thread );
+    if ( NULL == thread ) {
+        return 1;
+    }
 
     setThreadName( thread->getName().c_str() );
-    SystemInfo::ThreadId id;
+    ThreadId id = thread->getThreadId();
     id.Id = ::GetCurrentThreadId();
     SystemInfo::registerThreadName( id, thread->getName() );
-
+    thread->setThreadId( id );
     const i32 retCode( thread->run() );
 
     return retCode;
+}
+
+void Win32Thread::setThreadId(const ThreadId &id) {
+    m_id = id;
+}
+
+ThreadId Win32Thread::getThreadId() {
+    return m_id;
 }
 
 i32 Win32Thread::run() {

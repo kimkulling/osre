@@ -30,6 +30,11 @@ namespace Platform {
 class AbstractThreadEvent;
 class AbstractThreadLocalStorage;
 
+/// Manages platform-independent thread id
+struct ThreadId {
+    unsigned long Id;
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -40,6 +45,9 @@ class OSRE_EXPORT AbstractThread {
 public:
     ///	The function pointer for a user-specific thread-function.
     typedef ui32 (*threadfunc) ( void * );
+
+    /// The thread id type.
+    typedef unsigned int threadId;
 
     ///	@brief	This enum describes the priority of the thread.
     enum class Priority {
@@ -116,6 +124,8 @@ public:
 
     virtual AbstractThreadLocalStorage *getThreadLocalStorage() = 0;
     virtual void setThreadLocalStorage( AbstractThreadLocalStorage *tls ) = 0;
+    virtual void setThreadId( const ThreadId &id ) = 0;
+    virtual ThreadId getThreadId() = 0;
 
 protected:
     /// @brief  The default constructor.
