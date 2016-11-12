@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGUID>{35014594-5D59-3E28-8A75-613E58148E23}</ProjectGUID>
+    <ProjectGUID>{B1F3CD36-938C-3A3F-B93E-5FDDF652E5C6}</ProjectGUID>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
@@ -59,26 +59,26 @@
   <PropertyGroup Label="UserMacros" />
     <PropertyGroup>
       <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-      <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\projects\osre\lib\Debug\</OutDir>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\projects\HackAndJump\lib\Debug\</OutDir>
       <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">zlib.dir\Debug\</IntDir>
       <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">zlibd</TargetName>
       <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.lib</TargetExt>
-      <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\projects\osre\lib\Release\</OutDir>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\projects\HackAndJump\lib\Release\</OutDir>
       <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">zlib.dir\Release\</IntDir>
       <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">zlib</TargetName>
       <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.lib</TargetExt>
-      <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:\projects\osre\lib\MinSizeRel\</OutDir>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:\projects\HackAndJump\lib\MinSizeRel\</OutDir>
       <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">zlib.dir\MinSizeRel\</IntDir>
       <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">zlib</TargetName>
       <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.lib</TargetExt>
-      <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:\projects\osre\lib\RelWithDebInfo\</OutDir>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:\projects\HackAndJump\lib\RelWithDebInfo\</OutDir>
       <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">zlib.dir\RelWithDebInfo\</IntDir>
       <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">zlib</TargetName>
       <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.lib</TargetExt>
     </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\HackAndJump\.;D:\projects\HackAndJump;D:\projects\HackAndJump\3dparty\osre\include;D:\projects\HackAndJump\3dparty\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\HackAndJump\3dparty\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Debug/</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <CompileAs>CompileAsC</CompileAs>
@@ -95,10 +95,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\HackAndJump\.;D:\projects\HackAndJump;D:\projects\HackAndJump\3dparty\osre\include;D:\projects\HackAndJump\3dparty\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\HackAndJump\3dparty\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\HackAndJump\.;D:\projects\HackAndJump;D:\projects\HackAndJump\3dparty\osre\include;D:\projects\HackAndJump\3dparty\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\HackAndJump\3dparty\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -111,7 +111,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\HackAndJump\.;D:\projects\HackAndJump;D:\projects\HackAndJump\3dparty\osre\include;D:\projects\HackAndJump\3dparty\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\HackAndJump\3dparty\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>Release/</AssemblerListingLocation>
       <CompileAs>CompileAsC</CompileAs>
       <ExceptionHandling>
@@ -127,10 +127,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\HackAndJump\.;D:\projects\HackAndJump;D:\projects\HackAndJump\3dparty\osre\include;D:\projects\HackAndJump\3dparty\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\HackAndJump\3dparty\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\HackAndJump\.;D:\projects\HackAndJump;D:\projects\HackAndJump\3dparty\osre\include;D:\projects\HackAndJump\3dparty\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\HackAndJump\3dparty\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -143,7 +143,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\HackAndJump\.;D:\projects\HackAndJump;D:\projects\HackAndJump\3dparty\osre\include;D:\projects\HackAndJump\3dparty\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\HackAndJump\3dparty\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
       <CompileAs>CompileAsC</CompileAs>
       <ExceptionHandling>
@@ -159,10 +159,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\HackAndJump\.;D:\projects\HackAndJump;D:\projects\HackAndJump\3dparty\osre\include;D:\projects\HackAndJump\3dparty\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\HackAndJump\3dparty\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\HackAndJump\.;D:\projects\HackAndJump;D:\projects\HackAndJump\3dparty\osre\include;D:\projects\HackAndJump\3dparty\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\HackAndJump\3dparty\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -175,7 +175,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\HackAndJump\.;D:\projects\HackAndJump;D:\projects\HackAndJump\3dparty\osre\include;D:\projects\HackAndJump\3dparty\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\HackAndJump\3dparty\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
       <CompileAs>CompileAsC</CompileAs>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -191,10 +191,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\HackAndJump\.;D:\projects\HackAndJump;D:\projects\HackAndJump\3dparty\osre\include;D:\projects\HackAndJump\3dparty\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\HackAndJump\3dparty\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\HackAndJump\.;D:\projects\HackAndJump;D:\projects\HackAndJump\3dparty\osre\include;D:\projects\HackAndJump\3dparty\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\HackAndJump\3dparty\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -206,10 +206,10 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\projects\osre\3dparty\zlib\CMakeLists.txt">
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule D:/projects/osre/3dparty/zlib/CMakeLists.txt</Message>
+    <CustomBuild Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule D:/projects/HackAndJump/3dparty/osre/3dparty/zlib/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -HD:/projects/osre -BD:/projects/osre --check-stamp-file D:\projects\osre\3dparty\zlib\CMakeFiles\generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/projects/HackAndJump -BD:/projects/HackAndJump --check-stamp-file D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeFiles\generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -217,12 +217,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:/projects/osre/3dparty/zlib/CMakeLists.txt;D:\projects\osre\3dparty\zlib\CMakeLists.txt;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckTypeSize.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckFunctionExists.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckCSourceCompiles.cmake;D:\projects\osre\3dparty\zlib\zlib.pc.cmakein;D:\projects\osre\3dparty\zlib\zconf.h.cmakein;D:\projects\osre\3dparty\zlib\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\projects\osre\3dparty\zlib\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:/projects/HackAndJump/3dparty/osre/3dparty/zlib/CMakeLists.txt;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeLists.txt;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckTypeSize.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckFunctionExists.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckCSourceCompiles.cmake;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\zlib.pc.cmakein;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\zconf.h.cmakein;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule D:/projects/osre/3dparty/zlib/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule D:/projects/HackAndJump/3dparty/osre/3dparty/zlib/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -HD:/projects/osre -BD:/projects/osre --check-stamp-file D:\projects\osre\3dparty\zlib\CMakeFiles\generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/projects/HackAndJump -BD:/projects/HackAndJump --check-stamp-file D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeFiles\generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -230,12 +230,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:/projects/osre/3dparty/zlib/CMakeLists.txt;D:\projects\osre\3dparty\zlib\CMakeLists.txt;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckTypeSize.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckFunctionExists.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckCSourceCompiles.cmake;D:\projects\osre\3dparty\zlib\zlib.pc.cmakein;D:\projects\osre\3dparty\zlib\zconf.h.cmakein;D:\projects\osre\3dparty\zlib\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\projects\osre\3dparty\zlib\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:/projects/HackAndJump/3dparty/osre/3dparty/zlib/CMakeLists.txt;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeLists.txt;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckTypeSize.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckFunctionExists.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckCSourceCompiles.cmake;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\zlib.pc.cmakein;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\zconf.h.cmakein;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule D:/projects/osre/3dparty/zlib/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule D:/projects/HackAndJump/3dparty/osre/3dparty/zlib/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -HD:/projects/osre -BD:/projects/osre --check-stamp-file D:\projects\osre\3dparty\zlib\CMakeFiles\generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/projects/HackAndJump -BD:/projects/HackAndJump --check-stamp-file D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeFiles\generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -243,12 +243,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:/projects/osre/3dparty/zlib/CMakeLists.txt;D:\projects\osre\3dparty\zlib\CMakeLists.txt;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckTypeSize.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckFunctionExists.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckCSourceCompiles.cmake;D:\projects\osre\3dparty\zlib\zlib.pc.cmakein;D:\projects\osre\3dparty\zlib\zconf.h.cmakein;D:\projects\osre\3dparty\zlib\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:\projects\osre\3dparty\zlib\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:/projects/HackAndJump/3dparty/osre/3dparty/zlib/CMakeLists.txt;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeLists.txt;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckTypeSize.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckFunctionExists.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckCSourceCompiles.cmake;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\zlib.pc.cmakein;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\zconf.h.cmakein;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule D:/projects/osre/3dparty/zlib/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule D:/projects/HackAndJump/3dparty/osre/3dparty/zlib/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -HD:/projects/osre -BD:/projects/osre --check-stamp-file D:\projects\osre\3dparty\zlib\CMakeFiles\generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -HD:/projects/HackAndJump -BD:/projects/HackAndJump --check-stamp-file D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeFiles\generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -256,42 +256,42 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:/projects/osre/3dparty/zlib/CMakeLists.txt;D:\projects\osre\3dparty\zlib\CMakeLists.txt;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckTypeSize.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckFunctionExists.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckCSourceCompiles.cmake;D:\projects\osre\3dparty\zlib\zlib.pc.cmakein;D:\projects\osre\3dparty\zlib\zconf.h.cmakein;D:\projects\osre\3dparty\zlib\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:\projects\osre\3dparty\zlib\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:/projects/HackAndJump/3dparty/osre/3dparty/zlib/CMakeLists.txt;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeLists.txt;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckTypeSize.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFileCXX.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckFunctionExists.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckIncludeFile.cmake;C:\Program Files\CMake\share\cmake-3.7\Modules\CheckCSourceCompiles.cmake;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\zlib.pc.cmakein;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\zconf.h.cmakein;D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\projects\osre\3dparty\zlib\zconf.h" />
-    <ClInclude Include="D:\projects\osre\3dparty\zlib\zlib.h" />
-    <ClInclude Include="D:\projects\osre\3dparty\zlib\crc32.h" />
-    <ClInclude Include="D:\projects\osre\3dparty\zlib\deflate.h" />
-    <ClInclude Include="D:\projects\osre\3dparty\zlib\gzguts.h" />
-    <ClInclude Include="D:\projects\osre\3dparty\zlib\inffast.h" />
-    <ClInclude Include="D:\projects\osre\3dparty\zlib\inffixed.h" />
-    <ClInclude Include="D:\projects\osre\3dparty\zlib\inflate.h" />
-    <ClInclude Include="D:\projects\osre\3dparty\zlib\inftrees.h" />
-    <ClInclude Include="D:\projects\osre\3dparty\zlib\trees.h" />
-    <ClInclude Include="D:\projects\osre\3dparty\zlib\zutil.h" />
-    <ClCompile Include="D:\projects\osre\3dparty\zlib\adler32.c"  />
-    <ClCompile Include="D:\projects\osre\3dparty\zlib\compress.c"  />
-    <ClCompile Include="D:\projects\osre\3dparty\zlib\crc32.c"  />
-    <ClCompile Include="D:\projects\osre\3dparty\zlib\deflate.c"  />
-    <ClCompile Include="D:\projects\osre\3dparty\zlib\gzclose.c"  />
-    <ClCompile Include="D:\projects\osre\3dparty\zlib\gzlib.c"  />
-    <ClCompile Include="D:\projects\osre\3dparty\zlib\gzread.c"  />
-    <ClCompile Include="D:\projects\osre\3dparty\zlib\gzwrite.c"  />
-    <ClCompile Include="D:\projects\osre\3dparty\zlib\inflate.c"  />
-    <ClCompile Include="D:\projects\osre\3dparty\zlib\infback.c"  />
-    <ClCompile Include="D:\projects\osre\3dparty\zlib\inftrees.c"  />
-    <ClCompile Include="D:\projects\osre\3dparty\zlib\inffast.c"  />
-    <ClCompile Include="D:\projects\osre\3dparty\zlib\trees.c"  />
-    <ClCompile Include="D:\projects\osre\3dparty\zlib\uncompr.c"  />
-    <ClCompile Include="D:\projects\osre\3dparty\zlib\zutil.c"  />
+    <ClInclude Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\zconf.h" />
+    <ClInclude Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\zlib.h" />
+    <ClInclude Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\crc32.h" />
+    <ClInclude Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\deflate.h" />
+    <ClInclude Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\gzguts.h" />
+    <ClInclude Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\inffast.h" />
+    <ClInclude Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\inffixed.h" />
+    <ClInclude Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\inflate.h" />
+    <ClInclude Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\inftrees.h" />
+    <ClInclude Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\trees.h" />
+    <ClInclude Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\zutil.h" />
+    <ClCompile Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\adler32.c"  />
+    <ClCompile Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\compress.c"  />
+    <ClCompile Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\crc32.c"  />
+    <ClCompile Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\deflate.c"  />
+    <ClCompile Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\gzclose.c"  />
+    <ClCompile Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\gzlib.c"  />
+    <ClCompile Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\gzread.c"  />
+    <ClCompile Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\gzwrite.c"  />
+    <ClCompile Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\inflate.c"  />
+    <ClCompile Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\infback.c"  />
+    <ClCompile Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\inftrees.c"  />
+    <ClCompile Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\inffast.c"  />
+    <ClCompile Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\trees.c"  />
+    <ClCompile Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\uncompr.c"  />
+    <ClCompile Include="D:\projects\HackAndJump\3dparty\osre\3dparty\zlib\zutil.c"  />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="D:/projects/osre/ZERO_CHECK.vcxproj">
-      <Project>A133FFE7-1A96-3411-8905-5758C0CFCFA5</Project>
+    <ProjectReference Include="D:/projects/HackAndJump/ZERO_CHECK.vcxproj">
+      <Project>2CBDED99-37CB-32C9-9FCC-919306111051</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -6,6 +6,11 @@ SET ( OSRE_VERSION_PATCH 0 )
 SET ( OSRE_VERSION ${OSRE_VERSION_MAJOR}.${OSRE_VERSION_MINOR}.${OSRE_VERSION_PATCH} )
 SET ( PROJECT_VERSION "${OSRE_VERSION}" )
 
+OPTION( OSRE_BUILD_SAMPLES
+  "Build the samples of OSRE."
+  ON
+)
+
 # Cache these to allow the user to override them manually.
 SET( LIB_INSTALL_DIR "lib" CACHE PATH
     "Path the built library files are installed to." )
@@ -80,7 +85,9 @@ ADD_SUBDIRECTORY( src/Engine )
 ADD_SUBDIRECTORY( src/Editor )
 ADD_SUBDIRECTORY( test/RenderTests )
 ADD_SUBDIRECTORY( test/UnitTests )
-ADD_SUBDIRECTORY( samples )
+IF ( OSRE_BUILD_SAMPLES )
+    ADD_SUBDIRECTORY( samples )
+ENDIF(OSRE_BUILD_SAMPLES)
 ADD_SUBDIRECTORY( 3dparty/glew )
 ADD_SUBDIRECTORY( 3dparty/cppcore/build )
 ADD_SUBDIRECTORY( 3dparty/zlib )
