@@ -115,5 +115,23 @@ private:
     Impl *m_impl;
 };
 
+///	@brief  Shortcut to get a OSRE-main function.
+/// 
+#define OSRE_MAIN( APPNAME )          \
+int main( int argc, char *argv[] )  { \
+    APPNAME myApp( argc, argv );      \
+    if ( !myApp.create() ) {          \
+        return 1;                     \
+    }                                 \
+    while ( myApp.handleEvents() ) {  \
+        myApp.update();               \
+        myApp.requestNextFrame();     \
+    }                                 \
+    myApp.destroy();                  \
+                                      \
+    return 0;                         \
+}
+
+
 } // Namespace App
 } // Namespace OSRE
