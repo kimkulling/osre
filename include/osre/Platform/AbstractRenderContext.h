@@ -27,19 +27,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
+// Forward declarations
 class AbstractSurface;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  This abstract class declares the interface for a render context. Override this for your 
+/// own implementation.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractRenderContext {
 public:
+    /// @brief  The class destructor, virtual.
     virtual ~AbstractRenderContext();
-    bool create( AbstractSurface *pSurface );
+
+    /// @brief  Creates the context.
+    /// @param  surface     [in] The render surface.
+    /// @return true if creation was successful.
+    bool create( AbstractSurface *surface );
+
+    /// @brief  Destroys the context.
+    /// @return true if creation was successful.
     bool destroy();
+
+    /// @brief  Activates the context.
+    /// @return true if creation was successful.
     bool activate();
+
+    /// @brief  Updates the context.
+    /// @return true if creation was successful.
     bool update();
 
 protected:
@@ -49,6 +65,7 @@ protected:
     virtual bool onActivate() = 0;
 
 protected:
+    /// @brief  The default class constructor.
     AbstractRenderContext();
 };
 

@@ -23,36 +23,28 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <cppcore/Container/TArray.h>
 
+// Forward declarations
 namespace OSRE {
-namespace Platform {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  This abstract class declares the interface for critical sections. Override this for 
-/// your own implementation.
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AbstractCriticalSection {
-public:
-	///	@brief	The class destructor, virtual.
-	virtual ~AbstractCriticalSection();
-
-	///	@brief	The critical section will be entered.
-	virtual void enter() = 0;
-
-	///	@brief	Tries to enter the critical section.
-	///	@return	true, if entering was successful, false if not.
-	virtual bool tryEnter() = 0;
-
-	///	@brief	The critical section will be leaved.
-	virtual void leave() = 0;
-};
-
-inline
-AbstractCriticalSection::~AbstractCriticalSection( ) {
-	// empty
+namespace RenderBackend {
+    struct Geometry;
 }
 
-} // Namespace Platform
+namespace Assets {
+
+class Model {
+public: 
+    Model();
+    ~Model();
+    void addGeometry( RenderBackend::Geometry *geo );
+    ui32 getNumGeo() const;
+    RenderBackend::Geometry *getGeoAt( ui32 idx ) const;
+
+private:
+    CPPCore::TArray<RenderBackend::Geometry*> m_geo;
+};
+
+} // Namespace Assets
 } // Namespace OSRE

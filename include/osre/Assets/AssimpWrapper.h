@@ -24,35 +24,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/osre_common.h>
 
+#include <cppcore/Container/TArray.h>
+
+struct aiScene;
+struct aiMesh;
+
 namespace OSRE {
-namespace Platform {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  This abstract class declares the interface for critical sections. Override this for 
-/// your own implementation.
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AbstractCriticalSection {
-public:
-	///	@brief	The class destructor, virtual.
-	virtual ~AbstractCriticalSection();
-
-	///	@brief	The critical section will be entered.
-	virtual void enter() = 0;
-
-	///	@brief	Tries to enter the critical section.
-	///	@return	true, if entering was successful, false if not.
-	virtual bool tryEnter() = 0;
-
-	///	@brief	The critical section will be leaved.
-	virtual void leave() = 0;
-};
-
-inline
-AbstractCriticalSection::~AbstractCriticalSection( ) {
-	// empty
+namespace IO {
+    class Uri;
 }
 
-} // Namespace Platform
+namespace Assets {
+
+class Model;
+
+class AssimpWrapper {
+public:
+    AssimpWrapper();
+    ~AssimpWrapper();
+    bool importAsset( const IO::Uri &file, ui32 flags );
+    Model *getModel() const;
+
+protected:
+    Model *convertSceneToModel( const aiScene *scene );
+    void handleMesh( aiMesh *mesh );
+
+private:
+    Model *m_model;
+};
+
+} // Namespace Assets
 } // Namespace OSRE

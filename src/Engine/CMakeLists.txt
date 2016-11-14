@@ -11,6 +11,7 @@ INCLUDE_DIRECTORIES(
     ../../3dparty/glm/
     ../../3dparty/unzip/
     ../../3dparty/zlib/
+    ../../3dparty/assimp/include
 )
 
 # For Vulkan support
@@ -45,11 +46,15 @@ SET( app_src
 SET( assets_inc
     ${HEADER_PATH}/Assets/AssetRegistry.h
     ${HEADER_PATH}/Assets/AssetData.h
+    ${HEADER_PATH}/Assets/AssimpWrapper.h
+	${HEADER_PATH}/Assets/Model.h
 )
 
 SET( assets_src
     Assets/AssetRegistry.cpp
     Assets/AssetData.cpp
+	Assets/AssimpWrapper.cpp
+	Assets/Model.cpp
 )
 
 #==============================================================================
@@ -450,7 +455,7 @@ ADD_LIBRARY( osre SHARED
         ${threading_impl_src}
 )
 
-target_link_libraries ( osre cppcore zlib Unzip glew soil ${platform_libs} freetype )
+target_link_libraries ( osre cppcore zlib Unzip glew soil ${platform_libs} freetype assimp )
 set_target_properties(  osre PROPERTIES FOLDER Engine )
 
 #==============================================================================
@@ -460,7 +465,3 @@ INSTALL( TARGETS osre
     DESTINATION ${LIB_INSTALL_DIR}
     COMPONENT lib_ce2_infrastructure${ZFXCE2_VERSION_MAJOR}
 )
-#INSTALL( FILES ${PUBLIC_HEADERS}
-#    DESTINATION ${INCLUDE_INSTALL_DIR}/zfxce2/Infrastructure
-    #COMPONENT zfxce2-dev
-#)
