@@ -641,7 +641,7 @@ OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const I
     }
 
     // import the texture
-    const String filename = fileloc.getAbsPath()+fileloc.getResource();
+    const String filename = fileloc.getAbsPath() + fileloc.getResource();
     i32 width( 0 ), height( 0 ), channels( 0 );
     GLubyte *data = SOIL_load_image( filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO );
     if( !data ) {
@@ -955,7 +955,7 @@ void OGLRenderBackend::selectFont( FontBase *font ) {
 FontBase *OGLRenderBackend::findFont( const String &name ) const {
     FontBase *font( nullptr );
     for (ui32 i = 0; i < m_fonts.size(); i++) {
-        if ( m_fonts[ i ]->getTextureName() == name) {
+        if ( m_fonts[ i ]->getTextureName() == name ) {
             font = m_fonts[ i ];
             break;
         }

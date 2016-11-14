@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
+// Forward declarations
 class OSEventListener;
 
 typedef CPPCore::TList<Common::EventData*> EventDataList;
@@ -96,6 +97,7 @@ inline
 AbstractPlatformEventHandler::~AbstractPlatformEventHandler( ) {
     // empty
 }
+
 inline
 void AbstractPlatformEventHandler::processEvents( Common::EventTriggerer *triggerer ) {
     if ( nullptr == triggerer ) {
@@ -129,6 +131,7 @@ EventDataList *AbstractPlatformEventHandler::getPendingEventDataList() {
     ui32 queueToProcess = ( m_activeList + 1 ) % numEventQueues;
     m_eventQueues[ queueToProcess ].clear( );
     EventDataList *pendingEventQueue( &m_eventQueues[ queueToProcess ] );
+
     return pendingEventQueue;
 }
 

@@ -296,7 +296,6 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
         const f32 s = column * invCol;
         const f32 t = (row + 1) * invRow;
 
-        
 		tex0[VertexOffset + 0].x = s;
 		tex0[VertexOffset + 0].y = 1.0f - t;
 

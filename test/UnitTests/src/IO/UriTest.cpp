@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2016 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,39 +20,38 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/Common/osre_common.h>
+#include <gtest/gtest.h>
+#include <osre/IO/Uri.h>
 
 namespace OSRE {
-namespace Platform {
+namespace UnitTest {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  This abstract class declares the interface for critical sections. Override this for 
-/// your own implementation.
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AbstractCriticalSection {
-public:
-	///	@brief	The class destructor, virtual.
-	virtual ~AbstractCriticalSection();
+using namespace ::OSRE::IO;
 
-	///	@brief	The critical section will be entered.
-	virtual void enter() = 0;
-
-	///	@brief	Tries to enter the critical section.
-	///	@return	true, if entering was successful, false if not.
-	virtual bool tryEnter() = 0;
-
-	///	@brief	The critical section will be leaved.
-	virtual void leave() = 0;
+class UriTest : public ::testing::Test {
+  // empty
 };
 
-inline
-AbstractCriticalSection::~AbstractCriticalSection( ) {
-	// empty
+TEST_F( UriTest, createTest ) {
+    bool ok( true );
+    try {
+        Uri uri1;
+        Uri uri2( "file://c:/texture.jpg" );
+        Uri uri3( uri1 );
+    } catch ( ... ) {
+        ok = false;
+    }
+    EXPECT_TRUE( ok );
 }
 
-} // Namespace Platform
+TEST_F( UriTest, constructFromCompsTest ) {
+    Uri uri1;
+    const String Scheme   = "file";
+    const String path     = "assets/Textures/Fonts/buildin_arial.bmp";
+    const String resource = "buildin_arial.bmp";
+    String result = uri1.constructFromComps( Scheme, path, resource );
+    EXPECT_EQ( "file://assets/Textures/Fonts/buildin_arial.bmp", result );
+}
+
+} // Namespace UnitTest
 } // Namespace OSRE

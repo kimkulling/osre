@@ -20,39 +20,40 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/Common/osre_common.h>
+#include <osre/Assets/Model.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 namespace OSRE {
-namespace Platform {
+namespace Assets {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  This abstract class declares the interface for critical sections. Override this for 
-/// your own implementation.
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AbstractCriticalSection {
-public:
-	///	@brief	The class destructor, virtual.
-	virtual ~AbstractCriticalSection();
+Model::Model() 
+: m_geo() {
 
-	///	@brief	The critical section will be entered.
-	virtual void enter() = 0;
-
-	///	@brief	Tries to enter the critical section.
-	///	@return	true, if entering was successful, false if not.
-	virtual bool tryEnter() = 0;
-
-	///	@brief	The critical section will be leaved.
-	virtual void leave() = 0;
-};
-
-inline
-AbstractCriticalSection::~AbstractCriticalSection( ) {
-	// empty
 }
 
-} // Namespace Platform
+Model::~Model() {
+
+}
+
+void Model::addGeometry( RenderBackend::Geometry *geo ) {
+    if ( nullptr == geo ) {
+        return;
+    }
+
+    m_geo.add( geo );
+}
+
+ui32 Model::getNumGeo() const {
+    return m_geo.size();
+}
+
+RenderBackend::Geometry *Model::getGeoAt( ui32 idx ) const {
+    if ( idx >= m_geo.size() ) {
+        return nullptr;
+    }
+
+    return m_geo[ idx ];
+}
+
+} // Namespace Assets
 } // Namespace OSRE

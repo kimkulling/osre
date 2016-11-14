@@ -1,34 +1,34 @@
 # CMake generation dependency list for this directory.
 D:/projects/osre/3dparty/freetype/CMakeLists.txt
-C:/Program Files/CMake/share/cmake-3.7/Modules/CheckIncludeFile.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindZLIB.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/SelectLibraryConfigurations.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPackageHandleStandardArgs.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPackageMessage.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/CMakeParseArguments.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindBZip2.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/SelectLibraryConfigurations.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPackageHandleStandardArgs.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPackageMessage.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/CMakeParseArguments.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPNG.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindZLIB.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/SelectLibraryConfigurations.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPackageHandleStandardArgs.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPackageMessage.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/CMakeParseArguments.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPackageHandleStandardArgs.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPackageMessage.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/CMakeParseArguments.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/CheckIncludeFile.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindZLIB.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/SelectLibraryConfigurations.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindPackageMessage.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/CMakeParseArguments.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindBZip2.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/SelectLibraryConfigurations.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindPackageMessage.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/CMakeParseArguments.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindPNG.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindZLIB.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/SelectLibraryConfigurations.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindPackageMessage.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/CMakeParseArguments.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindPackageMessage.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/CMakeParseArguments.cmake
 D:/projects/osre/3dparty/freetype/builds/cmake/FindHarfBuzz.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPkgConfig.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPackageHandleStandardArgs.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPackageMessage.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/CMakeParseArguments.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPackageHandleStandardArgs.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/FindPackageMessage.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/CMakeParseArguments.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/CPack.cmake
-C:/Program Files/CMake/share/cmake-3.7/Modules/CPackComponent.cmake
-C:/Program Files/CMake/share/cmake-3.7/Templates/CPackConfig.cmake.in
-C:/Program Files/CMake/share/cmake-3.7/Templates/CPackConfig.cmake.in
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindPkgConfig.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindPackageMessage.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/CMakeParseArguments.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/FindPackageMessage.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/CMakeParseArguments.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/CPack.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Modules/CPackComponent.cmake
+C:/Program Files (x86)/CMake/share/cmake-3.4/Templates/CPackConfig.cmake.in
+C:/Program Files (x86)/CMake/share/cmake-3.4/Templates/CPackConfig.cmake.in
