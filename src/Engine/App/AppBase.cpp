@@ -52,6 +52,7 @@ struct AppBase::Impl {
 
     State m_state;
     d32 m_timediff;
+
     ArgumentParser m_argParser;
     Properties::Settings *m_settings;
     Platform::PlatformInterface *m_platformInterface;

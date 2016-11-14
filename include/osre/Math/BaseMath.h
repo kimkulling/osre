@@ -919,5 +919,10 @@ TVector3<T> operator * ( const S scalar, const TVector3<T>& vector ) {
     return vector * scalar;
 }
 
+template <typename T>
+inline T lerp(T v0, T v1, T t) {
+    return (1-t)*v0 + t*v1;
+}
+
 } // Namespace Math
 } // Namespace OSRE

@@ -38,18 +38,16 @@ namespace Platform {
 
 static const String Tag = "SDL2Thread";
 
-//-------------------------------------------------------------------------------------------------
 SDL2Thread::SDL2Thread( const String &name, ui32 stacksize )
 :  m_thread( nullptr )
 , m_pThreadSignal( nullptr )
 , m_tls( nullptr )
 , m_Prio( Priority::Normal )
 , m_ThreadName( name )
-, m_threadId( 0 ) {
+, m_id() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 SDL2Thread::~SDL2Thread( ) {
     if ( ThreadState::Running == AbstractThread::getCurrentState() ) {
         osre_debug( Tag, "Thread " + getName() + " is still running." );
@@ -57,7 +55,6 @@ SDL2Thread::~SDL2Thread( ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 bool SDL2Thread::start( void *data ) {
     if ( ThreadState::Running == AbstractThread::getCurrentState() ) {
         osre_debug( Tag, "Thread " + getName() + " is already running." );
@@ -80,7 +77,6 @@ bool SDL2Thread::start( void *data ) {
     return result;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool SDL2Thread::stop( ) {
     if ( ThreadState::Running != AbstractThread::getCurrentState()) {
         osre_debug( Tag, "Thread " + getName() + " is not running." );
@@ -95,13 +91,11 @@ bool SDL2Thread::stop( ) {
     delete m_pThreadSignal;
     m_pThreadSignal = nullptr;
 
-    SystemInfo::ThreadId id;
-    SystemInfo::unregisterThreadName( id );
+    SystemInfo::unregisterThreadName( getThreadId() );
 
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool SDL2Thread::suspend( ) {
     // check for a valid thread state
     if ( ThreadState::Running == AbstractThread::getCurrentState() ) {
@@ -115,7 +109,6 @@ bool SDL2Thread::suspend( ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool SDL2Thread::resume( ) {
     // check for a valid thread state
     if ( ThreadState::Waiting != AbstractThread::getCurrentState()) {
@@ -129,19 +122,16 @@ bool SDL2Thread::resume( ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 void SDL2Thread::setName( const String &name ) {
     assert( !name.empty( ) );
 
     m_ThreadName = name;
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &SDL2Thread::getName( ) const {
     return m_ThreadName;
 }
 
-//-------------------------------------------------------------------------------------------------
 void SDL2Thread::waitForTimeout( ui32 ms ) {
     if ( !m_pThreadSignal ) {
         osre_debug( Tag, "Invalid pointer to thread signal." );
@@ -151,7 +141,6 @@ void SDL2Thread::waitForTimeout( ui32 ms ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void SDL2Thread::wait( ) {
     if ( !m_pThreadSignal ) {
         osre_debug( Tag, "Invalid pointer to thread signal." );
@@ -161,22 +150,18 @@ void SDL2Thread::wait( ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractThreadEvent *SDL2Thread::getThreadEvent( ) const {
     return m_pThreadSignal;
 }
 
-//-------------------------------------------------------------------------------------------------
 void SDL2Thread::setPriority( Priority prio ) {
     m_Prio = prio;
 }
 
-//-------------------------------------------------------------------------------------------------
 SDL2Thread::Priority SDL2Thread::getPriority( ) const {
     return m_Prio;
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &SDL2Thread::getThreadName() const {
     return m_ThreadName;
 }
@@ -189,7 +174,14 @@ void SDL2Thread::setThreadLocalStorage( AbstractThreadLocalStorage *tls ) {
     m_tls = ( SDL2ThreadLocalStorage*) tls;
 }
 
-//-------------------------------------------------------------------------------------------------
+void SDL2Thread::setThreadId(const ThreadId &id) {
+    m_id = id;
+}
+
+ThreadId SDL2Thread::getThreadId() {
+    return m_id;
+}
+
 i32 SDL2Thread::sdl2threadfunc( void *data ) {
     i32 retCode( 0 );
     if( data ) {
@@ -209,10 +201,10 @@ i32 SDL2Thread::sdl2threadfunc( void *data ) {
                 break;
         }
         if( 0 == retCode ) {
-            SystemInfo::ThreadId id;
+            ThreadId id;
             id.Id = ( unsigned long ) SDL_ThreadID();
+            instance->setThreadId( id );
             SystemInfo::registerThreadName( id, instance->getName() );
-            instance->m_threadId = id.Id;
             retCode = instance->run();
         }
     } else {

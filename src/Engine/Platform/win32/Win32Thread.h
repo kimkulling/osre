@@ -72,22 +72,27 @@ public:
     virtual AbstractThreadLocalStorage *getThreadLocalStorage();
     /// Assigns a new thread local storage instance.
     virtual void setThreadLocalStorage( AbstractThreadLocalStorage *tls );
+    /// Will set the thread id.
+    virtual void setThreadId(const ThreadId &id);
+    /// Will return the thread id.
+    virtual ThreadId getThreadId();
 
 protected:
     ///	Override this for your own thread function.
     virtual i32 run();
     ///	The Win32-specific thread function.
-    static ui32 WINAPI ThreadFunc(LPVOID data);
+    static ui32 WINAPI ThreadFunc( LPVOID data );
     ///	Will assign a thread name.
     static void setThreadName( const c8 *pName );
 
 private:
-    HANDLE m_ThreadHandle;
-    Win32ThreadEvent *m_pThreadSignal;
-    Priority m_Prio;
-    ThreadState m_ThreadState;
+    HANDLE                   m_ThreadHandle;
+    Win32ThreadEvent        *m_pThreadSignal;
+    Priority                 m_Prio;
+    ThreadState              m_ThreadState;
     Win32ThreadLocalStorage *m_tls;
-    String m_ThreadName;
+    String                   m_ThreadName;
+    ThreadId                 m_id;
 };
 
 //-------------------------------------------------------------------------------------------------
