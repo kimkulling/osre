@@ -25,6 +25,7 @@ SET ( unittest_common_src
 
 SET( unittest_platform_src
 	src/Platform/AbstractDynamicLoaderTest.cpp
+    src/Platform/AbstractThreadTest.cpp
 )
 
 SET ( unittest_rb_src

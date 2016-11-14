@@ -40,10 +40,10 @@ static const String Tag = "SDL2Thread";
 
 SDL2Thread::SDL2Thread( const String &name, ui32 stacksize )
 :  m_thread( nullptr )
-, m_pThreadSignal( nullptr )
+, m_threadSignal( nullptr )
 , m_tls( nullptr )
 , m_Prio( Priority::Normal )
-, m_ThreadName( name )
+, m_threadName( name )
 , m_id() {
     // empty
 }
@@ -60,7 +60,7 @@ bool SDL2Thread::start( void *data ) {
         osre_debug( Tag, "Thread " + getName() + " is already running." );
         return false;
     }
-    if ( !data ) {
+    if ( nullptr == data ) {
         data = this;
     }
 
@@ -88,8 +88,8 @@ bool SDL2Thread::stop( ) {
 
     // update state and release signal
     setState( ThreadState::Terminated );
-    delete m_pThreadSignal;
-    m_pThreadSignal = nullptr;
+    delete m_threadSignal;
+    m_threadSignal = nullptr;
 
     SystemInfo::unregisterThreadName( getThreadId() );
 
@@ -125,33 +125,33 @@ bool SDL2Thread::resume( ) {
 void SDL2Thread::setName( const String &name ) {
     assert( !name.empty( ) );
 
-    m_ThreadName = name;
+    m_threadName = name;
 }
 
 const String &SDL2Thread::getName( ) const {
-    return m_ThreadName;
+    return m_threadName;
 }
 
 void SDL2Thread::waitForTimeout( ui32 ms ) {
-    if ( !m_pThreadSignal ) {
+    if ( !m_threadSignal ) {
         osre_debug( Tag, "Invalid pointer to thread signal." );
         return;
     } else {
-        m_pThreadSignal->waitForTimeout( ms );
+        m_threadSignal->waitForTimeout( ms );
     }
 }
 
 void SDL2Thread::wait( ) {
-    if ( !m_pThreadSignal ) {
+    if ( !m_threadSignal ) {
         osre_debug( Tag, "Invalid pointer to thread signal." );
         return;
     } else {
-        m_pThreadSignal->waitForOne();
+        m_threadSignal->waitForOne();
     }
 }
 
 AbstractThreadEvent *SDL2Thread::getThreadEvent( ) const {
-    return m_pThreadSignal;
+    return m_threadSignal;
 }
 
 void SDL2Thread::setPriority( Priority prio ) {
@@ -163,7 +163,7 @@ SDL2Thread::Priority SDL2Thread::getPriority( ) const {
 }
 
 const String &SDL2Thread::getThreadName() const {
-    return m_ThreadName;
+    return m_threadName;
 }
 
 AbstractThreadLocalStorage *SDL2Thread::getThreadLocalStorage() {
@@ -214,14 +214,11 @@ i32 SDL2Thread::sdl2threadfunc( void *data ) {
     return retCode;
 }
 
-//-------------------------------------------------------------------------------------------------
 i32 SDL2Thread::run( ) {
     // Override me!
 
     return 0;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

@@ -29,6 +29,7 @@ struct SDL_Thread;
 namespace OSRE {
 namespace Platform {
 
+// Forward declarations
 class SDL2ThreadEvent;
 class SDL2ThreadLocalStorage;
 
@@ -84,14 +85,13 @@ protected:
 
 private:
     SDL_Thread *m_thread;
-    SDL2ThreadEvent *m_pThreadSignal;
+    SDL2ThreadEvent *m_threadSignal;
     SDL2ThreadLocalStorage *m_tls;
     Priority m_Prio;
-    String m_ThreadName;
+    String m_threadName;
     ThreadId m_id;
 };
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
 } // Namespace OSRE
