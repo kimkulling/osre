@@ -398,10 +398,11 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
     m_oglBackend->setViewport( x, y, w, h );
 
     const String defaultFont( PlatformInterface::getInstance()->getDefaultFontName() );
-    IO::Uri fontUri( "file://assets/Textures/Fonts/" + defaultFont );
+    IO::Uri fontUri( "file://assets/Textures/Fonts/" );
     String root = Assets::AssetRegistry::getInstance()->getPath( "media" );
     String path = Assets::AssetRegistry::getInstance()->resolvePathFromUri( fontUri );
     fontUri.setPath( path );
+    fontUri.setResource( defaultFont );
     m_oglBackend->createFont( fontUri );
     m_renderCmdBuffer = new RenderCmdBuffer( m_oglBackend, m_renderCtx );
 

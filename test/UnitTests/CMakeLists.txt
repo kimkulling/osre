@@ -23,6 +23,10 @@ SET ( unittest_common_src
     src/Common/IdsTest.cpp
 )
 
+SET( unittest_io_src 
+    src/IO/UriTest.cpp
+)
+
 SET( unittest_math_src
     src/Math/BaseMathTest.cpp
 )
@@ -58,6 +62,7 @@ SET ( gtest_src
 )
 
 SOURCE_GROUP( src\\Common         FILES ${unittest_common_src} )
+SOURCE_GROUP( src\\IO             FILES ${unittest_io_src} )
 SOURCE_GROUP( src\\Math           FILES ${unittest_math_src} )
 SOURCE_GROUP( src\\Platform       FILES ${unittest_platform_src})
 SOURCE_GROUP( src\\Profiling      FILES ${unittest_profiling_src})
@@ -67,6 +72,7 @@ SOURCE_GROUP( src\\GTest          FILES ${gtest_src} )
 
 ADD_EXECUTABLE( osre_unittest
     ${unittest_common_src}
+    ${unittest_io_src}
     ${unittest_math_src}
 	${unittest_platform_src}    
 	${unittest_profiling_src}
