@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGUID>{042F12AB-B431-315C-BE1E-0657EA4E8591}</ProjectGUID>
-    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
     <ProjectName>INSTALL</ProjectName>
@@ -66,7 +66,7 @@
     </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;D:\projects\osre\3dparty\zlib;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -76,7 +76,7 @@
     <PostBuildEvent>
       <Message></Message>
       <Command>setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -DBUILD_TYPE=$(Configuration) -P cmake_install.cmake
+"C:\Program Files\CMake\bin\cmake.exe" -DBUILD_TYPE=$(Configuration) -P cmake_install.cmake
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -88,7 +88,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;D:\projects\osre\3dparty\zlib;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -98,7 +98,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <PostBuildEvent>
       <Message></Message>
       <Command>setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -DBUILD_TYPE=$(Configuration) -P cmake_install.cmake
+"C:\Program Files\CMake\bin\cmake.exe" -DBUILD_TYPE=$(Configuration) -P cmake_install.cmake
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -110,7 +110,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;D:\projects\osre\3dparty\zlib;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -120,7 +120,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <PostBuildEvent>
       <Message></Message>
       <Command>setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -DBUILD_TYPE=$(Configuration) -P cmake_install.cmake
+"C:\Program Files\CMake\bin\cmake.exe" -DBUILD_TYPE=$(Configuration) -P cmake_install.cmake
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -132,7 +132,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
     <Midl>
-      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre\3dparty\zlib;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\projects\osre\include;D:\projects\osre\3dparty\glew\include;D:\projects\osre\3dparty\zlib;d:\projects\libs\SDL2-2.0.3\include;c:\Users\kullingk\Desktop\projects\libs\SDL2-2.0.3\include;d:\libs\SDL2-2.0.5\include;C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\um;D:\projects\osre\3dparty\soil\src;\usr\include\SDL2;\usr\include;D:\projects\osre;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -142,7 +142,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <PostBuildEvent>
       <Message></Message>
       <Command>setlocal
-"C:\Program Files (x86)\CMake\bin\cmake.exe" -DBUILD_TYPE=$(Configuration) -P cmake_install.cmake
+"C:\Program Files\CMake\bin\cmake.exe" -DBUILD_TYPE=$(Configuration) -P cmake_install.cmake
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -209,6 +209,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="D:/projects/osre/ZERO_CHECK.vcxproj">
+      <Project>A133FFE7-1A96-3411-8905-5758C0CFCFA5</Project>
+    </ProjectReference>
     <ProjectReference Include="D:/projects/osre/3dparty/zlib/ALL_BUILD.vcxproj">
       <Project>5A61FCFC-9C1B-370A-B9BE-067275F5139B</Project>
     </ProjectReference>
