@@ -79,7 +79,6 @@ Model *AssimpWrapper::convertSceneToModel( const aiScene *scene ) {
             }
 
             handleMesh( currentMesh );
-            
         }
     }
 
