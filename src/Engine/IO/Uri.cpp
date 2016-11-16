@@ -57,7 +57,11 @@ Uri::~Uri() {
 }
 
 String Uri::constructFromComps( const String &scheme, const String &path, const String &res ) {
-    const String uriText = scheme + "://" + path + res;
+    String uriText = scheme + "://" + path;
+    String::size_type pos( uriText.rfind( res ) );
+    if ( String::npos == pos ) {
+        uriText += res;
+    }
     return uriText;
 }
 

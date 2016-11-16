@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractTimer.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/Common/ArgumentParser.h>
+#include <osre/Assets/AssetRegistry.h>
 
 #include "RenderTestSuite.h"
 
@@ -43,15 +44,19 @@ int main( int argc, char *argv[] ) {
         renderAPI = argParser.getArgument( "api" ); 
     }
 
+#ifdef _WIN32
     String mediaPath( "../../Media/" );
-    if( argParser.hasArgument( "media" ) ) {
+#else
+    String mediaPath( "../Media/" );
+#endif
+    if ( argParser.hasArgument( "media" ) ) {
         mediaPath = argParser.getArgument( "media" );
     }
+    RenderTestSuite::getInstance()->setMediaPath( mediaPath );
 
     RenderTestSuite *rtSuite = RenderTestSuite::create( "tests" );
     rtSuite->setup( renderAPI );
     RenderTestSuite::getInstance()->setRenderAPI( renderAPI );
-    RenderTestSuite::getInstance( )->setMediaPath( mediaPath );
     
     AbstractTimer *timer( rtSuite->getTimer() );
     if( nullptr == timer ) {

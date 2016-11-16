@@ -30,9 +30,15 @@ namespace Platform {
 class AbstractThreadEvent;
 class AbstractThreadLocalStorage;
 
-/// Manages platform-independent thread id
+/// @brief  Manages platform-independent thread id
 struct ThreadId {
     unsigned long Id;
+
+    /// @brief  The default constructor.
+    ThreadId()
+    : Id( 0 ) {
+        // empty
+    }
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -72,7 +72,6 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
         geo->m_material->m_numParameters++;
 
         m_rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
-
     } else {
         DbgTextEntry *entry( nullptr );
         if ( m_textBoxes.getValue( id, entry ) ) {

@@ -146,9 +146,9 @@ bool RenderTestSuite::setup( const String &API ) {
     Assets::AssetRegistry *registry( Assets::AssetRegistry::create() );
     if ( nullptr!=registry ) {
 #ifdef OSRE_WINDOWS
-        registry->registerAssetPath( "assets", "../../media" );
+        registry->registerAssetPath( "assets", getMediaPath() );
 #else
-        registry->registerAssetPath( "assets", "../media" );
+        registry->registerAssetPath( "assets", getMediaPath() );
 #endif 
     }
 
