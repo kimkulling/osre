@@ -82,7 +82,7 @@ public:
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
 
-        Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
+        Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
         ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
 
         geo->m_material->m_parameters = parameter;

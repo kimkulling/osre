@@ -138,10 +138,10 @@ public:
 			y += 2.0f;
 		}
         
-        Parameter *parameterMVP = Parameter::create( "VP", PT_Mat4 );
+        Parameter *parameterMVP = Parameter::create( "VP", ParameterType::PT_Mat4 );
         ::memcpy( parameterMVP->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view ), sizeof( glm::mat4 ) );
 
-        Parameter *parameterM = Parameter::create( "M", PT_Mat4Array, NumInstances);
+        Parameter *parameterM = Parameter::create( "M", ParameterType::PT_Mat4Array, NumInstances);
         ::memcpy( parameterM->m_data.m_data, glm::value_ptr( mat[ 0 ] ), sizeof( glm::mat4 ) * NumInstances);
         parameterMVP->m_next = parameterM;
 

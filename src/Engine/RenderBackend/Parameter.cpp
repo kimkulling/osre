@@ -51,22 +51,22 @@ void ParamDataBlob::clear() {
 ParamDataBlob *ParamDataBlob::create( ParameterType type, ui32 arraySize ) {
     ParamDataBlob *blob = new ParamDataBlob;
     switch( type ) {
-        case PT_Int:
+        case ParameterType::PT_Int:
             blob->m_size = sizeof( i32 );
             break;
-        case PT_Float:
+        case ParameterType::PT_Float:
             blob->m_size = sizeof( f32 );
             break;
-        case PT_Float2:
+        case ParameterType::PT_Float2:
             blob->m_size = sizeof( f32 ) * 2;
             break;
-        case PT_Float3:
+        case ParameterType::PT_Float3:
             blob->m_size = sizeof( f32 ) * 3;
             break;
-        case PT_Mat4:
+        case ParameterType::PT_Mat4:
             blob->m_size = sizeof( f32 ) * 16;
             break;
-        case PT_Mat4Array:
+        case ParameterType::PT_Mat4Array:
             blob->m_size = sizeof( f32 ) * 16 * arraySize;
             break;
         default:
@@ -81,7 +81,7 @@ ParamDataBlob *ParamDataBlob::create( ParameterType type, ui32 arraySize ) {
 
 Parameter::Parameter()
 : m_name( "" )
-, m_type( PT_None )
+, m_type( ParameterType::PT_None )
 , m_numItems( 1 )
 , m_next( nullptr ) {
     // empty
@@ -94,22 +94,22 @@ Parameter::~Parameter() {
 ui32 Parameter::getParamDataSize( ParameterType type, ui32 arraySize ) {
     ui32 size( 0 );
     switch( type ) {
-        case PT_Int:
+        case ParameterType::PT_Int:
             size = sizeof( i32 );
             break;
-        case PT_Float:
+        case ParameterType::PT_Float:
             size = sizeof( f32 );
             break;
-        case PT_Float2:
+        case ParameterType::PT_Float2:
             size = sizeof( f32 ) * 2;
             break;
-        case PT_Float3:
+        case ParameterType::PT_Float3:
             size = sizeof( f32 ) * 3;
             break;
-        case PT_Mat4:
+        case ParameterType::PT_Mat4:
             size = sizeof( f32 ) * 16;
             break;
-        case PT_Mat4Array:
+        case ParameterType::PT_Mat4Array:
             size = sizeof( f32 ) * 16 * arraySize;
             break;
 

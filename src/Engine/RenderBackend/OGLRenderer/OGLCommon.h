@@ -152,7 +152,7 @@ struct OGLParameter {
     OGLParameter()
     : m_name( "" )
     , m_loc( NoneLocation )
-    , m_type( PT_None )
+    , m_type( ParameterType::PT_None )
     , m_numItems( 1 ) {
         // empty
     }

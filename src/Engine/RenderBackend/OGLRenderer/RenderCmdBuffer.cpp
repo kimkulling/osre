@@ -39,16 +39,9 @@ RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRende
 , m_renderCtx( ctx )
 , m_activeShader( nullptr )
 , m_primitives()
-, m_materials()
-, m_param( nullptr ) {
+, m_materials() {
     OSRE_ASSERT( nullptr != m_renderbackend );
     OSRE_ASSERT( nullptr != m_renderCtx );
-
-    // ???
-    m_param = new OGLParameter;
-    m_param->m_name = "tex0";
-    m_param->m_type = PT_Int;
-    m_param->m_data = ParamDataBlob::create( PT_Int, 1 );
 
     m_clearState.m_state = ClearState::ColorBit | ClearState::DepthBit;
 }
@@ -58,9 +51,6 @@ RenderCmdBuffer::~RenderCmdBuffer() {
 
     m_renderbackend = nullptr;
     m_renderCtx = nullptr;
-
-	delete m_param;
-    m_param = nullptr;
 }
 
 void RenderCmdBuffer::setActiveShader( OGLShader *oglShader ) {

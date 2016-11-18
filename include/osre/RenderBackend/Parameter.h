@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-enum ParameterType {
+enum class ParameterType {
     PT_None,
     PT_Int,
     PT_Float,

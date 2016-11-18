@@ -48,7 +48,6 @@ struct SetParameterCmdData;
 struct SetMaterialStageCmdData;
 struct SetRenderTargetCmdData;
 struct DrawTextCmdData;
-struct OGLParameter;
 struct PrimitiveGroup;
 struct Material;
 
@@ -108,7 +107,6 @@ private:
     OGLShader *m_activeShader;
     CPPCore::TArray<PrimitiveGroup*> m_primitives;
     CPPCore::TArray<Material*> m_materials;
-    OGLParameter *m_param;
 };
 
 //-------------------------------------------------------------------------------------------------

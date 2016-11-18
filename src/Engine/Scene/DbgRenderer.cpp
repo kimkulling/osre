@@ -64,7 +64,7 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
-        Parameter *parameter = Parameter::create( "MVP", PT_Mat4 );
+        Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
         const float *mvpData( glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ) );
         ::memcpy( parameter->m_data.m_data, mvpData, sizeof( glm::mat4 ) );
 
