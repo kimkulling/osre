@@ -254,6 +254,7 @@ void PrimitiveGroup::init( IndexType indexType, ui32 numPrimitives, PrimitiveTyp
 
 Texture::Texture()
 : m_textureName( "" )
+, m_loc()
 , m_targetType( TextureTargetType::Texture2D )
 , m_size( 0 )
 , m_data( nullptr )

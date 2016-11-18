@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Assets {
     
-using namespace Assimp;
+using namespace ::Assimp;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
 
@@ -69,15 +69,24 @@ Model *AssimpWrapper::convertSceneToModel( const aiScene *scene ) {
         return nullptr;
     }
 
-
     m_model = new Model;
+
+    if ( scene->HasMaterials() ) {
+        for ( ui32 i = 0; i < scene->mNumMaterials; i++ ) {
+            aiMaterial *currentMat( scene->mMaterials[ i ] );
+            if ( nullptr == currentMat ) {
+                continue;
+            }
+            handleMaterial( currentMat );
+        }
+    }
+    
     if ( scene->HasMeshes() ) {
         for ( ui32 i = 0; i < scene->mNumMeshes; i++ ) {
             aiMesh *currentMesh( scene->mMeshes[ i ] );
             if ( nullptr == currentMesh ) {
                 continue;
             }
-
             handleMesh( currentMesh );
         }
     }
@@ -123,10 +132,66 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
         }
     }
 
+    const ui32 matIdx( mesh->mMaterialIndex );
+
     geo->m_vb = BufferData::alloc( BufferType::VertexBuffer, sizeof( RenderVert ) * numVertices, BufferAccessType::ReadOnly );
 
     // ToDo! alloc index buffer
     m_model->addGeometry( geo );
+}
+
+void AssimpWrapper::handleNode( aiNode *node ) {
+
+}
+
+void AssimpWrapper::handleMaterial( aiMaterial *material ) {
+    if ( nullptr == material ) {
+        return;
+    }
+    
+    Material *osreMat( new Material );
+    i32 texIndex( 0 );
+    aiString texPath;	// contains filename of texture
+    //AI_TEXTURE_TYPE_MAX
+    if ( AI_SUCCESS == material->GetTexture( aiTextureType_DIFFUSE, texIndex, &texPath ) ) {
+        osreMat->m_numTextures++;
+        osreMat->m_pTextures = new Texture[ 1 ];
+        Texture *tex( &osreMat->m_pTextures[ 0 ] );
+        String texname( texPath.C_Str() );
+        tex->m_loc = IO::Uri( texname );
+        String::size_type pos = texname.rfind( "/" );
+        if ( pos != String::npos ) {
+            texname = texname.substr( pos, texname.size() - pos );
+        }
+        tex->m_textureName = texname;
+    }
+
+    aiColor4D diffuse;
+    if ( AI_SUCCESS == aiGetMaterialColor( material, AI_MATKEY_COLOR_DIFFUSE, &diffuse ) ) {
+    }
+
+    aiColor4D specular;
+    if ( AI_SUCCESS == aiGetMaterialColor( material, AI_MATKEY_COLOR_SPECULAR, &specular ) ) {
+
+    }
+
+    aiColor4D ambient;
+    if ( AI_SUCCESS == aiGetMaterialColor( material, AI_MATKEY_COLOR_AMBIENT, &ambient ) ) {
+
+    }
+
+    aiColor4D emission;
+    if ( AI_SUCCESS == aiGetMaterialColor( material, AI_MATKEY_COLOR_EMISSIVE, &emission ) ) {
+
+    }
+
+
+    ai_real shininess, strength;
+    unsigned int max;	// changed: to unsigned
+    i32 ret;
+    ret = aiGetMaterialFloatArray( material, AI_MATKEY_SHININESS, &shininess, &max );
+    ret = aiGetMaterialFloatArray( material, AI_MATKEY_SHININESS_STRENGTH, &strength, &max );
+
 }
 
 } // Namespace Assets

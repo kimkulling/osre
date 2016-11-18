@@ -28,6 +28,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 struct aiScene;
 struct aiMesh;
+struct aiNode;
+struct aiMaterial;
 
 namespace OSRE {
 
@@ -49,6 +51,8 @@ public:
 protected:
     Model *convertSceneToModel( const aiScene *scene );
     void handleMesh( aiMesh *mesh );
+    void handleNode( aiNode *node );
+    void handleMaterial( aiMaterial *material );
 
 private:
     Model *m_model;
