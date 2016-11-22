@@ -59,6 +59,10 @@ void View::set( const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up
     m_up     = up;
 }
 
+void View::setProjectionMode() {
+
+}
+
 } // Namespace Scene
 } // Namespace OSRE
 
