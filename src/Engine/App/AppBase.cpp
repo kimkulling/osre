@@ -59,6 +59,7 @@ struct AppBase::Impl {
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
     Scene::World *m_world;
+    bool m_shutdownRequested;
     
     Impl( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
     : m_state( State::Uninited )
@@ -68,7 +69,8 @@ struct AppBase::Impl {
     , m_platformInterface( nullptr )
     , m_timer( nullptr )
     , m_rbService( nullptr )
-    , m_world( nullptr ) {
+    , m_world( nullptr )
+    , m_shutdownRequested( false ) {
         m_settings = new Properties::Settings;
         m_settings->setString( Properties::Settings::RenderAPI, "opengl" );
         m_settings->setBool( Properties::Settings::PollingMode, true );
@@ -114,7 +116,7 @@ void AppBase::update() {
 
     m_impl->m_timediff = m_impl->m_timer->getTimeDiff();
 
-    onUpdate();
+    onUpdate( m_impl->m_timediff );
 }
 
 void AppBase::requestNextFrame() {
@@ -165,6 +167,15 @@ bool AppBase::activateStage( const String &name ) {
     }
 
     return m_impl->m_world->setActiveStage( name );
+}
+void AppBase::requestShutdown() {
+    OSRE_ASSERT( nullptr != m_impl );
+    m_impl->m_shutdownRequested = true;
+}
+
+bool AppBase::shutdownRequested() const {
+    OSRE_ASSERT( nullptr != m_impl );
+    return m_impl->m_shutdownRequested;
 }
 
 bool AppBase::onCreate( Properties::Settings *config ) {
@@ -251,7 +262,7 @@ bool AppBase::onDestroy() {
     return true;
 }
 
-void AppBase::onUpdate() {
+void AppBase::onUpdate( d32 timetick ) {
     OSRE_ASSERT( nullptr != m_impl );
 
     m_impl->m_world->update( m_impl->m_rbService );

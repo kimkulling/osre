@@ -38,7 +38,13 @@ class View;
 
 class World : public Common::Object {
 public:
-    World( const String &worldName );
+    enum class RenderMode {
+        Render2D,
+        Render3D
+    };
+
+public:
+    World( const String &worldName, RenderMode renderMode = RenderMode::Render3D );
     virtual ~World();
     void addStage( Stage *stage );
     bool setActiveStage( Stage *activeStage );

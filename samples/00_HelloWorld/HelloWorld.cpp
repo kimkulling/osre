@@ -103,7 +103,7 @@ protected:
         return true;
     }
 
-    virtual void onUpdate() override {
+    virtual void onUpdate( d32 timetick) override {
         ui32 fps( 0 );
         Profiling::PerformanceCounters::queryCounter( "fps", fps );
         std::stringstream stream;

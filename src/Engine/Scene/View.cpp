@@ -42,7 +42,7 @@ View::View( const String &name )
 }
 
 View::~View() {
-
+    // empty
 }
 
 void View::observeNode( Node *node ) {

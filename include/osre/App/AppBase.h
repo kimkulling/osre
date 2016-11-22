@@ -94,6 +94,8 @@ public:
     /// @return true if successful,  false if not.
     virtual bool activateStage( const String &name );
 
+    virtual void requestShutdown();
+    virtual bool shutdownRequested() const;
 protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
     /// @return true if successful,  false if not.
@@ -104,7 +106,7 @@ protected:
     virtual bool onDestroy();
 
     /// @brief  The onUpdate callback, override this for your own update stuff.
-    virtual void onUpdate();
+    virtual void onUpdate( d32 timetick );
 
     /// @brief  Argument parser getter.
     /// @return The argument parser.
@@ -123,7 +125,7 @@ int main( int argc, char *argv[] )  { \
     if ( !myApp.create() ) {          \
         return 1;                     \
     }                                 \
-    while ( myApp.handleEvents() ) {  \
+    while ( myApp.handleEvents() && !myApp.shutdownRequested() ) {  \
         myApp.update();               \
         myApp.requestNextFrame();     \
     }                                 \

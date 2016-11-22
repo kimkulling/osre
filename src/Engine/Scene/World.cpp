@@ -55,15 +55,17 @@ struct World::Impl {
     Stage *m_activeStage;
     View *m_activeView;
     Ids m_ids;
+    RenderMode m_renderMode;
 
-    Impl()
+    Impl( RenderMode renderMode )
     : m_stages()
     , m_lookupStates()
     , m_views()
     , m_lookupViews()
     , m_activeStage( nullptr )
     , m_activeView( nullptr )
-    , m_ids() {
+    , m_ids()
+    , m_renderMode( renderMode ) {
         // empty
     }
 
@@ -83,10 +85,10 @@ static ui32 calcHash( const String &name ) {
     return hash;
 }
 
-World::World( const String &worldName )
+World::World( const String &worldName, RenderMode renderMode )
 : Object( worldName )
 , m_impl( nullptr ) {
-    m_impl = new Impl;
+    m_impl = new Impl( renderMode );
 }
 
 World::~World() {
