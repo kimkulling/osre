@@ -48,6 +48,7 @@ SET ( unittest_scene_src
     src/Scene/ComponentTest.cpp
 	src/Scene/GeometryBuilderTest.cpp
     src/Scene/NodeTest.cpp
+    src/Scene/WorldTest.cpp
 )
 
 SET ( gtest_src

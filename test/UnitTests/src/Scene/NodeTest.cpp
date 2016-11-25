@@ -115,6 +115,5 @@ TEST_F( NodeTest, activeTest ) {
     EXPECT_FALSE( myNode->isActive() );
 }
 
-
-}
-}
+} // Namespace UnitTest
+} // Namespace OSRE

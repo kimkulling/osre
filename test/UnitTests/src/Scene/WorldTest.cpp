@@ -20,41 +20,27 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/Common/Object.h>
-#include <glm/vec3.hpp>
-#include <glm/mat4x4.hpp>
+#include <gtest/gtest.h>
+#include <osre/Scene/World.h>
 
 namespace OSRE {
-    
-namespace RenderBackend {
-    class RenderBackendService;
-}
+namespace UnitTest {
 
-namespace Scene {
+using namespace ::OSRE::Scene;
 
-class Node;
+class WorldTest : public ::testing::Test {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT View : public Common::Object {
-public:
-    View( const String &name );
-    virtual ~View();
-    virtual void observeNode( Node *node );
-    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
-    virtual void set( const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up );
-    virtual void setProjectionMode();
-
-private:
-    Node *m_node;
-    glm::vec3 m_pos, m_lookAt, m_up;
-    glm::mat4 m_view, m_projection;
 };
 
-} // Namespace Scene
+TEST_F( WorldTest, createTest ) {
+    bool ok( true );
+    try {
+        World myWorld( "test" );
+    } catch ( ... ) {
+        ok = false;
+    }
+    EXPECT_TRUE( ok );
+}
+
+} // Namespace UnitTest
 } // Namespace OSRE

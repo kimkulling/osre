@@ -36,13 +36,12 @@ namespace Scene {
 class Stage;
 class View;
 
-class World : public Common::Object {
-public:
-    enum class RenderMode {
-        Render2D,
-        Render3D
-    };
+enum class RenderMode {
+    Render2D,
+    Render3D
+};
 
+class OSRE_EXPORT World : public Common::Object {
 public:
     World( const String &worldName, RenderMode renderMode = RenderMode::Render3D );
     virtual ~World();
@@ -53,6 +52,7 @@ public:
     bool setActiveView( View *activeView );
     bool setActiveView( const String &viewName );
     void update( RenderBackend::RenderBackendService *rbService );
+    RenderMode getRenderMode() const;
 
 private:
     struct Impl;

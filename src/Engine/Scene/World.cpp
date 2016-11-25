@@ -192,5 +192,10 @@ void World::update( RenderBackendService *rbService ) {
     }
 }
 
+RenderMode World::getRenderMode() const {
+    OSRE_ASSERT( nullptr != m_impl );
+    return m_impl->m_renderMode;
+}
+
 } // Namespace Scene
 } // namespace OSRE
