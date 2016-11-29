@@ -69,7 +69,7 @@ public:
 
     /// @brief  Will show the help.
     /// @return The help string;
-    String showHelp();
+    String showHelp() const;
 
     ///	@brief	Returns next argument and its content.
     ///	@param	arg     	[in] Next argument.

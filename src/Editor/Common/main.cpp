@@ -32,7 +32,7 @@ public:
 
 protected:
     virtual bool onCreate( Properties::Settings *settings = nullptr ) {
-        ArgumentParser &argParser = getArgumentParser();
+        const ArgumentParser &argParser = getArgumentParser();
         if ( argParser.hasArgument( "help" ) ) {
             String help( argParser.showHelp() ); 
             osre_info( Tag, help );
