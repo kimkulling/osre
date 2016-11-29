@@ -15,6 +15,10 @@ INCLUDE_DIRECTORIES(
     .././
 )
 
+SET ( unittest_app_src
+    src/App/TAbstractCtrlBaseTest.cpp
+)
+
 SET ( unittest_common_src
     src/Common/ArgumentParserTest.cpp
 	src/Common/AbstractServiceTest.cpp
@@ -63,6 +67,7 @@ SET ( gtest_src
     ${GTEST_PATH}/src/gtest_main.cc
 )
 
+SOURCE_GROUP( src\\App            FILES ${unittest_app_src} )
 SOURCE_GROUP( src\\Common         FILES ${unittest_common_src} )
 SOURCE_GROUP( src\\IO             FILES ${unittest_io_src} )
 SOURCE_GROUP( src\\Math           FILES ${unittest_math_src} )
@@ -73,6 +78,7 @@ SOURCE_GROUP( src\\Scene          FILES ${unittest_scene_src} )
 SOURCE_GROUP( src\\GTest          FILES ${gtest_src} )
 
 ADD_EXECUTABLE( osre_unittest
+    ${unittest_app_src}
     ${unittest_common_src}
     ${unittest_io_src}
     ${unittest_math_src}
