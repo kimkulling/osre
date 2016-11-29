@@ -43,10 +43,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 namespace RenderTest {
-glm::mat4 P = glm::mat4( 1 );
-glm::mat4 M = glm::mat4( 1 );
-glm::mat4 V = glm::mat4( 1 );
-
 
 using namespace ::OSRE::RenderBackend;
 

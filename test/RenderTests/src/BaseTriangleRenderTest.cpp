@@ -46,10 +46,6 @@ namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
-glm::mat4 P = glm::mat4( 1 );
-glm::mat4 M = glm::mat4( 1 );
-glm::mat4 V = glm::mat4( 1 );
-
 // vertex array and vertex buffer object IDs
 float angle = 0.0f;
 
