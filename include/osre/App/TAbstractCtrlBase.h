@@ -52,14 +52,17 @@ public:
     typedef TAbstractCtrlStateListener<Type, T> Listener;
 
     virtual ~TAbstractCtrlBase();
-    virtual bool onState() = 0;
     bool registerListener( Listener *listener );
     bool unregisterListener( Listener *listener );
+    bool gotoState( T newState );
     T getState() const;
 
 protected:
-    TAbstractCtrlBase();
+    TAbstractCtrlBase( T initialState );
     void notifyListener();
+    virtual bool onStateEnter(); 
+    virtual bool onState() = 0;
+    virtual bool onStateLeave();
 
 private:
     typedef typename CPPCore::TArray<typename Listener*>::Iterator ListenerIt;
@@ -69,9 +72,9 @@ private:
 
 template<class T>
 inline
-TAbstractCtrlBase<T>::TAbstractCtrlBase()
+TAbstractCtrlBase<T>::TAbstractCtrlBase( T initialState )
 : m_listener()
-, m_state( 0 ){
+, m_state( initialState ) {
     // 
 }
 
@@ -110,6 +113,13 @@ bool TAbstractCtrlBase<T>::unregisterListener( Listener *listener ) {
 
 template<class T>
 inline
+bool TAbstractCtrlBase<T>::gotoState( T newState ) {
+    m_state = newState;
+    return onState();
+}
+
+template<class T>
+inline
 T TAbstractCtrlBase<T>::getState() const {
     return m_state;
 }
@@ -122,6 +132,18 @@ void TAbstractCtrlBase<T>::notifyListener() {
             m_listener[ i ]->onStateChanged( m_state() );
         }
     }
+}
+
+template<class T>
+inline
+bool TAbstractCtrlBase<T>::onStateEnter() {
+    return true;
+}
+
+template<class T>
+inline
+bool TAbstractCtrlBase<T>::onStateLeave() {
+    return true;
 }
 
 }

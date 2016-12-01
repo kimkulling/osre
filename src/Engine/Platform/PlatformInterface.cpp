@@ -73,7 +73,6 @@ PlatformInterface::PlatformInterface( const Settings *config )
 }
 
 PlatformInterface::~PlatformInterface() {
-    delete m_config;
     m_config = nullptr;
 }
 
