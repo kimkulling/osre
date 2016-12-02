@@ -46,32 +46,25 @@ namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
-// vertex array and vertex buffer object IDs
-float angle = 0.0f;
+static const String Tag = "CanvasRenderTest";
 
-//-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderTest::BaseTriangleRenderTest
-///	@ingroup	Test
-///
-///	@brief  This class implements a base triangle render test.
-//-------------------------------------------------------------------------------------------------
-class BaseTriangleRenderTest : public AbstractRenderTest {
+class CanvasRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
 
 public:
-    BaseTriangleRenderTest()
-    : AbstractRenderTest( "rendertest/basetrianglerendertest" ) {
+    CanvasRenderTest()
+        : AbstractRenderTest( "rendertest/CanvasRenderTest" ) {
         // empty
     }
 
-    virtual ~BaseTriangleRenderTest() {
+    virtual ~CanvasRenderTest() {
         // empty
     }
 
-    virtual bool onCreate( RenderBackend::RenderBackendService *pRenderBackendSrv ) {
+    virtual bool onCreate( RenderBackendService *pRenderBackendSrv ) {
         pRenderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-        
+
         Geometry *geo = Scene::GeometryBuilder::allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
         attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_geo = geo;
@@ -83,14 +76,14 @@ public:
 
         geo->m_material->m_parameters = parameter;
         geo->m_material->m_numParameters++;
-        
+
         pRenderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
         return true;
     }
 };
 
-ATTACH_RENDERTEST( BaseTriangleRenderTest )
+ATTACH_RENDERTEST( CanvasRenderTest )
 
-} // Namespace RenderTest
-} // Namespace OSRE
+}
+}

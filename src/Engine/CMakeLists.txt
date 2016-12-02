@@ -34,6 +34,7 @@ ENDIF( WIN32 )
 #==============================================================================
 SET( app_inc
     ${HEADER_PATH}/App/AppBase.h
+    ${HEADER_PATH}/App/TAbstractCtrlBase.h
 )
 
 SET( app_src

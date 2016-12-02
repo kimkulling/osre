@@ -23,6 +23,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/Object.h>
+#include <osre/Common/Ids.h>
+#include <cppcore/Container/TArray.h>
+#include <cppcore/Container/THashMap.h>
 
 namespace OSRE {
 
@@ -55,8 +58,14 @@ public:
     RenderMode getRenderMode() const;
 
 private:
-    struct Impl;
-    Impl *m_impl;
+    CPPCore::TArray<Stage*> m_stages;
+    CPPCore::THashMap<ui32, Stage*> m_lookupStates;
+    CPPCore::TArray<View*> m_views;
+    CPPCore::THashMap<ui32, View*> m_lookupViews;
+    Stage *m_activeStage;
+    View *m_activeView;
+    Common::Ids m_ids;
+    RenderMode m_renderMode;
 };
 
 } // Namespace Scene

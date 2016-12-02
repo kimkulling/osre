@@ -21,7 +21,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
-#include <osre/Common/ArgumentParser.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractTimer.h>
@@ -42,60 +41,31 @@ using namespace ::OSRE::Common;
 const String API_Arg = "api";
 const String Tag     = "AppBase";
 
-struct AppBase::Impl {
-    enum class State {
-        Uninited,
-        Created,
-        Running,
-        Destroyed
-    };
-
-    State m_state;
-    d32 m_timediff;
-
-    ArgumentParser m_argParser;
-    Properties::Settings *m_settings;
-    Platform::PlatformInterface *m_platformInterface;
-    Platform::AbstractTimer *m_timer;
-    RenderBackend::RenderBackendService *m_rbService;
-    Scene::World *m_world;
-    bool m_shutdownRequested;
-    
-    Impl( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
-    : m_state( State::Uninited )
-    , m_timediff( 0.0 )
-    , m_argParser( argc, argv, supportedArgs, desc )
-    , m_settings( nullptr )
-    , m_platformInterface( nullptr )
-    , m_timer( nullptr )
-    , m_rbService( nullptr )
-    , m_world( nullptr )
-    , m_shutdownRequested( false ) {
-        m_settings = new Properties::Settings;
-        m_settings->setString( Properties::Settings::RenderAPI, "opengl" );
-        m_settings->setBool( Properties::Settings::PollingMode, true );
+AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
+: m_state( State::Uninited )
+, m_timediff( 0.0 )
+, m_argParser( argc, argv, supportedArgs, desc )
+, m_settings( nullptr )
+, m_platformInterface( nullptr )
+, m_timer( nullptr )
+, m_rbService( nullptr )
+, m_world( nullptr )
+, m_shutdownRequested( false ) {
+    m_settings = new Properties::Settings;
+    m_settings->setString( Properties::Settings::RenderAPI, "opengl" );
+    m_settings->setBool( Properties::Settings::PollingMode, true );
 
 #ifdef OSRE_WINDOWS
-        //pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
-        m_settings->setInt( Properties::Settings::PlatformPlugin, static_cast< i32 >( Platform::PluginType::WindowsPlugin ) );
+    //pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
+    m_settings->setInt( Properties::Settings::PlatformPlugin, static_cast< i32 >( Platform::PluginType::WindowsPlugin ) );
 #else
-        m_settings->setInt( Properties::Settings::PlatformPlugin, static_cast< i32 >( Platform::PluginType::SDL2Plugin ) );
+    m_settings->setInt( Properties::Settings::PlatformPlugin, static_cast< i32 >( Platform::PluginType::SDL2Plugin ) );
 #endif 
-    }
-
-    ~Impl(){
-        m_settings = nullptr;
-    }
-};
-
-AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
-: m_impl( new Impl( argc, argv, supportedArgs, desc ) ) {
-    // empty
 }
 
 AppBase::~AppBase() {
-    delete m_impl;
-    m_impl = nullptr;
+    delete m_settings;
+    m_settings = nullptr;
 }
 
 bool AppBase::create( Properties::Settings *config ) {
@@ -107,89 +77,71 @@ bool AppBase::destroy() {
 }
 
 void AppBase::update() {
-    OSRE_ASSERT( nullptr != m_impl );
-
-    if( m_impl->m_state == Impl::State::Created ) {
-        m_impl->m_state = Impl::State::Running;
+    if( m_state == State::Created ) {
+        m_state = State::Running;
         osre_debug( Tag, "Set application state to running." );
     }
 
-    m_impl->m_timediff = m_impl->m_timer->getTimeDiff();
+    m_timediff = m_timer->getTimeDiff();
 
-    onUpdate( m_impl->m_timediff );
+    onUpdate( m_timediff );
 }
 
 void AppBase::requestNextFrame() {
-    OSRE_ASSERT( nullptr != m_impl );
-
-    m_impl->m_rbService->update( m_impl->m_timediff );
+    m_rbService->update( m_timediff );
 }
 
 bool AppBase::handleEvents() {
-    OSRE_ASSERT( nullptr!=m_impl );
-
-    if( nullptr == m_impl->m_platformInterface ) {
+    if( nullptr == m_platformInterface ) {
         osre_debug( Tag, "AppBase::PlatforInterface not in proper state: not nullptr." );
         return false;
     }
 
-    return m_impl->m_platformInterface->update( m_impl->m_timediff );
+    return m_platformInterface->update( m_timediff );
 }
 
 Properties::Settings *AppBase::getSettings() const {
-    if( nullptr == m_impl ) {
-        return nullptr;
-    }
-
-    return m_impl->m_settings;
+    return m_settings;
 }
 
 Scene::Stage *AppBase::createStage( const String &name ) {
-    OSRE_ASSERT( nullptr!=m_impl );
-
     if ( name.empty() ) {
         return nullptr;
     }
 
-    Scene::Stage *stage( new Scene::Stage( name, m_impl->m_rbService ) );
+    Scene::Stage *stage( new Scene::Stage( name, m_rbService ) );
     if ( nullptr != stage ) {
-        m_impl->m_world->addStage( stage );
+        m_world->addStage( stage );
     }
 
     return stage;
 }
 
 bool AppBase::activateStage( const String &name ) {
-    OSRE_ASSERT( nullptr!=m_impl );
-
-    if ( nullptr == m_impl->m_world ) {
+    if ( nullptr == m_world ) {
         return false;
     }
 
-    return m_impl->m_world->setActiveStage( name );
+    return m_world->setActiveStage( name );
 }
 void AppBase::requestShutdown() {
-    OSRE_ASSERT( nullptr != m_impl );
-    m_impl->m_shutdownRequested = true;
+    m_shutdownRequested = true;
 }
 
 bool AppBase::shutdownRequested() const {
-    OSRE_ASSERT( nullptr != m_impl );
-    return m_impl->m_shutdownRequested;
+    return m_shutdownRequested;
 }
 
 bool AppBase::onCreate( Properties::Settings *config ) {
-    OSRE_ASSERT( nullptr!=m_impl );
-
-    if ( m_impl->m_state!=Impl::State::Uninited ) {
+    if ( m_state!=State::Uninited ) {
         osre_debug( Tag, "AppBase::State not in proper state: Uninited." );
         return false;
     }
 
     // create the platform abstraction
-    if( nullptr != config && config != m_impl->m_settings ) {
-        delete m_impl->m_settings;
-        m_impl->m_settings = config;
+    if( nullptr != config && config != m_settings ) {
+        delete m_settings;
+        m_settings = config;
     }
 
     // create the asset registry
@@ -200,9 +152,9 @@ bool AppBase::onCreate( Properties::Settings *config ) {
     }
 
     // create the platform interface instance
-    m_impl->m_platformInterface = Platform::PlatformInterface::create( m_impl->m_settings );
-    if( m_impl->m_platformInterface ) {
-        if( !m_impl->m_platformInterface->open() ) {
+    m_platformInterface = Platform::PlatformInterface::create( m_settings );
+    if( m_platformInterface ) {
+        if( !m_platformInterface->open() ) {
             return false;
         }
     }
@@ -214,64 +166,58 @@ bool AppBase::onCreate( Properties::Settings *config ) {
     }
 
     // create the render backend
-    m_impl->m_rbService = new RenderBackend::RenderBackendService();
-    if( !m_impl->m_rbService->open() ) {
-        m_impl->m_rbService->release();
-        m_impl->m_rbService = nullptr;
+    m_rbService = new RenderBackend::RenderBackendService();
+    if( !m_rbService->open() ) {
+        m_rbService->release();
+        m_rbService = nullptr;
     }
 
     // enable render-backend
-    if( m_impl->m_platformInterface ) {
-        RenderBackend::CreateRendererEventData *data = new RenderBackend::CreateRendererEventData( m_impl->m_platformInterface->getRootSurface() );
-        m_impl->m_rbService->sendEvent( &RenderBackend::OnCreateRendererEvent, data );
+    if( m_platformInterface ) {
+        RenderBackend::CreateRendererEventData *data = new RenderBackend::CreateRendererEventData( m_platformInterface->getRootSurface() );
+        m_rbService->sendEvent( &RenderBackend::OnCreateRendererEvent, data );
     }
-    m_impl->m_timer = Platform::PlatformInterface::getInstance()->getTimer();
+    m_timer = Platform::PlatformInterface::getInstance()->getTimer();
 
     // create our world
-    m_impl->m_world = new Scene::World( "world" );
+    m_world = new Scene::World( "world" );
     
     // set application state to "Created"
     osre_debug( Tag, "Set application state to Created." );
-    m_impl->m_state = Impl::State::Created;
+    m_state = State::Created;
     
     return true;
 }
 
 bool AppBase::onDestroy() {
-    OSRE_ASSERT( nullptr!=m_impl );
-
-    if ( m_impl->m_state != Impl::State::Running ) {
+    if ( m_state != State::Running ) {
         osre_debug( Tag, "AppBase::State not in proper state: Running." );
         return false;
     }
 
     Assets::AssetRegistry::destroy();
 
-    if( m_impl->m_platformInterface ) {
+    if( m_platformInterface ) {
         Platform::PlatformInterface::destroy();
-        m_impl->m_platformInterface = nullptr;
+        m_platformInterface = nullptr;
     }
 
-    delete m_impl->m_world;
-    m_impl->m_world = nullptr;
+    delete m_world;
+    m_world = nullptr;
 
     osre_debug( Tag, "Set application state to destroyed." );
-    m_impl->m_state = Impl::State::Destroyed;
+    m_state = State::Destroyed;
     Logger::kill();
 
     return true;
 }
 
 void AppBase::onUpdate( d32 timetick ) {
-    OSRE_ASSERT( nullptr != m_impl );
-
-    m_impl->m_world->update( m_impl->m_rbService );
+    m_world->update( m_rbService );
 }
 
-ArgumentParser &AppBase::getArgumentParser() const {
-    OSRE_ASSERT( nullptr != m_impl );
-
-    return m_impl->m_argParser;
+const ArgumentParser &AppBase::getArgumentParser() const {
+    return m_argParser;
 }
 
 } // Namespace App

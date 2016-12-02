@@ -118,7 +118,7 @@ ArgumentParser::~ArgumentParser() {
     // empty
 }
 
-String ArgumentParser::showHelp() {
+String ArgumentParser::showHelp() const {
     if ( m_SupportedArguments.isEmpty() ) {
         return String( "" );
     }

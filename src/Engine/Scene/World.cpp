@@ -25,10 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/View.h>
 #include <osre/Common/StringUtils.h>
 #include <osre/Debugging/osre_debugging.h>
-#include <osre/Common/Ids.h>
-
-#include <cppcore/Container/TArray.h>
-#include <cppcore/Container/THashMap.h>
 
 namespace OSRE {
 namespace Scene {
@@ -47,39 +43,6 @@ void lookupMapDeleterFunc( TArray<T> &ctr ) {
     ctr.clear();
 }
 
-struct World::Impl {
-    TArray<Stage*> m_stages;
-    THashMap<ui32, Stage*> m_lookupStates;
-    TArray<View*> m_views;
-    THashMap<ui32, View*> m_lookupViews;
-    Stage *m_activeStage;
-    View *m_activeView;
-    Ids m_ids;
-    RenderMode m_renderMode;
-
-    Impl( RenderMode renderMode )
-    : m_stages()
-    , m_lookupStates()
-    , m_views()
-    , m_lookupViews()
-    , m_activeStage( nullptr )
-    , m_activeView( nullptr )
-    , m_ids()
-    , m_renderMode( renderMode ) {
-        // empty
-    }
-
-    ~Impl() {
-        ContainerClear<TArray<View*> >( m_views, lookupMapDeleterFunc );
-        m_lookupViews.clear();
-        m_activeView = nullptr;
-
-        ContainerClear<TArray<Stage*> >( m_stages, lookupMapDeleterFunc );
-        m_lookupStates.clear();
-        m_activeStage = nullptr;
-    }
-};
-
 static ui32 calcHash( const String &name ) {
     const ui32 hash( StringUtils::hashName( name.c_str() ) );
     return hash;
@@ -87,55 +50,61 @@ static ui32 calcHash( const String &name ) {
 
 World::World( const String &worldName, RenderMode renderMode )
 : Object( worldName )
-, m_impl( nullptr ) {
-    m_impl = new Impl( renderMode );
+, m_stages()
+, m_lookupStates()
+, m_views()
+, m_lookupViews()
+, m_activeStage( nullptr )
+, m_activeView( nullptr )
+, m_ids()
+, m_renderMode( renderMode ) {
+    // empty
 }
 
 World::~World() {
-    delete m_impl;
-    m_impl = nullptr;
+    ContainerClear<TArray<View*> >( m_views, lookupMapDeleterFunc );
+    m_lookupViews.clear();
+    m_activeView = nullptr;
+
+    ContainerClear<TArray<Stage*> >( m_stages, lookupMapDeleterFunc );
+    m_lookupStates.clear();
+    m_activeStage = nullptr;
 }
 
 void World::addStage( Stage *stage ) {
-    OSRE_ASSERT( nullptr != m_impl );
-
     if ( nullptr == stage ) {
         return;
     }
 
     const ui32 hash( calcHash( stage->getName() ) );
-    if ( m_impl->m_lookupStates.hasKey( hash ) ) {
+    if ( m_lookupStates.hasKey( hash ) ) {
         return;
     }
 
-    m_impl->m_stages.add( stage );
-    m_impl->m_lookupStates.insert( hash, stage );
-    stage->setIdContainer( m_impl->m_ids );
+    m_stages.add( stage );
+    m_lookupStates.insert( hash, stage );
+    stage->setIdContainer( m_ids );
 }
 
 bool World::setActiveStage( Stage *activeStage ) {
-    OSRE_ASSERT( nullptr != m_impl );
-
-    if ( m_impl->m_activeStage == activeStage ) {
+    if ( m_activeStage == activeStage ) {
         return false;
     }
 
-    m_impl->m_activeStage = activeStage;
+    m_activeStage = activeStage;
 
     return true;
 }
 
 bool World::setActiveStage( const String &stageName ) {
-    OSRE_ASSERT( nullptr != m_impl );
-
     const ui32 hash( StringUtils::hashName( stageName.c_str() ) );
-    if ( !m_impl->m_lookupStates.hasKey( hash ) ) {
+    if ( !m_lookupStates.hasKey( hash ) ) {
         return false;
     }
     
     Stage *activeStage( nullptr );
-    if ( m_impl->m_lookupStates.getValue( hash, activeStage ) ) {
-        m_impl->m_activeStage = activeStage;
+    if ( m_lookupStates.getValue( hash, activeStage ) ) {
+        m_activeStage = activeStage;
         return true;
     }
 
@@ -147,34 +116,30 @@ void World::addView( View *view ) {
         return;
     }
 
-    m_impl->m_activeView = view;
+    m_activeView = view;
     const ui32 hash( calcHash( view->getName() ) );
-    m_impl->m_lookupViews.insert( hash, view );
+    m_lookupViews.insert( hash, view );
 }
 
 bool World::setActiveView( View *activeView ) {
-    OSRE_ASSERT( nullptr != m_impl );
-
-    if ( m_impl->m_activeView == activeView ) {
+    if ( m_activeView == activeView ) {
         return true;
     }
     
-    m_impl->m_activeView = activeView;
+    m_activeView = activeView;
 
     return true;
 }
 
 bool World::setActiveView( const String &viewName ) {
-    OSRE_ASSERT( nullptr != m_impl );
-
     const ui32 hash( calcHash( viewName ) );
-    if ( !m_impl->m_lookupViews.hasKey( hash ) ) {
+    if ( !m_lookupViews.hasKey( hash ) ) {
         return false;
     }
 
     View *activeView( nullptr );
-    if ( m_impl->m_lookupViews.getValue( hash, activeView ) ) {
-        m_impl->m_activeView = activeView;
+    if ( m_lookupViews.getValue( hash, activeView ) ) {
+        m_activeView = activeView;
         return true;
     }
 
@@ -182,19 +147,16 @@ bool World::setActiveView( const String &viewName ) {
 }
 
 void World::update( RenderBackendService *rbService ) {
-    OSRE_ASSERT( nullptr != m_impl );
-
-    if ( nullptr != m_impl->m_activeStage ) {
-        m_impl->m_activeStage->update( rbService );
+    if ( nullptr != m_activeStage ) {
+        m_activeStage->update( rbService );
     }
-    if ( nullptr != m_impl->m_activeView ) {
-        m_impl->m_activeView->update( rbService );
+    if ( nullptr != m_activeView ) {
+        m_activeView->update( rbService );
     }
 }
 
 RenderMode World::getRenderMode() const {
-    OSRE_ASSERT( nullptr != m_impl );
-    return m_impl->m_renderMode;
+    return m_renderMode;
 }
 
 } // Namespace Scene

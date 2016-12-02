@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <osre/Common/ArgumentParser.h>
 
 namespace OSRE {
 
@@ -32,7 +33,18 @@ namespace Common {
 }
 
 namespace Scene {
+    class View;
     class Stage;
+    class World;
+}
+
+namespace Platform {
+    class AbstractTimer;
+    class PlatformInterface;
+}
+
+namespace RenderBackend {
+    class RenderBackendService;
 }
 
 namespace Properties {
@@ -110,11 +122,26 @@ protected:
 
     /// @brief  Argument parser getter.
     /// @return The argument parser.
-    Common::ArgumentParser &getArgumentParser() const;
+    const Common::ArgumentParser &getArgumentParser() const;
 
 private:
-    struct Impl;
-    Impl *m_impl;
+    enum class State {
+        Uninited,
+        Created,
+        Running,
+        Destroyed
+    };
+
+    State m_state;
+    d32 m_timediff;
+
+    Common::ArgumentParser m_argParser;
+    Properties::Settings *m_settings;
+    Platform::PlatformInterface *m_platformInterface;
+    Platform::AbstractTimer *m_timer;
+    RenderBackend::RenderBackendService *m_rbService;
+    Scene::World *m_world;
+    bool m_shutdownRequested;
 };
 
 ///	@brief  Shortcut to get a OSRE-main function.

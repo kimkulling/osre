@@ -54,7 +54,6 @@ namespace Threading {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractTask : public Common::Object {
 public:
-    ///	@enum	WorkingMode
     ///	@brief	This enum describes the current working mode of the task. Tasks can be in a parallel
     ///			Working mode ( another thread ) or in sequence mode ( runs in the main thread ).
     enum WorkingMode {
@@ -62,7 +61,6 @@ public:
         Async	///< Runs in its own thread.
     };
 
-    /// @enum   BufferMode
     /// @brief  Describes the buffered mode for enqueued jobs.
     enum BufferMode {
         SingleBuffer,   ///< Single buffer. enqueued data will be handled in this frame.
@@ -155,7 +153,6 @@ private:
     AbstractTask *m_pParent;
     CPPCore::TArray<AbstractTask*> m_childTasks;
 };
-
 
 } // Namespace Threading
 } // Namespace OSRE
