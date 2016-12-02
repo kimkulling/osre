@@ -37,6 +37,14 @@ static const i32 DictId      = 1;
 static const c8  MagicOSRE[] = "OSRE";
 static const i32 Version     = 1;
 
+enum class TokenType  {
+    WorldToken    = 1,
+    StageToken    = 2,
+    ViewToken     = 3,
+    NodeToken     = 4,
+    GeometryToken = 5
+};
+
 AssetDataArchive::Chunk::Chunk()
 : m_id(-1)
 , m_size(0)
@@ -114,28 +122,26 @@ ui32 AssetDataArchive::writeChunkData( IO::Stream &stream, ui32 offset, i32 id, 
     return offset;
 }
 
-bool AssetDataArchive::readHeader( IO::Stream &stream ) {
-    ui32 offset( stream.seek( 0, IO::Stream::Origin::Begin ) );
+bool AssetDataArchive::readHeader( IO::Stream &stream, ui32 minVersion, AssetDataDict &dict, ui32 &offset ) {
+    offset = stream.seek( 0, IO::Stream::Origin::Begin );
     c8 bufferMagic[ 4 ];
     offset += stream.read( bufferMagic, sizeof( c8 ) * 4 );
     if ( 0 == strncmp( bufferMagic, MagicOSRE, strlen( MagicOSRE ) ) ) {
         return true;
     }
 
+    // validate min version
     i32 version( 0 );
     offset += stream.readI32( version );
-
-    i32 id( -1 );
-    uc8 *buffer( nullptr );
-
-    // read dict chunk 
-    AssetDataDict dict;
-    offset = readDict( stream, dict );
-    for ( ui32 i = 0; i < dict.m_numEntries; i++ ) {
-        DictEntry &entry = dict.m_entries[ i ];
+    if ( static_cast<ui32>( version ) < minVersion ) {
+        osre_error( Tag, "Version is less than min version." );
+        return false;
     }
 
-    return false;
+    // read dict chunk 
+    offset = readDict( stream, dict );
+
+    return true;
 }
 
 bool AssetDataArchive::writeHeader( IO::Stream &stream ) {
@@ -151,34 +157,58 @@ ui32 AssetDataArchive::readDict( IO::Stream &stream, AssetDataDict &dict ) {
     i32 id( -1 );
     uc8 *buffer( nullptr );
     ui32 offset = readChunkData( stream, offset, id, buffer, size );
-    ::memcpy( &dict.m_numEntries, buffer, sizeof( ui32 ) );
-    // TODO!
-    //dict.m_entries = buffer;
+    
+    ::memcpy( &dict.m_numEntries, &buffer[offset], sizeof( ui32 ) );
+    offset += sizeof( ui32 );
+    
+    ::memcpy( &dict.m_entries, &buffer[ offset ], dict.m_numEntries * sizeof( DictEntry ) );
+    offset += dict.m_numEntries * sizeof( DictEntry );
 
-    return 0;
+    return offset;
 }
 
 ui32 AssetDataArchive::writeDict() {
     return 0;
 }
 
-AssetDataArchive::AssetDataArchive() {
-
+AssetDataArchive::AssetDataArchive( ui32 minVersion )
+: m_dict()
+, m_minVersion( minVersion ) {
+    // empty
 }
 
 AssetDataArchive::~AssetDataArchive() {
-
+    // empty
 }
 
 bool AssetDataArchive::read( IO::Stream &stream ) {
     if ( !checkReadState( stream ) ) {
         return false;
     }
-
-    if ( !readHeader( stream ) ) {
+    ui32 offset( 0 );
+    if ( !readHeader( stream, m_minVersion, m_dict, offset ) ) {
         return false;
     }
 
+    // read all entries
+    for ( ui32 i = 0; i < m_dict.m_numEntries; i++ ) {
+        DictEntry &entry = m_dict.m_entries[ i ];
+        switch ( entry.m_id ) {
+            case TokenType::WorldToken:
+                break;
+            case TokenType::StageToken:
+                break;
+            case TokenType::ViewToken:
+                break;
+            case TokenType::NodeToken:
+                break;
+            case TokenType::GeometryToken:
+                break;
+            default:
+                osre_error( Tag, "Unknown token!" );
+                break;
+        }
+    }
     return true;
 }
 
