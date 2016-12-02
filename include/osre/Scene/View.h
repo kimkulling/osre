@@ -48,7 +48,7 @@ public:
     virtual void observeNode( Node *node );
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
     virtual void set( const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up );
-    virtual void setProjectionMode();
+    virtual void setProjectionMode( float fov, float aspectRatio, float near, float far );
 
 private:
     Node *m_node;

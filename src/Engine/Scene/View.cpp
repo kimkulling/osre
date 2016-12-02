@@ -59,7 +59,7 @@ void View::set( const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up
     m_up     = up;
 }
 
-void View::setProjectionMode() {
+void View::setProjectionMode( float fov, float aspectRatio, float near, float far ) {
 
 }
 
