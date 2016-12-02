@@ -45,14 +45,14 @@ SET( app_src
 #==============================================================================
 SET( assets_inc
     ${HEADER_PATH}/Assets/AssetRegistry.h
-    ${HEADER_PATH}/Assets/AssetData.h
+    ${HEADER_PATH}/Assets/AssetDataArchive.h
     ${HEADER_PATH}/Assets/AssimpWrapper.h
 	${HEADER_PATH}/Assets/Model.h
 )
 
 SET( assets_src
     Assets/AssetRegistry.cpp
-    Assets/AssetData.cpp
+    Assets/AssetDataArchive.cpp
 	Assets/AssimpWrapper.cpp
 	Assets/Model.cpp
 )

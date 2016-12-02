@@ -56,7 +56,7 @@ namespace Assets {
 //------------------------------------
 // Chunks
 //------------------------------------
-class OSRE_EXPORT AssetData {
+class OSRE_EXPORT AssetDataArchive {
 public:
     struct Chunk {
         i32  m_id;
@@ -84,8 +84,8 @@ public:
     };
     
 public:
-    AssetData();
-    ~AssetData();
+    AssetDataArchive();
+    ~AssetDataArchive();
     bool read( IO::Stream &stream );
     bool write( IO::Stream &stream );
     bool isLoaded() const;

@@ -20,7 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Assets/AssetData.h>
+#include <osre/Assets/AssetDataArchive.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/Stream.h>
@@ -37,28 +37,28 @@ static const i32 DictId      = 1;
 static const c8  MagicOSRE[] = "OSRE";
 static const i32 Version     = 1;
 
-AssetData::Chunk::Chunk()
+AssetDataArchive::Chunk::Chunk()
 : m_id(-1)
 , m_size(0)
 , m_data(nullptr) {
     // empty
 }
 
-AssetData::Chunk::~Chunk() {
+AssetDataArchive::Chunk::~Chunk() {
     // empty
 }
 
-AssetData::AssetDataDict::AssetDataDict()
+AssetDataArchive::AssetDataDict::AssetDataDict()
 : m_numEntries( 0 )
 , m_entries(nullptr) {
     // empty
 }
 
-AssetData::AssetDataDict::~AssetDataDict() {
+AssetDataArchive::AssetDataDict::~AssetDataDict() {
     m_entries = nullptr;
 }
 
-bool AssetData::checkReadState( IO::Stream &stream ) {
+bool AssetDataArchive::checkReadState( IO::Stream &stream ) {
     if ( !stream.isOpen() ) {
         osre_debug( Tag, "Stream is not open." );
         return false;
@@ -71,7 +71,7 @@ bool AssetData::checkReadState( IO::Stream &stream ) {
     return true;
 }
 
-bool AssetData::checkWriteState( IO::Stream &stream ) {
+bool AssetDataArchive::checkWriteState( IO::Stream &stream ) {
     if ( !stream.isOpen() ) {
         osre_debug( Tag, "Stream is not open." );
         return false;
@@ -85,15 +85,15 @@ bool AssetData::checkWriteState( IO::Stream &stream ) {
     return true;
 }
 
-uc8 *AssetData::allocChunkData( ui32 size ) {
+uc8 *AssetDataArchive::allocChunkData( ui32 size ) {
     return new uc8[ size ];
 }
 
-void AssetData::freeChunkData( uc8 *buffer ) {
+void AssetDataArchive::freeChunkData( uc8 *buffer ) {
     delete[] buffer;
 }
 
-ui32 AssetData::readChunkData( IO::Stream &stream, ui32 offset, i32 &id, uc8 *buffer, ui32 &size ) {
+ui32 AssetDataArchive::readChunkData( IO::Stream &stream, ui32 offset, i32 &id, uc8 *buffer, ui32 &size ) {
     offset += stream.readI32( id );
     offset += stream.readUI32( size );
     buffer = allocChunkData( size );
@@ -102,7 +102,7 @@ ui32 AssetData::readChunkData( IO::Stream &stream, ui32 offset, i32 &id, uc8 *bu
     return offset;
 }
 
-ui32 AssetData::writeChunkData( IO::Stream &stream, ui32 offset, i32 id, uc8 *buffer, ui32 size ) {
+ui32 AssetDataArchive::writeChunkData( IO::Stream &stream, ui32 offset, i32 id, uc8 *buffer, ui32 size ) {
     if ( nullptr == buffer ) {
         return offset;
     }
@@ -114,7 +114,7 @@ ui32 AssetData::writeChunkData( IO::Stream &stream, ui32 offset, i32 id, uc8 *bu
     return offset;
 }
 
-bool AssetData::readHeader( IO::Stream &stream ) {
+bool AssetDataArchive::readHeader( IO::Stream &stream ) {
     ui32 offset( stream.seek( 0, IO::Stream::Origin::Begin ) );
     c8 bufferMagic[ 4 ];
     offset += stream.read( bufferMagic, sizeof( c8 ) * 4 );
@@ -138,7 +138,7 @@ bool AssetData::readHeader( IO::Stream &stream ) {
     return false;
 }
 
-bool AssetData::writeHeader( IO::Stream &stream ) {
+bool AssetDataArchive::writeHeader( IO::Stream &stream ) {
     ui32 offset( stream.seek( 0, Stream::Origin::Begin ) );
     offset = stream.write( MagicOSRE, sizeof( uc8 ) * 4 );
     offset = stream.writeI32( Version );
@@ -146,7 +146,7 @@ bool AssetData::writeHeader( IO::Stream &stream ) {
     return true;
 }
 
-ui32 AssetData::readDict( IO::Stream &stream, AssetDataDict &dict ) {
+ui32 AssetDataArchive::readDict( IO::Stream &stream, AssetDataDict &dict ) {
     ui32 size( 0 );
     i32 id( -1 );
     uc8 *buffer( nullptr );
@@ -158,19 +158,19 @@ ui32 AssetData::readDict( IO::Stream &stream, AssetDataDict &dict ) {
     return 0;
 }
 
-ui32 AssetData::writeDict() {
+ui32 AssetDataArchive::writeDict() {
     return 0;
 }
 
-AssetData::AssetData() {
+AssetDataArchive::AssetDataArchive() {
 
 }
 
-AssetData::~AssetData() {
+AssetDataArchive::~AssetDataArchive() {
 
 }
 
-bool AssetData::read( IO::Stream &stream ) {
+bool AssetDataArchive::read( IO::Stream &stream ) {
     if ( !checkReadState( stream ) ) {
         return false;
     }
@@ -182,7 +182,7 @@ bool AssetData::read( IO::Stream &stream ) {
     return true;
 }
 
-bool AssetData::write( IO::Stream &stream ) {
+bool AssetDataArchive::write( IO::Stream &stream ) {
     if ( !checkWriteState( stream ) ) {
         return false;
     }
@@ -194,7 +194,7 @@ bool AssetData::write( IO::Stream &stream ) {
     return true;
 }
 
-bool AssetData::isLoaded() const {
+bool AssetDataArchive::isLoaded() const {
     return false;
 }
 

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <osre/Assets/AssetData.h>
+#include <osre/Assets/AssetDataArchive.h>
 
 namespace OSRE {
 namespace UnitTest {
@@ -13,7 +13,7 @@ class AssetDataTest : public ::testing::Test {
 TEST_F( AssetDataTest, createTest ) {
     bool ok( true );
     try {
-        AssetData myData;
+        AssetDataArchive myData;
     }
     catch ( ... ) {
         ok = false;
