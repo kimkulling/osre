@@ -98,7 +98,7 @@ public:
     static ui32 writeChunkData( IO::Stream &stream, ui32 offset, i32 id, uc8 *buffer, ui32 size );
     static bool readHeader( IO::Stream &stream, ui32 minVersion, AssetDataDict &dict, ui32 &offset );
     static bool writeHeader( IO::Stream &stream );
-    static ui32 readDict( IO::Stream &stream, AssetDataDict &dict );
+    static void readDict( IO::Stream &stream, AssetDataDict &dict, ui32 &offset );
     static ui32 writeDict();
 
 private:

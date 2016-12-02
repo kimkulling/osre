@@ -37,7 +37,7 @@ static const i32 DictId      = 1;
 static const c8  MagicOSRE[] = "OSRE";
 static const i32 Version     = 1;
 
-enum class TokenType  {
+enum class TokenType : ui32 {
     WorldToken    = 1,
     StageToken    = 2,
     ViewToken     = 3,
@@ -139,7 +139,7 @@ bool AssetDataArchive::readHeader( IO::Stream &stream, ui32 minVersion, AssetDat
     }
 
     // read dict chunk 
-    offset = readDict( stream, dict );
+    readDict( stream, dict, offset );
 
     return true;
 }
@@ -152,19 +152,17 @@ bool AssetDataArchive::writeHeader( IO::Stream &stream ) {
     return true;
 }
 
-ui32 AssetDataArchive::readDict( IO::Stream &stream, AssetDataDict &dict ) {
+void AssetDataArchive::readDict( IO::Stream &stream, AssetDataDict &dict, ui32 &offset ) {
     ui32 size( 0 );
     i32 id( -1 );
     uc8 *buffer( nullptr );
-    ui32 offset = readChunkData( stream, offset, id, buffer, size );
+    offset = readChunkData( stream, offset, id, buffer, size );
     
     ::memcpy( &dict.m_numEntries, &buffer[offset], sizeof( ui32 ) );
     offset += sizeof( ui32 );
     
     ::memcpy( &dict.m_entries, &buffer[ offset ], dict.m_numEntries * sizeof( DictEntry ) );
     offset += dict.m_numEntries * sizeof( DictEntry );
-
-    return offset;
 }
 
 ui32 AssetDataArchive::writeDict() {
@@ -193,7 +191,7 @@ bool AssetDataArchive::read( IO::Stream &stream ) {
     // read all entries
     for ( ui32 i = 0; i < m_dict.m_numEntries; i++ ) {
         DictEntry &entry = m_dict.m_entries[ i ];
-        switch ( entry.m_id ) {
+        switch ( static_cast<TokenType>( entry.m_id ) ) {
             case TokenType::WorldToken:
                 break;
             case TokenType::StageToken:
