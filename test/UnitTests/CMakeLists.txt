@@ -15,6 +15,10 @@ INCLUDE_DIRECTORIES(
     .././
 )
 
+SET ( unittest_assets_src
+	src/Assets/AssetDataTest.cpp
+)
+
 SET ( unittest_common_src
     src/Common/ArgumentParserTest.cpp
 	src/Common/AbstractServiceTest.cpp
@@ -64,6 +68,7 @@ SET ( gtest_src
 )
 
 SOURCE_GROUP( src\\Common         FILES ${unittest_common_src} )
+SOURCE_GROUP( src\\Assets         FILES ${unittest_assets_src} )
 SOURCE_GROUP( src\\IO             FILES ${unittest_io_src} )
 SOURCE_GROUP( src\\Math           FILES ${unittest_math_src} )
 SOURCE_GROUP( src\\Platform       FILES ${unittest_platform_src})
@@ -74,7 +79,8 @@ SOURCE_GROUP( src\\GTest          FILES ${gtest_src} )
 
 ADD_EXECUTABLE( osre_unittest
     ${unittest_common_src}
-    ${unittest_io_src}
+	${unittest_assets_src}    
+	${unittest_io_src}
     ${unittest_math_src}
 	${unittest_platform_src}    
 	${unittest_profiling_src}

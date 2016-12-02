@@ -56,7 +56,7 @@ namespace Assets {
 //------------------------------------
 // Chunks
 //------------------------------------
-class AssetData {
+class OSRE_EXPORT AssetData {
 public:
     struct Chunk {
         i32  m_id;
