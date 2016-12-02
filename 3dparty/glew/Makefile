@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kimmi/10_projects/osre
+CMAKE_SOURCE_DIR = /home/kimmi/10_projects/hackandjump
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kimmi/10_projects/osre
+CMAKE_BINARY_DIR = /home/kimmi/10_projects/hackandjump
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -81,7 +81,7 @@ rebuild_cache/fast: rebuild_cache
 # Special rule for the target package
 package: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool..."
-	cd /home/kimmi/10_projects/osre && /usr/bin/cpack --config ./CPackConfig.cmake
+	cd /home/kimmi/10_projects/hackandjump && /usr/bin/cpack --config ./CPackConfig.cmake
 .PHONY : package
 
 # Special rule for the target package
@@ -92,7 +92,7 @@ package/fast: package
 # Special rule for the target package_source
 package_source:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Run CPack packaging tool for source..."
-	cd /home/kimmi/10_projects/osre && /usr/bin/cpack --config ./CPackSourceConfig.cmake /home/kimmi/10_projects/osre/CPackSourceConfig.cmake
+	cd /home/kimmi/10_projects/hackandjump && /usr/bin/cpack --config ./CPackSourceConfig.cmake /home/kimmi/10_projects/hackandjump/CPackSourceConfig.cmake
 .PHONY : package_source
 
 # Special rule for the target package_source
@@ -124,7 +124,7 @@ install/local/fast: install/local
 
 # Special rule for the target list_install_components
 list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\" \"assimp-dev\" \"lib_ce2_infrastructure\" \"libassimp3.3.1-dev\""
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\" \"assimp-bin\" \"assimp-dev\" \"lib_ce2_infrastructure\" \"libassimp3.3.1-dev\""
 .PHONY : list_install_components
 
 # Special rule for the target list_install_components
@@ -146,14 +146,14 @@ install/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/kimmi/10_projects/osre && $(CMAKE_COMMAND) -E cmake_progress_start /home/kimmi/10_projects/osre/CMakeFiles /home/kimmi/10_projects/osre/3dparty/glew/CMakeFiles/progress.marks
-	cd /home/kimmi/10_projects/osre && $(MAKE) -f CMakeFiles/Makefile2 3dparty/glew/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kimmi/10_projects/osre/CMakeFiles 0
+	cd /home/kimmi/10_projects/hackandjump && $(CMAKE_COMMAND) -E cmake_progress_start /home/kimmi/10_projects/hackandjump/CMakeFiles /home/kimmi/10_projects/hackandjump/3dparty/osre/3dparty/glew/CMakeFiles/progress.marks
+	cd /home/kimmi/10_projects/hackandjump && $(MAKE) -f CMakeFiles/Makefile2 3dparty/osre/3dparty/glew/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/kimmi/10_projects/hackandjump/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/kimmi/10_projects/osre && $(MAKE) -f CMakeFiles/Makefile2 3dparty/glew/clean
+	cd /home/kimmi/10_projects/hackandjump && $(MAKE) -f CMakeFiles/Makefile2 3dparty/osre/3dparty/glew/clean
 .PHONY : clean
 
 # The main clean target
@@ -163,32 +163,32 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/kimmi/10_projects/osre && $(MAKE) -f CMakeFiles/Makefile2 3dparty/glew/preinstall
+	cd /home/kimmi/10_projects/hackandjump && $(MAKE) -f CMakeFiles/Makefile2 3dparty/osre/3dparty/glew/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/kimmi/10_projects/osre && $(MAKE) -f CMakeFiles/Makefile2 3dparty/glew/preinstall
+	cd /home/kimmi/10_projects/hackandjump && $(MAKE) -f CMakeFiles/Makefile2 3dparty/osre/3dparty/glew/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/kimmi/10_projects/osre && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/kimmi/10_projects/hackandjump && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
-3dparty/glew/CMakeFiles/glew.dir/rule:
-	cd /home/kimmi/10_projects/osre && $(MAKE) -f CMakeFiles/Makefile2 3dparty/glew/CMakeFiles/glew.dir/rule
-.PHONY : 3dparty/glew/CMakeFiles/glew.dir/rule
+3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/rule:
+	cd /home/kimmi/10_projects/hackandjump && $(MAKE) -f CMakeFiles/Makefile2 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/rule
+.PHONY : 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/rule
 
 # Convenience name for target.
-glew: 3dparty/glew/CMakeFiles/glew.dir/rule
+glew: 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/rule
 
 .PHONY : glew
 
 # fast build rule for target.
 glew/fast:
-	cd /home/kimmi/10_projects/osre && $(MAKE) -f 3dparty/glew/CMakeFiles/glew.dir/build.make 3dparty/glew/CMakeFiles/glew.dir/build
+	cd /home/kimmi/10_projects/hackandjump && $(MAKE) -f 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/build.make 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/build
 .PHONY : glew/fast
 
 src/glew.o: src/glew.c.o
@@ -197,7 +197,7 @@ src/glew.o: src/glew.c.o
 
 # target to build an object file
 src/glew.c.o:
-	cd /home/kimmi/10_projects/osre && $(MAKE) -f 3dparty/glew/CMakeFiles/glew.dir/build.make 3dparty/glew/CMakeFiles/glew.dir/src/glew.c.o
+	cd /home/kimmi/10_projects/hackandjump && $(MAKE) -f 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/build.make 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/src/glew.c.o
 .PHONY : src/glew.c.o
 
 src/glew.i: src/glew.c.i
@@ -206,7 +206,7 @@ src/glew.i: src/glew.c.i
 
 # target to preprocess a source file
 src/glew.c.i:
-	cd /home/kimmi/10_projects/osre && $(MAKE) -f 3dparty/glew/CMakeFiles/glew.dir/build.make 3dparty/glew/CMakeFiles/glew.dir/src/glew.c.i
+	cd /home/kimmi/10_projects/hackandjump && $(MAKE) -f 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/build.make 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/src/glew.c.i
 .PHONY : src/glew.c.i
 
 src/glew.s: src/glew.c.s
@@ -215,7 +215,7 @@ src/glew.s: src/glew.c.s
 
 # target to generate assembly for a file
 src/glew.c.s:
-	cd /home/kimmi/10_projects/osre && $(MAKE) -f 3dparty/glew/CMakeFiles/glew.dir/build.make 3dparty/glew/CMakeFiles/glew.dir/src/glew.c.s
+	cd /home/kimmi/10_projects/hackandjump && $(MAKE) -f 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/build.make 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/src/glew.c.s
 .PHONY : src/glew.c.s
 
 src/glewinfo.o: src/glewinfo.c.o
@@ -224,7 +224,7 @@ src/glewinfo.o: src/glewinfo.c.o
 
 # target to build an object file
 src/glewinfo.c.o:
-	cd /home/kimmi/10_projects/osre && $(MAKE) -f 3dparty/glew/CMakeFiles/glew.dir/build.make 3dparty/glew/CMakeFiles/glew.dir/src/glewinfo.c.o
+	cd /home/kimmi/10_projects/hackandjump && $(MAKE) -f 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/build.make 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/src/glewinfo.c.o
 .PHONY : src/glewinfo.c.o
 
 src/glewinfo.i: src/glewinfo.c.i
@@ -233,7 +233,7 @@ src/glewinfo.i: src/glewinfo.c.i
 
 # target to preprocess a source file
 src/glewinfo.c.i:
-	cd /home/kimmi/10_projects/osre && $(MAKE) -f 3dparty/glew/CMakeFiles/glew.dir/build.make 3dparty/glew/CMakeFiles/glew.dir/src/glewinfo.c.i
+	cd /home/kimmi/10_projects/hackandjump && $(MAKE) -f 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/build.make 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/src/glewinfo.c.i
 .PHONY : src/glewinfo.c.i
 
 src/glewinfo.s: src/glewinfo.c.s
@@ -242,7 +242,7 @@ src/glewinfo.s: src/glewinfo.c.s
 
 # target to generate assembly for a file
 src/glewinfo.c.s:
-	cd /home/kimmi/10_projects/osre && $(MAKE) -f 3dparty/glew/CMakeFiles/glew.dir/build.make 3dparty/glew/CMakeFiles/glew.dir/src/glewinfo.c.s
+	cd /home/kimmi/10_projects/hackandjump && $(MAKE) -f 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/build.make 3dparty/osre/3dparty/glew/CMakeFiles/glew.dir/src/glewinfo.c.s
 .PHONY : src/glewinfo.c.s
 
 # Help Target
@@ -277,6 +277,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/kimmi/10_projects/osre && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/kimmi/10_projects/hackandjump && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
