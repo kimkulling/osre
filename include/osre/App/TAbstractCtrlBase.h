@@ -65,7 +65,7 @@ protected:
     virtual bool onStateLeave();
 
 private:
-    typedef typename CPPCore::TArray<typename Listener*>::Iterator ListenerIt;
+    typedef typename CPPCore::TArray<Listener*>::Iterator ListenerIt;
     CPPCore::TArray<Listener*> m_listener;
     T m_state;
 };
