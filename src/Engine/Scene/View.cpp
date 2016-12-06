@@ -57,10 +57,16 @@ void View::set( const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up
     m_pos    = pos;
     m_lookAt = view;
     m_up     = up;
+
+    m_view = glm::lookAt( pos, view, up );
 }
 
-void View::setProjectionMode( float fov, float aspectRatio, float near, float far ) {
+void View::setProjectionMode( f32 fov, f32 aspectRatio, f32 near, f32 far ) {
+    m_projection = glm::perspective( fov, aspectRatio, near, far );
+}
 
+void View::setOrthoMode( f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far ) {
+    m_projection = glm::ortho( left, right, bottom, top, near, far );
 }
 
 } // Namespace Scene

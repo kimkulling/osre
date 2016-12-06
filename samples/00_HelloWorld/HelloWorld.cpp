@@ -108,7 +108,7 @@ protected:
         Profiling::PerformanceCounters::queryCounter( "fps", fps );
         std::stringstream stream;
         stream << std::setfill( '0' ) << std::setw( 2 ) << fps;
-        Scene::DbgRenderer::getInstance()->renderDbgText( 10, 10, 1, stream.str() );
+        //Scene::DbgRenderer::getInstance()->renderDbgText( 10, 10, 1, stream.str() );
 
     }
 };
