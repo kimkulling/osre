@@ -185,13 +185,11 @@ void AssimpWrapper::handleMaterial( aiMaterial *material ) {
 
     }
 
-
     ai_real shininess, strength;
     unsigned int max;	// changed: to unsigned
     i32 ret;
     ret = aiGetMaterialFloatArray( material, AI_MATKEY_SHININESS, &shininess, &max );
     ret = aiGetMaterialFloatArray( material, AI_MATKEY_SHININESS_STRENGTH, &strength, &max );
-
 }
 
 } // Namespace Assets

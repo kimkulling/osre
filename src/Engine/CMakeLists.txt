@@ -33,12 +33,14 @@ ENDIF( WIN32 )
 # App
 #==============================================================================
 SET( app_inc
-    ${HEADER_PATH}/App/AppBase.h
+    ${HEADER_PATH}/App/AppBase.h    
+    ${HEADER_PATH}/App/ServiceProvider.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
 )
 
 SET( app_src
     App/AppBase.cpp
+    App/ServiceProvider.cpp
 )
 
 #==============================================================================
@@ -48,7 +50,7 @@ SET( assets_inc
     ${HEADER_PATH}/Assets/AssetRegistry.h
     ${HEADER_PATH}/Assets/AssetDataArchive.h
     ${HEADER_PATH}/Assets/AssimpWrapper.h
-	${HEADER_PATH}/Assets/Model.h
+    ${HEADER_PATH}/Assets/Model.h
 )
 
 SET( assets_src
@@ -222,8 +224,8 @@ SET( platform_sdl2_src
     Platform/sdl2/SDL2ThreadFactory.cpp
     Platform/sdl2/SDL2ThreadFactory.h
     Platform/sdl2/SDL2ThreadLocalStorage.h
-	Platform/sdl2/SDL2DynamicLoader.cpp
-	Platform/sdl2/SDL2DynamicLoader.h
+    Platform/sdl2/SDL2DynamicLoader.cpp
+    Platform/sdl2/SDL2DynamicLoader.h
 )
 
 IF( WIN32 )
@@ -235,12 +237,12 @@ ENDIF( WIN32 )
 #==============================================================================
 SET( profiling_inc
     ${HEADER_PATH}/Profiling/FPSCounter.h 
-	${HEADER_PATH}/Profiling/PerformanceCounters.h
+    ${HEADER_PATH}/Profiling/PerformanceCounters.h
 )
 
 SET( profiling_src
     Profiling/FPSCounter.cpp
-	Profiling/PerformanceCounters.cpp
+    Profiling/PerformanceCounters.cpp
 )
 
 #==============================================================================
@@ -263,7 +265,7 @@ SET ( properties_src
 #==============================================================================
 SET( scene_src
     Scene/DbgRenderer.cpp
-	Scene/Component.cpp
+    Scene/Component.cpp
     Scene/GeometryBuilder.cpp
     Scene/MaterialBuilder.cpp
     Scene/Node.cpp
@@ -271,9 +273,14 @@ SET( scene_src
     Scene/TrackBall.cpp
     Scene/View.cpp
     Scene/World.cpp
+    Scene/2D/Sprite.cpp
+    Scene/2D/Sprite.h
+    Scene/2D/Node2D.cpp
+    Scene/2D/Stage2D.cpp
 )
+
 SET( scene_inc
-	${HEADER_PATH}/Scene/DbgRenderer.h
+    ${HEADER_PATH}/Scene/DbgRenderer.h
     ${HEADER_PATH}/Scene/Component.h
     ${HEADER_PATH}/Scene/GeometryBuilder.h
     ${HEADER_PATH}/Scene/MaterialBuilder.h
@@ -282,6 +289,8 @@ SET( scene_inc
     ${HEADER_PATH}/Scene/TrackBall.h
     ${HEADER_PATH}/Scene/View.h
     ${HEADER_PATH}/Scene/World.h
+    ${HEADER_PATH}/Scene/2D/Node2D.h
+    ${HEADER_PATH}/Scene/2D/Stage2D.h
 )
 
 #==============================================================================

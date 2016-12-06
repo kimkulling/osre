@@ -30,6 +30,14 @@ public:
         // empty
     }
 
+    bool loadWorld() {
+        return false;
+    }
+
+    bool saveWorld() {
+        return false;
+    }
+
 protected:
     virtual bool onCreate( Properties::Settings *settings = nullptr ) {
         const ArgumentParser &argParser = getArgumentParser();

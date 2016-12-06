@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
+#include <osre/App/ServiceProvider.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractTimer.h>
@@ -182,6 +183,8 @@ bool AppBase::onCreate( Properties::Settings *config ) {
     // create our world
     m_world = new Scene::World( "world" );
     
+    ServiceProvider::create( m_rbService );
+
     // set application state to "Created"
     osre_debug( Tag, "Set application state to Created." );
     m_state = State::Created;
@@ -196,6 +199,7 @@ bool AppBase::onDestroy() {
     }
 
     Assets::AssetRegistry::destroy();
+    ServiceProvider::destroy();
 
     if( m_platformInterface ) {
         Platform::PlatformInterface::destroy();

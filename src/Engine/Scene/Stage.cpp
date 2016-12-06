@@ -25,9 +25,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/View.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/Common/StringUtils.h>
 
 namespace OSRE {
 namespace Scene {
+
+using namespace ::OSRE::Common;
+
+static ui32 calcHash( const String &name ) {
+    const ui32 hash( StringUtils::hashName( name.c_str() ) );
+    return hash;
+}
 
 TransformBlockCache::TransformBlockCache( ui32 numIniBlocks )
 : m_numBlocks( numIniBlocks )
@@ -54,6 +62,7 @@ Stage::Stage( const String &name, RenderBackend::RenderBackendService *rbService
 : Object( name )
 , m_root( nullptr )
 , m_views()
+, m_registeredFactories()
 , m_transformBlocks( 5 )
 , m_rbService( rbService )
 , m_ids( nullptr ) {
@@ -73,18 +82,43 @@ Node *Stage::getRoot() const {
     return m_root;
 }
 
-Node *Stage::addNode( const String &name, Node *parent ) {
+Node *Stage::addNode( const String &name, Node *parent, const String &type ) {
     if( name.empty() ) {
         return nullptr;
     }
 
-    Node *newNode = new Node( name, *m_ids, true, true, parent );
-    if( nullptr == parent ) {
-        m_root = newNode;
-        m_root->get();
+    Node *newNode( nullptr );
+    if ( "default" == type ) {
+        newNode = new Node( name, *m_ids, true, true, parent );
+        if( nullptr == parent ) {
+            m_root = newNode;
+            m_root->get();
+        }
+    } else {
+        const ui32 hash( calcHash( type ) );
+        if ( m_registeredFactories.hasKey( hash ) ) {
+            AbstractNodeFactory *factory( nullptr );
+            if ( m_registeredFactories.getValue( hash, factory ) ) {
+                newNode = factory->create(name, *m_ids, true, true, parent);
+            }
+        }
     }
 
     return newNode;
+}
+
+bool Stage::registerNodeFactory( AbstractNodeFactory *factory ) {
+    if ( nullptr == factory ) {
+        return false;
+    }
+    const ui32 hash( calcHash( factory->getType() ) );
+    if ( m_registeredFactories.hasKey( hash ) ) {
+        return false;
+    }
+
+    m_registeredFactories.insert( hash, factory );
+
+    return true;
 }
 
 Node *Stage::findNode( const String &name ) const {
@@ -148,6 +182,11 @@ void Stage::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
 void Stage::setIdContainer( Common::Ids &ids ) {
     m_ids = &ids;
 }
+
+Common::Ids *Stage::getIdContainer() const {
+    return m_ids;
+}
+
 
 } // Namespace Scene
 } // namespace OSRE

@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/Object.h>
+#include <cppcore/Container/THashMap.h>
 
 namespace OSRE {
 
@@ -64,22 +65,48 @@ private:
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
+struct AbstractNodeFactory {
+    String m_type;
+    AbstractNodeFactory( const String &type )
+    : m_type( type ) {
+        // empty
+    }
+
+    virtual ~AbstractNodeFactory() {
+        // empty
+    }
+
+    virtual const String &getType() const {
+        return m_type;
+    }
+
+    virtual Node *create( const String &name, Common::Ids &ids, bool transformEnabled, bool renderEnabled, Node *parent ) = 0;
+};
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Stage : public Common::Object {
 public:
     Stage( const String &name, RenderBackend::RenderBackendService *rbService );
     virtual ~Stage();
     virtual void setRoot( Node *root );
     virtual Node *getRoot() const;
-    virtual Node *addNode( const String &name, Node *parent );
+    virtual Node *addNode( const String &name, Node *parent, const String &type="default" );
+    virtual bool registerNodeFactory( AbstractNodeFactory *factory );
     virtual Node *findNode( const String &name ) const;
     virtual View *addView( const String &name, Node *node );
     virtual void clear();
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
     virtual void setIdContainer( Common::Ids &ids );
-    
+    virtual Common::Ids *getIdContainer() const;
+
 private:
     Node *m_root;
     CPPCore::TArray<View*> m_views;
+    CPPCore::THashMap<ui32, AbstractNodeFactory*> m_registeredFactories;
     TransformBlockCache m_transformBlocks;
     RenderBackend::RenderBackendService *m_rbService;
     Common::Ids *m_ids;
