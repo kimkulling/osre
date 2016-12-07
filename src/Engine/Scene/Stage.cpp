@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/StringUtils.h>
+#include <osre/Common/Ids.h>
 
 namespace OSRE {
 namespace Scene {
@@ -66,7 +67,7 @@ Stage::Stage( const String &name, RenderBackend::RenderBackendService *rbService
 , m_transformBlocks( 5 )
 , m_rbService( rbService )
 , m_ids( nullptr ) {
-    // empty
+    m_ids = new Ids;
 }
 
 Stage::~Stage() {

@@ -58,6 +58,7 @@ namespace App {
 ///
 ///	@brief  This class implements the basics for a new OSRE-application. It helps you to 
 /// - create all subsystems on startup
+/// - prepares the ServiceProvider
 /// - destroy all subsystems on shutdown
 /// - managing stages and views for a running application.
 //-------------------------------------------------------------------------------------------------
@@ -145,7 +146,6 @@ private:
 };
 
 ///	@brief  Shortcut to get a OSRE-main function.
-/// 
 #define OSRE_MAIN( APPNAME )          \
 int main( int argc, char *argv[] )  { \
     APPNAME myApp( argc, argv );      \
@@ -160,7 +160,6 @@ int main( int argc, char *argv[] )  { \
                                       \
     return 0;                         \
 }
-
 
 } // Namespace App
 } // Namespace OSRE

@@ -56,12 +56,14 @@ public:
     bool unregisterListener( Listener *listener );
     bool gotoState( T newState );
     T getState() const;
+    bool update( d32 timetick);
 
 protected:
     TAbstractCtrlBase( T initialState );
     void notifyListener();
     virtual bool onStateEnter(); 
     virtual bool onState() = 0;
+    virtual bool onUpdate( d32 timetick );
     virtual bool onStateLeave();
 
 private:
@@ -75,13 +77,13 @@ inline
 TAbstractCtrlBase<T>::TAbstractCtrlBase( T initialState )
 : m_listener()
 , m_state( initialState ) {
-    // 
+    // empty
 }
 
 template<class T>
 inline
 TAbstractCtrlBase<T>::~TAbstractCtrlBase() {
-    // 
+    // empty
 }
 
 template<class T>
@@ -126,6 +128,15 @@ T TAbstractCtrlBase<T>::getState() const {
 
 template<class T>
 inline
+bool TAbstractCtrlBase<T>::update( d32 timetick ) {
+    if ( onState() ) {
+        return onUpdate( timetick );
+    }
+    return false;
+}
+
+template<class T>
+inline
 void TAbstractCtrlBase<T>::notifyListener() {
     for ( ui32 i = 0; i < m_listener.size(); i++ ) {
         if ( nullptr != m_listener[ i ] ) {
@@ -137,6 +148,12 @@ void TAbstractCtrlBase<T>::notifyListener() {
 template<class T>
 inline
 bool TAbstractCtrlBase<T>::onStateEnter() {
+    return true;
+}
+
+template<class T>
+inline
+bool TAbstractCtrlBase<T>::onUpdate( d32 timetick ) {
     return true;
 }
 
