@@ -66,6 +66,7 @@ public:
         WindowsResizable,       ///< Specific windows flags for the root surface.
         PollingMode,            ///< Polling mode, true for polling requested.
         DefaultFont,            ///< The default font for rendering.
+        RenderMode,             ///> The requested render mode ( 2D or 3D, default 3D ).
         MaxKonfigKey			///< The upper limit.
     };
 

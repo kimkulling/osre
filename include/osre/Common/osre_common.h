@@ -145,6 +145,18 @@ struct Handle {
     }
 };
 
+struct Rect2D {
+    ui32 m_x, m_y, m_width, m_height;
+
+    Rect2D( ui32 x, ui32 y, ui32 width, ui32 height )
+    : m_x( x )
+    , m_y( y )
+    , m_width( width )
+    , m_height( height ) {
+        // empty
+    }
+};
+
 ///	@brief  Shortcut to avoid copy operations.
 #define OSRE_NON_COPYABLE( NAME ) \
 private: \

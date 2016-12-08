@@ -177,7 +177,7 @@ SET( platform_src
     Platform/PlatformInterface.cpp
     Platform/PlatformPluginFactory.cpp
     Platform/PlatformPluginFactory.h
-	Platform/AbstractDynamicLoader.cpp
+    Platform/AbstractDynamicLoader.cpp
 )
 
 SET( platform_win32_src 
@@ -200,8 +200,8 @@ SET( platform_win32_src
     Platform/win32/Win32ThreadFactory.h
     Platform/win32/Win32Timer.cpp
     Platform/win32/Win32Timer.h
-	Platform/win32/Win32DynamicLoader.cpp
-	Platform/win32/Win32DynamicLoader.h
+    Platform/win32/Win32DynamicLoader.cpp
+    Platform/win32/Win32DynamicLoader.h
 )
 
 SET( platform_sdl2_src
@@ -294,22 +294,6 @@ SET( scene_inc
 )
 
 #==============================================================================
-# Threading
-#==============================================================================
-SET( threading_src
-    Threading/AbstractTask.cpp
-    Threading/AbstractThreadFactory.cpp
-    Threading/SystemTask.cpp
-)
-
-SET( threading_inc
-    ${HEADER_PATH}/Threading/AbstractTask.h
-    ${HEADER_PATH}/Threading/SystemTask.h
-    ${HEADER_PATH}/Threading/TaskJob.h
-    ${HEADER_PATH}/Threading/TAsyncQueue.h
-)
-
-#==============================================================================
 # RenderBackend
 #==============================================================================
 SET( renderbackend_src
@@ -317,7 +301,7 @@ SET( renderbackend_src
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
     RenderBackend/Parameter.cpp
-	RenderBackend/Pipeline.cpp
+    RenderBackend/Pipeline.cpp
 )
 
 SET( renderbackend_oglrenderer_src
@@ -334,28 +318,19 @@ SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLShader.cpp
     RenderBackend/OGLRenderer/OGLShader.h
 )
-
-if( NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*" )
-	if( WIN32 )
-		set( USE_PLATFORM "VK_USE_PLATFORM_WIN32_KHR" )
-	elseif( UNIX )
-		set( USE_PLATFORM "VK_USE_PLATFORM_XCB_KHR" )
-	endif()
-endif()
-
 SET( renderbackend_vulkanrenderer_src
-	RenderBackend/VulkanRenderer/VlkFunctions.h
-	RenderBackend/VulkanRenderer/VlkFunctions.cpp
-	RenderBackend/VulkanRenderer/VlkExportedFunctions.inl
-	RenderBackend/VulkanRenderer/VlkCommon.h
-	RenderBackend/VulkanRenderer/VlkRenderBackend.cpp
-	RenderBackend/VulkanRenderer/VlkRenderBackend.h
-	RenderBackend/VulkanRenderer/VlkRenderEventHandler.h
-	RenderBackend/VulkanRenderer/VlkRenderEventHandler.cpp
+        RenderBackend/VulkanRenderer/VlkFunctions.h
+        RenderBackend/VulkanRenderer/VlkFunctions.cpp
+        RenderBackend/VulkanRenderer/VlkExportedFunctions.inl
+        RenderBackend/VulkanRenderer/VlkCommon.h
+        RenderBackend/VulkanRenderer/VlkRenderBackend.cpp
+        RenderBackend/VulkanRenderer/VlkRenderBackend.h
+        RenderBackend/VulkanRenderer/VlkRenderEventHandler.h
+        RenderBackend/VulkanRenderer/VlkRenderEventHandler.cpp
 )
 
 SET( renderbackend_inc
-	${HEADER_PATH}/RenderBackend/BlendState.h
+    ${HEADER_PATH}/RenderBackend/BlendState.h
     ${HEADER_PATH}/RenderBackend/ClearState.h
     ${HEADER_PATH}/RenderBackend/SamplerState.h
     ${HEADER_PATH}/RenderBackend/StencilState.h
@@ -365,6 +340,40 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
 )
+
+#==============================================================================
+# UI
+#==============================================================================
+SET( ui_src
+    UI/ButtonBase.cpp
+)
+SET( ui_inc
+    ${HEADER_PATH}/UI/ButtonBase.h
+)
+
+#==============================================================================
+# Threading
+#==============================================================================
+SET( threading_src
+    Threading/AbstractTask.cpp
+    Threading/AbstractThreadFactory.cpp
+    Threading/SystemTask.cpp
+)
+
+SET( threading_inc
+    ${HEADER_PATH}/Threading/AbstractTask.h
+    ${HEADER_PATH}/Threading/SystemTask.h
+    ${HEADER_PATH}/Threading/TaskJob.h
+    ${HEADER_PATH}/Threading/TAsyncQueue.h
+)
+
+if( NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*" )
+	if( WIN32 )
+		set( USE_PLATFORM "VK_USE_PLATFORM_WIN32_KHR" )
+	elseif( UNIX )
+		set( USE_PLATFORM "VK_USE_PLATFORM_XCB_KHR" )
+	endif()
+endif()
 
 #==============================================================================
 # Defined Source groups
@@ -391,6 +400,7 @@ SOURCE_GROUP( RenderBackend\\VulkanRenderer FILES ${renderbackend_vulkanrenderer
 SOURCE_GROUP( Resources           FILES ${resources_src} )
 SOURCE_GROUP( Scene               FILES ${scene_src} )
 SOURCE_GROUP( Threading           FILES ${threading_src} )
+SOURCE_GROUP( UI                  FILES ${ui_src} )
 SOURCE_GROUP( Include\\App        FILES ${app_inc} )
 SOURCE_GROUP( Include\\Assets     FILES ${assets_inc} )
 SOURCE_GROUP( Include\\Debugging  FILES ${debugging_inc} )
@@ -400,15 +410,16 @@ SOURCE_GROUP( Include\\Debugging  FILES ${debugging_inc} )
 SOURCE_GROUP( Include\\System     FILES ${system_inc} )
 SOURCE_GROUP( Include\\Utils      FILES ${utils_inc} )
 SOURCE_GROUP( Include\\IO         FILES ${io_inc} )
-SOURCE_GROUP( Include\\Math       FILES ${math_inc} )
-SOURCE_GROUP( Include\\Memory     FILES ${memory_inc} )
-SOURCE_GROUP( Include\\Properties FILES ${properties_inc} )
-SOURCE_GROUP( Include\\Platform   FILES ${platform_inc} )
-SOURCE_GROUP( Include\\Profiling  FILES ${profiling_inc} )
-SOURCE_GROUP( Include\\Resources  FILES ${resources_inc} )
-SOURCE_GROUP( Include\\Scene      FILES ${scene_inc} )
-SOURCE_GROUP( Include\\Thread        FILES ${threading_inc} )
+SOURCE_GROUP( Include\\Math          FILES ${math_inc} )
+SOURCE_GROUP( Include\\Memory        FILES ${memory_inc} )
+SOURCE_GROUP( Include\\Properties    FILES ${properties_inc} )
+SOURCE_GROUP( Include\\Platform      FILES ${platform_inc} )
+SOURCE_GROUP( Include\\Profiling     FILES ${profiling_inc} )
+SOURCE_GROUP( Include\\Resources     FILES ${resources_inc} )
 SOURCE_GROUP( Include\\RenderBackend FILES ${renderbackend_inc} )
+SOURCE_GROUP( Include\\Scene         FILES ${scene_inc} )
+SOURCE_GROUP( Include\\Thread        FILES ${threading_inc} )
+SOURCE_GROUP( Include\\UI            FILES ${io_inc} )
 
 add_definitions( -D${USE_PLATFORM} )
 
@@ -437,6 +448,7 @@ ADD_LIBRARY( osre SHARED
     ${scene_inc}
     ${threading_inc}
     ${renderbackend_inc}
+    ${ui_inc}
     ${math_inc}
 
     ${app_src}
@@ -459,10 +471,11 @@ ADD_LIBRARY( osre SHARED
     ${resources_src}
     ${renderbackend_src}
         ${renderbackend_oglrenderer_src}
-		${renderbackend_vulkanrenderer_src}
+        ${renderbackend_vulkanrenderer_src}
     ${scene_src}
     ${threading_src}
         ${threading_impl_src}
+    ${ui_src}
 )
 
 target_link_libraries ( osre cppcore zlib Unzip glew soil ${platform_libs} freetype assimp )

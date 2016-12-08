@@ -7,36 +7,37 @@
 namespace OSRE {
 namespace App {
 
-class AbstractCtrlBase;
+template<class T>
+class TAbstractCtrlBase;
 
 //--------------------------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///
 ///	@brief	The abstract base class for application controller. 
 //--------------------------------------------------------------------------------------------------------------------
-template<class TCtrl, class T>
+template<class TEnum>
 class TAbstractCtrlStateListener {
 public:
     virtual ~TAbstractCtrlStateListener();
-    virtual void onStateChanged( T newState ) = 0;
+    virtual void onStateChanged( TEnum newState ) = 0;
 
 protected:
-    TAbstractCtrlStateListener( TCtrl *ctrl );
+    TAbstractCtrlStateListener( TAbstractCtrlBase<TEnum> *ctrl );
 
 private:
-    TCtrl *m_instance;
+    TAbstractCtrlBase<TEnum> *m_instance;
 };
 
-template<class TCtrl, class T>
+template<class TEnum>
 inline
-TAbstractCtrlStateListener<TCtrl, T>::TAbstractCtrlStateListener( TCtrl *ctrl )
+TAbstractCtrlStateListener<TEnum>::TAbstractCtrlStateListener( TAbstractCtrlBase<TEnum> *ctrl )
 : m_instance( ctrl ) {
     // empty
 }
 
-template<class TCtrl, class T>
+template<class TEnum>
 inline
-TAbstractCtrlStateListener<TCtrl, T>::~TAbstractCtrlStateListener() {
+TAbstractCtrlStateListener<TEnum>::~TAbstractCtrlStateListener() {
     // empty
 }
 
@@ -48,12 +49,9 @@ TAbstractCtrlStateListener<TCtrl, T>::~TAbstractCtrlStateListener() {
 template<class T>
 class TAbstractCtrlBase {
 public:
-    typedef TAbstractCtrlBase Type;
-    typedef TAbstractCtrlStateListener<Type, T> Listener;
-
     virtual ~TAbstractCtrlBase();
-    bool registerListener( Listener *listener );
-    bool unregisterListener( Listener *listener );
+    bool registerListener( TAbstractCtrlStateListener<T> *listener );
+    bool unregisterListener( TAbstractCtrlStateListener<T> *listener );
     bool gotoState( T newState );
     T getState() const;
     bool update( d32 timetick);
@@ -61,14 +59,14 @@ public:
 protected:
     TAbstractCtrlBase( T initialState );
     void notifyListener();
-    virtual bool onStateEnter(); 
+    virtual bool onStateEnter( T newState );
     virtual bool onState() = 0;
     virtual bool onUpdate( d32 timetick );
-    virtual bool onStateLeave();
+    virtual bool onStateLeave(T oldState );
 
 private:
-    typedef typename CPPCore::TArray<Listener*>::Iterator ListenerIt;
-    CPPCore::TArray<Listener*> m_listener;
+    typedef typename CPPCore::TArray<TAbstractCtrlStateListener<T>* >::Iterator ListenerIt;
+    CPPCore::TArray<TAbstractCtrlStateListener<T>* > m_listener;
     T m_state;
 };
 
@@ -88,17 +86,19 @@ TAbstractCtrlBase<T>::~TAbstractCtrlBase() {
 
 template<class T>
 inline
-bool TAbstractCtrlBase<T>::registerListener( Listener *listener ) {
+bool TAbstractCtrlBase<T>::registerListener( TAbstractCtrlStateListener<T> *listener ) {
     if ( nullptr == listener ) {
         return false;
     }
 
     m_listener.add( listener );
+
+    return true;
 }
 
 template<class T>
 inline
-bool TAbstractCtrlBase<T>::unregisterListener( Listener *listener ) {
+bool TAbstractCtrlBase<T>::unregisterListener( TAbstractCtrlStateListener<T> *listener ) {
     if ( nullptr == listener ) {
         return false;
     }
@@ -116,8 +116,21 @@ bool TAbstractCtrlBase<T>::unregisterListener( Listener *listener ) {
 template<class T>
 inline
 bool TAbstractCtrlBase<T>::gotoState( T newState ) {
+    if ( !onStateLeave( m_state ) ) {
+        return false;
+    }
+    if ( !onStateEnter( newState ) ) {
+        return false;
+    }
+
     m_state = newState;
-    return onState();
+    if ( !onState() ) {
+        return false;
+    }
+
+    notifyListener();
+
+    return true;
 }
 
 template<class T>
@@ -140,14 +153,14 @@ inline
 void TAbstractCtrlBase<T>::notifyListener() {
     for ( ui32 i = 0; i < m_listener.size(); i++ ) {
         if ( nullptr != m_listener[ i ] ) {
-            m_listener[ i ]->onStateChanged( m_state() );
+            m_listener[ i ]->onStateChanged( m_state );
         }
     }
 }
 
 template<class T>
 inline
-bool TAbstractCtrlBase<T>::onStateEnter() {
+bool TAbstractCtrlBase<T>::onStateEnter( T newState ) {
     return true;
 }
 
@@ -159,7 +172,7 @@ bool TAbstractCtrlBase<T>::onUpdate( d32 timetick ) {
 
 template<class T>
 inline
-bool TAbstractCtrlBase<T>::onStateLeave() {
+bool TAbstractCtrlBase<T>::onStateLeave( T oldState) {
     return true;
 }
 

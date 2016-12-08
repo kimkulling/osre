@@ -51,7 +51,8 @@ static const String           ConfigKeyStringTable[ Settings::MaxKonfigKey ] = {
     "Fullscreen",
     "WindowsResizable",
     "PollingMode",
-    "DefaultFont"
+    "DefaultFont",
+    "RenderMode"
 };
 
 Settings::Settings() 
@@ -194,6 +195,9 @@ void Settings::initDefaults() {
 
     value.setString( "buildin_arial.bmp" );
     m_pPropertyMap->setProperty( DefaultFont, ConfigKeyStringTable[ DefaultFont ], value );
+
+    value.setInt( 1 );
+    m_pPropertyMap->setProperty( RenderMode, ConfigKeyStringTable[ RenderMode], value );
 }
 
 } // Namespace Properties

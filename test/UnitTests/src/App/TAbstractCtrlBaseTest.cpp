@@ -22,3 +22,136 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
 #include <osre/App/TAbstractCtrlBase.h>
+
+namespace OSRE {
+namespace UnitTest {
+
+using namespace ::OSRE::App;
+
+enum class TestState {
+    United,
+    Inited
+};
+
+class TestCtrl : public TAbstractCtrlBase<TestState> {
+public:
+    TestCtrl()
+    : TAbstractCtrlBase<TestState>( TestState::Inited )
+    , m_entered( false )
+    , m_handled( false )
+    , m_leave( false ) {
+        // empty
+    }
+
+    ~TestCtrl() {
+        // empty
+    }
+
+    void clear() {
+        m_entered = false;
+        m_handled = false;
+        m_leave = false;
+    }
+
+protected:
+    virtual bool onStateEnter( TestState newState ) {
+        m_entered = true;
+        return true;
+    }
+
+    virtual bool onState() {
+        m_handled = true;
+        return true;
+
+        return true;
+    }
+    virtual bool onUpdate( d32 timetick ) {
+        m_lastTimetick = timetick;
+        return onUpdate( timetick );
+    }
+
+    virtual bool onStateLeave( TestState oldState ) {
+        m_leave = true;
+        return true;
+    }
+
+public:
+    bool m_entered, m_handled, m_leave;
+    d32 m_lastTimetick;
+};
+
+class TestCtrlListener : public TAbstractCtrlStateListener<TestState> {
+public:
+    TestCtrlListener( TestCtrl *ctrl )
+    : TAbstractCtrlStateListener<TestState>( ctrl )
+    , m_notified( false ) {
+        // empty
+    }
+
+    virtual ~TestCtrlListener() {
+        // empty
+    }
+
+    void clear() {
+        m_notified = false;
+    }
+
+    virtual void onStateChanged( TestState newState ) {
+        m_notified = true;
+    }
+
+    bool m_notified;
+};
+
+class TAbstractCtrlBaseTest : public ::testing::Test {
+    // empty
+};
+
+
+TEST_F( TAbstractCtrlBaseTest, createTest ) {
+    bool ok( true );
+    try {
+        TestCtrl ctrl;
+    } catch( ... ) {
+        ok = false;
+    }
+    EXPECT_TRUE( ok );
+}
+
+TEST_F( TAbstractCtrlBaseTest, gotoStateTest ) {
+    TestCtrl ctrl;
+    bool res( false );
+    res = ctrl.gotoState( TestState::Inited );
+    EXPECT_TRUE( res );
+
+    EXPECT_EQ( TestState::Inited, ctrl.getState() );
+    EXPECT_TRUE( ctrl.m_entered );
+    EXPECT_TRUE( ctrl.m_handled );
+    EXPECT_TRUE( ctrl.m_leave );
+}
+
+TEST_F( TAbstractCtrlBaseTest, notifyListenerTest ) {
+    TestCtrl ctrl;
+    TestCtrlListener *listener = new TestCtrlListener( &ctrl );
+    EXPECT_FALSE( listener->m_notified );
+    bool res( false );
+    res = ctrl.registerListener( listener );
+    EXPECT_TRUE( res );
+
+    res = ctrl.gotoState( TestState::Inited );
+    EXPECT_TRUE( res );
+    EXPECT_TRUE( listener->m_notified );
+
+    res = ctrl.unregisterListener( listener );
+    EXPECT_TRUE( res );
+
+    ctrl.clear();
+    listener->clear();
+    res = ctrl.gotoState( TestState::Inited );
+    EXPECT_FALSE( listener->m_notified );
+    delete listener;
+}
+
+}
+}
+

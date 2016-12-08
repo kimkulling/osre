@@ -102,6 +102,8 @@ public:
     /// @return The new stage instance or nullptr if the stage exists already.
     virtual Scene::Stage *createStage( const String &name );
 
+    virtual bool setActiveStage( Scene::Stage *stage );
+
     /// @brief  Activates a stage.
     /// @param  name        [in] The name of the stage.
     /// @return true if successful,  false if not.

@@ -118,6 +118,13 @@ Scene::Stage *AppBase::createStage( const String &name ) {
     return stage;
 }
 
+bool AppBase::setActiveStage( Scene::Stage *stage ) {
+    if ( nullptr == m_world ) {
+        return false;
+    }
+    return m_world->setActiveStage( stage );
+}
+
 bool AppBase::activateStage( const String &name ) {
     if ( nullptr == m_world ) {
         return false;
@@ -181,6 +188,7 @@ bool AppBase::onCreate( Properties::Settings *config ) {
     m_timer = Platform::PlatformInterface::getInstance()->getTimer();
 
     // create our world
+    m_settings->get( Properties::Settings::RenderMode );
     m_world = new Scene::World( "world" );
     
     ServiceProvider::create( m_rbService );

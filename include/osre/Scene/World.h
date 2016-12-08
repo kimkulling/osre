@@ -40,7 +40,7 @@ class Stage;
 class View;
 
 enum class RenderMode {
-    Render2D,
+    Render2D=0,
     Render3D
 };
 
