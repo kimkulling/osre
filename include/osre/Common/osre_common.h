@@ -145,10 +145,46 @@ struct Handle {
     }
 };
 
-struct Rect2D {
-    ui32 m_x, m_y, m_width, m_height;
+struct Color4 {
+    f32 m_r, m_g, m_b, m_a;
 
-    Rect2D( ui32 x, ui32 y, ui32 width, ui32 height )
+    Color4()
+    : m_r( 1.f )
+    , m_g( 1.f )
+    , m_b( 1.f )
+    , m_a( 1.f ) {
+        // empty
+    }
+
+    Color4( f32 r, f32 g, f32 b, f32 a )
+    : m_r( r )
+    , m_g( g )
+    , m_b( b )
+    , m_a( a ) {
+        // empty
+    }
+};
+
+template<class T>
+struct TVec2 {
+    T v[ 2 ];
+};
+
+template<class T>
+struct TVec3 {
+    T v[ 3 ];
+};
+
+template<class T>
+struct TVec4 {
+    T v[ 4 ];
+};
+
+template<class T>
+struct TRect2D {
+    T m_x, m_y, m_width, m_height;
+
+    TRect2D( T x, T y, T width, T height )
     : m_x( x )
     , m_y( y )
     , m_width( width )
@@ -156,6 +192,8 @@ struct Rect2D {
         // empty
     }
 };
+
+typedef TRect2D<ui32> RectUI;
 
 ///	@brief  Shortcut to avoid copy operations.
 #define OSRE_NON_COPYABLE( NAME ) \

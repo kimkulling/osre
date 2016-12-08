@@ -144,10 +144,10 @@ bool AssetDataArchive::readHeader( IO::Stream &stream, ui32 minVersion, AssetDat
     return true;
 }
 
-bool AssetDataArchive::writeHeader( IO::Stream &stream ) {
-    ui32 offset( stream.seek( 0, Stream::Origin::Begin ) );
-    offset = stream.write( MagicOSRE, sizeof( uc8 ) * 4 );
-    offset = stream.writeI32( Version );
+bool AssetDataArchive::writeHeader( IO::Stream &stream, ui32 &offset ) {
+    offset =  stream.seek( 0, Stream::Origin::Begin );
+    offset += stream.write( MagicOSRE, sizeof( uc8 ) * 4 );
+    offset += stream.writeI32( Version );
 
     return true;
 }
@@ -215,7 +215,8 @@ bool AssetDataArchive::write( IO::Stream &stream ) {
         return false;
     }
 
-    if ( !writeHeader( stream ) ) {
+    ui32 offset( 0 );
+    if ( !writeHeader( stream, offset ) ) {
         return false;
     }
 
