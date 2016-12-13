@@ -130,7 +130,7 @@ SET( io_src
 SET( io_inc
     ${HEADER_PATH}/IO/Stream.h
     ${HEADER_PATH}/IO/AbstractFileSystem.h
-        ${HEADER_PATH}/IO/IOService.h
+    ${HEADER_PATH}/IO/IOService.h
     ${HEADER_PATH}/IO/IOSystemInfo.h
     ${HEADER_PATH}/IO/Uri.h
 )
@@ -278,7 +278,6 @@ SET( scene_src
     Scene/2D/Node2D.cpp
     Scene/2D/Stage2D.cpp
 )
-
 SET( scene_inc
     ${HEADER_PATH}/Scene/DbgRenderer.h
     ${HEADER_PATH}/Scene/Component.h
@@ -303,7 +302,6 @@ SET( renderbackend_src
     RenderBackend/Parameter.cpp
     RenderBackend/Pipeline.cpp
 )
-
 SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLCommon.h
     RenderBackend/OGLRenderer/OGLCommon.cpp
@@ -328,7 +326,6 @@ SET( renderbackend_vulkanrenderer_src
         RenderBackend/VulkanRenderer/VlkRenderEventHandler.h
         RenderBackend/VulkanRenderer/VlkRenderEventHandler.cpp
 )
-
 SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/BlendState.h
     ${HEADER_PATH}/RenderBackend/ClearState.h
@@ -345,10 +342,14 @@ SET( renderbackend_inc
 # UI
 #==============================================================================
 SET( ui_src
+    UI/Widget.cpp
     UI/ButtonBase.cpp
+    UI/Screen.cpp
 )
 SET( ui_inc
+    ${HEADER_PATH}/UI/Widget.h
     ${HEADER_PATH}/UI/ButtonBase.h
+    ${HEADER_PATH}/UI/Screen.h
 )
 
 #==============================================================================

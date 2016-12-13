@@ -51,6 +51,10 @@ namespace Properties {
     class Settings;
 }
 
+namespace UI {
+    class Screen;
+}
+
 namespace App {
         
 //-------------------------------------------------------------------------------------------------
@@ -111,6 +115,8 @@ public:
 
     virtual void requestShutdown();
     virtual bool shutdownRequested() const;
+    virtual void setUIScreen( UI::Screen *uiScreen );
+
 protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
     /// @return true if successful,  false if not.
@@ -144,6 +150,7 @@ private:
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
     Scene::World *m_world;
+    UI::Screen *m_uiScreen;
     bool m_shutdownRequested;
 };
 

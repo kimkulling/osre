@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/World.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Assets/AssetRegistry.h>
+#include <osre/UI/Screen.h>
 
 // private includes
 #include <src/Engine/Platform/PlatformPluginFactory.h>
@@ -51,6 +52,7 @@ AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const Strin
 , m_timer( nullptr )
 , m_rbService( nullptr )
 , m_world( nullptr )
+, m_uiScreen( nullptr )
 , m_shutdownRequested( false ) {
     m_settings = new Properties::Settings;
     m_settings->setString( Properties::Settings::RenderAPI, "opengl" );
@@ -140,6 +142,12 @@ bool AppBase::shutdownRequested() const {
     return m_shutdownRequested;
 }
 
+void AppBase::setUIScreen( UI::Screen *uiScreen ) {
+    if ( m_uiScreen != uiScreen ) {
+        m_uiScreen = uiScreen;
+    }
+}
+
 bool AppBase::onCreate( Properties::Settings *config ) {
     if ( m_state!=State::Uninited ) {
         osre_debug( Tag, "AppBase::State not in proper state: Uninited." );
@@ -225,7 +233,13 @@ bool AppBase::onDestroy() {
 }
 
 void AppBase::onUpdate( d32 timetick ) {
-    m_world->update( m_rbService );
+    if ( nullptr != m_world ) {
+        m_world->update( m_rbService );
+    }
+
+    if ( nullptr != m_uiScreen ) {
+        m_uiScreen->render( m_rbService );
+    }
 }
 
 const ArgumentParser &AppBase::getArgumentParser() const {
