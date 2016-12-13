@@ -191,6 +191,14 @@ struct TRect2D {
     , m_height( height ) {
         // empty
     }
+
+    const bool operator == ( const TRect2D<T> &rhs ) const {
+        return ( m_x == rhs.m_x && m_y == rhs.m_y && m_width == rhs.m_width && m_height == rhs.m_height );
+    }
+
+    const bool operator != ( const TRect2D<T> &rhs ) const {
+        return ( m_x != rhs.m_x || m_y != rhs.m_y || m_width != rhs.m_width || m_height != rhs.m_height );
+    }
 };
 
 typedef TRect2D<ui32> RectUI;

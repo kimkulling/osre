@@ -58,7 +58,7 @@ TEST_F( PerformanceCountersTest, registerCounterTest ) {
 
     ok = PerformanceCounters::queryCounter( TestKey, v );
     EXPECT_TRUE( ok );
-    EXPECT_EQ( v, 0 );
+    EXPECT_EQ( v, 0U );
 
     ok = PerformanceCounters::unregisterCounter( TestKey );
     EXPECT_TRUE( ok );
@@ -82,7 +82,7 @@ TEST_F( PerformanceCountersTest, setCounterTest ) {
     ui32 v( 0 );
     ok = PerformanceCounters::queryCounter( TestKey, v );
     EXPECT_TRUE( ok );
-    EXPECT_EQ( v, 10 );
+    EXPECT_EQ( v, 10U );
 
     ok = PerformanceCounters::destroy();
     EXPECT_TRUE( ok );
@@ -99,7 +99,7 @@ TEST_F( PerformanceCountersTest, resetCounterTest ) {
 
     ui32 v( 0 );
     ok = PerformanceCounters::queryCounter( TestKey, v );
-    EXPECT_EQ( v, 10 );
+    EXPECT_EQ( v, 10U );
 
     PerformanceCounters::resetCounter( "test" );
     ok = PerformanceCounters::destroy();
