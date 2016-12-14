@@ -56,8 +56,8 @@ SET( assets_inc
 SET( assets_src
     Assets/AssetRegistry.cpp
     Assets/AssetDataArchive.cpp
-	Assets/AssimpWrapper.cpp
-	Assets/Model.cpp
+    Assets/AssimpWrapper.cpp
+    Assets/Model.cpp
 )
 
 #==============================================================================
@@ -104,7 +104,6 @@ SET( debugging_inc
     ${HEADER_PATH}/Debugging/AssertHandler.h
     ${HEADER_PATH}/Debugging/osre_debugging.h
 )
-
 SET( debugging_src
     Debugging/AssertHandler.cpp
 )
@@ -239,7 +238,6 @@ SET( profiling_inc
     ${HEADER_PATH}/Profiling/FPSCounter.h 
     ${HEADER_PATH}/Profiling/PerformanceCounters.h
 )
-
 SET( profiling_src
     Profiling/FPSCounter.cpp
     Profiling/PerformanceCounters.cpp
@@ -344,11 +342,13 @@ SET( renderbackend_inc
 SET( ui_src
     UI/Widget.cpp
     UI/ButtonBase.cpp
+    UI/Panel.cpp
     UI/Screen.cpp
 )
 SET( ui_inc
     ${HEADER_PATH}/UI/Widget.h
     ${HEADER_PATH}/UI/ButtonBase.h
+    ${HEADER_PATH}/UI/Panel.h
     ${HEADER_PATH}/UI/Screen.h
 )
 

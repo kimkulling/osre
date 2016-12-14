@@ -142,6 +142,17 @@ bool AppBase::shutdownRequested() const {
     return m_shutdownRequested;
 }
 
+UI::Screen *AppBase::createScreen( const String &name ) {
+    if ( name.empty() ) {
+        return nullptr;
+    }
+
+    UI::Screen *newScreen = new UI::Screen( name, nullptr );
+    m_uiScreen = newScreen;
+
+    return newScreen;
+}
+
 void AppBase::setUIScreen( UI::Screen *uiScreen ) {
     if ( m_uiScreen != uiScreen ) {
         m_uiScreen = uiScreen;

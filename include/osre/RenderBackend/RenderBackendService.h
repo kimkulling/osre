@@ -25,6 +25,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/AbstractService.h>
 #include <osre/Common/Event.h>
 #include <osre/Common/TObjPtr.h>
+#include <osre/RenderBackend/BlendState.h>
+#include <osre/RenderBackend/ClearState.h>
+#include <osre/RenderBackend/SamplerState.h>
+#include <osre/RenderBackend/StencilState.h>
 
 namespace OSRE {
 
@@ -59,6 +63,7 @@ DECL_EVENT( OnAttachSceneEvent );
 DECL_EVENT( OnUpdateGeoEvent );
 DECL_EVENT( OnClearSceneEvent );
 DECL_EVENT( OnDetachSceneEvent );
+DECL_EVENT( OnSetRenderStates );
 DECL_EVENT( OnRenderFrameEvent );
 DECL_EVENT( OnUpdateParameterEvent );
 
@@ -110,6 +115,17 @@ struct OSRE_EXPORT AttachGeoEventData : public Common::EventData {
     Geometry *m_geo;
     ui32 m_numInstances;
     GeoInstanceData *m_geoInstanceData;
+};
+
+struct OnSetRenderStatesData : public Common::EventData {
+    OnSetRenderStatesData()
+    : EventData(  OnSetRenderStates, nullptr ) {
+
+    }
+    BlendState   m_blendState;
+    ClearState   m_clearState;
+    StencilState m_stencilState;
+    SamplerState m_samplerState;
 };
 
 //-------------------------------------------------------------------------------------------------

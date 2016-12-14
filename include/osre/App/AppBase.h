@@ -115,6 +115,7 @@ public:
 
     virtual void requestShutdown();
     virtual bool shutdownRequested() const;
+    virtual UI::Screen *createScreen( const String &name );
     virtual void setUIScreen( UI::Screen *uiScreen );
 
 protected:
