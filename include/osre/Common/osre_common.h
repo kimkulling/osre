@@ -163,6 +163,14 @@ struct Color4 {
     , m_a( a ) {
         // empty
     }
+
+    bool operator == ( const Color4 & rhs ) const {
+        return ( m_r == rhs.m_r && m_g == rhs.m_b && m_g == rhs.m_b && m_a == rhs.m_a );
+    }
+
+    bool operator != ( const Color4 & rhs ) const {
+        return !( *this == rhs );
+    }
 };
 
 template<class T>

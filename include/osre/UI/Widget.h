@@ -49,7 +49,7 @@ struct Style {
     }
 };
 
-class StyleProvider {
+class OSRE_EXPORT StyleProvider {
 public:
     static Style &getCurrentStyle();
 
@@ -63,7 +63,7 @@ private:
     Style m_activeStyle;
 };
 
-class Widget : public Common::Object {
+class OSRE_EXPORT Widget : public Common::Object {
 public:
     virtual ~Widget();
     virtual void setParent( Widget *parent );

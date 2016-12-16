@@ -5,7 +5,7 @@
 namespace OSRE {
 namespace UI {
 
-class Panel : public Widget {
+class OSRE_EXPORT Panel : public Widget {
 public:
     Panel( const String &name, Widget *parent );
     virtual ~Panel();

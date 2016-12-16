@@ -36,7 +36,7 @@ namespace Platform {
 
 namespace UI {
 
-class Screen : public Widget {
+class OSRE_EXPORT Screen : public Widget {
 public:
     Screen( const String &name, Widget *parent );
     virtual ~Screen();

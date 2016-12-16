@@ -36,7 +36,7 @@ namespace RenderBackend {
 
 namespace UI {
 
-class ButtonBase : public Widget {
+class OSRE_EXPORT ButtonBase : public Widget {
 public:
     ButtonBase( const String &name, Widget *parent );
     virtual ~ButtonBase();
