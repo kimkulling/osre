@@ -566,11 +566,15 @@ bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
 	UpdateParameterEventData *updateParamData = ( UpdateParameterEventData* ) eventData;
     if( nullptr != updateParamData ) {
         for( ui32 i = 0; i < updateParamData->m_numParam; ++i ) {
-            OGLParameter *oglParam = m_oglBackend->getParameter( updateParamData->m_param[ i ].m_name );
+            Parameter *currentParam( updateParamData->m_param[ i ] );
+            if ( nullptr == currentParam ) {
+                continue;
+            }
+            OGLParameter *oglParam = m_oglBackend->getParameter( currentParam->m_name );
             if( oglParam ) {
                 ::memcpy( oglParam->m_data->getData(), 
-                          updateParamData->m_param[ i ].m_data.getData(), 
-                          updateParamData->m_param[ i ].m_data.m_size );
+                    currentParam->m_data.getData(),
+                    currentParam->m_data.m_size );
             }
         }
     }

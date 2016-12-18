@@ -148,7 +148,7 @@ TEST_F( TAbstractCtrlBaseTest, notifyListenerTest ) {
     ctrl.clear();
     listener->clear();
     res = ctrl.gotoState( TestState::Inited );
-    EXPECT_FALSE( listener->m_notified );
+    EXPECT_TRUE( listener->m_notified );
     delete listener;
 }
 
