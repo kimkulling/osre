@@ -147,7 +147,7 @@ UI::Screen *AppBase::createScreen( const String &name ) {
         return nullptr;
     }
 
-    UI::Screen *newScreen = new UI::Screen( name, nullptr );
+    UI::Screen *newScreen = new UI::Screen( name, nullptr, 100, 100 );
     m_uiScreen = newScreen;
 
     return newScreen;
