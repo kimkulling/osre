@@ -55,9 +55,8 @@ void Screen::render( RenderBackend::RenderBackendService *rbSrv ) {
         return;
     }
     // set 2D render mode
-    glm::mat4 project;
-    project = glm::ortho( 0, m_width, m_height, 0 );
-    ::memcpy( param->m_data.m_data, glm::value_ptr( project*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
+    m_transformMatrix.m_projection = glm::ortho( 0, m_width, m_height, 0 );
+    ::memcpy( param->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
     UpdateParameterEventData *data = new UpdateParameterEventData;
     data->m_numParam = 1;
     data->m_param = new Parameter *[ 1 ];

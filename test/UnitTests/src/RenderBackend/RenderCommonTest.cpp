@@ -173,7 +173,11 @@ TEST_F( RenderCommonTest, accessTransformMatrixBlockTest ) {
     block.m_projection = glm::translate( block.m_model, glm::vec3( 1, 2, 3 ) );
     block.m_view = glm::translate( block.m_model, glm::vec3( 1, 2, 3 ) );
 
+    glm::mat4 identity;
     block.init();
+    EXPECT_FLOAT_EQ( identity.length(), block.m_model.length() );
+    EXPECT_FLOAT_EQ( identity.length(), block.m_projection.length() );
+    EXPECT_FLOAT_EQ( identity.length(), block.m_view.length() );
 }
 
 TEST_F( RenderCommonTest, accessMaterialTest ) {

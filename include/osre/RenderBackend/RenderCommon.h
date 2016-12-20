@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -399,6 +400,7 @@ struct OSRE_EXPORT TransformMatrixBlock {
     TransformMatrixBlock();
     ~TransformMatrixBlock();
     void init();
+    const float *getMVP();
 
     OSRE_NON_COPYABLE( TransformMatrixBlock )
 };
