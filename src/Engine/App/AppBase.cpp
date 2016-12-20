@@ -222,8 +222,8 @@ bool AppBase::onCreate( Properties::Settings *config ) {
     m_timer = Platform::PlatformInterface::getInstance()->getTimer();
 
     // create our world
-    m_settings->get( Properties::Settings::RenderMode );
-    m_world = new Scene::World( "world" );
+    Scene::RenderMode mode = static_cast<Scene::RenderMode>( m_settings->get( Properties::Settings::RenderMode ).getInt() );
+    m_world = new Scene::World( "world", mode );
     
     ServiceProvider::create( m_rbService );
 
