@@ -25,7 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractTimer.h>
+#include <osre/Platform/AbstractSurface.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/Parameter.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/World.h>
 #include <osre/Debugging/osre_debugging.h>
@@ -39,6 +41,7 @@ namespace OSRE {
 namespace App {
 
 using namespace ::OSRE::Common;
+using namespace ::OSRE::Platform;
 
 const String API_Arg = "api";
 const String Tag     = "AppBase";
@@ -147,7 +150,13 @@ UI::Screen *AppBase::createScreen( const String &name ) {
         return nullptr;
     }
 
-    UI::Screen *newScreen = new UI::Screen( name, nullptr );
+    AbstractSurface *surface( m_platformInterface->getRootSurface() );
+    i32 w( 100 ), h( 100 );
+    if ( nullptr != surface ) {
+        w = surface->getProperties()->m_width;
+        h = surface->getProperties()->m_height;
+    }
+    UI::Screen *newScreen = new UI::Screen( name, nullptr, w, h );
     m_uiScreen = newScreen;
 
     return newScreen;
@@ -160,7 +169,7 @@ void AppBase::setUIScreen( UI::Screen *uiScreen ) {
 }
 
 bool AppBase::onCreate( Properties::Settings *config ) {
-    if ( m_state!=State::Uninited ) {
+    if ( m_state != State::Uninited ) {
         osre_debug( Tag, "AppBase::State not in proper state: Uninited." );
         return false;
     }
@@ -197,6 +206,12 @@ bool AppBase::onCreate( Properties::Settings *config ) {
     if( !m_rbService->open() ) {
         m_rbService->release();
         m_rbService = nullptr;
+        return false;
+    }
+
+    if ( nullptr == RenderBackend::ParameterRegistry::create( m_rbService ) ) {
+        m_rbService->release();
+        return false;
     }
 
     // enable render-backend
@@ -207,8 +222,8 @@ bool AppBase::onCreate( Properties::Settings *config ) {
     m_timer = Platform::PlatformInterface::getInstance()->getTimer();
 
     // create our world
-    m_settings->get( Properties::Settings::RenderMode );
-    m_world = new Scene::World( "world" );
+    Scene::RenderMode mode = static_cast<Scene::RenderMode>( m_settings->get( Properties::Settings::RenderMode ).getInt() );
+    m_world = new Scene::World( "world", mode );
     
     ServiceProvider::create( m_rbService );
 

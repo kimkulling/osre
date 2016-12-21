@@ -23,6 +23,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/UI/Widget.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace OSRE {
 
@@ -38,13 +42,15 @@ namespace UI {
 
 class OSRE_EXPORT Screen : public Widget {
 public:
-    Screen( const String &name, Widget *parent );
+    Screen( const String &name, Widget *parent, i32 width, i32 height );
     virtual ~Screen();
     virtual void setSurface( Platform::AbstractSurface *surface );
     virtual void render( RenderBackend::RenderBackendService *rbSrv );
 
 private:
     Platform::AbstractSurface *m_surface;
+    RenderBackend::TransformMatrixBlock m_transformMatrix;
+    i32 m_width, m_height;
 };
 
 }

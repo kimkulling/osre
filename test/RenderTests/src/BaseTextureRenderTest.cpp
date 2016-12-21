@@ -107,7 +107,7 @@ public:
     }
 
     virtual ~BaseTextureRenderTest( ) {
-        delete m_mvpParam;
+        Parameter::destroy( m_mvpParam );
         m_mvpParam = nullptr;
     }
 
@@ -211,8 +211,9 @@ public:
 
         UpdateParameterEventData *data( new UpdateParameterEventData );
         data->m_numParam = 1;
-        data->m_param = m_mvpParam;
-        ::memcpy( data->m_param->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
+        data->m_param = new Parameter*[ data->m_numParam ];
+        data->m_param[ 0 ] = m_mvpParam;
+        ::memcpy( m_mvpParam->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
 
         pRenderBackendSrv->sendEvent( &OnUpdateParameterEvent, data );
 

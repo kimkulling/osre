@@ -159,7 +159,7 @@ struct OSRE_EXPORT UpdateParameterEventData : public Common::EventData {
     }
 
     ui32 m_numParam;
-    Parameter *m_param;
+    Parameter **m_param;
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -66,8 +66,9 @@ void RenderCmdBuffer::enqueueRenderCmd( OGLRenderCmd *renderCmd, EnqueueType typ
         return;
     }
     if ( nullptr == renderCmd->m_pData ) {
-        osre_debug( Tag, "Nullptr in rener command data detected." );
+        osre_debug( Tag, "Nullptr in render-command data detected." );
     }
+
     if ( EnqueueType::RCE_Back == type  ) {
         m_cmdbuffer.add( renderCmd );
     }
@@ -125,9 +126,14 @@ bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
     UpdateParameterEventData *updateParamData = ( UpdateParameterEventData* ) data;
     if( nullptr != updateParamData ) {
         for( ui32 i = 0; i < updateParamData->m_numParam; ++i ) {
-            OGLParameter *oglParam = m_renderbackend->getParameter( updateParamData->m_param[ i ].m_name );
-            if( oglParam ) {
-                ::memcpy( oglParam->m_data->getData(), updateParamData->m_param[ i ].m_data.getData(), updateParamData->m_param[ i ].m_data.m_size );
+            Parameter *currentParam = updateParamData->m_param[ i ];
+            if ( nullptr == currentParam ) {
+                continue;
+            }
+
+            OGLParameter *oglParam = m_renderbackend->getParameter( currentParam->m_name );
+            if( nullptr != oglParam ) {
+                ::memcpy( oglParam->m_data->getData(), currentParam->m_data.getData(), currentParam->m_data.m_size );
             }
         }
     }

@@ -21,10 +21,14 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/Parameter.h>
+#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/Common/StringUtils.h>
 #include <osre/Common/Logger.h>
 
 namespace OSRE {
 namespace RenderBackend {
+
+using namespace ::OSRE::Common;
 
 static const String Tag = "Parameter";
 
@@ -120,22 +124,134 @@ ui32 Parameter::getParamDataSize( ParameterType type, ui32 arraySize ) {
     return size;
 }
 
+static ui32 calcHash( const String &name ) {
+    const ui32 hash( StringUtils::hashName( name.c_str() ) );
+    return hash;
+}
+
 Parameter *Parameter::create( const String &name, ParameterType type, ui32 arraySize ) {
     if( name.empty() ) {
         osre_debug( Tag, "Empty name for parameter." );
         return nullptr;
     }
 
-    Parameter *param = new Parameter;
-    param->m_name = name;
-    param->m_type = type;
-    param->m_numItems = arraySize;
+    Parameter *param     = new Parameter;
+    param->m_name        = name;
+    param->m_type        = type;
+    param->m_numItems    = arraySize;
     param->m_data.m_size = Parameter::getParamDataSize( type, arraySize );
     param->m_data.m_data = new uc8[ param->m_data.m_size ];
+    param->m_next        = nullptr;
     ::memset( param->m_data.m_data, 0, param->m_data.m_size );
-    param->m_next = nullptr;
 
     return param;
+}
+
+void Parameter::destroy( Parameter *param ) {
+    if ( nullptr != param ) {
+        delete param;
+    }
+}
+
+ParameterRegistry *ParameterRegistry::s_instance = nullptr;
+
+ParameterRegistry *ParameterRegistry::create( RenderBackendService *rbSrv ) {
+    if ( nullptr == s_instance ) {
+        s_instance = new ParameterRegistry( rbSrv );
+    }
+    return s_instance;
+}
+
+void ParameterRegistry::destroy() {
+    if ( nullptr != s_instance ) {
+        delete s_instance;
+        s_instance = nullptr;
+    }
+}
+
+bool ParameterRegistry::registerParameter( Parameter *param ) {
+    if ( nullptr == s_instance ) {
+        return false;
+    }
+
+    if ( nullptr == param ) {
+        return false;
+    }
+
+    bool res( false );
+    const ui32 hash( calcHash( param->m_name ) );
+    if ( !s_instance->m_parameterMap.hasKey( hash ) ) {
+        s_instance->m_parameterMap.insert( hash, param );
+        res = true;
+    }
+
+    return res;
+}
+
+Parameter *ParameterRegistry::getParameterByName( const String & name ) {
+    if ( nullptr == s_instance ) {
+        return nullptr;
+    }
+
+    Parameter *param( nullptr );
+    const ui32 hash( calcHash( name ) );
+    if ( s_instance->m_parameterMap.hasKey( hash ) ) {
+        s_instance->m_parameterMap.getValue( hash, param );
+    }
+    
+    return param;
+}
+
+bool ParameterRegistry::updateParameter( Parameter *param ) {
+    if ( nullptr == s_instance ) {
+        return false;
+    }
+
+    if ( nullptr == param ) {
+        return false;
+    }
+    
+    const ui32 hash( calcHash( param->m_name ) );
+    if ( !s_instance->m_parameterMap.hasKey( hash ) ) {
+        return false;
+    }
+
+    s_instance->m_updates.add( param );
+    
+    return true;
+}
+
+bool ParameterRegistry::commitChanges() {
+    if ( nullptr == s_instance ) {
+        return false;
+    }
+
+    if ( s_instance->m_updates.isEmpty() ) {
+        return true;
+    }
+
+    UpdateParameterEventData *data( new UpdateParameterEventData );
+    data->m_numParam = s_instance->m_updates.size();
+    data->m_param = new Parameter*[ data->m_numParam ];
+    for ( ui32 i = 0; i < data->m_numParam; i++ ) {
+        data->m_param[ i ] = s_instance->m_updates[ i ];
+    }
+    s_instance->m_updates.resize( 0 );
+
+    s_instance->m_rbService->sendEvent( &OnUpdateParameterEvent, data );
+
+    return true;
+}
+
+ParameterRegistry::ParameterRegistry( RenderBackendService *rbSrv )
+: m_parameterMap()
+, m_updates()
+, m_rbService( rbSrv ) {
+    OSRE_ASSERT( nullptr != rbSrv );
+}
+
+ParameterRegistry::~ParameterRegistry() {
+    // empty
 }
 
 } // Namespace RenderBackend

@@ -21,13 +21,19 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/UI/Screen.h>
+#include <osre/RenderBackend/Parameter.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 
 namespace OSRE {
 namespace UI {
 
-Screen::Screen( const String &name, Widget *parent )
+using namespace ::OSRE::RenderBackend;
+
+Screen::Screen( const String &name, Widget *parent, i32 width, i32 height )
 : Widget( name, parent )
-, m_surface( nullptr ) {
+, m_surface( nullptr )
+, m_width( width )
+, m_height( height ) {
     // empty
 }
 
@@ -44,6 +50,18 @@ void Screen::render( RenderBackend::RenderBackendService *rbSrv ) {
         return;
     }
 
+    Parameter *param = ParameterRegistry::getParameterByName( "MVP" );
+    if ( nullptr == param ) {
+        return;
+    }
+    // set 2D render mode
+    m_transformMatrix.m_projection = glm::ortho( 0, m_width, m_height, 0 );
+    ::memcpy( param->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
+    UpdateParameterEventData *data = new UpdateParameterEventData;
+    data->m_numParam = 1;
+    data->m_param = new Parameter *[ 1 ];
+    data->m_param[ 0 ] = param;
+    rbSrv->sendEvent( &OnUpdateGeoEvent, data );
     const ui32 numChildren( getNumChildren() );
     if ( 0 == numChildren ) {
         return;

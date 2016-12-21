@@ -23,9 +23,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <cppcore/Container/THashMap.h>
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
 namespace RenderBackend {
+
+class RenderBackendService;
 
 enum class ParameterType {
     PT_None,
@@ -55,11 +59,33 @@ struct OSRE_EXPORT Parameter {
     ParamDataBlob  m_data;
     Parameter     *m_next;
 
-    Parameter();
-    ~Parameter();
     static ui32 getParamDataSize( ParameterType type, ui32 arraySize );
     static Parameter *create( const String &name, ParameterType type, ui32 arraySize=1 );
+    static void destroy( Parameter *param );
+
+private:
+    Parameter();
+    ~Parameter();
 };
 
+struct ParameterRegistry {
+    static ParameterRegistry *create( RenderBackendService *rbSrv );
+    static void destroy();
+    static bool registerParameter( Parameter *param );
+    static Parameter *getParameterByName( const String & name );
+    static bool updateParameter( Parameter *param );
+    static bool commitChanges();
+
+private:
+    ParameterRegistry( RenderBackendService *rbSrv );
+    ~ParameterRegistry();
+
+private:
+    static ParameterRegistry *s_instance;
+    
+    CPPCore::THashMap<ui32, Parameter*> m_parameterMap;
+    CPPCore::TArray<Parameter*> m_updates;
+    RenderBackendService *m_rbService;
+};
 } // Namespace RenderBackend
 } // Namespace OSRE
