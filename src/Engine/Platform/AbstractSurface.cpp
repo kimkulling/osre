@@ -68,7 +68,7 @@ bool AbstractSurface::updateProperties() {
 }
 
 void AbstractSurface::setFlags( SurfaceFlagType flags ) {
-    if ( m_flags == flags ) {
+    if ( m_flags == static_cast<ui32>( flags ) ) {
         return;
     }
     m_flags = flags;
