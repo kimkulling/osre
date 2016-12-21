@@ -122,7 +122,6 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
             vertices[ i ].color0.r = diffuse.r;
             vertices[ i ].color0.g = diffuse.g;
             vertices[ i ].color0.b = diffuse.b;
-//            vertices[ i ].color0.a = diffuse.a;
         }
 
         if ( mesh->HasTextureCoords( 0 ) ) {
@@ -131,12 +130,21 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
             vertices[ i ].tex0.y = tex0.y;
         }
     }
-
     const ui32 matIdx( mesh->mMaterialIndex );
 
     geo->m_vb = BufferData::alloc( BufferType::VertexBuffer, sizeof( RenderVert ) * numVertices, BufferAccessType::ReadOnly );
 
-    // ToDo! alloc index buffer
+    CPPCore::TArray<ui16> indexArray;
+    for ( ui32 i = 0; i < mesh->mNumFaces; i++ ) {
+        aiFace &currentFace = mesh->mFaces[ i ];
+        for ( ui32 idx = 0; idx < currentFace.mNumIndices; idx++ ) {
+            const ui32 index = currentFace.mIndices[ idx ];
+            indexArray.add( static_cast<ui16>( index ) );
+        }
+    }
+    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( ui16 ) * indexArray.size(), BufferAccessType::ReadOnly );
+    geo->m_ib->copyFrom( &indexArray[ 0 ], geo->m_ib->m_size );
+
     m_model->addGeometry( geo );
 }
 
