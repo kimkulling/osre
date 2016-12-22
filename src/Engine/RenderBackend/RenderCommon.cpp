@@ -370,7 +370,8 @@ TransformBlock::~TransformBlock() {
 TransformMatrixBlock::TransformMatrixBlock()
 : m_projection()
 , m_model()
-, m_view() {
+, m_view()
+, m_mvp() {
     // empty
 }
 
@@ -384,9 +385,14 @@ void TransformMatrixBlock::init() {
     m_view = glm::mat4( 1.0f );
 }
 
-const float *TransformMatrixBlock::getMVP() {
-    return glm::value_ptr( m_projection * m_view * m_model );
+void TransformMatrixBlock::update() {
+    m_mvp = m_projection * m_view * m_model;
 }
+
+const float *TransformMatrixBlock::getMVP() {
+    return glm::value_ptr( m_mvp );
+}
+
 Viewport::Viewport() 
 : m_x(-1)
 , m_y(-1)
