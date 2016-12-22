@@ -151,7 +151,8 @@ public:
         geo->m_ib->copyFrom( indices, geo->m_ib->m_size );
 
         attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_geo = geo;
+        attachGeoEvData->m_geo = new Geometry*[ 1 ];
+        attachGeoEvData->m_geo[ 0 ] = geo;
 
         // use default material
         geo->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );

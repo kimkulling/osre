@@ -122,6 +122,10 @@ void Widget::setRect( ui32 x, ui32 y, ui32 w, ui32 h ) {
     }
 }
 
+const RectUI &Widget::getRect() const {
+    return m_rect;
+}
+
 void Widget::requestRedraw() {
     m_redrawRequest = true;
 }

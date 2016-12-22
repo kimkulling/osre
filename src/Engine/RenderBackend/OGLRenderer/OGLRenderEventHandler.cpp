@@ -461,7 +461,7 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
     }
     
     for ( ui32 geoIdx = 0; geoIdx < attachSceneEvData->m_numGeo; ++geoIdx ) {
-        Geometry *geo = &attachSceneEvData->m_geo[ geoIdx ];
+        Geometry *geo = attachSceneEvData->m_geo[ geoIdx ];
         if ( nullptr == geo ) {
             osre_debug( Tag, "Geometry-pointer is a nullptr." );
             return false;

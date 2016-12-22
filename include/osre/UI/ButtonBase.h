@@ -40,7 +40,7 @@ class OSRE_EXPORT ButtonBase : public Widget {
 public:
     ButtonBase( const String &name, Widget *parent );
     virtual ~ButtonBase();
-    virtual void render( RenderBackend::RenderBackendService *rbSrv );
+    virtual void render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
 
 private:
 };

@@ -74,7 +74,8 @@ public:
         
         Geometry *geo = Scene::GeometryBuilder::allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
         attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_geo = geo;
+        attachGeoEvData->m_geo = new Geometry*[ 1 ];
+        attachGeoEvData->m_geo[ 0 ] = geo;
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();

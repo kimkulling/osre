@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/Screen.h>
 #include <osre/RenderBackend/Parameter.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 namespace OSRE {
 namespace UI {
@@ -45,7 +46,7 @@ void Screen::setSurface( Platform::AbstractSurface *surface ) {
     m_surface = surface;
 }
 
-void Screen::render( RenderBackend::RenderBackendService *rbSrv ) {
+void Screen::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
     if ( nullptr == m_surface ) {
         return;
     }
@@ -54,9 +55,11 @@ void Screen::render( RenderBackend::RenderBackendService *rbSrv ) {
     if ( nullptr == param ) {
         return;
     }
+
     // set 2D render mode
     m_transformMatrix.m_projection = glm::ortho( 0, m_width, m_height, 0 );
-    ::memcpy( param->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
+    m_transformMatrix.update();
+    ::memcpy( param->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
     UpdateParameterEventData *data = new UpdateParameterEventData;
     data->m_numParam = 1;
     data->m_param = new Parameter *[ 1 ];
@@ -73,7 +76,18 @@ void Screen::render( RenderBackend::RenderBackendService *rbSrv ) {
             continue;
         }
 
-        currentChild->render( rbSrv );
+        currentChild->render( targetGeoArray, rbSrv );
+    }
+
+    if ( !targetGeoArray.isEmpty() ) {
+        AttachGeoEventData *attachGeoData( new AttachGeoEventData );
+        attachGeoData->m_numGeo = targetGeoArray.size();
+        attachGeoData->m_geo = new Geometry*[ attachGeoData->m_numGeo ];
+        for ( ui32 i = 0; i < attachGeoData->m_numGeo; i++ ) {
+            attachGeoData->m_geo[ i ] = targetGeoArray[ i ];
+        }
+        attachGeoData->m_geo = &targetGeoArray[ 0 ];
+        rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoData );
     }
 }
 

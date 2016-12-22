@@ -264,7 +264,8 @@ void AppBase::onUpdate( d32 timetick ) {
     }
 
     if ( nullptr != m_uiScreen ) {
-        m_uiScreen->render( m_rbService );
+        UI::Widget::TargetGeoArray geoArray;
+        m_uiScreen->render( geoArray, m_rbService );
     }
 }
 

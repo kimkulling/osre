@@ -94,9 +94,12 @@ public:
 
         static ui32 NumGeo( 2 );
         attachGeoEvData->m_numGeo = NumGeo;
-        attachGeoEvData->m_geo = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, NumGeo );
-        
-        Geometry *ptGeo = &attachGeoEvData->m_geo[ 0 ];
+        attachGeoEvData->m_geo = new Geometry*[ NumGeo ];
+
+        attachGeoEvData->m_geo[ 0 ] = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, 1 );
+        attachGeoEvData->m_geo[ 1 ] = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, 1 );
+
+        Geometry *ptGeo = attachGeoEvData->m_geo[ 0 ];
         ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, points, col, nullptr, BufferAccessType::ReadOnly );
         ptGeo->m_indextype = IndexType::UnsignedShort;
         ui32 pt_size = sizeof( GLushort ) * PtNumIndices;
@@ -108,7 +111,7 @@ public:
         ptGeo->m_pPrimGroups = new PrimitiveGroup[ ptGeo->m_numPrimGroups ];
         ptGeo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, 3, PrimitiveType::PointList, 0 );
 
-        Geometry *lineGeo = &attachGeoEvData->m_geo[ 1 ];
+        Geometry *lineGeo = attachGeoEvData->m_geo[ 1 ];
         lineGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly );
         lineGeo->m_indextype = IndexType::UnsignedShort;
         ui32 size = sizeof( GLushort ) * NumIndices;

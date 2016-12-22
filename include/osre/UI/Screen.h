@@ -45,7 +45,7 @@ public:
     Screen( const String &name, Widget *parent, i32 width, i32 height );
     virtual ~Screen();
     virtual void setSurface( Platform::AbstractSurface *surface );
-    virtual void render( RenderBackend::RenderBackendService *rbSrv );
+    virtual void render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
 
 private:
     Platform::AbstractSurface *m_surface;
@@ -53,5 +53,5 @@ private:
     i32 m_width, m_height;
 };
 
-}
-}
+} // Namespace UI
+} // Namespace OSRE

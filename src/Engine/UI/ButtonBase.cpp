@@ -38,7 +38,7 @@ ButtonBase::~ButtonBase() {
     // empty
 }
 
-void ButtonBase::render( RenderBackend::RenderBackendService *rbSrv ) {
+void ButtonBase::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
     // empty
 }
 
