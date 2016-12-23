@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Parameter.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Scene/MaterialBuilder.h>
 
 namespace OSRE {
 namespace UI {
@@ -46,7 +47,7 @@ void Screen::setSurface( Platform::AbstractSurface *surface ) {
     m_surface = surface;
 }
 
-void Screen::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
+void Screen::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *rbSrv ) {
     if ( nullptr == m_surface ) {
         return;
     }
@@ -80,17 +81,22 @@ void Screen::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBacken
     }
 
     if ( !targetGeoArray.isEmpty() ) {
+        RenderBackend::Material *material = Scene::MaterialBuilder::createBuildinMaterial( VertexType::RenderVertex );
+
         AttachGeoEventData *attachGeoData( new AttachGeoEventData );
         attachGeoData->m_numGeo = targetGeoArray.size();
         attachGeoData->m_geo = new Geometry*[ attachGeoData->m_numGeo ];
         for ( ui32 i = 0; i < attachGeoData->m_numGeo; i++ ) {
             attachGeoData->m_geo[ i ] = targetGeoArray[ i ];
+            if ( nullptr != attachGeoData->m_geo[ i ] ) {
+                attachGeoData->m_geo[ i ]->m_material = material;
+            }
         }
-        attachGeoData->m_geo = &targetGeoArray[ 0 ];
         rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoData );
+        targetGeoArray.resize( 0 );
     }
 }
 
-}
-}
+} // Namespace UI
+} // Namespace OSRE
 

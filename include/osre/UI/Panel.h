@@ -31,7 +31,9 @@ class OSRE_EXPORT Panel : public Widget {
 public:
     Panel( const String &name, Widget *parent );
     virtual ~Panel();
-    virtual void render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
+
+protected:
+    virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
 };
 
 } // Namespace UI

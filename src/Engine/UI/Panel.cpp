@@ -36,7 +36,7 @@ Panel::~Panel() {
 
 }
 
-void Panel::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
+void Panel::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
     Geometry *targetGeo = Geometry::create( 1 );
     const RectUI &rect( getRect() );
     static const ui32 NumVert = 4;
@@ -44,11 +44,11 @@ void Panel::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackend
     v[ 0 ].position.x = static_cast<f32>( rect.m_x );
     v[ 0 ].position.y = static_cast<f32>( rect.m_y );
 
-    v[ 1 ].position.x = static_cast<f32>( rect.m_x + rect.m_width );
-    v[ 1 ].position.y = static_cast<f32>( rect.m_y );
+    v[ 1 ].position.x = static_cast<f32>( rect.m_x );
+    v[ 1 ].position.y = static_cast<f32>( rect.m_y + rect.m_height );
 
-    v[ 2 ].position.x = static_cast<f32>( rect.m_x );
-    v[ 2 ].position.y = static_cast<f32>( rect.m_y + rect.m_height );
+    v[ 2 ].position.x = static_cast<f32>( rect.m_x + rect.m_width );
+    v[ 2 ].position.y = static_cast<f32>( rect.m_y );
 
     v[ 3 ].position.x = static_cast<f32>( rect.m_x + rect.m_width );
     v[ 3 ].position.y = static_cast<f32>( rect.m_y + rect.m_height );
@@ -70,8 +70,16 @@ void Panel::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackend
     ui32 ibSize = sizeof( ui16 ) * NumIndices;
     targetGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, ibSize, BufferAccessType::ReadOnly );
     targetGeo->m_vb->copyFrom( &indices[ 0 ], ibSize );
+
+    targetGeo->m_numPrimGroups = 1;
+    targetGeo->m_pPrimGroups = new PrimitiveGroup[ targetGeo->m_numPrimGroups ];
+    targetGeo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
+    targetGeo->m_pPrimGroups[ 0 ].m_numPrimitives = 3 * targetGeo->m_numPrimGroups;
+    targetGeo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
+    targetGeo->m_pPrimGroups[ 0 ].m_startIndex = 0;
+
     targetGeoArray.add( targetGeo );
 }
 
-}
-}
+} // Namespace UI
+} // Namespace OSRE

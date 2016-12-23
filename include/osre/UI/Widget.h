@@ -77,11 +77,13 @@ public:
     virtual void setRect( ui32 x, ui32 y, ui32 w, ui32 h );
     virtual const RectUI &getRect() const;
     virtual void requestRedraw();
+    virtual void redrawDone();
     virtual bool redrawRequested() const;
-    virtual void render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) = 0;
+    virtual void render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
 
 protected:
     Widget( const String &name, Widget *parent );
+    virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) = 0;
 
 private:
     Widget *m_parent;
