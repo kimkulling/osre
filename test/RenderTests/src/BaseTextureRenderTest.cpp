@@ -151,7 +151,8 @@ public:
         geo->m_ib->copyFrom( indices, geo->m_ib->m_size );
 
         attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_geo = geo;
+        attachGeoEvData->m_geo = new Geometry*[ 1 ];
+        attachGeoEvData->m_geo[ 0 ] = geo;
 
         // use default material
         geo->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
@@ -188,7 +189,8 @@ public:
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
         
         Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
-        ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
+        m_transformMatrix.update();
+        ::memcpy( parameter->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
         
         geo->m_material->m_parameters = parameter;
         geo->m_material->m_numParameters++;
@@ -204,7 +206,7 @@ public:
 
     virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *pRenderBackendSrv ) {
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
-       
+        m_transformMatrix.update();
         if( nullptr == m_mvpParam ) {
             m_mvpParam = Parameter::create( "MVP", ParameterType::PT_Mat4 );
         }
@@ -213,7 +215,7 @@ public:
         data->m_numParam = 1;
         data->m_param = new Parameter*[ data->m_numParam ];
         data->m_param[ 0 ] = m_mvpParam;
-        ::memcpy( m_mvpParam->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
+        ::memcpy( m_mvpParam->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
 
         pRenderBackendSrv->sendEvent( &OnUpdateParameterEvent, data );
 

@@ -148,11 +148,9 @@ bool World::setActiveView( const String &viewName ) {
 
 void World::update( RenderBackendService *rbService ) {
     if ( nullptr != m_activeStage ) {
-        printf("updating stage %s\n", m_activeStage->getName().c_str() );
         m_activeStage->update( rbService );
-    } else {
-        printf("no active stage.\n");
     }
+
     if ( nullptr != m_activeView ) {
         m_activeView->update( rbService );
     }

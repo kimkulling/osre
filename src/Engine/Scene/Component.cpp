@@ -56,7 +56,10 @@ void RenderComponent::update( RenderBackendService *renderBackendSrv ) {
         renderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
         attachGeoEvData->m_numGeo = m_newGeo.size();
-        attachGeoEvData->m_geo = m_newGeo[ 0 ];
+        attachGeoEvData->m_geo = new Geometry *[ attachGeoEvData->m_numGeo ];
+        for ( ui32 i = 0; i < attachGeoEvData->m_numGeo; i++ ) {
+            attachGeoEvData->m_geo[ i ] = m_newGeo[ i ];
+        }
         renderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
         m_newGeo.resize( 0 );
     }

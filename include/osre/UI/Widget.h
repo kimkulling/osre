@@ -28,6 +28,7 @@ namespace OSRE {
 
 namespace RenderBackend {
     class RenderBackendService;
+    struct Geometry;
 }
 
 namespace UI {
@@ -65,6 +66,7 @@ private:
 
 class OSRE_EXPORT Widget : public Common::Object {
 public:
+    typedef CPPCore::TArray<RenderBackend::Geometry*> TargetGeoArray;
     virtual ~Widget();
     virtual void setParent( Widget *parent );
     virtual Widget *getParent() const;
@@ -73,12 +75,15 @@ public:
     virtual ui32 getNumChildren() const;
     virtual Widget *getChildWidgetAt( ui32 idx ) const;
     virtual void setRect( ui32 x, ui32 y, ui32 w, ui32 h );
+    virtual const RectUI &getRect() const;
     virtual void requestRedraw();
+    virtual void redrawDone();
     virtual bool redrawRequested() const;
-    virtual void render( RenderBackend::RenderBackendService *rbSrv ) = 0;
+    virtual void render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
 
 protected:
     Widget( const String &name, Widget *parent );
+    virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) = 0;
 
 private:
     Widget *m_parent;
@@ -88,5 +93,5 @@ private:
     bool m_redrawRequest;
 };
 
-}
-}
+} // Namespace UI
+} // Namespace OSRE

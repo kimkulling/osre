@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/UI/Widget.h>
+#include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
 namespace UI {
@@ -113,7 +114,6 @@ Widget *Widget::getChildWidgetAt( ui32 idx ) const {
     return m_children[ idx ];
 }
 
-
 void Widget::setRect( ui32 x, ui32 y, ui32 w, ui32 h ) {
     RectUI newRect( x,y,w,h );
     if ( m_rect != newRect ) {
@@ -122,13 +122,30 @@ void Widget::setRect( ui32 x, ui32 y, ui32 w, ui32 h ) {
     }
 }
 
+const RectUI &Widget::getRect() const {
+    return m_rect;
+}
+
 void Widget::requestRedraw() {
     m_redrawRequest = true;
+}
+
+void Widget::redrawDone() {
+    m_redrawRequest = false;
 }
 
 bool Widget::redrawRequested() const {
     return m_redrawRequest;
 }
 
+void Widget::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
+    OSRE_ASSERT( nullptr != rbSrv );
+
+    if ( redrawRequested() ) {
+        onRender( targetGeoArray, rbSrv );
+        redrawDone();
+    }
 }
-}
+
+} // Namespace UI
+} // Namespace OSRE

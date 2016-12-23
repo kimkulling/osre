@@ -42,6 +42,7 @@ namespace App {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
+using namespace ::OSRE::RenderBackend;
 
 const String API_Arg = "api";
 const String Tag     = "AppBase";
@@ -157,7 +158,7 @@ UI::Screen *AppBase::createScreen( const String &name ) {
         h = surface->getProperties()->m_height;
     }
     UI::Screen *newScreen = new UI::Screen( name, nullptr, w, h );
-    m_uiScreen = newScreen;
+    setUIScreen( newScreen );
 
     return newScreen;
 }
@@ -165,6 +166,10 @@ UI::Screen *AppBase::createScreen( const String &name ) {
 void AppBase::setUIScreen( UI::Screen *uiScreen ) {
     if ( m_uiScreen != uiScreen ) {
         m_uiScreen = uiScreen;
+        AbstractSurface *surface( m_platformInterface->getRootSurface() );
+        if ( nullptr != surface ) {
+            m_uiScreen->setSurface( surface );
+        }
     }
 }
 
@@ -259,12 +264,14 @@ bool AppBase::onDestroy() {
 }
 
 void AppBase::onUpdate( d32 timetick ) {
+    ParameterRegistry::commitChanges();
     if ( nullptr != m_world ) {
         m_world->update( m_rbService );
     }
 
     if ( nullptr != m_uiScreen ) {
-        m_uiScreen->render( m_rbService );
+        UI::Widget::TargetGeoArray geoArray;
+        m_uiScreen->render( geoArray, m_rbService );
     }
 }
 

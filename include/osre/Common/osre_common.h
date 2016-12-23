@@ -178,6 +178,8 @@ struct TVec2 {
     T v[ 2 ];
 };
 
+typedef TVec2<i32> Vec2I;
+
 template<class T>
 struct TVec3 {
     T v[ 3 ];

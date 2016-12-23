@@ -107,7 +107,8 @@ public:
         Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
 
         attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_geo = geo;
+        attachGeoEvData->m_geo = new Geometry*[ attachGeoEvData->m_numGeo ];
+        attachGeoEvData->m_geo[0] = geo;
 
         // use a default material
         geo->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
@@ -120,6 +121,7 @@ public:
         }
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+        m_transformMatrix.update();
 
         static const ui32 NumInstances = 25;
         attachGeoEvData->m_numInstances = NumInstances;
@@ -139,7 +141,7 @@ public:
 		}
         
         Parameter *parameterMVP = Parameter::create( "VP", ParameterType::PT_Mat4 );
-        ::memcpy( parameterMVP->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view ), sizeof( glm::mat4 ) );
+        ::memcpy( parameterMVP->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
 
         Parameter *parameterM = Parameter::create( "M", ParameterType::PT_Mat4Array, NumInstances);
         ::memcpy( parameterM->m_data.m_data, glm::value_ptr( mat[ 0 ] ), sizeof( glm::mat4 ) * NumInstances);

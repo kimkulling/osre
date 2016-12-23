@@ -110,6 +110,7 @@ protected:
         stream << std::setfill( '0' ) << std::setw( 2 ) << fps;
         //Scene::DbgRenderer::getInstance()->renderDbgText( 10, 10, 1, stream.str() );
 
+        AppBase::onUpdate( timetick );
     }
 };
 

@@ -81,7 +81,7 @@ struct OSRE_EXPORT CreateRendererEventData : public Common::EventData {
     }
 
     Platform::AbstractSurface *m_activeSurface;
-    String m_defaultFont;
+    String                     m_defaultFont;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -111,17 +111,23 @@ struct OSRE_EXPORT AttachGeoEventData : public Common::EventData {
         // empty
     }
 
-    ui32 m_numGeo;
-    Geometry *m_geo;
-    ui32 m_numInstances;
+    ui32             m_numGeo;
+    Geometry       **m_geo;
+    ui32             m_numInstances;
     GeoInstanceData *m_geoInstanceData;
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 struct OnSetRenderStatesData : public Common::EventData {
     OnSetRenderStatesData()
     : EventData(  OnSetRenderStates, nullptr ) {
-
+        // empty
     }
+
     BlendState   m_blendState;
     ClearState   m_clearState;
     StencilState m_stencilState;

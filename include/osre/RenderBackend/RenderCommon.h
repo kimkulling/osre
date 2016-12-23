@@ -396,10 +396,12 @@ struct OSRE_EXPORT TransformMatrixBlock {
     glm::mat4 m_projection;
     glm::mat4 m_model;
     glm::mat4 m_view;
+    glm::mat4 m_mvp;
 
     TransformMatrixBlock();
     ~TransformMatrixBlock();
     void init();
+    void update();
     const float *getMVP();
 
     OSRE_NON_COPYABLE( TransformMatrixBlock )

@@ -129,9 +129,10 @@ public:
 
         static const ui32 NumGeo( 1 );
         attachGeoEvData->m_numGeo = NumGeo;
-        attachGeoEvData->m_geo = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, NumGeo );
+        attachGeoEvData->m_geo = new Geometry *[ NumGeo ];
+        attachGeoEvData->m_geo[0] = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, NumGeo );
 
-        m_ptGeo = &attachGeoEvData->m_geo[ 0 ];
+        m_ptGeo = attachGeoEvData->m_geo[ 0 ];
         m_ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, NumPts, m_pos, m_col, nullptr, BufferAccessType::ReadOnly );
         m_ptGeo->m_indextype = IndexType::UnsignedShort;
         ui32 pt_size = sizeof( GLushort ) * NumPts;
