@@ -91,7 +91,6 @@ protected:
 
 			geo->m_material->m_parameters = parameter;
             geo->m_material->m_numParameters++;
-			//geo->m_numParameter++;
 
 			geoNode->addGeometry( geo );
 		}
