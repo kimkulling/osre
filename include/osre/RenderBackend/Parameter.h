@@ -68,7 +68,7 @@ private:
     ~Parameter();
 };
 
-struct ParameterRegistry {
+struct OSRE_EXPORT ParameterRegistry {
     static ParameterRegistry *create( RenderBackendService *rbSrv );
     static void destroy();
     static bool registerParameter( Parameter *param );
