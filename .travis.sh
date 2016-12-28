@@ -4,6 +4,5 @@ function generate() {
 
 generate \
 && make -j4 \
-&& sudo make install \
-&& sudo ldconfig \
-&& (cd test/unit; ../../bin/osre_unittest) \
+&& cd bin \
+&& osre_unittest \
