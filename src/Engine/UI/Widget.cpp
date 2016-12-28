@@ -47,6 +47,20 @@ StyleProvider::~StyleProvider() {
     // empty
 }
 
+RectUI WidgetCoordMapping::s_dim = RectUI(-1,-1,-1,-1 );
+
+void WidgetCoordMapping::init( const RectUI &dim ) {
+    s_dim = dim;
+}
+
+const RectUI &WidgetCoordMapping::getDimension() {
+    return s_dim;
+}
+
+void WidgetCoordMapping::mapPosToWorld( ui32 x, ui32 y, f32 &mappedX, f32 &mappedY ) {
+    mapPosToWorld( getDimension(), x, y, mappedX, mappedY );
+}
+
 void WidgetCoordMapping::mapPosToWorld( const RectUI &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY ) {
     mappedX = mappedY = 0.0f;
 
@@ -58,7 +72,7 @@ void WidgetCoordMapping::mapPosToWorld( const RectUI &rect, ui32 x, ui32 y, f32 
         mappedX = ( static_cast<f32>( x ) / static_cast<f32>( w ) * 2.0f ) - 1.0f;
     }
     if ( 0.0f != h ) {
-        mappedY = ( static_cast<f32>( y ) / static_cast<f32>( h ) * 2.0f ) - 1.0f;
+        mappedY = 1.0f - ( static_cast<f32>( y ) / static_cast<f32>( h ) * 2.0f );
     }
 }
 

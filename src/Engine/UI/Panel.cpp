@@ -58,11 +58,20 @@ void Panel::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBacke
     RenderVert vertices[ 4 ];
     ui16 indices[ 6 ];
 
-    // setup triangle vertices        
-    vertices[ 0 ].position = glm::vec3( -1, -1, 0 );
+    f32 x1, y1, x2, y2;
+    WidgetCoordMapping::mapPosToWorld( rect.getX1(), rect.getY1(), x1, y1 );
+    WidgetCoordMapping::mapPosToWorld( rect.getX2(), rect.getY2(), x2, y2 );
+
+    // setup triangle vertices
+/*    vertices[ 0 ].position = glm::vec3( -1, -1, 0 );
     vertices[ 1 ].position = glm::vec3( -1, 1, 0 );
     vertices[ 2 ].position = glm::vec3( 1, -1, 0 );
-    vertices[ 3 ].position = glm::vec3( 1, 1, 0 );
+    vertices[ 3 ].position = glm::vec3( 1, 1, 0 );*/
+
+    vertices[ 0 ].position = glm::vec3( x1, y1, 0 );
+    vertices[ 1 ].position = glm::vec3( x1, y2, 0 );
+    vertices[ 2 ].position = glm::vec3( x2, y1, 0 );
+    vertices[ 3 ].position = glm::vec3( x2, y2, 0 );
 
     vertices[ 0 ].tex0 = glm::vec2( 0, 0 );
     vertices[ 1 ].tex0 = glm::vec2( 0, 1 );

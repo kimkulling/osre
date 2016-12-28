@@ -104,17 +104,17 @@ TEST_F( WidgetTest, WidgetCoordMappingTest ) {
     f32 mappedX, mappedY;
     WidgetCoordMapping::mapPosToWorld( rect, 0, 0, mappedX, mappedY );
     EXPECT_FLOAT_EQ( -1.0f, mappedX );
-    EXPECT_FLOAT_EQ( -1.0f, mappedY );
+    EXPECT_FLOAT_EQ( 1.0f, mappedY );
 
     WidgetCoordMapping::mapPosToWorld( rect, 100, 200, mappedX, mappedY );
     EXPECT_FLOAT_EQ( 1.0f, mappedX );
-    EXPECT_FLOAT_EQ( 1.0f, mappedY );
+    EXPECT_FLOAT_EQ( -1.0f, mappedY );
 
     WidgetCoordMapping::mapPosToWorld( rect, 50, 100, mappedX, mappedY );
     EXPECT_FLOAT_EQ( 0.0f, mappedX );
     EXPECT_FLOAT_EQ( 0.0f, mappedY );
-
 }
 
-}
-}
+} // Namespace UnitTest
+} // Namespace OSRE
+

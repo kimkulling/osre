@@ -67,7 +67,13 @@ private:
 };
 
 struct OSRE_EXPORT WidgetCoordMapping {
+    static void init( const RectUI &dim );
+    static const RectUI &getDimension();
+    static void mapPosToWorld( ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
     static void mapPosToWorld( const RectUI &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
+
+private:
+    static RectUI s_dim;
 };
 
 class OSRE_EXPORT Widget : public Common::Object {
