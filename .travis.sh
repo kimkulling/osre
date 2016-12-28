@@ -5,4 +5,4 @@ function generate() {
 generate \
 && make -j4 \
 && cd bin \
-&& osre_unittest \
+&& ./osre_unittest \
