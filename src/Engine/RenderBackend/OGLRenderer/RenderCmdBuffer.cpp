@@ -63,10 +63,12 @@ OGLShader *RenderCmdBuffer::getActiveShader() const {
 
 void RenderCmdBuffer::enqueueRenderCmd( OGLRenderCmd *renderCmd, EnqueueType type ) {
     if ( nullptr == renderCmd ) {
+        osre_debug( Tag, "Nullptr to render-command detected." );
         return;
     }
     if ( nullptr == renderCmd->m_pData ) {
         osre_debug( Tag, "Nullptr in render-command data detected." );
+        return;
     }
 
     if ( EnqueueType::RCE_Back == type  ) {
@@ -123,6 +125,7 @@ void RenderCmdBuffer::clear() {
 }
 
 bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
+    OSRE_ASSERT( nullptr != m_renderbackend );
     UpdateParameterEventData *updateParamData = ( UpdateParameterEventData* ) data;
     if( nullptr != updateParamData ) {
         for( ui32 i = 0; i < updateParamData->m_numParam; ++i ) {
@@ -143,7 +146,6 @@ bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
 
 bool RenderCmdBuffer::onSetParametersCmd( SetParameterCmdData *data ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
-
     if ( nullptr == data ) {
         return false;
     }
@@ -182,6 +184,8 @@ bool RenderCmdBuffer::onDrawPrimitivesInstancesCmd( DrawInstancePrimitivesCmdDat
 }
 
 bool RenderCmdBuffer::onSetRenderTargetCmd( SetRenderTargetCmdData *data ) {
+    OSRE_ASSERT( nullptr != m_renderbackend );
+
     return true;
 }
 

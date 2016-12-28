@@ -51,7 +51,7 @@ const String VsSrc =
     "}\n";
 
 const String FsSrc =
-    "#version 400 core\n"
+    GLSLVersionString_400 +
     "\n"
     "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
     "\n"
@@ -64,7 +64,7 @@ const String FsSrc =
     "}\n";
 
 const String VsSrcRV =
-    "#version 400 core\n"
+    GLSLVersionString_400 +
     "\n"
     "layout(location = 0) in vec3 position;	      // object space vertex position\n"
     "layout(location = 1) in vec3 normal;	            // object space vertex normal\n"
@@ -86,11 +86,12 @@ const String VsSrcRV =
     "    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
     "    //vertex position\n"
     "    gl_Position = MVP*vec4(position,1);\n"
+    "    vSmoothColor = vec4( color0, 1 );\n"
     "    vUV = texcoord0;\n"
     "}\n";
 
 const String FsSrcRV =
-    "#version 400 core\n"
+    GLSLVersionString_400 +
     "\n"
     "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
     "\n"
@@ -101,7 +102,7 @@ const String FsSrcRV =
     "\n"
     "void main()\n"
     "{\n"
-    "    //set the interpolated color as the shader output\n"
+    "    // set the interpolated color as the shader output\n"
     "    vFragColor = texture( tex0, vUV );\n"
     "}\n";
 
@@ -154,5 +155,5 @@ Material *MaterialBuilder::createBuildinMaterial( VertexType type ) {
     return mat;
 }
 
-}
-}
+} // Namespace Scene
+} // namespace OSRE

@@ -202,6 +202,22 @@ struct TRect2D {
         // empty
     }
 
+    T getX1() const {
+        return m_x;
+    }
+
+    T getY1() const {
+        return m_y;
+    }
+
+    T getX2() const {
+        return m_x + m_width;
+    }
+
+    T getY2() const {
+        return m_y + m_height;
+    }
+
     const bool operator == ( const TRect2D<T> &rhs ) const {
         return ( m_x == rhs.m_x && m_y == rhs.m_y && m_width == rhs.m_width && m_height == rhs.m_height );
     }

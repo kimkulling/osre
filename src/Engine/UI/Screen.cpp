@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/Screen.h>
 #include <osre/RenderBackend/Parameter.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/Platform/AbstractSurface.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/MaterialBuilder.h>
 
@@ -45,6 +46,15 @@ Screen::~Screen() {
 
 void Screen::setSurface( Platform::AbstractSurface *surface ) {
     m_surface = surface;
+    if ( nullptr != surface ) {
+        Platform::SurfaceProperties *props( surface->getProperties() );
+        ui32 x( props->m_x );
+        ui32 y( props->m_y );
+        ui32 w( props->m_width );
+        ui32 h( props->m_height );
+        RectUI dim( x, y, w, h );
+        WidgetCoordMapping::init( dim );
+    }
 }
 
 void Screen::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *rbSrv ) {
@@ -59,13 +69,15 @@ void Screen::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *rbS
 
     // set 2D render mode
     m_transformMatrix.m_projection = glm::ortho( 0, m_width, m_height, 0 );
+    m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+
     m_transformMatrix.update();
-    ::memcpy( param->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
+    /*::memcpy( param->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
     UpdateParameterEventData *data = new UpdateParameterEventData;
     data->m_numParam = 1;
     data->m_param = new Parameter *[ 1 ];
     data->m_param[ 0 ] = param;
-    rbSrv->sendEvent( &OnUpdateGeoEvent, data );
+    rbSrv->sendEvent( &OnUpdateGeoEvent, data );*/
     const ui32 numChildren( getNumChildren() );
     if ( 0 == numChildren ) {
         return;
@@ -81,16 +93,11 @@ void Screen::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *rbS
     }
 
     if ( !targetGeoArray.isEmpty() ) {
-        RenderBackend::Material *material = Scene::MaterialBuilder::createBuildinMaterial( VertexType::RenderVertex );
-
         AttachGeoEventData *attachGeoData( new AttachGeoEventData );
         attachGeoData->m_numGeo = targetGeoArray.size();
         attachGeoData->m_geo = new Geometry*[ attachGeoData->m_numGeo ];
         for ( ui32 i = 0; i < attachGeoData->m_numGeo; i++ ) {
             attachGeoData->m_geo[ i ] = targetGeoArray[ i ];
-            if ( nullptr != attachGeoData->m_geo[ i ] ) {
-                attachGeoData->m_geo[ i ]->m_material = material;
-            }
         }
         rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoData );
         targetGeoArray.resize( 0 );

@@ -110,7 +110,5 @@ private:
     OGLVertexArray *m_vertexArray;
 };
 
-//-------------------------------------------------------------------------------------------------
-
 } // Namespace RenderBackend
 } // Namespace OSRE

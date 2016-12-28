@@ -49,6 +49,10 @@ SET ( unittest_rb_src
     src/RenderBackend/RenderCommonTest.cpp
 )
 
+SET( unittest_ui_src
+    src/UI/WidgetTest.cpp
+)
+
 SET ( unittest_profiling_src
 	src/Profiling/PerformanceCountersTest.cpp
 )
@@ -80,6 +84,7 @@ SOURCE_GROUP( src\\Math           FILES ${unittest_math_src} )
 SOURCE_GROUP( src\\Platform       FILES ${unittest_platform_src})
 SOURCE_GROUP( src\\Profiling      FILES ${unittest_profiling_src})
 SOURCE_GROUP( src\\RenderBackend  FILES ${unittest_rb_src} )
+SOURCE_GROUP( src\\UI             FILES ${unittest_ui_src} )
 SOURCE_GROUP( src\\Scene          FILES ${unittest_scene_src} )
 SOURCE_GROUP( src\\GTest          FILES ${gtest_src} )
 
@@ -92,6 +97,7 @@ ADD_EXECUTABLE( osre_unittest
 	${unittest_platform_src}    
 	${unittest_profiling_src}
 	${unittest_rb_src}
+    ${unittest_ui_src}
     ${unittest_scene_src}
     ${gtest_src}
 )

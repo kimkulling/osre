@@ -33,6 +33,8 @@ namespace RenderBackend {
 
 namespace UI {
 
+class Screen;
+
 struct Style {
     enum class ColorTable {
         FGColor = 0,
@@ -64,9 +66,20 @@ private:
     Style m_activeStyle;
 };
 
+struct OSRE_EXPORT WidgetCoordMapping {
+    static void init( const RectUI &dim );
+    static const RectUI &getDimension();
+    static void mapPosToWorld( ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
+    static void mapPosToWorld( const RectUI &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
+
+private:
+    static RectUI s_dim;
+};
+
 class OSRE_EXPORT Widget : public Common::Object {
 public:
     typedef CPPCore::TArray<RenderBackend::Geometry*> TargetGeoArray;
+    
     virtual ~Widget();
     virtual void setParent( Widget *parent );
     virtual Widget *getParent() const;
