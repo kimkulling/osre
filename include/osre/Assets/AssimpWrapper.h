@@ -41,7 +41,7 @@ namespace Assets {
 
 class Model;
 
-class AssimpWrapper {
+class OSRE_EXPORT AssimpWrapper {
 public:
     AssimpWrapper();
     ~AssimpWrapper();

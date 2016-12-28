@@ -62,9 +62,8 @@ protected:
     virtual bool onState() {
         m_handled = true;
         return true;
-
-        return true;
     }
+
     virtual bool onUpdate( d32 timetick ) {
         m_lastTimetick = timetick;
         return onUpdate( timetick );
@@ -154,4 +153,3 @@ TEST_F( TAbstractCtrlBaseTest, notifyListenerTest ) {
 
 }
 }
-

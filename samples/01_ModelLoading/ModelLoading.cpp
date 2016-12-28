@@ -27,6 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
 #include <osre/Assets/AssetRegistry.h>
+#include <osre/Assets/AssimpWrapper.h>
+#include <osre/IO/Uri.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
 #include <glm/glm.hpp>
@@ -38,6 +40,8 @@ using namespace ::OSRE::RenderBackend;
 
 // To identify local log entries 
 static const String Tag = "ModelLoadingApp"; 
+
+static const String ModelPath = "file://assets/Models/Obj/spider.obj";
 
 // The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
@@ -56,10 +60,6 @@ public:
     }
 
 protected:
-    void createStaticText() {
-
-    }
-
     virtual bool onCreate( Properties::Settings *settings = nullptr ) {
         Properties::Settings *baseSettings( AppBase::getSettings() );
         if ( nullptr == baseSettings ) {
@@ -72,17 +72,20 @@ protected:
         }
 
 #ifdef OSRE_WINDOWS
-        Assets::AssetRegistry::getInstance()->registerAssetPath( "assets", "../../media" );
+        Assets::AssetRegistry::registerAssetPath( "assets", "../../media" );
 #else
-        Assets::AssetRegistry::getInstance()->registerAssetPath( "assets", "../media" );
+        Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
 #endif 
 
         m_stage = AppBase::createStage( "HelloWorld" );
         AppBase::activateStage( m_stage->getName() );
 
         Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
-        Scene::GeometryBuilder myBuilder;
-        RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
+        //Scene::GeometryBuilder myBuilder;
+        Assets::AssimpWrapper assimpWrapper;
+        IO::Uri model( ModelPath );
+        assimpWrapper.importAsset( model, 0 );
+        /*RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
         if( nullptr != geo ) {
 			m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
 
@@ -93,7 +96,7 @@ protected:
             geo->m_material->m_numParameters++;
 
 			geoNode->addGeometry( geo );
-		}
+		}*/
 
         return true;
     }

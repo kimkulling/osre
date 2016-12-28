@@ -35,11 +35,9 @@ namespace OSRE {
 namespace IO {
 
 using namespace OSRE::Common;
-//IOService * IOService::s_instance = nullptr;
 
 static const String Tag = "IOService";
 
-//-------------------------------------------------------------------------------------------------
 static AbstractFileSystem *createFS( const Uri &file ) {
     const String &schema( file.getScheme() );
     if( schema == "zip" ) {
@@ -49,19 +47,16 @@ static AbstractFileSystem *createFS( const Uri &file ) {
     return nullptr;
 }
 
-//-------------------------------------------------------------------------------------------------
 IOService::IOService() 
 : AbstractService( "io/ioserver" )
 , m_mountedMap() {
     CREATE_SINGLETON( IOService );
 }
 
-//-------------------------------------------------------------------------------------------------
 IOService::~IOService() {
     DESTROY_SINGLETON( IOService );
 }
 
-//-------------------------------------------------------------------------------------------------
 bool IOService::onOpen() {
     // create the locale file system
     AbstractFileSystem *pFileSystem( nullptr );    
@@ -71,17 +66,14 @@ bool IOService::onOpen() {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool IOService::onClose() {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool IOService::onUpdate( d32 timeDiff ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractFileSystem *IOService::addFileSystem( const String &name, const Uri &file ) {
     if( file.isEmpty() || !file.isValid() ) {
         return nullptr;
@@ -100,14 +92,12 @@ AbstractFileSystem *IOService::addFileSystem( const String &name, const Uri &fil
     return fs;
 }
 
-//-------------------------------------------------------------------------------------------------
 void IOService::mountFileSystem( const String &schema, AbstractFileSystem *pFileSystem ) {
     assert( nullptr != pFileSystem );
 
     m_mountedMap[ schema ] = pFileSystem;
 }
 
-//-------------------------------------------------------------------------------------------------
 void IOService::umountFileSystem( const String &schema, AbstractFileSystem *pFileSystem ) {
     assert( nullptr != pFileSystem );
 
@@ -119,7 +109,6 @@ void IOService::umountFileSystem( const String &schema, AbstractFileSystem *pFil
     m_mountedMap.erase( it );
 }
 
-//-------------------------------------------------------------------------------------------------
 Stream *IOService::openStream( const Uri &file, Stream::AccessMode mode ) {
     Stream *pStream( nullptr );
     AbstractFileSystem *pFS = getFileSystem( file.getScheme() );
@@ -130,7 +119,6 @@ Stream *IOService::openStream( const Uri &file, Stream::AccessMode mode ) {
     return pStream;
 }
 
-//-------------------------------------------------------------------------------------------------
 void IOService::closeStream( Stream **ppStream ) {
     if( nullptr == ppStream ) {
         return;
@@ -143,7 +131,6 @@ void IOService::closeStream( Stream **ppStream ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractFileSystem *IOService::getFileSystem( const String &schema ) const {
     if ( m_mountedMap.empty() ) {
         return nullptr;
@@ -157,7 +144,6 @@ AbstractFileSystem *IOService::getFileSystem( const String &schema ) const {
     return nullptr;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool IOService::fileExists( const Uri &file ) const {
     bool exists( false );
     AbstractFileSystem *pFS = this->getFileSystem( file.getScheme() );
@@ -168,12 +154,10 @@ bool IOService::fileExists( const Uri &file ) const {
     return exists;
 }
 
-//-------------------------------------------------------------------------------------------------
 IOService *IOService::create() {
     return new IOService;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool IOService::normalizePath( const String &path, const c8 sep, String &normalized ) {
     normalized = "";
     if ( path.empty() ) {
@@ -184,8 +168,6 @@ bool IOService::normalizePath( const String &path, const c8 sep, String &normali
     
     return true;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace IO
 } // Namespace OSRE

@@ -58,9 +58,9 @@ protected:
         }
 
 #ifdef OSRE_WINDOWS
-        Assets::AssetRegistry::getInstance()->registerAssetPath( "assets", "../../media" );
+        Assets::AssetRegistry::registerAssetPath( "assets", "../../media" );
 #else
-        Assets::AssetRegistry::getInstance()->registerAssetPath( "assets", "../media" );
+        Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
 #endif // OSRE_WINDOWS
 
         return true;

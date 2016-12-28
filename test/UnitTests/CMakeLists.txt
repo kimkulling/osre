@@ -16,6 +16,7 @@ INCLUDE_DIRECTORIES(
 )
 
 SET ( unittest_assets_src
+	src/Assets/AssetRegistryTest.cpp
 	src/Assets/AssetDataTest.cpp
 )
 

@@ -23,7 +23,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/AssimpWrapper.h>
 #include <osre/Assets/Model.h>
 #include <osre/IO/Uri.h>
+#include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Assets/AssetRegistry.h>
 #include <osre/Scene/GeometryBuilder.h>
 
 #include <assimp/Importer.hpp>
@@ -36,6 +38,8 @@ using namespace ::Assimp;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
 
+static const String Tag = "AssimpWrapper";
+
 AssimpWrapper::AssimpWrapper() 
 : m_model( nullptr ) {
     // empty
@@ -47,11 +51,16 @@ AssimpWrapper::~AssimpWrapper() {
 
 bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
     if ( !file.isValid() ) {
+        osre_error( Tag, "URI " + file.getUri() + " is invalid " );
         return false;
     }
 
+    String root = AssetRegistry::getPath( "media" );
+    String path = AssetRegistry::resolvePathFromUri( file );
+
+    String filename = root + path + file.getResource();
     Importer myImporter;
-    const aiScene *scene = myImporter.ReadFile( file.getAbsPath() + file.getResource(), flags );
+    const aiScene *scene = myImporter.ReadFile( filename, flags );
     if ( nullptr == scene ) {
         return false;
     }

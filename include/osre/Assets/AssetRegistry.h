@@ -52,12 +52,11 @@ class OSRE_EXPORT AssetRegistry {
 public:
     static AssetRegistry *create();
     static void destroy();
-    static AssetRegistry *getInstance();
-    void registerAssetPath( const String &mount, const String &path );
-    bool hasPath( const String &mount ) const;
-    String getPath( const String &mount ) const;
-    String resolvePathFromUri( const IO::Uri &location );
-    void clear();
+    static bool registerAssetPath( const String &mount, const String &path );
+    static bool hasPath( const String &mount );
+    static String getPath( const String &mount );
+    static String resolvePathFromUri( const IO::Uri &location );
+    static bool clear();
 
 private:
     AssetRegistry();
@@ -65,6 +64,7 @@ private:
 
 private:
     static AssetRegistry *s_instance;
+
     typedef CPPCore::THashMap<ui32, String> Name2PathMap;
     Name2PathMap m_name2pathMap;
 };

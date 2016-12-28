@@ -90,8 +90,8 @@ static void setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTextur
     for( ui32 i = 0; i < numTextures; ++i ) {
         Texture &tex( mat->m_pTextures[ i ] );
         if( !tex.m_textureName.empty() ) {
-            String root = Assets::AssetRegistry::getInstance()->getPath( "media" );
-            String path = Assets::AssetRegistry::getInstance()->resolvePathFromUri( tex.m_loc );
+            String root = Assets::AssetRegistry::getPath( "media" );
+            String path = Assets::AssetRegistry::resolvePathFromUri( tex.m_loc );
             
             IO::Uri loc( tex.m_loc );
             loc.setPath( path );
@@ -399,8 +399,8 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
 
     const String defaultFont( PlatformInterface::getInstance()->getDefaultFontName() );
     IO::Uri fontUri( "file://assets/Textures/Fonts/" );
-    String root = Assets::AssetRegistry::getInstance()->getPath( "media" );
-    String path = Assets::AssetRegistry::getInstance()->resolvePathFromUri( fontUri );
+    String root = Assets::AssetRegistry::getPath( "media" );
+    String path = Assets::AssetRegistry::resolvePathFromUri( fontUri );
     fontUri.setPath( path );
     fontUri.setResource( defaultFont );
     m_oglBackend->createFont( fontUri );

@@ -32,11 +32,13 @@ class UriTest : public ::testing::Test {
   // empty
 };
 
+static const String UriInit = "file://c:/texture.jpg";
+
 TEST_F( UriTest, createTest ) {
     bool ok( true );
     try {
         Uri uri1;
-        Uri uri2( "file://c:/texture.jpg" );
+        Uri uri2( UriInit );
         Uri uri3( uri1 );
     } catch ( ... ) {
         ok = false;
@@ -51,6 +53,12 @@ TEST_F( UriTest, constructFromCompsTest ) {
     const String resource = "buildin_arial.bmp";
     String result = uri1.constructFromComps( Scheme, path, resource );
     EXPECT_EQ( "file://assets/Textures/Fonts/buildin_arial.bmp", result );
+}
+
+TEST_F( UriTest, clearTest ) {
+    Uri uri( UriInit );
+    uri.clear();
+    EXPECT_EQ( UriInit, uri.getUri() );
 }
 
 } // Namespace UnitTest

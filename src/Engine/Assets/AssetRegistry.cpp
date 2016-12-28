@@ -31,8 +31,8 @@ namespace Assets {
 
 using namespace ::OSRE::Common;
 
-AssetRegistry *AssetRegistry::s_instance( nullptr );
-static const   String Tag = "AssetRegistry";
+AssetRegistry *AssetRegistry::s_instance = nullptr;
+static const   String Tag                = "AssetRegistry";
 
 AssetRegistry *AssetRegistry::create() {
     if ( nullptr == s_instance ) {
@@ -51,18 +51,24 @@ void AssetRegistry::destroy() {
     s_instance = nullptr;
 }
 
-AssetRegistry *AssetRegistry::getInstance() {
-    return s_instance;
+
+bool AssetRegistry::registerAssetPath( const String &mount, const String &path ) {
+    if ( nullptr == s_instance ) {
+        return false;
+    }
+    const ui32 hashId( StringUtils::hashName( mount.c_str() ) );
+    s_instance->m_name2pathMap.insert( hashId, path );
+
+    return true;
 }
 
-void AssetRegistry::registerAssetPath( const String &mount, const String &path ) {
-    const ui32 hashId( StringUtils::hashName( mount.c_str() ) );
-    m_name2pathMap.insert( hashId, path );
-}
+bool AssetRegistry::hasPath( const String &mount ) {
+    if ( nullptr == s_instance ) {
+        return false;
+    }
 
-bool AssetRegistry::hasPath( const String &mount ) const {
     const ui32 hashId( StringUtils::hashName( mount.c_str() ) );
-    if ( !m_name2pathMap.hasKey( hashId ) ) {
+    if ( !s_instance->m_name2pathMap.hasKey( hashId ) ) {
         return false;
     }
 
@@ -71,14 +77,18 @@ bool AssetRegistry::hasPath( const String &mount ) const {
 
 static const String Dummy("");
 
-String AssetRegistry::getPath( const String &mount ) const {
+String AssetRegistry::getPath( const String &mount ) {
+    if ( nullptr == s_instance ) {
+        return Dummy;
+    }
+
     const ui32 hashId( StringUtils::hashName( mount.c_str() ) );
-    if ( !m_name2pathMap.hasKey( hashId ) ) {
+    if ( !s_instance->m_name2pathMap.hasKey( hashId ) ) {
         return Dummy;
     }
 
     String path;
-    if ( m_name2pathMap.getValue( hashId, path ) ) {
+    if ( s_instance->m_name2pathMap.getValue( hashId, path ) ) {
         return path;
     }
 
@@ -109,8 +119,14 @@ String AssetRegistry::resolvePathFromUri( const IO::Uri &location ) {
     return absPath;
 }
 
-void AssetRegistry::clear() {
-    m_name2pathMap.clear();
+bool AssetRegistry::clear() {
+    if ( nullptr == s_instance ) {
+        return false;
+    }
+
+    s_instance->m_name2pathMap.clear();
+
+    return true;
 }
 
 AssetRegistry::AssetRegistry() 

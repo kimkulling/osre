@@ -158,7 +158,6 @@ bool Uri::isValid() const {
 }
 
 void Uri::clear() {
-	m_URI.clear();
 	m_Scheme.clear();
 	m_Path.clear();
 	m_AbsPath.clear();
