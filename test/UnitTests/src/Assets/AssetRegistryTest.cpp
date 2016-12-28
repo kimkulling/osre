@@ -32,8 +32,8 @@ using namespace ::OSRE::Assets;
 class AssetRegistryTest : public ::testing::Test {
 protected:
     virtual void SetUp() {
-#ifdef OSRE_WINDOWS
         AssetRegistry *reg( AssetRegistry::create() );
+#ifdef OSRE_WINDOWS
         Assets::AssetRegistry::registerAssetPath( "assets", "../../media" );
 #else
         Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
@@ -62,7 +62,7 @@ TEST_F( AssetRegistryTest, resolve_uri_from_mount_Test ) {
     static const String ModelPath = "file://assets/Models/Obj/spider.obj";
     IO::Uri fileUri( ModelPath );
     String loc = AssetRegistry::resolvePathFromUri( fileUri );
-    static const String expRes = "../../media/models/Obj/Spider.obj";
+    static const String expRes = "../../media/Models/Obj/spider.obj";
     EXPECT_EQ( expRes, loc );
 }
 
