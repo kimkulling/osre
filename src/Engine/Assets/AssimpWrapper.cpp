@@ -58,7 +58,7 @@ bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
     String root = AssetRegistry::getPath( "media" );
     String path = AssetRegistry::resolvePathFromUri( file );
 
-    String filename = root + path + file.getResource();
+    String filename = root + path;
     Importer myImporter;
     const aiScene *scene = myImporter.ReadFile( filename, flags );
     if ( nullptr == scene ) {
