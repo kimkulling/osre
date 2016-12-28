@@ -46,11 +46,13 @@ static const String Tag = "ModelLoadingApp";
 // The example application, will create the render environment and render a simple triangle onto it
 class UIDemoApp : public App::AppBase {
     Screen *m_screen;
+    TransformMatrixBlock m_transformMatrix;
 
 public:
     UIDemoApp( int argc, char *argv[] )
     : AppBase( argc, argv )
-    , m_screen( nullptr ) {
+    , m_screen( nullptr )
+    , m_transformMatrix() {
         // empty
     }
 
@@ -79,8 +81,16 @@ protected:
         m_screen = AppBase::createScreen( "HelloWorld" );
 
         Panel *panel = new Panel( "panel", m_screen );
+        panel->setRect( -1, -1, 1, 1 );
         ButtonBase *btnClick = new ButtonBase( "click", panel );
         ButtonBase *btnQuit  = new ButtonBase( "quit", panel );
+
+        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+
+        Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
+        ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
+        ParameterRegistry::registerParameter( parameter );
+        ParameterRegistry::updateParameter( parameter );
 
         return true;
     }

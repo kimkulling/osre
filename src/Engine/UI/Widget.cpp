@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/UI/Widget.h>
+#include <osre/UI/Screen.h>
 #include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
@@ -46,6 +47,20 @@ StyleProvider::~StyleProvider() {
     // empty
 }
 
+void WidgetCoordMapping::mapPosToWorld( const RectUI &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY ) {
+    mappedX = mappedY = 0.0f;
+
+    // UI coord system from (-1 | -1 ) to ( 1|1 )
+    const ui32 w( rect.m_width );
+    const ui32 h( rect.m_height );
+
+    if ( 0.0f != w ) {
+        mappedX = ( static_cast<f32>( x ) / static_cast<f32>( w ) * 2.0f ) - 1.0f;
+    }
+    if ( 0.0f != h ) {
+        mappedY = ( static_cast<f32>( y ) / static_cast<f32>( h ) * 2.0f ) - 1.0f;
+    }
+}
 
 Widget::Widget( const String &name, Widget *parent )
 : Object( name )
@@ -139,7 +154,9 @@ bool Widget::redrawRequested() const {
 }
 
 void Widget::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
-    OSRE_ASSERT( nullptr != rbSrv );
+    if ( nullptr == rbSrv ) {
+        return;
+    }
 
     if ( redrawRequested() ) {
         onRender( targetGeoArray, rbSrv );

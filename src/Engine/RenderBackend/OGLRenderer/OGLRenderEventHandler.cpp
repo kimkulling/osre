@@ -56,8 +56,8 @@ static const String Tag = "OGLRendeEventHandler";
 
 static const String VsSrc =
 	"layout(location = 0) in vec3 position;	      // object space vertex position\n"
-	"layout(location = 1) in vec3 normal;	            // object space vertex normal\n"
-	"layout(location = 2) in vec2 texcoord0;	        // texture coordinate\n"
+	"layout(location = 1) in vec3 normal;	      // object space vertex normal\n"
+	"layout(location = 2) in vec2 texcoord0;	  // texture coordinate\n"
 	"out vec2 vUV;\n"
 	"\n"
 	"void main() {\n"

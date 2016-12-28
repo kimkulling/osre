@@ -31,7 +31,6 @@ namespace Scene {
 using namespace OSRE::Common;
 using namespace OSRE::Platform;
 
-//-------------------------------------------------------------------------------------------------
 TrackBall::TrackBall( const String &trackBallObjName, ui32 w, ui32 h ) :
     OSEventListener( trackBallObjName ),
     m_StartVector( 0,0,0 ),
@@ -60,12 +59,10 @@ TrackBall::TrackBall( const String &trackBallObjName, ui32 w, ui32 h ) :
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 TrackBall::~TrackBall() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 void TrackBall::onOSEvent( const Common::Event &rOSEvent, const Common::EventData *pData ) {
 /*	if ( rOSEvent == Interface::MouseButtonDownEvent ) {
         Interface::MouseButtonEventData *pMBData = (Interface::MouseButtonEventData*) pData;
@@ -103,7 +100,6 @@ void TrackBall::onOSEvent( const Common::Event &rOSEvent, const Common::EventDat
     }*/
 }
 
-//-------------------------------------------------------------------------------------------------
 void TrackBall::mapToSphere( const Math::Vector2f *pNewPt, Math::Vector3f *NewVec ) {
     // copy parameter into temp point
     Math::Vector2f tempPt( *pNewPt );
@@ -129,7 +125,6 @@ void TrackBall::mapToSphere( const Math::Vector2f *pNewPt, Math::Vector3f *NewVe
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 void TrackBall::computeRotation() {
     Math::Vector3f perp;
     perp.crossProduct( m_StartVector, m_EndVector );
@@ -142,7 +137,6 @@ void TrackBall::computeRotation() {
     //m_nodePtr->setRotation( m_Rotation );
 }
 
-//-------------------------------------------------------------------------------------------------
 void TrackBall::computeScaling( ui32 y ) {
     m_screenYOld = m_screenY;
     m_screenY = y;
@@ -159,7 +153,6 @@ void TrackBall::computeScaling( ui32 y ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace SceneTools
 } // namespace OSRE

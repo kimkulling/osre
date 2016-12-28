@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/UI/Widget.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 namespace OSRE {
 namespace UI {
@@ -34,6 +35,10 @@ public:
 
 protected:
     virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
+
+private:
+    f32 m_angle;
+    RenderBackend::TransformMatrixBlock m_transformMatrix;
 };
 
 } // Namespace UI

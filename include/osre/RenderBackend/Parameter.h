@@ -87,5 +87,6 @@ private:
     CPPCore::TArray<Parameter*> m_updates;
     RenderBackendService *m_rbService;
 };
+
 } // Namespace RenderBackend
 } // Namespace OSRE

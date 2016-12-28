@@ -52,7 +52,6 @@ struct PrimitiveGroup;
 struct Material;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderBackend::RenderCmdBuffer
 ///	@ingroup	Engine
 ///
 ///	@brief  This class is used to manage a render command buffer. Render command buffers are used 
@@ -96,7 +95,7 @@ protected:
     virtual bool onDrawPrimitivesInstancesCmd( DrawInstancePrimitivesCmdData *data );
     /// The set render target callback.
     virtual bool onSetRenderTargetCmd( SetRenderTargetCmdData *pData );
-    ///
+    /// The set material callback.
     virtual bool onSetMaterialStageCmd( SetMaterialStageCmdData *data );
 
 private:
@@ -108,8 +107,6 @@ private:
     CPPCore::TArray<PrimitiveGroup*> m_primitives;
     CPPCore::TArray<Material*> m_materials;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderBackend
 } // Namespace OSRE
