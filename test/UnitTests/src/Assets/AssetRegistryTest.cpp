@@ -22,16 +22,49 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
 #include <osre/Assets/AssetRegistry.h>
+#include <osre/IO/Uri.h>
 
 namespace OSRE {
-    namespace UnitTest {
-        
-        class AssetRegistryTest : public ::testing::Test {
-            // empty
-        };
+namespace UnitTest {
 
-        TEST_F( AssetRegistryTest, createTest ) {
+using namespace ::OSRE::Assets;
 
-        }
+class AssetRegistryTest : public ::testing::Test {
+protected:
+    virtual void SetUp() {
+#ifdef OSRE_WINDOWS
+        AssetRegistry *reg( AssetRegistry::create() );
+        Assets::AssetRegistry::registerAssetPath( "assets", "../../media" );
+#else
+        Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
+#endif 
     }
+
+    virtual void TearDown() {
+        AssetRegistry::destroy();
+    }
+};
+
+TEST_F( AssetRegistryTest, createTest ) {
+    bool ok( true );
+    try {
+        AssetRegistry *reg( AssetRegistry::create() );
+        EXPECT_NE( nullptr, reg );
+
+        AssetRegistry::destroy();
+    } catch ( ... ) {
+        ok = false;
+    }
+    EXPECT_TRUE( ok );
+}
+
+TEST_F( AssetRegistryTest, resolve_uri_from_mount_Test ) {
+    static const String ModelPath = "file://assets/Models/Obj/spider.obj";
+    IO::Uri fileUri( ModelPath );
+    String loc = AssetRegistry::resolvePathFromUri( fileUri );
+    static const String expRes = "../../media/models/Obj/Spider.obj";
+    EXPECT_EQ( expRes, loc );
+}
+
+}
 }

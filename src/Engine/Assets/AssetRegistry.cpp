@@ -109,6 +109,7 @@ String AssetRegistry::resolvePathFromUri( const IO::Uri &location ) {
         if ( absPath[ absPath.size()-1 ]!='/' ) {
             absPath += '/';
         }
+        
         String::size_type endPos = pathToCheck.rfind( "/" );
         absPath += pathToCheck.substr( pos+1, pathToCheck.size()-( pos + endPos-2 ));
         if ( absPath[ absPath.size()-1 ]!='/' ) {
