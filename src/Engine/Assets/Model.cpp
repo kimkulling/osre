@@ -22,37 +22,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Assets/Model.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Scene/Node.h>
 
 namespace OSRE {
 namespace Assets {
 
 Model::Model() 
-: m_geo() {
-
+: m_root( nullptr ) {
+    // empty
 }
 
 Model::~Model() {
-
+    // empty
 }
 
-void Model::addGeometry( RenderBackend::Geometry *geo ) {
-    if ( nullptr == geo ) {
-        return;
+void Model::setRootNode( Scene::Node *root ) {
+    if ( nullptr != m_root ) {
+        m_root->release();
     }
-
-    m_geo.add( geo );
-}
-
-ui32 Model::getNumGeo() const {
-    return m_geo.size();
-}
-
-RenderBackend::Geometry *Model::getGeoAt( ui32 idx ) const {
-    if ( idx >= m_geo.size() ) {
-        return nullptr;
+    m_root = root;
+    if ( nullptr != m_root ) {
+        m_root->get();
     }
-
-    return m_geo[ idx ];
+}
+Scene::Node *Model::getRootNode() const {
+    return m_root;
 }
 
 } // Namespace Assets

@@ -24,9 +24,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/Model.h>
 #include <osre/IO/Uri.h>
 #include <osre/Common/Logger.h>
+#include <osre/Common/Ids.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/Node.h>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -40,8 +42,10 @@ using namespace ::OSRE::Scene;
 
 static const String Tag = "AssimpWrapper";
 
-AssimpWrapper::AssimpWrapper() 
-: m_model( nullptr ) {
+AssimpWrapper::AssimpWrapper( Common::Ids &ids )
+: m_model( nullptr )
+, m_geoArray()
+, m_ids( ids ) {
     // empty
 }
 
@@ -79,6 +83,9 @@ Model *AssimpWrapper::convertSceneToModel( const aiScene *scene ) {
     }
 
     m_model = new Model;
+    String rootName( scene->mRootNode->mName.C_Str() );
+    Node *root = new Node( rootName, m_ids, true, true, nullptr );
+    m_model->setRootNode( root );
 
     if ( scene->HasMaterials() ) {
         for ( ui32 i = 0; i < scene->mNumMaterials; i++ ) {
@@ -98,6 +105,10 @@ Model *AssimpWrapper::convertSceneToModel( const aiScene *scene ) {
             }
             handleMesh( currentMesh );
         }
+    }
+
+    if ( nullptr != scene->mRootNode ) {
+        handleNode( scene->mRootNode );
     }
 
     return m_model;
@@ -154,11 +165,19 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( ui16 ) * indexArray.size(), BufferAccessType::ReadOnly );
     geo->m_ib->copyFrom( &indexArray[ 0 ], geo->m_ib->m_size );
 
-    m_model->addGeometry( geo );
+    m_geoArray.add( geo );
 }
 
 void AssimpWrapper::handleNode( aiNode *node ) {
+    if ( nullptr == node ) {
+        return;
+    }
 
+    const ui32 numChildren( node->mNumChildren );
+    for ( ui32 i = 0; i < numChildren; i++ ) {
+        aiNode *currentNode( node->mChildren[ i ] );
+        handleNode( currentNode );
+    }
 }
 
 void AssimpWrapper::handleMaterial( aiMaterial *material ) {
