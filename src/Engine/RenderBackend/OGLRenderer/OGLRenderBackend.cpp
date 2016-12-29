@@ -641,7 +641,7 @@ OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const I
     }
 
     // import the texture
-    const String filename = fileloc.getAbsPath() + fileloc.getResource();
+    const String filename = fileloc.getAbsPath();
     i32 width( 0 ), height( 0 ), channels( 0 );
     GLubyte *data = SOIL_load_image( filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO );
     if( !data ) {
