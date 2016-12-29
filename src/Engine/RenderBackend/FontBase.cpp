@@ -90,5 +90,5 @@ bool FontBase::loadFromStream( OGLRenderBackend *rb ) {
     return true;
 }
 
-}
-}
+} // Namespace RenderBackend
+} // Namespace OSRE

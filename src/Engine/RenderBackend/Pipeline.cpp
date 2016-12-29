@@ -33,5 +33,5 @@ Pipeline::~Pipeline() {
 
 }
 
-}
-}
+} // Namespace RenderBackend
+} // Namespace OSRE

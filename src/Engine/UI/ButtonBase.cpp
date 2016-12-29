@@ -30,7 +30,8 @@ using namespace ::OSRE::Common;
 
 
 ButtonBase::ButtonBase( const String &name, Widget *parent )
-: Widget( name, parent ) {
+: Widget( name, parent )
+, m_label() {
     static_cast<void>( StyleProvider::getCurrentStyle() );
 }
 
@@ -40,6 +41,17 @@ ButtonBase::~ButtonBase() {
 
 void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
     // empty
+}
+
+void ButtonBase::setLabel( const String &label ) {
+    if ( m_label != label ) {
+        m_label = label;
+        Widget::requestRedraw();
+    }
+}
+
+const String &ButtonBase::getLabel() const {
+    return m_label;
 }
 
 } // Namespace UI

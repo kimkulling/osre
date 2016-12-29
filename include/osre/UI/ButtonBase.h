@@ -40,11 +40,14 @@ class OSRE_EXPORT ButtonBase : public Widget {
 public:
     ButtonBase( const String &name, Widget *parent );
     virtual ~ButtonBase();
+    virtual void setLabel( const String &label );
+    virtual const String &getLabel() const;
 
 protected:
     virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
 
 private:
+    String m_label;
 };
 
 } // Namespace UI

@@ -81,7 +81,7 @@ protected:
         m_screen = AppBase::createScreen( "HelloWorld" );
 
         Panel *panel = new Panel( "panel", m_screen );
-        panel->setRect( 10, 10, 100, 100 );
+        panel->setRect( 10, 10, 500, 500 );
         ButtonBase *btnClick = new ButtonBase( "click", panel );
         ButtonBase *btnQuit  = new ButtonBase( "quit", panel );
 
