@@ -35,11 +35,12 @@ namespace UI {
 
 class Screen;
 
-struct Style {
+struct OSRE_EXPORT Style {
     enum class ColorTable {
         FGColor = 0,
         BGColor,
-        TextColor
+        TextColor,
+        Max
     };
 
     CPPCore::TArray<Color4> m_properties;
@@ -47,17 +48,32 @@ struct Style {
     Style()
     : m_properties() {
         m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
-        m_properties.add( Color4( 0.f, 0.f, 0.f, 0.f ) );
+        m_properties.add( Color4( 0.8f, 0.8f, 0.8f, 0.f ) );
         m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
+    }
+
+    bool operator == ( const Style &rhs ) const {
+        bool equal( true );
+        for ( ui32 i = 0; i < (ui32) ColorTable::Max; i++ ) {
+            if ( m_properties[ i ] != rhs.m_properties[ i ] ) {
+                equal = false;
+                break;
+            }
+        }
+        return equal;
+    }
+
+    bool operator != ( const Style &rhs ) const {
+        return !( *this == rhs );
     }
 };
 
 class OSRE_EXPORT StyleProvider {
 public:
     static Style &getCurrentStyle();
+    static void setStyle( const Style &newStyle );
 
 private:
-    void create();
     StyleProvider();
     ~StyleProvider();
 

@@ -20,39 +20,35 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
+#include <gtest/gtest.h>
 #include <osre/UI/ButtonBase.h>
-#include <osre/Platform/AbstractSurface.h>
 
 namespace OSRE {
-namespace UI {
+namespace UnitTest {
 
-using namespace ::OSRE::Common;
+using namespace ::OSRE::UI;
 
-
-ButtonBase::ButtonBase( const String &name, Widget *parent )
-: Widget( name, parent )
-, m_label() {
-    static_cast<void>( StyleProvider::getCurrentStyle() );
-}
-
-ButtonBase::~ButtonBase() {
+class ButtonBaseTest : public ::testing::Test {
     // empty
-}
+};
 
-void ButtonBase::setLabel( const String &label ) {
-    if ( m_label != label ) {
-        m_label = label;
-        Widget::requestRedraw();
+TEST_F( ButtonBaseTest, createTest ) {
+    bool ok( true );
+    try {
+        ButtonBase theButton( "test", nullptr );
+    } catch ( ... ) {
+        ok = false;
     }
+    EXPECT_TRUE( ok );
 }
 
-const String &ButtonBase::getLabel() const {
-    return m_label;
+TEST_F( ButtonBaseTest, access_label_Test ) {
+    ButtonBase theButton( "test", nullptr );
+    static const String TestLabel = "test label";
+    theButton.setLabel( TestLabel );
+    EXPECT_EQ( TestLabel, theButton.getLabel() );
+    EXPECT_TRUE( theButton.redrawRequested() );
 }
 
-void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
-    // empty
-}
-
-} // Namespace UI
+} // Namespace UnitTest
 } // Namespace OSRE

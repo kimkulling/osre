@@ -43,6 +43,7 @@ public:
     MaterialBuilder();
     ~MaterialBuilder();
     static RenderBackend::Material *createBuildinMaterial( RenderBackend::VertexType type );
+    static RenderBackend::Material *createBuildinUIMaterial();
 };
 
 }

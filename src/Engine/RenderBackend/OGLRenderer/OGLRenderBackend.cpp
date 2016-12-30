@@ -666,6 +666,7 @@ OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const I
     // create texture and fill it
     tex = createEmptyTexture( name, TextureTargetType::Texture2D, width, height, channels );
     glTexImage2D( tex->m_target, 0, GL_RGB, width, height, 0, tex->m_format, GL_UNSIGNED_BYTE, data );
+    //glBindTexture( tex->m_target, 0 );
 
     SOIL_free_image_data( data );
 

@@ -52,6 +52,7 @@ SET ( unittest_rb_src
 SET( unittest_ui_src
     src/UI/WidgetTest.cpp
     src/UI/ButtonBaseTest.cpp
+    src/UI/StyleProviderTest.cpp
 )
 
 SET ( unittest_profiling_src

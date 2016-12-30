@@ -341,6 +341,8 @@ SET( renderbackend_inc
 #==============================================================================
 SET( ui_src
     UI/Widget.cpp
+    UI/UIRenderUtils.cpp
+    UI/UIRenderUtils.h
     UI/ButtonBase.cpp
     UI/Panel.cpp
     UI/Screen.cpp

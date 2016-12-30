@@ -27,7 +27,7 @@ namespace OSRE {
 namespace UnitTest {
 
 using namespace ::OSRE::UI;
- 
+
 class WidgetTest : public ::testing::Test {
     // empty
 };
@@ -35,7 +35,7 @@ class WidgetTest : public ::testing::Test {
 class TestWidget : public Widget {
 public:
     TestWidget( const String &name, Widget *parent )
-    : Widget( name, parent ) {
+        : Widget( name, parent ) {
         // empty
     }
 
@@ -49,7 +49,8 @@ TEST_F( WidgetTest, createTest ) {
     bool ok( true );
     try {
         TestWidget testWidget( "test", nullptr );
-    } catch ( ... ) {
+    }
+    catch ( ... ) {
         ok = false;
     }
 }
@@ -115,6 +116,5 @@ TEST_F( WidgetTest, WidgetCoordMappingTest ) {
     EXPECT_FLOAT_EQ( 0.0f, mappedY );
 }
 
-} // Namespace UnitTest
-} // Namespace OSRE
-
+}
+}

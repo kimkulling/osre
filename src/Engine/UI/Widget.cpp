@@ -38,6 +38,15 @@ Style &StyleProvider::getCurrentStyle() {
     return s_instance->m_activeStyle;
 }
 
+void StyleProvider::setStyle( const Style &newStyle ) {
+    if ( nullptr == s_instance ) {
+        static_cast<void>( StyleProvider::getCurrentStyle() );
+    }
+    if ( newStyle != s_instance->m_activeStyle ) {
+        s_instance->m_activeStyle = newStyle;
+    }
+}
+
 StyleProvider::StyleProvider()
 : m_activeStyle() {
     // empty
@@ -64,7 +73,7 @@ void WidgetCoordMapping::mapPosToWorld( ui32 x, ui32 y, f32 &mappedX, f32 &mappe
 void WidgetCoordMapping::mapPosToWorld( const RectUI &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY ) {
     mappedX = mappedY = 0.0f;
 
-    // UI coord system from (-1 | -1 ) to ( 1|1 )
+    // Used UI-axis from (-1 | -1 ) to ( 1 | 1 )
     const ui32 w( rect.m_width );
     const ui32 h( rect.m_height );
 
@@ -80,13 +89,13 @@ Widget::Widget( const String &name, Widget *parent )
 : Object( name )
 , m_parent( nullptr )
 , m_children()
-, m_rect( 0,0,1,1 )
+, m_rect( 0, 0, 1, 1 )
 , m_z( 1 ) {
     Widget::setParent( parent );
 }
 
 Widget::~Widget() {
-
+    // empty
 }
 
 void Widget::setParent( Widget *parent ) {

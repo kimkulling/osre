@@ -25,6 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/MaterialBuilder.h>
 
+#include "UIRenderUtils.h"
+
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <glm/glm.hpp>
@@ -40,7 +42,7 @@ using namespace ::OSRE::RenderBackend;
 Panel::Panel( const String &name, Widget *parent )
 : Widget( name, parent )
 , m_angle( 0.02f )
-,m_transformMatrix() {
+, m_transformMatrix() {
 }
 
 Panel::~Panel() {
@@ -48,65 +50,15 @@ Panel::~Panel() {
 }
 
 void Panel::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
+    const Style &activeStyle = StyleProvider::getCurrentStyle();
     const RectUI &rect( getRect() );
-    Geometry *geo = Geometry::create( 1 );
+
+    Geometry *geo = UIRenderUtils::createRectFromStyle( rect, activeStyle );
+
     AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-
-    geo->m_vertextype = VertexType::RenderVertex;
-    geo->m_indextype = IndexType::UnsignedShort;
-
-    RenderVert vertices[ 4 ];
-    ui16 indices[ 6 ];
-
-    f32 x1, y1, x2, y2;
-    WidgetCoordMapping::mapPosToWorld( rect.getX1(), rect.getY1(), x1, y1 );
-    WidgetCoordMapping::mapPosToWorld( rect.getX2(), rect.getY2(), x2, y2 );
-
-    // setup triangle vertices
-/*    vertices[ 0 ].position = glm::vec3( -1, -1, 0 );
-    vertices[ 1 ].position = glm::vec3( -1, 1, 0 );
-    vertices[ 2 ].position = glm::vec3( 1, -1, 0 );
-    vertices[ 3 ].position = glm::vec3( 1, 1, 0 );*/
-
-    vertices[ 0 ].position = glm::vec3( x1, y1, 0 );
-    vertices[ 1 ].position = glm::vec3( x1, y2, 0 );
-    vertices[ 2 ].position = glm::vec3( x2, y1, 0 );
-    vertices[ 3 ].position = glm::vec3( x2, y2, 0 );
-
-    vertices[ 0 ].tex0 = glm::vec2( 0, 0 );
-    vertices[ 1 ].tex0 = glm::vec2( 0, 1 );
-    vertices[ 2 ].tex0 = glm::vec2( 1, 0 );
-    vertices[ 3 ].tex0 = glm::vec2( 1, 1 );
-
-    geo->m_vb = BufferData::alloc( BufferType::VertexBuffer, sizeof( RenderVert ) * 4, BufferAccessType::ReadOnly );
-    geo->m_vb->copyFrom( vertices, geo->m_vb->m_size );
-
-    // setup triangle indices
-    indices[ 0 ] = 0;
-    indices[ 1 ] = 1;
-    indices[ 2 ] = 2;
-
-    indices[ 3 ] = 1;
-    indices[ 4 ] = 2;
-    indices[ 5 ] = 3;
-
-    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( ui16 ) * 6, BufferAccessType::ReadOnly );
-    geo->m_ib->copyFrom( indices, geo->m_ib->m_size );
-
     attachGeoEvData->m_numGeo = 1;
     attachGeoEvData->m_geo = new Geometry*[ 1 ];
     attachGeoEvData->m_geo[ 0 ] = geo;
-
-    // use default material
-    geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( VertexType::RenderVertex );
-
-    geo->m_numPrimGroups = 1;
-    geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
-    geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numPrimitives = 6;
-    geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-    geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
-
     rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
     m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
