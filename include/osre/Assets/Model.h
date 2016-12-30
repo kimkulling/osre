@@ -28,6 +28,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Forward declarations
 namespace OSRE {
 
+namespace Scene {
+    class Node;
+}
+
 namespace RenderBackend {
     struct Geometry;
 }
@@ -38,12 +42,11 @@ class Model {
 public: 
     Model();
     ~Model();
-    void addGeometry( RenderBackend::Geometry *geo );
-    ui32 getNumGeo() const;
-    RenderBackend::Geometry *getGeoAt( ui32 idx ) const;
+    void setRootNode( Scene::Node *root );
+    Scene::Node *getRootNode() const;
 
 private:
-    CPPCore::TArray<RenderBackend::Geometry*> m_geo;
+    Scene::Node *m_root;
 };
 
 } // Namespace Assets

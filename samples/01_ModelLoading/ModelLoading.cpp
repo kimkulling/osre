@@ -30,12 +30,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/AssimpWrapper.h>
 #include <osre/IO/Uri.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Common/Ids.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 using namespace ::OSRE;
+using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
 // To identify local log entries 
@@ -82,9 +84,13 @@ protected:
 
         Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
         //Scene::GeometryBuilder myBuilder;
-        Assets::AssimpWrapper assimpWrapper;
+        Ids ids;
+        Assets::AssimpWrapper assimpWrapper( ids );
         IO::Uri model( ModelPath );
-        assimpWrapper.importAsset( model, 0 );
+        if ( assimpWrapper.importAsset( model, 0 ) ) {
+            Assets::Model *model = assimpWrapper.getModel();
+
+        }
         /*RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
         if( nullptr != geo ) {
 			m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
@@ -96,8 +102,8 @@ protected:
             geo->m_material->m_numParameters++;
 
 			geoNode->addGeometry( geo );
-		}*/
-
+		}
+        */
         return true;
     }
 };

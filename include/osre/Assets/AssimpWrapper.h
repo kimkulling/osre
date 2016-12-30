@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <osre/Common/Ids.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -32,6 +33,14 @@ struct aiNode;
 struct aiMaterial;
 
 namespace OSRE {
+
+namespace Common {
+    class Ids;
+}
+
+namespace RenderBackend {
+    struct Geometry;
+}
 
 namespace IO {
     class Uri;
@@ -43,7 +52,7 @@ class Model;
 
 class OSRE_EXPORT AssimpWrapper {
 public:
-    AssimpWrapper();
+    AssimpWrapper( Common::Ids &ids );
     ~AssimpWrapper();
     bool importAsset( const IO::Uri &file, ui32 flags );
     Model *getModel() const;
@@ -55,7 +64,10 @@ protected:
     void handleMaterial( aiMaterial *material );
 
 private:
+    typedef CPPCore::TArray<RenderBackend::Geometry*> GeoArray;
+    GeoArray m_geoArray;
     Model *m_model;
+    Common::Ids &m_ids;
 };
 
 } // Namespace Assets
