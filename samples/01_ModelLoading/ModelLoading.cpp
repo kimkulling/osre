@@ -86,8 +86,8 @@ protected:
         //Scene::GeometryBuilder myBuilder;
         Ids ids;
         Assets::AssimpWrapper assimpWrapper( ids );
-        IO::Uri model( ModelPath );
-        if ( assimpWrapper.importAsset( model, 0 ) ) {
+        IO::Uri modelLoc( ModelPath );
+        if ( assimpWrapper.importAsset( modelLoc, 0 ) ) {
             Assets::Model *model = assimpWrapper.getModel();
 
         }

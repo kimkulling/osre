@@ -100,9 +100,9 @@ void TrackBall::onOSEvent( const Common::Event &rOSEvent, const Common::EventDat
     }*/
 }
 
-void TrackBall::mapToSphere( const Math::Vector2f *pNewPt, Math::Vector3f *NewVec ) {
+void TrackBall::mapToSphere( const Vec2f *pNewPt, Vec3f *NewVec ) {
     // copy parameter into temp point
-    Math::Vector2f tempPt( *pNewPt );
+    Vec2f tempPt( *pNewPt );
 
     // adjust point coordinates and scale down to range of [-1 ... 1]
     f32 x = ( tempPt.getX() * m_adjWidth )  - 1.0f;
@@ -126,8 +126,9 @@ void TrackBall::mapToSphere( const Math::Vector2f *pNewPt, Math::Vector3f *NewVe
 }
 
 void TrackBall::computeRotation() {
-    Math::Vector3f perp;
-    perp.crossProduct( m_StartVector, m_EndVector );
+    Vec3f perp = m_StartVector.crossProduct( m_EndVector );;
+    //perp.crossProduct( m_StartVector, m_EndVector );
+    
     if ( perp.getLength() > Math::BaseMath::getSPEPS() ) {
         m_rotation.set( perp.getX(), perp.getY(), perp.getZ(), m_StartVector.dotProduct( m_EndVector ) );
     } else {
@@ -144,7 +145,7 @@ void TrackBall::computeScaling( ui32 y ) {
     if ( m_screenYOld ) {
         i32 diff = m_screenY - m_screenYOld;
         const f32 scaleFactor = offset * (f32) diff;
-        Math::Vector3f scale/* = m_nodePtr->getScale()*/;
+        Vec3f scale/* = m_nodePtr->getScale()*/;
         scale += scaleFactor;				
         if ( scale.isZero() ) {
             scale.set( 0,0,0 );

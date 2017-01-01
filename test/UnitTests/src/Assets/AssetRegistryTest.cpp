@@ -33,6 +33,7 @@ class AssetRegistryTest : public ::testing::Test {
 protected:
     virtual void SetUp() {
         AssetRegistry *reg( AssetRegistry::create() );
+        EXPECT_NE( nullptr, reg );
 #ifdef OSRE_WINDOWS
         Assets::AssetRegistry::registerAssetPath( "assets", "../../media" );
 #else

@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Common/osre_common.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/Common/TArea.h>
 #include <osre/Common/TObjPtr.h>
@@ -55,7 +56,7 @@ public:
     ///	@brief	Maps a 2D-point to a sphere and returns the 3D-coordinate.
     ///	@param	pNewPt		[in] The 2D-point to map.
     ///	@param	NewVec		[out] The mapped 3D-point.
-    void mapToSphere( const Math::Vector2f *pNewPt, Math::Vector3f *NewVec );
+    void mapToSphere( const Vec2f *pNewPt, Vec3f *NewVec );
     
     ///	@brief	The current rotation will be calculated.
     void computeRotation();
@@ -65,9 +66,9 @@ public:
     void computeScaling( ui32 y );
 
 private:
-    Math::Vector3f m_StartVector, m_EndVector;
+    Vec3f m_StartVector, m_EndVector;
     Common::TArea<ui32> m_Dimension;
-    Math::Quatf m_rotation;
+    Quatf m_rotation;
     bool m_bLeftMButtonClicked;
     bool m_bMiddleClicked;
     bool m_bRightMButtonClicked;

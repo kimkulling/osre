@@ -58,8 +58,7 @@ public:
     virtual bool onCreate( RenderBackendService *rb ) override {
         rb->sendEvent( &OnAttachViewEvent, nullptr );
         
-//        Scene::DbgRenderer::getInstance()->renderDbgText( -1, -1, 1, "Hello, \nworld!" );
-        Scene::DbgRenderer::getInstance()->renderDbgText( -1, -1, 1, "XXX" );
+        Scene::DbgRenderer::getInstance()->renderDbgText( 1, 1, 1U, "XXX" );
 
         return true;
     }

@@ -176,19 +176,177 @@ struct Color4 {
 template<class T>
 struct TVec2 {
     T v[ 2 ];
+
+    TVec2() {
+        set( 0, 0 );
+    }
+
+    TVec2( T x, T y ) {
+        set( x, y );
+    }
+
+    void set( T x, T y ) {
+        v[ 0 ] = x;
+        v[ 1 ] = y;
+    }
+
+    T getX() const {
+        return v[ 0 ];
+    }
+
+    T getY() const {
+        return v[ 1 ];
+    }
+
+    T getSquaredLength() {
+        return ( ( v[ 0 ] * v[ 0 ] ) + ( v[ 1 ] * v[ 1 ] ) );
+    }
+
+    T getLength() {
+        return ::sqrt( getSquaredLength() );
+    }
+
+    T dotProduct( const TVec2<T> &rhs ) const {
+        return ( this->v[ 0 ] * rhs.v[ 0 ] + this->v[ 1 ] * rhs.v[1] );
+    }
+
+    TVec2<T> crossProduct( const TVec2<T> &rhs ) const {
+        return TVec2<T>( this->v[ 0 ] * rhs.v[ 1 ], this->v[ 1 ] * rhs.v[ 0 ] );
+    }
 };
 
-typedef TVec2<i32> Vec2I;
+typedef TVec2<i32> Vec2i;
+typedef TVec2<f32> Vec2f;
 
 template<class T>
 struct TVec3 {
     T v[ 3 ];
+
+    TVec3() {
+        set( 0, 0, 0 );
+    }
+
+    TVec3( T x, T y, T z ) {
+        set( x, y, z );
+    }
+
+    void set( T x, T y, T z ) {
+        v[ 0 ] = x;
+        v[ 1 ] = y;
+        v[ 2 ] = z;
+    }
+
+    T getX() const {
+        return v[ 0 ];
+    }
+
+    T getY() const {
+        return v[ 1 ];
+    }
+
+    T getZ() const {
+        return v[ 2 ];
+    }
+
+    T getSquaredLength() {
+        return ( ( v[ 0 ] * v[ 0 ] ) + ( v[ 1 ] * v[ 1 ] ) + ( v[ 2 ] * v[ 2 ] ) );
+    }
+
+    T getLength() {
+        return ::sqrt( getSquaredLength() );
+    }
+
+    T  dotProduct( const TVec3<T> &rhs ) const {
+        return v[ 0 ] * rhs.v[ 0 ] + v[ 1 ] * rhs.v[ 1 ] + v[ 2 ] * rhs.v[ 2 ];
+    }
+
+    TVec3<T> crossProduct( const TVec3<T> &rhs ) const {
+        return TVec3<T>( v[ 1 ] * rhs.v[ 2 ]- v[ 2 ] * rhs.v[ 1 ]
+            , v[ 2 ] * rhs.v[ 0 ] - v[ 0 ] * rhs.v[ 2 ]
+            , v[ 0 ] * rhs.v[ 1 ] - v[ 1 ] * rhs.v[ 0 ] );
+    }
+
+    bool isZero() const {
+        if ( v[ 0 ] <= 0 && v[ 1 ] <= 0 && v[ 2 ] <= 0 ) {
+            return true;
+        }
+        return false;
+    }
+
+    TVec3<T> &operator += ( const TVec3<T> &rhs ) {
+        v[ 0 ] += rhs.v[ 0 ];
+        v[ 1 ] += rhs.v[ 1 ];
+        v[ 2 ] += rhs.v[ 2 ];
+
+        return *this;
+    }
+
+    TVec3<T> &operator += ( T val ) {
+        v[ 0 ] += val;
+        v[ 1 ] += val;
+        v[ 2 ] += val;
+
+        return *this;
+    }
+
+    TVec3<T> &operator -= ( const TVec3<T> &rhs ) {
+        v[ 0 ] -= rhs.v[ 0 ];
+        v[ 1 ] -= rhs.v[ 1 ];
+        v[ 2 ] -= rhs.v[ 2 ];
+
+        return *this;
+    }
+
+    TVec3<T> &operator -= ( T val ) {
+        v[ 0 ] -= val;
+        v[ 1 ] -= val;
+        v[ 2 ] -= val;
+
+        return *this;
+    }
 };
+
+typedef TVec3<i32> Vec3i;
+typedef TVec3<f32> Vec3f;
 
 template<class T>
 struct TVec4 {
     T v[ 4 ];
+
+    TVec4() {
+        set( 0, 0, 0, 1 );
+    }
+
+    TVec4( T x, T y, T z, T w ) {
+        set( x, y, z, w );
+    }
+
+    void set( T x, T y, T z, T w ) {
+        v[ 0 ] = x;
+        v[ 1 ] = y;
+        v[ 2 ] = z;
+        v[ 3 ] = w;
+    }
+
+    T getX() const {
+        return v[ 0 ];
+    }
+
+    T getY() const {
+        return v[ 1 ];
+    }
+
+    T getZ() const {
+        return v[ 2 ];
+    }
+
+    T getW() const {
+        return v[ 3 ];
+    }
 };
+
+typedef TVec4<i32> Vec4i;
+typedef TVec4<f32> Vec4f;
 
 template<class T>
 struct TRect2D {
@@ -228,6 +386,28 @@ struct TRect2D {
 };
 
 typedef TRect2D<ui32> RectUI;
+
+template<class T>
+struct OSRE_EXPORT TQuat {
+    T m_x, m_y, m_z, m_w;
+
+    TQuat()
+    : m_x( 0 )
+    , m_y( 0 )
+    , m_z( 0 )
+    , m_w( 1 ) {
+        // empty
+    }
+
+    void set( T x, T y, T z, T w ) {
+        m_x = x;
+        m_y = y;
+        m_z = z;
+        m_w = w;
+    }
+};
+
+typedef TQuat<f32> Quatf;
 
 ///	@brief  Shortcut to avoid copy operations.
 #define OSRE_NON_COPYABLE( NAME ) \
