@@ -142,7 +142,6 @@ SET( math_src
 )
 SET( math_inc
     ${HEADER_PATH}/Math/BaseMath.h
-    ${HEADER_PATH}/Math/TVector.h
 )
 
 #==============================================================================
