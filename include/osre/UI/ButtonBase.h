@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/UI/Widget.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 namespace OSRE {
 
@@ -36,6 +37,11 @@ namespace RenderBackend {
 
 namespace UI {
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT ButtonBase : public Widget {
 public:
     ButtonBase( const String &name, Widget *parent );
@@ -48,6 +54,7 @@ protected:
 
 private:
     String m_label;
+    RenderBackend::TransformMatrixBlock m_transformMatrix;
 };
 
 } // Namespace UI

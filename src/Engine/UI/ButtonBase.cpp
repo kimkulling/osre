@@ -22,12 +22,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/UI/ButtonBase.h>
 #include <osre/Platform/AbstractSurface.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/RenderBackendService.h>
+
+#include <osre/Scene/MaterialBuilder.h>
+
+#include "UIRenderUtils.h"
+
+#include <GL/glew.h>
+#include <GL/gl.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 namespace OSRE {
 namespace UI {
 
 using namespace ::OSRE::Common;
-
+using namespace ::OSRE::RenderBackend;
 
 ButtonBase::ButtonBase( const String &name, Widget *parent )
 : Widget( name, parent )
@@ -51,7 +64,26 @@ const String &ButtonBase::getLabel() const {
 }
 
 void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
-    // empty
+    const Style &activeStyle = StyleProvider::getCurrentStyle();
+    const RectUI &rect( getRect() );
+
+    Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle );
+    AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
+    attachGeoEvData->m_numGeo = 1;
+    attachGeoEvData->m_geo = new Geometry*[ 1 ];
+    attachGeoEvData->m_geo[ 0 ] = geo;
+    rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+
+    /*m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.001f, glm::vec3( 1, 1, 0 ) );
+
+    Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
+    m_transformMatrix.update();
+    ::memcpy( parameter->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
+
+    geo->m_material->m_parameters = parameter;
+    geo->m_material->m_numParameters++;*/
+
+    targetGeoArray.add( geo );
 }
 
 } // Namespace UI

@@ -43,17 +43,18 @@ Panel::Panel( const String &name, Widget *parent )
 : Widget( name, parent )
 , m_angle( 0.02f )
 , m_transformMatrix() {
+    // empty
 }
 
 Panel::~Panel() {
-
+    // empty
 }
 
 void Panel::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const RectUI &rect( getRect() );
 
-    Geometry *geo = UIRenderUtils::createRectFromStyle( rect, activeStyle );
+    Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle );
 
     AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
     attachGeoEvData->m_numGeo = 1;

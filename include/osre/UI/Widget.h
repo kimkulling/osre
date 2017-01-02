@@ -35,10 +35,17 @@ namespace UI {
 
 class Screen;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  
+//-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT Style {
     enum class ColorTable {
-        FGColor = 0,
-        BGColor,
+        FGColorPanel = 0,
+        BGColorPanel,
+        FGColorWidget,
+        BGColorWidget,
         TextColor,
         Max
     };
@@ -47,8 +54,13 @@ struct OSRE_EXPORT Style {
 
     Style()
     : m_properties() {
+        // color panel
         m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
-        m_properties.add( Color4( 0.8f, 0.8f, 0.8f, 0.f ) );
+        m_properties.add( Color4( 0.9f, 0.9f, 0.9f, 1.f ) );
+        // color button
+        m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
+        m_properties.add( Color4( 0.5f, 0.5f, 0.5f, 1.f ) );
+        // color text
         m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
     }
 
@@ -68,6 +80,11 @@ struct OSRE_EXPORT Style {
     }
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT StyleProvider {
 public:
     static Style &getCurrentStyle();
@@ -82,6 +99,11 @@ private:
     Style m_activeStyle;
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  
+//-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT WidgetCoordMapping {
     static void init( const RectUI &dim );
     static const RectUI &getDimension();
@@ -92,6 +114,16 @@ private:
     static RectUI s_dim;
 };
 
+enum class WidgetType {
+    Panel,
+    Button
+};
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Widget : public Common::Object {
 public:
     typedef CPPCore::TArray<RenderBackend::Geometry*> TargetGeoArray;

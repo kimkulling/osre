@@ -10,7 +10,7 @@ namespace UI {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-Geometry *UIRenderUtils::createRectFromStyle( const RectUI &rect, const Style &style ) {
+Geometry *UIRenderUtils::createRectFromStyle( WidgetType type, const RectUI &rect, const Style &style ) {
     Geometry *geo = Geometry::create( 1 );
 
     geo->m_vertextype = VertexType::RenderVertex;
@@ -29,7 +29,12 @@ Geometry *UIRenderUtils::createRectFromStyle( const RectUI &rect, const Style &s
     vertices[ 2 ].position = glm::vec3( x2, y1, 0 );
     vertices[ 3 ].position = glm::vec3( x2, y2, 0 );
 
-    const Color4 &col = style.m_properties[ ( ui32 ) Style::ColorTable::BGColor ];
+    Color4 col;
+    if ( WidgetType::Panel == type ) {
+        col = style.m_properties[ ( ui32 ) Style::ColorTable::BGColorPanel ];
+    } else if ( WidgetType::Button == type ) {
+        col = style.m_properties[ ( ui32 ) Style::ColorTable::BGColorWidget ];
+    }
     vertices[ 0 ].color0 = glm::vec3( col.m_r, col.m_g, col.m_b );
     vertices[ 1 ].color0 = glm::vec3( col.m_r, col.m_g, col.m_b );
     vertices[ 2 ].color0 = glm::vec3( col.m_r, col.m_g, col.m_b );
@@ -68,5 +73,5 @@ Geometry *UIRenderUtils::createRectFromStyle( const RectUI &rect, const Style &s
     return geo;
 }
 
-}
-}
+} // Namespace UI
+} // Namespace OSRE

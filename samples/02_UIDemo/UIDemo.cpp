@@ -83,7 +83,9 @@ protected:
         Panel *panel = new Panel( "panel", m_screen );
         panel->setRect( 10, 10, 500, 500 );
         ButtonBase *btnClick = new ButtonBase( "click", panel );
+        btnClick->setRect( 20, 620, 100, 20 );
         ButtonBase *btnQuit  = new ButtonBase( "quit", panel );
+        btnQuit->setRect( 20, 50, 100, 20 );
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
 
