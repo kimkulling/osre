@@ -43,8 +43,10 @@ using namespace ::OSRE::Scene;
 static const String Tag = "AssimpWrapper";
 
 AssimpWrapper::AssimpWrapper( Common::Ids &ids )
-: m_model( nullptr )
+: m_nodeStack()
+, m_model( nullptr )
 , m_geoArray()
+, m_parent( nullptr )
 , m_ids( ids ) {
     // empty
 }
@@ -85,6 +87,7 @@ Model *AssimpWrapper::convertSceneToModel( const aiScene *scene ) {
     m_model = new Model;
     String rootName( scene->mRootNode->mName.C_Str() );
     Node *root = new Node( rootName, m_ids, true, true, nullptr );
+    m_parent = root;
     m_model->setRootNode( root );
 
     if ( scene->HasMaterials() ) {
@@ -168,6 +171,27 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     m_geoArray.add( geo );
 }
 
+void AssimpWrapper::pushNode( Scene::Node *newNode ) {
+    if ( nullptr == newNode ) {
+        return;
+    }
+    if ( !m_nodeStack.isEmpty() ) {
+        m_parent = m_nodeStack.back();
+    } else {
+        m_parent = nullptr;
+    }
+    m_nodeStack.add( newNode );
+}
+
+void AssimpWrapper::popNode() {
+    m_nodeStack.removeBack();
+    if ( !m_nodeStack.isEmpty() ) {
+        m_parent = m_nodeStack.back();
+    } else {
+        m_parent = nullptr;
+    }
+}
+
 void AssimpWrapper::handleNode( aiNode *node ) {
     if ( nullptr == node ) {
         return;
@@ -176,7 +200,11 @@ void AssimpWrapper::handleNode( aiNode *node ) {
     const ui32 numChildren( node->mNumChildren );
     for ( ui32 i = 0; i < numChildren; i++ ) {
         aiNode *currentNode( node->mChildren[ i ] );
+        const String name( currentNode->mName.C_Str() );
+        Node *newNode = new Node( name, m_ids, true, true, m_parent );
+        pushNode( newNode );
         handleNode( currentNode );
+        popNode();
     }
 }
 

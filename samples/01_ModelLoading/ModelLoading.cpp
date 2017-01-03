@@ -68,7 +68,7 @@ protected:
             return false;
         }
        
-        baseSettings->setString( Properties::Settings::WindowsTitle, "HelloWorld!" );
+        baseSettings->setString( Properties::Settings::WindowsTitle, "Model Loader!" );
         if ( !AppBase::onCreate( baseSettings ) ) {
             return false;
         }

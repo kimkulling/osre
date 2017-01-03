@@ -46,6 +46,10 @@ namespace IO {
     class Uri;
 }
 
+namespace Scene {
+    class Node;
+}
+
 namespace Assets {
 
 class Model;
@@ -60,13 +64,18 @@ public:
 protected:
     Model *convertSceneToModel( const aiScene *scene );
     void handleMesh( aiMesh *mesh );
+    void pushNode( Scene::Node *newNode );
+    void popNode();
     void handleNode( aiNode *node );
     void handleMaterial( aiMaterial *material );
 
 private:
     typedef CPPCore::TArray<RenderBackend::Geometry*> GeoArray;
     GeoArray m_geoArray;
+    typedef CPPCore::TArray<Scene::Node*> NodeArray;
+    NodeArray m_nodeStack;
     Model *m_model;
+    Scene::Node *m_parent;
     Common::Ids &m_ids;
 };
 

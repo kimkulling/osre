@@ -102,7 +102,7 @@ String AssetRegistry::resolvePathFromUri( const IO::Uri &location ) {
 
     const String pathToCheck( location.getAbsPath() );
     String absPath( pathToCheck );
-    String::size_type pos = pathToCheck.find( "/" );
+    const String::size_type pos = pathToCheck.find( "/" );
     String mountPoint = pathToCheck.substr( 0, pos );
     String::size_type offset = pos + mountPoint.size() + 1;
     if ( hasPath( mountPoint ) ) {
@@ -111,7 +111,7 @@ String AssetRegistry::resolvePathFromUri( const IO::Uri &location ) {
             absPath += '/';
             offset++;
         }
-        String rest = pathToCheck.substr( pos+1, pathToCheck.size() - pos-1 );
+        const String rest = pathToCheck.substr( pos+1, pathToCheck.size() - pos-1 );
         absPath += rest;
     }
     
