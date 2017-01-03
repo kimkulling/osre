@@ -204,8 +204,8 @@ Material *MaterialBuilder::createBuildinUIMaterial() {
     String vs = VsSrcUI;
     String fs = FsSrcUI;
     mat->m_pShader = new Shader;
-    mat->m_pShader->m_src[ static_cast< int >( ShaderType::SH_VertexShaderType ) ] = vs;
-    mat->m_pShader->m_src[ static_cast< int >( ShaderType::SH_FragmentShaderType ) ] = fs;
+    mat->m_pShader->m_src[ static_cast< i32 >( ShaderType::SH_VertexShaderType ) ] = vs;
+    mat->m_pShader->m_src[ static_cast< i32 >( ShaderType::SH_FragmentShaderType ) ] = fs;
 
     // setup shader attributes and variables
     if ( nullptr != mat->m_pShader ) {
@@ -213,6 +213,10 @@ Material *MaterialBuilder::createBuildinUIMaterial() {
         const String *attribs( RenderVert::getAttributes() );
         mat->m_pShader->m_attributes.add( attribs, numAttribs );
         mat->m_pShader->m_parameters.add( "MVP" );
+        /*
+        mat->m_parameters = ParameterRegistry::getParameterByName( "MVP" );
+        mat->m_numParameters++;
+        */
     }
 
     return mat;
