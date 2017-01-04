@@ -153,6 +153,7 @@ void Parameter::destroy( Parameter *param ) {
     }
 }
 
+
 ParameterRegistry *ParameterRegistry::s_instance = nullptr;
 
 ParameterRegistry *ParameterRegistry::create( RenderBackendService *rbSrv ) {

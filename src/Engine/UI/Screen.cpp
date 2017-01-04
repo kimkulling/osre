@@ -69,15 +69,9 @@ void Screen::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *rbS
 
     // set 2D render mode
     m_transformMatrix.m_projection = glm::ortho( 0, m_width, m_height, 0 );
-    m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+    m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
 
     m_transformMatrix.update();
-    ::memcpy( param->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
-    UpdateParameterEventData *data = new UpdateParameterEventData;
-    data->m_numParam = 1;
-    data->m_param = new Parameter *[ 1 ];
-    data->m_param[ 0 ] = param;
-    rbSrv->sendEvent( &OnUpdateGeoEvent, data );
     const ui32 numChildren( getNumChildren() );
     if ( 0 == numChildren ) {
         return;
@@ -100,6 +94,14 @@ void Screen::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *rbS
             attachGeoData->m_geo[ i ] = targetGeoArray[ i ];
         }
         rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoData );
+
+        /*::memcpy( param->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
+        UpdateParameterEventData *data = new UpdateParameterEventData;
+        data->m_numParam = 1;
+        data->m_param = new Parameter *[ 1 ];
+        data->m_param[ 0 ] = param;
+        rbSrv->sendEvent( &OnUpdateGeoEvent, data );*/
+
         targetGeoArray.resize( 0 );
     }
 }

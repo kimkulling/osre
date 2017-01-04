@@ -213,10 +213,6 @@ Material *MaterialBuilder::createBuildinUIMaterial() {
         const String *attribs( RenderVert::getAttributes() );
         mat->m_pShader->m_attributes.add( attribs, numAttribs );
         mat->m_pShader->m_parameters.add( "MVP" );
-        /*
-        mat->m_parameters = ParameterRegistry::getParameterByName( "MVP" );
-        mat->m_numParameters++;
-        */
     }
 
     return mat;
