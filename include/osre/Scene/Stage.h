@@ -27,6 +27,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+namespace Assets {
+    class Model;
+}
+    
 namespace Common {
     class Ids;
 }
@@ -97,6 +101,7 @@ public:
     virtual Node *addNode( const String &name, Node *parent, const String &type="default" );
     virtual bool registerNodeFactory( AbstractNodeFactory *factory );
     virtual Node *findNode( const String &name ) const;
+    virtual void addModel( Assets::Model *model, Node *parentNode );
     virtual View *addView( const String &name, Node *node );
     virtual void clear();
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );

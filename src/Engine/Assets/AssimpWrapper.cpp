@@ -197,11 +197,24 @@ void AssimpWrapper::handleNode( aiNode *node ) {
         return;
     }
 
+    const String name( node->mName.C_Str() );
+    Node *newNode = new Node( name, m_ids, true, true, m_parent );
+
+    for ( ui32 j = 0; j < node->mNumMeshes; j++ ) {
+        const ui32 meshIdx = node->mMeshes[ j ];
+        if ( meshIdx >= m_geoArray.size() ) {
+            continue;
+        }
+        Geometry *geo = m_geoArray[ meshIdx ];
+        newNode->addGeometry( geo );
+    }
+
     const ui32 numChildren( node->mNumChildren );
     for ( ui32 i = 0; i < numChildren; i++ ) {
         aiNode *currentNode( node->mChildren[ i ] );
-        const String name( currentNode->mName.C_Str() );
-        Node *newNode = new Node( name, m_ids, true, true, m_parent );
+        if ( nullptr == currentNode ) {
+            continue;
+        }
         pushNode( newNode );
         handleNode( currentNode );
         popNode();

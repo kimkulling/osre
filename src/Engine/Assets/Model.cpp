@@ -45,6 +45,7 @@ void Model::setRootNode( Scene::Node *root ) {
         m_root->get();
     }
 }
+
 Scene::Node *Model::getRootNode() const {
     return m_root;
 }

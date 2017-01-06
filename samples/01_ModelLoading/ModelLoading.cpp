@@ -82,28 +82,19 @@ protected:
         m_stage = AppBase::createStage( "HelloWorld" );
         AppBase::activateStage( m_stage->getName() );
 
-        Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
+        //Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
         //Scene::GeometryBuilder myBuilder;
         Ids ids;
         Assets::AssimpWrapper assimpWrapper( ids );
         IO::Uri modelLoc( ModelPath );
         if ( assimpWrapper.importAsset( modelLoc, 0 ) ) {
             Assets::Model *model = assimpWrapper.getModel();
-
+            m_stage = AppBase::createStage( "ModelLoader" );
+            AppBase::activateStage( m_stage->getName() );
+            Scene::Node *node = m_stage->addNode( "modelNode", nullptr );
+            m_stage->addModel( model, node );
         }
-        /*RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-        if( nullptr != geo ) {
-			m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
 
-			Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
-			::memcpy(parameter->m_data.m_data, glm::value_ptr(m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model), sizeof(glm::mat4));
-
-			geo->m_material->m_parameters = parameter;
-            geo->m_material->m_numParameters++;
-
-			geoNode->addGeometry( geo );
-		}
-        */
         return true;
     }
 };

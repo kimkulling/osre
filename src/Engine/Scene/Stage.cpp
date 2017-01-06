@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/StringUtils.h>
 #include <osre/Common/Ids.h>
+#include <osre/Assets/Model.h>
 
 namespace OSRE {
 namespace Scene {
@@ -130,6 +131,18 @@ Node *Stage::findNode( const String &name ) const {
     Node *myNode( m_root->findChild( name ) );
  
     return myNode;
+}
+
+void Stage::addModel( Assets::Model *model, Node *parentNode ) {
+    if ( nullptr == model ) {
+        return;
+    }
+
+    if ( nullptr == parentNode ) {
+        parentNode->addChild( model->getRootNode() );
+    } else {
+        m_root->addChild( model->getRootNode() );
+    }
 }
 
 View *Stage::addView( const String &name, Node *node ) {
