@@ -281,7 +281,7 @@ Shader::~Shader() {
 Material::Material()
 : m_type( MaterialType::FlatShadingMaterial )
 , m_numTextures( 0 )
-, m_pTextures( nullptr )
+, m_textures( nullptr )
 , m_pShader( nullptr )
 , m_numParameters( 0 )
 , m_parameters( nullptr ) {
@@ -291,8 +291,8 @@ Material::Material()
 Material::~Material() {
     m_pShader = nullptr;
 
-    delete[] m_pTextures;
-    m_pTextures = nullptr;
+    delete[] m_textures;
+    m_textures = nullptr;
 }
 
 Transform::Transform() {

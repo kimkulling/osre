@@ -165,18 +165,19 @@ public:
         }
 
         geo->m_material->m_numTextures = 1;
-        geo->m_material->m_pTextures = new Texture[ 1 ];
+        geo->m_material->m_textures = new Texture*[ 1 ];
+        Texture *tex = new Texture[ 1 ];
 
-        geo->m_material->m_pTextures[ 0 ].m_textureName = "SpiderTex";
-        geo->m_material->m_pTextures[ 0 ].m_loc = IO::Uri( "file://assets/Models/Obj/SpiderTex.jpg" );
+        tex->m_textureName = "SpiderTex";
+        tex->m_loc = IO::Uri( "file://assets/Models/Obj/SpiderTex.jpg" );
 
-        geo->m_material->m_pTextures[ 0 ].m_targetType = TextureTargetType::Texture2D;
-        geo->m_material->m_pTextures[ 0 ].m_width = 0;
-        geo->m_material->m_pTextures[ 0 ].m_height = 0;
-        geo->m_material->m_pTextures[ 0 ].m_channels = 0;
-        geo->m_material->m_pTextures[ 0 ].m_data = nullptr;
-        geo->m_material->m_pTextures[ 0 ].m_size = 0;
-
+        tex->m_targetType = TextureTargetType::Texture2D;
+        tex->m_width = 0;
+        tex->m_height = 0;
+        tex->m_channels = 0;
+        tex->m_data = nullptr;
+        tex->m_size = 0;
+        geo->m_material->m_textures[ 0 ] = tex;
         geo->m_numPrimGroups = 1;
         geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
         geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;

@@ -344,16 +344,17 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
 
     // setup the texture
     geo->m_material->m_numTextures = 1;
-    geo->m_material->m_pTextures = new Texture[ 1 ];    
-    geo->m_material->m_pTextures[ 0 ].m_textureName = "buildin_arial";
-    geo->m_material->m_pTextures[ 0 ].m_loc = IO::Uri( "file://assets/Textures/Fonts/buildin_arial.bmp" );
+    geo->m_material->m_textures = new Texture*[ 1 ];
+    geo->m_material->m_textures[ 0 ] = new Texture;
+    geo->m_material->m_textures[ 0 ]->m_textureName = "buildin_arial";
+    geo->m_material->m_textures[ 0 ]->m_loc = IO::Uri( "file://assets/Textures/Fonts/buildin_arial.bmp" );
 
-    geo->m_material->m_pTextures[0].m_targetType = TextureTargetType::Texture2D;
-    geo->m_material->m_pTextures[0].m_width = 0;
-    geo->m_material->m_pTextures[0].m_height = 0;
-    geo->m_material->m_pTextures[0].m_channels = 0;
-    geo->m_material->m_pTextures[0].m_data = nullptr;
-    geo->m_material->m_pTextures[0].m_size = 0;
+    geo->m_material->m_textures[0]->m_targetType = TextureTargetType::Texture2D;
+    geo->m_material->m_textures[0]->m_width = 0;
+    geo->m_material->m_textures[0]->m_height = 0;
+    geo->m_material->m_textures[0]->m_channels = 0;
+    geo->m_material->m_textures[0]->m_data = nullptr;
+    geo->m_material->m_textures[0]->m_size = 0;
 
     return geo;
 }

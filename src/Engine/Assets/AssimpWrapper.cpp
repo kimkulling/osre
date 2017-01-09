@@ -43,9 +43,9 @@ using namespace ::OSRE::Scene;
 static const String Tag = "AssimpWrapper";
 
 AssimpWrapper::AssimpWrapper( Common::Ids &ids )
-: m_nodeStack()
-, m_model( nullptr )
+: m_model( nullptr )
 , m_geoArray()
+, m_matArray()
 , m_parent( nullptr )
 , m_ids( ids ) {
     // empty
@@ -111,7 +111,7 @@ Model *AssimpWrapper::convertSceneToModel( const aiScene *scene ) {
     }
 
     if ( nullptr != scene->mRootNode ) {
-        handleNode( scene->mRootNode );
+        handleNode( scene->mRootNode, m_model->getRootNode() );
     }
 
     return m_model;
@@ -171,35 +171,14 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     m_geoArray.add( geo );
 }
 
-void AssimpWrapper::pushNode( Scene::Node *newNode ) {
-    if ( nullptr == newNode ) {
-        return;
-    }
-    if ( !m_nodeStack.isEmpty() ) {
-        m_parent = m_nodeStack.back();
-    } else {
-        m_parent = nullptr;
-    }
-    m_nodeStack.add( newNode );
-}
-
-void AssimpWrapper::popNode() {
-    m_nodeStack.removeBack();
-    if ( !m_nodeStack.isEmpty() ) {
-        m_parent = m_nodeStack.back();
-    } else {
-        m_parent = nullptr;
-    }
-}
-
-void AssimpWrapper::handleNode( aiNode *node ) {
-    if ( nullptr == node ) {
+void AssimpWrapper::handleNode( aiNode *node, Node *parent ) {
+    if ( nullptr == node || nullptr == parent ) {
         return;
     }
 
     const String name( node->mName.C_Str() );
     Node *newNode = new Node( name, m_ids, true, true, m_parent );
-
+    parent->addChild( newNode );
     for ( ui32 j = 0; j < node->mNumMeshes; j++ ) {
         const ui32 meshIdx = node->mMeshes[ j ];
         if ( meshIdx >= m_geoArray.size() ) {
@@ -215,9 +194,7 @@ void AssimpWrapper::handleNode( aiNode *node ) {
         if ( nullptr == currentNode ) {
             continue;
         }
-        pushNode( newNode );
-        handleNode( currentNode );
-        popNode();
+        handleNode( currentNode, newNode );
     }
 }
 
@@ -230,10 +207,11 @@ void AssimpWrapper::handleMaterial( aiMaterial *material ) {
     i32 texIndex( 0 );
     aiString texPath;	// contains filename of texture
     //AI_TEXTURE_TYPE_MAX
+    CPPCore::TArray<Texture*> textures;
     if ( AI_SUCCESS == material->GetTexture( aiTextureType_DIFFUSE, texIndex, &texPath ) ) {
         osreMat->m_numTextures++;
-        osreMat->m_pTextures = new Texture[ 1 ];
-        Texture *tex( &osreMat->m_pTextures[ 0 ] );
+        Texture *tex = new Texture;
+        textures.add( tex );
         String texname( texPath.C_Str() );
         tex->m_loc = IO::Uri( texname );
         String::size_type pos = texname.rfind( "/" );

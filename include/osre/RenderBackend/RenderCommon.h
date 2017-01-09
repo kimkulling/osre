@@ -327,12 +327,12 @@ struct OSRE_EXPORT Shader {
 
 ///	@brief
 struct OSRE_EXPORT Material {
-    MaterialType m_type;
-    ui32         m_numTextures;
-    Texture     *m_pTextures;
-    Shader      *m_pShader;
-    ui32         m_numParameters;
-    Parameter   *m_parameters;
+    MaterialType  m_type;
+    ui32          m_numTextures;
+    Texture     **m_textures;
+    Shader       *m_pShader;
+    ui32          m_numParameters;
+    Parameter    *m_parameters;
     
     Material();
     ~Material();

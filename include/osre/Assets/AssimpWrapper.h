@@ -40,6 +40,7 @@ namespace Common {
 
 namespace RenderBackend {
     struct Geometry;
+    struct Material;
 }
 
 namespace IO {
@@ -64,16 +65,14 @@ public:
 protected:
     Model *convertSceneToModel( const aiScene *scene );
     void handleMesh( aiMesh *mesh );
-    void pushNode( Scene::Node *newNode );
-    void popNode();
-    void handleNode( aiNode *node );
+    void handleNode( aiNode *node, Scene::Node *parent );
     void handleMaterial( aiMaterial *material );
 
 private:
     typedef CPPCore::TArray<RenderBackend::Geometry*> GeoArray;
     GeoArray m_geoArray;
-    typedef CPPCore::TArray<Scene::Node*> NodeArray;
-    NodeArray m_nodeStack;
+    typedef CPPCore::TArray<RenderBackend::Material*> MaterialArray;
+    MaterialArray m_matArray;
     Model *m_model;
     Scene::Node *m_parent;
     Common::Ids &m_ids;

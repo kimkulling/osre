@@ -164,7 +164,7 @@ void Stage::clear() {
 }
 
 static void updateNode( Node *current, bool traverse, RenderBackend::RenderBackendService *rb ) {
-    if ( nullptr == current ) {
+    if ( nullptr == current ) { 
         return;
     }
     
