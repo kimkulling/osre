@@ -1,6 +1,6 @@
-# Hello World
+## Mesh Loader
 ![HelloWorld](../../media/Images/HelloWorld.png)
-This sample just shows a simple HelloWorld application. The creation of the render window and the base setup is included.
+This sample shows how a mesh va Asset-Importer-Lib will be loaded and rendered.
 
 ## The main application
 At first we are including all needed dependecies, use the OSRE namespace and the Renderbackend-namespace. The we will generate our simple model-, view- and projection-matrix.
