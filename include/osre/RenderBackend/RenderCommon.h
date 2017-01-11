@@ -326,6 +326,17 @@ struct OSRE_EXPORT Shader {
 };
 
 ///	@brief
+enum class MaterialColorType : unsigned int {
+    Mat_Diffuse = 0,
+    Mat_Specular,
+    Mat_Ambient,
+    Mat_Emission,
+    MatColorMax
+};
+
+static const ui32 MaxMatColorType = (ui32) MaterialColorType::MatColorMax;
+
+///	@brief
 struct OSRE_EXPORT Material {
     MaterialType  m_type;
     ui32          m_numTextures;
@@ -333,6 +344,7 @@ struct OSRE_EXPORT Material {
     Shader       *m_pShader;
     ui32          m_numParameters;
     Parameter    *m_parameters;
+    Color4        m_color[ MaxMatColorType ];
     
     Material();
     ~Material();

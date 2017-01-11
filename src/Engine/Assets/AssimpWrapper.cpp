@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/MaterialBuilder.h>
 #include <osre/Scene/Node.h>
 
 #include <assimp/Importer.hpp>
@@ -154,7 +155,8 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
         }
     }
     const ui32 matIdx( mesh->mMaterialIndex );
-
+    Material *osreMat = m_matArray[ matIdx ];
+    geo->m_material = osreMat;
     geo->m_vb = BufferData::alloc( BufferType::VertexBuffer, sizeof( RenderVert ) * numVertices, BufferAccessType::ReadOnly );
 
     CPPCore::TArray<ui16> indexArray;
@@ -167,6 +169,14 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     }
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( ui16 ) * indexArray.size(), BufferAccessType::ReadOnly );
     geo->m_ib->copyFrom( &indexArray[ 0 ], geo->m_ib->m_size );
+
+    geo->m_numPrimGroups = 1;
+    geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
+    geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
+    geo->m_pPrimGroups[ 0 ].m_numPrimitives = mesh->mNumFaces * geo->m_numPrimGroups;
+    geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
+    geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
+
 
     m_geoArray.add( geo );
 }
@@ -198,46 +208,87 @@ void AssimpWrapper::handleNode( aiNode *node, Node *parent ) {
     }
 }
 
+static void setColor4( const aiColor4D &aiCol, Color4 &col ) {
+    col.m_r = aiCol.r;
+    col.m_g = aiCol.g;
+    col.m_b = aiCol.b;
+    col.m_a = aiCol.a;
+}
+
+static void setTexture( ui32 texIndex, const aiString &texPath, CPPCore::TArray<Texture*> &textures ) {
+    Texture *tex = new Texture;
+    textures.add( tex );
+    String texname( texPath.C_Str() );
+    tex->m_loc = IO::Uri( texname );
+    String::size_type pos = texname.rfind( "/" );
+    if ( pos != String::npos ) {
+        texname = texname.substr( pos, texname.size() - pos );
+    }
+    tex->m_textureName = texname;
+}
+
+static void assignTexturesToMat( Material *osreMat, CPPCore::TArray<Texture*> &textures ) {
+    if ( nullptr == osreMat ) {
+        return;
+    }
+
+    osreMat->m_numTextures = textures.size();
+    if ( textures.isEmpty() ) {
+        return;
+    }
+
+    osreMat->m_textures = new Texture *[ osreMat->m_numTextures ];
+    for ( ui32 i = 0; i < osreMat->m_numTextures; i++ ) {
+        osreMat->m_textures[ i ] = textures[ i ];
+    }
+}
+
 void AssimpWrapper::handleMaterial( aiMaterial *material ) {
     if ( nullptr == material ) {
         return;
     }
     
-    Material *osreMat( new Material );
+    Material *osreMat( MaterialBuilder::createBuildinMaterial( RenderBackend::VertexType::RenderVertex ) );
+    m_matArray.add( osreMat );
+
     i32 texIndex( 0 );
     aiString texPath;	// contains filename of texture
     //AI_TEXTURE_TYPE_MAX
     CPPCore::TArray<Texture*> textures;
     if ( AI_SUCCESS == material->GetTexture( aiTextureType_DIFFUSE, texIndex, &texPath ) ) {
-        osreMat->m_numTextures++;
-        Texture *tex = new Texture;
-        textures.add( tex );
-        String texname( texPath.C_Str() );
-        tex->m_loc = IO::Uri( texname );
-        String::size_type pos = texname.rfind( "/" );
-        if ( pos != String::npos ) {
-            texname = texname.substr( pos, texname.size() - pos );
-        }
-        tex->m_textureName = texname;
+        setTexture(  texIndex, texPath, textures );
     }
+    assignTexturesToMat( osreMat, textures );
+    /*aiTextureType_SPECULAR = 0x2,
+    aiTextureType_AMBIENT = 0x3,
+    aiTextureType_EMISSIVE = 0x4,
+    aiTextureType_HEIGHT = 0x5,
+    aiTextureType_NORMALS = 0x6,
+    aiTextureType_SHININESS = 0x7,
+    aiTextureType_OPACITY = 0x8,
+    aiTextureType_DISPLACEMENT = 0x9,
+    aiTextureType_LIGHTMAP = 0xA,
+    aiTextureType_REFLECTION = 0xB,*/
+
 
     aiColor4D diffuse;
     if ( AI_SUCCESS == aiGetMaterialColor( material, AI_MATKEY_COLOR_DIFFUSE, &diffuse ) ) {
+        setColor4( diffuse, osreMat->m_color[ (ui32) MaterialColorType::Mat_Diffuse ] );
     }
 
     aiColor4D specular;
     if ( AI_SUCCESS == aiGetMaterialColor( material, AI_MATKEY_COLOR_SPECULAR, &specular ) ) {
-
+        setColor4( specular, osreMat->m_color[ ( ui32 ) MaterialColorType::Mat_Specular ] );
     }
 
     aiColor4D ambient;
     if ( AI_SUCCESS == aiGetMaterialColor( material, AI_MATKEY_COLOR_AMBIENT, &ambient ) ) {
-
+        setColor4( ambient, osreMat->m_color[ ( ui32 ) MaterialColorType::Mat_Ambient ] );
     }
 
     aiColor4D emission;
     if ( AI_SUCCESS == aiGetMaterialColor( material, AI_MATKEY_COLOR_EMISSIVE, &emission ) ) {
-
+        setColor4( emission, osreMat->m_color[ ( ui32 ) MaterialColorType::Mat_Emission ] );
     }
 
     ai_real shininess, strength;
