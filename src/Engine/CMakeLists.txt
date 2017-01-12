@@ -83,7 +83,6 @@ SET( common_inc
     ${HEADER_PATH}/Common/osre_common.h
     ${HEADER_PATH}/Common/TArea.h
 )
-    
 SET( common_src
     Common/AbstractCodec.cpp
     Common/ArgumentParser.cpp
@@ -95,6 +94,15 @@ SET( common_src
     Common/Logger.cpp
     Common/Object.cpp
     Common/Tokenizer.cpp
+)
+
+#==============================================================================
+# Collision
+#==============================================================================
+SET( collision_inc
+    ${HEADER_PATH}/Collision/TAABB.h
+)
+SET( collision_src
 )
 
 #==============================================================================
@@ -165,7 +173,6 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/PluginType.h
     ${HEADER_PATH}/Platform/PlatformInterface.h
 )
-
 SET( platform_src
     Platform/CPUInfo.cpp
     Platform/SystemInfo.cpp
@@ -177,7 +184,6 @@ SET( platform_src
     Platform/PlatformPluginFactory.h
     Platform/AbstractDynamicLoader.cpp
 )
-
 SET( platform_win32_src 
     Platform/win32/Win32Atomic.h
     Platform/win32/Win32DbgLogStream.h
@@ -201,7 +207,6 @@ SET( platform_win32_src
     Platform/win32/Win32DynamicLoader.cpp
     Platform/win32/Win32DynamicLoader.h
 )
-
 SET( platform_sdl2_src
     Platform/sdl2/SDL2Atomic.h
     Platform/sdl2/SDL2CriticalSection.h
@@ -361,7 +366,6 @@ SET( threading_src
     Threading/AbstractThreadFactory.cpp
     Threading/SystemTask.cpp
 )
-
 SET( threading_inc
     ${HEADER_PATH}/Threading/AbstractTask.h
     ${HEADER_PATH}/Threading/SystemTask.h
@@ -384,6 +388,7 @@ SOURCE_GROUP( App                 FILES ${app_src} )
 SOURCE_GROUP( Assets              FILES ${assets_src} )
 SOURCE_GROUP( Common              FILES ${common_src} )
 SOURCE_GROUP( Components          FILES ${components_src} )
+SOURCE_GROUP( Collision           FILES ${collision_src} )
 SOURCE_GROUP( Debugging           FILES ${debugging_src} )
 SOURCE_GROUP( Debugging\\Win32    FILES ${debugging_windows_src} )
 SOURCE_GROUP( System              FILES ${system_src} )
@@ -408,6 +413,7 @@ SOURCE_GROUP( Include\\Assets     FILES ${assets_inc} )
 SOURCE_GROUP( Include\\Debugging  FILES ${debugging_inc} )
 SOURCE_GROUP( Include\\Common     FILES ${common_inc} )
 SOURCE_GROUP( Include\\Components FILES ${components_inc} )
+SOURCE_GROUP( Include\\Collision  FILES ${collision_src} )
 SOURCE_GROUP( Include\\Debugging  FILES ${debugging_inc} )
 SOURCE_GROUP( Include\\System     FILES ${system_inc} )
 SOURCE_GROUP( Include\\Utils      FILES ${utils_inc} )
@@ -435,7 +441,8 @@ ADD_LIBRARY( osre SHARED
     ${debugging_inc}
     ${common_inc}
     ${common_src}
-    ${Common_inc}
+    ${collision_inc}
+    ${collision_src}
     ${components_inc}
     ${debugging_inc}
     ${system_inc}
