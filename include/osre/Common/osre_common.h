@@ -195,8 +195,16 @@ struct TVec2 {
         return v[ 0 ];
     }
 
+    void setX( T x ) {
+        v[ 0 ] = x;
+    }
+
     T getY() const {
         return v[ 1 ];
+    }
+
+    void setY( T y ) {
+        v[ 1 ] = y;
     }
 
     T getSquaredLength() {
@@ -213,6 +221,14 @@ struct TVec2 {
 
     TVec2<T> crossProduct( const TVec2<T> &rhs ) const {
         return TVec2<T>( this->v[ 0 ] * rhs.v[ 1 ], this->v[ 1 ] * rhs.v[ 0 ] );
+    }
+
+    bool operator == ( const TVec2<T> &rhs ) const {
+        return ( v[ 0 ] == rhs.v[ 0 ] && v[ 1 ] );
+    }
+
+    bool operator != ( const TVec2<T> &rhs ) const {
+        return !( this == rhs );
     }
 };
 
@@ -241,12 +257,24 @@ struct TVec3 {
         return v[ 0 ];
     }
 
+    void setX( T x ) {
+        v[ 0 ] = x;
+    }
+
     T getY() const {
         return v[ 1 ];
     }
 
+    void setY( T y ) {
+        v[ 1 ] = y;
+    }
+
     T getZ() const {
         return v[ 2 ];
+    }
+
+    void setZ( T z ) {
+        v[ 2 ] = z;
     }
 
     T getSquaredLength() {
@@ -305,6 +333,14 @@ struct TVec3 {
 
         return *this;
     }
+
+    bool operator == ( const TVec3<T> &rhs ) const {
+        return ( v[ 0 ] == rhs.v[ 0 ] && v[ 1 ] == rhs.v[ 1 ] && v[ 2 ] == rhs.v[ 2 ] );
+    }
+
+    bool operator != ( const TVec3<T> &rhs ) const {
+        return !( this == rhs );
+    }
 };
 
 typedef TVec3<i32> Vec3i;
@@ -333,17 +369,42 @@ struct TVec4 {
         return v[ 0 ];
     }
 
+    void setX( T x ) {
+        v[ 0 ] = x;
+    }
+
     T getY() const {
         return v[ 1 ];
+    }
+
+    void setY( T y ) {
+        v[ 1 ] = y;
     }
 
     T getZ() const {
         return v[ 2 ];
     }
 
+    void setZ( T z ) {
+        v[ 2 ] = z;
+    }
+
     T getW() const {
         return v[ 3 ];
     }
+
+    void setW( T w ) {
+        v[ 3 ] = w;
+    }
+
+    bool operator == ( const TVec4<T> &rhs ) const {
+        return ( v[ 0 ] == rhs.v[ 0 ] && v[ 1 ] == rhs.v[ 1 ] && v[ 2 ] == rhs.v[ 2 ] && v[ 3 ] == rhs.v[ 3 ] );
+    }
+
+    bool operator != ( const TVec4<T> &rhs ) const {
+        return !( this == rhs );
+    }
+
 };
 
 typedef TVec4<i32> Vec4i;

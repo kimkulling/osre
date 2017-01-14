@@ -60,24 +60,57 @@ TEST_F( CommonTest, Color4Test ) {
 }
 
 TEST_F( CommonTest, TVec2Test ) {
-    Vec2f vec2( 1, 2 );
-    EXPECT_FLOAT_EQ( 1, vec2.getX() );
-    EXPECT_FLOAT_EQ( 2, vec2.getY() );
+    Vec2f vec2_1( 1, 2 ), vec2_2(1,2);
+    EXPECT_FLOAT_EQ( 1, vec2_1.getX() );
+    EXPECT_FLOAT_EQ( 2, vec2_1.getY() );
+    EXPECT_EQ( vec2_1, vec2_2 );
+
+    Vec2f v2;
+    v2.setX( 1 );
+    EXPECT_EQ( 1, v2.getX() );
+
+    v2.setY( 2 );
+    EXPECT_EQ( 2, v2.getY() );
 }
 
 TEST_F( CommonTest, TVec3Test ) {
-    Vec3f vec3( 1, 2, 3 );
-    EXPECT_FLOAT_EQ( 1, vec3.getX() );
-    EXPECT_FLOAT_EQ( 2, vec3.getY() );
-    EXPECT_FLOAT_EQ( 3, vec3.getZ() );
+    Vec3f vec3_1( 1, 2, 3 ), vec3_2( 1, 2, 3 );
+    EXPECT_FLOAT_EQ( 1, vec3_1.getX() );
+    EXPECT_FLOAT_EQ( 2, vec3_1.getY() );
+    EXPECT_FLOAT_EQ( 3, vec3_1.getZ() );
+    EXPECT_EQ( vec3_1, vec3_2 );
+
+    Vec3f v3;
+    v3.setX( 1 );
+    EXPECT_EQ( 1, v3.getX() );
+
+    v3.setY( 2 );
+    EXPECT_EQ( 2, v3.getY() );
+
+    v3.setZ( 3 );
+    EXPECT_EQ( 3, v3.getZ() );
 }
 
 TEST_F( CommonTest, TVec4Test ) {
-    Vec4f vec4( 1, 2, 3, 1 );
-    EXPECT_FLOAT_EQ( 1, vec4.getX() );
-    EXPECT_FLOAT_EQ( 2, vec4.getY() );
-    EXPECT_FLOAT_EQ( 3, vec4.getZ() );
-    EXPECT_FLOAT_EQ( 1, vec4.getW() );
+    Vec4f vec4_1( 1, 2, 3, 1 ), vec4_2( 1, 2, 3, 1 );
+    EXPECT_FLOAT_EQ( 1, vec4_1.getX() );
+    EXPECT_FLOAT_EQ( 2, vec4_1.getY() );
+    EXPECT_FLOAT_EQ( 3, vec4_1.getZ() );
+    EXPECT_FLOAT_EQ( 1, vec4_1.getW() );
+    EXPECT_EQ( vec4_1, vec4_2 );
+
+    Vec4f v4;
+    v4.setX( 1 );
+    EXPECT_EQ( 1, v4.getX() );
+
+    v4.setY( 2 );
+    EXPECT_EQ( 2, v4.getY() );
+
+    v4.setZ( 3 );
+    EXPECT_EQ( 3, v4.getZ() );
+
+    v4.setW( 1 );
+    EXPECT_EQ( 1, v4.getW() );
 }
 
 TEST_F( CommonTest, TQuatTest ) {

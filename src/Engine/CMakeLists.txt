@@ -319,14 +319,14 @@ SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLShader.h
 )
 SET( renderbackend_vulkanrenderer_src
-        RenderBackend/VulkanRenderer/VlkFunctions.h
-        RenderBackend/VulkanRenderer/VlkFunctions.cpp
-        RenderBackend/VulkanRenderer/VlkExportedFunctions.inl
-        RenderBackend/VulkanRenderer/VlkCommon.h
-        RenderBackend/VulkanRenderer/VlkRenderBackend.cpp
-        RenderBackend/VulkanRenderer/VlkRenderBackend.h
-        RenderBackend/VulkanRenderer/VlkRenderEventHandler.h
-        RenderBackend/VulkanRenderer/VlkRenderEventHandler.cpp
+    RenderBackend/VulkanRenderer/VlkFunctions.h
+    RenderBackend/VulkanRenderer/VlkFunctions.cpp
+    RenderBackend/VulkanRenderer/VlkExportedFunctions.inl
+    RenderBackend/VulkanRenderer/VlkCommon.h
+    RenderBackend/VulkanRenderer/VlkRenderBackend.cpp
+    RenderBackend/VulkanRenderer/VlkRenderBackend.h
+    RenderBackend/VulkanRenderer/VlkRenderEventHandler.h
+    RenderBackend/VulkanRenderer/VlkRenderEventHandler.cpp
 )
 SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/BlendState.h
@@ -413,7 +413,7 @@ SOURCE_GROUP( Include\\Assets     FILES ${assets_inc} )
 SOURCE_GROUP( Include\\Debugging  FILES ${debugging_inc} )
 SOURCE_GROUP( Include\\Common     FILES ${common_inc} )
 SOURCE_GROUP( Include\\Components FILES ${components_inc} )
-SOURCE_GROUP( Include\\Collision  FILES ${collision_src} )
+SOURCE_GROUP( Include\\Collision  FILES ${collision_inc} )
 SOURCE_GROUP( Include\\Debugging  FILES ${debugging_inc} )
 SOURCE_GROUP( Include\\System     FILES ${system_inc} )
 SOURCE_GROUP( Include\\Utils      FILES ${utils_inc} )
