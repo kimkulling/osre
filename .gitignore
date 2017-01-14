@@ -33,3 +33,7 @@
 *.log
 *.filters
 *.pdb
+
+# Generated CMake files
+*.cmake
+
