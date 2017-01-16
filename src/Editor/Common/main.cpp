@@ -7,6 +7,7 @@
 #include <osre/Scene/View.h>
 #include <osre/Common/ArgumentParser.h>
 #include <osre/Scene/World.h>
+#include <osre/IO/Uri.h>
 
 using namespace ::OSRE;
 using namespace ::OSRE::Common;
@@ -30,11 +31,15 @@ public:
         // empty
     }
 
-    bool loadWorld() {
+    bool onOpenWorld() {
+
+    }
+
+    bool loadWorld( const IO::Uri &loc ) {
         return false;
     }
 
-    bool saveWorld() {
+    bool saveWorld( const IO::Uri &loc ) {
         return false;
     }
 
