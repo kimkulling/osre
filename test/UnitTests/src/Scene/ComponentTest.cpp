@@ -36,25 +36,23 @@ class ComponentTest : public ::testing::Test {
 class MockComponent : public Component {
 public:
     MockComponent( ui32 id ) : Component( id ) {
-
+        // empty
     }
 
     ~MockComponent() {
-
+        // empty
     }
 
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv ) {
-
+        // empty
     }
-
 };
 
 TEST_F( ComponentTest, createTest ) {
     bool ok( true );
     try {
         MockComponent myComp( 0 );
-    }
-    catch ( ... ) {
+    } catch ( ... ) {
         ok = false;
     }
     EXPECT_TRUE( ok );

@@ -90,7 +90,8 @@ Widget::Widget( const String &name, Widget *parent )
 , m_parent( nullptr )
 , m_children()
 , m_rect( 0, 0, 1, 1 )
-, m_z( 1 ) {
+, m_z( 1 )
+, m_redrawRequest( true ) {
     Widget::setParent( parent );
 }
 

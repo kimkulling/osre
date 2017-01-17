@@ -29,7 +29,7 @@ namespace UnitTest {
 using namespace ::OSRE::Scene;
 
 class WorldTest : public ::testing::Test {
-
+    // empty
 };
 
 TEST_F( WorldTest, createTest ) {

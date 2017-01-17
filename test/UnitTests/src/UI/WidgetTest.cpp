@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
 #include <osre/UI/Widget.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 
 namespace OSRE {
 namespace UnitTest {
@@ -96,8 +97,10 @@ TEST_F( WidgetTest, request_redraw_Test ) {
     TestWidget testWidget( "test", nullptr );
     EXPECT_TRUE( testWidget.redrawRequested() );
     TestWidget::TargetGeoArray geoArray;
-    testWidget.render( geoArray, nullptr );
-    EXPECT_TRUE( testWidget.redrawRequested() );
+    RenderBackend::RenderBackendService *rb = new RenderBackend::RenderBackendService;
+    testWidget.render( geoArray, rb );
+    EXPECT_FALSE( testWidget.redrawRequested() );
+    delete rb;
 }
 
 TEST_F( WidgetTest, WidgetCoordMappingTest ) {
