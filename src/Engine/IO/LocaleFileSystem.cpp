@@ -72,6 +72,10 @@ Stream *LocaleFileSystem::open( const Uri &file, Stream::AccessMode mode ) {
         pFileStream = new FileStream( file, mode );
     }
 
+    if ( nullptr == pFileStream ) {
+        return nullptr;
+    }
+
     if ( pFileStream->open() ) {
         m_FileMap[ file.getResource() ] = pFileStream;
     } else {
