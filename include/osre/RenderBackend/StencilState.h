@@ -69,6 +69,8 @@ public:
     StencilOp getStencilOpSFail() const;
     StencilOp getStencilOpDPFail() const;
     StencilOp getStencilOpDPPass() const;
+    bool operator == ( const StencilState &rhs ) const;
+    bool operator != ( const StencilState &rhs ) const;
 
 private:
     StencilFunc m_stencilFunc;
@@ -136,6 +138,16 @@ StencilState::StencilOp StencilState::getStencilOpDPFail() const {
 inline
 StencilState::StencilOp StencilState::getStencilOpDPPass() const {
     return m_dpPass;
+}
+
+inline
+bool StencilState::operator == ( const StencilState &rhs ) const {
+    return ( m_sFail == rhs.m_sFail && m_dpFail == rhs.m_dpFail && m_dpPass == rhs.m_dpPass );
+}
+
+inline
+bool StencilState::operator != ( const StencilState &rhs ) const {
+    return !( *this == rhs );
 }
 
 } // Namespace RenderBackend

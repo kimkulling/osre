@@ -25,17 +25,49 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/BlendState.h>
 #include <osre/RenderBackend/SamplerState.h>
 #include <osre/RenderBackend/ClearState.h>
-#include <osre/RenderBackend/SamplerState.h>
+#include <osre/RenderBackend/StencilState.h>
+
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
 namespace RenderBackend {
+
+using CPPCore::TArray;
+
+struct RenderTarget {
+    // empty
+};
+
+class PipelinePass {
+public:
+    PipelinePass( RenderTarget &rt, BlendState &belndState, SamplerState &samplerState, ClearState &clearState, StencilState &stencilState );
+    ~PipelinePass();
+    bool operator == ( const PipelinePass &rhs ) const;
+    bool operator != ( const PipelinePass &rhs ) const;
+
+private:
+    RenderTarget m_renderTarget;
+    BlendState m_blendState;
+    SamplerState m_samplerState;
+    ClearState m_clearState;
+    StencilState m_stencilState;
+};
 
 class Pipeline {
 public:
     Pipeline();
     ~Pipeline();
+    void addPass( PipelinePass *pass );
+    ui32 beginFrame();
+    bool beginPass( ui32 passId );
+    bool endPass( ui32 passId );
+    void endFrame();
 
 private:
+    typedef TArray<PipelinePass*> PipelinePassArray;
+    PipelinePassArray m_passes;
+    i32 m_passId;
+    bool m_inFrame;
 };
 
 }

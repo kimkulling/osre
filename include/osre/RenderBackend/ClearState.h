@@ -40,8 +40,11 @@ public:
         StencilBit = 1 << 2     ///<
     };
 
+public:
     ClearState();
     ~ClearState();
+    bool operator == ( const ClearState &rhs ) const;
+    bool operator != ( const ClearState &rhs ) const;
 
     ui32 m_state;
 };
@@ -55,6 +58,16 @@ ClearState::ClearState()
 inline
 ClearState::~ClearState() {
     // empty
+}
+
+inline
+bool ClearState::operator == ( const ClearState &rhs ) const {
+    return m_state == rhs.m_state;
+}
+
+inline
+bool ClearState::operator != ( const ClearState &rhs ) const {
+    return !( *this == rhs );
 }
 
 } // Namespace RenderBackend

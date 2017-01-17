@@ -47,6 +47,8 @@ public:
     ~BlendState();
     void setBlendFunc( BlendFunc func );
     BlendFunc getBlendFunc() const;
+    bool operator == ( const BlendState &rhs ) const;
+    bool operator != ( const BlendState &rhs ) const;
 
 private:
     BlendFunc m_blendFunc;
@@ -73,6 +75,16 @@ void BlendState::setBlendFunc( BlendFunc func ) {
 inline
 BlendState::BlendFunc BlendState::getBlendFunc() const {
     return m_blendFunc;
+}
+
+inline
+bool BlendState::operator == ( const BlendState &rhs ) const {
+    return m_blendFunc == rhs.m_blendFunc;
+}
+
+inline
+bool BlendState::operator != ( const BlendState &rhs ) const {
+    return !( *this == rhs );
 }
 
 } // Namespace RenderBackend

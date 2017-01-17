@@ -21,16 +21,91 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/Pipeline.h>
+#include <osre/Common/osre_common.h>
 
 namespace OSRE {
 namespace RenderBackend {
 
-Pipeline::Pipeline() {
+PipelinePass::PipelinePass( RenderTarget &rt, BlendState &blendState, SamplerState &samplerState, 
+                            ClearState &clearState, StencilState &stencilState )
+: m_renderTarget( rt )
+, m_blendState( blendState )
+, m_samplerState( samplerState )
+, m_clearState( clearState )
+, m_stencilState( stencilState ) {
+    // empty
+}
 
+PipelinePass::~PipelinePass() {
+    // empty
+}
+
+bool PipelinePass::operator == ( const PipelinePass &rhs ) const {
+    return ( m_blendState == rhs.m_blendState 
+          && m_samplerState == rhs.m_samplerState 
+          && m_clearState == rhs.m_clearState
+          && m_stencilState == rhs.m_stencilState );
+}
+
+bool PipelinePass::operator != ( const PipelinePass &rhs ) const {
+    return ! (*this == rhs );
+}
+
+Pipeline::Pipeline() 
+: m_passes()
+, m_passId( -1 )
+, m_inFrame( false ) {
+    // empty
 }
 
 Pipeline::~Pipeline() {
+    CPPCore::ContainerClear<PipelinePassArray>( m_passes );
+}
 
+void Pipeline::addPass( PipelinePass *pass ) {
+    if ( nullptr == pass ) {
+        return;
+    }
+
+    m_passes.add( pass );
+}
+
+ui32 Pipeline::beginFrame() {
+    if ( m_inFrame ) {
+        return 0;
+    }
+
+    if ( m_passes.isEmpty() ) {
+        return 0;
+    }
+
+    m_inFrame = true;
+
+    return m_passes.size();
+}
+
+bool Pipeline::beginPass( ui32 passId ) {
+    if ( -1 == m_passId || !m_inFrame ) {
+        return false;
+    }
+
+    m_passId = passId;
+
+    return true;
+}
+
+bool Pipeline::endPass( ui32 passId ) {
+    if ( static_cast<i32>( passId ) != m_passId || !m_inFrame ) {
+        return false;
+    }
+
+    m_passId = -1;
+    
+    return true;
+}
+
+void Pipeline::endFrame() {
+    m_inFrame = false;
 }
 
 } // Namespace RenderBackend

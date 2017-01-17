@@ -34,6 +34,8 @@ class SamplerState {
 public:
     SamplerState();
     ~SamplerState();
+    bool operator == ( const SamplerState &rhs ) const;
+    bool operator != ( const SamplerState &rhs ) const;
 };
 
 inline
@@ -44,6 +46,16 @@ SamplerState::SamplerState() {
 inline
 SamplerState::~SamplerState() {
     // empty
+}
+
+inline
+bool SamplerState::operator == ( const SamplerState &rhs ) const {
+    return true;
+}
+
+inline
+bool SamplerState::operator != ( const SamplerState &rhs ) const {
+    return false;
 }
 
 } // Namespace RenderBackend
