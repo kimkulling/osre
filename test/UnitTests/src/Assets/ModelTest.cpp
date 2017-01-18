@@ -20,38 +20,38 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
+#include <gtest/gtest.h>
+#include <osre/Assets/Model.h>
+#include <osre/Scene/Node.h>
+#include <osre/Common/Ids.h>
 
-#include <osre/Common/osre_common.h>
-#include <osre/Collision/TAABB.h>
-#include <cppcore/Container/TArray.h>
-
-// Forward declarations
 namespace OSRE {
+namespace UnitTest {
 
-namespace Scene {
-    class Node;
-}
+using namespace ::OSRE::Assets;
+using namespace ::OSRE::Scene;
 
-namespace RenderBackend {
-    struct Geometry;
-}
-
-namespace Assets {
-
-class OSRE_EXPORT Model {
-public: 
-    Model();
-    ~Model();
-    void setRootNode( Scene::Node *root );
-    Scene::Node *getRootNode() const;
-    void setAABB( const Collision::TAABB<f32> &aabb );
-    const Collision::TAABB<f32> &getAABB() const;
-
-private:
-    Scene::Node *m_root;
-    Collision::TAABB<f32> m_aabb;
+class ModelTest : public ::testing::Test {
+    // empty
 };
 
-} // Namespace Assets
+TEST_F( ModelTest, createTest ) {
+    bool ok( true );
+    try {
+        Model myModel;
+    } catch ( ... ) {
+        ok = false;
+    }
+    EXPECT_TRUE( ok );
+}
+
+TEST_F( ModelTest, access_root_node_Test ) {
+    Common::Ids ids;
+    Node myNode( "test", ids, true, true, nullptr );
+    Model myModel;
+    myModel.setRootNode( &myNode );
+    EXPECT_EQ( &myNode, myModel.getRootNode() );
+}
+
+} // Namespace UnitTest
 } // Namespace OSRE

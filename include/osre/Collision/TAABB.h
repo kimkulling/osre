@@ -35,6 +35,7 @@ public:
     TAABB();
     TAABB( const VecType &min, const VecType &max );
     ~TAABB();
+    void reset();
     void set( const VecType &min, const VecType &max );
     const TVec3<T> &getMin() const;
     const TVec3<T> &getMax() const;
@@ -65,6 +66,13 @@ template<class T>
 inline
 TAABB<T>::~TAABB() {
     // empty
+}
+
+template<class T>
+inline
+void TAABB<T>::reset() {
+    m_min.set( 999999, 99999, 99999 );
+    m_max.set( -999999, -99999, -99999 );
 }
 
 template<class T>
@@ -110,7 +118,6 @@ void TAABB<T>::merge( const VecType &vec ) {
     if ( vec.getZ() > m_max.getZ() ) {
         m_max.setZ( vec.getZ() );
     }
-
 }
 
 } // Namespace Collision

@@ -298,5 +298,11 @@ void AssimpWrapper::handleMaterial( aiMaterial *material ) {
     ret = aiGetMaterialFloatArray( material, AI_MATKEY_SHININESS_STRENGTH, &strength, &max );
 }
 
+void AssimpWrapper::updateAxisAlignedBBox( Collision::TAABB<f32> aabb ) {
+    if ( m_geoArray.isEmpty() ) {
+
+    }
+}
+
 } // Namespace Assets
 } // Namespace OSRE

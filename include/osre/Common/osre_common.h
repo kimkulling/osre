@@ -339,7 +339,7 @@ struct TVec3 {
     }
 
     bool operator != ( const TVec3<T> &rhs ) const {
-        return !( this == rhs );
+        return !( *this == rhs );
     }
 };
 
@@ -404,7 +404,6 @@ struct TVec4 {
     bool operator != ( const TVec4<T> &rhs ) const {
         return !( this == rhs );
     }
-
 };
 
 typedef TVec4<i32> Vec4i;
@@ -414,11 +413,23 @@ template<class T>
 struct TRect2D {
     T m_x, m_y, m_width, m_height;
 
+    TRect2D()
+    : m_x( 0 )
+    , m_y( 0 )
+    , m_width( 0 )
+    , m_height( 0 ) {
+        // empty
+    }
+
     TRect2D( T x, T y, T width, T height )
     : m_x( x )
     , m_y( y )
     , m_width( width )
     , m_height( height ) {
+        // empty
+    }
+
+    ~TRect2D() {
         // empty
     }
 

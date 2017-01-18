@@ -27,8 +27,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Assets {
 
+using namespace ::OSRE::Collision;
+
 Model::Model() 
-: m_root( nullptr ) {
+: m_root( nullptr )
+, m_aabb() {
     // empty
 }
 
@@ -48,6 +51,14 @@ void Model::setRootNode( Scene::Node *root ) {
 
 Scene::Node *Model::getRootNode() const {
     return m_root;
+}
+
+void Model::setAABB( const TAABB<f32> &aabb ) {
+    m_aabb = aabb;
+}
+
+const TAABB<f32> &Model::getAABB() const {
+    return m_aabb;
 }
 
 } // Namespace Assets

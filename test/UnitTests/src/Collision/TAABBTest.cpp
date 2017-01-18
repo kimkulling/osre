@@ -44,6 +44,16 @@ TEST_F( TAABBTest, createTest ) {
     EXPECT_TRUE( ok );
 }
 
+TEST_F( TAABBTest, resetTest ) {
+    TAABB<f32> aabb;
+    Vec3f min( 0, 0, 0 ), max( 1, 1, 1 );
+    aabb.set( min, max );
+    aabb.reset();
+    EXPECT_NE( min, aabb.getMin() );
+    EXPECT_NE( max, aabb.getMax() );
+
+}
+
 TEST_F( TAABBTest, get_set_Test ) {
     TAABB<f32> aabb;
     Vec3f min( 0, 0, 0 ), max( 1, 1, 1 );

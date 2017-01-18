@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/osre_common.h>
 #include <osre/Common/Ids.h>
+#include <osre/Collision/TAABB.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -68,6 +69,7 @@ protected:
     void handleMesh( aiMesh *mesh );
     void handleNode( aiNode *node, Scene::Node *parent );
     void handleMaterial( aiMaterial *material );
+    void updateAxisAlignedBBox( Collision::TAABB<f32> aabb );
 
 private:
     typedef CPPCore::TArray<RenderBackend::Geometry*> GeoArray;
