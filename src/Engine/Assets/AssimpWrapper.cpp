@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/Scene/Node.h>
+#include <osre/Collision/TAABB.h>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -40,13 +41,14 @@ namespace Assets {
 using namespace ::Assimp;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
+using namespace ::OSRE::Collision;
 
 static const String Tag = "AssimpWrapper";
 
 AssimpWrapper::AssimpWrapper( Common::Ids &ids )
-: m_model( nullptr )
-, m_geoArray()
+: m_geoArray()
 , m_matArray()
+, m_model( nullptr )
 , m_parent( nullptr )
 , m_ids( ids ) {
     // empty
@@ -123,6 +125,7 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
         return;
     }
 
+    TAABB<f32> aabb = m_model->getAABB();
     Geometry *geo( Geometry::create( 1 ) );
     ui32 numVertices( mesh->mNumVertices );
     RenderVert *vertices = new RenderVert[ numVertices ];
@@ -132,6 +135,8 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
             vertices[ i ].position.x = vec3.x;
             vertices[ i ].position.y = vec3.y;
             vertices[ i ].position.z = vec3.z;
+
+            AssimpWrapper::updateAxisAlignedBBox( vec3, aabb );
         }
 
         if ( mesh->HasNormals() ) {
@@ -148,12 +153,17 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
             vertices[ i ].color0.b = diffuse.b;
         }
 
-        if ( mesh->HasTextureCoords( 0 ) ) {
-            aiVector3D &tex0 = mesh->mTextureCoords[ 0 ][ i ];
-            vertices[ i ].tex0.x = tex0.x;
-            vertices[ i ].tex0.y = tex0.y;
+        for ( ui32 texIdx =0; texIdx<AI_MAX_NUMBER_OF_TEXTURECOORDS; texIdx++ ) {
+            if ( mesh->HasTextureCoords( texIdx ) ) {
+                if ( 0 == texIdx ) {
+                    aiVector3D &tex0 = mesh->mTextureCoords[ texIdx ][ i ];
+                    vertices[ i ].tex0.x = tex0.x;
+                    vertices[ i ].tex0.y = tex0.y;
+                }
+            }
         }
     }
+
     const ui32 matIdx( mesh->mMaterialIndex );
     Material *osreMat = m_matArray[ matIdx ];
     geo->m_material = osreMat;
@@ -177,8 +187,8 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
     geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
-
     m_geoArray.add( geo );
+    m_model->setAABB( aabb );
 }
 
 void AssimpWrapper::handleNode( aiNode *node, Node *parent ) {
@@ -293,15 +303,18 @@ void AssimpWrapper::handleMaterial( aiMaterial *material ) {
 
     ai_real shininess, strength;
     unsigned int max;	// changed: to unsigned
-    i32 ret;
-    ret = aiGetMaterialFloatArray( material, AI_MATKEY_SHININESS, &shininess, &max );
-    ret = aiGetMaterialFloatArray( material, AI_MATKEY_SHININESS_STRENGTH, &strength, &max );
+    if ( AI_SUCCESS == aiGetMaterialFloatArray( material, AI_MATKEY_SHININESS, &shininess, &max ) ) {
+        // todo
+    }
+
+    if ( AI_SUCCESS == aiGetMaterialFloatArray( material, AI_MATKEY_SHININESS_STRENGTH, &strength, &max ) ) {
+        // todo
+    }
 }
 
-void AssimpWrapper::updateAxisAlignedBBox( Collision::TAABB<f32> aabb ) {
-    if ( m_geoArray.isEmpty() ) {
-
-    }
+void AssimpWrapper::updateAxisAlignedBBox( const aiVector3D &pos, Collision::TAABB<f32> &aabb ) {
+    Vec3f v( pos.x, pos.y, pos.z );
+    aabb.merge( v );
 }
 
 } // Namespace Assets

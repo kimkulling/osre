@@ -28,6 +28,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Container/TArray.h>
 
+#include <assimp/vector3.h>
+
 // Forward declarations
 struct aiScene;
 struct aiMesh;
@@ -69,7 +71,7 @@ protected:
     void handleMesh( aiMesh *mesh );
     void handleNode( aiNode *node, Scene::Node *parent );
     void handleMaterial( aiMaterial *material );
-    void updateAxisAlignedBBox( Collision::TAABB<f32> aabb );
+    static void updateAxisAlignedBBox( const aiVector3D &pos, Collision::TAABB<f32> &aabb );
 
 private:
     typedef CPPCore::TArray<RenderBackend::Geometry*> GeoArray;
