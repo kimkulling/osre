@@ -48,12 +48,14 @@ static const String ModelPath = "file://assets/Models/Obj/spider.obj";
 // The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
     Scene::Stage *m_stage;
+    Scene::View  *m_view;
     TransformMatrixBlock m_transformMatrix;
 
 public:
     ModelLoadingApp( int argc, char *argv[] )
     : AppBase( argc, argv )
-    , m_stage( nullptr ) {
+    , m_stage( nullptr )
+    , m_view( nullptr ) {
         // empty
     }
 
@@ -82,14 +84,13 @@ protected:
         m_stage = AppBase::createStage( "HelloWorld" );
         AppBase::activateStage( m_stage->getName() );
 
-        //Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
-        //Scene::GeometryBuilder myBuilder;
         Ids ids;
         Assets::AssimpWrapper assimpWrapper( ids );
         IO::Uri modelLoc( ModelPath );
         if ( assimpWrapper.importAsset( modelLoc, 0 ) ) {
             Assets::Model *model = assimpWrapper.getModel();
             m_stage = AppBase::createStage( "ModelLoader" );
+            m_view = m_stage->addView("camera", nullptr );
             AppBase::activateStage( m_stage->getName() );
             Scene::Node *node = m_stage->addNode( "modelNode", nullptr );
             m_stage->addModel( model, node );

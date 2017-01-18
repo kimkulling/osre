@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/Parameter.h>
 #include <osre/Scene/Stage.h>
+#include <osre/Scene/View.h>
 #include <osre/Scene/World.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Assets/AssetRegistry.h>
