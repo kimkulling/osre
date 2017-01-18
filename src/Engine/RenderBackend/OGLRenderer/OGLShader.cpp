@@ -96,20 +96,21 @@ bool OGLShader::loadFromFile( ShaderType type, IO::Stream &stream ) {
     return retCode;
 }
 
+
 bool OGLShader::createAndLink() {
     m_shaderprog = glCreateProgram();
     if ( 0 == m_shaderprog ) {
         osre_error( Tag, "Error while creating shader program." );
         return false;
     }
-    if ( 0 != m_shaders[ static_cast<int>( ShaderType::SH_VertexShaderType ) ] ) {
-        glAttachShader( m_shaderprog, m_shaders[ static_cast<int>( ShaderType::SH_VertexShaderType  )] );
+    if ( 0 != m_shaders[ static_cast<i32>( ShaderType::SH_VertexShaderType ) ] ) {
+        glAttachShader( m_shaderprog, m_shaders[ static_cast<i32>( ShaderType::SH_VertexShaderType  )] );
     }
-    if ( 0 != m_shaders[ static_cast<int>( ShaderType::SH_FragmentShaderType ) ] ) {
-        glAttachShader( m_shaderprog, m_shaders[ static_cast<int>( ShaderType::SH_FragmentShaderType ) ] );
+    if ( 0 != m_shaders[ static_cast<i32>( ShaderType::SH_FragmentShaderType ) ] ) {
+        glAttachShader( m_shaderprog, m_shaders[ static_cast<i32>( ShaderType::SH_FragmentShaderType ) ] );
     }
-    if ( 0 != m_shaders[ static_cast<int>( ShaderType::SH_GeometryShaderType  ) ] ) {
-        glAttachShader( m_shaderprog, m_shaders[ static_cast<int>( ShaderType::SH_GeometryShaderType ) ] );
+    if ( 0 != m_shaders[ static_cast<i32>( ShaderType::SH_GeometryShaderType  ) ] ) {
+        glAttachShader( m_shaderprog, m_shaders[ static_cast<i32>( ShaderType::SH_GeometryShaderType ) ] );
     }
 
     bool result( true );
@@ -117,14 +118,7 @@ bool OGLShader::createAndLink() {
     glLinkProgram( m_shaderprog );
     glGetProgramiv( m_shaderprog, GL_LINK_STATUS, &status );
     if (status == GL_FALSE) {
-        GLint infoLogLength( 0 );
-        glGetProgramiv( m_shaderprog, GL_INFO_LOG_LENGTH, &infoLogLength);
-        GLchar *infoLog= new GLchar[infoLogLength];
-        ::memset( infoLog, 0, infoLogLength );
-        glGetProgramInfoLog( m_shaderprog, infoLogLength, NULL, infoLog);
-        String error( infoLog );
-        osre_debug( Tag, "Link log: " + error + "\n" );
-        delete [] infoLog;
+        logCompileOrLinkError(m_shaderprog);
         result = false;
     }
 
@@ -153,6 +147,17 @@ void OGLShader::addUniform( const String& uniform ) {
     if( ErrorId == location ) {
         osre_debug( Tag, "Cannot find uniform variable " + uniform + " in shader." );
     }
+}
+
+void OGLShader::logCompileOrLinkError( ui32 shaderprog ) {
+    GLint infoLogLength( 0 );
+    glGetProgramiv( shaderprog, GL_INFO_LOG_LENGTH, &infoLogLength);
+    GLchar *infoLog= new GLchar[infoLogLength];
+    ::memset( infoLog, 0, infoLogLength );
+    glGetProgramInfoLog( shaderprog, infoLogLength, NULL, infoLog);
+    String error( infoLog );
+    osre_debug( Tag, "Link log: " + error + "\n" );
+    delete [] infoLog;
 }
 
 GLint OGLShader::operator[] ( const String &attribute ) {

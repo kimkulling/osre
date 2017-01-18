@@ -84,6 +84,10 @@ public:
     /// @param  attribute   [in] The name of the uniform.
     void addUniform( const String& uniform );
     
+    /// @brief  Logs a compile and link error.
+    /// @param  shaderprog  [in] The shader program handle.
+    static void logCompileOrLinkError( ui32 shaderprog );
+
     /// @brief  returns the location of the attribute.
     /// @param  attribute   [in] The name of the attribute.
     /// @return Its location or -1 for an error.
