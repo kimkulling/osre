@@ -45,9 +45,9 @@ int main( int argc, char *argv[] ) {
     }
 
 #ifdef _WIN32
-    String mediaPath( "../../Media/" );
+    String mediaPath( "../../media/" );
 #else
-    String mediaPath( "../Media/" );
+    String mediaPath( "../media/" );
 #endif
     if ( argParser.hasArgument( "media" ) ) {
         mediaPath = argParser.getArgument( "media" );
