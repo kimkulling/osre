@@ -223,6 +223,21 @@ struct TVec2 {
         return TVec2<T>( this->v[ 0 ] * rhs.v[ 1 ], this->v[ 1 ] * rhs.v[ 0 ] );
     }
 
+    TVec2<T> operator + ( const TVec2<T> &rhs ) const {
+        TVec2<T> res( v[ 0 ] + rhs.v[ 0 ], v[ 1 ] + rhs.v[ 1 ] );
+        return res;
+    }
+
+    TVec2<T> operator - ( const TVec2<T> &rhs )  const {
+        TVec2<T> res( v[ 0 ] - rhs.v[ 0 ], v[ 1 ] - rhs.v[ 1 ] );
+        return res;
+    }
+
+    TVec2<T> operator * ( T scalar ) const {
+        TVec2<T> res( v[ 0 ] * scalar, v[ 1 ] * scalar );
+        return res;
+    }
+
     bool operator == ( const TVec2<T> &rhs ) const {
         return ( v[ 0 ] == rhs.v[ 0 ] && v[ 1 ] );
     }
@@ -277,7 +292,7 @@ struct TVec3 {
         v[ 2 ] = z;
     }
 
-    T getSquaredLength() {
+    T getSquaredLength()  const {
         return ( ( v[ 0 ] * v[ 0 ] ) + ( v[ 1 ] * v[ 1 ] ) + ( v[ 2 ] * v[ 2 ] ) );
     }
 
@@ -332,6 +347,21 @@ struct TVec3 {
         v[ 2 ] -= val;
 
         return *this;
+    }
+
+    TVec3<T> operator * (  T scalar )  const {
+        TVec3<T> res( v[ 0 ] * scalar, v[ 1 ] * scalar, v[ 2 ] * scalar );
+        return res;
+    }
+
+    TVec3<T> operator + ( const TVec3<T> &rhs ) const {
+        TVec3<T> res( v[ 0 ] + rhs.v[ 0 ], v[ 1 ] + rhs.v[ 1 ], v[ 2 ] + rhs.v[ 2 ] );
+        return res;
+    }
+
+    TVec3<T> operator - ( const TVec3<T> &rhs )  const {
+        TVec3<T> res( v[ 0 ] - rhs.v[ 0 ], v[ 1 ] - rhs.v[ 1 ], v[ 2 ] - rhs.v[ 2 ] );
+        return res;
     }
 
     bool operator == ( const TVec3<T> &rhs ) const {
@@ -395,6 +425,21 @@ struct TVec4 {
 
     void setW( T w ) {
         v[ 3 ] = w;
+    }
+
+    TVec4<T> operator + ( const TVec4<T> &rhs )  const {
+        TVec3<T> res( v[ 0 ] + rhs.v[ 0 ], v[ 1 ] + rhs.v[ 1 ], v[ 2 ] + rhs.v[ 2 ], 1 );
+        return res;
+    }
+
+    TVec4<T> operator - ( const TVec4<T> &rhs ) const {
+        TVec3<T> res( v[ 0 ] - rhs.v[ 0 ], v[ 1 ] - rhs.v[ 1 ], v[ 2 ] - rhs.v[ 2 ], 1 );
+        return res;
+    }
+
+    TVec4<T> operator * ( T scalar )  const {
+        TVec4<T> res( v[ 0 ] * scalar, v[ 1 ] * scalar, v[ 2 ] * scalar, 1 );
+        return res;
     }
 
     bool operator == ( const TVec4<T> &rhs ) const {

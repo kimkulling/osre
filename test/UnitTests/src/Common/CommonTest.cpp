@@ -73,6 +73,28 @@ TEST_F( CommonTest, TVec2Test ) {
     EXPECT_EQ( 2, v2.getY() );
 }
 
+TEST_F( CommonTest, TVec2_add_sub_Test ) {
+    Vec2f vec2_1( 1, 2 ), vec2_2( 3, 4 );
+    Vec2f res1 = vec2_1 + vec2_2;
+    EXPECT_FLOAT_EQ( 4, res1.getX() );
+    EXPECT_FLOAT_EQ( 6, res1.getY() );
+
+    Vec2f res2 = vec2_1 - vec2_2;
+    EXPECT_FLOAT_EQ( -2, res2.getX() );
+    EXPECT_FLOAT_EQ( -2, res2.getY() );
+}
+
+TEST_F( CommonTest, TVec2_mul_with_scalar_Test ) {
+    Vec2f vec2_1( 1, 2 );
+    Vec2f res1 = 2.0f*vec2_1;
+    EXPECT_FLOAT_EQ( 2, res1.getX() );
+    EXPECT_FLOAT_EQ( 4, res1.getY() );
+
+    Vec2f res2 = vec2_1 * 2;
+    EXPECT_FLOAT_EQ( 2, res2.getX() );
+    EXPECT_FLOAT_EQ( 4, res2.getY() );
+}
+
 TEST_F( CommonTest, TVec3Test ) {
     Vec3f vec3_1( 1, 2, 3 ), vec3_2( 1, 2, 3 );
     EXPECT_FLOAT_EQ( 1, vec3_1.getX() );
@@ -89,6 +111,32 @@ TEST_F( CommonTest, TVec3Test ) {
 
     v3.setZ( 3 );
     EXPECT_EQ( 3, v3.getZ() );
+}
+
+TEST_F( CommonTest, TVec3_add_sub_Test ) {
+    Vec3f vec3_1( 1, 2, 3 ), vec3_2( 4, 5, 6 );
+    Vec3f res1 = vec3_1 + vec3_2;
+    EXPECT_FLOAT_EQ( 5, res1.getX() );
+    EXPECT_FLOAT_EQ( 7, res1.getY() );
+    EXPECT_FLOAT_EQ( 9, res1.getZ() );
+
+    Vec3f res2 = vec3_1 - vec3_2;
+    EXPECT_FLOAT_EQ( -2, res2.getX() );
+    EXPECT_FLOAT_EQ( -2, res2.getY() );
+    EXPECT_FLOAT_EQ( -3, res2.getZ() );
+}
+
+TEST_F( CommonTest, TVec3_mul_with_scalar_Test ) {
+    Vec3f vec3_1( 1, 2, 3 );
+    Vec3f res1 = 2 * vec3_1;
+    EXPECT_FLOAT_EQ( 2, res1.getX() );
+    EXPECT_FLOAT_EQ( 4, res1.getY() );
+    EXPECT_FLOAT_EQ( 6, res1.getZ() );
+
+    Vec2f res2 = vec3_1 * 2;
+    EXPECT_FLOAT_EQ( 2, res2.getX() );
+    EXPECT_FLOAT_EQ( 4, res2.getY() );
+    EXPECT_FLOAT_EQ( 6, res2.getZ() );
 }
 
 TEST_F( CommonTest, TVec4Test ) {
@@ -111,6 +159,21 @@ TEST_F( CommonTest, TVec4Test ) {
 
     v4.setW( 1 );
     EXPECT_EQ( 1, v4.getW() );
+}
+
+TEST_F( CommonTest, TVec4_add_sub_Test ) {
+    Vec4f vec4_1( 1, 2, 3, 1 ), vec4_2( 4, 5, 6, 1 );
+    Vec4f res1 = vec4_1 + vec4_2;
+    EXPECT_FLOAT_EQ( 5, res1.getX() );
+    EXPECT_FLOAT_EQ( 7, res1.getY() );
+    EXPECT_FLOAT_EQ( 9, res1.getZ() );
+    EXPECT_FLOAT_EQ( 1, res1.getW() );
+
+    Vec4f res2 = vec4_1 - vec4_2;
+    EXPECT_FLOAT_EQ( -2, res2.getX() );
+    EXPECT_FLOAT_EQ( -2, res2.getY() );
+    EXPECT_FLOAT_EQ( -3, res2.getZ() );
+    EXPECT_FLOAT_EQ(  1, res2.getW() );
 }
 
 TEST_F( CommonTest, TQuatTest ) {

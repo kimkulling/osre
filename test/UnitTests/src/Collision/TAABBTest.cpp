@@ -76,5 +76,17 @@ TEST_F( TAABBTest, mergeTest ) {
 
 }
 
+TEST_F( TAABBTest, getDiameterTest ) {
+    Vec3f min( 0, 0, 0 ), max( 1, 1, 1 );
+    TAABB<f32> aabb( min, max );
+    f32 diam = aabb.getDiameter();
+}
+
+TEST_F( TAABBTest, getCenterTest ) {
+    Vec3f min( 0, 0, 0 ), max( 1, 1, 1 );
+    TAABB<f32> aabb( min, max );
+    Vec3f center = aabb.getCenter();
+}
+
 } // Namespace Unittest
 } // Namespace OSRE

@@ -40,17 +40,23 @@ public:
     const TVec3<T> &getMin() const;
     const TVec3<T> &getMax() const;
     void merge( const VecType &vec );
+    T getDiameter();
+    const TVec3<T> &getCenter() const;
 
 private:
     VecType m_min;
     VecType m_max;
+    VecType m_center;
+    T m_diameter;
 };
 
 template<class T>
 inline
 TAABB<T>::TAABB()
-: m_min( 999999,99999,99999)
-, m_max( -999999, -99999, -99999 ) {
+: m_min( 999999,99999,99999 )
+, m_max( -999999, -99999, -99999 )
+, m_center( 999999, 99999, 99999 )
+, m_diameter( 0 ) {
     // empty
 }
 
@@ -118,6 +124,26 @@ void TAABB<T>::merge( const VecType &vec ) {
     if ( vec.getZ() > m_max.getZ() ) {
         m_max.setZ( vec.getZ() );
     }
+}
+
+template<class T>
+inline
+T TAABB<T>::getDiameter() {
+    if ( 0 != m_diameter ) {
+        return m_diameter;
+    }
+
+    T len = ( m_max - m_min ).getLength();
+
+    return len;
+}
+
+template<class T>
+inline
+const TVec3<T> &TAABB<T>::getCenter() const {
+    m_center = ( m_max - m_min ) * 0.5f;
+
+    return m_center;
 }
 
 } // Namespace Collision

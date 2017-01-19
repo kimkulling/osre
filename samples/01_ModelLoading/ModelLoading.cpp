@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/Node.h>
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/Assets/AssimpWrapper.h>
+#include <osre/Assets/Model.h>
 #include <osre/IO/Uri.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Common/Ids.h>
