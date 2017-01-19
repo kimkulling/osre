@@ -41,7 +41,7 @@ public:
     const TVec3<T> &getMax() const;
     void merge( const VecType &vec );
     T getDiameter();
-    const TVec3<T> &getCenter() const;
+    TVec3<T> getCenter();
 
 private:
     VecType m_min;
@@ -140,7 +140,7 @@ T TAABB<T>::getDiameter() {
 
 template<class T>
 inline
-const TVec3<T> &TAABB<T>::getCenter() const {
+TVec3<T> TAABB<T>::getCenter() {
     m_center = ( m_max - m_min ) * 0.5f;
 
     return m_center;

@@ -128,12 +128,12 @@ TEST_F( CommonTest, TVec3_add_sub_Test ) {
 
 TEST_F( CommonTest, TVec3_mul_with_scalar_Test ) {
     Vec3f vec3_1( 1, 2, 3 );
-    Vec3f res1 = 2 * vec3_1;
+    Vec3f res1 = 2.0f * vec3_1;
     EXPECT_FLOAT_EQ( 2, res1.getX() );
     EXPECT_FLOAT_EQ( 4, res1.getY() );
     EXPECT_FLOAT_EQ( 6, res1.getZ() );
 
-    Vec2f res2 = vec3_1 * 2;
+    Vec3f res2 = vec3_1 * 2.0f;
     EXPECT_FLOAT_EQ( 2, res2.getX() );
     EXPECT_FLOAT_EQ( 4, res2.getY() );
     EXPECT_FLOAT_EQ( 6, res2.getZ() );

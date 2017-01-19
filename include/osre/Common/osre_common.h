@@ -247,6 +247,13 @@ struct TVec2 {
     }
 };
 
+template<class T>
+inline
+TVec2<T> operator * ( T scalar, TVec2<T> vec ) {
+    TVec2<T> res( vec.v[ 0 ] * scalar, vec.v[ 1 ] * scalar );
+    return res;
+}
+
 typedef TVec2<i32> Vec2i;
 typedef TVec2<f32> Vec2f;
 
@@ -373,6 +380,14 @@ struct TVec3 {
     }
 };
 
+template<class T>
+inline
+TVec3<T> operator * ( T scalar, TVec3<T> vec ) {
+    TVec3<T> res( vec.v[ 0 ] * scalar, vec.v[ 1 ] * scalar, vec.v[ 2 ] * scalar );
+    return res;
+}
+
+
 typedef TVec3<i32> Vec3i;
 typedef TVec3<f32> Vec3f;
 
@@ -428,12 +443,12 @@ struct TVec4 {
     }
 
     TVec4<T> operator + ( const TVec4<T> &rhs )  const {
-        TVec3<T> res( v[ 0 ] + rhs.v[ 0 ], v[ 1 ] + rhs.v[ 1 ], v[ 2 ] + rhs.v[ 2 ], 1 );
+        TVec4<T> res( v[ 0 ] + rhs.v[ 0 ], v[ 1 ] + rhs.v[ 1 ], v[ 2 ] + rhs.v[ 2 ], 1 );
         return res;
     }
 
     TVec4<T> operator - ( const TVec4<T> &rhs ) const {
-        TVec3<T> res( v[ 0 ] - rhs.v[ 0 ], v[ 1 ] - rhs.v[ 1 ], v[ 2 ] - rhs.v[ 2 ], 1 );
+        TVec4<T> res( v[ 0 ] - rhs.v[ 0 ], v[ 1 ] - rhs.v[ 1 ], v[ 2 ] - rhs.v[ 2 ], 1 );
         return res;
     }
 
