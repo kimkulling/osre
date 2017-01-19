@@ -30,12 +30,14 @@ INCLUDE_DIRECTORIES(
     3dparty/soil/src
     /usr/include/SDL2/
     /usr/include/
+	"C:/projects/libs/SDL2-2.0.5/include"
 )
 
 link_directories(
     d:/projects/libs/SDL2-2.0.3/lib/x86
     d:/libs/SDL2-2.0.5/lib/x86
     "C:/Program Files (x86)/Windows Kits/10/Lib/10.0.10586.0/um/x86"
+	"C:/projects/libs/SDL2-2.0.5/lib/x86"
     ${CMAKE_HOME_DIRECTORY}/lib
     ${CMAKE_HOME_DIRECTORY}/bin
 )

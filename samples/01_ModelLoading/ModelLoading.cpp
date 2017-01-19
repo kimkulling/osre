@@ -81,9 +81,6 @@ protected:
         Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
 #endif 
 
-        m_stage = AppBase::createStage( "HelloWorld" );
-        AppBase::activateStage( m_stage->getName() );
-
         Ids ids;
         Assets::AssimpWrapper assimpWrapper( ids );
         IO::Uri modelLoc( ModelPath );
