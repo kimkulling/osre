@@ -147,23 +147,22 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
     }
 }
 
-static void setupParameter( Material *mat, OGLRenderBackend *rb, OGLRenderEventHandler *ev ) {
-	OSRE_ASSERT( nullptr != mat );
+static void setupParameter( Parameter *param, ui32 numParam, OGLRenderBackend *rb, OGLRenderEventHandler *ev ) {
+	OSRE_ASSERT( nullptr != param );
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != ev );
 
-    if( !mat->m_parameters ) {
+    if( !param ) {
         return;
     }
 
     OGLRenderCmd *setParameterCmd = new OGLRenderCmd;
     setParameterCmd->m_type = OGLRenderCmdType::SetParameterCmd;
-    Parameter *currentParam( mat->m_parameters );
     ::CPPCore::TArray<OGLParameter*> paramArray;
     SetParameterCmdData *paramData = new SetParameterCmdData;
-    paramData->m_numParam = mat->m_numParameters;
+    paramData->m_numParam = numParam;
     paramData->m_param = new OGLParameter*[ paramData->m_numParam ];
-
+    Parameter *currentParam( param );
     ui32 i( 0 );
     while( currentParam ) {
         OGLParameter *oglParam = rb->getParameter( currentParam->m_name );
@@ -484,7 +483,9 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
         }
 
         // setup global parameter
-        setupParameter( geo->m_material, m_oglBackend, this );
+        if ( nullptr != geo->m_material->m_parameters && geo->m_material->m_numParameters!= 0 ) {
+            setupParameter( geo->m_material->m_parameters, geo->m_material->m_numParameters, m_oglBackend, this );
+            }
 
         // setup the draw calls
         if ( 0 == attachSceneEvData->m_numInstances ) {
@@ -569,12 +570,13 @@ bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
             if ( nullptr == currentParam ) {
                 continue;
             }
-            OGLParameter *oglParam = m_oglBackend->getParameter( currentParam->m_name );
-            if( oglParam ) {
-                ::memcpy( oglParam->m_data->getData(), 
-                    currentParam->m_data.getData(),
-                    currentParam->m_data.m_size );
+            OGLParameter *oglParam( nullptr );
+            if ( nullptr == oglParam ) {
+                oglParam = m_oglBackend->createParameter( currentParam->m_name, currentParam->m_type, &currentParam->m_data, currentParam->m_numItems );
+            } else {
+                m_oglBackend->getParameter( currentParam->m_name );
             }
+            ::memcpy( oglParam->m_data->getData(), currentParam->m_data.getData(), currentParam->m_data.m_size );
         }
     }
 

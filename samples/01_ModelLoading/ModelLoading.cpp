@@ -106,6 +106,9 @@ protected:
 
             Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
             ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
+            ParameterRegistry::registerParameter( parameter );
+            ParameterRegistry::updateParameter( parameter );
+            ParameterRegistry::commitChanges();
         }
 
         return true;
