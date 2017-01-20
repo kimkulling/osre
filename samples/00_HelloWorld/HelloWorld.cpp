@@ -24,14 +24,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/Common/Logger.h>
 #include <osre/Scene/GeometryBuilder.h>
-#include <osre/Scene/DbgRenderer.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Profiling/PerformanceCounters.h>
 
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -66,7 +64,7 @@ public:
     }
 
 protected:
-    virtual bool onCreate( Settings *settings = nullptr ) override {
+    bool onCreate( Settings *settings = nullptr ) override {
         Settings *baseSettings( AppBase::getSettings() );
         if ( nullptr == baseSettings ) {
             return false;
@@ -103,7 +101,7 @@ protected:
         return true;
     }
 
-    virtual void onUpdate( d32 timetick) override {
+    void onUpdate( d32 timetick) override {
         ui32 fps( 0 );
         Profiling::PerformanceCounters::queryCounter( "fps", fps );
         std::stringstream stream;

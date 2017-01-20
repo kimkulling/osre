@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AppBase.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Common/Logger.h>
-#include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
 #include <osre/Assets/AssetRegistry.h>
@@ -32,10 +31,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Uri.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Common/Ids.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 using namespace ::OSRE;
 using namespace ::OSRE::Common;
@@ -65,7 +60,7 @@ public:
     }
 
 protected:
-    virtual bool onCreate( Properties::Settings *settings = nullptr ) {
+    bool onCreate( Properties::Settings *settings = nullptr ) override {
         Properties::Settings *baseSettings( AppBase::getSettings() );
         if ( nullptr == baseSettings ) {
             return false;

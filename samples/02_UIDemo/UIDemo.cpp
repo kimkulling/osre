@@ -24,15 +24,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/Common/Logger.h>
 #include <osre/Scene/GeometryBuilder.h>
-#include <osre/Scene/Stage.h>
-#include <osre/Scene/Node.h>
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/UI/Screen.h>
 #include <osre/UI/ButtonBase.h>
 #include <osre/UI/Panel.h>
 
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -61,7 +58,7 @@ public:
     }
 
 protected:
-    virtual bool onCreate( Properties::Settings *settings = nullptr ) {
+    bool onCreate( Properties::Settings *settings = nullptr ) override {
         Properties::Settings *baseSettings( AppBase::getSettings() );
         if ( nullptr == baseSettings ) {
             return false;

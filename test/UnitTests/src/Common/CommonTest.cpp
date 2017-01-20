@@ -121,8 +121,8 @@ TEST_F( CommonTest, TVec3_add_sub_Test ) {
     EXPECT_FLOAT_EQ( 9, res1.getZ() );
 
     Vec3f res2 = vec3_1 - vec3_2;
-    EXPECT_FLOAT_EQ( -2, res2.getX() );
-    EXPECT_FLOAT_EQ( -2, res2.getY() );
+    EXPECT_FLOAT_EQ( -3, res2.getX() );
+    EXPECT_FLOAT_EQ( -3, res2.getY() );
     EXPECT_FLOAT_EQ( -3, res2.getZ() );
 }
 
@@ -170,8 +170,8 @@ TEST_F( CommonTest, TVec4_add_sub_Test ) {
     EXPECT_FLOAT_EQ( 1, res1.getW() );
 
     Vec4f res2 = vec4_1 - vec4_2;
-    EXPECT_FLOAT_EQ( -2, res2.getX() );
-    EXPECT_FLOAT_EQ( -2, res2.getY() );
+    EXPECT_FLOAT_EQ( -3, res2.getX() );
+    EXPECT_FLOAT_EQ( -3, res2.getY() );
     EXPECT_FLOAT_EQ( -3, res2.getZ() );
     EXPECT_FLOAT_EQ(  1, res2.getW() );
 }
@@ -182,7 +182,6 @@ TEST_F( CommonTest, TQuatTest ) {
     EXPECT_FLOAT_EQ( 0, q.m_y );
     EXPECT_FLOAT_EQ( 0, q.m_z );
     EXPECT_FLOAT_EQ( 1, q.m_w );
-
 }
 
 } // Namespace UnitTest
