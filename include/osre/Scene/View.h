@@ -47,9 +47,11 @@ public:
     virtual ~View();
     virtual void observeNode( Node *node );
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
-    virtual void set( const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up );
+    virtual void setLookAt( const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up );
     virtual void setProjectionMode( f32 fov, f32 aspectRatio, f32 near, f32 far );
     virtual void setOrthoMode( f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far );
+    virtual const glm::mat4 &getView() const;
+    virtual const glm::mat4 &getProjection() const;
 
 private:
     Node *m_node;

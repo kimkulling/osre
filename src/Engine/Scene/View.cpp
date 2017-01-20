@@ -53,7 +53,7 @@ void View::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
     m_view = glm::lookAt( m_pos, m_lookAt, m_up );
 }
 
-void View::set( const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up ) {
+void View::setLookAt( const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up ) {
     m_pos    = pos;
     m_lookAt = view;
     m_up     = up;
@@ -67,6 +67,14 @@ void View::setProjectionMode( f32 fov, f32 aspectRatio, f32 near, f32 far ) {
 
 void View::setOrthoMode( f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far ) {
     m_projection = glm::ortho( left, right, bottom, top, near, far );
+}
+
+const glm::mat4 &View::getView() const {
+    return m_view;
+}
+
+const glm::mat4 &View::getProjection() const {
+    return m_projection;
 }
 
 } // Namespace Scene

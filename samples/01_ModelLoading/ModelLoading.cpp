@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
+#include <osre/Scene/View.h>
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/Assets/AssimpWrapper.h>
 #include <osre/Assets/Model.h>
@@ -82,11 +83,29 @@ protected:
         IO::Uri modelLoc( ModelPath );
         if ( assimpWrapper.importAsset( modelLoc, 0 ) ) {
             Assets::Model *model = assimpWrapper.getModel();
+            Collision::TAABB<f32> aabb = model->getAABB();
+
             m_stage = AppBase::createStage( "ModelLoader" );
             m_view = m_stage->addView("camera", nullptr );
+            const f32 diam = aabb.getDiameter();
+            const Vec3f center = aabb.getCenter();
+            f32 zNear = 1.0f;
+            f32 zFar = zNear + diam;
+            f32 left = center.getX() - diam;
+            f32 right = center.getX() + diam;
+            f32 bottom = center.getY() - diam;
+            f32 top = center.getY() + diam;
+            m_view->setOrthoMode( left, right, bottom, top, zNear, zFar );
+            glm::vec3 eye( 0, 0, 2 * diam ), up( 0, 1, 0 );
+            m_view->setLookAt( eye, glm::vec3( center.getX(), center.getY(), center.getZ() ), up );
+            m_transformMatrix.m_view = m_view->getView();
+            m_transformMatrix.m_projection = m_view->getProjection();
             AppBase::activateStage( m_stage->getName() );
             Scene::Node *node = m_stage->addNode( "modelNode", nullptr );
             m_stage->addModel( model, node );
+
+            Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
+            ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
         }
 
         return true;
