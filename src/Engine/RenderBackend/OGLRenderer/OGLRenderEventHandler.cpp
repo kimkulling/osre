@@ -485,7 +485,7 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
         // setup global parameter
         if ( nullptr != geo->m_material->m_parameters && geo->m_material->m_numParameters!= 0 ) {
             setupParameter( geo->m_material->m_parameters, geo->m_material->m_numParameters, m_oglBackend, this );
-            }
+        }
 
         // setup the draw calls
         if ( 0 == attachSceneEvData->m_numInstances ) {
@@ -572,11 +572,12 @@ bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
             }
             OGLParameter *oglParam( nullptr );
             if ( nullptr == oglParam ) {
-                oglParam = m_oglBackend->createParameter( currentParam->m_name, currentParam->m_type, &currentParam->m_data, currentParam->m_numItems );
+                setupParameter( currentParam, 1, m_oglBackend, this );
+//                oglParam = m_oglBackend->createParameter( currentParam->m_name, currentParam->m_type, &currentParam->m_data, currentParam->m_numItems );
             } else {
                 m_oglBackend->getParameter( currentParam->m_name );
+                ::memcpy( oglParam->m_data->getData(), currentParam->m_data.getData(), currentParam->m_data.m_size );
             }
-            ::memcpy( oglParam->m_data->getData(), currentParam->m_data.getData(), currentParam->m_data.m_size );
         }
     }
 
