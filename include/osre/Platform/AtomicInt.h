@@ -99,6 +99,5 @@ private:
     AbstractAtomic *m_pImpl;
 };
 
-
 } // Namespace Platform
 } // Namespace OSRE

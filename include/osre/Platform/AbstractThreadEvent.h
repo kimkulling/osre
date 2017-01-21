@@ -56,6 +56,5 @@ AbstractThreadEvent::~AbstractThreadEvent( ) {
 	// empty
 }
 
-
 } // Namespace Platform
 } // Namespace OSRE

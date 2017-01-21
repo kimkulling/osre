@@ -202,7 +202,6 @@ bool PlatformInterface::onOpen() {
     return result;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool PlatformInterface::onClose( ) {
     PlatformPluginFactory::release( m_type );
 
@@ -218,13 +217,11 @@ bool PlatformInterface::onClose( ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool PlatformInterface::onUpdate( d32 timediff ) {
     Common::Event ev( "none" );
     return m_pOSEventHandler->onEvent( ev, nullptr );
 }
 
-//-------------------------------------------------------------------------------------------------
 bool PlatformInterface::setupGfx( SurfaceProperties *props, bool polls ) {
     // create the root surface
     m_pRootSurface = PlatformPluginFactory::createSurface( m_type, props );
@@ -252,8 +249,6 @@ bool PlatformInterface::setupGfx( SurfaceProperties *props, bool polls ) {
 
     return true;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

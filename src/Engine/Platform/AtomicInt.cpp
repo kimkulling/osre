@@ -22,55 +22,45 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Platform/AtomicInt.h>
 #include <osre/Platform/AbstractThreadFactory.h>
-
-#include <cassert>
+#include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
 namespace Platform {
 
-//-------------------------------------------------------------------------------------------------
 AtomicInt::AtomicInt( i32 val )
 : m_pImpl( AbstractThreadFactory::getInstance()->createAtomic( val ) ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 AtomicInt::~AtomicInt() {
     delete m_pImpl;
     m_pImpl = nullptr;
 }
 
-//-------------------------------------------------------------------------------------------------
 void AtomicInt::incValue( i32 value ) {
-    assert( nullptr != m_pImpl );
+    OSRE_ASSERT( nullptr != m_pImpl );
     m_pImpl->incValue( value );
 }
 
-//-------------------------------------------------------------------------------------------------
 void AtomicInt::decValue( i32 value ) {
-    assert( nullptr != m_pImpl );   
+    OSRE_ASSERT( nullptr != m_pImpl );
     m_pImpl->decValue( value );
 }
 
-//-------------------------------------------------------------------------------------------------
 i32 AtomicInt::getValue() const {
-    assert( nullptr != m_pImpl );
+    OSRE_ASSERT( nullptr != m_pImpl );
     return m_pImpl->getValue( );
 }
 
-//-------------------------------------------------------------------------------------------------
 i32 AtomicInt::operator ++ ( ) {
-    assert( nullptr != m_pImpl );
+    OSRE_ASSERT( nullptr != m_pImpl );
     return m_pImpl->inc( );
 }
 
-//-------------------------------------------------------------------------------------------------
 i32 AtomicInt::operator -- ( ) {
-    assert( nullptr != m_pImpl );
+    OSRE_ASSERT( nullptr != m_pImpl );
     return m_pImpl->dec( );
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

@@ -227,5 +227,5 @@ bool AssetDataArchive::isLoaded() const {
     return false;
 }
 
-}
-}
+} // Namespace Assets
+} // Namespace OSRE

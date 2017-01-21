@@ -115,6 +115,5 @@ private:
     bool m_isCreated;
 };
 
-
 } // Namespace Platform
 } // Namespace OSRE

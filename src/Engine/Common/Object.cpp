@@ -62,7 +62,6 @@ const String &Object::getName() const {
     return m_objectName;
 }
 
-
 } // Namespace Common
 } // Namespace OSRE
 

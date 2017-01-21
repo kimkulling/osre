@@ -40,6 +40,11 @@ namespace Platform {
 
 namespace UI {
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Screen : public Widget {
 public:
     Screen( const String &name, Widget *parent, i32 width, i32 height );

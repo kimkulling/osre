@@ -90,7 +90,6 @@ private:
     CPPCore::TArray<String> m_Token;
 };
 
-
 } // Namespace Common
 } // Namespace OSRE
 

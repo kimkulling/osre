@@ -104,5 +104,5 @@ HashId StringUtils::hashName( char const *pIdentStr ) {
 #undef DO16
 }
 
-}
-}
+} // Namespace Common
+} // Namespace OSRE

@@ -79,6 +79,5 @@ private:
 	static ui32 m_NumCPUs;
 };
 
-
 } // Namespace System
 } // Namespace OSRE

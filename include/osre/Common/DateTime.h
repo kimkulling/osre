@@ -120,7 +120,5 @@ private:
     ui32 m_Milliseconds;
 };
 
-//-------------------------------------------------------------------------------------------------
-
-} // Namespace Utils
+} // Namespace Common
 } // Namespace OSRE
