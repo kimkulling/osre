@@ -54,9 +54,9 @@ TEST_F( CommonTest, HandleTest ) {
 }
 
 TEST_F( CommonTest, Color4Test ) {
-    Color4 col1( 0,0,0,0 ), col2( 1,1,1,1 ), col3( 1, 1, 1, 1 );
-    EXPECT_NE( col1, col2 );
-    EXPECT_EQ( col2, col3 );
+    Color4 col1( 0.1f, 0.2f, 0.3f, 0.4f ), col2( 0.1f, 0.2f, 0.3f, 0.4f ), col3( 0.5f, 0.6f, 0.7f, 0.8f );
+    EXPECT_EQ( col1, col2 );
+    EXPECT_NE( col2, col3 );
 }
 
 TEST_F( CommonTest, TVec2Test ) {

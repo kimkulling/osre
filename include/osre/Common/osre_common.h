@@ -137,7 +137,7 @@ struct Handle {
         // empty
     }
 
-    Handle( i32 idx ) {
+    explicit Handle( i32 idx ) {
         init( idx );
     }
 
@@ -166,7 +166,7 @@ struct Color4 {
     }
 
     bool operator == ( const Color4 & rhs ) const {
-        return ( m_r == rhs.m_r && m_g == rhs.m_b && m_g == rhs.m_b && m_a == rhs.m_a );
+        return ( m_r == rhs.m_r && m_g == rhs.m_g && m_b == rhs.m_b && m_a == rhs.m_a );
     }
 
     bool operator != ( const Color4 & rhs ) const {

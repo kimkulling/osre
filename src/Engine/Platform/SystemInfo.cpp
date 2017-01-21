@@ -48,17 +48,14 @@ bool                      SystemInfo::m_IsInited  = false;
 CPUInfo                  *SystemInfo::m_pCPUInfo  = nullptr;
 SystemInfo::ThreadNameMap SystemInfo::s_threadNames;
 
-//-------------------------------------------------------------------------------------------------
 SystemInfo::SystemInfo() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 SystemInfo::~SystemInfo() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 SystemInfo::Platform SystemInfo::getPlatform() {
 #if defined( OSRE_WINDOWS )
     return Platform::Win32;
@@ -67,7 +64,6 @@ SystemInfo::Platform SystemInfo::getPlatform() {
 #endif
 }
 
-//-------------------------------------------------------------------------------------------------
 void SystemInfo::getMemoryStatus( ui32 &totalPhysicMem, ui32 &memInUse ) {
     totalPhysicMem = 0;
     memInUse = 0;
@@ -89,12 +85,10 @@ void SystemInfo::getMemoryStatus( ui32 &totalPhysicMem, ui32 &memInUse ) {
 #endif
 }
 
-//-------------------------------------------------------------------------------------------------
 CPUInfo *SystemInfo::getCPUInfo() {
     return m_pCPUInfo;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool SystemInfo::registerThreadName( const ThreadId &id, const String &name ) {
     ThreadNameMap::const_iterator it( s_threadNames.find( id.Id) );
     bool success( true );
@@ -107,7 +101,6 @@ bool SystemInfo::registerThreadName( const ThreadId &id, const String &name ) {
     return success;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool SystemInfo::unregisterThreadName( const ThreadId &id ) {
     ThreadNameMap::iterator it( s_threadNames.find( id.Id) );
     bool success( true );
@@ -120,7 +113,6 @@ bool SystemInfo::unregisterThreadName( const ThreadId &id ) {
     return success;
 }
 
-//-------------------------------------------------------------------------------------------------
 String SystemInfo::getThreadName( const ThreadId &id ) {
     ThreadNameMap::const_iterator it( s_threadNames.find( id.Id) );
     if ( s_threadNames.end() != it ) {
@@ -134,7 +126,6 @@ String SystemInfo::getThreadName( const ThreadId &id ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 String SystemInfo::getCurrentThreadName() {
     ThreadId threadId;
 #ifdef OSRE_WINDOWS
@@ -145,7 +136,6 @@ String SystemInfo::getCurrentThreadName() {
     return getThreadName( threadId );
 }
 
-//-------------------------------------------------------------------------------------------------
 bool SystemInfo::init() {
     if ( m_IsInited ) {
         return false;
@@ -173,8 +163,6 @@ bool SystemInfo::init() {
 
     return success;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace System
 } // Namespace OSRE

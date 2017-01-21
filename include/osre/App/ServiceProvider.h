@@ -37,7 +37,7 @@ public:
     static RenderBackend::RenderBackendService *getRenderBackendService();
 
 private:
-    ServiceProvider( RenderBackend::RenderBackendService *rbService );
+    explicit ServiceProvider( RenderBackend::RenderBackendService *rbService );
     ~ServiceProvider();
 
 private:
