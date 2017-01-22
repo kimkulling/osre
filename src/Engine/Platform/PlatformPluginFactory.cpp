@@ -75,7 +75,7 @@ AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler(
 #endif // OSRE_WINDOWS
 
         case Platform::PluginType::SDL2Plugin:
-            eventHandler = new SDL2EventHandler();
+            eventHandler = new SDL2EventHandler;
             break;
 
         default:
@@ -138,7 +138,7 @@ AbstractTimer *PlatformPluginFactory::createTimer( PluginType type ) {
         case Platform::PluginType::WindowsPlugin:
             timer = new Win32Timer();
             break;
-#endif
+#endif // OSRE_WINDOWS
 
         case Platform::PluginType::SDL2Plugin:
             timer = new SDL2Timer();

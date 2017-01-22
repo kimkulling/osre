@@ -37,8 +37,7 @@ BasePropertyMap::BasePropertyMap()
 }
 
 BasePropertyMap::~BasePropertyMap() {
-    for ( PropertyLookupMap::iterator it = m_PropertyLookupMap.begin(); it != m_PropertyLookupMap.end(); 
-          ++it )	{
+    for ( PropertyLookupMap::iterator it = m_PropertyLookupMap.begin(); it != m_PropertyLookupMap.end(); ++it )	{
         OSRE_ASSERT( nullptr != it->second );
         delete it->second;
     }

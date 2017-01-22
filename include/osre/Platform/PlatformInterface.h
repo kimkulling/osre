@@ -209,6 +209,5 @@ private:
     AbstractDynamicLoader *m_dynLoader;
 };
 
-
 } // Namespace Platform
 } // Namespace OSRE

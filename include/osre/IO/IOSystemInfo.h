@@ -53,7 +53,5 @@ public:
 	static String getCurrentDirectory();
 };
 
-//-------------------------------------------------------------------------------------------------
-
 } // Namespace IO
 } // Namespace OSRE

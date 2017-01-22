@@ -73,7 +73,6 @@ private:
     Type m_Width, m_Height;
 };
 
-//-------------------------------------------------------------------------------------------------
 template<class Type>
 inline
 TArea<Type>::TArea() 
@@ -82,7 +81,6 @@ TArea<Type>::TArea()
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class Type>
 inline
 TArea<Type>::TArea( Type width, Type height ) 
@@ -91,7 +89,6 @@ TArea<Type>::TArea( Type width, Type height )
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class Type>
 inline
 TArea<Type>::TArea( const TArea<Type> &rhs ) 
@@ -100,14 +97,12 @@ TArea<Type>::TArea( const TArea<Type> &rhs )
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class Type>
 inline
 TArea<Type>::~TArea() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class Type>
 inline
 void TArea<Type>::set( Type width, Type height ) {
@@ -115,21 +110,18 @@ void TArea<Type>::set( Type width, Type height ) {
     m_Height = height;
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class Type>
 inline
 Type TArea<Type>::getWidth() const {
     return m_Width;
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class Type>
 inline
 Type TArea<Type>::getHeight() const {
     return m_Height;
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class Type>
 inline
 TArea<Type> &TArea<Type>::operator = ( const TArea<Type> &rhs ) {
@@ -141,14 +133,11 @@ TArea<Type> &TArea<Type>::operator = ( const TArea<Type> &rhs ) {
     return *this;
 }
 
-//-------------------------------------------------------------------------------------------------
 template<class Type>
 inline
 bool TArea<Type>::operator == ( const TArea<Type> &rhs ) const {
     return ( m_Width == rhs.m_Width && m_Height == rhs.m_Height );
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 } // Namespace OSRE

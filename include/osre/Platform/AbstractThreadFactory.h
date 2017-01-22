@@ -83,6 +83,5 @@ private:
     static AbstractThreadFactory *s_threadFactory;
 };
 
-
 } // Namespace Platform
 } // Namespace OSRE

@@ -89,26 +89,22 @@ private:
     ui32 m_NumberOfRefs;
 };
 
-//--------------------------------------------------------------------------------------------------------------------
 inline
 AbstractFileSystem::AbstractFileSystem() 
 : m_NumberOfRefs( 1 ) {
     // empty
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline
 AbstractFileSystem::~AbstractFileSystem() {
     // empty
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline
 void AbstractFileSystem::get() {
     ++m_NumberOfRefs;
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline
 void AbstractFileSystem::release() {
     if ( m_NumberOfRefs ) {
@@ -119,7 +115,6 @@ void AbstractFileSystem::release() {
     }
 }
 
-//--------------------------------------------------------------------------------------------------------------------
 inline
 void AbstractFileSystem::normalizeFilename( String &name ) {
     if ( name.empty() ) {
@@ -133,8 +128,6 @@ void AbstractFileSystem::normalizeFilename( String &name ) {
         }
     }
 }
-
-//--------------------------------------------------------------------------------------------------------------------
 
 } // Namespace IO
 } // Namespace OSRE

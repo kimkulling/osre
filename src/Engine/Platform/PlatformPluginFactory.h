@@ -43,7 +43,6 @@ class AbstractDynamicLoader;
 struct SurfaceProperties;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::PlatformPluginFactory
 ///	@ingroup	Infrastructure
 ///
 ///	@brief  This class is used to create all platform-specific instances.
@@ -76,8 +75,6 @@ struct PlatformPluginFactory {
     ///	@brief  Creates a platform-specific dynamic-library loader.
     static AbstractDynamicLoader *createDynmicLoader( PluginType type );
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

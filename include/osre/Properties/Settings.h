@@ -110,6 +110,5 @@ private:
     Properties::AbstractPropertyMap *m_pPropertyMap;
 };
 
-
 } // Namespace Properties
 } // Namespace OSRE

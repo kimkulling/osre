@@ -75,7 +75,6 @@ good:
 #define _REG_ECX		2
 #define _REG_EDX		3
 
-//-------------------------------------------------------------------------------------------------
 static void CPUID( int func, unsigned regs[ 4 ] ) {
     unsigned regEAX, regEBX, regECX, regEDX;
 
@@ -95,7 +94,6 @@ static void CPUID( int func, unsigned regs[ 4 ] ) {
     regs[ _REG_EDX ] = regEDX;
 }
 
-//-------------------------------------------------------------------------------------------------
 static bool isAMD() {
     c8 pstring[ 16 ];
     c8 processorString[ 13 ];
@@ -122,7 +120,6 @@ static bool isAMD() {
     return false;
 }
 
-//-------------------------------------------------------------------------------------------------
 static bool has3DNow() {
     unsigned regs[4];
 
@@ -141,7 +138,6 @@ static bool has3DNow() {
     return false;
 }
 
-//-------------------------------------------------------------------------------------------------
 static bool hasMMX() {
     unsigned regs[ 4 ];
 
@@ -155,7 +151,6 @@ static bool hasMMX() {
     return false;
 }
 
-//-------------------------------------------------------------------------------------------------
 static bool hasSSE()  {
     unsigned regs[ 4 ];
 
@@ -169,7 +164,6 @@ static bool hasSSE()  {
     return false;
 }
 
-//-------------------------------------------------------------------------------------------------
 static bool hasSSE2() {
     unsigned regs[ 4 ];
 
@@ -183,7 +177,6 @@ static bool hasSSE2() {
     return false;
 }
 
-//-------------------------------------------------------------------------------------------------
 static bool hasSSE3() {
     unsigned regs[4];
 
@@ -198,7 +191,6 @@ static bool hasSSE3() {
 }
 #endif
 
-//-------------------------------------------------------------------------------------------------
 CPUInfo::CPUInfo() {
     // empty
 }
@@ -208,22 +200,18 @@ CPUInfo::~CPUInfo() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 ui32 CPUInfo::getNumCPUs() const {
     return m_NumCPUs;
 }
 
-//-------------------------------------------------------------------------------------------------
 i32 CPUInfo::getCPUProperties() const {
     return m_CPUFlags;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool CPUInfo::isInited() {
     return m_IsInited;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool CPUInfo::init() {
     if( m_IsInited ) {
         return true;
@@ -238,7 +226,6 @@ bool CPUInfo::init() {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool CPUInfo::initCPUProperties() {
     m_CPUFlags = CPUID_None;
 #ifdef OSRE_WINDOWS
@@ -275,16 +262,12 @@ bool CPUInfo::initCPUProperties() {
         m_CPUFlags |= CPUID_SSE3;
     }
 
-
 #else
     m_NumCPUs = sysconf( _SC_NPROCESSORS_ONLN );
 #endif
 
     return true;
 }
-
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace System
 } // Namespace OSRE

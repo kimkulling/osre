@@ -30,6 +30,11 @@ namespace RenderBackend {
 
 namespace App {
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  
+//-------------------------------------------------------------------------------------------------
 class ServiceProvider {
 public:
     static ServiceProvider *create( RenderBackend::RenderBackendService *rbService );
