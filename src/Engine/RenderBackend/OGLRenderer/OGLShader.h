@@ -76,10 +76,14 @@ public:
     /// @brief  Will unbind this program to the current render context.
     void unuse();
     
+    bool hasAttribute( const String& attribute );
+
     /// @brief  Adds a new attribute to the shader.
     /// @param  attribute   [in] The name of the attribute.
     void addAttribute( const String& attribute );
-    
+
+    bool hasUniform( const String& uniform );
+
     /// @brief  Adds a new uniform to the shader.
     /// @param  attribute   [in] The name of the uniform.
     void addUniform( const String& uniform );
@@ -87,6 +91,8 @@ public:
     /// @brief  Logs a compile and link error.
     /// @param  shaderprog  [in] The shader program handle.
     static void logCompileOrLinkError( ui32 shaderprog );
+
+    bool isCompiled() const;
 
     /// @brief  returns the location of the attribute.
     /// @param  attribute   [in] The name of the attribute.
@@ -108,6 +114,7 @@ private:
     ui32 m_shaders[ MaxShaderTypes ];
     std::map<String, GLint> m_attributeList;
     std::map<String, GLint> m_uniformLocationList;
+    bool m_isCompiledAndLinked;
 };
 
 } // Namespace RenderBackend

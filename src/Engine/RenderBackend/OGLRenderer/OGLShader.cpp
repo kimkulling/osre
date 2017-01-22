@@ -51,7 +51,8 @@ OGLShader::OGLShader( const String &name )
 , m_shaderprog( 0 )
 , m_numShader( 0 )
 , m_attributeList()
-, m_uniformLocationList() {
+, m_uniformLocationList()
+, m_isCompiledAndLinked( false ) {
     ::memset( m_shaders, 0, sizeof( unsigned int ) * 3 );
 }
 
@@ -120,7 +121,8 @@ bool OGLShader::createAndLink() {
     if (status == GL_FALSE) {
         logCompileOrLinkError(m_shaderprog);
         result = false;
-    }
+    } 
+    m_isCompiledAndLinked = result;
 
     return result;
 }
@@ -133,12 +135,29 @@ void OGLShader::unuse( ) {
     glUseProgram( 0 );
 }
 
+bool OGLShader::hasAttribute( const String& attribute ) {
+    if ( 0 == m_shaderprog ) {
+        return false;
+    }
+
+    const GLint location = glGetAttribLocation( m_shaderprog, attribute.c_str() );
+    return -1 != location;
+}
+
 void OGLShader::addAttribute( const String& attribute ) {
     const GLint location = glGetAttribLocation( m_shaderprog, attribute.c_str( ) );
     m_attributeList[ attribute ] = location;
     if( ErrorId == location ) {
         osre_debug( Tag, "Cannot find attribute " + attribute + " in shader." );
     }
+}
+
+bool OGLShader::hasUniform( const String& uniform ) {
+    if ( 0 == m_shaderprog ) {
+        return false;
+    }
+    const GLint location = glGetUniformLocation( m_shaderprog, uniform.c_str() );
+    return -1 != location;
 }
 
 void OGLShader::addUniform( const String& uniform ) {
@@ -158,6 +177,10 @@ void OGLShader::logCompileOrLinkError( ui32 shaderprog ) {
     String error( infoLog );
     osre_debug( Tag, "Link log: " + error + "\n" );
     delete [] infoLog;
+}
+
+bool OGLShader::isCompiled() const {
+    return m_isCompiledAndLinked;
 }
 
 GLint OGLShader::operator[] ( const String &attribute ) {

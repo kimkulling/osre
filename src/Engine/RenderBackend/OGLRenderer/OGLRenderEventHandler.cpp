@@ -127,11 +127,17 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
                 if ( nullptr != shader ) {
                     matData->m_shader = shader;
                     for( ui32 i = 0; i < material->m_pShader->m_attributes.size(); i++ ) {
-                        shader->addAttribute( material->m_pShader->m_attributes[ i ] );
+                        const String &attribute = material->m_pShader->m_attributes[ i ];
+                        //if ( shader->hasAttribute( attribute ) ) {
+                            shader->addAttribute( attribute );
+                        //}
                     }
 
                     for( ui32 i = 0; i < material->m_pShader->m_parameters.size(); i++ ) {
-                        shader->addUniform( material->m_pShader->m_parameters[ i ] );
+                        const String &uniform = material->m_pShader->m_parameters[ i ];
+                        //if ( shader->hasUniform( uniform ) ) {
+                            shader->addUniform( uniform );
+                        //}
                     }
 
                     // for setting up all buffer objects

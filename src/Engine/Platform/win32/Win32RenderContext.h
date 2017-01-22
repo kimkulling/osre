@@ -30,7 +30,6 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::Win32RenderContext
 ///	@ingroup	Engine
 ///
 ///	@brief  This class implements the Render Context API by using the Win32-API.
@@ -39,6 +38,8 @@ class Win32RenderContext : public AbstractRenderContext {
 public:
     Win32RenderContext();
     virtual ~Win32RenderContext();
+    void setExtensions( const String &extensions );
+    const String &getExtensions() const;
 
 protected:
     virtual bool onCreate( AbstractSurface *pSurface );
@@ -50,6 +51,7 @@ private:
     i32 m_OpenGLVersion[ 2 ];
     HDC m_dc;
     HGLRC m_rc;
+    String m_extensions;
     bool m_active;
 };
 

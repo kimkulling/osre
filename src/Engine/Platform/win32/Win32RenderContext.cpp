@@ -37,7 +37,6 @@ namespace Platform {
 
 static const String Tag = "Win32RenderContext";
 
-//-------------------------------------------------------------------------------------------------
 void APIENTRY DebugLog( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
     const GLchar *msg, GLvoid *userParam ) {
 
@@ -83,26 +82,34 @@ void APIENTRY DebugLog( GLenum source, GLenum type, GLuint id, GLenum severity, 
     osre_info( Tag, "DebugLog" );
 }
 
-//-------------------------------------------------------------------------------------------------
 Win32RenderContext::Win32RenderContext( )
 : AbstractRenderContext()
+, m_dc( nullptr )
+, m_rc( nullptr )
+, m_extensions()
 , m_active( false ) {
     ::memset( m_OpenGLVersion, 0, sizeof( i32 ) * 2 );
 }
 
-//-------------------------------------------------------------------------------------------------
 Win32RenderContext::~Win32RenderContext( ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
+void Win32RenderContext::setExtensions( const String &extensions ) {
+    m_extensions = extensions;
+}
+
+const String &Win32RenderContext::getExtensions() const {
+    return m_extensions;
+}
+
 bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
-    Win32Surface *pWin32Surface = reinterpret_cast< Win32Surface* >( pSurface );
-    if( !pWin32Surface ) {
+    Win32Surface *win32Surface = reinterpret_cast< Win32Surface* >( pSurface );
+    if( !win32Surface ) {
         osre_error( Tag, "Invalid pointer to window." );
         return false;
     }
-    HDC dc = pWin32Surface->getDeviceContext();
+    HDC dc = win32Surface->getDeviceContext();
     if( !dc ) {
         osre_error( Tag, "Invalid device context." );
         return false;
@@ -184,8 +191,7 @@ bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
             osre_error( Tag, "wglMakeCurrent failed." );
             return false;
         }
-    }
-    else {
+    } else {
         // It's not possible to make a GL 3.x context. Use the old style context (GL 2.1 and before)
         rc = tempContext;
     }
@@ -195,12 +201,27 @@ bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
     }
 
     // checking the supported GL version
+    const char *GLVendorString = ( const char* ) glGetString( GL_VENDOR );
+    if ( GLVendorString ) {
+        String vendor( GLVendorString );
+        osre_info( Tag, vendor );
+    }
+    const char *GLRendererString = ( const char* ) glGetString( GL_RENDERER );
+    if ( GLRendererString ) {
+        String renderer( GLRendererString );
+        osre_info( Tag, renderer );
+    }
     const char *GLVersionString = ( const char* ) glGetString( GL_VERSION );
     if( GLVersionString ) {
         String version( GLVersionString );
         osre_info( Tag, version );
     }
+    const char *GLExtensions = ( const char * ) glGetString( GL_EXTENSIONS );
+    if ( GLExtensions ) {
+        String extensions( GLExtensions );
+        setExtensions( extensions );
 
+    }
     // or better yet, use the GL4.x way to get the version number
     glGetIntegerv( GL_MAJOR_VERSION, &m_OpenGLVersion[ 0 ] );
     glGetIntegerv( GL_MINOR_VERSION, &m_OpenGLVersion[ 1 ] );
