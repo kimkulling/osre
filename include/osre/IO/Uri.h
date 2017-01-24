@@ -71,12 +71,16 @@ public:
     ///	@return	A string containing the scheme.
     const String &getScheme() const;
 
+    /// @brief  Will assign a new scheme description.
+    /// @param  scheme      [in] The new scheme.
     void setScheme( const String &scheme );
 
     ///	@brief	Returns the path of the URI.
     ///	@return	A string containing the path.
     const String &getPath() const;
 
+    /// @brief  Will set a new path.
+    /// @param  path    [in] The new path to use.
     void setPath( const String &path );
 
     ///	@brief	Returns the resource name of the URI.
@@ -87,6 +91,8 @@ public:
     ///	@return	A string containing the absolute path.
     const String &getResource() const;
 
+    /// @brief  Will set the resource string.
+    /// @
     void setResource( const String &res );
 
     ///	@brief	Returns true, if the scheme is empty.
