@@ -134,10 +134,10 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
                     }
 
                     for( ui32 i = 0; i < material->m_pShader->m_parameters.size(); i++ ) {
-                        const String &uniform = material->m_pShader->m_parameters[ i ];
-                        //if ( shader->hasUniform( uniform ) ) {
-                            shader->addUniform( uniform );
-                        //}
+                        const Parameter *uniformParam( material->m_pShader->m_parameters[ i ] );
+                        if ( nullptr != uniformParam ) {
+                            shader->addUniform( uniformParam->m_name );
+                        }
                     }
 
                     // for setting up all buffer objects

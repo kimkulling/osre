@@ -315,9 +315,9 @@ static const ui32 MaxShaderTypes = 3;
 
 ///	@brief
 struct OSRE_EXPORT Shader {
-    CPPCore::TArray<String> m_parameters;
-    CPPCore::TArray<String> m_attributes;
-    String                  m_src[ MaxShaderTypes ];
+    CPPCore::TArray<Parameter*> m_parameters;
+    CPPCore::TArray<String>     m_attributes;
+    String                      m_src[ MaxShaderTypes ];
 
     Shader();
     ~Shader();

@@ -116,8 +116,10 @@ public:
             geo->m_material->m_pShader->m_attributes.add( "position" );
             geo->m_material->m_pShader->m_attributes.add( "normal" );
             geo->m_material->m_pShader->m_attributes.add( "color0" );
-            geo->m_material->m_pShader->m_parameters.add( "M" );
-            geo->m_material->m_pShader->m_parameters.add( "VP" );
+            Parameter *paramM = Parameter::create("M", ParameterType::PT_Mat4);
+            geo->m_material->m_pShader->m_parameters.add( paramM );
+            Parameter *paramVP = Parameter::create("VP", ParameterType::PT_Mat4);
+            geo->m_material->m_pShader->m_parameters.add( paramVP );
         }
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );

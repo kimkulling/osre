@@ -190,8 +190,9 @@ Material *MaterialBuilder::createBuildinMaterial( VertexType type ) {
             const String *attribs( RenderVert::getAttributes() );
             mat->m_pShader->m_attributes.add( attribs, numAttribs );
         }
-         
-        mat->m_pShader->m_parameters.add( "MVP" );
+
+        Parameter *param = Parameter::create("MVP", ParameterType::PT_Mat4);
+        mat->m_pShader->m_parameters.add( param );
     }
 
     return mat;
@@ -212,7 +213,8 @@ Material *MaterialBuilder::createBuildinUIMaterial() {
         ui32 numAttribs( RenderVert::getNumAttributes() );
         const String *attribs( RenderVert::getAttributes() );
         mat->m_pShader->m_attributes.add( attribs, numAttribs );
-        mat->m_pShader->m_parameters.add( "MVP" );
+        Parameter *param = Parameter::create("MVP", ParameterType::PT_Mat4);
+        mat->m_pShader->m_parameters.add( param );
     }
 
     return mat;
