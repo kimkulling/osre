@@ -107,7 +107,9 @@ bool RenderBackendService::onUpdate( d32 timediff ) {
     if ( !m_renderTaskPtr.isValid() ) {
         return false;
     }
-    
+
+    applyParameters();
+
     // synchronizing event with render back-end
     bool result( m_renderTaskPtr->sendEvent( &OnRenderFrameEvent, nullptr ) );
     m_renderTaskPtr->awaitUpdate();
@@ -127,6 +129,10 @@ void RenderBackendService::setSettings( const Settings *config, bool moveOwnersh
 
 const Properties::Settings *RenderBackendService::getSettings() const {
     return m_settings;
+}
+
+void RenderBackendService::applyParameters() {
+
 }
 
 void RenderBackendService::sendEvent( const Event *ev, const EventData *eventData ) {

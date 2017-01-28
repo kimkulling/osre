@@ -193,7 +193,7 @@ public:
     /// @brief  Returns the render configuration.
     /// @return The render configuration.
     const Properties::Settings *getSettings() const;
-    
+        
     /// @brief  Will send a new event to the render system task.
     /// @param  ev          [in] The event identifier.
     /// @param  eventData   [in] The event data.
@@ -208,6 +208,9 @@ protected:
     
     /// @brief  The update callback.
     virtual bool onUpdate( d32 timediff );
+
+    /// @brief  Will apply all used parameters
+    void applyParameters();
 
 private:
     Common::TObjPtr<Threading::SystemTask> m_renderTaskPtr;
