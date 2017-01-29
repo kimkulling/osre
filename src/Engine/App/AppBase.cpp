@@ -215,11 +215,6 @@ bool AppBase::onCreate( Properties::Settings *config ) {
         return false;
     }
 
-    if ( nullptr == RenderBackend::ParameterRegistry::create( m_rbService ) ) {
-        m_rbService->release();
-        return false;
-    }
-
     // enable render-backend
     if( m_platformInterface ) {
         RenderBackend::CreateRendererEventData *data = new RenderBackend::CreateRendererEventData( m_platformInterface->getRootSurface() );
@@ -265,7 +260,6 @@ bool AppBase::onDestroy() {
 }
 
 void AppBase::onUpdate( d32 timetick ) {
-    ParameterRegistry::commitChanges();
     if ( nullptr != m_world ) {
         m_world->update( m_rbService );
     }

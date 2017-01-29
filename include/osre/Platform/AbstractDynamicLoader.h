@@ -86,6 +86,5 @@ private:
     LibHandle *m_activeLib;
 };
 
-
 } // Namespace Platform
 } // Namespace OSRE

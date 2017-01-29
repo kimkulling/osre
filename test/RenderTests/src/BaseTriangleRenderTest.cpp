@@ -50,7 +50,6 @@ using namespace ::OSRE::RenderBackend;
 float angle = 0.0f;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderTest::BaseTriangleRenderTest
 ///	@ingroup	Test
 ///
 ///	@brief  This class implements a base triangle render test.
@@ -68,15 +67,13 @@ public:
         // empty
     }
 
-    virtual bool onCreate( RenderBackendService *rbSrv ) {
+    virtual bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
-        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
         
+        CPPCore::TArray<Geometry*> geoArray;
         Geometry *geo = Scene::GeometryBuilder::allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-        attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_geo = new Geometry*[ 1 ];
-        attachGeoEvData->m_geo[ 0 ] = geo;
-
+        geoArray.add( geo );
+        
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
 
@@ -86,7 +83,7 @@ public:
         geo->m_material->m_parameters = parameter;
         geo->m_material->m_numParameters++;
         
-        rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+        rbSrv->attachGeo( geoArray );
 
         return true;
     }

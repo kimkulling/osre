@@ -68,25 +68,5 @@ private:
     ~Parameter();
 };
 
-struct OSRE_EXPORT ParameterRegistry {
-    static ParameterRegistry *create( RenderBackendService *rbSrv );
-    static void destroy();
-    static bool registerParameter( Parameter *param );
-    static Parameter *getParameterByName( const String & name );
-    static bool updateParameter( Parameter *param );
-    static bool commitChanges();
-
-private:
-    ParameterRegistry( RenderBackendService *rbSrv );
-    ~ParameterRegistry();
-
-private:
-    static ParameterRegistry *s_instance;
-    
-    CPPCore::THashMap<ui32, Parameter*> m_parameterMap;
-    CPPCore::TArray<Parameter*> m_updates;
-    RenderBackendService *m_rbService;
-};
-
 } // Namespace RenderBackend
 } // Namespace OSRE

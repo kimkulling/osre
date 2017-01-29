@@ -319,7 +319,7 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
         result = onClearGeo( data );
     } else if( OnRenderFrameEvent == ev ) {
         result = onRenderFrame( data );
-    } else if ( OnUpdateParameterEvent == ev ) {
+    } else if ( OnSetParameterEvent == ev ) {
         result = onUpdateParameter( data );
     }
     return result;
@@ -569,7 +569,7 @@ bool OGLRenderEventHandler::onRenderFrame( const EventData *eventData ) {
 bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	
-	UpdateParameterEventData *updateParamData = ( UpdateParameterEventData* ) eventData;
+	SetParameterEventData *updateParamData = ( SetParameterEventData* ) eventData;
     if( nullptr != updateParamData ) {
         for( ui32 i = 0; i < updateParamData->m_numParam; ++i ) {
             Parameter *currentParam( updateParamData->m_param[ i ] );

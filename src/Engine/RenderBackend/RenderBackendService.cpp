@@ -132,13 +132,51 @@ const Properties::Settings *RenderBackendService::getSettings() const {
 }
 
 void RenderBackendService::applyParameters() {
-
+    if ( m_renderTaskPtr.isValid() ) {
+        for ( ui32 i = 0; i < m_paramUpdates.size(); i++ ) {
+            m_renderTaskPtr->sendEvent( &OnSetParameterEvent, m_paramUpdates[ i ] );
+        }
+        m_paramUpdates.resize( 0 );
+    }
 }
 
 void RenderBackendService::sendEvent( const Event *ev, const EventData *eventData ) {
     if ( m_renderTaskPtr.isValid() ) {
         m_renderTaskPtr->sendEvent( ev, eventData );
     }
+}
+
+void RenderBackendService::setMatrix( const String &name, const glm::mat4 &matrix ) {
+    Parameter *parameter( nullptr );
+    const ui32 key( Common::StringUtils::hashName( name.c_str() ) );
+    if ( !m_variables.hasKey( key ) ) {
+        parameter = Parameter::create( name, ParameterType::PT_Mat4 );
+        m_variables.insert( key, parameter );
+    } else {
+        m_variables.getValue( key, parameter );
+    }    
+
+    ::memcpy( parameter->m_data.m_data, glm::value_ptr( matrix ), sizeof( glm::mat4 ) );
+
+    SetParameterEventData *data = new SetParameterEventData;
+    data->m_numParam = 1;
+    data->m_param = new Parameter *[ 1 ];
+    data->m_param[ 0 ] = parameter;
+    m_paramUpdates.add( data );
+}
+
+void RenderBackendService::attachGeo( const CPPCore::TArray<Geometry*> &geoArray ) {
+    AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
+    attachGeoEvData->m_numGeo = geoArray.size();
+    attachGeoEvData->m_geo = new Geometry*[ attachGeoEvData->m_numGeo ];
+    for ( ui32 i = 0; i < attachGeoEvData->m_numGeo; i++ ) {
+        attachGeoEvData->m_geo[ i ] = geoArray[ i ];
+    }
+    sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+}
+
+void RenderBackendService::attachView( TransformMatrixBlock &transform ) {
+
 }
 
 } // Namespace RenderBackend

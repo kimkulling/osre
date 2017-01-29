@@ -62,11 +62,6 @@ void Screen::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *rbS
         return;
     }
 
-    Parameter *param = ParameterRegistry::getParameterByName( "MVP" );
-    if ( nullptr == param ) {
-        return;
-    }
-
     // set 2D render mode
     m_transformMatrix.m_projection = glm::ortho( 0, m_width, m_height, 0 );
     m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );

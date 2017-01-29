@@ -29,6 +29,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/ClearState.h>
 #include <osre/RenderBackend/SamplerState.h>
 #include <osre/RenderBackend/StencilState.h>
+#include <cppcore/Container/THashMap.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace OSRE {
 
@@ -51,6 +56,7 @@ struct BufferData;
 struct Geometry;
 struct GeoInstanceData;
 struct Parameter;
+struct TransformMatrixBlock;
 
 // Event declarations
 DECL_EVENT( OnAttachEventHandlerEvent );
@@ -65,7 +71,7 @@ DECL_EVENT( OnClearSceneEvent );
 DECL_EVENT( OnDetachSceneEvent );
 DECL_EVENT( OnSetRenderStates );
 DECL_EVENT( OnRenderFrameEvent );
-DECL_EVENT( OnUpdateParameterEvent );
+DECL_EVENT( OnSetParameterEvent );
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -156,9 +162,9 @@ struct OSRE_EXPORT UpdateGeoEventData : public Common::EventData {
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-struct OSRE_EXPORT UpdateParameterEventData : public Common::EventData {
-    UpdateParameterEventData()
-    : EventData( OnUpdateParameterEvent, nullptr )
+struct OSRE_EXPORT SetParameterEventData : public Common::EventData {
+    SetParameterEventData()
+    : EventData( OnSetParameterEvent, nullptr )
     , m_numParam( 0 )
     , m_param( nullptr ) {
         // empty
@@ -199,6 +205,12 @@ public:
     /// @param  eventData   [in] The event data.
     void sendEvent( const Common::Event *ev, const Common::EventData *eventData );
 
+    void setMatrix( const String &name, const glm::mat4 &matrix );
+
+    void attachGeo( const CPPCore::TArray<Geometry*> &geoArray );
+
+    void attachView( TransformMatrixBlock &transform );
+
 protected:
     /// @brief  The open callback.
     virtual bool onOpen();
@@ -216,6 +228,10 @@ private:
     Common::TObjPtr<Threading::SystemTask> m_renderTaskPtr;
     const Properties::Settings *m_settings;
     bool m_ownsSettingsConfig;
+
+    CPPCore::THashMap<ui32, Parameter*>  m_variables;
+    CPPCore::TArray<SetParameterEventData*> m_paramUpdates;
+    //SetParameterEventData *m_data;
 };
 
 } // Namespace RenderBackend

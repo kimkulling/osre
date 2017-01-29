@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Scene/GeometryBuilder.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 
 #include <GL/glew.h>
@@ -115,40 +116,10 @@ public:
         osre_debug( Tag, "BaseTextureRenderTest::onCreate" );
 
         pRenderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
+
+        Geometry *geo = Scene::GeometryBuilder::allocQuads( VertexType::RenderVertex, BufferAccessType::ReadOnly );
+
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-
-        Geometry *geo = Geometry::create( 1 );
-        geo->m_vertextype = VertexType::RenderVertex;
-        geo->m_indextype = IndexType::UnsignedShort;
-
-        RenderVert vertices[ 4 ];
-        GLushort indices[ 6 ];
-
-        // setup triangle vertices        
-        vertices[ 0 ].position = glm::vec3( -1, -1, 0 );
-        vertices[ 1 ].position = glm::vec3( -1,  1, 0 );
-        vertices[ 2 ].position = glm::vec3(  1, -1, 0 );
-        vertices[ 3 ].position = glm::vec3(  1,  1, 0 );
-
-        vertices[ 0 ].tex0 = glm::vec2( 0, 0 );
-        vertices[ 1 ].tex0 = glm::vec2( 0, 1 );
-        vertices[ 2 ].tex0 = glm::vec2( 1, 0 );
-        vertices[ 3 ].tex0 = glm::vec2( 1, 1 );
-
-        geo->m_vb = BufferData::alloc( BufferType::VertexBuffer, sizeof( RenderVert ) * 4, BufferAccessType::ReadOnly );
-        geo->m_vb->copyFrom( vertices, geo->m_vb->m_size );
-
-        // setup triangle indices
-        indices[ 0 ] = 0;
-        indices[ 1 ] = 1;
-        indices[ 2 ] = 2;
-
-        indices[ 3 ] = 1;
-        indices[ 4 ] = 2;
-        indices[ 5 ] = 3;
-        
-        geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( GLushort ) * 6, BufferAccessType::ReadOnly );        
-        geo->m_ib->copyFrom( indices, geo->m_ib->m_size );
 
         attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_geo = new Geometry*[ 1 ];
@@ -179,12 +150,6 @@ public:
         tex->m_data = nullptr;
         tex->m_size = 0;
         geo->m_material->m_textures[ 0 ] = tex;
-        geo->m_numPrimGroups = 1;
-        geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
-        geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-        geo->m_pPrimGroups[ 0 ].m_numPrimitives = 6;
-        geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-        geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
         pRenderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
@@ -209,17 +174,7 @@ public:
     virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *pRenderBackendSrv ) {
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
-        if( nullptr == m_mvpParam ) {
-            m_mvpParam = Parameter::create( "MVP", ParameterType::PT_Mat4 );
-        }
-
-        UpdateParameterEventData *data( new UpdateParameterEventData );
-        data->m_numParam = 1;
-        data->m_param = new Parameter*[ data->m_numParam ];
-        data->m_param[ 0 ] = m_mvpParam;
-        ::memcpy( m_mvpParam->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
-
-        pRenderBackendSrv->sendEvent( &OnUpdateParameterEvent, data );
+        pRenderBackendSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
 
         return true;
     }

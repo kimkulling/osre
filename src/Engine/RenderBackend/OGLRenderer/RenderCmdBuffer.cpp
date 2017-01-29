@@ -126,7 +126,7 @@ void RenderCmdBuffer::clear() {
 
 bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
-    UpdateParameterEventData *updateParamData = ( UpdateParameterEventData* ) data;
+    SetParameterEventData *updateParamData = ( SetParameterEventData* ) data;
     if( nullptr != updateParamData ) {
         for( ui32 i = 0; i < updateParamData->m_numParam; ++i ) {
             Parameter *currentParam = updateParamData->m_param[ i ];

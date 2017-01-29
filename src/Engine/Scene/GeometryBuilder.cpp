@@ -180,7 +180,13 @@ Geometry *GeometryBuilder::allocQuads( VertexType type, BufferAccessType access 
     pos[ 2 ] = glm::vec3( 1, -1, 0 );
     pos[ 3 ] = glm::vec3( 1, 1, 0 );
 
-    geo->m_vb = allocVertices( geo->m_vertextype, NumVert, pos, col, nullptr, access );
+    glm::vec2 tex0[ NumVert ];
+    tex0[ 0 ] = glm::vec2( 0, 0 );
+    tex0[ 1 ] = glm::vec2( 0, 1 );
+    tex0[ 2 ] = glm::vec2( 1, 0 );
+    tex0[ 3 ] = glm::vec2( 1, 1 );
+
+    geo->m_vb = allocVertices( geo->m_vertextype, NumVert, pos, col, tex0, access );
 
     // setup triangle indices
     static const ui32 NumIndices = 6;

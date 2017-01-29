@@ -94,8 +94,8 @@ RenderBackend::Material *AbstractRenderTest::createMaterial( const String &VsSrc
     mat->m_numTextures = 0;
     mat->m_type        = MaterialType::ShaderMaterial;
     mat->m_pShader     = new Shader;
-    mat->m_pShader->m_src[ static_cast<int>( ShaderType::SH_VertexShaderType ) ] = VsSrc;
-    mat->m_pShader->m_src[ static_cast<int>( ShaderType::SH_FragmentShaderType ) ] = FsSrc;
+    mat->m_pShader->m_src[ static_cast<i32>( ShaderType::SH_VertexShaderType ) ] = VsSrc;
+    mat->m_pShader->m_src[ static_cast<i32>( ShaderType::SH_FragmentShaderType ) ] = FsSrc;
 
     return mat;
 }

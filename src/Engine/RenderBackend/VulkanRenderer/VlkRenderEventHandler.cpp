@@ -64,7 +64,7 @@ bool VlkRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
         result = onClearGeo( data );
     } else if ( OnRenderFrameEvent == ev ) {
         result = onRenderFrame( data );
-    } else if ( OnUpdateParameterEvent == ev ) {
+    } else if ( OnSetParameterEvent == ev ) {
         result = onUpdateParameter( data );
     }
 
