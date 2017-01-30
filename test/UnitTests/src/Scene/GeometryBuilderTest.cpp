@@ -55,5 +55,75 @@ TEST_F( GeometryBuilderTest, allocTrianglesTest ) {
     Geometry::destroy( &geo );
 }
 
+TEST_F( GeometryBuilderTest, allocLineListTest ) {
+    const ui32 numLines = 2;
+    glm::vec3 pos[ 3 ], col[3];
+    pos[ 0 ].x = 0;
+    pos[ 0 ].y = 0;
+    pos[ 0 ].z = 0;
+
+    pos[ 1 ].x = 1;
+    pos[ 1 ].y = 0;
+    pos[ 1 ].z = 0;
+
+    pos[ 2 ].x = 2;
+    pos[ 2 ].y = 0;
+    pos[ 2 ].z = 0;
+
+    col[ 0 ].x = 0;
+    col[ 0 ].y = 0;
+    col[ 0 ].z = 0;
+
+    col[ 1 ].x = 0.5;
+    col[ 1 ].y = 0.5;
+    col[ 1 ].z = 0.5;
+
+    col[ 2 ].x = 0.8;
+    col[ 2 ].y = 0.8;
+    col[ 2 ].z = 0.8;
+
+    ui32 indices[ 4 ];
+    indices[ 0 ]=0;
+    indices[ 1 ]=1;
+    indices[ 2 ]=1;
+    indices[ 3 ]=2;
+
+    Geometry *geo = Scene::GeometryBuilder::allocLineList( VertexType::ColorVertex, BufferAccessType::ReadOnly, numLines, pos, col, indices );
+    EXPECT_NE( nullptr, geo );
+    Geometry::destroy( &geo );
+}
+
+TEST_F( GeometryBuilderTest, allocPointsTest ) {
+    const ui32 numPoints = 3;
+    glm::vec3 pos[ 3 ], col[ 3 ];
+    pos[ 0 ].x = 0;
+    pos[ 0 ].y = 0;
+    pos[ 0 ].z = 0;
+
+    pos[ 1 ].x = 1;
+    pos[ 1 ].y = 0;
+    pos[ 1 ].z = 0;
+
+    pos[ 2 ].x = 2;
+    pos[ 2 ].y = 0;
+    pos[ 2 ].z = 0;
+
+    col[ 0 ].x = 0;
+    col[ 0 ].y = 0;
+    col[ 0 ].z = 0;
+
+    col[ 1 ].x = 0.5;
+    col[ 1 ].y = 0.5;
+    col[ 1 ].z = 0.5;
+
+    col[ 2 ].x = 0.8;
+    col[ 2 ].y = 0.8;
+    col[ 2 ].z = 0.8;
+
+    Geometry *geo = Scene::GeometryBuilder::allocPoints( VertexType::ColorVertex, BufferAccessType::ReadOnly, numPoints, pos, col );
+    EXPECT_NE( nullptr, geo );
+    Geometry::destroy( &geo );
+}
+
 } // Namespace UnitTest
 } // Namespace OSRE

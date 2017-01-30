@@ -217,6 +217,54 @@ Geometry *GeometryBuilder::allocQuads( VertexType type, BufferAccessType access 
     return geo;
 }
 
+Geometry *GeometryBuilder::allocLineList( VertexType type, BufferAccessType access, ui32 numLines, 
+                                          glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices ) {
+    Geometry *geo = Geometry::create( 1 );
+    geo->m_vertextype = type;
+    geo->m_indextype = IndexType::UnsignedShort;
+
+    geo->m_numPrimGroups = 1;
+    geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
+    geo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, 2 * numLines, PrimitiveType::LineList, 0 );
+
+    geo->m_vb = Scene::GeometryBuilder::allocVertices( type, numLines, posArray, colorArray, nullptr, access );
+    geo->m_indextype = IndexType::UnsignedShort;
+    ui32 size = sizeof( GLushort ) * numLines*2;
+    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
+    geo->m_ib->copyFrom( indices, size );
+
+    return geo;
+}
+
+Geometry *GeometryBuilder::allocPoints( VertexType type, BufferAccessType access, ui32 numPoints, 
+                                        glm::vec3 *posArray, glm::vec3 *colorArray ) {
+    // colors
+    CPPCore::TArray<ui16> indices;
+    indices.resize( numPoints );
+    for ( ui16 i = 0; i < numPoints; i++ ) {
+        indices[ i ] = i;
+    }
+
+    Geometry *ptGeo = GeometryBuilder::allocEmptyGeometry( type, 1 );
+
+    ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, numPoints, posArray, colorArray, nullptr, BufferAccessType::ReadOnly );
+    ptGeo->m_indextype = IndexType::UnsignedShort;
+    ui32 pt_size = sizeof( GLushort ) * numPoints;
+    ptGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, BufferAccessType::ReadOnly );
+    ptGeo->m_ib->copyFrom( &indices[0], pt_size );
+
+    // setup primitives
+    ptGeo->m_numPrimGroups = 1;
+    ptGeo->m_pPrimGroups = new PrimitiveGroup[ ptGeo->m_numPrimGroups ];
+    ptGeo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, 3, PrimitiveType::PointList, 0 );
+
+    // setup material
+    Material *mat = MaterialBuilder::createBuildinMaterial( type );
+    ptGeo->m_material = mat;
+
+    return ptGeo;
+}
+
 static bool isLineBreak(c8 c) {
     if (c == '\n') {
         return true;

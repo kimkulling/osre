@@ -68,6 +68,14 @@ public:
     /// @return The created geometry.
     static RenderBackend::Geometry *allocQuads( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
 
+    ///	@brief  Will allocate vertices for a list of lines.
+    ///	@param  type        [in] The vertex type.
+    static RenderBackend::Geometry *allocLineList( RenderBackend::VertexType type, RenderBackend::BufferAccessType access,
+                                                   ui32 numLines, glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices );
+
+    static RenderBackend::Geometry *allocPoints( RenderBackend::VertexType type, RenderBackend::BufferAccessType access, 
+                                                 ui32 numPoints, glm::vec3 *posArray, glm::vec3 *colorArray );
+
     ///	@brief  Will allocate vertices for a text-box.
     /// @param  x           [in] Left position of the text box.
     /// @param  y           [in] Upper position of the text box.
