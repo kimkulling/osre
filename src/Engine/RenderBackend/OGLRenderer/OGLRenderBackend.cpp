@@ -49,11 +49,13 @@ using namespace ::CPPCore;
 
 static const String Tag = "OGLRenderBackend";
 
+static const ui32 NotInitedHandle = 9999999;
+
 OGLRenderBackend::OGLRenderBackend( )
 : m_renderCtx( nullptr )
 , m_buffers()
-, m_activeVB( 9999999 )
-, m_activeIB( 9999999 )
+, m_activeVB( NotInitedHandle )
+, m_activeIB( NotInitedHandle )
 , m_vertexarrays()
 , m_activeVertexArray( OGLNotSetId )
 , m_shaders()
@@ -183,8 +185,8 @@ void OGLRenderBackend::unbindBuffer( OGLBuffer *buffer ) {
         osre_debug( Tag, "Pointer to buffer is nullptr" );
         return;
     }
-    m_activeVB = 99999999;
-    m_activeIB = 99999999;
+    m_activeVB = NotInitedHandle;
+    m_activeIB = NotInitedHandle;
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, 0 );
 
@@ -402,7 +404,7 @@ void OGLRenderBackend::destroyVertexArray( OGLVertexArray *vertexArray ) {
     }
 
     glDeleteVertexArrays( 1, &vertexArray->m_id );
-    vertexArray->m_id = 99999999;
+    vertexArray->m_id = NotInitedHandle;
 }
 
 OGLVertexArray *OGLRenderBackend::getVertexArraybyId( ui32 id ) const {
@@ -880,7 +882,7 @@ void OGLRenderBackend::setParameter( OGLParameter **param, ui32 numParam ) {
 ui32 OGLRenderBackend::addPrimitiveGroup( PrimitiveGroup *grp ) {
     if ( nullptr == grp ) {
         osre_error( Tag, "Group pointer is nullptr" );
-        return 9999999;
+        return NotInitedHandle;
     }
 
     OGLPrimGroup *oglGrp    = new OGLPrimGroup;
