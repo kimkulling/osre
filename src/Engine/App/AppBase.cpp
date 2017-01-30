@@ -174,6 +174,14 @@ void AppBase::setUIScreen( UI::Screen *uiScreen ) {
     }
 }
 
+Platform::AbstractTimer *AppBase::getActiveTimer() const {
+    return m_timer;
+}
+
+RenderBackend::RenderBackendService *AppBase::getRenderBackendService() const {
+    return m_rbService;
+}
+
 bool AppBase::onCreate( Properties::Settings *config ) {
     if ( m_state != State::Uninited ) {
         osre_debug( Tag, "AppBase::State not in proper state: Uninited." );

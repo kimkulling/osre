@@ -107,7 +107,7 @@ public:
     virtual Scene::Stage *createStage( const String &name );
 
     /// @brief  Will activate a stage.
-    /// @param  stage       [in] The stage to acivate.
+    /// @param  stage       [in] The stage to activate.
     /// @return true if successful, false in case of an error.
     virtual bool setActiveStage( Scene::Stage *stage );
 
@@ -116,10 +116,29 @@ public:
     /// @return true if successful,  false if not.
     virtual bool activateStage( const String &name );
 
+    /// @brief  Will requested a shutdown.
     virtual void requestShutdown();
+    
+    /// @brief  Will return true, if a shutdown is requested by the user.
+    /// @return true, if a shutdown is requested.
     virtual bool shutdownRequested() const;
+    
+    /// @brief  Will create a new UI-Screen.
+    /// @param  name        [in] The name for the screen.
+    /// @return The new created ui-screen.
     virtual UI::Screen *createScreen( const String &name );
+    
+    /// @brief  Will set a ui-screen to active, if any screen was active before it will be deactivated.
+    /// @param  uiScreen    [in] The new ui-screen to activate. 
     virtual void setUIScreen( UI::Screen *uiScreen );
+
+    /// @brief  Will return the active time or nullptr, if none is active.
+    /// @return Pointer showing to the active timer.
+    virtual Platform::AbstractTimer *getActiveTimer() const;
+    
+    /// @brief  Will return the render-backend-service instance.
+    /// @return A pointer showing to the render-backend service instance.
+    virtual RenderBackend::RenderBackendService *getRenderBackendService() const;
 
 protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.

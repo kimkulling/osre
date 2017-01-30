@@ -98,21 +98,9 @@ public:
         attachGeoEvData->m_geo = new Geometry*[ NumGeo ];
 
         attachGeoEvData->m_geo[ 0 ] = Scene::GeometryBuilder::allocPoints( VertexType::ColorVertex, BufferAccessType::ReadOnly, 3, points, col );
-//        attachGeoEvData->m_geo[ 0 ] = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, 1 );
         attachGeoEvData->m_geo[ 1 ] = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, 1 );
 
-        /*Geometry *ptGeo = attachGeoEvData->m_geo[ 0 ];
-        ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, points, col, nullptr, BufferAccessType::ReadOnly );
-        ptGeo->m_indextype = IndexType::UnsignedShort;
-        ui32 pt_size = sizeof( GLushort ) * PtNumIndices;
-        ptGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, BufferAccessType::ReadOnly );
-        ptGeo->m_ib->copyFrom( pt_indices, pt_size );*/
         
-        // setup primitives
-        /*ptGeo->m_numPrimGroups = 1;
-        ptGeo->m_pPrimGroups = new PrimitiveGroup[ ptGeo->m_numPrimGroups ];
-        ptGeo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, 3, PrimitiveType::PointList, 0 );*/
-
         Geometry *lineGeo = attachGeoEvData->m_geo[ 1 ];
         lineGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly );
         lineGeo->m_indextype = IndexType::UnsignedShort;
@@ -128,7 +116,6 @@ public:
         // setup material
         Material *mat = Scene::MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
         attachGeoEvData->m_geo[ 0 ]->m_material = mat;
-        //ptGeo->m_material = mat;
         lineGeo->m_material = mat;
         
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );

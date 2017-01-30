@@ -31,6 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/Model.h>
 #include <osre/IO/Uri.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/Ids.h>
 
 using namespace ::OSRE;
@@ -105,8 +106,8 @@ protected:
             Scene::Node *node = m_stage->addNode( "modelNode", nullptr );
             m_stage->addModel( model, node );
 
-            Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
-            ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
+            m_transformMatrix.update();
+            AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
         }
 
         return true;
