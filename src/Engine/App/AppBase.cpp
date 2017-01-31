@@ -182,6 +182,14 @@ RenderBackend::RenderBackendService *AppBase::getRenderBackendService() const {
     return m_rbService;
 }
 
+Platform::AbstractSurface *AppBase::getRootSurface() const {
+    if ( nullptr == m_platformInterface ) {
+        return nullptr;
+    }
+
+    return m_platformInterface->getRootSurface();
+}
+
 bool AppBase::onCreate( Properties::Settings *config ) {
     if ( m_state != State::Uninited ) {
         osre_debug( Tag, "AppBase::State not in proper state: Uninited." );

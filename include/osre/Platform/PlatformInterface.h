@@ -176,17 +176,18 @@ public:
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT PlatformInterface : public Common::AbstractService {
 public:
-    AbstractSurface *getRootSurface() const;
     static PlatformInterface *create( const Properties::Settings *pConfiguration );
     static void destroy();
     static PlatformInterface *getInstance();
+    static PluginType getOSPluginType();
+    static String getOSPluginName( PluginType type );
+
+    AbstractSurface *getRootSurface() const;
     AbstractPlatformEventHandler *getPlatformEventHandler() const;
     AbstractRenderContext *getRenderContext() const;
     AbstractTimer *getTimer() const;
     AbstractDynamicLoader *getDynamicLoader() const;
     const String &getDefaultFontName() const;
-    static PluginType getOSPluginType();
-    static String getOSPluginName( PluginType type );
 
 protected:
     virtual bool onOpen();

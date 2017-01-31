@@ -40,6 +40,7 @@ namespace Scene {
 
 namespace Platform {
     class AbstractTimer;
+    class AbstractSurface;
     class PlatformInterface;
 }
 
@@ -139,6 +140,10 @@ public:
     /// @brief  Will return the render-backend-service instance.
     /// @return A pointer showing to the render-backend service instance.
     virtual RenderBackend::RenderBackendService *getRenderBackendService() const;
+
+    /// @brief  Will return the Root-Surface instance.
+    /// @return A pointer showing to the Root-Surface.
+    virtual Platform::AbstractSurface *getRootSurface() const;
 
 protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.

@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/AssimpWrapper.h>
 #include <osre/Assets/Model.h>
 #include <osre/IO/Uri.h>
+#include <osre/Platform/AbstractSurface.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/Ids.h>
@@ -97,8 +98,25 @@ protected:
             f32 right = center.getX() + diam;
             f32 bottom = center.getY() - diam;
             f32 top = center.getY() + diam;
-            m_view->setOrthoMode( left, right, bottom, top, zNear, zFar );
-            glm::vec3 eye( 0, 0, 2 * diam ), up( 0, 1, 0 );
+            Platform::AbstractSurface *rootSurface( getRootSurface() );
+            if ( nullptr == rootSurface ) {
+                return false;
+            }
+            const i32 w = rootSurface->getProperties()->m_width;
+            const i32 h = rootSurface->getProperties()->m_height;
+            f32 aspect = w / h; 
+            if ( aspect < 1.0 ) { 
+                // window taller than wide 
+                bottom /= aspect; 
+                top /= aspect; 
+            } else { 
+                left *= aspect; 
+                right *= aspect; 
+            }
+            f32 fov = 2.f;
+            m_view->setProjectionMode( fov, aspect, zNear, zFar );
+//            m_view->setOrthoMode( left, right, bottom, top, zNear, zFar );
+            glm::vec3 eye( 0, 0, 2 * diam ), up( 0, 0, 1 );
             m_view->setLookAt( eye, glm::vec3( center.getX(), center.getY(), center.getZ() ), up );
             m_transformMatrix.m_view = m_view->getView();
             m_transformMatrix.m_projection = m_view->getProjection();
