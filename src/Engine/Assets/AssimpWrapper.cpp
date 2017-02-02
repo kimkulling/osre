@@ -167,7 +167,9 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     const ui32 matIdx( mesh->mMaterialIndex );
     Material *osreMat = m_matArray[ matIdx ];
     geo->m_material = osreMat;
-    geo->m_vb = BufferData::alloc( BufferType::VertexBuffer, sizeof( RenderVert ) * numVertices, BufferAccessType::ReadOnly );
+    const ui32 vbSize( sizeof( RenderVert ) * numVertices );
+    geo->m_vb = BufferData::alloc( BufferType::VertexBuffer, vbSize, BufferAccessType::ReadOnly );
+    geo->m_vb->copyFrom( &vertices[ 0 ], vbSize );
 
     CPPCore::TArray<ui16> indexArray;
     for ( ui32 i = 0; i < mesh->mNumFaces; i++ ) {
