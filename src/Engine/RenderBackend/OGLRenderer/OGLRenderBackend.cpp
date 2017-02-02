@@ -47,9 +47,8 @@ namespace RenderBackend {
 
 using namespace ::CPPCore;
 
-static const String Tag = "OGLRenderBackend";
-
-static const ui32 NotInitedHandle = 9999999;
+static const String Tag             = "OGLRenderBackend";
+static const ui32   NotInitedHandle = 9999999;
 
 OGLRenderBackend::OGLRenderBackend( )
 : m_renderCtx( nullptr )

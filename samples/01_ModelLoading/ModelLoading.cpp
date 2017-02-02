@@ -115,7 +115,7 @@ protected:
             }
             f32 fov = 2.f;
             m_view->setProjectionMode( fov, aspect, zNear, zFar );
-//            m_view->setOrthoMode( left, right, bottom, top, zNear, zFar );
+            //m_view->setOrthoMode( left, right, bottom, top, zNear, zFar );
             glm::vec3 eye( 0, 0, 2 * diam ), up( 0, 0, 1 );
             m_view->setLookAt( eye, glm::vec3( center.getX(), center.getY(), center.getZ() ), up );
             m_transformMatrix.m_view = m_view->getView();

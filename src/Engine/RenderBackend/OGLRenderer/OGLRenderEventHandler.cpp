@@ -579,7 +579,6 @@ bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
             OGLParameter *oglParam( m_oglBackend->getParameter( currentParam->m_name ) );
             if ( nullptr == oglParam ) {
                 setupParameter( currentParam, 1, m_oglBackend, this );
-//                oglParam = m_oglBackend->createParameter( currentParam->m_name, currentParam->m_type, &currentParam->m_data, currentParam->m_numItems );
             } else {
                 ::memcpy( oglParam->m_data->getData(), currentParam->m_data.getData(), currentParam->m_data.m_size );
             }
