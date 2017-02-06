@@ -114,7 +114,7 @@ Model *AssimpWrapper::convertSceneToModel( const aiScene *scene ) {
     }
 
     if ( nullptr != scene->mRootNode ) {
-        handleNode( scene->mRootNode, m_model->getRootNode() );
+        handleNode( scene->mRootNode, nullptr );
     }
 
     return m_model;
@@ -196,13 +196,18 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
 }
 
 void AssimpWrapper::handleNode( aiNode *node, Node *parent ) {
-    if ( nullptr == node || nullptr == parent ) {
+    if ( nullptr == node ) {
         return;
     }
 
+    if ( nullptr == parent ) {
+        m_parent = m_model->getRootNode();
+    } else {
+        m_parent = parent;
+    }
     const String name( node->mName.C_Str() );
     Node *newNode = new Node( name, m_ids, true, true, m_parent );
-    parent->addChild( newNode );
+    m_parent->addChild( newNode );
     for ( ui32 j = 0; j < node->mNumMeshes; j++ ) {
         const ui32 meshIdx = node->mMeshes[ j ];
         if ( meshIdx >= m_geoArray.size() ) {
