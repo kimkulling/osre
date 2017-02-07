@@ -43,13 +43,17 @@ Component::~Component() {
 
 RenderComponent::RenderComponent( ui32 id )
 : Component( id )
+, m_currentPass( nullptr )
 , m_passes()
 , m_isShadowCaster( false ) {
     // empty
 }
 
 RenderComponent::~RenderComponent() {
-    // empty
+    for ( ui32 i = 0; i < m_passes.size(); i++ ) {
+        delete m_passes[ i ];
+    }
+    m_passes.clear();
 }
 
 void RenderComponent::update( RenderBackendService *renderBackendSrv ) {

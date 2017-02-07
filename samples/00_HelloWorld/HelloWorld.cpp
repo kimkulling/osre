@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
+#include <osre/Scene/Component.h>
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Profiling/PerformanceCounters.h>
@@ -95,7 +96,13 @@ protected:
 
 			geo->m_material->m_parameters = parameter;
             geo->m_material->m_numParameters++;
-			geoNode->addGeometry( geo );
+            Scene::RenderComponent *comp = ( Scene::RenderComponent* ) geoNode->getComponent( Scene::Node::ComponentType::RenderComponentType );
+            CPPCore::TArray<Parameter*> paramArray;
+            paramArray.add( parameter );
+            comp->beginPass( paramArray );
+            comp->addStaticGeometry( geo );
+            comp->endPass();
+            //geoNode->addGeometry( geo );
 		}
 
         return true;

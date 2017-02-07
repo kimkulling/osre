@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
+#include <osre/Scene/Component.h>
 #include <osre/Scene/Node.h>
 #include <osre/Collision/TAABB.h>
 
@@ -50,7 +51,8 @@ AssimpWrapper::AssimpWrapper( Common::Ids &ids )
 , m_matArray()
 , m_model( nullptr )
 , m_parent( nullptr )
-, m_ids( ids ) {
+, m_ids( ids )
+, m_mvpParam( nullptr ) {
     // empty
 }
 
@@ -86,6 +88,8 @@ Model *AssimpWrapper::convertSceneToModel( const aiScene *scene ) {
     if ( nullptr == scene ) {
         return nullptr;
     }
+
+    m_mvpParam = RenderBackend::Parameter::create( "MVP", ParameterType::PT_Mat4 );
 
     m_model = new Model;
     String rootName( scene->mRootNode->mName.C_Str() );
@@ -176,8 +180,7 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     for ( ui32 i = 0; i < mesh->mNumFaces; i++ ) {
         aiFace &currentFace = mesh->mFaces[ i ];
         for ( ui32 idx = 0; idx < currentFace.mNumIndices; idx++ ) {
-            index++;
-            //const ui32 index = currentFace.mIndices[ idx ];
+            const ui32 index = currentFace.mIndices[ idx ];
             indexArray.add( static_cast<ui16>( index ) );
         }
     }
@@ -208,6 +211,10 @@ void AssimpWrapper::handleNode( aiNode *node, Node *parent ) {
     const String name( node->mName.C_Str() );
     Node *newNode = new Node( name, m_ids, true, true, m_parent );
     m_parent->addChild( newNode );
+    RenderComponent *comp = (RenderComponent*) newNode->getComponent( Scene::Node::ComponentType::RenderComponentType );
+    CPPCore::TArray<Parameter*> paramArray;
+    paramArray.add( m_mvpParam );
+    comp->beginPass( paramArray );
     for ( ui32 j = 0; j < node->mNumMeshes; j++ ) {
         const ui32 meshIdx = node->mMeshes[ j ];
         if ( meshIdx >= m_geoArray.size() ) {
@@ -216,7 +223,7 @@ void AssimpWrapper::handleNode( aiNode *node, Node *parent ) {
         Geometry *geo = m_geoArray[ meshIdx ];
         newNode->addGeometry( geo );
     }
-
+    comp->endPass();
     const ui32 numChildren( node->mNumChildren );
     for ( ui32 i = 0; i < numChildren; i++ ) {
         aiNode *currentNode( node->mChildren[ i ] );

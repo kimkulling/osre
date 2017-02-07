@@ -89,7 +89,7 @@ public:
     Properties::Property *getProperty(const String name) const;
 
 private:
-    CPPCore::TArray<Node*> m_childs;
+    CPPCore::TArray<Node*> m_children;
     Node *m_parent;
     bool m_isActive;
     RenderBackend::TransformBlock *m_localTransform;

@@ -36,7 +36,7 @@ using namespace ::OSRE::Common;
 
 Node::Node( const String &name, Common::Ids &ids, bool transformEnabled, bool renderEnabled, Node *parent )
 : Object( name )
-, m_childs()
+, m_children()
 , m_parent( parent )
 , m_isActive( true )
 , m_localTransform( nullptr )
@@ -64,11 +64,11 @@ Node::~Node() {
     }
     m_components.clear();
 
-    if( !m_childs.isEmpty() ) {
-        for( size_t i = 0; i < m_childs.size(); i++ ) {
-            m_childs[ i ]->release();
+    if( !m_children.isEmpty() ) {
+        for( size_t i = 0; i < m_children.size(); i++ ) {
+            m_children[ i ]->release();
         }
-        m_childs.clear();
+        m_children.clear();
     }
 }
     
@@ -85,7 +85,7 @@ void Node::addChild( Node *child ) {
         return;
     }
 
-    m_childs.add( child );
+    m_children.add( child );
     child->setParent( this );
     child->get();
 }
@@ -97,12 +97,12 @@ bool Node::removeChild( const String &name, TraverseMode mode ) {
 
     bool found( false );
     Node *currentNode( nullptr );
-    for( ui32 i = 0; i < m_childs.size(); i++ ) {
-        currentNode = m_childs[ i ];
+    for( ui32 i = 0; i < m_children.size(); i++ ) {
+        currentNode = m_children[ i ];
         if( nullptr != currentNode ) {
             if( currentNode->getName() == name ) {
                 found = true;
-                m_childs.remove( i );
+                m_children.remove( i );
                 currentNode->release();
                 break;
             }
@@ -125,8 +125,8 @@ Node *Node::findChild( const String &name ) const {
     }
 
     Node *currentNode( nullptr );
-    for( ui32 i = 0; i < m_childs.size(); i++ ) {
-        currentNode = m_childs[ i ];
+    for( ui32 i = 0; i < m_children.size(); i++ ) {
+        currentNode = m_children[ i ];
         if( nullptr != currentNode ) {
             if( currentNode->getName() == name ) {
                 return currentNode;
@@ -138,26 +138,26 @@ Node *Node::findChild( const String &name ) const {
 }
 
 ui32 Node::getNumChilds() const {
-    return m_childs.size();
+    return m_children.size();
 }
 
 Node *Node::getChildAt( ui32 idx ) const {
-    if( idx >= m_childs.size() ) {
+    if( idx >= m_children.size() ) {
         return nullptr;
     }
 
-    return m_childs[ idx ];
+    return m_children[ idx ];
 }
 
 void Node::releaseChildren() {
-    if( m_childs.isEmpty() ) {
+    if( m_children.isEmpty() ) {
         return;
     }
 
-    for( ui32 i = 0; i < m_childs.size(); i++ ) {
-        if( nullptr != m_childs[ i ] ) {
-            m_childs[ i ]->releaseChildren();
-            m_childs[ i ]->release();
+    for( ui32 i = 0; i < m_children.size(); i++ ) {
+        if( nullptr != m_children[ i ] ) {
+            m_children[ i ]->releaseChildren();
+            m_children[ i ]->release();
         }
     }
 }

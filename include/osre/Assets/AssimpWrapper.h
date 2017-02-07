@@ -44,6 +44,7 @@ namespace Common {
 
 namespace RenderBackend {
     struct Geometry;
+    struct Parameter;
     struct Material;
 }
 
@@ -81,6 +82,7 @@ private:
     Model *m_model;
     Scene::Node *m_parent;
     Common::Ids &m_ids;
+    RenderBackend::Parameter *m_mvpParam;
 };
 
 } // Namespace Assets
