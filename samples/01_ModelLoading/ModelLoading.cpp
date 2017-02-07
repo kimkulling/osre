@@ -120,12 +120,13 @@ protected:
             m_view->setLookAt( eye, glm::vec3( center.getX(), center.getY(), center.getZ() ), up );
             m_transformMatrix.m_view = m_view->getView();
             m_transformMatrix.m_projection = m_view->getProjection();
+            m_transformMatrix.update();
+            AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
+
             AppBase::activateStage( m_stage->getName() );
             Scene::Node *node = m_stage->addNode( "modelNode", nullptr );
             m_stage->addModel( model, node );
 
-            m_transformMatrix.update();
-            AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
         }
 
         return true;

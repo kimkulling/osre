@@ -27,7 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Scene {
     
-using namespace OSRE::RenderBackend;
+using namespace ::OSRE::RenderBackend;
+using namespace ::CPPCore;
 
 static const glm::vec4 Dummy;
 
@@ -42,7 +43,7 @@ Component::~Component() {
 
 RenderComponent::RenderComponent( ui32 id )
 : Component( id )
-, m_newGeo()
+, m_passes()
 , m_isShadowCaster( false ) {
     // empty
 }
@@ -52,16 +53,30 @@ RenderComponent::~RenderComponent() {
 }
 
 void RenderComponent::update( RenderBackendService *renderBackendSrv ) {
-    if ( !m_newGeo.isEmpty() ) {
+    if ( !m_passes.isEmpty() ) {
         renderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
-        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-        attachGeoEvData->m_numGeo = m_newGeo.size();
-        attachGeoEvData->m_geo = new Geometry *[ attachGeoEvData->m_numGeo ];
-        for ( ui32 i = 0; i < attachGeoEvData->m_numGeo; i++ ) {
-            attachGeoEvData->m_geo[ i ] = m_newGeo[ i ];
+
+        for ( ui32 i=0; i<m_passes.size(); i++ ) {
+            Pass *currentPass = m_passes[i];
+            SetParameterEventData *data = new SetParameterEventData;
+            data->m_numParam = currentPass->m_paramArray.size();
+            data->m_param = new Parameter *[ data->m_numParam ];
+            for ( ui32 j=0; j<data->m_numParam; j++ ) {
+                data->m_param[ j ] = currentPass->m_paramArray[j];
+            }
+            renderBackendSrv->sendEvent( &OnSetParameterEvent, data );
+
+            AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
+            attachGeoEvData->m_numGeo = currentPass->m_newGeo.size();
+            attachGeoEvData->m_geo = new Geometry *[ attachGeoEvData->m_numGeo ];
+            for ( ui32 j = 0; j < attachGeoEvData->m_numGeo; j++ ) {
+                attachGeoEvData->m_geo[ j ] = currentPass->m_newGeo[ j ];
+            }
+            renderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+
         }
-        renderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
-        m_newGeo.resize( 0 );
+
+        m_passes.resize( 0 );
     }
 }
 
@@ -73,12 +88,23 @@ void RenderComponent::setShadowCaster(bool isShadowCaster) {
     m_isShadowCaster = isShadowCaster;
 }
 
-void RenderComponent::addStaticGeometry( RenderBackend::Geometry *geo ) {
-    if ( nullptr == geo ) {
+void RenderComponent::beginPass( TArray<Parameter*> &paramArray ) {
+    Pass *newPass = new Pass;
+    m_currentPass = newPass;
+    m_currentPass->m_paramArray = paramArray;
+}
+
+void RenderComponent::addStaticGeometry( Geometry *geo ) {
+    if ( nullptr == geo || nullptr == m_currentPass ) {
         return;
     }
 
-    m_newGeo.add( geo );
+    m_currentPass->m_newGeo.add( geo );
+}
+
+void RenderComponent::endPass() {
+    m_passes.add( m_currentPass );
+    m_currentPass = nullptr;
 }
 
 TransformComponent::TransformComponent( ui32 id )
