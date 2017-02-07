@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/ClearState.h>
 #include <osre/RenderBackend/SamplerState.h>
 #include <osre/RenderBackend/StencilState.h>
+#include <osre/RenderBackend/Pipeline.h>
 #include <cppcore/Container/THashMap.h>
 
 #include <glm/glm.hpp>
@@ -88,6 +89,7 @@ struct OSRE_EXPORT CreateRendererEventData : public Common::EventData {
 
     Platform::AbstractSurface *m_activeSurface;
     String                     m_defaultFont;
+    Pipeline                   m_pipeline;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -113,31 +115,16 @@ struct OSRE_EXPORT AttachGeoEventData : public Common::EventData {
     , m_numGeo( 0 )
     , m_geo( nullptr )
     , m_numInstances( 0 )
-    , m_geoInstanceData( nullptr ) {
+    , m_geoInstanceData( nullptr )
+    , m_pipelinePass( -1 ) {
         // empty
     }
 
     ui32             m_numGeo;
     Geometry       **m_geo;
     ui32             m_numInstances;
-    GeoInstanceData *m_geoInstanceData;
-};
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-struct OnSetRenderStatesData : public Common::EventData {
-    OnSetRenderStatesData()
-    : EventData(  OnSetRenderStates, nullptr ) {
-        // empty
-    }
-
-    BlendState   m_blendState;
-    ClearState   m_clearState;
-    StencilState m_stencilState;
-    SamplerState m_samplerState;
+    GeoInstanceData *m_geoInstanceData; 
+    i32              m_pipelinePass;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -231,7 +218,6 @@ private:
 
     CPPCore::THashMap<ui32, Parameter*>  m_variables;
     CPPCore::TArray<SetParameterEventData*> m_paramUpdates;
-    //SetParameterEventData *m_data;
 };
 
 } // Namespace RenderBackend
