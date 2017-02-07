@@ -31,7 +31,7 @@ namespace OSRE {
     
 namespace RenderBackend {
     class RenderBackendService;
-    
+    struct Parameter;
     struct Geometry;
     struct TransformBlock;
 }
@@ -69,10 +69,17 @@ public:
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
     bool isShadowCaster() const;
     void setShadowCaster( bool isShadowCaster );
+    void beginPass( CPPCore::TArray<RenderBackend::Parameter*> &paramArray );
     void addStaticGeometry( RenderBackend::Geometry *geo );
+    void endPass();
 
 private:
-    CPPCore::TArray<RenderBackend::Geometry*> m_newGeo;
+    struct Pass {
+        CPPCore::TArray<RenderBackend::Parameter*> m_paramArray;
+        CPPCore::TArray<RenderBackend::Geometry*> m_newGeo;
+    };
+    Pass *m_currentPass;
+    CPPCore::TArray<Pass*> m_passes;
     bool m_isShadowCaster;
 };
 
