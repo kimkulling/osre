@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations
 namespace Assets {
     class Model;
 }
@@ -37,7 +38,6 @@ namespace Common {
 
 namespace RenderBackend {
     struct TransformBlock;
-
     class RenderBackendService;
 }
 

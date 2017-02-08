@@ -26,9 +26,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 
 namespace OSRE {
-    namespace RenderBackend {
-        struct Material;
-    }
+
+// Forward declarations
+namespace RenderBackend {
+    struct Material;
+}
 
 
 namespace Scene {

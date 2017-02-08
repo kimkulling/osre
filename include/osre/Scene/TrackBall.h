@@ -23,10 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-#include <osre/Common/TObjPtr.h>
 #include <osre/Common/TArea.h>
 #include <osre/Common/TObjPtr.h>
-#include <osre/Math/BaseMath.h>
 #include <osre/Platform/PlatformInterface.h>
 
 namespace OSRE {

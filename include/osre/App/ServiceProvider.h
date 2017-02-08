@@ -51,6 +51,5 @@ private:
     RenderBackend::RenderBackendService *m_rbService;
 };
 
-}
-}
-
+} // Namespace App
+} // Namespace OSRE

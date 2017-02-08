@@ -29,7 +29,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/ClearState.h>
 

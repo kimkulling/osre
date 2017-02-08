@@ -33,7 +33,8 @@ namespace Platform {
 // Forward declarations
 class OSEventListener;
 
-typedef CPPCore::TList<Common::EventData*> EventDataList;
+using EventDataList = CPPCore::TList<Common::EventData*> ;
+using EventPtrArray = CPPCore::TArray<const Common::Event*>;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -48,12 +49,12 @@ public:
     ///	@brief  Used to register a event listener.
     ///	@param  events      List of events.
     /// @param  pListener   The listener instance
-    virtual void registerEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener ) = 0;
+    virtual void registerEventListener( const EventPtrArray &events, OSEventListener *pListener ) = 0;
     
     ///	@brief  Used to unregister a event listener.
     ///	@param  events      List of events.
     /// @param  pListener   The listener instance
-    virtual void unregisterEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener ) = 0;
+    virtual void unregisterEventListener( const EventPtrArray &events, OSEventListener *pListener ) = 0;
     
     ///	@brief  Set the polling state.
     ///	@param  enabled     true for enabling polling.
