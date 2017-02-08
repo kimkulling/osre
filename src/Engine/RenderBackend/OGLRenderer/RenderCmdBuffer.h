@@ -50,6 +50,7 @@ struct SetRenderTargetCmdData;
 struct DrawTextCmdData;
 struct PrimitiveGroup;
 struct Material;
+struct OGLParameter;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -84,11 +85,12 @@ public:
     /// The buffer and all attached commands will be cleared.
     void clear();
 
+    void addParameter( OGLParameter* param );
+    void addParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray );
+
 protected:
     /// The update parameter callback.
     virtual bool onUpdateParameter( const Common::EventData *pEventData );
-    /// The update parameter callback.
-    virtual bool onSetParametersCmd( SetParameterCmdData *pData );
     /// The draw primitive callback.
     virtual bool onDrawPrimitivesCmd( DrawPrimitivesCmdData *pData );
     /// The draw primitive instances callback.
@@ -102,10 +104,11 @@ private:
     OGLRenderBackend *m_renderbackend;
     ClearState m_clearState;
     Platform::AbstractRenderContext *m_renderCtx;
-    CPPCore::TArray<OGLRenderCmd*> m_cmdbuffer;
+    ::CPPCore::TArray<OGLRenderCmd*> m_cmdbuffer;
     OGLShader *m_activeShader;
-    CPPCore::TArray<PrimitiveGroup*> m_primitives;
-    CPPCore::TArray<Material*> m_materials;
+    ::CPPCore::TArray<PrimitiveGroup*> m_primitives;
+    ::CPPCore::TArray<Material*> m_materials;
+    ::CPPCore::TArray<OGLParameter*> m_paramArray;
 };
 
 } // Namespace RenderBackend

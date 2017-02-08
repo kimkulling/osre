@@ -39,7 +39,8 @@ RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRende
 , m_renderCtx( ctx )
 , m_activeShader( nullptr )
 , m_primitives()
-, m_materials() {
+, m_materials()
+, m_paramArray() {
     OSRE_ASSERT( nullptr != m_renderbackend );
     OSRE_ASSERT( nullptr != m_renderCtx );
 
@@ -95,9 +96,7 @@ void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
         OGLRenderCmd *renderCmd = m_cmdbuffer[ i ];
         OSRE_ASSERT( nullptr != renderCmd );
 
-        if( renderCmd->m_type == OGLRenderCmdType::SetParameterCmd ) {
-            onSetParametersCmd( ( SetParameterCmdData* ) renderCmd->m_pData );
-        } else if( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesCmd ) {
+        if( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesCmd ) {
             onDrawPrimitivesCmd( ( DrawPrimitivesCmdData* ) renderCmd->m_pData );
         } else if( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesInstancesCmd ) {
             onDrawPrimitivesInstancesCmd( ( DrawInstancePrimitivesCmdData* ) renderCmd->m_pData );
@@ -122,6 +121,30 @@ void RenderCmdBuffer::onPostRenderFrame() {
 
 void RenderCmdBuffer::clear() {
     ContainerClear( m_cmdbuffer );
+    m_paramArray.resize(0);
+}
+
+static bool hasParam( const String &name, const ::CPPCore::TArray<OGLParameter*> &paramArray ) {
+    for ( ui32 i = 0; i < paramArray.size(); i++ ) {
+        if ( name == paramArray[ i ]->m_name ) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void RenderCmdBuffer::addParameter( OGLParameter* param ) {
+    if ( !hasParam( param->m_name, m_paramArray ) ) {
+        m_paramArray.add( param );
+    }
+}
+
+void RenderCmdBuffer::addParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray ) {
+    for ( ui32 i = 0; i < paramArray.size(); i++ ) {
+        if ( !hasParam( paramArray[ i ]->m_name, m_paramArray ) ) {
+            m_paramArray.add( paramArray[ i ] );
+        }
+    }
 }
 
 bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
@@ -140,17 +163,6 @@ bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
             }
         }
     }
-
-    return true;
-}
-
-bool RenderCmdBuffer::onSetParametersCmd( SetParameterCmdData *data ) {
-    OSRE_ASSERT( nullptr != m_renderbackend );
-    if ( nullptr == data ) {
-        return false;
-    }
-
-    m_renderbackend->setParameter( data->m_param, data->m_numParam );
 
     return true;
 }
@@ -193,15 +205,16 @@ bool RenderCmdBuffer::onSetMaterialStageCmd( SetMaterialStageCmdData *data ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
 
     m_renderbackend->useShader( data->m_shader );
+    
+    for ( ui32 i = 0; i < m_paramArray.size(); i++ ) {
+        m_renderbackend->setParameter( m_paramArray[ i ] );
+    }
+    
     for ( ui32 i = 0; i < data->m_textures.size(); ++i ) {
         OGLTexture *oglTexture = data->m_textures[ i ];
         if ( nullptr != oglTexture ) {
             m_renderbackend->bindTexture( oglTexture, (TextureStageType) i );
         }
-    }
-
-    if ( nullptr != data->m_param ) {
-        m_renderbackend->setParameter( data->m_param, data->m_numParam );
     }
 
     return true;

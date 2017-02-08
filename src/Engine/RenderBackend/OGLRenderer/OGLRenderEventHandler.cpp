@@ -162,26 +162,13 @@ static void setupParameter( Parameter *param, ui32 numParam, OGLRenderBackend *r
         return;
     }
 
-    OGLRenderCmd *setParameterCmd = new OGLRenderCmd;
-    setParameterCmd->m_type = OGLRenderCmdType::SetParameterCmd;
     ::CPPCore::TArray<OGLParameter*> paramArray;
-    SetParameterCmdData *paramData = new SetParameterCmdData;
-    paramData->m_numParam = numParam;
-    paramData->m_param = new OGLParameter*[ paramData->m_numParam ];
-    Parameter *currentParam( param );
-    ui32 i( 0 );
-    while( currentParam ) {
-        OGLParameter *oglParam = rb->getParameter( currentParam->m_name );
-        if ( nullptr == oglParam ) {
-            oglParam = rb->createParameter( currentParam->m_name, currentParam->m_type, &currentParam->m_data, currentParam->m_numItems );
-        }
-            
-        currentParam = currentParam->m_next;
-        paramData->m_param[ i ] = oglParam;
-        i++;
+    OGLParameter *oglParam = rb->getParameter( param->m_name );
+    if ( nullptr == oglParam ) {
+        oglParam = rb->createParameter( param->m_name, param->m_type, &param->m_data, param->m_numItems );
+        paramArray.add( oglParam );
     }
-    setParameterCmd->m_pData = paramData;
-    ev->enqueueRenderCmd( setParameterCmd  );
+    ev->setParameter( paramArray );
 }
 
 static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLShader *oglShader ) {
@@ -340,6 +327,10 @@ void OGLRenderEventHandler::enqueueRenderCmd( OGLRenderCmd *oglRenderCmd ) {
         return;
     }
     m_renderCmdBuffer->enqueueRenderCmd( oglRenderCmd );
+}
+
+void OGLRenderEventHandler::setParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray ) {
+    m_renderCmdBuffer->addParameter( paramArray );
 }
 
 bool OGLRenderEventHandler::onAttached( const EventData *eventData ) {
@@ -596,6 +587,7 @@ bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
             } else {
                 ::memcpy( oglParam->m_data->getData(), currentParam->m_data.getData(), currentParam->m_data.m_size );
             }
+            m_renderCmdBuffer->addParameter( oglParam );
         }
     }
 

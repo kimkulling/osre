@@ -174,15 +174,11 @@ struct SetParameterCmdData {
 
 ///	@brief
 struct SetMaterialStageCmdData {
-    OGLParameter **m_param;
-    ui32 m_numParam;
     OGLShader *m_shader;
     CPPCore::TArray<OGLTexture*> m_textures;
 
     SetMaterialStageCmdData()
-    : m_param( nullptr )
-    , m_numParam( 0 )
-    , m_shader( nullptr )
+    : m_shader( nullptr )
     , m_textures() {
         // empty
     }

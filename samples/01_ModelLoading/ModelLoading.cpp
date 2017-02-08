@@ -104,7 +104,7 @@ protected:
             }
             const i32 w = rootSurface->getProperties()->m_width;
             const i32 h = rootSurface->getProperties()->m_height;
-            f32 aspect = w / h; 
+            f32 aspect = static_cast< f32 >( w ) / static_cast< f32 >( h );
             if ( aspect < 1.0 ) { 
                 // window taller than wide 
                 bottom /= aspect; 

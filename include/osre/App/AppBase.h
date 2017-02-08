@@ -45,7 +45,7 @@ namespace Platform {
 }
 
 namespace RenderBackend {
-    struct Pipeline;
+    class Pipeline;
     class RenderBackendService;
 }
 

@@ -77,6 +77,8 @@ public:
     /// Will enqueue a new render command.
     void enqueueRenderCmd( OGLRenderCmd *pOGLRenderCmd );
 
+    void setParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray );
+
 protected:
 	///	@brief	Callback for attaching the event handler.
     virtual bool onAttached( const Common::EventData *eventData ) override;

@@ -176,7 +176,6 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     geo->m_vb->copyFrom( &vertices[ 0 ], vbSize );
 
     CPPCore::TArray<ui16> indexArray;
-    ui32 index = 0;
     for ( ui32 i = 0; i < mesh->mNumFaces; i++ ) {
         aiFace &currentFace = mesh->mFaces[ i ];
         for ( ui32 idx = 0; idx < currentFace.mNumIndices; idx++ ) {
