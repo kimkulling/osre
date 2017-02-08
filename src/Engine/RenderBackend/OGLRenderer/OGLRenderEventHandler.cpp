@@ -287,7 +287,8 @@ OGLRenderEventHandler::OGLRenderEventHandler( )
 , m_oglBackend( nullptr )
 , m_renderCmdBuffer( nullptr )
 , m_renderCtx( nullptr )
-, m_vertexArray( nullptr ) {
+, m_vertexArray( nullptr ) 
+, m_pipeline( nullptr ) {
     // empty
 }
         
@@ -420,8 +421,6 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
     Profiling::PerformanceCounters::registerCounter( "fps" );
 
     m_pipeline = createRendererEvData->m_pipeline;
-    PipelinePass *pass = new PipelinePass( nullptr );
-    m_pipeline.addPass( pass );
 
     return true;
 }
@@ -564,15 +563,15 @@ bool OGLRenderEventHandler::onRenderFrame( const EventData *eventData ) {
         return false;
     }
 
-    ui32 numPasses = m_pipeline.beginFrame();
+    ui32 numPasses = m_pipeline->beginFrame();
     for ( ui32 passId = 0; passId < numPasses; passId++ ) {
-        m_pipeline.beginPass( passId );
+        m_pipeline->beginPass( passId );
 
         m_renderCmdBuffer->onPreRenderFrame();
         m_renderCmdBuffer->onRenderFrame( eventData );
         m_renderCmdBuffer->onPostRenderFrame();
 
-        m_pipeline.endPass( passId );
+        m_pipeline->endPass( passId );
     }
     /*m_renderCmdBuffer->onPreRenderFrame(); 
     m_renderCmdBuffer->onRenderFrame( eventData );

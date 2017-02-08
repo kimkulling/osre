@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractTimer.h>
 #include <osre/Platform/AbstractSurface.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/Pipeline.h>
 #include <osre/RenderBackend/Parameter.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/View.h>
@@ -234,6 +235,7 @@ bool AppBase::onCreate( Properties::Settings *config ) {
     // enable render-backend
     if( m_platformInterface ) {
         RenderBackend::CreateRendererEventData *data = new RenderBackend::CreateRendererEventData( m_platformInterface->getRootSurface() );
+        data->m_pipeline = createDefaultPipeline();
         m_rbService->sendEvent( &RenderBackend::OnCreateRendererEvent, data );
     }
     m_timer = Platform::PlatformInterface::getInstance()->getTimer();
@@ -288,6 +290,13 @@ void AppBase::onUpdate( d32 timetick ) {
 
 const ArgumentParser &AppBase::getArgumentParser() const {
     return m_argParser;
+}
+
+RenderBackend::Pipeline *AppBase::createDefaultPipeline() {
+    Pipeline *pipeline = new Pipeline;
+    PipelinePass *renderPass = new PipelinePass(nullptr);
+    pipeline->addPass(renderPass);
+    return pipeline;
 }
 
 } // Namespace App

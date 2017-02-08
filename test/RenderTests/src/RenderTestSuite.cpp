@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "RenderTestSuite.h"
 #include "AbstractRenderTest.h"
-
+#include <osre/App/AppBase.h>
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Debugging/osre_debugging.h>
@@ -138,6 +138,8 @@ bool RenderTestSuite::setup( const String &API ) {
     if( m_pPlatformInterface ) {
         CreateRendererEventData *data = new CreateRendererEventData( m_pPlatformInterface->getRootSurface() );
         data->m_defaultFont = m_pPlatformInterface->getDefaultFontName();
+        
+        data->m_pipeline = App::AppBase::createDefaultPipeline();
         m_pRenderBackendServer->sendEvent( &OnCreateRendererEvent, data );
     }
 

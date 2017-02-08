@@ -74,6 +74,7 @@ DECL_EVENT( OnSetRenderStates );
 DECL_EVENT( OnRenderFrameEvent );
 DECL_EVENT( OnSetParameterEvent );
 
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -83,13 +84,14 @@ struct OSRE_EXPORT CreateRendererEventData : public Common::EventData {
     CreateRendererEventData( Platform::AbstractSurface *pSurface )
     : EventData( OnCreateRendererEvent, nullptr )
     , m_activeSurface( pSurface ) 
-    , m_defaultFont( "" ) {
+    , m_defaultFont( "" )
+    , m_pipeline( nullptr ) {
         // empty
     }
 
     Platform::AbstractSurface *m_activeSurface;
     String                     m_defaultFont;
-    Pipeline                   m_pipeline;
+    Pipeline                  *m_pipeline;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -115,8 +117,7 @@ struct OSRE_EXPORT AttachGeoEventData : public Common::EventData {
     , m_numGeo( 0 )
     , m_geo( nullptr )
     , m_numInstances( 0 )
-    , m_geoInstanceData( nullptr )
-    , m_pipelinePass( -1 ) {
+    , m_geoInstanceData( nullptr ) {
         // empty
     }
 
@@ -124,7 +125,6 @@ struct OSRE_EXPORT AttachGeoEventData : public Common::EventData {
     Geometry       **m_geo;
     ui32             m_numInstances;
     GeoInstanceData *m_geoInstanceData; 
-    i32              m_pipelinePass;
 };
 
 //-------------------------------------------------------------------------------------------------
