@@ -26,18 +26,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-PipelinePass::PipelinePass( RenderTarget &rt, BlendState &blendState, SamplerState &samplerState, 
-                            ClearState &clearState, StencilState &stencilState )
-: m_renderTarget( rt )
-, m_blendState( blendState )
-, m_samplerState( samplerState )
-, m_clearState( clearState )
-, m_stencilState( stencilState ) {
+PipelinePass::PipelinePass( Shader *shader )
+: m_shader( shader ) {
     // empty
 }
 
 PipelinePass::~PipelinePass() {
     // empty
+}
+
+void PipelinePass::set( RenderTarget &rt, BlendState &blendState, SamplerState &samplerState, ClearState &clearState, StencilState &stencilState ) {
+    m_renderTarget = rt;
+    m_blendState = blendState;
+    m_samplerState = samplerState;
+    m_clearState = clearState;
+    m_stencilState = stencilState;
 }
 
 bool PipelinePass::operator == ( const PipelinePass &rhs ) const {

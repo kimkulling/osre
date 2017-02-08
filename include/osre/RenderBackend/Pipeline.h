@@ -32,6 +32,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+struct Shader;
+
 using CPPCore::TArray;
 
 struct RenderTarget {
@@ -40,8 +42,9 @@ struct RenderTarget {
 
 class PipelinePass {
 public:
-    PipelinePass( RenderTarget &rt, BlendState &belndState, SamplerState &samplerState, ClearState &clearState, StencilState &stencilState );
+    PipelinePass( Shader *shader );
     ~PipelinePass();
+    void set( RenderTarget &rt, BlendState &belndState, SamplerState &samplerState, ClearState &clearState, StencilState &stencilState );
     bool operator == ( const PipelinePass &rhs ) const;
     bool operator != ( const PipelinePass &rhs ) const;
 
@@ -51,6 +54,7 @@ private:
     SamplerState m_samplerState;
     ClearState m_clearState;
     StencilState m_stencilState;
+    Shader *m_shader;
 };
 
 class Pipeline {

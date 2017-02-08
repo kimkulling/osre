@@ -365,11 +365,12 @@ bool OGLRenderEventHandler::onDetached( const EventData *eventData ) {
     return true;
 }
 
+
 bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	
-	CreateRendererEventData *pCreateRendererEvData = ( CreateRendererEventData* ) eventData;
-    AbstractSurface *activeSurface = pCreateRendererEvData->m_activeSurface;
+	CreateRendererEventData *createRendererEvData = ( CreateRendererEventData* ) eventData;
+    AbstractSurface *activeSurface = createRendererEvData->m_activeSurface;
     if( !activeSurface ) {
         osre_debug( Tag, "No active surface." );
         return false;
@@ -417,6 +418,10 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
     }
 
     Profiling::PerformanceCounters::registerCounter( "fps" );
+
+    m_pipeline = createRendererEvData->m_pipeline;
+    PipelinePass *pass = new PipelinePass( nullptr );
+    m_pipeline.addPass( pass );
 
     return true;
 }
@@ -559,9 +564,19 @@ bool OGLRenderEventHandler::onRenderFrame( const EventData *eventData ) {
         return false;
     }
 
-    m_renderCmdBuffer->onPreRenderFrame(); 
+    ui32 numPasses = m_pipeline.beginFrame();
+    for ( ui32 passId = 0; passId < numPasses; passId++ ) {
+        m_pipeline.beginPass( passId );
+
+        m_renderCmdBuffer->onPreRenderFrame();
+        m_renderCmdBuffer->onRenderFrame( eventData );
+        m_renderCmdBuffer->onPostRenderFrame();
+
+        m_pipeline.endPass( passId );
+    }
+    /*m_renderCmdBuffer->onPreRenderFrame(); 
     m_renderCmdBuffer->onRenderFrame( eventData );
-    m_renderCmdBuffer->onPostRenderFrame();
+    m_renderCmdBuffer->onPostRenderFrame();*/
 
     return true;
 }
