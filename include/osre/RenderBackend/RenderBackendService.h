@@ -56,7 +56,7 @@ namespace RenderBackend {
 struct BufferData;
 struct Geometry;
 struct GeoInstanceData;
-struct Parameter;
+struct UniformVar;
 struct TransformMatrixBlock;
 
 // Event declarations
@@ -158,7 +158,7 @@ struct OSRE_EXPORT SetParameterEventData : public Common::EventData {
     }
 
     ui32 m_numParam;
-    Parameter **m_param;
+    UniformVar **m_param;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -216,7 +216,7 @@ private:
     const Properties::Settings *m_settings;
     bool m_ownsSettingsConfig;
 
-    CPPCore::THashMap<ui32, Parameter*>  m_variables;
+    CPPCore::THashMap<ui32, UniformVar*>  m_variables;
     CPPCore::TArray<SetParameterEventData*> m_paramUpdates;
 };
 

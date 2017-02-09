@@ -116,9 +116,9 @@ public:
             geo->m_material->m_pShader->m_attributes.add( "position" );
             geo->m_material->m_pShader->m_attributes.add( "normal" );
             geo->m_material->m_pShader->m_attributes.add( "color0" );
-            Parameter *paramM = Parameter::create("M", ParameterType::PT_Mat4);
+            UniformVar *paramM = UniformVar::create("M", ParameterType::PT_Mat4);
             geo->m_material->m_pShader->m_parameters.add( paramM );
-            Parameter *paramVP = Parameter::create("VP", ParameterType::PT_Mat4);
+            UniformVar *paramVP = UniformVar::create("VP", ParameterType::PT_Mat4);
             geo->m_material->m_pShader->m_parameters.add( paramVP );
         }
 
@@ -142,10 +142,10 @@ public:
 			y += 2.0f;
 		}
         
-        Parameter *parameterMVP = Parameter::create( "VP", ParameterType::PT_Mat4 );
+        UniformVar *parameterMVP = UniformVar::create( "VP", ParameterType::PT_Mat4 );
         ::memcpy( parameterMVP->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
 
-        Parameter *parameterM = Parameter::create( "M", ParameterType::PT_Mat4Array, NumInstances);
+        UniformVar *parameterM = UniformVar::create( "M", ParameterType::PT_Mat4Array, NumInstances);
         ::memcpy( parameterM->m_data.m_data, glm::value_ptr( mat[ 0 ] ), sizeof( glm::mat4 ) * NumInstances);
         parameterMVP->m_next = parameterM;
 

@@ -41,31 +41,62 @@ enum class ParameterType {
     PT_Mat4Array
 };
 
-struct OSRE_EXPORT ParamDataBlob {
+struct OSRE_EXPORT UniformDataBlob {
     void *m_data;
     ui32  m_size;
 
-    ParamDataBlob();
-    ~ParamDataBlob();
+    UniformDataBlob();
+    ~UniformDataBlob();
     void *getData() const;
     void clear();
-    static ParamDataBlob *create( ParameterType type, ui32 arraySize );
+    static UniformDataBlob *create( ParameterType type, ui32 arraySize );
 };
 
-struct OSRE_EXPORT Parameter {
+struct OSRE_EXPORT UniformVar {
     String         m_name;
     ParameterType  m_type;
     ui32           m_numItems;
-    ParamDataBlob  m_data;
-    Parameter     *m_next;
+    UniformDataBlob  m_data;
+    UniformVar     *m_next;
 
     static ui32 getParamDataSize( ParameterType type, ui32 arraySize );
-    static Parameter *create( const String &name, ParameterType type, ui32 arraySize=1 );
-    static void destroy( Parameter *param );
+    static UniformVar *create( const String &name, ParameterType type, ui32 arraySize=1 );
+    static void destroy( UniformVar *param );
 
 private:
-    Parameter();
-    ~Parameter();
+    UniformVar();
+    ~UniformVar();
+};
+
+struct UniformBuffer {
+    static UniformBuffer *create( ui32 size ) {
+        return new UniformBuffer( size );
+    }
+
+    ui32 read( ui32 size, uc8 *data ) {
+        return 0;
+    }
+
+    void write(ui32 size, uc8 *data) {
+        
+    }
+
+private:
+    UniformBuffer( ui32 size) 
+    : m_size( size )
+    , m_data( nullptr ) {
+        m_data = new uc8[size];
+    }
+    
+    ~UniformBuffer() {
+        m_size = 0;
+        delete[] m_data;
+        m_data = nullptr;
+    }
+
+private:
+    ui32 m_size;
+    uc8 *m_data;
 };
 
 } // Namespace RenderBackend

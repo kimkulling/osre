@@ -147,10 +147,10 @@ void RenderBackendService::sendEvent( const Event *ev, const EventData *eventDat
 }
 
 void RenderBackendService::setMatrix( const String &name, const glm::mat4 &matrix ) {
-    Parameter *parameter( nullptr );
+    UniformVar *parameter( nullptr );
     const ui32 key( Common::StringUtils::hashName( name.c_str() ) );
     if ( !m_variables.hasKey( key ) ) {
-        parameter = Parameter::create( name, ParameterType::PT_Mat4 );
+        parameter = UniformVar::create( name, ParameterType::PT_Mat4 );
         m_variables.insert( key, parameter );
     } else {
         m_variables.getValue( key, parameter );
@@ -160,7 +160,7 @@ void RenderBackendService::setMatrix( const String &name, const glm::mat4 &matri
 
     SetParameterEventData *data = new SetParameterEventData;
     data->m_numParam = 1;
-    data->m_param = new Parameter *[ 1 ];
+    data->m_param = new UniformVar *[ 1 ];
     data->m_param[ 0 ] = parameter;
     m_paramUpdates.add( data );
 }

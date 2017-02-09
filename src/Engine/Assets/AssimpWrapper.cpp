@@ -89,7 +89,7 @@ Model *AssimpWrapper::convertSceneToModel( const aiScene *scene ) {
         return nullptr;
     }
 
-    m_mvpParam = RenderBackend::Parameter::create( "MVP", ParameterType::PT_Mat4 );
+    m_mvpParam = RenderBackend::UniformVar::create( "MVP", ParameterType::PT_Mat4 );
 
     m_model = new Model;
     String rootName( scene->mRootNode->mName.C_Str() );
@@ -211,7 +211,7 @@ void AssimpWrapper::handleNode( aiNode *node, Node *parent ) {
     Node *newNode = new Node( name, m_ids, true, true, m_parent );
     m_parent->addChild( newNode );
     RenderComponent *comp = (RenderComponent*) newNode->getComponent( Scene::Node::ComponentType::RenderComponentType );
-    CPPCore::TArray<Parameter*> paramArray;
+    CPPCore::TArray<UniformVar*> paramArray;
     paramArray.add( m_mvpParam );
     comp->beginPass( paramArray );
     for ( ui32 j = 0; j < node->mNumMeshes; j++ ) {

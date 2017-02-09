@@ -76,7 +76,7 @@ void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::Render
 
     /*m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.001f, glm::vec3( 1, 1, 0 ) );
 
-    Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
+    UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
     m_transformMatrix.update();
     ::memcpy( parameter->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
 

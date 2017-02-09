@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-struct Parameter;
+struct UniformVar;
 
 static const i32  UnsetHandle = -1;
 static const ui32 MaxEntNameLen = 256;
@@ -315,7 +315,7 @@ static const ui32 MaxShaderTypes = 3;
 
 ///	@brief
 struct OSRE_EXPORT Shader {
-    CPPCore::TArray<Parameter*> m_parameters;
+    CPPCore::TArray<UniformVar*> m_parameters;
     CPPCore::TArray<String>     m_attributes;
     String                      m_src[ MaxShaderTypes ];
 
@@ -343,7 +343,7 @@ struct OSRE_EXPORT Material {
     Texture     **m_textures;
     Shader       *m_pShader;
     ui32          m_numParameters;
-    Parameter    *m_parameters;
+    UniformVar    *m_parameters;
     Color4        m_color[ MaxMatColorType ];
     
     Material();

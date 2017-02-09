@@ -152,7 +152,7 @@ bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
     SetParameterEventData *updateParamData = ( SetParameterEventData* ) data;
     if( nullptr != updateParamData ) {
         for( ui32 i = 0; i < updateParamData->m_numParam; ++i ) {
-            Parameter *currentParam = updateParamData->m_param[ i ];
+            UniformVar *currentParam = updateParamData->m_param[ i ];
             if ( nullptr == currentParam ) {
                 continue;
             }

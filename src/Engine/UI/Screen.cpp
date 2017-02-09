@@ -93,7 +93,7 @@ void Screen::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *rbS
         /*::memcpy( param->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
         UpdateParameterEventData *data = new UpdateParameterEventData;
         data->m_numParam = 1;
-        data->m_param = new Parameter *[ 1 ];
+        data->m_param = new UniformVar *[ 1 ];
         data->m_param[ 0 ] = param;
         rbSrv->sendEvent( &OnUpdateGeoEvent, data );*/
 

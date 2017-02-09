@@ -134,7 +134,7 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
                     }
 
                     for( ui32 i = 0; i < material->m_pShader->m_parameters.size(); i++ ) {
-                        const Parameter *uniformParam( material->m_pShader->m_parameters[ i ] );
+                        const UniformVar *uniformParam( material->m_pShader->m_parameters[ i ] );
                         if ( nullptr != uniformParam ) {
                             shader->addUniform( uniformParam->m_name );
                         }
@@ -153,7 +153,7 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
     }
 }
 
-static void setupParameter( Parameter *param, ui32 numParam, OGLRenderBackend *rb, OGLRenderEventHandler *ev ) {
+static void setupParameter( UniformVar *param, ui32 numParam, OGLRenderBackend *rb, OGLRenderEventHandler *ev ) {
 	OSRE_ASSERT( nullptr != param );
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != ev );
@@ -577,7 +577,7 @@ bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
 	SetParameterEventData *updateParamData = ( SetParameterEventData* ) eventData;
     if( nullptr != updateParamData ) {
         for( ui32 i = 0; i < updateParamData->m_numParam; ++i ) {
-            Parameter *currentParam( updateParamData->m_param[ i ] );
+            UniformVar *currentParam( updateParamData->m_param[ i ] );
             if ( nullptr == currentParam ) {
                 continue;
             }

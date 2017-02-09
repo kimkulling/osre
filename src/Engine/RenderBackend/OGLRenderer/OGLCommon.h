@@ -145,7 +145,7 @@ struct OGLParameter {
     String         m_name;
     GLint          m_loc;
     ParameterType  m_type;
-    ParamDataBlob *m_data;
+    UniformDataBlob *m_data;
     ui32           m_numItems;
 
     OGLParameter()

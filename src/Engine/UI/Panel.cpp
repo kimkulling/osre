@@ -64,7 +64,7 @@ void Panel::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBacke
 
     m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
 
-    Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
+    UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
     m_transformMatrix.update();
     ::memcpy( parameter->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
 

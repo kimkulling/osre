@@ -64,7 +64,7 @@ void RenderComponent::update( RenderBackendService *renderBackendSrv ) {
             Pass *currentPass = m_passes[i];
             SetParameterEventData *data = new SetParameterEventData;
             data->m_numParam = currentPass->m_paramArray.size();
-            data->m_param = new Parameter *[ data->m_numParam ];
+            data->m_param = new UniformVar *[ data->m_numParam ];
             for ( ui32 j=0; j<data->m_numParam; j++ ) {
                 data->m_param[ j ] = currentPass->m_paramArray[j];
             }
@@ -92,7 +92,7 @@ void RenderComponent::setShadowCaster(bool isShadowCaster) {
     m_isShadowCaster = isShadowCaster;
 }
 
-void RenderComponent::beginPass( TArray<Parameter*> &paramArray ) {
+void RenderComponent::beginPass( TArray<UniformVar*> &paramArray ) {
     Pass *newPass = new Pass;
     m_currentPass = newPass;
     m_currentPass->m_paramArray = paramArray;
