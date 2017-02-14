@@ -108,7 +108,7 @@ bool RenderBackendService::onUpdate( d32 timediff ) {
         return false;
     }
 
-    applyParameters();
+    commitUniformBuffer();
 
     // synchronizing event with render back-end
     bool result( m_renderTaskPtr->sendEvent( &OnRenderFrameEvent, nullptr ) );
@@ -131,7 +131,7 @@ const Properties::Settings *RenderBackendService::getSettings() const {
     return m_settings;
 }
 
-void RenderBackendService::applyParameters() {
+void RenderBackendService::commitUniformBuffer() {
     if ( m_renderTaskPtr.isValid() ) {
         for ( ui32 i = 0; i < m_paramUpdates.size(); i++ ) {
             m_renderTaskPtr->sendEvent( &OnSetParameterEvent, m_paramUpdates[ i ] );

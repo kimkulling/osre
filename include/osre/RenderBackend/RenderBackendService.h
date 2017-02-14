@@ -35,6 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "Parameter.h"
 
 namespace OSRE {
 
@@ -73,7 +74,7 @@ DECL_EVENT( OnDetachSceneEvent );
 DECL_EVENT( OnSetRenderStates );
 DECL_EVENT( OnRenderFrameEvent );
 DECL_EVENT( OnSetParameterEvent );
-
+DECL_EVENT( OnCommitUniformBufferEventData );
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -161,6 +162,16 @@ struct OSRE_EXPORT SetParameterEventData : public Common::EventData {
     UniformVar **m_param;
 };
 
+struct OSRE_EXPORT CommitUniformBufferEventData : Common::EventData {
+    CommitUniformBufferEventData()
+    : EventData(OnCommitUniformBufferEventData, nullptr )
+    , m_buffer( nullptr ) {
+        // empty            
+    }
+
+    CommandBuffer *m_buffer;
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -209,7 +220,7 @@ protected:
     virtual bool onUpdate( d32 timediff );
 
     /// @brief  Will apply all used parameters
-    void applyParameters();
+    void commitUniformBuffer();
 
 private:
     Common::TObjPtr<Threading::SystemTask> m_renderTaskPtr;

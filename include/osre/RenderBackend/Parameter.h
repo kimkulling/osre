@@ -68,34 +68,72 @@ private:
     ~UniformVar();
 };
 
-struct UniformBuffer {
-    static UniformBuffer *create( ui32 size ) {
-        return new UniformBuffer( size );
+
+class CommandBuffer {
+public:
+    static CommandBuffer *create( ui32 size ) {
+        return new CommandBuffer( size );
+    }
+
+    static void destroy( CommandBuffer *buffer ) {
+        delete buffer;
     }
 
     ui32 read( ui32 size, uc8 *data ) {
-        return 0;
+        if ( nullptr == data || 0 == size ) {
+            return 0;
+        }
+        if ( m_offset + size > m_size ) {
+            return 0;
+        }
+        ::memcpy(data, &m_data[m_offset], size );
+        m_offset += size;
+        
+        return size;
     }
 
     void write(ui32 size, uc8 *data) {
+        if (size + m_offset > m_size) {
+            return;
+        }
+
+        ::memcpy(&m_data[m_offset], data, size);
+        m_offset += size;
+    }
+
+    void reset() {
+        m_offset = 0;
+    }
+
+    bool setPos( ui32 pos ) {
+        if ( pos > m_size ) {
+            return false;
+        }
+        m_offset = pos;
         
+        return true;
     }
 
 private:
-    UniformBuffer( ui32 size) 
+    CommandBuffer( ui32 size) 
     : m_size( size )
+    , m_offset( 0 )
     , m_data( nullptr ) {
         m_data = new uc8[size];
     }
     
-    ~UniformBuffer() {
+    ~CommandBuffer() {
         m_size = 0;
         delete[] m_data;
         m_data = nullptr;
     }
 
+    CommandBuffer(const CommandBuffer &) = delete;
+    CommandBuffer& operator = (const CommandBuffer &) = delete;
+
 private:
     ui32 m_size;
+    ui32 m_offset;
     uc8 *m_data;
 };
 

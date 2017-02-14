@@ -135,7 +135,7 @@ UniformVar *UniformVar::create( const String &name, ParameterType type, ui32 arr
         return nullptr;
     }
 
-    UniformVar *param     = new UniformVar;
+    UniformVar *param    = new UniformVar;
     param->m_name        = name;
     param->m_type        = type;
     param->m_numItems    = arraySize;
