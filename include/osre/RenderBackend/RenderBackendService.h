@@ -74,7 +74,7 @@ DECL_EVENT( OnDetachSceneEvent );
 DECL_EVENT( OnSetRenderStates );
 DECL_EVENT( OnRenderFrameEvent );
 DECL_EVENT( OnSetParameterEvent );
-DECL_EVENT( OnCommitUniformBufferEventData );
+DECL_EVENT( OnCommitFrameEvent );
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -162,14 +162,14 @@ struct OSRE_EXPORT SetParameterEventData : public Common::EventData {
     UniformVar **m_param;
 };
 
-struct OSRE_EXPORT CommitUniformBufferEventData : Common::EventData {
-    CommitUniformBufferEventData()
-    : EventData(OnCommitUniformBufferEventData, nullptr )
-    , m_buffer( nullptr ) {
+struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
+    CommitFrameEventData()
+    : EventData( OnCommitFrameEvent, nullptr )
+    , m_frame( nullptr ) {
         // empty            
     }
 
-    CommandBuffer *m_buffer;
+    Frame *m_frame;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -220,15 +220,17 @@ protected:
     virtual bool onUpdate( d32 timediff );
 
     /// @brief  Will apply all used parameters
-    void commitUniformBuffer();
+    void commitNextFrame();
 
 private:
     Common::TObjPtr<Threading::SystemTask> m_renderTaskPtr;
     const Properties::Settings *m_settings;
     bool m_ownsSettingsConfig;
 
+    Frame m_nextFrame;
+    CPPCore::TArray<Geometry*> m_newGeo;
     CPPCore::THashMap<ui32, UniformVar*>  m_variables;
-    CPPCore::TArray<SetParameterEventData*> m_paramUpdates;
+    CPPCore::TArray<UniformVar*> m_uniformUpdates;
 };
 
 } // Namespace RenderBackend

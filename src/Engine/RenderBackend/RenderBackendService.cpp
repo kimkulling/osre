@@ -42,7 +42,11 @@ RenderBackendService::RenderBackendService()
 : AbstractService( "renderbackend/renderbackendserver" )
 , m_renderTaskPtr()
 , m_settings( nullptr )
-, m_ownsSettingsConfig( false ) {
+, m_ownsSettingsConfig( false )
+, m_nextFrame()
+, m_newGeo()
+, m_variables()
+, m_uniformUpdates() {
     // empty
 }
 
@@ -108,7 +112,7 @@ bool RenderBackendService::onUpdate( d32 timediff ) {
         return false;
     }
 
-    commitUniformBuffer();
+    commitNextFrame();
 
     // synchronizing event with render back-end
     bool result( m_renderTaskPtr->sendEvent( &OnRenderFrameEvent, nullptr ) );
@@ -131,12 +135,28 @@ const Properties::Settings *RenderBackendService::getSettings() const {
     return m_settings;
 }
 
-void RenderBackendService::commitUniformBuffer() {
+void RenderBackendService::commitNextFrame() {
     if ( m_renderTaskPtr.isValid() ) {
-        for ( ui32 i = 0; i < m_paramUpdates.size(); i++ ) {
-            m_renderTaskPtr->sendEvent( &OnSetParameterEvent, m_paramUpdates[ i ] );
+        CommitFrameEventData *data = new CommitFrameEventData;
+        if ( !m_newGeo.isEmpty() ) {
+            m_nextFrame.m_numNewGeo = m_newGeo.size();
+            m_nextFrame.m_newGeo = new Geometry *[ m_nextFrame.m_numNewGeo ];
+            for ( ui32 i = 0; i < m_nextFrame.m_numNewGeo; i++ ) {
+                m_nextFrame.m_newGeo[ i ] = m_newGeo[ i ];
+            }
+            m_newGeo.resize( 0 );
         }
-        m_paramUpdates.resize( 0 );
+
+        if ( !m_uniformUpdates.isEmpty() ) {
+            m_nextFrame.m_numVars = m_uniformUpdates.size();
+            m_nextFrame.m_vars = new UniformVar *[ m_nextFrame.m_numVars ];
+            for ( ui32 i = 0; i < m_nextFrame.m_numVars; i++ ) {
+                m_nextFrame.m_vars[ i ] = m_uniformUpdates[ i ];
+            }
+            m_uniformUpdates.resize( 0 );
+        }
+        data->m_frame = &m_nextFrame;
+        m_renderTaskPtr->sendEvent( &OnCommitFrameEvent, data );
     }
 }
 
@@ -147,32 +167,21 @@ void RenderBackendService::sendEvent( const Event *ev, const EventData *eventDat
 }
 
 void RenderBackendService::setMatrix( const String &name, const glm::mat4 &matrix ) {
-    UniformVar *parameter( nullptr );
+    UniformVar *uniform( nullptr );
     const ui32 key( Common::StringUtils::hashName( name.c_str() ) );
     if ( !m_variables.hasKey( key ) ) {
-        parameter = UniformVar::create( name, ParameterType::PT_Mat4 );
-        m_variables.insert( key, parameter );
+        uniform = UniformVar::create( name, ParameterType::PT_Mat4 );
+        m_variables.insert( key, uniform );
     } else {
-        m_variables.getValue( key, parameter );
+        m_variables.getValue( key, uniform );
     }    
 
-    ::memcpy( parameter->m_data.m_data, glm::value_ptr( matrix ), sizeof( glm::mat4 ) );
-
-    SetParameterEventData *data = new SetParameterEventData;
-    data->m_numParam = 1;
-    data->m_param = new UniformVar *[ 1 ];
-    data->m_param[ 0 ] = parameter;
-    m_paramUpdates.add( data );
+    ::memcpy( uniform->m_data.m_data, glm::value_ptr( matrix ), sizeof( glm::mat4 ) );
+    m_uniformUpdates.add( uniform );
 }
 
 void RenderBackendService::attachGeo( const CPPCore::TArray<Geometry*> &geoArray ) {
-    AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-    attachGeoEvData->m_numGeo = geoArray.size();
-    attachGeoEvData->m_geo = new Geometry*[ attachGeoEvData->m_numGeo ];
-    for ( ui32 i = 0; i < attachGeoEvData->m_numGeo; i++ ) {
-        attachGeoEvData->m_geo[ i ] = geoArray[ i ];
-    }
-    sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+    m_newGeo.add( &geoArray[ 0 ], geoArray.size() );
 }
 
 void RenderBackendService::attachView( TransformMatrixBlock &transform ) {

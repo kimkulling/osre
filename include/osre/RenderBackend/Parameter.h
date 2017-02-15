@@ -31,6 +31,8 @@ namespace RenderBackend {
 
 class RenderBackendService;
 
+struct Geometry;
+
 enum class ParameterType {
     PT_None,
     PT_Int,
@@ -68,14 +70,13 @@ private:
     ~UniformVar();
 };
 
-
-class CommandBuffer {
+class UniformBuffer {
 public:
-    static CommandBuffer *create( ui32 size ) {
-        return new CommandBuffer( size );
+    static UniformBuffer *create( ui32 size ) {
+        return new UniformBuffer( size );
     }
 
-    static void destroy( CommandBuffer *buffer ) {
+    static void destroy( UniformBuffer *buffer ) {
         delete buffer;
     }
 
@@ -114,27 +115,36 @@ public:
         return true;
     }
 
-private:
-    CommandBuffer( ui32 size) 
+    UniformBuffer( ui32 size) 
     : m_size( size )
     , m_offset( 0 )
     , m_data( nullptr ) {
         m_data = new uc8[size];
     }
     
-    ~CommandBuffer() {
+    ~UniformBuffer() {
         m_size = 0;
         delete[] m_data;
         m_data = nullptr;
     }
 
-    CommandBuffer(const CommandBuffer &) = delete;
-    CommandBuffer& operator = (const CommandBuffer &) = delete;
+    UniformBuffer(const UniformBuffer &) = delete;
+    UniformBuffer& operator = (const UniformBuffer &) = delete;
 
 private:
     ui32 m_size;
     ui32 m_offset;
     uc8 *m_data;
+};
+
+struct Frame {
+    ui32           m_numVars;
+    UniformVar   **m_vars;
+    ui32           m_numNewGeo;
+    Geometry     **m_newGeo;
+
+    Frame() {}
+    ~Frame() {}
 };
 
 } // Namespace RenderBackend
