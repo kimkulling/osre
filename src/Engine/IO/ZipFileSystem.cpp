@@ -77,8 +77,9 @@ Stream *ZipFileSystem::open( const Uri &file, Stream::AccessMode mode ) {
 
     Stream *pZipStream( nullptr );
     const String tmpName = file.getResource();
-    if ( fileExist( tmpName ) ) {
-        pZipStream = new ZipFileStream( tmpName, m_ZipFileHandle );
+    Uri uri( tmpName );
+    if ( fileExist( Uri( uri ) ) ) {
+        pZipStream = new ZipFileStream( uri, m_ZipFileHandle );
         m_FileMap[ tmpName ] = pZipStream;
     }
 

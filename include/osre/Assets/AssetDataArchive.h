@@ -84,7 +84,7 @@ public:
     };
     
 public:
-    AssetDataArchive( ui32 minVersion );
+    explicit AssetDataArchive( ui32 minVersion );
     ~AssetDataArchive();
     bool read( IO::Stream &stream );
     bool write( IO::Stream &stream );
