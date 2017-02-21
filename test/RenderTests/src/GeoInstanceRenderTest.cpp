@@ -101,14 +101,14 @@ public:
 
     virtual bool onCreate( RenderBackendService *rbSrv ) {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
-        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
+//        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         Scene::GeometryBuilder myBuilder;
         Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-
-        attachGeoEvData->m_numGeo = 1;
+        rbSrv->attachGeo( geo );
+        /*attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_geo = new Geometry*[ attachGeoEvData->m_numGeo ];
-        attachGeoEvData->m_geo[0] = geo;
+        attachGeoEvData->m_geo[0] = geo;*/
 
         // use a default material
         geo->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );

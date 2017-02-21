@@ -90,7 +90,7 @@ public:
 
 protected:
     /// The update parameter callback.
-    virtual bool onUpdateParameter( const Common::EventData *pEventData );
+    //virtual bool onUpdateParameter( const Common::EventData *pEventData );
     /// The draw primitive callback.
     virtual bool onDrawPrimitivesCmd( DrawPrimitivesCmdData *pData );
     /// The draw primitive instances callback.

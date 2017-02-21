@@ -63,7 +63,7 @@ public:
 
     virtual bool onCreate( RenderBackendService *pRenderBackendSrv ) {
         pRenderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
-        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
+//        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         Geometry *geo = Scene::GeometryBuilder::allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
         pRenderBackendSrv->attachGeo( geo );

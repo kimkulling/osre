@@ -136,7 +136,7 @@ const Settings *RenderBackendService::getSettings() const {
 }
 
 void RenderBackendService::commitNextFrame() {
-    if ( !m_renderTaskPtr.isValid() ) {
+     if ( !m_renderTaskPtr.isValid() ) {
         return;
     }
         
