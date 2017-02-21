@@ -68,11 +68,12 @@ void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::Render
     const RectUI &rect( getRect() );
 
     Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle );
-    AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
+    /*AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
     attachGeoEvData->m_numGeo = 1;
     attachGeoEvData->m_geo = new Geometry*[ 1 ];
     attachGeoEvData->m_geo[ 0 ] = geo;
-    rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+    rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );*/
+    rbSrv->attachGeo( geo );
 
     /*m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.001f, glm::vec3( 1, 1, 0 ) );
 

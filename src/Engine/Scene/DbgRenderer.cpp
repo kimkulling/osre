@@ -67,6 +67,13 @@ DbgRenderer *DbgRenderer::getInstance() {
     return s_instance;
 }
 
+static void insertTextEntry( ui32 id, Geometry *geo, const String &text, DbgRenderer::TextBoxHashMap &textBoxes ) {
+    DbgRenderer::DbgTextEntry *entry( new DbgRenderer::DbgTextEntry );
+    entry->m_geo = geo;
+    entry->m_text = text;
+    textBoxes.insert( id, entry );    
+}
+
 void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
     if ( text.empty() ) {
         return;
@@ -76,10 +83,11 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
 //        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
         Geometry *geo = GeometryBuilder::allocTextBox( 0, 0, 0.1f, text, BufferAccessType::ReadWrite );
         m_rbSrv->attachGeo( geo );
-        DbgTextEntry *entry( new DbgTextEntry );
+        insertTextEntry( id, geo, text, m_textBoxes );
+        /*DbgTextEntry *entry( new DbgTextEntry );
         entry->m_geo = geo;
         entry->m_text = text;
-        m_textBoxes.insert( id, entry );
+        m_textBoxes.insert( id, entry );*/
 
 /*        attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_geo = new Geometry*[ 1 ];
@@ -99,20 +107,25 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
     } else {
         DbgTextEntry *entry( nullptr );
         if ( m_textBoxes.getValue( id, entry ) ) {
+            OSRE_ASSERT( nullptr != entry );
             if ( entry->m_text == text ) {
                 return;
             }
-            
-            UpdateGeoEventData *updateGeoEvData( new UpdateGeoEventData );
-            updateGeoEvData->m_numGeo = 1;
+            Geometry *geo( nullptr );
+            //UpdateGeoEventData *updateGeoEvData( new UpdateGeoEventData );
+            //updateGeoEvData->m_numGeo = 1;
             if ( text.size() > entry->m_text.size() ) {
-                Geometry *geo = GeometryBuilder::allocTextBox( 0, 0, 0.1f, text, BufferAccessType::ReadWrite );
-                updateGeoEvData->m_geo = geo;
+                geo = GeometryBuilder::allocTextBox( 0, 0, 0.1f, text, BufferAccessType::ReadWrite );
+                //updateGeoEvData->m_geo = geo;
+                // todo: remove the old geometry
+                entry->m_geo = geo;
             } else {
                 GeometryBuilder::updateTextBox( entry->m_geo, 0.1f, text, false );
-                updateGeoEvData->m_geo = entry->m_geo;
+                geo = entry->m_geo;
+                //updateGeoEvData->m_geo = entry->m_geo;
             }
-            m_rbSrv->sendEvent( &OnUpdateGeoEvent, updateGeoEvData );
+            m_rbSrv->attachGeoUpdate( geo );
+            //m_rbSrv->sendEvent( &OnUpdateGeoEvent, updateGeoEvData );
         }
     }
 }

@@ -184,6 +184,7 @@ void RenderBackendService::setMatrix( const String &name, const glm::mat4 &matri
 
 void RenderBackendService::attachGeo( Geometry *geo ) {
     if ( nullptr == geo ) {
+        osre_debug( Tag, "Pointer to geometry is nullptr." );
         return;
     }
     m_newGeo.add( geo );
@@ -191,6 +192,19 @@ void RenderBackendService::attachGeo( Geometry *geo ) {
 
 void RenderBackendService::attachGeo( const CPPCore::TArray<Geometry*> &geoArray ) {
     m_newGeo.add( &geoArray[ 0 ], geoArray.size() );
+}
+
+void RenderBackendService::attachGeoUpdate( Geometry *geo ) {
+    if ( nullptr == geo ) {
+        osre_debug( Tag, "Pointer to geometry is nullptr." );
+        return;
+    }
+    m_geoUpdates.add( geo );
+}
+
+void RenderBackendService::attachGeoUpdate( const CPPCore::TArray<Geometry*> &geoArray ) {
+        m_geoUpdates.add( &geoArray[ 0 ], geoArray.size() );
+
 }
 
 void RenderBackendService::attachView( TransformMatrixBlock &transform ) {

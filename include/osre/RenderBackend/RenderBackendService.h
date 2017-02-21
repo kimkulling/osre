@@ -68,7 +68,7 @@ DECL_EVENT( OnDestroyRendererEvent );
 DECL_EVENT( OnAttachViewEvent );
 DECL_EVENT( OnDetachViewEvent );
 //DECL_EVENT( OnAttachSceneEvent );
-DECL_EVENT( OnUpdateGeoEvent );
+//DECL_EVENT( OnUpdateGeoEvent );
 DECL_EVENT( OnClearSceneEvent );
 DECL_EVENT( OnDetachSceneEvent );
 DECL_EVENT( OnSetRenderStates );
@@ -209,6 +209,10 @@ public:
 
     void attachGeo( const CPPCore::TArray<Geometry*> &geoArray );
 
+    void attachGeoUpdate( Geometry *geo );
+
+    void attachGeoUpdate( const CPPCore::TArray<Geometry*> &geoArray );
+
     void attachView( TransformMatrixBlock &transform );
 
 protected:
@@ -231,6 +235,7 @@ private:
 
     Frame m_nextFrame;
     CPPCore::TArray<Geometry*> m_newGeo;
+    CPPCore::TArray<Geometry*> m_geoUpdates;
     CPPCore::THashMap<ui32, UniformVar*>  m_variables;
     CPPCore::TArray<UniformVar*> m_uniformUpdates;
 };
