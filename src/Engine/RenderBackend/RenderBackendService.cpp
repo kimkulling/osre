@@ -131,33 +131,35 @@ void RenderBackendService::setSettings( const Settings *config, bool moveOwnersh
     m_ownsSettingsConfig = moveOwnership;
 }
 
-const Properties::Settings *RenderBackendService::getSettings() const {
+const Settings *RenderBackendService::getSettings() const {
     return m_settings;
 }
 
 void RenderBackendService::commitNextFrame() {
-    if ( m_renderTaskPtr.isValid() ) {
-        CommitFrameEventData *data = new CommitFrameEventData;
-        if ( !m_newGeo.isEmpty() ) {
-            m_nextFrame.m_numNewGeo = m_newGeo.size();
-            m_nextFrame.m_newGeo = new Geometry *[ m_nextFrame.m_numNewGeo ];
-            for ( ui32 i = 0; i < m_nextFrame.m_numNewGeo; i++ ) {
-                m_nextFrame.m_newGeo[ i ] = m_newGeo[ i ];
-            }
-            m_newGeo.resize( 0 );
-        }
-
-        if ( !m_uniformUpdates.isEmpty() ) {
-            m_nextFrame.m_numVars = m_uniformUpdates.size();
-            m_nextFrame.m_vars = new UniformVar *[ m_nextFrame.m_numVars ];
-            for ( ui32 i = 0; i < m_nextFrame.m_numVars; i++ ) {
-                m_nextFrame.m_vars[ i ] = m_uniformUpdates[ i ];
-            }
-            m_uniformUpdates.resize( 0 );
-        }
-        data->m_frame = &m_nextFrame;
-        m_renderTaskPtr->sendEvent( &OnCommitFrameEvent, data );
+    if ( !m_renderTaskPtr.isValid() ) {
+        return;
     }
+        
+    CommitFrameEventData *data = new CommitFrameEventData;
+    if ( !m_newGeo.isEmpty() ) {
+        m_nextFrame.m_numNewGeo = m_newGeo.size();
+        m_nextFrame.m_newGeo = new Geometry *[ m_nextFrame.m_numNewGeo ];
+        for ( ui32 i = 0; i < m_nextFrame.m_numNewGeo; i++ ) {
+            m_nextFrame.m_newGeo[ i ] = m_newGeo[ i ];
+        }
+        m_newGeo.resize( 0 );
+    }
+
+    if ( !m_uniformUpdates.isEmpty() ) {
+        m_nextFrame.m_numVars = m_uniformUpdates.size();
+        m_nextFrame.m_vars = new UniformVar *[ m_nextFrame.m_numVars ];
+        for ( ui32 i = 0; i < m_nextFrame.m_numVars; i++ ) {
+            m_nextFrame.m_vars[ i ] = m_uniformUpdates[ i ];
+        }
+        m_uniformUpdates.resize( 0 );
+    }
+    data->m_frame = &m_nextFrame;
+    m_renderTaskPtr->sendEvent( &OnCommitFrameEvent, data );
 }
 
 void RenderBackendService::sendEvent( const Event *ev, const EventData *eventData ) {
@@ -178,6 +180,13 @@ void RenderBackendService::setMatrix( const String &name, const glm::mat4 &matri
 
     ::memcpy( uniform->m_data.m_data, glm::value_ptr( matrix ), sizeof( glm::mat4 ) );
     m_uniformUpdates.add( uniform );
+}
+
+void RenderBackendService::attachGeo( Geometry *geo ) {
+    if ( nullptr == geo ) {
+        return;
+    }
+    m_newGeo.add( geo );
 }
 
 void RenderBackendService::attachGeo( const CPPCore::TArray<Geometry*> &geoArray ) {

@@ -66,19 +66,21 @@ public:
         AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         Geometry *geo = Scene::GeometryBuilder::allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-        attachGeoEvData->m_numGeo = 1;
+        pRenderBackendSrv->attachGeo( geo );
+        /*attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_geo = new Geometry*[ 1 ];
-        attachGeoEvData->m_geo[ 0 ] = geo;
+        attachGeoEvData->m_geo[ 0 ] = geo;*/
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
 
         UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
-        ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
+        //::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
 
         geo->m_material->m_parameters = parameter;
         geo->m_material->m_numParameters++;
 
-        pRenderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+        pRenderBackendSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
+        //pRenderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
         return true;
     }

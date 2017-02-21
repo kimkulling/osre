@@ -56,17 +56,17 @@ bool VlkRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
         result = onAttachView( data );
     } else if ( OnDetachViewEvent == ev ) {
         result = onDetachView( data );
-    } else if ( OnAttachSceneEvent == ev ) {
+    }/* else if ( OnAttachSceneEvent == ev ) {
         result = onAttachGeo( data );
-    } else if ( OnDetachSceneEvent == ev ) {
+    } */else if ( OnDetachSceneEvent == ev ) {
         result = onDetachGeo( data );
     } else if ( OnClearSceneEvent == ev ) {
         result = onClearGeo( data );
     } else if ( OnRenderFrameEvent == ev ) {
         result = onRenderFrame( data );
-    } else if ( OnSetParameterEvent == ev ) {
+    }/* else if ( OnSetParameterEvent == ev ) {
         result = onUpdateParameter( data );
-    }
+    }*/
 
     return result;
 }

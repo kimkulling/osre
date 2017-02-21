@@ -237,9 +237,9 @@ static void setupPrimDrawCmd( const TArray<ui32> &primGroups, OGLRenderBackend *
     eh->enqueueRenderCmd( renderCmd );
 }
 
-static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *geoInstanceData, 
+static void setupInstancedDrawCmd( const TArray<ui32> &ids, Frame *currentFrame, 
                                    OGLRenderBackend *rb, OGLRenderEventHandler *eh, OGLVertexArray *va ) {
-	OSRE_ASSERT( nullptr != geoInstanceData );
+	OSRE_ASSERT( nullptr != currentFrame );
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
 
@@ -247,7 +247,7 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
         return;
     }
 
-    GeoInstanceData *instData( geoInstanceData->m_geoInstanceData );
+    GeoInstanceData *instData( currentFrame->m_geoInstanceData );
 	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesInstancesCmd, nullptr );
     if( nullptr != instData ) {
         if( nullptr != instData->m_data ) {
@@ -259,7 +259,7 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, AttachGeoEventData *
     
     DrawInstancePrimitivesCmdData *data = new DrawInstancePrimitivesCmdData;
     data->m_vertexArray = va;
-    data->m_numInstances = geoInstanceData->m_numInstances;
+    data->m_numInstances = currentFrame->m_numInstances;
     data->m_primitives.reserve( ids.size() );
     for( ui32 i = 0; i < ids.size(); ++i ) {
         data->m_primitives.add( ids[ i ] );
@@ -297,7 +297,7 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
         result = onAttachView( data );
     } else if ( OnDetachViewEvent == ev ) {
         result = onDetachView( data );
-    } else if ( OnAttachSceneEvent == ev ) {
+    }/* else if ( OnAttachSceneEvent == ev ) {
         result = onAttachGeo( data );
     } else if ( OnUpdateGeoEvent == ev ) {
         result = onUpdateGeo( data );
@@ -305,11 +305,14 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
         result = onDetachGeo( data );
     } else if ( OnClearSceneEvent == ev ) {
         result = onClearGeo( data );
-    } else if( OnRenderFrameEvent == ev ) {
+    }*/ else if( OnRenderFrameEvent == ev ) {
         result = onRenderFrame( data );
-    } else if ( OnSetParameterEvent == ev ) {
+    }/* else if ( OnSetParameterEvent == ev ) {
         result = onUpdateParameter( data );
+    }*/ else if ( OnCommitFrameEvent == ev ) {
+        result = onCommitNexFrame( data );
     }
+ 
     return result;
 }
 
@@ -356,7 +359,6 @@ bool OGLRenderEventHandler::onDetached( const EventData *eventData ) {
 
     return true;
 }
-
 
 bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
@@ -450,7 +452,7 @@ bool OGLRenderEventHandler::onDetachView( const EventData * ) {
     return true;
 }
 
-bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
+/*bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	
 	AttachGeoEventData *attachSceneEvData = ( AttachGeoEventData* ) eventData;
@@ -499,15 +501,15 @@ bool OGLRenderEventHandler::onAttachGeo( const EventData *eventData ) {
     m_oglBackend->useShader( nullptr );
 
     return true;
-}
+}*/
 
-bool OGLRenderEventHandler::onDetachGeo( const EventData * ) {
+/*bool OGLRenderEventHandler::onDetachGeo( const EventData * ) {
     OSRE_ASSERT( nullptr != m_oglBackend );
 
     return true;
-}
+}*/
 
-bool OGLRenderEventHandler::onClearGeo( const EventData * ) {
+/*bool OGLRenderEventHandler::onClearGeo( const EventData * ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	
 	m_oglBackend->releaseAllBuffers();
@@ -517,9 +519,9 @@ bool OGLRenderEventHandler::onClearGeo( const EventData * ) {
     m_renderCmdBuffer->clear();
 
     return true;
-}
+}*/
 
-bool OGLRenderEventHandler::onUpdateGeo( const EventData *eventData ) {
+/*bool OGLRenderEventHandler::onUpdateGeo( const EventData *eventData ) {
     OSRE_ASSERT( nullptr != m_oglBackend );
 
     if ( nullptr == m_renderCtx ) {
@@ -544,7 +546,7 @@ bool OGLRenderEventHandler::onUpdateGeo( const EventData *eventData ) {
     }
 
     return true;
-}
+}*/
 
 bool OGLRenderEventHandler::onRenderFrame( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
@@ -571,27 +573,79 @@ bool OGLRenderEventHandler::onRenderFrame( const EventData *eventData ) {
     return true;
 }
 
-bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
+/*bool OGLRenderEventHandler::onUpdateParameter( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	
 	SetParameterEventData *updateParamData = ( SetParameterEventData* ) eventData;
-    if( nullptr != updateParamData ) {
-        for( ui32 i = 0; i < updateParamData->m_numParam; ++i ) {
-            UniformVar *currentParam( updateParamData->m_param[ i ] );
-            if ( nullptr == currentParam ) {
-                continue;
-            }
-            OGLParameter *oglParam( m_oglBackend->getParameter( currentParam->m_name ) );
-            if ( nullptr == oglParam ) {
-                setupParameter( currentParam, 1, m_oglBackend, this );
-            } else {
-                ::memcpy( oglParam->m_data->getData(), currentParam->m_data.getData(), currentParam->m_data.m_size );
-            }
-            m_renderCmdBuffer->addParameter( oglParam );
+    if ( nullptr == updateParamData ) {
+        return false;
+    }
+        
+    for( ui32 i = 0; i < updateParamData->m_numParam; ++i ) {
+        UniformVar *currentParam( updateParamData->m_param[ i ] );
+        if ( nullptr == currentParam ) {
+            continue;
         }
+        OGLParameter *oglParam( m_oglBackend->getParameter( currentParam->m_name ) );
+        if ( nullptr == oglParam ) {
+            setupParameter( currentParam, 1, m_oglBackend, this );
+        } else {
+            ::memcpy( oglParam->m_data->getData(), currentParam->m_data.getData(), currentParam->m_data.m_size );
+        }
+        m_renderCmdBuffer->addParameter( oglParam );
     }
 
     return true;
+}*/
+
+bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData ) {
+    OSRE_ASSERT( nullptr != m_oglBackend );
+
+    CommitFrameEventData *frameToCommitData = ( CommitFrameEventData* ) eventData;
+    if ( nullptr == frameToCommitData ) {
+        return false;
+    }
+    Frame *frame = frameToCommitData->m_frame;
+
+    for ( ui32 geoIdx = 0; geoIdx < frame->m_numNewGeo; ++geoIdx ) {
+        Geometry *geo = frame->m_newGeo[ geoIdx ];
+        if ( nullptr == geo ) {
+            osre_debug( Tag, "Geometry-pointer is a nullptr." );
+            return false;
+        }
+
+        // register primitive groups to render
+        CPPCore::TArray<ui32> primGroups;
+        for ( ui32 i = 0; i < geo->m_numPrimGroups; ++i ) {
+            const ui32 primIdx( m_oglBackend->addPrimitiveGroup( &geo->m_pPrimGroups[ i ] ) );
+            primGroups.add( primIdx );
+        }
+
+        // create the default material
+        setupMaterial( geo->m_material, m_oglBackend, this );
+
+        // setup vertex array, vertex and index buffers
+        m_vertexArray = setupBuffers( geo, m_oglBackend, m_renderCmdBuffer->getActiveShader() );
+        if ( nullptr == m_vertexArray ) {
+            osre_debug( Tag, "Vertex-Array-pointer is a nullptr." );
+            return false;
+        }
+
+        // setup global parameter
+        if ( nullptr != geo->m_material->m_parameters && geo->m_material->m_numParameters != 0 ) {
+            setupParameter( geo->m_material->m_parameters, geo->m_material->m_numParameters, m_oglBackend, this );
+        }
+
+        // setup the draw calls
+        if ( 0 == frame->m_numInstances ) {
+            setupPrimDrawCmd( primGroups, m_oglBackend, this, m_vertexArray );
+        }
+        else {
+            setupInstancedDrawCmd( primGroups, frame, m_oglBackend, this, m_vertexArray );
+        }
+    }
+
+    m_oglBackend->useShader( nullptr );
 }
 
 } // Namespace RenderBackend

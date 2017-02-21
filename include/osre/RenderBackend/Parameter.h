@@ -32,6 +32,7 @@ namespace RenderBackend {
 class RenderBackendService;
 
 struct Geometry;
+struct GeoInstanceData;
 
 enum class ParameterType {
     PT_None,
@@ -138,13 +139,29 @@ private:
 };
 
 struct Frame {
-    ui32           m_numVars;
-    UniformVar   **m_vars;
-    ui32           m_numNewGeo;
-    Geometry     **m_newGeo;
+    ui32              m_numVars;
+    UniformVar      **m_vars;
+    ui32              m_numNewGeo;
+    Geometry        **m_newGeo;
+    ui32              m_numInstances;
+    GeoInstanceData  *m_geoInstanceData;
 
-    Frame() {}
-    ~Frame() {}
+    Frame() 
+    : m_numVars( 0 )
+    , m_vars( nullptr )
+    , m_numNewGeo( 0 )
+    , m_newGeo( nullptr )
+    , m_numInstances( 0 )
+    , m_geoInstanceData( nullptr ) {
+        // empty
+    }
+    
+    ~Frame() {
+        // empty
+    }
+
+    Frame( const Frame  & ) = delete;
+    Frame& operator = ( const Frame & ) = delete;
 };
 
 } // Namespace RenderBackend

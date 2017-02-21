@@ -124,11 +124,6 @@ ui32 UniformVar::getParamDataSize( ParameterType type, ui32 arraySize ) {
     return size;
 }
 
-static ui32 calcHash( const String &name ) {
-    const ui32 hash( StringUtils::hashName( name.c_str() ) );
-    return hash;
-}
-
 UniformVar *UniformVar::create( const String &name, ParameterType type, ui32 arraySize ) {
     if( name.empty() ) {
         osre_debug( Tag, "Empty name for parameter." );

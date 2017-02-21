@@ -67,7 +67,7 @@ DECL_EVENT( OnCreateRendererEvent );
 DECL_EVENT( OnDestroyRendererEvent );
 DECL_EVENT( OnAttachViewEvent );
 DECL_EVENT( OnDetachViewEvent );
-DECL_EVENT( OnAttachSceneEvent );
+//DECL_EVENT( OnAttachSceneEvent );
 DECL_EVENT( OnUpdateGeoEvent );
 DECL_EVENT( OnClearSceneEvent );
 DECL_EVENT( OnDetachSceneEvent );
@@ -112,7 +112,7 @@ struct OSRE_EXPORT AttachViewEventData : public Common::EventData {
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-struct OSRE_EXPORT AttachGeoEventData : public Common::EventData {
+/*struct OSRE_EXPORT AttachGeoEventData : public Common::EventData {
     AttachGeoEventData()
     : EventData( OnAttachSceneEvent, nullptr )
     , m_numGeo( 0 )
@@ -126,14 +126,14 @@ struct OSRE_EXPORT AttachGeoEventData : public Common::EventData {
     Geometry       **m_geo;
     ui32             m_numInstances;
     GeoInstanceData *m_geoInstanceData; 
-};
+};*/
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-struct OSRE_EXPORT UpdateGeoEventData : public Common::EventData {
+/*struct OSRE_EXPORT UpdateGeoEventData : public Common::EventData {
     UpdateGeoEventData() 
     : EventData( OnUpdateGeoEvent, nullptr )
     , m_numGeo( 0 )
@@ -143,14 +143,14 @@ struct OSRE_EXPORT UpdateGeoEventData : public Common::EventData {
     
     ui32 m_numGeo;
     Geometry *m_geo;
-};
+};*/
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-struct OSRE_EXPORT SetParameterEventData : public Common::EventData {
+/*struct OSRE_EXPORT SetParameterEventData : public Common::EventData {
     SetParameterEventData()
     : EventData( OnSetParameterEvent, nullptr )
     , m_numParam( 0 )
@@ -160,7 +160,7 @@ struct OSRE_EXPORT SetParameterEventData : public Common::EventData {
 
     ui32 m_numParam;
     UniformVar **m_param;
-};
+};*/
 
 struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
     CommitFrameEventData()
@@ -204,6 +204,8 @@ public:
     void sendEvent( const Common::Event *ev, const Common::EventData *eventData );
 
     void setMatrix( const String &name, const glm::mat4 &matrix );
+
+    void attachGeo( Geometry *geo );
 
     void attachGeo( const CPPCore::TArray<Geometry*> &geoArray );
 

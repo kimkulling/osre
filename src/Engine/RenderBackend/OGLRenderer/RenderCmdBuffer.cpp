@@ -147,7 +147,7 @@ void RenderCmdBuffer::addParameter( const ::CPPCore::TArray<OGLParameter*> &para
     }
 }
 
-bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
+/*bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
     SetParameterEventData *updateParamData = ( SetParameterEventData* ) data;
     if( nullptr != updateParamData ) {
@@ -165,7 +165,7 @@ bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
     }
 
     return true;
-}
+}*/
 
 bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *data ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
