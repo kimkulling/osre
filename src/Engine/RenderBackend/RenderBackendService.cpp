@@ -45,6 +45,8 @@ RenderBackendService::RenderBackendService()
 , m_ownsSettingsConfig( false )
 , m_nextFrame()
 , m_newGeo()
+, m_geoUpdates()
+, m_newInstances()
 , m_variables()
 , m_uniformUpdates() {
     // empty
@@ -203,8 +205,19 @@ void RenderBackendService::attachGeoUpdate( Geometry *geo ) {
 }
 
 void RenderBackendService::attachGeoUpdate( const CPPCore::TArray<Geometry*> &geoArray ) {
-        m_geoUpdates.add( &geoArray[ 0 ], geoArray.size() );
+    m_geoUpdates.add( &geoArray[ 0 ], geoArray.size() );
+}
 
+void RenderBackendService::attachGeoInstance( GeoInstanceData *instanceData ) {
+    if ( nullptr == instanceData ) {
+        osre_debug( Tag, "Pointer to geometry is nullptr." );
+        return;
+    }
+    m_newInstances.add( instanceData );
+}
+
+void RenderBackendService::attachGeoInstance( const CPPCore::TArray<GeoInstanceData*> &instanceData ) {
+    m_newInstances.add( &instanceData[ 0 ], instanceData.size() );
 }
 
 void RenderBackendService::attachView( TransformMatrixBlock &transform ) {

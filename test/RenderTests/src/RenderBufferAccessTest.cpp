@@ -107,7 +107,7 @@ public:
 
     virtual bool onCreate( RenderBackendService *rbSrv ) {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
-        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
+//        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         CPPCore::RandomGenerator generator;
         for ( ui32 i = 0; i < NumPts; i++ ) {
@@ -128,11 +128,12 @@ public:
         }
 
         static const ui32 NumGeo( 1 );
-        attachGeoEvData->m_numGeo = NumGeo;
+        /*attachGeoEvData->m_numGeo = NumGeo;
         attachGeoEvData->m_geo = new Geometry *[ NumGeo ];
-        attachGeoEvData->m_geo[0] = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, NumGeo );
+        attachGeoEvData->m_geo[0] = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, NumGeo );*/
 
-        m_ptGeo = attachGeoEvData->m_geo[ 0 ];
+        m_ptGeo = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, NumGeo ); 
+        rbSrv->attachGeo( m_ptGeo );
         m_ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, NumPts, m_pos, m_col, nullptr, BufferAccessType::ReadOnly );
         m_ptGeo->m_indextype = IndexType::UnsignedShort;
         ui32 pt_size = sizeof( GLushort ) * NumPts;
@@ -156,7 +157,7 @@ public:
         mat->m_numParameters = 1;
         mat->m_parameters = parameter;
 
-        rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+//        rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
         return true;
     }
@@ -177,10 +178,11 @@ public:
             offset += sizeof( ColorVert );
         }
 
-        UpdateGeoEventData *updateGeoEvData( new UpdateGeoEventData );
-        updateGeoEvData->m_numGeo = 1;
-        updateGeoEvData->m_geo = m_ptGeo;
-        rbSrv->sendEvent( &OnUpdateGeoEvent, updateGeoEvData );
+//        UpdateGeoEventData *updateGeoEvData( new UpdateGeoEventData );
+        /*updateGeoEvData->m_numGeo = 1;
+        updateGeoEvData->m_geo = m_ptGeo;*/
+        rbSrv->attachGeoUpdate( m_ptGeo );
+        //rbSrv->sendEvent( &OnUpdateGeoEvent, updateGeoEvData );
         
         return true;
     }

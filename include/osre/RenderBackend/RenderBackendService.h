@@ -209,6 +209,10 @@ public:
 
     void attachGeo( const CPPCore::TArray<Geometry*> &geoArray );
 
+    void attachGeoInstance( GeoInstanceData *instanceData );
+
+    void attachGeoInstance( const CPPCore::TArray<GeoInstanceData*> &instanceData );
+
     void attachGeoUpdate( Geometry *geo );
 
     void attachGeoUpdate( const CPPCore::TArray<Geometry*> &geoArray );
@@ -236,7 +240,8 @@ private:
     Frame m_nextFrame;
     CPPCore::TArray<Geometry*> m_newGeo;
     CPPCore::TArray<Geometry*> m_geoUpdates;
-    CPPCore::THashMap<ui32, UniformVar*>  m_variables;
+    CPPCore::TArray<GeoInstanceData*> m_newInstances;
+    CPPCore::THashMap<ui32, UniformVar*> m_variables;
     CPPCore::TArray<UniformVar*> m_uniformUpdates;
 };
 

@@ -126,7 +126,7 @@ public:
         m_transformMatrix.update();
 
         static const ui32 NumInstances = 25;
-        attachGeoEvData->m_numInstances = NumInstances;
+//        attachGeoEvData->m_numInstances = NumInstances;
         glm::mat4 mat[NumInstances];
         glm::mat4 scale = glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.1f ) );
         
@@ -149,10 +149,10 @@ public:
         ::memcpy( parameterM->m_data.m_data, glm::value_ptr( mat[ 0 ] ), sizeof( glm::mat4 ) * NumInstances);
         parameterMVP->m_next = parameterM;
 
-        geo->m_material->m_parameters = parameterMVP;
-        geo->m_material->m_numParameters += 2;
+//        geo->m_material->m_parameters = parameterMVP;
+//        geo->m_material->m_numParameters += 2;
         
-        rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+//        rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
         return true;
     }
