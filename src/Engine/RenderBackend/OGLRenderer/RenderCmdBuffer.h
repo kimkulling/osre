@@ -39,6 +39,7 @@ namespace RenderBackend {
 
 class OGLRenderBackend;
 class OGLShader;
+class Pipeline;
 
 struct OGLVertexArray;
 struct OGLRenderCmd;
@@ -67,7 +68,7 @@ public:
 
 public:
     /// The class constructor.
-    RenderCmdBuffer( OGLRenderBackend *renderBackend, Platform::AbstractRenderContext *ctx );
+    RenderCmdBuffer( OGLRenderBackend *renderBackend, Platform::AbstractRenderContext *ctx, Pipeline *pipeline );
     /// The class destructor.
     virtual ~RenderCmdBuffer();
     /// Will set the active shader.
@@ -84,8 +85,9 @@ public:
     void onPostRenderFrame();
     /// The buffer and all attached commands will be cleared.
     void clear();
-
+    /// Will add one parameter to the setup of the pipeline
     void addParameter( OGLParameter* param );
+    /// Will add an array of parameters to the setup of the pipeline
     void addParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray );
 
 protected:
@@ -109,6 +111,7 @@ private:
     ::CPPCore::TArray<PrimitiveGroup*> m_primitives;
     ::CPPCore::TArray<Material*> m_materials;
     ::CPPCore::TArray<OGLParameter*> m_paramArray;
+    Pipeline *m_pipeline;
 };
 
 } // Namespace RenderBackend

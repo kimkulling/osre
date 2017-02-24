@@ -34,15 +34,17 @@ using namespace ::OSRE::Platform;
 
 static const String Tag = "RenderCmdBuffer";
 
-RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRenderContext *ctx )
+RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRenderContext *ctx, Pipeline *pipeline )
 : m_renderbackend( renderBackend )
 , m_renderCtx( ctx )
 , m_activeShader( nullptr )
 , m_primitives()
 , m_materials()
-, m_paramArray() {
+, m_paramArray()
+, m_pipeline( pipeline ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
     OSRE_ASSERT( nullptr != m_renderCtx );
+    OSRE_ASSERT( nullptr != m_pipeline );
 
     m_clearState.m_state = ClearState::ColorBit | ClearState::DepthBit;
 }
@@ -91,22 +93,33 @@ void RenderCmdBuffer::onPreRenderFrame() {
 void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
     OSRE_ASSERT( nullptr!=m_renderbackend );
 
-    for( ui32 i = 0; i < m_cmdbuffer.size(); ++i ) {
-        // only valid pointers are allowed
-        OGLRenderCmd *renderCmd = m_cmdbuffer[ i ];
-        OSRE_ASSERT( nullptr != renderCmd );
+    ui32 numPasses = m_pipeline->beginFrame();
+    for ( ui32 passId = 0; passId < numPasses; passId++ ) {
+        m_pipeline->beginPass( passId );
 
-        if( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesCmd ) {
-            onDrawPrimitivesCmd( ( DrawPrimitivesCmdData* ) renderCmd->m_pData );
-        } else if( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesInstancesCmd ) {
-            onDrawPrimitivesInstancesCmd( ( DrawInstancePrimitivesCmdData* ) renderCmd->m_pData );
-		} else if ( renderCmd->m_type == OGLRenderCmdType::SetRenderTargetCmd) {
-			onSetRenderTargetCmd( ( SetRenderTargetCmdData* ) renderCmd->m_pData);
-        } else if ( renderCmd->m_type == OGLRenderCmdType::SetMaterialCmd ) {
-            onSetMaterialStageCmd( ( SetMaterialStageCmdData* ) renderCmd->m_pData );
-        } else {
-            osre_error( Tag, "Unsupported render command type: " + static_cast<ui32>( renderCmd->m_type ) );
+        for ( ui32 i = 0; i < m_cmdbuffer.size(); ++i ) {
+            // only valid pointers are allowed
+            OGLRenderCmd *renderCmd = m_cmdbuffer[ i ];
+            OSRE_ASSERT( nullptr != renderCmd );
+
+            if ( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesCmd ) {
+                onDrawPrimitivesCmd( ( DrawPrimitivesCmdData* ) renderCmd->m_pData );
+            }
+            else if ( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesInstancesCmd ) {
+                onDrawPrimitivesInstancesCmd( ( DrawInstancePrimitivesCmdData* ) renderCmd->m_pData );
+            }
+            else if ( renderCmd->m_type == OGLRenderCmdType::SetRenderTargetCmd ) {
+                onSetRenderTargetCmd( ( SetRenderTargetCmdData* ) renderCmd->m_pData );
+            }
+            else if ( renderCmd->m_type == OGLRenderCmdType::SetMaterialCmd ) {
+                onSetMaterialStageCmd( ( SetMaterialStageCmdData* ) renderCmd->m_pData );
+            }
+            else {
+                osre_error( Tag, "Unsupported render command type: " + static_cast< ui32 >( renderCmd->m_type ) );
+            }
         }
+
+        m_pipeline->endPass( passId );
     }
 
     m_renderbackend->renderFrame();

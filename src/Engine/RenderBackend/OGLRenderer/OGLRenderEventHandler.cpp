@@ -274,8 +274,7 @@ OGLRenderEventHandler::OGLRenderEventHandler( )
 , m_oglBackend( nullptr )
 , m_renderCmdBuffer( nullptr )
 , m_renderCtx( nullptr )
-, m_vertexArray( nullptr ) 
-, m_pipeline( nullptr ) {
+, m_vertexArray( nullptr )  {
     // empty
 }
         
@@ -403,7 +402,7 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
     String path = Assets::AssetRegistry::resolvePathFromUri( fontUri );
     fontUri.setPath( path );
     m_oglBackend->createFont( fontUri );
-    m_renderCmdBuffer = new RenderCmdBuffer( m_oglBackend, m_renderCtx );
+    m_renderCmdBuffer = new RenderCmdBuffer( m_oglBackend, m_renderCtx, createRendererEvData->m_pipeline );
 
     bool ok( Profiling::PerformanceCounters::create() );
     if ( !ok ) {
@@ -412,8 +411,6 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
     }
 
     Profiling::PerformanceCounters::registerCounter( "fps" );
-
-    m_pipeline = createRendererEvData->m_pipeline;
 
     return true;
 }
@@ -556,19 +553,10 @@ bool OGLRenderEventHandler::onRenderFrame( const EventData *eventData ) {
         return false;
     }
 
-    ui32 numPasses = m_pipeline->beginFrame();
-    for ( ui32 passId = 0; passId < numPasses; passId++ ) {
-        m_pipeline->beginPass( passId );
 
-        m_renderCmdBuffer->onPreRenderFrame();
-        m_renderCmdBuffer->onRenderFrame( eventData );
-        m_renderCmdBuffer->onPostRenderFrame();
-
-        m_pipeline->endPass( passId );
-    }
-    /*m_renderCmdBuffer->onPreRenderFrame(); 
+    m_renderCmdBuffer->onPreRenderFrame();
     m_renderCmdBuffer->onRenderFrame( eventData );
-    m_renderCmdBuffer->onPostRenderFrame();*/
+    m_renderCmdBuffer->onPostRenderFrame();
 
     return true;
 }
@@ -646,6 +634,8 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
     }
 
     m_oglBackend->useShader( nullptr );
+
+    return true;
 }
 
 } // Namespace RenderBackend

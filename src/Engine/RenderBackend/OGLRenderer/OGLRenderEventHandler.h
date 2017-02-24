@@ -112,7 +112,6 @@ private:
     RenderCmdBuffer *m_renderCmdBuffer;
     Platform::AbstractRenderContext *m_renderCtx;
     OGLVertexArray *m_vertexArray;
-    Pipeline *m_pipeline;
 };
 
 } // Namespace RenderBackend
