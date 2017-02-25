@@ -54,20 +54,21 @@ enum class BufferAccessType {
     ReadWrite       ///< Read and write access.
 };
 
-///	@brief
+///	@brief  This enum describes the buildin vertex types provided by OSRE, mainly used for demos and examples.
 enum class VertexType {
-    ColorVertex,
-    RenderVertex
+    ColorVertex,    ///< A simple vertex consisting of position and color.
+    RenderVertex    ///< A render vertex with position, color, normals and texture coordinates.
 };
 
-///	@brief
+///	@brief  This enum describes the supported texture target types.
 enum class TextureTargetType {
-    Texture1D,
-    Texture2D,
-    Texture3D
+    Texture1D,      ///< 1D-textures, used for simple arrays in shaders.
+    Texture2D,      ///< 2D-textures, used for images and render targets.
+    Texture3D       ///< 3D-textures, used for volume rendering.
 };
 
-///	@brief
+///	@brief  This enum describes the supported texture stages. A texture stage describes one layer of 
+/// a texture composition like a diffuse texture at stage0 and a lighting information at statge1.
 enum class TextureStageType {
     TextureStage0 = 0,
     TextureStage1,
@@ -75,30 +76,30 @@ enum class TextureStageType {
     TextureStage3
 };
 
-///	@brief
+///	@brief  This enum describes different texture parameter names.
 enum class TextureParameterName {
-    TextureParamMinFilter = 0,
-    TextureParamMagFilter,
-    TextureParamWrapS,
-    TextureParamWrapT
+    TextureParamMinFilter = 0,  ///< The min filter name.
+    TextureParamMagFilter,      ///< The mag filter name.
+    TextureParamWrapS,          ///< The wrap name for s
+    TextureParamWrapT           ///< The warp name for t.
 };
 
-///	@brief
+///	@brief  This enum describes the parameters which are related the the parameter names ( @see TextureParameterName ).
 enum class TextureParameterType {
-    TexturePTNearest = 0,
-    TexturePTLinear,
-    TexturePTClamp,
-    TexturePTMirroredRepeat,
-    TexturePTRepeat
+    TexturePTNearest = 0,       ///< Use nearest filter mode.
+    TexturePTLinear,            ///< Use linear interpolation mode.
+    TexturePTClamp,             ///< Use clamp mode, texture data will be clamped.
+    TexturePTMirroredRepeat,    ///< Use mirror repeat mode, texture will be repeately mirrored.
+    TexturePTRepeat             ///< Use repeat mode, texture will be repeately mirrored.
 };
 
-///	@brief
+///	@brief  This enum describes the index data type.
 enum class IndexType {
-    UnsignedByte,   ///<
-    UnsignedShort   ///<
+    UnsignedByte,               ///< Bytes are used for the index data.
+    UnsignedShort               ///< UNsigned short for the index data.
 };
 
-///	@brief
+///	@brief  This enum describes the primitive types for rendering vertex information.
 enum class PrimitiveType {
     PointList,		///< A list of points, one index per point.
     LineList,		///< A list of separate lines, 2 indices per line.
@@ -108,28 +109,32 @@ enum class PrimitiveType {
     TriangleFan		///< A triangle fan.
 };
 
-///	@brief
+///	@brief  This struct declares a render vertex for textured geometry.
 struct OSRE_EXPORT ColorVert {
-    glm::vec3 position;
-    glm::vec3 normal;
-    glm::vec3 color0;
+    glm::vec3 position; ///< The position ( x|y|z )
+    glm::vec3 normal;   ///< The normal vector ( x|y|z )
+    glm::vec3 color0;   ///< The diffuse color ( r|g|b )
 
-    static ui32 getNumAttributes();
+    /// @brief  Returns the number of attributes.
+    static ui32          getNumAttributes();
+    /// @brief  Returns the attribute array.
     static const String *getAttributes();
 };
 
-///	@brief
+///	@brief  This struct declares a render vertex for textured geometry
 struct RenderVert {
-    glm::vec3 position;
-    glm::vec3 normal;
-    glm::vec3 color0;
-    glm::vec2 tex0;
+    glm::vec3 position; ///< The position ( x|y|z )
+    glm::vec3 normal;   ///< The normal vector ( x|y|z )
+    glm::vec3 color0;   ///< The diffuse color ( r|g|b )
+    glm::vec2 tex0;     ///< The texture color ( r|g|b )
 
-    static ui32 getNumAttributes(); 
+    /// @brief  Returns the number of attributes.
+    static ui32          getNumAttributes(); 
+    /// @brief  Returns the attribute array.
     static const String *getAttributes();
 };
 
-///	@brief
+///	@brief  This enum to descibes the type of the vertex attribute.
 enum class VertexAttribute : int {
     Position = 0,   ///< "position"
     Normal,         ///< "normal"
@@ -153,7 +158,7 @@ enum class VertexAttribute : int {
 
 OSRE_EXPORT const String &getVertCompName( VertexAttribute attrib );
 
-///	@brief
+///	@brief  This enum describes the vertex data format.
 enum class VertexFormat : int {
     Float,          ///< single component float, expanded to (x, 0, 0, 1)
     Float2,         ///< 2-component float, expanded to (x, y, 0, 1)
@@ -167,7 +172,7 @@ enum class VertexFormat : int {
     InvalidVertexFormat, 
 };
 
-///	@brief
+///	@brief  Utility function for calculate the vertex format size.
 inline
 ui32 getVertexFormatSize( VertexFormat format ) {
     ui32 size( 0 );
@@ -207,6 +212,7 @@ ui32 getVertexFormatSize( VertexFormat format ) {
     return size;
 }
 
+/// @brief  This struct declares an extension description.
 struct ExtensionProperty {
     c8   m_extensionName[ MaxEntNameLen ];
     ui32 m_version;
