@@ -39,6 +39,15 @@ struct ThreadId {
     : Id( 0 ) {
         // empty
     }
+
+    /// @brief  The equal operator implementation.
+    bool operator == ( const ThreadId &rhs ) const {
+        return Id == rhs.Id;
+    }
+    
+    bool operator != ( const ThreadId &rhs ) const {
+        return Id != rhs.Id;
+    }
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -53,7 +62,7 @@ public:
     typedef ui32 (*threadfunc) ( void * );
 
     /// The thread id type.
-    typedef unsigned int threadId;
+    //typedef unsigned int threadId;
 
     ///	@brief	This enum describes the priority of the thread.
     enum class Priority {
