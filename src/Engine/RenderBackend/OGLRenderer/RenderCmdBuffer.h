@@ -90,6 +90,8 @@ public:
     /// Will add an array of parameters to the setup of the pipeline
     void addParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray );
 
+    void commitParameters();
+
 protected:
     /// The update parameter callback.
     //virtual bool onUpdateParameter( const Common::EventData *pEventData );

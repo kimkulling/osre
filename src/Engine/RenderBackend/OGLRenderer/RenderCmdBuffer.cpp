@@ -94,6 +94,7 @@ void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
     OSRE_ASSERT( nullptr!=m_renderbackend );
 
     ui32 numPasses = m_pipeline->beginFrame();
+
     for ( ui32 passId = 0; passId < numPasses; passId++ ) {
         m_pipeline->beginPass( passId );
 
@@ -160,6 +161,11 @@ void RenderCmdBuffer::addParameter( const ::CPPCore::TArray<OGLParameter*> &para
     }
 }
 
+void RenderCmdBuffer::commitParameters() {
+    for ( ui32 i = 0; i < m_paramArray.size(); i++ ) {
+        m_renderbackend->setParameter( m_paramArray[ i ] );
+    }
+}
 /*bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
     SetParameterEventData *updateParamData = ( SetParameterEventData* ) data;
@@ -219,10 +225,8 @@ bool RenderCmdBuffer::onSetMaterialStageCmd( SetMaterialStageCmdData *data ) {
 
     m_renderbackend->useShader( data->m_shader );
     
-    for ( ui32 i = 0; i < m_paramArray.size(); i++ ) {
-        m_renderbackend->setParameter( m_paramArray[ i ] );
-    }
-    
+    commitParameters();
+
     for ( ui32 i = 0; i < data->m_textures.size(); ++i ) {
         OGLTexture *oglTexture = data->m_textures[ i ];
         if ( nullptr != oglTexture ) {

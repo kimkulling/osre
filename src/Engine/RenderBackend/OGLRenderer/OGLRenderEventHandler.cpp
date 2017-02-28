@@ -620,9 +620,14 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
         }
 
         // setup global parameter
-        if ( nullptr != geo->m_material->m_parameters && geo->m_material->m_numParameters != 0 ) {
-            setupParameter( geo->m_material->m_parameters, geo->m_material->m_numParameters, m_oglBackend, this );
+        if ( frame->m_numVars > 0 ) {
+            for ( ui32 i = 0; i < frame->m_numVars; i++ ) {
+                setupParameter( frame->m_vars[ i ], 1, m_oglBackend, this );
+            }
         }
+        /*if ( nullptr != geo->m_material->m_parameters && geo->m_material->m_numParameters != 0 ) {
+            setupParameter( geo->m_material->m_parameters, geo->m_material->m_numParameters, m_oglBackend, this );
+        }*/
 
         // setup the draw calls
         if ( 0 == frame->m_numInstances ) {

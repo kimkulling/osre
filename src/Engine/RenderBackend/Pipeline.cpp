@@ -35,7 +35,8 @@ PipelinePass::~PipelinePass() {
     // empty
 }
 
-void PipelinePass::set( RenderTarget &rt, BlendState &blendState, SamplerState &samplerState, ClearState &clearState, StencilState &stencilState ) {
+void PipelinePass::set( RenderTarget &rt, BlendState &blendState, SamplerState &samplerState, 
+                        ClearState &clearState, StencilState &stencilState ) {
     m_renderTarget = rt;
     m_blendState = blendState;
     m_samplerState = samplerState;
@@ -88,7 +89,7 @@ ui32 Pipeline::beginFrame() {
 }
 
 bool Pipeline::beginPass( ui32 passId ) {
-    if ( -1 == m_passId || !m_inFrame ) {
+    if ( !m_inFrame ) {
         return false;
     }
 
