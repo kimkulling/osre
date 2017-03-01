@@ -296,19 +296,9 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
         result = onAttachView( data );
     } else if ( OnDetachViewEvent == ev ) {
         result = onDetachView( data );
-    }/* else if ( OnAttachSceneEvent == ev ) {
-        result = onAttachGeo( data );
-    } else if ( OnUpdateGeoEvent == ev ) {
-        result = onUpdateGeo( data );
-    } else if( OnDetachSceneEvent == ev ) {
-        result = onDetachGeo( data );
-    } else if ( OnClearSceneEvent == ev ) {
-        result = onClearGeo( data );
-    }*/ else if( OnRenderFrameEvent == ev ) {
+    } else if ( OnRenderFrameEvent == ev ) {
         result = onRenderFrame( data );
-    }/* else if ( OnSetParameterEvent == ev ) {
-        result = onUpdateParameter( data );
-    }*/ else if ( OnCommitFrameEvent == ev ) {
+    } else if ( OnCommitFrameEvent == ev ) {
         result = onCommitNexFrame( data );
     }
  
@@ -625,18 +615,17 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
                 setupParameter( frame->m_vars[ i ], 1, m_oglBackend, this );
             }
         }
-        /*if ( nullptr != geo->m_material->m_parameters && geo->m_material->m_numParameters != 0 ) {
-            setupParameter( geo->m_material->m_parameters, geo->m_material->m_numParameters, m_oglBackend, this );
-        }*/
 
         // setup the draw calls
         if ( 0 == frame->m_numInstances ) {
             setupPrimDrawCmd( primGroups, m_oglBackend, this, m_vertexArray );
-        }
-        else {
+        } else {
             setupInstancedDrawCmd( primGroups, frame, m_oglBackend, this, m_vertexArray );
         }
     }
+    delete[] frame->m_newGeo;
+    frame->m_newGeo = nullptr;
+    frame->m_numNewGeo = 0;
 
     m_oglBackend->useShader( nullptr );
 
