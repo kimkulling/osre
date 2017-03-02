@@ -117,7 +117,7 @@ bool RenderBackendService::onUpdate( d32 timediff ) {
     commitNextFrame();
 
     // synchronizing event with render back-end
-    bool result( m_renderTaskPtr->sendEvent( &OnRenderFrameEvent, nullptr ) );
+    auto result( m_renderTaskPtr->sendEvent( &OnRenderFrameEvent, nullptr ) );
     m_renderTaskPtr->awaitUpdate();
 
     return result;
@@ -160,6 +160,15 @@ void RenderBackendService::commitNextFrame() {
         }
         m_uniformUpdates.resize( 0 );
     }
+
+    if ( !m_geoUpdates.isEmpty() ) {
+        m_nextFrame.m_numGeoUpdates = m_geoUpdates.size();
+        m_nextFrame.m_geoUpdates = new Geometry*[m_nextFrame.m_numGeoUpdates];
+        for (ui32 i = 0; i < m_nextFrame.m_numGeoUpdates; i++) {
+            m_nextFrame.m_geoUpdates[i] = m_geoUpdates[i];
+        }
+        m_geoUpdates.resize(0);
+    }
     data->m_frame = &m_nextFrame;
     m_renderTaskPtr->sendEvent( &OnCommitFrameEvent, data );
 }
@@ -182,6 +191,18 @@ void RenderBackendService::setMatrix( const String &name, const glm::mat4 &matri
 
     ::memcpy( uniform->m_data.m_data, glm::value_ptr( matrix ), sizeof( glm::mat4 ) );
     m_uniformUpdates.add( uniform );
+}
+
+void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray) {
+    UniformVar *uniform(nullptr);
+    const ui32 key(Common::StringUtils::hashName(name.c_str()));
+    if (!m_variables.hasKey(key)) {
+        uniform = UniformVar::create(name, ParameterType::PT_Mat4Array);
+        m_variables.insert(key, uniform);
+    } else {
+        m_variables.getValue(key, uniform);
+    }
+    ::memcpy(uniform->m_data.m_data, glm::value_ptr( matrixArray[0] ), sizeof(glm::mat4) * numMat );
 }
 
 void RenderBackendService::attachGeo( Geometry *geo ) {

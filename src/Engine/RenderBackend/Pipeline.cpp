@@ -104,7 +104,8 @@ bool Pipeline::endPass( ui32 passId ) {
     }
 
     m_passId = -1;
-    
+    m_inFrame = false;
+
     return true;
 }
 

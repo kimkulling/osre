@@ -145,6 +145,8 @@ struct Frame {
     Geometry        **m_newGeo;
     ui32              m_numInstances;
     GeoInstanceData  *m_geoInstanceData;
+    ui32              m_numGeoUpdates;
+    Geometry        **m_geoUpdates;
 
     Frame() 
     : m_numVars( 0 )
@@ -152,7 +154,9 @@ struct Frame {
     , m_numNewGeo( 0 )
     , m_newGeo( nullptr )
     , m_numInstances( 0 )
-    , m_geoInstanceData( nullptr ) {
+    , m_geoInstanceData( nullptr )
+    , m_numGeoUpdates( 0 )
+    , m_geoUpdates( nullptr ) {
         // empty
     }
     

@@ -29,11 +29,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractRenderContext.h>
 #include <osre/Profiling/PerformanceCounters.h>
 #include <osre/Common/Logger.h>
-#include <osre/Common/ColorRGBA.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Stream.h>
 #include <osre/IO/Uri.h>
-#include <osre/Assets/AssetRegistry.h>
 #include <osre/Profiling/PerformanceCounters.h>
 
 #include <cppcore/CPPCoreCommon.h>

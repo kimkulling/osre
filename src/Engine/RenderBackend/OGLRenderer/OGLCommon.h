@@ -175,10 +175,12 @@ struct SetParameterCmdData {
 struct SetMaterialStageCmdData {
     OGLShader *m_shader;
     CPPCore::TArray<OGLTexture*> m_textures;
+    OGLVertexArray        *m_vertexArray;    ///<
 
     SetMaterialStageCmdData()
     : m_shader( nullptr )
-    , m_textures() {
+    , m_textures()
+    , m_vertexArray( nullptr ) {
         // empty
     }
 

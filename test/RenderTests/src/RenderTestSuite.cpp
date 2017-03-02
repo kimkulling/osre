@@ -289,6 +289,10 @@ bool RenderTestSuite::update( d32 timediff ) {
 }
 
 bool RenderTestSuite::clearTestEnv() {
+    if ( nullptr == m_pRenderBackendServer ) {
+        return false;
+    }
+
     m_pRenderBackendServer->sendEvent( &OnClearSceneEvent, nullptr );
 
     return true;

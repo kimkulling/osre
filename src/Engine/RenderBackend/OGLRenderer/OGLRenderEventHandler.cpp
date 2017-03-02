@@ -29,7 +29,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractSurface.h>
-#include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractRenderContext.h>
 #include <osre/Profiling/PerformanceCounters.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -38,12 +37,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/AssetRegistry.h>
 
 #include <cppcore/Container/TArray.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <vector>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -104,11 +97,12 @@ static void setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTextur
     }
 }
 
-static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {
-	OSRE_ASSERT( nullptr != eh  );
+static SetMaterialStageCmdData *setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {
+	OSRE_ASSERT( nullptr != eh );
 	OSRE_ASSERT( nullptr != material );
 	OSRE_ASSERT( nullptr != rb );
 
+    SetMaterialStageCmdData *matData = new SetMaterialStageCmdData;
     switch( material->m_type ) {
         case MaterialType::FlatShadingMaterial:
             break;
@@ -118,7 +112,6 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
                 setupTextures( material, rb, textures );
                 OGLRenderCmd *renderMatCmd = new OGLRenderCmd;
                 renderMatCmd->m_type = OGLRenderCmdType::SetMaterialCmd;
-                SetMaterialStageCmdData *matData = new SetMaterialStageCmdData;
                 if( !textures.isEmpty() ) {
                     matData->m_textures = textures;
                 }
@@ -151,6 +144,8 @@ static void setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEv
         default:
             break;
     }
+
+    return matData;
 }
 
 static void setupParameter( UniformVar *param, ui32 numParam, OGLRenderBackend *rb, OGLRenderEventHandler *ev ) {
@@ -300,6 +295,8 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
         result = onRenderFrame( data );
     } else if ( OnCommitFrameEvent == ev ) {
         result = onCommitNexFrame( data );
+    } else if ( OnClearSceneEvent == ev ) {
+        result = onClearGeo( data );
     }
  
     return result;
@@ -496,7 +493,7 @@ bool OGLRenderEventHandler::onDetachView( const EventData * ) {
     return true;
 }*/
 
-/*bool OGLRenderEventHandler::onClearGeo( const EventData * ) {
+bool OGLRenderEventHandler::onClearGeo( const EventData * ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	
 	m_oglBackend->releaseAllBuffers();
@@ -506,7 +503,7 @@ bool OGLRenderEventHandler::onDetachView( const EventData * ) {
     m_renderCmdBuffer->clear();
 
     return true;
-}*/
+}
 
 /*bool OGLRenderEventHandler::onUpdateGeo( const EventData *eventData ) {
     OSRE_ASSERT( nullptr != m_oglBackend );
@@ -592,6 +589,7 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
             return false;
         }
 
+
         // register primitive groups to render
         CPPCore::TArray<ui32> primGroups;
         for ( ui32 i = 0; i < geo->m_numPrimGroups; ++i ) {
@@ -600,7 +598,7 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
         }
 
         // create the default material
-        setupMaterial( geo->m_material, m_oglBackend, this );
+        SetMaterialStageCmdData *data = setupMaterial(geo->m_material, m_oglBackend, this);
 
         // setup vertex array, vertex and index buffers
         m_vertexArray = setupBuffers( geo, m_oglBackend, m_renderCmdBuffer->getActiveShader() );
@@ -608,6 +606,7 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
             osre_debug( Tag, "Vertex-Array-pointer is a nullptr." );
             return false;
         }
+        data->m_vertexArray = m_vertexArray;
 
         // setup global parameter
         if ( frame->m_numVars > 0 ) {
@@ -626,6 +625,25 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
     delete[] frame->m_newGeo;
     frame->m_newGeo = nullptr;
     frame->m_numNewGeo = 0;
+
+    for ( ui32 i=0; i<frame->m_numGeoUpdates; i++ ) {
+        Geometry *geo = frame->m_geoUpdates[ i ];
+        if ( nullptr == geo ) {
+            osre_debug(Tag, "Geometry-update-pointer is a nullptr.");
+            return false;
+        }
+
+        OGLBuffer *buffer(m_oglBackend->getBufferById(geo->m_id));
+        if (nullptr != buffer) {
+            m_oglBackend->bindBuffer(buffer);
+            m_oglBackend->bufferData(buffer, geo->m_vb->m_data, geo->m_vb->m_size, geo->m_vb->m_access);
+            m_oglBackend->unbindBuffer(buffer);
+        }
+    }
+    delete[] frame->m_geoUpdates;
+    frame->m_geoUpdates = nullptr;
+    frame->m_numGeoUpdates = 0;
+
 
     m_oglBackend->useShader( nullptr );
 

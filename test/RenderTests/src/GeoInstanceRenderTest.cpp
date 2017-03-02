@@ -29,9 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 #include <osre/Scene/GeometryBuilder.h>
 
-#include <GL/glew.h>
 #include <GL/gl.h>
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -81,7 +79,6 @@ const String FsSrc =
     "}\n";
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderTest::GeoInstanceRenderTest
 ///	@ingroup	Test
 ///
 ///	@brief
@@ -91,7 +88,7 @@ class GeoInstanceRenderTest : public AbstractRenderTest {
 
 public:
     GeoInstanceRenderTest()
-        : AbstractRenderTest( "rendertest/geoinstancerendertest" ) {
+    : AbstractRenderTest( "rendertest/geoinstancerendertest" ) {
         // empty
     } 
 
@@ -101,7 +98,6 @@ public:
 
     virtual bool onCreate( RenderBackendService *rbSrv ) {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
-//        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         Scene::GeometryBuilder myBuilder;
         Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
@@ -142,13 +138,15 @@ public:
 			y += 2.0f;
 		}
         
-        UniformVar *parameterMVP = UniformVar::create( "VP", ParameterType::PT_Mat4 );
-        ::memcpy( parameterMVP->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
+        /*UniformVar *parameterMVP = UniformVar::create( "VP", ParameterType::PT_Mat4 );
+        ::memcpy( parameterMVP->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );*/
+        m_transformMatrix.update();
+        rbSrv->setMatrix("VP", m_transformMatrix.m_mvp );
 
-        UniformVar *parameterM = UniformVar::create( "M", ParameterType::PT_Mat4Array, NumInstances);
+        /*UniformVar *parameterM = UniformVar::create( "M", ParameterType::PT_Mat4Array, NumInstances);
         ::memcpy( parameterM->m_data.m_data, glm::value_ptr( mat[ 0 ] ), sizeof( glm::mat4 ) * NumInstances);
-        parameterMVP->m_next = parameterM;
-
+        parameterMVP->m_next = parameterM;*/
+        rbSrv->setMatrixArray( "M", NumInstances, mat );
 //        geo->m_material->m_parameters = parameterMVP;
 //        geo->m_material->m_numParameters += 2;
         

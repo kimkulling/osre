@@ -105,17 +105,13 @@ void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
 
             if ( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesCmd ) {
                 onDrawPrimitivesCmd( ( DrawPrimitivesCmdData* ) renderCmd->m_pData );
-            }
-            else if ( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesInstancesCmd ) {
+            } else if ( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesInstancesCmd ) {
                 onDrawPrimitivesInstancesCmd( ( DrawInstancePrimitivesCmdData* ) renderCmd->m_pData );
-            }
-            else if ( renderCmd->m_type == OGLRenderCmdType::SetRenderTargetCmd ) {
+            } else if ( renderCmd->m_type == OGLRenderCmdType::SetRenderTargetCmd ) {
                 onSetRenderTargetCmd( ( SetRenderTargetCmdData* ) renderCmd->m_pData );
-            }
-            else if ( renderCmd->m_type == OGLRenderCmdType::SetMaterialCmd ) {
+            } else if ( renderCmd->m_type == OGLRenderCmdType::SetMaterialCmd ) {
                 onSetMaterialStageCmd( ( SetMaterialStageCmdData* ) renderCmd->m_pData );
-            }
-            else {
+            } else {
                 osre_error( Tag, "Unsupported render command type: " + static_cast< ui32 >( renderCmd->m_type ) );
             }
         }
@@ -223,6 +219,7 @@ bool RenderCmdBuffer::onSetRenderTargetCmd( SetRenderTargetCmdData *data ) {
 bool RenderCmdBuffer::onSetMaterialStageCmd( SetMaterialStageCmdData *data ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
 
+    m_renderbackend->bindVertexArray( data->m_vertexArray );
     m_renderbackend->useShader( data->m_shader );
     
     commitParameters();

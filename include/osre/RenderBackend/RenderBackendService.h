@@ -25,15 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/AbstractService.h>
 #include <osre/Common/Event.h>
 #include <osre/Common/TObjPtr.h>
-#include <osre/RenderBackend/BlendState.h>
-#include <osre/RenderBackend/ClearState.h>
-#include <osre/RenderBackend/SamplerState.h>
-#include <osre/RenderBackend/StencilState.h>
 #include <osre/RenderBackend/Pipeline.h>
 #include <cppcore/Container/THashMap.h>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "Parameter.h"
 
@@ -204,6 +198,8 @@ public:
     void sendEvent( const Common::Event *ev, const Common::EventData *eventData );
 
     void setMatrix( const String &name, const glm::mat4 &matrix );
+
+    void setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray );
 
     void attachGeo( Geometry *geo );
 
