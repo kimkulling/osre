@@ -110,6 +110,15 @@ class AbstractThreadTest : public ::testing::Test {
     // empty
 };
 
+TEST_F( AbstractThreadTest, ThreadIdTest ) {
+    ThreadId tid1, tid2, tid3;
+    tid1.Id = 1;
+    tid2.Id = 2;
+    tid3.Id = 1;
+    EXPECT_NE( tid1, tid2 );
+    EXPECT_EQ( tid1, tid3 );
+}
+
 TEST_F( AbstractThreadTest, createTest ) {
     bool ok( true );
     try {
