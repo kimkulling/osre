@@ -55,7 +55,7 @@ struct OGLVertexAttribute;
 struct OGLTexture;
 struct RenderCmdData3DView;
 struct Shader;
-struct Parameter;
+struct UniformVar;
 struct PrimitiveGroup;
 
 //-------------------------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ public:
     void destroyVertexArray( OGLVertexArray *pVertexArray );
     OGLVertexArray *getVertexArraybyId( ui32 id ) const;
     void bindVertexArray( OGLVertexArray *pVertexArray );
-    void unbindVertexArray( OGLVertexArray *pVertexArray );
+    void unbindVertexArray();
     void releaseAllVertexArrays();
     OGLShader *createShader( const String &name, Shader *pShader );
     OGLShader *getShader( const String &name );
@@ -107,7 +107,7 @@ public:
     bool bindTexture( OGLTexture *pOGLTextue, TextureStageType stageType );
     void releaseTexture( OGLTexture *pTexture );
     void releaseAllTextures();
-    OGLParameter *createParameter( const String &name, ParameterType type, ParamDataBlob *blob, ui32 numItems );    
+    OGLParameter *createParameter( const String &name, ParameterType type, UniformDataBlob *blob, ui32 numItems );    
     OGLParameter *getParameter( const String &name ) const;
     void setParameter( OGLParameter *param );
     void setParameter( OGLParameter **param, ui32 numParam );

@@ -24,7 +24,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/TFunctor.h>
 #include <osre/Common/StringUtils.h>
-#include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
 namespace Common {

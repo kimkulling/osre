@@ -45,6 +45,12 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT DbgRenderer {
 public:
+    struct DbgTextEntry {
+        String m_text;
+        RenderBackend::Geometry *m_geo;
+    };
+    using TextBoxHashMap = CPPCore::THashMap<ui32, DbgTextEntry*> ;
+
     void renderDbgText( ui32 x, ui32 y, ui32 id, const String &text );
 
     static bool create( RenderBackend::RenderBackendService *rbSrv );
@@ -59,11 +65,6 @@ private:
     static DbgRenderer *s_instance;
     RenderBackend::RenderBackendService *m_rbSrv;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
-    struct DbgTextEntry {
-        String m_text;
-        RenderBackend::Geometry *m_geo;
-    };
-    typedef CPPCore::THashMap<ui32, DbgTextEntry*> TextBoxHashMap;
     TextBoxHashMap m_textBoxes;
 };
 

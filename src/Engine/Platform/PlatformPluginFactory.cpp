@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <src/Engine/Platform/PlatformPluginFactory.h>
 #include <osre/Common/Logger.h>
+#include <osre/Debugging/osre_debugging.h>
 #ifdef OSRE_WINDOWS
 #   include <src/Engine/Platform/win32/Win32Surface.h>
 #   include <src/Engine/Platform/win32/Win32Eventhandler.h>

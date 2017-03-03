@@ -30,30 +30,30 @@ namespace RenderBackend {
 
 using namespace ::OSRE::Common;
 
-static const String Tag = "Parameter";
+static const String Tag = "UniformVar";
 
-ParamDataBlob::ParamDataBlob()
+UniformDataBlob::UniformDataBlob()
 : m_data( nullptr )
 , m_size( 0 ) {
     // empty
 }
 
-ParamDataBlob::~ParamDataBlob() {
+UniformDataBlob::~UniformDataBlob() {
     clear();
 }
 
-void *ParamDataBlob::getData() const {
+void *UniformDataBlob::getData() const {
     return m_data;
 }
 
-void ParamDataBlob::clear() {
+void UniformDataBlob::clear() {
     delete[] m_data;
     m_data = nullptr;
     m_size = 0;
 }
 
-ParamDataBlob *ParamDataBlob::create( ParameterType type, ui32 arraySize ) {
-    ParamDataBlob *blob = new ParamDataBlob;
+UniformDataBlob *UniformDataBlob::create( ParameterType type, ui32 arraySize ) {
+    UniformDataBlob *blob = new UniformDataBlob;
     switch( type ) {
         case ParameterType::PT_Int:
             blob->m_size = sizeof( i32 );
@@ -83,7 +83,7 @@ ParamDataBlob *ParamDataBlob::create( ParameterType type, ui32 arraySize ) {
     return blob;
 }
 
-Parameter::Parameter()
+UniformVar::UniformVar()
 : m_name( "" )
 , m_type( ParameterType::PT_None )
 , m_numItems( 1 )
@@ -91,11 +91,11 @@ Parameter::Parameter()
     // empty
 }
 
-Parameter::~Parameter() {
+UniformVar::~UniformVar() {
     // empty
 }
 
-ui32 Parameter::getParamDataSize( ParameterType type, ui32 arraySize ) {
+ui32 UniformVar::getParamDataSize( ParameterType type, ui32 arraySize ) {
     ui32 size( 0 );
     switch( type ) {
         case ParameterType::PT_Int:
@@ -124,22 +124,17 @@ ui32 Parameter::getParamDataSize( ParameterType type, ui32 arraySize ) {
     return size;
 }
 
-static ui32 calcHash( const String &name ) {
-    const ui32 hash( StringUtils::hashName( name.c_str() ) );
-    return hash;
-}
-
-Parameter *Parameter::create( const String &name, ParameterType type, ui32 arraySize ) {
+UniformVar *UniformVar::create( const String &name, ParameterType type, ui32 arraySize ) {
     if( name.empty() ) {
         osre_debug( Tag, "Empty name for parameter." );
         return nullptr;
     }
 
-    Parameter *param     = new Parameter;
+    UniformVar *param    = new UniformVar;
     param->m_name        = name;
     param->m_type        = type;
     param->m_numItems    = arraySize;
-    param->m_data.m_size = Parameter::getParamDataSize( type, arraySize );
+    param->m_data.m_size = UniformVar::getParamDataSize( type, arraySize );
     param->m_data.m_data = new uc8[ param->m_data.m_size ];
     param->m_next        = nullptr;
     ::memset( param->m_data.m_data, 0, param->m_data.m_size );
@@ -147,7 +142,7 @@ Parameter *Parameter::create( const String &name, ParameterType type, ui32 array
     return param;
 }
 
-void Parameter::destroy( Parameter *param ) {
+void UniformVar::destroy( UniformVar *param ) {
     if ( nullptr != param ) {
         delete param;
     }

@@ -31,21 +31,20 @@ namespace Scene {
 using namespace OSRE::Common;
 using namespace OSRE::Platform;
 
-TrackBall::TrackBall( const String &trackBallObjName, ui32 w, ui32 h ) :
-    OSEventListener( trackBallObjName ),
-    m_StartVector( 0,0,0 ),
-    m_EndVector( 0,0,0 ),
-    m_Dimension( w, h ),
-    m_rotation(),
-    m_bLeftMButtonClicked( false ),
-    m_bMiddleClicked( false ),
-    m_bRightMButtonClicked( false ),
-    m_bStartPosInited( false ),
-    m_adjWidth( 0.0f ),
-    m_adjHeight( 0.0f ),
-    m_screenY( 0 ),
-    m_screenYOld( 0 )
-{
+TrackBall::TrackBall( const String &trackBallObjName, ui32 w, ui32 h ) 
+: OSEventListener( trackBallObjName )
+, m_StartVector( 0,0,0 )
+, m_EndVector( 0,0,0 )
+, m_Dimension( w, h )
+, m_rotation()
+, m_bLeftMButtonClicked( false )
+, m_bMiddleClicked( false )
+, m_bRightMButtonClicked( false )
+, m_bStartPosInited( false )
+, m_adjWidth( 0.0f )
+, m_adjHeight( 0.0f )
+, m_screenY( 0 )
+, m_screenYOld( 0 ) {
     // adjust the width for to sphere mapping
     const f32 width = static_cast<f32>( m_Dimension.getWidth() );
     if ( width ) {

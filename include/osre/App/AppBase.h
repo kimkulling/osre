@@ -45,6 +45,7 @@ namespace Platform {
 }
 
 namespace RenderBackend {
+    class Pipeline;
     class RenderBackendService;
 }
 
@@ -144,6 +145,8 @@ public:
     /// @brief  Will return the Root-Surface instance.
     /// @return A pointer showing to the Root-Surface.
     virtual Platform::AbstractSurface *getRootSurface() const;
+
+    static RenderBackend::Pipeline *createDefaultPipeline();
 
 protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.

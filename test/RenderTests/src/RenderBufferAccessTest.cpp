@@ -83,7 +83,6 @@ const String FsSrc =
     "}\n";
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderTest::GeoInstanceRenderTest
 ///	@ingroup	Test
 ///
 ///	@brief
@@ -107,7 +106,7 @@ public:
 
     virtual bool onCreate( RenderBackendService *rbSrv ) {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
-        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
+//        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         CPPCore::RandomGenerator generator;
         for ( ui32 i = 0; i < NumPts; i++ ) {
@@ -128,11 +127,9 @@ public:
         }
 
         static const ui32 NumGeo( 1 );
-        attachGeoEvData->m_numGeo = NumGeo;
-        attachGeoEvData->m_geo = new Geometry *[ NumGeo ];
-        attachGeoEvData->m_geo[0] = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, NumGeo );
 
-        m_ptGeo = attachGeoEvData->m_geo[ 0 ];
+        m_ptGeo = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, NumGeo ); 
+        rbSrv->attachGeo( m_ptGeo, 0 );
         m_ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, NumPts, m_pos, m_col, nullptr, BufferAccessType::ReadOnly );
         m_ptGeo->m_indextype = IndexType::UnsignedShort;
         ui32 pt_size = sizeof( GLushort ) * NumPts;
@@ -150,13 +147,11 @@ public:
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
-        Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
+        UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
         ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
 
-        mat->m_numParameters = 1;
-        mat->m_parameters = parameter;
-
-        rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+        m_transformMatrix.update();
+        rbSrv->setMatrix("MVP", m_transformMatrix.m_mvp);
 
         return true;
     }
@@ -177,10 +172,7 @@ public:
             offset += sizeof( ColorVert );
         }
 
-        UpdateGeoEventData *updateGeoEvData( new UpdateGeoEventData );
-        updateGeoEvData->m_numGeo = 1;
-        updateGeoEvData->m_geo = m_ptGeo;
-        rbSrv->sendEvent( &OnUpdateGeoEvent, updateGeoEvData );
+        rbSrv->attachGeoUpdate( m_ptGeo );
         
         return true;
     }

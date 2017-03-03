@@ -28,7 +28,6 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::Win32ThreadFactory
 ///	@ingroup	Engine
 ///
 ///	@brief 

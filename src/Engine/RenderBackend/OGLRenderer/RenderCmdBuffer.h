@@ -39,6 +39,7 @@ namespace RenderBackend {
 
 class OGLRenderBackend;
 class OGLShader;
+class Pipeline;
 
 struct OGLVertexArray;
 struct OGLRenderCmd;
@@ -50,6 +51,7 @@ struct SetRenderTargetCmdData;
 struct DrawTextCmdData;
 struct PrimitiveGroup;
 struct Material;
+struct OGLParameter;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -66,7 +68,7 @@ public:
 
 public:
     /// The class constructor.
-    RenderCmdBuffer( OGLRenderBackend *renderBackend, Platform::AbstractRenderContext *ctx );
+    RenderCmdBuffer( OGLRenderBackend *renderBackend, Platform::AbstractRenderContext *ctx, Pipeline *pipeline );
     /// The class destructor.
     virtual ~RenderCmdBuffer();
     /// Will set the active shader.
@@ -83,12 +85,16 @@ public:
     void onPostRenderFrame();
     /// The buffer and all attached commands will be cleared.
     void clear();
+    /// Will add one parameter to the setup of the pipeline
+    void addParameter( OGLParameter* param );
+    /// Will add an array of parameters to the setup of the pipeline
+    void addParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray );
+
+    void commitParameters();
 
 protected:
     /// The update parameter callback.
-    virtual bool onUpdateParameter( const Common::EventData *pEventData );
-    /// The update parameter callback.
-    virtual bool onSetParametersCmd( SetParameterCmdData *pData );
+    //virtual bool onUpdateParameter( const Common::EventData *pEventData );
     /// The draw primitive callback.
     virtual bool onDrawPrimitivesCmd( DrawPrimitivesCmdData *pData );
     /// The draw primitive instances callback.
@@ -102,10 +108,12 @@ private:
     OGLRenderBackend *m_renderbackend;
     ClearState m_clearState;
     Platform::AbstractRenderContext *m_renderCtx;
-    CPPCore::TArray<OGLRenderCmd*> m_cmdbuffer;
+    ::CPPCore::TArray<OGLRenderCmd*> m_cmdbuffer;
     OGLShader *m_activeShader;
-    CPPCore::TArray<PrimitiveGroup*> m_primitives;
-    CPPCore::TArray<Material*> m_materials;
+    ::CPPCore::TArray<PrimitiveGroup*> m_primitives;
+    ::CPPCore::TArray<Material*> m_materials;
+    ::CPPCore::TArray<OGLParameter*> m_paramArray;
+    Pipeline *m_pipeline;
 };
 
 } // Namespace RenderBackend

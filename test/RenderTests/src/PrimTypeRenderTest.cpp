@@ -56,7 +56,7 @@ public:
 
     virtual bool onCreate( RenderBackendService *rb ) {
         rb->sendEvent( &OnAttachViewEvent, nullptr );
-        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
+//        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         // colors
         glm::vec3 col[ 3 ];
@@ -94,14 +94,17 @@ public:
         indices[ 5 ] = 0;
 
         static ui32 NumGeo( 2 );
-        attachGeoEvData->m_numGeo = NumGeo;
-        attachGeoEvData->m_geo = new Geometry*[ NumGeo ];
+        //attachGeoEvData->m_numGeo = NumGeo;
+        //attachGeoEvData->m_geo = new Geometry*[ NumGeo ];
 
-        attachGeoEvData->m_geo[ 0 ] = Scene::GeometryBuilder::allocPoints( VertexType::ColorVertex, BufferAccessType::ReadOnly, 3, points, col );
-        attachGeoEvData->m_geo[ 1 ] = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, 1 );
+        Geometry *ptGeo = Scene::GeometryBuilder::allocPoints( VertexType::ColorVertex, BufferAccessType::ReadOnly, 3, points, col );
+        rb->attachGeo( ptGeo, 0 );
+        /*attachGeoEvData->m_geo[ 0 ] = Scene::GeometryBuilder::allocPoints( VertexType::ColorVertex, BufferAccessType::ReadOnly, 3, points, col );
+        attachGeoEvData->m_geo[ 1 ] = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, 1 );*/
 
         
-        Geometry *lineGeo = attachGeoEvData->m_geo[ 1 ];
+//        Geometry *lineGeo = attachGeoEvData->m_geo[ 1 ];
+        Geometry *lineGeo = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, 1 );
         lineGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly );
         lineGeo->m_indextype = IndexType::UnsignedShort;
         ui32 size = sizeof( GLushort ) * NumIndices;
@@ -115,18 +118,19 @@ public:
         
         // setup material
         Material *mat = Scene::MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
-        attachGeoEvData->m_geo[ 0 ]->m_material = mat;
+//        attachGeoEvData->m_geo[ 0 ]->m_material = mat;
         lineGeo->m_material = mat;
-        
+        rb->attachGeo( ptGeo, 0 );
+
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
-        Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
+        UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
         ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
 
         mat->m_numParameters = 1;
         mat->m_parameters = parameter;
 
-        rb->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+//        rb->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
         return true;
     }

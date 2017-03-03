@@ -74,13 +74,13 @@ TEST_F( GeometryBuilderTest, allocLineListTest ) {
     col[ 0 ].y = 0;
     col[ 0 ].z = 0;
 
-    col[ 1 ].x = 0.5;
-    col[ 1 ].y = 0.5;
-    col[ 1 ].z = 0.5;
+    col[ 1 ].x = 0.5f;
+    col[ 1 ].y = 0.5f;
+    col[ 1 ].z = 0.5f;
 
-    col[ 2 ].x = 0.8;
-    col[ 2 ].y = 0.8;
-    col[ 2 ].z = 0.8;
+    col[ 2 ].x = 0.8f;
+    col[ 2 ].y = 0.8f;
+    col[ 2 ].z = 0.8f;
 
     ui32 indices[ 4 ];
     indices[ 0 ]=0;
@@ -112,13 +112,13 @@ TEST_F( GeometryBuilderTest, allocPointsTest ) {
     col[ 0 ].y = 0;
     col[ 0 ].z = 0;
 
-    col[ 1 ].x = 0.5;
-    col[ 1 ].y = 0.5;
-    col[ 1 ].z = 0.5;
+    col[ 1 ].x = 0.5f;
+    col[ 1 ].y = 0.5f;
+    col[ 1 ].z = 0.5f;
 
-    col[ 2 ].x = 0.8;
-    col[ 2 ].y = 0.8;
-    col[ 2 ].z = 0.8;
+    col[ 2 ].x = 0.8f;
+    col[ 2 ].y = 0.8f;
+    col[ 2 ].z = 0.8f;
 
     Geometry *geo = Scene::GeometryBuilder::allocPoints( VertexType::ColorVertex, BufferAccessType::ReadOnly, numPoints, pos, col );
     EXPECT_NE( nullptr, geo );

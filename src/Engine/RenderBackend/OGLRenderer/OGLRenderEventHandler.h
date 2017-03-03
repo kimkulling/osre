@@ -77,6 +77,8 @@ public:
     /// Will enqueue a new render command.
     void enqueueRenderCmd( OGLRenderCmd *pOGLRenderCmd );
 
+    void setParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray );
+
 protected:
 	///	@brief	Callback for attaching the event handler.
     virtual bool onAttached( const Common::EventData *eventData ) override;
@@ -91,17 +93,19 @@ protected:
     ///	@brief	Callback for detaching a new view onto a stage.
     virtual bool onDetachView( const Common::EventData *eventData );
 	///	@brief	Callback for attaching a new geometry into a stage.
-	virtual bool onAttachGeo( const Common::EventData *eventData );
+/*	virtual bool onAttachGeo( const Common::EventData *eventData );
     ///	@brief	Callback for detaching existing geometry from a stage.
-    virtual bool onDetachGeo( const Common::EventData *eventData );
+    virtual bool onDetachGeo( const Common::EventData *eventData );*/
     ///	@brief	Callback for clearing all geometry from a stage.
 	virtual bool onClearGeo( const Common::EventData *eventData );
     ///	@brief	Callback for updating all geometry from a stage.
-    virtual bool onUpdateGeo( const Common::EventData *eventData );
-    ///	@brief	Callback for the render frame.
+   /*virtual bool onUpdateGeo( const Common::EventData *eventData );*/
+  ///	@brief	Callback for the render frame.
 	virtual bool onRenderFrame( const Common::EventData *eventData );
 	///	@brief	Callback when parameter will be updated.
-	virtual bool onUpdateParameter( const Common::EventData *eventData );
+	//virtual bool onUpdateParameter( const Common::EventData *eventData );
+
+    virtual bool onCommitNexFrame( const Common::EventData *eventData );
 
 private:
     OGLRenderBackend *m_oglBackend;

@@ -61,10 +61,10 @@ void RenderComponent::update( RenderBackendService *renderBackendSrv ) {
         renderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
         for ( ui32 i=0; i<m_passes.size(); i++ ) {
-            Pass *currentPass = m_passes[i];
+            /*Pass *currentPass = m_passes[i];
             SetParameterEventData *data = new SetParameterEventData;
             data->m_numParam = currentPass->m_paramArray.size();
-            data->m_param = new Parameter *[ data->m_numParam ];
+            data->m_param = new UniformVar *[ data->m_numParam ];
             for ( ui32 j=0; j<data->m_numParam; j++ ) {
                 data->m_param[ j ] = currentPass->m_paramArray[j];
             }
@@ -76,8 +76,7 @@ void RenderComponent::update( RenderBackendService *renderBackendSrv ) {
             for ( ui32 j = 0; j < attachGeoEvData->m_numGeo; j++ ) {
                 attachGeoEvData->m_geo[ j ] = currentPass->m_newGeo[ j ];
             }
-            renderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
-
+            renderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );*/
         }
 
         m_passes.resize( 0 );
@@ -92,7 +91,7 @@ void RenderComponent::setShadowCaster(bool isShadowCaster) {
     m_isShadowCaster = isShadowCaster;
 }
 
-void RenderComponent::beginPass( TArray<Parameter*> &paramArray ) {
+void RenderComponent::beginPass( TArray<UniformVar*> &paramArray ) {
     Pass *newPass = new Pass;
     m_currentPass = newPass;
     m_currentPass->m_paramArray = paramArray;

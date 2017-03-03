@@ -82,18 +82,19 @@ void Screen::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *rbS
     }
 
     if ( !targetGeoArray.isEmpty() ) {
-        AttachGeoEventData *attachGeoData( new AttachGeoEventData );
-        attachGeoData->m_numGeo = targetGeoArray.size();
-        attachGeoData->m_geo = new Geometry*[ attachGeoData->m_numGeo ];
-        for ( ui32 i = 0; i < attachGeoData->m_numGeo; i++ ) {
+        //AttachGeoEventData *attachGeoData( new AttachGeoEventData );
+        //attachGeoData->m_numGeo = targetGeoArray.size();
+        //attachGeoData->m_geo = new Geometry*[ attachGeoData->m_numGeo ];
+        /*for ( ui32 i = 0; i < attachGeoData->m_numGeo; i++ ) {
             attachGeoData->m_geo[ i ] = targetGeoArray[ i ];
-        }
-        rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoData );
+        }*/
+        rbSrv->attachGeo( targetGeoArray, 0 );
+        //rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoData );
 
         /*::memcpy( param->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
         UpdateParameterEventData *data = new UpdateParameterEventData;
         data->m_numParam = 1;
-        data->m_param = new Parameter *[ 1 ];
+        data->m_param = new UniformVar *[ 1 ];
         data->m_param[ 0 ] = param;
         rbSrv->sendEvent( &OnUpdateGeoEvent, data );*/
 

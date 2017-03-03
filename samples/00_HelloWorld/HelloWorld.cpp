@@ -91,13 +91,13 @@ protected:
         if( nullptr != geo ) {
 			m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
 
-			Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
+			UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
 			::memcpy(parameter->m_data.m_data, glm::value_ptr(m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model), sizeof(glm::mat4));
 
 			geo->m_material->m_parameters = parameter;
             geo->m_material->m_numParameters++;
             Scene::RenderComponent *comp = ( Scene::RenderComponent* ) geoNode->getComponent( Scene::Node::ComponentType::RenderComponentType );
-            CPPCore::TArray<Parameter*> paramArray;
+            CPPCore::TArray<UniformVar*> paramArray;
             paramArray.add( parameter );
             comp->beginPass( paramArray );
             comp->addStaticGeometry( geo );

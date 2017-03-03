@@ -26,18 +26,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-PipelinePass::PipelinePass( RenderTarget &rt, BlendState &blendState, SamplerState &samplerState, 
-                            ClearState &clearState, StencilState &stencilState )
-: m_renderTarget( rt )
-, m_blendState( blendState )
-, m_samplerState( samplerState )
-, m_clearState( clearState )
-, m_stencilState( stencilState ) {
+PipelinePass::PipelinePass( Shader *shader )
+: m_shader( shader ) {
     // empty
 }
 
 PipelinePass::~PipelinePass() {
     // empty
+}
+
+void PipelinePass::set( RenderTarget &rt, BlendState &blendState, SamplerState &samplerState, 
+                        ClearState &clearState, StencilState &stencilState ) {
+    m_renderTarget = rt;
+    m_blendState = blendState;
+    m_samplerState = samplerState;
+    m_clearState = clearState;
+    m_stencilState = stencilState;
 }
 
 bool PipelinePass::operator == ( const PipelinePass &rhs ) const {
@@ -85,7 +89,7 @@ ui32 Pipeline::beginFrame() {
 }
 
 bool Pipeline::beginPass( ui32 passId ) {
-    if ( -1 == m_passId || !m_inFrame ) {
+    if ( !m_inFrame ) {
         return false;
     }
 
@@ -100,7 +104,8 @@ bool Pipeline::endPass( ui32 passId ) {
     }
 
     m_passId = -1;
-    
+    m_inFrame = false;
+
     return true;
 }
 

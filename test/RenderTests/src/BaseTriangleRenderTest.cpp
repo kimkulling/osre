@@ -26,20 +26,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 #include <osre/Scene/GeometryBuilder.h>
 
-#include <GL/glew.h>
-#include <GL/gl.h>
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <GL/glew.h>
+#include <GL/gl.h>
 #ifdef WIN32
 #   include "GL/wglew.h"
 #endif
 
-#include <iostream>
 
 namespace OSRE {
 namespace RenderTest {
@@ -77,13 +74,13 @@ public:
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
 
-        Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
+        UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
         ::memcpy( parameter->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
 
         geo->m_material->m_parameters = parameter;
         geo->m_material->m_numParameters++;
         
-        rbSrv->attachGeo( geoArray );
+        rbSrv->attachGeo( geoArray, 0 );
 
         return true;
     }

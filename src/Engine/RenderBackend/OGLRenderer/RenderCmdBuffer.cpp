@@ -34,14 +34,17 @@ using namespace ::OSRE::Platform;
 
 static const String Tag = "RenderCmdBuffer";
 
-RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRenderContext *ctx )
+RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRenderContext *ctx, Pipeline *pipeline )
 : m_renderbackend( renderBackend )
 , m_renderCtx( ctx )
 , m_activeShader( nullptr )
 , m_primitives()
-, m_materials() {
+, m_materials()
+, m_paramArray()
+, m_pipeline( pipeline ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
     OSRE_ASSERT( nullptr != m_renderCtx );
+    OSRE_ASSERT( nullptr != m_pipeline );
 
     m_clearState.m_state = ClearState::ColorBit | ClearState::DepthBit;
 }
@@ -90,24 +93,30 @@ void RenderCmdBuffer::onPreRenderFrame() {
 void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
     OSRE_ASSERT( nullptr!=m_renderbackend );
 
-    for( ui32 i = 0; i < m_cmdbuffer.size(); ++i ) {
-        // only valid pointers are allowed
-        OGLRenderCmd *renderCmd = m_cmdbuffer[ i ];
-        OSRE_ASSERT( nullptr != renderCmd );
+    ui32 numPasses = m_pipeline->beginFrame();
 
-        if( renderCmd->m_type == OGLRenderCmdType::SetParameterCmd ) {
-            onSetParametersCmd( ( SetParameterCmdData* ) renderCmd->m_pData );
-        } else if( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesCmd ) {
-            onDrawPrimitivesCmd( ( DrawPrimitivesCmdData* ) renderCmd->m_pData );
-        } else if( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesInstancesCmd ) {
-            onDrawPrimitivesInstancesCmd( ( DrawInstancePrimitivesCmdData* ) renderCmd->m_pData );
-		} else if ( renderCmd->m_type == OGLRenderCmdType::SetRenderTargetCmd) {
-			onSetRenderTargetCmd( ( SetRenderTargetCmdData* ) renderCmd->m_pData);
-        } else if ( renderCmd->m_type == OGLRenderCmdType::SetMaterialCmd ) {
-            onSetMaterialStageCmd( ( SetMaterialStageCmdData* ) renderCmd->m_pData );
-        } else {
-            osre_error( Tag, "Unsupported render command type: " + static_cast<ui32>( renderCmd->m_type ) );
+    for ( ui32 passId = 0; passId < numPasses; passId++ ) {
+        m_pipeline->beginPass( passId );
+
+        for ( ui32 i = 0; i < m_cmdbuffer.size(); ++i ) {
+            // only valid pointers are allowed
+            OGLRenderCmd *renderCmd = m_cmdbuffer[ i ];
+            OSRE_ASSERT( nullptr != renderCmd );
+
+            if ( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesCmd ) {
+                onDrawPrimitivesCmd( ( DrawPrimitivesCmdData* ) renderCmd->m_pData );
+            } else if ( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesInstancesCmd ) {
+                onDrawPrimitivesInstancesCmd( ( DrawInstancePrimitivesCmdData* ) renderCmd->m_pData );
+            } else if ( renderCmd->m_type == OGLRenderCmdType::SetRenderTargetCmd ) {
+                onSetRenderTargetCmd( ( SetRenderTargetCmdData* ) renderCmd->m_pData );
+            } else if ( renderCmd->m_type == OGLRenderCmdType::SetMaterialCmd ) {
+                onSetMaterialStageCmd( ( SetMaterialStageCmdData* ) renderCmd->m_pData );
+            } else {
+                osre_error( Tag, "Unsupported render command type: " + static_cast< ui32 >( renderCmd->m_type ) );
+            }
         }
+
+        m_pipeline->endPass( passId );
     }
 
     m_renderbackend->renderFrame();
@@ -118,18 +127,48 @@ void RenderCmdBuffer::onPostRenderFrame() {
 
     // unbind the active shader
     m_renderbackend->useShader( nullptr );
+    m_renderbackend->unbindVertexArray();
 }
 
 void RenderCmdBuffer::clear() {
     ContainerClear( m_cmdbuffer );
+    m_paramArray.resize(0);
 }
 
-bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
+static bool hasParam( const String &name, const ::CPPCore::TArray<OGLParameter*> &paramArray ) {
+    for ( ui32 i = 0; i < paramArray.size(); i++ ) {
+        if ( name == paramArray[ i ]->m_name ) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void RenderCmdBuffer::addParameter( OGLParameter* param ) {
+    if ( !hasParam( param->m_name, m_paramArray ) ) {
+        m_paramArray.add( param );
+    }
+}
+
+void RenderCmdBuffer::addParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray ) {
+    for ( ui32 i = 0; i < paramArray.size(); i++ ) {
+        if ( !hasParam( paramArray[ i ]->m_name, m_paramArray ) ) {
+            m_paramArray.add( paramArray[ i ] );
+        }
+    }
+}
+
+void RenderCmdBuffer::commitParameters() {
+    for ( ui32 i = 0; i < m_paramArray.size(); i++ ) {
+        m_renderbackend->setParameter( m_paramArray[ i ] );
+    }
+}
+/*bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
     SetParameterEventData *updateParamData = ( SetParameterEventData* ) data;
     if( nullptr != updateParamData ) {
         for( ui32 i = 0; i < updateParamData->m_numParam; ++i ) {
-            Parameter *currentParam = updateParamData->m_param[ i ];
+            UniformVar *currentParam = updateParamData->m_param[ i ];
             if ( nullptr == currentParam ) {
                 continue;
             }
@@ -142,18 +181,7 @@ bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
     }
 
     return true;
-}
-
-bool RenderCmdBuffer::onSetParametersCmd( SetParameterCmdData *data ) {
-    OSRE_ASSERT( nullptr != m_renderbackend );
-    if ( nullptr == data ) {
-        return false;
-    }
-
-    m_renderbackend->setParameter( data->m_param, data->m_numParam );
-
-    return true;
-}
+}*/
 
 bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *data ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
@@ -192,16 +220,16 @@ bool RenderCmdBuffer::onSetRenderTargetCmd( SetRenderTargetCmdData *data ) {
 bool RenderCmdBuffer::onSetMaterialStageCmd( SetMaterialStageCmdData *data ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
 
+    m_renderbackend->bindVertexArray( data->m_vertexArray );
     m_renderbackend->useShader( data->m_shader );
+    
+    commitParameters();
+
     for ( ui32 i = 0; i < data->m_textures.size(); ++i ) {
         OGLTexture *oglTexture = data->m_textures[ i ];
         if ( nullptr != oglTexture ) {
             m_renderbackend->bindTexture( oglTexture, (TextureStageType) i );
         }
-    }
-
-    if ( nullptr != data->m_param ) {
-        m_renderbackend->setParameter( data->m_param, data->m_numParam );
     }
 
     return true;

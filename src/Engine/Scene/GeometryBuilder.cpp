@@ -76,7 +76,9 @@ static const String TextFsSrc =
     "    vFragColor = texture( tex0, UV );\n"
 	"};\n";
 
-namespace intern {
+
+class GeometryDiagnosticUtils {
+public:
     static void dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset ) {
         std::stringstream stream;
         stream << std::endl;
@@ -96,7 +98,7 @@ namespace intern {
         stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 3 ].x << ", " << tex0Pos[ VertexOffset + 3 ].y << "\n";
         osre_info( Tag, stream.str() );
     }
-}
+};
 
 GeometryBuilder::GeometryBuilder() {
     // empty
@@ -123,8 +125,6 @@ Geometry *GeometryBuilder::allocTriangles( VertexType type, BufferAccessType acc
 
     // setup triangle vertices    
     static const ui32 NumVert = 3;
-    ColorVert vertices[ NumVert ];
-
     glm::vec3 col[ NumVert ];
     col[ 0 ] = glm::vec3( 1, 0, 0 );
     col[ 1 ] = glm::vec3( 0, 1, 0 );
@@ -443,7 +443,6 @@ void GeometryBuilder::updateTextBox( RenderBackend::Geometry *geo, f32 textSize,
         }
 
         const ui32 VertexOffset( i * NumQuadVert );
-        const f32  rowHeight( -1.0f * textRow * textSize );
 
         const i32 column = ( ch ) % 16;
         const i32 row = ( ch ) / 16;
@@ -530,7 +529,6 @@ void GeometryBuilder::updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, Buff
     }
 
     RenderVert *vert = new RenderVert[ numVerts ];
-    const size_t vertsSize( sizeof( RenderVert ) * numVerts );
     ::memcpy( &vert[ 0 ].position, vb->m_data, vb->m_size );
     for ( ui32 i = 0; i < numVerts; i++ ) {
         vert[ i ].tex0 = tex0[ i ];

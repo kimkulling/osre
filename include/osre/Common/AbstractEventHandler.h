@@ -92,7 +92,6 @@ bool AbstractEventHandler::detach( const EventData *eventData ) {
     return onDetached( eventData );
 }
 
-
 } // Namespace Common
 } // Namespace OSRE
 

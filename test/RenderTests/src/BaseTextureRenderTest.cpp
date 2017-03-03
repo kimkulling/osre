@@ -96,7 +96,7 @@ const String FsSrc =
 class BaseTextureRenderTest : public AbstractRenderTest {
     f32 m_angle;
     TransformMatrixBlock m_transformMatrix;
-    Parameter *m_mvpParam;
+    UniformVar *m_mvpParam;
 
 public:
     BaseTextureRenderTest()
@@ -108,7 +108,7 @@ public:
     }
 
     virtual ~BaseTextureRenderTest( ) {
-        Parameter::destroy( m_mvpParam );
+        UniformVar::destroy( m_mvpParam );
         m_mvpParam = nullptr;
     }
 
@@ -118,12 +118,12 @@ public:
         pRenderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
         Geometry *geo = Scene::GeometryBuilder::allocQuads( VertexType::RenderVertex, BufferAccessType::ReadOnly );
+        pRenderBackendSrv->attachGeo( geo, 0 );
+//        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
-        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-
-        attachGeoEvData->m_numGeo = 1;
+        /*attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_geo = new Geometry*[ 1 ];
-        attachGeoEvData->m_geo[ 0 ] = geo;
+        attachGeoEvData->m_geo[ 0 ] = geo;*/
 
         // use default material
         geo->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
@@ -132,7 +132,7 @@ public:
             geo->m_material->m_pShader->m_attributes.add( "normal" );
             geo->m_material->m_pShader->m_attributes.add( "color0" );
             geo->m_material->m_pShader->m_attributes.add( "texcoord0" );
-            Parameter *param = Parameter::create("MVP", ParameterType::PT_Mat4);
+            UniformVar *param = UniformVar::create("MVP", ParameterType::PT_Mat4);
             geo->m_material->m_pShader->m_parameters.add( param );
         }
 
@@ -151,11 +151,11 @@ public:
         tex->m_size = 0;
         geo->m_material->m_textures[ 0 ] = tex;
 
-        pRenderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+        //pRenderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
         
-        Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
+        UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
         m_transformMatrix.update();
         ::memcpy( parameter->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
         

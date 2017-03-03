@@ -25,16 +25,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/AbstractService.h>
 #include <osre/Common/Event.h>
 #include <osre/Common/TObjPtr.h>
-#include <osre/RenderBackend/BlendState.h>
-#include <osre/RenderBackend/ClearState.h>
-#include <osre/RenderBackend/SamplerState.h>
-#include <osre/RenderBackend/StencilState.h>
 #include <osre/RenderBackend/Pipeline.h>
 #include <cppcore/Container/THashMap.h>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "Parameter.h"
 
 namespace OSRE {
 
@@ -56,7 +51,7 @@ namespace RenderBackend {
 struct BufferData;
 struct Geometry;
 struct GeoInstanceData;
-struct Parameter;
+struct UniformVar;
 struct TransformMatrixBlock;
 
 // Event declarations
@@ -66,13 +61,14 @@ DECL_EVENT( OnCreateRendererEvent );
 DECL_EVENT( OnDestroyRendererEvent );
 DECL_EVENT( OnAttachViewEvent );
 DECL_EVENT( OnDetachViewEvent );
-DECL_EVENT( OnAttachSceneEvent );
-DECL_EVENT( OnUpdateGeoEvent );
+//DECL_EVENT( OnAttachSceneEvent );
+//DECL_EVENT( OnUpdateGeoEvent );
 DECL_EVENT( OnClearSceneEvent );
 DECL_EVENT( OnDetachSceneEvent );
 DECL_EVENT( OnSetRenderStates );
 DECL_EVENT( OnRenderFrameEvent );
 DECL_EVENT( OnSetParameterEvent );
+DECL_EVENT( OnCommitFrameEvent );
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -83,13 +79,14 @@ struct OSRE_EXPORT CreateRendererEventData : public Common::EventData {
     CreateRendererEventData( Platform::AbstractSurface *pSurface )
     : EventData( OnCreateRendererEvent, nullptr )
     , m_activeSurface( pSurface ) 
-    , m_defaultFont( "" ) {
+    , m_defaultFont( "" )
+    , m_pipeline( nullptr ) {
         // empty
     }
 
     Platform::AbstractSurface *m_activeSurface;
     String                     m_defaultFont;
-    Pipeline                   m_pipeline;
+    Pipeline                  *m_pipeline;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -109,14 +106,13 @@ struct OSRE_EXPORT AttachViewEventData : public Common::EventData {
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-struct OSRE_EXPORT AttachGeoEventData : public Common::EventData {
+/*struct OSRE_EXPORT AttachGeoEventData : public Common::EventData {
     AttachGeoEventData()
     : EventData( OnAttachSceneEvent, nullptr )
     , m_numGeo( 0 )
     , m_geo( nullptr )
     , m_numInstances( 0 )
-    , m_geoInstanceData( nullptr )
-    , m_pipelinePass( -1 ) {
+    , m_geoInstanceData( nullptr ) {
         // empty
     }
 
@@ -124,15 +120,14 @@ struct OSRE_EXPORT AttachGeoEventData : public Common::EventData {
     Geometry       **m_geo;
     ui32             m_numInstances;
     GeoInstanceData *m_geoInstanceData; 
-    i32              m_pipelinePass;
-};
+};*/
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-struct OSRE_EXPORT UpdateGeoEventData : public Common::EventData {
+/*struct OSRE_EXPORT UpdateGeoEventData : public Common::EventData {
     UpdateGeoEventData() 
     : EventData( OnUpdateGeoEvent, nullptr )
     , m_numGeo( 0 )
@@ -142,14 +137,14 @@ struct OSRE_EXPORT UpdateGeoEventData : public Common::EventData {
     
     ui32 m_numGeo;
     Geometry *m_geo;
-};
+};*/
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-struct OSRE_EXPORT SetParameterEventData : public Common::EventData {
+/*struct OSRE_EXPORT SetParameterEventData : public Common::EventData {
     SetParameterEventData()
     : EventData( OnSetParameterEvent, nullptr )
     , m_numParam( 0 )
@@ -158,7 +153,22 @@ struct OSRE_EXPORT SetParameterEventData : public Common::EventData {
     }
 
     ui32 m_numParam;
-    Parameter **m_param;
+    UniformVar **m_param;
+};*/
+
+struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
+    CommitFrameEventData()
+    : EventData( OnCommitFrameEvent, nullptr )
+    , m_frame( nullptr ) {
+        // empty            
+    }
+
+    Frame *m_frame;
+};
+
+struct NewGeoEntry {
+    ui32 numInstances;
+    CPPCore::TArray<Geometry*> m_geo;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -194,7 +204,19 @@ public:
 
     void setMatrix( const String &name, const glm::mat4 &matrix );
 
-    void attachGeo( const CPPCore::TArray<Geometry*> &geoArray );
+    void setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray );
+
+    void attachGeo( Geometry *geo, ui32 numInstances );
+
+    void attachGeo( const CPPCore::TArray<Geometry*> &geoArray, ui32 numInstances );
+
+    void attachGeoInstance( GeoInstanceData *instanceData );
+
+    void attachGeoInstance( const CPPCore::TArray<GeoInstanceData*> &instanceData );
+
+    void attachGeoUpdate( Geometry *geo );
+
+    void attachGeoUpdate( const CPPCore::TArray<Geometry*> &geoArray );
 
     void attachView( TransformMatrixBlock &transform );
 
@@ -209,15 +231,18 @@ protected:
     virtual bool onUpdate( d32 timediff );
 
     /// @brief  Will apply all used parameters
-    void applyParameters();
+    void commitNextFrame();
 
 private:
     Common::TObjPtr<Threading::SystemTask> m_renderTaskPtr;
     const Properties::Settings *m_settings;
     bool m_ownsSettingsConfig;
-
-    CPPCore::THashMap<ui32, Parameter*>  m_variables;
-    CPPCore::TArray<SetParameterEventData*> m_paramUpdates;
+    Frame m_nextFrame;
+    CPPCore::TArray<NewGeoEntry*> m_newGeo;
+    CPPCore::TArray<Geometry*> m_geoUpdates;
+    CPPCore::TArray<GeoInstanceData*> m_newInstances;
+    CPPCore::THashMap<ui32, UniformVar*> m_variables;
+    CPPCore::TArray<UniformVar*> m_uniformUpdates;
 };
 
 } // Namespace RenderBackend

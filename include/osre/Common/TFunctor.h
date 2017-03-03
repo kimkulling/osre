@@ -39,8 +39,8 @@ public:
     virtual ~FunctorImpl();
 
     /// @brief Call for overwrite.
-    ///	@param	p1	Parameter 1.
-    ///	@param	p2	Parameter 2.
+    ///	@param	p1	UniformVar 1.
+    ///	@param	p2	UniformVar 2.
     ///	@return	The return value.
     virtual RET call( P1 p1, P2 p2 ) const = 0;
 };
@@ -70,8 +70,8 @@ public:
     virtual ~FunctorFunction() { /* empty */ }
         
     /// @brief Performs the binded function call
-    ///	@param	p1	Parameter 1.
-    ///	@param	p2	Parameter 1.
+    ///	@param	p1	UniformVar 1.
+    ///	@param	p2	UniformVar 1.
     virtual RET call( P1 p1, P2 p2 ) const {
         return m_Func(p1,p2);
     }
@@ -95,8 +95,8 @@ public:
     /// @brief The class constructor with instance and members.
     ///	@param	obj				[in] A pointer showing to the object to get called.
     ///	@param	( T::*func )	[in] The method pointer to call.
-    ///	@param	P1				[in] Parameter one.
-    ///	@param	P2				[in] Parameter two.
+    ///	@param	P1				[in] UniformVar one.
+    ///	@param	P2				[in] UniformVar two.
     FunctorMember( T* obj, RET ( T::*func ) ( P1,P2 ) ) 
     : m_Func( func )
     , m_Obj( obj ) {
@@ -109,8 +109,8 @@ public:
     }
 
     /// @brief Calls the member
-    ///	@param	P1		[in] Parameter one.
-    ///	@param	P2		[in] Parameter two.
+    ///	@param	P1		[in] UniformVar one.
+    ///	@param	P2		[in] UniformVar two.
     ///	@return	The return value.
     virtual RET call(P1 p1, P2 p2) const {
         return ( m_Obj->*m_Func )( p1, p2 );
@@ -150,8 +150,8 @@ public:
     }
 
     /// @brief () operator implementation, performs function call
-    /// @param p1	Parameter 1
-    /// @param p1	Parameter 2
+    /// @param p1	UniformVar 1
+    /// @param p1	UniformVar 2
     /// @return return type
     RET operator () (P1 p1, P2 p2) const {
         // Check for a valid this pointer

@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/IO/Stream.h>
+#include <osre/Common/osre_common.h>
 #include <cppcore/Container/TArray.h>
 
 #include <map>
@@ -31,6 +32,7 @@ namespace OSRE {
 namespace IO {
 
 class Uri;
+class Stream;
 
 //--------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

@@ -29,7 +29,6 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::Win32Timer
 ///	@ingroup	Engine
 ///
 ///	@brief	This class implements the timer API by using the Win32-API.
@@ -49,8 +48,6 @@ private:
 	LARGE_INTEGER m_globeTime, m_globeFrequency;
 	d32 m_LastTime;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

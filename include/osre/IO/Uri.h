@@ -48,7 +48,7 @@ public:
     ///	@brief	The class constructor with a string containing a valid URI. If the string description
     ///			is not ok the URI representation will be empty.
     ///	@param	uri			[in] The string with the URI.
-    Uri( const String &uri );
+    explicit Uri( const String &uri );
 
     ///	@brief	The copy class constructor.
     ///	@param	rhs		[in] Instance to copy.

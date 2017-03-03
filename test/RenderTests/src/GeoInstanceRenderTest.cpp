@@ -29,9 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 #include <osre/Scene/GeometryBuilder.h>
 
-#include <GL/glew.h>
 #include <GL/gl.h>
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -81,7 +79,6 @@ const String FsSrc =
     "}\n";
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderTest::GeoInstanceRenderTest
 ///	@ingroup	Test
 ///
 ///	@brief
@@ -91,7 +88,7 @@ class GeoInstanceRenderTest : public AbstractRenderTest {
 
 public:
     GeoInstanceRenderTest()
-        : AbstractRenderTest( "rendertest/geoinstancerendertest" ) {
+    : AbstractRenderTest( "rendertest/geoinstancerendertest" ) {
         // empty
     } 
 
@@ -101,14 +98,13 @@ public:
 
     virtual bool onCreate( RenderBackendService *rbSrv ) {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
-        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         Scene::GeometryBuilder myBuilder;
         Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-
-        attachGeoEvData->m_numGeo = 1;
+        rbSrv->attachGeo( geo, 0 );
+        /*attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_geo = new Geometry*[ attachGeoEvData->m_numGeo ];
-        attachGeoEvData->m_geo[0] = geo;
+        attachGeoEvData->m_geo[0] = geo;*/
 
         // use a default material
         geo->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
@@ -116,9 +112,9 @@ public:
             geo->m_material->m_pShader->m_attributes.add( "position" );
             geo->m_material->m_pShader->m_attributes.add( "normal" );
             geo->m_material->m_pShader->m_attributes.add( "color0" );
-            Parameter *paramM = Parameter::create("M", ParameterType::PT_Mat4);
+            UniformVar *paramM = UniformVar::create("M", ParameterType::PT_Mat4);
             geo->m_material->m_pShader->m_parameters.add( paramM );
-            Parameter *paramVP = Parameter::create("VP", ParameterType::PT_Mat4);
+            UniformVar *paramVP = UniformVar::create("VP", ParameterType::PT_Mat4);
             geo->m_material->m_pShader->m_parameters.add( paramVP );
         }
 
@@ -126,7 +122,7 @@ public:
         m_transformMatrix.update();
 
         static const ui32 NumInstances = 25;
-        attachGeoEvData->m_numInstances = NumInstances;
+//        attachGeoEvData->m_numInstances = NumInstances;
         glm::mat4 mat[NumInstances];
         glm::mat4 scale = glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.1f ) );
         
@@ -142,17 +138,19 @@ public:
 			y += 2.0f;
 		}
         
-        Parameter *parameterMVP = Parameter::create( "VP", ParameterType::PT_Mat4 );
-        ::memcpy( parameterMVP->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
+        /*UniformVar *parameterMVP = UniformVar::create( "VP", ParameterType::PT_Mat4 );
+        ::memcpy( parameterMVP->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );*/
+        m_transformMatrix.update();
+        rbSrv->setMatrix("VP", m_transformMatrix.m_mvp );
 
-        Parameter *parameterM = Parameter::create( "M", ParameterType::PT_Mat4Array, NumInstances);
+        /*UniformVar *parameterM = UniformVar::create( "M", ParameterType::PT_Mat4Array, NumInstances);
         ::memcpy( parameterM->m_data.m_data, glm::value_ptr( mat[ 0 ] ), sizeof( glm::mat4 ) * NumInstances);
-        parameterMVP->m_next = parameterM;
-
-        geo->m_material->m_parameters = parameterMVP;
-        geo->m_material->m_numParameters += 2;
+        parameterMVP->m_next = parameterM;*/
+        rbSrv->setMatrixArray( "M", NumInstances, mat );
+//        geo->m_material->m_parameters = parameterMVP;
+//        geo->m_material->m_numParameters += 2;
         
-        rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+//        rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
         return true;
     }

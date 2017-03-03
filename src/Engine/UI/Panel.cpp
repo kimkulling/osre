@@ -55,21 +55,22 @@ void Panel::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBacke
     const RectUI &rect( getRect() );
 
     Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle );
-
-    AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
+    rbSrv->attachGeo( geo, 0 );
+/*    AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
     attachGeoEvData->m_numGeo = 1;
     attachGeoEvData->m_geo = new Geometry*[ 1 ];
     attachGeoEvData->m_geo[ 0 ] = geo;
-    rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
+    rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );*/
 
     m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
 
-    Parameter *parameter = Parameter::create( "MVP", ParameterType::PT_Mat4 );
+    UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
     m_transformMatrix.update();
     ::memcpy( parameter->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
 
-    geo->m_material->m_parameters = parameter;
-    geo->m_material->m_numParameters++;
+    
+    /*geo->m_material->m_parameters = parameter;
+    geo->m_material->m_numParameters++;*/
 
     targetGeoArray.add( geo );
 }

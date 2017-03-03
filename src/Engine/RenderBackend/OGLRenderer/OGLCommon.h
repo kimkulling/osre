@@ -29,7 +29,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/ClearState.h>
 
@@ -146,7 +145,7 @@ struct OGLParameter {
     String         m_name;
     GLint          m_loc;
     ParameterType  m_type;
-    ParamDataBlob *m_data;
+    UniformDataBlob *m_data;
     ui32           m_numItems;
 
     OGLParameter()
@@ -174,16 +173,14 @@ struct SetParameterCmdData {
 
 ///	@brief
 struct SetMaterialStageCmdData {
-    OGLParameter **m_param;
-    ui32 m_numParam;
     OGLShader *m_shader;
     CPPCore::TArray<OGLTexture*> m_textures;
+    OGLVertexArray        *m_vertexArray;    ///<
 
     SetMaterialStageCmdData()
-    : m_param( nullptr )
-    , m_numParam( 0 )
-    , m_shader( nullptr )
-    , m_textures() {
+    : m_shader( nullptr )
+    , m_textures()
+    , m_vertexArray( nullptr ) {
         // empty
     }
 
