@@ -137,17 +137,30 @@ const Settings *RenderBackendService::getSettings() const {
     return m_settings;
 }
 
+static void setupGeoPackage(NewGeoEntry *newEntry, GeometryPackage *package ) {
+    OSRE_ASSERT( nullptr != newEntry );
+    OSRE_ASSERT( nullptr != package );
+    
+    const ui32 numNewGeo( newEntry->m_geo.size() );
+    package->m_newGeo = new Geometry*[numNewGeo];
+    package->m_numNewGeo = numNewGeo;
+    package->m_numInstances = newEntry->numInstances;
+    for ( ui32 i=0; i<numNewGeo; i++ ) {
+        package->m_newGeo[ i ] = newEntry->m_geo[ i ];
+    }
+}
+
 void RenderBackendService::commitNextFrame() {
      if ( !m_renderTaskPtr.isValid() ) {
         return;
     }
         
-    CommitFrameEventData *data = new CommitFrameEventData;
     if ( !m_newGeo.isEmpty() ) {
-        m_nextFrame.m_numNewGeo = m_newGeo.size();
-        m_nextFrame.m_newGeo = new Geometry *[ m_nextFrame.m_numNewGeo ];
-        for ( ui32 i = 0; i < m_nextFrame.m_numNewGeo; i++ ) {
-            m_nextFrame.m_newGeo[ i ] = m_newGeo[ i ];
+        m_nextFrame.m_numGeoPackages = m_newGeo.size();
+        m_nextFrame.m_geoPackages = new GeometryPackage*[m_newGeo.size()];        
+        for (ui32 i = 0; i < m_newGeo.size(); i++) {
+            m_nextFrame.m_geoPackages[ i ]= new GeometryPackage;
+            setupGeoPackage( m_newGeo[ i ], m_nextFrame.m_geoPackages[ i ] );
         }
         m_newGeo.resize( 0 );
     }
@@ -169,6 +182,7 @@ void RenderBackendService::commitNextFrame() {
         }
         m_geoUpdates.resize(0);
     }
+    CommitFrameEventData *data = new CommitFrameEventData;
     data->m_frame = &m_nextFrame;
     m_renderTaskPtr->sendEvent( &OnCommitFrameEvent, data );
 }
@@ -205,16 +219,22 @@ void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const
     ::memcpy(uniform->m_data.m_data, glm::value_ptr( matrixArray[0] ), sizeof(glm::mat4) * numMat );
 }
 
-void RenderBackendService::attachGeo( Geometry *geo ) {
+void RenderBackendService::attachGeo( Geometry *geo, ui32 numInstances ) {
     if ( nullptr == geo ) {
         osre_debug( Tag, "Pointer to geometry is nullptr." );
         return;
     }
-    m_newGeo.add( geo );
+    NewGeoEntry *entry = new NewGeoEntry;
+    entry->m_geo.add( geo );
+    entry->numInstances = numInstances;
+    m_newGeo.add( entry );
 }
 
-void RenderBackendService::attachGeo( const CPPCore::TArray<Geometry*> &geoArray ) {
-    m_newGeo.add( &geoArray[ 0 ], geoArray.size() );
+void RenderBackendService::attachGeo( const CPPCore::TArray<Geometry*> &geoArray, ui32 numInstances ) {
+    NewGeoEntry *entry = new NewGeoEntry;
+    entry->numInstances = numInstances;
+    entry->m_geo.add( &geoArray[ 0 ], geoArray.size() );
+    m_newGeo.add( entry );
 }
 
 void RenderBackendService::attachGeoUpdate( Geometry *geo ) {

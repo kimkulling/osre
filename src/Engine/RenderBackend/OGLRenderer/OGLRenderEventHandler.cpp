@@ -207,7 +207,7 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
     rb->bindBuffer( ib );
     rb->bufferData( ib, indices->m_data, indices->m_size, indices->m_access );
 
-    rb->unbindVertexArray( vertexArray );
+    rb->unbindVertexArray();
 
     return vertexArray;
 }
@@ -252,16 +252,29 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, Frame *currentFrame,
         }
     }
     
-    DrawInstancePrimitivesCmdData *data = new DrawInstancePrimitivesCmdData;
-    data->m_vertexArray = va;
-    data->m_numInstances = currentFrame->m_numInstances;
+    for ( ui32 i=0; i<currentFrame->m_numGeoPackages; i++ ) {
+        GeometryPackage *currentGeoPackage( currentFrame->m_geoPackages[ i ] );
+        if ( nullptr == currentGeoPackage ) {
+            continue;
+        }
+        DrawInstancePrimitivesCmdData *data = new DrawInstancePrimitivesCmdData;
+        data->m_vertexArray = va;
+        data->m_numInstances = currentGeoPackage->m_numInstances;
+        data->m_primitives.reserve( ids.size() );
+        for( ui32 j = 0; j < ids.size(); ++j ) {
+            data->m_primitives.add( ids[ j ] );
+        }
+        renderCmd->m_pData = static_cast< void* >( data );
+        eh->enqueueRenderCmd( renderCmd );
+    }
+    /*data->m_numInstances = currentFrame->m_numInstances;
     data->m_primitives.reserve( ids.size() );
     for( ui32 i = 0; i < ids.size(); ++i ) {
         data->m_primitives.add( ids[ i ] );
     }
     renderCmd->m_pData = static_cast< void* >( data );
 
-    eh->enqueueRenderCmd( renderCmd );
+    eh->enqueueRenderCmd( renderCmd );*/
 }
 
 OGLRenderEventHandler::OGLRenderEventHandler( )
@@ -580,9 +593,56 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
     if ( nullptr == frameToCommitData ) {
         return false;
     }
+    
     Frame *frame = frameToCommitData->m_frame;
+    for ( ui32 geoPackageIdx = 0; geoPackageIdx<frame->m_numGeoPackages; geoPackageIdx++ ) {
+        GeometryPackage *currentGeoPackage( frame->m_geoPackages[ geoPackageIdx ] );
+        if ( nullptr == currentGeoPackage ) {
+            continue;
+        }
 
-    for ( ui32 geoIdx = 0; geoIdx < frame->m_numNewGeo; ++geoIdx ) {
+        for( ui32 geoIdx = 0; geoIdx < currentGeoPackage->m_numNewGeo; ++geoIdx ) {
+            Geometry *geo = currentGeoPackage->m_newGeo[ geoIdx ];
+            if( nullptr == geo ) {
+                osre_debug( Tag, "Geometry-pointer is a nullptr." );
+                return false;
+            }
+
+            // register primitive groups to render
+            CPPCore::TArray<ui32> primGroups;
+            for( ui32 i = 0; i < geo->m_numPrimGroups; ++i ) {
+                const ui32 primIdx( m_oglBackend->addPrimitiveGroup( &geo->m_pPrimGroups[ i ] ) );
+                primGroups.add( primIdx );
+            }
+
+            // create the default material
+            SetMaterialStageCmdData *data = setupMaterial( geo->m_material, m_oglBackend, this );
+
+            // setup vertex array, vertex and index buffers
+            m_vertexArray = setupBuffers( geo, m_oglBackend, m_renderCmdBuffer->getActiveShader() );
+            if( nullptr == m_vertexArray ) {
+                osre_debug( Tag, "Vertex-Array-pointer is a nullptr." );
+                return false;
+            }
+            data->m_vertexArray = m_vertexArray;
+
+            // setup the draw calls
+            if( 0 == currentGeoPackage->m_numInstances ) {
+                setupPrimDrawCmd( primGroups, m_oglBackend, this, m_vertexArray );
+            } else {
+                setupInstancedDrawCmd( primGroups, frame, m_oglBackend, this, m_vertexArray );
+            }
+        }
+    }
+
+    // setup global parameter
+    if( frame->m_numVars > 0 ) {
+        for( ui32 i = 0; i < frame->m_numVars; i++ ) {
+            setupParameter( frame->m_vars[ i ], 1, m_oglBackend, this );
+        }
+    }
+
+    /*for ( ui32 geoIdx = 0; geoIdx < frame->m_numNewGeo; ++geoIdx ) {
         Geometry *geo = frame->m_newGeo[ geoIdx ];
         if ( nullptr == geo ) {
             osre_debug( Tag, "Geometry-pointer is a nullptr." );
@@ -621,10 +681,13 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
         } else {
             setupInstancedDrawCmd( primGroups, frame, m_oglBackend, this, m_vertexArray );
         }
+    }*/
+
+    if ( nullptr != frame->m_geoPackages ) {
+        delete[] frame->m_geoPackages;
+        frame->m_geoPackages = nullptr;
+        frame->m_numGeoPackages = 0;
     }
-    delete[] frame->m_newGeo;
-    frame->m_newGeo = nullptr;
-    frame->m_numNewGeo = 0;
 
     for ( ui32 i=0; i<frame->m_numGeoUpdates; i++ ) {
         Geometry *geo = frame->m_geoUpdates[ i ];
@@ -643,7 +706,6 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
     delete[] frame->m_geoUpdates;
     frame->m_geoUpdates = nullptr;
     frame->m_numGeoUpdates = 0;
-
 
     m_oglBackend->useShader( nullptr );
 

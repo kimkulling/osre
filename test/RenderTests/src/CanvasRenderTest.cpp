@@ -56,7 +56,7 @@ public:
     virtual bool onCreate( RenderBackendService *rbSrv ) {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
         Geometry *geo = Scene::GeometryBuilder::allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-        rbSrv->attachGeo( geo );
+        rbSrv->attachGeo( geo, 0 );
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
         rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );

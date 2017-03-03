@@ -91,7 +91,7 @@ public:
     void destroyVertexArray( OGLVertexArray *pVertexArray );
     OGLVertexArray *getVertexArraybyId( ui32 id ) const;
     void bindVertexArray( OGLVertexArray *pVertexArray );
-    void unbindVertexArray( OGLVertexArray *pVertexArray );
+    void unbindVertexArray();
     void releaseAllVertexArrays();
     OGLShader *createShader( const String &name, Shader *pShader );
     OGLShader *getShader( const String &name );

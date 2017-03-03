@@ -166,6 +166,11 @@ struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
     Frame *m_frame;
 };
 
+struct NewGeoEntry {
+    ui32 numInstances;
+    CPPCore::TArray<Geometry*> m_geo;
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -201,9 +206,9 @@ public:
 
     void setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray );
 
-    void attachGeo( Geometry *geo );
+    void attachGeo( Geometry *geo, ui32 numInstances );
 
-    void attachGeo( const CPPCore::TArray<Geometry*> &geoArray );
+    void attachGeo( const CPPCore::TArray<Geometry*> &geoArray, ui32 numInstances );
 
     void attachGeoInstance( GeoInstanceData *instanceData );
 
@@ -232,9 +237,8 @@ private:
     Common::TObjPtr<Threading::SystemTask> m_renderTaskPtr;
     const Properties::Settings *m_settings;
     bool m_ownsSettingsConfig;
-
     Frame m_nextFrame;
-    CPPCore::TArray<Geometry*> m_newGeo;
+    CPPCore::TArray<NewGeoEntry*> m_newGeo;
     CPPCore::TArray<Geometry*> m_geoUpdates;
     CPPCore::TArray<GeoInstanceData*> m_newInstances;
     CPPCore::THashMap<ui32, UniformVar*> m_variables;

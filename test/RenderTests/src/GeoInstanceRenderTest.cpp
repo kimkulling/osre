@@ -101,7 +101,7 @@ public:
 
         Scene::GeometryBuilder myBuilder;
         Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-        rbSrv->attachGeo( geo );
+        rbSrv->attachGeo( geo, 0 );
         /*attachGeoEvData->m_numGeo = 1;
         attachGeoEvData->m_geo = new Geometry*[ attachGeoEvData->m_numGeo ];
         attachGeoEvData->m_geo[0] = geo;*/

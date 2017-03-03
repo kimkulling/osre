@@ -127,6 +127,7 @@ void RenderCmdBuffer::onPostRenderFrame() {
 
     // unbind the active shader
     m_renderbackend->useShader( nullptr );
+    m_renderbackend->unbindVertexArray();
 }
 
 void RenderCmdBuffer::clear() {

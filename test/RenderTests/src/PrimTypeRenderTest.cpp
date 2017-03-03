@@ -98,7 +98,7 @@ public:
         //attachGeoEvData->m_geo = new Geometry*[ NumGeo ];
 
         Geometry *ptGeo = Scene::GeometryBuilder::allocPoints( VertexType::ColorVertex, BufferAccessType::ReadOnly, 3, points, col );
-        rb->attachGeo( ptGeo );
+        rb->attachGeo( ptGeo, 0 );
         /*attachGeoEvData->m_geo[ 0 ] = Scene::GeometryBuilder::allocPoints( VertexType::ColorVertex, BufferAccessType::ReadOnly, 3, points, col );
         attachGeoEvData->m_geo[ 1 ] = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, 1 );*/
 
@@ -120,7 +120,7 @@ public:
         Material *mat = Scene::MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
 //        attachGeoEvData->m_geo[ 0 ]->m_material = mat;
         lineGeo->m_material = mat;
-        rb->attachGeo( ptGeo );
+        rb->attachGeo( ptGeo, 0 );
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );

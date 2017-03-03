@@ -80,7 +80,7 @@ public:
         geo->m_material->m_parameters = parameter;
         geo->m_material->m_numParameters++;
         
-        rbSrv->attachGeo( geoArray );
+        rbSrv->attachGeo( geoArray, 0 );
 
         return true;
     }

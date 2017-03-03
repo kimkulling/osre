@@ -88,7 +88,7 @@ void Screen::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *rbS
         /*for ( ui32 i = 0; i < attachGeoData->m_numGeo; i++ ) {
             attachGeoData->m_geo[ i ] = targetGeoArray[ i ];
         }*/
-        rbSrv->attachGeo( targetGeoArray );
+        rbSrv->attachGeo( targetGeoArray, 0 );
         //rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoData );
 
         /*::memcpy( param->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );

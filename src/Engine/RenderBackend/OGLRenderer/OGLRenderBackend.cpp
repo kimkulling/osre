@@ -426,17 +426,7 @@ void OGLRenderBackend::bindVertexArray( OGLVertexArray *vertexArray ) {
     CHECKOGLERRORSTATE();
 }
 
-void OGLRenderBackend::unbindVertexArray( OGLVertexArray *vertexArray ) {
-    if ( nullptr == vertexArray ) {
-        osre_debug( Tag, "Pointer to vertex array is nullptr" );
-        return;
-    }
-    
-    if ( vertexArray->m_id != m_activeVertexArray ) {
-        osre_debug( Tag, "Try to unbind wrong vertex array ( index mismatch )." );
-        return;
-    }
-
+void OGLRenderBackend::unbindVertexArray() {
     glBindVertexArray( 0 );
     m_activeVertexArray = OGLNotSetId;
 }

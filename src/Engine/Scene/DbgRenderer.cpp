@@ -82,7 +82,7 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
     if ( !m_textBoxes.hasKey( id ) ) {
 //        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
         Geometry *geo = GeometryBuilder::allocTextBox( 0, 0, 0.1f, text, BufferAccessType::ReadWrite );
-        m_rbSrv->attachGeo( geo );
+        m_rbSrv->attachGeo( geo, 0 );
         insertTextEntry( id, geo, text, m_textBoxes );
         /*DbgTextEntry *entry( new DbgTextEntry );
         entry->m_geo = geo;

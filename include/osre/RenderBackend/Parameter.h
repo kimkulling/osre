@@ -138,25 +138,36 @@ private:
     uc8 *m_data;
 };
 
+struct GeometryPackage {
+    ui32       m_numInstances;
+    ui32       m_numNewGeo;
+    Geometry **m_newGeo;
+
+    GeometryPackage()
+    : m_numInstances( 0 )
+    , m_numNewGeo( 0 )
+    , m_newGeo( nullptr ) {
+        // empty
+    }
+};
+
 struct Frame {
     ui32              m_numVars;
     UniformVar      **m_vars;
-    ui32              m_numNewGeo;
-    Geometry        **m_newGeo;
-    ui32              m_numInstances;
-    GeoInstanceData  *m_geoInstanceData;
+    ui32              m_numGeoPackages;
+    GeometryPackage **m_geoPackages;
     ui32              m_numGeoUpdates;
     Geometry        **m_geoUpdates;
+    GeoInstanceData   *m_geoInstanceData;
 
     Frame() 
     : m_numVars( 0 )
     , m_vars( nullptr )
-    , m_numNewGeo( 0 )
-    , m_newGeo( nullptr )
-    , m_numInstances( 0 )
-    , m_geoInstanceData( nullptr )
+    , m_numGeoPackages( 0 )
+    , m_geoPackages( nullptr )
     , m_numGeoUpdates( 0 )
-    , m_geoUpdates( nullptr ) {
+    , m_geoUpdates( nullptr )
+    , m_geoInstanceData( nullptr ) {
         // empty
     }
     

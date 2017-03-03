@@ -118,7 +118,7 @@ public:
         pRenderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
         Geometry *geo = Scene::GeometryBuilder::allocQuads( VertexType::RenderVertex, BufferAccessType::ReadOnly );
-        pRenderBackendSrv->attachGeo( geo );
+        pRenderBackendSrv->attachGeo( geo, 0 );
 //        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         /*attachGeoEvData->m_numGeo = 1;

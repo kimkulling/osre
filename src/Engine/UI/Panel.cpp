@@ -55,7 +55,7 @@ void Panel::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBacke
     const RectUI &rect( getRect() );
 
     Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle );
-    rbSrv->attachGeo( geo );
+    rbSrv->attachGeo( geo, 0 );
 /*    AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
     attachGeoEvData->m_numGeo = 1;
     attachGeoEvData->m_geo = new Geometry*[ 1 ];
