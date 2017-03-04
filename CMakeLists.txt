@@ -101,7 +101,6 @@ ADD_SUBDIRECTORY( 3dparty/cppcore/build )
 ADD_SUBDIRECTORY( 3dparty/zlib )
 ADD_SUBDIRECTORY( 3dparty/unzip )
 ADD_SUBDIRECTORY( 3dparty/soil )
-ADD_SUBDIRECTORY( 3dparty/freetype )
 ADD_SUBDIRECTORY( 3dparty/assimp/ )
 
 
@@ -118,7 +117,5 @@ ADD_SUBDIRECTORY( 3dparty/assimp/ )
 
 set_target_properties(  cppcore PROPERTIES FOLDER ThirdParty )
 set_target_properties(  cppcore_unittest PROPERTIES FOLDER ThirdParty )
-set_target_properties(  freetype PROPERTIES FOLDER ThirdParty )
-set_target_properties(  dist PROPERTIES FOLDER ThirdParty )
 set_target_properties(  assimp PROPERTIES FOLDER ThirdParty )
 #set_target_properties(  zlibstatic PROPERTIES FOLDER ThirdParty )
