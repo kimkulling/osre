@@ -208,15 +208,17 @@ void RenderBackendService::setMatrix( const String &name, const glm::mat4 &matri
 }
 
 void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray) {
-    UniformVar *uniform(nullptr);
+    UniformVar *uniform( nullptr );
     const ui32 key(Common::StringUtils::hashName(name.c_str()));
-    if (!m_variables.hasKey(key)) {
-        uniform = UniformVar::create(name, ParameterType::PT_Mat4Array);
-        m_variables.insert(key, uniform);
+    if ( !m_variables.hasKey( key ) ) {
+        uniform = UniformVar::create( name, ParameterType::PT_Mat4Array, numMat );
+        m_variables.insert( key, uniform );
     } else {
-        m_variables.getValue(key, uniform);
+        m_variables.getValue( key, uniform );
     }
-    ::memcpy(uniform->m_data.m_data, glm::value_ptr( matrixArray[0] ), sizeof(glm::mat4) * numMat );
+    
+    ::memcpy(uniform->m_data.m_data, glm::value_ptr( matrixArray[0] ), sizeof( glm::mat4 ) * numMat );
+    m_uniformUpdates.add( uniform );
 }
 
 void RenderBackendService::attachGeo( Geometry *geo, ui32 numInstances ) {

@@ -98,13 +98,11 @@ public:
 
     virtual bool onCreate( RenderBackendService *rbSrv ) {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
+        static const ui32 NumInstances = 25;
 
         Scene::GeometryBuilder myBuilder;
         Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-        rbSrv->attachGeo( geo, 0 );
-        /*attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_geo = new Geometry*[ attachGeoEvData->m_numGeo ];
-        attachGeoEvData->m_geo[0] = geo;*/
+        rbSrv->attachGeo( geo, NumInstances );
 
         // use a default material
         geo->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
@@ -112,20 +110,13 @@ public:
             geo->m_material->m_pShader->m_attributes.add( "position" );
             geo->m_material->m_pShader->m_attributes.add( "normal" );
             geo->m_material->m_pShader->m_attributes.add( "color0" );
-            UniformVar *paramM = UniformVar::create("M", ParameterType::PT_Mat4);
-            geo->m_material->m_pShader->m_parameters.add( paramM );
-            UniformVar *paramVP = UniformVar::create("VP", ParameterType::PT_Mat4);
-            geo->m_material->m_pShader->m_parameters.add( paramVP );
         }
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
 
-        static const ui32 NumInstances = 25;
-//        attachGeoEvData->m_numInstances = NumInstances;
         glm::mat4 mat[NumInstances];
-        glm::mat4 scale = glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.1f ) );
-        
+        glm::mat4 scale = glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.1f ) );        
 		auto idx(0);
 		auto x(-2.0f), y(-2.0f);
 		for (auto i = 0; i < 5; i++) {
@@ -138,19 +129,8 @@ public:
 			y += 2.0f;
 		}
         
-        /*UniformVar *parameterMVP = UniformVar::create( "VP", ParameterType::PT_Mat4 );
-        ::memcpy( parameterMVP->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );*/
-        m_transformMatrix.update();
         rbSrv->setMatrix("VP", m_transformMatrix.m_mvp );
-
-        /*UniformVar *parameterM = UniformVar::create( "M", ParameterType::PT_Mat4Array, NumInstances);
-        ::memcpy( parameterM->m_data.m_data, glm::value_ptr( mat[ 0 ] ), sizeof( glm::mat4 ) * NumInstances);
-        parameterMVP->m_next = parameterM;*/
         rbSrv->setMatrixArray( "M", NumInstances, mat );
-//        geo->m_material->m_parameters = parameterMVP;
-//        geo->m_material->m_numParameters += 2;
-        
-//        rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
 
         return true;
     }
