@@ -161,8 +161,8 @@ static void setupParameter( UniformVar *param, ui32 numParam, OGLRenderBackend *
     OGLParameter *oglParam = rb->getParameter( param->m_name );
     if ( nullptr == oglParam ) {
         oglParam = rb->createParameter( param->m_name, param->m_type, &param->m_data, param->m_numItems );
-        paramArray.add( oglParam );
     }
+    paramArray.add( oglParam );
     ev->setParameter( paramArray );
 }
 
