@@ -81,6 +81,7 @@ GLenum OGLEnum::getGLIndexType( IndexType indexType ) {
         default:
             break;
     }
+
     return GL_UNSIGNED_SHORT;
 }
 
@@ -129,6 +130,7 @@ GLenum OGLEnum::getGLTextureStage( TextureStageType texType ) {
         default:
             break;
     }
+
     return GL_TEXTURE0;
 }
 

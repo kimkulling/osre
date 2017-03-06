@@ -89,7 +89,9 @@ public:
     void addParameter( OGLParameter* param );
     /// Will add an array of parameters to the setup of the pipeline
     void addParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray );
-
+    ///
+    void updateParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray );
+    ///
     void commitParameters();
 
 protected:

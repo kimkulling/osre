@@ -216,7 +216,8 @@ void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const
     } else {
         m_variables.getValue(key, uniform);
     }
-    ::memcpy(uniform->m_data.m_data, glm::value_ptr( matrixArray[0] ), sizeof(glm::mat4) * numMat );
+    ::memcpy( uniform->m_data.m_data, glm::value_ptr( matrixArray[0] ), sizeof(glm::mat4) * numMat );
+    m_uniformUpdates.add( uniform );
 }
 
 void RenderBackendService::attachGeo( Geometry *geo, ui32 numInstances ) {
