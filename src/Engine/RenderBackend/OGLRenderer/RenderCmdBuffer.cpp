@@ -158,6 +158,14 @@ void RenderCmdBuffer::addParameter( const ::CPPCore::TArray<OGLParameter*> &para
     }
 }
 
+void RenderCmdBuffer::updateParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray ) {
+    for ( ui32 i = 0; i < paramArray.size(); i++ ) {
+        if ( !hasParam( paramArray[ i ]->m_name, m_paramArray ) ) {
+            m_paramArray.add( paramArray[ i ] );
+        }
+    }
+}
+
 void RenderCmdBuffer::commitParameters() {
     for ( ui32 i = 0; i < m_paramArray.size(); i++ ) {
         m_renderbackend->setParameter( m_paramArray[ i ] );
