@@ -86,11 +86,9 @@ public:
     /// The buffer and all attached commands will be cleared.
     void clear();
     /// Will add one parameter to the setup of the pipeline
-    void addParameter( OGLParameter* param );
+    void setParameter( OGLParameter* param );
     /// Will add an array of parameters to the setup of the pipeline
-    void addParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray );
-    ///
-    void updateParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray );
+    void setParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray );
     ///
     void commitParameters();
 

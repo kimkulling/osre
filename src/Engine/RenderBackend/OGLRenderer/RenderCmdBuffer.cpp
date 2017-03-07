@@ -144,21 +144,13 @@ static bool hasParam( const String &name, const ::CPPCore::TArray<OGLParameter*>
     return false;
 }
 
-void RenderCmdBuffer::addParameter( OGLParameter* param ) {
+void RenderCmdBuffer::setParameter( OGLParameter* param ) {
     if ( !hasParam( param->m_name, m_paramArray ) ) {
         m_paramArray.add( param );
     }
 }
 
-void RenderCmdBuffer::addParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray ) {
-    for ( ui32 i = 0; i < paramArray.size(); i++ ) {
-        if ( !hasParam( paramArray[ i ]->m_name, m_paramArray ) ) {
-            m_paramArray.add( paramArray[ i ] );
-        }
-    }
-}
-
-void RenderCmdBuffer::updateParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray ) {
+void RenderCmdBuffer::setParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray ) {
     for ( ui32 i = 0; i < paramArray.size(); i++ ) {
         if ( !hasParam( paramArray[ i ]->m_name, m_paramArray ) ) {
             m_paramArray.add( paramArray[ i ] );
@@ -171,25 +163,6 @@ void RenderCmdBuffer::commitParameters() {
         m_renderbackend->setParameter( m_paramArray[ i ] );
     }
 }
-/*bool RenderCmdBuffer::onUpdateParameter( const EventData *data ) {
-    OSRE_ASSERT( nullptr != m_renderbackend );
-    SetParameterEventData *updateParamData = ( SetParameterEventData* ) data;
-    if( nullptr != updateParamData ) {
-        for( ui32 i = 0; i < updateParamData->m_numParam; ++i ) {
-            UniformVar *currentParam = updateParamData->m_param[ i ];
-            if ( nullptr == currentParam ) {
-                continue;
-            }
-
-            OGLParameter *oglParam = m_renderbackend->getParameter( currentParam->m_name );
-            if( nullptr != oglParam ) {
-                ::memcpy( oglParam->m_data->getData(), currentParam->m_data.getData(), currentParam->m_data.m_size );
-            }
-        }
-    }
-
-    return true;
-}*/
 
 bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *data ) {
     OSRE_ASSERT( nullptr != m_renderbackend );

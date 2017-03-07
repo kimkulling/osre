@@ -39,6 +39,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "SOIL.h"
 
+#include <iostream>
+
 namespace OSRE {
 namespace RenderTest {
 
@@ -88,7 +90,6 @@ const String FsSrc =
 
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderTest::BaseTextureRenderTest
 ///	@ingroup	Test
 ///
 ///	@brief  This class implements a simple texture render test.
@@ -112,18 +113,13 @@ public:
         m_mvpParam = nullptr;
     }
 
-    virtual bool onCreate( RenderBackend::RenderBackendService *pRenderBackendSrv ) {
+    virtual bool onCreate( RenderBackendService *rbSrv ) override {
         osre_debug( Tag, "BaseTextureRenderTest::onCreate" );
 
-        pRenderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
+        rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
         Geometry *geo = Scene::GeometryBuilder::allocQuads( VertexType::RenderVertex, BufferAccessType::ReadOnly );
-        pRenderBackendSrv->attachGeo( geo, 0 );
-//        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-
-        /*attachGeoEvData->m_numGeo = 1;
-        attachGeoEvData->m_geo = new Geometry*[ 1 ];
-        attachGeoEvData->m_geo[ 0 ] = geo;*/
+        rbSrv->attachGeo( geo, 0 );
 
         // use default material
         geo->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
@@ -151,30 +147,24 @@ public:
         tex->m_size = 0;
         geo->m_material->m_textures[ 0 ] = tex;
 
-        //pRenderBackendSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );
-
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
         
-        UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
         m_transformMatrix.update();
-        ::memcpy( parameter->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
-        
-        geo->m_material->m_parameters = parameter;
-        geo->m_material->m_numParameters++;
+        rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
 
         return true;
     }
 
-    virtual bool onDestroy( RenderBackend::RenderBackendService *pRenderBackendSrv ) {
+    virtual bool onDestroy( RenderBackendService *rbSrv ) override {
         osre_debug( Tag, "BaseTextureRenderTest::onDestroy" );
 
         return true;
     }
 
-    virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *pRenderBackendSrv ) {
+    virtual bool onRender( d32 timediff, RenderBackendService *rbSrv ) override {
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
-        pRenderBackendSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
+        rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
 
         return true;
     }
