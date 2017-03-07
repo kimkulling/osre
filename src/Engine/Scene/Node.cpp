@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/Node.h>
 #include <osre/Scene/Component.h>
+#include <osre/Assets/Model.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/Ids.h>
@@ -33,6 +34,7 @@ namespace Scene {
 
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Common;
+using namespace ::OSRE::Assets;
 
 Node::Node( const String &name, Common::Ids &ids, bool transformEnabled, bool renderEnabled, Node *parent )
 : Object( name )
@@ -159,6 +161,13 @@ void Node::releaseChildren() {
             m_children[ i ]->releaseChildren();
             m_children[ i ]->release();
         }
+    }
+}
+
+void Node::addModel( Model *model ) {
+    Node *root = model->getRootNode();
+    if ( nullptr != root ) {
+        addChild( root );
     }
 }
 

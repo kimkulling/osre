@@ -28,8 +28,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations
 namespace Common {
     class Ids;
+}
+
+namespace Assets {
+    class Model;
 }
 
 namespace Properties {
@@ -79,6 +84,7 @@ public:
     virtual ui32 getNumChilds() const;
     virtual Node *getChildAt( ui32 idx ) const;
     virtual void releaseChildren();
+    virtual void addModel( Assets::Model *model );
     virtual void addGeometry( RenderBackend::Geometry *geo );
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
 

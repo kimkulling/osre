@@ -133,18 +133,6 @@ Node *Stage::findNode( const String &name ) const {
     return myNode;
 }
 
-void Stage::addModel( Assets::Model *model, Node *parentNode ) {
-    if ( nullptr == model ) {
-        return;
-    }
-
-    if ( nullptr == parentNode ) {
-        parentNode->addChild( model->getRootNode() );
-    } else {
-        m_root->addChild( model->getRootNode() );
-    }
-}
-
 View *Stage::addView( const String &name, Node *node ) {
     if ( name.empty() ) {
         return nullptr;
@@ -200,7 +188,6 @@ void Stage::setIdContainer( Common::Ids &ids ) {
 Common::Ids *Stage::getIdContainer() const {
     return m_ids;
 }
-
 
 } // Namespace Scene
 } // namespace OSRE

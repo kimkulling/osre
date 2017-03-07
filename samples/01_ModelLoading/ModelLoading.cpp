@@ -124,8 +124,7 @@ protected:
 
             AppBase::activateStage( m_stage->getName() );
             Scene::Node *node = m_stage->addNode( "modelNode", nullptr );
-            m_stage->addModel( model, node );
-
+            node->addModel( model );
         }
 
         return true;
