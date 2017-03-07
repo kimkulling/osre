@@ -69,17 +69,10 @@ public:
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
     bool isShadowCaster() const;
     void setShadowCaster( bool isShadowCaster );
-    void beginPass( CPPCore::TArray<RenderBackend::UniformVar*> &paramArray );
     void addStaticGeometry( RenderBackend::Geometry *geo );
-    void endPass();
 
 private:
-    struct Pass {
-        CPPCore::TArray<RenderBackend::UniformVar*> m_paramArray;
-        CPPCore::TArray<RenderBackend::Geometry*> m_newGeo;
-    };
-    Pass *m_currentPass;
-    CPPCore::TArray<Pass*> m_passes;
+    CPPCore::TArray<RenderBackend::Geometry*> m_newGeo;
     bool m_isShadowCaster;
 };
 

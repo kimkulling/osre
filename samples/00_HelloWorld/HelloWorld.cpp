@@ -26,9 +26,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
-#include <osre/Scene/Component.h>
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Profiling/PerformanceCounters.h>
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -90,8 +90,8 @@ protected:
         RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
         if( nullptr != geo ) {
 			m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
-
-
+            m_transformMatrix.update();
+            getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
             geoNode->addGeometry( geo );
 		}
 
