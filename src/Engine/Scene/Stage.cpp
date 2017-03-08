@@ -27,7 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/StringUtils.h>
 #include <osre/Common/Ids.h>
-#include <osre/Assets/Model.h>
 
 namespace OSRE {
 namespace Scene {

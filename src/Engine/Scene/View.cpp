@@ -22,7 +22,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/View.h>
 #include <osre/Common/Logger.h>
-#include <osre/RenderBackend/Parameter.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace OSRE {
@@ -49,7 +48,7 @@ void View::observeNode( Node *node ) {
     m_node = node;
 }
 
-void View::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
+void View::update( RenderBackend::RenderBackendService *rbSrv ) {
     m_view = glm::lookAt( m_pos, m_lookAt, m_up );
 }
 
