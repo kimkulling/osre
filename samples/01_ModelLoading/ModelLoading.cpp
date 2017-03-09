@@ -33,6 +33,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/Ids.h>
+#include <osre/Scene/GeometryBuilder.h>
+
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace ::OSRE;
 using namespace ::OSRE::Common;
@@ -113,18 +116,23 @@ protected:
                 right *= aspect; 
             }
             f32 fov = 2.f;
-            m_view->setProjectionMode( fov, aspect, zNear, zFar );
+            m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+
+            //m_view->setProjectionMode( fov, aspect, zNear, zFar );
             //m_view->setOrthoMode( left, right, bottom, top, zNear, zFar );
             glm::vec3 eye( 0, 0, 2 * diam ), up( 0, 0, 1 );
-            m_view->setLookAt( eye, glm::vec3( center.getX(), center.getY(), center.getZ() ), up );
-            m_transformMatrix.m_view = m_view->getView();
-            m_transformMatrix.m_projection = m_view->getProjection();
+            //m_view->setLookAt( eye, glm::vec3( center.getX(), center.getY(), center.getZ() ), up );
+            //m_transformMatrix.m_view = m_view->getView();
+            //m_transformMatrix.m_projection = m_view->getProjection();
             m_transformMatrix.update();
             AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
 
             AppBase::activateStage( m_stage->getName() );
             Scene::Node *node = m_stage->addNode( "modelNode", nullptr );
-            node->addModel( model );
+//            node->addModel( model );
+            Scene::GeometryBuilder myBuilder;
+            RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
+            node->addGeometry( geo );
         }
 
         return true;
