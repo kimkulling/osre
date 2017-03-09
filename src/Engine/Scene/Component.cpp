@@ -55,7 +55,9 @@ RenderComponent::~RenderComponent() {
 void RenderComponent::update( RenderBackendService *renderBackendSrv ) {
     renderBackendSrv->sendEvent( &OnAttachViewEvent, nullptr );
     if( !m_newGeo.isEmpty() ) {
-        renderBackendSrv->attachGeo( m_newGeo[ 0 ], m_newGeo.size() );
+        for ( ui32 i = 0; i < m_newGeo.size(); i++ ) {
+            renderBackendSrv->attachGeo( m_newGeo[ i ], 0 );
+        }
         m_newGeo.resize( 0 );
     }
 }
