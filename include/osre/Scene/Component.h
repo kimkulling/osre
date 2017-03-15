@@ -31,6 +31,7 @@ namespace OSRE {
     
 namespace RenderBackend {
     class RenderBackendService;
+
     struct UniformVar;
     struct Geometry;
     struct TransformBlock;
@@ -92,5 +93,11 @@ private:
     RenderBackend::TransformBlock *m_localTransform;
 };
 
+class CollisionComponent : public Component {
+public:
+    CollisionComponent( ui32 id );
+    virtual ~CollisionComponent();
+    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
+};
 } // Namespace Scene
 } // namespace OSRE

@@ -77,6 +77,7 @@ bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
     }
     convertSceneToModel( scene );
 
+    m_model->setGeoArray( m_geoArray );
     return true;
 }
 

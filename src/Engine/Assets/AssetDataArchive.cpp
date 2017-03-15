@@ -126,8 +126,8 @@ bool AssetDataArchive::readHeader( IO::Stream &stream, ui32 minVersion, AssetDat
     offset = stream.seek( 0, IO::Stream::Origin::Begin );
     c8 bufferMagic[ 4 ];
     offset += stream.read( bufferMagic, sizeof( c8 ) * 4 );
-    if ( 0 == strncmp( bufferMagic, MagicOSRE, strlen( MagicOSRE ) ) ) {
-        return true;
+    if ( 0 != memcmp( bufferMagic, MagicOSRE, strlen( MagicOSRE ) ) ) {
+        return false;
     }
 
     // validate min version

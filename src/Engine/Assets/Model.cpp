@@ -30,13 +30,29 @@ namespace Assets {
 using namespace ::OSRE::Collision;
 
 Model::Model() 
-: m_root( nullptr )
+: m_geoArray()
+, m_root( nullptr )
+, m_aabb() {
+    // empty
+}
+
+Model::Model( GeoArray *geoArray, Scene::Node *root, ModelAABB &aabb )
+: m_geoArray( *geoArray )
+, m_root( root )
 , m_aabb() {
     // empty
 }
 
 Model::~Model() {
     // empty
+}
+
+void Model::setGeoArray( GeoArray &geoArray ) {
+    m_geoArray = geoArray;
+}
+
+const Model::GeoArray &Model::getGeoArray() const {
+    return m_geoArray;
 }
 
 void Model::setRootNode( Scene::Node *root ) {

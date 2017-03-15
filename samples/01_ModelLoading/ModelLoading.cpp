@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/Assets/AssimpWrapper.h>
 #include <osre/Assets/Model.h>
+#include <osre/Assets/Model.h>
 #include <osre/IO/Uri.h>
 #include <osre/Platform/AbstractSurface.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -38,6 +39,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace ::OSRE;
+using namespace ::OSRE::Assets;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
@@ -129,10 +131,11 @@ protected:
 
             AppBase::activateStage( m_stage->getName() );
             Scene::Node *node = m_stage->addNode( "modelNode", nullptr );
-//            node->addModel( model );
-            Scene::GeometryBuilder myBuilder;
-            RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-            node->addGeometry( geo );
+            const Model::GeoArray &geoArray = model->getGeoArray();
+            //node->addModel( model );
+            /*Scene::GeometryBuilder myBuilder;
+            RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );*/
+            node->addGeometry(geoArray[0] );
         }
 
         return true;

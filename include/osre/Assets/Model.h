@@ -41,14 +41,22 @@ namespace Assets {
 
 class OSRE_EXPORT Model {
 public: 
+    typedef Collision::TAABB<f32> ModelAABB;
+    typedef CPPCore::TArray<RenderBackend::Geometry*> GeoArray;
+
     Model();
+    Model( GeoArray *geoArray, Scene::Node *root, ModelAABB &aabb );
     ~Model();
+    void setGeoArray( GeoArray &geoArray );
+    const GeoArray &getGeoArray() const;
     void setRootNode( Scene::Node *root );
     Scene::Node *getRootNode() const;
     void setAABB( const Collision::TAABB<f32> &aabb );
-    const Collision::TAABB<f32> &getAABB() const;
+    const ModelAABB &getAABB() const;
 
 private:
+    GeoArray m_geoArray;
+
     Scene::Node *m_root;
     Collision::TAABB<f32> m_aabb;
 };

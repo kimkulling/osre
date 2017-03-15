@@ -125,5 +125,18 @@ const glm::vec4 &TransformComponent::getScale() const {
     return m_localTransform->m_scale;
 }
 
+CollisionComponent::CollisionComponent( ui32 id )
+: Component( id ) {
+    // empty
+}
+
+CollisionComponent::~CollisionComponent() {
+    // empty
+}
+
+void CollisionComponent::update( RenderBackend::RenderBackendService *rbSrv ) {
+    // empty
+}
+
 } // Namespace Scene
 } // namespace OSRE
