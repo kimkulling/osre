@@ -56,7 +56,7 @@ bool AssetRegistry::registerAssetPath( const String &mount, const String &path )
     if ( nullptr == s_instance ) {
         return false;
     }
-    const ui32 hashId( StringUtils::hashName( mount.c_str() ) );
+    const ui32 hashId( StringUtils::hashName( mount ) );
     s_instance->m_name2pathMap.insert( hashId, path );
 
     return true;
@@ -67,7 +67,7 @@ bool AssetRegistry::hasPath( const String &mount ) {
         return false;
     }
 
-    const ui32 hashId( StringUtils::hashName( mount.c_str() ) );
+    const ui32 hashId( StringUtils::hashName( mount ) );
     if ( !s_instance->m_name2pathMap.hasKey( hashId ) ) {
         return false;
     }
@@ -82,7 +82,7 @@ String AssetRegistry::getPath( const String &mount ) {
         return Dummy;
     }
 
-    const ui32 hashId( StringUtils::hashName( mount.c_str() ) );
+    const ui32 hashId( StringUtils::hashName( mount ) );
     if ( !s_instance->m_name2pathMap.hasKey( hashId ) ) {
         return Dummy;
     }

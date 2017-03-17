@@ -29,8 +29,14 @@ namespace Common {
 
 class OSRE_EXPORT StringUtils {
 public:
+    static HashId hashName( const String &str );
     static HashId hashName( char const *pIdentStr );
 };
+
+inline
+HashId StringUtils::hashName(const String &str) {
+    return hashName(str.c_str());
+}
 
 inline
 HashId StringUtils::hashName( char const *pIdentStr ) {

@@ -157,9 +157,9 @@ struct Color4 {
         // empty
     }
 
-    Color4( f32 r, f32 g, f32 b, f32 a )
+    Color4( f32 r, f32 _g, f32 b, f32 a )
     : m_r( r )
-    , m_g( g )
+    , m_g( _g )
     , m_b( b )
     , m_a( a ) {
         // empty

@@ -43,11 +43,6 @@ void lookupMapDeleterFunc( TArray<T> &ctr ) {
     ctr.clear();
 }
 
-static ui32 calcHash( const String &name ) {
-    const ui32 hash( StringUtils::hashName( name.c_str() ) );
-    return hash;
-}
-
 World::World( const String &worldName, RenderMode renderMode )
 : Object( worldName )
 , m_stages()
@@ -76,7 +71,7 @@ void World::addStage( Stage *stage ) {
         return;
     }
 
-    const ui32 hash( calcHash( stage->getName() ) );
+    const ui32 hash( StringUtils::hashName( stage->getName() ) );
     if ( m_lookupStates.hasKey( hash ) ) {
         return;
     }
@@ -117,7 +112,7 @@ void World::addView( View *view ) {
     }
 
     m_activeView = view;
-    const ui32 hash( calcHash( view->getName() ) );
+    const ui32 hash(StringUtils::hashName( view->getName() ) );
     m_lookupViews.insert( hash, view );
 }
 
@@ -132,7 +127,7 @@ bool World::setActiveView( View *activeView ) {
 }
 
 bool World::setActiveView( const String &viewName ) {
-    const ui32 hash( calcHash( viewName ) );
+    const ui32 hash(StringUtils::hashName( viewName ) );
     if ( !m_lookupViews.hasKey( hash ) ) {
         return false;
     }
