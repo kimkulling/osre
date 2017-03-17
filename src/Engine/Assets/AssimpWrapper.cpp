@@ -119,7 +119,7 @@ Model *AssimpWrapper::convertSceneToModel( const aiScene *scene ) {
     }
 
     if ( nullptr != scene->mRootNode ) {
-        handleNode( scene->mRootNode, nullptr );
+        handleNode( scene->mRootNode, root );
     }
 
     return m_model;
@@ -198,35 +198,32 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     m_model->setAABB( aabb );
 }
 
-void AssimpWrapper::handleNode( aiNode *node, Node *parent ) {
-    if ( nullptr == node ) {
+void AssimpWrapper::handleNode(aiNode *node, Scene::Node *parent ) {
+    if ( nullptr == node) {
         return;
     }
+    
+    Node *newNode = new Node( node->mName.C_Str(), m_ids, true, true, parent );
+    if ( node->mNumMeshes > 0 ) {
+        for ( ui32 i = 0; i < node->mNumMeshes; i++ ) {
+            const ui32 meshIdx( node->mMeshes[ i ] );
+            if ( meshIdx >= m_geoArray.size() ) {
+                continue;
+            }
 
-    if ( nullptr == parent ) {
-        m_parent = m_model->getRootNode();
-    } else {
-        m_parent = parent;
+            Geometry *geo( m_geoArray[ meshIdx ] );
+            if ( nullptr != geo ) {
+                newNode->addGeometry( geo );
+            }
+        }
     }
-    const String name( node->mName.C_Str() );
-    Node *newNode = new Node( name, m_ids, true, true, m_parent );
-    m_parent->addChild( newNode );
-    CPPCore::TArray<UniformVar*> paramArray;
-    paramArray.add( m_mvpParam );
-    for ( ui32 j = 0; j < node->mNumMeshes; j++ ) {
-        const ui32 meshIdx = node->mMeshes[ j ];
-        if ( meshIdx >= m_geoArray.size() ) {
+
+    for ( ui32 i = 0; i < node->mNumChildren; i++ ) {
+        aiNode *currentNode = node->mChildren[ i ];
+        if ( nullptr == currentNode) {
             continue;
         }
-        Geometry *geo = m_geoArray[ meshIdx ];
-        newNode->addGeometry( geo );
-    }
-    const ui32 numChildren( node->mNumChildren );
-    for ( ui32 i = 0; i < numChildren; i++ ) {
-        aiNode *currentNode( node->mChildren[ i ] );
-        if ( nullptr == currentNode ) {
-            continue;
-        }
+
         handleNode( currentNode, newNode );
     }
 }
