@@ -203,10 +203,10 @@ private:
     static PlatformInterface *s_instance;
     const Properties::Settings *m_config;
     PluginType m_type;
-    AbstractSurface *m_pRootSurface;
-    AbstractPlatformEventHandler *m_pOSEventHandler;
-    AbstractRenderContext *m_pRenderContext;
-    AbstractTimer *m_pTimer;
+    AbstractSurface *m_rootSurface;
+    AbstractPlatformEventHandler *m_oseventHandler;
+    AbstractRenderContext *m_renderContext;
+    AbstractTimer *m_timer;
     AbstractDynamicLoader *m_dynLoader;
 };
 

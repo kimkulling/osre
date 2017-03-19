@@ -70,7 +70,6 @@ public:
         Scene::DbgRenderer::getInstance()->renderDbgText( 10, 10, 1, stream.str() );
         return true;
     }
-
 };
 
 ATTACH_RENDERTEST( DbgFontRenderTest )

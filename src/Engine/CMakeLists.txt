@@ -33,7 +33,7 @@ ENDIF( WIN32 )
 # App
 #==============================================================================
 SET( app_inc
-    ${HEADER_PATH}/App/AppBase.h    
+    ${HEADER_PATH}/App/AppBase.h
     ${HEADER_PATH}/App/ServiceProvider.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
 )
@@ -101,6 +101,7 @@ SET( common_src
 #==============================================================================
 SET( collision_inc
     ${HEADER_PATH}/Collision/TAABB.h
+    ${HEADER_PATH}/Collision/TQuadTree.h
 )
 SET( collision_src
 )
@@ -155,7 +156,7 @@ SET( math_inc
 #==============================================================================
 # Platform
 #==============================================================================
-SET( platform_inc 
+SET( platform_inc
     ${HEADER_PATH}/Platform/AbstractThread.h
     ${HEADER_PATH}/Platform/AbstractThreadEvent.h
     ${HEADER_PATH}/Platform/AbstractThreadFactory.h
@@ -184,7 +185,7 @@ SET( platform_src
     Platform/PlatformPluginFactory.h
     Platform/AbstractDynamicLoader.cpp
 )
-SET( platform_win32_src 
+SET( platform_win32_src
     Platform/win32/Win32Atomic.h
     Platform/win32/Win32DbgLogStream.h
     Platform/win32/Win32Surface.cpp
@@ -239,7 +240,7 @@ ENDIF( WIN32 )
 # Profiling
 #==============================================================================
 SET( profiling_inc
-    ${HEADER_PATH}/Profiling/FPSCounter.h 
+    ${HEADER_PATH}/Profiling/FPSCounter.h
     ${HEADER_PATH}/Profiling/PerformanceCounters.h
 )
 SET( profiling_src

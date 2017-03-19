@@ -36,7 +36,7 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Assets;
 
-Node::Node( const String &name, Common::Ids &ids, bool transformEnabled, bool renderEnabled, Node *parent )
+Node::Node( const String &name, Common::Ids &ids, RenderCompRequest renderEnabled, TransformCompRequest transformEnabled, Node *parent )
 : Object( name )
 , m_children()
 , m_parent( parent )
@@ -46,11 +46,11 @@ Node::Node( const String &name, Common::Ids &ids, bool transformEnabled, bool re
 , m_transformComp( nullptr )
 , m_ids( &ids )
 , m_propMap() {
-    if ( transformEnabled ) {
+    if (TransformCompRequest::TransformCompRequested == transformEnabled) {
         m_transformComp = new TransformComponent( m_ids->getUniqueId() );
         m_components.add( m_transformComp );
     }
-    if ( renderEnabled ) {
+	if (RenderCompRequest::RenderCompRequested == renderEnabled ) {
         m_renderComp = new RenderComponent( m_ids->getUniqueId() );
         m_components.add( m_renderComp );
     }

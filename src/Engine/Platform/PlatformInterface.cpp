@@ -65,9 +65,9 @@ PlatformInterface::PlatformInterface( const Settings *config )
 #else
 , m_type( PluginType::SDL2Plugin )
 #endif // OSRE_WINDOWS
-, m_pRootSurface( nullptr )
-, m_pOSEventHandler( nullptr )
-, m_pTimer( nullptr )
+, m_rootSurface( nullptr )
+, m_oseventHandler( nullptr )
+, m_timer( nullptr )
 , m_dynLoader( nullptr ) {
     // empty
 }
@@ -99,19 +99,19 @@ PlatformInterface *PlatformInterface::getInstance( ) {
 }
 
 AbstractPlatformEventHandler *PlatformInterface::getPlatformEventHandler() const {
-    return m_pOSEventHandler;
+    return m_oseventHandler;
 }
 
 AbstractRenderContext *PlatformInterface::getRenderContext() const {
-    return m_pRenderContext;
+    return m_renderContext;
 }
 
 AbstractSurface *PlatformInterface::getRootSurface() const {
-    return m_pRootSurface;
+    return m_rootSurface;
 }
 
 AbstractTimer *PlatformInterface::getTimer() const {
-    return m_pTimer;
+    return m_timer;
 }
 
 AbstractDynamicLoader *PlatformInterface::getDynamicLoader() const {
@@ -205,13 +205,13 @@ bool PlatformInterface::onOpen() {
 bool PlatformInterface::onClose( ) {
     PlatformPluginFactory::release( m_type );
 
-    delete m_pOSEventHandler;
-    m_pOSEventHandler = nullptr;
+    delete m_oseventHandler;
+    m_oseventHandler = nullptr;
 
-    if( nullptr != m_pRenderContext ) {
-        m_pRenderContext->destroy();
-        delete m_pRenderContext;
-        m_pRenderContext = nullptr;
+    if( nullptr != m_renderContext ) {
+        m_renderContext->destroy();
+        delete m_renderContext;
+        m_renderContext = nullptr;
     }
 
     return true;
@@ -219,33 +219,33 @@ bool PlatformInterface::onClose( ) {
 
 bool PlatformInterface::onUpdate( d32 timediff ) {
     Common::Event ev( "none" );
-    return m_pOSEventHandler->onEvent( ev, nullptr );
+    return m_oseventHandler->onEvent( ev, nullptr );
 }
 
 bool PlatformInterface::setupGfx( SurfaceProperties *props, bool polls ) {
     // create the root surface
-    m_pRootSurface = PlatformPluginFactory::createSurface( m_type, props );
-    if( !m_pRootSurface->create() ) {
-        delete m_pRootSurface;
+    m_rootSurface = PlatformPluginFactory::createSurface( m_type, props );
+    if( !m_rootSurface->create() ) {
+        delete m_rootSurface;
         osre_error( Tag, "Error while creating platform root surface." );
 
-        m_pRootSurface = nullptr;
+        m_rootSurface = nullptr;
         return false;
     }
 
     // install the platform event handler
-    m_pOSEventHandler = PlatformPluginFactory::createPlatformEventHandler( m_type, m_pRootSurface );
-    if( !m_pOSEventHandler ) {
+    m_oseventHandler = PlatformPluginFactory::createPlatformEventHandler( m_type, m_rootSurface );
+    if( !m_oseventHandler ) {
         osre_error( Tag, "Error while creating platform event handler." );
-        m_pRootSurface->destroy();
-        m_pRootSurface = nullptr;
+        m_rootSurface->destroy();
+        m_rootSurface = nullptr;
         return false;
     }
-    m_pOSEventHandler->enablePolling( polls );
-    m_pTimer = PlatformPluginFactory::createTimer( m_type );
+    m_oseventHandler->enablePolling( polls );
+    m_timer = PlatformPluginFactory::createTimer( m_type );
 
     // setup the render context
-    m_pRenderContext = PlatformPluginFactory::createRenderContext( m_type );
+    m_renderContext = PlatformPluginFactory::createRenderContext( m_type );
 
     return true;
 }

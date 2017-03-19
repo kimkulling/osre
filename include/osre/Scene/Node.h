@@ -68,13 +68,23 @@ public:
         TransformComponentType
     };
 
+    enum class RenderCompRequest {
+        RenderCompRequested,
+        NoRenderComp
+    };
+
+    enum class TransformCompRequest {
+        TransformCompRequested,
+        NoTransformComp
+    };
+
     enum class TraverseMode {
         FlatMode,
         RecursiveMode
     };
 
 public:
-    Node( const String &name, Common::Ids &ids, bool transformEnabled, bool renderEnabled, Node *parent = nullptr );
+    Node( const String &name, Common::Ids &ids, RenderCompRequest renderEnabled, TransformCompRequest transformEnabled, Node *parent = nullptr );
     virtual ~Node();
     virtual void setParent( Node *parent );
     virtual Node *getParent() const;
