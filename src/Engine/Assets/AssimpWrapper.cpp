@@ -94,7 +94,7 @@ Model *AssimpWrapper::convertSceneToModel( const aiScene *scene ) {
 
     m_model = new Model;
     String rootName( scene->mRootNode->mName.C_Str() );
-    Node *root = new Node( rootName, m_ids, true, true, nullptr );
+    Node *root = new Node( rootName, m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, nullptr );
     m_parent = root;
     m_model->setRootNode( root );
 
@@ -203,7 +203,7 @@ void AssimpWrapper::handleNode(aiNode *node, Scene::Node *parent ) {
         return;
     }
     
-    Node *newNode = new Node( node->mName.C_Str(), m_ids, true, true, parent );
+    Node *newNode = new Node( node->mName.C_Str(), m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, parent );
     if ( node->mNumMeshes > 0 ) {
         for ( ui32 i = 0; i < node->mNumMeshes; i++ ) {
             const ui32 meshIdx( node->mMeshes[ i ] );

@@ -139,11 +139,11 @@ private:
 
 ///	@brief
 struct OGLParameter {
-    String         m_name;
-    GLint          m_loc;
-    ParameterType  m_type;
+    String           m_name;
+    GLint            m_loc;
+    ParameterType    m_type;
     UniformDataBlob *m_data;
-    ui32           m_numItems;
+    ui32             m_numItems;
 
     OGLParameter()
     : m_name( "" )
@@ -165,23 +165,19 @@ struct OGLPrimGroup {
 ///	@brief
 struct SetParameterCmdData {
     OGLParameter **m_param;
-    ui32 m_numParam;
+    ui32           m_numParam;
 };
 
 ///	@brief
 struct SetMaterialStageCmdData {
-    OGLShader *m_shader;
+    OGLShader                   *m_shader;
     CPPCore::TArray<OGLTexture*> m_textures;
-    OGLVertexArray        *m_vertexArray;    ///<
+    OGLVertexArray              *m_vertexArray;
 
     SetMaterialStageCmdData()
     : m_shader( nullptr )
     , m_textures()
     , m_vertexArray( nullptr ) {
-        // empty
-    }
-
-    ~SetMaterialStageCmdData() {
         // empty
     }
 };
@@ -193,15 +189,15 @@ struct SetRenderTargetCmdData {
 
 ///	@brief
 struct DrawInstancePrimitivesCmdData {
-    OGLVertexArray        *m_vertexArray;    ///<
-    ui32                   m_numInstances;   ///<
-    CPPCore::TArray<ui32>  m_primitives;     ///<
+    OGLVertexArray        *m_vertexArray;
+    ui32                   m_numInstances;
+    CPPCore::TArray<ui32>  m_primitives;
 };
 
 ///	@brief
 struct DrawPrimitivesCmdData {
-	OGLVertexArray        *m_vertexArray;    ///<
-    CPPCore::TArray<ui32>  m_primitives;     ///<
+	OGLVertexArray        *m_vertexArray;
+    CPPCore::TArray<ui32>  m_primitives;
 };
 
 } // Namespace RendeBackend

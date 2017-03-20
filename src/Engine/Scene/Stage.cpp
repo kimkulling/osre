@@ -68,7 +68,7 @@ Stage::Stage( const String &name, RenderBackend::RenderBackendService *rbService
 , m_rbService( rbService )
 , m_ids( nullptr ) {
     m_ids = new Ids;
-    m_root = new Node( "name" + String( ".root" ), *m_ids, true, false, nullptr );
+    m_root = new Node( "name" + String( ".root" ), *m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, nullptr );
 }
 
 Stage::~Stage() {
@@ -91,7 +91,7 @@ Node *Stage::addNode( const String &name, Node *parent, const String &type ) {
 
     Node *newNode( nullptr );
     if ( "default" == type ) {
-        newNode = new Node( name, *m_ids, true, true, parent );
+        newNode = new Node( name, *m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, parent );
         if( nullptr == parent ) {
             m_root->addChild( newNode );
         }

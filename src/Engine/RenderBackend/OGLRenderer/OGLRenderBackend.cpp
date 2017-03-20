@@ -32,7 +32,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Stream.h>
 #include <osre/IO/Uri.h>
-#include <osre/Profiling/PerformanceCounters.h>
 
 #include <cppcore/CPPCoreCommon.h>
 
@@ -655,7 +654,7 @@ OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const I
     // create texture and fill it
     tex = createEmptyTexture( name, TextureTargetType::Texture2D, width, height, channels );
     glTexImage2D( tex->m_target, 0, GL_RGB, width, height, 0, tex->m_format, GL_UNSIGNED_BYTE, data );
-    //glBindTexture( tex->m_target, 0 );
+    glBindTexture( tex->m_target, 0 );
 
     SOIL_free_image_data( data );
 

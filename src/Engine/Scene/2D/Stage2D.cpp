@@ -41,7 +41,7 @@ Node *Stage2D::addNode( const String &name, Node *parent, const String &type ) {
         if ( nullptr== ids ) {
             return nullptr;
         }
-        return new Node2D( name, *ids, true, true, parent );
+        return new Node2D( name, *ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, parent );
     } else {
         return Stage::addNode( name, parent, type );
     }

@@ -26,8 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Scene {
 
-Node2D::Node2D( const String &name, Common::Ids &ids, bool transformEnabled, bool renderEnabled, Node *parent )
-: Node( name, ids, transformEnabled, renderEnabled )
+Node2D::Node2D( const String &name, Common::Ids &ids, RenderCompRequest renderRequested, TransformCompRequest transformRequested, Node *parent )
+: Node( name, ids, renderRequested, transformRequested )
 , m_sprite( nullptr ) {
     // empty
 }
