@@ -90,8 +90,6 @@ Model *AssimpWrapper::convertSceneToModel( const aiScene *scene ) {
         return nullptr;
     }
 
-    m_mvpParam = RenderBackend::UniformVar::create( "MVP", ParameterType::PT_Mat4 );
-
     m_model = new Model;
     String rootName( scene->mRootNode->mName.C_Str() );
     Node *root = new Node( rootName, m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, nullptr );
@@ -190,9 +188,11 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     geo->m_numPrimGroups = 1;
     geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
     geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numPrimitives = mesh->mNumFaces * geo->m_numPrimGroups;
+    geo->m_pPrimGroups[ 0 ].m_numPrimitives = indexArray.size();
     geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
     geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
+
+    geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( VertexType::RenderVertex );
 
     m_geoArray.add( geo );
     m_model->setAABB( aabb );

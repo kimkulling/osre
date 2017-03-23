@@ -25,7 +25,7 @@ INCLUDE_DIRECTORIES(
     3dparty/zlib
     d:/projects/libs/SDL2-2.0.3/include
     c:/Users/kullingk/Desktop/projects/libs/SDL2-2.0.3/include
-    d:/libs/SDL2-2.0.5/include
+    d:/projects/libs/SDL2-2.0.5/include
     "C:/Program Files (x86)/Windows Kits/10/Include/10.0.10586.0/um"
     3dparty/soil/src
     /usr/include/SDL2/
@@ -34,7 +34,7 @@ INCLUDE_DIRECTORIES(
 )
 
 link_directories(
-    d:/projects/libs/SDL2-2.0.3/lib/x86
+    d:/projects/libs/SDL2-2.0.5/lib/x86
     d:/libs/SDL2-2.0.5/lib/x86
     "C:/Program Files (x86)/Windows Kits/10/Lib/10.0.10586.0/um/x86"
 	"C:/projects/libs/SDL2-2.0.5/lib/x86"

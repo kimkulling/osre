@@ -135,7 +135,7 @@ protected:
             //node->addModel( model );
             /*Scene::GeometryBuilder myBuilder;
             RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );*/
-            node->addGeometry(geoArray[0] );
+            node->addGeometry( geoArray[0] );
         }
 
         return true;
