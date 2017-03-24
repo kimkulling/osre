@@ -36,6 +36,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 
+#include <iostream>
+
 namespace OSRE {
 namespace Assets {
     
@@ -182,6 +184,8 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
             indexArray.add( static_cast<ui16>( index ) );
         }
     }
+	Scene::GeometryDiagnosticUtils::dumpIndices( indexArray );
+
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( ui16 ) * indexArray.size(), BufferAccessType::ReadOnly );
     geo->m_ib->copyFrom( &indexArray[ 0 ], geo->m_ib->m_size );
 

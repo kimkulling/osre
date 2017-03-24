@@ -37,6 +37,14 @@ namespace RenderBackend {
 
 namespace Scene {
 
+class GeometryDiagnosticUtils {
+public:
+	static void dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset );
+	static void dumpTextTex0Box( ui32 i, glm::vec2 *tex0Pos, ui32 VertexOffset );
+	static void dumVertices( const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices );
+	static void dumpIndices( const CPPCore::TArray<ui16> &indexArray );
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///

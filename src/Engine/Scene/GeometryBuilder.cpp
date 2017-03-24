@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <vector>
 #include <sstream>
+#include <iostream>
 
 namespace OSRE {
 namespace Scene {
@@ -76,29 +77,48 @@ static const String TextFsSrc =
     "    vFragColor = texture( tex0, UV );\n"
 	"};\n";
 
+void GeometryDiagnosticUtils::dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset ) {
+    std::stringstream stream;
+    stream << std::endl;
+    stream << "i = " << i << " : " << textPos[ VertexOffset + 0 ].x << ", " << textPos[ VertexOffset + 0 ].y << "\n";
+    stream << "i = " << i << " : " << textPos[ VertexOffset + 1 ].x << ", " << textPos[ VertexOffset + 1 ].y << "\n";
+    stream << "i = " << i << " : " << textPos[ VertexOffset + 2 ].x << ", " << textPos[ VertexOffset + 2 ].y << "\n";
+    stream << "i = " << i << " : " << textPos[ VertexOffset + 3 ].x << ", " << textPos[ VertexOffset + 3 ].y << "\n";
+    osre_info( Tag, stream.str() );
+}
 
-class GeometryDiagnosticUtils {
-public:
-    static void dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset ) {
-        std::stringstream stream;
-        stream << std::endl;
-        stream << "i = " << i << " : " << textPos[ VertexOffset + 0 ].x << ", " << textPos[ VertexOffset + 0 ].y << "\n";
-        stream << "i = " << i << " : " << textPos[ VertexOffset + 1 ].x << ", " << textPos[ VertexOffset + 1 ].y << "\n";
-        stream << "i = " << i << " : " << textPos[ VertexOffset + 2 ].x << ", " << textPos[ VertexOffset + 2 ].y << "\n";
-        stream << "i = " << i << " : " << textPos[ VertexOffset + 3 ].x << ", " << textPos[ VertexOffset + 3 ].y << "\n";
-        osre_info( Tag, stream.str() );
-    }
+void GeometryDiagnosticUtils::dumpTextTex0Box( ui32 i, glm::vec2 *tex0Pos, ui32 VertexOffset ) {
+    std::stringstream stream;
+    stream << std::endl;
+    stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 0 ].x << ", " << tex0Pos[ VertexOffset + 0 ].y << "\n";
+    stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 1 ].x << ", " << tex0Pos[ VertexOffset + 1 ].y << "\n";
+    stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 2 ].x << ", " << tex0Pos[ VertexOffset + 2 ].y << "\n";
+    stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 3 ].x << ", " << tex0Pos[ VertexOffset + 3 ].y << "\n";
+    osre_info( Tag, stream.str() );
+}
 
-    static void dumpTextTex0Box( ui32 i, glm::vec2 *tex0Pos, ui32 VertexOffset ) {
-        std::stringstream stream;
-        stream << std::endl;
-        stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 0 ].x << ", " << tex0Pos[ VertexOffset + 0 ].y << "\n";
-        stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 1 ].x << ", " << tex0Pos[ VertexOffset + 1 ].y << "\n";
-        stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 2 ].x << ", " << tex0Pos[ VertexOffset + 2 ].y << "\n";
-        stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 3 ].x << ", " << tex0Pos[ VertexOffset + 3 ].y << "\n";
-        osre_info( Tag, stream.str() );
-    }
-};
+void GeometryDiagnosticUtils::dumVertices(const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices) {
+	if ( renderVertices.isEmpty() ) {
+		return;
+	}
+	for (ui32 i = 0; i < renderVertices.size(); i++ ) {
+		std::cout << "v[" << i << "].position = " << renderVertices[i].position.x << "|" << renderVertices[i].position.y << "|" << renderVertices[i].position.z << "\n";
+		std::cout << "v[" << i << "].normal = " << renderVertices[i].normal.x << "|" << renderVertices[i].normal.y << "|" << renderVertices[i].normal.z << "\n";
+		std::cout << "v[" << i << "].color0 = " << renderVertices[i].color0.x << "|" << renderVertices[i].color0.y << "|" << renderVertices[i].color0.z << "\n";
+		std::cout << "v[" << i << "].tex0 = " << renderVertices[i].tex0.x << "|" << renderVertices[i].tex0.y << "\n";
+	}
+}
+
+void GeometryDiagnosticUtils::dumpIndices(const CPPCore::TArray<ui16> &indexArray) {
+	if ( indexArray.isEmpty() ) {
+		return;
+	}
+
+	for (ui32 i = 0; i<indexArray.size(); i++) {
+		std::cout << indexArray[i] << ", ";
+	}
+	std::cout << "\n";
+}
 
 GeometryBuilder::GeometryBuilder() {
     // empty
@@ -330,7 +350,7 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
             continue;
         }
         
-        const ui32 VertexOffset( i * NumQuadVert );
+        const ui16 VertexOffset(static_cast<ui16>( i ) * static_cast<ui16>( NumQuadVert ) );
         const f32  rowHeight( -1.0f * textRow * textSize );
         textPos[ VertexOffset + 0 ].x = pos[ 0 ].x + ( textCol*textSize );
         textPos[ VertexOffset + 0 ].y = pos[ 0 ].y + rowHeight;
