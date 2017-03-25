@@ -84,6 +84,15 @@ static const String RenderVertAttributes[ NumRenderVertAttributes ] = {
     "texcoord0"
 };
 
+RenderVert::RenderVert()
+: position()
+, normal()
+, color0( 1,1,1 )
+, tex0() {
+    // empty
+}
+
+
 ui32 RenderVert::getNumAttributes() {
     return NumRenderVertAttributes;
 }

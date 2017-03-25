@@ -168,6 +168,7 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
             }
         }
     }
+    GeometryDiagnosticUtils::dumVertices( vertices, numVertices );
 
     const ui32 matIdx( mesh->mMaterialIndex );
     Material *osreMat = m_matArray[ matIdx ];

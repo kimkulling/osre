@@ -97,15 +97,29 @@ void GeometryDiagnosticUtils::dumpTextTex0Box( ui32 i, glm::vec2 *tex0Pos, ui32 
     osre_info( Tag, stream.str() );
 }
 
+static void dumpRenderVertex( ui32 idx, const RenderBackend::RenderVert &vertex ) {
+    std::cout << "v[" << idx << "].position = " << vertex.position.x << "|" << vertex.position.y << "|" << vertex.position.z << "\n";
+    std::cout << "v[" << idx << "].normal   = " << vertex.normal.x   << "|" << vertex.normal.y   << "|" << vertex.normal.z   << "\n";
+    std::cout << "v[" << idx << "].color0   = " << vertex.color0.x   << "|" << vertex.color0.y   << "|" << vertex.color0.z   << "\n";
+    std::cout << "v[" << idx << "].tex0     = " << vertex.tex0.x     << "|" << vertex.tex0.y     << "\n";
+}
+
+void GeometryDiagnosticUtils::dumVertices( RenderBackend::RenderVert *renderVertices, ui32 numVertices ) {
+    if ( 0 == numVertices || nullptr == renderVertices ) {
+        return;
+    }
+
+    for ( ui32 i = 0; i < numVertices; i++ ) {
+        dumpRenderVertex( i, renderVertices[ i ] );
+    }
+}
+
 void GeometryDiagnosticUtils::dumVertices(const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices) {
 	if ( renderVertices.isEmpty() ) {
 		return;
 	}
 	for (ui32 i = 0; i < renderVertices.size(); i++ ) {
-		std::cout << "v[" << i << "].position = " << renderVertices[i].position.x << "|" << renderVertices[i].position.y << "|" << renderVertices[i].position.z << "\n";
-		std::cout << "v[" << i << "].normal = " << renderVertices[i].normal.x << "|" << renderVertices[i].normal.y << "|" << renderVertices[i].normal.z << "\n";
-		std::cout << "v[" << i << "].color0 = " << renderVertices[i].color0.x << "|" << renderVertices[i].color0.y << "|" << renderVertices[i].color0.z << "\n";
-		std::cout << "v[" << i << "].tex0 = " << renderVertices[i].tex0.x << "|" << renderVertices[i].tex0.y << "\n";
+        dumpRenderVertex( i, renderVertices[ i ] );
 	}
 }
 

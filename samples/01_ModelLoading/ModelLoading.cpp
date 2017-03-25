@@ -124,8 +124,8 @@ protected:
             m_view->setOrthoMode( left, right, bottom, top, zNear, zFar );
             glm::vec3 eye( 0, 0, 2 * diam ), up( 0, 0, 1 );
             m_view->setLookAt( eye, glm::vec3( center.getX(), center.getY(), center.getZ() ), up );
-            m_transformMatrix.m_view = m_view->getView();
-            m_transformMatrix.m_projection = m_view->getProjection();
+            //m_transformMatrix.m_view = m_view->getView();
+            //m_transformMatrix.m_projection = m_view->getProjection();
             m_transformMatrix.update();
             AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
 
@@ -133,9 +133,9 @@ protected:
             Scene::Node *node = m_stage->addNode( "modelNode", nullptr );
             const Model::GeoArray &geoArray = model->getGeoArray();
             //node->addModel( model );
-            /*Scene::GeometryBuilder myBuilder;
-            RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );*/
-            node->addGeometry( geoArray[0] );
+            Scene::GeometryBuilder myBuilder;
+            RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
+            node->addGeometry( geo );
         }
 
         return true;

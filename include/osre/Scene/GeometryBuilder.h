@@ -37,11 +37,17 @@ namespace RenderBackend {
 
 namespace Scene {
 
-class GeometryDiagnosticUtils {
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  This utility class is used to inspect geometry data.
+//-------------------------------------------------------------------------------------------------
+class OSRE_EXPORT GeometryDiagnosticUtils {
 public:
 	static void dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset );
 	static void dumpTextTex0Box( ui32 i, glm::vec2 *tex0Pos, ui32 VertexOffset );
-	static void dumVertices( const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices );
+    static void dumVertices( RenderBackend::RenderVert *renderVertices, ui32 numverices );
+    static void dumVertices( const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices );
 	static void dumpIndices( const CPPCore::TArray<ui16> &indexArray );
 };
 

@@ -128,6 +128,8 @@ struct RenderVert {
     glm::vec3 color0;   ///< The diffuse color ( r|g|b )
     glm::vec2 tex0;     ///< The texture color ( r|g|b )
 
+    RenderVert();
+
     /// @brief  Returns the number of attributes.
     static ui32          getNumAttributes(); 
     /// @brief  Returns the attribute array.
