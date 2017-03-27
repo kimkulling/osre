@@ -84,16 +84,16 @@ public:
     void setPath( const String &path );
 
     ///	@brief	Returns the resource name of the URI.
-    ///	@return	A string containing the resource.
+    ///	@return	A string containing the absolute path.
     const String &getAbsPath() const;
 
     ///	@brief	Returns the absolute path ( path + resource ) of the URI.
-    ///	@return	A string containing the absolute path.
+    ///	@return	A string containing the resource.
     const String &getResource() const;
 
     /// @brief  Will set the resource string.
-    /// @
-    void setResource( const String &res );
+    /// @param  resName     [in] The name of the new resource.
+    void setResource( const String &resName );
 
     ///	@brief	Returns true, if the scheme is empty.
     ///	@return	true, if the URI is empty, false if not.

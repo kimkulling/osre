@@ -66,7 +66,15 @@ static const String ColorVertAttributes[ NumColorVertAttributes ] = {
     "normal",
     "color0"
 };
-    
+
+ColorVert::ColorVert()
+: position()
+, normal()
+, color0( 1, 1, 1 ) {
+    // empty
+}
+
+
 ui32 ColorVert::getNumAttributes() {
     return NumColorVertAttributes;
 }
@@ -77,6 +85,7 @@ const String *ColorVert::getAttributes() {
 
 // List of attributes for render vertices
 static const ui32 NumRenderVertAttributes = 4;
+
 static const String RenderVertAttributes[ NumRenderVertAttributes ] = {
     "position",
     "normal",
@@ -91,7 +100,6 @@ RenderVert::RenderVert()
 , tex0() {
     // empty
 }
-
 
 ui32 RenderVert::getNumAttributes() {
     return NumRenderVertAttributes;

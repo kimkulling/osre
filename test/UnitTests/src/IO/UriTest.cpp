@@ -55,10 +55,18 @@ TEST_F( UriTest, constructFromCompsTest ) {
     EXPECT_EQ( "file://assets/Textures/Fonts/buildin_arial.bmp", result );
 }
 
-TEST_F( UriTest, clearTest ) {
+TEST_F( UriTest, parseTest ) {
     Uri uri( UriInit );
+    EXPECT_TRUE( uri.isValid() );
+
     uri.clear();
-    EXPECT_EQ( UriInit, uri.getUri() );
+    EXPECT_TRUE( uri.isEmpty() );
+
+    uri.setScheme( "file://" );
+    uri.setPath( "assets/Textures/Fonts/" );
+    uri.setResource( "buildin_arial.bmp" );
+    bool ok = uri.parse();
+    EXPECT_TRUE( ok );
 }
 
 } // Namespace UnitTest

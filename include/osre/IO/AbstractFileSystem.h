@@ -81,7 +81,9 @@ public:
     ///	@brief	Removes an ownership.
     void release();
 
-    static void normalizeFilename( String &rName ); 
+    /// @brief  Will normalize a filename.
+    /// @param  name    [inout] The filename to normalize.
+    static void normalizeFilename( String &name ); 
 
 protected:
     ///	@brief	The default class constructor

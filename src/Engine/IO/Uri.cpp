@@ -56,11 +56,11 @@ Uri::~Uri() {
 	// empty
 }
 
-String Uri::constructFromComps( const String &scheme, const String &path, const String &res ) {
+String Uri::constructFromComps( const String &scheme, const String &path, const String &resName ) {
     String uriText = scheme + "://" + path;
-    String::size_type pos( uriText.rfind( res ) );
+    String::size_type pos( uriText.rfind( resName ) );
     if ( String::npos == pos ) {
-        uriText += res;
+        uriText += resName;
     }
     return uriText;
 }
@@ -162,6 +162,7 @@ void Uri::clear() {
 	m_Path.clear();
 	m_AbsPath.clear();
 	m_Resource.clear();
+    m_URI.clear();
 }
 
 Uri &Uri::operator = ( const Uri &rhs ) {

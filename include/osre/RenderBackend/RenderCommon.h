@@ -115,6 +115,8 @@ struct OSRE_EXPORT ColorVert {
     glm::vec3 normal;   ///< The normal vector ( x|y|z )
     glm::vec3 color0;   ///< The diffuse color ( r|g|b )
 
+    ColorVert();
+
     /// @brief  Returns the number of attributes.
     static ui32          getNumAttributes();
     /// @brief  Returns the attribute array.
