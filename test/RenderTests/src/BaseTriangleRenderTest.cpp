@@ -74,13 +74,7 @@ public:
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
 
-		rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
-        /*UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
-        ::memcpy( parameter->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
-
-        geo->m_material->m_parameters = parameter;
-        geo->m_material->m_numParameters++;*/
-        
+		rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );        
         rbSrv->attachGeo( geoArray, 0 );
 
         return true;
