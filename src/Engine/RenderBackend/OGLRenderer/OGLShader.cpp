@@ -189,6 +189,10 @@ GLint OGLShader::operator[] ( const String &attribute ) {
 }
 
 GLint OGLShader::operator() ( const String &uniform ) {
+	std::map<String, GLint>::iterator it( m_uniformLocationList.find( uniform ) );
+	if (m_uniformLocationList.end() == it ) {
+		osre_error(Tag, "Cannot find uniform " + uniform + ".");
+	}
     const GLint loc( m_uniformLocationList[ uniform ] );
     return loc;
 }

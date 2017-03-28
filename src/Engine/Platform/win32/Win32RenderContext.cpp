@@ -232,6 +232,7 @@ bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
     glEnable( GL_TEXTURE_2D );
     glEnable( GL_TEXTURE_3D );
     glDisable( GL_LIGHTING );
+	glDisable( GL_CULL_FACE );
 
     return true;
 }

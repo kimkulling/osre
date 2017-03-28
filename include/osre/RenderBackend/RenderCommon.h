@@ -56,8 +56,8 @@ enum class BufferAccessType {
 
 ///	@brief  This enum describes the buildin vertex types provided by OSRE, mainly used for demos and examples.
 enum class VertexType {
-    ColorVertex,    ///< A simple vertex consisting of position and color.
-    RenderVertex    ///< A render vertex with position, color, normals and texture coordinates.
+    ColorVertex = 0, ///< A simple vertex consisting of position and color.
+    RenderVertex     ///< A render vertex with position, color, normals and texture coordinates.
 };
 
 ///	@brief  This enum describes the supported texture target types.

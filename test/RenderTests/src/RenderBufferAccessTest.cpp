@@ -106,7 +106,6 @@ public:
 
     virtual bool onCreate( RenderBackendService *rbSrv ) {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
-//        AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
 
         CPPCore::RandomGenerator generator;
         for ( ui32 i = 0; i < NumPts; i++ ) {

@@ -132,6 +132,7 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
 
     TAABB<f32> aabb = m_model->getAABB();
     Geometry *geo( Geometry::create( 1 ) );
+	geo->m_vertextype = VertexType::RenderVertex;
     ui32 numVertices( mesh->mNumVertices );
     RenderVert *vertices = new RenderVert[ numVertices ];
     for ( ui32 i = 0; i < numVertices; i++ ) {
@@ -197,7 +198,7 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
     geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
-    geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( VertexType::RenderVertex );
+    geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( geo->m_vertextype );
 
     m_geoArray.add( geo );
     m_model->setAABB( aabb );

@@ -96,7 +96,7 @@ protected:
             m_view = m_stage->addView("camera", nullptr );
             const f32 diam = aabb.getDiameter();
             const Vec3f center = aabb.getCenter();
-            f32 zNear = 1.0f;
+            f32 zNear = 0.0f;
             f32 zFar = zNear + diam;
             f32 left = center.getX() - diam;
             f32 right = center.getX() + diam;
@@ -125,7 +125,8 @@ protected:
             m_view->setOrthoMode( left, right, bottom, top, zNear, zFar );
             glm::vec3 eye( 0, 0, 2 * diam ), up( 0, 0, 1 );
             m_view->setLookAt( eye, glm::vec3( center.getX(), center.getY(), center.getZ() ), up );
-            //m_transformMatrix.m_view = m_view->getView();
+			
+			m_transformMatrix.m_view = m_view->getView();
             //m_transformMatrix.m_projection = m_view->getProjection();
             m_transformMatrix.update();
             AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
@@ -133,10 +134,11 @@ protected:
             AppBase::activateStage( m_stage->getName() );
             Scene::Node *node = m_stage->addNode( "modelNode", nullptr );
             const Model::GeoArray &geoArray = model->getGeoArray();
-            //node->addModel( model );
-            Scene::GeometryBuilder myBuilder;
+			//node->addGeometry( geoArray[ 0 ] );
+        	node->addModel( model );
+            /*Scene::GeometryBuilder myBuilder;
             RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-            node->addGeometry( geo );
+            node->addGeometry( geo );*/
         }
 
         return true;
