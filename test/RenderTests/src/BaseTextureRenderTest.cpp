@@ -128,8 +128,7 @@ public:
             geo->m_material->m_pShader->m_attributes.add( "normal" );
             geo->m_material->m_pShader->m_attributes.add( "color0" );
             geo->m_material->m_pShader->m_attributes.add( "texcoord0" );
-            UniformVar *param = UniformVar::create("MVP", ParameterType::PT_Mat4);
-            geo->m_material->m_pShader->m_parameters.add( param );
+            geo->m_material->m_pShader->m_parameters.add( "MVP" );
         }
 
         geo->m_material->m_numTextures = 1;

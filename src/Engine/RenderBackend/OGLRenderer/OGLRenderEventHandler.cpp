@@ -127,10 +127,7 @@ static SetMaterialStageCmdData *setupMaterial( Material *material, OGLRenderBack
                     }
 
                     for( ui32 i = 0; i < material->m_pShader->m_parameters.size(); i++ ) {
-                        const UniformVar *uniformParam( material->m_pShader->m_parameters[ i ] );
-                        if ( nullptr != uniformParam ) {
-                            shader->addUniform( uniformParam->m_name );
-                        }
+                        shader->addUniform( material->m_pShader->m_parameters[ i ] );
                     }
 
                     // for setting up all buffer objects

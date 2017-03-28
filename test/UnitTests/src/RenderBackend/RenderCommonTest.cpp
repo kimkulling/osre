@@ -206,12 +206,10 @@ TEST_F( RenderCommonTest, accessMaterialTest ) {
 TEST_F(RenderCommonTest, access_material_param_Test) {
     Material *mat( new Material );
     mat->m_pShader = new Shader;
-    UniformVar *param = UniformVar::create("MVP", ParameterType::PT_Mat4);
-    mat->m_pShader->m_parameters.add( param );
+    mat->m_pShader->m_parameters.add( "MVP" );
 
     EXPECT_EQ(1, mat->m_pShader->m_parameters.size());
     delete mat;
-    UniformVar::destroy(param);
 }
 
 } // Namespace UnitTest

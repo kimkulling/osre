@@ -191,8 +191,7 @@ Material *MaterialBuilder::createBuildinMaterial( VertexType type ) {
             mat->m_pShader->m_attributes.add( attribs, numAttribs );
         }
 
-        UniformVar *param = UniformVar::create("MVP", ParameterType::PT_Mat4);
-        mat->m_pShader->m_parameters.add( param );
+        mat->m_pShader->m_parameters.add( "MVP" );
     }
 
     return mat;
@@ -213,8 +212,7 @@ Material *MaterialBuilder::createBuildinUIMaterial() {
         ui32 numAttribs( RenderVert::getNumAttributes() );
         const String *attribs( RenderVert::getAttributes() );
         mat->m_pShader->m_attributes.add( attribs, numAttribs );
-        UniformVar *param = UniformVar::create("MVP", ParameterType::PT_Mat4);
-        mat->m_pShader->m_parameters.add( param );
+        mat->m_pShader->m_parameters.add( "MVP" );
     }
 
     return mat;
