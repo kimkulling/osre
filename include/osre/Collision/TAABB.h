@@ -40,6 +40,7 @@ public:
     const TVec3<T> &getMin() const;
     const TVec3<T> &getMax() const;
     void merge( const VecType &vec );
+    void updateFromVector3Array( VecType *vecArray, ui32 numVectors );
     T getDiameter();
     TVec3<T> getCenter();
 
@@ -123,6 +124,19 @@ void TAABB<T>::merge( const VecType &vec ) {
     }
     if ( vec.getZ() > m_max.getZ() ) {
         m_max.setZ( vec.getZ() );
+    }
+}
+
+template<class T>
+inline
+void TAABB<T>::updateFromVector3Array( VecType *vecArray, ui32 numVectors ) {
+    if ( nullptr == vecArray || 0 == numVectors ) {
+        return;
+    }
+
+    for ( ui32 i = 0; i < numVectors; i++ ) {
+        VecType &v( vecArray[ i ] );
+        merge( v );
     }
 }
 

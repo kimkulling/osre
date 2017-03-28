@@ -106,6 +106,7 @@ protected:
             if ( nullptr == rootSurface ) {
                 return false;
             }
+            
             const i32 w = rootSurface->getProperties()->m_width;
             const i32 h = rootSurface->getProperties()->m_height;
             f32 aspect = static_cast< f32 >( w ) / static_cast< f32 >( h );
