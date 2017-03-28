@@ -54,7 +54,7 @@ const String VsSrc =
     "\n"
     "// uniform\n"
     "uniform mat4 M[25];	// model matrix per instance\n"
-    "uniform mat4 VP;	// combined modelview projection matrix\n"
+    "uniform mat4 VP;	    // combined modelview projection matrix\n"
     "\n"
     "void main() {\n"
     "    //assign the per-vertex color to vSmoothColor varying\n"

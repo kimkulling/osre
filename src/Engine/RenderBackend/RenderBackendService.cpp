@@ -157,7 +157,7 @@ void RenderBackendService::commitNextFrame() {
         
     if ( !m_newGeo.isEmpty() ) {
         m_nextFrame.m_numGeoPackages = m_newGeo.size();
-        m_nextFrame.m_geoPackages = new GeometryPackage*[m_newGeo.size()];        
+        m_nextFrame.m_geoPackages = new GeometryPackage*[ m_newGeo.size() ];
         for (ui32 i = 0; i < m_newGeo.size(); i++) {
             m_nextFrame.m_geoPackages[ i ]= new GeometryPackage;
             setupGeoPackage( m_newGeo[ i ], m_nextFrame.m_geoPackages[ i ] );

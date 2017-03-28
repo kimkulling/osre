@@ -34,11 +34,11 @@ static const glm::vec4 Dummy;
 
 Component::Component( ui32 id ) :
 m_id( id ) {
-
+	// empty
 }
 
 Component::~Component() {
-
+	// empty
 }
 
 RenderComponent::RenderComponent( ui32 id )
@@ -82,15 +82,15 @@ void RenderComponent::addStaticGeometry( Geometry *geo ) {
 TransformComponent::TransformComponent( ui32 id )
 : Component( id )
 , m_localTransform( nullptr ) {
-
+	// empty
 }
 
 TransformComponent::~TransformComponent() {
-
+	// empty
 }
 
 void TransformComponent::update( RenderBackendService *renderBackendSrv ) {
-
+	// empty
 }
 
 void TransformComponent::setTransformBlock( TransformBlock *localTransform ) {
