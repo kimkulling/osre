@@ -153,6 +153,16 @@ TEST_F( RenderCommonTest, accessGeometryTest ) {
     EXPECT_EQ( geo, nullptr );
 }
 
+TEST_F(RenderCommonTest, initGeometryTest) {
+	Geometry *geo(nullptr);
+	geo = Geometry::create( 1 );
+	EXPECT_NE( geo, nullptr );
+	EXPECT_EQ( VertexType::RenderVertex, geo->m_vertextype );
+	EXPECT_EQ( nullptr, geo->m_ib );
+	EXPECT_EQ( nullptr, geo->m_vb );
+	EXPECT_EQ( nullptr, geo->m_material );
+}
+
 TEST_F( RenderCommonTest, geometryIdTest ) {
     static const ui32 NumGeo = 10;
     ui32 ids[ NumGeo ];

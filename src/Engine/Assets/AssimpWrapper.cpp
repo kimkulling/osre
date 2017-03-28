@@ -132,6 +132,7 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
 
     TAABB<f32> aabb = m_model->getAABB();
     Geometry *geo( Geometry::create( 1 ) );
+	geo->m_vertextype = VertexType::RenderVertex;
     ui32 numVertices( mesh->mNumVertices );
     RenderVert *vertices = new RenderVert[ numVertices ];
     for ( ui32 i = 0; i < numVertices; i++ ) {

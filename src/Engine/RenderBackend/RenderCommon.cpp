@@ -325,6 +325,7 @@ Transform::~Transform() {
 
 Geometry::Geometry()
 : m_material( nullptr )
+, m_vertextype( VertexType::RenderVertex )
 , m_vb( nullptr )
 , m_ib( nullptr )
 , m_numPrimGroups( 0 )

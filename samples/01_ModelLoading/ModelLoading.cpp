@@ -132,10 +132,11 @@ protected:
             AppBase::activateStage( m_stage->getName() );
             Scene::Node *node = m_stage->addNode( "modelNode", nullptr );
             const Model::GeoArray &geoArray = model->getGeoArray();
-            //node->addModel( model );
-            Scene::GeometryBuilder myBuilder;
+			//node->addGeometry( geoArray[ 0 ] );
+        	node->addModel( model );
+            /*Scene::GeometryBuilder myBuilder;
             RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-            node->addGeometry( geo );
+            node->addGeometry( geo );*/
         }
 
         return true;
