@@ -52,17 +52,26 @@ OGLShader::OGLShader( const String &name )
 , m_numShader( 0 )
 , m_attributeList()
 , m_uniformLocationList()
-, m_isCompiledAndLinked( false ) {
+, m_isCompiledAndLinked( false )
+, m_isInUse( false ) {
     ::memset( m_shaders, 0, sizeof( unsigned int ) * 3 );
 }
 
 OGLShader::~OGLShader( ) {
-    for ( unsigned int i=0; i<3; ++i ) {
-        if( m_shaders[ i ] ) {
+	if ( m_isInUse ) {
+		osre_warn(Tag, "Destroying shader which is still in use.");
+	}
+
+	for ( unsigned int i=0; i<3; ++i ) {
+        if ( 0 != m_shaders[ i ] ) {
             glDeleteShader( m_shaders[ i ] );
             m_shaders[ i ] = 0;
         }
     }
+	if ( 0 != m_shaderprog ) {
+		glDeleteProgram( m_shaderprog );
+		m_shaderprog = 0;
+	}
 }
 
 bool OGLShader::loadFromSource( ShaderType type, const String &src ) {
@@ -78,12 +87,12 @@ bool OGLShader::loadFromSource( ShaderType type, const String &src ) {
     return true;
 }
 
-bool OGLShader::loadFromFile( ShaderType type, IO::Stream &stream ) {
+bool OGLShader::loadFromStream( ShaderType type, IO::Stream &stream ) {
     if ( !stream.isOpen() ) {
         return false;
     }
 
-    ui32 filesize(stream.getSize());
+    const ui32 filesize( stream.getSize() );
     if ( 0 == filesize ) {
         return true;
     }
@@ -97,9 +106,13 @@ bool OGLShader::loadFromFile( ShaderType type, IO::Stream &stream ) {
     return retCode;
 }
 
-
 bool OGLShader::createAndLink() {
-    m_shaderprog = glCreateProgram();
+	if ( isCompiled() ) {
+		osre_info(Tag, "Trying to compile shader program, which was compiled before.");
+		return true;
+	}
+    
+	m_shaderprog = glCreateProgram();
     if ( 0 == m_shaderprog ) {
         osre_error( Tag, "Error while creating shader program." );
         return false;
@@ -128,10 +141,12 @@ bool OGLShader::createAndLink() {
 }
 
 void OGLShader::use( ) {
+	m_isInUse = true;
     glUseProgram( m_shaderprog );
 }
 
-void OGLShader::unuse( ) {
+void OGLShader::unuse() {
+	m_isInUse = false;
     glUseProgram( 0 );
 }
 
