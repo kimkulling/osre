@@ -61,8 +61,6 @@ DECL_EVENT( OnCreateRendererEvent );
 DECL_EVENT( OnDestroyRendererEvent );
 DECL_EVENT( OnAttachViewEvent );
 DECL_EVENT( OnDetachViewEvent );
-//DECL_EVENT( OnAttachSceneEvent );
-//DECL_EVENT( OnUpdateGeoEvent );
 DECL_EVENT( OnClearSceneEvent );
 DECL_EVENT( OnDetachSceneEvent );
 DECL_EVENT( OnSetRenderStates );
@@ -101,61 +99,12 @@ struct OSRE_EXPORT AttachViewEventData : public Common::EventData {
     }
 };
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-/*struct OSRE_EXPORT AttachGeoEventData : public Common::EventData {
-    AttachGeoEventData()
-    : EventData( OnAttachSceneEvent, nullptr )
-    , m_numGeo( 0 )
-    , m_geo( nullptr )
-    , m_numInstances( 0 )
-    , m_geoInstanceData( nullptr ) {
-        // empty
-    }
-
-    ui32             m_numGeo;
-    Geometry       **m_geo;
-    ui32             m_numInstances;
-    GeoInstanceData *m_geoInstanceData; 
-};*/
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-/*struct OSRE_EXPORT UpdateGeoEventData : public Common::EventData {
-    UpdateGeoEventData() 
-    : EventData( OnUpdateGeoEvent, nullptr )
-    , m_numGeo( 0 )
-    , m_geo( nullptr ) {
-        // empty
-    }
-    
-    ui32 m_numGeo;
-    Geometry *m_geo;
-};*/
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-/*struct OSRE_EXPORT SetParameterEventData : public Common::EventData {
-    SetParameterEventData()
-    : EventData( OnSetParameterEvent, nullptr )
-    , m_numParam( 0 )
-    , m_param( nullptr ) {
-        // empty
-    }
-
-    ui32 m_numParam;
-    UniformVar **m_param;
-};*/
-
 struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
     CommitFrameEventData()
     : EventData( OnCommitFrameEvent, nullptr )
@@ -166,6 +115,11 @@ struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
     Frame *m_frame;
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 struct NewGeoEntry {
     ui32 numInstances;
     CPPCore::TArray<Geometry*> m_geo;

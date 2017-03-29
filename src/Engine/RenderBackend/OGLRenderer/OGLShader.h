@@ -1,3 +1,5 @@
+#pragma once
+
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
@@ -20,13 +22,12 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
 
 #include <osre/Common/osre_common.h>
 #include <osre/Common/Object.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <GL/glew.h>
-#include <string>
+
 #include <map>
 
 namespace OSRE {
@@ -52,7 +53,7 @@ public:
     OGLShader( const String &name );
 
     /// @brief  The class destructor.
-    virtual ~OGLShader() override;
+    virtual ~OGLShader();
     
     /// @brief  Will load the shader type from a given string.
     /// @param  type    [in] The shader type.
@@ -60,11 +61,11 @@ public:
     /// @return true, if compile was successful, false in case of an error.
     bool loadFromSource( ShaderType type, const String &src );
     
-    /// @brief
+    /// @brief	
     /// @param  type    [in] The shader type.
-    /// @param  file    [in] The file containing the source.
+    /// @param  stream  [in] The stream  containing the source.
     /// @return true, if compile was successful, false in case of an error.
-    bool loadFromFile(ShaderType type, IO::Stream &stream );
+    bool loadFromStream( ShaderType type, IO::Stream &stream );
 
     /// @brief  Will create and link a shader program.
     /// @return true, if create & link was successful, false in case of an error.
@@ -76,23 +77,33 @@ public:
     /// @brief  Will unbind this program to the current render context.
     void unuse();
     
+	///	@brief	Will perform a lookup if the attribute is used in the shader program. 
+	///         The shader program must be compiled before.
+	///	@param	attribute	[in] The name of the attribute to look for.
+	///	@return	true, if the attribute is used in the shader program, false if not.
     bool hasAttribute( const String& attribute );
 
     /// @brief  Adds a new attribute to the shader.
     /// @param  attribute   [in] The name of the attribute.
     void addAttribute( const String& attribute );
 
-    bool hasUniform( const String& uniform );
+	///	@brief	Will perform a lookup if the uniform is used in the shader program. 
+	///         The shader program must be compiled before.
+	///	@param	uniform   	[in] The name of the attribute to look for.
+	///	@return	true, if the uniform is used in the shader program, false if not.
+	bool hasUniform( const String& uniform );
 
     /// @brief  Adds a new uniform to the shader.
-    /// @param  attribute   [in] The name of the uniform.
+    /// @param  uniform     [in] The name of the uniform.
     void addUniform( const String& uniform );
     
     /// @brief  Logs a compile and link error.
     /// @param  shaderprog  [in] The shader program handle.
     static void logCompileOrLinkError( ui32 shaderprog );
 
-    bool isCompiled() const;
+    ///	@brief	Will return the current compile state.
+	///	@return	true, if the shader is compiled with success, false if not.
+	bool isCompiled() const;
 
     /// @brief  returns the location of the attribute.
     /// @param  attribute   [in] The name of the attribute.
@@ -100,11 +111,11 @@ public:
     GLint operator[] (const String& attribute);
     
     /// @brief  returns the location of the uniform.
-    /// @param  attribute   [in] The name of the uniform.
+    /// @param  uniform     [in] The name of the uniform.
     /// @return Its location or -1 for an error.
     GLint operator() (const String& uniform);
 
-private:
+	// No copying
     OGLShader( const OGLShader & ) = delete;
     OGLShader &operator = ( const OGLShader & ) = delete;
 
@@ -115,6 +126,7 @@ private:
     std::map<String, GLint> m_attributeList;
     std::map<String, GLint> m_uniformLocationList;
     bool m_isCompiledAndLinked;
+	bool m_isInUse;
 };
 
 } // Namespace RenderBackend

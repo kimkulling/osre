@@ -103,7 +103,8 @@ const String FsSrcRV =
     "void main()\n"
     "{\n"
     "    // set the interpolated color as the shader output\n"
-    "    vFragColor = texture( tex0, vUV );\n"
+    "//    vFragColor = texture( tex0, vUV );\n"
+	"    vFragColor = vSmoothColor;\n"
     "}\n";
 
 const String VsSrcUI =

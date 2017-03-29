@@ -96,8 +96,8 @@ protected:
             m_view = m_stage->addView("camera", nullptr );
             const f32 diam = aabb.getDiameter();
             const Vec3f center = aabb.getCenter();
-            f32 zNear = 0.0f;
-            f32 zFar = zNear + diam;
+            f32 zNear = 0.000001f;
+			f32 zFar = 100000;//zNear + diam;
             f32 left = center.getX() - diam;
             f32 right = center.getX() + diam;
             f32 bottom = center.getY() - diam;
@@ -121,21 +121,22 @@ protected:
             f32 fov = 2.f;
             m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
 
-            m_view->setProjectionMode( fov, aspect, zNear, zFar );
-            m_view->setOrthoMode( left, right, bottom, top, zNear, zFar );
+            //m_view->setProjectionMode( fov, aspect, zNear, zFar );
+            //m_view->setOrthoMode( left, right, bottom, top, zNear, zFar );
             glm::vec3 eye( 0, 0, 2 * diam ), up( 0, 0, 1 );
-            m_view->setLookAt( eye, glm::vec3( center.getX(), center.getY(), center.getZ() ), up );
-			
-			m_transformMatrix.m_view = m_view->getView();
-            //m_transformMatrix.m_projection = m_view->getProjection();
+            //m_view->setLookAt( eye, glm::vec3( center.getX(), center.getY(), center.getZ() ), up );
+			//m_transformMatrix.m_view = glm::lookAt(eye, glm::vec3(center.getX(), center.getY(), center.getZ()), up);
+
+        	//m_transformMatrix.m_view = m_view->getView();
+            m_transformMatrix.m_projection = m_view->getProjection();
             m_transformMatrix.update();
             AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
 
             AppBase::activateStage( m_stage->getName() );
             Scene::Node *node = m_stage->addNode( "modelNode", nullptr );
             const Model::GeoArray &geoArray = model->getGeoArray();
-			//node->addGeometry( geoArray[ 0 ] );
-        	node->addModel( model );
+			node->addGeometry( geoArray[ 0 ] );
+        	//node->addModel( model );
             /*Scene::GeometryBuilder myBuilder;
             RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
             node->addGeometry( geo );*/

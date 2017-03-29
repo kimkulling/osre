@@ -169,7 +169,7 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
             }
         }
     }
-    GeometryDiagnosticUtils::dumVertices( vertices, numVertices );
+    //GeometryDiagnosticUtils::dumVertices( vertices, numVertices );
 
     const ui32 matIdx( mesh->mMaterialIndex );
     Material *osreMat = m_matArray[ matIdx ];
@@ -186,7 +186,7 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
             indexArray.add( static_cast<ui16>( index ) );
         }
     }
-	Scene::GeometryDiagnosticUtils::dumpIndices( indexArray );
+	//Scene::GeometryDiagnosticUtils::dumpIndices( indexArray );
 
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( ui16 ) * indexArray.size(), BufferAccessType::ReadOnly );
     geo->m_ib->copyFrom( &indexArray[ 0 ], geo->m_ib->m_size );

@@ -65,7 +65,9 @@ template<class T>
 inline
 TAABB<T>::TAABB( const VecType &min, const VecType &max )
 : m_min( min )
-, m_max( max ) {
+, m_max( max )
+, m_center(999999, 99999, 99999)
+, m_diameter(0) {
     // empty
 }
 
@@ -155,7 +157,7 @@ T TAABB<T>::getDiameter() {
 template<class T>
 inline
 TVec3<T> TAABB<T>::getCenter() {
-    m_center = ( m_max - m_min ) * 0.5f;
+    m_center = ( m_min + m_max ) * 0.5f;
 
     return m_center;
 }

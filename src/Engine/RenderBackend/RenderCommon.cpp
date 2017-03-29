@@ -412,14 +412,14 @@ const float *TransformMatrixBlock::getMVP() {
 }
 
 Viewport::Viewport() 
-: m_x(-1)
-, m_y(-1)
-, m_w(-1)
-, m_h(-1) {
+: m_x( -1 )
+, m_y( -1 )
+, m_w( -1 )
+, m_h( -1 ) {
 	// empty
 }
 
-Viewport::Viewport(i32 x, i32 y, i32 w, i32 h )
+Viewport::Viewport( i32 x, i32 y, i32 w, i32 h )
 : m_x( x )
 , m_y( y )
 , m_w( w )
