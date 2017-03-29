@@ -51,7 +51,6 @@ TEST_F( TAABBTest, resetTest ) {
     aabb.reset();
     EXPECT_NE( min, aabb.getMin() );
     EXPECT_NE( max, aabb.getMax() );
-
 }
 
 TEST_F( TAABBTest, get_set_Test ) {
@@ -73,19 +72,23 @@ TEST_F( TAABBTest, mergeTest ) {
     Vec3f newMax( 40, 50, 60 );
     aabb.merge( newMax );
     EXPECT_EQ( newMax, aabb.getMax() );
-
 }
 
 TEST_F( TAABBTest, getDiameterTest ) {
     Vec3f min( 0, 0, 0 ), max( 1, 1, 1 );
     TAABB<f32> aabb( min, max );
-    f32 diam = aabb.getDiameter();
+    const f32 diam = aabb.getDiameter();
+	
+	EXPECT_FLOAT_EQ( max.getLength(), diam );
 }
 
 TEST_F( TAABBTest, getCenterTest ) {
     Vec3f min( 0, 0, 0 ), max( 1, 1, 1 );
     TAABB<f32> aabb( min, max );
     Vec3f center = aabb.getCenter();
+
+	Vec3f res( 0.5, 0.5, 0.5 );
+	EXPECT_EQ( res, center );
 }
 
 } // Namespace Unittest
