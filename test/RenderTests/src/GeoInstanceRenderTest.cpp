@@ -84,11 +84,16 @@ const String FsSrc =
 ///	@brief
 //-------------------------------------------------------------------------------------------------
 class GeoInstanceRenderTest : public AbstractRenderTest {
+    static const ui32    NumInstances = 25;
+    f32 m_angle;
+    glm::mat4            m_mat[ NumInstances ];
     TransformMatrixBlock m_transformMatrix;
 
 public:
     GeoInstanceRenderTest()
-    : AbstractRenderTest( "rendertest/geoinstancerendertest" ) {
+    : AbstractRenderTest( "rendertest/geoinstancerendertest" )
+    , m_angle( 0.02f )
+    , m_transformMatrix() {
         // empty
     } 
 
@@ -98,7 +103,6 @@ public:
 
     virtual bool onCreate( RenderBackendService *rbSrv ) {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
-        static const ui32 NumInstances = 25;
 
         Scene::GeometryBuilder myBuilder;
         Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
@@ -120,11 +124,11 @@ public:
 
         glm::mat4 mat[NumInstances];
         glm::mat4 scale = glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.1f ) );        
-		auto idx(0);
-		auto x(-2.0f), y(-2.0f);
+		auto idx( 0 );
+		auto x( -2.0f ), y( -2.0f );
 		for (auto i = 0; i < 5; i++) {
 			x = -2.0f;
-			for (auto j = 0; j < 5; j++) {
+			for ( auto j = 0; j < 5; j++ ) {
 				mat[ idx ] = glm::translate( scale, glm::vec3( x, y, 0.f ) );
 				x += 2.0f;
 				++idx;
@@ -132,13 +136,21 @@ public:
 			y += 2.0f;
 		}
         
-        rbSrv->setMatrix("VP", m_transformMatrix.m_mvp );
+        rbSrv->setMatrix( "VP", m_transformMatrix.m_mvp );
         rbSrv->setMatrixArray( "M", NumInstances, mat );
 
         return true;
     }
 
-    virtual bool onDestroy( RenderBackend::RenderBackendService *pRenderBackendSrv ) {
+    virtual bool onRender( d32 timediff, RenderBackendService *rbSrv ) {
+        glm::mat4 scale = glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.1f ) );
+        for ( auto i = 0; i < 25; i++ ) {
+            m_mat[ i ] *= glm::rotate( m_mat[ i ], m_angle, glm::vec3( 1, 1, 0 ) );
+        }
+
+        rbSrv->setMatrix( "VP", m_transformMatrix.m_mvp );
+        rbSrv->setMatrixArray( "M", NumInstances, m_mat );
+
         return true;
     }
 };

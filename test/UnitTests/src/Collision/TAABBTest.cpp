@@ -73,7 +73,20 @@ TEST_F( TAABBTest, mergeTest ) {
     Vec3f newMax( 40, 50, 60 );
     aabb.merge( newMax );
     EXPECT_EQ( newMax, aabb.getMax() );
+}
 
+TEST_F( TAABBTest, mergeArrayTest_Success ) {
+    Vec3f min( 1, 2, 3 ), max( 4, 5, 6 );
+    TAABB<f32> aabb( min, max );
+
+    static const ui32 NumVectors = 100;
+    Vec3f v[ NumVectors ];
+    for ( ui32 i = 0; i < NumVectors; i++ ) {
+        v[ i ].set( i, i, i );
+    }
+    aabb.updateFromVector3Array( v, NumVectors );
+    Vec3f newMax( 99, 99, 99 );
+    EXPECT_EQ( newMax, aabb.getMax() );
 }
 
 TEST_F( TAABBTest, getDiameterTest ) {
