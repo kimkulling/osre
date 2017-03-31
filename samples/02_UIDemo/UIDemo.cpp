@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/UI/Screen.h>
 #include <osre/UI/ButtonBase.h>
 #include <osre/UI/Panel.h>
@@ -85,9 +86,8 @@ protected:
         btnQuit->setRect( 20, 50, 100, 20 );
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
-
-        UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
-        ::memcpy( parameter->m_data.m_data, glm::value_ptr( m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model ), sizeof( glm::mat4 ) );
+        m_transformMatrix.update();
+        AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
         return true;
 
     }

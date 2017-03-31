@@ -143,9 +143,9 @@ public:
     }
 
     virtual bool onRender( d32 timediff, RenderBackendService *rbSrv ) {
-        glm::mat4 scale = glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.1f ) );
         for ( auto i = 0; i < 25; i++ ) {
-            m_mat[ i ] *= glm::rotate( m_mat[ i ], m_angle, glm::vec3( 1, 1, 0 ) );
+            glm::mat4 rot;
+            m_mat[ i ] = glm::rotate( m_mat[ i ], m_angle, glm::vec3( 1, 1, 0 ) );
         }
 
         rbSrv->setMatrix( "VP", m_transformMatrix.m_mvp );
