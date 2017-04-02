@@ -88,8 +88,8 @@ protected:
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
         AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
-        return true;
 
+        return true;
     }
 };
 

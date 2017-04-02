@@ -428,7 +428,7 @@ SOURCE_GROUP( Include\\Resources     FILES ${resources_inc} )
 SOURCE_GROUP( Include\\RenderBackend FILES ${renderbackend_inc} )
 SOURCE_GROUP( Include\\Scene         FILES ${scene_inc} )
 SOURCE_GROUP( Include\\Thread        FILES ${threading_inc} )
-SOURCE_GROUP( Include\\UI            FILES ${io_inc} )
+SOURCE_GROUP( Include\\UI            FILES ${ui_inc} )
 
 add_definitions( -D${USE_PLATFORM} )
 
