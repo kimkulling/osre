@@ -36,10 +36,16 @@ struct Shader;
 
 using CPPCore::TArray;
 
+// Forward declarations
 struct RenderTarget {
     // empty
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  Describes one pass in a render pipeline.
+//-------------------------------------------------------------------------------------------------
 class PipelinePass {
 public:
     PipelinePass( Shader *shader );
@@ -57,6 +63,11 @@ private:
     Shader *m_shader;
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief Describes a pipeline used for rendering.
+//-------------------------------------------------------------------------------------------------
 class Pipeline {
 public:
     Pipeline();
@@ -74,5 +85,5 @@ private:
     bool m_inFrame;
 };
 
-}
-}
+} // Namespace RenderBackend
+} // Namespace OSRE
