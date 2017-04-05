@@ -101,7 +101,7 @@ public:
         // empty
     }
 
-    virtual bool onCreate( RenderBackendService *rbSrv ) {
+    bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
         Scene::GeometryBuilder myBuilder;
@@ -122,14 +122,13 @@ public:
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
 
-        glm::mat4 mat[NumInstances];
         glm::mat4 scale = glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.1f ) );        
 		auto idx( 0 );
 		auto x( -2.0f ), y( -2.0f );
 		for (auto i = 0; i < 5; i++) {
 			x = -2.0f;
 			for ( auto j = 0; j < 5; j++ ) {
-				mat[ idx ] = glm::translate( scale, glm::vec3( x, y, 0.f ) );
+                m_mat[ idx ] = glm::translate( scale, glm::vec3( x, y, 0.f ) );
 				x += 2.0f;
 				++idx;
 			}
@@ -137,15 +136,16 @@ public:
 		}
         
         rbSrv->setMatrix( "VP", m_transformMatrix.m_mvp );
-        rbSrv->setMatrixArray( "M", NumInstances, mat );
+        rbSrv->setMatrixArray( "M", NumInstances, m_mat);
 
         return true;
     }
 
-    virtual bool onRender( d32 timediff, RenderBackendService *rbSrv ) {
-        for ( auto i = 0; i < 25; i++ ) {
-            glm::mat4 rot;
-            m_mat[ i ] = glm::rotate( m_mat[ i ], m_angle, glm::vec3( 1, 1, 0 ) );
+    bool onRender( d32 timediff, RenderBackendService *rbSrv ) override {
+        glm::mat4 rot( 1.0 );
+        rot = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
+        for ( auto i = 0; i < NumInstances; i++ ) {
+            m_mat[ i ] = m_mat[ i ] * rot;
         }
 
         rbSrv->setMatrix( "VP", m_transformMatrix.m_mvp );
