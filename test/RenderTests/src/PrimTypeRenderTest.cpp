@@ -26,7 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
 
@@ -54,7 +53,7 @@ public:
         // empty
     }
 
-    virtual bool onCreate( RenderBackendService *rb ) {
+    bool onCreate( RenderBackendService *rb ) override {
         rb->sendEvent( &OnAttachViewEvent, nullptr );
 
         // colors

@@ -24,11 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/IO/IOService.h>
-#include <osre/IO/Stream.h>
 #include <osre/Common/Logger.h>
 #include <osre/Debugging/osre_debugging.h>
-
-#include <cassert>
 
 namespace OSRE {
 namespace RenderTest {
@@ -89,7 +86,7 @@ const String &AbstractRenderTest::getTestName() const {
     return m_renderTestName;
 }
 
-RenderBackend::Material *AbstractRenderTest::createMaterial( const String &VsSrc, const String &FsSrc ) {
+Material *AbstractRenderTest::createMaterial( const String &VsSrc, const String &FsSrc ) {
     Material *mat      = new Material;
     mat->m_numTextures = 0;
     mat->m_type        = MaterialType::ShaderMaterial;

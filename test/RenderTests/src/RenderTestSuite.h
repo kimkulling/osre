@@ -68,15 +68,15 @@ public:
     bool update( d32 timediff );
     bool clearTestEnv();
     bool requestNextTest( ui32 &next );
+    RenderTestSuite() = delete;
+    RenderTestSuite &operator = (const RenderTestSuite &) = delete;
+    virtual ~RenderTestSuite() final;
 
 protected:
     void addFailureLog(const String &logEntry);
 
 private:
-    RenderTestSuite();
     RenderTestSuite(const String &suiteName );
-    RenderTestSuite &operator = ( const RenderTestSuite & );
-    virtual ~RenderTestSuite() final;
 
 private:
     static RenderTestSuite *s_pInstance;

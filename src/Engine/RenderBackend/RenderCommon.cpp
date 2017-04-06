@@ -296,7 +296,7 @@ Shader::~Shader() {
 }
 
 Material::Material()
-: m_type( MaterialType::FlatShadingMaterial )
+: m_type( MaterialType::ShaderMaterial )
 , m_numTextures( 0 )
 , m_textures( nullptr )
 , m_pShader( nullptr )
@@ -431,7 +431,7 @@ Viewport::~Viewport() {
 	// empty
 }
 
-bool Viewport::operator == (const Viewport &rhs) const {
+bool Viewport::operator == ( const Viewport &rhs ) const {
 	return ( m_x == rhs.m_x && m_y == rhs.m_y && m_w == rhs.m_w && m_h == rhs.m_h );
 }
 

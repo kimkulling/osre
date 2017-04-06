@@ -61,7 +61,7 @@ public:
         // empty
     }
 
-    void onOSEvent( const Event &osEvent, const EventData *data ) {
+    void onOSEvent( const Event &osEvent, const EventData *data ) override {
          if( osEvent == KeyboardButtonDownEvent ) {
             if( data ) {
                 bool result( false );

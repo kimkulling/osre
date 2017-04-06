@@ -96,7 +96,7 @@ protected:
             m_view = m_stage->addView("camera", nullptr );
             const f32 diam = aabb.getDiameter();
             const Vec3f center = aabb.getCenter();
-            f32 zNear = 0.000001f;
+            f32 zNear = 0.00001f;
 			f32 zFar = 100000;//zNear + diam;
             f32 left = center.getX() - diam;
             f32 right = center.getX() + diam;
