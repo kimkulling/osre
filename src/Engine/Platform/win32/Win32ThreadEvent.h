@@ -30,7 +30,6 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::ITaskManager
 ///	@ingroup	Engine
 ///
 ///	@brief  This class implements the Thread Event API by using the Win32 API.
@@ -55,8 +54,6 @@ public:
 private:
 	HANDLE m_EventHandle;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

@@ -32,8 +32,8 @@ static const String Tag = "View";
 View::View( const String &name ) 
 : Object( name )
 , m_node( nullptr )
-, m_pos( 1, 1, 1 )
-, m_lookAt( 0, 0, 0 )
+, m_eye( 1, 1, 1 )
+, m_center( 0, 0, 0 )
 , m_up( 0, 0, 1 )
 , m_view()
 , m_projection() {
@@ -49,15 +49,15 @@ void View::observeNode( Node *node ) {
 }
 
 void View::update( RenderBackend::RenderBackendService *rbSrv ) {
-    m_view = glm::lookAt( m_pos, m_lookAt, m_up );
+    m_view = glm::lookAt( m_eye, m_center, m_up );
 }
 
-void View::setLookAt( const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up ) {
-    m_pos    = pos;
-    m_lookAt = view;
+void View::setLookAt( const glm::vec3 &eye, const glm::vec3 &center, const glm::vec3 &up ) {
+    m_eye    = eye;
+    m_center = center;
     m_up     = up;
 
-    m_view = glm::lookAt( pos, view, up );
+    m_view = glm::lookAt( eye, center, up );
 }
 
 void View::setProjectionMode( f32 fov, f32 aspectRatio, f32 near, f32 far ) {

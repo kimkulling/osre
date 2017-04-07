@@ -55,7 +55,7 @@ public:
 
 private:
     Node *m_node;
-    glm::vec3 m_pos, m_lookAt, m_up;
+    glm::vec3 m_eye, m_center, m_up;
     glm::mat4 m_view, m_projection;
 };
 

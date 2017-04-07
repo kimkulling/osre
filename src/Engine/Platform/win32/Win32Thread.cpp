@@ -88,7 +88,6 @@ bool Win32Thread::stop() {
     }
 
     // Stop the thread
-    //::TerminateThread(m_ThreadHandle, 0);
     if (m_ThreadHandle != NULL) {
         ::CloseHandle( m_ThreadHandle );
         m_ThreadHandle = NULL;
@@ -265,7 +264,6 @@ void Win32Thread::setThreadName( const c8 *name ) {
         // Nothing to do!
     }
 }
-
 
 } // Namespace Threading
 } // Namespace OSRE

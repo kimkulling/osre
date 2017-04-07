@@ -33,7 +33,6 @@ class Win32ThreadEvent;
 class Win32ThreadLocalStorage;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::Win32Thread
 ///	@ingroup	Engine
 ///
 ///	@brief	This class implements a thread which uses the Win32-API.
@@ -94,8 +93,6 @@ private:
     String                   m_ThreadName;
     ThreadId                 m_id;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE
