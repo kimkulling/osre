@@ -54,14 +54,12 @@ public:
     /// @brief  Translates the vertex format type to the corresponding size.
     static ui32 getOGLSizeForFormat( VertexFormat format );
 
-
 private:
-    OGLEnum();
-    ~OGLEnum();
-    OGLEnum( const OGLEnum & );
+    OGLEnum() = delete;
+    ~OGLEnum() = delete;
+    OGLEnum( const OGLEnum & ) = delete;
+    OGLEnum& operator = ( const OGLEnum & ) = delete;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace RenderBackend
 } // Namespace OSRE
