@@ -95,13 +95,14 @@ void OGLRenderBackend::setRenderContext( Platform::AbstractRenderContext *render
 
 void OGLRenderBackend::clearRenderTarget( const ClearState &clearState ) {
     GLbitfield glTarget( 0 );
-    if( clearState.m_state & ClearState::ColorBit ) {
+    const ui32 clear( clearState.getClearState() );
+    if( clear & ClearState::ColorBit ) {
         glTarget |= GL_COLOR_BUFFER_BIT;
     }
-    if( clearState.m_state & ClearState::DepthBit ) {
+    if( clear & ClearState::DepthBit ) {
         glTarget |= GL_DEPTH_BUFFER_BIT;
     }
-    if( clearState.m_state & ClearState::StencilBit ) {
+    if( clear & ClearState::StencilBit ) {
         glTarget |= GL_STENCIL_BUFFER_BIT;
     }
 

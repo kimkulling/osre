@@ -36,10 +36,6 @@ public:
     ~SamplerState();
     bool operator == ( const SamplerState &rhs ) const;
     bool operator != ( const SamplerState &rhs ) const;
-
-    // Avoid copying 
-    SamplerState( const SamplerState & ) = delete;
-    SamplerState& operator = ( const SamplerState & ) = delete;
 };
 
 inline

@@ -43,13 +43,12 @@ public:
 public:
     ClearState();
     ~ClearState();
+    void setClearState( ui32 state );
+    ui32 getClearState() const;
     bool operator == ( const ClearState &rhs ) const;
     bool operator != ( const ClearState &rhs ) const;
 
-    // Avoid copying 
-    ClearState( const ClearState & ) = delete;
-    ClearState& operator = ( const ClearState & ) = delete;
-
+private:
     ui32 m_state;
 };
 
@@ -62,6 +61,16 @@ ClearState::ClearState()
 inline
 ClearState::~ClearState() {
     // empty
+}
+
+inline
+void ClearState::setClearState( ui32 state ) {
+    m_state = state;
+}
+
+inline
+ui32 ClearState::getClearState() const {
+    return m_state;
 }
 
 inline

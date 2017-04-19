@@ -50,10 +50,6 @@ public:
     bool operator == ( const BlendState &rhs ) const;
     bool operator != ( const BlendState &rhs ) const;
 
-    // Avoid copying 
-    BlendState( const BlendState & ) = delete;
-    BlendState& operator = ( const BlendState & ) = delete;
-
 private:
     BlendFunc m_blendFunc;
 };
