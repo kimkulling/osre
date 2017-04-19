@@ -53,7 +53,7 @@ public:
         // empty
     }
 
-    virtual bool onCreate( RenderBackendService *rbSrv ) {
+    bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
         Geometry *geo = Scene::GeometryBuilder::allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
         rbSrv->attachGeo( geo, 0 );

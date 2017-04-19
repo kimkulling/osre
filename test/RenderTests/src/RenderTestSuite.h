@@ -54,8 +54,8 @@ public:
     static RenderTestSuite *create(const String &suiteName );
     static RenderTestSuite *getInstance();
     static void kill();
-    virtual bool setup( const String &API ) final;
-    virtual bool teardown() final;
+    bool setup( const String &API ) final;
+    bool teardown() final;
     void attachRenderTest(AbstractRenderTest *pRenderTest);
     ui32 getNumRenderTests() const;
     void startTests();
@@ -68,15 +68,15 @@ public:
     bool update( d32 timediff );
     bool clearTestEnv();
     bool requestNextTest( ui32 &next );
+    RenderTestSuite() = delete;
+    RenderTestSuite &operator = (const RenderTestSuite &) = delete;
+    virtual ~RenderTestSuite() final;
 
 protected:
     void addFailureLog(const String &logEntry);
 
 private:
-    RenderTestSuite();
-    RenderTestSuite(const String &suiteName );
-    RenderTestSuite &operator = ( const RenderTestSuite & );
-    virtual ~RenderTestSuite() final;
+    RenderTestSuite( const String &suiteName );
 
 private:
     static RenderTestSuite *s_pInstance;

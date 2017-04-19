@@ -42,10 +42,10 @@ public:
     const String &getExtensions() const;
 
 protected:
-    virtual bool onCreate( AbstractSurface *pSurface );
-    virtual bool onDestroy();
-    virtual bool onUpdate( );
-    virtual bool onActivate( );
+    bool onCreate( AbstractSurface *pSurface ) override;
+    bool onDestroy() override;
+    bool onUpdate( ) override;
+    bool onActivate() override;
 
 private:
     i32 m_OpenGLVersion[ 2 ];
@@ -54,8 +54,6 @@ private:
     String m_extensions;
     bool m_active;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

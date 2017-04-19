@@ -34,46 +34,62 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+// Forward declarations
 struct UniformVar;
 
-static const i32  UnsetHandle = -1;
+/// Describes an unset id.
+static const i32  UnsetHandle   = -1;
+
+/// Upper limits for names.
 static const ui32 MaxEntNameLen = 256;
 
 ///	@brief  This enum describes the usage of a buffer object.
 enum class BufferType {
-    EmptyBuffer,    ///< Empty buffer, no special use.
+    EmptyBuffer = 0, ///< Empty buffer, no special use.
     VertexBuffer,   ///< Vertex buffer, stores vertex data inside.
     IndexBuffer,    ///< Index buffer, stores indices inside.
-    InstanceBuffer  ///< Instance buffer, will store instance-specific data.
+    InstanceBuffer,  ///< Instance buffer, will store instance-specific data.
+    NumBufferTypes,       ///< Number of enums.
+    InvalidBufferType    ///< Enum for invalid enum.
+
 };
 
 /// @brief  This enum describes the supported access types for render buffers.
 enum class BufferAccessType {
-    ReadOnly,       ///< Read only access.
-    WriteOnly,      ///< Write only access.
-    ReadWrite       ///< Read and write access.
+    ReadOnly = 0,               ///< Read only access.
+    WriteOnly,                  ///< Write only access.
+    ReadWrite,                  ///< Read and write access.
+    NumBufferAccessTypes,       ///< Number of enums.
+    InvalidBufferAccessType     ///< Enum for invalid enum.
 };
 
 ///	@brief  This enum describes the buildin vertex types provided by OSRE, mainly used for demos and examples.
 enum class VertexType {
-    ColorVertex = 0, ///< A simple vertex consisting of position and color.
-    RenderVertex     ///< A render vertex with position, color, normals and texture coordinates.
+    ColorVertex = 0,            ///< A simple vertex consisting of position and color.
+    RenderVertex,               ///< A render vertex with position, color, normals and texture coordinates.
+    NumVertexTypes,             ///< Number of enums.
+    InvalidVertexType           ///< Enum for invalid enum.
+
 };
 
 ///	@brief  This enum describes the supported texture target types.
 enum class TextureTargetType {
-    Texture1D,      ///< 1D-textures, used for simple arrays in shaders.
-    Texture2D,      ///< 2D-textures, used for images and render targets.
-    Texture3D       ///< 3D-textures, used for volume rendering.
+    Texture1D = 0,              ///< 1D-textures, used for simple arrays in shaders.
+    Texture2D,                  ///< 2D-textures, used for images and render targets.
+    Texture3D,                  ///< 3D-textures, used for volume rendering.
+    NumTextureTargetTypes,      ///< Number of enums.
+    InvalidTextureTargetType    ///< Enum for invalid enum.
 };
 
 ///	@brief  This enum describes the supported texture stages. A texture stage describes one layer of 
 /// a texture composition like a diffuse texture at stage0 and a lighting information at statge1.
 enum class TextureStageType {
-    TextureStage0 = 0,
-    TextureStage1,
-    TextureStage2,
-    TextureStage3
+    TextureStage0 = 0,          ///< Texture state level 0
+    TextureStage1,              ///< Texture state level 1
+    TextureStage2,              ///< Texture state level 2
+    TextureStage3,              ///< Texture state level 3
+    NumTextureStageTypes,       ///< Number of enums.
+    InvalidTextureStageType     ///< Enum for invalid enum.
 };
 
 ///	@brief  This enum describes different texture parameter names.
@@ -81,7 +97,9 @@ enum class TextureParameterName {
     TextureParamMinFilter = 0,  ///< The min filter name.
     TextureParamMagFilter,      ///< The mag filter name.
     TextureParamWrapS,          ///< The wrap name for s
-    TextureParamWrapT           ///< The warp name for t.
+    TextureParamWrapT,          ///< The warp name for t.
+    NumTextureParameterNames,   ///< Number of enums.
+    InvalidTextureParameterName,///< Enum for invalid enum.
 };
 
 ///	@brief  This enum describes the parameters which are related the the parameter names ( @see TextureParameterName ).
@@ -90,30 +108,37 @@ enum class TextureParameterType {
     TexturePTLinear,            ///< Use linear interpolation mode.
     TexturePTClamp,             ///< Use clamp mode, texture data will be clamped.
     TexturePTMirroredRepeat,    ///< Use mirror repeat mode, texture will be repeately mirrored.
-    TexturePTRepeat             ///< Use repeat mode, texture will be repeately mirrored.
+    TexturePTRepeat,            ///< Use repeat mode, texture will be repeately mirrored.
+    NumTextureParameterTypes,   ///< Number of enums.
+    InvalidTextureParameterType,///< Enum for invalid enum.
+
 };
 
 ///	@brief  This enum describes the index data type.
 enum class IndexType {
-    UnsignedByte,               ///< Bytes are used for the index data.
-    UnsignedShort               ///< UNsigned short for the index data.
+    UnsignedByte = 0,       ///< Bytes are used for the index data.
+    UnsignedShort,          ///< Unsigned short for the index data.
+    NumIndexTypes,          ///< Number of enums.
+    InvalidIndexType,       ///< Enum for invalid enum.
 };
 
 ///	@brief  This enum describes the primitive types for rendering vertex information.
 enum class PrimitiveType {
-    PointList,		///< A list of points, one index per point.
-    LineList,		///< A list of separate lines, 2 indices per line.
-    LineStrip,		///< A line strip, Start and end-index and all indices between.
-    TriangleList,	///< A list of triangles, 3 indices per triangle.
-    TriangelStrip,	///< A strip of triangles
-    TriangleFan		///< A triangle fan.
+    PointList = 0,          ///< A list of points, one index per point.
+    LineList,		        ///< A list of separate lines, 2 indices per line.
+    LineStrip,		        ///< A line strip, Start and end-index and all indices between.
+    TriangleList,	        ///< A list of triangles, 3 indices per triangle.
+    TriangelStrip,	        ///< A strip of triangles
+    TriangleFan,	        ///< A triangle fan.
+	NumPrimitiveTypes,      ///< Number of enums.
+	InvalidPrimitiveType,   ///< Enum for invalid enum.
 };
 
 ///	@brief  This struct declares a render vertex for textured geometry.
 struct OSRE_EXPORT ColorVert {
-    glm::vec3 position; ///< The position ( x|y|z )
-    glm::vec3 normal;   ///< The normal vector ( x|y|z )
-    glm::vec3 color0;   ///< The diffuse color ( r|g|b )
+    glm::vec3 position;     ///< The position ( x|y|z )
+    glm::vec3 normal;       ///< The normal vector ( x|y|z )
+    glm::vec3 color0;       ///< The diffuse color ( r|g|b )
 
     ColorVert();
 
@@ -140,40 +165,40 @@ struct RenderVert {
 
 ///	@brief  This enum to descibes the type of the vertex attribute.
 enum class VertexAttribute : int {
-    Position = 0,   ///< "position"
-    Normal,         ///< "normal"
-    TexCoord0,      ///< "texcoord0"
-    TexCoord1,      ///< "texcoord1"
-    TexCoord2,      ///< "texcoord2"
-    TexCoord3,      ///< "texcoord3"
-    Tangent,        ///< "tangent
-    Binormal,       ///< "binormal"
-    Weights,        ///< "weights" (skin weights)
-    Indices,        ///< "indices" (skin indices)
-    Color0,         ///< "color0"
-    Color1,         ///< "color1"
-    Instance0,      ///< "instance0"
-    Instance1,      ///< "instance1"
-    Instance2,      ///< "instance2"
-    Instance3,      ///< "instance3"
-    NumVertexAttrs,
-    InvalidVertexAttr
+    Position = 0,       ///< "position"
+    Normal,             ///< "normal"
+    TexCoord0,          ///< "texcoord0"
+    TexCoord1,          ///< "texcoord1"
+    TexCoord2,          ///< "texcoord2"
+    TexCoord3,          ///< "texcoord3"
+    Tangent,            ///< "tangent
+    Binormal,           ///< "binormal"
+    Weights,            ///< "weights" (skin weights)
+    Indices,            ///< "indices" (skin indices)
+    Color0,             ///< "color0"
+    Color1,             ///< "color1"
+    Instance0,          ///< "instance0"
+    Instance1,          ///< "instance1"
+    Instance2,          ///< "instance2"
+    Instance3,          ///< "instance3"
+    NumVertexAttrs,     ///< Number of enums.
+    InvalidVertexAttr   ///< Enum for invalid enum.
 };
 
 OSRE_EXPORT const String &getVertCompName( VertexAttribute attrib );
 
 ///	@brief  This enum describes the vertex data format.
 enum class VertexFormat : int {
-    Float,          ///< single component float, expanded to (x, 0, 0, 1)
-    Float2,         ///< 2-component float, expanded to (x, y, 0, 1)
-    Float3,         ///< 3-component float, expanded to (x, y, z, 1)
-    Float4,         ///< 4-component float
-    Byte4,          ///< 4-component float (-128.0f..+127.0f) mapped to byte (-128..+127)
-    UByte4,         ///< 4-component float (0.0f..255.0f) mapped to byte (0..255)
-    Short2,         ///< 2-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
-    Short4,         ///< 4-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
-    NumVertexFormats,       
-    InvalidVertexFormat, 
+    Float,                  ///< single component float, expanded to (x, 0, 0, 1)
+    Float2,                 ///< 2-component float, expanded to (x, y, 0, 1)
+    Float3,                 ///< 3-component float, expanded to (x, y, z, 1)
+    Float4,                 ///< 4-component float
+    Byte4,                  ///< 4-component float (-128.0f..+127.0f) mapped to byte (-128..+127)
+    UByte4,                 ///< 4-component float (0.0f..255.0f) mapped to byte (0..255)
+    Short2,                 ///< 2-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
+    Short4,                 ///< 4-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
+    NumVertexFormats,       ///< Number of enums.
+    InvalidVertexFormat,    ///< Enum for invalid enum.
 };
 
 ///	@brief  Utility function for calculate the vertex format size.
@@ -290,13 +315,15 @@ struct OSRE_EXPORT PrimitiveGroup {
     OSRE_NON_COPYABLE( PrimitiveGroup )
 };
 
-///	@brief
+///	@brief  This enum describes the kind of buildin material.
 enum class MaterialType {
-    FlatShadingMaterial,
-    ShaderMaterial
+    ShaderMaterial = 0,         ///< Material using a buildin shader assigned to its type of vertex.
+    NumMaterialTypes,           ///< Number of enums.
+    InvalidMaterialType         ///< Enum for invalid enum.
+
 };
 
-///	@brief
+///	@brief  
 struct OSRE_EXPORT Texture {
     String            m_textureName;
     IO::Uri           m_loc;
@@ -314,14 +341,16 @@ struct OSRE_EXPORT Texture {
     OSRE_NON_COPYABLE( Texture )
 };
 
-///	@brief
-enum class ShaderType : int {
-    SH_VertexShaderType = 0,
-    SH_FragmentShaderType,
-    SH_GeometryShaderType
+///	@brief  This enum describes the different shader types, which are supported by the OSRE-engine.
+enum class ShaderType : ui32 {
+    SH_VertexShaderType = 0,    ///< The shader is a vertex shader, used for each vertex.
+    SH_FragmentShaderType,      ///< The shader is a fragment shader, used for rasterization.
+    SH_GeometryShaderType,      ///< The shader is a geometry shader, used for tesselation.
+    NumShaderTypes,             ///< Number of enums.
+    InvalidShaderType           ///< Enum for invalid enum.
 };
 
-static const ui32 MaxShaderTypes = 3;
+static const ui32 MaxShaderTypes = static_cast<ui32>( ShaderType::NumShaderTypes );
 
 ///	@brief
 struct OSRE_EXPORT Shader {
@@ -337,14 +366,15 @@ struct OSRE_EXPORT Shader {
 
 ///	@brief
 enum class MaterialColorType : unsigned int {
-    Mat_Diffuse = 0,
-    Mat_Specular,
-    Mat_Ambient,
-    Mat_Emission,
-    MatColorMax
+    Mat_Diffuse = 0,            ///<
+    Mat_Specular,               ///<
+    Mat_Ambient,                ///<
+    Mat_Emission,               ///<
+    NumMaterialColorTypes,      ///< Number of enums.
+    InvalidMaterialColorType    ///< Enum for invalid enum.
 };
 
-static const ui32 MaxMatColorType = (ui32) MaterialColorType::MatColorMax;
+static const ui32 MaxMatColorType = static_cast<ui32>( MaterialColorType::NumMaterialColorTypes );
 
 ///	@brief
 struct OSRE_EXPORT Material {
@@ -453,4 +483,3 @@ struct Canvas {
 
 } // Namespace RenderBackend
 } // Namespace OSRE
-

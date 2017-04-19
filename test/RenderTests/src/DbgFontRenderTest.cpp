@@ -55,15 +55,15 @@ public:
         // empty
     }
 
-    virtual bool onCreate( RenderBackendService *rb ) override {
-        rb->sendEvent( &OnAttachViewEvent, nullptr );
+    bool onCreate( RenderBackendService *rbSrv ) override {
+        rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
         
         Scene::DbgRenderer::getInstance()->renderDbgText( 1, 1, 1U, "XXX" );
 
         return true;
     }
 
-    virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *rbSrv ) override {
+    bool onRender( d32 timediff, RenderBackend::RenderBackendService *rbSrv ) override {
         m_frameCount++;
         std::stringstream stream;
         stream << std::setfill( '0' ) << std::setw( 3 ) << m_frameCount;

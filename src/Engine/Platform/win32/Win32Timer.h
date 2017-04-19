@@ -40,9 +40,9 @@ public:
 	///	The class destructor.
 	~Win32Timer();
 	///	Seconds getter.
-	d32 getCurrentSeconds();
+	d32 getCurrentSeconds() override;
 	///	Time difference getter.
-	d32 getTimeDiff();
+	d32 getTimeDiff() override;
 
 private:
 	LARGE_INTEGER m_globeTime, m_globeFrequency;

@@ -40,6 +40,7 @@ namespace RenderTest {
 class AbstractTestFixture {
 public:
     /// @brief  The setup method, will be called before the test execution of the fixure.
+    /// @param  API     [in] The requested API.
     /// @return true if successful, false in case of an error.
     virtual bool setup( const String &API ) = 0;
 
@@ -59,9 +60,10 @@ protected:
     /// @brief  The class destructor.
     virtual ~AbstractTestFixture();
 
-private:
+    // Avoid copying
     AbstractTestFixture() = delete;
     AbstractTestFixture( const AbstractTestFixture & ) = delete;
+    AbstractTestFixture &operator = ( const AbstractTestFixture & ) = delete;
 
 private:
     String m_name;

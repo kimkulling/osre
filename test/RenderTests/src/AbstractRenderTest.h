@@ -83,7 +83,7 @@ public:
 protected:
     /// @brief  The class constructor.
     /// @param  renderTestName  [in] The name for the render test.
-    AbstractRenderTest( const String &renderTestName );
+    explicit AbstractRenderTest( const String &renderTestName );
 
     /// @brief  The onCreate-callback.
     /// @param  rbSrv   [in] The render backend to use.
@@ -101,7 +101,9 @@ protected:
     /// @return true if successful.
     virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *rbSrv );
 
-private:
+    // Avoid copying
+    AbstractRenderTest() = delete;
+    AbstractRenderTest( const AbstractRenderTest & ) = delete;
     AbstractRenderTest &operator = ( const AbstractRenderTest & ) = delete;
 
 private:

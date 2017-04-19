@@ -104,9 +104,6 @@ static SetMaterialStageCmdData *setupMaterial( Material *material, OGLRenderBack
 
     SetMaterialStageCmdData *matData = new SetMaterialStageCmdData;
     switch( material->m_type ) {
-        case MaterialType::FlatShadingMaterial:
-            break;
-
         case MaterialType::ShaderMaterial: {
                 TArray<OGLTexture*> textures;
                 setupTextures( material, rb, textures );

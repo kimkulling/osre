@@ -96,12 +96,6 @@ protected:
             m_view = m_stage->addView("camera", nullptr );
             const f32 diam = aabb.getDiameter();
             const Vec3f center = aabb.getCenter();
-            f32 zNear = 0.000001f;
-			f32 zFar = 100000;//zNear + diam;
-            f32 left = center.getX() - diam;
-            f32 right = center.getX() + diam;
-            f32 bottom = center.getY() - diam;
-            f32 top = center.getY() + diam;
             Platform::AbstractSurface *rootSurface( getRootSurface() );
             if ( nullptr == rootSurface ) {
                 return false;
@@ -110,33 +104,24 @@ protected:
             const i32 w = rootSurface->getProperties()->m_width;
             const i32 h = rootSurface->getProperties()->m_height;
             f32 aspect = static_cast< f32 >( w ) / static_cast< f32 >( h );
-            if ( aspect < 1.0 ) { 
-                // window taller than wide 
-                bottom /= aspect; 
-                top /= aspect; 
-            } else { 
-                left *= aspect; 
-                right *= aspect; 
-            }
-            f32 fov = 2.f;
-            //m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
 
-            //m_view->setProjectionMode( fov, aspect, zNear, zFar );
-            //m_view->setOrthoMode( left, right, bottom, top, zNear, zFar );
-            glm::vec3 eye(2 * diam, 2 * diam, 0 ), up( 0, 1, 0 );
-            //m_view->setLookAt( eye, glm::vec3( center.getX(), center.getY(), center.getZ() ), up );
-			glm::vec3 c( glm::vec3( center.getX(), center.getY(), center.getZ() ) );
-//			m_transformMatrix.m_view = glm::lookAt( eye, c, up);
+            f32 zNear = 0.0001f;
+            f32 zFar  = 100.f;
+            m_view->setProjectionMode(glm::radians(45.0f), aspect, zNear, zFar );
+            glm::vec3 eye( 2 * diam, 0, 0), up( 0, 1, 0 );
+            m_view->setLookAt( eye, glm::vec3( 0,0,0 ), up );
 
-        	m_transformMatrix.m_view = m_view->getView();
-            //m_transformMatrix.m_projection = m_view->getProjection();
+            m_transformMatrix.m_model = glm::mat4(1.0f);
+            m_transformMatrix.m_view = m_view->getView();
+            m_transformMatrix.m_projection = m_view->getProjection();
             m_transformMatrix.update();
             AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
 
             AppBase::activateStage( m_stage->getName() );
             Scene::Node *node = m_stage->addNode( "modelNode", nullptr );
-            const Model::GeoArray &geoArray = model->getGeoArray();
-        	node->addModel( model );
+            if ( nullptr != node ) {
+                node->addModel(model);
+            }
         }
 
         return true;

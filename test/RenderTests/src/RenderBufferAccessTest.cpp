@@ -104,7 +104,7 @@ public:
         // empty
     }
 
-    virtual bool onCreate( RenderBackendService *rbSrv ) {
+    bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
         CPPCore::RandomGenerator generator;
@@ -155,7 +155,7 @@ public:
         return true;
     }
 
-    virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *rbSrv) {
+    bool onRender( d32 timediff, RenderBackend::RenderBackendService *rbSrv) override {
         CPPCore::RandomGenerator generator;
         for (ui32 i = 0; i < NumPts; i++) {
             const f32 x = static_cast<f32>(generator.get(-10, 10) ) / 100.0f;
@@ -173,10 +173,6 @@ public:
 
         rbSrv->attachGeoUpdate( m_ptGeo );
         
-        return true;
-    }
-
-    virtual bool onDestroy( RenderBackend::RenderBackendService *pRenderBackendSrv ) {
         return true;
     }
 };

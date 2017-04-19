@@ -194,7 +194,7 @@ TEST_F( RenderCommonTest, accessMaterialTest ) {
     bool ok = true;
     try {
         Material *mat( new Material );
-        EXPECT_EQ( MaterialType::FlatShadingMaterial, mat->m_type );
+        EXPECT_EQ( MaterialType::ShaderMaterial, mat->m_type );
         EXPECT_EQ( mat->m_parameters, nullptr );
         EXPECT_EQ( mat->m_numParameters, 0 );
     } catch ( ... ) {

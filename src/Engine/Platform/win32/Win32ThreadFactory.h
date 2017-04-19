@@ -36,14 +36,13 @@ class Win32ThreadFactory : public AbstractThreadFactory {
 public:
     Win32ThreadFactory();
     virtual ~Win32ThreadFactory( );
-    virtual AbstractThread *createThread( const String &name, ui32 stacksize );
-    virtual AbstractCriticalSection *createCriticalSection( );
-    virtual AbstractThreadEvent *createThreadEvent( );
-    virtual AbstractAtomic *createAtomic( i32 val );
-    virtual AbstractThreadLocalStorage *createThreadLocalStorage();
+    AbstractThread *createThread( const String &name, ui32 stacksize ) override;
+    AbstractCriticalSection *createCriticalSection( ) override;
+    AbstractThreadEvent *createThreadEvent( ) override;
+    AbstractAtomic *createAtomic( i32 val ) override;
+    AbstractThreadLocalStorage *createThreadLocalStorage() override;
 };
 
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
 } // Namespace OSRE

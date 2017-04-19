@@ -64,7 +64,7 @@ public:
         // empty
     }
 
-    virtual bool onCreate( RenderBackendService *rbSrv ) override {
+    bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
         
         CPPCore::TArray<Geometry*> geoArray;

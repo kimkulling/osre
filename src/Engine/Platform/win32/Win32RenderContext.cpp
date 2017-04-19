@@ -232,12 +232,11 @@ bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
     glEnable( GL_TEXTURE_2D );
     glEnable( GL_TEXTURE_3D );
     glDisable( GL_LIGHTING );
-	glDisable( GL_CULL_FACE );
+	//glEnable( GL_CULL_FACE );
 
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Win32RenderContext::onDestroy( ) {
     if( nullptr == m_rc ) {
         return false;
@@ -249,7 +248,6 @@ bool Win32RenderContext::onDestroy( ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Win32RenderContext::onUpdate( ) {
     if( TRUE == ::SwapBuffers( m_dc ) ) {
         return true;
@@ -258,7 +256,6 @@ bool Win32RenderContext::onUpdate( ) {
     return false;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Win32RenderContext::onActivate( ) {
     if( m_active ) {
         return true;
@@ -272,8 +269,6 @@ bool Win32RenderContext::onActivate( ) {
 
     return true;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

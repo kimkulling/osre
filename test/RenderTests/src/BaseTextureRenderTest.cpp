@@ -37,8 +37,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include "SOIL.h"
-
 #include <iostream>
 
 namespace OSRE {
@@ -113,7 +111,7 @@ public:
         m_mvpParam = nullptr;
     }
 
-    virtual bool onCreate( RenderBackendService *rbSrv ) override {
+    bool onCreate( RenderBackendService *rbSrv ) override {
         osre_debug( Tag, "BaseTextureRenderTest::onCreate" );
 
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
@@ -155,13 +153,13 @@ public:
         return true;
     }
 
-    virtual bool onDestroy( RenderBackendService *rbSrv ) override {
+    bool onDestroy( RenderBackendService *rbSrv ) override {
         osre_debug( Tag, "BaseTextureRenderTest::onDestroy" );
 
         return true;
     }
 
-    virtual bool onRender( d32 timediff, RenderBackendService *rbSrv ) override {
+    bool onRender( d32 timediff, RenderBackendService *rbSrv ) override {
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
         rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );

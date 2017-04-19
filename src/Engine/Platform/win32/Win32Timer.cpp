@@ -62,6 +62,5 @@ d32 Win32Timer::getTimeDiff() {
     }
 }
 
-
 } // Namespace Platform
 } // Namespace OSRE

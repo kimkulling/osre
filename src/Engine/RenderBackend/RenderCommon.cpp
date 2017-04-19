@@ -296,7 +296,7 @@ Shader::~Shader() {
 }
 
 Material::Material()
-: m_type( MaterialType::FlatShadingMaterial )
+: m_type( MaterialType::ShaderMaterial )
 , m_numTextures( 0 )
 , m_textures( nullptr )
 , m_pShader( nullptr )
@@ -386,10 +386,10 @@ TransformBlock::~TransformBlock() {
 }
 
 TransformMatrixBlock::TransformMatrixBlock()
-: m_projection()
-, m_model()
-, m_view()
-, m_mvp() {
+: m_projection(1.0f)
+, m_model(1.0f)
+, m_view(1.0f)
+, m_mvp(1.0f) {
     // empty
 }
 
@@ -401,6 +401,7 @@ void TransformMatrixBlock::init() {
     m_projection = glm::mat4( 1.0f );
     m_model = glm::mat4( 1.0f );
     m_view = glm::mat4( 1.0f );
+    m_mvp = glm::mat4(1.0f);
 }
 
 void TransformMatrixBlock::update() {
@@ -431,7 +432,7 @@ Viewport::~Viewport() {
 	// empty
 }
 
-bool Viewport::operator == (const Viewport &rhs) const {
+bool Viewport::operator == ( const Viewport &rhs ) const {
 	return ( m_x == rhs.m_x && m_y == rhs.m_y && m_w == rhs.m_w && m_h == rhs.m_h );
 }
 
