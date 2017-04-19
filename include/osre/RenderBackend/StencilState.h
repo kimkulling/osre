@@ -72,6 +72,10 @@ public:
     bool operator == ( const StencilState &rhs ) const;
     bool operator != ( const StencilState &rhs ) const;
 
+    // Avoid copying 
+    StencilState( const StencilState & ) = delete;
+    StencilState& operator = ( const StencilState & ) = delete;
+
 private:
     StencilFunc m_stencilFunc;
     i32 m_stencilFuncRef;
@@ -103,6 +107,7 @@ void StencilState::setStencilFunc( StencilFunc func, i32 ref, c8 mask ) {
     m_stencilFuncRef = ref;
     m_stencilFuncMask = mask;
 }
+
 inline
 StencilState::StencilFunc StencilState::getStencilFunc() const {
     return m_stencilFunc;

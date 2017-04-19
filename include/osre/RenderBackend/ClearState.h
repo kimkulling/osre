@@ -46,6 +46,10 @@ public:
     bool operator == ( const ClearState &rhs ) const;
     bool operator != ( const ClearState &rhs ) const;
 
+    // Avoid copying 
+    ClearState( const ClearState & ) = delete;
+    ClearState& operator = ( const ClearState & ) = delete;
+
     ui32 m_state;
 };
 
