@@ -32,11 +32,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+// Forward declarations
 struct Shader;
 
 using CPPCore::TArray;
 
-// Forward declarations
 struct RenderTarget {
     // empty
 };

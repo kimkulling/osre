@@ -27,6 +27,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Collision {
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief	
+//-------------------------------------------------------------------------------------------------
 template<class T>
 class TAABB {
 public:
