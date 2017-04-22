@@ -20,6 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
+
 #pragma once
 
 namespace OSRE {
@@ -30,60 +31,61 @@ namespace RenderBackend {
 ///
 ///	@brief  
 //-------------------------------------------------------------------------------------------------
-class BlendState {
+class CullState {
 public:
-    /// 
-    enum class BlendFunc {
-        FuncNone,
-        FuncAdd,
-        FuncSubstract,
-        ReverseSubstract,
-        Min,
-        Max
+    enum class CullMode {
+        Front,
+        Back, 
+        FrontAndBack
     };
 
 public:
-    BlendState();
-    ~BlendState();
-    void setBlendFunc( BlendFunc func );
-    BlendFunc getBlendFunc() const;
-    bool operator == ( const BlendState &rhs ) const;
-    bool operator != ( const BlendState &rhs ) const;
+    CullState();
+    explicit CullState( CullMode mode );
+    ~CullState();
+    void setCullMode( CullMode cullMode );
+    CullMode getCullMode() const;
+    bool operator == ( const CullState &rhs ) const;
+    bool operator != ( const CullState &rhs ) const;
 
 private:
-    BlendFunc m_blendFunc;
+    CullMode m_state;
 };
 
 inline
-BlendState::BlendState() 
-: m_blendFunc( BlendFunc::FuncNone ) {
+CullState::CullState()
+: m_state( CullMode::Front ) {
     // empty
 }
 
 inline
-BlendState::~BlendState() {
+CullState::CullState( CullMode mode )
+: m_state( mode ) {
     // empty
 }
 
 inline
-void BlendState::setBlendFunc( BlendFunc func ) {
-    if ( func != m_blendFunc ) {
-        m_blendFunc = func;
-    }
+CullState::~CullState() {
+    // empty
 }
 
 inline
-BlendState::BlendFunc BlendState::getBlendFunc() const {
-    return m_blendFunc;
+void CullState::setCullMode( CullMode cullMode ) {
+    m_state = cullMode;
 }
 
 inline
-bool BlendState::operator == ( const BlendState &rhs ) const {
-    return m_blendFunc == rhs.m_blendFunc;
+CullState::CullMode CullState::getCullMode() const {
+    return m_state;
 }
 
 inline
-bool BlendState::operator != ( const BlendState &rhs ) const {
+bool CullState::operator == ( const CullState &rhs ) const {
+    return m_state == rhs.m_state;
+}
+
+inline
+bool CullState::operator != ( const CullState &rhs ) const {
     return !( *this == rhs );
 }
 

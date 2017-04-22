@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/SamplerState.h>
 #include <osre/RenderBackend/ClearState.h>
 #include <osre/RenderBackend/StencilState.h>
+#include <osre/RenderBackend/CullState.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -50,12 +51,25 @@ class PipelinePass {
 public:
     PipelinePass( Shader *shader );
     ~PipelinePass();
-    void set( RenderTarget &rt, BlendState &belndState, SamplerState &samplerState, ClearState &clearState, StencilState &stencilState );
+    void set( RenderTarget &rt, CullState &cullstate, BlendState &blendState, SamplerState &samplerState, ClearState &clearState, StencilState &stencilState );
+    void setCullState( CullState &cullstate );
+    CullState getCullState() const;
+    void setBlendState( BlendState &blendState );
+    BlendState getBlendState() const;
+    void setSamplerState( SamplerState &samplerState );
+    SamplerState getSamplerState() const;
+    void setClearState( ClearState &clearState );
+    ClearState getClearState() const;
+    void setStencilState( StencilState &stencilState );
+    StencilState getStencilState() const;
+    void setShader( Shader *shader );
+    Shader *getShader() const;
     bool operator == ( const PipelinePass &rhs ) const;
     bool operator != ( const PipelinePass &rhs ) const;
 
 private:
     RenderTarget m_renderTarget;
+    CullState m_cullState;
     BlendState m_blendState;
     SamplerState m_samplerState;
     ClearState m_clearState;

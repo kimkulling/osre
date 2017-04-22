@@ -22,13 +22,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <src/Engine/Platform/win32/Win32RenderContext.h>
 #include <GL/glew.h>
-#include "GL/wglew.h"
-
+#include <GL/wglew.h>
 
 #include <osre/Common/Logger.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <src/Engine/Platform/win32/Win32Surface.h>
-
 
 #include <iostream>
 
