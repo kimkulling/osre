@@ -21,36 +21,26 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
-#include <osre/RenderBackend/CullState.h>
+#include <osre/RenderBackend/BlendState.h>
 
 namespace OSRE {
 namespace UnitTest {
 
 using namespace ::OSRE::RenderBackend;
 
-class CullStateTest : public ::testing::Test {
-    // empty
+class BlendStateTest : public ::testing::Test {
+// empty
 };
 
-TEST_F( CullStateTest, create_success ) {
+TEST_F( BlendStateTest, create_success ) {
     bool ok( true );
     try {
-        CullState state1;
-        CullState state2( CullState::CullMode::Front );
-    } catch ( ... ) {
+        BlendState state1;
+    }
+    catch ( ... ) {
         ok = false;
     }
     EXPECT_TRUE( ok );
-}
-
-TEST_F( CullStateTest, access_state_success ) {
-    CullState state1, state2, state3( CullState::CullMode::FrontAndBack );
-    state1.setCullMode( CullState::CullMode::Front );
-    EXPECT_EQ( CullState::CullMode::Front, state1.getCullMode() );
-
-    state2.setCullMode( CullState::CullMode::Front );
-    EXPECT_EQ( state1, state2 );
-    EXPECT_NE( state1, state3 );
 }
 
 } // Namespace UnitTest

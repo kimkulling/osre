@@ -52,7 +52,9 @@ SET( unittest_platform_src
 )
 
 SET ( unittest_rb_src
-    src/RenderBackend/RenderCommonTest.cpp
+	src/RenderBackend/CullStateTest.cpp
+    src/RenderBackend/BlendStateTeste.cpp
+	src/RenderBackend/RenderCommonTest.cpp
 )
 
 SET( unittest_ui_src
