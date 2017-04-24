@@ -123,6 +123,10 @@ void Pipeline::addPass( PipelinePass *pass ) {
     m_passes.add( pass );
 }
 
+ui32 Pipeline::getNumPasses() const {
+    return m_passes.size();
+}
+
 ui32 Pipeline::beginFrame() {
     if ( m_inFrame ) {
         return 0;
@@ -153,13 +157,18 @@ bool Pipeline::endPass( ui32 passId ) {
     }
 
     m_passId = -1;
-    m_inFrame = false;
 
     return true;
 }
 
 void Pipeline::endFrame() {
     m_inFrame = false;
+}
+
+void Pipeline::clear() {
+    m_passId = -1;
+    m_inFrame = false;
+    m_passes.resize( 0 );
 }
 
 } // Namespace RenderBackend

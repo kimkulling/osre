@@ -47,7 +47,7 @@ struct RenderTarget {
 ///
 ///	@brief  Describes one pass in a render pipeline.
 //-------------------------------------------------------------------------------------------------
-class PipelinePass {
+class OSRE_EXPORT PipelinePass {
 public:
     PipelinePass( Shader *shader );
     ~PipelinePass();
@@ -82,15 +82,17 @@ private:
 ///
 ///	@brief Describes a pipeline used for rendering.
 //-------------------------------------------------------------------------------------------------
-class Pipeline {
+class OSRE_EXPORT Pipeline {
 public:
     Pipeline();
     ~Pipeline();
     void addPass( PipelinePass *pass );
+    ui32 getNumPasses() const;
     ui32 beginFrame();
     bool beginPass( ui32 passId );
     bool endPass( ui32 passId );
     void endFrame();
+    void clear();
 
 private:
     typedef TArray<PipelinePass*> PipelinePassArray;

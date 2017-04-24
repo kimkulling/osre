@@ -42,6 +42,7 @@ public:
 
 public:
     ClearState();
+    explicit ClearState( ui32 state );
     ~ClearState();
     void setClearState( ui32 state );
     ui32 getClearState() const;
@@ -55,6 +56,12 @@ private:
 inline
 ClearState::ClearState()
 : m_state( 0 ) {
+    // empty
+}
+
+inline
+ClearState::ClearState( ui32 state )
+: m_state( state ) {
     // empty
 }
 
