@@ -118,6 +118,7 @@ void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
 
         m_pipeline->endPass( passId );
     }
+    m_pipeline->endFrame();
 
     m_renderbackend->renderFrame();
 }
