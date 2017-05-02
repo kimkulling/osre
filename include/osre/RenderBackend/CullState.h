@@ -36,7 +36,8 @@ public:
     enum class CullMode {
         Front,
         Back, 
-        FrontAndBack
+        FrontAndBack,
+        Off
     };
 
 public:

@@ -26,6 +26,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLEnum.h"
 #include <osre/RenderBackend/FontBase.h>
 #include <osre/RenderBackend/ClearState.h>
+#include <osre/RenderBackend/BlendState.h>
+#include <osre/RenderBackend/CullState.h>
+#include <osre/RenderBackend/SamplerState.h>
+#include <osre/RenderBackend/StencilState.h>
 #include <osre/Platform/AbstractRenderContext.h>
 #include <osre/Profiling/PerformanceCounters.h>
 #include <osre/Common/Logger.h>
@@ -47,6 +51,17 @@ using namespace ::CPPCore;
 static const String Tag             = "OGLRenderBackend";
 static const ui32   NotInitedHandle = 9999999;
 
+struct FixedPipelineState {
+    BlendState   m_blendState;
+    CullState    m_cullState;
+    SamplerState m_samplerState;
+    StencilState m_stensilState;
+
+    bool isEqual( CullState &cullstate, BlendState &blendState, SamplerState &samplerState, StencilState &stencilState ) const {
+        return ( cullstate == m_cullState && blendState == m_blendState && samplerState == m_samplerState && stencilState == m_stensilState );
+    }
+};
+
 OGLRenderBackend::OGLRenderBackend( )
 : m_renderCtx( nullptr )
 , m_buffers()
@@ -64,11 +79,15 @@ OGLRenderBackend::OGLRenderBackend( )
 , m_shaderInUse( nullptr )
 , m_freeBufferSlots()
 , m_primitives()
+, m_fpState( nullptr )
 , m_fpsCounter( nullptr ) {
-    // empty
+    m_fpState = new FixedPipelineState;
 }
 
 OGLRenderBackend::~OGLRenderBackend( ) {
+    delete m_fpState;
+    m_fpState = nullptr;
+
     releaseAllShaders();
     releaseAllFonts();
     releaseAllTextures();
@@ -979,6 +998,29 @@ void OGLRenderBackend::releaseAllFonts() {
         }
     }
     m_fonts.clear();
+}
+
+void OGLRenderBackend::setFixedPipelineStates( CullState &cullstate, BlendState &blendState, SamplerState &samplerState, StencilState &stencilState ) {
+    if ( m_fpState->isEqual( cullstate, blendState, samplerState, stencilState ) ) {
+        return;
+    }
+
+    m_fpState->m_blendState   = blendState;
+    m_fpState->m_cullState    = cullstate;
+    m_fpState->m_samplerState = samplerState;
+    m_fpState->m_stensilState = stencilState;
+
+    if ( m_fpState->m_cullState.getCullMode() == CullState::CullMode::Off ) {
+        glDisable( GL_CULL_FACE );
+    } else {
+        glEnable( GL_CULL_FACE );
+        glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );
+    }
+    glEnable( GL_TEXTURE_2D );
+    glEnable( GL_TEXTURE_3D );
+    glDisable( GL_LIGHTING );
+    glDisable( GL_CULL_FACE );
+
 }
 
 ui32 OGLRenderBackend::getVertexSize( VertexType vertextype ) {

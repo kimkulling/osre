@@ -58,6 +58,10 @@ SET ( unittest_rb_src
 	src/RenderBackend/PipelineTest.cpp
 )
 
+SET( unittest_rb_oglrenderer_src 
+	src/RenderBackend/OGLRenderer/GLEnumTest.cpp
+)
+
 SET( unittest_ui_src
     src/UI/WidgetTest.cpp
     src/UI/ButtonBaseTest.cpp
@@ -87,18 +91,19 @@ SET ( gtest_src
     ${GTEST_PATH}/src/gtest_main.cc
 )
 
-SOURCE_GROUP( src\\App            FILES ${unittest_app_src} )
-SOURCE_GROUP( src\\Common         FILES ${unittest_common_src} )
-SOURCE_GROUP( src\\Collision      FILES ${unittest_collision_src})
-SOURCE_GROUP( src\\Assets         FILES ${unittest_assets_src} )
-SOURCE_GROUP( src\\IO             FILES ${unittest_io_src} )
-SOURCE_GROUP( src\\Math           FILES ${unittest_math_src} )
-SOURCE_GROUP( src\\Platform       FILES ${unittest_platform_src})
-SOURCE_GROUP( src\\Profiling      FILES ${unittest_profiling_src})
-SOURCE_GROUP( src\\RenderBackend  FILES ${unittest_rb_src} )
-SOURCE_GROUP( src\\UI             FILES ${unittest_ui_src} )
-SOURCE_GROUP( src\\Scene          FILES ${unittest_scene_src} )
-SOURCE_GROUP( src\\GTest          FILES ${gtest_src} )
+SOURCE_GROUP( src\\App                        FILES ${unittest_app_src} )
+SOURCE_GROUP( src\\Common                     FILES ${unittest_common_src} )
+SOURCE_GROUP( src\\Collision                  FILES ${unittest_collision_src})
+SOURCE_GROUP( src\\Assets                     FILES ${unittest_assets_src} )
+SOURCE_GROUP( src\\IO                         FILES ${unittest_io_src} )
+SOURCE_GROUP( src\\Math                       FILES ${unittest_math_src} )
+SOURCE_GROUP( src\\Platform                   FILES ${unittest_platform_src})
+SOURCE_GROUP( src\\Profiling                  FILES ${unittest_profiling_src})
+SOURCE_GROUP( src\\RenderBackend              FILES ${unittest_rb_src} )
+SOURCE_GROUP( src\\RenderBackend\\OGLRenderer FILES ${unittest_rb_oglrenderer_src} )
+SOURCE_GROUP( src\\UI                         FILES ${unittest_ui_src} )
+SOURCE_GROUP( src\\Scene                      FILES ${unittest_scene_src} )
+SOURCE_GROUP( src\\GTest                      FILES ${gtest_src} )
 
 ADD_EXECUTABLE( osre_unittest
     ${unittest_app_src}
@@ -110,6 +115,7 @@ ADD_EXECUTABLE( osre_unittest
 	${unittest_platform_src}    
 	${unittest_profiling_src}
 	${unittest_rb_src}
+	${unittest_rb_oglrenderer_src}
     ${unittest_ui_src}
     ${unittest_scene_src}
     ${gtest_src}

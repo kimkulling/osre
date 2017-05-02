@@ -39,7 +39,8 @@ public:
         FuncSubstract,
         ReverseSubstract,
         Min,
-        Max
+        Max,
+        Off
     };
 
 public:

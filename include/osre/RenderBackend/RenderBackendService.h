@@ -71,7 +71,7 @@ DECL_EVENT( OnCommitFrameEvent );
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  Will create an event, which shall trigger the generation of a render instance.
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT CreateRendererEventData : public Common::EventData {
     CreateRendererEventData( Platform::AbstractSurface *pSurface )

@@ -93,31 +93,31 @@ public:
 	bool operator != ( const TObjPtr<T> &rOther ) const;
 
 private:
-	T *m_pPtr;
+	T *m_ptr;
 };
 
 template<class T>
 inline
 TObjPtr<T>::TObjPtr() 
-: m_pPtr( nullptr ) {
+: m_ptr( nullptr ) {
 	// empty
 }
 
 template<class T>
 inline
 TObjPtr<T>::TObjPtr( T *pPtr ) 
-: m_pPtr( pPtr ) {
-	if ( nullptr != m_pPtr ) {
-		m_pPtr->get();
+: m_ptr( pPtr ) {
+	if ( nullptr != m_ptr ) {
+		m_ptr->get();
 	}
 }
 
 template<class T>
 inline
 TObjPtr<T>::TObjPtr( const TObjPtr<T> &other ) 
-: m_pPtr( other.m_pPtr ) {
-	if ( nullptr != m_pPtr ) {
-		m_pPtr->get();
+: m_ptr( other.m_ptr ) {
+	if ( nullptr != m_ptr ) {
+		m_ptr->get();
 	}
 }
 
@@ -130,12 +130,12 @@ TObjPtr<T>::~TObjPtr() {
 template<class T>
 inline
 void TObjPtr<T>::init( T *pPtr ) {
-	if ( m_pPtr ) {
-		m_pPtr->release();
+	if ( m_ptr ) {
+		m_ptr->release();
 	}
 
 	if ( nullptr != pPtr )	{
-		m_pPtr = pPtr;
+		m_ptr = pPtr;
 	}
 }
 
@@ -144,53 +144,53 @@ inline
 void TObjPtr<T>::set( T *pPtr ) {
 	clear();
 	if ( nullptr != pPtr )	{
-		m_pPtr = pPtr;
-		m_pPtr->get();
+		m_ptr = pPtr;
+		m_ptr->get();
 	}
 }
 
 template<class T>
 inline
 T *TObjPtr<T>::getPtr() const {
-	return m_pPtr;
+	return m_ptr;
 }
 
 template<class T>
 inline
 void TObjPtr<T>::clear() {
-	if ( nullptr != m_pPtr ) {
-		m_pPtr->release();
-		m_pPtr = nullptr;
+	if ( nullptr != m_ptr ) {
+		m_ptr->release();
+		m_ptr = nullptr;
 	}
 }
 template<class T>
 inline
 bool TObjPtr<T>::isValid() const {
-	return ( nullptr != m_pPtr );
+	return ( nullptr != m_ptr );
 }
 
 template<class T>
 inline
 T *TObjPtr<T>::operator -> () const {
-	return m_pPtr;
+	return m_ptr;
 }
 
 template<class T>
 inline
 T &TObjPtr<T>::operator *() const {
-	return *m_pPtr;
+	return *m_ptr;
 }
 
 template<class T>
 inline
 TObjPtr<T> &TObjPtr<T>::operator = ( const TObjPtr<T> &other ) {
-	if ( m_pPtr == other.m_pPtr ) {
+	if ( m_ptr == other.m_ptr ) {
 		return *this;
 	}
 
 	clear();
-	m_pPtr = other.m_pPtr;
-	m_pPtr->get();
+	m_ptr = other.m_ptr;
+	m_ptr->get();
 
 	return *this;
 }
@@ -200,8 +200,8 @@ inline
 TObjPtr<T> &TObjPtr<T>::operator = ( T *pPtr ) {
 	clear();
 	if ( nullptr != pPtr ) {
-		m_pPtr = pPtr;
-		m_pPtr->get();
+		m_ptr = pPtr;
+		m_ptr->get();
 	}
 
 	return *this;
@@ -210,13 +210,13 @@ TObjPtr<T> &TObjPtr<T>::operator = ( T *pPtr ) {
 template<class T>
 inline
 bool TObjPtr<T>::operator == ( const TObjPtr<T> &rhs ) const {
-	return ( m_pPtr == rhs.m_pPtr );
+	return ( m_ptr == rhs.m_ptr );
 }
 
 template<class T>
 inline
 bool TObjPtr<T>::operator != ( const TObjPtr<T> &rhs ) const {
-	return !( m_pPtr == rhs.m_pPtr );
+	return !( m_ptr == rhs.m_ptr );
 }
 
 } // Namespace Common

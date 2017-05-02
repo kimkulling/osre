@@ -94,7 +94,8 @@ Shader *PipelinePass::getShader() const {
 }
 
 bool PipelinePass::operator == ( const PipelinePass &rhs ) const {
-    return ( m_blendState == rhs.m_blendState 
+    return ( m_cullState == rhs.m_cullState
+          && m_blendState == rhs.m_blendState 
           && m_samplerState == rhs.m_samplerState 
           && m_clearState == rhs.m_clearState
           && m_stencilState == rhs.m_stencilState );

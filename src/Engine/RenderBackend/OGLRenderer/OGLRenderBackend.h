@@ -48,6 +48,11 @@ namespace RenderBackend {
 class OGLShader;
 class FontBase;
 class ClearState;
+class CullState;
+class BlendState;
+class SamplerState;
+class ClearState;
+class StencilState;
 
 struct OGLBuffer;
 struct OGLVertexArray;
@@ -57,6 +62,7 @@ struct RenderCmdData3DView;
 struct Shader;
 struct UniformVar;
 struct PrimitiveGroup;
+struct FixedPipelineState;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -122,6 +128,7 @@ public:
     FontBase *findFont( const String &name ) const;
     bool relaseFont( FontBase *font );
     void releaseAllFonts();
+    void setFixedPipelineStates( CullState &cullstate, BlendState &blendState, SamplerState &samplerState,  StencilState &stencilState );
     static ui32 getVertexSize( VertexType vertextype );
 
 private:
@@ -141,6 +148,7 @@ private:
     OGLShader                       *m_shaderInUse;
     CPPCore::TArray<ui32>            m_freeBufferSlots;
     CPPCore::TArray<OGLPrimGroup*>   m_primitives;
+    FixedPipelineState              *m_fpState;
     Profiling::FPSCounter           *m_fpsCounter;
 };
 

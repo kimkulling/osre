@@ -88,5 +88,8 @@ TEST_F( PipelineTest, iterateThroughPasses_success ) {
     pipeline.clear();
 }
 
+TEST_F( PipelineTest, comparePipelinePasses_success ) {
+}
+
 } // Namespace UnitTest
 } // Namespace OSRE

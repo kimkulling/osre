@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "OGLCommon.h"
+#include <osre/RenderBackend/CullState.h>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -33,7 +34,7 @@ namespace RenderBackend {
 ///
 ///	@brief  This utility class implements the OpenGL enum lookup.
 //-------------------------------------------------------------------------------------------------
-class OGLEnum {
+class OSRE_EXPORT OGLEnum {
 public:
     ///	@brief  Translates the buffer type to OpenGL.
     static GLenum getGLBufferType( BufferType type );
@@ -53,6 +54,8 @@ public:
     static GLenum getOGLTypeForFormat( VertexFormat format );
     /// @brief  Translates the vertex format type to the corresponding size.
     static ui32 getOGLSizeForFormat( VertexFormat format );
+    /// @brief  Translates the cull state to the corresponding GLenum type.
+    static GLenum getOGLCullState( CullState::CullMode cullMode );
 
 private:
     OGLEnum() = delete;

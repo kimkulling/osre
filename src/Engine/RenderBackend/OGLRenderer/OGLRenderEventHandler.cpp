@@ -353,8 +353,8 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
 	
 	CreateRendererEventData *createRendererEvData = ( CreateRendererEventData* ) eventData;
     AbstractSurface *activeSurface = createRendererEvData->m_activeSurface;
-    if( !activeSurface ) {
-        osre_debug( Tag, "No active surface." );
+    if( nullptr == activeSurface ) {
+        osre_debug( Tag, "No active surface, pointer is nullptr." );
         return false;
     }
 
@@ -375,7 +375,8 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
     }
 
     m_oglBackend->setRenderContext( m_renderCtx );
-    if ( !m_renderCtx ) {
+    if ( !m_renderCtx->isActive() ) {
+        osre_debug( Tag, "Error while activafing render context." );
         return false;
     }
 

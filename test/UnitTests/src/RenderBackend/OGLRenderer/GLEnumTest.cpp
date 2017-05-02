@@ -20,42 +20,31 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/Common/Object.h>
-#include <osre/IO/Uri.h>
+#include <gtest/gtest.h>
+#include "src/Engine/RenderBackend/OGLRenderer/OGLEnum.h"
+#include <osre/RenderBackend/CullState.h>
 
 namespace OSRE {
-namespace RenderBackend {
+namespace UnitTest {
 
-class OGLRenderBackend;
-struct OGLTexture;
+using namespace ::OSRE::RenderBackend;
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-class FontBase : public Common::Object {
-public:
-    FontBase( const String &name );
-    virtual ~FontBase();
-    virtual void setSize( ui32 size );
-    virtual ui32 getSize() const;
-    virtual void setUri( const IO::Uri &uri );
-    virtual void setTextureName( const String &name );
-    virtual const String &getTextureName() const;
-    virtual void setAtlasCols( ui32 numCols );
-    virtual void setAtlasRows( ui32 numRows );
-    virtual bool loadFromStream( OGLRenderBackend *rb );
-
-private:
-    ui32 m_size;
-    String m_texName;
-    ui32 m_numCols, m_numRows;
-    OGLTexture *m_fontAtlas;
-    IO::Uri m_uri;
+class OGLEnumTest : public ::testing::Test {
+    // empty
 };
 
-} // Namespace RenderBackend
+TEST_F( OGLEnumTest, access_cullstate_success ) {
+    CullState state;
+    state.setCullMode( CullState::CullMode::Front );
+    EXPECT_EQ( GL_FRONT, OGLEnum::getOGLCullState( state.getCullMode() ) );
+
+    state.setCullMode( CullState::CullMode::Back );
+    EXPECT_EQ( GL_BACK, OGLEnum::getOGLCullState( state.getCullMode() ) );
+
+    state.setCullMode( CullState::CullMode::FrontAndBack );
+    EXPECT_EQ( GL_FRONT_AND_BACK, OGLEnum::getOGLCullState( state.getCullMode() ) );
+}
+
+} // Namespace UnitTest
 } // Namespace OSRE
+

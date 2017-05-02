@@ -43,7 +43,8 @@ public:
         Less,
         LEqual,
         GEqual,
-        Greater
+        Greater,
+        Off
     };
 
     /// @brief  

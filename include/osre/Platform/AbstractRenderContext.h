@@ -54,6 +54,10 @@ public:
     /// @return true if creation was successful.
     bool activate();
 
+    /// @brief  Will return true, id the render context is the active one.
+    /// @return true, if the render context is active.
+    bool isActive() const;
+
     /// @brief  Updates the context.
     /// @return true if creation was successful.
     bool update();
@@ -67,10 +71,14 @@ protected:
 protected:
     /// @brief  The default class constructor.
     AbstractRenderContext();
+
+private:
+    bool m_isActive;
 };
 
 inline
-AbstractRenderContext::AbstractRenderContext( ) {
+AbstractRenderContext::AbstractRenderContext( ) 
+:m_isActive( false ) {
     // empty
 }
 
@@ -91,7 +99,13 @@ bool AbstractRenderContext::destroy() {
 
 inline
 bool AbstractRenderContext::activate() {
-    return onActivate();
+    m_isActive = onActivate();
+    return m_isActive;
+}
+
+inline
+bool AbstractRenderContext::isActive() const {
+    return m_isActive;
 }
 
 inline

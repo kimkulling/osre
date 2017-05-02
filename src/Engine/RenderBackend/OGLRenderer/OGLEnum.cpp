@@ -47,6 +47,8 @@ GLenum OGLEnum::getGLBufferAccessType( BufferAccessType type ) {
             return GL_DYNAMIC_DRAW;
         case BufferAccessType::ReadWrite:
             return GL_DYNAMIC_DRAW;
+        default:
+            break;
     }
     return GL_STATIC_DRAW;
 }
@@ -179,6 +181,22 @@ ui32 OGLEnum::getOGLSizeForFormat( VertexFormat format ) {
     }
 
     return 0;
+}
+
+GLenum OGLEnum::getOGLCullState( CullState::CullMode cullMode ) {
+    switch ( cullMode ) {
+        case CullState::CullMode::Front:
+            return GL_FRONT;
+        case CullState::CullMode::Back:
+            return GL_BACK;
+        case CullState::CullMode::FrontAndBack:
+            return GL_FRONT_AND_BACK;
+        default:
+            break;
+
+    }
+
+    return GL_FRONT_AND_BACK;
 }
 
 } // Namespace RenderBackend
