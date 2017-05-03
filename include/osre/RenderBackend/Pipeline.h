@@ -89,7 +89,7 @@ public:
     void addPass( PipelinePass *pass );
     ui32 getNumPasses() const;
     ui32 beginFrame();
-    bool beginPass( ui32 passId );
+    PipelinePass *beginPass( ui32 passId );
     bool endPass( ui32 passId );
     void endFrame();
     void clear();

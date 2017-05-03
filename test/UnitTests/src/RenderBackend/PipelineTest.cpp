@@ -79,8 +79,8 @@ TEST_F( PipelineTest, iterateThroughPasses_success ) {
     ui32 numPasses = pipeline.beginFrame();
     EXPECT_EQ( 2, numPasses );
     for ( ui32 i = 0; i < numPasses; i++ ) {
-        bool ok = pipeline.beginPass( i );
-        EXPECT_TRUE( ok );
+        PipelinePass *pass = pipeline.beginPass( i );
+        EXPECT_NE( nullptr, pass );
         pipeline.endPass( i );
     }
 

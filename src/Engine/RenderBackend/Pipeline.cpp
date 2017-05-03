@@ -142,14 +142,18 @@ ui32 Pipeline::beginFrame() {
     return m_passes.size();
 }
 
-bool Pipeline::beginPass( ui32 passId ) {
+PipelinePass *Pipeline::beginPass( ui32 passId ) {
     if ( !m_inFrame ) {
-        return false;
+        return nullptr;
     }
 
     m_passId = passId;
+    PipelinePass *pass = m_passes[ passId ];
+    if ( nullptr == pass ) {
+        return nullptr;
+    }
 
-    return true;
+    return pass;
 }
 
 bool Pipeline::endPass( ui32 passId ) {
