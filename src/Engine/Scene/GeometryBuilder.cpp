@@ -174,8 +174,8 @@ Geometry *GeometryBuilder::allocTriangles( VertexType type, BufferAccessType acc
     static const ui32 NumIndices = 3;
     GLushort  indices[ NumIndices ];
     indices[ 0 ] = 0;
-    indices[ 1 ] = 1;
-    indices[ 2 ] = 2;
+    indices[ 1 ] = 2;
+    indices[ 2 ] = 1;
     
     ui32 size = sizeof( GLushort ) * NumIndices;
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, access );
@@ -226,8 +226,8 @@ Geometry *GeometryBuilder::allocQuads( VertexType type, BufferAccessType access 
     static const ui32 NumIndices = 6;
     GLushort  indices[ NumIndices ];
     indices[ 0 ] = 0;
-    indices[ 1 ] = 1;
-    indices[ 2 ] = 2;
+    indices[ 1 ] = 2;
+    indices[ 2 ] = 1;
 
     indices[ 3 ] = 1;
     indices[ 4 ] = 2;

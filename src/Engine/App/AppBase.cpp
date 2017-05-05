@@ -298,6 +298,7 @@ RenderBackend::Pipeline *AppBase::createDefaultPipeline() {
     CullState cullState( CullState::CullMode::Front );
     renderPass->setCullState( cullState );
     pipeline->addPass(renderPass);
+    
     return pipeline;
 }
 

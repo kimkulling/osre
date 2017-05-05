@@ -56,6 +56,16 @@ struct FixedPipelineState {
     CullState    m_cullState;
     SamplerState m_samplerState;
     StencilState m_stensilState;
+    bool         m_applied;
+
+    FixedPipelineState()
+    : m_blendState()
+    , m_cullState()
+    , m_samplerState()
+    , m_stensilState()
+    , m_applied( false ) {
+        // empty
+    }
 
     bool isEqual( CullState &cullstate, BlendState &blendState, SamplerState &samplerState, StencilState &stencilState ) const {
         return ( cullstate == m_cullState 
@@ -1004,8 +1014,10 @@ void OGLRenderBackend::releaseAllFonts() {
 }
 
 void OGLRenderBackend::setFixedPipelineStates( CullState &cullstate, BlendState &blendState, SamplerState &samplerState, StencilState &stencilState ) {
-    if ( m_fpState->isEqual( cullstate, blendState, samplerState, stencilState ) ) {
-        return;
+    if ( m_fpState->m_applied ) {
+        if ( m_fpState->isEqual( cullstate, blendState, samplerState, stencilState ) ) {
+            return;
+        }
     }
 
     m_fpState->m_blendState   = blendState;
@@ -1025,6 +1037,7 @@ void OGLRenderBackend::setFixedPipelineStates( CullState &cullstate, BlendState 
     } else {
         glEnable( GL_BLEND );
     }
+    m_fpState->m_applied = true;
 }
 
 ui32 OGLRenderBackend::getVertexSize( VertexType vertextype ) {

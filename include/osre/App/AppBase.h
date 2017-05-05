@@ -146,6 +146,8 @@ public:
     /// @return A pointer showing to the Root-Surface.
     virtual Platform::AbstractSurface *getRootSurface() const;
 
+    /// @brief  Will create the default pipeline for rendering.
+    /// @return The default pipeline.
     static RenderBackend::Pipeline *createDefaultPipeline();
 
 protected:

@@ -230,7 +230,6 @@ bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
     glEnable( GL_TEXTURE_2D );
     glEnable( GL_TEXTURE_3D );
     glDisable( GL_LIGHTING );
-	glDisable( GL_CULL_FACE );
 
     return true;
 }
@@ -256,7 +255,7 @@ bool Win32RenderContext::onUpdate( ) {
 
 bool Win32RenderContext::onActivate( ) {
     if( m_active ) {
-//        return true;
+        return true;
     }
 
     if( FALSE == wglMakeCurrent( m_dc, m_rc ) ) {
