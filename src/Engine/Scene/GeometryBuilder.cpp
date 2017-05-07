@@ -346,7 +346,6 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     indices[ 4 ] = 2;
     indices[ 5 ] = 3;
 
-    
     const ui32 NumTextVerts = getNumTextVerts( text );
     glm::vec3 *textPos = new glm::vec3[ NumTextVerts ];
     glm::vec3 *colors = new glm::vec3[ NumTextVerts ];

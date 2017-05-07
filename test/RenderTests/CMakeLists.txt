@@ -20,6 +20,7 @@ SET ( rendertest_src
     src/DbgFontRenderTest.cpp
     src/GeoInstanceRenderTest.cpp
 	src/RenderBufferAccessTest.cpp
+	src/StaticTextRenderTest.cpp
     src/RenderTestSuite.h
     src/RenderTestUtils.h
     src/main.cpp

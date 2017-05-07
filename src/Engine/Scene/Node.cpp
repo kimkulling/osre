@@ -75,6 +75,7 @@ Node::~Node() {
 }
     
 void Node::setParent( Node *parent ) {
+    // weak reference
     m_parent = parent;
 }
     
