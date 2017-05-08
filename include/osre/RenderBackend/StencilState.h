@@ -73,9 +73,6 @@ public:
     bool operator == ( const StencilState &rhs ) const;
     bool operator != ( const StencilState &rhs ) const;
 
-    StencilState( const StencilState  & ) = delete;
-    StencilState &operator = ( const StencilState & ) = delete;
-
 private:
     StencilFunc m_stencilFunc;
     i32 m_stencilFuncRef;
