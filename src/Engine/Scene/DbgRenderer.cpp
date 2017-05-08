@@ -38,12 +38,13 @@ DbgRenderer *DbgRenderer::s_instance = nullptr;
 
 DbgRenderer::DbgRenderer( RenderBackend::RenderBackendService *rbSrv )
 : m_rbSrv( rbSrv )
-, m_textBoxes() {
+, m_textBoxes()
+, m_tbArray() {
     OSRE_ASSERT( nullptr != m_rbSrv );
 }
 
 DbgRenderer::~DbgRenderer() {
-
+    clearDbgTextCache();
 }
 
 bool DbgRenderer::create( RenderBackend::RenderBackendService *rbSrv ) {
@@ -111,6 +112,24 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
 
         }
     }
+}
+
+void DbgRenderer::clearDbgTextCache() {
+    if ( m_textBoxes.isEmpty() ) {
+        return;
+    }
+
+    for ( ui32 i = 0; i < m_tbArray.size(); i++ ) {
+        if ( nullptr != m_tbArray[ i ] ) {
+            delete m_tbArray[ i ];
+        }
+    }
+    m_textBoxes.clear();
+    m_tbArray.resize( 0 );
+}
+
+ui32 DbgRenderer::numDbgTexts() const {
+    return m_tbArray.size();
 }
 
 } // Namespace Scene

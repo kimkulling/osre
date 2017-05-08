@@ -74,6 +74,7 @@ SET ( unittest_profiling_src
 
 SET ( unittest_scene_src
     src/Scene/ComponentTest.cpp
+	src/Scene/DbgRendererTest.cpp
 	src/Scene/GeometryBuilderTest.cpp
     src/Scene/NodeTest.cpp
     src/Scene/WorldTest.cpp

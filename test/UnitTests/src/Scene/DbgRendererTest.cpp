@@ -20,51 +20,46 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "AbstractRenderTest.h"
-#include "RenderTestUtils.h"
+#include <gtest/gtest.h>
 
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/DbgRenderer.h>
 
-#include <GL/glew.h>
-#include <GL/gl.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <iomanip>
-
 namespace OSRE {
-namespace RenderTest {
+namespace UnitTest {
 
-using namespace ::OSRE::RenderBackend;
-
-class StaticTextRenderTest : public AbstractRenderTest {
-    TransformMatrixBlock m_transformMatrix;
-    ui32 m_frameCount;
-
+class TestRenderBackendService : public RenderBackend::RenderBackendService {
 public:
-    StaticTextRenderTest()
-    : AbstractRenderTest( "rendertest/StaticTextRenderTest" )
-        , m_frameCount( 0 ) {
-        // empty
-    }
-
-    virtual ~StaticTextRenderTest() {
-        // empty
-    }
-
-    bool onCreate( RenderBackendService *rbSrv ) override {
-        rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
-
-        Scene::DbgRenderer::getInstance()->renderDbgText( 10, 10, 2U, "This is a test-text!" );
-
-        return true;
-    }
+    TestRenderBackendService() : RenderBackendService() {}
+    ~TestRenderBackendService(){}
 };
 
-ATTACH_RENDERTEST( StaticTextRenderTest )
+using namespace ::OSRE::Scene;
 
-} // Namespace RenderTest
+class DbgRendererTest : public ::testing::Test {
+    // empty
+};
+
+TEST_F( DbgRendererTest, create_Success ) {
+    RenderBackend::RenderBackendService *tstRBSrv = new TestRenderBackendService;
+    DbgRenderer::create( tstRBSrv );
+    DbgRenderer::destroy();
+    delete tstRBSrv;
+}
+
+TEST_F( DbgRendererTest, clearDbgCache_Success ) {
+    RenderBackend::RenderBackendService *tstRBSrv = new TestRenderBackendService;
+    DbgRenderer::create( tstRBSrv );
+
+    DbgRenderer::getInstance()->renderDbgText( 1, 1, 1, "xxx" );
+    const ui32 num_1( DbgRenderer::getInstance()->numDbgTexts() );
+    EXPECT_EQ( 0, num_1 );
+    DbgRenderer::getInstance()->clearDbgTextCache();
+    const ui32 num_2( DbgRenderer::getInstance()->numDbgTexts() );
+    EXPECT_EQ( 0, num_2  );
+    DbgRenderer::destroy();
+    delete tstRBSrv;
+}
+
+} // Namespace UnitTest
 } // Namespace OSRE

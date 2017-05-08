@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <cppcore/Container/THashMap.h>
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
     
@@ -37,7 +38,6 @@ namespace RenderBackend {
 
 namespace Scene {
 
-    
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -49,10 +49,12 @@ public:
         String m_text;
         RenderBackend::Geometry *m_geo;
     };
-    using TextBoxHashMap = CPPCore::THashMap<ui32, DbgTextEntry*> ;
+    using TextBoxHashMap = CPPCore::THashMap<ui32, DbgTextEntry*>;
+    using TextBoxArray = CPPCore::TArray<DbgTextEntry*>;
 
     void renderDbgText( ui32 x, ui32 y, ui32 id, const String &text );
-
+    void clearDbgTextCache();
+    ui32 numDbgTexts() const;
     static bool create( RenderBackend::RenderBackendService *rbSrv );
     static bool destroy();
     static DbgRenderer *getInstance();
@@ -66,6 +68,7 @@ private:
     RenderBackend::RenderBackendService *m_rbSrv;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
     TextBoxHashMap m_textBoxes;
+    TextBoxArray m_tbArray;
 };
 
 } // Namespace Scene
