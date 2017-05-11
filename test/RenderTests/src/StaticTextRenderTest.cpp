@@ -62,6 +62,11 @@ public:
 
         return true;
     }
+
+    bool onDestroy( RenderBackendService *rbSrv ) override {
+        Scene::DbgRenderer::getInstance()->clearDbgTextCache();
+        return true;
+    }
 };
 
 ATTACH_RENDERTEST( StaticTextRenderTest )

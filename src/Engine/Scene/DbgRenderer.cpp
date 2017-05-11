@@ -126,6 +126,7 @@ void DbgRenderer::clearDbgTextCache() {
     }
     m_textBoxes.clear();
     m_tbArray.resize( 0 );
+    m_textBoxes.init( 100 );
 }
 
 ui32 DbgRenderer::numDbgTexts() const {

@@ -63,6 +63,11 @@ public:
         return true;
     }
 
+    bool onDestroy( RenderBackendService *rbSrv ) override {
+        Scene::DbgRenderer::getInstance()->clearDbgTextCache();
+        return true;
+    }
+
     bool onRender( d32 timediff, RenderBackend::RenderBackendService *rbSrv ) override {
         m_frameCount++;
         std::stringstream stream;
