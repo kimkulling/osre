@@ -46,7 +46,7 @@ class DbgFontRenderTest : public AbstractRenderTest {
 
 public:
     DbgFontRenderTest()
-        : AbstractRenderTest( "rendertest/DbgFontRenderTest" )
+    : AbstractRenderTest( "rendertest/DbgFontRenderTest" )
         , m_frameCount( 0 ) {
         // empty
     }
@@ -60,6 +60,11 @@ public:
         
         Scene::DbgRenderer::getInstance()->renderDbgText( 1, 1, 1U, "XXX" );
 
+        return true;
+    }
+
+    bool onDestroy(RenderBackendService *rbSrv) override {
+        Scene::DbgRenderer::getInstance()->clearDbgTextCache();
         return true;
     }
 
