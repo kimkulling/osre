@@ -46,7 +46,7 @@ class DbgFontRenderTest : public AbstractRenderTest {
 
 public:
     DbgFontRenderTest()
-        : AbstractRenderTest( "rendertest/DbgFontRenderTest" )
+    : AbstractRenderTest( "rendertest/DbgFontRenderTest" )
         , m_frameCount( 0 ) {
         // empty
     }

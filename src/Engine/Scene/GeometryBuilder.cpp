@@ -342,8 +342,8 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     indices[ 1 ] = 1;
     indices[ 2 ] = 2;
 
-    indices[ 3 ] = 1;
-    indices[ 4 ] = 2;
+    indices[ 3 ] = 2;
+    indices[ 4 ] = 1;
     indices[ 5 ] = 3;
 
     const ui32 NumTextVerts = getNumTextVerts( text );
@@ -403,8 +403,8 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
         colors[ VertexOffset + 3 ] = col[ 3 ];
         const ui32 IndexOffset( i * NumQuadIndices );
         textIndices[ 0 + IndexOffset ] = 0 + VertexOffset;
-        textIndices[ 1 + IndexOffset ] = 1 + VertexOffset;
-        textIndices[ 2 + IndexOffset ] = 2 + VertexOffset;
+        textIndices[ 1 + IndexOffset ] = 2 + VertexOffset;
+        textIndices[ 2 + IndexOffset ] = 1 + VertexOffset;
 
         textIndices[ 3 + IndexOffset ] = 1 + VertexOffset;
         textIndices[ 4 + IndexOffset ] = 2 + VertexOffset;
