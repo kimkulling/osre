@@ -337,14 +337,14 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     pos[ 3 ] = glm::vec3( textSize, textSize, 0 );
 
     static const ui32 NumQuadIndices = 6;
-    GLushort  indices[ NumQuadIndices ];
-    indices[ 0 ] = 0;
+    /*GLushort  indices[ NumQuadIndices ];*/
+    /*indices[ 0 ] = 0;
     indices[ 1 ] = 1;
     indices[ 2 ] = 2;
 
     indices[ 3 ] = 2;
     indices[ 4 ] = 1;
-    indices[ 5 ] = 3;
+    indices[ 5 ] = 3;*/
 
     const ui32 NumTextVerts = getNumTextVerts( text );
     glm::vec3 *textPos = new glm::vec3[ NumTextVerts ];
