@@ -63,7 +63,7 @@ public:
         return true;
     }
 
-    bool onDestroy(RenderBackendService *rbSrv) override {
+    bool onDestroy( RenderBackendService *rbSrv ) override {
         Scene::DbgRenderer::getInstance()->clearDbgTextCache();
         return true;
     }
