@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <src/Engine/Platform/sdl2/SDL2EventHandler.h>
 #include <osre/Common/EventTriggerer.h>
+#include <osre/Common/Logger.h>
 #include <osre/Platform/PlatformInterface.h>
 
 #include <SDL.h>
@@ -29,9 +30,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-using namespace OSRE::Common;
+using namespace ::OSRE;
+using namespace ::OSRE::Common;
+using namespace ::CPPCore;
 
-//-------------------------------------------------------------------------------------------------
+static const String Tag = "SDL2EventHandler";
+
 struct AbstractSDL2InputUpdate {
     //  The virtual destructor.
     virtual ~AbstractSDL2InputUpdate( ){
@@ -93,7 +97,6 @@ struct SDL2PeekInputUpdate : public AbstractSDL2InputUpdate {
 
 std::map<SDL_Window*, SDL2EventHandler*> SDL2EventHandler::s_windowsServerMap;
 
-//-------------------------------------------------------------------------------------------------
 SDL2EventHandler::SDL2EventHandler()
 : AbstractPlatformEventHandler()
 , m_isPolling( false )
@@ -125,7 +128,6 @@ SDL2EventHandler::SDL2EventHandler()
     SDL_JoystickEventState( SDL_ENABLE );
 }
 
-//-------------------------------------------------------------------------------------------------
 SDL2EventHandler::~SDL2EventHandler( ) {
     delete m_pEventTriggerer;
     m_pEventTriggerer = nullptr;
@@ -134,8 +136,7 @@ SDL2EventHandler::~SDL2EventHandler( ) {
     m_pInputUpdate = nullptr;
 }
 
-//-------------------------------------------------------------------------------------------------
-bool SDL2EventHandler::onEvent( const Event &event, const EventData *pEventData ){
+bool SDL2EventHandler::onEvent( const Event &event, const EventData *eventData ){
     EventDataList *pActiveEventQueue( getActiveEventDataList() );
     SDL_Event ev;
     if( !m_shutdownRequested && m_pInputUpdate->update( &ev ) ) {
@@ -179,25 +180,24 @@ bool SDL2EventHandler::onEvent( const Event &event, const EventData *pEventData 
     return !m_shutdownRequested;
 }
 
-//-------------------------------------------------------------------------------------------------
-void SDL2EventHandler::registerEventListener( const CPPCore::TArray<const Common::Event*> &events,
-                                              OSEventListener *pListener ) {
-    assert( nullptr != pListener );
+void SDL2EventHandler::registerEventListener( const EventArray &events, OSEventListener *listener ) {
+    if ( nullptr == listener ) {
+        osre_error( Tag, "Pointer to listener is nullptr." );
+        return;
+    }
 
-    m_pEventTriggerer->addEventListener( events, 
-        Common::EventFunctor::Make( pListener, &OSEventListener::onOSEvent ) );
+    m_pEventTriggerer->addEventListener( events, EventFunctor::Make( listener, &OSEventListener::onOSEvent ) );
 }
 
-//-------------------------------------------------------------------------------------------------
-void SDL2EventHandler::unregisterEventListener( const CPPCore::TArray<const Common::Event*> &events,
-                                                OSEventListener *pListener ) {
-    assert( nullptr != pListener );
+void SDL2EventHandler::unregisterEventListener( const EventArray &events, OSEventListener *listener ) {
+    if (nullptr == listener) {
+        osre_error(Tag, "Pointer to listener is nullptr.");
+        return;
+    }
 
-    m_pEventTriggerer->removeEventListener( events, 
-        Common::EventFunctor::Make( pListener, &OSEventListener::onOSEvent ) );
+    m_pEventTriggerer->removeEventListener( events, EventFunctor::Make( listener, &OSEventListener::onOSEvent ) );
 }
         
-//-------------------------------------------------------------------------------------------------
 void SDL2EventHandler::enablePolling( bool enabled ) {
     if( enabled == m_isPolling ) {
         return;
@@ -212,17 +212,17 @@ void SDL2EventHandler::enablePolling( bool enabled ) {
     m_isPolling = enabled;
 }
 
-//-------------------------------------------------------------------------------------------------
-bool SDL2EventHandler::onAttached( const Common::EventData *pEventData ) {
+bool SDL2EventHandler::isPolling() const {
+    return m_isPolling;
+}
+
+bool SDL2EventHandler::onAttached( const EventData *eventData ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
-bool SDL2EventHandler::onDetached( const Common::EventData *pEventData ) {
+bool SDL2EventHandler::onDetached( const EventData *eventData ) {
     return true;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

@@ -454,8 +454,8 @@ void OGLRenderBackend::bindVertexArray( OGLVertexArray *vertexArray ) {
 	if ( ( m_activeVertexArray == OGLNotSetId ) || ( m_activeVertexArray != vertexArray->m_id) ){
 		m_activeVertexArray = vertexArray->m_id;
 		glBindVertexArray( m_activeVertexArray );
-	}
-    CHECKOGLERRORSTATE();
+        CHECKOGLERRORSTATE();
+    }
 }
 
 void OGLRenderBackend::unbindVertexArray() {

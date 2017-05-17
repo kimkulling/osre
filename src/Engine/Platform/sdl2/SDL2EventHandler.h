@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <map>
 
+// Forward delarations
 struct SDL_Window;
 
 namespace OSRE {
@@ -34,23 +35,25 @@ namespace Platform {
 struct AbstractSDL2InputUpdate;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::SDL2EventHandler
 ///	@ingroup	Engine
 ///
 ///	@brief  
 //-------------------------------------------------------------------------------------------------
 class SDL2EventHandler : public AbstractPlatformEventHandler {
 public:
+    using EventArray = CPPCore::TArray<const Common::Event*>;
+
     SDL2EventHandler();
     virtual ~SDL2EventHandler();
-    virtual bool onEvent( const Common::Event &event, const Common::EventData *pEventData );
-    virtual void registerEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener );
-    virtual void unregisterEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener );
-    virtual void enablePolling( bool enabled );
+    bool onEvent( const Common::Event &event, const Common::EventData *pEventData ) override;
+    void registerEventListener( const EventArray &events, OSEventListener *listener ) override;
+    void unregisterEventListener( const EventArray &events, OSEventListener *listener ) override;
+    void enablePolling( bool enabled ) override;
+    bool isPolling() const override;
 
 protected:
-    virtual bool onAttached( const Common::EventData *pEventData );
-    virtual bool onDetached( const Common::EventData *pEventData );
+    bool onAttached( const Common::EventData *eventData ) override;
+    bool onDetached( const Common::EventData *eventData ) override;
 
 private:
     static std::map<SDL_Window*, SDL2EventHandler*> s_windowsServerMap;

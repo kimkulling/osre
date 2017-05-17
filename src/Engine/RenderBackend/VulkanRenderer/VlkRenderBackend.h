@@ -82,7 +82,8 @@ private:
     bool createSwapChain();
     bool createSwapChainImageViews();
     bool loadGlobalLevelEntryPoints();
-    bool checkPhysicalDeviceProperties( VkPhysicalDevice physical_device, uint32_t &selected_graphics_queue_family_index, uint32_t &selected_present_queue_family_index );
+    bool checkPhysicalDeviceProperties( VkPhysicalDevice physical_device, uint32_t &selected_graphics_queue_family_index, 
+        uint32_t &selected_present_queue_family_index );
     bool createCommandPool( uint32_t queue_family_index, VkCommandPool *pool );
     const VlkSwapChainParameters &getSwapChain() const;
     bool allocateCommandBuffers( VkCommandPool pool, uint32_t count, VkCommandBuffer *command_buffers );
