@@ -91,7 +91,11 @@ Node *Stage::addNode( const String &name, Node *parent, const String &type ) {
 
     Node *newNode( nullptr );
     if ( "default" == type ) {
-        newNode = new Node( name, *m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, parent );
+        newNode = new Node( name, 
+                           *m_ids, 
+                            Node::RenderCompRequest::RenderCompRequested,
+                            Node::TransformCompRequest::TransformCompRequested, 
+                            parent );
         if( nullptr == parent ) {
             m_root->addChild( newNode );
         }
