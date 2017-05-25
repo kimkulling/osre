@@ -46,6 +46,8 @@ public:
     ~CullState();
     void setCullMode( CullMode cullMode );
     CullMode getCullMode() const;
+
+    /// The compare operators.
     bool operator == ( const CullState &rhs ) const;
     bool operator != ( const CullState &rhs ) const;
 
