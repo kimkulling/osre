@@ -405,7 +405,7 @@ struct OSRE_EXPORT Transform {
 
 ///	@brief
 struct OSRE_EXPORT Geometry {
-    mat4            m_model;
+    glm::mat4       m_model;
     Material       *m_material;
     VertexType      m_vertextype;
     BufferData     *m_vb;
@@ -482,13 +482,14 @@ struct Canvas {
     ui32 m_z;
 };
 
-struct RenderBatch() {
+struct RenderBatch {
+    glm::mat4       m_model;
+
     RenderBatch();
     ~RenderBatch();
 
     OSRE_NON_COPYABLE( RenderBatch )
-
-}
+};
 
 } // Namespace RenderBackend
 } // Namespace OSRE
