@@ -46,20 +46,23 @@ using namespace ::OSRE::RenderBackend;
 // To identify local log entries 
 static const String Tag = "ModelLoadingApp"; 
 
-static const String ModelPath = "file://assets/Models/Obj/box.obj";
-//static const String ModelPath = "file://assets/Models/Obj/spider.obj";
+//static const String ModelPath = "file://assets/Models/Obj/box.obj";
+static const String ModelPath = "file://assets/Models/Obj/spider.obj";
 
 // The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
     Scene::Stage *m_stage;
     Scene::View  *m_view;
+    f32 m_angle;
     TransformMatrixBlock m_transformMatrix;
 
 public:
     ModelLoadingApp( int argc, char *argv[] )
     : AppBase( argc, argv )
     , m_stage( nullptr )
-    , m_view( nullptr ) {
+    , m_view( nullptr )
+    , m_angle( 0.0f )
+    , m_transformMatrix() {
         // empty
     }
 
@@ -126,6 +129,17 @@ protected:
 
         return true;
     }
+
+    /*void onUpdate( d32 timetick ) override {
+        glm::mat4 rot( 1.0 );
+        //m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
+        m_transformMatrix.update();
+        m_angle += 0.01f;
+
+        //AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
+
+    }*/
+
 };
 
 OSRE_MAIN( ModelLoadingApp )

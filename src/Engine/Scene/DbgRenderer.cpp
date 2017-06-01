@@ -109,7 +109,6 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
             m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
 
             m_rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
-
         }
     }
 }

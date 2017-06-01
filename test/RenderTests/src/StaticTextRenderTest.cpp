@@ -58,7 +58,7 @@ public:
     bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
-        Scene::DbgRenderer::getInstance()->renderDbgText( 10, 10, 2U, "This is a test-text!" );
+        Scene::DbgRenderer::getInstance()->renderDbgText( 0, 0, 2U, "This is a test-text!" );
 
         return true;
     }

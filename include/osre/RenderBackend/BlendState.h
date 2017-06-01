@@ -28,7 +28,8 @@ namespace RenderBackend {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief  This class describes the supported blending states which are currently active in the 
+/// render-pass.
 //-------------------------------------------------------------------------------------------------
 class BlendState {
 public:
@@ -44,10 +45,21 @@ public:
     };
 
 public:
+    /// @brief  The default constructor.
     BlendState();
+
+    /// @brief  The class destructor.
     ~BlendState();
+
+    /// @brief  Will set a new blending function.
+    /// @param  func    [in] The new blending function to apply.
     void setBlendFunc( BlendFunc func );
+
+    /// @brief  Returns the blending function.
+    /// return  The blending function.
     BlendFunc getBlendFunc() const;
+
+    /// Copy operators.
     bool operator == ( const BlendState &rhs ) const;
     bool operator != ( const BlendState &rhs ) const;
 
