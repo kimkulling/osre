@@ -483,7 +483,9 @@ struct Canvas {
 };
 
 struct RenderBatch {
-    glm::mat4       m_model;
+    glm::mat4  m_model;
+    ui32       m_numGeo;
+    Geometry  *m_geoArray;
 
     RenderBatch();
     ~RenderBatch();

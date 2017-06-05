@@ -192,12 +192,29 @@ struct DrawInstancePrimitivesCmdData {
     OGLVertexArray        *m_vertexArray;
     ui32                   m_numInstances;
     CPPCore::TArray<ui32>  m_primitives;
+
+    DrawInstancePrimitivesCmdData()
+    : m_vertexArray( nullptr )
+    , m_numInstances( 0 )
+    , m_primitives() {
+        // empty
+    }
 };
 
 ///	@brief
 struct DrawPrimitivesCmdData {
-	OGLVertexArray        *m_vertexArray;
+    OGLParameter         **m_param;
+    ui32                   m_numParam;
+    OGLVertexArray        *m_vertexArray;
     CPPCore::TArray<ui32>  m_primitives;
+
+    DrawPrimitivesCmdData()
+    : m_param( nullptr )
+    , m_numParam( 0 )
+    , m_vertexArray( nullptr )
+    , m_primitives() {
+        // empty
+    }
 };
 
 } // Namespace RendeBackend
