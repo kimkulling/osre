@@ -66,6 +66,7 @@ SET( assets_src
 SET( common_inc
     ${HEADER_PATH}/Common/AbstractCodec.h
     ${HEADER_PATH}/Common/AbstractEventHandler.h
+    ${HEADER_PATH}/Common/AbstractProcessor.h
     ${HEADER_PATH}/Common/ArgumentParser.h
     ${HEADER_PATH}/Common/AbstractService.h
     ${HEADER_PATH}/Common/CodecRegistry.h
@@ -100,10 +101,12 @@ SET( common_src
 # Collision
 #==============================================================================
 SET( collision_inc
+    ${HEADER_PATH}/Collision/GeoProcessor.h
     ${HEADER_PATH}/Collision/TAABB.h
     ${HEADER_PATH}/Collision/TQuadTree.h
 )
 SET( collision_src
+    Collision/GeoProcessor.cpp
 )
 
 #==============================================================================
@@ -416,6 +419,7 @@ SOURCE_GROUP( Include\\Debugging  FILES ${debugging_inc} )
 SOURCE_GROUP( Include\\Common     FILES ${common_inc} )
 SOURCE_GROUP( Include\\Components FILES ${components_inc} )
 SOURCE_GROUP( Include\\Collision  FILES ${collision_inc} )
+SOURCE_GROUP( Include\\Collision  FILES ${collision_src} )
 SOURCE_GROUP( Include\\Debugging  FILES ${debugging_inc} )
 SOURCE_GROUP( Include\\System     FILES ${system_inc} )
 SOURCE_GROUP( Include\\Utils      FILES ${utils_inc} )

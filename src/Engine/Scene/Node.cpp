@@ -45,7 +45,8 @@ Node::Node( const String &name, Common::Ids &ids, RenderCompRequest renderEnable
 , m_renderComp( nullptr )
 , m_transformComp( nullptr )
 , m_ids( &ids )
-, m_propMap() {
+, m_propMap()
+, m_aabb() {
     if (TransformCompRequest::TransformCompRequested == transformEnabled) {
         m_transformComp = new TransformComponent( m_ids->getUniqueId() );
         m_components.add( m_transformComp );

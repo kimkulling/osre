@@ -22,61 +22,37 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Platform/AbstractCriticalSection.h>
-
-#include <SDL.h>
-#include <SDL_atomic.h>
-
 namespace OSRE {
-namespace Platform {
-
+namespace Common {
+        
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This class implements the critical section based on SDL2.
+///	@brief  This bastract class is used to define any kinf of data processors.
 //-------------------------------------------------------------------------------------------------
-class SDL2CriticalSection : public AbstractCriticalSection {
+class AbstractProcessor {
 public:
-    SDL2CriticalSection();
-    virtual ~SDL2CriticalSection( );
-    void enter() override;
-    bool tryEnter() override;
-    void leave() override; 
+    /// @brief  The class destructor, virtual.
+    virtual ~AbstractProcessor();
 
-private:
-    SDL_SpinLock m_spinlock;
+    /// @brief  Override this method for your own data processing function.
+    /// @return true, if successful, false in case of an error.
+    virtual bool execute() = 0;
+
+protected:
+    /// @brief  The default constructor.
+    AbstractProcessor();
 };
 
 inline
-SDL2CriticalSection::SDL2CriticalSection()
-: AbstractCriticalSection()
-, m_spinlock( 0 ) {
+AbstractProcessor::AbstractProcessor() {
     // empty
 }
 
 inline
-SDL2CriticalSection::~SDL2CriticalSection() {
-    SDL_AtomicUnlock( &m_spinlock );
+AbstractProcessor::~AbstractProcessor() {
+    // empty    
 }
 
-inline
-void SDL2CriticalSection::enter() {
-    SDL_AtomicLock( &m_spinlock );
-}
-
-inline
-bool SDL2CriticalSection::tryEnter() {
-    if( SDL_TRUE == SDL_AtomicTryLock( &m_spinlock ) ) {
-        return true;
-    }
-
-    return false;
-}
-
-inline
-void SDL2CriticalSection::leave() {
-    SDL_AtomicUnlock( &m_spinlock );
-}
-
-} // Namespace Platform
+} // Namespace Common
 } // Namespace OSRE

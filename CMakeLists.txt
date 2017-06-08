@@ -54,6 +54,7 @@ IF ( BUILD_SHARED_LIBS AND CMAKE_SIZEOF_VOID_P EQUAL 8 ) # -fPIC is only require
 ENDIF()
 
 if( WIN32 )
+    add_definitions( -DWIN32_LEAN_AND_MEAN )
 else()
   if(CMAKE_BUILD_TYPE STREQUAL "Debug")
       set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib-debug)
