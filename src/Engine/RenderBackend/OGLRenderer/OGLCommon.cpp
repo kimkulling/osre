@@ -75,6 +75,5 @@ void checkOGLErrorState( const c8 *file, ui32 line ) {
 	}
 }
 
-
 } // Namespace RendeBackend
 } // Namespace OSRE

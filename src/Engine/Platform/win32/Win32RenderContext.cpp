@@ -246,7 +246,7 @@ bool Win32RenderContext::onDestroy( ) {
 }
 
 bool Win32RenderContext::onUpdate( ) {
-     if( TRUE == ::SwapBuffers( m_dc ) ) {
+       if( TRUE == ::SwapBuffers( m_dc ) ) {
         return true;
     }
 

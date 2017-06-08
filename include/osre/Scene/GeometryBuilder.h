@@ -83,10 +83,10 @@ public:
     ///	@brief  Will allocate vertices for a list of lines.
     ///	@param  type        [in] The vertex type.
     static RenderBackend::Geometry *allocLineList( RenderBackend::VertexType type, RenderBackend::BufferAccessType access,
-                                                   ui32 numLines, glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices );
+            ui32 numLines, glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices );
 
     static RenderBackend::Geometry *allocPoints( RenderBackend::VertexType type, RenderBackend::BufferAccessType access, 
-                                                 ui32 numPoints, glm::vec3 *posArray, glm::vec3 *colorArray );
+            ui32 numPoints, glm::vec3 *posArray, glm::vec3 *colorArray );
 
     ///	@brief  Will allocate vertices for a text-box.
     /// @param  x           [in] Left position of the text box.
@@ -110,7 +110,7 @@ public:
     ///	@param  col1        [in] Pointer to array with vec3-diffuse colors, set to nullptr if nothing shall prepared
     /// @return The allocated buffer data.
     static RenderBackend::BufferData *allocVertices(RenderBackend::VertexType type, ui32 numVerts, ::glm::vec3 *pos, 
-        ::glm::vec3 *col1, ::glm::vec2 *tex0, RenderBackend::BufferAccessType access );
+            ::glm::vec3 *col1, ::glm::vec2 *tex0, RenderBackend::BufferAccessType access );
 
     static void updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, RenderBackend::BufferData *vb );
 

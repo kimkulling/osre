@@ -29,10 +29,9 @@ namespace OSRE {
 namespace RenderBackend {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::RenderBackend::OGLEnum
 ///	@ingroup	Engine
 ///
-///	@brief  This utility class implements the OpenGL enum lookup.
+///	@brief  This utility class implements the OpenGL enum translation.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT OGLEnum {
 public:
@@ -57,7 +56,6 @@ public:
     /// @brief  Translates the cull state to the corresponding GLenum type.
     static GLenum getOGLCullState( CullState::CullMode cullMode );
 
-private:
     OGLEnum() = delete;
     ~OGLEnum() = delete;
     OGLEnum( const OGLEnum & ) = delete;

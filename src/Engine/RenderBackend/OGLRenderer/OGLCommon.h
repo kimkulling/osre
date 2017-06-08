@@ -38,7 +38,6 @@ class OGLShader;
 void checkOGLErrorState( const c8 *file, ui32 line );
 
 //-------------------------------------------------------------------------------------------------
-/// @def        ::OSRE::RenderBackend::CHECKOGLERRORSTATE
 /// @ingroup    RenderSystem
 ///
 /// @brief  This macro will check the OpenGL-error state and write a message into the log.
@@ -132,7 +131,6 @@ struct OGLRenderCmdAllocator {
 		delete cmd;
 	}
 
-private:
     OGLRenderCmdAllocator() = delete;
     ~OGLRenderCmdAllocator() = delete;
 };

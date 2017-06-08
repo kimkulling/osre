@@ -189,7 +189,7 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
     OGLBuffer *vb = rb->createBuffer( vertices->m_type );
     vb->m_geoId = geo->m_id;
     rb->bindBuffer( vb );
-    rb->bufferData( vb, vertices->m_data, vertices->m_size, vertices->m_access );
+    rb->copyData( vb, vertices->m_data, vertices->m_size, vertices->m_access );
 
     // enable vertex attribute arrays
     TArray<OGLVertexAttribute*> attributes;
@@ -202,14 +202,15 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
     OGLBuffer *ib = rb->createBuffer( indices->m_type );
     ib->m_geoId = geo->m_id;
     rb->bindBuffer( ib );
-    rb->bufferData( ib, indices->m_data, indices->m_size, indices->m_access );
+    rb->copyData( ib, indices->m_data, indices->m_size, indices->m_access );
 
     rb->unbindVertexArray();
 
     return vertexArray;
 }
 
-static void setupPrimDrawCmd( const TArray<ui32> &primGroups, OGLRenderBackend *rb, OGLRenderEventHandler *eh, OGLVertexArray *va ) {
+static void setupPrimDrawCmd( const TArray<ui32> &primGroups, OGLRenderBackend *rb, 
+        OGLRenderEventHandler *eh, OGLVertexArray *va ) {
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
 
@@ -230,7 +231,7 @@ static void setupPrimDrawCmd( const TArray<ui32> &primGroups, OGLRenderBackend *
 }
 
 static void setupInstancedDrawCmd( const TArray<ui32> &ids, Frame *currentFrame, 
-                                   OGLRenderBackend *rb, OGLRenderEventHandler *eh, OGLVertexArray *va ) {
+        OGLRenderBackend *rb, OGLRenderEventHandler *eh, OGLVertexArray *va ) {
 	OSRE_ASSERT( nullptr != currentFrame );
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
@@ -245,7 +246,7 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, Frame *currentFrame,
         if( nullptr != instData->m_data ) {
             OGLBuffer *instanceDataBuffer = rb->createBuffer( BufferType::InstanceBuffer );
             rb->bindBuffer( instanceDataBuffer );
-            rb->bufferData( instanceDataBuffer, instData->m_data->m_data, instData->m_data->m_size, instData->m_data->m_access );
+            rb->copyData( instanceDataBuffer, instData->m_data->m_data, instData->m_data->m_size, instData->m_data->m_access );
         }
     }
     
@@ -539,7 +540,7 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
         OGLBuffer *buffer(m_oglBackend->getBufferById(geo->m_id));
         if (nullptr != buffer) {
             m_oglBackend->bindBuffer(buffer);
-            m_oglBackend->bufferData(buffer, geo->m_vb->m_data, geo->m_vb->m_size, geo->m_vb->m_access);
+            m_oglBackend->copyData(buffer, geo->m_vb->m_data, geo->m_vb->m_size, geo->m_vb->m_access);
             m_oglBackend->unbindBuffer(buffer);
         }
     }

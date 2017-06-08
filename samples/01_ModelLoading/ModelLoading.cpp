@@ -46,8 +46,8 @@ using namespace ::OSRE::RenderBackend;
 // To identify local log entries 
 static const String Tag = "ModelLoadingApp"; 
 
-//static const String ModelPath = "file://assets/Models/Obj/box.obj";
-static const String ModelPath = "file://assets/Models/Obj/spider.obj";
+static const String ModelPath = "file://assets/Models/Obj/box.obj";
+//static const String ModelPath = "file://assets/Models/Obj/spider.obj";
 
 // The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
@@ -111,7 +111,7 @@ protected:
             f32 zNear = 0.0001f;
             f32 zFar  = 100.f;
             m_view->setProjectionMode(glm::radians(45.0f), aspect, zNear, zFar );
-            glm::vec3 eye( 2 * diam, 0, 0), up( 0, 1, 0 );
+            glm::vec3 eye( 2 * diam, 0, 0), up( 1, 0, 0 );
             m_view->setLookAt( eye, glm::vec3( 0,0,0 ), up );
 
             m_transformMatrix.m_model = glm::mat4(1.0f);

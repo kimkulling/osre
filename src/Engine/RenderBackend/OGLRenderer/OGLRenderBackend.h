@@ -67,7 +67,7 @@ struct FixedPipelineState;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  This class implements the low level OpenGL-specific API.
 //-------------------------------------------------------------------------------------------------
 class OGLRenderBackend {
 public:
@@ -85,7 +85,7 @@ public:
     void bindBuffer( ui32 handle );
     void bindBuffer( OGLBuffer *pBuffer );
     void unbindBuffer( OGLBuffer *pBuffer );
-    void bufferData( OGLBuffer *pBuffer, void *pData, ui32 size, BufferAccessType usage );
+    void copyData( OGLBuffer *pBuffer, void *pData, ui32 size, BufferAccessType usage );
     void releaseBuffer( OGLBuffer *pBuffer );
     void releaseAllBuffers();
     bool createVertexCompArray( const VertexLayout *layout, OGLShader *pShader, VertAttribArray &attributes );

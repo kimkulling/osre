@@ -24,11 +24,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Logger.h>
 #include <osre/IO/Stream.h>
+#include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
 namespace RenderBackend {
 
-static const GLint ErrorId = -1;
+static const GLint  ErrorId = -1;
 static const String Tag    = "OGLShader";
 
 static GLuint getOGLShaderType( ShaderType type ) {
@@ -40,7 +41,8 @@ static GLuint getOGLShaderType( ShaderType type ) {
         case ShaderType::SH_GeometryShaderType:
             return GL_GEOMETRY_SHADER;
         default:
-           break;
+            OSRE_VALIDATE( false, "Unknown enum.")
+            break;
     }
 
     return 0;

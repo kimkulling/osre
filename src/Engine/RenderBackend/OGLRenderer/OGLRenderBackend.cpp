@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLShader.h"
 #include "OGLCommon.h"
 #include "OGLEnum.h"
+
 #include <osre/RenderBackend/FontBase.h>
 #include <osre/RenderBackend/ClearState.h>
 #include <osre/RenderBackend/BlendState.h>
@@ -67,7 +68,8 @@ struct FixedPipelineState {
         // empty
     }
 
-    bool isEqual( CullState &cullstate, BlendState &blendState, SamplerState &samplerState, StencilState &stencilState ) const {
+    bool isEqual( CullState &cullstate, BlendState &blendState, SamplerState &samplerState, 
+            StencilState &stencilState ) const {
         return ( cullstate == m_cullState 
               && blendState == m_blendState 
               && samplerState == m_samplerState 
@@ -222,7 +224,7 @@ void OGLRenderBackend::unbindBuffer( OGLBuffer *buffer ) {
     //CHECKOGLERRORSTATE();
 }
 
-void OGLRenderBackend::bufferData( OGLBuffer *buffer, void *data, ui32 size, BufferAccessType usage ) {
+void OGLRenderBackend::copyData( OGLBuffer *buffer, void *data, ui32 size, BufferAccessType usage ) {
     if ( nullptr == buffer ) {
         osre_debug( Tag, "Pointer to buffer is nullptr" );
         return;
