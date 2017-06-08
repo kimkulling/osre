@@ -438,7 +438,9 @@ bool Viewport::operator == ( const Viewport &rhs ) const {
 }
 
 RenderBatch::RenderBatch() 
-: m_model() {
+: m_model( 1.0f )
+, m_numGeo( 0 ) 
+, m_geoArray( nullptr ) {
     // empty
 }
 

@@ -173,6 +173,10 @@ bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *data ) {
     }
 
     m_renderbackend->bindVertexArray( data->m_vertexArray );
+    if ( data->m_numParam > 0 ) {
+        for ( ui32 i=0; i<data->m_numParam; i++ )
+        m_renderbackend->setParameter( m_paramArray[ i ] );
+    }
     for( ui32 i = 0; i < data->m_primitives.size(); ++i ) {
         m_renderbackend->render( data->m_primitives[ i ] );
     }

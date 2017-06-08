@@ -30,22 +30,38 @@ namespace RenderBackend {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief  This class describes the current active clear states for the render-pass.
+///
+/// It is possible to request several clear states. The states will be set as bits.
 //-------------------------------------------------------------------------------------------------
 class ClearState {
 public:
     enum ClearBitType {
-        ColorBit   = 1 << 0,    ///<
-        DepthBit   = 1 << 1,    ///<
-        StencilBit = 1 << 2     ///<
+        ColorBit   = 1 << 0,    ///< Clear the color buffer.
+        DepthBit   = 1 << 1,    ///< Clear the depth buffer.
+        StencilBit = 1 << 2     ///< Clear the stencil buffer.
     };
 
 public:
+    /// @brief  The default class constructor.
     ClearState();
-    explicit ClearState( ui32 state );
+
+    /// @brief  The class constructor with the requested clear states.
+    /// @param  states      [in] The requested clear states.
+    explicit ClearState( ui32 states );
+
+    /// @brief  The class destructor.
     ~ClearState();
-    void setClearState( ui32 state );
+
+    /// @brief  Will set the requested clear states.
+    /// @param  states      [in] The requested clear states.
+    void setClearState( ui32 states );
+
+    /// @brief  Will return the active clear states.
+    /// @return The requested clear states.
     ui32 getClearState() const;
+
+    /// The compare operators.
     bool operator == ( const ClearState &rhs ) const;
     bool operator != ( const ClearState &rhs ) const;
 

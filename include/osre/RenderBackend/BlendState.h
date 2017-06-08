@@ -59,7 +59,7 @@ public:
     /// return  The blending function.
     BlendFunc getBlendFunc() const;
 
-    /// Copy operators.
+    /// The compare operators.
     bool operator == ( const BlendState &rhs ) const;
     bool operator != ( const BlendState &rhs ) const;
 
