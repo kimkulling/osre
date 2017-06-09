@@ -101,12 +101,12 @@ SET( common_src
 # Collision
 #==============================================================================
 SET( collision_inc
-    ${HEADER_PATH}/Collision/GeoProcessor.h
+    ${HEADER_PATH}/Collision/GeometryProcessor.h
     ${HEADER_PATH}/Collision/TAABB.h
     ${HEADER_PATH}/Collision/TQuadTree.h
 )
 SET( collision_src
-    Collision/GeoProcessor.cpp
+    Collision/GeometryProcessor.cpp
 )
 
 #==============================================================================
