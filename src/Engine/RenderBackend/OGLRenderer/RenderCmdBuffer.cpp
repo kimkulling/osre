@@ -97,7 +97,11 @@ void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
 
     for ( ui32 passId = 0; passId < numPasses; passId++ ) {
         PipelinePass *pass = m_pipeline->beginPass( passId );
-        m_renderbackend->setFixedPipelineStates( pass->getCullState(), pass->getBlendState(), pass->getSamplerState(), pass->getStencilState() );
+        m_renderbackend->setFixedPipelineStates( 
+                pass->getCullState(), 
+                pass->getBlendState(), 
+                pass->getSamplerState(), 
+                pass->getStencilState() );
 
         for ( ui32 i = 0; i < m_cmdbuffer.size(); ++i ) {
             // only valid pointers are allowed

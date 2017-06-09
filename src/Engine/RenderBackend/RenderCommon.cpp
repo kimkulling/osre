@@ -23,11 +23,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/Ids.h>
+#include <glm/gtc/matrix_transform.inl>
 
 namespace OSRE {
 namespace RenderBackend {
 
 using namespace ::OSRE::Common;
+using namespace ::glm;
 
 VertComponent VertexLayout::ErrorComp;
 
@@ -262,7 +264,8 @@ PrimitiveGroup::~PrimitiveGroup() {
     // empty
 }
 
-void PrimitiveGroup::init( IndexType indexType, ui32 numPrimitives, PrimitiveType primType, ui32 startIdx ) {
+void PrimitiveGroup::init( IndexType indexType, ui32 numPrimitives, PrimitiveType primType, 
+        ui32 startIdx ) {
     m_indexType = indexType;
     m_numPrimitives = numPrimitives;
     m_primitive = primType;
@@ -310,17 +313,6 @@ Material::~Material() {
 
     delete[] m_textures;
     m_textures = nullptr;
-}
-
-Transform::Transform() {
-    for( ui32 i = 0; i < 3; ++i ) {
-        m_translate[ i ] = 0.0f;
-        m_scale[ i ] = 1.0f;
-    }
-}
-
-Transform::~Transform() {
-    // empty
 }
 
 Geometry::Geometry()
@@ -384,6 +376,13 @@ TransformBlock::TransformBlock() {
 
 TransformBlock::~TransformBlock() {
     // empty
+}
+
+void TransformBlock::toMatrix(mat4 &m) {
+    mat4 trans = glm::translate( m, m_transform );
+    mat4 rot = mat4(1.0f);
+    mat4 scale = glm::scale( m, m_scale);
+    m = trans *rot * scale;
 }
 
 TransformMatrixBlock::TransformMatrixBlock()

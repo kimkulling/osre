@@ -393,7 +393,7 @@ struct OSRE_EXPORT Material {
 };
 
 ///	@brief
-struct OSRE_EXPORT Transform {
+/*struct OSRE_EXPORT Transform {
     f32 m_translate[ 3 ];
     f32 m_scale[ 3 ];
 
@@ -401,7 +401,7 @@ struct OSRE_EXPORT Transform {
     ~Transform();
 
     OSRE_NON_COPYABLE( Transform )
-};
+};*/
 
 ///	@brief
 struct OSRE_EXPORT Geometry {
@@ -435,12 +435,14 @@ struct OSRE_EXPORT GeoInstanceData {
 };
 
 struct OSRE_EXPORT TransformBlock {
-    glm::vec4 m_transform;
-    glm::vec4 m_scale;
+    glm::vec3 m_transform;
+    glm::vec3 m_scale;
     glm::vec4 m_rotation;
 
     TransformBlock();
     ~TransformBlock();
+    void toMatrix(glm::mat4 &m);
+
 
     OSRE_NON_COPYABLE( TransformBlock )
 };
