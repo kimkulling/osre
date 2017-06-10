@@ -22,7 +22,7 @@ SET( BIN_INSTALL_DIR "bin" CACHE PATH
 INCLUDE_DIRECTORIES(
     include/
     3dparty/glew/include
-    3dparty/assimp/contrib/irrXml
+    3dparty/assimp/contrib/irrXML
     3dparty/zlib
     d:/projects/libs/SDL2-2.0.3/include
     c:/Users/kullingk/Desktop/projects/libs/SDL2-2.0.3/include
