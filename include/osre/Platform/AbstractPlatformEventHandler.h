@@ -60,6 +60,10 @@ public:
     ///	@param  enabled     true for enabling polling.
     virtual void enablePolling( bool enabled ) = 0;
 
+    /// @brief  Returns the currently active polling state.
+    /// @return The active polling state.
+    virtual bool isPolling() const = 0;
+
 protected:
     /// @brief  The class constructor.
     AbstractPlatformEventHandler();

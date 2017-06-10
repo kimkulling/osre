@@ -125,7 +125,7 @@ private:
 ///	clicked or the current position of the mouse cursor. Each event data instance holds a reference 
 ///	to its assigned event-instance.
 //--------------------------------------------------------------------------------------------------------------------
-struct EventData {
+struct OSRE_EXPORT EventData {
     ///	@brief	The class constructor with event and trigger.
     ///	@param	ev		[in] Owning event.
     ///	@param	sender	[in] Event-triggering instance.

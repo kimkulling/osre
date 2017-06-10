@@ -57,7 +57,7 @@ void PipelinePass::setBlendState( BlendState &blendState ) {
     m_blendState = blendState;
 }
 
-BlendState PipelinePass::getBlendState() const {
+const BlendState &PipelinePass::getBlendState() const {
     return m_blendState;
 }
 
@@ -65,7 +65,7 @@ void PipelinePass::setSamplerState( SamplerState &samplerState ) {
     m_samplerState = samplerState;
 }
 
-SamplerState PipelinePass::getSamplerState() const {
+const SamplerState &PipelinePass::getSamplerState() const {
     return m_samplerState;
 }
 
@@ -73,7 +73,7 @@ void PipelinePass::setClearState( ClearState &clearState ) {
     m_clearState = clearState;
 }
 
-ClearState PipelinePass::getClearState() const {
+const ClearState &PipelinePass::getClearState() const {
     return m_clearState;
 }
 
@@ -81,7 +81,7 @@ void PipelinePass::setStencilState( StencilState &stencilState ) {
     m_stencilState = stencilState;
 }
 
-StencilState PipelinePass::getStencilState() const {
+const StencilState &PipelinePass::getStencilState() const {
     return m_stencilState;
 }
 

@@ -30,7 +30,7 @@ namespace Scene {
 using namespace ::OSRE::RenderBackend;
 using namespace ::CPPCore;
 
-static const glm::vec4 Dummy;
+static const glm::vec3 Dummy;
 
 Component::Component( ui32 id ) :
 m_id( id ) {
@@ -99,11 +99,11 @@ void TransformComponent::setTransformBlock( TransformBlock *localTransform ) {
 
 void TransformComponent::setPosition( const glm::vec3 &pos ) {
     if ( nullptr != m_localTransform ) {
-        m_localTransform->m_transform = glm::vec4( pos, 1.0f );
+        m_localTransform->m_transform = glm::vec3( pos );
     }
 }
 
-const glm::vec4 &TransformComponent::getPosition() const {
+const glm::vec3 &TransformComponent::getPosition() const {
     if ( nullptr == m_localTransform ) {
         return Dummy;
     }
@@ -113,11 +113,11 @@ const glm::vec4 &TransformComponent::getPosition() const {
 
 void TransformComponent::setScale( const glm::vec3 &scale ) {
     if ( nullptr != m_localTransform ) {
-        m_localTransform->m_scale = glm::vec4( scale, 1.0f );;
+        m_localTransform->m_scale = glm::vec3( scale );;
     }
 }
 
-const glm::vec4 &TransformComponent::getScale() const {
+const glm::vec3 &TransformComponent::getScale() const {
     if ( nullptr == m_localTransform ) {
         return Dummy;
     }

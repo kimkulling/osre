@@ -22,61 +22,32 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Platform/AbstractCriticalSection.h>
+#include <osre/Common/AbstractProcessor.h>
+#include <osre/Scene/Node.h>
 
-#include <SDL.h>
-#include <SDL_atomic.h>
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
-namespace Platform {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  This class implements the critical section based on SDL2.
-//-------------------------------------------------------------------------------------------------
-class SDL2CriticalSection : public AbstractCriticalSection {
+namespace RenderBackend {
+    struct Geometry;
+}
+
+namespace Collision {
+        
+class GeoProcessor : public Common::AbstractProcessor {
 public:
-    SDL2CriticalSection();
-    virtual ~SDL2CriticalSection( );
-    void enter() override;
-    bool tryEnter() override;
-    void leave() override; 
+    using GeoArray = CPPCore::TArray<RenderBackend::Geometry*>;
+
+    GeoProcessor();
+    ~GeoProcessor();
+    bool execute() override;
+    void addGeo( RenderBackend::Geometry *geo );
+    const Scene::Node::AABB &getAABB() const;
 
 private:
-    SDL_SpinLock m_spinlock;
+    GeoArray m_geoArray;
 };
 
-inline
-SDL2CriticalSection::SDL2CriticalSection()
-: AbstractCriticalSection()
-, m_spinlock( 0 ) {
-    // empty
 }
-
-inline
-SDL2CriticalSection::~SDL2CriticalSection() {
-    SDL_AtomicUnlock( &m_spinlock );
 }
-
-inline
-void SDL2CriticalSection::enter() {
-    SDL_AtomicLock( &m_spinlock );
-}
-
-inline
-bool SDL2CriticalSection::tryEnter() {
-    if( SDL_TRUE == SDL_AtomicTryLock( &m_spinlock ) ) {
-        return true;
-    }
-
-    return false;
-}
-
-inline
-void SDL2CriticalSection::leave() {
-    SDL_AtomicUnlock( &m_spinlock );
-}
-
-} // Namespace Platform
-} // Namespace OSRE

@@ -22,6 +22,7 @@ SET( BIN_INSTALL_DIR "bin" CACHE PATH
 INCLUDE_DIRECTORIES(
     include/
     3dparty/glew/include
+    3dparty/assimp/contrib/irrXML
     3dparty/zlib
     d:/projects/libs/SDL2-2.0.3/include
     c:/Users/kullingk/Desktop/projects/libs/SDL2-2.0.3/include
@@ -54,6 +55,7 @@ IF ( BUILD_SHARED_LIBS AND CMAKE_SIZEOF_VOID_P EQUAL 8 ) # -fPIC is only require
 ENDIF()
 
 if( WIN32 )
+    add_definitions( -DWIN32_LEAN_AND_MEAN )
 else()
   if(CMAKE_BUILD_TYPE STREQUAL "Debug")
       set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib-debug)

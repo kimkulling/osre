@@ -55,13 +55,13 @@ public:
     void setCullState( CullState &cullstate );
     CullState getCullState() const;
     void setBlendState( BlendState &blendState );
-    BlendState getBlendState() const;
+    const BlendState &getBlendState() const;
     void setSamplerState( SamplerState &samplerState );
-    SamplerState getSamplerState() const;
+    const SamplerState &getSamplerState() const;
     void setClearState( ClearState &clearState );
-    ClearState getClearState() const;
+    const ClearState &getClearState() const;
     void setStencilState( StencilState &stencilState );
-    StencilState getStencilState() const;
+    const StencilState &getStencilState() const;
     void setShader( Shader *shader );
     Shader *getShader() const;
     bool operator == ( const PipelinePass &rhs ) const;

@@ -86,10 +86,12 @@ protected:
         AppBase::activateStage( m_stage->getName() );
 
         Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
+        const Scene::Node::AABB &aabb = geoNode->getAABB();
+
         Scene::GeometryBuilder myBuilder;
         RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
         if( nullptr != geo ) {
-			m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
+			m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
             m_transformMatrix.update();
             getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
             geoNode->addGeometry( geo );

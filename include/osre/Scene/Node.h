@@ -23,8 +23,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/Object.h>
+#include <osre/Collision/TAABB.h>
+
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>
+#include "3dparty/assimp/code/ColladaLoader.h"
 
 namespace OSRE {
 
@@ -63,6 +66,8 @@ class TransformComponent;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Node : public Common::Object {
 public:
+    using AABB = Collision::TAABB<f32>;
+
     enum class ComponentType {
         RenderComponentType,
         TransformComponentType
@@ -84,7 +89,8 @@ public:
     };
 
 public:
-    Node( const String &name, Common::Ids &ids, RenderCompRequest renderEnabled, TransformCompRequest transformEnabled, Node *parent = nullptr );
+    Node( const String &name, Common::Ids &ids, RenderCompRequest renderEnabled, 
+            TransformCompRequest transformEnabled, Node *parent = nullptr );
     virtual ~Node();
     virtual void setParent( Node *parent );
     virtual Node *getParent() const;
@@ -97,7 +103,10 @@ public:
     virtual void addModel( Assets::Model *model );
     virtual void addGeometry( RenderBackend::Geometry *geo );
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
-
+    
+public:
+    void setAABB(const AABB &aabb);
+    const AABB &getAABB() const;
     Component *getComponent( ComponentType type ) const;
     void setActive( bool isActive );
     bool isActive() const;
@@ -114,7 +123,18 @@ private:
     CPPCore::TArray<Component*> m_components;
     Common::Ids *m_ids;
     CPPCore::THashMap<ui32, Properties::Property*> m_propMap;
+    AABB m_aabb;
 };
+
+inline
+void Node::setAABB(const AABB &aabb) {
+    m_aabb = aabb;
+}
+
+inline
+const Node::AABB &Node::getAABB() const {
+    return m_aabb;
+}
 
 } // Namespace Scene
 } // namespace OSRE

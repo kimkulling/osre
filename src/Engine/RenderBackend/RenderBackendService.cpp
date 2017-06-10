@@ -61,7 +61,7 @@ RenderBackendService::~RenderBackendService() {
 
 bool RenderBackendService::onOpen() {
     if ( nullptr == m_settings ) {
-        m_settings = new Properties::Settings;
+        m_settings = new Settings;
         m_ownsSettingsConfig = true;
     }
 
@@ -195,7 +195,7 @@ void RenderBackendService::sendEvent( const Event *ev, const EventData *eventDat
 
 void RenderBackendService::setMatrix( const String &name, const glm::mat4 &matrix ) {
     UniformVar *uniform( nullptr );
-    const ui32 key( Common::StringUtils::hashName( name.c_str() ) );
+    const ui32 key( StringUtils::hashName( name.c_str() ) );
     if ( !m_variables.hasKey( key ) ) {
         uniform = UniformVar::create( name, ParameterType::PT_Mat4 );
         m_variables.insert( key, uniform );
