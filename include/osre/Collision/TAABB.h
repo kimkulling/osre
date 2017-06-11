@@ -30,12 +30,13 @@ namespace Collision {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief	
+///	@brief  This class is used to define a bounding volume, which is aligned at the axis of the
+/// global cooridnate system.
 //-------------------------------------------------------------------------------------------------
 template<class T>
 class TAABB {
 public:
-    typedef TVec3<T> VecType;
+    using VecType = TVec3<T>;
 
     TAABB();
     TAABB( const VecType &min, const VecType &max );

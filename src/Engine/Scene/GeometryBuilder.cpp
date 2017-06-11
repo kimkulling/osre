@@ -314,7 +314,7 @@ static ui32 getNumTextVerts( const String &text ) {
     return NumTextVerts;
 }
 
-Geometry *GeometryBuilder:: ( f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access ) {
+Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access ) {
 	if ( text.empty() ) {
 		return nullptr;
 	}

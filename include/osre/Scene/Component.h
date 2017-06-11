@@ -63,11 +63,17 @@ ui32 Component::getId() const {
     return m_id;
 }
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief Describes the render component
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT RenderComponent : public Component {
 public:
     RenderComponent( ui32 id );
     virtual ~RenderComponent();
-    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
+    void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
+
     bool isShadowCaster() const;
     void setShadowCaster( bool isShadowCaster );
     void addStaticGeometry( RenderBackend::Geometry *geo );
@@ -77,27 +83,37 @@ private:
     bool m_isShadowCaster;
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief Describes the transformation component.
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT TransformComponent : public Component {
 public:
     TransformComponent( ui32 id );
     virtual ~TransformComponent();
-    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
+    void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
 
     void setTransformBlock( RenderBackend::TransformBlock *localTransform );
     void setPosition( const glm::vec3 &pos );
-    const glm::vec4 &getPosition() const;
+    const glm::vec3 &getPosition() const;
     void setScale( const glm::vec3 &pos );
-    const glm::vec4 &getScale() const;
+    const glm::vec3 &getScale() const;
 
 private:
     RenderBackend::TransformBlock *m_localTransform;
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief Describes the collision component.
+//-------------------------------------------------------------------------------------------------
 class CollisionComponent : public Component {
 public:
     CollisionComponent( ui32 id );
     virtual ~CollisionComponent();
-    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
+    void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
 };
 } // Namespace Scene
 } // namespace OSRE

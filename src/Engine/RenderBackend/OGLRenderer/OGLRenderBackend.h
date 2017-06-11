@@ -67,17 +67,19 @@ struct FixedPipelineState;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This class implements the low level OpenGL-specific API.
+///	@brief  This class is used to wrap all OpenGL-specific calls ( version 4.x and higher ),
 //-------------------------------------------------------------------------------------------------
 class OGLRenderBackend {
 public:
     typedef CPPCore::TArray<OGLVertexAttribute*> VertAttribArray;
 
 public:
+    /// The default class constructor.
     OGLRenderBackend();
+    /// The class destructor.
     ~OGLRenderBackend();
     void setTimer( Platform::AbstractTimer *timer );
-    void setRenderContext( Platform::AbstractRenderContext *pRenderCtx );
+    void setRenderContext( Platform::AbstractRenderContext *renderCtx );
     void clearRenderTarget( const ClearState &clearState );
     void setViewport( i32 x, i32 y, i32 w, i32 h );
     OGLBuffer *createBuffer( BufferType type );
@@ -92,8 +94,10 @@ public:
     bool createVertexCompArray( VertexType type, OGLShader *pShader, VertAttribArray &attributes );
     void releaseVertexCompArray( CPPCore::TArray<OGLVertexAttribute*> &attributes );
     OGLVertexArray *createVertexArray();
-    bool bindVertexLayout( OGLVertexArray *pVertexArray, OGLShader *pShader, ui32 stride, GLint loc, OGLVertexAttribute* attrib );
-    bool bindVertexLayout( OGLVertexArray *pVertexArray, OGLShader *pShader, ui32 stride, const CPPCore::TArray<OGLVertexAttribute*> &attributes );
+    bool bindVertexLayout( OGLVertexArray *pVertexArray, OGLShader *pShader, ui32 stride, GLint loc, 
+            OGLVertexAttribute* attrib );
+    bool bindVertexLayout( OGLVertexArray *pVertexArray, OGLShader *pShader, ui32 stride, 
+            const CPPCore::TArray<OGLVertexAttribute*> &attributes );
     void destroyVertexArray( OGLVertexArray *pVertexArray );
     OGLVertexArray *getVertexArraybyId( ui32 id ) const;
     void bindVertexArray( OGLVertexArray *pVertexArray );
@@ -128,7 +132,8 @@ public:
     FontBase *findFont( const String &name ) const;
     bool relaseFont( FontBase *font );
     void releaseAllFonts();
-    void setFixedPipelineStates( CullState &cullstate, BlendState &blendState, SamplerState &samplerState,  StencilState &stencilState );
+    void setFixedPipelineStates( const CullState &cullstate, const BlendState &blendState, 
+            const SamplerState &samplerState, const StencilState &stencilState );
     static ui32 getVertexSize( VertexType vertextype );
 
 private:

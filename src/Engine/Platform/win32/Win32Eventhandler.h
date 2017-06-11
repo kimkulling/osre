@@ -28,9 +28,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <windows.h>
 #include <map>
 
-
 namespace OSRE {
 
+// Forward declarations
 namespace Common {
     struct Event;
     struct EventData;
@@ -45,9 +45,7 @@ class OSEventListener;
 struct IInputUpdate;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::Win32Eventhandler
 ///	@ingroup	Engine
-
 ///
 ///	@brief  This class implements the win32-specific event handler for OS-events.
 //-------------------------------------------------------------------------------------------------
@@ -55,14 +53,14 @@ class Win32Eventhandler : public AbstractPlatformEventHandler {
 public:
     Win32Eventhandler();
     virtual ~Win32Eventhandler();
-    virtual bool onEvent( const Common::Event &ev, const Common::EventData *pEventData );
+    virtual bool onEvent( const Common::Event &ev, const Common::EventData *pEventData ) override;
     static LRESULT CALLBACK winproc( HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam );
     void setRootSurface( AbstractSurface *pWIndow );
     AbstractSurface *getRootSurface() const;
-    void enablePolling( bool enabled );
+    void enablePolling( bool enabled ) override;;
     bool isPolling() const;
-    void registerEventListener( const CPPCore::TArray<const Common::Event*> &rEvents, OSEventListener *pListener );
-    void unregisterEventListener( const CPPCore::TArray<const Common::Event*> &rEvents, OSEventListener *pListener );
+    void registerEventListener( const CPPCore::TArray<const Common::Event*> &rEvents, OSEventListener *pListener ) override;;
+    void unregisterEventListener( const CPPCore::TArray<const Common::Event*> &rEvents, OSEventListener *pListener ) override;;
     static void registerEventServer( Win32Eventhandler *pServer, HWND hWnd );
     static void unregisterEventServer( Win32Eventhandler *pServer, HWND hWnd );
     static Win32Eventhandler *getInstance( HWND hWnd );

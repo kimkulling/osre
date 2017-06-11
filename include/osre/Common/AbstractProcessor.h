@@ -22,48 +22,37 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Platform/AbstractPlatformEventHandler.h>
-
-#include <map>
-
-// Forward delarations
-struct SDL_Window;
-
 namespace OSRE {
-namespace Platform {
-
-struct AbstractSDL2InputUpdate;
-
+namespace Common {
+        
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief  This bastract class is used to define any kinf of data processors.
 //-------------------------------------------------------------------------------------------------
-class SDL2EventHandler : public AbstractPlatformEventHandler {
+class AbstractProcessor {
 public:
-    using EventArray = CPPCore::TArray<const Common::Event*>;
+    /// @brief  The class destructor, virtual.
+    virtual ~AbstractProcessor();
 
-    SDL2EventHandler();
-    virtual ~SDL2EventHandler();
-    bool onEvent( const Common::Event &event, const Common::EventData *pEventData ) override;
-    void registerEventListener( const EventArray &events, OSEventListener *listener ) override;
-    void unregisterEventListener( const EventArray &events, OSEventListener *listener ) override;
-    void enablePolling( bool enabled ) override;
-    bool isPolling() const override;
+    /// @brief  Override this method for your own data processing function.
+    /// @return true, if successful, false in case of an error.
+    virtual bool execute() = 0;
 
 protected:
-    bool onAttached( const Common::EventData *eventData ) override;
-    bool onDetached( const Common::EventData *eventData ) override;
-
-private:
-    static std::map<SDL_Window*, SDL2EventHandler*> s_windowsServerMap;
-    bool m_isPolling;
-    bool m_shutdownRequested;
-    AbstractSDL2InputUpdate *m_pInputUpdate;
-    Common::EventTriggerer *m_pEventTriggerer;
+    /// @brief  The default constructor.
+    AbstractProcessor();
 };
 
-//-------------------------------------------------------------------------------------------------
+inline
+AbstractProcessor::AbstractProcessor() {
+    // empty
+}
 
-} // Namespace Platform
+inline
+AbstractProcessor::~AbstractProcessor() {
+    // empty    
+}
+
+} // Namespace Common
 } // Namespace OSRE

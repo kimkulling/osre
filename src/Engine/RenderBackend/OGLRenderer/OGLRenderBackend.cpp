@@ -68,8 +68,8 @@ struct FixedPipelineState {
         // empty
     }
 
-    bool isEqual( CullState &cullstate, BlendState &blendState, SamplerState &samplerState, 
-            StencilState &stencilState ) const {
+    bool isEqual( const CullState &cullstate, const BlendState &blendState, const SamplerState &samplerState, 
+            const StencilState &stencilState ) const {
         return ( cullstate == m_cullState 
               && blendState == m_blendState 
               && samplerState == m_samplerState 
@@ -456,8 +456,8 @@ void OGLRenderBackend::bindVertexArray( OGLVertexArray *vertexArray ) {
 	if ( ( m_activeVertexArray == OGLNotSetId ) || ( m_activeVertexArray != vertexArray->m_id) ){
 		m_activeVertexArray = vertexArray->m_id;
 		glBindVertexArray( m_activeVertexArray );
-	}
-    CHECKOGLERRORSTATE();
+        CHECKOGLERRORSTATE();
+    }
 }
 
 void OGLRenderBackend::unbindVertexArray() {
@@ -1015,7 +1015,8 @@ void OGLRenderBackend::releaseAllFonts() {
     m_fonts.clear();
 }
 
-void OGLRenderBackend::setFixedPipelineStates( CullState &cullstate, BlendState &blendState, SamplerState &samplerState, StencilState &stencilState ) {
+void OGLRenderBackend::setFixedPipelineStates( const CullState &cullstate, const BlendState &blendState, 
+        const SamplerState &samplerState, const StencilState &stencilState ) {
     if ( m_fpState->m_applied ) {
         if ( m_fpState->isEqual( cullstate, blendState, samplerState, stencilState ) ) {
             return;

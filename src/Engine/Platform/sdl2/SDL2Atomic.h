@@ -32,12 +32,11 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::SDL2Atomic
 ///	@ingroup	Engine
 ///
 ///	@brief  This class implements the atomic int based on SDL2.
 //-------------------------------------------------------------------------------------------------
-class SDL2Atomic :public AbstractAtomic {
+class SDL2Atomic : public AbstractAtomic {
 public:
     /// The class constructor.
     SDL2Atomic( i32 value );
@@ -58,51 +57,42 @@ private:
     SDL_atomic_t m_value;
 };
 
-//-------------------------------------------------------------------------------------------------
 inline
 SDL2Atomic::SDL2Atomic( i32 value ) {
     SDL_AtomicSet( &m_value, value );
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 SDL2Atomic::~SDL2Atomic( ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 void SDL2Atomic::incValue( i32 value ) {
     SDL_AtomicAdd( &m_value, value );
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 void SDL2Atomic::decValue( i32 value ) {
     SDL_AtomicAdd( &m_value, -value );
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 i32 SDL2Atomic::getValue( ) {
     return ( SDL_AtomicGet( &m_value ) );
 }
         
-//-------------------------------------------------------------------------------------------------
 inline
 i32 SDL2Atomic::inc( ) {
     SDL_AtomicIncRef( &m_value );
     return getValue();
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 i32 SDL2Atomic::dec( ) {
     SDL_AtomicDecRef( &m_value );
     return getValue();
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE
