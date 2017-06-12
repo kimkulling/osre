@@ -22,18 +22,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <cppcore/Container/TArray.h>
+
 namespace OSRE {
 namespace Common {
         
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This bastract class is used to define any kinf of data processors.
+///	@brief  This abstract class is used to define any kind of data processors. Each processor stores 
+/// its list of preconditions, which can be resolved by performing these processes.
 //-------------------------------------------------------------------------------------------------
 class AbstractProcessor {
 public:
+    using ProcessorArray = ::CPPCore::TArray<AbstractProcessor*>;
+
     /// @brief  The class destructor, virtual.
     virtual ~AbstractProcessor();
+
+    /// @brief  Will add a precondition.
+    /// @param  precondition    [in] Process which need to get executed before this.
+    virtual void addDependency( AbstractProcessor *precondition );
+
+    /// @brief  Will return the list of preconditions.
+    /// @return The list of percondtions.
+    virtual const ProcessorArray &getPreconditions() const;
 
     /// @brief  Override this method for your own data processing function.
     /// @return true, if successful, false in case of an error.
@@ -42,16 +55,32 @@ public:
 protected:
     /// @brief  The default constructor.
     AbstractProcessor();
+
+private:
+    ProcessorArray m_preconditions;
 };
 
 inline
-AbstractProcessor::AbstractProcessor() {
+AbstractProcessor::AbstractProcessor() 
+: m_preconditions() {
     // empty
 }
 
 inline
 AbstractProcessor::~AbstractProcessor() {
     // empty    
+}
+
+inline
+void AbstractProcessor::addDependency( AbstractProcessor *precondition ) {
+    if ( nullptr != precondition ) {
+        m_preconditions.add( precondition );
+    }
+}
+
+inline
+const AbstractProcessor::ProcessorArray &AbstractProcessor::getPreconditions() const {
+    return m_preconditions;
 }
 
 } // Namespace Common

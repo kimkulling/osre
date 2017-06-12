@@ -31,7 +31,7 @@ namespace Collision {
 ///	@ingroup	Engine
 ///
 ///	@brief  This class is used to define a bounding volume, which is aligned at the axis of the
-/// global cooridnate system.
+/// global coordinate system.
 //-------------------------------------------------------------------------------------------------
 template<class T>
 class TAABB {
@@ -46,6 +46,7 @@ public:
     const TVec3<T> &getMin() const;
     const TVec3<T> &getMax() const;
     void merge( const VecType &vec );
+    void merge( T x, T y, T z );
     void updateFromVector3Array( VecType *vecArray, ui32 numVectors );
     T getDiameter();
     TVec3<T> getCenter();
@@ -59,85 +60,94 @@ private:
 
 template<class T>
 inline
-TAABB<T>::TAABB()
-: m_min( 999999,99999,99999 )
-, m_max( -999999, -99999, -99999 )
-, m_center( 999999, 99999, 99999 )
-, m_diameter( 0 ) {
+    TAABB<T>::TAABB()
+    : m_min( 999999, 99999, 99999 )
+    , m_max( -999999, -99999, -99999 )
+    , m_center( 999999, 99999, 99999 )
+    , m_diameter( 0 ) {
     // empty
 }
 
 template<class T>
 inline
-TAABB<T>::TAABB( const VecType &min, const VecType &max )
-: m_min( min )
-, m_max( max )
-, m_center(999999, 99999, 99999)
-, m_diameter(0) {
+    TAABB<T>::TAABB( const VecType &min, const VecType &max )
+    : m_min( min )
+    , m_max( max )
+    , m_center( 999999, 99999, 99999 )
+    , m_diameter( 0 ) {
     // empty
 }
 
 template<class T>
 inline
-TAABB<T>::~TAABB() {
+    TAABB<T>::~TAABB() {
     // empty
 }
 
 template<class T>
 inline
-void TAABB<T>::reset() {
+    void TAABB<T>::reset() {
     m_min.set( 999999, 99999, 99999 );
     m_max.set( -999999, -99999, -99999 );
 }
 
 template<class T>
 inline
-void TAABB<T>::set( const VecType &min, const VecType &max ) {
+    void TAABB<T>::set( const VecType &min, const VecType &max ) {
     m_min = min;
     m_max = max;
 }
 
 template<class T>
 inline
-const TVec3<T> &TAABB<T>::getMin() const {
+    const TVec3<T> &TAABB<T>::getMin() const {
     return m_min;
 }
 
 template<class T>
 inline
-const TVec3<T> &TAABB<T>::getMax() const {
+    const TVec3<T> &TAABB<T>::getMax() const {
     return m_max;
 }
 
 template<class T>
 inline
-void TAABB<T>::merge( const VecType &vec ) {
+    void TAABB<T>::merge( const VecType &vec ) {
+    const T x( vec[ 0 ] );
+    const T y( vec[ 1 ] );
+    const T z( vec[ 2 ] );
+    merge( x, y, z );
+}
+
+template<class T>
+inline
+    void TAABB<T>::merge( T x, T y, T z ) {
     // set min values
-    if ( vec.getX() < m_min.getX() ) {
-        m_min.setX( vec.getX() );
+    if ( x < m_min.getX() ) {
+        m_min.setX( x );
     }
-    if ( vec.getY() < m_min.getY() ) {
-        m_min.setY( vec.getY() );
+    if ( y < m_min.getY() ) {
+        m_min.setY( y );
     }
-    if ( vec.getZ() < m_min.getZ() ) {
-        m_min.setZ( vec.getZ() );
+    if ( z < m_min.getZ() ) {
+        m_min.setZ( z );
     }
 
     // set max values
-    if ( vec.getX() > m_max.getX() ) {
-        m_max.setX( vec.getX() );
+    if ( x > m_max.getX() ) {
+        m_max.setX( x );
     }
-    if ( vec.getY() > m_max.getY() ) {
-        m_max.setY( vec.getY() );
+    if ( y > m_max.getY() ) {
+        m_max.setY( y );
     }
-    if ( vec.getZ() > m_max.getZ() ) {
-        m_max.setZ( vec.getZ() );
+    if ( z > m_max.getZ() ) {
+        m_max.setZ( z );
     }
 }
 
 template<class T>
 inline
-void TAABB<T>::updateFromVector3Array( VecType *vecArray, ui32 numVectors ) {
+    void TAABB<T>::updateFromVector3Array( VecType *vecArray, ui32 numVectors ) {
     if ( nullptr == vecArray || 0 == numVectors ) {
         return;
     }
@@ -150,7 +160,7 @@ void TAABB<T>::updateFromVector3Array( VecType *vecArray, ui32 numVectors ) {
 
 template<class T>
 inline
-T TAABB<T>::getDiameter() {
+    T TAABB<T>::getDiameter() {
     if ( 0 != m_diameter ) {
         return m_diameter;
     }
@@ -162,7 +172,7 @@ T TAABB<T>::getDiameter() {
 
 template<class T>
 inline
-TVec3<T> TAABB<T>::getCenter() {
+    TVec3<T> TAABB<T>::getCenter() {
     m_center = ( m_min + m_max ) * 0.5f;
 
     return m_center;

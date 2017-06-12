@@ -227,10 +227,10 @@ BufferData::~BufferData() {
 
 BufferData* BufferData::alloc( BufferType type, ui32 m_size, BufferAccessType access ) {
     BufferData *buffer( new BufferData );
-    buffer->m_size = m_size;
+    buffer->m_size   = m_size;
     buffer->m_access = access;
-    buffer->m_type = type;
-    buffer->m_data = new uc8[ buffer->m_size ];
+    buffer->m_type   = type;
+    buffer->m_data   = new uc8[ buffer->m_size ];
 
     return buffer;
 }

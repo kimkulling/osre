@@ -172,6 +172,20 @@ struct Color4 {
     bool operator != ( const Color4 & rhs ) const {
         return !( *this == rhs );
     }
+
+    f32 operator [] ( ui32 index ) const {
+        switch ( index ) {
+            case 0: return m_r;
+            case 1: return m_g;
+            case 2: return m_b;
+            case 3: return m_a;
+            default:
+                break;
+        }
+
+        return 0.0f;
+    }
+
 };
 
 template<class T>
@@ -244,6 +258,10 @@ struct TVec2 {
 
     bool operator != ( const TVec2<T> &rhs ) const {
         return !( this == rhs );
+    }
+
+    T operator [] ( ui32 index ) const {
+        return v[ index ];
     }
 };
 
@@ -378,6 +396,10 @@ struct TVec3 {
     bool operator != ( const TVec3<T> &rhs ) const {
         return !( *this == rhs );
     }
+
+    T operator [] ( ui32 index ) const {
+        return v[ index ];
+    }
 };
 
 template<class T>
@@ -463,6 +485,10 @@ struct TVec4 {
 
     bool operator != ( const TVec4<T> &rhs ) const {
         return !( this == rhs );
+    }
+
+    T operator [] ( ui32 index ) const {
+        return v[ index ];
     }
 };
 

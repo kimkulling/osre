@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/AbstractProcessor.h>
+#include <osre/Collision/TAABB.h>
 #include <osre/Scene/Node.h>
 
 #include <cppcore/Container/TArray.h>
@@ -35,19 +36,24 @@ namespace RenderBackend {
 
 namespace Collision {
         
-class GeoProcessor : public Common::AbstractProcessor {
+class GeometryProcessor : public Common::AbstractProcessor {
 public:
     using GeoArray = CPPCore::TArray<RenderBackend::Geometry*>;
 
-    GeoProcessor();
-    ~GeoProcessor();
+    GeometryProcessor();
+    ~GeometryProcessor();
     bool execute() override;
     void addGeo( RenderBackend::Geometry *geo );
     const Scene::Node::AABB &getAABB() const;
 
 private:
+    void handleGeometry( RenderBackend::Geometry *geo );
+
+private:
     GeoArray m_geoArray;
+    Scene::Node::AABB m_aabb;
+    i32 m_dirty;
 };
 
-}
-}
+} // Namespace Collision
+} // Namespace OSRE
