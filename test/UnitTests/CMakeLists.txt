@@ -27,6 +27,7 @@ SET ( unittest_app_src
 )
 
 SET ( unittest_common_src
+	src/Common/AbstractProcessTest.cpp
     src/Common/ArgumentParserTest.cpp
 	src/Common/AbstractServiceTest.cpp
 	src/Common/CommonTest.cpp

@@ -45,7 +45,7 @@ public:
     virtual void addDependency( AbstractProcessor *precondition );
 
     /// @brief  Will return the list of preconditions.
-    /// @return The list of percondtions.
+    /// @return The list of pre-condtions.
     virtual const ProcessorArray &getPreconditions() const;
 
     /// @brief  Override this method for your own data processing function.
