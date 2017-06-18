@@ -41,7 +41,7 @@ static GLuint getOGLShaderType( ShaderType type ) {
         case ShaderType::SH_GeometryShaderType:
             return GL_GEOMETRY_SHADER;
         default:
-            OSRE_VALIDATE( false, "Unknown enum.")
+            OSRE_VALIDATE( false, "Unknown enum.");
             break;
     }
 
