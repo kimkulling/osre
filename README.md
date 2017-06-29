@@ -11,7 +11,7 @@ Discuss with us: [![Join the chat at https://gitter.im/kimkulling/osre](https://
   + OpenGL-renderbackend
 
 # How to start
-## What you need to install
+## What you need to install it
 - A Linux or Windows-PC with a more or less modern GPU
 - cmake to genreate the build environment for your platform ( see www.cmake.org )
 - SDL2.0 ( see https://www.libsdl.org/download-2.0.php )
@@ -32,6 +32,11 @@ Generate a build environment of your choise ( you can choose your own build envi
 via -G )
 ```
 > cmake CMakeLists.txt [-G <makefile generator>]
+```
+## Run the tests
+Navigate to bin\debug or bin\release and run our test suite for rendering:
+```
+> bin\debug\osre_rendertest
 ```
 
 ### For Linux:
