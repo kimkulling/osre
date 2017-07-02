@@ -35,14 +35,11 @@ class OGLEnumTest : public ::testing::Test {
 
 TEST_F( OGLEnumTest, access_cullstate_success ) {
     CullState state;
-    state.setCullMode( CullState::CullMode::Front );
-    EXPECT_EQ( GL_FRONT, OGLEnum::getOGLCullState( state.getCullMode() ) );
+    state.setCullMode( CullState::CullMode::CW );
+    EXPECT_EQ( GL_CW, OGLEnum::getOGLCullState( state.getCullMode() ) );
 
-    state.setCullMode( CullState::CullMode::Back );
-    EXPECT_EQ( GL_BACK, OGLEnum::getOGLCullState( state.getCullMode() ) );
-
-    state.setCullMode( CullState::CullMode::FrontAndBack );
-    EXPECT_EQ( GL_FRONT_AND_BACK, OGLEnum::getOGLCullState( state.getCullMode() ) );
+    state.setCullMode( CullState::CullMode::CCW );
+    EXPECT_EQ( GL_CCW, OGLEnum::getOGLCullState( state.getCullMode() ) );
 }
 
 } // Namespace UnitTest

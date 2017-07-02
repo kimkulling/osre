@@ -130,15 +130,15 @@ protected:
         return true;
     }
 
-    /*void onUpdate( d32 timetick ) override {
+    void onUpdate( d32 timetick ) override {
         glm::mat4 rot( 1.0 );
-        //m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
+        m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
         m_angle += 0.01f;
 
-        //AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
-
-    }*/
+        AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
+        AppBase::onUpdate( timetick );
+    }
 
 };
 

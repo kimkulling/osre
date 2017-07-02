@@ -36,7 +36,7 @@ TEST_F( CullStateTest, create_success ) {
     bool ok( true );
     try {
         CullState state1;
-        CullState state2( CullState::CullMode::Front );
+        CullState state2( CullState::CullMode::CCW );
     } catch ( ... ) {
         ok = false;
     }
@@ -44,11 +44,11 @@ TEST_F( CullStateTest, create_success ) {
 }
 
 TEST_F( CullStateTest, access_state_success ) {
-    CullState state1, state2, state3( CullState::CullMode::FrontAndBack );
-    state1.setCullMode( CullState::CullMode::Front );
-    EXPECT_EQ( CullState::CullMode::Front, state1.getCullMode() );
+    CullState state1, state2, state3( CullState::CullMode::CW );
+    state1.setCullMode( CullState::CullMode::CCW );
+    EXPECT_EQ( CullState::CullMode::CCW, state1.getCullMode() );
 
-    state2.setCullMode( CullState::CullMode::Front );
+    state2.setCullMode( CullState::CullMode::CCW );
     EXPECT_EQ( state1, state2 );
     EXPECT_NE( state1, state3 );
 }

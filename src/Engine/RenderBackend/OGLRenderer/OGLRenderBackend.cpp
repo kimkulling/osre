@@ -244,7 +244,7 @@ void OGLRenderBackend::releaseBuffer( OGLBuffer *buffer ) {
     glDeleteBuffers( 1, &buffer->m_oglId );
     buffer->m_handle = OGLNotSetId;
     buffer->m_type   = BufferType::EmptyBuffer;
-    buffer->m_oglId     = OGLNotSetId;
+    buffer->m_oglId  = OGLNotSetId;
     m_freeBufferSlots.add( slot );
 }
 
@@ -396,8 +396,7 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
                            attrib->m_type,
                            GL_FALSE,
                            stride,
-                           attrib->m_ptr 
-                         );
+                           attrib->m_ptr );
 
     return true;
 }
@@ -418,8 +417,7 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
                                    attributes[ i ]->m_type,
                                    GL_FALSE,
                                    stride,
-                                   attributes[ i ]->m_ptr 
-                                 );
+                                   attributes[ i ]->m_ptr );
         } else {
             String msg = "Cannot find " + String( attribName );
             osre_debug( Tag, msg );
@@ -1032,6 +1030,7 @@ void OGLRenderBackend::setFixedPipelineStates( const CullState &cullstate, const
         glDisable( GL_CULL_FACE );
     } else {
         glEnable( GL_CULL_FACE );
+        glFrontFace( GL_CCW );
         glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );
     }
 

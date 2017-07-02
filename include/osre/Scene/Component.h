@@ -39,6 +39,11 @@ namespace RenderBackend {
 
 namespace Scene {
 
+///
+///	@ingroup	Engine
+///
+///	@brief Describes the render component
+///
 class OSRE_EXPORT Component {
 public:
     virtual ~Component();
@@ -63,24 +68,21 @@ ui32 Component::getId() const {
     return m_id;
 }
 
-//-------------------------------------------------------------------------------------------------
+///
 ///	@ingroup	Engine
 ///
 ///	@brief Describes the render component
-//-------------------------------------------------------------------------------------------------
+///
 class OSRE_EXPORT RenderComponent : public Component {
 public:
     RenderComponent( ui32 id );
     virtual ~RenderComponent();
     void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
-
-    bool isShadowCaster() const;
-    void setShadowCaster( bool isShadowCaster );
     void addStaticGeometry( RenderBackend::Geometry *geo );
 
 private:
     CPPCore::TArray<RenderBackend::Geometry*> m_newGeo;
-    bool m_isShadowCaster;
+
 };
 
 //-------------------------------------------------------------------------------------------------

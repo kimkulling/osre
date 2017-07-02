@@ -57,6 +57,7 @@ Node::Node( const String &name, Common::Ids &ids, RenderCompRequest renderEnable
     }
 
     if ( nullptr != m_parent ) {
+        m_parent = parent;
         m_parent->addChild( this );
     }
 }
@@ -90,7 +91,7 @@ void Node::addChild( Node *child ) {
     }
 
     m_children.add( child );
-    child->setParent( this );
+    //child->setParent( this );
     child->get();
 }
 

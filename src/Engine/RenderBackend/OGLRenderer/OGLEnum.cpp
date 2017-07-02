@@ -195,18 +195,16 @@ ui32 OGLEnum::getOGLSizeForFormat( VertexFormat format ) {
 
 GLenum OGLEnum::getOGLCullState( CullState::CullMode cullMode ) {
     switch ( cullMode ) {
-        case CullState::CullMode::Front:
-            return GL_FRONT;
-        case CullState::CullMode::Back:
-            return GL_BACK;
-        case CullState::CullMode::FrontAndBack:
-            return GL_FRONT_AND_BACK;
+        case CullState::CullMode::CW:
+            return GL_CW;
+        case CullState::CullMode::CCW:
+            return GL_CCW;
         default:
             OSRE_VALIDATE( false, "Unknown enum" );
             break;
     }
 
-    return GL_FRONT_AND_BACK;
+    return GL_CW;
 }
 
 } // Namespace RenderBackend

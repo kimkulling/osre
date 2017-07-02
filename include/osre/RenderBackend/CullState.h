@@ -34,9 +34,8 @@ namespace RenderBackend {
 class CullState {
 public:
     enum class CullMode {
-        Front,
-        Back, 
-        FrontAndBack,
+        CW,
+        CCW,
         Off
     };
 
@@ -57,7 +56,7 @@ private:
 
 inline
 CullState::CullState()
-: m_state( CullMode::Front ) {
+: m_state( CullMode::CW ) {
     // empty
 }
 

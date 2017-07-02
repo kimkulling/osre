@@ -279,10 +279,6 @@ SET( scene_src
     Scene/TrackBall.cpp
     Scene/View.cpp
     Scene/World.cpp
-    Scene/2D/Sprite.cpp
-    Scene/2D/Sprite.h
-    Scene/2D/Node2D.cpp
-    Scene/2D/Stage2D.cpp
 )
 SET( scene_inc
     ${HEADER_PATH}/Scene/DbgRenderer.h
@@ -294,8 +290,6 @@ SET( scene_inc
     ${HEADER_PATH}/Scene/TrackBall.h
     ${HEADER_PATH}/Scene/View.h
     ${HEADER_PATH}/Scene/World.h
-    ${HEADER_PATH}/Scene/2D/Node2D.h
-    ${HEADER_PATH}/Scene/2D/Stage2D.h
 )
 
 #==============================================================================
