@@ -1031,7 +1031,7 @@ void OGLRenderBackend::setFixedPipelineStates( const CullState &cullstate, const
     } else {
         glEnable( GL_CULL_FACE );
         glFrontFace( GL_CCW );
-        glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );
+        //glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );
     }
 
     if ( m_fpState->m_blendState.getBlendFunc() == BlendState::BlendFunc::Off ) {
@@ -1040,24 +1040,6 @@ void OGLRenderBackend::setFixedPipelineStates( const CullState &cullstate, const
         glEnable( GL_BLEND );
     }
     m_fpState->m_applied = true;
-}
-
-ui32 OGLRenderBackend::getVertexSize( VertexType vertextype ) {
-    ui32 vertexSize( 0 );
-    switch( vertextype ) {
-        case VertexType::ColorVertex:
-            vertexSize = sizeof( ColorVert );
-            break;
-
-        case VertexType::RenderVertex:
-            vertexSize = sizeof( RenderVert );
-            break;
-
-        default:
-            break;
-    }
-
-    return vertexSize;
 }
 
 } // Namespace RenderBackend

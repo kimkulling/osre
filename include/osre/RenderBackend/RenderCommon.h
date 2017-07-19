@@ -417,6 +417,7 @@ struct OSRE_EXPORT Geometry {
 
     static Geometry *create( ui32 numGeo );
     static void destroy( Geometry **geo );
+    static ui32 getVertexSize( VertexType vertextype );
 
     OSRE_NON_COPYABLE( Geometry )
 

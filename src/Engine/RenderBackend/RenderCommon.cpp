@@ -360,6 +360,24 @@ void Geometry::destroy( Geometry **geo ) {
     (*geo) = nullptr;
 }
 
+ui32 Geometry::getVertexSize( VertexType vertextype ) {
+    ui32 vertexSize( 0 );
+    switch ( vertextype ) {
+    case VertexType::ColorVertex:
+        vertexSize = sizeof( ColorVert );
+        break;
+
+    case VertexType::RenderVertex:
+        vertexSize = sizeof( RenderVert );
+        break;
+
+    default:
+        break;
+    }
+
+    return vertexSize;
+}
+
 GeoInstanceData::GeoInstanceData()
 : m_data( nullptr ) {
     // empty

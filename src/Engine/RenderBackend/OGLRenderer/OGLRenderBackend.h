@@ -134,7 +134,6 @@ public:
     void releaseAllFonts();
     void setFixedPipelineStates( const CullState &cullstate, const BlendState &blendState, 
             const SamplerState &samplerState, const StencilState &stencilState );
-    static ui32 getVertexSize( VertexType vertextype );
 
 private:
     Platform::AbstractRenderContext *m_renderCtx;
