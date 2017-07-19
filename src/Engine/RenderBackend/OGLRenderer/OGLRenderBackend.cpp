@@ -1032,6 +1032,7 @@ void OGLRenderBackend::setFixedPipelineStates( const CullState &cullstate, const
         glDisable( GL_CULL_FACE );
     } else {
         glEnable( GL_CULL_FACE );
+        glCullFace( GL_BACK );
         glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );
     }
 
