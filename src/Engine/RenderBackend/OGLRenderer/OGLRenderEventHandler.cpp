@@ -87,7 +87,7 @@ static bool setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTextur
 
     const ui32 numTextures( mat->m_numTextures );
     if( 0 == numTextures ) {
-        return;
+        return true;
     }
 
     for( ui32 i = 0; i < numTextures; ++i ) {

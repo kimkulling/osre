@@ -81,7 +81,8 @@ TEST_F( TAABBTest, mergeArrayTest_Success ) {
     static const ui32 NumVectors = 100;
     Vec3f v[ NumVectors ];
     for ( ui32 i = 0; i < NumVectors; i++ ) {
-        v[ i ].set( i, i, i );
+        const f32 val( static_cast< f32 >( i ) );
+        v[ i ].set( val, val, val );
     }
     aabb.updateFromVector3Array( v, NumVectors );
     Vec3f newMax( 99, 99, 99 );
