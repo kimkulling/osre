@@ -344,8 +344,9 @@ struct OSRE_EXPORT Texture {
 ///	@brief  This enum describes the different shader types, which are supported by the OSRE-engine.
 enum class ShaderType : ui32 {
     SH_VertexShaderType = 0,    ///< The shader is a vertex shader, used for each vertex.
-    SH_FragmentShaderType,      ///< The shader is a fragment shader, used for rasterization.
     SH_GeometryShaderType,      ///< The shader is a geometry shader, used for tesselation.
+    SH_TesselationShaderType,   ///< The Tellelation evaluation shader.
+    SH_FragmentShaderType,      ///< The shader is a fragment shader, used for rasterization.
     NumShaderTypes,             ///< Number of enums.
     InvalidShaderType           ///< Enum for invalid enum.
 };

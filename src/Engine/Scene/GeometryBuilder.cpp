@@ -281,7 +281,8 @@ Geometry *GeometryBuilder::allocPoints( VertexType type, BufferAccessType access
 
     Geometry *ptGeo = GeometryBuilder::allocEmptyGeometry( type, 1 );
 
-    ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, numPoints, posArray, colorArray, nullptr, BufferAccessType::ReadOnly );
+    ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, numPoints, posArray, 
+                        colorArray, nullptr, BufferAccessType::ReadOnly );
     ptGeo->m_indextype = IndexType::UnsignedShort;
     ui32 pt_size = sizeof( GLushort ) * numPoints;
     ptGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, BufferAccessType::ReadOnly );
@@ -457,12 +458,9 @@ void GeometryBuilder::updateTextBox( RenderBackend::Geometry *geo, f32 textSize,
 
     const f32 invCol = 1.f / 16.f;
     const f32 invRow = 1.f / 16.f;
-    ui32 textCol( 0 ), textRow( 0 );
     for ( ui32 i = 0; i < text.size(); i++ ) {
         const c8 ch = text[ i ];
         if ( isLineBreak( ch ) ) {
-            textCol = 0;
-            textRow++;
             continue;
         }
 
@@ -563,3 +561,4 @@ void GeometryBuilder::updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, Buff
 
 } // Namespace Scene
 } // Namespace OSRE
+

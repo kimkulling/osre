@@ -71,9 +71,19 @@ static const String FsSrc =
 	"};\n";
 
 
-static void setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTexture*> &textures ) {
+static bool setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTexture*> &textures ) {
     OSRE_ASSERT( nullptr != mat );
 	OSRE_ASSERT( nullptr != rb );
+
+    if ( nullptr == mat ) {
+        osre_debug( Tag, "Material is nullptr." );
+        return false;
+    }
+
+    if ( nullptr == rb ) {
+        osre_debug( Tag, "Renderbackend is nullptr." );
+        return false;
+    }
 
     const ui32 numTextures( mat->m_numTextures );
     if( 0 == numTextures ) {
@@ -95,6 +105,8 @@ static void setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTextur
             }
         }
     }
+
+    return true;
 }
 
 static SetMaterialStageCmdData *setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {

@@ -32,7 +32,7 @@ public:
     }
 
     bool onOpenWorld() {
-
+        return true;
     }
 
     bool loadWorld( const IO::Uri &loc ) {

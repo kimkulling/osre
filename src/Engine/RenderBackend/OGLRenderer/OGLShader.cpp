@@ -60,20 +60,21 @@ OGLShader::OGLShader( const String &name )
 }
 
 OGLShader::~OGLShader( ) {
-	if ( m_isInUse ) {
-		osre_warn(Tag, "Destroying shader which is still in use.");
-	}
+    if ( m_isInUse ) {
+        osre_warn(Tag, "Destroying shader which is still in use.");
+    }
 
-	for ( unsigned int i=0; i<3; ++i ) {
+    for ( unsigned int i=0; i<3; ++i ) {
         if ( 0 != m_shaders[ i ] ) {
             glDeleteShader( m_shaders[ i ] );
             m_shaders[ i ] = 0;
         }
     }
-	if ( 0 != m_shaderprog ) {
-		glDeleteProgram( m_shaderprog );
-		m_shaderprog = 0;
-	}
+
+    if ( 0 != m_shaderprog ) {
+        glDeleteProgram( m_shaderprog );
+        m_shaderprog = 0;
+    }
 }
 
 bool OGLShader::loadFromSource( ShaderType type, const String &src ) {
@@ -216,3 +217,4 @@ GLint OGLShader::operator() ( const String &uniform ) {
 
 } // Namespace RenderBackend
 } // Namespace OSRE
+

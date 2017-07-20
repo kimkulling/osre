@@ -30,18 +30,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iostream>
 
-namespace OSRE {
-namespace Platform {
+static const ::OSRE::String Tag = "Win32RenderContext";
 
-static const String Tag = "Win32RenderContext";
-
-void APIENTRY DebugLog( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
-    const GLchar *msg, GLvoid *userParam ) {
-
+static void APIENTRY openglCallbackFunction(
+    GLenum source,
+    GLenum type,
+    GLuint id,
+    GLenum severity,
+    GLsizei length,
+    const GLchar* message,
+    const void* userParam
+) {
     std::cout << "---------------------opengl-callback-start------------" << std::endl;
-    std::cout << "message: " << msg << std::endl;
+    std::cout << "message: " << message << std::endl;
     std::cout << "type: ";
-    switch( type ) {
+    switch ( type ) {
     case GL_DEBUG_TYPE_ERROR:
         std::cout << "ERROR";
         break;
@@ -64,7 +67,7 @@ void APIENTRY DebugLog( GLenum source, GLenum type, GLuint id, GLenum severity, 
     std::cout << std::endl;
 
     std::cout << "id: " << id << "severity: ";
-    switch( severity ){
+    switch ( severity ) {
     case GL_DEBUG_SEVERITY_LOW:
         std::cout << "LOW";
         break;
@@ -79,6 +82,8 @@ void APIENTRY DebugLog( GLenum source, GLenum type, GLuint id, GLenum severity, 
     std::cout << "---------------------opengl-callback-end--------------" << std::endl;
     osre_info( Tag, "DebugLog" );
 }
+namespace OSRE {
+namespace Platform {
 
 Win32RenderContext::Win32RenderContext( )
 : AbstractRenderContext()
@@ -165,15 +170,11 @@ bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
 #if _DEBUG
     if( glDebugMessageCallback ){
         std::cout << "Register OpenGL debug callback " << std::endl;
+        // Enable the debug callback
+        glEnable( GL_DEBUG_OUTPUT );
         glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS );
-        //glDebugMessageCallback( ::OSRE::Platform::DebugLog, nullptr );
-        GLuint unusedIds = 0;
-        glDebugMessageControl( GL_DONT_CARE,
-            GL_DONT_CARE,
-            GL_DONT_CARE,
-            0,
-            &unusedIds,
-            true );
+        glDebugMessageCallback( openglCallbackFunction, nullptr );
+        glDebugMessageControl( GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, true );
     } else {
         std::cout << "glDebugMessageCallback not available" << std::endl;
     }

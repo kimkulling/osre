@@ -1030,8 +1030,13 @@ void OGLRenderBackend::setFixedPipelineStates( const CullState &cullstate, const
         glDisable( GL_CULL_FACE );
     } else {
         glEnable( GL_CULL_FACE );
+<<<<<<< HEAD
         glFrontFace( GL_CCW );
         //glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );
+=======
+        glCullFace( GL_BACK );
+        glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );
+>>>>>>> 2d74e4b5c31cee56618f348a7d18190f489dab9f
     }
 
     if ( m_fpState->m_blendState.getBlendFunc() == BlendState::BlendFunc::Off ) {
