@@ -10,6 +10,9 @@ Discuss with us: [![Join the chat at https://gitter.im/kimkulling/osre](https://
 - Linux ( [![Build Status](https://travis-ci.org/kimkulling/osre.png)](https://travis-ci.org/kimkulling/osre) ): 
   + OpenGL-renderbackend
 
+# Static code analysis
+- Coverity Status: [![Coverity Scan Build Status](https://scan.coverity.com/projects/13242/badge.svg)](https://scan.coverity.com/projects/kimkulling-osre)
+
 # How to start
 ## What you need to install it
 - A Linux or Windows-PC with a more or less modern GPU
