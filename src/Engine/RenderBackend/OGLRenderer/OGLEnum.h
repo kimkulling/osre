@@ -55,6 +55,8 @@ public:
     static ui32 getOGLSizeForFormat( VertexFormat format );
     /// @brief  Translates the cull state to the corresponding GLenum type.
     static GLenum getOGLCullState( CullState::CullMode cullMode );
+    /// @brief  Translates the cull-face mode to the corresponding GLenum type.
+    static GLenum getOGLCullFace( CullState::CullFace cullFace );
 
     OGLEnum() = delete;
     ~OGLEnum() = delete;

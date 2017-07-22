@@ -97,6 +97,12 @@ public:
     /// @param  uniform     [in] The name of the uniform.
     void addUniform( const String& uniform );
     
+    /// @brief  Will create a list with all active attributes.
+    void getActiveAttributeList();
+
+    /// @brief  Will create a list with all active uniforms.
+    void getActiveUniformList();
+
     /// @brief  Logs a compile and link error.
     /// @param  shaderprog  [in] The shader program handle.
     static void logCompileOrLinkError( ui32 shaderprog );
@@ -120,11 +126,21 @@ public:
     OGLShader &operator = ( const OGLShader & ) = delete;
 
 private:
+    static const ui32 MaxLen = 64u;
+
+    struct ActiveParameter {
+        c8 m_name[ MaxLen ];
+        GLint m_location;
+    };
+
+    ::CPPCore::TArray<ActiveParameter*> m_attribParams;
+    ::CPPCore::TArray<ActiveParameter*> m_uniformParams;
+
     ui32 m_shaderprog;
     ui32 m_numShader;
     ui32 m_shaders[ MaxShaderTypes ];
-    std::map<String, GLint> m_attributeList;
-    std::map<String, GLint> m_uniformLocationList;
+    std::map<String, GLint> m_attributeMap;
+    std::map<String, GLint> m_uniformLocationMap;
     bool m_isCompiledAndLinked;
 	bool m_isInUse;
 };

@@ -207,5 +207,21 @@ GLenum OGLEnum::getOGLCullState( CullState::CullMode cullMode ) {
     return GL_CW;
 }
 
+GLenum OGLEnum::getOGLCullFace( CullState::CullFace cullFace ) {
+    switch ( cullFace ) {
+        case CullState::CullFace::Front:
+            return GL_FRONT;
+        case CullState::CullFace::Back:
+            return GL_BACK;
+        case CullState::CullFace::FrontAndBack:
+            return GL_FRONT_AND_BACK;
+        default:
+            OSRE_VALIDATE( false, "Unknown enum" );
+            break;
+    }
+    
+    return GL_BACK;
+}
+
 } // Namespace RenderBackend
 } // Namespace OSRE

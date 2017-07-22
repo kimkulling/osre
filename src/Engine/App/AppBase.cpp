@@ -295,7 +295,7 @@ const ArgumentParser &AppBase::getArgumentParser() const {
 RenderBackend::Pipeline *AppBase::createDefaultPipeline() {
     Pipeline *pipeline = new Pipeline;
     PipelinePass *renderPass = new PipelinePass(nullptr);
-    CullState cullState( CullState::CullMode::CCW );
+    CullState cullState( CullState::CullMode::CCW, CullState::CullFace::Back );
     renderPass->setCullState( cullState );
     pipeline->addPass(renderPass);
     

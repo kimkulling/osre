@@ -1015,6 +1015,8 @@ void OGLRenderBackend::releaseAllFonts() {
 
 void OGLRenderBackend::setFixedPipelineStates( const CullState &cullstate, const BlendState &blendState, 
         const SamplerState &samplerState, const StencilState &stencilState ) {
+    OSRE_ASSERT( nullptr != m_fpState );
+
     if ( m_fpState->m_applied ) {
         if ( m_fpState->isEqual( cullstate, blendState, samplerState, stencilState ) ) {
             return;
@@ -1030,7 +1032,7 @@ void OGLRenderBackend::setFixedPipelineStates( const CullState &cullstate, const
         glDisable( GL_CULL_FACE );
     } else {
         glEnable( GL_CULL_FACE );
-        glCullFace( GL_BACK );
+        glCullFace( OGLEnum::getOGLCullFace( m_fpState->m_cullState.getCullFace() ) );
         glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );
     }
 
