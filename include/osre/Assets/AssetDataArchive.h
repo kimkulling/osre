@@ -89,7 +89,17 @@ public:
     bool read( IO::Stream &stream );
     bool write( IO::Stream &stream );
     bool isLoaded() const;
-    
+    bool readWorldData();
+    bool writeWorldData();
+    bool readStageData();
+    bool writeStageData();
+    bool readViewData();
+    bool writeViewData();
+    bool readNodeData();
+    bool writeNodeData();
+    bool readGeometryData();
+    bool writeGeometryData();
+
     static bool checkReadState( IO::Stream &stream );
     static bool checkWriteState( IO::Stream &stream );
     static uc8* allocChunkData( ui32 size );

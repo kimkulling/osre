@@ -186,7 +186,7 @@ void OGLRenderBackend::bindBuffer( OGLBuffer *buffer ) {
         return;
     }
 
-    /*if ( BufferType::VertexBuffer == buffer->m_type ) {
+    if ( BufferType::VertexBuffer == buffer->m_type ) {
         if ( m_activeVB == buffer->m_oglId ) {
             return;
         }
@@ -196,7 +196,7 @@ void OGLRenderBackend::bindBuffer( OGLBuffer *buffer ) {
             return;
         }
         m_activeIB = buffer->m_oglId;
-    }*/
+    }
  
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, buffer->m_oglId );
