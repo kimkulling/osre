@@ -84,6 +84,8 @@ GLenum OGLEnum::getGLIndexType( IndexType indexType ) {
             return GL_UNSIGNED_BYTE;
         case IndexType::UnsignedShort:
             return GL_UNSIGNED_SHORT;
+        case IndexType::UnsignedInt:
+            return GL_UNSIGNED_INT;
         default:
             OSRE_VALIDATE( false, "Unknown enum" );
             break;

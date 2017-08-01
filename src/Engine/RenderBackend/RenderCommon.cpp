@@ -215,6 +215,7 @@ BufferData::BufferData()
 : m_type( BufferType::EmptyBuffer )
 , m_data( nullptr )
 , m_size( 0 )
+, m_cap( 0 )
 , m_access( BufferAccessType::ReadOnly ) {
     // empty
 }
@@ -223,14 +224,16 @@ BufferData::~BufferData() {
     delete[] m_data;
     m_data = nullptr;
     m_size = 0;
+    m_cap = 0;
 }
 
-BufferData* BufferData::alloc( BufferType type, ui32 m_size, BufferAccessType access ) {
+BufferData* BufferData::alloc( BufferType type, ui32 sizeInBytes, BufferAccessType access ) {
     BufferData *buffer( new BufferData );
-    buffer->m_size   = m_size;
+    buffer->m_size   = sizeInBytes;
+    buffer->m_cap    = sizeInBytes;
     buffer->m_access = access;
     buffer->m_type   = type;
-    buffer->m_data   = new uc8[ buffer->m_size ];
+    buffer->m_data   = new uc8[ sizeInBytes ];
 
     return buffer;
 }
@@ -248,6 +251,11 @@ void BufferData::copyFrom( void *data, ui32 size ) {
     if ( nullptr == data ) {
         return;
     }
+    if ( size > m_cap ) {
+        osre_error( Tag, "Out of buffer error." );
+        return;
+    }
+
     m_size = size;
     ::memcpy( m_data, data, size );
 }
@@ -255,7 +263,7 @@ void BufferData::copyFrom( void *data, ui32 size ) {
 PrimitiveGroup::PrimitiveGroup()
 : m_primitive( PrimitiveType::LineList )
 , m_startIndex( 0 )
-, m_numPrimitives( 0 )
+, m_numIndices( 0 )
 , m_indexType( IndexType::UnsignedShort ) {
     // empty
 }
@@ -267,7 +275,7 @@ PrimitiveGroup::~PrimitiveGroup() {
 void PrimitiveGroup::init( IndexType indexType, ui32 numPrimitives, PrimitiveType primType, 
         ui32 startIdx ) {
     m_indexType = indexType;
-    m_numPrimitives = numPrimitives;
+    m_numIndices = numPrimitives;
     m_primitive = primType;
     m_startIndex = startIdx;
 }

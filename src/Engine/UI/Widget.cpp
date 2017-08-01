@@ -29,6 +29,8 @@ namespace UI {
 
 using namespace ::OSRE::Common;
 
+static const String Tag = "StyleProvider";
+
 StyleProvider *StyleProvider::s_instance = nullptr;
 
 Style &StyleProvider::getCurrentStyle() {
@@ -42,6 +44,11 @@ void StyleProvider::setStyle( const Style &newStyle ) {
     if ( nullptr == s_instance ) {
         static_cast<void>( StyleProvider::getCurrentStyle() );
     }
+    if ( nullptr == s_instance ) {
+        osre_debug( Tag, "Singleton instance is nullptr." );
+        return;
+    }
+
     if ( newStyle != s_instance->m_activeStyle ) {
         s_instance->m_activeStyle = newStyle;
     }
@@ -56,7 +63,7 @@ StyleProvider::~StyleProvider() {
     // empty
 }
 
-RectUI WidgetCoordMapping::s_dim = RectUI(-1,-1,-1,-1 );
+RectUI WidgetCoordMapping::s_dim = RectUI( 0, 0, 0, 0 );
 
 void WidgetCoordMapping::init( const RectUI &dim ) {
     s_dim = dim;

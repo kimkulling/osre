@@ -77,6 +77,10 @@ const Scene::Node::AABB &GeometryProcessor::getAABB() const {
 void GeometryProcessor::handleGeometry( RenderBackend::Geometry *geo ) {
     OSRE_ASSERT( nullptr != geo );
 
+    if ( nullptr == geo ) {
+        return;
+    }
+
     ui32 offsetPos = 0, stride = 0;
     switch ( geo->m_vertextype ) {
         case VertexType::RenderVertex:

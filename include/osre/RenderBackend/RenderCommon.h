@@ -43,6 +43,11 @@ static const i32  UnsetHandle   = -1;
 /// Upper limits for names.
 static const ui32 MaxEntNameLen = 256;
 
+enum class RenderBackendType {
+    OpenGLRenderBackend,
+    VulkanRenderBackend
+};
+
 ///	@brief  This enum describes the usage of a buffer object.
 enum class BufferType {
     EmptyBuffer = 0, ///< Empty buffer, no special use.
@@ -51,7 +56,6 @@ enum class BufferType {
     InstanceBuffer,  ///< Instance buffer, will store instance-specific data.
     NumBufferTypes,       ///< Number of enums.
     InvalidBufferType    ///< Enum for invalid enum.
-
 };
 
 /// @brief  This enum describes the supported access types for render buffers.
@@ -63,13 +67,12 @@ enum class BufferAccessType {
     InvalidBufferAccessType     ///< Enum for invalid enum.
 };
 
-///	@brief  This enum describes the buildin vertex types provided by OSRE, mainly used for demos and examples.
+///	@brief  This enum describes the build-in vertex types provided by OSRE, mainly used for demos and examples.
 enum class VertexType {
     ColorVertex = 0,            ///< A simple vertex consisting of position and color.
     RenderVertex,               ///< A render vertex with position, color, normals and texture coordinates.
     NumVertexTypes,             ///< Number of enums.
     InvalidVertexType           ///< Enum for invalid enum.
-
 };
 
 ///	@brief  This enum describes the supported texture target types.
@@ -111,13 +114,13 @@ enum class TextureParameterType {
     TexturePTRepeat,            ///< Use repeat mode, texture will be repeately mirrored.
     NumTextureParameterTypes,   ///< Number of enums.
     InvalidTextureParameterType,///< Enum for invalid enum.
-
 };
 
 ///	@brief  This enum describes the index data type.
 enum class IndexType {
     UnsignedByte = 0,       ///< Bytes are used for the index data.
     UnsignedShort,          ///< Unsigned short for the index data.
+    UnsignedInt,            ///< Unsigned int for the index data.
     NumIndexTypes,          ///< Number of enums.
     InvalidIndexType,       ///< Enum for invalid enum.
 };
@@ -163,7 +166,7 @@ struct RenderVert {
     static const String *getAttributes();
 };
 
-///	@brief  This enum to descibes the type of the vertex attribute.
+///	@brief  This enum to describes the type of the vertex attribute.
 enum class VertexAttribute : int {
     Position = 0,       ///< "position"
     Normal,             ///< "normal"
@@ -285,16 +288,17 @@ struct OSRE_EXPORT VertexLayout {
     OSRE_NON_COPYABLE( VertexLayout )
 };
 
-///	@brief
+///	@brief  This struct is used to describe data for a GPU buffer.
 struct OSRE_EXPORT BufferData {
-    BufferType       m_type;
-    void            *m_data;
-    ui32             m_size;
-    BufferAccessType m_access;
+    BufferType       m_type;    ///< The buffer type ( @see BufferType )
+    void            *m_data;    ///< The buffer data
+    ui32             m_size;    ///< The size of the buffer
+    ui32             m_cap;
+    BufferAccessType m_access;  ///< Access token ( @see BufferAccessType )
 
     BufferData();
     ~BufferData();
-    static BufferData *alloc( BufferType type, ui32 m_size, BufferAccessType access );
+    static BufferData *alloc( BufferType type, ui32 sizeInBytes, BufferAccessType access );
 	static void free( BufferData *data );
     void copyFrom( void *data, ui32 size );
 
@@ -305,7 +309,7 @@ struct OSRE_EXPORT BufferData {
 struct OSRE_EXPORT PrimitiveGroup {
     PrimitiveType m_primitive;
     ui32          m_startIndex;
-    ui32          m_numPrimitives;
+    ui32          m_numIndices;
     IndexType     m_indexType;
 
     PrimitiveGroup();
@@ -315,12 +319,11 @@ struct OSRE_EXPORT PrimitiveGroup {
     OSRE_NON_COPYABLE( PrimitiveGroup )
 };
 
-///	@brief  This enum describes the kind of buildin material.
+///	@brief  This enum describes the kind of build-in material.
 enum class MaterialType {
-    ShaderMaterial = 0,         ///< Material using a buildin shader assigned to its type of vertex.
+    ShaderMaterial = 0,         ///< Material using a build-in shader assigned to its type of vertex.
     NumMaterialTypes,           ///< Number of enums.
     InvalidMaterialType         ///< Enum for invalid enum.
-
 };
 
 ///	@brief  
@@ -345,7 +348,7 @@ struct OSRE_EXPORT Texture {
 enum class ShaderType : ui32 {
     SH_VertexShaderType = 0,    ///< The shader is a vertex shader, used for each vertex.
     SH_GeometryShaderType,      ///< The shader is a geometry shader, used for tesselation.
-    SH_TesselationShaderType,   ///< The Tellelation evaluation shader.
+    SH_TesselationShaderType,   ///< The tesselation evaluation shader.
     SH_FragmentShaderType,      ///< The shader is a fragment shader, used for rasterization.
     NumShaderTypes,             ///< Number of enums.
     InvalidShaderType           ///< Enum for invalid enum.
@@ -392,17 +395,6 @@ struct OSRE_EXPORT Material {
 
     OSRE_NON_COPYABLE( Material )
 };
-
-///	@brief
-/*struct OSRE_EXPORT Transform {
-    f32 m_translate[ 3 ];
-    f32 m_scale[ 3 ];
-
-    Transform();
-    ~Transform();
-
-    OSRE_NON_COPYABLE( Transform )
-};*/
 
 ///	@brief
 struct OSRE_EXPORT Geometry {

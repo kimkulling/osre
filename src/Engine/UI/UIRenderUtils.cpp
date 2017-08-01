@@ -66,7 +66,7 @@ Geometry *UIRenderUtils::createRectFromStyle( WidgetType type, const RectUI &rec
     geo->m_numPrimGroups = 1;
     geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
     geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numPrimitives = 6;
+    geo->m_pPrimGroups[ 0 ].m_numIndices = 6;
     geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
     geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 

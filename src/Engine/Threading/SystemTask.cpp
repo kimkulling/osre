@@ -163,9 +163,10 @@ protected:
 
                 const TaskJob *job = m_activeJobQueue->dequeue();
                 const Common::Event *ev = job->getEvent();
-                if ( !ev ) {
+                if ( nullptr == ev ) {
                     running = false;
                     OSRE_ASSERT(nullptr != ev);
+                    continue;
                 }
 
                 if ( OnStopSystemTaskEvent == *ev ) {
@@ -304,6 +305,10 @@ void SystemTask::attachEventHandler( AbstractEventHandler *eventHandler ) {
 
 void SystemTask::detachEventHandler() {
     OSRE_ASSERT( nullptr != m_taskThread );
+    if ( nullptr == m_taskThread ) {
+        osre_debug( Tag, "TaskThread is nullptr." );
+        return;
+    }
 
     Common::AbstractEventHandler *eh = m_taskThread->getEventHandler();
     if( eh ) {
@@ -336,6 +341,8 @@ void SystemTask::onUpdate() {
 }
 
 void SystemTask::awaitUpdate() {
+    OSRE_ASSERT( nullptr != m_taskThread );
+
     if ( nullptr != m_taskThread ) {
         AbstractThreadEvent *threadEvent = m_taskThread->getUpdateEvent();
         if ( nullptr != threadEvent ) {

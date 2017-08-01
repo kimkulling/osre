@@ -221,10 +221,10 @@ void OGLRenderBackend::unbindBuffer( OGLBuffer *buffer ) {
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, 0 );
 
-    //CHECKOGLERRORSTATE();
+    CHECKOGLERRORSTATE();
 }
 
-void OGLRenderBackend::copyData( OGLBuffer *buffer, void *data, ui32 size, BufferAccessType usage ) {
+void OGLRenderBackend::copyDataToBuffer( OGLBuffer *buffer, void *data, ui32 size, BufferAccessType usage ) {
     if ( nullptr == buffer ) {
         osre_debug( Tag, "Pointer to buffer is nullptr" );
         return;
@@ -232,7 +232,7 @@ void OGLRenderBackend::copyData( OGLBuffer *buffer, void *data, ui32 size, Buffe
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBufferData( target, size, data, OGLEnum::getGLBufferAccessType( usage ) );
     
-    //CHECKOGLERRORSTATE();
+    CHECKOGLERRORSTATE();
 }
 
 void OGLRenderBackend::releaseBuffer( OGLBuffer *buffer ) {
@@ -908,7 +908,7 @@ ui32 OGLRenderBackend::addPrimitiveGroup( PrimitiveGroup *grp ) {
     oglGrp->m_primitive     = OGLEnum::getGLPrimitiveType( grp->m_primitive );
     oglGrp->m_indexType     = OGLEnum::getGLIndexType( grp->m_indexType );
     oglGrp->m_startIndex    = grp->m_startIndex;
-    oglGrp->m_numPrimitives = grp->m_numPrimitives;
+    oglGrp->m_numIndices = grp->m_numIndices;
     
     const ui32 idx( m_primitives.size() );
     m_primitives.add( oglGrp );
@@ -924,7 +924,7 @@ void OGLRenderBackend::render( ui32 primpGrpIdx ) {
     OGLPrimGroup *grp( m_primitives[ primpGrpIdx ] );
     if( nullptr != grp ) {
         glDrawElements( grp->m_primitive, 
-                        grp->m_numPrimitives, 
+                        grp->m_numIndices, 
                         grp->m_indexType, 
                         ( const GLvoid* ) grp->m_startIndex );
     }
@@ -935,7 +935,7 @@ void OGLRenderBackend::render( ui32 primpGrpIdx, ui32 numInstances ) {
     if ( nullptr != grp ) {
         glDrawArraysInstanced( grp->m_primitive, 
                                grp->m_startIndex, 
-                               grp->m_numPrimitives, 
+                               grp->m_numIndices, 
                                numInstances );
     }
 }
@@ -1027,13 +1027,13 @@ void OGLRenderBackend::setFixedPipelineStates( const CullState &cullstate, const
     m_fpState->m_cullState    = cullstate;
     m_fpState->m_samplerState = samplerState;
     m_fpState->m_stensilState = stencilState;
-
+    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     if ( m_fpState->m_cullState.getCullMode() == CullState::CullMode::Off ) {
         glDisable( GL_CULL_FACE );
     } else {
-        glEnable( GL_CULL_FACE );
+        /*glEnable( GL_CULL_FACE );
         glCullFace( OGLEnum::getOGLCullFace( m_fpState->m_cullState.getCullFace() ) );
-        glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );
+        glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );*/
     }
 
     if ( m_fpState->m_blendState.getBlendFunc() == BlendState::BlendFunc::Off ) {

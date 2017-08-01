@@ -250,8 +250,6 @@ void OGLShader::getActiveUniformList() {
         if ( size > 1 ) {
             for ( i32 attribIdx = 0; attribIdx < size; attribIdx++ ) {
                 ActiveParameter *attribParam = new ActiveParameter;
-
-                c8 LongName[ MaxLen ];
                 std::stringstream stream;
                 stream << name << attribIdx;
                 strncpy( attribParam->m_name, stream.str().c_str(), stream.str().size() );
