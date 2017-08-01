@@ -35,8 +35,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 #include <iostream>
+
 
 namespace OSRE {
 namespace Assets {
@@ -67,6 +69,18 @@ bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
         osre_error( Tag, "URI " + file.getUri() + " is invalid " );
         return false;
     }
+
+    unsigned int importFlags = aiProcess_CalcTangentSpace
+        | aiProcess_GenSmoothNormals
+        | aiProcess_JoinIdenticalVertices
+        | aiProcess_ImproveCacheLocality
+        | aiProcess_LimitBoneWeights
+        | aiProcess_RemoveRedundantMaterials
+        | aiProcess_SplitLargeMeshes
+        | aiProcess_Triangulate
+        | aiProcess_GenUVCoords
+        | aiProcess_SortByPType;
+    flags = importFlags;
 
     String root = AssetRegistry::getPath( "media" );
     String path = AssetRegistry::resolvePathFromUri( file );
@@ -173,23 +187,23 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     geo->m_vb = BufferData::alloc( BufferType::VertexBuffer, vbSize, BufferAccessType::ReadOnly );
     geo->m_vb->copyFrom( &vertices[ 0 ], vbSize );
 
-    CPPCore::TArray<ui16> indexArray;
+    CPPCore::TArray<ui32> indexArray;
     for ( ui32 i = 0; i < mesh->mNumFaces; i++ ) {
         aiFace &currentFace = mesh->mFaces[ i ];
         for ( ui32 idx = 0; idx < currentFace.mNumIndices; idx++ ) {
             const ui32 index = currentFace.mIndices[ idx ];
-            indexArray.add( static_cast<ui16>( index ) );
+            indexArray.add( index );
         }
     }
-	//Scene::GeometryDiagnosticUtils::dumpIndices( indexArray );
+	Scene::GeometryDiagnosticUtils::dumpIndices( indexArray );
 
-    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( ui16 ) * indexArray.size(), BufferAccessType::ReadOnly );
+    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( ui32 ) * indexArray.size(), BufferAccessType::ReadOnly );
     geo->m_ib->copyFrom( &indexArray[ 0 ], geo->m_ib->m_size );
 
     geo->m_numPrimGroups = 1;
     geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
-    geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numPrimitives = indexArray.size();
+    geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedInt;
+    geo->m_pPrimGroups[ 0 ].m_numIndices = indexArray.size();
     geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
     geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
@@ -204,7 +218,6 @@ void AssimpWrapper::handleNode( aiNode *node, Scene::Node *parent ) {
         return;
     }
     
-
     Node *newNode = new Node( node->mName.C_Str(), m_ids, 
             Node::RenderCompRequest::RenderCompRequested,
             Node::TransformCompRequest::TransformCompRequested, 
