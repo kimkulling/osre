@@ -1027,7 +1027,7 @@ void OGLRenderBackend::setFixedPipelineStates( const CullState &cullstate, const
     m_fpState->m_cullState    = cullstate;
     m_fpState->m_samplerState = samplerState;
     m_fpState->m_stensilState = stencilState;
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     if ( m_fpState->m_cullState.getCullMode() == CullState::CullMode::Off ) {
         glDisable( GL_CULL_FACE );
     } else {
