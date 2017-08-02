@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/ClearState.h>
 #include <osre/RenderBackend/StencilState.h>
 #include <osre/RenderBackend/CullState.h>
+#include <osre/RenderBackend/PolygonState.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -42,6 +43,15 @@ struct RenderTarget {
     // empty
 };
 
+struct PipelineStates {
+    PolygonState m_polygonState;
+    CullState    m_cullState;
+    BlendState   m_blendState;
+    SamplerState m_samplerState;
+    ClearState   m_clearState;
+    StencilState m_stencilState;
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -51,7 +61,9 @@ class OSRE_EXPORT PipelinePass {
 public:
     PipelinePass( Shader *shader );
     ~PipelinePass();
-    void set( RenderTarget &rt, CullState &cullstate, BlendState &blendState, SamplerState &samplerState, ClearState &clearState, StencilState &stencilState );
+    void set( RenderTarget &rt, PipelineStates &states );
+    void setPolygonState(PolygonState polyState);
+    PolygonState getPolygonState() const;
     void setCullState( CullState &cullstate );
     CullState getCullState() const;
     void setBlendState( BlendState &blendState );
@@ -69,11 +81,7 @@ public:
 
 private:
     RenderTarget m_renderTarget;
-    CullState m_cullState;
-    BlendState m_blendState;
-    SamplerState m_samplerState;
-    ClearState m_clearState;
-    StencilState m_stencilState;
+    PipelineStates m_states;
     Shader *m_shader;
 };
 

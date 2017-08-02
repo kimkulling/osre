@@ -46,7 +46,7 @@ RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRende
     OSRE_ASSERT( nullptr != m_renderCtx );
     OSRE_ASSERT( nullptr != m_pipeline );
 
-    m_clearState.setClearState( ClearState::ColorBit | ClearState::DepthBit );
+    m_clearState.setClearState( (int) ClearState::ClearBitType::ColorBit | (int)ClearState::ClearBitType::DepthBit );
 }
 
 RenderCmdBuffer::~RenderCmdBuffer() {
@@ -97,12 +97,17 @@ void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
 
     for ( ui32 passId = 0; passId < numPasses; passId++ ) {
         PipelinePass *pass = m_pipeline->beginPass( passId );
-        m_renderbackend->setFixedPipelineStates( 
-                pass->getCullState(), 
-                pass->getBlendState(), 
-                pass->getSamplerState(), 
-                pass->getStencilState() );
-
+        if ( nullptr == pass ) {
+            osre_debug(Tag, "Ponter to pipeline pass is nullptr.");
+            continue;
+        }
+        PipelineStates states;
+/*        states.m_polygonState = pass->getPolygonState();
+        states.m_cullState = pass->getCullState();
+        states.m_blendState = pass->getBlendState();
+        states.m_samplerState = pass->getSamplerState();
+        states.m_stencilState = pass->getStencilState();
+        m_renderbackend->setFixedPipelineStates(states);*/
         for ( ui32 i = 0; i < m_cmdbuffer.size(); ++i ) {
             // only valid pointers are allowed
             OGLRenderCmd *renderCmd = m_cmdbuffer[ i ];

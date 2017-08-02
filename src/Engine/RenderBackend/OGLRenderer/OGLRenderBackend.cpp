@@ -53,6 +53,7 @@ static const String Tag             = "OGLRenderBackend";
 static const ui32   NotInitedHandle = 9999999;
 
 struct FixedPipelineState {
+    PolygonState m_polygonState;
     BlendState   m_blendState;
     CullState    m_cullState;
     SamplerState m_samplerState;
@@ -60,7 +61,8 @@ struct FixedPipelineState {
     bool         m_applied;
 
     FixedPipelineState()
-    : m_blendState()
+    : m_polygonState()
+    , m_blendState()
     , m_cullState()
     , m_samplerState()
     , m_stensilState()
@@ -68,10 +70,11 @@ struct FixedPipelineState {
         // empty
     }
 
-    bool isEqual( const CullState &cullstate, const BlendState &blendState, const SamplerState &samplerState, 
+    bool isEqual( const PolygonState &polygonState, const CullState &cullstate, const BlendState &blendState, const SamplerState &samplerState,
             const StencilState &stencilState ) const {
-        return ( cullstate == m_cullState 
+        return ( polygonState  == m_polygonState
               && blendState == m_blendState 
+              && cullstate == m_cullState
               && samplerState == m_samplerState 
               && stencilState == m_stensilState );
     }
@@ -130,13 +133,13 @@ void OGLRenderBackend::setRenderContext( Platform::AbstractRenderContext *render
 void OGLRenderBackend::clearRenderTarget( const ClearState &clearState ) {
     GLbitfield glTarget( 0 );
     const ui32 clear( clearState.getClearState() );
-    if( clear & ClearState::ColorBit ) {
+    if( clear & (int) ClearState::ClearBitType::ColorBit ) {
         glTarget |= GL_COLOR_BUFFER_BIT;
     }
-    if( clear & ClearState::DepthBit ) {
+    if( clear & (int)ClearState::ClearBitType::DepthBit ) {
         glTarget |= GL_DEPTH_BUFFER_BIT;
     }
-    if( clear & ClearState::StencilBit ) {
+    if( clear & (int) ClearState::ClearBitType::StencilBit ) {
         glTarget |= GL_STENCIL_BUFFER_BIT;
     }
 
@@ -1013,27 +1016,27 @@ void OGLRenderBackend::releaseAllFonts() {
     m_fonts.clear();
 }
 
-void OGLRenderBackend::setFixedPipelineStates( const CullState &cullstate, const BlendState &blendState, 
-        const SamplerState &samplerState, const StencilState &stencilState ) {
+void OGLRenderBackend::setFixedPipelineStates( const PipelineStates &states ) {
     OSRE_ASSERT( nullptr != m_fpState );
 
     if ( m_fpState->m_applied ) {
-        if ( m_fpState->isEqual( cullstate, blendState, samplerState, stencilState ) ) {
+        if ( m_fpState->isEqual(states.m_polygonState, states.m_cullState, states.m_blendState, states.m_samplerState, states.m_stencilState ) ) {
             return;
         }
     }
 
-    m_fpState->m_blendState   = blendState;
-    m_fpState->m_cullState    = cullstate;
-    m_fpState->m_samplerState = samplerState;
-    m_fpState->m_stensilState = stencilState;
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    m_fpState->m_polygonState = states.m_polygonState;
+    m_fpState->m_blendState   = states.m_blendState;
+    m_fpState->m_cullState    = states.m_cullState;
+    m_fpState->m_samplerState = states.m_samplerState;
+    m_fpState->m_stensilState = states.m_stencilState;
+    
     if ( m_fpState->m_cullState.getCullMode() == CullState::CullMode::Off ) {
         glDisable( GL_CULL_FACE );
     } else {
-        /*glEnable( GL_CULL_FACE );
-        glCullFace( OGLEnum::getOGLCullFace( m_fpState->m_cullState.getCullFace() ) );
-        glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );*/
+        glEnable( GL_CULL_FACE );
+        glPolygonMode( OGLEnum::getOGLCullFace(m_fpState->m_cullState.getCullFace()), OGLEnum::getOGLPolygonMode(m_fpState->m_polygonState.getPolygonMode() ) );
+        glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );
     }
 
     if ( m_fpState->m_blendState.getBlendFunc() == BlendState::BlendFunc::Off ) {
