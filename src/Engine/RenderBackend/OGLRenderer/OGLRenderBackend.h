@@ -132,8 +132,7 @@ public:
     FontBase *findFont( const String &name ) const;
     bool relaseFont( FontBase *font );
     void releaseAllFonts();
-    void setFixedPipelineStates( const CullState &cullstate, const BlendState &blendState, 
-            const SamplerState &samplerState, const StencilState &stencilState );
+    void setFixedPipelineStates(const PipelineStates &states);
 
 private:
     Platform::AbstractRenderContext *m_renderCtx;

@@ -35,54 +35,57 @@ PipelinePass::~PipelinePass() {
     // empty
 }
 
-void PipelinePass::set( RenderTarget &rt, CullState &cullstate, BlendState &blendState, SamplerState &samplerState,
-                        ClearState &clearState, StencilState &stencilState ) {
-    m_cullState = cullstate;
+void PipelinePass::set( RenderTarget &rt, PipelineStates &states) {
     m_renderTarget = rt;
-    m_blendState = blendState;
-    m_samplerState = samplerState;
-    m_clearState = clearState;
-    m_stencilState = stencilState;
+    m_states = states;
+}
+
+void PipelinePass::setPolygonState(PolygonState polyState) {
+    m_states.m_polygonState = polyState;
+}
+
+PolygonState PipelinePass::getPolygonState() const {
+    return m_states.m_polygonState;
 }
 
 void PipelinePass::setCullState( CullState &cullstate ) {
-    m_cullState = cullstate;
+    m_states.m_cullState = cullstate;
 }
 
 CullState PipelinePass::getCullState() const {
-    return m_cullState;
+    return m_states.m_cullState;
 }
 
 void PipelinePass::setBlendState( BlendState &blendState ) {
-    m_blendState = blendState;
+    m_states.m_blendState = blendState;
 }
 
 const BlendState &PipelinePass::getBlendState() const {
-    return m_blendState;
+    return m_states.m_blendState;
 }
 
 void PipelinePass::setSamplerState( SamplerState &samplerState ) {
-    m_samplerState = samplerState;
+    m_states.m_samplerState = samplerState;
 }
 
 const SamplerState &PipelinePass::getSamplerState() const {
-    return m_samplerState;
+    return m_states.m_samplerState;
 }
 
 void PipelinePass::setClearState( ClearState &clearState ) {
-    m_clearState = clearState;
+    m_states.m_clearState = clearState;
 }
 
 const ClearState &PipelinePass::getClearState() const {
-    return m_clearState;
+    return m_states.m_clearState;
 }
 
 void PipelinePass::setStencilState( StencilState &stencilState ) {
-    m_stencilState = stencilState;
+    m_states.m_stencilState = stencilState;
 }
 
 const StencilState &PipelinePass::getStencilState() const {
-    return m_stencilState;
+    return m_states.m_stencilState;
 }
 
 void PipelinePass::setShader( Shader *shader ) {
@@ -94,11 +97,12 @@ Shader *PipelinePass::getShader() const {
 }
 
 bool PipelinePass::operator == ( const PipelinePass &rhs ) const {
-    return ( m_cullState == rhs.m_cullState
-          && m_blendState == rhs.m_blendState 
-          && m_samplerState == rhs.m_samplerState 
-          && m_clearState == rhs.m_clearState
-          && m_stencilState == rhs.m_stencilState );
+    return ( m_states.m_polygonState == rhs.m_states.m_polygonState
+          && m_states.m_cullState == rhs.m_states.m_cullState
+          && m_states.m_blendState == rhs.m_states.m_blendState
+          && m_states.m_samplerState == rhs.m_states.m_samplerState
+          && m_states.m_clearState == rhs.m_states.m_clearState
+          && m_states.m_stencilState == rhs.m_states.m_stencilState );
 }
 
 bool PipelinePass::operator != ( const PipelinePass &rhs ) const {

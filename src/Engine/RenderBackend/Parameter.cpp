@@ -22,7 +22,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/Parameter.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Common/StringUtils.h>
 #include <osre/Common/Logger.h>
 
 namespace OSRE {

@@ -225,5 +225,21 @@ GLenum OGLEnum::getOGLCullFace( CullState::CullFace cullFace ) {
     return GL_BACK;
 }
 
+GLenum OGLEnum::getOGLPolygonMode(PolygonState::PolygonMode polyMode) {
+    switch( polyMode ) {
+        case PolygonState::PolygonMode::Point:
+            return GL_POINT;
+        case PolygonState::PolygonMode::Line:
+            return GL_LINE;
+        case PolygonState::PolygonMode::Fill:
+            return GL_FILL;
+        default:
+            OSRE_VALIDATE(false, "Unknown enum");
+            break;
+    }
+
+    return GL_FILL;
+}
+
 } // Namespace RenderBackend
 } // Namespace OSRE
