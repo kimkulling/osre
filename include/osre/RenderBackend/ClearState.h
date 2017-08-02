@@ -36,7 +36,7 @@ namespace RenderBackend {
 //-------------------------------------------------------------------------------------------------
 class ClearState {
 public:
-    enum ClearBitType {
+    enum class ClearBitType : int {
         ColorBit   = 1 << 0,    ///< Clear the color buffer.
         DepthBit   = 1 << 1,    ///< Clear the depth buffer.
         StencilBit = 1 << 2     ///< Clear the stencil buffer.
