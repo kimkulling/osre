@@ -241,5 +241,23 @@ GLenum OGLEnum::getOGLPolygonMode(PolygonState::PolygonMode polyMode) {
     return GL_FILL;
 }
 
+GLuint OGLEnum::getOGLShaderType( ShaderType type ) {
+    switch ( type ) {
+    case ShaderType::SH_VertexShaderType:
+        return GL_VERTEX_SHADER;
+    case ShaderType::SH_FragmentShaderType:
+        return GL_FRAGMENT_SHADER;
+    case ShaderType::SH_GeometryShaderType:
+        return GL_GEOMETRY_SHADER;
+    case ShaderType::SH_TesselationShaderType:
+        return GL_TESS_EVALUATION_SHADER;
+    default:
+        OSRE_VALIDATE( false, "Unknown enum." );
+        break;
+    }
+
+    return 0;
+}
+
 } // Namespace RenderBackend
 } // Namespace OSRE

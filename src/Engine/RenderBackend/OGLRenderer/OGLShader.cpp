@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "OGLShader.h"
-
+#include "OGLEnum.h"
 #include <osre/Common/Logger.h>
 #include <osre/IO/Stream.h>
 #include <osre/Debugging/osre_debugging.h>
@@ -31,24 +31,6 @@ namespace RenderBackend {
 
 static const GLint  ErrorId = -1;
 static const String Tag    = "OGLShader";
-
-static GLuint getOGLShaderType( ShaderType type ) {
-    switch( type ) {
-        case ShaderType::SH_VertexShaderType:
-            return GL_VERTEX_SHADER;
-        case ShaderType::SH_FragmentShaderType:
-            return GL_FRAGMENT_SHADER;
-        case ShaderType::SH_GeometryShaderType:
-            return GL_GEOMETRY_SHADER;
-        case ShaderType::SH_TesselationShaderType:
-            return GL_TESS_EVALUATION_SHADER;
-        default:
-            OSRE_VALIDATE( false, "Unknown enum." );
-            break;
-    }
-
-    return 0;
-}
 
 OGLShader::OGLShader( const String &name )
 : Object( name )
@@ -87,7 +69,7 @@ bool OGLShader::loadFromSource( ShaderType type, const String &src ) {
     if ( src.empty() ) {
         return false;
     }
-    GLuint shader = glCreateShader( getOGLShaderType( type ) );
+    GLuint shader = glCreateShader( OGLEnum::getOGLShaderType( type ) );
     m_shaders[ static_cast<int>( type ) ] = shader;
 
     const char *tmp = src.c_str();
