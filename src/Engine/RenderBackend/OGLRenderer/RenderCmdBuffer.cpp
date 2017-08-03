@@ -102,12 +102,12 @@ void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
             continue;
         }
         PipelineStates states;
-/*        states.m_polygonState = pass->getPolygonState();
+        states.m_polygonState = pass->getPolygonState();
         states.m_cullState = pass->getCullState();
         states.m_blendState = pass->getBlendState();
         states.m_samplerState = pass->getSamplerState();
         states.m_stencilState = pass->getStencilState();
-        m_renderbackend->setFixedPipelineStates(states);*/
+        m_renderbackend->setFixedPipelineStates(states);
         for ( ui32 i = 0; i < m_cmdbuffer.size(); ++i ) {
             // only valid pointers are allowed
             OGLRenderCmd *renderCmd = m_cmdbuffer[ i ];

@@ -60,7 +60,7 @@ public:
     static GLenum getOGLCullFace( CullState::CullFace cullFace );
     /// @brief  Translates the polygon mode to the corresponding GLenum value.
     static GLenum getOGLPolygonMode(PolygonState::PolygonMode polyMode);
-    ///
+    /// @brief  Translates the shader type to the corresponding GLuint value.
     static GLuint OGLEnum::getOGLShaderType( ShaderType type );
 
     OGLEnum() = delete;

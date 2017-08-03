@@ -473,5 +473,18 @@ RenderBatch::~RenderBatch() {
     // empty
 }
 
+RenderLight::RenderLight()
+: m_position(0,0,0)
+, m_specular( 1,1,1 )
+, m_diffuse(1,1,1)
+, m_ambient(1,1,1)
+, m_specularExp( 1 ) {
+    // empty
+}
+
+RenderLight::~RenderLight() {
+    // empty
+}
+
 } // Namespace RenderBackend
 } // Namespace OSRE

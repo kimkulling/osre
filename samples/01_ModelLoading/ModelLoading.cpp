@@ -100,6 +100,9 @@ protected:
             m_transformMatrix.update();
             RenderBackendService *rbSrv( getRenderBackendService() );
             if ( nullptr != rbSrv ) {
+                /*rbSrv->setMatrix( "M", m_transformMatrix.m_model );
+                rbSrv->setMatrix( "V", m_transformMatrix.m_view );
+                rbSrv->setMatrix( "P", m_transformMatrix.m_projection );*/
                 rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
                 rbSrv->attachGeo( geoArray, 0 );
             }
@@ -113,6 +116,10 @@ protected:
         m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
         m_angle += 0.01f;
+        RenderBackendService *rbSrv( getRenderBackendService() );
+        /*rbSrv->setMatrix( "M", m_transformMatrix.m_model );
+        rbSrv->setMatrix( "V", m_transformMatrix.m_view );
+        rbSrv->setMatrix( "P", m_transformMatrix.m_projection );*/
 
         AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
         AppBase::onUpdate( timetick );

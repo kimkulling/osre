@@ -419,6 +419,7 @@ private:
     ~Geometry();
 };
 
+///	@brief
 struct OSRE_EXPORT GeoInstanceData {
     BufferData *m_data;
 
@@ -428,6 +429,7 @@ struct OSRE_EXPORT GeoInstanceData {
     OSRE_NON_COPYABLE( GeoInstanceData )
 };
 
+///	@brief
 struct OSRE_EXPORT TransformBlock {
     glm::vec3 m_transform;
     glm::vec3 m_scale;
@@ -441,6 +443,7 @@ struct OSRE_EXPORT TransformBlock {
     OSRE_NON_COPYABLE( TransformBlock )
 };
 
+///	@brief
 struct OSRE_EXPORT TransformMatrixBlock {
     glm::mat4 m_projection;
     glm::mat4 m_model;
@@ -456,6 +459,7 @@ struct OSRE_EXPORT TransformMatrixBlock {
     OSRE_NON_COPYABLE( TransformMatrixBlock )
 };
 
+///	@brief
 struct OSRE_EXPORT Viewport {
 	i32 m_x;
 	i32 m_y;
@@ -470,6 +474,7 @@ struct OSRE_EXPORT Viewport {
 	OSRE_NON_COPYABLE( Viewport )
 };
 
+///	@brief
 struct Canvas {
     ui32 m_x;
     ui32 m_y;
@@ -478,6 +483,7 @@ struct Canvas {
     ui32 m_z;
 };
 
+///	@brief
 struct RenderBatch {
     glm::mat4  m_model;
     ui32       m_numGeo;
@@ -487,6 +493,20 @@ struct RenderBatch {
     ~RenderBatch();
 
     OSRE_NON_COPYABLE( RenderBatch )
+};
+
+///	@brief
+struct RenderLight {
+    glm::vec3 m_position;
+    glm::vec3 m_specular;
+    glm::vec3 m_diffuse;
+    glm::vec3 m_ambient;
+    f32       m_specularExp;
+
+    RenderLight();
+    ~RenderLight();
+
+    OSRE_NON_COPYABLE( RenderLight )
 };
 
 } // Namespace RenderBackend

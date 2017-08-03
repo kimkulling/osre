@@ -188,18 +188,6 @@ void OGLRenderBackend::bindBuffer( OGLBuffer *buffer ) {
         osre_debug( Tag, "Pointer to buffer is nullptr" );
         return;
     }
-
-    if ( BufferType::VertexBuffer == buffer->m_type ) {
-        if ( m_activeVB == buffer->m_oglId ) {
-            return;
-        }
-        m_activeVB = buffer->m_oglId;
-    } else if ( BufferType::IndexBuffer == buffer->m_type ) {
-        if ( m_activeIB == buffer->m_oglId ) {
-            return;
-        }
-        m_activeIB = buffer->m_oglId;
-    }
  
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, buffer->m_oglId );

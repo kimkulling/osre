@@ -27,7 +27,8 @@ namespace Scene {
         
 using namespace ::OSRE::RenderBackend;
 
-static const String GLSLVersionString_400 = "#version 400 core\n";
+static const String GLSLVersionString_400 = 
+    "#version 400 core\n";
 
 static const String GLSLRenderVertexLayout =
 	"// RenderVertex layout\n"
@@ -37,7 +38,11 @@ static const String GLSLRenderVertexLayout =
 	"layout(location = 3) in vec2 texcoord0;  // per-vertex colour\n"
 	"\n";
 
-const String VsSrc =
+static const String CombinedMVPUniformSrc =
+    "// uniform\n"
+    "uniform mat4 MVP;	//combined modelview projection matrix\n";
+
+static const String VsSrc =
     GLSLVersionString_400 +
     "\n"
     "layout(location = 0) in vec3 position;	      // object space vertex position\n"
@@ -47,8 +52,7 @@ const String VsSrc =
     "// output from the vertex shader\n"
     "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
     "\n"
-    "// uniform\n"
-    "uniform mat4 MVP;	//combined modelview projection matrix\n"
+    + CombinedMVPUniformSrc +
     "\n"
     "void main() {\n"
     "    // assign the per-vertex color to vSmoothColor varying\n"
@@ -80,8 +84,7 @@ const String VsSrcRV =
     "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
     "smooth out vec2 vUV;\n"
     "\n"
-    "// uniform\n"
-    "uniform mat4 MVP;	//combined modelview projection matrix\n"
+    + CombinedMVPUniformSrc +
     "\n"
     "void main()\n"
     "{\n"
@@ -108,8 +111,6 @@ const String FsSrcRV =
     "void main()\n"
     "{\n"
     "    // set the interpolated color as the shader output\n"
-	"//    vFragColor = texture( tex0, vUV) * vSmoothColor;\n"
-    "//    vFragColor = texture( tex0, vUV );\n"
 	"    vec4 texColor = texture( tex0, vUV );\n"
 	"    vFragColor = texColor + vSmoothColor;\n"
     "}\n";
@@ -117,17 +118,13 @@ const String FsSrcRV =
 const String VsSrcUI =
     GLSLVersionString_400 +
     "\n"
-    "layout(location = 0) in vec3 position;	      // object space vertex position\n"
-    "layout(location = 1) in vec3 normal;	            // object space vertex normal\n"
-    "layout(location = 2) in vec3 color0;  // per-vertex colour\n"
-    "layout(location = 3) in vec2 texcoord0;  // per-vertex colour\n"
+    + GLSLRenderVertexLayout +
     "\n"
     "// output from the vertex shader\n"
     "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
     "smooth out vec2 vUV;\n"
     "\n"
-    "// uniform\n"
-    "uniform mat4 MVP;	//combined modelview projection matrix\n"
+    + CombinedMVPUniformSrc +
     "\n"
     "void main()\n"
     "{\n"
@@ -156,6 +153,9 @@ const String FsSrcUI =
     "    // set the interpolated color as the shader output\n"
     "    vFragColor = vSmoothColor;\n"
     "}\n";
+
+static const String VSLightRenderVertexSrc = "";
+static const String FSLightRenderVertexSrc = "";
 
 MaterialBuilder::MaterialBuilder() {
     // empty
