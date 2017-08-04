@@ -27,7 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>
-//#include "3dparty/assimp/code/ColladaLoader.h"
 
 namespace OSRE {
 
