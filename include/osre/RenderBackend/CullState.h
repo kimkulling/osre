@@ -20,7 +20,6 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-
 #pragma once
 
 namespace OSRE {
@@ -33,13 +32,14 @@ namespace RenderBackend {
 //-------------------------------------------------------------------------------------------------
 class CullState {
 public:
-    /// @brief  The cullmode, describes direction for a polygon.
+    /// @brief  The cull-mode, describes direction for a polygon.
     enum class CullMode {
         CW,     ///< Clockwise
         CCW,    ///< Counter-clock wise
         Off     ///< Off
     };
 
+    /// @brief  The cull-face, describes the direction for a valid polygon declaration.
     enum class CullFace {
         Front,          ///< Front polygons will be culled.
         Back,           ///< Back polygons will be culled
@@ -50,10 +50,10 @@ public:
     /// @brief  The default class constructor.
     CullState();
 
-    /// @brief  The class constructor with the cullmode and the cull face option.
-    /// @param  mode        [in] The cullmode, @see CullMode.
+    /// @brief  The class constructor with the cull-mode and the cull face option.
+    /// @param  mode        [in] The cull-mode, @see CullMode.
     /// @param  cullFace    [in] The cullFace mode, @see CullFace.
-    explicit CullState::CullState( CullMode mode, CullFace cullFace );
+    explicit CullState( CullMode mode, CullFace cullFace );
     
     /// @brief  The class destructor.
     ~CullState();
@@ -62,8 +62,8 @@ public:
     /// @param  cullmode    [in] The new cull mode.
     void setCullMode( CullMode cullMode );
 
-    /// @brief  Will return the current actie cull mode.
-    /// @return The actie cull mode.
+    /// @brief  Will return the current active cull mode.
+    /// @return The active cull mode.
     CullMode getCullMode() const;
 
     /// @brief  Will set the new cull face mode.
