@@ -22,50 +22,58 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <osre/RenderBackend/RenderCommon.h>
-
-#include <cppcore/Container/THashMap.h>
-
 namespace OSRE {
 namespace RenderBackend {
 
-struct Buffer {
-    ui32 m_handle;
-    ui32 m_size;
-};
-
-class GPUBufferManager {
+class PolygonState {
 public:
-    struct Impl {
-        ~Impl();
-        virtual Buffer *createBuffer( const String &desc ) = 0;
-        virtual Buffer *getBufferByDesc( const String &desc );
-        virtual void updateBuffer( BufferData &data ) = 0;
-        virtual void appendToBuffer( BufferData &data ) = 0;
-        virtual void releaseBuffer( Buffer *buffer ) = 0;
+    enum class PolygonMode {
+        Point,
+        Line,
+        Fill
     };
 
-public:
-    GPUBufferManager( Impl *impl );
-    ~GPUBufferManager();
-    Buffer *createBuffer( const String &desc );
-    Buffer *getBufferByDesc( const String &desc );
-    void updateBuffer( BufferData &data );
-    void appendToBuffer( BufferData &data );
-    void releaseBuffer( Buffer *buffer );
+    PolygonState();
+    ~PolygonState();
+    void setPolygoneMode( PolygonMode polyMode );
+    PolygonMode getPolygonMode() const;
+    bool operator == ( const PolygonState &rhs ) const; 
+    bool operator != ( const PolygonState &rhs ) const;
 
 private:
-    typedef CPPCore::THashMap<String, Buffer*> BufferMap;
-    BufferMap m_bufferMap;
-    RenderBackendType m_backendType;
-    Impl *m_impl;
+    PolygonMode m_polyMode;
 };
 
 inline
-GPUBufferManager::Impl::~Impl() {
+PolygonState::PolygonState()
+: m_polyMode( PolygonMode::Fill ) {
     // empty
 }
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+inline
+PolygonState::~PolygonState() {
+    // empty
+}
+
+inline
+void PolygonState::setPolygoneMode( PolygonMode polyMode ) {
+    m_polyMode = polyMode;
+}
+
+inline
+PolygonState::PolygonMode PolygonState::getPolygonMode() const {
+    return m_polyMode;
+}
+
+inline
+bool PolygonState::operator == ( const PolygonState &rhs ) const {
+    return ( m_polyMode == rhs.m_polyMode );
+}
+
+inline
+bool PolygonState::operator != ( const PolygonState &rhs ) const {
+    return !( *this == rhs );
+}
+
+}
+}

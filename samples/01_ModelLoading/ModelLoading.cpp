@@ -42,6 +42,7 @@ using namespace ::OSRE;
 using namespace ::OSRE::Assets;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Scene;
 
 // To identify local log entries 
 static const String Tag = "ModelLoadingApp"; 
@@ -106,6 +107,8 @@ protected:
                 rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
                 rbSrv->attachGeo( geoArray, 0 );
             }
+
+            Stage *myStage = AppBase::createStage( "ModelLoading" );
         }
 
         return true;
