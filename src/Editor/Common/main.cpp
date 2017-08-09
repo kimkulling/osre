@@ -8,22 +8,30 @@
 #include <osre/Common/ArgumentParser.h>
 #include <osre/Scene/World.h>
 #include <osre/IO/Uri.h>
+#include <osre/Assets/AssetDataArchive.h>
+#include <osre/Platform/PlatformOperations.h>
 
 using namespace ::OSRE;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Scene;
+using namespace ::OSRE::Platform;
+using namespace ::OSRE::Assets;
 
 static const String SupportedArgs = "help:api:gen_project:asset_path";
 static const String Descs         = "Shows the help:The render API:Generates a template project:Path to media";
 static const String Tag = "osre_ed";
 
 class osre_ed : public App::AppBase {
-    World *m_world;
-
+    World            *m_world;
+    AssetDataArchive *m_project;
+    IO::Uri           m_projecUri;
+    
 public:
     osre_ed( int argc, char *argv[] )
     : AppBase( argc, argv, SupportedArgs, Descs )
-    , m_world( nullptr ) {
+    , m_world( nullptr )
+    , m_project( nullptr )
+    , m_projecUri() {
         // empty
     }
 
@@ -31,15 +39,45 @@ public:
         // empty
     }
 
-    bool onOpenWorld() {
+    bool openWorld( const String &projectName ) {
+        m_project = new AssetDataArchive( 1 );
+        m_project->setName( projectName );
+
+        return true;
+    }
+
+    bool closeWorld() {
+        if ( nullptr == m_project ) {
+            return true;
+        }
+
         return true;
     }
 
     bool loadWorld( const IO::Uri &loc ) {
-        return false;
+        if ( loc.isEmpty() ) {
+            PlatformOperations::getFileOpenDialog( AssetDataArchive::getExtension(), m_projecUri );
+        } else {
+            m_projecUri = loc;
+        }
+
+        const String &name = m_projecUri.getResource();
+        if ( name.empty() ) {
+            return false;
+        }
+
+        m_project->setName( name );
+
+        return true;
     }
 
     bool saveWorld( const IO::Uri &loc ) {
+        if ( !loc.isValid() ) {
+            PlatformOperations::getFileOpenDialog( AssetDataArchive::getExtension(), m_projecUri );
+        } else {
+            m_projecUri = loc;
+        }
+
         return false;
     }
 

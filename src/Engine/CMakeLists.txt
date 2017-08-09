@@ -176,6 +176,7 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/KeyTypes.h
     ${HEADER_PATH}/Platform/PluginType.h
     ${HEADER_PATH}/Platform/PlatformInterface.h
+    ${HEADER_PATH}/Platform/PlatformOperations.h
 )
 SET( platform_src
     Platform/CPUInfo.cpp
@@ -187,6 +188,7 @@ SET( platform_src
     Platform/PlatformPluginFactory.cpp
     Platform/PlatformPluginFactory.h
     Platform/AbstractDynamicLoader.cpp
+    Platform/PlatformOperations.cpp
 )
 SET( platform_win32_src
     Platform/win32/Win32Atomic.h

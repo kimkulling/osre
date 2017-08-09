@@ -174,13 +174,28 @@ ui32 AssetDataArchive::writeDict() {
 }
 
 AssetDataArchive::AssetDataArchive( ui32 minVersion )
-: m_dict()
-, m_minVersion( minVersion ) {
+: m_name()
+, m_dict()
+, m_minVersion( minVersion )
+, m_dateStream( nullptr ) {
     // empty
 }
 
 AssetDataArchive::~AssetDataArchive() {
     // empty
+}
+
+String AssetDataArchive::getExtension() {
+    static const String Extension = "osa";
+    return Extension;
+}
+
+void AssetDataArchive::setName( const String &name ) {
+    m_name = name;
+}
+
+const String AssetDataArchive::getName() const {
+    return m_name;
 }
 
 bool AssetDataArchive::read( IO::Stream &stream ) {

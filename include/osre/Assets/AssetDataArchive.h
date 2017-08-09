@@ -86,6 +86,9 @@ public:
 public:
     explicit AssetDataArchive( ui32 minVersion );
     ~AssetDataArchive();
+    static String getExtension();
+    void setName( const String &name );
+    const String getName() const;
     bool read( IO::Stream &stream );
     bool write( IO::Stream &stream );
     bool isLoaded() const;
@@ -112,9 +115,10 @@ public:
     static ui32 writeDict();
 
 private:
+    String m_name;
     AssetDataDict m_dict;
     ui32 m_minVersion;
-
+    IO::Stream *m_dateStream;
 };
 
 }
