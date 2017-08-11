@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifdef OSRE_WINDOWS
 #   include <Windows.h>
+#   include <Commdlg.h>
 #endif // OSRE_WINDOWS
 
 namespace OSRE {

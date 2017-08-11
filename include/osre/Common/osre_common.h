@@ -141,7 +141,7 @@ struct Handle {
         init( idx );
     }
 
-    void init( int idx ) {
+    void init( i32 idx ) {
         m_idx = idx;
     }
 };
