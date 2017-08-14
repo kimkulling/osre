@@ -24,21 +24,15 @@ INCLUDE_DIRECTORIES(
     3dparty/glew/include
     3dparty/assimp/contrib/irrXML
     3dparty/zlib
-    d:/projects/libs/SDL2-2.0.3/include
     c:/Users/kullingk/Desktop/projects/libs/SDL2-2.0.3/include
-    d:/projects/libs/SDL2-2.0.5/include
-    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.10586.0/um"
     3dparty/soil/src
     /usr/include/SDL2/
     /usr/include/
-	"C:/projects/libs/SDL2-2.0.5/include"
+	$ENV{SDL_PATH}/include
 )
 
 link_directories(
-    d:/projects/libs/SDL2-2.0.5/lib/x86
-    d:/libs/SDL2-2.0.5/lib/x86
-    "C:/Program Files (x86)/Windows Kits/10/Lib/10.0.10586.0/um/x86"
-	"C:/projects/libs/SDL2-2.0.5/lib/x86"
+	$ENV{SDL_PATH}/lib/x86
     ${CMAKE_HOME_DIRECTORY}/lib
     ${CMAKE_HOME_DIRECTORY}/bin
 )

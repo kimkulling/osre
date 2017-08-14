@@ -31,6 +31,7 @@ namespace OSRE {
 namespace RenderBackend {
 
 struct Buffer {
+    String desc;
     ui32 m_handle;
     ui32 m_size;
 };
@@ -56,7 +57,7 @@ public:
     void releaseBuffer( Buffer *buffer );
 
 private:
-    typedef CPPCore::THashMap<String, Buffer*> BufferMap;
+    typedef CPPCore::THashMap<ui32, Buffer*> BufferMap;
     BufferMap m_bufferMap;
     RenderBackendType m_backendType;
     Impl *m_impl;

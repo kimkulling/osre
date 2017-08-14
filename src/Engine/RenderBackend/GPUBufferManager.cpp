@@ -21,6 +21,8 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/GPUBufferManager.h>
+#include <osre/Common/StringUtils.h>
+
 #include "OGLRenderer/OGLRenderBackend.h"
 
 namespace OSRE {
@@ -46,6 +48,7 @@ struct OGLImpl : public GPUBufferManager::Impl {
         }
         Buffer *buffer = new Buffer;
         buffer->m_handle = glBuffer->m_handle;
+        buffer->desc = desc;
     }
     
     Buffer *getBufferByDesc( const String &desc ) override {
@@ -82,12 +85,43 @@ Buffer *GPUBufferManager::createBuffer( const String &desc ) {
     if ( desc.empty() ) {
         return nullptr;
     }
+    Buffer *buffer = getBufferByDesc( desc );
+    if ( nullptr != buffer ) {
+        return buffer;
+    }
 
-    m_impl->createBuffer( desc );
+    buffer = m_impl->createBuffer( desc );
+    if ( nullptr != buffer ) {
+        const ui32 key( Common::StringUtils::hashName( desc ) );
+        m_bufferMap.insert( key, buffer );
+    }
+
+    return buffer;
+}
+
+Buffer *GPUBufferManager::getBufferByDesc( const String &desc ) {
+    if ( desc.empty() ) {
+        return nullptr;
+    }
+    const ui32 key( Common::StringUtils::hashName( desc ) );
+    if ( !m_bufferMap.hasKey( key ) ) {
+        return nullptr;
+    }
+    Buffer *buffer( nullptr );
+    if ( m_bufferMap.getValue( key, buffer ) ) {
+        return buffer;
+    }
+    
+    return nullptr;
 }
 
 void GPUBufferManager::releaseBuffer( Buffer *buffer ) {
-
+    if ( nullptr == buffer ) {
+        return;
+    }
+    m_impl->releaseBuffer( buffer );
+    const ui32 key( Common::StringUtils::hashName( buffer->desc ) );
+    m_bufferMap.remove( key );
 }
 
 } // Namespace RenderBackend
