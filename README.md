@@ -36,6 +36,8 @@ via -G )
 ```
 > cmake CMakeLists.txt [-G <makefile generator>]
 ```
+[Special build instructions for Windows](docs/Build_Windows.md)
+
 ## Run the tests
 Navigate to bin\debug or bin\release and run our test suite for rendering:
 ```
