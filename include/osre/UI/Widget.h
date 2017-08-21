@@ -57,9 +57,11 @@ struct OSRE_EXPORT Style {
         // color panel
         m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
         m_properties.add( Color4( 0.9f, 0.9f, 0.9f, 1.f ) );
+        
         // color button
         m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
         m_properties.add( Color4( 0.5f, 0.5f, 0.5f, 1.f ) );
+        
         // color text
         m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
     }
@@ -135,11 +137,13 @@ public:
     virtual bool removeChildWidget( Widget *child );
     virtual ui32 getNumChildren() const;
     virtual Widget *getChildWidgetAt( ui32 idx ) const;
-    virtual void setRect( ui32 x, ui32 y, ui32 w, ui32 h );
+    virtual Widget &setRect( ui32 x, ui32 y, ui32 w, ui32 h );
     virtual const RectUI &getRect() const;
     virtual void requestRedraw();
     virtual void redrawDone();
     virtual bool redrawRequested() const;
+    void setStackIndex( i32 index );
+    i32 getStackIndex() const;
     virtual void render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
 
 protected:
@@ -150,7 +154,7 @@ private:
     Widget *m_parent;
     CPPCore::TArray<Widget*> m_children;
     RectUI m_rect;
-    ui32 m_z;
+    i32 m_stackIndex;
     bool m_redrawRequest;
 };
 

@@ -48,6 +48,7 @@ public:
     virtual ~ButtonBase();
     virtual void setLabel( const String &label );
     virtual const String &getLabel() const;
+    static ButtonBase *createBaseButton(const String &name, Widget *parent);
 
 protected:
     virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );

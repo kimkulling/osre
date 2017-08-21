@@ -97,7 +97,7 @@ Widget::Widget( const String &name, Widget *parent )
 , m_parent( nullptr )
 , m_children()
 , m_rect( 0, 0, 1, 1 )
-, m_z( 1 )
+, m_stackIndex( 1 )
 , m_redrawRequest( true ) {
     Widget::setParent( parent );
 }
@@ -160,12 +160,14 @@ Widget *Widget::getChildWidgetAt( ui32 idx ) const {
     return m_children[ idx ];
 }
 
-void Widget::setRect( ui32 x, ui32 y, ui32 w, ui32 h ) {
+Widget &Widget::setRect( ui32 x, ui32 y, ui32 w, ui32 h ) {
     RectUI newRect( x,y,w,h );
     if ( m_rect != newRect ) {
         m_rect = newRect;
         requestRedraw();
     }
+    
+    return *this;
 }
 
 const RectUI &Widget::getRect() const {
@@ -182,6 +184,14 @@ void Widget::redrawDone() {
 
 bool Widget::redrawRequested() const {
     return m_redrawRequest;
+}
+
+void Widget::setStackIndex(i32 index) {
+    m_stackIndex = index;
+}
+
+i32 Widget::getStackIndex() const {
+    return m_stackIndex;
 }
 
 void Widget::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {

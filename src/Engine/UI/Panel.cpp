@@ -55,13 +55,8 @@ void Panel::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBacke
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const RectUI &rect( getRect() );
 
-    Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle );
+    Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle, getStackIndex() );
     rbSrv->attachGeo( geo, 0 );
-/*    AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-    attachGeoEvData->m_numGeo = 1;
-    attachGeoEvData->m_geo = new Geometry*[ 1 ];
-    attachGeoEvData->m_geo[ 0 ] = geo;
-    rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );*/
 
     m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
 

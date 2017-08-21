@@ -47,6 +47,9 @@ ButtonBase::ButtonBase( const String &name, Widget *parent )
 : Widget( name, parent )
 , m_label() {
     static_cast<void>( StyleProvider::getCurrentStyle() );
+    if ( nullptr != parent ) {
+        setStackIndex(parent->getStackIndex() + 1);
+    }
 }
 
 ButtonBase::~ButtonBase() {
@@ -64,26 +67,17 @@ const String &ButtonBase::getLabel() const {
     return m_label;
 }
 
+ButtonBase *ButtonBase::createBaseButton(const String &name, Widget *parent) {
+    return new ButtonBase(name, parent);
+}
+
 void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const RectUI &rect( getRect() );
 
-    Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle );
-    /*AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-    attachGeoEvData->m_numGeo = 1;
-    attachGeoEvData->m_geo = new Geometry*[ 1 ];
-    attachGeoEvData->m_geo[ 0 ] = geo;
-    rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );*/
+
+    Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, getStackIndex() );
     rbSrv->attachGeo( geo, 0 );
-
-    /*m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.001f, glm::vec3( 1, 1, 0 ) );
-
-    UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
-    m_transformMatrix.update();
-    ::memcpy( parameter->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
-
-    geo->m_material->m_parameters = parameter;
-    geo->m_material->m_numParameters++;*/
 
     targetGeoArray.add( geo );
 }
