@@ -71,5 +71,38 @@ void PlatformOperations::getFileOpenDialog( const String &extensions, IO::Uri &l
 #endif // OSRE_WINDOWS
 }
 
+void PlatformOperations::getFileSaveDialog( const String &extensions, IO::Uri &location ) {
+#ifdef OSRE_WINDOWS
+    OPENFILENAME ofn;       // common dialog box structure
+    char szFile[ 260 ];       // buffer for file name
+                              //HWND hwnd;              // owner window
+
+                              // Initialize OPENFILENAME
+    ZeroMemory( &ofn, sizeof( ofn ) );
+    ofn.lStructSize = sizeof( ofn );
+    //ofn.hwndOwner = hwnd;
+    ofn.lpstrFile = szFile;
+    // Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
+    // use the contents of szFile to initialize itself.
+    ofn.lpstrFile[ 0 ] = '\0';
+    ofn.nMaxFile = sizeof( szFile );
+    ofn.lpstrFilter = extensions.c_str();
+    ofn.nFilterIndex = 1;
+    ofn.lpstrFileTitle = NULL;
+    ofn.nMaxFileTitle = 0;
+    ofn.lpstrInitialDir = NULL;
+    ofn.Flags = OFN_PATHMUSTEXIST;
+
+    // Display the Open dialog box. 
+    if ( TRUE == GetSaveFileName() ) {
+        String filename = ofn.lpstrFile;
+        location.setResource( filename );
+    } else {
+        location.clear();
+    }
+#endif // OSRE_WINDOWSl
+
+}
+
 } // Namespace Platform
 } // Namespace OSRE
