@@ -16,6 +16,6 @@ env:
 language: cpp
 compiler:
   - gcc
-  - clang
+  #- clang
 script:
   - . ./.travis.sh
