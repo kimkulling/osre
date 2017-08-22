@@ -21,12 +21,14 @@ configuration:
   #- 10 2010 # only works for x86
 
 init:
-- call c:\projects\osre\scripts\appveyor\setup_repo.bat
 - if "%platform%" EQU "x64" ( for %%a in (2008 2010 MinGW) do ( if "%Configuration%"=="%%a" (echo "Skipping unsupported configuration" && exit /b 1 ) ) )
 
 install:
 # Make compiler command line tools available
 - call c:\projects\osre\scripts\appveyor\compiler_setup.bat
+
+before_build:
+- call c:\projects\osre\scripts\appveyor\setup_repo.bat
 
 build_script:
 - cd c:\projects\osre
