@@ -26,7 +26,7 @@ init:
 install:
 # Make compiler command line tools available
 - ps: Start-FileDownload 'https://www.libsdl.org/release/SDL2-devel-2.0.5-VC.zip'
-- ps: 7z x SDL2-devel-2.0.5-VC.zip -o SDL2-devel-2.0.5
+- ps: 7z x SDL2-devel-2.0.5-VC.zip -oSDL2-devel-2.0.5
 - ps: $env:SDL_PATH="c:\projects\osre\SDL2-devel-2.0.5"
 - call c:\projects\osre\scripts\appveyor\compiler_setup.bat
 
