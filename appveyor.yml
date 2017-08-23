@@ -18,6 +18,9 @@ configuration:
 - 14 2017
 - 14 2015
 
+init:
+- if "%platform%" EQU "x64" ( for %%a in (2008 2010 MinGW) do ( if "%Configuration%"=="%%a" (echo "Skipping unsupported configuration" && exit /b 1 ) ) )
+
 install:
 # Make compiler command line tools available
 - ps: Start-FileDownload 'https://www.libsdl.org/release/SDL2-devel-2.0.5-VC.zip'
