@@ -14,18 +14,9 @@ platform:
     - x86
     #- x64
     
-environment:
-  matrix:
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-#configuration:
-#  - 14 2015
-#  - 12 2013
-  #- MinGW
-  #- 10 2010 # only works for x86
-
-init:
-- if "%platform%" EQU "x64" ( for %%a in (2008 2010 MinGW) do ( if "%Configuration%"=="%%a" (echo "Skipping unsupported configuration" && exit /b 1 ) ) )
+configuration:
+- 14 2017
+- 14 2015
 
 install:
 # Make compiler command line tools available
