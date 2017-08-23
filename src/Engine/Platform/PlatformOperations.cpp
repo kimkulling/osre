@@ -94,7 +94,7 @@ void PlatformOperations::getFileSaveDialog( const String &extensions, IO::Uri &l
     ofn.Flags = OFN_PATHMUSTEXIST;
 
     // Display the Open dialog box. 
-    if ( TRUE == GetSaveFileName() ) {
+    if ( TRUE == GetSaveFileName( &ofn ) ) {
         String filename = ofn.lpstrFile;
         location.setResource( filename );
     } else {

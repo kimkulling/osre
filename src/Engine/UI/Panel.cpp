@@ -29,10 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <GL/glew.h>
-#include <GL/gl.h>
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
 namespace OSRE {
@@ -63,10 +60,6 @@ void Panel::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBacke
     UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
     m_transformMatrix.update();
     ::memcpy( parameter->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
-
-    
-    /*geo->m_material->m_parameters = parameter;
-    geo->m_material->m_numParameters++;*/
 
     targetGeoArray.add( geo );
 }
