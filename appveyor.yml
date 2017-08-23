@@ -14,9 +14,17 @@ platform:
     - x86
     #- x64
 
-configuration:
-  - 14 2015
-  - 12 2013
+image:
+- Visual Studio 2015
+- Visual Studio 2017
+
+environment:
+  matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+#configuration:
+#  - 14 2015
+#  - 12 2013
   #- MinGW
   #- 10 2010 # only works for x86
 
