@@ -203,6 +203,14 @@ void Widget::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBacken
         onRender( targetGeoArray, rbSrv );
         redrawDone();
     }
+
+    const ui32 numChildren( getNumChildren() );
+    for ( ui32 i = 0; i < numChildren; i++ ) {
+        Widget *child = getChildWidgetAt( i );
+        if ( nullptr != child ) {
+            child->render( targetGeoArray, rbSrv );
+        }
+    }
 }
 
 } // Namespace UI
