@@ -15,7 +15,6 @@ platform:
     #- x64
     
 configuration:
-- 14 2017
 - 14 2015
 
 init:
@@ -32,7 +31,6 @@ before_build:
 
 build_script:
 - cd c:\projects\osre
-- dir
 - set SDL_PATH=\projects\osre\SDL2-2.0.5\
 - if "%platform%" equ "x64" (cmake CMakeLists.txt -G "Visual Studio %Configuration% Win64")
 - if "%platform%" equ "x86" (cmake CMakeLists.txt -G "Visual Studio %Configuration%")
