@@ -25,16 +25,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
-#include <osre/Scene/MaterialBuilder.h>
-
 #include "UIRenderUtils.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <GL/glew.h>
-#include <GL/gl.h>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
 namespace OSRE {
@@ -74,7 +69,6 @@ ButtonBase *ButtonBase::createBaseButton(const String &name, Widget *parent) {
 void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const RectUI &rect( getRect() );
-
 
     Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, getStackIndex() );
     rbSrv->attachGeo( geo, 0 );

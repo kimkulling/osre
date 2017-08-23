@@ -36,6 +36,7 @@ namespace Platform {
 class PlatformOperations {
 public:
     static void getFileOpenDialog( const String &extensions, IO::Uri &location );
+    static void getFileSaveDialog( const String &extensions, IO::Uri &location );
 
 private:
     PlatformOperations();
