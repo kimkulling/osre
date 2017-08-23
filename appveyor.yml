@@ -13,11 +13,7 @@ branches:
 platform:
     - x86
     #- x64
-
-image:
-- Visual Studio 2015
-- Visual Studio 2017
-
+    
 environment:
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
