@@ -38,8 +38,7 @@ ui32 CPUInfo::m_NumCPUs   = 0;
 //	Looks for the CPU ids.
 //-------------------------------------------------------------------------------------------------
 #ifdef OSRE_WINDOWS
-static
-bool hasCPUId() {
+/* static bool hasCPUId() {
     __asm {
         pushfd						// save eflags
             pop		eax
@@ -188,7 +187,7 @@ static bool hasSSE3() {
         return true;
     }
     return false;
-}
+}*/
 #endif
 
 CPUInfo::CPUInfo() {
@@ -229,7 +228,7 @@ bool CPUInfo::init() {
 bool CPUInfo::initCPUProperties() {
     m_CPUFlags = CPUID_None;
 #ifdef OSRE_WINDOWS
-    if( !hasCPUId() ) {
+/*    if( !hasCPUId() ) {
         m_CPUFlags |= CPUID_Unsupported;
         return false;
     }
@@ -261,7 +260,7 @@ bool CPUInfo::initCPUProperties() {
     if ( hasSSE3() ) {
         m_CPUFlags |= CPUID_SSE3;
     }
-
+    */
 #else
     m_NumCPUs = sysconf( _SC_NPROCESSORS_ONLN );
 #endif
