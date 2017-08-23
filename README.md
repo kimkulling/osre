@@ -4,7 +4,7 @@ Another open-source render experience. feel free to play around with it!
 Discuss with us: [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Supported platforms:
-- Windows: 
+- Windows ( [![Build status](https://ci.appveyor.com/api/projects/status/q2ivokgqcit9k5w1/branch/master?svg=true)](https://ci.appveyor.com/project/kimkulling/osre/branch/master) ): 
   + OpenGL-Renderbackend
   + Vulkan-Renderbackend
 - Linux ( [![Build Status](https://travis-ci.org/kimkulling/osre.png)](https://travis-ci.org/kimkulling/osre) ): 
