@@ -50,7 +50,7 @@ void Screen::setSurface( Platform::AbstractSurface *surface ) {
         ui32 y( props->m_y );
         ui32 w( props->m_width );
         ui32 h( props->m_height );
-        RectUI dim( x, y, w, h );
+        Rect2ui dim( x, y, w, h );
         WidgetCoordMapping::init( dim );
     }
 }

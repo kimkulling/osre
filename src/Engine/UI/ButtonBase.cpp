@@ -68,7 +68,7 @@ ButtonBase *ButtonBase::createBaseButton(const String &name, Widget *parent) {
 
 void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
-    const RectUI &rect( getRect() );
+    const Rect2ui &rect( getRect() );
 
     Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, getStackIndex() );
     rbSrv->attachGeo( geo, 0 );

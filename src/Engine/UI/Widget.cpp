@@ -63,13 +63,13 @@ StyleProvider::~StyleProvider() {
     // empty
 }
 
-RectUI WidgetCoordMapping::s_dim = RectUI( 0, 0, 0, 0 );
+Rect2ui WidgetCoordMapping::s_dim = Rect2ui( 0, 0, 0, 0 );
 
-void WidgetCoordMapping::init( const RectUI &dim ) {
+void WidgetCoordMapping::init( const Rect2ui &dim ) {
     s_dim = dim;
 }
 
-const RectUI &WidgetCoordMapping::getDimension() {
+const Rect2ui &WidgetCoordMapping::getDimension() {
     return s_dim;
 }
 
@@ -77,7 +77,7 @@ void WidgetCoordMapping::mapPosToWorld( ui32 x, ui32 y, f32 &mappedX, f32 &mappe
     mapPosToWorld( getDimension(), x, y, mappedX, mappedY );
 }
 
-void WidgetCoordMapping::mapPosToWorld( const RectUI &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY ) {
+void WidgetCoordMapping::mapPosToWorld( const Rect2ui &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY ) {
     mappedX = mappedY = 0.0f;
 
     // Used UI-axis from (-1 | -1 ) to ( 1 | 1 )
@@ -161,7 +161,7 @@ Widget *Widget::getChildWidgetAt( ui32 idx ) const {
 }
 
 Widget &Widget::setRect( ui32 x, ui32 y, ui32 w, ui32 h ) {
-    RectUI newRect( x,y,w,h );
+    Rect2ui newRect( x,y,w,h );
     if ( m_rect != newRect ) {
         m_rect = newRect;
         requestRedraw();
@@ -170,7 +170,7 @@ Widget &Widget::setRect( ui32 x, ui32 y, ui32 w, ui32 h ) {
     return *this;
 }
 
-const RectUI &Widget::getRect() const {
+const Rect2ui &Widget::getRect() const {
     return m_rect;
 }
 

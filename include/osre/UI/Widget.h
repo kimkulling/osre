@@ -107,13 +107,13 @@ private:
 ///	@brief  
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT WidgetCoordMapping {
-    static void init( const RectUI &dim );
-    static const RectUI &getDimension();
+    static void init( const Rect2ui &dim );
+    static const Rect2ui &getDimension();
     static void mapPosToWorld( ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
-    static void mapPosToWorld( const RectUI &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
+    static void mapPosToWorld( const Rect2ui &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
 
 private:
-    static RectUI s_dim;
+    static Rect2ui s_dim;
 };
 
 enum class WidgetType {
@@ -138,7 +138,7 @@ public:
     virtual ui32 getNumChildren() const;
     virtual Widget *getChildWidgetAt( ui32 idx ) const;
     virtual Widget &setRect( ui32 x, ui32 y, ui32 w, ui32 h );
-    virtual const RectUI &getRect() const;
+    virtual const Rect2ui &getRect() const;
     virtual void requestRedraw();
     virtual void redrawDone();
     virtual bool redrawRequested() const;
@@ -153,7 +153,7 @@ protected:
 private:
     Widget *m_parent;
     CPPCore::TArray<Widget*> m_children;
-    RectUI m_rect;
+    Rect2ui m_rect;
     i32 m_stackIndex;
     bool m_redrawRequest;
 };

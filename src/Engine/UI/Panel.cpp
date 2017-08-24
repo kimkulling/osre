@@ -50,7 +50,7 @@ Panel::~Panel() {
 
 void Panel::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
-    const RectUI &rect( getRect() );
+    const Rect2ui &rect( getRect() );
 
     Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle, getStackIndex() );
     rbSrv->attachGeo( geo, 0 );

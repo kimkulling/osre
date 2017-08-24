@@ -58,7 +58,7 @@ TEST_F( WidgetTest, createTest ) {
 
 TEST_F( WidgetTest, access_rect_Test ) {
     TestWidget testWidget( "test", nullptr );
-    RectUI myrect( 0, 1, 2, 3 );
+    Rect2ui myrect( 0, 1, 2, 3 );
     testWidget.setRect( 0, 1, 2, 3 );
     EXPECT_EQ( myrect, testWidget.getRect() );
 }
@@ -104,7 +104,7 @@ TEST_F( WidgetTest, request_redraw_Test ) {
 }
 
 TEST_F( WidgetTest, WidgetCoordMappingTest ) {
-    RectUI rect( 0, 0, 100, 200 );
+    Rect2ui rect( 0, 0, 100, 200 );
     f32 mappedX, mappedY;
     WidgetCoordMapping::mapPosToWorld( rect, 0, 0, mappedX, mappedY );
     EXPECT_FLOAT_EQ( -1.0f, mappedX );

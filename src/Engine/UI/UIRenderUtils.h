@@ -43,7 +43,7 @@ struct Style;
 //-------------------------------------------------------------------------------------------------
 class UIRenderUtils {
 public:
-    static RenderBackend::Geometry *createRectFromStyle( WidgetType Type, const RectUI &rect, const Style &style, i32 stackIndex);
+    static RenderBackend::Geometry *createRectFromStyle( WidgetType Type, const Rect2ui &rect, const Style &style, i32 stackIndex);
 
 private:
     UIRenderUtils();

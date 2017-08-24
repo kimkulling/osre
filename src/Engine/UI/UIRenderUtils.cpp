@@ -40,7 +40,7 @@ UIRenderUtils::~UIRenderUtils() {
     // empty
 }
 
-Geometry *UIRenderUtils::createRectFromStyle( WidgetType type, const RectUI &rect, const Style &style, i32 stackIndex ) {
+Geometry *UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, const Style &style, i32 stackIndex ) {
     Geometry *geo = Geometry::create( 1 );
 
     geo->m_vertextype = VertexType::RenderVertex;
