@@ -1,5 +1,5 @@
 ## Mesh Loader
-![HelloWorld](../../media/Images/HelloWorld.png)
+![A simple box](../../media/Images/01_box.png)
 This sample shows how to import a model using Assimp.
 
 ```cpp
