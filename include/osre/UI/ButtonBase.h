@@ -52,6 +52,8 @@ public:
 
 protected:
     virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
+    virtual void onButtonPressed();
+    virtual void onButtonReleased();
 
 private:
     String m_label;

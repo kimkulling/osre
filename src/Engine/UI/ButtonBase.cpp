@@ -76,5 +76,13 @@ void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::Render
     targetGeoArray.add( geo );
 }
 
+void ButtonBase::onButtonPressed() {
+    Widget::requestRedraw();
+}
+
+void ButtonBase::onButtonReleased() {
+    Widget::requestRedraw();
+}
+
 } // Namespace UI
 } // Namespace OSRE

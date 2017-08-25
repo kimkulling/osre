@@ -1,95 +1,118 @@
 ## Mesh Loader
 ![HelloWorld](../../media/Images/HelloWorld.png)
-This sample shows how a mesh va Asset-Importer-Lib will be loaded and rendered.
+This sample shows how to import a model using Assimp.
 
-## The main application
-At first we are including all needed dependecies, use the OSRE namespace and the Renderbackend-namespace. The we will generate our simple model-, view- and projection-matrix.
 ```cpp
 #include <osre/App/AppBase.h>
 #include <osre/Properties/Settings.h>
-#include <osre/Common/Logger.h>
-#include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
+#include <osre/Scene/View.h>
+#include <osre/Assets/AssetRegistry.h>
+#include <osre/Assets/AssimpWrapper.h>
+#include <osre/Assets/Model.h>
+#include <osre/Assets/Model.h>
+#include <osre/IO/Uri.h>
+#include <osre/Platform/AbstractSurface.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/Common/Ids.h>
+#include <osre/Scene/GeometryBuilder.h>
 
-// for the transform ops
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
-using namespace OSRE;
-using namespace OSRE::RenderBackend;
+using namespace ::OSRE;
+using namespace ::OSRE::Assets;
+using namespace ::OSRE::Common;
+using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Scene;
 
-// to identify local log entries 
-static const String Tag    = "HelloWorld"; 
-```
+// To identify local log entries 
+static const String Tag = "ModelLoadingApp"; 
 
-To start OSRE you cann use the base class for main applications. Just rderive from App::AppBase:
+static const String ModelPath = "file://assets/Models/Obj/box.obj";
 
-```cpp
-class HelloWorldApp : public App::AppBase {
+// The example application, will create the render environment and render a simple triangle onto it
+class ModelLoadingApp : public App::AppBase {
     Scene::Stage *m_stage;
+    Scene::View  *m_view;
+    f32 m_angle;
     TransformMatrixBlock m_transformMatrix;
 
 public:
-    HelloWorldApp( int argc, char *argv[] )
+    ModelLoadingApp( int argc, char *argv[] )
     : AppBase( argc, argv )
-    , m_stage( nullptr ) {
-
+    , m_stage( nullptr )
+    , m_view( nullptr )
+    , m_angle( 0.0f )
+    , m_transformMatrix() {
+        // empty
     }
 
-    virtual ~HelloWorldApp() {
-
+    virtual ~ModelLoadingApp() {
+        // empty
     }
 
 protected:
-    virtual bool onCreate( Properties::Settings *config = nullptr ) {
-        AppBase::getConfig()->setString( Properties::Settings::WindowsTitle, "HelloWorld!" );
-
-        if( !AppBase::onCreate( config ) ) {
+    bool onCreate( Properties::Settings *settings = nullptr ) override {
+        Properties::Settings *baseSettings( AppBase::getSettings() );
+        if ( nullptr == baseSettings ) {
+            return false;
+        }
+       
+        baseSettings->setString( Properties::Settings::WindowsTitle, "Model Loader!" );
+        if ( !AppBase::onCreate( baseSettings ) ) {
             return false;
         }
 
-        m_stage = AppBase::createStage( "HelloWorld" );
-        Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
-        Scene::GeometryBuilder myBuilder;
-        RenderBackend::Geometry *geo = myBuilder.createTriangle();
-        if( nullptr != geo ) {
-                m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
+#ifdef OSRE_WINDOWS
+        Assets::AssetRegistry::registerAssetPath( "assets", "../../media" );
+#else
+        Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
+#endif 
 
-                Parameter *parameter = Parameter::create("MVP", PT_Mat4);
-                ::memcpy(parameter->m_data.m_data,glm::value_ptr(m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model), sizeof(glm::mat4));
+        Ids ids;
+        Assets::AssimpWrapper assimpWrapper( ids );
+        IO::Uri modelLoc( ModelPath );
+        if ( assimpWrapper.importAsset( modelLoc, 0 ) ) {
+            Assets::Model *model = assimpWrapper.getModel();
+            Collision::TAABB<f32> aabb = model->getAABB();
 
-                geo->m_parameter = parameter;
-                geo->m_numParameter++;
+            CPPCore::TArray<Geometry*> geoArray = model->getGeoArray();
+            m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+            m_transformMatrix.update();
+            RenderBackendService *rbSrv( getRenderBackendService() );
+            if ( nullptr != rbSrv ) {
+                /*rbSrv->setMatrix( "M", m_transformMatrix.m_model );
+                rbSrv->setMatrix( "V", m_transformMatrix.m_view );
+                rbSrv->setMatrix( "P", m_transformMatrix.m_projection );*/
+                rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
+                rbSrv->attachGeo( geoArray, 0 );
+            }
 
-                geoNode->addGeometry(geo);
+            Stage *myStage = AppBase::createStage( "ModelLoading" );
         }
 
         return true;
     }
 
-    virtual void onUpdate()  {
-        m_stage->update();
+	// Lets rotate
+    void onUpdate( d32 timetick ) override {
+        glm::mat4 rot( 1.0 );
+        m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
+        m_transformMatrix.update();
+        m_angle += 0.01f;
+        RenderBackendService *rbSrv( getRenderBackendService() );
+
+        AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
+        AppBase::onUpdate( timetick );
     }
+
 };
+
+OSRE_MAIN( ModelLoadingApp )
 ```
-At first we add a stage as an member attribute of your Hello-World. A stage stores the current scene.
-Then we need a transformation to move somthing inside of your scene, so we need another member attribute for the transformation.
+At first we are generating our render window as usual. IN the onCreate-Method we will generate the 
+assimp-wrapper and import a model with it.
 
-Now we create the constructor and the destructor. 
-
-We create the stag in the onCreate callback. When calling AbbBase::create this callback will be called by OSRE. We are creating a simple triangle, 
-storing this in a geometry node, add this to the stage. Now we adding the attributes of our vertex layout, creating a parameter to set the transformation 
-to a parameter of the geometry.
-
-The onUpdate-callback will be called once per frame. We just updating the stage and thats all.
-
-## The main program
-In your main you just need to create the application instance and call create.
-Afterwards you enter the main loop, where you can react on events, update your app and request the rendering.
-```cpp
-OSRE_MAIN( HelloWorldApp )
-```
-
+In the onUpdate-callback the model will be rotated.

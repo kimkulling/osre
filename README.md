@@ -81,5 +81,6 @@ This example will show you how to create a window and add a simple stage to it.
 
 ## Sample 2: Model Loader
 This example will show you how to create a window, load a model using assimp and render it into a new created stage.
+### [02-ModelLoading](https://github.com/kimkulling/osre/blob/master/samples/01_ModelLoading/)
 
   
