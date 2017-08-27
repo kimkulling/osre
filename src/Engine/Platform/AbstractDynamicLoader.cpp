@@ -29,8 +29,10 @@ namespace Platform {
 
 using namespace ::OSRE::Common;
 
+static const i32 NotInitesHandle = -1;
+
 LibHandle::LibHandle()
-: m_index( -1 )
+: m_index( NotInitesHandle )
 , m_handle( nullptr ) {
     // empty
 }
@@ -71,7 +73,7 @@ void AbstractDynamicLoader::removeLib( const String &libName ) {
         LibHandle *libHandle( nullptr );
         m_libmap.getValue( key, libHandle );
         if ( nullptr != libHandle ) {
-            if ( -1 != libHandle->m_index ) {
+            if ( NotInitesHandle != libHandle->m_index ) {
                 m_handles[ static_cast<size_t>( libHandle->m_index ) ] = nullptr;
                 if ( libHandle == getActiveLib() ) {
                     setActiveLib( nullptr );
@@ -104,7 +106,6 @@ void AbstractDynamicLoader::setActiveLib( LibHandle *handle ) {
 LibHandle *AbstractDynamicLoader::getActiveLib() const {
     return m_activeLib;
 }
-
 
 } // Namespace Platform
 } // Namespace OSRE

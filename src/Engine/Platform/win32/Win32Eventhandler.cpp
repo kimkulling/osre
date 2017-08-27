@@ -35,7 +35,6 @@ std::map<HWND, Win32Eventhandler*> Win32Eventhandler::s_WindowsServerMap;
 
 static const String Tag = "Win32Eventhandler";
 
-//-------------------------------------------------------------------------------------------------
 struct IInputUpdate {
     ~IInputUpdate(){
         // empty
@@ -44,7 +43,6 @@ struct IInputUpdate {
     virtual bool update( MSG &rProgram ) = 0;
 };
 
-//-------------------------------------------------------------------------------------------------
 struct Win32GetInputUpdate : public IInputUpdate {
     Win32GetInputUpdate( ) {
         // empty
@@ -63,7 +61,6 @@ struct Win32GetInputUpdate : public IInputUpdate {
     }
 };
 
-//-------------------------------------------------------------------------------------------------
 struct Win32PeekInputUpdate : public IInputUpdate {
     Win32PeekInputUpdate( ) {
         // empty
@@ -81,13 +78,11 @@ struct Win32PeekInputUpdate : public IInputUpdate {
     }
 };
 
-//-------------------------------------------------------------------------------------------------
 static void getXYPosFromLParam( LPARAM lparam, i32 &x, i32 &y ) {
     x = GET_X_LPARAM( lparam );
     y = GET_Y_LPARAM( lparam );
 }
 
-//-------------------------------------------------------------------------------------------------
 Win32Eventhandler::Win32Eventhandler( )
 : AbstractPlatformEventHandler()
 , m_pUpdateInstance( nullptr )
@@ -106,7 +101,6 @@ Win32Eventhandler::Win32Eventhandler( )
     m_pOSEventTriggerer->addTriggerableEvent( AppFocusEvent );
 }
 
-//-------------------------------------------------------------------------------------------------
 Win32Eventhandler::~Win32Eventhandler( ) {
     delete m_pOSEventTriggerer;
     m_pOSEventTriggerer = nullptr;
@@ -115,7 +109,6 @@ Win32Eventhandler::~Win32Eventhandler( ) {
     m_pUpdateInstance = nullptr;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Win32Eventhandler::onEvent( const Common::Event &ev, const Common::EventData *pEventData ) {
     EventDataList *pActiveEventQueue = getActiveEventDataList();
     MSG	Program;
@@ -133,7 +126,6 @@ bool Win32Eventhandler::onEvent( const Common::Event &ev, const Common::EventDat
                 m_shutdownRequested = true;
             }
             break;
-
 
             case WM_SYSCOMMAND: {
                 switch( Program.wParam ) {
@@ -233,7 +225,6 @@ bool Win32Eventhandler::onEvent( const Common::Event &ev, const Common::EventDat
     return !m_shutdownRequested;
 }
 
-//-------------------------------------------------------------------------------------------------
 LRESULT Win32Eventhandler::winproc( HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam ) {
     Win32Eventhandler *pEventHandler = Win32Eventhandler::getInstance( hWnd );
     switch( Message ) {
@@ -323,12 +314,10 @@ void Win32Eventhandler::setRootSurface( AbstractSurface *pSurface ) {
 
 }
 
-//-------------------------------------------------------------------------------------------------
 AbstractSurface *Win32Eventhandler::getRootSurface( ) const {
     return m_pRootSurface;
 }
 
-//-------------------------------------------------------------------------------------------------
 void Win32Eventhandler::enablePolling( bool enabled ) {
     if( m_pUpdateInstance && enabled == m_isPolling ) {
         return;
@@ -346,12 +335,10 @@ void Win32Eventhandler::enablePolling( bool enabled ) {
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Win32Eventhandler::isPolling( ) const {
     return m_isPolling;
 }
 
-//-------------------------------------------------------------------------------------------------
 void Win32Eventhandler::registerEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener ) {
     assert( nullptr != m_pOSEventTriggerer );
 
@@ -359,15 +346,12 @@ void Win32Eventhandler::registerEventListener( const CPPCore::TArray<const Commo
         &OSEventListener::onOSEvent ) );
 }
 
-//-------------------------------------------------------------------------------------------------
 void Win32Eventhandler::unregisterEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener ) {
     assert( nullptr != m_pOSEventTriggerer );
 
     m_pOSEventTriggerer->removeEventListener( events, Common::EventFunctor::Make( pListener,
         &OSEventListener::onOSEvent ) );
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

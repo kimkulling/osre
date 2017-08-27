@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractTimer.h>
 #include <osre/Platform/AbstractSurface.h>
+#include <osre/Platform/AbstractPlatformEventHandler.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/Pipeline.h>
 #include <osre/RenderBackend/Parameter.h>
@@ -48,6 +49,21 @@ using namespace ::OSRE::RenderBackend;
 
 const String API_Arg = "api";
 const String Tag     = "AppBase";
+
+class MouseEventListener : public Platform::OSEventListener {
+public:
+    MouseEventListener()
+    : OSEventListener( "App/MouseEventListener" ) {
+    }
+
+    ~MouseEventListener() {
+        // empty
+    }
+
+    void onOSEvent( const Event &osEvent, const EventData *data ) override {
+    }
+
+};
 
 AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
 : m_state( State::Uninited )
@@ -224,7 +240,7 @@ bool AppBase::onCreate( Properties::Settings *config ) {
         Logger::getInstance()->registerLogStream( stream );
     }
 
-    // create the render backend
+    // create the render back-end
     m_rbService = new RenderBackend::RenderBackendService();
     if( !m_rbService->open() ) {
         m_rbService->release();
@@ -232,7 +248,7 @@ bool AppBase::onCreate( Properties::Settings *config ) {
         return false;
     }
 
-    // enable render-backend
+    // enable render-back-end
     if( m_platformInterface ) {
         RenderBackend::CreateRendererEventData *data = new RenderBackend::CreateRendererEventData( m_platformInterface->getRootSurface() );
         data->m_pipeline = createDefaultPipeline();
@@ -245,6 +261,16 @@ bool AppBase::onCreate( Properties::Settings *config ) {
     m_world = new Scene::World( "world", mode );
     
     ServiceProvider::create( m_rbService );
+
+    // Setup onMouse event-listener
+    AbstractPlatformEventHandler *evHandler = m_platformInterface->getPlatformEventHandler();
+    if ( nullptr != evHandler ) {
+        TArray<const Common::Event*> eventArray;
+        eventArray.add( &MouseButtonDownEvent );
+        eventArray.add( &MouseButtonUpEvent );
+        MouseEventListener *listener = new MouseEventListener;
+        evHandler->registerEventListener( eventArray, listener );
+    }
 
     // set application state to "Created"
     osre_debug( Tag, "Set application state to Created." );

@@ -191,9 +191,6 @@ bool PlatformInterface::onOpen() {
     osre_info( Tag, "Platform plugin created for " + PlatformInterface::getOSPluginName( m_type ) );
 
     m_dynLoader = PlatformPluginFactory::createDynmicLoader( m_type );
-
-    PlatformPluginFactory::createThreadFactory( m_type );
-
     bool result( true );
     if( appType == Settings::GfxApp ) {
         result = setupGfx( props, polls );

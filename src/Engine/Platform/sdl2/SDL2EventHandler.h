@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <map>
 
-// Forward delarations
+// Forward declarations
 struct SDL_Window;
 
 namespace OSRE {
@@ -59,8 +59,8 @@ private:
     static std::map<SDL_Window*, SDL2EventHandler*> s_windowsServerMap;
     bool m_isPolling;
     bool m_shutdownRequested;
-    AbstractSDL2InputUpdate *m_pInputUpdate;
-    Common::EventTriggerer *m_pEventTriggerer;
+    AbstractSDL2InputUpdate *m_inputUpdate;
+    Common::EventTriggerer *m_eventTriggerer;
 };
 
 //-------------------------------------------------------------------------------------------------
