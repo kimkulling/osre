@@ -59,6 +59,8 @@ namespace UI {
 
 namespace App {
         
+class MouseEventListener;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -184,6 +186,7 @@ private:
     RenderBackend::RenderBackendService *m_rbService;
     Scene::World *m_world;
     UI::Screen *m_uiScreen;
+    MouseEventListener *m_mouseEvListener;
     bool m_shutdownRequested;
 };
 

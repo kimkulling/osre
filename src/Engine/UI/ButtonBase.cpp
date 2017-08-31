@@ -45,6 +45,8 @@ ButtonBase::ButtonBase( const String &name, Widget *parent )
     if ( nullptr != parent ) {
         setStackIndex(parent->getStackIndex() + 1);
     }
+    m_callbacks[ 0 ] = nullptr;
+    m_callbacks[ 1 ] = nullptr;
 }
 
 ButtonBase::~ButtonBase() {
@@ -62,6 +64,18 @@ const String &ButtonBase::getLabel() const {
     return m_label;
 }
 
+void ButtonBase::registerCallback( ButtonState state, UIFunctor *functor ) {
+    m_callbacks[ state ] = functor;
+}
+
+void ButtonBase::setId( ui32 id ) {
+    m_id = id;
+}
+
+i32 ButtonBase::getId() const {
+    return m_id;
+}
+
 ButtonBase *ButtonBase::createBaseButton(const String &name, Widget *parent) {
     return new ButtonBase(name, parent);
 }
@@ -77,6 +91,9 @@ void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::Render
 }
 
 void ButtonBase::onButtonPressed() {
+    if ( m_callbacks[ 0 ] ) {
+        (*m_callbacks[ 0 ])( m_id, nullptr );
+    }
     Widget::requestRedraw();
 }
 

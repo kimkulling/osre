@@ -121,7 +121,8 @@ bool Win32Eventhandler::onEvent( const Common::Event &ev, const Common::EventDat
             break;
 
             case WM_QUIT:
-            case WM_CLOSE: {
+            case WM_CLOSE: 
+            {
                 onQuit();
                 m_shutdownRequested = true;
             }
@@ -139,7 +140,8 @@ bool Win32Eventhandler::onEvent( const Common::Event &ev, const Common::EventDat
             }
             break;
 
-            case WM_LBUTTONDOWN: {
+            case WM_LBUTTONDOWN: 
+            {
                 MouseButtonEventData *data = new MouseButtonEventData( true, m_pOSEventTriggerer );
                 data->m_Button = MouseButtonEventData::LeftButton;
                 getXYPosFromLParam( Program.lParam, data->m_AbsX, data->m_AbsY );
@@ -147,7 +149,8 @@ bool Win32Eventhandler::onEvent( const Common::Event &ev, const Common::EventDat
             }
             break;
 
-            case WM_LBUTTONUP: {
+            case WM_LBUTTONUP: 
+            {
                 MouseButtonEventData *data = new MouseButtonEventData( false, m_pOSEventTriggerer );
                 data->m_Button = MouseButtonEventData::LeftButton;
                 getXYPosFromLParam( Program.lParam, data->m_AbsX, data->m_AbsY );
@@ -300,7 +303,6 @@ bool Win32Eventhandler::onQuit() {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 void Win32Eventhandler::setRootSurface( AbstractSurface *pSurface ) {
     if( !pSurface ) {
         osre_debug( Tag, "Invalid window pointer." );

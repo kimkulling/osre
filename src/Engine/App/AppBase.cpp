@@ -60,9 +60,21 @@ public:
         // empty
     }
 
-    void onOSEvent( const Event &osEvent, const EventData *data ) override {
+    void setScreen( UI::Screen *screen ) {
+        m_uiScreen = screen;
     }
 
+    void onOSEvent( const Event &osEvent, const EventData *data ) override {
+        if ( nullptr != m_uiScreen ) {
+            osre_debug( Tag, "listener called" );
+            MouseButtonEventData *mouseBtnData( ( MouseButtonEventData*) data );
+            const Point2ui pt( mouseBtnData->m_AbsX, mouseBtnData->m_AbsY );
+            m_uiScreen->mouseDown( pt );
+        }
+    }
+
+private:
+    UI::Screen *m_uiScreen;
 };
 
 AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
@@ -75,6 +87,7 @@ AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const Strin
 , m_rbService( nullptr )
 , m_world( nullptr )
 , m_uiScreen( nullptr )
+, m_mouseEvListener( nullptr )
 , m_shutdownRequested( false ) {
     m_settings = new Properties::Settings;
     m_settings->setString( Properties::Settings::RenderAPI, "opengl" );
@@ -187,6 +200,7 @@ void AppBase::setUIScreen( UI::Screen *uiScreen ) {
         AbstractSurface *surface( m_platformInterface->getRootSurface() );
         if ( nullptr != surface ) {
             m_uiScreen->setSurface( surface );
+            m_mouseEvListener->setScreen( m_uiScreen );
         }
     }
 }
@@ -268,8 +282,8 @@ bool AppBase::onCreate( Properties::Settings *config ) {
         TArray<const Common::Event*> eventArray;
         eventArray.add( &MouseButtonDownEvent );
         eventArray.add( &MouseButtonUpEvent );
-        MouseEventListener *listener = new MouseEventListener;
-        evHandler->registerEventListener( eventArray, listener );
+        m_mouseEvListener = new MouseEventListener;
+        evHandler->registerEventListener( eventArray, m_mouseEvListener );
     }
 
     // set application state to "Created"

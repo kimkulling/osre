@@ -213,5 +213,29 @@ void Widget::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBacken
     }
 }
 
+void Widget::mouseDown( const Point2ui &pt ) {
+    onMouseDown( pt );
+}
+
+void Widget::mouseUp( const Point2ui &pt ) {
+    onMouseUp( pt );
+}
+
+void Widget::onMouseDown( const Point2ui &pt ) {
+    for ( ui32 i = 0; i < getNumChildren(); i++ ) {
+        Widget *child( getChildWidgetAt( i ) );
+        const Rect2ui &r = child->getRect();
+        if ( r.isIn( pt ) ) {
+            child->onMouseDown( pt );
+        }
+
+    }
+
+}
+
+void Widget::onMouseUp( const Point2ui &pt ) {
+
+}
+
 } // Namespace UI
 } // Namespace OSRE

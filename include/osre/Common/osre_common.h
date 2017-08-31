@@ -590,7 +590,7 @@ struct TRect2D {
         return m_y2;
     }
 
-    bool isIn( const TPoint2<T> &pt ) {
+    bool isIn( const TPoint2<T> &pt ) const {
         if ( pt.m_x >= m_x1 && pt.m_y >= m_y1 && pt.m_x <= m_x2 && pt.m_y <= m_y2 ) {
             return true;
         }

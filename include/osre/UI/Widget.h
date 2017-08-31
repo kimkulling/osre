@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/Object.h>
+#include <osre/Common/TFunctor.h>
 
 namespace OSRE {
 
@@ -121,6 +122,8 @@ enum class WidgetType {
     Button
 };
 
+typedef Common::Functor<void, ui32, void *> UIFunctor;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -145,10 +148,14 @@ public:
     void setStackIndex( i32 index );
     i32 getStackIndex() const;
     virtual void render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
+    virtual void mouseDown( const Point2ui &pt );
+    virtual void mouseUp( const Point2ui &pt );
 
 protected:
     Widget( const String &name, Widget *parent );
     virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) = 0;
+    virtual void onMouseDown( const Point2ui &pt);
+    virtual void onMouseUp( const Point2ui &pt );
 
 private:
     Widget *m_parent;
