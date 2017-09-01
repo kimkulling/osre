@@ -40,6 +40,10 @@ SET ( unittest_collision_src
     src/Collision/TAABBTest.cpp
 )
 
+SET ( unittest_debugging_src
+    src/Debugging/osre_debugging_test.cpp
+)
+
 SET( unittest_io_src 
     src/IO/UriTest.cpp
 )
@@ -98,6 +102,7 @@ SET ( gtest_src
 SOURCE_GROUP( src\\App                        FILES ${unittest_app_src} )
 SOURCE_GROUP( src\\Common                     FILES ${unittest_common_src} )
 SOURCE_GROUP( src\\Collision                  FILES ${unittest_collision_src})
+SOURCE_GROUP( src\\Debugging                  FILES ${unittest_debugging_src})
 SOURCE_GROUP( src\\Assets                     FILES ${unittest_assets_src} )
 SOURCE_GROUP( src\\IO                         FILES ${unittest_io_src} )
 SOURCE_GROUP( src\\Math                       FILES ${unittest_math_src} )
@@ -111,9 +116,10 @@ SOURCE_GROUP( src\\GTest                      FILES ${gtest_src} )
 
 ADD_EXECUTABLE( osre_unittest
     ${unittest_app_src}
+	${unittest_assets_src}    
     ${unittest_common_src}
     ${unittest_collision_src}
-	${unittest_assets_src}    
+    ${unittest_debugging_src}
 	${unittest_io_src}
     ${unittest_math_src}
 	${unittest_platform_src}    
