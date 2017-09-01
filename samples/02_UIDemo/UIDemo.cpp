@@ -40,14 +40,6 @@ using namespace ::OSRE::UI;
 // To identify local log entries
 static const String Tag = "ModelLoadingApp";
 
-void callback1( ui32 id, void *data ) {
-    int i = 0;
-    i++;
-}
-
-void callback2( ui32 id, void *data ) {
-
-}
 // The example application, will create the render environment and render a simple triangle onto it
 class UIDemoApp : public App::AppBase {
     Screen *m_screen;
@@ -88,10 +80,10 @@ protected:
         Panel *panel = new Panel( "panel", m_screen );
         panel->setRect( 10, 10, 500, 500 );
         ButtonBase *btnClick = new ButtonBase( "click", panel );
-        btnClick->registerCallback( ButtonBase::ButtonPressed, new UIFunctor );
+//        btnClick->registerCallback( ButtonBase::ButtonPressed, UIFunctor::Make(this, &callback1));
         btnClick->setRect( 20, 20, 100, 20 );
         ButtonBase *btnQuit  = new ButtonBase( "quit", panel );
-        btnClick->registerCallback( ButtonBase::ButtonReleased, new UIFunctor );
+        //btnClick->registerCallback( ButtonBase::ButtonReleased, new UIFunctor );
         btnQuit->setRect( 20, 50, 100, 20 );
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
@@ -100,6 +92,16 @@ protected:
 
         return true;
     }
+
+    void callback1(ui32 id, void *data) {
+        int i = 0;
+        i++;
+    }
+
+    void callback2(ui32 id, void *data) {
+
+    }
+
 };
 
 OSRE_MAIN( UIDemoApp )

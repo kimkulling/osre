@@ -228,9 +228,7 @@ void Widget::onMouseDown( const Point2ui &pt ) {
         if ( r.isIn( pt ) ) {
             child->onMouseDown( pt );
         }
-
     }
-
 }
 
 void Widget::onMouseUp( const Point2ui &pt ) {

@@ -45,7 +45,6 @@ public:
     virtual RET call( P1 p1, P2 p2 ) const = 0;
 };
 
-//-------------------------------------------------------------------------------------------------
 template < class RET, class P1, class P2 >
 inline 
 FunctorImpl<RET, P1, P2>::~FunctorImpl() {

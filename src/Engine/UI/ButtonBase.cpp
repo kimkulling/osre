@@ -64,7 +64,7 @@ const String &ButtonBase::getLabel() const {
     return m_label;
 }
 
-void ButtonBase::registerCallback( ButtonState state, UIFunctor *functor ) {
+void ButtonBase::registerCallback( ButtonState state, const UIFunctor &functor ) {
     m_callbacks[ state ] = functor;
 }
 
@@ -90,14 +90,16 @@ void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::Render
     targetGeoArray.add( geo );
 }
 
-void ButtonBase::onButtonPressed() {
+void ButtonBase::onMouseDown(const Point2ui &pt) {
     if ( m_callbacks[ 0 ] ) {
         (*m_callbacks[ 0 ])( m_id, nullptr );
     }
+    Widget::onMouseDown(pt);
     Widget::requestRedraw();
 }
 
-void ButtonBase::onButtonReleased() {
+void ButtonBase::onMouseUp(const Point2ui &pt) {
+    Widget::onMouseUp(pt);
     Widget::requestRedraw();
 }
 

@@ -54,20 +54,20 @@ public:
     virtual ~ButtonBase();
     virtual void setLabel( const String &label );
     virtual const String &getLabel() const;
-    void registerCallback( ButtonState state, UIFunctor *functor );
+    void registerCallback( ButtonState state, const UIFunctor &functor );
     void setId( ui32 id );
     i32 getId() const;
     static ButtonBase *createBaseButton(const String &name, Widget *parent);
 
 protected:
     virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
-    virtual void onButtonPressed();
-    virtual void onButtonReleased();
+    virtual void onMouseDown(const Point2ui &pt);
+    virtual void onMouseUp(const Point2ui &pt);
 
 private:
     ui32 m_id;
     String m_label;
-    UIFunctor* m_callbacks[ MaxStates ];
+    UIFunctor m_callbacks[ MaxStates ];
     RenderBackend::TransformMatrixBlock m_transformMatrix;
 };
 

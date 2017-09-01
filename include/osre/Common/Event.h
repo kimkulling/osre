@@ -156,7 +156,7 @@ struct OSRE_EXPORT EventData {
     ///	@return	true, if both instances are equal.
     bool operator == (const EventData &other) const;
 
-private:
+    // removed functions
     EventData() = delete;
     EventData( const EventData & ) = delete;
     EventData &operator = ( const EventData & ) = delete;
