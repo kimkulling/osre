@@ -108,7 +108,7 @@ protected:
                 rbSrv->attachGeo( geoArray, 0 );
             }
 
-            Stage *myStage = AppBase::createStage( "ModelLoading" );
+            m_stage = AppBase::createStage( "ModelLoading" );
         }
 
         return true;
