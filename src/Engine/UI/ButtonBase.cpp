@@ -38,19 +38,30 @@ namespace UI {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
+ButtonBase::FunctorContainer::FunctorContainer()
+: m_used( false )
+, m_callback() {
+    // empty
+}
+
+ButtonBase::FunctorContainer::~FunctorContainer() {
+    // empty
+}
+
 ButtonBase::ButtonBase( const String &name, Widget *parent )
 : Widget( name, parent )
-, m_label() {
+, m_label()
+, m_callback( nullptr ) {
     static_cast<void>( StyleProvider::getCurrentStyle() );
     if ( nullptr != parent ) {
         setStackIndex(parent->getStackIndex() + 1);
     }
-    m_callbacks[ 0 ] = nullptr;
-    m_callbacks[ 1 ] = nullptr;
+    m_callback = new FunctorContainer[ MaxStates ];
 }
 
 ButtonBase::~ButtonBase() {
-    // empty
+    delete[] m_callback;
+    m_callback = nullptr;
 }
 
 void ButtonBase::setLabel( const String &label ) {
@@ -65,7 +76,8 @@ const String &ButtonBase::getLabel() const {
 }
 
 void ButtonBase::registerCallback( ButtonState state, const UIFunctor &functor ) {
-    m_callbacks[ state ] = functor;
+    m_callback[ state ].m_used = true;
+    m_callback[ state ].m_callback = functor;
 }
 
 void ButtonBase::setId( ui32 id ) {
@@ -91,8 +103,8 @@ void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::Render
 }
 
 void ButtonBase::onMouseDown(const Point2ui &pt) {
-    if ( m_callbacks[ 0 ] ) {
-        (*m_callbacks[ 0 ])( m_id, nullptr );
+    if ( m_callback[ 0 ].m_used ) {
+        m_callback[ 0 ].m_callback( m_id, nullptr );
     }
     Widget::onMouseDown(pt);
     Widget::requestRedraw();

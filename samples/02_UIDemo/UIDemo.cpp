@@ -56,6 +56,14 @@ public:
     virtual ~UIDemoApp() {
         // empty
     }
+    void callback1( ui32 id, void *data ) {
+        int i = 0;
+        i++;
+    }
+
+    void callback2( ui32 id, void *data ) {
+
+    }
 
 protected:
     bool onCreate( Properties::Settings *settings = nullptr ) override {
@@ -80,7 +88,7 @@ protected:
         Panel *panel = new Panel( "panel", m_screen );
         panel->setRect( 10, 10, 500, 500 );
         ButtonBase *btnClick = new ButtonBase( "click", panel );
-//        btnClick->registerCallback( ButtonBase::ButtonPressed, UIFunctor::Make(this, &callback1));
+        btnClick->registerCallback( ButtonBase::ButtonPressed, UIFunctor::Make(this, &UIDemoApp::callback1));
         btnClick->setRect( 20, 20, 100, 20 );
         ButtonBase *btnQuit  = new ButtonBase( "quit", panel );
         //btnClick->registerCallback( ButtonBase::ButtonReleased, new UIFunctor );
@@ -92,16 +100,6 @@ protected:
 
         return true;
     }
-
-    void callback1(ui32 id, void *data) {
-        int i = 0;
-        i++;
-    }
-
-    void callback2(ui32 id, void *data) {
-
-    }
-
 };
 
 OSRE_MAIN( UIDemoApp )

@@ -60,14 +60,21 @@ public:
     static ButtonBase *createBaseButton(const String &name, Widget *parent);
 
 protected:
-    virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
-    virtual void onMouseDown(const Point2ui &pt);
-    virtual void onMouseUp(const Point2ui &pt);
+    void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) override;
+    void onMouseDown(const Point2ui &pt) override;
+    void onMouseUp(const Point2ui &pt) override;
 
 private:
+    struct FunctorContainer {
+        bool m_used;
+        UIFunctor m_callback;
+
+        FunctorContainer();
+        ~FunctorContainer();
+    };
     ui32 m_id;
     String m_label;
-    UIFunctor m_callbacks[ MaxStates ];
+    FunctorContainer *m_callback;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
 };
 
