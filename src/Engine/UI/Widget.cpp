@@ -94,6 +94,7 @@ void WidgetCoordMapping::mapPosToWorld( const Rect2ui &rect, ui32 x, ui32 y, f32
 
 Widget::Widget( const String &name, Widget *parent )
 : Object( name )
+, m_id( 99999999 )
 , m_parent( nullptr )
 , m_children()
 , m_rect( 0, 0, 1, 1 )
@@ -233,6 +234,14 @@ void Widget::onMouseDown( const Point2ui &pt ) {
 
 void Widget::onMouseUp( const Point2ui &pt ) {
 
+}
+
+void Widget::setId( ui32 id ) {
+    m_id = id;
+}
+
+i32 Widget::getId() const {
+    return m_id;
 }
 
 } // Namespace UI

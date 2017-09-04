@@ -261,22 +261,18 @@ LRESULT Win32Eventhandler::winproc( HWND hWnd, UINT Message, WPARAM wParam, LPAR
     return ::DefWindowProc( hWnd, Message, wParam, lParam );
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Win32Eventhandler::onAttached( const Common::EventData *pEventData ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Win32Eventhandler::onDetached( const Common::EventData *pEventData ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 void Win32Eventhandler::registerEventServer( Win32Eventhandler *pServer, HWND hWnd ) {
     s_WindowsServerMap[ hWnd ] = pServer;
 }
 
-//-------------------------------------------------------------------------------------------------
 void Win32Eventhandler::unregisterEventServer( Win32Eventhandler *pServer, HWND hWnd ) {
     std::map<HWND, Win32Eventhandler*>::iterator it = s_WindowsServerMap.find( hWnd );
     if( s_WindowsServerMap.end() != it ) {
@@ -284,7 +280,6 @@ void Win32Eventhandler::unregisterEventServer( Win32Eventhandler *pServer, HWND 
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 Win32Eventhandler *Win32Eventhandler::getInstance( HWND hWnd ) {
     std::map<HWND, Win32Eventhandler*>::iterator it = s_WindowsServerMap.find( hWnd );
     if( s_WindowsServerMap.end() != it ) {
@@ -294,7 +289,6 @@ Win32Eventhandler *Win32Eventhandler::getInstance( HWND hWnd ) {
     return nullptr;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool Win32Eventhandler::onQuit() {
     Common::EventData data( QuitEvent, m_pOSEventTriggerer );
     m_pOSEventTriggerer->triggerEvent( data.getEvent(), &data );

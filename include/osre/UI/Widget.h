@@ -150,6 +150,8 @@ public:
     virtual void render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
     virtual void mouseDown( const Point2ui &pt );
     virtual void mouseUp( const Point2ui &pt );
+    void setId( ui32 id );
+    i32 getId() const;
 
 protected:
     Widget( const String &name, Widget *parent );
@@ -159,6 +161,8 @@ protected:
 
 private:
     Widget *m_parent;
+    ui32 m_id;
+
     CPPCore::TArray<Widget*> m_children;
     Rect2ui m_rect;
     i32 m_stackIndex;

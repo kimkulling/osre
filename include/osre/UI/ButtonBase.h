@@ -54,9 +54,9 @@ public:
     virtual ~ButtonBase();
     virtual void setLabel( const String &label );
     virtual const String &getLabel() const;
+    virtual void setImage( const String &name );
+    virtual const String &getImage() const;
     void registerCallback( ButtonState state, const UIFunctor &functor );
-    void setId( ui32 id );
-    i32 getId() const;
     static ButtonBase *createBaseButton(const String &name, Widget *parent);
 
 protected:
@@ -72,8 +72,8 @@ private:
         FunctorContainer();
         ~FunctorContainer();
     };
-    ui32 m_id;
     String m_label;
+    String m_image;
     FunctorContainer *m_callback;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
 };

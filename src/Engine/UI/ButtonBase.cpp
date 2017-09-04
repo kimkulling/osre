@@ -51,6 +51,7 @@ ButtonBase::FunctorContainer::~FunctorContainer() {
 ButtonBase::ButtonBase( const String &name, Widget *parent )
 : Widget( name, parent )
 , m_label()
+, m_image()
 , m_callback( nullptr ) {
     static_cast<void>( StyleProvider::getCurrentStyle() );
     if ( nullptr != parent ) {
@@ -75,17 +76,17 @@ const String &ButtonBase::getLabel() const {
     return m_label;
 }
 
+void ButtonBase::setImage( const String &name ) {
+    m_image = name;
+}
+
+const String &ButtonBase::getImage() const {
+    return m_image;
+}
+
 void ButtonBase::registerCallback( ButtonState state, const UIFunctor &functor ) {
     m_callback[ state ].m_used = true;
     m_callback[ state ].m_callback = functor;
-}
-
-void ButtonBase::setId( ui32 id ) {
-    m_id = id;
-}
-
-i32 ButtonBase::getId() const {
-    return m_id;
 }
 
 ButtonBase *ButtonBase::createBaseButton(const String &name, Widget *parent) {
@@ -104,7 +105,8 @@ void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::Render
 
 void ButtonBase::onMouseDown(const Point2ui &pt) {
     if ( m_callback[ 0 ].m_used ) {
-        m_callback[ 0 ].m_callback( m_id, nullptr );
+        FunctorContainer &ct( m_callback[ 0 ] );
+        ct.m_callback( Widget::getId(), nullptr );
     }
     Widget::onMouseDown(pt);
     Widget::requestRedraw();
