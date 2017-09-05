@@ -52,7 +52,7 @@ struct OGLImpl : public GPUBufferManager::Impl {
     }
     
     Buffer *getBufferByDesc( const String &desc ) override {
-
+	return nullptr;
     }
 
     void updateBuffer( BufferData &data ) override {
@@ -78,7 +78,7 @@ GPUBufferManager::GPUBufferManager( Impl *impl )
 }
 
 GPUBufferManager::~GPUBufferManager() {
-
+    // empty
 }
 
 Buffer *GPUBufferManager::createBuffer( const String &desc ) {
@@ -126,3 +126,4 @@ void GPUBufferManager::releaseBuffer( Buffer *buffer ) {
 
 } // Namespace RenderBackend
 } // Namespace OSRE
+
