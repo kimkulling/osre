@@ -236,7 +236,7 @@ BufferData* BufferData::alloc( BufferType type, ui32 m_size, BufferAccessType ac
 }
 
 void BufferData::free( BufferData *data ) {
-	if (nullptr == data) {
+    if ( nullptr == data ) {
 		return;
 	}
 

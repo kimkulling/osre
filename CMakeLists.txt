@@ -88,6 +88,8 @@ elseif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
 elseif ( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -Wall -Wno-long-long -pedantic -std=c++11" )
 endif()
+add_definitions( -DGLM_ENABLE_EXPERIMENTAL )
+
 
 SET( BUILD_SHARED_LIBS OFF )
 # Include all sub directories of the engine code component
