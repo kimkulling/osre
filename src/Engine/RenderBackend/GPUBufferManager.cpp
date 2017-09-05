@@ -49,6 +49,8 @@ struct OGLImpl : public GPUBufferManager::Impl {
         Buffer *buffer = new Buffer;
         buffer->m_handle = glBuffer->m_handle;
         buffer->desc = desc;
+
+        return buffer;
     }
     
     Buffer *getBufferByDesc( const String &desc ) override {

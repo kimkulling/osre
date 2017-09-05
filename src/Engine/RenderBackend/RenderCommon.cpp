@@ -135,8 +135,8 @@ VertComponent::~VertComponent() {
 }
 
 VertexLayout::VertexLayout()
-: m_components()
-, m_attributes( nullptr )
+: m_attributes( nullptr )
+, m_components()
 , m_offsets()
 , m_currentOffset( 0 )
 , m_sizeInBytes( 0 ) {
