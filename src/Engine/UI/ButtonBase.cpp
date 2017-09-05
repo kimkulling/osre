@@ -84,9 +84,10 @@ const String &ButtonBase::getImage() const {
     return m_image;
 }
 
-void ButtonBase::registerCallback( ButtonState state, const UIFunctor &functor ) {
+void ButtonBase::registerCallback( ButtonState state, UIFunctor functor ) {
     m_callback[ state ].m_used = true;
     m_callback[ state ].m_callback = functor;
+    functor.incRef();
 }
 
 ButtonBase *ButtonBase::createBaseButton(const String &name, Widget *parent) {
@@ -105,7 +106,7 @@ void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::Render
 
 void ButtonBase::onMouseDown(const Point2ui &pt) {
     if ( m_callback[ 0 ].m_used ) {
-        FunctorContainer &ct( m_callback[ 0 ] );
+        const FunctorContainer &ct( m_callback[ 0 ] );
         ct.m_callback( Widget::getId(), nullptr );
     }
     Widget::onMouseDown(pt);

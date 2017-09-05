@@ -56,7 +56,7 @@ public:
     virtual const String &getLabel() const;
     virtual void setImage( const String &name );
     virtual const String &getImage() const;
-    void registerCallback( ButtonState state, const UIFunctor &functor );
+    void registerCallback( ButtonState state, UIFunctor functor );
     static ButtonBase *createBaseButton(const String &name, Widget *parent);
 
 protected:

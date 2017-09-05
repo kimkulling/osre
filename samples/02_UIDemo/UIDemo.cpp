@@ -57,12 +57,11 @@ public:
         // empty
     }
     void callback1( ui32 id, void *data ) {
-        int i = 0;
-        i++;
+        osre_debug( Tag, "Callback1" );
     }
 
     void callback2( ui32 id, void *data ) {
-
+        osre_debug( Tag, "Callback2" );
     }
 
 protected:

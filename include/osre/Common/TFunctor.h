@@ -162,6 +162,10 @@ public:
         return RET();
     }
 
+    void incRef() {
+        ++( *m_refCounter );
+    }
+
     /// @brief == operator implementation
     bool operator == (const Functor& other) const {
         return (m_data == other.m_data);
