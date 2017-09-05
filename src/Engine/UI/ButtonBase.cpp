@@ -52,7 +52,8 @@ ButtonBase::ButtonBase( const String &name, Widget *parent )
 : Widget( name, parent )
 , m_label()
 , m_image()
-, m_callback( nullptr ) {
+, m_callback( nullptr )
+, m_geo( nullptr ) {
     static_cast<void>( StyleProvider::getCurrentStyle() );
     if ( nullptr != parent ) {
         setStackIndex(parent->getStackIndex() + 1);
@@ -98,10 +99,11 @@ void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::Render
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const Rect2ui &rect( getRect() );
 
-    Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, getStackIndex() );
-    rbSrv->attachGeo( geo, 0 );
-
-    targetGeoArray.add( geo );
+    if ( nullptr == m_geo ) {
+        m_geo = UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, getStackIndex() );
+        rbSrv->attachGeo( m_geo, 0 );
+        targetGeoArray.add( m_geo );
+    }
 }
 
 void ButtonBase::onMouseDown(const Point2ui &pt) {

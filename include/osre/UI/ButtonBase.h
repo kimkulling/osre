@@ -76,6 +76,7 @@ private:
     String m_image;
     FunctorContainer *m_callback;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
+    RenderBackend::Geometry *m_geo;
 };
 
 } // Namespace UI
