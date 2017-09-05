@@ -176,6 +176,7 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/KeyTypes.h
     ${HEADER_PATH}/Platform/PluginType.h
     ${HEADER_PATH}/Platform/PlatformInterface.h
+    ${HEADER_PATH}/Platform/PlatformOperations.h
 )
 SET( platform_src
     Platform/CPUInfo.cpp
@@ -187,6 +188,7 @@ SET( platform_src
     Platform/PlatformPluginFactory.cpp
     Platform/PlatformPluginFactory.h
     Platform/AbstractDynamicLoader.cpp
+    Platform/PlatformOperations.cpp
 )
 SET( platform_win32_src
     Platform/win32/Win32Atomic.h
@@ -296,6 +298,7 @@ SET( scene_inc
 # RenderBackend
 #==============================================================================
 SET( renderbackend_src
+    RenderBackend/GPUBufferManager.cpp
     RenderBackend/FontBase.cpp
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
@@ -330,8 +333,10 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/BlendState.h
 	${HEADER_PATH}/RenderBackend/CullState.h
     ${HEADER_PATH}/RenderBackend/ClearState.h
+	${HEADER_PATH}/RenderBackend/GPUBufferManager.h
     ${HEADER_PATH}/RenderBackend/SamplerState.h
     ${HEADER_PATH}/RenderBackend/StencilState.h
+    ${HEADER_PATH}/RenderBackend/PolygonState.h
     ${HEADER_PATH}/RenderBackend/FontBase.h
     ${HEADER_PATH}/RenderBackend/Parameter.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h

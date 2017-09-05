@@ -25,15 +25,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
-#include <osre/Scene/MaterialBuilder.h>
-
 #include "UIRenderUtils.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <GL/glew.h>
-#include <GL/gl.h>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
 namespace OSRE {
@@ -42,14 +38,32 @@ namespace UI {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
+ButtonBase::FunctorContainer::FunctorContainer()
+: m_used( false )
+, m_callback() {
+    // empty
+}
+
+ButtonBase::FunctorContainer::~FunctorContainer() {
+    // empty
+}
+
 ButtonBase::ButtonBase( const String &name, Widget *parent )
 : Widget( name, parent )
-, m_label() {
+, m_label()
+, m_image()
+, m_callback( nullptr )
+, m_geo( nullptr ) {
     static_cast<void>( StyleProvider::getCurrentStyle() );
+    if ( nullptr != parent ) {
+        setStackIndex(parent->getStackIndex() + 1);
+    }
+    m_callback = new FunctorContainer[ MaxStates ];
 }
 
 ButtonBase::~ButtonBase() {
-    // empty
+    delete[] m_callback;
+    m_callback = nullptr;
 }
 
 void ButtonBase::setLabel( const String &label ) {
@@ -63,28 +77,47 @@ const String &ButtonBase::getLabel() const {
     return m_label;
 }
 
+void ButtonBase::setImage( const String &name ) {
+    m_image = name;
+}
+
+const String &ButtonBase::getImage() const {
+    return m_image;
+}
+
+void ButtonBase::registerCallback( ButtonState state, UIFunctor functor ) {
+    m_callback[ state ].m_used = true;
+    m_callback[ state ].m_callback = functor;
+    functor.incRef();
+}
+
+ButtonBase *ButtonBase::createBaseButton(const String &name, Widget *parent) {
+    return new ButtonBase(name, parent);
+}
+
 void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
-    const RectUI &rect( getRect() );
+    const Rect2ui &rect( getRect() );
 
-    Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle );
-    /*AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-    attachGeoEvData->m_numGeo = 1;
-    attachGeoEvData->m_geo = new Geometry*[ 1 ];
-    attachGeoEvData->m_geo[ 0 ] = geo;
-    rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );*/
-    rbSrv->attachGeo( geo, 0 );
+    if ( nullptr == m_geo ) {
+        m_geo = UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, getStackIndex() );
+        rbSrv->attachGeo( m_geo, 0 );
+        targetGeoArray.add( m_geo );
+    }
+}
 
-    /*m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.001f, glm::vec3( 1, 1, 0 ) );
+void ButtonBase::onMouseDown(const Point2ui &pt) {
+    if ( m_callback[ 0 ].m_used ) {
+        const FunctorContainer &ct( m_callback[ 0 ] );
+        ct.m_callback( Widget::getId(), nullptr );
+    }
+    Widget::onMouseDown(pt);
+    Widget::requestRedraw();
+}
 
-    UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
-    m_transformMatrix.update();
-    ::memcpy( parameter->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
-
-    geo->m_material->m_parameters = parameter;
-    geo->m_material->m_numParameters++;*/
-
-    targetGeoArray.add( geo );
+void ButtonBase::onMouseUp(const Point2ui &pt) {
+    Widget::onMouseUp(pt);
+    Widget::requestRedraw();
 }
 
 } // Namespace UI

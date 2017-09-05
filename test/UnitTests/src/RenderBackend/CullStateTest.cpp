@@ -36,21 +36,29 @@ TEST_F( CullStateTest, create_success ) {
     bool ok( true );
     try {
         CullState state1;
-        CullState state2( CullState::CullMode::CCW );
+        CullState state2( CullState::CullMode::CCW, CullState::CullFace::Back );
     } catch ( ... ) {
         ok = false;
     }
     EXPECT_TRUE( ok );
 }
 
-TEST_F( CullStateTest, access_state_success ) {
-    CullState state1, state2, state3( CullState::CullMode::CW );
+TEST_F( CullStateTest, access_CullMode_success ) {
+    CullState state1, state2, state3( CullState::CullMode::CW, CullState::CullFace::Back );
     state1.setCullMode( CullState::CullMode::CCW );
     EXPECT_EQ( CullState::CullMode::CCW, state1.getCullMode() );
 
     state2.setCullMode( CullState::CullMode::CCW );
     EXPECT_EQ( state1, state2 );
     EXPECT_NE( state1, state3 );
+}
+
+TEST_F( CullStateTest, access_CullFace_success ) {
+    CullState state1, state2( CullState::CullMode::CW, CullState::CullFace::FrontAndBack );
+    state1.setCullFace( CullState::CullFace::FrontAndBack );
+    EXPECT_EQ( CullState::CullFace::FrontAndBack, state1.getCullFace() );
+
+    EXPECT_EQ( state1, state2 );
 }
 
 } // Namespace UnitTest

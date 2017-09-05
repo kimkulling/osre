@@ -20,7 +20,6 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-
 #pragma once
 
 namespace OSRE {
@@ -29,22 +28,51 @@ namespace RenderBackend {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief  This class stores the different information regarding colling for a pipeline pass.
 //-------------------------------------------------------------------------------------------------
 class CullState {
 public:
+    /// @brief  The cull-mode, describes direction for a polygon.
     enum class CullMode {
-        CW,
-        CCW,
-        Off
+        CW,     ///< Clockwise
+        CCW,    ///< Counter-clock wise
+        Off     ///< Off
+    };
+
+    /// @brief  The cull-face, describes the direction for a valid polygon declaration.
+    enum class CullFace {
+        Front,          ///< Front polygons will be culled.
+        Back,           ///< Back polygons will be culled
+        FrontAndBack    ///< Show front an back polygon.
     };
 
 public:
+    /// @brief  The default class constructor.
     CullState();
-    explicit CullState( CullMode mode );
+
+    /// @brief  The class constructor with the cull-mode and the cull face option.
+    /// @param  mode        [in] The cull-mode, @see CullMode.
+    /// @param  cullFace    [in] The cullFace mode, @see CullFace.
+    explicit CullState( CullMode mode, CullFace cullFace );
+    
+    /// @brief  The class destructor.
     ~CullState();
+    
+    /// @brief  Will set the new cull mode.
+    /// @param  cullmode    [in] The new cull mode.
     void setCullMode( CullMode cullMode );
+
+    /// @brief  Will return the current active cull mode.
+    /// @return The active cull mode.
     CullMode getCullMode() const;
+
+    /// @brief  Will set the new cull face mode.
+    /// @param  cullface    [in] The new cull face mode.
+    void setCullFace( CullFace cullFace );
+
+    /// @brief  Will return the cull-face mode.
+    /// @return The cull-face mode.
+    CullFace getCullFace() const;
 
     /// The compare operators.
     bool operator == ( const CullState &rhs ) const;
@@ -52,17 +80,20 @@ public:
 
 private:
     CullMode m_state;
+    CullFace m_cullFace;
 };
 
 inline
 CullState::CullState()
-: m_state( CullMode::CW ) {
+: m_state( CullMode::CW )
+, m_cullFace( CullFace::Back ) {
     // empty
 }
 
 inline
-CullState::CullState( CullMode mode )
-: m_state( mode ) {
+CullState::CullState( CullMode mode, CullFace cullFace )
+: m_state( mode )
+, m_cullFace( cullFace ) {
     // empty
 }
 
@@ -82,8 +113,18 @@ CullState::CullMode CullState::getCullMode() const {
 }
 
 inline
+void CullState::setCullFace( CullFace cullFace ) {
+    m_cullFace = cullFace;
+}
+
+inline
+CullState::CullFace CullState::getCullFace() const {
+    return m_cullFace;
+}
+
+inline
 bool CullState::operator == ( const CullState &rhs ) const {
-    return m_state == rhs.m_state;
+    return ( m_state == rhs.m_state && m_cullFace == rhs.m_cullFace );
 }
 
 inline

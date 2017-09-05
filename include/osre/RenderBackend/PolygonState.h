@@ -22,33 +22,58 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <osre/UI/Widget.h>
-
 namespace OSRE {
-    
-// forward declarations
 namespace RenderBackend {
-    struct Geometry;
-}
 
-namespace UI {
-
-struct Style;
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-class UIRenderUtils {
+class PolygonState {
 public:
-    static RenderBackend::Geometry *createRectFromStyle( WidgetType Type, const Rect2ui &rect, const Style &style, i32 stackIndex);
+    enum class PolygonMode {
+        Point,
+        Line,
+        Fill
+    };
+
+    PolygonState();
+    ~PolygonState();
+    void setPolygoneMode( PolygonMode polyMode );
+    PolygonMode getPolygonMode() const;
+    bool operator == ( const PolygonState &rhs ) const; 
+    bool operator != ( const PolygonState &rhs ) const;
 
 private:
-    UIRenderUtils();
-    ~UIRenderUtils();
+    PolygonMode m_polyMode;
 };
 
-} // Namespace UI
-} // Namespace OSRE
+inline
+PolygonState::PolygonState()
+: m_polyMode( PolygonMode::Fill ) {
+    // empty
+}
+
+inline
+PolygonState::~PolygonState() {
+    // empty
+}
+
+inline
+void PolygonState::setPolygoneMode( PolygonMode polyMode ) {
+    m_polyMode = polyMode;
+}
+
+inline
+PolygonState::PolygonMode PolygonState::getPolygonMode() const {
+    return m_polyMode;
+}
+
+inline
+bool PolygonState::operator == ( const PolygonState &rhs ) const {
+    return ( m_polyMode == rhs.m_polyMode );
+}
+
+inline
+bool PolygonState::operator != ( const PolygonState &rhs ) const {
+    return !( *this == rhs );
+}
+
+}
+}

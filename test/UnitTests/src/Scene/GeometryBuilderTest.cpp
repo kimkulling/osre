@@ -125,7 +125,9 @@ TEST_F( GeometryBuilderTest, allocPointsTest ) {
     Geometry::destroy( &geo );
 }
 
-class GeometryDiagnosticUtilsTest : public ::testing::Test {};
+class GeometryDiagnosticUtilsTest : public ::testing::Test {
+    // empty
+};
 
 TEST_F( GeometryDiagnosticUtilsTest, dumVerticesTest_invalidInput ) {
     EXPECT_NO_THROW( GeometryDiagnosticUtils::dumVertices( nullptr, 1 ) );

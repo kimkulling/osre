@@ -20,35 +20,35 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/Common/osre_common.h>
-#include <osre/UI/Widget.h>
+#include <gtest/gtest.h>
+#include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
-    
-// forward declarations
-namespace RenderBackend {
-    struct Geometry;
-}
+namespace UnitTest {
 
-namespace UI {
-
-struct Style;
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-class UIRenderUtils {
-public:
-    static RenderBackend::Geometry *createRectFromStyle( WidgetType Type, const Rect2ui &rect, const Style &style, i32 stackIndex);
-
-private:
-    UIRenderUtils();
-    ~UIRenderUtils();
+class DebuggingTest : public ::testing::Test {
+    // empty
 };
 
-} // Namespace UI
+TEST_F(DebuggingTest, ValidateTest) {
+    bool ok = true;
+    try {
+        OSRE_VALIDATE(false, "haha");
+    } catch( ...) {
+        ok = false;
+    }
+    EXPECT_TRUE(ok);
+}
+
+TEST_F(DebuggingTest, handleFatalTest) {
+    bool ok = true;
+    try {
+        Debugging::handleFatal("test", 1, "haha");
+    } catch (...) {
+        ok = false;
+    }
+    EXPECT_TRUE(ok);
+}
+
+} // Namespace UnitTest
 } // Namespace OSRE

@@ -86,10 +86,23 @@ public:
 public:
     explicit AssetDataArchive( ui32 minVersion );
     ~AssetDataArchive();
+    static String getExtension();
+    void setName( const String &name );
+    const String getName() const;
     bool read( IO::Stream &stream );
     bool write( IO::Stream &stream );
     bool isLoaded() const;
-    
+    bool readWorldData();
+    bool writeWorldData();
+    bool readStageData();
+    bool writeStageData();
+    bool readViewData();
+    bool writeViewData();
+    bool readNodeData();
+    bool writeNodeData();
+    bool readGeometryData();
+    bool writeGeometryData();
+
     static bool checkReadState( IO::Stream &stream );
     static bool checkWriteState( IO::Stream &stream );
     static uc8* allocChunkData( ui32 size );
@@ -102,9 +115,10 @@ public:
     static ui32 writeDict();
 
 private:
+    String m_name;
     AssetDataDict m_dict;
     ui32 m_minVersion;
-
+    IO::Stream *m_dateStream;
 };
 
 }

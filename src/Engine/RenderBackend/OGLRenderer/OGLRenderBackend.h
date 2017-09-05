@@ -87,7 +87,7 @@ public:
     void bindBuffer( ui32 handle );
     void bindBuffer( OGLBuffer *pBuffer );
     void unbindBuffer( OGLBuffer *pBuffer );
-    void copyData( OGLBuffer *pBuffer, void *pData, ui32 size, BufferAccessType usage );
+    void copyDataToBuffer( OGLBuffer *pBuffer, void *pData, ui32 size, BufferAccessType usage );
     void releaseBuffer( OGLBuffer *pBuffer );
     void releaseAllBuffers();
     bool createVertexCompArray( const VertexLayout *layout, OGLShader *pShader, VertAttribArray &attributes );
@@ -132,8 +132,7 @@ public:
     FontBase *findFont( const String &name ) const;
     bool relaseFont( FontBase *font );
     void releaseAllFonts();
-    void setFixedPipelineStates( const CullState &cullstate, const BlendState &blendState, 
-            const SamplerState &samplerState, const StencilState &stencilState );
+    void setFixedPipelineStates(const PipelineStates &states);
 
 private:
     Platform::AbstractRenderContext *m_renderCtx;

@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AppBase.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Common/Logger.h>
-#include <osre/Scene/GeometryBuilder.h>
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
@@ -57,6 +56,13 @@ public:
     virtual ~UIDemoApp() {
         // empty
     }
+    void callback1( ui32 id, void *data ) {
+        osre_debug( Tag, "Callback1" );
+    }
+
+    void callback2( ui32 id, void *data ) {
+        osre_debug( Tag, "Callback2" );
+    }
 
 protected:
     bool onCreate( Properties::Settings *settings = nullptr ) override {
@@ -81,8 +87,10 @@ protected:
         Panel *panel = new Panel( "panel", m_screen );
         panel->setRect( 10, 10, 500, 500 );
         ButtonBase *btnClick = new ButtonBase( "click", panel );
-        btnClick->setRect( 20, 620, 100, 20 );
+        btnClick->registerCallback( ButtonBase::ButtonPressed, UIFunctor::Make(this, &UIDemoApp::callback1));
+        btnClick->setRect( 20, 20, 100, 20 );
         ButtonBase *btnQuit  = new ButtonBase( "quit", panel );
+        //btnClick->registerCallback( ButtonBase::ButtonReleased, new UIFunctor );
         btnQuit->setRect( 20, 50, 100, 20 );
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );

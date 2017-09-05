@@ -23,32 +23,50 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-#include <osre/UI/Widget.h>
+#include <osre/RenderBackend/RenderCommon.h>
+
+#include <cppcore/Container/THashMap.h>
 
 namespace OSRE {
-    
-// forward declarations
 namespace RenderBackend {
-    struct Geometry;
-}
 
-namespace UI {
-
-struct Style;
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-class UIRenderUtils {
-public:
-    static RenderBackend::Geometry *createRectFromStyle( WidgetType Type, const Rect2ui &rect, const Style &style, i32 stackIndex);
-
-private:
-    UIRenderUtils();
-    ~UIRenderUtils();
+struct Buffer {
+    String desc;
+    ui32 m_handle;
+    ui32 m_size;
 };
 
-} // Namespace UI
+class GPUBufferManager {
+public:
+    struct Impl {
+        ~Impl();
+        virtual Buffer *createBuffer( const String &desc ) = 0;
+        virtual Buffer *getBufferByDesc( const String &desc );
+        virtual void updateBuffer( BufferData &data ) = 0;
+        virtual void appendToBuffer( BufferData &data ) = 0;
+        virtual void releaseBuffer( Buffer *buffer ) = 0;
+    };
+
+public:
+    GPUBufferManager( Impl *impl );
+    ~GPUBufferManager();
+    Buffer *createBuffer( const String &desc );
+    Buffer *getBufferByDesc( const String &desc );
+    void updateBuffer( BufferData &data );
+    void appendToBuffer( BufferData &data );
+    void releaseBuffer( Buffer *buffer );
+
+private:
+    typedef CPPCore::THashMap<ui32, Buffer*> BufferMap;
+    BufferMap m_bufferMap;
+    RenderBackendType m_backendType;
+    Impl *m_impl;
+};
+
+inline
+GPUBufferManager::Impl::~Impl() {
+    // empty
+}
+
+} // Namespace RenderBackend
 } // Namespace OSRE

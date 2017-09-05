@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractTimer.h>
 #include <osre/Platform/AbstractSurface.h>
+#include <osre/Platform/AbstractPlatformEventHandler.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/Pipeline.h>
 #include <osre/RenderBackend/Parameter.h>
@@ -49,6 +50,33 @@ using namespace ::OSRE::RenderBackend;
 const String API_Arg = "api";
 const String Tag     = "AppBase";
 
+class MouseEventListener : public Platform::OSEventListener {
+public:
+    MouseEventListener()
+    : OSEventListener( "App/MouseEventListener" ) {
+    }
+
+    ~MouseEventListener() {
+        // empty
+    }
+
+    void setScreen( UI::Screen *screen ) {
+        m_uiScreen = screen;
+    }
+
+    void onOSEvent( const Event &osEvent, const EventData *data ) override {
+        if ( nullptr != m_uiScreen ) {
+            osre_debug( Tag, "listener called" );
+            MouseButtonEventData *mouseBtnData( ( MouseButtonEventData*) data );
+            const Point2ui pt( mouseBtnData->m_AbsX, mouseBtnData->m_AbsY );
+            m_uiScreen->mouseDown( pt );
+        }
+    }
+
+private:
+    UI::Screen *m_uiScreen;
+};
+
 AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
 : m_state( State::Uninited )
 , m_timediff( 0.0 )
@@ -59,6 +87,7 @@ AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const Strin
 , m_rbService( nullptr )
 , m_world( nullptr )
 , m_uiScreen( nullptr )
+, m_mouseEvListener( nullptr )
 , m_shutdownRequested( false ) {
     m_settings = new Properties::Settings;
     m_settings->setString( Properties::Settings::RenderAPI, "opengl" );
@@ -171,6 +200,7 @@ void AppBase::setUIScreen( UI::Screen *uiScreen ) {
         AbstractSurface *surface( m_platformInterface->getRootSurface() );
         if ( nullptr != surface ) {
             m_uiScreen->setSurface( surface );
+            m_mouseEvListener->setScreen( m_uiScreen );
         }
     }
 }
@@ -224,7 +254,7 @@ bool AppBase::onCreate( Properties::Settings *config ) {
         Logger::getInstance()->registerLogStream( stream );
     }
 
-    // create the render backend
+    // create the render back-end
     m_rbService = new RenderBackend::RenderBackendService();
     if( !m_rbService->open() ) {
         m_rbService->release();
@@ -232,7 +262,7 @@ bool AppBase::onCreate( Properties::Settings *config ) {
         return false;
     }
 
-    // enable render-backend
+    // enable render-back-end
     if( m_platformInterface ) {
         RenderBackend::CreateRendererEventData *data = new RenderBackend::CreateRendererEventData( m_platformInterface->getRootSurface() );
         data->m_pipeline = createDefaultPipeline();
@@ -245,6 +275,16 @@ bool AppBase::onCreate( Properties::Settings *config ) {
     m_world = new Scene::World( "world", mode );
     
     ServiceProvider::create( m_rbService );
+
+    // Setup onMouse event-listener
+    AbstractPlatformEventHandler *evHandler = m_platformInterface->getPlatformEventHandler();
+    if ( nullptr != evHandler ) {
+        TArray<const Common::Event*> eventArray;
+        eventArray.add( &MouseButtonDownEvent );
+        eventArray.add( &MouseButtonUpEvent );
+        m_mouseEvListener = new MouseEventListener;
+        evHandler->registerEventListener( eventArray, m_mouseEvListener );
+    }
 
     // set application state to "Created"
     osre_debug( Tag, "Set application state to Created." );
@@ -295,7 +335,7 @@ const ArgumentParser &AppBase::getArgumentParser() const {
 RenderBackend::Pipeline *AppBase::createDefaultPipeline() {
     Pipeline *pipeline = new Pipeline;
     PipelinePass *renderPass = new PipelinePass(nullptr);
-    CullState cullState( CullState::CullMode::CCW );
+    CullState cullState( CullState::CullMode::CCW, CullState::CullFace::Back );
     renderPass->setCullState( cullState );
     pipeline->addPass(renderPass);
     

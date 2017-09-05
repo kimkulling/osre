@@ -156,7 +156,7 @@ struct OGLParameter {
 struct OGLPrimGroup {
     GLenum m_primitive;
     ui32   m_startIndex;
-    ui32   m_numPrimitives;
+    ui32   m_numIndices;
     GLenum m_indexType;
 };
 

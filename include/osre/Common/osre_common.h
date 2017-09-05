@@ -141,7 +141,7 @@ struct Handle {
         init( idx );
     }
 
-    void init( int idx ) {
+    void init( i32 idx ) {
         m_idx = idx;
     }
 };
@@ -496,20 +496,75 @@ typedef TVec4<i32> Vec4i;
 typedef TVec4<f32> Vec4f;
 
 template<class T>
+struct OSRE_EXPORT TQuat {
+    T m_x, m_y, m_z, m_w;
+
+    TQuat()
+        : m_x(0)
+        , m_y(0)
+        , m_z(0)
+        , m_w(1) {
+        // empty
+    }
+
+    void set(T x, T y, T z, T w) {
+        m_x = x;
+        m_y = y;
+        m_z = z;
+        m_w = w;
+    }
+};
+
+typedef TQuat<f32> Quatf;
+
+template<class T>
+struct TPoint2 {
+    T m_x, m_y;
+
+    TPoint2()
+    : m_x(0)
+    , m_y(0) {
+        // empty
+    }
+
+
+    TPoint2( T x, T y )
+    : m_x( x )
+    , m_y( y ) {
+        // empty
+    }
+
+    bool operator == ( const TPoint2<T> &rhs ) const {
+        return ( m_x == rhs.m_x && m_y == rhs.m_y );
+    }
+
+    bool operator != (const TPoint2<T> &rhs) const {
+        return !( *this == rhs );
+    }
+};
+
+typedef TPoint2<i32>  Point2i;
+typedef TPoint2<ui32> Point2ui;
+
+template<class T>
 struct TRect2D {
-    T m_x, m_y, m_width, m_height;
+    T m_x1, m_y1, m_x2, m_y2, m_width, m_height;
 
     TRect2D()
-    : m_x( 0 )
-    , m_y( 0 )
+    : m_x1( 0 )
+    , m_y1( 0 )
+    , m_x2( 0 )
+    , m_y2(  0 )
     , m_width( 0 )
     , m_height( 0 ) {
         // empty
     }
 
     TRect2D( T x, T y, T width, T height )
-    : m_x( x )
-    , m_y( y )
+    : m_x1( x )
+    , m_y1( y )
+    , m_x2( x + width )
+    , m_y2( y + height )
     , m_width( width )
     , m_height( height ) {
         // empty
@@ -520,53 +575,40 @@ struct TRect2D {
     }
 
     T getX1() const {
-        return m_x;
+        return m_x1;
     }
 
     T getY1() const {
-        return m_y;
+        return m_y1;
     }
 
     T getX2() const {
-        return m_x + m_width;
+        return m_x2;
     }
 
     T getY2() const {
-        return m_y + m_height;
+        return m_y2;
+    }
+
+    bool isIn( const TPoint2<T> &pt ) const {
+        if ( pt.m_x >= m_x1 && pt.m_y >= m_y1 && pt.m_x <= m_x2 && pt.m_y <= m_y2 ) {
+            return true;
+        }
+        
+        return false;
     }
 
     const bool operator == ( const TRect2D<T> &rhs ) const {
-        return ( m_x == rhs.m_x && m_y == rhs.m_y && m_width == rhs.m_width && m_height == rhs.m_height );
+        return ( m_x1 == rhs.m_x1 && m_y1 == rhs.m_y1 && m_width == rhs.m_width && m_height == rhs.m_height );
     }
 
     const bool operator != ( const TRect2D<T> &rhs ) const {
-        return ( m_x != rhs.m_x || m_y != rhs.m_y || m_width != rhs.m_width || m_height != rhs.m_height );
+        return ( m_x1 != rhs.m_x1 || m_y1 != rhs.m_y1 || m_width != rhs.m_width || m_height != rhs.m_height );
     }
 };
 
-typedef TRect2D<ui32> RectUI;
-
-template<class T>
-struct OSRE_EXPORT TQuat {
-    T m_x, m_y, m_z, m_w;
-
-    TQuat()
-    : m_x( 0 )
-    , m_y( 0 )
-    , m_z( 0 )
-    , m_w( 1 ) {
-        // empty
-    }
-
-    void set( T x, T y, T z, T w ) {
-        m_x = x;
-        m_y = y;
-        m_z = z;
-        m_w = w;
-    }
-};
-
-typedef TQuat<f32> Quatf;
+typedef TRect2D<ui32> Rect2ui;
+typedef TRect2D<i32>  Rect2i;
 
 ///	@brief  Shortcut to avoid copy operations.
 #define OSRE_NON_COPYABLE( NAME ) \

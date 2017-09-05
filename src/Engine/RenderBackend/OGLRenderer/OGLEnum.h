@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "OGLCommon.h"
 #include <osre/RenderBackend/CullState.h>
+#include <osre/RenderBackend/PolygonState.h>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -47,14 +48,20 @@ public:
     static GLenum getGLTextureTarget( TextureTargetType type );
     ///	@brief  Translates the texture parameter type to OpenGL.
     static GLenum getGLTextureParameterName( TextureParameterName name );
-    /// @brief  Translates the texture state to the corresponding GLenum type.
+    /// @brief  Translates the texture state to the corresponding GLenum value.
     static GLenum getGLTextureStage( TextureStageType texType );
-    /// @brief  Translates the vertex format type to the corresponding GLenum type.
+    /// @brief  Translates the vertex format type to the corresponding GLenum value.
     static GLenum getOGLTypeForFormat( VertexFormat format );
     /// @brief  Translates the vertex format type to the corresponding size.
     static ui32 getOGLSizeForFormat( VertexFormat format );
     /// @brief  Translates the cull state to the corresponding GLenum type.
     static GLenum getOGLCullState( CullState::CullMode cullMode );
+    /// @brief  Translates the cull-face mode to the corresponding GLenum value.
+    static GLenum getOGLCullFace( CullState::CullFace cullFace );
+    /// @brief  Translates the polygon mode to the corresponding GLenum value.
+    static GLenum getOGLPolygonMode(PolygonState::PolygonMode polyMode);
+    /// @brief  Translates the shader type to the corresponding GLuint value.
+    static GLuint getOGLShaderType( ShaderType type );
 
     OGLEnum() = delete;
     ~OGLEnum() = delete;

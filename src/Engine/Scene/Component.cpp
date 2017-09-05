@@ -30,10 +30,10 @@ namespace Scene {
 using namespace ::OSRE::RenderBackend;
 using namespace ::CPPCore;
 
-static const glm::vec3 Dummy;
+static const glm::vec3 Dummy = glm::vec3( -1, -1, -1);
 
-Component::Component( ui32 id ) :
-m_id( id ) {
+Component::Component( ui32 id )
+: m_id( id ) {
 	// empty
 }
 
@@ -128,4 +128,4 @@ void CollisionComponent::update( RenderBackend::RenderBackendService *rbSrv ) {
 }
 
 } // Namespace Scene
-} // namespace OSRE
+} // Namespace OSRE

@@ -49,6 +49,7 @@ public:
     static void dumVertices( RenderBackend::RenderVert *renderVertices, ui32 numverices );
     static void dumVertices( const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices );
 	static void dumpIndices( const CPPCore::TArray<ui16> &indexArray );
+    static void dumpIndices( const CPPCore::TArray<ui32> &indexArray );
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -79,6 +80,8 @@ public:
     ///	@param  type        [in] The vertex type.
     /// @return The created geometry.
     static RenderBackend::Geometry *allocQuads( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
+
+    static RenderBackend::Geometry *allocCube( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
 
     ///	@brief  Will allocate vertices for a list of lines.
     ///	@param  type        [in] The vertex type.

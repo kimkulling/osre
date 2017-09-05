@@ -42,6 +42,7 @@ using namespace ::OSRE;
 using namespace ::OSRE::Assets;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Scene;
 
 // To identify local log entries 
 static const String Tag = "ModelLoadingApp"; 
@@ -95,36 +96,19 @@ protected:
             Assets::Model *model = assimpWrapper.getModel();
             Collision::TAABB<f32> aabb = model->getAABB();
 
-            m_stage = AppBase::createStage( "ModelLoader" );
-            m_view = m_stage->addView("camera", nullptr );
-            const f32 diam = aabb.getDiameter();
-            const Vec3f center = aabb.getCenter();
-            Platform::AbstractSurface *rootSurface( getRootSurface() );
-            if ( nullptr == rootSurface ) {
-                return false;
-            }
-            
-            const i32 w = rootSurface->getProperties()->m_width;
-            const i32 h = rootSurface->getProperties()->m_height;
-            f32 aspect = static_cast< f32 >( w ) / static_cast< f32 >( h );
-
-            f32 zNear = 0.0001f;
-            f32 zFar  = 100.f;
-            m_view->setProjectionMode(glm::radians(45.0f), aspect, zNear, zFar );
-            glm::vec3 eye( 2 * diam, 0, 0), up( 1, 0, 0 );
-            m_view->setLookAt( eye, glm::vec3( 0,0,0 ), up );
-
-            m_transformMatrix.m_model = glm::mat4(1.0f);
-            m_transformMatrix.m_view = m_view->getView();
-            m_transformMatrix.m_projection = m_view->getProjection();
+            CPPCore::TArray<Geometry*> geoArray = model->getGeoArray();
+            m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
             m_transformMatrix.update();
-            AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
-
-            AppBase::activateStage( m_stage->getName() );
-            Scene::Node *node = m_stage->addNode( "modelNode", nullptr );
-            if ( nullptr != node ) {
-                node->addModel(model);
+            RenderBackendService *rbSrv( getRenderBackendService() );
+            if ( nullptr != rbSrv ) {
+                /*rbSrv->setMatrix( "M", m_transformMatrix.m_model );
+                rbSrv->setMatrix( "V", m_transformMatrix.m_view );
+                rbSrv->setMatrix( "P", m_transformMatrix.m_projection );*/
+                rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
+                rbSrv->attachGeo( geoArray, 0 );
             }
+
+            m_stage = AppBase::createStage( "ModelLoading" );
         }
 
         return true;
@@ -135,6 +119,10 @@ protected:
         m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
         m_angle += 0.01f;
+        RenderBackendService *rbSrv( getRenderBackendService() );
+        /*rbSrv->setMatrix( "M", m_transformMatrix.m_model );
+        rbSrv->setMatrix( "V", m_transformMatrix.m_view );
+        rbSrv->setMatrix( "P", m_transformMatrix.m_projection );*/
 
         AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
         AppBase::onUpdate( timetick );

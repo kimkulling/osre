@@ -24,21 +24,15 @@ INCLUDE_DIRECTORIES(
     3dparty/glew/include
     3dparty/assimp/contrib/irrXML
     3dparty/zlib
-    d:/projects/libs/SDL2-2.0.3/include
     c:/Users/kullingk/Desktop/projects/libs/SDL2-2.0.3/include
-    d:/projects/libs/SDL2-2.0.5/include
-    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.10586.0/um"
     3dparty/soil/src
     /usr/include/SDL2/
     /usr/include/
-	"C:/projects/libs/SDL2-2.0.5/include"
+	$ENV{SDL_PATH}/include
 )
 
 link_directories(
-    d:/projects/libs/SDL2-2.0.5/lib/x86
-    d:/libs/SDL2-2.0.5/lib/x86
-    "C:/Program Files (x86)/Windows Kits/10/Lib/10.0.10586.0/um/x86"
-	"C:/projects/libs/SDL2-2.0.5/lib/x86"
+	$ENV{SDL_PATH}/lib/x86
     ${CMAKE_HOME_DIRECTORY}/lib
     ${CMAKE_HOME_DIRECTORY}/bin
 )
@@ -49,14 +43,11 @@ SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin )
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-IF ( BUILD_SHARED_LIBS AND CMAKE_SIZEOF_VOID_P EQUAL 8 ) # -fPIC is only required for shared libs on 64 bit
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-  SET(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -fPIC" )
-ENDIF()
-
 if( WIN32 )
     add_definitions( -DWIN32_LEAN_AND_MEAN )
 else()
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
+  SET(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -fPIC" )
   if(CMAKE_BUILD_TYPE STREQUAL "Debug")
       set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib-debug)
       set(LIB_INSTALL_DIR ${CMAKE_SOURCE_DIR}/lib-debug)

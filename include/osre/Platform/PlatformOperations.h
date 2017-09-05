@@ -23,32 +23,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-#include <osre/UI/Widget.h>
 
 namespace OSRE {
-    
-// forward declarations
-namespace RenderBackend {
-    struct Geometry;
+
+// Forward declarations
+namespace IO {
+    class Uri;
 }
 
-namespace UI {
+namespace Platform {
 
-struct Style;
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-class UIRenderUtils {
+class PlatformOperations {
 public:
-    static RenderBackend::Geometry *createRectFromStyle( WidgetType Type, const Rect2ui &rect, const Style &style, i32 stackIndex);
+    static void getFileOpenDialog( const String &extensions, IO::Uri &location );
+    static void getFileSaveDialog( const String &extensions, IO::Uri &location );
 
 private:
-    UIRenderUtils();
-    ~UIRenderUtils();
+    PlatformOperations();
+    ~PlatformOperations();
 };
 
-} // Namespace UI
+} // Namespace Platform
 } // Namespace OSRE

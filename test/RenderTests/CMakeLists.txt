@@ -12,7 +12,7 @@ SET ( rendertest_src
     src/AbstractTestFixure.h
     src/AbstractRenderTest.cpp
     src/AbstractRenderTest.h
-    src/CanvasRenderTest.cpp
+    src/UIRenderTest.cpp
     src/RenderTestSuite.cpp
     src/PrimTypeRenderTest.cpp
     src/BaseTriangleRenderTest.cpp

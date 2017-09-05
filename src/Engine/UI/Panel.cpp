@@ -27,11 +27,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "UIRenderUtils.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <GL/glew.h>
-#include <GL/gl.h>
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/string_cast.hpp>
 
 namespace OSRE {
@@ -52,25 +50,16 @@ Panel::~Panel() {
 
 void Panel::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
-    const RectUI &rect( getRect() );
+    const Rect2ui &rect( getRect() );
 
-    Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle );
+    Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle, getStackIndex() );
     rbSrv->attachGeo( geo, 0 );
-/*    AttachGeoEventData *attachGeoEvData = new AttachGeoEventData;
-    attachGeoEvData->m_numGeo = 1;
-    attachGeoEvData->m_geo = new Geometry*[ 1 ];
-    attachGeoEvData->m_geo[ 0 ] = geo;
-    rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoEvData );*/
 
     m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
 
     UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
     m_transformMatrix.update();
     ::memcpy( parameter->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
-
-    
-    /*geo->m_material->m_parameters = parameter;
-    geo->m_material->m_numParameters++;*/
 
     targetGeoArray.add( geo );
 }

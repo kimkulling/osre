@@ -29,6 +29,8 @@ namespace UI {
 
 using namespace ::OSRE::Common;
 
+static const String Tag = "StyleProvider";
+
 StyleProvider *StyleProvider::s_instance = nullptr;
 
 Style &StyleProvider::getCurrentStyle() {
@@ -42,6 +44,11 @@ void StyleProvider::setStyle( const Style &newStyle ) {
     if ( nullptr == s_instance ) {
         static_cast<void>( StyleProvider::getCurrentStyle() );
     }
+    if ( nullptr == s_instance ) {
+        osre_debug( Tag, "Singleton instance is nullptr." );
+        return;
+    }
+
     if ( newStyle != s_instance->m_activeStyle ) {
         s_instance->m_activeStyle = newStyle;
     }
@@ -56,13 +63,13 @@ StyleProvider::~StyleProvider() {
     // empty
 }
 
-RectUI WidgetCoordMapping::s_dim = RectUI(-1,-1,-1,-1 );
+Rect2ui WidgetCoordMapping::s_dim = Rect2ui( 0, 0, 0, 0 );
 
-void WidgetCoordMapping::init( const RectUI &dim ) {
+void WidgetCoordMapping::init( const Rect2ui &dim ) {
     s_dim = dim;
 }
 
-const RectUI &WidgetCoordMapping::getDimension() {
+const Rect2ui &WidgetCoordMapping::getDimension() {
     return s_dim;
 }
 
@@ -70,7 +77,7 @@ void WidgetCoordMapping::mapPosToWorld( ui32 x, ui32 y, f32 &mappedX, f32 &mappe
     mapPosToWorld( getDimension(), x, y, mappedX, mappedY );
 }
 
-void WidgetCoordMapping::mapPosToWorld( const RectUI &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY ) {
+void WidgetCoordMapping::mapPosToWorld( const Rect2ui &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY ) {
     mappedX = mappedY = 0.0f;
 
     // Used UI-axis from (-1 | -1 ) to ( 1 | 1 )
@@ -87,10 +94,11 @@ void WidgetCoordMapping::mapPosToWorld( const RectUI &rect, ui32 x, ui32 y, f32 
 
 Widget::Widget( const String &name, Widget *parent )
 : Object( name )
+, m_id( 99999999 )
 , m_parent( nullptr )
 , m_children()
 , m_rect( 0, 0, 1, 1 )
-, m_z( 1 )
+, m_stackIndex( 1 )
 , m_redrawRequest( true ) {
     Widget::setParent( parent );
 }
@@ -153,15 +161,17 @@ Widget *Widget::getChildWidgetAt( ui32 idx ) const {
     return m_children[ idx ];
 }
 
-void Widget::setRect( ui32 x, ui32 y, ui32 w, ui32 h ) {
-    RectUI newRect( x,y,w,h );
+Widget &Widget::setRect( ui32 x, ui32 y, ui32 w, ui32 h ) {
+    Rect2ui newRect( x,y,w,h );
     if ( m_rect != newRect ) {
         m_rect = newRect;
         requestRedraw();
     }
+    
+    return *this;
 }
 
-const RectUI &Widget::getRect() const {
+const Rect2ui &Widget::getRect() const {
     return m_rect;
 }
 
@@ -177,6 +187,14 @@ bool Widget::redrawRequested() const {
     return m_redrawRequest;
 }
 
+void Widget::setStackIndex(i32 index) {
+    m_stackIndex = index;
+}
+
+i32 Widget::getStackIndex() const {
+    return m_stackIndex;
+}
+
 void Widget::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
     if ( nullptr == rbSrv ) {
         return;
@@ -186,6 +204,44 @@ void Widget::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBacken
         onRender( targetGeoArray, rbSrv );
         redrawDone();
     }
+
+    const ui32 numChildren( getNumChildren() );
+    for ( ui32 i = 0; i < numChildren; i++ ) {
+        Widget *child = getChildWidgetAt( i );
+        if ( nullptr != child ) {
+            child->render( targetGeoArray, rbSrv );
+        }
+    }
+}
+
+void Widget::mouseDown( const Point2ui &pt ) {
+    onMouseDown( pt );
+}
+
+void Widget::mouseUp( const Point2ui &pt ) {
+    onMouseUp( pt );
+}
+
+void Widget::onMouseDown( const Point2ui &pt ) {
+    for ( ui32 i = 0; i < getNumChildren(); i++ ) {
+        Widget *child( getChildWidgetAt( i ) );
+        const Rect2ui &r = child->getRect();
+        if ( r.isIn( pt ) ) {
+            child->onMouseDown( pt );
+        }
+    }
+}
+
+void Widget::onMouseUp( const Point2ui &pt ) {
+
+}
+
+void Widget::setId( ui32 id ) {
+    m_id = id;
+}
+
+i32 Widget::getId() const {
+    return m_id;
 }
 
 } // Namespace UI

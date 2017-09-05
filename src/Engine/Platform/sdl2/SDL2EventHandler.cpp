@@ -101,17 +101,17 @@ SDL2EventHandler::SDL2EventHandler()
 : AbstractPlatformEventHandler()
 , m_isPolling( false )
 , m_shutdownRequested( false )
-, m_pInputUpdate( nullptr )
-, m_pEventTriggerer( nullptr ) {
-    m_pInputUpdate = new SDL2GetInputUpdate;
-    m_pEventTriggerer = new EventTriggerer;
-    m_pEventTriggerer->addTriggerableEvent( KeyboardButtonDownEvent );
-    m_pEventTriggerer->addTriggerableEvent( KeyboardButtonUpEvent );
-    m_pEventTriggerer->addTriggerableEvent( MouseButtonDownEvent );
-    m_pEventTriggerer->addTriggerableEvent( MouseButtonUpEvent );
-    m_pEventTriggerer->addTriggerableEvent( MouseMoveEvent );
-    m_pEventTriggerer->addTriggerableEvent( QuitEvent );
-    m_pEventTriggerer->addTriggerableEvent( AppFocusEvent );
+, m_inputUpdate( nullptr )
+, m_eventTriggerer( nullptr ) {
+    m_inputUpdate = new SDL2GetInputUpdate;
+    m_eventTriggerer = new EventTriggerer;
+    m_eventTriggerer->addTriggerableEvent( KeyboardButtonDownEvent );
+    m_eventTriggerer->addTriggerableEvent( KeyboardButtonUpEvent );
+    m_eventTriggerer->addTriggerableEvent( MouseButtonDownEvent );
+    m_eventTriggerer->addTriggerableEvent( MouseButtonUpEvent );
+    m_eventTriggerer->addTriggerableEvent( MouseMoveEvent );
+    m_eventTriggerer->addTriggerableEvent( QuitEvent );
+    m_eventTriggerer->addTriggerableEvent( AppFocusEvent );
 
     if( 0 == SDL_WasInit( SDL_INIT_EVERYTHING ) ) {
         SDL_Init( SDL_INIT_EVERYTHING );
@@ -129,23 +129,23 @@ SDL2EventHandler::SDL2EventHandler()
 }
 
 SDL2EventHandler::~SDL2EventHandler( ) {
-    delete m_pEventTriggerer;
-    m_pEventTriggerer = nullptr;
+    delete m_eventTriggerer;
+    m_eventTriggerer = nullptr;
 
-    delete m_pInputUpdate;
-    m_pInputUpdate = nullptr;
+    delete m_inputUpdate;
+    m_inputUpdate = nullptr;
 }
 
 bool SDL2EventHandler::onEvent( const Event &event, const EventData *eventData ){
-    EventDataList *pActiveEventQueue( getActiveEventDataList() );
+    EventDataList *activeEventQueue( getActiveEventDataList() );
     SDL_Event ev;
-    if( !m_shutdownRequested && m_pInputUpdate->update( &ev ) ) {
+    if( !m_shutdownRequested && m_inputUpdate->update( &ev ) ) {
         switch( ev.type ){
             case SDL_KEYDOWN:
             case SDL_KEYUP: {
-                KeyboardButtonEventData *data = new KeyboardButtonEventData( SDL_KEYDOWN == ev.type, m_pEventTriggerer );
+                KeyboardButtonEventData *data = new KeyboardButtonEventData( SDL_KEYDOWN == ev.type, m_eventTriggerer );
                 data->m_Key = ( Key ) ev.key.keysym.sym;
-                pActiveEventQueue->addBack( data );
+                activeEventQueue->addBack( data );
             }
             break;
 
@@ -174,7 +174,7 @@ bool SDL2EventHandler::onEvent( const Event &event, const EventData *eventData )
             break;
         }
 
-        processEvents( m_pEventTriggerer );
+        processEvents( m_eventTriggerer );
     }
     
     return !m_shutdownRequested;
@@ -186,7 +186,7 @@ void SDL2EventHandler::registerEventListener( const EventArray &events, OSEventL
         return;
     }
 
-    m_pEventTriggerer->addEventListener( events, EventFunctor::Make( listener, &OSEventListener::onOSEvent ) );
+    m_eventTriggerer->addEventListener( events, EventFunctor::Make( listener, &OSEventListener::onOSEvent ) );
 }
 
 void SDL2EventHandler::unregisterEventListener( const EventArray &events, OSEventListener *listener ) {
@@ -195,7 +195,7 @@ void SDL2EventHandler::unregisterEventListener( const EventArray &events, OSEven
         return;
     }
 
-    m_pEventTriggerer->removeEventListener( events, EventFunctor::Make( listener, &OSEventListener::onOSEvent ) );
+    m_eventTriggerer->removeEventListener( events, EventFunctor::Make( listener, &OSEventListener::onOSEvent ) );
 }
         
 void SDL2EventHandler::enablePolling( bool enabled ) {
@@ -203,11 +203,11 @@ void SDL2EventHandler::enablePolling( bool enabled ) {
         return;
     }
 
-    delete m_pInputUpdate;
+    delete m_inputUpdate;
     if( enabled ) {
-        m_pInputUpdate = new SDL2PeekInputUpdate;
+        m_inputUpdate = new SDL2PeekInputUpdate;
     } else {
-        m_pInputUpdate = new SDL2GetInputUpdate;
+        m_inputUpdate = new SDL2GetInputUpdate;
     }
     m_isPolling = enabled;
 }

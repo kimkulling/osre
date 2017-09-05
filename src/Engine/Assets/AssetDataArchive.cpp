@@ -157,8 +157,12 @@ void AssetDataArchive::readDict( IO::Stream &stream, AssetDataDict &dict, ui32 &
     i32 id( -1 );
     uc8 *buffer( nullptr );
     offset = readChunkData( stream, offset, id, buffer, size );
+    if ( nullptr == buffer ) {
+        osre_error( Tag, "Reading chunk failed." );
+        return;
+    }
     
-    ::memcpy( &dict.m_numEntries, &buffer[offset], sizeof( ui32 ) );
+    ::memcpy( &dict.m_numEntries, &buffer[ offset ], sizeof( ui32 ) );
     offset += sizeof( ui32 );
     
     ::memcpy( &dict.m_entries, &buffer[ offset ], dict.m_numEntries * sizeof( DictEntry ) );
@@ -170,13 +174,28 @@ ui32 AssetDataArchive::writeDict() {
 }
 
 AssetDataArchive::AssetDataArchive( ui32 minVersion )
-: m_dict()
-, m_minVersion( minVersion ) {
+: m_name()
+, m_dict()
+, m_minVersion( minVersion )
+, m_dateStream( nullptr ) {
     // empty
 }
 
 AssetDataArchive::~AssetDataArchive() {
     // empty
+}
+
+String AssetDataArchive::getExtension() {
+    static const String Extension = "osa";
+    return Extension;
+}
+
+void AssetDataArchive::setName( const String &name ) {
+    m_name = name;
+}
+
+const String AssetDataArchive::getName() const {
+    return m_name;
 }
 
 bool AssetDataArchive::read( IO::Stream &stream ) {
@@ -189,18 +208,24 @@ bool AssetDataArchive::read( IO::Stream &stream ) {
     }
 
     // read all entries
+    bool result( true );
     for ( ui32 i = 0; i < m_dict.m_numEntries; i++ ) {
         DictEntry &entry = m_dict.m_entries[ i ];
         switch ( static_cast<TokenType>( entry.m_id ) ) {
             case TokenType::WorldToken:
+                result = readWorldData();
                 break;
             case TokenType::StageToken:
+                result = readStageData();
                 break;
             case TokenType::ViewToken:
+                result = readViewData();
                 break;
             case TokenType::NodeToken:
+                result = readNodeData();
                 break;
             case TokenType::GeometryToken:
+                result = readGeometryData();
                 break;
             default:
                 osre_error( Tag, "Unknown token!" );
@@ -224,6 +249,46 @@ bool AssetDataArchive::write( IO::Stream &stream ) {
 }
 
 bool AssetDataArchive::isLoaded() const {
+    return false;
+}
+
+bool AssetDataArchive::readWorldData() {
+    return false;
+}
+
+bool AssetDataArchive::writeWorldData() {
+    return false;
+}
+
+bool AssetDataArchive::readStageData() {
+    return false;
+}
+
+bool AssetDataArchive::writeStageData() {
+    return false;
+}
+
+bool AssetDataArchive::readViewData() {
+    return false;
+}
+
+bool AssetDataArchive::writeViewData() {
+    return false;
+}
+
+bool AssetDataArchive::readNodeData() {
+    return false;
+}
+
+bool AssetDataArchive::writeNodeData() {
+    return false;
+}
+
+bool AssetDataArchive::readGeometryData() {
+    return false;
+}
+
+bool AssetDataArchive::writeGeometryData() {
     return false;
 }
 

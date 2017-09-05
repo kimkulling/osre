@@ -84,7 +84,8 @@ struct AbstractNodeFactory {
         return m_type;
     }
 
-    virtual Node *create( const String &name, Common::Ids &ids, bool transformEnabled, bool renderEnabled, Node *parent ) = 0;
+    virtual Node *create( const String &name, Common::Ids &ids, bool transformEnabled, 
+        bool renderEnabled, Node *parent ) = 0;
 };
 
 //-------------------------------------------------------------------------------------------------

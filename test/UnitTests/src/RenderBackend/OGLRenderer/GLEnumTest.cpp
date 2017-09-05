@@ -42,6 +42,18 @@ TEST_F( OGLEnumTest, access_cullstate_success ) {
     EXPECT_EQ( GL_CCW, OGLEnum::getOGLCullState( state.getCullMode() ) );
 }
 
+TEST_F( OGLEnumTest, access_cullFace_success ) {
+    CullState state;
+    state.setCullFace( CullState::CullFace::Front );
+    EXPECT_EQ( GL_FRONT, OGLEnum::getOGLCullFace( state.getCullFace() ) );
+
+    state.setCullFace( CullState::CullFace::Back );
+    EXPECT_EQ( GL_BACK, OGLEnum::getOGLCullFace( state.getCullFace() ) );
+
+    state.setCullFace( CullState::CullFace::FrontAndBack );
+    EXPECT_EQ( GL_FRONT_AND_BACK, OGLEnum::getOGLCullFace( state.getCullFace() ) );
+}
+
 } // Namespace UnitTest
 } // Namespace OSRE
 

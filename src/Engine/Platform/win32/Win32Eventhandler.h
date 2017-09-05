@@ -59,8 +59,8 @@ public:
     AbstractSurface *getRootSurface() const;
     void enablePolling( bool enabled ) override;;
     bool isPolling() const;
-    void registerEventListener( const CPPCore::TArray<const Common::Event*> &rEvents, OSEventListener *pListener ) override;;
-    void unregisterEventListener( const CPPCore::TArray<const Common::Event*> &rEvents, OSEventListener *pListener ) override;;
+    void registerEventListener( const CPPCore::TArray<const Common::Event*> &rEvents, OSEventListener *pListener ) override;
+    void unregisterEventListener( const CPPCore::TArray<const Common::Event*> &rEvents, OSEventListener *pListener ) override;
     static void registerEventServer( Win32Eventhandler *pServer, HWND hWnd );
     static void unregisterEventServer( Win32Eventhandler *pServer, HWND hWnd );
     static Win32Eventhandler *getInstance( HWND hWnd );

@@ -44,17 +44,39 @@ namespace UI {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT ButtonBase : public Widget {
 public:
+    enum ButtonState {
+        ButtonPressed = 0,
+        ButtonReleased,
+        MaxStates
+    };
+
     ButtonBase( const String &name, Widget *parent );
     virtual ~ButtonBase();
     virtual void setLabel( const String &label );
     virtual const String &getLabel() const;
+    virtual void setImage( const String &name );
+    virtual const String &getImage() const;
+    void registerCallback( ButtonState state, UIFunctor functor );
+    static ButtonBase *createBaseButton(const String &name, Widget *parent);
 
 protected:
-    virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
+    void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) override;
+    void onMouseDown(const Point2ui &pt) override;
+    void onMouseUp(const Point2ui &pt) override;
 
 private:
+    struct FunctorContainer {
+        bool m_used;
+        UIFunctor m_callback;
+
+        FunctorContainer();
+        ~FunctorContainer();
+    };
     String m_label;
+    String m_image;
+    FunctorContainer *m_callback;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
+    RenderBackend::Geometry *m_geo;
 };
 
 } // Namespace UI

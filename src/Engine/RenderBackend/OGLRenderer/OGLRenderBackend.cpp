@@ -53,6 +53,7 @@ static const String Tag             = "OGLRenderBackend";
 static const ui32   NotInitedHandle = 9999999;
 
 struct FixedPipelineState {
+    PolygonState m_polygonState;
     BlendState   m_blendState;
     CullState    m_cullState;
     SamplerState m_samplerState;
@@ -60,7 +61,8 @@ struct FixedPipelineState {
     bool         m_applied;
 
     FixedPipelineState()
-    : m_blendState()
+    : m_polygonState()
+    , m_blendState()
     , m_cullState()
     , m_samplerState()
     , m_stensilState()
@@ -68,10 +70,11 @@ struct FixedPipelineState {
         // empty
     }
 
-    bool isEqual( const CullState &cullstate, const BlendState &blendState, const SamplerState &samplerState, 
+    bool isEqual( const PolygonState &polygonState, const CullState &cullstate, const BlendState &blendState, const SamplerState &samplerState,
             const StencilState &stencilState ) const {
-        return ( cullstate == m_cullState 
+        return ( polygonState  == m_polygonState
               && blendState == m_blendState 
+              && cullstate == m_cullState
               && samplerState == m_samplerState 
               && stencilState == m_stensilState );
     }
@@ -130,13 +133,13 @@ void OGLRenderBackend::setRenderContext( Platform::AbstractRenderContext *render
 void OGLRenderBackend::clearRenderTarget( const ClearState &clearState ) {
     GLbitfield glTarget( 0 );
     const ui32 clear( clearState.getClearState() );
-    if( clear & ClearState::ColorBit ) {
+    if( clear & (int) ClearState::ClearBitType::ColorBit ) {
         glTarget |= GL_COLOR_BUFFER_BIT;
     }
-    if( clear & ClearState::DepthBit ) {
+    if( clear & (int)ClearState::ClearBitType::DepthBit ) {
         glTarget |= GL_DEPTH_BUFFER_BIT;
     }
-    if( clear & ClearState::StencilBit ) {
+    if( clear & (int) ClearState::ClearBitType::StencilBit ) {
         glTarget |= GL_STENCIL_BUFFER_BIT;
     }
 
@@ -185,18 +188,6 @@ void OGLRenderBackend::bindBuffer( OGLBuffer *buffer ) {
         osre_debug( Tag, "Pointer to buffer is nullptr" );
         return;
     }
-
-    /*if ( BufferType::VertexBuffer == buffer->m_type ) {
-        if ( m_activeVB == buffer->m_oglId ) {
-            return;
-        }
-        m_activeVB = buffer->m_oglId;
-    } else if ( BufferType::IndexBuffer == buffer->m_type ) {
-        if ( m_activeIB == buffer->m_oglId ) {
-            return;
-        }
-        m_activeIB = buffer->m_oglId;
-    }*/
  
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, buffer->m_oglId );
@@ -221,10 +212,10 @@ void OGLRenderBackend::unbindBuffer( OGLBuffer *buffer ) {
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBindBuffer( target, 0 );
 
-    //CHECKOGLERRORSTATE();
+    CHECKOGLERRORSTATE();
 }
 
-void OGLRenderBackend::copyData( OGLBuffer *buffer, void *data, ui32 size, BufferAccessType usage ) {
+void OGLRenderBackend::copyDataToBuffer( OGLBuffer *buffer, void *data, ui32 size, BufferAccessType usage ) {
     if ( nullptr == buffer ) {
         osre_debug( Tag, "Pointer to buffer is nullptr" );
         return;
@@ -232,7 +223,7 @@ void OGLRenderBackend::copyData( OGLBuffer *buffer, void *data, ui32 size, Buffe
     GLenum target = OGLEnum::getGLBufferType( buffer->m_type );
     glBufferData( target, size, data, OGLEnum::getGLBufferAccessType( usage ) );
     
-    //CHECKOGLERRORSTATE();
+    CHECKOGLERRORSTATE();
 }
 
 void OGLRenderBackend::releaseBuffer( OGLBuffer *buffer ) {
@@ -542,7 +533,7 @@ bool OGLRenderBackend::useShader( OGLShader *shader ) {
         m_shaderInUse->unuse();
     }
 
-    // 
+    // use new shader
     m_shaderInUse = shader;
     if ( nullptr != m_shaderInUse ) {
         m_shaderInUse->use();
@@ -908,7 +899,7 @@ ui32 OGLRenderBackend::addPrimitiveGroup( PrimitiveGroup *grp ) {
     oglGrp->m_primitive     = OGLEnum::getGLPrimitiveType( grp->m_primitive );
     oglGrp->m_indexType     = OGLEnum::getGLIndexType( grp->m_indexType );
     oglGrp->m_startIndex    = grp->m_startIndex;
-    oglGrp->m_numPrimitives = grp->m_numPrimitives;
+    oglGrp->m_numIndices = grp->m_numIndices;
     
     const ui32 idx( m_primitives.size() );
     m_primitives.add( oglGrp );
@@ -924,7 +915,7 @@ void OGLRenderBackend::render( ui32 primpGrpIdx ) {
     OGLPrimGroup *grp( m_primitives[ primpGrpIdx ] );
     if( nullptr != grp ) {
         glDrawElements( grp->m_primitive, 
-                        grp->m_numPrimitives, 
+                        grp->m_numIndices, 
                         grp->m_indexType, 
                         ( const GLvoid* ) grp->m_startIndex );
     }
@@ -935,7 +926,7 @@ void OGLRenderBackend::render( ui32 primpGrpIdx, ui32 numInstances ) {
     if ( nullptr != grp ) {
         glDrawArraysInstanced( grp->m_primitive, 
                                grp->m_startIndex, 
-                               grp->m_numPrimitives, 
+                               grp->m_numIndices, 
                                numInstances );
     }
 }
@@ -1013,24 +1004,26 @@ void OGLRenderBackend::releaseAllFonts() {
     m_fonts.clear();
 }
 
-void OGLRenderBackend::setFixedPipelineStates( const CullState &cullstate, const BlendState &blendState, 
-        const SamplerState &samplerState, const StencilState &stencilState ) {
+void OGLRenderBackend::setFixedPipelineStates( const PipelineStates &states ) {
+    OSRE_ASSERT( nullptr != m_fpState );
+
     if ( m_fpState->m_applied ) {
-        if ( m_fpState->isEqual( cullstate, blendState, samplerState, stencilState ) ) {
+        if ( m_fpState->isEqual(states.m_polygonState, states.m_cullState, states.m_blendState, states.m_samplerState, states.m_stencilState ) ) {
             return;
         }
     }
 
-    m_fpState->m_blendState   = blendState;
-    m_fpState->m_cullState    = cullstate;
-    m_fpState->m_samplerState = samplerState;
-    m_fpState->m_stensilState = stencilState;
-
+    m_fpState->m_polygonState = states.m_polygonState;
+    m_fpState->m_blendState   = states.m_blendState;
+    m_fpState->m_cullState    = states.m_cullState;
+    m_fpState->m_samplerState = states.m_samplerState;
+    m_fpState->m_stensilState = states.m_stencilState;
+    
     if ( m_fpState->m_cullState.getCullMode() == CullState::CullMode::Off ) {
         glDisable( GL_CULL_FACE );
     } else {
         glEnable( GL_CULL_FACE );
-        glCullFace( GL_BACK );
+        glPolygonMode( OGLEnum::getOGLCullFace(m_fpState->m_cullState.getCullFace()), OGLEnum::getOGLPolygonMode(m_fpState->m_polygonState.getPolygonMode() ) );
         glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );
     }
 

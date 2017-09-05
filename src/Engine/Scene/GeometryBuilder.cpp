@@ -134,6 +134,18 @@ void GeometryDiagnosticUtils::dumpIndices(const CPPCore::TArray<ui16> &indexArra
 	std::cout << "\n";
 }
 
+void GeometryDiagnosticUtils::dumpIndices( const CPPCore::TArray<ui32> &indexArray ) {
+    if ( indexArray.isEmpty() ) {
+        return;
+    }
+
+    for ( ui32 i = 0; i < indexArray.size(); i++ ) {
+        std::cout << indexArray[ i ] << ", ";
+    }
+    std::cout << "\n";
+
+}
+
 GeometryBuilder::GeometryBuilder() {
     // empty
 }
@@ -185,7 +197,7 @@ Geometry *GeometryBuilder::allocTriangles( VertexType type, BufferAccessType acc
     geo->m_numPrimGroups = 1;
     geo->m_pPrimGroups   = new PrimitiveGroup[ geo->m_numPrimGroups ];
     geo->m_pPrimGroups[ 0 ].m_indexType     = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numPrimitives = 3 * geo->m_numPrimGroups;
+    geo->m_pPrimGroups[ 0 ].m_numIndices = 3 * geo->m_numPrimGroups;
     geo->m_pPrimGroups[ 0 ].m_primitive     = PrimitiveType::TriangleList;
     geo->m_pPrimGroups[ 0 ].m_startIndex    = 0;
 
@@ -241,13 +253,19 @@ Geometry *GeometryBuilder::allocQuads( VertexType type, BufferAccessType access 
     geo->m_numPrimGroups = 1;
     geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
     geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numPrimitives = 6 * geo->m_numPrimGroups;
+    geo->m_pPrimGroups[ 0 ].m_numIndices = 6 * geo->m_numPrimGroups;
     geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
     geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
     // setup material
     geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
+    return geo;
+}
+
+Geometry *GeometryBuilder::allocCube( RenderBackend::VertexType type, RenderBackend::BufferAccessType access ) {
+    Geometry *geo = Geometry::create( 1 );
+    
     return geo;
 }
 
@@ -415,7 +433,7 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     geo->m_numPrimGroups = text.size();
     geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
     geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numPrimitives = 6 * geo->m_numPrimGroups;
+    geo->m_pPrimGroups[ 0 ].m_numIndices = 6 * geo->m_numPrimGroups;
     geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
     geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 

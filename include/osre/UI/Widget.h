@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/Object.h>
+#include <osre/Common/TFunctor.h>
 
 namespace OSRE {
 
@@ -57,9 +58,11 @@ struct OSRE_EXPORT Style {
         // color panel
         m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
         m_properties.add( Color4( 0.9f, 0.9f, 0.9f, 1.f ) );
+        
         // color button
         m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
         m_properties.add( Color4( 0.5f, 0.5f, 0.5f, 1.f ) );
+        
         // color text
         m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
     }
@@ -105,19 +108,21 @@ private:
 ///	@brief  
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT WidgetCoordMapping {
-    static void init( const RectUI &dim );
-    static const RectUI &getDimension();
+    static void init( const Rect2ui &dim );
+    static const Rect2ui &getDimension();
     static void mapPosToWorld( ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
-    static void mapPosToWorld( const RectUI &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
+    static void mapPosToWorld( const Rect2ui &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
 
 private:
-    static RectUI s_dim;
+    static Rect2ui s_dim;
 };
 
 enum class WidgetType {
     Panel,
     Button
 };
+
+typedef Common::Functor<void, ui32, void *> UIFunctor;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -135,22 +140,32 @@ public:
     virtual bool removeChildWidget( Widget *child );
     virtual ui32 getNumChildren() const;
     virtual Widget *getChildWidgetAt( ui32 idx ) const;
-    virtual void setRect( ui32 x, ui32 y, ui32 w, ui32 h );
-    virtual const RectUI &getRect() const;
+    virtual Widget &setRect( ui32 x, ui32 y, ui32 w, ui32 h );
+    virtual const Rect2ui &getRect() const;
     virtual void requestRedraw();
     virtual void redrawDone();
     virtual bool redrawRequested() const;
+    void setStackIndex( i32 index );
+    i32 getStackIndex() const;
     virtual void render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
+    virtual void mouseDown( const Point2ui &pt );
+    virtual void mouseUp( const Point2ui &pt );
+    void setId( ui32 id );
+    i32 getId() const;
 
 protected:
     Widget( const String &name, Widget *parent );
     virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) = 0;
+    virtual void onMouseDown( const Point2ui &pt);
+    virtual void onMouseUp( const Point2ui &pt );
 
 private:
     Widget *m_parent;
+    ui32 m_id;
+
     CPPCore::TArray<Widget*> m_children;
-    RectUI m_rect;
-    ui32 m_z;
+    Rect2ui m_rect;
+    i32 m_stackIndex;
     bool m_redrawRequest;
 };
 

@@ -21,11 +21,9 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/UI/Screen.h>
-#include <osre/RenderBackend/Parameter.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Platform/AbstractSurface.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/MaterialBuilder.h>
 
 namespace OSRE {
 namespace UI {
@@ -52,7 +50,7 @@ void Screen::setSurface( Platform::AbstractSurface *surface ) {
         ui32 y( props->m_y );
         ui32 w( props->m_width );
         ui32 h( props->m_height );
-        RectUI dim( x, y, w, h );
+        Rect2ui dim( x, y, w, h );
         WidgetCoordMapping::init( dim );
     }
 }
@@ -82,22 +80,7 @@ void Screen::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *rbS
     }
 
     if ( !targetGeoArray.isEmpty() ) {
-        //AttachGeoEventData *attachGeoData( new AttachGeoEventData );
-        //attachGeoData->m_numGeo = targetGeoArray.size();
-        //attachGeoData->m_geo = new Geometry*[ attachGeoData->m_numGeo ];
-        /*for ( ui32 i = 0; i < attachGeoData->m_numGeo; i++ ) {
-            attachGeoData->m_geo[ i ] = targetGeoArray[ i ];
-        }*/
         rbSrv->attachGeo( targetGeoArray, 0 );
-        //rbSrv->sendEvent( &OnAttachSceneEvent, attachGeoData );
-
-        /*::memcpy( param->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
-        UpdateParameterEventData *data = new UpdateParameterEventData;
-        data->m_numParam = 1;
-        data->m_param = new UniformVar *[ 1 ];
-        data->m_param[ 0 ] = param;
-        rbSrv->sendEvent( &OnUpdateGeoEvent, data );*/
-
         targetGeoArray.resize( 0 );
     }
 }

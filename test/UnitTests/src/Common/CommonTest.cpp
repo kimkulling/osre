@@ -184,5 +184,36 @@ TEST_F( CommonTest, TQuatTest ) {
     EXPECT_FLOAT_EQ( 1, q.m_w );
 }
 
+TEST_F( CommonTest, TPoint2_Test ) {
+    Point2ui pt1;
+    EXPECT_EQ(0, pt1.m_x);
+    EXPECT_EQ(0, pt1.m_y);
+    
+    Point2ui pt2( 1, 2 );
+    EXPECT_EQ( 1, pt2.m_x );
+    EXPECT_EQ( 2, pt2.m_y );
+
+    EXPECT_NE( pt1, pt2 );
+    EXPECT_EQ( pt2, pt2 );
+}
+
+TEST_F( CommonTest, TRect2D_Create ) {
+    Rect2ui rect( 0, 0, 100, 20 );
+    EXPECT_EQ( 0, rect.m_x1 );
+    EXPECT_EQ( 0, rect.m_y1 );
+    EXPECT_EQ( 100, rect.m_x2 );
+    EXPECT_EQ( 20, rect.m_y2 );
+    EXPECT_EQ( 100, rect.m_width );
+    EXPECT_EQ( 20, rect.m_height );
+}
+
+TEST_F(CommonTest, TRect2D_IsIn ) {
+    Rect2ui rect(0, 0, 100, 20);
+    Point2ui pt1(10, 2);
+    Point2ui pt2(102, 200);
+    EXPECT_TRUE( rect.isIn( pt1 ) );
+    EXPECT_FALSE( rect.isIn( pt2 ) );
+}
+
 } // Namespace UnitTest
 } // Namespace OSRE
