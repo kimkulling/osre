@@ -22,42 +22,33 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Object.h>
-#include <osre/IO/Uri.h>
+#include <osre/UI/Widget.h>
 
 namespace OSRE {
-namespace RenderBackend {
 
 // Forward declarations
-class OGLRenderBackend;
+namespace RenderBackend {
+    class FontBase;
+}
 
-struct OGLTexture;
+namespace UI {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-class FontBase : public Common::Object {
+class TextBase : public Widget {
 public:
-    FontBase( const String &name );
-    virtual ~FontBase();
-    virtual void setSize( ui32 size );
-    virtual ui32 getSize() const;
-    virtual void setUri( const IO::Uri &uri );
-    virtual void setTextureName( const String &name );
-    virtual const String &getTextureName() const;
-    virtual void setAtlasCols( ui32 numCols );
-    virtual void setAtlasRows( ui32 numRows );
-    virtual bool loadFromStream( OGLRenderBackend *rb );
+    TextBase( const String &name, Widget *parent );
+    ~TextBase();
+    void setLabel( const String &text );
+    const String &getLabel() const;
+    void setFont( RenderBackend::FontBase *font );
+    RenderBackend::FontBase *getFont() const;
+
+protected:
+    void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) override;
 
 private:
-    ui32 m_size;
-    String m_texName;
-    ui32 m_numCols, m_numRows;
-    OGLTexture *m_fontAtlas;
-    IO::Uri m_uri;
+    RenderBackend::FontBase *m_font;
+    String m_text;
 };
 
-} // Namespace RenderBackend
+} // Namespace UI
 } // Namespace OSRE

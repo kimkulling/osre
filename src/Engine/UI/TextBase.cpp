@@ -20,44 +20,53 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/Common/Object.h>
-#include <osre/IO/Uri.h>
+#include <osre/UI/TextBase.h>
 
 namespace OSRE {
-namespace RenderBackend {
+namespace UI {
 
-// Forward declarations
-class OGLRenderBackend;
+using namespace ::OSRE::RenderBackend;
 
-struct OGLTexture;
+TextBase::TextBase( const String &name, Widget *parent )
+: Widget( name, parent )
+, m_font( nullptr )
+, m_text( "" ) {
+    // empty
+}
+    
+TextBase::~TextBase() {
+    // empty
+}
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-class FontBase : public Common::Object {
-public:
-    FontBase( const String &name );
-    virtual ~FontBase();
-    virtual void setSize( ui32 size );
-    virtual ui32 getSize() const;
-    virtual void setUri( const IO::Uri &uri );
-    virtual void setTextureName( const String &name );
-    virtual const String &getTextureName() const;
-    virtual void setAtlasCols( ui32 numCols );
-    virtual void setAtlasRows( ui32 numRows );
-    virtual bool loadFromStream( OGLRenderBackend *rb );
+void TextBase::setLabel( const String &text ) {
+    if ( text == m_text ) {
+        return;
+    }
+    
+    m_text = text;
+    Widget::requestRedraw();
+}
 
-private:
-    ui32 m_size;
-    String m_texName;
-    ui32 m_numCols, m_numRows;
-    OGLTexture *m_fontAtlas;
-    IO::Uri m_uri;
-};
+const String &TextBase::getLabel() const {
+    return m_text;
+}
 
-} // Namespace RenderBackend
+void TextBase::setFont( RenderBackend::FontBase *font ) {
+    if ( m_font == font ) {
+        return;
+    }
+    
+    m_font = font;
+    Widget::requestRedraw();
+}
+
+RenderBackend::FontBase *TextBase::getFont() const {
+    return m_font;
+}
+
+void TextBase::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *rbSrv ) {
+
+}
+
+} // Namespace UI
 } // Namespace OSRE

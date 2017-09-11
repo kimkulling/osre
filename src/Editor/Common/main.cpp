@@ -60,7 +60,7 @@ public:
 
     bool loadWorld( const IO::Uri &loc ) {
         if ( loc.isEmpty() ) {
-            PlatformOperations::getFileOpenDialog( AssetDataArchive::getExtension(), m_projecUri );
+            PlatformOperations::getFileOpenDialog( AssetDataArchive::getExtension().c_str(), m_projecUri );
         } else {
             m_projecUri = loc;
         }
@@ -77,7 +77,7 @@ public:
 
     bool saveWorld( const IO::Uri &loc ) {
         if ( !loc.isValid() ) {
-            PlatformOperations::getFileOpenDialog( AssetDataArchive::getExtension(), m_projecUri );
+            PlatformOperations::getFileOpenDialog( AssetDataArchive::getExtension().c_str(), m_projecUri );
         } else {
             m_projecUri = loc;
         }

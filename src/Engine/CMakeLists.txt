@@ -354,12 +354,14 @@ SET( ui_src
     UI/ButtonBase.cpp
     UI/Panel.cpp
     UI/Screen.cpp
+	UI/TextBase.cpp
 )
 SET( ui_inc
     ${HEADER_PATH}/UI/Widget.h
     ${HEADER_PATH}/UI/ButtonBase.h
     ${HEADER_PATH}/UI/Panel.h
     ${HEADER_PATH}/UI/Screen.h
+	${HEADER_PATH}/UI/TextBase.h
 )
 
 #==============================================================================
