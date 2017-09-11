@@ -33,10 +33,10 @@ namespace IO {
 
 namespace Platform {
 
-class PlatformOperations {
+class OSRE_EXPORT PlatformOperations {
 public:
-    static void getFileOpenDialog( const String &extensions, IO::Uri &location );
-    static void getFileSaveDialog( const String &extensions, IO::Uri &location );
+    static void getFileOpenDialog( const c8 *extensions, IO::Uri &location );
+    static void getFileSaveDialog( const c8 *extensions, IO::Uri &location );
 
 private:
     PlatformOperations();

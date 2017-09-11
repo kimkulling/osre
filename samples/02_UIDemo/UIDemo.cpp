@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/Screen.h>
 #include <osre/UI/ButtonBase.h>
 #include <osre/UI/Panel.h>
+#include <osre/Platform/PlatformOperations.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -36,6 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using namespace ::OSRE;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::UI;
+using namespace ::OSRE::Platform;
 
 // To identify local log entries
 static const String Tag = "ModelLoadingApp";
@@ -56,12 +58,14 @@ public:
     virtual ~UIDemoApp() {
         // empty
     }
-    void callback1( ui32 id, void *data ) {
-        osre_debug( Tag, "Callback1" );
+    void openFileCallback( ui32 id, void *data ) {
+        IO::Uri loc;
+        PlatformOperations::getFileOpenDialog( "All\0 *.*\0", loc );
     }
 
-    void callback2( ui32 id, void *data ) {
-        osre_debug( Tag, "Callback2" );
+    void quitCallback( ui32 id, void *data ) {
+        AppBase::requestShutdown();
+        //osre_debug( Tag, "Callback2" );
     }
 
 protected:
@@ -87,12 +91,11 @@ protected:
         Panel *panel = new Panel( "panel", m_screen );
         panel->setRect( 10, 10, 500, 500 );
         ButtonBase *btnClick = new ButtonBase( "click", panel );
-        btnClick->registerCallback( ButtonBase::ButtonPressed, UIFunctor::Make(this, &UIDemoApp::callback1));
+        btnClick->registerCallback( ButtonBase::ButtonPressed, UIFunctor::Make(this, &UIDemoApp::openFileCallback ));
         btnClick->setRect( 20, 20, 100, 20 );
         ButtonBase *btnQuit  = new ButtonBase( "quit", panel );
-        //btnClick->registerCallback( ButtonBase::ButtonReleased, new UIFunctor );
-        btnQuit->setRect( 20, 50, 100, 20 );
-
+        btnQuit->setRect( 400, 20, 100, 20 );
+        btnQuit->registerCallback( ButtonBase::ButtonPressed, UIFunctor::Make( this, &UIDemoApp::quitCallback ) );
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
         AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );

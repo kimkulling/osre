@@ -38,7 +38,7 @@ PlatformOperations::~PlatformOperations() {
     // empty
 }
 
-void PlatformOperations::getFileOpenDialog( const String &extensions, IO::Uri &location ) {
+void PlatformOperations::getFileOpenDialog( const c8 *extensions, IO::Uri &location ) {
 #ifdef OSRE_WINDOWS
     OPENFILENAME ofn;       // common dialog box structure
     char szFile[ 260 ];       // buffer for file name
@@ -53,7 +53,7 @@ void PlatformOperations::getFileOpenDialog( const String &extensions, IO::Uri &l
     // use the contents of szFile to initialize itself.
     ofn.lpstrFile[ 0 ] = '\0';
     ofn.nMaxFile = sizeof( szFile );
-    ofn.lpstrFilter = extensions.c_str();
+    ofn.lpstrFilter = extensions;
     ofn.nFilterIndex = 1;
     ofn.lpstrFileTitle = NULL;
     ofn.nMaxFileTitle = 0;
@@ -71,7 +71,7 @@ void PlatformOperations::getFileOpenDialog( const String &extensions, IO::Uri &l
 #endif // OSRE_WINDOWS
 }
 
-void PlatformOperations::getFileSaveDialog( const String &extensions, IO::Uri &location ) {
+void PlatformOperations::getFileSaveDialog( const c8 *extensions, IO::Uri &location ) {
 #ifdef OSRE_WINDOWS
     OPENFILENAME ofn;       // common dialog box structure
     char szFile[ 260 ];       // buffer for file name
@@ -86,7 +86,7 @@ void PlatformOperations::getFileSaveDialog( const String &extensions, IO::Uri &l
     // use the contents of szFile to initialize itself.
     ofn.lpstrFile[ 0 ] = '\0';
     ofn.nMaxFile = sizeof( szFile );
-    ofn.lpstrFilter = extensions.c_str();
+    ofn.lpstrFilter = extensions;
     ofn.nFilterIndex = 1;
     ofn.lpstrFileTitle = NULL;
     ofn.nMaxFileTitle = 0;
