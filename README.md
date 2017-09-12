@@ -77,10 +77,18 @@ Check our doxygen reference doc: http://kimkulling.github.io/osre/doc/html/index
 # Samples
 ## Sample 1: Hello world
 This example will show you how to create a window and add a simple stage to it.
-### [01-helloworld](https://github.com/kimkulling/osre/blob/master/samples/00_HelloWorld/)
+
+[00-helloworld](https://github.com/kimkulling/osre/blob/master/samples/00_HelloWorld/)
+
 
 ## Sample 2: Model Loader
 This example will show you how to create a window, load a model using assimp and render it into a new created stage.
-### [02-ModelLoading](https://github.com/kimkulling/osre/blob/master/samples/01_ModelLoading/)
 
+[01-ModelLoading](https://github.com/kimkulling/osre/blob/master/samples/01_ModelLoading/)
+
+
+## Sample 3: UI-Demo
+This example will show you how to create a simple dialog and add your own callbacks.
+
+[02-UIDemo](https://github.com/kimkulling/osre/tree/master/samples/02_UIDemo)
   
