@@ -65,7 +65,6 @@ public:
 
     void quitCallback( ui32 id, void *data ) {
         AppBase::requestShutdown();
-        //osre_debug( Tag, "Callback2" );
     }
 
 protected:
