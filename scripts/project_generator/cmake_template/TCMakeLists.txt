@@ -14,13 +14,17 @@ add_definitions( -D%PROJECT_NAME%_BUILD )
 add_definitions( -D_VARIADIC_MAX=10 )
 
 INCLUDE_DIRECTORIES(
-    ./
-    ./src
+  ./
+  ./src
 	3dparty/osre/include
+	3dparty/osre/3dparty/assimp/include
+	3dparty/osre/3dparty/cppcore/include
+	3dparty/osre/3dparty/glm
 )
 
 link_directories(
-    ./lib
+  $ENV{SDL_PATH}/lib/x86
+  ./lib
 )
 
 SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib )
@@ -52,3 +56,5 @@ SOURCE_GROUP( src\\App    FILES ${app_src} )
 ADD_EXECUTABLE( %PROJECT_NAME_EXE%
     ${app_src}
 )
+
+target_link_libraries ( %PROJECT_NAME% osre )
