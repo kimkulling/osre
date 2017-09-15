@@ -63,6 +63,7 @@ public:
     bool update();
 
 protected:
+    /// @brief The callbacks.
     virtual bool onCreate( AbstractSurface *pSurface ) = 0;
     virtual bool onDestroy() = 0;
     virtual bool onUpdate() = 0;
@@ -77,13 +78,13 @@ private:
 };
 
 inline
-AbstractRenderContext::AbstractRenderContext( ) 
+AbstractRenderContext::AbstractRenderContext() 
 :m_isActive( false ) {
     // empty
 }
 
 inline
-AbstractRenderContext::~AbstractRenderContext( ) {
+AbstractRenderContext::~AbstractRenderContext() {
     // empty
 }
 

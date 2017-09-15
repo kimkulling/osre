@@ -39,8 +39,6 @@ class Uri;
 ///	@brief	This class implements the IO-server, which offers access to all mounted file systems.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT IOService : public Common::AbstractService {
-private:                                                                           
-//    static IOService * s_instance;                                                
 public:
     DECLARE_SINGLETON( IOService )
 
@@ -86,8 +84,8 @@ public:
     Stream *openStream( const Uri &file, Stream::AccessMode mode );
     
     /// @brief  Will close a opened stream.
-    /// @param  ppStream    [in] The pointer to the stream pointer, will be nullptr afterwards.
-    void closeStream( Stream **ppStream );
+    /// @param  stream      [in] The pointer to the stream pointer, will be nullptr afterwards.
+    void closeStream( Stream **stream );
 
     ///	@brief	Returns the assigned file system to a schema.
     ///	@param	schema		[in] The schema description of the mounted file system.

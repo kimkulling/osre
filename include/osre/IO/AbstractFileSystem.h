@@ -31,6 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace IO {
 
+// Forward declarations
 class Uri;
 class Stream;
 
@@ -49,22 +50,26 @@ public:
     virtual ~AbstractFileSystem();
 
     ///	@brief	Opens a new file instance.
-    ///	@param	rFilename	Filename to open.
-    ///	@param	rFileMode	Access mode.
+    ///	@param	filename    [in] Filename to open.
+    ///	@param	mode        [in] Access mode.
     ///	@return	Opened file instance
-    virtual Stream *open( const Uri &rFile, Stream::AccessMode mode ) = 0;
+    virtual Stream *open( const Uri &filename, Stream::AccessMode mode ) = 0;
     
-    ///	@brief	Close a given file instance
+    ///	@brief	Closes a given file instance
     ///	@param	pFile	File instance to close, must be opened before.
     virtual void close( Stream **pFile ) = 0;
 
     ///	@brief	Returns true, if file exists in file system.
-    ///	@param	rFileName	Filename to look for.
+    ///	@param	filename    [in] Filename to look for.
     ///	@return	true, if file exists.
-    virtual bool fileExist( const Uri &rFile ) = 0;
+    virtual bool fileExist( const Uri &filename) = 0;
 
     /// @brief  Search for a given file.
-    virtual Stream *find(const Uri &rFile, Stream::AccessMode mode, CPPCore::TArray<String> *pSearchPaths ) = 0;
+    /// @param  filename    [in] The filename to look for.
+    /// @param  mode        [in] The requested access mode.
+    /// @param  searchPaths [in] The search paths to look in.
+    /// @return A pointer showing to the opened stream.
+    virtual Stream *find(const Uri &filename, Stream::AccessMode mode, CPPCore::TArray<String> *searchPaths ) = 0;
 
     ///	@brief	Returns the schema description of the file system.
     ///	@return	The schema description.

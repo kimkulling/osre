@@ -37,7 +37,7 @@ namespace IO {
 class FileStream : public Stream {
 public:
     /// The default class constructor.
-    FileStream();
+    FileStream() noexcept;
     /// The class constructor with URI and access mode.
     FileStream( const Uri &uri, AccessMode requestedAccess );
     /// The class destructor.
@@ -74,7 +74,7 @@ public:
     bool isOpen() const;
 
 private:
-    FILE *m_pFile;
+    FILE *m_file;
 };
 
 } // Namespace IO

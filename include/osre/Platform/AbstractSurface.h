@@ -61,10 +61,9 @@ public:
         SF_WinTitleDirty   = ( 1 << 1 )
     };
 
-public:
     /// @brief  The class constructor.
     /// @param  props       [in] The surface properties.
-    AbstractSurface( SurfaceProperties *props );
+    explicit AbstractSurface( SurfaceProperties *props );
 
     /// @brief  The class destructor, virtual.
     virtual ~AbstractSurface();

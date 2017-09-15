@@ -25,14 +25,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace IO {
 
-Stream::Stream() 
+Stream::Stream() noexcept
 : m_Uri()
 , m_AccessMode() {
 	// empty
 }
 
 Stream::Stream( const Uri &uri, AccessMode mode ) 
-: m_Uri( uri)
+: m_Uri( uri )
 , m_AccessMode( mode ) {
 	// empty
 }

@@ -24,8 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Tokenizer.h>
 #include <osre/Common/Logger.h>
 #include <src/Engine/IO/ZipFileSystem.h>
-
-#include "LocaleFileSystem.h"
+#include <src/Engine/IO/LocaleFileSystem.h>
 
 #include <algorithm>
 
@@ -37,10 +36,15 @@ namespace IO {
 using namespace OSRE::Common;
 
 static const String Tag = "IOService";
+static const String Zip_Extension = "zip";
 
 static AbstractFileSystem *createFS( const Uri &file ) {
+    if ( !file.isValid() ) {
+        return nullptr;
+    }
+
     const String &schema( file.getScheme() );
-    if( schema == "zip" ) {
+    if( Zip_Extension == schema ) {
         return new ZipFileSystem( file );
     }
 

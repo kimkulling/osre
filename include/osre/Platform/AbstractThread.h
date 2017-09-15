@@ -61,9 +61,6 @@ public:
     ///	The function pointer for a user-specific thread-function.
     typedef ui32 (*threadfunc) ( void * );
 
-    /// The thread id type.
-    //typedef unsigned int threadId;
-
     ///	@brief	This enum describes the priority of the thread.
     enum class Priority {
         Low,	///< Low prio thread.
@@ -81,12 +78,11 @@ public:
         Terminated		///< Thread is terminated, will be destroyed immediately
     };
 
-public:
     ///	@brief	The destructor, virtual.
     virtual ~AbstractThread();
 
     ///	@brief	The thread will be started.
-    ///	@param	pData	The data pointer.
+    ///	@param	pData	[in] The data pointer.
     ///	@return	true, if the startup was successful, false if not.
     virtual bool start( void *pData ) = 0;
 
@@ -107,7 +103,7 @@ public:
     virtual bool resume() = 0;
 
     ///	@brief	Sets the name of the thread.
-    ///	@param	name	The new name for the thread.
+    ///	@param	name	[in] The new name for the thread.
     virtual void setName( const String &name ) = 0;
 
     ///	@brief	Returns the current name of the thread.
@@ -115,7 +111,7 @@ public:
     virtual const String &getName() const = 0;
 
     ///	@brief	Waits until the thread is signaled by an event.
-    ///	@param	ms				The timeout, set to 0 for infinite.
+    ///	@param	ms		[in] The timeout, set to 0 for infinite.
     virtual void waitForTimeout( ui32 ms ) = 0;
 
     ///	@brief	Waits for infinity for a signal.
@@ -126,7 +122,7 @@ public:
     virtual AbstractThreadEvent *getThreadEvent() const = 0;
 
     ///	@brief	Assigns a new thread priority to the thread.
-    ///	@param	prio	The new thread prio.
+    ///	@param	prio	[in] The new thread prio.
     virtual void setPriority( Priority prio ) = 0;
 
     ///	@brief	Returns the current thread prio.
@@ -137,9 +133,20 @@ public:
     ///	@return	The assigned name of the thread.
     virtual const String &getThreadName() const = 0;
 
+    /// @brief  Returns the thread storage instance.
+    /// @param  A pointer showing to the thread local storage instance.
     virtual AbstractThreadLocalStorage *getThreadLocalStorage() = 0;
+    
+    /// @brief  Will set the local thread storage instance.
+    /// @param  tls     [in] The new lts instance.
     virtual void setThreadLocalStorage( AbstractThreadLocalStorage *tls ) = 0;
+    
+    /// @brief  Will set the thread id.
+    /// @param  id       [in] The new thread id.
     virtual void setThreadId( const ThreadId &id ) = 0;
+
+    /// @brief  Returns the thread id.
+    /// @return The thread id.
     virtual ThreadId getThreadId() = 0;
 
 protected:

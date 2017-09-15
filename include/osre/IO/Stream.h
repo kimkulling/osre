@@ -63,7 +63,7 @@ public:
 
 public:
     ///	@brief	The default class constructor.
-    Stream();
+    Stream() noexcept;
 
     ///	@brief	The class constructor with the uri and the access type.
     ///	@param	uri				[in] Describes the location of the object to access.

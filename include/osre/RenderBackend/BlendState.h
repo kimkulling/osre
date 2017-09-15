@@ -46,7 +46,11 @@ public:
 
 public:
     /// @brief  The default constructor.
-    BlendState();
+    BlendState() noexcept;
+
+    /// @brief  The constructor with the func.
+    /// @param  func    [in] The new blending function to apply.
+    explicit BlendState(BlendFunc func);
 
     /// @brief  The class destructor.
     ~BlendState();
@@ -68,8 +72,14 @@ private:
 };
 
 inline
-BlendState::BlendState() 
+BlendState::BlendState() noexcept
 : m_blendFunc( BlendFunc::FuncNone ) {
+    // empty
+}
+
+inline 
+BlendState::BlendState(BlendFunc func)
+: m_blendFunc(BlendFunc::FuncNone) {
     // empty
 }
 

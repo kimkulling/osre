@@ -30,7 +30,7 @@ namespace Platform  {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  The abstract interface for a thread event.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractThreadEvent {
 public:

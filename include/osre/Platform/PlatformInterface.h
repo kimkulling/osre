@@ -24,12 +24,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/AbstractService.h>
 #include <osre/Common/AbstractEventHandler.h>
-#include <osre/Common/Logger.h>
+//#include <osre/Common/Logger.h>
 #include <osre/Common/Event.h>
 #include <osre/Platform/KeyTypes.h>
 #include <osre/Platform/PluginType.h>
 
-#include <cppcore/Container/TArray.h>
+//#include <cppcore/Container/TArray.h>
 #include <cppcore/Container/TList.h>
 
 #include <map>
