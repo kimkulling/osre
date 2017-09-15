@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
 #include <osre/App/ServiceProvider.h>
+#include <osre/Common/TObjPtr.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractTimer.h>
@@ -53,7 +54,9 @@ const String Tag     = "AppBase";
 class MouseEventListener : public Platform::OSEventListener {
 public:
     MouseEventListener()
-    : OSEventListener( "App/MouseEventListener" ) {
+    : OSEventListener( "App/MouseEventListener" )
+    , m_uiScreen() {
+        // empty
     }
 
     ~MouseEventListener() {
@@ -64,8 +67,12 @@ public:
         m_uiScreen = screen;
     }
 
+    UI::Screen *getScreen() const {
+        return m_uiScreen.getPtr();
+    }
+
     void onOSEvent( const Event &osEvent, const EventData *data ) override {
-        if ( nullptr != m_uiScreen ) {
+        if ( m_uiScreen.isValid() ) {
             osre_debug( Tag, "listener called" );
             MouseButtonEventData *mouseBtnData( ( MouseButtonEventData*) data );
             const Point2ui pt( mouseBtnData->m_AbsX, mouseBtnData->m_AbsY );
@@ -74,7 +81,7 @@ public:
     }
 
 private:
-    UI::Screen *m_uiScreen;
+    Common::TObjPtr<UI::Screen> m_uiScreen;
 };
 
 AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
