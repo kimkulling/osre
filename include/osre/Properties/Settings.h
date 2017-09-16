@@ -87,9 +87,13 @@ public:
     ///	@param	rValue	The assigned value.
     ///	@return	true, of set was successful, false if not.
     bool setString( ConfigKey key, const String &rValue );
+    String getString( ConfigKey key );
     bool setInt( ConfigKey key, i32 value );
+    i32 getInt( ConfigKey key );
     bool setBool( ConfigKey key, bool value );
+    bool getBool( ConfigKey key );
     bool setFloat( ConfigKey key, f32 value );
+    f32 getFloat( ConfigKey key );
     ///	@brief	Returns the value for the key.
     ///	@param	key	Key to look for.
     ///	@return	The assigned variant.
