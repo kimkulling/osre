@@ -99,6 +99,12 @@ void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::Render
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const Rect2ui &rect( getRect() );
 
+    const String &label( getLabel() );
+
+    if ( !label.empty() ) {
+        
+    }
+
     if ( nullptr == m_geo ) {
         m_geo = UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, getStackIndex() );
         rbSrv->attachGeo( m_geo, 0 );

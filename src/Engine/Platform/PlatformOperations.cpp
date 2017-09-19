@@ -47,7 +47,6 @@ void PlatformOperations::getFileOpenDialog( const c8 *extensions, IO::Uri &locat
                             // Initialize OPENFILENAME
     ZeroMemory( &ofn, sizeof( ofn ) );
     ofn.lStructSize = sizeof( ofn );
-    //ofn.hwndOwner = hwnd;
     ofn.lpstrFile = szFile;
     // Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
     // use the contents of szFile to initialize itself.
@@ -55,9 +54,9 @@ void PlatformOperations::getFileOpenDialog( const c8 *extensions, IO::Uri &locat
     ofn.nMaxFile = sizeof( szFile );
     ofn.lpstrFilter = extensions;
     ofn.nFilterIndex = 1;
-    ofn.lpstrFileTitle = NULL;
+    ofn.lpstrFileTitle = nullptr;
     ofn.nMaxFileTitle = 0;
-    ofn.lpstrInitialDir = NULL;
+    ofn.lpstrInitialDir = nullptr;
     ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
     // Display the Open dialog box. 
@@ -80,7 +79,6 @@ void PlatformOperations::getFileSaveDialog( const c8 *extensions, IO::Uri &locat
                               // Initialize OPENFILENAME
     ZeroMemory( &ofn, sizeof( ofn ) );
     ofn.lStructSize = sizeof( ofn );
-    //ofn.hwndOwner = hwnd;
     ofn.lpstrFile = szFile;
     // Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
     // use the contents of szFile to initialize itself.
@@ -88,9 +86,9 @@ void PlatformOperations::getFileSaveDialog( const c8 *extensions, IO::Uri &locat
     ofn.nMaxFile = sizeof( szFile );
     ofn.lpstrFilter = extensions;
     ofn.nFilterIndex = 1;
-    ofn.lpstrFileTitle = NULL;
+    ofn.lpstrFileTitle = nullptr;
     ofn.nMaxFileTitle = 0;
-    ofn.lpstrInitialDir = NULL;
+    ofn.lpstrInitialDir = nullptr;
     ofn.Flags = OFN_PATHMUSTEXIST;
 
     // Display the Open dialog box. 
@@ -100,7 +98,7 @@ void PlatformOperations::getFileSaveDialog( const c8 *extensions, IO::Uri &locat
     } else {
         location.clear();
     }
-#endif // OSRE_WINDOWSl
+#endif // OSRE_WINDOWS
 
 }
 

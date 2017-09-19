@@ -24,12 +24,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/AbstractService.h>
 #include <osre/Common/AbstractEventHandler.h>
-//#include <osre/Common/Logger.h>
 #include <osre/Common/Event.h>
 #include <osre/Platform/KeyTypes.h>
 #include <osre/Platform/PluginType.h>
 
-//#include <cppcore/Container/TArray.h>
 #include <cppcore/Container/TList.h>
 
 #include <map>
@@ -102,15 +100,14 @@ public:
     ///	@brief	The class constructor.
     ///	@param	down	[in] true, if button is pressed, false if button is releases.
     ///	@param	c		[in] The event trigger sender.
-    KeyboardButtonEventData( bool down, Common::EventTriggerer* c ) :
-        Common::EventData( down ? KeyboardButtonDownEvent : KeyboardButtonUpEvent, c ),
-        m_Key( KEY_UNKNOWN ),
-        m_Unicode( 0 )
-    {
+    KeyboardButtonEventData( bool down, Common::EventTriggerer* c ) 
+    : Common::EventData( down ? KeyboardButtonDownEvent : KeyboardButtonUpEvent, c )
+    , m_Key( KEY_UNKNOWN )
+    , m_Unicode( 0 ) {
             // empty
-        }
+    }
 
-    Key m_Key;		///< Key code for the pressed/released keyboard button
+    Key  m_Key;		///< Key code for the pressed/released keyboard button
     ui16 m_Unicode;	///< The Unicode character for the pressed/released key
 };
 
@@ -128,7 +125,6 @@ public:
         RightButton
     };
 
-public:
     ///	@brief	The class constructor.
     ///	@param	down	[in] true, if the mouse button was pressed, false if the mouse button was
     ///					released.
@@ -139,12 +135,12 @@ public:
     , m_AbsX( 0 )
     , m_AbsY( 0 )
     , m_Pressed( false ) {
-            // empty
+        // empty
     }
 
     ui32 m_Button;	///< pressed button (0=left, 1=middle, 2=right )
-    i32 m_AbsX;		///< absolute X-position of the mouse cursor
-    i32 m_AbsY;		///< absolute Y-position of the mouse cursor
+    i32  m_AbsX;	///< absolute X-position of the mouse cursor
+    i32  m_AbsY;	///< absolute Y-position of the mouse cursor
     bool m_Pressed;	///< True, if the button was pressed
 };
 
@@ -157,17 +153,16 @@ class OSRE_EXPORT MouseMoveEventData : public Common::EventData {
 public:
     ///	@brief	The class constructor.
     ///	@param	c		[in] The event trigger sender.
-    MouseMoveEventData( Common::EventTriggerer *c ) :
-        Common::EventData( MouseMoveEvent, c ),
-        m_AbsX( 0 ),
-        m_AbsY( 0 ) {
-            // empty
-        }
+    MouseMoveEventData( Common::EventTriggerer *c ) 
+    : Common::EventData( MouseMoveEvent, c )
+    , m_AbsX( 0 )
+    , m_AbsY( 0 ) {
+        // empty
+    }
 
     i32 m_AbsX;		///< The absolute X-position of the mouse cursor
     i32 m_AbsY;		///< The absolute Y-position of the mouse cursor
 };
-
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -181,7 +176,6 @@ public:
     static PlatformInterface *getInstance();
     static PluginType getOSPluginType();
     static String getOSPluginName( PluginType type );
-
     AbstractSurface *getRootSurface() const;
     AbstractPlatformEventHandler *getPlatformEventHandler() const;
     AbstractRenderContext *getRenderContext() const;
@@ -190,13 +184,13 @@ public:
     const String &getDefaultFontName() const;
 
 protected:
-    virtual bool onOpen();
-    virtual bool onClose();
-    virtual bool onUpdate( d32 timediff );
+    bool onOpen() override;
+    bool onClose() override;
+    bool onUpdate( d32 timediff ) override;
     virtual bool setupGfx( SurfaceProperties *props, bool polls );
 
 private:
-    PlatformInterface( const Properties::Settings *pConfiguration );
+    explicit PlatformInterface( const Properties::Settings *configuration );
     virtual ~PlatformInterface();
 
 private:

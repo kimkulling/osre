@@ -66,7 +66,7 @@ AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler(
     switch( type ) {
 #ifdef OSRE_WINDOWS
         case Platform::PluginType::WindowsPlugin: {
-                Win32Surface *win32Surface = ( Win32Surface* ) rootSurface;
+                Win32Surface *win32Surface = static_cast<Win32Surface*>( rootSurface );
                 if( win32Surface ) {
                     eventHandler = new Win32Eventhandler;
                     Win32Eventhandler::registerEventServer( ( Win32Eventhandler* ) eventHandler, win32Surface->getHWnd() );

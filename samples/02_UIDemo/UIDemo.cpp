@@ -89,10 +89,10 @@ protected:
 
         Panel *panel = new Panel( "panel", m_screen );
         panel->setRect( 10, 10, 500, 500 );
-        ButtonBase *btnClick = new ButtonBase( "click", panel );
+        ButtonBase *btnClick = new ButtonBase( "Open file", panel );
         btnClick->registerCallback( ButtonBase::ButtonPressed, UIFunctor::Make(this, &UIDemoApp::openFileCallback ));
         btnClick->setRect( 20, 20, 100, 20 );
-        ButtonBase *btnQuit  = new ButtonBase( "quit", panel );
+        ButtonBase *btnQuit  = new ButtonBase( "Quit", panel );
         btnQuit->setRect( 400, 20, 100, 20 );
         btnQuit->registerCallback( ButtonBase::ButtonPressed, UIFunctor::Make( this, &UIDemoApp::quitCallback ) );
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );

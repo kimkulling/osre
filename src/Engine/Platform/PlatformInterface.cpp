@@ -25,17 +25,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/EventTriggerer.h>
 #include <osre/Properties/Settings.h>
 #ifdef OSRE_WINDOWS
-#   include <src/Engine/Platform/win32/Win32Surface.h>
-#   include <src/Engine/Platform/win32/Win32Eventhandler.h>
-#   include <src/Engine/Platform/win32/Win32Timer.h>
 #   include <src/Engine/Platform/win32/Win32RenderContext.h>
-#   include <src/Engine/Platform/win32/Win32ThreadFactory.h>
 #endif // OSRE_WINDOWS
 #include <src/Engine/Platform/sdl2/SDL2Surface.h>
 #include <src/Engine/Platform/sdl2/SDL2EventHandler.h>
 #include <src/Engine/Platform/sdl2/SDL2RenderContext.h>
 #include <src/Engine/Platform/sdl2/SDL2Timer.h>
-#include <src/Engine/Platform/sdl2/SDL2ThreadFactory.h>
 
 #include <GL/glew.h>
 #include <SDL.h>
@@ -67,6 +62,7 @@ PlatformInterface::PlatformInterface( const Settings *config )
 #endif // OSRE_WINDOWS
 , m_rootSurface( nullptr )
 , m_oseventHandler( nullptr )
+, m_renderContext( nullptr )
 , m_timer( nullptr )
 , m_dynLoader( nullptr ) {
     // empty
@@ -163,7 +159,7 @@ bool PlatformInterface::onOpen() {
     }
 
     Settings::WorkingModeType appType = 
-        ( Settings::WorkingModeType ) m_config->get( Settings::AppType ).getInt();
+        static_cast<Settings::WorkingModeType>( m_config->get( Settings::AppType ).getInt() );
 
     SurfaceProperties *props( nullptr );
     bool polls( false );
