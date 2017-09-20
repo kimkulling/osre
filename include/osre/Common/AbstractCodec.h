@@ -44,11 +44,13 @@ public:
 
     /// @brief  Will encode data.
     /// @return true in case of a success.
-    virtual bool encode( IO::Stream *inStream );
+    virtual bool encode( IO::Stream *inStream, uc8 *data, ui32 &size );
 
     /// @brief  Will decode data
     /// @return true in case of a success.
     virtual bool decode( IO::Stream *outStream );
+
+    virtual void releaseData( uc8 *data );
 
     /// @brief  Returns the codec name.
     /// @return The codec name.

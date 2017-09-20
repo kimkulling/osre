@@ -180,7 +180,7 @@ bool PlatformInterface::onOpen() {
         polls = m_config->get( Settings::PollingMode ).getBool();
     }
 
-    String appName = "OSRE Applicaton";
+    String appName = "My OSRE-Applicaton";
     m_type = static_cast<PluginType>( m_config->get( Settings::PlatformPlugin ).getInt( ) );
 
     PlatformPluginFactory::init( m_type );

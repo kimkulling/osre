@@ -20,41 +20,54 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Common/AbstractCodec.h>
+#include <src/Engine/IO/ImageCodec.h>
+#include <osre/IO/Stream.h>
+#include <osre/Common/Logger.h>
+
+#include "SOIL.h"
 
 namespace OSRE {
-namespace Common {
-    
-AbstractCodec::AbstractCodec( const String &name, const String &ext )
-: m_name( name )
-, m_ext( ext ) {
+namespace IO {
+
+static const String Extensions = "jpg|png";
+static const String Tag        = "ImageCodec";
+
+ImageCodec::ImageCodec()
+: AbstractCodec("image", Extensions ) {
     // empty
 }
 
-AbstractCodec::~AbstractCodec() {
+ImageCodec::~ImageCodec() {
     // empty
 }
 
-bool AbstractCodec::encode( IO::Stream *, uc8 *, ui32 & ) {
+bool ImageCodec::encode( IO::Stream *inStream, uc8 *data, ui32 &size ) {
+    if ( nullptr == inStream ) {
+        osre_debug( Tag, "Input stream is nullptr." );
+        return false;
+    }
+    if ( 0 == size ) {
+        return true;
+    }
+    unsigned char *buffer = new unsigned char[ size ];
+    i32 width( 0 ), height( 0 ), channels( 0 );
+    data = SOIL_load_image_from_memory( buffer, size, &width, &height, &channels, SOIL_LOAD_AUTO );
+
+    return true;
+}
+
+bool ImageCodec::decode( IO::Stream *outStream ) {
     return false;
 }
 
-bool AbstractCodec::decode( IO::Stream * ) {
-    return false;
+void ImageCodec::releaseData( uc8 *data ) {
+    if ( nullptr == data ) {
+        osre_error( Tag, "Pointer to data buffer is nullptr." );
+        return;
+    }
+
+    SOIL_free_image_data( data );
 }
 
-void AbstractCodec::releaseData( uc8 *data ) {
-    // empty
 }
-
-
-const String &AbstractCodec::getCodecName() const {
-    return m_name;
 }
-
-const String &AbstractCodec::getCodecExt() const {
-    return m_ext;
-}
-
-} // Namespace Common
-} // Namespace OSRE

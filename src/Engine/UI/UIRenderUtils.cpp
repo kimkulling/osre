@@ -103,5 +103,19 @@ Geometry *UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &re
     return geo;
 }
 
+Rect2ui UIRenderUtils::computeTextBox( const String &text, f32 textSize ) {
+    ui32 width = 0, height = textSize;
+    for ( ui32 i = 0; i < text.size(); ++i ) {
+        if ( text[ i ] == '\n' ) {
+            height += textSize;
+        }
+        width += textSize;
+    }
+    const Rect2ui box( 0, 0, width, height );
+    
+    return box;
+
+}
+
 } // Namespace UI
 } // Namespace OSRE

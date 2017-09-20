@@ -312,7 +312,7 @@ void SystemTask::detachEventHandler() {
 
     Common::AbstractEventHandler *eh = m_taskThread->getEventHandler();
     if( eh ) {
-        m_taskThread->setEventHandler( NULL );
+        m_taskThread->setEventHandler( nullptr );
     }
 }
 

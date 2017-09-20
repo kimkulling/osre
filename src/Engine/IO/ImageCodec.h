@@ -20,41 +20,21 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
+#pragma once
+
 #include <osre/Common/AbstractCodec.h>
 
 namespace OSRE {
-namespace Common {
-    
-AbstractCodec::AbstractCodec( const String &name, const String &ext )
-: m_name( name )
-, m_ext( ext ) {
-    // empty
+namespace IO {
+
+class ImageCodec : public Common::AbstractCodec {
+public:
+    ImageCodec();
+    virtual ~ImageCodec();
+    bool encode( IO::Stream *inStream, uc8 *data, ui32 &size ) override;
+    bool decode( IO::Stream *outStream ) override ;
+    void releaseData( uc8 *data ) override;
+};
+
 }
-
-AbstractCodec::~AbstractCodec() {
-    // empty
 }
-
-bool AbstractCodec::encode( IO::Stream *, uc8 *, ui32 & ) {
-    return false;
-}
-
-bool AbstractCodec::decode( IO::Stream * ) {
-    return false;
-}
-
-void AbstractCodec::releaseData( uc8 *data ) {
-    // empty
-}
-
-
-const String &AbstractCodec::getCodecName() const {
-    return m_name;
-}
-
-const String &AbstractCodec::getCodecExt() const {
-    return m_ext;
-}
-
-} // Namespace Common
-} // Namespace OSRE

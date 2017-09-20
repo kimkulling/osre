@@ -52,7 +52,7 @@ private:
 
 template<class TEnum>
 inline
-    TAbstractCtrlStateListener<TEnum>::TAbstractCtrlStateListener( TAbstractCtrlBase<TEnum> *ctrl )
+TAbstractCtrlStateListener<TEnum>::TAbstractCtrlStateListener( TAbstractCtrlBase<TEnum> *ctrl )
     : m_instance( ctrl ) {
     // empty
 }
@@ -94,21 +94,21 @@ private:
 
 template<class T>
 inline
-    TAbstractCtrlBase<T>::TAbstractCtrlBase( T initialState )
-    : m_listener()
-    , m_state( initialState ) {
+TAbstractCtrlBase<T>::TAbstractCtrlBase( T initialState )
+: m_listener()
+, m_state( initialState ) {
     // empty
 }
 
 template<class T>
 inline
-    TAbstractCtrlBase<T>::~TAbstractCtrlBase() {
+TAbstractCtrlBase<T>::~TAbstractCtrlBase() {
     // empty
 }
 
 template<class T>
 inline
-    bool TAbstractCtrlBase<T>::registerListener( TAbstractCtrlStateListener<T> *listener ) {
+bool TAbstractCtrlBase<T>::registerListener( TAbstractCtrlStateListener<T> *listener ) {
     if ( nullptr == listener ) {
         return false;
     }
@@ -120,7 +120,7 @@ inline
 
 template<class T>
 inline
-    bool TAbstractCtrlBase<T>::unregisterListener( TAbstractCtrlStateListener<T> *listener ) {
+bool TAbstractCtrlBase<T>::unregisterListener( TAbstractCtrlStateListener<T> *listener ) {
     if ( nullptr == listener ) {
         return false;
     }
@@ -137,7 +137,7 @@ inline
 
 template<class T>
 inline
-    bool TAbstractCtrlBase<T>::gotoState( T newState ) {
+bool TAbstractCtrlBase<T>::gotoState( T newState ) {
     if ( !onStateLeave( m_state ) ) {
         return false;
     }
@@ -157,13 +157,13 @@ inline
 
 template<class T>
 inline
-    T TAbstractCtrlBase<T>::getState() const {
+T TAbstractCtrlBase<T>::getState() const {
     return m_state;
 }
 
 template<class T>
 inline
-    bool TAbstractCtrlBase<T>::update( d32 timetick ) {
+bool TAbstractCtrlBase<T>::update( d32 timetick ) {
     if ( onState() ) {
         return onUpdate( timetick );
     }
@@ -172,8 +172,8 @@ inline
 
 template<class T>
 inline
-    void TAbstractCtrlBase<T>::notifyListener() {
-    for ( ui32 i = 0; i < m_listener.size(); i++ ) {
+void TAbstractCtrlBase<T>::notifyListener() {
+for ( ui32 i = 0; i < m_listener.size(); i++ ) {
         if ( nullptr != m_listener[ i ] ) {
             m_listener[ i ]->onStateChanged( m_state );
         }
@@ -182,19 +182,19 @@ inline
 
 template<class T>
 inline
-    bool TAbstractCtrlBase<T>::onStateEnter( T newState ) {
+bool TAbstractCtrlBase<T>::onStateEnter( T newState ) {
     return true;
 }
 
 template<class T>
 inline
-    bool TAbstractCtrlBase<T>::onUpdate( d32 timetick ) {
+bool TAbstractCtrlBase<T>::onUpdate( d32 timetick ) {
     return true;
 }
 
 template<class T>
 inline
-    bool TAbstractCtrlBase<T>::onStateLeave( T oldState ) {
+bool TAbstractCtrlBase<T>::onStateLeave( T oldState ) {
     return true;
 }
 

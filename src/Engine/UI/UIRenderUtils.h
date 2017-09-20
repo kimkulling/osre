@@ -44,7 +44,8 @@ struct Style;
 class UIRenderUtils {
 public:
     static RenderBackend::Geometry *createRectFromStyle( WidgetType Type, const Rect2ui &rect, const Style &style, i32 stackIndex);
-
+    static Rect2ui computeTextBox( const String &text, f32 textSize );
+    
 private:
     UIRenderUtils();
     ~UIRenderUtils();

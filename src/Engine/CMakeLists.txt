@@ -126,6 +126,8 @@ SET( debugging_src
 SET( io_src
     IO/FileStream.cpp
     IO/FileStream.h
+    IO/ImageCodec.h
+    IO/ImageCodec.cpp
     IO/IOService.cpp
     IO/LocaleFileSystem.cpp
     IO/LocaleFileSystem.h
@@ -348,6 +350,7 @@ SET( renderbackend_inc
 # UI
 #==============================================================================
 SET( ui_src
+    UI/FontManager.cpp
     UI/Widget.cpp
     UI/UIRenderUtils.cpp
     UI/UIRenderUtils.h
@@ -357,6 +360,7 @@ SET( ui_src
 	UI/TextBase.cpp
 )
 SET( ui_inc
+    ${HEADER_PATH}/UI/FontManager.h
     ${HEADER_PATH}/UI/Widget.h
     ${HEADER_PATH}/UI/ButtonBase.h
     ${HEADER_PATH}/UI/Panel.h

@@ -27,7 +27,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "UIRenderUtils.h"
 
-#define GLM_ENABLE_EXPERIMENTAL
+#ifndef GLM_ENABLE_EXPERIMENTAL
+#   define GLM_ENABLE_EXPERIMENTAL
+#endif // 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -102,7 +104,8 @@ void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::Render
     const String &label( getLabel() );
 
     if ( !label.empty() ) {
-        
+//        PlatformInterface::getInstance();
+//        Rect2ui textBox = UIRenderUtils::computeTextBox( label, )
     }
 
     if ( nullptr == m_geo ) {

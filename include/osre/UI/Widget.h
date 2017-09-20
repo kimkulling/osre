@@ -29,6 +29,8 @@ namespace OSRE {
 
 namespace RenderBackend {
     class RenderBackendService;
+    class FontBase;
+
     struct Geometry;
 }
 
@@ -52,9 +54,11 @@ struct OSRE_EXPORT Style {
     };
 
     CPPCore::TArray<Color4> m_properties;
+    RenderBackend::FontBase *m_font;
 
     Style()
-    : m_properties() {
+    : m_properties()
+    , m_font( nullptr ) {
         // color panel
         m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
         m_properties.add( Color4( 0.9f, 0.9f, 0.9f, 1.f ) );
@@ -68,14 +72,15 @@ struct OSRE_EXPORT Style {
     }
 
     bool operator == ( const Style &rhs ) const {
-        bool equal( true );
         for ( ui32 i = 0; i < (ui32) ColorTable::Max; i++ ) {
             if ( m_properties[ i ] != rhs.m_properties[ i ] ) {
-                equal = false;
-                break;
+                return false;
+            }
+            if ( m_font != rhs.m_font ) {
+                return false;
             }
         }
-        return equal;
+        return true;
     }
 
     bool operator != ( const Style &rhs ) const {
