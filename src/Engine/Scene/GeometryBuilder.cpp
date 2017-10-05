@@ -430,10 +430,10 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     ::memcpy( geo->m_ib->m_data, textIndices, size );
 
     // setup primitives
-    geo->m_numPrimGroups = text.size();
+    geo->m_numPrimGroups = 1;
     geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
     geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numIndices = 6 * geo->m_numPrimGroups;
+    geo->m_pPrimGroups[ 0 ].m_numIndices = 6 * text.size();
     geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
     geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
@@ -476,9 +476,12 @@ void GeometryBuilder::updateTextBox( RenderBackend::Geometry *geo, f32 textSize,
 
     const f32 invCol = 1.f / 16.f;
     const f32 invRow = 1.f / 16.f;
+    ui32 textCol( 0 ), textRow( 0 );
     for ( ui32 i = 0; i < text.size(); i++ ) {
         const c8 ch = text[ i ];
         if ( isLineBreak( ch ) ) {
+            textCol = 0;
+            textRow++;
             continue;
         }
 
@@ -579,4 +582,3 @@ void GeometryBuilder::updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, Buff
 
 } // Namespace Scene
 } // Namespace OSRE
-
