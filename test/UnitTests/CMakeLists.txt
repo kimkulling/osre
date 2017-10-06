@@ -38,6 +38,7 @@ SET ( unittest_common_src
 
 SET ( unittest_collision_src
     src/Collision/TAABBTest.cpp
+    src/Collision/TRayTest.cpp
 )
 
 SET ( unittest_debugging_src

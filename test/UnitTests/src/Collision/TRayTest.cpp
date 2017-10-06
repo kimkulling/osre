@@ -20,45 +20,27 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/Common/AbstractProcessor.h>
-#include <osre/Collision/TAABB.h>
-#include <osre/Scene/Node.h>
-
-#include <cppcore/Container/TArray.h>
+#include <gtest/gtest.h>
+#include <osre/Collision/TRay.h>
 
 namespace OSRE {
+namespace UnitTest {
 
-namespace RenderBackend {
-    struct Geometry;
-}
+using namespace ::OSRE::Collision;
 
-namespace Collision {
-        
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-class GeometryProcessor : public Common::AbstractProcessor {
-public:
-    using GeoArray = CPPCore::TArray<RenderBackend::Geometry*>;
-
-    GeometryProcessor();
-    ~GeometryProcessor();
-    bool execute() override;
-    void addGeo( RenderBackend::Geometry *geo );
-    const Scene::Node::AABB &getAABB() const;
-
-private:
-    void handleGeometry( RenderBackend::Geometry *geo );
-
-private:
-    GeoArray m_geoArray;
-    Scene::Node::AABB m_aabb;
-    i32 m_dirty;
+class TRayTest : public ::testing::Test {
+    // empty
 };
 
-} // Namespace Collision
+TEST_F( TRayTest, createTest ) {
+    bool ok( true );
+    try {
+        TRay<f32> ray;
+    } catch (...) {
+        ok = false;
+    }
+    EXPECT_TRUE( ok );
+}
+
+} // Namespace Unittest
 } // Namespace OSRE
