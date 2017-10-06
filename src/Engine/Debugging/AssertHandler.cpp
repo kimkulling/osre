@@ -33,7 +33,7 @@ void handleFatal( const OSRE::String &file, int line, const OSRE::String &msg ) 
 void handleAssert( const OSRE::String &file, int line, const char *msg ) {
     handleFatal( file, line, msg );
 #ifdef OSRE_WINDOWS
-    ::__debugbreak();
+     ::__debugbreak();
 #endif
     ::exit( 1 );
 }

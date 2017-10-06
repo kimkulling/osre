@@ -29,6 +29,8 @@ namespace OSRE {
 // Forward declarations
 namespace RenderBackend {
     class FontBase;
+    
+    struct Geometry;
 }
 
 namespace UI {
@@ -47,6 +49,7 @@ protected:
 
 private:
     RenderBackend::FontBase *m_font;
+    RenderBackend::Geometry *m_textGlyphes;
     String m_text;
 };
 

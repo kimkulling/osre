@@ -21,16 +21,20 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/UI/TextBase.h>
+#include <osre/Scene/GeometryBuilder.h>
+#include <osre/RenderBackend/FontBase.h>
 
 namespace OSRE {
 namespace UI {
 
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Scene;
 
 TextBase::TextBase( const String &name, Widget *parent )
 : Widget( name, parent )
 , m_font( nullptr )
-, m_text( "" ) {
+, m_text( "" )
+, m_textGlyphes() {
     // empty
 }
     
@@ -65,7 +69,17 @@ RenderBackend::FontBase *TextBase::getFont() const {
 }
 
 void TextBase::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *rbSrv ) {
-
+    if ( m_text.empty() ) {
+        return;
+    }
+    f32 fontSize = 0.1f;
+    if ( nullptr != m_font ) {
+        fontSize = m_font->getSize();
+    }
+    if ( nullptr == m_textGlyphes ) {
+        m_textGlyphes = GeometryBuilder::allocTextBox( 0, 0, fontSize, m_text, BufferAccessType::ReadWrite );
+    }
+    targetGeoArray.add( m_textGlyphes );
 }
 
 } // Namespace UI

@@ -430,10 +430,10 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     ::memcpy( geo->m_ib->m_data, textIndices, size );
 
     // setup primitives
-    geo->m_numPrimGroups = text.size();
+    geo->m_numPrimGroups = 1;
     geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
     geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numIndices = 6 * geo->m_numPrimGroups;
+    geo->m_pPrimGroups[ 0 ].m_numIndices = 6 * text.size();
     geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
     geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
