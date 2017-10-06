@@ -104,6 +104,7 @@ SET( collision_inc
     ${HEADER_PATH}/Collision/GeometryProcessor.h
     ${HEADER_PATH}/Collision/TAABB.h
     ${HEADER_PATH}/Collision/TQuadTree.h
+    ${HEADER_PATH}/Collision/TRay.h
 )
 SET( collision_src
     Collision/GeometryProcessor.cpp
@@ -424,7 +425,6 @@ SOURCE_GROUP( Include\\Debugging  FILES ${debugging_inc} )
 SOURCE_GROUP( Include\\Common     FILES ${common_inc} )
 SOURCE_GROUP( Include\\Components FILES ${components_inc} )
 SOURCE_GROUP( Include\\Collision  FILES ${collision_inc} )
-SOURCE_GROUP( Include\\Collision  FILES ${collision_src} )
 SOURCE_GROUP( Include\\Debugging  FILES ${debugging_inc} )
 SOURCE_GROUP( Include\\System     FILES ${system_inc} )
 SOURCE_GROUP( Include\\Utils      FILES ${utils_inc} )
