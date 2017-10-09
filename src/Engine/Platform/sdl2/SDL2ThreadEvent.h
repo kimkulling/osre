@@ -31,7 +31,6 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::SDL2ThreadEvent
 ///	@ingroup	Engine
 ///
 ///	@brief
@@ -41,23 +40,21 @@ public:
     ///	The class constructor.
     SDL2ThreadEvent( );
     ///	The class destructor.
-    ~SDL2ThreadEvent( );
+    virtual ~SDL2ThreadEvent( );
     ///	The event will be signaled.
-    void signal();
+    void signal() override;
     /// Wait for one when signaled.
-    void waitForOne();
+    void waitForOne() override;
     /// Wait for all when signaled.
-    void waitForAll();
+    void waitForAll() override;
     ///	Wait until the event is signaled until a given timeout.
-    void waitForTimeout( ui32 ms );
+    void waitForTimeout( ui32 ms ) override;
 
 private:
     i32 m_bool;
     SDL_mutex *m_lock;
     SDL_cond *m_event;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

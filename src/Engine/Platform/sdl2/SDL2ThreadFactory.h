@@ -44,7 +44,5 @@ public:
     virtual AbstractThreadLocalStorage *createThreadLocalStorage();
 };
 
-//-------------------------------------------------------------------------------------------------
-
 } // Namespace Platform
 } // Namespace OSRE

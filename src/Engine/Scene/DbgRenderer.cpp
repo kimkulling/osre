@@ -85,8 +85,9 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
         m_rbSrv->attachGeo( geo, 0 );
         insertTextEntry( id, geo, text, m_textBoxes );
 
-        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
+        m_transformMatrix.update();
 
         m_rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
     } else {
@@ -105,9 +106,9 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
                 geo = entry->m_geo;
             }
             m_rbSrv->attachGeoUpdate( geo );
-            m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+            m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
             m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
-
+            m_transformMatrix.update();
             m_rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
         }
     }

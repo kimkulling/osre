@@ -81,7 +81,6 @@ elseif ( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" )
 endif()
 add_definitions( -DGLM_ENABLE_EXPERIMENTAL )
 
-
 SET( BUILD_SHARED_LIBS OFF )
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )

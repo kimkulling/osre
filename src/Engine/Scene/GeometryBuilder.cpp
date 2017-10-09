@@ -253,7 +253,7 @@ Geometry *GeometryBuilder::allocQuads( VertexType type, BufferAccessType access 
     geo->m_numPrimGroups = 1;
     geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
     geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numIndices = 6 * geo->m_numPrimGroups;
+    geo->m_pPrimGroups[ 0 ].m_numIndices = NumIndices * geo->m_numPrimGroups;
     geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
     geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
@@ -377,17 +377,21 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
         const f32  rowHeight( -1.0f * textRow * textSize );
         textPos[ VertexOffset + 0 ].x = pos[ 0 ].x + ( textCol*textSize );
         textPos[ VertexOffset + 0 ].y = pos[ 0 ].y + rowHeight;
+        textPos[ VertexOffset + 0 ].z = 0;
 
         textPos[ VertexOffset + 1 ].x = pos[ 1 ].x + ( textCol*textSize );
         textPos[ VertexOffset + 1 ].y = pos[ 1 ].y + rowHeight;
+        textPos[ VertexOffset + 1 ].z = 0;
 
         textPos[ VertexOffset + 2 ].x = pos[ 2 ].x + ( textCol*textSize );
         textPos[ VertexOffset + 2 ].y = pos[ 2 ].y + rowHeight;
+        textPos[ VertexOffset + 2 ].z = 0;
 
         textPos[ VertexOffset + 3 ].x = pos[ 3 ].x + ( textCol*textSize );
         textPos[ VertexOffset + 3 ].y = pos[ 3 ].y + rowHeight;
+        textPos[ VertexOffset + 3 ].z = 0;
 
-        //dumpTextBox( i, textPos, VertexOffset );
+        GeometryDiagnosticUtils::dumpTextBox( i, textPos, VertexOffset );
         
         const i32 column = (ch ) % 16;
         const i32 row = (ch ) / 16;
@@ -406,7 +410,7 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
         tex0[VertexOffset + 3].x = s + 1.0f / 16.0f;
         tex0[VertexOffset + 3].y = 1.0f - t + 1.0f / 16.0f;
         
-        //dumpTextTex0Box(i, tex0, VertexOffset);
+        //GeometryDiagnosticUtils::dumpTextTex0Box(i, tex0, VertexOffset);
         colors[ VertexOffset + 0 ] = col[ 0 ];
         colors[ VertexOffset + 1 ] = col[ 1 ];
         colors[ VertexOffset + 2 ] = col[ 2 ];
@@ -427,7 +431,8 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     // setup triangle indices
     ui32 size = sizeof( GLushort ) * 6 * text.size();
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
-    ::memcpy( geo->m_ib->m_data, textIndices, size );
+    geo->m_ib->copyFrom( textIndices, size );
+    //::memcpy( geo->m_ib->m_data, textIndices, size );
 
     // setup primitives
     geo->m_numPrimGroups = 1;

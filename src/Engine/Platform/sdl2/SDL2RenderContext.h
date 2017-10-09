@@ -31,7 +31,6 @@ namespace Platform {
 
 class SDL2Surface;
 
-//-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::SDL2RenderContext
 ///	@ingroup	Engine
 ///
@@ -53,8 +52,6 @@ private:
     SDL2Surface *m_pSurface;
     bool m_isActive;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

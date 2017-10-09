@@ -28,7 +28,6 @@ namespace OSRE {
 namespace Platform {
         
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::SDL2Initializer
 ///	@ingroup	Engine
 ///
 ///	@brief
@@ -41,8 +40,6 @@ public:
 private:
     static bool s_inited;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Threading
 } // Namespace OSRE

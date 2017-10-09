@@ -30,7 +30,6 @@ namespace OSRE {
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::SDL2Surface
 ///	@ingroup	Engine
 ///
 ///	@brief
@@ -55,8 +54,6 @@ protected:
 private:
     SDL_Window *m_surface;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

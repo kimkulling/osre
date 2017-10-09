@@ -18,8 +18,8 @@ class SDL2ThreadLocalStorage : public AbstractThreadLocalStorage {
 public:
     SDL2ThreadLocalStorage();
     virtual ~SDL2ThreadLocalStorage();
-    virtual void *get() override;
-    virtual void set( void *data ) override;
+    void *get() override;
+    void set( void *data ) override;
 
 private:
     SDL_TLSID m_index;

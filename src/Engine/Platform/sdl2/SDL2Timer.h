@@ -36,15 +36,13 @@ namespace Platform {
 class SDL2Timer : public AbstractTimer {
 public:
     SDL2Timer();
-    virtual~SDL2Timer();
-    virtual d32 getCurrentSeconds();
-    virtual d32 getTimeDiff();
+    virtual ~SDL2Timer();
+    d32 getCurrentSeconds() override;
+    d32 getTimeDiff() override;
 
 private:
     d32 m_lasttick;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

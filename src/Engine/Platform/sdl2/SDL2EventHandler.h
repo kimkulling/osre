@@ -63,7 +63,5 @@ private:
     Common::EventTriggerer *m_eventTriggerer;
 };
 
-//-------------------------------------------------------------------------------------------------
-
 } // Namespace Platform
 } // Namespace OSRE

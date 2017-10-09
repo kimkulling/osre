@@ -92,6 +92,5 @@ private:
     ThreadId m_id;
 };
 
-
 } // Namespace Threading
 } // Namespace OSRE
