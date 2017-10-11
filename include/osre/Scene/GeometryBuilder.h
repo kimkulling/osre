@@ -49,6 +49,7 @@ public:
     static void dumVertices( RenderBackend::RenderVert *renderVertices, ui32 numverices );
     static void dumVertices( const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices );
 	static void dumpIndices( const CPPCore::TArray<ui16> &indexArray );
+    static void dumpIndices( ui16 *indices, ui32 numIndices );
     static void dumpIndices( const CPPCore::TArray<ui32> &indexArray );
 };
 

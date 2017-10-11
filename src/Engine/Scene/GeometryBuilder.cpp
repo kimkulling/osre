@@ -134,6 +134,17 @@ void GeometryDiagnosticUtils::dumpIndices(const CPPCore::TArray<ui16> &indexArra
 	std::cout << "\n";
 }
 
+void GeometryDiagnosticUtils::dumpIndices( ui16 *indices, ui32 numIndices ) {
+    if ( nullptr == indices || 0 == numIndices ) {
+        return;
+    }
+
+    for ( ui32 i = 0; i < numIndices; i++ ) {
+        std::cout << indices[ i ] << ", ";
+    }
+    std::cout << "\n";
+}
+
 void GeometryDiagnosticUtils::dumpIndices( const CPPCore::TArray<ui32> &indexArray ) {
     if ( indexArray.isEmpty() ) {
         return;
@@ -423,6 +434,7 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
         textIndices[ 3 + IndexOffset ] = 1 + VertexOffset;
         textIndices[ 4 + IndexOffset ] = 2 + VertexOffset;
         textIndices[ 5 + IndexOffset ] = 3 + VertexOffset;
+        GeometryDiagnosticUtils::dumpIndices( &textIndices[ IndexOffset ], 6 );
         textCol++;
     }
 
