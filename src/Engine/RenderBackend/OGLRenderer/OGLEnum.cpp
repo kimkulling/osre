@@ -71,7 +71,7 @@ GLenum OGLEnum::getGLPrimitiveType( PrimitiveType primType ) {
         case PrimitiveType::TriangleFan:
             return GL_TRIANGLE_FAN;
         default:
-            //OSRE_ASSERT2( false, "Unknown enum" );
+            OSRE_ASSERT2( false, "Unknown enum" );
             break;
     }
 
@@ -87,7 +87,7 @@ GLenum OGLEnum::getGLIndexType( IndexType indexType ) {
         case IndexType::UnsignedInt:
             return GL_UNSIGNED_INT;
         default:
-            //OSRE_ASSERT2( false, "Unknown enum" );
+            OSRE_ASSERT2( false, "Unknown enum" );
             break;
     }
 

@@ -80,10 +80,10 @@ static const String TextFsSrc =
 void GeometryDiagnosticUtils::dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset ) {
     std::stringstream stream;
     stream << std::endl;
-    stream << "i = " << i << " : " << textPos[ VertexOffset + 0 ].x << ", " << textPos[ VertexOffset + 0 ].y << "\n";
-    stream << "i = " << i << " : " << textPos[ VertexOffset + 1 ].x << ", " << textPos[ VertexOffset + 1 ].y << "\n";
-    stream << "i = " << i << " : " << textPos[ VertexOffset + 2 ].x << ", " << textPos[ VertexOffset + 2 ].y << "\n";
-    stream << "i = " << i << " : " << textPos[ VertexOffset + 3 ].x << ", " << textPos[ VertexOffset + 3 ].y << "\n";
+    stream << "i = " << i << " : " << textPos[ VertexOffset + 0 ].x << ", " << textPos[ VertexOffset + 0 ].y << ", " << textPos[ VertexOffset + 0 ].z << "\n";
+    stream << "i = " << i << " : " << textPos[ VertexOffset + 1 ].x << ", " << textPos[ VertexOffset + 1 ].y << ", " << textPos[ VertexOffset + 1 ].z << "\n";
+    stream << "i = " << i << " : " << textPos[ VertexOffset + 2 ].x << ", " << textPos[ VertexOffset + 2 ].y << ", " << textPos[ VertexOffset + 2 ].z << "\n";
+    stream << "i = " << i << " : " << textPos[ VertexOffset + 3 ].x << ", " << textPos[ VertexOffset + 3 ].y << ", " << textPos[ VertexOffset + 3 ].z << "\n";
     osre_info( Tag, stream.str() );
 }
 
@@ -432,7 +432,6 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     ui32 size = sizeof( GLushort ) * 6 * text.size();
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
     geo->m_ib->copyFrom( textIndices, size );
-    //::memcpy( geo->m_ib->m_data, textIndices, size );
 
     // setup primitives
     geo->m_numPrimGroups = 1;
