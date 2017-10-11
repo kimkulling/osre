@@ -127,6 +127,8 @@ void GeometryDiagnosticUtils::dumpIndices(const CPPCore::TArray<ui16> &indexArra
 	if ( indexArray.isEmpty() ) {
 		return;
 	}
+    std::stringstream stream;
+    stream << std::endl;
 
 	for (ui32 i = 0; i<indexArray.size(); i++) {
 		std::cout << indexArray[i] << ", ";
@@ -139,10 +141,13 @@ void GeometryDiagnosticUtils::dumpIndices( ui16 *indices, ui32 numIndices ) {
         return;
     }
 
+    std::stringstream stream;
+    stream << std::endl;
     for ( ui32 i = 0; i < numIndices; i++ ) {
-        std::cout << indices[ i ] << ", ";
+        stream << indices[ i ] << ", ";
     }
-    std::cout << "\n";
+    stream << "\n";
+    osre_info( Tag, stream.str() );
 }
 
 void GeometryDiagnosticUtils::dumpIndices( const CPPCore::TArray<ui32> &indexArray ) {
@@ -434,9 +439,9 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
         textIndices[ 3 + IndexOffset ] = 1 + VertexOffset;
         textIndices[ 4 + IndexOffset ] = 2 + VertexOffset;
         textIndices[ 5 + IndexOffset ] = 3 + VertexOffset;
-        GeometryDiagnosticUtils::dumpIndices( &textIndices[ IndexOffset ], 6 );
         textCol++;
     }
+    GeometryDiagnosticUtils::dumpIndices( textIndices, 6 * text.size() );
 
     geo->m_vb = allocVertices( geo->m_vertextype, text.size() * NumQuadVert, textPos, colors, tex0, access );
 
@@ -457,7 +462,7 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( VertexType::RenderVertex );
 
     // setup the texture
-    geo->m_material->m_numTextures = 1;
+    /*geo->m_material->m_numTextures = 1;
     geo->m_material->m_textures = new Texture*[ 1 ];
     geo->m_material->m_textures[ 0 ] = new Texture;
     geo->m_material->m_textures[ 0 ]->m_textureName = "buildin_arial";
@@ -468,7 +473,7 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     geo->m_material->m_textures[0]->m_height = 0;
     geo->m_material->m_textures[0]->m_channels = 0;
     geo->m_material->m_textures[0]->m_data = nullptr;
-    geo->m_material->m_textures[0]->m_size = 0;
+    geo->m_material->m_textures[0]->m_size = 0;*/
 
     return geo;
 }
