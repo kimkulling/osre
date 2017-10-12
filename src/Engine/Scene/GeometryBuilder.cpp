@@ -407,7 +407,7 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
         textPos[ VertexOffset + 3 ].y = pos[ 3 ].y + rowHeight;
         textPos[ VertexOffset + 3 ].z = 0;
 
-        GeometryDiagnosticUtils::dumpTextBox( i, textPos, VertexOffset );
+        //GeometryDiagnosticUtils::dumpTextBox( i, textPos, VertexOffset );
         
         const i32 column = (ch ) % 16;
         const i32 row = (ch ) / 16;
@@ -441,7 +441,7 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
         textIndices[ 5 + IndexOffset ] = 3 + VertexOffset;
         textCol++;
     }
-    GeometryDiagnosticUtils::dumpIndices( textIndices, 6 * text.size() );
+    //GeometryDiagnosticUtils::dumpIndices( textIndices, 6 * text.size() );
 
     geo->m_vb = allocVertices( geo->m_vertextype, text.size() * NumQuadVert, textPos, colors, tex0, access );
 
@@ -462,7 +462,7 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( VertexType::RenderVertex );
 
     // setup the texture
-    /*geo->m_material->m_numTextures = 1;
+    geo->m_material->m_numTextures = 1;
     geo->m_material->m_textures = new Texture*[ 1 ];
     geo->m_material->m_textures[ 0 ] = new Texture;
     geo->m_material->m_textures[ 0 ]->m_textureName = "buildin_arial";
@@ -473,7 +473,7 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     geo->m_material->m_textures[0]->m_height = 0;
     geo->m_material->m_textures[0]->m_channels = 0;
     geo->m_material->m_textures[0]->m_data = nullptr;
-    geo->m_material->m_textures[0]->m_size = 0;*/
+    geo->m_material->m_textures[0]->m_size = 0;
 
     return geo;
 }

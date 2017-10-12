@@ -1020,17 +1020,17 @@ void OGLRenderBackend::setFixedPipelineStates( const PipelineStates &states ) {
     m_fpState->m_stensilState = states.m_stencilState;
     
     if ( m_fpState->m_cullState.getCullMode() == CullState::CullMode::Off ) {
-        //glDisable( GL_CULL_FACE );
+        glDisable( GL_CULL_FACE );
     } else {
-        /*glEnable( GL_CULL_FACE );
+        glEnable( GL_CULL_FACE );
         glPolygonMode( OGLEnum::getOGLCullFace(m_fpState->m_cullState.getCullFace()), OGLEnum::getOGLPolygonMode(m_fpState->m_polygonState.getPolygonMode() ) );
-        glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );*/
+        glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );
     }
 
     if ( m_fpState->m_blendState.getBlendFunc() == BlendState::BlendFunc::Off ) {
-        //glDisable( GL_BLEND );
+        glDisable( GL_BLEND );
     } else {
-        //glEnable( GL_BLEND );
+        glEnable( GL_BLEND );
     }
     m_fpState->m_applied = true;
 }
