@@ -53,6 +53,16 @@ TEST_F( CommonTest, HandleTest ) {
     EXPECT_EQ( 1U, testHandle.m_idx );
 }
 
+TEST_F( CommonTest, HandleEualTest ) {
+    Handle testHandle1, testHandle2;
+    testHandle1.init( 1 );
+    testHandle2.init( 1 );
+    EXPECT_EQ( testHandle1, testHandle2 );
+
+    testHandle2.init( 2 );
+    EXPECT_NE( testHandle1, testHandle2 );
+}
+
 TEST_F( CommonTest, Color4Test ) {
     Color4 col1( 0.1f, 0.2f, 0.3f, 0.4f ), col2( 0.1f, 0.2f, 0.3f, 0.4f ), col3( 0.5f, 0.6f, 0.7f, 0.8f );
     EXPECT_EQ( col1, col2 );

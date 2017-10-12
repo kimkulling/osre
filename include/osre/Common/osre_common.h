@@ -129,6 +129,7 @@ typedef int ObjectId;
 ///	The data type for strings
 typedef std::string String;
 
+/// A handle struct.
 struct Handle {
     i32 m_idx;
 
@@ -143,6 +144,13 @@ struct Handle {
 
     void init( i32 idx ) {
         m_idx = idx;
+    }
+
+    bool operator == ( const Handle &rhs ) const {
+        return m_idx == rhs.m_idx;
+    }
+    bool operator != ( const Handle &rhs ) const {
+        return !(*this == rhs );
     }
 };
 
