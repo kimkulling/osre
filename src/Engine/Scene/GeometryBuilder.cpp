@@ -360,16 +360,16 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
 
     // setup triangle vertices    
     glm::vec3 col[ NumQuadVert ];
-    col[ 0 ] = glm::vec3( 1, 0, 0 );
-    col[ 1 ] = glm::vec3( 0, 1, 0 );
-    col[ 2 ] = glm::vec3( 0, 0, 1 );
-    col[ 3 ] = glm::vec3( 1, 0, 0 );
+    col[ 0 ] = glm::vec3( 0, 0, 0 );
+    col[ 1 ] = glm::vec3( 0, 0, 0 );
+    col[ 2 ] = glm::vec3( 0, 0, 0 );
+    col[ 3 ] = glm::vec3( 0, 0, 0 );
 
     glm::vec3 pos[ NumQuadVert ];
-    pos[ 0 ] = glm::vec3( 0, 0, 0 );
-    pos[ 1 ] = glm::vec3( 0, textSize, 0 );
-    pos[ 2 ] = glm::vec3( textSize, 0, 0 );
-    pos[ 3 ] = glm::vec3( textSize, textSize, 0 );
+    pos[ 0 ] = glm::vec3( x, y, 0 );
+    pos[ 1 ] = glm::vec3( x, y+textSize, 0 );
+    pos[ 2 ] = glm::vec3( x+textSize, y, 0 );
+    pos[ 3 ] = glm::vec3( x+textSize, y+textSize, 0 );
 
     static const ui32 NumQuadIndices = 6;
     const ui32 NumTextVerts = getNumTextVerts( text );
