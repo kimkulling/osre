@@ -95,16 +95,33 @@ protected:
         if ( assimpWrapper.importAsset( modelLoc, 0 ) ) {
             Assets::Model *model = assimpWrapper.getModel();
             Collision::TAABB<f32> aabb = model->getAABB();
+            const f32 diam = aabb.getDiameter();
+            const Vec3f center = aabb.getCenter();
 
             CPPCore::TArray<Geometry*> geoArray = model->getGeoArray();
             m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
             m_transformMatrix.update();
             RenderBackendService *rbSrv( getRenderBackendService() );
             if ( nullptr != rbSrv ) {
-                /*rbSrv->setMatrix( "M", m_transformMatrix.m_model );
-                rbSrv->setMatrix( "V", m_transformMatrix.m_view );
-                rbSrv->setMatrix( "P", m_transformMatrix.m_projection );*/
+                Platform::AbstractSurface *rootSurface(getRootSurface());
+                if ( nullptr == rootSurface ) {
+                    return false;
+                }
+                const i32 w = rootSurface->getProperties()->m_width;
+                const i32 h = rootSurface->getProperties()->m_height;
+                const f32 aspect = static_cast<f32>(w) / static_cast<f32>(h);
+                const f32 zNear = 0.0001f;
+                const f32 zFar = 100.f;
+                
+                glm::vec3 eye( diam, 0, 0), up(0, 0, 1);
+                glm::vec3 c(center.getX(), center.getY(), center.getZ());
+                
+                m_transformMatrix.m_model = glm::mat4(1.0f);
+                m_transformMatrix.m_projection = glm::perspective(glm::radians(60.0f), aspect, zNear, zFar);
+                m_transformMatrix.m_view = glm::lookAt(eye, c, up);;
+                m_transformMatrix.update();
                 rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
+
                 rbSrv->attachGeo( geoArray, 0 );
             }
 
@@ -120,9 +137,6 @@ protected:
         m_transformMatrix.update();
         m_angle += 0.01f;
         RenderBackendService *rbSrv( getRenderBackendService() );
-        /*rbSrv->setMatrix( "M", m_transformMatrix.m_model );
-        rbSrv->setMatrix( "V", m_transformMatrix.m_view );
-        rbSrv->setMatrix( "P", m_transformMatrix.m_projection );*/
 
         AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
         AppBase::onUpdate( timetick );

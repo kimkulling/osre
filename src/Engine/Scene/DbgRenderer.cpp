@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Scene/GeometryBuilder.h>
+#include <osre/UI/Widget.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -81,7 +82,10 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
     }
 
     if ( !m_textBoxes.hasKey( id ) ) {
-        Geometry *geo = GeometryBuilder::allocTextBox( 0, 0, 0.1f, text, BufferAccessType::ReadWrite );
+        f32 xTrans(0), yTrans(0);
+        
+        UI::WidgetCoordMapping::mapPosToWorld(x , y, xTrans, yTrans);
+        Geometry *geo = GeometryBuilder::allocTextBox(xTrans, yTrans, 0.1f, text, BufferAccessType::ReadWrite );
         m_rbSrv->attachGeo( geo, 0 );
         insertTextEntry( id, geo, text, m_textBoxes );
 

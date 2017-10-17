@@ -76,7 +76,6 @@ ColorVert::ColorVert()
     // empty
 }
 
-
 ui32 ColorVert::getNumAttributes() {
     return NumColorVertAttributes;
 }
@@ -324,7 +323,7 @@ Material::~Material() {
 }
 
 Geometry::Geometry()
-: m_model()
+: m_model(1.0f)
 , m_material( nullptr )
 , m_vertextype( VertexType::RenderVertex )
 , m_vb( nullptr )
