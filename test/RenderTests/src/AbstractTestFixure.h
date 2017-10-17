@@ -35,21 +35,21 @@ namespace RenderTest {
 /// To implement a new render test fixture you have to implement the setup and the teardown method. 
 /// Setup will be called before performing the fixture, teardown will be called to cleanup after the
 /// render test was executed.
-/// You can use a fixure to group tests.
+/// You can use a fixture to group tests.
 //-------------------------------------------------------------------------------------------------
 class AbstractTestFixture {
 public:
-    /// @brief  The setup method, will be called before the test execution of the fixure.
+    /// @brief  The setup method, will be called before the test execution of the fixture.
     /// @param  API     [in] The requested API.
     /// @return true if successful, false in case of an error.
     virtual bool setup( const String &API ) = 0;
 
-    /// @brief  The teardown method, will be called after the test execution of the fixure.
+    /// @brief  The teardown method, will be called after the test execution of the fixture.
     /// @return true if successful, false in case of an error.
     virtual bool teardown() = 0;
 
-    /// @brief  Returns the test fixure name.
-    /// @return The name of the test fixure.
+    /// @brief  Returns the test fixture name.
+    /// @return The name of the test fixture.
     const String &getName() const;
 
 protected:
