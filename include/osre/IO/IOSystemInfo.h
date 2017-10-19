@@ -40,10 +40,6 @@ public:
 	///	@brief	The class destructor.
 	~IOSystemInfo();
 
-	///	@brief	Returns the directory separator of the current platform.
-	///	@return	The directory separator ( for instance using a Unix platform / will be returned ).
-	static String getDirSeparator();
-
 	///	@brief	Returns the token to mark the local directory.
 	///	@return	The token for the local directory.
 	static String getCurrentDirToken();

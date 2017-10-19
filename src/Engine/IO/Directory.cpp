@@ -20,59 +20,30 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/IO/IOSystemInfo.h>
 #include <osre/IO/Directory.h>
 
-#ifdef OSRE_WINDOWS
-#  include <direct.h>
-#  include <stdio.h>
-#  include <stdlib.h>
-#else
-#  include <unistd.h>
-#endif
-
+#include <sys/types.h>
+#include <sys/stat.h>
 
 namespace OSRE {
 namespace IO {
-
-//-------------------------------------------------------------------------------------------------
-IOSystemInfo::IOSystemInfo() {
-    // empty
-}
-
-IOSystemInfo::~IOSystemInfo() {
-    // empty
-}
-
-String IOSystemInfo::getCurrentDirToken() {
-#ifdef OSRE_WINDOWS
-    static String token = ".\\";
-#else
-    static String token = "./";
-#endif
-
-    return token;
-}
-
-String IOSystemInfo::getCurrentDirectory() {
-    static const ui32 buffersize = 256;
-    c8 buffer[buffersize];
-    c8 *retPtr( nullptr );
-#ifndef OSRE_WINDOWS
-    // POSIX call
-    retPtr = ::getcwd( buffer, buffersize );
-#else
-    // WIN32-API call
-    retPtr = ::_getcwd( buffer, buffersize );
-#endif
-    if( nullptr == retPtr ) {
-        return nullptr;
+        
+bool Directory::exists(const String &dir) {
+    struct stat info;
+    const int result = ::stat(dir.c_str(), &info);
+    if (info.st_mode & S_IFDIR) {
+        return true;
     }
+    return false;
+}
 
-    String currentDir( buffer );
-    currentDir += Directory::getDirSeparator();
-
-    return currentDir;
+String Directory::getDirSeparator() {
+#ifdef OSRE_WINDOWS
+    static String sep = "\\";
+#else
+    static String sep = "/";
+#endif
+    return sep;
 }
 
 } // Namespace IO

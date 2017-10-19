@@ -20,60 +20,30 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/IO/IOSystemInfo.h>
-#include <osre/IO/Directory.h>
+#pragma once
 
-#ifdef OSRE_WINDOWS
-#  include <direct.h>
-#  include <stdio.h>
-#  include <stdlib.h>
-#else
-#  include <unistd.h>
-#endif
-
+#include <osre/Common/osre_common.h>
 
 namespace OSRE {
 namespace IO {
 
 //-------------------------------------------------------------------------------------------------
-IOSystemInfo::IOSystemInfo() {
-    // empty
-}
+///	@ingroup	Engine
+///
+///	@brief	This class implements static helpers to work with directories more easily.
+//-------------------------------------------------------------------------------------------------
+class Directory {
+public:
+    /// @brief  Will return true, when the directory exists.
+    /// @param  dir     [in] The name of the directory.
+    /// @return true, when the directory exists.
+    static bool exists( const String &dir );
 
-IOSystemInfo::~IOSystemInfo() {
-    // empty
-}
-
-String IOSystemInfo::getCurrentDirToken() {
-#ifdef OSRE_WINDOWS
-    static String token = ".\\";
-#else
-    static String token = "./";
-#endif
-
-    return token;
-}
-
-String IOSystemInfo::getCurrentDirectory() {
-    static const ui32 buffersize = 256;
-    c8 buffer[buffersize];
-    c8 *retPtr( nullptr );
-#ifndef OSRE_WINDOWS
-    // POSIX call
-    retPtr = ::getcwd( buffer, buffersize );
-#else
-    // WIN32-API call
-    retPtr = ::_getcwd( buffer, buffersize );
-#endif
-    if( nullptr == retPtr ) {
-        return nullptr;
-    }
-
-    String currentDir( buffer );
-    currentDir += Directory::getDirSeparator();
-
-    return currentDir;
-}
+    ///	@brief	Returns the directory separator for the current platform.
+    ///	@return	The directory separator 
+    /// @remark For instance using a Unix platform / will be returned.
+    static String getDirSeparator();
+};
 
 } // Namespace IO
 } // Namespace OSRE

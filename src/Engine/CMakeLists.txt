@@ -125,6 +125,7 @@ SET( debugging_src
 # IO
 #==============================================================================
 SET( io_src
+    IO/Directory.cpp
     IO/FileStream.cpp
     IO/FileStream.h
     IO/ImageCodec.h
@@ -142,6 +143,7 @@ SET( io_src
     IO/IOSystemInfo.cpp
 )
 SET( io_inc
+    ${HEADER_PATH}/IO/Directory.h
     ${HEADER_PATH}/IO/Stream.h
     ${HEADER_PATH}/IO/AbstractFileSystem.h
     ${HEADER_PATH}/IO/IOService.h
