@@ -98,8 +98,11 @@ protected:
 	virtual bool onRenderFrame( const Common::EventData *eventData );
     /// @brief  Callback to commit the next frame.
     virtual bool onCommitNexFrame( const Common::EventData *eventData );
+    /// @brief  Callback for dealing with a shutdown request.
+    virtual bool onShutdownRequest( const Common::EventData *eventData );
 
 private:
+    bool m_isRunning;
     OGLRenderBackend *m_oglBackend;
     RenderCmdBuffer *m_renderCmdBuffer;
     Platform::AbstractRenderContext *m_renderCtx;
