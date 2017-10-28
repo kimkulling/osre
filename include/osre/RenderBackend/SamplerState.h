@@ -22,6 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/RenderBackend/RenderCommon.h>
+
 namespace OSRE {
 namespace RenderBackend {
 
@@ -32,14 +34,18 @@ namespace RenderBackend {
 //-------------------------------------------------------------------------------------------------
 class SamplerState {
 public:
-    SamplerState();
+    SamplerState( TextureTargetType targetType );
     ~SamplerState();
     bool operator == ( const SamplerState &rhs ) const;
     bool operator != ( const SamplerState &rhs ) const;
+
+private:
+    TextureTargetType m_targetType;
 };
 
 inline
-SamplerState::SamplerState() {
+SamplerState::SamplerState( TextureTargetType targetType ) 
+: m_targetType( targetType ) {
     // empty
 }
 
@@ -50,12 +56,12 @@ SamplerState::~SamplerState() {
 
 inline
 bool SamplerState::operator == ( const SamplerState &rhs ) const {
-    return true;
+    return ( m_targetType == rhs.m_targetType );
 }
 
 inline
 bool SamplerState::operator != ( const SamplerState &rhs ) const {
-    return false;
+    return !( *this == rhs );
 }
 
 } // Namespace RenderBackend

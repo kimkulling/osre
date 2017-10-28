@@ -79,7 +79,7 @@ BlendState::BlendState() noexcept
 
 inline 
 BlendState::BlendState(BlendFunc func)
-: m_blendFunc(BlendFunc::FuncNone) {
+: m_blendFunc( func ) {
     // empty
 }
 
