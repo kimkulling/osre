@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
     
+// Forward declarations
 namespace Common {
     struct EventData;
 }
@@ -76,7 +77,9 @@ public:
     /// Will return the active shader.
     OGLShader *getActiveShader() const;
     /// Will enqueue a new render command.
-    void enqueueRenderCmd( OGLRenderCmd *renderCmd, EnqueueType type = EnqueueType::RCE_Back );
+    void enqueueRenderCmd( const String &groupName, OGLRenderCmd *renderCmd, EnqueueType type = EnqueueType::RCE_Back );
+    /// Will enqueue a new render command group.
+    void enqueueRenderCmdGroup( const String &groupName, CPPCore::TArray<OGLRenderCmd*>& cmdGroup, EnqueueType type = EnqueueType::RCE_Back );
     /// The callback before rendering.
     void onPreRenderFrame();
     /// The render callback.

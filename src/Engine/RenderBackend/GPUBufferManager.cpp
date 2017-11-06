@@ -54,7 +54,7 @@ struct OGLImpl : public GPUBufferManager::Impl {
     }
     
     Buffer *getBufferByDesc( const String &desc ) override {
-	return nullptr;
+	    return nullptr;
     }
 
     void updateBuffer( BufferData &data ) override {
@@ -128,4 +128,3 @@ void GPUBufferManager::releaseBuffer( Buffer *buffer ) {
 
 } // Namespace RenderBackend
 } // Namespace OSRE
-
