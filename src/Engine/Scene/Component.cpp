@@ -70,7 +70,7 @@ void RenderComponent::addStaticGeometry( Geometry *geo ) {
 
 TransformComponent::TransformComponent( ui32 id )
 : Component( id )
-, m_localTransform( nullptr ) {
+, m_localTransform() {
 	// empty
 }
 
@@ -82,36 +82,20 @@ void TransformComponent::update( RenderBackendService *renderBackendSrv ) {
 	// empty
 }
 
-void TransformComponent::setTransformBlock( TransformBlock *localTransform ) {
-    m_localTransform = localTransform;
-}
-
 void TransformComponent::setPosition( const glm::vec3 &pos ) {
-    if ( nullptr != m_localTransform ) {
-        m_localTransform->m_transform = glm::vec3( pos );
-    }
+    m_localTransform.m_transform = glm::vec3( pos );
 }
 
 const glm::vec3 &TransformComponent::getPosition() const {
-    if ( nullptr == m_localTransform ) {
-        return Dummy;
-    }
-
-    return m_localTransform->m_transform;
+    return m_localTransform.m_transform;
 }
 
 void TransformComponent::setScale( const glm::vec3 &scale ) {
-    if ( nullptr != m_localTransform ) {
-        m_localTransform->m_scale = glm::vec3( scale );;
-    }
+    m_localTransform.m_scale = glm::vec3( scale );;
 }
 
 const glm::vec3 &TransformComponent::getScale() const {
-    if ( nullptr == m_localTransform ) {
-        return Dummy;
-    }
-
-    return m_localTransform->m_scale;
+    return m_localTransform.m_scale;
 }
 
 CollisionComponent::CollisionComponent( ui32 id )

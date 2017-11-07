@@ -55,6 +55,7 @@ class ModelLoadingApp : public App::AppBase {
     Scene::Stage *m_stage;
     Scene::View  *m_view;
     f32 m_angle;
+    Common::Ids m_ids;
     TransformMatrixBlock m_transformMatrix;
 
 public:
@@ -63,6 +64,7 @@ public:
     , m_stage( nullptr )
     , m_view( nullptr )
     , m_angle( 0.0f )
+    , m_ids()
     , m_transformMatrix() {
         // empty
     }
@@ -126,6 +128,8 @@ protected:
             }
 
             m_stage = AppBase::createStage( "ModelLoading" );
+            const String name(model->getRootNode()->getName());
+            Node *modelNode = m_stage->addNode(name, nullptr, "default" );
         }
 
         return true;
@@ -141,7 +145,6 @@ protected:
         AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
         AppBase::onUpdate( timetick );
     }
-
 };
 
 OSRE_MAIN( ModelLoadingApp )

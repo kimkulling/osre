@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <osre/RenderBackend/RenderCommon.h>
 #include <cppcore/Container/TArray.h>
 
 #include <glm/glm.hpp>
@@ -34,16 +35,15 @@ namespace RenderBackend {
 
     struct UniformVar;
     struct Geometry;
-    struct TransformBlock;
 }
 
 namespace Scene {
 
-///
+//-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
 ///	@brief Describes the render component
-///
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Component {
 public:
     virtual ~Component();
@@ -68,11 +68,11 @@ ui32 Component::getId() const {
     return m_id;
 }
 
-///
+//-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
 ///	@brief Describes the render component
-///
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT RenderComponent : public Component {
 public:
     RenderComponent( ui32 id );
@@ -82,7 +82,6 @@ public:
 
 private:
     CPPCore::TArray<RenderBackend::Geometry*> m_newGeo;
-
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -95,15 +94,13 @@ public:
     TransformComponent( ui32 id );
     virtual ~TransformComponent();
     void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
-
-    void setTransformBlock( RenderBackend::TransformBlock *localTransform );
     void setPosition( const glm::vec3 &pos );
     const glm::vec3 &getPosition() const;
     void setScale( const glm::vec3 &pos );
     const glm::vec3 &getScale() const;
 
 private:
-    RenderBackend::TransformBlock *m_localTransform;
+    RenderBackend::TransformBlock m_localTransform;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -117,5 +114,6 @@ public:
     virtual ~CollisionComponent();
     void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
 };
+
 } // Namespace Scene
 } // namespace OSRE

@@ -31,11 +31,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  include <unistd.h>
 #endif
 
-
 namespace OSRE {
 namespace IO {
 
-//-------------------------------------------------------------------------------------------------
 IOSystemInfo::IOSystemInfo() {
     // empty
 }
