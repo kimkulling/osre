@@ -87,4 +87,3 @@ void Screen::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *rbS
 
 } // Namespace UI
 } // Namespace OSRE
-
