@@ -22,54 +22,36 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Common/osre_common.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include <GL/glew.h>
+#include <GL/gl.h>
 
 namespace OSRE {
 namespace RenderBackend {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-class SamplerState {
+struct Geometry;
+
+class RenderBackendService;
+
+class OSRE_EXPORT ParticleGenerator {
 public:
-    SamplerState();
-    explicit SamplerState( TextureTargetType targetType );
-    ~SamplerState();
-    bool operator == ( const SamplerState &rhs ) const;
-    bool operator != ( const SamplerState &rhs ) const;
+    ParticleGenerator( RenderBackendService *rbSrv );
+    ~ParticleGenerator();
+    void init( ui32 numPoints );
+    void update( d32 tick );
 
 private:
-    TextureTargetType m_targetType;
+    RenderBackendService *m_rbSrv;
+    ui32 m_numPoints;
+    glm::vec3 *m_col;
+    glm::vec3 *m_pos;
+    GLushort *m_pt_indices;
+    Geometry *m_ptGeo;
 };
 
-inline
-SamplerState::SamplerState() 
-: m_targetType( TextureTargetType::Texture2D ) {
-    // empty
 }
-
-inline
-SamplerState::SamplerState( TextureTargetType targetType ) 
-: m_targetType( targetType ) {
-    // empty
 }
-
-inline
-SamplerState::~SamplerState() {
-    // empty
-}
-
-inline
-bool SamplerState::operator == ( const SamplerState &rhs ) const {
-    return ( m_targetType == rhs.m_targetType );
-}
-
-inline
-bool SamplerState::operator != ( const SamplerState &rhs ) const {
-    return !( *this == rhs );
-}
-
-} // Namespace RenderBackend
-} // Namespace OSRE
