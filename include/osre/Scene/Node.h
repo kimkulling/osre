@@ -116,7 +116,6 @@ private:
     CPPCore::TArray<Node*> m_children;
     Node *m_parent;
     bool m_isActive;
-    RenderBackend::TransformBlock *m_localTransform;
     RenderComponent *m_renderComp;
     TransformComponent *m_transformComp;
     CPPCore::TArray<Component*> m_components;

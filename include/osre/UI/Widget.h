@@ -152,6 +152,8 @@ public:
     virtual bool redrawRequested() const;
     void setStackIndex( i32 index );
     i32 getStackIndex() const;
+    void setVisible( bool visible );
+    bool isVisible() const;
     virtual void render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
     virtual void mouseDown( const Point2ui &pt );
     virtual void mouseUp( const Point2ui &pt );
@@ -172,6 +174,7 @@ private:
     Rect2ui m_rect;
     i32 m_stackIndex;
     bool m_redrawRequest;
+    bool m_isVisible;
 };
 
 } // Namespace UI

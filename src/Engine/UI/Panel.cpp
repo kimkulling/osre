@@ -27,7 +27,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "UIRenderUtils.h"
 
-#define GLM_ENABLE_EXPERIMENTAL
+#ifndef GLM_ENABLE_EXPERIMENTAL
+#   define GLM_ENABLE_EXPERIMENTAL
+#endif // GLM_ENABLE_EXPERIMENTAL
+
 #include <GL/glew.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>

@@ -59,6 +59,8 @@ RenderBackendService::~RenderBackendService() {
     }
 }
 
+static const String OGL_API = "opengl";
+static const String Vulkan_API = "vulkan";
 bool RenderBackendService::onOpen() {
     if ( nullptr == m_settings ) {
         m_settings = new Settings;
@@ -69,15 +71,20 @@ bool RenderBackendService::onOpen() {
         m_renderTaskPtr.init( SystemTask::create( "render_task" ) );
     }
 
-    // Run the render task
     bool ok( true );
-    m_renderTaskPtr->start( nullptr );
+
+    // Run the render task
+    ok = m_renderTaskPtr->start( nullptr );
+    if ( !ok ) {
+        osre_error( Tag, "Cannot run render task." );
+        return ok;
+    }
     
     // Create render event handler for backend 
-    String api = m_settings->get( Settings::RenderAPI ).getString();
-    if ( api == "opengl" ) {
+    const String api = m_settings->get( Settings::RenderAPI ).getString();
+    if ( api == OGL_API ) {
         m_renderTaskPtr->attachEventHandler( new OGLRenderEventHandler );
-    } else if ( api == "vulkan" ) {
+    } else if ( api == Vulkan_API ) {
         m_renderTaskPtr->attachEventHandler( new VlkRenderEventHandler );
     } else {
         osre_error( Tag, "Requested render-api unknown: " + api );

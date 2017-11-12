@@ -74,7 +74,7 @@ void TextBase::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *r
     }
     f32 fontSize = 0.1f;
     if ( nullptr != m_font ) {
-        fontSize = m_font->getSize();
+        fontSize = static_cast<f32>( m_font->getSize() );
     }
     if ( nullptr == m_textGlyphes ) {
         m_textGlyphes = GeometryBuilder::allocTextBox( 0, 0, fontSize, m_text, BufferAccessType::ReadWrite );

@@ -336,7 +336,7 @@ void OGLRenderEventHandler::enqueueRenderCmd( OGLRenderCmd *oglRenderCmd ) {
         osre_error( Tag, "Renderer not up and running." );
         return;
     }
-    m_renderCmdBuffer->enqueueRenderCmd( oglRenderCmd );
+    m_renderCmdBuffer->enqueueRenderCmd( "pass0", oglRenderCmd );
 }
 
 void OGLRenderEventHandler::setParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray ) {

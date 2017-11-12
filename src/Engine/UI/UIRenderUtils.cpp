@@ -104,12 +104,12 @@ Geometry *UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &re
 }
 
 Rect2ui UIRenderUtils::computeTextBox( const String &text, f32 textSize ) {
-    ui32 width = 0, height = textSize;
+    ui32 width = 0, height = static_cast<ui32>(textSize);
     for ( ui32 i = 0; i < text.size(); ++i ) {
         if ( text[ i ] == '\n' ) {
-            height += textSize;
+            height += static_cast<ui32>( textSize );
         }
-        width += textSize;
+        width += static_cast<ui32>( textSize );
     }
     const Rect2ui box( 0, 0, width, height );
     

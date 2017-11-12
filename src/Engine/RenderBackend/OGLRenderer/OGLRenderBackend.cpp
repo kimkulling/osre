@@ -828,12 +828,25 @@ void OGLRenderBackend::setParameter( OGLParameter *param ) {
             glUniform1i( param->m_loc, data );
         }
         break;
-    
+        
+        case ParameterType::PT_IntArray:
+        {
+            glUniform1iv( param->m_loc, param->m_numItems, (i32*) param->m_data->getData() );
+        }
+        break;
+
         case ParameterType::PT_Float:
         {
             GLfloat value;
             ::memcpy( &value, param->m_data->getData(), sizeof( GLfloat ) );
             glUniform1f( param->m_loc, value );
+        }
+        break;
+
+        case ParameterType::PT_FloatArray:
+        {
+            glUniform1fv( param->m_loc, param->m_numItems, (f32*) param->m_data->getData() );
+
         }
         break;
 
@@ -844,6 +857,12 @@ void OGLRenderBackend::setParameter( OGLParameter *param ) {
             glUniform2f( param->m_loc, value[ 0 ], value[ 1 ] );
         }
         break;
+        
+        case ParameterType::PT_Float2Array:
+        {
+            glUniform2fv( param->m_loc, param->m_numItems, ( f32* )param->m_data->getData() );
+        }
+        break;
 
         case ParameterType::PT_Float3:
         {
@@ -852,7 +871,14 @@ void OGLRenderBackend::setParameter( OGLParameter *param ) {
             glUniform3f( param->m_loc, value[ 0 ], value[ 1 ], value[ 2 ] );
         }
         break;
-    
+
+        case ParameterType::PT_Float3Array:
+        {
+            glUniform3fv( param->m_loc, param->m_numItems, ( f32* )param->m_data->getData() );
+
+        }
+        break;
+
         case ParameterType::PT_Mat4: {
             glm::mat4 mat;
             ::memcpy( &mat, param->m_data->getData(), sizeof( glm::mat4 ) );
