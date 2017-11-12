@@ -113,9 +113,13 @@ public:
 
     void setEventHandler( AbstractEventHandler *eventHandler ) {
         m_eventHandler = eventHandler;
-        if ( m_eventHandler ) {
+        if ( nullptr != m_eventHandler ) {
             m_eventHandler->attach( nullptr );
         } 
+
+        if ( nullptr == eventHandler && nullptr != m_eventHandler ) {
+            m_eventHandler->detach( nullptr );
+        }
     }
 
     virtual bool stop() {
@@ -311,7 +315,7 @@ void SystemTask::detachEventHandler() {
     }
 
     Common::AbstractEventHandler *eh = m_taskThread->getEventHandler();
-    if( eh ) {
+    if( nullptr != eh ) {
         m_taskThread->setEventHandler( nullptr );
     }
 }
