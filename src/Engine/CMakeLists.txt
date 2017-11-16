@@ -309,6 +309,7 @@ SET( renderbackend_src
     RenderBackend/RenderCommon.cpp
     RenderBackend/Parameter.cpp
     RenderBackend/Pipeline.cpp
+	RenderBackend/ParticleGenerator.cpp
 )
 SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLCommon.h
@@ -344,6 +345,7 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/PolygonState.h
     ${HEADER_PATH}/RenderBackend/FontBase.h
     ${HEADER_PATH}/RenderBackend/Parameter.h
+	${HEADER_PATH}/RenderBackend/ParticleGenerator.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
     ${HEADER_PATH}/RenderBackend/RenderCommon.h

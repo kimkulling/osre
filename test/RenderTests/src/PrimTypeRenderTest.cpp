@@ -41,6 +41,9 @@ namespace RenderTest {
 using namespace ::OSRE::RenderBackend;
 
 class PrimTypeRenderTest : public AbstractRenderTest {
+    static const ui32 NumPoints = 3;
+    static const ui32 PtNumIndices = 3;
+
     TransformMatrixBlock m_transformMatrix;
 
 public:
@@ -57,25 +60,24 @@ public:
         rb->sendEvent( &OnAttachViewEvent, nullptr );
 
         // colors
-        glm::vec3 col[ 3 ];
+        glm::vec3 col[ NumPoints ];
         col[ 0 ] = glm::vec3( 1, 0, 0 );
         col[ 1 ] = glm::vec3( 0, 1, 0 );
         col[ 2 ] = glm::vec3( 0, 0, 1 );
 
         // point coordinates
-        glm::vec3 points[ 3 ];
+        glm::vec3 points[ NumPoints ];
         points[ 0 ] = glm::vec3( -0.5, -0.5, 0 );
         points[ 1 ] = glm::vec3(  0,    0.5, 0 );
         points[ 2 ] = glm::vec3(  0.5, -0.5, 0 );
         
-        static const ui32 PtNumIndices = 3;
         GLushort pt_indices[ PtNumIndices ];
         pt_indices[ 0 ] = 0;
         pt_indices[ 1 ] = 1;
         pt_indices[ 2 ] = 2;
 
         // line segment coordinates
-        glm::vec3 pos[ 3 ];
+        glm::vec3 pos[ NumPoints ];
         pos[ 0 ] = glm::vec3( -1, -1, 0 );
         pos[ 1 ] = glm::vec3(  0,  1, 0 );
         pos[ 2 ] = glm::vec3(  1, -1, 0 );
@@ -93,7 +95,7 @@ public:
 
         static ui32 NumGeo( 2 );
 
-        Geometry *ptGeo = Scene::GeometryBuilder::allocPoints( VertexType::ColorVertex, BufferAccessType::ReadOnly, 3, points, col );
+        Geometry *ptGeo = Scene::GeometryBuilder::allocPoints( VertexType::ColorVertex, BufferAccessType::ReadOnly, NumPoints, points, col );
         rb->attachGeo( ptGeo, 0 );
         Geometry *lineGeo = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, 1 );
         lineGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly );

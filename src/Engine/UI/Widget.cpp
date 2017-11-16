@@ -100,7 +100,8 @@ Widget::Widget( const String &name, Widget *parent )
 , m_properties()
 , m_rect( 0, 0, 1, 1 )
 , m_stackIndex( 1 )
-, m_redrawRequest( true ) {
+, m_redrawRequest( true )
+, m_isVisible( true ) {
     Widget::setParent( parent );
 }
 
@@ -223,8 +224,25 @@ i32 Widget::getStackIndex() const {
     return m_stackIndex;
 }
 
+void Widget::setVisible( bool visible ) {
+    if ( visible == m_isVisible ) {
+        return;
+    }
+
+    m_isVisible = visible;
+
+}
+
+bool Widget::isVisible() const {
+    return m_isVisible;
+}
+
 void Widget::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
     if ( nullptr == rbSrv ) {
+        return;
+    }
+
+    if ( !isVisible() ) {
         return;
     }
 

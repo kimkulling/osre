@@ -21,6 +21,7 @@ SET ( rendertest_src
     src/GeoInstanceRenderTest.cpp
 	src/RenderBufferAccessTest.cpp
 	src/StaticTextRenderTest.cpp
+	src/SwitchCmdBufferRenderTest.cpp
     src/RenderTestSuite.h
     src/RenderTestUtils.h
     src/main.cpp

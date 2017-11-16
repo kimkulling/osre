@@ -37,9 +37,13 @@ struct GeoInstanceData;
 enum class ParameterType {
     PT_None,
     PT_Int,
+    PT_IntArray,
     PT_Float,
+    PT_FloatArray,
     PT_Float2,
+    PT_Float2Array,
     PT_Float3,
+    PT_Float3Array,
     PT_Mat4, 
     PT_Mat4Array
 };

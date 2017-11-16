@@ -41,7 +41,6 @@ Node::Node( const String &name, Common::Ids &ids, RenderCompRequest renderEnable
 , m_children()
 , m_parent( parent )
 , m_isActive( true )
-, m_localTransform( nullptr )
 , m_renderComp( nullptr )
 , m_transformComp( nullptr )
 , m_ids( &ids )
@@ -70,6 +69,7 @@ Node::~Node() {
 
     if( !m_children.isEmpty() ) {
         for( size_t i = 0; i < m_children.size(); i++ ) {
+            m_children[ i ]->setParent(nullptr);
             m_children[ i ]->release();
         }
         m_children.clear();

@@ -67,6 +67,7 @@ DECL_EVENT( OnSetRenderStates );
 DECL_EVENT( OnRenderFrameEvent );
 DECL_EVENT( OnSetParameterEvent );
 DECL_EVENT( OnCommitFrameEvent );
+DECL_EVENT( OnShutdownRequest );
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

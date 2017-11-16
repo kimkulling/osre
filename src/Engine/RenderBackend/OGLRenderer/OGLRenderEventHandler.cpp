@@ -281,6 +281,7 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, Frame *currentFrame,
 
 OGLRenderEventHandler::OGLRenderEventHandler( )
 : AbstractEventHandler()
+, m_isRunning ( true )
 , m_oglBackend( nullptr )
 , m_renderCmdBuffer( nullptr )
 , m_renderCtx( nullptr )
@@ -294,6 +295,9 @@ OGLRenderEventHandler::~OGLRenderEventHandler( ) {
 
 bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
     bool result( false );
+    if ( !m_isRunning ) {
+        return true;
+    }
     if ( OnAttachEventHandlerEvent == ev ) {
         result = onAttached( data );
     } else if ( OnDetatachEventHandlerEvent == ev ) {
@@ -312,6 +316,8 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
         result = onCommitNexFrame( data );
     } else if ( OnClearSceneEvent == ev ) {
         result = onClearGeo( data );
+    } else if ( OnShutdownRequest == ev ) {
+
     }
  
     return result;
@@ -330,7 +336,7 @@ void OGLRenderEventHandler::enqueueRenderCmd( OGLRenderCmd *oglRenderCmd ) {
         osre_error( Tag, "Renderer not up and running." );
         return;
     }
-    m_renderCmdBuffer->enqueueRenderCmd( oglRenderCmd );
+    m_renderCmdBuffer->enqueueRenderCmd( "pass0", oglRenderCmd );
 }
 
 void OGLRenderEventHandler::setParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray ) {
@@ -561,6 +567,14 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
     frame->m_numGeoUpdates = 0;
 
     m_oglBackend->useShader( nullptr );
+
+    return true;
+}
+
+bool OGLRenderEventHandler::onShutdownRequest( const Common::EventData *eventData ) {
+    OSRE_ASSERT( nullptr != eventData );
+
+    m_isRunning = false;
 
     return true;
 }

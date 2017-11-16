@@ -46,7 +46,7 @@ RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRende
     OSRE_ASSERT( nullptr != m_renderCtx );
     OSRE_ASSERT( nullptr != m_pipeline );
 
-    m_clearState.setClearState( (int) ClearState::ClearBitType::ColorBit | (int)ClearState::ClearBitType::DepthBit );
+    m_clearState.setClearState( (int) ClearState::ClearBitType::ColorBit | (int) ClearState::ClearBitType::DepthBit );
 }
 
 RenderCmdBuffer::~RenderCmdBuffer() {
@@ -64,7 +64,7 @@ OGLShader *RenderCmdBuffer::getActiveShader() const {
     return m_activeShader;
 }
 
-void RenderCmdBuffer::enqueueRenderCmd( OGLRenderCmd *renderCmd, EnqueueType type ) {
+void RenderCmdBuffer::enqueueRenderCmd( const String &groupName, OGLRenderCmd *renderCmd, EnqueueType type ) {
     if ( nullptr == renderCmd ) {
         osre_debug( Tag, "Nullptr to render-command detected." );
         return;
@@ -77,6 +77,10 @@ void RenderCmdBuffer::enqueueRenderCmd( OGLRenderCmd *renderCmd, EnqueueType typ
     if ( EnqueueType::RCE_Back == type  ) {
         m_cmdbuffer.add( renderCmd );
     }
+}
+
+void RenderCmdBuffer::enqueueRenderCmdGroup( const String &groupName, CPPCore::TArray<OGLRenderCmd*>& cmdGroup, EnqueueType type ) {
+
 }
 
 void RenderCmdBuffer::onPreRenderFrame() {
