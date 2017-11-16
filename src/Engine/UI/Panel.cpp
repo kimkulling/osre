@@ -37,9 +37,10 @@ namespace UI {
 
 using namespace ::OSRE::RenderBackend;
 
-Panel::Panel( const String &name, Widget *parent )
+Panel::Panel( const String &name, ui32 flags, Widget *parent )
 : Widget( name, parent )
 , m_angle( 0.02f )
+, m_flags( flags )
 , m_transformMatrix() {
     // empty
 }
@@ -47,6 +48,9 @@ Panel::Panel( const String &name, Widget *parent )
 Panel::~Panel() {
     // empty
 }
+
+void Panel::setHeadline( const String &headline );
+const String &Panel::getHeadline() const;
 
 void Panel::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();

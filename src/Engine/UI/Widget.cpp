@@ -97,6 +97,7 @@ Widget::Widget( const String &name, Widget *parent )
 , m_id( 99999999 )
 , m_parent( nullptr )
 , m_children()
+, m_properties()
 , m_rect( 0, 0, 1, 1 )
 , m_stackIndex( 1 )
 , m_redrawRequest( true ) {
@@ -185,6 +186,33 @@ void Widget::redrawDone() {
 
 bool Widget::redrawRequested() const {
     return m_redrawRequest;
+}
+
+void Widget::setProperty( UiProperty *prop ) {
+    if ( !hasProperty( prop->m_name ) ) {
+       m_properties.add( prop );
+       return;
+    }
+
+    for ( ui32 i = 0; i < m_properties.size(); ++i ) {
+        if ( m_properties[ i ]->m_name == prop->m_name ) {
+            m_properties[ i ] = prop;
+        }
+    }
+}
+
+UiProperty *Widget::getProperty( const String &name ) const {
+    for ( ui32 i = 0; i < m_properties.size(); ++i ) {
+        if ( m_properties[ i ]->m_name == name ) {
+            return m_properties[ i ];
+        }
+    }
+
+    return nullptr;
+}
+
+bool Widget::hasProperty( const String &name ) const {
+    return ( getProperty( name ) != nullptr );
 }
 
 void Widget::setStackIndex(i32 index) {

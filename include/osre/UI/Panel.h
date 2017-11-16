@@ -35,14 +35,17 @@ namespace UI {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Panel : public Widget {
 public:
-    Panel( const String &name, Widget *parent );
+    Panel( const String &name, ui32 flags, Widget *parent );
     virtual ~Panel();
+    void setHeadline( const String &headline );
+    const String &getHeadline() const;
 
 protected:
     virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
 
 private:
     f32 m_angle;
+    ui32 m_flags;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
 };
 

@@ -24,9 +24,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Object.h>
 #include <osre/Common/TFunctor.h>
+#include <cppcore/Common/Variant.h>
 
 namespace OSRE {
 
+// Forward declarations
 namespace RenderBackend {
     class RenderBackendService;
     class FontBase;
@@ -37,6 +39,10 @@ namespace RenderBackend {
 namespace UI {
 
 class Screen;
+
+// Flags
+static const ui32 WidgetResizable = 1;
+
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -129,6 +135,11 @@ enum class WidgetType {
 
 typedef Common::Functor<void, ui32, void *> UIFunctor;
 
+struct UiProperty {
+    String m_name;
+    CPPCore::Variant m_data;
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -150,6 +161,9 @@ public:
     virtual void requestRedraw();
     virtual void redrawDone();
     virtual bool redrawRequested() const;
+    virtual void setProperty( UiProperty *prop );
+    virtual UiProperty *getProperty( const String &name ) const;
+    virtual bool hasProperty( const String &name ) const;
     void setStackIndex( i32 index );
     i32 getStackIndex() const;
     virtual void render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
@@ -169,6 +183,7 @@ private:
     ui32 m_id;
 
     CPPCore::TArray<Widget*> m_children;
+    CPPCore::TArray<UiProperty*> m_properties;
     Rect2ui m_rect;
     i32 m_stackIndex;
     bool m_redrawRequest;

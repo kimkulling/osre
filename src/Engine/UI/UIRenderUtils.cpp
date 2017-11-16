@@ -114,7 +114,6 @@ Rect2ui UIRenderUtils::computeTextBox( const String &text, f32 textSize ) {
     const Rect2ui box( 0, 0, width, height );
     
     return box;
-
 }
 
 } // Namespace UI
