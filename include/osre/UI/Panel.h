@@ -28,6 +28,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace UI {
 
+struct UiFlags {
+    static const ui32 Resizable = 0x001;
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -37,6 +41,8 @@ class OSRE_EXPORT Panel : public Widget {
 public:
     Panel( const String &name, ui32 flags, Widget *parent );
     virtual ~Panel();
+    ui32 getFlags() const;
+    bool isEnabled( ui32 flag ) const;
     void setHeadline( const String &headline );
     const String &getHeadline() const;
 
@@ -46,6 +52,7 @@ protected:
 private:
     f32 m_angle;
     ui32 m_flags;
+    String m_headline;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
 };
 

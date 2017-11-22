@@ -44,6 +44,7 @@ Panel::Panel( const String &name, ui32 flags, Widget *parent )
 : Widget( name, parent )
 , m_angle( 0.02f )
 , m_flags( flags )
+, m_headline()
 , m_transformMatrix() {
     // empty
 }
@@ -52,8 +53,24 @@ Panel::~Panel() {
     // empty
 }
 
-void Panel::setHeadline( const String &headline );
-const String &Panel::getHeadline() const;
+ui32 Panel::getFlags() const {
+    return m_flags;
+}
+
+bool Panel::isEnabled( ui32 flag ) const {
+    return m_flags & static_cast<ui32>( flag );
+}
+
+void Panel::setHeadline( const String &headline ) {
+    if ( m_headline != headline ) {
+        m_headline = headline;
+        Widget::requestRedraw();
+    }
+}
+
+const String &Panel::getHeadline() const {
+    return m_headline;
+}
 
 void Panel::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();

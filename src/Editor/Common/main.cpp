@@ -89,7 +89,7 @@ protected:
     void setupUI() {
         m_screen = AppBase::createScreen("OSRE-Editor");
 
-        m_panel = new UI::Panel( "file_panel", m_screen );
+        m_panel = new UI::Panel( "file_panel", UI::UiFlags::Resizable, m_screen );
         m_panel->setRect(10, 10, 200, 600);
         
         m_panel->addChildWidget( &UI::ButtonBase::createBaseButton("Open File", m_panel)->setRect(12, 12, 196, 28) );

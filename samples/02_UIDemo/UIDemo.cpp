@@ -87,7 +87,7 @@ protected:
 
         m_screen = AppBase::createScreen( "HelloWorld" );
 
-        Panel *panel = new Panel( "panel", m_screen );
+        Panel *panel = new Panel( "panel", UiFlags::Resizable, m_screen );
         panel->setRect( 10, 10, 500, 500 );
         ButtonBase *btnClick = new ButtonBase( "Open file", panel );
         btnClick->registerCallback( ButtonBase::ButtonPressed, UIFunctor::Make(this, &UIDemoApp::openFileCallback ));
