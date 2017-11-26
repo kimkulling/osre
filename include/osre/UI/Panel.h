@@ -47,7 +47,7 @@ public:
     const String &getHeadline() const;
 
 protected:
-    virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
+    virtual void onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv );
 
 private:
     f32 m_angle;

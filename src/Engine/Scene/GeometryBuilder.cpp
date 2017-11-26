@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/Common/Logger.h>
+#include <osre/Common/Tokenizer.h>
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -34,6 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Scene {
 
+using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
 static const String Tag = "GeometryBuilder";
@@ -334,14 +336,6 @@ Geometry *GeometryBuilder::allocPoints( VertexType type, BufferAccessType access
     return ptGeo;
 }
 
-static bool isLineBreak(c8 c) {
-    if (c == '\n') {
-        return true;
-    } else {
-        return false;
-    }
-}
-
 static const ui32 NumQuadVert = 4;
 
 static ui32 getNumTextVerts( const String &text ) {
@@ -383,7 +377,7 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     ui32 textCol( 0 ), textRow( 0 );
     for (ui32 i = 0; i < text.size(); i++) {
         const c8 ch = text[ i ];
-        if ( isLineBreak( ch ) ) {
+        if ( Tokenizer::isLineBreak( ch ) ) {
             textCol = 0;
             textRow++;
             continue;
@@ -500,7 +494,7 @@ void GeometryBuilder::updateTextBox( RenderBackend::Geometry *geo, f32 textSize,
     ui32 textCol( 0 ), textRow( 0 );
     for ( ui32 i = 0; i < text.size(); i++ ) {
         const c8 ch = text[ i ];
-        if ( isLineBreak( ch ) ) {
+        if ( Tokenizer::isLineBreak( ch ) ) {
             textCol = 0;
             textRow++;
             continue;

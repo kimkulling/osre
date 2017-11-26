@@ -43,8 +43,10 @@ struct Style;
 //-------------------------------------------------------------------------------------------------
 class UIRenderUtils {
 public:
-    static RenderBackend::Geometry *createRectFromStyle( WidgetType Type, const Rect2ui &rect, const Style &style, i32 stackIndex);
+    static void createRectFromStyle( WidgetType Type, const Rect2ui &rect, const Style &style, i32 stackIndex, 
+            UiVertexCache &vertexCache, UiIndexCache &indexCache );
     static Rect2ui computeTextBox( const String &text, f32 textSize );
+    static RenderBackend::Geometry *createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache );
     
 private:
     UIRenderUtils();

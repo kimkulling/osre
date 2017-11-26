@@ -85,7 +85,9 @@ public:
     ///	@param	delimiters	[in] The delimiter.
     ///	@return	The number of token.
     ui32 tokenize( const String& str, const String& delimiters );
-    
+
+    static bool isLineBreak( c8 c );
+
 private:
     CPPCore::TArray<String> m_Token;
 };

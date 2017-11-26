@@ -41,7 +41,7 @@ public:
     }
 
 protected:
-    virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
+    virtual void onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv ) {
         // empty
     }
 
@@ -50,8 +50,7 @@ TEST_F( WidgetTest, createTest ) {
     bool ok( true );
     try {
         TestWidget testWidget( "test", nullptr );
-    }
-    catch ( ... ) {
+    } catch ( ... ) {
         ok = false;
     }
 }
@@ -96,9 +95,10 @@ TEST_F( WidgetTest, access_children_Test ) {
 TEST_F( WidgetTest, request_redraw_Test ) {
     TestWidget testWidget( "test", nullptr );
     EXPECT_TRUE( testWidget.redrawRequested() );
-    TestWidget::TargetGeoArray geoArray;
+    UiVertexCache vertexCache( 10 );
+    UiIndexCache indexCache( 10 );
     RenderBackend::RenderBackendService *rb = new RenderBackend::RenderBackendService;
-    testWidget.render( geoArray, rb );
+    testWidget.render( vertexCache, indexCache, rb );
     EXPECT_FALSE( testWidget.redrawRequested() );
     delete rb;
 }
@@ -119,5 +119,5 @@ TEST_F( WidgetTest, WidgetCoordMappingTest ) {
     EXPECT_FLOAT_EQ( 0.0f, mappedY );
 }
 
-}
-}
+} // Namespace UnitTest
+} // Namespace OSRE

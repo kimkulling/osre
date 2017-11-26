@@ -152,7 +152,7 @@ struct OSRE_EXPORT ColorVert {
 };
 
 ///	@brief  This struct declares a render vertex for textured geometry
-struct RenderVert {
+struct OSRE_EXPORT RenderVert {
     glm::vec3 position; ///< The position ( x|y|z )
     glm::vec3 normal;   ///< The normal vector ( x|y|z )
     glm::vec3 color0;   ///< The diffuse color ( r|g|b )
@@ -481,6 +481,52 @@ struct Canvas {
     ui32 m_width;
     ui32 m_height;
     ui32 m_z;
+};
+
+template<class T>
+struct TVertexCache {
+    using CacheType = ::CPPCore::TArray<T>;
+    CacheType m_cache;
+
+    TVertexCache( ui32 size )
+    : m_cache( size ) {
+        // empty
+    }
+
+    void add( const T &vertex ) {
+        m_cache.add( vertex );
+    }
+
+    ui32 numVertices() const {
+        return m_cache.size();
+    }
+
+    ui32 sizeInBytes() const {
+        return m_cache.size() * sizeof( T );
+    }
+};
+
+template<class T>
+struct TIndexCache {
+    using CacheType = ::CPPCore::TArray<T>;
+    CacheType m_cache;
+
+    TIndexCache( ui32 size ) 
+    : m_cache( size ) {
+        // empty
+    }
+
+    void add( const T &vertex ) {
+        m_cache.add( vertex );
+    }
+
+    ui32 numIndices() const {
+        return m_cache.size();
+    }
+
+    ui32 sizeInBytes() const {
+        return m_cache.size() * sizeof( T );
+    }
 };
 
 ///	@brief

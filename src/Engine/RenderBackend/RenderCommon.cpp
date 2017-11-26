@@ -40,7 +40,7 @@ static const String Tag = "RenderCommon";
 static Ids s_Ids;
 
 /// @brief  The corresponding names for vertex components in a vertex layout
-static const String VertCompName[ static_cast<int>(VertexAttribute::NumVertexAttrs) ] = {
+static const String VertCompName[ static_cast<ui32>(VertexAttribute::NumVertexAttrs) ] = {
     "position",     ///< Position
     "normal",       ///< Normal
     "texcoord0",    ///< TexCoord0

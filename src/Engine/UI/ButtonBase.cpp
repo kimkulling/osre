@@ -97,7 +97,7 @@ ButtonBase *ButtonBase::createBaseButton(const String &name, Widget *parent) {
     return new ButtonBase(name, parent);
 }
 
-void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
+void ButtonBase::onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const Rect2ui &rect( getRect() );
 
@@ -109,9 +109,7 @@ void ButtonBase::onRender( TargetGeoArray &targetGeoArray, RenderBackend::Render
     }
 
     if ( nullptr == m_geo ) {
-        m_geo = UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, getStackIndex() );
-        rbSrv->attachGeo( m_geo, 0 );
-        targetGeoArray.add( m_geo );
+        UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, getStackIndex(), vertexCache, indexCache );
     }
 }
 

@@ -52,7 +52,7 @@ public:
     virtual void setSurface( Platform::AbstractSurface *surface );
 
 protected:
-    virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
+    virtual void onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv );
 
 private:
     Platform::AbstractSurface *m_surface;

@@ -40,20 +40,16 @@ UIRenderUtils::~UIRenderUtils() {
     // empty
 }
 
-Geometry *UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, const Style &style, i32 stackIndex ) {
-    Geometry *geo = Geometry::create( 1 );
+void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, const Style &style, i32 stackIndex,
+    UiVertexCache &vertexCache, UiIndexCache &indexCache ) {
 
-    geo->m_vertextype = VertexType::RenderVertex;
-    geo->m_indextype = IndexType::UnsignedShort;
-
-    RenderVert vertices[ 4 ];
-    ui16 indices[ 6 ];
 
     f32 x1, y1, x2, y2;
     WidgetCoordMapping::mapPosToWorld( rect.getX1(), rect.getY1(), x1, y1 );
     WidgetCoordMapping::mapPosToWorld( rect.getX2(), rect.getY2(), x2, y2 );
 
     // setup triangle vertices
+    RenderVert vertices[ 4 ];
     vertices[ 0 ].position = glm::vec3( x1, y1, 0 );
     vertices[ 1 ].position = glm::vec3( x1, y2, 0 );
     vertices[ 2 ].position = glm::vec3( x2, y1, 0 );
@@ -75,10 +71,13 @@ Geometry *UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &re
     vertices[ 2 ].tex0 = glm::vec2( 1, 0 );
     vertices[ 3 ].tex0 = glm::vec2( 1, 1 );
 
-    geo->m_vb = BufferData::alloc( BufferType::VertexBuffer, sizeof( RenderVert ) * 4, BufferAccessType::ReadOnly );
-    geo->m_vb->copyFrom( vertices, geo->m_vb->m_size );
+    ui32 vertOffset = vertexCache.numVertices() ;
+    for ( ui32 i = 0; i < 4; ++i ) {
+        vertexCache.add( vertices[ i ] );
+    }
 
     // setup triangle indices
+    ui16 indices[ 6 ];
     indices[ 0 ] = 0;
     indices[ 1 ] = 1;
     indices[ 2 ] = 2;
@@ -87,20 +86,9 @@ Geometry *UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &re
     indices[ 4 ] = 2;
     indices[ 5 ] = 1;
 
-    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( ui16 ) * 6, BufferAccessType::ReadOnly );
-    geo->m_ib->copyFrom( indices, geo->m_ib->m_size );
-
-    // use default material
-    geo->m_material = Scene::MaterialBuilder::createBuildinUIMaterial();
-
-    geo->m_numPrimGroups = 1;
-    geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
-    geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numIndices = 6;
-    geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-    geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
-
-    return geo;
+    for ( ui32 i = 0; i < 6; ++i ) {
+        indexCache.add( vertOffset + indices[ i ] );
+    }
 }
 
 Rect2ui UIRenderUtils::computeTextBox( const String &text, f32 textSize ) {
@@ -114,6 +102,31 @@ Rect2ui UIRenderUtils::computeTextBox( const String &text, f32 textSize ) {
     const Rect2ui box( 0, 0, width, height );
     
     return box;
+}
+
+RenderBackend::Geometry *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache ) {
+    Geometry *geo = Geometry::create( 1 );
+
+    geo->m_vertextype = VertexType::RenderVertex;
+    geo->m_indextype = IndexType::UnsignedShort;
+
+    geo->m_vb = BufferData::alloc( BufferType::VertexBuffer, vertexCache.sizeInBytes(), BufferAccessType::ReadOnly );
+    geo->m_vb->copyFrom( &vertexCache.m_cache[ 0 ], vertexCache.sizeInBytes() );
+
+    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, indexCache.sizeInBytes(), BufferAccessType::ReadOnly );
+    geo->m_ib->copyFrom( &indexCache.m_cache[ 0 ], indexCache.sizeInBytes() );
+
+    // use default material
+    geo->m_material = Scene::MaterialBuilder::createBuildinUiMaterial();
+
+    geo->m_numPrimGroups = 1;
+    geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
+    geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
+    geo->m_pPrimGroups[ 0 ].m_numIndices = indexCache.numIndices();
+    geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
+    geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
+
+    return geo;
 }
 
 } // Namespace UI

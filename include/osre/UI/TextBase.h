@@ -45,7 +45,7 @@ public:
     RenderBackend::FontBase *getFont() const;
 
 protected:
-    void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) override;
+    void onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv ) override;
 
 private:
     RenderBackend::FontBase *m_font;

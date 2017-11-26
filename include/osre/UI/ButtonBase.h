@@ -60,7 +60,7 @@ public:
     static ButtonBase *createBaseButton(const String &name, Widget *parent);
 
 protected:
-    void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) override;
+    void onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv ) override;
     void onMouseDown(const Point2ui &pt) override;
     void onMouseUp(const Point2ui &pt) override;
 

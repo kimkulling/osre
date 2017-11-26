@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Object.h>
 #include <osre/Common/TFunctor.h>
+#include <osre/RenderBackend/RenderCommon.h>
 #include <cppcore/Common/Variant.h>
 
 namespace OSRE {
@@ -140,15 +141,16 @@ struct UiProperty {
     CPPCore::Variant m_data;
 };
 
+using UiVertexCache = RenderBackend::TVertexCache<RenderBackend::RenderVert>;
+using UiIndexCache = RenderBackend::TIndexCache<ui16>;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
 ///	@brief  
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Widget : public Common::Object {
-public:
-    typedef CPPCore::TArray<RenderBackend::Geometry*> TargetGeoArray;
-    
+public:    
     virtual ~Widget();
     virtual void setParent( Widget *parent );
     virtual Widget *getParent() const;
@@ -168,7 +170,7 @@ public:
     i32 getStackIndex() const;
     void setVisible( bool visible );
     bool isVisible() const;
-    virtual void render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv );
+    virtual void render( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv );
     virtual void mouseDown( const Point2ui &pt );
     virtual void mouseUp( const Point2ui &pt );
     void setId( ui32 id );
@@ -176,7 +178,7 @@ public:
 
 protected:
     Widget( const String &name, Widget *parent );
-    virtual void onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) = 0;
+    virtual void onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv ) = 0;
     virtual void onMouseDown( const Point2ui &pt);
     virtual void onMouseUp( const Point2ui &pt );
 

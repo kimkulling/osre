@@ -330,8 +330,9 @@ void AppBase::onUpdate( d32 timetick ) {
     }
 
     if ( nullptr != m_uiScreen ) {
-        UI::Widget::TargetGeoArray geoArray;
-        m_uiScreen->render( geoArray, m_rbService );
+        UI::UiVertexCache vertexCache(100);
+        UI::UiIndexCache indexCache( 300 );
+        m_uiScreen->render( vertexCache, indexCache, m_rbService );
     }
 }
 

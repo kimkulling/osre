@@ -25,6 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractSurface.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
+#include "UIRenderUtils.h"
+
 namespace OSRE {
 namespace UI {
 
@@ -43,19 +45,22 @@ Screen::~Screen() {
 }
 
 void Screen::setSurface( Platform::AbstractSurface *surface ) {
+    if ( surface == m_surface ) {
+        return;
+    }
     m_surface = surface;
     if ( nullptr != surface ) {
         Platform::SurfaceProperties *props( surface->getProperties() );
-        ui32 x( props->m_x );
-        ui32 y( props->m_y );
-        ui32 w( props->m_width );
-        ui32 h( props->m_height );
+        const ui32 x( props->m_x );
+        const ui32 y( props->m_y );
+        const ui32 w( props->m_width );
+        const ui32 h( props->m_height );
         Rect2ui dim( x, y, w, h );
         WidgetCoordMapping::init( dim );
     }
 }
 
-void Screen::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *rbSrv ) {
+void Screen::onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackendService *rbSrv ) {
     if ( nullptr == m_surface ) {
         return;
     }
@@ -76,13 +81,11 @@ void Screen::onRender( TargetGeoArray &targetGeoArray, RenderBackendService *rbS
             continue;
         }
 
-        currentChild->render( targetGeoArray, rbSrv );
+        currentChild->render( vertexCache, indexCache, rbSrv );
     }
 
-    if ( !targetGeoArray.isEmpty() ) {
-        rbSrv->attachGeo( targetGeoArray, 0 );
-        targetGeoArray.resize( 0 );
-    }
+    RenderBackend::Geometry *geo = UIRenderUtils::createGeoFromCache( vertexCache, indexCache );
+    rbSrv->attachGeo( geo, 0 );
 }
 
 } // Namespace UI

@@ -96,5 +96,13 @@ ui32 Tokenizer::tokenize( const String& str, const String& delimiters ) {
     return m_Token.size();
 }
 
+bool Tokenizer::isLineBreak( c8 c ) {
+    if ( c == '\n' ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 } // Namespace Common
 } // Namespace OSRE

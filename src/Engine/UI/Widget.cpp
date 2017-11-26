@@ -237,7 +237,7 @@ bool Widget::isVisible() const {
     return m_isVisible;
 }
 
-void Widget::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
+void Widget::render( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv ) {
     if ( nullptr == rbSrv ) {
         return;
     }
@@ -247,7 +247,7 @@ void Widget::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBacken
     }
 
     if ( redrawRequested() ) {
-        onRender( targetGeoArray, rbSrv );
+        onRender( vertexCache, indexCache, rbSrv );
         redrawDone();
     }
 
@@ -255,7 +255,7 @@ void Widget::render( TargetGeoArray &targetGeoArray, RenderBackend::RenderBacken
     for ( ui32 i = 0; i < numChildren; i++ ) {
         Widget *child = getChildWidgetAt( i );
         if ( nullptr != child ) {
-            child->render( targetGeoArray, rbSrv );
+            child->render( vertexCache, indexCache, rbSrv );
         }
     }
 }

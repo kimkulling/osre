@@ -236,6 +236,7 @@ void OGLShader::getActiveUniformList() {
                 stream << name << attribIdx;
                 strncpy( attribParam->m_name, stream.str().c_str(), stream.str().size() );
                 i32 loc = glGetUniformLocation( m_shaderprog, attribParam->m_name );
+                OSRE_VALIDATE( loc != -1, "Location not found." );
                 m_attribParams.add( attribParam );
             }
         } else {

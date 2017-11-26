@@ -72,20 +72,10 @@ const String &Panel::getHeadline() const {
     return m_headline;
 }
 
-void Panel::onRender( TargetGeoArray &targetGeoArray, RenderBackend::RenderBackendService *rbSrv ) {
+void Panel::onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackendService *rbSrv ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const Rect2ui &rect( getRect() );
-
-    Geometry *geo = UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle, getStackIndex() );
-    rbSrv->attachGeo( geo, 0 );
-
-    m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
-
-    UniformVar *parameter = UniformVar::create( "MVP", ParameterType::PT_Mat4 );
-    m_transformMatrix.update();
-    ::memcpy( parameter->m_data.m_data, m_transformMatrix.getMVP(), sizeof( glm::mat4 ) );
-
-    targetGeoArray.add( geo );
+    UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle, getStackIndex(), vertexCache, indexCache );
 }
 
 } // Namespace UI

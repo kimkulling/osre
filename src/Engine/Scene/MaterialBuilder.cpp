@@ -205,7 +205,7 @@ Material *MaterialBuilder::createBuildinMaterial( VertexType type ) {
     return mat;
 }
 
-Material *MaterialBuilder::createBuildinUIMaterial() {
+Material *MaterialBuilder::createBuildinUiMaterial() {
     Material *mat = new Material;
     mat->m_numTextures = 0;
     mat->m_type = MaterialType::ShaderMaterial;
