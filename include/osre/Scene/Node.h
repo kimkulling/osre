@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/Object.h>
+#include <osre/Common/TObjPtr.h>
 #include <osre/Collision/TAABB.h>
 
 #include <cppcore/Container/TArray.h>
@@ -65,7 +66,8 @@ class TransformComponent;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Node : public Common::Object {
 public:
-    using AABB = Collision::TAABB<f32>;
+    using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::Scene::Node>;
+    using AABB    = ::OSRE::Collision::TAABB<f32>;
 
     enum class ComponentType {
         RenderComponentType,

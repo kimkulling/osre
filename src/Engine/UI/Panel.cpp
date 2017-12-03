@@ -72,10 +72,19 @@ const String &Panel::getHeadline() const {
     return m_headline;
 }
 
-void Panel::onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackendService *rbSrv ) {
+void Panel::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const Rect2ui &rect( getRect() );
-    UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle, getStackIndex(), vertexCache, indexCache );
+    UiVertexCache vertexCache;
+    UiIndexCache indexCache;
+    UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle, getStackIndex(), 
+            vertexCache, indexCache );
+
+    UiRenderCmd *cmd( new UiRenderCmd );
+    cmd->m_vc = vertexCache;
+    cmd->m_ic = indexCache;
+
+    renderCmdCache.add( cmd );
 }
 
 } // Namespace UI

@@ -102,6 +102,17 @@ RenderVert::RenderVert()
     // empty
 }
 
+RenderVert::~RenderVert() {
+    // empty
+}
+bool RenderVert::operator == ( const RenderVert &rhs ) const {
+    return ( position == rhs.position && normal == rhs.normal && color0 == rhs.color0 && tex0 == rhs.tex0 );
+}
+
+bool RenderVert::operator != ( const RenderVert &rhs ) const {
+    return !( *this == rhs );
+}
+
 ui32 RenderVert::getNumAttributes() {
     return NumRenderVertAttributes;
 }
@@ -257,6 +268,23 @@ void BufferData::copyFrom( void *data, ui32 size ) {
 
     m_size = size;
     ::memcpy( m_data, data, size );
+}
+
+void BufferData::attach( void *data, ui32 size ) {
+    const ui32 newSize( m_size + size );
+    if ( newSize < m_cap ) {
+        void *ptr = ( (uc8*) m_data ) + m_size;
+        ::memcpy( ptr, data, size );
+        m_size += size;
+        return;
+    }
+    
+    uc8 *newData = new uc8[ newSize ];
+    ::memcpy( newData, m_data, m_size );
+    ::memcpy( &newData[ m_size ], data, size );
+    delete[] m_data;
+    m_data = newData;
+    m_size += size;
 }
 
 PrimitiveGroup::PrimitiveGroup()
@@ -459,6 +487,10 @@ Viewport::~Viewport() {
 
 bool Viewport::operator == ( const Viewport &rhs ) const {
 	return ( m_x == rhs.m_x && m_y == rhs.m_y && m_w == rhs.m_w && m_h == rhs.m_h );
+}
+
+bool Viewport::operator != ( const Viewport &rhs ) const {
+    return !( *this == rhs );
 }
 
 RenderBatch::RenderBatch() 

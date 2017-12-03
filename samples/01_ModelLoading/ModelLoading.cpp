@@ -28,7 +28,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/Assets/AssimpWrapper.h>
 #include <osre/Assets/Model.h>
-#include <osre/Assets/Model.h>
 #include <osre/IO/Uri.h>
 #include <osre/Platform/AbstractSurface.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -57,6 +56,7 @@ class ModelLoadingApp : public App::AppBase {
     f32 m_angle;
     Common::Ids m_ids;
     TransformMatrixBlock m_transformMatrix;
+    Node::NodePtr m_modelNode;
 
 public:
     ModelLoadingApp( int argc, char *argv[] )
@@ -65,7 +65,8 @@ public:
     , m_view( nullptr )
     , m_angle( 0.0f )
     , m_ids()
-    , m_transformMatrix() {
+    , m_transformMatrix()
+    , m_modelNode() {
         // empty
     }
 
@@ -129,7 +130,7 @@ protected:
 
             m_stage = AppBase::createStage( "ModelLoading" );
             const String name(model->getRootNode()->getName());
-            Node *modelNode = m_stage->addNode(name, nullptr, "default" );
+            m_modelNode = m_stage->addNode(name, nullptr, "default" );
         }
 
         return true;

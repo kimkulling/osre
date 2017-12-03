@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Platform/AbstractThreadEvent.h>
 
-#include <windows.h>
+#include <osre/Platform/Windows/MinWindows.h>
 
 namespace OSRE {
 namespace Platform {

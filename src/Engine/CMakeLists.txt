@@ -356,7 +356,9 @@ SET( renderbackend_inc
 #==============================================================================
 SET( ui_src
     UI/FontManager.cpp
+	UI/Image.cpp
     UI/Widget.cpp
+	UI/UiRenderer.cpp
     UI/UIRenderUtils.cpp
     UI/UIRenderUtils.h
     UI/ButtonBase.cpp
@@ -366,11 +368,13 @@ SET( ui_src
 )
 SET( ui_inc
     ${HEADER_PATH}/UI/FontManager.h
+	${HEADER_PATH}/UI/Image.h
     ${HEADER_PATH}/UI/Widget.h
     ${HEADER_PATH}/UI/ButtonBase.h
     ${HEADER_PATH}/UI/Panel.h
     ${HEADER_PATH}/UI/Screen.h
 	${HEADER_PATH}/UI/TextBase.h
+	${HEADER_PATH}/UI/UiRenderer.h
 )
 
 #==============================================================================

@@ -159,6 +159,9 @@ struct OSRE_EXPORT RenderVert {
     glm::vec2 tex0;     ///< The texture color ( r|g|b )
 
     RenderVert();
+    ~RenderVert();
+    bool operator == ( const RenderVert &rhs ) const;
+    bool operator != ( const RenderVert &rhs ) const;
 
     /// @brief  Returns the number of attributes.
     static ui32          getNumAttributes(); 
@@ -301,6 +304,7 @@ struct OSRE_EXPORT BufferData {
     static BufferData *alloc( BufferType type, ui32 sizeInBytes, BufferAccessType access );
 	static void free( BufferData *data );
     void copyFrom( void *data, ui32 size );
+    void attach( void *data, ui32 size );
 
     OSRE_NON_COPYABLE( BufferData )
 };
@@ -470,6 +474,7 @@ struct OSRE_EXPORT Viewport {
 	Viewport( i32 x, i32 y, i32 w, i32 h );
 	~Viewport();
 	bool operator == (const Viewport &rhs) const;
+    bool operator != ( const Viewport &rhs ) const;
 	
 	OSRE_NON_COPYABLE( Viewport )
 };
@@ -493,6 +498,15 @@ struct TVertexCache {
         // empty
     }
 
+    TVertexCache()
+    : m_cache() {
+        // empty
+    }
+
+    ~TVertexCache() {
+        // empty
+    }
+
     void add( const T &vertex ) {
         m_cache.add( vertex );
     }
@@ -513,6 +527,15 @@ struct TIndexCache {
 
     TIndexCache( ui32 size ) 
     : m_cache( size ) {
+        // empty
+    }
+
+    TIndexCache()
+    : m_cache() {
+        // empty
+    }
+
+    ~TIndexCache() {
         // empty
     }
 

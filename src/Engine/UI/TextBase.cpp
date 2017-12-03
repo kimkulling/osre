@@ -77,7 +77,7 @@ static ui32 getNumTextVerts( const String &text ) {
     return NumTextVerts;
 }
 
-void TextBase::onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackendService *rbSrv ) {
+void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
     if ( m_text.empty() ) {
         return;
     }

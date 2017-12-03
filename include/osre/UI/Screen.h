@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations
 namespace RenderBackend {
     class RenderBackendService;
 }
@@ -52,7 +53,7 @@ public:
     virtual void setSurface( Platform::AbstractSurface *surface );
 
 protected:
-    virtual void onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv );
+    void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) override;
 
 private:
     Platform::AbstractSurface *m_surface;

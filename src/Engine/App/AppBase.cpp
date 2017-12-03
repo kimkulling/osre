@@ -37,6 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/UI/Screen.h>
+#include <osre/ui/UiRenderer.h>
 
 // private includes
 #include <src/Engine/Platform/PlatformPluginFactory.h>
@@ -94,6 +95,7 @@ AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const Strin
 , m_rbService( nullptr )
 , m_world( nullptr )
 , m_uiScreen( nullptr )
+, m_uiRenderer( nullptr )
 , m_mouseEvListener( nullptr )
 , m_shutdownRequested( false ) {
     m_settings = new Properties::Settings;
@@ -196,6 +198,7 @@ UI::Screen *AppBase::createScreen( const String &name ) {
         h = surface->getProperties()->m_height;
     }
     UI::Screen *newScreen = new UI::Screen( name, nullptr, w, h );
+    m_uiRenderer = new UI::UiRenderer;
     setUIScreen( newScreen );
 
     return newScreen;
@@ -314,6 +317,9 @@ bool AppBase::onDestroy() {
         m_platformInterface = nullptr;
     }
 
+    delete m_uiScreen;
+    delete m_uiRenderer;
+
     delete m_world;
     m_world = nullptr;
 
@@ -330,9 +336,7 @@ void AppBase::onUpdate( d32 timetick ) {
     }
 
     if ( nullptr != m_uiScreen ) {
-        UI::UiVertexCache vertexCache(100);
-        UI::UiIndexCache indexCache( 300 );
-        m_uiScreen->render( vertexCache, indexCache, m_rbService );
+        m_uiRenderer->render( m_uiScreen, m_rbService );
     }
 }
 

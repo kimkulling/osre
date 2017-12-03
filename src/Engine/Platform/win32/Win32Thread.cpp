@@ -28,7 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/SystemInfo.h>
 #include <osre/Common/Logger.h>
 
-#include <windows.h>
+#include <osre/Platform/Windows/MinWindows.h>
 #include <process.h>
 #include <cassert>
 

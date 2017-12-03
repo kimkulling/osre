@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractPlatformEventHandler.h>
 #include <cppcore/Container/TArray.h>
 
-#include <windows.h>
+#include <osre/Platform/Windows/MinWindows.h>
 #include <map>
 
 namespace OSRE {

@@ -47,7 +47,7 @@ public:
     const String &getHeadline() const;
 
 protected:
-    virtual void onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv );
+    void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) override;
 
 private:
     f32 m_angle;

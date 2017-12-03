@@ -92,6 +92,17 @@ void WidgetCoordMapping::mapPosToWorld( const Rect2ui &rect, ui32 x, ui32 y, f32
     }
 }
 
+UiRenderCmd::UiRenderCmd()
+: m_vc()
+, m_ic()
+, m_mat( nullptr ) {
+    // empty
+}
+
+UiRenderCmd::~UiRenderCmd() {
+    m_mat = nullptr;
+}
+
 Widget::Widget( const String &name, Widget *parent )
 : Object( name )
 , m_id( 99999999 )
@@ -237,7 +248,7 @@ bool Widget::isVisible() const {
     return m_isVisible;
 }
 
-void Widget::render( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv ) {
+void Widget::render( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) {
     if ( nullptr == rbSrv ) {
         return;
     }
@@ -247,7 +258,7 @@ void Widget::render( UiVertexCache &vertexCache, UiIndexCache &indexCache, Rende
     }
 
     if ( redrawRequested() ) {
-        onRender( vertexCache, indexCache, rbSrv );
+        onRender( renderCmdCache, rbSrv );
         redrawDone();
     }
 
@@ -255,7 +266,7 @@ void Widget::render( UiVertexCache &vertexCache, UiIndexCache &indexCache, Rende
     for ( ui32 i = 0; i < numChildren; i++ ) {
         Widget *child = getChildWidgetAt( i );
         if ( nullptr != child ) {
-            child->render( vertexCache, indexCache, rbSrv );
+            child->render( renderCmdCache, rbSrv );
         }
     }
 }

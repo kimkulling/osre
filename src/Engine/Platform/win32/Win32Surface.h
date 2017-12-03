@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 #include <osre/Platform/AbstractSurface.h>
 
-#include <Windows.h>
+#include <osre/Platform/Windows/MinWindows.h>
 #include <Windowsx.h>
 
 namespace OSRE {

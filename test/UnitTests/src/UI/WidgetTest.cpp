@@ -28,6 +28,7 @@ namespace OSRE {
 namespace UnitTest {
 
 using namespace ::OSRE::UI;
+using namespace ::OSRE::RenderBackend;
 
 class WidgetTest : public ::testing::Test {
     // empty
@@ -41,7 +42,7 @@ public:
     }
 
 protected:
-    virtual void onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv ) {
+    void onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) override {
         // empty
     }
 
@@ -98,7 +99,8 @@ TEST_F( WidgetTest, request_redraw_Test ) {
     UiVertexCache vertexCache( 10 );
     UiIndexCache indexCache( 10 );
     RenderBackend::RenderBackendService *rb = new RenderBackend::RenderBackendService;
-    testWidget.render( vertexCache, indexCache, rb );
+    UiRenderCmdCache renderCmdCache;
+    testWidget.render( renderCmdCache, rb );
     EXPECT_FALSE( testWidget.redrawRequested() );
     delete rb;
 }

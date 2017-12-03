@@ -55,6 +55,7 @@ namespace Properties {
 
 namespace UI {
     class Screen;
+    class UiRenderer;
 }
 
 namespace App {
@@ -186,6 +187,7 @@ private:
     RenderBackend::RenderBackendService *m_rbService;
     Scene::World *m_world;
     UI::Screen *m_uiScreen;
+    UI::UiRenderer *m_uiRenderer;
     MouseEventListener *m_mouseEvListener;
     bool m_shutdownRequested;
 };

@@ -97,7 +97,7 @@ ButtonBase *ButtonBase::createBaseButton(const String &name, Widget *parent) {
     return new ButtonBase(name, parent);
 }
 
-void ButtonBase::onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv ) {
+void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const Rect2ui &rect( getRect() );
 
@@ -109,7 +109,14 @@ void ButtonBase::onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache,
     }
 
     if ( nullptr == m_geo ) {
-        UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, getStackIndex(), vertexCache, indexCache );
+        UiVertexCache vertexCache;
+        UiIndexCache indexCache;
+        UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, getStackIndex(), 
+                vertexCache, indexCache );
+        UiRenderCmd *cmd( new UiRenderCmd );
+        cmd->m_ic = indexCache;
+        cmd->m_vc = vertexCache;
+        renderCmdCache.add( cmd );
     }
 }
 

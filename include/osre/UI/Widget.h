@@ -144,6 +144,19 @@ struct UiProperty {
 using UiVertexCache = RenderBackend::TVertexCache<RenderBackend::RenderVert>;
 using UiIndexCache = RenderBackend::TIndexCache<ui16>;
 
+struct UiRenderCmd {
+    UiVertexCache m_vc;
+    UiIndexCache m_ic;
+    RenderBackend::Material *m_mat;
+
+    UiRenderCmd();
+    ~UiRenderCmd();
+
+    OSRE_NON_COPYABLE( UiRenderCmd );
+};
+
+using UiRenderCmdCache = CPPCore::TArray<UiRenderCmd*>;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -166,19 +179,19 @@ public:
     virtual void setProperty( UiProperty *prop );
     virtual UiProperty *getProperty( const String &name ) const;
     virtual bool hasProperty( const String &name ) const;
-    void setStackIndex( i32 index );
-    i32 getStackIndex() const;
-    void setVisible( bool visible );
-    bool isVisible() const;
-    virtual void render( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv );
+    virtual void setStackIndex( i32 index );
+    virtual i32 getStackIndex() const;
+    virtual void setVisible( bool visible );
+    virtual bool isVisible() const;
+    virtual void render( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv );
     virtual void mouseDown( const Point2ui &pt );
     virtual void mouseUp( const Point2ui &pt );
-    void setId( ui32 id );
-    i32 getId() const;
+    virtual void setId( ui32 id );
+    virtual i32 getId() const;
 
 protected:
     Widget( const String &name, Widget *parent );
-    virtual void onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv ) = 0;
+    virtual void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) = 0;
     virtual void onMouseDown( const Point2ui &pt);
     virtual void onMouseUp( const Point2ui &pt );
 

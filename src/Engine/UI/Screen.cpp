@@ -60,7 +60,7 @@ void Screen::setSurface( Platform::AbstractSurface *surface ) {
     }
 }
 
-void Screen::onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackendService *rbSrv ) {
+void Screen::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
     if ( nullptr == m_surface ) {
         return;
     }
@@ -81,11 +81,8 @@ void Screen::onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, Ren
             continue;
         }
 
-        currentChild->render( vertexCache, indexCache, rbSrv );
+        currentChild->render( renderCmdCache, rbSrv );
     }
-
-    RenderBackend::Geometry *geo = UIRenderUtils::createGeoFromCache( vertexCache, indexCache );
-    rbSrv->attachGeo( geo, 0 );
 }
 
 } // Namespace UI

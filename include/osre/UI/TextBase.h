@@ -45,7 +45,7 @@ public:
     RenderBackend::FontBase *getFont() const;
 
 protected:
-    void onRender( UiVertexCache &vertexCache, UiIndexCache &indexCache, RenderBackend::RenderBackendService *rbSrv ) override;
+    void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) override;
 
 private:
     RenderBackend::FontBase *m_font;

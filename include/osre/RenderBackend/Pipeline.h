@@ -39,6 +39,11 @@ struct Shader;
 
 using CPPCore::TArray;
 
+enum RenderPass : ui32 {
+    StaticRenderPass,
+    UiRenderPass
+};
+
 struct RenderTarget {
     // empty
 };
