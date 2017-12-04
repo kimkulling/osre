@@ -31,6 +31,7 @@ namespace OSRE {
 namespace UI {
 
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Platform;
 
 Screen::Screen( const String &name, Widget *parent, i32 width, i32 height )
 : Widget( name, parent )
@@ -44,20 +45,26 @@ Screen::~Screen() {
     // empty
 }
 
-void Screen::setSurface( Platform::AbstractSurface *surface ) {
+void Screen::setSurface( AbstractSurface *surface ) {
     if ( surface == m_surface ) {
         return;
     }
+    
     m_surface = surface;
-    if ( nullptr != surface ) {
-        Platform::SurfaceProperties *props( surface->getProperties() );
-        const ui32 x( props->m_x );
-        const ui32 y( props->m_y );
-        const ui32 w( props->m_width );
-        const ui32 h( props->m_height );
-        Rect2ui dim( x, y, w, h );
-        WidgetCoordMapping::init( dim );
+    if ( nullptr == surface ) {
+        return;
     }
+
+    SurfaceProperties *props( surface->getProperties() );
+    if ( nullptr == props ) {
+        return;
+    }
+    const ui32 x( props->m_x );
+    const ui32 y( props->m_y );
+    const ui32 w( props->m_width );
+    const ui32 h( props->m_height );
+    Rect2ui dim( x, y, w, h );
+    WidgetCoordMapping::init( dim );
 }
 
 void Screen::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
@@ -68,7 +75,6 @@ void Screen::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *r
     // set 2D render mode
     m_transformMatrix.m_projection = glm::ortho( 0, m_width, m_height, 0 );
     m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
-
     m_transformMatrix.update();
     const ui32 numChildren( getNumChildren() );
     if ( 0 == numChildren ) {

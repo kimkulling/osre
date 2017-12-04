@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractSurface.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/ui/TextBase.h>
 
 #include "UIRenderUtils.h"
 
@@ -54,8 +55,9 @@ ButtonBase::ButtonBase( const String &name, Widget *parent )
 : Widget( name, parent )
 , m_label()
 , m_image()
-, m_callback( nullptr )
-, m_geo( nullptr ) {
+, m_imageWidget( nullptr )
+, m_textWidget( nullptr )
+, m_callback( nullptr ){
     static_cast<void>( StyleProvider::getCurrentStyle() );
     if ( nullptr != parent ) {
         setStackIndex(parent->getStackIndex() + 1);
@@ -71,6 +73,12 @@ ButtonBase::~ButtonBase() {
 void ButtonBase::setLabel( const String &label ) {
     if ( m_label != label ) {
         m_label = label;
+        if ( !label.empty() ) {
+            if ( nullptr == m_textWidget ) {
+                m_textWidget = new TextBase( getName() + ".label", this );
+                m_textWidget->setLabel( m_label );
+            }
+        }
         Widget::requestRedraw();
     }
 }
@@ -103,21 +111,14 @@ void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::Rend
 
     const String &label( getLabel() );
 
-    if ( !label.empty() ) {
-//        PlatformInterface::getInstance();
-//        Rect2ui textBox = UIRenderUtils::computeTextBox( label, )
-    }
-
-    if ( nullptr == m_geo ) {
-        UiVertexCache vertexCache;
-        UiIndexCache indexCache;
-        UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, getStackIndex(), 
-                vertexCache, indexCache );
-        UiRenderCmd *cmd( new UiRenderCmd );
-        cmd->m_ic = indexCache;
-        cmd->m_vc = vertexCache;
-        renderCmdCache.add( cmd );
-    }
+    UiVertexCache vertexCache;
+    UiIndexCache indexCache;
+    UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, getStackIndex(), 
+            vertexCache, indexCache );
+    UiRenderCmd *cmd( new UiRenderCmd );
+    cmd->m_ic = indexCache;
+    cmd->m_vc = vertexCache;
+    renderCmdCache.add( cmd );
 }
 
 void ButtonBase::onMouseDown(const Point2ui &pt) {

@@ -22,8 +22,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/UI/TextBase.h>
 #include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/MaterialBuilder.h>
 #include <osre/Common/Tokenizer.h>
 #include <osre/RenderBackend/FontBase.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 namespace OSRE {
 namespace UI {
@@ -106,9 +108,7 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
 
         static const ui32 NumQuadIndices = 6;
         const ui32 NumTextVerts = getNumTextVerts( m_text );
-        glm::vec3 *textPos = new glm::vec3[ NumTextVerts ];
-        glm::vec3 *colors = new glm::vec3[ NumTextVerts ];
-        glm::vec2 *tex0 = new glm::vec2[ NumTextVerts ];
+        RenderVert *vertices = new RenderVert[ NumTextVerts ];
         ui16 *textIndices = new ui16[ NumQuadIndices * m_text.size() ];
 
         const f32 invCol = 1.f / 16.f;
@@ -125,21 +125,21 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
 
             const ui16 VertexOffset( static_cast< ui16 >( i ) * static_cast< ui16 >( NumQuadVert ) );
             const f32  rowHeight( -1.0f * textRow * fontSize );
-            textPos[ VertexOffset + 0 ].x = pos[ 0 ].x + ( squaredFontSize );
-            textPos[ VertexOffset + 0 ].y = pos[ 0 ].y + rowHeight;
-            textPos[ VertexOffset + 0 ].z = 0;
+            vertices[ VertexOffset + 0 ].position.x = pos[ 0 ].x + ( squaredFontSize );
+            vertices[ VertexOffset + 0 ].position.y = pos[ 0 ].y + rowHeight;
+            vertices[ VertexOffset + 0 ].position.z = 0;
 
-            textPos[ VertexOffset + 1 ].x = pos[ 1 ].x + ( squaredFontSize );
-            textPos[ VertexOffset + 1 ].y = pos[ 1 ].y + rowHeight;
-            textPos[ VertexOffset + 1 ].z = 0;
+            vertices[ VertexOffset + 1 ].position.x = pos[ 1 ].x + ( squaredFontSize );
+            vertices[ VertexOffset + 1 ].position.y = pos[ 1 ].y + rowHeight;
+            vertices[ VertexOffset + 1 ].position.z = 0;
 
-            textPos[ VertexOffset + 2 ].x = pos[ 2 ].x + ( squaredFontSize );
-            textPos[ VertexOffset + 2 ].y = pos[ 2 ].y + rowHeight;
-            textPos[ VertexOffset + 2 ].z = 0;
+            vertices[ VertexOffset + 2 ].position.x = pos[ 2 ].x + ( squaredFontSize );
+            vertices[ VertexOffset + 2 ].position.y = pos[ 2 ].y + rowHeight;
+            vertices[ VertexOffset + 2 ].position.z = 0;
 
-            textPos[ VertexOffset + 3 ].x = pos[ 3 ].x + ( squaredFontSize );
-            textPos[ VertexOffset + 3 ].y = pos[ 3 ].y + rowHeight;
-            textPos[ VertexOffset + 3 ].z = 0;
+            vertices[ VertexOffset + 3 ].position.x = pos[ 3 ].x + ( squaredFontSize );
+            vertices[ VertexOffset + 3 ].position.y = pos[ 3 ].y + rowHeight;
+            vertices[ VertexOffset + 3 ].position.z = 0;
 
             //GeometryDiagnosticUtils::dumpTextBox( i, textPos, VertexOffset );
 
@@ -148,23 +148,23 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
             const f32 s = column * invCol;
             const f32 t = ( row + 1 ) * invRow;
 
-            tex0[ VertexOffset + 0 ].x = s;
-            tex0[ VertexOffset + 0 ].y = 1.0f - t;
+            vertices[ VertexOffset + 0 ].tex0.x = s;
+            vertices[ VertexOffset + 0 ].tex0.y = 1.0f - t;
 
-            tex0[ VertexOffset + 1 ].x = s;
-            tex0[ VertexOffset + 1 ].y = 1.0f - t + 1.0f / 16.0f;
+            vertices[ VertexOffset + 1 ].tex0.x = s;
+            vertices[ VertexOffset + 1 ].tex0.y = 1.0f - t + 1.0f / 16.0f;
 
-            tex0[ VertexOffset + 2 ].x = s + 1.0f / 16.0f;
-            tex0[ VertexOffset + 2 ].y = 1.0f - t;
+            vertices[ VertexOffset + 2 ].tex0.x = s + 1.0f / 16.0f;
+            vertices[ VertexOffset + 2 ].tex0.y = 1.0f - t;
 
-            tex0[ VertexOffset + 3 ].x = s + 1.0f / 16.0f;
-            tex0[ VertexOffset + 3 ].y = 1.0f - t + 1.0f / 16.0f;
+            vertices[ VertexOffset + 3 ].tex0.x = s + 1.0f / 16.0f;
+            vertices[ VertexOffset + 3 ].tex0.y = 1.0f - t + 1.0f / 16.0f;
 
             //GeometryDiagnosticUtils::dumpTextTex0Box(i, tex0, VertexOffset);
-            colors[ VertexOffset + 0 ] = col[ 0 ];
-            colors[ VertexOffset + 1 ] = col[ 1 ];
-            colors[ VertexOffset + 2 ] = col[ 2 ];
-            colors[ VertexOffset + 3 ] = col[ 3 ];
+            vertices[ VertexOffset + 0 ].color0 = col[ 0 ];
+            vertices[ VertexOffset + 1 ].color0 = col[ 1 ];
+            vertices[ VertexOffset + 2 ].color0 = col[ 2 ];
+            vertices[ VertexOffset + 3 ].color0 = col[ 3 ];
             const ui32 IndexOffset( i * NumQuadIndices );
             textIndices[ 0 + IndexOffset ] = 0 + VertexOffset;
             textIndices[ 1 + IndexOffset ] = 2 + VertexOffset;
@@ -175,6 +175,25 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
             textIndices[ 5 + IndexOffset ] = 3 + VertexOffset;
             textCol++;
         }
+
+        UiVertexCache vertexCache;
+        for ( ui32 i = 0; i < NumTextVerts; ++i ) {
+            vertexCache.add( vertices[ i ] );
+        }
+        delete[] vertices;
+
+        UiIndexCache indexCache;
+        for ( ui32 i = 0; i < NumQuadIndices * m_text.size(); ++i ) {
+            indexCache.add( textIndices[ i ] );
+        }
+
+        Material *mat( Scene::MaterialBuilder::createBuildinUiMaterial() );
+
+        UiRenderCmd *cmd( new UiRenderCmd );
+        cmd->m_vc = vertexCache;
+        cmd->m_ic = indexCache;
+        cmd->m_mat = mat;
+        renderCmdCache.add( cmd );
     }
 }
 

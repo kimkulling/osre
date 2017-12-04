@@ -92,6 +92,7 @@ protected:
         ButtonBase *btnClick = new ButtonBase( "Open file", panel );
         btnClick->registerCallback( ButtonBase::ButtonPressed, UIFunctor::Make(this, &UIDemoApp::openFileCallback ));
         btnClick->setRect( 20, 20, 100, 20 );
+        btnClick->setLabel( "Open file" );
         ButtonBase *btnQuit  = new ButtonBase( "Quit", panel );
         btnQuit->setRect( 400, 20, 100, 20 );
         btnQuit->registerCallback( ButtonBase::ButtonPressed, UIFunctor::Make( this, &UIDemoApp::quitCallback ) );

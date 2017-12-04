@@ -37,6 +37,9 @@ namespace RenderBackend {
 
 namespace UI {
 
+class Image;
+class TextBase;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -74,9 +77,9 @@ private:
     };
     String m_label;
     String m_image;
+    Image *m_imageWidget;
+    TextBase *m_textWidget;
     FunctorContainer *m_callback;
-    RenderBackend::TransformMatrixBlock m_transformMatrix;
-    RenderBackend::Geometry *m_geo;
 };
 
 } // Namespace UI
