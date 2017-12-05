@@ -77,6 +77,20 @@ void WidgetCoordMapping::mapPosToWorld( ui32 x, ui32 y, f32 &mappedX, f32 &mappe
     mapPosToWorld( getDimension(), x, y, mappedX, mappedY );
 }
 
+void WidgetCoordMapping::mapPosArrayToWorld( ui32 *x, ui32 *y, ui32 numPoints, f32 *mappedX, f32 *mappedY ) {
+    if ( 0 == numPoints ) {
+        return;
+    }
+    OSRE_ASSERT( nullptr != x );
+    OSRE_ASSERT( nullptr != y );
+    OSRE_ASSERT( nullptr != mappedX );
+    OSRE_ASSERT( nullptr != mappedY );
+    for ( ui32 i = 0; i < numPoints; ++i ) {
+        mapPosToWorld( getDimension(), x[i], y[i], mappedX[i], mappedY[i] );
+
+    }
+}
+
 void WidgetCoordMapping::mapPosToWorld( const Rect2ui &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY ) {
     mappedX = mappedY = 0.0f;
 

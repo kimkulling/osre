@@ -27,6 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/FontBase.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
+#include "UIRenderUtils.h"
+
 namespace OSRE {
 namespace UI {
 
@@ -92,7 +94,8 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
     if ( nullptr == m_textGlyphes ) {
         f32 x( Widget::getRect().getX1() );
         f32 y( Widget::getRect().getY1() );
-        
+        WidgetCoordMapping::mapPosToWorld( x, y, x, y );
+
         // setup triangle vertices    
         glm::vec3 col[ NumQuadVert ];
         col[ 0 ] = glm::vec3( 0, 0, 0 );
@@ -106,6 +109,7 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
         pos[ 2 ] = glm::vec3( x + fontSize, y, 0 );
         pos[ 3 ] = glm::vec3( x + fontSize, y + fontSize, 0 );
 
+        
         static const ui32 NumQuadIndices = 6;
         const ui32 NumTextVerts = getNumTextVerts( m_text );
         RenderVert *vertices = new RenderVert[ NumTextVerts ];

@@ -123,6 +123,7 @@ struct OSRE_EXPORT WidgetCoordMapping {
     static void init( const Rect2ui &dim );
     static const Rect2ui &getDimension();
     static void mapPosToWorld( ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
+    static void mapPosArrayToWorld( ui32 *x, ui32 *y, ui32 numPoints, f32 *mappedX, f32 *mappedY );
     static void mapPosToWorld( const Rect2ui &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
 
 private:
