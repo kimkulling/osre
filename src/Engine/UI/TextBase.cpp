@@ -165,7 +165,7 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
         vertices[ VertexOffset + 3 ].tex0.x = s + 1.0f / 16.0f;
         vertices[ VertexOffset + 3 ].tex0.y = 1.0f - t + 1.0f / 16.0f;
 
-        GeometryDiagnosticUtils::dumpTextTex0Box(i, tex0, VertexOffset);
+        //GeometryDiagnosticUtils::dumpTextTex0Box(i, verticestex0, VertexOffset);
         vertices[ VertexOffset + 0 ].color0 = col[ 0 ];
         vertices[ VertexOffset + 1 ].color0 = col[ 1 ];
         vertices[ VertexOffset + 2 ].color0 = col[ 2 ];
