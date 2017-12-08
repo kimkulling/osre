@@ -125,18 +125,18 @@ static SetMaterialStageCmdData *setupMaterial( Material *material, OGLRenderBack
                     matData->m_textures = textures;
                 }
 
-                OGLShader *shader = rb->createShader( "mat", material->m_pShader );
+                OGLShader *shader = rb->createShader( "mat", material->m_shader );
                 if ( nullptr != shader ) {
                     matData->m_shader = shader;
-                    for( ui32 i = 0; i < material->m_pShader->m_attributes.size(); i++ ) {
-                        const String &attribute = material->m_pShader->m_attributes[ i ];
+                    for( ui32 i = 0; i < material->m_shader->m_attributes.size(); i++ ) {
+                        const String &attribute = material->m_shader->m_attributes[ i ];
                         //if ( shader->hasAttribute( attribute ) ) {
                             shader->addAttribute( attribute );
                         //}
                     }
 
-                    for( ui32 i = 0; i < material->m_pShader->m_parameters.size(); i++ ) {
-                        shader->addUniform( material->m_pShader->m_parameters[ i ] );
+                    for( ui32 i = 0; i < material->m_shader->m_parameters.size(); i++ ) {
+                        shader->addUniform( material->m_shader->m_parameters[ i ] );
                     }
 
                     // for setting up all buffer objects

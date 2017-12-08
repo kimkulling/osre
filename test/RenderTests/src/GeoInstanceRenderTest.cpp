@@ -110,13 +110,13 @@ public:
 
         // use a default material
         geo->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
-        if( nullptr != geo->m_material->m_pShader ) {
-            geo->m_material->m_pShader->m_attributes.add( "position" );
-            geo->m_material->m_pShader->m_attributes.add( "normal" );
-            geo->m_material->m_pShader->m_attributes.add( "color0" );
+        if( nullptr != geo->m_material->m_shader ) {
+            geo->m_material->m_shader->m_attributes.add( "position" );
+            geo->m_material->m_shader->m_attributes.add( "normal" );
+            geo->m_material->m_shader->m_attributes.add( "color0" );
 
-            geo->m_material->m_pShader->m_parameters.add( "VP" );
-            geo->m_material->m_pShader->m_parameters.add( "M" );
+            geo->m_material->m_shader->m_parameters.add( "VP" );
+            geo->m_material->m_shader->m_parameters.add( "M" );
         }
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );

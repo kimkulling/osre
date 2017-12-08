@@ -124,13 +124,13 @@ public:
 
         // use default material
         geo->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
-        if( nullptr != geo->m_material->m_pShader ) {
-            geo->m_material->m_pShader->m_attributes.add( "position" );
-            geo->m_material->m_pShader->m_attributes.add( "normal" );
-            geo->m_material->m_pShader->m_attributes.add( "color0" );
-            geo->m_material->m_pShader->m_attributes.add( "texcoord0" );
+        if( nullptr != geo->m_material->m_shader ) {
+            geo->m_material->m_shader->m_attributes.add( "position" );
+            geo->m_material->m_shader->m_attributes.add( "normal" );
+            geo->m_material->m_shader->m_attributes.add( "color0" );
+            geo->m_material->m_shader->m_attributes.add( "texcoord0" );
 
-            geo->m_material->m_pShader->m_parameters.add( "MVP" );
+            geo->m_material->m_shader->m_parameters.add( "MVP" );
         }
 
         geo->m_material->m_numTextures = 1;

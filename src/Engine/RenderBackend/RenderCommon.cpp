@@ -337,17 +337,34 @@ Material::Material()
 : m_type( MaterialType::ShaderMaterial )
 , m_numTextures( 0 )
 , m_textures( nullptr )
-, m_pShader( nullptr )
+, m_shader( nullptr )
+, m_numParameters( 0 )
+, m_parameters( nullptr ) {
+    // empty
+}
+
+Material::Material( MaterialType type )
+: m_type( type )
+, m_numTextures( 0 )
+, m_textures( nullptr )
+, m_shader( nullptr )
 , m_numParameters( 0 )
 , m_parameters( nullptr ) {
     // empty
 }
 
 Material::~Material() {
-    m_pShader = nullptr;
+    delete m_shader;
+    m_shader = nullptr;
 
     delete[] m_textures;
     m_textures = nullptr;
+}
+
+void Material::createShader( String vs, String fs ) {
+    m_shader = new Shader;
+    m_shader->m_src[ static_cast< int >( ShaderType::SH_VertexShaderType ) ] = vs;
+    m_shader->m_src[ static_cast< int >( ShaderType::SH_FragmentShaderType ) ] = fs;
 }
 
 Geometry::Geometry()

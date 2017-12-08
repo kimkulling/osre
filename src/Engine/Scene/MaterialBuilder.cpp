@@ -166,9 +166,7 @@ MaterialBuilder::~MaterialBuilder() {
 }
 
 Material *MaterialBuilder::createBuildinMaterial( VertexType type ) {
-    Material *mat = new Material;
-    mat->m_numTextures = 0;
-    mat->m_type = MaterialType::ShaderMaterial;
+    Material *mat = new Material( MaterialType::ShaderMaterial );
     String vs, fs;
     if ( type == VertexType::ColorVertex ) {
         vs = VsSrc;
@@ -183,44 +181,36 @@ Material *MaterialBuilder::createBuildinMaterial( VertexType type ) {
         return nullptr;
     }
 
-    mat->m_pShader = new Shader;
-    mat->m_pShader->m_src[ static_cast<int>( ShaderType::SH_VertexShaderType ) ] = vs;
-    mat->m_pShader->m_src[ static_cast<int>( ShaderType::SH_FragmentShaderType ) ] = fs;
+    mat->createShader( vs, fs );
 
     // setup shader attributes and variables
-    if ( nullptr != mat->m_pShader ) {
+    if ( nullptr != mat->m_shader ) {
         if ( type == VertexType::ColorVertex ) {
             ui32 numAttribs( ColorVert::getNumAttributes() );
             const String *attribs( ColorVert::getAttributes() );
-            mat->m_pShader->m_attributes.add( attribs, numAttribs );
+            mat->m_shader->m_attributes.add( attribs, numAttribs );
         } else if ( type == VertexType::RenderVertex ) {
             ui32 numAttribs( RenderVert::getNumAttributes() );
             const String *attribs( RenderVert::getAttributes() );
-            mat->m_pShader->m_attributes.add( attribs, numAttribs );
+            mat->m_shader->m_attributes.add( attribs, numAttribs );
         }
 
-        mat->m_pShader->m_parameters.add( "MVP" );
+        mat->m_shader->m_parameters.add( "MVP" );
     }
 
     return mat;
 }
 
 Material *MaterialBuilder::createBuildinUiMaterial() {
-    Material *mat = new Material;
-    mat->m_numTextures = 0;
-    mat->m_type = MaterialType::ShaderMaterial;
-    String vs = VsSrcUI;
-    String fs = FsSrcUI;
-    mat->m_pShader = new Shader;
-    mat->m_pShader->m_src[ static_cast< i32 >( ShaderType::SH_VertexShaderType ) ] = vs;
-    mat->m_pShader->m_src[ static_cast< i32 >( ShaderType::SH_FragmentShaderType ) ] = fs;
+    Material *mat = new Material( MaterialType::ShaderMaterial );
+    mat->createShader( VsSrcUI, FsSrcUI );
 
     // setup shader attributes and variables
-    if ( nullptr != mat->m_pShader ) {
+    if ( nullptr != mat->m_shader ) {
         ui32 numAttribs( RenderVert::getNumAttributes() );
         const String *attribs( RenderVert::getAttributes() );
-        mat->m_pShader->m_attributes.add( attribs, numAttribs );
-        mat->m_pShader->m_parameters.add( "MVP" );
+        mat->m_shader->m_attributes.add( attribs, numAttribs );
+        mat->m_shader->m_parameters.add( "MVP" );
     }
 
     return mat;

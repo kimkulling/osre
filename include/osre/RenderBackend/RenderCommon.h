@@ -389,13 +389,15 @@ struct OSRE_EXPORT Material {
     MaterialType  m_type;
     ui32          m_numTextures;
     Texture     **m_textures;
-    Shader       *m_pShader;
+    Shader       *m_shader;
     ui32          m_numParameters;
-    UniformVar    *m_parameters;
+    UniformVar   *m_parameters;
     Color4        m_color[ MaxMatColorType ];
     
     Material();
+    Material( MaterialType type );
     ~Material();
+    void createShader( String vs, String fs );
 
     OSRE_NON_COPYABLE( Material )
 };
