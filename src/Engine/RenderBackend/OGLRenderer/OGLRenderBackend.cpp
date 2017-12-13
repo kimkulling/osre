@@ -70,8 +70,8 @@ struct FixedPipelineState {
         // empty
     }
 
-    bool isEqual( const PolygonState &polygonState, const CullState &cullstate, const BlendState &blendState, const SamplerState &samplerState,
-            const StencilState &stencilState ) const {
+    bool isEqual( const PolygonState &polygonState, const CullState &cullstate, const BlendState &blendState, 
+            const SamplerState &samplerState, const StencilState &stencilState ) const {
         return ( polygonState  == m_polygonState
               && blendState == m_blendState 
               && cullstate == m_cullState

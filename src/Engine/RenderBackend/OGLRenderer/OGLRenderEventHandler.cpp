@@ -119,8 +119,7 @@ static SetMaterialStageCmdData *setupMaterial( Material *material, OGLRenderBack
         case MaterialType::ShaderMaterial: {
                 TArray<OGLTexture*> textures;
                 setupTextures( material, rb, textures );
-                OGLRenderCmd *renderMatCmd = new OGLRenderCmd;
-                renderMatCmd->m_type = OGLRenderCmdType::SetMaterialCmd;
+                OGLRenderCmd *renderMatCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::SetMaterialCmd, nullptr );
                 if( !textures.isEmpty() ) {
                     matData->m_textures = textures;
                 }
@@ -142,7 +141,7 @@ static SetMaterialStageCmdData *setupMaterial( Material *material, OGLRenderBack
                     // for setting up all buffer objects
                     eh->setActiveShader( shader );
                 }
-                renderMatCmd->m_pData = matData;
+                renderMatCmd->m_data = matData;
                 eh->enqueueRenderCmd( renderMatCmd );
             }
             break;
@@ -237,7 +236,7 @@ static void setupPrimDrawCmd( const TArray<ui32> &primGroups, OGLRenderBackend *
     for( ui32 i = 0; i < primGroups.size(); ++i ) {
         data->m_primitives.add( primGroups[ i ] );
     }
-    renderCmd->m_pData = static_cast<void*>( data );
+    renderCmd->m_data = static_cast<void*>( data );
     
     eh->enqueueRenderCmd( renderCmd );
 }
@@ -274,7 +273,7 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, Frame *currentFrame,
         for( ui32 j = 0; j < ids.size(); ++j ) {
             data->m_primitives.add( ids[ j ] );
         }
-        renderCmd->m_pData = static_cast< void* >( data );
+        renderCmd->m_data = static_cast< void* >( data );
         eh->enqueueRenderCmd( renderCmd );
     }
 }

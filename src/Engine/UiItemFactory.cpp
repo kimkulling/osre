@@ -20,35 +20,61 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/UI/Widget.h>
+#include <osre/UI/UiItemFactory.h>
+#include <osre/UI/ButtonBase.h>
+#include <osre/UI/TextBase.h>
+#include <osre/UI/Image.h>
+#include <osre/UI/Panel.h>
+#include <osre/UI/Screen.h>
 
 namespace OSRE {
-
-// Forward declarations
-namespace RenderBackend {
-    class FontBase;
-}
-
 namespace UI {
 
-class OSRE_EXPORT TextBase : public Widget {
-public:
-    TextBase( const String &name, Widget *parent );
-    ~TextBase();
-    void setLabel( const String &text );
-    const String &getLabel() const;
-    void setFont( RenderBackend::FontBase *font );
-    RenderBackend::FontBase *getFont() const;
+UiItemFactory *UiItemFactory::s_instance = nullptr;
 
-protected:
-    void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) override;
+UiItemFactory *UiItemFactory::create() {
+    if ( nullptr == s_instance ) {
+        s_instance = new UiItemFactory;
+    }
 
-private:
-    RenderBackend::FontBase *m_font;
-    String m_text;
-};
+    return s_instance;
+}
 
-} // Namespace UI
-} // Namespace OSRE
+void UiItemFactory::destroy() {
+    if ( nullptr != s_instance ) {
+        delete s_instance;
+        s_instance = nullptr;
+    }
+}
+UiItemFactory *UiItemFactory::getInstance() {
+    return s_instance;
+}
+
+Widget *UiItemFactory::create( WidgetType type, const String &uiName, Widget *parent ) {
+    Widget *item( nullptr );
+    switch ( type ) {
+        case WidgetType::Button:
+            item = new ButtonBase( uiName, parent );
+            break;
+        case WidgetType::Text:
+            item = new TextBase( uiName, parent );
+            break;
+        case WidgetType::Image:
+            item = new Image( uiName, parent );
+            break;
+        case WidgetType::Panel:
+            item = new Panel( uiName, 0, parent );
+            break;
+        case WidgetType::Screen:
+            item = new Screen( uiName, parent, w, h );
+            break;
+
+        default:
+            break;
+    }
+
+    return item;
+}
+
+}
+}

@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/UI/Screen.h>
 #include <osre/UI/ButtonBase.h>
+#include <osre/ui/TextBase.h>
 #include <osre/UI/Panel.h>
 #include <osre/Platform/PlatformOperations.h>
 
@@ -93,9 +94,14 @@ protected:
         btnClick->registerCallback( ButtonBase::ButtonPressed, UIFunctor::Make(this, &UIDemoApp::openFileCallback ));
         btnClick->setRect( 20, 20, 100, 20 );
         btnClick->setLabel( "Open file" );
+
         ButtonBase *btnQuit  = new ButtonBase( "Quit", panel );
         btnQuit->setRect( 400, 20, 100, 20 );
         btnQuit->registerCallback( ButtonBase::ButtonPressed, UIFunctor::Make( this, &UIDemoApp::quitCallback ) );
+
+        TextBase *tb = new TextBase( "test", panel );
+        tb->setLabel( "Test" );
+        tb->setRect( 80, 20, 400, 60 );
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
         AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );

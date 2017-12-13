@@ -165,7 +165,7 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
         vertices[ VertexOffset + 3 ].tex0.x = s + 1.0f / 16.0f;
         vertices[ VertexOffset + 3 ].tex0.y = 1.0f - t + 1.0f / 16.0f;
 
-        //GeometryDiagnosticUtils::dumpTextTex0Box(i, verticestex0, VertexOffset);
+//        GeometryDiagnosticUtils::dumpTextTex0Box(i, verticestex0, VertexOffset);
         vertices[ VertexOffset + 0 ].color0 = col[ 0 ];
         vertices[ VertexOffset + 1 ].color0 = col[ 1 ];
         vertices[ VertexOffset + 2 ].color0 = col[ 2 ];
@@ -193,6 +193,13 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
     }
 
     Material *mat( Scene::MaterialBuilder::createBuildinMaterial( VertexType::RenderVertex) );
+
+    // setup the texture
+    mat->m_numTextures = 1;
+    mat->m_textures = new Texture*[ 1 ];
+    mat->m_textures[ 0 ] = new Texture;
+    mat->m_textures[ 0 ]->m_textureName = "buildin_arial";
+    mat->m_textures[ 0 ]->m_loc = IO::Uri( "file://assets/Textures/Fonts/buildin_arial.bmp" );
 
     UiRenderCmd *cmd( new UiRenderCmd );
     cmd->m_vc = vertexCache;

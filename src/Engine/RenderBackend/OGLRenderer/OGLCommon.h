@@ -103,15 +103,31 @@ enum class OGLRenderCmdType {
     SetRenderTargetCmd,
     SetMaterialCmd,
     DrawPrimitivesCmd,
-    DrawPrimitivesInstancesCmd
+    DrawPrimitivesInstancesCmd,
+    None
 };
+
+struct OGLRenderCmdAllocator;
 
 ///	@brief
 struct OGLRenderCmd {
+    friend struct OGLRenderCmdAllocator;
+
     OGLRenderCmdType m_type;
 	ui32             m_id;
-    void            *m_pData;
+    void            *m_data;
+
+private:
+    OGLRenderCmd();
 };
+
+inline 
+OGLRenderCmd::OGLRenderCmd() 
+: m_type( OGLRenderCmdType::None )
+, m_id( 999999 )
+, m_data( nullptr ) {
+    // empty
+}
 
 ///	@brief
 struct OGLRenderCmdAllocator {
@@ -121,8 +137,8 @@ struct OGLRenderCmdAllocator {
 		OGLRenderCmd *cmd = new OGLRenderCmd;
 		cmd->m_type  = type;
 		cmd->m_id    = m_lastid;
-		cmd->m_pData = data;
-		m_lastid++;
+		cmd->m_data = data;
+		++m_lastid;
 
 		return cmd;
 	}

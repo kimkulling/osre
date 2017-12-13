@@ -22,33 +22,29 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/UI/Widget.h>
+#include <osre/Common/osre_common.h>
 
 namespace OSRE {
+    namespace UI {
+        class Widget;
 
-// Forward declarations
-namespace RenderBackend {
-    class FontBase;
+        enum class WidgetType {
+            Button,
+            Text,
+            Image,
+            Panel,
+            Screen
+        };
+
+        class UiItemFactory {
+        public:
+            static UiItemFactory *create();
+            static void destroy();
+            static UiItemFactory *getInstance();
+            Widget *create( WidgetType type, const String &uiName, Widget *parent );
+
+        private:
+            static UiItemFactory *s_instance;
+        };
+    }
 }
-
-namespace UI {
-
-class OSRE_EXPORT TextBase : public Widget {
-public:
-    TextBase( const String &name, Widget *parent );
-    ~TextBase();
-    void setLabel( const String &text );
-    const String &getLabel() const;
-    void setFont( RenderBackend::FontBase *font );
-    RenderBackend::FontBase *getFont() const;
-
-protected:
-    void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) override;
-
-private:
-    RenderBackend::FontBase *m_font;
-    String m_text;
-};
-
-} // Namespace UI
-} // Namespace OSRE

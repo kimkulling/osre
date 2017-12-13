@@ -28,6 +28,7 @@ namespace OSRE {
 namespace UI {
 
 using namespace ::OSRE::Common;
+using namespace ::OSRE::RenderBackend;
 
 static const String Tag = "StyleProvider";
 
@@ -87,7 +88,6 @@ void WidgetCoordMapping::mapPosArrayToWorld( ui32 *x, ui32 *y, ui32 numPoints, f
     OSRE_ASSERT( nullptr != mappedY );
     for ( ui32 i = 0; i < numPoints; ++i ) {
         mapPosToWorld( getDimension(), x[i], y[i], mappedX[i], mappedY[i] );
-
     }
 }
 
@@ -262,7 +262,7 @@ bool Widget::isVisible() const {
     return m_isVisible;
 }
 
-void Widget::render( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) {
+void Widget::render( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
     if ( nullptr == rbSrv ) {
         return;
     }

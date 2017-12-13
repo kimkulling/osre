@@ -64,7 +64,8 @@ class RenderCmdBuffer {
 public:
     /// @brief  Describes the requested enqueue type.
     enum class EnqueueType {
-        RCE_Back    ///< Enqueue render command at the end.
+        PushBack,    ///< Enqueue render command at the end.
+        PushFront
     };
 
 public:
@@ -77,9 +78,9 @@ public:
     /// Will return the active shader.
     OGLShader *getActiveShader() const;
     /// Will enqueue a new render command.
-    void enqueueRenderCmd( const String &groupName, OGLRenderCmd *renderCmd, EnqueueType type = EnqueueType::RCE_Back );
+    void enqueueRenderCmd( const String &groupName, OGLRenderCmd *renderCmd, EnqueueType type = EnqueueType::PushBack );
     /// Will enqueue a new render command group.
-    void enqueueRenderCmdGroup( const String &groupName, CPPCore::TArray<OGLRenderCmd*>& cmdGroup, EnqueueType type = EnqueueType::RCE_Back );
+    void enqueueRenderCmdGroup( const String &groupName, CPPCore::TArray<OGLRenderCmd*>& cmdGroup, EnqueueType type = EnqueueType::PushBack );
     /// The callback before rendering.
     void onPreRenderFrame();
     /// The render callback.

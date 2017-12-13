@@ -69,18 +69,31 @@ void RenderCmdBuffer::enqueueRenderCmd( const String &groupName, OGLRenderCmd *r
         osre_debug( Tag, "Nullptr to render-command detected." );
         return;
     }
-    if ( nullptr == renderCmd->m_pData ) {
+    if ( nullptr == renderCmd->m_data ) {
         osre_debug( Tag, "Nullptr in render-command data detected." );
         return;
     }
 
-    if ( EnqueueType::RCE_Back == type  ) {
+    if ( EnqueueType::PushBack == type ) {
         m_cmdbuffer.add( renderCmd );
     }
 }
 
-void RenderCmdBuffer::enqueueRenderCmdGroup( const String &groupName, CPPCore::TArray<OGLRenderCmd*>& cmdGroup, EnqueueType type ) {
+void RenderCmdBuffer::enqueueRenderCmdGroup( const String &groupName, CPPCore::TArray<OGLRenderCmd*>& cmdGroup, 
+        EnqueueType type ) {
+    if ( groupName.empty() ) {
+        osre_debug( Tag, "No name for render command group defined." );
+        return;
+    }
 
+    if ( cmdGroup.isEmpty() ) {
+        osre_debug( Tag, "Render command group is empty." );
+        return;
+    }
+
+    if ( EnqueueType::PushBack == type ) {
+        m_cmdbuffer.add( &cmdGroup[ 0 ], cmdGroup.size() );
+    }
 }
 
 void RenderCmdBuffer::onPreRenderFrame() {
@@ -118,13 +131,13 @@ void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
             OSRE_ASSERT( nullptr != renderCmd );
 
             if ( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesCmd ) {
-                onDrawPrimitivesCmd( ( DrawPrimitivesCmdData* ) renderCmd->m_pData );
+                onDrawPrimitivesCmd( ( DrawPrimitivesCmdData* ) renderCmd->m_data );
             } else if ( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesInstancesCmd ) {
-                onDrawPrimitivesInstancesCmd( ( DrawInstancePrimitivesCmdData* ) renderCmd->m_pData );
+                onDrawPrimitivesInstancesCmd( ( DrawInstancePrimitivesCmdData* ) renderCmd->m_data );
             } else if ( renderCmd->m_type == OGLRenderCmdType::SetRenderTargetCmd ) {
-                onSetRenderTargetCmd( ( SetRenderTargetCmdData* ) renderCmd->m_pData );
+                onSetRenderTargetCmd( ( SetRenderTargetCmdData* ) renderCmd->m_data );
             } else if ( renderCmd->m_type == OGLRenderCmdType::SetMaterialCmd ) {
-                onSetMaterialStageCmd( ( SetMaterialStageCmdData* ) renderCmd->m_pData );
+                onSetMaterialStageCmd( ( SetMaterialStageCmdData* ) renderCmd->m_data );
             } else {
                 osre_error( Tag, "Unsupported render command type: " + static_cast< ui32 >( renderCmd->m_type ) );
             }

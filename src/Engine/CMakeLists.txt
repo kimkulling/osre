@@ -375,6 +375,7 @@ SET( ui_inc
     ${HEADER_PATH}/UI/Screen.h
 	${HEADER_PATH}/UI/TextBase.h
 	${HEADER_PATH}/UI/UiRenderer.h
+	${HEADER_PATH}/UI/UiItemFactory.h
 )
 
 #==============================================================================
