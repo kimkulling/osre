@@ -37,7 +37,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/UI/Screen.h>
-#include <osre/ui/UiRenderer.h>
+#include <osre/UI/UiItemFactory.h>
+#include <osre/UI/UiRenderer.h>
 
 // private includes
 #include <src/Engine/Platform/PlatformPluginFactory.h>
@@ -48,6 +49,7 @@ namespace App {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::UI;
 
 const String API_Arg = "api";
 const String Tag     = "AppBase";
@@ -191,13 +193,7 @@ UI::Screen *AppBase::createScreen( const String &name ) {
         return nullptr;
     }
 
-    AbstractSurface *surface( m_platformInterface->getRootSurface() );
-    i32 w( 100 ), h( 100 );
-    if ( nullptr != surface ) {
-        w = surface->getProperties()->m_width;
-        h = surface->getProperties()->m_height;
-    }
-    UI::Screen *newScreen = new UI::Screen( name, nullptr, w, h );
+    UI::Screen *newScreen = ( Screen* ) UiItemFactory::getInstance()->create( WidgetType::Screen, name, nullptr );
     m_uiRenderer = new UI::UiRenderer;
     setUIScreen( newScreen );
 

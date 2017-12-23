@@ -25,7 +25,7 @@ void UiRenderer::render( UI::Screen *screen, RenderBackendService *rbService ) {
     CPPCore::TArray<Geometry*> geoCache;
     for ( ui32 i = 0; i < cache.size(); ++i ) {
         UiRenderCmd *currentCmd( cache[ i ] );
-        Geometry *geo = UIRenderUtils::createGeoFromCache( currentCmd->m_vc, currentCmd->m_ic );
+        Geometry *geo = UIRenderUtils::createGeoFromCache( currentCmd->m_vc, currentCmd->m_ic, currentCmd->m_mat );
         geoCache.add( geo );
 
         rbService->attachGeo( geoCache, 0 );

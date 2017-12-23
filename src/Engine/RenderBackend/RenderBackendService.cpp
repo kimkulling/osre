@@ -48,7 +48,8 @@ RenderBackendService::RenderBackendService()
 , m_geoUpdates()
 , m_newInstances()
 , m_variables()
-, m_uniformUpdates() {
+, m_uniformUpdates()
+, m_transformStack() {
     // empty
 }
 
@@ -61,6 +62,7 @@ RenderBackendService::~RenderBackendService() {
 
 static const String OGL_API = "opengl";
 static const String Vulkan_API = "vulkan";
+
 bool RenderBackendService::onOpen() {
     if ( nullptr == m_settings ) {
         m_settings = new Settings;
@@ -153,7 +155,8 @@ static void setupGeoPackage(NewGeoEntry *newEntry, GeometryPackage *package ) {
     package->m_numNewGeo = numNewGeo;
     package->m_numInstances = newEntry->numInstances;
     for ( ui32 i=0; i<numNewGeo; i++ ) {
-        package->m_newGeo[ i ] = newEntry->m_geo[ i ];
+        Geometry *geo( newEntry->m_geo[ i ] );
+        package->m_newGeo[ i ] = geo;
     }
 }
 
@@ -225,6 +228,20 @@ void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const
     }
     ::memcpy(uniform->m_data.m_data, glm::value_ptr( matrixArray[0] ), sizeof( glm::mat4 ) * numMat );
     m_uniformUpdates.add( uniform );
+}
+
+void RenderBackendService::pushWorldTransform( const glm::mat4 &matrix ) {
+    m_transformStack.add( matrix );
+}
+
+void RenderBackendService::popWorldTransform() {
+    if ( m_transformStack.size() > 0 ) {
+        m_transformStack.removeBack();
+    }
+}
+
+const glm::mat4 &RenderBackendService::getTopWorldTransform() const {
+    return m_transformStack.back();
 }
 
 void RenderBackendService::attachGeo( Geometry *geo, ui32 numInstances ) {

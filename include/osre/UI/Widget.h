@@ -131,8 +131,11 @@ private:
 };
 
 enum class WidgetType {
+    Button,
+    Text,
+    Image,
     Panel,
-    Button
+    Screen
 };
 
 typedef Common::Functor<void, ui32, void *> UIFunctor;

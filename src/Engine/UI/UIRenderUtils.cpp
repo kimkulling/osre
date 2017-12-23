@@ -103,7 +103,7 @@ Rect2ui UIRenderUtils::computeTextBox( const String &text, f32 textSize ) {
     return box;
 }
 
-RenderBackend::Geometry *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache ) {
+RenderBackend::Geometry *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, Material *material ) {
     Geometry *geo = Geometry::create( 1 );
 
     geo->m_vertextype = VertexType::RenderVertex;
@@ -116,7 +116,11 @@ RenderBackend::Geometry *UIRenderUtils::createGeoFromCache( UiVertexCache &verte
     geo->m_ib->copyFrom( &indexCache.m_cache[ 0 ], indexCache.sizeInBytes() );
 
     // use default material
-    geo->m_material = Scene::MaterialBuilder::createBuildinUiMaterial();
+    if ( nullptr == material ) {
+        geo->m_material = Scene::MaterialBuilder::createBuildinUiMaterial();
+    } else {
+        geo->m_material = material;
+    }
 
     geo->m_numPrimGroups = 1;
     geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];

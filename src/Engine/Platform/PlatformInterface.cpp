@@ -24,6 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <src/Engine/Platform/PlatformPluginFactory.h>
 #include <osre/Common/EventTriggerer.h>
 #include <osre/Properties/Settings.h>
+#include <osre/UI/FontManager.h>
+#include <osre/UI/UiItemFactory.h>
 #ifdef OSRE_WINDOWS
 #   include <src/Engine/Platform/win32/Win32RenderContext.h>
 #endif // OSRE_WINDOWS
@@ -40,6 +42,7 @@ namespace Platform {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Properties;
+using namespace ::OSRE::UI;
 
 PlatformInterface *PlatformInterface::s_instance( nullptr );
 
@@ -240,6 +243,9 @@ bool PlatformInterface::setupGfx( SurfaceProperties *props, bool polls ) {
     // setup the render context
     m_renderContext = PlatformPluginFactory::createRenderContext( m_type );
 
+    UiItemFactory::createInstance( getRootSurface() );
+    FontManager::create();
+        
     return true;
 }
 

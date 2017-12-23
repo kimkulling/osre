@@ -79,7 +79,8 @@ TransformComponent::~TransformComponent() {
 }
 
 void TransformComponent::update( RenderBackendService *renderBackendSrv ) {
-	// empty
+    glm::mat4 world;
+    m_localTransform.toMatrix( world );
 }
 
 void TransformComponent::setPosition( const glm::vec3 &pos ) {

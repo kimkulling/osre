@@ -26,26 +26,32 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/Image.h>
 #include <osre/UI/Panel.h>
 #include <osre/UI/Screen.h>
+#include <osre/Platform/AbstractSurface.h>
+#include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
 namespace UI {
 
+using namespace ::OSRE::Debugging;
+using namespace ::OSRE::Platform;
+
 UiItemFactory *UiItemFactory::s_instance = nullptr;
 
-UiItemFactory *UiItemFactory::create() {
+UiItemFactory *UiItemFactory::createInstance( AbstractSurface *surface ) {
     if ( nullptr == s_instance ) {
-        s_instance = new UiItemFactory;
+        s_instance = new UiItemFactory( surface );
     }
 
     return s_instance;
 }
 
-void UiItemFactory::destroy() {
+void UiItemFactory::destroyInstance() {
     if ( nullptr != s_instance ) {
         delete s_instance;
         s_instance = nullptr;
     }
 }
+
 UiItemFactory *UiItemFactory::getInstance() {
     return s_instance;
 }
@@ -65,8 +71,11 @@ Widget *UiItemFactory::create( WidgetType type, const String &uiName, Widget *pa
         case WidgetType::Panel:
             item = new Panel( uiName, 0, parent );
             break;
-        case WidgetType::Screen:
-            item = new Screen( uiName, parent, w, h );
+        case WidgetType::Screen: {
+                const ui32 w( m_surface->getProperties()->m_width );
+                const ui32 h( m_surface->getProperties()->m_height );
+                item = new Screen( uiName, parent, w, h );
+            }
             break;
 
         default:
@@ -74,6 +83,15 @@ Widget *UiItemFactory::create( WidgetType type, const String &uiName, Widget *pa
     }
 
     return item;
+}
+
+UiItemFactory::UiItemFactory( AbstractSurface *surface )
+: m_surface( surface ) {
+    OSRE_ASSERT( nullptr != surface );
+}
+
+UiItemFactory::~UiItemFactory() {
+    // empty
 }
 
 }

@@ -730,21 +730,23 @@ bool OGLRenderBackend::bindTexture( OGLTexture *oglTexture, TextureStageType sta
 }
 
 void OGLRenderBackend::releaseTexture( OGLTexture *oglTexture ) {
-    if( m_textures[ oglTexture->m_slot ] ) {
-        glDeleteTextures( 1, &oglTexture->m_textureId );
-        oglTexture->m_textureId = OGLNotSetId;
-        oglTexture->m_width     = 0;
-        oglTexture->m_height    = 0;
-        oglTexture->m_channels  = 0;
-
-        m_freeTexSlots.add( oglTexture->m_slot );
-
-        std::map<String, ui32>::iterator it( m_texLookupMap.find( oglTexture->m_name ) );
-        if( m_texLookupMap.end() != it ) {
-            it = m_texLookupMap.erase( it );
-        }
-        oglTexture->m_slot = 0;
+    if ( nullptr == m_textures[ oglTexture->m_slot ] ) {
+        return;
     }
+        
+    glDeleteTextures( 1, &oglTexture->m_textureId );
+    oglTexture->m_textureId = OGLNotSetId;
+    oglTexture->m_width     = 0;
+    oglTexture->m_height    = 0;
+    oglTexture->m_channels  = 0;
+
+    m_freeTexSlots.add( oglTexture->m_slot );
+
+    std::map<String, ui32>::iterator it( m_texLookupMap.find( oglTexture->m_name ) );
+    if( m_texLookupMap.end() != it ) {
+        it = m_texLookupMap.erase( it );
+    }
+    oglTexture->m_slot = 0;
 }
 
 void OGLRenderBackend::releaseAllTextures( ) {

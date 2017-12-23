@@ -297,6 +297,7 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
     if ( !m_isRunning ) {
         return true;
     }
+
     if ( OnAttachEventHandlerEvent == ev ) {
         result = onAttached( data );
     } else if ( OnDetatachEventHandlerEvent == ev ) {
@@ -323,18 +324,10 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
 }
 
 void OGLRenderEventHandler::setActiveShader( OGLShader *oglShader ) {
-    if ( nullptr == m_renderCmdBuffer ) {
-        osre_error( Tag, "Renderer not up and running." );
-        return;
-    }
     m_renderCmdBuffer->setActiveShader( oglShader );
 }
 
 void OGLRenderEventHandler::enqueueRenderCmd( OGLRenderCmd *oglRenderCmd ) {
-    if ( nullptr == m_renderCmdBuffer ) {
-        osre_error( Tag, "Renderer not up and running." );
-        return;
-    }
     m_renderCmdBuffer->enqueueRenderCmd( "pass0", oglRenderCmd );
 }
 

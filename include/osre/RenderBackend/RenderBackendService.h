@@ -161,6 +161,10 @@ public:
 
     void setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray );
 
+    void pushWorldTransform( const glm::mat4 &matrix );
+    void popWorldTransform();
+    const glm::mat4 &getTopWorldTransform() const;
+
     void attachGeo( Geometry *geo, ui32 numInstances );
 
     void attachGeo( const CPPCore::TArray<Geometry*> &geoArray, ui32 numInstances );
@@ -198,6 +202,7 @@ private:
     CPPCore::TArray<GeoInstanceData*> m_newInstances;
     CPPCore::THashMap<ui32, UniformVar*> m_variables;
     CPPCore::TArray<UniformVar*> m_uniformUpdates;
+    CPPCore::TArray<glm::mat4> m_transformStack;
 };
 
 } // Namespace RenderBackend

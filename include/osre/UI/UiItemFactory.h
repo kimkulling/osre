@@ -23,28 +23,34 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <osre/ui/Widget.h>
 
 namespace OSRE {
-    namespace UI {
-        class Widget;
 
-        enum class WidgetType {
-            Button,
-            Text,
-            Image,
-            Panel,
-            Screen
-        };
+namespace Platform {
+    class AbstractSurface;
+}
 
-        class UiItemFactory {
-        public:
-            static UiItemFactory *create();
-            static void destroy();
-            static UiItemFactory *getInstance();
-            Widget *create( WidgetType type, const String &uiName, Widget *parent );
+namespace UI {
 
-        private:
-            static UiItemFactory *s_instance;
-        };
-    }
+class Widget;
+
+class UiItemFactory {
+public:
+    static UiItemFactory *createInstance( Platform::AbstractSurface *surface );
+    static void destroyInstance();
+    static UiItemFactory *getInstance();
+    Widget *create( WidgetType type, const String &uiName, Widget *parent );
+
+private:
+    UiItemFactory( Platform::AbstractSurface *surface );
+    ~UiItemFactory();
+
+private:
+    static UiItemFactory *s_instance;
+
+    Platform::AbstractSurface *m_surface;
+};
+
+}
 }
