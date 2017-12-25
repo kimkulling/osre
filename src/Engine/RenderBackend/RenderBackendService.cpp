@@ -240,7 +240,13 @@ void RenderBackendService::popWorldTransform() {
     }
 }
 
+static const glm::mat4 Error( 1 );
+
 const glm::mat4 &RenderBackendService::getTopWorldTransform() const {
+    if ( m_transformStack.isEmpty() ) {
+        return Error;
+    }
+
     return m_transformStack.back();
 }
 
