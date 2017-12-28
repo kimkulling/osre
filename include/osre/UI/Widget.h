@@ -156,7 +156,7 @@ struct UiRenderCmd {
     UiRenderCmd();
     ~UiRenderCmd();
 
-    OSRE_NON_COPYABLE( UiRenderCmd );
+    OSRE_NON_COPYABLE( UiRenderCmd )
 };
 
 using UiRenderCmdCache = CPPCore::TArray<UiRenderCmd*>;

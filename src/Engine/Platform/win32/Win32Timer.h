@@ -40,7 +40,7 @@ public:
 	///	The class destructor.
 	~Win32Timer();
 	///	Seconds getter.
-	d32 getCurrentSeconds() override;
+	d32 getMilliCurrentSeconds() override;
 	///	Time difference getter.
 	d32 getTimeDiff() override;
 

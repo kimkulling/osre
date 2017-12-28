@@ -27,39 +27,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-static d32 InvSecToMSec = 1.0/1000.0;
-
-//-------------------------------------------------------------------------------------------------
 SDL2Timer::SDL2Timer()
 : AbstractTimer( "platform/sdl2timer" )
 , m_lasttick( 0 ){
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 SDL2Timer::~SDL2Timer( ) {
-
+    // empty
 }
 
-//-------------------------------------------------------------------------------------------------
-d32 SDL2Timer::getCurrentSeconds( ) {
-    m_lasttick = ( ( d32 ) SDL_GetTicks() ) * InvSecToMSec;
-    return (  m_lasttick ) ;
+d32 SDL2Timer::getMilliCurrentSeconds( ) {
+    d32 ticks =  ( d32 ) SDL_GetTicks()/1000.0;
+    return ticks;
 }
 
-//-------------------------------------------------------------------------------------------------
 d32 SDL2Timer::getTimeDiff( ) {
-    d32 last( m_lasttick );
-    d32 current = getCurrentSeconds();
-    d32 diff = current - last;
-    if( diff > 1000.0 ) {
-        return AbstractTimer::getRequestedTimeStep();
+    d32 currentTime = getMilliCurrentSeconds();
+    if ( m_lasttick == 0.0 ) {
+        m_lasttick = currentTime;
+        return 0.0;
     } else {
-        return current - last;
+        d32 diff( currentTime - m_lasttick );
+        if( diff > 1000.0 ) {
+            diff = AbstractTimer::getRequestedTimeStep();
+        }
+        m_lasttick = currentTime;
+        return diff;
     }
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

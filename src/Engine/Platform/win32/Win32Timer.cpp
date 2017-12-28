@@ -38,7 +38,7 @@ Win32Timer::~Win32Timer() {
     // empty
 }
 
-d32 Win32Timer::getCurrentSeconds() {
+d32 Win32Timer::getMilliCurrentSeconds() {
     LARGE_INTEGER currentTime;
     QueryPerformanceCounter( &currentTime );
     const d32 secs = static_cast<d32>( ( currentTime.QuadPart - m_globeTime.QuadPart ) ) 
@@ -48,7 +48,7 @@ d32 Win32Timer::getCurrentSeconds() {
 }
 
 d32 Win32Timer::getTimeDiff() {
-    d32 currentTime = getCurrentSeconds();
+    d32 currentTime = getMilliCurrentSeconds();
     if ( m_LastTime == 0.0 ) {
         m_LastTime = currentTime;
         return 0.0;

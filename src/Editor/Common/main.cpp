@@ -22,7 +22,7 @@ static const String SupportedArgs = "help:api:gen_project:asset_path";
 static const String Descs         = "Shows the help:The render API:Generates a template project:Path to media";
 static const String Tag = "osre_ed";
 
-class osre_ed : public App::AppBase {
+class EditorApp : public App::AppBase {
     World             *m_world;
     AssetDataArchive  *m_project;
     IO::Uri            m_projecUri;
@@ -31,7 +31,7 @@ class osre_ed : public App::AppBase {
     RenderBackend::TransformMatrixBlock m_transformMatrix;
 
 public:
-    osre_ed( int argc, char *argv[] )
+    EditorApp( int argc, char *argv[] )
     : AppBase( argc, argv, SupportedArgs, Descs )
     , m_world( nullptr )
     , m_project( nullptr )
@@ -39,7 +39,7 @@ public:
         // empty
     }
 
-    virtual ~osre_ed() {
+    virtual ~EditorApp() {
         // empty
     }
 
@@ -142,4 +142,4 @@ protected:
     }
 };
 
-OSRE_MAIN( osre_ed )
+OSRE_MAIN( EditorApp )

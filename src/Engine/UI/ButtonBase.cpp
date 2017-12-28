@@ -109,8 +109,6 @@ void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::Rend
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const Rect2ui &rect( getRect() );
 
-    const String &label( getLabel() );
-
     UiVertexCache vertexCache;
     UiIndexCache indexCache;
     UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, getStackIndex(), 

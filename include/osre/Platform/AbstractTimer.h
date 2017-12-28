@@ -44,9 +44,9 @@ public:
     ///	@brief	Destructor, virtual.
     virtual ~AbstractTimer();
 
-    ///	@brief	Returns the seconds since starting the application.
+    ///	@brief	Returns the milli-seconds since starting the application.
     ///	@return	Seconds past since starting the application.
-    virtual d32 getCurrentSeconds() = 0;
+    virtual d32 getMilliCurrentSeconds() = 0;
 
     ///	@brief	Returns the difference since the last call of getTimeDiff.
     ///	@return	The time difference.

@@ -93,7 +93,6 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
 
     const i32 stackId( getStackIndex() );
     const f32 z(-1.0f* static_cast<f32>( stackId ) );
-    RenderBackend::RenderVert *verts;
     f32 x( Widget::getRect().getX1() );
     f32 y( Widget::getRect().getY1() );
     WidgetCoordMapping::mapPosToWorld( x, y, x, y );

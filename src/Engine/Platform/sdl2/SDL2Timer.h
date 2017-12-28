@@ -37,7 +37,7 @@ class SDL2Timer : public AbstractTimer {
 public:
     SDL2Timer();
     virtual ~SDL2Timer();
-    d32 getCurrentSeconds() override;
+    d32 getMilliCurrentSeconds() override;
     d32 getTimeDiff() override;
 
 private:
