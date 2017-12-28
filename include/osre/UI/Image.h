@@ -1,7 +1,7 @@
 #pragma once
 
 #include <osre/UI/Widget.h>
-#include <osre/io/Uri.h>
+#include <osre/IO/Uri.h>
 
 namespace OSRE {
 namespace UI {

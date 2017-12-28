@@ -28,7 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/UI/Screen.h>
 #include <osre/UI/ButtonBase.h>
-#include <osre/ui/TextBase.h>
+#include <osre/UI/TextBase.h>
 #include <osre/UI/Panel.h>
 #include <osre/Platform/PlatformOperations.h>
 

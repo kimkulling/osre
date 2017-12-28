@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-#include <osre/ui/Widget.h>
+#include <osre/UI/Widget.h>
 
 namespace OSRE {
 

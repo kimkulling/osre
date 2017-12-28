@@ -74,7 +74,7 @@ TRay<T>::~TRay() {
 template<class T>
 inline
 TVec3<T> TRay<T>::validate( T time ) {
-    const TVec3<T> res = m_origin + t * m_direction;
+    const TVec3<T> res = m_origin + time * m_direction;
     return res;
 }
 

@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractSurface.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/ui/TextBase.h>
+#include <osre/UI/TextBase.h>
 
 #include "UIRenderUtils.h"
 
