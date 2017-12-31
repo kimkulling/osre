@@ -37,6 +37,7 @@ namespace OSRE {
 #if defined( _WIN32 ) || defined( _WIN64 )
 #   define OSRE_WINDOWS
 #   define _CRT_SECURE_NO_WARNINGS
+#   define WIN32_LEAN_AND_MEAN
 #elif defined(__gnu_linux__)
 #   define OSRE_GNU_LINUX
 #elif defined(__APPLE__) || defined (__MACH__)

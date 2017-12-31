@@ -445,7 +445,6 @@ struct OSRE_EXPORT TransformBlock {
     ~TransformBlock();
     void toMatrix(glm::mat4 &m);
 
-
     OSRE_NON_COPYABLE( TransformBlock )
 };
 
@@ -488,6 +487,8 @@ struct Canvas {
     ui32 m_width;
     ui32 m_height;
     ui32 m_z;
+
+    OSRE_NON_COPYABLE( Canvas )
 };
 
 template<class T>
