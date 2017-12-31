@@ -350,6 +350,14 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
 )
+#==============================================================================
+# Scripting with Mono
+#==============================================================================
+SET( scripting_mono_src
+)
+SET( scripting_mono_inc
+	${HEADER_PATH}/Scripting/osre_scripting.h
+)
 
 #==============================================================================
 # UI
@@ -447,6 +455,7 @@ SOURCE_GROUP( Include\\Profiling     FILES ${profiling_inc} )
 SOURCE_GROUP( Include\\Resources     FILES ${resources_inc} )
 SOURCE_GROUP( Include\\RenderBackend FILES ${renderbackend_inc} )
 SOURCE_GROUP( Include\\Scene         FILES ${scene_inc} )
+SOURCE_GROUP( Include\\Scripting     FILES ${scripting_mono_inc} )
 SOURCE_GROUP( Include\\Thread        FILES ${threading_inc} )
 SOURCE_GROUP( Include\\UI            FILES ${ui_inc} )
 
@@ -476,6 +485,7 @@ ADD_LIBRARY( osre SHARED
     ${profiling_inc}
     ${resources_inc}
     ${scene_inc}
+	${scripting_mono_inc}
     ${threading_inc}
     ${renderbackend_inc}
     ${ui_inc}
