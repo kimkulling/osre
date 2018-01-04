@@ -318,10 +318,10 @@ Geometry *GeometryBuilder::allocPoints( VertexType type, BufferAccessType access
     Geometry *ptGeo = GeometryBuilder::allocEmptyGeometry( type, 1 );
 
     ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, numPoints, posArray, 
-                        colorArray, nullptr, BufferAccessType::ReadOnly );
+                        colorArray, nullptr, access );
     ptGeo->m_indextype = IndexType::UnsignedShort;
     ui32 pt_size = sizeof( GLushort ) * numPoints;
-    ptGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, BufferAccessType::ReadOnly );
+    ptGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, access );
     ptGeo->m_ib->copyFrom( &indices[0], pt_size );
 
     // setup primitives
@@ -472,8 +472,13 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     return geo;
 }
 
-void GeometryBuilder::updateTextBox( RenderBackend::Geometry *geo, f32 textSize, const String &text, bool resize ) {
-    ui32 numTextVerts( getNumTextVerts( text ) );
+void GeometryBuilder::updateTextBox( Geometry *geo, f32 textSize, const String &text, bool resize ) {
+    if ( nullptr == geo ) {
+        osre_debug( Tag, "Pointer to geometry is nullptr." );
+        return;
+    }
+
+    const ui32 numTextVerts( getNumTextVerts( text ) );
     glm::vec2 *tex0 = new glm::vec2[ numTextVerts ];
 
     // setup triangle vertices    

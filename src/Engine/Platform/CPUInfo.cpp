@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Platform/CPUInfo.h>
 #ifdef OSRE_WINDOWS
-#  include <windows.h>
+#  include <osre/Platform/Windows/MinWindows.h>
 #else
 #   include <unistd.h>
 #endif

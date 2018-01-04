@@ -52,7 +52,6 @@ SET( assets_inc
     ${HEADER_PATH}/Assets/AssimpWrapper.h
     ${HEADER_PATH}/Assets/Model.h
 )
-
 SET( assets_src
     Assets/AssetRegistry.cpp
     Assets/AssetDataArchive.cpp
@@ -182,6 +181,9 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/PluginType.h
     ${HEADER_PATH}/Platform/PlatformInterface.h
     ${HEADER_PATH}/Platform/PlatformOperations.h
+)
+SET( platform_win_inc
+	${HEADER_PATH}/Platform/Windows/MinWindows.h
 )
 SET( platform_src
     Platform/CPUInfo.cpp
@@ -451,6 +453,7 @@ SOURCE_GROUP( Include\\Math          FILES ${math_inc} )
 SOURCE_GROUP( Include\\Memory        FILES ${memory_inc} )
 SOURCE_GROUP( Include\\Properties    FILES ${properties_inc} )
 SOURCE_GROUP( Include\\Platform      FILES ${platform_inc} )
+SOURCE_GROUP( Include\\Platform\\Windows FILES ${platform_win_inc} )
 SOURCE_GROUP( Include\\Profiling     FILES ${profiling_inc} )
 SOURCE_GROUP( Include\\Resources     FILES ${resources_inc} )
 SOURCE_GROUP( Include\\RenderBackend FILES ${renderbackend_inc} )
@@ -482,6 +485,7 @@ ADD_LIBRARY( osre SHARED
     ${utils_inc}
     ${properties_inc}
     ${platform_inc}
+	${platform_win_inc}
     ${profiling_inc}
     ${resources_inc}
     ${scene_inc}

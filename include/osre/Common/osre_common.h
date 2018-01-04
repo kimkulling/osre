@@ -37,7 +37,9 @@ namespace OSRE {
 #if defined( _WIN32 ) || defined( _WIN64 )
 #   define OSRE_WINDOWS
 #   define _CRT_SECURE_NO_WARNINGS
-#   define WIN32_LEAN_AND_MEAN
+#   ifndef WIN32_LEAN_AND_MEAN 
+#       define WIN32_LEAN_AND_MEAN // Minimal windows header
+#   endif // WIN32_LEAN_AND_MEAN
 #elif defined(__gnu_linux__)
 #   define OSRE_GNU_LINUX
 #elif defined(__APPLE__) || defined (__MACH__)
@@ -63,13 +65,13 @@ namespace OSRE {
 
 #if _MSC_VER >= 1200
 #  pragma warning( disable : 4006 ) // Ignore double defined symbols warning
-#  pragma warning( disable : 4786 )
-#  pragma warning( disable : 4251 )
-#  pragma warning( disable : 4275 )
+#  pragma warning( disable : 4786 ) // Identifier was truncated to 'number' characters in the debug information
+#  pragma warning( disable : 4251 ) // class 'type' needs to have dll-interface to be used by clients of class 'type2'
+#  pragma warning( disable : 4275 ) // non – DLL-interface classkey 'identifier' used as base for DLL-interface classkey 'identifier'
 #  pragma warning( disable : 4127 )	// Conditional expression is constant
-#  pragma warning( disable : 4100 )
+//#  pragma warning( disable : 4100 ) // identifier' : unreferenced formal parameter
 #  pragma warning( disable : 4201 ) // No standard extension
-#  pragma warning( disable : 4316 )
+#  pragma warning( disable : 4316 ) // Object allocated on the heap may not be aligned for this type
 #endif
 
 // Declares thread-local data

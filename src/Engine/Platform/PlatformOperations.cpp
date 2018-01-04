@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Uri.h>
 
 #ifdef OSRE_WINDOWS
-#   include <Windows.h>
+#  include <osre/Platform/Windows/MinWindows.h>
 #   include <Commdlg.h>
 #endif // OSRE_WINDOWS
 

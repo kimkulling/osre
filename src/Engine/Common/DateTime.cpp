@@ -3,7 +3,7 @@
 #include <ctime>
 
 #ifdef OSRE_WINDOWS
-#  include <Windows.h>
+#  include <osre/Platform/Windows/MinWindows.h>
 #endif // OSRE_WINDOWS
 
 namespace OSRE {

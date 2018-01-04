@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cassert>
 
 #ifdef OSRE_WINDOWS
-#    include <Windows.h>
+#  include <osre/Platform/Windows/MinWindows.h>
 #else
 #   include <sys/time.h>
 #   include <sys/resource.h>

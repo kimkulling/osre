@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/SystemUtils.h>
 
 #ifdef OSRE_WINDOWS
-#   include <Windows.h>
+#  include <osre/Platform/Windows/MinWindows.h>
 #else
 #   include <time.h>
 #endif

@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "vulkan.h"
 #ifdef OSRE_WINDOWS
-#  include <windows.h>
+#  include <osre/Platform/Windows/MinWindows.h>
 #endif // OSRE_WINDOWS
 #include <cppcore/Container/TArray.h>
 
