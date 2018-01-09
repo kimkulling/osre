@@ -72,6 +72,7 @@ namespace OSRE {
 //#  pragma warning( disable : 4100 ) // identifier' : unreferenced formal parameter
 #  pragma warning( disable : 4201 ) // No standard extension
 #  pragma warning( disable : 4316 ) // Object allocated on the heap may not be aligned for this type
+#  pragma warning( disable : 4996 ) // 
 #endif
 
 // Declares thread-local data

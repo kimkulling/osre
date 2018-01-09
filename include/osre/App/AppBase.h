@@ -163,7 +163,7 @@ protected:
     virtual bool onDestroy();
 
     /// @brief  The onUpdate callback, override this for your own update stuff.
-    virtual void onUpdate( d32 timetick );
+    virtual void onUpdate();
 
     /// @brief  Argument parser getter.
     /// @return The argument parser.
@@ -178,8 +178,6 @@ private:
     };
 
     State m_state;
-    d32 m_timediff;
-
     Common::ArgumentParser m_argParser;
     Properties::Settings *m_settings;
     Platform::PlatformInterface *m_platformInterface;

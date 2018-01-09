@@ -53,6 +53,9 @@ public:
     virtual const glm::mat4 &getView() const;
     virtual const glm::mat4 &getProjection() const;
 
+protected:
+    void onUpdate( RenderBackend::RenderBackendService *renderBackendSrv );
+
 private:
     Node *m_node;
     glm::vec3 m_eye, m_center, m_up;

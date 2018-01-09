@@ -74,7 +74,7 @@ bool IOService::onClose() {
     return true;
 }
 
-bool IOService::onUpdate( d32 timeDiff ) {
+bool IOService::onUpdate() {
     return true;
 }
 

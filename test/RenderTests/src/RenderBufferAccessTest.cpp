@@ -155,7 +155,7 @@ public:
         return true;
     }
 
-    bool onRender( d32 timediff, RenderBackend::RenderBackendService *rbSrv) override {
+    bool onRender( RenderBackend::RenderBackendService *rbSrv) override {
         CPPCore::RandomGenerator generator;
         for (ui32 i = 0; i < NumPts; i++) {
             const f32 x = static_cast<f32>(generator.get(-10, 10) ) / 100.0f;

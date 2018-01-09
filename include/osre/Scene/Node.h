@@ -114,6 +114,9 @@ public:
     void setProperty( Properties::Property *prop );
     Properties::Property *getProperty(const String name) const;
 
+protected:
+    void onUpdate( RenderBackend::RenderBackendService *renderBackendSrv );
+
 private:
     CPPCore::TArray<Node*> m_children;
     Node *m_parent;

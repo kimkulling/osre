@@ -68,7 +68,7 @@ public:
         return true;
     }
 
-    bool onRender( d32 timediff, RenderBackend::RenderBackendService *rbSrv ) override {
+    bool onRender( RenderBackend::RenderBackendService *rbSrv ) override {
         m_frameCount++;
         std::stringstream stream;
         stream << std::setfill( '0' ) << std::setw( 3 ) << m_frameCount;

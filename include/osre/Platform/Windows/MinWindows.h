@@ -10,7 +10,9 @@
 #define OSRE_MINIMAL_WINDOWS_INCLUDE
 
 // WIN32_LEAN_AND_MEAN excludes rarely-used services from windows headers.
-#define WIN32_LEAN_AND_MEAN
+#ifndef WIN32_LEAN_AND_MEAN
+#   define WIN32_LEAN_AND_MEAN
+#endif // WIN32_LEAN_AND_MEAN
 
 // The below excludes some other unused services from the windows headers -- see windows.h for details.
 #define NOGDICAPMASKS			// CC_*, LC_*, PC_*, CP_*, TC_*, RC_

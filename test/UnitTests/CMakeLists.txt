@@ -1,4 +1,5 @@
-SET ( GTEST_PATH ../../3dparty/gmock-1.7.0/gtest/ )
+SET ( GMOCK_PATH ../../3dparty/gmock-1.7.0/ )
+SET ( GTEST_PATH ${GMOCK_PATH}gtest/ )
 
 if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
     find_package(Threads)
@@ -11,9 +12,11 @@ INCLUDE_DIRECTORIES(
     ../../3dparty/glew/include
     ../../3dparty/glm/
     ../../3dparty/soil/src
-    ${GTEST_PATH}
+    ${GMOCK_PATH}
+	${GTEST_PATH}
     ${GTEST_PATH}/include
     .././
+	src
 )
 
 SET ( unittest_assets_src
@@ -116,6 +119,7 @@ SOURCE_GROUP( src\\Scene                      FILES ${unittest_scene_src} )
 SOURCE_GROUP( src\\GTest                      FILES ${gtest_src} )
 
 ADD_EXECUTABLE( osre_unittest
+    src/osre_testcommon.h
     ${unittest_app_src}
 	${unittest_assets_src}    
     ${unittest_common_src}

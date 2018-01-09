@@ -118,7 +118,7 @@ bool RenderBackendService::onClose() {
     return true;
 }
 
-bool RenderBackendService::onUpdate( d32 timediff ) {
+bool RenderBackendService::onUpdate() {
     if ( !m_renderTaskPtr.isValid() ) {
         return false;
     }

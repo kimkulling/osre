@@ -186,7 +186,7 @@ public:
 protected:
     bool onOpen() override;
     bool onClose() override;
-    bool onUpdate( d32 timediff ) override;
+    bool onUpdate() override;
     virtual bool setupGfx( SurfaceProperties *props, bool polls );
 
 private:

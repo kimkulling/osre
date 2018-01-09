@@ -141,7 +141,7 @@ public:
         return true;
     }
 
-    bool onRender( d32 timediff, RenderBackendService *rbSrv ) override {
+    bool onRender( RenderBackendService *rbSrv ) override {
         glm::mat4 rot( 1.0 );
         rot = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
         for ( auto i = 0; i < NumInstances; i++ ) {

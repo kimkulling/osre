@@ -89,7 +89,6 @@ private:
 
 AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
 : m_state( State::Uninited )
-, m_timediff( 0.0 )
 , m_argParser( argc, argv, supportedArgs, desc )
 , m_settings( nullptr )
 , m_platformInterface( nullptr )
@@ -131,13 +130,11 @@ void AppBase::update() {
         osre_debug( Tag, "Set application state to running." );
     }
 
-    m_timediff = m_timer->getTimeDiff();
-
-    onUpdate( m_timediff );
+    onUpdate();
 }
 
 void AppBase::requestNextFrame() {
-    m_rbService->update( m_timediff );
+    m_rbService->update();
 }
 
 bool AppBase::handleEvents() {
@@ -146,7 +143,7 @@ bool AppBase::handleEvents() {
         return false;
     }
 
-    return m_platformInterface->update( m_timediff );
+    return m_platformInterface->update();
 }
 
 Properties::Settings *AppBase::getSettings() const {
@@ -326,7 +323,7 @@ bool AppBase::onDestroy() {
     return true;
 }
 
-void AppBase::onUpdate( d32 timetick ) {
+void AppBase::onUpdate() {
     if ( nullptr != m_world ) {
         m_world->update( m_rbService );
     }

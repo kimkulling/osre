@@ -53,9 +53,8 @@ public:
     virtual bool isOpen();
 
     ///	@brief	Will update the server.
-    ///	@param	timeDiff	[in] The time difference since the last update callback.
     ///	@return	true, if update callback was successful
-    virtual bool update( d32 timeDiff );
+    virtual bool update();
 
 protected:
     ///	@brief	The default class constructor.
@@ -73,7 +72,7 @@ protected:
     /// @brief  Override this method for the update callback.
     ///	@param	timeDiff	[in] The time difference since the last update callback.
     ///	@return	true, if update callback was successful
-    virtual bool onUpdate( d32 timediff ) = 0;
+    virtual bool onUpdate() = 0;
 
 private:
     bool m_isOpen;
@@ -117,12 +116,12 @@ bool AbstractService::isOpen() {
 }
 
 inline
-bool AbstractService::update(  d32 timeDiff ) {
+bool AbstractService::update() {
     if ( !isOpen() ) {
         return false;
     }
 
-    return onUpdate( timeDiff );
+    return onUpdate();
 }
 
 //-------------------------------------------------------------------------------------------------

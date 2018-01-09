@@ -261,16 +261,16 @@ LRESULT Win32Eventhandler::winproc( HWND hWnd, UINT Message, WPARAM wParam, LPAR
     return ::DefWindowProc( hWnd, Message, wParam, lParam );
 }
 
-bool Win32Eventhandler::onAttached( const Common::EventData *pEventData ) {
+bool Win32Eventhandler::onAttached( const EventData *eventData ) {
     return true;
 }
 
-bool Win32Eventhandler::onDetached( const Common::EventData *pEventData ) {
+bool Win32Eventhandler::onDetached( const EventData *eventData ) {
     return true;
 }
 
-void Win32Eventhandler::registerEventServer( Win32Eventhandler *pServer, HWND hWnd ) {
-    s_WindowsServerMap[ hWnd ] = pServer;
+void Win32Eventhandler::registerEventServer( Win32Eventhandler *server, HWND hWnd ) {
+    s_WindowsServerMap[ hWnd ] = server;
 }
 
 void Win32Eventhandler::unregisterEventServer( Win32Eventhandler *pServer, HWND hWnd ) {

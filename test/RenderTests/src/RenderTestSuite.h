@@ -65,7 +65,7 @@ public:
     void setMediaPath( const String &mediaPath );
     const String &getMediaPath() const;
     Platform::AbstractTimer *getTimer( ) const;
-    bool update( d32 timediff );
+    bool update();
     bool clearTestEnv();
     bool requestNextTest( ui32 &next );
     RenderTestSuite() = delete;

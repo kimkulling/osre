@@ -100,14 +100,14 @@ protected:
         return true;
     }
 
-    void onUpdate( d32 timetick) override {
+    void onUpdate() override {
         ui32 fps( 0 );
         Profiling::PerformanceCounters::queryCounter( "fps", fps );
         std::stringstream stream;
         stream << std::setfill( '0' ) << std::setw( 2 ) << fps;
         //Scene::DbgRenderer::getInstance()->renderDbgText( 10, 10, 1, stream.str() );
 
-        AppBase::onUpdate( timetick );
+        AppBase::onUpdate();
     }
 };
 

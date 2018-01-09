@@ -161,7 +161,7 @@ public:
         return true;
     }
 
-    bool onRender( d32 timediff, RenderBackendService *rbSrv ) override {
+    bool onRender( RenderBackendService *rbSrv ) override {
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
         rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );

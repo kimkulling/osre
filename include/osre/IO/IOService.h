@@ -58,8 +58,7 @@ public:
     bool onClose();
     
     ///	@brief	The update callback, will be called once per frame.
-    ///	@param	timeDiff	[in] The time passed since the last update was triggered.
-    bool onUpdate( d32 timeDiff );
+    bool onUpdate();
 
     /// @brief  A new file system will be added.
     ///	@param	name		[in] The name of the new file system.

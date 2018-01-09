@@ -121,8 +121,7 @@ public:
         return true;
     }
 
-    bool onRender( d32 timediff, RenderBackend::RenderBackendService *rbSrv ) override {
-
+    bool onRender( RenderBackend::RenderBackendService *rbSrv ) override {
         m_particeGen->update( NumPts );
 
         return true;

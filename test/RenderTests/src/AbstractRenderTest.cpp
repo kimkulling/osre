@@ -56,29 +56,29 @@ bool AbstractRenderTest::destroy( RenderBackendService *pRenderBackendSrv ) {
     return onDestroy( pRenderBackendSrv );
 }
 
-bool AbstractRenderTest::render( d32 timediff, RenderBackendService *pRenderBackendSrv ) {
-    OSRE_ASSERT( nullptr != pRenderBackendSrv );
+bool AbstractRenderTest::render( RenderBackendService *rbSrv ) {
+    OSRE_ASSERT( nullptr != rbSrv );
 
-    return onRender( timediff, pRenderBackendSrv );
+    return onRender( rbSrv );
 }
 
-bool AbstractRenderTest::onCreate( RenderBackendService *rb ) {
+bool AbstractRenderTest::onCreate( RenderBackendService * ) {
     return true;
 }
 
-bool AbstractRenderTest::onDestroy( RenderBackendService *rv ) {
+bool AbstractRenderTest::onDestroy( RenderBackendService * ) {
     return true;
 }
 
-bool AbstractRenderTest::onRender( d32 timediff, RenderBackendService *rb ) {
+bool AbstractRenderTest::onRender( RenderBackendService * ) {
     return true;
 }
 
-void AbstractRenderTest::setup( RenderBackendService *pRenderBackendSrv ) {
+void AbstractRenderTest::setup( RenderBackendService * ) {
     // empty
 }
 
-void AbstractRenderTest::teardown( RenderBackendService *pRenderBackendSrv ) {
+void AbstractRenderTest::teardown( RenderBackendService * ) {
     // empty
 }
 

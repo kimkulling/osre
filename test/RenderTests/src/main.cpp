@@ -63,7 +63,7 @@ int main( int argc, char *argv[] ) {
         return 1;
     }
 
-    while( rtSuite->update( timer->getTimeDiff( ) ) ) {
+    while( rtSuite->update() ) {
         rtSuite->startTests();
     }
 

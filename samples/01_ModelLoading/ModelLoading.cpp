@@ -46,8 +46,8 @@ using namespace ::OSRE::Scene;
 // To identify local log entries 
 static const String Tag = "ModelLoadingApp"; 
 
-static const String ModelPath = "file://assets/Models/Obj/box.obj";
-//static const String ModelPath = "file://assets/Models/Obj/spider.obj";
+//static const String ModelPath = "file://assets/Models/Obj/box.obj";
+static const String ModelPath = "file://assets/Models/Obj/spider.obj";
 
 // The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
@@ -121,7 +121,7 @@ protected:
                 
                 m_transformMatrix.m_model = glm::mat4(1.0f);
                 m_transformMatrix.m_projection = glm::perspective(glm::radians(60.0f), aspect, zNear, zFar);
-                m_transformMatrix.m_view = glm::lookAt(eye, c, up);;
+                m_transformMatrix.m_view = glm::lookAt(eye, c, up);
                 m_transformMatrix.update();
                 rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
 
@@ -136,7 +136,7 @@ protected:
         return true;
     }
 
-    void onUpdate( d32 timetick ) override {
+    void onUpdate() override {
         glm::mat4 rot( 1.0 );
         m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
@@ -144,7 +144,7 @@ protected:
         RenderBackendService *rbSrv( getRenderBackendService() );
 
         AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
-        AppBase::onUpdate( timetick );
+        AppBase::onUpdate();
     }
 };
 

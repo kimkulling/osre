@@ -187,7 +187,7 @@ protected:
     virtual bool onClose();
     
     /// @brief  The update callback.
-    virtual bool onUpdate( d32 timediff );
+    virtual bool onUpdate();
 
     /// @brief  Will apply all used parameters
     void commitNextFrame();

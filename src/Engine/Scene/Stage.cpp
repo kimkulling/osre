@@ -183,6 +183,8 @@ void Stage::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
     }
 
     updateNode( m_root, true, m_rbService );
+
+    onUpdate( renderBackendSrv );
 }
 
 void Stage::setIdContainer( Common::Ids &ids ) {
@@ -191,6 +193,10 @@ void Stage::setIdContainer( Common::Ids &ids ) {
 
 Common::Ids *Stage::getIdContainer() const {
     return m_ids;
+}
+
+void Stage::onUpdate( RenderBackend::RenderBackendService *renderBackendSrv ) {
+    // emtpy
 }
 
 } // Namespace Scene

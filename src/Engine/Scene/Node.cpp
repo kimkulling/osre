@@ -36,7 +36,8 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Assets;
 
-Node::Node( const String &name, Common::Ids &ids, RenderCompRequest renderEnabled, TransformCompRequest transformEnabled, Node *parent )
+Node::Node( const String &name, Ids &ids, RenderCompRequest renderEnabled, TransformCompRequest transformEnabled, 
+        Node *parent )
 : Object( name )
 , m_children()
 , m_parent( parent )
@@ -50,13 +51,13 @@ Node::Node( const String &name, Common::Ids &ids, RenderCompRequest renderEnable
         m_transformComp = new TransformComponent( m_ids->getUniqueId() );
         m_components.add( m_transformComp );
     }
+
 	if (RenderCompRequest::RenderCompRequested == renderEnabled ) {
         m_renderComp = new RenderComponent( m_ids->getUniqueId() );
         m_components.add( m_renderComp );
     }
 
     if ( nullptr != m_parent ) {
-        m_parent = parent;
         m_parent->addChild( this );
     }
 }
@@ -91,7 +92,6 @@ void Node::addChild( Node *child ) {
     }
 
     m_children.add( child );
-    //child->setParent( this );
     child->get();
 }
 
@@ -181,6 +181,12 @@ void Node::addGeometry( RenderBackend::Geometry *geo ) {
 }
 
 void Node::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
+    if ( nullptr == renderBackendSrv ) {
+        return;
+    }
+
+    onUpdate( renderBackendSrv );
+
     // at first we need to update the transformations
     if ( nullptr != m_transformComp ) {
         m_transformComp->update( renderBackendSrv );
@@ -227,6 +233,10 @@ Properties::Property *Node::getProperty(const String name) const {
     }
 
     return nullptr;
+}
+
+void Node::onUpdate( RenderBackendService *renderBackendSrv ) {
+    // empty
 }
 
 } // Namespace Scene

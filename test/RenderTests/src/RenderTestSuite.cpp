@@ -240,7 +240,7 @@ AbstractTimer *RenderTestSuite::getTimer() const {
     return m_pTimer;
 }
 
-bool RenderTestSuite::update( d32 timediff ) {
+bool RenderTestSuite::update() {
     if( !m_pPlatformInterface ) {
         return false;
     }
@@ -251,7 +251,7 @@ bool RenderTestSuite::update( d32 timediff ) {
     AbstractPlatformEventHandler *pEvHandler = m_pPlatformInterface->getPlatformEventHandler( );
     pEvHandler->registerEventListener( eventArray, m_pListener );
 
-    while( m_pPlatformInterface->update( timediff ) ) {
+    while( m_pPlatformInterface->update() ) {
         if( m_activeTestIdx == AllTestsDone ) {
             break;
         }
@@ -270,10 +270,10 @@ bool RenderTestSuite::update( d32 timediff ) {
         
         if( m_pActiveRenderTest ) {
             m_pActiveRenderTest->setup( m_pRenderBackendServer );
-            if( !m_pActiveRenderTest->render( timediff, m_pRenderBackendServer ) ) {
+            if( !m_pActiveRenderTest->render( m_pRenderBackendServer ) ) {
                 addFailureLog( "Error : Cannot render test " + m_pActiveRenderTest->getTestName( ) + "\n" );
             }
-            m_pRenderBackendServer->update( timediff );
+            m_pRenderBackendServer->update();
 
             m_pActiveRenderTest->teardown( m_pRenderBackendServer );
         }

@@ -20,7 +20,8 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <gtest/gtest.h>
+#include "osre_testcommon.h"
+//#include <gmock>
 
 #include <osre/Scene/Node.h>
 #include <osre/Common/Ids.h>
@@ -80,7 +81,6 @@ TEST_F( NodeTest, createTest ) {
         ok = false;
     }
     EXPECT_TRUE( ok );
-
 }
 
 TEST_F( NodeTest, accessChilds ) {
@@ -114,6 +114,12 @@ TEST_F( NodeTest, activeTest ) {
 
     myNode->setActive( false );
     EXPECT_FALSE( myNode->isActive() );
+}
+
+TEST_F( NodeTest, onUpdateTest ) {
+    Node *myNode = createNode( "parent", *m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, nullptr );
+
+//    myNode->update()
 }
 
 } // Namespace UnitTest

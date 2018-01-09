@@ -108,6 +108,9 @@ public:
     virtual void setIdContainer( Common::Ids &ids );
     virtual Common::Ids *getIdContainer() const;
 
+protected:
+    virtual void onUpdate( RenderBackend::RenderBackendService *renderBackendSrv );
+
 private:
     Node *m_root;
     CPPCore::TArray<View*> m_views;

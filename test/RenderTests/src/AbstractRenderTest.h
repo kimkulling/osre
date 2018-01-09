@@ -56,10 +56,9 @@ public:
     bool destroy( RenderBackend::RenderBackendService *rbSrv );
     
     /// @brief  Will render the rendertest.
-    /// @param  timediff    [in] The timediff since the last frame.
     /// @param  rbSrv       [in] The render backend to use.
     /// @return true if successful.
-    bool render( d32 timediff, RenderBackend::RenderBackendService *rbSrv );
+    bool render( RenderBackend::RenderBackendService *rbSrv );
 
     ///	@brief	Will create the render data.
     ///	@return	true if creation was successful, false if not.
@@ -96,10 +95,9 @@ protected:
     virtual bool onDestroy( RenderBackend::RenderBackendService *rbSrv );
 
     /// @brief  The onRender-callback.
-    /// @param  timediff    [in] The timediff since the last frame.
     /// @param  rbSrv       [in] The render backend to use.
     /// @return true if successful.
-    virtual bool onRender( d32 timediff, RenderBackend::RenderBackendService *rbSrv );
+    virtual bool onRender( RenderBackend::RenderBackendService *rbSrv );
 
     // Avoid copying
     AbstractRenderTest() = delete;

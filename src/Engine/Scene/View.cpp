@@ -21,11 +21,15 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/View.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/Logger.h>
+
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace OSRE {
 namespace Scene {
+
+using namespace ::OSRE::RenderBackend;
 
 static const String Tag = "View";
 
@@ -48,8 +52,15 @@ void View::observeNode( Node *node ) {
     m_node = node;
 }
 
-void View::update( RenderBackend::RenderBackendService *rbSrv ) {
-    m_view = glm::lookAt( m_eye, m_center, m_up );
+void View::update( RenderBackendService *rbSrv ) {
+    if ( nullptr == rbSrv ) {
+        return;
+    }
+    
+    onUpdate( rbSrv );
+
+    rbSrv->setMatrix( "P", m_projection );
+    rbSrv->setMatrix( "V", m_view );
 }
 
 void View::setLookAt( const glm::vec3 &eye, const glm::vec3 &center, const glm::vec3 &up ) {
@@ -74,6 +85,10 @@ const glm::mat4 &View::getView() const {
 
 const glm::mat4 &View::getProjection() const {
     return m_projection;
+}
+
+void View::onUpdate( RenderBackend::RenderBackendService *renderBackendSrv ) {
+    // empty
 }
 
 } // Namespace Scene

@@ -213,7 +213,7 @@ bool PlatformInterface::onClose( ) {
     return true;
 }
 
-bool PlatformInterface::onUpdate( d32 timediff ) {
+bool PlatformInterface::onUpdate() {
     Common::Event ev( "none" );
     return m_oseventHandler->onEvent( ev, nullptr );
 }
