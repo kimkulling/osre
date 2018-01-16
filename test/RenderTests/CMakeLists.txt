@@ -9,7 +9,8 @@ INCLUDE_DIRECTORIES(
 )
 
 SET ( rendertest_src
-    src/AbstractTestFixure.h
+    src/AABBDbgRenderTest.cpp
+	src/AbstractTestFixure.h
     src/AbstractRenderTest.cpp
     src/AbstractRenderTest.h
     src/UIRenderTest.cpp

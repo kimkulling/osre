@@ -330,8 +330,7 @@ Geometry *GeometryBuilder::allocPoints( VertexType type, BufferAccessType access
     ptGeo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, 3, PrimitiveType::PointList, 0 );
 
     // setup material
-    Material *mat = MaterialBuilder::createBuildinMaterial( type );
-    ptGeo->m_material = mat;
+    ptGeo->m_material = MaterialBuilder::createBuildinMaterial( type );;
 
     return ptGeo;
 }

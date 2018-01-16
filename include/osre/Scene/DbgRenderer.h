@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/osre_common.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Collision/TAABB.h>
 #include <cppcore/Container/THashMap.h>
 #include <cppcore/Container/TArray.h>
 
@@ -53,7 +54,9 @@ public:
     using TextBoxArray = CPPCore::TArray<DbgTextEntry*>;
 
     void renderDbgText( ui32 x, ui32 y, ui32 id, const String &text );
+    void renderAABB( const glm::mat4 &transform, const Collision::TAABB<f32> &aabb );
     void clearDbgTextCache();
+    void clearDbgRenderPass();
     ui32 numDbgTexts() const;
     static bool create( RenderBackend::RenderBackendService *rbSrv );
     static bool destroy();

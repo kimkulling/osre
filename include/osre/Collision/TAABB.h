@@ -80,20 +80,20 @@ inline
 
 template<class T>
 inline
-    TAABB<T>::~TAABB() {
+TAABB<T>::~TAABB() {
     // empty
 }
 
 template<class T>
 inline
-    void TAABB<T>::reset() {
+void TAABB<T>::reset() {
     m_min.set( 999999, 99999, 99999 );
     m_max.set( -999999, -99999, -99999 );
 }
 
 template<class T>
 inline
-    void TAABB<T>::set( const VecType &min, const VecType &max ) {
+void TAABB<T>::set( const VecType &min, const VecType &max ) {
     m_min = min;
     m_max = max;
 }

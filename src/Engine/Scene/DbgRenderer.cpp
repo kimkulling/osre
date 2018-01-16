@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/DbgRenderer.h>
+#include <osre/Scene/MaterialBuilder.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Debugging/osre_debugging.h>
@@ -117,6 +118,85 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
     }
 }
 
+void DbgRenderer::renderAABB( const glm::mat4 &transform, const Collision::TAABB<f32> &aabb ) {
+    Geometry *geo = GeometryBuilder::allocEmptyGeometry(VertexType::ColorVertex, 1);
+
+    static const ui32 NumVertices = 8;
+    ColorVert vertices[ NumVertices ];
+    const OSRE::Vec3f &min( aabb.getMin() );
+    const OSRE::Vec3f &max( aabb.getMax() );
+    f32 x0( min.getX() ), y0( min.getY() ), z0( min.getZ() ), x1( max.getX() ), y1( max.getY() ), z1 ( max.getZ() );
+    vertices[ 0 ].position.x = x0;
+    vertices[ 0 ].position.y = y0;
+    vertices[ 0 ].position.y = z0;
+
+    vertices[ 1 ].position.x = x1;
+    vertices[ 1 ].position.y = y0;
+    vertices[ 1 ].position.y = z0;
+
+    vertices[ 2 ].position.x = x1;
+    vertices[ 2 ].position.y = y1;
+    vertices[ 2 ].position.y = z0;
+
+    vertices[ 3 ].position.x = x0;
+    vertices[ 3 ].position.y = y1;
+    vertices[ 3 ].position.y = z0;
+
+    vertices[ 4 ].position.x = x0;
+    vertices[ 4 ].position.y = y0;
+    vertices[ 4 ].position.y = z1;
+
+    vertices[ 5 ].position.x = x1;
+    vertices[ 5 ].position.y = y0;
+    vertices[ 5 ].position.y = z1;
+
+    vertices[ 6 ].position.x = x1;
+    vertices[ 6 ].position.y = y1;
+    vertices[ 6 ].position.y = z1;
+
+    vertices[ 7 ].position.x = x0;
+    vertices[ 7 ].position.y = y1;
+    vertices[ 7 ].position.y = z1;
+
+
+    static const ui32 NumIndices = 24;
+    ui16 indices[ NumIndices ] = { 
+        0, 1, 
+        1, 2, 
+        2, 3, 
+        3, 0, 
+        4, 5, 
+        5, 6, 
+        6, 7, 
+        7, 5, 
+        0, 4, 
+        1, 5, 
+        2, 6, 
+        3, 7 
+    };
+
+    const size_t vertexSize( sizeof( ColorVert )*NumVertices );
+    geo->m_vb = BufferData::alloc( BufferType::VertexBuffer, vertexSize, BufferAccessType::ReadOnly );
+    geo->m_vb->copyFrom( &vertices[ 0 ], vertexSize );
+    const size_t indexSize( sizeof( ui16 )*NumIndices );
+    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, indexSize, BufferAccessType::ReadOnly );
+    geo->m_indextype = IndexType::UnsignedShort;
+    geo->m_ib->copyFrom( &indices[ 0 ], indexSize );
+
+    // setup primitives
+    geo->m_numPrimGroups = 1;
+    
+    geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
+    geo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, NumIndices, PrimitiveType::LineList, 0 );
+
+    // setup material
+    geo->m_material = MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
+
+    //geo->m_model = transform;
+
+    m_rbSrv->attachGeo( geo, 0 );
+}
+
 void DbgRenderer::clearDbgTextCache() {
     if ( m_textBoxes.isEmpty() ) {
         return;
@@ -131,6 +211,10 @@ void DbgRenderer::clearDbgTextCache() {
     m_textBoxes.init(100);
     m_tbArray.resize( 0 );
     m_textBoxes.init( 100 );
+}
+
+void DbgRenderer::clearDbgRenderPass() {
+
 }
 
 ui32 DbgRenderer::numDbgTexts() const {
