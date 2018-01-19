@@ -128,35 +128,35 @@ void DbgRenderer::renderAABB( const glm::mat4 &transform, const Collision::TAABB
     f32 x0( min.getX() ), y0( min.getY() ), z0( min.getZ() ), x1( max.getX() ), y1( max.getY() ), z1 ( max.getZ() );
     vertices[ 0 ].position.x = x0;
     vertices[ 0 ].position.y = y0;
-    vertices[ 0 ].position.y = z0;
+    vertices[ 0 ].position.z = z0;
 
     vertices[ 1 ].position.x = x1;
     vertices[ 1 ].position.y = y0;
-    vertices[ 1 ].position.y = z0;
+    vertices[ 1 ].position.z = z0;
 
     vertices[ 2 ].position.x = x1;
     vertices[ 2 ].position.y = y1;
-    vertices[ 2 ].position.y = z0;
+    vertices[ 2 ].position.z = z0;
 
     vertices[ 3 ].position.x = x0;
     vertices[ 3 ].position.y = y1;
-    vertices[ 3 ].position.y = z0;
+    vertices[ 3 ].position.z = z0;
 
     vertices[ 4 ].position.x = x0;
     vertices[ 4 ].position.y = y0;
-    vertices[ 4 ].position.y = z1;
+    vertices[ 4 ].position.z = z1;
 
     vertices[ 5 ].position.x = x1;
     vertices[ 5 ].position.y = y0;
-    vertices[ 5 ].position.y = z1;
+    vertices[ 5 ].position.z = z1;
 
     vertices[ 6 ].position.x = x1;
     vertices[ 6 ].position.y = y1;
-    vertices[ 6 ].position.y = z1;
+    vertices[ 6 ].position.z = z1;
 
     vertices[ 7 ].position.x = x0;
     vertices[ 7 ].position.y = y1;
-    vertices[ 7 ].position.y = z1;
+    vertices[ 7 ].position.z = z1;
 
 
     static const ui32 NumIndices = 24;
@@ -168,7 +168,7 @@ void DbgRenderer::renderAABB( const glm::mat4 &transform, const Collision::TAABB
         4, 5, 
         5, 6, 
         6, 7, 
-        7, 5, 
+        7, 4, 
         0, 4, 
         1, 5, 
         2, 6, 
