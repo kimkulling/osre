@@ -62,7 +62,7 @@ struct RenderCmdData3DView;
 struct Shader;
 struct UniformVar;
 struct PrimitiveGroup;
-struct FixedPipelineState;
+struct RenderStates;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -151,7 +151,7 @@ private:
     OGLShader                       *m_shaderInUse;
     CPPCore::TArray<ui32>            m_freeBufferSlots;
     CPPCore::TArray<OGLPrimGroup*>   m_primitives;
-    FixedPipelineState              *m_fpState;
+    RenderStates              *m_fpState;
     Profiling::FPSCounter           *m_fpsCounter;
 };
 

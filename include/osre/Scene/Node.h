@@ -45,7 +45,7 @@ namespace Properties {
 }
 
 namespace RenderBackend {
-    struct TransformBlock;
+    struct TransformState;
     struct Geometry;
 
     class RenderBackendService;

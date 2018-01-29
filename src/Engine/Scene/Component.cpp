@@ -84,11 +84,11 @@ void TransformComponent::update( RenderBackendService *renderBackendSrv ) {
 }
 
 void TransformComponent::setPosition( const glm::vec3 &pos ) {
-    m_localTransform.m_transform = glm::vec3( pos );
+    m_localTransform.m_translate = glm::vec3( pos );
 }
 
 const glm::vec3 &TransformComponent::getPosition() const {
-    return m_localTransform.m_transform;
+    return m_localTransform.m_translate;
 }
 
 void TransformComponent::setScale( const glm::vec3 &scale ) {

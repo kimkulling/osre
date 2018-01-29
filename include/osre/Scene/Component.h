@@ -100,7 +100,7 @@ public:
     const glm::vec3 &getScale() const;
 
 private:
-    RenderBackend::TransformBlock m_localTransform;
+    RenderBackend::TransformState m_localTransform;
 };
 
 //-------------------------------------------------------------------------------------------------

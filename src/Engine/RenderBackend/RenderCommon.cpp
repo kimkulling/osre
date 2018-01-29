@@ -440,16 +440,27 @@ GeoInstanceData::~GeoInstanceData() {
     m_data = nullptr;
 }
 
-TransformBlock::TransformBlock() {
+TransformState::TransformState() 
+: m_translate()
+, m_scale()
+, m_rotation() {
     // empty
 }
 
-TransformBlock::~TransformBlock() {
+TransformState::~TransformState() {
     // empty
 }
 
-void TransformBlock::toMatrix(mat4 &m) {
-    mat4 trans = glm::translate( m, m_transform );
+bool TransformState::operator == ( const TransformState &rhs ) const {
+    return ( m_translate == rhs.m_translate && m_scale == rhs.m_scale && m_rotation == rhs.m_rotation );
+}
+
+bool TransformState::operator != ( const TransformState &rhs ) const {
+    return !( *this == rhs );
+}
+
+void TransformState::toMatrix(mat4 &m) {
+    mat4 trans = glm::translate( m, m_translate );
     mat4 rot = mat4(1.0f);
     mat4 scale = glm::scale( m, m_scale);
     m = trans *rot * scale;

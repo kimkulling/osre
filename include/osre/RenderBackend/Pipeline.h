@@ -49,12 +49,13 @@ struct RenderTarget {
 };
 
 struct PipelineStates {
-    PolygonState m_polygonState;
-    CullState    m_cullState;
-    BlendState   m_blendState;
-    SamplerState m_samplerState;
-    ClearState   m_clearState;
-    StencilState m_stencilState;
+    TransformState m_transformState;
+    PolygonState   m_polygonState;
+    CullState      m_cullState;
+    BlendState     m_blendState;
+    SamplerState   m_samplerState;
+    ClearState     m_clearState;
+    StencilState   m_stencilState;
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -52,16 +52,18 @@ using namespace ::CPPCore;
 static const String Tag             = "OGLRenderBackend";
 static const ui32   NotInitedHandle = 9999999;
 
-struct FixedPipelineState {
-    PolygonState m_polygonState;
-    BlendState   m_blendState;
-    CullState    m_cullState;
-    SamplerState m_samplerState;
-    StencilState m_stensilState;
-    bool         m_applied;
+struct RenderStates {
+    TransformState m_transformState;
+    PolygonState   m_polygonState;
+    BlendState     m_blendState;
+    CullState      m_cullState;
+    SamplerState   m_samplerState;
+    StencilState   m_stensilState;
+    bool           m_applied;
 
-    FixedPipelineState()
-    : m_polygonState()
+    RenderStates()
+    : m_transformState()
+    , m_polygonState()
     , m_blendState()
     , m_cullState()
     , m_samplerState()
@@ -70,9 +72,10 @@ struct FixedPipelineState {
         // empty
     }
 
-    bool isEqual( const PolygonState &polygonState, const CullState &cullstate, const BlendState &blendState, 
+    bool isEqual( const TransformState &transformState, const PolygonState &polygonState, const CullState &cullstate, const BlendState &blendState, 
             const SamplerState &samplerState, const StencilState &stencilState ) const {
-        return ( polygonState  == m_polygonState
+        return ( transformState == m_transformState
+              && polygonState  == m_polygonState
               && blendState == m_blendState 
               && cullstate == m_cullState
               && samplerState == m_samplerState 
@@ -99,7 +102,7 @@ OGLRenderBackend::OGLRenderBackend( )
 , m_primitives()
 , m_fpState( nullptr )
 , m_fpsCounter( nullptr ) {
-    m_fpState = new FixedPipelineState;
+    m_fpState = new RenderStates;
 }
 
 OGLRenderBackend::~OGLRenderBackend( ) {
@@ -1036,7 +1039,7 @@ void OGLRenderBackend::setFixedPipelineStates( const PipelineStates &states ) {
     OSRE_ASSERT( nullptr != m_fpState );
 
     if ( m_fpState->m_applied ) {
-        if ( m_fpState->isEqual(states.m_polygonState, states.m_cullState, states.m_blendState, states.m_samplerState, states.m_stencilState ) ) {
+        if ( m_fpState->isEqual( states.m_transformState, states.m_polygonState, states.m_cullState, states.m_blendState, states.m_samplerState, states.m_stencilState ) ) {
             return;
         }
     }

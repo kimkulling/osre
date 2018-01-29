@@ -373,7 +373,7 @@ struct OSRE_EXPORT Shader {
 };
 
 ///	@brief
-enum class MaterialColorType : unsigned int {
+enum class MaterialColorType : ui32 {
     Mat_Diffuse = 0,            ///<
     Mat_Specular,               ///<
     Mat_Ambient,                ///<
@@ -436,16 +436,16 @@ struct OSRE_EXPORT GeoInstanceData {
 };
 
 ///	@brief
-struct OSRE_EXPORT TransformBlock {
-    glm::vec3 m_transform;
+struct OSRE_EXPORT TransformState {
+    glm::vec3 m_translate;
     glm::vec3 m_scale;
     glm::vec4 m_rotation;
 
-    TransformBlock();
-    ~TransformBlock();
+    TransformState();
+    ~TransformState();
     void toMatrix(glm::mat4 &m);
-
-    OSRE_NON_COPYABLE( TransformBlock )
+    bool operator == ( const TransformState &rhs ) const;
+    bool operator != ( const TransformState &rhs ) const;
 };
 
 ///	@brief

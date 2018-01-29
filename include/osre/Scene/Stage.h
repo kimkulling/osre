@@ -37,7 +37,7 @@ namespace Common {
 }
 
 namespace RenderBackend {
-    struct TransformBlock;
+    struct TransformState;
     class RenderBackendService;
 }
 
@@ -53,7 +53,7 @@ class View;
 //-------------------------------------------------------------------------------------------------
 struct TransformBlockCache {
     ui32 m_numBlocks;
-    RenderBackend::TransformBlock *m_blocks;
+    RenderBackend::TransformState *m_blocks;
 
     TransformBlockCache( ui32 numIniBlocks );
     ~TransformBlockCache();

@@ -42,7 +42,7 @@ TransformBlockCache::TransformBlockCache( ui32 numIniBlocks )
 : m_numBlocks( numIniBlocks )
 , m_blocks( nullptr ) {
     if( 0 != m_numBlocks ) {
-        m_blocks = new RenderBackend::TransformBlock[ m_numBlocks ];
+        m_blocks = new RenderBackend::TransformState[ m_numBlocks ];
     }
 }
 
