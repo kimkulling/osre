@@ -103,6 +103,8 @@ public:
     virtual void releaseChildren();
     virtual void addModel( Assets::Model *model );
     virtual void addGeometry( RenderBackend::Geometry *geo );
+    virtual ui32 getNumGeometries() const;
+    virtual RenderBackend::Geometry *getGeometryAt(ui32 idx) const;
     virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
     
 public:

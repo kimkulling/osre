@@ -180,6 +180,14 @@ void Node::addGeometry( RenderBackend::Geometry *geo ) {
     }
 }
 
+ui32 Node::getNumGeometries() const {
+    return m_renderComp->getNumGeometry();
+}
+
+RenderBackend::Geometry *Node::getGeometryAt(ui32 idx) const {
+    return m_renderComp->getGeoAt(idx);
+}
+
 void Node::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
     if ( nullptr == renderBackendSrv ) {
         return;

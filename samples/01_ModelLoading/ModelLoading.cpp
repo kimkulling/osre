@@ -46,8 +46,9 @@ using namespace ::OSRE::Scene;
 // To identify local log entries 
 static const String Tag = "ModelLoadingApp"; 
 
+static const String ModelPath = "file://assets/Models/Obj/Testwuson.X";
 //static const String ModelPath = "file://assets/Models/Obj/box.obj";
-static const String ModelPath = "file://assets/Models/Obj/spider.obj";
+//static const String ModelPath = "file://assets/Models/Obj/spider.obj";
 
 // The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
@@ -125,7 +126,8 @@ protected:
                 m_transformMatrix.update();
                 rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
 
-                rbSrv->attachGeo( geoArray, 0 );
+                renderNodes(model, rbSrv);
+                //rbSrv->attachGeo( geoArray, 0 );
             }
 
             m_stage = AppBase::createStage( "ModelLoading" );
@@ -134,6 +136,30 @@ protected:
         }
 
         return true;
+    }
+
+    void renderNode(Node *currentNode, RenderBackendService *rbSrv) {
+        const ui32 numGeo = currentNode->getNumGeometries();
+        for (ui32 i = 0; i < numGeo; ++i) {
+            rbSrv->attachGeo(currentNode->getGeometryAt(i), 0 );
+        }
+        for (ui32 i = 0; i < currentNode->getNumChilds(); ++i) {
+            Node *current = currentNode->getChildAt(i);
+            renderNode(current, rbSrv);
+        }
+    }
+
+    void renderNodes(Assets::Model *model, RenderBackendService *rbSrv) {
+        if (nullptr == model) {
+            return;
+        }
+
+        Node *root = model->getRootNode();
+        if (nullptr == root) {
+            return;
+        }
+
+        renderNode(root, rbSrv);
     }
 
     void onUpdate() override {

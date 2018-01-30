@@ -78,6 +78,8 @@ public:
     RenderComponent( ui32 id );
     virtual ~RenderComponent();
     void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
+    ui32 getNumGeometry() const;
+    RenderBackend::Geometry *getGeoAt(ui32 idx) const;
     void addStaticGeometry( RenderBackend::Geometry *geo );
 
 private:

@@ -68,6 +68,14 @@ void RenderComponent::addStaticGeometry( Geometry *geo ) {
     m_newGeo.add( geo );
 }
 
+ui32 RenderComponent::getNumGeometry() const {
+    return m_newGeo.size();
+}
+
+RenderBackend::Geometry *RenderComponent::getGeoAt(ui32 idx) const {
+    return m_newGeo[idx];
+}
+
 TransformComponent::TransformComponent( ui32 id )
 : Component( id )
 , m_localTransform() {
