@@ -46,9 +46,9 @@ using namespace ::OSRE::Scene;
 // To identify local log entries 
 static const String Tag = "ModelLoadingApp"; 
 
-static const String ModelPath = "file://assets/Models/Obj/Testwuson.X";
+//static const String ModelPath = "file://assets/Models/Obj/Testwuson.X";
 //static const String ModelPath = "file://assets/Models/Obj/box.obj";
-//static const String ModelPath = "file://assets/Models/Obj/spider.obj";
+static const String ModelPath = "file://assets/Models/Obj/spider.obj";
 
 // The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
@@ -127,8 +127,7 @@ protected:
                 rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
 
                 renderNodes(model, rbSrv);
-                //rbSrv->attachGeo( geoArray, 0 );
-            }
+             }
 
             m_stage = AppBase::createStage( "ModelLoading" );
             const String name(model->getRootNode()->getName());

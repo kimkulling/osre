@@ -91,6 +91,7 @@ private:
     Win32ThreadLocalStorage *m_tls;
     String                   m_ThreadName;
     ThreadId                 m_id;
+    ui32                     m_stacksize;
 };
 
 } // Namespace Platform

@@ -71,6 +71,7 @@ private:
 //-------------------------------------------------------------------------------------------------
 struct AbstractNodeFactory {
     String m_type;
+
     AbstractNodeFactory( const String &type )
     : m_type( type ) {
         // empty
@@ -112,9 +113,12 @@ protected:
     virtual void onUpdate( RenderBackend::RenderBackendService *renderBackendSrv );
 
 private:
+    using ViewArray = CPPCore::TArray<View*>;
+    using NodeFactoryMap = CPPCore::THashMap<ui32, AbstractNodeFactory*>;
+
     Node *m_root;
-    CPPCore::TArray<View*> m_views;
-    CPPCore::THashMap<ui32, AbstractNodeFactory*> m_registeredFactories;
+    ViewArray m_views;
+    NodeFactoryMap m_registeredFactories;
     TransformBlockCache m_transformBlocks;
     RenderBackend::RenderBackendService *m_rbService;
     Common::Ids *m_ids;

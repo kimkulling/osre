@@ -120,14 +120,17 @@ protected:
     void onUpdate( RenderBackend::RenderBackendService *renderBackendSrv );
 
 private:
-    CPPCore::TArray<Node*> m_children;
+    using ChildrenArray = CPPCore::TArray<Node*>;
+    using PropertyMap = CPPCore::THashMap<ui32, Properties::Property*>;
+
+    ChildrenArray m_children;
     Node *m_parent;
     bool m_isActive;
     RenderComponent *m_renderComp;
     TransformComponent *m_transformComp;
     CPPCore::TArray<Component*> m_components;
     Common::Ids *m_ids;
-    CPPCore::THashMap<ui32, Properties::Property*> m_propMap;
+    PropertyMap m_propMap;
     AABB m_aabb;
 };
 

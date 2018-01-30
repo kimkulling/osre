@@ -181,11 +181,19 @@ void Node::addGeometry( RenderBackend::Geometry *geo ) {
 }
 
 ui32 Node::getNumGeometries() const {
-    return m_renderComp->getNumGeometry();
+    if ( nullptr != m_renderComp ) {
+        return m_renderComp->getNumGeometry();
+    }
+
+    return 0;
 }
 
 RenderBackend::Geometry *Node::getGeometryAt(ui32 idx) const {
-    return m_renderComp->getGeoAt(idx);
+    if ( nullptr != m_renderComp ) {
+        return m_renderComp->getGeoAt( idx );
+    }
+
+    return nullptr;
 }
 
 void Node::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
