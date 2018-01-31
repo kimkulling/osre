@@ -224,14 +224,6 @@ Component *Node::getComponent( ComponentType type ) const {
     return nullptr;
 }
 
-void Node::setActive( bool isActive ) {
-    m_isActive = isActive;
-}
-
-bool Node::isActive() const {
-    return m_isActive;
-}
-
 void Node::setProperty( Properties::Property *prop) {
     const ui32 hashId( StringUtils::hashName( prop->getPropertyName().c_str() ) );
     m_propMap.insert( hashId, prop );

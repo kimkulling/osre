@@ -48,5 +48,5 @@ public:
     static RenderBackend::Material *createBuildinUiMaterial();
 };
 
-}
-}
+} // Namespace Scene
+} // namespace OSRE

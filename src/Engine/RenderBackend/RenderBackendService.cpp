@@ -161,7 +161,7 @@ static void setupGeoPackage(NewGeoEntry *newEntry, GeometryPackage *package ) {
 }
 
 void RenderBackendService::commitNextFrame() {
-     if ( !m_renderTaskPtr.isValid() ) {
+    if ( !m_renderTaskPtr.isValid() ) {
         return;
     }
         

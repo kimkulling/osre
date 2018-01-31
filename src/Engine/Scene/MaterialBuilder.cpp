@@ -165,8 +165,9 @@ MaterialBuilder::~MaterialBuilder() {
     // empty
 }
 
-Material *MaterialBuilder::createBuildinMaterial( VertexType type ) {
-    Material *mat = new Material( MaterialType::ShaderMaterial );
+ Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
+    Material *mat = new Material(MaterialType::ShaderMaterial);
+
     String vs, fs;
     if ( type == VertexType::ColorVertex ) {
         vs = VsSrc;
@@ -183,7 +184,7 @@ Material *MaterialBuilder::createBuildinMaterial( VertexType type ) {
 
     mat->createShader( vs, fs );
 
-    // setup shader attributes and variables
+    // Setup shader attributes and variables
     if ( nullptr != mat->m_shader ) {
         if ( type == VertexType::ColorVertex ) {
             ui32 numAttribs( ColorVert::getNumAttributes() );

@@ -47,8 +47,8 @@ using namespace ::OSRE::Scene;
 static const String Tag = "ModelLoadingApp"; 
 
 //static const String ModelPath = "file://assets/Models/Obj/Testwuson.X";
-//static const String ModelPath = "file://assets/Models/Obj/box.obj";
-static const String ModelPath = "file://assets/Models/Obj/spider.obj";
+static const String ModelPath = "file://assets/Models/Obj/box.obj";
+//static const String ModelPath = "file://assets/Models/Obj/spider.obj";
 
 // The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {

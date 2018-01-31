@@ -72,7 +72,7 @@ ui32 RenderComponent::getNumGeometry() const {
     return m_newGeo.size();
 }
 
-RenderBackend::Geometry *RenderComponent::getGeoAt(ui32 idx) const {
+Geometry *RenderComponent::getGeoAt(ui32 idx) const {
     return m_newGeo[idx];
 }
 
@@ -116,7 +116,7 @@ CollisionComponent::~CollisionComponent() {
     // empty
 }
 
-void CollisionComponent::update( RenderBackend::RenderBackendService *rbSrv ) {
+void CollisionComponent::update( RenderBackendService *rbSrv ) {
     // empty
 }
 

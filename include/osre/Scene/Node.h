@@ -135,6 +135,16 @@ private:
 };
 
 inline
+void Node::setActive(bool isActive) {
+    m_isActive = isActive;
+}
+
+inline
+bool Node::isActive() const {
+    return m_isActive;
+}
+
+inline
 void Node::setAABB(const AABB &aabb) {
     m_aabb = aabb;
 }
