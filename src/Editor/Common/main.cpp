@@ -35,7 +35,9 @@ public:
     : AppBase( argc, argv, SupportedArgs, Descs )
     , m_world( nullptr )
     , m_project( nullptr )
-    , m_projecUri() {
+    , m_projecUri()
+    , m_screen( nullptr )
+    , m_panel( nullptr ) {
         // empty
     }
 

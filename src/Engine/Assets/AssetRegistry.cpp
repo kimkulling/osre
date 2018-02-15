@@ -134,7 +134,7 @@ AssetRegistry::AssetRegistry()
 }
 
 AssetRegistry::~AssetRegistry() {
-
+    // empty
 }
 
 } // Namespace Assets
