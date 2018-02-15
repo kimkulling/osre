@@ -78,6 +78,7 @@ SET( common_inc
     ${HEADER_PATH}/Common/Object.h
     ${HEADER_PATH}/Common/StringUtils.h
     ${HEADER_PATH}/Common/TFunctor.h
+	${HEADER_PATH}/Common/TResourceCache.h
     ${HEADER_PATH}/Common/TObjPtr.h
     ${HEADER_PATH}/Common/Tokenizer.h
     ${HEADER_PATH}/Common/osre_common.h
@@ -351,6 +352,7 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/Pipeline.h
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
+	${HEADER_PATH}/RenderBackend/RenderStates.h
 )
 #==============================================================================
 # Scripting with Mono

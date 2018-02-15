@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2017 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -25,18 +25,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLCommon.h"
 #include "OGLEnum.h"
 
-#include <osre/RenderBackend/FontBase.h>
-#include <osre/RenderBackend/ClearState.h>
-#include <osre/RenderBackend/BlendState.h>
-#include <osre/RenderBackend/CullState.h>
-#include <osre/RenderBackend/SamplerState.h>
-#include <osre/RenderBackend/StencilState.h>
 #include <osre/Platform/AbstractRenderContext.h>
 #include <osre/Profiling/PerformanceCounters.h>
 #include <osre/Common/Logger.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Stream.h>
 #include <osre/IO/Uri.h>
+#include <osre/RenderBackend/RenderStates.h>
 
 #include <cppcore/CPPCoreCommon.h>
 
@@ -51,37 +46,6 @@ using namespace ::CPPCore;
 
 static const String Tag             = "OGLRenderBackend";
 static const ui32   NotInitedHandle = 9999999;
-
-struct RenderStates {
-    TransformState m_transformState;
-    PolygonState   m_polygonState;
-    BlendState     m_blendState;
-    CullState      m_cullState;
-    SamplerState   m_samplerState;
-    StencilState   m_stensilState;
-    bool           m_applied;
-
-    RenderStates()
-    : m_transformState()
-    , m_polygonState()
-    , m_blendState()
-    , m_cullState()
-    , m_samplerState()
-    , m_stensilState()
-    , m_applied( false ) {
-        // empty
-    }
-
-    bool isEqual( const TransformState &transformState, const PolygonState &polygonState, const CullState &cullstate, const BlendState &blendState, 
-            const SamplerState &samplerState, const StencilState &stencilState ) const {
-        return ( transformState == m_transformState
-              && polygonState  == m_polygonState
-              && blendState == m_blendState 
-              && cullstate == m_cullState
-              && samplerState == m_samplerState 
-              && stencilState == m_stensilState );
-    }
-};
 
 OGLRenderBackend::OGLRenderBackend( )
 : m_renderCtx( nullptr )
