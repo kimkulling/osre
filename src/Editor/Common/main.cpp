@@ -37,7 +37,7 @@ public:
     , m_project( nullptr )
     , m_projecUri()
     , m_screen( nullptr )
-    , m_panel( nullptr )	{
+    , m_panel( nullptr ) {
         // empty
     }
 
@@ -156,3 +156,4 @@ protected:
 };
 
 OSRE_MAIN( EditorApp )
+

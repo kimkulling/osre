@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2017 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -109,10 +109,9 @@ Model *AssimpWrapper::convertSceneToModel( const aiScene *scene ) {
     if ( scene->HasMaterials() ) {
         for ( ui32 i = 0; i < scene->mNumMaterials; i++ ) {
             aiMaterial *currentMat( scene->mMaterials[ i ] );
-            if ( nullptr == currentMat ) {
-                continue;
+            if ( nullptr != currentMat ) {
+                handleMaterial(currentMat);
             }
-            handleMaterial( currentMat );
         }
     }
     
@@ -206,7 +205,10 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
     geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
 
-    geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( geo->m_vertextype );
+    geo->m_material = m_matArray[matIdx];
+    
+    //
+
 
     m_geoArray.add( geo );
     m_model->setAABB( aabb );
@@ -267,6 +269,11 @@ static void setTexture( ui32 texIndex, const aiString &texPath, CPPCore::TArray<
         texname = texname.substr( pos, texname.size() - pos );
     }
     tex->m_textureName = texname;
+    tex->m_width = 0;
+    tex->m_height = 0;
+    tex->m_channels = 0;
+    tex->m_data = nullptr;
+    tex->m_size = 0;
 }
 
 static void assignTexturesToMat( Material *osreMat, CPPCore::TArray<Texture*> &textures ) {
@@ -298,7 +305,7 @@ void AssimpWrapper::handleMaterial( aiMaterial *material ) {
     //AI_TEXTURE_TYPE_MAX
     CPPCore::TArray<Texture*> textures;
     if ( AI_SUCCESS == material->GetTexture( aiTextureType_DIFFUSE, texIndex, &texPath ) ) {
-        setTexture(  texIndex, texPath, textures );
+        setTexture( texIndex, texPath, textures );
     }
     assignTexturesToMat( osreMat, textures );
     /*aiTextureType_SPECULAR = 0x2,
@@ -345,8 +352,7 @@ void AssimpWrapper::handleMaterial( aiMaterial *material ) {
 }
 
 void AssimpWrapper::updateAxisAlignedBBox( const aiVector3D &pos, Collision::TAABB<f32> &aabb ) {
-    Vec3f v( pos.x, pos.y, pos.z );
-    aabb.merge( v );
+    aabb.merge(pos.x, pos.y, pos.z);
 }
 
 } // Namespace Assets

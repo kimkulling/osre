@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2017 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -133,6 +133,16 @@ private:
     PropertyMap m_propMap;
     AABB m_aabb;
 };
+
+inline
+void Node::setActive(bool isActive) {
+    m_isActive = isActive;
+}
+
+inline
+bool Node::isActive() const {
+    return m_isActive;
+}
 
 inline
 void Node::setAABB(const AABB &aabb) {

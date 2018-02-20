@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2017 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -72,7 +72,7 @@ ui32 RenderComponent::getNumGeometry() const {
     return m_newGeo.size();
 }
 
-RenderBackend::Geometry *RenderComponent::getGeoAt(ui32 idx) const {
+Geometry *RenderComponent::getGeoAt(ui32 idx) const {
     return m_newGeo[idx];
 }
 
@@ -116,7 +116,7 @@ CollisionComponent::~CollisionComponent() {
     // empty
 }
 
-void CollisionComponent::update( RenderBackend::RenderBackendService *rbSrv ) {
+void CollisionComponent::update( RenderBackendService *rbSrv ) {
     // empty
 }
 
