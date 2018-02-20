@@ -185,5 +185,9 @@ bool Uri::operator == ( const Uri &rhs ) const {
 			m_Resource == rhs.m_Resource );
 }
 
+bool Uri::operator != ( const Uri &rhs ) const {
+    return !( *this == rhs );
+}
+
 } // Namespace IO
 } // Namespace OSRE

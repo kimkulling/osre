@@ -35,8 +35,20 @@ namespace Platform {
 
 class OSRE_EXPORT PlatformOperations {
 public:
+    enum {
+        DlgButton_YesNo = 1,
+        DlgButton_ok = 2
+    };
+
+    enum DlgResults {
+        DlgButtonRes_Yes = 1,
+        DlgButtonRes_No,
+        DlgButtonRes_Ok
+    };
+
     static void getFileOpenDialog( const c8 *extensions, IO::Uri &location );
     static void getFileSaveDialog( const c8 *extensions, IO::Uri &location );
+    static void getDialog( const String &title, const String &question, ui32 requestedButtons, DlgResults &result );
 
 private:
     PlatformOperations();

@@ -22,6 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Platform/PlatformOperations.h>
 #include <osre/IO/Uri.h>
+#include <osre/Common/Logger.h>
+
+#include <string>
 
 #ifdef OSRE_WINDOWS
 #  include <osre/Platform/Windows/MinWindows.h>
@@ -30,6 +33,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 namespace Platform {
+
+static const String Tag = "PlatformOperations";
+
 PlatformOperations::PlatformOperations() {
     // empty
 }
@@ -99,7 +105,41 @@ void PlatformOperations::getFileSaveDialog( const c8 *extensions, IO::Uri &locat
         location.clear();
     }
 #endif // OSRE_WINDOWS
+}
 
+void PlatformOperations::getDialog( const String &title, const String &question, ui32 requestedButtons, DlgResults &result ) {
+#ifdef OSRE_WINDOWS
+    ui32 flags( 0 );
+    if ( requestedButtons & PlatformOperations::DlgButton_YesNo )  {
+        flags |= MB_YESNO;
+    }
+    if ( requestedButtons & PlatformOperations::DlgButton_ok ) {
+        flags = MB_OK;
+    }
+
+    int msgboxID = ::MessageBox(
+        NULL,
+        question.c_str(),
+        title.c_str(),
+        flags
+    );
+
+    switch ( msgboxID ) {
+        case IDYES:
+            result = DlgButtonRes_Yes;
+            break;
+        case IDNO:
+            result = DlgButtonRes_No;
+            break;
+        case IDOK:
+            result = DlgButtonRes_Ok;
+            break;
+        default:
+            osre_debug( Tag, "UNsupported id detected " + std::to_string( msgboxID ) );
+            break;
+    }
+
+#endif // OSRE_WINDOWS
 }
 
 } // Namespace Platform

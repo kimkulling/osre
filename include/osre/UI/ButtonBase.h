@@ -57,10 +57,12 @@ public:
     virtual ~ButtonBase();
     virtual void setLabel( const String &label );
     virtual const String &getLabel() const;
+    virtual void setImage( Image &image );
     virtual void setImage( const String &name );
     virtual const String &getImage() const;
     void registerCallback( ButtonState state, UIFunctor functor );
-    static ButtonBase *createBaseButton(const String &name, Widget *parent);
+    static ButtonBase *createIconButton( const String &name, Image &icon, Widget *parent );
+    static ButtonBase *createBaseButton( const String &name, const String &label, Widget *parent );
 
 protected:
     void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) override;
@@ -75,8 +77,9 @@ private:
         FunctorContainer();
         ~FunctorContainer();
     };
+
     String m_label;
-    String m_image;
+    IO::Uri m_image;
     Image *m_imageWidget;
     TextBase *m_textWidget;
     FunctorContainer *m_callback;

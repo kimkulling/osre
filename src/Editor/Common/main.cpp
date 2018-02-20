@@ -35,7 +35,9 @@ public:
     : AppBase( argc, argv, SupportedArgs, Descs )
     , m_world( nullptr )
     , m_project( nullptr )
-    , m_projecUri() {
+    , m_projecUri()
+    , m_screen( nullptr )
+    , m_panel( nullptr )	{
         // empty
     }
 
@@ -86,14 +88,25 @@ public:
     }
 
 protected:
+    void openFileCallback( ui32 id, void *data ) {
+        IO::Uri loc;
+        PlatformOperations::getFileOpenDialog( "All\0 *.*\0", loc );
+    }
+
     void setupUI() {
         m_screen = AppBase::createScreen("OSRE-Editor");
 
-        m_panel = new UI::Panel( "file_panel", UI::UiFlags::Resizable, m_screen );
+        m_panel = new UI::Panel( "project_panel_id", UI::UiFlags::Resizable, m_screen );
         m_panel->setRect(10, 10, 200, 600);
         
-        m_panel->addChildWidget( &UI::ButtonBase::createBaseButton("Open File", m_panel)->setRect(12, 12, 196, 28) );
-        m_panel->addChildWidget(new UI::ButtonBase("Close", m_panel ) );
+        UI::ButtonBase *open_proj( UI::ButtonBase::createBaseButton( "open_proj_id", "Open File", m_panel ) );
+        open_proj->setRect( 12, 12, 196, 20 );
+        open_proj->registerCallback( UI::ButtonBase::ButtonPressed, UI::UIFunctor::Make( this, &EditorApp::openFileCallback ) );
+
+        m_panel->addChildWidget( open_proj );
+        UI::ButtonBase *close_proj( UI::ButtonBase::createBaseButton( "close_proj", "Close project", m_panel ) );
+        close_proj->setRect( 12, 34, 196, 20 );
+        m_panel->addChildWidget( close_proj );
     }
 
     virtual bool onCreate( Properties::Settings *settings = nullptr ) {

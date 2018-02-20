@@ -57,6 +57,11 @@ public:
     ///	@brief	The class destructor.
     ~Uri();
 
+    /// @brief  Will construct a valid uri from the given scheme, path and resource name.
+    /// @param  scheme  [in] The scheme to use.
+    /// @param  path    [in] The path to the resource.
+    /// @param  res     [in] The resource name.
+    /// @return The uri string.
     static String constructFromComps( const String &scheme, const String &path, const String &res );
 
     ///	@brief	Assigns a new uri string, the older data will be erased.
@@ -115,6 +120,9 @@ public:
 
     ///	@brief	The compare operator.
     bool operator == ( const Uri &rhs ) const;
+
+    /// @brief  The not-equal operator.
+    bool operator != ( const Uri &rhs ) const;
 
 private:
     String m_URI;

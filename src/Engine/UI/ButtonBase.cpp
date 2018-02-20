@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/UI/TextBase.h>
+#include <osre/UI/Image.h>
 
 #include "UIRenderUtils.h"
 
@@ -87,12 +88,32 @@ const String &ButtonBase::getLabel() const {
     return m_label;
 }
 
+void ButtonBase::setImage( Image &image ) {
+    const IO::Uri newName( image.getName() );
+    if ( m_image != newName ) {
+        m_imageWidget = &image;
+        m_image = newName;
+        Widget::requestRedraw();
+    }
+}
+
 void ButtonBase::setImage( const String &name ) {
-    m_image = name;
+    const IO::Uri uri( name );
+    if ( uri == m_image ) {
+        return;
+    }
+
+    m_image.setPath( name );
+    if ( nullptr == m_imageWidget ) {
+        m_imageWidget = new Image( m_image.getAbsPath(), this );
+        IO::Uri imageUri( m_image );
+        m_imageWidget->setUri( imageUri );
+    }
+    Widget::requestRedraw();
 }
 
 const String &ButtonBase::getImage() const {
-    return m_image;
+    return m_image.getPath();
 }
 
 void ButtonBase::registerCallback( ButtonState state, UIFunctor functor ) {
@@ -101,8 +122,18 @@ void ButtonBase::registerCallback( ButtonState state, UIFunctor functor ) {
     functor.incRef();
 }
 
-ButtonBase *ButtonBase::createBaseButton(const String &name, Widget *parent) {
-    return new ButtonBase(name, parent);
+ButtonBase *ButtonBase::createIconButton( const String &name, Image &icon, Widget *parent ) {
+    ButtonBase *button( new ButtonBase( name, parent ) );
+    button->setImage( icon );
+
+    return button;
+}
+
+ButtonBase *ButtonBase::createBaseButton( const String &name, const String &label, Widget *parent) {
+    ButtonBase *button( new ButtonBase( name, parent ) );
+    button->setLabel( label );
+    
+    return button;
 }
 
 void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) {
