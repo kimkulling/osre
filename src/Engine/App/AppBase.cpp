@@ -224,6 +224,16 @@ Platform::AbstractSurface *AppBase::getRootSurface() const {
     return m_platformInterface->getRootSurface();
 }
 
+void AppBase::setWindowsTitle( const String &title ) {
+    if ( nullptr == m_platformInterface ) {
+        return;
+    }
+
+    AbstractSurface *rs = m_platformInterface->getRootSurface();
+    if ( nullptr != rs ) {
+    }
+}
+
 bool AppBase::onCreate( Properties::Settings *config ) {
     if ( m_state != State::Uninited ) {
         osre_debug( Tag, "AppBase::State not in proper state: Uninited." );

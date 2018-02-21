@@ -7,6 +7,8 @@
 #include <osre/IO/Uri.h>
 #include <osre/Assets/AssetDataArchive.h>
 #include <osre/Platform/PlatformOperations.h>
+#include <osre/Platform/PlatformInterface.h>
+#include <osre/Platform/AbstractSurface.h>
 #include <osre/UI/Panel.h>
 #include <osre/UI/ButtonBase.h>
 #include <osre/UI/Screen.h>
@@ -25,6 +27,15 @@ static const String Tag = "osre_ed";
 
 static const ui32 ButtonWidth = 196;
 static const ui32 ButtonHeight = 20;
+
+namespace Details {
+    static const String Version = "0.1";
+
+    static String createWindowsTitle( const String &project ) {
+        String title = project + " | OSRE_Ed Version " + Version;
+        return title;
+    }
+}
 
 class EditorApp : public App::AppBase {
     World             *m_world;
@@ -193,6 +204,12 @@ protected:
 
     bool onImportStage() {
         return false;
+    }
+
+
+    void setProjectTitle( const String &project ) {
+        String newWindowsTitle = Details::createWindowsTitle( project );
+        PlatformInterface::getInstance()->getRootSurface()->setWindowsTitle( newWindowsTitle );
     }
 };
 

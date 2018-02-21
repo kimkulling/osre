@@ -42,6 +42,8 @@ public:
     Win32Surface( SurfaceProperties *properties );
     /// The class destructor, virtual.
     virtual ~Win32Surface();
+    /// Will set the windows title.
+    void setWindowsTitle( const String &title ) override;
     /// Returns the windows handle.
     HWND getHWnd() const;
     /// Returns the device context.

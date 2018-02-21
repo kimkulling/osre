@@ -42,6 +42,9 @@ public:
     virtual ~SDL2Surface();
     /// Will return a pointer showing to the SDL_Window.
     SDL_Window *getSDLSurface() const;
+    /// Will set a new windows title.
+    void setWindowsTitle( const String &title ) override;
+
 
 protected:
     /// The onCreate callback implementation.

@@ -40,6 +40,13 @@ SDL2Surface::~SDL2Surface( ) {
     // empty
 }
 
+void SDL2Surface::setWindowsTitle( const String &title ) {
+    if ( nullptr == m_surface ) {
+        return;
+    }
+    SDL_SetWindowTitle( m_surface, title.c_str() );
+}
+
 SDL_Window *SDL2Surface::getSDLSurface() const {
     return m_surface;
 }

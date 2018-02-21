@@ -38,6 +38,15 @@ Win32Surface::~Win32Surface( ) {
     // empty
 }
 
+
+void Win32Surface::setWindowsTitle( const String &title ) {
+    if ( nullptr == m_wnd ) {
+        return;
+    }
+
+    ::SetWindowText( m_wnd, title.c_str() );
+}
+
 HWND Win32Surface::getHWnd( ) const {
     return m_wnd;
 }

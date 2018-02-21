@@ -149,6 +149,8 @@ public:
     /// @return A pointer showing to the Root-Surface.
     virtual Platform::AbstractSurface *getRootSurface() const;
 
+    void setWindowsTitle( const String &title );
+
     /// @brief  Will create the default pipeline for rendering.
     /// @return The default pipeline.
     static RenderBackend::Pipeline *createDefaultPipeline();

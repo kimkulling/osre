@@ -98,6 +98,8 @@ public:
     /// @return The surface flags.
     ui32 getFlags() const;
 
+    virtual void setWindowsTitle( const String &title ) = 0;
+
 protected:
     /// @brief  Callback to override on creation.
     virtual bool onCreate() = 0;
