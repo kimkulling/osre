@@ -23,6 +23,9 @@ static const String SupportedArgs = "help:api:gen_project:asset_path";
 static const String Descs         = "Shows the help:The render API:Generates a template project:Path to media";
 static const String Tag = "osre_ed";
 
+static const ui32 ButtonWidth = 196;
+static const ui32 ButtonHeight = 20;
+
 class EditorApp : public App::AppBase {
     World             *m_world;
     AssetDataArchive  *m_project;
@@ -112,29 +115,39 @@ protected:
         }
     }
 
-    void setupUI() {
-        m_screen = AppBase::createScreen("OSRE-Editor");
+    void quitEd( ui32 id, void *data ) {
+        // todo
+    }
 
-        m_panel = new UI::Panel( "project_panel_id", UI::UiFlags::Resizable, m_screen );
+    void setupProjectPanel() {
+        // Create panel
+        m_panel = new UI::Panel("project_panel_id", UI::UiFlags::Resizable, m_screen);
         m_panel->setRect(10, 10, 200, 600);
-        
+
         // Create new project
         UI::ButtonBase *new_proj(UI::ButtonBase::createBaseButton("new_proj_id", "New Project", m_panel));
-        new_proj->setRect(12, 12, 196, 20);
+        new_proj->setRect(12, 12, ButtonWidth, ButtonHeight);
         new_proj->registerCallback(UI::ButtonBase::ButtonPressed, UI::UIFunctor::Make(this, &EditorApp::newProjectCallback));
-        m_panel->addChildWidget(new_proj);
 
         // Open existing project
-        UI::ButtonBase *open_proj( UI::ButtonBase::createBaseButton( "open_proj_id", "Open Project", m_panel ) );
-        open_proj->setRect( 12, 34, 196, 20 );
-        open_proj->registerCallback( UI::ButtonBase::ButtonPressed, UI::UIFunctor::Make( this, &EditorApp::openProjectCallback ) );
-        m_panel->addChildWidget( open_proj );
+        UI::ButtonBase *open_proj(UI::ButtonBase::createBaseButton("open_proj_id", "Open Project", m_panel));
+        open_proj->setRect(12, 34, ButtonWidth, ButtonHeight);
+        open_proj->registerCallback(UI::ButtonBase::ButtonPressed, UI::UIFunctor::Make(this, &EditorApp::openProjectCallback));
 
         // Close opened project
-        UI::ButtonBase *close_proj( UI::ButtonBase::createBaseButton( "close_proj_id", "Close project", m_panel ) );
-        close_proj->setRect( 12, 56, 196, 20 );
+        UI::ButtonBase *close_proj(UI::ButtonBase::createBaseButton("close_proj_id", "Close project", m_panel));
+        close_proj->setRect(12, 56, ButtonWidth, ButtonHeight);
         close_proj->registerCallback(UI::ButtonBase::ButtonPressed, UI::UIFunctor::Make(this, &EditorApp::closeProjectCallback));
-        m_panel->addChildWidget( close_proj );
+
+        // Quit button
+        UI::ButtonBase *quit_ed(UI::ButtonBase::createBaseButton("quit_id", "Quit", m_panel));
+        quit_ed->setRect(12, 578, ButtonWidth, ButtonHeight);
+        quit_ed->registerCallback(UI::ButtonBase::ButtonPressed, UI::UIFunctor::Make(this, &EditorApp::quitEd));
+    }
+
+    void setupUI() {
+        m_screen = AppBase::createScreen("OSRE-Editor");
+        setupProjectPanel();
     }
 
     virtual bool onCreate( Properties::Settings *settings = nullptr ) {

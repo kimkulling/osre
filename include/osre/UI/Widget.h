@@ -204,7 +204,6 @@ protected:
 private:
     Widget *m_parent;
     ui32 m_id;
-
     CPPCore::TArray<Widget*> m_children;
     CPPCore::TArray<UiProperty*> m_properties;
     Rect2ui m_rect;
