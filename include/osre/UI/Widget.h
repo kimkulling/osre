@@ -149,9 +149,9 @@ using UiVertexCache = RenderBackend::TVertexCache<RenderBackend::RenderVert>;
 using UiIndexCache = RenderBackend::TIndexCache<ui16>;
 
 struct UiRenderCmd {
-    UiVertexCache m_vc;
-    UiIndexCache m_ic;
-    RenderBackend::Material *m_mat;
+    UiVertexCache            m_vc;  ///< Will store all vertices
+    UiIndexCache             m_ic;  ///< Will store all indices
+    RenderBackend::Material *m_mat; ///< Will store the material
 
     UiRenderCmd();
     ~UiRenderCmd();
@@ -167,12 +167,13 @@ using UiRenderCmdCache = CPPCore::TArray<UiRenderCmd*>;
 ///	@brief  
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Widget : public Common::Object {
-public:    
+public:
     virtual ~Widget();
     virtual void setParent( Widget *parent );
     virtual Widget *getParent() const;
     virtual bool addChildWidget( Widget *child );
     virtual bool removeChildWidget( Widget *child );
+    virtual bool hasChild(Widget *child);
     virtual ui32 getNumChildren() const;
     virtual Widget *getChildWidgetAt( ui32 idx ) const;
     virtual Widget &setRect( ui32 x, ui32 y, ui32 w, ui32 h );
@@ -195,6 +196,7 @@ public:
 
 protected:
     Widget( const String &name, Widget *parent );
+    void checkChildren(const Point2ui &pt);
     virtual void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) = 0;
     virtual void onMouseDown( const Point2ui &pt);
     virtual void onMouseUp( const Point2ui &pt );

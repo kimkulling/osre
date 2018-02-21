@@ -150,7 +150,7 @@ void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::Rend
     renderCmdCache.add( cmd );
 }
 
-void ButtonBase::onMouseDown(const Point2ui &pt) {
+void ButtonBase::onMouseDown( const Point2ui &pt ) {
     if ( m_callback[ 0 ].m_used ) {
         const FunctorContainer &ct( m_callback[ 0 ] );
         ct.m_callback( Widget::getId(), nullptr );

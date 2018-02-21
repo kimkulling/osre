@@ -93,6 +93,16 @@ TEST_F( WidgetTest, access_children_Test ) {
     EXPECT_EQ( 2, testWidget.getNumChildren() );
 }
 
+TEST_F(WidgetTest, hasChild_ReturnsTrue) {
+    TestWidget parent("test", nullptr);
+    TestWidget testWidget("test", nullptr);
+
+    EXPECT_FALSE( parent.hasChild( &testWidget ) );
+
+    parent.addChildWidget(&testWidget);
+    EXPECT_TRUE(parent.hasChild(&testWidget));
+}
+
 TEST_F( WidgetTest, request_redraw_Test ) {
     TestWidget testWidget( "test", nullptr );
     EXPECT_TRUE( testWidget.redrawRequested() );

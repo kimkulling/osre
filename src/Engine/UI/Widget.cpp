@@ -75,13 +75,15 @@ const Rect2ui &WidgetCoordMapping::getDimension() {
 }
 
 void WidgetCoordMapping::mapPosToWorld( ui32 x, ui32 y, f32 &mappedX, f32 &mappedY ) {
-    mapPosToWorld( getDimension(), x, y, mappedX, mappedY );
+    const Rect2ui &r(getDimension());
+    mapPosToWorld( r, x, y, mappedX, mappedY );
 }
 
 void WidgetCoordMapping::mapPosArrayToWorld( ui32 *x, ui32 *y, ui32 numPoints, f32 *mappedX, f32 *mappedY ) {
     if ( 0 == numPoints ) {
         return;
     }
+
     OSRE_ASSERT( nullptr != x );
     OSRE_ASSERT( nullptr != y );
     OSRE_ASSERT( nullptr != mappedX );
@@ -155,8 +157,12 @@ bool Widget::addChildWidget( Widget *child ) {
         return false;
     }
 
-    m_children.add( child );
-    child->get();
+    if (!hasChild(child)) {
+        m_children.add(child);
+        child->get();
+    } else {
+        osre_debug(Tag, "Tried to add child again.");
+    }
 
     return true;
 }
@@ -175,6 +181,19 @@ bool Widget::removeChildWidget( Widget *child ) {
     }
 
     return ok;
+}
+
+bool Widget::hasChild(Widget *child) {
+    if (nullptr == child) {
+        return false;
+    }
+    
+    CPPCore::TArray<Widget*>::Iterator it = m_children.find(child);
+    if (m_children.end() != it) {
+        return true;
+    }
+
+    return false;
 }
 
 ui32 Widget::getNumChildren() const {
@@ -228,6 +247,10 @@ void Widget::setProperty( UiProperty *prop ) {
 }
 
 UiProperty *Widget::getProperty( const String &name ) const {
+    if (name.empty()) {
+        return nullptr;
+    }
+
     for ( ui32 i = 0; i < m_properties.size(); ++i ) {
         if ( m_properties[ i ]->m_name == name ) {
             return m_properties[ i ];
@@ -255,7 +278,7 @@ void Widget::setVisible( bool visible ) {
     }
 
     m_isVisible = visible;
-
+    requestRedraw();
 }
 
 bool Widget::isVisible() const {
@@ -293,18 +316,22 @@ void Widget::mouseUp( const Point2ui &pt ) {
     onMouseUp( pt );
 }
 
-void Widget::onMouseDown( const Point2ui &pt ) {
-    for ( ui32 i = 0; i < getNumChildren(); i++ ) {
-        Widget *child( getChildWidgetAt( i ) );
+void Widget::checkChildren( const Point2ui &pt ) {
+    for (ui32 i = 0; i < getNumChildren(); i++) {
+        Widget *child(getChildWidgetAt(i));
         const Rect2ui &r = child->getRect();
-        if ( r.isIn( pt ) ) {
-            child->onMouseDown( pt );
+        if (r.isIn(pt)) {
+            child->onMouseDown(pt);
         }
     }
 }
 
-void Widget::onMouseUp( const Point2ui &pt ) {
+void Widget::onMouseDown( const Point2ui &pt ) {
+    checkChildren(pt);
+}
 
+void Widget::onMouseUp( const Point2ui &pt ) {
+    checkChildren(pt);
 }
 
 void Widget::setId( ui32 id ) {

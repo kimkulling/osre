@@ -47,7 +47,7 @@ using namespace ::CPPCore;
 static const String Tag             = "OGLRenderBackend";
 static const ui32   NotInitedHandle = 9999999;
 
-OGLRenderBackend::OGLRenderBackend( )
+OGLRenderBackend::OGLRenderBackend()
 : m_renderCtx( nullptr )
 , m_buffers()
 , m_activeVB( NotInitedHandle )
@@ -587,7 +587,7 @@ OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTar
     tex->m_format    = GL_RGB;
 
     glActiveTexture( GL_TEXTURE0 );
-    tex->m_target = OGLEnum::getGLTextureTarget( TextureTargetType::Texture2D );
+    tex->m_target = OGLEnum::getGLTextureTarget( target );
     glBindTexture( tex->m_target, textureId );
     
     glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParameterName::TextureParamMinFilter ), GL_LINEAR );

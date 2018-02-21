@@ -17,6 +17,7 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Scene;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::Assets;
+using IO::Uri;
 
 static const String SupportedArgs = "help:api:gen_project:asset_path";
 static const String Descs         = "Shows the help:The render API:Generates a template project:Path to media";
@@ -88,9 +89,27 @@ public:
     }
 
 protected:
-    void openFileCallback( ui32 id, void *data ) {
+    void newProjectCallback( ui32 id, void *data ) {
+        const String name = "NewProject";
+        openWorld( name );
+    }
+
+    void openProjectCallback( ui32 id, void *data ) {
         IO::Uri loc;
         PlatformOperations::getFileOpenDialog( "All\0 *.*\0", loc );
+        loadWorld( loc );
+    }
+
+    void closeProjectCallback( ui32 id, void *data ) {
+        PlatformOperations::DlgResults results;
+        PlatformOperations::getDialog("Close project", 
+                "Do you really want to save the project?", 
+                PlatformOperations::DlgButton_YesNo, results );
+        if (PlatformOperations::DlgButtonRes_Yes == results) {
+            IO::Uri loc;
+            PlatformOperations::getFileSaveDialog("All\0 *.*\0", loc);
+            saveWorld(loc);
+        }
     }
 
     void setupUI() {
@@ -99,13 +118,22 @@ protected:
         m_panel = new UI::Panel( "project_panel_id", UI::UiFlags::Resizable, m_screen );
         m_panel->setRect(10, 10, 200, 600);
         
-        UI::ButtonBase *open_proj( UI::ButtonBase::createBaseButton( "open_proj_id", "Open File", m_panel ) );
-        open_proj->setRect( 12, 12, 196, 20 );
-        open_proj->registerCallback( UI::ButtonBase::ButtonPressed, UI::UIFunctor::Make( this, &EditorApp::openFileCallback ) );
+        // Create new project
+        UI::ButtonBase *new_proj(UI::ButtonBase::createBaseButton("new_proj_id", "New Project", m_panel));
+        new_proj->setRect(12, 12, 196, 20);
+        new_proj->registerCallback(UI::ButtonBase::ButtonPressed, UI::UIFunctor::Make(this, &EditorApp::newProjectCallback));
+        m_panel->addChildWidget(new_proj);
 
+        // Open existing project
+        UI::ButtonBase *open_proj( UI::ButtonBase::createBaseButton( "open_proj_id", "Open Project", m_panel ) );
+        open_proj->setRect( 12, 34, 196, 20 );
+        open_proj->registerCallback( UI::ButtonBase::ButtonPressed, UI::UIFunctor::Make( this, &EditorApp::openProjectCallback ) );
         m_panel->addChildWidget( open_proj );
-        UI::ButtonBase *close_proj( UI::ButtonBase::createBaseButton( "close_proj", "Close project", m_panel ) );
-        close_proj->setRect( 12, 34, 196, 20 );
+
+        // Close opened project
+        UI::ButtonBase *close_proj( UI::ButtonBase::createBaseButton( "close_proj_id", "Close project", m_panel ) );
+        close_proj->setRect( 12, 56, 196, 20 );
+        close_proj->registerCallback(UI::ButtonBase::ButtonPressed, UI::UIFunctor::Make(this, &EditorApp::closeProjectCallback));
         m_panel->addChildWidget( close_proj );
     }
 
