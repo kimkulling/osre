@@ -47,11 +47,14 @@ using namespace ::OSRE::Scene;
 static const String Tag = "ModelLoadingApp"; 
 
 //static const String ModelPath = "file://assets/Models/Obj/Testwuson.X";
-static const String ModelPath = "file://assets/Models/Obj/box.obj";
-//static const String ModelPath = "file://assets/Models/Obj/spider.obj";
+//static const String ModelPath = "file://assets/Models/Obj/box.obj";
+static const String ModelPath = "file://assets/Models/Obj/spider.obj";
+
+static const String AssetFolderArg = "asset_folder";
 
 // The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
+    String m_assetFolder;
     Scene::Stage *m_stage;
     Scene::View  *m_view;
     f32 m_angle;
@@ -62,6 +65,7 @@ class ModelLoadingApp : public App::AppBase {
 public:
     ModelLoadingApp( int argc, char *argv[] )
     : AppBase( argc, argv )
+    , m_assetFolder("")
     , m_stage( nullptr )
     , m_view( nullptr )
     , m_angle( 0.0f )
@@ -85,6 +89,11 @@ protected:
         baseSettings->setString( Properties::Settings::WindowsTitle, "Model Loader!" );
         if ( !AppBase::onCreate( baseSettings ) ) {
             return false;
+        }
+
+        const Common::ArgumentParser &parser = AppBase::getArgumentParser();
+        if ( parser.hasArgument( AssetFolderArg ) ) {
+            m_assetFolder = parser.getArgument( AssetFolderArg );
         }
 
 #ifdef OSRE_WINDOWS
