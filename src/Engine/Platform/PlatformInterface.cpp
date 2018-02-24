@@ -29,10 +29,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifdef OSRE_WINDOWS
 #   include <src/Engine/Platform/win32/Win32RenderContext.h>
 #endif // OSRE_WINDOWS
-#include <src/Engine/Platform/sdl2/SDL2Surface.h>
-#include <src/Engine/Platform/sdl2/SDL2EventHandler.h>
+#include "Engine/Platform/sdl2/SDL2Surface.h"
+#include "Engine/Platform/sdl2/SDL2EventHandler.h"
 #include <src/Engine/Platform/sdl2/SDL2RenderContext.h>
 #include <src/Engine/Platform/sdl2/SDL2Timer.h>
+#include <src/Engine/Platform/sdl2/SDL2SystemInfo.h>
 
 #include <GL/glew.h>
 #include <SDL.h>
@@ -67,7 +68,8 @@ PlatformInterface::PlatformInterface( const Settings *config )
 , m_oseventHandler( nullptr )
 , m_renderContext( nullptr )
 , m_timer( nullptr )
-, m_dynLoader( nullptr ) {
+, m_dynLoader( nullptr )
+, m_systemInfo( nullptr ) {
     // empty
 }
 
@@ -115,6 +117,10 @@ AbstractTimer *PlatformInterface::getTimer() const {
 
 AbstractDynamicLoader *PlatformInterface::getDynamicLoader() const {
     return m_dynLoader;
+}
+
+AbstractSystemInfo *PlatformInterface::getSystemInfo() const {
+    return m_systemInfo;
 }
 
 const String &PlatformInterface::getDefaultFontName() const {
@@ -194,6 +200,8 @@ bool PlatformInterface::onOpen() {
     if( appType == Settings::GfxApp ) {
         result = setupGfx( props, polls );
     }
+
+    m_systemInfo = PlatformPluginFactory::createSystemInfo( m_type );
 
     return result;
 }

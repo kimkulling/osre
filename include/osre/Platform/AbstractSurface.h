@@ -30,6 +30,22 @@ namespace Platform {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
+///	@brief  This struct stores all information regarding any resolution.
+//-------------------------------------------------------------------------------------------------
+struct Resolution {
+    ui32 m_width;   ///< The resolution in x.
+    ui32 m_height;  ///< The resolution in y.
+
+    Resolution()
+    : m_width(0)
+    , m_height( 0 ) {
+        // empty
+    }
+};
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
 ///	@brief  This struct stores all surface related information.
 //-------------------------------------------------------------------------------------------------
 struct SurfaceProperties {

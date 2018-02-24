@@ -31,6 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   include <src/Engine/Platform/win32/Win32ThreadFactory.h>
 #   include <src/Engine/Platform/win32/Win32DbgLogStream.h>
 #   include <src/Engine/Platform/win32/Win32DynamicLoader.h>
+#   include "Engine/Platform/win32/Win32SystemInfo.h"
 #endif
 #include <src/Engine/Platform/sdl2/SDL2Surface.h>
 #include <src/Engine/Platform/sdl2/SDL2EventHandler.h>
@@ -39,6 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <src/Engine/Platform/sdl2/SDL2ThreadFactory.h>
 #include <src/Engine/Platform/sdl2/SDL2Initializer.h>
 #include <src/Engine/Platform/sdl2/SDL2DynamicLoader.h>
+#include <src/Engine/Platform/sdl2/SDL2SystemInfo.h>
 
 namespace OSRE {
 namespace Platform {
@@ -201,6 +203,26 @@ AbstractDynamicLoader *PlatformPluginFactory::createDynmicLoader( PluginType typ
     }
 
     return dynloader;
+}
+
+AbstractSystemInfo *PlatformPluginFactory::createSystemInfo( PluginType type ) {
+    AbstractSystemInfo *sysInfo( nullptr );
+    switch ( type ) {
+#ifdef OSRE_WINDOWS
+    case Platform::PluginType::WindowsPlugin:
+        sysInfo = new Win32SystemInfo;
+        break;
+#endif // OSRE_WINDOWS
+
+    case Platform::PluginType::SDL2Plugin:
+        sysInfo = new SDL2SystemInfo();
+        break;
+
+    default:
+        break;
+    }
+
+    return sysInfo;
 }
 
 } // Namespace Platform

@@ -231,6 +231,7 @@ void AppBase::setWindowsTitle( const String &title ) {
 
     AbstractSurface *rs = m_platformInterface->getRootSurface();
     if ( nullptr != rs ) {
+        rs->setWindowsTitle( title );
     }
 }
 

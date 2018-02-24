@@ -30,6 +30,7 @@ INCLUDE_DIRECTORIES(
     3dparty/soil/src
     /usr/include/SDL2/
     /usr/include/
+	src/
 	$ENV{SDL_PATH}/include
 )
 

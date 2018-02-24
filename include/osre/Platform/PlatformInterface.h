@@ -50,6 +50,7 @@ class AbstractTimer;
 class AbstractPlatformEventHandler;
 class AbstractRenderContext;
 class AbstractDynamicLoader;
+class AbstractSystemInfo;
 
 struct IInputUpdate;
 struct SurfaceProperties;
@@ -181,6 +182,7 @@ public:
     AbstractRenderContext *getRenderContext() const;
     AbstractTimer *getTimer() const;
     AbstractDynamicLoader *getDynamicLoader() const;
+    AbstractSystemInfo *getSystemInfo() const;
     const String &getDefaultFontName() const;
 
 protected:
@@ -202,6 +204,7 @@ private:
     AbstractRenderContext *m_renderContext;
     AbstractTimer *m_timer;
     AbstractDynamicLoader *m_dynLoader;
+    AbstractSystemInfo *m_systemInfo;
 };
 
 } // Namespace Platform

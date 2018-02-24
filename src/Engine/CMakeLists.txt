@@ -175,6 +175,7 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/AbstractRenderContext.h
     ${HEADER_PATH}/Platform/AbstractSurface.h
     ${HEADER_PATH}/Platform/AbstractTimer.h
+	${HEADER_PATH}/Platform/AbstractSystemInfo.h
     ${HEADER_PATH}/Platform/CPUInfo.h
     ${HEADER_PATH}/Platform/SystemInfo.h
     ${HEADER_PATH}/Platform/SystemUtils.h
@@ -199,6 +200,7 @@ SET( platform_src
     Platform/PlatformOperations.cpp
 )
 SET( platform_win32_src
+	Platform/win32/Win32SystemInfo.h
     Platform/win32/Win32Atomic.h
     Platform/win32/Win32DbgLogStream.h
     Platform/win32/Win32Surface.cpp
@@ -243,6 +245,7 @@ SET( platform_sdl2_src
     Platform/sdl2/SDL2ThreadLocalStorage.h
     Platform/sdl2/SDL2DynamicLoader.cpp
     Platform/sdl2/SDL2DynamicLoader.h
+	Platform/sdl2/SDL2SystemInfo.h
 )
 
 IF( WIN32 )

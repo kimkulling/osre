@@ -39,6 +39,7 @@ class AbstractRenderContext;
 class AbstractTimer;
 class AbstractThreadFactory;
 class AbstractDynamicLoader;
+class AbstractSystemInfo;
 
 struct SurfaceProperties;
 
@@ -74,6 +75,9 @@ struct PlatformPluginFactory {
 
     ///	@brief  Creates a platform-specific dynamic-library loader.
     static AbstractDynamicLoader *createDynmicLoader( PluginType type );
+
+    /// @brief  CReates the platform-specific system, info instance.
+    static AbstractSystemInfo *createSystemInfo( PluginType type );
 };
 
 } // Namespace Platform

@@ -9,6 +9,7 @@
 #include <osre/Platform/PlatformOperations.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractSurface.h>
+#include <osre/Platform/AbstractSystemInfo.h>
 #include <osre/UI/Panel.h>
 #include <osre/UI/ButtonBase.h>
 #include <osre/UI/Screen.h>
@@ -106,6 +107,8 @@ protected:
     void newProjectCallback( ui32 id, void *data ) {
         const String name = "NewProject";
         openWorld( name );
+        const String title( Details::createWindowsTitle( name ) );
+        AppBase::setWindowsTitle( title );
     }
 
     void openProjectCallback( ui32 id, void *data ) {
@@ -158,6 +161,7 @@ protected:
 
     void setupUI() {
         m_screen = AppBase::createScreen("OSRE-Editor");
+        AppBase::setWindowsTitle( Details::createWindowsTitle( "No project" ) );
         setupProjectPanel();
     }
 
@@ -178,6 +182,11 @@ protected:
         if ( !AppBase::onCreate( baseSettings ) ) {
             return false;
         }
+
+        Platform::Resolution res;
+        PlatformInterface::getInstance()->getSystemInfo()->getDesktopResolution( res );
+        baseSettings->setInt( Properties::Settings::WinWidth, res.m_width - 100 );
+        baseSettings->setInt( Properties::Settings::WinHeight, res.m_height - 50 );
 
 #ifdef OSRE_WINDOWS
         Assets::AssetRegistry::registerAssetPath( "assets", "../../media" );

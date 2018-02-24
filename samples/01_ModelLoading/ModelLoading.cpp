@@ -52,7 +52,7 @@ static const String ModelPath = "file://assets/Models/Obj/spider.obj";
 
 static const String AssetFolderArg = "asset_folder";
 
-// The example application, will create the render environment and render a simple triangle onto it
+/// The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
     String m_assetFolder;
     Scene::Stage *m_stage;
@@ -151,6 +151,7 @@ protected:
         for (ui32 i = 0; i < numGeo; ++i) {
             rbSrv->attachGeo(currentNode->getGeometryAt(i), 0 );
         }
+
         for (ui32 i = 0; i < currentNode->getNumChilds(); ++i) {
             Node *current = currentNode->getChildAt(i);
             renderNode(current, rbSrv);
