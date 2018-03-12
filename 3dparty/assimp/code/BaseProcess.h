@@ -125,13 +125,13 @@ public:
     //! Add a heap property to the list
     template <typename T>
     void AddProperty( const char* name, T* in ){
-        AddProperty(name,(Base*)new THeapData<T>(in));
+        AddProperty( name, static_cast<Base*>( new THeapData<T>( in ) ) );
     }
 
     //! Add a static by-value property to the list
     template <typename T>
     void AddProperty( const char* name, T in ){
-        AddProperty(name,(Base*)new TStaticData<T>(in));
+        AddProperty( name,static_cast<Base*>( new TStaticData<T>( in ) ) );
     }
 
 
