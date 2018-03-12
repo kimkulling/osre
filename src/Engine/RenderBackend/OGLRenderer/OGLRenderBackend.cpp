@@ -131,10 +131,10 @@ OGLBuffer *OGLRenderBackend::createBuffer( BufferType type ) {
         buffer = m_buffers[ handle ];
         m_freeBufferSlots.removeBack();
     }
-    buffer->m_handle = handle;
-    buffer->m_type = type;
+    buffer->m_handle  = handle;
+    buffer->m_type    = type;
     buffer->m_oglId   = bufferId;
-    buffer->m_size = 0;
+    buffer->m_size    = 0;
 
     return buffer;
 }
@@ -999,11 +999,12 @@ void OGLRenderBackend::releaseAllFonts() {
     m_fonts.clear();
 }
 
-void OGLRenderBackend::setFixedPipelineStates( const PipelineStates &states ) {
+void OGLRenderBackend::setFixedPipelineStates( const RenderStates &states ) {
     OSRE_ASSERT( nullptr != m_fpState );
 
     if ( m_fpState->m_applied ) {
-        if ( m_fpState->isEqual( states.m_transformState, states.m_polygonState, states.m_cullState, states.m_blendState, states.m_samplerState, states.m_stencilState ) ) {
+        if ( m_fpState->isEqual( states.m_clearState, states.m_transformState, states.m_polygonState, 
+                states.m_cullState, states.m_blendState, states.m_samplerState, states.m_stencilState ) ) {
             return;
         }
     }
@@ -1012,7 +1013,7 @@ void OGLRenderBackend::setFixedPipelineStates( const PipelineStates &states ) {
     m_fpState->m_blendState   = states.m_blendState;
     m_fpState->m_cullState    = states.m_cullState;
     m_fpState->m_samplerState = states.m_samplerState;
-    m_fpState->m_stensilState = states.m_stencilState;
+    m_fpState->m_stencilState = states.m_stencilState;
     
     if ( m_fpState->m_cullState.getCullMode() == CullState::CullMode::Off ) {
         glDisable( GL_CULL_FACE );

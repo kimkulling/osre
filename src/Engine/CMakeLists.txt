@@ -36,6 +36,7 @@ SET( app_inc
     ${HEADER_PATH}/App/AppBase.h
     ${HEADER_PATH}/App/ServiceProvider.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
+	${HEADER_PATH}/App/TCommand.h
 )
 
 SET( app_src

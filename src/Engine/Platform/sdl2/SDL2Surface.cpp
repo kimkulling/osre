@@ -98,5 +98,22 @@ bool SDL2Surface::onUpdateProperies() {
     return true;
 }
 
+void SDL2Surface::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
+    if ( nullptr == m_surface ) {
+        return;
+    }
+
+    SDL_SetWindowPosition( m_surface, x, y );
+    SDL_SetWindowSize( m_surface, w, h );
+    SurfaceProperties *props( AbstractSurface::getProperties() );
+    if ( nullptr != props ) {
+        props->m_x = x;
+        props->m_y = y;
+        props->m_width = w;
+        props->m_height = h;
+        AbstractSurface::setProperties( props );
+    }
+}
+
 } // Namespace Platform
 } // Namespace OSRE

@@ -53,11 +53,14 @@ public:
 
 protected:
     /// The create callback implementation.
-    virtual bool onCreate() override;
+    bool onCreate() override;
     /// The destroy callback implementation.
-    virtual bool onDestroy() override;
+    bool onDestroy() override;
     /// The updateProperties callback implementation.
-    virtual bool onUpdateProperies() override;
+    bool onUpdateProperies() override;
+    /// The resize callback implementation.
+    void onResize( ui32 x, ui32 y, ui32 w, ui32 h ) override;
+
 
 private:
     HINSTANCE m_hInstance;

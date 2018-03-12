@@ -32,15 +32,23 @@ namespace Platform {
 ///
 ///	@brief  This struct stores all information regarding any resolution.
 //-------------------------------------------------------------------------------------------------
-struct Resolution {
+struct OSRE_EXPORT Resolution {
+    enum ResRequest {
+        Res640x480,
+        Res800x600,
+        Res1024x768,
+        Res1280x720,
+        Res1176x664,
+        Res1768x992,
+        Res1920x1080
+    };
+
     ui32 m_width;   ///< The resolution in x.
     ui32 m_height;  ///< The resolution in y.
 
-    Resolution()
-    : m_width(0)
-    , m_height( 0 ) {
-        // empty
-    }
+    explicit Resolution( ResRequest req );
+    Resolution();
+    ~Resolution();
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -74,7 +82,8 @@ class OSRE_EXPORT AbstractSurface {
 public:
     enum SurfaceFlagType {
         SF_PropertiesClean = 0,
-        SF_WinTitleDirty   = ( 1 << 1 )
+        SF_WinTitleDirty   = ( 1 << 1 ),
+        SF_WinResize       = ( 1 << 2 )
     };
 
     /// @brief  The class constructor.
@@ -116,6 +125,8 @@ public:
 
     virtual void setWindowsTitle( const String &title ) = 0;
 
+    void resize( ui32 x, ui32 y, ui32 w, ui32 h );
+
 protected:
     /// @brief  Callback to override on creation.
     virtual bool onCreate() = 0;
@@ -125,6 +136,8 @@ protected:
     
     /// @brief  Callback to override on updates.
     virtual bool onUpdateProperies() = 0;
+
+    virtual void onResize( ui32 x, ui32 y, ui32 w, ui32 h ) = 0;
 
 private:
     ui32 m_flags;

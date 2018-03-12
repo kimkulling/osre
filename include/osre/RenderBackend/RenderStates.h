@@ -33,33 +33,36 @@ namespace OSRE {
 namespace RenderBackend {
 
 struct RenderStates {
+    ClearState     m_clearState;
     TransformState m_transformState;
     PolygonState   m_polygonState;
     BlendState     m_blendState;
     CullState      m_cullState;
     SamplerState   m_samplerState;
-    StencilState   m_stensilState;
+    StencilState   m_stencilState;
     bool           m_applied;
 
     RenderStates()
-    : m_transformState()
+    : m_clearState()
+    , m_transformState()
     , m_polygonState()
     , m_blendState()
     , m_cullState()
     , m_samplerState()
-    , m_stensilState()
+    , m_stencilState()
     , m_applied( false ) {
         // empty
     }
 
-    bool isEqual( const TransformState &transformState, const PolygonState &polygonState, const CullState &cullstate, const BlendState &blendState,
+    bool isEqual( const ClearState &ClearState, const TransformState &transformState, const PolygonState &polygonState, const CullState &cullstate, const BlendState &blendState,
         const SamplerState &samplerState, const StencilState &stencilState ) const {
-        return ( transformState == m_transformState
+        return ( ClearState == m_clearState
+            && transformState == m_transformState
             && polygonState == m_polygonState
             && blendState == m_blendState
             && cullstate == m_cullState
             && samplerState == m_samplerState
-            && stencilState == m_stensilState );
+            && stencilState == m_stencilState );
     }
 };
 

@@ -28,6 +28,41 @@ namespace Platform {
 
 static const String Tag = "AbstractSurface";
 
+Resolution::Resolution( ResRequest req )
+: m_width( 0 )
+, m_height( 0 ) {
+    if ( Res640x480 == req ) {
+        m_width = 640;
+        m_height = 480;
+    } else if ( Res800x600 == req ) {
+        m_width = 800;
+        m_height = 600;
+    } else if ( Res1024x768 == req ) {
+        m_width = 1024;
+        m_height = 768;
+    } else if ( Res1176x664 == req ) {
+        m_width = 1176;
+        m_height = 664;
+
+    } else if ( Res1768x992 == req ) {
+        m_width = 1768;
+        m_height = 992;
+    } else if ( Res1920x1080 == req ) {
+        m_width = 1920;
+        m_height = 1080;
+    }
+}
+
+Resolution::Resolution()
+: m_width( 0 )
+, m_height( 0 ) {
+    // empty
+}
+
+Resolution::~Resolution() {
+    // empty
+}
+
 AbstractSurface::AbstractSurface( SurfaceProperties *properties )
 : m_flags( SF_PropertiesClean )
 , m_pProperties( properties )
@@ -56,11 +91,21 @@ bool AbstractSurface::destroy( ) {
         osre_warn( Tag, "Surface not valid, cannot be destoyed." );
         return false;
     }
+    
     if ( onDestroy() ) {
         m_isCreated = false;
     }
 
     return ( false == m_isCreated );
+}
+
+void AbstractSurface::resize( ui32 x, ui32 y, ui32 w, ui32 h ) {
+    if ( !m_isCreated ) {
+        osre_warn( Tag, "Surface not valid, cannot be resized." );
+        return;
+    }
+
+    onResize( x, y, w, h );
 }
 
 bool AbstractSurface::updateProperties() {

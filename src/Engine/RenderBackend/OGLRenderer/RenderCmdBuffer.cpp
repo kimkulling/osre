@@ -118,7 +118,7 @@ void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
             osre_debug(Tag, "Ponter to pipeline pass is nullptr.");
             continue;
         }
-        PipelineStates states;
+        RenderStates states;
         states.m_polygonState = pass->getPolygonState();
         states.m_cullState = pass->getCullState();
         states.m_blendState = pass->getBlendState();

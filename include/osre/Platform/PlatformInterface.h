@@ -90,6 +90,42 @@ DECL_EVENT( MouseButtonUpEvent );
 DECL_EVENT( MouseMoveEvent );
 DECL_EVENT( QuitEvent );
 DECL_EVENT( AppFocusEvent );
+DECL_EVENT( WindowsMoveEvent );
+DECL_EVENT( WindowsResizeEvent );
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief	This class stores window-resizing events.
+//-------------------------------------------------------------------------------------------------
+class WindowsMoveEventData : public Common::EventData {
+public:
+    WindowsMoveEventData( Common::EventTriggerer* c )
+    : Common::EventData( WindowsResizeEvent, c )
+    , m_x( 0 )
+    , m_y( 0 ) {
+        // empty
+    }
+
+    ui32 m_x, m_y;
+};
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief	This class stores window-resizing events.
+//-------------------------------------------------------------------------------------------------
+class WindowsResizeEventData : public Common::EventData {
+public:
+    WindowsResizeEventData( Common::EventTriggerer* c )
+    : Common::EventData( WindowsResizeEvent, c )
+    , m_w( 0 )
+    , m_h( 0 ) {
+        // empty
+    }
+    
+    ui32 m_w, m_h;
+};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -111,7 +147,6 @@ public:
     Key  m_Key;		///< Key code for the pressed/released keyboard button
     ui16 m_Unicode;	///< The Unicode character for the pressed/released key
 };
-
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

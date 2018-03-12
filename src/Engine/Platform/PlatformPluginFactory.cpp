@@ -78,7 +78,7 @@ AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler(
 #endif // OSRE_WINDOWS
 
         case Platform::PluginType::SDL2Plugin:
-            eventHandler = new SDL2EventHandler;
+            eventHandler = new SDL2EventHandler(rootSurface);
             break;
 
         default:

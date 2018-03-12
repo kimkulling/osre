@@ -48,11 +48,13 @@ public:
 
 protected:
     /// The onCreate callback implementation.
-    virtual bool onCreate();
+    virtual bool onCreate() override;
     /// The onDestroy callback implementation.
-    virtual bool onDestroy();
+    virtual bool onDestroy() override;
     /// The onUpdateProperies callback implementation.
-    virtual bool onUpdateProperies();
+    virtual bool onUpdateProperies() override;
+    ///
+    virtual void onResize( ui32 x, ui32 y, ui32 w, ui32 h ) override;
 
 private:
     SDL_Window *m_surface;

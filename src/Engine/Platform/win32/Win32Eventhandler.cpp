@@ -97,6 +97,7 @@ Win32Eventhandler::Win32Eventhandler( )
     m_pOSEventTriggerer->addTriggerableEvent( MouseButtonDownEvent );
     m_pOSEventTriggerer->addTriggerableEvent( MouseButtonUpEvent );
     m_pOSEventTriggerer->addTriggerableEvent( MouseMoveEvent );
+    m_pOSEventTriggerer->addTriggerableEvent( WindowsResizeEvent );
     m_pOSEventTriggerer->addTriggerableEvent( QuitEvent );
     m_pOSEventTriggerer->addTriggerableEvent( AppFocusEvent );
 }
@@ -214,6 +215,17 @@ bool Win32Eventhandler::onEvent( const Common::Event &ev, const Common::EventDat
             {
                 KeyboardButtonEventData *data = new KeyboardButtonEventData( false, m_pOSEventTriggerer );
                 data->m_Key = ( Key ) Program.wParam;
+                pActiveEventQueue->addBack( data );
+            }
+            break;
+
+            case WM_SIZE: {
+                WindowsResizeEventData *data = new WindowsResizeEventData( m_pOSEventTriggerer );
+                RECT rcClient;
+                Win32Surface *s = ( Win32Surface* )m_pRootSurface;
+                GetClientRect( s->getHWnd(), &rcClient );
+                data->m_w = rcClient.right - rcClient.left;
+                data->m_h = rcClient.bottom - rcClient.top;
                 pActiveEventQueue->addBack( data );
             }
             break;

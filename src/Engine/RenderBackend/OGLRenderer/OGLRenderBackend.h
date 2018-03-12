@@ -62,7 +62,7 @@ struct RenderCmdData3DView;
 struct Shader;
 struct UniformVar;
 struct PrimitiveGroup;
-struct RenderStates;
+//struct RenderStates;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -132,7 +132,7 @@ public:
     FontBase *findFont( const String &name ) const;
     bool relaseFont( FontBase *font );
     void releaseAllFonts();
-    void setFixedPipelineStates(const PipelineStates &states);
+    void setFixedPipelineStates(const RenderStates &states);
 
 private:
     Platform::AbstractRenderContext *m_renderCtx;

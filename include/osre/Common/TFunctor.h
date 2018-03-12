@@ -86,10 +86,6 @@ private:
 //-------------------------------------------------------------------------------------------------
 template < class T, class RET, class P1, class P2 >
 class FunctorMember : public FunctorImpl<RET, P1, P2> {
-private:
-    RET (T::*m_Func) (P1,P2);
-    T* m_Obj;
-
 public:
     /// @brief The class constructor with instance and members.
     ///	@param	obj				[in] A pointer showing to the object to get called.
@@ -114,6 +110,10 @@ public:
     virtual RET call(P1 p1, P2 p2) const {
         return ( m_Obj->*m_Func )( p1, p2 );
     }
+
+private:
+    RET( T::*m_Func ) ( P1, P2 );
+    T* m_Obj;
 };
 
 //-------------------------------------------------------------------------------------------------

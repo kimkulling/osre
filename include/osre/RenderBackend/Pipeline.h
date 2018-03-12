@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/StencilState.h>
 #include <osre/RenderBackend/CullState.h>
 #include <osre/RenderBackend/PolygonState.h>
+#include <osre/RenderBackend/RenderStates.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -48,7 +49,7 @@ struct RenderTarget {
     // empty
 };
 
-struct PipelineStates {
+/*struct RenderStates {
     TransformState m_transformState;
     PolygonState   m_polygonState;
     CullState      m_cullState;
@@ -56,7 +57,7 @@ struct PipelineStates {
     SamplerState   m_samplerState;
     ClearState     m_clearState;
     StencilState   m_stencilState;
-};
+};*/
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -67,7 +68,7 @@ class OSRE_EXPORT PipelinePass {
 public:
     PipelinePass( Shader *shader );
     ~PipelinePass();
-    void set( RenderTarget &rt, PipelineStates &states );
+    void set( RenderTarget &rt, RenderStates &states );
     void setPolygonState(PolygonState polyState);
     PolygonState getPolygonState() const;
     void setCullState( CullState &cullstate );
@@ -87,7 +88,7 @@ public:
 
 private:
     RenderTarget m_renderTarget;
-    PipelineStates m_states;
+    RenderStates m_states;
     Shader *m_shader;
 };
 

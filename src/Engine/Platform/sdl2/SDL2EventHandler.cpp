@@ -25,6 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Platform/PlatformInterface.h>
 
+#include "SDL2Surface.h"
+
 #include <SDL.h>
 
 namespace OSRE {
@@ -97,18 +99,26 @@ struct SDL2PeekInputUpdate : public AbstractSDL2InputUpdate {
 
 std::map<SDL_Window*, SDL2EventHandler*> SDL2EventHandler::s_windowsServerMap;
 
-SDL2EventHandler::SDL2EventHandler()
+SDL2EventHandler::SDL2EventHandler( AbstractSurface *window )
 : AbstractPlatformEventHandler()
 , m_isPolling( false )
 , m_shutdownRequested( false )
 , m_inputUpdate( nullptr )
+, m_window( nullptr )
 , m_eventTriggerer( nullptr ) {
+    OSRE_ASSERT( nullptr != window );
+    SDL2Surface *s = ( SDL2Surface* ) window;
+    if ( nullptr != s ) {
+        m_window = s->getSDLSurface();
+        OSRE_ASSERT( nullptr != m_window );
+    }
     m_inputUpdate = new SDL2GetInputUpdate;
     m_eventTriggerer = new EventTriggerer;
     m_eventTriggerer->addTriggerableEvent( KeyboardButtonDownEvent );
     m_eventTriggerer->addTriggerableEvent( KeyboardButtonUpEvent );
     m_eventTriggerer->addTriggerableEvent( MouseButtonDownEvent );
     m_eventTriggerer->addTriggerableEvent( MouseButtonUpEvent );
+    m_eventTriggerer->addTriggerableEvent( WindowsResizeEvent );
     m_eventTriggerer->addTriggerableEvent( MouseMoveEvent );
     m_eventTriggerer->addTriggerableEvent( QuitEvent );
     m_eventTriggerer->addTriggerableEvent( AppFocusEvent );
@@ -136,10 +146,12 @@ SDL2EventHandler::~SDL2EventHandler( ) {
     m_inputUpdate = nullptr;
 }
 
-bool SDL2EventHandler::onEvent( const Event &event, const EventData *eventData ){
+bool SDL2EventHandler::onEvent( const Event &event, const EventData* ){
     EventDataList *activeEventQueue( getActiveEventDataList() );
     SDL_Event ev;
     if( !m_shutdownRequested && m_inputUpdate->update( &ev ) ) {
+        const Uint32 windowID = SDL_GetWindowID( m_window );
+
         switch( ev.type ){
             case SDL_KEYDOWN:
             case SDL_KEYUP: {
@@ -149,24 +161,60 @@ bool SDL2EventHandler::onEvent( const Event &event, const EventData *eventData )
             }
             break;
 
-            case SDL_MOUSEMOTION:
-            {
+            case SDL_MOUSEMOTION: {
+                MouseMoveEventData *data = new MouseMoveEventData( m_eventTriggerer );
+                int *x, *y;
+                SDL_GetMouseState( x, y );
+                data->m_AbsX = *x;
+                data->m_AbsY = *y;
+                activeEventQueue->addBack( data );
             }
             break;
 
             case SDL_MOUSEBUTTONDOWN:
-            case SDL_MOUSEBUTTONUP:
-            {
+            case SDL_MOUSEBUTTONUP: {
+                MouseButtonEventData *data = new MouseButtonEventData( ev.type == SDL_MOUSEBUTTONDOWN, m_eventTriggerer );
+                activeEventQueue->addBack( data );
             }
             break;
 
-
-            case SDL_QUIT: {
+            case SDL_QUIT:  {
                 m_shutdownRequested = true;
             }
             break;
 
-            //case SDL_VIDEORESIZE:
+            case SDL_WINDOWEVENT: {
+                if ( ev.window.windowID == windowID ) {
+                    switch ( ev.window.event ) {
+                    case SDL_WINDOWEVENT_MOVED: {
+                        WindowsMoveEventData *data = new WindowsMoveEventData( m_eventTriggerer );
+                        data->m_x = ( ui32 )ev.window.data1;
+                        data->m_y = ( ui32 )ev.window.data1;
+                        activeEventQueue->addBack( data );
+                    }
+                    break;
+
+                    case SDL_WINDOWEVENT_SIZE_CHANGED: {
+                        WindowsResizeEventData *data = new WindowsResizeEventData( m_eventTriggerer );
+                        data->m_w = ev.window.data1;
+                        data->m_h = ev.window.data2;
+                        activeEventQueue->addBack( data );
+                    }
+                    break;
+
+                    case SDL_WINDOWEVENT_RESIZED: {
+                        WindowsResizeEventData *data = new WindowsResizeEventData( m_eventTriggerer );
+                        data->m_w = ( ui32 )ev.window.data1;
+                        data->m_h = ( ui32 )ev.window.data1;
+                        activeEventQueue->addBack( data );
+                    }
+                    break;
+                    }
+                }
+            }
+            break;
+
+            //case SDL_WINDOWEVENT_SIZE_CHANGED:                                  
             //case SDL_VIDEOEXPOSE:
             //case SDL_SYSWMEVENT:
             //case SDL_USEREVENT:

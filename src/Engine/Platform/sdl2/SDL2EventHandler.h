@@ -34,6 +34,8 @@ namespace Platform {
 
 struct AbstractSDL2InputUpdate;
 
+class AbstractSurface;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -43,7 +45,7 @@ class SDL2EventHandler : public AbstractPlatformEventHandler {
 public:
     using EventArray = CPPCore::TArray<const Common::Event*>;
 
-    SDL2EventHandler();
+    SDL2EventHandler( AbstractSurface *window );
     virtual ~SDL2EventHandler();
     bool onEvent( const Common::Event &event, const Common::EventData *pEventData ) override;
     void registerEventListener( const EventArray &events, OSEventListener *listener ) override;
@@ -60,6 +62,7 @@ private:
     bool m_isPolling;
     bool m_shutdownRequested;
     AbstractSDL2InputUpdate *m_inputUpdate;
+    SDL_Window *m_window;
     Common::EventTriggerer *m_eventTriggerer;
 };
 

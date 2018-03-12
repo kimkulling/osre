@@ -61,7 +61,7 @@ HINSTANCE Win32Surface::getModuleHandle() const {
 
 bool Win32Surface::onCreate( ) {
     SurfaceProperties *prop = getProperties();
-    if( !prop ) {
+    if( nullptr == prop ) {
         return false;
     }
 
@@ -79,8 +79,8 @@ bool Win32Surface::onCreate( ) {
     }
 
     ::AdjustWindowRect( &clientSize, style, FALSE );
-    const ui32 realWidth = clientSize.right - clientSize.left;
-    const ui32 realHeight = clientSize.bottom - clientSize.top;
+    const ui32 realWidth( clientSize.right - clientSize.left );
+    const ui32 realHeight( clientSize.bottom - clientSize.top );
 
     ui32 cx = prop->m_width / 2;
     ui32 cy = prop->m_height / 2;
@@ -95,8 +95,9 @@ bool Win32Surface::onCreate( ) {
     sWC.hbrBackground = ( HBRUSH )::GetStockObject( BLACK_BRUSH );
     sWC.lpszMenuName = NULL;
     sWC.lpszClassName = prop->m_title.c_str();
-    if( !::RegisterClass( &sWC ) )
+    if ( !::RegisterClass( &sWC ) ) {
         return false;
+    }
 
     if( prop->m_fullscreen ) {
         DEVMODE dmScreenSettings;
@@ -130,7 +131,8 @@ bool Win32Surface::onCreate( ) {
         prop->m_title.c_str(),
         prop->m_title.c_str(),
         dwStyle | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
-        prop->m_x, prop->m_y,
+        prop->m_x, 
+        prop->m_y,
         realWidth, realHeight,
         NULL, NULL,
         m_hInstance,
@@ -158,16 +160,16 @@ bool Win32Surface::onCreate( ) {
 }
 
 bool Win32Surface::onDestroy( ) {
-    SurfaceProperties *pProp = getProperties();
-    if( !pProp ) {
+    SurfaceProperties *prop = getProperties();
+    if( nullptr == prop ) {
         return false;
     }
 
-    if( !pProp->m_open ) {
+    if( !prop->m_open ) {
         return false;
     }
 
-    if ( !pProp->m_fullscreen ) {
+    if ( !prop->m_fullscreen ) {
         ::ChangeDisplaySettings( NULL, 0 );
     }
 
@@ -183,13 +185,13 @@ bool Win32Surface::onDestroy( ) {
         m_wnd = NULL;
     }
 
-    if( !::UnregisterClass( pProp->m_title.c_str(), m_hInstance ) ) {
+    if( !::UnregisterClass( prop->m_title.c_str(), m_hInstance ) ) {
         ::MessageBox( NULL, "Cannot unregister the application .",
             "Abort application", MB_OK | MB_ICONEXCLAMATION );
         m_hInstance = NULL;
     }
 
-    pProp->m_open = false;
+    prop->m_open = false;
 
     return true;
 }
@@ -203,6 +205,18 @@ bool Win32Surface::onUpdateProperies() {
     AbstractSurface::setFlags( SF_PropertiesClean );
 
     return true;
+}
+
+void Win32Surface::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
+    ::SetWindowPos( m_wnd, HWND_TOP, x, y, w, h, SWP_NOSIZE );
+    SurfaceProperties *props( AbstractSurface::getProperties() );
+    if ( nullptr != props ) {
+        props->m_x = x;
+        props->m_y = y;
+        props->m_width = w;
+        props->m_height = h;
+        AbstractSurface::setProperties( props );
+    }
 }
 
 } // Namespace Platform

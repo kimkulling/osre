@@ -35,7 +35,7 @@ PipelinePass::~PipelinePass() {
     // empty
 }
 
-void PipelinePass::set( RenderTarget &rt, PipelineStates &states) {
+void PipelinePass::set( RenderTarget &rt, RenderStates &states) {
     m_renderTarget = rt;
     m_states = states;
 }
