@@ -100,7 +100,7 @@ static bool setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTextur
             loc.setPath( path );
 
             OGLTexture *oglTexture = rb->createTextureFromFile( tex->m_textureName, loc );
-            if( oglTexture ) {
+            if( nullptr != oglTexture ) {
                 textures.add( oglTexture );
             }
         }
@@ -571,5 +571,17 @@ bool OGLRenderEventHandler::onShutdownRequest( const Common::EventData *eventDat
     return true;
 }
 
+bool OGLRenderEventHandler::onResizeRenderTarget( const Common::EventData *eventData ) {
+    OSRE_ASSERT( nullptr != eventData );
+
+    ResizeEventData *data = ( ResizeEventData* ) eventData;
+    const ui32 x( data->m_x );
+    const ui32 y( data->m_y );
+    const ui32 w( data->m_w );
+    const ui32 h( data->m_h );
+    m_oglBackend->setViewport( x, y, w, h );
+
+    return true;
+}
 } // Namespace RenderBackend
 } // Namespace OSRE

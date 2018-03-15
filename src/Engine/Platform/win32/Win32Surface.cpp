@@ -133,8 +133,10 @@ bool Win32Surface::onCreate( ) {
         dwStyle | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
         prop->m_x, 
         prop->m_y,
-        realWidth, realHeight,
-        NULL, NULL,
+        realWidth, 
+        realHeight,
+        NULL, 
+        NULL,
         m_hInstance,
         NULL );
 

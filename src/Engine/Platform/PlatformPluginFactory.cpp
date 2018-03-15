@@ -70,7 +70,7 @@ AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler(
         case Platform::PluginType::WindowsPlugin: {
                 Win32Surface *win32Surface = static_cast<Win32Surface*>( rootSurface );
                 if( win32Surface ) {
-                    eventHandler = new Win32Eventhandler;
+                    eventHandler = new Win32Eventhandler( win32Surface );
                     Win32Eventhandler::registerEventServer( ( Win32Eventhandler* ) eventHandler, win32Surface->getHWnd() );
                 }
             }
@@ -78,7 +78,7 @@ AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler(
 #endif // OSRE_WINDOWS
 
         case Platform::PluginType::SDL2Plugin:
-            eventHandler = new SDL2EventHandler(rootSurface);
+            eventHandler = new SDL2EventHandler( rootSurface );
             break;
 
         default:

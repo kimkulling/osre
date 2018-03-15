@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <src/Engine/Platform/win32/Win32Eventhandler.h>
 #include <src/Engine/Platform/win32/Win32Surface.h>
-
+#include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Common/EventTriggerer.h>
 
@@ -83,47 +83,49 @@ static void getXYPosFromLParam( LPARAM lparam, i32 &x, i32 &y ) {
     y = GET_Y_LPARAM( lparam );
 }
 
-Win32Eventhandler::Win32Eventhandler( )
+Win32Eventhandler::Win32Eventhandler( AbstractSurface *rootWindow )
 : AbstractPlatformEventHandler()
-, m_pUpdateInstance( nullptr )
-, m_pOSEventTriggerer( nullptr )
-, m_pRootSurface( nullptr )
+, m_updateInstance( nullptr )
+, m_eventTriggerer( nullptr )
+, m_rootWindow( rootWindow )
 , m_shutdownRequested( false )
 , m_isPolling( true ) {
+    OSRE_ASSERT( nullptr != rootWindow );
     enablePolling( m_isPolling );
-    m_pOSEventTriggerer = new EventTriggerer;
-    m_pOSEventTriggerer->addTriggerableEvent( KeyboardButtonDownEvent );
-    m_pOSEventTriggerer->addTriggerableEvent( KeyboardButtonUpEvent );
-    m_pOSEventTriggerer->addTriggerableEvent( MouseButtonDownEvent );
-    m_pOSEventTriggerer->addTriggerableEvent( MouseButtonUpEvent );
-    m_pOSEventTriggerer->addTriggerableEvent( MouseMoveEvent );
-    m_pOSEventTriggerer->addTriggerableEvent( WindowsResizeEvent );
-    m_pOSEventTriggerer->addTriggerableEvent( QuitEvent );
-    m_pOSEventTriggerer->addTriggerableEvent( AppFocusEvent );
+    m_eventTriggerer = new EventTriggerer;
+    m_eventTriggerer->addTriggerableEvent( KeyboardButtonDownEvent );
+    m_eventTriggerer->addTriggerableEvent( KeyboardButtonUpEvent );
+    m_eventTriggerer->addTriggerableEvent( MouseButtonDownEvent );
+    m_eventTriggerer->addTriggerableEvent( MouseButtonUpEvent );
+    m_eventTriggerer->addTriggerableEvent( MouseMoveEvent );
+    m_eventTriggerer->addTriggerableEvent( WindowsResizeEvent );
+    m_eventTriggerer->addTriggerableEvent( QuitEvent );
+    m_eventTriggerer->addTriggerableEvent( AppFocusEvent );
 }
 
 Win32Eventhandler::~Win32Eventhandler( ) {
-    delete m_pOSEventTriggerer;
-    m_pOSEventTriggerer = nullptr;
+    m_rootWindow = nullptr;
 
-    delete m_pUpdateInstance;
-    m_pUpdateInstance = nullptr;
+    delete m_eventTriggerer;
+    m_eventTriggerer = nullptr;
+
+    delete m_updateInstance;
+    m_updateInstance = nullptr;
 }
 
 bool Win32Eventhandler::onEvent( const Common::Event &ev, const Common::EventData *pEventData ) {
     EventDataList *pActiveEventQueue = getActiveEventDataList();
     MSG	Program;
-    if( !m_shutdownRequested && m_pUpdateInstance->update( Program ) ) {
+    if( !m_shutdownRequested && m_updateInstance->update( Program ) ) {
         switch( Program.message ) {
             case WM_ACTIVATE: {
-                Common::EventData *data = new Common::EventData( AppFocusEvent, m_pOSEventTriggerer );
+                Common::EventData *data = new Common::EventData( AppFocusEvent, m_eventTriggerer );
                 pActiveEventQueue->addBack( data );
             }
             break;
 
             case WM_QUIT:
-            case WM_CLOSE: 
-            {
+            case WM_CLOSE: {
                 onQuit();
                 m_shutdownRequested = true;
             }
@@ -141,97 +143,90 @@ bool Win32Eventhandler::onEvent( const Common::Event &ev, const Common::EventDat
             }
             break;
 
-            case WM_LBUTTONDOWN: 
-            {
-                MouseButtonEventData *data = new MouseButtonEventData( true, m_pOSEventTriggerer );
+            case WM_LBUTTONDOWN: {
+                MouseButtonEventData *data = new MouseButtonEventData( true, m_eventTriggerer );
                 data->m_Button = MouseButtonEventData::LeftButton;
                 getXYPosFromLParam( Program.lParam, data->m_AbsX, data->m_AbsY );
                 pActiveEventQueue->addBack( data );
             }
             break;
 
-            case WM_LBUTTONUP: 
-            {
-                MouseButtonEventData *data = new MouseButtonEventData( false, m_pOSEventTriggerer );
+            case WM_LBUTTONUP: {
+                MouseButtonEventData *data = new MouseButtonEventData( false, m_eventTriggerer );
                 data->m_Button = MouseButtonEventData::LeftButton;
                 getXYPosFromLParam( Program.lParam, data->m_AbsX, data->m_AbsY );
                 pActiveEventQueue->addBack( data );
             }
             break;
 
-            case WM_MBUTTONDOWN:
-            {
-                MouseButtonEventData *data = new MouseButtonEventData( true, m_pOSEventTriggerer );
+            case WM_MBUTTONDOWN: {
+                MouseButtonEventData *data = new MouseButtonEventData( true, m_eventTriggerer );
                 data->m_Button = MouseButtonEventData::MiddleButton;
                 getXYPosFromLParam( Program.lParam, data->m_AbsX, data->m_AbsY );
                 pActiveEventQueue->addBack( data );
             }
             break;
 
-            case WM_MBUTTONUP:
-            {
-                MouseButtonEventData *data = new MouseButtonEventData( false, m_pOSEventTriggerer );
+            case WM_MBUTTONUP: {
+                MouseButtonEventData *data = new MouseButtonEventData( false, m_eventTriggerer );
                 data->m_Button = MouseButtonEventData::MiddleButton;
                 getXYPosFromLParam( Program.lParam, data->m_AbsX, data->m_AbsY );
                 pActiveEventQueue->addBack( data );
             }
             break;
 
-            case WM_RBUTTONDOWN:
-            {
-                MouseButtonEventData *data = new MouseButtonEventData( true, m_pOSEventTriggerer );
+            case WM_RBUTTONDOWN: {
+                MouseButtonEventData *data = new MouseButtonEventData( true, m_eventTriggerer );
                 data->m_Button = MouseButtonEventData::RightButton;
                 getXYPosFromLParam( Program.lParam, data->m_AbsX, data->m_AbsY );
                 pActiveEventQueue->addBack( data );
             }
             break;
 
-            case WM_RBUTTONUP:
-            {
-                MouseButtonEventData *data = new MouseButtonEventData( false, m_pOSEventTriggerer );
+            case WM_RBUTTONUP: {
+                MouseButtonEventData *data = new MouseButtonEventData( false, m_eventTriggerer );
                 data->m_Button = MouseButtonEventData::RightButton;
                 getXYPosFromLParam( Program.lParam, data->m_AbsX, data->m_AbsY );
                 pActiveEventQueue->addBack( data );
             }
             break;
 
-            case WM_MOUSEMOVE:
-            {
-                MouseMoveEventData *data = new MouseMoveEventData( m_pOSEventTriggerer );
+            case WM_MOUSEMOVE: {
+                MouseMoveEventData *data = new MouseMoveEventData( m_eventTriggerer );
                 getXYPosFromLParam( Program.lParam, data->m_AbsX, data->m_AbsY );
                 pActiveEventQueue->addBack( data );
             }
             break;
 
-            case WM_KEYDOWN:
-            {
-                KeyboardButtonEventData *data = new KeyboardButtonEventData( true, m_pOSEventTriggerer );
+            case WM_KEYDOWN: 
+            case WM_KEYUP: {
+                KeyboardButtonEventData *data = new KeyboardButtonEventData( Program.message == WM_KEYDOWN, m_eventTriggerer );
                 data->m_Key = ( Key ) Program.wParam;
                 pActiveEventQueue->addBack( data );
             }
             break;
 
-            case WM_KEYUP:
-            {
-                KeyboardButtonEventData *data = new KeyboardButtonEventData( false, m_pOSEventTriggerer );
-                data->m_Key = ( Key ) Program.wParam;
-                pActiveEventQueue->addBack( data );
-            }
-            break;
-
+            case WM_PAINT:
             case WM_SIZE: {
-                WindowsResizeEventData *data = new WindowsResizeEventData( m_pOSEventTriggerer );
+                WindowsResizeEventData *data = new WindowsResizeEventData( m_eventTriggerer );
                 RECT rcClient;
-                Win32Surface *s = ( Win32Surface* )m_pRootSurface;
-                GetClientRect( s->getHWnd(), &rcClient );
-                data->m_w = rcClient.right - rcClient.left;
-                data->m_h = rcClient.bottom - rcClient.top;
-                pActiveEventQueue->addBack( data );
+                Win32Surface *s = ( Win32Surface* ) m_rootWindow;
+                if ( nullptr != s ) {
+                    GetClientRect( s->getHWnd(), &rcClient );
+                    ui32 x = rcClient.left;
+                    ui32 y = rcClient.top;
+                    ui32 w = rcClient.right - rcClient.left;
+                    ui32 h = rcClient.bottom - rcClient.top;
+
+                    getRenderBackendService()->resize( x, y, w,h );
+
+                    pActiveEventQueue->addBack( data );
+                }
             }
             break;
         }
 
-        processEvents( m_pOSEventTriggerer );
+        processEvents( m_eventTriggerer );
 
         ::TranslateMessage( &Program );
         ::DispatchMessage( &Program );
@@ -243,11 +238,11 @@ bool Win32Eventhandler::onEvent( const Common::Event &ev, const Common::EventDat
 LRESULT Win32Eventhandler::winproc( HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam ) {
     Win32Eventhandler *pEventHandler = Win32Eventhandler::getInstance( hWnd );
     switch( Message ) {
-        case WM_ACTIVATE:
-            return 0;
+        case WM_ACTIVATE: {
+        return 0;
+        }
 
-        case WM_SYSCOMMAND:
-        {
+        case WM_SYSCOMMAND: {
             switch( wParam ) {
             case SC_SCREENSAVE:
             case SC_MONITORPOWER:
@@ -302,8 +297,8 @@ Win32Eventhandler *Win32Eventhandler::getInstance( HWND hWnd ) {
 }
 
 bool Win32Eventhandler::onQuit() {
-    Common::EventData data( QuitEvent, m_pOSEventTriggerer );
-    m_pOSEventTriggerer->triggerEvent( data.getEvent(), &data );
+    Common::EventData data( QuitEvent, m_eventTriggerer );
+    m_eventTriggerer->triggerEvent( data.getEvent(), &data );
     m_shutdownRequested = true;
 
     return true;
@@ -318,28 +313,29 @@ void Win32Eventhandler::setRootSurface( AbstractSurface *pSurface ) {
     Win32Surface *pWin32Surface = ( Win32Surface* ) pSurface;
     registerEventServer( this, pWin32Surface->getHWnd() );
 
-    m_pRootSurface = pWin32Surface;
-
+    m_rootWindow = pWin32Surface;
 }
 
 AbstractSurface *Win32Eventhandler::getRootSurface( ) const {
-    return m_pRootSurface;
+    return m_rootWindow;
 }
 
 void Win32Eventhandler::enablePolling( bool enabled ) {
-    if( m_pUpdateInstance && enabled == m_isPolling ) {
+    if( m_updateInstance && enabled == m_isPolling ) {
         return;
     }
 
-    if( m_pUpdateInstance ) {
-        delete m_pUpdateInstance;
-        m_pUpdateInstance = nullptr;
+    if( m_updateInstance ) {
+        delete m_updateInstance;
+        m_updateInstance = nullptr;
     }
+
     m_isPolling = enabled;
+    
     if( m_isPolling ) {
-        m_pUpdateInstance = new Win32PeekInputUpdate;
+        m_updateInstance = new Win32PeekInputUpdate;
     } else {
-        m_pUpdateInstance = new Win32GetInputUpdate;
+        m_updateInstance = new Win32GetInputUpdate;
     }
 }
 
@@ -347,17 +343,18 @@ bool Win32Eventhandler::isPolling( ) const {
     return m_isPolling;
 }
 
-void Win32Eventhandler::registerEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener ) {
-    assert( nullptr != m_pOSEventTriggerer );
+void Win32Eventhandler::registerEventListener( const CPPCore::TArray<const Common::Event*> &events, 
+        OSEventListener *pListener ) {
+    OSRE_ASSERT( nullptr != m_eventTriggerer );
 
-    m_pOSEventTriggerer->addEventListener( events, Common::EventFunctor::Make( pListener,
+    m_eventTriggerer->addEventListener( events, Common::EventFunctor::Make( pListener,
         &OSEventListener::onOSEvent ) );
 }
 
 void Win32Eventhandler::unregisterEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener ) {
-    assert( nullptr != m_pOSEventTriggerer );
+    OSRE_ASSERT( nullptr != m_eventTriggerer );
 
-    m_pOSEventTriggerer->removeEventListener( events, Common::EventFunctor::Make( pListener,
+    m_eventTriggerer->removeEventListener( events, Common::EventFunctor::Make( pListener,
         &OSEventListener::onOSEvent ) );
 }
 

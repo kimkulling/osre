@@ -296,5 +296,10 @@ void RenderBackendService::attachView( TransformMatrixBlock &transform ) {
 
 }
 
+void RenderBackendService::resize( ui32 x, ui32 y, ui32 w, ui32 h ) {
+    ResizeEventData *data = new ResizeEventData( x, y, w, h );
+    m_renderTaskPtr->sendEvent( &OnResizeEvent, data );
+
+}
 } // Namespace RenderBackend
 } // Namespace OSRE

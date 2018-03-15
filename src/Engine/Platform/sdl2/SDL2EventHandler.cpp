@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <src/Engine/Platform/sdl2/SDL2EventHandler.h>
 #include <osre/Common/EventTriggerer.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/Logger.h>
 #include <osre/Platform/PlatformInterface.h>
 
@@ -34,6 +35,8 @@ namespace Platform {
 
 using namespace ::OSRE;
 using namespace ::OSRE::Common;
+using namespace ::OSRE::RenderBackend;
+
 using namespace ::CPPCore;
 
 static const String Tag = "SDL2EventHandler";
@@ -87,7 +90,7 @@ struct SDL2PeekInputUpdate : public AbstractSDL2InputUpdate {
         // empty
     }
 
-    //  Update implemented as a poll operation, will check for a new exent.
+    //  Update implemented as a poll operation, will check for a new event.
     bool update( SDL_Event *ev ) {
         const i32 ret = ::SDL_PollEvent( ev );
         if( 0 == ret ) {
@@ -107,11 +110,9 @@ SDL2EventHandler::SDL2EventHandler( AbstractSurface *window )
 , m_window( nullptr )
 , m_eventTriggerer( nullptr ) {
     OSRE_ASSERT( nullptr != window );
-    SDL2Surface *s = ( SDL2Surface* ) window;
-    if ( nullptr != s ) {
-        m_window = s->getSDLSurface();
-        OSRE_ASSERT( nullptr != m_window );
-    }
+    m_window = ( SDL2Surface* ) window;
+    OSRE_ASSERT( nullptr != m_window );
+
     m_inputUpdate = new SDL2GetInputUpdate;
     m_eventTriggerer = new EventTriggerer;
     m_eventTriggerer->addTriggerableEvent( KeyboardButtonDownEvent );
@@ -150,7 +151,7 @@ bool SDL2EventHandler::onEvent( const Event &event, const EventData* ){
     EventDataList *activeEventQueue( getActiveEventDataList() );
     SDL_Event ev;
     if( !m_shutdownRequested && m_inputUpdate->update( &ev ) ) {
-        const Uint32 windowID = SDL_GetWindowID( m_window );
+        const Uint32 windowID = SDL_GetWindowID( m_window->getSDLSurface() );
 
         switch( ev.type ){
             case SDL_KEYDOWN:
@@ -187,18 +188,16 @@ bool SDL2EventHandler::onEvent( const Event &event, const EventData* ){
                 if ( ev.window.windowID == windowID ) {
                     switch ( ev.window.event ) {
                     case SDL_WINDOWEVENT_MOVED: {
-                        WindowsMoveEventData *data = new WindowsMoveEventData( m_eventTriggerer );
-                        data->m_x = ( ui32 )ev.window.data1;
-                        data->m_y = ( ui32 )ev.window.data1;
-                        activeEventQueue->addBack( data );
+                        ui32 x = ( ui32 )ev.window.data1;
+                        ui32 y = ( ui32 )ev.window.data1;
+                        getRenderBackendService()->resize( x, y, m_window->getProperties()->m_width, m_window->getProperties()->m_width );
                     }
                     break;
 
                     case SDL_WINDOWEVENT_SIZE_CHANGED: {
-                        WindowsResizeEventData *data = new WindowsResizeEventData( m_eventTriggerer );
-                        data->m_w = ev.window.data1;
-                        data->m_h = ev.window.data2;
-                        activeEventQueue->addBack( data );
+                        ui32 w = ev.window.data1;
+                        ui32 h = ev.window.data2;
+                        getRenderBackendService()->resize( m_window->getProperties()->m_x, m_window->getProperties()->m_y, w, h );
                     }
                     break;
 

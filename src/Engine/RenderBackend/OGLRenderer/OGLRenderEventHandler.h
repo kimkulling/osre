@@ -100,6 +100,8 @@ protected:
     virtual bool onCommitNexFrame( const Common::EventData *eventData );
     /// @brief  Callback for dealing with a shutdown request.
     virtual bool onShutdownRequest( const Common::EventData *eventData );
+    /// @brief  Callback for dealing with resize events.
+    virtual bool onResizeRenderTarget( const Common::EventData *eventData );
 
 private:
     bool m_isRunning;

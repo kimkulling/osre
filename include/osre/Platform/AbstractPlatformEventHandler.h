@@ -28,6 +28,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TList.h>
 
 namespace OSRE {
+
+namespace RenderBackend {
+    class RenderBackendService;
+}
+
 namespace Platform {
 
 // Forward declarations
@@ -64,6 +69,9 @@ public:
     /// @return The active polling state.
     virtual bool isPolling() const = 0;
 
+    void setRenderBackendService( RenderBackend::RenderBackendService *rbSrv );
+    RenderBackend::RenderBackendService *getRenderBackendService() const;
+
 protected:
     /// @brief  The class constructor.
     AbstractPlatformEventHandler();
@@ -83,18 +91,20 @@ protected:
     ///	@brief  Toggles between the active and pending list.
     void switchEventDataList();
 
+
 private:
     enum {
         numEventQueues = 2
     };
     EventDataList m_eventQueues[ numEventQueues ];
     ui32 m_activeList;
+    RenderBackend::RenderBackendService *m_rbSrv;
 };
 
 inline
-AbstractPlatformEventHandler::AbstractPlatformEventHandler( )
-: AbstractEventHandler()
-, m_activeList( 0 ) {
+AbstractPlatformEventHandler::AbstractPlatformEventHandler()
+: m_activeList( 0 )
+, m_rbSrv( nullptr ) {
     // empty
 }
 
@@ -143,6 +153,16 @@ EventDataList *AbstractPlatformEventHandler::getPendingEventDataList() {
 inline
 void AbstractPlatformEventHandler::switchEventDataList() {
     m_activeList = ( m_activeList + 1 ) % numEventQueues;
+}
+
+inline
+void AbstractPlatformEventHandler::setRenderBackendService( RenderBackend::RenderBackendService *rbSrv ) {
+    m_rbSrv = rbSrv;
+}
+
+inline
+RenderBackend::RenderBackendService *AbstractPlatformEventHandler::getRenderBackendService() const {
+    return m_rbSrv;
 }
 
 } // Namespace Platform

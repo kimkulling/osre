@@ -35,6 +35,7 @@ namespace Platform {
 struct AbstractSDL2InputUpdate;
 
 class AbstractSurface;
+class SDL2Surface;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -62,7 +63,7 @@ private:
     bool m_isPolling;
     bool m_shutdownRequested;
     AbstractSDL2InputUpdate *m_inputUpdate;
-    SDL_Window *m_window;
+    SDL2Surface *m_window;
     Common::EventTriggerer *m_eventTriggerer;
 };
 

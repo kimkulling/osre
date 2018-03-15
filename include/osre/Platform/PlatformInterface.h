@@ -119,12 +119,14 @@ class WindowsResizeEventData : public Common::EventData {
 public:
     WindowsResizeEventData( Common::EventTriggerer* c )
     : Common::EventData( WindowsResizeEvent, c )
+    , m_x( 0 )
+    , m_y( 0 )
     , m_w( 0 )
     , m_h( 0 ) {
         // empty
     }
     
-    ui32 m_w, m_h;
+    ui32 m_x, m_y, m_w, m_h;
 };
 
 //-------------------------------------------------------------------------------------------------

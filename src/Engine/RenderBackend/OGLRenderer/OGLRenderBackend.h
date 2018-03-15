@@ -62,7 +62,6 @@ struct RenderCmdData3DView;
 struct Shader;
 struct UniformVar;
 struct PrimitiveGroup;
-//struct RenderStates;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

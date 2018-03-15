@@ -51,7 +51,7 @@ struct IInputUpdate;
 //-------------------------------------------------------------------------------------------------
 class Win32Eventhandler : public AbstractPlatformEventHandler {
 public:
-    Win32Eventhandler();
+    Win32Eventhandler( AbstractSurface *rootWindow );
     virtual ~Win32Eventhandler();
     virtual bool onEvent( const Common::Event &ev, const Common::EventData *pEventData ) override;
     static LRESULT CALLBACK winproc( HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam );
@@ -70,12 +70,11 @@ protected:
     virtual bool onDetached( const Common::EventData *pEventData );
     virtual bool onQuit();
 
-
 private:
     static std::map<HWND, Win32Eventhandler*> s_WindowsServerMap;
-    IInputUpdate *m_pUpdateInstance;
-    Common::EventTriggerer *m_pOSEventTriggerer;
-    AbstractSurface *m_pRootSurface;
+    IInputUpdate *m_updateInstance;
+    Common::EventTriggerer *m_eventTriggerer;
+    AbstractSurface *m_rootWindow;
     bool m_shutdownRequested;
     bool m_isPolling;
 };

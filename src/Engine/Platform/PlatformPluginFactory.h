@@ -31,6 +31,10 @@ namespace Common {
     class AbstractLogStream;
 }
 
+namespace RenderBackend {
+    class RenderBackendService;
+}
+
 namespace Platform {
 
 class AbstractPlatformEventHandler;

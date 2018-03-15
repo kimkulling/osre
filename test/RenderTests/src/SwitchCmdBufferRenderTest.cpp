@@ -121,7 +121,7 @@ public:
         return true;
     }
 
-    bool onRender( RenderBackend::RenderBackendService *rbSrv ) override {
+    bool onRender( RenderBackend::RenderBackendService * ) override {
         m_particeGen->update( NumPts );
 
         return true;

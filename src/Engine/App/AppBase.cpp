@@ -151,7 +151,8 @@ Properties::Settings *AppBase::getSettings() const {
 }
 
 Scene::Stage *AppBase::createStage( const String &name ) {
-    if ( name.empty() ) {
+    if ( nullptr == m_world || name.empty() ) {
+        osre_debug( Tag, "No world to add state to." );
         return nullptr;
     }
 
@@ -165,6 +166,7 @@ Scene::Stage *AppBase::createStage( const String &name ) {
 
 bool AppBase::setActiveStage( Scene::Stage *stage ) {
     if ( nullptr == m_world ) {
+        osre_debug( Tag, "No world to activate state to." );
         return false;
     }
     return m_world->setActiveStage( stage );
@@ -172,6 +174,7 @@ bool AppBase::setActiveStage( Scene::Stage *stage ) {
 
 bool AppBase::activateStage( const String &name ) {
     if ( nullptr == m_world ) {
+        osre_debug( Tag, "No world to activate state to." );
         return false;
     }
 
@@ -275,7 +278,8 @@ bool AppBase::onCreate( Properties::Settings *config ) {
         m_rbService = nullptr;
         return false;
     }
-
+    m_platformInterface->getPlatformEventHandler()->setRenderBackendService( m_rbService );
+    
     // enable render-back-end
     if( m_platformInterface ) {
         RenderBackend::CreateRendererEventData *data = new RenderBackend::CreateRendererEventData( m_platformInterface->getRootSurface() );

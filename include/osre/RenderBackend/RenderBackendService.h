@@ -68,6 +68,7 @@ DECL_EVENT( OnRenderFrameEvent );
 DECL_EVENT( OnSetParameterEvent );
 DECL_EVENT( OnCommitFrameEvent );
 DECL_EVENT( OnShutdownRequest );
+DECL_EVENT( OnResizeEvent );
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -114,6 +115,15 @@ struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
     }
 
     Frame *m_frame;
+};
+
+struct OSRE_EXPORT ResizeEventData : Common::EventData {
+    ResizeEventData( ui32 x, ui32 y, ui32 w, ui32 h )
+    : EventData( OnResizeEvent, nullptr )
+    , m_x(x), m_y( y ), m_w( w ), m_h( h ) {
+        // empty
+    }
+    ui32 m_x, m_y, m_w, m_h;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -178,6 +188,8 @@ public:
     void attachGeoUpdate( const CPPCore::TArray<Geometry*> &geoArray );
 
     void attachView( TransformMatrixBlock &transform );
+
+    void resize( ui32 x, ui32 y, ui32 w, ui32 h);
 
 protected:
     /// @brief  The open callback.
