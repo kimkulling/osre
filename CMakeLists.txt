@@ -86,6 +86,8 @@ add_definitions( -DGLM_ENABLE_EXPERIMENTAL )
 
 SET( BUILD_SHARED_LIBS OFF )
 SET( ASSIMP_BUILD_ASSIMP_TOOLS OFF )
+SET( ASSIMP_BUILD_TESTS OFF )
+
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
 ADD_SUBDIRECTORY( src/Editor )
