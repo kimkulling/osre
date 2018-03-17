@@ -51,6 +51,7 @@ public:
     Screen( const String &name, Widget *parent, i32 width, i32 height );
     virtual ~Screen();
     virtual void setSurface( Platform::AbstractSurface *surface );
+    virtual void resize( ui32 x, ui32 y, ui32 w, ui32 h ) override;
 
 protected:
     void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) override;

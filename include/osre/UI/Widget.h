@@ -193,6 +193,7 @@ public:
     virtual void mouseUp( const Point2ui &pt );
     virtual void setId( ui32 id );
     virtual i32 getId() const;
+    virtual void resize( ui32 x, ui32 y, ui32 w, ui32 h ) {}
 
 protected:
     Widget( const String &name, Widget *parent );

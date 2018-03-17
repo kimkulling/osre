@@ -67,6 +67,11 @@ void Screen::setSurface( AbstractSurface *surface ) {
     WidgetCoordMapping::init( dim );
 }
 
+void Screen::resize( ui32 x, ui32 y, ui32 w, ui32 h ) {
+    Rect2ui dim( x, y, w, h );
+    WidgetCoordMapping::init( dim );
+}
+
 void Screen::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
     if ( nullptr == m_surface ) {
         return;
@@ -81,7 +86,7 @@ void Screen::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *r
         return;
     }
 
-    for ( ui32 i=0; i<numChildren; i++ ) {
+    for ( ui32 i=0; i<numChildren; ++i ) {
         Widget *currentChild( getChildWidgetAt( i ) );
         if ( nullptr == currentChild ) {
             continue;
