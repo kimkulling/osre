@@ -333,8 +333,9 @@ Shader::~Shader() {
     // empty
 }
 
-Material::Material()
-: m_type( MaterialType::ShaderMaterial )
+Material::Material( const String &name )
+: m_name( name )
+, m_type( MaterialType::ShaderMaterial )
 , m_numTextures( 0 )
 , m_textures( nullptr )
 , m_shader( nullptr )
@@ -343,8 +344,9 @@ Material::Material()
     // empty
 }
 
-Material::Material( MaterialType type )
-: m_type( type )
+Material::Material( const String &name, MaterialType type )
+: m_name( name )
+, m_type( type )
 , m_numTextures( 0 )
 , m_textures( nullptr )
 , m_shader( nullptr )

@@ -41,7 +41,7 @@ using namespace ::OSRE::UI;
 using namespace ::OSRE::Platform;
 
 // To identify local log entries
-static const String Tag = "ModelLoadingApp";
+static const c8 Tag[] = "ModelLoadingApp";
 
 // The example application, will create the render environment and render a simple triangle onto it
 class UIDemoApp : public App::AppBase {

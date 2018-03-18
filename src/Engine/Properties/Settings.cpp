@@ -193,9 +193,9 @@ void Settings::initDefaults() {
     value.setInt( 0 );
     m_pPropertyMap->setProperty( WinX, ConfigKeyStringTable[ WinX ], value );
     m_pPropertyMap->setProperty( WinY, ConfigKeyStringTable[ WinY ], value );
-    value.setInt( 800 );
+    value.setInt( 1024 );
     m_pPropertyMap->setProperty( WinWidth, ConfigKeyStringTable[ WinWidth ], value );
-    value.setInt( 800 );
+    value.setInt( 768 );
     m_pPropertyMap->setProperty( WinHeight, ConfigKeyStringTable[ WinHeight ], value );
 
     value.setBool( true );

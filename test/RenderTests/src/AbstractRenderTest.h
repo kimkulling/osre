@@ -74,10 +74,11 @@ public:
     const String &getTestName() const;
 
     /// @brief  Creates a new material based on vertex- and fragment-shader.
+    /// @param  matName     [in] The material name.
     /// @param  VsSrc       [in] The vertex-shader-code.
     /// @param  FsSrc       [in] The fragment-shader-code.
     /// @return The new created material.
-    RenderBackend::Material *createMaterial( const String &VsSrc, const String &FsSrc );
+    RenderBackend::Material *createMaterial( const String &matName, const String &VsSrc, const String &FsSrc );
 
 protected:
     /// @brief  The class constructor.

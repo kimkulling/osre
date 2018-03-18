@@ -166,7 +166,7 @@ MaterialBuilder::~MaterialBuilder() {
 }
 
  Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
-    Material *mat = new Material(MaterialType::ShaderMaterial);
+    Material *mat = new Material( "shadermaterial", MaterialType::ShaderMaterial);
 
     String vs, fs;
     if ( type == VertexType::ColorVertex ) {
@@ -203,7 +203,7 @@ MaterialBuilder::~MaterialBuilder() {
 }
 
 Material *MaterialBuilder::createBuildinUiMaterial() {
-    Material *mat = new Material( MaterialType::ShaderMaterial );
+    Material *mat = new Material( "shadermaterial", MaterialType::ShaderMaterial );
     mat->createShader( VsSrcUI, FsSrcUI );
 
     // setup shader attributes and variables
