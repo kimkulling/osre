@@ -36,7 +36,6 @@ SET( app_inc
     ${HEADER_PATH}/App/AppBase.h
     ${HEADER_PATH}/App/ServiceProvider.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
-	${HEADER_PATH}/App/TCommand.h
 )
 
 SET( app_src
@@ -64,6 +63,7 @@ SET( assets_src
 # Common
 #==============================================================================
 SET( common_inc
+	${HEADER_PATH}/Common/TCommand.h
     ${HEADER_PATH}/Common/AbstractCodec.h
     ${HEADER_PATH}/Common/AbstractEventHandler.h
     ${HEADER_PATH}/Common/AbstractProcessor.h
