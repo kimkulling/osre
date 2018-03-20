@@ -91,8 +91,8 @@ bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
         return false;
     }
     convertSceneToModel( scene );
-
     m_model->setGeoArray( m_geoArray );
+
     return true;
 }
 
@@ -193,7 +193,7 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
             indexArray.add( index );
         }
     }
-	Scene::GeometryDiagnosticUtils::dumpIndices( indexArray );
+	//Scene::GeometryDiagnosticUtils::dumpIndices( indexArray );
 
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( ui32 ) * indexArray.size(), BufferAccessType::ReadOnly );
     geo->m_ib->copyFrom( &indexArray[ 0 ], geo->m_ib->m_size );
@@ -208,7 +208,6 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     geo->m_material = m_matArray[matIdx];
     
     //
-
 
     m_geoArray.add( geo );
     m_model->setAABB( aabb );
