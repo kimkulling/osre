@@ -35,6 +35,11 @@ namespace UI {
 
 class Widget;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  
+//-------------------------------------------------------------------------------------------------
 class UiItemFactory {
 public:
     static UiItemFactory *createInstance( Platform::AbstractSurface *surface );

@@ -191,6 +191,8 @@ public:
 
     void resize( ui32 x, ui32 y, ui32 w, ui32 h);
 
+    void focusLost();
+
 protected:
     /// @brief  The open callback.
     virtual bool onOpen();
