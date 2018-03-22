@@ -43,8 +43,17 @@ private:
 template<class TParam, class TRet, class TFunc>
 inline
 TCommand<TParam, TRet, TFunc>::TCommand()
-: m_param() {
+: m_param()
+, m_funcBinding() {
+    // empty
+}
 
+template<class TParam, class TRet, class TFunc>
+inline
+TCommand<TParam, TRet, TFunc>::TCommand(TParam param, TFunc func)
+: m_param( param )
+, m_funcBinding( func ) {
+    // empty
 }
 
 template<class TParam, class TRet, class TFunc>

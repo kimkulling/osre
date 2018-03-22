@@ -36,3 +36,6 @@
 
 # Generated CMake files
 
+# Project files
+*.user
+*.depend
