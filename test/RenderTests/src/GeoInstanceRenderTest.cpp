@@ -109,7 +109,7 @@ public:
         rbSrv->attachGeo( geo, NumInstances );
 
         // use a default material
-        geo->m_material = AbstractRenderTest::createMaterial( VsSrc, FsSrc );
+        geo->m_material = AbstractRenderTest::createMaterial( "ColorVertexMat", VsSrc, FsSrc );
         if( nullptr != geo->m_material->m_shader ) {
             geo->m_material->m_shader->m_attributes.add( "position" );
             geo->m_material->m_shader->m_attributes.add( "normal" );

@@ -193,7 +193,7 @@ TEST_F( RenderCommonTest, accessTransformMatrixBlockTest ) {
 TEST_F( RenderCommonTest, accessMaterialTest ) {
     bool ok = true;
     try {
-        Material *mat( new Material );
+        Material *mat( new Material( "test" ) );
         EXPECT_EQ( MaterialType::ShaderMaterial, mat->m_type );
         EXPECT_EQ( mat->m_parameters, nullptr );
         EXPECT_EQ( mat->m_numParameters, 0 );
@@ -204,7 +204,7 @@ TEST_F( RenderCommonTest, accessMaterialTest ) {
 }
 
 TEST_F(RenderCommonTest, access_material_param_Test) {
-    Material *mat( new Material );
+    Material *mat( new Material( "test" ) );
     mat->m_shader = new Shader;
     mat->m_shader->m_parameters.add( "MVP" );
 

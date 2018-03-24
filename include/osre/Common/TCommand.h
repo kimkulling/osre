@@ -22,45 +22,49 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/UI/Widget.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <osre/Common/TFunctor.h>
 
 namespace OSRE {
+namespace App {
 
-// Forward declarations
-namespace RenderBackend {
-    class RenderBackendService;
-}
-
-namespace Platform {
-    class AbstractSurface;
-}
-
-namespace UI {
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Screen : public Widget {
+template<class TParam, class TRet, class TFunc>
+class TCommand {
 public:
-    Screen( const String &name, Widget *parent, i32 width, i32 height );
-    virtual ~Screen();
-    virtual void setSurface( Platform::AbstractSurface *surface );
-
-protected:
-    void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) override;
-    void onResize( ui32 x, ui32 y, ui32 w, ui32 h ) override;
+    TCommand();
+    explicit TCommand( TParam param, TFunc func );
+    ~TCommand();
+    TRet execute( TParam param );
 
 private:
-    Platform::AbstractSurface *m_surface;
-    RenderBackend::TransformMatrixBlock m_transformMatrix;
-    i32 m_width, m_height;
+    TParam m_param;
+    TFunc m_funcBinding;
 };
 
-} // Namespace UI
-} // Namespace OSRE
+template<class TParam, class TRet, class TFunc>
+inline
+TCommand<TParam, TRet, TFunc>::TCommand()
+: m_param() {
+
+}
+
+template<class TParam, class TRet, class TFunc>
+inline
+TCommand<TParam, TRet, TFunc>::TCommand( TParam param )
+: m_param( param ) {
+    // empty
+}
+
+template<class TParam, class TRet, class TFunc>
+inline
+TCommand<TParam, TRet, TFunc>::~TCommand() {
+
+}
+
+template<class TParam, class TRet, class TFunc>
+inline
+TRet TCommand<TParam, TRet, TFunc>::execute( TParam param ) {
+
+}
+
+}
+}

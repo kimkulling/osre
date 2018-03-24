@@ -81,7 +81,7 @@ void Screen::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *r
         return;
     }
 
-    for ( ui32 i=0; i<numChildren; i++ ) {
+    for ( ui32 i=0; i<numChildren; ++i ) {
         Widget *currentChild( getChildWidgetAt( i ) );
         if ( nullptr == currentChild ) {
             continue;
@@ -89,6 +89,11 @@ void Screen::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *r
 
         currentChild->render( renderCmdCache, rbSrv );
     }
+}
+
+void Screen::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
+    Rect2ui dim( x, y, w, h );
+    WidgetCoordMapping::init( dim );
 }
 
 } // Namespace UI

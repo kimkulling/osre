@@ -174,6 +174,40 @@ static void setupParameter( UniformVar *param, ui32 numParam, OGLRenderBackend *
     ev->setParameter( paramArray );
 }
 
+
+static OGLVertexArray *setupBufferForGeoBundle( GeometryPackage *geoPackage, OGLRenderBackend *rb, OGLShader *oglShader ) {
+    OSRE_ASSERT( nullptr != geoPackage );
+    OSRE_ASSERT( nullptr != rb );
+    OSRE_ASSERT( nullptr != oglShader );
+
+    rb->useShader( oglShader );
+    OGLVertexArray *vertexArray = rb->createVertexArray();
+    rb->bindVertexArray( vertexArray );
+
+    // Get the batch size
+    ui32 lenVB( 0 ), lenIB( 0 );
+    for ( ui32 i = 0; i < geoPackage->m_numNewGeo; ++i ) {
+        lenVB += geoPackage->m_newGeo[ i ]->m_vb->m_size;
+        lenIB += geoPackage->m_newGeo[ i ]->m_ib->m_size;
+    }
+    if ( 0 == lenVB ) {
+        return vertexArray;
+    }
+
+    // Build one batch
+    ui32 offsetVD( 0 ), offsetID( 0 );
+    TArray<uc8> vertexData( lenVB ), indexData( lenIB );
+    for ( ui32 i = 0; i < geoPackage->m_numNewGeo; ++i ) {
+        Geometry *geo( geoPackage->m_newGeo[ i ] );
+        ::memcpy( &vertexData[ offsetVD ], geo->m_vb->m_data, geo->m_vb->m_size );
+        offsetVD += geo->m_vb->m_size;
+        ::memcpy( &indexData[ offsetID ], geo->m_ib->m_data, geo->m_ib->m_size );
+        offsetID += geo->m_ib->m_size;
+    }
+
+    return vertexArray;
+}
+
 static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLShader *oglShader ) {
 	OSRE_ASSERT( nullptr != geo );
 	OSRE_ASSERT( nullptr != rb );
@@ -542,7 +576,7 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
         frame->m_numGeoPackages = 0;
     }
 
-    for ( ui32 i=0; i<frame->m_numGeoUpdates; i++ ) {
+    for ( ui32 i=0; i<frame->m_numGeoUpdates; ++i ) {
         Geometry *geo = frame->m_geoUpdates[ i ];
         if ( nullptr == geo ) {
             osre_debug(Tag, "Geometry-update-pointer is a nullptr.");
@@ -585,5 +619,6 @@ bool OGLRenderEventHandler::onResizeRenderTarget( const Common::EventData *event
 
     return true;
 }
+
 } // Namespace RenderBackend
 } // Namespace OSRE

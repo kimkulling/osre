@@ -42,6 +42,10 @@ namespace Properties {
     class Settings;
 }
 
+namespace UI {
+    class Widget;
+}
+
 namespace Threading {
     class SystemTask;
 }
@@ -193,6 +197,8 @@ public:
 
     void focusLost();
 
+    void setUiScreen( UI::Widget *screen );
+
 protected:
     /// @brief  The open callback.
     virtual bool onOpen();
@@ -211,6 +217,7 @@ private:
     const Properties::Settings *m_settings;
     bool m_ownsSettingsConfig;
     Frame m_nextFrame;
+    UI::Widget *m_screen;
     CPPCore::TArray<NewGeoEntry*> m_newGeo;
     CPPCore::TArray<Geometry*> m_geoUpdates;
     CPPCore::TArray<GeoInstanceData*> m_newInstances;
@@ -218,6 +225,11 @@ private:
     CPPCore::TArray<UniformVar*> m_uniformUpdates;
     CPPCore::TArray<glm::mat4> m_transformStack;
 };
+
+inline 
+void RenderBackendService::setUiScreen( UI::Widget *screen ) {
+    m_screen = screen;
+}
 
 } // Namespace RenderBackend
 } // Namespace OSRE

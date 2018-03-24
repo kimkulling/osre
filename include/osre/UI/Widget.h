@@ -193,10 +193,12 @@ public:
     virtual void mouseUp( const Point2ui &pt );
     virtual void setId( ui32 id );
     virtual i32 getId() const;
+    virtual void resize( ui32 x, ui32 y, ui32 w, ui32 h );
 
 protected:
     Widget( const String &name, Widget *parent );
     void checkChildren(const Point2ui &pt);
+    virtual void onResize( ui32 x, ui32 y, ui32 w, ui32 h );
     virtual void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) = 0;
     virtual void onMouseDown( const Point2ui &pt);
     virtual void onMouseUp( const Point2ui &pt );
@@ -211,6 +213,11 @@ private:
     bool m_redrawRequest;
     bool m_isVisible;
 };
+
+inline
+void Widget::resize( ui32 x, ui32 y, ui32 w, ui32 h ) {
+    onResize( x, y , w, h );
+}
 
 } // Namespace UI
 } // Namespace OSRE

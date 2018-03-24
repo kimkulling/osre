@@ -11,6 +11,7 @@ INCLUDE_DIRECTORIES(
     ../../3dparty/glm/
     ../../3dparty/unzip/
     ../../3dparty/zlib/
+    ./src
 )
 
 # For Vulkan support
@@ -32,9 +33,10 @@ ENDIF( WIN32 )
 # Common
 #==============================================================================    
 SET( common_src
+    Common/EditorApp.cpp
+    Common/EditorApp.h
     Common/main.cpp
 )
-
 
 #==============================================================================
 # Defined Source groups

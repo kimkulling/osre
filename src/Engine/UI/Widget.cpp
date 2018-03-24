@@ -334,6 +334,14 @@ void Widget::onMouseUp( const Point2ui &pt ) {
     checkChildren(pt);
 }
 
+void Widget::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
+    const Rect2ui &r( getRect() );
+    if ( x != r.m_x1 || y != r.m_y1 || w != r.m_width || h != r.m_height ) {
+        Widget::setRect( x, y, w, h );
+        Widget::requestRedraw();
+    }
+}
+
 void Widget::setId( ui32 id ) {
     m_id = id;
 }

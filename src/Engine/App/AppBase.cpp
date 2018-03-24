@@ -207,6 +207,7 @@ void AppBase::setUIScreen( UI::Screen *uiScreen ) {
         if ( nullptr != surface ) {
             m_uiScreen->setSurface( surface );
             m_mouseEvListener->setScreen( m_uiScreen );
+            m_rbService->setUiScreen( uiScreen );
         }
     }
 }

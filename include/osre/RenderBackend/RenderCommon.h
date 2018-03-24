@@ -387,6 +387,7 @@ static const ui32 MaxMatColorType = static_cast<ui32>( MaterialColorType::NumMat
 
 ///	@brief
 struct OSRE_EXPORT Material {
+    String        m_name;
     MaterialType  m_type;
     ui32          m_numTextures;
     Texture     **m_textures;
@@ -395,8 +396,8 @@ struct OSRE_EXPORT Material {
     UniformVar   *m_parameters;
     Color4        m_color[ MaxMatColorType ];
     
-    Material();
-    Material( MaterialType type );
+    Material( const String &name );
+    Material( const String &name, MaterialType type );
     ~Material();
     void createShader( String vs, String fs );
 

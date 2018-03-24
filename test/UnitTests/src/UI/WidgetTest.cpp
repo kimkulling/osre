@@ -37,7 +37,15 @@ class WidgetTest : public ::testing::Test {
 class TestWidget : public Widget {
 public:
     TestWidget( const String &name, Widget *parent )
-        : Widget( name, parent ) {
+    : Widget( name, parent )
+    , m_x( 0 )
+    , m_y( 0 )
+    , m_w( 0 )
+    , m_h( 0 ) {
+        // empty
+    }
+
+    ~TestWidget() {
         // empty
     }
 
@@ -46,6 +54,13 @@ protected:
         // empty
     }
 
+    void onResize( ui32 x, ui32 y, ui32 w, ui32 h ) override {
+        m_x = x;
+        m_y = y;
+        m_w = w;
+        m_h = h;
+    }
+    ui32 m_x, m_y, m_w, m_h;
 };
 TEST_F( WidgetTest, createTest ) {
     bool ok( true );

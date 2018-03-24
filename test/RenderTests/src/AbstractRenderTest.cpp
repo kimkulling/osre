@@ -86,8 +86,12 @@ const String &AbstractRenderTest::getTestName() const {
     return m_renderTestName;
 }
 
-Material *AbstractRenderTest::createMaterial( const String &VsSrc, const String &FsSrc ) {
-    Material *mat      = new Material;
+Material *AbstractRenderTest::createMaterial( const String &matName, const String &VsSrc, const String &FsSrc ) {
+    if ( matName.empty() ) {
+        return nullptr;
+    }
+
+    Material *mat = new Material( matName );
     mat->m_numTextures = 0;
     mat->m_type        = MaterialType::ShaderMaterial;
     mat->createShader( VsSrc, FsSrc );
