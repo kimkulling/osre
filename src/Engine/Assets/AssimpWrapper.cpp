@@ -286,7 +286,7 @@ static void assignTexturesToMat( Material *osreMat, CPPCore::TArray<Texture*> &t
     }
 
     osreMat->m_textures = new Texture *[ osreMat->m_numTextures ];
-    for ( ui32 i = 0; i < osreMat->m_numTextures; i++ ) {
+    for ( ui32 i = 0; i < osreMat->m_numTextures; ++i ) {
         osreMat->m_textures[ i ] = textures[ i ];
     }
 }
@@ -301,23 +301,11 @@ void AssimpWrapper::handleMaterial( aiMaterial *material ) {
 
     i32 texIndex( 0 );
     aiString texPath;	// contains filename of texture
-    //AI_TEXTURE_TYPE_MAX
     CPPCore::TArray<Texture*> textures;
     if ( AI_SUCCESS == material->GetTexture( aiTextureType_DIFFUSE, texIndex, &texPath ) ) {
         setTexture( texIndex, texPath, textures );
     }
     assignTexturesToMat( osreMat, textures );
-    /*aiTextureType_SPECULAR = 0x2,
-    aiTextureType_AMBIENT = 0x3,
-    aiTextureType_EMISSIVE = 0x4,
-    aiTextureType_HEIGHT = 0x5,
-    aiTextureType_NORMALS = 0x6,
-    aiTextureType_SHININESS = 0x7,
-    aiTextureType_OPACITY = 0x8,
-    aiTextureType_DISPLACEMENT = 0x9,
-    aiTextureType_LIGHTMAP = 0xA,
-    aiTextureType_REFLECTION = 0xB,*/
-
 
     aiColor4D diffuse;
     if ( AI_SUCCESS == aiGetMaterialColor( material, AI_MATKEY_COLOR_DIFFUSE, &diffuse ) ) {
