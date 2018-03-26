@@ -98,7 +98,7 @@ public:
     virtual void addChild( Node *child );
     virtual bool removeChild( const String &name, TraverseMode mode );
     virtual Node *findChild( const String &name ) const;
-    virtual ui32 getNumChilds() const;
+    virtual ui32 getNumChildren() const;
     virtual Node *getChildAt( ui32 idx ) const;
     virtual void releaseChildren();
     virtual void addModel( Assets::Model *model );

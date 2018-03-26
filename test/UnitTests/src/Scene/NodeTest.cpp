@@ -88,7 +88,7 @@ TEST_F( NodeTest, accessChilds ) {
     Node *myNode1 = createNode( "testnode1", *m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, parent );
     Node *myNode2 = createNode( "testnode2", *m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, parent );
 
-    EXPECT_EQ( 2, parent->getNumChilds() );
+    EXPECT_EQ( 2, parent->getNumChildren() );
     EXPECT_TRUE( nullptr != myNode1->getParent() );
     EXPECT_TRUE( nullptr != myNode2->getParent() );
     EXPECT_TRUE( nullptr == parent->getParent() );

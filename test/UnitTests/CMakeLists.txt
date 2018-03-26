@@ -1,6 +1,10 @@
 SET ( GMOCK_PATH ../../3dparty/gmock-1.7.0/ )
 SET ( GTEST_PATH ${GMOCK_PATH}gtest/ )
 
+if (MSVC)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING")
+endif()
+
 if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
     find_package(Threads)
 endif()

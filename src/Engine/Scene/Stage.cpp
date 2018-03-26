@@ -169,7 +169,7 @@ static void updateNode( Node *current, bool traverse, RenderBackend::RenderBacke
  
     // traverse all children, if requested
     if ( traverse ) {
-        const ui32 numChilds( current->getNumChilds() );
+        const ui32 numChilds( current->getNumChildren() );
         for ( ui32 i = 0; i < numChilds; ++i ) {
             Node *child( current->getChildAt( i ) );
             updateNode( child, traverse, rb );

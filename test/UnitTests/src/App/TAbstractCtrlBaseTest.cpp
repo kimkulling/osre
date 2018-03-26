@@ -39,7 +39,9 @@ public:
     : TAbstractCtrlBase<TestState>( TestState::Inited )
     , m_entered( false )
     , m_handled( false )
-    , m_leave( false ) {
+    , m_leave( false )
+    , m_lastTimetick(0)
+    , m_enteredNewState( TestState::United ) {
         // empty
     }
 
@@ -55,13 +57,15 @@ public:
 
 protected:
     virtual bool onStateEnter( TestState newState ) {
+        m_enteredNewState = newState;
         m_entered = true;
-        return true;
+
+        return TAbstractCtrlBase<TestState>::onStateEnter( newState );
     }
 
     virtual bool onState() {
         m_handled = true;
-        return true;
+        return TAbstractCtrlBase<TestState>::onState();
     }
 
     virtual bool onUpdate( d32 timetick ) {
@@ -71,12 +75,14 @@ protected:
 
     virtual bool onStateLeave( TestState oldState ) {
         m_leave = true;
-        return true;
+
+        return TAbstractCtrlBase<TestState>::onStateLeave( oldState );
     }
 
 public:
     bool m_entered, m_handled, m_leave;
     d32 m_lastTimetick;
+    TestState m_enteredNewState;
 };
 
 class TestCtrlListener : public TAbstractCtrlStateListener<TestState> {

@@ -142,7 +142,7 @@ Node *Node::findChild( const String &name ) const {
     return nullptr;
 }
 
-ui32 Node::getNumChilds() const {
+ui32 Node::getNumChildren() const {
     return m_children.size();
 }
 

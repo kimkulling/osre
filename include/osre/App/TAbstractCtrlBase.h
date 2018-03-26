@@ -182,19 +182,19 @@ for ( ui32 i = 0; i < m_listener.size(); i++ ) {
 
 template<class T>
 inline
-bool TAbstractCtrlBase<T>::onStateEnter( T newState ) {
+bool TAbstractCtrlBase<T>::onStateEnter( T ) {
     return true;
 }
 
 template<class T>
 inline
-bool TAbstractCtrlBase<T>::onUpdate( d32 timetick ) {
+bool TAbstractCtrlBase<T>::onUpdate( d32 ) {
     return true;
 }
 
 template<class T>
 inline
-bool TAbstractCtrlBase<T>::onStateLeave( T oldState ) {
+bool TAbstractCtrlBase<T>::onStateLeave( T ) {
     return true;
 }
 
