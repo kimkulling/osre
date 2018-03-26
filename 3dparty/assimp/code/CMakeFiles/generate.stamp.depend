@@ -1,5 +1,5 @@
 # CMake generation dependency list for this directory.
 D:/projects/osre/3dparty/assimp/code/CMakeLists.txt
 D:/projects/osre/3dparty/assimp/cmake-modules/FindRT.cmake
-C:/Program Files/CMake/share/cmake-3.10/Modules/FindPackageHandleStandardArgs.cmake
-C:/Program Files/CMake/share/cmake-3.10/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-3.9/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-3.9/Modules/FindPackageMessage.cmake

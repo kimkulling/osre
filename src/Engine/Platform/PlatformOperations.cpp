@@ -36,14 +36,6 @@ namespace Platform {
 
 static const String Tag = "PlatformOperations";
 
-PlatformOperations::PlatformOperations() {
-    // empty
-}
-
-PlatformOperations::~PlatformOperations() {
-    // empty
-}
-
 void PlatformOperations::getFileOpenDialog( const c8 *extensions, IO::Uri &location ) {
 #ifdef OSRE_WINDOWS
     OPENFILENAME ofn;       // common dialog box structure

@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/Ids.h>
 #include <osre/Scene/GeometryBuilder.h>
-
+#include <osre/Scene/DbgRenderer.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace ::OSRE;
@@ -174,6 +174,10 @@ protected:
     }
 
     void onUpdate() override {
+        // Render FPS-counter
+        Scene::DbgRenderer::getInstance()->renderDbgText( 1, 1, 1U, "XXX" );
+
+        // Rotate the model
         glm::mat4 rot( 1.0 );
         m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
