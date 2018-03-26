@@ -67,11 +67,6 @@ void Screen::setSurface( AbstractSurface *surface ) {
     WidgetCoordMapping::init( dim );
 }
 
-void Screen::resize( ui32 x, ui32 y, ui32 w, ui32 h ) {
-    Rect2ui dim( x, y, w, h );
-    WidgetCoordMapping::init( dim );
-}
-
 void Screen::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
     if ( nullptr == m_surface ) {
         return;
@@ -94,6 +89,11 @@ void Screen::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *r
 
         currentChild->render( renderCmdCache, rbSrv );
     }
+}
+
+void Screen::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
+    Rect2ui dim( x, y, w, h );
+    WidgetCoordMapping::init( dim );
 }
 
 } // Namespace UI

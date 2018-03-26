@@ -72,7 +72,6 @@ class OGLRenderBackend {
 public:
     typedef CPPCore::TArray<OGLVertexAttribute*> VertAttribArray;
 
-public:
     /// The default class constructor.
     OGLRenderBackend();
     /// The class destructor.

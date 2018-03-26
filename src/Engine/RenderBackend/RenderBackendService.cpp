@@ -84,7 +84,7 @@ bool RenderBackendService::onOpen() {
         return ok;
     }
     
-    // Create render event handler for backend 
+    // Create render event handler for back-end 
     const String api = m_settings->get( Settings::RenderAPI ).getString();
     if ( api == OGL_API ) {
         m_renderTaskPtr->attachEventHandler( new OGLRenderEventHandler );
@@ -95,7 +95,7 @@ bool RenderBackendService::onOpen() {
         ok = false;
     }
 
-    // Create debug renderer
+    // Create the debug renderer instance
     if ( !Scene::DbgRenderer::create( this ) ) {
         osre_error( Tag, "Cannot create Debug renderer" );
         ok = false;
@@ -127,7 +127,7 @@ bool RenderBackendService::onUpdate() {
 
     commitNextFrame();
 
-    // synchronizing event with render back-end
+    // Synchronizing event with render back-end
     auto result( m_renderTaskPtr->sendEvent( &OnRenderFrameEvent, nullptr ) );
     m_renderTaskPtr->awaitUpdate();
 
@@ -307,5 +307,10 @@ void RenderBackendService::resize( ui32 x, ui32 y, ui32 w, ui32 h ) {
     }
 
 }
+
+void RenderBackendService::focusLost() {
+    // todo: implement me
+}
+
 } // Namespace RenderBackend
 } // Namespace OSRE

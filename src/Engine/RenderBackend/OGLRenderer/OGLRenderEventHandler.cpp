@@ -382,7 +382,9 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
     } else if ( OnClearSceneEvent == ev ) {
         result = onClearGeo( data );
     } else if ( OnShutdownRequest == ev ) {
-
+        result = onShutdownRequest( data );
+    } else if ( OnResizeEvent == ev ) {
+        result = onResizeRenderTarget( data );
     }
  
     return result;
