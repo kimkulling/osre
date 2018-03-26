@@ -46,9 +46,8 @@ using namespace ::OSRE::Scene;
 // To identify local log entries 
 static const String Tag = "ModelLoadingApp"; 
 
-static const String ModelPath = "file://assets/Models/Obj/Testwuson.X";
 //static const String ModelPath = "file://assets/Models/Obj/box.obj";
-//static const String ModelPath = "file://assets/Models/Obj/spider.obj";
+static const String ModelPath = "file://assets/Models/Obj/spider.obj";
 
 static const String AssetFolderArg = "asset_folder";
 
@@ -81,13 +80,16 @@ public:
 
 protected:
     bool onCreate( Properties::Settings *settings = nullptr ) override {
-        Properties::Settings *baseSettings( AppBase::getSettings() );
-        if ( nullptr == baseSettings ) {
-            return false;
+        Properties::Settings *appSettings( settings );
+        if ( nullptr == appSettings ) {
+            appSettings = AppBase::getSettings();
+            if ( nullptr == appSettings ) {
+                return false;
+            }
         }
        
-        baseSettings->setString( Properties::Settings::WindowsTitle, "Model Loader!" );
-        if ( !AppBase::onCreate( baseSettings ) ) {
+        appSettings->setString( Properties::Settings::WindowsTitle, "Model Loader!" );
+        if ( !AppBase::onCreate( appSettings ) ) {
             return false;
         }
 
@@ -124,7 +126,7 @@ protected:
                 const i32 h = rootSurface->getProperties()->m_height;
                 const f32 aspect = static_cast<f32>(w) / static_cast<f32>(h);
                 const f32 zNear = 0.0001f;
-                const f32 zFar = 100.f;
+                const f32 zFar = 1000.f;
                 
                 glm::vec3 eye( diam, 0, 0), up(0, 0, 1);
                 glm::vec3 c(center.getX(), center.getY(), center.getZ());
