@@ -53,7 +53,7 @@ private:
 template<class TEnum>
 inline
 TAbstractCtrlStateListener<TEnum>::TAbstractCtrlStateListener( TAbstractCtrlBase<TEnum> *ctrl )
-    : m_instance( ctrl ) {
+: m_instance( ctrl ) {
     // empty
 }
 

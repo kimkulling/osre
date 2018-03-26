@@ -65,7 +65,8 @@ protected:
 
     virtual bool onState() {
         m_handled = true;
-        return TAbstractCtrlBase<TestState>::onState();
+        
+        return m_handled;
     }
 
     virtual bool onUpdate( d32 timetick ) {
@@ -89,7 +90,8 @@ class TestCtrlListener : public TAbstractCtrlStateListener<TestState> {
 public:
     TestCtrlListener( TestCtrl *ctrl )
     : TAbstractCtrlStateListener<TestState>( ctrl )
-    , m_notified( false ) {
+    , m_notified( false )
+    , m_newState( TestState::United ) {
         // empty
     }
 
@@ -103,9 +105,11 @@ public:
 
     virtual void onStateChanged( TestState newState ) {
         m_notified = true;
+        m_newState = newState;
     }
 
     bool m_notified;
+    TestState m_newState;
 };
 
 class TAbstractCtrlBaseTest : public ::testing::Test {

@@ -152,7 +152,7 @@ protected:
             rbSrv->attachGeo(currentNode->getGeometryAt(i), 0 );
         }
 
-        for (ui32 i = 0; i < currentNode->getNumChilds(); ++i) {
+        for (ui32 i = 0; i < currentNode->getNumChildren(); ++i) {
             Node *current = currentNode->getChildAt(i);
             renderNode(current, rbSrv);
         }
