@@ -218,8 +218,8 @@ bool Win32Eventhandler::onEvent( const Common::Event &ev, const Common::EventDat
                     ui32 w = rcClient.right - rcClient.left;
                     ui32 h = rcClient.bottom - rcClient.top;
 
+                    RenderBackend::RenderBackendService *rbSrv(getRenderBackendService());
                     getRenderBackendService()->resize( x, y, w,h );
-
                     pActiveEventQueue->addBack( data );
                 }
             }

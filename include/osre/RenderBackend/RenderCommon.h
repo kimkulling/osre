@@ -306,6 +306,8 @@ struct OSRE_EXPORT BufferData {
 	static void free( BufferData *data );
     void copyFrom( void *data, ui32 size );
     void attach( void *data, ui32 size );
+    BufferType getBufferType() const;
+    BufferAccessType getBufferAccessType() const;
 
     OSRE_NON_COPYABLE( BufferData )
 };

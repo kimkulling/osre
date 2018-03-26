@@ -134,6 +134,7 @@ bool RenderTestSuite::setup( const String &API ) {
         m_pRenderBackendServer->release();
         m_pRenderBackendServer = nullptr;
     }
+    m_pPlatformInterface->getPlatformEventHandler()->setRenderBackendService(m_pRenderBackendServer);
 
     if( m_pPlatformInterface ) {
         CreateRendererEventData *data = new CreateRendererEventData( m_pPlatformInterface->getRootSurface() );

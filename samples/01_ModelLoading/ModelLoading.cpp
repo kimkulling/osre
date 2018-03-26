@@ -46,9 +46,9 @@ using namespace ::OSRE::Scene;
 // To identify local log entries 
 static const String Tag = "ModelLoadingApp"; 
 
-//static const String ModelPath = "file://assets/Models/Obj/Testwuson.X";
+static const String ModelPath = "file://assets/Models/Obj/Testwuson.X";
 //static const String ModelPath = "file://assets/Models/Obj/box.obj";
-static const String ModelPath = "file://assets/Models/Obj/spider.obj";
+//static const String ModelPath = "file://assets/Models/Obj/spider.obj";
 
 static const String AssetFolderArg = "asset_folder";
 

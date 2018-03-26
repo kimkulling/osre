@@ -197,13 +197,45 @@ static OGLVertexArray *setupBufferForGeoBundle( GeometryPackage *geoPackage, OGL
     // Build one batch
     ui32 offsetVD( 0 ), offsetID( 0 );
     TArray<uc8> vertexData( lenVB ), indexData( lenIB );
+    BufferType vbType( geoPackage->m_newGeo[ 0 ]->m_vb->m_type );
+    BufferAccessType vbAccessType(geoPackage->m_newGeo[ 0 ]->m_vb->m_access);
+    BufferType ibType( geoPackage->m_newGeo[ 0 ]->m_ib->m_type );
+    BufferAccessType ibAccessType(geoPackage->m_newGeo[ 0 ]->m_ib->m_access);
+    VertexType vertexType(geoPackage->m_newGeo[ 0 ]->m_vertextype);
     for ( ui32 i = 0; i < geoPackage->m_numNewGeo; ++i ) {
         Geometry *geo( geoPackage->m_newGeo[ i ] );
-        ::memcpy( &vertexData[ offsetVD ], geo->m_vb->m_data, geo->m_vb->m_size );
+        OSRE_ASSERT( vertexType == geo->m_vertextype );
+        OSRE_ASSERT( geo->m_vb->m_type == vbType );
+        OSRE_ASSERT( geo->m_vb->m_access == vbAccessType);
+        OSRE_ASSERT( geo->m_ib->m_type == ibType );
+        OSRE_ASSERT( geo->m_ib->m_access == ibAccessType);
+
+        ::memcpy(&vertexData[offsetVD], geo->m_vb->m_data, geo->m_vb->m_size);
         offsetVD += geo->m_vb->m_size;
         ::memcpy( &indexData[ offsetID ], geo->m_ib->m_data, geo->m_ib->m_size );
         offsetID += geo->m_ib->m_size;
     }
+
+    // create vertex buffer and  and pass triangle vertex to buffer object
+    OGLBuffer *vb = rb->createBuffer(vbType);
+    //vb->m_geoId = geo->m_id;
+    rb->bindBuffer(vb);
+    rb->copyDataToBuffer(vb, &vertexData[0], vertexData.size(), vbAccessType );
+
+    // enable vertex attribute arrays
+    TArray<OGLVertexAttribute*> attributes;
+    rb->createVertexCompArray(vertexType, oglShader, attributes);
+    const ui32 stride = Geometry::getVertexSize(vertexType);
+    rb->bindVertexLayout(vertexArray, oglShader, stride, attributes);
+    rb->releaseVertexCompArray(attributes);
+
+    // create index buffer and pass indices to element array buffer
+    OGLBuffer *ib = rb->createBuffer(ibType);
+    //ib->m_geoId = geo->m_id;
+    rb->bindBuffer(ib);
+    rb->copyDataToBuffer(ib, &indexData[0], indexData.size(), ibAccessType );
+
+    rb->unbindVertexArray();
 
     return vertexArray;
 }
@@ -230,7 +262,6 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
     }
 
     // create vertex buffer and  and pass triangle vertex to buffer object
-
     OGLBuffer *vb = rb->createBuffer( vertices->m_type );
     vb->m_geoId = geo->m_id;
     rb->bindBuffer( vb );
@@ -527,36 +558,66 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
             continue;
         }
 
-        for( ui32 geoIdx = 0; geoIdx < currentGeoPackage->m_numNewGeo; ++geoIdx ) {
-            Geometry *geo = currentGeoPackage->m_newGeo[ geoIdx ];
-            if( nullptr == geo ) {
-                osre_debug( Tag, "Geometry-pointer is a nullptr." );
+        /*
+        SetMaterialStageCmdData *data(nullptr);
+        CPPCore::TArray<ui32> primGroups;
+        for (ui32 geoIdx = 0; geoIdx < currentGeoPackage->m_numNewGeo; ++geoIdx) {
+            Geometry *geo = currentGeoPackage->m_newGeo[geoIdx];
+            if (nullptr == geo) {
+                osre_debug(Tag, "Geometry-pointer is a nullptr.");
+                return false;
+            }
+
+            // register primitive groups to render
+            for (ui32 i = 0; i < geo->m_numPrimGroups; ++i) {
+                const ui32 primIdx(m_oglBackend->addPrimitiveGroup(&geo->m_pPrimGroups[i]));
+                primGroups.add(primIdx);
+            }
+            // create the default material
+            data = setupMaterial(geo->m_material, m_oglBackend, this);
+        }
+        m_vertexArray = setupBufferForGeoBundle(currentGeoPackage, m_oglBackend, m_renderCmdBuffer->getActiveShader());
+        data->m_vertexArray = m_vertexArray;
+
+
+        // setup the draw calls
+        if (0 == currentGeoPackage->m_numInstances) {
+            setupPrimDrawCmd(primGroups, m_oglBackend, this, m_vertexArray);
+        } else {
+            setupInstancedDrawCmd(primGroups, frame, m_oglBackend, this, m_vertexArray);
+        }
+        */
+        
+        for (ui32 geoIdx = 0; geoIdx < currentGeoPackage->m_numNewGeo; ++geoIdx) {
+            Geometry *geo = currentGeoPackage->m_newGeo[geoIdx];
+            if (nullptr == geo) {
+                osre_debug(Tag, "Geometry-pointer is a nullptr.");
                 return false;
             }
 
             // register primitive groups to render
             CPPCore::TArray<ui32> primGroups;
-            for( ui32 i = 0; i < geo->m_numPrimGroups; ++i ) {
-                const ui32 primIdx( m_oglBackend->addPrimitiveGroup( &geo->m_pPrimGroups[ i ] ) );
+            for (ui32 i = 0; i < geo->m_numPrimGroups; ++i) {
+                const ui32 primIdx( m_oglBackend->addPrimitiveGroup( &geo->m_pPrimGroups[ i ]) );
                 primGroups.add( primIdx );
             }
 
             // create the default material
-            SetMaterialStageCmdData *data = setupMaterial( geo->m_material, m_oglBackend, this );
+            SetMaterialStageCmdData *data = setupMaterial(geo->m_material, m_oglBackend, this);
 
             // setup vertex array, vertex and index buffers
-            m_vertexArray = setupBuffers( geo, m_oglBackend, m_renderCmdBuffer->getActiveShader() );
-            if( nullptr == m_vertexArray ) {
-                osre_debug( Tag, "Vertex-Array-pointer is a nullptr." );
+            m_vertexArray = setupBuffers(geo, m_oglBackend, m_renderCmdBuffer->getActiveShader());
+            if (nullptr == m_vertexArray) {
+                osre_debug(Tag, "Vertex-Array-pointer is a nullptr.");
                 return false;
             }
             data->m_vertexArray = m_vertexArray;
 
             // setup the draw calls
-            if( 0 == currentGeoPackage->m_numInstances ) {
-                setupPrimDrawCmd( primGroups, m_oglBackend, this, m_vertexArray );
+            if (0 == currentGeoPackage->m_numInstances) {
+                setupPrimDrawCmd(primGroups, m_oglBackend, this, m_vertexArray);
             } else {
-                setupInstancedDrawCmd( primGroups, frame, m_oglBackend, this, m_vertexArray );
+                setupInstancedDrawCmd(primGroups, frame, m_oglBackend, this, m_vertexArray);
             }
         }
     }

@@ -1,9 +1,12 @@
 # Hello World
 ![HelloWorld](../../media/Images/HelloWorld.png)
-This sample just shows a simple HelloWorld application. The creation of the render window and the base setup is included.
+This sample just shows a simple HelloWorld application. The creation of the render window 
+and the base setup is included.
 
 ## The main application
-At first we are including all needed dependecies, use the OSRE namespace and the Renderbackend-namespace. The we will generate our simple model-, view- and projection-matrix.
+At first we are including all needed dependecies, use the OSRE namespace and the Renderbackend-namespace. 
+The we will generate our simple model-, view- and projection-matrix.
+
 ```cpp
 #include <osre/App/AppBase.h>
 #include <osre/Properties/Settings.h>
@@ -89,6 +92,7 @@ The onUpdate-callback will be called once per frame. We just updating the stage 
 ## The main program
 In your main you just need to create the application instance and call create.
 Afterwards you enter the main loop, where you can react on events, update your app and request the rendering.
+To make this much easier you can just use the macro OSRE_MAIN.
 ```cpp
 OSRE_MAIN( HelloWorldApp )
 ```

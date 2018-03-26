@@ -287,6 +287,14 @@ void BufferData::attach( void *data, ui32 size ) {
     m_size += size;
 }
 
+BufferType BufferData::getBufferType() const {
+    return m_type;
+}
+
+BufferAccessType BufferData::getBufferAccessType() const {
+    return m_access;
+}
+
 PrimitiveGroup::PrimitiveGroup()
 : m_primitive( PrimitiveType::LineList )
 , m_startIndex( 0 )

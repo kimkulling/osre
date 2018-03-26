@@ -1,6 +1,18 @@
 # OSRE - An Open Source Render Experience
 
-Another open-source render experience. feel free to play around with it!
+Just another open-source render experience. feel free to play around with it! I tried it again and again
+and always reached the point where it got hard to implement som new features. So enjoy another try to build
+a modern multi-threaded platform-indipendent render-engine in c++.
+
+Some features:
+- Primitive rendering + instancing
+- Texturing
+- Model import via Asset-Importer-Lib
+- Bitmap-Font-Rendering
+- Simple Scenegraph to manage your scene
+- PLatform-tools for better platform independent access to IO, threading and a base windows system
+- Simple UI providing Panels, and Buttons
+
 Discuss with us: [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Supported platforms:
