@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLEnum.h"
 
 #include <osre/Platform/AbstractRenderContext.h>
-#include <osre/Profiling/PerformanceCounters.h>
+#include <osre/Profiling/PerformanceCounterRegistry.h>
 #include <osre/Common/Logger.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Stream.h>

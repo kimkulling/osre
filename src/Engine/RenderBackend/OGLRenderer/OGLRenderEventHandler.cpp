@@ -30,7 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractSurface.h>
 #include <osre/Platform/AbstractRenderContext.h>
-#include <osre/Profiling/PerformanceCounters.h>
+#include <osre/Profiling/PerformanceCounterRegistry.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Geometry.h>
 #include <osre/Debugging/osre_debugging.h>
@@ -154,7 +154,7 @@ static SetMaterialStageCmdData *setupMaterial( Material *material, OGLRenderBack
     return matData;
 }
 
-static void setupParameter( UniformVar *param, ui32 numParam, OGLRenderBackend *rb, OGLRenderEventHandler *ev ) {
+static void setupParameter( UniformVar *param, OGLRenderBackend *rb, OGLRenderEventHandler *ev ) {
 	OSRE_ASSERT( nullptr != param );
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != ev );
@@ -403,7 +403,7 @@ void OGLRenderEventHandler::setParameter( const ::CPPCore::TArray<OGLParameter*>
     m_renderCmdBuffer->setParameter( paramArray );
 }
 
-bool OGLRenderEventHandler::onAttached( const EventData *eventData ) {
+bool OGLRenderEventHandler::onAttached( const EventData* ) {
     if( nullptr != m_oglBackend ) {
         return false;
     }
@@ -414,7 +414,7 @@ bool OGLRenderEventHandler::onAttached( const EventData *eventData ) {
     return true;
 }
 
-bool OGLRenderEventHandler::onDetached( const EventData *eventData ) {
+bool OGLRenderEventHandler::onDetached( const EventData* ) {
     if( m_renderCmdBuffer ) {
         osre_error( Tag, "Renderer not destroyed." );
         delete m_renderCmdBuffer;
@@ -628,7 +628,7 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
     // setup global parameter
     if( frame->m_numVars > 0 ) {
         for( ui32 i = 0; i < frame->m_numVars; i++ ) {
-            setupParameter( frame->m_vars[ i ], 1, m_oglBackend, this );
+            setupParameter( frame->m_vars[ i ], m_oglBackend, this );
         }
     }
 

@@ -42,7 +42,7 @@ public:
         // empty
     }
 
-    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv ) {
+    virtual void update( RenderBackend::RenderBackendService* ) {
         // empty
     }
 };
