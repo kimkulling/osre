@@ -472,13 +472,13 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
     m_oglBackend->createFont( fontUri );
     m_renderCmdBuffer = new RenderCmdBuffer( m_oglBackend, m_renderCtx, createRendererEvData->m_pipeline );
 
-    bool ok( Profiling::PerformanceCounters::create() );
+    bool ok( Profiling::PerformanceCounterRegistry::create() );
     if ( !ok ) {
         osre_error( Tag, "Error while destroying performance counters." );
         return false;
     }
 
-    Profiling::PerformanceCounters::registerCounter( "fps" );
+    Profiling::PerformanceCounterRegistry::registerCounter( "fps" );
 
     return true;
 }
@@ -490,7 +490,7 @@ bool OGLRenderEventHandler::onDestroyRenderer( const Common::EventData * ) {
         return false;
     }
 
-    bool ok( Profiling::PerformanceCounters::destroy() );
+    bool ok( Profiling::PerformanceCounterRegistry::destroy() );
     if ( !ok ) {
         osre_error( Tag, "Error while destroying performance counters." );
     }

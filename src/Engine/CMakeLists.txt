@@ -258,11 +258,11 @@ ENDIF( WIN32 )
 #==============================================================================
 SET( profiling_inc
     ${HEADER_PATH}/Profiling/FPSCounter.h
-    ${HEADER_PATH}/Profiling/PerformanceCounters.h
+    ${HEADER_PATH}/Profiling/PerformanceCounterRegistry.h
 )
 SET( profiling_src
     Profiling/FPSCounter.cpp
-    Profiling/PerformanceCounters.cpp
+    Profiling/PerformanceCounterRegistry.cpp
 )
 
 #==============================================================================

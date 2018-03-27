@@ -20,7 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Profiling/PerformanceCounters.h>
+#include <osre/Profiling/PerformanceCounterRegistry.h>
 #include <osre/Common/StringUtils.h>
 
 namespace OSRE {
@@ -28,37 +28,37 @@ namespace Profiling {
 
 using namespace ::OSRE::Common;
 
-PerformanceCounters *PerformanceCounters::s_instance = nullptr;
+PerformanceCounterRegistry *PerformanceCounterRegistry::s_instance = nullptr;
 
-PerformanceCounters::CounterMeasure::CounterMeasure()
+PerformanceCounterRegistry::CounterMeasure::CounterMeasure()
 : m_count( 0 ) {
     // empty
 }
 
-PerformanceCounters::CounterMeasure::~CounterMeasure() {
+PerformanceCounterRegistry::CounterMeasure::~CounterMeasure() {
     // empty
 }
 
-PerformanceCounters::PerformanceCounters()
+PerformanceCounterRegistry::PerformanceCounterRegistry()
 : m_counters() {
 
 }
     
-PerformanceCounters::~PerformanceCounters() {
+PerformanceCounterRegistry::~PerformanceCounterRegistry() {
 
 }
     
-bool PerformanceCounters::create() {
+bool PerformanceCounterRegistry::create() {
     if ( nullptr != s_instance ) {
         return false;
     }
 
-    s_instance = new PerformanceCounters;
+    s_instance = new PerformanceCounterRegistry;
 
     return true;
 }
 
-bool PerformanceCounters::destroy() {
+bool PerformanceCounterRegistry::destroy() {
     if ( nullptr == s_instance ) {
         return false;
     }
@@ -69,7 +69,7 @@ bool PerformanceCounters::destroy() {
     return true;
 }
 
-bool PerformanceCounters::registerCounter( const String &name ) {
+bool PerformanceCounterRegistry::registerCounter( const String &name ) {
     if ( nullptr == s_instance ) {
         return false;
     }
@@ -84,7 +84,7 @@ bool PerformanceCounters::registerCounter( const String &name ) {
     return true;
 }
     
-bool PerformanceCounters::unregisterCounter( const String &name ) {
+bool PerformanceCounterRegistry::unregisterCounter( const String &name ) {
     if ( nullptr == s_instance ) {
         return false;
     }
@@ -106,7 +106,7 @@ bool PerformanceCounters::unregisterCounter( const String &name ) {
     return s_instance->m_counters.remove( hash );
 }
 
-bool PerformanceCounters::setCounter( const String &name, ui32 value ) {
+bool PerformanceCounterRegistry::setCounter( const String &name, ui32 value ) {
     if ( nullptr == s_instance ) {
         return false;
     }
@@ -122,11 +122,11 @@ bool PerformanceCounters::setCounter( const String &name, ui32 value ) {
     return true;
 }
 
-bool PerformanceCounters::resetCounter( const String &name ) {
+bool PerformanceCounterRegistry::resetCounter( const String &name ) {
     return setCounter( name, 0 );
 }
 
-bool PerformanceCounters::addValueToCounter( const String &name, ui32 value ) {
+bool PerformanceCounterRegistry::addValueToCounter( const String &name, ui32 value ) {
     if ( nullptr == s_instance ) {
         return false;
     }
@@ -147,7 +147,7 @@ bool PerformanceCounters::addValueToCounter( const String &name, ui32 value ) {
     return true;
 }
 
-bool PerformanceCounters::queryCounter( const String &name, ui32 &counterValue ) {
+bool PerformanceCounterRegistry::queryCounter( const String &name, ui32 &counterValue ) {
     if ( nullptr == s_instance ) {
         return false;
     }

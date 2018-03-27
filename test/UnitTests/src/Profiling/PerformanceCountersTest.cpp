@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "osre_testcommon.h"
-#include <osre/Profiling/PerformanceCounters.h>
+#include <osre/Profiling/PerformanceCounterRegistry.h>
 
 namespace OSRE {
 namespace UnitTest {
@@ -36,77 +36,77 @@ static const String TestKey = "test";
 
 TEST_F( PerformanceCountersTest, createTest ) {
     bool ok( true );
-    ok = PerformanceCounters::create();
+    ok = PerformanceCounterRegistry::create();
     EXPECT_TRUE( ok );
-    ok = PerformanceCounters::create();
+    ok = PerformanceCounterRegistry::create();
     EXPECT_FALSE( ok );
-    ok = PerformanceCounters::destroy();
+    ok = PerformanceCounterRegistry::destroy();
     EXPECT_TRUE( ok );
-    ok = PerformanceCounters::destroy();
+    ok = PerformanceCounterRegistry::destroy();
     EXPECT_FALSE( ok );
 }
 
 TEST_F( PerformanceCountersTest, registerCounterTest ) {
-    bool ok = PerformanceCounters::create();
+    bool ok = PerformanceCounterRegistry::create();
     EXPECT_TRUE( ok );
 
     ui32 v( 0 );
-    ok = PerformanceCounters::queryCounter( TestKey, v );
+    ok = PerformanceCounterRegistry::queryCounter( TestKey, v );
     EXPECT_FALSE( ok );
 
-    ok = PerformanceCounters::registerCounter( TestKey );
+    ok = PerformanceCounterRegistry::registerCounter( TestKey );
     EXPECT_TRUE( ok );
 
-    ok = PerformanceCounters::queryCounter( TestKey, v );
+    ok = PerformanceCounterRegistry::queryCounter( TestKey, v );
     EXPECT_TRUE( ok );
     EXPECT_EQ( v, 0U );
 
-    ok = PerformanceCounters::unregisterCounter( TestKey );
+    ok = PerformanceCounterRegistry::unregisterCounter( TestKey );
     EXPECT_TRUE( ok );
 
-    ok = PerformanceCounters::unregisterCounter( TestKey );
+    ok = PerformanceCounterRegistry::unregisterCounter( TestKey );
     EXPECT_FALSE( ok );
 
-    ok = PerformanceCounters::destroy();
+    ok = PerformanceCounterRegistry::destroy();
     EXPECT_TRUE( ok );
 }
 
 TEST_F( PerformanceCountersTest, setCounterTest ) {
-    bool ok = PerformanceCounters::create();
+    bool ok = PerformanceCounterRegistry::create();
     EXPECT_TRUE( ok );
 
-    ok = PerformanceCounters::registerCounter( TestKey );
+    ok = PerformanceCounterRegistry::registerCounter( TestKey );
     EXPECT_TRUE( ok );
 
-    PerformanceCounters::addValueToCounter( TestKey, 10 );
+    PerformanceCounterRegistry::addValueToCounter( TestKey, 10 );
     EXPECT_TRUE( ok );
 
     ui32 v( 0 );
-    ok = PerformanceCounters::queryCounter( TestKey, v );
+    ok = PerformanceCounterRegistry::queryCounter( TestKey, v );
     EXPECT_TRUE( ok );
     EXPECT_EQ( v, 10U );
 
-    ok = PerformanceCounters::destroy();
+    ok = PerformanceCounterRegistry::destroy();
     EXPECT_TRUE( ok );
 }
 
 TEST_F( PerformanceCountersTest, resetCounterTest ) {
-    bool ok = PerformanceCounters::create();
+    bool ok = PerformanceCounterRegistry::create();
     EXPECT_TRUE( ok );
 
-    ok = PerformanceCounters::registerCounter( TestKey );
+    ok = PerformanceCounterRegistry::registerCounter( TestKey );
     EXPECT_TRUE( ok );
 
-    PerformanceCounters::addValueToCounter( TestKey, 10 );
+    PerformanceCounterRegistry::addValueToCounter( TestKey, 10 );
     EXPECT_TRUE( ok );
 
     ui32 v( 0 );
-    ok = PerformanceCounters::queryCounter( TestKey, v );
+    ok = PerformanceCounterRegistry::queryCounter( TestKey, v );
     EXPECT_TRUE( ok );
     EXPECT_EQ( v, 10U );
 
-    PerformanceCounters::resetCounter( "test" );
-    ok = PerformanceCounters::destroy();
+    PerformanceCounterRegistry::resetCounter( "test" );
+    ok = PerformanceCounterRegistry::destroy();
     EXPECT_TRUE( ok );
 }
 

@@ -34,7 +34,7 @@ namespace Profiling {
 ///	@brief  This class is used to set performance counters like FPS. You can register your own 
 /// counters as well.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT PerformanceCounters {
+class OSRE_EXPORT PerformanceCounterRegistry {
 public:
     /// @brief  
     static bool create();
@@ -61,8 +61,8 @@ public:
     static bool queryCounter( const String &name, ui32 &counterValue );
 
 private:
-    PerformanceCounters();
-    ~PerformanceCounters();
+    PerformanceCounterRegistry();
+    ~PerformanceCounterRegistry();
 
 private:
     struct CounterMeasure {
@@ -71,7 +71,7 @@ private:
         CounterMeasure();
         ~CounterMeasure();
     };
-    static PerformanceCounters *s_instance;
+    static PerformanceCounterRegistry *s_instance;
     CPPCore::THashMap<ui32, CounterMeasure*> m_counters;
 };
 

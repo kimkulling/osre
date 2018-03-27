@@ -932,7 +932,7 @@ void OGLRenderBackend::renderFrame() {
 	m_renderCtx->update();
     if ( nullptr != m_fpsCounter ) {
         const ui32 fps = m_fpsCounter->getFPS();
-        Profiling::PerformanceCounters::setCounter( "fps", fps );
+        Profiling::PerformanceCounterRegistry::setCounter( "fps", fps );
     }
 }
 

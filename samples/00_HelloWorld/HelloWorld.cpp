@@ -102,7 +102,7 @@ protected:
 
     void onUpdate() override {
         ui32 fps( 0 );
-        Profiling::PerformanceCounters::queryCounter( "fps", fps );
+        Profiling::PerformanceCounterRegistry::queryCounter( "fps", fps );
         std::stringstream stream;
         stream << std::setfill( '0' ) << std::setw( 2 ) << fps;
         //Scene::DbgRenderer::getInstance()->renderDbgText( 10, 10, 1, stream.str() );
