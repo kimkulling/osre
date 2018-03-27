@@ -177,12 +177,6 @@ struct OGLPrimGroup {
 };
 
 ///	@brief
-struct SetParameterCmdData {
-    OGLParameter **m_param;
-    ui32           m_numParam;
-};
-
-///	@brief
 struct SetMaterialStageCmdData {
     OGLShader                   *m_shader;
     CPPCore::TArray<OGLTexture*> m_textures;

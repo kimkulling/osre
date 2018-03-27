@@ -68,8 +68,10 @@ Stage::Stage( const String &name, RenderBackend::RenderBackendService *rbService
 , m_rbService( rbService )
 , m_ids( nullptr ) {
     m_ids = new Ids;
-    m_root = new Node( "name" + String( ".root" ), *m_ids, Node::RenderCompRequest::RenderCompRequested, 
-        Node::TransformCompRequest::TransformCompRequested, nullptr );
+    m_root = new Node( "name" + String( ".root" ), *m_ids, 
+        Node::RenderCompRequest::RenderCompRequested, 
+        Node::TransformCompRequest::TransformCompRequested, 
+        nullptr );
 }
 
 Stage::~Stage() {

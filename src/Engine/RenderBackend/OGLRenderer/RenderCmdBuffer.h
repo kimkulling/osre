@@ -46,7 +46,6 @@ struct OGLVertexArray;
 struct OGLRenderCmd;
 struct DrawPrimitivesCmdData;
 struct DrawInstancePrimitivesCmdData;
-struct SetParameterCmdData;
 struct SetMaterialStageCmdData;
 struct SetRenderTargetCmdData;
 struct DrawTextCmdData;

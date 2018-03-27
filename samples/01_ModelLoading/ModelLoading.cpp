@@ -103,6 +103,7 @@ protected:
 #else
         Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
 #endif 
+        Scene::DbgRenderer::getInstance()->renderDbgText( 0, 0, 2U, "XXX" );
 
         Ids ids;
         Assets::AssimpWrapper assimpWrapper( ids );
@@ -138,8 +139,8 @@ protected:
                 rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
 
                 renderNodes(model, rbSrv);
-             }
 
+             }
             m_stage = AppBase::createStage( "ModelLoading" );
             const String name(model->getRootNode()->getName());
             m_modelNode = m_stage->addNode(name, nullptr, "default" );
@@ -174,9 +175,6 @@ protected:
     }
 
     void onUpdate() override {
-        // Render FPS-counter
-        Scene::DbgRenderer::getInstance()->renderDbgText( 1, 1, 1U, "XXX" );
-
         // Rotate the model
         glm::mat4 rot( 1.0 );
         m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
@@ -184,7 +182,7 @@ protected:
         m_angle += 0.01f;
         RenderBackendService *rbSrv( getRenderBackendService() );
 
-        AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
+        rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
         AppBase::onUpdate();
     }
 };

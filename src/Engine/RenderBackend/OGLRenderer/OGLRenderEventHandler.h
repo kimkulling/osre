@@ -53,7 +53,6 @@ struct PrimitiveGroup;
 struct Material;
 struct OGLRenderCmd;
 struct DrawPrimitivesCmdData;
-struct SetParameterCmdData;
 struct SetTextureStageCmdData;
 struct SetShaderStageCmdData;
 struct SetRenderTargetCmdData;
