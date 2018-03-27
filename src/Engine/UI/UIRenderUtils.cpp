@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/Widget.h>
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/Geometry.h>
 
 namespace OSRE {
 namespace UI {

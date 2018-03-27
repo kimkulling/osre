@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
+#include <osre/RenderBackend/Geometry.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/Tokenizer.h>
 

@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "osre_testcommon.h"
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/Geometry.h>
 
 namespace OSRE {
 namespace UnitTest {

@@ -407,28 +407,6 @@ struct OSRE_EXPORT Material {
 };
 
 ///	@brief
-struct OSRE_EXPORT Geometry {
-    glm::mat4       m_model;
-    Material       *m_material;
-    VertexType      m_vertextype;
-    BufferData     *m_vb;
-    IndexType       m_indextype;
-    BufferData     *m_ib;
-    ui32            m_numPrimGroups;
-    PrimitiveGroup *m_pPrimGroups;
-    ui32            m_id;
-
-    static Geometry *create( ui32 numGeo );
-    static void destroy( Geometry **geo );
-    static ui32 getVertexSize( VertexType vertextype );
-
-    OSRE_NON_COPYABLE( Geometry )
-
-private:
-    Geometry();
-    ~Geometry();
-};
-
 ///	@brief
 struct OSRE_EXPORT GeoInstanceData {
     BufferData *m_data;

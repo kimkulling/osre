@@ -43,7 +43,7 @@ bool AbstractCodec::decode( IO::Stream * ) {
     return false;
 }
 
-void AbstractCodec::releaseData( uc8 *data ) {
+void AbstractCodec::releaseData( uc8 * ) {
     // empty
 }
 

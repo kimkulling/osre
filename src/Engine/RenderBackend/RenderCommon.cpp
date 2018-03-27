@@ -36,9 +36,6 @@ VertComponent VertexLayout::ErrorComp;
 // The log tag for messages
 static const String Tag = "RenderCommon";
 
-// Id container used for geometries
-static Ids s_Ids;
-
 /// @brief  The corresponding names for vertex components in a vertex layout
 static const String VertCompName[ static_cast<ui32>(VertexAttribute::NumVertexAttrs) ] = {
     "position",     ///< Position
@@ -375,69 +372,6 @@ void Material::createShader( String vs, String fs ) {
     m_shader = new Shader;
     m_shader->m_src[ static_cast< int >( ShaderType::SH_VertexShaderType ) ] = vs;
     m_shader->m_src[ static_cast< int >( ShaderType::SH_FragmentShaderType ) ] = fs;
-}
-
-Geometry::Geometry()
-: m_model(1.0f)
-, m_material( nullptr )
-, m_vertextype( VertexType::RenderVertex )
-, m_vb( nullptr )
-, m_ib( nullptr )
-, m_numPrimGroups( 0 )
-, m_pPrimGroups( nullptr )
-, m_id( 99999999 ) {
-    // empty
-}
-
-Geometry::~Geometry() {
-    delete m_material;
-    m_material = nullptr;
-
-    delete m_vb;
-    m_vb = nullptr;
-
-    delete m_ib;
-    m_ib = nullptr;
-
-    delete [] m_pPrimGroups;
-    m_pPrimGroups = nullptr;
-
-    s_Ids.releaseId( m_id );
-}
-
-Geometry *Geometry::create( ui32 numGeo ) {
-    if ( 0 == numGeo ) {
-        osre_debug( Tag, "Number of static geo to create is zero." );
-        return nullptr;
-    }
-    Geometry *geoArray( new Geometry[ numGeo ] );
-    for ( ui32 i = 0; i < numGeo; i++ ) {
-        geoArray[ i ].m_id = s_Ids.getUniqueId();
-    }
-    return geoArray;
-}
-
-void Geometry::destroy( Geometry **geo ) {
-    delete [] *geo;
-    (*geo) = nullptr;
-}
-
-ui32 Geometry::getVertexSize( VertexType vertextype ) {
-    ui32 vertexSize( 0 );
-    switch ( vertextype ) {
-    case VertexType::ColorVertex:
-        vertexSize = sizeof( ColorVert );
-        break;
-
-    case VertexType::RenderVertex:
-        vertexSize = sizeof( RenderVert );
-        break;
-
-    default:
-        break;
-    }
-
-    return vertexSize;
 }
 
 GeoInstanceData::GeoInstanceData()

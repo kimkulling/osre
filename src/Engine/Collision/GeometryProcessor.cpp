@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Collision/GeometryProcessor.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/Geometry.h>
 
 namespace OSRE {
 namespace Collision {
