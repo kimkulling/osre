@@ -30,10 +30,12 @@ using namespace ::OSRE::Platform;
 
 class TestThread : public AbstractThread {
 public:
-    TestThread() : AbstractThread() {
+    TestThread() 
+    : AbstractThread() {
+        // empty
     }
 
-    virtual bool start(void *pData) {
+    virtual bool start( void* ) {
         return true;
     }
 
@@ -49,7 +51,7 @@ public:
         return true;
     }
 
-    virtual void setName(const String &name) {
+    virtual void setName( const String & ) {
         // empty
     }
 
@@ -58,7 +60,7 @@ public:
         return Name;
     }
 
-    virtual void waitForTimeout( ui32 ms ) {
+    virtual void waitForTimeout( ui32 ) {
         // empty
     }
 
@@ -70,7 +72,7 @@ public:
         return nullptr;
     }
 
-    virtual void setPriority( Priority prio ) {
+    virtual void setPriority( Priority ) {
         // empty
     }
 
@@ -87,11 +89,11 @@ public:
         return nullptr;
     }
 
-    virtual void setThreadLocalStorage( AbstractThreadLocalStorage *tls ) {
+    virtual void setThreadLocalStorage( AbstractThreadLocalStorage* ) {
         // empty
     }
     
-    virtual void setThreadId( const ThreadId &id ) {
+    virtual void setThreadId( const ThreadId& ) {
         // empty
     }
     
