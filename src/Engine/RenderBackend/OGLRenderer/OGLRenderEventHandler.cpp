@@ -645,13 +645,14 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
             return false;
         }
 
-        OGLBuffer *buffer(m_oglBackend->getBufferById(geo->m_id));
+        OGLBuffer *buffer( m_oglBackend->getBufferById( geo->m_id ) );
         if (nullptr != buffer) {
             m_oglBackend->bindBuffer(buffer);
             m_oglBackend->copyDataToBuffer(buffer, geo->m_vb->m_data, geo->m_vb->m_size, geo->m_vb->m_access);
             m_oglBackend->unbindBuffer(buffer);
         }
     }
+
     delete[] frame->m_geoUpdates;
     frame->m_geoUpdates = nullptr;
     frame->m_numGeoUpdates = 0;

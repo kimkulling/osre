@@ -311,7 +311,6 @@ SET( scene_inc
 #==============================================================================
 SET( renderbackend_src
     RenderBackend/Geometry.cpp
-    RenderBackend/GPUBufferManager.cpp
     RenderBackend/FontBase.cpp
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
@@ -348,7 +347,6 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/CullState.h
     ${HEADER_PATH}/RenderBackend/ClearState.h
     ${HEADER_PATH}/RenderBackend/Geometry.h
-    ${HEADER_PATH}/RenderBackend/GPUBufferManager.h
     ${HEADER_PATH}/RenderBackend/SamplerState.h
     ${HEADER_PATH}/RenderBackend/StencilState.h
     ${HEADER_PATH}/RenderBackend/PolygonState.h
