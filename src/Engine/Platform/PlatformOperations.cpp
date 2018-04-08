@@ -65,6 +65,8 @@ void PlatformOperations::getFileOpenDialog( const c8 *extensions, IO::Uri &locat
     } else {
         location.clear();
     }
+#else
+    osre_warn( Tag, "Not supported," );
 #endif // OSRE_WINDOWS
 }
 
@@ -130,7 +132,8 @@ void PlatformOperations::getDialog( const String &title, const String &question,
             osre_debug( Tag, "UNsupported id detected " + std::to_string( msgboxID ) );
             break;
     }
-
+#else
+    osre_warn( Tag, "Not supported," );
 #endif // OSRE_WINDOWS
 }
 
