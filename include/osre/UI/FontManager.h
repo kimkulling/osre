@@ -23,12 +23,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+
 #include <cppcore/Container/THashMap.h>
 
 namespace OSRE {
 
+// Forward declarations
 namespace RenderBackend {
-class FontBase;
+    class FontBase;
 }
 
 namespace UI {
@@ -57,5 +59,5 @@ private:
     FontHashMap m_fontHashMap;
 };
 
-}
-}
+} // Namespace UI
+} // Namespace OSRE

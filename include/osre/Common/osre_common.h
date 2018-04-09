@@ -624,6 +624,65 @@ struct TRect2D {
 typedef TRect2D<ui32> Rect2ui;
 typedef TRect2D<i32>  Rect2i;
 
+struct float4 {
+    union {
+        __m128 m_val4;
+        f32 m_vals[4];
+    };
+
+    float4();
+    float4(f32 a, f32 b, f32 c, f32 d);
+    float4(const float4 &rhs);
+    const float4 operator+=(float4 v);
+    const float4 operator-=(float4 v);
+    const float4 operator*=(float4 v);
+    const float4 operator/=(float4 v);
+};
+
+inline
+float4::float4() {
+    m_vals[0] = 0.0f;
+    m_vals[1] = 0.0f;
+    m_vals[2] = 0.0f;
+    m_vals[3] = 0.0f;
+}
+    
+inline
+float4::float4(f32 a, f32 b, f32 c, f32 d) 
+: m_val4(_mm_set_ps(d, c, b, a)) {
+    // empty
+}
+
+inline
+float4::float4(const float4 &rhs) 
+: m_val4(rhs.m_val4) { 
+    // empty
+}
+
+inline
+const float4 float4::operator+=(float4 v) { 
+    m_val4 = _mm_add_ps(m_val4, v.m_val4); 
+    return *this; 
+}
+
+inline
+const float4 float4::operator-=(float4 v) { 
+    m_val4 = _mm_sub_ps(m_val4, v.m_val4); 
+    return *this; 
+}
+
+inline
+const float4 float4::operator*=(float4 v) { 
+    m_val4 = _mm_mul_ps(m_val4, v.m_val4); 
+    return *this; 
+}
+
+inline
+const float4 float4::operator/=(float4 v) { 
+    m_val4 = _mm_div_ps(m_val4, v.m_val4); 
+    return *this; 
+}
+
 ///	@brief  Shortcut to avoid copy operations.
 #define OSRE_NON_COPYABLE( NAME ) \
 private: \
