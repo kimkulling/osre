@@ -147,8 +147,10 @@ SDL2EventHandler::~SDL2EventHandler( ) {
     m_inputUpdate = nullptr;
 }
 
-bool SDL2EventHandler::onEvent( const Event &event, const EventData* ){
+bool SDL2EventHandler::onEvent( const Event &, const EventData* ){
     EventDataList *activeEventQueue( getActiveEventDataList() );
+    OSRE_ASSERT(nullptr != activeEventQueue);
+
     SDL_Event ev;
     if( !m_shutdownRequested && m_inputUpdate->update( &ev ) ) {
         const Uint32 windowID = SDL_GetWindowID( m_window->getSDLSurface() );
@@ -164,10 +166,10 @@ bool SDL2EventHandler::onEvent( const Event &event, const EventData* ){
 
             case SDL_MOUSEMOTION: {
                 MouseMoveEventData *data = new MouseMoveEventData( m_eventTriggerer );
-                int *x, *y;
-                SDL_GetMouseState( x, y );
-                data->m_AbsX = *x;
-                data->m_AbsY = *y;
+                int x, y;
+                SDL_GetMouseState( &x, &y );
+                data->m_AbsX = x;
+                data->m_AbsY = y;
                 activeEventQueue->addBack( data );
             }
             break;
@@ -213,12 +215,8 @@ bool SDL2EventHandler::onEvent( const Event &event, const EventData* ){
             }
             break;
 
-            //case SDL_WINDOWEVENT_SIZE_CHANGED:                                  
-            //case SDL_VIDEOEXPOSE:
-            //case SDL_SYSWMEVENT:
-            //case SDL_USEREVENT:
-        default:
-            break;
+            default:
+                break;
         }
 
         processEvents( m_eventTriggerer );
@@ -263,11 +261,11 @@ bool SDL2EventHandler::isPolling() const {
     return m_isPolling;
 }
 
-bool SDL2EventHandler::onAttached( const EventData *eventData ) {
+bool SDL2EventHandler::onAttached( const EventData * ) {
     return true;
 }
 
-bool SDL2EventHandler::onDetached( const EventData *eventData ) {
+bool SDL2EventHandler::onDetached( const EventData * ) {
     return true;
 }
 
