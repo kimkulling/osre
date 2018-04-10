@@ -395,6 +395,18 @@ TransformState::~TransformState() {
     // empty
 }
 
+void TransformState::setTranslation( f32 x, f32 y, f32 z ) {
+    m_translate.x = x;
+    m_translate.y = y;
+    m_translate.z = z;
+}
+
+void TransformState::setScale( f32 sx, f32 sy, f32 sz ) {
+    m_scale.x = sx;
+    m_scale.y = sy;
+    m_scale.z = sz;
+}
+
 bool TransformState::operator == ( const TransformState &rhs ) const {
     return ( m_translate == rhs.m_translate && m_scale == rhs.m_scale && m_rotation == rhs.m_rotation );
 }

@@ -9,6 +9,7 @@ INCLUDE_DIRECTORIES(
 )
 
 SET ( rendertest_src
+    src/GeoModelMatrixRenderTest.cpp
     src/AABBDbgRenderTest.cpp
 	src/AbstractTestFixure.h
     src/AbstractRenderTest.cpp

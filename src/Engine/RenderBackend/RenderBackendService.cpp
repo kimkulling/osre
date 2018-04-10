@@ -62,8 +62,8 @@ RenderBackendService::~RenderBackendService() {
     }
 }
 
-static const String OGL_API = "opengl";
-static const String Vulkan_API = "vulkan";
+static const c8 *OGL_API = "opengl";
+static const c8 *Vulkan_API = "vulkan";
 
 bool RenderBackendService::onOpen() {
     if ( nullptr == m_settings ) {

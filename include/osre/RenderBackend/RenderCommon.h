@@ -425,6 +425,8 @@ struct OSRE_EXPORT TransformState {
 
     TransformState();
     ~TransformState();
+    void setTranslation( f32 x, f32 y, f32 z );
+    void setScale( f32 sx, f32 sy, f32 sz );
     void toMatrix(glm::mat4 &m);
     bool operator == ( const TransformState &rhs ) const;
     bool operator != ( const TransformState &rhs ) const;
