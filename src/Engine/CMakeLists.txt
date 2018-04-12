@@ -172,7 +172,7 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/AbstractThreadLocalStorage.h
     ${HEADER_PATH}/Platform/AbstractCriticalSection.h
     ${HEADER_PATH}/Platform/AtomicInt.h
-    ${HEADER_PATH}/Platform/AbstractPlatformEventHandler.h
+    ${HEADER_PATH}/Platform/AbstractPlatformEventQueue.h
     ${HEADER_PATH}/Platform/AbstractRenderContext.h
     ${HEADER_PATH}/Platform/AbstractSurface.h
     ${HEADER_PATH}/Platform/AbstractTimer.h
@@ -206,8 +206,8 @@ SET( platform_win32_src
     Platform/win32/Win32DbgLogStream.h
     Platform/win32/Win32Surface.cpp
     Platform/win32/Win32Surface.h
-    Platform/win32/Win32Eventhandler.cpp
-    Platform/win32/Win32Eventhandler.h
+    Platform/win32/Win32EventQueue.cpp
+    Platform/win32/Win32EventQueue.h
     Platform/win32/Win32RenderContext.cpp
     Platform/win32/Win32RenderContext.h
     Platform/win32/Win32Timer.cpp
@@ -227,8 +227,8 @@ SET( platform_win32_src
 SET( platform_sdl2_src
     Platform/sdl2/SDL2Atomic.h
     Platform/sdl2/SDL2CriticalSection.h
-    Platform/sdl2/SDL2EventHandler.cpp
-    Platform/sdl2/SDL2EventHandler.h
+    Platform/sdl2/SDL2EventQueue.cpp
+    Platform/sdl2/SDL2EventQueue.h
     Platform/sdl2/SDL2Initializer.cpp
     Platform/sdl2/SDL2Initializer.h
     Platform/sdl2/SDL2Surface.cpp

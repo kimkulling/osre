@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractTimer.h>
 #include <osre/Platform/AbstractSurface.h>
-#include <osre/Platform/AbstractPlatformEventHandler.h>
+#include <osre/Platform/AbstractPlatformEventQueue.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/Pipeline.h>
 #include <osre/RenderBackend/Parameter.h>

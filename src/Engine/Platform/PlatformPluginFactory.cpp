@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Debugging/osre_debugging.h>
 #ifdef OSRE_WINDOWS
 #   include <src/Engine/Platform/win32/Win32Surface.h>
-#   include <src/Engine/Platform/win32/Win32Eventhandler.h>
+#   include <src/Engine/Platform/win32/Win32EventQueue.h>
 #   include <src/Engine//Platform/win32/Win32Timer.h>
 #   include <src/Engine//Platform/win32/Win32RenderContext.h>
 #   include <src/Engine/Platform/win32/Win32ThreadFactory.h>
@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   include "Engine/Platform/win32/Win32SystemInfo.h"
 #endif
 #include <src/Engine/Platform/sdl2/SDL2Surface.h>
-#include <src/Engine/Platform/sdl2/SDL2EventHandler.h>
+#include <src/Engine/Platform/sdl2/SDL2EventQueue.h>
 #include <src/Engine/Platform/sdl2/SDL2RenderContext.h>
 #include <src/Engine/Platform/sdl2/SDL2Timer.h>
 #include <src/Engine/Platform/sdl2/SDL2ThreadFactory.h>
