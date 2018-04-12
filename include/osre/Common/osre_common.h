@@ -633,10 +633,10 @@ struct float4 {
     float4();
     float4(f32 a, f32 b, f32 c, f32 d);
     float4(const float4 &rhs);
-    const float4 operator+=(float4 v);
-    const float4 operator-=(float4 v);
-    const float4 operator*=(float4 v);
-    const float4 operator/=(float4 v);
+    const float4 operator += (const float4 &v);
+    const float4 operator -= (const float4 &v);
+    const float4 operator *= (const float4 &v);
+    const float4 operator /= (const float4 &v);
 };
 
 inline
@@ -660,25 +660,25 @@ float4::float4(const float4 &rhs)
 }
 
 inline
-const float4 float4::operator+=(float4 v) { 
+const float4 float4::operator += (const float4 &v) { 
     m_val4 = _mm_add_ps(m_val4, v.m_val4); 
     return *this; 
 }
 
 inline
-const float4 float4::operator-=(float4 v) { 
+const float4 float4::operator -= (const float4 &v) {
     m_val4 = _mm_sub_ps(m_val4, v.m_val4); 
     return *this; 
 }
 
 inline
-const float4 float4::operator*=(float4 v) { 
+const float4 float4::operator *= (const float4 &v) {
     m_val4 = _mm_mul_ps(m_val4, v.m_val4); 
     return *this; 
 }
 
 inline
-const float4 float4::operator/=(float4 v) { 
+const float4 float4::operator /= (const float4 &v) {
     m_val4 = _mm_div_ps(m_val4, v.m_val4); 
     return *this; 
 }
