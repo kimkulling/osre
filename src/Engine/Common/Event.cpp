@@ -60,6 +60,16 @@ void Event::release() {
     }
 }
 
+bool Event::isEqual(const String &id) const {
+    if (id.empty()) {
+        return false;
+    }
+
+    const HashId hash( StringUtils::hashName(id.c_str()) );
+    
+    return ( hash == m_hash );
+}
+
 bool Event::operator == ( const Event &rhs ) const {
     return ( m_hash == rhs.m_hash );
 }

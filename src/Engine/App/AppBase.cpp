@@ -77,6 +77,7 @@ public:
     void onOSEvent( const Event &osEvent, const EventData *data ) override {
         if ( m_uiScreen.isValid() ) {
             osre_debug( Tag, "listener called" );
+            bool ok = osEvent.isEqual(MouseButtonDownEvent);
             MouseButtonEventData *mouseBtnData( ( MouseButtonEventData*) data );
             const Point2ui pt( mouseBtnData->m_AbsX, mouseBtnData->m_AbsY );
             m_uiScreen->mouseDown( pt );

@@ -103,18 +103,21 @@ struct OSRE_EXPORT Event {
     ///	@brief	An owned reference will be released.
     void release();
 
+    bool isEqual(const String &id) const;
+
     ///	@brief	Implementation of == operator.
     ///	@param	other	Instance to compare.
     ///	@return	true, if both instances are equal, else false.
     bool operator == (const Event &other) const;
 
+    // No copying
+    Event(const Event &) = delete;
+    Event &operator = (const Event &) = delete;
+
     ui32 m_numRefs;
     HashId m_hash;
     const EventData *m_eventData;
 
-private:
-    Event( const Event & ) = delete;
-    Event &operator = ( const Event & ) = delete;
 };
 
 //--------------------------------------------------------------------------------------------------------------------
