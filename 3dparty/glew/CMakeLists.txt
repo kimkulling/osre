@@ -1,4 +1,4 @@
-SET( LIBRARY_VERSION "1.0.0" )
+add_definitions( -DGLEW_BUILD )
 
 IF( WIN32 )
     SET( GL_LIBRARY opengl32 )
