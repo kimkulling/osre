@@ -56,7 +56,7 @@ bool ImageCodec::encode( IO::Stream *inStream, uc8 *data, ui32 &size ) {
     return true;
 }
 
-bool ImageCodec::decode( IO::Stream *outStream ) {
+bool ImageCodec::decode( IO::Stream * ) {
     return false;
 }
 

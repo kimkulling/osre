@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/AbstractEventHandler.h>
 #include <osre/Common/EventTriggerer.h>
+#include <osre/Common/Object.h>
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/TList.h>
 
@@ -46,10 +47,10 @@ using EventPtrArray = CPPCore::TArray<const Common::Event*>;
 ///
 ///	@brief  This abstract class defines the event handler for a platform event loop handler.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AbstractPlatformEventHandler : public Common::AbstractEventHandler {
+class OSRE_EXPORT AbstractPlatformEventQueue : public Common::Object {
 public:
     ///	@brief  The class destructor, virtual.
-    virtual ~AbstractPlatformEventHandler();
+    virtual ~AbstractPlatformEventQueue();
     
     ///	@brief  Used to register a event listener.
     ///	@param  events      List of events.
@@ -69,12 +70,15 @@ public:
     /// @return The active polling state.
     virtual bool isPolling() const = 0;
 
+    virtual bool update() = 0;
+
     void setRenderBackendService( RenderBackend::RenderBackendService *rbSrv );
+    
     RenderBackend::RenderBackendService *getRenderBackendService() const;
 
 protected:
     /// @brief  The class constructor.
-    AbstractPlatformEventHandler();
+    AbstractPlatformEventQueue();
 
     ///	@brief  Will be called to process events.
     /// @param  pTriggerer  The event trigger.
@@ -102,19 +106,20 @@ private:
 };
 
 inline
-AbstractPlatformEventHandler::AbstractPlatformEventHandler()
-: m_activeList( 0 )
+AbstractPlatformEventQueue::AbstractPlatformEventQueue()
+: Object("Platform/AbstractPlatformEventQueue")
+, m_activeList( 0 )
 , m_rbSrv( nullptr ) {
     // empty
 }
 
 inline
-AbstractPlatformEventHandler::~AbstractPlatformEventHandler( ) {
+AbstractPlatformEventQueue::~AbstractPlatformEventQueue( ) {
     // empty
 }
 
 inline
-void AbstractPlatformEventHandler::processEvents( Common::EventTriggerer *triggerer ) {
+void AbstractPlatformEventQueue::processEvents( Common::EventTriggerer *triggerer ) {
     if ( nullptr == triggerer ) {
         return;
     }
@@ -136,13 +141,13 @@ void AbstractPlatformEventHandler::processEvents( Common::EventTriggerer *trigge
 }
 
 inline
-EventDataList *AbstractPlatformEventHandler::getActiveEventDataList() {
+EventDataList *AbstractPlatformEventQueue::getActiveEventDataList() {
     EventDataList *activeEventQueue( &m_eventQueues[ m_activeList ] );
     return activeEventQueue;
 }
 
 inline
-EventDataList *AbstractPlatformEventHandler::getPendingEventDataList() {
+EventDataList *AbstractPlatformEventQueue::getPendingEventDataList() {
     ui32 queueToProcess = ( m_activeList + 1 ) % numEventQueues;
     m_eventQueues[ queueToProcess ].clear( );
     EventDataList *pendingEventQueue( &m_eventQueues[ queueToProcess ] );
@@ -151,17 +156,17 @@ EventDataList *AbstractPlatformEventHandler::getPendingEventDataList() {
 }
 
 inline
-void AbstractPlatformEventHandler::switchEventDataList() {
+void AbstractPlatformEventQueue::switchEventDataList() {
     m_activeList = ( m_activeList + 1 ) % numEventQueues;
 }
 
 inline
-void AbstractPlatformEventHandler::setRenderBackendService( RenderBackend::RenderBackendService *rbSrv ) {
+void AbstractPlatformEventQueue::setRenderBackendService( RenderBackend::RenderBackendService *rbSrv ) {
     m_rbSrv = rbSrv;
 }
 
 inline
-RenderBackend::RenderBackendService *AbstractPlatformEventHandler::getRenderBackendService() const {
+RenderBackend::RenderBackendService *AbstractPlatformEventQueue::getRenderBackendService() const {
     return m_rbSrv;
 }
 

@@ -63,15 +63,15 @@ bool PlatformPluginFactory::release( PluginType type ) {
     return true;
 }
 
-AbstractPlatformEventHandler *PlatformPluginFactory::createPlatformEventHandler( PluginType type, AbstractSurface *rootSurface ) {
-    AbstractPlatformEventHandler *eventHandler( nullptr );
+AbstractPlatformEventQueue *PlatformPluginFactory::createPlatformEventHandler( PluginType type, AbstractSurface *rootSurface ) {
+    AbstractPlatformEventQueue *eventHandler( nullptr );
     switch( type ) {
 #ifdef OSRE_WINDOWS
         case Platform::PluginType::WindowsPlugin: {
                 Win32Surface *win32Surface = static_cast<Win32Surface*>( rootSurface );
                 if( win32Surface ) {
-                    eventHandler = new Win32Eventhandler( win32Surface );
-                    Win32Eventhandler::registerEventServer( ( Win32Eventhandler* ) eventHandler, win32Surface->getHWnd() );
+                    eventHandler = new Win32EventQueue( win32Surface );
+                    Win32EventQueue::registerEventQueue( ( Win32EventQueue* ) eventHandler, win32Surface->getHWnd() );
                 }
             }
             break;

@@ -103,7 +103,7 @@ struct SDL2PeekInputUpdate : public AbstractSDL2InputUpdate {
 std::map<SDL_Window*, SDL2EventHandler*> SDL2EventHandler::s_windowsServerMap;
 
 SDL2EventHandler::SDL2EventHandler( AbstractSurface *window )
-: AbstractPlatformEventHandler()
+: AbstractPlatformEventQueue()
 , m_isPolling( false )
 , m_shutdownRequested( false )
 , m_inputUpdate( nullptr )
@@ -147,7 +147,7 @@ SDL2EventHandler::~SDL2EventHandler( ) {
     m_inputUpdate = nullptr;
 }
 
-bool SDL2EventHandler::onEvent( const Event &, const EventData* ){
+bool SDL2EventHandler::update() {
     EventDataList *activeEventQueue( getActiveEventDataList() );
     OSRE_ASSERT(nullptr != activeEventQueue);
 
@@ -259,14 +259,6 @@ void SDL2EventHandler::enablePolling( bool enabled ) {
 
 bool SDL2EventHandler::isPolling() const {
     return m_isPolling;
-}
-
-bool SDL2EventHandler::onAttached( const EventData * ) {
-    return true;
-}
-
-bool SDL2EventHandler::onDetached( const EventData * ) {
-    return true;
 }
 
 } // Namespace Platform

@@ -31,7 +31,7 @@ namespace Platform {
 
 using namespace ::OSRE::Common;
 
-std::map<HWND, Win32Eventhandler*> Win32Eventhandler::s_WindowsServerMap;
+std::map<HWND, Win32EventQueue*> Win32EventQueue::s_WindowsServerMap;
 
 static const String Tag = "Win32Eventhandler";
 
@@ -83,8 +83,8 @@ static void getXYPosFromLParam( LPARAM lparam, i32 &x, i32 &y ) {
     y = GET_Y_LPARAM( lparam );
 }
 
-Win32Eventhandler::Win32Eventhandler( AbstractSurface *rootWindow )
-: AbstractPlatformEventHandler()
+Win32EventQueue::Win32EventQueue( AbstractSurface *rootWindow )
+: AbstractPlatformEventQueue()
 , m_updateInstance( nullptr )
 , m_eventTriggerer( nullptr )
 , m_rootWindow( rootWindow )
@@ -103,7 +103,7 @@ Win32Eventhandler::Win32Eventhandler( AbstractSurface *rootWindow )
     m_eventTriggerer->addTriggerableEvent( AppFocusEvent );
 }
 
-Win32Eventhandler::~Win32Eventhandler( ) {
+Win32EventQueue::~Win32EventQueue( ) {
     m_rootWindow = nullptr;
 
     delete m_eventTriggerer;
@@ -113,7 +113,7 @@ Win32Eventhandler::~Win32Eventhandler( ) {
     m_updateInstance = nullptr;
 }
 
-bool Win32Eventhandler::onEvent( const Common::Event &ev, const Common::EventData *pEventData ) {
+bool Win32EventQueue::update() {
     EventDataList *pActiveEventQueue = getActiveEventDataList();
     MSG	Program;
     if( !m_shutdownRequested && m_updateInstance->update( Program ) ) {
@@ -219,7 +219,9 @@ bool Win32Eventhandler::onEvent( const Common::Event &ev, const Common::EventDat
                     ui32 h = rcClient.bottom - rcClient.top;
 
                     RenderBackend::RenderBackendService *rbSrv(getRenderBackendService());
-                    getRenderBackendService()->resize( x, y, w,h );
+                    if (nullptr != rbSrv) {
+                        rbSrv->resize(x, y, w, h);
+                    }
                     pActiveEventQueue->addBack( data );
                 }
             }
@@ -235,8 +237,8 @@ bool Win32Eventhandler::onEvent( const Common::Event &ev, const Common::EventDat
     return !m_shutdownRequested;
 }
 
-LRESULT Win32Eventhandler::winproc( HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam ) {
-    Win32Eventhandler *pEventHandler = Win32Eventhandler::getInstance( hWnd );
+LRESULT Win32EventQueue::winproc( HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam ) {
+    Win32EventQueue *pEventHandler = Win32EventQueue::getInstance( hWnd );
     switch( Message ) {
         case WM_ACTIVATE: {
         return 0;
@@ -268,27 +270,22 @@ LRESULT Win32Eventhandler::winproc( HWND hWnd, UINT Message, WPARAM wParam, LPAR
     return ::DefWindowProc( hWnd, Message, wParam, lParam );
 }
 
-bool Win32Eventhandler::onAttached( const EventData *eventData ) {
-    return true;
-}
-
-bool Win32Eventhandler::onDetached( const EventData *eventData ) {
-    return true;
-}
-
-void Win32Eventhandler::registerEventServer( Win32Eventhandler *server, HWND hWnd ) {
+void Win32EventQueue::registerEventQueue( Win32EventQueue *server, HWND hWnd ) {
     s_WindowsServerMap[ hWnd ] = server;
 }
 
-void Win32Eventhandler::unregisterEventServer( Win32Eventhandler *pServer, HWND hWnd ) {
-    std::map<HWND, Win32Eventhandler*>::iterator it = s_WindowsServerMap.find( hWnd );
+void Win32EventQueue::unregisterEventQueue( Win32EventQueue *server, HWND hWnd ) {
+    std::map<HWND, Win32EventQueue*>::iterator it = s_WindowsServerMap.find( hWnd );
     if( s_WindowsServerMap.end() != it ) {
+        if (server != it->second) {
+            osre_debug(Tag, "Invalid assignment frin eventqueue to window handle.");
+        }
         s_WindowsServerMap.erase( it );
     }
 }
 
-Win32Eventhandler *Win32Eventhandler::getInstance( HWND hWnd ) {
-    std::map<HWND, Win32Eventhandler*>::iterator it = s_WindowsServerMap.find( hWnd );
+Win32EventQueue *Win32EventQueue::getInstance( HWND hWnd ) {
+    std::map<HWND, Win32EventQueue*>::iterator it = s_WindowsServerMap.find( hWnd );
     if( s_WindowsServerMap.end() != it ) {
         return it->second;
     }
@@ -296,7 +293,7 @@ Win32Eventhandler *Win32Eventhandler::getInstance( HWND hWnd ) {
     return nullptr;
 }
 
-bool Win32Eventhandler::onQuit() {
+bool Win32EventQueue::onQuit() {
     Common::EventData data( QuitEvent, m_eventTriggerer );
     m_eventTriggerer->triggerEvent( data.getEvent(), &data );
     m_shutdownRequested = true;
@@ -304,23 +301,23 @@ bool Win32Eventhandler::onQuit() {
     return true;
 }
 
-void Win32Eventhandler::setRootSurface( AbstractSurface *pSurface ) {
+void Win32EventQueue::setRootSurface( AbstractSurface *pSurface ) {
     if( !pSurface ) {
         osre_debug( Tag, "Invalid window pointer." );
         return;
     }
 
     Win32Surface *pWin32Surface = ( Win32Surface* ) pSurface;
-    registerEventServer( this, pWin32Surface->getHWnd() );
+    registerEventQueue( this, pWin32Surface->getHWnd() );
 
     m_rootWindow = pWin32Surface;
 }
 
-AbstractSurface *Win32Eventhandler::getRootSurface( ) const {
+AbstractSurface *Win32EventQueue::getRootSurface( ) const {
     return m_rootWindow;
 }
 
-void Win32Eventhandler::enablePolling( bool enabled ) {
+void Win32EventQueue::enablePolling( bool enabled ) {
     if( m_updateInstance && enabled == m_isPolling ) {
         return;
     }
@@ -339,11 +336,11 @@ void Win32Eventhandler::enablePolling( bool enabled ) {
     }
 }
 
-bool Win32Eventhandler::isPolling( ) const {
+bool Win32EventQueue::isPolling( ) const {
     return m_isPolling;
 }
 
-void Win32Eventhandler::registerEventListener( const CPPCore::TArray<const Common::Event*> &events, 
+void Win32EventQueue::registerEventListener( const CPPCore::TArray<const Common::Event*> &events, 
         OSEventListener *pListener ) {
     OSRE_ASSERT( nullptr != m_eventTriggerer );
 
@@ -351,7 +348,7 @@ void Win32Eventhandler::registerEventListener( const CPPCore::TArray<const Commo
         &OSEventListener::onOSEvent ) );
 }
 
-void Win32Eventhandler::unregisterEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener ) {
+void Win32EventQueue::unregisterEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener ) {
     OSRE_ASSERT( nullptr != m_eventTriggerer );
 
     m_eventTriggerer->removeEventListener( events, Common::EventFunctor::Make( pListener,

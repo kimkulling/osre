@@ -49,29 +49,27 @@ struct IInputUpdate;
 ///
 ///	@brief  This class implements the win32-specific event handler for OS-events.
 //-------------------------------------------------------------------------------------------------
-class Win32Eventhandler : public AbstractPlatformEventHandler {
+class Win32EventQueue : public AbstractPlatformEventQueue {
 public:
-    Win32Eventhandler( AbstractSurface *rootWindow );
-    virtual ~Win32Eventhandler();
-    virtual bool onEvent( const Common::Event &ev, const Common::EventData *pEventData ) override;
+    Win32EventQueue( AbstractSurface *rootWindow );
+    virtual ~Win32EventQueue();
+    virtual bool update() override;
     static LRESULT CALLBACK winproc( HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam );
-    void setRootSurface( AbstractSurface *pWIndow );
+    void setRootSurface( AbstractSurface *window );
     AbstractSurface *getRootSurface() const;
-    void enablePolling( bool enabled ) override;;
+    void enablePolling( bool enabled ) override;
     bool isPolling() const;
     void registerEventListener( const CPPCore::TArray<const Common::Event*> &rEvents, OSEventListener *pListener ) override;
     void unregisterEventListener( const CPPCore::TArray<const Common::Event*> &rEvents, OSEventListener *pListener ) override;
-    static void registerEventServer( Win32Eventhandler *pServer, HWND hWnd );
-    static void unregisterEventServer( Win32Eventhandler *pServer, HWND hWnd );
-    static Win32Eventhandler *getInstance( HWND hWnd );
+    static void registerEventQueue( Win32EventQueue *pServer, HWND hWnd );
+    static void unregisterEventQueue( Win32EventQueue *pServer, HWND hWnd );
+    static Win32EventQueue *getInstance( HWND hWnd );
 
 protected:
-    virtual bool onAttached( const Common::EventData *pEventData );
-    virtual bool onDetached( const Common::EventData *pEventData );
     virtual bool onQuit();
 
 private:
-    static std::map<HWND, Win32Eventhandler*> s_WindowsServerMap;
+    static std::map<HWND, Win32EventQueue*> s_WindowsServerMap;
     IInputUpdate *m_updateInstance;
     Common::EventTriggerer *m_eventTriggerer;
     AbstractSurface *m_rootWindow;

@@ -86,7 +86,7 @@ bool Win32Surface::onCreate( ) {
     ui32 cy = prop->m_height / 2;
     m_hInstance = ::GetModuleHandle( NULL );
     sWC.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-    sWC.lpfnWndProc = ( WNDPROC ) Win32Eventhandler::winproc;
+    sWC.lpfnWndProc = ( WNDPROC ) Win32EventQueue::winproc;
     sWC.cbClsExtra = 0;
     sWC.cbWndExtra = 0;
     sWC.hInstance = m_hInstance;

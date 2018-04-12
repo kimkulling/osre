@@ -249,8 +249,8 @@ bool RenderTestSuite::update() {
     TArray<const Common::Event*> eventArray;
     eventArray.add( &KeyboardButtonDownEvent );    
     m_pListener = new KeyboardEventListener( this );
-    AbstractPlatformEventHandler *pEvHandler = m_pPlatformInterface->getPlatformEventHandler( );
-    pEvHandler->registerEventListener( eventArray, m_pListener );
+    AbstractPlatformEventQueue *evQueue = m_pPlatformInterface->getPlatformEventHandler( );
+    evQueue->registerEventListener( eventArray, m_pListener );
 
     while( m_pPlatformInterface->update() ) {
         if( m_activeTestIdx == AllTestsDone ) {
@@ -284,7 +284,7 @@ bool RenderTestSuite::update() {
         clearTestEnv();
     }
 
-    pEvHandler->unregisterEventListener( eventArray, m_pListener );
+    evQueue->unregisterEventListener( eventArray, m_pListener );
 
     return false;
 }

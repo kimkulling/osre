@@ -42,21 +42,17 @@ class SDL2Surface;
 ///
 ///	@brief  
 //-------------------------------------------------------------------------------------------------
-class SDL2EventHandler : public AbstractPlatformEventHandler {
+class SDL2EventHandler : public AbstractPlatformEventQueue {
 public:
     using EventArray = CPPCore::TArray<const Common::Event*>;
 
     SDL2EventHandler( AbstractSurface *window );
     virtual ~SDL2EventHandler();
-    bool onEvent( const Common::Event &event, const Common::EventData *pEventData ) override;
+    bool update() override;
     void registerEventListener( const EventArray &events, OSEventListener *listener ) override;
     void unregisterEventListener( const EventArray &events, OSEventListener *listener ) override;
     void enablePolling( bool enabled ) override;
     bool isPolling() const override;
-
-protected:
-    bool onAttached( const Common::EventData *eventData ) override;
-    bool onDetached( const Common::EventData *eventData ) override;
 
 private:
     static std::map<SDL_Window*, SDL2EventHandler*> s_windowsServerMap;

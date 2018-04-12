@@ -99,7 +99,7 @@ PlatformInterface *PlatformInterface::getInstance( ) {
     return s_instance;
 }
 
-AbstractPlatformEventHandler *PlatformInterface::getPlatformEventHandler() const {
+AbstractPlatformEventQueue *PlatformInterface::getPlatformEventHandler() const {
     return m_oseventHandler;
 }
 
@@ -222,8 +222,11 @@ bool PlatformInterface::onClose( ) {
 }
 
 bool PlatformInterface::onUpdate() {
-    Common::Event ev( "none" );
-    return m_oseventHandler->onEvent( ev, nullptr );
+    if (nullptr == m_oseventHandler) {
+        return false;
+    }
+
+    return m_oseventHandler->update();
 }
 
 bool PlatformInterface::setupGfx( SurfaceProperties *props, bool polls ) {

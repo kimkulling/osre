@@ -296,7 +296,7 @@ bool AppBase::onCreate( Properties::Settings *config ) {
     ServiceProvider::create( m_rbService );
 
     // Setup onMouse event-listener
-    AbstractPlatformEventHandler *evHandler = m_platformInterface->getPlatformEventHandler();
+    AbstractPlatformEventQueue *evHandler = m_platformInterface->getPlatformEventHandler();
     if ( nullptr != evHandler ) {
         TArray<const Common::Event*> eventArray;
         eventArray.add( &MouseButtonDownEvent );

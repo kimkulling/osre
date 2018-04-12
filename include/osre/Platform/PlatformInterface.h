@@ -47,7 +47,7 @@ namespace Platform {
 
 class AbstractSurface;
 class AbstractTimer;
-class AbstractPlatformEventHandler;
+class AbstractPlatformEventQueue;
 class AbstractRenderContext;
 class AbstractDynamicLoader;
 class AbstractSystemInfo;
@@ -215,7 +215,7 @@ public:
     static PluginType getOSPluginType();
     static String getOSPluginName( PluginType type );
     AbstractSurface *getRootSurface() const;
-    AbstractPlatformEventHandler *getPlatformEventHandler() const;
+    AbstractPlatformEventQueue *getPlatformEventHandler() const;
     AbstractRenderContext *getRenderContext() const;
     AbstractTimer *getTimer() const;
     AbstractDynamicLoader *getDynamicLoader() const;
@@ -237,7 +237,7 @@ private:
     const Properties::Settings *m_config;
     PluginType m_type;
     AbstractSurface *m_rootSurface;
-    AbstractPlatformEventHandler *m_oseventHandler;
+    AbstractPlatformEventQueue *m_oseventHandler;
     AbstractRenderContext *m_renderContext;
     AbstractTimer *m_timer;
     AbstractDynamicLoader *m_dynLoader;
