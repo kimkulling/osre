@@ -90,6 +90,7 @@ private:
     Priority m_Prio;
     String m_threadName;
     ThreadId m_id;
+    úi32 m_stacksize;
 };
 
 } // Namespace Threading

@@ -47,6 +47,7 @@ using namespace ::OSRE::Platform;
 using namespace ::CPPCore;
 
 static const String Tag = "OGLRendeEventHandler";
+/*
 
 static const String VsSrc =
 	"layout(location = 0) in vec3 position;	      // object space vertex position\n"
@@ -60,7 +61,6 @@ static const String VsSrc =
 	"    // UV of the vertex. No special space for this one.\n"
 	"    UV = texcoord0;\n"
 	"};\n";
-
 static const String FsSrc =
 	"in vec2 vUV;\n"
 	"// Output data\n"
@@ -70,7 +70,7 @@ static const String FsSrc =
 	"void main() {\n"
 	"    vFragColor = texture( tex0, vUV );\n"
 	"};\n";
-
+    */
 
 static bool setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTexture*> &textures ) {
     OSRE_ASSERT( nullptr != mat );

@@ -44,7 +44,8 @@ SDL2Thread::SDL2Thread( const String &name, ui32 stacksize )
 , m_tls( nullptr )
 , m_Prio( Priority::Normal )
 , m_threadName( name )
-, m_id() {
+, m_id()
+, m_stacksize( stacksize ) {
     // empty
 }
 
