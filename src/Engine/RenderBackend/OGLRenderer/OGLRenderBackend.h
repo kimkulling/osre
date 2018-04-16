@@ -103,7 +103,9 @@ public:
             UniformDataBlob *blob = UniformDataBlob::create( ParameterType::PT_Mat4, 1 );
             ::memcpy( blob->m_data, m_mvp.getMVP(), sizeof( glm::mat4 ) );
             mvp = createParameter( "MVP", ParameterType::PT_Mat4, blob, 1 );
-        }            
+        } else {
+            memcpy( mvp->m_data->m_data, m_mvp.getMVP(), sizeof( glm::mat4 ) );
+        }
         ::memcpy( mvp->m_data->m_data, glm::value_ptr( m_mvp.m_mvp ), sizeof( glm::mat4 ) );
     }
     
