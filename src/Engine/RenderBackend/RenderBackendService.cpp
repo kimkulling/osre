@@ -232,11 +232,11 @@ void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const
     m_uniformUpdates.add( uniform );
 }
 
-void RenderBackendService::pushWorldTransform( const glm::mat4 &matrix ) {
+void RenderBackendService::pushTransform( const glm::mat4 &matrix ) {
     m_transformStack.add( matrix );
 }
 
-void RenderBackendService::popWorldTransform() {
+void RenderBackendService::popTransform() {
     if ( m_transformStack.size() > 0 ) {
         m_transformStack.removeBack();
     }
