@@ -47,30 +47,6 @@ using namespace ::OSRE::Platform;
 using namespace ::CPPCore;
 
 static const String Tag = "OGLRendeEventHandler";
-/*
-
-static const String VsSrc =
-	"layout(location = 0) in vec3 position;	      // object space vertex position\n"
-	"layout(location = 1) in vec3 normal;	      // object space vertex normal\n"
-	"layout(location = 2) in vec2 texcoord0;	  // texture coordinate\n"
-	"out vec2 vUV;\n"
-	"\n"
-	"void main() {\n"
-	"    vec3 vertexPosition_homoneneousspace = position;\n"
-	"    gl_Position = vec4(position, 1 );\n"
-	"    // UV of the vertex. No special space for this one.\n"
-	"    UV = texcoord0;\n"
-	"};\n";
-static const String FsSrc =
-	"in vec2 vUV;\n"
-	"// Output data\n"
-	"out vec4 vFragColor;\n"
-	"uniform sampler2D tex0;\n"
-
-	"void main() {\n"
-	"    vFragColor = texture( tex0, vUV );\n"
-	"};\n";
-    */
 
 static bool setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTexture*> &textures ) {
     OSRE_ASSERT( nullptr != mat );
