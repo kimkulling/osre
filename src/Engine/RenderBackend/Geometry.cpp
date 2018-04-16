@@ -14,7 +14,8 @@ static Ids s_Ids;
 static const String Tag = "Geometry";
 
 Geometry::Geometry()
-: m_model( 1.0f )
+: m_localMatrix( false )
+, m_model( 1.0f )
 , m_material( nullptr )
 , m_vertextype( VertexType::RenderVertex )
 , m_vb( nullptr )

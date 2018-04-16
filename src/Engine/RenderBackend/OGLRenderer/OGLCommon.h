@@ -211,14 +211,14 @@ struct DrawInstancePrimitivesCmdData {
 
 ///	@brief
 struct DrawPrimitivesCmdData {
-    OGLParameter         **m_param;
-    ui32                   m_numParam;
+    bool                   m_localMatrix;
+    glm::mat4              m_model;
     OGLVertexArray        *m_vertexArray;
     CPPCore::TArray<ui32>  m_primitives;
 
     DrawPrimitivesCmdData()
-    : m_param( nullptr )
-    , m_numParam( 0 )
+    : m_localMatrix( false )
+    , m_model()
     , m_vertexArray( nullptr )
     , m_primitives() {
         // empty

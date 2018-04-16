@@ -42,6 +42,8 @@ namespace RenderTest {
 using namespace ::OSRE::RenderBackend;
 
 class GeoModelMatrixRenderTest : public AbstractRenderTest {
+    TransformMatrixBlock m_transformMatrix;
+
 public:
     GeoModelMatrixRenderTest()
     : AbstractRenderTest( "rendertest/GeoModelMatrixRenderTest" ) {
@@ -57,16 +59,21 @@ public:
 
         Scene::GeometryBuilder myBuilder;
         Geometry *geo1 = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
+        geo1->m_localMatrix = true; 
         TransformState transform;
-        transform.setTranslation( 10, 0, 0 );
+        transform.setTranslation( 1, 0, 0 );
         transform.toMatrix( geo1->m_model );
          
         rbSrv->attachGeo( geo1, 0 );
 
         Geometry *geo2 = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
         transform.toMatrix( geo2->m_model );
-        transform.setTranslation( -10, 0, 0 );
+        geo2->m_localMatrix = true;
+        transform.setTranslation( -1, 0, 0 );
         rbSrv->attachGeo( geo2, 0 );
+
+        m_transformMatrix.update();
+        //rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
 
         return true;
     }

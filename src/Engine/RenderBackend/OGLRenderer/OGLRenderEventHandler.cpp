@@ -262,7 +262,7 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
     return vertexArray;
 }
 
-static void setupPrimDrawCmd( const TArray<ui32> &primGroups, OGLRenderBackend *rb, 
+static void setupPrimDrawCmd( bool useLocalMatrix, const glm::mat4 &model, const TArray<ui32> &primGroups, OGLRenderBackend *rb, 
         OGLRenderEventHandler *eh, OGLVertexArray *va ) {
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
@@ -273,6 +273,10 @@ static void setupPrimDrawCmd( const TArray<ui32> &primGroups, OGLRenderBackend *
 
 	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesCmd, nullptr );
     DrawPrimitivesCmdData *data = new DrawPrimitivesCmdData;
+    if ( useLocalMatrix ) {
+        data->m_model = model;
+        data->m_localMatrix = useLocalMatrix;
+    }
     data->m_vertexArray = va;
     data->m_primitives.reserve( primGroups.size() );
     for( ui32 i = 0; i < primGroups.size(); ++i ) {
@@ -594,7 +598,7 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
 
             // setup the draw calls
             if (0 == currentGeoPackage->m_numInstances) {
-                setupPrimDrawCmd(primGroups, m_oglBackend, this, m_vertexArray);
+                setupPrimDrawCmd( geo->m_localMatrix, geo->m_model, primGroups, m_oglBackend, this, m_vertexArray);
             } else {
                 setupInstancedDrawCmd(primGroups, frame, m_oglBackend, this, m_vertexArray);
             }

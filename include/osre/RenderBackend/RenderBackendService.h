@@ -175,8 +175,8 @@ public:
 
     void setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray );
 
-    void pushWorldTransform( const glm::mat4 &matrix );
-    void popWorldTransform();
+    void pushTransform( const glm::mat4 &matrix );
+    void popTransform();
     const glm::mat4 &getTopWorldTransform() const;
 
     void attachGeo( Geometry *geo, ui32 numInstances );

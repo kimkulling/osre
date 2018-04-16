@@ -70,12 +70,55 @@ struct PrimitiveGroup;
 //-------------------------------------------------------------------------------------------------
 class OGLRenderBackend {
 public:
+    enum MatrixType {
+        Model = 0 ,
+        View,
+        Projection,
+        MaxMatrix
+    };
+    TransformMatrixBlock m_mvp;
+    
     typedef CPPCore::TArray<OGLVertexAttribute*> VertAttribArray;
 
     /// The default class constructor.
     OGLRenderBackend();
     /// The class destructor.
     ~OGLRenderBackend();
+    
+    void setMatrix( MatrixType type, const glm::mat4 &mat ) {
+        switch ( type ) {
+            case Model:
+                m_mvp.m_model = mat;
+                break;
+            case View:
+                m_mvp.m_view = mat;
+                break;
+            case Projection:
+                m_mvp.m_projection = mat;
+                break;
+        }
+        m_mvp.update();
+        OGLParameter *mvp = getParameter( "MVP" );
+        if ( nullptr == mvp ) {
+            UniformDataBlob *blob = UniformDataBlob::create( ParameterType::PT_Mat4, 1 );
+            ::memcpy( blob->m_data, m_mvp.getMVP(), sizeof( glm::mat4 ) );
+            mvp = createParameter( "MVP", ParameterType::PT_Mat4, blob, 1 );
+        }            
+        ::memcpy( mvp->m_data->m_data, glm::value_ptr( m_mvp.m_mvp ), sizeof( glm::mat4 ) );
+    }
+    
+    const glm::mat4 &getMatrix( MatrixType type ) const {
+        switch ( type ) {
+        case Model:
+            return m_mvp.m_model;
+        case View:
+            return m_mvp.m_view;
+        case Projection:
+            return m_mvp.m_projection;
+        }
+        return m_mvp.m_model;
+    }
+
     void setTimer( Platform::AbstractTimer *timer );
     void setRenderContext( Platform::AbstractRenderContext *renderCtx );
     void clearRenderTarget( const ClearState &clearState );

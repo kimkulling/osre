@@ -6,6 +6,7 @@ namespace OSRE {
 namespace RenderBackend {
 
 struct OSRE_EXPORT Geometry {
+    bool            m_localMatrix;
     glm::mat4       m_model;
     Material       *m_material;
     VertexType      m_vertextype;
