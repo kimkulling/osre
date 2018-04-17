@@ -51,12 +51,14 @@ enum class RenderBackendType {
 
 ///	@brief  This enum describes the usage of a buffer object.
 enum class BufferType {
-    EmptyBuffer = 0, ///< Empty buffer, no special use.
-    VertexBuffer,   ///< Vertex buffer, stores vertex data inside.
-    IndexBuffer,    ///< Index buffer, stores indices inside.
-    InstanceBuffer,  ///< Instance buffer, will store instance-specific data.
-    NumBufferTypes,       ///< Number of enums.
-    InvalidBufferType    ///< Enum for invalid enum.
+    EmptyBuffer = 0,    ///< Empty buffer, no special use.
+    VertexBuffer,       ///< Vertex buffer, stores vertex data inside.
+    IndexBuffer,        ///< Index buffer, stores indices inside.
+    InstanceBuffer,     ///< Instance buffer, will store instance-specific data.
+    UniformBuffer,      ///< Uniform buffer, used for structured uniform data.
+    NumBufferTypes,     ///< Number of enums.
+    
+    InvalidBufferType   ///< Enum for invalid enum.
 };
 
 /// @brief  This enum describes the supported access types for render buffers.
@@ -64,7 +66,8 @@ enum class BufferAccessType {
     ReadOnly = 0,               ///< Read only access.
     WriteOnly,                  ///< Write only access.
     ReadWrite,                  ///< Read and write access.
-    NumBufferAccessTypes,       ///< Number of enums.
+    NumBufferAccessTypes,       ///< Number of enum's.
+    
     InvalidBufferAccessType     ///< Enum for invalid enum.
 };
 
@@ -73,6 +76,7 @@ enum class VertexType {
     ColorVertex = 0,            ///< A simple vertex consisting of position and color.
     RenderVertex,               ///< A render vertex with position, color, normals and texture coordinates.
     NumVertexTypes,             ///< Number of enums.
+    
     InvalidVertexType           ///< Enum for invalid enum.
 };
 
@@ -82,6 +86,7 @@ enum class TextureTargetType {
     Texture2D,                  ///< 2D-textures, used for images and render targets.
     Texture3D,                  ///< 3D-textures, used for volume rendering.
     NumTextureTargetTypes,      ///< Number of enums.
+    
     InvalidTextureTargetType    ///< Enum for invalid enum.
 };
 
@@ -93,6 +98,7 @@ enum class TextureStageType {
     TextureStage2,              ///< Texture state level 2
     TextureStage3,              ///< Texture state level 3
     NumTextureStageTypes,       ///< Number of enums.
+    
     InvalidTextureStageType     ///< Enum for invalid enum.
 };
 
@@ -103,6 +109,7 @@ enum class TextureParameterName {
     TextureParamWrapS,          ///< The wrap name for s
     TextureParamWrapT,          ///< The warp name for t.
     NumTextureParameterNames,   ///< Number of enums.
+    
     InvalidTextureParameterName,///< Enum for invalid enum.
 };
 
@@ -114,6 +121,7 @@ enum class TextureParameterType {
     TexturePTMirroredRepeat,    ///< Use mirror repeat mode, texture will be repeately mirrored.
     TexturePTRepeat,            ///< Use repeat mode, texture will be repeately mirrored.
     NumTextureParameterTypes,   ///< Number of enums.
+    
     InvalidTextureParameterType,///< Enum for invalid enum.
 };
 
@@ -123,6 +131,7 @@ enum class IndexType {
     UnsignedShort,          ///< Unsigned short for the index data.
     UnsignedInt,            ///< Unsigned int for the index data.
     NumIndexTypes,          ///< Number of enums.
+    
     InvalidIndexType,       ///< Enum for invalid enum.
 };
 
@@ -135,7 +144,8 @@ enum class PrimitiveType {
     TriangelStrip,	        ///< A strip of triangles
     TriangleFan,	        ///< A triangle fan.
 	NumPrimitiveTypes,      ///< Number of enums.
-	InvalidPrimitiveType,   ///< Enum for invalid enum.
+	
+    InvalidPrimitiveType,   ///< Enum for invalid enum.
 };
 
 ///	@brief  This struct declares a render vertex for textured geometry.
@@ -147,7 +157,7 @@ struct OSRE_EXPORT ColorVert {
     ColorVert();
 
     /// @brief  Returns the number of attributes.
-    static ui32          getNumAttributes();
+    static ui32 getNumAttributes();
     /// @brief  Returns the attribute array.
     static const String *getAttributes();
 };
@@ -189,6 +199,7 @@ enum class VertexAttribute : int {
     Instance2,          ///< "instance2"
     Instance3,          ///< "instance3"
     NumVertexAttrs,     ///< Number of enums.
+
     InvalidVertexAttr   ///< Enum for invalid enum.
 };
 
@@ -205,6 +216,7 @@ enum class VertexFormat : int {
     Short2,                 ///< 2-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
     Short4,                 ///< 4-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
     NumVertexFormats,       ///< Number of enums.
+
     InvalidVertexFormat,    ///< Enum for invalid enum.
 };
 
@@ -330,6 +342,7 @@ struct OSRE_EXPORT PrimitiveGroup {
 enum class MaterialType {
     ShaderMaterial = 0,         ///< Material using a build-in shader assigned to its type of vertex.
     NumMaterialTypes,           ///< Number of enums.
+
     InvalidMaterialType         ///< Enum for invalid enum.
 };
 
@@ -358,6 +371,7 @@ enum class ShaderType : ui32 {
     SH_TesselationShaderType,   ///< The tesselation evaluation shader.
     SH_FragmentShaderType,      ///< The shader is a fragment shader, used for rasterization.
     NumShaderTypes,             ///< Number of enums.
+
     InvalidShaderType           ///< Enum for invalid enum.
 };
 
@@ -382,6 +396,7 @@ enum class MaterialColorType : ui32 {
     Mat_Ambient,                ///<
     Mat_Emission,               ///<
     NumMaterialColorTypes,      ///< Number of enums.
+
     InvalidMaterialColorType    ///< Enum for invalid enum.
 };
 
@@ -430,6 +445,12 @@ struct OSRE_EXPORT TransformState {
     void toMatrix(glm::mat4 &m);
     bool operator == ( const TransformState &rhs ) const;
     bool operator != ( const TransformState &rhs ) const;
+};
+
+struct UniformTransformBuffer {
+    glm::mat4 m_projection;
+    glm::mat4 m_model;
+    glm::mat4 m_view;
 };
 
 ///	@brief

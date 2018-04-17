@@ -38,6 +38,7 @@ static const String GLSLRenderVertexLayout =
 	"layout(location = 3) in vec2 texcoord0;  // per-vertex colour\n"
 	"\n";
 
+
 static const String CombinedMVPUniformSrc =
     "// uniform\n"
     "uniform mat4 MVP;	//combined modelview projection matrix\n";
