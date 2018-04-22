@@ -1,22 +1,17 @@
 #include "EditorMain.h"
+
 #include <osre/Common/osre_common.h>
 #include <osre/App/AppBase.h>
 #include <osre/Properties/Settings.h>
-
-#include <osre/Properties/Settings.h>
-#include <osre/Common/Logger.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
-#include <osre/Assets/AssetRegistry.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Profiling/PerformanceCounterRegistry.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <iostream>
 #include <iomanip>
 
 #include <osre/Platform/Windows/MinWindows.h>
