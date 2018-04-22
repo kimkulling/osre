@@ -25,7 +25,8 @@ namespace OSREEditor
 
         private void newToolStripMenuItem_New_Click(object sender, EventArgs e)
         {
-            OSREWrapper.CreateEditorApp();
+            IntPtr windowsHandle = this.Handle;
+            OSREWrapper.CreateEditorApp(windowsHandle);
         }
 
         private void openToolStripMenuItem_Open_Click(object sender, EventArgs e)

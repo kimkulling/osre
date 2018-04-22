@@ -19,6 +19,8 @@
 #include <iostream>
 #include <iomanip>
 
+#include <osre/Platform/Windows/MinWindows.h>
+
 using namespace ::OSRE;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Properties;
@@ -71,8 +73,12 @@ protected:
 
 static EditorApplication *s_EditorApplication = nullptr;
 
-extern "C" OSRE_EDITOR_EXPORT int CreateEditorApp() {
+extern "C" OSRE_EDITOR_EXPORT int CreateEditorApp( int *mainWindowHandle ) {
     if (nullptr == s_EditorApplication) {
+        HWND mainWH( nullptr );
+        if ( nullptr != mainWindowHandle ) {
+            mainWH = (HWND) mainWindowHandle;
+        }
         char *argc[] = { "CreateEditorApp" };
         s_EditorApplication = new EditorApplication(1, argc );
         s_EditorApplication->create();
@@ -85,18 +91,28 @@ extern "C" OSRE_EDITOR_EXPORT int CreateEditorApp() {
 }
 
 int EditorUpdate() {
+    if ( nullptr == s_EditorApplication ) {
+        return 1;
+    }
+
     s_EditorApplication->update();
     
     return 0;
 }
 
 int EditorRequestNextFrame() {
+    if ( nullptr == s_EditorApplication ) {
+        return 1;
+    }
     s_EditorApplication->requestNextFrame();
 
     return 0;
 }
 
 int DestroyEditorApp() {
+    if ( nullptr == s_EditorApplication ) {
+        return 1;
+    }
     s_EditorApplication->destroy();
     delete s_EditorApplication;
     s_EditorApplication = nullptr;

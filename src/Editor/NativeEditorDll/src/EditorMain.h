@@ -19,7 +19,7 @@
 #   define OSRE_EDITOR_EXPORT  __attribute__ ((visibility("default")))
 #endif
 
-extern "C" OSRE_EDITOR_EXPORT int CreateEditorApp();
+extern "C" OSRE_EDITOR_EXPORT int CreateEditorApp( int *mainWindowHandle );
 
 extern "C" OSRE_EDITOR_EXPORT int EditorUpdate();
 
