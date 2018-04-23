@@ -35,7 +35,7 @@ class AssetDataTest : public ::testing::Test {
 TEST_F( AssetDataTest, createTest ) {
     bool ok( true );
     try {
-        AssetDataArchive myData( 1 );
+        AssetDataArchive myData( 1, 0 );
     }
     catch ( ... ) {
         ok = false;

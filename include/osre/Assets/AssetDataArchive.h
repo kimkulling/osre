@@ -42,6 +42,24 @@ namespace Scene {
 
 namespace Assets {
 
+class OSRE_EXPORT AssetDataArchive {
+public:
+    AssetDataArchive(i32 majorVersion, i32 minorVersion);
+    ~AssetDataArchive();
+
+private:
+    struct Version {
+        i32 mMajor;
+        i32 mMinor;
+
+        Version( i32 major, i32 minor )
+        : mMajor( major )
+        , mMinor( minor ) {
+            // empty
+        }
+    } mVersion;
+};
+
 }
 }
 

@@ -32,6 +32,14 @@ using namespace ::OSRE::IO;
 
 static const String Tag = "AssetData";
 
+AssetDataArchive::AssetDataArchive( i32 majorVersion, i32 minorVersion )
+:mVersion(majorVersion, minorVersion ){
+    // empty
+}
+
+AssetDataArchive::~AssetDataArchive() {
+
+}
 
 } // Namespace Assets
 } // Namespace OSRE
