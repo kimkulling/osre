@@ -12,14 +12,13 @@ namespace OSREEditor.View
         const string EditorDllName = "osre_nativeeditor.dll";
 
         [DllImport(EditorDllName)]
-        public unsafe static extern int CreateEditorApp( IntPtr handle );
+        public static extern int CreateEditorApp( IntPtr handle );
 
         [DllImport(EditorDllName)]
-        public unsafe static extern int EditorRequestNextFrame();
+        public static extern int EditorRequestNextFrame();
 
         [DllImport(EditorDllName)]
-        public unsafe static extern int DestroyEditorApp();
-
+        public static extern int DestroyEditorApp();
     }
 }
  

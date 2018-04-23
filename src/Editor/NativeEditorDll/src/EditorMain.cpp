@@ -68,7 +68,7 @@ protected:
 
 static EditorApplication *s_EditorApplication = nullptr;
 
-extern "C" OSRE_EDITOR_EXPORT int CreateEditorApp( int *mainWindowHandle ) {
+extern "C" OSRE_EDITOR_EXPORT int __stdcall CreateEditorApp( int *mainWindowHandle ) {
     if (nullptr == s_EditorApplication) {
         HWND mainWH( nullptr );
         if ( nullptr != mainWindowHandle ) {
@@ -85,7 +85,7 @@ extern "C" OSRE_EDITOR_EXPORT int CreateEditorApp( int *mainWindowHandle ) {
     return 0;
 }
 
-int EditorUpdate() {
+int __stdcall EditorUpdate() {
     if ( nullptr == s_EditorApplication ) {
         return 1;
     }
@@ -95,7 +95,7 @@ int EditorUpdate() {
     return 0;
 }
 
-int EditorRequestNextFrame() {
+int __stdcall EditorRequestNextFrame() {
     if ( nullptr == s_EditorApplication ) {
         return 1;
     }
@@ -104,7 +104,7 @@ int EditorRequestNextFrame() {
     return 0;
 }
 
-int DestroyEditorApp() {
+int __stdcall DestroyEditorApp() {
     if ( nullptr == s_EditorApplication ) {
         return 1;
     }
