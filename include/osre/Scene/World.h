@@ -51,7 +51,8 @@ public:
     void addStage( Stage *stage );
     bool setActiveStage( Stage *activeStage );
     bool setActiveStage( const String &stageName );
-    void addView( View *view );
+    Stage *getActiveStage() const;
+	void addView(View *view);
     bool setActiveView( View *activeView );
     bool setActiveView( const String &viewName );
     void update( RenderBackend::RenderBackendService *rbService );

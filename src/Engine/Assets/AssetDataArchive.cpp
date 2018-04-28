@@ -22,13 +22,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Assets/AssetDataArchive.h>
 #include <osre/Debugging/osre_debugging.h>
+#include <osre/Scene/Stage.h>
+#include <osre/Scene/World.h>
+#include <osre/Scene/Node.h>
 #include <osre/IO/Uri.h>
-#include <osre/IO/Stream.h>
+
+#include <json/json.h>
 
 namespace OSRE {
 namespace Assets {
 
 using namespace ::OSRE::IO;
+using namespace ::OSRE::Scene;
 
 static const String Tag = "AssetData";
 
@@ -39,6 +44,49 @@ AssetDataArchive::AssetDataArchive( i32 majorVersion, i32 minorVersion )
 
 AssetDataArchive::~AssetDataArchive() {
 
+}
+
+Scene::World *AssetDataArchive::load( const IO::Uri & fileLocation ) {
+    if (fileLocation.isEmpty()) {
+        return nullptr;
+    }
+
+    return nullptr;
+}
+
+bool AssetDataArchive::save( Scene::World *world, const IO::Uri & fileLocation ) {
+    if ( nullptr == world ) {
+        return false;
+    }
+
+    const String name( world->getName() );
+    Stage *activeStage = world->getActiveStage();
+    if ( nullptr == activeStage ) {
+        return true;
+    }
+
+    Node *root = activeStage->getRoot();
+    if ( nullptr == root ) {
+        return true;
+    }
+
+    traverseChildren( root );
+}
+
+void AssetDataArchive::traverseChildren( Node *currentNode ) {
+    if ( nullptr == currentNode ) {
+        return;
+    }
+
+	Node *currentChild( nullptr );
+    for ( ui32 i = 0; i < currentNode->getNumChildren(); ++i ) {
+        currentChild = currentNode->getChildAt( i );
+        if ( nullptr == currentChild ) {
+            continue;
+        }
+
+        traverseChildren( currentChild );
+    }
 }
 
 } // Namespace Assets

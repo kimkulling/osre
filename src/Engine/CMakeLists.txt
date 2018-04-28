@@ -528,7 +528,7 @@ ADD_LIBRARY( osre SHARED
     ${ui_src}
 )
 
-target_link_libraries ( osre cppcore zlib Unzip glew soil ${platform_libs} assimp )
+target_link_libraries ( osre cppcore zlib Unzip glew soil jsoncpp_lib_static ${platform_libs} assimp )
 set_target_properties(  osre PROPERTIES FOLDER Engine )
 
 #==============================================================================

@@ -106,6 +106,10 @@ bool World::setActiveStage( const String &stageName ) {
     return false;
 }
 
+Stage *World::getActiveStage() const {
+    return m_activeStage;
+}
+
 void World::addView( View *view ) {
     if ( nullptr == view ) {
         return;

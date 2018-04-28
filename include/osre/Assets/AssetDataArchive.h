@@ -38,6 +38,7 @@ namespace RenderBackend {
 
 namespace Scene {
     class World;
+    class Node;
 }
 
 namespace Assets {
@@ -46,6 +47,9 @@ class OSRE_EXPORT AssetDataArchive {
 public:
     AssetDataArchive(i32 majorVersion, i32 minorVersion);
     ~AssetDataArchive();
+    Scene::World *load( const IO::Uri & fileLocation );
+    bool save( Scene::World *world, const IO::Uri & fileLocation );
+    void traverseChildren(Scene::Node *currentNode );
 
 private:
     struct Version {

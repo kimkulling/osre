@@ -26,6 +26,7 @@ INCLUDE_DIRECTORIES(
     3dparty/glew/include
     3dparty/assimp/contrib/irrXML
     3dparty/zlib
+    3dparty/jsoncpp-1.8.4/include
     c:/Users/kullingk/Desktop/projects/libs/SDL2-2.0.3/include
     3dparty/soil/src
     /usr/include/SDL2/
@@ -103,6 +104,7 @@ ADD_SUBDIRECTORY( 3dparty/zlib )
 ADD_SUBDIRECTORY( 3dparty/unzip )
 ADD_SUBDIRECTORY( 3dparty/soil )
 ADD_SUBDIRECTORY( 3dparty/assimp/ )
+ADD_SUBDIRECTORY( 3dparty/jsoncpp-1.8.4 )
 
 
 # Include the doc component.
