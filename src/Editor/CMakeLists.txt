@@ -31,6 +31,8 @@ ADD_LIBRARY( osre_nativeeditor SHARED
 target_link_libraries ( osre_nativeeditor osre ${platform_libs} )
 set_target_properties(  osre_nativeeditor PROPERTIES FOLDER Editor )
 
-include_external_msproject(
-    OSREEditor ${PROJECT_SOURCE_DIR}/src/Editor/OSREEditor/OSREEditor.csproj
-    TYPE FAE04EC0-301F-11D3-BF4B-00C04F79EFBC)
+if( WIN32 )
+    include_external_msproject(
+        OSREEditor ${PROJECT_SOURCE_DIR}/src/Editor/OSREEditor/OSREEditor.csproj
+        TYPE FAE04EC0-301F-11D3-BF4B-00C04F79EFBC)
+ENDIF( WIN32 )

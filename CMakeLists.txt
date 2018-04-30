@@ -8,8 +8,14 @@ set ( PROJECT_VERSION "${OSRE_VERSION}" )
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/3dparty/assimp/cmake-modules/")
 message(${CMAKE_MODULE_PATH})
+
 OPTION( OSRE_BUILD_SAMPLES
   "Build the samples of OSRE."
+  ON
+)
+
+OPTION( OSRE_BUILD_TESTS
+  "Build the test suite of OSRE."
   ON
 )
 
@@ -93,11 +99,16 @@ set( ASSIMP_BUILD_TESTS OFF )
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
 ADD_SUBDIRECTORY( src/Editor )
-ADD_SUBDIRECTORY( test/RenderTests )
-ADD_SUBDIRECTORY( test/UnitTests )
+
+IF ( OSRE_BUILD_TESTS )
+    ADD_SUBDIRECTORY( test/RenderTests )
+    ADD_SUBDIRECTORY( test/UnitTests )
+ENDIF(OSRE_BUILD_TESTS)
+
 IF ( OSRE_BUILD_SAMPLES )
     ADD_SUBDIRECTORY( samples )
 ENDIF(OSRE_BUILD_SAMPLES)
+
 ADD_SUBDIRECTORY( 3dparty/glew )
 ADD_SUBDIRECTORY( 3dparty/cppcore/build )
 ADD_SUBDIRECTORY( 3dparty/zlib )
