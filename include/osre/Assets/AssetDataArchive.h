@@ -24,6 +24,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/osre_common.h>
 
+namespace Json {
+    class StreamWriter;
+}
+
 namespace OSRE {
 
 // Forward declarations
@@ -49,7 +53,10 @@ public:
     ~AssetDataArchive();
     Scene::World *load( const IO::Uri & fileLocation );
     bool save( Scene::World *world, const IO::Uri & fileLocation );
-    void traverseChildren(Scene::Node *currentNode );
+    void traverseChildren(Scene::Node *currentNode, Json::StreamWriter *sw);
+
+private:
+    bool parseType(Scene::World *world);
 
 private:
     struct Version {

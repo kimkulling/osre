@@ -43,13 +43,11 @@ using namespace ::CPPCore;
 static const String BaseFileSchema = "file";
 static const String Tag = "IOService";
 
-//-------------------------------------------------------------------------------------------------
 LocaleFileSystem::LocaleFileSystem() 
 : m_FileMap() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 LocaleFileSystem::~LocaleFileSystem() {
     for ( StreamMap::iterator it = m_FileMap.begin(); it != m_FileMap.end(); ++it )	{
         if ( it->second ) {
@@ -59,7 +57,6 @@ LocaleFileSystem::~LocaleFileSystem() {
     m_FileMap.clear();
 }
 
-//-------------------------------------------------------------------------------------------------
 Stream *LocaleFileSystem::open( const Uri &file, Stream::AccessMode mode ) {
     if ( file.isEmpty() ) {
         osre_debug( Tag, "Uri is empty." );
@@ -85,9 +82,11 @@ Stream *LocaleFileSystem::open( const Uri &file, Stream::AccessMode mode ) {
 
     return pFileStream;
 }
-
-//-------------------------------------------------------------------------------------------------
 void LocaleFileSystem::close( Stream **pFile ) {
+    if (nullptr == pFile) {
+        return;
+    }
+
     if ( ( *pFile )->isOpen() ) {
         ( *pFile )->close();
     }
@@ -98,7 +97,6 @@ void LocaleFileSystem::close( Stream **pFile ) {
     (*pFile) = NULL;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool LocaleFileSystem::fileExist( const Uri &filename ) {
     if( filename.isEmpty() ) {
         return false;
@@ -123,9 +121,7 @@ bool LocaleFileSystem::fileExist( const Uri &filename ) {
     return exists;
 }
 
-//-------------------------------------------------------------------------------------------------
-Stream *LocaleFileSystem::find( const Uri &rFile, Stream::AccessMode mode, 
-                                TArray<String> *pSearchPaths ) {
+Stream *LocaleFileSystem::find( const Uri &rFile, Stream::AccessMode mode,  TArray<String> *pSearchPaths ) {
     if ( !pSearchPaths ) {
         return nullptr;
     }
@@ -145,12 +141,10 @@ Stream *LocaleFileSystem::find( const Uri &rFile, Stream::AccessMode mode,
     return nullptr;
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &LocaleFileSystem::getSchema() const {
     return BaseFileSchema;
 }
 
-//-------------------------------------------------------------------------------------------------
 String LocaleFileSystem::getWorkingDirectory() {
     String workingDir;
     static const ui32 Size = 256;
@@ -165,8 +159,6 @@ String LocaleFileSystem::getWorkingDirectory() {
 
     return workingDir;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace IO
 } // Namespace OSRE

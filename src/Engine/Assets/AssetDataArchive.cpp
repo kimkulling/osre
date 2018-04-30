@@ -25,9 +25,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/World.h>
 #include <osre/Scene/Node.h>
+#include <osre/Scene/Component.h>
 #include <osre/IO/Uri.h>
+#include <osre/IO/Stream.h>
+#include <osre/IO/IOService.h>
 
 #include <json/json.h>
+#include <json/reader.h>
+
+#include <fstream>
 
 namespace OSRE {
 namespace Assets {
@@ -51,8 +57,80 @@ Scene::World *AssetDataArchive::load( const IO::Uri & fileLocation ) {
         return nullptr;
     }
 
-    return nullptr;
+
+    IO::Stream *file = IO::IOService::getInstance()->openStream(fileLocation, IO::Stream::AccessMode::ReadAccess);
+    if (nullptr == file) {
+        return nullptr;
+    }
+    
+    const ui32 size(file->getSize());
+    std::string doc;
+    doc.resize(size);
+    file->read(&doc[0], size);
+    file->close();
+
+    Json::Value content;
+    Json::Reader reader;
+    if (!reader.parse(doc, content, false)) {
+        return nullptr;
+    }
+    
+    if (content.empty()) {
+        return nullptr;
+    }
+
+    String worldName(fileLocation.getResource());
+    World *world = new World( worldName );
+    std::string key;
+    for (Json::ValueConstIterator it = content.begin(); it != content.end(); ++it) {
+        key = it.key().asString();
+    }
+
+
+    return world;
 }
+
+static bool writeNode(Scene::Node *currentNode, Json::StreamWriter *sw ) {
+    if (nullptr == currentNode || nullptr == sw ) {
+        return false;
+    }
+
+    Json::Value value;
+    value["name"] = currentNode->getName();
+    value["type"] = "scene::node";
+    Component *comp(nullptr);
+    comp = currentNode->getComponent(Node::ComponentType::RenderComponentType);
+    if (nullptr != comp) {
+        RenderComponent *renderComp = static_cast<RenderComponent*>(comp);
+        Json::Value renderCompObj;
+        renderCompObj["id"] = renderComp->getId();
+        renderCompObj["type"] = "scene::rendercomponent";
+        value["rendercomp"] = renderCompObj;
+    }
+
+    comp  = currentNode->getComponent(Node::ComponentType::TransformComponentType);
+    if (nullptr != comp) {
+        TransformComponent *transformComp = static_cast<TransformComponent*>(comp);
+        Json::Value transformCompObj;
+        transformCompObj["id"] = transformComp->getId();
+        transformCompObj["type"] = "scene::transformcomponent";
+        
+        const glm::vec3 &pos = transformComp->getPosition();
+        transformCompObj[0]["transform"] = pos.x;
+        transformCompObj[1]["transform"] = pos.y;
+        transformCompObj[2]["transform"] = pos.z;
+
+        const glm::vec3 &scale = transformComp->getScale();
+        transformCompObj[0]["scale"] = scale.x;
+        transformCompObj[1]["scale"] = scale.y;
+        transformCompObj[2]["scale"] = scale.z;
+
+        value["transformcomp"] = transformCompObj;
+    }
+
+    return true;
+}
+
 
 bool AssetDataArchive::save( Scene::World *world, const IO::Uri & fileLocation ) {
     if ( nullptr == world ) {
@@ -65,16 +143,26 @@ bool AssetDataArchive::save( Scene::World *world, const IO::Uri & fileLocation )
         return true;
     }
 
-    Node *root = activeStage->getRoot();
-    if ( nullptr == root ) {
+    Node *rootNode = activeStage->getRoot();
+    if ( nullptr == rootNode ) {
         return true;
     }
+    Json::StreamWriterBuilder builder;
+    Json::StreamWriter *sw = builder.newStreamWriter();
+    std::ofstream stream( fileLocation.getAbsPath(), std::ofstream::out );
+    if (!stream.is_open()) {
+        return false;
+    }
 
-    traverseChildren( root );
+    traverseChildren(rootNode, sw);
+
+    sw->write(rootNode, &stream );
+
+    return true;
 }
 
-void AssetDataArchive::traverseChildren( Node *currentNode ) {
-    if ( nullptr == currentNode ) {
+void AssetDataArchive::traverseChildren( Node *currentNode, Json::StreamWriter *sw) {
+    if ( nullptr == currentNode || nullptr == sw ) {
         return;
     }
 
@@ -85,9 +173,19 @@ void AssetDataArchive::traverseChildren( Node *currentNode ) {
             continue;
         }
 
-        traverseChildren( currentChild );
+        writeNode( currentNode, sw );
+        traverseChildren( currentChild, sw );
     }
 }
+
+bool AssetDataArchive::parseType( Scene::World *world ) {
+    if (nullptr == world) {
+        return false;
+    }
+
+    return true;
+}
+
 
 } // Namespace Assets
 } // Namespace OSRE

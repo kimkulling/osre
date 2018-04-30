@@ -109,7 +109,7 @@ public:
     static bool normalizePath( const String &path, const c8 sep, String &normalized );
 
 private:
-    typedef std::map<String, AbstractFileSystem*> MountedMap;
+    using MountedMap = std::map<String, AbstractFileSystem*> ;
     MountedMap m_mountedMap;
 };
 

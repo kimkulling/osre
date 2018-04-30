@@ -6,6 +6,7 @@
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
+#include <osre/Scene/World.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
@@ -19,14 +20,18 @@
 using namespace ::OSRE;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Properties;
+using namespace ::OSRE::Scene;
 
 class EditorApplication : public App::AppBase {
-    Scene::Stage *m_stage;
+    World *m_world;
+    Stage *m_stage;
     TransformMatrixBlock m_transformMatrix;
 
 public:
     EditorApplication(int argc, char *argv[])
-    : AppBase(argc, argv) {
+    : AppBase(argc, argv)
+    , m_world( nullptr )
+    , m_stage( nullptr ) {
         // empty
     }
 
@@ -46,7 +51,9 @@ protected:
             return false;
         }
 
+        m_world = new World("HelloWorld", RenderMode::Render3D);
         m_stage = AppBase::createStage( "HelloWorld" );
+        m_world->addStage(m_stage);
         AppBase::activateStage( m_stage->getName() );
 
         Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
@@ -111,6 +118,22 @@ int __stdcall DestroyEditorApp() {
     s_EditorApplication->destroy();
     delete s_EditorApplication;
     s_EditorApplication = nullptr;
+
+    return 0;
+}
+
+int __stdcall LoadWorld(const char *filelocation, int flags) {
+    if (nullptr == filelocation) {
+        return 1;
+    }
+
+    return 0;
+}
+
+int __stdcall SaveWorld(const char *filelocation, int flags) {
+    if (nullptr == filelocation) {
+        return 1;
+    }
 
     return 0;
 }

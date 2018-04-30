@@ -121,3 +121,5 @@ ADD_SUBDIRECTORY( 3dparty/jsoncpp-1.8.4 )
 set_target_properties(  cppcore          PROPERTIES FOLDER ThirdParty )
 set_target_properties(  cppcore_unittest PROPERTIES FOLDER ThirdParty )
 set_target_properties(  assimp           PROPERTIES FOLDER ThirdParty )
+set_target_properties(  OSREEditor       PROPERTIES FOLDER Editor )
+
