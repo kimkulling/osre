@@ -57,5 +57,22 @@ namespace OSREEditor
 
             }
         }
+
+        private void importAssetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            openFileDialog.InitialDirectory = "c:\\";
+            openFileDialog.Filter = "txt files (*.osa)|*.osa|All files (*.*)|*.*";
+            openFileDialog.FilterIndex = 2;
+            openFileDialog.RestoreDirectory = true;
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                var filename = openFileDialog.FileName;
+                OSREWrapper.ImportAsset(filename, 0);
+            }
+
+        }
     }
 }

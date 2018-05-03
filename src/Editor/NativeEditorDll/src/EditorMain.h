@@ -30,3 +30,5 @@ extern "C" OSRE_EDITOR_EXPORT int __stdcall DestroyEditorApp();
 extern "C" OSRE_EDITOR_EXPORT int __stdcall LoadWorld(const char *filelocation, int flags);
 
 extern "C" OSRE_EDITOR_EXPORT int __stdcall SaveWorld(const char *filelocation, int flags );
+
+extern "C" OSRE_EDITOR_EXPORT int __stdcall ImportAsset(const char *filename, int flags);

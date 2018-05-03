@@ -1,12 +1,15 @@
 #include "EditorMain.h"
 
 #include <osre/Common/osre_common.h>
+#include <osre/Common/Ids.h>
 #include <osre/App/AppBase.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
 #include <osre/Scene/World.h>
+#include <osre/IO/IOService.h>
+#include <osre/Assets/AssimpWrapper.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
@@ -18,6 +21,7 @@
 #include <osre/Platform/Windows/MinWindows.h>
 
 using namespace ::OSRE;
+using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Properties;
 using namespace ::OSRE::Scene;
@@ -37,6 +41,25 @@ public:
 
     virtual ~EditorApplication() {
         // empty
+    }
+
+    int importAsset( const String &filename, int flags ) {
+        if (filename.empty() ) {
+            return 1;
+        }
+
+        Ids ids;
+        Assets::AssimpWrapper assimpWrapper(ids);
+        String normalizedFilename;
+#ifdef OSRE_WINDOWS
+        IO::Uri::normalizePath(filename, '\\', normalizedFilename);
+#else
+        normalizedFilename = filename;
+#endif
+        IO::Uri modelLoc(normalizedFilename);
+        if (assimpWrapper.importAsset(modelLoc, flags)) {
+            // todo
+        }
     }
 
 protected:
@@ -123,6 +146,10 @@ int __stdcall DestroyEditorApp() {
 }
 
 int __stdcall LoadWorld(const char *filelocation, int flags) {
+    if (nullptr == s_EditorApplication) {
+        return 1;
+    }
+
     if (nullptr == filelocation) {
         return 1;
     }
@@ -131,9 +158,25 @@ int __stdcall LoadWorld(const char *filelocation, int flags) {
 }
 
 int __stdcall SaveWorld(const char *filelocation, int flags) {
+    if (nullptr == s_EditorApplication) {
+        return 1;
+    }
+
     if (nullptr == filelocation) {
         return 1;
     }
 
     return 0;
+}
+
+int __stdcall ImportAsset(const char *filename, int flags) {
+    if (nullptr == s_EditorApplication) {
+        return 1;
+    }
+
+    if (nullptr == filename) {
+        return 1;
+    }
+
+    s_EditorApplication->importAsset(filename, flags);
 }

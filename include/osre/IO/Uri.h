@@ -115,6 +115,13 @@ public:
     ///	@brief	The URI representation will be cleared.
     void clear();
 
+    /// @brief  Normalizes a path name.
+    /// @param  path        [in-out] The path.
+    /// @param  sep         [in] The path separator.
+    /// @param  normalized  [out] The normalized path.
+    /// @return false in case of an error.
+    static bool normalizePath(const String &path, const c8 sep, String &normalized);
+
     ///	@brief	The assignment operator.
     Uri &operator = ( const Uri &rhs );
 

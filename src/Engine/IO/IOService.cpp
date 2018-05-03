@@ -26,8 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <src/Engine/IO/ZipFileSystem.h>
 #include <src/Engine/IO/LocaleFileSystem.h>
 
-#include <algorithm>
-
 IMPLEMENT_SINGLETON( ::OSRE::IO::IOService )
 
 namespace OSRE {
@@ -160,17 +158,6 @@ bool IOService::fileExists( const Uri &file ) const {
 
 IOService *IOService::create() {
     return new IOService;
-}
-
-bool IOService::normalizePath( const String &path, const c8 sep, String &normalized ) {
-    normalized = "";
-    if ( path.empty() ) {
-        return true;
-    }
-    normalized = path;
-    std::replace( normalized.begin(), normalized.end(), sep, '/');
-    
-    return true;
 }
 
 } // Namespace IO

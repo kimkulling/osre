@@ -22,8 +22,34 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/IO/Uri.h>
 
+#include <assimp/ParsingUtils.h>
+
+#include <algorithm>
+
 namespace OSRE {
 namespace IO {
+
+static bool isWindowsRootFolder(const String &filename) {
+    if (filename.empty()) {
+        return false;
+    }
+
+    if (Assimp::IsUpper(filename[0])) {
+        if (filename[1] == ':') {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static String converRootFolder2Uri(const String &filename) {
+    String uri;
+    uri += "file://";
+    uri += filename;
+    
+    return uri;
+}
 
 Uri::Uri() 
 : m_URI( "" )
@@ -34,12 +60,15 @@ Uri::Uri()
 	// empty
 }
 
-Uri::Uri( const String &rhs )
-: m_URI( rhs )
+Uri::Uri( const String &uri )
+: m_URI(uri)
 , m_Scheme( "" )
 , m_Path( "" )
 , m_AbsPath( "" )
 , m_Resource( "" ) {
+    if (isWindowsRootFolder(uri)) {
+        m_URI = converRootFolder2Uri(uri);
+    }
 	static_cast<void>( parse() );
 }
 
@@ -163,6 +192,17 @@ void Uri::clear() {
 	m_AbsPath.clear();
 	m_Resource.clear();
     m_URI.clear();
+}
+
+bool Uri::normalizePath(const String &path, const c8 sep, String &normalized) {
+    normalized = "";
+    if (path.empty()) {
+        return true;
+    }
+    normalized = path;
+    std::replace(normalized.begin(), normalized.end(), sep, '/');
+
+    return true;
 }
 
 Uri &Uri::operator = ( const Uri &rhs ) {

@@ -19,6 +19,9 @@ namespace OSREEditor.View
 
         [DllImport(EditorDllName)]
         public static extern int DestroyEditorApp();
+
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int ImportAsset([MarshalAs(UnmanagedType.LPStr)] string code, int flags );
     }
 }
  

@@ -131,7 +131,6 @@ static bool writeNode(Scene::Node *currentNode, Json::StreamWriter *sw ) {
     return true;
 }
 
-
 bool AssetDataArchive::save( Scene::World *world, const IO::Uri & fileLocation ) {
     if ( nullptr == world ) {
         return false;
