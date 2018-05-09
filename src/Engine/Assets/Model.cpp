@@ -39,7 +39,7 @@ Model::Model()
 Model::Model( GeoArray *geoArray, Scene::Node *root, ModelAABB &aabb )
 : m_geoArray( *geoArray )
 , m_root( root )
-, m_aabb() {
+, m_aabb( aabb ) {
     // empty
 }
 
