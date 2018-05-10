@@ -148,6 +148,14 @@ enum class PrimitiveType {
     InvalidPrimitiveType,   ///< Enum for invalid enum.
 };
 
+enum class MatrixType {
+    Model = 0,
+    View,
+    Projection,
+    NumMatrixTypes,
+    InvalidMatrixType
+};
+
 ///	@brief  This struct declares a render vertex for textured geometry.
 struct OSRE_EXPORT ColorVert {
     glm::vec3 position;     ///< The position ( x|y|z )

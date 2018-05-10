@@ -70,12 +70,6 @@ struct PrimitiveGroup;
 //-------------------------------------------------------------------------------------------------
 class OGLRenderBackend {
 public:
-    enum MatrixType {
-        Model = 0 ,
-        View,
-        Projection,
-        MaxMatrix
-    };
     TransformMatrixBlock m_mvp;
     
     typedef CPPCore::TArray<OGLVertexAttribute*> VertAttribArray;
@@ -87,13 +81,13 @@ public:
     
     void setMatrix( MatrixType type, const glm::mat4 &mat ) {
         switch ( type ) {
-            case Model:
+            case MatrixType::Model:
                 m_mvp.m_model = mat;
                 break;
-            case View:
+            case MatrixType::View:
                 m_mvp.m_view = mat;
                 break;
-            case Projection:
+            case MatrixType::Projection:
                 m_mvp.m_projection = mat;
                 break;
         }
@@ -111,11 +105,11 @@ public:
     
     const glm::mat4 &getMatrix( MatrixType type ) const {
         switch ( type ) {
-        case Model:
+        case MatrixType::Model:
             return m_mvp.m_model;
-        case View:
+        case MatrixType::View:
             return m_mvp.m_view;
-        case Projection:
+        case MatrixType::Projection:
             return m_mvp.m_projection;
         }
         return m_mvp.m_model;

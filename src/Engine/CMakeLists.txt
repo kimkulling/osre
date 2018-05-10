@@ -342,6 +342,12 @@ SET( renderbackend_vulkanrenderer_src
     RenderBackend/VulkanRenderer/VlkRenderEventHandler.h
     RenderBackend/VulkanRenderer/VlkRenderEventHandler.cpp
 )
+
+SET( renderbackend_dx11renderer_src
+    RenderBackend/DX11Renderer/DX11Renderer.h
+    RenderBackend/DX11Renderer/DX11Renderer.cpp
+)
+
 SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/BlendState.h
     ${HEADER_PATH}/RenderBackend/CullState.h
@@ -441,6 +447,7 @@ SOURCE_GROUP( Properties          FILES ${properties_src} )
 SOURCE_GROUP( RenderBackend       FILES ${renderbackend_src} )
 SOURCE_GROUP( RenderBackend\\OGLRenderer    FILES ${renderbackend_oglrenderer_src} )
 SOURCE_GROUP( RenderBackend\\VulkanRenderer FILES ${renderbackend_vulkanrenderer_src} )
+SOURCE_GROUP( RenderBackend\\DX11Renderer FILES ${renderbackend_dx11renderer_src} )
 SOURCE_GROUP( Resources           FILES ${resources_src} )
 SOURCE_GROUP( Scene               FILES ${scene_src} )
 SOURCE_GROUP( Threading           FILES ${threading_src} )
@@ -522,6 +529,7 @@ ADD_LIBRARY( osre SHARED
     ${renderbackend_src}
         ${renderbackend_oglrenderer_src}
         ${renderbackend_vulkanrenderer_src}
+        ${renderbackend_dx11renderer_src}
     ${scene_src}
     ${threading_src}
         ${threading_impl_src}
