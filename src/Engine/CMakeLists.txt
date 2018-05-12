@@ -342,11 +342,14 @@ SET( renderbackend_vulkanrenderer_src
     RenderBackend/VulkanRenderer/VlkRenderEventHandler.h
     RenderBackend/VulkanRenderer/VlkRenderEventHandler.cpp
 )
-
-SET( renderbackend_dx11renderer_src
-    RenderBackend/DX11Renderer/DX11Renderer.h
-    RenderBackend/DX11Renderer/DX11Renderer.cpp
-)
+IF( WIN32 )
+    SET( renderbackend_dx11renderer_src
+        RenderBackend/DX11Renderer/DX11Renderer.h
+        RenderBackend/DX11Renderer/DX11Renderer.cpp
+        RenderBackend/DX11Renderer/DX11RenderVEventHandler.h
+        RenderBackend/DX11Renderer/DX11RenderVEventHandler.cpp
+    )
+ENDIF( WIN32 )
 
 SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/BlendState.h

@@ -27,8 +27,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Threading/SystemTask.h>
 #include <osre/Scene/DbgRenderer.h>
 #include <osre/UI/Widget.h>
+
 #include "OGLRenderer/OGLRenderEventHandler.h"
 #include "VulkanRenderer/VlkRenderEventHandler.h"
+#ifndef OSRE_WINDOWS
+
+#include "DX11Renderer/DX11Renderer.h"
+#endif
 
 namespace OSRE {
 namespace RenderBackend {

@@ -114,7 +114,8 @@ public:
         }
         return m_mvp.m_model;
     }
-
+    bool create(Platform::AbstractRenderContext *renderCtx);
+    bool destroy();
     void setTimer( Platform::AbstractTimer *timer );
     void setRenderContext( Platform::AbstractRenderContext *renderCtx );
     void clearRenderTarget( const ClearState &clearState );
@@ -188,7 +189,7 @@ private:
     OGLShader                       *m_shaderInUse;
     CPPCore::TArray<ui32>            m_freeBufferSlots;
     CPPCore::TArray<OGLPrimGroup*>   m_primitives;
-    RenderStates              *m_fpState;
+    RenderStates                    *m_fpState;
     Profiling::FPSCounter           *m_fpsCounter;
 };
 

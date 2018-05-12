@@ -62,6 +62,10 @@ public:
     /// @return true if creation was successful.
     bool update();
 
+    /// @brief  Returns the root render surface.
+    /// @return The root render surface.
+    AbstractSurface *getRenderSurface() const;
+
 protected:
     /// @brief The callbacks.
     virtual bool onCreate( AbstractSurface *pSurface ) = 0;
@@ -75,11 +79,13 @@ protected:
 
 private:
     bool m_isActive;
+    AbstractSurface *m_rootRenderSurface;
 };
 
 inline
 AbstractRenderContext::AbstractRenderContext() 
-:m_isActive( false ) {
+: m_isActive( false )
+, m_rootRenderSurface( nullptr ) {
     // empty
 }
 
@@ -90,6 +96,7 @@ AbstractRenderContext::~AbstractRenderContext() {
 
 inline
 bool AbstractRenderContext::create( AbstractSurface *surface ) {
+    m_rootRenderSurface = surface;
     return onCreate( surface );
 }
 
@@ -112,6 +119,11 @@ bool AbstractRenderContext::isActive() const {
 inline
 bool AbstractRenderContext::update() {
     return onUpdate();
+}
+
+inline
+AbstractSurface *AbstractRenderContext::getRenderSurface() const {
+    return m_rootRenderSurface;
 }
 
 } // Namespace Platform

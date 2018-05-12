@@ -82,6 +82,16 @@ OGLRenderBackend::~OGLRenderBackend( ) {
     releaseAllPrimitiveGroups();
 }
 
+bool OGLRenderBackend::create(Platform::AbstractRenderContext *renderCtx) {
+    setRenderContext( renderCtx );
+
+    return true;
+}
+
+bool OGLRenderBackend::destroy() {
+    return true;
+}
+
 void OGLRenderBackend::setTimer( Platform::AbstractTimer *timer ) {
     if ( nullptr == m_fpsCounter ) {
         m_fpsCounter = new Profiling::FPSCounter( timer );

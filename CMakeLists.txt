@@ -33,7 +33,7 @@ INCLUDE_DIRECTORIES(
     3dparty/assimp/contrib/irrXML
     3dparty/zlib
     3dparty/jsoncpp-1.8.4/include
-    c:/Users/kullingk/Desktop/projects/libs/SDL2-2.0.3/include
+    "c:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include"
     3dparty/soil/src
     /usr/include/SDL2/
     /usr/include/
@@ -54,6 +54,7 @@ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin )
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 if( WIN32 )
+    FIND_PACKAGE( DirectX )
     add_definitions( -DWIN32_LEAN_AND_MEAN )
 else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
