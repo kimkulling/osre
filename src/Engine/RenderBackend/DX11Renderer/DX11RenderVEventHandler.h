@@ -35,7 +35,8 @@ protected:
     bool onResizeRenderTarget(const Common::EventData *eventData);
 
 private:
-    DX11Renderer * m_dx11Renderer;
+    bool m_isRunning;
+    DX11Renderer *m_dx11Renderer;
     Platform::AbstractRenderContext *m_renderCtx;
 };
 

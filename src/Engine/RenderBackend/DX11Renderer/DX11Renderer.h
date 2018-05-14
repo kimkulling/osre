@@ -18,7 +18,7 @@ struct ID3D11RasterizerState;
 namespace OSRE {
 
 namespace Platform {
-    class AbstractRenderContext;
+    class AbstractSurface;
 }
 
 namespace RenderBackend {
@@ -27,8 +27,10 @@ class DX11Renderer {
 public:
     DX11Renderer();
     ~DX11Renderer();
-    bool create(Platform::AbstractRenderContext *renderCtx);
+    bool create(Platform::AbstractSurface *surface);
     bool destroy();
+    void beginScene(Color4 &clearColor);
+    void endScene();
 
 private:
     bool m_vsync_enabled;

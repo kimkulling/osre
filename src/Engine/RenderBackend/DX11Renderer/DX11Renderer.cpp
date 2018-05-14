@@ -33,11 +33,7 @@ DX11Renderer::~DX11Renderer() {
 
 }
 
-bool DX11Renderer::create(Platform::AbstractRenderContext *renderCtx) {
-    if (nullptr == renderCtx) {
-        return false;
-    }
-    Platform::AbstractSurface *surface = renderCtx->getRenderSurface();
+bool DX11Renderer::create(Platform::AbstractSurface *surface) {
     if (nullptr == surface) {
         return false;
     }
@@ -347,6 +343,32 @@ bool DX11Renderer::create(Platform::AbstractRenderContext *renderCtx) {
 
 bool DX11Renderer::destroy() {
     return true;
+}
+
+void DX11Renderer::beginScene(Color4 &clearColor) {
+    // Setup the color to clear the buffer to.
+    float color[4];
+    color[0] = clearColor.m_r;
+    color[1] = clearColor.m_g;
+    color[2] = clearColor.m_b;
+    color[3] = clearColor.m_a;
+
+    // Clear the back buffer.
+    m_deviceContext->ClearRenderTargetView(m_renderTargetView, color);
+
+    // Clear the depth buffer.
+    m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void DX11Renderer::endScene() {
+    // Present the back buffer to the screen since rendering is complete.
+    if (m_vsync_enabled) {
+        // Lock to screen refresh rate.
+        m_swapChain->Present(1, 0);
+    } else {
+        // Present as fast as possible.
+        m_swapChain->Present(0, 0);
+    }
 }
 
 } // Namespace RenderBackend

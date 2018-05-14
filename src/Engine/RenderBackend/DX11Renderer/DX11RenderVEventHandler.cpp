@@ -24,6 +24,7 @@ static const String Tag = "DX11RenderEventHandler";
 
 DX11RenderEventHandler::DX11RenderEventHandler()
 : AbstractEventHandler()
+, m_isRunning( true )
 , m_dx11Renderer( nullptr )
 , m_renderCtx( nullptr ) {
 
@@ -33,8 +34,37 @@ DX11RenderEventHandler::~DX11RenderEventHandler() {
 
 }
 
-bool DX11RenderEventHandler::onEvent(const Event &ev, const EventData *pEventData) {
-    return true;
+bool DX11RenderEventHandler::onEvent(const Event &ev, const EventData *data) {
+    bool result(false);
+    if (!m_isRunning) {
+        return true;
+    }
+
+    if (OnAttachEventHandlerEvent == ev) {
+        result = onAttached(data);
+    } else if (OnDetatachEventHandlerEvent == ev) {
+        result = onDetached(data);
+    } else if (OnCreateRendererEvent == ev) {
+        result = onCreateRenderer(data);
+    } else if (OnDestroyRendererEvent == ev) {
+        result = onDestroyRenderer(data);
+    } else if (OnAttachViewEvent == ev) {
+        result = onAttachView(data);
+    } else if (OnDetachViewEvent == ev) {
+        result = onDetachView(data);
+    } else if (OnRenderFrameEvent == ev) {
+        result = onRenderFrame(data);
+    } else if (OnCommitFrameEvent == ev) {
+        result = onCommitNexFrame(data);
+    } else if (OnClearSceneEvent == ev) {
+        result = onClearGeo(data);
+    } else if (OnShutdownRequest == ev) {
+        result = onShutdownRequest(data);
+    } else if (OnResizeEvent == ev) {
+        result = onResizeRenderTarget(data);
+    }
+
+    return result;
 }
 
 bool DX11RenderEventHandler::onAttached(const EventData *eventData) {
@@ -64,18 +94,8 @@ bool DX11RenderEventHandler::onCreateRenderer(const Common::EventData *eventData
     }
 
     bool result(false);
-    m_renderCtx = PlatformInterface::getInstance()->getRenderContext();
 
-    if (nullptr != m_renderCtx) {
-        result = m_renderCtx->create(activeSurface);
-        if (!result) {
-            osre_debug(Tag, "Cannot create render context.");
-            return false;
-        }
-    }
-
-
-    result = m_dx11Renderer->create(m_renderCtx );
+    result = m_dx11Renderer->create(activeSurface);
 
     return result;
 }
