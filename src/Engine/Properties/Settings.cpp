@@ -56,9 +56,7 @@ static const String           ConfigKeyStringTable[ Settings::MaxKonfigKey ] = {
 };
 
 Settings::Settings() 
-: m_pPropertyMap( nullptr ) {
-    m_pPropertyMap = new Properties::BasePropertyMap;
-
+: m_pPropertyMap(new Properties::BasePropertyMap) {
     initDefaults();
 }
 

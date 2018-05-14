@@ -30,9 +30,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "OGLRenderer/OGLRenderEventHandler.h"
 #include "VulkanRenderer/VlkRenderEventHandler.h"
-#ifndef OSRE_WINDOWS
-
-#include "DX11Renderer/DX11Renderer.h"
+#ifdef OSRE_WINDOWS
+#   include "DX11Renderer/DX11Renderer.h"
+#   include "DX11Renderer/DX11RenderVEventHandler.h"
 #endif
 
 namespace OSRE {
@@ -67,8 +67,11 @@ RenderBackendService::~RenderBackendService() {
     }
 }
 
-static const c8 *OGL_API = "opengl";
+static const c8 *OGL_API    = "opengl";
 static const c8 *Vulkan_API = "vulkan";
+#ifdef OSRE_WINDOWS
+static const c8 *DX11_API   = "dx11";
+#endif // OSRE_WINDOWS
 
 bool RenderBackendService::onOpen() {
     if ( nullptr == m_settings ) {
@@ -95,7 +98,13 @@ bool RenderBackendService::onOpen() {
         m_renderTaskPtr->attachEventHandler( new OGLRenderEventHandler );
     } else if ( api == Vulkan_API ) {
         m_renderTaskPtr->attachEventHandler( new VlkRenderEventHandler );
-    } else {
+    } 
+#ifdef OSRE_WINDOWS
+    else if (api == DX11_API) {
+        m_renderTaskPtr->attachEventHandler( new DX11RenderEventHandler );
+    } 
+#endif // OSRE_WINDOWS
+    else {
         osre_error( Tag, "Requested render-api unknown: " + api );
         ok = false;
     }
