@@ -127,6 +127,9 @@ bool DX11RenderEventHandler::onRenderFrame(const Common::EventData *) {
     Color4 clear(0, 1, 0, 0);
     m_dx11Renderer->beginScene(clear);
     
+    for (ui32 i = 0; i < m_renderCmds.size(); ++i) {
+        m_dx11Renderer->render(m_renderCmds[i]);
+    }
     m_dx11Renderer->endScene();
 
     return true;
