@@ -1,7 +1,6 @@
 #include "DX11Renderer.h"
 #include <osre/Platform/AbstractSurface.h>
 #include <osre/Platform/AbstractRenderContext.h>
-
 #include <src/Engine/Platform/win32/Win32Surface.h>
 
 #include <dxgi.h>
@@ -10,10 +9,18 @@
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
-//#pragma comment(lib, "d3dx11.lib")
 
 namespace OSRE {
 namespace RenderBackend {
+
+template<class T>
+inline
+void SafeRelease(T *iface) {
+    if (nullptr != iface) {
+        iface->Release();
+        iface = nullptr;
+    }
+}
 
 DX11Renderer::DX11Renderer() 
 : m_vsync_enabled( true )
@@ -120,19 +127,19 @@ bool DX11Renderer::create(Platform::AbstractSurface *surface) {
 
     // Release the display mode list.
     delete[] displayModeList;
-    displayModeList = 0;
+    displayModeList = nullptr;
 
     // Release the adapter output.
     adapterOutput->Release();
-    adapterOutput = 0;
+    adapterOutput = nullptr;
 
     // Release the adapter.
     adapter->Release();
-    adapter = 0;
+    adapter = nullptr;
 
     // Release the factory.
     factory->Release();
-    factory = 0;
+    factory = nullptr;
 
     // Initialize the swap chain description.
     ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
@@ -148,13 +155,10 @@ bool DX11Renderer::create(Platform::AbstractSurface *surface) {
     swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
     // Set the refresh rate of the back buffer.
-    if (m_vsync_enabled)
-    {
+    if (m_vsync_enabled) {
         swapChainDesc.BufferDesc.RefreshRate.Numerator = numerator;
         swapChainDesc.BufferDesc.RefreshRate.Denominator = denominator;
-    }
-    else
-    {
+    } else {
         swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
         swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
     }
@@ -166,7 +170,7 @@ bool DX11Renderer::create(Platform::AbstractSurface *surface) {
     Platform::Win32Surface *osSurface = (Platform::Win32Surface*)surface;
     swapChainDesc.OutputWindow = osSurface->getHWnd();
 
-    // Turn multisampling off.
+    // Turn multi-sampling off.
     swapChainDesc.SampleDesc.Count = 1;
     swapChainDesc.SampleDesc.Quality = 0;
 
@@ -216,7 +220,7 @@ bool DX11Renderer::create(Platform::AbstractSurface *surface) {
     backBufferPtr = 0;
 
     // Initialize the description of the depth buffer.
-    ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
+    ::ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
 
     // Set up the description of the depth buffer.
     depthBufferDesc.Width = screenWidth;
@@ -264,8 +268,7 @@ bool DX11Renderer::create(Platform::AbstractSurface *surface) {
 
     // Create the depth stencil state.
     result = m_device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState);
-    if (FAILED(result))
-    {
+    if (FAILED(result)) {
         return false;
     }
 
@@ -283,8 +286,7 @@ bool DX11Renderer::create(Platform::AbstractSurface *surface) {
 
     // Create the depth stencil view.
     result = m_device->CreateDepthStencilView(m_depthStencilBuffer, &depthStencilViewDesc, &m_depthStencilView);
-    if (FAILED(result))
-    {
+    if (FAILED(result)) {
         return false;
     }
 
@@ -342,8 +344,70 @@ bool DX11Renderer::create(Platform::AbstractSurface *surface) {
 }
 
 bool DX11Renderer::destroy() {
+    if (nullptr != m_swapChain) {
+        m_swapChain->SetFullscreenState(false, NULL);
+    }
+
+    SafeRelease(m_rasterState);
+    SafeRelease(m_depthStencilView);
+    SafeRelease(m_depthStencilState);
+    SafeRelease(m_depthStencilBuffer);
+    SafeRelease(m_renderTargetView);
+    SafeRelease(m_deviceContext);
+    SafeRelease(m_device);
+    SafeRelease(m_swapChain);
+    
     return true;
 }
+
+ui32 translateVBEnum2DX11(BufferType type) {
+    switch (type) {
+    case BufferType::VertexBuffer:
+        return D3D11_BIND_VERTEX_BUFFER;
+    case BufferType::IndexBuffer:
+        return D3D11_BIND_INDEX_BUFFER;
+    default:
+        break;
+    }
+
+    return 0;
+}
+
+ID3D11Buffer *DX11Renderer::createBuffer(BufferType type, BufferData *bd ) {
+    D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
+
+    // Set up the description of the static vertex buffer.
+    vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    vertexBufferDesc.ByteWidth = bd->m_size;
+    vertexBufferDesc.BindFlags = translateVBEnum2DX11(type);
+    vertexBufferDesc.CPUAccessFlags = 0;
+    vertexBufferDesc.MiscFlags = 0;
+    vertexBufferDesc.StructureByteStride = 0;
+
+    // Give the subresource structure a pointer to the vertex data.
+    D3D11_SUBRESOURCE_DATA bufferData;
+    bufferData.pSysMem = bd->m_data;
+    bufferData.SysMemPitch = 0;
+    bufferData.SysMemSlicePitch = 0;
+
+    // Now create the vertex buffer.
+    ID3D11Buffer *buffer;
+    HRESULT result = m_device->CreateBuffer(&vertexBufferDesc, &bufferData, &buffer);
+    if (FAILED(result)) {
+        return nullptr;
+    }
+
+    return buffer;
+}
+
+void DX11Renderer::releaseBuffer(ID3D11Buffer *buffer) {
+    if (nullptr == buffer) {
+        return;
+    }
+
+    SafeRelease(buffer);
+}
+
 
 void DX11Renderer::beginScene(Color4 &clearColor) {
     // Setup the color to clear the buffer to.
@@ -358,6 +422,22 @@ void DX11Renderer::beginScene(Color4 &clearColor) {
 
     // Clear the depth buffer.
     m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void DX11Renderer::render(RenderCmd *cmd) {
+    // Set vertex buffer stride and offset.
+    ui32 stride = sizeof(RenderVert);
+    ui32 offset = 0;
+
+    // Set the vertex buffer to active in the input assembler so it can be rendered.
+    
+    m_deviceContext->IASetVertexBuffers(0, 1, &cmd->m_vb, &stride, &offset);
+
+    // Set the index buffer to active in the input assembler so it can be rendered.
+    m_deviceContext->IASetIndexBuffer(cmd->m_ib, DXGI_FORMAT_R32_UINT, 0);
+
+    // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+    m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void DX11Renderer::endScene() {

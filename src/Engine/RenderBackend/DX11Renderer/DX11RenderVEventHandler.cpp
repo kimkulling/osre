@@ -26,8 +26,8 @@ DX11RenderEventHandler::DX11RenderEventHandler()
 : AbstractEventHandler()
 , m_isRunning( true )
 , m_dx11Renderer( nullptr )
-, m_renderCtx( nullptr ) {
-
+, m_renderCmds() {
+    // empty
 }
 
 DX11RenderEventHandler::~DX11RenderEventHandler() {
@@ -67,11 +67,11 @@ bool DX11RenderEventHandler::onEvent(const Event &ev, const EventData *data) {
     return result;
 }
 
-bool DX11RenderEventHandler::onAttached(const EventData *eventData) {
+bool DX11RenderEventHandler::onAttached(const EventData *) {
     return true;
 }
 
-bool DX11RenderEventHandler::onDetached(const EventData *eventData) {
+bool DX11RenderEventHandler::onDetached(const EventData *) {
     return true;
 }
 
@@ -100,35 +100,72 @@ bool DX11RenderEventHandler::onCreateRenderer(const Common::EventData *eventData
     return result;
 }
 
-bool DX11RenderEventHandler::onDestroyRenderer(const Common::EventData *eventData) {
+bool DX11RenderEventHandler::onDestroyRenderer(const Common::EventData *) {
+    if (nullptr == m_dx11Renderer) {
+        return false;
+    }
+
+    delete m_dx11Renderer;
+    m_dx11Renderer = nullptr;
+
     return true;
 }
 
-bool DX11RenderEventHandler::onAttachView(const Common::EventData *eventData) {
+bool DX11RenderEventHandler::onAttachView(const Common::EventData *) {
     return true;
 }
 
-bool DX11RenderEventHandler::onDetachView(const Common::EventData *eventData) {
+bool DX11RenderEventHandler::onDetachView(const Common::EventData *) {
     return true;
 }
 
-bool DX11RenderEventHandler::onClearGeo(const Common::EventData *eventData) {
+bool DX11RenderEventHandler::onClearGeo(const Common::EventData *) {
     return true;
 }
 
-bool DX11RenderEventHandler::onRenderFrame(const Common::EventData *eventData) {
+bool DX11RenderEventHandler::onRenderFrame(const Common::EventData *) {
+    Color4 clear(0, 1, 0, 0);
+    m_dx11Renderer->beginScene(clear);
+    
+    m_dx11Renderer->endScene();
+
     return true;
 }
 
 bool DX11RenderEventHandler::onCommitNexFrame(const Common::EventData *eventData) {
+    CommitFrameEventData *frameToCommitData = (CommitFrameEventData*)eventData;
+    if (nullptr == frameToCommitData) {
+        return false;
+    }
+    Frame *frame = frameToCommitData->m_frame;
+    for (ui32 geoPackageIdx = 0; geoPackageIdx<frame->m_numGeoPackages; ++geoPackageIdx) {
+        GeometryPackage *currentGeoPackage(frame->m_geoPackages[geoPackageIdx]);
+        if (nullptr == currentGeoPackage) {
+            continue;
+        }
+
+        for (ui32 geoIdx = 0; geoIdx < currentGeoPackage->m_numNewGeo; ++geoIdx) {
+            Geometry *geo = currentGeoPackage->m_newGeo[geoIdx];
+
+            ID3D11Buffer *vb = m_dx11Renderer->createBuffer(BufferType::VertexBuffer, geo->m_vb);
+            ID3D11Buffer *ib = m_dx11Renderer->createBuffer(BufferType::VertexBuffer, geo->m_ib );
+
+            RenderCmd *cmd = new RenderCmd;
+            cmd->m_vb = vb;
+            cmd->m_ib = ib;
+            
+            m_renderCmds.add(cmd);
+        }
+    }
+
     return true;
 }
 
-bool DX11RenderEventHandler::onShutdownRequest(const Common::EventData *eventData) {
+bool DX11RenderEventHandler::onShutdownRequest(const EventData *) {
     return true;
 }
 
-bool DX11RenderEventHandler::onResizeRenderTarget(const Common::EventData *eventData) {
+bool DX11RenderEventHandler::onResizeRenderTarget(const EventData *) {
     return true;
 }
 

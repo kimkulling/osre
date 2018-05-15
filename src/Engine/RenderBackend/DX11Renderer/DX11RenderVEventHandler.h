@@ -2,6 +2,10 @@
 
 #include <osre/Common/AbstractEventHandler.h>
 
+#include <cppcore/Container/TArray.h>
+
+struct ID3D11Buffer;
+
 namespace OSRE {
     
 namespace Platform {
@@ -11,6 +15,8 @@ namespace Platform {
 namespace RenderBackend {
 
 class DX11Renderer;
+
+struct RenderCmd;
 
 class DX11RenderEventHandler : public Common::AbstractEventHandler {
 public:
@@ -37,7 +43,7 @@ protected:
 private:
     bool m_isRunning;
     DX11Renderer *m_dx11Renderer;
-    Platform::AbstractRenderContext *m_renderCtx;
+    CPPCore::TArray<RenderCmd*> m_renderCmds;
 };
 
 }

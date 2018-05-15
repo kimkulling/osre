@@ -3,6 +3,7 @@
 #include <DirectXMath.h>
 
 #include <osre/Common/osre_common.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 using namespace DirectX;
 
@@ -14,6 +15,7 @@ struct ID3D11Texture2D;
 struct ID3D11DepthStencilState;
 struct ID3D11DepthStencilView;
 struct ID3D11RasterizerState;
+struct ID3D11Buffer;
 
 namespace OSRE {
 
@@ -23,13 +25,21 @@ namespace Platform {
 
 namespace RenderBackend {
 
+struct RenderCmd {
+    ID3D11Buffer *m_vb;
+    ID3D11Buffer *m_ib;
+};
+
 class DX11Renderer {
 public:
     DX11Renderer();
     ~DX11Renderer();
     bool create(Platform::AbstractSurface *surface);
     bool destroy();
+    ID3D11Buffer *createBuffer(BufferType type, BufferData *bd);
+    void releaseBuffer(ID3D11Buffer *buffer);
     void beginScene(Color4 &clearColor);
+    void render(RenderCmd *cmd);
     void endScene();
 
 private:
