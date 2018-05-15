@@ -51,7 +51,11 @@ RenderComponent::~RenderComponent() {
     // empty
 }
 
-void RenderComponent::update( RenderBackendService *renderBackendSrv ) {
+void RenderComponent::update( Time dt ) {
+    // empty
+}
+
+void RenderComponent::draw( RenderBackendService *renderBackendSrv ) {
     if( !m_newGeo.isEmpty() ) {
         for ( ui32 i = 0; i < m_newGeo.size(); i++ ) {
             renderBackendSrv->attachGeo( m_newGeo[ i ], 0 );
@@ -86,7 +90,11 @@ TransformComponent::~TransformComponent() {
 	// empty
 }
 
-void TransformComponent::update( RenderBackendService *renderBackendSrv ) {
+void TransformComponent::update( Time dt ) {
+    // empty
+}
+
+void TransformComponent::draw( RenderBackendService *renderBackendSrv ) {
     glm::mat4 world;
     m_localTransform.toMatrix( world );
 }
@@ -116,7 +124,7 @@ CollisionComponent::~CollisionComponent() {
     // empty
 }
 
-void CollisionComponent::update( RenderBackendService *rbSrv ) {
+void CollisionComponent::update( Time dt ) {
     // empty
 }
 

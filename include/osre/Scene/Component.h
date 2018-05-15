@@ -47,7 +47,8 @@ namespace Scene {
 class OSRE_EXPORT Component {
 public:
     virtual ~Component();
-    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv ) = 0;
+    virtual void update( Time dt ) = 0;
+    virtual void draw( RenderBackend::RenderBackendService *renderBackendSrv ) = 0;
     void setId( ui32 id );
     ui32 getId() const;
 
@@ -77,7 +78,8 @@ class OSRE_EXPORT RenderComponent : public Component {
 public:
     RenderComponent( ui32 id );
     virtual ~RenderComponent();
-    void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
+    void update( Time dt ) override;
+    void draw( RenderBackend::RenderBackendService *renderBackendSrv ) override;
     ui32 getNumGeometry() const;
     RenderBackend::Geometry *getGeoAt(ui32 idx) const;
     void addStaticGeometry( RenderBackend::Geometry *geo );
@@ -95,7 +97,8 @@ class OSRE_EXPORT TransformComponent : public Component {
 public:
     TransformComponent( ui32 id );
     virtual ~TransformComponent();
-    void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
+    void update( Time dt ) override;
+    void draw( RenderBackend::RenderBackendService *renderBackendSrv ) override;
     void setPosition( const glm::vec3 &pos );
     const glm::vec3 &getPosition() const;
     void setScale( const glm::vec3 &pos );
@@ -114,7 +117,7 @@ class CollisionComponent : public Component {
 public:
     CollisionComponent( ui32 id );
     virtual ~CollisionComponent();
-    void update( RenderBackend::RenderBackendService *renderBackendSrv ) override;
+    void update( Time dt ) override;
 };
 
 } // Namespace Scene

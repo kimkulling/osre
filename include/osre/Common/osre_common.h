@@ -160,6 +160,36 @@ struct Handle {
     }
 };
 
+struct Time {
+    i64 m_microseconds;
+
+    Time( i64 microseconds );
+    f32 asSeconds() const;
+    i32 asMilliSeconds() const;
+    i64 asMicroSeconds() const;
+};
+
+inline
+Time::Time( i64 microseconds )
+: m_microseconds( microseconds ) {
+    // empty
+}
+
+inline 
+f32 Time::asSeconds() const {
+    return m_microseconds / 1000000.f;
+}
+
+inline
+i32 Time::asMilliSeconds() const {
+    return static_cast<i32>( m_microseconds / 1000 );
+}
+
+inline
+i64 Time::asMicroSeconds() const {
+    return m_microseconds;
+}
+
 struct Color4 {
     f32 m_r, m_g, m_b, m_a;
 

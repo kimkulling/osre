@@ -196,21 +196,25 @@ RenderBackend::Geometry *Node::getGeometryAt(ui32 idx) const {
     return nullptr;
 }
 
-void Node::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
+void Node::update() {
+
+}
+
+void Node::draw( RenderBackend::RenderBackendService *renderBackendSrv ) {
     if ( nullptr == renderBackendSrv ) {
         return;
     }
 
-    onUpdate( renderBackendSrv );
+    onDraw( renderBackendSrv );
 
     // at first we need to update the transformations
     if ( nullptr != m_transformComp ) {
-        m_transformComp->update( renderBackendSrv );
+        m_transformComp->draw( renderBackendSrv );
     }
 
     // now e can render the scene
     if ( nullptr != m_renderComp ) {
-        m_renderComp->update( renderBackendSrv );
+        m_renderComp->draw( renderBackendSrv );
     }
 }
 
@@ -243,8 +247,12 @@ Properties::Property *Node::getProperty(const String name) const {
     return nullptr;
 }
 
-void Node::onUpdate( RenderBackendService *renderBackendSrv ) {
+void Node::onUpdate() {
     // empty
+}
+
+void Node::onDraw( RenderBackend::RenderBackendService *renderBackendSrv ) {
+
 }
 
 } // Namespace Scene

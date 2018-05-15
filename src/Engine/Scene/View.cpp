@@ -52,12 +52,16 @@ void View::observeNode( Node *node ) {
     m_node = node;
 }
 
-void View::update( RenderBackendService *rbSrv ) {
+void View::update( Time dt ) {
+    onUpdate( dt );
+}
+
+void View::draw( RenderBackendService *rbSrv ) {
     if ( nullptr == rbSrv ) {
         return;
     }
     
-    onUpdate( rbSrv );
+    onDraw( rbSrv );
 
     rbSrv->setMatrix( "P", m_projection );
     rbSrv->setMatrix( "V", m_view );
@@ -87,7 +91,11 @@ const glm::mat4 &View::getProjection() const {
     return m_projection;
 }
 
-void View::onUpdate( RenderBackend::RenderBackendService *renderBackendSrv ) {
+void View::onUpdate( Time dt ) {
+    // empty
+}
+
+void View::onDraw( RenderBackend::RenderBackendService *renderBackendSrv ) {
     // empty
 }
 

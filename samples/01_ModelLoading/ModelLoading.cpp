@@ -139,7 +139,6 @@ protected:
                 rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
 
                 renderNodes(model, rbSrv);
-
              }
             m_stage = AppBase::createStage( "ModelLoading" );
             const String name(model->getRootNode()->getName());

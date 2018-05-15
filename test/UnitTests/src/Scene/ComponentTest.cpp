@@ -42,7 +42,11 @@ public:
         // empty
     }
 
-    virtual void update( RenderBackend::RenderBackendService* ) {
+    void update( Time dt ) {
+        // empty
+    }
+
+    void draw( RenderBackend::RenderBackendService* ) override {
         // empty
     }
 };

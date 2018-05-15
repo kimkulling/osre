@@ -105,12 +105,14 @@ public:
     virtual Node *findNode( const String &name ) const;
     virtual View *addView( const String &name, Node *node );
     virtual void clear();
-    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
+    virtual void update(Time dt );
+    virtual void draw( RenderBackend::RenderBackendService *renderBackendSrv );
     virtual void setIdContainer( Common::Ids &ids );
     virtual Common::Ids *getIdContainer() const;
 
 protected:
-    virtual void onUpdate( RenderBackend::RenderBackendService *renderBackendSrv );
+    virtual void onUpdate( Time dt );
+    virtual void onDraw( RenderBackend::RenderBackendService *renderBackendSrv );
 
 private:
     using ViewArray = CPPCore::TArray<View*>;

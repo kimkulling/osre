@@ -157,36 +157,41 @@ void Stage::clear() {
     releaseChildNodes( m_root );
 }
 
-static void updateNode( Node *current, bool traverse, RenderBackend::RenderBackendService *rb ) {
-    if ( nullptr == current ) { 
-        return;
-    }
-    
-    // only update active nodes
-    if ( !current->isActive() ) {
+void Stage::update( Time dt ) {
+
+}
+
+static void drawNode( Node *current, bool traverse, RenderBackend::RenderBackendService *rb ) {
+    if (nullptr == current) {
         return;
     }
 
-    current->update( rb );
- 
+    // only update active nodes
+    if (!current->isActive()) {
+        return;
+    }
+
+    current->draw( rb );
+
     // traverse all children, if requested
-    if ( traverse ) {
+    if (traverse) {
         const ui32 numChilds( current->getNumChildren() );
-        for ( ui32 i = 0; i < numChilds; ++i ) {
+        for (ui32 i = 0; i < numChilds; ++i) {
             Node *child( current->getChildAt( i ) );
-            updateNode( child, traverse, rb );
+            drawNode( child, traverse, rb );
         }
     }
 }
 
-void Stage::update( RenderBackend::RenderBackendService *renderBackendSrv ) {
+
+void Stage::draw( RenderBackend::RenderBackendService *renderBackendSrv ) {
     if( nullptr == m_root ) {
         return;
     }
 
-    updateNode( m_root, true, m_rbService );
+    drawNode( m_root, true, m_rbService );
 
-    onUpdate( renderBackendSrv );
+    onDraw( renderBackendSrv );
 }
 
 void Stage::setIdContainer( Common::Ids &ids ) {
@@ -197,8 +202,12 @@ Common::Ids *Stage::getIdContainer() const {
     return m_ids;
 }
 
-void Stage::onUpdate( RenderBackend::RenderBackendService *renderBackendSrv ) {
-    // emtpy
+void Stage::onUpdate( Time dt ) {
+    // empty
+}
+
+void Stage::onDraw( RenderBackend::RenderBackendService *renderBackendSrv ) {
+    // empty
 }
 
 } // Namespace Scene

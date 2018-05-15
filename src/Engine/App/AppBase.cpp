@@ -136,6 +136,10 @@ void AppBase::update() {
 }
 
 void AppBase::requestNextFrame() {
+    m_world->draw( m_rbService );
+    if (nullptr != m_uiScreen) {
+        m_uiRenderer->render( m_uiScreen, m_rbService );
+    }
     m_rbService->update();
 }
 
@@ -342,12 +346,10 @@ bool AppBase::onDestroy() {
 }
 
 void AppBase::onUpdate() {
+    i64 microsecs = m_timer->getMilliCurrentSeconds() * 1000;
+    Time dt( microsecs );
     if ( nullptr != m_world ) {
-        m_world->update( m_rbService );
-    }
-
-    if ( nullptr != m_uiScreen ) {
-        m_uiRenderer->render( m_uiScreen, m_rbService );
+        m_world->update( dt );
     }
 }
 

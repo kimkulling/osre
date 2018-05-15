@@ -105,7 +105,8 @@ public:
     virtual void addGeometry( RenderBackend::Geometry *geo );
     virtual ui32 getNumGeometries() const;
     virtual RenderBackend::Geometry *getGeometryAt(ui32 idx) const;
-    virtual void update( RenderBackend::RenderBackendService *renderBackendSrv );
+    void update();
+    void draw(RenderBackend::RenderBackendService *renderBackendSrv);
     
 public:
     void setAABB(const AABB &aabb);
@@ -117,7 +118,8 @@ public:
     Properties::Property *getProperty(const String name) const;
 
 protected:
-    void onUpdate( RenderBackend::RenderBackendService *renderBackendSrv );
+    virtual void onUpdate();
+    virtual void onDraw(RenderBackend::RenderBackendService *renderBackendSrv);
 
 private:
     using ChildrenArray = CPPCore::TArray<Node*>;

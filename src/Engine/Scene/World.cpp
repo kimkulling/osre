@@ -145,13 +145,24 @@ bool World::setActiveView( const String &viewName ) {
     return false;
 }
 
-void World::update( RenderBackendService *rbService ) {
+void World::update( Time dt ) {
+    if (nullptr != m_activeStage) {
+        m_activeStage->update( dt );
+    }
+
+    if (nullptr != m_activeView) {
+        m_activeView->update( dt );
+    }
+
+}
+
+void World::draw( RenderBackendService *rbService ) {
     if ( nullptr != m_activeStage ) {
-        m_activeStage->update( rbService );
+        m_activeStage->draw( rbService );
     }
 
     if ( nullptr != m_activeView ) {
-        m_activeView->update( rbService );
+        m_activeView->draw( rbService );
     }
 }
 

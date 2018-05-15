@@ -55,7 +55,8 @@ public:
 	void addView(View *view);
     bool setActiveView( View *activeView );
     bool setActiveView( const String &viewName );
-    void update( RenderBackend::RenderBackendService *rbService );
+    void update( Time dt );
+    void draw( RenderBackend::RenderBackendService *rbService );
     RenderMode getRenderMode() const;
 
 private:
