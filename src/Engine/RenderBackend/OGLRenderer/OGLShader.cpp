@@ -30,7 +30,7 @@ namespace OSRE {
 namespace RenderBackend {
 
 static const GLint  ErrorId = -1;
-static const String Tag    = "OGLShader";
+static const String Tag     = "OGLShader";
 
 OGLShader::OGLShader( const String &name )
 : Object( name )
