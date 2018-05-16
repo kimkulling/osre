@@ -106,8 +106,8 @@ const String &Win32RenderContext::getExtensions() const {
     return m_extensions;
 }
 
-bool Win32RenderContext::onCreate( AbstractSurface *pSurface )  {
-    Win32Surface *win32Surface = reinterpret_cast< Win32Surface* >( pSurface );
+bool Win32RenderContext::onCreate( AbstractSurface *surface )  {
+    Win32Surface *win32Surface = reinterpret_cast< Win32Surface* >( surface );
     if( !win32Surface ) {
         osre_error( Tag, "Invalid pointer to window." );
         return false;

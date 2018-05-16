@@ -32,6 +32,8 @@ namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
+static const String Tag = "AbstractRenderTest";
+
 AbstractRenderTest::AbstractRenderTest( const String &renderTestName )
 : m_renderTestName( renderTestName ) {
     // empty
@@ -94,7 +96,10 @@ Material *AbstractRenderTest::createMaterial( const String &matName, const Strin
     Material *mat = new Material( matName );
     mat->m_numTextures = 0;
     mat->m_type        = MaterialType::ShaderMaterial;
-    mat->createShader( VsSrc, FsSrc );
+    ShaderSourceArray shArray;
+    shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = VsSrc;
+    shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = FsSrc;
+    mat->createShader(shArray);
 
     return mat;
 }

@@ -189,13 +189,15 @@ MaterialBuilder::~MaterialBuilder() {
         vs = VsSrcRV;
         fs = FsSrcRV;
     }
-
+    
     if ( vs.empty() || fs.empty() ) {
         delete mat;
         return nullptr;
     }
-
-    mat->createShader( vs, fs );
+    ShaderSourceArray arr;
+    arr[ static_cast<ui32>( ShaderType::SH_VertexShaderType ) ] = vs;
+    arr[ static_cast<ui32>( ShaderType::SH_FragmentShaderType ) ] = fs;
+    mat->createShader(arr);
 
     // Setup shader attributes and variables
     if ( nullptr != mat->m_shader ) {
@@ -217,7 +219,10 @@ MaterialBuilder::~MaterialBuilder() {
 
 Material *MaterialBuilder::createBuildinUiMaterial() {
     Material *mat = new Material( "shadermaterial", MaterialType::ShaderMaterial );
-    mat->createShader( VsSrcUI, FsSrcUI );
+    ShaderSourceArray arr;
+    arr[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = VsSrcUI;
+    arr[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = FsSrcUI;
+    mat->createShader(arr);
 
     // setup shader attributes and variables
     if ( nullptr != mat->m_shader ) {

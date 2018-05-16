@@ -72,6 +72,7 @@ protected:
         }
        
         baseSettings->setString( Properties::Settings::WindowsTitle, "HelloWorld!" );
+        baseSettings->setString(Settings::RenderAPI, "dx11");
         if ( !AppBase::onCreate( baseSettings ) ) {
             return false;
         }

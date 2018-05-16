@@ -280,6 +280,7 @@ bool AppBase::onCreate( Properties::Settings *config ) {
 
     // create the render back-end
     m_rbService = new RenderBackend::RenderBackendService();
+    m_rbService->setSettings(m_settings, false);
     if( !m_rbService->open() ) {
         m_rbService->release();
         m_rbService = nullptr;

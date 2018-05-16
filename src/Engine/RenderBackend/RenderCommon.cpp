@@ -368,10 +368,13 @@ Material::~Material() {
     m_textures = nullptr;
 }
 
-void Material::createShader( String vs, String fs ) {
+void Material::createShader(CPPCore::TStaticArray<String, MaxShaderTypes> &shaders) {
     m_shader = new Shader;
-    m_shader->m_src[ static_cast< int >( ShaderType::SH_VertexShaderType ) ] = vs;
-    m_shader->m_src[ static_cast< int >( ShaderType::SH_FragmentShaderType ) ] = fs;
+    for (ui32 i = 0; i < MaxShaderTypes; ++i) {
+        if (!shaders[i].empty()) {
+            m_shader->m_src[i] = shaders[i];
+        }
+    }
 }
 
 GeoInstanceData::GeoInstanceData()

@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Uri.h>
 
 #include <cppcore/Container/TArray.h>
+#include <cppcore/Container/TStaticArray.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -410,6 +411,8 @@ enum class MaterialColorType : ui32 {
 
 static const ui32 MaxMatColorType = static_cast<ui32>( MaterialColorType::NumMaterialColorTypes );
 
+using ShaderSourceArray = CPPCore::TStaticArray<String, MaxShaderTypes>;
+
 ///	@brief
 struct OSRE_EXPORT Material {
     String        m_name;
@@ -424,7 +427,7 @@ struct OSRE_EXPORT Material {
     Material( const String &name );
     Material( const String &name, MaterialType type );
     ~Material();
-    void createShader( String vs, String fs );
+    void createShader(ShaderSourceArray &shaders );
 
     OSRE_NON_COPYABLE( Material )
 };

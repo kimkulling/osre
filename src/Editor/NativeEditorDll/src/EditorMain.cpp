@@ -18,7 +18,9 @@
 
 #include <iomanip>
 
-#include <osre/Platform/Windows/MinWindows.h>
+#ifdef OSRE_WINDOWS
+#   include <osre/Platform/Windows/MinWindows.h>
+#endif // OSRE_WINDOWS
 
 using namespace ::OSRE;
 using namespace ::OSRE::Common;
