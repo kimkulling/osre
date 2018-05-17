@@ -1,4 +1,5 @@
 #include "DX11Renderer.h"
+#include <osre/Common/Logger.h>
 #include <osre/Platform/AbstractSurface.h>
 #include <osre/Platform/AbstractRenderContext.h>
 #include <src/Engine/Platform/win32/Win32Surface.h>
@@ -6,12 +7,15 @@
 #include <dxgi.h>
 #include <d3dcommon.h>
 #include <d3d11.h>
+#include <D3DX11async.h>
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
 
 namespace OSRE {
 namespace RenderBackend {
+
+using namespace ::OSRE::Common;
 
 template<class T>
 inline
@@ -21,6 +25,8 @@ void SafeRelease(T *iface) {
         iface = nullptr;
     }
 }
+
+static const String Tag = "DX11Renderer";
 
 DX11Renderer::DX11Renderer() 
 : m_vsync_enabled( true )
@@ -408,6 +414,170 @@ void DX11Renderer::releaseBuffer(ID3D11Buffer *buffer) {
     SafeRelease(buffer);
 }
 
+static bool getDx11Component(VertexAttribute attrib, String &name, DXGI_FORMAT &dx11Format ) {
+    bool result(true);
+    switch (attrib) {
+        case VertexAttribute::Position:
+            name = "POSITION";
+            dx11Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            break;
+        case VertexAttribute::Normal:
+            name = "NORMAL";
+            dx11Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+            break;
+        case VertexAttribute::TexCoord0:
+            name = "TEXCOORD0";
+            dx11Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            break;
+        case VertexAttribute::TexCoord1:
+            name = "TEXCOORD1";
+            dx11Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            break;
+        case VertexAttribute::TexCoord2:
+            name = "TEXCOORD2";
+            dx11Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            break;
+        case VertexAttribute::TexCoord3:
+            name = "TEXCOORD3";
+            dx11Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            break;
+        case VertexAttribute::Tangent:
+            name = "TANGENT";
+            dx11Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            break;
+        case VertexAttribute::Binormal:
+            name = "BINORMAL";
+            dx11Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            break;
+        case VertexAttribute::Weights:
+            name = "BLENDWEIGHT0";
+            dx11Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            break;
+        case VertexAttribute::Indices:
+            name = "BLENDINDICES0";
+            dx11Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            break;
+        case VertexAttribute::Color0:
+            name = "COLOR0";
+            dx11Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            break;
+        case VertexAttribute::Color1:
+            name = "COLOR1";
+            dx11Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            break;
+        case VertexAttribute::Instance0:
+            name = "NONE";
+            result = false;
+            dx11Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            break;
+        case VertexAttribute::Instance1:
+            name = "NONE";
+            result = false;
+            dx11Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            break;
+        case VertexAttribute::Instance2:
+            name = "NONE";
+            dx11Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            result = false;
+            break;
+        case VertexAttribute::Instance3:
+            name = "NONE";
+            dx11Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            result = false;
+            break;
+        default:
+            result = false;
+            break;
+    }
+
+    return result;
+}
+
+D3D11_INPUT_ELEMENT_DESC *DX11Renderer::createVertexLayout(VertexLayout *layout, Shader *shader) {
+    if (nullptr == layout || nullptr == shader) {
+        return nullptr;
+    }
+
+    String src;
+    HRESULT result;
+    ID3D10Blob* errorMessage;
+    ID3D10Blob* vertexShaderBuffer;
+    ID3D10Blob* pixelShaderBuffer;
+
+    D3D11_BUFFER_DESC matrixBufferDesc;
+
+
+    // Initialize the pointers this function will use to null.
+    errorMessage = 0;
+    vertexShaderBuffer = 0;
+    pixelShaderBuffer = 0;
+
+    // Compile the vertex shader code.
+    src = shader->m_src[static_cast<ui32>(ShaderType::SH_VertexShaderType)];
+    result = D3DX11CompileFromMemory( src.c_str(), src.size(), NULL, NULL, NULL, "ColorVertexShader", "vs_5_0",
+            D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &vertexShaderBuffer, &errorMessage, NULL);
+    if (FAILED(result)) {
+        // If the shader failed to compile it should have written something to the error message.
+        if (errorMessage) {
+            //osre_error(Tag, errorMessage);
+        }
+
+        return false;
+    }
+
+    // Compile the pixel shader code.
+    src = shader->m_src[static_cast<ui32>(ShaderType::SH_FragmentShaderType)];
+    result = D3DX11CompileFromMemory(src.c_str(), src.size(), NULL, NULL, NULL, "ColorPixelShader", "ps_5_0",
+            D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &pixelShaderBuffer, &errorMessage, NULL);
+    if (FAILED(result)) {
+        // If the shader failed to compile it should have written something to the error message.
+        if (errorMessage) {
+            //osre_error( Tag, (uc8*) errorMessage->GetBufferPointer());
+        }
+
+        return false;
+    }
+
+    // Create the vertex shader from the buffer.
+    ID3D11VertexShader *vertexShader(nullptr);
+    ID3D11PixelShader *pixelShader(nullptr);
+    result = m_device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &vertexShader);
+    if (FAILED(result)) {
+        return false;
+    }
+
+    // Create the pixel shader from the buffer.
+    result = m_device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &pixelShader);
+    if (FAILED(result)) {
+        return false;
+    }
+    String name;
+    DXGI_FORMAT dx11Format;
+    const ui32 numComps = layout->m_components.size();
+    D3D11_INPUT_ELEMENT_DESC *dx11VertexDecl = new D3D11_INPUT_ELEMENT_DESC[numComps];
+    for (ui32 i = 0; i < numComps; ++i) {
+        VertComponent &comp = layout->getAt( i );
+        getDx11Component(comp.m_attrib, name, dx11Format);
+        dx11VertexDecl[ i ].SemanticName = name.c_str();
+        dx11VertexDecl[i].SemanticIndex = 0;
+        dx11VertexDecl[i].Format = dx11Format;
+        dx11VertexDecl[i].InputSlot = 0;
+        if (0 == i) {
+            dx11VertexDecl[i].AlignedByteOffset = 0;
+        } else {
+            dx11VertexDecl[i].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+        }
+        dx11VertexDecl[i].InputSlot = D3D11_INPUT_PER_VERTEX_DATA;
+        dx11VertexDecl[i].InputSlot = 0;
+    }
+    ID3D11InputLayout *dx11Layout( nullptr );
+    result = m_device->CreateInputLayout(dx11VertexDecl, numComps, vertexShaderBuffer->GetBufferPointer(),
+        vertexShaderBuffer->GetBufferSize(), &dx11Layout);
+    if (FAILED(result))
+    {
+        return false;
+    }
+}
 
 void DX11Renderer::beginScene(Color4 &clearColor) {
     // Setup the color to clear the buffer to.
