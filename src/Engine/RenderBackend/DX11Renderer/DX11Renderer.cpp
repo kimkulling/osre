@@ -573,10 +573,28 @@ D3D11_INPUT_ELEMENT_DESC *DX11Renderer::createVertexLayout(VertexLayout *layout,
     ID3D11InputLayout *dx11Layout( nullptr );
     result = m_device->CreateInputLayout(dx11VertexDecl, numComps, vertexShaderBuffer->GetBufferPointer(),
         vertexShaderBuffer->GetBufferSize(), &dx11Layout);
-    if (FAILED(result))
+    if (FAILED(result)) {
+        return false;
+    }
+    SafeRelease( &vertexShaderBuffer );
+    SafeRelease( &pixelShaderBuffer );
+
+    // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
+    matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    matrixBufferDesc.ByteWidth = sizeof( MatrixBufferType );
+    matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    matrixBufferDesc.MiscFlags = 0;
+    matrixBufferDesc.StructureByteStride = 0;
+
+    // Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+    result = m_device->CreateBuffer( &matrixBufferDesc, NULL, &m_matrixBuffer );
+    if (FAILED( result ))
     {
         return false;
     }
+
+    return true;
 }
 
 void DX11Renderer::beginScene(Color4 &clearColor) {

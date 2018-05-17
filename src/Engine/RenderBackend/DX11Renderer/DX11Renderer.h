@@ -31,6 +31,12 @@ struct RenderCmd {
     ID3D11Buffer *m_ib;
 };
 
+struct MatrixBufferType {
+    XMMATRIX world;
+    XMMATRIX view;
+    XMMATRIX projection;
+};
+
 class DX11Renderer {
 public:
     DX11Renderer();
@@ -59,6 +65,8 @@ private:
     XMMATRIX m_projectionMatrix;
     XMMATRIX m_worldMatrix;
     XMMATRIX m_orthoMatrix;
+    ID3D11Buffer* m_matrixBuffer;
+    MatrixBufferType m_matrixBufferData;
 };
 
 } // Namespace RenderBackend
