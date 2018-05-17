@@ -16,6 +16,7 @@ struct ID3D11DepthStencilState;
 struct ID3D11DepthStencilView;
 struct ID3D11RasterizerState;
 struct ID3D11Buffer;
+struct D3D11_INPUT_ELEMENT_DESC;
 
 namespace OSRE {
 
@@ -38,6 +39,7 @@ public:
     bool destroy();
     ID3D11Buffer *createBuffer(BufferType type, BufferData *bd);
     void releaseBuffer(ID3D11Buffer *buffer);
+    D3D11_INPUT_ELEMENT_DESC *createVertexLayout(VertexLayout *layout, Shader *shader);
     void beginScene(Color4 &clearColor);
     void render(RenderCmd *cmd);
     void endScene();
