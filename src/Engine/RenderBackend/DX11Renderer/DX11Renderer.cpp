@@ -493,7 +493,7 @@ static bool getDx11Component(VertexAttribute attrib, String &name, DXGI_FORMAT &
     return result;
 }
 
-D3D11_INPUT_ELEMENT_DESC *DX11Renderer::createVertexLayout(VertexLayout *layout, Shader *shader) {
+DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, Shader *shader) {
     if (nullptr == layout || nullptr == shader) {
         return nullptr;
     }
@@ -522,7 +522,7 @@ D3D11_INPUT_ELEMENT_DESC *DX11Renderer::createVertexLayout(VertexLayout *layout,
             //osre_error(Tag, errorMessage);
         }
 
-        return false;
+        return nullptr;
     }
 
     // Compile the pixel shader code.
@@ -535,7 +535,7 @@ D3D11_INPUT_ELEMENT_DESC *DX11Renderer::createVertexLayout(VertexLayout *layout,
             //osre_error( Tag, (uc8*) errorMessage->GetBufferPointer());
         }
 
-        return false;
+        return nullptr;
     }
 
     // Create the vertex shader from the buffer.
@@ -543,13 +543,13 @@ D3D11_INPUT_ELEMENT_DESC *DX11Renderer::createVertexLayout(VertexLayout *layout,
     ID3D11PixelShader *pixelShader(nullptr);
     result = m_device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &vertexShader);
     if (FAILED(result)) {
-        return false;
+        return nullptr;
     }
 
     // Create the pixel shader from the buffer.
     result = m_device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &pixelShader);
     if (FAILED(result)) {
-        return false;
+        return nullptr;
     }
     String name;
     DXGI_FORMAT dx11Format;
@@ -574,7 +574,7 @@ D3D11_INPUT_ELEMENT_DESC *DX11Renderer::createVertexLayout(VertexLayout *layout,
     result = m_device->CreateInputLayout(dx11VertexDecl, numComps, vertexShaderBuffer->GetBufferPointer(),
         vertexShaderBuffer->GetBufferSize(), &dx11Layout);
     if (FAILED(result)) {
-        return false;
+        return nullptr;
     }
     SafeRelease( &vertexShaderBuffer );
     SafeRelease( &pixelShaderBuffer );
@@ -591,10 +591,13 @@ D3D11_INPUT_ELEMENT_DESC *DX11Renderer::createVertexLayout(VertexLayout *layout,
     result = m_device->CreateBuffer( &matrixBufferDesc, NULL, &m_matrixBuffer );
     if (FAILED( result ))
     {
-        return false;
+        return nullptr;
     }
 
-    return true;
+    DX11VertexLayout *vl = new DX11VertexLayout;
+    vl->m_desc = dx11VertexDecl;
+    
+    return vl;
 }
 
 void DX11Renderer::beginScene(Color4 &clearColor) {

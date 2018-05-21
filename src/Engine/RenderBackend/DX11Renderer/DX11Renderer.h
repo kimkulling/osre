@@ -5,6 +5,8 @@
 #include <osre/Common/osre_common.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
+#include <cppcore/Container/THashMap.h>
+
 using namespace DirectX;
 
 struct IDXGISwapChain;
@@ -37,6 +39,14 @@ struct MatrixBufferType {
     XMMATRIX projection;
 };
 
+struct DX11Shader {
+
+};
+
+struct DX11VertexLayout {
+    D3D11_INPUT_ELEMENT_DESC *m_desc;
+};
+
 class DX11Renderer {
 public:
     DX11Renderer();
@@ -45,7 +55,7 @@ public:
     bool destroy();
     ID3D11Buffer *createBuffer(BufferType type, BufferData *bd);
     void releaseBuffer(ID3D11Buffer *buffer);
-    D3D11_INPUT_ELEMENT_DESC *createVertexLayout(VertexLayout *layout, Shader *shader);
+    DX11VertexLayout *createVertexLayout(VertexLayout *layout, Shader *shader);
     void beginScene(Color4 &clearColor);
     void render(RenderCmd *cmd);
     void endScene();
