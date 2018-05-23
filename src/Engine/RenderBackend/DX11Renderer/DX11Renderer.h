@@ -37,6 +37,15 @@ struct MatrixBufferType {
     XMMATRIX projection;
 };
 
+struct DX11VertexDeclaration {
+    D3D11_INPUT_ELEMENT_DESC *m_desc;
+};
+
+struct DX11Shader {
+    ID3D11VertexShader *m_vertexShader;
+    ID3D11PixelShader *m_pixelShader;
+};
+
 class DX11Renderer {
 public:
     DX11Renderer();
@@ -45,7 +54,8 @@ public:
     bool destroy();
     ID3D11Buffer *createBuffer(BufferType type, BufferData *bd);
     void releaseBuffer(ID3D11Buffer *buffer);
-    D3D11_INPUT_ELEMENT_DESC *createVertexLayout(VertexLayout *layout, Shader *shader);
+    DX11VertexDeclaration *createVertexLayout(VertexLayout *layout, DX11Shader *shader);
+    DX11Shader *createShader();
     void beginScene(Color4 &clearColor);
     void render(RenderCmd *cmd);
     void endScene();

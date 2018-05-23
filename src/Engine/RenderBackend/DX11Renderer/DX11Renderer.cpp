@@ -493,7 +493,7 @@ static bool getDx11Component(VertexAttribute attrib, String &name, DXGI_FORMAT &
     return result;
 }
 
-D3D11_INPUT_ELEMENT_DESC *DX11Renderer::createVertexLayout(VertexLayout *layout, Shader *shader) {
+DX11VertexDeclaration *DX11Renderer::createVertexLayout(VertexLayout *layout, DX11Shader *shader) {
     if (nullptr == layout || nullptr == shader) {
         return nullptr;
     }
@@ -522,7 +522,7 @@ D3D11_INPUT_ELEMENT_DESC *DX11Renderer::createVertexLayout(VertexLayout *layout,
             //osre_error(Tag, errorMessage);
         }
 
-        return false;
+        return nullptr;
     }
 
     // Compile the pixel shader code.
@@ -559,9 +559,9 @@ D3D11_INPUT_ELEMENT_DESC *DX11Renderer::createVertexLayout(VertexLayout *layout,
         VertComponent &comp = layout->getAt( i );
         getDx11Component(comp.m_attrib, name, dx11Format);
         dx11VertexDecl[ i ].SemanticName = name.c_str();
-        dx11VertexDecl[i].SemanticIndex = 0;
-        dx11VertexDecl[i].Format = dx11Format;
-        dx11VertexDecl[i].InputSlot = 0;
+        dx11VertexDecl[ i ].SemanticIndex = 0;
+        dx11VertexDecl[ i ].Format = dx11Format;
+        dx11VertexDecl[ i ].InputSlot = 0;
         if (0 == i) {
             dx11VertexDecl[i].AlignedByteOffset = 0;
         } else {
@@ -589,12 +589,15 @@ D3D11_INPUT_ELEMENT_DESC *DX11Renderer::createVertexLayout(VertexLayout *layout,
 
     // Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
     result = m_device->CreateBuffer( &matrixBufferDesc, NULL, &m_matrixBuffer );
-    if (FAILED( result ))
-    {
-        return false;
+    if (FAILED( result )) {
+        return nullptr;
     }
 
     return true;
+}
+
+DX11Shader *DX11Renderer::createShader() {
+
 }
 
 void DX11Renderer::beginScene(Color4 &clearColor) {
