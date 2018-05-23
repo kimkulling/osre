@@ -494,7 +494,7 @@ static bool getDx11Component(VertexAttribute attrib, String &name, DXGI_FORMAT &
     return result;
 }
 
-DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, Shader *shader) {
+DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, DX11Shader *shader ) {
     if (nullptr == layout || nullptr == shader) {
         return nullptr;
     }
@@ -507,51 +507,10 @@ DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, Shader 
 
     D3D11_BUFFER_DESC matrixBufferDesc;
 
-
-    // Initialize the pointers this function will use to null.
-    errorMessage = 0;
-    vertexShaderBuffer = 0;
-    pixelShaderBuffer = 0;
-
-    // Compile the vertex shader code.
-    src = shader->m_src[static_cast<ui32>(ShaderType::SH_VertexShaderType)];
-    //result = D3DX11CompileFromMemory( src.c_str(), src.size(), NULL, NULL, NULL, "ColorVertexShader", "vs_5_0",
-    //        D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &vertexShaderBuffer, &errorMessage, NULL);
-    if (FAILED(result)) {
-        // If the shader failed to compile it should have written something to the error message.
-        if (errorMessage) {
-            //osre_error(Tag, errorMessage);
-        }
-
-        return nullptr;
-    }
-
-    // Compile the pixel shader code.
-    src = shader->m_src[static_cast<ui32>(ShaderType::SH_FragmentShaderType)];
-    result = D3DX11CompileFromMemory(src.c_str(), src.size(), NULL, NULL, NULL, "ColorPixelShader", "ps_5_0",
-            D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &pixelShaderBuffer, &errorMessage, NULL);
-    if (FAILED(result)) {
-        // If the shader failed to compile it should have written something to the error message.
-        if (errorMessage) {
-            //osre_error( Tag, (uc8*) errorMessage->GetBufferPointer());
-        }
-
-        return nullptr;
-    }
-
     // Create the vertex shader from the buffer.
-    ID3D11VertexShader *vertexShader(nullptr);
-    ID3D11PixelShader *pixelShader(nullptr);
-    result = m_device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &vertexShader);
-    if (FAILED(result)) {
-        return nullptr;
-    }
+    ID3D11VertexShader *vertexShader( shader->m_vertexShader);
+    ID3D11PixelShader *pixelShader(shader->m_pixelShader);
 
-    // Create the pixel shader from the buffer.
-    result = m_device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &pixelShader);
-    if (FAILED(result)) {
-        return nullptr;
-    }
     String name;
     DXGI_FORMAT dx11Format;
     const ui32 numComps = layout->m_components.size();

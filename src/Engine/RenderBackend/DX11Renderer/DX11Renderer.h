@@ -19,6 +19,8 @@ struct ID3D11DepthStencilView;
 struct ID3D11RasterizerState;
 struct ID3D11Buffer;
 struct D3D11_INPUT_ELEMENT_DESC;
+struct ID3D11VertexShader;
+struct ID3D11PixelShader;
 
 namespace OSRE {
 
@@ -42,11 +44,9 @@ struct MatrixBufferType {
 struct DX11Shader {
     ID3D11VertexShader *m_vertexShader;
     ID3D11PixelShader *m_pixelShader;
-
 };
 
 struct DX11VertexLayout {
-    D3D11_INPUT_ELEMENT_DESC *m_desc;
     D3D11_INPUT_ELEMENT_DESC *m_desc;
 };
 
