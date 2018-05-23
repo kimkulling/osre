@@ -11,6 +11,7 @@
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
+//#pragma comment(lib, "D3DX11.lib")
 
 namespace OSRE {
 namespace RenderBackend {
@@ -514,8 +515,8 @@ DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, Shader 
 
     // Compile the vertex shader code.
     src = shader->m_src[static_cast<ui32>(ShaderType::SH_VertexShaderType)];
-    result = D3DX11CompileFromMemory( src.c_str(), src.size(), NULL, NULL, NULL, "ColorVertexShader", "vs_5_0",
-            D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &vertexShaderBuffer, &errorMessage, NULL);
+    //result = D3DX11CompileFromMemory( src.c_str(), src.size(), NULL, NULL, NULL, "ColorVertexShader", "vs_5_0",
+    //        D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, &vertexShaderBuffer, &errorMessage, NULL);
     if (FAILED(result)) {
         // If the shader failed to compile it should have written something to the error message.
         if (errorMessage) {
@@ -576,8 +577,8 @@ DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, Shader 
     if (FAILED(result)) {
         return nullptr;
     }
-    SafeRelease( &vertexShaderBuffer );
-    SafeRelease( &pixelShaderBuffer );
+//    SafeRelease( &vertexShaderBuffer );
+//    SafeRelease( &pixelShaderBuffer );
 
     // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
     matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
