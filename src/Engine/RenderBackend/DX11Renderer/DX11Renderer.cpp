@@ -560,9 +560,9 @@ DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, Shader 
         VertComponent &comp = layout->getAt( i );
         getDx11Component(comp.m_attrib, name, dx11Format);
         dx11VertexDecl[ i ].SemanticName = name.c_str();
-        dx11VertexDecl[i].SemanticIndex = 0;
-        dx11VertexDecl[i].Format = dx11Format;
-        dx11VertexDecl[i].InputSlot = 0;
+        dx11VertexDecl[ i ].SemanticIndex = 0;
+        dx11VertexDecl[ i ].Format = dx11Format;
+        dx11VertexDecl[ i ].InputSlot = 0;
         if (0 == i) {
             dx11VertexDecl[i].AlignedByteOffset = 0;
         } else {
@@ -599,6 +599,10 @@ DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, Shader 
     vl->m_desc = dx11VertexDecl;
     
     return vl;
+}
+
+DX11Shader *DX11Renderer::createShader() {
+
 }
 
 void DX11Renderer::beginScene(Color4 &clearColor) {
