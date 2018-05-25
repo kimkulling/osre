@@ -251,7 +251,11 @@ void Node::onUpdate() {
     // empty
 }
 
-void Node::onDraw( RenderBackend::RenderBackendService *renderBackendSrv ) {
+void Node::onDraw( RenderBackendService *renderBackendSrv ) {
+    if (nullptr == m_renderComp) {
+        return;
+    }
+
 
 }
 

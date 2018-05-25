@@ -39,19 +39,19 @@ public:
         // empty
     }
 
-    virtual LibHandle *load( const String &libName ) override {
+    virtual LibHandle *load( const String & ) override {
         return nullptr;
     }
 
-    virtual LibHandle *lookupLib( const String &libName ) override {
+    virtual LibHandle *lookupLib( const String & ) override {
         return nullptr;
     }
 
-    virtual void unload( const String &libName ) override {
+    virtual void unload( const String & ) override {
         // empty
     }
 
-    virtual void *loadFunction( const String &name ) override {
+    virtual void *loadFunction( const String & ) override {
         return nullptr;
     }
 };

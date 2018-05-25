@@ -6,6 +6,8 @@
 
 #include <d3d11.h>
 #include <D3Dcompiler.h>
+#include <glm/gtc/matrix_transform.hpp>
+
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
@@ -58,7 +60,7 @@ bool DX11Renderer::create(Platform::AbstractSurface *surface) {
     D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
     D3D11_RASTERIZER_DESC rasterDesc;
     D3D11_VIEWPORT viewport;
-    float fieldOfView, screenAspect;
+    f32 fieldOfView, screenAspect;
 
     // Create a DirectX graphics interface factory.
     IDXGIFactory *factory;
@@ -334,13 +336,13 @@ bool DX11Renderer::create(Platform::AbstractSurface *surface) {
 
     // Create the projection matrix for 3D rendering.
     f32 screenNear = 0.1f, screenDepth = 1000.0f;
-    m_projectionMatrix = XMMatrixPerspectiveFovLH( fieldOfView, screenAspect, screenNear, screenDepth );
-
+    m_projectionMatrix = glm::perspectiveFovLH( fieldOfView, (float)screenWidth, (float)screenHeight, screenNear, screenDepth );
+    
     // Initialize the world matrix to the identity matrix.
-    m_worldMatrix = XMMatrixIdentity();
+    m_worldMatrix = glm::mat4( 1 );
 
     // Create an orthographic projection matrix for 2D rendering.
-    m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
+    m_orthoMatrix = glm::orthoLH( 0.f, (f32) screenWidth, 0.f, (f32) screenHeight, screenNear, screenDepth );
 
     return true;
 }

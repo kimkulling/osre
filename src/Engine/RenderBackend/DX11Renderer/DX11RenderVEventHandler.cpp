@@ -150,8 +150,8 @@ bool DX11RenderEventHandler::onCommitNexFrame(const Common::EventData *eventData
         for (ui32 geoIdx = 0; geoIdx < currentGeoPackage->m_numNewGeo; ++geoIdx) {
             Geometry *geo = currentGeoPackage->m_newGeo[geoIdx];
 
-            ID3D11Buffer *vb = m_dx11Renderer->createBuffer(BufferType::VertexBuffer, geo->m_vb);
-            ID3D11Buffer *ib = m_dx11Renderer->createBuffer(BufferType::VertexBuffer, geo->m_ib );
+            ID3D11Buffer *vb = m_dx11Renderer->createBuffer(BufferType::VertexBuffer, geo->m_vb, geo->m_vb->getBufferAccessType() );
+            ID3D11Buffer *ib = m_dx11Renderer->createBuffer(BufferType::VertexBuffer, geo->m_ib, geo->m_vb->getBufferAccessType() );
 
             RenderCmd *cmd = new RenderCmd;
             cmd->m_vb = vb;
