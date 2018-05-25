@@ -51,7 +51,7 @@ public:
 
 protected:
     void onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) override {
-        // empty
+        EXPECT_NE(nullptr, rbSrv);
     }
 
     void onResize( ui32 x, ui32 y, ui32 w, ui32 h ) override {

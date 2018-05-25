@@ -33,7 +33,7 @@ GLenum OGLEnum::getGLBufferType( BufferType type ) {
             return GL_ARRAY_BUFFER;
         case BufferType::IndexBuffer:
             return GL_ELEMENT_ARRAY_BUFFER;
-        case BufferType::UniformBuffer:
+        case BufferType::ConstantBuffer:
             return GL_UNIFORM_BUFFER;
         case BufferType::EmptyBuffer:
         default:

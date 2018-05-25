@@ -4,14 +4,12 @@
 #include <osre/Platform/AbstractRenderContext.h>
 #include <src/Engine/Platform/win32/Win32Surface.h>
 
-#include <dxgi.h>
-#include <d3dcommon.h>
 #include <d3d11.h>
-#include <D3DX11async.h>
+#include <D3Dcompiler.h>
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
-//#pragma comment(lib, "D3DX11.lib")
+#pragma comment(lib, "D3DCompiler.lib")
 
 namespace OSRE {
 namespace RenderBackend {
@@ -137,19 +135,16 @@ bool DX11Renderer::create(Platform::AbstractSurface *surface) {
     displayModeList = nullptr;
 
     // Release the adapter output.
-    adapterOutput->Release();
-    adapterOutput = nullptr;
+    SafeRelease(adapterOutput);
 
     // Release the adapter.
-    adapter->Release();
-    adapter = nullptr;
+    SafeRelease(adapter);
 
     // Release the factory.
-    factory->Release();
-    factory = nullptr;
+    SafeRelease(factory);
 
     // Initialize the swap chain description.
-    ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
+    ::ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 
     // Set to a single back buffer.
     swapChainDesc.BufferCount = 1;
@@ -338,7 +333,7 @@ bool DX11Renderer::create(Platform::AbstractSurface *surface) {
     screenAspect = (float)screenWidth / (float)screenHeight;
 
     // Create the projection matrix for 3D rendering.
-    float screenNear = 0.1f, screenDepth = 1000.0f;
+    f32 screenNear = 0.1f, screenDepth = 1000.0f;
     m_projectionMatrix = XMMatrixPerspectiveFovLH( fieldOfView, screenAspect, screenNear, screenDepth );
 
     // Initialize the world matrix to the identity matrix.
@@ -369,27 +364,41 @@ bool DX11Renderer::destroy() {
 
 ui32 translateVBEnum2DX11(BufferType type) {
     switch (type) {
-    case BufferType::VertexBuffer:
-        return D3D11_BIND_VERTEX_BUFFER;
-    case BufferType::IndexBuffer:
-        return D3D11_BIND_INDEX_BUFFER;
-    default:
-        break;
+        case BufferType::VertexBuffer:
+            return D3D11_BIND_VERTEX_BUFFER;
+        case BufferType::IndexBuffer:
+            return D3D11_BIND_INDEX_BUFFER;
+        case BufferType::ConstantBuffer:
+            return D3D11_BIND_CONSTANT_BUFFER;
+        default:
+            break;
     }
 
     return 0;
 }
 
-ID3D11Buffer *DX11Renderer::createBuffer(BufferType type, BufferData *bd ) {
-    D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
+UINT translateAccessFlag(BufferAccessType usage) {
+    switch (usage) {
+        case BufferAccessType::ReadOnly:
+            return D3D11_CPU_ACCESS_READ;
+        case BufferAccessType::WriteOnly:
+            return D3D11_CPU_ACCESS_WRITE;
+        case BufferAccessType::ReadWrite:
+            return D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+    }
 
-    // Set up the description of the static vertex buffer.
-    vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    vertexBufferDesc.ByteWidth = bd->m_size;
-    vertexBufferDesc.BindFlags = translateVBEnum2DX11(type);
-    vertexBufferDesc.CPUAccessFlags = 0;
-    vertexBufferDesc.MiscFlags = 0;
-    vertexBufferDesc.StructureByteStride = 0;
+    return 0;
+}
+
+ID3D11Buffer *DX11Renderer::createBuffer(BufferType type, BufferData *bd, BufferAccessType usage) {
+    // Set up the description for the buffer.
+    D3D11_BUFFER_DESC bufferDesc;
+    bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    bufferDesc.ByteWidth = bd->m_size;
+    bufferDesc.BindFlags = translateVBEnum2DX11(type);
+    bufferDesc.CPUAccessFlags = translateAccessFlag(usage);
+    bufferDesc.MiscFlags = 0;
+    bufferDesc.StructureByteStride = 0;
 
     // Give the subresource structure a pointer to the vertex data.
     D3D11_SUBRESOURCE_DATA bufferData;
@@ -399,7 +408,7 @@ ID3D11Buffer *DX11Renderer::createBuffer(BufferType type, BufferData *bd ) {
 
     // Now create the vertex buffer.
     ID3D11Buffer *buffer;
-    HRESULT result = m_device->CreateBuffer(&vertexBufferDesc, &bufferData, &buffer);
+    HRESULT result = m_device->CreateBuffer(&bufferDesc, &bufferData, &buffer);
     if (FAILED(result)) {
         return nullptr;
     }
@@ -501,16 +510,9 @@ DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, DX11Sha
 
     String src;
     HRESULT result;
-    ID3D10Blob* errorMessage;
-    ID3D10Blob* vertexShaderBuffer;
-    ID3D10Blob* pixelShaderBuffer;
-
     D3D11_BUFFER_DESC matrixBufferDesc;
 
     // Create the vertex shader from the buffer.
-    ID3D11VertexShader *vertexShader( shader->m_vertexShader);
-    ID3D11PixelShader *pixelShader(shader->m_pixelShader);
-
     String name;
     DXGI_FORMAT dx11Format;
     const ui32 numComps = layout->m_components.size();
@@ -531,14 +533,12 @@ DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, DX11Sha
         dx11VertexDecl[i].InputSlot = 0;
     }
     ID3D11InputLayout *dx11Layout( nullptr );
-    result = m_device->CreateInputLayout(dx11VertexDecl, numComps, vertexShaderBuffer->GetBufferPointer(),
-        vertexShaderBuffer->GetBufferSize(), &dx11Layout);
+    result = m_device->CreateInputLayout(dx11VertexDecl, numComps, shader->m_vsBuffer->GetBufferPointer(),
+        shader->m_vsBuffer->GetBufferSize(), &dx11Layout);
     if (FAILED(result)) {
         return nullptr;
     }
-//    SafeRelease( &vertexShaderBuffer );
-//    SafeRelease( &pixelShaderBuffer );
-
+    
     // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
     matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     matrixBufferDesc.ByteWidth = sizeof( MatrixBufferType );
@@ -549,8 +549,7 @@ DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, DX11Sha
 
     // Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
     result = m_device->CreateBuffer( &matrixBufferDesc, NULL, &m_matrixBuffer );
-    if (FAILED( result ))
-    {
+    if (FAILED( result )) {
         return nullptr;
     }
 
@@ -560,7 +559,84 @@ DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, DX11Sha
     return vl;
 }
 
-DX11Shader *DX11Renderer::createShader() {
+static void ShowCompileError(ID3D10Blob *errorMessage) {
+    if (nullptr == errorMessage) {
+        return;
+    }
+
+    const char *compileErrors = static_cast<char*>(errorMessage->GetBufferPointer());
+    const size_t size(errorMessage->GetBufferSize());
+    osre_error(Tag, compileErrors);
+}
+
+DX11Shader *DX11Renderer::createShader(Shader *shader) {
+    if (nullptr == shader) {
+        return nullptr;
+    }
+
+    HRESULT result;
+    DX11Shader *dx11Shader(nullptr);
+    String src;
+    ID3D10Blob *buffer, *errorMessage;
+    for (ui32 i = 0; i < static_cast<ui32>(ShaderType::NumShaderTypes); ++i) {
+        src = shader->m_src[ i ];
+        result = D3DCompile(src.c_str(), src.size(), NULL, NULL, NULL, "ColorVertexShader", "vs_5_0", 
+            D3D10_SHADER_ENABLE_STRICTNESS, 0, &buffer, &errorMessage);
+        if (FAILED(result)) {
+            if (nullptr != errorMessage) {
+                ShowCompileError(errorMessage);
+            } 
+
+            return dx11Shader;
+        }
+
+        dx11Shader = new DX11Shader;
+        if (static_cast<ShaderType>(i) == ShaderType::SH_VertexShaderType) {
+            result = m_device->CreateVertexShader(buffer, buffer->GetBufferSize(), NULL, &dx11Shader->m_vertexShader);
+            dx11Shader->m_vsBuffer = buffer;
+        } else if (static_cast<ShaderType>(i) == ShaderType::SH_FragmentShaderType) {
+            result = m_device->CreatePixelShader(buffer, buffer->GetBufferSize(), NULL, &dx11Shader->m_pixelShader);
+        }
+    }
+
+    return dx11Shader;
+}
+
+void DX11Renderer::setMatrix(MatrixType type, const glm::mat4 &mat) {
+    switch (type) {
+        case MatrixType::Model:
+            m_worldMatrix = mat;
+            break;
+        case MatrixType::View:
+            m_orthoMatrix = mat;
+            break;
+        case MatrixType::Projection:
+            m_projectionMatrix = mat;
+            break;
+        default:
+            break;
+    }
+}
+
+const glm::mat4 &DX11Renderer::getMatrix(MatrixType type) const {
+    glm::mat4 mat;
+    switch (type) {
+    case MatrixType::Model:
+        mat = m_worldMatrix;
+        break;
+    case MatrixType::View:
+        mat = m_orthoMatrix;
+        break;
+    case MatrixType::Projection:
+        mat = m_projectionMatrix;
+        break;
+    default:
+        break;
+    }
+    return mat;
+}
+
+void DX11Renderer::setModelViewProjectionParameters() {
 
 }
 

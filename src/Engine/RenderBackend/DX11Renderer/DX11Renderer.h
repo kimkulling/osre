@@ -1,6 +1,8 @@
 #pragma once
 
 #include <DirectXMath.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <osre/Common/osre_common.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -21,6 +23,7 @@ struct ID3D11Buffer;
 struct D3D11_INPUT_ELEMENT_DESC;
 struct ID3D11VertexShader;
 struct ID3D11PixelShader;
+struct ID3D10Blob;
 
 namespace OSRE {
 
@@ -42,6 +45,7 @@ struct MatrixBufferType {
 };
 
 struct DX11Shader {
+    ID3D10Blob *m_vsBuffer;
     ID3D11VertexShader *m_vertexShader;
     ID3D11PixelShader *m_pixelShader;
 };
@@ -56,10 +60,13 @@ public:
     ~DX11Renderer();
     bool create(Platform::AbstractSurface *surface);
     bool destroy();
-    ID3D11Buffer *createBuffer(BufferType type, BufferData *bd);
+    ID3D11Buffer *createBuffer(BufferType type, BufferData *bd, BufferAccessType usage);
     void releaseBuffer(ID3D11Buffer *buffer);
     DX11VertexLayout *createVertexLayout(VertexLayout *layout, DX11Shader *shader);
-    DX11Shader *createShader();
+    DX11Shader *createShader(Shader *shader);
+    void setMatrix(MatrixType type, const glm::mat4 &mat);
+    const glm::mat4 &getMatrix(MatrixType type) const;
+    void setModelViewProjectionParameters();
     void beginScene(Color4 &clearColor);
     void render(RenderCmd *cmd);
     void endScene();
@@ -76,9 +83,9 @@ private:
     ID3D11DepthStencilState* m_depthStencilState;
     ID3D11DepthStencilView* m_depthStencilView;
     ID3D11RasterizerState* m_rasterState;
-    XMMATRIX m_projectionMatrix;
-    XMMATRIX m_worldMatrix;
-    XMMATRIX m_orthoMatrix;
+    glm::mat4 m_projectionMatrix;
+    glm::mat4 m_worldMatrix;
+    glm::mat4 m_orthoMatrix;
     ID3D11Buffer* m_matrixBuffer;
     MatrixBufferType m_matrixBufferData;
 };

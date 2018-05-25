@@ -26,6 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Common/EventTriggerer.h>
 
+#include <Windowsx.h>
+
 namespace OSRE {
 namespace Platform {
 
