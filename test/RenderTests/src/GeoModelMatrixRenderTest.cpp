@@ -67,9 +67,9 @@ public:
         rbSrv->attachGeo( geo1, 0 );
 
         Geometry *geo2 = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-        transform.toMatrix( geo2->m_model );
         geo2->m_localMatrix = true;
         transform.setTranslation( -1, 0, 0 );
+        transform.toMatrix( geo2->m_model );
         rbSrv->attachGeo( geo2, 0 );
 
         m_transformMatrix.update();

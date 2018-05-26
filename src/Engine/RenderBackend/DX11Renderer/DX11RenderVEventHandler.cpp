@@ -79,8 +79,8 @@ bool DX11RenderEventHandler::onCreateRenderer(const Common::EventData *eventData
     if (nullptr != m_dx11Renderer) {
         return false;
     }
-    m_dx11Renderer = new DX11Renderer();
 
+    m_dx11Renderer = new DX11Renderer();
     CreateRendererEventData *createRendererEvData = (CreateRendererEventData*)eventData;
     AbstractSurface *activeSurface = createRendererEvData->m_activeSurface;
     if (nullptr == activeSurface) {
@@ -93,10 +93,12 @@ bool DX11RenderEventHandler::onCreateRenderer(const Common::EventData *eventData
         return false;
     }
 
-    bool result(false);
-
+    bool result( false );
     result = m_dx11Renderer->create(activeSurface);
-
+    if (!result) {
+        osre_error( Tag, "Error occurred while creating DX11Renderer.")
+    }
+    
     return result;
 }
 
@@ -124,12 +126,13 @@ bool DX11RenderEventHandler::onClearGeo(const Common::EventData *) {
 }
 
 bool DX11RenderEventHandler::onRenderFrame(const Common::EventData *) {
+    // triggers the render frame loop
     Color4 clear(0, 1, 0, 0);
     m_dx11Renderer->beginScene(clear);
-    
     for (ui32 i = 0; i < m_renderCmds.size(); ++i) {
         m_dx11Renderer->render(m_renderCmds[i]);
     }
+
     m_dx11Renderer->endScene();
 
     return true;

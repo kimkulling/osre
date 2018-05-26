@@ -24,6 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/IO/IOService.h>
+#include <osre/Platform/PlatformInterface.h>
+#include <osre/Platform/AbstractSurface.h>
 #include <osre/Common/Logger.h>
 #include <osre/Debugging/osre_debugging.h>
 
@@ -43,19 +45,25 @@ AbstractRenderTest::~AbstractRenderTest() {
     // empty
 }
 
-bool AbstractRenderTest::create( RenderBackendService *pRenderBackendSrv ) {
-    OSRE_ASSERT( nullptr != pRenderBackendSrv );
+bool AbstractRenderTest::create( RenderBackendService *rbSrv ) {
+    OSRE_ASSERT( nullptr != rbSrv );
     
     osre_info( m_renderTestName, "=> Creating test." );
-    return onCreate( pRenderBackendSrv );
+    const String &name( getTestName() );
+    Platform::AbstractSurface *surface = Platform::PlatformInterface::getInstance()->getRootSurface();
+    if (nullptr != surface) {
+        surface->setWindowsTitle( "Performing test " + name );
+    }
+    
+    return onCreate( rbSrv );
 }
 
-bool AbstractRenderTest::destroy( RenderBackendService *pRenderBackendSrv ) {
-    OSRE_ASSERT( nullptr != pRenderBackendSrv );
+bool AbstractRenderTest::destroy( RenderBackendService *rbSrv ) {
+    OSRE_ASSERT( nullptr != rbSrv );
     
     osre_info( m_renderTestName, "<= Destroying test." );
 
-    return onDestroy( pRenderBackendSrv );
+    return onDestroy( rbSrv );
 }
 
 bool AbstractRenderTest::render( RenderBackendService *rbSrv ) {

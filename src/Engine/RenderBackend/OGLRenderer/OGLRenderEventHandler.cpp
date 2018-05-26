@@ -571,6 +571,7 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
         }
         */
         
+        CPPCore::TArray<ui32> primGroups;
         for (ui32 geoIdx = 0; geoIdx < currentGeoPackage->m_numNewGeo; ++geoIdx) {
             Geometry *geo = currentGeoPackage->m_newGeo[geoIdx];
             if (nullptr == geo) {
@@ -579,7 +580,6 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
             }
 
             // register primitive groups to render
-            CPPCore::TArray<ui32> primGroups;
             for (ui32 i = 0; i < geo->m_numPrimGroups; ++i) {
                 const ui32 primIdx( m_oglBackend->addPrimitiveGroup( &geo->m_pPrimGroups[ i ]) );
                 primGroups.add( primIdx );
@@ -603,6 +603,7 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
                 setupInstancedDrawCmd(primGroups, frame, m_oglBackend, this, m_vertexArray);
             }
         }
+        primGroups.resize( 0 );
     }
 
     // setup global parameter
