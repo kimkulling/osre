@@ -389,7 +389,7 @@ GeoInstanceData::~GeoInstanceData() {
 
 TransformState::TransformState() 
 : m_translate()
-, m_scale()
+, m_scale(1.0f)
 , m_rotation() {
     // empty
 }
@@ -419,10 +419,10 @@ bool TransformState::operator != ( const TransformState &rhs ) const {
 }
 
 void TransformState::toMatrix(mat4 &m) {
-    mat4 trans = glm::translate( m, m_translate );
-    mat4 rot = mat4(1.0f);
-    mat4 scale = glm::scale( m, m_scale);
-    mat4 mvp = trans * rot * scale;
+    mat4 mvp = mat4( 1.0f );
+    mvp *= glm::translate( m, m_translate );
+    mvp *= mat4(1.0f);
+    mvp *= glm::scale( m, m_scale);
     m *= mvp;
 }
 
