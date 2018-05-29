@@ -46,6 +46,7 @@ class OGLRenderContext;
 class OGLRenderBackend;
 class OGLShader;
 class RenderCmdBuffer;
+class HWBufferManager;
 
 struct Vertex;
 struct OGLVertexArray;
@@ -108,6 +109,7 @@ private:
     RenderCmdBuffer *m_renderCmdBuffer;
     Platform::AbstractRenderContext *m_renderCtx;
     OGLVertexArray *m_vertexArray;
+    HWBufferManager *m_hwBufferManager;
 };
 
 } // Namespace RenderBackend

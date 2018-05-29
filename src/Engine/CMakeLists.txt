@@ -356,6 +356,7 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/CullState.h
     ${HEADER_PATH}/RenderBackend/ClearState.h
     ${HEADER_PATH}/RenderBackend/Geometry.h
+    ${HEADER_PATH}/RenderBackend/HWBufferManager.h
     ${HEADER_PATH}/RenderBackend/SamplerState.h
     ${HEADER_PATH}/RenderBackend/StencilState.h
     ${HEADER_PATH}/RenderBackend/PolygonState.h

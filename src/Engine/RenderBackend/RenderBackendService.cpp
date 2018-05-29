@@ -56,7 +56,8 @@ RenderBackendService::RenderBackendService()
 , m_newInstances()
 , m_variables()
 , m_uniformUpdates()
-, m_transformStack() {
+, m_transformStack()
+, m_hwBufferManager( nullptr ) {
     // empty
 }
 
@@ -92,8 +93,9 @@ bool RenderBackendService::onOpen() {
         return ok;
     }
     
-    // Create render event handler for back-end 
+    // Create render event handler for back-end
     const String api = m_settings->get( Settings::RenderAPI ).getString();
+    m_hwBufferManager = new HWBufferManager;
     if ( api == OGL_API ) {
         m_renderTaskPtr->attachEventHandler( new OGLRenderEventHandler );
     } else if ( api == Vulkan_API ) {
