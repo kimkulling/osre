@@ -108,14 +108,21 @@ void OGLRenderBackend::setMatrix( MatrixType type, const glm::mat4 &mat ) {
 
 const glm::mat4 &OGLRenderBackend::getMatrix( MatrixType type ) const {
     switch (type) {
-    case MatrixType::Model:
-        return m_mvp.m_model;
-    case MatrixType::View:
-        return m_mvp.m_view;
-    case MatrixType::Projection:
-        return m_mvp.m_projection;
+        case MatrixType::Model:
+            return m_mvp.m_model;
+        case MatrixType::View:
+            return m_mvp.m_view;
+        case MatrixType::Projection:
+            return m_mvp.m_projection;
     }
     return m_mvp.m_model;
+}
+
+void OGLRenderBackend::applyMatrix() {
+    OGLParameter *mvp = getParameter("MVP");
+    if (nullptr != mvp) {
+        setParameter(mvp);
+    }
 }
 
 bool OGLRenderBackend::create(Platform::AbstractRenderContext *renderCtx) {

@@ -201,6 +201,7 @@ bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *data ) {
     m_renderbackend->bindVertexArray( data->m_vertexArray );
     if ( data->m_localMatrix ) {
         m_renderbackend->setMatrix( MatrixType::Model, data->m_model );
+        m_renderbackend->applyMatrix();
     }
     for( ui32 i = 0; i < data->m_primitives.size(); ++i ) {
         m_renderbackend->render( data->m_primitives[ i ] );

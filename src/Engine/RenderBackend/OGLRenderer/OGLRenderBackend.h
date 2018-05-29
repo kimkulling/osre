@@ -81,6 +81,7 @@ public:
     
     void setMatrix( MatrixType type, const glm::mat4 &mat );    
     const glm::mat4 &getMatrix( MatrixType type ) const;
+    void applyMatrix();
     bool create(Platform::AbstractRenderContext *renderCtx);
     bool destroy();
     void setTimer( Platform::AbstractTimer *timer );
