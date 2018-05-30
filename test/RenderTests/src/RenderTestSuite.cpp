@@ -30,6 +30,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractPlatformEventQueue.h>
 #include <osre/Platform/AbstractTimer.h>
 #include <osre/Assets/AssetRegistry.h>
+#include <osre/UI/Widget.h>
+#include <osre/Platform/AbstractSurface.h>
 #include <osre/IO/IOService.h>
 
 #include <iostream>
@@ -143,7 +145,12 @@ bool RenderTestSuite::setup( const String &API ) {
         data->m_pipeline = App::AppBase::createDefaultPipeline();
         m_pRenderBackendServer->sendEvent( &OnCreateRendererEvent, data );
     }
-
+    Platform::AbstractSurface *surface = m_pPlatformInterface->getRootSurface();
+    if (nullptr != surface) {
+        Rect2ui rect;
+        surface->getProperties()->getDimension(rect);
+        UI::WidgetCoordMapping::init(rect);
+    }
     m_pTimer = PlatformInterface::getInstance()->getTimer();
     
     Assets::AssetRegistry *registry( Assets::AssetRegistry::create() );

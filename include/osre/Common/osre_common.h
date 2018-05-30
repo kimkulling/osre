@@ -618,6 +618,24 @@ struct TRect2D {
         // empty
     }
 
+    void set(T x, T y, T width, T height) {
+        m_x1 = x;
+        m_y1 = y;
+        m_x2 = x + width;
+        m_y2 = y + height;
+        m_width = width;
+        m_height = height;
+    }
+
+    void setEdges(T x1, T y1, T x2, T y2) {
+        m_x1 = x1;
+        m_y1 = y1;
+        m_x2 = x2 + width;
+        m_y2 = y2 + height;
+        m_width = x2 - x1;
+        m_height = y2 - y1;
+    }
+
     T getX1() const {
         return m_x1;
     }

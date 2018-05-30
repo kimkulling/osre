@@ -317,6 +317,7 @@ SET( renderbackend_src
     RenderBackend/Parameter.cpp
     RenderBackend/Pipeline.cpp
     RenderBackend/ParticleGenerator.cpp
+    RenderBackend/HWBufferManager.cpp
 )
 SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLCommon.h

@@ -68,6 +68,10 @@ struct SurfaceProperties {
     bool   m_fullscreen;          ///< true for full screen.
     bool   m_resizable;           ///< true, if window wan be resized.
     bool   m_open;                ///< Window is open flag.
+
+    void getDimension(Rect2ui &rect) {
+        rect.set(m_x, m_y, m_width, m_height);
+    }
 };
 
 //-------------------------------------------------------------------------------------------------

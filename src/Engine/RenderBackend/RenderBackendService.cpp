@@ -46,6 +46,7 @@ static const String Tag = "RenderBackendService";
 
 RenderBackendService::RenderBackendService()
 : AbstractService( "renderbackend/renderbackendserver" )
+, m_matrixBuffer()
 , m_renderTaskPtr()
 , m_settings( nullptr )
 , m_ownsSettingsConfig( false )
@@ -56,8 +57,7 @@ RenderBackendService::RenderBackendService()
 , m_newInstances()
 , m_variables()
 , m_uniformUpdates()
-, m_transformStack()
-, m_hwBufferManager( nullptr ) {
+, m_transformStack() {
     // empty
 }
 
@@ -95,7 +95,6 @@ bool RenderBackendService::onOpen() {
     
     // Create render event handler for back-end
     const String api = m_settings->get( Settings::RenderAPI ).getString();
-    m_hwBufferManager = new HWBufferManager;
     if ( api == OGL_API ) {
         m_renderTaskPtr->attachEventHandler( new OGLRenderEventHandler );
     } else if ( api == Vulkan_API ) {
@@ -218,6 +217,22 @@ void RenderBackendService::commitNextFrame() {
 void RenderBackendService::sendEvent( const Event *ev, const EventData *eventData ) {
     if ( m_renderTaskPtr.isValid() ) {
         m_renderTaskPtr->sendEvent( ev, eventData );
+    }
+}
+
+void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
+    switch (type) {
+        case MatrixType::Model:
+            m_matrixBuffer.m_model = m;
+            break;
+        case MatrixType::View:
+            m_matrixBuffer.m_view = m;
+            break;
+        case MatrixType::Projection:
+            m_matrixBuffer.m_proj = m;
+            break;
+        default:
+            break;
     }
 }
 

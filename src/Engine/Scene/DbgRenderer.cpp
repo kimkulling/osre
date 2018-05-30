@@ -83,17 +83,20 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
         return;
     }
 
+    f32 scale = 0.2f;
+    glm::vec3 translate(0.f, 0.f, 0);
+    m_transformMatrix.init();
+    m_transformMatrix.m_model = glm::translate(m_transformMatrix.m_model, translate);
+    m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, glm::vec3(scale, scale, scale));
+    m_transformMatrix.update();
+
     if ( !m_textBoxes.hasKey( id ) ) {
         f32 xTrans(0), yTrans(0);
-        
         UI::WidgetCoordMapping::mapPosToWorld(x , y, xTrans, yTrans);
-        Geometry *geo = GeometryBuilder::allocTextBox(xTrans, yTrans, 0.1f, text, BufferAccessType::ReadWrite );
+        Geometry *geo = GeometryBuilder::allocTextBox(xTrans, yTrans, scale, text, BufferAccessType::ReadWrite );
         m_rbSrv->attachGeo( geo, 0 );
         insertTextEntry( id, geo, text, m_textBoxes );
-
-        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
-        m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
-        m_transformMatrix.update();
+        geo->m_localMatrix = true;
         geo->m_model = m_transformMatrix.m_model;
     } else {
         DbgTextEntry *entry( nullptr );
@@ -110,10 +113,8 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
                 GeometryBuilder::updateTextBox( entry->m_geo, 0.1f, text, false );
                 geo = entry->m_geo;
             }
-            m_rbSrv->attachGeoUpdate( geo );
-            m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
-            m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
-            m_transformMatrix.update();
+            m_rbSrv->attachGeoUpdate( geo );            
+            geo->m_localMatrix = true;
             geo->m_model = m_transformMatrix.m_model;
         }
     }
@@ -185,6 +186,7 @@ void DbgRenderer::renderAABB( const glm::mat4 &transform, const Collision::TAABB
     geo->m_ib->copyFrom( &indices[ 0 ], indexSize );
 
     // setup primitives
+    geo->m_model = transform;
     geo->m_numPrimGroups = 1;
     
     geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];

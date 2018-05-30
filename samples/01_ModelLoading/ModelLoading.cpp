@@ -136,7 +136,9 @@ protected:
                 m_transformMatrix.m_projection = glm::perspective(glm::radians(60.0f), aspect, zNear, zFar);
                 m_transformMatrix.m_view = glm::lookAt(eye, c, up);
                 m_transformMatrix.update();
-                rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
+                rbSrv->setMatrix(MatrixType::View, m_transformMatrix.m_view);
+                rbSrv->setMatrix(MatrixType::Projection, m_transformMatrix.m_projection);
+                //rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
 
                 renderNodes(model, rbSrv);
              }

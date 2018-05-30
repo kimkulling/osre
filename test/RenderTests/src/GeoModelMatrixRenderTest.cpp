@@ -74,7 +74,7 @@ public:
         transform.toMatrix( geo2->m_model );
         rbSrv->attachGeo( geo2, 0 );
 
-        m_transformMatrix.update();
+        //m_transformMatrix.update();
 
         return true;
     }

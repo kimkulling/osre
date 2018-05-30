@@ -171,6 +171,7 @@ public:
     /// @param  eventData   [in] The event data.
     void sendEvent( const Common::Event *ev, const Common::EventData *eventData );
 
+    void setMatrix(MatrixType type, const glm::mat4 &m );
     void setMatrix( const String &name, const glm::mat4 &matrix );
 
     void setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray );
@@ -213,6 +214,18 @@ protected:
     void commitNextFrame();
 
 private:
+    struct MatrixBuffer {
+        glm::mat4 m_model;
+        glm::mat4 m_view;
+        glm::mat4 m_proj;
+
+        MatrixBuffer()
+        : m_model(1.0f)
+        , m_view(1.0f)
+        , m_proj(1.0f) {
+            // empty
+        }
+    } m_matrixBuffer;
     Common::TObjPtr<Threading::SystemTask> m_renderTaskPtr;
     const Properties::Settings *m_settings;
     bool m_ownsSettingsConfig;
