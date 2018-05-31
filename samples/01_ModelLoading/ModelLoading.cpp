@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -58,6 +58,7 @@ class ModelLoadingApp : public App::AppBase {
     Scene::View  *m_view;
     f32 m_angle;
     Common::Ids m_ids;
+    glm::mat4 m_model;
     TransformMatrixBlock m_transformMatrix;
     Node::NodePtr m_modelNode;
 
@@ -135,13 +136,11 @@ protected:
                 m_transformMatrix.m_model = glm::mat4(1.0f);
                 m_transformMatrix.m_projection = glm::perspective(glm::radians(60.0f), aspect, zNear, zFar);
                 m_transformMatrix.m_view = glm::lookAt(eye, c, up);
-                m_transformMatrix.update();
                 rbSrv->setMatrix(MatrixType::View, m_transformMatrix.m_view);
                 rbSrv->setMatrix(MatrixType::Projection, m_transformMatrix.m_projection);
-                //rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
 
                 renderNodes(model, rbSrv);
-             }
+            }
             m_stage = AppBase::createStage( "ModelLoading" );
             const String name(model->getRootNode()->getName());
             m_modelNode = m_stage->addNode(name, nullptr, "default" );
@@ -179,11 +178,12 @@ protected:
         // Rotate the model
         glm::mat4 rot( 1.0 );
         m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
-        m_transformMatrix.update();
+
         m_angle += 0.01f;
         RenderBackendService *rbSrv( getRenderBackendService() );
 
-        rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
+        rbSrv->setMatrix( MatrixType::Model, m_transformMatrix.m_model);
+        
         AppBase::onUpdate();
     }
 };

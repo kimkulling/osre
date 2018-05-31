@@ -150,8 +150,7 @@ public:
         geo->m_material->m_textures[ 0 ] = tex;
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
-        m_transformMatrix.update();
-        rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
+        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
 
         return true;
     }
@@ -164,8 +163,7 @@ public:
 
     bool onRender( RenderBackendService *rbSrv ) override {
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
-        m_transformMatrix.update();
-        rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
+        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
 
         return true;
     }

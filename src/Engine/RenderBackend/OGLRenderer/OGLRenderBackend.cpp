@@ -84,26 +84,17 @@ OGLRenderBackend::~OGLRenderBackend( ) {
 
 void OGLRenderBackend::setMatrix( MatrixType type, const glm::mat4 &mat ) {
     switch (type) {
-    case MatrixType::Model:
-        m_mvp.m_model = mat;
-        break;
-    case MatrixType::View:
-        m_mvp.m_view = mat;
-        break;
-    case MatrixType::Projection:
-        m_mvp.m_projection = mat;
-        break;
+        case MatrixType::Model:
+            m_mvp.m_model = mat;
+            break;
+        case MatrixType::View:
+            m_mvp.m_view = mat;
+            break;
+        case MatrixType::Projection:
+            m_mvp.m_projection = mat;
+            break;
     }
     m_mvp.update();
-    OGLParameter *mvp = getParameter( "MVP" );
-    if (nullptr == mvp) {
-        UniformDataBlob *blob = UniformDataBlob::create( ParameterType::PT_Mat4, 1 );
-        ::memcpy( blob->m_data, m_mvp.getMVP(), sizeof( glm::mat4 ) );
-        mvp = createParameter( "MVP", ParameterType::PT_Mat4, blob, 1 );
-    } else {
-        memcpy( mvp->m_data->m_data, m_mvp.getMVP(), sizeof( glm::mat4 ) );
-    }
-    ::memcpy( mvp->m_data->m_data, glm::value_ptr( m_mvp.m_mvp ), sizeof( glm::mat4 ) );
 }
 
 const glm::mat4 &OGLRenderBackend::getMatrix( MatrixType type ) const {
@@ -120,6 +111,15 @@ const glm::mat4 &OGLRenderBackend::getMatrix( MatrixType type ) const {
 
 void OGLRenderBackend::applyMatrix() {
     OGLParameter *mvp = getParameter("MVP");
+    if (nullptr == mvp) {
+        UniformDataBlob *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
+        ::memcpy(blob->m_data, m_mvp.getMVP(), sizeof(glm::mat4));
+        mvp = createParameter("MVP", ParameterType::PT_Mat4, blob, 1);
+    }
+    else {
+        memcpy(mvp->m_data->m_data, m_mvp.getMVP(), sizeof(glm::mat4));
+    }
+    ::memcpy(mvp->m_data->m_data, glm::value_ptr(m_mvp.m_mvp), sizeof(glm::mat4));
     if (nullptr != mvp) {
         setParameter(mvp);
     }

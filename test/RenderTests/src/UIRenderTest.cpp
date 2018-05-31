@@ -38,18 +38,18 @@ namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
-static const String Tag = "CanvasRenderTest";
+static const String Tag = "UiRenderTest";
 
-class CanvasRenderTest : public AbstractRenderTest {
+class UiRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
 
 public:
-    CanvasRenderTest()
-        : AbstractRenderTest( "rendertest/CanvasRenderTest" ) {
+    UiRenderTest()
+        : AbstractRenderTest( "rendertest/UiRenderTest" ) {
         // empty
     }
 
-    virtual ~CanvasRenderTest() {
+    virtual ~UiRenderTest() {
         // empty
     }
 
@@ -65,7 +65,7 @@ public:
     }
 };
 
-ATTACH_RENDERTEST( CanvasRenderTest )
+ATTACH_RENDERTEST( UiRenderTest )
 
 }
 }

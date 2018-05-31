@@ -24,6 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Container/TArray.h>
 #include <osre/RenderBackend/ClearState.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace OSRE {
     
@@ -95,13 +97,15 @@ public:
     ///
     void commitParameters();
 
+    void setMatrixes(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj);
+
 protected:
     /// The draw primitive callback.
-    virtual bool onDrawPrimitivesCmd( DrawPrimitivesCmdData *pData );
+    virtual bool onDrawPrimitivesCmd( DrawPrimitivesCmdData *data );
     /// The draw primitive instances callback.
     virtual bool onDrawPrimitivesInstancesCmd( DrawInstancePrimitivesCmdData *data );
     /// The set render target callback.
-    virtual bool onSetRenderTargetCmd( SetRenderTargetCmdData *pData );
+    virtual bool onSetRenderTargetCmd( SetRenderTargetCmdData *data );
     /// The set material callback.
     virtual bool onSetMaterialStageCmd( SetMaterialStageCmdData *data );
 
@@ -114,6 +118,9 @@ private:
     ::CPPCore::TArray<PrimitiveGroup*> m_primitives;
     ::CPPCore::TArray<Material*> m_materials;
     ::CPPCore::TArray<OGLParameter*> m_paramArray;
+    glm::mat4 m_model;
+    glm::mat4 m_view;
+    glm::mat4 m_proj;
     Pipeline *m_pipeline;
 };
 

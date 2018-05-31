@@ -87,6 +87,14 @@ static bool setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTextur
     return true;
 }
 
+static void setConstantBuffers(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj, 
+        OGLRenderBackend *rb, OGLRenderEventHandler *eh) {
+    OSRE_ASSERT(nullptr != eh);
+    OSRE_ASSERT(nullptr != rb);
+
+    eh->getRenderCmdBuffer()->setMatrixes(model, view, proj);
+}
+
 static SetMaterialStageCmdData *setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {
 	OSRE_ASSERT( nullptr != eh );
 	OSRE_ASSERT( nullptr != material );
@@ -539,6 +547,8 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
     }
     
     Frame *frame = frameToCommitData->m_frame;
+    setConstantBuffers( frame->m_model, frame->m_view, frame->m_proj, m_oglBackend, this );
+
     for ( ui32 geoPackageIdx = 0; geoPackageIdx<frame->m_numGeoPackages; geoPackageIdx++ ) {
         GeometryPackage *currentGeoPackage( frame->m_geoPackages[ geoPackageIdx ] );
         if ( nullptr == currentGeoPackage ) {

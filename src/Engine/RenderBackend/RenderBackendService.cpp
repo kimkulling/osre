@@ -181,7 +181,10 @@ void RenderBackendService::commitNextFrame() {
     if ( !m_renderTaskPtr.isValid() ) {
         return;
     }
-        
+    
+    m_nextFrame.m_model = m_matrixBuffer.m_model;
+    m_nextFrame.m_view = m_matrixBuffer.m_view;
+    m_nextFrame.m_proj = m_matrixBuffer.m_proj;
     if ( !m_newGeo.isEmpty() ) {
         m_nextFrame.m_numGeoPackages = m_newGeo.size();
         m_nextFrame.m_geoPackages = new GeometryPackage*[ m_newGeo.size() ];

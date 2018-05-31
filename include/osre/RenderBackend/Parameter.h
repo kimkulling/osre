@@ -23,8 +23,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+
 #include <cppcore/Container/THashMap.h>
 #include <cppcore/Container/TArray.h>
+
+#include <glm/glm.hpp>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -163,6 +166,9 @@ struct Frame {
     ui32              m_numGeoUpdates;
     Geometry        **m_geoUpdates;
     GeoInstanceData   *m_geoInstanceData;
+    glm::mat4         m_model;
+    glm::mat4         m_view;
+    glm::mat4         m_proj;
 
     Frame() 
     : m_numVars( 0 )
@@ -171,7 +177,10 @@ struct Frame {
     , m_geoPackages( nullptr )
     , m_numGeoUpdates( 0 )
     , m_geoUpdates( nullptr )
-    , m_geoInstanceData( nullptr ) {
+    , m_geoInstanceData( nullptr )
+    , m_model( 1.0f )
+    , m_view( 1.0f )
+    , m_proj( 1.0f ) {
         // empty
     }
     
@@ -179,7 +188,8 @@ struct Frame {
         // empty
     }
 
-    Frame( const Frame  & ) = delete;
+    Frame( const Frame & ) = delete;
+    Frame( Frame &&) = delete;
     Frame& operator = ( const Frame & ) = delete;
 };
 

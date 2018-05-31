@@ -79,6 +79,8 @@ public:
 
     void setParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray );
 
+    RenderCmdBuffer *getRenderCmdBuffer() const { return m_renderCmdBuffer; }
+
 protected:
 	///	@brief	Callback for attaching the event handler.
     virtual bool onAttached( const Common::EventData *eventData ) override;

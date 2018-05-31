@@ -118,6 +118,7 @@ void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
             osre_debug(Tag, "Ponter to pipeline pass is nullptr.");
             continue;
         }
+
         RenderStates states;
         states.m_polygonState = pass->getPolygonState();
         states.m_cullState = pass->getCullState();
@@ -129,7 +130,6 @@ void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
             // only valid pointers are allowed
             OGLRenderCmd *renderCmd = m_cmdbuffer[ i ];
             OSRE_ASSERT( nullptr != renderCmd );
-
             if ( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesCmd ) {
                 onDrawPrimitivesCmd( ( DrawPrimitivesCmdData* ) renderCmd->m_data );
             } else if ( renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesInstancesCmd ) {
@@ -187,9 +187,20 @@ void RenderCmdBuffer::setParameter( const ::CPPCore::TArray<OGLParameter*> &para
 }
 
 void RenderCmdBuffer::commitParameters() {
+    m_renderbackend->setMatrix(MatrixType::Model, m_model);
+    m_renderbackend->setMatrix(MatrixType::View, m_view);
+    m_renderbackend->setMatrix(MatrixType::Projection, m_proj);
+    m_renderbackend->applyMatrix();
+
     for ( ui32 i = 0; i < m_paramArray.size(); i++ ) {
         m_renderbackend->setParameter( m_paramArray[ i ] );
     }
+}
+
+void RenderCmdBuffer::setMatrixes(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj) {
+    m_model = model;
+    m_view = view;
+    m_proj = proj;
 }
 
 bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *data ) {

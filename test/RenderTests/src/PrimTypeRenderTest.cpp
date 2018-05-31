@@ -117,8 +117,7 @@ public:
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
-        m_transformMatrix.update();
-        rb->setMatrix( "MVP", m_transformMatrix.m_mvp );
+        rb->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
 
         return true;
     }
