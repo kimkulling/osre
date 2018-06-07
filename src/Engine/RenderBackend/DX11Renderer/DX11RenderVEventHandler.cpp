@@ -13,6 +13,8 @@
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
+#include <d3d11.h>
+
 namespace OSRE {
 namespace RenderBackend {
 
@@ -32,7 +34,7 @@ DX11RenderEventHandler::DX11RenderEventHandler()
 }
 
 DX11RenderEventHandler::~DX11RenderEventHandler() {
-
+    SafeRelease( m_matrixBuffer );
 }
 
 bool DX11RenderEventHandler::onEvent(const Event &ev, const EventData *data) {

@@ -54,6 +54,15 @@ struct DX11VertexLayout {
     D3D11_INPUT_ELEMENT_DESC *m_desc;
 };
 
+template<class T>
+inline
+void SafeRelease(T *iface) {
+    if (nullptr != iface) {
+        iface->Release();
+        iface = nullptr;
+    }
+}
+
 class DX11Renderer {
 public:
     DX11Renderer();

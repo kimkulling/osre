@@ -18,15 +18,6 @@ namespace RenderBackend {
 
 using namespace ::OSRE::Common;
 
-template<class T>
-inline
-void SafeRelease(T *iface) {
-    if (nullptr != iface) {
-        iface->Release();
-        iface = nullptr;
-    }
-}
-
 static const String Tag = "DX11Renderer";
 
 DX11Renderer::DX11Renderer() 
