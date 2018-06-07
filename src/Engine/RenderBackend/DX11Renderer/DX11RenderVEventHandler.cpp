@@ -26,7 +26,8 @@ DX11RenderEventHandler::DX11RenderEventHandler()
 : AbstractEventHandler()
 , m_isRunning( true )
 , m_dx11Renderer( nullptr )
-, m_renderCmds() {
+, m_renderCmds()
+, m_matrixBuffer( nullptr ) {
     // empty
 }
 
@@ -98,6 +99,15 @@ bool DX11RenderEventHandler::onCreateRenderer(const Common::EventData *eventData
     if (!result) {
         osre_error( Tag, "Error occurred while creating DX11Renderer.")
     }
+    
+    // Create Matrix buffer
+    struct MatrixBuffer {
+        glm::mat4 model;
+        glm::mat4 view;
+        glm::mat4 projection;
+    };
+    BufferData *data = BufferData::alloc(BufferType::ConstantBuffer, sizeof(MatrixBuffer), BufferAccessType::ReadWrite);
+    m_matrixBuffer = m_dx11Renderer->createBuffer(BufferType::ConstantBuffer, data, BufferAccessType::ReadWrite);
     
     return result;
 }

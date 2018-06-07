@@ -44,6 +44,7 @@ private:
     bool m_isRunning;
     DX11Renderer *m_dx11Renderer;
     CPPCore::TArray<RenderCmd*> m_renderCmds;
+    ID3D11Buffer *m_matrixBuffer;
 };
 
 }

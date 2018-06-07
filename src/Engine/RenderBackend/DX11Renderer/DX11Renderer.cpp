@@ -623,17 +623,17 @@ void DX11Renderer::setMatrix(MatrixType type, const glm::mat4 &mat) {
 const glm::mat4 &DX11Renderer::getMatrix(MatrixType type) const {
     glm::mat4 mat;
     switch (type) {
-    case MatrixType::Model:
-        mat = m_worldMatrix;
-        break;
-    case MatrixType::View:
-        mat = m_orthoMatrix;
-        break;
-    case MatrixType::Projection:
-        mat = m_projectionMatrix;
-        break;
-    default:
-        break;
+        case MatrixType::Model:
+            mat = m_worldMatrix;
+            break;
+        case MatrixType::View:
+            mat = m_orthoMatrix;
+            break;
+        case MatrixType::Projection:
+            mat = m_projectionMatrix;
+            break;
+        default:
+            break;
     }
     return mat;
 }
