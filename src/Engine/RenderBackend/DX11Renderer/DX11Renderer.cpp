@@ -629,8 +629,12 @@ const glm::mat4 &DX11Renderer::getMatrix(MatrixType type) const {
     return mat;
 }
 
-void DX11Renderer::setModelViewProjectionParameters() {
+void DX11Renderer::setConstantBuffer(ui32 bufferNumber, ID3D11Buffer *constantBuffer) {
+    if (nullptr == constantBuffer) {
+        return;
+    }
 
+    m_deviceContext->CSSetConstantBuffers(bufferNumber, 1, &constantBuffer);
 }
 
 void DX11Renderer::beginScene(Color4 &clearColor) {
