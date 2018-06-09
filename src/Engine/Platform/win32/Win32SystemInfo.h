@@ -28,11 +28,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
         
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  This class implements the System Information API for Win32-based systems.
+//-------------------------------------------------------------------------------------------------
 class Win32SystemInfo : public AbstractSystemInfo {
 public:
     Win32SystemInfo();
     virtual ~Win32SystemInfo();
     void getDesktopResolution( Resolution &resolution ) override;
+    bool getDiskInfo(const c8 *drive, ui64 &freeSpaceInBytes) override;
 };
 
 inline
@@ -52,6 +58,20 @@ void Win32SystemInfo::getDesktopResolution( Resolution &resolution ) {
         resolution.m_width = actualDesktop.right - actualDesktop.left;
         resolution.m_height = actualDesktop.bottom - actualDesktop.top;
     }
+}
+
+inline
+bool Win32SystemInfo::getDiskInfo(const c8 *drive, ui64 &freeSpaceInBytes) {
+    if (nullptr == drive) {
+        freeSpaceInBytes = 0;
+        return false;
+    }
+
+    PULARGE_INTEGER  freeByteAvailable, totalNumberOfBytes, totalNumberOfFreeBytes;
+    BOOL result = ::GetDiskFreeSpaceEx(drive, freeByteAvailable, totalNumberOfBytes, totalNumberOfFreeBytes);
+    ::memcpy(&freeSpaceInBytes, &freeByteAvailable->QuadPart, sizeof(PULARGE_INTEGER));
+
+    return TRUE == result;
 }
 
 } // Namespace Platform

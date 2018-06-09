@@ -41,6 +41,12 @@ public:
     /// @brief  Will return the current desktop resolution.
     /// @param  resolution  [out] The resolution info.
     virtual void getDesktopResolution( Resolution &resolution ) = 0;
+
+    /// @brief  Will return disk information.
+    /// @param  drive      [in] The drive descriptor.
+    /// @param  freeSpace  [out] The free space.
+    /// @return true, if this feature is supported.
+    virtual bool getDiskInfo( const c8 *drive, ui64 &freeSpaceInBytes) = 0;
 };
 
 inline

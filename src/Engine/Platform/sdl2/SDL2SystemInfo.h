@@ -34,6 +34,7 @@ public:
     SDL2SystemInfo();
     virtual ~SDL2SystemInfo();
     void getDesktopResolution( Resolution &resolution ) override;
+    bool getDiskInfo(const c8 *drive, ui64 &freeSpaceInBytes) override;
 };
 
 inline
@@ -54,6 +55,13 @@ void SDL2SystemInfo::getDesktopResolution( Resolution &resolution ) {
     }
     resolution.m_width = dm.w;
     resolution.m_height = dm.h;
+}
+
+inline
+bool SDL2SystemInfo::getDiskInfo(const c8 *drive, ui64 &freeSpaceInBytes) {
+    // todo
+    freeSpaceInBytes = 0;
+    return false;
 }
 
 } // Namespace Platform
