@@ -180,5 +180,9 @@ int __stdcall ImportAsset(const char *filename, int flags) {
         return 1;
     }
 
-    s_EditorApplication->importAsset(filename, flags);
+    return s_EditorApplication->importAsset(filename, flags);
+}
+
+int __stdcall EnqueueEvent() {
+    return 0;
 }
