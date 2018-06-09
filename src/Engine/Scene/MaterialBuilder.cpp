@@ -27,6 +27,9 @@ namespace Scene {
         
 using namespace ::OSRE::RenderBackend;
 
+static const String GLSLVersionString_330 =
+    "#version 330 core\n";
+
 static const String GLSLVersionString_400 = 
     "#version 400 core\n";
 
@@ -37,7 +40,6 @@ static const String GLSLRenderVertexLayout =
 	"layout(location = 2) in vec3 color0;     // per-vertex colour\n"
 	"layout(location = 3) in vec2 texcoord0;  // per-vertex colour\n"
 	"\n";
-
 
 static const String CombinedMVPUniformSrc =
     "// uniform\n"
@@ -167,8 +169,18 @@ const String FsSrcUI =
     "    vFragColor = vSmoothColor;\n"
     "}\n";
 
-static const String VSLightRenderVertexSrc = "";
-static const String FSLightRenderVertexSrc = "";
+static const String VSLightRenderVertexSrc = 
+    "";
+
+static const String FSLightRenderVertexSrc =
+    "";
+
+static const String MaterialParameterStruct = 
+    "struct MaterialParameter {\n"
+    "    vec3 ka;\n"
+    "    vec3 kd;\n"
+    "    vec3 ks;\n"
+    "}\n";
 
 MaterialBuilder::MaterialBuilder() {
     // empty
