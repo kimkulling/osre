@@ -16,6 +16,10 @@ namespace OSREEditor
         public MainEditorWindow()
         {
             InitializeComponent();
+            this.MouseMove += Window_MouseMove;
+            this.MouseWheel += Window_MouseWheel;
+            this.MouseDown += Window_MouseClick;
+            this.OnMouseUp += Window_MouseClick;
         }
 
         private void quitToolStripMenuItem_Quit_Click(object sender, EventArgs e)
@@ -72,6 +76,20 @@ namespace OSREEditor
                 var filename = openFileDialog.FileName;
                 OSREWrapper.ImportAsset(filename, 0);
             }
+        }
+
+        private void Window_MouseMove(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void Window_MouseWheel(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void Window_MouseClick(object sender, MouseEventArgs e)
+        {
 
         }
     }

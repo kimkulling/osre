@@ -75,7 +75,7 @@ public:
     DX11Shader *createShader(Shader *shader);
     void setMatrix(MatrixType type, const glm::mat4 &mat);
     const glm::mat4 &getMatrix(MatrixType type) const;
-    void setModelViewProjectionParameters();
+    void setConstantBuffer(ui32 bufferNumber, ID3D11Buffer *constantBuffer);
     void beginScene(Color4 &clearColor);
     void render(RenderCmd *cmd);
     void endScene();
