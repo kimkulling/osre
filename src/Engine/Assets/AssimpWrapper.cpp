@@ -262,7 +262,12 @@ static void setColor4( const aiColor4D &aiCol, Color4 &col ) {
 static void setTexture( ui32 texIndex, const aiString &texPath, CPPCore::TArray<Texture*> &textures ) {
     Texture *tex = new Texture;
     textures.add( tex );
-    String texname( texPath.C_Str() );
+    String texname;
+    texname += "file://";
+    String temp( texPath.C_Str() ), temp1;
+    IO::Uri::normalizePath( temp, '\\', temp1 );
+    texname += temp1;
+
     tex->m_loc = IO::Uri( texname );
     String::size_type pos = texname.rfind( "/" );
     if ( pos != String::npos ) {

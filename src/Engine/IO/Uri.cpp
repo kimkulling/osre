@@ -66,10 +66,13 @@ Uri::Uri( const String &uri )
 , m_Path( "" )
 , m_AbsPath( "" )
 , m_Resource( "" ) {
-    if (isWindowsRootFolder(uri)) {
-        m_URI = converRootFolder2Uri(uri);
+    String normailizedStr;
+    if (Uri::normalizePath( uri, '\\', normailizedStr )) {
+        if (isWindowsRootFolder( normailizedStr )) {
+            m_URI = converRootFolder2Uri( normailizedStr );
+        }
+        static_cast<void>(parse());
     }
-	static_cast<void>( parse() );
 }
 
 Uri::Uri( const Uri &rhs ) 
@@ -162,6 +165,7 @@ bool Uri::parse() {
 		clear();
 		return false;
 	}
+
 
 	// extract the schema type
 	m_Scheme = m_URI.substr( 0, pos0 );
