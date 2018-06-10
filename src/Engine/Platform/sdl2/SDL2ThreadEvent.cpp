@@ -28,7 +28,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-//-------------------------------------------------------------------------------------------------
 SDL2ThreadEvent::SDL2ThreadEvent()
 : m_bool( SDL_FALSE )
 , m_lock( nullptr )
@@ -37,7 +36,6 @@ SDL2ThreadEvent::SDL2ThreadEvent()
     m_event = SDL_CreateCond();
 }
 
-//-------------------------------------------------------------------------------------------------
 SDL2ThreadEvent::~SDL2ThreadEvent( ) {
     SDL_DestroyCond( m_event );
     m_event = nullptr;
@@ -54,7 +52,6 @@ void SDL2ThreadEvent::signal( ) {
     SDL_UnlockMutex( m_lock );
 }
 
-//-------------------------------------------------------------------------------------------------
 void SDL2ThreadEvent::waitForOne( ) {
     m_bool = SDL_FALSE;
     SDL_LockMutex( m_lock );
@@ -64,7 +61,6 @@ void SDL2ThreadEvent::waitForOne( ) {
     SDL_UnlockMutex( m_lock );
 }
 
-//-------------------------------------------------------------------------------------------------
 void SDL2ThreadEvent::waitForAll() {
     m_bool = SDL_FALSE;
     SDL_LockMutex( m_lock );
@@ -75,12 +71,16 @@ void SDL2ThreadEvent::waitForAll() {
 }
 
 
-//-------------------------------------------------------------------------------------------------
 void SDL2ThreadEvent::waitForTimeout( ui32 ms ) {
-    // todo!
-}
+    m_bool = SDL_FALSE;
+    SDL_LockMutex( m_lock );
+    while (!m_bool) {
+        SDL_CondWaitTimeout( m_event, m_lock, ms );
+    }
+    SDL_UnlockMutex( m_lock );
 
-//-------------------------------------------------------------------------------------------------
+    
+}
 
 } // Namespace Threading
 } // Namespace OSRE
