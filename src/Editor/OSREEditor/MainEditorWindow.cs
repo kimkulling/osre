@@ -19,7 +19,7 @@ namespace OSREEditor
             this.MouseMove += Window_MouseMove;
             this.MouseWheel += Window_MouseWheel;
             this.MouseDown += Window_MouseClick;
-            this.OnMouseUp += Window_MouseClick;
+            this.MouseUp += Window_MouseClick;
         }
 
         private void quitToolStripMenuItem_Quit_Click(object sender, EventArgs e)
@@ -83,14 +83,24 @@ namespace OSREEditor
 
         }
 
+        private bool IsDown(int numClicks)
+        {
+            bool down = true;
+            if (numClicks % 2 != 0)
+            {
+                down = false;
+            }
+            return down;
+        }
+
         private void Window_MouseWheel(object sender, MouseEventArgs e)
         {
-
+            bool isDown = IsDown(e.Clicks);
         }
 
         private void Window_MouseClick(object sender, MouseEventArgs e)
         {
-
+            bool isDown = IsDown(e.Clicks);
         }
     }
 }

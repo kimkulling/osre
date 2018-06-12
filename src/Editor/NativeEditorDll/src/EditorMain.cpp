@@ -4,12 +4,14 @@
 #include <osre/Common/Ids.h>
 #include <osre/App/AppBase.h>
 #include <osre/Properties/Settings.h>
+#include <osre/Platform/AbstractSurface.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
 #include <osre/Scene/World.h>
 #include <osre/IO/IOService.h>
 #include <osre/Assets/AssimpWrapper.h>
+#include <osre/Assets/Model.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
@@ -31,13 +33,16 @@ using namespace ::OSRE::Scene;
 class EditorApplication : public App::AppBase {
     World *m_world;
     Stage *m_stage;
+    Node::NodePtr m_modelNode;
     TransformMatrixBlock m_transformMatrix;
 
 public:
     EditorApplication(int argc, char *argv[])
     : AppBase(argc, argv)
     , m_world( nullptr )
-    , m_stage( nullptr ) {
+    , m_stage( nullptr )
+    , m_modelNode()
+    , m_transformMatrix() {
         // empty
     }
 
@@ -60,8 +65,65 @@ public:
 #endif
         IO::Uri modelLoc(normalizedFilename);
         if (assimpWrapper.importAsset(modelLoc, flags)) {
-            // todo
+            Assets::Model *model = assimpWrapper.getModel();
+            Collision::TAABB<f32> aabb = model->getAABB();
+            const f32 diam = aabb.getDiameter();
+            const Vec3f center = aabb.getCenter();
+
+            CPPCore::TArray<Geometry*> geoArray = model->getGeoArray();
+            m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
+            m_transformMatrix.update();
+            RenderBackendService *rbSrv(getRenderBackendService());
+            if (nullptr != rbSrv) {
+                Platform::AbstractSurface *rootSurface(getRootSurface());
+                if (nullptr == rootSurface) {
+                    return false;
+                }
+                const i32 w = rootSurface->getProperties()->m_width;
+                const i32 h = rootSurface->getProperties()->m_height;
+                const f32 aspect = static_cast<f32>(w) / static_cast<f32>(h);
+                const f32 zNear = 0.0001f;
+                const f32 zFar = 1000.f;
+
+                glm::vec3 eye(diam, 0, 0), up(0, 0, 1);
+                glm::vec3 c(center.getX(), center.getY(), center.getZ());
+
+                m_transformMatrix.m_model = glm::mat4(1.0f);
+                m_transformMatrix.m_projection = glm::perspective(glm::radians(60.0f), aspect, zNear, zFar);
+                m_transformMatrix.m_view = glm::lookAt(eye, c, up);
+                rbSrv->setMatrix(MatrixType::View, m_transformMatrix.m_view);
+                rbSrv->setMatrix(MatrixType::Projection, m_transformMatrix.m_projection);
+
+                renderNodes(model, rbSrv);
+            }
+            const String name(model->getRootNode()->getName());
+            m_modelNode = m_stage->addNode(name, nullptr, "default");
         }
+    }
+
+    void renderNode(Node *currentNode, RenderBackendService *rbSrv) {
+        const ui32 numGeo = currentNode->getNumGeometries();
+        for (ui32 i = 0; i < numGeo; ++i) {
+            rbSrv->attachGeo(currentNode->getGeometryAt(i), 0);
+        }
+
+        for (ui32 i = 0; i < currentNode->getNumChildren(); ++i) {
+            Node *current = currentNode->getChildAt(i);
+            renderNode(current, rbSrv);
+        }
+    }
+
+    void renderNodes(Assets::Model *model, RenderBackendService *rbSrv) {
+        if (nullptr == model) {
+            return;
+        }
+
+        Node *root = model->getRootNode();
+        if (nullptr == root) {
+            return;
+        }
+
+        renderNode(root, rbSrv);
     }
 
 protected:
@@ -82,17 +144,16 @@ protected:
         AppBase::activateStage( m_stage->getName() );
 
         Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
-        const Scene::Node::AABB &aabb = geoNode->getAABB();
+        //const Scene::Node::AABB &aabb = geoNode->getAABB();
 
-        Scene::GeometryBuilder myBuilder;
+        /*Scene::GeometryBuilder myBuilder;
         RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
         if ( nullptr != geo ) {
             m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
             m_transformMatrix.update();
             getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
             geoNode->addGeometry( geo );
-        }
-
+        }*/
 
         return true;
     }

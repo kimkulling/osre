@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Platform/AbstractSystemInfo.h>
-
+#include <cppcore/IO/FileSystem.h>
 #include <SDL.h>
 
 namespace OSRE {
@@ -59,9 +59,16 @@ void SDL2SystemInfo::getDesktopResolution( Resolution &resolution ) {
 
 inline
 bool SDL2SystemInfo::getDiskInfo(const c8 *drive, ui64 &freeSpaceInBytes) {
-    // todo
     freeSpaceInBytes = 0;
-    return false;
+    CPPCore::FileSystem fs(drive);
+    CPPCore::FSSpace *space = fs.getFreeDiskSpace();
+    if (nullptr == space) {
+        return false;
+    }
+
+    freeSpaceInBytes = space->free;
+
+    return true;
 }
 
 } // Namespace Platform
