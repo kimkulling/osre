@@ -150,7 +150,7 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
             vertices[ i ].position.y = vec3.y;
             vertices[ i ].position.z = vec3.z;
 
-            AssimpWrapper::updateAxisAlignedBBox( vec3, aabb );
+            aabb.merge( vec3.x, vec3.y, vec3.z );
         }
 
         if ( mesh->HasNormals() ) {
@@ -342,10 +342,6 @@ void AssimpWrapper::handleMaterial( aiMaterial *material ) {
     if ( AI_SUCCESS == aiGetMaterialFloatArray( material, AI_MATKEY_SHININESS_STRENGTH, &strength, &max ) ) {
         // todo
     }
-}
-
-void AssimpWrapper::updateAxisAlignedBBox( const aiVector3D &pos, Collision::TAABB<f32> &aabb ) {
-    aabb.merge(pos.x, pos.y, pos.z);
 }
 
 } // Namespace Assets

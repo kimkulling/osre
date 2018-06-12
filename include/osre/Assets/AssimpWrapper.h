@@ -72,7 +72,6 @@ protected:
     void handleMesh( aiMesh *mesh );
     void handleNode( aiNode *node, Scene::Node *parent );
     void handleMaterial( aiMaterial *material );
-    static void updateAxisAlignedBBox( const aiVector3D &pos, Collision::TAABB<f32> &aabb );
 
 private:
     typedef CPPCore::TArray<RenderBackend::Geometry*> GeoArray;

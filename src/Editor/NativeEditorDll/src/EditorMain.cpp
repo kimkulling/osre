@@ -98,6 +98,9 @@ public:
             }
             const String name(model->getRootNode()->getName());
             m_modelNode = m_stage->addNode(name, nullptr, "default");
+
+            update();
+            requestNextFrame();
         }
     }
 
@@ -141,19 +144,8 @@ protected:
         m_world = new World("HelloWorld", RenderMode::Render3D);
         m_stage = AppBase::createStage( "HelloWorld" );
         m_world->addStage(m_stage);
+
         AppBase::activateStage( m_stage->getName() );
-
-        Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
-        //const Scene::Node::AABB &aabb = geoNode->getAABB();
-
-        /*Scene::GeometryBuilder myBuilder;
-        RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-        if ( nullptr != geo ) {
-            m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
-            m_transformMatrix.update();
-            getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
-            geoNode->addGeometry( geo );
-        }*/
 
         return true;
     }

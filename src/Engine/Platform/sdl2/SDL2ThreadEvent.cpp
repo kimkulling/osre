@@ -44,7 +44,6 @@ SDL2ThreadEvent::~SDL2ThreadEvent( ) {
     m_lock = nullptr;
 }
 
-//-------------------------------------------------------------------------------------------------
 void SDL2ThreadEvent::signal( ) {
     SDL_LockMutex( m_lock );
     m_bool = SDL_TRUE;
@@ -78,8 +77,6 @@ void SDL2ThreadEvent::waitForTimeout( ui32 ms ) {
         SDL_CondWaitTimeout( m_event, m_lock, ms );
     }
     SDL_UnlockMutex( m_lock );
-
-    
 }
 
 } // Namespace Threading
