@@ -56,7 +56,7 @@ struct OSRE_EXPORT Resolution {
 ///
 ///	@brief  This struct stores all surface related information.
 //-------------------------------------------------------------------------------------------------
-struct SurfaceProperties {
+struct WindoweProperties {
     ui32   m_x;                   ///< Upper left x coordinate.
     ui32   m_y;                   ///< Upper left y coordinate.
     ui32   m_width;               ///< Width of the surface.
@@ -82,20 +82,21 @@ struct SurfaceProperties {
 /// A render surface could be a window on a desktop system for instance or a rectangle on an 
 /// embedded device.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AbstractSurface {
+class OSRE_EXPORT AbstractWindow {
 public:
     enum SurfaceFlagType {
         SF_PropertiesClean = 0,
         SF_WinTitleDirty   = ( 1 << 1 ),
-        SF_WinResize       = ( 1 << 2 )
+        SF_WinResize       = ( 1 << 2 ),
+        SF_ChildWindow     = ( 1 << 3 )
     };
 
     /// @brief  The class constructor.
     /// @param  props       [in] The surface properties.
-    explicit AbstractSurface( SurfaceProperties *props );
+    explicit AbstractWindow( WindoweProperties *props );
 
     /// @brief  The class destructor, virtual.
-    virtual ~AbstractSurface();
+    virtual ~AbstractWindow();
 
     /// @brief  Will create the surface.
     /// @return true will be returned, when creation was successful.
@@ -112,12 +113,12 @@ public:
     /// @brief  Setter to update all properties. updateProperties must be called to 
     ///         apply changed properties.
     /// @param  props       [in] The new properties.
-    void setProperties( SurfaceProperties *props );
+    void setProperties( WindoweProperties *props );
 
     /// @brief  Returns a non-const pointer to the window properties. setFlags must 
     ///         be called manually followed by updateProperties to apply changes.
     /// @return Pointer showing to the surface properties.
-    SurfaceProperties *getProperties();
+    WindoweProperties *getProperties();
     
     /// @brief  Setting of a new flag.
     /// @param  flags       [in] The new flags.
@@ -145,7 +146,7 @@ protected:
 
 private:
     ui32 m_flags;
-    SurfaceProperties *m_pProperties;
+    WindoweProperties *m_pProperties;
     bool m_isCreated;
 };
 

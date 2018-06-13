@@ -63,7 +63,7 @@ bool PlatformPluginFactory::release( PluginType type ) {
     return true;
 }
 
-AbstractPlatformEventQueue *PlatformPluginFactory::createPlatformEventHandler( PluginType type, AbstractSurface *rootSurface ) {
+AbstractPlatformEventQueue *PlatformPluginFactory::createPlatformEventHandler( PluginType type, AbstractWindow *rootSurface ) {
     AbstractPlatformEventQueue *eventHandler( nullptr );
     switch( type ) {
 #ifdef OSRE_WINDOWS
@@ -90,8 +90,8 @@ AbstractPlatformEventQueue *PlatformPluginFactory::createPlatformEventHandler( P
     return eventHandler;
 }
 
-AbstractSurface *PlatformPluginFactory::createSurface( PluginType type, SurfaceProperties *pProps ) {
-    AbstractSurface *surface( nullptr );
+AbstractWindow *PlatformPluginFactory::createSurface( PluginType type, WindoweProperties *pProps ) {
+    AbstractWindow *surface( nullptr );
     switch( type ) {
 #ifdef OSRE_WINDOWS
         case Platform::PluginType::WindowsPlugin:

@@ -28,7 +28,7 @@ namespace OSRE {
 namespace Platform {
 
 // Forward declarations
-class AbstractSurface;
+class AbstractWindow;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -44,7 +44,7 @@ public:
     /// @brief  Creates the context.
     /// @param  surface     [in] The render surface.
     /// @return true if creation was successful.
-    bool create( AbstractSurface *surface );
+    bool create( AbstractWindow *surface );
 
     /// @brief  Destroys the context.
     /// @return true if creation was successful.
@@ -64,11 +64,11 @@ public:
 
     /// @brief  Returns the root render surface.
     /// @return The root render surface.
-    AbstractSurface *getRenderSurface() const;
+    AbstractWindow *getRenderSurface() const;
 
 protected:
     /// @brief The callbacks.
-    virtual bool onCreate( AbstractSurface *pSurface ) = 0;
+    virtual bool onCreate( AbstractWindow *pSurface ) = 0;
     virtual bool onDestroy() = 0;
     virtual bool onUpdate() = 0;
     virtual bool onActivate() = 0;
@@ -79,7 +79,7 @@ protected:
 
 private:
     bool m_isActive;
-    AbstractSurface *m_rootRenderSurface;
+    AbstractWindow *m_rootRenderSurface;
 };
 
 inline
@@ -95,7 +95,7 @@ AbstractRenderContext::~AbstractRenderContext() {
 }
 
 inline
-bool AbstractRenderContext::create( AbstractSurface *surface ) {
+bool AbstractRenderContext::create( AbstractWindow *surface ) {
     m_rootRenderSurface = surface;
     return onCreate( surface );
 }
@@ -122,7 +122,7 @@ bool AbstractRenderContext::update() {
 }
 
 inline
-AbstractSurface *AbstractRenderContext::getRenderSurface() const {
+AbstractWindow *AbstractRenderContext::getRenderSurface() const {
     return m_rootRenderSurface;
 }
 

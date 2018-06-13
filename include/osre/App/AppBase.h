@@ -40,7 +40,7 @@ namespace Scene {
 
 namespace Platform {
     class AbstractTimer;
-    class AbstractSurface;
+    class AbstractWindow;
     class PlatformInterface;
 }
 
@@ -147,7 +147,7 @@ public:
 
     /// @brief  Will return the Root-Surface instance.
     /// @return A pointer showing to the Root-Surface.
-    virtual Platform::AbstractSurface *getRootSurface() const;
+    virtual Platform::AbstractWindow *getRootWindow() const;
 
     void setWindowsTitle( const String &title );
 

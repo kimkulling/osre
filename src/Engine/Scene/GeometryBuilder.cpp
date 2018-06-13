@@ -472,7 +472,7 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     return geo;
 }
 
-void GeometryBuilder::updateTextBox( Geometry *geo, f32 textSize, const String &text, bool resize ) {
+void GeometryBuilder::updateTextBox( Geometry *geo, f32 textSize, const String &text ) {
     if ( nullptr == geo ) {
         osre_debug( Tag, "Pointer to geometry is nullptr." );
         return;
@@ -526,6 +526,7 @@ void GeometryBuilder::updateTextBox( Geometry *geo, f32 textSize, const String &
     }
 
     updateTextVertices(  numTextVerts, tex0, geo->m_vb );
+
     delete[] tex0;
 }
 

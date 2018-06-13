@@ -28,7 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 namespace Platform {
-    class AbstractSurface;
+    class AbstractWindow;
 }
 
 namespace UI {
@@ -42,19 +42,19 @@ class Widget;
 //-------------------------------------------------------------------------------------------------
 class UiItemFactory {
 public:
-    static UiItemFactory *createInstance( Platform::AbstractSurface *surface );
+    static UiItemFactory *createInstance( Platform::AbstractWindow *surface );
     static void destroyInstance();
     static UiItemFactory *getInstance();
     Widget *create( WidgetType type, const String &uiName, Widget *parent );
 
 private:
-    UiItemFactory( Platform::AbstractSurface *surface );
+    UiItemFactory( Platform::AbstractWindow *surface );
     ~UiItemFactory();
 
 private:
     static UiItemFactory *s_instance;
 
-    Platform::AbstractSurface *m_surface;
+    Platform::AbstractWindow *m_surface;
 };
 
 }

@@ -85,7 +85,7 @@ static void getXYPosFromLParam( LPARAM lparam, i32 &x, i32 &y ) {
     y = GET_Y_LPARAM( lparam );
 }
 
-Win32EventQueue::Win32EventQueue( AbstractSurface *rootWindow )
+Win32EventQueue::Win32EventQueue( AbstractWindow *rootWindow )
 : AbstractPlatformEventQueue()
 , m_updateInstance( nullptr )
 , m_eventTriggerer( nullptr )
@@ -303,7 +303,7 @@ bool Win32EventQueue::onQuit() {
     return true;
 }
 
-void Win32EventQueue::setRootSurface( AbstractSurface *pSurface ) {
+void Win32EventQueue::setRootSurface( AbstractWindow *pSurface ) {
     if( !pSurface ) {
         osre_debug( Tag, "Invalid window pointer." );
         return;
@@ -315,7 +315,7 @@ void Win32EventQueue::setRootSurface( AbstractSurface *pSurface ) {
     m_rootWindow = pWin32Surface;
 }
 
-AbstractSurface *Win32EventQueue::getRootSurface( ) const {
+AbstractWindow *Win32EventQueue::getRootSurface( ) const {
     return m_rootWindow;
 }
 

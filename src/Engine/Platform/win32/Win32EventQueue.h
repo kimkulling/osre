@@ -39,7 +39,7 @@ namespace Common {
 
 namespace Platform {
 
-class AbstractSurface;
+class AbstractWindow;
 class OSEventListener;
 
 struct IInputUpdate;
@@ -51,12 +51,12 @@ struct IInputUpdate;
 //-------------------------------------------------------------------------------------------------
 class Win32EventQueue : public AbstractPlatformEventQueue {
 public:
-    Win32EventQueue( AbstractSurface *rootWindow );
+    Win32EventQueue( AbstractWindow *rootWindow );
     virtual ~Win32EventQueue();
     virtual bool update() override;
     static LRESULT CALLBACK winproc( HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam );
-    void setRootSurface( AbstractSurface *window );
-    AbstractSurface *getRootSurface() const;
+    void setRootSurface( AbstractWindow *window );
+    AbstractWindow *getRootSurface() const;
     void enablePolling( bool enabled ) override;
     bool isPolling() const;
     void registerEventListener( const CPPCore::TArray<const Common::Event*> &rEvents, OSEventListener *pListener ) override;
@@ -72,7 +72,7 @@ private:
     static std::map<HWND, Win32EventQueue*> s_WindowsServerMap;
     IInputUpdate *m_updateInstance;
     Common::EventTriggerer *m_eventTriggerer;
-    AbstractSurface *m_rootWindow;
+    AbstractWindow *m_rootWindow;
     bool m_shutdownRequested;
     bool m_isPolling;
 };

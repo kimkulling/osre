@@ -26,8 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
     
-Win32Surface::Win32Surface( SurfaceProperties *pProperties )
-: AbstractSurface( pProperties )
+Win32Surface::Win32Surface( WindoweProperties *properties )
+: AbstractWindow( properties )
 , m_hInstance( nullptr )
 , m_wnd( nullptr )
 , m_dc( nullptr ) {
@@ -60,7 +60,7 @@ HINSTANCE Win32Surface::getModuleHandle() const {
 }
 
 bool Win32Surface::onCreate( ) {
-    SurfaceProperties *prop = getProperties();
+    WindoweProperties *prop = getProperties();
     if( nullptr == prop ) {
         return false;
     }
@@ -162,7 +162,7 @@ bool Win32Surface::onCreate( ) {
 }
 
 bool Win32Surface::onDestroy( ) {
-    SurfaceProperties *prop = getProperties();
+    WindoweProperties *prop = getProperties();
     if( nullptr == prop ) {
         return false;
     }
@@ -199,25 +199,25 @@ bool Win32Surface::onDestroy( ) {
 }
 
 bool Win32Surface::onUpdateProperies() {
-    const ui32 flags( AbstractSurface::getFlags() );
+    const ui32 flags( AbstractWindow::getFlags() );
     if( flags | SF_WinTitleDirty ) {
-        const String &title(AbstractSurface::getProperties()->m_title );
+        const String &title(AbstractWindow::getProperties()->m_title );
         ::SetWindowText( getHWnd(), title.c_str() );   
     }
-    AbstractSurface::setFlags( SF_PropertiesClean );
+    AbstractWindow::setFlags( SF_PropertiesClean );
 
     return true;
 }
 
 void Win32Surface::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
     ::SetWindowPos( m_wnd, HWND_TOP, x, y, w, h, SWP_NOSIZE );
-    SurfaceProperties *props( AbstractSurface::getProperties() );
+    WindoweProperties *props( AbstractWindow::getProperties() );
     if ( nullptr != props ) {
         props->m_x = x;
         props->m_y = y;
         props->m_width = w;
         props->m_height = h;
-        AbstractSurface::setProperties( props );
+        AbstractWindow::setProperties( props );
     }
 }
 

@@ -423,7 +423,7 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
 	OSRE_ASSERT( nullptr != m_oglBackend );
 	
 	CreateRendererEventData *createRendererEvData = ( CreateRendererEventData* ) eventData;
-    AbstractSurface *activeSurface = createRendererEvData->m_activeSurface;
+    AbstractWindow *activeSurface = createRendererEvData->m_activeSurface;
     if( nullptr == activeSurface ) {
         osre_debug( Tag, "No active surface, pointer is nullptr." );
         return false;

@@ -51,7 +51,7 @@ RenderComponent::~RenderComponent() {
     // empty
 }
 
-void RenderComponent::update( Time dt ) {
+void RenderComponent::update( Time ) {
     // empty
 }
 
@@ -90,11 +90,11 @@ TransformComponent::~TransformComponent() {
 	// empty
 }
 
-void TransformComponent::update( Time dt ) {
+void TransformComponent::update( Time ) {
     // empty
 }
 
-void TransformComponent::draw( RenderBackendService *renderBackendSrv ) {
+void TransformComponent::draw( RenderBackendService * ) {
     glm::mat4 world;
     m_localTransform.toMatrix( world );
 }
@@ -124,7 +124,7 @@ CollisionComponent::~CollisionComponent() {
     // empty
 }
 
-void CollisionComponent::update( Time dt ) {
+void CollisionComponent::update( Time ) {
     // empty
 }
 

@@ -35,7 +35,7 @@ namespace OSRE {
 
 // Forward declarations
 namespace Platform {
-    class AbstractSurface;
+    class AbstractWindow;
 }
 
 namespace Properties {
@@ -80,7 +80,7 @@ DECL_EVENT( OnResizeEvent );
 ///	@brief  Will create an event, which shall trigger the generation of a render instance.
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT CreateRendererEventData : public Common::EventData {
-    CreateRendererEventData( Platform::AbstractSurface *pSurface )
+    CreateRendererEventData( Platform::AbstractWindow *pSurface )
     : EventData( OnCreateRendererEvent, nullptr )
     , m_activeSurface( pSurface ) 
     , m_defaultFont( "" )
@@ -88,7 +88,7 @@ struct OSRE_EXPORT CreateRendererEventData : public Common::EventData {
         // empty
     }
 
-    Platform::AbstractSurface *m_activeSurface;
+    Platform::AbstractWindow *m_activeSurface;
     String                     m_defaultFont;
     Pipeline                  *m_pipeline;
 };

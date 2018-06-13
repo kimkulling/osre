@@ -50,9 +50,9 @@ bool AbstractRenderTest::create( RenderBackendService *rbSrv ) {
     
     osre_info( m_renderTestName, "=> Creating test." );
     const String &name( getTestName() );
-    Platform::AbstractSurface *surface = Platform::PlatformInterface::getInstance()->getRootSurface();
-    if (nullptr != surface) {
-        surface->setWindowsTitle( "Performing test " + name );
+    Platform::AbstractWindow *window = Platform::PlatformInterface::getInstance()->getRootWindow();
+    if (nullptr != window) {
+        window->setWindowsTitle( "Performing test " + name );
     }
     
     return onCreate( rbSrv );

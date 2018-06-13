@@ -120,12 +120,12 @@ protected:
             m_transformMatrix.update();
             RenderBackendService *rbSrv( getRenderBackendService() );
             if ( nullptr != rbSrv ) {
-                Platform::AbstractSurface *rootSurface(getRootSurface());
-                if ( nullptr == rootSurface ) {
+                Platform::AbstractWindow *rootWindow(getRootWindow());
+                if ( nullptr == rootWindow ) {
                     return false;
                 }
-                const i32 w = rootSurface->getProperties()->m_width;
-                const i32 h = rootSurface->getProperties()->m_height;
+                const i32 w = rootWindow->getProperties()->m_width;
+                const i32 h = rootWindow->getProperties()->m_height;
                 const f32 aspect = static_cast<f32>(w) / static_cast<f32>(h);
                 const f32 zNear = 0.0001f;
                 const f32 zFar = 1000.f;

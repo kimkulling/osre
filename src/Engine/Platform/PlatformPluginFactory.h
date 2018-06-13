@@ -38,14 +38,14 @@ namespace RenderBackend {
 namespace Platform {
 
 class AbstractPlatformEventQueue;
-class AbstractSurface;
+class AbstractWindow;
 class AbstractRenderContext;
 class AbstractTimer;
 class AbstractThreadFactory;
 class AbstractDynamicLoader;
 class AbstractSystemInfo;
 
-struct SurfaceProperties;
+struct WindoweProperties;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Infrastructure
@@ -60,10 +60,10 @@ struct PlatformPluginFactory {
     static bool release( PluginType type );
 
     /// @brief  Creates a platform-specific event handler instance.
-    static AbstractPlatformEventQueue *createPlatformEventHandler( PluginType type, AbstractSurface *rootSurface );
+    static AbstractPlatformEventQueue *createPlatformEventHandler( PluginType type, AbstractWindow *rootSurface );
 
     /// @brief  Creates a platform-specific surface instance.
-    static AbstractSurface *createSurface( PluginType type, SurfaceProperties *pProps );
+    static AbstractWindow *createSurface( PluginType type, WindoweProperties *pProps );
 
     /// @brief  Creates a platform-specific render context.
     static AbstractRenderContext *createRenderContext( PluginType type );

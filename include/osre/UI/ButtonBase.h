@@ -29,7 +29,7 @@ namespace OSRE {
 
 // Forward declarations
 namespace Platform {
-    class AbstractSurface;
+    class AbstractWindow;
 }
 
 namespace RenderBackend {

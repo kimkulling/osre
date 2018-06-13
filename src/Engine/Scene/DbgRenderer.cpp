@@ -110,7 +110,7 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
                 geo = GeometryBuilder::allocTextBox( 0, 0, 0.1f, text, BufferAccessType::ReadWrite );
                 entry->m_geo = geo;
             } else {
-                GeometryBuilder::updateTextBox( entry->m_geo, 0.1f, text, false );
+                GeometryBuilder::updateTextBox( entry->m_geo, 0.1f, text );
                 geo = entry->m_geo;
             }
             m_rbSrv->attachGeoUpdate( geo );            

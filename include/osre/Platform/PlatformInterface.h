@@ -45,7 +45,7 @@ namespace Properties {
 
 namespace Platform {
 
-class AbstractSurface;
+class AbstractWindow;
 class AbstractTimer;
 class AbstractPlatformEventQueue;
 class AbstractRenderContext;
@@ -53,7 +53,7 @@ class AbstractDynamicLoader;
 class AbstractSystemInfo;
 
 struct IInputUpdate;
-struct SurfaceProperties;
+struct WindoweProperties;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -214,7 +214,7 @@ public:
     static PlatformInterface *getInstance();
     static PluginType getOSPluginType();
     static String getOSPluginName( PluginType type );
-    AbstractSurface *getRootSurface() const;
+    AbstractWindow *getRootWindow() const;
     AbstractPlatformEventQueue *getPlatformEventHandler() const;
     AbstractRenderContext *getRenderContext() const;
     AbstractTimer *getTimer() const;
@@ -226,7 +226,7 @@ protected:
     bool onOpen() override;
     bool onClose() override;
     bool onUpdate() override;
-    virtual bool setupGfx( SurfaceProperties *props, bool polls );
+    virtual bool setupGfx( WindoweProperties *props, bool polls );
 
 private:
     explicit PlatformInterface( const Properties::Settings *configuration );
@@ -236,7 +236,7 @@ private:
     static PlatformInterface *s_instance;
     const Properties::Settings *m_config;
     PluginType m_type;
-    AbstractSurface *m_rootSurface;
+    AbstractWindow *m_rootSurface;
     AbstractPlatformEventQueue *m_oseventHandler;
     AbstractRenderContext *m_renderContext;
     AbstractTimer *m_timer;

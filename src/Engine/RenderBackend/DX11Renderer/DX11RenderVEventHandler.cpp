@@ -85,7 +85,7 @@ bool DX11RenderEventHandler::onCreateRenderer(const Common::EventData *eventData
 
     m_dx11Renderer = new DX11Renderer();
     CreateRendererEventData *createRendererEvData = (CreateRendererEventData*)eventData;
-    AbstractSurface *activeSurface = createRendererEvData->m_activeSurface;
+    AbstractWindow *activeSurface = createRendererEvData->m_activeSurface;
     if (nullptr == activeSurface) {
         osre_debug(Tag, "No active surface, pointer is nullptr.");
         return false;

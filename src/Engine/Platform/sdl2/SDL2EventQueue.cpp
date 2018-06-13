@@ -102,7 +102,7 @@ struct SDL2PeekInputUpdate : public AbstractSDL2InputUpdate {
 
 std::map<SDL_Window*, SDL2EventHandler*> SDL2EventHandler::s_windowsServerMap;
 
-SDL2EventHandler::SDL2EventHandler( AbstractSurface *window )
+SDL2EventHandler::SDL2EventHandler( AbstractWindow *window )
 : AbstractPlatformEventQueue()
 , m_isPolling( false )
 , m_shutdownRequested( false )

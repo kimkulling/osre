@@ -35,7 +35,7 @@ namespace OSRE {
 namespace Platform {
     struct LibHandle;
 
-    class AbstractSurface;
+    class AbstractWindow;
 }
 
 namespace IO {
@@ -55,7 +55,7 @@ class VlkRenderBackend {
 public:
     VlkRenderBackend();
     ~VlkRenderBackend();
-    bool create( Platform::AbstractSurface *rootSurface );
+    bool create( Platform::AbstractWindow *rootSurface );
     VkDevice getDevice() const;
     bool createRenderPass();
     bool createFramebuffers( ui32 width, ui32 height );

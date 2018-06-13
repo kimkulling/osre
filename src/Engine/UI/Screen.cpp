@@ -45,7 +45,7 @@ Screen::~Screen() {
     // empty
 }
 
-void Screen::setSurface( AbstractSurface *surface ) {
+void Screen::setSurface( AbstractWindow *surface ) {
     if ( surface == m_surface ) {
         return;
     }
@@ -55,7 +55,7 @@ void Screen::setSurface( AbstractSurface *surface ) {
         return;
     }
 
-    SurfaceProperties *props( surface->getProperties() );
+    WindoweProperties *props( surface->getProperties() );
     if ( nullptr == props ) {
         return;
     }

@@ -34,7 +34,7 @@ namespace Platform {
 
 struct AbstractSDL2InputUpdate;
 
-class AbstractSurface;
+class AbstractWindow;
 class SDL2Surface;
 
 //-------------------------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ class SDL2EventHandler : public AbstractPlatformEventQueue {
 public:
     using EventArray = CPPCore::TArray<const Common::Event*>;
 
-    SDL2EventHandler( AbstractSurface *window );
+    SDL2EventHandler( AbstractWindow *window );
     virtual ~SDL2EventHandler();
     bool update() override;
     void registerEventListener( const EventArray &events, OSEventListener *listener ) override;

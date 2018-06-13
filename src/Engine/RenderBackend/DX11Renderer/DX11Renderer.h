@@ -28,7 +28,7 @@ struct ID3D10Blob;
 namespace OSRE {
 
 namespace Platform {
-    class AbstractSurface;
+    class AbstractWindow;
 }
 
 namespace RenderBackend {
@@ -67,7 +67,7 @@ class DX11Renderer {
 public:
     DX11Renderer();
     ~DX11Renderer();
-    bool create(Platform::AbstractSurface *surface);
+    bool create(Platform::AbstractWindow *surface);
     bool destroy();
     ID3D11Buffer *createBuffer(BufferType type, BufferData *bd, BufferAccessType usage);
     void releaseBuffer(ID3D11Buffer *buffer);

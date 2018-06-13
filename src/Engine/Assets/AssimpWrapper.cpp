@@ -259,7 +259,7 @@ static void setColor4( const aiColor4D &aiCol, Color4 &col ) {
     col.m_a = aiCol.a;
 }
 
-static void setTexture( ui32 texIndex, const aiString &texPath, CPPCore::TArray<Texture*> &textures ) {
+static void setTexture( const aiString &texPath, CPPCore::TArray<Texture*> &textures ) {
     Texture *tex = new Texture;
     textures.add( tex );
     String texname;
@@ -309,7 +309,7 @@ void AssimpWrapper::handleMaterial( aiMaterial *material ) {
     aiString texPath;	// contains filename of texture
     CPPCore::TArray<Texture*> textures;
     if ( AI_SUCCESS == material->GetTexture( aiTextureType_DIFFUSE, texIndex, &texPath ) ) {
-        setTexture( texIndex, texPath, textures );
+        setTexture( texPath, textures );
     }
     assignTexturesToMat( osreMat, textures );
 

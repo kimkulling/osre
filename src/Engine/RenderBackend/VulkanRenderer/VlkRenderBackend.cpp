@@ -79,7 +79,7 @@ VlkRenderBackend::~VlkRenderBackend() {
     }
 }
 
-bool VlkRenderBackend::create( Platform::AbstractSurface *rootSurface ) {
+bool VlkRenderBackend::create( Platform::AbstractWindow *rootSurface ) {
     if ( m_state == State::Initialized ) {
         return true;
     }

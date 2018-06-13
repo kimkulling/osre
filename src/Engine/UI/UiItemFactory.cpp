@@ -37,7 +37,7 @@ using namespace ::OSRE::Platform;
 
 UiItemFactory *UiItemFactory::s_instance = nullptr;
 
-UiItemFactory *UiItemFactory::createInstance( AbstractSurface *surface ) {
+UiItemFactory *UiItemFactory::createInstance( AbstractWindow *surface ) {
     if ( nullptr == s_instance ) {
         s_instance = new UiItemFactory( surface );
     }
@@ -85,7 +85,7 @@ Widget *UiItemFactory::create( WidgetType type, const String &uiName, Widget *pa
     return item;
 }
 
-UiItemFactory::UiItemFactory( AbstractSurface *surface )
+UiItemFactory::UiItemFactory( AbstractWindow *surface )
 : m_surface( surface ) {
     OSRE_ASSERT( nullptr != surface );
 }

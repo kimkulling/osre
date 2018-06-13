@@ -38,7 +38,7 @@ DX11Renderer::~DX11Renderer() {
 
 }
 
-bool DX11Renderer::create(Platform::AbstractSurface *surface) {
+bool DX11Renderer::create(Platform::AbstractWindow *surface) {
     if (nullptr == surface) {
         return false;
     }

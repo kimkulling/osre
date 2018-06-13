@@ -47,7 +47,7 @@ SDL2RenderContext::~SDL2RenderContext( ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-bool SDL2RenderContext::onCreate( AbstractSurface *pSurface ) {
+bool SDL2RenderContext::onCreate( AbstractWindow *pSurface ) {
     if( !pSurface ) {
         osre_error( Tag, "Surface pointer is a nullptr." );
         return false;

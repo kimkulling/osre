@@ -209,7 +209,7 @@ UI::Screen *AppBase::createScreen( const String &name ) {
 void AppBase::setUIScreen( UI::Screen *uiScreen ) {
     if ( m_uiScreen != uiScreen ) {
         m_uiScreen = uiScreen;
-        AbstractSurface *surface( m_platformInterface->getRootSurface() );
+        AbstractWindow *surface( m_platformInterface->getRootWindow() );
         if ( nullptr != surface ) {
             m_uiScreen->setSurface( surface );
             m_mouseEvListener->setScreen( m_uiScreen );
@@ -226,12 +226,12 @@ RenderBackend::RenderBackendService *AppBase::getRenderBackendService() const {
     return m_rbService;
 }
 
-Platform::AbstractSurface *AppBase::getRootSurface() const {
+Platform::AbstractWindow *AppBase::getRootWindow() const {
     if ( nullptr == m_platformInterface ) {
         return nullptr;
     }
 
-    return m_platformInterface->getRootSurface();
+    return m_platformInterface->getRootWindow();
 }
 
 void AppBase::setWindowsTitle( const String &title ) {
@@ -239,7 +239,7 @@ void AppBase::setWindowsTitle( const String &title ) {
         return;
     }
 
-    AbstractSurface *rs = m_platformInterface->getRootSurface();
+    AbstractWindow *rs = m_platformInterface->getRootWindow();
     if ( nullptr != rs ) {
         rs->setWindowsTitle( title );
     }
@@ -290,7 +290,7 @@ bool AppBase::onCreate( Properties::Settings *config ) {
     
     // enable render-back-end
     if( m_platformInterface ) {
-        RenderBackend::CreateRendererEventData *data = new RenderBackend::CreateRendererEventData( m_platformInterface->getRootSurface() );
+        RenderBackend::CreateRendererEventData *data = new RenderBackend::CreateRendererEventData( m_platformInterface->getRootWindow() );
         data->m_pipeline = createDefaultPipeline();
         m_rbService->sendEvent( &RenderBackend::OnCreateRendererEvent, data );
     }

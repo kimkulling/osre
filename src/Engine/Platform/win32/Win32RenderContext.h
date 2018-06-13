@@ -42,7 +42,7 @@ public:
     const String &getExtensions() const;
 
 protected:
-    bool onCreate( AbstractSurface *pSurface ) override;
+    bool onCreate( AbstractWindow *pSurface ) override;
     bool onDestroy() override;
     bool onUpdate( ) override;
     bool onActivate() override;

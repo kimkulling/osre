@@ -139,16 +139,16 @@ bool RenderTestSuite::setup( const String &API ) {
     m_pPlatformInterface->getPlatformEventHandler()->setRenderBackendService(m_pRenderBackendServer);
 
     if( m_pPlatformInterface ) {
-        CreateRendererEventData *data = new CreateRendererEventData( m_pPlatformInterface->getRootSurface() );
+        CreateRendererEventData *data = new CreateRendererEventData( m_pPlatformInterface->getRootWindow() );
         data->m_defaultFont = m_pPlatformInterface->getDefaultFontName();
         
         data->m_pipeline = App::AppBase::createDefaultPipeline();
         m_pRenderBackendServer->sendEvent( &OnCreateRendererEvent, data );
     }
-    Platform::AbstractSurface *surface = m_pPlatformInterface->getRootSurface();
-    if (nullptr != surface) {
+    Platform::AbstractWindow *window = m_pPlatformInterface->getRootWindow();
+    if (nullptr != window) {
         Rect2ui rect;
-        surface->getProperties()->getDimension(rect);
+        window->getProperties()->getDimension(rect);
         UI::WidgetCoordMapping::init(rect);
     }
     m_pTimer = PlatformInterface::getInstance()->getTimer();

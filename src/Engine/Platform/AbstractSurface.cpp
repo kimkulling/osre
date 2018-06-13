@@ -63,19 +63,19 @@ Resolution::~Resolution() {
     // empty
 }
 
-AbstractSurface::AbstractSurface( SurfaceProperties *properties )
+AbstractWindow::AbstractWindow( WindoweProperties *properties )
 : m_flags( SF_PropertiesClean )
 , m_pProperties( properties )
 , m_isCreated( false ) {
     // empty    
 }
 
-AbstractSurface::~AbstractSurface( ) {
+AbstractWindow::~AbstractWindow( ) {
     delete m_pProperties;
     m_pProperties = nullptr;
 }
 
-bool AbstractSurface::create( ) {
+bool AbstractWindow::create( ) {
     if ( m_isCreated ) {
         osre_warn( Tag, "Surface already created." );
         return true;
@@ -86,7 +86,7 @@ bool AbstractSurface::create( ) {
     return m_isCreated;
 }
 
-bool AbstractSurface::destroy( ) {
+bool AbstractWindow::destroy( ) {
     if ( !m_isCreated ) {
         osre_warn( Tag, "Surface not valid, cannot be destoyed." );
         return false;
@@ -99,7 +99,7 @@ bool AbstractSurface::destroy( ) {
     return ( false == m_isCreated );
 }
 
-void AbstractSurface::resize( ui32 x, ui32 y, ui32 w, ui32 h ) {
+void AbstractWindow::resize( ui32 x, ui32 y, ui32 w, ui32 h ) {
     if ( !m_isCreated ) {
         osre_warn( Tag, "Surface not valid, cannot be resized." );
         return;
@@ -108,26 +108,26 @@ void AbstractSurface::resize( ui32 x, ui32 y, ui32 w, ui32 h ) {
     onResize( x, y, w, h );
 }
 
-bool AbstractSurface::updateProperties() {
+bool AbstractWindow::updateProperties() {
     return onUpdateProperies();
 }
 
-void AbstractSurface::setFlags( SurfaceFlagType flags ) {
+void AbstractWindow::setFlags( SurfaceFlagType flags ) {
     if ( m_flags == static_cast<ui32>( flags ) ) {
         return;
     }
     m_flags = flags;
 }
 
-ui32 AbstractSurface::getFlags() const {
+ui32 AbstractWindow::getFlags() const {
     return m_flags;
 }
 
-void AbstractSurface::setProperties( SurfaceProperties *pProperties ) {
+void AbstractWindow::setProperties( WindoweProperties *pProperties ) {
     m_pProperties = pProperties;
 }
 
-SurfaceProperties *AbstractSurface::getProperties( ) {
+WindoweProperties *AbstractWindow::getProperties( ) {
     return m_pProperties;
 }
 

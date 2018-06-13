@@ -36,7 +36,7 @@ namespace RenderBackend {
 }
 
 namespace Platform {
-    class AbstractSurface;
+    class AbstractWindow;
 }
 
 namespace UI {
@@ -50,14 +50,14 @@ class OSRE_EXPORT Screen : public Widget {
 public:
     Screen( const String &name, Widget *parent, i32 width, i32 height );
     virtual ~Screen();
-    virtual void setSurface( Platform::AbstractSurface *surface );
+    virtual void setSurface( Platform::AbstractWindow *surface );
 
 protected:
     void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) override;
     void onResize( ui32 x, ui32 y, ui32 w, ui32 h ) override;
 
 private:
-    Platform::AbstractSurface *m_surface;
+    Platform::AbstractWindow *m_surface;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
     i32 m_width, m_height;
 };

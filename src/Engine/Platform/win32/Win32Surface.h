@@ -35,10 +35,10 @@ namespace Platform {
 ///
 ///	@brief  This class implements the surface API by using Win32-API.
 //-------------------------------------------------------------------------------------------------
-class Win32Surface : public AbstractSurface {
+class Win32Surface : public AbstractWindow {
 public:
     /// The class constructor.
-    Win32Surface( SurfaceProperties *properties );
+    Win32Surface( WindoweProperties *properties );
     /// The class destructor, virtual.
     virtual ~Win32Surface();
     /// Will set the windows title.

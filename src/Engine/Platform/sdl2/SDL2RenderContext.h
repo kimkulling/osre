@@ -42,7 +42,7 @@ public:
     virtual ~SDL2RenderContext();
 
 protected:
-    virtual bool onCreate( AbstractSurface *pSurface );
+    virtual bool onCreate( AbstractWindow *pSurface );
     virtual bool onDestroy();
     virtual bool onUpdate( );
     virtual bool onActivate( );

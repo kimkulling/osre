@@ -107,7 +107,7 @@ AbstractRenderContext *PlatformInterface::getRenderContext() const {
     return m_renderContext;
 }
 
-AbstractSurface *PlatformInterface::getRootSurface() const {
+AbstractWindow *PlatformInterface::getRootWindow() const {
     return m_rootSurface;
 }
 
@@ -170,11 +170,11 @@ bool PlatformInterface::onOpen() {
     Settings::WorkingModeType appType = 
         static_cast<Settings::WorkingModeType>( m_config->get( Settings::AppType ).getInt() );
 
-    SurfaceProperties *props( nullptr );
+    WindoweProperties *props( nullptr );
     bool polls( false );
     if( appType == Settings::GfxApp ) {
         // get the configuration values for the window
-        props = new SurfaceProperties;
+        props = new WindoweProperties;
         bool fullscreen = false;
         props->m_x = m_config->get( Settings::WinX ).getInt();
         props->m_y = m_config->get( Settings::WinY ).getInt();
@@ -229,7 +229,7 @@ bool PlatformInterface::onUpdate() {
     return m_oseventHandler->update();
 }
 
-bool PlatformInterface::setupGfx( SurfaceProperties *props, bool polls ) {
+bool PlatformInterface::setupGfx( WindoweProperties *props, bool polls ) {
     // create the root surface
     m_rootSurface = PlatformPluginFactory::createSurface( m_type, props );
     if( !m_rootSurface->create() ) {
@@ -254,7 +254,7 @@ bool PlatformInterface::setupGfx( SurfaceProperties *props, bool polls ) {
     // setup the render context
     m_renderContext = PlatformPluginFactory::createRenderContext( m_type );
 
-    UiItemFactory::createInstance( getRootSurface() );
+    UiItemFactory::createInstance( getRootWindow() );
     FontManager::create();
         
     return true;

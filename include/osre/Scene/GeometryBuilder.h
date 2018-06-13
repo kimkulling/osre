@@ -104,8 +104,7 @@ public:
     /// @param  geo         [inout] The geometry to update.
     /// @param  textSize    [in] The new text size.
     /// @param  text        [in] The updated text.
-    /// @param  resize      [in] The resize flag, true for resize of text-box requested.
-    static void updateTextBox( RenderBackend::Geometry *geo, f32 textSize, const String &text, bool resize );
+    static void updateTextBox( RenderBackend::Geometry *geo, f32 textSize, const String &text );
 
     ///	@brief  Allocates vertices into a buffer data.
     /// @param  type        [in] The vertex type to create.

@@ -81,7 +81,7 @@ bool VlkRenderEventHandler::onDetached( const Common::EventData *eventData ) {
 
 bool VlkRenderEventHandler::onCreateRenderer( const Common::EventData *eventData ) {
     m_vlkBackend = new VlkRenderBackend;
-    AbstractSurface *surface( PlatformInterface::getInstance()->getRootSurface() );
+    AbstractWindow *surface( PlatformInterface::getInstance()->getRootWindow() );
     if ( nullptr == surface ) {
         return false;
     }
