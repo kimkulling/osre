@@ -102,6 +102,8 @@ public:
             update();
             requestNextFrame();
         }
+
+        return 0;
     }
 
     void renderNode(Node *currentNode, RenderBackendService *rbSrv) {
@@ -153,7 +155,8 @@ protected:
 
 static EditorApplication *s_EditorApplication = nullptr;
 
-extern "C" OSRE_EDITOR_EXPORT int __stdcall CreateEditorApp( int *mainWindowHandle ) {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle ) {
+#ifdef OSRE_WINDOWS
     if (nullptr == s_EditorApplication) {
         HWND mainWH( nullptr );
         if ( nullptr != mainWindowHandle ) {
@@ -166,11 +169,11 @@ extern "C" OSRE_EDITOR_EXPORT int __stdcall CreateEditorApp( int *mainWindowHand
         s_EditorApplication->requestNextFrame();
 
     }
-
+#endif // OSRE_WINDOWS
     return 0;
 }
 
-int __stdcall EditorUpdate() {
+int STDCALL EditorUpdate() {
     if ( nullptr == s_EditorApplication ) {
         return 1;
     }
@@ -180,7 +183,7 @@ int __stdcall EditorUpdate() {
     return 0;
 }
 
-int __stdcall EditorRequestNextFrame() {
+int STDCALL EditorRequestNextFrame() {
     if ( nullptr == s_EditorApplication ) {
         return 1;
     }
@@ -189,7 +192,7 @@ int __stdcall EditorRequestNextFrame() {
     return 0;
 }
 
-int __stdcall DestroyEditorApp() {
+int STDCALL DestroyEditorApp() {
     if ( nullptr == s_EditorApplication ) {
         return 1;
     }
@@ -200,7 +203,7 @@ int __stdcall DestroyEditorApp() {
     return 0;
 }
 
-int __stdcall LoadWorld(const char *filelocation, int flags) {
+int STDCALL LoadWorld(const char *filelocation, int flags) {
     if (nullptr == s_EditorApplication) {
         return 1;
     }
@@ -212,7 +215,7 @@ int __stdcall LoadWorld(const char *filelocation, int flags) {
     return 0;
 }
 
-int __stdcall SaveWorld(const char *filelocation, int flags) {
+int STDCALL SaveWorld(const char *filelocation, int flags) {
     if (nullptr == s_EditorApplication) {
         return 1;
     }
@@ -224,7 +227,7 @@ int __stdcall SaveWorld(const char *filelocation, int flags) {
     return 0;
 }
 
-int __stdcall ImportAsset(const char *filename, int flags) {
+int STDCALL ImportAsset(const char *filename, int flags) {
     if (nullptr == s_EditorApplication) {
         return 1;
     }
@@ -236,6 +239,6 @@ int __stdcall ImportAsset(const char *filename, int flags) {
     return s_EditorApplication->importAsset(filename, flags);
 }
 
-int __stdcall EnqueueEvent() {
+int STDCALL EnqueueEvent() {
     return 0;
 }

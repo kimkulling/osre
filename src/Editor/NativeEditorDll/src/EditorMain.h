@@ -7,6 +7,7 @@
 #  define TAG_DLL_IMPORT __declspec(dllimport )
 #endif 
 
+// Define compiler-specific export macro
 #define OSRE_EDITOR_BUILD_EXPORT
 
 #ifdef OSRE_WINDOWS
@@ -19,16 +20,23 @@
 #   define OSRE_EDITOR_EXPORT  __attribute__ ((visibility("default")))
 #endif
 
-extern "C" OSRE_EDITOR_EXPORT int __stdcall CreateEditorApp( int *mainWindowHandle );
+// Define the calling convention macro for each supported platform
+#ifdef OSRE_WINDOWS
+#   define STDCALL __stdcall
+#else
+#   define STDCALL
+#endif
 
-extern "C" OSRE_EDITOR_EXPORT int __stdcall EditorUpdate();
+extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle );
 
-extern "C" OSRE_EDITOR_EXPORT int __stdcall EditorRequestNextFrame();
+extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorUpdate();
 
-extern "C" OSRE_EDITOR_EXPORT int __stdcall DestroyEditorApp();
+extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorRequestNextFrame();
 
-extern "C" OSRE_EDITOR_EXPORT int __stdcall LoadWorld(const char *filelocation, int flags);
+extern "C" OSRE_EDITOR_EXPORT int STDCALL DestroyEditorApp();
 
-extern "C" OSRE_EDITOR_EXPORT int __stdcall SaveWorld(const char *filelocation, int flags );
+extern "C" OSRE_EDITOR_EXPORT int STDCALL LoadWorld(const char *filelocation, int flags);
 
-extern "C" OSRE_EDITOR_EXPORT int __stdcall ImportAsset(const char *filename, int flags);
+extern "C" OSRE_EDITOR_EXPORT int STDCALL SaveWorld(const char *filelocation, int flags );
+
+extern "C" OSRE_EDITOR_EXPORT int STDCALL ImportAsset(const char *filename, int flags);

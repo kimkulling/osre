@@ -121,8 +121,8 @@ UiRenderCmd::~UiRenderCmd() {
 
 Widget::Widget( const String &name, Widget *parent )
 : Object( name )
-, m_id( 99999999 )
 , m_parent( nullptr )
+, m_id( 99999999 )
 , m_children()
 , m_properties()
 , m_rect( 0, 0, 1, 1 )

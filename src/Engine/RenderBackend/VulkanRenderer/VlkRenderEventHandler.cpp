@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "VlkRenderBackend.h"
 
 #include <osre/Platform/PlatformInterface.h>
-#include <osre/Platform/AbstractSurface.h>
+#include <osre/Platform/AbstractWindow.h>
 
 namespace OSRE {
 namespace RenderBackend {

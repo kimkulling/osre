@@ -69,7 +69,7 @@ namespace OSRE {
 #  pragma warning( disable : 4006 ) // Ignore double defined symbols warning
 #  pragma warning( disable : 4786 ) // Identifier was truncated to 'number' characters in the debug information
 #  pragma warning( disable : 4251 ) // class 'type' needs to have dll-interface to be used by clients of class 'type2'
-#  pragma warning( disable : 4275 ) // non – DLL-interface classkey 'identifier' used as base for DLL-interface classkey 'identifier'
+#  pragma warning( disable : 4275 ) // non DLL-interface classkey 'identifier' used as base for DLL-interface classkey 'identifier'
 #  pragma warning( disable : 4127 )	// Conditional expression is constant
 //#  pragma warning( disable : 4100 ) // identifier' : unreferenced formal parameter
 #  pragma warning( disable : 4201 ) // No standard extension
@@ -630,8 +630,8 @@ struct TRect2D {
     void setEdges(T x1, T y1, T x2, T y2) {
         m_x1 = x1;
         m_y1 = y1;
-        m_x2 = x2 + width;
-        m_y2 = y2 + height;
+        m_x2 = x2;
+        m_y2 = y2;
         m_width = x2 - x1;
         m_height = y2 - y1;
     }
