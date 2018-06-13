@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/UI/Screen.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Platform/AbstractSurface.h>
+#include <osre/Platform/AbstractWindow.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
 #include "UIRenderUtils.h"

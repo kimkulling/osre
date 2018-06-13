@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/BasePropertyMap.h>
 #include <osre/Properties/Property.h>
 #include <osre/Platform/PlatformInterface.h>
-#include <osre/Platform/AbstractSurface.h>
+#include <osre/Platform/AbstractWindow.h>
 #include <cppcore/Common/Variant.h>
 
 namespace OSRE {

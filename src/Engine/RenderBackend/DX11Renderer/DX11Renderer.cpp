@@ -1,8 +1,8 @@
 #include "DX11Renderer.h"
 #include <osre/Common/Logger.h>
-#include <osre/Platform/AbstractSurface.h>
+#include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/AbstractRenderContext.h>
-#include <src/Engine/Platform/win32/Win32Surface.h>
+#include <src/Engine/Platform/win32/Win32Window.h>
 
 #include <d3d11.h>
 #include <D3Dcompiler.h>

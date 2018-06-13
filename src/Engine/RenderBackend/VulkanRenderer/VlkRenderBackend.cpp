@@ -28,9 +28,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractDynamicLoader.h>
 #ifdef OSRE_WINDOWS
-#  include <src/Engine/Platform/win32/Win32Surface.h>
+#  include <src/Engine/Platform/win32/Win32Window.h>
 #else
-#  include <src/Engine/Platform/sdl2/SDL2Surface.h>
+#  include <src/Engine/Platform/sdl2/SDL2Window.h>
 #endif
 
 namespace OSRE {

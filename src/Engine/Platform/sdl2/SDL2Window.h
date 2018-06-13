@@ -22,10 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <osre/Platform/AbstractSurface.h>
+#include <osre/Platform/AbstractWindow.h>
 
-#include <osre/Platform/Windows/MinWindows.h>
+struct SDL_Window;
 
 namespace OSRE {
 namespace Platform {
@@ -33,41 +32,33 @@ namespace Platform {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This class implements the surface API by using Win32-API.
+///	@brief
 //-------------------------------------------------------------------------------------------------
-class Win32Surface : public AbstractWindow {
+class SDL2Surface : public AbstractWindow {
 public:
     /// The class constructor.
-    Win32Surface( WindoweProperties *properties );
+    SDL2Surface( WindoweProperties *props );
     /// The class destructor, virtual.
-    virtual ~Win32Surface();
-    /// Will set the windows title.
+    virtual ~SDL2Surface();
+    /// Will return a pointer showing to the SDL_Window.
+    SDL_Window *getSDLSurface() const;
+    /// Will set a new windows title.
     void setWindowsTitle( const String &title ) override;
-    /// Returns the windows handle.
-    HWND getHWnd() const;
-    /// Returns the device context.
-    HDC getDeviceContext() const;
-    /// Returns the module handle of the window.
-    HINSTANCE getModuleHandle() const;
+
 
 protected:
-    /// The create callback implementation.
-    bool onCreate() override;
-    /// The destroy callback implementation.
-    bool onDestroy() override;
-    /// The updateProperties callback implementation.
-    bool onUpdateProperies() override;
-    /// The resize callback implementation.
-    void onResize( ui32 x, ui32 y, ui32 w, ui32 h ) override;
-
+    /// The onCreate callback implementation.
+    virtual bool onCreate() override;
+    /// The onDestroy callback implementation.
+    virtual bool onDestroy() override;
+    /// The onUpdateProperies callback implementation.
+    virtual bool onUpdateProperies() override;
+    ///
+    virtual void onResize( ui32 x, ui32 y, ui32 w, ui32 h ) override;
 
 private:
-    HINSTANCE m_hInstance;
-    HWND m_wnd;
-    HDC m_dc;
+    SDL_Window *m_surface;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifdef OSRE_WINDOWS
 #   include <src/Engine/Platform/win32/Win32RenderContext.h>
 #endif // OSRE_WINDOWS
-#include "Engine/Platform/sdl2/SDL2Surface.h"
+#include "Engine/Platform/sdl2/SDL2Window.h"
 #include "Engine/Platform/sdl2/SDL2EventQueue.h"
 #include <src/Engine/Platform/sdl2/SDL2RenderContext.h>
 #include <src/Engine/Platform/sdl2/SDL2Timer.h>

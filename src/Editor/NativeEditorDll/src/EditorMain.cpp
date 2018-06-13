@@ -4,7 +4,7 @@
 #include <osre/Common/Ids.h>
 #include <osre/App/AppBase.h>
 #include <osre/Properties/Settings.h>
-#include <osre/Platform/AbstractSurface.h>
+#include <osre/Platform/AbstractWindow.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>

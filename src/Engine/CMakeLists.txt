@@ -174,7 +174,7 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/AtomicInt.h
     ${HEADER_PATH}/Platform/AbstractPlatformEventQueue.h
     ${HEADER_PATH}/Platform/AbstractRenderContext.h
-    ${HEADER_PATH}/Platform/AbstractSurface.h
+    ${HEADER_PATH}/Platform/AbstractWindow.h
     ${HEADER_PATH}/Platform/AbstractTimer.h
 	${HEADER_PATH}/Platform/AbstractSystemInfo.h
     ${HEADER_PATH}/Platform/CPUInfo.h
@@ -193,7 +193,7 @@ SET( platform_src
     Platform/SystemInfo.cpp
     Platform/SystemUtils.cpp
     Platform/AtomicInt.cpp
-    Platform/AbstractSurface.cpp
+    Platform/AbstractWindow.cpp
     Platform/PlatformInterface.cpp
     Platform/PlatformPluginFactory.cpp
     Platform/PlatformPluginFactory.h
@@ -204,8 +204,8 @@ SET( platform_win32_src
 	Platform/win32/Win32SystemInfo.h
     Platform/win32/Win32Atomic.h
     Platform/win32/Win32DbgLogStream.h
-    Platform/win32/Win32Surface.cpp
-    Platform/win32/Win32Surface.h
+    Platform/win32/Win32Window.cpp
+    Platform/win32/Win32Window.h
     Platform/win32/Win32EventQueue.cpp
     Platform/win32/Win32EventQueue.h
     Platform/win32/Win32RenderContext.cpp
@@ -231,8 +231,8 @@ SET( platform_sdl2_src
     Platform/sdl2/SDL2EventQueue.h
     Platform/sdl2/SDL2Initializer.cpp
     Platform/sdl2/SDL2Initializer.h
-    Platform/sdl2/SDL2Surface.cpp
-    Platform/sdl2/SDL2Surface.h
+    Platform/sdl2/SDL2Window.cpp
+    Platform/sdl2/SDL2Window.h
     Platform/sdl2/SDL2Timer.cpp
     Platform/sdl2/SDL2Timer.h
     Platform/sdl2/SDL2RenderContext.cpp

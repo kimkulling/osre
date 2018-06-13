@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Logger.h>
 #include <osre/Platform/PlatformInterface.h>
-#include <src/Engine/Platform/win32/Win32Surface.h>
+#include <src/Engine/Platform/win32/Win32Window.h>
 
 #include <iostream>
 

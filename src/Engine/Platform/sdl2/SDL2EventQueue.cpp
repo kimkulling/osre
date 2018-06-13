@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Platform/PlatformInterface.h>
 
-#include "SDL2Surface.h"
+#include "SDL2Window.h"
 
 #include <SDL.h>
 

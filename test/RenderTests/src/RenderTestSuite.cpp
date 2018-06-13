@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractTimer.h>
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/UI/Widget.h>
-#include <osre/Platform/AbstractSurface.h>
+#include <osre/Platform/AbstractWindow.h>
 #include <osre/IO/IOService.h>
 
 #include <iostream>

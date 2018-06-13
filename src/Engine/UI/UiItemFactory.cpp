@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/Image.h>
 #include <osre/UI/Panel.h>
 #include <osre/UI/Screen.h>
-#include <osre/Platform/AbstractSurface.h>
+#include <osre/Platform/AbstractWindow.h>
 #include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
