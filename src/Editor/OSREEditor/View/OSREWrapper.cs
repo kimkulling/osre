@@ -9,6 +9,10 @@ namespace OSREEditor.View
 {
     public static class OSREWrapper
     {
+        struct TreeItem
+        {
+
+        }
         const string EditorDllName = "osre_nativeeditor.dll";
 
         [DllImport(EditorDllName)]
@@ -22,6 +26,8 @@ namespace OSREEditor.View
 
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         public static extern int ImportAsset([MarshalAs(UnmanagedType.LPStr)] string code, int flags );
+
+
     }
 }
  

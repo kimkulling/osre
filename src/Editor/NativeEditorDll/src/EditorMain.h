@@ -27,6 +27,13 @@
 #   define STDCALL
 #endif
 
+struct NativeStreeItem {
+    ui32 m_parentId;
+    String m_name;
+    ui32 m_numChildren;
+    ui32 *m_childrenIds;
+};
+
 extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle );
 
 extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorUpdate();

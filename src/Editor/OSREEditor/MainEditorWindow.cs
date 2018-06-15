@@ -74,7 +74,11 @@ namespace OSREEditor
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 var filename = openFileDialog.FileName;
-                OSREWrapper.ImportAsset(filename, 0);
+                var retValue = OSREWrapper.ImportAsset(filename, 0);
+                if ( 0 == retValue )
+                {
+
+                }
             }
         }
 
