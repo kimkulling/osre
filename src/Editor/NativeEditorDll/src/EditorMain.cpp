@@ -50,6 +50,14 @@ public:
         // empty
     }
 
+    int enqueueEvent() {
+        return 0;
+    }
+
+    World *getWorld() const {
+        return m_world;
+    }
+
     int importAsset( const String &filename, int flags ) {
         if (filename.empty() ) {
             return 1;
@@ -187,6 +195,7 @@ int STDCALL EditorRequestNextFrame() {
     if ( nullptr == s_EditorApplication ) {
         return 1;
     }
+
     s_EditorApplication->requestNextFrame();
 
     return 0;
@@ -239,6 +248,130 @@ int STDCALL ImportAsset(const char *filename, int flags) {
     return s_EditorApplication->importAsset(filename, flags);
 }
 
-int STDCALL EnqueueEvent() {
+int STDCALL EnqueueEvent( CSharpEvent *ev ) {
+    if (nullptr == ev || nullptr == s_EditorApplication ) {
+        return 1;
+    }
+
+    return s_EditorApplication->enqueueEvent();
+}
+using NodeArray = CPPCore::TArray<Node*>;
+
+void countChildren( Node *node, ui32 &numNodes ) {
+    if (nullptr == node) {
+        return;
+    }
+    numNodes += node->getNumChildren();
+    for (ui32 i = 0; i < node->getNumChildren(); ++i) {
+        Node *child( node->getChildAt( i ) );
+        if (nullptr != child) {
+            countChildren( child, numNodes );
+        }
+    }
+}
+static void collectNodes( Node *node, NodeArray &nodeArray ) {
+    nodeArray.add( node );
+    for (ui32 i = 0; i < node->getNumChildren(); ++i) {
+        Node *child( node->getChildAt( i ) );
+        if ( nullptr != child ) {
+            collectNodes( child, nodeArray );
+        }
+    }
+}
+
+static i32 getNodeIndex( Node *node, const NodeArray &nodeArray ) {
+    if (nullptr == node) {
+        return -1;
+    }
+    for (ui32 i = 0; i < nodeArray.size(); ++i) {
+        if (node == nodeArray[ i ]) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+static void addChildren( Node *node, NodeArray &nodeArray ) {
+    if (nullptr == node) {
+        return;
+    }
+
+    for (ui32 i = 0; i < node->getNumChildren(); ++i) {
+        Node *currentNode( node->getChildAt( i ) );
+        nodeArray.add( currentNode );
+        addChildren( currentNode, nodeArray );
+    }
+}
+
+int STDCALL GetNumItems() {
+    if (nullptr == s_EditorApplication) {
+        return 1;
+    }
+
+    World *world = s_EditorApplication->getWorld();
+    if (nullptr == world) {
+        return 0;
+    }
+
+    Stage *stage = world->getActiveStage();
+    if (nullptr == stage) {
+        return 1;
+    }
+
+    Node *rootNode = stage->getRoot();
+    if (nullptr == rootNode) {
+        return 0;
+    }
+    ui32 numNodes( 0 );
+    countChildren( rootNode, numNodes );
+
+    return static_cast<i32>(numNodes);
+}
+
+int STDCALL GetNodeHierarchy( int numItems, NativeStreeItem *items ) {
+    if (nullptr == s_EditorApplication) {
+        return 1;
+    }
+
+    if (nullptr == items) {
+        return 0;
+    }
+
+    World *world = s_EditorApplication->getWorld();
+    if (nullptr == world) {
+        return 0;
+    }
+
+    Stage *stage = world->getActiveStage();
+    if (nullptr == stage) {
+        return 1;
+    }
+
+    Node *rootNode = stage->getRoot();
+    if (nullptr == rootNode) {
+        return 0;
+    }
+    CPPCore::TArray<Node*> nodeArray;
+    collectNodes( rootNode, nodeArray );
+
+    CPPCore::TArray<NativeStreeItem*> itemArray;
+    const ui32 numChildren( rootNode->getNumChildren() );
+    for (ui32 i = 0; i < numChildren; ++i) {
+        Node *currentChild( rootNode->getChildAt( i ) );
+        if (nullptr == currentChild) {
+            continue;
+        }
+
+        NativeStreeItem *item = new NativeStreeItem;
+        item->m_name = currentChild->getName();
+        item->m_numChildren = currentChild->getNumChildren();
+        item->m_childrenIds = new i32[ item->m_numChildren ];
+        
+        for (ui32 j = 0; j < item->m_numChildren; ++j) {
+            item->m_childrenIds[ i ] = getNodeIndex( currentChild->getChildAt( j ), nodeArray );
+        }
+    }
+
     return 0;
 }

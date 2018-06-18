@@ -77,7 +77,24 @@ namespace OSREEditor
                 var retValue = OSREWrapper.ImportAsset(filename, 0);
                 if ( 0 == retValue )
                 {
+                    int numItems = OSREWrapper.GetNumItems();
+                    if ( numItems == 0 )
+                    {
+                        return;
+                    }
 
+                    OSREWrapper.NativeStreeItem[] items = new OSREWrapper.NativeStreeItem[numItems];
+                    OSREWrapper.GetNodeHierarchy(numItems, items);
+                    this.treeView1.BeginUpdate();
+                    TreeNode newNode = new TreeNode();
+                    foreach ( var item in items )
+                    {
+                        var name = item.m_name;
+                    }
+                    this.treeView1.EndUpdate();
+
+                //    this.treeView1.SelectedNode.
+                
                 }
             }
         }
@@ -105,6 +122,15 @@ namespace OSREEditor
         private void Window_MouseClick(object sender, MouseEventArgs e)
         {
             bool isDown = IsDown(e.Clicks);
+            int clicked = 0;
+            if (isDown)
+            {
+                clicked = 1;
+            }
+
+            int x = e.X;
+            int y = e.Y;
+
         }
     }
 }
