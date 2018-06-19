@@ -16,6 +16,7 @@ namespace OSREEditor
         public MainEditorWindow()
         {
             InitializeComponent();
+
             this.MouseMove += Window_MouseMove;
             this.MouseWheel += Window_MouseWheel;
             this.MouseDown += Window_MouseClick;

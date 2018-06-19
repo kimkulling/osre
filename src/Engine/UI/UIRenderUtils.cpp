@@ -87,7 +87,7 @@ void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, c
     indices[ 5 ] = 1;
 
     for ( ui32 i = 0; i < 6; ++i ) {
-        indexCache.add( vertOffset + indices[ i ] );
+        indexCache.add( static_cast<ui16>(vertOffset) + indices[ i ] );
     }
 }
 

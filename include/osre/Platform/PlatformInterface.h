@@ -53,7 +53,7 @@ class AbstractDynamicLoader;
 class AbstractSystemInfo;
 
 struct IInputUpdate;
-struct WindoweProperties;
+struct WindowsProperties;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -226,7 +226,7 @@ protected:
     bool onOpen() override;
     bool onClose() override;
     bool onUpdate() override;
-    virtual bool setupGfx( WindoweProperties *props, bool polls );
+    virtual bool setupGfx( WindowsProperties *props, bool polls );
 
 private:
     explicit PlatformInterface( const Properties::Settings *configuration );

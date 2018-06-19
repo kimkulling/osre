@@ -30,7 +30,7 @@ namespace Platform {
 
 static const String Tag = "SDL2Surface";
 
-SDL2Surface::SDL2Surface( WindoweProperties *props )
+SDL2Surface::SDL2Surface( WindowsProperties *props )
 : AbstractWindow( props )
 , m_surface( nullptr ) {
     // empty
@@ -57,7 +57,7 @@ bool SDL2Surface::onCreate() {
     SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 24 );
 
     // Create our window centered at 512x512 resolution
-    WindoweProperties *prop = getProperties();
+    WindowsProperties *prop = getProperties();
     if( !prop ) {
         return false;
     }
@@ -105,7 +105,7 @@ void SDL2Surface::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
 
     SDL_SetWindowPosition( m_surface, x, y );
     SDL_SetWindowSize( m_surface, w, h );
-    WindoweProperties *props( AbstractWindow::getProperties() );
+    WindowsProperties *props( AbstractWindow::getProperties() );
     if ( nullptr != props ) {
         props->m_x = x;
         props->m_y = y;

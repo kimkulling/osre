@@ -162,7 +162,7 @@ bool DX11Renderer::create(Platform::AbstractWindow *surface) {
     swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
     // Set the handle for the window to render to.
-    Platform::Win32Surface *osSurface = (Platform::Win32Surface*)surface;
+    Platform::Win32Window *osSurface = (Platform::Win32Window*)surface;
     swapChainDesc.OutputWindow = osSurface->getHWnd();
 
     // Turn multi-sampling off.

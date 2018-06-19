@@ -15,6 +15,8 @@
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
+#include <src/Engine/Platform/win32/Win32Window.h>
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -145,7 +147,7 @@ protected:
         if (nullptr == baseSettings) {
             return false;
         }
-
+        baseSettings->setBool( Settings::ChildWindow, true );
         baseSettings->setString(Properties::Settings::WindowsTitle, "Demo UI!");
         if (!AppBase::onCreate(baseSettings)) {
             return false;
@@ -174,6 +176,17 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
         s_EditorApplication = new EditorApplication(1, argc );
         s_EditorApplication->create();
         s_EditorApplication->update();
+
+        ::OSRE::Platform::Win32Window *window = (::OSRE::Platform::Win32Window*) s_EditorApplication->getRootWindow();
+        if (nullptr != window) {
+            HWND childHandle = window->getHWnd();
+            ::SetParent( childHandle, mainWH );
+            RECT rect;
+            ::GetClientRect( mainWH, &rect );
+            const ui32 w = rect.right - rect.left;
+
+            ::MoveWindow( childHandle, 25, 45, w - 240, rect.bottom - 45, TRUE );
+        }
         s_EditorApplication->requestNextFrame();
 
     }

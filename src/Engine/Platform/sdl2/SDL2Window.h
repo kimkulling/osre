@@ -37,7 +37,7 @@ namespace Platform {
 class SDL2Surface : public AbstractWindow {
 public:
     /// The class constructor.
-    SDL2Surface( WindoweProperties *props );
+    SDL2Surface( WindowsProperties *props );
     /// The class destructor, virtual.
     virtual ~SDL2Surface();
     /// Will return a pointer showing to the SDL_Window.

@@ -63,16 +63,16 @@ Resolution::~Resolution() {
     // empty
 }
 
-AbstractWindow::AbstractWindow( WindoweProperties *properties )
+AbstractWindow::AbstractWindow( WindowsProperties *properties )
 : m_flags( SF_PropertiesClean )
-, m_pProperties( properties )
+, m_properties( properties )
 , m_isCreated( false ) {
     // empty    
 }
 
 AbstractWindow::~AbstractWindow( ) {
-    delete m_pProperties;
-    m_pProperties = nullptr;
+    delete m_properties;
+    m_properties = nullptr;
 }
 
 bool AbstractWindow::create( ) {
@@ -123,12 +123,12 @@ ui32 AbstractWindow::getFlags() const {
     return m_flags;
 }
 
-void AbstractWindow::setProperties( WindoweProperties *pProperties ) {
-    m_pProperties = pProperties;
+void AbstractWindow::setProperties( WindowsProperties *pProperties ) {
+    m_properties = pProperties;
 }
 
-WindoweProperties *AbstractWindow::getProperties( ) {
-    return m_pProperties;
+WindowsProperties *AbstractWindow::getProperties( ) {
+    return m_properties;
 }
 
 } // Namespace Platform

@@ -55,7 +55,7 @@ void Screen::setSurface( AbstractWindow *surface ) {
         return;
     }
 
-    WindoweProperties *props( surface->getProperties() );
+    WindowsProperties *props( surface->getProperties() );
     if ( nullptr == props ) {
         return;
     }

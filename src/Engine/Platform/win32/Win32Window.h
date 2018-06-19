@@ -35,12 +35,12 @@ namespace Platform {
 ///
 ///	@brief  This class implements the surface API by using Win32-API.
 //-------------------------------------------------------------------------------------------------
-class Win32Surface : public AbstractWindow {
+class OSRE_EXPORT Win32Window : public AbstractWindow {
 public:
     /// The class constructor.
-    Win32Surface( WindoweProperties *properties );
+    Win32Window( WindowsProperties *properties );
     /// The class destructor, virtual.
-    virtual ~Win32Surface();
+    virtual ~Win32Window();
     /// Will set the windows title.
     void setWindowsTitle( const String &title ) override;
     /// Returns the windows handle.

@@ -68,7 +68,7 @@ AbstractPlatformEventQueue *PlatformPluginFactory::createPlatformEventHandler( P
     switch( type ) {
 #ifdef OSRE_WINDOWS
         case Platform::PluginType::WindowsPlugin: {
-                Win32Surface *win32Surface = static_cast<Win32Surface*>( rootSurface );
+                Win32Window *win32Surface = static_cast<Win32Window*>( rootSurface );
                 if( win32Surface ) {
                     eventHandler = new Win32EventQueue( win32Surface );
                     Win32EventQueue::registerEventQueue( ( Win32EventQueue* ) eventHandler, win32Surface->getHWnd() );
@@ -90,12 +90,12 @@ AbstractPlatformEventQueue *PlatformPluginFactory::createPlatformEventHandler( P
     return eventHandler;
 }
 
-AbstractWindow *PlatformPluginFactory::createSurface( PluginType type, WindoweProperties *pProps ) {
+AbstractWindow *PlatformPluginFactory::createSurface( PluginType type, WindowsProperties *pProps ) {
     AbstractWindow *surface( nullptr );
     switch( type ) {
 #ifdef OSRE_WINDOWS
         case Platform::PluginType::WindowsPlugin:
-            surface = new Win32Surface( pProps );
+            surface = new Win32Window( pProps );
             break;
 #endif // OSRE_WINDOWS
 

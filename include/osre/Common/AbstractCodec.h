@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations
 namespace IO {
     class Stream;
 }
@@ -66,7 +67,7 @@ protected:
     ///	@param  ext     [in] The code extension.
     AbstractCodec( const String &name, const String &ext );
 
-private:
+    // not used
     AbstractCodec() = delete;
     AbstractCodec( const AbstractCodec & ) = delete ;
     AbstractCodec &operator = ( const AbstractCodec & ) = delete;
@@ -75,8 +76,6 @@ private:
     const String m_name;
     const String m_ext;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 } // Namespace OSRE

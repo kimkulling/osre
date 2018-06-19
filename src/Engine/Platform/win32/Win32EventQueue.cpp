@@ -212,7 +212,7 @@ bool Win32EventQueue::update() {
             case WM_SIZE: {
                 WindowsResizeEventData *data = new WindowsResizeEventData( m_eventTriggerer );
                 RECT rcClient;
-                Win32Surface *s = ( Win32Surface* ) m_rootWindow;
+                Win32Window *s = ( Win32Window* ) m_rootWindow;
                 if ( nullptr != s ) {
                     GetClientRect( s->getHWnd(), &rcClient );
                     ui32 x = rcClient.left;
@@ -309,7 +309,7 @@ void Win32EventQueue::setRootSurface( AbstractWindow *pSurface ) {
         return;
     }
 
-    Win32Surface *pWin32Surface = ( Win32Surface* ) pSurface;
+    Win32Window *pWin32Surface = ( Win32Window* ) pSurface;
     registerEventQueue( this, pWin32Surface->getHWnd() );
 
     m_rootWindow = pWin32Surface;
