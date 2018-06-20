@@ -22,13 +22,13 @@ namespace OSREEditor.View
         public struct CSharpEvent
         {
             [MarshalAs(UnmanagedType.SysInt)]
-            int type;
+            public int type;
             [MarshalAs(UnmanagedType.SysInt)]
-            int x;
+            public int x;
             [MarshalAs(UnmanagedType.SysInt)]
-            int y;
+            public int y;
             [MarshalAs(UnmanagedType.SysInt)]
-            int mouseBtnState;
+            public int mouseBtnState;
         }
         const string EditorDllName = "osre_nativeeditor.dll";
 
@@ -40,6 +40,9 @@ namespace OSREEditor.View
 
         [DllImport(EditorDllName)]
         public static extern int DestroyEditorApp();
+
+        [DllImport(EditorDllName)]
+        public static extern int NewProject([MarshalAs(UnmanagedType.LPStr)] string name);
 
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         public static extern int ImportAsset([MarshalAs(UnmanagedType.LPStr)] string code, int flags);

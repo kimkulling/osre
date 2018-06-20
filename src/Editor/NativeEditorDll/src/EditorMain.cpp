@@ -2,6 +2,7 @@
 
 #include <osre/Common/osre_common.h>
 #include <osre/Common/Ids.h>
+#include <osre/Common/Event.h>
 #include <osre/App/AppBase.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Platform/AbstractWindow.h>
@@ -37,6 +38,7 @@ class EditorApplication : public App::AppBase {
     Stage *m_stage;
     Node::NodePtr m_modelNode;
     TransformMatrixBlock m_transformMatrix;
+    String m_projectName;
 
 public:
     EditorApplication(int argc, char *argv[])
@@ -44,7 +46,8 @@ public:
     , m_world( nullptr )
     , m_stage( nullptr )
     , m_modelNode()
-    , m_transformMatrix() {
+    , m_transformMatrix()
+    , m_projectName( "untitled" ) {
         // empty
     }
 
@@ -54,6 +57,16 @@ public:
 
     int enqueueEvent() {
         return 0;
+    }
+
+    void newProject( const String &name) {
+        if (name != m_projectName) {
+            m_projectName = name;
+        }
+        Platform::AbstractWindow *rootWindow(getRootWindow());
+        if (nullptr != rootWindow) {
+            rootWindow->setWindowsTitle(m_projectName);
+        }
     }
 
     World *getWorld() const {
@@ -148,7 +161,7 @@ protected:
             return false;
         }
         baseSettings->setBool( Settings::ChildWindow, true );
-        baseSettings->setString(Properties::Settings::WindowsTitle, "Demo UI!");
+        baseSettings->setString(Properties::Settings::WindowsTitle, m_projectName );
         if (!AppBase::onCreate(baseSettings)) {
             return false;
         }
@@ -225,6 +238,15 @@ int STDCALL DestroyEditorApp() {
     return 0;
 }
 
+int STDCALL NewProject(const char *name) {
+    if (nullptr == name) {
+        return 1;
+    }
+    s_EditorApplication->newProject(name);
+
+    return 0;
+}
+
 int STDCALL LoadWorld(const char *filelocation, int flags) {
     if (nullptr == s_EditorApplication) {
         return 1;
@@ -261,11 +283,14 @@ int STDCALL ImportAsset(const char *filename, int flags) {
     return s_EditorApplication->importAsset(filename, flags);
 }
 
-int STDCALL EnqueueEvent( CSharpEvent *ev ) {
-    if (nullptr == ev || nullptr == s_EditorApplication ) {
+int STDCALL EnqueueEvent( CSharpEvent *csEv ) {
+    if (nullptr == csEv || nullptr == s_EditorApplication ) {
         return 1;
     }
 
+    if ( csEv->type == )
+    Event ev()
+    ev->type = csEv
     return s_EditorApplication->enqueueEvent();
 }
 using NodeArray = CPPCore::TArray<Node*>;

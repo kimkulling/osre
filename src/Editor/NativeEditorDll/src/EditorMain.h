@@ -73,6 +73,8 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorRequestNextFrame();
 
 extern "C" OSRE_EDITOR_EXPORT int STDCALL DestroyEditorApp();
 
+extern "C" OSRE_EDITOR_EXPORT int STDCALL NewProject(const char *name);
+
 extern "C" OSRE_EDITOR_EXPORT int STDCALL LoadWorld(const char *filelocation, int flags);
 
 extern "C" OSRE_EDITOR_EXPORT int STDCALL SaveWorld(const char *filelocation, int flags );

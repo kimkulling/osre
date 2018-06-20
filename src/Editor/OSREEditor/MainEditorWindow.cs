@@ -8,11 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using OSREEditor.View;
+using OSREEditor.Model;
 
 namespace OSREEditor
 {
     public partial class MainEditorWindow : Form
     {
+        Project _project;
         public MainEditorWindow()
         {
             InitializeComponent();
@@ -21,6 +23,8 @@ namespace OSREEditor
             this.MouseWheel += Window_MouseWheel;
             this.MouseDown += Window_MouseClick;
             this.MouseUp += Window_MouseClick;
+
+            _project = new Project();
         }
 
         private void quitToolStripMenuItem_Quit_Click(object sender, EventArgs e)
@@ -32,6 +36,9 @@ namespace OSREEditor
         {
             IntPtr windowsHandle = this.Handle;
             OSREWrapper.CreateEditorApp(windowsHandle);
+            _project.ProjectName = "New Project";
+
+            OSREWrapper.NewProject(_project.ProjectName);
         }
 
         private void openToolStripMenuItem_Open_Click(object sender, EventArgs e)
@@ -132,6 +139,7 @@ namespace OSREEditor
             int x = e.X;
             int y = e.Y;
 
+            OSREWrapper.CSharpEvent ev;
         }
     }
 }
