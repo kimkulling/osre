@@ -55,7 +55,7 @@ public:
         // empty
     }
 
-    int enqueueEvent() {
+    int enqueueEvent(const Common::Event *ev, const Common::EventData *evData) {
         return 0;
     }
 
@@ -293,11 +293,12 @@ int STDCALL EnqueueEvent( CSharpEvent *csEv ) {
     if (nullptr == csEv || nullptr == s_EditorApplication ) {
         return 1;
     }
-
+    int retCode(0);
     if (csEv->type == MouseDown) {
-        
+        EventData *data = new EventData;
+        retCode = s_EditorApplication->enqueueEvent(&MouseButtonDownEvent, data );
     }
-    return s_EditorApplication->enqueueEvent();
+    return 
 }
 using NodeArray = CPPCore::TArray<Node*>;
 

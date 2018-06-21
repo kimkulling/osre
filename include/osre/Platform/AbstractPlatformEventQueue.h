@@ -30,13 +30,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations
 namespace RenderBackend {
     class RenderBackendService;
 }
 
 namespace Platform {
 
-// Forward declarations
 class OSEventListener;
 
 using EventDataList = CPPCore::TList<Common::EventData*> ;

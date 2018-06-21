@@ -127,19 +127,16 @@ namespace OSREEditor
             bool isDown = IsDown(e.Clicks);
         }
 
-        private void Window_MouseClick(object sender, MouseEventArgs e)
-        {
+        private void Window_MouseClick(object sender, MouseEventArgs e) {
             bool isDown = IsDown(e.Clicks);
             int clicked = 0;
-            if (isDown)
-            {
+            if (isDown) {
                 clicked = 1;
             }
 
-            int x = e.X;
-            int y = e.Y;
-
             OSREWrapper.CSharpEvent ev;
+            ev.x = e.X;
+            ev.y = e.Y;
         }
     }
 }
