@@ -2,6 +2,7 @@
 
 #include <osre/Common/osre_common.h>
 #include <osre/Common/Ids.h>
+#include <osre/Common/Event.h>
 #include <osre/App/AppBase.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Platform/AbstractWindow.h>
@@ -14,6 +15,8 @@
 #include <osre/Assets/Model.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+
+#include <src/Engine/Platform/win32/Win32Window.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -35,6 +38,7 @@ class EditorApplication : public App::AppBase {
     Stage *m_stage;
     Node::NodePtr m_modelNode;
     TransformMatrixBlock m_transformMatrix;
+    String m_projectName;
 
 public:
     EditorApplication(int argc, char *argv[])
@@ -42,12 +46,31 @@ public:
     , m_world( nullptr )
     , m_stage( nullptr )
     , m_modelNode()
-    , m_transformMatrix() {
+    , m_transformMatrix()
+    , m_projectName( "untitled" ) {
         // empty
     }
 
     virtual ~EditorApplication() {
         // empty
+    }
+
+    int enqueueEvent() {
+        return 0;
+    }
+
+    void newProject( const String &name) {
+        if (name != m_projectName) {
+            m_projectName = name;
+        }
+        Platform::AbstractWindow *rootWindow(getRootWindow());
+        if (nullptr != rootWindow) {
+            rootWindow->setWindowsTitle(m_projectName);
+        }
+    }
+
+    World *getWorld() const {
+        return m_world;
     }
 
     int importAsset( const String &filename, int flags ) {
@@ -140,8 +163,8 @@ protected:
                 return false;
             }
         }
-
-        baseSettings->setString(Properties::Settings::WindowsTitle, "Demo UI!");
+        baseSettings->setBool( Settings::ChildWindow, true );
+        baseSettings->setString(Properties::Settings::WindowsTitle, m_projectName );
         if (!AppBase::onCreate(baseSettings)) {
             return false;
         }
@@ -169,6 +192,17 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
         s_EditorApplication = new EditorApplication(1, argc );
         s_EditorApplication->create();
         s_EditorApplication->update();
+
+        ::OSRE::Platform::Win32Window *window = (::OSRE::Platform::Win32Window*) s_EditorApplication->getRootWindow();
+        if (nullptr != window) {
+            HWND childHandle = window->getHWnd();
+            ::SetParent( childHandle, mainWH );
+            RECT rect;
+            ::GetClientRect( mainWH, &rect );
+            const ui32 w = rect.right - rect.left;
+
+            ::MoveWindow( childHandle, 25, 45, w - 240, rect.bottom - 45, TRUE );
+        }
         s_EditorApplication->requestNextFrame();
 
     }
@@ -190,6 +224,7 @@ int STDCALL EditorRequestNextFrame() {
     if ( nullptr == s_EditorApplication ) {
         return 1;
     }
+
     s_EditorApplication->requestNextFrame();
 
     return 0;
@@ -202,6 +237,15 @@ int STDCALL DestroyEditorApp() {
     s_EditorApplication->destroy();
     delete s_EditorApplication;
     s_EditorApplication = nullptr;
+
+    return 0;
+}
+
+int STDCALL NewProject(const char *name) {
+    if (nullptr == name) {
+        return 1;
+    }
+    s_EditorApplication->newProject(name);
 
     return 0;
 }
@@ -242,6 +286,136 @@ int STDCALL ImportAsset(const char *filename, int flags) {
     return s_EditorApplication->importAsset(filename, flags);
 }
 
-int STDCALL EnqueueEvent() {
+static const i32 MouseDown = 1;
+static const i32 MouseUp = 2;
+
+int STDCALL EnqueueEvent( CSharpEvent *csEv ) {
+    if (nullptr == csEv || nullptr == s_EditorApplication ) {
+        return 1;
+    }
+
+    if (csEv->type == MouseDown) {
+        
+    }
+    return s_EditorApplication->enqueueEvent();
+}
+using NodeArray = CPPCore::TArray<Node*>;
+
+void countChildren( Node *node, ui32 &numNodes ) {
+    if (nullptr == node) {
+        return;
+    }
+    numNodes += node->getNumChildren();
+    for (ui32 i = 0; i < node->getNumChildren(); ++i) {
+        Node *child( node->getChildAt( i ) );
+        if (nullptr != child) {
+            countChildren( child, numNodes );
+        }
+    }
+}
+static void collectNodes( Node *node, NodeArray &nodeArray ) {
+    nodeArray.add( node );
+    for (ui32 i = 0; i < node->getNumChildren(); ++i) {
+        Node *child( node->getChildAt( i ) );
+        if ( nullptr != child ) {
+            collectNodes( child, nodeArray );
+        }
+    }
+}
+
+static i32 getNodeIndex( Node *node, const NodeArray &nodeArray ) {
+    if (nullptr == node) {
+        return -1;
+    }
+    for (ui32 i = 0; i < nodeArray.size(); ++i) {
+        if (node == nodeArray[ i ]) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+static void addChildren( Node *node, NodeArray &nodeArray ) {
+    if (nullptr == node) {
+        return;
+    }
+
+    for (ui32 i = 0; i < node->getNumChildren(); ++i) {
+        Node *currentNode( node->getChildAt( i ) );
+        nodeArray.add( currentNode );
+        addChildren( currentNode, nodeArray );
+    }
+}
+
+int STDCALL GetNumItems() {
+    if (nullptr == s_EditorApplication) {
+        return 1;
+    }
+
+    World *world = s_EditorApplication->getWorld();
+    if (nullptr == world) {
+        return 0;
+    }
+
+    Stage *stage = world->getActiveStage();
+    if (nullptr == stage) {
+        return 1;
+    }
+
+    Node *rootNode = stage->getRoot();
+    if (nullptr == rootNode) {
+        return 0;
+    }
+    ui32 numNodes( 0 );
+    countChildren( rootNode, numNodes );
+
+    return static_cast<i32>(numNodes);
+}
+
+int STDCALL GetNodeHierarchy( int numItems, NativeStreeItem *items ) {
+    if (nullptr == s_EditorApplication) {
+        return 1;
+    }
+
+    if (nullptr == items) {
+        return 0;
+    }
+
+    World *world = s_EditorApplication->getWorld();
+    if (nullptr == world) {
+        return 0;
+    }
+
+    Stage *stage = world->getActiveStage();
+    if (nullptr == stage) {
+        return 1;
+    }
+
+    Node *rootNode = stage->getRoot();
+    if (nullptr == rootNode) {
+        return 0;
+    }
+    CPPCore::TArray<Node*> nodeArray;
+    collectNodes( rootNode, nodeArray );
+
+    CPPCore::TArray<NativeStreeItem*> itemArray;
+    const ui32 numChildren( rootNode->getNumChildren() );
+    for (ui32 i = 0; i < numChildren; ++i) {
+        Node *currentChild( rootNode->getChildAt( i ) );
+        if (nullptr == currentChild) {
+            continue;
+        }
+
+        NativeStreeItem *item = new NativeStreeItem;
+        item->m_name = currentChild->getName();
+        item->m_numChildren = currentChild->getNumChildren();
+        item->m_childrenIds = new i32[ item->m_numChildren ];
+        
+        for (ui32 j = 0; j < item->m_numChildren; ++j) {
+            item->m_childrenIds[ i ] = getNodeIndex( currentChild->getChildAt( j ), nodeArray );
+        }
+    }
+
     return 0;
 }

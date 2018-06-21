@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
     
-Win32Surface::Win32Surface( WindoweProperties *properties )
+Win32Window::Win32Window( WindowsProperties *properties )
 : AbstractWindow( properties )
 , m_hInstance( nullptr )
 , m_wnd( nullptr )
@@ -34,12 +34,12 @@ Win32Surface::Win32Surface( WindoweProperties *properties )
     // empty
 }
 
-Win32Surface::~Win32Surface( ) {
+Win32Window::~Win32Window( ) {
     // empty
 }
 
 
-void Win32Surface::setWindowsTitle( const String &title ) {
+void Win32Window::setWindowsTitle( const String &title ) {
     if ( nullptr == m_wnd ) {
         return;
     }
@@ -47,20 +47,20 @@ void Win32Surface::setWindowsTitle( const String &title ) {
     ::SetWindowText( m_wnd, title.c_str() );
 }
 
-HWND Win32Surface::getHWnd( ) const {
+HWND Win32Window::getHWnd( ) const {
     return m_wnd;
 }
 
-HDC Win32Surface::getDeviceContext( ) const {
+HDC Win32Window::getDeviceContext( ) const {
     return m_dc;
 }
 
-HINSTANCE Win32Surface::getModuleHandle() const {
+HINSTANCE Win32Window::getModuleHandle() const {
     return m_hInstance;
 }
 
-bool Win32Surface::onCreate( ) {
-    WindoweProperties *prop = getProperties();
+bool Win32Window::onCreate( ) {
+    WindowsProperties *prop = getProperties();
     if( nullptr == prop ) {
         return false;
     }
@@ -125,13 +125,17 @@ bool Win32Surface::onCreate( ) {
         if ( prop->m_resizable ) {
             dwStyle |= WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SIZEBOX ;
         }
+        if (prop->m_childWindow) {
+            dwExStyle = 0;
+            dwStyle = WS_VISIBLE;
+        }
     }
 
     m_wnd = ::CreateWindowEx( dwExStyle,
         prop->m_title.c_str(),
         prop->m_title.c_str(),
         dwStyle | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
-        prop->m_x, 
+        prop->m_x,
         prop->m_y,
         realWidth, 
         realHeight,
@@ -161,8 +165,8 @@ bool Win32Surface::onCreate( ) {
     return true;
 }
 
-bool Win32Surface::onDestroy( ) {
-    WindoweProperties *prop = getProperties();
+bool Win32Window::onDestroy( ) {
+    WindowsProperties *prop = getProperties();
     if( nullptr == prop ) {
         return false;
     }
@@ -198,7 +202,7 @@ bool Win32Surface::onDestroy( ) {
     return true;
 }
 
-bool Win32Surface::onUpdateProperies() {
+bool Win32Window::onUpdateProperies() {
     const ui32 flags( AbstractWindow::getFlags() );
     if( flags | SF_WinTitleDirty ) {
         const String &title(AbstractWindow::getProperties()->m_title );
@@ -209,9 +213,9 @@ bool Win32Surface::onUpdateProperies() {
     return true;
 }
 
-void Win32Surface::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
+void Win32Window::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
     ::SetWindowPos( m_wnd, HWND_TOP, x, y, w, h, SWP_NOSIZE );
-    WindoweProperties *props( AbstractWindow::getProperties() );
+    WindowsProperties *props( AbstractWindow::getProperties() );
     if ( nullptr != props ) {
         props->m_x = x;
         props->m_y = y;

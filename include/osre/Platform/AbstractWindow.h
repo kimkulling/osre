@@ -56,7 +56,7 @@ struct OSRE_EXPORT Resolution {
 ///
 ///	@brief  This struct stores all surface related information.
 //-------------------------------------------------------------------------------------------------
-struct WindoweProperties {
+struct WindowsProperties {
     ui32   m_x;                   ///< Upper left x coordinate.
     ui32   m_y;                   ///< Upper left y coordinate.
     ui32   m_width;               ///< Width of the surface.
@@ -67,6 +67,7 @@ struct WindoweProperties {
     String m_title;               ///< Window title.
     bool   m_fullscreen;          ///< true for full screen.
     bool   m_resizable;           ///< true, if window wan be resized.
+    bool   m_childWindow;         ///< true, if the window is a child window, for embedding
     bool   m_open;                ///< Window is open flag.
 
     void getDimension(Rect2ui &rect) {
@@ -93,7 +94,7 @@ public:
 
     /// @brief  The class constructor.
     /// @param  props       [in] The surface properties.
-    explicit AbstractWindow( WindoweProperties *props );
+    explicit AbstractWindow( WindowsProperties *props );
 
     /// @brief  The class destructor, virtual.
     virtual ~AbstractWindow();
@@ -113,12 +114,12 @@ public:
     /// @brief  Setter to update all properties. updateProperties must be called to 
     ///         apply changed properties.
     /// @param  props       [in] The new properties.
-    void setProperties( WindoweProperties *props );
+    void setProperties( WindowsProperties *props );
 
     /// @brief  Returns a non-const pointer to the window properties. setFlags must 
     ///         be called manually followed by updateProperties to apply changes.
     /// @return Pointer showing to the surface properties.
-    WindoweProperties *getProperties();
+    WindowsProperties *getProperties();
     
     /// @brief  Setting of a new flag.
     /// @param  flags       [in] The new flags.
@@ -146,7 +147,7 @@ protected:
 
 private:
     ui32 m_flags;
-    WindoweProperties *m_pProperties;
+    WindowsProperties *m_properties;
     bool m_isCreated;
 };
 

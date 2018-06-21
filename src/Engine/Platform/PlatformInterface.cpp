@@ -170,11 +170,11 @@ bool PlatformInterface::onOpen() {
     Settings::WorkingModeType appType = 
         static_cast<Settings::WorkingModeType>( m_config->get( Settings::AppType ).getInt() );
 
-    WindoweProperties *props( nullptr );
+    WindowsProperties *props( nullptr );
     bool polls( false );
     if( appType == Settings::GfxApp ) {
         // get the configuration values for the window
-        props = new WindoweProperties;
+        props = new WindowsProperties;
         bool fullscreen = false;
         props->m_x = m_config->get( Settings::WinX ).getInt();
         props->m_y = m_config->get( Settings::WinY ).getInt();
@@ -229,7 +229,7 @@ bool PlatformInterface::onUpdate() {
     return m_oseventHandler->update();
 }
 
-bool PlatformInterface::setupGfx( WindoweProperties *props, bool polls ) {
+bool PlatformInterface::setupGfx( WindowsProperties *props, bool polls ) {
     // create the root surface
     m_rootSurface = PlatformPluginFactory::createSurface( m_type, props );
     if( !m_rootSurface->create() ) {

@@ -8,18 +8,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using OSREEditor.View;
+using OSREEditor.Model;
 
 namespace OSREEditor
 {
     public partial class MainEditorWindow : Form
     {
+        Project _project;
         public MainEditorWindow()
         {
             InitializeComponent();
+
             this.MouseMove += Window_MouseMove;
             this.MouseWheel += Window_MouseWheel;
             this.MouseDown += Window_MouseClick;
             this.MouseUp += Window_MouseClick;
+
+            _project = new Project();
         }
 
         private void quitToolStripMenuItem_Quit_Click(object sender, EventArgs e)
@@ -31,6 +36,9 @@ namespace OSREEditor
         {
             IntPtr windowsHandle = this.Handle;
             OSREWrapper.CreateEditorApp(windowsHandle);
+            _project.ProjectName = "New Project";
+
+            OSREWrapper.NewProject(_project.ProjectName);
         }
 
         private void openToolStripMenuItem_Open_Click(object sender, EventArgs e)
@@ -77,7 +85,24 @@ namespace OSREEditor
                 var retValue = OSREWrapper.ImportAsset(filename, 0);
                 if ( 0 == retValue )
                 {
+                    int numItems = OSREWrapper.GetNumItems();
+                    if ( numItems == 0 )
+                    {
+                        return;
+                    }
 
+                    OSREWrapper.NativeStreeItem[] items = new OSREWrapper.NativeStreeItem[numItems];
+                    OSREWrapper.GetNodeHierarchy(numItems, items);
+                    this.treeView1.BeginUpdate();
+                    TreeNode newNode = new TreeNode();
+                    foreach ( var item in items )
+                    {
+                        var name = item.m_name;
+                    }
+                    this.treeView1.EndUpdate();
+
+                //    this.treeView1.SelectedNode.
+                
                 }
             }
         }
@@ -105,6 +130,16 @@ namespace OSREEditor
         private void Window_MouseClick(object sender, MouseEventArgs e)
         {
             bool isDown = IsDown(e.Clicks);
+            int clicked = 0;
+            if (isDown)
+            {
+                clicked = 1;
+            }
+
+            int x = e.X;
+            int y = e.Y;
+
+            OSREWrapper.CSharpEvent ev;
         }
     }
 }

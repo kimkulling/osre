@@ -45,7 +45,7 @@ class AbstractThreadFactory;
 class AbstractDynamicLoader;
 class AbstractSystemInfo;
 
-struct WindoweProperties;
+struct WindowsProperties;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Infrastructure
@@ -63,7 +63,7 @@ struct PlatformPluginFactory {
     static AbstractPlatformEventQueue *createPlatformEventHandler( PluginType type, AbstractWindow *rootSurface );
 
     /// @brief  Creates a platform-specific surface instance.
-    static AbstractWindow *createSurface( PluginType type, WindoweProperties *pProps );
+    static AbstractWindow *createSurface( PluginType type, WindowsProperties *pProps );
 
     /// @brief  Creates a platform-specific render context.
     static AbstractRenderContext *createRenderContext( PluginType type );

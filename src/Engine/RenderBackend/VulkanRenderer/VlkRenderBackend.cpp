@@ -88,7 +88,7 @@ bool VlkRenderBackend::create( Platform::AbstractWindow *rootSurface ) {
         return false;
     }
 #ifdef OSRE_WINDOWS
-    Win32Surface *win32Surface = ( Win32Surface* ) rootSurface;
+    Win32Window *win32Surface = ( Win32Window* ) rootSurface;
     m_window.m_instance = win32Surface->getModuleHandle();
     m_window.m_handle = win32Surface->getHWnd();
 #endif
