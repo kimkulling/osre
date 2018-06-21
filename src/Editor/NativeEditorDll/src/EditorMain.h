@@ -2,6 +2,8 @@
 
 #include <osre/Common/osre_common.h>
 
+using namespace ::OSRE;
+
 #ifdef OSRE_WINDOWS
 #  define TAG_DLL_EXPORT __declspec(dllexport)
 #  define TAG_DLL_IMPORT __declspec(dllimport )

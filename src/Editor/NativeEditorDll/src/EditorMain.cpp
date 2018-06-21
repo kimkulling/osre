@@ -132,10 +132,13 @@ public:
     }
 
 protected:
-    bool onCreate(Properties::Settings *settings = nullptr) override {
-        Properties::Settings *baseSettings(AppBase::getSettings());
-        if (nullptr == baseSettings) {
-            return false;
+    bool onCreate( Properties::Settings *settings = nullptr ) override {
+        Properties::Settings *baseSettings(settings);
+        if (baseSettings == nullptr) {
+            baseSettings = AppBase::getSettings();
+            if (nullptr == baseSettings) {
+                return false;
+            }
         }
 
         baseSettings->setString(Properties::Settings::WindowsTitle, "Demo UI!");

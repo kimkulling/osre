@@ -32,30 +32,27 @@ namespace Platform {
 
 static const String Tag = "SDL2RenderContext";
 
-//-------------------------------------------------------------------------------------------------
 SDL2RenderContext::SDL2RenderContext()
 : AbstractRenderContext()
-, m_pContext( nullptr )
-, m_pSurface( nullptr )
+, m_renderContext( nullptr )
+, m_surface( nullptr )
 , m_isActive( false ) {
-// empty
+    // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 SDL2RenderContext::~SDL2RenderContext( ) {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
-bool SDL2RenderContext::onCreate( AbstractWindow *pSurface ) {
-    if( !pSurface ) {
+bool SDL2RenderContext::onCreate( AbstractWindow *window ) {
+    if( !window ) {
         osre_error( Tag, "Surface pointer is a nullptr." );
         return false;
     }
 
-    m_pSurface = reinterpret_cast< SDL2Surface* >( pSurface );
-    m_pContext = SDL_GL_CreateContext( m_pSurface->getSDLSurface() );
-    if( !m_pContext ) {
+    m_surface = reinterpret_cast< SDL2Surface* >( window );
+    m_renderContext = SDL_GL_CreateContext( m_surface->getSDLSurface() );
+    if( !m_renderContext ) {
         osre_error( Tag, "Error while creating GL-context.!" );
         return false;
     }
@@ -76,13 +73,13 @@ bool SDL2RenderContext::onCreate( AbstractWindow *pSurface ) {
 
 //-------------------------------------------------------------------------------------------------
 bool SDL2RenderContext::onDestroy( ) {
-    if( !m_pContext ) {
+    if( !m_renderContext ) {
         osre_error( Tag, "Context pointer is a nullptr." );
         return false;
     }
 
-    SDL_GL_DeleteContext( m_pContext );
-    m_pContext = nullptr;
+    SDL_GL_DeleteContext( m_renderContext );
+    m_renderContext = nullptr;
 
     return true;
 }
@@ -92,7 +89,7 @@ bool SDL2RenderContext::onUpdate( ) {
     if ( !m_isActive ) {
         osre_debug( Tag, "No active render context." );
     }
-    SDL_GL_SwapWindow( m_pSurface->getSDLSurface() );
+    SDL_GL_SwapWindow( m_surface->getSDLSurface() );
 
     return true;
 }
@@ -100,7 +97,7 @@ bool SDL2RenderContext::onUpdate( ) {
 //-------------------------------------------------------------------------------------------------
 bool SDL2RenderContext::onActivate( ) {
     m_isActive = true;
-    const i32 retCode( SDL_GL_MakeCurrent( m_pSurface->getSDLSurface(), m_pContext ) );
+    const i32 retCode( SDL_GL_MakeCurrent( m_surface->getSDLSurface(), m_renderContext ) );
     return ( retCode == 0 );
 }
 

@@ -117,7 +117,9 @@ TEST_F( NodeTest, activeTest ) {
 }
 
 TEST_F( NodeTest, onUpdateTest ) {
-    Node *myNode = createNode( "parent", *m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, nullptr );
+    Node *myNode = createNode( "parent", *m_ids, Node::RenderCompRequest::RenderCompRequested, 
+        Node::TransformCompRequest::TransformCompRequested, nullptr );
+    EXPECT_NE(nullptr, myNode);
 }
 
 } // Namespace UnitTest

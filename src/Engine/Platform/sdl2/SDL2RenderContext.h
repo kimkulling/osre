@@ -31,6 +31,7 @@ namespace Platform {
 
 class SDL2Surface;
 
+//-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Platform::SDL2RenderContext
 ///	@ingroup	Engine
 ///
@@ -38,7 +39,9 @@ class SDL2Surface;
 //-------------------------------------------------------------------------------------------------
 class SDL2RenderContext : public AbstractRenderContext {
 public:
+    /// The class constructor.
     SDL2RenderContext();
+    ///  The class destructor.
     virtual ~SDL2RenderContext();
 
 protected:
@@ -48,8 +51,8 @@ protected:
     virtual bool onActivate( );
 
 private:
-    SDL_GLContext m_pContext;
-    SDL2Surface *m_pSurface;
+    SDL_GLContext m_renderContext;
+    SDL2Surface *m_surface;
     bool m_isActive;
 };
 
