@@ -59,6 +59,7 @@ public:
     virtual ~UIDemoApp() {
         // empty
     }
+
     void openFileCallback( ui32 id, void *data ) {
         IO::Uri loc;
         PlatformOperations::getFileOpenDialog( "All\0 *.*\0", loc );

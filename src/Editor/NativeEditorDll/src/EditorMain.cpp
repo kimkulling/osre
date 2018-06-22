@@ -6,6 +6,8 @@
 #include <osre/App/AppBase.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Platform/AbstractWindow.h>
+#include <osre/Platform/PlatformInterface.h>
+#include <osre/Platform/AbstractPlatformEventQueue.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
@@ -31,13 +33,39 @@ using namespace ::OSRE;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Properties;
+using namespace ::OSRE::Platform;
 using namespace ::OSRE::Scene;
+
+class EditorApplication;
+
+static const String Tag = "EditorMain";
+
+class MouseEventListener : public Platform::OSEventListener {
+public:
+    MouseEventListener(EditorApplication *app)
+    : OSEventListener("Editor/MouseEventListener") {
+
+    }
+
+    ~MouseEventListener() {
+        // empty
+    }
+
+    void onOSEvent(const Event &osEvent, const EventData *data) override {
+        if (osEvent == Platform::MouseButtonDownEvent ) {
+            if (nullptr != data) {
+                osre_info(Tag, "mouse click");
+            }
+        }
+    }
+};
 
 class EditorApplication : public App::AppBase {
     World *m_world;
     Stage *m_stage;
     Node::NodePtr m_modelNode;
     TransformMatrixBlock m_transformMatrix;
+    Platform::PlatformInterface *m_platformInterface;
     String m_projectName;
 
 public:
@@ -47,6 +75,7 @@ public:
     , m_stage( nullptr )
     , m_modelNode()
     , m_transformMatrix()
+    , m_platformInterface( nullptr )
     , m_projectName( "untitled" ) {
         // empty
     }
@@ -154,6 +183,10 @@ public:
         renderNode(root, rbSrv);
     }
 
+    PlatformInterface *getPlatformInterface() const {
+        return m_platformInterface;
+    }
+
 protected:
     bool onCreate( Properties::Settings *settings = nullptr ) override {
         Properties::Settings *baseSettings(settings);
@@ -173,6 +206,7 @@ protected:
         m_stage = AppBase::createStage( "HelloWorld" );
         m_world->addStage(m_stage);
 
+        m_platformInterface = Platform::PlatformInterface::getInstance();
         AppBase::activateStage( m_stage->getName() );
 
         return true;
@@ -193,7 +227,7 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
         s_EditorApplication->create();
         s_EditorApplication->update();
 
-        ::OSRE::Platform::Win32Window *window = (::OSRE::Platform::Win32Window*) s_EditorApplication->getRootWindow();
+        Win32Window *window = (Win32Window*) s_EditorApplication->getRootWindow();
         if (nullptr != window) {
             HWND childHandle = window->getHWnd();
             ::SetParent( childHandle, mainWH );
@@ -203,6 +237,13 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
 
             ::MoveWindow( childHandle, 25, 45, w - 240, rect.bottom - 45, TRUE );
         }
+
+        ::CPPCore::TArray<const Common::Event*> eventArray;
+        eventArray.add( &KeyboardButtonDownEvent );
+        OSEventListener *listener = new MouseEventListener(s_EditorApplication);
+        AbstractPlatformEventQueue *evQueue = s_EditorApplication->getPlatformInterface()->getPlatformEventHandler();
+        evQueue->registerEventListener(eventArray, listener);
+
         s_EditorApplication->requestNextFrame();
 
     }
@@ -286,20 +327,6 @@ int STDCALL ImportAsset(const char *filename, int flags) {
     return s_EditorApplication->importAsset(filename, flags);
 }
 
-static const i32 MouseDown = 1;
-static const i32 MouseUp = 2;
-
-int STDCALL EnqueueEvent( CSharpEvent *csEv ) {
-    if (nullptr == csEv || nullptr == s_EditorApplication ) {
-        return 1;
-    }
-    int retCode(0);
-    if (csEv->type == MouseDown) {
-        EventData *data = new EventData;
-        retCode = s_EditorApplication->enqueueEvent(&MouseButtonDownEvent, data );
-    }
-    return 
-}
 using NodeArray = CPPCore::TArray<Node*>;
 
 void countChildren( Node *node, ui32 &numNodes ) {

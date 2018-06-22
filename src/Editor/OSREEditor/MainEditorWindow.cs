@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using OSREEditor.View;
 using OSREEditor.Model;
@@ -15,14 +8,13 @@ namespace OSREEditor
     public partial class MainEditorWindow : Form
     {
         Project _project;
+
         public MainEditorWindow()
         {
             InitializeComponent();
 
-            this.MouseMove += Window_MouseMove;
-            this.MouseWheel += Window_MouseWheel;
-            this.MouseDown += Window_MouseClick;
-            this.MouseUp += Window_MouseClick;
+            //this.MouseWheel += Window_MouseWheel;
+            this.MouseClick += Window_MouseClick;
 
             _project = new Project();
         }
@@ -107,11 +99,6 @@ namespace OSREEditor
             }
         }
 
-        private void Window_MouseMove(object sender, MouseEventArgs e)
-        {
-
-        }
-
         private bool IsDown(int numClicks)
         {
             bool down = true;
@@ -125,18 +112,22 @@ namespace OSREEditor
         private void Window_MouseWheel(object sender, MouseEventArgs e)
         {
             bool isDown = IsDown(e.Clicks);
+
+            OSREWrapper.EditorRequestNextFrame();
         }
 
-        private void Window_MouseClick(object sender, MouseEventArgs e) {
+        private void Window_MouseClick(object sender, MouseEventArgs e)
+        {
             bool isDown = IsDown(e.Clicks);
-            int clicked = 0;
+            OSREWrapper.EditorRequestNextFrame();
+            /*int clicked = 0;
             if (isDown) {
                 clicked = 1;
             }
 
             OSREWrapper.CSharpEvent ev;
             ev.x = e.X;
-            ev.y = e.Y;
+            ev.y = e.Y;*/
         }
     }
 }

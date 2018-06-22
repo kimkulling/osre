@@ -81,8 +81,6 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL SaveWorld(const char *filelocation, in
 
 extern "C" OSRE_EDITOR_EXPORT int STDCALL ImportAsset(const char *filename, int flags);
 
-extern "C" OSRE_EDITOR_EXPORT int STDCALL EnqueueEvent( CSharpEvent *ev );
-
 extern "C" OSRE_EDITOR_EXPORT int STDCALL GetNumItems();
 
 extern "C" OSRE_EDITOR_EXPORT int STDCALL  GetNodeHierarchy( int numItems, NativeStreeItem *items );
