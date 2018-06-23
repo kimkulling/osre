@@ -148,9 +148,9 @@ AbstractFileSystem *IOService::getFileSystem( const String &schema ) const {
 
 bool IOService::fileExists( const Uri &file ) const {
     bool exists( false );
-    AbstractFileSystem *pFS = this->getFileSystem( file.getScheme() );
-    if ( pFS ) {
-        exists = pFS->fileExist( file );
+    AbstractFileSystem *fs = this->getFileSystem( file.getScheme() );
+    if ( fs ) {
+        exists = fs->fileExist( file );
     }
 
     return exists;

@@ -82,6 +82,8 @@ private:
     Scene::Node *m_parent;
     Common::Ids &m_ids;
     RenderBackend::UniformVar *m_mvpParam;
+    String m_root;
+    String m_absPathWithFile;
 };
 
 } // Namespace Assets

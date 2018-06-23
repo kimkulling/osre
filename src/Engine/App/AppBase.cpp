@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AppBase.h>
 #include <osre/App/ServiceProvider.h>
 #include <osre/Common/TObjPtr.h>
+#include <osre/IO/IOService.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractTimer.h>
@@ -50,6 +51,7 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::UI;
+using namespace ::OSRE::IO;
 
 const String API_Arg = "api";
 const String Tag     = "AppBase";
@@ -311,6 +313,8 @@ bool AppBase::onCreate( Properties::Settings *config ) {
         m_mouseEvListener = new MouseEventListener;
         evHandler->registerEventListener( eventArray, m_mouseEvListener );
     }
+
+    IO::IOService::create();
 
     // set application state to "Created"
     osre_debug( Tag, "Set application state to Created." );

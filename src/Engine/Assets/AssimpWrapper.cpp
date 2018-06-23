@@ -33,6 +33,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/Component.h>
 #include <osre/Scene/Node.h>
 #include <osre/Collision/TAABB.h>
+#include <osre/IO/IOService.h>
+#include <osre/IO/AbstractFileSystem.h>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -56,12 +58,30 @@ AssimpWrapper::AssimpWrapper( Common::Ids &ids )
 , m_model( nullptr )
 , m_parent( nullptr )
 , m_ids( ids )
-, m_mvpParam( nullptr ) {
+, m_mvpParam( nullptr )
+, m_root()
+, m_absPathWithFile() {
     // empty
 }
 
 AssimpWrapper::~AssimpWrapper() {
     // empty
+}
+
+static void separatePathAndFilename(const String pathAndFilename, String &path, String &filename) {
+    path.clear();
+    filename.clear();
+    if (pathAndFilename.empty()) {
+        return;
+    }
+
+    String::size_type pos = pathAndFilename.rfind("/");
+    if (String::npos == pos) {
+        return;
+    }
+
+    path = pathAndFilename.substr(0, pos+1);
+    filename = pathAndFilename.substr(pos+1, pathAndFilename.size() - pos-1);
 }
 
 bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
@@ -82,13 +102,17 @@ bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
         | aiProcess_SortByPType;
     flags = importFlags;
 
-    String root = AssetRegistry::getPath( "media" );
-    String path = AssetRegistry::resolvePathFromUri( file );
+    m_root = AssetRegistry::getPath( "media" );
+    m_absPathWithFile = AssetRegistry::resolvePathFromUri( file );
 
-    String filename = root + path;
+    String filename;
+    separatePathAndFilename(m_absPathWithFile, m_root, filename);
+    filename = m_root + filename;
     Importer myImporter;
     const aiScene *scene = myImporter.ReadFile( filename, flags );
     if ( nullptr == scene ) {
+        m_root = "";
+        m_absPathWithFile = "";
         return false;
     }
     convertSceneToModel( scene );
@@ -259,20 +283,33 @@ static void setColor4( const aiColor4D &aiCol, Color4 &col ) {
     col.m_a = aiCol.a;
 }
 
-static void setTexture( const aiString &texPath, CPPCore::TArray<Texture*> &textures ) {
+using IO::Stream;
+using IO::AbstractFileSystem;
+
+static void setTexture( const String &resolvedPath, const aiString &texPath, CPPCore::TArray<Texture*> &textures ) {
     Texture *tex = new Texture;
     textures.add( tex );
     String texname;
     texname += "file://";
+    texname += resolvedPath;
     String temp( texPath.C_Str() ), temp1;
     IO::Uri::normalizePath( temp, '\\', temp1 );
     texname += temp1;
+
 
     tex->m_loc = IO::Uri( texname );
     String::size_type pos = texname.rfind( "/" );
     if ( pos != String::npos ) {
         texname = texname.substr( pos, texname.size() - pos );
     }
+    if (IO::IOService::getInstance()->fileExists(tex->m_loc)) {
+        IO::AbstractFileSystem *fs = IO::IOService::getInstance()->getFileSystem("file");
+        IO::Stream *file = fs->open(tex->m_loc, IO::Stream::AccessMode::ReadAccess);
+        tex->m_size = file->getSize();
+        file->read(tex->m_data, tex->m_size);
+        fs->close(&file);
+    }
+        
     tex->m_textureName = texname;
     tex->m_width = 0;
     tex->m_height = 0;
@@ -309,7 +346,7 @@ void AssimpWrapper::handleMaterial( aiMaterial *material ) {
     aiString texPath;	// contains filename of texture
     CPPCore::TArray<Texture*> textures;
     if ( AI_SUCCESS == material->GetTexture( aiTextureType_DIFFUSE, texIndex, &texPath ) ) {
-        setTexture( texPath, textures );
+        setTexture( m_root, texPath, textures );
     }
     assignTexturesToMat( osreMat, textures );
 
