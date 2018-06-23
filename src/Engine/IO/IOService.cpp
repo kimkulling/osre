@@ -53,6 +53,8 @@ IOService::IOService()
 : AbstractService( "io/ioserver" )
 , m_mountedMap() {
     CREATE_SINGLETON( IOService );
+
+    m_mountedMap["file"] = new LocaleFileSystem();
 }
 
 IOService::~IOService() {
