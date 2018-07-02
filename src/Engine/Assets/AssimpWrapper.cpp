@@ -296,7 +296,6 @@ static void setTexture( const String &resolvedPath, const aiString &texPath, CPP
     IO::Uri::normalizePath( temp, '\\', temp1 );
     texname += temp1;
 
-
     tex->m_loc = IO::Uri( texname );
     String::size_type pos = texname.rfind( "/" );
     if ( pos != String::npos ) {

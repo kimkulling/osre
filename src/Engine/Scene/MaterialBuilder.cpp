@@ -37,8 +37,8 @@ static const String GLSLRenderVertexLayout =
 	"// RenderVertex layout\n"
 	"layout(location = 0) in vec3 position;	  // object space vertex position\n"
 	"layout(location = 1) in vec3 normal;	  // object space vertex normal\n"
-	"layout(location = 2) in vec3 color0;     // per-vertex colour\n"
-	"layout(location = 3) in vec2 texcoord0;  // per-vertex colour\n"
+	"layout(location = 2) in vec3 color0;     // per-vertex diffuse colour\n"
+	"layout(location = 3) in vec2 texcoord0;  // per-vertex tex coord, stage 0\n"
 	"\n";
 
 static const String CombinedMVPUniformSrc =
@@ -114,8 +114,9 @@ const String FsSrcRV =
     "void main()\n"
     "{\n"
     "    // set the interpolated color as the shader output\n"
-	"    vec4 texColor = texture( tex0, vUV );\n"
-	"    vFragColor = texColor + vSmoothColor;\n"
+    "    vFragColor = texture( tex0, vUV );\n"
+    //"    vec4 texColor = texture( tex0, vUV );\n"
+	//"    vFragColor = texColor + vSmoothColor;\n"
     "}\n";
 
 const String VsSrcUI =

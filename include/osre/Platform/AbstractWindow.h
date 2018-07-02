@@ -85,6 +85,7 @@ struct WindowsProperties {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractWindow {
 public:
+    /// @brief  The Windows flags.
     enum SurfaceFlagType {
         SF_PropertiesClean = 0,
         SF_WinTitleDirty   = ( 1 << 1 ),
@@ -136,13 +137,11 @@ public:
 protected:
     /// @brief  Callback to override on creation.
     virtual bool onCreate() = 0;
-    
     /// @brief  Callback to override on destroying.
     virtual bool onDestroy() = 0;
-    
     /// @brief  Callback to override on updates.
     virtual bool onUpdateProperies() = 0;
-
+    /// @brief  The onResize callback.
     virtual void onResize( ui32 x, ui32 y, ui32 w, ui32 h ) = 0;
 
 private:

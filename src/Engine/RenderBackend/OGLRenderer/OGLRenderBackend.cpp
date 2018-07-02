@@ -780,7 +780,8 @@ void OGLRenderBackend::releaseAllTextures( ) {
     m_texLookupMap.clear();
 }
 
-OGLParameter *OGLRenderBackend::createParameter( const String &name, ParameterType type,  UniformDataBlob *blob, ui32 numItems ) {    
+OGLParameter *OGLRenderBackend::createParameter( const String &name, ParameterType type,  
+        UniformDataBlob *blob, ui32 numItems ) {    
     // Check if the parameter is already there
     OGLParameter *param = getParameter( name );
     if ( nullptr != param ) {
@@ -1072,7 +1073,8 @@ void OGLRenderBackend::setFixedPipelineStates( const RenderStates &states ) {
         glDisable( GL_CULL_FACE );
     } else {
         glEnable( GL_CULL_FACE );
-        glPolygonMode( OGLEnum::getOGLCullFace(m_fpState->m_cullState.getCullFace()), OGLEnum::getOGLPolygonMode(m_fpState->m_polygonState.getPolygonMode() ) );
+        glPolygonMode( OGLEnum::getOGLCullFace(m_fpState->m_cullState.getCullFace()), 
+                OGLEnum::getOGLPolygonMode(m_fpState->m_polygonState.getPolygonMode() ) );
         glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );
     }
 

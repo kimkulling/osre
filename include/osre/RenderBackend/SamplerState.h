@@ -35,24 +35,28 @@ namespace RenderBackend {
 class SamplerState {
 public:
     SamplerState();
-    SamplerState( TextureTargetType targetType );
+    SamplerState( TextureTargetType targetType, TextureStageType stageType);
     ~SamplerState();
     bool operator == ( const SamplerState &rhs ) const;
     bool operator != ( const SamplerState &rhs ) const;
 
 private:
     TextureTargetType m_targetType;
+    TextureStageType  m_stageType;
 };
 
 inline
 SamplerState::SamplerState() 
-: m_targetType( TextureTargetType::Texture2D ) {
+: m_targetType( TextureTargetType::Texture2D )
+, m_stageType( TextureStageType::TextureStage0 ) {
     // empty
 }
 
 inline
-SamplerState::SamplerState( TextureTargetType targetType ) 
-: m_targetType( targetType ) {
+SamplerState::SamplerState( TextureTargetType targetType, TextureStageType stageType)
+: m_targetType( targetType )
+, m_stageType( stageType ) {
+
     // empty
 }
 
@@ -63,7 +67,8 @@ SamplerState::~SamplerState() {
 
 inline
 bool SamplerState::operator == ( const SamplerState &rhs ) const {
-    return ( m_targetType == rhs.m_targetType );
+    return ( m_targetType == rhs.m_targetType 
+        &&  m_stageType == rhs.m_stageType );
 }
 
 inline

@@ -164,6 +164,7 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
 #else
         0,
 #endif
+        
         0
     };
 
@@ -191,7 +192,8 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
             return false;
         }
     } else {
-        // It's not possible to make a GL 3.x context. Use the old style context (GL 2.1 and before)
+        // It's not possible to make a GL 3.x context. Use the old style 
+        // context (GL 2.1 and before)
         rc = tempContext;
     }
 
