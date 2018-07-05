@@ -34,18 +34,25 @@ static const String ModelPath = "file://assets/Models/Obj/box.obj";
 
 // The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
+    String m_assetFolder;
     Scene::Stage *m_stage;
     Scene::View  *m_view;
     f32 m_angle;
+    Common::Ids m_ids;
+    glm::mat4 m_model;
     TransformMatrixBlock m_transformMatrix;
+    Node::NodePtr m_modelNode;
 
 public:
     ModelLoadingApp( int argc, char *argv[] )
     : AppBase( argc, argv )
+    , m_assetFolder("")
     , m_stage( nullptr )
     , m_view( nullptr )
     , m_angle( 0.0f )
-    , m_transformMatrix() {
+    , m_ids()
+    , m_transformMatrix()
+    , m_modelNode() {
         // empty
     }
 
@@ -54,15 +61,22 @@ public:
     }
 
 protected:
-    bool onCreate( Properties::Settings *settings = nullptr ) override {
-        Properties::Settings *baseSettings( AppBase::getSettings() );
-        if ( nullptr == baseSettings ) {
-            return false;
+        Properties::Settings *appSettings( settings );
+        if ( nullptr == appSettings ) {
+            appSettings = AppBase::getSettings();
+            if ( nullptr == appSettings ) {
+                return false;
+            }
         }
        
-        baseSettings->setString( Properties::Settings::WindowsTitle, "Model Loader!" );
-        if ( !AppBase::onCreate( baseSettings ) ) {
+        appSettings->setString( Properties::Settings::WindowsTitle, "Model Loader!" );
+        if ( !AppBase::onCreate( appSettings ) ) {
             return false;
+        }
+
+        const Common::ArgumentParser &parser = AppBase::getArgumentParser();
+        if ( parser.hasArgument( AssetFolderArg ) ) {
+            m_assetFolder = parser.getArgument( AssetFolderArg );
         }
 
 #ifdef OSRE_WINDOWS
@@ -70,6 +84,7 @@ protected:
 #else
         Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
 #endif 
+        Scene::DbgRenderer::getInstance()->renderDbgText( 0, 0, 2U, "XXX" );
 
         Ids ids;
         Assets::AssimpWrapper assimpWrapper( ids );
@@ -77,42 +92,85 @@ protected:
         if ( assimpWrapper.importAsset( modelLoc, 0 ) ) {
             Assets::Model *model = assimpWrapper.getModel();
             Collision::TAABB<f32> aabb = model->getAABB();
+            const f32 diam = aabb.getDiameter();
+            const Vec3f center = aabb.getCenter();
 
             CPPCore::TArray<Geometry*> geoArray = model->getGeoArray();
             m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
             m_transformMatrix.update();
             RenderBackendService *rbSrv( getRenderBackendService() );
             if ( nullptr != rbSrv ) {
-                /*rbSrv->setMatrix( "M", m_transformMatrix.m_model );
-                rbSrv->setMatrix( "V", m_transformMatrix.m_view );
-                rbSrv->setMatrix( "P", m_transformMatrix.m_projection );*/
-                rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
-                rbSrv->attachGeo( geoArray, 0 );
-            }
+                Platform::AbstractWindow *rootWindow(getRootWindow());
+                if ( nullptr == rootWindow ) {
+                    return false;
+                }
+                const i32 w = rootWindow->getProperties()->m_width;
+                const i32 h = rootWindow->getProperties()->m_height;
+                const f32 aspect = static_cast<f32>(w) / static_cast<f32>(h);
+                const f32 zNear = 0.0001f;
+                const f32 zFar = 1000.f;
+                
+                glm::vec3 eye( diam, 0, 0), up(0, 0, 1);
+                glm::vec3 c(center.getX(), center.getY(), center.getZ());
+                
+                m_transformMatrix.m_model = glm::mat4(1.0f);
+                m_transformMatrix.m_projection = glm::perspective(glm::radians(60.0f), aspect, zNear, zFar);
+                m_transformMatrix.m_view = glm::lookAt(eye, c, up);
+                rbSrv->setMatrix(MatrixType::View, m_transformMatrix.m_view);
+                rbSrv->setMatrix(MatrixType::Projection, m_transformMatrix.m_projection);
 
-            Stage *myStage = AppBase::createStage( "ModelLoading" );
+                renderNodes(model, rbSrv);
+            }
+            m_stage = AppBase::createStage( "ModelLoading" );
+            const String name(model->getRootNode()->getName());
+            m_modelNode = m_stage->addNode(name, nullptr, "default" );
         }
 
         return true;
     }
 
-	// Lets rotate
-    void onUpdate( d32 timetick ) override {
+    void renderNode(Node *currentNode, RenderBackendService *rbSrv) {
+        const ui32 numGeo = currentNode->getNumGeometries();
+        for (ui32 i = 0; i < numGeo; ++i) {
+            rbSrv->attachGeo(currentNode->getGeometryAt(i), 0 );
+        }
+
+        for (ui32 i = 0; i < currentNode->getNumChildren(); ++i) {
+            Node *current = currentNode->getChildAt(i);
+            renderNode(current, rbSrv);
+        }
+    }
+
+    void renderNodes(Assets::Model *model, RenderBackendService *rbSrv) {
+        if (nullptr == model) {
+            return;
+        }
+
+        Node *root = model->getRootNode();
+        if (nullptr == root) {
+            return;
+        }
+
+        renderNode(root, rbSrv);
+    }
+
+    void onUpdate() override {
+        // Rotate the model
         glm::mat4 rot( 1.0 );
         m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
-        m_transformMatrix.update();
+
         m_angle += 0.01f;
         RenderBackendService *rbSrv( getRenderBackendService() );
 
-        AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
-        AppBase::onUpdate( timetick );
+        rbSrv->setMatrix( MatrixType::Model, m_transformMatrix.m_model);
+        
+        AppBase::onUpdate();
     }
-
 };
 
 OSRE_MAIN( ModelLoadingApp )
 ```
-At first we are generating our render window as usual. IN the onCreate-Method we will generate the 
+At first we are generating our render window as usual. In the onCreate-Method we will generate the 
 assimp-wrapper and import a model with it.
 
 In the onUpdate-callback the model will be rotated.
