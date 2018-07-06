@@ -640,22 +640,22 @@ void DX11Renderer::setMatrix(MatrixType type, const glm::mat4 &mat) {
     }
 }
 
+static const glm::mat4 Dummy(1);
+
 const glm::mat4 &DX11Renderer::getMatrix(MatrixType type) const {
-    glm::mat4 mat;
     switch (type) {
         case MatrixType::Model:
-            mat = m_worldMatrix;
-            break;
+            return m_worldMatrix;
+
         case MatrixType::View:
-            mat = m_orthoMatrix;
-            break;
+            return m_orthoMatrix;
+
         case MatrixType::Projection:
-            mat = m_projectionMatrix;
-            break;
+            return m_projectionMatrix;
         default:
             break;
     }
-    return mat;
+    return Dummy;
 }
 
 void DX11Renderer::setConstantBuffer(ui32 bufferNumber, ID3D11Buffer *constantBuffer) {
