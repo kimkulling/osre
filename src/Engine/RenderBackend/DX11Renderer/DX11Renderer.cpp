@@ -1,12 +1,41 @@
+/*-----------------------------------------------------------------------------------------------
+The MIT License (MIT)
+
+Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-----------------------------------------------------------------------------------------------*/
 #include "DX11Renderer.h"
 #include <osre/Common/Logger.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/AbstractRenderContext.h>
 #include <src/Engine/Platform/win32/Win32Window.h>
 
-#include <d3d11.h>
-#include <D3Dcompiler.h>
-#include <glm/gtc/matrix_transform.hpp>
+#pragma warning( push )
+#   pragma warning( disable : 4005 )
+#   include <d3d11.h>
+#   include <D3Dcompiler.h>
+#pragma warning( pop )
+
+#pragma warning( push )
+#   pragma warning( disable : 4201 )
+#   include <glm/gtc/matrix_transform.hpp>
+#pragma warning( pop )
 
 
 #pragma comment(lib, "dxgi.lib")
@@ -89,7 +118,6 @@ bool DX11Renderer::create(Platform::AbstractWindow *surface) {
     }
 
     // Now fill the display mode list structures.
-    unsigned int  numerator, denominator, stringLength;
     result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
     if (FAILED(result)) {
         return false;
@@ -99,6 +127,7 @@ bool DX11Renderer::create(Platform::AbstractWindow *surface) {
     // When a match is found store the numerator and denominator of the refresh rate for that monitor.
     ui32 screenWidth = surface->getProperties()->m_width;
     ui32 screenHeight = surface->getProperties()->m_height;
+    ui32 numerator(0), denominator( 0 );
     for (ui32 i = 0; i < numModes; i++) {
         if (displayModeList[i].Width == (unsigned int)screenWidth) {
             if (displayModeList[i].Height == (unsigned int)screenHeight) {
@@ -118,6 +147,7 @@ bool DX11Renderer::create(Platform::AbstractWindow *surface) {
     m_videoCardMemory = (int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
 
     // Convert the name of the video card to a character array and store it.
+    ui32 stringLength(0);
     i32 error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
     if ( 0 != error ) {
         return false;
@@ -199,8 +229,7 @@ bool DX11Renderer::create(Platform::AbstractWindow *surface) {
 
     // Get the pointer to the back buffer.
     result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
-    if (FAILED(result))
-    {
+    if (FAILED(result)) {
         return false;
     }
 
@@ -232,8 +261,7 @@ bool DX11Renderer::create(Platform::AbstractWindow *surface) {
 
     // Create the texture for the depth buffer using the filled out description.
     result = m_device->CreateTexture2D(&depthBufferDesc, NULL, &m_depthStencilBuffer);
-    if (FAILED(result))
-    {
+    if (FAILED(result)) {
         return false;
     }
 
@@ -302,8 +330,7 @@ bool DX11Renderer::create(Platform::AbstractWindow *surface) {
 
     // Create the rasterizer state from the description we just filled out.
     result = m_device->CreateRasterizerState(&rasterDesc, &m_rasterState);
-    if (FAILED(result))
-    {
+    if (FAILED(result)) {
         return false;
     }
 
@@ -558,8 +585,10 @@ static void ShowCompileError(ID3D10Blob *errorMessage) {
     }
 
     const char *compileErrors = static_cast<char*>(errorMessage->GetBufferPointer());
-    const size_t size(errorMessage->GetBufferSize());
-    osre_error(Tag, compileErrors);
+    const size_t size( errorMessage->GetBufferSize() );
+    if (nullptr != compileErrors) {
+        osre_error(Tag, compileErrors);
+    }
 }
 
 DX11Shader *DX11Renderer::createShader(Shader *shader) {
