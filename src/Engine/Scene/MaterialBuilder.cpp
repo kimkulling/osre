@@ -41,11 +41,11 @@ static const String GLSLRenderVertexLayout =
 	"layout(location = 3) in vec2 texcoord0;  // per-vertex tex coord, stage 0\n"
 	"\n";
 
-static const String CombinedMVPUniformSrc =
+static const String GLSLCombinedMVPUniformSrc =
     "// uniform\n"
     "uniform mat4 MVP;	//combined modelview projection matrix\n";
 
-static const String VsSrc =
+static const String GLSLVsSrc =
     GLSLVersionString_400 +
     "\n"
     "layout(location = 0) in vec3 position;	      // object space vertex position\n"
@@ -55,7 +55,7 @@ static const String VsSrc =
     "// output from the vertex shader\n"
     "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
     "\n"
-    + CombinedMVPUniformSrc +
+    + GLSLCombinedMVPUniformSrc +
     "\n"
     "void main() {\n"
     "    // assign the per-vertex color to vSmoothColor varying\n"
@@ -65,7 +65,7 @@ static const String VsSrc =
     "    gl_Position = MVP*vec4(position,1);\n"
     "}\n";
 
-const String FsSrc =
+const String GLSLFsSrc =
     GLSLVersionString_400 +
     "\n"
     "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
@@ -78,7 +78,7 @@ const String FsSrc =
     "    vFragColor = vSmoothColor;\n"
     "}\n";
 
-const String VsSrcRV =
+const String GLSLVsSrcRV =
     GLSLVersionString_400 +
     "\n"
 	+ GLSLRenderVertexLayout +
@@ -87,7 +87,7 @@ const String VsSrcRV =
     "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
     "smooth out vec2 vUV;\n"
     "\n"
-    + CombinedMVPUniformSrc +
+    + GLSLCombinedMVPUniformSrc +
     "\n"
     "void main()\n"
     "{\n"
@@ -101,7 +101,7 @@ const String VsSrcRV =
     "    vUV = texcoord0;\n"
     "}\n";
 
-const String FsSrcRV =
+const String GLSLFsSrcRV =
     GLSLVersionString_400 +
     "\n"
     "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
@@ -119,7 +119,7 @@ const String FsSrcRV =
 	//"    vFragColor = texColor + vSmoothColor;\n"
     "}\n";
 
-const String VsSrcUI =
+const String GLSLVsSrcUI =
     GLSLVersionString_400 +
     "\n"
     + GLSLRenderVertexLayout +
@@ -140,7 +140,7 @@ const String VsSrcUI =
     "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
     "smooth out vec2 vUV;\n"
     "\n"
-    + CombinedMVPUniformSrc +
+    + GLSLCombinedMVPUniformSrc +
     "\n"
     "void main()\n"
     "{\n"
@@ -154,7 +154,7 @@ const String VsSrcUI =
     "    vUV = texcoord0;\n"
     "}\n";
 
-const String FsSrcUI =
+const String GLSLFsSrcUI =
     GLSLVersionString_400 +
     "\n"
     "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
@@ -170,13 +170,13 @@ const String FsSrcUI =
     "    vFragColor = vSmoothColor;\n"
     "}\n";
 
-static const String VSLightRenderVertexSrc = 
+static const String GLSLVSLightRenderVertexSrc = 
     "";
 
-static const String FSLightRenderVertexSrc =
+static const String GLSLFSLightRenderVertexSrc =
     "";
 
-static const String MaterialParameterStruct = 
+static const String GLSLMaterialParameterStruct = 
     "struct MaterialParameter {\n"
     "    vec3 ka;\n"
     "    vec3 kd;\n"
@@ -196,11 +196,11 @@ MaterialBuilder::~MaterialBuilder() {
 
     String vs, fs;
     if ( type == VertexType::ColorVertex ) {
-        vs = VsSrc;
-        fs = FsSrc;
+        vs = GLSLVsSrc;
+        fs = GLSLFsSrc;
     } else if ( type == VertexType::RenderVertex ) {
-        vs = VsSrcRV;
-        fs = FsSrcRV;
+        vs = GLSLVsSrcRV;
+        fs = GLSLFsSrcRV;
     }
     
     if ( vs.empty() || fs.empty() ) {
@@ -233,8 +233,8 @@ MaterialBuilder::~MaterialBuilder() {
 Material *MaterialBuilder::createBuildinUiMaterial() {
     Material *mat = new Material( "shadermaterial", MaterialType::ShaderMaterial );
     ShaderSourceArray arr;
-    arr[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = VsSrcUI;
-    arr[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = FsSrcUI;
+    arr[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = GLSLVsSrcUI;
+    arr[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = GLSLFsSrcUI;
     mat->createShader(arr);
 
     // setup shader attributes and variables
