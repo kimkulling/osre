@@ -38,6 +38,7 @@ namespace RenderBackend {
 
 class DX11Renderer;
 
+struct DX11VertexLayout;
 struct RenderCmd;
 
 class DX11RenderEventHandler : public Common::AbstractEventHandler {
@@ -67,6 +68,7 @@ private:
     DX11Renderer *m_dx11Renderer;
     CPPCore::TArray<RenderCmd*> m_renderCmds;
     ID3D11Buffer *m_matrixBuffer;
+    DX11VertexLayout *m_currentLayout;
 };
 
 }

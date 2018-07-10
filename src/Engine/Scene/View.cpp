@@ -35,6 +35,10 @@ static const String Tag = "View";
 
 View::View( const String &name ) 
 : Object( name )
+, m_fov( 60.0f )
+, m_w( 0.0f )
+, m_h( 0.0f )
+, m_far( 1000.0f )
 , m_node( nullptr )
 , m_eye( 1, 1, 1 )
 , m_center( 0, 0, 0 )
@@ -46,6 +50,18 @@ View::View( const String &name )
 
 View::~View() {
     // empty
+}
+
+void View::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
+    m_fov = fov;
+    m_w = w;
+    m_h = h;
+
+    f32 aspect = 1.0f;
+    if (0.0f != h) {
+        aspect = w / h;
+    }
+    m_projection = glm::perspective(glm::radians(m_fov), aspect, zNear, zFar);
 }
 
 void View::observeNode( Node *node ) {

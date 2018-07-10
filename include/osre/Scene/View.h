@@ -45,6 +45,7 @@ class OSRE_EXPORT View : public Common::Object {
 public:
     View( const String &name );
     virtual ~View();
+    virtual void setProjectionParameters(f32 fov, f32 w, f32 h, f32 near, f32 far);
     virtual void observeNode( Node *node );
     virtual void update( Time dt );
     virtual void draw( RenderBackend::RenderBackendService *renderBackendSrv );
@@ -59,6 +60,9 @@ protected:
     virtual void onDraw( RenderBackend::RenderBackendService *renderBackendSrv );
 
 private:
+    f32 m_fov;
+    f32 m_w, m_h;
+    f32 m_near, m_far;
     Node *m_node;
     glm::vec3 m_eye, m_center, m_up;
     glm::mat4 m_view, m_projection;

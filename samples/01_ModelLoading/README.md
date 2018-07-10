@@ -30,18 +30,19 @@ using namespace ::OSRE::Scene;
 // To identify local log entries 
 static const String Tag = "ModelLoadingApp"; 
 
-static const String ModelPath = "file://assets/Models/Obj/box.obj";
+// The file to load
+static const String ModelPath = "file://assets/Models/Obj/spider.obj";
 
 // The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
-    String m_assetFolder;
-    Scene::Stage *m_stage;
-    Scene::View  *m_view;
-    f32 m_angle;
-    Common::Ids m_ids;
-    glm::mat4 m_model;
+    String               m_assetFolder;
+    Scene::Stage        *m_stage;
+    Scene::View         *m_view;
+    f32                  m_angle;
+    Common::Ids          m_ids;
+    glm::mat4            m_model;
     TransformMatrixBlock m_transformMatrix;
-    Node::NodePtr m_modelNode;
+    Node::NodePtr        m_modelNode;
 
 public:
     ModelLoadingApp( int argc, char *argv[] )

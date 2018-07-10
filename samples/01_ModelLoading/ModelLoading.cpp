@@ -46,7 +46,7 @@ using namespace ::OSRE::Scene;
 // To identify local log entries 
 static const String Tag = "ModelLoadingApp"; 
 
-//static const String ModelPath = "file://assets/Models/Obj/box.obj";
+// The file to load
 static const String ModelPath = "file://assets/Models/Obj/spider.obj";
 
 static const String AssetFolderArg = "asset_folder";
@@ -119,31 +119,30 @@ protected:
             m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
             m_transformMatrix.update();
             RenderBackendService *rbSrv( getRenderBackendService() );
-            if ( nullptr != rbSrv ) {
+            if (nullptr != rbSrv) {
                 Platform::AbstractWindow *rootWindow(getRootWindow());
-                if ( nullptr == rootWindow ) {
+                if (nullptr == rootWindow) {
                     return false;
                 }
-                const i32 w = rootWindow->getProperties()->m_width;
-                const i32 h = rootWindow->getProperties()->m_height;
-                const f32 aspect = static_cast<f32>(w) / static_cast<f32>(h);
-                const f32 zNear = 0.0001f;
-                const f32 zFar = 1000.f;
-                
-                glm::vec3 eye( diam, 0, 0), up(0, 0, 1);
+
+                glm::vec3 eye(diam, 0, 0), up(0, 0, 1);
                 glm::vec3 c(center.getX(), center.getY(), center.getZ());
-                
+
+                m_stage = AppBase::createStage("ModelLoading");
+                Scene::View *view = m_stage->addView("default_view", nullptr);
+                view->setProjectionParameters(60.f, rootWindow->getProperties()->m_width, rootWindow->getProperties()->m_height, 0.0001f, 1000.f);
+                const String name(model->getRootNode()->getName());
+                m_modelNode = m_stage->addNode(name, nullptr, "default");
+
                 m_transformMatrix.m_model = glm::mat4(1.0f);
-                m_transformMatrix.m_projection = glm::perspective(glm::radians(60.0f), aspect, zNear, zFar);
+                m_transformMatrix.m_projection = view->getProjection();
+
                 m_transformMatrix.m_view = glm::lookAt(eye, c, up);
                 rbSrv->setMatrix(MatrixType::View, m_transformMatrix.m_view);
                 rbSrv->setMatrix(MatrixType::Projection, m_transformMatrix.m_projection);
 
                 renderNodes(model, rbSrv);
             }
-            m_stage = AppBase::createStage( "ModelLoading" );
-            const String name(model->getRootNode()->getName());
-            m_modelNode = m_stage->addNode(name, nullptr, "default" );
         }
 
         return true;

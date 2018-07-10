@@ -51,15 +51,16 @@ DX11RenderEventHandler::DX11RenderEventHandler()
 , m_isRunning( true )
 , m_dx11Renderer( nullptr )
 , m_renderCmds()
-, m_matrixBuffer( nullptr ) {
+, m_matrixBuffer( nullptr )
+, m_currentLayout( nullptr ) {
     // empty
 }
 
 DX11RenderEventHandler::~DX11RenderEventHandler() {
-    SafeRelease( m_matrixBuffer );
+    // empty
 }
 
-bool DX11RenderEventHandler::onEvent(const Event &ev, const EventData *data) {
+bool DX11RenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
     bool result(false);
     if (!m_isRunning) {
         return true;
