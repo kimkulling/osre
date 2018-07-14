@@ -37,11 +37,11 @@ class SDL2Timer : public AbstractTimer {
 public:
     SDL2Timer();
     virtual ~SDL2Timer();
-    d32 getMilliCurrentSeconds() override;
-    d32 getTimeDiff() override;
+    i64 getMilliCurrentSeconds() override;
+    i64 getTimeDiff() override;
 
 private:
-    d32 m_lasttick;
+    i64 m_lasttick;
 };
 
 } // Namespace Platform

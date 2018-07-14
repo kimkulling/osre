@@ -40,13 +40,13 @@ public:
 	///	The class destructor.
 	~Win32Timer();
 	///	Seconds getter.
-	d32 getMilliCurrentSeconds() override;
+	i64 getMilliCurrentSeconds() override;
 	///	Time difference getter.
-	d32 getTimeDiff() override;
+	i64 getTimeDiff() override;
 
 private:
 	LARGE_INTEGER m_globeTime, m_globeFrequency;
-	d32 m_LastTime;
+	i64 m_LastTime;
 };
 
 } // Namespace Platform

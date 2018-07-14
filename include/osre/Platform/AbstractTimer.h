@@ -46,11 +46,11 @@ public:
 
     ///	@brief	Returns the milli-seconds since starting the application.
     ///	@return	Seconds past since starting the application.
-    virtual d32 getMilliCurrentSeconds() = 0;
+    virtual i64 getMilliCurrentSeconds() = 0;
 
     ///	@brief	Returns the difference since the last call of getTimeDiff.
     ///	@return	The time difference.
-    virtual d32 getTimeDiff() = 0;
+    virtual i64 getTimeDiff() = 0;
 
 protected:
     ///	@brief	The constructor with the name of the timer instance.
