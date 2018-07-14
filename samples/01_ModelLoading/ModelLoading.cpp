@@ -111,13 +111,10 @@ protected:
         IO::Uri modelLoc( ModelPath );
         if ( assimpWrapper.importAsset( modelLoc, 0 ) ) {
             Assets::Model *model = assimpWrapper.getModel();
-            Collision::TAABB<f32> aabb = model->getAABB();
-            const f32 diam = aabb.getDiameter();
-            const Vec3f center = aabb.getCenter();
-
             CPPCore::TArray<Geometry*> geoArray = model->getGeoArray();
             m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
             m_transformMatrix.update();
+
             RenderBackendService *rbSrv( getRenderBackendService() );
             if (nullptr != rbSrv) {
                 Platform::AbstractWindow *rootWindow(getRootWindow());
@@ -125,19 +122,19 @@ protected:
                     return false;
                 }
 
-                glm::vec3 eye(diam, 0, 0), up(0, 0, 1);
-                glm::vec3 c(center.getX(), center.getY(), center.getZ());
+                Rect2ui windowsRect = rootWindow->getWindowsRect();
 
                 m_stage = AppBase::createStage("ModelLoading");
                 Scene::View *view = m_stage->addView("default_view", nullptr);
-                view->setProjectionParameters(60.f, rootWindow->getProperties()->m_width, rootWindow->getProperties()->m_height, 0.0001f, 1000.f);
+                view->setProjectionParameters( 60.f, windowsRect.m_width, windowsRect.m_height, 0.0001f, 1000.f );
+                view->observeBoundingBox( model->getAABB() );
                 const String name(model->getRootNode()->getName());
                 m_modelNode = m_stage->addNode(name, nullptr, "default");
 
                 m_transformMatrix.m_model = glm::mat4(1.0f);
                 m_transformMatrix.m_projection = view->getProjection();
 
-                m_transformMatrix.m_view = glm::lookAt(eye, c, up);
+                m_transformMatrix.m_view = view->getView();
                 rbSrv->setMatrix(MatrixType::View, m_transformMatrix.m_view);
                 rbSrv->setMatrix(MatrixType::Projection, m_transformMatrix.m_projection);
 

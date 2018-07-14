@@ -48,33 +48,30 @@ public:
     void merge( const VecType &vec );
     void merge( T x, T y, T z );
     void updateFromVector3Array( VecType *vecArray, ui32 numVectors );
-    T getDiameter();
-    TVec3<T> getCenter();
+    T getDiameter() const;
+    TVec3<T> getCenter() const;
 
 private:
     VecType m_min;
     VecType m_max;
-    VecType m_center;
     T m_diameter;
 };
 
 template<class T>
 inline
-    TAABB<T>::TAABB()
-    : m_min( 999999, 99999, 99999 )
-    , m_max( -999999, -99999, -99999 )
-    , m_center( 999999, 99999, 99999 )
-    , m_diameter( 0 ) {
+TAABB<T>::TAABB()
+: m_min( 999999, 99999, 99999 )
+, m_max( -999999, -99999, -99999 )
+, m_diameter( 0 ) {
     // empty
 }
 
 template<class T>
 inline
-    TAABB<T>::TAABB( const VecType &min, const VecType &max )
-    : m_min( min )
-    , m_max( max )
-    , m_center( 999999, 99999, 99999 )
-    , m_diameter( 0 ) {
+TAABB<T>::TAABB( const VecType &min, const VecType &max )
+: m_min( min )
+, m_max( max )
+, m_diameter( 0 ) {
     // empty
 }
 
@@ -100,19 +97,19 @@ void TAABB<T>::set( const VecType &min, const VecType &max ) {
 
 template<class T>
 inline
-    const TVec3<T> &TAABB<T>::getMin() const {
+const TVec3<T> &TAABB<T>::getMin() const {
     return m_min;
 }
 
 template<class T>
 inline
-    const TVec3<T> &TAABB<T>::getMax() const {
+const TVec3<T> &TAABB<T>::getMax() const {
     return m_max;
 }
 
 template<class T>
 inline
-    void TAABB<T>::merge( const VecType &vec ) {
+void TAABB<T>::merge( const VecType &vec ) {
     const T x( vec[ 0 ] );
     const T y( vec[ 1 ] );
     const T z( vec[ 2 ] );
@@ -121,7 +118,7 @@ inline
 
 template<class T>
 inline
-    void TAABB<T>::merge( T x, T y, T z ) {
+void TAABB<T>::merge( T x, T y, T z ) {
     // set min values
     if ( x < m_min.getX() ) {
         m_min.setX( x );
@@ -147,12 +144,12 @@ inline
 
 template<class T>
 inline
-    void TAABB<T>::updateFromVector3Array( VecType *vecArray, ui32 numVectors ) {
+void TAABB<T>::updateFromVector3Array( VecType *vecArray, ui32 numVectors ) {
     if ( nullptr == vecArray || 0 == numVectors ) {
         return;
     }
 
-    for ( ui32 i = 0; i < numVectors; i++ ) {
+    for ( ui32 i = 0; i < numVectors; ++i ) {
         VecType &v( vecArray[ i ] );
         merge( v );
     }
@@ -160,7 +157,7 @@ inline
 
 template<class T>
 inline
-    T TAABB<T>::getDiameter() {
+T TAABB<T>::getDiameter() const {
     if ( 0 != m_diameter ) {
         return m_diameter;
     }
@@ -172,10 +169,10 @@ inline
 
 template<class T>
 inline
-    TVec3<T> TAABB<T>::getCenter() {
-    m_center = ( m_min + m_max ) * 0.5f;
+TVec3<T> TAABB<T>::getCenter() const {
+    TVec3<T> center = ( m_min + m_max ) * 0.5f;
 
-    return m_center;
+    return center;
 }
 
 } // Namespace Collision

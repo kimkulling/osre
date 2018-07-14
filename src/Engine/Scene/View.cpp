@@ -83,6 +83,15 @@ void View::draw( RenderBackendService *rbSrv ) {
     rbSrv->setMatrix( "V", m_view );
 }
 
+void View::observeBoundingBox( const Collision::TAABB<f32> &aabb) {
+    const f32 diam = aabb.getDiameter();
+    const Vec3f center = aabb.getCenter();
+
+    glm::vec3 eye(diam, 0, 0), up(0, 0, 1);
+    glm::vec3 c(center.getX(), center.getY(), center.getZ());
+    setLookAt(eye, c, up);
+}
+
 void View::setLookAt( const glm::vec3 &eye, const glm::vec3 &center, const glm::vec3 &up ) {
     m_eye    = eye;
     m_center = center;
