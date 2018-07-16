@@ -45,24 +45,24 @@ static void APIENTRY openglCallbackFunction(
     std::cout << "message: " << message << std::endl;
     std::cout << "type: ";
     switch ( type ) {
-    case GL_DEBUG_TYPE_ERROR:
-        std::cout << "ERROR";
-        break;
-    case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-        std::cout << "DEPRECATED_BEHAVIOR";
-        break;
-    case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-        std::cout << "UNDEFINED_BEHAVIOR";
-        break;
-    case GL_DEBUG_TYPE_PORTABILITY:
-        std::cout << "PORTABILITY";
-        break;
-    case GL_DEBUG_TYPE_PERFORMANCE:
-        std::cout << "PERFORMANCE";
-        break;
-    case GL_DEBUG_TYPE_OTHER:
-        std::cout << "OTHER";
-        break;
+        case GL_DEBUG_TYPE_ERROR:
+            std::cout << "ERROR";
+            break;
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+            std::cout << "DEPRECATED_BEHAVIOR";
+            break;
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+            std::cout << "UNDEFINED_BEHAVIOR";
+            break;
+        case GL_DEBUG_TYPE_PORTABILITY:
+            std::cout << "PORTABILITY";
+            break;
+        case GL_DEBUG_TYPE_PERFORMANCE:
+            std::cout << "PERFORMANCE";
+            break;
+        case GL_DEBUG_TYPE_OTHER:
+            std::cout << "OTHER";
+            break;
     }
     std::cout << std::endl;
 
@@ -171,11 +171,16 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
 #if _DEBUG
     if( glDebugMessageCallback ){
         std::cout << "Register OpenGL debug callback " << std::endl;
+        int param = -1;
         // Enable the debug callback
-        glEnable( GL_DEBUG_OUTPUT );
-        glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS );
-        glDebugMessageCallback( openglCallbackFunction, nullptr );
+        glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+        glDebugMessageCallback( openglCallbackFunction, &param);
         glDebugMessageControl( GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, true );
+
+        // Enable this to check if the debug callback works as expected.
+        glEnable(GL_LINE);
+        glEnableVertexAttribArray(GL_MAX_VERTEX_ATTRIBS + 1);
     } else {
         std::cout << "glDebugMessageCallback not available" << std::endl;
     }
