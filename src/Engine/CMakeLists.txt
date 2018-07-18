@@ -345,6 +345,7 @@ SET( renderbackend_vulkanrenderer_src
 )
 IF( WIN32 )
     SET( renderbackend_dx11renderer_src
+        RenderBackend/DX11Renderer/DX11Common.h
         RenderBackend/DX11Renderer/DX11Renderer.h
         RenderBackend/DX11Renderer/DX11Renderer.cpp
         RenderBackend/DX11Renderer/DX11RenderVEventHandler.h

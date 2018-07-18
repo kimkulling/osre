@@ -27,6 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Geometry.h>
 
+#include <cppcore/Memory/MemUtils.h>
+
 namespace OSRE {
 namespace UI {
 
@@ -71,7 +73,8 @@ void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, c
     vertices[ 2 ].tex0 = glm::vec2( 1, 0 );
     vertices[ 3 ].tex0 = glm::vec2( 1, 1 );
 
-    ui32 vertOffset = vertexCache.numVertices() ;
+    ui32 vertOffset = vertexCache.numVertices();
+    vertexCache.increaseSize(4);
     for ( ui32 i = 0; i < 4; ++i ) {
         vertexCache.add( vertices[ i ] );
     }
@@ -86,6 +89,7 @@ void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, c
     indices[ 4 ] = 3;
     indices[ 5 ] = 1;
 
+    indexCache.increaseSize( 6 );
     for ( ui32 i = 0; i < 6; ++i ) {
         indexCache.add( static_cast<ui16>(vertOffset) + indices[ i ] );
     }

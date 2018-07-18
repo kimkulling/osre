@@ -42,7 +42,7 @@ namespace Platform {
 class AbstractWindow;
 class OSEventListener;
 
-struct IInputUpdate;
+struct AbstractInputUpdate;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -70,7 +70,7 @@ protected:
 
 private:
     static std::map<HWND, Win32EventQueue*> s_WindowsServerMap;
-    IInputUpdate *m_updateInstance;
+    AbstractInputUpdate *m_updateInstance;
     Common::EventTriggerer *m_eventTriggerer;
     AbstractWindow *m_rootWindow;
     bool m_shutdownRequested;

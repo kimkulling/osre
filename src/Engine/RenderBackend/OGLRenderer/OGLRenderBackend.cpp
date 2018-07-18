@@ -65,13 +65,19 @@ OGLRenderBackend::OGLRenderBackend()
 , m_freeBufferSlots()
 , m_primitives()
 , m_fpState( nullptr )
-, m_fpsCounter( nullptr ) {
+, m_fpsCounter( nullptr )
+, m_oglCapabilities( nullptr ) {
     m_fpState = new RenderStates;
+    m_oglCapabilities = new OGLCapabilities;
+    glGetFloatv( GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &m_oglCapabilities->m_maxAniso );
 }
 
 OGLRenderBackend::~OGLRenderBackend( ) {
     delete m_fpState;
     m_fpState = nullptr;
+
+    delete m_oglCapabilities;
+    m_oglCapabilities = nullptr;
 
     releaseAllShaders();
     releaseAllFonts();
@@ -648,6 +654,8 @@ OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTar
     glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParameterName::TextureParamWrapS ), GL_CLAMP );
     glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParameterName::TextureParamWrapT ), GL_CLAMP );
 
+    glTexParameterf(tex->m_target, GL_TEXTURE_MAX_ANISOTROPY_EXT, m_oglCapabilities->m_maxAniso);
+
     return tex;
 }
 
@@ -719,6 +727,7 @@ OGLTexture *OGLRenderBackend::createTextureFromStream( const String &name, IO::S
     // create texture and fill it
     tex = createEmptyTexture( name, TextureTargetType::Texture2D, width, height, channels );
     glTexImage2D( tex->m_target, 0, GL_RGB, width, height, 0, tex->m_format, GL_UNSIGNED_BYTE, data );
+    glGenerateMipmap(tex->m_target);
     delete [] data;
 
     return tex;

@@ -42,7 +42,7 @@ namespace UI {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-ButtonBase::FunctorContainer::FunctorContainer()
+ButtonBase::FunctorContainer::FunctorContainer() noexcept
 : m_used( false )
 , m_callback() {
     // empty
@@ -136,7 +136,7 @@ ButtonBase *ButtonBase::createBaseButton( const String &name, const String &labe
     return button;
 }
 
-void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) {
+void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const Rect2ui &rect( getRect() );
 

@@ -112,8 +112,9 @@ protected:
         if ( assimpWrapper.importAsset( modelLoc, 0 ) ) {
             Assets::Model *model = assimpWrapper.getModel();
             CPPCore::TArray<Geometry*> geoArray = model->getGeoArray();
-            m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
-            m_transformMatrix.update();
+            
+            //m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+            //m_transformMatrix.update();
 
             RenderBackendService *rbSrv( getRenderBackendService() );
             if (nullptr != rbSrv) {
@@ -128,6 +129,7 @@ protected:
                 Scene::View *view = m_stage->addView("default_view", nullptr);
                 view->setProjectionParameters( 60.f, windowsRect.m_width, windowsRect.m_height, 0.0001f, 1000.f );
                 view->observeBoundingBox( model->getAABB() );
+
                 const String name(model->getRootNode()->getName());
                 m_modelNode = m_stage->addNode(name, nullptr, "default");
 

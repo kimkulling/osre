@@ -24,10 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Uri.h>
 #include <osre/Common/Logger.h>
 
-#include <string>
-
 #ifdef OSRE_WINDOWS
-#  include <osre/Platform/Windows/MinWindows.h>
+#   include <osre/Platform/Windows/MinWindows.h>
 #   include <Commdlg.h>
 #endif // OSRE_WINDOWS
 
@@ -38,14 +36,14 @@ static const String Tag = "PlatformOperations";
 
 void PlatformOperations::getFileOpenDialog( const c8 *extensions, IO::Uri &location ) {
 #ifdef OSRE_WINDOWS
-    OPENFILENAME ofn;       // common dialog box structure
-    char szFile[ 260 ];       // buffer for file name
-    //HWND hwnd;              // owner window
+    OPENFILENAME ofn;  
+    char szFile[ 260 ];
 
-                            // Initialize OPENFILENAME
+    // Initialize OPENFILENAME
     ZeroMemory( &ofn, sizeof( ofn ) );
     ofn.lStructSize = sizeof( ofn );
     ofn.lpstrFile = szFile;
+    
     // Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
     // use the contents of szFile to initialize itself.
     ofn.lpstrFile[ 0 ] = '\0';
@@ -58,7 +56,6 @@ void PlatformOperations::getFileOpenDialog( const c8 *extensions, IO::Uri &locat
     ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
     // Display the Open dialog box. 
-
     if ( TRUE == GetOpenFileName( &ofn ) ) {
         String filename = ofn.lpstrFile;
         location.setResource( filename );
@@ -72,14 +69,14 @@ void PlatformOperations::getFileOpenDialog( const c8 *extensions, IO::Uri &locat
 
 void PlatformOperations::getFileSaveDialog( const c8 *extensions, IO::Uri &location ) {
 #ifdef OSRE_WINDOWS
-    OPENFILENAME ofn;       // common dialog box structure
-    char szFile[ 260 ];       // buffer for file name
-                              //HWND hwnd;              // owner window
+    OPENFILENAME ofn;
+    char szFile[ 260 ];
 
-                              // Initialize OPENFILENAME
+    // Initialize OPENFILENAME
     ZeroMemory( &ofn, sizeof( ofn ) );
     ofn.lStructSize = sizeof( ofn );
     ofn.lpstrFile = szFile;
+
     // Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
     // use the contents of szFile to initialize itself.
     ofn.lpstrFile[ 0 ] = '\0';
@@ -98,6 +95,8 @@ void PlatformOperations::getFileSaveDialog( const c8 *extensions, IO::Uri &locat
     } else {
         location.clear();
     }
+#else
+    osre_warn(Tag, "Not supported,");
 #endif // OSRE_WINDOWS
 }
 
@@ -129,7 +128,7 @@ void PlatformOperations::getDialog( const String &title, const String &question,
             result = DlgButtonRes_Ok;
             break;
         default:
-            osre_debug( Tag, "UNsupported id detected " + std::to_string( msgboxID ) );
+            osre_debug( Tag, "Unsupported id detected " + std::to_string( msgboxID ) );
             break;
     }
 #else
