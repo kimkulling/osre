@@ -451,11 +451,8 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
         return false;
     }
 
-    const ui32 x = activeSurface->getProperties()->m_x;
-    const ui32 y = activeSurface->getProperties()->m_y;
-    const ui32 w = activeSurface->getProperties()->m_width;
-    const ui32 h = activeSurface->getProperties()->m_height;
-    m_oglBackend->setViewport( x, y, w, h );
+    Rect2ui rect = activeSurface->getWindowsRect();
+    m_oglBackend->setViewport( rect.m_x1, rect.m_y1, rect.m_width, rect.m_height );
 
     const String defaultFont( PlatformInterface::getInstance()->getDefaultFontName() );
     IO::Uri fontUri( "file://assets/Textures/Fonts/" + defaultFont );

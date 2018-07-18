@@ -590,10 +590,12 @@ struct TPoint2 {
 typedef TPoint2<i32>  Point2i;
 typedef TPoint2<ui32> Point2ui;
 
+/// @brief  Helper class t represent a 2D rectangle.
 template<class T>
 struct TRect2D {
     T m_x1, m_y1, m_x2, m_y2, m_width, m_height;
 
+    /// @brief  The default class constructor.
     TRect2D()
     : m_x1( 0 )
     , m_y1( 0 )
@@ -604,6 +606,11 @@ struct TRect2D {
         // empty
     }
 
+    /// @brief  The class constructor with parameters
+    /// @param  x       [in] X coordinate of upper left corner.
+    /// @param  y       [in] Y coordinate of upper left corner.
+    /// @param  width   [in] The width of the rectangle.
+    /// @param  height  [in] The height of the rectangle.
     TRect2D( T x, T y, T width, T height )
     : m_x1( x )
     , m_y1( y )
@@ -614,10 +621,16 @@ struct TRect2D {
         // empty
     }
 
+    /// @brief  The class destructor.
     ~TRect2D() {
         // empty
     }
 
+    /// @brief  Will set the rectangle-geometry with the upper left corner, width and height.
+    /// @param  x       [in] X coordinate of upper left corner.
+    /// @param  y       [in] Y coordinate of upper left corner.
+    /// @param  width   [in] The width of the rectangle.
+    /// @param  height  [in] The height of the rectangle.
     void set(T x, T y, T width, T height) {
         m_x1 = x;
         m_y1 = y;
@@ -627,6 +640,11 @@ struct TRect2D {
         m_height = height;
     }
 
+    /// @brief  Will set the rectangle-geometry with the upper left corner and the lower right corner.
+    /// @param  x1      [in] X coordinate of the upper left corner.
+    /// @param  y1      [in] Y coordinate of the upper left corner.
+    /// @param  x2      [in] X coordinate of the lower right corner.
+    /// @param  y2      [in] Y coordinate of the lower right corner.
     void setEdges(T x1, T y1, T x2, T y2) {
         m_x1 = x1;
         m_y1 = y1;
@@ -636,10 +654,14 @@ struct TRect2D {
         m_height = y2 - y1;
     }
 
+    /// @brief  Return the X-coordinate of the upper left corner.
+    /// @brief  The x-coordinate.
     T getX1() const {
         return m_x1;
     }
 
+    /// @brief  Return the X-coordinate of the upper left corner.
+    /// @brief  The y-coordinate.
     T getY1() const {
         return m_y1;
     }
@@ -650,6 +672,14 @@ struct TRect2D {
 
     T getY2() const {
         return m_y2;
+    }
+
+    T getWidth() const {
+        return m_width;
+    }
+
+    T getHeight() const {
+        return m_height;
     }
 
     bool isIn( const TPoint2<T> &pt ) const {
