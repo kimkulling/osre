@@ -192,7 +192,7 @@ bool DX11RenderEventHandler::onCommitNexFrame(const Common::EventData *eventData
             Geometry *geo = currentGeoPackage->m_newGeo[geoIdx];
 
             ID3D11Buffer *vb = m_dx11Renderer->createBuffer(BufferType::VertexBuffer, geo->m_vb, geo->m_vb->getBufferAccessType() );
-            ID3D11Buffer *ib = m_dx11Renderer->createBuffer(BufferType::VertexBuffer, geo->m_ib, geo->m_ib->getBufferAccessType() );
+            ID3D11Buffer *ib = m_dx11Renderer->createBuffer(BufferType::IndexBuffer, geo->m_ib, geo->m_ib->getBufferAccessType() );
 
             RenderCmd *cmd = new RenderCmd;
             cmd->m_vb = vb;
@@ -201,6 +201,10 @@ bool DX11RenderEventHandler::onCommitNexFrame(const Common::EventData *eventData
             m_renderCmds.add(cmd);
         }
     }
+
+    delete[] frame->m_geoUpdates;
+    frame->m_geoUpdates = nullptr;
+    frame->m_numGeoUpdates = 0;
 
     return true;
 }
