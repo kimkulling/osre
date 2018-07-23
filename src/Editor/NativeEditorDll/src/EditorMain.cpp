@@ -118,6 +118,10 @@ public:
         IO::Uri modelLoc(normalizedFilename);
         if (assimpWrapper.importAsset(modelLoc, flags)) {
             Assets::Model *model = assimpWrapper.getModel();
+            Stage *stage = AppBase::createStage(model->getRootNode()->getName());
+            stage->setRoot( model->getRootNode() );
+            m_world->addStage(stage);
+            m_world->setActiveStage(stage);
             Collision::TAABB<f32> aabb = model->getAABB();
             const f32 diam = aabb.getDiameter();
             const Vec3f center = aabb.getCenter();

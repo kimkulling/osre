@@ -62,8 +62,7 @@ namespace OSREEditor
             }
         }
 
-        private void importAssetToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void importAssetToolStripMenuItem_Click(object sender, EventArgs e) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
             openFileDialog.InitialDirectory = "c:\\";
@@ -71,12 +70,10 @@ namespace OSREEditor
             openFileDialog.FilterIndex = 2;
             openFileDialog.RestoreDirectory = true;
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
+            if (openFileDialog.ShowDialog() == DialogResult.OK) {
                 var filename = openFileDialog.FileName;
                 var retValue = OSREWrapper.ImportAsset(filename, 0);
-                if ( 0 == retValue )
-                {
+                if ( 0 == retValue ) {
                     int numItems = OSREWrapper.GetNumItems();
                     if ( numItems == 0 )
                     {
@@ -86,15 +83,14 @@ namespace OSREEditor
                     OSREWrapper.NativeStreeItem[] items = new OSREWrapper.NativeStreeItem[numItems];
                     OSREWrapper.GetNodeHierarchy(numItems, items);
                     this.treeView1.BeginUpdate();
-                    TreeNode newNode = new TreeNode();
+                    TreeNode newNode = new TreeNode("root");
+                    treeView1.Nodes.Add(newNode);
                     foreach ( var item in items )
                     {
-                        var name = item.m_name;
+                        newNode = new TreeNode(item.m_name);
+                        treeView1.Nodes[0].Nodes.Add(newNode);
                     }
-                    this.treeView1.EndUpdate();
-
-                //    this.treeView1.SelectedNode.
-                
+                    this.treeView1.EndUpdate();                
                 }
             }
         }
