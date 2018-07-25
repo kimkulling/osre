@@ -30,9 +30,9 @@ namespace Common {
 using namespace ::CPPCore;
 
 static const String option = "--";
-static const c8 tokenArgIn    = '<';
-static const c8 tokenArgOut   = '>';
-static const String dummy = "";
+static const c8 tokenArgIn  = '<';
+static const c8 tokenArgOut = '>';
+static const String dummy   = "";
 
 ArgumentParser::Argument::Argument()
 : m_argument( "" )

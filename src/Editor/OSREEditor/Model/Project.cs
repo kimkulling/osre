@@ -10,8 +10,11 @@ namespace OSREEditor.Model
     {
         string _projectName;
 
+        WorldProxy  _world;
+
         public Project() {
             _projectName = "untitled";
+            _world = new WorldProxy();
         }
 
         public string ProjectName {

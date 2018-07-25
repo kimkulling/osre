@@ -53,6 +53,7 @@
       <DependentUpon>MainEditorWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\Project.cs" />
+    <Compile Include="Model\WorldProxy.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\OSREWrapper.cs" />
