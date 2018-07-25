@@ -112,7 +112,7 @@ protected:
     void initDefaults();
 
 private:
-    Properties::AbstractPropertyMap *m_pPropertyMap;
+    Properties::AbstractPropertyMap *m_propertyMap;
 };
 
 } // Namespace Properties

@@ -67,7 +67,7 @@ bool Win32SystemInfo::getDiskInfo(const c8 *drive, ui64 &freeSpaceInBytes) {
         return false;
     }
 
-    PULARGE_INTEGER  freeByteAvailable, totalNumberOfBytes, totalNumberOfFreeBytes;
+    PULARGE_INTEGER  freeByteAvailable(0), totalNumberOfBytes(0), totalNumberOfFreeBytes(0);
     BOOL result = ::GetDiskFreeSpaceEx(drive, freeByteAvailable, totalNumberOfBytes, totalNumberOfFreeBytes);
     ::memcpy(&freeSpaceInBytes, &freeByteAvailable->QuadPart, sizeof(PULARGE_INTEGER));
 

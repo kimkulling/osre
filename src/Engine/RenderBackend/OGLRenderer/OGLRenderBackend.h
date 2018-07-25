@@ -72,14 +72,15 @@ class OGLRenderBackend {
 public:
     TransformMatrixBlock m_mvp;
     
-    typedef CPPCore::TArray<OGLVertexAttribute*> VertAttribArray;
+    using VertAttribArray = CPPCore::TArray<OGLVertexAttribute*>;
 
     /// The default class constructor.
     OGLRenderBackend();
     /// The class destructor.
     ~OGLRenderBackend();
-    
+    /// Will set the requested global matrix for the frame.
     void setMatrix( MatrixType type, const glm::mat4 &mat );
+    /// All matrix values will be applied to the current frame.
     void applyMatrix();
     const glm::mat4 &getMatrix( MatrixType type ) const;
     bool create(Platform::AbstractRenderContext *renderCtx);
@@ -159,6 +160,7 @@ private:
     CPPCore::TArray<OGLPrimGroup*>   m_primitives;
     RenderStates                    *m_fpState;
     Profiling::FPSCounter           *m_fpsCounter;
+    OGLCapabilities                 *m_oglCapabilities;
 };
 
 } // Namespace RenderBackend

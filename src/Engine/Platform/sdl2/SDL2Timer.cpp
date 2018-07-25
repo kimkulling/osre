@@ -37,19 +37,19 @@ SDL2Timer::~SDL2Timer( ) {
     // empty
 }
 
-d32 SDL2Timer::getMilliCurrentSeconds( ) {
-    d32 ticks =  ( d32 ) SDL_GetTicks()/1000.0;
+i64 SDL2Timer::getMilliCurrentSeconds( ) {
+    i64 ticks =  (i64) SDL_GetTicks()/1000.0;
     return ticks;
 }
 
-d32 SDL2Timer::getTimeDiff( ) {
-    d32 currentTime = getMilliCurrentSeconds();
-    if ( m_lasttick == 0.0 ) {
+i64 SDL2Timer::getTimeDiff( ) {
+    i64 currentTime = getMilliCurrentSeconds();
+    if ( m_lasttick == 0 ) {
         m_lasttick = currentTime;
-        return 0.0;
+        return 0;
     } else {
-        d32 diff( currentTime - m_lasttick );
-        if( diff > 1000.0 ) {
+        i64 diff( currentTime - m_lasttick );
+        if( diff > 1000 ) {
             diff = AbstractTimer::getRequestedTimeStep();
         }
         m_lasttick = currentTime;

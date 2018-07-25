@@ -52,7 +52,7 @@ class AbstractRenderContext;
 class AbstractDynamicLoader;
 class AbstractSystemInfo;
 
-struct IInputUpdate;
+struct AbstractInputUpdate;
 struct WindowsProperties;
 
 //-------------------------------------------------------------------------------------------------

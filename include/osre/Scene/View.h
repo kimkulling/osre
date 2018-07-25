@@ -23,6 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/Object.h>
+#include <osre/Collision/TAABB.h>
+
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
@@ -49,6 +51,7 @@ public:
     virtual void observeNode( Node *node );
     virtual void update( Time dt );
     virtual void draw( RenderBackend::RenderBackendService *renderBackendSrv );
+    virtual void observeBoundingBox(const Collision::TAABB<f32> &box);
     virtual void setLookAt( const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up );
     virtual void setProjectionMode( f32 fov, f32 aspectRatio, f32 near, f32 far );
     virtual void setOrthoMode( f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far );

@@ -131,5 +131,16 @@ WindowsProperties *AbstractWindow::getProperties( ) {
     return m_properties;
 }
 
+Rect2ui AbstractWindow::getWindowsRect() const {
+    Rect2ui r;
+    if (nullptr == m_properties) {
+        return r;
+    }
+
+    r.set(m_properties->m_x, m_properties->m_y, m_properties->m_width, m_properties->m_height);
+
+    return r;
+}
+
 } // Namespace Platform
 } // Namespace OSRE

@@ -526,6 +526,14 @@ struct TVertexCache {
         // empty
     }
 
+    void clear() {
+        m_cache.clear();
+    }
+
+    void increaseSize(ui32 newSize) {
+        m_cache.reserve(m_cache.size() + newSize);
+    }
+
     void add( const T &vertex ) {
         m_cache.add( vertex );
     }
@@ -556,6 +564,14 @@ struct TIndexCache {
 
     ~TIndexCache() {
         // empty
+    }
+
+    void clear() {
+        m_cache.clear();
+    }
+
+    void increaseSize( ui32 newSize ) {
+        m_cache.reserve(m_cache.size() + newSize);
     }
 
     void add( const T &vertex ) {

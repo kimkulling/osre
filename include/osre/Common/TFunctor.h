@@ -125,7 +125,7 @@ template < class RET, class P1, class P2 >
 class Functor {
 public:
     /// @brief The class default constructor
-    Functor() 
+    Functor() noexcept
     : m_data( nullptr )
     , m_refCounter( nullptr ) {
         // empty 

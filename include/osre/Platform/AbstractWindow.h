@@ -134,6 +134,8 @@ public:
 
     void resize( ui32 x, ui32 y, ui32 w, ui32 h );
 
+    Rect2ui getWindowsRect() const;
+
 protected:
     /// @brief  Callback to override on creation.
     virtual bool onCreate() = 0;

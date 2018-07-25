@@ -225,5 +225,10 @@ struct DrawPrimitivesCmdData {
     }
 };
 
+struct OGLCapabilities {
+    GLfloat m_maxAniso;
+
+};
+
 } // Namespace RendeBackend
 } // Namespace OSRE

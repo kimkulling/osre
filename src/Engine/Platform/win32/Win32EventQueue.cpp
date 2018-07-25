@@ -37,15 +37,16 @@ std::map<HWND, Win32EventQueue*> Win32EventQueue::s_WindowsServerMap;
 
 static const String Tag = "Win32Eventhandler";
 
-struct IInputUpdate {
-    ~IInputUpdate(){
+// The interface for the event update.
+struct AbstractInputUpdate {
+    ~AbstractInputUpdate() {
         // empty
     }
 
     virtual bool update( MSG &rProgram ) = 0;
 };
 
-struct Win32GetInputUpdate : public IInputUpdate {
+struct Win32GetInputUpdate : public AbstractInputUpdate {
     Win32GetInputUpdate( ) {
         // empty
     }
@@ -63,7 +64,7 @@ struct Win32GetInputUpdate : public IInputUpdate {
     }
 };
 
-struct Win32PeekInputUpdate : public IInputUpdate {
+struct Win32PeekInputUpdate : public AbstractInputUpdate {
     Win32PeekInputUpdate( ) {
         // empty
     }

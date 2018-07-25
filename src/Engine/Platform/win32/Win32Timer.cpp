@@ -29,7 +29,7 @@ Win32Timer::Win32Timer()
 : AbstractTimer( "platform/win32timer" )
 , m_globeTime()
 , m_globeFrequency()
-, m_LastTime( 0.0 ) {
+, m_LastTime( 0 ) {
     ::QueryPerformanceCounter( &m_globeTime );
     ::QueryPerformanceFrequency( &m_globeFrequency );
 }
@@ -38,23 +38,23 @@ Win32Timer::~Win32Timer() {
     // empty
 }
 
-d32 Win32Timer::getMilliCurrentSeconds() {
+i64 Win32Timer::getMilliCurrentSeconds() {
     LARGE_INTEGER currentTime;
     QueryPerformanceCounter( &currentTime );
-    const d32 secs = static_cast<d32>( ( currentTime.QuadPart - m_globeTime.QuadPart ) ) 
-        / static_cast<d32>(m_globeFrequency.QuadPart );
+    const i64 secs = static_cast<i64>( ( currentTime.QuadPart - m_globeTime.QuadPart ) ) 
+        / static_cast<i64>(m_globeFrequency.QuadPart );
 
     return secs;
 }
 
-d32 Win32Timer::getTimeDiff() {
-    d32 currentTime = getMilliCurrentSeconds();
+i64 Win32Timer::getTimeDiff() {
+    i64 currentTime = getMilliCurrentSeconds();
     if ( m_LastTime == 0.0 ) {
         m_LastTime = currentTime;
         return 0.0;
     } else {
-        d32 diff( currentTime - m_LastTime );
-        if( diff > 1000.0 ) {
+        i64 diff( currentTime - m_LastTime );
+        if( diff > 1000 ) {
             diff = AbstractTimer::getRequestedTimeStep();
         }
         m_LastTime = currentTime;

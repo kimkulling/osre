@@ -75,7 +75,7 @@ private:
         bool m_used;
         UIFunctor m_callback;
 
-        FunctorContainer();
+        FunctorContainer() noexcept;
         ~FunctorContainer();
     };
 
