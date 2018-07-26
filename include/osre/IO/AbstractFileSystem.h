@@ -95,12 +95,12 @@ protected:
     AbstractFileSystem();
 
 private:
-    ui32 m_NumberOfRefs;
+    ui32 m_numberOfRefs;
 };
 
 inline
 AbstractFileSystem::AbstractFileSystem() 
-: m_NumberOfRefs( 1 ) {
+: m_numberOfRefs( 1 ) {
     // empty
 }
 
@@ -111,14 +111,14 @@ AbstractFileSystem::~AbstractFileSystem() {
 
 inline
 void AbstractFileSystem::get() {
-    ++m_NumberOfRefs;
+    ++m_numberOfRefs;
 }
 
 inline
 void AbstractFileSystem::release() {
-    if ( m_NumberOfRefs ) {
-        --m_NumberOfRefs;
-        if ( !m_NumberOfRefs ) {
+    if ( m_numberOfRefs ) {
+        --m_numberOfRefs;
+        if ( !m_numberOfRefs ) {
             delete this;
         }
     }

@@ -76,7 +76,7 @@ private:
     std::vector<String> m_FileList;
     String m_ArchiveName;
     unzFile m_ZipFileHandle;
-    ui32 m_NumberOfRefs;
+    ui32 m_numberOfRefs;
     bool m_Dirty;
 };
 

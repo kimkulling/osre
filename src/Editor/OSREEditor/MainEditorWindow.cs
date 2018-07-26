@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using OSREEditor.View;
 using OSREEditor.Model;
+using System.Runtime.InteropServices;
 
 namespace OSREEditor
 {
@@ -73,24 +74,16 @@ namespace OSREEditor
             if (openFileDialog.ShowDialog() == DialogResult.OK) {
                 var filename = openFileDialog.FileName;
                 var retValue = OSREWrapper.ImportAsset(filename, 0);
-                if ( 0 == retValue ) {
-                    int numItems = OSREWrapper.GetNumItems();
-                    if ( numItems == 0 )
-                    {
-                        return;
-                    }
-
-                    OSREWrapper.NativeStreeItem[] items = new OSREWrapper.NativeStreeItem[numItems];
-                    OSREWrapper.GetNodeHierarchy(numItems, items);
+                if (0 == retValue) {
                     this.treeView1.BeginUpdate();
-                    TreeNode newNode = new TreeNode("root");
+                    TreeNode newNode = new TreeNode(filename);
                     treeView1.Nodes.Add(newNode);
-                    foreach ( var item in items )
+                    /*foreach ( var item in items )
                     {
                         newNode = new TreeNode(item.m_name);
                         treeView1.Nodes[0].Nodes.Add(newNode);
-                    }
-                    this.treeView1.EndUpdate();                
+                    }*/
+                    this.treeView1.EndUpdate();
                 }
             }
         }
