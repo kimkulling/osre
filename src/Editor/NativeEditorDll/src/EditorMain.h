@@ -51,13 +51,6 @@ using namespace ::OSRE;
 #   define STDCALL
 #endif
 
-struct NativeStreeItem {
-    String m_name;
-    i32   m_parentId;
-    i32   m_numChildren;
-    i32  *m_childrenIds;
-};
-
 struct CSharpEvent {
     int type;
     int x;
@@ -80,7 +73,3 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL LoadWorld(const char *filelocation, in
 extern "C" OSRE_EDITOR_EXPORT int STDCALL SaveWorld(const char *filelocation, int flags );
 
 extern "C" OSRE_EDITOR_EXPORT int STDCALL ImportAsset(const char *filename, int flags);
-
-extern "C" OSRE_EDITOR_EXPORT int STDCALL GetNumItems();
-
-extern "C" OSRE_EDITOR_EXPORT int STDCALL  GetNodeHierarchy( int numItems, NativeStreeItem *items );

@@ -29,6 +29,8 @@
 #   include <osre/Platform/Windows/MinWindows.h>
 #endif // OSRE_WINDOWS
 
+#include "SceneNodeIterator.h"
+
 using namespace ::OSRE;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
@@ -345,109 +347,14 @@ void countChildren( Node *node, ui32 &numNodes ) {
         }
     }
 }
-static void collectNodes( Node *node, NodeArray &nodeArray ) {
-    nodeArray.add( node );
-    for (ui32 i = 0; i < node->getNumChildren(); ++i) {
-        Node *child( node->getChildAt( i ) );
-        if ( nullptr != child ) {
-            collectNodes( child, nodeArray );
-        }
-    }
-}
 
-static i32 getNodeIndex( Node *node, const NodeArray &nodeArray ) {
-    if (nullptr == node) {
-        return -1;
-    }
-    for (ui32 i = 0; i < nodeArray.size(); ++i) {
-        if (node == nodeArray[ i ]) {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
-static void addChildren( Node *node, NodeArray &nodeArray ) {
+static void countNodes(Node *node, int &numNodes) {
     if (nullptr == node) {
         return;
     }
-
-    for (ui32 i = 0; i < node->getNumChildren(); ++i) {
-        Node *currentNode( node->getChildAt( i ) );
-        nodeArray.add( currentNode );
-        addChildren( currentNode, nodeArray );
+    const int numChildren(node->getNumChildren());
+    numNodes += numChildren;
+    for (int i = 0; i < numChildren; ++i) {
+        countNodes(node->getChildAt(i), numNodes);
     }
-}
-
-int STDCALL GetNumItems() {
-    if (nullptr == s_EditorApplication) {
-        return 1;
-    }
-
-    World *world = s_EditorApplication->getWorld();
-    if (nullptr == world) {
-        return 0;
-    }
-
-    Stage *stage = world->getActiveStage();
-    if (nullptr == stage) {
-        return 1;
-    }
-
-    Node *rootNode = stage->getRoot();
-    if (nullptr == rootNode) {
-        return 0;
-    }
-    ui32 numNodes( 0 );
-    countChildren( rootNode, numNodes );
-
-    return static_cast<i32>(numNodes);
-}
-
-int STDCALL GetNodeHierarchy( int numItems, NativeStreeItem *items ) {
-    if (nullptr == s_EditorApplication) {
-        return 1;
-    }
-
-    if (nullptr == items) {
-        return 0;
-    }
-
-    World *world = s_EditorApplication->getWorld();
-    if (nullptr == world) {
-        return 0;
-    }
-
-    Stage *stage = world->getActiveStage();
-    if (nullptr == stage) {
-        return 1;
-    }
-
-    Node *rootNode = stage->getRoot();
-    if (nullptr == rootNode) {
-        return 0;
-    }
-    CPPCore::TArray<Node*> nodeArray;
-    collectNodes( rootNode, nodeArray );
-
-    CPPCore::TArray<NativeStreeItem*> itemArray;
-    const ui32 numChildren( rootNode->getNumChildren() );
-    for (ui32 i = 0; i < numChildren; ++i) {
-        Node *currentChild( rootNode->getChildAt( i ) );
-        if (nullptr == currentChild) {
-            continue;
-        }
-
-        NativeStreeItem *item = new NativeStreeItem;
-        item->m_name = currentChild->getName();
-        item->m_numChildren = currentChild->getNumChildren();
-        item->m_childrenIds = new i32[ item->m_numChildren ];
-        
-        for (ui32 j = 0; j < item->m_numChildren; ++j) {
-            item->m_childrenIds[ i ] = getNodeIndex( currentChild->getChildAt( j ), nodeArray );
-        }
-    }
-
-    return 0;
 }
