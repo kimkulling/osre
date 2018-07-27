@@ -185,6 +185,7 @@ bool PlatformInterface::onOpen() {
         props->m_stencildepth = m_config->get( Settings::StencilBufferDepth ).getInt();
         props->m_fullscreen = fullscreen;
         props->m_resizable = m_config->get( Settings::WindowsResizable ).getBool();
+        props->m_childWindow = m_config->get(Settings::ChildWindow).getBool();
         props->m_title = m_config->get( Settings::WindowsTitle ).getString();
         polls = m_config->get( Settings::PollingMode ).getBool();
     }

@@ -79,8 +79,8 @@ void View::draw( RenderBackendService *rbSrv ) {
     
     onDraw( rbSrv );
 
-    rbSrv->setMatrix( "P", m_projection );
-    rbSrv->setMatrix( "V", m_view );
+    //rbSrv->setMatrix( "P", m_projection );
+    //rbSrv->setMatrix( "V", m_view );
 }
 
 void View::observeBoundingBox( const Collision::TAABB<f32> &aabb) {

@@ -145,13 +145,17 @@ bool World::setActiveView( const String &viewName ) {
     return false;
 }
 
+View *World::getActiveView() const {
+    return m_activeView;
+}
+
 void World::update( Time dt ) {
     if (nullptr != m_activeStage) {
         m_activeStage->update( dt );
     }
 
     if (nullptr != m_activeView) {
-        m_activeView->update( dt );
+        //m_activeView->update( dt );
     }
 
 }

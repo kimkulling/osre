@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
 #include <osre/Scene/View.h>
+#include <osre/Scene/World.h>
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/Assets/AssimpWrapper.h>
 #include <osre/Assets/Model.h>
@@ -113,9 +114,6 @@ protected:
             Assets::Model *model = assimpWrapper.getModel();
             CPPCore::TArray<Geometry*> geoArray = model->getGeoArray();
             
-            //m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
-            //m_transformMatrix.update();
-
             RenderBackendService *rbSrv( getRenderBackendService() );
             if (nullptr != rbSrv) {
                 Platform::AbstractWindow *rootWindow(getRootWindow());
@@ -127,6 +125,7 @@ protected:
 
                 m_stage = AppBase::createStage("ModelLoading");
                 Scene::View *view = m_stage->addView("default_view", nullptr);
+                AppBase::setActiveView(view);
                 view->setProjectionParameters( 60.f, windowsRect.m_width, windowsRect.m_height, 0.0001f, 1000.f );
                 view->observeBoundingBox( model->getAABB() );
 

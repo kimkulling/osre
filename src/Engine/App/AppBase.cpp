@@ -180,6 +180,14 @@ bool AppBase::setActiveStage( Scene::Stage *stage ) {
     return m_world->setActiveStage( stage );
 }
 
+bool AppBase::setActiveView(Scene::View *view) {
+    if (nullptr == m_world) {
+        osre_debug(Tag, "No world to activate state to.");
+        return false;
+    }
+    return m_world->setActiveView(view);
+}
+
 bool AppBase::activateStage( const String &name ) {
     if ( nullptr == m_world ) {
         osre_debug( Tag, "No world to activate state to." );

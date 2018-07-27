@@ -1,3 +1,4 @@
+
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
@@ -46,7 +47,8 @@ static const i32  UnsetHandle   = -1;
 static const ui32 MaxEntNameLen = 256;
 
 enum class RenderBackendType {
-    OpenGLRenderBackend,
+    OpenGLRenderBackend = 0,
+    DX11Backend,
     VulkanRenderBackend
 };
 
