@@ -527,7 +527,7 @@ bool OGLRenderEventHandler::onRenderFrame( const EventData *eventData ) {
         return false;
     }
 
-
+    OSRE_ASSERT(nullptr != m_renderCmdBuffer);
     m_renderCmdBuffer->onPreRenderFrame();
     m_renderCmdBuffer->onRenderFrame( eventData );
     m_renderCmdBuffer->onPostRenderFrame();

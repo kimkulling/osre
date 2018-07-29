@@ -33,6 +33,8 @@
 *.log
 *.filters
 *.pdb
+*.sln
+*.vspx
 
 # Generated CMake files
 3dparty/assimp/CMakeFiles/

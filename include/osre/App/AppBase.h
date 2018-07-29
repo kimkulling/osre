@@ -116,6 +116,8 @@ public:
     /// @return true if successful, false in case of an error.
     virtual bool setActiveStage( Scene::Stage *stage );
 
+    virtual bool setActiveView(Scene::View *view);
+
     /// @brief  Activates a stage.
     /// @param  name        [in] The name of the stage.
     /// @return true if successful,  false if not.

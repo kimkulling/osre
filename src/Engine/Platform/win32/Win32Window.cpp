@@ -134,7 +134,7 @@ bool Win32Window::onCreate( ) {
     m_wnd = ::CreateWindowEx( dwExStyle,
         prop->m_title.c_str(),
         prop->m_title.c_str(),
-        dwStyle | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
+        dwStyle,
         prop->m_x,
         prop->m_y,
         realWidth, 
@@ -150,6 +150,9 @@ bool Win32Window::onCreate( ) {
         return false;
     }
 
+    if (prop->m_childWindow) {
+        SetWindowLong(m_wnd, GWL_STYLE, 0);
+    }
     m_dc = ::GetDC( m_wnd );
     if( !m_dc ) {
         ::MessageBox( NULL, "Cannot create a device context.", "Abort application",
