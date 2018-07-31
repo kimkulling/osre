@@ -44,7 +44,10 @@ Geometry::Geometry()
 , m_ib( nullptr )
 , m_numPrimGroups( 0 )
 , m_pPrimGroups( nullptr )
-, m_id( 99999999 ) {
+, m_id( 99999999 )
+, m_vertexData()
+, m_indexData()
+, m_lastIndex( 0 ) {
     // empty
 }
 
@@ -84,19 +87,27 @@ void Geometry::destroy( Geometry **geo ) {
 ui32 Geometry::getVertexSize( VertexType vertextype ) {
     ui32 vertexSize( 0 );
     switch ( vertextype ) {
-    case VertexType::ColorVertex:
-        vertexSize = sizeof( ColorVert );
-        break;
+        case VertexType::ColorVertex:
+            vertexSize = sizeof( ColorVert );
+            break;
 
-    case VertexType::RenderVertex:
-        vertexSize = sizeof( RenderVert );
-        break;
+        case VertexType::RenderVertex:
+            vertexSize = sizeof( RenderVert );
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 
     return vertexSize;
+}
+
+void Geometry::commitNewGeometry() {
+    if (m_vertexData.isEmpty()) {
+        return;
+    }
+
+
 }
 
 } // Namespace RenderBackend
