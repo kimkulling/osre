@@ -83,7 +83,6 @@ SET( common_inc
     ${HEADER_PATH}/Common/TObjPtr.h
     ${HEADER_PATH}/Common/Tokenizer.h
     ${HEADER_PATH}/Common/osre_common.h
-    ${HEADER_PATH}/Common/TArea.h
 )
 SET( common_src
     Common/AbstractCodec.cpp

@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-#include <osre/Common/TArea.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/Platform/PlatformInterface.h>
 
@@ -65,7 +64,7 @@ public:
 
 private:
     Vec3f m_StartVector, m_EndVector;
-    Common::TArea<ui32> m_Dimension;
+    TRect2D<ui32> m_Dimension;
     Quatf m_rotation;
     bool m_bLeftMButtonClicked;
     bool m_bMiddleClicked;
@@ -76,8 +75,6 @@ private:
     ui32 m_screenY;
     ui32 m_screenYOld;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Scene
 } // namespace OSRE

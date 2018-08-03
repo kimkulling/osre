@@ -120,7 +120,10 @@ AppBase::~AppBase() {
     m_settings = nullptr;
 }
 
-bool AppBase::initWindow( ui32 x, ui32 y, ui32 width, ui32 height, const String &title, bool fullscreen, RenderBackendType renderer ) {
+bool AppBase::initWindow( ui32 x, ui32 y, ui32 width, ui32 height, const String &title, bool fullscreen,
+        RenderBackendType renderer ) {
+    OSRE_ASSERT( nullptr != m_settings );
+
     m_settings->setInt( Properties::Settings::WinX, x );
     m_settings->setInt( Properties::Settings::WinY, y );
     m_settings->setInt( Properties::Settings::WinWidth, width );
@@ -157,6 +160,13 @@ void AppBase::update() {
 }
 
 void AppBase::requestNextFrame() {
+    OSRE_ASSERT( nullptr != m_uiRenderer );
+    OSRE_ASSERT( nullptr != m_rbService );
+
+    if (nullptr == m_world) {
+        return;
+    }
+
     m_world->draw( m_rbService );
     if (nullptr != m_uiScreen) {
         m_uiRenderer->render( m_uiScreen, m_rbService );
@@ -202,6 +212,7 @@ bool AppBase::setActiveStage( Scene::Stage *stage ) {
         osre_debug( Tag, "No world to activate state to." );
         return false;
     }
+    
     return m_world->setActiveStage( stage );
 }
 
@@ -235,7 +246,6 @@ UI::Screen *AppBase::createScreen( const String &name ) {
     }
 
     UI::Screen *newScreen = ( Screen* ) UiItemFactory::getInstance()->create( WidgetType::Screen, name, nullptr );
-    m_uiRenderer = new UI::UiRenderer;
     setUIScreen( newScreen );
 
     return newScreen;
@@ -348,6 +358,8 @@ bool AppBase::onCreate( Properties::Settings *config ) {
     }
 
     IO::IOService::create();
+
+    m_uiRenderer = new UI::UiRenderer;
 
     // set application state to "Created"
     osre_debug( Tag, "Set application state to Created." );

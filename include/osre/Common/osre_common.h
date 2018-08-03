@@ -606,6 +606,19 @@ struct TRect2D {
         // empty
     }
 
+    /// @brief  The class constructor with width and height, x and 0 are set to 0,0.
+    /// @param  width   [in] The width of the rectangle.
+    /// @param  height  [in] The height of the rectangle.
+    TRect2D( T width, T height )
+    : m_x1( 0 )
+    , m_y1( 0 )
+    , m_x2( width )
+    , m_y2( height )
+    , m_width( width )
+    , m_height( height ) {
+        // empty
+    }
+
     /// @brief  The class constructor with parameters
     /// @param  x       [in] X coordinate of upper left corner.
     /// @param  y       [in] Y coordinate of upper left corner.
