@@ -46,12 +46,6 @@ static const i32  UnsetHandle   = -1;
 /// Upper limits for names.
 static const ui32 MaxEntNameLen = 256;
 
-enum class RenderBackendType {
-    OpenGLRenderBackend = 0,
-    DX11Backend,
-    VulkanRenderBackend
-};
-
 ///	@brief  This enum describes the usage of a buffer object.
 enum class BufferType {
     EmptyBuffer = 0,    ///< Empty buffer, no special use.

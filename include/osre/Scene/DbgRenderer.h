@@ -58,6 +58,9 @@ public:
     void clearDbgTextCache();
     void clearDbgRenderPass();
     ui32 numDbgTexts() const;
+    void addLine( const RenderBackend::ColorVert &v0, const RenderBackend::ColorVert &v1 );
+    void addTriangle( const RenderBackend::ColorVert &v0, const RenderBackend::ColorVert &v1, const RenderBackend::ColorVert &v2 );
+    
     static bool create( RenderBackend::RenderBackendService *rbSrv );
     static bool destroy();
     static DbgRenderer *getInstance();
@@ -68,6 +71,7 @@ private:
 
 private:
     static DbgRenderer *s_instance;
+
     RenderBackend::RenderBackendService *m_rbSrv;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
     TextBoxHashMap m_textBoxes;

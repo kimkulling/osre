@@ -185,4 +185,18 @@ protected:
     }
 };
 
-OSRE_MAIN( ModelLoadingApp )
+int main( int argc, char *argv[] ) {
+    ModelLoadingApp myApp( argc, argv );
+    if (!myApp.initWindow( 10, 10, 1024, 768, "ModelLoader-Sample", false, App::RenderBackendType::OpenGLRenderBackend )) {
+        return 1;
+    }
+
+    while (myApp.handleEvents() ) {
+        myApp.update();
+        myApp.requestNextFrame();
+    }
+            
+    myApp.destroy();
+
+    return 0;
+}

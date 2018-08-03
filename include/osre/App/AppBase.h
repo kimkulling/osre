@@ -62,6 +62,12 @@ namespace App {
         
 class MouseEventListener;
 
+enum class RenderBackendType {
+    OpenGLRenderBackend = 0,
+    DX11Backend,
+    VulkanRenderBackend
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -82,6 +88,10 @@ public:
 
     /// @brief  The class destructor, virtual.
     virtual ~AppBase();
+
+
+    virtual bool initWindow( ui32 x, ui32 y, ui32 width, ui32 height, const String &title, 
+        bool fullscreen, RenderBackendType renderer );
 
     /// @brief  Creates the application.
     /// @param  settings         [in] The user-defined settings.

@@ -120,6 +120,22 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
     }
 }
 
+static const ui32 NumIndices = 24;
+ui16 indices[ NumIndices ] = {
+    0, 1,
+    1, 2,
+    2, 3,
+    3, 0,
+    4, 5,
+    5, 6,
+    6, 7,
+    7, 4,
+    0, 4,
+    1, 5,
+    2, 6,
+    3, 7
+};
+
 void DbgRenderer::renderAABB( const glm::mat4 &transform, const Collision::TAABB<f32> &aabb ) {
     Geometry *geo = GeometryBuilder::allocEmptyGeometry(VertexType::ColorVertex, 1);
 
@@ -160,23 +176,6 @@ void DbgRenderer::renderAABB( const glm::mat4 &transform, const Collision::TAABB
     vertices[ 7 ].position.y = y1;
     vertices[ 7 ].position.z = z1;
 
-
-    static const ui32 NumIndices = 24;
-    ui16 indices[ NumIndices ] = { 
-        0, 1, 
-        1, 2, 
-        2, 3, 
-        3, 0, 
-        4, 5, 
-        5, 6, 
-        6, 7, 
-        7, 4, 
-        0, 4, 
-        1, 5, 
-        2, 6, 
-        3, 7 
-    };
-
     const size_t vertexSize( sizeof( ColorVert )*NumVertices );
     geo->m_vb = BufferData::alloc( BufferType::VertexBuffer, vertexSize, BufferAccessType::ReadOnly );
     geo->m_vb->copyFrom( &vertices[ 0 ], vertexSize );
@@ -195,7 +194,7 @@ void DbgRenderer::renderAABB( const glm::mat4 &transform, const Collision::TAABB
     // setup material
     geo->m_material = MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
 
-    //geo->m_model = transform;
+    geo->m_model = transform;
 
     m_rbSrv->attachGeo( geo, 0 );
 }
@@ -222,6 +221,12 @@ void DbgRenderer::clearDbgRenderPass() {
 
 ui32 DbgRenderer::numDbgTexts() const {
     return m_tbArray.size();
+}
+
+void DbgRenderer::addLine( const ColorVert &v0, const ColorVert &v1 ) {
+}
+
+void DbgRenderer::addTriangle( const ColorVert &v0, const ColorVert &v1, const ColorVert &v2 ) {
 }
 
 } // Namespace Scene

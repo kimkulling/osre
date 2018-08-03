@@ -46,12 +46,10 @@ struct OSRE_EXPORT Geometry {
     static ui32 getVertexSize( VertexType vertextype );
 
     template<class TVertexType>
-    void addLine( const TVertexType &v1, const TVertexType &v2 );
-    
-    template<class TVertexType>
-    void addTriangle( const TVertexType &v0, const TVertexType &v1, const TVertexType &v2 );
-
-    void commitNewGeometry();
+    inline
+    static ui32 getVertexSize() {
+        return sizeof( TVertexType );
+    }
 
     OSRE_NON_COPYABLE( Geometry )
 
@@ -71,48 +69,6 @@ ui32 getVertexTypeSize() {
     return sizeof( TVertexType );
 }
 
-template<class TVertexType>
-inline
-void Geometry::addLine( const TVertexType &v0, const TVertexType &v1 ) {
-    ui32 size = getVertexTypeSize( v0 );
-    ui32 offset = m_vertexData.size();
-    m_vertexData.resize( m_vertexData.size()*size*2 );
-    ::memcpy( m_vertexData[ offset ], &v0, size );
-    offset += size;
-    ::memcpy( m_vertexData[ offset ], &v1, size );
-    offset += size;
-
-    offset = m_indexData.size();
-    m_indexData.resize( m_indexData.size() + 2 * sizeof( ui32 ) );
-    ::memcpy( m_indexData[ offset ], &m_lastIndex, sizeof( ui32 ) );
-    m_indexData++;
-    ::memcpy( m_indexData[ offset ], &m_lastIndex, sizeof( ui32 ) );
-    m_indexData++;
-}
-
-template<class TVertexType>
-inline
-void Geometry::addTriangle( const TVertexType &v0, const TVertexType &v1, const TVertexType &v2 ) {
-    ui32 size = getVertexTypeSize( v0 );
-    ui32 offset = m_vertexData.size();
-    m_vertexData.resize( m_vertexData.size()*size * 2 );
-    ::memcpy( m_vertexData[ offset ], &v0, size );
-    offset += size;
-    ::memcpy( m_vertexData[ offset ], &v1, size );
-    offset += size;
-    ::memcpy( m_vertexData[ offset ], &v2, size );
-    offset += size;
-
-    offset = m_indexData.size();
-    m_indexData.resize( m_indexData.size() + 2 * sizeof( ui32 ) );
-    ::memcpy( m_indexData[ offset ], &m_lastIndex, sizeof( ui32 ) );
-    m_indexData++;
-    ::memcpy( m_indexData[ offset ], &m_lastIndex, sizeof( ui32 ) );
-    m_indexData++;
-    ::memcpy( m_indexData[ offset ], &m_lastIndex, sizeof( ui32 ) );
-    m_indexData++;
-}
 
 } // Namespace RenderBackend
 } // Namespace OSRE
-

@@ -120,6 +120,17 @@ AppBase::~AppBase() {
     m_settings = nullptr;
 }
 
+bool AppBase::initWindow( ui32 x, ui32 y, ui32 width, ui32 height, const String &title, bool fullscreen, RenderBackendType renderer ) {
+    m_settings->setInt( Properties::Settings::WinX, x );
+    m_settings->setInt( Properties::Settings::WinY, y );
+    m_settings->setInt( Properties::Settings::WinWidth, width );
+    m_settings->setInt( Properties::Settings::WinHeight, height );
+    m_settings->setString( Properties::Settings::WindowsTitle, title );
+    m_settings->setBool( Properties::Settings::FullScreen, fullscreen );
+
+    return onCreate( m_settings );
+}
+
 bool AppBase::create( Properties::Settings *config ) {
     return onCreate( config  );
 }
@@ -151,7 +162,13 @@ bool AppBase::handleEvents() {
         return false;
     }
 
-    return m_platformInterface->update();
+    bool retCode = m_platformInterface->update();
+
+    if (shutdownRequested()) {
+        return false;
+    }
+    
+    return retCode;
 }
 
 Properties::Settings *AppBase::getSettings() const {

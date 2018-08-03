@@ -102,13 +102,5 @@ ui32 Geometry::getVertexSize( VertexType vertextype ) {
     return vertexSize;
 }
 
-void Geometry::commitNewGeometry() {
-    if (m_vertexData.isEmpty()) {
-        return;
-    }
-
-
-}
-
 } // Namespace RenderBackend
 } // Namespace OSRE

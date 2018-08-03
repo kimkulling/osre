@@ -49,16 +49,6 @@ struct RenderTarget {
     // empty
 };
 
-/*struct RenderStates {
-    TransformState m_transformState;
-    PolygonState   m_polygonState;
-    CullState      m_cullState;
-    BlendState     m_blendState;
-    SamplerState   m_samplerState;
-    ClearState     m_clearState;
-    StencilState   m_stencilState;
-};*/
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -110,9 +100,9 @@ public:
     void clear();
 
 private:
-    typedef TArray<PipelinePass*> PipelinePassArray;
+    using PipelinePassArray = TArray<PipelinePass*>;
     PipelinePassArray m_passes;
-    i32 m_passId;
+    i32 m_currentPassId;
     bool m_inFrame;
 };
 

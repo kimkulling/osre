@@ -111,7 +111,7 @@ bool PipelinePass::operator != ( const PipelinePass &rhs ) const {
 
 Pipeline::Pipeline() 
 : m_passes()
-, m_passId( -1 )
+, m_currentPassId( -1 )
 , m_inFrame( false ) {
     // empty
 }
@@ -151,7 +151,7 @@ PipelinePass *Pipeline::beginPass( ui32 passId ) {
         return nullptr;
     }
 
-    m_passId = passId;
+    m_currentPassId = passId;
     PipelinePass *pass = m_passes[ passId ];
     if ( nullptr == pass ) {
         return nullptr;
@@ -161,11 +161,11 @@ PipelinePass *Pipeline::beginPass( ui32 passId ) {
 }
 
 bool Pipeline::endPass( ui32 passId ) {
-    if ( static_cast<i32>( passId ) != m_passId || !m_inFrame ) {
+    if ( static_cast<i32>( passId ) != m_currentPassId || !m_inFrame ) {
         return false;
     }
 
-    m_passId = -1;
+    m_currentPassId = -1;
 
     return true;
 }
@@ -175,7 +175,7 @@ void Pipeline::endFrame() {
 }
 
 void Pipeline::clear() {
-    m_passId = -1;
+    m_currentPassId = -1;
     m_inFrame = false;
     m_passes.resize( 0 );
 }

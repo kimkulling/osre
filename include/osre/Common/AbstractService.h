@@ -165,7 +165,5 @@ private:
     OSRE_ASSERT( nullptr != s_instance );        \
     s_instance = nullptr;         
 
-//-------------------------------------------------------------------------------------------------
-
 } // Namespace Common
 } // Namespace OSRE

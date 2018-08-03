@@ -59,6 +59,7 @@ struct OSRE_EXPORT UniformDataBlob {
     ~UniformDataBlob();
     void *getData() const;
     void clear();
+
     static UniformDataBlob *create( ParameterType type, ui32 arraySize );
 };
 
