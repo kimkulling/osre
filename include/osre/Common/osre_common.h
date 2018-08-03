@@ -22,20 +22,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <string>
-#include <string.h>
-#include <stdio.h>
-#include <cstddef>
-#include <cmath>
-
-#include <emmintrin.h>
-
-#ifndef _WIN32
-#  include <inttypes.h>
-#endif 
-
-namespace OSRE {
-
 #if defined( _WIN32 ) || defined( _WIN64 )
 #   define OSRE_WINDOWS
 #   define _CRT_SECURE_NO_WARNINGS
@@ -49,6 +35,20 @@ namespace OSRE {
 #elif defined(__ANDROID__)
 #   define OSRE_ANDROID
 #endif
+
+#include <string>
+#include <string.h>
+#include <stdio.h>
+#include <cstddef>
+#include <cmath>
+
+#include <emmintrin.h>
+
+#ifndef _WIN32
+#  include <inttypes.h>
+#endif 
+
+namespace OSRE {
 
 #ifdef OSRE_WINDOWS
 #  define TAG_DLL_EXPORT __declspec(dllexport)

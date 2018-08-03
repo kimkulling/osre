@@ -128,6 +128,14 @@ bool AppBase::initWindow( ui32 x, ui32 y, ui32 width, ui32 height, const String 
     m_settings->setString( Properties::Settings::WindowsTitle, title );
     m_settings->setBool( Properties::Settings::FullScreen, fullscreen );
 
+    if (renderer == RenderBackendType::OpenGLRenderBackend) {
+        m_settings->setString( Properties::Settings::RenderAPI, "opengl" );
+    } else if (renderer == RenderBackendType::DX11Backend) {
+        m_settings->setString( Properties::Settings::RenderAPI, "dx11" );
+    } else if (renderer == RenderBackendType::VulkanRenderBackend) {
+        m_settings->setString( Properties::Settings::RenderAPI, "vulkan" );
+    }
+
     return onCreate( m_settings );
 }
 
