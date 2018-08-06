@@ -129,8 +129,9 @@ protected:
                 view->setProjectionParameters( 60.f, windowsRect.m_width, windowsRect.m_height, 0.0001f, 1000.f );
                 view->observeBoundingBox( model->getAABB() );
 
-                const String name(model->getRootNode()->getName());
-                m_modelNode = m_stage->addNode(name, nullptr, "default");
+                //const String name(->getName());
+                m_stage->setRoot( model->getRootNode() );
+                m_modelNode = m_stage->getRoot();
 
                 m_transformMatrix.m_model = glm::mat4(1.0f);
                 m_transformMatrix.m_projection = view->getProjection();

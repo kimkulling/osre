@@ -43,10 +43,12 @@ class EditorApplication;
 static const String Tag = "EditorMain";
 
 class MouseEventListener : public Platform::OSEventListener {
+    EditorApplication *m_app;
 public:
     MouseEventListener(EditorApplication *app)
-    : OSEventListener("Editor/MouseEventListener") {
-
+    : OSEventListener("Editor/MouseEventListener")
+    , m_app( app ) {
+        // app
     }
 
     ~MouseEventListener() {
@@ -152,10 +154,11 @@ public:
                 rbSrv->setMatrix(MatrixType::View, m_transformMatrix.m_view);
                 rbSrv->setMatrix(MatrixType::Projection, m_transformMatrix.m_projection);
 
-                renderNodes(model, rbSrv);
+                //renderNodes(model, rbSrv);
             }
-            const String name(model->getRootNode()->getName());
-            m_modelNode = m_stage->addNode(name, nullptr, "default");
+            //const String name(model->getRootNode()->getName());
+            m_stage->setRoot( model->getRootNode() );
+            //m_modelNode = m_stage->addNode(name, nullptr, "default");
 
             update();
             requestNextFrame();

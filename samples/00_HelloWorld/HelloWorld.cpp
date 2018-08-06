@@ -86,7 +86,7 @@ protected:
         m_stage = AppBase::createStage( "HelloWorld" );
         AppBase::activateStage( m_stage->getName() );
 
-        Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
+        Scene::Node *geoNode = m_stage->createNode( "geo", nullptr );
         const Scene::Node::AABB &aabb = geoNode->getAABB();
 
         Scene::GeometryBuilder myBuilder;

@@ -247,6 +247,8 @@ void AssimpWrapper::handleNode( aiNode *node, Scene::Node *parent ) {
             Node::RenderCompRequest::RenderCompRequested,
             Node::TransformCompRequest::TransformCompRequested, 
             parent );
+    
+    // If this is the root-node of the model, set it as the root for the model
     if ( nullptr == m_parent ) {
         m_parent = newNode;
         m_model->setRootNode( m_parent );

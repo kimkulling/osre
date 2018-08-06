@@ -33,13 +33,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 static const ::OSRE::String Tag = "Win32RenderContext";
 
 static void APIENTRY openglCallbackFunction(
-    GLenum source,
-    GLenum type,
-    GLuint id,
-    GLenum severity,
-    GLsizei length,
-    const GLchar* message,
-    const void* userParam
+        GLenum source,
+        GLenum type,
+        GLuint id,
+        GLenum severity,
+        GLsizei length,
+        const GLchar* message,
+        const void* userParam
 ) {
     std::cout << "---------------------opengl-callback-start------------" << std::endl;
     std::cout << "message: " << message << std::endl;
@@ -179,8 +179,8 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
         glDebugMessageControl( GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, true );
 
         // Enable this to check if the debug callback works as expected.
-        glEnable(GL_LINE);
-        glEnableVertexAttribArray(GL_MAX_VERTEX_ATTRIBS + 1);
+        //glEnable(GL_LINE);
+        //glEnableVertexAttribArray(GL_MAX_VERTEX_ATTRIBS + 1);
     } else {
         std::cout << "glDebugMessageCallback not available" << std::endl;
     }
