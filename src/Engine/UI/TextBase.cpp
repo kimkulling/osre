@@ -82,7 +82,7 @@ static ui32 getNumTextVerts( const String &text ) {
     return NumTextVerts;
 }
 
-void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
+void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService * ) {
     if ( m_text.empty() ) {
         return;
     }
@@ -93,8 +93,8 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
 
     const i32 stackId( getStackIndex() );
     const f32 z(-1.0f* static_cast<f32>( stackId ) );
-    f32 x( Widget::getRect().getX1() );
-    f32 y( Widget::getRect().getY1() );
+    f32 x( static_cast<f32>( Widget::getRect().getX1() ) );
+    f32 y( static_cast<f32>( Widget::getRect().getY1() ) );
     WidgetCoordMapping::mapPosToWorld( x, y, x, y );
 
     // setup triangle vertices    

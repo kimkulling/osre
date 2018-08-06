@@ -154,42 +154,14 @@ public:
                 rbSrv->setMatrix(MatrixType::View, m_transformMatrix.m_view);
                 rbSrv->setMatrix(MatrixType::Projection, m_transformMatrix.m_projection);
 
-                //renderNodes(model, rbSrv);
             }
-            //const String name(model->getRootNode()->getName());
             m_stage->setRoot( model->getRootNode() );
-            //m_modelNode = m_stage->addNode(name, nullptr, "default");
 
             update();
             requestNextFrame();
         }
 
         return 0;
-    }
-
-    void renderNode(Node *currentNode, RenderBackendService *rbSrv) {
-        const ui32 numGeo = currentNode->getNumGeometries();
-        for (ui32 i = 0; i < numGeo; ++i) {
-            rbSrv->attachGeo(currentNode->getGeometryAt(i), 0);
-        }
-
-        for (ui32 i = 0; i < currentNode->getNumChildren(); ++i) {
-            Node *current = currentNode->getChildAt(i);
-            renderNode(current, rbSrv);
-        }
-    }
-
-    void renderNodes(Assets::Model *model, RenderBackendService *rbSrv) {
-        if (nullptr == model) {
-            return;
-        }
-
-        Node *root = model->getRootNode();
-        if (nullptr == root) {
-            return;
-        }
-
-        renderNode(root, rbSrv);
     }
 
     PlatformInterface *getPlatformInterface() const {
