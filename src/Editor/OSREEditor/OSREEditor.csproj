@@ -57,6 +57,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\OSREWrapper.cs" />
+    <Compile Include="View\ProjectTreeView.cs" />
     <Compile Include="View\RenderControl.cs" />
     <EmbeddedResource Include="MainEditorWindow.resx">
       <DependentUpon>MainEditorWindow.cs</DependentUpon>
