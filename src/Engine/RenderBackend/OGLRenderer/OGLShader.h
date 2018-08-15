@@ -131,6 +131,12 @@ private:
     struct ActiveParameter {
         c8 m_name[ MaxLen ];
         GLint m_location;
+
+        ActiveParameter() 
+        : m_name()
+        , m_location( -1 ) {
+            ::memset(m_name, '\0', sizeof(c8)*MaxLen);
+        }
     };
 
     ::CPPCore::TArray<ActiveParameter*> m_attribParams;

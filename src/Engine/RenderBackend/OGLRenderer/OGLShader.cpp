@@ -228,23 +228,12 @@ void OGLShader::getActiveUniformList() {
         GLint actual_length( 0 ), size( 0 );
         GLenum type;
         c8 name[ MaxLen ];
+        ::memset(name, '\0', sizeof(c8)*MaxLen);
         glGetActiveUniform( m_shaderprog, i, MaxLen, &actual_length, &size, &type, name );
-        if ( size > 1 ) {
-            for ( i32 attribIdx = 0; attribIdx < size; attribIdx++ ) {
-                ActiveParameter *attribParam = new ActiveParameter;
-                std::stringstream stream;
-                stream << name << attribIdx;
-                strncpy( attribParam->m_name, stream.str().c_str(), stream.str().size() );
-                i32 loc = glGetUniformLocation( m_shaderprog, attribParam->m_name );
-                OSRE_VALIDATE( loc != -1, "Location not found." );
-                m_attribParams.add( attribParam );
-            }
-        } else {
-            ActiveParameter *attribParam = new ActiveParameter;
-            strncpy( attribParam->m_name, name, strlen( name ) );
-            attribParam->m_location = glGetUniformLocation( m_shaderprog, name );
-            m_attribParams.add( attribParam );
-        }
+        ActiveParameter *attribParam = new ActiveParameter;
+        strncpy( attribParam->m_name, name, strlen( name ) );
+        attribParam->m_location = glGetUniformLocation( m_shaderprog, name );
+        m_attribParams.add( attribParam );        
     }
 }
 
