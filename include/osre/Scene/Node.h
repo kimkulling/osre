@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Object.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/Collision/TAABB.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>
@@ -156,5 +157,20 @@ const Node::AABB &Node::getAABB() const {
     return m_aabb;
 }
 
+
+class LightNode : public Node {
+public:
+    LightNode(const String &name, Common::Ids &ids, RenderCompRequest renderEnabled,
+        TransformCompRequest transformEnabled, Node *parent = nullptr);
+    ~LightNode();
+    void setLight(const RenderBackend::Light &light);
+
+protected:
+    virtual void onUpdate();
+    virtual void onDraw(RenderBackend::RenderBackendService *renderBackendSrv);
+
+private:
+    RenderBackend::Light m_light;
+};
 } // Namespace Scene
 } // namespace OSRE

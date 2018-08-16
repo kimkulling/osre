@@ -70,10 +70,14 @@ struct WindowsProperties {
     bool   m_childWindow;         ///< true, if the window is a child window, for embedding
     bool   m_open;                ///< Window is open flag.
 
-    void getDimension(Rect2ui &rect) {
-        rect.set(m_x, m_y, m_width, m_height);
-    }
+    /// Will return the dimension as a rectangle.
+    void getDimension(Rect2ui &rect);
 };
+
+inline
+void WindowsProperties::getDimension(Rect2ui &rect) {
+    rect.set(m_x, m_y, m_width, m_height);
+}
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

@@ -36,6 +36,9 @@ static const CPPCore::Variant EmptyVariant;
 static const String           ConfigKeyStringTable[ Settings::MaxKonfigKey ] = {
     "AppName",
     "AppType",
+    "AppVersionMajor",
+    "AppVersionMinor",
+    "AppVersionPatch",
     "PlatformPlugin",
     "WindowsTitle",
     "RenderAPI",
@@ -175,11 +178,19 @@ static i32 mapPlatformtype2Int( PluginType type ) {
 
 void Settings::initDefaults() {
     CPPCore::Variant appName, windowsTitle, renderAPI, value;
-    appName.setString( "OSRE Application" );
-    m_propertyMap->setProperty( AppName, ConfigKeyStringTable[ AppName ], appName );
-    
-    value.setInt( static_cast<i32>( GfxApp ) );
-    m_propertyMap->setProperty( AppType, ConfigKeyStringTable[ AppName ], value );
+    appName.setString("OSRE Application");
+    m_propertyMap->setProperty(AppName, ConfigKeyStringTable[AppName], appName);
+
+    value.setInt(static_cast<i32>(GfxApp));
+    m_propertyMap->setProperty(AppType, ConfigKeyStringTable[AppName], value);
+
+    // Set version 0.1.0 as default
+    value.setInt(0);
+    m_propertyMap->setProperty(AppVersionMajor, ConfigKeyStringTable[AppVersionMajor], value);
+    value.setInt(1);
+    m_propertyMap->setProperty(AppVersionMajor, ConfigKeyStringTable[AppVersionMinor], value);
+    value.setInt(0);
+    m_propertyMap->setProperty(AppVersionPatch, ConfigKeyStringTable[AppVersionPatch], value);
 
     windowsTitle.setString( "The OSRE experience" );
     const i32 pluginType( mapPlatformtype2Int( Platform::PlatformInterface::getOSPluginType() ) );
