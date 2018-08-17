@@ -36,6 +36,7 @@ class RenderBackendService;
 
 struct Geometry;
 struct GeoInstanceData;
+struct Light;
 
 enum class ParameterType {
     PT_None,
@@ -166,6 +167,8 @@ struct Frame {
     GeometryPackage **m_geoPackages;
     ui32              m_numGeoUpdates;
     Geometry        **m_geoUpdates;
+    ui32              m_numLights;
+    Light           **m_lights;
     GeoInstanceData   *m_geoInstanceData;
     glm::mat4         m_model;
     glm::mat4         m_view;
@@ -178,6 +181,8 @@ struct Frame {
     , m_geoPackages( nullptr )
     , m_numGeoUpdates( 0 )
     , m_geoUpdates( nullptr )
+    , m_numLights( 0 )
+    , m_lights( nullptr )
     , m_geoInstanceData( nullptr )
     , m_model( 1.0f )
     , m_view( 1.0f )

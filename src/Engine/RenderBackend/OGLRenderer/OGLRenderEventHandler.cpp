@@ -87,6 +87,16 @@ static bool setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTextur
     return true;
 }
 
+static void setupLights( ui32 numLights, Light **lights, OGLRenderBackend *rb, OGLRenderEventHandler *eh) {
+    OSRE_ASSERT(nullptr != eh);
+    OSRE_ASSERT(nullptr != rb);
+    OSRE_ASSERT(nullptr != lights);
+
+    for ( ui32 i = 0; i < numLights; ++i ) {
+        Light *currentLight( lights[ i ] );
+    }
+}
+
 static void setConstantBuffers(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj, 
         OGLRenderBackend *rb, OGLRenderEventHandler *eh) {
     OSRE_ASSERT(nullptr != eh);
@@ -606,6 +616,10 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
                 return false;
             }
             data->m_vertexArray = m_vertexArray;
+
+            if (frame->m_numLights > 0) {
+                setupLights(frame->m_numLights, frame->m_lights, m_oglBackend, this);
+            }
 
             // setup the draw calls
             if (0 == currentGeoPackage->m_numInstances) {

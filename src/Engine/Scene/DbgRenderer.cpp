@@ -121,6 +121,7 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
 }
 
 static const ui32 NumIndices = 24;
+
 ui16 indices[ NumIndices ] = {
     0, 1,
     1, 2,
