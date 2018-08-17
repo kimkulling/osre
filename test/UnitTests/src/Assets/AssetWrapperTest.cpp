@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
 #include <osre/Assets/AssimpWrapper.h>
+#include <osre/Common/Ids.h>
 
 namespace OSRE {
 namespace UnitTest {
@@ -35,7 +36,8 @@ class AssimpWrapperTest : public ::testing::Test {
 TEST_F( AssimpWrapperTest, createTest ) {
     bool ok( true );
     try {
-        AssimpWrapper assimpWrapper;
+        Common::Ids ids;
+        AssimpWrapper assimpWrapper(ids);
     } catch (...) {
         ok = false;
     }
