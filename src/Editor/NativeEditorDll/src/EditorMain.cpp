@@ -307,29 +307,3 @@ int STDCALL ImportAsset(const char *filename, int flags) {
 
     return s_EditorApplication->importAsset(filename, flags);
 }
-
-using NodeArray = CPPCore::TArray<Node*>;
-
-void countChildren( Node *node, ui32 &numNodes ) {
-    if (nullptr == node) {
-        return;
-    }
-    numNodes += node->getNumChildren();
-    for (ui32 i = 0; i < node->getNumChildren(); ++i) {
-        Node *child( node->getChildAt( i ) );
-        if (nullptr != child) {
-            countChildren( child, numNodes );
-        }
-    }
-}
-
-static void countNodes(Node *node, int &numNodes) {
-    if (nullptr == node) {
-        return;
-    }
-    const int numChildren(node->getNumChildren());
-    numNodes += numChildren;
-    for (int i = 0; i < numChildren; ++i) {
-        countNodes(node->getChildAt(i), numNodes);
-    }
-}

@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OSREEditor.View
+namespace OSREEditor.Model
 {
-    public class RenderControl
+    class Node
     {
-        public RenderControl() {
-
-        }
     }
 }

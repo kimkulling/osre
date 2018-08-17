@@ -35,9 +35,10 @@ class AssimpWrapperTest : public ::testing::Test {
 
 TEST_F( AssimpWrapperTest, createTest ) {
     bool ok( true );
+
     try {
         Common::Ids ids;
-        AssimpWrapper assimpWrapper(ids);
+        AssimpWrapper assimpWrapper( ids );
     } catch (...) {
         ok = false;
     }

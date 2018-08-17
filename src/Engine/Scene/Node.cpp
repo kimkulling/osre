@@ -201,7 +201,7 @@ void Node::update() {
 }
 
 void Node::draw( RenderBackend::RenderBackendService *renderBackendSrv ) {
-    if ( nullptr == renderBackendSrv ) {
+    if ( nullptr == renderBackendSrv || nullptr == m_renderComp ) {
         return;
     }
 
@@ -252,10 +252,29 @@ void Node::onUpdate() {
 }
 
 void Node::onDraw( RenderBackendService *renderBackendSrv ) {
-    if (nullptr == m_renderComp) {
-        return;
-    }
+    // empty
+}
 
+LightNode::LightNode(const String &name, Common::Ids &ids, RenderCompRequest renderEnabled,
+        TransformCompRequest transformEnabled, Node *parent)
+: Node(name, ids, renderEnabled, transformEnabled, parent)
+, m_light() {
+    // empty
+}
+
+LightNode::~LightNode() {
+
+}
+
+void LightNode::setLight(const Light &light) {
+    m_light = light;
+}
+
+void LightNode::onUpdate() {
+
+}
+
+void LightNode::onDraw( RenderBackendService *renderBackendSrv) {
 
 }
 

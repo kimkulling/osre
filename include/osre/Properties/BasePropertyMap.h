@@ -82,7 +82,7 @@ public:
     /// @brief  Clears the map.
     virtual void clear();
     
-private:
+    // No copying
     BasePropertyMap( const BasePropertyMap & ) = delete;
     BasePropertyMap &operator = ( const BasePropertyMap & ) = delete;
     bool operator == ( const BasePropertyMap & ) const = delete;

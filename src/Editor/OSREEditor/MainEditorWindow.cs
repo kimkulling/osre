@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using OSREEditor.View;
 using OSREEditor.Model;
@@ -8,7 +9,9 @@ namespace OSREEditor
 {
     public partial class MainEditorWindow : Form
     {
-        Project _project;
+        private Project _project;
+
+        private ProjectTreeView _projectTreeView;
 
         public MainEditorWindow()
         {
@@ -18,6 +21,7 @@ namespace OSREEditor
             this.MouseClick += Window_MouseClick;
 
             _project = new Project();
+            _projectTreeView = new ProjectTreeView(ref this.treeView1);
         }
 
         private void quitToolStripMenuItem_Quit_Click(object sender, EventArgs e)
@@ -75,15 +79,9 @@ namespace OSREEditor
                 var filename = openFileDialog.FileName;
                 var retValue = OSREWrapper.ImportAsset(filename, 0);
                 if (0 == retValue) {
-                    this.treeView1.BeginUpdate();
-                    TreeNode newNode = new TreeNode(filename);
-                    treeView1.Nodes.Add(newNode);
-                    /*foreach ( var item in items )
-                    {
-                        newNode = new TreeNode(item.m_name);
-                        treeView1.Nodes[0].Nodes.Add(newNode);
-                    }*/
-                    this.treeView1.EndUpdate();
+                    string[] sepFolders  = filename.Split('\\');
+                    string name = sepFolders[sepFolders.Length - 1];
+                    _projectTreeView.NewProjectView(name);
                 }
             }
         }

@@ -595,18 +595,24 @@ struct RenderBatch {
     OSRE_NON_COPYABLE( RenderBatch )
 };
 
+enum class LightType {
+    Directional,
+    Point,
+    Spot,
+    None
+};
+
 ///	@brief
-struct RenderLight {
+struct Light {
     glm::vec3 m_position;
     glm::vec3 m_specular;
     glm::vec3 m_diffuse;
     glm::vec3 m_ambient;
     f32       m_specularExp;
+    LightType m_type;
 
-    RenderLight();
-    ~RenderLight();
-
-    OSRE_NON_COPYABLE( RenderLight )
+    Light();
+    ~Light();
 };
 
 } // Namespace RenderBackend
