@@ -159,7 +159,7 @@ bool SDL2EventHandler::update() {
             case SDL_KEYDOWN:
             case SDL_KEYUP: {
                 KeyboardButtonEventData *data = new KeyboardButtonEventData( SDL_KEYDOWN == ev.type, m_eventTriggerer );
-                data->m_Key = ( Key ) ev.key.keysym.sym;
+                data->m_key = ( Key ) ev.key.keysym.sym;
                 activeEventQueue->addBack( data );
             }
             break;
@@ -168,8 +168,8 @@ bool SDL2EventHandler::update() {
                 MouseMoveEventData *data = new MouseMoveEventData( m_eventTriggerer );
                 int x, y;
                 SDL_GetMouseState( &x, &y );
-                data->m_AbsX = x;
-                data->m_AbsY = y;
+                data->m_absX = x;
+                data->m_absY = y;
                 activeEventQueue->addBack( data );
             }
             break;

@@ -78,6 +78,17 @@ const String GLSLFsSrc =
     "    vFragColor = vSmoothColor;\n"
     "}\n";
 
+const String RVLightVS =
+    GLSLVersionString_400 +
+    "\n"
+    + GLSLRenderVertexLayout +
+    "\n"
+    "void main() {\n"
+    "\n"
+    "\n"
+    "\n"
+    "}\n";
+
 const String GLSLVsSrcRV =
     GLSLVersionString_400 +
     "\n"

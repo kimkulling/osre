@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #elif defined(__gnu_linux__)
 #   define OSRE_GNU_LINUX
 #elif defined(__APPLE__) || defined (__MACH__)
-
+#   error "Currently not supported platform"
 #elif defined(__ANDROID__)
 #   define OSRE_ANDROID
 #endif
@@ -41,10 +41,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdio.h>
 #include <cstddef>
 #include <cmath>
-
 #include <emmintrin.h>
 
-#ifndef _WIN32
+#ifndef OSRE_WINDOWS
 #  include <inttypes.h>
 #endif 
 

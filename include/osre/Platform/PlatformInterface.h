@@ -141,13 +141,13 @@ public:
     ///	@param	c		[in] The event trigger sender.
     KeyboardButtonEventData( bool down, Common::EventTriggerer* c ) 
     : Common::EventData( down ? KeyboardButtonDownEvent : KeyboardButtonUpEvent, c )
-    , m_Key( KEY_UNKNOWN )
-    , m_Unicode( 0 ) {
+    , m_key( KEY_UNKNOWN )
+    , m_unicode( 0 ) {
             // empty
     }
 
-    Key  m_Key;		///< Key code for the pressed/released keyboard button
-    ui16 m_Unicode;	///< The Unicode character for the pressed/released key
+    Key  m_key;		///< Key code for the pressed/released keyboard button
+    ui16 m_unicode;	///< The Unicode character for the pressed/released key
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -193,13 +193,13 @@ public:
     ///	@param	c		[in] The event trigger sender.
     MouseMoveEventData( Common::EventTriggerer *c ) 
     : Common::EventData( MouseMoveEvent, c )
-    , m_AbsX( 0 )
-    , m_AbsY( 0 ) {
+    , m_absX( 0 )
+    , m_absY( 0 ) {
         // empty
     }
 
-    i32 m_AbsX;		///< The absolute X-position of the mouse cursor
-    i32 m_AbsY;		///< The absolute Y-position of the mouse cursor
+    i32 m_absX;		///< The absolute X-position of the mouse cursor
+    i32 m_absY;		///< The absolute Y-position of the mouse cursor
 };
 
 //-------------------------------------------------------------------------------------------------

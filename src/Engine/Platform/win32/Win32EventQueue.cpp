@@ -196,7 +196,7 @@ bool Win32EventQueue::update() {
 
             case WM_MOUSEMOVE: {
                 MouseMoveEventData *data = new MouseMoveEventData( m_eventTriggerer );
-                getXYPosFromLParam( Program.lParam, data->m_AbsX, data->m_AbsY );
+                getXYPosFromLParam( Program.lParam, data->m_absX, data->m_absY );
                 pActiveEventQueue->addBack( data );
             }
             break;
@@ -204,7 +204,7 @@ bool Win32EventQueue::update() {
             case WM_KEYDOWN: 
             case WM_KEYUP: {
                 KeyboardButtonEventData *data = new KeyboardButtonEventData( Program.message == WM_KEYDOWN, m_eventTriggerer );
-                data->m_Key = ( Key ) Program.wParam;
+                data->m_key = ( Key ) Program.wParam;
                 pActiveEventQueue->addBack( data );
             }
             break;
