@@ -449,12 +449,12 @@ struct OSRE_EXPORT TransformState {
     ~TransformState();
     void setTranslation( f32 x, f32 y, f32 z );
     void setScale( f32 sx, f32 sy, f32 sz );
-    void toMatrix(glm::mat4 &m);
+    void toMatrix(glm::mat4 &m) const;
     bool operator == ( const TransformState &rhs ) const;
     bool operator != ( const TransformState &rhs ) const;
 };
 
-struct UniformTransformBuffer {
+struct OSRE_EXPORT UniformTransformBuffer {
     glm::mat4 m_projection;
     glm::mat4 m_model;
     glm::mat4 m_view;
@@ -603,11 +603,12 @@ enum class LightType {
 };
 
 ///	@brief
-struct Light {
-    glm::vec3 m_position;
+struct OSRE_EXPORT Light {
+    glm::vec4 m_position;
     glm::vec3 m_specular;
     glm::vec3 m_diffuse;
     glm::vec3 m_ambient;
+    glm::vec4 m_direction;
     f32       m_specularExp;
     LightType m_type;
 

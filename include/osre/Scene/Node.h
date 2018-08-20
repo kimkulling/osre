@@ -62,7 +62,7 @@ class TransformComponent;
 ///	@ingroup	Engine
 ///
 ///	@brief  This class is used to represents a simple node in the stage hierarchy. You can add  
-///  several functionalities by adding components to is. Each component implements functionality 
+/// several functionalities by adding components to is. Each component implements functionality 
 /// like render geometry or transformation information.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Node : public Common::Object {
@@ -70,9 +70,10 @@ public:
     using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::Scene::Node>;
     using AABB    = ::OSRE::Collision::TAABB<f32>;
 
+    /// The type of component
     enum class ComponentType {
-        RenderComponentType,
-        TransformComponentType
+        RenderComponentType,    ///< Renderable component
+        TransformComponentType  ///< Transformable component
     };
 
     enum class RenderCompRequest {
@@ -106,7 +107,7 @@ public:
     virtual void addGeometry( RenderBackend::Geometry *geo );
     virtual ui32 getNumGeometries() const;
     virtual RenderBackend::Geometry *getGeometryAt(ui32 idx) const;
-    void update();
+    void update(Time dt);
     void draw(RenderBackend::RenderBackendService *renderBackendSrv);
     
 public:
@@ -119,7 +120,7 @@ public:
     Properties::Property *getProperty(const String name) const;
 
 protected:
-    virtual void onUpdate();
+    virtual void onUpdate(Time dt);
     virtual void onDraw(RenderBackend::RenderBackendService *renderBackendSrv);
 
 private:
@@ -158,15 +159,16 @@ const Node::AABB &Node::getAABB() const {
 }
 
 
-class LightNode : public Node {
+class OSRE_EXPORT LightNode : public Node {
 public:
     LightNode(const String &name, Common::Ids &ids, RenderCompRequest renderEnabled,
         TransformCompRequest transformEnabled, Node *parent = nullptr);
     ~LightNode();
     void setLight(const RenderBackend::Light &light);
+    const RenderBackend::Light &getLight() const;
 
 protected:
-    virtual void onUpdate();
+    void onUpdate(Time dt) override;
     virtual void onDraw(RenderBackend::RenderBackendService *renderBackendSrv);
 
 private:

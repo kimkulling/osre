@@ -80,9 +80,11 @@ Geometry *RenderComponent::getGeoAt(ui32 idx) const {
     return m_newGeo[idx];
 }
 
-TransformComponent::TransformComponent( ui32 id )
-: Component( id )
-, m_localTransform() {
+TransformComponent::TransformComponent(ui32 id)
+: Component(id)
+, m_dirty(NotDirty)
+, m_localTransformState()
+, m_transform( 1.0f ) {
 	// empty
 }
 
@@ -91,28 +93,44 @@ TransformComponent::~TransformComponent() {
 }
 
 void TransformComponent::update( Time ) {
-    // empty
+    if (m_dirty == NeedsTransform) {
+        m_localTransformState.toMatrix(m_transform);
+        m_dirty = NotDirty;
+    }
 }
 
 void TransformComponent::draw( RenderBackendService * ) {
-    glm::mat4 world;
-    m_localTransform.toMatrix( world );
+    // empty
 }
 
-void TransformComponent::setPosition( const glm::vec3 &pos ) {
-    m_localTransform.m_translate = glm::vec3( pos );
+void TransformComponent::setTranslation( const glm::vec3 &pos ) {
+    m_localTransformState.m_translate = glm::vec3( pos );
+    m_dirty = NeedsTransform;
 }
 
-const glm::vec3 &TransformComponent::getPosition() const {
-    return m_localTransform.m_translate;
+const glm::vec3 &TransformComponent::getTranslation() const {
+    return m_localTransformState.m_translate;
 }
 
 void TransformComponent::setScale( const glm::vec3 &scale ) {
-    m_localTransform.m_scale = glm::vec3( scale );;
+    m_localTransformState.m_scale = glm::vec3( scale );;
+    m_dirty = NeedsTransform;
 }
 
 const glm::vec3 &TransformComponent::getScale() const {
-    return m_localTransform.m_scale;
+    return m_localTransformState.m_scale;
+}
+
+void TransformComponent::setTransformationMatrix(const glm::mat4 &m) {
+    m_transform = m;
+}
+
+const glm::mat4 &TransformComponent::getTransformationMatrix() const {
+    return m_transform;
+}
+
+const RenderBackend::TransformState &TransformComponent::getTransformState() const {
+    return m_localTransformState;
 }
 
 CollisionComponent::CollisionComponent( ui32 id )

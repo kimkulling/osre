@@ -99,13 +99,22 @@ public:
     virtual ~TransformComponent();
     void update( Time dt ) override;
     void draw( RenderBackend::RenderBackendService *renderBackendSrv ) override;
-    void setPosition( const glm::vec3 &pos );
-    const glm::vec3 &getPosition() const;
+    void setTranslation( const glm::vec3 &pos );
+    const glm::vec3 &getTranslation() const;
     void setScale( const glm::vec3 &pos );
     const glm::vec3 &getScale() const;
+    void setTransformationMatrix(const glm::mat4 &m);
+    const glm::mat4 &getTransformationMatrix() const;
+    const RenderBackend::TransformState &getTransformState() const;
 
 private:
-    RenderBackend::TransformState m_localTransform;
+    enum DirtyFrag {
+        NotDirty = 0,
+        NeedsTransform = 1
+    };
+    ui32 m_dirty;
+    RenderBackend::TransformState m_localTransformState;
+    glm::mat4 m_transform;
 };
 
 //-------------------------------------------------------------------------------------------------

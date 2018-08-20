@@ -29,6 +29,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/StringUtils.h>
 #include <osre/Properties/Property.h>
 
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace OSRE {
 namespace Scene {
 
@@ -196,8 +198,8 @@ RenderBackend::Geometry *Node::getGeometryAt(ui32 idx) const {
     return nullptr;
 }
 
-void Node::update() {
-
+void Node::update(Time dt) {
+    onUpdate(dt);
 }
 
 void Node::draw( RenderBackend::RenderBackendService *renderBackendSrv ) {
@@ -247,8 +249,11 @@ Properties::Property *Node::getProperty(const String name) const {
     return nullptr;
 }
 
-void Node::onUpdate() {
-    // empty
+void Node::onUpdate(Time dt) {
+    TransformComponent *comp((TransformComponent*)getComponent(Node::ComponentType::TransformComponentType));
+    if (nullptr != comp) {
+        comp->update(dt);
+    }
 }
 
 void Node::onDraw( RenderBackendService *renderBackendSrv ) {
@@ -270,8 +275,18 @@ void LightNode::setLight(const Light &light) {
     m_light = light;
 }
 
-void LightNode::onUpdate() {
+const Light &LightNode::getLight() const {
+    return m_light;
+}
 
+void LightNode::onUpdate(Time dt) {
+    TransformComponent *comp( ( TransformComponent* ) getComponent( Node::ComponentType::TransformComponentType ) );
+    if (nullptr != comp) {
+        const TransformState &transformState(comp->getTransformState());
+        glm::mat4 m(1.0f);
+        transformState.toMatrix( m );
+        m_light.m_position = m * m_light.m_position;
+    }
 }
 
 void LightNode::onDraw( RenderBackendService *renderBackendSrv) {

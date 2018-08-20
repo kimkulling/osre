@@ -68,7 +68,7 @@ public:
             if( data ) {
                 bool result( false );
                 ui32 next( 0 );
-                Key key = reinterpret_cast< const KeyboardButtonEventData* >( data )->m_Key;
+                Key key = reinterpret_cast< const KeyboardButtonEventData* >( data )->m_key;
                 if( key == KEY_SPACE ) {
                     result = m_testSuite->requestNextTest( next );
                     if ( !result ) {

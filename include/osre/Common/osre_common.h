@@ -162,11 +162,18 @@ struct Handle {
 struct Time {
     i64 m_microseconds;
 
+    Time();
     Time( i64 microseconds );
     f32 asSeconds() const;
     i32 asMilliSeconds() const;
     i64 asMicroSeconds() const;
 };
+
+inline
+Time::Time()
+: m_microseconds(0) {
+    // empty
+}
 
 inline
 Time::Time( i64 microseconds )

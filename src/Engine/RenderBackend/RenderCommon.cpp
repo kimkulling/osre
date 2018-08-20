@@ -418,7 +418,7 @@ bool TransformState::operator != ( const TransformState &rhs ) const {
     return !( *this == rhs );
 }
 
-void TransformState::toMatrix(mat4 &m) {
+void TransformState::toMatrix(mat4 &m) const {
     mat4 mvp = mat4( 1.0f );
     mvp *= glm::translate( m, m_translate );
     mvp *= mat4(1.0f);
@@ -493,11 +493,12 @@ RenderBatch::~RenderBatch() {
 }
 
 Light::Light()
-: m_position(0,0,0)
-, m_specular( 1,1,1 )
-, m_diffuse(1,1,1)
-, m_ambient(1,1,1)
-, m_specularExp( 1 )
+: m_position(0.0f,0.0f,0.0f,1.0f)
+, m_specular( 1.0f,1.0f,1.0f)
+, m_diffuse(1.0f,1.0f,1.0f)
+, m_ambient(1.0f,1.0f,1.0f)
+, m_direction(0.0f, 0.0f, 1.0f, 1.0f)
+, m_specularExp( 1.0f)
 , m_type( LightType::None ) {
     // empty
 }

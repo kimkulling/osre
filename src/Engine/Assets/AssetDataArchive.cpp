@@ -115,7 +115,7 @@ static bool writeNode(Scene::Node *currentNode, Json::StreamWriter *sw ) {
         transformCompObj["id"] = transformComp->getId();
         transformCompObj["type"] = "scene::transformcomponent";
         
-        const glm::vec3 &pos = transformComp->getPosition();
+        const glm::vec3 &pos = transformComp->getTranslation();
         transformCompObj[0]["transform"] = pos.x;
         transformCompObj[1]["transform"] = pos.y;
         transformCompObj[2]["transform"] = pos.z;

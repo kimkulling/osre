@@ -24,7 +24,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //#include <gmock>
 
 #include <osre/Scene/Node.h>
+#include <osre/Scene/Component.h>
 #include <osre/Common/Ids.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 namespace OSRE {
 namespace UnitTest {
@@ -53,9 +55,16 @@ protected:
     Node *createNode( const String &name, Common::Ids &ids, Node::RenderCompRequest renderingRequested, Node::TransformCompRequest transformRequested, Node *parent ) {
         Node *n( new Node( name, ids, renderingRequested, transformRequested, parent ) );
         addNodeForRelease( n );
+        
         return n;
     }
 
+    LightNode *createLightNode(const String &name, Common::Ids &ids, Node::RenderCompRequest renderingRequested, Node::TransformCompRequest transformRequested, Node *parent) {
+        LightNode *ln = new LightNode(name, ids, renderingRequested, transformRequested, parent);
+        addNodeForRelease(ln);
+
+        return ln;
+    }
     void addNodeForRelease( Node *node ) {
         m_nodes.push_back( node );
     }
@@ -76,8 +85,7 @@ TEST_F( NodeTest, createTest ) {
         Node *myNode = createNode( "testnode3", *m_ids, Node::RenderCompRequest::NoRenderComp, Node::TransformCompRequest::NoTransformComp, nullptr );
         EXPECT_TRUE( nullptr == myNode->getComponent( Node::ComponentType::TransformComponentType ) );
         EXPECT_TRUE( nullptr == myNode->getComponent( Node::ComponentType::RenderComponentType ) );
-    }
-    catch ( ... ) {
+    } catch ( ... ) {
         ok = false;
     }
     EXPECT_TRUE( ok );
@@ -121,6 +129,32 @@ TEST_F( NodeTest, onUpdateTest ) {
         Node::TransformCompRequest::TransformCompRequested, nullptr );
     EXPECT_NE(nullptr, myNode);
 }
+
+TEST_F(NodeTest, lightNodeTransformTest) {
+    LightNode *ln = createLightNode("test", *m_ids, Node::RenderCompRequest::RenderCompRequested,
+        Node::TransformCompRequest::TransformCompRequested, nullptr);
+    EXPECT_NE(nullptr, ln);
+
+    RenderBackend::Light light;
+    
+    light.m_position.x = 10.0f;
+    light.m_position.y = 0.0f;
+    light.m_position.z = 0.0f;
+
+    ln->setLight(light);
+    TransformComponent *tc = (TransformComponent*)ln->getComponent(Node::ComponentType::TransformComponentType);
+    EXPECT_NE(nullptr, tc);
+    tc->setTranslation(glm::vec3(10.0f, 20.0f, 30.0f));
+
+    Time dt;
+    ln->update(dt);
+
+    light = ln->getLight();
+    EXPECT_FLOAT_EQ(20.0f, light.m_position.x);
+    EXPECT_FLOAT_EQ(20.0f, light.m_position.y);
+    EXPECT_FLOAT_EQ(30.0f, light.m_position.z);
+}
+
 
 } // Namespace UnitTest
 } // Namespace OSRE
