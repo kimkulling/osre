@@ -12,9 +12,12 @@ namespace OSREEditor.View
 {
     public partial class NewProject : Form
     {
-        public NewProject()
+        IntPtr mHandle;
+
+        public NewProject(IntPtr handle)
         {
             InitializeComponent();
+            mHandle = handle;
         }
 
         private void button1_Click(object sender, EventArgs e)
