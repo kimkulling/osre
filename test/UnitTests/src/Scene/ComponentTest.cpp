@@ -42,7 +42,7 @@ public:
         // empty
     }
 
-    void update( Time dt ) {
+    void update( Time ) {
         // empty
     }
 

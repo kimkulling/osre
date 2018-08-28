@@ -50,7 +50,7 @@ public:
     }
 
 protected:
-    void onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) override {
+    void onRender( UiRenderCmdCache &, RenderBackendService *rbSrv ) override {
         EXPECT_NE(nullptr, rbSrv);
     }
 

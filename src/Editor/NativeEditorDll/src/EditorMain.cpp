@@ -88,7 +88,9 @@ public:
         // empty
     }
 
-    int enqueueEvent(const Common::Event *ev, const Common::EventData *evData) {
+    int enqueueEvent(const Event *ev, EventData *evData) {
+        AbstractPlatformEventQueue *queue = m_platformInterface->getInstance()->getPlatformEventHandler();
+        queue->enqueueEvent(*ev, evData);
         return 0;
     }
 
@@ -166,6 +168,14 @@ public:
 
     PlatformInterface *getPlatformInterface() const {
         return m_platformInterface;
+    }
+
+    bool loadWorld(const char *filelocation, int flags) {
+        return true;
+    }
+
+    bool saveWorld(const char *filelocation, int flags) {
+        return true;
     }
 
 protected:
@@ -281,7 +291,9 @@ int STDCALL LoadWorld(const char *filelocation, int flags) {
         return 1;
     }
 
-    return 0;
+    const bool retValue = s_EditorApplication->loadWorld(filelocation, flags);
+
+    return retValue ? 0 : 1;
 }
 
 int STDCALL SaveWorld(const char *filelocation, int flags) {
@@ -293,7 +305,9 @@ int STDCALL SaveWorld(const char *filelocation, int flags) {
         return 1;
     }
 
-    return 0;
+    const bool retValue = s_EditorApplication->saveWorld(filelocation, flags);
+
+    return retValue ? 0 : 1;
 }
 
 int STDCALL ImportAsset(const char *filename, int flags) {

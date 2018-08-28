@@ -13,7 +13,6 @@ public:
     Scene::Node *getNextChild();
     
     SceneNodeIterator(const SceneNodeIterator &) = delete;
-    SceneNodeIterator(SceneNodeIterator &) = delete;
     SceneNodeIterator &operator = ( const SceneNodeIterator & ) = delete;
         
 private:

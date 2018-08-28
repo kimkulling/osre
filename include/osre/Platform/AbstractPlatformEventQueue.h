@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Object.h>
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/TList.h>
+#include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
 
@@ -53,14 +54,14 @@ public:
     virtual ~AbstractPlatformEventQueue();
     
     ///	@brief  Used to register a event listener.
-    ///	@param  events      List of events.
-    /// @param  pListener   The listener instance
-    virtual void registerEventListener( const EventPtrArray &events, OSEventListener *pListener ) = 0;
+    ///	@param  events      [in] List of events.
+    /// @param  listener    [in] The listener instance
+    virtual void registerEventListener( const EventPtrArray &events, OSEventListener *listener) = 0;
     
     ///	@brief  Used to unregister a event listener.
-    ///	@param  events      List of events.
-    /// @param  pListener   The listener instance
-    virtual void unregisterEventListener( const EventPtrArray &events, OSEventListener *pListener ) = 0;
+    ///	@param  events      [in] List of events.
+    /// @param  listener    [in] The listener instance
+    virtual void unregisterEventListener( const EventPtrArray &events, OSEventListener *listener) = 0;
     
     ///	@brief  Set the polling state.
     ///	@param  enabled     true for enabling polling.
@@ -70,11 +71,21 @@ public:
     /// @return The active polling state.
     virtual bool isPolling() const = 0;
 
+    /// @brief  Will perform an update.
+    /// @return Returns false in case of an error.
     virtual bool update() = 0;
 
-    void setRenderBackendService( RenderBackend::RenderBackendService *rbSrv );
+    /// @brief  Will set the render back-end service.
+    /// @param  rbSrv   [in] The pointer showing to the render back-end.
+    virtual void setRenderBackendService( RenderBackend::RenderBackendService *rbSrv );
     
-    RenderBackend::RenderBackendService *getRenderBackendService() const;
+    /// @brief  Will return the render back-end.
+    /// @return The render back-end service, pointer is nullptr if the service was not set.
+    virtual RenderBackend::RenderBackendService *getRenderBackendService() const;
+
+    /// @brief  Enqueues a new event into the active event queue.
+    /// @param  ev      [in] The event to enqueue.
+    virtual void enqueueEvent(const Common::Event &ev, Common::EventData *data);
 
 protected:
     /// @brief  The class constructor.
@@ -94,7 +105,6 @@ protected:
     
     ///	@brief  Toggles between the active and pending list.
     void switchEventDataList();
-
 
 private:
     enum {
@@ -168,6 +178,15 @@ void AbstractPlatformEventQueue::setRenderBackendService( RenderBackend::RenderB
 inline
 RenderBackend::RenderBackendService *AbstractPlatformEventQueue::getRenderBackendService() const {
     return m_rbSrv;
+}
+
+inline
+void AbstractPlatformEventQueue::enqueueEvent(const Common::Event &ev, Common::EventData *data) {
+    OSRE_ASSERT(nullptr != data);
+
+    if (ev == data->getEvent()) {
+        getActiveEventDataList()->addBack(data);
+    }
 }
 
 } // Namespace Platform
