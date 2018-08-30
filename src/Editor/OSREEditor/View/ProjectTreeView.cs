@@ -1,24 +1,36 @@
-﻿using System.Windows.Forms;
+﻿using System.Runtime.Remoting.Messaging;
+using System.Windows.Forms;
 
-namespace OSREEditor.View
-{
+namespace OSREEditor.View {
     public class ProjectTreeView {
 
-        private TreeView _projectTreeView;
+        private TreeView projectTreeView;
 
         public ProjectTreeView(ref TreeView treeView) {
-            _projectTreeView = treeView;
+            this.projectTreeView = treeView;
+        }
+
+        public ProjectTreeView() {
+            this.projectTreeView = new TreeView();
         }
 
         public void NewProjectView(string name) {
-            if (_projectTreeView.Nodes.Count > 0) {
-                _projectTreeView.Nodes.Clear();
+            if ( projectTreeView.Nodes.Count > 0) {
+                this.projectTreeView.Nodes.Clear();
             }
 
-            _projectTreeView.BeginUpdate();
-            TreeNode newNode = new TreeNode(name);
-            _projectTreeView.Nodes.Add(newNode);
-            _projectTreeView.EndUpdate();
+            var newNode = new TreeNode(name);
+
+            this.projectTreeView.BeginUpdate();
+            this.projectTreeView.Nodes.Add(newNode);
+            this.projectTreeView.EndUpdate();
+        }
+
+        public void AddNode(string name) {
+            if (name.Length == 0) {
+                return;
+            }
+            this.projectTreeView.Nodes.Add(new TreeNode(name));
         }
     }
 }
