@@ -71,7 +71,7 @@ public:
     /// @brief Performs the binded function call
     ///	@param	p1	UniformVar 1.
     ///	@param	p2	UniformVar 1.
-    virtual RET call( P1 p1, P2 p2 ) const {
+    RET call( P1 p1, P2 p2 ) const override {
         return m_Func(p1,p2);
     }
 
@@ -107,7 +107,7 @@ public:
     ///	@param	P1		[in] UniformVar one.
     ///	@param	P2		[in] UniformVar two.
     ///	@return	The return value.
-    virtual RET call(P1 p1, P2 p2) const {
+    RET call(P1 p1, P2 p2) const override {
         return ( m_Obj->*m_Func )( p1, p2 );
     }
 

@@ -32,6 +32,7 @@ namespace OSRE {
 namespace Scene {
 
 using namespace ::OSRE::Common;
+using namespace ::OSRE::RenderBackend;
 
 static ui32 calcHash( const String &name ) {
     const ui32 hash( StringUtils::hashName( name.c_str() ) );
@@ -59,7 +60,7 @@ static void releaseChildNodes( Node *node ) {
     }
 }
 
-Stage::Stage( const String &name, RenderBackend::RenderBackendService *rbService )
+Stage::Stage( const String &name, RenderBackendService *rbService )
 : Object( name )
 , m_root( nullptr )
 , m_views()
@@ -71,7 +72,8 @@ Stage::Stage( const String &name, RenderBackend::RenderBackendService *rbService
     m_root = new Node( "name" + String( ".root" ), *m_ids, 
         Node::RenderCompRequest::RenderCompRequested, 
         Node::TransformCompRequest::TransformCompRequested, 
-        nullptr );
+        nullptr 
+    );
 }
 
 Stage::~Stage() {
@@ -98,7 +100,8 @@ Node *Stage::createNode( const String &name, Node *parent, const String &type ) 
                            *m_ids, 
                             Node::RenderCompRequest::RenderCompRequested,
                             Node::TransformCompRequest::TransformCompRequested, 
-                            parent );
+                            parent 
+                        );
         if( nullptr == parent ) {
             m_root->addChild( newNode );
         }
@@ -139,16 +142,13 @@ Node *Stage::findNode( const String &name ) const {
     return myNode;
 }
 
-View *Stage::addView( const String &name, Node *node ) {
+View *Stage::addView( const String &name, Node *parent ) {
     if ( name.empty() ) {
         return nullptr;
     }
 
-    View *view( new View( name ) );
+    View *view( new View( name, *m_ids, parent ) );
     m_views.add( view );
-    if ( nullptr != node ) {
-        view->observeNode( node );
-    }
 
     return view;
 }
@@ -158,10 +158,10 @@ void Stage::clear() {
 }
 
 void Stage::update( Time dt ) {
-
+    onUpdate( dt );
 }
 
-static void drawNode( Node *current, bool traverse, RenderBackend::RenderBackendService *rb ) {
+static void drawNode( Node *current, bool traverse, RenderBackendService *rb ) {
     if (nullptr == current) {
         return;
     }
@@ -183,8 +183,7 @@ static void drawNode( Node *current, bool traverse, RenderBackend::RenderBackend
     }
 }
 
-
-void Stage::draw( RenderBackend::RenderBackendService *renderBackendSrv ) {
+void Stage::draw( RenderBackendService *renderBackendSrv ) {
     if( nullptr == m_root ) {
         return;
     }
@@ -206,7 +205,7 @@ void Stage::onUpdate( Time dt ) {
     // empty
 }
 
-void Stage::onDraw( RenderBackend::RenderBackendService *renderBackendSrv ) {
+void Stage::onDraw( RenderBackendService *renderBackendSrv ) {
     // empty
 }
 

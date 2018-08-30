@@ -56,17 +56,17 @@ protected:
     ///	@brief	The constructor with the name of the timer instance.
     ///	@param	name        [in] The name for the timer instance.
     /// @param  reqTimeStep [in] The time-step for the target FPS-value.
-    AbstractTimer( const String &name, d32 reqTimeStep = 1.0 / 30.0 );
+    AbstractTimer( const String &name, i64 reqTimeStep );
 
     /// @brief  Will return the target time slice for 
-    d32 getRequestedTimeStep() const;
+    i64 getRequestedTimeStep() const;
 
 private:
-    d32 m_reqTimeSlice;
+    i64 m_reqTimeSlice;
 };
 
 inline
-AbstractTimer::AbstractTimer( const String &name, d32 reqTimeSlice )
+AbstractTimer::AbstractTimer( const String &name, i64 reqTimeSlice )
 : Object( name )
 , m_reqTimeSlice( reqTimeSlice ) {
     // empty

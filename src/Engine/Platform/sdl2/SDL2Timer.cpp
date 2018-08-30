@@ -38,7 +38,7 @@ SDL2Timer::~SDL2Timer( ) {
 }
 
 i64 SDL2Timer::getMilliCurrentSeconds( ) {
-    i64 ticks =  (i64) SDL_GetTicks()/1000.0;
+    i64 ticks =  static_cast<i64>( SDL_GetTicks() / 1000U );
     return ticks;
 }
 

@@ -39,7 +39,7 @@ static void APIENTRY openglCallbackFunction(
         GLenum severity,
         GLsizei length,
         const GLchar* message,
-        const void* userParam
+        const void* 
 ) {
     std::cout << "---------------------opengl-callback-start------------" << std::endl;
     std::cout << "message: " << message << std::endl;
@@ -65,18 +65,23 @@ static void APIENTRY openglCallbackFunction(
             break;
     }
     std::cout << std::endl;
-
+    std::cout << "source: " << source << " ";
     std::cout << "id: " << id << "severity: ";
+    std::cout << "length: " << length << " ";
     switch ( severity ) {
-    case GL_DEBUG_SEVERITY_LOW:
-        std::cout << "LOW";
-        break;
-    case GL_DEBUG_SEVERITY_MEDIUM:
-        std::cout << "MEDIUM";
-        break;
-    case GL_DEBUG_SEVERITY_HIGH:
-        std::cout << "HIGH";
-        break;
+        case GL_DEBUG_SEVERITY_LOW:
+            std::cout << "LOW";
+            break;
+        case GL_DEBUG_SEVERITY_MEDIUM:
+            std::cout << "MEDIUM";
+            break;
+        case GL_DEBUG_SEVERITY_HIGH:
+            std::cout << "HIGH";
+            break;
+
+        default:
+            OSRE_ASSERT(false);
+            break;
     }
     std::cout << std::endl;
     std::cout << "---------------------opengl-callback-end--------------" << std::endl;

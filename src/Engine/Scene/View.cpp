@@ -33,13 +33,13 @@ using namespace ::OSRE::RenderBackend;
 
 static const String Tag = "View";
 
-View::View( const String &name ) 
-: Object( name )
+View::View(const String &name, Common::Ids &ids, Node *parent )
+: Node( name, ids, RenderCompRequest::NoRenderComp, TransformCompRequest::TransformCompRequested, parent )
 , m_fov( 60.0f )
 , m_w( 0.0f )
 , m_h( 0.0f )
 , m_far( 1000.0f )
-, m_node( nullptr )
+, m_observedNode( nullptr )
 , m_eye( 1, 1, 1 )
 , m_center( 0, 0, 0 )
 , m_up( 0, 0, 1 )
@@ -65,7 +65,7 @@ void View::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
 }
 
 void View::observeNode( Node *node ) {
-    m_node = node;
+    m_observedNode = node;
 }
 
 void View::update( Time dt ) {

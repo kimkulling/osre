@@ -58,15 +58,15 @@ public:
     ///	@return	The name of the object.
     const String &getName() const;
 
+    /// No copying
+    Object(const Object &) = delete;
+    Object &operator = (const Object &) = delete;
+    Object() = delete;
+
 protected:
     ///	@brief	The constructor with the name of the object.
     ///	@param	objectName  [in] The object name.
     Object( const String &objectName );
-
-private: 
-    Object();
-    Object( const Object & ) = delete;
-    Object &operator = ( const Object & ) = delete;
 
 private:
     String m_objectName;

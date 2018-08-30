@@ -37,16 +37,14 @@ namespace RenderBackend {
 
 namespace Scene {
 
-class Node;
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT View : public Common::Object {
+class OSRE_EXPORT View : public Node {
 public:
-    View( const String &name );
+    View( const String &name, Common::Ids &ids, Node *parent = nullptr );
     virtual ~View();
     virtual void setProjectionParameters(f32 fov, f32 w, f32 h, f32 near, f32 far);
     virtual void observeNode( Node *node );
@@ -67,7 +65,7 @@ private:
     f32 m_fov;
     f32 m_w, m_h;
     f32 m_near, m_far;
-    Node *m_node;
+    Node *m_observedNode;
     glm::vec3 m_eye, m_center, m_up;
     glm::mat4 m_view, m_projection;
 };
