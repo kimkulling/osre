@@ -77,6 +77,19 @@ TEST_F(ComponentTest, accessNodeTest) {
 }
 
 TEST_F( ComponentTest, accessIdTest ) {
+    String name = "test";
+    Common::Ids *ids = new Common::Ids;
+    Node *n(new Node(name, *ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, nullptr));
+
+    Component *tc = n->getComponent(Node::ComponentType::TransformComponentType);
+    EXPECT_NE(nullptr, tc);
+    const ui32 id1 = tc->getId();
+
+    Component *rc = n->getComponent(Node::ComponentType::RenderComponentType);
+    EXPECT_NE(nullptr, rc);
+    const ui32 id2 = rc->getId();
+
+    EXPECT_NE(id1, id2);
 }
 
 } // Namespace UnitTest
