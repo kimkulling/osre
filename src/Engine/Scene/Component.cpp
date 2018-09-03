@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/Component.h>
+#include <osre/Scene/Node.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
@@ -32,8 +33,9 @@ using namespace ::CPPCore;
 
 static const glm::vec3 Dummy = glm::vec3( -1, -1, -1);
 
-Component::Component( ui32 id )
-: m_id( id ) {
+Component::Component(Node *node, ui32 id )
+: m_owner( node )
+, m_id( id ) {
 	// empty
 }
 
@@ -41,8 +43,8 @@ Component::~Component() {
 	// empty
 }
 
-RenderComponent::RenderComponent( ui32 id )
-: Component( id )
+RenderComponent::RenderComponent(Node *node, ui32 id )
+: Component(node, id )
 , m_newGeo() {
     // empty
 }
@@ -80,8 +82,8 @@ Geometry *RenderComponent::getGeoAt(ui32 idx) const {
     return m_newGeo[idx];
 }
 
-TransformComponent::TransformComponent(ui32 id)
-: Component(id)
+TransformComponent::TransformComponent(Node *node, ui32 id)
+: Component(node, id)
 , m_dirty(NotDirty)
 , m_localTransformState()
 , m_transform( 1.0f ) {
@@ -99,8 +101,8 @@ void TransformComponent::update( Time ) {
     }
 }
 
-void TransformComponent::draw( RenderBackendService * ) {
-    // empty
+void TransformComponent::draw( RenderBackendService *rbSrv ) {
+    //rbSrv->setMatrix(MatrixType::Model, m_transform);
 }
 
 void TransformComponent::setTranslation( const glm::vec3 &pos ) {
@@ -129,12 +131,24 @@ const glm::mat4 &TransformComponent::getTransformationMatrix() const {
     return m_transform;
 }
 
+glm::mat4 TransformComponent::getWorlTransformMatrix() {
+    glm::mat4 wt(1.0);
+    for (const Node *node = getOwnerNode(); node != nullptr; node = node->getParent() ) {
+        TransformComponent *comp = (TransformComponent*) node->getComponent(Node::ComponentType::TransformComponentType);
+        if (nullptr != comp) {
+            wt = comp->getTransformationMatrix() * wt;
+        }
+    }
+
+    return wt;
+}
+
 const RenderBackend::TransformState &TransformComponent::getTransformState() const {
     return m_localTransformState;
 }
 
-CollisionComponent::CollisionComponent( ui32 id )
-: Component( id ) {
+CollisionComponent::CollisionComponent(Node *node, ui32 id )
+: Component( node, id ) {
     // empty
 }
 

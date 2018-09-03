@@ -78,9 +78,6 @@ void View::draw( RenderBackendService *rbSrv ) {
     }
     
     onDraw( rbSrv );
-
-    //rbSrv->setMatrix( "P", m_projection );
-    //rbSrv->setMatrix( "V", m_view );
 }
 
 void View::observeBoundingBox( const Collision::TAABB<f32> &aabb) {
@@ -120,8 +117,9 @@ void View::onUpdate( Time dt ) {
     // empty
 }
 
-void View::onDraw( RenderBackend::RenderBackendService *renderBackendSrv ) {
-    // empty
+void View::onDraw( RenderBackendService *rbSrv ) {
+    rbSrv->setMatrix(MatrixType::View, m_view );
+    rbSrv->setMatrix(MatrixType::Projection, m_projection);
 }
 
 } // Namespace Scene

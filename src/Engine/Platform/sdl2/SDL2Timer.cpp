@@ -53,6 +53,7 @@ i64 SDL2Timer::getTimeDiff( ) {
             diff = AbstractTimer::getRequestedTimeStep();
         }
         m_lasttick = currentTime;
+        
         return diff;
     }
 }

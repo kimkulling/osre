@@ -21,6 +21,9 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "osre_testcommon.h"
+
+#include <osre/Common/Ids.h>
+#include <osre/Scene/Node.h>
 #include <osre/Scene/Component.h>
 
 namespace OSRE {
@@ -34,7 +37,8 @@ class ComponentTest : public ::testing::Test {
 
 class MockComponent : public Component {
 public:
-    MockComponent( ui32 id ) : Component( id ) {
+    MockComponent( Node *node, ui32 id ) 
+    : Component( node, id ) {
         // empty
     }
 
@@ -54,11 +58,22 @@ public:
 TEST_F( ComponentTest, createTest ) {
     bool ok( true );
     try {
-        MockComponent myComp( 0 );
+        MockComponent myComp( nullptr, 0 );
     } catch ( ... ) {
         ok = false;
     }
     EXPECT_TRUE( ok );
+}
+
+TEST_F(ComponentTest, accessNodeTest) {
+    String name = "test";
+    Common::Ids *ids = new Common::Ids;
+
+    Node *n(new Node(name, *ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, nullptr));
+    MockComponent myComp( n, 0);
+
+    EXPECT_EQ(n, myComp.getOwnerNode());
+
 }
 
 TEST_F( ComponentTest, accessIdTest ) {

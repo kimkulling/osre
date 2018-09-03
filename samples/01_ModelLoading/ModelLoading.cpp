@@ -36,7 +36,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Ids.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/DbgRenderer.h>
+#include <osre/Scene/Component.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
 
 using namespace ::OSRE;
 using namespace ::OSRE::Assets;
@@ -124,52 +126,18 @@ protected:
                 Rect2ui windowsRect = rootWindow->getWindowsRect();
 
                 m_stage = AppBase::createStage("ModelLoading");
+                AppBase::setActiveStage(m_stage);
                 Scene::View *view = m_stage->addView("default_view", nullptr);
                 AppBase::setActiveView(view);
                 view->setProjectionParameters( 60.f, windowsRect.m_width, windowsRect.m_height, 0.0001f, 1000.f );
                 view->observeBoundingBox( model->getAABB() );
 
-                //const String name(->getName());
                 m_stage->setRoot( model->getRootNode() );
                 m_modelNode = m_stage->getRoot();
-
-                m_transformMatrix.m_model = glm::mat4(1.0f);
-                m_transformMatrix.m_projection = view->getProjection();
-
-                m_transformMatrix.m_view = view->getView();
-                rbSrv->setMatrix(MatrixType::View, m_transformMatrix.m_view);
-                rbSrv->setMatrix(MatrixType::Projection, m_transformMatrix.m_projection);
-
-                renderNodes(model, rbSrv);
             }
         }
 
         return true;
-    }
-
-    void renderNode(Node *currentNode, RenderBackendService *rbSrv) {
-        const ui32 numGeo = currentNode->getNumGeometries();
-        for (ui32 i = 0; i < numGeo; ++i) {
-            rbSrv->attachGeo(currentNode->getGeometryAt(i), 0 );
-        }
-
-        for (ui32 i = 0; i < currentNode->getNumChildren(); ++i) {
-            Node *current = currentNode->getChildAt(i);
-            renderNode(current, rbSrv);
-        }
-    }
-
-    void renderNodes(Assets::Model *model, RenderBackendService *rbSrv) {
-        if (nullptr == model) {
-            return;
-        }
-
-        Node *root = model->getRootNode();
-        if (nullptr == root) {
-            return;
-        }
-
-        renderNode(root, rbSrv);
     }
 
     void onUpdate() override {
@@ -179,6 +147,11 @@ protected:
 
         m_angle += 0.01f;
         RenderBackendService *rbSrv( getRenderBackendService() );
+
+        TransformComponent *comp = (TransformComponent*)m_modelNode->getComponent(Node::ComponentType::TransformComponentType);
+        if (nullptr != comp) {
+            //comp->setTransformationMatrix(m_transformMatrix.m_model);
+        }
 
         rbSrv->setMatrix( MatrixType::Model, m_transformMatrix.m_model);
         

@@ -50,12 +50,12 @@ Node::Node( const String &name, Ids &ids, RenderCompRequest renderEnabled, Trans
 , m_propMap()
 , m_aabb() {
     if (TransformCompRequest::TransformCompRequested == transformEnabled) {
-        m_transformComp = new TransformComponent( m_ids->getUniqueId() );
+        m_transformComp = new TransformComponent( this, m_ids->getUniqueId() );
         m_components.add( m_transformComp );
     }
 
 	if (RenderCompRequest::RenderCompRequested == renderEnabled ) {
-        m_renderComp = new RenderComponent( m_ids->getUniqueId() );
+        m_renderComp = new RenderComponent( this, m_ids->getUniqueId() );
         m_components.add( m_renderComp );
     }
 
@@ -202,7 +202,7 @@ void Node::update(Time dt) {
     onUpdate(dt);
 }
 
-void Node::draw( RenderBackend::RenderBackendService *renderBackendSrv ) {
+void Node::draw( RenderBackendService *renderBackendSrv ) {
     if ( nullptr == renderBackendSrv || nullptr == m_renderComp ) {
         return;
     }

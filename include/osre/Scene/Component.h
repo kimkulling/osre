@@ -39,6 +39,8 @@ namespace RenderBackend {
 
 namespace Scene {
 
+class Node;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -51,11 +53,13 @@ public:
     virtual void draw( RenderBackend::RenderBackendService *renderBackendSrv ) = 0;
     void setId( ui32 id );
     ui32 getId() const;
+    Node *getOwnerNode() const;
 
 protected:
-    Component( ui32 id );
+    Component( Node *node, ui32 id );
 
 private:
+    Node *m_owner;
     ui32 m_id;
 };
 
@@ -69,6 +73,11 @@ ui32 Component::getId() const {
     return m_id;
 }
 
+inline
+Node *Component::getOwnerNode() const {
+    return m_owner;
+}
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -76,7 +85,7 @@ ui32 Component::getId() const {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT RenderComponent : public Component {
 public:
-    RenderComponent( ui32 id );
+    RenderComponent(Node *node, ui32 id );
     virtual ~RenderComponent();
     void update( Time dt ) override;
     void draw( RenderBackend::RenderBackendService *renderBackendSrv ) override;
@@ -95,7 +104,7 @@ private:
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT TransformComponent : public Component {
 public:
-    TransformComponent( ui32 id );
+    TransformComponent(Node *node, ui32 id );
     virtual ~TransformComponent();
     void update( Time dt ) override;
     void draw( RenderBackend::RenderBackendService *renderBackendSrv ) override;
@@ -105,6 +114,7 @@ public:
     const glm::vec3 &getScale() const;
     void setTransformationMatrix(const glm::mat4 &m);
     const glm::mat4 &getTransformationMatrix() const;
+    glm::mat4 getWorlTransformMatrix();
     const RenderBackend::TransformState &getTransformState() const;
 
 private:
@@ -124,7 +134,7 @@ private:
 //-------------------------------------------------------------------------------------------------
 class CollisionComponent : public Component {
 public:
-    CollisionComponent( ui32 id );
+    CollisionComponent(Node *node, ui32 id );
     virtual ~CollisionComponent();
     void update( Time dt ) override;
 };
