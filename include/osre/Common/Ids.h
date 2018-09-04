@@ -53,13 +53,13 @@ public:
     /// @param  id      [in] The unique id to release.
     void releaseId( ui32 id );
 
+    // Copying is not allowed
+    Ids(const Ids &) = delete;
+    Ids &operator = (const Ids &) = delete;
+
 private:
     CPPCore::TArray<ui32> m_freeIds;
     ui32 m_last;
-
-private:
-    Ids( const Ids & ) = delete;
-    Ids &operator = ( const Ids & ) = delete;
 };
 
 } // Namespace Common
