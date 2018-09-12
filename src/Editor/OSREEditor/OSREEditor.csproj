@@ -52,6 +52,9 @@
     <Compile Include="MainEditorWindow.Designer.cs">
       <DependentUpon>MainEditorWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\Actions\IAction.cs" />
+    <Compile Include="Model\Actions\NewProjectAction.cs" />
+    <Compile Include="Model\MarshallingHelper.cs" />
     <Compile Include="Model\Project.cs" />
     <Compile Include="Model\WorldProxy.cs" />
     <Compile Include="Program.cs" />

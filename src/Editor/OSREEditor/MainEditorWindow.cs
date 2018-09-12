@@ -17,7 +17,6 @@ namespace OSREEditor
         {
             InitializeComponent();
 
-            //this.MouseWheel += Window_MouseWheel;
             this.MouseClick += Window_MouseClick;
 
             _project = new Project();
@@ -33,11 +32,13 @@ namespace OSREEditor
         {
             IntPtr windowsHandle = this.Handle;
             NewProject npDialog = new NewProject(windowsHandle);
-            npDialog.ShowDialog();
-            OSREWrapper.CreateEditorApp(windowsHandle);
-            _project.ProjectName = "New Project";
-
-            OSREWrapper.NewProject(_project.ProjectName);
+            if ( npDialog.ShowDialog() == DialogResult.OK ) {
+                _project = Project.Instance;
+                if (_project != null) {
+                    OSREWrapper.CreateEditorApp(windowsHandle);
+                    OSREWrapper.NewProject(_project.ProjectName);
+                }
+            }
         }
 
         private void openToolStripMenuItem_Open_Click(object sender, EventArgs e)
