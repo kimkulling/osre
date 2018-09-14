@@ -35,14 +35,11 @@ namespace OSREEditor
             if ( npDialog.ShowDialog() == DialogResult.OK ) {
                 _project = Project.Instance;
                 if (_project != null) {
-                    OSREWrapper.CreateEditorApp(windowsHandle);
-                    OSREWrapper.NewProject(_project.ProjectName);
                 }
             }
         }
 
-        private void openToolStripMenuItem_Open_Click(object sender, EventArgs e)
-        {
+        private void openToolStripMenuItem_Open_Click(object sender, EventArgs e) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
             openFileDialog.InitialDirectory = "c:\\";
@@ -50,8 +47,7 @@ namespace OSREEditor
             openFileDialog.FilterIndex = 2;
             openFileDialog.RestoreDirectory = true;
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
+            if (openFileDialog.ShowDialog() == DialogResult.OK) {
 
             }
         }
@@ -118,6 +114,12 @@ namespace OSREEditor
             OSREWrapper.CSharpEvent ev;
             ev.x = e.X;
             ev.y = e.Y;*/
+        }
+
+        private void versionInfoToolStripMenuItem_Click( object sender, EventArgs e )
+        {
+            InfoDialog infoDialog = new InfoDialog();
+            infoDialog.ShowDialog();
         }
     }
 }

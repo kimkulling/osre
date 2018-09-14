@@ -20,35 +20,28 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-using OSREEditor.View;
 using System;
+using System.Windows.Forms;
 
-namespace OSREEditor.Model.Actions {
-    public class NewProjectAction : IAction {
-        public string ProjectName { get; set; }
-        private IntPtr mHandle;
-
-        public Project CurrentProject { get; set; }
-
-        public NewProjectAction( IntPtr handle ) {
-            mHandle = handle;
+namespace OSREEditor.View {
+    /// <summary>
+    /// The info-dialog
+    /// </summary>
+    public partial class InfoDialog : Form {
+        /// <summary>
+        /// The class constructor.
+        /// </summary>
+        public InfoDialog() {
+            InitializeComponent();
         }
 
-        public bool Execute() {
-            if ( mHandle == null ) {
-                return false;
-            }
-
-            if (ProjectName.Length == 0) {
-                ProjectName = "New Project";
-            }
-            CurrentProject = new Project();
-            CurrentProject.ProjectName = ProjectName;
-            int retCode = 0;
-            retCode = OSREWrapper.CreateEditorApp(mHandle);
-            OSREWrapper.NewProject(CurrentProject.ProjectName);
-
-            return 0 == retCode;
+        /// <summary>
+        /// The onClose callback.
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Args</param>
+        private void button1_Click( object sender, EventArgs e ) {
+            this.Close();
         }
     }
 }
