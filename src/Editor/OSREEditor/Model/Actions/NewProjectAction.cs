@@ -22,16 +22,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 using OSREEditor.View;
 using System;
+using System.Windows.Forms;
 
 namespace OSREEditor.Model.Actions {
     public class NewProjectAction : IAction {
         public string ProjectName { get; set; }
-        private IntPtr mHandle;
 
+        private IntPtr mHandle;
+        private Form mMainWindow;
         public Project CurrentProject { get; set; }
 
-        public NewProjectAction( IntPtr handle ) {
+        public NewProjectAction( IntPtr handle, Form mainWindow ) {
             mHandle = handle;
+            mMainWindow = mainWindow;
         }
 
         public bool Execute() {
@@ -41,6 +44,9 @@ namespace OSREEditor.Model.Actions {
 
             if (ProjectName.Length == 0) {
                 ProjectName = "New Project";
+            }
+            if (mMainWindow != null) {
+                mMainWindow.Text = ProjectName;
             }
             CurrentProject = new Project();
             CurrentProject.ProjectName = ProjectName;

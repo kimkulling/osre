@@ -6,16 +6,18 @@ using OSREEditor.Model.Actions;
 namespace OSREEditor.View {
     public partial class NewProject : Form {
         IntPtr mHandle;
+        Form mParent;
 
-        public NewProject(IntPtr handle) {
+        public NewProject(IntPtr handle, Form parent ) {
             InitializeComponent();
             mHandle = handle;
+            mParent = parent;
             this.ProjectType.Select(0, 1);
         }
 
         private void NewProjectButton_Click(object sender, EventArgs e)
         {
-            NewProjectAction projectAction = new NewProjectAction(mHandle);
+            NewProjectAction projectAction = new NewProjectAction(mHandle, mParent);
             projectAction.ProjectName = this.ProjectName.Text;
             if (projectAction.Execute()) {
                 Project.Instance = projectAction.CurrentProject;

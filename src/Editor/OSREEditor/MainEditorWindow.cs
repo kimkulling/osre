@@ -31,7 +31,7 @@ namespace OSREEditor
         private void newToolStripMenuItem_New_Click(object sender, EventArgs e)
         {
             IntPtr windowsHandle = this.Handle;
-            NewProject npDialog = new NewProject(windowsHandle);
+            NewProject npDialog = new NewProject(windowsHandle, this);
             if ( npDialog.ShowDialog() == DialogResult.OK ) {
                 _project = Project.Instance;
                 if (_project != null) {
