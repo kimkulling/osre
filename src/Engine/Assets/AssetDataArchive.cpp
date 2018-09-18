@@ -57,7 +57,6 @@ Scene::World *AssetDataArchive::load( const IO::Uri & fileLocation ) {
         return nullptr;
     }
 
-
     IO::Stream *file = IO::IOService::getInstance()->openStream(fileLocation, IO::Stream::AccessMode::ReadAccess);
     if (nullptr == file) {
         return nullptr;
@@ -85,7 +84,6 @@ Scene::World *AssetDataArchive::load( const IO::Uri & fileLocation ) {
     for (Json::ValueConstIterator it = content.begin(); it != content.end(); ++it) {
         key = it.key().asString();
     }
-
 
     return world;
 }
@@ -165,6 +163,10 @@ void AssetDataArchive::traverseChildren( Node *currentNode, Json::StreamWriter *
         return;
     }
 
+    // Write the node
+    writeNode( currentNode, sw );
+
+    // Loop over all children
 	Node *currentChild( nullptr );
     for ( ui32 i = 0; i < currentNode->getNumChildren(); ++i ) {
         currentChild = currentNode->getChildAt( i );
@@ -184,7 +186,6 @@ bool AssetDataArchive::parseType( Scene::World *world ) {
 
     return true;
 }
-
 
 } // Namespace Assets
 } // Namespace OSRE

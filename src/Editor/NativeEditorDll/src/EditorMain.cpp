@@ -14,6 +14,7 @@
 #include <osre/Scene/World.h>
 #include <osre/IO/IOService.h>
 #include <osre/Assets/AssimpWrapper.h>
+#include <osre/Assets/AssetDataArchive.h>
 #include <osre/Assets/Model.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
@@ -37,6 +38,7 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Properties;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::Scene;
+using namespace ::OSRE::Assets;
 
 class EditorApplication;
 
@@ -171,11 +173,20 @@ public:
     }
 
     bool loadWorld(const char *filelocation, int flags) {
+        if (nullptr == filelocation) {
+            return false;
+        }
+
         return true;
     }
 
     bool saveWorld(const char *filelocation, int flags) {
-        return true;
+        if (nullptr == filelocation) {
+            return false;
+        }
+        IO::Uri uri( filelocation );
+        AssetDataArchive archive(0,1);
+        return archive.save( m_world, uri );
     }
 
 protected:

@@ -28,6 +28,7 @@ SET ( unittest_assets_src
 	src/Assets/AssetRegistryTest.cpp
 	src/Assets/AssetDataTest.cpp
     src/Assets/AssetWrapperTest.cpp
+    src/Assets/AssetDataArchiveTest.cpp
 )
 
 SET ( unittest_app_src

@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
 #include <osre/Assets/AssetDataArchive.h>
+#include <osre/IO/Uri.h>
 
 namespace OSRE {
 namespace UnitTest {
@@ -44,8 +45,10 @@ TEST_F( AssetDataTest, createTest ) {
 }
 
 TEST_F( AssetDataTest, load_save_Test ) {
-    
+    AssetDataArchive archive( 1, 0 );
+    IO::Uri uri( "test" );
+    bool ok = archive.save( nullptr, uri );
 }
 
-}
-}
+} // Namespace UnitTest
+} // Namespace OSRE
