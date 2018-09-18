@@ -20,6 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
+using OSREEditor.View;
 using System.Collections.Generic;
 
 namespace OSREEditor.Model {
@@ -41,6 +42,17 @@ namespace OSREEditor.Model {
 
         public WorldProxy() {
             _stages = new List<Stage>();
+        }
+
+        public bool LoadWorld( string name, int flags ) {
+            int retCode = OSREWrapper.LoadWorld(name, flags);
+            return retCode == 0;
+        }
+
+        public bool SaveWorld( string name, int flags )
+        {
+            int retCode = OSREWrapper.SaveWorld(name, flags);
+            return retCode == 0;
         }
     }
 }

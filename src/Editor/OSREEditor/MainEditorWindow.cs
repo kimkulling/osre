@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using OSREEditor.View;
 using OSREEditor.Model;
 using System.Runtime.InteropServices;
+using OSREEditor.Model.Actions;
 
 namespace OSREEditor
 {
@@ -48,21 +49,30 @@ namespace OSREEditor
             openFileDialog.RestoreDirectory = true;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK) {
-
+                LoadProjectAction action = new LoadProjectAction(_project);
+                action.Filename = openFileDialog.FileName;
+                action.LoaderFlags = 0;
+                if ( !action.Execute() ) {
+                    System.Console.WriteLine("Error while loading project.");
+                }
             }
         }
 
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e) {
             SaveFileDialog saveFileDlg = new SaveFileDialog();
             saveFileDlg.InitialDirectory = "c:\\";
             saveFileDlg.Filter = "txt files (*.osa)|*.osa|All files (*.*)|*.*";
             saveFileDlg.FilterIndex = 2;
             saveFileDlg.RestoreDirectory = true;
 
-            if (saveFileDlg.ShowDialog() == DialogResult.OK)
-            {
+            if (saveFileDlg.ShowDialog() == DialogResult.OK) {
+                SaveProjectAction action = new SaveProjectAction(_project);
+                action.Filename = saveFileDlg.FileName;
+                action.SaveFlags = 0;
+                if (!action.Execute()) {
+                    System.Console.WriteLine("Error while saving project.");
 
+                }
             }
         }
 

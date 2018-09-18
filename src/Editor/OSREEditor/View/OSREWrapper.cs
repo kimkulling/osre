@@ -21,6 +21,12 @@ namespace OSREEditor.View
 
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         public static extern int ImportAsset([MarshalAs(UnmanagedType.LPStr)] string code, int flags);
+
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int LoadWorld( [MarshalAs(UnmanagedType.LPStr)] string code, int flags );
+
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int SaveWorld( [MarshalAs(UnmanagedType.LPStr)] string code, int flags );
     }
 }
  

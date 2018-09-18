@@ -54,5 +54,22 @@ namespace OSREEditor.Model
         public int MinorVersion { get; set; }
 
         public ProjectType CurrentProjectType { get; set; }
+
+        public bool LoadProject(string name, int flags) {
+            if ( _world == null ) {
+                return true;
+            }
+
+            return _world.LoadWorld(name, flags);
+        }
+
+        public bool SaveProject( string name, int flags ) {
+            if (_world == null) {
+                return true;
+            }
+
+            return _world.SaveWorld(name, flags);
+
+        }
     }
 }
