@@ -465,6 +465,7 @@ struct OSRE_EXPORT TransformMatrixBlock {
     glm::mat4 m_projection;
     glm::mat4 m_model;
     glm::mat4 m_view;
+    glm::mat4 m_normal;
     glm::mat4 m_mvp;
 
     TransformMatrixBlock();

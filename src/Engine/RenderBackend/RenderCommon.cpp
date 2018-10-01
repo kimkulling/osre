@@ -427,10 +427,11 @@ void TransformState::toMatrix(mat4 &m) const {
 }
 
 TransformMatrixBlock::TransformMatrixBlock()
-: m_projection(1.0f)
-, m_model(1.0f)
-, m_view(1.0f)
-, m_mvp(1.0f) {
+: m_projection( 1.0f )
+, m_model( 1.0f )
+, m_view( 1.0f )
+, m_normal( 1.0f )
+, m_mvp( 1.0f ) {
     init();
 }
 
@@ -442,11 +443,14 @@ void TransformMatrixBlock::init() {
     m_projection = glm::mat4( 1.0f );
     m_model = glm::mat4( 1.0f );
     m_view = glm::mat4( 1.0f );
-    m_mvp = glm::mat4(1.0f);
+    m_normal = glm::mat4( 1.0f );
+    m_mvp = glm::mat4( 1.0f );
 }
 
 void TransformMatrixBlock::update() {
-    m_mvp = m_projection * m_view * m_model;
+    glm::mat4 modelView = m_view * m_model;
+    m_mvp = m_projection * modelView;
+    m_normal = transpose( inverse( modelView ) );
 }
 
 const float *TransformMatrixBlock::getMVP() {
