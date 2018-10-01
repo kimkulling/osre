@@ -73,7 +73,9 @@ public:
     /// The type of component
     enum class ComponentType {
         RenderComponentType,    ///< Renderable component
-        TransformComponentType  ///< Transformable component
+        TransformComponentType, ///< Transformable component
+        CollisionComponent,     ///< For collision 
+        LightComponent          ///< Light node component type
     };
 
     enum class RenderCompRequest {
@@ -107,17 +109,15 @@ public:
     virtual void addGeometry( RenderBackend::Geometry *geo );
     virtual ui32 getNumGeometries() const;
     virtual RenderBackend::Geometry *getGeometryAt(ui32 idx) const;
-    void update(Time dt);
-    void draw(RenderBackend::RenderBackendService *renderBackendSrv);
-    
-public:
-    void setAABB(const AABB &aabb);
-    const AABB &getAABB() const;
-    Component *getComponent( ComponentType type ) const;
-    void setActive( bool isActive );
-    bool isActive() const;
-    void setProperty( Properties::Property *prop );
-    Properties::Property *getProperty(const String name) const;
+    virtual void update(Time dt);
+    virtual void draw(RenderBackend::RenderBackendService *renderBackendSrv);
+    virtual void setAABB(const AABB &aabb);
+    virtual const AABB &getAABB() const;
+    virtual Component *getComponent( ComponentType type ) const;
+    virtual void setActive( bool isActive );
+    virtual bool isActive() const;
+    virtual void setProperty( Properties::Property *prop );
+    virtual Properties::Property *getProperty(const String name) const;
 
 protected:
     virtual void onUpdate(Time dt);

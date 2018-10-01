@@ -56,7 +56,7 @@ protected:
     ///	@brief	The constructor with the name of the timer instance.
     ///	@param	name        [in] The name for the timer instance.
     /// @param  reqTimeStep [in] The time-step for the target FPS-value.
-    AbstractTimer( const String &name, i64 reqTimeStep = 1000/60 );
+    AbstractTimer( const String &name, i64 reqTimeStep = 1000L/60L );
 
     /// @brief  Will return the target time slice for 
     i64 getRequestedTimeStep() const;

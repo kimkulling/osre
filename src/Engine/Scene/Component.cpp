@@ -160,5 +160,37 @@ void CollisionComponent::update( Time ) {
     // empty
 }
 
+LightComponent::LightComponent(Node *node, ui32 id)
+: Component(node, id)
+, m_light()
+, m_radius(10.f) {
+    // empty
+}
+
+LightComponent::~LightComponent() {
+    // empty
+}
+
+void LightComponent::update(Time dt) {
+
+}
+
+void LightComponent::setLight(RenderBackend::Light &light) {
+    m_light = light;
+}
+
+const RenderBackend::Light &LightComponent::getLight() const {
+    return m_light;
+}
+
+void LightComponent::setRadius(f32 r) {
+    m_radius = r;
+}
+
+f32 LightComponent::getRadius() const {
+    return m_radius;
+}
+
+
 } // Namespace Scene
 } // Namespace OSRE

@@ -49,17 +49,17 @@ i64 Win32Timer::getMilliCurrentSeconds() {
 
 i64 Win32Timer::getTimeDiff() {
     i64 currentTime = getMilliCurrentSeconds();
-    if ( m_LastTime == 0.0 ) {
+    if ( m_LastTime == 0L ) {
         m_LastTime = currentTime;
-        return 0.0;
-    } else {
-        i64 diff( currentTime - m_LastTime );
-        if( diff > 1000 ) {
-            diff = AbstractTimer::getRequestedTimeStep();
-        }
-        m_LastTime = currentTime;
-        return diff;
+        return 0L;
+    } 
+      
+    i64 diff( currentTime - m_LastTime );
+    if( diff > 1000L ) {
+        diff = AbstractTimer::getRequestedTimeStep();
     }
+    m_LastTime = currentTime;
+    return diff;
 }
 
 } // Namespace Platform

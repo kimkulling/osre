@@ -139,5 +139,20 @@ public:
     void update( Time dt ) override;
 };
 
+class LightComponent : public Component {
+public:
+    LightComponent(Node *node, ui32 id);
+    virtual ~LightComponent();
+    void update(Time dt) override;
+    void setLight( RenderBackend::Light &light );
+    const RenderBackend::Light &getLight() const;
+    void setRadius(f32 r);
+    f32 getRadius() const;
+
+private:
+    RenderBackend::Light m_light;
+    f32 m_radius;
+};
+
 } // Namespace Scene
 } // namespace OSRE
