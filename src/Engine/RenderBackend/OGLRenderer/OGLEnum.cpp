@@ -40,6 +40,7 @@ GLenum OGLEnum::getGLBufferType( BufferType type ) {
             OSRE_ASSERT2( false, "Unknown enum for BufferType." );
             break;
     }
+
     return GL_ARRAY_BUFFER;
 }
 
@@ -55,6 +56,7 @@ GLenum OGLEnum::getGLBufferAccessType( BufferAccessType type ) {
             OSRE_ASSERT2( false, "Unknown enum for buffer BufferAccessType." );
             break;
     }
+
     return GL_STATIC_DRAW;
 }
 

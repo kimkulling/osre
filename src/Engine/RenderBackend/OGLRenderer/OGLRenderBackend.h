@@ -53,13 +53,13 @@ class BlendState;
 class SamplerState;
 class ClearState;
 class StencilState;
+class Shader;
 
 struct OGLBuffer;
 struct OGLVertexArray;
 struct OGLVertexAttribute;
 struct OGLTexture;
 struct RenderCmdData3DView;
-struct Shader;
 struct UniformVar;
 struct PrimitiveGroup;
 

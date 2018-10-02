@@ -28,12 +28,13 @@ namespace OSRE {
 namespace Profiling {
 
 using namespace ::OSRE::Common;
+
 static const String Tag = "FPSCounter";
 
 FPSCounter::FPSCounter( Platform::AbstractTimer *timer )
 : m_timerPtr( timer )
-, m_timeDiff( 0.0 )
-, m_lastTime( 0.0 )
+, m_timeDiff( 0 )
+, m_lastTime( 0 )
 , m_fps( 0 )
 , m_lastFPS( 0 ) {
     if ( m_timerPtr.isValid() ) {
@@ -50,11 +51,12 @@ ui32 FPSCounter::getFPS() {
         osre_debug( Tag, "No valid timer instance." );
         return 0;
     }
+    
     m_timeDiff = m_timerPtr->getTimeDiff();
     m_lastTime += m_timeDiff;
     m_fps++;
-    if (m_lastTime > 1.0) {
-        m_lastTime = 0.0;
+    if (m_lastTime > 1000) {
+        m_lastTime = 0;
         m_lastFPS = m_fps;
         m_fps = 0;
     }

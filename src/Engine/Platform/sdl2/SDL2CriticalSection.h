@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractCriticalSection.h>
 
 #include <SDL.h>
-#include <SDL_atomic.h>
+//#include <SDL_atomic.h>
 
 namespace OSRE {
 namespace Platform {

@@ -317,6 +317,7 @@ SET( renderbackend_src
     RenderBackend/Pipeline.cpp
     RenderBackend/ParticleGenerator.cpp
     RenderBackend/HWBufferManager.cpp
+    RenderBackend/Shader.cpp
 )
 SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLCommon.h
@@ -368,6 +369,7 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
 	${HEADER_PATH}/RenderBackend/RenderStates.h
+    ${HEADER_PATH}/RenderBackend/Shader.h
 )
 #==============================================================================
 # Scripting with Mono

@@ -32,6 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Stream.h>
 #include <osre/IO/Uri.h>
 #include <osre/RenderBackend/RenderStates.h>
+#include <osre/RenderBackend/Shader.h>
 
 #include <cppcore/CPPCoreCommon.h>
 
@@ -99,6 +100,12 @@ void OGLRenderBackend::setMatrix( MatrixType type, const glm::mat4 &mat ) {
         case MatrixType::Projection:
             m_mvp.m_projection = mat;
             break;
+        case MatrixType::Normal:
+            m_mvp.m_normal = mat;
+            break;
+        default:
+            osre_debug(Tag, "Not supported enum " + osre_to_string((i32)type));
+            break;
     }
     m_mvp.update();
 }
@@ -111,6 +118,11 @@ const glm::mat4 &OGLRenderBackend::getMatrix( MatrixType type ) const {
             return m_mvp.m_view;
         case MatrixType::Projection:
             return m_mvp.m_projection;
+        case MatrixType::Normal:
+            return m_mvp.m_normal;
+        default:
+            osre_debug(Tag, "Not supported enum " + osre_to_string((i32)type));
+            break;
     }
     return m_mvp.m_model;
 }

@@ -1,4 +1,3 @@
-
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
@@ -39,6 +38,8 @@ namespace RenderBackend {
 
 // Forward declarations
 struct UniformVar;
+
+class Shader;
 
 /// Describes an unset id.
 static const i32  UnsetHandle   = -1;
@@ -149,6 +150,7 @@ enum class MatrixType {
     Model = 0,
     View,
     Projection,
+    Normal,
     NumMatrixTypes,
     InvalidMatrixType
 };
@@ -383,16 +385,6 @@ enum class ShaderType : ui32 {
 static const ui32 MaxShaderTypes = static_cast<ui32>( ShaderType::NumShaderTypes );
 
 ///	@brief
-struct OSRE_EXPORT Shader {
-    CPPCore::TArray<String>  m_parameters;
-    CPPCore::TArray<String>  m_attributes;
-    String                   m_src[ MaxShaderTypes ];
-
-    Shader();
-    ~Shader();
-
-    OSRE_NON_COPYABLE( Shader )
-};
 
 ///	@brief
 enum class MaterialColorType : ui32 {

@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/AbstractRenderContext.h>
+#include <osre/RenderBackend/Shader.h>
 #include <src/Engine/Platform/win32/Win32Window.h>
 
 #pragma warning( push )

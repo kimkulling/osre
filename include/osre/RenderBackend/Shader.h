@@ -23,44 +23,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-#include <osre/Common/TObjPtr.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
+namespace RenderBackend {
 
-// Forward declarations
-namespace Platform {
-    class AbstractTimer;
-}
-
-namespace Profiling {
-        
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  This class implements a simple frames-per-second counter.
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT FPSCounter {
+class OSRE_EXPORT Shader {
 public:
-    ///	@brief  The class constructor.
-    /// @param  timer   [in] The timer instance.
-    FPSCounter( Platform::AbstractTimer  *timer );
-    
-    ///	@brief  The class destructor.
-    ~FPSCounter();
+    CPPCore::TArray<String>  m_parameters;
+    CPPCore::TArray<String>  m_attributes;
+    String                   m_src[MaxShaderTypes];
 
-    ///	@brief  Returns the counted frames per seconds.
-    /// @return The counted frames per second.
-    ui32 getFPS();
+    Shader();
+    ~Shader();
+    void setSource(ShaderType type, const String &src);
 
-    FPSCounter() = delete;
-    FPSCounter( const FPSCounter & ) = delete;
-    FPSCounter & operator = ( const FPSCounter & ) = delete;
+
+    OSRE_NON_COPYABLE(Shader)
 
 private:
-    Common::TObjPtr<Platform::AbstractTimer>  m_timerPtr;
-    i64 m_timeDiff, m_lastTime;
-    ui32 m_fps, m_lastFPS;
+    enum CompileState {
+        Updated = 0,
+        Compiled,
+        Error,
+        MaxCompileState
+    };
+
+    CompileState m_compileState[MaxCompileState];
 };
 
-} // Namespace Profiling
+} // Namespace RenderBackend
 } // Namespace OSRE

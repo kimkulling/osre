@@ -786,4 +786,13 @@ private: \
     NAME( const NAME & ) = delete;        \
     NAME& operator = ( const NAME & ) = delete;
 
+template<class T>
+inline
+String osre_to_string(T val) {
+    std::stringstream str;
+    str << val;
+
+    return str.str();
+}
+
 } // Namespace OSRE

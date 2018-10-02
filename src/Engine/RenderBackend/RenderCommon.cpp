@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/Shader.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/Ids.h>
 #include <glm/gtc/matrix_transform.inl>
@@ -330,14 +331,6 @@ Texture::~Texture() {
     m_data = nullptr;
 }
 
-Shader::Shader() {
-    // empty
-}
-
-Shader::~Shader() {
-    // empty
-}
-
 Material::Material( const String &name )
 : m_name( name )
 , m_type( MaterialType::ShaderMaterial )
@@ -448,7 +441,7 @@ void TransformMatrixBlock::init() {
 }
 
 void TransformMatrixBlock::update() {
-    glm::mat4 modelView = m_view * m_model;
+    const glm::mat4 modelView = m_view * m_model;
     m_mvp = m_projection * modelView;
     m_normal = transpose( inverse( modelView ) );
 }

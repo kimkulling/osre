@@ -36,7 +36,7 @@ namespace OSRE {
 namespace RenderBackend {
 
 // Forward declarations
-struct Shader;
+class Shader;
 
 using CPPCore::TArray;
 
