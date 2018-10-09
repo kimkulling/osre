@@ -74,8 +74,7 @@ public:
     enum class ComponentType {
         RenderComponentType,    ///< Renderable component
         TransformComponentType, ///< Transformable component
-        CollisionComponent,     ///< For collision 
-        LightComponent          ///< Light node component type
+        CollisionComponent      ///< For collision 
     };
 
     enum class RenderCompRequest {
@@ -158,7 +157,6 @@ const Node::AABB &Node::getAABB() const {
     return m_aabb;
 }
 
-
 class OSRE_EXPORT LightNode : public Node {
 public:
     LightNode(const String &name, Common::Ids &ids, RenderCompRequest renderEnabled,
@@ -174,5 +172,6 @@ protected:
 private:
     RenderBackend::Light m_light;
 };
+
 } // Namespace Scene
 } // namespace OSRE

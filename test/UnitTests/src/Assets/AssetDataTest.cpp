@@ -48,6 +48,7 @@ TEST_F( AssetDataTest, load_save_Test ) {
     AssetDataArchive archive( 1, 0 );
     IO::Uri uri( "test" );
     bool ok = archive.save( nullptr, uri );
+    EXPECT_TRUE( ok );
 }
 
 } // Namespace UnitTest
