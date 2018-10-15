@@ -211,7 +211,7 @@ int main( int argc, char *argv[] )  { \
     if ( !myApp.create() ) {          \
         return 1;                     \
     }                                 \
-    while ( myApp.handleEvents() && !myApp.shutdownRequested() ) {  \
+    while ( myApp.handleEvents() ) {  \
         myApp.update();               \
         myApp.requestNextFrame();     \
     }                                 \
