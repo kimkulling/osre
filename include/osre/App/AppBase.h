@@ -62,10 +62,11 @@ namespace App {
         
 class MouseEventListener;
 
+/// @brief  Describes the render API
 enum class RenderBackendType {
-    OpenGLRenderBackend = 0,
-    DX11Backend,
-    VulkanRenderBackend
+    OpenGLRenderBackend = 0,    ///< OpenGL render API.
+    DX11Backend,                ///< DX11 render API.
+    VulkanRenderBackend         ///< Vulkan render API.
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -89,7 +90,15 @@ public:
     /// @brief  The class destructor, virtual.
     virtual ~AppBase();
 
-
+    /// @brief  Will initialize a render window, the whole render engine will be started.
+    /// @param  x           [in] The left position of the render windows for windowed mode.
+    /// @param  y           [in] The top position of the render windows for windowed mode.
+    /// @param  width       [in] The width of the window.
+    /// @param  height      [in] The height of the render window.
+    /// @param  title       [in] The Windows title.
+    /// @param  fullscreen  [in] true for fullscreen mode, false for windowed mode.
+    /// @param  renderer    [in] The requested render mode.
+    /// @return true, if the window was generated.
     virtual bool initWindow( ui32 x, ui32 y, ui32 width, ui32 height, const String &title, 
         bool fullscreen, RenderBackendType renderer );
 
@@ -126,6 +135,9 @@ public:
     /// @return true if successful, false in case of an error.
     virtual bool setActiveStage( Scene::Stage *stage );
 
+    /// @brief  Will activate the given view in the active world instance.
+    /// @param  view        [in] A pointer showing to the view.
+    /// @return true, if the view activation was successful, false if not.
     virtual bool setActiveView(Scene::View *view);
 
     /// @brief  Activates a stage.
@@ -161,7 +173,9 @@ public:
     /// @return A pointer showing to the Root-Surface.
     virtual Platform::AbstractWindow *getRootWindow() const;
 
-    void setWindowsTitle( const String &title );
+    /// @brief  Will set the windows tile of the main engine window.
+    /// @param  title       [in] The new windows title.
+    virtual void setWindowsTitle( const String &title );
 
     /// @brief  Will create the default pipeline for rendering.
     /// @return The default pipeline.
@@ -204,7 +218,18 @@ private:
     bool m_shutdownRequested;
 };
 
+//-------------------------------------------------------------------------------------------------
 ///	@brief  Shortcut to get a OSRE-main function.
+/// To use this you need to derive your application class from the ::OSRE::App::AppBase class and
+/// put this into your main source file:
+/// @code
+///
+/// class MyApp : public ::OSRE::App::AppBase { ... };
+///
+/// OSRE_MAIN(MyApp);
+///
+/// @endcode
+//-------------------------------------------------------------------------------------------------
 #define OSRE_MAIN( APPNAME )          \
 int main( int argc, char *argv[] )  { \
     APPNAME myApp( argc, argv );      \

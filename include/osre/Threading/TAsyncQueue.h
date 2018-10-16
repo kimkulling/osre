@@ -80,10 +80,9 @@ public:
     ///	@brief	The queue will be cleared.
     void clear();
 
-private:
     /// Copying is not allowed.
-    TAsyncQueue( const TAsyncQueue<T> & );
-    TAsyncQueue &operator = ( const TAsyncQueue<T> & );
+    TAsyncQueue( const TAsyncQueue<T> & ) = delete;
+    TAsyncQueue &operator = ( const TAsyncQueue<T> & ) = delete;
 
 private:
     Platform::AbstractCriticalSection *m_criticalSection;
@@ -93,14 +92,14 @@ private:
 
 template<class T>
 inline
-TAsyncQueue<T>::TAsyncQueue( Platform::AbstractThreadFactory *pThreadFactory )
+TAsyncQueue<T>::TAsyncQueue( Platform::AbstractThreadFactory *threadFactory )
 : m_criticalSection( nullptr )
 , m_enqueueEvent( nullptr )
 , m_ItemQueue() {
-    OSRE_ASSERT(nullptr != pThreadFactory);
+    OSRE_ASSERT( nullptr != threadFactory );
   
-    m_criticalSection = pThreadFactory->createCriticalSection();
-    m_enqueueEvent = pThreadFactory->createThreadEvent();
+    m_criticalSection = threadFactory->createCriticalSection();
+    m_enqueueEvent = threadFactory->createThreadEvent();
 }
 
 template<class T>

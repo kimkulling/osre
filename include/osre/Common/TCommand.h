@@ -27,6 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 
+//-------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 template<class TParam, class TRet, class TFunc>
 class TCommand {
 public:
@@ -74,7 +76,6 @@ inline
 TRet TCommand<TParam, TRet, TFunc>::execute( TParam param ) {
 
 }
-
 
 }
 }
