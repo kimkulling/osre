@@ -29,53 +29,51 @@ namespace App {
 
 //-------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
-template<class TParam, class TRet, class TFunc>
+template<class TParam, class TFunc>
 class TCommand {
 public:
     TCommand();
     explicit TCommand( TParam param, TFunc func );
     ~TCommand();
-    TRet execute( TParam param );
+    bool execute( TParam param );
 
 private:
     TParam m_param;
     TFunc m_funcBinding;
 };
 
-template<class TParam, class TRet, class TFunc>
+template<class TParam, class TFunc>
 inline
-TCommand<TParam, TRet, TFunc>::TCommand()
+TCommand<TParam, TFunc>::TCommand()
 : m_param()
 , m_funcBinding() {
     // empty
 }
 
-template<class TParam, class TRet, class TFunc>
+template<class TParam, class TFunc>
 inline
-TCommand<TParam, TRet, TFunc>::TCommand(TParam param, TFunc func)
+TCommand<TParam, TFunc>::TCommand(TParam param, TFunc func)
 : m_param( param )
 , m_funcBinding( func ) {
     // empty
 }
 
-template<class TParam, class TRet, class TFunc>
+template<class TParam, class TFunc>
 inline
-TCommand<TParam, TRet, TFunc>::TCommand( TParam param )
-: m_param( param ) {
-    // empty
+TCommand<TParam, TFunc>::~TCommand() {
+
 }
 
-template<class TParam, class TRet, class TFunc>
+template<class TParam, class TFunc>
 inline
-TCommand<TParam, TRet, TFunc>::~TCommand() {
+bool TCommand<TParam, TFunc>::execute( TParam param ) {
+    if (nullptr == m_funcBinding) {
+        return false;
+    }
+    m_funcBinding(m_param);
 
+    return true;
 }
 
-template<class TParam, class TRet, class TFunc>
-inline
-TRet TCommand<TParam, TRet, TFunc>::execute( TParam param ) {
-
-}
-
-}
-}
+} // Namespace Common
+} // Namespace OSRE
