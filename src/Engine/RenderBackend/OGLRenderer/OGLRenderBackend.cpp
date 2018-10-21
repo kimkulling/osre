@@ -133,8 +133,7 @@ void OGLRenderBackend::applyMatrix() {
         UniformDataBlob *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
         ::memcpy(blob->m_data, m_mvp.getMVP(), sizeof(glm::mat4));
         mvp = createParameter("MVP", ParameterType::PT_Mat4, blob, 1);
-    }
-    else {
+    } else {
         memcpy(mvp->m_data->m_data, m_mvp.getMVP(), sizeof(glm::mat4));
     }
     ::memcpy(mvp->m_data->m_data, glm::value_ptr(m_mvp.m_mvp), sizeof(glm::mat4));
@@ -673,7 +672,7 @@ OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTar
 
 void OGLRenderBackend::updateTexture( OGLTexture *oglTextue, ui32 offsetX, ui32 offsetY, c8 *data,
                                       ui32 size ) {
-	if( !oglTextue ) {
+	if( nullptr == oglTextue ) {
         osre_error( Tag, "Pointer to texture is a nullptr." );
         return;
     }
@@ -728,7 +727,7 @@ OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const I
 OGLTexture *OGLRenderBackend::createTextureFromStream( const String &name, IO::Stream &stream, 
                                                        ui32 width, ui32 height, ui32 channels ) {
     OGLTexture *tex( findTexture( name ) );
-    if( tex ) {
+    if( nullptr != tex ) {
         return tex;
     }
 

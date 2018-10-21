@@ -87,7 +87,7 @@ protected:
         Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
 #endif
 
-        m_screen = AppBase::createScreen( "HelloWorld" );
+        m_screen = AppBase::createScreen( "UiDemo" );
 
         Panel *panel = new Panel( "panel", UiFlags::Resizable, m_screen );
         panel->setRect( 10, 10, 500, 500 );
