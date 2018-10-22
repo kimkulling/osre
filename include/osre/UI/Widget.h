@@ -41,9 +41,8 @@ namespace UI {
 
 class Screen;
 
-// Flags
+/// @brief  Behavior-flags for the widgets
 static const ui32 WidgetResizable = 1;
-
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

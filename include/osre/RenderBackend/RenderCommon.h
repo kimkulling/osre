@@ -523,6 +523,13 @@ struct TVertexCache {
         m_cache.reserve(m_cache.size() + newSize);
     }
 
+    void add(T *vertices, ui32 numItems) {
+        if (nullptr == vertices || 0 == numItems) {
+            return;
+        }
+        m_cache.add(vertices, numItems);
+    }
+
     void add( const T &vertex ) {
         m_cache.add( vertex );
     }
@@ -563,8 +570,15 @@ struct TIndexCache {
         m_cache.reserve(m_cache.size() + newSize);
     }
 
-    void add( const T &vertex ) {
-        m_cache.add( vertex );
+    void add( const T &index ) {
+        m_cache.add(index);
+    }
+
+    void add(T *index, ui32 numItems) {
+        if (nullptr == index || 0 == numItems) {
+            return;
+        }
+        m_cache.add(index, numItems);
     }
 
     ui32 numIndices() const {

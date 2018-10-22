@@ -94,5 +94,5 @@ UiItemFactory::~UiItemFactory() {
     // empty
 }
 
-}
-}
+} // Namespace UI
+} // Namespace OSRE
