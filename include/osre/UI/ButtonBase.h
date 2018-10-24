@@ -61,7 +61,7 @@ public:
     virtual void setImage( Image &image );
     virtual void setImage( const String &name );
     virtual const String &getImage() const;
-    void registerCallback( ButtonState state, UIFunctor functor );
+    void registerCallback( ButtonState state, UiFunctor functor );
     static ButtonBase *createIconButton( const String &name, Image &icon, Widget *parent );
     static ButtonBase *createBaseButton( const String &name, const String &label, Widget *parent );
 
@@ -73,7 +73,7 @@ protected:
 private:
     struct FunctorContainer {
         bool m_used;
-        UIFunctor m_callback;
+        UiFunctor m_callback;
 
         FunctorContainer() noexcept;
         ~FunctorContainer();

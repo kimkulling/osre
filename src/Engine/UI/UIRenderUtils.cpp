@@ -114,11 +114,13 @@ RenderBackend::Geometry *UIRenderUtils::createGeoFromCache( UiVertexCache &verte
     geo->m_vertextype = VertexType::RenderVertex;
     geo->m_indextype = IndexType::UnsignedShort;
 
-    geo->m_vb = BufferData::alloc( BufferType::VertexBuffer, vertexCache.sizeInBytes(), BufferAccessType::ReadOnly );
-    geo->m_vb->copyFrom( &vertexCache.m_cache[ 0 ], vertexCache.sizeInBytes() );
+    if (vertexCache.sizeInBytes() > 0) {
+        geo->m_vb = BufferData::alloc(BufferType::VertexBuffer, vertexCache.sizeInBytes(), BufferAccessType::ReadOnly);
+        geo->m_vb->copyFrom(&vertexCache.m_cache[0], vertexCache.sizeInBytes());
 
-    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, indexCache.sizeInBytes(), BufferAccessType::ReadOnly );
-    geo->m_ib->copyFrom( &indexCache.m_cache[ 0 ], indexCache.sizeInBytes() );
+        geo->m_ib = BufferData::alloc(BufferType::IndexBuffer, indexCache.sizeInBytes(), BufferAccessType::ReadOnly);
+        geo->m_ib->copyFrom(&indexCache.m_cache[0], indexCache.sizeInBytes());
+    }
 
     // use default material
     if ( nullptr == material ) {
@@ -128,11 +130,11 @@ RenderBackend::Geometry *UIRenderUtils::createGeoFromCache( UiVertexCache &verte
     }
 
     geo->m_numPrimGroups = 1;
-    geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
-    geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numIndices = indexCache.numIndices();
-    geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-    geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
+    geo->m_primGroups = new PrimitiveGroup[ 1 ];
+    geo->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
+    geo->m_primGroups[ 0 ].m_numIndices = indexCache.numIndices();
+    geo->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
+    geo->m_primGroups[ 0 ].m_startIndex = 0;
 
     return geo;
 }

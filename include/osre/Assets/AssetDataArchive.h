@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace Json {
     class StreamWriter;
+    class Value;
 }
 
 namespace OSRE {
@@ -42,7 +43,9 @@ namespace RenderBackend {
 
 namespace Scene {
     class World;
+    class Stage;
     class Node;
+    class View;
 }
 
 namespace Assets {
@@ -53,7 +56,9 @@ public:
     ~AssetDataArchive();
     Scene::World *load( const IO::Uri & fileLocation );
     bool save( Scene::World *world, const IO::Uri & fileLocation );
-    void traverseChildren(Scene::Node *currentNode, Json::StreamWriter *sw);
+    bool saveStage( Scene::Stage *stage, Json::Value *parent, Json::StreamWriter *sw, std::ofstream &stream);
+    bool saveView(Scene::View *view, Json::Value *parent, Json::StreamWriter *sw, std::ofstream &stream);
+    void traverseChildren(Scene::Node *currentNode, Json::StreamWriter *sw, std::ofstream &stream);
 
 private:
     bool parseType(Scene::World *world);

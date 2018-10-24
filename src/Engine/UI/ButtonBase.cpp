@@ -116,7 +116,7 @@ const String &ButtonBase::getImage() const {
     return m_image.getPath();
 }
 
-void ButtonBase::registerCallback( ButtonState state, UIFunctor functor ) {
+void ButtonBase::registerCallback( ButtonState state, UiFunctor functor ) {
     m_callback[ state ].m_used = true;
     m_callback[ state ].m_callback = functor;
     functor.incRef();

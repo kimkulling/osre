@@ -130,11 +130,11 @@ class GeometryDiagnosticUtilsTest : public ::testing::Test {
     // empty
 };
 
-TEST_F( GeometryDiagnosticUtilsTest, dumVerticesTest_invalidInput ) {
-    EXPECT_NO_THROW( GeometryDiagnosticUtils::dumVertices( nullptr, 1 ) );
+TEST_F( GeometryDiagnosticUtilsTest, dumpVerticesTest_invalidInput ) {
+    EXPECT_NO_THROW( GeometryDiagnosticUtils::dumpVertices( nullptr, 1 ) );
     
     CPPCore::TArray<RenderVert> vertices;
-    EXPECT_NO_THROW( GeometryDiagnosticUtils::dumVertices( vertices ) );
+    EXPECT_NO_THROW( GeometryDiagnosticUtils::dumpVertices( vertices ) );
 }
 
 } // Namespace UnitTest

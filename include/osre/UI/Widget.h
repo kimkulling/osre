@@ -137,15 +137,15 @@ enum class WidgetType {
     Screen
 };
 
-typedef Common::Functor<void, ui32, void *> UIFunctor;
+typedef Common::Functor<void, ui32, void *> UiFunctor;
 
 struct UiProperty {
     String m_name;
     CPPCore::Variant m_data;
 };
 
-using UiVertexCache = RenderBackend::TVertexCache<RenderBackend::RenderVert>;
-using UiIndexCache = RenderBackend::TIndexCache<ui16>;
+using RenderBackend::UiVertexCache;
+using RenderBackend::UiIndexCache;
 
 struct UiRenderCmd {
     UiVertexCache            m_vc;  ///< Will store all vertices

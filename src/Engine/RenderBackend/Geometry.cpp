@@ -43,7 +43,7 @@ Geometry::Geometry()
 , m_vb( nullptr )
 , m_ib( nullptr )
 , m_numPrimGroups( 0 )
-, m_pPrimGroups( nullptr )
+, m_primGroups( nullptr )
 , m_id( 99999999 )
 , m_vertexData()
 , m_indexData()
@@ -61,8 +61,8 @@ Geometry::~Geometry() {
     delete m_ib;
     m_ib = nullptr;
 
-    delete[] m_pPrimGroups;
-    m_pPrimGroups = nullptr;
+    delete[] m_primGroups;
+    m_primGroups = nullptr;
 
     s_Ids.releaseId( m_id );
 }

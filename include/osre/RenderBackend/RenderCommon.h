@@ -496,6 +496,11 @@ struct Canvas {
     OSRE_NON_COPYABLE( Canvas )
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  This template class is used to store vertex data in a cache.
+//-------------------------------------------------------------------------------------------------
 template<class T>
 struct TVertexCache {
     using CacheType = ::CPPCore::TArray<T>;
@@ -543,6 +548,11 @@ struct TVertexCache {
     }
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  This template class is used to store index data in a cache.
+//-------------------------------------------------------------------------------------------------
 template<class T>
 struct TIndexCache {
     using CacheType = ::CPPCore::TArray<T>;
@@ -590,11 +600,12 @@ struct TIndexCache {
     }
 };
 
-///	@brief
+///	@brief  A render batch struct.
+/// Render batches are used to store cluster of similar render data, which can be rendered in one draw call.
 struct RenderBatch {
-    glm::mat4  m_model;
-    ui32       m_numGeo;
-    Geometry  *m_geoArray;
+    glm::mat4  m_model;     ///< The local model matrix.
+    ui32       m_numGeo;    ///< Number of geometries
+    Geometry  *m_geoArray;  ///< The geometry for the batch.
 
     RenderBatch();
     ~RenderBatch();
@@ -622,6 +633,9 @@ struct OSRE_EXPORT Light {
     Light();
     ~Light();
 };
+
+using UiVertexCache = RenderBackend::TVertexCache<RenderBackend::RenderVert>;
+using UiIndexCache = RenderBackend::TIndexCache<ui16>;
 
 } // Namespace RenderBackend
 } // Namespace OSRE

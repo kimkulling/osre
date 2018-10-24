@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
 #include <osre/Assets/AssetDataArchive.h>
+#include <osre/Scene/World.h>
 #include <osre/IO/Uri.h>
 
 namespace OSRE {
@@ -46,9 +47,18 @@ TEST_F( AssetDataTest, createTest ) {
 
 TEST_F( AssetDataTest, load_save_Test ) {
     AssetDataArchive archive( 1, 0 );
-    IO::Uri uri( "test" );
+    IO::Uri uri( "file://test.osr" );
+    
+    // nullptr for world, must return false
     bool ok = archive.save( nullptr, uri );
-    EXPECT_TRUE( ok );
+    EXPECT_FALSE( ok );
+
+    Scene::World *world = new Scene::World("test");
+    ok = archive.save(world, uri);
+    EXPECT_TRUE(ok);
+
+    world->release();
+
 }
 
 } // Namespace UnitTest

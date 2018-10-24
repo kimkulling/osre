@@ -108,7 +108,7 @@ static void dumpRenderVertex( ui32 idx, const RenderBackend::RenderVert &vertex 
     std::cout << "v[" << idx << "].tex0     = " << vertex.tex0.x     << "|" << vertex.tex0.y     << "\n";
 }
 
-void GeometryDiagnosticUtils::dumVertices( RenderBackend::RenderVert *renderVertices, ui32 numVertices ) {
+void GeometryDiagnosticUtils::dumpVertices( RenderBackend::RenderVert *renderVertices, ui32 numVertices ) {
     if ( 0 == numVertices || nullptr == renderVertices ) {
         return;
     }
@@ -118,7 +118,7 @@ void GeometryDiagnosticUtils::dumVertices( RenderBackend::RenderVert *renderVert
     }
 }
 
-void GeometryDiagnosticUtils::dumVertices(const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices) {
+void GeometryDiagnosticUtils::dumpVertices(const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices) {
 	if ( renderVertices.isEmpty() ) {
 		return;
 	}
@@ -215,11 +215,11 @@ Geometry *GeometryBuilder::allocTriangles( VertexType type, BufferAccessType acc
 
 	// setup primitives
     geo->m_numPrimGroups = 1;
-    geo->m_pPrimGroups   = new PrimitiveGroup[ geo->m_numPrimGroups ];
-    geo->m_pPrimGroups[ 0 ].m_indexType     = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numIndices = 3 * geo->m_numPrimGroups;
-    geo->m_pPrimGroups[ 0 ].m_primitive     = PrimitiveType::TriangleList;
-    geo->m_pPrimGroups[ 0 ].m_startIndex    = 0;
+    geo->m_primGroups   = new PrimitiveGroup[ geo->m_numPrimGroups ];
+    geo->m_primGroups[ 0 ].m_indexType     = IndexType::UnsignedShort;
+    geo->m_primGroups[ 0 ].m_numIndices = 3 * geo->m_numPrimGroups;
+    geo->m_primGroups[ 0 ].m_primitive     = PrimitiveType::TriangleList;
+    geo->m_primGroups[ 0 ].m_startIndex    = 0;
 
 	// setup material
     geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
@@ -271,11 +271,11 @@ Geometry *GeometryBuilder::allocQuads( VertexType type, BufferAccessType access 
 
     // setup primitives
     geo->m_numPrimGroups = 1;
-    geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
-    geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numIndices = NumIndices * geo->m_numPrimGroups;
-    geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-    geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
+    geo->m_primGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
+    geo->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
+    geo->m_primGroups[ 0 ].m_numIndices = NumIndices * geo->m_numPrimGroups;
+    geo->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
+    geo->m_primGroups[ 0 ].m_startIndex = 0;
 
     // setup material
     geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
@@ -296,8 +296,8 @@ Geometry *GeometryBuilder::allocLineList( VertexType type, BufferAccessType acce
     geo->m_indextype = IndexType::UnsignedShort;
 
     geo->m_numPrimGroups = 1;
-    geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
-    geo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, 2 * numLines, PrimitiveType::LineList, 0 );
+    geo->m_primGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
+    geo->m_primGroups[ 0 ].init( IndexType::UnsignedShort, 2 * numLines, PrimitiveType::LineList, 0 );
 
     geo->m_vb = Scene::GeometryBuilder::allocVertices( type, numLines, posArray, colorArray, nullptr, access );
     geo->m_indextype = IndexType::UnsignedShort;
@@ -328,8 +328,8 @@ Geometry *GeometryBuilder::allocPoints( VertexType type, BufferAccessType access
 
     // setup primitives
     ptGeo->m_numPrimGroups = 1;
-    ptGeo->m_pPrimGroups = new PrimitiveGroup[ ptGeo->m_numPrimGroups ];
-    ptGeo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, 3, PrimitiveType::PointList, 0 );
+    ptGeo->m_primGroups = new PrimitiveGroup[ ptGeo->m_numPrimGroups ];
+    ptGeo->m_primGroups[ 0 ].init( IndexType::UnsignedShort, 3, PrimitiveType::PointList, 0 );
 
     // setup material
     ptGeo->m_material = MaterialBuilder::createBuildinMaterial( type );;
@@ -342,6 +342,13 @@ static const ui32 NumQuadVert = 4;
 static ui32 getNumTextVerts( const String &text ) {
     const ui32 NumTextVerts = NumQuadVert * text.size();
     return NumTextVerts;
+}
+
+static const ui32 NumQuadIndices = 6;
+
+static ui32 getNumTextIndices(const String &text) {
+    const ui32 numIndices = NumQuadIndices * text.size();
+    return numIndices;
 }
 
 static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const String &text, 
@@ -363,12 +370,11 @@ static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const 
     pos[2] = glm::vec3(x + textSize, y, 0);
     pos[3] = glm::vec3(x + textSize, y + textSize, 0);
 
-    static const ui32 NumQuadIndices = 6;
     const ui32 NumTextVerts = getNumTextVerts(text);
     *textPos = new glm::vec3[NumTextVerts];
     *colors = new glm::vec3[NumTextVerts];
     *tex0 = new glm::vec2[NumTextVerts];
-    *textIndices = new GLushort[NumQuadIndices * text.size()];
+    *textIndices = new GLushort[getNumTextIndices(text)];
 
     const f32 invCol = 1.f / 16.f;
     const f32 invRow = 1.f / 16.f;
@@ -460,11 +466,11 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
 
     // setup primitives
     geo->m_numPrimGroups = 1;
-    geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
-    geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numIndices = 6 * text.size();
-    geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-    geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
+    geo->m_primGroups = new PrimitiveGroup[ 1 ];
+    geo->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
+    geo->m_primGroups[ 0 ].m_numIndices = 6 * text.size();
+    geo->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
+    geo->m_primGroups[ 0 ].m_startIndex = 0;
 
     // setup material
     geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( VertexType::RenderVertex );
@@ -485,6 +491,30 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
 
     return geo;
 }
+
+void GeometryBuilder::allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access, UiVertexCache &vc, UiIndexCache &ic) {
+    glm::vec3 *textPos(nullptr), *colors(nullptr);
+    glm::vec2 *tex0(nullptr);
+    GLushort *textIndices(nullptr);
+    generateTextBoxVerticesAndIndices(x, y, textSize, text, &textPos, &colors, &tex0, &textIndices);
+    for (ui32 i = 0; i < text.size(); i++) {
+        RenderVert v;
+        v.position = textPos[i];
+        v.color0 = colors[i];
+        v.tex0 = tex0[i];
+        vc.add(v);
+    }
+
+    const ui32 numIndices(getNumTextIndices(text));
+    for (ui32 i = 0; i < numIndices; ++i) {
+        ic.add(textIndices[i]);
+    }
+
+    delete[] textIndices;
+    delete[] tex0;
+    delete[] textPos;
+}
+
 
 void GeometryBuilder::updateTextBox( Geometry *geo, f32 textSize, const String &text ) {
     if ( nullptr == geo ) {

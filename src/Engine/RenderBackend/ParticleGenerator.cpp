@@ -82,8 +82,8 @@ void ParticleGenerator::init( ui32 numPoints ) {
 
     // setup primitives
     m_ptGeo->m_numPrimGroups = 1;
-    m_ptGeo->m_pPrimGroups = new PrimitiveGroup[ m_ptGeo->m_numPrimGroups ];
-    m_ptGeo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, m_numPoints, PrimitiveType::PointList, 0 );
+    m_ptGeo->m_primGroups = new PrimitiveGroup[ m_ptGeo->m_numPrimGroups ];
+    m_ptGeo->m_primGroups[ 0 ].init( IndexType::UnsignedShort, m_numPoints, PrimitiveType::PointList, 0 );
 
     // setup material
     Material *mat = Scene::MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );

@@ -44,13 +44,24 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT GeometryDiagnosticUtils {
 public:
+    /// @brief  Will dump the vertex data of a text-box.
 	static void dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset );
-	static void dumpTextTex0Box( ui32 i, glm::vec2 *tex0Pos, ui32 VertexOffset );
-    static void dumVertices( RenderBackend::RenderVert *renderVertices, ui32 numverices );
-    static void dumVertices( const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices );
-	static void dumpIndices( const CPPCore::TArray<ui16> &indexArray );
+    /// @brief  Will dump the vertex-texture-coordinates data of a text-box.
+    static void dumpTextTex0Box(ui32 i, glm::vec2 *tex0Pos, ui32 VertexOffset);
+    /// @brief  Will dump the vertex data of given vertices.
+    static void dumpVertices( RenderBackend::RenderVert *renderVertices, ui32 numverices );
+    /// @brief  Will dump the vertex data of given vertices.
+    static void dumpVertices( const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices );
+    /// @brief  Will dump the index data of given indices.
+    static void dumpIndices(const CPPCore::TArray<ui16> &indexArray);
+    /// @brief  Will dump the index data of given indices.
     static void dumpIndices( ui16 *indices, ui32 numIndices );
+    /// @brief  Will dump the index data of given indices.
     static void dumpIndices( const CPPCore::TArray<ui32> &indexArray );
+
+    GeometryDiagnosticUtils() = delete;
+    GeometryDiagnosticUtils(const GeometryDiagnosticUtils &) = delete;
+    GeometryDiagnosticUtils &operator = (const GeometryDiagnosticUtils &) = delete;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -99,6 +110,8 @@ public:
     /// @param  text        [in] The text to render.
     /// @return The created geometry.
     static RenderBackend::Geometry *allocTextBox( f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access );
+
+    static void allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access, RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic);
 
     /// @brief  Will update the vertices of a text box.
     /// @param  geo         [inout] The geometry to update.
