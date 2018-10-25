@@ -56,8 +56,8 @@ public:
     ~AssetDataArchive();
     Scene::World *load( const IO::Uri & fileLocation );
     bool save( Scene::World *world, const IO::Uri & fileLocation );
-    bool saveStage( Scene::Stage *stage, Json::Value *parent, Json::StreamWriter *sw, std::ofstream &stream);
-    bool saveView(Scene::View *view, Json::Value *parent, Json::StreamWriter *sw, std::ofstream &stream);
+    bool saveStage( Scene::Stage *stage, Json::Value &parent, Json::StreamWriter *sw, std::ofstream &stream);
+    bool saveView(Scene::View *view, Json::Value &parent, Json::StreamWriter *sw, std::ofstream &stream);
     void traverseChildren(Scene::Node *currentNode, Json::StreamWriter *sw, std::ofstream &stream);
 
 private:

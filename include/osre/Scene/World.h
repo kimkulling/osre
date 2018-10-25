@@ -51,10 +51,14 @@ public:
     void addStage( Stage *stage );
     bool setActiveStage( Stage *activeStage );
     bool setActiveStage( const String &stageName );
+    ui32 getNumStages() const;
+    Stage *getStageAt(ui32 i) const;
     Stage *getActiveStage() const;
 	void addView(View *view);
     bool setActiveView( View *activeView );
     bool setActiveView( const String &viewName );
+    ui32 getNumViews() const;
+    View *getViewAt(ui32 i) const;
     View *getActiveView() const;
     void update( Time dt );
     void draw( RenderBackend::RenderBackendService *rbService );

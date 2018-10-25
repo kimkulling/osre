@@ -121,14 +121,14 @@ static bool writeNode(Scene::Node *currentNode, Json::StreamWriter *sw ) {
         transformCompObj["type"] = "scene::transformcomponent";
         
         const glm::vec3 &pos = transformComp->getTranslation();
-        transformCompObj[0]["transform"] = pos.x;
-        transformCompObj[1]["transform"] = pos.y;
-        transformCompObj[2]["transform"] = pos.z;
+        transformCompObj["transform.x"] = pos.x;
+        transformCompObj["transform.y"] = pos.y;
+        transformCompObj["transform.z"] = pos.z;
 
         const glm::vec3 &scale = transformComp->getScale();
-        transformCompObj[0]["scale"] = scale.x;
-        transformCompObj[1]["scale"] = scale.y;
-        transformCompObj[2]["scale"] = scale.z;
+        transformCompObj["scale.x"] = scale.x;
+        transformCompObj["scale.y"] = scale.y;
+        transformCompObj["scale.z"] = scale.z;
 
         value["transformComp"] = transformCompObj;
     }
@@ -156,14 +156,27 @@ bool AssetDataArchive::save( Scene::World *world, const IO::Uri &fileLocation ) 
     worldObj["type"] = "scene::world";;
     worldObj["name"] = name;
 
-    Stage *activeStage = world->getActiveStage();
-    if ( nullptr != activeStage ) {
-        saveStage(activeStage, &worldObj, sw, stream);
+    for (ui32 i = 0; i < world->getNumStages(); ++i) {
+        Stage *currentStage(world->getStageAt(i));
+        if (nullptr != currentStage) {
+            saveStage(currentStage, worldObj, sw, stream);
+        }
     }
 
+    Stage *activeStage = world->getActiveStage();
+    if ( nullptr != activeStage ) {
+        worldObj["activeStage"] = activeStage->getName();
+    }
+
+    for (ui32 i = 0; i < world->getNumViews(); ++i) {
+        View *currentView(world->getViewAt(i));
+        if (nullptr != currentView) {
+            saveView(currentView, worldObj, sw, stream);
+        }
+    }
     View *activeView = world->getActiveView();
     if (nullptr != activeView) {
-        saveView(activeView, &worldObj, sw, stream);
+        worldObj["activeView"] = activeView->getName();
     }
 
     sw->write(worldObj, &stream);
@@ -172,7 +185,7 @@ bool AssetDataArchive::save( Scene::World *world, const IO::Uri &fileLocation ) 
     return true;
 }
 
-bool AssetDataArchive::saveStage(Scene::Stage *stage, Json::Value *parent, Json::StreamWriter *sw, std::ofstream &stream) {
+bool AssetDataArchive::saveStage(Scene::Stage *stage, Json::Value &parent, Json::StreamWriter *sw, std::ofstream &stream) {
     Node *rootNode = stage->getRoot();
     if (nullptr == rootNode) {
         return true;
@@ -186,17 +199,16 @@ bool AssetDataArchive::saveStage(Scene::Stage *stage, Json::Value *parent, Json:
     Json::Value stageObj;
     stageObj[Token::Type] = "scene::stage";
     stageObj[Token::Name] = name;
-    if (nullptr != parent) {
-        (*parent)[Token::StageAttrib_ActiveState] = stageObj;
-    }
+    
+    parent[Token::StageAttrib_ActiveState] = stageObj;
 
     traverseChildren(rootNode, sw, stream);
-    sw->write(rootNode, &stream);
+    sw->write(parent, &stream);
 
     return true;
 }
 
-bool AssetDataArchive::saveView(Scene::View *view, Json::Value *parent, Json::StreamWriter *sw, std::ofstream &stream) {
+bool AssetDataArchive::saveView(Scene::View *view, Json::Value &parent, Json::StreamWriter *sw, std::ofstream &stream) {
     String name(view->getName());
     if (name.empty()) {
         name = "view_1";
@@ -206,9 +218,8 @@ bool AssetDataArchive::saveView(Scene::View *view, Json::Value *parent, Json::St
     viewObj["type"] = "scene::view";
     viewObj["name"] = name;
 
-    if (nullptr != parent) {
-        (*parent)["activeView"] = viewObj;
-    }
+    parent["activeView"] = viewObj;
+    sw->write(parent, &stream);
 
     return true;
 }

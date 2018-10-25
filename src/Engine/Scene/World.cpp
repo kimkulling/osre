@@ -87,6 +87,9 @@ bool World::setActiveStage( Stage *activeStage ) {
     }
 
     m_activeStage = activeStage;
+    if (nullptr == m_stages.find(activeStage)) {
+        m_stages.add(activeStage);
+    }
 
     return true;
 }
@@ -99,11 +102,22 @@ bool World::setActiveStage( const String &stageName ) {
     
     Stage *activeStage( nullptr );
     if ( m_lookupStates.getValue( hash, activeStage ) ) {
-        m_activeStage = activeStage;
+        setActiveStage(activeStage);
         return true;
     }
 
     return false;
+}
+
+ui32 World::getNumStages() const {
+    return m_stages.size();
+}
+
+Stage *World::getStageAt(ui32 i) const {
+    if (i >= m_stages.size()) {
+        return nullptr;
+    }
+    return m_stages[i];
 }
 
 Stage *World::getActiveStage() const {
@@ -120,12 +134,27 @@ void World::addView( View *view ) {
     m_lookupViews.insert( hash, view );
 }
 
+ui32 World::getNumViews() const {
+    return m_views.size();
+}
+
+View *World::getViewAt(ui32 i) const {
+    if (i >= m_views.size()) {
+        return nullptr;
+    }
+
+    return m_views[ i ];
+}
+
 bool World::setActiveView( View *activeView ) {
     if ( m_activeView == activeView ) {
         return true;
     }
     
     m_activeView = activeView;
+    if (nullptr == m_views.find(activeView)) {
+        m_views.add(activeView);
+    }
 
     return true;
 }
@@ -138,7 +167,7 @@ bool World::setActiveView( const String &viewName ) {
 
     View *activeView( nullptr );
     if ( m_lookupViews.getValue( hash, activeView ) ) {
-        m_activeView = activeView;
+        setActiveView(activeView);
         return true;
     }
 
