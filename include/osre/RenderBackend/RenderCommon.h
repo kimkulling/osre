@@ -485,17 +485,6 @@ struct OSRE_EXPORT Viewport {
 	OSRE_NON_COPYABLE( Viewport )
 };
 
-///	@brief
-struct Canvas {
-    ui32 m_x;
-    ui32 m_y;
-    ui32 m_width;
-    ui32 m_height;
-    ui32 m_z;
-
-    OSRE_NON_COPYABLE( Canvas )
-};
-
 template<class T>
 struct TVertexCache {
     using CacheType = ::CPPCore::TArray<T>;
@@ -520,6 +509,10 @@ struct TVertexCache {
     }
 
     void increaseSize(ui32 newSize) {
+        if (0 == newSize) {
+            return;
+
+        }
         m_cache.reserve(m_cache.size() + newSize);
     }
 

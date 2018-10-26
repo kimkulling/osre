@@ -32,6 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef GLM_ENABLE_EXPERIMENTAL
 #   define GLM_ENABLE_EXPERIMENTAL
 #endif // GLM_ENABLE_EXPERIMENTAL
+
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -58,12 +59,11 @@ ButtonBase::ButtonBase( const String &name, Widget *parent )
 , m_image()
 , m_imageWidget( nullptr )
 , m_textWidget( nullptr )
-, m_callback( nullptr ){
+, m_callback( new FunctorContainer[ MaxStates ] ){
     static_cast<void>( StyleProvider::getCurrentStyle() );
     if ( nullptr != parent ) {
         setStackIndex(parent->getStackIndex() + 1);
     }
-    m_callback = new FunctorContainer[ MaxStates ];
 }
 
 ButtonBase::~ButtonBase() {

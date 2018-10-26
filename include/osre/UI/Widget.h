@@ -138,7 +138,7 @@ enum class WidgetType {
     Screen
 };
 
-typedef Common::Functor<void, ui32, void *> UIFunctor;
+using UIFunctor = Common::Functor<void, ui32, void *>;
 
 struct UiProperty {
     String m_name;

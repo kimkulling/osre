@@ -62,7 +62,7 @@ const String &TextBase::getLabel() const {
     return m_text;
 }
 
-void TextBase::setFont( RenderBackend::FontBase *font ) {
+void TextBase::setFont( FontBase *font ) {
     if ( m_font == font ) {
         return;
     }
@@ -177,7 +177,7 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
         textIndices[ 3 + IndexOffset ] = 1 + VertexOffset;
         textIndices[ 4 + IndexOffset ] = 2 + VertexOffset;
         textIndices[ 5 + IndexOffset ] = 3 + VertexOffset;
-        textCol++;
+        ++textCol;
     }
 
     UiVertexCache vertexCache;

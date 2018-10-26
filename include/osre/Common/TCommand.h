@@ -32,7 +32,6 @@ namespace App {
 template<class TParam, class TFunc>
 class TCommand {
 public:
-    TCommand();
     explicit TCommand( TParam param, TFunc func );
     ~TCommand();
     bool execute( TParam param );
@@ -41,14 +40,6 @@ private:
     TParam m_param;
     TFunc m_funcBinding;
 };
-
-template<class TParam, class TFunc>
-inline
-TCommand<TParam, TFunc>::TCommand()
-: m_param()
-, m_funcBinding() {
-    // empty
-}
 
 template<class TParam, class TFunc>
 inline
@@ -67,9 +58,6 @@ TCommand<TParam, TFunc>::~TCommand() {
 template<class TParam, class TFunc>
 inline
 bool TCommand<TParam, TFunc>::execute( TParam param ) {
-    if (nullptr == m_funcBinding) {
-        return false;
-    }
     m_funcBinding(m_param);
 
     return true;

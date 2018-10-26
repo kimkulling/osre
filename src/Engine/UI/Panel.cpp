@@ -72,7 +72,7 @@ const String &Panel::getHeadline() const {
     return m_headline;
 }
 
-void Panel::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
+void Panel::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService* ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const Rect2ui &rect( getRect() );
     UiVertexCache vertexCache;
