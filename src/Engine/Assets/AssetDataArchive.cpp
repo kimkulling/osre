@@ -22,8 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Assets/AssetDataArchive.h>
 #include <osre/Debugging/osre_debugging.h>
-#include <osre/Scene/Stage.h>
 #include <osre/Scene/World.h>
+#include <osre/Scene/Stage.h>
+#include <osre/Scene/View.h>
 #include <osre/Scene/Node.h>
 #include <osre/Scene/Component.h>
 #include <osre/IO/Uri.h>
@@ -42,6 +43,12 @@ using namespace ::OSRE::IO;
 using namespace ::OSRE::Scene;
 
 static const String Tag = "AssetData";
+
+namespace Token {
+    static const String Type = "type";
+    static const String Name = "Name";
+    static const String StageAttrib_ActiveState = "activeStage";
+}
 
 AssetDataArchive::AssetDataArchive( i32 majorVersion, i32 minorVersion )
 :mVersion(majorVersion, minorVersion ){
@@ -103,7 +110,7 @@ static bool writeNode(Scene::Node *currentNode, Json::StreamWriter *sw ) {
         Json::Value renderCompObj;
         renderCompObj["id"] = renderComp->getId();
         renderCompObj["type"] = "scene::rendercomponent";
-        value["rendercomp"] = renderCompObj;
+        value["renderComp"] = renderCompObj;
     }
 
     comp  = currentNode->getComponent(Node::ComponentType::TransformComponentType);
@@ -114,51 +121,110 @@ static bool writeNode(Scene::Node *currentNode, Json::StreamWriter *sw ) {
         transformCompObj["type"] = "scene::transformcomponent";
         
         const glm::vec3 &pos = transformComp->getTranslation();
-        transformCompObj[0]["transform"] = pos.x;
-        transformCompObj[1]["transform"] = pos.y;
-        transformCompObj[2]["transform"] = pos.z;
+        transformCompObj["transform.x"] = pos.x;
+        transformCompObj["transform.y"] = pos.y;
+        transformCompObj["transform.z"] = pos.z;
 
         const glm::vec3 &scale = transformComp->getScale();
-        transformCompObj[0]["scale"] = scale.x;
-        transformCompObj[1]["scale"] = scale.y;
-        transformCompObj[2]["scale"] = scale.z;
+        transformCompObj["scale.x"] = scale.x;
+        transformCompObj["scale.y"] = scale.y;
+        transformCompObj["scale.z"] = scale.z;
 
-        value["transformcomp"] = transformCompObj;
+        value["transformComp"] = transformCompObj;
     }
 
     return true;
 }
 
-bool AssetDataArchive::save( Scene::World *world, const IO::Uri & fileLocation ) {
+bool AssetDataArchive::save( Scene::World *world, const IO::Uri &fileLocation ) {
     if ( nullptr == world ) {
         return false;
     }
 
-    const String name( world->getName() );
-    Stage *activeStage = world->getActiveStage();
-    if ( nullptr == activeStage ) {
-        return true;
-    }
-
-    Node *rootNode = activeStage->getRoot();
-    if ( nullptr == rootNode ) {
-        return true;
-    }
     Json::StreamWriterBuilder builder;
     Json::StreamWriter *sw = builder.newStreamWriter();
-    std::ofstream stream( fileLocation.getAbsPath(), std::ofstream::out );
+    std::ofstream stream(fileLocation.getAbsPath(), std::ofstream::out);
     if (!stream.is_open()) {
         return false;
     }
 
-    traverseChildren(rootNode, sw);
+    String name( world->getName() );
+    if (name.empty()) {
+        name = "world_1";
+    }
+    Json::Value worldObj;
+    worldObj["type"] = "scene::world";;
+    worldObj["name"] = name;
 
-    sw->write(rootNode, &stream );
+    for (ui32 i = 0; i < world->getNumStages(); ++i) {
+        Stage *currentStage(world->getStageAt(i));
+        if (nullptr != currentStage) {
+            saveStage(currentStage, worldObj, sw, stream);
+        }
+    }
+
+    Stage *activeStage = world->getActiveStage();
+    if ( nullptr != activeStage ) {
+        worldObj["activeStage"] = activeStage->getName();
+    }
+
+    for (ui32 i = 0; i < world->getNumViews(); ++i) {
+        View *currentView(world->getViewAt(i));
+        if (nullptr != currentView) {
+            saveView(currentView, worldObj, sw, stream);
+        }
+    }
+    View *activeView = world->getActiveView();
+    if (nullptr != activeView) {
+        worldObj["activeView"] = activeView->getName();
+    }
+
+    sw->write(worldObj, &stream);
+    stream << std::endl;
 
     return true;
 }
 
-void AssetDataArchive::traverseChildren( Node *currentNode, Json::StreamWriter *sw) {
+bool AssetDataArchive::saveStage(Scene::Stage *stage, Json::Value &parent, Json::StreamWriter *sw, std::ofstream &stream) {
+    Node *rootNode = stage->getRoot();
+    if (nullptr == rootNode) {
+        return true;
+    }
+
+    String name(stage->getName());
+    if (name.empty()) {
+        name = "stage_1";
+    }
+
+    Json::Value stageObj;
+    stageObj[Token::Type] = "scene::stage";
+    stageObj[Token::Name] = name;
+    
+    parent[Token::StageAttrib_ActiveState] = stageObj;
+
+    traverseChildren(rootNode, sw, stream);
+    sw->write(parent, &stream);
+
+    return true;
+}
+
+bool AssetDataArchive::saveView(Scene::View *view, Json::Value &parent, Json::StreamWriter *sw, std::ofstream &stream) {
+    String name(view->getName());
+    if (name.empty()) {
+        name = "view_1";
+    }
+
+    Json::Value viewObj;
+    viewObj["type"] = "scene::view";
+    viewObj["name"] = name;
+
+    parent["activeView"] = viewObj;
+    sw->write(parent, &stream);
+
+    return true;
+}
+
+void AssetDataArchive::traverseChildren( Node *currentNode, Json::StreamWriter *sw, std::ofstream &stream) {
     if ( nullptr == currentNode || nullptr == sw ) {
         return;
     }
@@ -175,7 +241,7 @@ void AssetDataArchive::traverseChildren( Node *currentNode, Json::StreamWriter *
         }
 
         writeNode( currentNode, sw );
-        traverseChildren( currentChild, sw );
+        traverseChildren( currentChild, sw, stream );
     }
 }
 

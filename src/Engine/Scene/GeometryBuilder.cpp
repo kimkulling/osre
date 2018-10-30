@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Geometry.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/Tokenizer.h>
+#include <osre/Debugging/osre_debugging.h>
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -107,7 +108,7 @@ static void dumpRenderVertex( ui32 idx, const RenderBackend::RenderVert &vertex 
     std::cout << "v[" << idx << "].tex0     = " << vertex.tex0.x     << "|" << vertex.tex0.y     << "\n";
 }
 
-void GeometryDiagnosticUtils::dumVertices( RenderBackend::RenderVert *renderVertices, ui32 numVertices ) {
+void GeometryDiagnosticUtils::dumpVertices( RenderBackend::RenderVert *renderVertices, ui32 numVertices ) {
     if ( 0 == numVertices || nullptr == renderVertices ) {
         return;
     }
@@ -117,7 +118,7 @@ void GeometryDiagnosticUtils::dumVertices( RenderBackend::RenderVert *renderVert
     }
 }
 
-void GeometryDiagnosticUtils::dumVertices(const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices) {
+void GeometryDiagnosticUtils::dumpVertices(const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices) {
 	if ( renderVertices.isEmpty() ) {
 		return;
 	}
@@ -214,11 +215,11 @@ Geometry *GeometryBuilder::allocTriangles( VertexType type, BufferAccessType acc
 
 	// setup primitives
     geo->m_numPrimGroups = 1;
-    geo->m_pPrimGroups   = new PrimitiveGroup[ geo->m_numPrimGroups ];
-    geo->m_pPrimGroups[ 0 ].m_indexType     = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numIndices = 3 * geo->m_numPrimGroups;
-    geo->m_pPrimGroups[ 0 ].m_primitive     = PrimitiveType::TriangleList;
-    geo->m_pPrimGroups[ 0 ].m_startIndex    = 0;
+    geo->m_primGroups   = new PrimitiveGroup[ geo->m_numPrimGroups ];
+    geo->m_primGroups[ 0 ].m_indexType     = IndexType::UnsignedShort;
+    geo->m_primGroups[ 0 ].m_numIndices = 3 * geo->m_numPrimGroups;
+    geo->m_primGroups[ 0 ].m_primitive     = PrimitiveType::TriangleList;
+    geo->m_primGroups[ 0 ].m_startIndex    = 0;
 
 	// setup material
     geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
@@ -270,11 +271,11 @@ Geometry *GeometryBuilder::allocQuads( VertexType type, BufferAccessType access 
 
     // setup primitives
     geo->m_numPrimGroups = 1;
-    geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
-    geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numIndices = NumIndices * geo->m_numPrimGroups;
-    geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-    geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
+    geo->m_primGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
+    geo->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
+    geo->m_primGroups[ 0 ].m_numIndices = NumIndices * geo->m_numPrimGroups;
+    geo->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
+    geo->m_primGroups[ 0 ].m_startIndex = 0;
 
     // setup material
     geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
@@ -295,8 +296,8 @@ Geometry *GeometryBuilder::allocLineList( VertexType type, BufferAccessType acce
     geo->m_indextype = IndexType::UnsignedShort;
 
     geo->m_numPrimGroups = 1;
-    geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
-    geo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, 2 * numLines, PrimitiveType::LineList, 0 );
+    geo->m_primGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
+    geo->m_primGroups[ 0 ].init( IndexType::UnsignedShort, 2 * numLines, PrimitiveType::LineList, 0 );
 
     geo->m_vb = Scene::GeometryBuilder::allocVertices( type, numLines, posArray, colorArray, nullptr, access );
     geo->m_indextype = IndexType::UnsignedShort;
@@ -327,8 +328,8 @@ Geometry *GeometryBuilder::allocPoints( VertexType type, BufferAccessType access
 
     // setup primitives
     ptGeo->m_numPrimGroups = 1;
-    ptGeo->m_pPrimGroups = new PrimitiveGroup[ ptGeo->m_numPrimGroups ];
-    ptGeo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, 3, PrimitiveType::PointList, 0 );
+    ptGeo->m_primGroups = new PrimitiveGroup[ ptGeo->m_numPrimGroups ];
+    ptGeo->m_primGroups[ 0 ].init( IndexType::UnsignedShort, 3, PrimitiveType::PointList, 0 );
 
     // setup material
     ptGeo->m_material = MaterialBuilder::createBuildinMaterial( type );;
@@ -343,6 +344,103 @@ static ui32 getNumTextVerts( const String &text ) {
     return NumTextVerts;
 }
 
+static const ui32 NumQuadIndices = 6;
+
+static ui32 getNumTextIndices(const String &text) {
+    const ui32 numIndices = NumQuadIndices * text.size();
+    return numIndices;
+}
+
+static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const String &text, 
+        glm::vec3 **textPos, glm::vec3 **colors, glm::vec2 **tex0, GLushort **textIndices) {
+    OSRE_ASSERT(nullptr != textPos);
+    OSRE_ASSERT(nullptr != colors);
+    OSRE_ASSERT(nullptr != tex0);
+    OSRE_ASSERT(nullptr != textIndices);
+
+    glm::vec3 col[NumQuadVert];
+    col[0] = glm::vec3(0, 0, 0);
+    col[1] = glm::vec3(0, 0, 0);
+    col[2] = glm::vec3(0, 0, 0);
+    col[3] = glm::vec3(0, 0, 0);
+
+    glm::vec3 pos[NumQuadVert];
+    pos[0] = glm::vec3(x, y, 0);
+    pos[1] = glm::vec3(x, y + textSize, 0);
+    pos[2] = glm::vec3(x + textSize, y, 0);
+    pos[3] = glm::vec3(x + textSize, y + textSize, 0);
+
+    const ui32 NumTextVerts = getNumTextVerts(text);
+    *textPos = new glm::vec3[NumTextVerts];
+    *colors = new glm::vec3[NumTextVerts];
+    *tex0 = new glm::vec2[NumTextVerts];
+    *textIndices = new GLushort[getNumTextIndices(text)];
+
+    const f32 invCol = 1.f / 16.f;
+    const f32 invRow = 1.f / 16.f;
+    ui32 textCol(0), textRow(0);
+    for (ui32 i = 0; i < text.size(); i++) {
+        const c8 ch = text[i];
+        if (Tokenizer::isLineBreak(ch)) {
+            textCol = 0;
+            textRow++;
+            continue;
+        }
+
+        const ui16 VertexOffset(static_cast<ui16>(i) * static_cast<ui16>(NumQuadVert));
+        const f32  rowHeight(-1.0f * textRow * textSize);
+        (*textPos)[VertexOffset + 0].x = pos[0].x + (textCol*textSize);
+        (*textPos)[VertexOffset + 0].y = pos[0].y + rowHeight;
+        (*textPos)[VertexOffset + 0].z = 0;
+
+        (*textPos)[VertexOffset + 1].x = pos[1].x + (textCol*textSize);
+        (*textPos)[VertexOffset + 1].y = pos[1].y + rowHeight;
+        (*textPos)[VertexOffset + 1].z = 0;
+
+        (*textPos)[VertexOffset + 2].x = pos[2].x + (textCol*textSize);
+        (*textPos)[VertexOffset + 2].y = pos[2].y + rowHeight;
+        (*textPos)[VertexOffset + 2].z = 0;
+
+        (*textPos)[VertexOffset + 3].x = pos[3].x + (textCol*textSize);
+        (*textPos)[VertexOffset + 3].y = pos[3].y + rowHeight;
+        (*textPos)[VertexOffset + 3].z = 0;
+
+        //GeometryDiagnosticUtils::dumpTextBox( i, textPos, VertexOffset );
+
+        const i32 column = (ch) % 16;
+        const i32 row = (ch) / 16;
+        const f32 s = column * invCol;
+        const f32 t = (row + 1) * invRow;
+
+        (*tex0)[VertexOffset + 0].x = s;
+        (*tex0)[VertexOffset + 0].y = 1.0f - t;
+
+        (*tex0)[VertexOffset + 1].x = s;
+        (*tex0)[VertexOffset + 1].y = 1.0f - t + 1.0f / 16.0f;
+
+        (*tex0)[VertexOffset + 2].x = s + 1.0f / 16.0f;
+        (*tex0)[VertexOffset + 2].y = 1.0f - t;
+
+        (*tex0)[VertexOffset + 3].x = s + 1.0f / 16.0f;
+        (*tex0)[VertexOffset + 3].y = 1.0f - t + 1.0f / 16.0f;
+
+        //GeometryDiagnosticUtils::dumpTextTex0Box(i, tex0, VertexOffset);
+        (*colors)[VertexOffset + 0] = col[0];
+        (*colors)[VertexOffset + 1] = col[1];
+        (*colors)[VertexOffset + 2] = col[2];
+        (*colors)[VertexOffset + 3] = col[3];
+        const ui32 IndexOffset(i * NumQuadIndices);
+        (*textIndices)[0 + IndexOffset] = 0 + VertexOffset;
+        (*textIndices)[1 + IndexOffset] = 1 + VertexOffset;
+        (*textIndices)[2 + IndexOffset] = 2 + VertexOffset;
+
+        (*textIndices)[3 + IndexOffset] = 1 + VertexOffset;
+        (*textIndices)[4 + IndexOffset] = 3 + VertexOffset;
+        (*textIndices)[5 + IndexOffset] = 2 + VertexOffset;
+        ++textCol;
+    }
+}
+
 Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access ) {
 	if ( text.empty() ) {
 		return nullptr;
@@ -352,89 +450,11 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     geo->m_vertextype = VertexType::RenderVertex;
     geo->m_indextype = IndexType::UnsignedShort;
 
-    // setup triangle vertices    
-    glm::vec3 col[ NumQuadVert ];
-    col[ 0 ] = glm::vec3( 0, 0, 0 );
-    col[ 1 ] = glm::vec3( 0, 0, 0 );
-    col[ 2 ] = glm::vec3( 0, 0, 0 );
-    col[ 3 ] = glm::vec3( 0, 0, 0 );
+    glm::vec3 *textPos( nullptr ), *colors(nullptr );
+    glm::vec2 *tex0(nullptr);
+    GLushort *textIndices(nullptr);
+    generateTextBoxVerticesAndIndices(x,y,textSize, text, &textPos, &colors, &tex0, &textIndices);
 
-    glm::vec3 pos[ NumQuadVert ];
-    pos[ 0 ] = glm::vec3( x, y, 0 );
-    pos[ 1 ] = glm::vec3( x, y+textSize, 0 );
-    pos[ 2 ] = glm::vec3( x+textSize, y, 0 );
-    pos[ 3 ] = glm::vec3( x+textSize, y+textSize, 0 );
-
-    static const ui32 NumQuadIndices = 6;
-    const ui32 NumTextVerts = getNumTextVerts( text );
-    glm::vec3 *textPos = new glm::vec3[ NumTextVerts ];
-    glm::vec3 *colors = new glm::vec3[ NumTextVerts ];
-	glm::vec2 *tex0 = new glm::vec2[ NumTextVerts ];
-    GLushort *textIndices = new GLushort[ NumQuadIndices * text.size() ];
-
-    const f32 invCol = 1.f / 16.f;
-    const f32 invRow = 1.f / 16.f;
-    ui32 textCol( 0 ), textRow( 0 );
-    for (ui32 i = 0; i < text.size(); i++) {
-        const c8 ch = text[ i ];
-        if ( Tokenizer::isLineBreak( ch ) ) {
-            textCol = 0;
-            textRow++;
-            continue;
-        }
-        
-        const ui16 VertexOffset(static_cast<ui16>( i ) * static_cast<ui16>( NumQuadVert ) );
-        const f32  rowHeight( -1.0f * textRow * textSize );
-        textPos[ VertexOffset + 0 ].x = pos[ 0 ].x + ( textCol*textSize );
-        textPos[ VertexOffset + 0 ].y = pos[ 0 ].y + rowHeight;
-        textPos[ VertexOffset + 0 ].z = 0;
-
-        textPos[ VertexOffset + 1 ].x = pos[ 1 ].x + ( textCol*textSize );
-        textPos[ VertexOffset + 1 ].y = pos[ 1 ].y + rowHeight;
-        textPos[ VertexOffset + 1 ].z = 0;
-
-        textPos[ VertexOffset + 2 ].x = pos[ 2 ].x + ( textCol*textSize );
-        textPos[ VertexOffset + 2 ].y = pos[ 2 ].y + rowHeight;
-        textPos[ VertexOffset + 2 ].z = 0;
-
-        textPos[ VertexOffset + 3 ].x = pos[ 3 ].x + ( textCol*textSize );
-        textPos[ VertexOffset + 3 ].y = pos[ 3 ].y + rowHeight;
-        textPos[ VertexOffset + 3 ].z = 0;
-
-        //GeometryDiagnosticUtils::dumpTextBox( i, textPos, VertexOffset );
-        
-        const i32 column = (ch ) % 16;
-        const i32 row = (ch ) / 16;
-        const f32 s = column * invCol;
-        const f32 t = (row + 1) * invRow;
-
-		tex0[VertexOffset + 0].x = s;
-		tex0[VertexOffset + 0].y = 1.0f - t;
-
-		tex0[VertexOffset + 1].x = s;
-        tex0[VertexOffset + 1].y = 1.0f - t + 1.0f / 16.0f;
-
-		tex0[VertexOffset + 2].x = s + 1.0f/16.0f;
-        tex0[VertexOffset + 2].y = 1.0f - t;
-       
-        tex0[VertexOffset + 3].x = s + 1.0f / 16.0f;
-        tex0[VertexOffset + 3].y = 1.0f - t + 1.0f / 16.0f;
-        
-        //GeometryDiagnosticUtils::dumpTextTex0Box(i, tex0, VertexOffset);
-        colors[ VertexOffset + 0 ] = col[ 0 ];
-        colors[ VertexOffset + 1 ] = col[ 1 ];
-        colors[ VertexOffset + 2 ] = col[ 2 ];
-        colors[ VertexOffset + 3 ] = col[ 3 ];
-        const ui32 IndexOffset( i * NumQuadIndices );
-        textIndices[ 0 + IndexOffset ] = 0 + VertexOffset;
-        textIndices[ 1 + IndexOffset ] = 1 + VertexOffset;
-        textIndices[ 2 + IndexOffset ] = 2 + VertexOffset;
-
-        textIndices[ 3 + IndexOffset ] = 1 + VertexOffset;
-        textIndices[ 4 + IndexOffset ] = 3 + VertexOffset;
-        textIndices[ 5 + IndexOffset ] = 2 + VertexOffset;
-        textCol++;
-    }
     //GeometryDiagnosticUtils::dumpIndices( textIndices, 6 * text.size() );
 
     geo->m_vb = allocVertices( geo->m_vertextype, text.size() * NumQuadVert, textPos, colors, tex0, access );
@@ -446,11 +466,11 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
 
     // setup primitives
     geo->m_numPrimGroups = 1;
-    geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
-    geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_pPrimGroups[ 0 ].m_numIndices = 6 * text.size();
-    geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-    geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
+    geo->m_primGroups = new PrimitiveGroup[ 1 ];
+    geo->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
+    geo->m_primGroups[ 0 ].m_numIndices = 6 * text.size();
+    geo->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
+    geo->m_primGroups[ 0 ].m_startIndex = 0;
 
     // setup material
     geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( VertexType::RenderVertex );
@@ -471,6 +491,30 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
 
     return geo;
 }
+
+void GeometryBuilder::allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access, UiVertexCache &vc, UiIndexCache &ic) {
+    glm::vec3 *textPos(nullptr), *colors(nullptr);
+    glm::vec2 *tex0(nullptr);
+    GLushort *textIndices(nullptr);
+    generateTextBoxVerticesAndIndices(x, y, textSize, text, &textPos, &colors, &tex0, &textIndices);
+    for (ui32 i = 0; i < text.size(); i++) {
+        RenderVert v;
+        v.position = textPos[i];
+        v.color0 = colors[i];
+        v.tex0 = tex0[i];
+        vc.add(v);
+    }
+
+    const ui32 numIndices(getNumTextIndices(text));
+    for (ui32 i = 0; i < numIndices; ++i) {
+        ic.add(textIndices[i]);
+    }
+
+    delete[] textIndices;
+    delete[] tex0;
+    delete[] textPos;
+}
+
 
 void GeometryBuilder::updateTextBox( Geometry *geo, f32 textSize, const String &text ) {
     if ( nullptr == geo ) {
@@ -501,7 +545,7 @@ void GeometryBuilder::updateTextBox( Geometry *geo, f32 textSize, const String &
         const c8 ch = text[ i ];
         if ( Tokenizer::isLineBreak( ch ) ) {
             textCol = 0;
-            textRow++;
+            ++textRow;
             continue;
         }
 

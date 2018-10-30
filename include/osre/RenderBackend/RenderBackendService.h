@@ -105,7 +105,6 @@ struct OSRE_EXPORT AttachViewEventData : public Common::EventData {
     }
 };
 
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///

@@ -219,6 +219,7 @@ MaterialBuilder::~MaterialBuilder() {
         delete mat;
         return nullptr;
     }
+
     ShaderSourceArray arr;
     arr[ static_cast<ui32>( ShaderType::SH_VertexShaderType ) ] = vs;
     arr[ static_cast<ui32>( ShaderType::SH_FragmentShaderType ) ] = fs;

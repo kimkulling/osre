@@ -97,113 +97,15 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
     f32 y( static_cast<f32>( Widget::getRect().getY1() ) );
     WidgetCoordMapping::mapPosToWorld( x, y, x, y );
 
-    // setup triangle vertices    
-    glm::vec3 col[ NumQuadVert ];
-    col[ 0 ] = glm::vec3( 0, 0, 0 );
-    col[ 1 ] = glm::vec3( 0, 0, 0 );
-    col[ 2 ] = glm::vec3( 0, 0, 0 );
-    col[ 3 ] = glm::vec3( 0, 0, 0 );
-
-    glm::vec3 pos[ NumQuadVert ];
-    pos[ 0 ] = glm::vec3( x, y, z );
-    pos[ 1 ] = glm::vec3( x, y + fontSize, z );
-    pos[ 2 ] = glm::vec3( x + fontSize, y, z );
-    pos[ 3 ] = glm::vec3( x + fontSize, y + fontSize, z );
-
-    static const ui32 NumQuadIndices = 6;
-    const ui32 NumTextVerts = getNumTextVerts( m_text );
-    RenderVert *vertices = new RenderVert[ NumTextVerts ];
-    ui16 *textIndices = new ui16[ NumQuadIndices * m_text.size() ];
-
-    const f32 invCol = 1.f / 16.f;
-    const f32 invRow = 1.f / 16.f;
-    ui32 textCol( 0 ), textRow( 0 );
-    const f32 squaredFontSize( fontSize * fontSize );
-    for ( ui32 i = 0; i < m_text.size(); i++ ) {
-        const c8 ch = m_text[ i ];
-        if ( Tokenizer::isLineBreak( ch ) ) {
-            textCol = 0;
-            textRow++;
-            continue;
-        }
-
-        const ui16 VertexOffset( static_cast< ui16 >( i ) * static_cast< ui16 >( NumQuadVert ) );
-        const f32  rowHeight( -1.0f * textRow * fontSize );
-        vertices[ VertexOffset + 0 ].position.x = pos[ 0 ].x + ( squaredFontSize );
-        vertices[ VertexOffset + 0 ].position.y = pos[ 0 ].y + rowHeight;
-        vertices[ VertexOffset + 0 ].position.z = 0;
-
-        vertices[ VertexOffset + 1 ].position.x = pos[ 1 ].x + ( squaredFontSize );
-        vertices[ VertexOffset + 1 ].position.y = pos[ 1 ].y + rowHeight;
-        vertices[ VertexOffset + 1 ].position.z = 0;
-
-        vertices[ VertexOffset + 2 ].position.x = pos[ 2 ].x + ( squaredFontSize );
-        vertices[ VertexOffset + 2 ].position.y = pos[ 2 ].y + rowHeight;
-        vertices[ VertexOffset + 2 ].position.z = 0;
-
-        vertices[ VertexOffset + 3 ].position.x = pos[ 3 ].x + ( squaredFontSize );
-        vertices[ VertexOffset + 3 ].position.y = pos[ 3 ].y + rowHeight;
-        vertices[ VertexOffset + 3 ].position.z = 0;
-
-        //GeometryDiagnosticUtils::dumpTextBox( i, textPos, VertexOffset );
-
-        const i32 column = ( ch ) % 16;
-        const i32 row = ( ch ) / 16;
-        const f32 s = column * invCol;
-        const f32 t = ( row + 1 ) * invRow;
-
-        vertices[ VertexOffset + 0 ].tex0.x = s;
-        vertices[ VertexOffset + 0 ].tex0.y = 1.0f - t;
-
-        vertices[ VertexOffset + 1 ].tex0.x = s;
-        vertices[ VertexOffset + 1 ].tex0.y = 1.0f - t + 1.0f / 16.0f;
-
-        vertices[ VertexOffset + 2 ].tex0.x = s + 1.0f / 16.0f;
-        vertices[ VertexOffset + 2 ].tex0.y = 1.0f - t;
-
-        vertices[ VertexOffset + 3 ].tex0.x = s + 1.0f / 16.0f;
-        vertices[ VertexOffset + 3 ].tex0.y = 1.0f - t + 1.0f / 16.0f;
-
-//        GeometryDiagnosticUtils::dumpTextTex0Box(i, verticestex0, VertexOffset);
-        vertices[ VertexOffset + 0 ].color0 = col[ 0 ];
-        vertices[ VertexOffset + 1 ].color0 = col[ 1 ];
-        vertices[ VertexOffset + 2 ].color0 = col[ 2 ];
-        vertices[ VertexOffset + 3 ].color0 = col[ 3 ];
-        const ui32 IndexOffset( i * NumQuadIndices );
-        textIndices[ 0 + IndexOffset ] = 0 + VertexOffset;
-        textIndices[ 1 + IndexOffset ] = 2 + VertexOffset;
-        textIndices[ 2 + IndexOffset ] = 1 + VertexOffset;
-
-        textIndices[ 3 + IndexOffset ] = 1 + VertexOffset;
-        textIndices[ 4 + IndexOffset ] = 2 + VertexOffset;
-        textIndices[ 5 + IndexOffset ] = 3 + VertexOffset;
-        ++textCol;
-    }
-
+    RenderBackend::Geometry *geo = Scene::GeometryBuilder::allocTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite);
+    
     UiVertexCache vertexCache;
-    for ( ui32 i = 0; i < NumTextVerts; ++i ) {
-        vertexCache.add( vertices[ i ] );
-    }
-    delete[] vertices;
-
     UiIndexCache indexCache;
-    for ( ui32 i = 0; i < NumQuadIndices * m_text.size(); ++i ) {
-        indexCache.add( textIndices[ i ] );
-    }
-
-    Material *mat( Scene::MaterialBuilder::createBuildinMaterial( VertexType::RenderVertex) );
-
-    // setup the texture
-    mat->m_numTextures = 1;
-    mat->m_textures = new Texture*[ 1 ];
-    mat->m_textures[ 0 ] = new Texture;
-    mat->m_textures[ 0 ]->m_textureName = "buildin_arial";
-    mat->m_textures[ 0 ]->m_loc = IO::Uri( "file://assets/Textures/Fonts/buildin_arial.bmp" );
 
     UiRenderCmd *cmd( new UiRenderCmd );
     cmd->m_vc = vertexCache;
     cmd->m_ic = indexCache;
-    cmd->m_mat = mat;
+//    cmd->m_mat = mat;
     renderCmdCache.add( cmd );
 }
 

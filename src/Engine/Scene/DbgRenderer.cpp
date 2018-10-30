@@ -189,8 +189,8 @@ void DbgRenderer::renderAABB( const glm::mat4 &transform, const Collision::TAABB
     geo->m_model = transform;
     geo->m_numPrimGroups = 1;
     
-    geo->m_pPrimGroups = new PrimitiveGroup[ 1 ];
-    geo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, NumIndices, PrimitiveType::LineList, 0 );
+    geo->m_primGroups = new PrimitiveGroup[ 1 ];
+    geo->m_primGroups[ 0 ].init( IndexType::UnsignedShort, NumIndices, PrimitiveType::LineList, 0 );
 
     // setup material
     geo->m_material = MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );

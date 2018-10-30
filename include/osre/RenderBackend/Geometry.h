@@ -38,7 +38,7 @@ struct OSRE_EXPORT Geometry {
     IndexType       m_indextype;
     BufferData     *m_ib;
     ui32            m_numPrimGroups;
-    PrimitiveGroup *m_pPrimGroups;
+    PrimitiveGroup *m_primGroups;
     ui32            m_id;
 
     static Geometry *create( ui32 numGeo );

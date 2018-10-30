@@ -603,7 +603,7 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
 
             // register primitive groups to render
             for (ui32 i = 0; i < geo->m_numPrimGroups; ++i) {
-                const ui32 primIdx( m_oglBackend->addPrimitiveGroup( &geo->m_pPrimGroups[ i ]) );
+                const ui32 primIdx( m_oglBackend->addPrimitiveGroup( &geo->m_primGroups[ i ]) );
                 primGroups.add( primIdx );
             }
 

@@ -224,11 +224,11 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     geo->m_ib->copyFrom( &indexArray[ 0 ], geo->m_ib->m_size );
 
     geo->m_numPrimGroups = 1;
-    geo->m_pPrimGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
-    geo->m_pPrimGroups[ 0 ].m_indexType = IndexType::UnsignedInt;
-    geo->m_pPrimGroups[ 0 ].m_numIndices = indexArray.size();
-    geo->m_pPrimGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-    geo->m_pPrimGroups[ 0 ].m_startIndex = 0;
+    geo->m_primGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
+    geo->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedInt;
+    geo->m_primGroups[ 0 ].m_numIndices = indexArray.size();
+    geo->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
+    geo->m_primGroups[ 0 ].m_startIndex = 0;
 
     geo->m_material = m_matArray[matIdx];
     

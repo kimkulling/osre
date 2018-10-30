@@ -40,6 +40,7 @@ namespace OSRE {
 namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Scene;
 
 class PrimTypeRenderTest : public AbstractRenderTest {
     static const ui32 NumPoints = 3;
@@ -96,10 +97,10 @@ public:
 
         static ui32 NumGeo( 2 );
 
-        Geometry *ptGeo = Scene::GeometryBuilder::allocPoints( VertexType::ColorVertex, BufferAccessType::ReadOnly, NumPoints, points, col );
+        Geometry *ptGeo = GeometryBuilder::allocPoints( VertexType::ColorVertex, BufferAccessType::ReadOnly, NumPoints, points, col );
         rb->attachGeo( ptGeo, 0 );
-        Geometry *lineGeo = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, 1 );
-        lineGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly );
+        Geometry *lineGeo = GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, 1 );
+        lineGeo->m_vb = GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly );
         lineGeo->m_indextype = IndexType::UnsignedShort;
         ui32 size = sizeof( GLushort ) * NumIndices;
         lineGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
@@ -107,11 +108,11 @@ public:
 
         // setup primitives
         lineGeo->m_numPrimGroups = 1;
-        lineGeo->m_pPrimGroups = new PrimitiveGroup[ lineGeo->m_numPrimGroups ];
-        lineGeo->m_pPrimGroups[ 0 ].init( IndexType::UnsignedShort, 2*3, PrimitiveType::LineList, 0 );
+        lineGeo->m_primGroups = new PrimitiveGroup[ lineGeo->m_numPrimGroups ];
+        lineGeo->m_primGroups[ 0 ].init( IndexType::UnsignedShort, 2*3, PrimitiveType::LineList, 0 );
         
         // setup material
-        Material *mat = Scene::MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
+        Material *mat = MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
         lineGeo->m_material = mat;
         rb->attachGeo( lineGeo, 0 );
 

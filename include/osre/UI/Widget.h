@@ -41,9 +41,8 @@ namespace UI {
 
 class Screen;
 
-// Flags
+/// @brief  Behavior-flags for the widgets
 static const ui32 WidgetResizable = 1;
-
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -51,6 +50,7 @@ static const ui32 WidgetResizable = 1;
 ///	@brief  
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT Style {
+	///	This enum descripes the type of Ui-element.
     enum class ColorTable {
         FGColorPanel = 0,
         BGColorPanel,
@@ -105,9 +105,8 @@ public:
     static Style &getCurrentStyle();
     static void setStyle( const Style &newStyle );
 
-private:
-    StyleProvider();
-    ~StyleProvider();
+    StyleProvider() = delete;
+    ~StyleProvider() = delete;
 
 private:
     static StyleProvider *s_instance;
@@ -145,8 +144,8 @@ struct UiProperty {
     CPPCore::Variant m_data;
 };
 
-using UiVertexCache = RenderBackend::TVertexCache<RenderBackend::RenderVert>;
-using UiIndexCache = RenderBackend::TIndexCache<ui16>;
+using RenderBackend::UiVertexCache;
+using RenderBackend::UiIndexCache;
 
 struct UiRenderCmd {
     UiVertexCache            m_vc;  ///< Will store all vertices

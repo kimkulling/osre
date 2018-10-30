@@ -385,8 +385,6 @@ enum class ShaderType : ui32 {
 static const ui32 MaxShaderTypes = static_cast<ui32>( ShaderType::NumShaderTypes );
 
 ///	@brief
-
-///	@brief
 enum class MaterialColorType : ui32 {
     Mat_Diffuse = 0,            ///<
     Mat_Specular,               ///<
@@ -420,7 +418,6 @@ struct OSRE_EXPORT Material {
     OSRE_NON_COPYABLE( Material )
 };
 
-///	@brief
 ///	@brief
 struct OSRE_EXPORT GeoInstanceData {
     BufferData *m_data;
@@ -485,6 +482,11 @@ struct OSRE_EXPORT Viewport {
 	OSRE_NON_COPYABLE( Viewport )
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  This template class is used to store vertex data in a cache.
+//-------------------------------------------------------------------------------------------------
 template<class T>
 struct TVertexCache {
     using CacheType = ::CPPCore::TArray<T>;
@@ -516,6 +518,13 @@ struct TVertexCache {
         m_cache.reserve(m_cache.size() + newSize);
     }
 
+    void add(T *vertices, ui32 numItems) {
+        if (nullptr == vertices || 0 == numItems) {
+            return;
+        }
+        m_cache.add(vertices, numItems);
+    }
+
     void add( const T &vertex ) {
         m_cache.add( vertex );
     }
@@ -529,6 +538,11 @@ struct TVertexCache {
     }
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  This template class is used to store index data in a cache.
+//-------------------------------------------------------------------------------------------------
 template<class T>
 struct TIndexCache {
     using CacheType = ::CPPCore::TArray<T>;
@@ -556,8 +570,15 @@ struct TIndexCache {
         m_cache.reserve(m_cache.size() + newSize);
     }
 
-    void add( const T &vertex ) {
-        m_cache.add( vertex );
+    void add( const T &index ) {
+        m_cache.add(index);
+    }
+
+    void add(T *index, ui32 numItems) {
+        if (nullptr == index || 0 == numItems) {
+            return;
+        }
+        m_cache.add(index, numItems);
     }
 
     ui32 numIndices() const {
@@ -569,11 +590,12 @@ struct TIndexCache {
     }
 };
 
-///	@brief
+///	@brief  A render batch struct.
+/// Render batches are used to store cluster of similar render data, which can be rendered in one draw call.
 struct RenderBatch {
-    glm::mat4  m_model;
-    ui32       m_numGeo;
-    Geometry  *m_geoArray;
+    glm::mat4  m_model;     ///< The local model matrix.
+    ui32       m_numGeo;    ///< Number of geometries
+    Geometry  *m_geoArray;  ///< The geometry for the batch.
 
     RenderBatch();
     ~RenderBatch();
@@ -601,6 +623,9 @@ struct OSRE_EXPORT Light {
     Light();
     ~Light();
 };
+
+using UiVertexCache = RenderBackend::TVertexCache<RenderBackend::RenderVert>;
+using UiIndexCache = RenderBackend::TIndexCache<ui16>;
 
 } // Namespace RenderBackend
 } // Namespace OSRE
