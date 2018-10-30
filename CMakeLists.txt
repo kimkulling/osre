@@ -121,18 +121,20 @@ ADD_SUBDIRECTORY( 3dparty/jsoncpp-1.8.4 )
 
 # Include the doc component.
 #ADD_SUBDIRECTORY( Doc )
-#FIND_PACKAGE( doxygen )
-#IF ( DOXYGEN_FOUND )
-#    CONFIGURE_FILE( Doc/Doxygen/OSRE_dox_config.in Doc/Doxygen/Doxyfile @ONLY )
-#    ADD_CUSTOM_TARGET( doc ALL ${DOXYGEN_EXECUTABLE} Doc/Doxygen/Doxyfile
-#        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-#        COMMENT "Generating API documentation with Doxygen" VERBATIM
-#    )
-#ENDIF ( DOXYGEN_FOUND )
+FIND_PACKAGE( doxygen )
+IF ( DOXYGEN_FOUND )
+    CONFIGURE_FILE( Doc/Doxygen/osre_doxygen.in Doc/Doxygen/osre_doxyfile @ONLY )
+    ADD_CUSTOM_TARGET( doc ALL ${DOXYGEN_EXECUTABLE} Doc/Doxygen/osre_doxyfile
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Generating OSRE-API documentation with Doxygen" VERBATIM
+    )
+ENDIF ( DOXYGEN_FOUND )
 
+set_target_properties(  doc   PROPERTIES FOLDER Documentation )
 set_target_properties(  cppcore          PROPERTIES FOLDER ThirdParty )
 set_target_properties(  cppcore_unittest PROPERTIES FOLDER ThirdParty )
 set_target_properties(  assimp           PROPERTIES FOLDER ThirdParty )
 if( WIN32 )
     set_target_properties(  OSREEditor       PROPERTIES FOLDER Editor )
 endif( WIN32 )
+
