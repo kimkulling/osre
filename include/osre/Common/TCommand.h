@@ -32,20 +32,18 @@ namespace App {
 template<class TParam, class TFunc>
 class TCommand {
 public:
-    explicit TCommand( TParam param, TFunc func );
+    explicit TCommand( TFunc func );
     ~TCommand();
     bool execute( TParam param );
 
 private:
-    TParam m_param;
     TFunc m_funcBinding;
 };
 
 template<class TParam, class TFunc>
 inline
-TCommand<TParam, TFunc>::TCommand(TParam param, TFunc func)
-: m_param( param )
-, m_funcBinding( func ) {
+TCommand<TParam, TFunc>::TCommand( TFunc func)
+: m_funcBinding( func ) {
     // empty
 }
 
