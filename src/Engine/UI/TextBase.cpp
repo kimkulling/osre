@@ -97,10 +97,11 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
     f32 y( static_cast<f32>( Widget::getRect().getY1() ) );
     WidgetCoordMapping::mapPosToWorld( x, y, x, y );
 
-    RenderBackend::Geometry *geo = Scene::GeometryBuilder::allocTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite);
-    
     UiVertexCache vertexCache;
     UiIndexCache indexCache;
+    Scene::GeometryBuilder::allocUiTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite, vertexCache, indexCache);
+    //RenderBackend::Geometry *geo = Scene::GeometryBuilder::allocTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite);
+    
 
     UiRenderCmd *cmd( new UiRenderCmd );
     cmd->m_vc = vertexCache;

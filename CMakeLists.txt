@@ -118,9 +118,7 @@ ADD_SUBDIRECTORY( 3dparty/soil )
 ADD_SUBDIRECTORY( 3dparty/assimp/ )
 ADD_SUBDIRECTORY( 3dparty/jsoncpp-1.8.4 )
 
-
 # Include the doc component.
-#ADD_SUBDIRECTORY( Doc )
 FIND_PACKAGE( doxygen )
 IF ( DOXYGEN_FOUND )
     CONFIGURE_FILE( Doc/Doxygen/osre_doxygen.in Doc/Doxygen/osre_doxyfile @ONLY )
