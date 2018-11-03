@@ -28,7 +28,7 @@ install:
 # Make compiler command line tools available
 - ps: Start-FileDownload 'https://www.libsdl.org/release/SDL2-devel-2.0.5-VC.zip'
 - ps: 7z x SDL2-devel-2.0.5-VC.zip
-- call c:\projects\osre\scripts\appveyor\compiler_setup.bat
+#- call c:\projects\osre\scripts\appveyor\compiler_setup.bat
 
 before_build:
 - call c:\projects\osre\scripts\appveyor\setup_repo.bat
