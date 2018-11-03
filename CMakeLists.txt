@@ -39,6 +39,7 @@ INCLUDE_DIRECTORIES(
     /usr/include/
 	src/
 	$ENV{SDL_PATH}/include
+	SDL2-devel-2.0.5-VC.zip/include
 )
 
 link_directories(
