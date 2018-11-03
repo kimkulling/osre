@@ -23,6 +23,7 @@ configuration: Release
 
 init:
 - if "%platform%" EQU "x64" ( for %%a in (2008 2010 MinGW) do ( if "%Configuration%"=="%%a" (echo "Skipping unsupported configuration" && exit /b 1 ) ) )
+- choco install doxygen.portable
 
 install:
 # Make compiler command line tools available
@@ -33,7 +34,6 @@ install:
 - if "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2017" set CMAKE_GENERATOR_NAME=Visual Studio 15 2017
 - if "%platform%"=="x64" set CMAKE_GENERATOR_NAME=%CMAKE_GENERATOR_NAME% Win64
 - cmake %CMAKE_DEFINES% -G "%CMAKE_GENERATOR_NAME%"
-- choco install doxygen.portable
 
 before_build:
 - call c:\projects\osre\scripts\appveyor\setup_repo.bat
