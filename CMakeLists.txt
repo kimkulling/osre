@@ -120,9 +120,8 @@ ADD_SUBDIRECTORY( 3dparty/assimp/ )
 ADD_SUBDIRECTORY( 3dparty/jsoncpp-1.8.4 )
 
 
-# Include the doc component.
-#ADD_SUBDIRECTORY( Doc )
-FIND_PACKAGE( doxygen )
+# Include the doc component
+FIND_PACKAGE( Doxygen REQUIRED dot OPTIONAL_COMPONENTS mscgen dia )
 IF ( DOXYGEN_FOUND )
     CONFIGURE_FILE( doc/Doxygen/osre_doxygen.in doc/Doxygen/osre_doxyfile @ONLY )
     ADD_CUSTOM_TARGET( doc ALL ${DOXYGEN_EXECUTABLE} doc/Doxygen/osre_doxyfile
