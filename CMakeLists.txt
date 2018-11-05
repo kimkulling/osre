@@ -124,8 +124,8 @@ ADD_SUBDIRECTORY( 3dparty/jsoncpp-1.8.4 )
 #ADD_SUBDIRECTORY( Doc )
 FIND_PACKAGE( doxygen )
 IF ( DOXYGEN_FOUND )
-    CONFIGURE_FILE( Doc/Doxygen/osre_doxygen.in Doc/Doxygen/osre_doxyfile @ONLY )
-    ADD_CUSTOM_TARGET( doc ALL ${DOXYGEN_EXECUTABLE} Doc/Doxygen/osre_doxyfile
+    CONFIGURE_FILE( doc/Doxygen/osre_doxygen.in doc/Doxygen/osre_doxyfile @ONLY )
+    ADD_CUSTOM_TARGET( doc ALL ${DOXYGEN_EXECUTABLE} doc/Doxygen/osre_doxyfile
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Generating OSRE-API documentation with Doxygen" VERBATIM
     )
