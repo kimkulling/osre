@@ -121,13 +121,15 @@ ADD_SUBDIRECTORY( 3dparty/jsoncpp-1.8.4 )
 
 
 # Include the doc component
-FIND_PACKAGE( Doxygen REQUIRED dot OPTIONAL_COMPONENTS mscgen dia )
+find_package(Doxygen)
 IF ( DOXYGEN_FOUND )
     CONFIGURE_FILE( doc/Doxygen/osre_doxygen.in doc/Doxygen/osre_doxyfile @ONLY )
     ADD_CUSTOM_TARGET( doc ALL ${DOXYGEN_EXECUTABLE} doc/Doxygen/osre_doxyfile
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Generating OSRE-API documentation with Doxygen" VERBATIM
     )
+else (DOXYGEN_FOUND)
+    message("Doxygen need to be installed to generate the doxygen documentation")
 ENDIF ( DOXYGEN_FOUND )
 
 set_target_properties(  doc   PROPERTIES FOLDER Documentation )
