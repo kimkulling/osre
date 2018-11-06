@@ -37,6 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #include <string>
+#include <sstream>
 #include <string.h>
 #include <stdio.h>
 #include <cstddef>
