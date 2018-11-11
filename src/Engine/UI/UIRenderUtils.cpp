@@ -43,7 +43,7 @@ UIRenderUtils::~UIRenderUtils() {
     // empty
 }
 
-void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, const Style &style, i32 stackIndex,
+void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, const Style &style,
         UiVertexCache &vertexCache, UiIndexCache &indexCache ) {
 
     f32 x1, y1, x2, y2;

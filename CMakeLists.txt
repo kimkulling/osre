@@ -116,9 +116,8 @@ ADD_SUBDIRECTORY( 3dparty/cppcore/build )
 ADD_SUBDIRECTORY( 3dparty/zlib )
 ADD_SUBDIRECTORY( 3dparty/unzip )
 ADD_SUBDIRECTORY( 3dparty/soil )
-ADD_SUBDIRECTORY( 3dparty/assimp/ )
+ADD_SUBDIRECTORY( 3dparty/assimp )
 ADD_SUBDIRECTORY( 3dparty/jsoncpp-1.8.4 )
-
 
 # Include the doc component
 find_package(Doxygen)
@@ -132,10 +131,9 @@ else (DOXYGEN_FOUND)
     message("Doxygen need to be installed to generate the doxygen documentation")
 ENDIF ( DOXYGEN_FOUND )
 
-set_target_properties(  doc   PROPERTIES FOLDER Documentation )
+set_target_properties(  doc              PROPERTIES FOLDER Documentation )
 set_target_properties(  cppcore          PROPERTIES FOLDER ThirdParty )
 set_target_properties(  cppcore_unittest PROPERTIES FOLDER ThirdParty )
-set_target_properties(  assimp           PROPERTIES FOLDER ThirdParty )
 if( WIN32 )
     set_target_properties(  OSREEditor       PROPERTIES FOLDER Editor )
 endif( WIN32 )

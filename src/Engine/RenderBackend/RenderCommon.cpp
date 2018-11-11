@@ -103,6 +103,7 @@ RenderVert::RenderVert()
 RenderVert::~RenderVert() {
     // empty
 }
+
 bool RenderVert::operator == ( const RenderVert &rhs ) const {
     return ( position == rhs.position && normal == rhs.normal && color0 == rhs.color0 && tex0 == rhs.tex0 );
 }

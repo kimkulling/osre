@@ -105,7 +105,6 @@ struct OSRE_EXPORT AttachViewEventData : public Common::EventData {
     }
 };
 
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -121,6 +120,11 @@ struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
     Frame *m_frame;
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT ResizeEventData : Common::EventData {
     ResizeEventData( ui32 x, ui32 y, ui32 w, ui32 h )
     : EventData( OnResizeEvent, nullptr )
@@ -214,18 +218,7 @@ protected:
     void commitNextFrame();
 
 private:
-    struct MatrixBuffer {
-        glm::mat4 m_model;
-        glm::mat4 m_view;
-        glm::mat4 m_proj;
-
-        MatrixBuffer()
-        : m_model(1.0f)
-        , m_view(1.0f)
-        , m_proj(1.0f) {
-            // empty
-        }
-    } m_matrixBuffer;
+    MatrixBuffer m_matrixBuffer;
     Common::TObjPtr<Threading::SystemTask> m_renderTaskPtr;
     const Properties::Settings *m_settings;
     bool m_ownsSettingsConfig;

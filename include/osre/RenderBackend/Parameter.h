@@ -160,6 +160,19 @@ struct GeometryPackage {
     }
 };
 
+struct MatrixBuffer {
+    glm::mat4 m_model;
+    glm::mat4 m_view;
+    glm::mat4 m_proj;
+
+    MatrixBuffer()
+    : m_model(1.0f)
+    , m_view(1.0f)
+    , m_proj(1.0f) {
+        // empty
+    }
+};
+
 struct Frame {
     ui32              m_numVars;
     UniformVar      **m_vars;
