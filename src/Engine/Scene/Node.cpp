@@ -256,7 +256,7 @@ void Node::onUpdate(Time dt) {
     }
 }
 
-void Node::onDraw( RenderBackendService *renderBackendSrv ) {
+void Node::onDraw( RenderBackendService* ) {
     // empty
 }
 
