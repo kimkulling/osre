@@ -597,6 +597,7 @@ struct RenderBatch {
     OSRE_NON_COPYABLE( RenderBatch )
 };
 
+///	@brief
 enum class LightType {
     Directional,
     Point,
