@@ -11,12 +11,14 @@ its own source folder containing the cpp-files with the private header files.
 <br>
 The public interface to a module are located in the folder:
 
-include/<ModuleName>
+include/ModuleName
 
 All public interfaces shall be used to access the API of the modules, the privates headers
 shall not be visible at all.
 
 @section common The Common Module
+
+The common-module provide a couple of widely-used services and classes. The base-object for all derived objects can be found here.
 
 @section debug The Debugger-Module
 

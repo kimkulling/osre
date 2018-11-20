@@ -34,7 +34,7 @@ namespace IO {
 namespace Common {
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup    Engine
+///	@ingroup    Common.Engine
 ///
 ///	@brief  The abstract class describes the en- and decoding algorithm for a given file format.
 //-------------------------------------------------------------------------------------------------
