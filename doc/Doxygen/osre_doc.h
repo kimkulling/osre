@@ -17,14 +17,18 @@ All public interfaces shall be used to access the API of the modules, the privat
 shall not be visible at all.
 
 @section common The Common Module
-
-The common-module provide a couple of widely-used services and classes. The base-object for all derived objects can be found here.
+The common-module provide a couple of widely-used services and classes. The base-object for all 
+derived objects can be found here.
 
 @section debug The Debugger-Module
+The DEbugging-module provided some nice assert-implementations, which will show you a typical 
+assertion-behavior plus some nice log for the OSRE-environment.
 
 @section props The Property-Module
 
 @section threads The Threading-Module
+The provide a multi-threaded render-environment the OSRE provides the concept of tasks. A task is 
+just an active object, running in its own thread and has a async-event-queue to enqueue events onto it.
 
 @section assets The Assets-Module
 
