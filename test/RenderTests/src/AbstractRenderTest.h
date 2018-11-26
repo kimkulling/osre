@@ -27,6 +27,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 // Forward declarations
+namespace Platform {
+    class AbstractWindow;
+}
+
 namespace RenderBackend {
     class RenderBackendService;
     struct Material;
@@ -68,7 +72,6 @@ public:
     ///	@return	true if destroying was successful, false if not.
     virtual void teardown( RenderBackend::RenderBackendService *rbSrv );
 
-public:
     ///	@brief	Returns the name of the render test.
     ///	@return	The name of the render test.
     const String &getTestName() const;
@@ -79,6 +82,10 @@ public:
     /// @param  FsSrc       [in] The fragment-shader-code.
     /// @return The new created material.
     RenderBackend::Material *createMaterial( const String &matName, const String &VsSrc, const String &FsSrc );
+
+    /// @brief  Will return the active window.
+    /// @return A pointer sowing to the active window.
+    Platform::AbstractWindow *getWindow() const;
 
 protected:
     /// @brief  The class constructor.
@@ -107,6 +114,7 @@ protected:
 
 private:
     const String m_renderTestName;
+    Platform::AbstractWindow *m_window;
 };
 
 } // Namespace RenderTest

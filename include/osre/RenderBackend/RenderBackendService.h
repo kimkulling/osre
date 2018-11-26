@@ -175,26 +175,31 @@ public:
     /// @param  eventData   [in] The event data.
     void sendEvent( const Common::Event *ev, const Common::EventData *eventData );
 
+    bool beginPassRecording();
+    
+    bool beginGeometryRecording();
+
     void setMatrix(MatrixType type, const glm::mat4 &m );
+    
     void setMatrix( const String &name, const glm::mat4 &matrix );
 
     void setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray );
-
-    void pushTransform( const glm::mat4 &matrix );
-    void popTransform();
-    const glm::mat4 &getTopWorldTransform() const;
 
     void attachGeo( Geometry *geo, ui32 numInstances );
 
     void attachGeo( const CPPCore::TArray<Geometry*> &geoArray, ui32 numInstances );
 
-    void attachGeoInstance( GeoInstanceData *instanceData );
-
-    void attachGeoInstance( const CPPCore::TArray<GeoInstanceData*> &instanceData );
-
     void attachGeoUpdate( Geometry *geo );
 
     void attachGeoUpdate( const CPPCore::TArray<Geometry*> &geoArray );
+
+    void attachGeoInstance(GeoInstanceData *instanceData);
+
+    void attachGeoInstance(const CPPCore::TArray<GeoInstanceData*> &instanceData);
+
+    bool endGeometryRecording();
+
+    bool endPassRecording();
 
     void attachView( TransformMatrixBlock &transform );
 
@@ -224,12 +229,23 @@ private:
     bool m_ownsSettingsConfig;
     Frame m_nextFrame;
     UI::Widget *m_screen;
+
+    struct GeoBatch {
+        CPPCore::TArray<UniformVar*> mUniforms;
+        CPPCore::TArray<Geometry*> mGeoArray;
+    };
+
+    struct PassData {
+        CPPCore::TArray<GeoBatch*> m_geoBatches;
+    };
+    CPPCore::TArray<PassData*> m_passes;
+    PassData *m_currentPass;
+
     CPPCore::TArray<NewGeoEntry*> m_newGeo;
     CPPCore::TArray<Geometry*> m_geoUpdates;
     CPPCore::TArray<GeoInstanceData*> m_newInstances;
     CPPCore::THashMap<ui32, UniformVar*> m_variables;
     CPPCore::TArray<UniformVar*> m_uniformUpdates;
-    CPPCore::TArray<glm::mat4> m_transformStack;
 };
 
 inline 

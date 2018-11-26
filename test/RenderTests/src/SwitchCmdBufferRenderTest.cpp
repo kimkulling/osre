@@ -91,8 +91,6 @@ const String FsSrc =
 class SwitchCmdBufferRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
     static const ui32 NumPts = 1000;
-    //glm::vec3 m_col[ NumPts ];
-    //glm::vec3 m_pos[ NumPts ];
     Geometry *m_ptGeo;
     ParticleGenerator *m_particeGen;
 

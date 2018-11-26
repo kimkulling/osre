@@ -162,6 +162,8 @@ bool RenderTestSuite::setup( const String &API ) {
 #endif 
     }
 
+
+
     return true;
 }
 
@@ -281,6 +283,7 @@ bool RenderTestSuite::update() {
             if( !m_pActiveRenderTest->render( m_pRenderBackendServer ) ) {
                 addFailureLog( "Error : Cannot render test " + m_pActiveRenderTest->getTestName( ) + "\n" );
             }
+
             m_pRenderBackendServer->update();
 
             m_pActiveRenderTest->teardown( m_pRenderBackendServer );

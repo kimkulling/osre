@@ -63,7 +63,7 @@ namespace App {
         
 class MouseEventListener;
 
-/// @brief  Describes the render API
+/// @brief  Describes the requested render API.
 enum class RenderBackendType {
     OpenGLRenderBackend = 0,    ///< OpenGL render API.
     DX11Backend,                ///< DX11 render API.
