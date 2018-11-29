@@ -326,6 +326,10 @@ void RenderBackendService::attachGeoInstance( GeoInstanceData *instanceData ) {
 }
 
 void RenderBackendService::attachGeoInstance( const CPPCore::TArray<GeoInstanceData*> &instanceData ) {
+    if (instanceData.isEmpty() ) {
+        return;
+    }
+
     m_newInstances.add( &instanceData[ 0 ], instanceData.size() );
 }
 
