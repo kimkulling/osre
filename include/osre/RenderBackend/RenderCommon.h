@@ -169,7 +169,7 @@ struct OSRE_EXPORT ColorVert {
     static const String *getAttributes();
 };
 
-///	@brief  This struct declares a render vertex for textured geometry
+///	@brief  This struct declares a render vertex for textured geometry.
 struct OSRE_EXPORT RenderVert {
     glm::vec3 position; ///< The position ( x|y|z )
     glm::vec3 normal;   ///< The normal vector ( x|y|z )
@@ -182,7 +182,8 @@ struct OSRE_EXPORT RenderVert {
     bool operator != ( const RenderVert &rhs ) const;
 
     /// @brief  Returns the number of attributes.
-    static ui32          getNumAttributes(); 
+    static ui32 getNumAttributes();
+
     /// @brief  Returns the attribute array.
     static const String *getAttributes();
 };
@@ -413,7 +414,7 @@ struct OSRE_EXPORT Material {
     Material( const String &name );
     Material( const String &name, MaterialType type );
     ~Material();
-    void createShader(ShaderSourceArray &shaders );
+    void createShader(ShaderSourceArray &shaders);
 
     OSRE_NON_COPYABLE( Material )
 };
@@ -441,12 +442,6 @@ struct OSRE_EXPORT TransformState {
     void toMatrix(glm::mat4 &m) const;
     bool operator == ( const TransformState &rhs ) const;
     bool operator != ( const TransformState &rhs ) const;
-};
-
-struct OSRE_EXPORT UniformTransformBuffer {
-    glm::mat4 m_projection;
-    glm::mat4 m_model;
-    glm::mat4 m_view;
 };
 
 ///	@brief
@@ -603,6 +598,7 @@ struct RenderBatch {
     OSRE_NON_COPYABLE( RenderBatch )
 };
 
+///	@brief
 enum class LightType {
     Directional,
     Point,

@@ -121,6 +121,13 @@ SET( debugging_src
 )
 
 #==============================================================================
+# Documentation
+#==============================================================================
+SET( doc_inc
+    ${CMAKE_HOME_DIRECTORY}/doc/Doxygen/osre_doc.h
+)
+
+#==============================================================================
 # IO
 #==============================================================================
 SET( io_src
@@ -442,8 +449,6 @@ SOURCE_GROUP( Components          FILES ${components_src} )
 SOURCE_GROUP( Collision           FILES ${collision_src} )
 SOURCE_GROUP( Debugging           FILES ${debugging_src} )
 SOURCE_GROUP( Debugging\\Win32    FILES ${debugging_windows_src} )
-SOURCE_GROUP( System              FILES ${system_src} )
-SOURCE_GROUP( Utils               FILES ${utils_src} )
 SOURCE_GROUP( IO                  FILES ${io_src} )
 SOURCE_GROUP( Math                FILES ${math_src} )
 SOURCE_GROUP( Memory              FILES ${memory_src} )
@@ -483,6 +488,8 @@ SOURCE_GROUP( Include\\Scripting     FILES ${scripting_mono_inc} )
 SOURCE_GROUP( Include\\Thread        FILES ${threading_inc} )
 SOURCE_GROUP( Include\\UI            FILES ${ui_inc} )
 
+SOURCE_GROUP( Documentation          FILES ${doc_inc} )
+
 add_definitions( -D${USE_PLATFORM} )
 
 #==============================================================================
@@ -493,6 +500,7 @@ ADD_LIBRARY( osre SHARED
     ${app_inc}
     ${assets_inc}
     ${debugging_inc}
+    ${doc_inc}
     ${common_inc}
     ${common_src}
     ${collision_inc}

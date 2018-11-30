@@ -77,8 +77,7 @@ void Panel::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService* ) 
     const Rect2ui &rect( getRect() );
     UiVertexCache vertexCache;
     UiIndexCache indexCache;
-    UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle, getStackIndex(), 
-            vertexCache, indexCache );
+    UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle, vertexCache, indexCache );
 
     UiRenderCmd *cmd( new UiRenderCmd );
     cmd->m_vc = vertexCache;

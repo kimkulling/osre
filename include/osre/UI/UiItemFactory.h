@@ -40,7 +40,7 @@ class Widget;
 ///
 ///	@brief  
 //-------------------------------------------------------------------------------------------------
-class UiItemFactory {
+class OSRE_EXPORT UiItemFactory {
 public:
     static UiItemFactory *createInstance( Platform::AbstractWindow *surface );
     static void destroyInstance();

@@ -28,6 +28,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 #include <osre/Scene/GeometryBuilder.h>
+#include <osre/UI/Screen.h>
+#include <osre/UI/UiItemFactory.h>
+#include <osre/UI/TextBase.h>
+#include <osre/UI/UiRenderer.h>
 
 #include <GL/gl.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -37,15 +41,21 @@ namespace OSRE {
 namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::UI;
 
 static const String Tag = "UiRenderTest";
 
 class UiRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
+    Screen *m_screen;
+    UiRenderer *m_uiRenderer;
+
 
 public:
     UiRenderTest()
-        : AbstractRenderTest( "rendertest/UiRenderTest" ) {
+    : AbstractRenderTest( "rendertest/UiRenderTest" )
+    , m_screen( nullptr )
+    , m_uiRenderer( nullptr ) {
         // empty
     }
 
@@ -55,11 +65,25 @@ public:
 
     bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
-        Geometry *geo = Scene::GeometryBuilder::allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-        rbSrv->attachGeo( geo, 0 );
-        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
-        m_transformMatrix.update();
-        rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
+        UiItemFactory::createInstance(getWindow());
+        m_uiRenderer = new UiRenderer;
+        m_screen = (Screen*)UiItemFactory::getInstance()->create(WidgetType::Screen, getTestName(), nullptr);
+        m_screen->setSurface(getWindow());
+
+        TextBase *text = (TextBase*) UiItemFactory::getInstance()->create(WidgetType::Text, getTestName() + ".test", m_screen);
+        text->setLabel("Huhu");
+
+        return true;
+    }
+
+    bool onRender( RenderBackendService *rbSrv ) override {
+        m_uiRenderer->render(m_screen, rbSrv);
+
+        return true;
+    }
+
+    bool onDestroy(RenderBackendService *rbSrv) override {
+        delete m_uiRenderer;
 
         return true;
     }

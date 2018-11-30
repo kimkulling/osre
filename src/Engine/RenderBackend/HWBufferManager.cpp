@@ -99,7 +99,7 @@ static c8 *getAccessShortCut( BufferAccessType access ) {
     return nullptr;
 }
 
-void getShortcut( const VertexLayout &vertexLayout, BufferAccessType access, ui32 &hash ) {
+void getBufferKey( const VertexLayout &vertexLayout, BufferAccessType access, ui32 &hash ) {
     String key;
     for (ui32 i = 0; i < vertexLayout.numComponents(); ++i) {
         VertComponent &vc = vertexLayout.getAt( i );
@@ -109,11 +109,12 @@ void getShortcut( const VertexLayout &vertexLayout, BufferAccessType access, ui3
     hash = StringUtils::hashName( key );
 
 }
+
 Buffer *HWBufferManager::createBuffer( const VertexLayout &vertexLayout, BufferAccessType access ) {
     Buffer *buffer = new Buffer();
     
-    ui32 hash;
-    getShortcut( vertexLayout, access, hash );
+    ui32 hash( 0 );
+    getBufferKey( vertexLayout, access, hash );
     m_bufferDict.insert(hash, buffer );
     ui32 id = m_buffers.size();
     m_buffers.add( buffer );
@@ -127,8 +128,8 @@ Buffer *HWBufferManager::getBufferByDesc( VertexLayout vertexLayout, BufferAcces
         return nullptr;
     }
     
-    ui32 hash;
-    getShortcut( vertexLayout, access, hash );
+    ui32 hash(0);
+    getBufferKey( vertexLayout, access, hash );
     Buffer *buffer( nullptr );
     if (m_bufferDict.hasKey( hash )) {
         m_bufferDict.getValue( hash, buffer );

@@ -39,6 +39,7 @@ INCLUDE_DIRECTORIES(
     /usr/include/
 	src/
 	$ENV{SDL_PATH}/include
+	SDL2-devel-2.0.5-VC.zip/include
 )
 
 link_directories(
@@ -115,25 +116,24 @@ ADD_SUBDIRECTORY( 3dparty/cppcore/build )
 ADD_SUBDIRECTORY( 3dparty/zlib )
 ADD_SUBDIRECTORY( 3dparty/unzip )
 ADD_SUBDIRECTORY( 3dparty/soil )
-ADD_SUBDIRECTORY( 3dparty/assimp/ )
+ADD_SUBDIRECTORY( 3dparty/assimp )
 ADD_SUBDIRECTORY( 3dparty/jsoncpp-1.8.4 )
 
-
-# Include the doc component.
-#ADD_SUBDIRECTORY( Doc )
-FIND_PACKAGE( doxygen )
+# Include the doc component
+find_package(Doxygen)
 IF ( DOXYGEN_FOUND )
-    CONFIGURE_FILE( Doc/Doxygen/osre_doxygen.in Doc/Doxygen/osre_doxyfile @ONLY )
-    ADD_CUSTOM_TARGET( doc ALL ${DOXYGEN_EXECUTABLE} Doc/Doxygen/osre_doxyfile
+    CONFIGURE_FILE( doc/Doxygen/osre_doxygen.in doc/Doxygen/osre_doxyfile @ONLY )
+    ADD_CUSTOM_TARGET( doc ALL ${DOXYGEN_EXECUTABLE} doc/Doxygen/osre_doxyfile
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Generating OSRE-API documentation with Doxygen" VERBATIM
     )
+else (DOXYGEN_FOUND)
+    message("Doxygen need to be installed to generate the doxygen documentation")
 ENDIF ( DOXYGEN_FOUND )
 
-set_target_properties(  doc   PROPERTIES FOLDER Documentation )
+set_target_properties(  doc              PROPERTIES FOLDER Documentation )
 set_target_properties(  cppcore          PROPERTIES FOLDER ThirdParty )
 set_target_properties(  cppcore_unittest PROPERTIES FOLDER ThirdParty )
-set_target_properties(  assimp           PROPERTIES FOLDER ThirdParty )
 if( WIN32 )
     set_target_properties(  OSREEditor       PROPERTIES FOLDER Editor )
 endif( WIN32 )

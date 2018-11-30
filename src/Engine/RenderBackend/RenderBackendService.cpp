@@ -52,12 +52,13 @@ RenderBackendService::RenderBackendService()
 , m_ownsSettingsConfig( false )
 , m_nextFrame()
 , m_screen( nullptr )
+, m_passes()
+, m_currentPass(nullptr)
 , m_newGeo()
 , m_geoUpdates()
 , m_newInstances()
 , m_variables()
-, m_uniformUpdates()
-, m_transformStack() {
+, m_uniformUpdates() {
     // empty
 }
 
@@ -223,6 +224,26 @@ void RenderBackendService::sendEvent( const Event *ev, const EventData *eventDat
     }
 }
 
+bool RenderBackendService::beginPassRecording() {
+    if (nullptr != m_currentPass) {
+        osre_warn(Tag, "Pass recording already active.");
+        return false;
+    }
+
+    m_currentPass = new PassData;
+
+    return true;
+}
+
+bool RenderBackendService::beginGeometryRecording() {
+    if (nullptr != m_currentPass) {
+        osre_warn(Tag, "Pass recording not active.");
+        return false;
+    }
+
+    return true;
+}
+
 void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
     switch (type) {
         case MatrixType::Model:
@@ -266,26 +287,6 @@ void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const
     m_uniformUpdates.add( uniform );
 }
 
-void RenderBackendService::pushTransform( const glm::mat4 &matrix ) {
-    m_transformStack.add( matrix );
-}
-
-void RenderBackendService::popTransform() {
-    if ( m_transformStack.size() > 0 ) {
-        m_transformStack.removeBack();
-    }
-}
-
-static const glm::mat4 Error( 1 );
-
-const glm::mat4 &RenderBackendService::getTopWorldTransform() const {
-    if ( m_transformStack.isEmpty() ) {
-        return Error;
-    }
-
-    return m_transformStack.back();
-}
-
 void RenderBackendService::attachGeo( Geometry *geo, ui32 numInstances ) {
     if ( nullptr == geo ) {
         osre_debug( Tag, "Pointer to geometry is nullptr." );
@@ -325,7 +326,27 @@ void RenderBackendService::attachGeoInstance( GeoInstanceData *instanceData ) {
 }
 
 void RenderBackendService::attachGeoInstance( const CPPCore::TArray<GeoInstanceData*> &instanceData ) {
+    if (instanceData.isEmpty() ) {
+        return;
+    }
+
     m_newInstances.add( &instanceData[ 0 ], instanceData.size() );
+}
+
+bool RenderBackendService::endGeometryRecording() {
+    return true;
+}
+
+bool RenderBackendService::endPassRecording() {
+    if (nullptr != m_currentPass) {
+        return false;
+    }
+
+    m_passes.add(m_currentPass);
+    m_currentPass = nullptr;
+
+    return true;
+
 }
 
 void RenderBackendService::attachView( TransformMatrixBlock &transform ) {

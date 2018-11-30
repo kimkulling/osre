@@ -37,7 +37,8 @@ using namespace ::OSRE::RenderBackend;
 static const String Tag = "AbstractRenderTest";
 
 AbstractRenderTest::AbstractRenderTest( const String &renderTestName )
-: m_renderTestName( renderTestName ) {
+: m_renderTestName( renderTestName )
+, m_window( nullptr ) {
     // empty
 }
 
@@ -50,9 +51,9 @@ bool AbstractRenderTest::create( RenderBackendService *rbSrv ) {
     
     osre_info( m_renderTestName, "=> Creating test." );
     const String &name( getTestName() );
-    Platform::AbstractWindow *window = Platform::PlatformInterface::getInstance()->getRootWindow();
-    if (nullptr != window) {
-        window->setWindowsTitle( "Performing test " + name );
+    m_window = Platform::PlatformInterface::getInstance()->getRootWindow();
+    if (nullptr != m_window ) {
+        m_window->setWindowsTitle( "Performing test " + name );
     }
     
     return onCreate( rbSrv );
@@ -110,6 +111,10 @@ Material *AbstractRenderTest::createMaterial( const String &matName, const Strin
     mat->createShader(shArray);
 
     return mat;
+}
+
+Platform::AbstractWindow *AbstractRenderTest::getWindow() const {
+    return m_window;
 }
 
 } // Namespace RenderTest

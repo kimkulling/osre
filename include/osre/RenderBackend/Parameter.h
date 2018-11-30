@@ -65,11 +65,11 @@ struct OSRE_EXPORT UniformDataBlob {
 };
 
 struct OSRE_EXPORT UniformVar {
-    String         m_name;
-    ParameterType  m_type;
-    ui32           m_numItems;
+    String           m_name;
+    ParameterType    m_type;
+    ui32             m_numItems;
     UniformDataBlob  m_data;
-    UniformVar     *m_next;
+    UniformVar      *m_next;
 
     static ui32 getParamDataSize( ParameterType type, ui32 arraySize );
     static UniformVar *create( const String &name, ParameterType type, ui32 arraySize=1 );
@@ -80,82 +80,32 @@ private:
     ~UniformVar();
 };
 
-class UniformBuffer {
-public:
-    static UniformBuffer *create( ui32 size ) {
-        return new UniformBuffer( size );
-    }
-
-    static void destroy( UniformBuffer *buffer ) {
-        delete buffer;
-    }
-
-    ui32 read( ui32 size, uc8 *data ) {
-        if ( nullptr == data || 0 == size ) {
-            return 0;
-        }
-        if ( m_offset + size > m_size ) {
-            return 0;
-        }
-        ::memcpy(data, &m_data[m_offset], size );
-        m_offset += size;
-        
-        return size;
-    }
-
-    void write(ui32 size, uc8 *data) {
-        if (size + m_offset > m_size) {
-            return;
-        }
-
-        ::memcpy(&m_data[m_offset], data, size);
-        m_offset += size;
-    }
-
-    void reset() {
-        m_offset = 0;
-    }
-
-    bool setPos( ui32 pos ) {
-        if ( pos > m_size ) {
-            return false;
-        }
-        m_offset = pos;
-        
-        return true;
-    }
-
-    UniformBuffer( ui32 size) 
-    : m_size( size )
-    , m_offset( 0 )
-    , m_data( nullptr ) {
-        m_data = new uc8[size];
-    }
-    
-    ~UniformBuffer() {
-        m_size = 0;
-        delete[] m_data;
-        m_data = nullptr;
-    }
-
-    UniformBuffer(const UniformBuffer &) = delete;
-    UniformBuffer& operator = (const UniformBuffer &) = delete;
-
-private:
-    ui32 m_size;
-    ui32 m_offset;
-    uc8 *m_data;
-};
-
 struct GeometryPackage {
-    ui32       m_numInstances;
-    ui32       m_numNewGeo;
-    Geometry **m_newGeo;
+    ui32           m_numInstances;
+    ui32           m_numNewGeo;
+    Geometry     **m_newGeo;
 
     GeometryPackage()
     : m_numInstances( 0 )
     , m_numNewGeo( 0 )
     , m_newGeo( nullptr ) {
+        // empty
+    }
+
+    ~GeometryPackage() {
+        // empty
+    }
+};
+
+struct MatrixBuffer {
+    glm::mat4 m_model;
+    glm::mat4 m_view;
+    glm::mat4 m_proj;
+
+    MatrixBuffer()
+    : m_model(1.0f)
+    , m_view(1.0f)
+    , m_proj(1.0f) {
         // empty
     }
 };

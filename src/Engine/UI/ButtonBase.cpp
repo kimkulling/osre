@@ -136,14 +136,13 @@ ButtonBase *ButtonBase::createBaseButton( const String &name, const String &labe
     return button;
 }
 
-void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
+void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService* ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const Rect2ui &rect( getRect() );
 
     UiVertexCache vertexCache;
     UiIndexCache indexCache;
-    UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, getStackIndex(), 
-            vertexCache, indexCache );
+    UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, vertexCache, indexCache );
     UiRenderCmd *cmd( new UiRenderCmd );
     cmd->m_ic = indexCache;
     cmd->m_vc = vertexCache;

@@ -77,11 +77,6 @@ RenderBackend::FontBase *TextBase::getFont() const {
 
 static const ui32 NumQuadVert = 4;
 
-static ui32 getNumTextVerts( const String &text ) {
-    const ui32 NumTextVerts = NumQuadVert * text.size();
-    return NumTextVerts;
-}
-
 void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService * ) {
     if ( m_text.empty() ) {
         return;
@@ -95,12 +90,12 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
     const f32 z(-1.0f* static_cast<f32>( stackId ) );
     f32 x( static_cast<f32>( Widget::getRect().getX1() ) );
     f32 y( static_cast<f32>( Widget::getRect().getY1() ) );
-    WidgetCoordMapping::mapPosToWorld( x, y, x, y );
+    WidgetCoordMapping::mapPosToWorld( static_cast<ui32>(x), static_cast<ui32>(y), x, y );
 
-    RenderBackend::Geometry *geo = GeometryBuilder::allocTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite);
-    
     UiVertexCache vertexCache;
     UiIndexCache indexCache;
+    Scene::GeometryBuilder::allocUiTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite, vertexCache, indexCache);
+    
 
     UiRenderCmd *cmd( new UiRenderCmd );
     cmd->m_vc = vertexCache;
