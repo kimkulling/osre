@@ -105,8 +105,9 @@ public:
     static Style &getCurrentStyle();
     static void setStyle( const Style &newStyle );
 
-    StyleProvider() = delete;
-    ~StyleProvider() = delete;
+private:
+    StyleProvider();
+    ~StyleProvider();
 
 private:
     static StyleProvider *s_instance;
@@ -137,7 +138,7 @@ enum class WidgetType {
     Screen
 };
 
-using UIFunctor = Common::Functor<void, ui32, void *>;
+using UiFunctor = Common::Functor<void, ui32, void *>;
 
 struct UiProperty {
     String m_name;

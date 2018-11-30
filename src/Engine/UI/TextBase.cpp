@@ -97,7 +97,7 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
     f32 y( static_cast<f32>( Widget::getRect().getY1() ) );
     WidgetCoordMapping::mapPosToWorld( x, y, x, y );
 
-    RenderBackend::Geometry *geo = Scene::GeometryBuilder::allocTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite);
+    RenderBackend::Geometry *geo = GeometryBuilder::allocTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite);
     
     UiVertexCache vertexCache;
     UiIndexCache indexCache;
@@ -105,7 +105,7 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
     UiRenderCmd *cmd( new UiRenderCmd );
     cmd->m_vc = vertexCache;
     cmd->m_ic = indexCache;
-//    cmd->m_mat = mat;
+    cmd->m_mat = mat;
     renderCmdCache.add( cmd );
 }
 

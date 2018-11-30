@@ -63,7 +63,6 @@ SET( assets_src
 # Common
 #==============================================================================
 SET( common_inc
-	${HEADER_PATH}/Common/TCommand.h
     ${HEADER_PATH}/Common/AbstractCodec.h
     ${HEADER_PATH}/Common/AbstractEventHandler.h
     ${HEADER_PATH}/Common/AbstractProcessor.h
