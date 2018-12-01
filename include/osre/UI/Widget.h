@@ -116,19 +116,47 @@ private:
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief  This static helper struct encapsulate the coordinate transformation from screen 
+/// coordinates from the current viewport to the world-coordinates of the scene and back. To use it 
+/// you have to reinitialize in on every resize event from the viewport.
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT WidgetCoordMapping {
-    static void init( const Rect2ui &dim );
+    /// @brief  Will initialize the translation for ui-coordinates.
+    /// @param  viewport    [in] The dimension of the current viewport.
+    static void init( const Rect2ui &viewport );
+
+    /// @brief  Will return the current dimension of the viewport.
+    /// @return The dimension of the current viewport.
     static const Rect2ui &getDimension();
+
+    /// @brief  Will map an absolution screen position to the world coordinates of the scene.  
+    /// @param  x       [in] The x-coordinate in the viewport.
+    /// @param  y       [in] The y-coordinate in the viewport.
+    /// @param  mappedX [out] The mapped x-coordinate in the scene.
+    /// @param  mappedY [out] The mapped y-coordinate in the scene.
     static void mapPosToWorld( ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
+
+    /// @brief  Will map screen coordinates as an array to the world coordinates of the scene.  
+    /// @param  x           [in] The x-coordinate array in the viewport.
+    /// @param  y           [in] The y-coordinate array in the viewport.
+    /// @param  numPoints   [in] The number of points in the array.
+    /// @param  mappedX     [out] The mapped array x-coordinate in the scene.
+    /// @param  mappedY     [out] The mapped array y-coordinate in the scene.
     static void mapPosArrayToWorld( ui32 *x, ui32 *y, ui32 numPoints, f32 *mappedX, f32 *mappedY );
-    static void mapPosToWorld( const Rect2ui &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
+
+    /// @brief  Will map screen coordinate to the world coordinates of the scene.  
+    /// @param  viewport    [in] The dimension of the current viewport.
+    /// @param  x          [in] The x-coordinate in the viewport.
+    /// @param  y           [in] The y-coordinate in the viewport.
+    /// @param  mappedX     [out] The mapped x-coordinate in the scene.
+    /// @param  mappedY     [out] The mapped y-coordinate in the scene.
+    static void mapPosToWorld( const Rect2ui &viewport, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
 
 private:
     static Rect2ui s_dim;
 };
 
+/// This enum is used to describe the widget type.
 enum class WidgetType {
     Button,
     Text,
@@ -137,8 +165,10 @@ enum class WidgetType {
     Screen
 };
 
+/// The Ui-specific callback implemented as a functor.
 typedef Common::Functor<void, ui32, void *> UiFunctor;
 
+/// @brief  Description of a single 
 struct UiProperty {
     String m_name;
     CPPCore::Variant m_data;

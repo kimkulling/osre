@@ -175,9 +175,9 @@ public:
     /// @param  eventData   [in] The event data.
     void sendEvent( const Common::Event *ev, const Common::EventData *eventData );
 
-    bool beginPassRecording();
+    bool beginPass();
     
-    bool beginGeometryRecording();
+    bool beginGeometryBatch();
 
     void setMatrix(MatrixType type, const glm::mat4 &m );
     
@@ -197,9 +197,9 @@ public:
 
     void attachGeoInstance(const CPPCore::TArray<GeoInstanceData*> &instanceData);
 
-    bool endGeometryRecording();
+    bool endGeometryBatch();
 
-    bool endPassRecording();
+    bool endPass();
 
     void attachView( TransformMatrixBlock &transform );
 
@@ -231,11 +231,12 @@ private:
     UI::Widget *m_screen;
 
     struct GeoBatch {
-        CPPCore::TArray<UniformVar*> mUniforms;
-        CPPCore::TArray<Geometry*> mGeoArray;
+        CPPCore::TArray<UniformVar*> m_uniforms;
+        CPPCore::TArray<Geometry*>   m_geoArray;
     };
 
     struct PassData {
+        MatrixBuffer m_matrixBuffer;
         CPPCore::TArray<GeoBatch*> m_geoBatches;
     };
     CPPCore::TArray<PassData*> m_passes;

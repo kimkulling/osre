@@ -224,7 +224,7 @@ void RenderBackendService::sendEvent( const Event *ev, const EventData *eventDat
     }
 }
 
-bool RenderBackendService::beginPassRecording() {
+bool RenderBackendService::beginPass() {
     if (nullptr != m_currentPass) {
         osre_warn(Tag, "Pass recording already active.");
         return false;
@@ -235,7 +235,7 @@ bool RenderBackendService::beginPassRecording() {
     return true;
 }
 
-bool RenderBackendService::beginGeometryRecording() {
+bool RenderBackendService::beginGeometryBatch() {
     if (nullptr != m_currentPass) {
         osre_warn(Tag, "Pass recording not active.");
         return false;
@@ -333,11 +333,11 @@ void RenderBackendService::attachGeoInstance( const CPPCore::TArray<GeoInstanceD
     m_newInstances.add( &instanceData[ 0 ], instanceData.size() );
 }
 
-bool RenderBackendService::endGeometryRecording() {
+bool RenderBackendService::endGeometryBatch() {
     return true;
 }
 
-bool RenderBackendService::endPassRecording() {
+bool RenderBackendService::endPass() {
     if (nullptr != m_currentPass) {
         return false;
     }
@@ -346,7 +346,6 @@ bool RenderBackendService::endPassRecording() {
     m_currentPass = nullptr;
 
     return true;
-
 }
 
 void RenderBackendService::attachView( TransformMatrixBlock &transform ) {
