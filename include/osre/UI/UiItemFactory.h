@@ -38,7 +38,7 @@ class Widget;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief  The factory class is used to generated new 
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT UiItemFactory {
 public:
