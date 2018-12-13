@@ -166,7 +166,8 @@ void GeometryDiagnosticUtils::dumpIndices( const CPPCore::TArray<ui32> &indexArr
 
 }
 
-GeometryBuilder::GeometryBuilder() {
+GeometryBuilder::GeometryBuilder() 
+: m_ActiveGeo( nullptr ) {
     // empty
 }
 
@@ -174,17 +175,15 @@ GeometryBuilder::~GeometryBuilder() {
     // empty
 }
 
-Geometry *GeometryBuilder::allocEmptyGeometry( VertexType type, ui32 numGeo ) {
-    Geometry *geo = Geometry::create( numGeo );
+void GeometryBuilder::allocEmptyGeometry( VertexType type, ui32 numGeo ) {
+    m_ActiveGeo = Geometry::create( numGeo );
     for ( ui32 i = 0; i < numGeo; i++ ) {
-        geo[ i ].m_vertextype = type;
-        geo[ i ].m_indextype = IndexType::UnsignedShort;
+        m_ActiveGeo[ i ].m_vertextype = type;
+        m_ActiveGeo[ i ].m_indextype  = IndexType::UnsignedShort;
     }
-
-    return geo;
 }
 
-Geometry *GeometryBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
+void GeometryBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
     Geometry *geo = Geometry::create( 1 );
     geo->m_vertextype = type;
     geo->m_indextype = IndexType::UnsignedShort;
@@ -224,10 +223,10 @@ Geometry *GeometryBuilder::allocTriangles( VertexType type, BufferAccessType acc
 	// setup material
     geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
-    return geo;
+    m_ActiveGeo = geo;
 }
 
-Geometry *GeometryBuilder::allocQuads( VertexType type, BufferAccessType access ) {
+void GeometryBuilder::allocQuads( VertexType type, BufferAccessType access ) {
     Geometry *geo = Geometry::create( 1 );
     geo->m_vertextype = type;
     geo->m_indextype = IndexType::UnsignedShort;
@@ -280,16 +279,14 @@ Geometry *GeometryBuilder::allocQuads( VertexType type, BufferAccessType access 
     // setup material
     geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
-    return geo;
+    m_ActiveGeo = geo;
 }
 
-Geometry *GeometryBuilder::allocCube( RenderBackend::VertexType type, RenderBackend::BufferAccessType access ) {
-    Geometry *geo = Geometry::create( 1 );
-    
-    return geo;
+void GeometryBuilder::allocCube( RenderBackend::VertexType type, RenderBackend::BufferAccessType access ) {
+    m_ActiveGeo = Geometry::create( 1 );    
 }
 
-Geometry *GeometryBuilder::allocLineList( VertexType type, BufferAccessType access, ui32 numLines, 
+void GeometryBuilder::allocLineList( VertexType type, BufferAccessType access, ui32 numLines, 
                                           glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices ) {
     Geometry *geo = Geometry::create( 1 );
     geo->m_vertextype = type;
@@ -305,10 +302,10 @@ Geometry *GeometryBuilder::allocLineList( VertexType type, BufferAccessType acce
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
     geo->m_ib->copyFrom( indices, size );
 
-    return geo;
+    m_ActiveGeo = geo;
 }
 
-Geometry *GeometryBuilder::allocPoints( VertexType type, BufferAccessType access, ui32 numPoints, 
+void GeometryBuilder::allocPoints( VertexType type, BufferAccessType access, ui32 numPoints, 
                                         glm::vec3 *posArray, glm::vec3 *colorArray ) {
     // colors
     CPPCore::TArray<ui16> indices;
@@ -317,7 +314,8 @@ Geometry *GeometryBuilder::allocPoints( VertexType type, BufferAccessType access
         indices[ i ] = i;
     }
 
-    Geometry *ptGeo = GeometryBuilder::allocEmptyGeometry( type, 1 );
+    Geometry *ptGeo = Geometry::create( 1 );
+    ptGeo->m_vertextype = type;
 
     ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, numPoints, posArray, 
                         colorArray, nullptr, access );
@@ -334,7 +332,7 @@ Geometry *GeometryBuilder::allocPoints( VertexType type, BufferAccessType access
     // setup material
     ptGeo->m_material = MaterialBuilder::createBuildinMaterial( type );;
 
-    return ptGeo;
+    m_ActiveGeo = ptGeo;
 }
 
 static const ui32 NumQuadVert = 4;
@@ -441,9 +439,9 @@ static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const 
     }
 }
 
-Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access ) {
+void GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access ) {
 	if ( text.empty() ) {
-		return nullptr;
+		return;
 	}
 
     Geometry *geo = Geometry::create( 1 );
@@ -489,7 +487,7 @@ Geometry *GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const Strin
     geo->m_material->m_textures[0]->m_data = nullptr;
     geo->m_material->m_textures[0]->m_size = 0;
 
-    return geo;
+    m_ActiveGeo = geo;
 }
 
 void GeometryBuilder::allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access, UiVertexCache &vc, UiIndexCache &ic) {

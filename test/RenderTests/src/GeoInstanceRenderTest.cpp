@@ -107,7 +107,8 @@ public:
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
         Scene::GeometryBuilder myBuilder;
-        Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
+        myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
+        Geometry *geo = myBuilder.getGeometry();
         rbSrv->attachGeo( geo, NumInstances );
 
         // use a default material

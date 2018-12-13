@@ -36,7 +36,9 @@ class GeometryBuilderTest : public ::testing::Test {
 };
 
 TEST_F( GeometryBuilderTest, allocEmptyGeometryTest ) {
-    Geometry *geoArray = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, 2 );
+    GeometryBuilder geoBuilder;
+    geoBuilder.allocEmptyGeometry(VertexType::ColorVertex, 2);
+    Geometry *geoArray = geoBuilder.getGeometry();
     EXPECT_NE( geoArray, nullptr );
 
     for ( ui32 i = 0; i < 2; i++ ) {
@@ -47,7 +49,9 @@ TEST_F( GeometryBuilderTest, allocEmptyGeometryTest ) {
 }
 
 TEST_F( GeometryBuilderTest, allocTrianglesTest ) {
-    Geometry *geo = Scene::GeometryBuilder::allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
+    GeometryBuilder geoBuilder;
+    geoBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+    Geometry *geo = geoBuilder.getGeometry();
     EXPECT_NE( geo, nullptr );
     EXPECT_EQ( geo->m_vertextype, VertexType::ColorVertex );
     EXPECT_NE( geo->m_vb, nullptr );
@@ -89,7 +93,9 @@ TEST_F( GeometryBuilderTest, allocLineListTest ) {
     indices[ 2 ]=1;
     indices[ 3 ]=2;
 
-    Geometry *geo = Scene::GeometryBuilder::allocLineList( VertexType::ColorVertex, BufferAccessType::ReadOnly, numLines, pos, col, indices );
+    Scene::GeometryBuilder geoBuilder;
+    geoBuilder.allocLineList(VertexType::ColorVertex, BufferAccessType::ReadOnly, numLines, pos, col, indices);
+    Geometry *geo = geoBuilder.getGeometry();
     EXPECT_NE( nullptr, geo );
     Geometry::destroy( &geo );
 }
@@ -120,8 +126,9 @@ TEST_F( GeometryBuilderTest, allocPointsTest ) {
     col[ 2 ].x = 0.8f;
     col[ 2 ].y = 0.8f;
     col[ 2 ].z = 0.8f;
-
-    Geometry *geo = Scene::GeometryBuilder::allocPoints( VertexType::ColorVertex, BufferAccessType::ReadOnly, numPoints, pos, col );
+    Scene::GeometryBuilder geoBuilder;
+    geoBuilder.allocPoints(VertexType::ColorVertex, BufferAccessType::ReadOnly, numPoints, pos, col);
+    Geometry *geo = geoBuilder.getGeometry();
     EXPECT_NE( nullptr, geo );
     Geometry::destroy( &geo );
 }

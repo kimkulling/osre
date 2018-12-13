@@ -97,9 +97,12 @@ public:
 
         static ui32 NumGeo( 2 );
 
-        Geometry *ptGeo = GeometryBuilder::allocPoints( VertexType::ColorVertex, BufferAccessType::ReadOnly, NumPoints, points, col );
+        GeometryBuilder geoBuilder;
+        geoBuilder.allocPoints(VertexType::ColorVertex, BufferAccessType::ReadOnly, NumPoints, points, col);
+        Geometry *ptGeo = geoBuilder.getGeometry();
         rb->attachGeo( ptGeo, 0 );
-        Geometry *lineGeo = GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, 1 );
+        geoBuilder.allocEmptyGeometry(VertexType::ColorVertex, 1);
+        Geometry *lineGeo = geoBuilder.getGeometry();
         lineGeo->m_vb = GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly );
         lineGeo->m_indextype = IndexType::UnsignedShort;
         ui32 size = sizeof( GLushort ) * NumIndices;

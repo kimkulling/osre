@@ -121,7 +121,9 @@ public:
 
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
-        Geometry *geo = Scene::GeometryBuilder::allocQuads( VertexType::RenderVertex, BufferAccessType::ReadOnly );
+        Scene::GeometryBuilder geoBuilder;
+        geoBuilder.allocQuads( VertexType::RenderVertex, BufferAccessType::ReadOnly );
+        Geometry *geo = geoBuilder.getGeometry();
         rbSrv->attachGeo( geo, 0 );
 
         // use default material

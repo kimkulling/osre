@@ -81,26 +81,26 @@ public:
     /// @brief  Will allocate an empty geometry.
     ///	@param  type        [in] The vertex type.
     /// @return The created geometry.
-    static RenderBackend::Geometry *allocEmptyGeometry( RenderBackend::VertexType type, ui32 numGeo );
+    void allocEmptyGeometry( RenderBackend::VertexType type, ui32 numGeo );
 
     /// @brief  Will allocate a triangle geometry.
     ///	@param  type        [in] The vertex type.
     /// @return The created geometry.
-    static RenderBackend::Geometry *allocTriangles( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
+    void allocTriangles( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
 
     ///	@brief  Will allocate vertices for a quad primitive.
     ///	@param  type        [in] The vertex type.
     /// @return The created geometry.
-    static RenderBackend::Geometry *allocQuads( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
+    void allocQuads( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
 
-    static RenderBackend::Geometry *allocCube( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
+    void allocCube( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
 
     ///	@brief  Will allocate vertices for a list of lines.
     ///	@param  type        [in] The vertex type.
-    static RenderBackend::Geometry *allocLineList( RenderBackend::VertexType type, RenderBackend::BufferAccessType access,
+    void allocLineList( RenderBackend::VertexType type, RenderBackend::BufferAccessType access,
             ui32 numLines, glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices );
 
-    static RenderBackend::Geometry *allocPoints( RenderBackend::VertexType type, RenderBackend::BufferAccessType access, 
+    void allocPoints( RenderBackend::VertexType type, RenderBackend::BufferAccessType access, 
             ui32 numPoints, glm::vec3 *posArray, glm::vec3 *colorArray );
 
     ///	@brief  Will allocate vertices for a text-box.
@@ -109,9 +109,11 @@ public:
     /// @param  textSize    [in] The size for a single glyph.
     /// @param  text        [in] The text to render.
     /// @return The created geometry.
-    static RenderBackend::Geometry *allocTextBox( f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access );
+    void allocTextBox( f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access );
 
-    static void allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access, RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic);
+    /// @brief  Helper method to create text-box geometry.
+    static void allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access, 
+                RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic);
 
     /// @brief  Will update the vertices of a text box.
     /// @param  geo         [inout] The geometry to update.
@@ -130,10 +132,20 @@ public:
 
     static void updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, RenderBackend::BufferData *vb );
 
+    RenderBackend::Geometry *getGeometry() const;
+
     /// No copying.
     GeometryBuilder( const GeometryBuilder& ) = delete;
     GeometryBuilder &operator = ( const GeometryBuilder& ) = delete;
+
+private:
+    RenderBackend::Geometry *m_ActiveGeo;
 };
+
+inline
+RenderBackend::Geometry *GeometryBuilder::getGeometry() const {
+    return m_ActiveGeo;
+}
 
 } // Namespace Scene
 } // namespace OSRE

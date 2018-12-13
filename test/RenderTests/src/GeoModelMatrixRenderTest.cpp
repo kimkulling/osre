@@ -58,23 +58,27 @@ public:
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
         Scene::GeometryBuilder myBuilder;
-        Geometry *geo1 = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
+        myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+        Geometry *geo1 = myBuilder.getGeometry();
         geo1->m_localMatrix = true; 
         TransformState transform;
         transform.setTranslation( 0.5f, 0, 0 );
         transform.setScale(0.2f, 0.2f, 0.2f);
         transform.toMatrix( geo1->m_model );
          
+        rbSrv->beginPass();
+
         rbSrv->attachGeo( geo1, 0 );
 
-        Geometry *geo2 = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
+        myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+        Geometry *geo2 = myBuilder.getGeometry();
         geo2->m_localMatrix = true;
         transform.setTranslation( -0.5f, 0, 0 );
         transform.setScale(0.2f, 0.2f, 0.2f);
         transform.toMatrix( geo2->m_model );
         rbSrv->attachGeo( geo2, 0 );
 
-        //m_transformMatrix.update();
+        rbSrv->endPass();
 
         return true;
     }

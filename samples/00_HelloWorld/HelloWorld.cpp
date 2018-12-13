@@ -90,7 +90,8 @@ protected:
         const Scene::Node::AABB &aabb = geoNode->getAABB();
 
         Scene::GeometryBuilder myBuilder;
-        RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
+        myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+        RenderBackend::Geometry *geo = myBuilder.getGeometry();
         if( nullptr != geo ) {
 			m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
             m_transformMatrix.update();
