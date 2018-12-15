@@ -34,7 +34,7 @@ namespace RenderBackend {
     class RenderBackendService;
 
     struct UniformVar;
-    struct Geometry;
+    struct Mesh;
 }
 
 namespace Scene {
@@ -90,11 +90,11 @@ public:
     void update( Time dt ) override;
     void draw( RenderBackend::RenderBackendService *renderBackendSrv ) override;
     ui32 getNumGeometry() const;
-    RenderBackend::Geometry *getGeoAt(ui32 idx) const;
-    void addStaticGeometry( RenderBackend::Geometry *geo );
+    RenderBackend::Mesh *getGeoAt(ui32 idx) const;
+    void addStaticGeometry( RenderBackend::Mesh *geo );
 
 private:
-    CPPCore::TArray<RenderBackend::Geometry*> m_newGeo;
+    CPPCore::TArray<RenderBackend::Mesh*> m_newGeo;
 };
 
 //-------------------------------------------------------------------------------------------------

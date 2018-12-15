@@ -59,7 +59,7 @@ public:
 
         Scene::GeometryBuilder myBuilder;
         myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
-        Geometry *geo1 = myBuilder.getGeometry();
+        Mesh *geo1 = myBuilder.getGeometry();
         geo1->m_localMatrix = true; 
         TransformState transform;
         transform.setTranslation( 0.5f, 0, 0 );
@@ -71,7 +71,7 @@ public:
         rbSrv->attachGeo( geo1, 0 );
 
         myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
-        Geometry *geo2 = myBuilder.getGeometry();
+        Mesh *geo2 = myBuilder.getGeometry();
         geo2->m_localMatrix = true;
         transform.setTranslation( -0.5f, 0, 0 );
         transform.setScale(0.2f, 0.2f, 0.2f);

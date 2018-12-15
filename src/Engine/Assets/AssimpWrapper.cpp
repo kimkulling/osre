@@ -116,7 +116,7 @@ bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
         return false;
     }
     convertSceneToModel( scene );
-    m_model->setGeoArray( m_geoArray );
+    m_model->setMeshArray( m_geoArray );
 
     return true;
 }
@@ -163,7 +163,7 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     }
 
     TAABB<f32> aabb = m_model->getAABB();
-    Geometry *geo( Geometry::create( 1 ) );
+    Mesh *geo( Mesh::create( 1 ) );
 	geo->m_vertextype = VertexType::RenderVertex;
     ui32 numVertices( mesh->mNumVertices );
     RenderVert *vertices = new RenderVert[ numVertices ];
@@ -232,8 +232,6 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
 
     geo->m_material = m_matArray[matIdx];
     
-    //
-
     m_geoArray.add( geo );
     m_model->setAABB( aabb );
 }
@@ -261,9 +259,9 @@ void AssimpWrapper::handleNode( aiNode *node, Scene::Node *parent ) {
                 continue;
             }
 
-            Geometry *geo( m_geoArray[ meshIdx ] );
+            Mesh *geo( m_geoArray[ meshIdx ] );
             if ( nullptr != geo ) {
-                newNode->addGeometry( geo );
+                newNode->addMesh( geo );
             }
         }
     }

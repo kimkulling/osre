@@ -169,11 +169,11 @@ static void setupGeoPackage(NewGeoEntry *newEntry, GeometryPackage *package ) {
     OSRE_ASSERT( nullptr != package );
     
     const ui32 numNewGeo( newEntry->m_geo.size() );
-    package->m_newGeo = new Geometry*[numNewGeo];
+    package->m_newGeo = new Mesh*[numNewGeo];
     package->m_numNewGeo = numNewGeo;
     package->m_numInstances = newEntry->numInstances;
     for ( ui32 i=0; i<numNewGeo; i++ ) {
-        Geometry *geo( newEntry->m_geo[ i ] );
+        Mesh *geo( newEntry->m_geo[ i ] );
         package->m_newGeo[ i ] = geo;
     }
 }
@@ -207,7 +207,7 @@ void RenderBackendService::commitNextFrame() {
 
     if ( !m_geoUpdates.isEmpty() ) {
         m_nextFrame.m_numGeoUpdates = m_geoUpdates.size();
-        m_nextFrame.m_geoUpdates = new Geometry*[m_nextFrame.m_numGeoUpdates];
+        m_nextFrame.m_geoUpdates = new Mesh*[m_nextFrame.m_numGeoUpdates];
         for (ui32 i = 0; i < m_nextFrame.m_numGeoUpdates; i++) {
             m_nextFrame.m_geoUpdates[i] = m_geoUpdates[i];
         }
@@ -287,7 +287,7 @@ void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const
     m_uniformUpdates.add( uniform );
 }
 
-void RenderBackendService::attachGeo( Geometry *geo, ui32 numInstances ) {
+void RenderBackendService::attachGeo( Mesh *geo, ui32 numInstances ) {
     if ( nullptr == geo ) {
         osre_debug( Tag, "Pointer to geometry is nullptr." );
         return;
@@ -298,14 +298,14 @@ void RenderBackendService::attachGeo( Geometry *geo, ui32 numInstances ) {
     m_newGeo.add( entry );
 }
 
-void RenderBackendService::attachGeo( const CPPCore::TArray<Geometry*> &geoArray, ui32 numInstances ) {
+void RenderBackendService::attachGeo( const CPPCore::TArray<Mesh*> &geoArray, ui32 numInstances ) {
     NewGeoEntry *entry = new NewGeoEntry;
     entry->numInstances = numInstances;
     entry->m_geo.add( &geoArray[ 0 ], geoArray.size() );
     m_newGeo.add( entry );
 }
 
-void RenderBackendService::attachGeoUpdate( Geometry *geo ) {
+void RenderBackendService::attachGeoUpdate( Mesh *geo ) {
     if ( nullptr == geo ) {
         osre_debug( Tag, "Pointer to geometry is nullptr." );
         return;
@@ -313,7 +313,7 @@ void RenderBackendService::attachGeoUpdate( Geometry *geo ) {
     m_geoUpdates.add( geo );
 }
 
-void RenderBackendService::attachGeoUpdate( const CPPCore::TArray<Geometry*> &geoArray ) {
+void RenderBackendService::attachGeoUpdate( const CPPCore::TArray<Mesh*> &geoArray ) {
     m_geoUpdates.add( &geoArray[ 0 ], geoArray.size() );
 }
 

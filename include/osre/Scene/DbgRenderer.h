@@ -34,7 +34,7 @@ namespace OSRE {
 namespace RenderBackend {
     class RenderBackendService;
 
-    struct Geometry;
+    struct Mesh;
 }
 
 namespace Scene {
@@ -48,7 +48,7 @@ class OSRE_EXPORT DbgRenderer {
 public:
     struct DbgTextEntry {
         String m_text;
-        RenderBackend::Geometry *m_geo;
+        RenderBackend::Mesh *m_geo;
     };
     using TextBoxHashMap = CPPCore::THashMap<ui32, DbgTextEntry*>;
     using TextBoxArray = CPPCore::TArray<DbgTextEntry*>;

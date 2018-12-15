@@ -34,7 +34,7 @@ namespace Scene {
 }
 
 namespace RenderBackend {
-    struct Geometry;
+    struct Mesh;
 }
 
 namespace Assets {
@@ -42,20 +42,20 @@ namespace Assets {
 class OSRE_EXPORT Model {
 public: 
     typedef Collision::TAABB<f32> ModelAABB;
-    typedef CPPCore::TArray<RenderBackend::Geometry*> GeoArray;
+    typedef CPPCore::TArray<RenderBackend::Mesh*> MeshArray;
 
     Model();
-    Model( GeoArray *geoArray, Scene::Node *root, ModelAABB &aabb );
+    Model( MeshArray *geoArray, Scene::Node *root, ModelAABB &aabb );
     ~Model();
-    void setGeoArray( GeoArray &geoArray );
-    const GeoArray &getGeoArray() const;
+    void setMeshArray( MeshArray &geoArray );
+    const MeshArray &getMeshArray() const;
     void setRootNode( Scene::Node *root );
     Scene::Node *getRootNode() const;
     void setAABB( const Collision::TAABB<f32> &aabb );
     const ModelAABB &getAABB() const;
 
 private:
-    GeoArray m_geoArray;
+    MeshArray m_meshArray;
 
     Scene::Node *m_root;
     Collision::TAABB<f32> m_aabb;

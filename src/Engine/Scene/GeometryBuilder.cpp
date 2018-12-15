@@ -176,7 +176,7 @@ GeometryBuilder::~GeometryBuilder() {
 }
 
 void GeometryBuilder::allocEmptyGeometry( VertexType type, ui32 numGeo ) {
-    m_ActiveGeo = Geometry::create( numGeo );
+    m_ActiveGeo = Mesh::create( numGeo );
     for ( ui32 i = 0; i < numGeo; i++ ) {
         m_ActiveGeo[ i ].m_vertextype = type;
         m_ActiveGeo[ i ].m_indextype  = IndexType::UnsignedShort;
@@ -184,7 +184,7 @@ void GeometryBuilder::allocEmptyGeometry( VertexType type, ui32 numGeo ) {
 }
 
 void GeometryBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
-    Geometry *geo = Geometry::create( 1 );
+    Mesh *geo = Mesh::create( 1 );
     geo->m_vertextype = type;
     geo->m_indextype = IndexType::UnsignedShort;
 
@@ -227,7 +227,7 @@ void GeometryBuilder::allocTriangles( VertexType type, BufferAccessType access )
 }
 
 void GeometryBuilder::allocQuads( VertexType type, BufferAccessType access ) {
-    Geometry *geo = Geometry::create( 1 );
+    Mesh *geo = Mesh::create( 1 );
     geo->m_vertextype = type;
     geo->m_indextype = IndexType::UnsignedShort;
 
@@ -283,12 +283,12 @@ void GeometryBuilder::allocQuads( VertexType type, BufferAccessType access ) {
 }
 
 void GeometryBuilder::allocCube( RenderBackend::VertexType type, RenderBackend::BufferAccessType access ) {
-    m_ActiveGeo = Geometry::create( 1 );    
+    m_ActiveGeo = Mesh::create( 1 );    
 }
 
 void GeometryBuilder::allocLineList( VertexType type, BufferAccessType access, ui32 numLines, 
                                           glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices ) {
-    Geometry *geo = Geometry::create( 1 );
+    Mesh *geo = Mesh::create( 1 );
     geo->m_vertextype = type;
     geo->m_indextype = IndexType::UnsignedShort;
 
@@ -314,7 +314,7 @@ void GeometryBuilder::allocPoints( VertexType type, BufferAccessType access, ui3
         indices[ i ] = i;
     }
 
-    Geometry *ptGeo = Geometry::create( 1 );
+    Mesh *ptGeo = Mesh::create( 1 );
     ptGeo->m_vertextype = type;
 
     ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, numPoints, posArray, 
@@ -444,7 +444,7 @@ void GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &te
 		return;
 	}
 
-    Geometry *geo = Geometry::create( 1 );
+    Mesh *geo = Mesh::create( 1 );
     geo->m_vertextype = VertexType::RenderVertex;
     geo->m_indextype = IndexType::UnsignedShort;
 
@@ -514,7 +514,7 @@ void GeometryBuilder::allocUiTextBox(f32 x, f32 y, f32 textSize, const String &t
 }
 
 
-void GeometryBuilder::updateTextBox( Geometry *geo, f32 textSize, const String &text ) {
+void GeometryBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text ) {
     if ( nullptr == geo ) {
         osre_debug( Tag, "Pointer to geometry is nullptr." );
         return;

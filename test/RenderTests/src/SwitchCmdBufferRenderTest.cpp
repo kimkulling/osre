@@ -90,14 +90,14 @@ const String FsSrc =
 //-------------------------------------------------------------------------------------------------
 class SwitchCmdBufferRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
-    static const ui32 NumPts = 1000;
-    Geometry *m_ptGeo;
+    static const ui32 NumPoints = 1000;
+    Mesh *m_pointMesh;
     ParticleGenerator *m_particeGen;
 
 public:
     SwitchCmdBufferRenderTest()
     : AbstractRenderTest( "rendertest/SwitchCmdBufferRenderTest" )
-    , m_ptGeo( nullptr )
+    , m_pointMesh( nullptr )
     , m_particeGen( nullptr ) {
         // empty
     }
@@ -111,7 +111,7 @@ public:
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
         m_particeGen = new ParticleGenerator( rbSrv );
-        m_particeGen->init( NumPts );
+        m_particeGen->init( NumPoints );
 
         m_transformMatrix.update();
         rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
@@ -120,7 +120,7 @@ public:
     }
 
     bool onRender( RenderBackend::RenderBackendService * ) override {
-        m_particeGen->update( NumPts );
+        m_particeGen->update( NumPoints );
 
         return true;
     }

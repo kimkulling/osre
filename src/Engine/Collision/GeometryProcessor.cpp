@@ -61,7 +61,7 @@ bool GeometryProcessor::execute() {
     return true;
 }
 
-void GeometryProcessor::addGeo( RenderBackend::Geometry *geo ) {
+void GeometryProcessor::addGeo( RenderBackend::Mesh *geo ) {
     if ( nullptr == geo ) {
         return;
     }
@@ -75,7 +75,7 @@ const Scene::Node::AABB &GeometryProcessor::getAABB() const {
     return m_aabb;
 }
 
-void GeometryProcessor::handleGeometry( RenderBackend::Geometry *geo ) {
+void GeometryProcessor::handleGeometry( RenderBackend::Mesh *geo ) {
     OSRE_ASSERT( nullptr != geo );
 
     if ( nullptr == geo ) {

@@ -589,7 +589,7 @@ struct TIndexCache {
 struct RenderBatch {
     glm::mat4  m_model;     ///< The local model matrix.
     ui32       m_numGeo;    ///< Number of geometries
-    Geometry  *m_geoArray;  ///< The geometry for the batch.
+    Mesh  *m_geoArray;  ///< The geometry for the batch.
 
     RenderBatch();
     ~RenderBatch();

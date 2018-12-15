@@ -47,7 +47,7 @@ namespace Properties {
 
 namespace RenderBackend {
     struct TransformState;
-    struct Geometry;
+    struct Mesh;
 
     class RenderBackendService;
 }
@@ -105,9 +105,9 @@ public:
     virtual Node *getChildAt( ui32 idx ) const;
     virtual void releaseChildren();
     virtual void addModel( Assets::Model *model );
-    virtual void addGeometry( RenderBackend::Geometry *geo );
-    virtual ui32 getNumGeometries() const;
-    virtual RenderBackend::Geometry *getGeometryAt(ui32 idx) const;
+    virtual void addMesh( RenderBackend::Mesh *geo );
+    virtual ui32 getNumMeshes() const;
+    virtual RenderBackend::Mesh *getMeshAt(ui32 idx) const;
     virtual void update(Time dt);
     virtual void draw(RenderBackend::RenderBackendService *renderBackendSrv);
     virtual void setAABB(const AABB &aabb);

@@ -68,7 +68,7 @@ public:
     virtual bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
         
-        CPPCore::TArray<Geometry*> geoArray;
+        CPPCore::TArray<Mesh*> geoArray;
         GeometryBuilder geoBuilder;
         geoBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
         geoArray.add(geoBuilder.getGeometry());

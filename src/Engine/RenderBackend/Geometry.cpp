@@ -35,7 +35,7 @@ static Ids s_Ids;
 // The log tag for messages
 static const String Tag = "Geometry";
 
-Geometry::Geometry()
+Mesh::Mesh()
 : m_localMatrix( false )
 , m_model( 1.0f )
 , m_material( nullptr )
@@ -51,7 +51,7 @@ Geometry::Geometry()
     // empty
 }
 
-Geometry::~Geometry() {
+Mesh::~Mesh() {
     delete m_material;
     m_material = nullptr;
 
@@ -67,24 +67,24 @@ Geometry::~Geometry() {
     s_Ids.releaseId( m_id );
 }
 
-Geometry *Geometry::create( ui32 numGeo ) {
+Mesh *Mesh::create( ui32 numGeo ) {
     if ( 0 == numGeo ) {
         osre_debug( Tag, "Number of static geo to create is zero." );
         return nullptr;
     }
-    Geometry *geoArray( new Geometry[ numGeo ] );
+    Mesh *geoArray( new Mesh[ numGeo ] );
     for ( ui32 i = 0; i < numGeo; i++ ) {
         geoArray[ i ].m_id = s_Ids.getUniqueId();
     }
     return geoArray;
 }
 
-void Geometry::destroy( Geometry **geo ) {
+void Mesh::destroy( Mesh **geo ) {
     delete[] * geo;
     ( *geo ) = nullptr;
 }
 
-ui32 Geometry::getVertexSize( VertexType vertextype ) {
+ui32 Mesh::getVertexSize( VertexType vertextype ) {
     ui32 vertexSize( 0 );
     switch ( vertextype ) {
         case VertexType::ColorVertex:

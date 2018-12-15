@@ -38,26 +38,26 @@ class GeometryBuilderTest : public ::testing::Test {
 TEST_F( GeometryBuilderTest, allocEmptyGeometryTest ) {
     GeometryBuilder geoBuilder;
     geoBuilder.allocEmptyGeometry(VertexType::ColorVertex, 2);
-    Geometry *geoArray = geoBuilder.getGeometry();
-    EXPECT_NE( geoArray, nullptr );
+    Mesh *meshArray = geoBuilder.getGeometry();
+    EXPECT_NE( meshArray, nullptr );
 
     for ( ui32 i = 0; i < 2; i++ ) {
-        Geometry &currentGeo( geoArray[ i ] );
+        Mesh &currentGeo( meshArray[ i ] );
         EXPECT_EQ( currentGeo.m_vertextype, VertexType::ColorVertex );
     }
-    Geometry::destroy( &geoArray );
+    Mesh::destroy( &meshArray );
 }
 
 TEST_F( GeometryBuilderTest, allocTrianglesTest ) {
     GeometryBuilder geoBuilder;
     geoBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
-    Geometry *geo = geoBuilder.getGeometry();
-    EXPECT_NE( geo, nullptr );
-    EXPECT_EQ( geo->m_vertextype, VertexType::ColorVertex );
-    EXPECT_NE( geo->m_vb, nullptr );
-    EXPECT_NE( geo->m_ib, nullptr );
-    EXPECT_NE( geo->m_material, nullptr );
-    Geometry::destroy( &geo );
+    Mesh *mesh = geoBuilder.getGeometry();
+    EXPECT_NE( mesh, nullptr );
+    EXPECT_EQ( mesh->m_vertextype, VertexType::ColorVertex );
+    EXPECT_NE( mesh->m_vb, nullptr );
+    EXPECT_NE( mesh->m_ib, nullptr );
+    EXPECT_NE( mesh->m_material, nullptr );
+    Mesh::destroy( &mesh );
 }
 
 TEST_F( GeometryBuilderTest, allocLineListTest ) {
@@ -95,9 +95,9 @@ TEST_F( GeometryBuilderTest, allocLineListTest ) {
 
     Scene::GeometryBuilder geoBuilder;
     geoBuilder.allocLineList(VertexType::ColorVertex, BufferAccessType::ReadOnly, numLines, pos, col, indices);
-    Geometry *geo = geoBuilder.getGeometry();
-    EXPECT_NE( nullptr, geo );
-    Geometry::destroy( &geo );
+    Mesh *mesh = geoBuilder.getGeometry();
+    EXPECT_NE( nullptr, mesh );
+    Mesh::destroy( &mesh );
 }
 
 TEST_F( GeometryBuilderTest, allocPointsTest ) {
@@ -128,9 +128,9 @@ TEST_F( GeometryBuilderTest, allocPointsTest ) {
     col[ 2 ].z = 0.8f;
     Scene::GeometryBuilder geoBuilder;
     geoBuilder.allocPoints(VertexType::ColorVertex, BufferAccessType::ReadOnly, numPoints, pos, col);
-    Geometry *geo = geoBuilder.getGeometry();
-    EXPECT_NE( nullptr, geo );
-    Geometry::destroy( &geo );
+    Mesh *mesh = geoBuilder.getGeometry();
+    EXPECT_NE( nullptr, mesh );
+    Mesh::destroy( &mesh );
 }
 
 class GeometryDiagnosticUtilsTest : public ::testing::Test {

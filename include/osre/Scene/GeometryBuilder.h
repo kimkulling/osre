@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 namespace RenderBackend {
-    struct Geometry;
+    struct Mesh;
 }
 
 namespace Scene {
@@ -119,7 +119,7 @@ public:
     /// @param  geo         [inout] The geometry to update.
     /// @param  textSize    [in] The new text size.
     /// @param  text        [in] The updated text.
-    static void updateTextBox( RenderBackend::Geometry *geo, f32 textSize, const String &text );
+    static void updateTextBox( RenderBackend::Mesh *geo, f32 textSize, const String &text );
 
     ///	@brief  Allocates vertices into a buffer data.
     /// @param  type        [in] The vertex type to create.
@@ -132,18 +132,18 @@ public:
 
     static void updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, RenderBackend::BufferData *vb );
 
-    RenderBackend::Geometry *getGeometry() const;
+    RenderBackend::Mesh *getGeometry() const;
 
     /// No copying.
     GeometryBuilder( const GeometryBuilder& ) = delete;
     GeometryBuilder &operator = ( const GeometryBuilder& ) = delete;
 
 private:
-    RenderBackend::Geometry *m_ActiveGeo;
+    RenderBackend::Mesh *m_ActiveGeo;
 };
 
 inline
-RenderBackend::Geometry *GeometryBuilder::getGeometry() const {
+RenderBackend::Mesh *GeometryBuilder::getGeometry() const {
     return m_ActiveGeo;
 }
 

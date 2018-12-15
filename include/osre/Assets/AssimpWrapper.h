@@ -43,7 +43,7 @@ namespace Common {
 }
 
 namespace RenderBackend {
-    struct Geometry;
+    struct Mesh;
     struct UniformVar;
     struct Material;
 }
@@ -74,7 +74,7 @@ protected:
     void handleMaterial( aiMaterial *material );
 
 private:
-    typedef CPPCore::TArray<RenderBackend::Geometry*> GeoArray;
+    typedef CPPCore::TArray<RenderBackend::Mesh*> GeoArray;
     GeoArray m_geoArray;
     typedef CPPCore::TArray<RenderBackend::Material*> MaterialArray;
     MaterialArray m_matArray;

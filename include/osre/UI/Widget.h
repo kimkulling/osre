@@ -34,7 +34,7 @@ namespace RenderBackend {
     class RenderBackendService;
     class FontBase;
 
-    struct Geometry;
+    struct Mesh;
 }
 
 namespace UI {

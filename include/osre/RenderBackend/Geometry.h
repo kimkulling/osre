@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-struct OSRE_EXPORT Geometry {
+struct OSRE_EXPORT Mesh {
     bool            m_localMatrix;
     glm::mat4       m_model;
     Material       *m_material;
@@ -41,8 +41,8 @@ struct OSRE_EXPORT Geometry {
     PrimitiveGroup *m_primGroups;
     ui32            m_id;
 
-    static Geometry *create( ui32 numGeo );
-    static void destroy( Geometry **geo );
+    static Mesh *create( ui32 numGeo );
+    static void destroy( Mesh **geo );
     static ui32 getVertexSize( VertexType vertextype );
 
     template<class TVertexType>
@@ -51,11 +51,11 @@ struct OSRE_EXPORT Geometry {
         return sizeof( TVertexType );
     }
 
-    OSRE_NON_COPYABLE( Geometry )
+    OSRE_NON_COPYABLE( Mesh )
 
 private:
-    Geometry();
-    ~Geometry();
+    Mesh();
+    ~Mesh();
 
 private:
     ::CPPCore::TArray<uc8> m_vertexData;

@@ -99,10 +99,10 @@ public:
 
         GeometryBuilder geoBuilder;
         geoBuilder.allocPoints(VertexType::ColorVertex, BufferAccessType::ReadOnly, NumPoints, points, col);
-        Geometry *ptGeo = geoBuilder.getGeometry();
+        Mesh *ptGeo = geoBuilder.getGeometry();
         rb->attachGeo( ptGeo, 0 );
         geoBuilder.allocEmptyGeometry(VertexType::ColorVertex, 1);
-        Geometry *lineGeo = geoBuilder.getGeometry();
+        Mesh *lineGeo = geoBuilder.getGeometry();
         lineGeo->m_vb = GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly );
         lineGeo->m_indextype = IndexType::UnsignedShort;
         ui32 size = sizeof( GLushort ) * NumIndices;

@@ -33,7 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-struct Geometry;
+struct Mesh;
 
 class RenderBackendService;
 
@@ -50,7 +50,7 @@ private:
     glm::vec3 *m_col;
     glm::vec3 *m_pos;
     GLushort *m_pt_indices;
-    Geometry *m_ptGeo;
+    Mesh *m_ptGeo;
 };
 
 }

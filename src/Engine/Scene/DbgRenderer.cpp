@@ -71,7 +71,7 @@ DbgRenderer *DbgRenderer::getInstance() {
     return s_instance;
 }
 
-static void insertTextEntry( ui32 id, Geometry *geo, const String &text, DbgRenderer::TextBoxHashMap &textBoxes ) {
+static void insertTextEntry( ui32 id, Mesh *geo, const String &text, DbgRenderer::TextBoxHashMap &textBoxes ) {
     DbgRenderer::DbgTextEntry *entry( new DbgRenderer::DbgTextEntry );
     entry->m_geo = geo;
     entry->m_text = text;
@@ -95,7 +95,7 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
         UI::WidgetCoordMapping::mapPosToWorld(x , y, xTrans, yTrans);
         GeometryBuilder geoBuilder;
         geoBuilder.allocTextBox(xTrans, yTrans, scale, text, BufferAccessType::ReadWrite);
-        Geometry *geo = geoBuilder.getGeometry();
+        Mesh *geo = geoBuilder.getGeometry();
         m_rbSrv->attachGeo( geo, 0 );
         insertTextEntry( id, geo, text, m_textBoxes );
         geo->m_localMatrix = true;
@@ -107,7 +107,7 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
             if ( entry->m_text == text ) {
                 return;
             }
-            Geometry *geo( nullptr );
+            Mesh *geo( nullptr );
             if ( text.size() > entry->m_text.size() ) {
                 GeometryBuilder geoBuilder;
                 geoBuilder.allocTextBox(0, 0, 0.1f, text, BufferAccessType::ReadWrite);
@@ -144,7 +144,7 @@ ui16 indices[ NumIndices ] = {
 void DbgRenderer::renderAABB( const glm::mat4 &transform, const Collision::TAABB<f32> &aabb ) {
     GeometryBuilder geoBuilder;
     geoBuilder.allocEmptyGeometry(VertexType::ColorVertex, 1);
-    Geometry *geo = geoBuilder.getGeometry();
+    Mesh *geo = geoBuilder.getGeometry();
 
     static const ui32 NumVertices = 8;
     ColorVert vertices[ NumVertices ];
