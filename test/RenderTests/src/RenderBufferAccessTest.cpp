@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Geometry.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
@@ -128,12 +128,12 @@ public:
 
         static const ui32 NumGeo( 1 );
 
-        Scene::GeometryBuilder geoBuilder;
-        geoBuilder.allocEmptyGeometry( VertexType::ColorVertex, NumGeo );
-        m_pointMesh = geoBuilder.getGeometry();
+        Scene::MeshBuilder geoBuilder;
+        geoBuilder.allocEmptyMesh( VertexType::ColorVertex, NumGeo );
+        m_pointMesh = geoBuilder.getMesh();
 
         rbSrv->attachGeo( m_pointMesh, 0 );
-        m_pointMesh->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, NumPts, m_pos, m_col, nullptr, BufferAccessType::ReadOnly );
+        m_pointMesh->m_vb = Scene::MeshBuilder::allocVertices( VertexType::ColorVertex, NumPts, m_pos, m_col, nullptr, BufferAccessType::ReadOnly );
         m_pointMesh->m_indextype = IndexType::UnsignedShort;
         ui32 pt_size = sizeof( GLushort ) * NumPts;
         m_pointMesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, BufferAccessType::ReadOnly );

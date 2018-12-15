@@ -94,7 +94,7 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
 
     UiVertexCache vertexCache;
     UiIndexCache indexCache;
-    Scene::GeometryBuilder::allocUiTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite, vertexCache, indexCache);
+    Scene::MeshBuilder::allocUiTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite, vertexCache, indexCache);
     //RenderBackend::Geometry *geo = Scene::GeometryBuilder::allocTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite);
     
 

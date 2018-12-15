@@ -33,7 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Profiling/PerformanceCounterRegistry.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Shader.h>
-#include <osre/RenderBackend/Geometry.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/HWBufferManager.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Uri.h>

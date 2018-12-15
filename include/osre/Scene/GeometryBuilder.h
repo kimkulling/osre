@@ -40,9 +40,9 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This utility class is used to inspect geometry data.
+///	@brief  This utility class is used to inspect mesh data.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT GeometryDiagnosticUtils {
+class OSRE_EXPORT MeshDiagnostic {
 public:
     /// @brief  Will dump the vertex data of a text-box.
 	static void dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset );
@@ -59,38 +59,38 @@ public:
     /// @brief  Will dump the index data of given indices.
     static void dumpIndices( const CPPCore::TArray<ui32> &indexArray );
 
-    GeometryDiagnosticUtils() = delete;
-    GeometryDiagnosticUtils(const GeometryDiagnosticUtils &) = delete;
-    GeometryDiagnosticUtils &operator = (const GeometryDiagnosticUtils &) = delete;
+    MeshDiagnostic() = delete;
+    MeshDiagnostic(const MeshDiagnostic &) = delete;
+    MeshDiagnostic &operator = (const MeshDiagnostic &) = delete;
 };
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This class is used to create the static geometry for base shapes like a triangle or a 
+///	@brief  This class is used to create the static mesh for base shapes like a triangle or a 
 ///	text box. 
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT GeometryBuilder {
+class OSRE_EXPORT MeshBuilder {
 public:
     /// @brief  The class constructor.
-    GeometryBuilder();
+    MeshBuilder();
 
     /// @brief  The class destructor.
-    ~GeometryBuilder();
+    ~MeshBuilder();
 
-    /// @brief  Will allocate an empty geometry.
+    /// @brief  Will allocate an empty mesh.
     ///	@param  type        [in] The vertex type.
-    /// @return The created geometry.
-    void allocEmptyGeometry( RenderBackend::VertexType type, ui32 numGeo );
+    /// @return The created mesh.
+    void allocEmptyMesh( RenderBackend::VertexType type, ui32 numGeo );
 
-    /// @brief  Will allocate a triangle geometry.
+    /// @brief  Will allocate a triangle mesh.
     ///	@param  type        [in] The vertex type.
-    /// @return The created geometry.
+    /// @return The created mesh.
     void allocTriangles( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
 
     ///	@brief  Will allocate vertices for a quad primitive.
     ///	@param  type        [in] The vertex type.
-    /// @return The created geometry.
+    /// @return The created mesh.
     void allocQuads( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
 
     void allocCube( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
@@ -108,15 +108,15 @@ public:
     /// @param  y           [in] Upper position of the text box.
     /// @param  textSize    [in] The size for a single glyph.
     /// @param  text        [in] The text to render.
-    /// @return The created geometry.
+    /// @return The created mesh.
     void allocTextBox( f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access );
 
-    /// @brief  Helper method to create text-box geometry.
+    /// @brief  Helper method to create text-box mesh.
     static void allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access, 
                 RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic);
 
     /// @brief  Will update the vertices of a text box.
-    /// @param  geo         [inout] The geometry to update.
+    /// @param  geo         [inout] The mesh to update.
     /// @param  textSize    [in] The new text size.
     /// @param  text        [in] The updated text.
     static void updateTextBox( RenderBackend::Mesh *geo, f32 textSize, const String &text );
@@ -132,18 +132,18 @@ public:
 
     static void updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, RenderBackend::BufferData *vb );
 
-    RenderBackend::Mesh *getGeometry() const;
+    RenderBackend::Mesh *getMesh() const;
 
     /// No copying.
-    GeometryBuilder( const GeometryBuilder& ) = delete;
-    GeometryBuilder &operator = ( const GeometryBuilder& ) = delete;
+    MeshBuilder( const MeshBuilder& ) = delete;
+    MeshBuilder &operator = ( const MeshBuilder& ) = delete;
 
 private:
     RenderBackend::Mesh *m_ActiveGeo;
 };
 
 inline
-RenderBackend::Mesh *GeometryBuilder::getGeometry() const {
+RenderBackend::Mesh *MeshBuilder::getMesh() const {
     return m_ActiveGeo;
 }
 

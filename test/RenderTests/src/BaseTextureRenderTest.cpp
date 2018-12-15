@@ -28,7 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/Shader.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Geometry.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 
@@ -121,9 +121,9 @@ public:
 
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
-        Scene::GeometryBuilder geoBuilder;
+        Scene::MeshBuilder geoBuilder;
         geoBuilder.allocQuads( VertexType::RenderVertex, BufferAccessType::ReadOnly );
-        Mesh *geo = geoBuilder.getGeometry();
+        Mesh *geo = geoBuilder.getMesh();
         rbSrv->attachGeo( geo, 0 );
 
         // use default material

@@ -89,9 +89,9 @@ protected:
         Scene::Node *geoNode = m_stage->createNode( "geo", nullptr );
         const Scene::Node::AABB &aabb = geoNode->getAABB();
 
-        Scene::GeometryBuilder myBuilder;
-        myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
-        RenderBackend::Mesh *mesh = myBuilder.getGeometry();
+        Scene::MeshBuilder meshBuilder;
+        meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+        RenderBackend::Mesh *mesh = meshBuilder.getMesh();
         if( nullptr != mesh ) {
 			m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
             m_transformMatrix.update();

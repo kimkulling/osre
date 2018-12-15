@@ -177,7 +177,7 @@ public:
 
     bool beginPass();
     
-    bool beginGeometryBatch();
+    bool beginRenderBatch();
 
     void setMatrix(MatrixType type, const glm::mat4 &m );
     
@@ -197,7 +197,7 @@ public:
 
     void attachGeoInstance(const CPPCore::TArray<GeoInstanceData*> &instanceData);
 
-    bool endGeometryBatch();
+    bool endRenderBatch();
 
     bool endPass();
 

@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/Shader.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Geometry.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 #include <osre/Scene/GeometryBuilder.h>
 
@@ -106,9 +106,9 @@ public:
     bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
-        Scene::GeometryBuilder myBuilder;
+        Scene::MeshBuilder myBuilder;
         myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-        Mesh *geo = myBuilder.getGeometry();
+        Mesh *geo = myBuilder.getMesh();
         rbSrv->attachGeo( geo, NumInstances );
 
         // use a default material

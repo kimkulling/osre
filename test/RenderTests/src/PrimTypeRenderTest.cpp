@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Geometry.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
 
@@ -97,13 +97,13 @@ public:
 
         static ui32 NumGeo( 2 );
 
-        GeometryBuilder geoBuilder;
-        geoBuilder.allocPoints(VertexType::ColorVertex, BufferAccessType::ReadOnly, NumPoints, points, col);
-        Mesh *ptGeo = geoBuilder.getGeometry();
+        MeshBuilder meshBuilder;
+        meshBuilder.allocPoints(VertexType::ColorVertex, BufferAccessType::ReadOnly, NumPoints, points, col);
+        Mesh *ptGeo = meshBuilder.getMesh();
         rb->attachGeo( ptGeo, 0 );
-        geoBuilder.allocEmptyGeometry(VertexType::ColorVertex, 1);
-        Mesh *lineGeo = geoBuilder.getGeometry();
-        lineGeo->m_vb = GeometryBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly );
+        meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 1);
+        Mesh *lineGeo = meshBuilder.getMesh();
+        lineGeo->m_vb = MeshBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly );
         lineGeo->m_indextype = IndexType::UnsignedShort;
         ui32 size = sizeof( GLushort ) * NumIndices;
         lineGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );

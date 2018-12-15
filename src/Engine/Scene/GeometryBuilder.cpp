@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
-#include <osre/RenderBackend/Geometry.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/Tokenizer.h>
 #include <osre/Debugging/osre_debugging.h>
@@ -81,7 +81,7 @@ static const String TextFsSrc =
     "    vFragColor = texture( tex0, UV );\n"
 	"};\n";
 
-void GeometryDiagnosticUtils::dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset ) {
+void MeshDiagnostic::dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset ) {
     std::stringstream stream;
     stream << std::endl;
     stream << "i = " << i << " : " << textPos[ VertexOffset + 0 ].x << ", " << textPos[ VertexOffset + 0 ].y << ", " << textPos[ VertexOffset + 0 ].z << "\n";
@@ -91,7 +91,7 @@ void GeometryDiagnosticUtils::dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 Vert
     osre_info( Tag, stream.str() );
 }
 
-void GeometryDiagnosticUtils::dumpTextTex0Box( ui32 i, glm::vec2 *tex0Pos, ui32 VertexOffset ) {
+void MeshDiagnostic::dumpTextTex0Box( ui32 i, glm::vec2 *tex0Pos, ui32 VertexOffset ) {
     std::stringstream stream;
     stream << std::endl;
     stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 0 ].x << ", " << tex0Pos[ VertexOffset + 0 ].y << "\n";
@@ -108,7 +108,7 @@ static void dumpRenderVertex( ui32 idx, const RenderBackend::RenderVert &vertex 
     std::cout << "v[" << idx << "].tex0     = " << vertex.tex0.x     << "|" << vertex.tex0.y     << "\n";
 }
 
-void GeometryDiagnosticUtils::dumpVertices( RenderBackend::RenderVert *renderVertices, ui32 numVertices ) {
+void MeshDiagnostic::dumpVertices( RenderBackend::RenderVert *renderVertices, ui32 numVertices ) {
     if ( 0 == numVertices || nullptr == renderVertices ) {
         return;
     }
@@ -118,7 +118,7 @@ void GeometryDiagnosticUtils::dumpVertices( RenderBackend::RenderVert *renderVer
     }
 }
 
-void GeometryDiagnosticUtils::dumpVertices(const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices) {
+void MeshDiagnostic::dumpVertices(const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices) {
 	if ( renderVertices.isEmpty() ) {
 		return;
 	}
@@ -127,7 +127,7 @@ void GeometryDiagnosticUtils::dumpVertices(const CPPCore::TArray<RenderBackend::
 	}
 }
 
-void GeometryDiagnosticUtils::dumpIndices(const CPPCore::TArray<ui16> &indexArray) {
+void MeshDiagnostic::dumpIndices(const CPPCore::TArray<ui16> &indexArray) {
 	if ( indexArray.isEmpty() ) {
 		return;
 	}
@@ -140,7 +140,7 @@ void GeometryDiagnosticUtils::dumpIndices(const CPPCore::TArray<ui16> &indexArra
 	std::cout << "\n";
 }
 
-void GeometryDiagnosticUtils::dumpIndices( ui16 *indices, ui32 numIndices ) {
+void MeshDiagnostic::dumpIndices( ui16 *indices, ui32 numIndices ) {
     if ( nullptr == indices || 0 == numIndices ) {
         return;
     }
@@ -154,7 +154,7 @@ void GeometryDiagnosticUtils::dumpIndices( ui16 *indices, ui32 numIndices ) {
     osre_info( Tag, stream.str() );
 }
 
-void GeometryDiagnosticUtils::dumpIndices( const CPPCore::TArray<ui32> &indexArray ) {
+void MeshDiagnostic::dumpIndices( const CPPCore::TArray<ui32> &indexArray ) {
     if ( indexArray.isEmpty() ) {
         return;
     }
@@ -166,16 +166,16 @@ void GeometryDiagnosticUtils::dumpIndices( const CPPCore::TArray<ui32> &indexArr
 
 }
 
-GeometryBuilder::GeometryBuilder() 
+MeshBuilder::MeshBuilder() 
 : m_ActiveGeo( nullptr ) {
     // empty
 }
 
-GeometryBuilder::~GeometryBuilder() {
+MeshBuilder::~MeshBuilder() {
     // empty
 }
 
-void GeometryBuilder::allocEmptyGeometry( VertexType type, ui32 numGeo ) {
+void MeshBuilder::allocEmptyMesh( VertexType type, ui32 numGeo ) {
     m_ActiveGeo = Mesh::create( numGeo );
     for ( ui32 i = 0; i < numGeo; i++ ) {
         m_ActiveGeo[ i ].m_vertextype = type;
@@ -183,7 +183,7 @@ void GeometryBuilder::allocEmptyGeometry( VertexType type, ui32 numGeo ) {
     }
 }
 
-void GeometryBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
+void MeshBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
     Mesh *geo = Mesh::create( 1 );
     geo->m_vertextype = type;
     geo->m_indextype = IndexType::UnsignedShort;
@@ -226,7 +226,7 @@ void GeometryBuilder::allocTriangles( VertexType type, BufferAccessType access )
     m_ActiveGeo = geo;
 }
 
-void GeometryBuilder::allocQuads( VertexType type, BufferAccessType access ) {
+void MeshBuilder::allocQuads( VertexType type, BufferAccessType access ) {
     Mesh *geo = Mesh::create( 1 );
     geo->m_vertextype = type;
     geo->m_indextype = IndexType::UnsignedShort;
@@ -282,11 +282,11 @@ void GeometryBuilder::allocQuads( VertexType type, BufferAccessType access ) {
     m_ActiveGeo = geo;
 }
 
-void GeometryBuilder::allocCube( RenderBackend::VertexType type, RenderBackend::BufferAccessType access ) {
+void MeshBuilder::allocCube( RenderBackend::VertexType type, RenderBackend::BufferAccessType access ) {
     m_ActiveGeo = Mesh::create( 1 );    
 }
 
-void GeometryBuilder::allocLineList( VertexType type, BufferAccessType access, ui32 numLines, 
+void MeshBuilder::allocLineList( VertexType type, BufferAccessType access, ui32 numLines, 
                                           glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices ) {
     Mesh *geo = Mesh::create( 1 );
     geo->m_vertextype = type;
@@ -296,7 +296,7 @@ void GeometryBuilder::allocLineList( VertexType type, BufferAccessType access, u
     geo->m_primGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
     geo->m_primGroups[ 0 ].init( IndexType::UnsignedShort, 2 * numLines, PrimitiveType::LineList, 0 );
 
-    geo->m_vb = Scene::GeometryBuilder::allocVertices( type, numLines, posArray, colorArray, nullptr, access );
+    geo->m_vb = Scene::MeshBuilder::allocVertices( type, numLines, posArray, colorArray, nullptr, access );
     geo->m_indextype = IndexType::UnsignedShort;
     ui32 size = sizeof( GLushort ) * numLines*2;
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
@@ -305,7 +305,7 @@ void GeometryBuilder::allocLineList( VertexType type, BufferAccessType access, u
     m_ActiveGeo = geo;
 }
 
-void GeometryBuilder::allocPoints( VertexType type, BufferAccessType access, ui32 numPoints, 
+void MeshBuilder::allocPoints( VertexType type, BufferAccessType access, ui32 numPoints, 
                                         glm::vec3 *posArray, glm::vec3 *colorArray ) {
     // colors
     CPPCore::TArray<ui16> indices;
@@ -317,7 +317,7 @@ void GeometryBuilder::allocPoints( VertexType type, BufferAccessType access, ui3
     Mesh *ptGeo = Mesh::create( 1 );
     ptGeo->m_vertextype = type;
 
-    ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, numPoints, posArray, 
+    ptGeo->m_vb = Scene::MeshBuilder::allocVertices( VertexType::ColorVertex, numPoints, posArray, 
                         colorArray, nullptr, access );
     ptGeo->m_indextype = IndexType::UnsignedShort;
     ui32 pt_size = sizeof( GLushort ) * numPoints;
@@ -439,7 +439,7 @@ static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const 
     }
 }
 
-void GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access ) {
+void MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access ) {
 	if ( text.empty() ) {
 		return;
 	}
@@ -490,7 +490,7 @@ void GeometryBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &te
     m_ActiveGeo = geo;
 }
 
-void GeometryBuilder::allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access, UiVertexCache &vc, UiIndexCache &ic) {
+void MeshBuilder::allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access, UiVertexCache &vc, UiIndexCache &ic) {
     glm::vec3 *textPos(nullptr), *colors(nullptr);
     glm::vec2 *tex0(nullptr);
     GLushort *textIndices(nullptr);
@@ -514,7 +514,7 @@ void GeometryBuilder::allocUiTextBox(f32 x, f32 y, f32 textSize, const String &t
 }
 
 
-void GeometryBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text ) {
+void MeshBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text ) {
     if ( nullptr == geo ) {
         osre_debug( Tag, "Pointer to geometry is nullptr." );
         return;
@@ -572,7 +572,7 @@ void GeometryBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text
     delete[] tex0;
 }
 
-BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm::vec3 *pos, 
+BufferData *MeshBuilder::allocVertices( VertexType type, ui32 numVerts, glm::vec3 *pos, 
                                             glm::vec3 *col1, glm::vec2 *tex0, BufferAccessType access ) {
     BufferData *data( nullptr );
     ui32 size( 0 );
@@ -628,7 +628,7 @@ BufferData *GeometryBuilder::allocVertices( VertexType type, ui32 numVerts, glm:
     return data;
 }
 
-void GeometryBuilder::updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, BufferData *vb ) {
+void MeshBuilder::updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, BufferData *vb ) {
     if ( nullptr == tex0 || nullptr == vb ) {
         return;
     }

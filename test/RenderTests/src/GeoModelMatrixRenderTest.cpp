@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/GeometryBuilder.h>
-#include <osre/RenderBackend/Geometry.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/Scene/DbgRenderer.h>
 
 #include <GL/glew.h>
@@ -57,26 +57,26 @@ public:
     bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
-        Scene::GeometryBuilder myBuilder;
+        Scene::MeshBuilder myBuilder;
         myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
-        Mesh *geo1 = myBuilder.getGeometry();
-        geo1->m_localMatrix = true; 
+        Mesh *mesh1 = myBuilder.getMesh();
+        mesh1->m_localMatrix = true; 
         TransformState transform;
         transform.setTranslation( 0.5f, 0, 0 );
         transform.setScale(0.2f, 0.2f, 0.2f);
-        transform.toMatrix( geo1->m_model );
+        transform.toMatrix( mesh1->m_model );
          
         rbSrv->beginPass();
 
-        rbSrv->attachGeo( geo1, 0 );
+        rbSrv->attachGeo( mesh1, 0 );
 
         myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
-        Mesh *geo2 = myBuilder.getGeometry();
-        geo2->m_localMatrix = true;
+        Mesh *mesh2 = myBuilder.getMesh();
+        mesh2->m_localMatrix = true;
         transform.setTranslation( -0.5f, 0, 0 );
         transform.setScale(0.2f, 0.2f, 0.2f);
-        transform.toMatrix( geo2->m_model );
-        rbSrv->attachGeo( geo2, 0 );
+        transform.toMatrix( mesh2->m_model );
+        rbSrv->attachGeo( mesh2, 0 );
 
         rbSrv->endPass();
 

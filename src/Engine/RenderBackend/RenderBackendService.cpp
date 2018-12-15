@@ -235,7 +235,7 @@ bool RenderBackendService::beginPass() {
     return true;
 }
 
-bool RenderBackendService::beginGeometryBatch() {
+bool RenderBackendService::beginRenderBatch() {
     if (nullptr != m_currentPass) {
         osre_warn(Tag, "Pass recording not active.");
         return false;
@@ -333,7 +333,7 @@ void RenderBackendService::attachGeoInstance( const CPPCore::TArray<GeoInstanceD
     m_newInstances.add( &instanceData[ 0 ], instanceData.size() );
 }
 
-bool RenderBackendService::endGeometryBatch() {
+bool RenderBackendService::endRenderBatch() {
     return true;
 }
 

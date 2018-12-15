@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Geometry.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/UI/Widget.h>
@@ -93,9 +93,9 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
     if ( !m_textBoxes.hasKey( id ) ) {
         f32 xTrans(0), yTrans(0);
         UI::WidgetCoordMapping::mapPosToWorld(x , y, xTrans, yTrans);
-        GeometryBuilder geoBuilder;
+        MeshBuilder geoBuilder;
         geoBuilder.allocTextBox(xTrans, yTrans, scale, text, BufferAccessType::ReadWrite);
-        Mesh *geo = geoBuilder.getGeometry();
+        Mesh *geo = geoBuilder.getMesh();
         m_rbSrv->attachGeo( geo, 0 );
         insertTextEntry( id, geo, text, m_textBoxes );
         geo->m_localMatrix = true;
@@ -109,12 +109,12 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
             }
             Mesh *geo( nullptr );
             if ( text.size() > entry->m_text.size() ) {
-                GeometryBuilder geoBuilder;
+                MeshBuilder geoBuilder;
                 geoBuilder.allocTextBox(0, 0, 0.1f, text, BufferAccessType::ReadWrite);
-                geo = geoBuilder.getGeometry();
+                geo = geoBuilder.getMesh();
                 entry->m_geo = geo;
             } else {
-                GeometryBuilder::updateTextBox( entry->m_geo, 0.1f, text );
+                MeshBuilder::updateTextBox( entry->m_geo, 0.1f, text );
                 geo = entry->m_geo;
             }
             m_rbSrv->attachGeoUpdate( geo );            
@@ -142,9 +142,9 @@ ui16 indices[ NumIndices ] = {
 };
 
 void DbgRenderer::renderAABB( const glm::mat4 &transform, const Collision::TAABB<f32> &aabb ) {
-    GeometryBuilder geoBuilder;
-    geoBuilder.allocEmptyGeometry(VertexType::ColorVertex, 1);
-    Mesh *geo = geoBuilder.getGeometry();
+    MeshBuilder geoBuilder;
+    geoBuilder.allocEmptyMesh(VertexType::ColorVertex, 1);
+    Mesh *geo = geoBuilder.getMesh();
 
     static const ui32 NumVertices = 8;
     ColorVert vertices[ NumVertices ];

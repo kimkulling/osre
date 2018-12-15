@@ -68,17 +68,17 @@ public:
     virtual bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
         
-        CPPCore::TArray<Mesh*> geoArray;
-        GeometryBuilder geoBuilder;
-        geoBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-        geoArray.add(geoBuilder.getGeometry());
+        CPPCore::TArray<Mesh*> meshArray;
+        MeshBuilder meshBuilder;
+        meshBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
+        meshArray.add(meshBuilder.getMesh());
         
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         
         rbSrv->beginPass();
         
         rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
-        rbSrv->attachGeo( geoArray, 0 );
+        rbSrv->attachGeo( meshArray, 0 );
         
         rbSrv->endPass();
 
