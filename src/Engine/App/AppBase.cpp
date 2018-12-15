@@ -77,13 +77,15 @@ public:
     }
 
     void onOSEvent( const Event &osEvent, const EventData *data ) override {
-        if ( m_uiScreen.isValid() ) {
-            osre_debug( Tag, "listener called" );
-            if ( osEvent == MouseButtonDownEvent ) {
-                MouseButtonEventData *mouseBtnData( ( MouseButtonEventData* )data );
-                const Point2ui pt( mouseBtnData->m_AbsX, mouseBtnData->m_AbsY );
-                m_uiScreen->mouseDown( pt );
-            }
+        if (!m_uiScreen.isValid()) {
+            return;
+        }
+
+        osre_debug( Tag, "listener called" );
+        if ( osEvent == MouseButtonDownEvent ) {
+            MouseButtonEventData *mouseBtnData( ( MouseButtonEventData* )data );
+            const Point2ui pt( mouseBtnData->m_AbsX, mouseBtnData->m_AbsY );
+            m_uiScreen->mouseDown( pt );
         }
     }
 
