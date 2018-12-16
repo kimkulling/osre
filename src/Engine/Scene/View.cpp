@@ -64,10 +64,6 @@ void View::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
     m_projection = glm::perspective(glm::radians(m_fov), aspect, zNear, zFar);
 }
 
-void View::observeNode( Node *node ) {
-    m_observedNode = node;
-}
-
 void View::update( Time dt ) {
     onUpdate( dt );
 }
