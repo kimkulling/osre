@@ -29,27 +29,39 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+struct OSRE_EXPORT VertexWeight {
+    ui32 m__vertexIdx;
+    f32  m_vertexWeight;
+};
+
+struct OSRE_EXPORT Bone {
+    String m_name;
+    CPPCore::TArray<VertexWeight*> m_vertexWeights;
+    glm::mat4 m_offsetMatrix;
+};
+
 struct OSRE_EXPORT Mesh {
-    bool            m_localMatrix;
-    glm::mat4       m_model;
-    Material       *m_material;
-    VertexType      m_vertextype;
-    BufferData     *m_vb;
-    IndexType       m_indextype;
-    BufferData     *m_ib;
-    ui32            m_numPrimGroups;
-    PrimitiveGroup *m_primGroups;
-    ui32            m_id;
+    bool                   m_localMatrix;
+    glm::mat4              m_model;
+    Material              *m_material;
+    VertexType             m_vertextype;
+    BufferData            *m_vb;
+    IndexType              m_indextype;
+    BufferData            *m_ib;
+    ui32                   m_numPrimGroups;
+    PrimitiveGroup        *m_primGroups;
+    ui32                   m_id;
+    CPPCore::TArray<Bone*> m_bones;
 
     static Mesh *create( ui32 numGeo );
     static void destroy( Mesh **geo );
     static ui32 getVertexSize( VertexType vertextype );
 
-    template<class TVertexType>
+    /*template<class TVertexType>
     inline
     static ui32 getVertexSize() {
         return sizeof( TVertexType );
-    }
+    }*/
 
     OSRE_NON_COPYABLE( Mesh )
 
