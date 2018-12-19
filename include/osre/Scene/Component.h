@@ -22,24 +22,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
+#include <osre/Scene/SceneCommon.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <cppcore/Container/TArray.h>
 
 #include <glm/glm.hpp>
 
 namespace OSRE {
-    
-namespace RenderBackend {
-    class RenderBackendService;
-
-    struct UniformVar;
-    struct Mesh;
-}
-
 namespace Scene {
-
-class Node;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

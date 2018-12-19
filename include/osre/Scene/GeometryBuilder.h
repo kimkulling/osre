@@ -22,19 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
+#include <osre/Scene/SceneCommon.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-// Forward declarations
 namespace OSRE {
-
-namespace RenderBackend {
-    struct Mesh;
-}
-
 namespace Scene {
 
 //-------------------------------------------------------------------------------------------------

@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Scene/SceneCommon.h>
 #include <osre/Common/Object.h>
 #include <cppcore/Container/THashMap.h>
 
@@ -42,9 +43,6 @@ namespace RenderBackend {
 }
 
 namespace Scene {
-
-class Node;
-class View;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -67,20 +65,25 @@ private:
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  This class is used to declare user-defined node factories.
 //-------------------------------------------------------------------------------------------------
 struct AbstractNodeFactory {
-    String m_type;
+    String m_type;  ///< The type descriptor.
 
+    /// @brief  The class constructor.
+    /// @param  type    [in] The type descriptor.
     AbstractNodeFactory( const String &type )
     : m_type( type ) {
         // empty
     }
 
+    /// @brief  The class destructor, virtual.
     virtual ~AbstractNodeFactory() {
         // empty
     }
 
+    /// @brief  Will return the type.
+    /// @return The type.
     virtual const String &getType() const {
         return m_type;
     }

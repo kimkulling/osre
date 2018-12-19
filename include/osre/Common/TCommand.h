@@ -61,7 +61,7 @@ TCommand<TParam, TFunc>::TCommand(TParam param, TFunc func)
 template<class TParam, class TFunc>
 inline
 TCommand<TParam, TFunc>::~TCommand() {
-
+    // empty
 }
 
 template<class TParam, class TFunc>

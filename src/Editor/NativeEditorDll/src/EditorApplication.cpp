@@ -93,7 +93,7 @@ int EditorApplication::importAsset( const String &filename, int flags ) {
         const f32 diam = aabb.getDiameter();
         const Vec3f center = aabb.getCenter();
 
-        Assets::Model::MeshArray meshArray = model->getMeshArray();
+        RenderBackend::MeshArray meshArray = model->getMeshArray();
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.update();
         RenderBackendService *rbSrv( getRenderBackendService() );

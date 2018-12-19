@@ -53,7 +53,7 @@ using namespace ::OSRE::Collision;
 static const String Tag = "AssimpWrapper";
 
 AssimpWrapper::AssimpWrapper( Common::Ids &ids )
-: m_geoArray()
+: m_meshArray()
 , m_matArray()
 , m_model( nullptr )
 , m_parent( nullptr )
@@ -116,7 +116,7 @@ bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
         return false;
     }
     convertSceneToModel( scene );
-    m_model->setMeshArray( m_geoArray );
+    m_model->setMeshArray( m_meshArray );
 
     return true;
 }
@@ -232,7 +232,7 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
 
     geo->m_material = m_matArray[matIdx];
     
-    m_geoArray.add( geo );
+    m_meshArray.add( geo );
     m_model->setAABB( aabb );
 }
 
@@ -255,11 +255,11 @@ void AssimpWrapper::handleNode( aiNode *node, Scene::Node *parent ) {
     if ( node->mNumMeshes > 0 ) {
         for ( ui32 i = 0; i < node->mNumMeshes; i++ ) {
             const ui32 meshIdx( node->mMeshes[ i ] );
-            if ( meshIdx >= m_geoArray.size() ) {
+            if ( meshIdx >= m_meshArray.size() ) {
                 continue;
             }
 
-            Mesh *geo( m_geoArray[ meshIdx ] );
+            Mesh *geo( m_meshArray[ meshIdx ] );
             if ( nullptr != geo ) {
                 newNode->addMesh( geo );
             }

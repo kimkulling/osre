@@ -22,28 +22,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Scene/SceneCommon.h>
 #include <osre/Common/Object.h>
 #include <osre/Common/Ids.h>
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>
 
 namespace OSRE {
-
-// Forward declarations
-namespace RenderBackend {
-    class RenderBackendService;
-}
-
 namespace Scene {
-
-class Stage;
-class View;
-
-/// @brief  The provided render modes for a world.
-enum class RenderMode {
-    Render2D = 0,   ///< A 2D-render environment
-    Render3D        ///< A 3D-render environment
-};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

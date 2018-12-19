@@ -39,6 +39,10 @@ namespace RenderBackend {
 // Forward declarations
 struct UniformVar;
 
+class Mesh;
+
+using MeshArray = CPPCore::TArray<RenderBackend::Mesh*>;
+
 class Shader;
 
 /// Describes an unset id.
@@ -116,8 +120,8 @@ enum class TextureParameterType {
     TexturePTNearest = 0,       ///< Use nearest filter mode.
     TexturePTLinear,            ///< Use linear interpolation mode.
     TexturePTClamp,             ///< Use clamp mode, texture data will be clamped.
-    TexturePTMirroredRepeat,    ///< Use mirror repeat mode, texture will be repeately mirrored.
-    TexturePTRepeat,            ///< Use repeat mode, texture will be repeately mirrored.
+    TexturePTMirroredRepeat,    ///< Use mirror repeat mode, texture will be repeated mirrored.
+    TexturePTRepeat,            ///< Use repeat mode, texture will be repeated mirrored.
     NumTextureParameterTypes,   ///< Number of enums.
     
     InvalidTextureParameterType,///< Enum for invalid enum.

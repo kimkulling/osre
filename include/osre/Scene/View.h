@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Scene/SceneCommon.h>
 #include <osre/Scene/Node.h>
 #include <osre/Common/Object.h>
 #include <osre/Collision/TAABB.h>
@@ -30,11 +31,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/mat4x4.hpp>
 
 namespace OSRE {
-    
-namespace RenderBackend {
-    class RenderBackendService;
-}
-
 namespace Scene {
 
 //-------------------------------------------------------------------------------------------------

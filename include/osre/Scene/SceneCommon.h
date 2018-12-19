@@ -22,24 +22,34 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Scene/SceneCommon.h>
-#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Common/osre_common.h>
 
 namespace OSRE {
+
+// Forward declarations
+namespace RenderBackend {
+    class RenderBackendService;
+    class Mesh;
+
+    struct Material;
+}
+
 namespace Scene {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT MaterialBuilder {
-public:
-    MaterialBuilder();
-    ~MaterialBuilder();
-    static RenderBackend::Material *createBuildinMaterial( RenderBackend::VertexType type );
-    static RenderBackend::Material *createBuildinUiMaterial();
+class Node;
+class World;
+class Stage;
+class View;
+class Component;
+class RenderComponent;
+class TransformComponent;
+
+/// @brief  The provided render modes for a world.
+enum class RenderMode {
+    Render2D = 0,   ///< A 2D-render environment
+    Render3D        ///< A 3D-render environment
 };
 
 } // Namespace Scene
-} // namespace OSRE
+} // Namespace OSRE
+

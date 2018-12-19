@@ -33,8 +33,7 @@ namespace OSRE {
 namespace RenderBackend {
     class RenderBackendService;
     class FontBase;
-
-    struct Mesh;
+    class Mesh;
 }
 
 namespace UI {

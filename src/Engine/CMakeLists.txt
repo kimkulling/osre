@@ -63,7 +63,8 @@ SET( assets_src
 # Common
 #==============================================================================
 SET( common_inc
-	${HEADER_PATH}/Common/TCommand.h
+	${HEADER_PATH}/Common/Common.h
+    ${HEADER_PATH}/Common/TCommand.h
     ${HEADER_PATH}/Common/AbstractCodec.h
     ${HEADER_PATH}/Common/AbstractEventHandler.h
     ${HEADER_PATH}/Common/AbstractProcessor.h
@@ -301,6 +302,7 @@ SET( scene_src
     Scene/World.cpp
 )
 SET( scene_inc
+    ${HEADER_PATH}/Scene/SceneCommon.h
     ${HEADER_PATH}/Scene/DbgRenderer.h
     ${HEADER_PATH}/Scene/Component.h
     ${HEADER_PATH}/Scene/GeometryBuilder.h

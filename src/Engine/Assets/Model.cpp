@@ -28,6 +28,7 @@ namespace OSRE {
 namespace Assets {
 
 using namespace ::OSRE::Collision;
+using namespace ::OSRE::RenderBackend;
 
 Model::Model() 
 : m_meshArray()
@@ -51,7 +52,7 @@ void Model::setMeshArray( MeshArray &geoArray ) {
     m_meshArray = geoArray;
 }
 
-const Model::MeshArray &Model::getMeshArray() const {
+const RenderBackend::MeshArray &Model::getMeshArray() const {
     return m_meshArray;
 }
 

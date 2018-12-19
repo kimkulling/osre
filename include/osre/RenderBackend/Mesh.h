@@ -40,7 +40,8 @@ struct OSRE_EXPORT Bone {
     glm::mat4 m_offsetMatrix;
 };
 
-struct OSRE_EXPORT Mesh {
+class OSRE_EXPORT Mesh {
+public:
     bool                   m_localMatrix;
     glm::mat4              m_model;
     Material              *m_material;
@@ -56,12 +57,6 @@ struct OSRE_EXPORT Mesh {
     static Mesh *create( ui32 numGeo );
     static void destroy( Mesh **geo );
     static ui32 getVertexSize( VertexType vertextype );
-
-    /*template<class TVertexType>
-    inline
-    static ui32 getVertexSize() {
-        return sizeof( TVertexType );
-    }*/
 
     OSRE_NON_COPYABLE( Mesh )
 
@@ -80,7 +75,6 @@ inline
 ui32 getVertexTypeSize() {
     return sizeof( TVertexType );
 }
-
 
 } // Namespace RenderBackend
 } // Namespace OSRE

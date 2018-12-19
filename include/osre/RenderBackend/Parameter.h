@@ -33,8 +33,8 @@ namespace OSRE {
 namespace RenderBackend {
 
 class RenderBackendService;
+class Mesh;
 
-struct Mesh;
 struct GeoInstanceData;
 struct Light;
 

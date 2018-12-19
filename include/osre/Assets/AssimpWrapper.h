@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
+#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Common/Ids.h>
 #include <osre/Collision/TAABB.h>
 
@@ -43,7 +43,8 @@ namespace Common {
 }
 
 namespace RenderBackend {
-    struct Mesh;
+    class Mesh;
+
     struct UniformVar;
     struct Material;
 }
@@ -74,9 +75,8 @@ protected:
     void handleMaterial( aiMaterial *material );
 
 private:
-    typedef CPPCore::TArray<RenderBackend::Mesh*> GeoArray;
-    GeoArray m_geoArray;
-    typedef CPPCore::TArray<RenderBackend::Material*> MaterialArray;
+    RenderBackend::MeshArray m_meshArray;
+    using MaterialArray = CPPCore::TArray<RenderBackend::Material*> ;
     MaterialArray m_matArray;
     Model *m_model;
     Scene::Node *m_parent;

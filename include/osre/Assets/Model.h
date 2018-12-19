@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
+#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Collision/TAABB.h>
 #include <cppcore/Container/TArray.h>
 
@@ -33,30 +33,24 @@ namespace Scene {
     class Node;
 }
 
-namespace RenderBackend {
-    struct Mesh;
-}
-
 namespace Assets {
 
 class OSRE_EXPORT Model {
 public: 
-    typedef Collision::TAABB<f32> ModelAABB;
-    typedef CPPCore::TArray<RenderBackend::Mesh*> MeshArray;
+    using ModelAABB = Collision::TAABB<f32>;
 
     Model();
-    Model( MeshArray *geoArray, Scene::Node *root, ModelAABB &aabb );
+    Model(RenderBackend::MeshArray *geoArray, Scene::Node *root, ModelAABB &aabb );
     ~Model();
-    void setMeshArray( MeshArray &geoArray );
-    const MeshArray &getMeshArray() const;
+    void setMeshArray(RenderBackend::MeshArray &geoArray );
+    const RenderBackend::MeshArray &getMeshArray() const;
     void setRootNode( Scene::Node *root );
     Scene::Node *getRootNode() const;
     void setAABB( const Collision::TAABB<f32> &aabb );
     const ModelAABB &getAABB() const;
 
 private:
-    MeshArray m_meshArray;
-
+    RenderBackend::MeshArray m_meshArray;
     Scene::Node *m_root;
     Collision::TAABB<f32> m_aabb;
 };

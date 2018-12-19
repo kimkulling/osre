@@ -22,24 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Scene/SceneCommon.h>
-#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Common/osre_common.h>
 
 namespace OSRE {
-namespace Scene {
+namespace Common {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT MaterialBuilder {
-public:
-    MaterialBuilder();
-    ~MaterialBuilder();
-    static RenderBackend::Material *createBuildinMaterial( RenderBackend::VertexType type );
-    static RenderBackend::Material *createBuildinUiMaterial();
-};
+// Forward declarations
+class Ids;
 
-} // Namespace Scene
-} // namespace OSRE
+} // Namespace Common
+} // Namespace OSRE

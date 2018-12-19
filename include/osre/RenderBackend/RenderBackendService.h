@@ -52,8 +52,9 @@ namespace Threading {
 
 namespace RenderBackend {
 
+class Mesh;
+
 struct BufferData;
-struct Mesh;
 struct GeoInstanceData;
 struct UniformVar;
 struct TransformMatrixBlock;
