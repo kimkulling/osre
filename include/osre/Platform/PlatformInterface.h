@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Platform/PlatformCommon.h>
 #include <osre/Common/AbstractService.h>
 #include <osre/Common/AbstractEventHandler.h>
 #include <osre/Common/Event.h>
@@ -44,16 +45,6 @@ namespace Properties {
 }
 
 namespace Platform {
-
-class AbstractWindow;
-class AbstractTimer;
-class AbstractPlatformEventQueue;
-class AbstractRenderContext;
-class AbstractDynamicLoader;
-class AbstractSystemInfo;
-
-struct AbstractInputUpdate;
-struct WindowsProperties;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

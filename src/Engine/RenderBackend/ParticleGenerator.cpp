@@ -114,5 +114,5 @@ void ParticleGenerator::update( d32 tick ) {
     m_rbSrv->attachGeoUpdate( m_ptGeo );
 }
 
-}
-}
+} // Namespace RenderBackend
+} // Namespace OSRE

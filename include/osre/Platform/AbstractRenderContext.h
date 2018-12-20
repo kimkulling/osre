@@ -22,13 +22,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
+#include <osre/Platform/PlatformCommon.h>
 
 namespace OSRE {
 namespace Platform {
-
-// Forward declarations
-class AbstractWindow;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

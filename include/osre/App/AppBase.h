@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
+#include <osre/App/AppCommon.h>
 #include <osre/Common/TCommand.h>
 #include <osre/Common/ArgumentParser.h>
 
@@ -61,15 +61,6 @@ namespace UI {
 
 namespace App {
         
-class MouseEventListener;
-
-/// @brief  Describes the requested render API.
-enum class RenderBackendType {
-    OpenGLRenderBackend = 0,    ///< OpenGL render API.
-    DX11Backend,                ///< DX11 render API.
-    VulkanRenderBackend         ///< Vulkan render API.
-};
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -100,8 +91,7 @@ public:
     /// @param  fullscreen  [in] true for fullscreen mode, false for windowed mode.
     /// @param  renderer    [in] The requested render mode.
     /// @return true, if the window was generated.
-    virtual bool initWindow( ui32 x, ui32 y, ui32 width, ui32 height, const String &title, 
-        bool fullscreen, RenderBackendType renderer );
+    virtual bool initWindow( ui32 x, ui32 y, ui32 width, ui32 height, const String &title, bool fullscreen, RenderBackendType renderer );
 
     /// @brief  Creates the application.
     /// @param  settings         [in] The user-defined settings.

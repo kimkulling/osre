@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
+#include <osre/Properties/PropertiesCommon.h>
 
 namespace CPPCore {
     class Variant;
@@ -30,8 +30,6 @@ namespace CPPCore {
 
 namespace OSRE {
 namespace Properties {
-
-class Property;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

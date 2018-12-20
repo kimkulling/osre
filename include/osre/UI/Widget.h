@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/UI/UICommon.h>
 #include <osre/Common/Object.h>
 #include <osre/Common/TFunctor.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -37,61 +38,6 @@ namespace RenderBackend {
 }
 
 namespace UI {
-
-class Screen;
-
-/// @brief  Behavior-flags for the widgets
-static const ui32 WidgetResizable = 1;
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-struct OSRE_EXPORT Style {
-    enum class ColorTable {
-        FGColorPanel = 0,
-        BGColorPanel,
-        FGColorWidget,
-        BGColorWidget,
-        TextColor,
-        Max
-    };
-
-    CPPCore::TArray<Color4> m_properties;
-    RenderBackend::FontBase *m_font;
-
-    Style()
-    : m_properties()
-    , m_font( nullptr ) {
-        // color panel
-        m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
-        m_properties.add( Color4( 0.9f, 0.9f, 0.9f, 1.f ) );
-        
-        // color button
-        m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
-        m_properties.add( Color4( 0.5f, 0.5f, 0.5f, 1.f ) );
-        
-        // color text
-        m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
-    }
-
-    bool operator == ( const Style &rhs ) const {
-        for ( ui32 i = 0; i < (ui32) ColorTable::Max; i++ ) {
-            if ( m_properties[ i ] != rhs.m_properties[ i ] ) {
-                return false;
-            }
-            if ( m_font != rhs.m_font ) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    bool operator != ( const Style &rhs ) const {
-        return !( *this == rhs );
-    }
-};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

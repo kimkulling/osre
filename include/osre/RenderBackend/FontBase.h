@@ -22,16 +22,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Common/Object.h>
 #include <osre/IO/Uri.h>
 
 namespace OSRE {
 namespace RenderBackend {
-
-// Forward declarations
-class OGLRenderBackend;
-
-struct OGLTexture;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

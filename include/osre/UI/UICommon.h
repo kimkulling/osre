@@ -22,28 +22,79 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/IO/IOCommon.h>
+#include <osre/Common/osre_common.h>
+
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
-namespace IO {
+
+namespace RenderBackend {
+    class FontBase;
+}
+
+namespace UI {
+
+class Widget;
+class Image;
+class TextBase;
+class Screen;
+
+struct UiFlags {
+    static const ui32 Resizable = 0x001;
+};
+
+/// @brief  Behavior-flags for the widgets
+static const ui32 WidgetResizable = 1;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief	This class implements static helpers to work with directories more easily.
+///	@brief  
 //-------------------------------------------------------------------------------------------------
-class Directory {
-public:
-    /// @brief  Will return true, when the directory exists.
-    /// @param  dir     [in] The name of the directory.
-    /// @return true, when the directory exists.
-    static bool exists( const String &dir );
+struct OSRE_EXPORT Style {
+    enum class ColorTable {
+        FGColorPanel = 0,
+        BGColorPanel,
+        FGColorWidget,
+        BGColorWidget,
+        TextColor,
+        Max
+    };
 
-    ///	@brief	Returns the directory separator for the current platform.
-    ///	@return	The directory separator 
-    /// @remark For instance using a Unix platform / will be returned.
-    static String getDirSeparator();
+    CPPCore::TArray<Color4> m_properties;
+    RenderBackend::FontBase *m_font;
+
+    Style()
+    : m_properties()
+    , m_font(nullptr) {
+        // color panel
+        m_properties.add(Color4(1.f, 1.f, 1.f, 1.f));
+        m_properties.add(Color4(0.9f, 0.9f, 0.9f, 1.f));
+
+        // color button
+        m_properties.add(Color4(1.f, 1.f, 1.f, 1.f));
+        m_properties.add(Color4(0.5f, 0.5f, 0.5f, 1.f));
+
+        // color text
+        m_properties.add(Color4(1.f, 1.f, 1.f, 1.f));
+    }
+
+    bool operator == (const Style &rhs) const {
+        for (ui32 i = 0; i < (ui32)ColorTable::Max; i++) {
+            if (m_properties[i] != rhs.m_properties[i]) {
+                return false;
+            }
+            if (m_font != rhs.m_font) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool operator != (const Style &rhs) const {
+        return !(*this == rhs);
+    }
 };
 
-} // Namespace IO
+} // Namespace UI
 } // Namespace OSRE

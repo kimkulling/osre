@@ -41,6 +41,10 @@ struct UniformVar;
 
 class Mesh;
 
+// TODO: remove me
+class OGLRenderBackend;
+class OGLTexture;
+
 using MeshArray = CPPCore::TArray<RenderBackend::Mesh*>;
 
 class Shader;

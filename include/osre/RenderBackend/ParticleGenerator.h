@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
+#include <osre/RenderBackend/RenderCommon.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -33,10 +33,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-struct Mesh;
-
-class RenderBackendService;
-
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief	This class offers some system-specific functions.
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT ParticleGenerator {
 public:
     ParticleGenerator( RenderBackendService *rbSrv );
@@ -53,5 +54,5 @@ private:
     Mesh *m_ptGeo;
 };
 
-}
-}
+} // Namespace RenderBackend
+} // Namespace OSRE

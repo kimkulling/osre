@@ -22,28 +22,32 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/IO/IOCommon.h>
+#include <osre/Common/osre_common.h>
+#include <osre/Common/Object.h>
 
 namespace OSRE {
-namespace IO {
+namespace Platform {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief	This class implements static helpers to work with directories more easily.
-//-------------------------------------------------------------------------------------------------
-class Directory {
-public:
-    /// @brief  Will return true, when the directory exists.
-    /// @param  dir     [in] The name of the directory.
-    /// @return true, when the directory exists.
-    static bool exists( const String &dir );
+// Forward declarations
+class AbstractWindow;
+class OSEventListener;
+class AbstractThreadEvent;
+class AbstractThreadLocalStorage;
+class AbstractCriticalSection;
+class AbstractThreadEvent;
+class AbstractThread;
+class AbstractAtomic;
+class AbstractThreadLocalStorage;
+class AbstractTimer;
+class AbstractPlatformEventQueue;
+class AbstractRenderContext;
+class AbstractDynamicLoader;
+class AbstractSystemInfo;
+class CPUInfo;
 
-    ///	@brief	Returns the directory separator for the current platform.
-    ///	@return	The directory separator 
-    /// @remark For instance using a Unix platform / will be returned.
-    static String getDirSeparator();
-};
+struct AbstractInputUpdate;
+struct WindowsProperties;
 
-} // Namespace IO
+} // Namespace Platform
 } // Namespace OSRE
+

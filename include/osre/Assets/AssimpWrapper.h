@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Assets/AssetsCommon.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Common/Ids.h>
 #include <osre/Collision/TAABB.h>

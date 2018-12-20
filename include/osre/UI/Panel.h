@@ -28,9 +28,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace UI {
 
-struct UiFlags {
-    static const ui32 Resizable = 0x001;
-};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
