@@ -40,6 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <assimp/vector3.h>
 
 #include <iostream>
 
@@ -52,7 +53,7 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
 using namespace ::OSRE::Collision;
 
-static const String Tag = "AssimpWrapper";
+static const c8* Tag = "AssimpWrapper";
 
 AssimpWrapper::AssimpWrapper( Common::Ids &ids )
 : m_meshArray()

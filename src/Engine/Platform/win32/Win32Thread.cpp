@@ -35,7 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-static const String Tag = "Win32Thread";
+static const c8 *Tag = "Win32Thread";
 
 Win32Thread::Win32Thread(  const String &name, ui32 stacksize  ) 
 : AbstractThread()

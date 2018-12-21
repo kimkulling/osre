@@ -29,7 +29,7 @@ namespace RenderBackend {
 
 using namespace ::OSRE::Common;
 
-static const String Tag = "UniformVar";
+static const c8 *Tag = "UniformVar";
 
 UniformDataBlob::UniformDataBlob()
 : m_data( nullptr )

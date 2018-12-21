@@ -30,7 +30,7 @@ namespace UI {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-static const String Tag = "StyleProvider";
+static const c8 *Tag = "StyleProvider";
 
 StyleProvider *StyleProvider::s_instance = nullptr;
 

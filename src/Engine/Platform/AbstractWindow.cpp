@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-static const String Tag = "AbstractSurface";
+static const c8 *Tag = "AbstractSurface";
 
 Resolution::Resolution( ResRequest req )
 : m_width( 0 )

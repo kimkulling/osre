@@ -40,11 +40,11 @@ namespace Scene {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-static const String Tag = "GeometryBuilder";
+static const c8 *Tag = "GeometryBuilder";
 
-static const String GLSLVersionString_400 = "#version 400 core\n";
+const String GLSLVersionString_400 = "#version 400 core\n";
 
-static const String TextVsSrc =
+const String TextVsSrc =
     GLSLVersionString_400 +
     "\n"
     "layout(location = 0) in vec3 position;	  // object space vertex position\n"
@@ -65,7 +65,7 @@ static const String TextVsSrc =
 	"    vUV = texcoord0;\n"
 	"};\n";
 
-static const String TextFsSrc =
+const String TextFsSrc =
     "#version 400 core\n"
     "\n"
     "in vec2 UV;\n"

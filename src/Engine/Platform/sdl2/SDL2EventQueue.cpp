@@ -39,7 +39,7 @@ using namespace ::OSRE::RenderBackend;
 
 using namespace ::CPPCore;
 
-static const String Tag = "SDL2EventHandler";
+static const c8 *Tag = "SDL2EventHandler";
 
 struct AbstractSDL2InputUpdate {
     //  The virtual destructor.

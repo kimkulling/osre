@@ -42,7 +42,7 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Properties;
 
 // To identify local log entries we will define this tag.
-static const String Tag = "HelloWorldApp"; 
+static const c8 *Tag = "HelloWorldApp"; 
 
 /// The example application, will create the render environment and render a simple triangle onto it
 class HelloWorldApp : public App::AppBase {

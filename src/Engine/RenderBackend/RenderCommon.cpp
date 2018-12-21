@@ -35,7 +35,7 @@ using namespace ::glm;
 VertComponent VertexLayout::ErrorComp;
 
 // The log tag for messages
-static const String Tag = "RenderCommon";
+static const c8 *Tag = "RenderCommon";
 
 /// @brief  The corresponding names for vertex components in a vertex layout
 static const String VertCompName[ static_cast<ui32>(VertexAttribute::NumVertexAttrs) ] = {

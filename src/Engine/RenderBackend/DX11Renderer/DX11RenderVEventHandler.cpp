@@ -44,7 +44,7 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::CPPCore;
 
-static const String Tag = "DX11RenderEventHandler";
+static const c8 *Tag = "DX11RenderEventHandler";
 
 DX11RenderEventHandler::DX11RenderEventHandler()
 : AbstractEventHandler()

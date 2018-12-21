@@ -43,7 +43,7 @@ using namespace ::OSRE::Platform;
 using namespace ::OSRE::Scene;
 using namespace ::OSRE::Assets;
 
-static const String Tag = "EditorMain";
+static const c8 *Tag = "EditorMain";
 
 static OSRE::EditorApplication *s_EditorApplication = nullptr;
 

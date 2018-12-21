@@ -43,7 +43,7 @@ namespace RenderTest {
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::UI;
 
-static const String Tag = "UiRenderTest";
+static const c8 *Tag = "UiRenderTest";
 
 class UiRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
@@ -82,7 +82,7 @@ public:
         return true;
     }
 
-    bool onDestroy(RenderBackendService *rbSrv) override {
+    bool onDestroy(RenderBackendService* ) override {
         delete m_uiRenderer;
 
         return true;

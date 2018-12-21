@@ -28,7 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-static const String Tag = "SDL2Surface";
+static const c8 *Tag = "SDL2Surface";
 
 SDL2Surface::SDL2Surface( WindowsProperties *props )
 : AbstractWindow( props )

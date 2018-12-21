@@ -30,7 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-static const String Tag = "SDL2RenderContext";
+static const c8 *Tag = "SDL2RenderContext";
 
 SDL2RenderContext::SDL2RenderContext()
 : AbstractRenderContext()

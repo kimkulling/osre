@@ -32,7 +32,7 @@ namespace RenderBackend {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 
-static const String Tag = "RenderCmdBuffer";
+static const c8 *Tag = "RenderCmdBuffer";
 
 RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRenderContext *ctx, Pipeline *pipeline )
 : m_renderbackend( renderBackend )

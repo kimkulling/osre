@@ -49,7 +49,7 @@ namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
-static const String Tag = "BasetexturerenderTest";
+static const c8 *Tag = "BasetexturerenderTest";
 
 const String VsSrc =
     "#version 400 core\n"

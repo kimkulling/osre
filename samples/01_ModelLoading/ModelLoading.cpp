@@ -47,7 +47,7 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
 
 // To identify local log entries 
-static const String Tag = "ModelLoadingApp"; 
+static const c8 *Tag = "ModelLoadingApp";
 
 // The file to load
 static const String ModelPath = "file://assets/Models/Obj/spider.obj";

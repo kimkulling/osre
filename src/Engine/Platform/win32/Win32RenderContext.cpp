@@ -30,7 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iostream>
 
-static const ::OSRE::String Tag = "Win32RenderContext";
+static const OSRE::c8 *Tag = "Win32RenderContext";
 
 static void APIENTRY openglCallbackFunction(
         GLenum source,

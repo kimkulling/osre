@@ -42,7 +42,7 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Threading;
 using namespace ::OSRE::Properties;
 
-static const String Tag = "RenderBackendService";
+static const c8 *Tag = "RenderBackendService";
 
 RenderBackendService::RenderBackendService()
 : AbstractService( "renderbackend/renderbackendserver" )

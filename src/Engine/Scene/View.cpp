@@ -31,7 +31,7 @@ namespace Scene {
 
 using namespace ::OSRE::RenderBackend;
 
-static const String Tag = "View";
+static const c8 *Tag = "View";
 
 View::View(const String &name, Common::Ids &ids, Node *parent )
 : Node( name, ids, RenderCompRequest::NoRenderComp, TransformCompRequest::TransformCompRequested, parent )

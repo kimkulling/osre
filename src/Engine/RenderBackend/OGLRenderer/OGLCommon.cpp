@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-static const String Tag = "OGLRenderBackend";
+static const c8 *Tag = "OGLRenderBackend";
 
 ui32 OGLRenderCmdAllocator::m_lastid( 0 );
 

@@ -35,8 +35,8 @@ namespace IO {
 
 using namespace ::CPPCore;
 
-static const String ZipSchema = "zip";
-static const String Tag = "ZipFileSystem";
+static const c8 *ZipSchema = "zip";
+static const c8 *Tag = "ZipFileSystem";
 
 ZipFileSystem::ZipFileSystem( const Uri &archive ) 
 : m_FileMap()

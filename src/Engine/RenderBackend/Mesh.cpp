@@ -33,7 +33,7 @@ using namespace ::OSRE::Common;
 static Ids s_Ids;
 
 // The log tag for messages
-static const String Tag = "Mesh";
+static const c8 *Tag = "Mesh";
 
 Mesh::Mesh()
 : m_localMatrix( false )

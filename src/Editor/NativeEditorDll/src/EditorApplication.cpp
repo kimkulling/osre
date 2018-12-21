@@ -32,7 +32,7 @@ using namespace ::OSRE::Scene;
 using namespace ::OSRE::Assets;
 
 
-static const String Tag = "EditorApplication";
+static const c8 *Tag = "EditorApplication";
 
 EditorApplication::EditorApplication( int argc, char *argv[] )
 : AppBase( argc, argv )

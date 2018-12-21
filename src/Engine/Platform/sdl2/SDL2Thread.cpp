@@ -36,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-static const String Tag = "SDL2Thread";
+static const c8 *Tag = "SDL2Thread";
 
 SDL2Thread::SDL2Thread( const String &name, ui32 stacksize )
 :  m_thread( nullptr )

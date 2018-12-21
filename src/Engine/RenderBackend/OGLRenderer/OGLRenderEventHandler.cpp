@@ -48,7 +48,7 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::CPPCore;
 
-static const String Tag = "OGLRendeEventHandler";
+static const c8 *Tag = "OGLRendeEventHandler";
 
 static bool setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTexture*> &textures ) {
     OSRE_ASSERT( nullptr != mat );
