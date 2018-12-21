@@ -34,16 +34,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <map>
 
 namespace OSRE {
-
-// Forward declarations
-namespace Common {
-    class EventTriggerer;
-}
-
-namespace Properties {
-    class Settings;
-}
-
 namespace Platform {
 
 //-------------------------------------------------------------------------------------------------
@@ -225,6 +215,7 @@ private:
 
 private:
     static PlatformInterface *s_instance;
+    
     const Properties::Settings *m_config;
     PluginType m_type;
     AbstractWindow *m_rootSurface;

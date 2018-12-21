@@ -39,6 +39,12 @@ public:
     /// @return true, when the directory exists.
     static bool exists( const String &dir );
 
+    /// @brief  Will separate the directory- and filename from an absolute path.
+    /// @param  absPath     [in] The absolute name with the path and the filename.
+    /// @param              [out] The path.
+    /// @param  filename    [out] The filename.
+    static void getDirectoryAndFile(const String absPath, String &path, String &filename);
+
     ///	@brief	Returns the directory separator for the current platform.
     ///	@return	The directory separator 
     /// @remark For instance using a Unix platform / will be returned.

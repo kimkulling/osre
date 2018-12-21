@@ -40,14 +40,9 @@ namespace RenderBackend {
 struct UniformVar;
 
 class Mesh;
-
-// TODO: remove me
-class OGLRenderBackend;
-class OGLTexture;
+class Shader;
 
 using MeshArray = CPPCore::TArray<RenderBackend::Mesh*>;
-
-class Shader;
 
 /// Describes an unset id.
 static const i32  UnsetHandle   = -1;

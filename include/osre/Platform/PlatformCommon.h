@@ -26,6 +26,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Object.h>
 
 namespace OSRE {
+
+// Forward declarations
+namespace Common {
+    class EventTriggerer;
+}
+
+namespace Properties {
+    class Settings;
+}
+
 namespace Platform {
 
 // Forward declarations
@@ -44,6 +54,7 @@ class AbstractRenderContext;
 class AbstractDynamicLoader;
 class AbstractSystemInfo;
 class CPUInfo;
+class PlatformInterface;
 
 struct AbstractInputUpdate;
 struct WindowsProperties;

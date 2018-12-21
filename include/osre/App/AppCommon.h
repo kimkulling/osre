@@ -25,6 +25,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 
 namespace OSRE {
+
+namespace RenderBackend {
+    class Pipeline;
+    class RenderBackendService;
+}
+
 namespace App {
 
 class MouseEventListener;

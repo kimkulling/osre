@@ -42,7 +42,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/UiRenderer.h>
 
 // private includes
-#include <src/Engine/Platform/PlatformPluginFactory.h>
+#include "src/Engine/Platform/PlatformPluginFactory.h"
 
 namespace OSRE {
 namespace App {
@@ -397,8 +397,10 @@ bool AppBase::onDestroy() {
     return true;
 }
 
+static const i64 Conversion2Micro = 1000;
+
 void AppBase::onUpdate() {
-    i64 microsecs = m_timer->getMilliCurrentSeconds() * 1000;
+    i64 microsecs = m_timer->getMilliCurrentSeconds() * Conversion2Micro;
     Time dt( microsecs );
     if ( nullptr != m_world ) {
         m_world->update( dt );

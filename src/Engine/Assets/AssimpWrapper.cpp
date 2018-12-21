@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/AssimpWrapper.h>
 #include <osre/Assets/Model.h>
 #include <osre/IO/Uri.h>
+#include <osre/IO/Directory.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/Ids.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -46,6 +47,7 @@ namespace OSRE {
 namespace Assets {
     
 using namespace ::Assimp;
+using namespace ::OSRE::IO;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
 using namespace ::OSRE::Collision;
@@ -66,22 +68,6 @@ AssimpWrapper::AssimpWrapper( Common::Ids &ids )
 
 AssimpWrapper::~AssimpWrapper() {
     // empty
-}
-
-static void separatePathAndFilename(const String pathAndFilename, String &path, String &filename) {
-    path.clear();
-    filename.clear();
-    if (pathAndFilename.empty()) {
-        return;
-    }
-
-    String::size_type pos = pathAndFilename.rfind("/");
-    if (String::npos == pos) {
-        return;
-    }
-
-    path = pathAndFilename.substr(0, pos+1);
-    filename = pathAndFilename.substr(pos+1, pathAndFilename.size() - pos-1);
 }
 
 bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
@@ -106,7 +92,7 @@ bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
     m_absPathWithFile = AssetRegistry::resolvePathFromUri( file );
 
     String filename;
-    separatePathAndFilename(m_absPathWithFile, m_root, filename);
+    Directory::getDirectoryAndFile(m_absPathWithFile, m_root, filename);
     filename = m_root + filename;
     Importer myImporter;
     const aiScene *scene = myImporter.ReadFile( filename, flags );
@@ -132,16 +118,18 @@ Model *AssimpWrapper::convertSceneToModel( const aiScene *scene ) {
 
     m_model = new Model;
     if ( scene->HasMaterials() ) {
-        for ( ui32 i = 0; i < scene->mNumMaterials; i++ ) {
+        for ( ui32 i = 0; i < scene->mNumMaterials; ++i ) {
             aiMaterial *currentMat( scene->mMaterials[ i ] );
-            if ( nullptr != currentMat ) {
-                handleMaterial(currentMat);
+            if (nullptr == currentMat) {
+                continue;
             }
+            
+            handleMaterial(currentMat);
         }
     }
     
     if ( scene->HasMeshes() ) {
-        for ( ui32 i = 0; i < scene->mNumMeshes; i++ ) {
+        for ( ui32 i = 0; i < scene->mNumMeshes; ++i ) {
             aiMesh *currentMesh( scene->mMeshes[ i ] );
             if ( nullptr == currentMesh ) {
                 continue;

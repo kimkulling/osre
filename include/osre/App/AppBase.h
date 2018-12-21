@@ -23,7 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/App/AppCommon.h>
-#include <osre/Common/TCommand.h>
+#include <osre/Platform/PlatformCommon.h>
+//#include <osre/Common/TCommand.h>
 #include <osre/Common/ArgumentParser.h>
 
 namespace OSRE {
@@ -37,17 +38,6 @@ namespace Scene {
     class View;
     class Stage;
     class World;
-}
-
-namespace Platform {
-    class AbstractTimer;
-    class AbstractWindow;
-    class PlatformInterface;
-}
-
-namespace RenderBackend {
-    class Pipeline;
-    class RenderBackendService;
 }
 
 namespace Properties {
