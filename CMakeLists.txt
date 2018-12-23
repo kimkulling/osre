@@ -100,7 +100,9 @@ set( ASSIMP_BUILD_TESTS OFF )
 
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
-ADD_SUBDIRECTORY( src/Editor )
+IF ( WIN32)
+  ADD_SUBDIRECTORY( src/Editor )
+ENDIF( WIN32 )
 
 IF ( OSRE_BUILD_TESTS )
     ADD_SUBDIRECTORY( test/RenderTests )

@@ -1,5 +1,6 @@
 #include <glm/gtc/epsilon.hpp>
 #include <glm/gtc/constants.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <glm/vector_relational.hpp>
 
 int test_defined()
@@ -25,7 +26,7 @@ int test_defined()
 	return 0;
 }
 
-template <typename T>
+template<typename T>
 int test_equal()
 {
 	int Error(0);
