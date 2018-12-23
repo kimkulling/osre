@@ -19,6 +19,11 @@ OPTION( OSRE_BUILD_TESTS
   ON
 )
 
+OPTION( OSRE_BUILD_DOC
+  "Build the doxygen-based documentationof OSRE."
+  OFF
+)
+
 # Cache these to allow the user to override them manually.
 set( LIB_INSTALL_DIR "lib" CACHE PATH
     "Path the built library files are installed to." )
@@ -122,16 +127,18 @@ ADD_SUBDIRECTORY( 3dparty/assimp )
 ADD_SUBDIRECTORY( 3dparty/jsoncpp-1.8.4 )
 
 # Include the doc component
-find_package(Doxygen)
-IF ( DOXYGEN_FOUND )
-    CONFIGURE_FILE( doc/Doxygen/osre_doxygen.in doc/Doxygen/osre_doxyfile @ONLY )
-    ADD_CUSTOM_TARGET( doc ALL ${DOXYGEN_EXECUTABLE} doc/Doxygen/osre_doxyfile
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        COMMENT "Generating OSRE-API documentation with Doxygen" VERBATIM
-    )
-else (DOXYGEN_FOUND)
-    message("Doxygen need to be installed to generate the doxygen documentation")
-ENDIF ( DOXYGEN_FOUND )
+IF( OSRE_BUILD_DOC )
+  find_package(Doxygen)
+  IF ( DOXYGEN_FOUND )
+      CONFIGURE_FILE( doc/Doxygen/osre_doxygen.in doc/Doxygen/osre_doxyfile @ONLY )
+      ADD_CUSTOM_TARGET( doc ALL ${DOXYGEN_EXECUTABLE} doc/Doxygen/osre_doxyfile
+          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+          COMMENT "Generating OSRE-API documentation with Doxygen" VERBATIM
+      )
+  else (DOXYGEN_FOUND)
+      message("Doxygen need to be installed to generate the doxygen documentation")
+  ENDIF ( DOXYGEN_FOUND )
+ENDIF( OSRE_BUILD_DOC )
 
 set_target_properties(  doc                PROPERTIES FOLDER Documentation )
 set_target_properties(  cppcore            PROPERTIES FOLDER ThirdParty )
