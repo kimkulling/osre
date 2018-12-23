@@ -20,7 +20,7 @@ Discuss with us: [![Join the chat at https://gitter.im/kimkulling/osre](https://
   + OpenGL-Renderbackend
   + Vulkan-Renderbackend
 - Linux ( [![Build Status](https://travis-ci.org/kimkulling/osre.png)](https://travis-ci.org/kimkulling/osre) ): 
-  + OpenGL-renderbackend
+  + OpenGL-Renderbackend
 
 # Static code analysis
 - Coverity Status: [![Coverity Scan Build Status](https://scan.coverity.com/projects/13242/badge.svg)](https://scan.coverity.com/projects/kimkulling-osre)
@@ -66,7 +66,7 @@ Use the generated Visual studio project files.
 
 ## Featurelist
 - OpenGL4.x-Renderer:
-   + Multithreaded renderer
+   + Multithreaded render-concept.
    + Primitive rendering
    + Texture mapping
    + Instanced rendering
