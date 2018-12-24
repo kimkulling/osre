@@ -47,6 +47,8 @@ TEST_F( DbgRendererTest, create_Success ) {
 }
 
 TEST_F( DbgRendererTest, clearDbgCache_Success ) {
+#ifdef OSRE_WINDOWS
+    
     RenderBackend::RenderBackendService *tstRBSrv = new TestRenderBackendService;
     DbgRenderer::create( tstRBSrv );
 
@@ -58,6 +60,8 @@ TEST_F( DbgRendererTest, clearDbgCache_Success ) {
     EXPECT_EQ( 0, num_2  );
     DbgRenderer::destroy();
     delete tstRBSrv;
+
+#endif
 }
 
 } // Namespace UnitTest
