@@ -24,6 +24,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/osre_common.h>
 
+// Forward declarations
+struct aiScene;
+struct aiMesh;
+struct aiNode;
+struct aiMaterial;
+struct aiAnimation;
+
 namespace OSRE {
 namespace Assets {
 

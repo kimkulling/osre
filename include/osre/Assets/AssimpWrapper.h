@@ -30,12 +30,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 
 
-// Forward declarations
-struct aiScene;
-struct aiMesh;
-struct aiNode;
-struct aiMaterial;
-
 namespace OSRE {
 
 namespace Common {
@@ -73,6 +67,7 @@ protected:
     void handleMesh( aiMesh *mesh );
     void handleNode( aiNode *node, Scene::Node *parent );
     void handleMaterial( aiMaterial *material );
+    void handleAnimation( aiAnimation *animation );
 
 private:
     RenderBackend::MeshArray m_meshArray;

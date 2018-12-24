@@ -30,7 +30,7 @@ namespace OSRE {
 namespace RenderBackend {
 
 struct OSRE_EXPORT VertexWeight {
-    ui32 m__vertexIdx;
+    ui32 m_vertexIdx;
     f32  m_vertexWeight;
 };
 

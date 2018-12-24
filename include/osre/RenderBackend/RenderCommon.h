@@ -425,7 +425,6 @@ struct OSRE_EXPORT Material {
 };
 
 ///	@brief
-///	@brief
 struct OSRE_EXPORT GeoInstanceData {
     BufferData *m_data;
 

@@ -83,7 +83,7 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
     return 0;
 }
 
-int STDCALL EditorUpdate() {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorUpdate() {
     if (nullptr == s_EditorApplication) {
         return 1;
     }
@@ -93,7 +93,7 @@ int STDCALL EditorUpdate() {
     return 0;
 }
 
-int STDCALL EditorRequestNextFrame() {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorRequestNextFrame() {
     if (nullptr == s_EditorApplication) {
         return 1;
     }
@@ -103,7 +103,7 @@ int STDCALL EditorRequestNextFrame() {
     return 0;
 }
 
-int STDCALL DestroyEditorApp() {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL DestroyEditorApp() {
     if (nullptr == s_EditorApplication) {
         return 1;
     }
@@ -114,7 +114,7 @@ int STDCALL DestroyEditorApp() {
     return 0;
 }
 
-int STDCALL NewProject( const char *name ) {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL NewProject( const char *name ) {
     if (nullptr == name) {
         return 1;
     }
@@ -123,7 +123,7 @@ int STDCALL NewProject( const char *name ) {
     return 0;
 }
 
-int STDCALL LoadWorld( const char *filelocation, int flags ) {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL LoadWorld( const char *filelocation, int flags ) {
     if (nullptr == s_EditorApplication) {
         return 1;
     }
@@ -137,7 +137,7 @@ int STDCALL LoadWorld( const char *filelocation, int flags ) {
     return retValue ? 0 : 1;
 }
 
-int STDCALL SaveWorld( const char *filelocation, int flags ) {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL SaveWorld( const char *filelocation, int flags ) {
     if (nullptr == s_EditorApplication) {
         return 1;
     }
@@ -151,7 +151,7 @@ int STDCALL SaveWorld( const char *filelocation, int flags ) {
     return retValue ? 0 : 1;
 }
 
-int STDCALL ImportAsset( const char *filename, int flags ) {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL ImportAsset( const char *filename, int flags ) {
     if (nullptr == s_EditorApplication) {
         return 1;
     }
