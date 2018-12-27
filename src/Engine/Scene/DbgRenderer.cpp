@@ -142,9 +142,9 @@ ui16 indices[ NumIndices ] = {
 };
 
 void DbgRenderer::renderAABB( const glm::mat4 &transform, const Collision::TAABB<f32> &aabb ) {
-    MeshBuilder geoBuilder;
-    geoBuilder.allocEmptyMesh(VertexType::ColorVertex, 1);
-    Mesh *geo = geoBuilder.getMesh();
+    MeshBuilder meshBuilder;
+    meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 1);
+    Mesh *geo = meshBuilder.getMesh();
 
     static const ui32 NumVertices = 8;
     ColorVert vertices[ NumVertices ];

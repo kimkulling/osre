@@ -10,10 +10,10 @@ namespace OSREEditor.Model.Actions {
     /// WIll implement the loading of a project
     /// </summary>
     class LoadProjectAction : IAction {
+
         private Project _project;
 
-        public LoadProjectAction( Project project)
-        {
+        public LoadProjectAction( Project project) {
             _project = project;
         }
 

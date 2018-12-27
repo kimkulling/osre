@@ -74,8 +74,7 @@ public:
 
     /// @brief  Will allocate an empty mesh.
     ///	@param  type        [in] The vertex type.
-    /// @return The created mesh.
-    void allocEmptyMesh( RenderBackend::VertexType type, ui32 numGeo );
+    void allocEmptyMesh( RenderBackend::VertexType type, ui32 numMeshes );
 
     /// @brief  Will allocate a triangle mesh.
     ///	@param  type        [in] The vertex type.
@@ -126,20 +125,25 @@ public:
 
     static void updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, RenderBackend::BufferData *vb );
 
-    RenderBackend::Mesh *getMesh() const;
+    RenderBackend::Mesh *getMesh();
 
     /// No copying.
     MeshBuilder( const MeshBuilder& ) = delete;
     MeshBuilder &operator = ( const MeshBuilder& ) = delete;
 
 private:
+    CPPCore::TArray<glm::vec3> m_posCache;
+    CPPCore::TArray<glm::vec3> m_diffuseColCache;
+    CPPCore::TArray<glm::vec3> m_normalCache;
+    CPPCore::TArray<glm::vec2> m_tex0Cache;
+    RenderBackend::PrimitiveGroup *m_activePrimGroup;
+    CPPCore::TArray<ui32> m_indexCache;
+
+    CPPCore::TArray<RenderBackend::PrimitiveGroup*> m_primGroupCache;
+    bool m_isDirty;
     RenderBackend::Mesh *m_ActiveGeo;
 };
 
-inline
-RenderBackend::Mesh *MeshBuilder::getMesh() const {
-    return m_ActiveGeo;
-}
 
 } // Namespace Scene
 } // namespace OSRE

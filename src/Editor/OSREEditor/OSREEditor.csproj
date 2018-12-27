@@ -55,6 +55,7 @@
     <Compile Include="Model\Actions\IAction.cs" />
     <Compile Include="Model\Actions\LoadProjectAction.cs" />
     <Compile Include="Model\Actions\NewProjectAction.cs" />
+    <Compile Include="Model\Actions\NewSceneNodeAction.cs" />
     <Compile Include="Model\Actions\SaveProjectAction.cs" />
     <Compile Include="Model\MarshallingHelper.cs" />
     <Compile Include="Model\Project.cs" />

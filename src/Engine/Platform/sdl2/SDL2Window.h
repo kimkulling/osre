@@ -45,7 +45,6 @@ public:
     /// Will set a new windows title.
     void setWindowsTitle( const String &title ) override;
 
-
 protected:
     /// The onCreate callback implementation.
     virtual bool onCreate() override;

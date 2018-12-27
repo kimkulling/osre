@@ -126,11 +126,9 @@ public:
             pt_indices[ i ] = static_cast<GLushort>( i );
         }
 
-        static const ui32 NumGeo( 1 );
-
-        Scene::MeshBuilder geoBuilder;
-        geoBuilder.allocEmptyMesh( VertexType::ColorVertex, NumGeo );
-        m_pointMesh = geoBuilder.getMesh();
+        Scene::MeshBuilder meshBuilder;
+        meshBuilder.allocEmptyMesh( VertexType::ColorVertex, 1 );
+        m_pointMesh = meshBuilder.getMesh();
 
         rbSrv->attachGeo( m_pointMesh, 0 );
         m_pointMesh->m_vb = Scene::MeshBuilder::allocVertices( VertexType::ColorVertex, NumPts, m_pos, m_col, nullptr, BufferAccessType::ReadOnly );

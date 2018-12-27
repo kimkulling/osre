@@ -48,8 +48,9 @@ namespace OSREEditor.Model.Actions {
             if (mMainWindow != null) {
                 mMainWindow.Text = ProjectName;
             }
-            CurrentProject = new Project();
-            CurrentProject.ProjectName = ProjectName;
+            CurrentProject = new Project {
+                ProjectName = ProjectName
+            };
             int retCode = 0;
             retCode = OSREWrapper.CreateEditorApp(mHandle);
             OSREWrapper.NewProject(CurrentProject.ProjectName);

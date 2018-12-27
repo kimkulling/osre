@@ -14,14 +14,22 @@ namespace OSREEditor
 
         private ProjectTreeView _projectTreeView;
 
+        private OSREWrapper _osreWrapper;
+
         public MainEditorWindow()
         {
             InitializeComponent();
 
+
+            
             this.MouseClick += Window_MouseClick;
 
             _project = new Project();
+
             _projectTreeView = new ProjectTreeView(ref this.treeView1);
+
+            _osreWrapper = new OSREWrapper( this.logWindow );
+            _osreWrapper.InitCSharpModules();
         }
 
         private void quitToolStripMenuItem_Quit_Click(object sender, EventArgs e)

@@ -169,7 +169,6 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
 #else
         0,
 #endif
-        
         0
     };
 

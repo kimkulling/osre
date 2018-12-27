@@ -15,6 +15,7 @@ INCLUDE_DIRECTORIES(
 # NativeEditorDll
 #==============================================================================
 SET( native_editor_dll_src
+    NativeEditorDll/src/UiLogStream.h
     NativeEditorDll/src/SceneNodeIterator.h
     NativeEditorDll/src/EditorApplication.h
     NativeEditorDll/src/EditorApplication.cpp

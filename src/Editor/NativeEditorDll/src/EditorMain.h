@@ -51,6 +51,8 @@ using namespace ::OSRE;
 #   define STDCALL
 #endif
 
+typedef void(STDCALL *fnc_log_callback) (int, const char*);
+
 struct CSharpEvent {
     int type;
     int x;

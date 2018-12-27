@@ -70,11 +70,9 @@ void ParticleGenerator::init( ui32 numPoints ) {
         m_pt_indices[ i ] = static_cast< GLushort >( i );
     }
 
-    static const ui32 NumGeo( 1 );
-
-    Scene::MeshBuilder geoBuilder;
-    geoBuilder.allocEmptyMesh(VertexType::ColorVertex, NumGeo);
-    m_ptGeo = geoBuilder.getMesh();
+    Scene::MeshBuilder meshBuilder;
+    meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 1 );
+    m_ptGeo = meshBuilder.getMesh();
     m_rbSrv->attachGeo( m_ptGeo, 0 );
     m_ptGeo->m_vb = Scene::MeshBuilder::allocVertices( VertexType::ColorVertex, m_numPoints, m_pos, m_col, nullptr, BufferAccessType::ReadOnly );
     m_ptGeo->m_indextype = IndexType::UnsignedShort;
