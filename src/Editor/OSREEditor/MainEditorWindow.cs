@@ -14,13 +14,11 @@ namespace OSREEditor
 
         private ProjectTreeView _projectTreeView;
 
-        private OSREWrapper _osreWrapper;
+        private readonly OSREWrapper _osreWrapper;
 
         public MainEditorWindow()
         {
             InitializeComponent();
-
-
             
             this.MouseClick += Window_MouseClick;
 

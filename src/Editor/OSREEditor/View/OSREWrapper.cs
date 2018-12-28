@@ -37,7 +37,9 @@ namespace OSREEditor.View
         private static extern void RegisterLogCallback(IntPtr fc);
 
         private LogCallbackDelegate _logCallback;
+
         private static TextBox _logger;
+
         public OSREWrapper(TextBox logWindow)
         {
             _logCallback = null;
@@ -59,10 +61,9 @@ namespace OSREEditor.View
         private static void Log(int severity, string message) {
             if (_logger.InvokeRequired) {
                 LogDelegate delegateLog = new LogDelegate(Log);
-                _logger.BeginInvoke(delegateLog, severity, message);
+                _logger?.BeginInvoke(delegateLog, severity, message);
             } else {
                 _logger?.AppendText(message + Environment.NewLine);
-                //_logger.Text += message;
             }
         }
     }
