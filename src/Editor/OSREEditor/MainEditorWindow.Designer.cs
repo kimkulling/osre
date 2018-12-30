@@ -44,6 +44,7 @@
             this.versionInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.logWindow = new System.Windows.Forms.TextBox();
+            this.panel3d = new System.Windows.Forms.Panel();
             this.panel2.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -54,7 +55,7 @@
             this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.treeView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.treeView1.Location = new System.Drawing.Point(812, 3);
+            this.treeView1.Location = new System.Drawing.Point(808, 3);
             this.treeView1.Name = "treeView1";
             this.treeView1.Size = new System.Drawing.Size(167, 666);
             this.treeView1.TabIndex = 0;
@@ -65,10 +66,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.panel3d);
             this.panel2.Controls.Add(this.treeView1);
             this.panel2.Location = new System.Drawing.Point(12, 39);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(984, 674);
+            this.panel2.Size = new System.Drawing.Size(980, 674);
             this.panel2.TabIndex = 1;
             // 
             // menuStrip2
@@ -187,6 +189,14 @@
             this.logWindow.Size = new System.Drawing.Size(980, 106);
             this.logWindow.TabIndex = 2;
             // 
+            // panel3d
+            // 
+            this.panel3d.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3d.Location = new System.Drawing.Point(3, 3);
+            this.panel3d.Name = "panel3d";
+            this.panel3d.Size = new System.Drawing.Size(799, 666);
+            this.panel3d.TabIndex = 1;
+            // 
             // MainEditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -225,6 +235,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStripMenuItem versionInfoToolStripMenuItem;
         private System.Windows.Forms.TextBox logWindow;
+        private System.Windows.Forms.Panel panel3d;
     }
 }
 

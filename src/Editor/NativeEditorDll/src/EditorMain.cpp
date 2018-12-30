@@ -73,7 +73,7 @@ static const c8 *Tag = "EditorMain";
 
 static OSRE::EditorApplication *s_EditorApplication = nullptr;
 
-extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle ) {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle, int width, int height) {
 #ifdef OSRE_WINDOWS
     if (nullptr == s_EditorApplication) {
         HWND mainWH( nullptr );
@@ -101,7 +101,7 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
             ::GetClientRect( mainWH, &rect );
             const ui32 w = rect.right - rect.left;
 
-            ::MoveWindow( childHandle, 25, 45, w - 240, rect.bottom - 45, TRUE );
+            ::MoveWindow( childHandle, 25, 45, width, height, TRUE );
         }
 
         ::CPPCore::TArray<const Common::Event*> eventArray;

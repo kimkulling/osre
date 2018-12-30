@@ -9,7 +9,7 @@ namespace OSREEditor.View
         const string EditorDllName = "osre_nativeeditor.dll";
 
         [DllImport(EditorDllName)]
-        public static extern int CreateEditorApp(IntPtr handle);
+        public static extern int CreateEditorApp(IntPtr handle, int width, int height);
 
         [DllImport(EditorDllName)]
         public static extern int EditorRequestNextFrame();
@@ -36,13 +36,10 @@ namespace OSREEditor.View
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         private static extern void RegisterLogCallback(IntPtr fc);
 
-        private LogCallbackDelegate _logCallback;
-
         private static TextBox _logger;
 
         public OSREWrapper(TextBox logWindow)
         {
-            _logCallback = null;
             _logger = logWindow;
         }
 
@@ -50,8 +47,8 @@ namespace OSREEditor.View
 
         public void InitCSharpModules()
         {
-            _logCallback = Log;
-            var ipLog = Marshal.GetFunctionPointerForDelegate(_logCallback);
+            LogCallbackDelegate logCallback = Log;
+            var ipLog = Marshal.GetFunctionPointerForDelegate(logCallback);
             if (ipLog != null)
             {
                 RegisterLogCallback(ipLog);

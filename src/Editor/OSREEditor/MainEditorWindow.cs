@@ -23,9 +23,7 @@ namespace OSREEditor
             this.MouseClick += Window_MouseClick;
 
             _project = new Project();
-
             _projectTreeView = new ProjectTreeView(ref this.treeView1);
-
             _osreWrapper = new OSREWrapper( this.logWindow );
             _osreWrapper.InitCSharpModules();
         }
@@ -38,7 +36,8 @@ namespace OSREEditor
         private void newToolStripMenuItem_New_Click(object sender, EventArgs e)
         {
             IntPtr windowsHandle = this.Handle;
-            NewProject npDialog = new NewProject(windowsHandle, this);
+            var size = this.panel3d.Size;
+            NewProject npDialog = new NewProject(windowsHandle, this, size.Width, size.Height);
             if ( npDialog.ShowDialog() == DialogResult.OK ) {
                 _project = Project.Instance;
                 if (_project != null) {
