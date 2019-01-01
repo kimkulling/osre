@@ -1,19 +1,18 @@
 # OSRE - An Open Source Render Experience
 
-Just another open-source render experience. feel free to play around with it! I tried it again and again
-and always reached the point where it got hard to implement som new features. So enjoy another try to build
-a modern multi-threaded platform-indipendent render-engine in c++.
+Just another open-source renderer. So feel free to play around with it!
 
 Some features:
-- Default rendering + instanced rendering ( done in a separate thread )
-- OS-independent task support to make multi-threaded rendering more easy
-- Platform abstraction
-- Model import via Asset-Importer-Lib
+- Multithreaded rendering + instanced-rendering
+- Platform abstraction-layer
+- OS-independent task-support to make multi-threaded rendering more easy
+- Model-import provided by Asset-Importer-Lib ( see https://github.com/assimp/assimp )
 - Bitmap-Font-Rendering
-- Simple Scenegraph to manage your scene
-- Simple UI providing Panels, and Buttons
+- Simple scenegraph-module
+- Simple UI-module providing Panels Buttons and some more stuff
+- CMake base build environment
 
-Discuss with us: [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Supported platforms:
 - Windows ( [![Build status](https://ci.appveyor.com/api/projects/status/q2ivokgqcit9k5w1/branch/master?svg=true)](https://ci.appveyor.com/project/kimkulling/osre/branch/master) ): 
