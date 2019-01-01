@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.panel2 = new System.Windows.Forms.Panel();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
@@ -42,28 +41,23 @@
             this.SceneMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.versionInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.logWindow = new System.Windows.Forms.TextBox();
+            this.panel3d = new System.Windows.Forms.Panel();
             this.panel2.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1008, 24);
-            this.menuStrip1.TabIndex = 2;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
             // treeView1
             // 
             this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.treeView1.Location = new System.Drawing.Point(621, 3);
+            this.treeView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.treeView1.Location = new System.Drawing.Point(808, 3);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(170, 660);
+            this.treeView1.Size = new System.Drawing.Size(167, 666);
             this.treeView1.TabIndex = 0;
             // 
             // panel2
@@ -71,10 +65,12 @@
             this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.panel3d);
             this.panel2.Controls.Add(this.treeView1);
-            this.panel2.Location = new System.Drawing.Point(205, 39);
+            this.panel2.Location = new System.Drawing.Point(12, 39);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(791, 677);
+            this.panel2.Size = new System.Drawing.Size(980, 674);
             this.panel2.TabIndex = 1;
             // 
             // menuStrip2
@@ -165,6 +161,13 @@
             this.infoToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.infoToolStripMenuItem.Text = "Info";
             // 
+            // versionInfoToolStripMenuItem
+            // 
+            this.versionInfoToolStripMenuItem.Name = "versionInfoToolStripMenuItem";
+            this.versionInfoToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.versionInfoToolStripMenuItem.Text = "Version Info";
+            this.versionInfoToolStripMenuItem.Click += new System.EventHandler(this.versionInfoToolStripMenuItem_Click);
+            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.menuStrip2);
@@ -173,22 +176,35 @@
             this.panel1.Size = new System.Drawing.Size(173, 451);
             this.panel1.TabIndex = 0;
             // 
-            // versionInfoToolStripMenuItem
+            // logWindow
             // 
-            this.versionInfoToolStripMenuItem.Name = "versionInfoToolStripMenuItem";
-            this.versionInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.versionInfoToolStripMenuItem.Text = "Version Info";
-            this.versionInfoToolStripMenuItem.Click += new System.EventHandler(this.versionInfoToolStripMenuItem_Click);
+            this.logWindow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.logWindow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.logWindow.Cursor = System.Windows.Forms.Cursors.No;
+            this.logWindow.Location = new System.Drawing.Point(12, 719);
+            this.logWindow.Multiline = true;
+            this.logWindow.Name = "logWindow";
+            this.logWindow.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.logWindow.Size = new System.Drawing.Size(980, 106);
+            this.logWindow.TabIndex = 2;
+            // 
+            // panel3d
+            // 
+            this.panel3d.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3d.Location = new System.Drawing.Point(3, 3);
+            this.panel3d.Name = "panel3d";
+            this.panel3d.Size = new System.Drawing.Size(799, 666);
+            this.panel3d.TabIndex = 1;
             // 
             // MainEditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1008, 729);
+            this.ClientSize = new System.Drawing.Size(1008, 837);
+            this.Controls.Add(this.logWindow);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainEditorWindow";
             this.Text = "Form1";
             this.panel2.ResumeLayout(false);
@@ -202,7 +218,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.Panel panel2;
@@ -219,6 +234,8 @@
         private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStripMenuItem versionInfoToolStripMenuItem;
+        private System.Windows.Forms.TextBox logWindow;
+        private System.Windows.Forms.Panel panel3d;
     }
 }
 

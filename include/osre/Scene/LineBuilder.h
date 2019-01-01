@@ -22,38 +22,45 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Platform/PlatformCommon.h>
+#include <osre/Scene/SceneCommon.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
+namespace Scene {
 
-// Forward declarations
-namespace IO {
-    class Uri;
-}
-
-namespace Platform {
-
-class OSRE_EXPORT PlatformOperations {
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  
+//-------------------------------------------------------------------------------------------------
+class OSRE_EXPORT LineBuilder {
 public:
-    enum {
-        DlgButton_YesNo = 1,
-        DlgButton_ok = 2
-    };
+    LineBuilder();
+    ~LineBuilder();
+    LineBuilder &addLine(const Vec3f &pos0, const Vec3f &pos1);
+    LineBuilder &addLines(Vec3f *pos0, Vec3f *pos1, ui32 numLines);
+    RenderBackend::Mesh *getMesh();
 
-    enum DlgResults {
-        DlgButtonRes_Yes = 1,
-        DlgButtonRes_No,
-        DlgButtonRes_Ok
-    };
+    /// No copying.
+    LineBuilder(const LineBuilder &) = delete;
+    LineBuilder& operator = (const LineBuilder &) = delete;
 
-    static void getFileOpenDialog( const c8 *extensions, IO::Uri &location );
-    static void getFileSaveDialog( const c8 *extensions, IO::Uri &location );
-    static void getDialog( const String &title, const String &question, ui32 requestedButtons, DlgResults &result );
-    
-    PlatformOperations() = delete;
-    PlatformOperations(const PlatformOperations &) = delete;
-    ~PlatformOperations() = delete;
+protected:
+    void preparePrimGroups();
+
+private:
+    CPPCore::TArray<glm::vec3> m_posCache;
+    CPPCore::TArray<glm::vec3> m_diffuseColCache;
+    CPPCore::TArray<glm::vec3> m_normalCache;
+    CPPCore::TArray<glm::vec2> m_tex0Cache;
+    RenderBackend::PrimitiveGroup *m_activePrimGroup;
+    CPPCore::TArray<ui32> m_indexCache;
+
+    CPPCore::TArray<RenderBackend::PrimitiveGroup*> m_primGroupCache;
+    bool m_isDirty;
+    RenderBackend::Mesh *m_ActiveGeo;
 };
 
-} // Namespace Platform
+} // Namespace Scene
 } // Namespace OSRE

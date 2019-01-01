@@ -178,6 +178,7 @@ SET( math_inc
 #==============================================================================
 SET( platform_inc
     ${HEADER_PATH}/Platform/PlatformCommon.h
+    ${HEADER_PATH}/Platform/AbstractOSService.h
     ${HEADER_PATH}/Platform/AbstractThread.h
     ${HEADER_PATH}/Platform/AbstractThreadEvent.h
     ${HEADER_PATH}/Platform/AbstractThreadFactory.h
@@ -235,6 +236,8 @@ SET( platform_win32_src
     Platform/win32/Win32Timer.h
     Platform/win32/Win32DynamicLoader.cpp
     Platform/win32/Win32DynamicLoader.h
+    Platform/win32/Win32OSService.cpp
+    Platform/win32/Win32OSService.h
 )
 SET( platform_sdl2_src
     Platform/sdl2/SDL2Atomic.h
@@ -259,6 +262,8 @@ SET( platform_sdl2_src
     Platform/sdl2/SDL2DynamicLoader.cpp
     Platform/sdl2/SDL2DynamicLoader.h
 	Platform/sdl2/SDL2SystemInfo.h
+    Platform/sdl2/SDL2OSService.h
+    Platform/sdl2/SDL2OSService.cpp
 )
 
 IF( WIN32 )
@@ -308,10 +313,12 @@ SET( scene_inc
     ${HEADER_PATH}/Scene/TrackBall.h
     ${HEADER_PATH}/Scene/View.h
     ${HEADER_PATH}/Scene/World.h
+    ${HEADER_PATH}/Scene/LineBuilder.h
 )
 SET( scene_src
     Scene/DbgRenderer.cpp
     Scene/Component.cpp
+    Scene/LineBuilder.cpp
     Scene/GeometryBuilder.cpp
     Scene/MaterialBuilder.cpp
     Scene/Node.cpp

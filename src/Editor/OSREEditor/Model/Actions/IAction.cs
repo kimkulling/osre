@@ -22,8 +22,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 namespace OSREEditor.Model.Actions
 {
+    /// <summary>
+    /// This interfae is used to declare the API for acion implementations.
+    /// </summary>
     interface IAction
     {
+        /// <summary>
+        /// Override this for your action execution.
+        /// </summary>
+        /// <returns>true, if successful.</returns>
         bool Execute();
     }
 }

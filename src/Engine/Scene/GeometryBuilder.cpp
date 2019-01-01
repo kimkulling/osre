@@ -167,7 +167,8 @@ void MeshDiagnostic::dumpIndices( const CPPCore::TArray<ui32> &indexArray ) {
 }
 
 MeshBuilder::MeshBuilder() 
-: m_ActiveGeo( nullptr ) {
+: m_ActiveGeo( nullptr )
+, m_isDirty( false ) {
     // empty
 }
 
@@ -175,11 +176,11 @@ MeshBuilder::~MeshBuilder() {
     // empty
 }
 
-void MeshBuilder::allocEmptyMesh( VertexType type, ui32 numGeo ) {
-    m_ActiveGeo = Mesh::create( numGeo );
-    for ( ui32 i = 0; i < numGeo; i++ ) {
+void MeshBuilder::allocEmptyMesh( VertexType type, ui32 numMeshes ) {
+    m_ActiveGeo = Mesh::create(numMeshes);
+    for (ui32 i = 0; i < numMeshes; ++i) {
         m_ActiveGeo[ i ].m_vertextype = type;
-        m_ActiveGeo[ i ].m_indextype  = IndexType::UnsignedShort;
+        m_ActiveGeo[ i ].m_indextype = IndexType::UnsignedShort;
     }
 }
 
@@ -640,6 +641,10 @@ void MeshBuilder::updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, BufferDa
     }
     ::memcpy( vb->m_data, vert, vb->m_size );
     delete[] vert;
+}
+
+RenderBackend::Mesh *MeshBuilder::getMesh() {
+    return m_ActiveGeo;
 }
 
 } // Namespace Scene
