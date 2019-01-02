@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Scene/SceneCommon.h>
 #include <osre/Scene/Node.h>
 #include <osre/Common/Object.h>
 #include <osre/Collision/TAABB.h>
@@ -30,11 +31,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/mat4x4.hpp>
 
 namespace OSRE {
-    
-namespace RenderBackend {
-    class RenderBackendService;
-}
-
 namespace Scene {
 
 //-------------------------------------------------------------------------------------------------
@@ -47,7 +43,6 @@ public:
     View( const String &name, Common::Ids &ids, Node *parent = nullptr );
     virtual ~View();
     virtual void setProjectionParameters(f32 fov, f32 w, f32 h, f32 near, f32 far);
-    virtual void observeNode( Node *node );
     virtual void update( Time dt );
     virtual void draw( RenderBackend::RenderBackendService *renderBackendSrv );
     virtual void observeBoundingBox(const Collision::TAABB<f32> &box);

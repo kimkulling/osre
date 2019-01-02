@@ -1,17 +1,19 @@
 #define GLM_FORCE_SWIZZLE
-#include <glm/vector_relational.hpp>
+#include <glm/gtc/constants.hpp>
 #include <glm/gtc/vec1.hpp>
+#include <glm/ext/vector_relational.hpp>
+#include <glm/vec2.hpp>
 #include <vector>
 
-static glm::vec1 v1;
-static glm::vec1 v2(1);
+static glm::vec1 g1;
+static glm::vec1 g2(1);
 
 int test_vec1_operators()
 {
-	int Error(0);
+	int Error = 0;
 
-	glm::vec1 A(1.0f);
-	glm::vec1 B(1.0f);
+	glm::ivec1 A(1);
+	glm::ivec1 B(1);
 	{
 		bool R = A != B;
 		bool S = A == B;
@@ -20,10 +22,10 @@ int test_vec1_operators()
 	}
 
 	{
-		A *= 1.0f;
-		B *= 1.0;
-		A += 1.0f;
-		B += 1.0;
+		A *= 1;
+		B *= 1;
+		A += 1;
+		B += 1;
 
 		bool R = A != B;
 		bool S = A == B;
@@ -68,18 +70,6 @@ int test_vec1_ctor()
 	}
 #endif
 */
-#if GLM_HAS_UNRESTRICTED_UNIONS && defined(GLM_FORCE_SWIZZLE)
-	{
-		glm::vec2 A = glm::vec2(1.0f, 2.0f);
-		glm::vec2 B = A.xy;
-		glm::vec2 C(A.xy);
-		glm::vec2 D(A.xy());
-
-		Error += glm::all(glm::equal(A, B)) ? 0 : 1;
-		Error += glm::all(glm::equal(A, C)) ? 0 : 1;
-		Error += glm::all(glm::equal(A, D)) ? 0 : 1;
-	}
-#endif//GLM_HAS_UNRESTRICTED_UNIONS && defined(GLM_FORCE_SWIZZLE)
 
 	{
 		glm::vec2 A = glm::vec2(2.0f);
@@ -93,7 +83,7 @@ int test_vec1_ctor()
 	return Error;
 }
 
-int test_vec1_size()
+static int test_vec1_size()
 {
 	int Error = 0;
 
@@ -109,7 +99,7 @@ int test_vec1_size()
 	return Error;
 }
 
-int test_vec1_operator_increment()
+static int test_vec1_operator_increment()
 {
 	int Error(0);
 
@@ -136,17 +126,44 @@ int test_vec1_operator_increment()
 	return Error;
 }
 
-int main()
+static int test_swizzle()
 {
 	int Error = 0;
 
-	glm::vec1 v;
-	assert(v.length() == 1);
+#	if GLM_CONFIG_SWIZZLE == GLM_SWIZZLE_OPERATOR
+	{
+		glm::vec1 A = glm::vec1(1.0f);
+		//glm::vec1 B = A.x;
+		glm::vec1 C(A.x);
+
+		//Error += glm::all(glm::equal(A, B)) ? 0 : 1;
+		Error += glm::all(glm::equal(A, C, glm::epsilon<float>())) ? 0 : 1;
+	}
+#	endif//GLM_CONFIG_SWIZZLE == GLM_SWIZZLE_OPERATOR
+
+	return Error;
+}
+
+static int test_constexpr()
+{
+#if GLM_HAS_CONSTEXPR
+	static_assert(glm::vec1::length() == 1, "GLM: Failed constexpr");
+	static_assert(glm::vec1(1.0f).x > 0.0f, "GLM: Failed constexpr");
+#endif
+
+	return 0;
+}
+
+int main()
+{
+	int Error = 0;
 
 	Error += test_vec1_size();
 	Error += test_vec1_ctor();
 	Error += test_vec1_operators();
 	Error += test_vec1_operator_increment();
+	Error += test_swizzle();
+	Error += test_constexpr();
 	
 	return Error;
 }

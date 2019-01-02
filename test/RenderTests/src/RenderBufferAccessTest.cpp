@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Geometry.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
@@ -93,7 +93,7 @@ class RenderBufferAccessTest : public AbstractRenderTest {
     static const ui32 NumPts = 1000;
     glm::vec3 m_col[NumPts];
     glm::vec3 m_pos[NumPts];
-    Geometry *m_ptGeo;
+    Mesh *m_pointMesh;
 
 public:
     RenderBufferAccessTest()
@@ -128,22 +128,25 @@ public:
 
         static const ui32 NumGeo( 1 );
 
-        m_ptGeo = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, NumGeo ); 
-        rbSrv->attachGeo( m_ptGeo, 0 );
-        m_ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, NumPts, m_pos, m_col, nullptr, BufferAccessType::ReadOnly );
-        m_ptGeo->m_indextype = IndexType::UnsignedShort;
+        Scene::MeshBuilder geoBuilder;
+        geoBuilder.allocEmptyMesh( VertexType::ColorVertex, NumGeo );
+        m_pointMesh = geoBuilder.getMesh();
+
+        rbSrv->attachGeo( m_pointMesh, 0 );
+        m_pointMesh->m_vb = Scene::MeshBuilder::allocVertices( VertexType::ColorVertex, NumPts, m_pos, m_col, nullptr, BufferAccessType::ReadOnly );
+        m_pointMesh->m_indextype = IndexType::UnsignedShort;
         ui32 pt_size = sizeof( GLushort ) * NumPts;
-        m_ptGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, BufferAccessType::ReadOnly );
-        m_ptGeo->m_ib->copyFrom( pt_indices, pt_size );
+        m_pointMesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, BufferAccessType::ReadOnly );
+        m_pointMesh->m_ib->copyFrom( pt_indices, pt_size );
 
         // setup primitives
-        m_ptGeo->m_numPrimGroups = 1;
-        m_ptGeo->m_primGroups = new PrimitiveGroup[ m_ptGeo->m_numPrimGroups ];
-        m_ptGeo->m_primGroups[ 0 ].init( IndexType::UnsignedShort, NumPts, PrimitiveType::PointList, 0 );
+        m_pointMesh->m_numPrimGroups = 1;
+        m_pointMesh->m_primGroups = new PrimitiveGroup[ m_pointMesh->m_numPrimGroups ];
+        m_pointMesh->m_primGroups[ 0 ].init( IndexType::UnsignedShort, NumPts, PrimitiveType::PointList, 0 );
 
         // setup material
         Material *mat = Scene::MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
-        m_ptGeo->m_material = mat;
+        m_pointMesh->m_material = mat;
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
@@ -167,12 +170,12 @@ public:
 
         ui32 offset( 0 );
         for (ui32 i = 0; i < NumPts; i++) {
-            uc8 *ptr = (uc8*) m_ptGeo->m_vb->m_data;
+            uc8 *ptr = (uc8*) m_pointMesh->m_vb->m_data;
             ::memcpy( &ptr[offset], &m_pos[ i ], sizeof(glm::vec3));
             offset += sizeof( ColorVert );
         }
 
-        rbSrv->attachGeoUpdate( m_ptGeo );
+        rbSrv->attachGeoUpdate( m_pointMesh );
         
         return true;
     }

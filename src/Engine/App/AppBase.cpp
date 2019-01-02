@@ -42,7 +42,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/UiRenderer.h>
 
 // private includes
-#include <src/Engine/Platform/PlatformPluginFactory.h>
+#include "src/Engine/Platform/PlatformPluginFactory.h"
 
 namespace OSRE {
 namespace App {
@@ -77,13 +77,15 @@ public:
     }
 
     void onOSEvent( const Event &osEvent, const EventData *data ) override {
-        if ( m_uiScreen.isValid() ) {
-            osre_debug( Tag, "listener called" );
-            if ( osEvent == MouseButtonDownEvent ) {
-                MouseButtonEventData *mouseBtnData( ( MouseButtonEventData* )data );
-                const Point2ui pt( mouseBtnData->m_AbsX, mouseBtnData->m_AbsY );
-                m_uiScreen->mouseDown( pt );
-            }
+        if (!m_uiScreen.isValid()) {
+            return;
+        }
+
+        osre_debug( Tag, "listener called" );
+        if ( osEvent == MouseButtonDownEvent ) {
+            MouseButtonEventData *mouseBtnData( ( MouseButtonEventData* )data );
+            const Point2ui pt( mouseBtnData->m_AbsX, mouseBtnData->m_AbsY );
+            m_uiScreen->mouseDown( pt );
         }
     }
 
@@ -395,8 +397,10 @@ bool AppBase::onDestroy() {
     return true;
 }
 
+static const i64 Conversion2Micro = 1000;
+
 void AppBase::onUpdate() {
-    i64 microsecs = m_timer->getMilliCurrentSeconds() * 1000;
+    i64 microsecs = m_timer->getMilliCurrentSeconds() * Conversion2Micro;
     Time dt( microsecs );
     if ( nullptr != m_world ) {
         m_world->update( dt );

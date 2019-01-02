@@ -8,7 +8,7 @@
 
 namespace isPowerOfTwo
 {
-	template <typename genType>
+	template<typename genType>
 	struct type
 	{
 		genType		Value;
@@ -146,7 +146,7 @@ namespace isPowerOfTwo
 
 namespace ceilPowerOfTwo_advanced
 {
-	template <typename genIUType>
+	template<typename genIUType>
 	GLM_FUNC_QUALIFIER genIUType highestBitValue(genIUType Value)
 	{
 		genIUType tmp = Value;
@@ -159,13 +159,13 @@ namespace ceilPowerOfTwo_advanced
 		return result;
 	}
 
-	template <typename genType>
+	template<typename genType>
 	GLM_FUNC_QUALIFIER genType ceilPowerOfTwo_loop(genType value)
 	{
 		return glm::isPowerOfTwo(value) ? value : highestBitValue(value) << 1;
 	}
 
-	template <typename genType>
+	template<typename genType>
 	struct type
 	{
 		genType		Value;
@@ -247,8 +247,8 @@ namespace ceilPowerOfTwo_advanced
 
 		std::clock_t Timestramp2 = std::clock();
 
-		std::printf("ceilPowerOfTwo_loop: %d clocks\n", static_cast<unsigned int>(Timestramp1 - Timestramp0));
-		std::printf("glm::ceilPowerOfTwo: %d clocks\n", static_cast<unsigned int>(Timestramp2 - Timestramp1));
+		std::printf("ceilPowerOfTwo_loop: %d clocks\n", static_cast<int>(Timestramp1 - Timestramp0));
+		std::printf("glm::ceilPowerOfTwo: %d clocks\n", static_cast<int>(Timestramp2 - Timestramp1));
 
 		return Error;
 	}
@@ -332,7 +332,7 @@ namespace ceilPowerOfTwo
 
 namespace floorMultiple
 {
-	template <typename genType>
+	template<typename genType>
 	struct type
 	{
 		genType		Source;
@@ -372,7 +372,7 @@ namespace floorMultiple
 
 namespace ceilMultiple
 {
-	template <typename genType>
+	template<typename genType>
 	struct type
 	{
 		genType		Source;

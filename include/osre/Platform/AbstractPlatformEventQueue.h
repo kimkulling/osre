@@ -22,6 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Platform/PlatformCommon.h>
+
 #include <osre/Common/AbstractEventHandler.h>
 #include <osre/Common/EventTriggerer.h>
 #include <osre/Common/Object.h>
@@ -37,8 +39,6 @@ namespace RenderBackend {
 }
 
 namespace Platform {
-
-class OSEventListener;
 
 using EventDataList = CPPCore::TList<Common::EventData*> ;
 using EventPtrArray = CPPCore::TArray<const Common::Event*>;

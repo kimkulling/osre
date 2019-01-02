@@ -22,19 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
+#include <osre/Assets/AssetsCommon.h>
+#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Common/Ids.h>
 #include <osre/Collision/TAABB.h>
 
 #include <cppcore/Container/TArray.h>
 
-#include <assimp/vector3.h>
-
-// Forward declarations
-struct aiScene;
-struct aiMesh;
-struct aiNode;
-struct aiMaterial;
 
 namespace OSRE {
 
@@ -43,7 +37,8 @@ namespace Common {
 }
 
 namespace RenderBackend {
-    struct Geometry;
+    class Mesh;
+
     struct UniformVar;
     struct Material;
 }
@@ -72,11 +67,11 @@ protected:
     void handleMesh( aiMesh *mesh );
     void handleNode( aiNode *node, Scene::Node *parent );
     void handleMaterial( aiMaterial *material );
+    void handleAnimation( aiAnimation *animation );
 
 private:
-    typedef CPPCore::TArray<RenderBackend::Geometry*> GeoArray;
-    GeoArray m_geoArray;
-    typedef CPPCore::TArray<RenderBackend::Material*> MaterialArray;
+    RenderBackend::MeshArray m_meshArray;
+    using MaterialArray = CPPCore::TArray<RenderBackend::Material*> ;
     MaterialArray m_matArray;
     Model *m_model;
     Scene::Node *m_parent;

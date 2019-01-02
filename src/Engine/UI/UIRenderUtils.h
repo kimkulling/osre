@@ -29,7 +29,7 @@ namespace OSRE {
     
 // forward declarations
 namespace RenderBackend {
-    struct Geometry;
+    struct Mesh;
     struct Material;
 }
 
@@ -47,7 +47,7 @@ public:
     static void createRectFromStyle( WidgetType Type, const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
         UiIndexCache &indexCache );
     static Rect2ui computeTextBox( const String &text, f32 textSize );
-    static RenderBackend::Geometry *createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, 
+    static RenderBackend::Mesh *createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, 
         RenderBackend::Material *material );
     
 private:

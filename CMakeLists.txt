@@ -19,6 +19,11 @@ OPTION( OSRE_BUILD_TESTS
   ON
 )
 
+OPTION( OSRE_BUILD_DOC
+  "Build the doxygen-based documentationof OSRE."
+  OFF
+)
+
 # Cache these to allow the user to override them manually.
 set( LIB_INSTALL_DIR "lib" CACHE PATH
     "Path the built library files are installed to." )
@@ -100,7 +105,9 @@ set( ASSIMP_BUILD_TESTS OFF )
 
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
-ADD_SUBDIRECTORY( src/Editor )
+IF ( WIN32)
+  ADD_SUBDIRECTORY( src/Editor )
+ENDIF( WIN32 )
 
 IF ( OSRE_BUILD_TESTS )
     ADD_SUBDIRECTORY( test/RenderTests )
@@ -120,20 +127,33 @@ ADD_SUBDIRECTORY( 3dparty/assimp )
 ADD_SUBDIRECTORY( 3dparty/jsoncpp-1.8.4 )
 
 # Include the doc component
-find_package(Doxygen)
-IF ( DOXYGEN_FOUND )
-    CONFIGURE_FILE( doc/Doxygen/osre_doxygen.in doc/Doxygen/osre_doxyfile @ONLY )
-    ADD_CUSTOM_TARGET( doc ALL ${DOXYGEN_EXECUTABLE} doc/Doxygen/osre_doxyfile
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        COMMENT "Generating OSRE-API documentation with Doxygen" VERBATIM
-    )
-else (DOXYGEN_FOUND)
-    message("Doxygen need to be installed to generate the doxygen documentation")
-ENDIF ( DOXYGEN_FOUND )
+IF( OSRE_BUILD_DOC )
+  find_package(Doxygen)
+  IF ( DOXYGEN_FOUND )
+      CONFIGURE_FILE( doc/Doxygen/osre_doxygen.in doc/Doxygen/osre_doxyfile @ONLY )
+      ADD_CUSTOM_TARGET( doc ALL ${DOXYGEN_EXECUTABLE} doc/Doxygen/osre_doxyfile
+          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+          COMMENT "Generating OSRE-API documentation with Doxygen" VERBATIM
+      )
+  else (DOXYGEN_FOUND)
+      message("Doxygen need to be installed to generate the doxygen documentation")
+  ENDIF ( DOXYGEN_FOUND )
+ENDIF( OSRE_BUILD_DOC )
 
-set_target_properties(  doc              PROPERTIES FOLDER Documentation )
-set_target_properties(  cppcore          PROPERTIES FOLDER ThirdParty )
-set_target_properties(  cppcore_unittest PROPERTIES FOLDER ThirdParty )
+IF ( OSRE_BUILD_DOC )  
+  set_target_properties(  doc                PROPERTIES FOLDER Documentation )
+ENDIF( OSRE_BUILD_DOC )
+set_target_properties(  cppcore            PROPERTIES FOLDER ThirdParty )
+set_target_properties(  cppcore_unittest   PROPERTIES FOLDER ThirdParty )
+set_target_properties(  assimp             PROPERTIES FOLDER ThirdParty )
+#set_target_properties(  assimp_cmd         PROPERTIES FOLDER ThirdParty )
+#set_target_properties(  assimp_viewer      PROPERTIES FOLDER ThirdParty )
+#set_target_properties(  IrrXML             PROPERTIES FOLDER ThirdParty )
+#set_target_properties(  jsoncpp_lib_static PROPERTIES FOLDER ThirdParty )
+#set_target_properties(  zlib               PROPERTIES FOLDER ThirdParty )
+#set_target_properties(  zlibstatic         PROPERTIES FOLDER ThirdParty )
+#set_target_properties(  unit               PROPERTIES FOLDER ThirdParty )
+
 if( WIN32 )
     set_target_properties(  OSREEditor       PROPERTIES FOLDER Editor )
 endif( WIN32 )

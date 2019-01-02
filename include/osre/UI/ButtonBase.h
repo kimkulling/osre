@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/UI/UICommon.h>
 #include <osre/UI/Widget.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
@@ -37,9 +38,6 @@ namespace RenderBackend {
 }
 
 namespace UI {
-
-class Image;
-class TextBase;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

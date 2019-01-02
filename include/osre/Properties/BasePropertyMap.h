@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Properties/PropertiesCommon.h>
 #include <osre/Properties/AbstractPropertyMap.h>
 
 #include <map>

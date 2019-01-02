@@ -52,8 +52,9 @@ namespace Threading {
 
 namespace RenderBackend {
 
+class Mesh;
+
 struct BufferData;
-struct Geometry;
 struct GeoInstanceData;
 struct UniformVar;
 struct TransformMatrixBlock;
@@ -141,7 +142,7 @@ struct OSRE_EXPORT ResizeEventData : Common::EventData {
 //-------------------------------------------------------------------------------------------------
 struct NewGeoEntry {
     ui32 numInstances;
-    CPPCore::TArray<Geometry*> m_geo;
+    CPPCore::TArray<Mesh*> m_geo;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -175,9 +176,9 @@ public:
     /// @param  eventData   [in] The event data.
     void sendEvent( const Common::Event *ev, const Common::EventData *eventData );
 
-    bool beginPassRecording();
+    bool beginPass();
     
-    bool beginGeometryRecording();
+    bool beginRenderBatch();
 
     void setMatrix(MatrixType type, const glm::mat4 &m );
     
@@ -185,21 +186,21 @@ public:
 
     void setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray );
 
-    void attachGeo( Geometry *geo, ui32 numInstances );
+    void attachGeo( Mesh *geo, ui32 numInstances );
 
-    void attachGeo( const CPPCore::TArray<Geometry*> &geoArray, ui32 numInstances );
+    void attachGeo( const CPPCore::TArray<Mesh*> &geoArray, ui32 numInstances );
 
-    void attachGeoUpdate( Geometry *geo );
+    void attachGeoUpdate( Mesh *geo );
 
-    void attachGeoUpdate( const CPPCore::TArray<Geometry*> &geoArray );
+    void attachGeoUpdate( const CPPCore::TArray<Mesh*> &geoArray );
 
     void attachGeoInstance(GeoInstanceData *instanceData);
 
     void attachGeoInstance(const CPPCore::TArray<GeoInstanceData*> &instanceData);
 
-    bool endGeometryRecording();
+    bool endRenderBatch();
 
-    bool endPassRecording();
+    bool endPass();
 
     void attachView( TransformMatrixBlock &transform );
 
@@ -231,18 +232,19 @@ private:
     UI::Widget *m_screen;
 
     struct GeoBatch {
-        CPPCore::TArray<UniformVar*> mUniforms;
-        CPPCore::TArray<Geometry*> mGeoArray;
+        CPPCore::TArray<UniformVar*> m_uniforms;
+        CPPCore::TArray<Mesh*>   m_geoArray;
     };
 
     struct PassData {
+        MatrixBuffer m_matrixBuffer;
         CPPCore::TArray<GeoBatch*> m_geoBatches;
     };
     CPPCore::TArray<PassData*> m_passes;
     PassData *m_currentPass;
 
     CPPCore::TArray<NewGeoEntry*> m_newGeo;
-    CPPCore::TArray<Geometry*> m_geoUpdates;
+    CPPCore::TArray<Mesh*> m_geoUpdates;
     CPPCore::TArray<GeoInstanceData*> m_newInstances;
     CPPCore::THashMap<ui32, UniformVar*> m_variables;
     CPPCore::TArray<UniformVar*> m_uniformUpdates;

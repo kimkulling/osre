@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/IO/IOCommon.h>
 #include <osre/Common/AbstractService.h>
 #include <osre/IO/Stream.h>
 
@@ -29,9 +30,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 namespace IO {
-
-class AbstractFileSystem;
-class Uri;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

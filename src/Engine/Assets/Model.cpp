@@ -28,16 +28,17 @@ namespace OSRE {
 namespace Assets {
 
 using namespace ::OSRE::Collision;
+using namespace ::OSRE::RenderBackend;
 
 Model::Model() 
-: m_geoArray()
+: m_meshArray()
 , m_root( nullptr )
 , m_aabb() {
     // empty
 }
 
-Model::Model( GeoArray *geoArray, Scene::Node *root, ModelAABB &aabb )
-: m_geoArray( *geoArray )
+Model::Model( MeshArray *geoArray, Scene::Node *root, ModelAABB &aabb )
+: m_meshArray( *geoArray )
 , m_root( root )
 , m_aabb( aabb ) {
     // empty
@@ -47,12 +48,12 @@ Model::~Model() {
     // empty
 }
 
-void Model::setGeoArray( GeoArray &geoArray ) {
-    m_geoArray = geoArray;
+void Model::setMeshArray( MeshArray &geoArray ) {
+    m_meshArray = geoArray;
 }
 
-const Model::GeoArray &Model::getGeoArray() const {
-    return m_geoArray;
+const RenderBackend::MeshArray &Model::getMeshArray() const {
+    return m_meshArray;
 }
 
 void Model::setRootNode( Scene::Node *root ) {

@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 namespace RenderBackend {
-    struct Geometry;
+    class Mesh;
 }
 
 namespace Collision {
@@ -43,16 +43,16 @@ namespace Collision {
 //-------------------------------------------------------------------------------------------------
 class GeometryProcessor : public Common::AbstractProcessor {
 public:
-    using GeoArray = CPPCore::TArray<RenderBackend::Geometry*>;
+    using GeoArray = CPPCore::TArray<RenderBackend::Mesh*>;
 
     GeometryProcessor();
     ~GeometryProcessor();
     bool execute() override;
-    void addGeo( RenderBackend::Geometry *geo );
+    void addGeo( RenderBackend::Mesh *geo );
     const Scene::Node::AABB &getAABB() const;
 
 private:
-    void handleGeometry( RenderBackend::Geometry *geo );
+    void handleGeometry( RenderBackend::Mesh *geo );
 
 private:
     GeoArray m_geoArray;

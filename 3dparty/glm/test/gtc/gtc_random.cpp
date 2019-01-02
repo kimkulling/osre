@@ -1,5 +1,7 @@
+#define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
 #include <glm/gtc/random.hpp>
 #include <glm/gtc/epsilon.hpp>
+#include <glm/gtc/type_precision.hpp>
 #if GLM_LANG & GLM_LANG_CXX0X_FLAG
 #	include <array>
 #endif
@@ -203,7 +205,7 @@ int test_linearRand()
 
 	{
 		float ResultFloat = 0.0f;
-		double ResultDouble = 0.0f;
+		double ResultDouble = 0.0;
 		for(std::size_t i = 0; i < TestSamples; ++i)
 		{
 			ResultFloat += glm::linearRand(-1.0f, 1.0f);
@@ -225,8 +227,8 @@ int test_circularRand()
 	{
 		std::size_t Max = TestSamples;
 		float ResultFloat = 0.0f;
-		double ResultDouble = 0.0f;
-		double Radius = 2.0f;
+		double ResultDouble = 0.0;
+		double Radius = 2.0;
 
 		for(std::size_t i = 0; i < Max; ++i)
 		{
@@ -251,9 +253,9 @@ int test_sphericalRand()
 		float ResultFloatA = 0.0f;
 		float ResultFloatB = 0.0f;
 		float ResultFloatC = 0.0f;
-		double ResultDoubleA = 0.0f;
-		double ResultDoubleB = 0.0f;
-		double ResultDoubleC = 0.0f;
+		double ResultDoubleA = 0.0;
+		double ResultDoubleB = 0.0;
+		double ResultDoubleC = 0.0;
 
 		for(std::size_t i = 0; i < Max; ++i)
 		{
@@ -283,7 +285,7 @@ int test_diskRand()
 
 	{
 		float ResultFloat = 0.0f;
-		double ResultDouble = 0.0f;
+		double ResultDouble = 0.0;
 
 		for(std::size_t i = 0; i < TestSamples; ++i)
 		{
@@ -305,7 +307,7 @@ int test_ballRand()
 
 	{
 		float ResultFloat = 0.0f;
-		double ResultDouble = 0.0f;
+		double ResultDouble = 0.0;
 
 		for(std::size_t i = 0; i < TestSamples; ++i)
 		{

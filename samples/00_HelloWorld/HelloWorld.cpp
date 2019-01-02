@@ -42,7 +42,7 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Properties;
 
 // To identify local log entries we will define this tag.
-static const String Tag = "HelloWorldApp"; 
+static const c8 *Tag = "HelloWorldApp"; 
 
 /// The example application, will create the render environment and render a simple triangle onto it
 class HelloWorldApp : public App::AppBase {
@@ -89,13 +89,14 @@ protected:
         Scene::Node *geoNode = m_stage->createNode( "geo", nullptr );
         const Scene::Node::AABB &aabb = geoNode->getAABB();
 
-        Scene::GeometryBuilder myBuilder;
-        RenderBackend::Geometry *geo = myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-        if( nullptr != geo ) {
+        Scene::MeshBuilder meshBuilder;
+        meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+        RenderBackend::Mesh *mesh = meshBuilder.getMesh();
+        if( nullptr != mesh ) {
 			m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
             m_transformMatrix.update();
             getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
-            geoNode->addGeometry( geo );
+            geoNode->addMesh( mesh );
 		}
 
         return true;

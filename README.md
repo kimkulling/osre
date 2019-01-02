@@ -5,12 +5,12 @@ and always reached the point where it got hard to implement som new features. So
 a modern multi-threaded platform-indipendent render-engine in c++.
 
 Some features:
-- Primitive rendering + instancing
-- Texturing
+- Default rendering + instanced rendering ( done in a separate thread )
+- OS-independent task support to make multi-threaded rendering more easy
+- Platform abstraction
 - Model import via Asset-Importer-Lib
 - Bitmap-Font-Rendering
 - Simple Scenegraph to manage your scene
-- PLatform-tools for better platform independent access to IO, threading and a base windows system
 - Simple UI providing Panels, and Buttons
 
 Discuss with us: [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -20,7 +20,7 @@ Discuss with us: [![Join the chat at https://gitter.im/kimkulling/osre](https://
   + OpenGL-Renderbackend
   + Vulkan-Renderbackend
 - Linux ( [![Build Status](https://travis-ci.org/kimkulling/osre.png)](https://travis-ci.org/kimkulling/osre) ): 
-  + OpenGL-renderbackend
+  + OpenGL-Renderbackend
 
 # Static code analysis
 - Coverity Status: [![Coverity Scan Build Status](https://scan.coverity.com/projects/13242/badge.svg)](https://scan.coverity.com/projects/kimkulling-osre)
@@ -66,7 +66,7 @@ Use the generated Visual studio project files.
 
 ## Featurelist
 - OpenGL4.x-Renderer:
-   + Multithreaded renderer
+   + Multithreaded render-concept.
    + Primitive rendering
    + Texture mapping
    + Instanced rendering

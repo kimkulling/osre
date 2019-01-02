@@ -39,7 +39,10 @@ namespace RenderBackend {
 // Forward declarations
 struct UniformVar;
 
+class Mesh;
 class Shader;
+
+using MeshArray = CPPCore::TArray<RenderBackend::Mesh*>;
 
 /// Describes an unset id.
 static const i32  UnsetHandle   = -1;
@@ -116,8 +119,8 @@ enum class TextureParameterType {
     TexturePTNearest = 0,       ///< Use nearest filter mode.
     TexturePTLinear,            ///< Use linear interpolation mode.
     TexturePTClamp,             ///< Use clamp mode, texture data will be clamped.
-    TexturePTMirroredRepeat,    ///< Use mirror repeat mode, texture will be repeately mirrored.
-    TexturePTRepeat,            ///< Use repeat mode, texture will be repeately mirrored.
+    TexturePTMirroredRepeat,    ///< Use mirror repeat mode, texture will be repeated mirrored.
+    TexturePTRepeat,            ///< Use repeat mode, texture will be repeated mirrored.
     NumTextureParameterTypes,   ///< Number of enums.
     
     InvalidTextureParameterType,///< Enum for invalid enum.
@@ -590,7 +593,7 @@ struct TIndexCache {
 struct RenderBatch {
     glm::mat4  m_model;     ///< The local model matrix.
     ui32       m_numGeo;    ///< Number of geometries
-    Geometry  *m_geoArray;  ///< The geometry for the batch.
+    Mesh  *m_geoArray;  ///< The geometry for the batch.
 
     RenderBatch();
     ~RenderBatch();

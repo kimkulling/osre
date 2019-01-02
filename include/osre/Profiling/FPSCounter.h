@@ -22,16 +22,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <osre/Common/TObjPtr.h>
+#include <osre/Profiling/ProfilingCommon.h>
+
 
 namespace OSRE {
-
-// Forward declarations
-namespace Platform {
-    class AbstractTimer;
-}
-
 namespace Profiling {
         
 //-------------------------------------------------------------------------------------------------

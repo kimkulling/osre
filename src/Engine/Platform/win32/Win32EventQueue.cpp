@@ -35,7 +35,7 @@ using namespace ::OSRE::Common;
 
 std::map<HWND, Win32EventQueue*> Win32EventQueue::s_WindowsServerMap;
 
-static const String Tag = "Win32Eventhandler";
+static const c8 *Tag = "Win32Eventhandler";
 
 // The interface for the event update.
 struct AbstractInputUpdate {

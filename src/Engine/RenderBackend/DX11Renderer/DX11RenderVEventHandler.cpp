@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractRenderContext.h>
 #include <osre/Profiling/PerformanceCounterRegistry.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Geometry.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Uri.h>
 #include <osre/Assets/AssetRegistry.h>
@@ -44,7 +44,7 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::CPPCore;
 
-static const String Tag = "DX11RenderEventHandler";
+static const c8 *Tag = "DX11RenderEventHandler";
 
 DX11RenderEventHandler::DX11RenderEventHandler()
 : AbstractEventHandler()
@@ -189,7 +189,7 @@ bool DX11RenderEventHandler::onCommitNexFrame(const Common::EventData *eventData
         }
 
         for (ui32 geoIdx = 0; geoIdx < currentGeoPackage->m_numNewGeo; ++geoIdx) {
-            Geometry *geo = currentGeoPackage->m_newGeo[geoIdx];
+            Mesh *geo = currentGeoPackage->m_newGeo[geoIdx];
 
             ID3D11Buffer *vb = m_dx11Renderer->createBuffer(BufferType::VertexBuffer, geo->m_vb, geo->m_vb->getBufferAccessType() );
             ID3D11Buffer *ib = m_dx11Renderer->createBuffer(BufferType::IndexBuffer, geo->m_ib, geo->m_ib->getBufferAccessType() );

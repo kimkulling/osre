@@ -31,7 +31,7 @@ namespace Scene {
 
 using namespace ::OSRE::RenderBackend;
 
-static const String Tag = "View";
+static const c8 *Tag = "View";
 
 View::View(const String &name, Common::Ids &ids, Node *parent )
 : Node( name, ids, RenderCompRequest::NoRenderComp, TransformCompRequest::TransformCompRequested, parent )
@@ -62,10 +62,6 @@ void View::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
         aspect = w / h;
     }
     m_projection = glm::perspective(glm::radians(m_fov), aspect, zNear, zFar);
-}
-
-void View::observeNode( Node *node ) {
-    m_observedNode = node;
 }
 
 void View::update( Time dt ) {

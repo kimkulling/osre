@@ -42,6 +42,7 @@ namespace OSRE {
 namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Scene;
 
 // vertex array and vertex buffer object IDs
 float angle = 0.0f;
@@ -67,13 +68,19 @@ public:
     virtual bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
         
-        CPPCore::TArray<Geometry*> geoArray;
-        Geometry *geo = Scene::GeometryBuilder::allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-        geoArray.add( geo );
+        CPPCore::TArray<Mesh*> meshArray;
+        MeshBuilder meshBuilder;
+        meshBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
+        meshArray.add(meshBuilder.getMesh());
         
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+        
+        rbSrv->beginPass();
+        
         rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
-        rbSrv->attachGeo( geoArray, 0 );
+        rbSrv->attachGeo( meshArray, 0 );
+        
+        rbSrv->endPass();
 
         return true;
     }

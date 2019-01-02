@@ -33,6 +33,7 @@ ENDIF( WIN32 )
 # App
 #==============================================================================
 SET( app_inc
+    ${HEADER_PATH}/App/AppCommon.h
     ${HEADER_PATH}/App/AppBase.h
     ${HEADER_PATH}/App/ServiceProvider.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
@@ -47,6 +48,7 @@ SET( app_src
 # Assets
 #==============================================================================
 SET( assets_inc
+    ${HEADER_PATH}/Assets/AssetsCommon.h
     ${HEADER_PATH}/Assets/AssetRegistry.h
     ${HEADER_PATH}/Assets/AssetDataArchive.h
     ${HEADER_PATH}/Assets/AssimpWrapper.h
@@ -63,6 +65,8 @@ SET( assets_src
 # Common
 #==============================================================================
 SET( common_inc
+	${HEADER_PATH}/Common/Common.h
+    ${HEADER_PATH}/Common/TCommand.h
     ${HEADER_PATH}/Common/AbstractCodec.h
     ${HEADER_PATH}/Common/AbstractEventHandler.h
     ${HEADER_PATH}/Common/AbstractProcessor.h
@@ -100,6 +104,7 @@ SET( common_src
 # Collision
 #==============================================================================
 SET( collision_inc
+    ${HEADER_PATH}/Collision/CollisionCommon.h
     ${HEADER_PATH}/Collision/GeometryProcessor.h
     ${HEADER_PATH}/Collision/TAABB.h
     ${HEADER_PATH}/Collision/TQuadTree.h
@@ -149,6 +154,7 @@ SET( io_src
     IO/IOSystemInfo.cpp
 )
 SET( io_inc
+    ${HEADER_PATH}/IO/IOCommon.h
     ${HEADER_PATH}/IO/Directory.h
     ${HEADER_PATH}/IO/Stream.h
     ${HEADER_PATH}/IO/AbstractFileSystem.h
@@ -171,6 +177,7 @@ SET( math_inc
 # Platform
 #==============================================================================
 SET( platform_inc
+    ${HEADER_PATH}/Platform/PlatformCommon.h
     ${HEADER_PATH}/Platform/AbstractThread.h
     ${HEADER_PATH}/Platform/AbstractThreadEvent.h
     ${HEADER_PATH}/Platform/AbstractThreadFactory.h
@@ -262,6 +269,7 @@ ENDIF( WIN32 )
 # Profiling
 #==============================================================================
 SET( profiling_inc
+    ${HEADER_PATH}/Profiling/ProfilingCommon.h
     ${HEADER_PATH}/Profiling/FPSCounter.h
     ${HEADER_PATH}/Profiling/PerformanceCounterRegistry.h
 )
@@ -274,6 +282,7 @@ SET( profiling_src
 # Properties
 #==============================================================================
 SET ( properties_inc
+    ${HEADER_PATH}/Properties/PropertiesCommon.h
     ${HEADER_PATH}/Properties/BasePropertyMap.h
     ${HEADER_PATH}/Properties/AbstractPropertyMap.h
     ${HEADER_PATH}/Properties/Property.h
@@ -288,6 +297,18 @@ SET ( properties_src
 #==============================================================================
 # Scene
 #==============================================================================
+SET( scene_inc
+    ${HEADER_PATH}/Scene/SceneCommon.h
+    ${HEADER_PATH}/Scene/DbgRenderer.h
+    ${HEADER_PATH}/Scene/Component.h
+    ${HEADER_PATH}/Scene/GeometryBuilder.h
+    ${HEADER_PATH}/Scene/MaterialBuilder.h
+    ${HEADER_PATH}/Scene/Node.h
+    ${HEADER_PATH}/Scene/Stage.h
+    ${HEADER_PATH}/Scene/TrackBall.h
+    ${HEADER_PATH}/Scene/View.h
+    ${HEADER_PATH}/Scene/World.h
+)
 SET( scene_src
     Scene/DbgRenderer.cpp
     Scene/Component.cpp
@@ -299,23 +320,30 @@ SET( scene_src
     Scene/View.cpp
     Scene/World.cpp
 )
-SET( scene_inc
-    ${HEADER_PATH}/Scene/DbgRenderer.h
-    ${HEADER_PATH}/Scene/Component.h
-    ${HEADER_PATH}/Scene/GeometryBuilder.h
-    ${HEADER_PATH}/Scene/MaterialBuilder.h
-    ${HEADER_PATH}/Scene/Node.h
-    ${HEADER_PATH}/Scene/Stage.h
-    ${HEADER_PATH}/Scene/TrackBall.h
-    ${HEADER_PATH}/Scene/View.h
-    ${HEADER_PATH}/Scene/World.h
-)
 
 #==============================================================================
 # RenderBackend
 #==============================================================================
+SET( renderbackend_inc
+    ${HEADER_PATH}/RenderBackend/RenderCommon.h
+    ${HEADER_PATH}/RenderBackend/BlendState.h
+    ${HEADER_PATH}/RenderBackend/CullState.h
+    ${HEADER_PATH}/RenderBackend/ClearState.h
+    ${HEADER_PATH}/RenderBackend/Mesh.h
+    ${HEADER_PATH}/RenderBackend/HWBufferManager.h
+    ${HEADER_PATH}/RenderBackend/SamplerState.h
+    ${HEADER_PATH}/RenderBackend/StencilState.h
+    ${HEADER_PATH}/RenderBackend/PolygonState.h
+    ${HEADER_PATH}/RenderBackend/FontBase.h
+    ${HEADER_PATH}/RenderBackend/Parameter.h
+    ${HEADER_PATH}/RenderBackend/ParticleGenerator.h
+    ${HEADER_PATH}/RenderBackend/Pipeline.h
+    ${HEADER_PATH}/RenderBackend/RenderBackendService.h
+	${HEADER_PATH}/RenderBackend/RenderStates.h
+    ${HEADER_PATH}/RenderBackend/Shader.h
+)
 SET( renderbackend_src
-    RenderBackend/Geometry.cpp
+    RenderBackend/Mesh.cpp
     RenderBackend/FontBase.cpp
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
@@ -361,24 +389,6 @@ IF( WIN32 )
     )
 ENDIF( WIN32 )
 
-SET( renderbackend_inc
-    ${HEADER_PATH}/RenderBackend/BlendState.h
-    ${HEADER_PATH}/RenderBackend/CullState.h
-    ${HEADER_PATH}/RenderBackend/ClearState.h
-    ${HEADER_PATH}/RenderBackend/Geometry.h
-    ${HEADER_PATH}/RenderBackend/HWBufferManager.h
-    ${HEADER_PATH}/RenderBackend/SamplerState.h
-    ${HEADER_PATH}/RenderBackend/StencilState.h
-    ${HEADER_PATH}/RenderBackend/PolygonState.h
-    ${HEADER_PATH}/RenderBackend/FontBase.h
-    ${HEADER_PATH}/RenderBackend/Parameter.h
-    ${HEADER_PATH}/RenderBackend/ParticleGenerator.h
-    ${HEADER_PATH}/RenderBackend/Pipeline.h
-    ${HEADER_PATH}/RenderBackend/RenderBackendService.h
-    ${HEADER_PATH}/RenderBackend/RenderCommon.h
-	${HEADER_PATH}/RenderBackend/RenderStates.h
-    ${HEADER_PATH}/RenderBackend/Shader.h
-)
 #==============================================================================
 # Scripting with Mono
 #==============================================================================
@@ -405,6 +415,7 @@ SET( ui_src
     UI/UiItemFactory.cpp
 )
 SET( ui_inc
+    ${HEADER_PATH}/UI/UICommon.h
     ${HEADER_PATH}/UI/FontManager.h
 	${HEADER_PATH}/UI/Image.h
     ${HEADER_PATH}/UI/Widget.h
@@ -419,16 +430,17 @@ SET( ui_inc
 #==============================================================================
 # Threading
 #==============================================================================
-SET( threading_src
-    Threading/AbstractTask.cpp
-    Threading/AbstractThreadFactory.cpp
-    Threading/SystemTask.cpp
-)
 SET( threading_inc
+    ${HEADER_PATH}/Threading/ThreadingCommon.h
     ${HEADER_PATH}/Threading/AbstractTask.h
     ${HEADER_PATH}/Threading/SystemTask.h
     ${HEADER_PATH}/Threading/TaskJob.h
     ${HEADER_PATH}/Threading/TAsyncQueue.h
+)
+SET( threading_src
+    Threading/AbstractTask.cpp
+    Threading/AbstractThreadFactory.cpp
+    Threading/SystemTask.cpp
 )
 
 if( NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*" )
@@ -485,7 +497,7 @@ SOURCE_GROUP( Include\\Resources     FILES ${resources_inc} )
 SOURCE_GROUP( Include\\RenderBackend FILES ${renderbackend_inc} )
 SOURCE_GROUP( Include\\Scene         FILES ${scene_inc} )
 SOURCE_GROUP( Include\\Scripting     FILES ${scripting_mono_inc} )
-SOURCE_GROUP( Include\\Thread        FILES ${threading_inc} )
+SOURCE_GROUP( Include\\Threading     FILES ${threading_inc} )
 SOURCE_GROUP( Include\\UI            FILES ${ui_inc} )
 
 SOURCE_GROUP( Documentation          FILES ${doc_inc} )
@@ -554,11 +566,3 @@ ADD_LIBRARY( osre SHARED
 
 target_link_libraries ( osre cppcore zlib Unzip glew soil jsoncpp_lib_static ${platform_libs} assimp )
 set_target_properties(  osre PROPERTIES FOLDER Engine )
-
-#==============================================================================
-# Define the install targets.
-#==============================================================================
-INSTALL( TARGETS osre
-    DESTINATION ${LIB_INSTALL_DIR}
-    COMPONENT lib_ce2_infrastructure${ZFXCE2_VERSION_MAJOR}
-)

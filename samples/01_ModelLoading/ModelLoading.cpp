@@ -47,7 +47,7 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
 
 // To identify local log entries 
-static const String Tag = "ModelLoadingApp"; 
+static const c8 *Tag = "ModelLoadingApp";
 
 // The file to load
 static const String ModelPath = "file://assets/Models/Obj/spider.obj";
@@ -103,18 +103,18 @@ protected:
         }
 
 #ifdef OSRE_WINDOWS
-        Assets::AssetRegistry::registerAssetPath( "assets", "../../media" );
+        AssetRegistry::registerAssetPath( "assets", "../../media" );
 #else
-        Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
+        AssetRegistry::registerAssetPath( "assets", "../media" );
 #endif 
         Scene::DbgRenderer::getInstance()->renderDbgText( 0, 0, 2U, "XXX" );
 
         Ids ids;
-        Assets::AssimpWrapper assimpWrapper( ids );
+        AssimpWrapper assimpWrapper( ids );
         IO::Uri modelLoc( ModelPath );
         if ( assimpWrapper.importAsset( modelLoc, 0 ) ) {
-            Assets::Model *model = assimpWrapper.getModel();
-            CPPCore::TArray<Geometry*> geoArray = model->getGeoArray();
+            Model *model = assimpWrapper.getModel();
+            RenderBackend::MeshArray meshArray = model->getMeshArray();
             
             RenderBackendService *rbSrv( getRenderBackendService() );
             if (nullptr != rbSrv) {

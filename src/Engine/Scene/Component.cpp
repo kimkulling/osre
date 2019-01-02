@@ -66,7 +66,7 @@ void RenderComponent::draw( RenderBackendService *renderBackendSrv ) {
     }
 }
 
-void RenderComponent::addStaticGeometry( Geometry *geo ) {
+void RenderComponent::addStaticGeometry( Mesh *geo ) {
     if ( nullptr == geo ) {
         return;
     }
@@ -78,7 +78,7 @@ ui32 RenderComponent::getNumGeometry() const {
     return m_newGeo.size();
 }
 
-Geometry *RenderComponent::getGeoAt(ui32 idx) const {
+Mesh *RenderComponent::getGeoAt(ui32 idx) const {
     return m_newGeo[idx];
 }
 

@@ -1,3 +1,4 @@
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtc/epsilon.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -42,21 +43,24 @@ int test_quat_shortMix()
 
 int test_orientation()
 {
-	int Error(0);
+	int Error = 0;
 
 	{
 		glm::quat q(1.0f, 0.0f, 0.0f, 1.0f);
 		float p = glm::roll(q);
+		Error += glm::epsilonEqual(p, glm::pi<float>() * 0.5f, 0.0001f) ? 0 : 1;
 	}
 
 	{
 		glm::quat q(1.0f, 0.0f, 0.0f, 1.0f);
 		float p = glm::pitch(q);
+		Error += glm::epsilonEqual(p, 0.f, 0.0001f) ? 0 : 1;
 	}
 
 	{
 		glm::quat q(1.0f, 0.0f, 0.0f, 1.0f);
 		float p = glm::yaw(q);
+		Error += glm::epsilonEqual(p, 0.f, 0.0001f) ? 0 : 1;
 	}
 
 	return Error;
@@ -95,6 +99,7 @@ int main()
 
 	Error += test_log();
 	Error += test_rotation();
+	Error += test_orientation();
 	Error += test_quat_fastMix();
 	Error += test_quat_shortMix();
 

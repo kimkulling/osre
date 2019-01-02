@@ -45,7 +45,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-static const String Tag = "PlatformPluginFactory";
+static const c8 *Tag = "PlatformPluginFactory";
 
 bool PlatformPluginFactory::init( PluginType type ) {
     static_cast< void >( createThreadFactory( type ) );

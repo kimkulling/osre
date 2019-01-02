@@ -56,7 +56,7 @@ public:
     }
 };
 
-static const String Tag = "SystemTaskThread";
+static const c8 *Tag = "SystemTaskThread";
 
 static bool DebugQueueSize = false;
 

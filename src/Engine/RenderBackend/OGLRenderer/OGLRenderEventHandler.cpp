@@ -33,7 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Profiling/PerformanceCounterRegistry.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Shader.h>
-#include <osre/RenderBackend/Geometry.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/HWBufferManager.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Uri.h>
@@ -48,7 +48,7 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::CPPCore;
 
-static const String Tag = "OGLRendeEventHandler";
+static const c8 *Tag = "OGLRendeEventHandler";
 
 static bool setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTexture*> &textures ) {
     OSRE_ASSERT( nullptr != mat );
@@ -173,7 +173,7 @@ static void setupParameter( UniformVar *param, OGLRenderBackend *rb, OGLRenderEv
 
 
 
-static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLShader *oglShader ) {
+static OGLVertexArray *setupBuffers( Mesh *geo, OGLRenderBackend *rb, OGLShader *oglShader ) {
 	OSRE_ASSERT( nullptr != geo );
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != oglShader );
@@ -203,7 +203,7 @@ static OGLVertexArray *setupBuffers( Geometry *geo, OGLRenderBackend *rb, OGLSha
     // enable vertex attribute arrays
     TArray<OGLVertexAttribute*> attributes;
     rb->createVertexCompArray( geo->m_vertextype, oglShader, attributes );
-    const ui32 stride = Geometry::getVertexSize( geo->m_vertextype );
+    const ui32 stride = Mesh::getVertexSize( geo->m_vertextype );
     rb->bindVertexLayout( vertexArray, oglShader, stride, attributes );
     rb->releaseVertexCompArray( attributes );
 
@@ -531,7 +531,7 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
         
         CPPCore::TArray<ui32> primGroups;
         for (ui32 geoIdx = 0; geoIdx < currentGeoPackage->m_numNewGeo; ++geoIdx) {
-            Geometry *geo = currentGeoPackage->m_newGeo[geoIdx];
+            Mesh *geo = currentGeoPackage->m_newGeo[geoIdx];
             if (nullptr == geo) {
                 osre_debug(Tag, "Geometry-pointer is a nullptr.");
                 return false;
@@ -582,7 +582,7 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
     }
 
     for ( ui32 i=0; i<frame->m_numGeoUpdates; ++i ) {
-        Geometry *geo = frame->m_geoUpdates[ i ];
+        Mesh *geo = frame->m_geoUpdates[ i ];
         if ( nullptr == geo ) {
             osre_debug(Tag, "Geometry-update-pointer is a nullptr.");
             return false;

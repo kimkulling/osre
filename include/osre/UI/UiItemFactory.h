@@ -33,12 +33,11 @@ namespace Platform {
 
 namespace UI {
 
-class Widget;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief  The factory class is used to generated new 
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT UiItemFactory {
 public:

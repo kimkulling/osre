@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Collision/GeometryProcessor.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Geometry.h>
+#include <osre/RenderBackend/Mesh.h>
 
 namespace OSRE {
 namespace Collision {
@@ -61,7 +61,7 @@ bool GeometryProcessor::execute() {
     return true;
 }
 
-void GeometryProcessor::addGeo( RenderBackend::Geometry *geo ) {
+void GeometryProcessor::addGeo( RenderBackend::Mesh *geo ) {
     if ( nullptr == geo ) {
         return;
     }
@@ -75,7 +75,7 @@ const Scene::Node::AABB &GeometryProcessor::getAABB() const {
     return m_aabb;
 }
 
-void GeometryProcessor::handleGeometry( RenderBackend::Geometry *geo ) {
+void GeometryProcessor::handleGeometry( RenderBackend::Mesh *geo ) {
     OSRE_ASSERT( nullptr != geo );
 
     if ( nullptr == geo ) {

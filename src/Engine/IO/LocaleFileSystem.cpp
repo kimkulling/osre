@@ -41,7 +41,7 @@ using namespace ::OSRE::Common;
 using namespace ::CPPCore;
 
 static const String BaseFileSchema = "file";
-static const String Tag = "IOService";
+static const c8 *Tag = "IOService";
 
 LocaleFileSystem::LocaleFileSystem() 
 : m_FileMap() {

@@ -22,21 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
+#include <osre/Scene/SceneCommon.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Collision/TAABB.h>
 #include <cppcore/Container/THashMap.h>
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
-    
-// Forward declarations
-namespace RenderBackend {
-    class RenderBackendService;
-
-    struct Geometry;
-}
-
 namespace Scene {
 
 //-------------------------------------------------------------------------------------------------
@@ -48,7 +40,7 @@ class OSRE_EXPORT DbgRenderer {
 public:
     struct DbgTextEntry {
         String m_text;
-        RenderBackend::Geometry *m_geo;
+        RenderBackend::Mesh *m_geo;
     };
     using TextBoxHashMap = CPPCore::THashMap<ui32, DbgTextEntry*>;
     using TextBoxArray = CPPCore::TArray<DbgTextEntry*>;

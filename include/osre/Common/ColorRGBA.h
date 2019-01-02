@@ -62,16 +62,28 @@ public:
 
     ///	@brief	Returns the 32-bit word with the color representation from the given components as
     ///			a RGBA representation.
-    ///	@param	r, g, b, a	[in] The several components.
+    ///	@param	r   [in] The red channel
+    ///	@param	g   [in] The green channel.
+    ///	@param	b   [in] The blue channel.
+    ///	@param	a	[in] The alpha channel.
     ///	@return	The color a encoded as one 32-bit DWORD.
     static ui32 getAsRGBA( f32 r, f32 g, f32 b, f32 a );
+
+    /// @brief  Returns the color encoded as RGBA value.
+    /// @return The value.
     ui32 getAsRGBA() const;
 
     ///	@brief	Returns the 32-bit word with the color representation from the given components as
     ///			a ARGB representation.
-    ///	@param	r, g, b, a	[in] The several components.
+    ///	@param	r   [in] The red channel
+    ///	@param	g   [in] The green channel.
+    ///	@param	b   [in] The blue channel.
+    ///	@param	a	[in] The alpha channel.
     ///	@return	The color a encoded as one 32-bit DWORD.
     static ui32 getAsARGB( f32 r, f32 g, f32 b, f32 a );
+    
+    /// @brief  Returns the color encoded as ARGB value.
+    /// @return The value.
     ui32 getAsARGB() const;
 
     const f32 *getValue() const;
@@ -85,7 +97,6 @@ public:
     f32 m_ColorValues[ 4 ];
 };
 
-//-------------------------------------------------------------------------------------------------
 inline
 ColorRGBA::ColorRGBA() {
     m_ColorValues[ 0 ] = 1.0f;
@@ -94,7 +105,6 @@ ColorRGBA::ColorRGBA() {
     m_ColorValues[ 3 ] = 0.0f;
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 ColorRGBA::ColorRGBA( f32 *pData ) {
     m_ColorValues[ 0 ] = pData[ 0 ];
@@ -103,25 +113,21 @@ ColorRGBA::ColorRGBA( f32 *pData ) {
     m_ColorValues[ 3 ] = pData[ 3 ];
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 ColorRGBA::ColorRGBA( f32 r, f32 g, f32 b, f32 a ) {
     set( r, g, b, a );
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 ColorRGBA::ColorRGBA( const ColorRGBA &other ) {
     ::memcpy( m_ColorValues, other.m_ColorValues, sizeof( f32 ) * 4 );
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 ColorRGBA::~ColorRGBA() {
     // empty
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 void ColorRGBA::set( f32 r, f32 g, f32 b, f32 a ) {
     m_ColorValues[ 0 ] = r;
@@ -130,7 +136,6 @@ void ColorRGBA::set( f32 r, f32 g, f32 b, f32 a ) {
     m_ColorValues[ 3 ] = a;
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 ui32 ColorRGBA::getAsRGBA( f32 r, f32 g, f32 b, f32 a ) {
     uc8 R = (uc8) ( r * COL_SHIFT);
@@ -141,14 +146,12 @@ ui32 ColorRGBA::getAsRGBA( f32 r, f32 g, f32 b, f32 a ) {
     return ( R + ( G<<8 ) + ( B<<16 ) + ( A<<24 ) );
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 ui32 ColorRGBA::getAsRGBA() const {
     return ColorRGBA::getAsRGBA( m_ColorValues[ 0 ], m_ColorValues[ 1 ], m_ColorValues[ 2 ], 
         m_ColorValues[ 3 ] );
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 ui32 ColorRGBA::getAsARGB( f32 r, f32 g, f32 b, f32 a ) {
     uc8 R = (uc8) ( r * COL_SHIFT );
@@ -159,30 +162,26 @@ ui32 ColorRGBA::getAsARGB( f32 r, f32 g, f32 b, f32 a ) {
     return ( A + ( R<<8 ) + ( G<<16 ) + ( B<<24 ) );
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 ui32 ColorRGBA::getAsARGB() const {
     return ColorRGBA::getAsARGB( m_ColorValues[ 0 ], m_ColorValues[ 1 ], m_ColorValues[ 2 ], 
         m_ColorValues[ 3 ] );
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 const f32 *ColorRGBA::getValue() const {
     return &m_ColorValues[ 0 ];
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 bool ColorRGBA::operator == ( const ColorRGBA &other ) const {
     if ( 0 == ::memcmp( &m_ColorValues[ 0 ], &other.m_ColorValues[ 0 ], sizeof( f32 ) * 4 ) ) {
         return true;
-    } else {
-        return false;
-    }
+    } 
+
+    return false;
 }
 
-//-------------------------------------------------------------------------------------------------
 inline
 ColorRGBA &ColorRGBA::operator = ( const ColorRGBA &other ) {
     if ( other == *this ) {
@@ -193,8 +192,6 @@ ColorRGBA &ColorRGBA::operator = ( const ColorRGBA &other ) {
     
     return *this;
 }
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Common
 } // Namespace OSRE

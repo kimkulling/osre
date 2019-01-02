@@ -77,47 +77,47 @@ ui32 Stream::getSize() const {
 	return 0;
 }
 
-ui32 Stream::read( void *buffer, ui32 size ) {
+ui32 Stream::read( void *, ui32 ) {
 	return 0;
 }
 
-ui32 Stream::write( const void *buffer, ui32 size ) {
+ui32 Stream::write( const void *, ui32 ) {
 	return 0;
 }
 
-ui32 Stream::readI32( i32 &value ) {
+ui32 Stream::readI32( i32 & ) {
     return 0;
 }
 
-ui32 Stream::writeI32( i32 value ) {
+ui32 Stream::writeI32( i32 ) {
     return 0;
 }
 
-ui32 Stream::readUI32( ui32 &value ) {
+ui32 Stream::readUI32( ui32 & ) {
     return 0;
 }
 
-ui32 Stream::writeUI32( ui32 value ) {
+ui32 Stream::writeUI32( ui32  ) {
     return 0;
 }
 
-ui32 Stream::readF32( f32 &value ) {
+ui32 Stream::readF32( f32 & ) {
     return 0;
 }
 
-ui32 Stream::writeF32( f32 value ) {
+ui32 Stream::writeF32( f32  ) {
     return 0;
 }
 
-ui32 Stream::readD32( d32 &value ) {
+ui32 Stream::readD32( d32 & ) {
     return 0;
 }
 
-ui32 Stream::writeD32( d32 value ) {
+ui32 Stream::writeD32( d32  ) {
     return 0;
 }
 
-Stream::Position Stream::seek( Offset offset, Origin origin ) {
+Stream::Position Stream::seek( Offset , Origin  ) {
 	return 0;
 }
 

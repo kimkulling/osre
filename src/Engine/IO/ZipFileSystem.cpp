@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ZipFileStream.h"
 #include <osre/IO/IOSystemInfo.h>
 #include <osre/Common/Logger.h>
+#include <osre/Debugging/osre_debugging.h>
 
 #include "unzip.h"
 #include <algorithm>
@@ -34,10 +35,9 @@ namespace IO {
 
 using namespace ::CPPCore;
 
-static const String ZipSchema = "zip";
-static const String Tag = "ZipFileSystem";
+static const c8 *ZipSchema = "zip";
+static const c8 *Tag = "ZipFileSystem";
 
-//-------------------------------------------------------------------------------------------------
 ZipFileSystem::ZipFileSystem( const Uri &archive ) 
 : m_FileMap()
 , m_FileList()
@@ -49,16 +49,14 @@ ZipFileSystem::ZipFileSystem( const Uri &archive )
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 ZipFileSystem::~ZipFileSystem() {
     closeAllFiles();
-    if ( NULL != m_ZipFileHandle ) {
+    if (nullptr != m_ZipFileHandle ) {
         unzClose( m_ZipFileHandle );
         m_ZipFileHandle = nullptr;
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 Stream *ZipFileSystem::open( const Uri &file, Stream::AccessMode mode ) {
     if ( !isOpened() || mode != Stream::AccessMode::ReadAccess ) {
         return nullptr;
@@ -86,9 +84,8 @@ Stream *ZipFileSystem::open( const Uri &file, Stream::AccessMode mode ) {
     return pZipStream;
 }
 
-//-------------------------------------------------------------------------------------------------
 void ZipFileSystem::close( Stream **ppZipFileStream ) {
-    assert( NULL != *ppZipFileStream );
+    OSRE_ASSERT( nullptr != *ppZipFileStream );
     
     const String &name = ( *ppZipFileStream )->getUri().getResource();
     StreamMap::iterator it = m_FileMap.find( name );
@@ -102,7 +99,6 @@ void ZipFileSystem::close( Stream **ppZipFileStream ) {
     (*ppZipFileStream) = nullptr;
 }
 
-//-------------------------------------------------------------------------------------------------
 bool ZipFileSystem::fileExist( const Uri &file ) {
     if ( file.isEmpty() ) {
         osre_debug( Tag, "Filename is empty." );
@@ -117,7 +113,6 @@ bool ZipFileSystem::fileExist( const Uri &file ) {
     return true;
 }
 
-//-------------------------------------------------------------------------------------------------
 Stream *ZipFileSystem::find( const Uri &file, Stream::AccessMode mode, CPPCore::TArray<String> *pSearchPaths ) {
     if( !fileExist( file ) ) {
         return nullptr;
@@ -126,12 +121,10 @@ Stream *ZipFileSystem::find( const Uri &file, Stream::AccessMode mode, CPPCore::
     return this->open( file, Stream::AccessMode::ReadAccess );
 }
 
-//-------------------------------------------------------------------------------------------------
 const String &ZipFileSystem::getSchema() const {
     return ZipSchema;
 }
 
-//-------------------------------------------------------------------------------------------------
 String ZipFileSystem::getWorkingDirectory() {
 
 #ifdef OSRE_WINDOWS
@@ -142,40 +135,40 @@ String ZipFileSystem::getWorkingDirectory() {
 
 }
 
-//-------------------------------------------------------------------------------------------------
 void ZipFileSystem::getFileList( std::vector<String> &rFileList ) {
-    if ( NULL == m_ZipFileHandle ) {
+    if (nullptr == m_ZipFileHandle ) {
         rFileList.resize( 0 );
     } else {
         rFileList = m_FileList;
     }
 }
 
-//-------------------------------------------------------------------------------------------------
 bool ZipFileSystem::openArchive() {
-    assert( NULL == m_ZipFileHandle );
+    OSRE_ASSERT(nullptr == m_ZipFileHandle );
 
     String current_dir = IOSystemInfo::getCurrentDirectory();
-    if ( m_ArchiveName.empty() )	
+    if (m_ArchiveName.empty()) {
         return false;
+    }
 
     m_ZipFileHandle = unzOpen( m_ArchiveName.c_str() );
-    if ( NULL != m_ZipFileHandle )
+    if (nullptr != m_ZipFileHandle) {
         return true;
+    }
 
     return false;
 }
-//-------------------------------------------------------------------------------------------------
+
 bool ZipFileSystem::isOpened() const {
-    return ( NULL != m_ZipFileHandle );
+    return (nullptr != m_ZipFileHandle );
 }
 
-//-------------------------------------------------------------------------------------------------
 void ZipFileSystem::mapArchive() {
-    assert( NULL != m_ZipFileHandle );
+    OSRE_ASSERT(nullptr != m_ZipFileHandle );
 
-    if ( !m_FileList.empty() )
-        m_FileList.resize( 0 );
+    if (!m_FileList.empty()) {
+        m_FileList.resize(0);
+    }
 
     //	at first ensure file is already open
     if ( UNZ_OK == unzGoToFirstFile( m_ZipFileHandle ) )  {
@@ -196,12 +189,9 @@ void ZipFileSystem::mapArchive() {
     m_Dirty = false;
 }
 
-//-------------------------------------------------------------------------------------------------
 void ZipFileSystem::closeAllFiles() {
     /// TODO: implement me
 }
 
-//-------------------------------------------------------------------------------------------------
-
-} // Namespace VFS
+} // Namespace IO
 } // Namespace OSRE

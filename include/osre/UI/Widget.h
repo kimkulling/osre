@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/UI/UICommon.h>
 #include <osre/Common/Object.h>
 #include <osre/Common/TFunctor.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -33,67 +34,10 @@ namespace OSRE {
 namespace RenderBackend {
     class RenderBackendService;
     class FontBase;
-
-    struct Geometry;
+    class Mesh;
 }
 
 namespace UI {
-
-class Screen;
-
-/// @brief  Behavior-flags for the widgets
-static const ui32 WidgetResizable = 1;
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-struct OSRE_EXPORT Style {
-	///	This enum descripes the type of Ui-element.
-    enum class ColorTable {
-        FGColorPanel = 0,
-        BGColorPanel,
-        FGColorWidget,
-        BGColorWidget,
-        TextColor,
-        Max
-    };
-
-    CPPCore::TArray<Color4> m_properties;
-    RenderBackend::FontBase *m_font;
-
-    Style()
-    : m_properties()
-    , m_font( nullptr ) {
-        // color panel
-        m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
-        m_properties.add( Color4( 0.9f, 0.9f, 0.9f, 1.f ) );
-        
-        // color button
-        m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
-        m_properties.add( Color4( 0.5f, 0.5f, 0.5f, 1.f ) );
-        
-        // color text
-        m_properties.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
-    }
-
-    bool operator == ( const Style &rhs ) const {
-        for ( ui32 i = 0; i < (ui32) ColorTable::Max; i++ ) {
-            if ( m_properties[ i ] != rhs.m_properties[ i ] ) {
-                return false;
-            }
-            if ( m_font != rhs.m_font ) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    bool operator != ( const Style &rhs ) const {
-        return !( *this == rhs );
-    }
-};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -117,19 +61,47 @@ private:
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief  This static helper struct encapsulate the coordinate transformation from screen 
+/// coordinates from the current viewport to the world-coordinates of the scene and back. To use it 
+/// you have to reinitialize in on every resize event from the viewport.
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT WidgetCoordMapping {
-    static void init( const Rect2ui &dim );
+    /// @brief  Will initialize the translation for ui-coordinates.
+    /// @param  viewport    [in] The dimension of the current viewport.
+    static void init( const Rect2ui &viewport );
+
+    /// @brief  Will return the current dimension of the viewport.
+    /// @return The dimension of the current viewport.
     static const Rect2ui &getDimension();
+
+    /// @brief  Will map an absolution screen position to the world coordinates of the scene.  
+    /// @param  x       [in] The x-coordinate in the viewport.
+    /// @param  y       [in] The y-coordinate in the viewport.
+    /// @param  mappedX [out] The mapped x-coordinate in the scene.
+    /// @param  mappedY [out] The mapped y-coordinate in the scene.
     static void mapPosToWorld( ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
+
+    /// @brief  Will map screen coordinates as an array to the world coordinates of the scene.  
+    /// @param  x           [in] The x-coordinate array in the viewport.
+    /// @param  y           [in] The y-coordinate array in the viewport.
+    /// @param  numPoints   [in] The number of points in the array.
+    /// @param  mappedX     [out] The mapped array x-coordinate in the scene.
+    /// @param  mappedY     [out] The mapped array y-coordinate in the scene.
     static void mapPosArrayToWorld( ui32 *x, ui32 *y, ui32 numPoints, f32 *mappedX, f32 *mappedY );
-    static void mapPosToWorld( const Rect2ui &rect, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
+
+    /// @brief  Will map screen coordinate to the world coordinates of the scene.  
+    /// @param  viewport    [in] The dimension of the current viewport.
+    /// @param  x          [in] The x-coordinate in the viewport.
+    /// @param  y           [in] The y-coordinate in the viewport.
+    /// @param  mappedX     [out] The mapped x-coordinate in the scene.
+    /// @param  mappedY     [out] The mapped y-coordinate in the scene.
+    static void mapPosToWorld( const Rect2ui &viewport, ui32 x, ui32 y, f32 &mappedX, f32 &mappedY );
 
 private:
     static Rect2ui s_dim;
 };
 
+/// This enum is used to describe the widget type.
 enum class WidgetType {
     Button,
     Text,
@@ -140,6 +112,7 @@ enum class WidgetType {
 
 using UiFunctor = Common::Functor<void, ui32, void *>;
 
+/// @brief  Description of a single 
 struct UiProperty {
     String m_name;
     CPPCore::Variant m_data;

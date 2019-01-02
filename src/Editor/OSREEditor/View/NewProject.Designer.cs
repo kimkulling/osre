@@ -190,7 +190,7 @@ namespace OSREEditor.View
         private System.Windows.Forms.TextBox ProjectName;
         private System.Windows.Forms.Button NewProjectButton;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button CancelButton;
+        private new System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox ProjectType;
         private System.Windows.Forms.Label label3;

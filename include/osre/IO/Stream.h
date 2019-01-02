@@ -22,14 +22,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
+#include <osre/IO/IOCommon.h>
 #include <osre/IO/Uri.h>
 
 namespace OSRE {
 namespace IO {
-
-// Forward declarations
-class Uri;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/ParticleGenerator.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Geometry.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
 
@@ -72,9 +72,11 @@ void ParticleGenerator::init( ui32 numPoints ) {
 
     static const ui32 NumGeo( 1 );
 
-    m_ptGeo = Scene::GeometryBuilder::allocEmptyGeometry( VertexType::ColorVertex, NumGeo );
+    Scene::MeshBuilder geoBuilder;
+    geoBuilder.allocEmptyMesh(VertexType::ColorVertex, NumGeo);
+    m_ptGeo = geoBuilder.getMesh();
     m_rbSrv->attachGeo( m_ptGeo, 0 );
-    m_ptGeo->m_vb = Scene::GeometryBuilder::allocVertices( VertexType::ColorVertex, m_numPoints, m_pos, m_col, nullptr, BufferAccessType::ReadOnly );
+    m_ptGeo->m_vb = Scene::MeshBuilder::allocVertices( VertexType::ColorVertex, m_numPoints, m_pos, m_col, nullptr, BufferAccessType::ReadOnly );
     m_ptGeo->m_indextype = IndexType::UnsignedShort;
     ui32 pt_size = sizeof( GLushort ) * m_numPoints;
     m_ptGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, BufferAccessType::ReadOnly );
@@ -112,5 +114,5 @@ void ParticleGenerator::update( d32 tick ) {
     m_rbSrv->attachGeoUpdate( m_ptGeo );
 }
 
-}
-}
+} // Namespace RenderBackend
+} // Namespace OSRE

@@ -44,10 +44,10 @@ void UiRenderer::render( UI::Screen *screen, RenderBackendService *rbService ) {
     UiRenderCmdCache cache;
     screen->render( cache, rbService );
 
-    CPPCore::TArray<Geometry*> geoCache;
+    CPPCore::TArray<Mesh*> geoCache;
     for ( ui32 i = 0; i < cache.size(); ++i ) {
         UiRenderCmd *currentCmd( cache[ i ] );
-        Geometry *geo = UIRenderUtils::createGeoFromCache( currentCmd->m_vc, currentCmd->m_ic, currentCmd->m_mat );
+        Mesh *geo = UIRenderUtils::createGeoFromCache( currentCmd->m_vc, currentCmd->m_ic, currentCmd->m_mat );
         geoCache.add( geo );
 
         rbService->attachGeo( geoCache, 0 );

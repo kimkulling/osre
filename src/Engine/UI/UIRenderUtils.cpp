@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/Widget.h>
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Geometry.h>
+#include <osre/RenderBackend/Mesh.h>
 
 #include <cppcore/Memory/MemUtils.h>
 
@@ -108,8 +108,8 @@ Rect2ui UIRenderUtils::computeTextBox( const String &text, f32 textSize ) {
     return box;
 }
 
-RenderBackend::Geometry *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, Material *material ) {
-    Geometry *geo = Geometry::create( 1 );
+RenderBackend::Mesh *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, Material *material ) {
+    Mesh *geo = Mesh::create( 1 );
 
     geo->m_vertextype = VertexType::RenderVertex;
     geo->m_indextype = IndexType::UnsignedShort;

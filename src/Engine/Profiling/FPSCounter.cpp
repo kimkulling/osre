@@ -29,7 +29,7 @@ namespace Profiling {
 
 using namespace ::OSRE::Common;
 
-static const String Tag = "FPSCounter";
+static const c8 *Tag = "FPSCounter";
 
 FPSCounter::FPSCounter( Platform::AbstractTimer *timer )
 : m_timerPtr( timer )

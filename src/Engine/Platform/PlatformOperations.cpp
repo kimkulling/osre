@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-static const String Tag = "PlatformOperations";
+static const c8 *Tag = "PlatformOperations";
 
 void PlatformOperations::getFileOpenDialog( const c8 *extensions, IO::Uri &location ) {
 #ifdef OSRE_WINDOWS

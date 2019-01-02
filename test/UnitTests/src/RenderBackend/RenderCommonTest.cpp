@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "osre_testcommon.h"
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Shader.h>
-#include <osre/RenderBackend/Geometry.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace OSRE {
@@ -146,37 +146,36 @@ TEST_F( RenderCommonTest, copyBufferDataTest ) {
 }
 
 TEST_F( RenderCommonTest, accessGeometryTest ) {
-    Geometry *geo( nullptr );
-    geo = Geometry::create( 0 );
+    Mesh *geo( nullptr );
+    geo = Mesh::create( 0 );
     EXPECT_EQ( geo, nullptr );
-    geo = Geometry::create( 1 );
+    geo = Mesh::create( 1 );
     EXPECT_NE( geo, nullptr );
-    Geometry::destroy( &geo );
+    Mesh::destroy( &geo );
     EXPECT_EQ( geo, nullptr );
 }
 
 TEST_F(RenderCommonTest, initGeometryTest) {
-	Geometry *geo(nullptr);
-	geo = Geometry::create( 1 );
-	EXPECT_NE( geo, nullptr );
-	EXPECT_EQ( VertexType::RenderVertex, geo->m_vertextype );
-	EXPECT_EQ( nullptr, geo->m_ib );
-	EXPECT_EQ( nullptr, geo->m_vb );
-	EXPECT_EQ( nullptr, geo->m_material );
+    Mesh *mesh = Mesh::create( 1 );
+	EXPECT_NE( mesh, nullptr );
+	EXPECT_EQ( VertexType::RenderVertex, mesh->m_vertextype );
+	EXPECT_EQ( nullptr, mesh->m_ib );
+	EXPECT_EQ( nullptr, mesh->m_vb );
+	EXPECT_EQ( nullptr, mesh->m_material );
 }
 
 TEST_F( RenderCommonTest, geometryIdTest ) {
     static const ui32 NumGeo = 10;
     ui32 ids[ NumGeo ];
     ::memset( ids, 0, sizeof( ui32 ) * NumGeo );
-    Geometry *geo = Geometry::create( NumGeo );
-    ui32 oldId( geo[ 0 ].m_id );
+    Mesh *mesh = Mesh::create( NumGeo );
+    ui32 oldId( mesh[ 0 ].m_id );
     for ( ui32 i = 1; i < NumGeo; i++ ) {
-        ui32 id( geo[ i ].m_id );
+        ui32 id( mesh[ i ].m_id );
         EXPECT_EQ( id, oldId + 1 );
         oldId = id;
     }
-    Geometry::destroy( &geo );
+    Mesh::destroy( &mesh );
 }
 
 TEST_F( RenderCommonTest, accessTransformMatrixBlockTest ) {

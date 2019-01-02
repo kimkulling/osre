@@ -176,13 +176,13 @@ void Node::addModel( Model *model ) {
     }
 }
 
-void Node::addGeometry( RenderBackend::Geometry *geo ) {
+void Node::addMesh( RenderBackend::Mesh *geo ) {
     if ( nullptr != m_renderComp ) {
         m_renderComp->addStaticGeometry( geo );
     }
 }
 
-ui32 Node::getNumGeometries() const {
+ui32 Node::getNumMeshes() const {
     if ( nullptr != m_renderComp ) {
         return m_renderComp->getNumGeometry();
     }
@@ -190,7 +190,7 @@ ui32 Node::getNumGeometries() const {
     return 0;
 }
 
-RenderBackend::Geometry *Node::getGeometryAt(ui32 idx) const {
+RenderBackend::Mesh *Node::getMeshAt(ui32 idx) const {
     if ( nullptr != m_renderComp ) {
         return m_renderComp->getGeoAt( idx );
     }

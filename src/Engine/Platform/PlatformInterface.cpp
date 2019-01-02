@@ -54,7 +54,7 @@ static const String PlatformPluginName[ static_cast<i32>( PluginType::MaxPlugin 
     "SDL2Plugin"
 };
 
-static const String Tag = "PlatformInterface";
+static const c8 *Tag = "PlatformInterface";
 
 PlatformInterface::PlatformInterface( const Settings *config )
 : AbstractService( "platform/platforminterface" )

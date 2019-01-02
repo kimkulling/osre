@@ -37,6 +37,22 @@ bool Directory::exists(const String &dir) {
     return false;
 }
 
+void Directory::getDirectoryAndFile(const String pathAndFilename, String &path, String &filename) {
+    path.clear();
+    filename.clear();
+    if (pathAndFilename.empty()) {
+        return;
+    }
+
+    String::size_type pos = pathAndFilename.rfind("/");
+    if (String::npos == pos) {
+        return;
+    }
+
+    path = pathAndFilename.substr(0, pos + 1);
+    filename = pathAndFilename.substr(pos + 1, pathAndFilename.size() - pos - 1);
+}
+
 String Directory::getDirSeparator() {
 #ifdef OSRE_WINDOWS
     static String sep = "\\";

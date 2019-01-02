@@ -48,7 +48,7 @@ namespace RenderBackend {
 
 using namespace ::OSRE::Common;
 
-static const String Tag = "DX11Renderer";
+static const c8 *Tag = "DX11Renderer";
 
 DX11Renderer::DX11Renderer() 
 : m_vsync_enabled( true )

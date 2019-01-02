@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Platform/PlatformCommon.h>
 #include <osre/Common/AbstractService.h>
 #include <osre/Common/AbstractEventHandler.h>
 #include <osre/Common/Event.h>
@@ -33,27 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <map>
 
 namespace OSRE {
-
-// Forward declarations
-namespace Common {
-    class EventTriggerer;
-}
-
-namespace Properties {
-    class Settings;
-}
-
 namespace Platform {
-
-class AbstractWindow;
-class AbstractTimer;
-class AbstractPlatformEventQueue;
-class AbstractRenderContext;
-class AbstractDynamicLoader;
-class AbstractSystemInfo;
-
-struct AbstractInputUpdate;
-struct WindowsProperties;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -234,6 +215,7 @@ private:
 
 private:
     static PlatformInterface *s_instance;
+    
     const Properties::Settings *m_config;
     PluginType m_type;
     AbstractWindow *m_rootSurface;

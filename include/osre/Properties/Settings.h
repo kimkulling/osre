@@ -22,14 +22,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once  
 
-#include <osre/Common/osre_common.h>
+#include <osre/Properties/PropertiesCommon.h>
 
 #include <cppcore/Common/Variant.h>
 
 namespace OSRE {
 namespace Properties {
-
-class AbstractPropertyMap;
 
 //--------------------------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

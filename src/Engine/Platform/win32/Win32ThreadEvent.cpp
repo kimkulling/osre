@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-static const String Tag = "Win32ThreadEvent";
+static const c8 *Tag = "Win32ThreadEvent";
 
 Win32ThreadEvent::Win32ThreadEvent() 
 : m_EventHandle( nullptr ) {

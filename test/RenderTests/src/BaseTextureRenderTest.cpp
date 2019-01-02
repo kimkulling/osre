@@ -28,7 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/Shader.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Geometry.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 
@@ -49,7 +49,7 @@ namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
-static const String Tag = "BasetexturerenderTest";
+static const c8 *Tag = "BasetexturerenderTest";
 
 const String VsSrc =
     "#version 400 core\n"
@@ -121,7 +121,9 @@ public:
 
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
-        Geometry *geo = Scene::GeometryBuilder::allocQuads( VertexType::RenderVertex, BufferAccessType::ReadOnly );
+        Scene::MeshBuilder geoBuilder;
+        geoBuilder.allocQuads( VertexType::RenderVertex, BufferAccessType::ReadOnly );
+        Mesh *geo = geoBuilder.getMesh();
         rbSrv->attachGeo( geo, 0 );
 
         // use default material

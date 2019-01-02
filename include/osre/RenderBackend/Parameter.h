@@ -33,8 +33,8 @@ namespace OSRE {
 namespace RenderBackend {
 
 class RenderBackendService;
+class Mesh;
 
-struct Geometry;
 struct GeoInstanceData;
 struct Light;
 
@@ -83,7 +83,7 @@ private:
 struct GeometryPackage {
     ui32           m_numInstances;
     ui32           m_numNewGeo;
-    Geometry     **m_newGeo;
+    Mesh     **m_newGeo;
 
     GeometryPackage()
     : m_numInstances( 0 )
@@ -116,7 +116,7 @@ struct Frame {
     ui32              m_numGeoPackages;
     GeometryPackage **m_geoPackages;
     ui32              m_numGeoUpdates;
-    Geometry        **m_geoUpdates;
+    Mesh        **m_geoUpdates;
     ui32              m_numLights;
     Light           **m_lights;
     GeoInstanceData   *m_geoInstanceData;

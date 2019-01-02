@@ -22,6 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+
+#include <osre/Common/Common.h>
+#include <osre/Scene/SceneCommon.h>
 #include <osre/Common/Object.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/Collision/TAABB.h>
@@ -33,9 +36,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 // Forward declarations
-namespace Common {
-    class Ids;
-}
 
 namespace Assets {
     class Model;
@@ -47,16 +47,9 @@ namespace Properties {
 
 namespace RenderBackend {
     struct TransformState;
-    struct Geometry;
-
-    class RenderBackendService;
 }
 
 namespace Scene {
-
-class Component;
-class RenderComponent;
-class TransformComponent;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -105,9 +98,9 @@ public:
     virtual Node *getChildAt( ui32 idx ) const;
     virtual void releaseChildren();
     virtual void addModel( Assets::Model *model );
-    virtual void addGeometry( RenderBackend::Geometry *geo );
-    virtual ui32 getNumGeometries() const;
-    virtual RenderBackend::Geometry *getGeometryAt(ui32 idx) const;
+    virtual void addMesh( RenderBackend::Mesh *geo );
+    virtual ui32 getNumMeshes() const;
+    virtual RenderBackend::Mesh *getMeshAt(ui32 idx) const;
     virtual void update(Time dt);
     virtual void draw(RenderBackend::RenderBackendService *renderBackendSrv);
     virtual void setAABB(const AABB &aabb);

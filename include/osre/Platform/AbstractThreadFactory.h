@@ -22,17 +22,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Object.h>
+#include <osre/Platform/PlatformCommon.h>
 
 namespace OSRE {
 namespace Platform {
-
-// Forward declarations
-class AbstractCriticalSection;
-class AbstractThreadEvent;
-class AbstractThread;
-class AbstractAtomic;
-class AbstractThreadLocalStorage;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

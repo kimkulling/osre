@@ -76,6 +76,6 @@ private:
     } mVersion;
 };
 
-}
-}
+} // Namespace Assets
+} // Namespace OSRE
 
