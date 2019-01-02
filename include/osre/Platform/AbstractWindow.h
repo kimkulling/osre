@@ -106,39 +106,42 @@ public:
 
     /// @brief  Will create the surface.
     /// @return true will be returned, when creation was successful.
-    bool create();
+    virtual bool create();
 
     /// @brief  Will destroy the surface.
     /// @return true will be returned, when creation was successful.
-    bool destroy();
+    virtual bool destroy();
 
     /// @brief  Call this to signal an updated property.
     /// @return true will be returned, when creation was successful.
-    bool updateProperties();
+    virtual bool updateProperties();
 
     /// @brief  Setter to update all properties. updateProperties must be called to 
     ///         apply changed properties.
     /// @param  props       [in] The new properties.
-    void setProperties( WindowsProperties *props );
+    virtual void setProperties( WindowsProperties *props );
 
     /// @brief  Returns a non-const pointer to the window properties. setFlags must 
     ///         be called manually followed by updateProperties to apply changes.
     /// @return Pointer showing to the surface properties.
-    WindowsProperties *getProperties();
+    virtual WindowsProperties *getProperties();
     
     /// @brief  Setting of a new flag.
     /// @param  flags       [in] The new flags.
-    void setFlags( SurfaceFlagType flags );
+    virtual void setFlags( SurfaceFlagType flags );
 
     /// @brief  Returns the surface flags.
     /// @return The surface flags.
-    ui32 getFlags() const;
+    virtual ui32 getFlags() const;
 
+    /// @brief  Will set the windows title.
+    /// @param  title       [in] The new windows title.
     virtual void setWindowsTitle( const String &title ) = 0;
 
-    void resize( ui32 x, ui32 y, ui32 w, ui32 h );
+    /// @
+    virtual void resize( ui32 x, ui32 y, ui32 w, ui32 h );
 
-    Rect2ui getWindowsRect() const;
+    virtual Rect2ui getWindowsRect() const;
 
 protected:
     /// @brief  Callback to override on creation.

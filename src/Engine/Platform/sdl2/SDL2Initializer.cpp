@@ -53,5 +53,5 @@ bool SDL2Initializer::release() {
     return true;
 }
 
-} // Namespace Threading
+} // Namespace Platform
 } // Namespace OSRE

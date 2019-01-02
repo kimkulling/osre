@@ -25,35 +25,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformCommon.h>
 
 namespace OSRE {
-
-// Forward declarations
-namespace IO {
-    class Uri;
-}
-
 namespace Platform {
 
-class OSRE_EXPORT PlatformOperations {
+class OSRE_EXPORT AbstractOSService {
 public:
-    enum {
-        DlgButton_YesNo = 1,
-        DlgButton_ok = 2
-    };
-
-    enum DlgResults {
-        DlgButtonRes_Yes = 1,
-        DlgButtonRes_No,
-        DlgButtonRes_Ok
-    };
-
-    static void getFileOpenDialog( const c8 *extensions, IO::Uri &location );
-    static void getFileSaveDialog( const c8 *extensions, IO::Uri &location );
-    static void getDialog( const String &title, const String &question, ui32 requestedButtons, DlgResults &result );
-    
-    PlatformOperations() = delete;
-    PlatformOperations(const PlatformOperations &) = delete;
-    ~PlatformOperations() = delete;
+    virtual ~AbstractOSService();
+    virtual void showCursor(bool enabled) = 0;
 };
 
-} // Namespace Platform
-} // Namespace OSRE
+inline 
+AbstractOSService::~AbstractOSService() {
+    // empty
+}
+
+}
+}

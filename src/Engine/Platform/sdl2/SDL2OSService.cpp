@@ -20,40 +20,29 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
+#include "SDL2OSService.h"
 
-#include <osre/Platform/PlatformCommon.h>
+#include <SDL.h>
 
 namespace OSRE {
-
-// Forward declarations
-namespace IO {
-    class Uri;
-}
-
 namespace Platform {
-
-class OSRE_EXPORT PlatformOperations {
-public:
-    enum {
-        DlgButton_YesNo = 1,
-        DlgButton_ok = 2
-    };
-
-    enum DlgResults {
-        DlgButtonRes_Yes = 1,
-        DlgButtonRes_No,
-        DlgButtonRes_Ok
-    };
-
-    static void getFileOpenDialog( const c8 *extensions, IO::Uri &location );
-    static void getFileSaveDialog( const c8 *extensions, IO::Uri &location );
-    static void getDialog( const String &title, const String &question, ui32 requestedButtons, DlgResults &result );
+        
+SDL2OSService::SDL2OSService()
+: AbstractOSService() {
+    // empty
+}
     
-    PlatformOperations() = delete;
-    PlatformOperations(const PlatformOperations &) = delete;
-    ~PlatformOperations() = delete;
-};
+SDL2OSService::~SDL2OSService() {
+
+}
+    
+void SDL2OSService::showCursor(bool enabled) {
+    int flag = SDL_ENABLE;
+    if (!enabled) {
+        flag = SDL_DISABLE;
+    }
+    SDL_ShowCursor(flag);
+}
 
 } // Namespace Platform
 } // Namespace OSRE

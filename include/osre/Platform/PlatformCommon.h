@@ -53,6 +53,7 @@ class AbstractPlatformEventQueue;
 class AbstractRenderContext;
 class AbstractDynamicLoader;
 class AbstractSystemInfo;
+class AbstractOSService;
 class CPUInfo;
 class PlatformInterface;
 

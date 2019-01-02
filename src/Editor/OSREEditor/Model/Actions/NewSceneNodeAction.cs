@@ -1,4 +1,4 @@
-/*-----------------------------------------------------------------------------------------------
+﻿/*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
 Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
@@ -20,40 +20,26 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
 
-#include <osre/Platform/PlatformCommon.h>
-
-namespace OSRE {
-
-// Forward declarations
-namespace IO {
-    class Uri;
-}
-
-namespace Platform {
-
-class OSRE_EXPORT PlatformOperations {
-public:
-    enum {
-        DlgButton_YesNo = 1,
-        DlgButton_ok = 2
-    };
-
-    enum DlgResults {
-        DlgButtonRes_Yes = 1,
-        DlgButtonRes_No,
-        DlgButtonRes_Ok
-    };
-
-    static void getFileOpenDialog( const c8 *extensions, IO::Uri &location );
-    static void getFileSaveDialog( const c8 *extensions, IO::Uri &location );
-    static void getDialog( const String &title, const String &question, ui32 requestedButtons, DlgResults &result );
+namespace OSREEditor.Model.Actions {
     
-    PlatformOperations() = delete;
-    PlatformOperations(const PlatformOperations &) = delete;
-    ~PlatformOperations() = delete;
-};
+    /// <summary>
+    /// Will create a new scene-node.
+    /// </summary>
+    public class NewSceneNodeAction : IAction {
+        private string _name;
 
-} // Namespace Platform
-} // Namespace OSRE
+        private string _type;
+
+        public NewSceneNodeAction(string name, string type)
+        {
+            _name = name;
+            _type = type;
+        }
+
+        public bool Execute()
+        {
+            return true;
+        }
+    }
+}

@@ -31,10 +31,14 @@ namespace OSREEditor.Model.Actions {
         private IntPtr mHandle;
         private Form mMainWindow;
         public Project CurrentProject { get; set; }
+        private int _width;
+        private int _height;
 
-        public NewProjectAction( IntPtr handle, Form mainWindow ) {
+        public NewProjectAction( IntPtr handle, Form mainWindow, int width, int height ) {
             mHandle = handle;
             mMainWindow = mainWindow;
+            _width = width;
+            _height = height;
         }
 
         public bool Execute() {
@@ -48,10 +52,11 @@ namespace OSREEditor.Model.Actions {
             if (mMainWindow != null) {
                 mMainWindow.Text = ProjectName;
             }
-            CurrentProject = new Project();
-            CurrentProject.ProjectName = ProjectName;
+            CurrentProject = new Project {
+                ProjectName = ProjectName
+            };
             int retCode = 0;
-            retCode = OSREWrapper.CreateEditorApp(mHandle);
+            retCode = OSREWrapper.CreateEditorApp(mHandle, _width, _height);
             OSREWrapper.NewProject(CurrentProject.ProjectName);
 
             return 0 == retCode;
