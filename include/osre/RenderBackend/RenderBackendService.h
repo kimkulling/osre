@@ -184,6 +184,8 @@ public:
     
     void setMatrix( const String &name, const glm::mat4 &matrix );
 
+    void setUniform(UniformVar *var);
+
     void setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray );
 
     void attachGeo( Mesh *geo, ui32 numInstances );
@@ -232,6 +234,7 @@ private:
     UI::Widget *m_screen;
 
     struct GeoBatch {
+        MatrixBuffer m_matrixBuffer;
         CPPCore::TArray<UniformVar*> m_uniforms;
         CPPCore::TArray<Mesh*>   m_geoArray;
     };
@@ -240,8 +243,10 @@ private:
         MatrixBuffer m_matrixBuffer;
         CPPCore::TArray<GeoBatch*> m_geoBatches;
     };
+
     CPPCore::TArray<PassData*> m_passes;
     PassData *m_currentPass;
+    GeoBatch *m_currentBatch;
 
     CPPCore::TArray<NewGeoEntry*> m_newGeo;
     CPPCore::TArray<Mesh*> m_geoUpdates;
