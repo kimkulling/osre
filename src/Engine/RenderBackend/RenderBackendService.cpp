@@ -44,6 +44,28 @@ using namespace ::OSRE::Properties;
 
 static const c8 *Tag = "RenderBackendService";
 
+static const c8 *OGL_API = "opengl";
+static const c8 *Vulkan_API = "vulkan";
+#ifdef OSRE_WINDOWS
+
+static const c8 *DX11_API = "dx11";
+
+#endif // OSRE_WINDOWS
+
+GeoBatch *PassData::getBatchById(const c8 *id) const {
+    if (nullptr == id) {
+        return nullptr;
+    }
+
+    for (ui32 i = 0; i < m_geoBatches.size(); ++i) {
+        if (m_geoBatches[i]->m_id == id) {
+            return m_geoBatches[i];
+        }
+    }
+
+    return nullptr;
+}
+
 RenderBackendService::RenderBackendService()
 : AbstractService( "renderbackend/renderbackendserver" )
 , m_matrixBuffer()
@@ -69,12 +91,6 @@ RenderBackendService::~RenderBackendService() {
         m_settings = nullptr;
     }
 }
-
-static const c8 *OGL_API    = "opengl";
-static const c8 *Vulkan_API = "vulkan";
-#ifdef OSRE_WINDOWS
-static const c8 *DX11_API   = "dx11";
-#endif // OSRE_WINDOWS
 
 bool RenderBackendService::onOpen() {
     if ( nullptr == m_settings ) {
@@ -230,24 +246,42 @@ void RenderBackendService::sendEvent( const Event *ev, const EventData *eventDat
     }
 }
 
-bool RenderBackendService::beginPass() {
+PassData *RenderBackendService::getPassById(const c8 *id) const {
+    if (nullptr == id) {
+        return nullptr;
+    }
+
+    if (m_currentPass->m_id == id) {
+        return m_currentPass;
+    }
+
+    for (ui32 i = 0; i < m_passes.size(); ++i) {
+        if (m_passes[i]->m_id == id) {
+            return m_passes[i];
+        }
+    }
+
+    return nullptr;
+}
+
+bool RenderBackendService::beginPass(const c8 *id) {
     if (nullptr != m_currentPass) {
         osre_warn(Tag, "Pass recording already active.");
         return false;
     }
 
-    m_currentPass = new PassData;
+    m_currentPass = new PassData(id);
 
     return true;
 }
 
-bool RenderBackendService::beginRenderBatch() {
+bool RenderBackendService::beginRenderBatch(const c8 *id) {
     if (nullptr != m_currentPass) {
         osre_warn(Tag, "Pass recording not active.");
         return false;
     }
 
-    m_currentBatch = new GeoBatch;
+    m_currentBatch = new GeoBatch(id);
 
     return true;
 }
@@ -366,7 +400,7 @@ bool RenderBackendService::endRenderBatch() {
     }
 
     if (nullptr == m_currentPass) {
-        m_currentPass = new PassData;
+        m_currentPass = new PassData("defaultPass");
     }
     m_currentPass->m_geoBatches.add(m_currentBatch);
     m_currentBatch = nullptr;

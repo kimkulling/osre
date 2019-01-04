@@ -65,8 +65,9 @@ public:
         transform.setTranslation( 0.5f, 0, 0 );
         transform.setScale(0.2f, 0.2f, 0.2f);
         transform.toMatrix( mesh1->m_model );
-         
-        rbSrv->beginPass();
+        
+        const String passName("pass1");
+        rbSrv->beginPass(passName.c_str());
 
         rbSrv->attachGeo( mesh1, 0 );
 

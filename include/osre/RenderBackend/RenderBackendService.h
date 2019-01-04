@@ -148,6 +148,44 @@ struct NewGeoEntry {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
+///	@brief
+//-------------------------------------------------------------------------------------------------
+struct GeoBatch {
+    const c8                    *m_id;
+    MatrixBuffer                 m_matrixBuffer;
+    CPPCore::TArray<UniformVar*> m_uniforms;
+    CPPCore::TArray<Mesh*>       m_geoArray;
+
+    GeoBatch(const c8 *id)
+    : m_id(id)
+    , m_matrixBuffer()
+    , m_uniforms()
+    , m_geoArray() {
+        // empty
+    }
+};
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
+struct PassData {
+    const c8 *m_id;
+    CPPCore::TArray<GeoBatch*> m_geoBatches;
+
+    PassData(const c8 *id)
+    : m_id(id)
+    , m_geoBatches() {
+        // empty
+    }
+
+    GeoBatch *getBatchById(const c8 *id) const;
+};
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
 ///	@brief  This class implements the render back-end service.
 ///
 /// A render service implements the low-level API of the rendering. The API-calls will be performed 
@@ -176,9 +214,11 @@ public:
     /// @param  eventData   [in] The event data.
     void sendEvent( const Common::Event *ev, const Common::EventData *eventData );
 
-    bool beginPass();
+    PassData *getPassById(const c8 *id) const;
+
+    bool beginPass(const c8 *id);
     
-    bool beginRenderBatch();
+    bool beginRenderBatch(const c8 *id);
 
     void setMatrix(MatrixType type, const glm::mat4 &m );
     
@@ -232,17 +272,6 @@ private:
     bool m_ownsSettingsConfig;
     Frame m_nextFrame;
     UI::Widget *m_screen;
-
-    struct GeoBatch {
-        MatrixBuffer m_matrixBuffer;
-        CPPCore::TArray<UniformVar*> m_uniforms;
-        CPPCore::TArray<Mesh*>   m_geoArray;
-    };
-
-    struct PassData {
-        MatrixBuffer m_matrixBuffer;
-        CPPCore::TArray<GeoBatch*> m_geoBatches;
-    };
 
     CPPCore::TArray<PassData*> m_passes;
     PassData *m_currentPass;
