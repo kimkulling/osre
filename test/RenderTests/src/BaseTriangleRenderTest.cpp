@@ -75,7 +75,8 @@ public:
         
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         
-        rbSrv->beginPass();
+        const String passName("pass1");
+        rbSrv->beginPass(passName.c_str());
         
         rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
         rbSrv->attachGeo( meshArray, 0 );

@@ -68,6 +68,7 @@ SET( unittest_platform_src
 )
 
 SET ( unittest_rb_src
+    src/RenderBackend/RenderBackendServiceTest.cpp
 	src/RenderBackend/CullStateTest.cpp
     src/RenderBackend/BlendStateTeste.cpp
     #src/RenderBackend/PolygonStateTest.cpp

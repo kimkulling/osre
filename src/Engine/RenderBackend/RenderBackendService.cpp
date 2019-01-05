@@ -44,6 +44,28 @@ using namespace ::OSRE::Properties;
 
 static const c8 *Tag = "RenderBackendService";
 
+static const c8 *OGL_API = "opengl";
+static const c8 *Vulkan_API = "vulkan";
+#ifdef OSRE_WINDOWS
+
+static const c8 *DX11_API = "dx11";
+
+#endif // OSRE_WINDOWS
+
+GeoBatch *PassData::getBatchById(const c8 *id) const {
+    if (nullptr == id) {
+        return nullptr;
+    }
+
+    for (ui32 i = 0; i < m_geoBatches.size(); ++i) {
+        if (m_geoBatches[i]->m_id == id) {
+            return m_geoBatches[i];
+        }
+    }
+
+    return nullptr;
+}
+
 RenderBackendService::RenderBackendService()
 : AbstractService( "renderbackend/renderbackendserver" )
 , m_matrixBuffer()
@@ -54,6 +76,7 @@ RenderBackendService::RenderBackendService()
 , m_screen( nullptr )
 , m_passes()
 , m_currentPass(nullptr)
+, m_currentBatch( nullptr )
 , m_newGeo()
 , m_geoUpdates()
 , m_newInstances()
@@ -68,12 +91,6 @@ RenderBackendService::~RenderBackendService() {
         m_settings = nullptr;
     }
 }
-
-static const c8 *OGL_API    = "opengl";
-static const c8 *Vulkan_API = "vulkan";
-#ifdef OSRE_WINDOWS
-static const c8 *DX11_API   = "dx11";
-#endif // OSRE_WINDOWS
 
 bool RenderBackendService::onOpen() {
     if ( nullptr == m_settings ) {
@@ -169,8 +186,13 @@ static void setupGeoPackage(NewGeoEntry *newEntry, GeometryPackage *package ) {
     OSRE_ASSERT( nullptr != package );
     
     const ui32 numNewGeo( newEntry->m_geo.size() );
-    package->m_newGeo = new Mesh*[numNewGeo];
     package->m_numNewGeo = numNewGeo;
+    if (0 == numNewGeo) {
+        package->m_newGeo = nullptr;
+        return;
+    }
+
+    package->m_newGeo = new Mesh*[numNewGeo];
     package->m_numInstances = newEntry->numInstances;
     for ( ui32 i=0; i<numNewGeo; i++ ) {
         Mesh *geo( newEntry->m_geo[ i ] );
@@ -224,22 +246,42 @@ void RenderBackendService::sendEvent( const Event *ev, const EventData *eventDat
     }
 }
 
-bool RenderBackendService::beginPass() {
+PassData *RenderBackendService::getPassById(const c8 *id) const {
+    if (nullptr == id) {
+        return nullptr;
+    }
+
+    if (m_currentPass->m_id == id) {
+        return m_currentPass;
+    }
+
+    for (ui32 i = 0; i < m_passes.size(); ++i) {
+        if (m_passes[i]->m_id == id) {
+            return m_passes[i];
+        }
+    }
+
+    return nullptr;
+}
+
+bool RenderBackendService::beginPass(const c8 *id) {
     if (nullptr != m_currentPass) {
         osre_warn(Tag, "Pass recording already active.");
         return false;
     }
 
-    m_currentPass = new PassData;
+    m_currentPass = new PassData(id);
 
     return true;
 }
 
-bool RenderBackendService::beginRenderBatch() {
+bool RenderBackendService::beginRenderBatch(const c8 *id) {
     if (nullptr != m_currentPass) {
         osre_warn(Tag, "Pass recording not active.");
         return false;
     }
+
+    m_currentBatch = new GeoBatch(id);
 
     return true;
 }
@@ -247,12 +289,21 @@ bool RenderBackendService::beginRenderBatch() {
 void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
     switch (type) {
         case MatrixType::Model:
+            if (nullptr != m_currentBatch) {
+                m_currentBatch->m_matrixBuffer.m_model = m;
+            }
             m_matrixBuffer.m_model = m;
             break;
         case MatrixType::View:
+            if (nullptr != m_currentBatch) {
+                m_currentBatch->m_matrixBuffer.m_view = m;
+            }
             m_matrixBuffer.m_view = m;
             break;
         case MatrixType::Projection:
+            if (nullptr != m_currentBatch) {
+                m_currentBatch->m_matrixBuffer.m_proj = m;
+            }
             m_matrixBuffer.m_proj = m;
             break;
         default:
@@ -272,6 +323,16 @@ void RenderBackendService::setMatrix( const String &name, const glm::mat4 &matri
 
     ::memcpy( uniform->m_data.m_data, glm::value_ptr( matrix ), sizeof( glm::mat4 ) );
     m_uniformUpdates.add( uniform );
+}
+
+void RenderBackendService::setUniform(UniformVar *var) {
+    if (nullptr == var) {
+        return;
+    }
+
+    if (nullptr != m_currentBatch) {
+        m_currentBatch->m_uniforms.add( var );
+    }
 }
 
 void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray) {
@@ -334,11 +395,21 @@ void RenderBackendService::attachGeoInstance( const CPPCore::TArray<GeoInstanceD
 }
 
 bool RenderBackendService::endRenderBatch() {
+    if (nullptr == m_currentBatch) {
+        return false;
+    }
+
+    if (nullptr == m_currentPass) {
+        m_currentPass = new PassData("defaultPass");
+    }
+    m_currentPass->m_geoBatches.add(m_currentBatch);
+    m_currentBatch = nullptr;
+
     return true;
 }
 
 bool RenderBackendService::endPass() {
-    if (nullptr != m_currentPass) {
+    if (nullptr == m_currentPass) {
         return false;
     }
 

@@ -81,7 +81,9 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
             mainWH = (HWND)mainWindowHandle;
         }
 
-        char *argc[] = { "CreateEditorApp" };
+        char *argc[] = { 
+            "CreateEditorApp" 
+        };
         s_EditorApplication = new EditorApplication( 1, argc );
         s_EditorApplication->create();
 
@@ -91,16 +93,18 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
         }
 
         s_EditorApplication->update();
-
-
         Win32Window *window = (Win32Window*)s_EditorApplication->getRootWindow();
         if (nullptr != window) {
             HWND childHandle = window->getHWnd();
+            if (childHandle == nullptr) {
+                osre_error(Tag, "Cannot get window handle from editor instance.");
+                return 1;
+            }
+
             ::SetParent( childHandle, mainWH );
             RECT rect;
             ::GetClientRect( mainWH, &rect );
             const ui32 w = rect.right - rect.left;
-
             ::MoveWindow( childHandle, 25, 45, width, height, TRUE );
         }
 
@@ -109,6 +113,7 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
         OSEventListener *listener = new MouseEventListener( s_EditorApplication );
         AbstractPlatformEventQueue *evQueue = s_EditorApplication->getPlatformInterface()->getPlatformEventHandler();
         if (nullptr == evQueue) {
+            osre_error(Tag, "CAnnot get event queue.");
             return 1;
         }
 
@@ -203,9 +208,6 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL ImportAsset( const char *filename, int
 extern "C" OSRE_EDITOR_EXPORT void STDCALL RegisterLogCallback(fnc_log_callback *fnc) {
     fnc_log_callback ptr = (fnc_log_callback)fnc;
     g_fnc_log_callback = ptr;
-    if (nullptr != ptr) {
-
-    }
 }
 
 }
