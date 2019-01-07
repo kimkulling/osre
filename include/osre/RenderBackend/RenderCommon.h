@@ -586,19 +586,6 @@ struct TIndexCache {
     }
 };
 
-///	@brief  A render batch struct.
-/// Render batches are used to store cluster of similar render data, which can be rendered in one draw call.
-struct RenderBatch {
-    glm::mat4  m_model;     ///< The local model matrix.
-    ui32       m_numGeo;    ///< Number of geometries
-    Mesh  *m_geoArray;  ///< The geometry for the batch.
-
-    RenderBatch();
-    ~RenderBatch();
-
-    OSRE_NON_COPYABLE( RenderBatch )
-};
-
 ///	@brief
 enum class LightType {
     Directional,
@@ -623,6 +610,91 @@ struct OSRE_EXPORT Light {
 
 using UiVertexCache = RenderBackend::TVertexCache<RenderBackend::RenderVert>;
 using UiIndexCache = RenderBackend::TIndexCache<ui16>;
+
+struct MatrixBuffer {
+    glm::mat4 m_model;
+    glm::mat4 m_view;
+    glm::mat4 m_proj;
+
+    MatrixBuffer()
+    : m_model(1.0f)
+    , m_view(1.0f)
+    , m_proj(1.0f) {
+        // empty
+    }
+};
+
+struct MeshEntry {
+    ui32 numInstances;
+    bool m_isDirty;
+    CPPCore::TArray<Mesh*> m_geo;
+};
+
+struct GeoBatch {
+    const c8                    *m_id;
+    MatrixBuffer                 m_matrixBuffer;
+    CPPCore::TArray<UniformVar*> m_uniforms;
+    CPPCore::TArray<MeshEntry*>  m_meshArray;
+
+    GeoBatch(const c8 *id)
+    : m_id(id)
+    , m_matrixBuffer()
+    , m_uniforms()
+    , m_meshArray() {
+        // empty
+    }
+
+    MeshEntry *getMeshEntryByName(const c8 *name);
+    UniformVar *getVarByName(const c8 *name);
+};
+
+struct PassData {
+    const c8 *m_id;
+    CPPCore::TArray<GeoBatch*> m_geoBatches;
+
+    PassData(const c8 *id)
+    : m_id(id)
+    , m_geoBatches() {
+        // empty
+    }
+
+    GeoBatch *getBatchById(const c8 *id) const;
+};
+
+struct GeometryPackage {
+    ui32           m_numInstances;
+    ui32           m_numNewGeo;
+    Mesh     **m_newGeo;
+
+    GeometryPackage()
+    : m_numInstances(0)
+    , m_numNewGeo(0)
+    , m_newGeo(nullptr) {
+        // empty
+    }
+
+    ~GeometryPackage() {
+        // empty
+    }
+};
+
+
+struct Frame {
+    ::CPPCore::TArray<PassData*> m_passes;
+
+    Frame()
+    : m_passes() {
+        // empty
+    }
+
+    ~Frame() {
+        // empty
+    }
+
+    Frame(const Frame &) = delete;
+    Frame(Frame &&) = delete;
+    Frame& operator = (const Frame &) = delete;
+};
 
 } // Namespace RenderBackend
 } // Namespace OSRE

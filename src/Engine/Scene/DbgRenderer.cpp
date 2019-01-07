@@ -90,16 +90,19 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
     m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, glm::vec3(scale, scale, scale));
     m_transformMatrix.update();
 
+    m_rbSrv->beginPass("dbgPass");
+    m_rbSrv->beginRenderBatch("dbgFontBatch");
+
     if ( !m_textBoxes.hasKey( id ) ) {
         f32 xTrans(0), yTrans(0);
         UI::WidgetCoordMapping::mapPosToWorld(x , y, xTrans, yTrans);
         MeshBuilder geoBuilder;
         geoBuilder.allocTextBox(xTrans, yTrans, scale, text, BufferAccessType::ReadWrite);
-        Mesh *geo = geoBuilder.getMesh();
-        m_rbSrv->attachGeo( geo, 0 );
-        insertTextEntry( id, geo, text, m_textBoxes );
-        geo->m_localMatrix = true;
-        geo->m_model = m_transformMatrix.m_model;
+        Mesh *mesh = geoBuilder.getMesh();
+        m_rbSrv->attachGeo(mesh, 0 );
+        insertTextEntry( id, mesh, text, m_textBoxes );
+        mesh->m_localMatrix = true;
+        mesh->m_model = m_transformMatrix.m_model;
     } else {
         DbgTextEntry *entry( nullptr );
         if ( m_textBoxes.getValue( id, entry ) ) {
@@ -117,11 +120,24 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
                 MeshBuilder::updateTextBox( entry->m_geo, 0.1f, text );
                 geo = entry->m_geo;
             }
-            m_rbSrv->attachGeoUpdate( geo );            
-            geo->m_localMatrix = true;
-            geo->m_model = m_transformMatrix.m_model;
+
+            PassData *data = m_rbSrv->getPassById("dbgPass");
+            if (nullptr != data) {
+                GeoBatch *batch = data->getBatchById("dbgFontBatch");
+                for (ui32 i = 0; i < batch->m_meshArray.size(); ++i) {
+                    for (ui32 j = 0; j < batch->m_meshArray[i]->m_geo.size(); j++) {
+                        if (batch->m_meshArray[i]->m_geo[j]->m_id == id) {
+                            batch->m_meshArray[i]->m_isDirty = true;
+                            batch->m_meshArray[i]->m_geo[j] = geo;
+                        }
+                    }
+                }
+            }
         }
     }
+    
+    m_rbSrv->endRenderBatch();
+    m_rbSrv->endPass();
 }
 
 static const ui32 NumIndices = 24;

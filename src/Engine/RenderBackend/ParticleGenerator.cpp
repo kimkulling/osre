@@ -109,7 +109,7 @@ void ParticleGenerator::update( d32 tick ) {
         offset += sizeof( ColorVert );
     }
 
-    m_rbSrv->attachGeoUpdate( m_ptGeo );
+    //m_rbSrv->attachGeoUpdate( m_ptGeo );
 }
 
 } // Namespace RenderBackend

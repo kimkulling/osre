@@ -138,54 +138,6 @@ struct OSRE_EXPORT ResizeEventData : Common::EventData {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-struct NewGeoEntry {
-    ui32 numInstances;
-    CPPCore::TArray<Mesh*> m_geo;
-};
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-struct GeoBatch {
-    const c8                    *m_id;
-    MatrixBuffer                 m_matrixBuffer;
-    CPPCore::TArray<UniformVar*> m_uniforms;
-    CPPCore::TArray<Mesh*>       m_geoArray;
-
-    GeoBatch(const c8 *id)
-    : m_id(id)
-    , m_matrixBuffer()
-    , m_uniforms()
-    , m_geoArray() {
-        // empty
-    }
-};
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-struct PassData {
-    const c8 *m_id;
-    CPPCore::TArray<GeoBatch*> m_geoBatches;
-
-    PassData(const c8 *id)
-    : m_id(id)
-    , m_geoBatches() {
-        // empty
-    }
-
-    GeoBatch *getBatchById(const c8 *id) const;
-};
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
 ///	@brief  This class implements the render back-end service.
 ///
 /// A render service implements the low-level API of the rendering. The API-calls will be performed 
@@ -232,14 +184,6 @@ public:
 
     void attachGeo( const CPPCore::TArray<Mesh*> &geoArray, ui32 numInstances );
 
-    void attachGeoUpdate( Mesh *geo );
-
-    void attachGeoUpdate( const CPPCore::TArray<Mesh*> &geoArray );
-
-    void attachGeoInstance(GeoInstanceData *instanceData);
-
-    void attachGeoInstance(const CPPCore::TArray<GeoInstanceData*> &instanceData);
-
     bool endRenderBatch();
 
     bool endPass();
@@ -276,12 +220,6 @@ private:
     CPPCore::TArray<PassData*> m_passes;
     PassData *m_currentPass;
     GeoBatch *m_currentBatch;
-
-    CPPCore::TArray<NewGeoEntry*> m_newGeo;
-    CPPCore::TArray<Mesh*> m_geoUpdates;
-    CPPCore::TArray<GeoInstanceData*> m_newInstances;
-    CPPCore::THashMap<ui32, UniformVar*> m_variables;
-    CPPCore::TArray<UniformVar*> m_uniformUpdates;
 };
 
 inline 

@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Shader.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/Ids.h>
 #include <glm/gtc/matrix_transform.inl>
@@ -479,17 +480,6 @@ bool Viewport::operator != ( const Viewport &rhs ) const {
     return !( *this == rhs );
 }
 
-RenderBatch::RenderBatch() 
-: m_model( 1.0f )
-, m_numGeo( 0 ) 
-, m_geoArray( nullptr ) {
-    // empty
-}
-
-RenderBatch::~RenderBatch() {
-    // empty
-}
-
 Light::Light()
 : m_position(0.0f,0.0f,0.0f,1.0f)
 , m_specular( 1.0f,1.0f,1.0f)
@@ -503,6 +493,38 @@ Light::Light()
 
 Light::~Light() {
     // empty
+}
+
+
+
+MeshEntry *GeoBatch::getMeshEntryByName(const c8 *name) {
+    if (nullptr == name) {
+        return nullptr;
+    }
+
+    for (ui32 i = 0; i < m_meshArray.size(); ++i) {
+        for (ui32 j = 0; j < m_meshArray[i]->m_geo.size(); ++j) {
+            if (m_meshArray[i]->m_geo[j]->m_name == name) {
+                return m_meshArray[i];
+            }
+        }
+    }
+
+    return nullptr;
+}
+
+UniformVar *GeoBatch::getVarByName(const c8 *name) {
+    if (nullptr == name) {
+        return nullptr;
+    }
+
+    for (ui32 i = 0; i < m_uniforms.size(); ++i) {
+        if (m_uniforms[i]->m_name == name) {
+            return m_uniforms[i];
+        }
+    }
+
+    return nullptr;
 }
 
 } // Namespace RenderBackend

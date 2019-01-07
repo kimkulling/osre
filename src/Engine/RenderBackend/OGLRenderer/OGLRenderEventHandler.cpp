@@ -88,16 +88,6 @@ static bool setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTextur
     return true;
 }
 
-static void setupLights( ui32 numLights, Light **lights, OGLRenderBackend *rb, OGLRenderEventHandler *eh) {
-    OSRE_ASSERT(nullptr != eh);
-    OSRE_ASSERT(nullptr != rb);
-    OSRE_ASSERT(nullptr != lights);
-
-    for ( ui32 i = 0; i < numLights; ++i ) {
-        Light *currentLight( lights[ i ] );
-    }
-}
-
 static void setConstantBuffers(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj, 
         OGLRenderBackend *rb, OGLRenderEventHandler *eh) {
     OSRE_ASSERT(nullptr != eh);
@@ -253,7 +243,7 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, Frame *currentFrame,
         return;
     }
 
-    GeoInstanceData *instData( currentFrame->m_geoInstanceData );
+/*    GeoInstanceData *instData( currentFrame->m_geoInstanceData );
 	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesInstancesCmd, nullptr );
     if( nullptr != instData ) {
         if( nullptr != instData->m_data ) {
@@ -277,7 +267,7 @@ static void setupInstancedDrawCmd( const TArray<ui32> &ids, Frame *currentFrame,
         }
         renderCmd->m_data = static_cast< void* >( data );
         eh->enqueueRenderCmd( renderCmd );
-    }
+    }*/
 }
 
 OGLRenderEventHandler::OGLRenderEventHandler( )
@@ -491,43 +481,13 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
     }
     
     Frame *frame = frameToCommitData->m_frame;
-    setConstantBuffers( frame->m_model, frame->m_view, frame->m_proj, m_oglBackend, this );
+    /*setConstantBuffers( frame->m_model, frame->m_view, frame->m_proj, m_oglBackend, this );
 
     for ( ui32 geoPackageIdx = 0; geoPackageIdx<frame->m_numGeoPackages; geoPackageIdx++ ) {
         GeometryPackage *currentGeoPackage( frame->m_geoPackages[ geoPackageIdx ] );
         if ( nullptr == currentGeoPackage ) {
             continue;
         }
-
-        /*
-        SetMaterialStageCmdData *data(nullptr);
-        CPPCore::TArray<ui32> primGroups;
-        for (ui32 geoIdx = 0; geoIdx < currentGeoPackage->m_numNewGeo; ++geoIdx) {
-            Geometry *geo = currentGeoPackage->m_newGeo[geoIdx];
-            if (nullptr == geo) {
-                osre_debug(Tag, "Geometry-pointer is a nullptr.");
-                return false;
-            }
-
-            // register primitive groups to render
-            for (ui32 i = 0; i < geo->m_numPrimGroups; ++i) {
-                const ui32 primIdx(m_oglBackend->addPrimitiveGroup(&geo->m_pPrimGroups[i]));
-                primGroups.add(primIdx);
-            }
-            // create the default material
-            data = setupMaterial(geo->m_material, m_oglBackend, this);
-        }
-        m_vertexArray = setupBufferForGeoBundle(currentGeoPackage, m_oglBackend, m_renderCmdBuffer->getActiveShader());
-        data->m_vertexArray = m_vertexArray;
-
-
-        // setup the draw calls
-        if (0 == currentGeoPackage->m_numInstances) {
-            setupPrimDrawCmd(primGroups, m_oglBackend, this, m_vertexArray);
-        } else {
-            setupInstancedDrawCmd(primGroups, frame, m_oglBackend, this, m_vertexArray);
-        }
-        */
         
         CPPCore::TArray<ui32> primGroups;
         for (ui32 geoIdx = 0; geoIdx < currentGeoPackage->m_numNewGeo; ++geoIdx) {
@@ -598,7 +558,7 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
 
     delete[] frame->m_geoUpdates;
     frame->m_geoUpdates = nullptr;
-    frame->m_numGeoUpdates = 0;
+    frame->m_numGeoUpdates = 0;*/
 
     m_oglBackend->useShader( nullptr );
 

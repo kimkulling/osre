@@ -42,6 +42,7 @@ struct OSRE_EXPORT Bone {
 
 class OSRE_EXPORT Mesh {
 public:
+    String                 m_name;
     bool                   m_localMatrix;
     glm::mat4              m_model;
     Material              *m_material;

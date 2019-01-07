@@ -29,7 +29,8 @@ namespace OSRE {
     
 // forward declarations
 namespace RenderBackend {
-    struct Mesh;
+    class Mesh;
+
     struct Material;
 }
 

@@ -130,6 +130,9 @@ public:
         meshBuilder.allocEmptyMesh( VertexType::ColorVertex, 1 );
         m_pointMesh = meshBuilder.getMesh();
 
+        rbSrv->beginPass("pass0");
+        rbSrv->beginRenderBatch("particle");
+
         rbSrv->attachGeo( m_pointMesh, 0 );
         m_pointMesh->m_vb = Scene::MeshBuilder::allocVertices( VertexType::ColorVertex, NumPts, m_pos, m_col, nullptr, BufferAccessType::ReadOnly );
         m_pointMesh->m_indextype = IndexType::UnsignedShort;
@@ -154,6 +157,9 @@ public:
         m_transformMatrix.update();
         rbSrv->setMatrix("MVP", m_transformMatrix.m_mvp);
 
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
+
         return true;
     }
 
@@ -173,7 +179,7 @@ public:
             offset += sizeof( ColorVert );
         }
 
-        rbSrv->attachGeoUpdate( m_pointMesh );
+        //rbSrv->attachGeoUpdate( m_pointMesh );
         
         return true;
     }
