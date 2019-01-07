@@ -210,10 +210,10 @@ PassData *RenderBackendService::getPassById(const c8 *id) const {
     return nullptr;
 }
 
-bool RenderBackendService::beginPass(const c8 *id) {
+PassData *RenderBackendService::beginPass(const c8 *id) {
     if (nullptr != m_currentPass) {
         osre_warn(Tag, "Pass recording already active.");
-        return false;
+        return nullptr;
     }
 
     m_currentPass = getPassById(id);
@@ -221,13 +221,13 @@ bool RenderBackendService::beginPass(const c8 *id) {
         m_currentPass = new PassData(id);
     }
 
-    return true;
+    return m_currentPass;
 }
 
-bool RenderBackendService::beginRenderBatch(const c8 *id) {
+GeoBatch *RenderBackendService::beginRenderBatch(const c8 *id) {
     if (nullptr != m_currentPass) {
         osre_warn(Tag, "Pass recording not active.");
-        return false;
+        return nullptr;
     }
     
     m_currentBatch = m_currentPass->getBatchById(id);
@@ -235,7 +235,7 @@ bool RenderBackendService::beginRenderBatch(const c8 *id) {
         m_currentBatch = new GeoBatch(id);
     }
 
-    return true;
+    return m_currentBatch;
 }
 
 void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {

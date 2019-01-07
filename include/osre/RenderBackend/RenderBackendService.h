@@ -168,9 +168,9 @@ public:
 
     PassData *getPassById(const c8 *id) const;
 
-    bool beginPass(const c8 *id);
+    PassData *beginPass(const c8 *id);
     
-    bool beginRenderBatch(const c8 *id);
+    GeoBatch *beginRenderBatch(const c8 *id);
 
     void setMatrix(MatrixType type, const glm::mat4 &m );
     
