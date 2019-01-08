@@ -52,20 +52,6 @@ static const c8 *DX11_API = "dx11";
 
 #endif // OSRE_WINDOWS
 
-GeoBatch *PassData::getBatchById(const c8 *id) const {
-    if (nullptr == id) {
-        return nullptr;
-    }
-
-    for (ui32 i = 0; i < m_geoBatches.size(); ++i) {
-        if (m_geoBatches[i]->m_id == id) {
-            return m_geoBatches[i];
-        }
-    }
-
-    return nullptr;
-}
-
 RenderBackendService::RenderBackendService()
 : AbstractService( "renderbackend/renderbackendserver" )
 , m_matrixBuffer()
@@ -319,6 +305,7 @@ bool RenderBackendService::endRenderBatch() {
     if (nullptr == m_currentPass) {
         m_currentPass = new PassData("defaultPass");
     }
+
     m_currentPass->m_geoBatches.add(m_currentBatch);
     m_currentBatch = nullptr;
 

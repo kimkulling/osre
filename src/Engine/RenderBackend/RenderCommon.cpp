@@ -495,8 +495,6 @@ Light::~Light() {
     // empty
 }
 
-
-
 MeshEntry *GeoBatch::getMeshEntryByName(const c8 *name) {
     if (nullptr == name) {
         return nullptr;
@@ -521,6 +519,20 @@ UniformVar *GeoBatch::getVarByName(const c8 *name) {
     for (ui32 i = 0; i < m_uniforms.size(); ++i) {
         if (m_uniforms[i]->m_name == name) {
             return m_uniforms[i];
+        }
+    }
+
+    return nullptr;
+}
+
+GeoBatch *PassData::getBatchById( const c8 *id ) const {
+    if (nullptr == id) {
+        return nullptr;
+    }
+
+    for (ui32 i = 0; i < m_geoBatches.size(); ++i) {
+        if (m_geoBatches[ i ]->m_id == id) {
+            return m_geoBatches[ i ];
         }
     }
 
