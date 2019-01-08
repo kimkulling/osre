@@ -81,7 +81,6 @@
 3dparty/zlib/zlib.sln
 CMakeCache.txt
 CMakeFiles/
-Win32/
 bin/
 cmake_install.cmake
 lib/
