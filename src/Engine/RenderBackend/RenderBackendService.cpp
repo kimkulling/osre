@@ -319,6 +319,7 @@ bool RenderBackendService::endRenderBatch() {
     if (nullptr == m_currentPass) {
         m_currentPass = new PassData("defaultPass");
     }
+
     m_currentPass->m_geoBatches.add(m_currentBatch);
     m_currentBatch = nullptr;
 
