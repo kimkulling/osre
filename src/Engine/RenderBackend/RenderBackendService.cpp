@@ -52,20 +52,6 @@ static const c8 *DX11_API = "dx11";
 
 #endif // OSRE_WINDOWS
 
-GeoBatchData *PassData::getBatchById(const c8 *id) const {
-    if (nullptr == id) {
-        return nullptr;
-    }
-
-    for (ui32 i = 0; i < m_geoBatches.size(); ++i) {
-        if (m_geoBatches[i]->m_id == id) {
-            return m_geoBatches[i];
-        }
-    }
-
-    return nullptr;
-}
-
 RenderBackendService::RenderBackendService()
 : AbstractService( "renderbackend/renderbackendserver" )
 , m_matrixBuffer()
@@ -183,6 +169,13 @@ void RenderBackendService::commitNextFrame() {
     
     CommitFrameEventData *data = new CommitFrameEventData;
     data->m_frame = &m_nextFrame;
+
+    
+    m_nextFrame.m_passes.resize(0);
+    for (ui32 i = 0; i < m_passes.size(); ++i) {
+        m_nextFrame.m_passes.add(m_passes[i]);
+    }
+
     m_renderTaskPtr->sendEvent( &OnCommitFrameEvent, data );
 }
 
@@ -196,9 +189,10 @@ PassData *RenderBackendService::getPassById(const c8 *id) const {
     if (nullptr == id) {
         return nullptr;
     }
-
-    if (m_currentPass->m_id == id) {
-        return m_currentPass;
+    if (nullptr != m_currentPass) {
+        if (m_currentPass->m_id == id) {
+            return m_currentPass;
+        }
     }
 
     for (ui32 i = 0; i < m_passes.size(); ++i) {
@@ -225,7 +219,7 @@ PassData *RenderBackendService::beginPass(const c8 *id) {
 }
 
 GeoBatchData *RenderBackendService::beginRenderBatch(const c8 *id) {
-    if (nullptr != m_currentPass) {
+    if (nullptr == m_currentPass) {
         osre_warn(Tag, "Pass recording not active.");
         return nullptr;
     }
@@ -298,6 +292,11 @@ void RenderBackendService::attachGeo( Mesh *mesh, ui32 numInstances ) {
         return;
     }
 
+    if (nullptr == m_currentBatch) {
+        osre_error(Tag, "No active batch.");
+        return;
+    }
+
     MeshEntry *entry = new MeshEntry;
     entry->m_geo.add(mesh);
     entry->numInstances = numInstances;
@@ -305,6 +304,11 @@ void RenderBackendService::attachGeo( Mesh *mesh, ui32 numInstances ) {
 }
 
 void RenderBackendService::attachGeo( const CPPCore::TArray<Mesh*> &geoArray, ui32 numInstances ) {
+    if (nullptr == m_currentBatch) {
+        osre_error(Tag, "No active batch.");
+        return;
+    }
+
     MeshEntry *entry = new MeshEntry;
     entry->numInstances = numInstances;
     entry->m_geo.add( &geoArray[ 0 ], geoArray.size() );

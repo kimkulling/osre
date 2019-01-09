@@ -525,7 +525,7 @@ UniformVar *GeoBatchData::getVarByName(const c8 *name) {
     return nullptr;
 }
 
-GeoBatch *PassData::getBatchById( const c8 *id ) const {
+GeoBatchData *PassData::getBatchById( const c8 *id ) const {
     if (nullptr == id) {
         return nullptr;
     }

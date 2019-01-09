@@ -479,8 +479,66 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
     if ( nullptr == frameToCommitData ) {
         return false;
     }
-    
+    CPPCore::TArray<ui32> primGroups;
+
     Frame *frame = frameToCommitData->m_frame;
+    for (ui32 passIdx = 0; passIdx < frame->m_passes.size(); ++passIdx) {
+        PassData *currentPass = frame->m_passes[passIdx];
+        OSRE_ASSERT(nullptr != currentPass);
+        
+        for (ui32 batchIdx = 0; batchIdx < currentPass->m_geoBatches.size(); ++batchIdx) {
+            GeoBatchData *currentBatchData = currentPass->m_geoBatches[passIdx];
+            OSRE_ASSERT(nullptr != currentBatchData);
+
+            MatrixBuffer &matrixBuffer = currentBatchData->m_matrixBuffer;
+            
+            setConstantBuffers(matrixBuffer.m_model, matrixBuffer.m_view, matrixBuffer.m_proj, m_oglBackend, this );
+            for (ui32 uniformIdx = 0; uniformIdx < currentBatchData->m_uniforms.size(); ++uniformIdx) {
+                setupParameter(currentBatchData->m_uniforms[uniformIdx], m_oglBackend, this);
+            }
+
+            for (ui32 meshEntryIdx = 0; meshEntryIdx < currentBatchData->m_meshArray.size(); ++meshEntryIdx) {
+                MeshEntry *currentMeshEntry = currentBatchData->m_meshArray[meshEntryIdx];
+                OSRE_ASSERT(nullptr != currentMeshEntry);
+                if (!currentMeshEntry->m_isDirty) {
+                    continue;
+                }
+
+                for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->m_geo.size(); ++meshIdx) {
+                    Mesh *currentMesh = currentMeshEntry->m_geo[meshIdx];
+                    OSRE_ASSERT(nullptr != currentMesh);
+
+                    // register primitive groups to render
+                    for (ui32 i = 0; i < currentMesh->m_numPrimGroups; ++i) {
+                        const ui32 primIdx(m_oglBackend->addPrimitiveGroup(&currentMesh->m_primGroups[i]));
+                        primGroups.add(primIdx);
+                    }
+
+                    // create the default material
+                    SetMaterialStageCmdData *data = setupMaterial(currentMesh->m_material, m_oglBackend, this);
+
+                    // setup vertex array, vertex and index buffers
+                    m_vertexArray = setupBuffers(currentMesh, m_oglBackend, m_renderCmdBuffer->getActiveShader());
+                    if (nullptr == m_vertexArray) {
+                        osre_debug(Tag, "Vertex-Array-pointer is a nullptr.");
+                        return false;
+                    }
+                    data->m_vertexArray = m_vertexArray;
+
+
+                    // setup the draw calls
+                    if (0 == currentMeshEntry->numInstances) {
+                        setupPrimDrawCmd(currentMesh->m_localMatrix, currentMesh->m_model, primGroups, m_oglBackend, this, m_vertexArray);
+                    } else {
+                        setupInstancedDrawCmd(primGroups, frame, m_oglBackend, this, m_vertexArray);
+                    }
+                    
+                    primGroups.resize(0);
+                }
+            }
+        }
+    }
+
     /*setConstantBuffers( frame->m_model, frame->m_view, frame->m_proj, m_oglBackend, this );
 
     for ( ui32 geoPackageIdx = 0; geoPackageIdx<frame->m_numGeoPackages; geoPackageIdx++ ) {
