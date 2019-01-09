@@ -54,13 +54,13 @@ static const c8 *DX11_API = "dx11";
 
 RenderBackendService::RenderBackendService()
 : AbstractService( "renderbackend/renderbackendserver" )
-, m_matrixBuffer()
 , m_renderTaskPtr()
 , m_settings( nullptr )
 , m_ownsSettingsConfig( false )
 , m_nextFrame()
 , m_screen( nullptr )
 , m_passes()
+, m_dirty(false)
 , m_currentPass(nullptr)
 , m_currentBatch( nullptr ) {
     // empty
@@ -168,12 +168,14 @@ void RenderBackendService::commitNextFrame() {
     }
     
     CommitFrameEventData *data = new CommitFrameEventData;
+    m_nextFrame.m_passes.resize(0);
     data->m_frame = &m_nextFrame;
 
-    
-    m_nextFrame.m_passes.resize(0);
-    for (ui32 i = 0; i < m_passes.size(); ++i) {
-        m_nextFrame.m_passes.add(m_passes[i]);
+    if (m_dirty) {
+        for (ui32 i = 0; i < m_passes.size(); ++i) {
+            m_nextFrame.m_passes.add(m_passes[i]);
+        }
+        m_dirty = false;
     }
 
     m_renderTaskPtr->sendEvent( &OnCommitFrameEvent, data );
@@ -189,6 +191,7 @@ PassData *RenderBackendService::getPassById(const c8 *id) const {
     if (nullptr == id) {
         return nullptr;
     }
+
     if (nullptr != m_currentPass) {
         if (m_currentPass->m_id == id) {
             return m_currentPass;
@@ -214,7 +217,7 @@ PassData *RenderBackendService::beginPass(const c8 *id) {
     if (nullptr == m_currentPass) {
         m_currentPass = new PassData(id);
     }
-
+    m_dirty = true;
     return m_currentPass;
 }
 
@@ -238,19 +241,16 @@ void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
             if (nullptr != m_currentBatch) {
                 m_currentBatch->m_matrixBuffer.m_model = m;
             }
-            m_matrixBuffer.m_model = m;
             break;
         case MatrixType::View:
             if (nullptr != m_currentBatch) {
                 m_currentBatch->m_matrixBuffer.m_view = m;
             }
-            m_matrixBuffer.m_view = m;
             break;
         case MatrixType::Projection:
             if (nullptr != m_currentBatch) {
                 m_currentBatch->m_matrixBuffer.m_proj = m;
             }
-            m_matrixBuffer.m_proj = m;
             break;
         default:
             break;

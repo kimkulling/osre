@@ -210,13 +210,13 @@ protected:
     void commitNextFrame();
 
 private:
-    MatrixBuffer m_matrixBuffer;
     Common::TObjPtr<Threading::SystemTask> m_renderTaskPtr;
     const Properties::Settings *m_settings;
     bool m_ownsSettingsConfig;
     Frame m_nextFrame;
     UI::Widget *m_screen;
 
+    bool m_dirty;
     CPPCore::TArray<PassData*> m_passes;
     PassData *m_currentPass;
     GeoBatchData *m_currentBatch;

@@ -142,7 +142,7 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
 
 static const ui32 NumIndices = 24;
 
-ui16 indices[ NumIndices ] = {
+static ui16 indices[ NumIndices ] = {
     0, 1,
     1, 2,
     2, 3,
@@ -219,7 +219,13 @@ void DbgRenderer::renderAABB( const glm::mat4 &transform, const Collision::TAABB
 
     geo->m_model = transform;
 
+    m_rbSrv->beginPass("dbgPass");
+    m_rbSrv->beginRenderBatch("dbgFontBatch");
+
     m_rbSrv->attachGeo( geo, 0 );
+
+    m_rbSrv->endRenderBatch();
+    m_rbSrv->endPass();
 }
 
 void DbgRenderer::clearDbgTextCache() {
