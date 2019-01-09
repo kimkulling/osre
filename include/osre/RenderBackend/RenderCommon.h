@@ -630,13 +630,13 @@ struct MeshEntry {
     CPPCore::TArray<Mesh*> m_geo;
 };
 
-struct GeoBatch {
+struct GeoBatchData {
     const c8                    *m_id;
     MatrixBuffer                 m_matrixBuffer;
     CPPCore::TArray<UniformVar*> m_uniforms;
     CPPCore::TArray<MeshEntry*>  m_meshArray;
 
-    GeoBatch(const c8 *id)
+    GeoBatchData(const c8 *id)
     : m_id(id)
     , m_matrixBuffer()
     , m_uniforms()
@@ -650,7 +650,7 @@ struct GeoBatch {
 
 struct PassData {
     const c8 *m_id;
-    CPPCore::TArray<GeoBatch*> m_geoBatches;
+    CPPCore::TArray<GeoBatchData*> m_geoBatches;
 
     PassData(const c8 *id)
     : m_id(id)
@@ -658,7 +658,7 @@ struct PassData {
         // empty
     }
 
-    GeoBatch *getBatchById(const c8 *id) const;
+    GeoBatchData *getBatchById(const c8 *id) const;
 };
 
 struct GeometryPackage {

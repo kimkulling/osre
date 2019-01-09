@@ -123,7 +123,7 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
 
             PassData *data = m_rbSrv->getPassById("dbgPass");
             if (nullptr != data) {
-                GeoBatch *batch = data->getBatchById("dbgFontBatch");
+                GeoBatchData *batch = data->getBatchById("dbgFontBatch");
                 for (ui32 i = 0; i < batch->m_meshArray.size(); ++i) {
                     for (ui32 j = 0; j < batch->m_meshArray[i]->m_geo.size(); j++) {
                         if (batch->m_meshArray[i]->m_geo[j]->m_id == id) {

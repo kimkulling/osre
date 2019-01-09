@@ -497,7 +497,7 @@ Light::~Light() {
 
 
 
-MeshEntry *GeoBatch::getMeshEntryByName(const c8 *name) {
+MeshEntry *GeoBatchData::getMeshEntryByName(const c8 *name) {
     if (nullptr == name) {
         return nullptr;
     }
@@ -513,7 +513,7 @@ MeshEntry *GeoBatch::getMeshEntryByName(const c8 *name) {
     return nullptr;
 }
 
-UniformVar *GeoBatch::getVarByName(const c8 *name) {
+UniformVar *GeoBatchData::getVarByName(const c8 *name) {
     if (nullptr == name) {
         return nullptr;
     }

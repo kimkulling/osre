@@ -52,7 +52,7 @@ static const c8 *DX11_API = "dx11";
 
 #endif // OSRE_WINDOWS
 
-GeoBatch *PassData::getBatchById(const c8 *id) const {
+GeoBatchData *PassData::getBatchById(const c8 *id) const {
     if (nullptr == id) {
         return nullptr;
     }
@@ -224,7 +224,7 @@ PassData *RenderBackendService::beginPass(const c8 *id) {
     return m_currentPass;
 }
 
-GeoBatch *RenderBackendService::beginRenderBatch(const c8 *id) {
+GeoBatchData *RenderBackendService::beginRenderBatch(const c8 *id) {
     if (nullptr != m_currentPass) {
         osre_warn(Tag, "Pass recording not active.");
         return nullptr;
@@ -232,7 +232,7 @@ GeoBatch *RenderBackendService::beginRenderBatch(const c8 *id) {
     
     m_currentBatch = m_currentPass->getBatchById(id);
     if (nullptr == m_currentBatch) {
-        m_currentBatch = new GeoBatch(id);
+        m_currentBatch = new GeoBatchData(id);
     }
 
     return m_currentBatch;

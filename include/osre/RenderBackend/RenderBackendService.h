@@ -170,7 +170,7 @@ public:
 
     PassData *beginPass(const c8 *id);
     
-    GeoBatch *beginRenderBatch(const c8 *id);
+    GeoBatchData *beginRenderBatch(const c8 *id);
 
     void setMatrix(MatrixType type, const glm::mat4 &m );
     
@@ -219,7 +219,7 @@ private:
 
     CPPCore::TArray<PassData*> m_passes;
     PassData *m_currentPass;
-    GeoBatch *m_currentBatch;
+    GeoBatchData *m_currentBatch;
 };
 
 inline 
