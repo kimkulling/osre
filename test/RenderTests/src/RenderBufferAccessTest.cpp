@@ -133,7 +133,7 @@ public:
         rbSrv->beginPass("pass0");
         rbSrv->beginRenderBatch("particle");
 
-        rbSrv->attachGeo( m_pointMesh, 0 );
+        rbSrv->addMesh( m_pointMesh, 0 );
         m_pointMesh->m_vb = Scene::MeshBuilder::allocVertices( VertexType::ColorVertex, NumPts, m_pos, m_col, nullptr, BufferAccessType::ReadOnly );
         m_pointMesh->m_indextype = IndexType::UnsignedShort;
         ui32 pt_size = sizeof( GLushort ) * NumPts;

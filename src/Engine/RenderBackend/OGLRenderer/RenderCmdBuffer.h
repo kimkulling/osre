@@ -78,6 +78,8 @@ public:
     void setActiveShader( OGLShader *oglShader );
     /// Will return the active shader.
     OGLShader *getActiveShader() const;
+    ///
+    void createPass(ui32 id);
     /// Will enqueue a new render command.
     void enqueueRenderCmd( const String &groupName, OGLRenderCmd *renderCmd, EnqueueType type = EnqueueType::PushBack );
     /// Will enqueue a new render command group.

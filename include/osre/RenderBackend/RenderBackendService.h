@@ -180,15 +180,17 @@ public:
 
     void setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray );
 
-    void attachGeo( Mesh *geo, ui32 numInstances );
+    void addMesh( Mesh *geo, ui32 numInstances );
 
-    void attachGeo( const CPPCore::TArray<Mesh*> &geoArray, ui32 numInstances );
+    void addMesh( const CPPCore::TArray<Mesh*> &geoArray, ui32 numInstances );
 
     bool endRenderBatch();
 
     bool endPass();
 
-    void attachView( TransformMatrixBlock &transform );
+    void clearPasses();
+
+    void attachView();
 
     void resize( ui32 x, ui32 y, ui32 w, ui32 h);
 

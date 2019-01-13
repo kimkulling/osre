@@ -99,7 +99,7 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
         MeshBuilder geoBuilder;
         geoBuilder.allocTextBox(xTrans, yTrans, scale, text, BufferAccessType::ReadWrite);
         Mesh *mesh = geoBuilder.getMesh();
-        m_rbSrv->attachGeo(mesh, 0 );
+        m_rbSrv->addMesh(mesh, 0 );
         insertTextEntry( id, mesh, text, m_textBoxes );
         mesh->m_localMatrix = true;
         mesh->m_model = m_transformMatrix.m_model;
@@ -222,7 +222,8 @@ void DbgRenderer::renderAABB( const glm::mat4 &transform, const Collision::TAABB
     m_rbSrv->beginPass("dbgPass");
     m_rbSrv->beginRenderBatch("dbgFontBatch");
 
-    m_rbSrv->attachGeo( geo, 0 );
+    m_rbSrv->setMatrix(MatrixType::Model, transform);
+    m_rbSrv->addMesh( geo, 0 );
 
     m_rbSrv->endRenderBatch();
     m_rbSrv->endPass();

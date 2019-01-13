@@ -73,7 +73,7 @@ void ParticleGenerator::init( ui32 numPoints ) {
     Scene::MeshBuilder meshBuilder;
     meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 1 );
     m_ptGeo = meshBuilder.getMesh();
-    m_rbSrv->attachGeo( m_ptGeo, 0 );
+    m_rbSrv->addMesh( m_ptGeo, 0 );
     m_ptGeo->m_vb = Scene::MeshBuilder::allocVertices( VertexType::ColorVertex, m_numPoints, m_pos, m_col, nullptr, BufferAccessType::ReadOnly );
     m_ptGeo->m_indextype = IndexType::UnsignedShort;
     ui32 pt_size = sizeof( GLushort ) * m_numPoints;

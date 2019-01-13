@@ -60,7 +60,7 @@ void RenderComponent::update( Time ) {
 void RenderComponent::draw( RenderBackendService *renderBackendSrv ) {
     if( !m_newGeo.isEmpty() ) {
         for ( ui32 i = 0; i < m_newGeo.size(); i++ ) {
-            renderBackendSrv->attachGeo( m_newGeo[ i ], 0 );
+            renderBackendSrv->addMesh( m_newGeo[ i ], 0 );
         }
         m_newGeo.resize( 0 );
     }

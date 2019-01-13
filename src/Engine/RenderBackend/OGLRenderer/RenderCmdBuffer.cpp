@@ -97,7 +97,7 @@ void RenderCmdBuffer::enqueueRenderCmdGroup( const String &groupName, CPPCore::T
 }
 
 void RenderCmdBuffer::onPreRenderFrame() {
-    OSRE_ASSERT( nullptr!=m_renderbackend );
+    OSRE_ASSERT( nullptr != m_renderbackend );
 
     if( nullptr == m_renderCtx ) {
         return;
@@ -108,7 +108,7 @@ void RenderCmdBuffer::onPreRenderFrame() {
 }
 
 void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
-    OSRE_ASSERT( nullptr!=m_renderbackend );
+    OSRE_ASSERT( nullptr != m_renderbackend );
 
     ui32 numPasses = m_pipeline->beginFrame();
 
@@ -126,6 +126,7 @@ void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
         states.m_samplerState = pass->getSamplerState();
         states.m_stencilState = pass->getStencilState();
         m_renderbackend->setFixedPipelineStates(states);
+        
         for ( ui32 i = 0; i < m_cmdbuffer.size(); ++i ) {
             // only valid pointers are allowed
             OGLRenderCmd *renderCmd = m_cmdbuffer[ i ];

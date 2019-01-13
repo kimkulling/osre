@@ -52,6 +52,24 @@ static const c8 *DX11_API = "dx11";
 
 #endif // OSRE_WINDOWS
 
+static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData*> &passDataArray) {
+    for (ui32 i = 0; i < passDataArray.size(); ++i) {
+        if (0 == strncmp(passDataArray[i]->m_id, id, strlen(id))) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<GeoBatchData*> &batchDataArray) {
+    for (ui32 i = 0; i < batchDataArray.size(); ++i) {
+        if (0 == strncmp(batchDataArray[i]->m_id, id, strlen(id))) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 RenderBackendService::RenderBackendService()
 : AbstractService( "renderbackend/renderbackendserver" )
 , m_renderTaskPtr()
@@ -168,15 +186,10 @@ void RenderBackendService::commitNextFrame() {
     }
     
     CommitFrameEventData *data = new CommitFrameEventData;
-    m_nextFrame.m_passes.resize(0);
+    m_nextFrame.m_newPasses.resize(0);
+    m_nextFrame.update(m_passes);
     data->m_frame = &m_nextFrame;
 
-    if (m_dirty) {
-        for (ui32 i = 0; i < m_passes.size(); ++i) {
-            m_nextFrame.m_passes.add(m_passes[i]);
-        }
-        m_dirty = false;
-    }
 
     m_renderTaskPtr->sendEvent( &OnCommitFrameEvent, data );
 }
@@ -193,13 +206,13 @@ PassData *RenderBackendService::getPassById(const c8 *id) const {
     }
 
     if (nullptr != m_currentPass) {
-        if (m_currentPass->m_id == id) {
+        if (0 == ::strncmp(m_currentPass->m_id, id, strlen(id))) {
             return m_currentPass;
         }
     }
 
     for (ui32 i = 0; i < m_passes.size(); ++i) {
-        if (m_passes[i]->m_id == id) {
+        if (0 == ::strncmp(m_passes[i]->m_id, id, strlen(id))) {
             return m_passes[i];
         }
     }
@@ -218,6 +231,7 @@ PassData *RenderBackendService::beginPass(const c8 *id) {
         m_currentPass = new PassData(id);
     }
     m_dirty = true;
+    
     return m_currentPass;
 }
 
@@ -240,16 +254,19 @@ void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
         case MatrixType::Model:
             if (nullptr != m_currentBatch) {
                 m_currentBatch->m_matrixBuffer.m_model = m;
+                m_currentBatch->m_dirtyFlag |= GeoBatchData::MatrixBufferDirty;
             }
             break;
         case MatrixType::View:
             if (nullptr != m_currentBatch) {
                 m_currentBatch->m_matrixBuffer.m_view = m;
+                m_currentBatch->m_dirtyFlag |= GeoBatchData::MatrixBufferDirty;
             }
             break;
         case MatrixType::Projection:
             if (nullptr != m_currentBatch) {
                 m_currentBatch->m_matrixBuffer.m_proj = m;
+                m_currentBatch->m_dirtyFlag |= GeoBatchData::MatrixBufferDirty;
             }
             break;
         default:
@@ -263,7 +280,8 @@ void RenderBackendService::setMatrix( const String &name, const glm::mat4 &matri
         var = UniformVar::create( name, ParameterType::PT_Mat4 );
         m_currentBatch->m_uniforms.add(var);
     }    
-
+    
+    m_currentBatch->m_dirtyFlag |= GeoBatchData::UniformBufferDirty;
     ::memcpy( var->m_data.m_data, glm::value_ptr( matrix ), sizeof( glm::mat4 ) );
 }
 
@@ -274,6 +292,7 @@ void RenderBackendService::setUniform(UniformVar *var) {
 
     if (nullptr != m_currentBatch) {
         m_currentBatch->m_uniforms.add( var );
+        m_currentBatch->m_dirtyFlag |= GeoBatchData::UniformBufferDirty;
     }
 }
 
@@ -283,10 +302,12 @@ void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const
         var = UniformVar::create(name, ParameterType::PT_Mat4Array, numMat);
         m_currentBatch->m_uniforms.add(var);
     }
+    
     ::memcpy(var->m_data.m_data, glm::value_ptr(matrixArray[0]), sizeof(glm::mat4) * numMat);
+    m_currentBatch->m_dirtyFlag |= GeoBatchData::UniformBufferDirty;    
 }
 
-void RenderBackendService::attachGeo( Mesh *mesh, ui32 numInstances ) {
+void RenderBackendService::addMesh( Mesh *mesh, ui32 numInstances ) {
     if ( nullptr == mesh) {
         osre_debug( Tag, "Pointer to geometry is nullptr." );
         return;
@@ -301,9 +322,11 @@ void RenderBackendService::attachGeo( Mesh *mesh, ui32 numInstances ) {
     entry->m_geo.add(mesh);
     entry->numInstances = numInstances;
     m_currentBatch->m_meshArray.add(entry);
+    m_currentBatch->m_dirtyFlag |= GeoBatchData::MeshDirty;
+
 }
 
-void RenderBackendService::attachGeo( const CPPCore::TArray<Mesh*> &geoArray, ui32 numInstances ) {
+void RenderBackendService::addMesh( const CPPCore::TArray<Mesh*> &geoArray, ui32 numInstances ) {
     if (nullptr == m_currentBatch) {
         osre_error(Tag, "No active batch.");
         return;
@@ -313,6 +336,7 @@ void RenderBackendService::attachGeo( const CPPCore::TArray<Mesh*> &geoArray, ui
     entry->numInstances = numInstances;
     entry->m_geo.add( &geoArray[ 0 ], geoArray.size() );
     m_currentBatch->m_meshArray.add(entry);
+    m_currentBatch->m_dirtyFlag |= GeoBatchData::MeshDirty;
 }
 
 bool RenderBackendService::endRenderBatch() {
@@ -323,8 +347,11 @@ bool RenderBackendService::endRenderBatch() {
     if (nullptr == m_currentPass) {
         m_currentPass = new PassData("defaultPass");
     }
+    
+    if (-1 == hasBatch(m_currentBatch->m_id, m_currentPass->m_geoBatches)) {
+        m_currentPass->m_geoBatches.add(m_currentBatch);
+    }
 
-    m_currentPass->m_geoBatches.add(m_currentBatch);
     m_currentBatch = nullptr;
 
     return true;
@@ -335,13 +362,24 @@ bool RenderBackendService::endPass() {
         return false;
     }
 
-    m_passes.add(m_currentPass);
+    if (-1 == hasPass(m_currentPass->m_id, m_passes)) {
+        m_passes.add(m_currentPass);
+    }
     m_currentPass = nullptr;
 
     return true;
 }
 
-void RenderBackendService::attachView( TransformMatrixBlock &transform ) {
+void RenderBackendService::clearPasses() {
+    m_currentPass = nullptr;
+
+    for (ui32 i = 0; i < m_passes.size(); ++i) {
+        delete m_passes[i];
+    }
+    m_passes.clear();
+}
+
+void RenderBackendService::attachView() {
 
 }
 

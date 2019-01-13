@@ -38,7 +38,6 @@ namespace RenderBackend {
 
 // Forward declarations
 struct UniformVar;
-
 class Mesh;
 class Shader;
 
@@ -631,16 +630,24 @@ struct MeshEntry {
 };
 
 struct GeoBatchData {
+    enum DirtyMode {
+        MatrixBufferDirty = 1,
+        UniformBufferDirty = 2,
+        MeshDirty = 4
+    };
+
     const c8                    *m_id;
     MatrixBuffer                 m_matrixBuffer;
     CPPCore::TArray<UniformVar*> m_uniforms;
     CPPCore::TArray<MeshEntry*>  m_meshArray;
+    ui32 m_dirtyFlag;
 
     GeoBatchData(const c8 *id)
     : m_id(id)
     , m_matrixBuffer()
     , m_uniforms()
-    , m_meshArray() {
+    , m_meshArray()
+    , m_dirtyFlag(0) {
         // empty
     }
 
@@ -651,45 +658,42 @@ struct GeoBatchData {
 struct PassData {
     const c8 *m_id;
     CPPCore::TArray<GeoBatchData*> m_geoBatches;
+    bool m_isDirty;
 
     PassData(const c8 *id)
     : m_id(id)
-    , m_geoBatches() {
+    , m_geoBatches()
+    , m_isDirty( true ) {
         // empty
     }
 
     GeoBatchData *getBatchById(const c8 *id) const;
 };
 
-struct GeometryPackage {
-    ui32           m_numInstances;
-    ui32           m_numNewGeo;
-    Mesh     **m_newGeo;
+struct FrameSubmitCmd {
+    enum Type {
+        CreatePasses = 1,
+        UpdateBuffer = 2
+    };
 
-    GeometryPackage()
-    : m_numInstances(0)
-    , m_numNewGeo(0)
-    , m_newGeo(nullptr) {
-        // empty
-    }
-
-    ~GeometryPackage() {
-        // empty
-    }
+    ui32 m_updateFlags;
 };
 
-
 struct Frame {
-    ::CPPCore::TArray<PassData*> m_passes;
+    ::CPPCore::TArray<PassData*> m_newPasses;
+    ::CPPCore::TArray<FrameSubmitCmd*> m_submitCmds;
 
-    Frame()
-    : m_passes() {
+    Frame() 
+    : m_newPasses()
+    , m_submitCmds() {
         // empty
     }
 
     ~Frame() {
         // empty
     }
+
+    void update(::CPPCore::TArray<PassData*> &newPasses);
 
     Frame(const Frame &) = delete;
     Frame(Frame &&) = delete;

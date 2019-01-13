@@ -479,24 +479,32 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
     if ( nullptr == frameToCommitData ) {
         return false;
     }
+    
     CPPCore::TArray<ui32> primGroups;
-
     Frame *frame = frameToCommitData->m_frame;
-    for (ui32 passIdx = 0; passIdx < frame->m_passes.size(); ++passIdx) {
-        PassData *currentPass = frame->m_passes[passIdx];
+    
+    for (ui32 passIdx = 0; passIdx < frame->m_newPasses.size(); ++passIdx) {
+        PassData *currentPass = frame->m_newPasses[passIdx];
         OSRE_ASSERT(nullptr != currentPass);
         
+        if (!currentPass->m_isDirty) {
+            continue;
+        }
+
         for (ui32 batchIdx = 0; batchIdx < currentPass->m_geoBatches.size(); ++batchIdx) {
             GeoBatchData *currentBatchData = currentPass->m_geoBatches[passIdx];
             OSRE_ASSERT(nullptr != currentBatchData);
 
+            // set the matrix
             MatrixBuffer &matrixBuffer = currentBatchData->m_matrixBuffer;
-            
             setConstantBuffers(matrixBuffer.m_model, matrixBuffer.m_view, matrixBuffer.m_proj, m_oglBackend, this );
+            
+            // set uniforms
             for (ui32 uniformIdx = 0; uniformIdx < currentBatchData->m_uniforms.size(); ++uniformIdx) {
                 setupParameter(currentBatchData->m_uniforms[uniformIdx], m_oglBackend, this);
             }
 
+            // set meshes
             for (ui32 meshEntryIdx = 0; meshEntryIdx < currentBatchData->m_meshArray.size(); ++meshEntryIdx) {
                 MeshEntry *currentMeshEntry = currentBatchData->m_meshArray[meshEntryIdx];
                 OSRE_ASSERT(nullptr != currentMeshEntry);
@@ -535,10 +543,13 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
                     
                     primGroups.resize(0);
                 }
+                currentMeshEntry->m_isDirty = false;
             }
         }
     }
 
+    frame->m_newPasses.clear();
+-
     /*setConstantBuffers( frame->m_model, frame->m_view, frame->m_proj, m_oglBackend, this );
 
     for ( ui32 geoPackageIdx = 0; geoPackageIdx<frame->m_numGeoPackages; geoPackageIdx++ ) {
@@ -584,13 +595,6 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
             }
         }
         primGroups.resize( 0 );
-    }
-
-    // setup global parameter
-    if( frame->m_numVars > 0 ) {
-        for( ui32 i = 0; i < frame->m_numVars; i++ ) {
-            setupParameter( frame->m_vars[ i ], m_oglBackend, this );
-        }
     }
 
     if ( nullptr != frame->m_geoPackages ) {

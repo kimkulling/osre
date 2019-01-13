@@ -50,7 +50,7 @@ void UiRenderer::render( UI::Screen *screen, RenderBackendService *rbService ) {
         Mesh *geo = UIRenderUtils::createGeoFromCache( currentCmd->m_vc, currentCmd->m_ic, currentCmd->m_mat );
         geoCache.add( geo );
 
-        rbService->attachGeo( geoCache, 0 );
+        rbService->addMesh( geoCache, 0 );
     }
 }
 

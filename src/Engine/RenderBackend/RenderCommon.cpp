@@ -531,12 +531,19 @@ GeoBatchData *PassData::getBatchById( const c8 *id ) const {
     }
 
     for (ui32 i = 0; i < m_geoBatches.size(); ++i) {
-        if (m_geoBatches[ i ]->m_id == id) {
+        
+        if (0 == strncmp(m_geoBatches[i]->m_id, id, strlen(id))) {
             return m_geoBatches[ i ];
         }
     }
 
     return nullptr;
+}
+
+void Frame::update(::CPPCore::TArray<PassData*> &newPasses) {
+    for (ui32 i = 0; i < newPasses.size(); ++i) {
+        m_newPasses.add(newPasses[i]);
+    }
 }
 
 } // Namespace RenderBackend

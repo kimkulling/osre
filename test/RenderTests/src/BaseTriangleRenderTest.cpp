@@ -79,7 +79,7 @@ public:
         rbSrv->beginPass(passName.c_str());
         
         rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
-        rbSrv->attachGeo( meshArray, 0 );
+        rbSrv->addMesh( meshArray, 0 );
         
         rbSrv->endPass();
 
