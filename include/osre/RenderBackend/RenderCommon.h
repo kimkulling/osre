@@ -679,13 +679,13 @@ struct FrameSubmitCmd {
     ui32 m_updateFlags;
 };
 
-struct Frame {
-    ::CPPCore::TArray<PassData*> m_newPasses;
+struct Frame {    
     ::CPPCore::TArray<FrameSubmitCmd*> m_submitCmds;
+    Pipeline *m_pipeline;
 
     Frame() 
-    : m_newPasses()
-    , m_submitCmds() {
+    : m_submitCmds()
+    , m_pipeline( nullptr ) {
         // empty
     }
 
