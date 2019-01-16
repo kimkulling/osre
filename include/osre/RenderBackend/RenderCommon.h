@@ -40,6 +40,7 @@ namespace RenderBackend {
 struct UniformVar;
 class Mesh;
 class Shader;
+class Pipeline;
 
 using MeshArray = CPPCore::TArray<RenderBackend::Mesh*>;
 
@@ -680,20 +681,14 @@ struct FrameSubmitCmd {
 };
 
 struct Frame {    
+    ::CPPCore::TArray<PassData*> m_newPasses;
     ::CPPCore::TArray<FrameSubmitCmd*> m_submitCmds;
     Pipeline *m_pipeline;
 
-    Frame() 
-    : m_submitCmds()
-    , m_pipeline( nullptr ) {
-        // empty
-    }
-
-    ~Frame() {
-        // empty
-    }
-
-    void update(::CPPCore::TArray<PassData*> &newPasses);
+    Frame();
+    ~Frame();
+    void init(::CPPCore::TArray<PassData*> &newPasses);
+    void update(::CPPCore::TArray<FrameSubmitCmd*> &updateCmds );
 
     Frame(const Frame &) = delete;
     Frame(Frame &&) = delete;

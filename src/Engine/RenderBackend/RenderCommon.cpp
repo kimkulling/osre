@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+using namespace ::CPPCore;
 using namespace ::OSRE::Common;
 using namespace ::glm;
 
@@ -540,9 +541,28 @@ GeoBatchData *PassData::getBatchById( const c8 *id ) const {
     return nullptr;
 }
 
-void Frame::update(::CPPCore::TArray<PassData*> &newPasses) {
-    for (ui32 i = 0; i < newPasses.size(); ++i) {
-        m_newPasses.add(newPasses[i]);
+Frame::Frame()
+: m_newPasses()
+, m_submitCmds()
+, m_pipeline(nullptr) {
+    // empty
+}
+
+Frame::~Frame() {
+    // empty
+}
+
+void Frame::init(TArray<PassData*> &newPasses) {
+    if (newPasses.isEmpty()) {
+        return;
+    }
+    for ( ui32 i=0; i<newPasses.size(); ++i )
+    m_newPasses.add( newPasses[i]);
+}
+
+void Frame::update(TArray<FrameSubmitCmd*> &updateCmds) {
+    if (updateCmds.isEmpty()) {
+        return;
     }
 }
 

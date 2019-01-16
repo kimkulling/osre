@@ -75,6 +75,7 @@ RenderBackendService::RenderBackendService()
 , m_renderTaskPtr()
 , m_settings( nullptr )
 , m_ownsSettingsConfig( false )
+, m_frameCreated( false )
 , m_nextFrame()
 , m_screen( nullptr )
 , m_passes()
@@ -157,6 +158,11 @@ bool RenderBackendService::onUpdate() {
         return false;
     }
 
+    if (!m_frameCreated) {
+        initPasses();
+        m_frameCreated = true;
+    }
+
     commitNextFrame();
 
     // Synchronizing event with render back-end
@@ -180,14 +186,28 @@ const Settings *RenderBackendService::getSettings() const {
     return m_settings;
 }
 
+void RenderBackendService::initPasses() {
+    if (!m_renderTaskPtr.isValid()) {
+        return;
+    }
+
+    InitPassesEventData *data = new InitPassesEventData;
+    //m_nextFrame.m_newPasses = m_passes;
+    m_nextFrame.init(m_passes);
+    data->m_frame = &m_nextFrame;
+
+    m_renderTaskPtr->sendEvent(&OnInitPassesEvent, data);
+
+}
+
 void RenderBackendService::commitNextFrame() {
     if ( !m_renderTaskPtr.isValid() ) {
         return;
     }
     
     CommitFrameEventData *data = new CommitFrameEventData;
-    m_nextFrame.m_newPasses.resize(0);
-    m_nextFrame.update(m_passes);
+    //m_nextFrame.m_newPasses.resize(0);
+    //m_nextFrame.update(m_passes);
     data->m_frame = &m_nextFrame;
 
 

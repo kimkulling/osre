@@ -71,6 +71,7 @@ DECL_EVENT( OnDetachSceneEvent );
 DECL_EVENT( OnSetRenderStates );
 DECL_EVENT( OnRenderFrameEvent );
 DECL_EVENT( OnSetParameterEvent );
+DECL_EVENT( OnInitPassesEvent);
 DECL_EVENT( OnCommitFrameEvent );
 DECL_EVENT( OnShutdownRequest );
 DECL_EVENT( OnResizeEvent );
@@ -104,6 +105,21 @@ struct OSRE_EXPORT AttachViewEventData : public Common::EventData {
     : EventData( OnAttachViewEvent, nullptr ) {
         // empty
     }
+};
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
+struct OSRE_EXPORT InitPassesEventData : Common::EventData {
+    InitPassesEventData()
+    : EventData(OnInitPassesEvent, nullptr)
+    , m_frame(nullptr) {
+        // empty            
+    }
+
+    Frame *m_frame;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -208,6 +224,8 @@ protected:
     /// @brief  The update callback.
     virtual bool onUpdate();
 
+    void initPasses();
+
     /// @brief  Will apply all used parameters
     void commitNextFrame();
 
@@ -215,6 +233,7 @@ private:
     Common::TObjPtr<Threading::SystemTask> m_renderTaskPtr;
     const Properties::Settings *m_settings;
     bool m_ownsSettingsConfig;
+    bool m_frameCreated;
     Frame m_nextFrame;
     UI::Widget *m_screen;
 

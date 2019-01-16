@@ -304,8 +304,10 @@ bool OGLRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
         result = onAttachView( data );
     } else if ( OnDetachViewEvent == ev ) {
         result = onDetachView( data );
-    } else if ( OnRenderFrameEvent == ev ) {
-        result = onRenderFrame( data );
+    } else if (OnRenderFrameEvent == ev) {
+        result = onRenderFrame(data);
+    } else if ( OnInitPassesEvent == ev) {
+        result = onInitRenderPasses(data);
     } else if ( OnCommitFrameEvent == ev ) {
         result = onCommitNexFrame( data );
     } else if ( OnClearSceneEvent == ev ) {
@@ -472,10 +474,10 @@ bool OGLRenderEventHandler::onRenderFrame( const EventData *eventData ) {
     return true;
 }
 
-bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData ) {
+bool OGLRenderEventHandler::onInitRenderPasses( const Common::EventData *eventData ) {
     OSRE_ASSERT( nullptr != m_oglBackend );
 
-    CommitFrameEventData *frameToCommitData = ( CommitFrameEventData* ) eventData;
+    InitPassesEventData *frameToCommitData = (InitPassesEventData* ) eventData;
     if ( nullptr == frameToCommitData ) {
         return false;
     }
@@ -624,6 +626,10 @@ bool OGLRenderEventHandler::onCommitNexFrame( const Common::EventData *eventData
 
     m_oglBackend->useShader( nullptr );
 
+    return true;
+}
+
+bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData) {
     return true;
 }
 
