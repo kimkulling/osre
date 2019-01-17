@@ -397,6 +397,7 @@ void RenderBackendService::clearPasses() {
         delete m_passes[i];
     }
     m_passes.clear();
+    m_frameCreated = false;
 }
 
 void RenderBackendService::attachView() {
