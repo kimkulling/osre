@@ -270,6 +270,11 @@ GeoBatchData *RenderBackendService::beginRenderBatch(const c8 *id) {
 }
 
 void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
+    if (nullptr == m_currentBatch) {
+        osre_error(Tag, "No active batch.");
+        return;
+    }
+
     switch (type) {
         case MatrixType::Model:
             if (nullptr != m_currentBatch) {
@@ -295,6 +300,11 @@ void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
 }
 
 void RenderBackendService::setMatrix( const String &name, const glm::mat4 &matrix ) {
+    if (nullptr == m_currentBatch) {
+        osre_error(Tag, "No active batch.");
+        return;
+    }
+
     UniformVar *var = m_currentBatch->getVarByName(name.c_str());
     if ( nullptr == var ) {
         var = UniformVar::create( name, ParameterType::PT_Mat4 );
@@ -307,6 +317,7 @@ void RenderBackendService::setMatrix( const String &name, const glm::mat4 &matri
 
 void RenderBackendService::setUniform(UniformVar *var) {
     if (nullptr == var) {
+        osre_error(Tag, "No active batch.");
         return;
     }
 
@@ -317,6 +328,11 @@ void RenderBackendService::setUniform(UniformVar *var) {
 }
 
 void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray) {
+    if (nullptr == m_currentBatch) {
+        osre_error(Tag, "No active batch.");
+        return;
+    }
+
     UniformVar *var = m_currentBatch->getVarByName(name.c_str());
     if (nullptr == var) {
         var = UniformVar::create(name, ParameterType::PT_Mat4Array, numMat);
