@@ -106,6 +106,8 @@ public:
     bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
+        rbSrv->beginPass("p1");
+        rbSrv->beginRenderBatch("b1");
         Scene::MeshBuilder myBuilder;
         myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
         Mesh *mesh = myBuilder.getMesh();
@@ -140,6 +142,9 @@ public:
         
         rbSrv->setMatrix( "VP", m_transformMatrix.m_mvp );
         rbSrv->setMatrixArray( "M", NumInstances, m_mat);
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
 
         return true;
     }

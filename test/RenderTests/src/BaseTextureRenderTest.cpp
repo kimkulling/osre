@@ -124,6 +124,9 @@ public:
         Scene::MeshBuilder geoBuilder;
         geoBuilder.allocQuads( VertexType::RenderVertex, BufferAccessType::ReadOnly );
         Mesh *mesh = geoBuilder.getMesh();
+        
+        rbSrv->beginPass("p1");
+        rbSrv->beginRenderBatch("b1");
         rbSrv->addMesh( mesh, 0 );
 
         // use default material
@@ -154,6 +157,9 @@ public:
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
         rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
 
         return true;
     }

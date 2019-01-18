@@ -77,10 +77,10 @@ public:
         
         const String passName("pass1");
         rbSrv->beginPass(passName.c_str());
-        
+        rbSrv->beginRenderBatch("b1");
         rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
         rbSrv->addMesh( meshArray, 0 );
-        
+        rbSrv->endRenderBatch();
         rbSrv->endPass();
 
         return true;
