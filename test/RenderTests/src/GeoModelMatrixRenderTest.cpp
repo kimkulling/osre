@@ -66,8 +66,8 @@ public:
         transform.setScale(0.2f, 0.2f, 0.2f);
         transform.toMatrix( mesh1->m_model );
         
-        rbSrv->beginPass("pass1");
-        rbSrv->beginRenderBatch("batch1");
+        rbSrv->beginPass("p1");
+        rbSrv->beginRenderBatch("b1");
         
         rbSrv->addMesh( mesh1, 0 );
 

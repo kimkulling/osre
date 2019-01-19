@@ -70,8 +70,10 @@ namespace OSRE {
             bool onRender( RenderBackendService *rbSrv ) override {
                 rbSrv->beginPass("dbgPass");
                 rbSrv->beginRenderBatch("dbgFontBatch");
+                
                 m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
                 rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+                
                 rbSrv->endRenderBatch();
                 rbSrv->endPass();
 

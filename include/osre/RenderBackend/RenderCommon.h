@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/TStaticArray.h>
+#include <cppcore/Memory/TPoolAllocator.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -674,11 +675,18 @@ struct PassData {
 struct FrameSubmitCmd {
     enum Type {
         CreatePasses = 1,
-        UpdateBuffer = 2
+        UpdateBuffer = 2,
+        UpdateMatrixes = 4
     };
 
+    const c8 *passId;
+    const c8 *batchId;
     ui32 m_updateFlags;
+    ui32 m_size;
+    c8 *m_data;
 };
+
+using FrameSubmitCmdAllocator = CPPCore::TPoolAllocator<FrameSubmitCmd>;
 
 struct Frame {    
     ::CPPCore::TArray<PassData*> m_newPasses;

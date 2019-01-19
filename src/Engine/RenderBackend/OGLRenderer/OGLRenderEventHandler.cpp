@@ -208,7 +208,7 @@ static OGLVertexArray *setupBuffers( Mesh *geo, OGLRenderBackend *rb, OGLShader 
     return vertexArray;
 }
 
-static void setupPrimDrawCmd( bool useLocalMatrix, const glm::mat4 &model, const TArray<ui32> &primGroups, OGLRenderBackend *rb, 
+static void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat4 &model, const TArray<ui32> &primGroups, OGLRenderBackend *rb, 
         OGLRenderEventHandler *eh, OGLVertexArray *va ) {
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
@@ -223,6 +223,7 @@ static void setupPrimDrawCmd( bool useLocalMatrix, const glm::mat4 &model, const
         data->m_model = model;
         data->m_localMatrix = useLocalMatrix;
     }
+    data->m_id = id;
     data->m_vertexArray = va;
     data->m_primitives.reserve( primGroups.size() );
     for( ui32 i = 0; i < primGroups.size(); ++i ) {
@@ -233,7 +234,7 @@ static void setupPrimDrawCmd( bool useLocalMatrix, const glm::mat4 &model, const
     eh->enqueueRenderCmd( renderCmd );
 }
 
-static void setupInstancedDrawCmd( const TArray<ui32> &ids, Frame *currentFrame, 
+static void setupInstancedDrawCmd(const char *id, const TArray<ui32> &ids, Frame *currentFrame,
         OGLRenderBackend *rb, OGLRenderEventHandler *eh, OGLVertexArray *va ) {
 	OSRE_ASSERT( nullptr != currentFrame );
 	OSRE_ASSERT( nullptr != rb );
@@ -535,12 +536,11 @@ bool OGLRenderEventHandler::onInitRenderPasses( const Common::EventData *eventDa
                     }
                     data->m_vertexArray = m_vertexArray;
 
-
                     // setup the draw calls
                     if (0 == currentMeshEntry->numInstances) {
-                        setupPrimDrawCmd(currentMesh->m_localMatrix, currentMesh->m_model, primGroups, m_oglBackend, this, m_vertexArray);
+                        setupPrimDrawCmd(currentBatchData->m_id, currentMesh->m_localMatrix, currentMesh->m_model, primGroups, m_oglBackend, this, m_vertexArray);
                     } else {
-                        setupInstancedDrawCmd(primGroups, frame, m_oglBackend, this, m_vertexArray);
+                        setupInstancedDrawCmd(currentBatchData->m_id, primGroups, frame, m_oglBackend, this, m_vertexArray);
                     }
                     
                     primGroups.resize(0);
@@ -630,6 +630,28 @@ bool OGLRenderEventHandler::onInitRenderPasses( const Common::EventData *eventDa
 }
 
 bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData) {
+
+    CommitFrameEventData *data = (CommitFrameEventData*)eventData;
+    if (nullptr == data) {
+        return false;
+    }
+
+    for (ui32 i = 0; i < data->m_frame->m_submitCmds.size(); ++i) {
+        FrameSubmitCmd *cmd = data->m_frame->m_submitCmds[i];
+        if (nullptr == cmd) {
+            continue;
+        }
+
+        if (cmd->m_updateFlags &= (ui32)FrameSubmitCmd::UpdateMatrixes) {
+            MatrixBuffer *buffer = (MatrixBuffer*) cmd->m_data;
+
+            m_renderCmdBuffer->setMatrixBuffer(cmd->batchId, buffer);
+            //setConstantBuffers(buffer->m_model, buffer->m_view, buffer->m_proj, m_oglBackend, this);
+        }
+    }
+    data->m_frame->m_submitCmds.resize(0);
+    m_oglBackend->useShader(nullptr);
+
     return true;
 }
 

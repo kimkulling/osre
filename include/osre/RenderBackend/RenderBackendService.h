@@ -241,6 +241,7 @@ private:
     CPPCore::TArray<PassData*> m_passes;
     PassData *m_currentPass;
     GeoBatchData *m_currentBatch;
+    FrameSubmitCmdAllocator m_submitCmdAllocator;
 };
 
 inline 

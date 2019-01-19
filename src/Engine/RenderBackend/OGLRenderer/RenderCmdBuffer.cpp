@@ -41,6 +41,7 @@ RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRende
 , m_primitives()
 , m_materials()
 , m_paramArray()
+, m_matrixBuffer()
 , m_pipeline( pipeline ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
     OSRE_ASSERT( nullptr != m_renderCtx );
@@ -204,10 +205,22 @@ void RenderCmdBuffer::setMatrixes(const glm::mat4 &model, const glm::mat4 &view,
     m_proj = proj;
 }
 
+void RenderCmdBuffer::setMatrixBuffer(const c8 *id, MatrixBuffer *buffer) {
+    OSRE_ASSERT(nullptr != id);
+
+    m_matrixBuffer[id] = buffer;
+}
+
 bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *data ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
     if ( nullptr == data ) {
         return false;
+    }
+
+    std::map<const char*, MatrixBuffer*>::iterator it = m_matrixBuffer.find(data->m_id);
+    if (it != m_matrixBuffer.end()) {
+        MatrixBuffer *buffer = it->second;
+        setMatrixes(buffer->m_model, buffer->m_view, buffer->m_proj);
     }
 
     m_renderbackend->bindVertexArray( data->m_vertexArray );
