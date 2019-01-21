@@ -234,9 +234,7 @@ static void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat
     eh->enqueueRenderCmd( renderCmd );
 }
 
-static void setupInstancedDrawCmd(const char *id, const TArray<ui32> &ids, Frame *currentFrame,
-        OGLRenderBackend *rb, OGLRenderEventHandler *eh, OGLVertexArray *va ) {
-	OSRE_ASSERT( nullptr != currentFrame );
+static void setupInstancedDrawCmd(const char *id, const TArray<ui32> &ids, OGLRenderBackend *rb, OGLRenderEventHandler *eh, OGLVertexArray *va, ui32 numInstances ) {
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
 
@@ -244,31 +242,17 @@ static void setupInstancedDrawCmd(const char *id, const TArray<ui32> &ids, Frame
         return;
     }
 
-/*    GeoInstanceData *instData( currentFrame->m_geoInstanceData );
 	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesInstancesCmd, nullptr );
-    if( nullptr != instData ) {
-        if( nullptr != instData->m_data ) {
-            OGLBuffer *instanceDataBuffer = rb->createBuffer( BufferType::InstanceBuffer );
-            rb->bindBuffer( instanceDataBuffer );
-            rb->copyDataToBuffer( instanceDataBuffer, instData->m_data->m_data, instData->m_data->m_size, instData->m_data->m_access );
-        }
-    }
     
-    for ( ui32 i=0; i<currentFrame->m_numGeoPackages; i++ ) {
-        GeometryPackage *currentGeoPackage( currentFrame->m_geoPackages[ i ] );
-        if ( nullptr == currentGeoPackage ) {
-            continue;
-        }
-        DrawInstancePrimitivesCmdData *data = new DrawInstancePrimitivesCmdData;
-        data->m_vertexArray = va;
-        data->m_numInstances = currentGeoPackage->m_numInstances;
-        data->m_primitives.reserve( ids.size() );
-        for( ui32 j = 0; j < ids.size(); ++j ) {
-            data->m_primitives.add( ids[ j ] );
-        }
-        renderCmd->m_data = static_cast< void* >( data );
-        eh->enqueueRenderCmd( renderCmd );
-    }*/
+    DrawInstancePrimitivesCmdData *data = new DrawInstancePrimitivesCmdData;
+    data->m_vertexArray = va;
+    data->m_numInstances = numInstances;
+    data->m_primitives.reserve( ids.size() );
+    for( ui32 j = 0; j < ids.size(); ++j ) {
+        data->m_primitives.add( ids[ j ] );
+    }
+    renderCmd->m_data = static_cast< void* >( data );
+    eh->enqueueRenderCmd( renderCmd );
 }
 
 OGLRenderEventHandler::OGLRenderEventHandler( )
@@ -540,7 +524,7 @@ bool OGLRenderEventHandler::onInitRenderPasses( const Common::EventData *eventDa
                     if (0 == currentMeshEntry->numInstances) {
                         setupPrimDrawCmd(currentBatchData->m_id, currentMesh->m_localMatrix, currentMesh->m_model, primGroups, m_oglBackend, this, m_vertexArray);
                     } else {
-                        setupInstancedDrawCmd(currentBatchData->m_id, primGroups, frame, m_oglBackend, this, m_vertexArray);
+                        setupInstancedDrawCmd(currentBatchData->m_id, primGroups, m_oglBackend, this, m_vertexArray, currentMeshEntry->numInstances);
                     }
                     
                     primGroups.resize(0);
@@ -551,78 +535,6 @@ bool OGLRenderEventHandler::onInitRenderPasses( const Common::EventData *eventDa
     }
 
     frame->m_newPasses.clear();
--
-    /*setConstantBuffers( frame->m_model, frame->m_view, frame->m_proj, m_oglBackend, this );
-
-    for ( ui32 geoPackageIdx = 0; geoPackageIdx<frame->m_numGeoPackages; geoPackageIdx++ ) {
-        GeometryPackage *currentGeoPackage( frame->m_geoPackages[ geoPackageIdx ] );
-        if ( nullptr == currentGeoPackage ) {
-            continue;
-        }
-        
-        CPPCore::TArray<ui32> primGroups;
-        for (ui32 geoIdx = 0; geoIdx < currentGeoPackage->m_numNewGeo; ++geoIdx) {
-            Mesh *geo = currentGeoPackage->m_newGeo[geoIdx];
-            if (nullptr == geo) {
-                osre_debug(Tag, "Geometry-pointer is a nullptr.");
-                return false;
-            }
-
-            // register primitive groups to render
-            for (ui32 i = 0; i < geo->m_numPrimGroups; ++i) {
-                const ui32 primIdx( m_oglBackend->addPrimitiveGroup( &geo->m_primGroups[ i ]) );
-                primGroups.add( primIdx );
-            }
-
-            // create the default material
-            SetMaterialStageCmdData *data = setupMaterial(geo->m_material, m_oglBackend, this);
-
-            // setup vertex array, vertex and index buffers
-            m_vertexArray = setupBuffers(geo, m_oglBackend, m_renderCmdBuffer->getActiveShader());
-            if (nullptr == m_vertexArray) {
-                osre_debug(Tag, "Vertex-Array-pointer is a nullptr.");
-                return false;
-            }
-            data->m_vertexArray = m_vertexArray;
-
-            if (frame->m_numLights > 0) {
-                setupLights(frame->m_numLights, frame->m_lights, m_oglBackend, this);
-            }
-
-            // setup the draw calls
-            if (0 == currentGeoPackage->m_numInstances) {
-                setupPrimDrawCmd( geo->m_localMatrix, geo->m_model, primGroups, m_oglBackend, this, m_vertexArray);
-            } else {
-                setupInstancedDrawCmd(primGroups, frame, m_oglBackend, this, m_vertexArray);
-            }
-        }
-        primGroups.resize( 0 );
-    }
-
-    if ( nullptr != frame->m_geoPackages ) {
-        delete[] frame->m_geoPackages;
-        frame->m_geoPackages = nullptr;
-        frame->m_numGeoPackages = 0;
-    }
-
-    for ( ui32 i=0; i<frame->m_numGeoUpdates; ++i ) {
-        Mesh *geo = frame->m_geoUpdates[ i ];
-        if ( nullptr == geo ) {
-            osre_debug(Tag, "Geometry-update-pointer is a nullptr.");
-            return false;
-        }
-
-        OGLBuffer *buffer( m_oglBackend->getBufferById( geo->m_id ) );
-        if (nullptr != buffer) {
-            m_oglBackend->bindBuffer(buffer);
-            m_oglBackend->copyDataToBuffer(buffer, geo->m_vb->m_data, geo->m_vb->m_size, geo->m_vb->m_access);
-            m_oglBackend->unbindBuffer(buffer);
-        }
-    }
-
-    delete[] frame->m_geoUpdates;
-    frame->m_geoUpdates = nullptr;
-    frame->m_numGeoUpdates = 0;*/
 
     m_oglBackend->useShader( nullptr );
 
@@ -647,6 +559,9 @@ bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData)
 
             m_renderCmdBuffer->setMatrixBuffer(cmd->batchId, buffer);
             //setConstantBuffers(buffer->m_model, buffer->m_view, buffer->m_proj, m_oglBackend, this);
+        }
+        else if (cmd->m_updateFlags &= (ui32)FrameSubmitCmd::UpdateUniforms) {
+            setupParameter(cmd->m_var, m_oglBackend, this);
         }
     }
     data->m_frame->m_submitCmds.resize(0);

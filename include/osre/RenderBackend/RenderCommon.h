@@ -676,11 +676,13 @@ struct FrameSubmitCmd {
     enum Type {
         CreatePasses = 1,
         UpdateBuffer = 2,
-        UpdateMatrixes = 4
+        UpdateMatrixes = 4,
+        UpdateUniforms = 8
     };
 
     const c8 *passId;
     const c8 *batchId;
+    UniformVar *m_var;
     ui32 m_updateFlags;
     ui32 m_size;
     c8 *m_data;

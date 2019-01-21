@@ -155,9 +155,14 @@ public:
         for ( auto i = 0; i < NumInstances; i++ ) {
             m_mat[ i ] = m_mat[ i ] * rot;
         }
+        rbSrv->beginPass("p1");
+        rbSrv->beginRenderBatch("b1");
 
         rbSrv->setMatrix( "VP", m_transformMatrix.m_mvp );
         rbSrv->setMatrixArray( "M", NumInstances, m_mat );
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
 
         return true;
     }

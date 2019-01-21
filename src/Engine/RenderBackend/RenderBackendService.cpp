@@ -204,8 +204,6 @@ void RenderBackendService::commitNextFrame() {
     if ( !m_renderTaskPtr.isValid() ) {
         return;
     }
-//    MatrixBufferDirty = 1,
-//        UniformBufferDirty = 2,
 
     if (0 == m_submitCmdAllocator.capacity()) {
         m_submitCmdAllocator.release();
@@ -226,6 +224,21 @@ void RenderBackendService::commitNextFrame() {
                 ::memcpy(cmd->m_data, &currentBatch->m_matrixBuffer, cmd->m_size);
 
                 m_nextFrame.m_submitCmds.add(cmd);
+                currentBatch->m_dirtyFlag = 0;
+            } else if (currentBatch->m_dirtyFlag & GeoBatchData::UniformBufferDirty) {
+                for (ui32 k = 0; k < currentBatch->m_uniforms.size(); ++k) {
+                    FrameSubmitCmd *cmd = m_submitCmdAllocator.alloc();
+                    cmd->passId = currentPass->m_id;
+                    cmd->batchId = currentBatch->m_id;
+                    cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateUniforms;
+                    UniformVar *var = currentBatch->m_uniforms[k];
+                    if (nullptr == var) {
+                        continue;
+                    }
+
+                    cmd->m_var = var;
+                    m_nextFrame.m_submitCmds.add(cmd);
+                }
                 currentBatch->m_dirtyFlag = 0;
             }
         }

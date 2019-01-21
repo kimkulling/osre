@@ -75,6 +75,8 @@ struct OSRE_EXPORT UniformVar {
     static UniformVar *create( const String &name, ParameterType type, ui32 arraySize=1 );
     static void destroy( UniformVar *param );
 
+    ui32 getSize();
+
 private:
     UniformVar();
     ~UniformVar();

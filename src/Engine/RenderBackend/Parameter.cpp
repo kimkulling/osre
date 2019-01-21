@@ -147,5 +147,9 @@ void UniformVar::destroy( UniformVar *param ) {
     }
 }
 
+ui32 UniformVar::getSize() {
+    return m_data.m_size;
+}
+
 } // Namespace RenderBackend
 } // Namespace OSRE
