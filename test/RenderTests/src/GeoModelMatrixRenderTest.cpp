@@ -66,10 +66,10 @@ public:
         transform.setScale(0.2f, 0.2f, 0.2f);
         transform.toMatrix( mesh1->m_model );
         
-        const String passName("pass1");
-        rbSrv->beginPass(passName.c_str());
-
-        rbSrv->attachGeo( mesh1, 0 );
+        rbSrv->beginPass("p1");
+        rbSrv->beginRenderBatch("b1");
+        
+        rbSrv->addMesh( mesh1, 0 );
 
         myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
         Mesh *mesh2 = myBuilder.getMesh();
@@ -77,8 +77,9 @@ public:
         transform.setTranslation( -0.5f, 0, 0 );
         transform.setScale(0.2f, 0.2f, 0.2f);
         transform.toMatrix( mesh2->m_model );
-        rbSrv->attachGeo( mesh2, 0 );
+        rbSrv->addMesh( mesh2, 0 );
 
+        rbSrv->endRenderBatch();
         rbSrv->endPass();
 
         return true;

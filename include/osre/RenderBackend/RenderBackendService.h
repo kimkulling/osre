@@ -71,6 +71,7 @@ DECL_EVENT( OnDetachSceneEvent );
 DECL_EVENT( OnSetRenderStates );
 DECL_EVENT( OnRenderFrameEvent );
 DECL_EVENT( OnSetParameterEvent );
+DECL_EVENT( OnInitPassesEvent);
 DECL_EVENT( OnCommitFrameEvent );
 DECL_EVENT( OnShutdownRequest );
 DECL_EVENT( OnResizeEvent );
@@ -111,6 +112,21 @@ struct OSRE_EXPORT AttachViewEventData : public Common::EventData {
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
+struct OSRE_EXPORT InitPassesEventData : Common::EventData {
+    InitPassesEventData()
+    : EventData(OnInitPassesEvent, nullptr)
+    , m_frame(nullptr) {
+        // empty            
+    }
+
+    Frame *m_frame;
+};
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
     CommitFrameEventData()
     : EventData( OnCommitFrameEvent, nullptr )
@@ -133,54 +149,6 @@ struct OSRE_EXPORT ResizeEventData : Common::EventData {
         // empty
     }
     ui32 m_x, m_y, m_w, m_h;
-};
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-struct NewGeoEntry {
-    ui32 numInstances;
-    CPPCore::TArray<Mesh*> m_geo;
-};
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-struct GeoBatch {
-    const c8                    *m_id;
-    MatrixBuffer                 m_matrixBuffer;
-    CPPCore::TArray<UniformVar*> m_uniforms;
-    CPPCore::TArray<Mesh*>       m_geoArray;
-
-    GeoBatch(const c8 *id)
-    : m_id(id)
-    , m_matrixBuffer()
-    , m_uniforms()
-    , m_geoArray() {
-        // empty
-    }
-};
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-struct PassData {
-    const c8 *m_id;
-    CPPCore::TArray<GeoBatch*> m_geoBatches;
-
-    PassData(const c8 *id)
-    : m_id(id)
-    , m_geoBatches() {
-        // empty
-    }
-
-    GeoBatch *getBatchById(const c8 *id) const;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -216,9 +184,9 @@ public:
 
     PassData *getPassById(const c8 *id) const;
 
-    bool beginPass(const c8 *id);
+    PassData *beginPass(const c8 *id);
     
-    bool beginRenderBatch(const c8 *id);
+    GeoBatchData *beginRenderBatch(const c8 *id);
 
     void setMatrix(MatrixType type, const glm::mat4 &m );
     
@@ -228,23 +196,17 @@ public:
 
     void setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray );
 
-    void attachGeo( Mesh *geo, ui32 numInstances );
+    void addMesh( Mesh *geo, ui32 numInstances );
 
-    void attachGeo( const CPPCore::TArray<Mesh*> &geoArray, ui32 numInstances );
-
-    void attachGeoUpdate( Mesh *geo );
-
-    void attachGeoUpdate( const CPPCore::TArray<Mesh*> &geoArray );
-
-    void attachGeoInstance(GeoInstanceData *instanceData);
-
-    void attachGeoInstance(const CPPCore::TArray<GeoInstanceData*> &instanceData);
+    void addMesh( const CPPCore::TArray<Mesh*> &geoArray, ui32 numInstances );
 
     bool endRenderBatch();
 
     bool endPass();
 
-    void attachView( TransformMatrixBlock &transform );
+    void clearPasses();
+
+    void attachView();
 
     void resize( ui32 x, ui32 y, ui32 w, ui32 h);
 
@@ -262,26 +224,24 @@ protected:
     /// @brief  The update callback.
     virtual bool onUpdate();
 
+    void initPasses();
+
     /// @brief  Will apply all used parameters
     void commitNextFrame();
 
 private:
-    MatrixBuffer m_matrixBuffer;
     Common::TObjPtr<Threading::SystemTask> m_renderTaskPtr;
     const Properties::Settings *m_settings;
     bool m_ownsSettingsConfig;
+    bool m_frameCreated;
     Frame m_nextFrame;
     UI::Widget *m_screen;
 
+    bool m_dirty;
     CPPCore::TArray<PassData*> m_passes;
     PassData *m_currentPass;
-    GeoBatch *m_currentBatch;
-
-    CPPCore::TArray<NewGeoEntry*> m_newGeo;
-    CPPCore::TArray<Mesh*> m_geoUpdates;
-    CPPCore::TArray<GeoInstanceData*> m_newInstances;
-    CPPCore::THashMap<ui32, UniformVar*> m_variables;
-    CPPCore::TArray<UniformVar*> m_uniformUpdates;
+    GeoBatchData *m_currentBatch;
+    FrameSubmitCmdAllocator m_submitCmdAllocator;
 };
 
 inline 

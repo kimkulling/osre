@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/TStaticArray.h>
+#include <cppcore/Memory/TPoolAllocator.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -38,9 +39,9 @@ namespace RenderBackend {
 
 // Forward declarations
 struct UniformVar;
-
 class Mesh;
 class Shader;
+class Pipeline;
 
 using MeshArray = CPPCore::TArray<RenderBackend::Mesh*>;
 
@@ -586,19 +587,6 @@ struct TIndexCache {
     }
 };
 
-///	@brief  A render batch struct.
-/// Render batches are used to store cluster of similar render data, which can be rendered in one draw call.
-struct RenderBatch {
-    glm::mat4  m_model;     ///< The local model matrix.
-    ui32       m_numGeo;    ///< Number of geometries
-    Mesh  *m_geoArray;  ///< The geometry for the batch.
-
-    RenderBatch();
-    ~RenderBatch();
-
-    OSRE_NON_COPYABLE( RenderBatch )
-};
-
 ///	@brief
 enum class LightType {
     Directional,
@@ -623,6 +611,99 @@ struct OSRE_EXPORT Light {
 
 using UiVertexCache = RenderBackend::TVertexCache<RenderBackend::RenderVert>;
 using UiIndexCache = RenderBackend::TIndexCache<ui16>;
+
+struct MatrixBuffer {
+    glm::mat4 m_model;
+    glm::mat4 m_view;
+    glm::mat4 m_proj;
+
+    MatrixBuffer()
+    : m_model(1.0f)
+    , m_view(1.0f)
+    , m_proj(1.0f) {
+        // empty
+    }
+};
+
+struct MeshEntry {
+    ui32 numInstances;
+    bool m_isDirty;
+    CPPCore::TArray<Mesh*> m_geo;
+};
+
+struct GeoBatchData {
+    enum DirtyMode {
+        MatrixBufferDirty = 1,
+        UniformBufferDirty = 2,
+        MeshDirty = 4
+    };
+
+    const c8                    *m_id;
+    MatrixBuffer                 m_matrixBuffer;
+    CPPCore::TArray<UniformVar*> m_uniforms;
+    CPPCore::TArray<MeshEntry*>  m_meshArray;
+    ui32 m_dirtyFlag;
+
+    GeoBatchData(const c8 *id)
+    : m_id(id)
+    , m_matrixBuffer()
+    , m_uniforms()
+    , m_meshArray()
+    , m_dirtyFlag(0) {
+        // empty
+    }
+
+    MeshEntry *getMeshEntryByName(const c8 *name);
+    UniformVar *getVarByName(const c8 *name);
+};
+
+struct PassData {
+    const c8 *m_id;
+    CPPCore::TArray<GeoBatchData*> m_geoBatches;
+    bool m_isDirty;
+
+    PassData(const c8 *id)
+    : m_id(id)
+    , m_geoBatches()
+    , m_isDirty( true ) {
+        // empty
+    }
+
+    GeoBatchData *getBatchById(const c8 *id) const;
+};
+
+struct FrameSubmitCmd {
+    enum Type {
+        CreatePasses = 1,
+        UpdateBuffer = 2,
+        UpdateMatrixes = 4,
+        UpdateUniforms = 8
+    };
+
+    const c8 *passId;
+    const c8 *batchId;
+    UniformVar *m_var;
+    ui32 m_updateFlags;
+    ui32 m_size;
+    c8 *m_data;
+};
+
+using FrameSubmitCmdAllocator = CPPCore::TPoolAllocator<FrameSubmitCmd>;
+
+struct Frame {    
+    ::CPPCore::TArray<PassData*> m_newPasses;
+    ::CPPCore::TArray<FrameSubmitCmd*> m_submitCmds;
+    Pipeline *m_pipeline;
+
+    Frame();
+    ~Frame();
+    void init(::CPPCore::TArray<PassData*> &newPasses);
+    void update(::CPPCore::TArray<FrameSubmitCmd*> &updateCmds );
+
+    Frame(const Frame &) = delete;
+    Frame(Frame &&) = delete;
+    Frame& operator = (const Frame &) = delete;
+};
 
 } // Namespace RenderBackend
 } // Namespace OSRE
