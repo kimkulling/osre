@@ -554,13 +554,13 @@ bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData)
             continue;
         }
 
-        if (cmd->m_updateFlags &= (ui32)FrameSubmitCmd::UpdateMatrixes) {
+        if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateMatrixes) {
             MatrixBuffer *buffer = (MatrixBuffer*) cmd->m_data;
 
-            m_renderCmdBuffer->setMatrixBuffer(cmd->batchId, buffer);
+            m_renderCmdBuffer->setMatrixBuffer(cmd->m_batchId, buffer);
             //setConstantBuffers(buffer->m_model, buffer->m_view, buffer->m_proj, m_oglBackend, this);
         }
-        else if (cmd->m_updateFlags &= (ui32)FrameSubmitCmd::UpdateUniforms) {
+        else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateUniforms) {
             setupParameter(cmd->m_var, m_oglBackend, this);
         }
     }

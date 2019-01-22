@@ -680,12 +680,22 @@ struct FrameSubmitCmd {
         UpdateUniforms = 8
     };
 
-    const c8 *passId;
-    const c8 *batchId;
+    const c8 *m_passId;
+    const c8 *m_batchId;
     UniformVar *m_var;
     ui32 m_updateFlags;
     ui32 m_size;
     c8 *m_data;
+
+    FrameSubmitCmd()
+    : m_passId(nullptr)
+    , m_batchId(nullptr)
+    , m_var(nullptr)
+    , m_updateFlags(0)
+    , m_size(0)
+    , m_data(nullptr) {
+        // empty
+    }
 };
 
 using FrameSubmitCmdAllocator = CPPCore::TPoolAllocator<FrameSubmitCmd>;
