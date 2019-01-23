@@ -152,7 +152,7 @@ public:
     bool onRender( RenderBackendService *rbSrv ) override {
         glm::mat4 rot( 1.0 );
         rot = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
-        for ( auto i = 0; i < NumInstances; i++ ) {
+        for ( ui32 i = 0; i < NumInstances; i++ ) {
             m_mat[ i ] = m_mat[ i ] * rot;
         }
         rbSrv->beginPass("p1");

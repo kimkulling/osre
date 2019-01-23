@@ -121,7 +121,7 @@ Stream *ZipFileSystem::find( const Uri &file, Stream::AccessMode mode, CPPCore::
     return this->open( file, Stream::AccessMode::ReadAccess );
 }
 
-const String &ZipFileSystem::getSchema() const {
+const c8 *ZipFileSystem::getSchema() const {
     return ZipSchema;
 }
 

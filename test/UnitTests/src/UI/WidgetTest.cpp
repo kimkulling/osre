@@ -38,10 +38,10 @@ class TestWidget : public Widget {
 public:
     TestWidget( const String &name, Widget *parent )
     : Widget( name, parent )
-    , m_x( 0 )
-    , m_y( 0 )
-    , m_w( 0 )
-    , m_h( 0 ) {
+    , m_x( 0u )
+    , m_y( 0u )
+    , m_w( 0u )
+    , m_h( 0u ) {
         // empty
     }
 
@@ -69,6 +69,7 @@ TEST_F( WidgetTest, createTest ) {
     } catch ( ... ) {
         ok = false;
     }
+    EXPECT_TRUE(ok);
 }
 
 TEST_F( WidgetTest, access_rect_Test ) {
