@@ -34,13 +34,12 @@ protected:
     PipelinePass *m_pass2;
 
 protected:
-    virtual void SetUp() {
-        m_pass1 = new PipelinePass( nullptr );
-        m_pass2 = new PipelinePass( nullptr );
-
+    void SetUp() override {
+        m_pass1 = new PipelinePass( RenderPassId, nullptr );
+        m_pass2 = new PipelinePass( DbgPassId, nullptr );
     }
 
-    virtual void TearDown() {
+    void TearDown() override {
         delete m_pass2;
         delete m_pass1;
     }

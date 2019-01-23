@@ -49,6 +49,14 @@ struct RenderTarget {
     // empty
 };
 
+static const c8* RenderPassNames[] = {
+    "RendePass",
+    "DbgPass"
+};
+
+static const ui32 RenderPassId = 0;
+static const ui32 DbgPassId = 1;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -56,7 +64,7 @@ struct RenderTarget {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT PipelinePass {
 public:
-    PipelinePass( Shader *shader );
+    PipelinePass( ui32 id, Shader *shader );
     ~PipelinePass();
     void set( RenderTarget &rt, RenderStates &states );
     void setPolygonState(PolygonState polyState);
@@ -73,10 +81,12 @@ public:
     const StencilState &getStencilState() const;
     void setShader( Shader *shader );
     Shader *getShader() const;
+    ui32 getId() const;
     bool operator == ( const PipelinePass &rhs ) const;
     bool operator != ( const PipelinePass &rhs ) const;
 
 private:
+    ui32 m_id;
     RenderTarget m_renderTarget;
     RenderStates m_states;
     Shader *m_shader;
