@@ -150,9 +150,9 @@ String LocaleFileSystem::getWorkingDirectory() {
 
 #ifdef OSRE_WINDOWS
     GetCurrentDirectory( Size-1, buffer );
-    workingDir = buffer;
+    workingDir = buffer:
 #else
-    getcwd( buffer, Size-1);
+    workingDir = getcwd( buffer, Size-1);
 #endif
 
     return workingDir;

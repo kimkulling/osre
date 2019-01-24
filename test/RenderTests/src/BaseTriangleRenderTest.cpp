@@ -75,7 +75,7 @@ public:
         
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         
-        rbSrv->beginPass(RenderPassNames[RenderPassId]);
+        rbSrv->beginPass( PipelinePass::getPassNameById( RenderPassId ) );
         rbSrv->beginRenderBatch("b1");
         rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
         rbSrv->addMesh( meshArray, 0 );
