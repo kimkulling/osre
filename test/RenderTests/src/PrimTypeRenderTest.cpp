@@ -58,8 +58,8 @@ public:
         // empty
     }
 
-    bool onCreate( RenderBackendService *rb ) override {
-        rb->sendEvent( &OnAttachViewEvent, nullptr );
+    bool onCreate( RenderBackendService *rbSrv ) override {
+        rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
         // colors
         glm::vec3 col[ NumPoints ];
@@ -101,10 +101,10 @@ public:
         meshBuilder.allocPoints(VertexType::ColorVertex, BufferAccessType::ReadOnly, NumPoints, points, col);
         Mesh *ptMesh = meshBuilder.getMesh();
 
-        rb->beginPass("pass1");
-        rb->beginRenderBatch("batch1");
+        rbSrv->beginPass(RenderPassNames[RenderPassId]);
+        rbSrv->beginRenderBatch("batch1");
 
-        rb->addMesh( ptMesh, 0 );
+        rbSrv->addMesh( ptMesh, 0 );
         meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 1);
         Mesh *lineMesh = meshBuilder.getMesh();
         lineMesh->m_vb = MeshBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly );
@@ -121,14 +121,14 @@ public:
         // setup material
         Material *mat = MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
         lineMesh->m_material = mat;
-        rb->addMesh( lineMesh, 0 );
+        rbSrv->addMesh( lineMesh, 0 );
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
-        rb->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
 
-        rb->endRenderBatch();
-        rb->endPass();
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
 
         return true;
     }

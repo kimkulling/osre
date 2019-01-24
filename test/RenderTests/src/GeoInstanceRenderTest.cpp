@@ -106,7 +106,7 @@ public:
     bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
-        rbSrv->beginPass("p1");
+        rbSrv->beginPass(RenderPassNames[RenderPassId]);
         rbSrv->beginRenderBatch("b1");
         Scene::MeshBuilder myBuilder;
         myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
@@ -155,7 +155,7 @@ public:
         for ( ui32 i = 0; i < NumInstances; i++ ) {
             m_mat[ i ] = m_mat[ i ] * rot;
         }
-        rbSrv->beginPass("p1");
+        rbSrv->beginPass(RenderPassNames[RenderPassId]);
         rbSrv->beginRenderBatch("b1");
 
         rbSrv->setMatrix( "VP", m_transformMatrix.m_mvp );

@@ -477,7 +477,8 @@ bool OGLRenderEventHandler::onInitRenderPasses( const Common::EventData *eventDa
         if (!currentPass->m_isDirty) {
             continue;
         }
-
+        // ToDo: create pipeline pass for the name.
+        const c8 *name = currentPass->m_id;
         for (ui32 batchIdx = 0; batchIdx < currentPass->m_geoBatches.size(); ++batchIdx) {
             GeoBatchData *currentBatchData = currentPass->m_geoBatches[passIdx];
             OSRE_ASSERT(nullptr != currentBatchData);
@@ -558,9 +559,7 @@ bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData)
             MatrixBuffer *buffer = (MatrixBuffer*) cmd->m_data;
 
             m_renderCmdBuffer->setMatrixBuffer(cmd->m_batchId, buffer);
-            //setConstantBuffers(buffer->m_model, buffer->m_view, buffer->m_proj, m_oglBackend, this);
-        }
-        else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateUniforms) {
+        } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateUniforms) {
             setupParameter(cmd->m_var, m_oglBackend, this);
         }
     }

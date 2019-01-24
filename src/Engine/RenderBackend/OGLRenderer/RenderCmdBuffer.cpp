@@ -80,8 +80,7 @@ void RenderCmdBuffer::enqueueRenderCmd( const String &groupName, OGLRenderCmd *r
     }
 }
 
-void RenderCmdBuffer::enqueueRenderCmdGroup( const String &groupName, CPPCore::TArray<OGLRenderCmd*>& cmdGroup, 
-        EnqueueType type ) {
+void RenderCmdBuffer::enqueueRenderCmdGroup( const String &groupName, CPPCore::TArray<OGLRenderCmd*>& cmdGroup, EnqueueType type ) {
     if ( groupName.empty() ) {
         osre_debug( Tag, "No name for render command group defined." );
         return;

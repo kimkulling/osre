@@ -26,8 +26,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-PipelinePass::PipelinePass( Shader *shader )
-: m_shader( shader ) {
+PipelinePass::PipelinePass(ui32 id, Shader *shader )
+: m_shader( shader )
+, m_renderTarget()
+, m_states()
+, m_id(id ){
     // empty
 }
 
@@ -94,6 +97,10 @@ void PipelinePass::setShader( Shader *shader ) {
 
 Shader *PipelinePass::getShader() const {
     return m_shader;
+}
+
+ui32 PipelinePass::getId() const {
+    return m_id;
 }
 
 bool PipelinePass::operator == ( const PipelinePass &rhs ) const {

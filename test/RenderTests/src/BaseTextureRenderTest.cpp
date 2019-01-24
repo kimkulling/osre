@@ -125,7 +125,7 @@ public:
         geoBuilder.allocQuads( VertexType::RenderVertex, BufferAccessType::ReadOnly );
         Mesh *mesh = geoBuilder.getMesh();
         
-        rbSrv->beginPass("p1");
+        rbSrv->beginPass(RenderPassNames[RenderPassId]);
         rbSrv->beginRenderBatch("b1");
         rbSrv->addMesh( mesh, 0 );
 
