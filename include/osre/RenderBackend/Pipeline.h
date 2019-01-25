@@ -50,7 +50,7 @@ struct RenderTarget {
 };
 
 static const c8* RenderPassNames[] = {
-    "RendePass",
+    "RenderPass",
     "DbgPass"
 };
 
