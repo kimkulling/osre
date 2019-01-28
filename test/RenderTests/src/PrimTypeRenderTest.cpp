@@ -73,10 +73,10 @@ public:
         points[ 1 ] = glm::vec3(  0,    0.5, 0 );
         points[ 2 ] = glm::vec3(  0.5, -0.5, 0 );
         
-        GLushort pt_indices[ PtNumIndices ];
+       /* GLushort pt_indices[ PtNumIndices ];
         pt_indices[ 0 ] = 0;
         pt_indices[ 1 ] = 1;
-        pt_indices[ 2 ] = 2;
+        pt_indices[ 2 ] = 2;*/
 
         // line segment coordinates
         glm::vec3 pos[ NumPoints ];
@@ -101,7 +101,7 @@ public:
         meshBuilder.allocPoints(VertexType::ColorVertex, BufferAccessType::ReadOnly, NumPoints, points, col);
         Mesh *ptMesh = meshBuilder.getMesh();
 
-        rbSrv->beginPass(RenderPassNames[RenderPassId]);
+        rbSrv->beginPass( PipelinePass::getPassNameById( RenderPassId ) );
         rbSrv->beginRenderBatch("batch1");
 
         rbSrv->addMesh( ptMesh, 0 );

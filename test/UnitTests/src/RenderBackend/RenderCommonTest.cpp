@@ -63,38 +63,38 @@ TEST_F( RenderCommonTest, createVertexLayoutTest ) {
 TEST_F( RenderCommonTest, addCompVertexLayoutTest ) {
     VertComponent *comp = new VertComponent;
     VertexLayout layout;
-    EXPECT_EQ( 0, layout.numComponents() );
+    EXPECT_EQ( 0u, layout.numComponents() );
     layout.add( comp );
-    EXPECT_EQ( 1, layout.numComponents() );
+    EXPECT_EQ( 1u, layout.numComponents() );
 }
 
 TEST_F( RenderCommonTest, clearCompVertexLayoutTest ) {
     VertComponent *comp = new VertComponent;
     VertexLayout layout;
     layout.add( comp );
-    EXPECT_EQ( 1, layout.numComponents() );
+    EXPECT_EQ( 1u, layout.numComponents() );
     layout.clear();
-    EXPECT_EQ( 0, layout.numComponents() );
+    EXPECT_EQ( 0u, layout.numComponents() );
 }
 
 TEST_F( RenderCommonTest, sizeInBytesTest ) {
     VertexLayout layout;
     ui32 size( layout.sizeInBytes() );
-    EXPECT_EQ( 0, size );
+    EXPECT_EQ( 0u, size );
 
     VertComponent *comp1 = new VertComponent;
     layout.add( comp1 );
     size = layout.sizeInBytes();
-    EXPECT_EQ( 0, size );
+    EXPECT_EQ( 0u, size );
 
     layout.clear();
     size = layout.sizeInBytes();
-    EXPECT_EQ( 0, size );
+    EXPECT_EQ( 0u, size );
 
     VertComponent *comp2 = new VertComponent( VertexAttribute::Position, VertexFormat::Float3 );
     layout.add( comp2 );
     size = layout.sizeInBytes();
-    EXPECT_EQ( 12, size );
+    EXPECT_EQ( 12u, size );
 }
 
 TEST_F( RenderCommonTest, getVertCompNameTest ) {
@@ -108,27 +108,27 @@ TEST_F( RenderCommonTest, getVertCompNameTest ) {
 }
 
 TEST_F(RenderCommonTest, viewportTest) {
-	Viewport vp;
-	EXPECT_EQ( -1, vp.m_x );
-	EXPECT_EQ( -1, vp.m_y );
-	EXPECT_EQ( -1, vp.m_w );
-	EXPECT_EQ( -1, vp.m_h );
+    Viewport vp;
+    EXPECT_EQ( -1, vp.m_x );
+    EXPECT_EQ( -1, vp.m_y );
+    EXPECT_EQ( -1, vp.m_w );
+    EXPECT_EQ( -1, vp.m_h );
 
-	Viewport vp_set( 1, 2, 3, 4 );
-	EXPECT_EQ( 1, vp_set.m_x );
-	EXPECT_EQ( 2, vp_set.m_y );
-	EXPECT_EQ( 3, vp_set.m_w );
-	EXPECT_EQ( 4, vp_set.m_h );
+    Viewport vp_set( 1, 2, 3, 4 );
+    EXPECT_EQ( 1, vp_set.m_x );
+    EXPECT_EQ( 2, vp_set.m_y );
+    EXPECT_EQ( 3, vp_set.m_w );
+    EXPECT_EQ( 4, vp_set.m_h );
 
-	Viewport vp_set2(1, 2, 3, 4);
-	EXPECT_EQ( vp_set, vp_set2 );
+    Viewport vp_set2(1, 2, 3, 4);
+    EXPECT_EQ( vp_set, vp_set2 );
 }
 
 TEST_F( RenderCommonTest, allocBufferDataTest ) {
     BufferData *data( BufferData::alloc( BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite ) );
     EXPECT_NE( data, nullptr );
     EXPECT_EQ( data->m_access, BufferAccessType::ReadWrite );
-    EXPECT_EQ( data->m_size, 100 );
+    EXPECT_EQ( data->m_size, 100u );
     EXPECT_EQ( data->m_type, BufferType::VertexBuffer );
 
     BufferData::free( data );
@@ -157,11 +157,11 @@ TEST_F( RenderCommonTest, accessGeometryTest ) {
 
 TEST_F(RenderCommonTest, initGeometryTest) {
     Mesh *mesh = Mesh::create( 1 );
-	EXPECT_NE( mesh, nullptr );
-	EXPECT_EQ( VertexType::RenderVertex, mesh->m_vertextype );
-	EXPECT_EQ( nullptr, mesh->m_ib );
-	EXPECT_EQ( nullptr, mesh->m_vb );
-	EXPECT_EQ( nullptr, mesh->m_material );
+    EXPECT_NE( mesh, nullptr );
+    EXPECT_EQ( VertexType::RenderVertex, mesh->m_vertextype );
+    EXPECT_EQ( nullptr, mesh->m_ib );
+    EXPECT_EQ( nullptr, mesh->m_vb );
+    EXPECT_EQ( nullptr, mesh->m_material );
 }
 
 TEST_F( RenderCommonTest, geometryIdTest ) {
@@ -197,7 +197,7 @@ TEST_F( RenderCommonTest, accessMaterialTest ) {
         Material *mat( new Material( "test" ) );
         EXPECT_EQ( MaterialType::ShaderMaterial, mat->m_type );
         EXPECT_EQ( mat->m_parameters, nullptr );
-        EXPECT_EQ( mat->m_numParameters, 0 );
+        EXPECT_EQ( mat->m_numParameters, 0u );
     } catch ( ... ) {
         ok = false;
     }
@@ -209,9 +209,10 @@ TEST_F(RenderCommonTest, access_material_param_Test) {
     mat->m_shader = new Shader;
     mat->m_shader->m_parameters.add( "MVP" );
 
-    EXPECT_EQ(1, mat->m_shader->m_parameters.size());
+    EXPECT_EQ(1u, mat->m_shader->m_parameters.size());
     delete mat;
 }
 
 } // Namespace UnitTest
 } // Namespace OSRE
+

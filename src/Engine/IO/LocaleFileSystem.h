@@ -48,7 +48,7 @@ public:
 	///	Looks for a file and returns the stream.	
 	virtual Stream *find(const Uri &rFile, Stream::AccessMode mode, CPPCore::TArray<String> *pSearchPaths );
 	///	returns the schema description of the file system.
-	virtual const String &getSchema() const;
+	virtual const c8 *getSchema() const;
 	///	Returns the working directory.
 	virtual String getWorkingDirectory();
 

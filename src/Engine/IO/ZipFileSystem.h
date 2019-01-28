@@ -57,7 +57,7 @@ public:
     /// Search for a given file.
     virtual Stream *find( const Uri &file, Stream::AccessMode mode, CPPCore::TArray<String> *pSearchPaths );
     ///	Returns the zip schema description.
-    virtual const String &getSchema() const;
+    virtual const c8 *getSchema() const;
     ///	Returns the working directory.
     virtual String getWorkingDirectory();
 

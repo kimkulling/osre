@@ -49,13 +49,10 @@ struct RenderTarget {
     // empty
 };
 
-static const c8* RenderPassNames[] = {
-    "RenderPass",
-    "DbgPass"
-};
 
 static const ui32 RenderPassId = 0;
-static const ui32 DbgPassId = 1;
+static const ui32 DbgPassId    = 1;
+static const ui32 MaxDbgPasses = 2;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -82,6 +79,7 @@ public:
     void setShader( Shader *shader );
     Shader *getShader() const;
     ui32 getId() const;
+    static const c8 *getPassNameById( ui32 id );
     bool operator == ( const PipelinePass &rhs ) const;
     bool operator != ( const PipelinePass &rhs ) const;
 
