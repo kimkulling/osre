@@ -150,7 +150,7 @@ String LocaleFileSystem::getWorkingDirectory() {
 
 #ifdef OSRE_WINDOWS
     GetCurrentDirectory( Size-1, buffer );
-    workingDir = buffer:
+    workingDir = buffer;
 #else
     workingDir = getcwd( buffer, Size-1);
 #endif

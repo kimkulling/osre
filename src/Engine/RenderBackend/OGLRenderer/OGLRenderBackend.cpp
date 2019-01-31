@@ -1016,6 +1016,9 @@ FontBase *OGLRenderBackend::createFont( const IO::Uri &font ) {
     if ( fontInst->loadFromStream( this ) ) {
         m_fonts.add( fontInst );
         m_activeFont = fontInst;
+    } else {
+        delete fontInst;
+        m_activeFont = nullptr;
     }
     
     return fontInst;
@@ -1030,6 +1033,7 @@ void OGLRenderBackend::selectFont( FontBase *font ) {
     if ( nullptr != findFont( font->getTextureName() ) ) {
         m_activeFont = font;
     } else {
+        m_activeFont = nullptr;
         osre_debug( Tag, "Cannot set font " + font->getName() + "." );
     }
 }
