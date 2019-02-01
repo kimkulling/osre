@@ -88,7 +88,7 @@ TEST_F( PipelineTest, iterateThroughPasses_success ) {
 }
 
 TEST_F( PipelineTest, comparePipelinePasses_success ) {
-    EXPECT_EQ( *m_pass1, *m_pass2 );
+    EXPECT_NE( *m_pass1, *m_pass2 );
 }
 
 } // Namespace UnitTest
