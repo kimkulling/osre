@@ -47,14 +47,14 @@ namespace RenderBackend {
 
 class OGLShader;
 class FontBase;
-class ClearState;
-class CullState;
-class BlendState;
-class SamplerState;
-class ClearState;
-class StencilState;
 class Shader;
 
+struct ClearState;
+struct CullState;
+struct BlendState;
+struct SamplerState;
+struct ClearState;
+struct StencilState;
 struct OGLBuffer;
 struct OGLVertexArray;
 struct OGLVertexAttribute;

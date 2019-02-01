@@ -169,7 +169,7 @@ void OGLRenderBackend::setRenderContext( Platform::AbstractRenderContext *render
 
 void OGLRenderBackend::clearRenderTarget( const ClearState &clearState ) {
     GLbitfield glTarget( 0 );
-    const ui32 clear( clearState.getClearState() );
+    const ui32 clear( clearState.m_state );
     if( clear & (int) ClearState::ClearBitType::ColorBit ) {
         glTarget |= GL_COLOR_BUFFER_BIT;
     }
@@ -1093,16 +1093,16 @@ void OGLRenderBackend::setFixedPipelineStates( const RenderStates &states ) {
     m_fpState->m_samplerState = states.m_samplerState;
     m_fpState->m_stencilState = states.m_stencilState;
     
-    if ( m_fpState->m_cullState.getCullMode() == CullState::CullMode::Off ) {
+    if ( m_fpState->m_cullState.m_cullMode == CullState::CullMode::Off ) {
         glDisable( GL_CULL_FACE );
     } else {
         glEnable( GL_CULL_FACE );
-        glPolygonMode( OGLEnum::getOGLCullFace(m_fpState->m_cullState.getCullFace()), 
-                OGLEnum::getOGLPolygonMode(m_fpState->m_polygonState.getPolygonMode() ) );
-        glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );
+        glPolygonMode( OGLEnum::getOGLCullFace(m_fpState->m_cullState.m_cullFace),
+                OGLEnum::getOGLPolygonMode(m_fpState->m_polygonState.m_polyMode ) );
+        glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.m_cullMode) );
     }
 
-    if ( m_fpState->m_blendState.getBlendFunc() == BlendState::BlendFunc::Off ) {
+    if ( m_fpState->m_blendState.m_blendFunc == BlendState::BlendFunc::Off ) {
         glDisable( GL_BLEND );
     } else {
         glEnable( GL_BLEND );

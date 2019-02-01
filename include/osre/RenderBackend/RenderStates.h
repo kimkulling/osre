@@ -23,11 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/ClearState.h>
-#include <osre/RenderBackend/BlendState.h>
-#include <osre/RenderBackend/CullState.h>
-#include <osre/RenderBackend/SamplerState.h>
-#include <osre/RenderBackend/StencilState.h>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -47,8 +42,8 @@ struct ClearState {
     /// @brief  The class constructor with the requested clear states.
     /// @param  states      [in] The requested clear states.
     explicit ClearState(ui32 states);
-    bool operator == (const SamplerState &rhs) const;
-    bool operator != (const SamplerState &rhs) const;
+    bool operator == (const ClearState &rhs) const;
+    bool operator != (const ClearState &rhs) const;
 
 };
 
@@ -291,6 +286,8 @@ struct CullState {
         Back,           ///< Back polygons will be culled
         FrontAndBack    ///< Show front an back polygon.
     };
+    CullMode m_cullMode;
+    CullFace m_cullFace;
 
     /// @brief  The default class constructor.
     CullState();
@@ -306,22 +303,18 @@ struct CullState {
     /// The compare operators.
     bool operator == (const CullState &rhs) const;
     bool operator != (const CullState &rhs) const;
-
-private:
-    CullMode m_state;
-    CullFace m_cullFace;
 };
 
 inline
 CullState::CullState()
-: m_state(CullMode::CW)
+: m_cullMode(CullMode::CW)
 , m_cullFace(CullFace::Back) {
     // empty
 }
 
 inline
 CullState::CullState(CullMode mode, CullFace cullFace)
-    : m_state(mode)
+    : m_cullMode(mode)
     , m_cullFace(cullFace) {
     // empty
 }
@@ -333,11 +326,40 @@ CullState::~CullState() {
 
 inline
 bool CullState::operator == (const CullState &rhs) const {
-    return (m_state == rhs.m_state && m_cullFace == rhs.m_cullFace);
+    return (m_cullMode == rhs.m_cullMode && m_cullFace == rhs.m_cullFace);
 }
 
 inline
 bool CullState::operator != (const CullState &rhs) const {
+    return !(*this == rhs);
+}
+
+struct PolygonState {
+    enum class PolygonMode {
+        Point,
+        Line,
+        Fill
+    };
+    PolygonMode m_polyMode;
+
+    PolygonState();
+    bool operator == (const PolygonState &rhs) const;
+    bool operator != (const PolygonState &rhs) const;
+};
+
+inline
+PolygonState::PolygonState()
+: m_polyMode(PolygonMode::Fill) {
+    // empty
+}
+
+inline
+bool PolygonState::operator == (const PolygonState &rhs) const {
+    return (m_polyMode == rhs.m_polyMode);
+}
+
+inline
+bool PolygonState::operator != (const PolygonState &rhs) const {
     return !(*this == rhs);
 }
 

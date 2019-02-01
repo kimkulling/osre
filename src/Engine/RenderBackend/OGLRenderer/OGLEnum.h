@@ -23,8 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "OGLCommon.h"
-#include <osre/RenderBackend/CullState.h>
-#include <osre/RenderBackend/PolygonState.h>
+#include <osre/RenderBackend/RenderStates.h>
 
 namespace OSRE {
 namespace RenderBackend {

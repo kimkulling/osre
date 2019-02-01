@@ -22,12 +22,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/RenderBackend/BlendState.h>
-#include <osre/RenderBackend/SamplerState.h>
-#include <osre/RenderBackend/ClearState.h>
-#include <osre/RenderBackend/StencilState.h>
-#include <osre/RenderBackend/CullState.h>
-#include <osre/RenderBackend/PolygonState.h>
 #include <osre/RenderBackend/RenderStates.h>
 
 #include <cppcore/Container/TArray.h>
