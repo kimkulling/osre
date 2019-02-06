@@ -46,7 +46,9 @@ public:
     ///	@brief  Translates the texture type to OpenGL.
     static GLenum getGLTextureTarget( TextureTargetType type );
     ///	@brief  Translates the texture parameter type to OpenGL.
-    static GLenum getGLTextureParameterName( TextureParameterName name );
+    static GLenum getGLTextureEnum( TextureParameterName name );
+    /// @brief  Translates the texture format to the OpenGL specific enum.
+    static GLenum getGLTextureFormat(TextureFormatType texFormat);
     /// @brief  Translates the texture state to the corresponding GLenum value.
     static GLenum getGLTextureStage( TextureStageType texType );
     /// @brief  Translates the vertex format type to the corresponding GLenum value.

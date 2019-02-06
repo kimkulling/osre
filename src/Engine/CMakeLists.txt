@@ -354,8 +354,6 @@ SET( renderbackend_src
     RenderBackend/ParticleGenerator.cpp
     RenderBackend/HWBufferManager.cpp
     RenderBackend/Shader.cpp
-    RenderBackend/TextRenderer.h
-    RenderBackend/TextRenderer.cpp
 )
 SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLCommon.h

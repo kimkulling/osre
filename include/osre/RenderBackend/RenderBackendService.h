@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/AbstractService.h>
 #include <osre/Common/Event.h>
-#include <osre/Common/TObjPtr.h>
+#include <osre/Threading/SystemTask.h>
 #include <osre/RenderBackend/Pipeline.h>
 #include <cppcore/Container/THashMap.h>
 
@@ -230,13 +230,12 @@ protected:
     void commitNextFrame();
 
 private:
-    Common::TObjPtr<Threading::SystemTask> m_renderTaskPtr;
+    Threading::SystemTaskPtr m_renderTaskPtr;
     const Properties::Settings *m_settings;
     bool m_ownsSettingsConfig;
     bool m_frameCreated;
     Frame m_nextFrame;
     UI::Widget *m_screen;
-
     bool m_dirty;
     CPPCore::TArray<PassData*> m_passes;
     PassData *m_currentPass;

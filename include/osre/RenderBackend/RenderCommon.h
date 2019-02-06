@@ -73,6 +73,12 @@ enum class BufferAccessType {
     InvalidBufferAccessType     ///< Enum for invalid enum.
 };
 
+enum class TextureFormatType {
+    R8G8B8,
+    R8G8B8A8,
+    InvaliTextureType
+};
+
 ///	@brief  This enum describes the build-in vertex types provided by OSRE, mainly used for demos and examples.
 enum class VertexType {
     ColorVertex = 0,            ///< A simple vertex consisting of position and color.
@@ -388,8 +394,6 @@ enum class ShaderType : ui32 {
 };
 
 static const ui32 MaxShaderTypes = static_cast<ui32>( ShaderType::NumShaderTypes );
-
-///	@brief
 
 ///	@brief
 enum class MaterialColorType : ui32 {

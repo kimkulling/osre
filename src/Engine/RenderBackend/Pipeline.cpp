@@ -32,10 +32,10 @@ static const c8* RenderPassNames[] = {
 };
 
 PipelinePass::PipelinePass(ui32 id, Shader *shader )
-: m_shader( shader )
+: m_id(id )
+,  m_shader( shader )
 , m_renderTarget()
-, m_states()
-, m_id(id ){
+, m_states() {
     // empty
 }
 
