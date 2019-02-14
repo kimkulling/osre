@@ -114,7 +114,7 @@ GLenum OGLEnum::getGLTextureTarget( TextureTargetType type ) {
     return GL_TEXTURE_2D;
 }
 
-GLenum OGLEnum::getGLTextureParameterName( TextureParameterName name ) {
+GLenum OGLEnum::getGLTextureEnum( TextureParameterName name ) {
     switch( name ) {
         case TextureParameterName::TextureParamMinFilter:
             return GL_TEXTURE_MIN_FILTER;
@@ -130,6 +130,21 @@ GLenum OGLEnum::getGLTextureParameterName( TextureParameterName name ) {
     }
 
     return GL_TEXTURE_MIN_FILTER;
+}
+
+GLenum  OGLEnum::getGLTextureFormat(TextureFormatType texFormat) {
+    switch (texFormat ) {
+        case TextureFormatType::R8G8B8:
+            return GL_RGB;
+        case TextureFormatType::R8G8B8A8:
+            return GL_RGBA;
+        case TextureFormatType::InvaliTextureType:
+        default:
+            OSRE_ASSERT2( false, "Unknown enum for TextureParameterName." );
+            break;
+    }
+
+    return GL_RGB;
 }
 
 GLenum OGLEnum::getGLTextureStage( TextureStageType texType ) {
