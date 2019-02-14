@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-
+#include <osre/RenderBackend/RenderCommon.h>
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {

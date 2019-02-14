@@ -144,6 +144,5 @@ private:
     RenderBackend::Mesh *m_ActiveGeo;
 };
 
-
 } // Namespace Scene
 } // namespace OSRE

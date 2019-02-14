@@ -25,7 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/UICommon.h>
 #include <osre/Common/Object.h>
 #include <osre/Common/TFunctor.h>
-#include <osre/RenderBackend/RenderCommon.h>
 #include <cppcore/Common/Variant.h>
 
 namespace OSRE {

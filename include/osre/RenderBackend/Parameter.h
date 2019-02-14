@@ -24,8 +24,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/RenderBackend/RenderCommon.h>
 
-#include <cppcore/Container/THashMap.h>
-#include <cppcore/Container/TArray.h>
 
 #include <glm/glm.hpp>
 
@@ -38,35 +36,6 @@ class Mesh;
 struct GeoInstanceData;
 struct Light;
 
-struct OSRE_EXPORT UniformDataBlob {
-    void *m_data;
-    ui32  m_size;
-
-    UniformDataBlob();
-    ~UniformDataBlob();
-    void *getData() const;
-    void clear();
-
-    static UniformDataBlob *create( ParameterType type, ui32 arraySize );
-};
-
-struct OSRE_EXPORT UniformVar {
-    String           m_name;
-    ParameterType    m_type;
-    ui32             m_numItems;
-    UniformDataBlob  m_data;
-    UniformVar      *m_next;
-
-    static ui32 getParamDataSize( ParameterType type, ui32 arraySize );
-    static UniformVar *create( const String &name, ParameterType type, ui32 arraySize=1 );
-    static void destroy( UniformVar *param );
-
-    ui32 getSize();
-
-private:
-    UniformVar();
-    ~UniformVar();
-};
 
 } // Namespace RenderBackend
 } // Namespace OSRE

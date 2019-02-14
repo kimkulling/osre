@@ -52,4 +52,3 @@ enum class RenderMode {
 
 } // Namespace Scene
 } // Namespace OSRE
-

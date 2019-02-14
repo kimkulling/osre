@@ -23,13 +23,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-//#include <osre/RenderBackend/Parameter.h>
+#include <osre/RenderBackend/Parameter.h>
 #include <osre/RenderBackend/FontBase.h>
 #include <osre/IO/Uri.h>
 
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/TStaticArray.h>
 #include <cppcore/Memory/TPoolAllocator.h>
+#include <cppcore/Container/THashMap.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -39,6 +40,7 @@ namespace RenderBackend {
 
 // Forward declarations
 struct UniformVar;
+
 class Mesh;
 class Shader;
 class Pipeline;
@@ -752,6 +754,36 @@ struct Frame {
     Frame(const Frame &) = delete;
     Frame(Frame &&) = delete;
     Frame& operator = (const Frame &) = delete;
+};
+
+struct OSRE_EXPORT UniformDataBlob {
+    void *m_data;
+    ui32  m_size;
+
+    UniformDataBlob();
+    ~UniformDataBlob();
+    void *getData() const;
+    void clear();
+
+    static UniformDataBlob *create(ParameterType type, ui32 arraySize);
+};
+
+struct OSRE_EXPORT UniformVar {
+    String           m_name;
+    ParameterType    m_type;
+    ui32             m_numItems;
+    UniformDataBlob  m_data;
+    UniformVar      *m_next;
+
+    static ui32 getParamDataSize(ParameterType type, ui32 arraySize);
+    static UniformVar *create(const String &name, ParameterType type, ui32 arraySize = 1);
+    static void destroy(UniformVar *param);
+
+    ui32 getSize();
+
+private:
+    UniformVar();
+    ~UniformVar();
 };
 
 } // Namespace RenderBackend
