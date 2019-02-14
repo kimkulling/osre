@@ -58,8 +58,8 @@ public:
         // empty
     }
 
-    bool onCreate( RenderBackendService *rb ) override {
-        rb->sendEvent( &OnAttachViewEvent, nullptr );
+    bool onCreate( RenderBackendService *rbSrv ) override {
+        rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
         // colors
         glm::vec3 col[ NumPoints ];
@@ -73,10 +73,10 @@ public:
         points[ 1 ] = glm::vec3(  0,    0.5, 0 );
         points[ 2 ] = glm::vec3(  0.5, -0.5, 0 );
         
-        GLushort pt_indices[ PtNumIndices ];
+       /* GLushort pt_indices[ PtNumIndices ];
         pt_indices[ 0 ] = 0;
         pt_indices[ 1 ] = 1;
-        pt_indices[ 2 ] = 2;
+        pt_indices[ 2 ] = 2;*/
 
         // line segment coordinates
         glm::vec3 pos[ NumPoints ];
@@ -99,29 +99,36 @@ public:
 
         MeshBuilder meshBuilder;
         meshBuilder.allocPoints(VertexType::ColorVertex, BufferAccessType::ReadOnly, NumPoints, points, col);
-        Mesh *ptGeo = meshBuilder.getMesh();
-        rb->attachGeo( ptGeo, 0 );
+        Mesh *ptMesh = meshBuilder.getMesh();
+
+        rbSrv->beginPass( PipelinePass::getPassNameById( RenderPassId ) );
+        rbSrv->beginRenderBatch("batch1");
+
+        rbSrv->addMesh( ptMesh, 0 );
         meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 1);
-        Mesh *lineGeo = meshBuilder.getMesh();
-        lineGeo->m_vb = MeshBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly );
-        lineGeo->m_indextype = IndexType::UnsignedShort;
+        Mesh *lineMesh = meshBuilder.getMesh();
+        lineMesh->m_vb = MeshBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly );
+        lineMesh->m_indextype = IndexType::UnsignedShort;
         ui32 size = sizeof( GLushort ) * NumIndices;
-        lineGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
-        lineGeo->m_ib->copyFrom( indices, size );
+        lineMesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
+        lineMesh->m_ib->copyFrom( indices, size );
 
         // setup primitives
-        lineGeo->m_numPrimGroups = 1;
-        lineGeo->m_primGroups = new PrimitiveGroup[ lineGeo->m_numPrimGroups ];
-        lineGeo->m_primGroups[ 0 ].init( IndexType::UnsignedShort, 2*3, PrimitiveType::LineList, 0 );
+        lineMesh->m_numPrimGroups = 1;
+        lineMesh->m_primGroups = new PrimitiveGroup[ lineMesh->m_numPrimGroups ];
+        lineMesh->m_primGroups[ 0 ].init( IndexType::UnsignedShort, 2*3, PrimitiveType::LineList, 0 );
         
         // setup material
         Material *mat = MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
-        lineGeo->m_material = mat;
-        rb->attachGeo( lineGeo, 0 );
+        lineMesh->m_material = mat;
+        rbSrv->addMesh( lineMesh, 0 );
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
-        rb->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
 
         return true;
     }

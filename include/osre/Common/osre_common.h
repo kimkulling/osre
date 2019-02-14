@@ -155,6 +155,7 @@ struct Handle {
     bool operator == ( const Handle &rhs ) const {
         return m_idx == rhs.m_idx;
     }
+
     bool operator != ( const Handle &rhs ) const {
         return !(*this == rhs );
     }
@@ -543,8 +544,8 @@ struct TVec4 {
     }
 };
 
-typedef TVec4<i32> Vec4i;
-typedef TVec4<f32> Vec4f;
+using Vec4i = TVec4<i32>;
+using Vec4f = TVec4<f32>;
 
 template<class T>
 struct OSRE_EXPORT TQuat {
@@ -566,7 +567,7 @@ struct OSRE_EXPORT TQuat {
     }
 };
 
-typedef TQuat<f32> Quatf;
+using Quatf = TQuat<f32>;
 
 template<class T>
 struct TPoint2 {

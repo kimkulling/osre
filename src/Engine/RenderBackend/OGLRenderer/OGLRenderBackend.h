@@ -47,14 +47,14 @@ namespace RenderBackend {
 
 class OGLShader;
 class FontBase;
-class ClearState;
-class CullState;
-class BlendState;
-class SamplerState;
-class ClearState;
-class StencilState;
 class Shader;
 
+struct ClearState;
+struct CullState;
+struct BlendState;
+struct SamplerState;
+struct ClearState;
+struct StencilState;
 struct OGLBuffer;
 struct OGLVertexArray;
 struct OGLVertexAttribute;
@@ -116,7 +116,7 @@ public:
     OGLShader *getActiveShader() const;
     bool releaseShader( OGLShader *pShader );
     void releaseAllShaders();
-    OGLTexture *createEmptyTexture( const String &name, TextureTargetType target, ui32 width, ui32 height, ui32 channels );
+    OGLTexture *createEmptyTexture( const String &name, TextureTargetType target, TextureFormatType format, ui32 width, ui32 height, ui32 channels );
     void updateTexture( OGLTexture *pOGLTextue, ui32 offsetX, ui32 offsetY, c8 *data, ui32 size );
     OGLTexture *createTextureFromFile( const String &name, const IO::Uri &fileloc );
     OGLTexture *createTextureFromStream( const String &name, IO::Stream &stream, ui32 width, ui32 height, ui32 channels );

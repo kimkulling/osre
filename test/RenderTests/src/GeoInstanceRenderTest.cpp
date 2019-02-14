@@ -106,20 +106,22 @@ public:
     bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
+        rbSrv->beginPass( PipelinePass::getPassNameById( RenderPassId ) );
+        rbSrv->beginRenderBatch("b1");
         Scene::MeshBuilder myBuilder;
         myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-        Mesh *geo = myBuilder.getMesh();
-        rbSrv->attachGeo( geo, NumInstances );
+        Mesh *mesh = myBuilder.getMesh();
+        rbSrv->addMesh( mesh, NumInstances );
 
         // use a default material
-        geo->m_material = AbstractRenderTest::createMaterial( "ColorVertexMat", VsSrc, FsSrc );
-        if( nullptr != geo->m_material->m_shader ) {
-            geo->m_material->m_shader->m_attributes.add( "position" );
-            geo->m_material->m_shader->m_attributes.add( "normal" );
-            geo->m_material->m_shader->m_attributes.add( "color0" );
+        mesh->m_material = AbstractRenderTest::createMaterial( "ColorVertexMat", VsSrc, FsSrc );
+        if( nullptr != mesh->m_material->m_shader ) {
+            mesh->m_material->m_shader->m_attributes.add( "position" );
+            mesh->m_material->m_shader->m_attributes.add( "normal" );
+            mesh->m_material->m_shader->m_attributes.add( "color0" );
 
-            geo->m_material->m_shader->m_parameters.add( "VP" );
-            geo->m_material->m_shader->m_parameters.add( "M" );
+            mesh->m_material->m_shader->m_parameters.add( "VP" );
+            mesh->m_material->m_shader->m_parameters.add( "M" );
         }
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
@@ -141,18 +143,26 @@ public:
         rbSrv->setMatrix( "VP", m_transformMatrix.m_mvp );
         rbSrv->setMatrixArray( "M", NumInstances, m_mat);
 
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
+
         return true;
     }
 
     bool onRender( RenderBackendService *rbSrv ) override {
         glm::mat4 rot( 1.0 );
         rot = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
-        for ( auto i = 0; i < NumInstances; i++ ) {
+        for ( ui32 i = 0; i < NumInstances; i++ ) {
             m_mat[ i ] = m_mat[ i ] * rot;
         }
+        rbSrv->beginPass(PipelinePass::getPassNameById( RenderPassId ) );
+        rbSrv->beginRenderBatch("b1");
 
         rbSrv->setMatrix( "VP", m_transformMatrix.m_mvp );
         rbSrv->setMatrixArray( "M", NumInstances, m_mat );
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
 
         return true;
     }

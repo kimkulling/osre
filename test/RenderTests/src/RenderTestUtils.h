@@ -29,7 +29,7 @@ class AutoAttach {
 public:
     AutoAttach() {
         T *pInstance = ::new T;
-        OSRE::RenderTest::RenderTestSuite::getInstance()->attachRenderTest(pInstance);
+        ::OSRE::RenderTest::RenderTestSuite::getInstance()->attachRenderTest(pInstance);
     }
 };
 

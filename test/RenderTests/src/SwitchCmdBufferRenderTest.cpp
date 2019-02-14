@@ -110,11 +110,17 @@ public:
     bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
+        rbSrv->beginPass(PipelinePass::getPassNameById( RenderPassId ) );
+        rbSrv->beginRenderBatch("b1");
+
         m_particeGen = new ParticleGenerator( rbSrv );
         m_particeGen->init( NumPoints );
 
         m_transformMatrix.update();
         rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
 
         return true;
     }

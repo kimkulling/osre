@@ -35,7 +35,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
-#include <d3d11.h>
+#pragma warning( push )
+#   pragma warning( disable : 4005 )
+#   include <d3d11.h>
+//#   include <D3Dcompiler.h>
+#pragma warning( pop )
+//#include <d3d11.h>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -182,29 +187,6 @@ bool DX11RenderEventHandler::onCommitNexFrame(const Common::EventData *eventData
         return false;
     }
     Frame *frame = frameToCommitData->m_frame;
-    for (ui32 geoPackageIdx = 0; geoPackageIdx<frame->m_numGeoPackages; ++geoPackageIdx) {
-        GeometryPackage *currentGeoPackage(frame->m_geoPackages[geoPackageIdx]);
-        if (nullptr == currentGeoPackage) {
-            continue;
-        }
-
-        for (ui32 geoIdx = 0; geoIdx < currentGeoPackage->m_numNewGeo; ++geoIdx) {
-            Mesh *geo = currentGeoPackage->m_newGeo[geoIdx];
-
-            ID3D11Buffer *vb = m_dx11Renderer->createBuffer(BufferType::VertexBuffer, geo->m_vb, geo->m_vb->getBufferAccessType() );
-            ID3D11Buffer *ib = m_dx11Renderer->createBuffer(BufferType::IndexBuffer, geo->m_ib, geo->m_ib->getBufferAccessType() );
-
-            RenderCmd *cmd = new RenderCmd;
-            cmd->m_vb = vb;
-            cmd->m_ib = ib;
-            
-            m_renderCmds.add(cmd);
-        }
-    }
-
-    delete[] frame->m_geoUpdates;
-    frame->m_geoUpdates = nullptr;
-    frame->m_numGeoUpdates = 0;
 
     return true;
 }

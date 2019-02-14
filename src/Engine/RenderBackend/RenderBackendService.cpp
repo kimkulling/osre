@@ -52,37 +52,38 @@ static const c8 *DX11_API = "dx11";
 
 #endif // OSRE_WINDOWS
 
-GeoBatch *PassData::getBatchById(const c8 *id) const {
-    if (nullptr == id) {
-        return nullptr;
-    }
-
-    for (ui32 i = 0; i < m_geoBatches.size(); ++i) {
-        if (m_geoBatches[i]->m_id == id) {
-            return m_geoBatches[i];
+static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData*> &passDataArray) {
+    for (ui32 i = 0; i < passDataArray.size(); ++i) {
+        if (0 == strncmp(passDataArray[i]->m_id, id, strlen(id))) {
+            return i;
         }
     }
+    return -1;
+}
 
-    return nullptr;
+static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<GeoBatchData*> &batchDataArray) {
+    for (ui32 i = 0; i < batchDataArray.size(); ++i) {
+        if (0 == strncmp(batchDataArray[i]->m_id, id, strlen(id))) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 RenderBackendService::RenderBackendService()
 : AbstractService( "renderbackend/renderbackendserver" )
-, m_matrixBuffer()
 , m_renderTaskPtr()
 , m_settings( nullptr )
 , m_ownsSettingsConfig( false )
+, m_frameCreated( false )
 , m_nextFrame()
 , m_screen( nullptr )
 , m_passes()
+, m_dirty(false)
 , m_currentPass(nullptr)
-, m_currentBatch( nullptr )
-, m_newGeo()
-, m_geoUpdates()
-, m_newInstances()
-, m_variables()
-, m_uniformUpdates() {
-    // empty
+, m_currentBatch( nullptr ) 
+, m_submitCmdAllocator() {
+    m_submitCmdAllocator.reserve(1000);
 }
 
 RenderBackendService::~RenderBackendService() {
@@ -158,6 +159,11 @@ bool RenderBackendService::onUpdate() {
         return false;
     }
 
+    if (!m_frameCreated) {
+        initPasses();
+        m_frameCreated = true;
+    }
+
     commitNextFrame();
 
     // Synchronizing event with render back-end
@@ -181,61 +187,63 @@ const Settings *RenderBackendService::getSettings() const {
     return m_settings;
 }
 
-static void setupGeoPackage(NewGeoEntry *newEntry, GeometryPackage *package ) {
-    OSRE_ASSERT( nullptr != newEntry );
-    OSRE_ASSERT( nullptr != package );
-    
-    const ui32 numNewGeo( newEntry->m_geo.size() );
-    package->m_numNewGeo = numNewGeo;
-    if (0 == numNewGeo) {
-        package->m_newGeo = nullptr;
+void RenderBackendService::initPasses() {
+    if (!m_renderTaskPtr.isValid()) {
         return;
     }
 
-    package->m_newGeo = new Mesh*[numNewGeo];
-    package->m_numInstances = newEntry->numInstances;
-    for ( ui32 i=0; i<numNewGeo; i++ ) {
-        Mesh *geo( newEntry->m_geo[ i ] );
-        package->m_newGeo[ i ] = geo;
-    }
+    InitPassesEventData *data = new InitPassesEventData;
+    m_nextFrame.init(m_passes);
+    data->m_frame = &m_nextFrame;
+
+    m_renderTaskPtr->sendEvent(&OnInitPassesEvent, data);
+
 }
 
 void RenderBackendService::commitNextFrame() {
     if ( !m_renderTaskPtr.isValid() ) {
         return;
     }
-    
-    m_nextFrame.m_model = m_matrixBuffer.m_model;
-    m_nextFrame.m_view = m_matrixBuffer.m_view;
-    m_nextFrame.m_proj = m_matrixBuffer.m_proj;
-    if ( !m_newGeo.isEmpty() ) {
-        m_nextFrame.m_numGeoPackages = m_newGeo.size();
-        m_nextFrame.m_geoPackages = new GeometryPackage*[ m_newGeo.size() ];
-        for (ui32 i = 0; i < m_newGeo.size(); i++) {
-            m_nextFrame.m_geoPackages[ i ]= new GeometryPackage;
-            setupGeoPackage( m_newGeo[ i ], m_nextFrame.m_geoPackages[ i ] );
-        }
-        m_newGeo.resize( 0 );
+
+    if (0 == m_submitCmdAllocator.capacity()) {
+        m_submitCmdAllocator.release();
     }
 
-    if ( !m_uniformUpdates.isEmpty() ) {
-        m_nextFrame.m_numVars = m_uniformUpdates.size();
-        m_nextFrame.m_vars = new UniformVar *[ m_nextFrame.m_numVars ];
-        for ( ui32 i = 0; i < m_nextFrame.m_numVars; i++ ) {
-            m_nextFrame.m_vars[ i ] = m_uniformUpdates[ i ];
-        }
-        m_uniformUpdates.resize( 0 );
-    }
-
-    if ( !m_geoUpdates.isEmpty() ) {
-        m_nextFrame.m_numGeoUpdates = m_geoUpdates.size();
-        m_nextFrame.m_geoUpdates = new Mesh*[m_nextFrame.m_numGeoUpdates];
-        for (ui32 i = 0; i < m_nextFrame.m_numGeoUpdates; i++) {
-            m_nextFrame.m_geoUpdates[i] = m_geoUpdates[i];
-        }
-        m_geoUpdates.resize(0);
-    }
     CommitFrameEventData *data = new CommitFrameEventData;
+    for (ui32 i = 0; i < m_passes.size(); ++i) {
+        PassData *currentPass = m_passes[i];
+        for (ui32 j = 0; j < currentPass->m_geoBatches.size(); ++j) {
+            GeoBatchData *currentBatch = currentPass->m_geoBatches[j];
+            if ( currentBatch->m_dirtyFlag & GeoBatchData::MatrixBufferDirty ) {
+                FrameSubmitCmd *cmd = m_submitCmdAllocator.alloc();                    
+                cmd->m_passId = currentPass->m_id;
+                cmd->m_batchId = currentBatch->m_id;
+                cmd->m_updateFlags |= (ui32) FrameSubmitCmd::UpdateMatrixes;
+                cmd->m_size = sizeof(MatrixBuffer);
+                cmd->m_data = new c8[cmd->m_size];
+                ::memcpy(cmd->m_data, &currentBatch->m_matrixBuffer, cmd->m_size);
+
+                m_nextFrame.m_submitCmds.add(cmd);
+                currentBatch->m_dirtyFlag = 0;
+            } else if (currentBatch->m_dirtyFlag & GeoBatchData::UniformBufferDirty) {
+                for (ui32 k = 0; k < currentBatch->m_uniforms.size(); ++k) {
+                    FrameSubmitCmd *cmd = m_submitCmdAllocator.alloc();
+                    cmd->m_passId = currentPass->m_id;
+                    cmd->m_batchId = currentBatch->m_id;
+                    cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateUniforms;
+                    UniformVar *var = currentBatch->m_uniforms[k];
+                    if (nullptr == var) {
+                        continue;
+                    }
+
+                    cmd->m_var = var;
+                    m_nextFrame.m_submitCmds.add(cmd);
+                }
+                currentBatch->m_dirtyFlag = 0;
+            }
+        }
+    }
+
     data->m_frame = &m_nextFrame;
     m_renderTaskPtr->sendEvent( &OnCommitFrameEvent, data );
 }
@@ -251,12 +259,14 @@ PassData *RenderBackendService::getPassById(const c8 *id) const {
         return nullptr;
     }
 
-    if (m_currentPass->m_id == id) {
-        return m_currentPass;
+    if (nullptr != m_currentPass) {
+        if (0 == ::strncmp(m_currentPass->m_id, id, strlen(id))) {
+            return m_currentPass;
+        }
     }
 
     for (ui32 i = 0; i < m_passes.size(); ++i) {
-        if (m_passes[i]->m_id == id) {
+        if (0 == ::strncmp(m_passes[i]->m_id, id, strlen(id))) {
             return m_passes[i];
         }
     }
@@ -264,47 +274,59 @@ PassData *RenderBackendService::getPassById(const c8 *id) const {
     return nullptr;
 }
 
-bool RenderBackendService::beginPass(const c8 *id) {
+PassData *RenderBackendService::beginPass(const c8 *id) {
     if (nullptr != m_currentPass) {
         osre_warn(Tag, "Pass recording already active.");
-        return false;
+        return nullptr;
     }
 
-    m_currentPass = new PassData(id);
-
-    return true;
+    m_currentPass = getPassById(id);
+    if (nullptr == m_currentPass) {
+        m_currentPass = new PassData(id);
+    }
+    m_dirty = true;
+    
+    return m_currentPass;
 }
 
-bool RenderBackendService::beginRenderBatch(const c8 *id) {
-    if (nullptr != m_currentPass) {
+GeoBatchData *RenderBackendService::beginRenderBatch(const c8 *id) {
+    if (nullptr == m_currentPass) {
         osre_warn(Tag, "Pass recording not active.");
-        return false;
+        return nullptr;
+    }
+    
+    m_currentBatch = m_currentPass->getBatchById(id);
+    if (nullptr == m_currentBatch) {
+        m_currentBatch = new GeoBatchData(id);
     }
 
-    m_currentBatch = new GeoBatch(id);
-
-    return true;
+    return m_currentBatch;
 }
 
 void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
+    if (nullptr == m_currentBatch) {
+        osre_error(Tag, "No active batch.");
+        return;
+    }
+
     switch (type) {
         case MatrixType::Model:
             if (nullptr != m_currentBatch) {
                 m_currentBatch->m_matrixBuffer.m_model = m;
+                m_currentBatch->m_dirtyFlag |= GeoBatchData::MatrixBufferDirty;
             }
-            m_matrixBuffer.m_model = m;
             break;
         case MatrixType::View:
             if (nullptr != m_currentBatch) {
                 m_currentBatch->m_matrixBuffer.m_view = m;
+                m_currentBatch->m_dirtyFlag |= GeoBatchData::MatrixBufferDirty;
             }
-            m_matrixBuffer.m_view = m;
             break;
         case MatrixType::Projection:
             if (nullptr != m_currentBatch) {
                 m_currentBatch->m_matrixBuffer.m_proj = m;
+                m_currentBatch->m_dirtyFlag |= GeoBatchData::MatrixBufferDirty;
             }
-            m_matrixBuffer.m_proj = m;
             break;
         default:
             break;
@@ -312,86 +334,79 @@ void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
 }
 
 void RenderBackendService::setMatrix( const String &name, const glm::mat4 &matrix ) {
-    UniformVar *uniform( nullptr );
-    const ui32 key( StringUtils::hashName( name.c_str() ) );
-    if ( !m_variables.hasKey( key ) ) {
-        uniform = UniformVar::create( name, ParameterType::PT_Mat4 );
-        m_variables.insert( key, uniform );
-    } else {
-        m_variables.getValue( key, uniform );
-    }    
+    if (nullptr == m_currentBatch) {
+        osre_error(Tag, "No active batch.");
+        return;
+    }
 
-    ::memcpy( uniform->m_data.m_data, glm::value_ptr( matrix ), sizeof( glm::mat4 ) );
-    m_uniformUpdates.add( uniform );
+    UniformVar *var = m_currentBatch->getVarByName(name.c_str());
+    if ( nullptr == var ) {
+        var = UniformVar::create( name, ParameterType::PT_Mat4 );
+        m_currentBatch->m_uniforms.add(var);
+    }    
+    
+    m_currentBatch->m_dirtyFlag |= GeoBatchData::UniformBufferDirty;
+    ::memcpy( var->m_data.m_data, glm::value_ptr( matrix ), sizeof( glm::mat4 ) );
 }
 
 void RenderBackendService::setUniform(UniformVar *var) {
     if (nullptr == var) {
+        osre_error(Tag, "No active batch.");
         return;
     }
 
     if (nullptr != m_currentBatch) {
         m_currentBatch->m_uniforms.add( var );
+        m_currentBatch->m_dirtyFlag |= GeoBatchData::UniformBufferDirty;
     }
 }
 
 void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray) {
-    UniformVar *uniform( nullptr );
-    const ui32 key(Common::StringUtils::hashName(name.c_str()));
-    if ( !m_variables.hasKey( key ) ) {
-        uniform = UniformVar::create( name, ParameterType::PT_Mat4Array, numMat );
-        m_variables.insert( key, uniform );
-    } else {
-        m_variables.getValue( key, uniform );
+    if (nullptr == m_currentBatch) {
+        osre_error(Tag, "No active batch.");
+        return;
     }
-    ::memcpy(uniform->m_data.m_data, glm::value_ptr( matrixArray[0] ), sizeof( glm::mat4 ) * numMat );
-    m_uniformUpdates.add( uniform );
+
+    UniformVar *var = m_currentBatch->getVarByName(name.c_str());
+    if (nullptr == var) {
+        var = UniformVar::create(name, ParameterType::PT_Mat4Array, numMat);
+        m_currentBatch->m_uniforms.add(var);
+    }
+    
+    ::memcpy(var->m_data.m_data, glm::value_ptr(matrixArray[0]), sizeof(glm::mat4) * numMat);
+    m_currentBatch->m_dirtyFlag |= GeoBatchData::UniformBufferDirty;    
 }
 
-void RenderBackendService::attachGeo( Mesh *geo, ui32 numInstances ) {
-    if ( nullptr == geo ) {
+void RenderBackendService::addMesh( Mesh *mesh, ui32 numInstances ) {
+    if ( nullptr == mesh) {
         osre_debug( Tag, "Pointer to geometry is nullptr." );
         return;
     }
-    NewGeoEntry *entry = new NewGeoEntry;
-    entry->m_geo.add( geo );
+
+    if (nullptr == m_currentBatch) {
+        osre_error(Tag, "No active batch.");
+        return;
+    }
+
+    MeshEntry *entry = new MeshEntry;
+    entry->m_geo.add(mesh);
     entry->numInstances = numInstances;
-    m_newGeo.add( entry );
+    m_currentBatch->m_meshArray.add(entry);
+    m_currentBatch->m_dirtyFlag |= GeoBatchData::MeshDirty;
+
 }
 
-void RenderBackendService::attachGeo( const CPPCore::TArray<Mesh*> &geoArray, ui32 numInstances ) {
-    NewGeoEntry *entry = new NewGeoEntry;
+void RenderBackendService::addMesh( const CPPCore::TArray<Mesh*> &geoArray, ui32 numInstances ) {
+    if (nullptr == m_currentBatch) {
+        osre_error(Tag, "No active batch.");
+        return;
+    }
+
+    MeshEntry *entry = new MeshEntry;
     entry->numInstances = numInstances;
     entry->m_geo.add( &geoArray[ 0 ], geoArray.size() );
-    m_newGeo.add( entry );
-}
-
-void RenderBackendService::attachGeoUpdate( Mesh *geo ) {
-    if ( nullptr == geo ) {
-        osre_debug( Tag, "Pointer to geometry is nullptr." );
-        return;
-    }
-    m_geoUpdates.add( geo );
-}
-
-void RenderBackendService::attachGeoUpdate( const CPPCore::TArray<Mesh*> &geoArray ) {
-    m_geoUpdates.add( &geoArray[ 0 ], geoArray.size() );
-}
-
-void RenderBackendService::attachGeoInstance( GeoInstanceData *instanceData ) {
-    if ( nullptr == instanceData ) {
-        osre_debug( Tag, "Pointer to geometry is nullptr." );
-        return;
-    }
-    m_newInstances.add( instanceData );
-}
-
-void RenderBackendService::attachGeoInstance( const CPPCore::TArray<GeoInstanceData*> &instanceData ) {
-    if (instanceData.isEmpty() ) {
-        return;
-    }
-
-    m_newInstances.add( &instanceData[ 0 ], instanceData.size() );
+    m_currentBatch->m_meshArray.add(entry);
+    m_currentBatch->m_dirtyFlag |= GeoBatchData::MeshDirty;
 }
 
 bool RenderBackendService::endRenderBatch() {
@@ -402,7 +417,11 @@ bool RenderBackendService::endRenderBatch() {
     if (nullptr == m_currentPass) {
         m_currentPass = new PassData("defaultPass");
     }
-    m_currentPass->m_geoBatches.add(m_currentBatch);
+    
+    if (-1 == hasBatch(m_currentBatch->m_id, m_currentPass->m_geoBatches)) {
+        m_currentPass->m_geoBatches.add(m_currentBatch);
+    }
+
     m_currentBatch = nullptr;
 
     return true;
@@ -413,13 +432,25 @@ bool RenderBackendService::endPass() {
         return false;
     }
 
-    m_passes.add(m_currentPass);
+    if (-1 == hasPass(m_currentPass->m_id, m_passes)) {
+        m_passes.add(m_currentPass);
+    }
     m_currentPass = nullptr;
 
     return true;
 }
 
-void RenderBackendService::attachView( TransformMatrixBlock &transform ) {
+void RenderBackendService::clearPasses() {
+    m_currentPass = nullptr;
+
+    for (ui32 i = 0; i < m_passes.size(); ++i) {
+        delete m_passes[i];
+    }
+    m_passes.clear();
+    m_frameCreated = false;
+}
+
+void RenderBackendService::attachView() {
 
 }
 

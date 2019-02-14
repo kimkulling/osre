@@ -46,7 +46,7 @@ void *UniformDataBlob::getData() const {
 }
 
 void UniformDataBlob::clear() {
-    delete[] m_data;
+    ::free( m_data );
     m_data = nullptr;
     m_size = 0;
 }
@@ -76,7 +76,7 @@ UniformDataBlob *UniformDataBlob::create( ParameterType type, ui32 arraySize ) {
             blob->m_size = 0;
             break;
     }
-    blob->m_data = new uc8[ blob->m_size ];
+    blob->m_data = ::malloc( blob->m_size );
     ::memset( blob->m_data, 0, blob->m_size );
 
     return blob;
@@ -145,6 +145,10 @@ void UniformVar::destroy( UniformVar *param ) {
     if ( nullptr != param ) {
         delete param;
     }
+}
+
+ui32 UniformVar::getSize() {
+    return m_data.m_size;
 }
 
 } // Namespace RenderBackend

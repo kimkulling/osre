@@ -20,60 +20,25 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
+#include "Win32OSService.h"
+
+#include <osre/Platform/Windows/MinWindows.h>
 
 namespace OSRE {
-namespace RenderBackend {
+namespace Platform {
 
-class PolygonState {
-public:
-    enum class PolygonMode {
-        Point,
-        Line,
-        Fill
-    };
-
-    PolygonState();
-    ~PolygonState();
-    void setPolygoneMode( PolygonMode polyMode );
-    PolygonMode getPolygonMode() const;
-    bool operator == ( const PolygonState &rhs ) const; 
-    bool operator != ( const PolygonState &rhs ) const;
-
-private:
-    PolygonMode m_polyMode;
-};
-
-inline
-PolygonState::PolygonState()
-: m_polyMode( PolygonMode::Fill ) {
+Win32OSService::Win32OSService()
+: AbstractOSService() {
     // empty
 }
 
-inline
-PolygonState::~PolygonState() {
+Win32OSService::~Win32OSService() {
     // empty
 }
 
-inline
-void PolygonState::setPolygoneMode( PolygonMode polyMode ) {
-    m_polyMode = polyMode;
+void Win32OSService::showCursor(bool enabled) {
+    ::ShowCursor(enabled);
 }
 
-inline
-PolygonState::PolygonMode PolygonState::getPolygonMode() const {
-    return m_polyMode;
-}
-
-inline
-bool PolygonState::operator == ( const PolygonState &rhs ) const {
-    return ( m_polyMode == rhs.m_polyMode );
-}
-
-inline
-bool PolygonState::operator != ( const PolygonState &rhs ) const {
-    return !( *this == rhs );
-}
-
-}
-}
+} // Namespace Platform
+} // Namespace OSRE

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,28 +20,19 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "osre_testcommon.h"
-#include <osre/RenderBackend/BlendState.h>
+#pragma once
+
+#include <osre/Platform/AbstractOSService.h>
 
 namespace OSRE {
-namespace UnitTest {
+namespace Platform {
 
-using namespace ::OSRE::RenderBackend;
-
-class BlendStateTest : public ::testing::Test {
-// empty
+class Win32OSService : public AbstractOSService {
+public:
+    Win32OSService();
+    ~Win32OSService() override;
+    void showCursor(bool enabled) override;
 };
 
-TEST_F( BlendStateTest, create_success ) {
-    bool ok( true );
-    try {
-        BlendState state1;
-    }
-    catch ( ... ) {
-        ok = false;
-    }
-    EXPECT_TRUE( ok );
-}
-
-} // Namespace UnitTest
+} // Namespace Platform
 } // Namespace OSRE

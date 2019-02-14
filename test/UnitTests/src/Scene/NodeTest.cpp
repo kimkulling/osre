@@ -95,7 +95,7 @@ TEST_F( NodeTest, accessChilds ) {
     Node *myNode1 = createNode( "testnode1", *m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, parent );
     Node *myNode2 = createNode( "testnode2", *m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, parent );
 
-    EXPECT_EQ( 2, parent->getNumChildren() );
+    EXPECT_EQ( 2u, parent->getNumChildren() );
     EXPECT_TRUE( nullptr != myNode1->getParent() );
     EXPECT_TRUE( nullptr != myNode2->getParent() );
     EXPECT_TRUE( nullptr == parent->getParent() );
@@ -154,6 +154,6 @@ TEST_F(NodeTest, lightNodeTransformTest) {
     EXPECT_FLOAT_EQ(30.0f, light.m_position.z);
 }
 
-
 } // Namespace UnitTest
 } // Namespace OSRE
+

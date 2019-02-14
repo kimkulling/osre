@@ -73,7 +73,7 @@ public:
 
     ///	@brief	Returns the schema description of the file system.
     ///	@return	The schema description.
-    virtual const String &getSchema() const = 0;
+    virtual const c8 *getSchema() const = 0;
 
     /// @brief  Will return the working directory.
     /// @return The working directory.

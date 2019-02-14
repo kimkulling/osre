@@ -169,7 +169,7 @@ void OGLRenderBackend::setRenderContext( Platform::AbstractRenderContext *render
 
 void OGLRenderBackend::clearRenderTarget( const ClearState &clearState ) {
     GLbitfield glTarget( 0 );
-    const ui32 clear( clearState.getClearState() );
+    const ui32 clear( clearState.m_state );
     if( clear & (int) ClearState::ClearBitType::ColorBit ) {
         glTarget |= GL_COLOR_BUFFER_BIT;
     }
@@ -620,7 +620,7 @@ void OGLRenderBackend::releaseAllShaders( ) {
     m_shaders.clear();
 }
 
-OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTargetType target,
+OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTargetType target, TextureFormatType format,
                                                   ui32 width, ui32 height, ui32 channels ) {
 	if( name.empty() ) {
         osre_debug( Tag, "Texture anme is empty." );
@@ -654,24 +654,23 @@ OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTar
     tex->m_width     = static_cast< ui32 >( width );
     tex->m_height    = static_cast< ui32 >( height );
     tex->m_channels  = static_cast< ui32 >( channels );
-    tex->m_format    = GL_RGB;
+    tex->m_format    = OGLEnum::getGLTextureFormat(format);
 
     glActiveTexture( GL_TEXTURE0 );
     tex->m_target = OGLEnum::getGLTextureTarget( target );
     glBindTexture( tex->m_target, textureId );
     
-    glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParameterName::TextureParamMinFilter ), GL_LINEAR );
-    glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParameterName::TextureParamMagFilter ), GL_LINEAR );
-    glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParameterName::TextureParamWrapS ), GL_CLAMP );
-    glTexParameteri( tex->m_target, OGLEnum::getGLTextureParameterName( TextureParameterName::TextureParamWrapT ), GL_CLAMP );
+    glTexParameteri( tex->m_target, OGLEnum::getGLTextureEnum( TextureParameterName::TextureParamMinFilter ), GL_LINEAR );
+    glTexParameteri( tex->m_target, OGLEnum::getGLTextureEnum( TextureParameterName::TextureParamMagFilter ), GL_LINEAR );
+    glTexParameteri( tex->m_target, OGLEnum::getGLTextureEnum( TextureParameterName::TextureParamWrapS ), GL_CLAMP );
+    glTexParameteri( tex->m_target, OGLEnum::getGLTextureEnum( TextureParameterName::TextureParamWrapT ), GL_CLAMP );
 
     glTexParameterf(tex->m_target, GL_TEXTURE_MAX_ANISOTROPY_EXT, m_oglCapabilities->m_maxAniso);
 
     return tex;
 }
 
-void OGLRenderBackend::updateTexture( OGLTexture *oglTextue, ui32 offsetX, ui32 offsetY, c8 *data,
-                                      ui32 size ) {
+void OGLRenderBackend::updateTexture( OGLTexture *oglTextue, ui32 offsetX, ui32 offsetY, c8 *data, ui32 size ) {
 	if( nullptr == oglTextue ) {
         osre_error( Tag, "Pointer to texture is a nullptr." );
         return;
@@ -680,7 +679,7 @@ void OGLRenderBackend::updateTexture( OGLTexture *oglTextue, ui32 offsetX, ui32 
     const ui32 diffX( oglTextue->m_width - offsetX );
     const ui32 diffY( oglTextue->m_height - offsetY );
     const ui32 subSize( diffX * diffY * oglTextue->m_channels );
-	OSRE_ASSERT( size < subSize );
+    OSRE_VALIDATE( size < subSize, "Invalid size" );
     glTexSubImage2D( oglTextue->m_target, 0, offsetX, offsetY, oglTextue->m_width,
                      oglTextue->m_height, oglTextue->m_format, GL_UNSIGNED_BYTE, data );
 }
@@ -715,7 +714,7 @@ OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const I
     }
 
     // create texture and fill it
-    tex = createEmptyTexture( name, TextureTargetType::Texture2D, width, height, channels );
+    tex = createEmptyTexture( name, TextureTargetType::Texture2D, TextureFormatType::R8G8B8, width, height, channels );
     glTexImage2D( tex->m_target, 0, GL_RGB, width, height, 0, tex->m_format, GL_UNSIGNED_BYTE, data );
     glBindTexture( tex->m_target, 0 );
 
@@ -736,7 +735,7 @@ OGLTexture *OGLRenderBackend::createTextureFromStream( const String &name, IO::S
     stream.read( data, size );
 
     // create texture and fill it
-    tex = createEmptyTexture( name, TextureTargetType::Texture2D, width, height, channels );
+    tex = createEmptyTexture( name, TextureTargetType::Texture2D, TextureFormatType::R8G8B8, width, height, channels );
     glTexImage2D( tex->m_target, 0, GL_RGB, width, height, 0, tex->m_format, GL_UNSIGNED_BYTE, data );
     glGenerateMipmap(tex->m_target);
     delete [] data;
@@ -1016,6 +1015,9 @@ FontBase *OGLRenderBackend::createFont( const IO::Uri &font ) {
     if ( fontInst->loadFromStream( this ) ) {
         m_fonts.add( fontInst );
         m_activeFont = fontInst;
+    } else {
+        delete fontInst;
+        m_activeFont = nullptr;
     }
     
     return fontInst;
@@ -1030,6 +1032,7 @@ void OGLRenderBackend::selectFont( FontBase *font ) {
     if ( nullptr != findFont( font->getTextureName() ) ) {
         m_activeFont = font;
     } else {
+        m_activeFont = nullptr;
         osre_debug( Tag, "Cannot set font " + font->getName() + "." );
     }
 }
@@ -1089,16 +1092,16 @@ void OGLRenderBackend::setFixedPipelineStates( const RenderStates &states ) {
     m_fpState->m_samplerState = states.m_samplerState;
     m_fpState->m_stencilState = states.m_stencilState;
     
-    if ( m_fpState->m_cullState.getCullMode() == CullState::CullMode::Off ) {
+    if ( m_fpState->m_cullState.m_cullMode == CullState::CullMode::Off ) {
         glDisable( GL_CULL_FACE );
     } else {
         glEnable( GL_CULL_FACE );
-        glPolygonMode( OGLEnum::getOGLCullFace(m_fpState->m_cullState.getCullFace()), 
-                OGLEnum::getOGLPolygonMode(m_fpState->m_polygonState.getPolygonMode() ) );
-        glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.getCullMode() ) );
+        glPolygonMode( OGLEnum::getOGLCullFace(m_fpState->m_cullState.m_cullFace),
+                OGLEnum::getOGLPolygonMode(m_fpState->m_polygonState.m_polyMode ) );
+        glFrontFace( OGLEnum::getOGLCullState( m_fpState->m_cullState.m_cullMode) );
     }
 
-    if ( m_fpState->m_blendState.getBlendFunc() == BlendState::BlendFunc::Off ) {
+    if ( m_fpState->m_blendState.m_blendFunc == BlendState::BlendFunc::Off ) {
         glDisable( GL_BLEND );
     } else {
         glEnable( GL_BLEND );

@@ -98,6 +98,8 @@ protected:
 	virtual bool onClearGeo( const Common::EventData *eventData );
     ///	@brief	Callback for the render frame.
 	virtual bool onRenderFrame( const Common::EventData *eventData );
+    /// @brief  Callback to init the passes.
+    virtual bool onInitRenderPasses(const Common::EventData *eventData);
     /// @brief  Callback to commit the next frame.
     virtual bool onCommitNexFrame( const Common::EventData *eventData );
     /// @brief  Callback for dealing with a shutdown request.

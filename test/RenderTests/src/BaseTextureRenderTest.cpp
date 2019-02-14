@@ -32,16 +32,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/GeometryBuilder.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 
-#ifndef GLM_ENABLE_EXPERIMENTAL
-#   define GLM_ENABLE_EXPERIMENTAL
-#endif // GLM_ENABLE_EXPERIMENTAL
-#include <GL/glew.h>
-#include <GL/gl.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/string_cast.hpp>
-
 #include <iostream>
 
 namespace OSRE {
@@ -123,22 +113,25 @@ public:
 
         Scene::MeshBuilder geoBuilder;
         geoBuilder.allocQuads( VertexType::RenderVertex, BufferAccessType::ReadOnly );
-        Mesh *geo = geoBuilder.getMesh();
-        rbSrv->attachGeo( geo, 0 );
+        Mesh *mesh = geoBuilder.getMesh();
+        
+        rbSrv->beginPass( PipelinePass::getPassNameById( RenderPassId ) );
+        rbSrv->beginRenderBatch("b1");
+        rbSrv->addMesh( mesh, 0 );
 
         // use default material
-        geo->m_material = AbstractRenderTest::createMaterial( "renderVertexMat", VsSrc, FsSrc );
-        if( nullptr != geo->m_material->m_shader ) {
-            geo->m_material->m_shader->m_attributes.add( "position" );
-            geo->m_material->m_shader->m_attributes.add( "normal" );
-            geo->m_material->m_shader->m_attributes.add( "color0" );
-            geo->m_material->m_shader->m_attributes.add( "texcoord0" );
+        mesh->m_material = AbstractRenderTest::createMaterial( "renderVertexMat", VsSrc, FsSrc );
+        if( nullptr != mesh->m_material->m_shader ) {
+            mesh->m_material->m_shader->m_attributes.add( "position" );
+            mesh->m_material->m_shader->m_attributes.add( "normal" );
+            mesh->m_material->m_shader->m_attributes.add( "color0" );
+            mesh->m_material->m_shader->m_attributes.add( "texcoord0" );
 
-            geo->m_material->m_shader->m_parameters.add( "MVP" );
+            mesh->m_material->m_shader->m_parameters.add( "MVP" );
         }
 
-        geo->m_material->m_numTextures = 1;
-        geo->m_material->m_textures = new Texture*[ 1 ];
+        mesh->m_material->m_numTextures = 1;
+        mesh->m_material->m_textures = new Texture*[ 1 ];
         Texture *tex = new Texture[ 1 ];
 
         tex->m_textureName = "SpiderTex";
@@ -150,10 +143,13 @@ public:
         tex->m_channels = 0;
         tex->m_data = nullptr;
         tex->m_size = 0;
-        geo->m_material->m_textures[ 0 ] = tex;
+        mesh->m_material->m_textures[ 0 ] = tex;
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
         rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
 
         return true;
     }
@@ -165,8 +161,14 @@ public:
     }
 
     bool onRender( RenderBackendService *rbSrv ) override {
+        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginRenderBatch("b1");
+
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
         rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
 
         return true;
     }

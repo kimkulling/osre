@@ -75,12 +75,11 @@ public:
         
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         
-        const String passName("pass1");
-        rbSrv->beginPass(passName.c_str());
-        
+        rbSrv->beginPass( PipelinePass::getPassNameById( RenderPassId ) );
+        rbSrv->beginRenderBatch("b1");
         rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
-        rbSrv->attachGeo( meshArray, 0 );
-        
+        rbSrv->addMesh( meshArray, 0 );
+        rbSrv->endRenderBatch();
         rbSrv->endPass();
 
         return true;

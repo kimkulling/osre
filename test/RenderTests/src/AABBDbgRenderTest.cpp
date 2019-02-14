@@ -46,7 +46,7 @@ namespace OSRE {
 
         public:
             AABBDbgRenderTest()
-                : AbstractRenderTest( "rendertest/AABBDbgRenderTest" )
+            : AbstractRenderTest( "rendertest/AABBDbgRenderTest" )
                 , m_frameCount( 0 ) {
                 // empty
             }
@@ -59,20 +59,24 @@ namespace OSRE {
                 rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
                 TVec3<f32> min( -1, -1, -1 ), max( 1, 1, 1 );
-                glm::mat4 transform;
                 Collision::TAABB<f32> aabb( min, max );
-                Scene::DbgRenderer::getInstance()->renderAABB( transform, aabb );
-
-                m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
-                m_transformMatrix.m_model = glm::scale( m_transformMatrix.m_model, glm::vec3( .5, .5, .5 ) );
-                rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+                m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
+                m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, glm::vec3(.5, .5, .5));
+                Scene::DbgRenderer::getInstance()->renderAABB(m_transformMatrix.m_model, aabb );
 
                 return true;
             }
 
             bool onRender( RenderBackendService *rbSrv ) override {
+                rbSrv->beginPass(PipelinePass::getPassNameById( DbgPassId ));
+                rbSrv->beginRenderBatch("dbgFontBatch");
+                
                 m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
                 rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+                
+                rbSrv->endRenderBatch();
+                rbSrv->endPass();
+
 
                 return true;
             }

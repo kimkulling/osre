@@ -333,14 +333,9 @@ SET( scene_src
 #==============================================================================
 SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
-    ${HEADER_PATH}/RenderBackend/BlendState.h
-    ${HEADER_PATH}/RenderBackend/CullState.h
-    ${HEADER_PATH}/RenderBackend/ClearState.h
     ${HEADER_PATH}/RenderBackend/Mesh.h
+    ${HEADER_PATH}/RenderBackend/FontBase.h
     ${HEADER_PATH}/RenderBackend/HWBufferManager.h
-    ${HEADER_PATH}/RenderBackend/SamplerState.h
-    ${HEADER_PATH}/RenderBackend/StencilState.h
-    ${HEADER_PATH}/RenderBackend/PolygonState.h
     ${HEADER_PATH}/RenderBackend/FontBase.h
     ${HEADER_PATH}/RenderBackend/Parameter.h
     ${HEADER_PATH}/RenderBackend/ParticleGenerator.h
@@ -359,8 +354,6 @@ SET( renderbackend_src
     RenderBackend/ParticleGenerator.cpp
     RenderBackend/HWBufferManager.cpp
     RenderBackend/Shader.cpp
-    RenderBackend/TextRenderer.h
-    RenderBackend/TextRenderer.cpp
 )
 SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLCommon.h

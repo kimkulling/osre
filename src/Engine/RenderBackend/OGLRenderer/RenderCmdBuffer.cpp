@@ -41,12 +41,13 @@ RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRende
 , m_primitives()
 , m_materials()
 , m_paramArray()
+, m_matrixBuffer()
 , m_pipeline( pipeline ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
     OSRE_ASSERT( nullptr != m_renderCtx );
     OSRE_ASSERT( nullptr != m_pipeline );
 
-    m_clearState.setClearState( (int) ClearState::ClearBitType::ColorBit | (int) ClearState::ClearBitType::DepthBit );
+    m_clearState.m_state =  (i32) ClearState::ClearBitType::ColorBit | (int) ClearState::ClearBitType::DepthBit;
 }
 
 RenderCmdBuffer::~RenderCmdBuffer() {
@@ -79,8 +80,7 @@ void RenderCmdBuffer::enqueueRenderCmd( const String &groupName, OGLRenderCmd *r
     }
 }
 
-void RenderCmdBuffer::enqueueRenderCmdGroup( const String &groupName, CPPCore::TArray<OGLRenderCmd*>& cmdGroup, 
-        EnqueueType type ) {
+void RenderCmdBuffer::enqueueRenderCmdGroup( const String &groupName, CPPCore::TArray<OGLRenderCmd*>& cmdGroup, EnqueueType type ) {
     if ( groupName.empty() ) {
         osre_debug( Tag, "No name for render command group defined." );
         return;
@@ -97,7 +97,7 @@ void RenderCmdBuffer::enqueueRenderCmdGroup( const String &groupName, CPPCore::T
 }
 
 void RenderCmdBuffer::onPreRenderFrame() {
-    OSRE_ASSERT( nullptr!=m_renderbackend );
+    OSRE_ASSERT( nullptr != m_renderbackend );
 
     if( nullptr == m_renderCtx ) {
         return;
@@ -107,8 +107,8 @@ void RenderCmdBuffer::onPreRenderFrame() {
     m_renderbackend->clearRenderTarget( m_clearState );
 }
 
-void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
-    OSRE_ASSERT( nullptr!=m_renderbackend );
+void RenderCmdBuffer::onRenderFrame( const EventData * ) {
+    OSRE_ASSERT( nullptr != m_renderbackend );
 
     ui32 numPasses = m_pipeline->beginFrame();
 
@@ -126,6 +126,7 @@ void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
         states.m_samplerState = pass->getSamplerState();
         states.m_stencilState = pass->getStencilState();
         m_renderbackend->setFixedPipelineStates(states);
+        
         for ( ui32 i = 0; i < m_cmdbuffer.size(); ++i ) {
             // only valid pointers are allowed
             OGLRenderCmd *renderCmd = m_cmdbuffer[ i ];
@@ -203,10 +204,22 @@ void RenderCmdBuffer::setMatrixes(const glm::mat4 &model, const glm::mat4 &view,
     m_proj = proj;
 }
 
+void RenderCmdBuffer::setMatrixBuffer(const c8 *id, MatrixBuffer *buffer) {
+    OSRE_ASSERT(nullptr != id);
+
+    m_matrixBuffer[id] = buffer;
+}
+
 bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *data ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
     if ( nullptr == data ) {
         return false;
+    }
+
+    std::map<const char*, MatrixBuffer*>::iterator it = m_matrixBuffer.find(data->m_id);
+    if (it != m_matrixBuffer.end()) {
+        MatrixBuffer *buffer = it->second;
+        setMatrixes(buffer->m_model, buffer->m_view, buffer->m_proj);
     }
 
     m_renderbackend->bindVertexArray( data->m_vertexArray );

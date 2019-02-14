@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <GL/gl.h>
 
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/ClearState.h>
+#include <osre/RenderBackend/RenderStates.h>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -151,6 +151,8 @@ struct OGLRenderCmdAllocator {
     ~OGLRenderCmdAllocator() = delete;
 };
 
+struct UniformDataBlob;
+
 ///	@brief
 struct OGLParameter {
     String           m_name;
@@ -200,6 +202,7 @@ struct DrawInstancePrimitivesCmdData {
     OGLVertexArray        *m_vertexArray;
     ui32                   m_numInstances;
     CPPCore::TArray<ui32>  m_primitives;
+    const char *m_id;
 
     DrawInstancePrimitivesCmdData()
     : m_vertexArray( nullptr )
@@ -215,6 +218,7 @@ struct DrawPrimitivesCmdData {
     glm::mat4              m_model;
     OGLVertexArray        *m_vertexArray;
     CPPCore::TArray<ui32>  m_primitives;
+    const char *m_id;
 
     DrawPrimitivesCmdData()
     : m_localMatrix( false )

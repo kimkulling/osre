@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 #include <cppcore/Container/THashMap.h>
 #include <cppcore/Container/TArray.h>
@@ -37,20 +37,6 @@ class Mesh;
 
 struct GeoInstanceData;
 struct Light;
-
-enum class ParameterType {
-    PT_None,
-    PT_Int,
-    PT_IntArray,
-    PT_Float,
-    PT_FloatArray,
-    PT_Float2,
-    PT_Float2Array,
-    PT_Float3,
-    PT_Float3Array,
-    PT_Mat4, 
-    PT_Mat4Array
-};
 
 struct OSRE_EXPORT UniformDataBlob {
     void *m_data;
@@ -75,78 +61,11 @@ struct OSRE_EXPORT UniformVar {
     static UniformVar *create( const String &name, ParameterType type, ui32 arraySize=1 );
     static void destroy( UniformVar *param );
 
+    ui32 getSize();
+
 private:
     UniformVar();
     ~UniformVar();
-};
-
-struct GeometryPackage {
-    ui32           m_numInstances;
-    ui32           m_numNewGeo;
-    Mesh     **m_newGeo;
-
-    GeometryPackage()
-    : m_numInstances( 0 )
-    , m_numNewGeo( 0 )
-    , m_newGeo( nullptr ) {
-        // empty
-    }
-
-    ~GeometryPackage() {
-        // empty
-    }
-};
-
-struct MatrixBuffer {
-    glm::mat4 m_model;
-    glm::mat4 m_view;
-    glm::mat4 m_proj;
-
-    MatrixBuffer()
-    : m_model(1.0f)
-    , m_view(1.0f)
-    , m_proj(1.0f) {
-        // empty
-    }
-};
-
-struct Frame {
-    ui32              m_numVars;
-    UniformVar      **m_vars;
-    ui32              m_numGeoPackages;
-    GeometryPackage **m_geoPackages;
-    ui32              m_numGeoUpdates;
-    Mesh        **m_geoUpdates;
-    ui32              m_numLights;
-    Light           **m_lights;
-    GeoInstanceData   *m_geoInstanceData;
-    glm::mat4         m_model;
-    glm::mat4         m_view;
-    glm::mat4         m_proj;
-
-    Frame() 
-    : m_numVars( 0 )
-    , m_vars( nullptr )
-    , m_numGeoPackages( 0 )
-    , m_geoPackages( nullptr )
-    , m_numGeoUpdates( 0 )
-    , m_geoUpdates( nullptr )
-    , m_numLights( 0 )
-    , m_lights( nullptr )
-    , m_geoInstanceData( nullptr )
-    , m_model( 1.0f )
-    , m_view( 1.0f )
-    , m_proj( 1.0f ) {
-        // empty
-    }
-    
-    ~Frame() {
-        // empty
-    }
-
-    Frame( const Frame & ) = delete;
-    Frame( Frame &&) = delete;
-    Frame& operator = ( const Frame & ) = delete;
 };
 
 } // Namespace RenderBackend

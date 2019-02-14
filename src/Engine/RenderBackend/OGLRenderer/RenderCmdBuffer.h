@@ -23,9 +23,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <cppcore/Container/TArray.h>
-#include <osre/RenderBackend/ClearState.h>
+#include <osre/RenderBackend/RenderStates.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include <map>
 
 namespace OSRE {
     
@@ -78,6 +80,8 @@ public:
     void setActiveShader( OGLShader *oglShader );
     /// Will return the active shader.
     OGLShader *getActiveShader() const;
+    ///
+    void createPass(ui32 id);
     /// Will enqueue a new render command.
     void enqueueRenderCmd( const String &groupName, OGLRenderCmd *renderCmd, EnqueueType type = EnqueueType::PushBack );
     /// Will enqueue a new render command group.
@@ -99,6 +103,8 @@ public:
 
     void setMatrixes(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj);
 
+    void setMatrixBuffer(const c8 *id, MatrixBuffer *buffer);
+
 protected:
     /// The draw primitive callback.
     virtual bool onDrawPrimitivesCmd( DrawPrimitivesCmdData *data );
@@ -118,6 +124,9 @@ private:
     ::CPPCore::TArray<PrimitiveGroup*> m_primitives;
     ::CPPCore::TArray<Material*> m_materials;
     ::CPPCore::TArray<OGLParameter*> m_paramArray;
+
+    std::map<const char*, MatrixBuffer*> m_matrixBuffer;
+
     glm::mat4 m_model;
     glm::mat4 m_view;
     glm::mat4 m_proj;

@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "osre_testcommon.h"
-#include <osre/RenderBackend/CullState.h>
+#include <osre/RenderBackend/RenderStates.h>
 
 namespace OSRE {
 namespace UnitTest {
@@ -41,24 +41,6 @@ TEST_F( CullStateTest, create_success ) {
         ok = false;
     }
     EXPECT_TRUE( ok );
-}
-
-TEST_F( CullStateTest, access_CullMode_success ) {
-    CullState state1, state2, state3( CullState::CullMode::CW, CullState::CullFace::Back );
-    state1.setCullMode( CullState::CullMode::CCW );
-    EXPECT_EQ( CullState::CullMode::CCW, state1.getCullMode() );
-
-    state2.setCullMode( CullState::CullMode::CCW );
-    EXPECT_EQ( state1, state2 );
-    EXPECT_NE( state1, state3 );
-}
-
-TEST_F( CullStateTest, access_CullFace_success ) {
-    CullState state1, state2( CullState::CullMode::CW, CullState::CullFace::FrontAndBack );
-    state1.setCullFace( CullState::CullFace::FrontAndBack );
-    EXPECT_EQ( CullState::CullFace::FrontAndBack, state1.getCullFace() );
-
-    EXPECT_EQ( state1, state2 );
 }
 
 } // Namespace UnitTest

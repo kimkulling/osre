@@ -21,7 +21,9 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/Parameter.h>
 #include <osre/RenderBackend/Shader.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/Ids.h>
 #include <glm/gtc/matrix_transform.inl>
@@ -29,6 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+using namespace ::CPPCore;
 using namespace ::OSRE::Common;
 using namespace ::glm;
 
@@ -479,17 +482,6 @@ bool Viewport::operator != ( const Viewport &rhs ) const {
     return !( *this == rhs );
 }
 
-RenderBatch::RenderBatch() 
-: m_model( 1.0f )
-, m_numGeo( 0 ) 
-, m_geoArray( nullptr ) {
-    // empty
-}
-
-RenderBatch::~RenderBatch() {
-    // empty
-}
-
 Light::Light()
 : m_position(0.0f,0.0f,0.0f,1.0f)
 , m_specular( 1.0f,1.0f,1.0f)
@@ -503,6 +495,135 @@ Light::Light()
 
 Light::~Light() {
     // empty
+}
+
+MeshEntry *GeoBatchData::getMeshEntryByName(const c8 *name) {
+    if (nullptr == name) {
+        return nullptr;
+    }
+
+    for (ui32 i = 0; i < m_meshArray.size(); ++i) {
+        for (ui32 j = 0; j < m_meshArray[i]->m_geo.size(); ++j) {
+            if (m_meshArray[i]->m_geo[j]->m_name == name) {
+                return m_meshArray[i];
+            }
+        }
+    }
+
+    return nullptr;
+}
+
+UniformVar *GeoBatchData::getVarByName(const c8 *name) {
+    if (nullptr == name) {
+        return nullptr;
+    }
+
+    for (ui32 i = 0; i < m_uniforms.size(); ++i) {
+        if (m_uniforms[i]->m_name == name) {
+            return m_uniforms[i];
+        }
+    }
+
+    return nullptr;
+}
+
+GeoBatchData *PassData::getBatchById( const c8 *id ) const {
+    if (nullptr == id) {
+        return nullptr;
+    }
+
+    for (ui32 i = 0; i < m_geoBatches.size(); ++i) {
+        
+        if (0 == strncmp(m_geoBatches[i]->m_id, id, strlen(id))) {
+            return m_geoBatches[ i ];
+        }
+    }
+
+    return nullptr;
+}
+
+ui64 getSize(UniformVar *vars, ui32 numVars) {
+    if (0 == numVars) {
+        return 0;
+    }
+
+    ui64 size(0);
+    for (ui32 i = 0; i < numVars; ++i) {
+        size += vars[ i ].getSize();
+    }
+
+    return size;
+}
+
+ui32 UniformBuffer::encode(ParameterType type) {
+    return static_cast<ui32>(type);
+}
+
+void UniformBuffer::decode(ui32 opCode, ParameterType type) {
+    type = static_cast<ParameterType>(opCode);
+}
+
+bool UniformBuffer::create(ui32 size) {
+    if (0 != m_buffer.m_size) {
+        return false;
+    }
+    m_buffer.m_size = size;
+    m_buffer.m_data = new c8[size];
+    return true;
+}
+
+bool UniformBuffer::destroy() {
+    if (0 == m_buffer.m_size) {
+        return false;
+    }
+    m_buffer.m_size = 0;
+    delete[] m_buffer.m_data;
+    m_buffer.m_data = nullptr;
+
+    return true;
+}
+
+void UniformBuffer::readUniforms(UniformVar *vars, ui32 numVars) {
+    ui64 size = getSize(vars, numVars);
+
+}
+ 
+void UniformBuffer::writeUniforms(UniformVar *vars, ui32 numVars) {
+    if (nullptr == vars) {
+        return;
+    }
+
+    for (ui32 i = 0; i < numVars; ++i) {
+        const ui32 size(vars[i].getSize());
+        ::memcpy( &m_buffer.m_data[ m_pos ], &vars[i].m_data, size);
+        m_buffer.m_size = size;
+        m_pos += size;
+    }
+}
+
+Frame::Frame()
+: m_newPasses()
+, m_submitCmds()
+, m_pipeline(nullptr) {
+    // empty
+}
+
+Frame::~Frame() {
+    // empty
+}
+
+void Frame::init(TArray<PassData*> &newPasses) {
+    if (newPasses.isEmpty()) {
+        return;
+    }
+    for ( ui32 i=0; i<newPasses.size(); ++i )
+    m_newPasses.add( newPasses[i]);
+}
+
+void Frame::update(TArray<FrameSubmitCmd*> &updateCmds) {
+    if (updateCmds.isEmpty()) {
+        return;
+    }
 }
 
 } // Namespace RenderBackend

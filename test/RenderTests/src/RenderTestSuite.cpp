@@ -162,8 +162,6 @@ bool RenderTestSuite::setup( const String &API ) {
 #endif 
     }
 
-
-
     return true;
 }
 
@@ -305,6 +303,7 @@ bool RenderTestSuite::clearTestEnv() {
     }
 
     m_pRenderBackendServer->sendEvent( &OnClearSceneEvent, nullptr );
+    m_pRenderBackendServer->clearPasses();
 
     return true;
 }
