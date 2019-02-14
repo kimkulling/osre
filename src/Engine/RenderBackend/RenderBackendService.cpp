@@ -197,7 +197,6 @@ void RenderBackendService::initPasses() {
     data->m_frame = &m_nextFrame;
 
     m_renderTaskPtr->sendEvent(&OnInitPassesEvent, data);
-
 }
 
 void RenderBackendService::commitNextFrame() {

@@ -530,6 +530,10 @@ struct TVertexCache {
     }
 
     void increaseSize(ui32 newSize) {
+        if (0 == newSize) {
+            return;
+
+        }
         m_cache.reserve(m_cache.size() + newSize);
     }
 

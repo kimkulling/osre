@@ -38,6 +38,7 @@ INCLUDE_DIRECTORIES(
     3dparty/assimp/contrib/irrXML
     3dparty/zlib
     3dparty/jsoncpp-1.8.4/include
+	3dparty/lua-5.3.5/src
     "c:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include"
     3dparty/soil/src
     /usr/include/SDL2/
@@ -125,6 +126,7 @@ ADD_SUBDIRECTORY( 3dparty/unzip )
 ADD_SUBDIRECTORY( 3dparty/soil )
 ADD_SUBDIRECTORY( 3dparty/assimp )
 ADD_SUBDIRECTORY( 3dparty/jsoncpp-1.8.4 )
+ADD_SUBDIRECTORY( 3dparty/lua-5.3.5 )
 
 # Include the doc component
 IF( OSRE_BUILD_DOC )
