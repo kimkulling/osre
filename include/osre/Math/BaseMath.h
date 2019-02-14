@@ -53,7 +53,6 @@ public:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	@fn			::OSRE::Math::osre_min
 ///	@ingroup	Engine
 ///
 ///	@brief	Returns the minimal value.
@@ -68,7 +67,6 @@ T osre_min( T val1, T val2 ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-///	@fn			::OSRE::Math::osre_max
 ///	@ingroup	Engine
 ///
 ///	@brief	Returns the maximal value.
@@ -83,7 +81,6 @@ T osre_max( T val1, T val2 ) {
 }
 
 //-------------------------------------------------------------------------------------------------
-///	@fn			::OSRE::Math::osre_lerp
 ///	@ingroup	Engine
 ///
 ///	@brief	Performs a linear interpolation.
@@ -97,7 +94,6 @@ inline T
 osre_lerp( T v0, T v1, T t ) {
     return (1-t)*v0 + t*v1;
 }
-
 
 } // Namespace Math
 } // Namespace OSRE

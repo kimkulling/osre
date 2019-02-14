@@ -191,6 +191,5 @@ f32 LightComponent::getRadius() const {
     return m_radius;
 }
 
-
 } // Namespace Scene
 } // Namespace OSRE

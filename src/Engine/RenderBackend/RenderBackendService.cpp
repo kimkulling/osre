@@ -215,8 +215,8 @@ void RenderBackendService::commitNextFrame() {
             GeoBatchData *currentBatch = currentPass->m_geoBatches[j];
             if ( currentBatch->m_dirtyFlag & GeoBatchData::MatrixBufferDirty ) {
                 FrameSubmitCmd *cmd = m_submitCmdAllocator.alloc();                    
-                cmd->passId = currentPass->m_id;
-                cmd->batchId = currentBatch->m_id;
+                cmd->m_passId = currentPass->m_id;
+                cmd->m_batchId = currentBatch->m_id;
                 cmd->m_updateFlags |= (ui32) FrameSubmitCmd::UpdateMatrixes;
                 cmd->m_size = sizeof(MatrixBuffer);
                 cmd->m_data = new c8[cmd->m_size];
@@ -227,8 +227,8 @@ void RenderBackendService::commitNextFrame() {
             } else if (currentBatch->m_dirtyFlag & GeoBatchData::UniformBufferDirty) {
                 for (ui32 k = 0; k < currentBatch->m_uniforms.size(); ++k) {
                     FrameSubmitCmd *cmd = m_submitCmdAllocator.alloc();
-                    cmd->passId = currentPass->m_id;
-                    cmd->batchId = currentBatch->m_id;
+                    cmd->m_passId = currentPass->m_id;
+                    cmd->m_batchId = currentBatch->m_id;
                     cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateUniforms;
                     UniformVar *var = currentBatch->m_uniforms[k];
                     if (nullptr == var) {

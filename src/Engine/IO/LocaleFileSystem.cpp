@@ -40,7 +40,7 @@ namespace IO {
 using namespace ::OSRE::Common;
 using namespace ::CPPCore;
 
-static const String BaseFileSchema = "file";
+static const c8 *BaseFileSchema = "file";
 static const c8 *Tag = "IOService";
 
 LocaleFileSystem::LocaleFileSystem() 
@@ -82,6 +82,7 @@ Stream *LocaleFileSystem::open( const Uri &file, Stream::AccessMode mode ) {
 
     return pFileStream;
 }
+
 void LocaleFileSystem::close( Stream **pFile ) {
     if (nullptr == pFile) {
         return;
@@ -94,7 +95,7 @@ void LocaleFileSystem::close( Stream **pFile ) {
     const Uri &rFile = (*pFile)->getUri();
     StreamMap::iterator it = m_FileMap.find( rFile.getResource() );
     m_FileMap.erase( it );
-    (*pFile) = NULL;
+    (*pFile) = nullptr;
 }
 
 bool LocaleFileSystem::fileExist( const Uri &filename ) {
@@ -132,16 +133,13 @@ Stream *LocaleFileSystem::find( const Uri &rFile, Stream::AccessMode mode,  TArr
         String abspath = path + rFile.getResource();
         Uri file( rFile.getScheme() +"://" + abspath );
         pStream = open( file, mode );
-        if ( pStream )
-        {
-            return pStream;
-        }
+        return pStream;
     }
 
     return nullptr;
 }
 
-const String &LocaleFileSystem::getSchema() const {
+const c8 *LocaleFileSystem::getSchema() const {
     return BaseFileSchema;
 }
 
@@ -154,7 +152,7 @@ String LocaleFileSystem::getWorkingDirectory() {
     GetCurrentDirectory( Size-1, buffer );
     workingDir = buffer;
 #else
-    getcwd( buffer, Size-1);
+    workingDir = getcwd( buffer, Size-1);
 #endif
 
     return workingDir;

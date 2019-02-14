@@ -82,7 +82,7 @@ void GeometryProcessor::handleGeometry( RenderBackend::Mesh *geo ) {
         return;
     }
 
-    ui32 offsetPos = 0, stride = 0;
+    ui32 offsetPos( 0 ), stride( 0 );
     switch ( geo->m_vertextype ) {
         case VertexType::RenderVertex:
             offsetPos = 0;

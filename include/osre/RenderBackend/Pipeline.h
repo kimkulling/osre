@@ -22,12 +22,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/RenderBackend/BlendState.h>
-#include <osre/RenderBackend/SamplerState.h>
-#include <osre/RenderBackend/ClearState.h>
-#include <osre/RenderBackend/StencilState.h>
-#include <osre/RenderBackend/CullState.h>
-#include <osre/RenderBackend/PolygonState.h>
 #include <osre/RenderBackend/RenderStates.h>
 
 #include <cppcore/Container/TArray.h>
@@ -49,6 +43,11 @@ struct RenderTarget {
     // empty
 };
 
+
+static const ui32 RenderPassId = 0;
+static const ui32 DbgPassId    = 1;
+static const ui32 MaxDbgPasses = 2;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -56,7 +55,7 @@ struct RenderTarget {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT PipelinePass {
 public:
-    PipelinePass( Shader *shader );
+    PipelinePass( ui32 id, Shader *shader );
     ~PipelinePass();
     void set( RenderTarget &rt, RenderStates &states );
     void setPolygonState(PolygonState polyState);
@@ -73,10 +72,13 @@ public:
     const StencilState &getStencilState() const;
     void setShader( Shader *shader );
     Shader *getShader() const;
+    ui32 getId() const;
+    static const c8 *getPassNameById( ui32 id );
     bool operator == ( const PipelinePass &rhs ) const;
     bool operator != ( const PipelinePass &rhs ) const;
 
 private:
+    ui32 m_id;
     RenderTarget m_renderTarget;
     RenderStates m_states;
     Shader *m_shader;

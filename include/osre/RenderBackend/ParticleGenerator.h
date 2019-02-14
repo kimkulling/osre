@@ -33,6 +33,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+class RenderBackendService;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///

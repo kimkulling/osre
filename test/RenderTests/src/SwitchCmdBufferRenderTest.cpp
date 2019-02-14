@@ -110,7 +110,7 @@ public:
     bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
-        rbSrv->beginPass("p1");
+        rbSrv->beginPass(PipelinePass::getPassNameById( RenderPassId ) );
         rbSrv->beginRenderBatch("b1");
 
         m_particeGen = new ParticleGenerator( rbSrv );

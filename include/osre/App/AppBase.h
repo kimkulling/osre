@@ -24,7 +24,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/App/AppCommon.h>
 #include <osre/Platform/PlatformCommon.h>
-//#include <osre/Common/TCommand.h>
 #include <osre/Common/ArgumentParser.h>
 
 namespace OSRE {

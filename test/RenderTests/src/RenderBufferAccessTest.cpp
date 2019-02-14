@@ -130,7 +130,7 @@ public:
         meshBuilder.allocEmptyMesh( VertexType::ColorVertex, 1 );
         m_pointMesh = meshBuilder.getMesh();
 
-        rbSrv->beginPass("pass0");
+        rbSrv->beginPass( PipelinePass::getPassNameById( RenderPassId ) );
         rbSrv->beginRenderBatch("particle");
 
         rbSrv->addMesh( m_pointMesh, 0 );

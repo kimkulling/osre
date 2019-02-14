@@ -50,7 +50,6 @@ class UiRenderTest : public AbstractRenderTest {
     Screen *m_screen;
     UiRenderer *m_uiRenderer;
 
-
 public:
     UiRenderTest()
     : AbstractRenderTest( "rendertest/UiRenderTest" )

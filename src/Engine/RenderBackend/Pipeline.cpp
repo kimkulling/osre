@@ -26,8 +26,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-PipelinePass::PipelinePass( Shader *shader )
-: m_shader( shader ) {
+static const c8* RenderPassNames[] = {
+    "RendePass",
+    "DbgPass"
+};
+
+PipelinePass::PipelinePass(ui32 id, Shader *shader )
+: m_id(id )
+,  m_shader( shader )
+, m_renderTarget()
+, m_states() {
     // empty
 }
 
@@ -96,8 +104,21 @@ Shader *PipelinePass::getShader() const {
     return m_shader;
 }
 
+ui32 PipelinePass::getId() const {
+    return m_id;
+}
+
+const c8 *PipelinePass::getPassNameById( ui32 id ) {
+    if ( id >= MaxDbgPasses ) {
+        return nullptr;
+    }
+
+    return RenderPassNames[ id ];
+}
+
 bool PipelinePass::operator == ( const PipelinePass &rhs ) const {
-    return ( m_states.m_polygonState == rhs.m_states.m_polygonState
+    return ( m_id == rhs.m_id
+          && m_states.m_polygonState == rhs.m_states.m_polygonState
           && m_states.m_cullState == rhs.m_states.m_cullState
           && m_states.m_blendState == rhs.m_states.m_blendState
           && m_states.m_samplerState == rhs.m_states.m_samplerState

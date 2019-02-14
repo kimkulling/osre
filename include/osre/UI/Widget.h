@@ -110,8 +110,7 @@ enum class WidgetType {
     Screen
 };
 
-/// The Ui-specific callback implemented as a functor.
-typedef Common::Functor<void, ui32, void *> UiFunctor;
+using UiFunctor = Common::Functor<void, ui32, void *>;
 
 /// @brief  Description of a single 
 struct UiProperty {

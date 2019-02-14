@@ -28,13 +28,30 @@ namespace OSRE {
 namespace App {
 
 //-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///	@brief	This class is used to define a command. Commands are actions which can be bounded to 
+///	events. When a new event will be firedd a command will be enqueued to ensure that the ordering 
+///	of the events will not be changed.
+///	The command encapsulates a function with its parameter. So when you just want to bind an action
+///	like highlighting an object when its get clicked create a function with the instance of the 
+///	object as parameter. 
 //-------------------------------------------------------------------------------------------------
 template<class TParam, class TFunc>
 class TCommand {
 public:
+	///	@brief	The default class constructor.
     TCommand();
-    explicit TCommand( TParam param, TFunc func );
+	
+	///	@brief	The class constructor with the function and the parameter.
+	///	@param	func		[in] The function stored as a functor.
+    explicit TCommand( TFunc func );
+	
+	///	@brief	The class destructor.
     ~TCommand();
+	
+	///	@brief	Will execute the function.
+	///	@param	param		[in] The function parameter.
+	///	@return true, if the fnction call was successful, false if not.
     bool execute( TParam param );
 
 private:
@@ -52,8 +69,8 @@ TCommand<TParam, TFunc>::TCommand()
 
 template<class TParam, class TFunc>
 inline
-TCommand<TParam, TFunc>::TCommand(TParam param, TFunc func)
-: m_param( param )
+TCommand<TParam, TFunc>::TCommand( TFunc func )
+: m_param()
 , m_funcBinding( func ) {
     // empty
 }

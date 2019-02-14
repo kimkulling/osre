@@ -47,7 +47,7 @@ RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRende
     OSRE_ASSERT( nullptr != m_renderCtx );
     OSRE_ASSERT( nullptr != m_pipeline );
 
-    m_clearState.setClearState( (int) ClearState::ClearBitType::ColorBit | (int) ClearState::ClearBitType::DepthBit );
+    m_clearState.m_state =  (i32) ClearState::ClearBitType::ColorBit | (int) ClearState::ClearBitType::DepthBit;
 }
 
 RenderCmdBuffer::~RenderCmdBuffer() {
@@ -80,8 +80,7 @@ void RenderCmdBuffer::enqueueRenderCmd( const String &groupName, OGLRenderCmd *r
     }
 }
 
-void RenderCmdBuffer::enqueueRenderCmdGroup( const String &groupName, CPPCore::TArray<OGLRenderCmd*>& cmdGroup, 
-        EnqueueType type ) {
+void RenderCmdBuffer::enqueueRenderCmdGroup( const String &groupName, CPPCore::TArray<OGLRenderCmd*>& cmdGroup, EnqueueType type ) {
     if ( groupName.empty() ) {
         osre_debug( Tag, "No name for render command group defined." );
         return;
@@ -108,7 +107,7 @@ void RenderCmdBuffer::onPreRenderFrame() {
     m_renderbackend->clearRenderTarget( m_clearState );
 }
 
-void RenderCmdBuffer::onRenderFrame( const EventData *eventData ) {
+void RenderCmdBuffer::onRenderFrame( const EventData * ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
 
     ui32 numPasses = m_pipeline->beginFrame();

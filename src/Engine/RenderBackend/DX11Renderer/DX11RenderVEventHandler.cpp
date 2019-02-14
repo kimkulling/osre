@@ -35,7 +35,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
-#include <d3d11.h>
+#pragma warning( push )
+#   pragma warning( disable : 4005 )
+#   include <d3d11.h>
+//#   include <D3Dcompiler.h>
+#pragma warning( pop )
+//#include <d3d11.h>
 
 namespace OSRE {
 namespace RenderBackend {

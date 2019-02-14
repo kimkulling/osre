@@ -34,13 +34,12 @@ protected:
     PipelinePass *m_pass2;
 
 protected:
-    virtual void SetUp() {
-        m_pass1 = new PipelinePass( nullptr );
-        m_pass2 = new PipelinePass( nullptr );
-
+    void SetUp() override {
+        m_pass1 = new PipelinePass( RenderPassId, nullptr );
+        m_pass2 = new PipelinePass( DbgPassId, nullptr );
     }
 
-    virtual void TearDown() {
+    void TearDown() override {
         delete m_pass2;
         delete m_pass1;
     }
@@ -61,14 +60,14 @@ TEST_F( PipelineTest, accessPass_success ) {
     Pipeline pipeline;
 
     ui32 numPasses = pipeline.getNumPasses();
-    EXPECT_EQ( 0, numPasses );
+    EXPECT_EQ( 0u, numPasses );
     pipeline.addPass( m_pass1 );
     numPasses = pipeline.getNumPasses();
-    EXPECT_EQ( 1, numPasses );
+    EXPECT_EQ( 1u, numPasses );
 
     pipeline.clear();
     numPasses = pipeline.getNumPasses();
-    EXPECT_EQ( 0, numPasses );
+    EXPECT_EQ( 0u, numPasses );
 }
 
 TEST_F( PipelineTest, iterateThroughPasses_success ) {
@@ -77,7 +76,7 @@ TEST_F( PipelineTest, iterateThroughPasses_success ) {
     pipeline.addPass( m_pass2 );
 
     ui32 numPasses = pipeline.beginFrame();
-    EXPECT_EQ( 2, numPasses );
+    EXPECT_EQ( 2u, numPasses );
     for ( ui32 i = 0; i < numPasses; i++ ) {
         PipelinePass *pass = pipeline.beginPass( i );
         EXPECT_NE( nullptr, pass );
@@ -89,7 +88,7 @@ TEST_F( PipelineTest, iterateThroughPasses_success ) {
 }
 
 TEST_F( PipelineTest, comparePipelinePasses_success ) {
-    EXPECT_EQ( *m_pass1, *m_pass2 );
+    EXPECT_NE( *m_pass1, *m_pass2 );
 }
 
 } // Namespace UnitTest

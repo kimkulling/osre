@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <GL/gl.h>
 
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/ClearState.h>
+#include <osre/RenderBackend/RenderStates.h>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -150,6 +150,8 @@ struct OGLRenderCmdAllocator {
     OGLRenderCmdAllocator() = delete;
     ~OGLRenderCmdAllocator() = delete;
 };
+
+struct UniformDataBlob;
 
 ///	@brief
 struct OGLParameter {

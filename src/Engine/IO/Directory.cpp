@@ -30,10 +30,14 @@ namespace IO {
         
 bool Directory::exists(const String &dir) {
     struct stat info;
-    const int result = ::stat(dir.c_str(), &info);
+    if ( -1 == ::stat( dir.c_str(), &info ) ) {
+        return false;
+    }
+
     if (info.st_mode & S_IFDIR) {
         return true;
     }
+
     return false;
 }
 

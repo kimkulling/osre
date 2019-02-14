@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
 #include "src/Engine/RenderBackend/OGLRenderer/OGLEnum.h"
-#include <osre/RenderBackend/CullState.h>
+#include <osre/RenderBackend/RenderStates.h>
 
 namespace OSRE {
 namespace UnitTest {
@@ -35,23 +35,17 @@ class OGLEnumTest : public ::testing::Test {
 
 TEST_F( OGLEnumTest, access_cullstate_success ) {
     CullState state;
-    state.setCullMode( CullState::CullMode::CW );
-    EXPECT_EQ( GL_CW, OGLEnum::getOGLCullState( state.getCullMode() ) );
+    state.m_cullMode = CullState::CullMode::CW;
+    EXPECT_EQ( GL_CW, OGLEnum::getOGLCullState( state.m_cullMode) );
 
-    state.setCullMode( CullState::CullMode::CCW );
-    EXPECT_EQ( GL_CCW, OGLEnum::getOGLCullState( state.getCullMode() ) );
+    state.m_cullMode = CullState::CullMode::CCW;
+    EXPECT_EQ( GL_CCW, OGLEnum::getOGLCullState( state.m_cullMode) );
 }
 
 TEST_F( OGLEnumTest, access_cullFace_success ) {
     CullState state;
-    state.setCullFace( CullState::CullFace::Front );
-    EXPECT_EQ( GL_FRONT, OGLEnum::getOGLCullFace( state.getCullFace() ) );
-
-    state.setCullFace( CullState::CullFace::Back );
-    EXPECT_EQ( GL_BACK, OGLEnum::getOGLCullFace( state.getCullFace() ) );
-
-    state.setCullFace( CullState::CullFace::FrontAndBack );
-    EXPECT_EQ( GL_FRONT_AND_BACK, OGLEnum::getOGLCullFace( state.getCullFace() ) );
+    state.m_cullFace = CullState::CullFace::Front;
+    EXPECT_EQ( GL_FRONT, OGLEnum::getOGLCullFace( state.m_cullFace ) );
 }
 
 } // Namespace UnitTest

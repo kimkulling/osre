@@ -62,7 +62,7 @@ const String &TextBase::getLabel() const {
     return m_text;
 }
 
-void TextBase::setFont( RenderBackend::FontBase *font ) {
+void TextBase::setFont( FontBase *font ) {
     if ( m_font == font ) {
         return;
     }
@@ -94,14 +94,13 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
 
     UiVertexCache vertexCache;
     UiIndexCache indexCache;
-    Scene::MeshBuilder::allocUiTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite, vertexCache, indexCache);
-    //RenderBackend::Geometry *geo = Scene::GeometryBuilder::allocTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite);
+    Scene::GeometryBuilder::allocUiTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite, vertexCache, indexCache);
     
 
     UiRenderCmd *cmd( new UiRenderCmd );
     cmd->m_vc = vertexCache;
     cmd->m_ic = indexCache;
-//    cmd->m_mat = mat;
+    cmd->m_mat = mat;
     renderCmdCache.add( cmd );
 }
 

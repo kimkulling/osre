@@ -106,7 +106,7 @@ public:
     bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
-        rbSrv->beginPass("p1");
+        rbSrv->beginPass( PipelinePass::getPassNameById( RenderPassId ) );
         rbSrv->beginRenderBatch("b1");
         Scene::MeshBuilder myBuilder;
         myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
@@ -152,10 +152,10 @@ public:
     bool onRender( RenderBackendService *rbSrv ) override {
         glm::mat4 rot( 1.0 );
         rot = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
-        for ( auto i = 0; i < NumInstances; i++ ) {
+        for ( ui32 i = 0; i < NumInstances; i++ ) {
             m_mat[ i ] = m_mat[ i ] * rot;
         }
-        rbSrv->beginPass("p1");
+        rbSrv->beginPass(PipelinePass::getPassNameById( RenderPassId ) );
         rbSrv->beginRenderBatch("b1");
 
         rbSrv->setMatrix( "VP", m_transformMatrix.m_mvp );

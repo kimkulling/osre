@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-#include <osre/RenderBackend/Parameter.h>
+//#include <osre/RenderBackend/Parameter.h>
 #include <osre/RenderBackend/FontBase.h>
 #include <osre/IO/Uri.h>
 
@@ -71,6 +71,12 @@ enum class BufferAccessType {
     NumBufferAccessTypes,       ///< Number of enum's.
     
     InvalidBufferAccessType     ///< Enum for invalid enum.
+};
+
+enum class TextureFormatType {
+    R8G8B8,
+    R8G8B8A8,
+    InvaliTextureType
 };
 
 ///	@brief  This enum describes the build-in vertex types provided by OSRE, mainly used for demos and examples.
@@ -157,6 +163,20 @@ enum class MatrixType {
     Normal,
     NumMatrixTypes,
     InvalidMatrixType
+};
+
+enum class ParameterType {
+    PT_None,
+    PT_Int,
+    PT_IntArray,
+    PT_Float,
+    PT_FloatArray,
+    PT_Float2,
+    PT_Float2Array,
+    PT_Float3,
+    PT_Float3Array,
+    PT_Mat4,
+    PT_Mat4Array
 };
 
 ///	@brief  This struct declares a render vertex for textured geometry.
@@ -390,8 +410,6 @@ enum class ShaderType : ui32 {
 static const ui32 MaxShaderTypes = static_cast<ui32>( ShaderType::NumShaderTypes );
 
 ///	@brief
-
-///	@brief
 enum class MaterialColorType : ui32 {
     Mat_Diffuse = 0,            ///<
     Mat_Specular,               ///<
@@ -512,6 +530,10 @@ struct TVertexCache {
     }
 
     void increaseSize(ui32 newSize) {
+        if (0 == newSize) {
+            return;
+
+        }
         m_cache.reserve(m_cache.size() + newSize);
     }
 
@@ -680,15 +702,42 @@ struct FrameSubmitCmd {
         UpdateUniforms = 8
     };
 
-    const c8 *passId;
-    const c8 *batchId;
+    const c8 *m_passId;
+    const c8 *m_batchId;
     UniformVar *m_var;
     ui32 m_updateFlags;
     ui32 m_size;
     c8 *m_data;
+
+    FrameSubmitCmd()
+    : m_passId(nullptr)
+    , m_batchId(nullptr)
+    , m_var(nullptr)
+    , m_updateFlags(0)
+    , m_size(0)
+    , m_data(nullptr) {
+        // empty
+    }
 };
 
 using FrameSubmitCmdAllocator = CPPCore::TPoolAllocator<FrameSubmitCmd>;
+
+struct MemoryBuffer {
+    ui64 m_size;
+    c8 *m_data;
+};
+
+struct UniformBuffer {
+    ui32 encode(ParameterType type);
+    void decode(ui32 opCode, ParameterType type);
+    bool create(ui32 size);
+    bool destroy();
+    void readUniforms(UniformVar *vars, ui32 numVars);
+    void writeUniforms(UniformVar *vars, ui32 numVars);
+
+    ui64 m_pos;
+    MemoryBuffer m_buffer;
+};
 
 struct Frame {    
     ::CPPCore::TArray<PassData*> m_newPasses;
