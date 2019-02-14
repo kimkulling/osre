@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/Parameter.h>
 #include <osre/RenderBackend/Shader.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/Common/Logger.h>
@@ -539,6 +540,65 @@ GeoBatchData *PassData::getBatchById( const c8 *id ) const {
     }
 
     return nullptr;
+}
+
+ui64 getSize(UniformVar *vars, ui32 numVars) {
+    if (0 == numVars) {
+        return 0;
+    }
+
+    ui64 size(0);
+    for (ui32 i = 0; i < numVars; ++i) {
+        size += vars[ i ].getSize();
+    }
+
+    return size;
+}
+
+ui32 UniformBuffer::encode(ParameterType type) {
+    return static_cast<ui32>(type);
+}
+
+void UniformBuffer::decode(ui32 opCode, ParameterType type) {
+    type = static_cast<ParameterType>(opCode);
+}
+
+bool UniformBuffer::create(ui32 size) {
+    if (0 != m_buffer.m_size) {
+        return false;
+    }
+    m_buffer.m_size = size;
+    m_buffer.m_data = new c8[size];
+    return true;
+}
+
+bool UniformBuffer::destroy() {
+    if (0 == m_buffer.m_size) {
+        return false;
+    }
+    m_buffer.m_size = 0;
+    delete[] m_buffer.m_data;
+    m_buffer.m_data = nullptr;
+
+    return true;
+}
+
+void UniformBuffer::readUniforms(UniformVar *vars, ui32 numVars) {
+    ui64 size = getSize(vars, numVars);
+
+}
+ 
+void UniformBuffer::writeUniforms(UniformVar *vars, ui32 numVars) {
+    if (nullptr == vars) {
+        return;
+    }
+
+    for (ui32 i = 0; i < numVars; ++i) {
+        const ui32 size(vars[i].getSize());
+        ::memcpy( &m_buffer.m_data[ m_pos ], &vars[i].m_data, size);
+        m_buffer.m_size = size;
+        m_pos += size;
+    }
 }
 
 Frame::Frame()

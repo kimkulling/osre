@@ -151,6 +151,8 @@ struct OGLRenderCmdAllocator {
     ~OGLRenderCmdAllocator() = delete;
 };
 
+struct UniformDataBlob;
+
 ///	@brief
 struct OGLParameter {
     String           m_name;

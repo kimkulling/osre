@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-#include <osre/RenderBackend/Parameter.h>
+//#include <osre/RenderBackend/Parameter.h>
 #include <osre/RenderBackend/FontBase.h>
 #include <osre/IO/Uri.h>
 
@@ -157,6 +157,20 @@ enum class MatrixType {
     Normal,
     NumMatrixTypes,
     InvalidMatrixType
+};
+
+enum class ParameterType {
+    PT_None,
+    PT_Int,
+    PT_IntArray,
+    PT_Float,
+    PT_FloatArray,
+    PT_Float2,
+    PT_Float2Array,
+    PT_Float3,
+    PT_Float3Array,
+    PT_Mat4,
+    PT_Mat4Array
 };
 
 ///	@brief  This struct declares a render vertex for textured geometry.
@@ -699,6 +713,23 @@ struct FrameSubmitCmd {
 };
 
 using FrameSubmitCmdAllocator = CPPCore::TPoolAllocator<FrameSubmitCmd>;
+
+struct MemoryBuffer {
+    ui64 m_size;
+    c8 *m_data;
+};
+
+struct UniformBuffer {
+    ui32 encode(ParameterType type);
+    void decode(ui32 opCode, ParameterType type);
+    bool create(ui32 size);
+    bool destroy();
+    void readUniforms(UniformVar *vars, ui32 numVars);
+    void writeUniforms(UniformVar *vars, ui32 numVars);
+
+    ui64 m_pos;
+    MemoryBuffer m_buffer;
+};
 
 struct Frame {    
     ::CPPCore::TArray<PassData*> m_newPasses;

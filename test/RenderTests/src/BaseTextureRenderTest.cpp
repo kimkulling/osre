@@ -32,16 +32,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/GeometryBuilder.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 
-#ifndef GLM_ENABLE_EXPERIMENTAL
-#   define GLM_ENABLE_EXPERIMENTAL
-#endif // GLM_ENABLE_EXPERIMENTAL
-#include <GL/glew.h>
-#include <GL/gl.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/string_cast.hpp>
-
 #include <iostream>
 
 namespace OSRE {
@@ -171,8 +161,14 @@ public:
     }
 
     bool onRender( RenderBackendService *rbSrv ) override {
+        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginRenderBatch("b1");
+
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
         rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
 
         return true;
     }
