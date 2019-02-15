@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-#include <osre/RenderBackend/Parameter.h>
 #include <osre/RenderBackend/FontBase.h>
 #include <osre/IO/Uri.h>
 
@@ -164,6 +163,7 @@ enum class MatrixType {
     Projection,
     Normal,
     NumMatrixTypes,
+
     InvalidMatrixType
 };
 
@@ -178,7 +178,47 @@ enum class ParameterType {
     PT_Float3,
     PT_Float3Array,
     PT_Mat4,
-    PT_Mat4Array
+    PT_Mat4Array,
+
+    InvalidParameterType
+};
+
+///	@brief  This enum to describes the type of the vertex attribute.
+enum class VertexAttribute : int {
+    Position = 0,       ///< "position"
+    Normal,             ///< "normal"
+    TexCoord0,          ///< "texcoord0"
+    TexCoord1,          ///< "texcoord1"
+    TexCoord2,          ///< "texcoord2"
+    TexCoord3,          ///< "texcoord3"
+    Tangent,            ///< "tangent
+    Binormal,           ///< "binormal"
+    Weights,            ///< "weights" (skin weights)
+    Indices,            ///< "indices" (skin indices)
+    Color0,             ///< "color0"
+    Color1,             ///< "color1"
+    Instance0,          ///< "instance0"
+    Instance1,          ///< "instance1"
+    Instance2,          ///< "instance2"
+    Instance3,          ///< "instance3"
+    NumVertexAttrs,     ///< Number of enums.
+
+    InvalidVertexAttr   ///< Enum for invalid enum.
+};
+
+///	@brief  This enum describes the vertex data format.
+enum class VertexFormat : int {
+    Float,                  ///< single component float, expanded to (x, 0, 0, 1)
+    Float2,                 ///< 2-component float, expanded to (x, y, 0, 1)
+    Float3,                 ///< 3-component float, expanded to (x, y, z, 1)
+    Float4,                 ///< 4-component float
+    Byte4,                  ///< 4-component float (-128.0f..+127.0f) mapped to byte (-128..+127)
+    UByte4,                 ///< 4-component float (0.0f..255.0f) mapped to byte (0..255)
+    Short2,                 ///< 2-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
+    Short4,                 ///< 4-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
+    NumVertexFormats,       ///< Number of enums.
+
+    InvalidVertexFormat,    ///< Enum for invalid enum.
 };
 
 ///	@brief  This struct declares a render vertex for textured geometry.
@@ -214,45 +254,7 @@ struct OSRE_EXPORT RenderVert {
     static const String *getAttributes();
 };
 
-///	@brief  This enum to describes the type of the vertex attribute.
-enum class VertexAttribute : int {
-    Position = 0,       ///< "position"
-    Normal,             ///< "normal"
-    TexCoord0,          ///< "texcoord0"
-    TexCoord1,          ///< "texcoord1"
-    TexCoord2,          ///< "texcoord2"
-    TexCoord3,          ///< "texcoord3"
-    Tangent,            ///< "tangent
-    Binormal,           ///< "binormal"
-    Weights,            ///< "weights" (skin weights)
-    Indices,            ///< "indices" (skin indices)
-    Color0,             ///< "color0"
-    Color1,             ///< "color1"
-    Instance0,          ///< "instance0"
-    Instance1,          ///< "instance1"
-    Instance2,          ///< "instance2"
-    Instance3,          ///< "instance3"
-    NumVertexAttrs,     ///< Number of enums.
-
-    InvalidVertexAttr   ///< Enum for invalid enum.
-};
-
 OSRE_EXPORT const String &getVertCompName( VertexAttribute attrib );
-
-///	@brief  This enum describes the vertex data format.
-enum class VertexFormat : int {
-    Float,                  ///< single component float, expanded to (x, 0, 0, 1)
-    Float2,                 ///< 2-component float, expanded to (x, y, 0, 1)
-    Float3,                 ///< 3-component float, expanded to (x, y, z, 1)
-    Float4,                 ///< 4-component float
-    Byte4,                  ///< 4-component float (-128.0f..+127.0f) mapped to byte (-128..+127)
-    UByte4,                 ///< 4-component float (0.0f..255.0f) mapped to byte (0..255)
-    Short2,                 ///< 2-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
-    Short4,                 ///< 4-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
-    NumVertexFormats,       ///< Number of enums.
-
-    InvalidVertexFormat,    ///< Enum for invalid enum.
-};
 
 ///	@brief  Utility function for calculate the vertex format size.
 inline

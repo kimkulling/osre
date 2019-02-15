@@ -126,7 +126,7 @@ Stream *ZipFileSystem::find( const Uri &file, Stream::AccessMode mode, CPPCore::
             Uri currentFile(file.getScheme() + "://" + abspath);
 
             stream = open(currentFile, mode);
-            if (nullptr != stream) {
+            if ( nullptr != stream) {
                 return stream;
             }
         }

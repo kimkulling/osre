@@ -24,7 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Common/Tokenizer.h>
-#include <osre/RenderBackend/FontBase.h>
+//#include <osre/RenderBackend/FontBase.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 #include "UIRenderUtils.h"
 
@@ -76,7 +77,7 @@ RenderBackend::FontBase *TextBase::getFont() const {
 
 static const ui32 NumQuadVert = 4;
 
-void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService * ) {
+void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
     if ( m_text.empty() ) {
         return;
     }
@@ -93,13 +94,13 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
 
     UiVertexCache vertexCache;
     UiIndexCache indexCache;
-    Scene::GeometryBuilder::allocUiTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite, vertexCache, indexCache);
     
+    Scene::MeshBuilder::allocUiTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite, vertexCache, indexCache);
 
     UiRenderCmd *cmd( new UiRenderCmd );
     cmd->m_vc = vertexCache;
     cmd->m_ic = indexCache;
-    cmd->m_mat = mat;
+    cmd->m_mat = Scene::MaterialBuilder::createBuildinUiMaterial();;
     renderCmdCache.add( cmd );
 }
 
