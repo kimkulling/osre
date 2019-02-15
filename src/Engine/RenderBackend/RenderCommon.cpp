@@ -584,6 +584,10 @@ bool UniformBuffer::destroy() {
 }
 
 void UniformBuffer::readUniforms(UniformVar *vars, ui32 numVars) {
+    if (m_buffer.m_size == 0) {
+        return;
+    }
+
     ui64 size = getSize(vars, numVars);
 
 }

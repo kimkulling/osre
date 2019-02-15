@@ -29,13 +29,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 namespace RenderBackend {
-
+/*
 class RenderBackendService;
 class Mesh;
 
 struct GeoInstanceData;
 struct Light;
-
+*/
 
 } // Namespace RenderBackend
 } // Namespace OSRE

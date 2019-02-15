@@ -106,6 +106,9 @@ VK_INSTANCE_LEVEL_FUNCTION( vkGetPhysicalDeviceMemoryProperties )
 #  define VK_DEVICE_LEVEL_FUNCTION( fun )
 #endif
 
+#pragma warning(push)
+#pragma warning( disable : 4706 )
+
 VK_DEVICE_LEVEL_FUNCTION( vkGetDeviceQueue )
 VK_DEVICE_LEVEL_FUNCTION( vkDeviceWaitIdle )
 VK_DEVICE_LEVEL_FUNCTION( vkDestroyDevice )
@@ -164,6 +167,8 @@ VK_DEVICE_LEVEL_FUNCTION( vkResetFences )
 VK_DEVICE_LEVEL_FUNCTION( vkFreeMemory )
 VK_DEVICE_LEVEL_FUNCTION( vkDestroyBuffer )
 VK_DEVICE_LEVEL_FUNCTION( vkDestroyFence )
+
+#pragma warning(pop)
 
 #undef VK_DEVICE_LEVEL_FUNCTION
 
