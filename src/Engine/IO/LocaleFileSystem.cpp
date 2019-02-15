@@ -122,16 +122,16 @@ bool LocaleFileSystem::fileExist( const Uri &filename ) {
     return exists;
 }
 
-Stream *LocaleFileSystem::find( const Uri &rFile, Stream::AccessMode mode,  TArray<String> *pSearchPaths ) {
-    if ( !pSearchPaths ) {
+Stream *LocaleFileSystem::find( const Uri &file, Stream::AccessMode mode,  TArray<String> *searchPaths ) {
+    if ( !searchPaths ) {
         return nullptr;
     }
 
     Stream *pStream( nullptr );
-    for ( ui32 i=0; i<pSearchPaths->size(); ++i ) {
-        const String &path = (*pSearchPaths)[ i ];
-        String abspath = path + rFile.getResource();
-        Uri file( rFile.getScheme() +"://" + abspath );
+    for ( ui32 i=0; i<searchPaths->size(); ++i ) {
+        const String &path = (*searchPaths)[ i ];
+        String abspath = path + file.getResource();
+        Uri file( file.getScheme() +"://" + abspath );
         pStream = open( file, mode );
         return pStream;
     }

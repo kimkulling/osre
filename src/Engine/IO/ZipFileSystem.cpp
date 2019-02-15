@@ -113,12 +113,25 @@ bool ZipFileSystem::fileExist( const Uri &file ) {
     return true;
 }
 
-Stream *ZipFileSystem::find( const Uri &file, Stream::AccessMode mode, CPPCore::TArray<String> *pSearchPaths ) {
+Stream *ZipFileSystem::find( const Uri &file, Stream::AccessMode mode, CPPCore::TArray<String> *searchPaths ) {
     if( !fileExist( file ) ) {
         return nullptr;
     }
 
-    return this->open( file, Stream::AccessMode::ReadAccess );
+    Stream *stream(nullptr);
+    if (nullptr != searchPaths) {
+        for (ui32 i = 0; i < searchPaths->size(); ++i) {
+            const String &folder = (*searchPaths)[i];
+            String abspath = folder + file.getResource();
+            Uri currentFile(file.getScheme() + "://" + abspath);
+
+            stream = open(currentFile, mode);
+            if (nullptr != stream) {
+                return stream;
+            }
+        }
+    }
+    return this->open( file, mode );
 }
 
 const c8 *ZipFileSystem::getSchema() const {
