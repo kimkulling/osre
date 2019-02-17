@@ -225,27 +225,26 @@ const String *VertexLayout::getAttributes() {
 
 BufferData::BufferData()
 : m_type( BufferType::EmptyBuffer )
-, m_data( nullptr )
-, m_size( 0 )
+, m_buffer()
 , m_cap( 0 )
 , m_access( BufferAccessType::ReadOnly ) {
     // empty
 }
 
 BufferData::~BufferData() {
-    delete[] m_data;
-    m_data = nullptr;
-    m_size = 0;
+    delete[] m_buffer.m_data;
+    m_buffer.m_data = nullptr;
+    m_buffer.m_size = 0;
     m_cap = 0;
 }
 
 BufferData* BufferData::alloc( BufferType type, ui32 sizeInBytes, BufferAccessType access ) {
-    BufferData *buffer( new BufferData );
-    buffer->m_size   = sizeInBytes;
-    buffer->m_cap    = sizeInBytes;
-    buffer->m_access = access;
-    buffer->m_type   = type;
-    buffer->m_data   = new uc8[ sizeInBytes ];
+    BufferData *buffer        = new BufferData;
+    buffer->m_buffer.m_size   = sizeInBytes;
+    buffer->m_cap             = sizeInBytes;
+    buffer->m_access          = access;
+    buffer->m_type            = type;
+    buffer->m_buffer.m_data   = new c8[ sizeInBytes ];
 
     return buffer;
 }
@@ -268,25 +267,25 @@ void BufferData::copyFrom( void *data, ui32 size ) {
         return;
     }
 
-    m_size = size;
-    ::memcpy( m_data, data, size );
+    m_buffer.m_size = size;
+    ::memcpy(m_buffer.m_data, data, size );
 }
 
 void BufferData::attach( void *data, ui32 size ) {
-    const ui32 newSize( m_size + size );
+    const ui64 newSize(m_buffer.m_size + size );
     if ( newSize < m_cap ) {
-        void *ptr = ( (uc8*) m_data ) + m_size;
+        void *ptr = ( (uc8*) m_buffer.m_data ) + m_buffer.m_size;
         ::memcpy( ptr, data, size );
-        m_size += size;
+        m_buffer.m_size += size;
         return;
     }
     
-    uc8 *newData = new uc8[ newSize ];
-    ::memcpy( newData, m_data, m_size );
-    ::memcpy( &newData[ m_size ], data, size );
-    delete[] m_data;
-    m_data = newData;
-    m_size += size;
+    c8 *newData = new c8[ newSize ];
+    ::memcpy( newData, m_buffer.m_data, m_buffer.m_size );
+    ::memcpy( &newData[m_buffer.m_size ], data, size );
+    delete[] m_buffer.m_data;
+    m_buffer.m_data = newData;
+    m_buffer.m_size += size;
 }
 
 BufferType BufferData::getBufferType() const {
@@ -489,7 +488,7 @@ Light::Light()
 , m_ambient(1.0f,1.0f,1.0f)
 , m_direction(0.0f, 0.0f, 1.0f, 1.0f)
 , m_specularExp( 1.0f)
-, m_type( LightType::None ) {
+, m_type( LightType::InvalidLightType ) {
     // empty
 }
 
@@ -542,69 +541,6 @@ GeoBatchData *PassData::getBatchById( const c8 *id ) const {
     return nullptr;
 }
 
-ui64 getSize(UniformVar *vars, ui32 numVars) {
-    if (0 == numVars) {
-        return 0;
-    }
-
-    ui64 size(0);
-    for (ui32 i = 0; i < numVars; ++i) {
-        size += vars[ i ].getSize();
-    }
-
-    return size;
-}
-
-ui32 UniformBuffer::encode(ParameterType type) {
-    return static_cast<ui32>(type);
-}
-
-void UniformBuffer::decode(ui32 opCode, ParameterType type) {
-    type = static_cast<ParameterType>(opCode);
-}
-
-bool UniformBuffer::create(ui32 size) {
-    if (0 != m_buffer.m_size) {
-        return false;
-    }
-    m_buffer.m_size = size;
-    m_buffer.m_data = new c8[size];
-    return true;
-}
-
-bool UniformBuffer::destroy() {
-    if (0 == m_buffer.m_size) {
-        return false;
-    }
-    m_buffer.m_size = 0;
-    delete[] m_buffer.m_data;
-    m_buffer.m_data = nullptr;
-
-    return true;
-}
-
-void UniformBuffer::readUniforms(UniformVar *vars, ui32 numVars) {
-    if (m_buffer.m_size == 0) {
-        return;
-    }
-
-    ui64 size = getSize(vars, numVars);
-
-}
- 
-void UniformBuffer::writeUniforms(UniformVar *vars, ui32 numVars) {
-    if (nullptr == vars) {
-        return;
-    }
-
-    for (ui32 i = 0; i < numVars; ++i) {
-        const ui32 size(vars[i].getSize());
-        ::memcpy( &m_buffer.m_data[ m_pos ], &vars[i].m_data, size);
-        m_buffer.m_size = size;
-        m_pos += size;
-    }
-}
-
 Frame::Frame()
 : m_newPasses()
 , m_submitCmds()
@@ -653,27 +589,27 @@ void UniformDataBlob::clear() {
 UniformDataBlob *UniformDataBlob::create(ParameterType type, ui32 arraySize) {
     UniformDataBlob *blob = new UniformDataBlob;
     switch (type) {
-    case ParameterType::PT_Int:
-        blob->m_size = sizeof(i32);
-        break;
-    case ParameterType::PT_Float:
-        blob->m_size = sizeof(f32);
-        break;
-    case ParameterType::PT_Float2:
-        blob->m_size = sizeof(f32) * 2;
-        break;
-    case ParameterType::PT_Float3:
-        blob->m_size = sizeof(f32) * 3;
-        break;
-    case ParameterType::PT_Mat4:
-        blob->m_size = sizeof(f32) * 16;
-        break;
-    case ParameterType::PT_Mat4Array:
-        blob->m_size = sizeof(f32) * 16 * arraySize;
-        break;
-    default:
-        blob->m_size = 0;
-        break;
+        case ParameterType::PT_Int:
+            blob->m_size = sizeof(i32);
+            break;
+        case ParameterType::PT_Float:
+            blob->m_size = sizeof(f32);
+            break;
+        case ParameterType::PT_Float2:
+            blob->m_size = sizeof(f32) * 2;
+            break;
+        case ParameterType::PT_Float3:
+            blob->m_size = sizeof(f32) * 3;
+            break;
+        case ParameterType::PT_Mat4:
+            blob->m_size = sizeof(f32) * 16;
+            break;
+        case ParameterType::PT_Mat4Array:
+            blob->m_size = sizeof(f32) * 16 * arraySize;
+            break;
+        default:
+            blob->m_size = 0;
+            break;
     }
     blob->m_data = ::malloc(blob->m_size);
     ::memset(blob->m_data, 0, blob->m_size);
@@ -696,27 +632,27 @@ UniformVar::~UniformVar() {
 ui32 UniformVar::getParamDataSize(ParameterType type, ui32 arraySize) {
     ui32 size(0);
     switch (type) {
-    case ParameterType::PT_Int:
-        size = sizeof(i32);
-        break;
-    case ParameterType::PT_Float:
-        size = sizeof(f32);
-        break;
-    case ParameterType::PT_Float2:
-        size = sizeof(f32) * 2;
-        break;
-    case ParameterType::PT_Float3:
-        size = sizeof(f32) * 3;
-        break;
-    case ParameterType::PT_Mat4:
-        size = sizeof(f32) * 16;
-        break;
-    case ParameterType::PT_Mat4Array:
-        size = sizeof(f32) * 16 * arraySize;
-        break;
+        case ParameterType::PT_Int:
+            size = sizeof(i32);
+            break;
+        case ParameterType::PT_Float:
+            size = sizeof(f32);
+            break;
+        case ParameterType::PT_Float2:
+            size = sizeof(f32) * 2;
+            break;
+        case ParameterType::PT_Float3:
+            size = sizeof(f32) * 3;
+            break;
+        case ParameterType::PT_Mat4:
+            size = sizeof(f32) * 16;
+            break;
+        case ParameterType::PT_Mat4Array:
+            size = sizeof(f32) * 16 * arraySize;
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 
     return size;

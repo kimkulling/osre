@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
+// Forward declarations
 class Win32ThreadEvent;
 class Win32ThreadLocalStorage;
 
@@ -39,7 +40,7 @@ class Win32ThreadLocalStorage;
 class Win32Thread : public AbstractThread {
 public:
     ///	The class constructor.
-    Win32Thread( const String &threadName, ui32 stacksize );
+    Win32Thread( const String &threadName, ui32 stacksize = 1024*1024 );
     ///	The class destructor.
     virtual ~Win32Thread();
     ///	Starts the thread.

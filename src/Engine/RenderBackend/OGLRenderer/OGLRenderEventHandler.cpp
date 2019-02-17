@@ -163,8 +163,8 @@ static void setupParameter( UniformVar *param, OGLRenderBackend *rb, OGLRenderEv
 
 
 
-static OGLVertexArray *setupBuffers( Mesh *geo, OGLRenderBackend *rb, OGLShader *oglShader ) {
-	OSRE_ASSERT( nullptr != geo );
+static OGLVertexArray *setupBuffers( Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglShader ) {
+	OSRE_ASSERT( nullptr != mesh );
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != oglShader );
 
@@ -172,13 +172,13 @@ static OGLVertexArray *setupBuffers( Mesh *geo, OGLRenderBackend *rb, OGLShader 
 
     OGLVertexArray *vertexArray = rb->createVertexArray();
     rb->bindVertexArray( vertexArray );
-    BufferData *vertices = geo->m_vb;
+    BufferData *vertices = mesh->m_vb;
 	if ( nullptr == vertices ) {
 		osre_debug( Tag, "No vertex buffer data for setting up data." );
 		return nullptr;
     }
 
-    BufferData *indices = geo->m_ib;
+    BufferData *indices = mesh->m_ib;
     if ( nullptr == indices ) {
         osre_debug( Tag, "No index buffer data for setting up data." );
         return nullptr;
@@ -186,22 +186,22 @@ static OGLVertexArray *setupBuffers( Mesh *geo, OGLRenderBackend *rb, OGLShader 
 
     // create vertex buffer and  and pass triangle vertex to buffer object
     OGLBuffer *vb = rb->createBuffer( vertices->m_type );
-    vb->m_geoId = geo->m_id;
+    vb->m_geoId = mesh->m_id;
     rb->bindBuffer( vb );
-    rb->copyDataToBuffer( vb, vertices->m_data, vertices->m_size, vertices->m_access );
+    rb->copyDataToBuffer( vb, vertices->getData(), vertices->getSize(), vertices->m_access );
 
     // enable vertex attribute arrays
     TArray<OGLVertexAttribute*> attributes;
-    rb->createVertexCompArray( geo->m_vertextype, oglShader, attributes );
-    const ui32 stride = Mesh::getVertexSize( geo->m_vertextype );
+    rb->createVertexCompArray( mesh->m_vertextype, oglShader, attributes );
+    const ui32 stride = Mesh::getVertexSize( mesh->m_vertextype );
     rb->bindVertexLayout( vertexArray, oglShader, stride, attributes );
     rb->releaseVertexCompArray( attributes );
 
     // create index buffer and pass indices to element array buffer
     OGLBuffer *ib = rb->createBuffer( indices->m_type );
-    ib->m_geoId = geo->m_id;
+    ib->m_geoId = mesh->m_id;
     rb->bindBuffer( ib );
-    rb->copyDataToBuffer( ib, indices->m_data, indices->m_size, indices->m_access );
+    rb->copyDataToBuffer( ib, indices->getData(), indices->getSize(), indices->m_access );
 
     rb->unbindVertexArray();
 

@@ -157,14 +157,15 @@ enum class PrimitiveType {
     InvalidPrimitiveType,   ///< Enum for invalid enum.
 };
 
+/// @brief  This enum is used to describe the type of build-in matrices.
 enum class MatrixType {
-    Model = 0,
-    View,
-    Projection,
-    Normal,
-    NumMatrixTypes,
+    Model = 0,              ///<
+    View,                   ///<
+    Projection,             ///<
+    Normal,                 ///<
+    NumMatrixTypes,         ///< Number of matrix types-
 
-    InvalidMatrixType
+    InvalidMatrixType       ///< Enum for invalid values.
 };
 
 enum class ParameterType {
@@ -219,6 +220,46 @@ enum class VertexFormat : int {
     NumVertexFormats,       ///< Number of enums.
 
     InvalidVertexFormat,    ///< Enum for invalid enum.
+};
+
+///	@brief  This enum describes the kind of build-in material.
+enum class MaterialType {
+    ShaderMaterial = 0,         ///< Material using a build-in shader assigned to its type of vertex.
+    NumMaterialTypes,           ///< Number of enums.
+
+    InvalidMaterialType         ///< Enum for invalid enum.
+};
+
+///	@brief  This enum describes the different shader types, which are supported by the OSRE-engine.
+enum class ShaderType : ui32 {
+    SH_VertexShaderType = 0,    ///< The shader is a vertex shader, used for each vertex.
+    SH_GeometryShaderType,      ///< The shader is a geometry shader, used for tesselation.
+    SH_TesselationShaderType,   ///< The tesselation evaluation shader.
+    SH_FragmentShaderType,      ///< The shader is a fragment shader, used for rasterization.
+    NumShaderTypes,             ///< Number of enums.
+
+    InvalidShaderType           ///< Enum for invalid enum.
+};
+
+///	@brief
+enum class MaterialColorType : ui32 {
+    Mat_Diffuse = 0,            ///<
+    Mat_Specular,               ///<
+    Mat_Ambient,                ///<
+    Mat_Emission,               ///<
+    NumMaterialColorTypes,      ///< Number of enums.
+
+    InvalidMaterialColorType    ///< Enum for invalid enum.
+};
+
+///	@brief
+enum class LightType {
+    Directional  = 0,
+    Point,
+    Spot,
+    NumLightTypes,
+
+    InvalidLightType            ///< Enum for invalid enum.
 };
 
 ///	@brief  This struct declares a render vertex for textured geometry.
@@ -343,8 +384,9 @@ struct OSRE_EXPORT VertexLayout {
 ///	@brief  This struct is used to describe data for a GPU buffer.
 struct OSRE_EXPORT BufferData {
     BufferType       m_type;    ///< The buffer type ( @see BufferType )
-    void            *m_data;    ///< The buffer data
-    ui32             m_size;    ///< The size of the buffer
+    MemoryBuffer     m_buffer;
+    //c8              *m_data;    ///< The buffer data
+    //ui32             m_size;    ///< The size of the buffer
     ui32             m_cap;
     BufferAccessType m_access;  ///< Access token ( @see BufferAccessType )
 
@@ -356,9 +398,22 @@ struct OSRE_EXPORT BufferData {
     void attach( void *data, ui32 size );
     BufferType getBufferType() const;
     BufferAccessType getBufferAccessType() const;
+    ui64 getSize() const;
+    c8 *getData() const;
 
     OSRE_NON_COPYABLE( BufferData )
 };
+
+inline
+ui64 BufferData::getSize() const {
+    return (nullptr != m_buffer.m_data ? m_buffer.m_size : 0L);
+}
+
+inline
+c8 *BufferData::getData() const {
+    return m_buffer.m_data;
+}
+
 
 ///	@brief
 struct OSRE_EXPORT PrimitiveGroup {
@@ -372,14 +427,6 @@ struct OSRE_EXPORT PrimitiveGroup {
     void init( IndexType indexType, ui32 numPrimitives, PrimitiveType primType, ui32 startIdx );
 
     OSRE_NON_COPYABLE( PrimitiveGroup )
-};
-
-///	@brief  This enum describes the kind of build-in material.
-enum class MaterialType {
-    ShaderMaterial = 0,         ///< Material using a build-in shader assigned to its type of vertex.
-    NumMaterialTypes,           ///< Number of enums.
-
-    InvalidMaterialType         ///< Enum for invalid enum.
 };
 
 ///	@brief  
@@ -400,29 +447,9 @@ struct OSRE_EXPORT Texture {
     OSRE_NON_COPYABLE( Texture )
 };
 
-///	@brief  This enum describes the different shader types, which are supported by the OSRE-engine.
-enum class ShaderType : ui32 {
-    SH_VertexShaderType = 0,    ///< The shader is a vertex shader, used for each vertex.
-    SH_GeometryShaderType,      ///< The shader is a geometry shader, used for tesselation.
-    SH_TesselationShaderType,   ///< The tesselation evaluation shader.
-    SH_FragmentShaderType,      ///< The shader is a fragment shader, used for rasterization.
-    NumShaderTypes,             ///< Number of enums.
-
-    InvalidShaderType           ///< Enum for invalid enum.
-};
 
 static const ui32 MaxShaderTypes = static_cast<ui32>( ShaderType::NumShaderTypes );
 
-///	@brief
-enum class MaterialColorType : ui32 {
-    Mat_Diffuse = 0,            ///<
-    Mat_Specular,               ///<
-    Mat_Ambient,                ///<
-    Mat_Emission,               ///<
-    NumMaterialColorTypes,      ///< Number of enums.
-
-    InvalidMaterialColorType    ///< Enum for invalid enum.
-};
 
 static const ui32 MaxMatColorType = static_cast<ui32>( MaterialColorType::NumMaterialColorTypes );
 
@@ -614,14 +641,6 @@ struct TIndexCache {
 };
 
 ///	@brief
-enum class LightType {
-    Directional,
-    Point,
-    Spot,
-    None
-};
-
-///	@brief
 struct OSRE_EXPORT Light {
     glm::vec4 m_position;
     glm::vec3 m_specular;
@@ -698,66 +717,6 @@ struct PassData {
     GeoBatchData *getBatchById(const c8 *id) const;
 };
 
-struct FrameSubmitCmd {
-    enum Type {
-        CreatePasses = 1,
-        UpdateBuffer = 2,
-        UpdateMatrixes = 4,
-        UpdateUniforms = 8
-    };
-
-    const c8 *m_passId;
-    const c8 *m_batchId;
-    UniformVar *m_var;
-    ui32 m_updateFlags;
-    ui32 m_size;
-    c8 *m_data;
-
-    FrameSubmitCmd()
-    : m_passId(nullptr)
-    , m_batchId(nullptr)
-    , m_var(nullptr)
-    , m_updateFlags(0)
-    , m_size(0)
-    , m_data(nullptr) {
-        // empty
-    }
-};
-
-using FrameSubmitCmdAllocator = CPPCore::TPoolAllocator<FrameSubmitCmd>;
-
-struct MemoryBuffer {
-    ui64 m_size;
-    c8 *m_data;
-};
-
-struct UniformBuffer {
-    ui32 encode(ParameterType type);
-    void decode(ui32 opCode, ParameterType type);
-    bool create(ui32 size);
-    bool destroy();
-    void readUniforms(UniformVar *vars, ui32 numVars);
-    void writeUniforms(UniformVar *vars, ui32 numVars);
-
-    ui64 m_pos;
-    MemoryBuffer m_buffer;
-};
-
-struct Frame {    
-    ::CPPCore::TArray<PassData*> m_newPasses;
-    ::CPPCore::TArray<FrameSubmitCmd*> m_submitCmds;
-    Pipeline *m_pipeline;
-
-    Frame();
-    ~Frame();
-    void init(::CPPCore::TArray<PassData*> &newPasses);
-    void update(::CPPCore::TArray<FrameSubmitCmd*> &updateCmds );
-
-    Frame(const Frame &) = delete;
-    Frame(Frame &&) = delete;
-    Frame& operator = (const Frame &) = delete;
-};
-
 struct OSRE_EXPORT UniformDataBlob {
     void *m_data;
     ui32  m_size;
@@ -786,6 +745,49 @@ struct OSRE_EXPORT UniformVar {
 private:
     UniformVar();
     ~UniformVar();
+};
+
+struct FrameSubmitCmd {
+    enum Type {
+        CreatePasses = 1,
+        UpdateBuffer = 2,
+        UpdateMatrixes = 4,
+        UpdateUniforms = 8
+    };
+
+    const c8 *m_passId;
+    const c8 *m_batchId;
+    UniformVar *m_var;
+    ui32 m_updateFlags;
+    ui32 m_size;
+    c8 *m_data;
+
+    FrameSubmitCmd()
+        : m_passId(nullptr)
+        , m_batchId(nullptr)
+        , m_var(nullptr)
+        , m_updateFlags(0)
+        , m_size(0)
+        , m_data(nullptr) {
+        // empty
+    }
+};
+
+using FrameSubmitCmdAllocator = CPPCore::TPoolAllocator<FrameSubmitCmd>;
+
+struct Frame {    
+    ::CPPCore::TArray<PassData*> m_newPasses;
+    ::CPPCore::TArray<FrameSubmitCmd*> m_submitCmds;
+    Pipeline *m_pipeline;
+
+    Frame();
+    ~Frame();
+    void init(::CPPCore::TArray<PassData*> &newPasses);
+    void update(::CPPCore::TArray<FrameSubmitCmd*> &updateCmds );
+
+    Frame(const Frame &) = delete;
+    Frame(Frame &&) = delete;
+    Frame& operator = (const Frame &) = delete;
 };
 
 } // Namespace RenderBackend

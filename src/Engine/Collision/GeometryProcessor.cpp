@@ -99,15 +99,15 @@ void GeometryProcessor::handleGeometry( RenderBackend::Mesh *geo ) {
     }
 
     BufferData *data = geo->m_vb;
-    if ( nullptr == data || 0 == data->m_size ) {
+    if ( nullptr == data || 0 == data->getSize() ) {
         return;
     }
 
     ui32 offset( 0 );
-    const ui32 numVertices = data->m_size / stride;
+    const ui32 numVertices = (ui32) data->getSize() / stride;
     for ( ui32 i = 0; i < numVertices; i++ ) {
         glm::vec3 pos;
-        uc8 *ptr = (uc8*) data->m_data;
+        uc8 *ptr = (uc8*) data->getData();
         ::memcpy( &pos.x, &ptr[offset], sizeof( glm::vec3 ) );
         offset += stride;
         m_aabb.merge( pos.x, pos.y, pos.z );

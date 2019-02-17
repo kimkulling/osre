@@ -128,7 +128,7 @@ TEST_F( RenderCommonTest, allocBufferDataTest ) {
     BufferData *data( BufferData::alloc( BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite ) );
     EXPECT_NE( data, nullptr );
     EXPECT_EQ( data->m_access, BufferAccessType::ReadWrite );
-    EXPECT_EQ( data->m_size, 100u );
+    EXPECT_EQ( data->getSize(), 100u );
     EXPECT_EQ( data->m_type, BufferType::VertexBuffer );
 
     BufferData::free( data );

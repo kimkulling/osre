@@ -161,6 +161,20 @@ struct Handle {
     }
 };
 
+struct MemoryBuffer {
+    ui64  m_size;
+    c8   *m_data;
+
+    MemoryBuffer();
+};
+
+inline
+MemoryBuffer::MemoryBuffer()
+: m_size(0)
+, m_data(nullptr) {
+    // empty
+}
+
 struct Time {
     i64 m_microseconds;
 

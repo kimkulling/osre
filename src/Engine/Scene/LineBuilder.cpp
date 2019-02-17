@@ -122,7 +122,7 @@ Mesh *LineBuilder::getMesh() {
         if (!m_tex0Cache.isEmpty()) {
             v.tex0 = m_tex0Cache[i];
         }
-        c8 *ptr = (c8*)m_ActiveGeo->m_vb->m_data;
+        c8 *ptr = (c8*)m_ActiveGeo->m_vb->getData();
         ::memcpy(&ptr[offset], &v, sizeof(RenderVert));
         offset += sizeof(RenderVert);
     }

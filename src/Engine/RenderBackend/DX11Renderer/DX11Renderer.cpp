@@ -415,7 +415,7 @@ ID3D11Buffer *DX11Renderer::createBuffer(BufferType type, BufferData *bd, Buffer
     // Set up the description for the buffer.
     D3D11_BUFFER_DESC bufferDesc;
     bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    bufferDesc.ByteWidth = bd->m_size;
+    bufferDesc.ByteWidth = bd->getSize();
     bufferDesc.BindFlags = translateVBEnum2DX11(type);
     bufferDesc.CPUAccessFlags = translateAccessFlag(usage);
     bufferDesc.MiscFlags = 0;
@@ -423,7 +423,7 @@ ID3D11Buffer *DX11Renderer::createBuffer(BufferType type, BufferData *bd, Buffer
 
     // Give the subresource structure a pointer to the vertex data.
     D3D11_SUBRESOURCE_DATA bufferData;
-    bufferData.pSysMem = bd->m_data;
+    bufferData.pSysMem = bd->getData();
     bufferData.SysMemPitch = 0;
     bufferData.SysMemSlicePitch = 0;
 

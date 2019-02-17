@@ -41,10 +41,12 @@ Win32Thread::Win32Thread(  const String &name, ui32 stacksize  )
 : AbstractThread()
 , m_ThreadHandle( NULL )
 , m_pThreadSignal( NULL )
+, m_Prio(Priority::Normal)
 , m_ThreadState( ThreadState::New )
-, m_Prio( Priority::Normal )
+, m_tls(nullptr)
 , m_ThreadName( name )
-, m_tls( nullptr ) {
+, m_id()
+, m_stacksize(stacksize) {
     // empty
 }
 
@@ -67,7 +69,7 @@ bool Win32Thread::start( void *pData ) {
 
     m_pThreadSignal = new Win32ThreadEvent;
     m_ThreadHandle = (HANDLE) _beginthreadex( NULL,
-        1024*1024,
+        m_stacksize,
         Win32Thread::ThreadFunc,
         pData,
         NULL,

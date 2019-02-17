@@ -211,7 +211,7 @@ void MeshBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
     
     ui32 size = sizeof( GLushort ) * NumIndices;
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, access );
-    ::memcpy( geo->m_ib->m_data, indices, size );
+    ::memcpy( geo->m_ib->getData(), indices, size );
 
 	// setup primitives
     geo->m_numPrimGroups = 1;
@@ -267,7 +267,7 @@ void MeshBuilder::allocQuads( VertexType type, BufferAccessType access ) {
 
     ui32 size = sizeof( GLushort ) * NumIndices;
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
-    ::memcpy( geo->m_ib->m_data, indices, size );
+    ::memcpy( geo->m_ib->getData(), indices, size );
 
     // setup primitives
     geo->m_numPrimGroups = 1;
@@ -592,7 +592,7 @@ BufferData *MeshBuilder::allocVertices( VertexType type, ui32 numVerts, glm::vec
             }
             size = sizeof( ColorVert ) * numVerts;
             data = BufferData::alloc( BufferType::VertexBuffer, size, access );
-            ::memcpy( data->m_data, colVerts, size );
+            ::memcpy( data->getData(), colVerts, size );
             delete [] colVerts;
         }
         break;
@@ -617,7 +617,7 @@ BufferData *MeshBuilder::allocVertices( VertexType type, ui32 numVerts, glm::vec
 
             size = sizeof( RenderVert ) * numVerts;
             data = BufferData::alloc( BufferType::VertexBuffer, size, BufferAccessType::ReadOnly );
-            ::memcpy( data->m_data, renderVerts, size );
+            ::memcpy( data->getData(), renderVerts, size );
             delete [] renderVerts;
         }
         break;
@@ -635,11 +635,11 @@ void MeshBuilder::updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, BufferDa
     }
 
     RenderVert *vert = new RenderVert[ numVerts ];
-    ::memcpy( &vert[ 0 ].position, vb->m_data, vb->m_size );
+    ::memcpy( &vert[ 0 ].position, vb->getData(), vb->getSize() );
     for ( ui32 i = 0; i < numVerts; i++ ) {
         vert[ i ].tex0 = tex0[ i ];
     }
-    ::memcpy( vb->m_data, vert, vb->m_size );
+    ::memcpy( vb->getData(), vert, vb->getSize() );
     delete[] vert;
 }
 

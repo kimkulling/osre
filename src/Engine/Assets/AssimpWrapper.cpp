@@ -259,7 +259,7 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
 	//Scene::GeometryDiagnosticUtils::dumpIndices( indexArray );
 
     currentMesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( ui32 ) * indexArray.size(), BufferAccessType::ReadOnly );
-    currentMesh->m_ib->copyFrom( &indexArray[ 0 ], currentMesh->m_ib->m_size );
+    currentMesh->m_ib->copyFrom( &indexArray[ 0 ], currentMesh->m_ib->getSize());
 
     currentMesh->m_numPrimGroups = 1;
     currentMesh->m_primGroups = new PrimitiveGroup[ currentMesh->m_numPrimGroups ];

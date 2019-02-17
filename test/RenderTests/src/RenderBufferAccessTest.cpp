@@ -174,7 +174,7 @@ public:
 
         ui32 offset( 0 );
         for (ui32 i = 0; i < NumPts; i++) {
-            uc8 *ptr = (uc8*) m_pointMesh->m_vb->m_data;
+            uc8 *ptr = (uc8*) m_pointMesh->m_vb->getData();
             ::memcpy( &ptr[offset], &m_pos[ i ], sizeof(glm::vec3));
             offset += sizeof( ColorVert );
         }
