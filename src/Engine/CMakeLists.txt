@@ -337,7 +337,6 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/FontBase.h
     ${HEADER_PATH}/RenderBackend/HWBufferManager.h
     ${HEADER_PATH}/RenderBackend/FontBase.h
-    ${HEADER_PATH}/RenderBackend/Parameter.h
     ${HEADER_PATH}/RenderBackend/ParticleGenerator.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
@@ -349,7 +348,6 @@ SET( renderbackend_src
     RenderBackend/FontBase.cpp
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
-    RenderBackend/Parameter.cpp
     RenderBackend/Pipeline.cpp
     RenderBackend/ParticleGenerator.cpp
     RenderBackend/HWBufferManager.cpp

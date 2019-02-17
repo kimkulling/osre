@@ -31,7 +31,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractPlatformEventQueue.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/Pipeline.h>
-#include <osre/RenderBackend/Parameter.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/View.h>
 #include <osre/Scene/World.h>
