@@ -682,7 +682,8 @@ void UniformVar::destroy(UniformVar *param) {
 }
 
 ui32 UniformVar::getSize() {
-    return m_data.m_size;
+    // len of name | name | buffer
+    return m_name.size() + 1 + m_data.m_size;
 }
 
 } // Namespace RenderBackend

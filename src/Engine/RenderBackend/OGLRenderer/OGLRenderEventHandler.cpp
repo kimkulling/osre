@@ -161,8 +161,6 @@ static void setupParameter( UniformVar *param, OGLRenderBackend *rb, OGLRenderEv
     ev->setParameter( paramArray );
 }
 
-
-
 static OGLVertexArray *setupBuffers( Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglShader ) {
 	OSRE_ASSERT( nullptr != mesh );
 	OSRE_ASSERT( nullptr != rb );
@@ -542,7 +540,6 @@ bool OGLRenderEventHandler::onInitRenderPasses( const Common::EventData *eventDa
 }
 
 bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData) {
-
     CommitFrameEventData *data = (CommitFrameEventData*)eventData;
     if (nullptr == data) {
         return false;
@@ -559,7 +556,14 @@ bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData)
 
             m_renderCmdBuffer->setMatrixBuffer(cmd->m_batchId, buffer);
         } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateUniforms) {
-            setupParameter(cmd->m_var, m_oglBackend, this);
+            c8 name[255];
+            ::memset(name, '\0', 255);
+            ::strncpy(name, &cmd->m_data[1], cmd->m_data[0]);
+            ui32 offset = cmd->m_data[0] + 1;
+            ui32 size = cmd->m_size - offset;
+            OGLParameter *oglParam = m_oglBackend->getParameter(name);
+            ::memcpy(oglParam->m_data->getData(), &cmd->m_data[offset], size);
+            m_oglBackend->setParameter(oglParam);
         }
     }
     data->m_frame->m_submitCmds.resize(0);

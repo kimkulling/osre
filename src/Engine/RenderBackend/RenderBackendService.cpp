@@ -225,6 +225,7 @@ void RenderBackendService::commitNextFrame() {
                 m_nextFrame.m_submitCmds.add(cmd);
                 currentBatch->m_dirtyFlag = 0;
             } else if (currentBatch->m_dirtyFlag & GeoBatchData::UniformBufferDirty) {
+
                 for (ui32 k = 0; k < currentBatch->m_uniforms.size(); ++k) {
                     FrameSubmitCmd *cmd = m_submitCmdAllocator.alloc();
                     cmd->m_passId = currentPass->m_id;
@@ -235,7 +236,14 @@ void RenderBackendService::commitNextFrame() {
                         continue;
                     }
 
-                    cmd->m_var = var;
+                    cmd->m_size = var->getSize();
+                    cmd->m_data = new c8[cmd->m_size];
+                    ui32 offset(0);
+                    cmd->m_data[offset] = var->m_name.size() > 255 ? 255 : static_cast<c8>(var->m_name.size());
+                    offset++;
+                    ::memcpy(&cmd->m_data[offset], var->m_name.c_str(), var->m_name.size());
+                    offset += var->m_name.size();
+                    ::memcpy(&cmd->m_data[offset], var->m_data.getData(), var->m_data.m_size);
                     m_nextFrame.m_submitCmds.add(cmd);
                 }
                 currentBatch->m_dirtyFlag = 0;
@@ -392,7 +400,6 @@ void RenderBackendService::addMesh( Mesh *mesh, ui32 numInstances ) {
     entry->numInstances = numInstances;
     m_currentBatch->m_meshArray.add(entry);
     m_currentBatch->m_dirtyFlag |= GeoBatchData::MeshDirty;
-
 }
 
 void RenderBackendService::addMesh( const CPPCore::TArray<Mesh*> &geoArray, ui32 numInstances ) {
