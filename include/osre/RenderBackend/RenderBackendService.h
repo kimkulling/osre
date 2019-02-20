@@ -233,7 +233,8 @@ private:
     const Properties::Settings *m_settings;
     bool m_ownsSettingsConfig;
     bool m_frameCreated;
-    Frame m_nextFrame;
+    Frame m_nextFrame[2];
+    ui32 m_activeFrame;
     UI::Widget *m_screen;
     bool m_dirty;
     CPPCore::TArray<PassData*> m_passes;

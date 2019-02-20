@@ -776,6 +776,7 @@ using FrameSubmitCmdAllocator = CPPCore::TPoolAllocator<FrameSubmitCmd>;
 struct Frame {    
     ::CPPCore::TArray<PassData*> m_newPasses;
     ::CPPCore::TArray<FrameSubmitCmd*> m_submitCmds;
+
     Pipeline *m_pipeline;
 
     Frame();

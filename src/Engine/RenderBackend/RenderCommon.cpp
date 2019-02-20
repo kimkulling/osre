@@ -540,11 +540,13 @@ GeoBatchData *PassData::getBatchById( const c8 *id ) const {
     return nullptr;
 }
 
+const ui32 MaxSubmitCmds = 100;
+
 Frame::Frame()
 : m_newPasses()
 , m_submitCmds()
 , m_pipeline(nullptr) {
-    // empty
+    //
 }
 
 Frame::~Frame() {

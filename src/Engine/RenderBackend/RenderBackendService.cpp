@@ -82,7 +82,8 @@ RenderBackendService::RenderBackendService()
 , m_dirty(false)
 , m_currentPass(nullptr)
 , m_currentBatch( nullptr ) 
-, m_submitCmdAllocator() {
+, m_submitCmdAllocator()
+, m_activeFrame( 0 ){
     m_submitCmdAllocator.reserve(1000);
 }
 
@@ -193,8 +194,8 @@ void RenderBackendService::initPasses() {
     }
 
     InitPassesEventData *data = new InitPassesEventData;
-    m_nextFrame.init(m_passes);
-    data->m_frame = &m_nextFrame;
+    m_nextFrame[m_activeFrame].init(m_passes);
+    data->m_frame = &m_nextFrame[m_activeFrame];
 
     m_renderTaskPtr->sendEvent(&OnInitPassesEvent, data);
 }
@@ -222,7 +223,7 @@ void RenderBackendService::commitNextFrame() {
                 cmd->m_data = new c8[cmd->m_size];
                 ::memcpy(cmd->m_data, &currentBatch->m_matrixBuffer, cmd->m_size);
 
-                m_nextFrame.m_submitCmds.add(cmd);
+                m_nextFrame[m_activeFrame].m_submitCmds.add(cmd);
                 currentBatch->m_dirtyFlag = 0;
             } else if (currentBatch->m_dirtyFlag & GeoBatchData::UniformBufferDirty) {
 
@@ -244,15 +245,16 @@ void RenderBackendService::commitNextFrame() {
                     ::memcpy(&cmd->m_data[offset], var->m_name.c_str(), var->m_name.size());
                     offset += var->m_name.size();
                     ::memcpy(&cmd->m_data[offset], var->m_data.getData(), var->m_data.m_size);
-                    m_nextFrame.m_submitCmds.add(cmd);
+                    m_nextFrame[m_activeFrame].m_submitCmds.add(cmd);
                 }
                 currentBatch->m_dirtyFlag = 0;
             }
         }
     }
 
-    data->m_frame = &m_nextFrame;
+    data->m_frame = &m_nextFrame[m_activeFrame];
     m_renderTaskPtr->sendEvent( &OnCommitFrameEvent, data );
+    m_activeFrame = !m_activeFrame;
 }
 
 void RenderBackendService::sendEvent( const Event *ev, const EventData *eventData ) {
