@@ -48,27 +48,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using namespace std;
 using namespace Assimp;
 
-class SharedPPDataTest : public ::testing::Test
-{
+class SharedPPDataTest : public ::testing::Test {
 public:
-
     virtual void SetUp();
     virtual void TearDown();
 
 protected:
-
     SharedPostProcessInfo* shared;
 };
 
 // ------------------------------------------------------------------------------------------------
-void SharedPPDataTest::SetUp()
-{
+void SharedPPDataTest::SetUp() {
     shared = new SharedPostProcessInfo();
 }
 
 // ------------------------------------------------------------------------------------------------
-void SharedPPDataTest::TearDown()
-{
+void SharedPPDataTest::TearDown() {
 	delete shared;
 }
 
@@ -77,7 +72,7 @@ TEST_F(SharedPPDataTest, testPODProperty)
 {
     int i = 5;
     shared->AddProperty("test",i);
-    int o;
+    int o=0;
     EXPECT_TRUE(shared->GetProperty("test",o));
     EXPECT_EQ(5, o);
     EXPECT_FALSE(shared->GetProperty("test2",o));
@@ -94,7 +89,7 @@ TEST_F(SharedPPDataTest, testPropertyPointer)
 {
     int *i = new int;
     shared->AddProperty("test16",i);
-    int* o;
+    int* o=nullptr;
     EXPECT_TRUE(shared->GetProperty("test16",o));
     EXPECT_EQ(i, o);
     shared->RemoveProperty("test16");
