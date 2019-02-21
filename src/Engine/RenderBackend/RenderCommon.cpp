@@ -545,8 +545,10 @@ const ui32 MaxSubmitCmds = 100;
 Frame::Frame()
 : m_newPasses()
 , m_submitCmds()
+, m_submitCmdAllocator()
 , m_pipeline(nullptr) {
-    //
+    m_submitCmdAllocator.reserve( 500 );
+
 }
 
 Frame::~Frame() {
@@ -561,10 +563,13 @@ void Frame::init(TArray<PassData*> &newPasses) {
     m_newPasses.add( newPasses[i]);
 }
 
-void Frame::update(TArray<FrameSubmitCmd*> &updateCmds) {
-    if (updateCmds.isEmpty()) {
-        return;
+FrameSubmitCmd *Frame::enqueue() {
+    FrameSubmitCmd *cmd = m_submitCmdAllocator.alloc();
+    if (nullptr != cmd) {
+        m_submitCmds.add(cmd);
     }
+
+    return cmd;
 }
 
 UniformDataBlob::UniformDataBlob()

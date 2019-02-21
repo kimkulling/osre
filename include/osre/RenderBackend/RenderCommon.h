@@ -776,13 +776,14 @@ using FrameSubmitCmdAllocator = CPPCore::TPoolAllocator<FrameSubmitCmd>;
 struct Frame {    
     ::CPPCore::TArray<PassData*> m_newPasses;
     ::CPPCore::TArray<FrameSubmitCmd*> m_submitCmds;
+    FrameSubmitCmdAllocator m_submitCmdAllocator;
 
     Pipeline *m_pipeline;
 
     Frame();
     ~Frame();
     void init(::CPPCore::TArray<PassData*> &newPasses);
-    void update(::CPPCore::TArray<FrameSubmitCmd*> &updateCmds );
+    FrameSubmitCmd *enqueue();
 
     Frame(const Frame &) = delete;
     Frame(Frame &&) = delete;

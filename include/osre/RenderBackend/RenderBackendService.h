@@ -233,14 +233,14 @@ private:
     const Properties::Settings *m_settings;
     bool m_ownsSettingsConfig;
     bool m_frameCreated;
-    Frame m_nextFrame[2];
-    ui32 m_activeFrame;
+    Frame  m_frames[2];
+    Frame *m_renderFrame;
+    Frame *m_submitFrame;
     UI::Widget *m_screen;
     bool m_dirty;
     CPPCore::TArray<PassData*> m_passes;
     PassData *m_currentPass;
     GeoBatchData *m_currentBatch;
-    FrameSubmitCmdAllocator m_submitCmdAllocator;
 };
 
 inline 

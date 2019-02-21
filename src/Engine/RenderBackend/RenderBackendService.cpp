@@ -76,15 +76,14 @@ RenderBackendService::RenderBackendService()
 , m_settings( nullptr )
 , m_ownsSettingsConfig( false )
 , m_frameCreated( false )
-, m_nextFrame()
+, m_renderFrame(&m_frames[0])
+, m_submitFrame(&m_frames[1])
 , m_screen( nullptr )
 , m_passes()
 , m_dirty(false)
 , m_currentPass(nullptr)
-, m_currentBatch( nullptr ) 
-, m_submitCmdAllocator()
-, m_activeFrame( 0 ){
-    m_submitCmdAllocator.reserve(1000);
+, m_currentBatch( nullptr )  {
+    // empty
 }
 
 RenderBackendService::~RenderBackendService() {
@@ -194,8 +193,8 @@ void RenderBackendService::initPasses() {
     }
 
     InitPassesEventData *data = new InitPassesEventData;
-    m_nextFrame[m_activeFrame].init(m_passes);
-    data->m_frame = &m_nextFrame[m_activeFrame];
+    m_submitFrame->init(m_passes);
+    data->m_frame = m_submitFrame;
 
     m_renderTaskPtr->sendEvent(&OnInitPassesEvent, data);
 }
@@ -205,30 +204,22 @@ void RenderBackendService::commitNextFrame() {
         return;
     }
 
-    if (0 == m_submitCmdAllocator.capacity()) {
-        m_submitCmdAllocator.release();
-    }
-
     CommitFrameEventData *data = new CommitFrameEventData;
     for (ui32 i = 0; i < m_passes.size(); ++i) {
         PassData *currentPass = m_passes[i];
         for (ui32 j = 0; j < currentPass->m_geoBatches.size(); ++j) {
             GeoBatchData *currentBatch = currentPass->m_geoBatches[j];
             if ( currentBatch->m_dirtyFlag & GeoBatchData::MatrixBufferDirty ) {
-                FrameSubmitCmd *cmd = m_submitCmdAllocator.alloc();                    
+                FrameSubmitCmd *cmd = m_submitFrame->enqueue();
                 cmd->m_passId = currentPass->m_id;
                 cmd->m_batchId = currentBatch->m_id;
                 cmd->m_updateFlags |= (ui32) FrameSubmitCmd::UpdateMatrixes;
                 cmd->m_size = sizeof(MatrixBuffer);
                 cmd->m_data = new c8[cmd->m_size];
                 ::memcpy(cmd->m_data, &currentBatch->m_matrixBuffer, cmd->m_size);
-
-                m_nextFrame[m_activeFrame].m_submitCmds.add(cmd);
-                currentBatch->m_dirtyFlag = 0;
             } else if (currentBatch->m_dirtyFlag & GeoBatchData::UniformBufferDirty) {
-
                 for (ui32 k = 0; k < currentBatch->m_uniforms.size(); ++k) {
-                    FrameSubmitCmd *cmd = m_submitCmdAllocator.alloc();
+                    FrameSubmitCmd *cmd = m_submitFrame->enqueue();
                     cmd->m_passId = currentPass->m_id;
                     cmd->m_batchId = currentBatch->m_id;
                     cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateUniforms;
@@ -245,16 +236,16 @@ void RenderBackendService::commitNextFrame() {
                     ::memcpy(&cmd->m_data[offset], var->m_name.c_str(), var->m_name.size());
                     offset += var->m_name.size();
                     ::memcpy(&cmd->m_data[offset], var->m_data.getData(), var->m_data.m_size);
-                    m_nextFrame[m_activeFrame].m_submitCmds.add(cmd);
                 }
-                currentBatch->m_dirtyFlag = 0;
             }
+            currentBatch->m_dirtyFlag = 0;
         }
     }
+    
+    data->m_frame = m_submitFrame;
+    std::swap(m_submitFrame, m_renderFrame);
 
-    data->m_frame = &m_nextFrame[m_activeFrame];
     m_renderTaskPtr->sendEvent( &OnCommitFrameEvent, data );
-    m_activeFrame = !m_activeFrame;
 }
 
 void RenderBackendService::sendEvent( const Event *ev, const EventData *eventData ) {

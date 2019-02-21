@@ -553,7 +553,6 @@ bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData)
 
         if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateMatrixes) {
             MatrixBuffer *buffer = (MatrixBuffer*) cmd->m_data;
-
             m_renderCmdBuffer->setMatrixBuffer(cmd->m_batchId, buffer);
         } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateUniforms) {
             c8 name[255];
@@ -563,11 +562,11 @@ bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData)
             ui32 size = cmd->m_size - offset;
             OGLParameter *oglParam = m_oglBackend->getParameter(name);
             ::memcpy(oglParam->m_data->getData(), &cmd->m_data[offset], size);
-            m_oglBackend->setParameter(oglParam);
         }
     }
     data->m_frame->m_submitCmds.resize(0);
-    m_oglBackend->useShader(nullptr);
+
+    data->m_frame->m_submitCmdAllocator.release();
 
     return true;
 }
