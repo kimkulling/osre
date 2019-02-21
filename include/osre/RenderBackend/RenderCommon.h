@@ -773,7 +773,36 @@ struct FrameSubmitCmd {
 
 using FrameSubmitCmdAllocator = CPPCore::TPoolAllocator<FrameSubmitCmd>;
 
-struct Frame {    
+struct UniformBuffer {
+    void create( ui64 size = 1024*1024) {
+        m_buffer.m_size = size;
+        m_buffer.m_data = new c8[size];
+        m_pos = 0;
+    }
+
+    void destroy() {
+        delete[] m_buffer.m_data;
+        m_buffer.m_size = 0;
+        m_pos = 0;
+
+    }
+    void info(ui32 &numVars) {
+
+    }
+
+    void read() {
+
+    }
+    
+    void write( UniformVar *vars ui32 numVars ) {
+
+    }
+
+    ui64 m_pos;
+    MemoryBuffer m_buffer;
+};
+
+struct Frame {
     ::CPPCore::TArray<PassData*> m_newPasses;
     ::CPPCore::TArray<FrameSubmitCmd*> m_submitCmds;
     FrameSubmitCmdAllocator m_submitCmdAllocator;
