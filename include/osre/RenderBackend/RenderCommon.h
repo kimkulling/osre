@@ -688,6 +688,7 @@ struct GeoBatchData {
     MatrixBuffer                 m_matrixBuffer;
     CPPCore::TArray<UniformVar*> m_uniforms;
     CPPCore::TArray<MeshEntry*>  m_meshArray;
+    CPPCore::TArray<MeshEntry*> m_updateMeshArray;
     ui32 m_dirtyFlag;
 
     GeoBatchData(const c8 *id)
@@ -695,6 +696,7 @@ struct GeoBatchData {
     , m_matrixBuffer()
     , m_uniforms()
     , m_meshArray()
+    , m_updateMeshArray()
     , m_dirtyFlag(0) {
         // empty
     }
