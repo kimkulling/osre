@@ -271,7 +271,7 @@ void BufferData::copyFrom( void *data, ui32 size ) {
 }
 
 void BufferData::attach( void *data, ui32 size ) {
-    const ui64 newSize(m_buffer.m_size + size );
+    const ui32 newSize(m_buffer.m_size + size );
     if ( newSize < m_cap ) {
         void *ptr = ( (uc8*) m_buffer.m_data ) + m_buffer.m_size;
         ::memcpy( ptr, data, size );
@@ -546,21 +546,25 @@ Frame::Frame()
 : m_newPasses()
 , m_submitCmds()
 , m_submitCmdAllocator()
-, m_pipeline(nullptr) {
+, m_uniforBuffers( nullptr)
+, m_pipeline(nullptr)
+{
     m_submitCmdAllocator.reserve( 500 );
-
 }
 
 Frame::~Frame() {
-    // empty
+    delete[] m_uniforBuffers;
+    m_uniforBuffers = nullptr;
 }
 
 void Frame::init(TArray<PassData*> &newPasses) {
     if (newPasses.isEmpty()) {
         return;
     }
-    for ( ui32 i=0; i<newPasses.size(); ++i )
-    m_newPasses.add( newPasses[i]);
+    for (ui32 i = 0; i < newPasses.size(); ++i) {
+        m_newPasses.add(newPasses[i]);
+    }
+    m_uniforBuffers = new UniformBuffer[newPasses.size()];
 }
 
 FrameSubmitCmd *Frame::enqueue() {

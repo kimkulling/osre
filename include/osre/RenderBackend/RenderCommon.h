@@ -680,7 +680,8 @@ struct GeoBatchData {
     enum DirtyMode {
         MatrixBufferDirty = 1,
         UniformBufferDirty = 2,
-        MeshDirty = 4
+        MeshDirty = 4,
+        MeshUpdateDirty = 8
     };
 
     const c8                    *m_id;
@@ -774,7 +775,18 @@ struct FrameSubmitCmd {
 using FrameSubmitCmdAllocator = CPPCore::TPoolAllocator<FrameSubmitCmd>;
 
 struct UniformBuffer {
-    void create( ui64 size = 1024*1024) {
+    UniformBuffer()
+    : m_numvars(0)
+    , m_pos(0L)
+    , m_buffer() {
+
+    }
+
+    ui32 getSize() const {
+        return m_buffer.m_size;
+    }
+
+    void create( ui32 size = 1024*1024) {
         m_buffer.m_size = size;
         m_buffer.m_data = new c8[size];
         m_pos = 0;
@@ -786,18 +798,59 @@ struct UniformBuffer {
         m_pos = 0;
 
     }
-    void info(ui32 &numVars) {
 
+    void reset() {
+        m_pos = 0;
     }
 
-    void read() {
+    static ui32 encode(ui16 nameLen, ui16 dataLen) {
+        const ui32 nl_encoded = nameLen << 16;
+        const ui32 dl_encoded = dataLen << 0;
 
+        return nl_encoded | dl_encoded;
+    }
+
+    static void decode(ui32 info, ui16 &nameLen, ui16 &dataLen) {
+        const ui32 i = info >> 16;
+        nameLen = (ui16) i;
+        dataLen = (ui16) info >> 0;
+    }
+
+    void writeVar(UniformVar *var) {
+        ++m_numvars;
+        ui32 varInfo = encode( (ui16) var->m_name.size(), (ui16) var->m_data.m_size );
+        write( (c8*) &varInfo, sizeof(ui32) );
+        write( (c8*) var->m_data.getData(), var->m_data.m_size);
+    }
+
+    void readVar(c8 *id, ui32 &size, c8 *data) {
+        ui32 varInfo = 0;
+        read( (c8*) &varInfo, sizeof(ui32));
+        ui16 nameLen(0), dataLen(0);
+        decode(varInfo, nameLen, dataLen);
+        read(id, nameLen);
+        size = dataLen;
+        read(data, dataLen);
+    }
+
+    void read(c8 *data, ui32 size ) {
+        if ((m_pos + size) > m_buffer.m_size || 0 == size) {
+            return;
+        }
+        ::memcpy(data, &m_buffer.m_data[m_pos], size );
+        m_pos += size;
     }
     
-    void write( UniformVar *vars ui32 numVars ) {
+    void write( c8 *data, ui32 size ) {
+        if (0 == size || ( m_pos + size ) > m_buffer.m_size ) {
+            return;
+        }
 
+        ::memcpy(&m_buffer.m_data[m_pos], data, size);
+        m_pos += size;
     }
 
+    ui32 m_numvars;
     ui64 m_pos;
     MemoryBuffer m_buffer;
 };
@@ -806,7 +859,7 @@ struct Frame {
     ::CPPCore::TArray<PassData*> m_newPasses;
     ::CPPCore::TArray<FrameSubmitCmd*> m_submitCmds;
     FrameSubmitCmdAllocator m_submitCmdAllocator;
-
+    UniformBuffer *m_uniforBuffers;
     Pipeline *m_pipeline;
 
     Frame();

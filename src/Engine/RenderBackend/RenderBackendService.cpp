@@ -205,6 +205,7 @@ void RenderBackendService::commitNextFrame() {
     }
 
     CommitFrameEventData *data = new CommitFrameEventData;
+    data->m_frame = m_submitFrame;
     for (ui32 i = 0; i < m_passes.size(); ++i) {
         PassData *currentPass = m_passes[i];
         for (ui32 j = 0; j < currentPass->m_geoBatches.size(); ++j) {
@@ -218,6 +219,8 @@ void RenderBackendService::commitNextFrame() {
                 cmd->m_data = new c8[cmd->m_size];
                 ::memcpy(cmd->m_data, &currentBatch->m_matrixBuffer, cmd->m_size);
             } else if (currentBatch->m_dirtyFlag & GeoBatchData::UniformBufferDirty) {
+                UniformBuffer &uniformBuffer = data->m_frame->m_uniforBuffers[i];
+                
                 for (ui32 k = 0; k < currentBatch->m_uniforms.size(); ++k) {
                     FrameSubmitCmd *cmd = m_submitFrame->enqueue();
                     cmd->m_passId = currentPass->m_id;
@@ -228,6 +231,7 @@ void RenderBackendService::commitNextFrame() {
                         continue;
                     }
 
+                    uniformBuffer.writeVar(var);
                     cmd->m_size = var->getSize();
                     cmd->m_data = new c8[cmd->m_size];
                     ui32 offset(0);
@@ -236,6 +240,8 @@ void RenderBackendService::commitNextFrame() {
                     ::memcpy(&cmd->m_data[offset], var->m_name.c_str(), var->m_name.size());
                     offset += var->m_name.size();
                     ::memcpy(&cmd->m_data[offset], var->m_data.getData(), var->m_data.m_size);
+
+                    
                 }
             }
             currentBatch->m_dirtyFlag = 0;
@@ -406,6 +412,15 @@ void RenderBackendService::addMesh( const CPPCore::TArray<Mesh*> &geoArray, ui32
     entry->m_geo.add( &geoArray[ 0 ], geoArray.size() );
     m_currentBatch->m_meshArray.add(entry);
     m_currentBatch->m_dirtyFlag |= GeoBatchData::MeshDirty;
+}
+
+void RenderBackendService::updateMesh(Mesh *mesh) {
+    if (nullptr == m_currentBatch) {
+        osre_error(Tag, "No active batch.");
+        return;
+    }
+
+    m_currentBatch->m_dirtyFlag |= GeoBatchData::MeshUpdateDirty;
 }
 
 bool RenderBackendService::endRenderBatch() {

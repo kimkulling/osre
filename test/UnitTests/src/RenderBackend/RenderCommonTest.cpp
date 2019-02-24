@@ -213,6 +213,48 @@ TEST_F(RenderCommonTest, access_material_param_Test) {
     delete mat;
 }
 
+static bool isEqual(c8 *buf, c8 v, ui32 size) {
+    bool equal = true;
+    for (ui32 i = 0; i < size; ++i) {
+        if (buf[i] != v) {
+            equal = false;
+            break;
+        }
+    }
+
+    return equal;
+}
+
+TEST_F(RenderCommonTest, uniformBufferReadWriteTest) {
+    UniformBuffer buffer;
+    EXPECT_EQ(0, buffer.getSize());
+    buffer.create(1024);
+    EXPECT_EQ(1024, buffer.getSize());
+
+    c8 buf[100];
+    ::memset(buf, 1, 100);
+    buffer.write(buf, 100);
+    ::memset(buf, 2, 100);
+    buffer.write(buf, 100);
+
+    buffer.reset();
+    c8 buf_out[100];
+    buffer.read(buf_out, 100);
+    EXPECT_TRUE(isEqual( buf_out, 1, 100) );
+
+    buffer.read(buf_out, 100);
+    EXPECT_TRUE(isEqual(buf_out, 2, 100) );
+}
+
+TEST_F(RenderCommonTest, uniformBufferEncodeDecodeTest) {
+    ui16 lenName = 10, lenName_out(0);
+    ui16 lenData = 100, lenData_out(0);
+    ui32 data = UniformBuffer::encode(lenName, lenData);
+    UniformBuffer::decode(data, lenName_out, lenData_out);
+    EXPECT_EQ(lenName, lenName_out);
+    EXPECT_EQ(lenData, lenData_out);
+}
+
 } // Namespace UnitTest
 } // Namespace OSRE
 

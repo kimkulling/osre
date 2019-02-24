@@ -121,19 +121,7 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
                 MeshBuilder::updateTextBox( entry->m_geo, 0.1f, text );
                 geo = entry->m_geo;
             }
-
-            PassData *data = m_rbSrv->getPassById(PipelinePass::getPassNameById( DbgPassId ));
-            if (nullptr != data) {
-                GeoBatchData *batch = data->getBatchById("dbgFontBatch");
-                for (ui32 i = 0; i < batch->m_meshArray.size(); ++i) {
-                    for (ui32 j = 0; j < batch->m_meshArray[i]->m_geo.size(); j++) {
-                        if (batch->m_meshArray[i]->m_geo[j]->m_id == id) {
-                            batch->m_meshArray[i]->m_isDirty = true;
-                            batch->m_meshArray[i]->m_geo[j] = geo;
-                        }
-                    }
-                }
-            }
+            m_rbSrv->updateMesh(geo);
         }
     }
     

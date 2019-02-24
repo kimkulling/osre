@@ -467,7 +467,6 @@ bool OGLRenderEventHandler::onInitRenderPasses( const Common::EventData *eventDa
     
     CPPCore::TArray<ui32> primGroups;
     Frame *frame = frameToCommitData->m_frame;
-    
     for (ui32 passIdx = 0; passIdx < frame->m_newPasses.size(); ++passIdx) {
         PassData *currentPass = frame->m_newPasses[passIdx];
         OSRE_ASSERT(nullptr != currentPass);
@@ -475,6 +474,7 @@ bool OGLRenderEventHandler::onInitRenderPasses( const Common::EventData *eventDa
         if (!currentPass->m_isDirty) {
             continue;
         }
+
         // ToDo: create pipeline pass for the name.
         for (ui32 batchIdx = 0; batchIdx < currentPass->m_geoBatches.size(); ++batchIdx) {
             GeoBatchData *currentBatchData = currentPass->m_geoBatches[passIdx];
@@ -533,7 +533,7 @@ bool OGLRenderEventHandler::onInitRenderPasses( const Common::EventData *eventDa
     }
 
     frame->m_newPasses.clear();
-
+    
     m_oglBackend->useShader( nullptr );
 
     return true;

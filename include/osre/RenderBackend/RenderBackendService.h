@@ -199,6 +199,8 @@ public:
 
     void addMesh( const CPPCore::TArray<Mesh*> &geoArray, ui32 numInstances );
 
+    void updateMesh(Mesh *mesh);
+
     bool endRenderBatch();
 
     bool endPass();
