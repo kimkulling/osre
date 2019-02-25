@@ -232,6 +232,8 @@ void RenderBackendService::commitNextFrame() {
                     }
 
                     uniformBuffer.writeVar(var);
+
+                    // todo: replace by uniform buffer.
                     cmd->m_size = var->getSize();
                     cmd->m_data = new c8[cmd->m_size];
                     ui32 offset(0);
@@ -240,10 +242,11 @@ void RenderBackendService::commitNextFrame() {
                     ::memcpy(&cmd->m_data[offset], var->m_name.c_str(), var->m_name.size());
                     offset += var->m_name.size();
                     ::memcpy(&cmd->m_data[offset], var->m_data.getData(), var->m_data.m_size);
-
-                    
                 }
+            } else if (currentBatch->m_dirtyFlag & GeoBatchData::MeshUpdateDirty) {
+                // todo: implement me
             }
+
             currentBatch->m_dirtyFlag = 0;
         }
     }
@@ -419,7 +422,7 @@ void RenderBackendService::updateMesh(Mesh *mesh) {
         osre_error(Tag, "No active batch.");
         return;
     }
-
+    m_currentBatch->m_updateMeshArray.add(mesh);
     m_currentBatch->m_dirtyFlag |= GeoBatchData::MeshUpdateDirty;
 }
 
