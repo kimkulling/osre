@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Profiling/PerformanceCounterRegistry.h>
 #include <osre/Threading/SystemTask.h>
@@ -244,7 +245,16 @@ void RenderBackendService::commitNextFrame() {
                     ::memcpy(&cmd->m_data[offset], var->m_data.getData(), var->m_data.m_size);
                 }
             } else if (currentBatch->m_dirtyFlag & GeoBatchData::MeshUpdateDirty) {
-                // todo: implement me
+                for (ui32 i = 0; i < currentBatch->m_updateMeshArray.size(); ++i) {
+                    FrameSubmitCmd *cmd = m_submitFrame->enqueue();
+                    cmd->m_passId = currentPass->m_id;
+                    cmd->m_batchId = currentBatch->m_id;
+                    cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateBuffer;
+                    Mesh *currentMesh = currentBatch->m_updateMeshArray[i];
+                    cmd->m_size = currentMesh->m_vb->getSize();
+                    cmd->m_data = new c8[cmd->m_size];
+                    ::memcpy(cmd->m_data, currentMesh->m_vb->getData(), cmd->m_size);
+                }
             }
 
             currentBatch->m_dirtyFlag = 0;
