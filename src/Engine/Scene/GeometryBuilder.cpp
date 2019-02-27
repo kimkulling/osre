@@ -283,7 +283,7 @@ void MeshBuilder::allocQuads( VertexType type, BufferAccessType access ) {
     m_ActiveGeo = geo;
 }
 
-void MeshBuilder::allocUiQuad( VertexType type, BufferAccessType access, const Rect2ui &dim, UiVertexCache &vc, RenderBackend::UiIndexCache &ic ) {
+void MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, RenderBackend::UiIndexCache &ic ) {
     // setup triangle vertices    
     static const ui32 NumVert = 4;
     glm::vec3 col[ NumVert ];

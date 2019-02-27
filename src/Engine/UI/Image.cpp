@@ -58,7 +58,7 @@ void Image::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rb
 
     MeshBuilder builder;
     const Rect2ui &dim = Widget::getRect();
-    builder.allocUiQuad( VertexType::RenderVertex, BufferAccessType::ReadOnly, dim.getX1(), dim.getY1(), dim.getWidth(), dim.getHeight(), vertexCache, indexCache );
+    builder.allocUiQuad( dim, vertexCache, indexCache );
     
 }
 
