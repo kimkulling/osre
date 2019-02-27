@@ -398,14 +398,14 @@ struct OSRE_EXPORT BufferData {
     void attach( void *data, ui32 size );
     BufferType getBufferType() const;
     BufferAccessType getBufferAccessType() const;
-    ui64 getSize() const;
+    ui32 getSize() const;
     c8 *getData() const;
 
     OSRE_NON_COPYABLE( BufferData )
 };
 
 inline
-ui64 BufferData::getSize() const {
+ui32 BufferData::getSize() const {
     return (nullptr != m_buffer.m_data ? m_buffer.m_size : 0L);
 }
 

@@ -21,11 +21,13 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/UI/Image.h>
+#include <osre/Scene/GeometryBuilder.h>
 
 namespace OSRE {
 namespace UI {
 
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Scene;
 
 Image::Image( const String &name, Widget *parent )
 : Widget( name, parent ) 
@@ -53,6 +55,11 @@ const IO::Uri &Image::getUri() const {
 void Image::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
     UiVertexCache vertexCache;
     UiIndexCache indexCache;
+
+    MeshBuilder builder;
+    const Rect2ui &dim = Widget::getRect();
+    builder.allocUiQuad( VertexType::RenderVertex, BufferAccessType::ReadOnly, dim.getX1(), dim.getY1(), dim.getWidth(), dim.getHeight(), vertexCache, indexCache );
+    
 }
 
 } // Namespace UI

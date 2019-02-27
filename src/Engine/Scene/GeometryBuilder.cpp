@@ -283,6 +283,51 @@ void MeshBuilder::allocQuads( VertexType type, BufferAccessType access ) {
     m_ActiveGeo = geo;
 }
 
+void MeshBuilder::allocUiQuad( VertexType type, BufferAccessType access, const Rect2ui &dim, UiVertexCache &vc, RenderBackend::UiIndexCache &ic ) {
+    // setup triangle vertices    
+    static const ui32 NumVert = 4;
+    glm::vec3 col[ NumVert ];
+    col[ 0 ] = glm::vec3( 1, 0, 0 );
+    col[ 1 ] = glm::vec3( 0, 1, 0 );
+    col[ 2 ] = glm::vec3( 0, 0, 1 );
+    col[ 3 ] = glm::vec3( 1, 0, 0 );
+
+    glm::vec3 pos[ NumVert ];
+    pos[ 0 ] = glm::vec3( x, y, 0 );
+    pos[ 1 ] = glm::vec3( x, y+h, 0 );
+    pos[ 2 ] = glm::vec3( x+w, y, 0 );
+    pos[ 3 ] = glm::vec3( x+h, y+h, 0 );
+
+    glm::vec2 tex0[ NumVert ];
+    tex0[ 0 ] = glm::vec2( 0, 0 );
+    tex0[ 1 ] = glm::vec2( 0, 1 );
+    tex0[ 2 ] = glm::vec2( 1, 0 );
+    tex0[ 3 ] = glm::vec2( 1, 1 );
+
+    for (ui32 i = 0; i < 4; ++i) {
+        RenderVert v;
+        v.position = pos[ i ];
+        v.color0 = col[ i ];
+        v.tex0 = tex0[ i ];
+        vc.add( v );
+    }
+
+    // setup triangle indices
+    static const ui32 NumIndices = 6;
+    GLushort  indices[ NumIndices ];
+    indices[ 0 ] = 0;
+    indices[ 1 ] = 1;
+    indices[ 2 ] = 2;
+
+    indices[ 3 ] = 1;
+    indices[ 4 ] = 3;
+    indices[ 5 ] = 2;
+    
+    for (ui32 i = 0; i < 4; ++i) {
+        ic.add( indices[ i ] );
+    }
+}
+
 void MeshBuilder::allocCube( RenderBackend::VertexType type, RenderBackend::BufferAccessType access ) {
     m_ActiveGeo = Mesh::create( 1 );    
 }
