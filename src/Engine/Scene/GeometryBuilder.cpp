@@ -283,7 +283,12 @@ void MeshBuilder::allocQuads( VertexType type, BufferAccessType access ) {
     m_ActiveGeo = geo;
 }
 
-void MeshBuilder::allocUiQuad( VertexType type, BufferAccessType access, const Rect2ui &dim, UiVertexCache &vc, RenderBackend::UiIndexCache &ic ) {
+void MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, RenderBackend::UiIndexCache &ic ) {
+    const f32 x = dim.getX1();
+    const f32 y = dim.getY1();
+    const f32 w = dim.getWidth();
+    const f32 h = dim.getHeight();
+
     // setup triangle vertices    
     static const ui32 NumVert = 4;
     glm::vec3 col[ NumVert ];
@@ -536,7 +541,8 @@ void MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text, 
     m_ActiveGeo = geo;
 }
 
-void MeshBuilder::allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access, UiVertexCache &vc, UiIndexCache &ic) {
+void MeshBuilder::allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access, 
+        UiVertexCache &vc, UiIndexCache &ic) {
     glm::vec3 *textPos(nullptr), *colors(nullptr);
     glm::vec2 *tex0(nullptr);
     GLushort *textIndices(nullptr);
@@ -558,7 +564,6 @@ void MeshBuilder::allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text,
     delete[] tex0;
     delete[] textPos;
 }
-
 
 void MeshBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text ) {
     if ( nullptr == geo ) {

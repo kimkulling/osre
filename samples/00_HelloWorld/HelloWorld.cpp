@@ -66,9 +66,12 @@ public:
 
 protected:
     bool onCreate( Settings *settings = nullptr ) override {
-        Settings *baseSettings( AppBase::getSettings() );
-        if ( nullptr == baseSettings ) {
-            return false;
+        Settings *baseSettings( settings );
+        if (nullptr == baseSettings) {
+            baseSettings = AppBase::getSettings();
+            if (nullptr == baseSettings) {
+                return false;
+            }
         }
        
         baseSettings->setString( Properties::Settings::WindowsTitle, "HelloWorld!" );
@@ -87,8 +90,6 @@ protected:
         AppBase::activateStage( m_stage->getName() );
 
         Scene::Node *geoNode = m_stage->createNode( "geo", nullptr );
-        const Scene::Node::AABB &aabb = geoNode->getAABB();
-
         Scene::MeshBuilder meshBuilder;
         meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
         RenderBackend::Mesh *mesh = meshBuilder.getMesh();

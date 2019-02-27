@@ -86,7 +86,7 @@ public:
     /// @return The created mesh.
     void allocQuads( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
 
-    void allocUiQuad( RenderBackend::VertexType type, RenderBackend::BufferAccessType access, const Rect2ui &dim, RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic );
+    void allocUiQuad( const Rect2ui &dim, RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic );
     
     void allocCube( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
 
