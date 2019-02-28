@@ -49,7 +49,6 @@ bool GeometryProcessor::execute() {
         return true;
     }
 
-
     if ( m_dirty &= NeedsUpdate ) {
         for ( ui32 i = 0; i < m_geoArray.size(); i++ ) {
             handleGeometry( m_geoArray[ i ] );

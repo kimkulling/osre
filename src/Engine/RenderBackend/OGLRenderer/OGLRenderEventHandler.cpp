@@ -574,7 +574,6 @@ bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData)
         }
     }
     data->m_frame->m_submitCmds.resize(0);
-
     data->m_frame->m_submitCmdAllocator.release();
 
     return true;
