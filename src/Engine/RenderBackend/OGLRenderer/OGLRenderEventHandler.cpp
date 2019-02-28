@@ -206,7 +206,8 @@ static OGLVertexArray *setupBuffers( Mesh *mesh, OGLRenderBackend *rb, OGLShader
     return vertexArray;
 }
 
-static void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat4 &model, const TArray<ui32> &primGroups, OGLRenderBackend *rb, 
+static void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat4 &model,
+        const TArray<ui32> &primGroups, OGLRenderBackend *rb, 
         OGLRenderEventHandler *eh, OGLVertexArray *va ) {
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
@@ -232,7 +233,8 @@ static void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat
     eh->enqueueRenderCmd( renderCmd );
 }
 
-static void setupInstancedDrawCmd(const char *id, const TArray<ui32> &ids, OGLRenderBackend *rb, OGLRenderEventHandler *eh, OGLVertexArray *va, ui32 numInstances ) {
+static void setupInstancedDrawCmd(const char *id, const TArray<ui32> &ids, OGLRenderBackend *rb, 
+        OGLRenderEventHandler *eh, OGLVertexArray *va, ui32 numInstances ) {
 	OSRE_ASSERT( nullptr != rb );
 	OSRE_ASSERT( nullptr != eh );
 
@@ -520,9 +522,11 @@ bool OGLRenderEventHandler::onInitRenderPasses( const Common::EventData *eventDa
 
                     // setup the draw calls
                     if (0 == currentMeshEntry->numInstances) {
-                        setupPrimDrawCmd(currentBatchData->m_id, currentMesh->m_localMatrix, currentMesh->m_model, primGroups, m_oglBackend, this, m_vertexArray);
+                        setupPrimDrawCmd(currentBatchData->m_id, currentMesh->m_localMatrix, currentMesh->m_model, 
+                                primGroups, m_oglBackend, this, m_vertexArray);
                     } else {
-                        setupInstancedDrawCmd(currentBatchData->m_id, primGroups, m_oglBackend, this, m_vertexArray, currentMeshEntry->numInstances);
+                        setupInstancedDrawCmd(currentBatchData->m_id, primGroups, m_oglBackend, this, m_vertexArray, 
+                                currentMeshEntry->numInstances);
                     }
                     
                     primGroups.resize(0);
@@ -562,6 +566,11 @@ bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData)
             ui32 size = cmd->m_size - offset;
             OGLParameter *oglParam = m_oglBackend->getParameter(name);
             ::memcpy(oglParam->m_data->getData(), &cmd->m_data[offset], size);
+        } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateBuffer) {
+            OGLBuffer *buffer = m_oglBackend->getBufferById(cmd->m_meshId);
+            m_oglBackend->bindBuffer( buffer );
+            m_oglBackend->copyDataToBuffer( buffer, cmd->m_data, cmd->m_size, BufferAccessType::ReadWrite );
+            m_oglBackend->unbindBuffer( buffer );
         }
     }
     data->m_frame->m_submitCmds.resize(0);

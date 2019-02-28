@@ -251,6 +251,7 @@ void RenderBackendService::commitNextFrame() {
                     cmd->m_batchId = currentBatch->m_id;
                     cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateBuffer;
                     Mesh *currentMesh = currentBatch->m_updateMeshArray[i];
+                    cmd->m_meshId = currentMesh->m_id;
                     cmd->m_size = currentMesh->m_vb->getSize();
                     cmd->m_data = new c8[cmd->m_size];
                     ::memcpy(cmd->m_data, currentMesh->m_vb->getData(), cmd->m_size);

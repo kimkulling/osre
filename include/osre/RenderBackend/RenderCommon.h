@@ -758,6 +758,7 @@ struct FrameSubmitCmd {
         UpdateUniforms = 8
     };
 
+    ui32 m_meshId;
     const c8 *m_passId;
     const c8 *m_batchId;
     ui32 m_updateFlags;
@@ -765,7 +766,8 @@ struct FrameSubmitCmd {
     c8 *m_data;
 
     FrameSubmitCmd()
-    : m_passId(nullptr)
+    : m_meshId(999999)
+    , m_passId(nullptr)
     , m_batchId(nullptr)
     , m_updateFlags(0)
     , m_size(0)
