@@ -89,7 +89,7 @@ protected:
 
         m_screen = AppBase::createScreen( "UiDemo" );
 
-        /*Panel *panel = new Panel( "panel", UiFlags::Resizable, m_screen );
+        Panel *panel = new Panel( "panel", UiFlags::Resizable, m_screen );
         panel->setRect( 10, 10, 500, 500 );
         ButtonBase *btnOpenFile = new ButtonBase( "Open file", panel );
         btnOpenFile->registerCallback( ButtonBase::ButtonPressed, UiFunctor::Make(this, &UIDemoApp::openFileCallback ));
@@ -98,14 +98,11 @@ protected:
 
         ButtonBase *btnQuit  = new ButtonBase( "Quit", panel );
         btnQuit->setRect( 400, 20, 100, 20 );
-        btnQuit->registerCallback( ButtonBase::ButtonPressed, UiFunctor::Make( this, &UIDemoApp::quitCallback ) );*/
+        btnQuit->registerCallback( ButtonBase::ButtonPressed, UiFunctor::Make( this, &UIDemoApp::quitCallback ) );
 
         TextBase *tb = new TextBase( "test", m_screen);
         tb->setLabel( "Test" );
         tb->setRect( 80, 20, 400, 60 );
-        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
-        m_transformMatrix.update();
-        AppBase::getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
 
         return true;
     }

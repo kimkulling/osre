@@ -404,6 +404,10 @@ void AppBase::onUpdate() {
     if ( nullptr != m_world ) {
         m_world->update( dt );
     }
+
+    if (nullptr != m_uiRenderer && nullptr != m_uiScreen) {
+        m_uiRenderer->render(m_uiScreen, m_rbService);
+    }
 }
 
 const ArgumentParser &AppBase::getArgumentParser() const {

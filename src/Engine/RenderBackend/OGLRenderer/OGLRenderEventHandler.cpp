@@ -572,6 +572,7 @@ bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData)
             m_oglBackend->copyDataToBuffer( buffer, cmd->m_data, cmd->m_size, BufferAccessType::ReadWrite );
             m_oglBackend->unbindBuffer( buffer );
         }
+        cmd->m_updateFlags = 0;
     }
     data->m_frame->m_submitCmds.resize(0);
     data->m_frame->m_submitCmdAllocator.release();
