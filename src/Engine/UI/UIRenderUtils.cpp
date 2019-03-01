@@ -122,7 +122,7 @@ RenderBackend::Mesh *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCac
         geo->m_ib->copyFrom(&indexCache.m_cache[0], indexCache.sizeInBytes());
     }
 
-    // use default material
+    // use default ui material
     if ( nullptr == material ) {
         geo->m_material = Scene::MaterialBuilder::createBuildinUiMaterial();
     } else {

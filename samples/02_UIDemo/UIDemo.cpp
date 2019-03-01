@@ -92,13 +92,13 @@ protected:
         Panel *panel = new Panel( "panel", UiFlags::Resizable, m_screen );
         panel->setRect( 10, 10, 500, 500 );
         ButtonBase *btnOpenFile = new ButtonBase( "Open file", panel );
-        btnOpenFile->registerCallback( ButtonBase::ButtonPressed, UiFunctor::Make(this, &UIDemoApp::openFileCallback ));
+        btnOpenFile->registerCallback( Widget::Pressed, UiFunctor::Make(this, &UIDemoApp::openFileCallback ));
         btnOpenFile->setRect( 20, 20, 100, 20 );
         //btnClick->setLabel( "Open file" );
 
         ButtonBase *btnQuit  = new ButtonBase( "Quit", panel );
         btnQuit->setRect( 400, 20, 100, 20 );
-        btnQuit->registerCallback( ButtonBase::ButtonPressed, UiFunctor::Make( this, &UIDemoApp::quitCallback ) );
+        btnQuit->registerCallback(Widget::Pressed, UiFunctor::Make( this, &UIDemoApp::quitCallback ) );
 
         TextBase *tb = new TextBase( "test", m_screen);
         tb->setLabel( "Test" );

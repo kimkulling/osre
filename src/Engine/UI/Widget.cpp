@@ -308,30 +308,30 @@ void Widget::render( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbS
     }
 }
 
-void Widget::mouseDown( const Point2ui &pt ) {
-    onMouseDown( pt );
+void Widget::mouseDown( const Point2ui &pt, void *data) {
+    onMouseDown( pt, data );
 }
 
-void Widget::mouseUp( const Point2ui &pt ) {
-    onMouseUp( pt );
+void Widget::mouseUp( const Point2ui &pt, void *data) {
+    onMouseUp( pt, data );
 }
 
-void Widget::checkChildren( const Point2ui &pt ) {
+void Widget::checkChildren( const Point2ui &pt, void *data, WidgetState state) {
     for (ui32 i = 0; i < getNumChildren(); i++) {
         Widget *child(getChildWidgetAt(i));
         const Rect2ui &r = child->getRect();
         if (r.isIn(pt)) {
-            child->onMouseDown(pt);
+            child->onMouseDown(pt, data );
         }
     }
 }
 
-void Widget::onMouseDown( const Point2ui &pt ) {
-    checkChildren(pt);
+void Widget::onMouseDown( const Point2ui &pt, void *data) {
+    checkChildren(pt, data, Pressed);
 }
 
-void Widget::onMouseUp( const Point2ui &pt ) {
-    checkChildren(pt);
+void Widget::onMouseUp( const Point2ui &pt, void *data) {
+    checkChildren(pt, data, Released);
 }
 
 void Widget::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {

@@ -140,6 +140,14 @@ using UiRenderCmdCache = CPPCore::TArray<UiRenderCmd*>;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Widget : public Common::Object {
 public:
+    enum WidgetState {
+        Pressed = 0,
+        Released = 1,
+        MaxStates,
+
+        InvalidWidgetState
+    };
+
     virtual ~Widget();
     virtual void setParent( Widget *parent );
     virtual Widget *getParent() const;
@@ -161,19 +169,19 @@ public:
     virtual void setVisible( bool visible );
     virtual bool isVisible() const;
     virtual void render( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv );
-    virtual void mouseDown( const Point2ui &pt );
-    virtual void mouseUp( const Point2ui &pt );
+    virtual void mouseDown( const Point2ui &pt, void *data);
+    virtual void mouseUp( const Point2ui &pt, void *data);
     virtual void setId( ui32 id );
     virtual i32 getId() const;
     virtual void resize( ui32 x, ui32 y, ui32 w, ui32 h );
 
 protected:
     Widget( const String &name, Widget *parent );
-    void checkChildren(const Point2ui &pt);
+    void checkChildren(const Point2ui &pt, void *data, WidgetState state );
     virtual void onResize( ui32 x, ui32 y, ui32 w, ui32 h );
     virtual void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) = 0;
-    virtual void onMouseDown( const Point2ui &pt);
-    virtual void onMouseUp( const Point2ui &pt );
+    virtual void onMouseDown( const Point2ui &pt, void *data);
+    virtual void onMouseUp( const Point2ui &pt, void *data);
 
 private:
     Widget *m_parent;

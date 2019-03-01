@@ -84,7 +84,7 @@ public:
         if ( osEvent == MouseButtonDownEvent ) {
             MouseButtonEventData *mouseBtnData( ( MouseButtonEventData* )data );
             const Point2ui pt( mouseBtnData->m_AbsX, mouseBtnData->m_AbsY );
-            m_uiScreen->mouseDown( pt );
+            m_uiScreen->mouseDown( pt, nullptr );
         }
     }
 

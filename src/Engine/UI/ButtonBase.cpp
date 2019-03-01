@@ -29,9 +29,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "UIRenderUtils.h"
 
-#ifndef GLM_ENABLE_EXPERIMENTAL
+/*#ifndef GLM_ENABLE_EXPERIMENTAL
 #   define GLM_ENABLE_EXPERIMENTAL
-#endif // GLM_ENABLE_EXPERIMENTAL
+#endif // GLM_ENABLE_EXPERIMENTAL*/
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
@@ -116,7 +116,7 @@ const String &ButtonBase::getImage() const {
     return m_image.getPath();
 }
 
-void ButtonBase::registerCallback( ButtonState state, UiFunctor functor ) {
+void ButtonBase::registerCallback( WidgetState state, UiFunctor functor ) {
     m_callback[ state ].m_used = true;
     m_callback[ state ].m_callback = functor;
     functor.incRef();
@@ -149,17 +149,24 @@ void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendServic
     renderCmdCache.add( cmd );
 }
 
-void ButtonBase::onMouseDown( const Point2ui &pt ) {
-    if ( m_callback[ 0 ].m_used ) {
-        const FunctorContainer &ct( m_callback[ 0 ] );
+void ButtonBase::onMouseDown( const Point2ui &pt, void *data) {
+    const ui32 index = static_cast<ui32>(Pressed);
+    if ( m_callback[ index ].m_used ) {
+        const FunctorContainer &ct( m_callback[index] );
         ct.m_callback( Widget::getId(), nullptr );
     }
-    Widget::onMouseDown(pt);
+    Widget::onMouseDown(pt, data);
     Widget::requestRedraw();
 }
 
-void ButtonBase::onMouseUp(const Point2ui &pt) {
-    Widget::onMouseUp(pt);
+void ButtonBase::onMouseUp(const Point2ui &pt, void *data) {
+    const ui32 index = static_cast<ui32>(Released);
+    if (m_callback[ index ].m_used) {
+        const FunctorContainer &ct(m_callback[index ]);
+        ct.m_callback(Widget::getId(), nullptr);
+    }
+    
+    Widget::onMouseUp(pt, data);
     Widget::requestRedraw();
 }
 

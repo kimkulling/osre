@@ -46,12 +46,6 @@ namespace UI {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT ButtonBase : public Widget {
 public:
-    enum ButtonState {
-        ButtonPressed = 0,
-        ButtonReleased,
-        MaxStates
-    };
-
     ButtonBase( const String &name, Widget *parent );
     virtual ~ButtonBase();
     virtual void setLabel( const String &label );
@@ -59,14 +53,14 @@ public:
     virtual void setImage( Image &image );
     virtual void setImage( const String &name );
     virtual const String &getImage() const;
-    void registerCallback( ButtonState state, UiFunctor functor );
+    void registerCallback( WidgetState state, UiFunctor functor );
     static ButtonBase *createIconButton( const String &name, Image &icon, Widget *parent );
     static ButtonBase *createBaseButton( const String &name, const String &label, Widget *parent );
 
 protected:
     void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) override;
-    void onMouseDown(const Point2ui &pt) override;
-    void onMouseUp(const Point2ui &pt) override;
+    void onMouseDown(const Point2ui &pt, void *data ) override;
+    void onMouseUp(const Point2ui &pt, void *data) override;
 
 private:
     struct FunctorContainer {
