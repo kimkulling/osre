@@ -577,8 +577,8 @@ FrameSubmitCmd *Frame::enqueue() {
 }
 
 UniformDataBlob::UniformDataBlob()
-    : m_data(nullptr)
-    , m_size(0) {
+: m_data(nullptr)
+, m_size(0) {
     // empty
 }
 

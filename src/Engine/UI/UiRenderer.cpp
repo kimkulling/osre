@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/UI/UiRenderer.h>
+#include <osre/RenderBackend/Pipeline.h>
 #include <osre/UI/Screen.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
@@ -44,6 +45,9 @@ void UiRenderer::render( UI::Screen *screen, RenderBackendService *rbService ) {
     UiRenderCmdCache cache;
     screen->render( cache, rbService );
 
+    rbService->beginPass(PipelinePass::getPassNameById(UiPassId));
+    rbService->beginRenderBatch("b1");
+    
     CPPCore::TArray<Mesh*> geoCache;
     for ( ui32 i = 0; i < cache.size(); ++i ) {
         UiRenderCmd *currentCmd( cache[ i ] );
@@ -52,6 +56,9 @@ void UiRenderer::render( UI::Screen *screen, RenderBackendService *rbService ) {
 
         rbService->addMesh( geoCache, 0 );
     }
+
+    rbService->endRenderBatch();
+    rbService->endPass();
 }
 
 }

@@ -28,6 +28,7 @@ namespace RenderBackend {
 
 static const c8* RenderPassNames[] = {
     "RendePass",
+    "UiPass",
     "DbgPass"
 };
 

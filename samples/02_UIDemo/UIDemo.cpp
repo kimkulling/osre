@@ -60,12 +60,12 @@ public:
         // empty
     }
 
-    void openFileCallback( ui32 id, void *data ) {
+    void openFileCallback( ui32, void* ) {
         IO::Uri loc;
         PlatformOperations::getFileOpenDialog( "All\0 *.*\0", loc );
     }
 
-    void quitCallback( ui32 id, void *data ) {
+    void quitCallback( ui32, void * ) {
         AppBase::requestShutdown();
     }
 

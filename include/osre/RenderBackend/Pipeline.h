@@ -43,10 +43,10 @@ struct RenderTarget {
     // empty
 };
 
-
 static const ui32 RenderPassId = 0;
-static const ui32 DbgPassId    = 1;
-static const ui32 MaxDbgPasses = 2;
+static const ui32 UiPassId     = 1;
+static const ui32 DbgPassId    = 2;
+static const ui32 MaxDbgPasses = 3;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
