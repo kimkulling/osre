@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/World.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/View.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/StringUtils.h>
 #include <osre/Debugging/osre_debugging.h>
 
@@ -189,14 +190,22 @@ void World::update( Time dt ) {
 
 }
 
-void World::draw( RenderBackendService *rbService ) {
+void World::draw( RenderBackendService *rbSrv ) {
+    OSRE_ASSERT(nullptr != rbSrv);
+
+    rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+    rbSrv->beginRenderBatch("b1");
+
     if ( nullptr != m_activeStage ) {
-        m_activeStage->draw( rbService );
+        m_activeStage->draw( rbSrv );
     }
 
     if ( nullptr != m_activeView ) {
-        m_activeView->draw( rbService );
+        m_activeView->draw( rbSrv );
     }
+
+    rbSrv->endRenderBatch();
+    rbSrv->endPass();
 }
 
 RenderMode World::getRenderMode() const {

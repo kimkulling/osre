@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/StringUtils.h>
 #include <osre/Common/Ids.h>
+#include <osre/RenderBackend/Pipeline.h>
 
 namespace OSRE {
 namespace Scene {
@@ -161,7 +162,7 @@ void Stage::update( Time dt ) {
     onUpdate( dt );
 }
 
-static void drawNode( Node *current, bool traverse, RenderBackendService *rb ) {
+static void renderNode( Node *current, bool traverse, RenderBackendService *rb ) {
     if (nullptr == current) {
         return;
     }
@@ -178,19 +179,19 @@ static void drawNode( Node *current, bool traverse, RenderBackendService *rb ) {
         const ui32 numChilds( current->getNumChildren() );
         for (ui32 i = 0; i < numChilds; ++i) {
             Node *child( current->getChildAt( i ) );
-            drawNode( child, traverse, rb );
+            renderNode( child, traverse, rb );
         }
     }
 }
 
-void Stage::draw( RenderBackendService *renderBackendSrv ) {
+void Stage::draw( RenderBackendService *rbSrv ) {
     if( nullptr == m_root ) {
         return;
     }
 
-    drawNode( m_root, true, m_rbService );
+    renderNode( m_root, true, m_rbService );
 
-    onDraw( renderBackendSrv );
+    onDraw( rbSrv );
 }
 
 void Stage::setIdContainer( Common::Ids &ids ) {

@@ -47,5 +47,5 @@ public:
     void render( UI::Screen *screen, RenderBackend::RenderBackendService *rbService );
 };
 
-}
-}
+} // Namespace UI
+} // Namespace OSRE

@@ -48,7 +48,7 @@ ArgumentParser::Argument::Argument( const String &arg, const String &desc, ui32 
     // empty
 }
 
-static void parseExpectedArgs( const String &userDefinedArgs, const String &desc, CPPCore::TArray<ArgumentParser::Argument> &supportedArgs ) {
+static void parseExpectedArgs( const String &userDefinedArgs, const String &desc, TArray<ArgumentParser::Argument> &supportedArgs ) {
     TArray<String> extractedArgs, extractedDescs;
     Tokenizer::tokenize( userDefinedArgs, extractedArgs, ":" );
     Tokenizer::tokenize( desc, extractedDescs, ":" );

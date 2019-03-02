@@ -27,7 +27,7 @@ namespace OSRE {
 namespace RenderBackend {
 
 static const c8* RenderPassNames[] = {
-    "RendePass",
+    "RenderPass",
     "UiPass",
     "DbgPass"
 };

@@ -118,19 +118,20 @@ public:
     ///	@return	The blanked argument.
     static String getBlankArgument( const String &arg );
 
+    // no copying
+    ArgumentParser() = delete;
+    ArgumentParser(const ArgumentParser &) = delete;
+    ArgumentParser &operator = (const ArgumentParser &) = delete;
+
 protected:
     bool validateArguments( i32 iArgc, c8 *ppArgv[] );
     void setInvalid();
 
-private:
-    ArgumentParser();
-    ArgumentParser( const ArgumentParser & );
-    ArgumentParser &operator = ( const ArgumentParser & );
 
 private:
     CPPCore::TArray<Argument> m_SupportedArguments;	// List with supported arguments
-    CPPCore::TArray<String> m_detectedArgs;		// List with detected arguments
-    CPPCore::TArray<String> m_StoredArguments;	// List with store arguments
+    CPPCore::TArray<String> m_detectedArgs;		    // List with detected arguments
+    CPPCore::TArray<String> m_StoredArguments;	    // List with store arguments
     ui32 m_CurrentIndex;					        // The current index for iteration
     bool m_isValid;							        // The valid flag
 };
@@ -144,7 +145,6 @@ inline
 void ArgumentParser::reset() {
     m_CurrentIndex = 0;
 }
-
 
 } // Namespace Common
 } // Namespace OSRE

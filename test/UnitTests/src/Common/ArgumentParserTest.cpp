@@ -52,7 +52,28 @@ TEST_F( ArgumentParserTest, parseArgTest ) {
     c8 *ppArgv[] = { "testApp", "--api" };
     ArgumentParser testParser( argc, ppArgv, SupportedArgs, Descs );
     EXPECT_TRUE( testParser.hasValidArgs() );
-
 }
+
+TEST_F(ArgumentParserTest, getArgTest) {
+    static const String SupportedArgs = "help:api:gen_project:asset_path";
+    static const String Descs = "Shows the help:The render API:Generates a template project:Path to media";
+
+    i32 argc = 3;
+    c8 *ppArgv[] = { "testApp", "--api", "opengl" };
+    ArgumentParser testParser(argc, ppArgv, SupportedArgs, Descs);
+
+    bool ok = testParser.hasArgument("api");
+    EXPECT_TRUE(ok);
+
+    String value = testParser.getArgument("api");
+    EXPECT_EQ(value, "opengl");
+
+    ok = testParser.hasArgument("apo");
+    EXPECT_FALSE(ok);
+    value = testParser.getArgument("apo");
+    EXPECT_TRUE(value.empty());
+}
+
+
 }
 }

@@ -34,11 +34,11 @@ namespace UI {
 using namespace ::OSRE::RenderBackend;
 
 UiRenderer::UiRenderer() {
-
+    // empty
 }
 
 UiRenderer::~UiRenderer() {
-
+    // empty
 }
 
 void UiRenderer::render( UI::Screen *screen, RenderBackendService *rbService ) {
@@ -61,5 +61,5 @@ void UiRenderer::render( UI::Screen *screen, RenderBackendService *rbService ) {
     rbService->endPass();
 }
 
-}
-}
+} // Namespace UI
+} // Namespace OSRE

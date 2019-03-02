@@ -107,8 +107,6 @@ protected:
 #else
         AssetRegistry::registerAssetPath( "assets", "../media" );
 #endif 
-        Scene::DbgRenderer::getInstance()->renderDbgText( 0, 0, 2U, "XXX" );
-
         Ids ids;
         AssimpWrapper assimpWrapper( ids );
         IO::Uri modelLoc( ModelPath );
@@ -123,18 +121,19 @@ protected:
                     return false;
                 }
 
-                Rect2ui windowsRect = rootWindow->getWindowsRect();
-
                 m_stage = AppBase::createStage("ModelLoading");
                 AppBase::setActiveStage(m_stage);
                 Scene::View *view = m_stage->addView("default_view", nullptr);
                 AppBase::setActiveView(view);
+
+                const Rect2ui &windowsRect = rootWindow->getWindowsRect();
                 view->setProjectionParameters( 60.f, windowsRect.m_width, windowsRect.m_height, 0.0001f, 1000.f );
                 view->observeBoundingBox( model->getAABB() );
 
                 m_stage->setRoot( model->getRootNode() );
                 m_modelNode = m_stage->getRoot();
             }
+
         }
 
         return true;
@@ -148,13 +147,16 @@ protected:
         m_angle += 0.01f;
         RenderBackendService *rbSrv( getRenderBackendService() );
 
-        TransformComponent *comp = (TransformComponent*)m_modelNode->getComponent(Node::ComponentType::TransformComponentType);
-        if (nullptr != comp) {
-            //comp->setTransformationMatrix(m_transformMatrix.m_model);
-        }
+        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginRenderBatch("b1");
 
         rbSrv->setMatrix( MatrixType::Model, m_transformMatrix.m_model);
-        
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
+
+        Scene::DbgRenderer::getInstance()->renderDbgText(0, 0, 2U, "XXX");
+
         AppBase::onUpdate();
     }
 };

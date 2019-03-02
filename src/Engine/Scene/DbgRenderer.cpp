@@ -93,7 +93,7 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
 
     m_rbSrv->beginPass( PipelinePass::getPassNameById( DbgPassId ) );
     m_rbSrv->beginRenderBatch("dbgFontBatch");
-
+    
     if ( !m_textBoxes.hasKey( id ) ) {
         f32 xTrans(0), yTrans(0);
         UI::WidgetCoordMapping::mapPosToWorld(x , y, xTrans, yTrans);
