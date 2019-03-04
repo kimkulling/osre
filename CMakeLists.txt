@@ -32,7 +32,7 @@ set( INCLUDE_INSTALL_DIR "osre" CACHE PATH
 set( BIN_INSTALL_DIR "bin" CACHE PATH
     "Path the tool executables are installed to." )
 
-INCLUDE_DIRECTORIES(
+INCLUDE_DIRECTORIES( BEFORE
     include/
     3dparty/glew/include
     3dparty/assimp/contrib/irrXML
