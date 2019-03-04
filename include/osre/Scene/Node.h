@@ -102,7 +102,7 @@ public:
     virtual ui32 getNumMeshes() const;
     virtual RenderBackend::Mesh *getMeshAt(ui32 idx) const;
     virtual void update(Time dt);
-    virtual void draw(RenderBackend::RenderBackendService *renderBackendSrv);
+    virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
     virtual void setAABB(const AABB &aabb);
     virtual const AABB &getAABB() const;
     virtual Component *getComponent( ComponentType type ) const;
@@ -113,7 +113,7 @@ public:
 
 protected:
     virtual void onUpdate(Time dt);
-    virtual void onDraw(RenderBackend::RenderBackendService *renderBackendSrv);
+    virtual void onRender(RenderBackend::RenderBackendService *renderBackendSrv);
 
 private:
     using ChildrenArray = CPPCore::TArray<Node*>;
@@ -160,7 +160,7 @@ public:
 
 protected:
     void onUpdate(Time dt) override;
-    virtual void onDraw(RenderBackend::RenderBackendService *renderBackendSrv);
+    virtual void onRender(RenderBackend::RenderBackendService *renderBackendSrv);
 
 private:
     RenderBackend::Light m_light;

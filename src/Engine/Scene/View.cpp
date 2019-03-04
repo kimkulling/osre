@@ -73,7 +73,7 @@ void View::draw( RenderBackendService *rbSrv ) {
         return;
     }
     
-    onDraw( rbSrv );
+    onRender( rbSrv );
 }
 
 void View::observeBoundingBox( const Collision::TAABB<f32> &aabb) {
@@ -113,11 +113,10 @@ void View::onUpdate( Time dt ) {
     // empty
 }
 
-void View::onDraw( RenderBackendService *rbSrv ) {
+void View::onRender( RenderBackendService *rbSrv ) {
     rbSrv->setMatrix(MatrixType::View, m_view );
     rbSrv->setMatrix(MatrixType::Projection, m_projection);
 }
 
 } // Namespace Scene
 } // Namespace OSRE
-

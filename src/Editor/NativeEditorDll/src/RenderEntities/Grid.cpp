@@ -45,7 +45,7 @@ void Grid::onUpdate(Time dt) {
 
 }
 
-void Grid::onDraw(RenderBackendService *rbSrv ) {
+void Grid::onRender(RenderBackendService *rbSrv ) {
     OSRE_ASSERT(nullptr != rbSrv);
 
     if (nullptr == m_mesh) {

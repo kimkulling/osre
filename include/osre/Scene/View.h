@@ -54,7 +54,7 @@ public:
 
 protected:
     virtual void onUpdate( Time dt );
-    virtual void onDraw( RenderBackend::RenderBackendService *renderBackendSrv );
+    virtual void onRender( RenderBackend::RenderBackendService *renderBackendSrv );
 
 private:
     f32 m_fov;

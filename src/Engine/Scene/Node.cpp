@@ -202,12 +202,12 @@ void Node::update(Time dt) {
     onUpdate(dt);
 }
 
-void Node::draw( RenderBackendService *renderBackendSrv ) {
+void Node::render( RenderBackendService *renderBackendSrv ) {
     if ( nullptr == renderBackendSrv || nullptr == m_renderComp ) {
         return;
     }
 
-    onDraw( renderBackendSrv );
+    onRender( renderBackendSrv );
 
     // at first we need to update the transformations
     if ( nullptr != m_transformComp ) {
@@ -256,7 +256,7 @@ void Node::onUpdate(Time dt) {
     }
 }
 
-void Node::onDraw( RenderBackendService* ) {
+void Node::onRender( RenderBackendService* ) {
     // empty
 }
 
@@ -289,7 +289,7 @@ void LightNode::onUpdate(Time dt) {
     }
 }
 
-void LightNode::onDraw( RenderBackendService *renderBackendSrv) {
+void LightNode::onRender( RenderBackendService *renderBackendSrv) {
 
 }
 

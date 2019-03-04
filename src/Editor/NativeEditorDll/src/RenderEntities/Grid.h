@@ -34,7 +34,7 @@ public:
 
 protected:
     void onUpdate(Time dt) override;
-    void onDraw(RenderBackend::RenderBackendService *rbSrv) override;
+    void onRender(RenderBackend::RenderBackendService *rbSrv) override;
     void createMesh(RenderBackend::RenderBackendService *rbSrv);
 
 private:

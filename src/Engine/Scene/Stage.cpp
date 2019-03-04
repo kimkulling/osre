@@ -172,7 +172,7 @@ static void renderNode( Node *current, bool traverse, RenderBackendService *rb )
         return;
     }
 
-    current->draw( rb );
+    current->render( rb );
 
     // traverse all children, if requested
     if (traverse) {
@@ -191,7 +191,7 @@ void Stage::draw( RenderBackendService *rbSrv ) {
 
     renderNode( m_root, true, m_rbService );
 
-    onDraw( rbSrv );
+    onRender( rbSrv );
 }
 
 void Stage::setIdContainer( Common::Ids &ids ) {
@@ -206,7 +206,7 @@ void Stage::onUpdate( Time dt ) {
     // empty
 }
 
-void Stage::onDraw( RenderBackendService *renderBackendSrv ) {
+void Stage::onRender( RenderBackendService *renderBackendSrv ) {
     // empty
 }
 

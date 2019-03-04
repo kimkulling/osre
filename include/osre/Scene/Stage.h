@@ -115,7 +115,7 @@ public:
 
 protected:
     virtual void onUpdate( Time dt );
-    virtual void onDraw( RenderBackend::RenderBackendService *renderBackendSrv );
+    virtual void onRender( RenderBackend::RenderBackendService *renderBackendSrv );
 
 private:
     using ViewArray = CPPCore::TArray<View*>;
