@@ -185,7 +185,7 @@ ThreadId SDL2Thread::getThreadId() {
 
 i32 SDL2Thread::sdl2threadfunc( void *data ) {
     i32 retCode( 0 );
-    if( data ) {
+    if( nullptr != data ) {
         SDL2Thread *instance = ( SDL2Thread* ) data;
         switch( instance->getPriority() ) {
             case Priority::Low:
@@ -210,6 +210,7 @@ i32 SDL2Thread::sdl2threadfunc( void *data ) {
         }
     } else {
         osre_error( Tag, "Invalid thread data." );
+        retCode = 1;
     }
 
     return retCode;

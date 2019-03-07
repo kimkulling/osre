@@ -41,7 +41,7 @@ Grid::~Grid() {
     // empty
 }
 
-void Grid::onUpdate(Time dt) {
+void Grid::onUpdate(Time ) {
 
 }
 

@@ -114,8 +114,9 @@ bool Win32Thread::suspend() {
 
     // suspend the thread
     DWORD retCode = ::SuspendThread( m_ThreadHandle );
-    if ( -1 == retCode )
+    if (-1 == retCode) {
         return false;
+    }
 
     setState( ThreadState::Suspended );
 
@@ -155,9 +156,9 @@ void Win32Thread::waitForTimeout( ui32 ms ) {
     if ( !m_pThreadSignal ) {
         osre_debug( Tag, "Invalid pointer to thread signal." );
         return;
-    } else {
-        m_pThreadSignal->waitForTimeout( ms );
-    }
+    } 
+      
+    m_pThreadSignal->waitForTimeout( ms );
 }
 
 void Win32Thread::wait() {
