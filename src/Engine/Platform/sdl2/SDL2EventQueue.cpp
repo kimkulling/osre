@@ -41,6 +41,9 @@ using namespace ::CPPCore;
 
 static const c8 *Tag = "SDL2EventHandler";
 
+//-------------------------------------------------------------------------------------------------
+//  The abstract interface for sdl2-based event updates.
+//-------------------------------------------------------------------------------------------------
 struct AbstractSDL2InputUpdate {
     //  The virtual destructor.
     virtual ~AbstractSDL2InputUpdate( ){
@@ -149,7 +152,10 @@ SDL2EventHandler::~SDL2EventHandler( ) {
 
 bool SDL2EventHandler::update() {
     EventDataList *activeEventQueue( getActiveEventDataList() );
-    OSRE_ASSERT(nullptr != activeEventQueue);
+    if (nullptr == activeEventQueue) {
+        OSRE_CHECK_NOENTRY2("Active event queue is nullptr." );
+        return false;
+    }
 
     SDL_Event ev;
     if( !m_shutdownRequested && m_inputUpdate->update( &ev ) ) {

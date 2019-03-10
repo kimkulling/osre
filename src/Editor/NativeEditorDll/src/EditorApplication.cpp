@@ -34,6 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
 #include <osre/Scene/World.h>
+#include <osre/Scene/View.h>
 #include <osre/IO/IOService.h>
 #include <osre/Assets/AssimpWrapper.h>
 #include <osre/Assets/AssetDataArchive.h>
@@ -73,6 +74,7 @@ EditorApplication::~EditorApplication() {
 int EditorApplication::enqueueEvent( const Event *ev, EventData *evData ) {
     AbstractPlatformEventQueue *queue = m_platformInterface->getInstance()->getPlatformEventHandler();
     queue->enqueueEvent( *ev, evData );
+
     return 0;
 }
 
@@ -106,41 +108,26 @@ int EditorApplication::importAsset( const String &filename, int flags ) {
 #endif
     IO::Uri modelLoc( normalizedFilename );
     if (assimpWrapper.importAsset( modelLoc, flags )) {
-        Assets::Model *model = assimpWrapper.getModel();
-        Stage *stage = AppBase::createStage( model->getRootNode()->getName() );
-        stage->setRoot( model->getRootNode() );
-        m_world->addStage( stage );
-        m_world->setActiveStage( stage );
-        Collision::TAABB<f32> aabb = model->getAABB();
-        const f32 diam = aabb.getDiameter();
-        const Vec3f center = aabb.getCenter();
-
-        RenderBackend::MeshArray meshArray = model->getMeshArray();
-        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
-        m_transformMatrix.update();
-        RenderBackendService *rbSrv( getRenderBackendService() );
+        Model *model = assimpWrapper.getModel();
+        RenderBackendService *rbSrv(getRenderBackendService());
         if (nullptr != rbSrv) {
-            Platform::AbstractWindow *rootWindow( getRootWindow() );
+            Platform::AbstractWindow *rootWindow(getRootWindow());
             if (nullptr == rootWindow) {
                 return false;
             }
-            const i32 w = rootWindow->getProperties()->m_width;
-            const i32 h = rootWindow->getProperties()->m_height;
-            const f32 aspect = static_cast<f32>(w) / static_cast<f32>(h);
-            const f32 zNear = 0.0001f;
-            const f32 zFar = 1000.f;
 
-            glm::vec3 eye( diam, 0, 0 ), up( 0, 0, 1 );
-            glm::vec3 c( center.getX(), center.getY(), center.getZ() );
+            m_stage = AppBase::createStage("ModelLoading");
+            AppBase::setActiveStage(m_stage);
+            Scene::View *view = m_stage->addView("default_view", nullptr);
+            AppBase::setActiveView(view);
 
-            m_transformMatrix.m_model = glm::mat4( 1.0f );
-            m_transformMatrix.m_projection = glm::perspective( glm::radians( 60.0f ), aspect, zNear, zFar );
-            m_transformMatrix.m_view = glm::lookAt( eye, c, up );
-            rbSrv->setMatrix( MatrixType::View, m_transformMatrix.m_view );
-            rbSrv->setMatrix( MatrixType::Projection, m_transformMatrix.m_projection );
+            const Rect2ui &windowsRect = rootWindow->getWindowsRect();
+            view->setProjectionParameters(60.f, windowsRect.m_width, windowsRect.m_height, 0.0001f, 1000.f);
+            view->observeBoundingBox(model->getAABB());
 
+            m_stage->setRoot(model->getRootNode());
+            m_modelNode = m_stage->getRoot();
         }
-        m_stage->setRoot( model->getRootNode() );
 
         update();
         requestNextFrame();

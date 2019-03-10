@@ -112,7 +112,6 @@ protected:
         IO::Uri modelLoc( ModelPath );
         if ( assimpWrapper.importAsset( modelLoc, 0 ) ) {
             Model *model = assimpWrapper.getModel();
-            RenderBackend::MeshArray meshArray = model->getMeshArray();
             
             RenderBackendService *rbSrv( getRenderBackendService() );
             if (nullptr != rbSrv) {

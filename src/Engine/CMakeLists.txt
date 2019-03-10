@@ -197,6 +197,7 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/PluginType.h
     ${HEADER_PATH}/Platform/PlatformInterface.h
     ${HEADER_PATH}/Platform/PlatformOperations.h
+    ${HEADER_PATH}/Platform/AbstractMutex.h
 )
 SET( platform_win_inc
 	${HEADER_PATH}/Platform/Windows/MinWindows.h
@@ -238,6 +239,8 @@ SET( platform_win32_src
     Platform/win32/Win32DynamicLoader.h
     Platform/win32/Win32OSService.cpp
     Platform/win32/Win32OSService.h
+    Platform/win32/Win32Mutex.h
+    Platform/win32/Win32Mutex.cpp
 )
 SET( platform_sdl2_src
     Platform/sdl2/SDL2Atomic.h
@@ -264,6 +267,8 @@ SET( platform_sdl2_src
 	Platform/sdl2/SDL2SystemInfo.h
     Platform/sdl2/SDL2OSService.h
     Platform/sdl2/SDL2OSService.cpp
+    Platform/sdl2/SDL2Mutex.h
+    Platform/sdl2/SDL2Mutex.cpp
 )
 
 IF( WIN32 )

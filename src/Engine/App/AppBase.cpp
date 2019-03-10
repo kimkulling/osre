@@ -195,12 +195,17 @@ Properties::Settings *AppBase::getSettings() const {
 }
 
 Scene::Stage *AppBase::createStage( const String &name ) {
-    if ( nullptr == m_world || name.empty() ) {
+    if ( nullptr == m_world ) {
         osre_debug( Tag, "No world to add state to." );
         return nullptr;
     }
 
-    Scene::Stage *stage( new Scene::Stage( name, m_rbService ) );
+    String stageName(name);
+    if (stageName.empty()) {
+        stageName = "new_stage";
+    }
+
+    Scene::Stage *stage( new Scene::Stage(stageName, m_rbService ) );
     if ( nullptr != stage ) {
         m_world->addStage( stage );
     }

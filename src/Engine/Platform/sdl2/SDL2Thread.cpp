@@ -146,9 +146,9 @@ void SDL2Thread::wait( ) {
     if ( !m_threadSignal ) {
         osre_debug( Tag, "Invalid pointer to thread signal." );
         return;
-    } else {
-        m_threadSignal->waitForOne();
-    }
+    } 
+
+    m_threadSignal->waitForOne();
 }
 
 AbstractThreadEvent *SDL2Thread::getThreadEvent( ) const {
@@ -172,7 +172,7 @@ AbstractThreadLocalStorage *SDL2Thread::getThreadLocalStorage() {
 }
 
 void SDL2Thread::setThreadLocalStorage( AbstractThreadLocalStorage *tls ) {
-    m_tls = ( SDL2ThreadLocalStorage*) tls;
+    m_tls = ( SDL2ThreadLocalStorage* ) tls;
 }
 
 void SDL2Thread::setThreadId(const ThreadId &id) {
