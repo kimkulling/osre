@@ -1,8 +1,8 @@
-# OSRE - Another Open Source Render Engine
+# OSRE - Just another Open Source Render Engine
 
 Just another open-source renderer. Feel free to play around with it!
 
-Some features:
+The core-features:
 - Multithreaded rendering + instanced-rendering
 - Platform abstraction-layer
 - OS-independent task-support to make multi-threaded rendering more easy
