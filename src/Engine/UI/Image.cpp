@@ -52,6 +52,10 @@ const IO::Uri &Image::getUri() const {
     return m_imageUri;
 }
 
+void Image::onLayout() {
+
+}
+
 void Image::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
     UiVertexCache vertexCache;
     UiIndexCache indexCache;

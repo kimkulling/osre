@@ -58,6 +58,10 @@ public:
     ///	@return	The name of the object.
     const String &getName() const;
 
+    void setId(HashId  id);
+    
+    HashId getId() const;
+
     /// No copying
     Object(const Object &) = delete;
     Object &operator = (const Object &) = delete;
@@ -70,6 +74,7 @@ protected:
 
 private:
     String m_objectName;
+    HashId m_id;
     ui32 m_Refcount;
 };
 

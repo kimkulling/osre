@@ -44,7 +44,7 @@ class OSRE_EXPORT UiRenderer {
 public:
     UiRenderer();
     ~UiRenderer();
-    void render( UI::Screen *screen, RenderBackend::RenderBackendService *rbService );
+    void render( Screen *screen, RenderBackend::RenderBackendService *rbService );
 };
 
 } // Namespace UI

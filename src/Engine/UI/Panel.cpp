@@ -72,6 +72,10 @@ const String &Panel::getHeadline() const {
     return m_headline;
 }
 
+void Panel::onLayout() {
+
+}
+
 void Panel::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService* ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const Rect2ui &rect( getRect() );

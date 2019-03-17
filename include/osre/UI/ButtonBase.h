@@ -58,7 +58,8 @@ public:
     static ButtonBase *createBaseButton( const String &name, const String &label, Widget *parent );
 
 protected:
-    void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) override;
+    void onLayout() override;
+    void onRender(UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv) override;
     void onMouseDown(const Point2ui &pt, void *data ) override;
     void onMouseUp(const Point2ui &pt, void *data) override;
 

@@ -41,6 +41,7 @@ public:
     virtual const IO::Uri &getUri() const;
 
 protected:
+    void onLayout() override;
     void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) override;
 
 private:

@@ -75,6 +75,10 @@ RenderBackend::FontBase *TextBase::getFont() const {
     return m_font;
 }
 
+void TextBase::onLayout() {
+
+}
+
 static const ui32 NumQuadVert = 4;
 
 void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
@@ -86,7 +90,7 @@ void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService 
         fontSize = static_cast<f32>( m_font->getSize() );
     }
 
-    const i32 stackId( getStackIndex() );
+    const i32 stackId( getStackIndex() + 1 );
     const f32 z(-1.0f* static_cast<f32>( stackId ) );
     f32 x( static_cast<f32>( Widget::getRect().getX1() ) );
     f32 y( static_cast<f32>( Widget::getRect().getY1() ) );

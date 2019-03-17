@@ -89,7 +89,7 @@ void WidgetCoordMapping::mapPosArrayToWorld( ui32 *x, ui32 *y, ui32 numPoints, f
     OSRE_ASSERT( nullptr != mappedX );
     OSRE_ASSERT( nullptr != mappedY );
     for ( ui32 i = 0; i < numPoints; ++i ) {
-        mapPosToWorld( getDimension(), x[i], y[i], mappedX[i], mappedY[i] );
+        mapPosToWorld(s_dim, x[i], y[i], mappedX[i], mappedY[i] );
     }
 }
 
@@ -122,7 +122,6 @@ UiRenderCmd::~UiRenderCmd() {
 Widget::Widget( const String &name, Widget *parent )
 : Object( name )
 , m_parent( nullptr )
-, m_id( 99999999 )
 , m_children()
 , m_properties()
 , m_rect( 0, 0, 1, 1 )
@@ -142,22 +141,22 @@ void Widget::setParent( Widget *parent ) {
     }
 
     if ( nullptr != m_parent ) {
-        m_parent->removeChildWidget( this );
+        m_parent->removeWidget( this );
     }
     m_parent = parent;
-    m_parent->addChildWidget( this );
+    m_parent->addWidget( this );
 }
 
 Widget *Widget::getParent() const {
     return m_parent;
 }
 
-bool Widget::addChildWidget( Widget *child ) {
+bool Widget::addWidget( Widget *child ) {
     if ( nullptr == child ) {
         return false;
     }
 
-    if (!hasChild(child)) {
+    if (!hasWidget(child)) {
         m_children.add(child);
         child->get();
     } else {
@@ -167,7 +166,7 @@ bool Widget::addChildWidget( Widget *child ) {
     return true;
 }
 
-bool Widget::removeChildWidget( Widget *child ) {
+bool Widget::removeWidget( Widget *child ) {
     if ( nullptr == child ) {
         return false;
     }
@@ -183,7 +182,7 @@ bool Widget::removeChildWidget( Widget *child ) {
     return ok;
 }
 
-bool Widget::hasChild(Widget *child) {
+bool Widget::hasWidget(Widget *child) {
     if (nullptr == child) {
         return false;
     }
@@ -196,11 +195,11 @@ bool Widget::hasChild(Widget *child) {
     return false;
 }
 
-ui32 Widget::getNumChildren() const {
+ui32 Widget::getNumWidgets() const {
     return m_children.size();
 }
 
-Widget *Widget::getChildWidgetAt( ui32 idx ) const {
+Widget *Widget::getWidgetAt( ui32 idx ) const {
     if ( idx >= m_children.size() ) {
         return nullptr;
     }
@@ -299,9 +298,9 @@ void Widget::render( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbS
         redrawDone();
     }
 
-    const ui32 numChildren( getNumChildren() );
+    const ui32 numChildren( getNumWidgets() );
     for ( ui32 i = 0; i < numChildren; i++ ) {
-        Widget *child = getChildWidgetAt( i );
+        Widget *child = getWidgetAt( i );
         if ( nullptr != child ) {
             child->render( renderCmdCache, rbSrv );
         }
@@ -316,23 +315,37 @@ void Widget::mouseUp( const Point2ui &pt, void *data) {
     onMouseUp( pt, data );
 }
 
+void Widget::layout() {
+    onLayout();
+}
+
+void Widget::setState(WidgetState state) {
+    m_state = state;
+}
+
+WidgetState Widget::getWidgetState() const {
+    return m_state;
+}
+
 void Widget::checkChildren( const Point2ui &pt, void *data, WidgetState state) {
-    for (ui32 i = 0; i < getNumChildren(); i++) {
-        Widget *child(getChildWidgetAt(i));
+    for (ui32 i = 0; i < getNumWidgets(); i++) {
+        Widget *child(getWidgetAt(i));
         const Rect2ui &r = child->getRect();
         if (r.isIn(pt)) {
             child->onMouseDown(pt, data );
+            
         }
     }
 }
 
 void Widget::onMouseDown( const Point2ui &pt, void *data) {
-    checkChildren(pt, data, Pressed);
+    checkChildren(pt, data, WidgetState::Pressed);
 }
 
 void Widget::onMouseUp( const Point2ui &pt, void *data) {
-    checkChildren(pt, data, Released);
+    checkChildren(pt, data, WidgetState::Released);
 }
+
 
 void Widget::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
     const Rect2ui &r( getRect() );
@@ -340,14 +353,6 @@ void Widget::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
         Widget::setRect( x, y, w, h );
         Widget::requestRedraw();
     }
-}
-
-void Widget::setId( ui32 id ) {
-    m_id = id;
-}
-
-i32 Widget::getId() const {
-    return m_id;
 }
 
 } // Namespace UI

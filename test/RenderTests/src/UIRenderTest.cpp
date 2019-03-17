@@ -31,6 +31,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/Screen.h>
 #include <osre/UI/UiItemFactory.h>
 #include <osre/UI/TextBase.h>
+#include <osre/UI/Panel.h>
+#include <osre/UI/ButtonBase.h>
 #include <osre/UI/UiRenderer.h>
 
 #include <GL/gl.h>
@@ -69,8 +71,23 @@ public:
         m_screen = (Screen*)UiItemFactory::getInstance()->create(WidgetType::Screen, getTestName(), nullptr);
         m_screen->setSurface(getWindow());
 
-        TextBase *text = (TextBase*) UiItemFactory::getInstance()->create(WidgetType::Text, getTestName() + ".test", m_screen);
-        text->setLabel("Huhu");
+        Panel *panel1 = (Panel*) UiItemFactory::getInstance()->create(WidgetType::Panel, getTestName() + ".panel1", m_screen);
+        panel1->setHeadline("Button-tests");
+        panel1->setRect(10, 10, 200, 200);
+        ButtonBase *btn1 = (ButtonBase*)UiItemFactory::getInstance()->create(WidgetType::Button, getTestName() + ".btn1", panel1);
+        btn1->setRect(15, 15, 190, 20);
+        ButtonBase *btn2 = (ButtonBase*)UiItemFactory::getInstance()->create(WidgetType::Button, getTestName() + ".btn2", panel1);
+        btn2->setRect(15, 40, 190, 20);
+
+        Panel *panel2 = (Panel*)UiItemFactory::getInstance()->create(WidgetType::Panel, getTestName() + ".panel2", m_screen);
+        panel2->setRect(230, 10, 200, 200);
+
+        panel2->setHeadline("Text-tests");
+        TextBase *text = (TextBase*) UiItemFactory::getInstance()->create(WidgetType::Text, getTestName() + ".test", panel2);
+        text->setLabel( "Huhu" );
+
+        Panel *panel3 = (Panel*)UiItemFactory::getInstance()->create(WidgetType::Panel, getTestName() + ".panel2", m_screen);
+        panel3->setRect(450, 10, 200, 200);
 
         return true;
     }

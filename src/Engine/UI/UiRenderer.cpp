@@ -48,6 +48,11 @@ void UiRenderer::render( UI::Screen *screen, RenderBackendService *rbService ) {
     rbService->beginPass(PipelinePass::getPassNameById(UiPassId));
     rbService->beginRenderBatch("b1");
     
+    const TransformMatrixBlock &mb = screen->getMVP();
+    //rbService->setMatrix(MatrixType::Model, mb.m_model);
+//    rbService->setMatrix(MatrixType::View, mb.m_view);
+    //rbService->setMatrix(MatrixType::Projection, mb.m_projection);
+    
     CPPCore::TArray<Mesh*> geoCache;
     for ( ui32 i = 0; i < cache.size(); ++i ) {
         UiRenderCmd *currentCmd( cache[ i ] );

@@ -97,5 +97,21 @@ struct OSRE_EXPORT Style {
     }
 };
 
+using RenderBackend::UiVertexCache;
+using RenderBackend::UiIndexCache;
+
+struct UiRenderCmd {
+    UiVertexCache            m_vc;  ///< Will store all vertices
+    UiIndexCache             m_ic;  ///< Will store all indices
+    RenderBackend::Material *m_mat; ///< Will store the material
+
+    UiRenderCmd();
+    ~UiRenderCmd();
+
+    OSRE_NON_COPYABLE(UiRenderCmd)
+};
+
+using UiRenderCmdCache = CPPCore::TArray<UiRenderCmd*>;
+
 } // Namespace UI
 } // Namespace OSRE

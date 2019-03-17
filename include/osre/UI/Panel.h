@@ -42,8 +42,10 @@ public:
     bool isEnabled( ui32 flag ) const;
     void setHeadline( const String &headline );
     const String &getHeadline() const;
+    
 
 protected:
+    void onLayout() override;
     void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) override;
 
 private:

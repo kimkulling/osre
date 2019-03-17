@@ -129,8 +129,8 @@ int EditorApplication::importAsset( const String &filename, int flags ) {
             m_modelNode = m_stage->getRoot();
         }
 
-        update();
-        requestNextFrame();
+        AppBase::onUpdate();
+        //requestNextFrame();
     }
 
     return 0;

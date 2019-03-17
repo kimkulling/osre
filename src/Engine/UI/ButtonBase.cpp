@@ -59,7 +59,7 @@ ButtonBase::ButtonBase( const String &name, Widget *parent )
 , m_image()
 , m_imageWidget( nullptr )
 , m_textWidget( nullptr )
-, m_callback( new FunctorContainer[ MaxStates ] ){
+, m_callback( new FunctorContainer[ (ui32) WidgetState::NumWidgetState] ){
     static_cast<void>( StyleProvider::getCurrentStyle() );
     if ( nullptr != parent ) {
         setStackIndex(parent->getStackIndex() + 1);
@@ -117,8 +117,8 @@ const String &ButtonBase::getImage() const {
 }
 
 void ButtonBase::registerCallback( WidgetState state, UiFunctor functor ) {
-    m_callback[ state ].m_used = true;
-    m_callback[ state ].m_callback = functor;
+    m_callback[ (ui32) state ].m_used = true;
+    m_callback[ (ui32) state ].m_callback = functor;
     functor.incRef();
 }
 
@@ -136,6 +136,10 @@ ButtonBase *ButtonBase::createBaseButton( const String &name, const String &labe
     return button;
 }
 
+void ButtonBase::onLayout() {
+    
+}
+
 void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService* ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const Rect2ui &rect( getRect() );
@@ -150,7 +154,7 @@ void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendServic
 }
 
 void ButtonBase::onMouseDown( const Point2ui &pt, void *data) {
-    const ui32 index = static_cast<ui32>(Pressed);
+    const ui32 index = static_cast<ui32>(WidgetState::Pressed);
     if ( m_callback[ index ].m_used ) {
         const FunctorContainer &ct( m_callback[index] );
         ct.m_callback( Widget::getId(), nullptr );
@@ -160,7 +164,7 @@ void ButtonBase::onMouseDown( const Point2ui &pt, void *data) {
 }
 
 void ButtonBase::onMouseUp(const Point2ui &pt, void *data) {
-    const ui32 index = static_cast<ui32>(Released);
+    const ui32 index = static_cast<ui32>(WidgetState::Released);
     if (m_callback[ index ].m_used) {
         const FunctorContainer &ct(m_callback[index ]);
         ct.m_callback(Widget::getId(), nullptr);

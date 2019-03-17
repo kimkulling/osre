@@ -71,6 +71,9 @@ OGLRenderBackend::OGLRenderBackend()
     m_fpState = new RenderStates;
     m_oglCapabilities = new OGLCapabilities;
     glGetFloatv( GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &m_oglCapabilities->m_maxAniso );
+    i32 mask;
+    glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &mask );
+    c8 *slv = (c8*) glGetString(GL_SHADING_LANGUAGE_VERSION);
 }
 
 OGLRenderBackend::~OGLRenderBackend( ) {

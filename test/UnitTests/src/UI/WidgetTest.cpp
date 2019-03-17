@@ -60,6 +60,11 @@ protected:
         m_w = w;
         m_h = h;
     }
+
+    void onLayout() override {
+        // empty
+    }
+
     ui32 m_x, m_y, m_w, m_h;
 };
 TEST_F( WidgetTest, createTest ) {
@@ -81,7 +86,7 @@ TEST_F( WidgetTest, access_rect_Test ) {
 
 TEST_F( WidgetTest, access_children_Test ) {
     TestWidget testWidget( "test", nullptr );
-    EXPECT_EQ( 0U, testWidget.getNumChildren() );
+    EXPECT_EQ( 0U, testWidget.getNumWidgets() );
 
     String names[ 3 ] = {
         "child1",
@@ -92,31 +97,31 @@ TEST_F( WidgetTest, access_children_Test ) {
     TestWidget child2( names[ 1 ], &testWidget );
     TestWidget child3( names[ 2 ], &testWidget );
 
-    EXPECT_EQ( 3U, testWidget.getNumChildren() );
-    for ( ui32 i = 0; i < testWidget.getNumChildren(); i++ ) {
-        Widget *current( testWidget.getChildWidgetAt( i ) );
+    EXPECT_EQ( 3U, testWidget.getNumWidgets() );
+    for ( ui32 i = 0; i < testWidget.getNumWidgets(); i++ ) {
+        Widget *current( testWidget.getWidgetAt( i ) );
         EXPECT_NE( nullptr, current );
         EXPECT_EQ( names[ i ], current->getName() );
         EXPECT_EQ( &testWidget, current->getParent() );
     }
 
-    bool ok = testWidget.removeChildWidget( &child2 );
+    bool ok = testWidget.removeWidget( &child2 );
     EXPECT_TRUE( ok );
 
-    ok = testWidget.removeChildWidget( &child2 );
+    ok = testWidget.removeWidget( &child2 );
     EXPECT_FALSE( ok );
 
-    EXPECT_EQ( 2, testWidget.getNumChildren() );
+    EXPECT_EQ( 2, testWidget.getNumWidgets() );
 }
 
 TEST_F(WidgetTest, hasChild_ReturnsTrue) {
     TestWidget parent("test", nullptr);
     TestWidget testWidget("test", nullptr);
 
-    EXPECT_FALSE( parent.hasChild( &testWidget ) );
+    EXPECT_FALSE( parent.hasWidget( &testWidget ) );
 
-    parent.addChildWidget(&testWidget);
-    EXPECT_TRUE(parent.hasChild(&testWidget));
+    parent.addWidget(&testWidget);
+    EXPECT_TRUE(parent.hasWidget(&testWidget));
 }
 
 TEST_F( WidgetTest, request_redraw_Test ) {

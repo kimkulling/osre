@@ -21,14 +21,16 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Common/Object.h>
+#include <osre/Common/StringUtils.h>
 
 namespace OSRE {
 namespace Common {
 
 Object::Object( const String &objectName )
 : m_objectName( objectName )
+, m_id(99999999)
 , m_Refcount( 1 ) {
-    // empty
+    m_id = StringUtils::hashName(objectName);
 }
 
 Object::~Object() {
@@ -60,6 +62,14 @@ void Object::setName( const String &objName ) {
 
 const String &Object::getName() const {
     return m_objectName;
+}
+
+void Object::setId(HashId id) {
+    m_id = id;
+}
+
+HashId Object::getId() const {
+    return m_id;
 }
 
 } // Namespace Common

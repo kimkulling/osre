@@ -67,6 +67,14 @@ void Screen::setSurface( AbstractWindow *surface ) {
     WidgetCoordMapping::init( dim );
 }
 
+const RenderBackend::TransformMatrixBlock &Screen::getMVP() const {
+    return m_transformMatrix;
+}
+
+void Screen::onLayout() {
+
+}
+
 void Screen::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
     if ( nullptr == m_surface ) {
         return;
@@ -76,13 +84,13 @@ void Screen::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *r
     m_transformMatrix.m_projection = glm::ortho( 0, m_width, m_height, 0 );
     m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
     m_transformMatrix.update();
-    const ui32 numChildren( getNumChildren() );
+    const ui32 numChildren( getNumWidgets() );
     if ( 0 == numChildren ) {
         return;
     }
 
     for ( ui32 i=0; i<numChildren; ++i ) {
-        Widget *currentChild( getChildWidgetAt( i ) );
+        Widget *currentChild( getWidgetAt( i ) );
         if ( nullptr == currentChild ) {
             continue;
         }

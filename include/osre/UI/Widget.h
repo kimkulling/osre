@@ -117,21 +117,21 @@ struct UiProperty {
     CPPCore::Variant m_data;
 };
 
-using RenderBackend::UiVertexCache;
-using RenderBackend::UiIndexCache;
+enum class WidgetState {
+    Pressed = 0,
+    Released = 1,
+    NumWidgetState,
 
-struct UiRenderCmd {
-    UiVertexCache            m_vc;  ///< Will store all vertices
-    UiIndexCache             m_ic;  ///< Will store all indices
-    RenderBackend::Material *m_mat; ///< Will store the material
-
-    UiRenderCmd();
-    ~UiRenderCmd();
-
-    OSRE_NON_COPYABLE( UiRenderCmd )
+    InvalidWidgetState
 };
 
-using UiRenderCmdCache = CPPCore::TArray<UiRenderCmd*>;
+enum class LayoutPolicy {
+    Auto = 0,
+    Fixed,
+    NumLayoutPolicies,
+
+    InvalidLayoutPolicy
+};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -140,22 +140,15 @@ using UiRenderCmdCache = CPPCore::TArray<UiRenderCmd*>;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Widget : public Common::Object {
 public:
-    enum WidgetState {
-        Pressed = 0,
-        Released = 1,
-        MaxStates,
-
-        InvalidWidgetState
-    };
 
     virtual ~Widget();
     virtual void setParent( Widget *parent );
     virtual Widget *getParent() const;
-    virtual bool addChildWidget( Widget *child );
-    virtual bool removeChildWidget( Widget *child );
-    virtual bool hasChild(Widget *child);
-    virtual ui32 getNumChildren() const;
-    virtual Widget *getChildWidgetAt( ui32 idx ) const;
+    virtual bool addWidget( Widget *child );
+    virtual bool removeWidget( Widget *child );
+    virtual bool hasWidget(Widget *child);
+    virtual ui32 getNumWidgets() const;
+    virtual Widget *getWidgetAt( ui32 idx ) const;
     virtual Widget &setRect( ui32 x, ui32 y, ui32 w, ui32 h );
     virtual const Rect2ui &getRect() const;
     virtual void requestRedraw();
@@ -171,13 +164,15 @@ public:
     virtual void render( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv );
     virtual void mouseDown( const Point2ui &pt, void *data);
     virtual void mouseUp( const Point2ui &pt, void *data);
-    virtual void setId( ui32 id );
-    virtual i32 getId() const;
     virtual void resize( ui32 x, ui32 y, ui32 w, ui32 h );
+    virtual void layout();
+    virtual void setState(WidgetState state);
+    virtual WidgetState getWidgetState() const;
 
 protected:
     Widget( const String &name, Widget *parent );
     void checkChildren(const Point2ui &pt, void *data, WidgetState state );
+    virtual void onLayout() = 0;
     virtual void onResize( ui32 x, ui32 y, ui32 w, ui32 h );
     virtual void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) = 0;
     virtual void onMouseDown( const Point2ui &pt, void *data);
@@ -185,13 +180,13 @@ protected:
 
 private:
     Widget *m_parent;
-    ui32 m_id;
     CPPCore::TArray<Widget*> m_children;
     CPPCore::TArray<UiProperty*> m_properties;
     Rect2ui m_rect;
     i32 m_stackIndex;
     bool m_redrawRequest;
     bool m_isVisible;
+    WidgetState m_state;
 };
 
 inline

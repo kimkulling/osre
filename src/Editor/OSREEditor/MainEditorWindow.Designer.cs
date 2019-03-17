@@ -30,6 +30,7 @@
         {
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3d = new System.Windows.Forms.Panel();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,7 +45,6 @@
             this.versionInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.logWindow = new System.Windows.Forms.TextBox();
-            this.panel3d = new System.Windows.Forms.Panel();
             this.panel2.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -72,6 +72,14 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(980, 674);
             this.panel2.TabIndex = 1;
+            // 
+            // panel3d
+            // 
+            this.panel3d.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3d.Location = new System.Drawing.Point(3, 3);
+            this.panel3d.Name = "panel3d";
+            this.panel3d.Size = new System.Drawing.Size(799, 666);
+            this.panel3d.TabIndex = 1;
             // 
             // menuStrip2
             // 
@@ -188,14 +196,6 @@
             this.logWindow.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.logWindow.Size = new System.Drawing.Size(980, 106);
             this.logWindow.TabIndex = 2;
-            // 
-            // panel3d
-            // 
-            this.panel3d.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel3d.Location = new System.Drawing.Point(3, 3);
-            this.panel3d.Name = "panel3d";
-            this.panel3d.Size = new System.Drawing.Size(799, 666);
-            this.panel3d.TabIndex = 1;
             // 
             // MainEditorWindow
             // 

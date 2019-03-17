@@ -32,15 +32,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 static const OSRE::c8 *Tag = "Win32RenderContext";
 
-static void APIENTRY openglCallbackFunction(
-        GLenum source,
-        GLenum type,
-        GLuint id,
-        GLenum severity,
-        GLsizei length,
-        const GLchar* message,
-        const void* 
-) {
+static void APIENTRY openglCallbackFunction( GLenum source, GLenum type, GLuint id, GLenum severity,
+        GLsizei length, const GLchar* message, const void* ) {
     std::cout << "---------------------opengl-callback-start------------" << std::endl;
     std::cout << "message: " << message << std::endl;
     std::cout << "type: ";
@@ -86,6 +79,7 @@ static void APIENTRY openglCallbackFunction(
     std::cout << std::endl;
     std::cout << "---------------------opengl-callback-end--------------" << std::endl;
     osre_info( Tag, "DebugLog" );
+
 }
 namespace OSRE {
 namespace Platform {
@@ -112,11 +106,12 @@ const String &Win32RenderContext::getExtensions() const {
 }
 
 bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
-    Win32Window *win32Surface = reinterpret_cast< Win32Window* >( surface );
-    if( !win32Surface ) {
+    Win32Window *win32Surface = reinterpret_cast<Win32Window*>( surface );
+    if( nullptr == win32Surface ) {
         osre_error( Tag, "Invalid pointer to window." );
         return false;
     }
+
     HDC dc = win32Surface->getDeviceContext();
     if( !dc ) {
         osre_error( Tag, "Invalid device context." );
