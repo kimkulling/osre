@@ -73,7 +73,6 @@ OGLRenderBackend::OGLRenderBackend()
     glGetFloatv( GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &m_oglCapabilities->m_maxAniso );
     i32 mask;
     glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &mask );
-    c8 *slv = (c8*) glGetString(GL_SHADING_LANGUAGE_VERSION);
 }
 
 OGLRenderBackend::~OGLRenderBackend( ) {
@@ -139,10 +138,8 @@ void OGLRenderBackend::applyMatrix() {
     } else {
         memcpy(mvp->m_data->m_data, m_mvp.getMVP(), sizeof(glm::mat4));
     }
-    ::memcpy(mvp->m_data->m_data, glm::value_ptr(m_mvp.m_mvp), sizeof(glm::mat4));
-    if (nullptr != mvp) {
-        setParameter(mvp);
-    }
+
+    setParameter(mvp);
 }
 
 bool OGLRenderBackend::create(Platform::AbstractRenderContext *renderCtx) {
@@ -852,14 +849,13 @@ void OGLRenderBackend::setParameter( OGLParameter *param ) {
         return;
     }
 
-    OGLShader *shader( m_shaderInUse );
     if ( NoneLocation == param->m_loc ) {
-        param->m_loc = ( *shader )( param->m_name );
+        param->m_loc = ( *m_shaderInUse)( param->m_name );
         if ( NoneLocation == param->m_loc ) {
             osre_debug( Tag, "Cannot location for parameter " 
                 + param->m_name 
                 + " in shader " 
-                + shader->getName() 
+                + m_shaderInUse->getName()
                 + "." );
             return;
         }

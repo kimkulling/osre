@@ -154,6 +154,11 @@ public:
     virtual void requestRedraw();
     virtual void redrawDone();
     virtual bool redrawRequested() const;
+
+    virtual void requestLayouting();
+    virtual void layoutingDone();
+    virtual bool layoutingRequested() const;
+
     virtual void setProperty( UiProperty *prop );
     virtual UiProperty *getProperty( const String &name ) const;
     virtual bool hasProperty( const String &name ) const;
@@ -179,12 +184,16 @@ protected:
     virtual void onMouseUp( const Point2ui &pt, void *data);
 
 private:
+    enum UpdateRequest {
+        RedrawRequest = 1,
+        LayourRequest = 2
+    };
     Widget *m_parent;
     CPPCore::TArray<Widget*> m_children;
     CPPCore::TArray<UiProperty*> m_properties;
     Rect2ui m_rect;
     i32 m_stackIndex;
-    bool m_redrawRequest;
+    ui32 m_dirtyState;
     bool m_isVisible;
     WidgetState m_state;
 };

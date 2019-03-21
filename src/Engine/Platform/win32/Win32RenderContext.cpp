@@ -156,13 +156,12 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
     int attribs[] = {
         WGL_CONTEXT_FLAGS_ARB,
 #ifdef _DEBUG
-#   ifdef OSRE_WINDOWS
         WGL_CONTEXT_DEBUG_BIT_ARB,
-#   else
-        0,
-#   endif
+        WGL_CONTEXT_PROFILE_MASK_ARB,
+        WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
 #else
-        0,
+        WGL_CONTEXT_PROFILE_MASK_ARB,
+        WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
 #endif
         0
     };
@@ -230,6 +229,9 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
     // or better yet, use the GL4.x way to get the version number
     glGetIntegerv( GL_MAJOR_VERSION, &m_OpenGLVersion[ 0 ] );
     glGetIntegerv( GL_MINOR_VERSION, &m_OpenGLVersion[ 1 ] );
+
+    c8 *slv = (c8*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+    osre_debug(Tag, "Supported GLSL language " + String(slv));
 
     m_dc = dc;
     m_rc = rc;

@@ -124,6 +124,13 @@ TEST_F(WidgetTest, hasChild_ReturnsTrue) {
     EXPECT_TRUE(parent.hasWidget(&testWidget));
 }
 
+TEST_F(WidgetTest, request_layout_Test) {
+    TestWidget testWidget("test", nullptr);
+    EXPECT_TRUE(testWidget.layoutingRequested());
+    testWidget.layout();
+    EXPECT_FALSE(testWidget.layoutingRequested());
+}
+
 TEST_F( WidgetTest, request_redraw_Test ) {
     TestWidget testWidget( "test", nullptr );
     EXPECT_TRUE( testWidget.redrawRequested() );

@@ -126,9 +126,11 @@ Widget::Widget( const String &name, Widget *parent )
 , m_properties()
 , m_rect( 0, 0, 1, 1 )
 , m_stackIndex( 1 )
-, m_redrawRequest( true )
+, m_dirtyState( 0 )
 , m_isVisible( true ) {
     Widget::setParent( parent );
+    Widget::requestRedraw();
+    Widget::requestLayouting();
 }
 
 Widget::~Widget() {
@@ -221,15 +223,27 @@ const Rect2ui &Widget::getRect() const {
 }
 
 void Widget::requestRedraw() {
-    m_redrawRequest = true;
+    m_dirtyState |= RedrawRequest;
 }
 
 void Widget::redrawDone() {
-    m_redrawRequest = false;
+    m_dirtyState = m_dirtyState & ~RedrawRequest;
 }
 
 bool Widget::redrawRequested() const {
-    return m_redrawRequest;
+    return m_dirtyState & RedrawRequest;
+}
+
+void Widget::requestLayouting() {
+    m_dirtyState |= LayourRequest;
+}
+
+void Widget::layoutingDone() {
+    m_dirtyState = m_dirtyState & ~LayourRequest;
+}
+
+bool Widget::layoutingRequested() const {
+    return m_dirtyState & LayourRequest;
 }
 
 void Widget::setProperty( UiProperty *prop ) {
@@ -316,7 +330,18 @@ void Widget::mouseUp( const Point2ui &pt, void *data) {
 }
 
 void Widget::layout() {
-    onLayout();
+    if (layoutingRequested()) {
+        onLayout();
+        layoutingDone();
+    }
+
+    const ui32 numChildren( getNumWidgets() );
+    for (ui32 i = 0; i < numChildren; ++i) {
+        Widget *child = getWidgetAt(i);
+        if (nullptr != child) {
+            child->layout();
+        }
+    }
 }
 
 void Widget::setState(WidgetState state) {
