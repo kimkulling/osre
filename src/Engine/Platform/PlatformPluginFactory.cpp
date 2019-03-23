@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   include <src/Engine/Platform/win32/Win32Window.h>
 #   include <src/Engine/Platform/win32/Win32EventQueue.h>
 #   include <src/Engine//Platform/win32/Win32Timer.h>
-#   include <src/Engine//Platform/win32/Win32RenderContext.h>
+#   include <src/Engine//Platform/win32/Win32OGLRenderContext.h>
 #   include <src/Engine/Platform/win32/Win32ThreadFactory.h>
 #   include <src/Engine/Platform/win32/Win32DbgLogStream.h>
 #   include <src/Engine/Platform/win32/Win32DynamicLoader.h>
@@ -35,7 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 #include <src/Engine/Platform/sdl2/SDL2Window.h>
 #include <src/Engine/Platform/sdl2/SDL2EventQueue.h>
-#include <src/Engine/Platform/sdl2/SDL2RenderContext.h>
+#include <src/Engine/Platform/sdl2/SDL2OGLRenderContext.h>
 #include <src/Engine/Platform/sdl2/SDL2Timer.h>
 #include <src/Engine/Platform/sdl2/SDL2ThreadFactory.h>
 #include <src/Engine/Platform/sdl2/SDL2Initializer.h>

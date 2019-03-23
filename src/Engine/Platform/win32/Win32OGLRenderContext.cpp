@@ -20,13 +20,15 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <src/Engine/Platform/win32/Win32RenderContext.h>
+#include <src/Engine/Platform/win32/Win32OGLRenderContext.h>
 #include <GL/glew.h>
 #include <GL/wglew.h>
 
 #include <osre/Common/Logger.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <src/Engine/Platform/win32/Win32Window.h>
+
+#include "Engine/RenderBackend/OGLRenderer/OGLCommon.h"
 
 #include <iostream>
 
@@ -233,7 +235,7 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
     c8 *slv = (c8*)glGetString(GL_SHADING_LANGUAGE_VERSION);
     osre_debug(Tag, "Supported GLSL language " + String(slv));
 
-    m_oglCapabilities = new OGLCapabilities;
+    RenderBackend::OGLCapabilities *caps = new RenderBackend::OGLCapabilities;
 
     m_dc = dc;
     m_rc = rc;

@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "DX11Renderer.h"
 #include <osre/Common/Logger.h>
 #include <osre/Platform/AbstractWindow.h>
-#include <osre/Platform/AbstractRenderContext.h>
+#include <osre/Platform/AbstractOGLRenderContext.h>
 #include <osre/RenderBackend/Shader.h>
 #include <src/Engine/Platform/win32/Win32Window.h>
 

@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <src/Engine/RenderBackend/OGLRenderer/RenderCmdBuffer.h>
-#include <osre/Platform/AbstractRenderContext.h>
+#include <osre/Platform/AbstractOGLRenderContext.h>
 #include <osre/Debugging/osre_debugging.h>
 #include "OGLCommon.h"
 #include "OGLRenderBackend.h"

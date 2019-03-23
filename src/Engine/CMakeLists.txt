@@ -253,8 +253,8 @@ SET( platform_sdl2_src
     Platform/sdl2/SDL2Window.h
     Platform/sdl2/SDL2Timer.cpp
     Platform/sdl2/SDL2Timer.h
-    Platform/sdl2/SDL2RenderContext.cpp
-    Platform/sdl2/SDL2RenderContext.h
+    Platform/sdl2/SDL2OGLRenderContext.cpp
+    Platform/sdl2/SDL2OGLRenderContext.h
     Platform/sdl2/SDL2Thread.cpp
     Platform/sdl2/SDL2Thread.h
     Platform/sdl2/SDL2ThreadEvent.cpp

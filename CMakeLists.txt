@@ -35,6 +35,9 @@ set( BIN_INSTALL_DIR "bin" CACHE PATH
 INCLUDE_DIRECTORIES( BEFORE
     include/
     3dparty/glew/include
+    3dparty/cppcore/include
+    3dparty/cppcore/contrib/gtest-1.7.0/include
+    3dparty/cppcore/contrib/gtest-1.7.0/
     3dparty/assimp/contrib/irrXML
     3dparty/zlib
     3dparty/jsoncpp-1.8.4/include

@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLCommon.h"
 #include "OGLEnum.h"
 
-#include <osre/Platform/AbstractRenderContext.h>
+#include <osre/Platform/AbstractOGLRenderContext.h>
 #include <osre/Profiling/PerformanceCounterRegistry.h>
 #include <osre/Common/Logger.h>
 #include <osre/Debugging/osre_debugging.h>
