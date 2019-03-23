@@ -37,7 +37,7 @@ namespace Interface {
 }
 
 namespace Platform {
-    class AbstractRenderContext;
+    class AbstractOGLRenderContext;
 }
 
 namespace RenderBackend {
@@ -111,7 +111,7 @@ private:
     bool m_isRunning;
     OGLRenderBackend *m_oglBackend;
     RenderCmdBuffer *m_renderCmdBuffer;
-    Platform::AbstractRenderContext *m_renderCtx;
+    Platform::AbstractOGLRenderContext *m_renderCtx;
     OGLVertexArray *m_vertexArray;
     HWBufferManager *m_hwBufferManager;
 };

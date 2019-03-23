@@ -37,7 +37,7 @@ namespace Common {
 }
 
 namespace Platform {
-    class AbstractRenderContext;
+    class AbstractOGLRenderContext;
 }
 
 namespace RenderBackend {
@@ -73,7 +73,7 @@ public:
 
 public:
     /// The class constructor.
-    RenderCmdBuffer( OGLRenderBackend *renderBackend, Platform::AbstractRenderContext *ctx, Pipeline *pipeline );
+    RenderCmdBuffer( OGLRenderBackend *renderBackend, Platform::AbstractOGLRenderContext *ctx, Pipeline *pipeline );
     /// The class destructor.
     virtual ~RenderCmdBuffer();
     /// Will set the active shader.
@@ -118,7 +118,7 @@ protected:
 private:
     OGLRenderBackend *m_renderbackend;
     ClearState m_clearState;
-    Platform::AbstractRenderContext *m_renderCtx;
+    Platform::AbstractOGLRenderContext *m_renderCtx;
     ::CPPCore::TArray<OGLRenderCmd*> m_cmdbuffer;
     OGLShader *m_activeShader;
     ::CPPCore::TArray<PrimitiveGroup*> m_primitives;

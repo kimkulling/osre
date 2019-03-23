@@ -39,7 +39,7 @@ namespace IO {
 }
 
 namespace Platform {
-    class AbstractRenderContext;
+    class AbstractOGLRenderContext;
     class AbstractTimer;
 }
 
@@ -83,10 +83,10 @@ public:
     /// All matrix values will be applied to the current frame.
     void applyMatrix();
     const glm::mat4 &getMatrix( MatrixType type ) const;
-    bool create(Platform::AbstractRenderContext *renderCtx);
+    bool create(Platform::AbstractOGLRenderContext *renderCtx);
     bool destroy();
     void setTimer( Platform::AbstractTimer *timer );
-    void setRenderContext( Platform::AbstractRenderContext *renderCtx );
+    void setRenderContext( Platform::AbstractOGLRenderContext *renderCtx );
     void clearRenderTarget( const ClearState &clearState );
     void setViewport( i32 x, i32 y, i32 w, i32 h );
     OGLBuffer *createBuffer( BufferType type );
@@ -142,7 +142,7 @@ public:
     void setFixedPipelineStates(const RenderStates &states);
 
 private:
-    Platform::AbstractRenderContext *m_renderCtx;
+    Platform::AbstractOGLRenderContext *m_renderCtx;
     CPPCore::TArray<OGLBuffer*>      m_buffers;
     GLuint                           m_activeVB;
     GLuint                           m_activeIB;

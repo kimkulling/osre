@@ -197,7 +197,7 @@ public:
     static String getOSPluginName( PluginType type );
     AbstractWindow *getRootWindow() const;
     AbstractPlatformEventQueue *getPlatformEventHandler() const;
-    AbstractRenderContext *getRenderContext() const;
+    AbstractOGLRenderContext *getRenderContext() const;
     AbstractTimer *getTimer() const;
     AbstractDynamicLoader *getDynamicLoader() const;
     AbstractSystemInfo *getSystemInfo() const;
@@ -220,7 +220,7 @@ private:
     PluginType m_type;
     AbstractWindow *m_rootSurface;
     AbstractPlatformEventQueue *m_oseventHandler;
-    AbstractRenderContext *m_renderContext;
+    AbstractOGLRenderContext *m_renderContext;
     AbstractTimer *m_timer;
     AbstractDynamicLoader *m_dynLoader;
     AbstractSystemInfo *m_systemInfo;

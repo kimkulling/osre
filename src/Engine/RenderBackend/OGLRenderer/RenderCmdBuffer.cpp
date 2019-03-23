@@ -34,7 +34,7 @@ using namespace ::OSRE::Platform;
 
 static const c8 *Tag = "RenderCmdBuffer";
 
-RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractRenderContext *ctx, Pipeline *pipeline )
+RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractOGLRenderContext *ctx, Pipeline *pipeline )
 : m_renderbackend( renderBackend )
 , m_renderCtx( ctx )
 , m_activeShader( nullptr )

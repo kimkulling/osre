@@ -142,7 +142,7 @@ void OGLRenderBackend::applyMatrix() {
     setParameter(mvp);
 }
 
-bool OGLRenderBackend::create(Platform::AbstractRenderContext *renderCtx) {
+bool OGLRenderBackend::create(Platform::AbstractOGLRenderContext *renderCtx) {
     setRenderContext( renderCtx );
 
     return true;
@@ -158,7 +158,7 @@ void OGLRenderBackend::setTimer( Platform::AbstractTimer *timer ) {
     }
 }
 
-void OGLRenderBackend::setRenderContext( Platform::AbstractRenderContext *renderCtx ) {
+void OGLRenderBackend::setRenderContext( Platform::AbstractOGLRenderContext *renderCtx ) {
     if ( m_renderCtx != renderCtx ) {
         m_renderCtx = renderCtx;
         if ( nullptr != m_renderCtx ) {

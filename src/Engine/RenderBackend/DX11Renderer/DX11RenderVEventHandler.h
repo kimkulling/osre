@@ -31,7 +31,7 @@ struct ID3D11Buffer;
 namespace OSRE {
     
 namespace Platform {
-    class AbstractRenderContext;
+    class AbstractOGLRenderContext;
 }
 
 namespace RenderBackend {

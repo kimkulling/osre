@@ -103,7 +103,7 @@ AbstractPlatformEventQueue *PlatformInterface::getPlatformEventHandler() const {
     return m_oseventHandler;
 }
 
-AbstractRenderContext *PlatformInterface::getRenderContext() const {
+AbstractOGLRenderContext *PlatformInterface::getRenderContext() const {
     return m_renderContext;
 }
 

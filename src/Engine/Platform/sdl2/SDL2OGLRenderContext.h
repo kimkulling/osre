@@ -37,7 +37,7 @@ class SDL2Surface;
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class SDL2RenderContext : public AbstractRenderContext {
+class SDL2RenderContext : public AbstractOGLRenderContext {
 public:
     /// The class constructor.
     SDL2RenderContext();

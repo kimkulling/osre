@@ -34,7 +34,7 @@ namespace Platform {
 ///
 ///	@brief  This class implements the Render Context API by using the Win32-API.
 //-------------------------------------------------------------------------------------------------
-class Win32RenderContext : public AbstractRenderContext {
+class Win32RenderContext : public AbstractOGLRenderContext {
 public:
     Win32RenderContext();
     virtual ~Win32RenderContext();

@@ -39,7 +39,7 @@ namespace Platform {
 
 class AbstractPlatformEventQueue;
 class AbstractWindow;
-class AbstractRenderContext;
+class AbstractOGLRenderContext;
 class AbstractTimer;
 class AbstractThreadFactory;
 class AbstractDynamicLoader;
@@ -66,7 +66,7 @@ struct PlatformPluginFactory {
     static AbstractWindow *createSurface( PluginType type, WindowsProperties *pProps );
 
     /// @brief  Creates a platform-specific render context.
-    static AbstractRenderContext *createRenderContext( PluginType type );
+    static AbstractOGLRenderContext *createRenderContext( PluginType type );
 
     /// @brief  Creates a platform-specific timer instance.
     static AbstractTimer *createTimer( PluginType type );

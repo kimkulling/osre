@@ -186,7 +186,7 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/AbstractCriticalSection.h
     ${HEADER_PATH}/Platform/AtomicInt.h
     ${HEADER_PATH}/Platform/AbstractPlatformEventQueue.h
-    ${HEADER_PATH}/Platform/AbstractRenderContext.h
+    ${HEADER_PATH}/Platform/AbstractOGLRenderContext.h
     ${HEADER_PATH}/Platform/AbstractWindow.h
     ${HEADER_PATH}/Platform/AbstractTimer.h
 	${HEADER_PATH}/Platform/AbstractSystemInfo.h
@@ -222,8 +222,8 @@ SET( platform_win32_src
     Platform/win32/Win32Window.h
     Platform/win32/Win32EventQueue.cpp
     Platform/win32/Win32EventQueue.h
-    Platform/win32/Win32RenderContext.cpp
-    Platform/win32/Win32RenderContext.h
+    Platform/win32/Win32OGLRenderContext.cpp
+    Platform/win32/Win32OGLRenderContext.h
     Platform/win32/Win32Timer.cpp
     Platform/win32/Win32Timer.h
     Platform/win32/Win32CriticalSection.h

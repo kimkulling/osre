@@ -112,8 +112,8 @@ AbstractWindow *PlatformPluginFactory::createSurface( PluginType type, WindowsPr
     return surface;
 }
 
-AbstractRenderContext *PlatformPluginFactory::createRenderContext( PluginType type ) {
-    AbstractRenderContext *renderCtx( nullptr );
+AbstractOGLRenderContext *PlatformPluginFactory::createRenderContext( PluginType type ) {
+    AbstractOGLRenderContext *renderCtx( nullptr );
     switch( type ) {
 #ifdef OSRE_WINDOWS
         case Platform::PluginType::WindowsPlugin:

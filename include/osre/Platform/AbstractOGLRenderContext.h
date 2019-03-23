@@ -33,10 +33,10 @@ namespace Platform {
 ///	@brief  This abstract class declares the interface for a render context. Override this for your 
 /// own implementation.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AbstractRenderContext {
+class OSRE_EXPORT AbstractOGLRenderContext {
 public:
     /// @brief  The class destructor, virtual.
-    virtual ~AbstractRenderContext();
+    virtual ~AbstractOGLRenderContext();
 
     /// @brief  Creates the context.
     /// @param  surface     [in] The render surface.
@@ -72,7 +72,7 @@ protected:
 
 protected:
     /// @brief  The default class constructor.
-    AbstractRenderContext();
+    AbstractOGLRenderContext();
 
 private:
     bool m_isActive;
@@ -80,46 +80,46 @@ private:
 };
 
 inline
-AbstractRenderContext::AbstractRenderContext() 
+AbstractOGLRenderContext::AbstractOGLRenderContext() 
 : m_isActive( false )
 , m_rootRenderSurface( nullptr ) {
     // empty
 }
 
 inline
-AbstractRenderContext::~AbstractRenderContext() {
+AbstractOGLRenderContext::~AbstractOGLRenderContext() {
     // empty
 }
 
 inline
-bool AbstractRenderContext::create( AbstractWindow *surface ) {
+bool AbstractOGLRenderContext::create( AbstractWindow *surface ) {
     m_rootRenderSurface = surface;
     return onCreate( surface );
 }
 
 inline
-bool AbstractRenderContext::destroy() {
+bool AbstractOGLRenderContext::destroy() {
     return onDestroy();
 }
 
 inline
-bool AbstractRenderContext::activate() {
+bool AbstractOGLRenderContext::activate() {
     m_isActive = onActivate();
     return m_isActive;
 }
 
 inline
-bool AbstractRenderContext::isActive() const {
+bool AbstractOGLRenderContext::isActive() const {
     return m_isActive;
 }
 
 inline
-bool AbstractRenderContext::update() {
+bool AbstractOGLRenderContext::update() {
     return onUpdate();
 }
 
 inline
-AbstractWindow *AbstractRenderContext::getRenderSurface() const {
+AbstractWindow *AbstractOGLRenderContext::getRenderSurface() const {
     return m_rootRenderSurface;
 }
 

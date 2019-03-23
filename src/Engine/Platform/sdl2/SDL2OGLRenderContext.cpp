@@ -33,7 +33,7 @@ namespace Platform {
 static const c8 *Tag = "SDL2RenderContext";
 
 SDL2RenderContext::SDL2RenderContext()
-: AbstractRenderContext()
+: AbstractOGLRenderContext()
 , m_renderContext( nullptr )
 , m_surface( nullptr )
 , m_isActive( false ) {

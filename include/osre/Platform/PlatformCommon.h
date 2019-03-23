@@ -50,7 +50,7 @@ class AbstractAtomic;
 class AbstractThreadLocalStorage;
 class AbstractTimer;
 class AbstractPlatformEventQueue;
-class AbstractRenderContext;
+class AbstractOGLRenderContext;
 class AbstractDynamicLoader;
 class AbstractSystemInfo;
 class AbstractOSService;

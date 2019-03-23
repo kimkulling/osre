@@ -85,7 +85,7 @@ namespace OSRE {
 namespace Platform {
 
 Win32RenderContext::Win32RenderContext( )
-: AbstractRenderContext()
+: AbstractOGLRenderContext()
 , m_dc( nullptr )
 , m_rc( nullptr )
 , m_extensions()
@@ -232,6 +232,8 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
 
     c8 *slv = (c8*)glGetString(GL_SHADING_LANGUAGE_VERSION);
     osre_debug(Tag, "Supported GLSL language " + String(slv));
+
+    m_oglCapabilities = new OGLCapabilities;
 
     m_dc = dc;
     m_rc = rc;
