@@ -59,6 +59,7 @@ protected:
     bool onDetachView(const Common::EventData *eventData);
     bool onClearGeo(const Common::EventData *eventData);
     bool onRenderFrame(const Common::EventData *eventData);
+    bool onInitRenderPasses(const Common::EventData *eventData);
     bool onCommitNexFrame(const Common::EventData *eventData);
     bool onShutdownRequest(const Common::EventData *eventData);
     bool onResizeRenderTarget(const Common::EventData *eventData);

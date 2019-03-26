@@ -46,6 +46,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+static const c8 *DefaultVertexShader = "";
+    
+static const c8 *DefaultPixelShader = "";
+
 using namespace ::OSRE::Common;
 
 static const c8 *Tag = "DX11Renderer";
@@ -65,7 +69,7 @@ DX11Renderer::DX11Renderer()
 }
 
 DX11Renderer::~DX11Renderer() {
-
+    // empty
 }
 
 bool DX11Renderer::create(Platform::AbstractWindow *surface) {
@@ -398,7 +402,7 @@ ui32 translateVBEnum2DX11(BufferType type) {
     return 0;
 }
 
-UINT translateAccessFlag(BufferAccessType usage) {
+static UINT translateAccessFlag(BufferAccessType usage) {
     switch (usage) {
         case BufferAccessType::ReadOnly:
             return D3D11_CPU_ACCESS_READ;

@@ -85,6 +85,8 @@ bool DX11RenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
         result = onDetachView(data);
     } else if (OnRenderFrameEvent == ev) {
         result = onRenderFrame(data);
+    } else if (OnInitPassesEvent == ev) {
+        result = onInitRenderPasses(data);
     } else if (OnCommitFrameEvent == ev) {
         result = onCommitNexFrame(data);
     } else if (OnClearSceneEvent == ev) {
@@ -106,7 +108,7 @@ bool DX11RenderEventHandler::onDetached(const EventData *) {
     return true;
 }
 
-bool DX11RenderEventHandler::onCreateRenderer(const Common::EventData *eventData) {
+bool DX11RenderEventHandler::onCreateRenderer(const EventData *eventData) {
     if (nullptr != m_dx11Renderer) {
         return false;
     }
@@ -142,7 +144,7 @@ bool DX11RenderEventHandler::onCreateRenderer(const Common::EventData *eventData
     return result;
 }
 
-bool DX11RenderEventHandler::onDestroyRenderer(const Common::EventData *) {
+bool DX11RenderEventHandler::onDestroyRenderer(const EventData *) {
     if (nullptr == m_dx11Renderer) {
         return false;
     }
@@ -156,22 +158,25 @@ bool DX11RenderEventHandler::onDestroyRenderer(const Common::EventData *) {
     return true;
 }
 
-bool DX11RenderEventHandler::onAttachView(const Common::EventData *) {
+bool DX11RenderEventHandler::onAttachView(const EventData *) {
     return true;
 }
 
-bool DX11RenderEventHandler::onDetachView(const Common::EventData *) {
+bool DX11RenderEventHandler::onDetachView(const EventData *) {
     return true;
 }
 
-bool DX11RenderEventHandler::onClearGeo(const Common::EventData *) {
+bool DX11RenderEventHandler::onClearGeo(const EventData *) {
     return true;
 }
 
-bool DX11RenderEventHandler::onRenderFrame(const Common::EventData *) {
+bool DX11RenderEventHandler::onRenderFrame(const EventData *) {
+    OSRE_ASSERT(nullptr != m_dx11Renderer);
+
     // triggers the render frame loop
     Color4 clear(0, 1, 0, 0);
     m_dx11Renderer->beginScene(clear);
+    
     for (ui32 i = 0; i < m_renderCmds.size(); ++i) {
         m_dx11Renderer->render(m_renderCmds[i]);
     }
@@ -181,11 +186,25 @@ bool DX11RenderEventHandler::onRenderFrame(const Common::EventData *) {
     return true;
 }
 
-bool DX11RenderEventHandler::onCommitNexFrame(const Common::EventData *eventData) {
+bool DX11RenderEventHandler::onInitRenderPasses( const EventData *eventData ) {
+    OSRE_ASSERT(nullptr != m_dx11Renderer);
+
+    InitPassesEventData *frameToCommitData = (InitPassesEventData*)eventData;
+    if (nullptr == frameToCommitData) {
+        return false;
+    }
+
+    return true;
+}
+
+bool DX11RenderEventHandler::onCommitNexFrame(const EventData *eventData) {
+    OSRE_ASSERT(nullptr != m_dx11Renderer);
+
     CommitFrameEventData *frameToCommitData = (CommitFrameEventData*)eventData;
     if (nullptr == frameToCommitData) {
         return false;
     }
+
     Frame *frame = frameToCommitData->m_frame;
 
     return true;
