@@ -88,14 +88,6 @@ static bool setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTextur
     return true;
 }
 
-static void setConstantBuffers(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj, 
-        OGLRenderBackend *rb, OGLRenderEventHandler *eh) {
-    OSRE_ASSERT(nullptr != eh);
-    OSRE_ASSERT(nullptr != rb);
-
-    eh->getRenderCmdBuffer()->setMatrixes(model, view, proj);
-}
-
 static SetMaterialStageCmdData *setupMaterial( Material *material, OGLRenderBackend *rb, OGLRenderEventHandler *eh ) {
 	OSRE_ASSERT( nullptr != eh );
 	OSRE_ASSERT( nullptr != material );
@@ -245,6 +237,7 @@ static void setupInstancedDrawCmd(const char *id, const TArray<ui32> &ids, OGLRe
 	OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc( OGLRenderCmdType::DrawPrimitivesInstancesCmd, nullptr );
     
     DrawInstancePrimitivesCmdData *data = new DrawInstancePrimitivesCmdData;
+    data->m_id = id;
     data->m_vertexArray = va;
     data->m_numInstances = numInstances;
     data->m_primitives.reserve( ids.size() );
@@ -487,7 +480,7 @@ bool OGLRenderEventHandler::onInitRenderPasses( const Common::EventData *eventDa
 
             // set the matrix
             MatrixBuffer &matrixBuffer = currentBatchData->m_matrixBuffer;
-            setConstantBuffers(matrixBuffer.m_model, matrixBuffer.m_view, matrixBuffer.m_proj, m_oglBackend, this );
+            getRenderCmdBuffer()->setMatrixes(matrixBuffer.m_model, matrixBuffer.m_view, matrixBuffer.m_proj);
             
             // set uniforms
             for (ui32 uniformIdx = 0; uniformIdx < currentBatchData->m_uniforms.size(); ++uniformIdx) {

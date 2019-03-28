@@ -102,12 +102,11 @@ bool SystemInfo::registerThreadName( const ThreadId &id, const String &name ) {
 
 bool SystemInfo::unregisterThreadName( const ThreadId &id ) {
     ThreadNameMap::iterator it( s_threadNames.find( id.Id) );
-    bool success( true );
+    bool success( false );
     if ( s_threadNames.end() != it ) {
         s_threadNames.erase( it );
-    } else {
-        success = false;
-    }
+        success = true;
+    } 
 
     return success;
 }
@@ -116,13 +115,12 @@ String SystemInfo::getThreadName( const ThreadId &id ) {
     ThreadNameMap::const_iterator it( s_threadNames.find( id.Id) );
     if ( s_threadNames.end() != it ) {
         return it->second;
-    } else {
-        std::stringstream stream;
-        stream << "t" << id.Id;
-        const String name( stream.str() );
-        s_threadNames[ id.Id ] = name;
-        return name;
-    }
+    } 
+    std::stringstream stream;
+    stream << "t" << id.Id;
+    const String name( stream.str() );
+    s_threadNames[ id.Id ] = name;
+    return name;
 }
 
 String SystemInfo::getCurrentThreadName() {

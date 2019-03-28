@@ -51,6 +51,16 @@ using namespace ::CPPCore;
 
 static const c8 *Tag = "DX11RenderEventHandler";
 
+static void setConstantBuffers(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj, DX11Renderer *dx11Renderer ) {
+    dx11Renderer->setMatrix(MatrixType::Model, model);
+    dx11Renderer->setMatrix(MatrixType::View, view);
+    dx11Renderer->setMatrix(MatrixType::Projection, proj);
+}
+
+static void setupUniforms( void *bufferData, DX11Renderer *dx11Renderer ) {
+
+}
+
 DX11RenderEventHandler::DX11RenderEventHandler()
 : AbstractEventHandler()
 , m_isRunning( true )
@@ -193,6 +203,81 @@ bool DX11RenderEventHandler::onInitRenderPasses( const EventData *eventData ) {
     if (nullptr == frameToCommitData) {
         return false;
     }
+
+    CPPCore::TArray<ui32> primGroups;
+    Frame *frame = frameToCommitData->m_frame;
+    for (ui32 passIdx = 0; passIdx < frame->m_newPasses.size(); ++passIdx) {
+        PassData *currentPass = frame->m_newPasses[passIdx];
+        OSRE_ASSERT(nullptr != currentPass);
+
+        if (!currentPass->m_isDirty) {
+            continue;
+        }
+
+        // ToDo: create pipeline pass for the name.
+        for (ui32 batchIdx = 0; batchIdx < currentPass->m_geoBatches.size(); ++batchIdx) {
+            GeoBatchData *currentBatchData = currentPass->m_geoBatches[batchIdx];
+            OSRE_ASSERT(nullptr != currentBatchData);
+
+            // set the matrix
+            MatrixBuffer &matrixBuffer = currentBatchData->m_matrixBuffer;
+            setConstantBuffers(matrixBuffer.m_model, matrixBuffer.m_view, matrixBuffer.m_proj, m_dx11Renderer );
+
+            // set uniforms
+            for (ui32 uniformIdx = 0; uniformIdx < currentBatchData->m_uniforms.size(); ++uniformIdx) {
+                setupUniforms(nullptr, m_dx11Renderer);
+                //setupConstantBuffer(currentBatchData->m_uniforms[uniformIdx], m_oglBackend, this);
+            }
+
+            // set meshes
+            for (ui32 meshEntryIdx = 0; meshEntryIdx < currentBatchData->m_meshArray.size(); ++meshEntryIdx) {
+                MeshEntry *currentMeshEntry = currentBatchData->m_meshArray[meshEntryIdx];
+                OSRE_ASSERT(nullptr != currentMeshEntry);
+                if (!currentMeshEntry->m_isDirty) {
+                    continue;
+                }
+
+                for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->m_geo.size(); ++meshIdx) {
+                    Mesh *currentMesh = currentMeshEntry->m_geo[meshIdx];
+                    OSRE_ASSERT(nullptr != currentMesh);
+
+                    // register primitive groups to render
+                    for (ui32 i = 0; i < currentMesh->m_numPrimGroups; ++i) {
+                        //const ui32 primIdx(m_oglBackend->addPrimitiveGroup(&currentMesh->m_primGroups[i]));
+                      //  primGroups.add(primIdx);
+                    }
+
+                    // create the default material
+                    //SetMaterialStageCmdData *data = setupMaterial(currentMesh->m_material, m_oglBackend, this);
+
+                    // setup vertex array, vertex and index buffers
+                    //m_vertexArray = setupBuffers(currentMesh, m_oglBackend, m_renderCmdBuffer->getActiveShader());
+                    //if (nullptr == m_vertexArray) {
+                        osre_debug(Tag, "Vertex-Array-pointer is a nullptr.");
+                        return false;
+                    //}
+                    //data->m_vertexArray = m_vertexArray;
+
+                    // setup the draw calls
+                    if (0 == currentMeshEntry->numInstances) {
+                     /*   setupPrimDrawCmd(currentBatchData->m_id, currentMesh->m_localMatrix, currentMesh->m_model,
+                            primGroups, m_oglBackend, this, m_vertexArray);*/
+                    }
+                    else {
+                        /*setupInstancedDrawCmd(currentBatchData->m_id, primGroups, m_oglBackend, this, m_vertexArray,
+                            currentMeshEntry->numInstances);*/
+                    }
+
+                    primGroups.resize(0);
+                }
+                currentMeshEntry->m_isDirty = false;
+            }
+        }
+    }
+
+    frame->m_newPasses.clear();
+
+    //m_oglBackend->useShader(nullptr);
 
     return true;
 }
