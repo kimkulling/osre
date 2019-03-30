@@ -61,9 +61,9 @@ struct WindowsProperties {
     ui32   m_y;                   ///< Upper left y coordinate.
     ui32   m_width;               ///< Width of the surface.
     ui32   m_height;              ///< Height of the surface.
-    ui32   m_colordepth;          ///< Color depth.
-    ui32   m_depthbufferdepth;    ///< Z-Depth.
-    ui32   m_stencildepth;        ///< Stencil depth.
+    uc8    m_colordepth;          ///< Color depth.
+    uc8    m_depthbufferdepth;    ///< Z-Depth.
+    uc8    m_stencildepth;        ///< Stencil depth.
     String m_title;               ///< Window title.
     bool   m_fullscreen;          ///< true for full screen.
     bool   m_resizable;           ///< true, if window wan be resized.

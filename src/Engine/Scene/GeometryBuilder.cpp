@@ -206,8 +206,8 @@ void MeshBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
     static const ui32 NumIndices = 3;
     GLushort  indices[ NumIndices ];
     indices[ 0 ] = 0;
-    indices[ 1 ] = 1;
-    indices[ 2 ] = 2;
+    indices[ 1 ] = 2;
+    indices[ 2 ] = 1;
     
     ui32 size = sizeof( GLushort ) * NumIndices;
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, access );
@@ -258,12 +258,12 @@ void MeshBuilder::allocQuads( VertexType type, BufferAccessType access ) {
     static const ui32 NumIndices = 6;
     GLushort  indices[ NumIndices ];
     indices[ 0 ] = 0;
-    indices[ 1 ] = 1;
-    indices[ 2 ] = 2;
+    indices[ 1 ] = 2;
+    indices[ 2 ] = 1;
 
     indices[ 3 ] = 1;
-    indices[ 4 ] = 3;
-    indices[ 5 ] = 2;
+    indices[ 4 ] = 2;
+    indices[ 5 ] = 3;
 
     ui32 size = sizeof( GLushort ) * NumIndices;
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
@@ -321,12 +321,12 @@ void MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, RenderBack
     static const ui32 NumIndices = 6;
     GLushort  indices[ NumIndices ];
     indices[ 0 ] = 0;
-    indices[ 1 ] = 1;
-    indices[ 2 ] = 2;
+    indices[ 1 ] = 2;
+    indices[ 2 ] = 1;
 
     indices[ 3 ] = 1;
-    indices[ 4 ] = 3;
-    indices[ 5 ] = 2;
+    indices[ 4 ] = 2;
+    indices[ 5 ] = 3;
     
     for (ui32 i = 0; i < 4; ++i) {
         ic.add( indices[ i ] );
@@ -480,12 +480,12 @@ static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const 
         (*colors)[VertexOffset + 3] = col[3];
         const ui32 IndexOffset(i * NumQuadIndices);
         (*textIndices)[0 + IndexOffset] = 0 + VertexOffset;
-        (*textIndices)[1 + IndexOffset] = 1 + VertexOffset;
-        (*textIndices)[2 + IndexOffset] = 2 + VertexOffset;
+        (*textIndices)[1 + IndexOffset] = 2 + VertexOffset;
+        (*textIndices)[2 + IndexOffset] = 1 + VertexOffset;
 
         (*textIndices)[3 + IndexOffset] = 1 + VertexOffset;
-        (*textIndices)[4 + IndexOffset] = 3 + VertexOffset;
-        (*textIndices)[5 + IndexOffset] = 2 + VertexOffset;
+        (*textIndices)[4 + IndexOffset] = 2 + VertexOffset;
+        (*textIndices)[5 + IndexOffset] = 3 + VertexOffset;
         ++textCol;
     }
 }

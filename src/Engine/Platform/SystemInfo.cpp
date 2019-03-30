@@ -116,6 +116,7 @@ String SystemInfo::getThreadName( const ThreadId &id ) {
     if ( s_threadNames.end() != it ) {
         return it->second;
     } 
+
     std::stringstream stream;
     stream << "t" << id.Id;
     const String name( stream.str() );

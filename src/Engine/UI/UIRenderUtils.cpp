@@ -82,12 +82,12 @@ void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, c
     // setup triangle indices
     ui16 indices[ 6 ];
     indices[ 0 ] = 0;
-    indices[ 1 ] = 2;
-    indices[ 2 ] = 1;
+    indices[ 1 ] = 1;
+    indices[ 2 ] = 2;
 
     indices[ 3 ] = 2;
-    indices[ 4 ] = 3;
-    indices[ 5 ] = 1;
+    indices[ 4 ] = 1;
+    indices[ 5 ] = 3;
 
     indexCache.increaseSize( 6 );
     for ( ui32 i = 0; i < 6; ++i ) {

@@ -27,13 +27,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+/// @brief  The clear state.
 struct ClearState {
-    enum class ClearBitType : int {
-        ColorBit = 1 << 0,    ///< Clear the color buffer.
-        DepthBit = 1 << 1,    ///< Clear the depth buffer.
+    /// The provided clear buffer bits
+    enum ClearBitType : int {
+        ColorBit   = 1 << 0,    ///< Clear the color buffer.
+        DepthBit   = 1 << 1,    ///< Clear the depth buffer.
         StencilBit = 1 << 2     ///< Clear the stencil buffer.
     };
 
+    /// The clear buffer states bit coded.
     ui32 m_state;
 
     /// @brief  The default class constructor.
@@ -44,7 +47,6 @@ struct ClearState {
     explicit ClearState(ui32 states);
     bool operator == (const ClearState &rhs) const;
     bool operator != (const ClearState &rhs) const;
-
 };
 
 inline
@@ -69,12 +71,67 @@ bool ClearState::operator != (const ClearState &rhs) const {
     return !(*this == rhs);
 }
 
+struct DepthState {
+    enum DepthStateType {
+        Enabled = 0,
+        Disabled,
+        NumDepthStates,
+        InvalidDepthState
+    };
+
+    enum DepthFuncType {
+        Always = 0,
+        Never,
+        Less,
+        Equal,
+        LEqual,
+        Greater,
+        NotEqual,
+        GEqual,
+        NumDepthFuncs,
+        InvalidDepthFunc
+    };
+
+    DepthStateType m_type;
+    DepthFuncType m_func;
+
+    DepthState();
+    DepthState(DepthStateType stateType, DepthFuncType depthFuncType);
+    bool operator == (const DepthState &rhs) const;
+    bool operator != (const DepthState &rhs) const;
+};
+
+inline
+DepthState::DepthState()
+: m_type(Enabled)
+, m_func(Always) {
+    // empty
+}
+
+inline
+DepthState::DepthState(DepthStateType stateType, DepthFuncType depthFuncType) 
+: m_type(stateType)
+, m_func(depthFuncType) {
+    // empty
+}
+
+inline
+bool DepthState::operator == (const DepthState &rhs) const {
+    return ( m_type == rhs.m_type && m_func == rhs.m_func );
+}
+
+inline
+bool DepthState::operator != (const DepthState &rhs) const {
+    return !(*this == rhs);
+}
+
 struct SamplerState {
     TextureTargetType m_targetType;
     TextureStageType  m_stageType;
 
     SamplerState();
     SamplerState(TextureTargetType targetType, TextureStageType stageType);
+
     bool operator == (const SamplerState &rhs) const;
     bool operator != (const SamplerState &rhs) const;
 

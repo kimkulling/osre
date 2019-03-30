@@ -114,6 +114,8 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
         return false;
     }
 
+    WindowsProperties *props = surface->getProperties();
+    
     HDC dc = win32Surface->getDeviceContext();
     if( !dc ) {
         osre_error( Tag, "Invalid device context." );
@@ -126,8 +128,9 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
     pfd.nVersion = 1;
     pfd.dwFlags = PFD_DOUBLEBUFFER | PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW;
     pfd.iPixelType = PFD_TYPE_RGBA;
-    pfd.cColorBits = 32;
-    pfd.cDepthBits = 32;
+    pfd.cColorBits = props->m_colordepth;
+    pfd.cDepthBits = props->m_depthbufferdepth;
+    pfd.cStencilBits = props->m_stencildepth;
     pfd.iLayerType = PFD_MAIN_PLANE;
 
     i32 pixelFormat = ::ChoosePixelFormat( dc, &pfd );
@@ -243,6 +246,9 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
     glEnable( GL_TEXTURE_2D );
     glEnable( GL_TEXTURE_3D );
     glDisable( GL_LIGHTING );
+    
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_LESS);
 
     return true;
 }

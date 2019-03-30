@@ -180,9 +180,9 @@ bool PlatformInterface::onOpen() {
         props->m_y = m_config->get( Settings::WinY ).getInt();
         props->m_width = m_config->get( Settings::WinWidth ).getInt();
         props->m_height = m_config->get( Settings::WinHeight ).getInt();
-        props->m_colordepth = m_config->get( Settings::BPP ).getInt();
-        props->m_depthbufferdepth = m_config->get( Settings::DepthBufferDepth ).getInt();
-        props->m_stencildepth = m_config->get( Settings::StencilBufferDepth ).getInt();
+        props->m_colordepth = m_config->get( Settings::BPP ).getByte();
+        props->m_depthbufferdepth = m_config->get( Settings::DepthBufferDepth ).getByte();
+        props->m_stencildepth = m_config->get( Settings::StencilBufferDepth ).getByte();
         props->m_fullscreen = fullscreen;
         props->m_resizable = m_config->get( Settings::WindowsResizable ).getBool();
         props->m_childWindow = m_config->get(Settings::ChildWindow).getBool();
