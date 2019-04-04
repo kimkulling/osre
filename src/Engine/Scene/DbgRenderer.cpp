@@ -108,20 +108,19 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
         DbgTextEntry *entry( nullptr );
         if ( m_textBoxes.getValue( id, entry ) ) {
             OSRE_ASSERT( nullptr != entry );
-            if ( entry->m_text == text ) {
-                return;
-            }
-            Mesh *geo( nullptr );
-            if ( text.size() > entry->m_text.size() ) {
-                MeshBuilder geoBuilder;
-                geoBuilder.allocTextBox(0, 0, 0.1f, text, BufferAccessType::ReadWrite);
-                geo = geoBuilder.getMesh();
-                entry->m_geo = geo;
-            } else {
-                MeshBuilder::updateTextBox( entry->m_geo, 0.1f, text );
-                geo = entry->m_geo;
-            }
-            m_rbSrv->updateMesh(geo);
+			if (entry->m_text != text) {
+				Mesh* geo(nullptr);
+				if (text.size() > entry->m_text.size()) {
+					MeshBuilder geoBuilder;
+					geoBuilder.allocTextBox(0, 0, 0.1f, text, BufferAccessType::ReadWrite);
+					geo = geoBuilder.getMesh();
+					entry->m_geo = geo;
+				} else {
+					MeshBuilder::updateTextBox(entry->m_geo, 0.1f, text);
+					geo = entry->m_geo;
+				}
+				m_rbSrv->updateMesh(geo);
+			}
         }
     }
     
