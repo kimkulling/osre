@@ -152,7 +152,7 @@ bool DX11Renderer::create(Platform::AbstractWindow *surface) {
     m_videoCardMemory = (int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
 
     // Convert the name of the video card to a character array and store it.
-    ui32 stringLength(0);
+    size_t stringLength(0);
     i32 error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
     if ( 0 != error ) {
         return false;

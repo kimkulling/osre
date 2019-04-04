@@ -76,7 +76,7 @@ HashId StringUtils::hashName( char const *pIdentStr ) {
     unsigned long s2 = 0;
 
     for ( size_t len = strlen( pIdentStr ); len > 0 ; ) {
-        unsigned long k = len < NMAX ? len : NMAX;
+        unsigned long k = static_cast<unsigned long>( len < NMAX ? len : NMAX );
         len -= k;
 
         while (k >= 16)	{
