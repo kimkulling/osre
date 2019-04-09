@@ -185,9 +185,8 @@ void World::update( Time dt ) {
     }
 
     if (nullptr != m_activeView) {
-        //m_activeView->update( dt );
+        m_activeView->update( dt );
     }
-
 }
 
 void World::draw( RenderBackendService *rbSrv ) {

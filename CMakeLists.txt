@@ -52,7 +52,7 @@ INCLUDE_DIRECTORIES( BEFORE
 )
 
 link_directories(
-	$ENV{SDL_PATH}/lib/x86
+	$ENV{SDL_PATH}/lib/x64
     ${CMAKE_HOME_DIRECTORY}/lib
     ${CMAKE_HOME_DIRECTORY}/bin
 )
@@ -82,6 +82,7 @@ endif()
 
 # we want to have all wanings
 if( WIN32 AND NOT CYGWIN )
+  add_compile_options("/bigobj")
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc" )  # Force to always compile with W4
   if( CMAKE_CXX_FLAGS MATCHES "/W[0-4]" )
     string( REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" )

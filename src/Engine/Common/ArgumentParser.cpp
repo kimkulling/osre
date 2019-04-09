@@ -68,7 +68,7 @@ ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedA
 , m_CurrentIndex( 0 )
 , m_isValid( true ) {
     // Parse and store the expected arguments
-    const ui32 optionLen = option.size();
+    const ui32 optionLen = static_cast<size_t>( option.size() );
     parseExpectedArgs( supportedArgs, desc, m_SupportedArguments );
     if ( argc > 1 )	{
         while ( m_CurrentIndex < static_cast<ui32>( argc ) ) {
