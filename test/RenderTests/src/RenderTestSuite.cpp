@@ -207,7 +207,7 @@ void RenderTestSuite::attachRenderTest( AbstractRenderTest *pRenderTest ) {
 }
 
 ui32 RenderTestSuite::getNumRenderTests() const {
-    return m_attachedRenderTests.size();
+    return static_cast<ui32>( m_attachedRenderTests.size() );
 }
 
 void RenderTestSuite::startTests() {
