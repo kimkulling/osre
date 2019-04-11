@@ -50,12 +50,19 @@ INCLUDE_DIRECTORIES( BEFORE
 	$ENV{SDL_PATH}/include
 	SDL2-devel-2.0.5-VC.zip/include
 )
-
-link_directories(
-	$ENV{SDL_PATH}/lib/x64
-    ${CMAKE_HOME_DIRECTORY}/lib
-    ${CMAKE_HOME_DIRECTORY}/bin
-)
+if( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)")
+	link_directories(
+		$ENV{SDL_PATH}/lib/x64
+		${CMAKE_HOME_DIRECTORY}/lib
+		${CMAKE_HOME_DIRECTORY}/bin
+	)
+else()
+	link_directories(
+		$ENV{SDL_PATH}/lib/x86
+		${CMAKE_HOME_DIRECTORY}/lib
+		${CMAKE_HOME_DIRECTORY}/bin
+	)
+endif()
 
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib )
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib )
