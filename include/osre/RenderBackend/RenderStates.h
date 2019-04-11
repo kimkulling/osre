@@ -422,7 +422,8 @@ bool PolygonState::operator != (const PolygonState &rhs) const {
 
 struct RenderStates {
     ClearState     m_clearState;
-    TransformState m_transformState;
+	DepthState     m_depthState;
+	TransformState m_transformState;
     PolygonState   m_polygonState;
     BlendState     m_blendState;
     CullState      m_cullState;
@@ -432,6 +433,7 @@ struct RenderStates {
 
     RenderStates()
     : m_clearState()
+    , m_depthState()
     , m_transformState()
     , m_polygonState()
     , m_blendState()
@@ -442,9 +444,11 @@ struct RenderStates {
         // empty
     }
 
-    bool isEqual( const ClearState &ClearState, const TransformState &transformState, const PolygonState &polygonState, const CullState &cullstate, const BlendState &blendState,
-        const SamplerState &samplerState, const StencilState &stencilState ) const {
-        return ( ClearState == m_clearState
+    bool isEqual( const ClearState &ClearState, const DepthState &depthState, const TransformState &transformState, 
+			const PolygonState &polygonState, const CullState &cullstate, const BlendState &blendState,
+			const SamplerState &samplerState, const StencilState &stencilState ) const {
+		return (ClearState == m_clearState
+			&& depthState == m_depthState
             && transformState == m_transformState
             && polygonState == m_polygonState
             && blendState == m_blendState

@@ -1079,7 +1079,7 @@ void OGLRenderBackend::setFixedPipelineStates( const RenderStates &states ) {
     OSRE_ASSERT( nullptr != m_fpState );
 
     if ( m_fpState->m_applied ) {
-        if ( m_fpState->isEqual( states.m_clearState, states.m_transformState, states.m_polygonState, 
+        if ( m_fpState->isEqual( states.m_clearState, states.m_depthState, states.m_transformState, states.m_polygonState, 
                 states.m_cullState, states.m_blendState, states.m_samplerState, states.m_stencilState ) ) {
             return;
         }
