@@ -52,7 +52,7 @@ struct AbstractInputUpdate;
 class Win32EventQueue : public AbstractPlatformEventQueue {
 public:
     Win32EventQueue( AbstractWindow *rootWindow );
-    virtual ~Win32EventQueue();
+    virtual ~Win32EventQueue() override;
     virtual bool update() override;
     static LRESULT CALLBACK winproc( HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam );
     void setRootSurface( AbstractWindow *window );

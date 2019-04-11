@@ -50,7 +50,9 @@ INCLUDE_DIRECTORIES( BEFORE
 	$ENV{SDL_PATH}/include
 	SDL2-devel-2.0.5-VC.zip/include
 )
-if( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)")
+message( ${CMAKE_GENERATOR} )
+
+if( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR "${CMAKE_GENERATOR}" MATCHES "16 2019")
 	link_directories(
 		$ENV{SDL_PATH}/lib/x64
 		${CMAKE_HOME_DIRECTORY}/lib
