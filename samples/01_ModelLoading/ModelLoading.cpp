@@ -132,7 +132,6 @@ protected:
                 m_stage->setRoot( model->getRootNode() );
                 m_modelNode = m_stage->getRoot();
             }
-
         }
 
         return true;

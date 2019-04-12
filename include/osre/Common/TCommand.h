@@ -30,7 +30,7 @@ namespace App {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///	@brief	This class is used to define a command. Commands are actions which can be bounded to 
-///	events. When a new event will be firedd a command will be enqueued to ensure that the ordering 
+///	events. When a new event will be fired a command will be enqueued to ensure that the ordering 
 ///	of the events will not be changed.
 ///	The command encapsulates a function with its parameter. So when you just want to bind an action
 ///	like highlighting an object when its get clicked create a function with the instance of the 

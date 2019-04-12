@@ -317,10 +317,14 @@ bool AppBase::onCreate( Properties::Settings *config ) {
 
     // create the platform interface instance
     m_platformInterface = Platform::PlatformInterface::create( m_settings );
-    if( m_platformInterface ) {
-        if( !m_platformInterface->open() ) {
-            return false;
-        }
+	if (nullptr == m_platformInterface) {
+		osre_error(Tag, "Pointer to platform interface is nullptr.");
+		return false;
+	}
+
+    if( !m_platformInterface->open() ) {
+		osre_error(Tag, "Error while opening platform interface.");
+		return false;
     }
 
     // register any available platform-specific log streams
