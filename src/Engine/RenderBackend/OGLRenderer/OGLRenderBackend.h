@@ -59,6 +59,7 @@ struct OGLBuffer;
 struct OGLVertexArray;
 struct OGLVertexAttribute;
 struct OGLTexture;
+struct OGLFrameBuffer;
 struct RenderCmdData3DView;
 struct UniformVar;
 struct PrimitiveGroup;
@@ -131,6 +132,9 @@ public:
     void releaseAllParameters();
     ui32 addPrimitiveGroup( PrimitiveGroup *grp );
     void releaseAllPrimitiveGroups();
+    OGLFrameBuffer* createFrameBuffer(ui32 width, ui32 height, bool depthBuffer);
+    void bindFrameBuffer(OGLFrameBuffer *oglFB);
+    void releaseFrameBuffer(OGLFrameBuffer* oglFB);
     void render( ui32 grimpGrpIdx );
     void render( ui32 primpGrpIdx, ui32 numInstances );
     void renderFrame();
@@ -161,6 +165,7 @@ private:
     RenderStates                    *m_fpState;
     Profiling::FPSCounter           *m_fpsCounter;
     OGLCapabilities                 *m_oglCapabilities;
+    CPPCore::TArray<OGLFrameBuffer*> m_framebuffers;
 };
 
 } // Namespace RenderBackend

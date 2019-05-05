@@ -207,7 +207,8 @@ struct DrawInstancePrimitivesCmdData {
     DrawInstancePrimitivesCmdData()
     : m_vertexArray( nullptr )
     , m_numInstances( 0 )
-    , m_primitives() {
+    , m_primitives()
+    , m_id( nullptr ) {
         // empty
     }
 };
@@ -224,7 +225,8 @@ struct DrawPrimitivesCmdData {
     : m_localMatrix( false )
     , m_model()
     , m_vertexArray( nullptr )
-    , m_primitives() {
+    , m_primitives()
+    , m_id( nullptr ) {
         // empty
     }
 };
@@ -232,6 +234,23 @@ struct DrawPrimitivesCmdData {
 struct OGLCapabilities {
     GLfloat m_maxAniso;
 
+};
+
+struct OGLFrameBuffer {
+    GLuint m_bufferId;
+    GLuint m_depthrenderbufferId;
+    GLuint m_renderedTexture;
+    ui32 m_width;
+    ui32 m_height;
+
+    OGLFrameBuffer( ui32 w, ui32 h )
+    : m_bufferId(0)
+    , m_depthrenderbufferId( 0 )
+    , m_renderedTexture( 0 )
+    , m_width( w )
+    , m_height( h ) {
+        // empty
+    }
 };
 
 } // Namespace RendeBackend

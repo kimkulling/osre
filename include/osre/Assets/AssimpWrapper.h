@@ -29,9 +29,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Container/TArray.h>
 
+#include <map>
 
 namespace OSRE {
 
+// Froward declarations
 namespace Common {
     class Ids;
 }
@@ -55,6 +57,13 @@ namespace Assets {
 
 class Model;
 
+struct BoneInfo;
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Engine
+///
+///	@brief  
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AssimpWrapper {
 public:
     AssimpWrapper( Common::Ids &ids );
@@ -63,15 +72,18 @@ public:
     Model *getModel() const;
 
 protected:
-    Model *convertSceneToModel( const aiScene *scene );
-    void handleMesh( aiMesh *mesh );
-    void handleNode( aiNode *node, Scene::Node *parent );
-    void handleMaterial( aiMaterial *material );
-    void handleAnimation( aiAnimation *animation );
+    Model *convertSceneToModel();
+    void importMeshes( aiMesh *mesh );
+	void importBones(aiMesh* mesh);
+    void impotNode( aiNode *node, Scene::Node *parent );
+    void importMaterial( aiMaterial *material );
+    void importAnimation( aiAnimation *animation );
 
 private:
-    RenderBackend::MeshArray m_meshArray;
-    using MaterialArray = CPPCore::TArray<RenderBackend::Material*> ;
+	const aiScene *m_scene;
+	RenderBackend::MeshArray m_meshArray;
+    
+	using MaterialArray = CPPCore::TArray<RenderBackend::Material*> ;
     MaterialArray m_matArray;
     Model *m_model;
     Scene::Node *m_parent;
@@ -79,6 +91,12 @@ private:
     RenderBackend::UniformVar *m_mvpParam;
     String m_root;
     String m_absPathWithFile;
+
+	using BoneInfoArray = ::CPPCore::TArray<BoneInfo*>;
+	BoneInfoArray m_boneInfoArray;
+
+	using Bone2NodeMap = std::map<const char*, const aiNode*>;
+	Bone2NodeMap m_bone2NodeMap;
 };
 
 } // Namespace Assets

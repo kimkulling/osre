@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Directory.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/Ids.h>
+#include <osre/Common/StringUtils.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/Assets/AssetRegistry.h>
@@ -48,6 +49,7 @@ namespace OSRE {
 namespace Assets {
     
 using namespace ::Assimp;
+using namespace ::OSRE::Common;
 using namespace ::OSRE::IO;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
@@ -55,20 +57,27 @@ using namespace ::OSRE::Collision;
 
 static const c8* Tag = "AssimpWrapper";
 
+struct BoneInfo {
+
+};
+
 AssimpWrapper::AssimpWrapper( Common::Ids &ids )
-: m_meshArray()
+: m_scene( nullptr )
+, m_meshArray()
 , m_matArray()
 , m_model( nullptr )
 , m_parent( nullptr )
 , m_ids( ids )
 , m_mvpParam( nullptr )
 , m_root()
-, m_absPathWithFile() {
+, m_absPathWithFile()
+, m_boneInfoArray()
+, m_bone2NodeMap() {
     // empty
 }
 
 AssimpWrapper::~AssimpWrapper() {
-    // empty
+	::CPPCore::ContainerClear(m_boneInfoArray);
 }
 
 bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
@@ -96,13 +105,13 @@ bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
     Directory::getDirectoryAndFile(m_absPathWithFile, m_root, filename);
     filename = m_root + filename;
     Importer myImporter;
-    const aiScene *scene = myImporter.ReadFile( filename, flags );
-    if ( nullptr == scene ) {
+    m_scene = myImporter.ReadFile( filename, flags );
+    if ( nullptr == m_scene) {
         m_root = "";
         m_absPathWithFile = "";
         return false;
     }
-    convertSceneToModel( scene );
+    convertSceneToModel();
     m_model->setMeshArray( m_meshArray );
 
     return true;
@@ -112,40 +121,40 @@ Model *AssimpWrapper::getModel() const {
     return m_model;
 }
 
-Model *AssimpWrapper::convertSceneToModel( const aiScene *scene ) {
-    if ( nullptr == scene ) {
+Model *AssimpWrapper::convertSceneToModel() {
+    if ( nullptr == m_scene) {
         return nullptr;
     }
 
     m_model = new Model;
-    if ( scene->HasMaterials() ) {
-        for ( ui32 i = 0; i < scene->mNumMaterials; ++i ) {
-            aiMaterial *currentMat( scene->mMaterials[ i ] );
+    if (m_scene->HasMaterials() ) {
+        for ( ui32 i = 0; i < m_scene->mNumMaterials; ++i ) {
+            aiMaterial *currentMat(m_scene->mMaterials[ i ] );
             if (nullptr == currentMat) {
                 continue;
             }
             
-            handleMaterial(currentMat);
+            importMaterial(currentMat);
         }
     }
     
-    if ( scene->HasMeshes() ) {
-        for ( ui32 i = 0; i < scene->mNumMeshes; ++i ) {
-            aiMesh *currentMesh( scene->mMeshes[ i ] );
+    if (m_scene->HasMeshes() ) {
+        for ( ui32 i = 0; i < m_scene->mNumMeshes; ++i ) {
+            aiMesh *currentMesh( m_scene->mMeshes[ i ] );
             if ( nullptr == currentMesh ) {
                 continue;
             }
-            handleMesh( currentMesh );
+            importMeshes( currentMesh );
         }
     }
 
-    if ( nullptr != scene->mRootNode ) {
-        handleNode( scene->mRootNode, nullptr );
+    if ( nullptr != m_scene->mRootNode ) {
+        impotNode(m_scene->mRootNode, nullptr );
     }
 
-    if (nullptr != scene->mAnimations) {
-        for (ui32 i = 0 ; i < scene->mNumAnimations; ++i) {
-            handleAnimation( scene->mAnimations[i]);
+    if (nullptr != m_scene->mAnimations) {
+        for (ui32 i = 0 ; i < m_scene->mNumAnimations; ++i) {
+            importAnimation(m_scene->mAnimations[i]);
         }
     }
 
@@ -174,7 +183,7 @@ static void copyAiMatrix4(const aiMatrix4x4 &aiMat, glm::mat4 &mat) {
     mat[3].w = aiMat.d4;
 }
 
-void AssimpWrapper::handleMesh( aiMesh *mesh ) {
+void AssimpWrapper::importMeshes( aiMesh *mesh ) {
     if ( nullptr == mesh ) {
         return;
     }
@@ -237,7 +246,10 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
                 w->m_vertexWeight = aiVW.mWeight;
                 bone->m_vertexWeights.add(w);
             }
-            currentMesh->m_bones.add(bone);
+			const aiNode* node = m_scene->mRootNode->FindNode(bone->m_name.c_str());
+			if (nullptr != node) {
+				m_bone2NodeMap[bone->m_name.c_str() ]= node;
+			}
         }
     }
 
@@ -274,7 +286,7 @@ void AssimpWrapper::handleMesh( aiMesh *mesh ) {
     m_model->setAABB( aabb );
 }
 
-void AssimpWrapper::handleNode( aiNode *node, Scene::Node *parent ) {
+void AssimpWrapper::impotNode( aiNode *node, Scene::Node *parent ) {
     if ( nullptr == node) {
         return;
     }
@@ -310,7 +322,7 @@ void AssimpWrapper::handleNode( aiNode *node, Scene::Node *parent ) {
             continue;
         }
 
-        handleNode( currentNode, newNode );
+        impotNode( currentNode, newNode );
     }
 }
 
@@ -371,7 +383,7 @@ static void assignTexturesToMat( Material *osreMat, CPPCore::TArray<Texture*> &t
     }
 }
 
-void AssimpWrapper::handleMaterial( aiMaterial *material ) {
+void AssimpWrapper::importMaterial( aiMaterial *material ) {
     if ( nullptr == material ) {
         return;
     }
@@ -418,12 +430,14 @@ void AssimpWrapper::handleMaterial( aiMaterial *material ) {
     }
 }
 
-void AssimpWrapper::handleAnimation(aiAnimation *animation) {
+void AssimpWrapper::importAnimation(aiAnimation *animation) {
     if (nullptr == animation) {
         return;
     }
 
-    //animation->mChannels
+
+
+    
 }
 
 } // Namespace Assets

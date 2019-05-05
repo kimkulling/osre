@@ -53,7 +53,6 @@ public:
     ui32                   m_numPrimGroups;
     PrimitiveGroup        *m_primGroups;
     ui32                   m_id;
-    CPPCore::TArray<Bone*> m_bones;
 
     static Mesh *create( ui32 numGeo );
     static void destroy( Mesh **geo );

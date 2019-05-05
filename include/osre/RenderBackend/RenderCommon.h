@@ -636,7 +636,7 @@ struct TIndexCache {
     }
 
     ui32 sizeInBytes() const {
-        return m_cache.size() * sizeof( T );
+        return static_cast<ui32>( m_cache.size() * sizeof( T ) );
     }
 };
 

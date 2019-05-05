@@ -50,9 +50,12 @@ using namespace ::OSRE::Scene;
 static const c8 *Tag = "ModelLoadingApp";
 
 // The file to load
-static const String ModelPath = "file://assets/Models/Obj/spider.obj";
+static const char *ModelPath = "file://assets/Models/Obj/spider.obj";
 
-static const String AssetFolderArg = "asset_folder";
+static const char *AssetFolderArg = "asset_folder";
+
+static const char* ModelArg = "model";
+
 
 /// The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
@@ -67,12 +70,13 @@ class ModelLoadingApp : public App::AppBase {
 
 public:
     ModelLoadingApp( int argc, char *argv[] )
-    : AppBase( argc, argv )
+    : AppBase( argc, argv, "api:model", "The render API:The model to load")
     , m_assetFolder("")
     , m_stage( nullptr )
     , m_view( nullptr )
     , m_angle( 0.0f )
     , m_ids()
+	, m_model()
     , m_transformMatrix()
     , m_modelNode() {
         // empty

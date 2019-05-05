@@ -67,7 +67,8 @@ OGLRenderBackend::OGLRenderBackend()
 , m_primitives()
 , m_fpState( nullptr )
 , m_fpsCounter( nullptr )
-, m_oglCapabilities( nullptr ) {
+, m_oglCapabilities( nullptr )
+, m_framebuffers() {
     m_fpState = new RenderStates;
     m_oglCapabilities = new OGLCapabilities;
     glGetFloatv( GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &m_oglCapabilities->m_maxAniso );
@@ -962,10 +963,10 @@ ui32 OGLRenderBackend::addPrimitiveGroup( PrimitiveGroup *grp ) {
         return NotInitedHandle;
     }
 
-    OGLPrimGroup *oglGrp    = new OGLPrimGroup;
-    oglGrp->m_primitive     = OGLEnum::getGLPrimitiveType( grp->m_primitive );
-    oglGrp->m_indexType     = OGLEnum::getGLIndexType( grp->m_indexType );
-    oglGrp->m_startIndex    = grp->m_startIndex;
+    OGLPrimGroup *oglGrp = new OGLPrimGroup;
+    oglGrp->m_primitive  = OGLEnum::getGLPrimitiveType( grp->m_primitive );
+    oglGrp->m_indexType  = OGLEnum::getGLIndexType( grp->m_indexType );
+    oglGrp->m_startIndex = grp->m_startIndex;
     oglGrp->m_numIndices = grp->m_numIndices;
     
     const ui32 idx( m_primitives.size() );
@@ -976,6 +977,69 @@ ui32 OGLRenderBackend::addPrimitiveGroup( PrimitiveGroup *grp ) {
 
 void OGLRenderBackend::releaseAllPrimitiveGroups() {
     ContainerClear( m_primitives );
+}
+
+OGLFrameBuffer* OGLRenderBackend::createFrameBuffer(ui32 width, ui32 height, bool depthBuffer) {
+    OGLFrameBuffer *oglFB = new OGLFrameBuffer( width, height );
+    glGenFramebuffers(1, &oglFB->m_bufferId);
+    glBindFramebuffer(GL_FRAMEBUFFER, oglFB->m_bufferId );
+
+    GLuint renderedTexture;
+    glGenTextures(1, &oglFB->m_renderedTexture);
+    glBindTexture(GL_TEXTURE_2D, oglFB->m_renderedTexture );
+
+    // Give an empty image to OpenGL ( the last "0" )
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    if (depthBuffer) {
+        glGenRenderbuffers(1, &oglFB->m_depthrenderbufferId);
+        glBindRenderbuffer(GL_RENDERBUFFER, oglFB->m_depthrenderbufferId);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, oglFB->m_depthrenderbufferId);
+    }
+    
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, oglFB->m_renderedTexture, 0);
+
+    // Set the list of draw buffers.
+    GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+    glDrawBuffers(1, DrawBuffers);
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        glDeleteFramebuffers(1, &oglFB->m_bufferId);
+        glDeleteTextures(1, &oglFB->m_renderedTexture);
+        delete oglFB;
+        oglFB = nullptr;
+    }
+
+    if (nullptr != oglFB) {
+        m_framebuffers.add(oglFB);
+    }
+
+    return oglFB;
+}
+
+void OGLRenderBackend::bindFrameBuffer(OGLFrameBuffer* oglFB) {
+    if (nullptr == oglFB) {
+        return;
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, oglFB->m_bufferId);
+    glViewport(0, 0, oglFB->m_width, oglFB->m_height);
+}
+
+void OGLRenderBackend::releaseFrameBuffer(OGLFrameBuffer* oglFB) {
+    if (nullptr == oglFB) {
+        return;
+    }
+
+    for (ui32 i = 0; i < m_framebuffers.size(); ++i) {
+        if (m_framebuffers[i] == oglFB) {
+            glDeleteFramebuffers(1, &oglFB->m_bufferId);
+            glDeleteTextures(1, &oglFB->m_renderedTexture);
+            m_framebuffers.remove(i);
+        }
+    }
 }
 
 void OGLRenderBackend::render( ui32 primpGrpIdx ) {
