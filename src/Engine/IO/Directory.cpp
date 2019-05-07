@@ -25,6 +25,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#ifdef OSRE_WINDOWS
+#   include <osre/Platform/Windows/MinWindows.h>
+#endif // OSRE_WINDOWS
+
 namespace OSRE {
 namespace IO {
         
@@ -41,7 +45,7 @@ bool Directory::exists(const String &dir) {
     return false;
 }
 
-void Directory::getDirectoryAndFile(const String pathAndFilename, String &path, String &filename) {
+void Directory::getDirectoryAndFile(const String &pathAndFilename, String &path, String &filename) {
     path.clear();
     filename.clear();
     if (pathAndFilename.empty()) {
@@ -64,6 +68,18 @@ String Directory::getDirSeparator() {
     static String sep = "/";
 #endif
     return sep;
+}
+
+bool Directory::createDirectory(const c8* name) {
+    if (nullptr == name) {
+        return false;
+    }
+
+#ifdef OSRE_WINDOWS
+    return TRUE == ::CreateDirectory(name, nullptr);
+#else
+    return 0 == mkdir(name);
+#endif
 }
 
 } // Namespace IO

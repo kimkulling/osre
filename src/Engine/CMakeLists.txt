@@ -36,12 +36,14 @@ SET( app_inc
     ${HEADER_PATH}/App/AppCommon.h
     ${HEADER_PATH}/App/AppBase.h
     ${HEADER_PATH}/App/ServiceProvider.h
+    ${HEADER_PATH}/App/Project.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
 )
 
 SET( app_src
     App/AppBase.cpp
     App/ServiceProvider.cpp
+	App/Project.cpp
 )
 
 #==============================================================================

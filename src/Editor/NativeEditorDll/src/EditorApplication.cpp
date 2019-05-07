@@ -72,14 +72,21 @@ EditorApplication::~EditorApplication() {
 }
 
 int EditorApplication::enqueueEvent( const Event *ev, EventData *evData ) {
+    if (nullptr == m_platformInterface) {
+        return 1;
+    }
+
     AbstractPlatformEventQueue *queue = m_platformInterface->getInstance()->getPlatformEventHandler();
+    if (nullptr == queue) {
+        return 1;
+    }
     queue->enqueueEvent( *ev, evData );
 
     return 0;
 }
 
 void EditorApplication::newProject( const String &name ) {
-    if (name != m_projectName) {
+    if ( name != m_projectName ) {
         m_projectName = name;
     }
 
@@ -140,7 +147,7 @@ PlatformInterface *EditorApplication::getPlatformInterface() const {
     return m_platformInterface;
 }
 
-bool EditorApplication::loadWorld( const char *filelocation, int flags ) {
+bool EditorApplication::loadProject( const char *filelocation, int flags ) {
     if (nullptr == filelocation) {
         return false;
     }
@@ -148,7 +155,7 @@ bool EditorApplication::loadWorld( const char *filelocation, int flags ) {
     return true;
 }
 
-bool EditorApplication::saveWorld( const char *filelocation, int flags ) {
+bool EditorApplication::saveProject( const char *filelocation, int flags ) {
     if (nullptr == filelocation) {
         return false;
     }
