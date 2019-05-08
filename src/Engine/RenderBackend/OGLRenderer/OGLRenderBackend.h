@@ -132,8 +132,9 @@ public:
     void releaseAllParameters();
     ui32 addPrimitiveGroup( PrimitiveGroup *grp );
     void releaseAllPrimitiveGroups();
-    OGLFrameBuffer* createFrameBuffer(ui32 width, ui32 height, bool depthBuffer);
+    OGLFrameBuffer* createFrameBuffer(const String &name, ui32 width, ui32 height, bool depthBuffer);
     void bindFrameBuffer(OGLFrameBuffer *oglFB);
+    OGLFrameBuffer* getFrameBufferByName(const String &name) const;
     void releaseFrameBuffer(OGLFrameBuffer* oglFB);
     void render( ui32 grimpGrpIdx );
     void render( ui32 primpGrpIdx, ui32 numInstances );

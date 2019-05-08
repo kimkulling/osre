@@ -237,7 +237,7 @@ BufferData::~BufferData() {
     m_cap = 0;
 }
 
-BufferData* BufferData::alloc( BufferType type, ui32 sizeInBytes, BufferAccessType access ) {
+BufferData* BufferData::alloc( BufferType type, size_t sizeInBytes, BufferAccessType access ) {
     BufferData *buffer        = new BufferData;
     buffer->m_buffer.m_size   = sizeInBytes;
     buffer->m_cap             = sizeInBytes;
@@ -257,7 +257,7 @@ void BufferData::free( BufferData *data ) {
 	data = nullptr;
 }
 
-void BufferData::copyFrom( void *data, ui32 size ) {
+void BufferData::copyFrom( void *data, size_t size ) {
     if ( nullptr == data ) {
         return;
     }
@@ -270,7 +270,7 @@ void BufferData::copyFrom( void *data, ui32 size ) {
     ::memcpy(m_buffer.m_data, data, size );
 }
 
-void BufferData::attach( void *data, ui32 size ) {
+void BufferData::attach( void *data, size_t size ) {
     const ui32 newSize(m_buffer.m_size + size );
     if ( newSize < m_cap ) {
         void *ptr = ( (uc8*) m_buffer.m_data ) + m_buffer.m_size;

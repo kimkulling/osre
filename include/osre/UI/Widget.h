@@ -147,8 +147,8 @@ public:
     virtual bool addWidget( Widget *child );
     virtual bool removeWidget( Widget *child );
     virtual bool hasWidget(Widget *child);
-    virtual ui32 getNumWidgets() const;
-    virtual Widget *getWidgetAt( ui32 idx ) const;
+    virtual size_t getNumWidgets() const;
+    virtual Widget *getWidgetAt(size_t idx ) const;
     virtual Widget &setRect( ui32 x, ui32 y, ui32 w, ui32 h );
     virtual const Rect2ui &getRect() const;
     virtual void requestRedraw();

@@ -84,7 +84,7 @@ void Screen::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *r
     m_transformMatrix.m_projection = glm::ortho( 0, m_width, m_height, 0 );
     m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
     m_transformMatrix.update();
-    const ui32 numChildren( getNumWidgets() );
+    const size_t numChildren( getNumWidgets() );
     if ( 0 == numChildren ) {
         return;
     }

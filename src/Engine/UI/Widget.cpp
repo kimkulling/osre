@@ -197,11 +197,11 @@ bool Widget::hasWidget(Widget *child) {
     return false;
 }
 
-ui32 Widget::getNumWidgets() const {
+size_t Widget::getNumWidgets() const {
     return m_children.size();
 }
 
-Widget *Widget::getWidgetAt( ui32 idx ) const {
+Widget *Widget::getWidgetAt( size_t idx ) const {
     if ( idx >= m_children.size() ) {
         return nullptr;
     }
@@ -312,8 +312,8 @@ void Widget::render( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbS
         redrawDone();
     }
 
-    const ui32 numChildren( getNumWidgets() );
-    for ( ui32 i = 0; i < numChildren; i++ ) {
+    const size_t numChildren( getNumWidgets() );
+    for (size_t i = 0; i < numChildren; i++ ) {
         Widget *child = getWidgetAt( i );
         if ( nullptr != child ) {
             child->render( renderCmdCache, rbSrv );
@@ -335,7 +335,7 @@ void Widget::layout() {
         layoutingDone();
     }
 
-    const ui32 numChildren( getNumWidgets() );
+    const size_t numChildren( getNumWidgets() );
     for (ui32 i = 0; i < numChildren; ++i) {
         Widget *child = getWidgetAt(i);
         if (nullptr != child) {
@@ -358,7 +358,6 @@ void Widget::checkChildren( const Point2ui &pt, void *data, WidgetState state) {
         const Rect2ui &r = child->getRect();
         if (r.isIn(pt)) {
             child->onMouseDown(pt, data );
-            
         }
     }
 }

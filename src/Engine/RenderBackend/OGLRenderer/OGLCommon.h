@@ -57,14 +57,14 @@ struct OGLBuffer {
     BufferType m_type;
     GLuint     m_oglId;
     ui32       m_geoId;
-    ui32       m_size;
+    size_t     m_size;
 };
 
 ///	@brief
 struct OGLVertexAttribute {
     GLuint        m_index;
     const c8     *m_pAttributeName;
-    ui32          m_size;
+    size_t        m_size;
     GLenum        m_type;
     const GLvoid *m_ptr;
 };
@@ -237,14 +237,16 @@ struct OGLCapabilities {
 };
 
 struct OGLFrameBuffer {
+    const char *m_name;
     GLuint m_bufferId;
     GLuint m_depthrenderbufferId;
     GLuint m_renderedTexture;
     ui32 m_width;
     ui32 m_height;
 
-    OGLFrameBuffer( ui32 w, ui32 h )
-    : m_bufferId(0)
+    OGLFrameBuffer(const char *name, ui32 w, ui32 h )
+    : m_name( name )
+    , m_bufferId(0)
     , m_depthrenderbufferId( 0 )
     , m_renderedTexture( 0 )
     , m_width( w )

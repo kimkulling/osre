@@ -189,7 +189,7 @@ void OGLRenderBackend::setViewport( i32 x, i32 y, i32 w, i32 h ) {
 }
 
 OGLBuffer *OGLRenderBackend::createBuffer( BufferType type ) {
-    ui32 handle( OGLNotSetId );
+    size_t handle( OGLNotSetId );
     GLuint bufferId( OGLNotSetId );
     glGenBuffers( 1, &bufferId );
     OGLBuffer *buffer( nullptr );
@@ -979,8 +979,8 @@ void OGLRenderBackend::releaseAllPrimitiveGroups() {
     ContainerClear( m_primitives );
 }
 
-OGLFrameBuffer* OGLRenderBackend::createFrameBuffer(ui32 width, ui32 height, bool depthBuffer) {
-    OGLFrameBuffer *oglFB = new OGLFrameBuffer( width, height );
+OGLFrameBuffer* OGLRenderBackend::createFrameBuffer(const String& name, ui32 width, ui32 height, bool depthBuffer) {
+    OGLFrameBuffer *oglFB = new OGLFrameBuffer(name.c_str(), width, height );
     glGenFramebuffers(1, &oglFB->m_bufferId);
     glBindFramebuffer(GL_FRAMEBUFFER, oglFB->m_bufferId );
 
@@ -1021,11 +1021,26 @@ OGLFrameBuffer* OGLRenderBackend::createFrameBuffer(ui32 width, ui32 height, boo
 
 void OGLRenderBackend::bindFrameBuffer(OGLFrameBuffer* oglFB) {
     if (nullptr == oglFB) {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0 );
         return;
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, oglFB->m_bufferId);
     glViewport(0, 0, oglFB->m_width, oglFB->m_height);
+}
+
+OGLFrameBuffer *OGLRenderBackend::getFrameBufferByName(const String& name) const {
+    if (name.empty()) {
+        return nullptr;
+    }
+
+    for (ui32 i = 0; i < m_framebuffers.size(); ++i) {
+        if (0 == strncmp(name.c_str(), m_framebuffers[i]->m_name, name.size())) {
+            return m_framebuffers[i];
+        }
+    }
+
+    return nullptr;
 }
 
 void OGLRenderBackend::releaseFrameBuffer(OGLFrameBuffer* oglFB) {

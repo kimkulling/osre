@@ -392,20 +392,20 @@ struct OSRE_EXPORT BufferData {
 
     BufferData();
     ~BufferData();
-    static BufferData *alloc( BufferType type, ui32 sizeInBytes, BufferAccessType access );
+    static BufferData *alloc( BufferType type, size_t sizeInBytes, BufferAccessType access );
 	static void free( BufferData *data );
-    void copyFrom( void *data, ui32 size );
-    void attach( void *data, ui32 size );
+    void copyFrom( void *data, size_t size );
+    void attach( void *data, size_t size );
     BufferType getBufferType() const;
     BufferAccessType getBufferAccessType() const;
-    ui32 getSize() const;
+    size_t getSize() const;
     c8 *getData() const;
 
     OSRE_NON_COPYABLE( BufferData )
 };
 
 inline
-ui32 BufferData::getSize() const {
+size_t BufferData::getSize() const {
     return (nullptr != m_buffer.m_data ? m_buffer.m_size : 0L);
 }
 
@@ -542,7 +542,7 @@ struct TVertexCache {
     using CacheType = ::CPPCore::TArray<T>;
     CacheType m_cache;
 
-    TVertexCache( ui32 size )
+    TVertexCache( size_t size )
     : m_cache( size ) {
         // empty
     }
@@ -560,7 +560,7 @@ struct TVertexCache {
         m_cache.clear();
     }
 
-    void increaseSize(ui32 newSize) {
+    void increaseSize(size_t newSize) {
         if (0 == newSize) {
             return;
 
@@ -579,11 +579,11 @@ struct TVertexCache {
         m_cache.add( vertex );
     }
 
-    ui32 numVertices() const {
+    size_t numVertices() const {
         return m_cache.size();
     }
 
-    ui32 sizeInBytes() const {
+    size_t sizeInBytes() const {
         return m_cache.size() * sizeof( T );
     }
 };
@@ -596,9 +596,10 @@ struct TVertexCache {
 template<class T>
 struct TIndexCache {
     using CacheType = ::CPPCore::TArray<T>;
+    
     CacheType m_cache;
 
-    TIndexCache( ui32 size ) 
+    TIndexCache(size_t size )
     : m_cache( size ) {
         // empty
     }
@@ -616,7 +617,7 @@ struct TIndexCache {
         m_cache.clear();
     }
 
-    void increaseSize( ui32 newSize ) {
+    void increaseSize(size_t newSize ) {
         m_cache.reserve(m_cache.size() + newSize);
     }
 
@@ -624,19 +625,19 @@ struct TIndexCache {
         m_cache.add(index);
     }
 
-    void add(T *index, ui32 numItems) {
+    void add(T *index, size_t numItems) {
         if (nullptr == index || 0 == numItems) {
             return;
         }
         m_cache.add(index, numItems);
     }
 
-    ui32 numIndices() const {
+    size_t numIndices() const {
         return m_cache.size();
     }
 
-    ui32 sizeInBytes() const {
-        return static_cast<ui32>( m_cache.size() * sizeof( T ) );
+    size_t sizeInBytes() const {
+        return m_cache.size() * sizeof( T );
     }
 };
 

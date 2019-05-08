@@ -73,7 +73,7 @@ void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, c
     vertices[ 2 ].tex0 = glm::vec2( 1, 0 );
     vertices[ 3 ].tex0 = glm::vec2( 1, 1 );
 
-    ui32 vertOffset = vertexCache.numVertices();
+    size_t vertOffset = vertexCache.numVertices();
     vertexCache.increaseSize(4);
     for ( ui32 i = 0; i < 4; ++i ) {
         vertexCache.add( vertices[ i ] );
@@ -132,7 +132,7 @@ RenderBackend::Mesh *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCac
     geo->m_numPrimGroups = 1;
     geo->m_primGroups = new PrimitiveGroup[ 1 ];
     geo->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_primGroups[ 0 ].m_numIndices = indexCache.numIndices();
+    geo->m_primGroups[ 0 ].m_numIndices = (ui32) indexCache.numIndices();
     geo->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
     geo->m_primGroups[ 0 ].m_startIndex = 0;
 
