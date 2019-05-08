@@ -45,13 +45,13 @@ namespace OSREEditor.Model {
         }
 
         public bool LoadWorld( string name, int flags ) {
-            int retCode = OSREWrapper.LoadWorld(name, flags);
+            int retCode = OSREWrapper.LoadProject(name, flags);
             return retCode == 0;
         }
 
         public bool SaveWorld( string name, int flags )
         {
-            int retCode = OSREWrapper.SaveWorld(name, flags);
+            int retCode = OSREWrapper.SaveProject(name, flags);
             return retCode == 0;
         }
     }

@@ -165,7 +165,7 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL NewProject( const char *name ) {
     return 0;
 }
 
-extern "C" OSRE_EDITOR_EXPORT int STDCALL LoadWorld( const char *filelocation, int flags ) {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL LoadProject( const char *filelocation, int flags ) {
     if (nullptr == s_EditorApplication) {
         return 1;
     }
@@ -174,12 +174,12 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL LoadWorld( const char *filelocation, i
         return 1;
     }
 
-    const bool retValue = s_EditorApplication->loadWorld( filelocation, flags );
+    const bool retValue = s_EditorApplication->loadProject( filelocation, flags );
 
     return retValue ? 0 : 1;
 }
 
-extern "C" OSRE_EDITOR_EXPORT int STDCALL SaveWorld( const char *filelocation, int flags ) {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL SaveProject( const char *filelocation, int flags ) {
     if (nullptr == s_EditorApplication) {
         return 1;
     }
@@ -188,7 +188,7 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL SaveWorld( const char *filelocation, i
         return 1;
     }
 
-    const bool retValue = s_EditorApplication->saveWorld( filelocation, flags );
+    const bool retValue = s_EditorApplication->saveProject( filelocation, flags );
 
     return retValue ? 0 : 1;
 }

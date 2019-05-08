@@ -59,7 +59,7 @@ AssetDataArchive::~AssetDataArchive() {
 
 }
 
-Scene::World *AssetDataArchive::load( const IO::Uri & fileLocation ) {
+Scene::World *AssetDataArchive::load( const IO::Uri &fileLocation ) {
     if (fileLocation.isEmpty()) {
         return nullptr;
     }

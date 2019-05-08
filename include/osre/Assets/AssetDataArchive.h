@@ -49,10 +49,13 @@ namespace Scene {
 }
 
 namespace Assets {
+    
+static const i32 CurrentMajorVersion = 0;
+static const i32 CurrentMinorVersion = 1;
 
 class OSRE_EXPORT AssetDataArchive {
 public:
-    AssetDataArchive(i32 majorVersion, i32 minorVersion);
+    AssetDataArchive(i32 majorVersion = CurrentMajorVersion, i32 minorVersion = CurrentMinorVersion);
     ~AssetDataArchive();
     Scene::World *load( const IO::Uri & fileLocation );
     bool save( Scene::World *world, const IO::Uri & fileLocation );
