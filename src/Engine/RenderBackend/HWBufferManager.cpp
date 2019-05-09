@@ -30,7 +30,8 @@ using namespace ::OSRE::Common;
 
 Buffer::Buffer()
 : m_id( 0 )
-, m_ptr( nullptr ) {
+, m_ptr( nullptr )
+, m_size( 0 ) {
     // empty
 }
 
@@ -96,6 +97,7 @@ static c8 *getAccessShortCut( BufferAccessType access ) {
         default:
             break;
     }
+    
     return nullptr;
 }
 
@@ -107,7 +109,6 @@ void getBufferKey( const VertexLayout &vertexLayout, BufferAccessType access, ui
     }
     key += getAccessShortCut( access );
     hash = StringUtils::hashName( key );
-
 }
 
 Buffer *HWBufferManager::createBuffer( const VertexLayout &vertexLayout, BufferAccessType access ) {

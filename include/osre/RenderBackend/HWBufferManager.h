@@ -36,6 +36,7 @@ struct VertexLayout;
 struct Buffer {
     ui32 m_id;
     void *m_ptr;
+    size_t m_size;
 
     Buffer();
 };
