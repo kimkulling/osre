@@ -271,7 +271,7 @@ struct OSRE_EXPORT ColorVert {
     ColorVert();
 
     /// @brief  Returns the number of attributes.
-    static ui32 getNumAttributes();
+    static size_t getNumAttributes();
     /// @brief  Returns the attribute array.
     static const String *getAttributes();
 };
@@ -289,7 +289,7 @@ struct OSRE_EXPORT RenderVert {
     bool operator != ( const RenderVert &rhs ) const;
 
     /// @brief  Returns the number of attributes.
-    static ui32 getNumAttributes();
+    static size_t getNumAttributes();
 
     /// @brief  Returns the attribute array.
     static const String *getAttributes();
@@ -299,7 +299,7 @@ OSRE_EXPORT const String &getVertCompName( VertexAttribute attrib );
 
 ///	@brief  Utility function for calculate the vertex format size.
 inline
-ui32 getVertexFormatSize( VertexFormat format ) {
+size_t getVertexFormatSize( VertexFormat format ) {
     ui32 size( 0 );
     switch( format ) {
         case VertexFormat::Float:
@@ -366,16 +366,16 @@ struct OSRE_EXPORT VertexLayout {
     String                         *m_attributes;
     CPPCore::TArray<VertComponent*> m_components;
     CPPCore::TArray<ui32>           m_offsets;
-    ui32                            m_currentOffset;
-    ui32                            m_sizeInBytes;
+    size_t                          m_currentOffset;
+    size_t                          m_sizeInBytes;
 
     VertexLayout();     
     ~VertexLayout();
     void clear();
-    ui32 numComponents() const;
-    ui32 sizeInBytes();
+    size_t numComponents() const;
+    size_t sizeInBytes();
     VertexLayout &add( VertComponent *comp );
-    VertComponent &getAt( ui32 idx ) const;
+    VertComponent &getAt(size_t idx ) const;
     const String *getAttributes();
 
     OSRE_NON_COPYABLE( VertexLayout )
@@ -385,9 +385,7 @@ struct OSRE_EXPORT VertexLayout {
 struct OSRE_EXPORT BufferData {
     BufferType       m_type;    ///< The buffer type ( @see BufferType )
     MemoryBuffer     m_buffer;
-    //c8              *m_data;    ///< The buffer data
-    //ui32             m_size;    ///< The size of the buffer
-    ui32             m_cap;
+    size_t           m_cap;
     BufferAccessType m_access;  ///< Access token ( @see BufferAccessType )
 
     BufferData();
@@ -418,13 +416,13 @@ c8 *BufferData::getData() const {
 ///	@brief
 struct OSRE_EXPORT PrimitiveGroup {
     PrimitiveType m_primitive;
-    ui32          m_startIndex;
-    ui32          m_numIndices;
+    size_t        m_startIndex;
+    size_t        m_numIndices;
     IndexType     m_indexType;
 
     PrimitiveGroup();
     ~PrimitiveGroup();
-    void init( IndexType indexType, ui32 numPrimitives, PrimitiveType primType, ui32 startIdx );
+    void init( IndexType indexType, size_t numPrimitives, PrimitiveType primType, size_t startIdx );
 
     OSRE_NON_COPYABLE( PrimitiveGroup )
 };
@@ -459,7 +457,7 @@ using ShaderSourceArray = CPPCore::TStaticArray<String, MaxShaderTypes>;
 struct OSRE_EXPORT Material {
     String        m_name;
     MaterialType  m_type;
-    ui32          m_numTextures;
+    size_t        m_numTextures;
     Texture     **m_textures;
     Shader       *m_shader;
     ui32          m_numParameters;
@@ -762,9 +760,9 @@ struct FrameSubmitCmd {
     ui32 m_meshId;
     const c8 *m_passId;
     const c8 *m_batchId;
-    ui32 m_updateFlags;
-    ui32 m_size;
-    c8 *m_data;
+    ui32   m_updateFlags;
+    size_t m_size;
+    c8    *m_data;
 
     FrameSubmitCmd()
     : m_meshId(999999)
@@ -787,11 +785,11 @@ struct UniformBuffer {
 
     }
 
-    ui32 getSize() const {
+    size_t getSize() const {
         return m_buffer.m_size;
     }
 
-    void create( ui32 size = 1024*1024) {
+    void create(size_t size = 1024*1024) {
         m_buffer.m_size = size;
         m_buffer.m_data = new c8[size];
         m_pos = 0;
@@ -828,7 +826,7 @@ struct UniformBuffer {
         write( (c8*) var->m_data.getData(), var->m_data.m_size);
     }
 
-    void readVar(c8 *id, ui32 &size, c8 *data) {
+    void readVar(c8 *id, size_t&size, c8 *data) {
         ui32 varInfo = 0;
         read( (c8*) &varInfo, sizeof(ui32));
         ui16 nameLen(0), dataLen(0);
@@ -838,7 +836,7 @@ struct UniformBuffer {
         read(data, dataLen);
     }
 
-    void read(c8 *data, ui32 size ) {
+    void read(c8 *data, size_t size ) {
         if ((m_pos + size) > m_buffer.m_size || 0 == size) {
             return;
         }
@@ -846,7 +844,7 @@ struct UniformBuffer {
         m_pos += size;
     }
     
-    void write( c8 *data, ui32 size ) {
+    void write( c8 *data, size_t size ) {
         if (0 == size || ( m_pos + size ) > m_buffer.m_size ) {
             return;
         }
@@ -855,7 +853,7 @@ struct UniformBuffer {
         m_pos += size;
     }
 
-    ui32 m_numvars;
+    size_t m_numvars;
     ui64 m_pos;
     MemoryBuffer m_buffer;
 };

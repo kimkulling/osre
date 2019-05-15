@@ -159,7 +159,7 @@ protected:
             while ( !m_activeJobQueue->isEmpty() )	{
                 // for debugging
 				if (DebugQueueSize) {
-					ui32 size = m_activeJobQueue->size();
+                    size_t size = m_activeJobQueue->size();
 					std::stringstream stream;
 					stream << "queue size = " << size << std::endl;
 					osre_debug(Tag, stream.str());

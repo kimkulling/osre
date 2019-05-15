@@ -33,12 +33,10 @@ namespace UI {
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Platform;
 
-Screen::Screen( const String &name, Widget *parent, i32 width, i32 height )
+Screen::Screen( const String &name, Widget *parent, ui32 x, ui32 y, ui32 width, ui32 height )
 : Widget( name, parent )
-, m_surface( nullptr )
-, m_width( width )
-, m_height( height ) {
-    // empty
+, m_surface( nullptr ) {
+    Widget::setRect(x, y, width, height);
 }
 
 Screen::~Screen() {
@@ -80,15 +78,12 @@ void Screen::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *r
         return;
     }
 
-    // set 2D render mode
-    m_transformMatrix.m_projection = glm::ortho( 0, m_width, m_height, 0 );
+    // push 2D render mode
+    const Rect2ui& r = Widget::getRect();
+    m_transformMatrix.m_projection = glm::ortho( r.getX1(), r.getWidth(), r.getHeight(), r.getY1() );
     m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
     m_transformMatrix.update();
     const size_t numChildren( getNumWidgets() );
-    if ( 0 == numChildren ) {
-        return;
-    }
-
     for ( ui32 i=0; i<numChildren; ++i ) {
         Widget *currentChild( getWidgetAt( i ) );
         if ( nullptr == currentChild ) {

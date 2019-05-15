@@ -58,7 +58,7 @@ public:
 
     ///	@brief	Returns the number of stored token.
     ///	@return	The number of stored token.
-    ui32 getNumOfToken() const;
+    size_t getNumOfToken() const;
     
     ///	@brief	Returns the token at the given index.
     ///	@param	idx		[in] The given index, must be between ( 0 ... numToken-1 ).
@@ -78,13 +78,13 @@ public:
     ///	@param	tokens		[in] The result token list.
     ///	@param	delimiters	[in] The delimiter.
     ///	@return	The number of token.
-    static ui32 tokenize( const String& str, CPPCore::TArray<String>& tokens, const String& delimiters );
+    static size_t tokenize( const String& str, CPPCore::TArray<String>& tokens, const String& delimiters );
 
     ///	@brief	Will tokenize a given string by a given delimiter.
     ///	@param	str			[in] The string to tokenize.
     ///	@param	delimiters	[in] The delimiter.
     ///	@return	The number of token.
-    ui32 tokenize( const String& str, const String& delimiters );
+    size_t tokenize( const String& str, const String& delimiters );
 
     static bool isLineBreak( c8 c );
 

@@ -76,7 +76,7 @@ ColorVert::ColorVert()
     // empty
 }
 
-ui32 ColorVert::getNumAttributes() {
+size_t ColorVert::getNumAttributes() {
     return NumColorVertAttributes;
 }
 
@@ -114,7 +114,7 @@ bool RenderVert::operator != ( const RenderVert &rhs ) const {
     return !( *this == rhs );
 }
 
-ui32 RenderVert::getNumAttributes() {
+size_t RenderVert::getNumAttributes() {
     return NumRenderVertAttributes;
 }
 
@@ -161,7 +161,7 @@ VertexLayout::~VertexLayout() {
 
 void VertexLayout::clear() {
     if( !m_components.isEmpty() ) {
-        for( ui32 i = 0; i < m_components.size(); ++i ) {
+        for ( size_t i = 0; i < m_components.size(); ++i ) {
             delete m_components[ i ];
         }
         m_components.clear();
@@ -171,10 +171,10 @@ void VertexLayout::clear() {
     m_currentOffset = 0;
 }
 
-ui32 VertexLayout::sizeInBytes() {
+size_t VertexLayout::sizeInBytes() {
     if( 0 == m_sizeInBytes ) {
-        for( ui32 i = 0; i < m_components.size(); ++i ) {
-            const ui32 compSizeInBytes( getVertexFormatSize( m_components[ i ]->m_format ) );
+        for(size_t i = 0; i < m_components.size(); ++i ) {
+            const size_t compSizeInBytes( getVertexFormatSize( m_components[ i ]->m_format ) );
             m_sizeInBytes += compSizeInBytes;
         }
     }
@@ -182,7 +182,7 @@ ui32 VertexLayout::sizeInBytes() {
     return m_sizeInBytes;
 }
 
-ui32 VertexLayout::numComponents() const {
+size_t VertexLayout::numComponents() const {
     return m_components.size();
 }
 
@@ -191,14 +191,14 @@ VertexLayout &VertexLayout::add( VertComponent *comp ) {
         return *this;
     }
     m_components.add( comp );
-    const ui32 offset( getVertexFormatSize( comp->m_format ) );
+    const size_t offset( getVertexFormatSize( comp->m_format ) );
     m_offsets.add( m_currentOffset );
     m_currentOffset += offset;
 
     return *this;
 }
 
-VertComponent &VertexLayout::getAt( ui32 idx ) const {
+VertComponent &VertexLayout::getAt(size_t idx ) const {
     if( idx >= m_components.size() ) {
         return ErrorComp;
     }
@@ -212,9 +212,9 @@ const String *VertexLayout::getAttributes() {
     }
     
     if( nullptr == m_attributes ) {
-        const ui32 numAttributes( m_components.size() );
+        const size_t numAttributes( m_components.size() );
         m_attributes = new String[ numAttributes ];
-        for( ui32 i = 0; i < m_components.size(); ++i )  {
+        for(size_t i = 0; i < m_components.size(); ++i )  {
             m_attributes[ i ] = VertCompName[ static_cast<int>( m_components[ i ]->m_attrib  ) ];
         }
     }
@@ -307,8 +307,8 @@ PrimitiveGroup::~PrimitiveGroup() {
     // empty
 }
 
-void PrimitiveGroup::init( IndexType indexType, ui32 numPrimitives, PrimitiveType primType, 
-        ui32 startIdx ) {
+void PrimitiveGroup::init( IndexType indexType, size_t numPrimitives, PrimitiveType primType,
+        size_t startIdx ) {
     m_indexType = indexType;
     m_numIndices = numPrimitives;
     m_primitive = primType;

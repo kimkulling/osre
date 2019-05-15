@@ -74,7 +74,7 @@ Widget *UiItemFactory::create( WidgetType type, const String &uiName, Widget *pa
         case WidgetType::Screen: {
                 const ui32 w( m_surface->getProperties()->m_width );
                 const ui32 h( m_surface->getProperties()->m_height );
-                item = new Screen( uiName, parent, w, h );
+                item = new Screen( uiName, parent, 0, 0, w, h );
             }
             break;
 

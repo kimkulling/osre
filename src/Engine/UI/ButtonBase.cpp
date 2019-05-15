@@ -29,10 +29,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "UIRenderUtils.h"
 
-/*#ifndef GLM_ENABLE_EXPERIMENTAL
-#   define GLM_ENABLE_EXPERIMENTAL
-#endif // GLM_ENABLE_EXPERIMENTAL*/
-
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>

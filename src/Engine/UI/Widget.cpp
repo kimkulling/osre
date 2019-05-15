@@ -127,7 +127,8 @@ Widget::Widget( const String &name, Widget *parent )
 , m_rect( 0, 0, 1, 1 )
 , m_stackIndex( 1 )
 , m_dirtyState( 0 )
-, m_isVisible( true ) {
+, m_isVisible( true )
+, m_isActive( true ) {
     Widget::setParent( parent );
     Widget::requestRedraw();
     Widget::requestLayouting();

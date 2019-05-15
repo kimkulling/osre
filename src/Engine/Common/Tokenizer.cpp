@@ -43,7 +43,7 @@ Tokenizer::~Tokenizer() {
     // empty
 }
 
-ui32 Tokenizer::getNumOfToken() const {
+size_t Tokenizer::getNumOfToken() const {
     return m_Token.size();
 }
 
@@ -63,7 +63,7 @@ void Tokenizer::clear() {
     m_Token.clear();
 }
 
-ui32 Tokenizer::tokenize( const String& str, TArray<String>& tokens, const String& delimiters ) {
+size_t Tokenizer::tokenize( const String& str, TArray<String>& tokens, const String& delimiters ) {
     // Skip delimiters at beginning.
     String::size_type lastPos = str.find_first_not_of( delimiters, 0 );
     
@@ -86,7 +86,7 @@ ui32 Tokenizer::tokenize( const String& str, TArray<String>& tokens, const Strin
     return static_cast<ui32>( tokens.size() );
 }
 
-ui32 Tokenizer::tokenize( const String& str, const String& delimiters ) {
+size_t Tokenizer::tokenize( const String& str, const String& delimiters ) {
     if( !m_Token.isEmpty() ) {
         m_Token.resize( 0 );
     }

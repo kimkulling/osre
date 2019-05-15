@@ -140,6 +140,13 @@ enum class LayoutPolicy {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Widget : public Common::Object {
 public:
+    struct FunctorContainer {
+        bool m_used;
+        UiFunctor m_callback;
+
+        FunctorContainer() noexcept;
+        ~FunctorContainer();
+    };
 
     virtual ~Widget();
     virtual void setParent( Widget *parent );
@@ -154,11 +161,9 @@ public:
     virtual void requestRedraw();
     virtual void redrawDone();
     virtual bool redrawRequested() const;
-
     virtual void requestLayouting();
     virtual void layoutingDone();
     virtual bool layoutingRequested() const;
-
     virtual void setProperty( UiProperty *prop );
     virtual UiProperty *getProperty( const String &name ) const;
     virtual bool hasProperty( const String &name ) const;
@@ -166,6 +171,8 @@ public:
     virtual i32 getStackIndex() const;
     virtual void setVisible( bool visible );
     virtual bool isVisible() const;
+    virtual void setActive(bool isActive);
+    virtual bool isActive() const;
     virtual void render( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv );
     virtual void mouseDown( const Point2ui &pt, void *data);
     virtual void mouseUp( const Point2ui &pt, void *data);
@@ -195,12 +202,23 @@ private:
     i32 m_stackIndex;
     ui32 m_dirtyState;
     bool m_isVisible;
+    bool m_isActive;
     WidgetState m_state;
 };
 
 inline
 void Widget::resize( ui32 x, ui32 y, ui32 w, ui32 h ) {
     onResize( x, y , w, h );
+}
+
+inline
+void Widget::setActive(bool isActive) {
+    m_isActive = isActive;
+}
+
+inline
+bool Widget::isActive() const {
+    return m_isActive;
 }
 
 } // Namespace UI

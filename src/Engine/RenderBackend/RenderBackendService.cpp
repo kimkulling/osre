@@ -237,7 +237,7 @@ void RenderBackendService::commitNextFrame() {
                     // todo: replace by uniform buffer.
                     cmd->m_size = var->getSize();
                     cmd->m_data = new c8[cmd->m_size];
-                    ui32 offset(0);
+                    size_t offset(0);
                     cmd->m_data[offset] = var->m_name.size() > 255 ? 255 : static_cast<c8>(var->m_name.size());
                     offset++;
                     ::memcpy(&cmd->m_data[offset], var->m_name.c_str(), var->m_name.size());

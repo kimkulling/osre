@@ -162,8 +162,8 @@ struct Handle {
 };
 
 struct MemoryBuffer {
-    ui32  m_size;
-    c8   *m_data;
+    size_t m_size;
+    c8    *m_data;
 
     MemoryBuffer();
 };

@@ -48,7 +48,7 @@ namespace UI {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Screen : public Widget {
 public:
-    Screen( const String &name, Widget *parent, i32 width, i32 height );
+    Screen( const String &name, Widget *parent, ui32 x, ui32 y, ui32 width, ui32 height );
     virtual ~Screen();
     virtual void setSurface( Platform::AbstractWindow *surface );
     const RenderBackend::TransformMatrixBlock &getMVP() const;
@@ -61,7 +61,6 @@ protected:
 private:
     Platform::AbstractWindow *m_surface;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
-    i32 m_width, m_height;
 };
 
 } // Namespace UI

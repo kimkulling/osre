@@ -175,7 +175,7 @@ ui32 TAsyncQueue<T>::size() {
     OSRE_ASSERT(nullptr != m_criticalSection);
 
     m_criticalSection->enter( );
-    const ui32 size = m_ItemQueue.size();
+    const size_t size = m_ItemQueue.size();
     m_criticalSection->leave();
 
     return size;

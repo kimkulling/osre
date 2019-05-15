@@ -79,7 +79,7 @@ TEST_F( RenderCommonTest, clearCompVertexLayoutTest ) {
 
 TEST_F( RenderCommonTest, sizeInBytesTest ) {
     VertexLayout layout;
-    ui32 size( layout.sizeInBytes() );
+    size_t size( layout.sizeInBytes() );
     EXPECT_EQ( 0u, size );
 
     VertComponent *comp1 = new VertComponent;

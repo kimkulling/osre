@@ -64,14 +64,6 @@ protected:
     void onMouseUp(const Point2ui &pt, void *data) override;
 
 private:
-    struct FunctorContainer {
-        bool m_used;
-        UiFunctor m_callback;
-
-        FunctorContainer() noexcept;
-        ~FunctorContainer();
-    };
-
     String m_label;
     IO::Uri m_image;
     Image *m_imageWidget;
