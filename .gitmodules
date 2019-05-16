@@ -1,3 +1,6 @@
 [submodule "3dparty/cppcore"]
 	path = 3dparty/cppcore
 	url = https://github.com/kimkulling/cppcore.git
+[submodule "3dparty/assimp"]
+	path = 3dparty/assimp
+	url = https://github.com/assimp/assimp.git
