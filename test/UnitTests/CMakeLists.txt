@@ -2,7 +2,8 @@ SET ( GMOCK_PATH ../../3dparty/gmock-1.7.0/ )
 SET ( GTEST_PATH ${GMOCK_PATH}gtest/ )
 
 if (MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING")
+    add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
 endif()
 
 if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
@@ -24,9 +25,9 @@ INCLUDE_DIRECTORIES(
 )
 
 SET ( unittest_assets_src
-	src/Assets/ModelTest.cpp
-	src/Assets/AssetRegistryTest.cpp
-	src/Assets/AssetDataTest.cpp
+    src/Assets/ModelTest.cpp
+    src/Assets/AssetRegistryTest.cpp
+    src/Assets/AssetDataTest.cpp
     src/Assets/AssetWrapperTest.cpp
     src/Assets/AssetDataArchiveTest.cpp
 )
@@ -36,11 +37,11 @@ SET ( unittest_app_src
 )
 
 SET ( unittest_common_src
-	src/Common/AbstractProcessTest.cpp
+    src/Common/AbstractProcessTest.cpp
     src/Common/ArgumentParserTest.cpp
-	src/Common/AbstractServiceTest.cpp
-	src/Common/CommonTest.cpp
-	src/Common/ObjectTest.cpp
+    src/Common/AbstractServiceTest.cpp
+    src/Common/CommonTest.cpp
+    src/Common/ObjectTest.cpp
     src/Common/EventTest.cpp
     src/Common/IdsTest.cpp
 )
@@ -63,19 +64,19 @@ SET( unittest_math_src
 )
 
 SET( unittest_platform_src
-	src/Platform/AbstractDynamicLoaderTest.cpp
+    src/Platform/AbstractDynamicLoaderTest.cpp
     src/Platform/AbstractThreadTest.cpp
 )
 
 SET ( unittest_rb_src
     src/RenderBackend/RenderBackendServiceTest.cpp
-	src/RenderBackend/CullStateTest.cpp
-	src/RenderBackend/RenderCommonTest.cpp
-	src/RenderBackend/PipelineTest.cpp
+    src/RenderBackend/CullStateTest.cpp
+    src/RenderBackend/RenderCommonTest.cpp
+    src/RenderBackend/PipelineTest.cpp
 )
 
 SET( unittest_rb_oglrenderer_src 
-	src/RenderBackend/OGLRenderer/GLEnumTest.cpp
+    src/RenderBackend/OGLRenderer/GLEnumTest.cpp
 )
 
 SET( unittest_ui_src
@@ -85,13 +86,13 @@ SET( unittest_ui_src
 )
 
 SET ( unittest_profiling_src
-	src/Profiling/PerformanceCountersTest.cpp
+    src/Profiling/PerformanceCountersTest.cpp
 )
 
 SET ( unittest_scene_src
     src/Scene/ComponentTest.cpp
-	src/Scene/DbgRendererTest.cpp
-	src/Scene/GeometryBuilderTest.cpp
+    src/Scene/DbgRendererTest.cpp
+    src/Scene/GeometryBuilderTest.cpp
     src/Scene/NodeTest.cpp
     src/Scene/WorldTest.cpp
 )
@@ -154,3 +155,4 @@ ENDIF( WIN32 )
 
 target_link_libraries ( osre_unittest osre ${platform_libs} ) 
 set_target_properties(  osre_unittest PROPERTIES FOLDER Tests )
+
