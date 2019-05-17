@@ -34,6 +34,7 @@ SET ( unittest_assets_src
 
 SET ( unittest_app_src
     src/App/TAbstractCtrlBaseTest.cpp
+	src/App/ProjectTest.cpp
 )
 
 SET ( unittest_common_src

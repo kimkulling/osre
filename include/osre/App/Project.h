@@ -6,10 +6,11 @@
 namespace OSRE {
 namespace App {
 	
-class Project : public Common::Object {
+class OSRE_EXPORT Project : public Common::Object {
 public:
-	Project( const String &name );
+	Project();
 	~Project();
+    bool create(const String &name);
 	bool load( const String &name, i32 major, i32 minor );
 	bool save( const String &name, i32 major, i32 minor );
     bool loadMetadata();

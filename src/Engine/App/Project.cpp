@@ -19,8 +19,8 @@ using namespace ::OSRE::IO;
 
 static const c8* Tag = "Project";
 
-Project::Project(const String& name)
-: Object(name)
+Project::Project()
+: Object("App/Project")
 , m_project()
 , m_activeWorld( nullptr ) {
     // empty
@@ -28,6 +28,12 @@ Project::Project(const String& name)
 
 Project::~Project() {
     // empty}
+}
+
+bool Project::create(const String &name) {
+    m_project = name;
+
+    return true;
 }
 
 bool Project::load(const String& name, i32 major, i32 minor) {
@@ -84,6 +90,8 @@ bool Project::loadMetadata() {
     if (!file.is_open()) {
         return false;
     }
+
+    return true;
 }
 
 bool Project::saveMetadata() {
