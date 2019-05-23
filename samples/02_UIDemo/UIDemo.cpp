@@ -32,9 +32,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/Panel.h>
 #include <osre/Platform/PlatformOperations.h>
 
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 using namespace ::OSRE;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::UI;
@@ -70,14 +67,14 @@ public:
     }
 
 protected:
-    bool onCreate( Properties::Settings *settings = nullptr ) override {
+    bool onCreate() override {
         Properties::Settings *baseSettings( AppBase::getSettings() );
         if ( nullptr == baseSettings ) {
             return false;
         }
 
         baseSettings->setString( Properties::Settings::WindowsTitle, "Demo UI!" );
-        if ( !AppBase::onCreate( baseSettings ) ) {
+        if ( !AppBase::onCreate() ) {
             return false;
         }
 

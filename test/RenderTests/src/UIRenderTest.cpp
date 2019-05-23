@@ -35,10 +35,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/ButtonBase.h>
 #include <osre/UI/UiRenderer.h>
 
-#include <GL/gl.h>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 namespace OSRE {
 namespace RenderTest {
 

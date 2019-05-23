@@ -164,17 +164,11 @@ bool EditorApplication::saveProject( const char *filelocation, int flags ) {
     return archive.save( m_world, uri );
 }
 
-bool EditorApplication::onCreate( Properties::Settings *settings ) {
-    Properties::Settings *baseSettings( settings );
-    if (baseSettings == nullptr) {
-        baseSettings = AppBase::getSettings();
-        if (nullptr == baseSettings) {
-            return false;
-        }
-    }
+bool EditorApplication::onCreate() {
+    Properties::Settings *baseSettings(AppBase::getSettings());
     baseSettings->setBool( Settings::ChildWindow, true );
     baseSettings->setString( Properties::Settings::WindowsTitle, m_projectName );
-    if (!AppBase::onCreate( baseSettings )) {
+    if (!AppBase::onCreate()) {
         return false;
     }
 

@@ -164,7 +164,7 @@ public:
 protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
     /// @return true if successful,  false if not.
-    virtual bool onCreate( Properties::Settings *config );
+    virtual bool onCreate();
 
     /// @brief  The onDestroy callback, override this for your own destroying stuff.
     /// @return true if successful,  false if not.

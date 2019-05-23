@@ -31,6 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations
 namespace Scene {
     class World;
     class Stage;
@@ -79,7 +80,7 @@ public:
     bool saveProject( const char *filelocation, int flags );
 
 protected:
-    bool onCreate( Properties::Settings *settings = nullptr ) override;
+    bool onCreate() override;
 
 private:
     Scene::World* m_world;
@@ -90,5 +91,5 @@ private:
     String m_projectName;
 };
 
-}
-}
+} // Namespace NativeEditor
+} // Namespace OSRE

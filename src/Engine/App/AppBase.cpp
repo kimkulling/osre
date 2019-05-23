@@ -71,7 +71,7 @@ public:
         m_uiScreen = screen;
     }
 
-    UI::Screen *getScreen() const {
+    Screen *getScreen() const {
         return m_uiScreen.getPtr();
     }
 
@@ -140,11 +140,16 @@ bool AppBase::initWindow( ui32 x, ui32 y, ui32 width, ui32 height, const String 
         m_settings->setString( Properties::Settings::RenderAPI, "vulkan" );
     }
 
-    return onCreate( m_settings );
+    return onCreate();
 }
 
 bool AppBase::create( Properties::Settings *config ) {
-    return onCreate( config  );
+    if (nullptr != config && config != m_settings) {
+        delete m_settings;
+        m_settings = config;
+    }
+
+    return onCreate();
 }
 
 bool AppBase::destroy() {
@@ -296,17 +301,12 @@ void AppBase::setWindowsTitle( const String &title ) {
     }
 }
 
-bool AppBase::onCreate( Properties::Settings *config ) {
+bool AppBase::onCreate() {
     if ( m_state != State::Uninited ) {
         osre_debug( Tag, "AppBase::State not in proper state: Uninited." );
         return false;
     }
 
-    // create the platform abstraction
-    if( nullptr != config && config != m_settings ) {
-        delete m_settings;
-        m_settings = config;
-    }
 
     // create the asset registry
     Assets::AssetRegistry *registry( Assets::AssetRegistry::create() );

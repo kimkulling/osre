@@ -27,63 +27,56 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/DbgRenderer.h>
 
-#include <GL/glew.h>
-#include <GL/gl.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 #include <iomanip>
 
 namespace OSRE {
-    namespace RenderTest {
+namespace RenderTest {
 
-        using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::RenderBackend;
 
-        class AABBDbgRenderTest : public AbstractRenderTest {
-            TransformMatrixBlock m_transformMatrix;
-            ui32 m_frameCount;
+class AABBDbgRenderTest : public AbstractRenderTest {
+    TransformMatrixBlock m_transformMatrix;
+    ui32 m_frameCount;
 
-        public:
-            AABBDbgRenderTest()
-            : AbstractRenderTest( "rendertest/AABBDbgRenderTest" )
-                , m_frameCount( 0 ) {
-                // empty
-            }
+public:
+    AABBDbgRenderTest()
+    : AbstractRenderTest( "rendertest/AABBDbgRenderTest" )
+    , m_frameCount( 0 ) {
+        // empty
+    }
 
-            virtual ~AABBDbgRenderTest() {
-                // empty
-            }
+    ~AABBDbgRenderTest() override {
+        // empty
+    }
 
-            bool onCreate( RenderBackendService *rbSrv ) override {
-                rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
+    bool onCreate( RenderBackendService *rbSrv ) override {
+        rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
-                TVec3<f32> min( -1, -1, -1 ), max( 1, 1, 1 );
-                Collision::TAABB<f32> aabb( min, max );
-                m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
-                m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, glm::vec3(.5, .5, .5));
-                Scene::DbgRenderer::getInstance()->renderAABB(m_transformMatrix.m_model, aabb );
+        TVec3<f32> min( -1, -1, -1 ), max( 1, 1, 1 );
+        Collision::TAABB<f32> aabb( min, max );
+        m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
+        m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, glm::vec3(.5, .5, .5));
+        Scene::DbgRenderer::getInstance()->renderAABB(m_transformMatrix.m_model, aabb );
 
-                return true;
-            }
+        return true;
+    }
 
-            bool onRender( RenderBackendService *rbSrv ) override {
-                rbSrv->beginPass(PipelinePass::getPassNameById( DbgPassId ));
-                rbSrv->beginRenderBatch("dbgFontBatch");
+    bool onRender( RenderBackendService *rbSrv ) override {
+        rbSrv->beginPass(PipelinePass::getPassNameById( DbgPassId ));
+        rbSrv->beginRenderBatch("dbgFontBatch");
                 
-                m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
-                rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
+        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
                 
-                rbSrv->endRenderBatch();
-                rbSrv->endPass();
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
 
 
-                return true;
-            }
+        return true;
+    }
+};
 
-        };
+ATTACH_RENDERTEST( AABBDbgRenderTest )
 
-        ATTACH_RENDERTEST( AABBDbgRenderTest )
-
-    } // Namespace RenderTest
+} // Namespace RenderTest
 } // Namespace OSRE
