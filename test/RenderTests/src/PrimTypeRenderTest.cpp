@@ -30,11 +30,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
 
-#include <GL/glew.h>
+/*#include <GL/glew.h>
 #include <GL/gl.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/type_ptr.hpp>*/
 
 namespace OSRE {
 namespace RenderTest {
@@ -85,7 +85,7 @@ public:
         pos[ 2 ] = glm::vec3(  1, -1, 0 );
 
         static const ui32 NumIndices = 6;
-        GLushort indices[ NumIndices ];
+        ui16 indices[ NumIndices ];
         indices[ 0 ] = 0;
         indices[ 1 ] = 1;
 
@@ -109,7 +109,7 @@ public:
         Mesh *lineMesh = meshBuilder.getMesh();
         lineMesh->m_vb = MeshBuilder::allocVertices( VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly );
         lineMesh->m_indextype = IndexType::UnsignedShort;
-        ui32 size = sizeof( GLushort ) * NumIndices;
+        ui32 size = sizeof( ui16 ) * NumIndices;
         lineMesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
         lineMesh->m_ib->copyFrom( indices, size );
 

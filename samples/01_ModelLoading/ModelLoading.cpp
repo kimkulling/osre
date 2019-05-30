@@ -56,7 +56,6 @@ static const char *AssetFolderArg = "asset_folder";
 
 static const char* ModelArg = "model";
 
-
 /// The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
     String m_assetFolder;
@@ -87,17 +86,10 @@ public:
     }
 
 protected:
-    bool onCreate( Properties::Settings *settings = nullptr ) override {
-        Properties::Settings *appSettings( settings );
-        if ( nullptr == appSettings ) {
-            appSettings = AppBase::getSettings();
-            if ( nullptr == appSettings ) {
-                return false;
-            }
-        }
-       
+    bool onCreate() override {
+        Properties::Settings *appSettings(AppBase::getSettings() );       
         appSettings->setString( Properties::Settings::WindowsTitle, "Model Loader!" );
-        if ( !AppBase::onCreate( appSettings ) ) {
+        if ( !AppBase::onCreate() ) {
             return false;
         }
 

@@ -31,14 +31,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 #include <osre/Scene/GeometryBuilder.h>
 
-#include <GL/gl.h>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#ifdef OSRE_WINDOWS
-#   include "GL/wglew.h"
-#endif
-
 namespace OSRE {
 namespace RenderTest {
 

@@ -28,16 +28,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/GeometryBuilder.h>
 
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <GL/glew.h>
-#include <GL/gl.h>
-#ifdef WIN32
-#   include "GL/wglew.h"
-#endif
-
-
 namespace OSRE {
 namespace RenderTest {
 

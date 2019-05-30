@@ -65,21 +65,7 @@ public:
     }
 
 protected:
-    bool onCreate( Settings *settings = nullptr ) override {
-        Settings *baseSettings( settings );
-        if (nullptr == baseSettings) {
-            baseSettings = AppBase::getSettings();
-            if (nullptr == baseSettings) {
-                return false;
-            }
-        }
-       
-        baseSettings->setString( Properties::Settings::WindowsTitle, "HelloWorld!" );
-        baseSettings->setString(Settings::RenderAPI, "dx11");
-        if ( !AppBase::onCreate( baseSettings ) ) {
-            return false;
-        }
-
+    bool onCreate() override {
 #ifdef OSRE_WINDOWS
         Assets::AssetRegistry::registerAssetPath( "assets", "../../media" );
 #else
