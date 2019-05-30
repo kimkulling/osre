@@ -20,27 +20,25 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OSREEditor.Model
 {
-    public enum ProjectType {
+    public enum ProjectType
+    {
         Project2D,
         Project3D
     }
 
-    public class Project {
+    public class Project
+    {
         private string _projectName;
 
         private WorldProxy _world;
 
         public static Project Instance { get; set; }
 
-        public Project() {
+        public Project()
+        {
             _projectName = "untitled";
             _world = new WorldProxy();
         }
@@ -55,16 +53,20 @@ namespace OSREEditor.Model
 
         public ProjectType CurrentProjectType { get; set; }
 
-        public bool LoadProject(string name, int flags) {
-            if ( _world == null ) {
+        public bool LoadProject(string name, int flags)
+        {
+            if (_world == null)
+            {
                 return true;
             }
 
             return _world.LoadWorld(name, flags);
         }
 
-        public bool SaveProject( string name, int flags ) {
-            if (_world == null) {
+        public bool SaveProject(string name, int flags)
+        {
+            if (_world == null)
+            {
                 return true;
             }
 

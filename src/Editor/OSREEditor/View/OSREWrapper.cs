@@ -55,14 +55,17 @@ namespace OSREEditor.View
             }
         }
 
-        private static void Log(int severity, string message) {
-            if (_logger.InvokeRequired) {
+        private static void Log(int severity, string message)
+        {
+            if (_logger.InvokeRequired)
+            {
                 LogDelegate delegateLog = new LogDelegate(Log);
                 _logger?.BeginInvoke(delegateLog, severity, message);
-            } else {
+            }
+            else
+            {
                 _logger?.AppendText(message + Environment.NewLine);
             }
         }
     }
 }
- 

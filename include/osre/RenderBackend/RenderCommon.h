@@ -365,7 +365,7 @@ struct OSRE_EXPORT VertexLayout {
     static VertComponent            ErrorComp;
     String                         *m_attributes;
     CPPCore::TArray<VertComponent*> m_components;
-    CPPCore::TArray<ui32>           m_offsets;
+    CPPCore::TArray<size_t>         m_offsets;
     size_t                          m_currentOffset;
     size_t                          m_sizeInBytes;
 

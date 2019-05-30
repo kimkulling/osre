@@ -22,11 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
 #include <osre/App/Project.h>
+#include <osre/IO/Directory.h>
 
 namespace OSRE {
 namespace UnitTest {
     
 using namespace ::OSRE::App;
+using namespace ::OSRE::IO;
 
 class ProjectTest : public ::testing::Test {
     // empty
@@ -47,8 +49,34 @@ TEST_F(ProjectTest, loadsaveTest) {
     Project myProject;
 
     bool res(true);
-    res = myProject.save("test", 1, 0);
+    // Not created must return false
+    String oldPath, newPath;
+    oldPath = Directory::getCurrentDirectory();
+    res = myProject.save("test", 0);
+    EXPECT_FALSE(res);
 
+    //// Save test ////
+
+    // Created must return true
+    res = myProject.create("test", 0, 1);
+    EXPECT_TRUE(res);
+    res = myProject.save("test", 0);
+    EXPECT_TRUE(res);
+    newPath = Directory::getCurrentDirectory();
+    EXPECT_EQ(oldPath, newPath);
+
+    //// Load test ////
+
+    Project myProject1;
+    i32 major(-1), minor(-1);
+    oldPath = Directory::getCurrentDirectory();
+    res = myProject1.load("test", major, minor, 0);
+    EXPECT_TRUE(res);
+    newPath = Directory::getCurrentDirectory();
+    EXPECT_EQ(oldPath, newPath);
+
+    EXPECT_EQ(0, myProject1.getMajorVersion());
+    EXPECT_EQ(1, myProject1.getMinorVersion());
 }
 
 }

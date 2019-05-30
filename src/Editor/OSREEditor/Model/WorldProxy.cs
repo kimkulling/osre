@@ -23,33 +23,41 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using OSREEditor.View;
 using System.Collections.Generic;
 
-namespace OSREEditor.Model {
+namespace OSREEditor.Model
+{
 
-    public class Node {
-        public Node() {
-
-        }
-    }
-
-    public class Stage {
-        public Stage() {
+    public class Node
+    {
+        public Node()
+        {
 
         }
     }
 
-    public class WorldProxy {
+    public class Stage
+    {
+        public Stage()
+        {
+
+        }
+    }
+
+    public class WorldProxy
+    {
         private IList<Stage> _stages;
 
-        public WorldProxy() {
+        public WorldProxy()
+        {
             _stages = new List<Stage>();
         }
 
-        public bool LoadWorld( string name, int flags ) {
+        public bool LoadWorld(string name, int flags)
+        {
             int retCode = OSREWrapper.LoadProject(name, flags);
             return retCode == 0;
         }
 
-        public bool SaveWorld( string name, int flags )
+        public bool SaveWorld(string name, int flags)
         {
             int retCode = OSREWrapper.SaveProject(name, flags);
             return retCode == 0;

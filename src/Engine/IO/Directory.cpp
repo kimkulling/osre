@@ -54,6 +54,7 @@ void Directory::getDirectoryAndFile(const String &pathAndFilename, String &path,
 
     String::size_type pos = pathAndFilename.rfind("/");
     if (String::npos == pos) {
+        filename = pathAndFilename;
         return;
     }
 
@@ -68,6 +69,34 @@ String Directory::getDirSeparator() {
     static String sep = "/";
 #endif
     return sep;
+}
+
+bool Directory::setCurrentDirectory(const String& absPath) {
+    if (absPath.empty()) {
+        return false;
+    }
+#ifdef OSRE_WINDOWS
+    return TRUE == ::SetCurrentDirectory(absPath.c_str());
+#else
+    return 0 == chdir(absPath.c_str());
+#endif
+}
+
+String Directory::getCurrentDirectory() {
+    const size_t BufferLen = 256;
+    c8 buffer[BufferLen];
+#ifdef OSRE_WINDOWS
+    DWORD len = ::GetCurrentDirectory(BufferLen, buffer);
+    if (len>0) {
+        String path(buffer);
+        return path;
+    }
+    return "";
+#else
+    buffer = getcwd(buffer, BufferSize);
+    String path(buffer);
+    return path;
+#endif
 }
 
 bool Directory::createDirectory(const c8* name) {

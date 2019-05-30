@@ -32,7 +32,7 @@ namespace IO {
 ///
 ///	@brief	This class implements static helpers to work with directories more easily.
 //-------------------------------------------------------------------------------------------------
-class Directory {
+class OSRE_EXPORT Directory {
 public:
     /// @brief  Will return true, when the directory exists.
     /// @param  dir     [in] The name of the directory.
@@ -50,6 +50,8 @@ public:
     /// @remark For instance using a Unix platform / will be returned.
     static String getDirSeparator();
 
+    static bool setCurrentDirectory(const String& absPath);
+    static String getCurrentDirectory();
     static bool createDirectory( const c8 *name );
 };
 

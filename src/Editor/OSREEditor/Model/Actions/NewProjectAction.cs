@@ -24,8 +24,10 @@ using OSREEditor.View;
 using System;
 using System.Windows.Forms;
 
-namespace OSREEditor.Model.Actions {
-    public class NewProjectAction : IAction {
+namespace OSREEditor.Model.Actions
+{
+    public class NewProjectAction : IAction
+    {
         public string ProjectName { get; set; }
 
         private IntPtr mHandle;
@@ -34,25 +36,31 @@ namespace OSREEditor.Model.Actions {
         private int _width;
         private int _height;
 
-        public NewProjectAction( IntPtr handle, Form mainWindow, int width, int height ) {
+        public NewProjectAction(IntPtr handle, Form mainWindow, int width, int height)
+        {
             mHandle = handle;
             mMainWindow = mainWindow;
             _width = width;
             _height = height;
         }
 
-        public bool Execute() {
-            if ( mHandle == null ) {
+        public bool Execute()
+        {
+            if (mHandle == null)
+            {
                 return false;
             }
 
-            if (ProjectName.Length == 0) {
+            if (ProjectName.Length == 0)
+            {
                 ProjectName = "New Project";
             }
-            if (mMainWindow != null) {
+            if (mMainWindow != null)
+            {
                 mMainWindow.Text = ProjectName;
             }
-            CurrentProject = new Project {
+            CurrentProject = new Project
+            {
                 ProjectName = ProjectName
             };
             int retCode = 0;

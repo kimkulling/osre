@@ -21,12 +21,14 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 
-namespace OSREEditor.Model.Actions {
+namespace OSREEditor.Model.Actions
+{
 
     /// <summary>
     /// Will save the project.
     /// </summary>
-    public class SaveProjectAction : IAction {
+    public class SaveProjectAction : IAction
+    {
 
         private Project _project;
 
@@ -34,7 +36,8 @@ namespace OSREEditor.Model.Actions {
         /// The class constructor with the project instance.
         /// </summary>
         /// <param name="project">The project instance.</param>
-        public SaveProjectAction( Project project ) {
+        public SaveProjectAction(Project project)
+        {
             _project = project;
             Filename = "none";
             SaveFlags = 0;
@@ -46,7 +49,8 @@ namespace OSREEditor.Model.Actions {
 
         public bool Execute()
         {
-            if (null == _project) {
+            if (null == _project)
+            {
                 return false;
             }
 

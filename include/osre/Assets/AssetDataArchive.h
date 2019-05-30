@@ -50,9 +50,6 @@ namespace Scene {
 
 namespace Assets {
     
-static const i32 CurrentMajorVersion = 0;
-static const i32 CurrentMinorVersion = 1;
-
 class OSRE_EXPORT AssetDataArchive {
 public:
     AssetDataArchive(i32 majorVersion = CurrentMajorVersion, i32 minorVersion = CurrentMinorVersion);
@@ -67,16 +64,7 @@ private:
     bool parseType(Scene::World *world);
 
 private:
-    struct Version {
-        i32 mMajor;
-        i32 mMinor;
-
-        Version( i32 major, i32 minor )
-        : mMajor( major )
-        , mMinor( minor ) {
-            // empty
-        }
-    } mVersion;
+    Version mVersion;
 };
 
 } // Namespace Assets

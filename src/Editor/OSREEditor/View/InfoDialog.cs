@@ -23,15 +23,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using System;
 using System.Windows.Forms;
 
-namespace OSREEditor.View {
+namespace OSREEditor.View
+{
     /// <summary>
     /// The info-dialog
     /// </summary>
-    public partial class InfoDialog : Form {
+    public partial class InfoDialog : Form
+    {
         /// <summary>
         /// The class constructor.
         /// </summary>
-        public InfoDialog() {
+        public InfoDialog()
+        {
             InitializeComponent();
         }
 
@@ -40,7 +43,8 @@ namespace OSREEditor.View {
         /// </summary>
         /// <param name="sender">Sender</param>
         /// <param name="e">Args</param>
-        private void button1_Click( object sender, EventArgs e ) {
+        private void button1_Click(object sender, EventArgs e)
+        {
             this.Close();
         }
     }

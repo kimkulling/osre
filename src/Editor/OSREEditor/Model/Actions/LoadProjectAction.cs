@@ -20,22 +20,20 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace OSREEditor.Model.Actions {
+namespace OSREEditor.Model.Actions
+{
 
     /// <summary>
     /// WIll implement the loading of a project
     /// </summary>
-    class LoadProjectAction : IAction {
+    class LoadProjectAction : IAction
+    {
 
         private Project _project;
 
-        public LoadProjectAction( Project project) {
+        public LoadProjectAction(Project project)
+        {
             _project = project;
         }
 
@@ -43,12 +41,14 @@ namespace OSREEditor.Model.Actions {
 
         public int LoaderFlags { get; set; }
 
-        public bool Execute() {
-            if ( null == _project ) {
+        public bool Execute()
+        {
+            if (null == _project)
+            {
                 return false;
             }
 
             return _project.LoadProject(Filename, LoaderFlags);
-       }
+        }
     }
 }

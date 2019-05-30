@@ -811,4 +811,18 @@ String osre_to_string(T val) {
     return str.str();
 }
 
+// Archive file version
+static const i32 CurrentMajorVersion = 0;
+static const i32 CurrentMinorVersion = 1;
+
+struct Version {
+    i32 mMajor;
+    i32 mMinor;
+
+    Version(i32 major, i32 minor)
+    : mMajor(major)
+    , mMinor(minor) {
+        // empty
+    }
+};
 } // Namespace OSRE

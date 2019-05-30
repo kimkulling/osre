@@ -52,12 +52,12 @@ i32 AtomicInt::getValue() const {
     return m_pImpl->getValue( );
 }
 
-i32 AtomicInt::operator ++ ( ) {
+i32 AtomicInt::operator ++ () {
     OSRE_ASSERT( nullptr != m_pImpl );
     return m_pImpl->inc( );
 }
 
-i32 AtomicInt::operator -- ( ) {
+i32 AtomicInt::operator -- () {
     OSRE_ASSERT( nullptr != m_pImpl );
     return m_pImpl->dec( );
 }

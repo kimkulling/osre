@@ -63,7 +63,8 @@ EditorApplication::EditorApplication( int argc, char *argv[] )
 , m_modelNode()
 , m_transformMatrix()
 , m_platformInterface( nullptr )
-, m_projectName( "untitled" ) {
+, m_projectName( "untitled" )
+, m_project() {
     // empty
 }
 
@@ -88,6 +89,10 @@ int EditorApplication::enqueueEvent( const Event *ev, EventData *evData ) {
 void EditorApplication::newProject( const String &name ) {
     if ( name != m_projectName ) {
         m_projectName = name;
+    }
+
+    if (!m_project.create(m_projectName, 0, 1)) {
+        return;
     }
 
     Platform::AbstractWindow *rootWindow( getRootWindow() );
@@ -129,7 +134,7 @@ int EditorApplication::importAsset( const String &filename, int flags ) {
             AppBase::setActiveView(view);
 
             const Rect2ui &windowsRect = rootWindow->getWindowsRect();
-            view->setProjectionParameters(60.f, windowsRect.m_width, windowsRect.m_height, 0.0001f, 1000.f);
+            view->setProjectionParameters(60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.0001f, 1000.f);
             view->observeBoundingBox(model->getAABB());
 
             m_stage->setRoot(model->getRootNode());
@@ -152,16 +157,21 @@ bool EditorApplication::loadProject( const char *filelocation, int flags ) {
         return false;
     }
 
-    return true;
+    App::Project project;
+    i32 major, minor;
+    const bool result = project.load(filelocation, major, minor, flags);
+    
+    return result;
 }
 
 bool EditorApplication::saveProject( const char *filelocation, int flags ) {
     if (nullptr == filelocation) {
         return false;
     }
-    IO::Uri uri( filelocation );
-    AssetDataArchive archive( 0, 1 );
-    return archive.save( m_world, uri );
+
+    const bool result = m_project.save(filelocation, flags);
+
+    return result;
 }
 
 bool EditorApplication::onCreate( Properties::Settings *settings ) {

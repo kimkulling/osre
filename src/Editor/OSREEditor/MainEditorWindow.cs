@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms;
-using OSREEditor.View;
-using OSREEditor.Model;
-using System.Runtime.InteropServices;
+﻿using OSREEditor.Model;
 using OSREEditor.Model.Actions;
+using OSREEditor.View;
+using System;
+using System.Windows.Forms;
 
 namespace OSREEditor
 {
@@ -19,12 +17,12 @@ namespace OSREEditor
         public MainEditorWindow()
         {
             InitializeComponent();
-            
+
             this.MouseClick += Window_MouseClick;
 
             _project = new Project();
             _projectTreeView = new ProjectTreeView(ref this.treeView1);
-            _osreWrapper = new OSREWrapper( this.logWindow );
+            _osreWrapper = new OSREWrapper(this.logWindow);
             _osreWrapper.InitCSharpModules();
         }
 
@@ -38,14 +36,17 @@ namespace OSREEditor
             IntPtr windowsHandle = this.Handle;
             var size = this.panel3d.Size;
             NewProject npDialog = new NewProject(windowsHandle, this, size.Width, size.Height);
-            if ( npDialog.ShowDialog() == DialogResult.OK ) {
+            if (npDialog.ShowDialog() == DialogResult.OK)
+            {
                 _project = Project.Instance;
-                if (_project != null) {
+                if (_project != null)
+                {
                 }
             }
         }
 
-        private void openToolStripMenuItem_Open_Click(object sender, EventArgs e) {
+        private void openToolStripMenuItem_Open_Click(object sender, EventArgs e)
+        {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
             openFileDialog.InitialDirectory = "c:\\";
@@ -53,35 +54,41 @@ namespace OSREEditor
             openFileDialog.FilterIndex = 2;
             openFileDialog.RestoreDirectory = true;
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK) {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
                 LoadProjectAction action = new LoadProjectAction(_project);
                 action.Filename = openFileDialog.FileName;
                 action.LoaderFlags = 0;
-                if ( !action.Execute() ) {
+                if (!action.Execute())
+                {
                     System.Console.WriteLine("Error while loading project.");
                 }
             }
         }
 
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             SaveFileDialog saveFileDlg = new SaveFileDialog();
             saveFileDlg.InitialDirectory = "c:\\";
             saveFileDlg.Filter = "txt files (*.osa)|*.osa|All files (*.*)|*.*";
             saveFileDlg.FilterIndex = 2;
             saveFileDlg.RestoreDirectory = true;
 
-            if (saveFileDlg.ShowDialog() == DialogResult.OK) {
+            if (saveFileDlg.ShowDialog() == DialogResult.OK)
+            {
                 SaveProjectAction action = new SaveProjectAction(_project);
                 action.Filename = saveFileDlg.FileName;
                 action.SaveFlags = 0;
-                if (!action.Execute()) {
+                if (!action.Execute())
+                {
                     System.Console.WriteLine("Error while saving project.");
 
                 }
             }
         }
 
-        private void importAssetToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void importAssetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
             openFileDialog.InitialDirectory = "c:\\";
@@ -89,11 +96,13 @@ namespace OSREEditor
             openFileDialog.FilterIndex = 2;
             openFileDialog.RestoreDirectory = true;
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK) {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
                 var filename = openFileDialog.FileName;
                 var retValue = OSREWrapper.ImportAsset(filename, 0);
-                if (0 == retValue) {
-                    string[] sepFolders  = filename.Split('\\');
+                if (0 == retValue)
+                {
+                    string[] sepFolders = filename.Split('\\');
                     string name = sepFolders[sepFolders.Length - 1];
                     _projectTreeView.NewProjectView(name);
                 }
@@ -131,7 +140,7 @@ namespace OSREEditor
             ev.y = e.Y;*/
         }
 
-        private void versionInfoToolStripMenuItem_Click( object sender, EventArgs e )
+        private void versionInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             InfoDialog infoDialog = new InfoDialog();
             infoDialog.ShowDialog();

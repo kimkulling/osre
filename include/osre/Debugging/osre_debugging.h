@@ -26,7 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Common/osre_common.h>
 #include <osre/Debugging/AssertHandler.h>
-
 ///
 ///	@def	OSRE_ASSERT
 ///	@brief	The Open-Source-rendering-Engine assert macro. The system will exit in case of an assertion. 

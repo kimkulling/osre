@@ -21,12 +21,14 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 
-namespace OSREEditor.Model.Actions {
-    
+namespace OSREEditor.Model.Actions
+{
+
     /// <summary>
     /// Will create a new scene-node.
     /// </summary>
-    public class NewSceneNodeAction : IAction {
+    public class NewSceneNodeAction : IAction
+    {
         private string _name;
 
         private string _type;

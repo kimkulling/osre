@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AppBase.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/App/Project.h>
 
 namespace OSRE {
 
@@ -48,8 +49,8 @@ class MouseEventListener : public Platform::OSEventListener {
     EditorApplication *m_app;
 public:
     MouseEventListener( EditorApplication *app )
-        : OSEventListener( "Editor/MouseEventListener" )
-        , m_app( app ) {
+    : OSEventListener( "Editor/MouseEventListener" )
+    , m_app( app ) {
         // app
     }
 
@@ -88,6 +89,7 @@ private:
     RenderBackend::TransformMatrixBlock m_transformMatrix;
     Platform::PlatformInterface* m_platformInterface;
     String m_projectName;
+    App::Project m_project;
 };
 
 }
