@@ -77,9 +77,12 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
 #ifdef OSRE_WINDOWS
     if (nullptr == s_EditorApplication) {
         HWND mainWH( nullptr );
-        if (nullptr != mainWindowHandle) {
-            mainWH = (HWND) mainWindowHandle;
+        if (nullptr == mainWindowHandle) {
+            osre_error(Tag, "Invalid main window handle.");
+            return 1;
         }
+
+        mainWH = (HWND) mainWindowHandle;
 
         char *argc[] = { 
             "CreateEditorApp" 
