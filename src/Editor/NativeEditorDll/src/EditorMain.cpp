@@ -73,12 +73,12 @@ static const c8 *Tag = "EditorMain";
 
 static OSRE::EditorApplication *s_EditorApplication = nullptr;
 
-extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle, int width, int height) {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle ) {
 #ifdef OSRE_WINDOWS
     if (nullptr == s_EditorApplication) {
         HWND mainWH( nullptr );
         if (nullptr != mainWindowHandle) {
-            mainWH = (HWND)mainWindowHandle;
+            mainWH = (HWND) mainWindowHandle;
         }
 
         char *argc[] = { 
@@ -102,10 +102,16 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
             }
 
             ::SetParent( childHandle, mainWH );
+
             RECT rect;
-            ::GetClientRect( mainWH, &rect );
+            if (TRUE != GetClientRect(mainWH, &rect)) {
+                osre_error(Tag, "Cannot get geometry from parent window.");
+                return 1;
+            }
+
             const ui32 w = rect.right - rect.left;
-            ::MoveWindow( childHandle, 25, 45, width, height, TRUE );
+            const ui32 h = rect.bottom - rect.top;
+            ::MoveWindow( childHandle, rect.left, rect.top, w, h, TRUE );
         }
 
         ::CPPCore::TArray<const Common::Event*> eventArray;
@@ -113,7 +119,7 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
         OSEventListener *listener = new MouseEventListener( s_EditorApplication );
         AbstractPlatformEventQueue *evQueue = s_EditorApplication->getPlatformInterface()->getPlatformEventHandler();
         if (nullptr == evQueue) {
-            osre_error(Tag, "CAnnot get event queue.");
+            osre_error(Tag, "Cannot get event queue.");
             return 1;
         }
 

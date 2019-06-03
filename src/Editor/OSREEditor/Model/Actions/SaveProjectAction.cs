@@ -23,13 +23,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSREEditor.Model.Actions
 {
-
     /// <summary>
     /// Will save the project.
     /// </summary>
     public class SaveProjectAction : IAction
     {
-
         private Project _project;
 
         /// <summary>

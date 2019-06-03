@@ -60,7 +60,7 @@ struct CSharpEvent {
     int mouseBtnState;
 };
 
-extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle );
+extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp(int* mainWindowHandle );
 
 extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorUpdate();
 

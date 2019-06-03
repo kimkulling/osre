@@ -7,24 +7,21 @@ namespace OSREEditor.View
 {
     public partial class NewProject : Form
     {
-        IntPtr mHandle;
-        Form mParent;
-        int _width;
-        int _height;
+        private IntPtr mHandle;
 
-        public NewProject(IntPtr handle, Form parent, int width, int height)
+        private Form mParent;
+
+        public NewProject(IntPtr handle, Form parent )
         {
             InitializeComponent();
             mHandle = handle;
             mParent = parent;
             this.ProjectType.Select(0, 1);
-            _width = width;
-            _height = height;
         }
 
         private void NewProjectButton_Click(object sender, EventArgs e)
         {
-            NewProjectAction projectAction = new NewProjectAction(mHandle, mParent, _width, _height);
+            NewProjectAction projectAction = new NewProjectAction(mHandle, mParent);
             projectAction.ProjectName = this.ProjectName.Text;
             if (projectAction.Execute())
             {

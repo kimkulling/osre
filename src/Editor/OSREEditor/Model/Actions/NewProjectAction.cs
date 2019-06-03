@@ -31,17 +31,15 @@ namespace OSREEditor.Model.Actions
         public string ProjectName { get; set; }
 
         private IntPtr mHandle;
-        private Form mMainWindow;
-        public Project CurrentProject { get; set; }
-        private int _width;
-        private int _height;
 
-        public NewProjectAction(IntPtr handle, Form mainWindow, int width, int height)
+        private Form mMainWindow;
+
+        public Project CurrentProject { get; set; }
+
+        public NewProjectAction(IntPtr handle, Form mainWindow)
         {
             mHandle = handle;
             mMainWindow = mainWindow;
-            _width = width;
-            _height = height;
         }
 
         public bool Execute()
@@ -64,7 +62,7 @@ namespace OSREEditor.Model.Actions
                 ProjectName = ProjectName
             };
             int retCode = 0;
-            retCode = OSREWrapper.CreateEditorApp(mHandle, _width, _height);
+            retCode = OSREWrapper.CreateEditorApp( mHandle );
             OSREWrapper.NewProject(CurrentProject.ProjectName);
 
             return 0 == retCode;

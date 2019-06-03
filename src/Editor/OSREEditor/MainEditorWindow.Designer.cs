@@ -55,9 +55,9 @@
             this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.treeView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.treeView1.Location = new System.Drawing.Point(808, 3);
+            this.treeView1.Location = new System.Drawing.Point(1255, 3);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(167, 666);
+            this.treeView1.Size = new System.Drawing.Size(167, 870);
             this.treeView1.TabIndex = 0;
             // 
             // panel2
@@ -70,7 +70,7 @@
             this.panel2.Controls.Add(this.treeView1);
             this.panel2.Location = new System.Drawing.Point(12, 39);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(980, 674);
+            this.panel2.Size = new System.Drawing.Size(1427, 878);
             this.panel2.TabIndex = 1;
             // 
             // panel3d
@@ -78,7 +78,7 @@
             this.panel3d.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3d.Location = new System.Drawing.Point(3, 3);
             this.panel3d.Name = "panel3d";
-            this.panel3d.Size = new System.Drawing.Size(799, 666);
+            this.panel3d.Size = new System.Drawing.Size(1246, 870);
             this.panel3d.TabIndex = 1;
             // 
             // menuStrip2
@@ -190,23 +190,24 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.logWindow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.logWindow.Cursor = System.Windows.Forms.Cursors.No;
-            this.logWindow.Location = new System.Drawing.Point(12, 719);
+            this.logWindow.Location = new System.Drawing.Point(12, 923);
             this.logWindow.Multiline = true;
             this.logWindow.Name = "logWindow";
             this.logWindow.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.logWindow.Size = new System.Drawing.Size(980, 106);
+            this.logWindow.Size = new System.Drawing.Size(1427, 106);
             this.logWindow.TabIndex = 2;
             // 
             // MainEditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1008, 837);
+            this.ClientSize = new System.Drawing.Size(1455, 1041);
             this.Controls.Add(this.logWindow);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
+            this.HelpButton = true;
             this.Name = "MainEditorWindow";
-            this.Text = "Form1";
+            this.Text = "OsreEd";
             this.panel2.ResumeLayout(false);
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();

@@ -33,9 +33,13 @@ namespace OSREEditor
 
         private void newToolStripMenuItem_New_Click(object sender, EventArgs e)
         {
-            IntPtr windowsHandle = this.Handle;
-            var size = this.panel3d.Size;
-            NewProject npDialog = new NewProject(windowsHandle, this, size.Width, size.Height);
+            IntPtr windowsHandle = this.panel3d.Handle;
+            if ( windowsHandle == null )
+            {
+                return;
+            }
+
+            NewProject npDialog = new NewProject( windowsHandle, this );
             if (npDialog.ShowDialog() == DialogResult.OK)
             {
                 _project = Project.Instance;
@@ -82,7 +86,6 @@ namespace OSREEditor
                 if (!action.Execute())
                 {
                     System.Console.WriteLine("Error while saving project.");
-
                 }
             }
         }
