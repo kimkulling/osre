@@ -142,7 +142,7 @@ int EditorApplication::importAsset( const String &filename, int flags ) {
         }
 
         AppBase::onUpdate();
-        //requestNextFrame();
+        requestNextFrame();
     }
 
     return 0;

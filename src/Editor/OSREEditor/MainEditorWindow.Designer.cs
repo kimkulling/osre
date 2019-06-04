@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainEditorWindow));
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3d = new System.Windows.Forms.Panel();
@@ -189,7 +190,7 @@
             this.logWindow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.logWindow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.logWindow.Cursor = System.Windows.Forms.Cursors.No;
+            this.logWindow.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.logWindow.Location = new System.Drawing.Point(12, 923);
             this.logWindow.Multiline = true;
             this.logWindow.Name = "logWindow";
@@ -206,6 +207,7 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.HelpButton = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainEditorWindow";
             this.Text = "OsreEd";
             this.panel2.ResumeLayout(false);
