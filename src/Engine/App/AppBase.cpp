@@ -165,6 +165,19 @@ void AppBase::update() {
     onUpdate();
 }
 
+void AppBase::resize(i32 x, i32 y, i32 w, i32 h) {
+    if (nullptr == m_platformInterface) {
+        return;
+    }
+
+    Platform::AbstractWindow* rootWindow = m_platformInterface->getRootWindow();
+    if (nullptr == rootWindow) {
+        return;
+    }
+
+    rootWindow->resize(x, y, w, h);
+}
+
 void AppBase::requestNextFrame() {
     OSRE_ASSERT( nullptr != m_uiRenderer );
     OSRE_ASSERT( nullptr != m_rbService );

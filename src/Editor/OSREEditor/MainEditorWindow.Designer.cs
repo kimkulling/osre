@@ -76,6 +76,9 @@
             // 
             // panel3d
             // 
+            this.panel3d.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel3d.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3d.Location = new System.Drawing.Point(3, 3);
             this.panel3d.Name = "panel3d";

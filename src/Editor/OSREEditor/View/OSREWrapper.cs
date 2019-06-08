@@ -36,6 +36,9 @@ namespace OSREEditor.View
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         private static extern void RegisterLogCallback(IntPtr fc);
 
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern void EditorResize(int x, int y, int w, int h);
+
         private static TextBox _logger;
 
         public OSREWrapper(TextBox logWindow)

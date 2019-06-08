@@ -95,6 +95,8 @@ public:
     /// @brief  Updates the current frame.
     virtual void update();
 
+    virtual void resize(i32 x, i32 y, i32 w, i32 h);
+
     /// @brief  Requests a new frame.
     virtual void requestNextFrame();
 

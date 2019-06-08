@@ -158,9 +158,29 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL DestroyEditorApp() {
     if (nullptr == s_EditorApplication) {
         return 1;
     }
+    
     s_EditorApplication->destroy();
     delete s_EditorApplication;
     s_EditorApplication = nullptr;
+
+    return 0;
+}
+
+extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorResize(i32 x, i32 y, i32 w, i32 h) {
+    if (nullptr == s_EditorApplication) {
+        return 1;
+    }
+
+    WindowsResizeEventData* data = new WindowsResizeEventData(nullptr );
+    data->m_x = x;
+    data->m_y = y;
+    data->m_w = w;
+    data->m_h = h;
+    s_EditorApplication->resize(x, y, w, h);
+    s_EditorApplication->enqueueEvent(&WindowsResizeEvent, data);
+    s_EditorApplication->getRenderBackendService()->resize(x, y, w, h);
+    s_EditorApplication->handleEvents();
+    s_EditorApplication->requestNextFrame();
 
     return 0;
 }
@@ -169,6 +189,7 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL NewProject( const char *name ) {
     if (nullptr == name) {
         return 1;
     }
+
     s_EditorApplication->newProject( name );
 
     return 0;

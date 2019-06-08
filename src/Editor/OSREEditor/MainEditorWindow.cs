@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace OSREEditor
 {
-    public partial class MainEditorWindow : Form
+    public partial class MainEditorWindow : Form, IDisposable
     {
         private Project _project;
 
@@ -19,11 +19,21 @@ namespace OSREEditor
             InitializeComponent();
 
             this.MouseClick += Window_MouseClick;
-
+            this.Resize += OnResize;
+            
             _project = new Project();
             _projectTreeView = new ProjectTreeView(ref this.treeView1);
             _osreWrapper = new OSREWrapper(this.logWindow);
             _osreWrapper.InitCSharpModules();
+        }
+
+        ~MainEditorWindow()
+        {
+            // empty
+        }
+
+        public void Dispose() {
+            this.MouseClick -= Window_MouseClick;
         }
 
         private void quitToolStripMenuItem_Quit_Click(object sender, EventArgs e)
@@ -31,21 +41,15 @@ namespace OSREEditor
             Application.Exit();
         }
 
-        private void newToolStripMenuItem_New_Click(object sender, EventArgs e)
-        {
+        private void newToolStripMenuItem_New_Click(object sender, EventArgs e) {
             IntPtr windowsHandle = this.panel3d.Handle;
-            if ( windowsHandle == null )
-            {
+            if ( windowsHandle == null ) {
                 return;
             }
 
             NewProject npDialog = new NewProject( windowsHandle, this );
-            if (npDialog.ShowDialog() == DialogResult.OK)
-            {
+            if (npDialog.ShowDialog() == DialogResult.OK) {
                 _project = Project.Instance;
-                if (_project != null)
-                {
-                }
             }
         }
 
@@ -141,6 +145,14 @@ namespace OSREEditor
             OSREWrapper.CSharpEvent ev;
             ev.x = e.X;
             ev.y = e.Y;*/
+        }
+
+        private void OnResize(object sender, System.EventArgs e) {
+            MainEditorWindow mainWindow = (MainEditorWindow) sender;
+            if ( mainWindow != null) {
+                var parentSize = mainWindow.panel3d.Size;
+                OSREWrapper.EditorResize(0, 0, parentSize.Width, parentSize.Height);
+            }
         }
 
         private void versionInfoToolStripMenuItem_Click(object sender, EventArgs e)

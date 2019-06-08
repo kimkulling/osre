@@ -68,6 +68,8 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorRequestNextFrame();
 
 extern "C" OSRE_EDITOR_EXPORT int STDCALL DestroyEditorApp();
 
+extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorResize(i32 x, i32 y, i32 w, i32 h);
+
 extern "C" OSRE_EDITOR_EXPORT int STDCALL NewProject(const char *name);
 
 extern "C" OSRE_EDITOR_EXPORT int STDCALL LoadProject(const char *filelocation, int flags);
