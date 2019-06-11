@@ -77,3 +77,9 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL LoadProject(const char *filelocation, 
 extern "C" OSRE_EDITOR_EXPORT int STDCALL SaveProject(const char *filelocation, int flags );
 
 extern "C" OSRE_EDITOR_EXPORT int STDCALL ImportAsset(const char *filename, int flags);
+
+extern "C" OSRE_EDITOR_EXPORT int STDCALL LeftMousePressed(int x, int y, bool pressed);
+
+extern "C" OSRE_EDITOR_EXPORT int STDCALL MiddleMousePressed(int x, int y, bool pressed);
+
+extern "C" OSRE_EDITOR_EXPORT int STDCALL RightMousePressed(int x, int y, bool pressed);

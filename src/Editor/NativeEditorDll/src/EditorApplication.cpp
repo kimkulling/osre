@@ -142,6 +142,7 @@ int EditorApplication::importAsset( const String &filename, int flags ) {
         }
 
         AppBase::onUpdate();
+        
         requestNextFrame();
     }
 
@@ -190,6 +191,28 @@ bool EditorApplication::onCreate() {
     AppBase::activateStage( m_stage->getName() );
 
     return true;
+}
+
+void EditorApplication::onUpdate() {
+    RenderBackendService* rbSrv(getRenderBackendService());
+    if (nullptr == rbSrv) {
+        return;
+    }
+
+    // Rotate the model
+    /*glm::mat4 rot(1.0);
+    m_transformMatrix.m_model = glm::rotate(rot, m_angle, glm::vec3(1, 1, 0));
+
+    m_angle += 0.01f;
+    rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+    rbSrv->beginRenderBatch("b1");
+
+    rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+
+    rbSrv->endRenderBatch();
+    rbSrv->endPass();*/
+
+    AppBase::onUpdate();
 }
 
 }

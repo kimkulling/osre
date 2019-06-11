@@ -82,6 +82,7 @@ public:
 
 protected:
     bool onCreate() override;
+    void onUpdate() override;
 
 private:
     Scene::World* m_world;
@@ -90,6 +91,7 @@ private:
     RenderBackend::TransformMatrixBlock m_transformMatrix;
     Platform::PlatformInterface* m_platformInterface;
     String m_projectName;
+
     App::Project m_project;
 };
 

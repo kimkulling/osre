@@ -240,4 +240,47 @@ extern "C" OSRE_EDITOR_EXPORT void STDCALL RegisterLogCallback(fnc_log_callback 
     g_fnc_log_callback = ptr;
 }
 
+static void enqueueMouseBtnData(int x, int y, bool pressed, MouseButtonEventData::ButtonType type) {
+    MouseButtonEventData* data = new MouseButtonEventData(pressed, nullptr);
+    data->m_AbsX = x;
+    data->m_AbsY = y;
+    data->m_Button = type;
+    if (pressed) {
+        s_EditorApplication->enqueueEvent(&MouseButtonDownEvent, data);
+    } else {
+        s_EditorApplication->enqueueEvent(&MouseButtonUpEvent, data);
+    }
 }
+
+extern "C" OSRE_EDITOR_EXPORT int STDCALL LeftMousePressed(int x, int y, bool pressed) {
+    if (nullptr == s_EditorApplication) {
+        return 1;
+    }
+    
+    enqueueMouseBtnData(x, y, pressed, MouseButtonEventData::LeftButton);
+
+    return 0;
+}
+
+extern "C" OSRE_EDITOR_EXPORT int STDCALL MiddleMousePressed(int x, int y, bool pressed) {
+    if (nullptr == s_EditorApplication) {
+        return 1;
+    }
+    
+    enqueueMouseBtnData(x, y, pressed, MouseButtonEventData::MiddleButton);
+
+    return 0;
+
+}
+
+extern "C" OSRE_EDITOR_EXPORT int STDCALL RightMousePressed(int x, int y, bool pressed) {
+    if (nullptr == s_EditorApplication) {
+        return 1;
+    }
+
+    enqueueMouseBtnData(x, y, pressed, MouseButtonEventData::RightButton);
+
+    return 0;
+}
+
+} // Namespace OSRE

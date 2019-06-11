@@ -53,8 +53,7 @@ namespace OSREEditor
             }
         }
 
-        private void openToolStripMenuItem_Open_Click(object sender, EventArgs e)
-        {
+        private void openToolStripMenuItem_Open_Click(object sender, EventArgs e) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
             openFileDialog.InitialDirectory = "c:\\";
@@ -62,8 +61,7 @@ namespace OSREEditor
             openFileDialog.FilterIndex = 2;
             openFileDialog.RestoreDirectory = true;
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
+            if (openFileDialog.ShowDialog() == DialogResult.OK) {
                 LoadProjectAction action = new LoadProjectAction(_project);
                 action.Filename = openFileDialog.FileName;
                 action.LoaderFlags = 0;
@@ -74,28 +72,24 @@ namespace OSREEditor
             }
         }
 
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e) {
             SaveFileDialog saveFileDlg = new SaveFileDialog();
             saveFileDlg.InitialDirectory = "c:\\";
             saveFileDlg.Filter = "txt files (*.osa)|*.osa|All files (*.*)|*.*";
             saveFileDlg.FilterIndex = 2;
             saveFileDlg.RestoreDirectory = true;
 
-            if (saveFileDlg.ShowDialog() == DialogResult.OK)
-            {
+            if (saveFileDlg.ShowDialog() == DialogResult.OK) {
                 SaveProjectAction action = new SaveProjectAction(_project);
                 action.Filename = saveFileDlg.FileName;
                 action.SaveFlags = 0;
-                if (!action.Execute())
-                {
+                if (!action.Execute()) {
                     System.Console.WriteLine("Error while saving project.");
                 }
             }
         }
 
-        private void importAssetToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void importAssetToolStripMenuItem_Click(object sender, EventArgs e) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
             openFileDialog.InitialDirectory = "c:\\";
@@ -126,8 +120,7 @@ namespace OSREEditor
             return down;
         }
 
-        private void Window_MouseWheel(object sender, MouseEventArgs e)
-        {
+        private void Window_MouseWheel(object sender, MouseEventArgs e) {
             bool isDown = IsDown(e.Clicks);
 
             OSREWrapper.EditorRequestNextFrame();
@@ -155,8 +148,7 @@ namespace OSREEditor
             }
         }
 
-        private void versionInfoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void versionInfoToolStripMenuItem_Click(object sender, EventArgs e) {
             InfoDialog infoDialog = new InfoDialog();
             infoDialog.ShowDialog();
         }

@@ -146,6 +146,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Common\" />
     <Folder Include="NativeInterface\" />
   </ItemGroup>
   <ItemGroup>
