@@ -23,6 +23,11 @@ SET ( 02_uidemo_src
     02_UIDemo/README.md
 )
 
+SET ( 03_instancing_src
+	03_Instancing/Instancing.cpp
+	03_Instancing/README.md
+)
+
 ADD_EXECUTABLE( HelloWorld
     ${00_helloworld_src}
 )
@@ -35,6 +40,10 @@ ADD_EXECUTABLE( UIDemo
     ${02_uidemo_src}
 )
 
+ADD_EXECUTABLE( Instancing
+    ${03_instancing_src}
+)
+
 link_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdParty/glew/Debug
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdParty/glew/Release
@@ -43,7 +52,9 @@ link_directories(
 target_link_libraries ( HelloWorld   osre )
 target_link_libraries ( ModelLoading osre ) 
 target_link_libraries ( UIDemo       osre )
+target_link_libraries ( Instancing   osre )
 
 set_target_properties(  HelloWorld   PROPERTIES FOLDER Samples )
 set_target_properties(  ModelLoading PROPERTIES FOLDER Samples )
 set_target_properties(  UIDemo       PROPERTIES FOLDER Samples )
+set_target_properties(  UIDemo       PROPERTIES Instancing Samples )

@@ -15,7 +15,7 @@ namespace OSREEditor.View {
 
         #endregion
 
-        #region NAtive Interface Wrapper
+        #region Native Interface Wrapper
 
         /// <summary>
         /// Will create the editor native application instance.
@@ -138,6 +138,7 @@ namespace OSREEditor.View {
         /// </summary>
         public void InitCSharpModules() {
             LogCallbackDelegate logCallback = Log;
+            var dir = System.IO.Directory.GetCurrentDirectory();
             var ipLog = Marshal.GetFunctionPointerForDelegate(logCallback);
             if (ipLog != null) {
                 RegisterLogCallback(ipLog);

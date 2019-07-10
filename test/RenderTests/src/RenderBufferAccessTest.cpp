@@ -118,7 +118,7 @@ public:
         return true;
     }
 
-    bool onRender( RenderBackend::RenderBackendService* ) override {
+    bool onRender( RenderBackend::RenderBackendService *rbSrv) override {
         CPPCore::RandomGenerator generator;
         for (ui32 i = 0; i < NumPts; i++) {
             const f32 x = static_cast<f32>(generator.get(-10, 10) ) / 100.0f;
@@ -134,6 +134,15 @@ public:
             offset += sizeof( ColorVert );
         }
         
+        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginRenderBatch("particle");
+
+        rbSrv->updateMesh(m_pointMesh);
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
+
+
         return true;
     }
 };

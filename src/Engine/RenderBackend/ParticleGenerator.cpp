@@ -108,8 +108,10 @@ void ParticleGenerator::update( d32 tick ) {
         ::memcpy( &ptr[ offset ], &m_pos[ i ], sizeof( glm::vec3 ) );
         offset += sizeof( ColorVert );
     }
+}
 
-    //m_rbSrv->attachGeoUpdate( m_ptGeo );
+Mesh* ParticleGenerator::getMesh() const {
+    return m_ptGeo;
 }
 
 } // Namespace RenderBackend

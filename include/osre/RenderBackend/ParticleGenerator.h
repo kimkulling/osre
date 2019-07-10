@@ -46,6 +46,7 @@ public:
     ~ParticleGenerator();
     void init( ui32 numPoints );
     void update( d32 tick );
+    Mesh* getMesh() const;
 
 private:
     RenderBackendService *m_rbSrv;

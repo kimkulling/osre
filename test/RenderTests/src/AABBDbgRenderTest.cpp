@@ -36,12 +36,10 @@ using namespace ::OSRE::RenderBackend;
 
 class AABBDbgRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
-    ui32 m_frameCount;
 
 public:
     AABBDbgRenderTest()
-    : AbstractRenderTest( "rendertest/AABBDbgRenderTest" )
-    , m_frameCount( 0 ) {
+    : AbstractRenderTest( "rendertest/AABBDbgRenderTest" ) {
         // empty
     }
 
@@ -70,7 +68,6 @@ public:
                 
         rbSrv->endRenderBatch();
         rbSrv->endPass();
-
 
         return true;
     }

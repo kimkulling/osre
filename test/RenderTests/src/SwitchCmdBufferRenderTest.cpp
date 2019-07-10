@@ -115,8 +115,16 @@ public:
         return true;
     }
 
-    bool onRender( RenderBackend::RenderBackendService * ) override {
+    bool onRender( RenderBackend::RenderBackendService *rbSrv) override {
         m_particeGen->update( NumPoints );
+
+        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginRenderBatch("b1");
+
+        rbSrv->updateMesh( m_particeGen->getMesh() );
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
 
         return true;
     }
