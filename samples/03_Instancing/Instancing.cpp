@@ -47,14 +47,7 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
 
 // To identify local log entries 
-static const c8* Tag = "ModelLoadingApp";
-
-// The file to load
-static const char* ModelPath = "file://assets/Models/Obj/spider.obj";
-
-static const char* AssetFolderArg = "asset_folder";
-
-static const char* ModelArg = "model";
+static const c8* Tag = "InstancingApp";
 
 /// The example application, will create the render environment and render a simple triangle onto it
 class InstancingApp : public App::AppBase {
@@ -75,11 +68,10 @@ public:
 
 protected:
     bool onCreate() override {
-        Properties::Settings* appSettings(AppBase::getSettings());
-        appSettings->setString(Properties::Settings::WindowsTitle, "Instancing sample!");
         if (!AppBase::onCreate()) {
             return false;
         }
+        AppBase::setWindowsTitle("Instancing sample!");
 
         const Common::ArgumentParser& parser = AppBase::getArgumentParser();
 

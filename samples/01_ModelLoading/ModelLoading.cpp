@@ -85,11 +85,10 @@ public:
 
 protected:
     bool onCreate() override {
-        Properties::Settings *appSettings(AppBase::getSettings() );       
-        appSettings->setString( Properties::Settings::WindowsTitle, "Model Loader!" );
         if ( !AppBase::onCreate() ) {
             return false;
         }
+        AppBase::setWindowsTitle("ModelLoader sample!");
 
         const Common::ArgumentParser &parser = AppBase::getArgumentParser();
         if ( parser.hasArgument( AssetFolderArg ) ) {
