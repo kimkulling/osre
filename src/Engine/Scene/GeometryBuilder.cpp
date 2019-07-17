@@ -176,15 +176,17 @@ MeshBuilder::~MeshBuilder() {
     // empty
 }
 
-void MeshBuilder::allocEmptyMesh( VertexType type, ui32 numMeshes ) {
+MeshBuilder &MeshBuilder::allocEmptyMesh( VertexType type, ui32 numMeshes ) {
     m_ActiveGeo = Mesh::create(numMeshes);
     for (ui32 i = 0; i < numMeshes; ++i) {
         m_ActiveGeo[ i ].m_vertextype = type;
         m_ActiveGeo[ i ].m_indextype = IndexType::UnsignedShort;
     }
+
+    return *this;
 }
 
-void MeshBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
+MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
     Mesh *geo = Mesh::create( 1 );
     geo->m_vertextype = type;
     geo->m_indextype = IndexType::UnsignedShort;
@@ -225,9 +227,11 @@ void MeshBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
     geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
     m_ActiveGeo = geo;
+
+    return *this;
 }
 
-void MeshBuilder::allocQuads( VertexType type, BufferAccessType access ) {
+MeshBuilder &MeshBuilder::allocQuads( VertexType type, BufferAccessType access ) {
     Mesh *geo = Mesh::create( 1 );
     geo->m_vertextype = type;
     geo->m_indextype = IndexType::UnsignedShort;
@@ -281,9 +285,11 @@ void MeshBuilder::allocQuads( VertexType type, BufferAccessType access ) {
     geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
     m_ActiveGeo = geo;
+
+    return *this;
 }
 
-void MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, RenderBackend::UiIndexCache &ic ) {
+MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, RenderBackend::UiIndexCache &ic ) {
     const f32 x = (ui32) dim.getX1();
     const f32 y = (ui32)dim.getY1();
     const f32 w = (ui32)dim.getWidth();
@@ -331,9 +337,11 @@ void MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, RenderBack
     for (ui32 i = 0; i < 4; ++i) {
         ic.add( indices[ i ] );
     }
+
+    return *this;
 }
 
-void MeshBuilder::allocCube( RenderBackend::VertexType type, f32 w, f32 h, f32 d, RenderBackend::BufferAccessType access ) {
+MeshBuilder &MeshBuilder::allocCube( RenderBackend::VertexType type, f32 w, f32 h, f32 d, RenderBackend::BufferAccessType access ) {
     m_ActiveGeo = Mesh::create( 1 );
     RenderVert v[8];
 
@@ -400,9 +408,11 @@ void MeshBuilder::allocCube( RenderBackend::VertexType type, f32 w, f32 h, f32 d
     m_ActiveGeo->m_ib->copyFrom(indices, ibSize);
 
     m_ActiveGeo->m_material = Scene::MaterialBuilder::createBuildinMaterial(type);
+
+    return *this;
 }
 
-void MeshBuilder::allocLineList( VertexType type, BufferAccessType access, ui32 numLines, 
+MeshBuilder &MeshBuilder::allocLineList( VertexType type, BufferAccessType access, ui32 numLines,
                                           glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices ) {
     Mesh *geo = Mesh::create( 1 );
     geo->m_vertextype = type;
@@ -419,9 +429,11 @@ void MeshBuilder::allocLineList( VertexType type, BufferAccessType access, ui32 
     geo->m_ib->copyFrom( indices, size );
 
     m_ActiveGeo = geo;
+
+    return *this;
 }
 
-void MeshBuilder::allocPoints( VertexType type, BufferAccessType access, ui32 numPoints, 
+MeshBuilder &MeshBuilder::allocPoints( VertexType type, BufferAccessType access, ui32 numPoints,
                                         glm::vec3 *posArray, glm::vec3 *colorArray ) {
     // colors
     CPPCore::TArray<ui16> indices;
@@ -449,6 +461,8 @@ void MeshBuilder::allocPoints( VertexType type, BufferAccessType access, ui32 nu
     ptGeo->m_material = MaterialBuilder::createBuildinMaterial( type );;
 
     m_ActiveGeo = ptGeo;
+
+    return *this;
 }
 
 static const size_t NumQuadVert = 4;
@@ -555,9 +569,9 @@ static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const 
     }
 }
 
-void MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access ) {
+MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access ) {
 	if ( text.empty() ) {
-		return;
+		return *this;
 	}
 
     Mesh *geo = Mesh::create( 1 );
@@ -604,9 +618,11 @@ void MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text, 
     geo->m_material->m_textures[0]->m_size = 0;
 
     m_ActiveGeo = geo;
+
+    return *this;
 }
 
-void MeshBuilder::allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access, 
+void MeshBuilder::allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access,
         UiVertexCache &vc, UiIndexCache &ic) {
     glm::vec3 *textPos(nullptr), *colors(nullptr);
     glm::vec2 *tex0(nullptr);

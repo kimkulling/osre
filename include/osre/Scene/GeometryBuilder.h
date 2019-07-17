@@ -74,28 +74,28 @@ public:
 
     /// @brief  Will allocate an empty mesh.
     ///	@param  type        [in] The vertex type.
-    void allocEmptyMesh( RenderBackend::VertexType type, ui32 numMeshes );
+    MeshBuilder &allocEmptyMesh( RenderBackend::VertexType type, ui32 numMeshes );
 
     /// @brief  Will allocate a triangle mesh.
     ///	@param  type        [in] The vertex type.
     /// @return The created mesh.
-    void allocTriangles( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
+    MeshBuilder& allocTriangles( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
 
     ///	@brief  Will allocate vertices for a quad primitive.
     ///	@param  type        [in] The vertex type.
     /// @return The created mesh.
-    void allocQuads( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
+    MeshBuilder& allocQuads( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
 
-    void allocUiQuad( const Rect2ui &dim, RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic );
+    MeshBuilder& allocUiQuad( const Rect2ui &dim, RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic );
     
-    void allocCube( RenderBackend::VertexType type, f32 w, f32 h, f32 d, RenderBackend::BufferAccessType access );
+    MeshBuilder& allocCube( RenderBackend::VertexType type, f32 w, f32 h, f32 d, RenderBackend::BufferAccessType access );
 
     ///	@brief  Will allocate vertices for a list of lines.
     ///	@param  type        [in] The vertex type.
-    void allocLineList( RenderBackend::VertexType type, RenderBackend::BufferAccessType access,
+    MeshBuilder& allocLineList( RenderBackend::VertexType type, RenderBackend::BufferAccessType access,
             ui32 numLines, glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices );
 
-    void allocPoints( RenderBackend::VertexType type, RenderBackend::BufferAccessType access, 
+    MeshBuilder& allocPoints( RenderBackend::VertexType type, RenderBackend::BufferAccessType access,
             ui32 numPoints, glm::vec3 *posArray, glm::vec3 *colorArray );
 
     ///	@brief  Will allocate vertices for a text-box.
@@ -104,7 +104,7 @@ public:
     /// @param  textSize    [in] The size for a single glyph.
     /// @param  text        [in] The text to render.
     /// @return The created mesh.
-    void allocTextBox( f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access );
+    MeshBuilder& allocTextBox( f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access );
 
     /// @brief  Helper method to create text-box mesh.
     static void allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access, 
