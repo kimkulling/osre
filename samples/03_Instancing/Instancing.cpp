@@ -33,10 +33,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/Common/Ids.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/DbgRenderer.h>
 #include <osre/Scene/Component.h>
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>
 
@@ -47,83 +47,71 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
 
 // To identify local log entries 
-static const c8 *Tag = "ModelLoadingApp";
+static const c8* Tag = "ModelLoadingApp";
 
 // The file to load
-static const char *ModelPath = "file://assets/Models/Obj/spider.obj";
+static const char* ModelPath = "file://assets/Models/Obj/spider.obj";
 
-static const char *AssetFolderArg = "asset_folder";
+static const char* AssetFolderArg = "asset_folder";
 
 static const char* ModelArg = "model";
 
 /// The example application, will create the render environment and render a simple triangle onto it
-class ModelLoadingApp : public App::AppBase {
-    String m_assetFolder;
-    Scene::Stage *m_stage;
-    Scene::View  *m_view;
-    f32 m_angle;
-    glm::mat4 m_model;
-    TransformMatrixBlock m_transformMatrix;
-    Node::NodePtr m_modelNode;
+class InstancingApp : public App::AppBase {
+    Scene::Stage* m_stage;
+    Scene::View* m_view;
 
 public:
-    ModelLoadingApp( int argc, char *argv[] )
-    : AppBase( argc, argv, "api:model", "The render API:The model to load")
-    , m_assetFolder("")
-    , m_stage( nullptr )
-    , m_view( nullptr )
-    , m_angle( 0.0f )
-	, m_model()
-    , m_transformMatrix()
-    , m_modelNode() {
+    InstancingApp(int argc, char* argv[])
+    : AppBase(argc, argv, "api:model", "The render API:The model to load")
+    , m_stage(nullptr)
+    , m_view(nullptr) {
         // empty
     }
 
-    virtual ~ModelLoadingApp() {
+    virtual ~InstancingApp() {
         // empty
     }
 
 protected:
     bool onCreate() override {
-        Properties::Settings *appSettings(AppBase::getSettings() );       
-        appSettings->setString( Properties::Settings::WindowsTitle, "Model Loader!" );
-        if ( !AppBase::onCreate() ) {
+        Properties::Settings* appSettings(AppBase::getSettings());
+        appSettings->setString(Properties::Settings::WindowsTitle, "Instancing sample!");
+        if (!AppBase::onCreate()) {
             return false;
         }
 
-        const Common::ArgumentParser &parser = AppBase::getArgumentParser();
-        if ( parser.hasArgument( AssetFolderArg ) ) {
-            m_assetFolder = parser.getArgument( AssetFolderArg );
-        }
+        const Common::ArgumentParser& parser = AppBase::getArgumentParser();
 
 #ifdef OSRE_WINDOWS
-        AssetRegistry::registerAssetPath( "assets", "../../media" );
+        AssetRegistry::registerAssetPath("assets", "../../media");
 #else
-        AssetRegistry::registerAssetPath( "assets", "../media" );
+        AssetRegistry::registerAssetPath("assets", "../media");
+
 #endif 
-        AssimpWrapper assimpWrapper(*getIdContainer());
-        IO::Uri modelLoc( ModelPath );
-        if ( assimpWrapper.importAsset( modelLoc, 0 ) ) {
-            Model *model = assimpWrapper.getModel();
-            
-            RenderBackendService *rbSrv( getRenderBackendService() );
-            if (nullptr != rbSrv) {
-                Platform::AbstractWindow *rootWindow(getRootWindow());
-                if (nullptr == rootWindow) {
-                    return false;
-                }
 
-                m_stage = AppBase::createStage("ModelLoading");
-                AppBase::setActiveStage(m_stage);
-                Scene::View *view = m_stage->addView("default_view", nullptr);
-                AppBase::setActiveView(view);
+        RenderBackendService* rbSrv(getRenderBackendService());
+        if (nullptr != rbSrv) {
+            Platform::AbstractWindow* rootWindow(getRootWindow());
+            if (nullptr == rootWindow) {
+                return false;
+            }
 
-                const Rect2ui &windowsRect = rootWindow->getWindowsRect();
-                view->setProjectionParameters( 60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.0001f, 1000.f );
-                view->observeBoundingBox( model->getAABB() );
+            m_stage = AppBase::createStage("Instancing");
+            AppBase::setActiveStage(m_stage);
+            Scene::View* view = m_stage->addView("default_view", nullptr);
+            AppBase::setActiveView(view);
+            Scene::Node* geoNode = m_stage->createNode("geo", nullptr);
 
-                m_stage->setRoot( model->getRootNode() );
-                m_modelNode = m_stage->getRoot();
+            const Rect2ui& windowsRect = rootWindow->getWindowsRect();
+            view->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.0001f, 1000.f);
+
+            Scene::MeshBuilder meshBuilder;
+            meshBuilder.allocCube(VertexType::RenderVertex, 1, 2, 3, BufferAccessType::ReadWrite);
+
+            RenderBackend::Mesh* mesh = meshBuilder.getMesh();
+            if (nullptr != mesh) {
+                geoNode->addMesh(mesh);
             }
         }
 
@@ -132,16 +120,13 @@ protected:
 
     void onUpdate() override {
         // Rotate the model
-        glm::mat4 rot( 1.0 );
-        m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
+        glm::mat4 rot(1.0);
 
-        m_angle += 0.01f;
-        RenderBackendService *rbSrv( getRenderBackendService() );
+        RenderBackendService* rbSrv(getRenderBackendService());
 
         rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 
-        rbSrv->setMatrix( MatrixType::Model, m_transformMatrix.m_model);
 
         rbSrv->endRenderBatch();
         rbSrv->endPass();
@@ -152,17 +137,17 @@ protected:
     }
 };
 
-int main( int argc, char *argv[] ) {
-    ModelLoadingApp myApp( argc, argv );
-    if (!myApp.initWindow( 10, 10, 1024, 768, "ModelLoader-Sample", false, App::RenderBackendType::OpenGLRenderBackend )) {
+int main(int argc, char* argv[]) {
+    InstancingApp myApp(argc, argv);
+    if (!myApp.initWindow(10, 10, 1024, 768, "ModelLoader-Sample", false, App::RenderBackendType::OpenGLRenderBackend)) {
         return 1;
     }
 
-    while (myApp.handleEvents() ) {
+    while (myApp.handleEvents()) {
         myApp.update();
         myApp.requestNextFrame();
     }
-            
+
     myApp.destroy();
 
     return 0;

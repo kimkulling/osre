@@ -269,7 +269,7 @@ void OGLRenderBackend::releaseBuffer( OGLBuffer *buffer ) {
         osre_debug( Tag, "Pointer to buffer instance is nullptr" );
         return;
     }
-    const ui32 slot = buffer->m_handle;
+    const size_t slot = buffer->m_handle;
     glDeleteBuffers( 1, &buffer->m_oglId );
     buffer->m_handle = OGLNotSetId;
     buffer->m_type   = BufferType::EmptyBuffer;
@@ -301,7 +301,7 @@ bool OGLRenderBackend::createVertexCompArray( const VertexLayout *layout, OGLSha
         return false;
     }
 
-    ui32 index( 0 );
+    size_t index( 0 );
     OGLVertexAttribute *attribute( nullptr );
     for( ui32 i = 0; i < layout->numComponents(); i++ ) {
         VertComponent &comp( layout->getAt( i ) );
@@ -407,7 +407,7 @@ void OGLRenderBackend::releaseVertexCompArray( TArray<OGLVertexAttribute*> &attr
 OGLVertexArray *OGLRenderBackend::createVertexArray() {
     OGLVertexArray *vertexArray = new OGLVertexArray;
     glGenVertexArrays( 1, &vertexArray->m_id );
-    const ui32 id = m_vertexarrays.size();
+    const size_t id = m_vertexarrays.size();
     m_vertexarrays.add( vertexArray );
     vertexArray->m_slot = id;
 
@@ -421,7 +421,7 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
     }
 
     glEnableVertexAttribArray( loc );
-    glVertexAttribPointer( loc, attrib->m_size,
+    glVertexAttribPointer( loc,(GLint) attrib->m_size,
                            attrib->m_type,
                            GL_FALSE,
                            stride,
@@ -442,7 +442,7 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
         const GLint loc = ( *shader )[ attribName ];
         if( -1 != loc ) {
             glEnableVertexAttribArray( loc );
-            glVertexAttribPointer( loc, attributes[ i ]->m_size,
+            glVertexAttribPointer( loc, (GLint) attributes[ i ]->m_size,
                                    attributes[ i ]->m_type,
                                    GL_FALSE,
                                    stride,
@@ -635,7 +635,7 @@ OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTar
     }
 
     // get texture slot
-    ui32 slot( 0 );
+    size_t slot( 0 );
     if( m_freeTexSlots.isEmpty() ) {
         slot = m_textures.size();
         tex = new OGLTexture;
@@ -957,7 +957,7 @@ void OGLRenderBackend::setParameter( OGLParameter **param, ui32 numParam ) {
     }
 }
 
-ui32 OGLRenderBackend::addPrimitiveGroup( PrimitiveGroup *grp ) {
+size_t OGLRenderBackend::addPrimitiveGroup( PrimitiveGroup *grp ) {
     if ( nullptr == grp ) {
         osre_error( Tag, "Group pointer is nullptr" );
         return NotInitedHandle;
@@ -969,7 +969,7 @@ ui32 OGLRenderBackend::addPrimitiveGroup( PrimitiveGroup *grp ) {
     oglGrp->m_startIndex = grp->m_startIndex;
     oglGrp->m_numIndices = grp->m_numIndices;
     
-    const ui32 idx( m_primitives.size() );
+    const size_t idx( m_primitives.size() );
     m_primitives.add( oglGrp );
 
     return idx;

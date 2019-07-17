@@ -130,7 +130,7 @@ public:
     void setParameter( OGLParameter *param );
     void setParameter( OGLParameter **param, ui32 numParam );
     void releaseAllParameters();
-    ui32 addPrimitiveGroup( PrimitiveGroup *grp );
+    size_t addPrimitiveGroup( PrimitiveGroup *grp );
     void releaseAllPrimitiveGroups();
     OGLFrameBuffer* createFrameBuffer(const String &name, ui32 width, ui32 height, bool depthBuffer);
     void bindFrameBuffer(OGLFrameBuffer *oglFB);
@@ -161,7 +161,7 @@ private:
     std::map<String, ui32>           m_texLookupMap;
     CPPCore::TArray<OGLParameter*>   m_parameters;
     OGLShader                       *m_shaderInUse;
-    CPPCore::TArray<ui32>            m_freeBufferSlots;
+    CPPCore::TArray<size_t>          m_freeBufferSlots;
     CPPCore::TArray<OGLPrimGroup*>   m_primitives;
     RenderStates                    *m_fpState;
     Profiling::FPSCounter           *m_fpsCounter;

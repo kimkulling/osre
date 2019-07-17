@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Collision/TAABB.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -46,6 +47,7 @@ public:
     ~ParticleGenerator();
     void init( ui32 numPoints );
     void update( d32 tick );
+    void setBounds(const Collision::TAABB<f32>& bounds);
     Mesh* getMesh() const;
 
 private:
@@ -55,6 +57,8 @@ private:
     glm::vec3 *m_pos;
     GLushort *m_pt_indices;
     Mesh *m_ptGeo;
+    bool m_useBounds;
+    Collision::TAABB<f32> m_bounds;
 };
 
 } // Namespace RenderBackend

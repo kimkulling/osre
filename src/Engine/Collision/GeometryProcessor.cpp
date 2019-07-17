@@ -60,7 +60,7 @@ bool GeometryProcessor::execute() {
     return true;
 }
 
-void GeometryProcessor::addGeo( RenderBackend::Mesh *geo ) {
+void GeometryProcessor::addGeo( Mesh *geo ) {
     if ( nullptr == geo ) {
         return;
     }
@@ -74,9 +74,7 @@ const Scene::Node::AABB &GeometryProcessor::getAABB() const {
     return m_aabb;
 }
 
-void GeometryProcessor::handleGeometry( RenderBackend::Mesh *geo ) {
-    OSRE_ASSERT( nullptr != geo );
-
+void GeometryProcessor::handleGeometry( Mesh *geo ) {
     if ( nullptr == geo ) {
         return;
     }
@@ -98,7 +96,7 @@ void GeometryProcessor::handleGeometry( RenderBackend::Mesh *geo ) {
     }
 
     BufferData *data = geo->m_vb;
-    if ( nullptr == data || 0 == data->getSize() ) {
+    if ( nullptr == data || 0L == data->getSize() ) {
         return;
     }
 

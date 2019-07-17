@@ -284,10 +284,10 @@ void MeshBuilder::allocQuads( VertexType type, BufferAccessType access ) {
 }
 
 void MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, RenderBackend::UiIndexCache &ic ) {
-    const f32 x = dim.getX1();
-    const f32 y = dim.getY1();
-    const f32 w = dim.getWidth();
-    const f32 h = dim.getHeight();
+    const f32 x = (ui32) dim.getX1();
+    const f32 y = (ui32)dim.getY1();
+    const f32 w = (ui32)dim.getWidth();
+    const f32 h = (ui32)dim.getHeight();
 
     // setup triangle vertices    
     static const ui32 NumVert = 4;
@@ -333,8 +333,73 @@ void MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, RenderBack
     }
 }
 
-void MeshBuilder::allocCube( RenderBackend::VertexType type, RenderBackend::BufferAccessType access ) {
-    m_ActiveGeo = Mesh::create( 1 );    
+void MeshBuilder::allocCube( RenderBackend::VertexType type, f32 w, f32 h, f32 d, RenderBackend::BufferAccessType access ) {
+    m_ActiveGeo = Mesh::create( 1 );
+    RenderVert v[8];
+
+    //glm::vec3 v[8];
+    v[0].position.x = v[0].position.y = v[0].position.z = 0.0f;
+    
+    v[1].position.x = w;
+    v[1].position.y = v[1].position.z = 0.0f;
+    
+    v[2].position.y = d;
+    v[2].position.x = v[2].position.z = 0.0f;
+    
+    v[3].position.x = w;
+    v[3].position.y = d;
+    v[3].position.z = 0.0f;
+
+    v[4].position.x = v[4].position.y = 0.0f;
+    v[4].position.z = h;
+    
+    v[5].position.x = w;
+    v[5].position.y = 0.0f;
+    v[5].position.z = h;
+    
+    v[6].position.y = d;
+    v[6].position.x = 0.0f;
+    v[6].position.z = h;
+    
+    v[7].position.x = w;
+    v[7].position.y = d;
+    v[7].position.z = h;
+
+    GLushort indices[36] = {
+        0,2,1, // bottom
+        1,2,3,
+
+        4,5,3,
+        3,2,4,
+
+        5,6,2,
+        2,1,5,
+
+        6,7,3,
+        3,2,6,
+
+        7,6,5,
+        5,4,7,
+
+        4,5,6,
+        6,7,4
+    }; 
+
+    m_ActiveGeo->m_vertextype = type;
+    m_ActiveGeo->m_indextype = IndexType::UnsignedShort;
+    m_ActiveGeo->m_numPrimGroups = 1;
+    m_ActiveGeo->m_primGroups = new PrimitiveGroup[m_ActiveGeo->m_numPrimGroups];
+    m_ActiveGeo->m_primGroups[0].init(IndexType::UnsignedShort, 12, PrimitiveType::TriangleList, 0);
+
+    const size_t vbSize = sizeof(RenderVert) * 8;
+    m_ActiveGeo->m_vb = BufferData::alloc(BufferType::VertexBuffer, vbSize, access);
+    m_ActiveGeo->m_vb->copyFrom(&v[0].position.x, vbSize);
+
+    const size_t ibSize = sizeof(GLushort) * 36;
+    m_ActiveGeo->m_ib = BufferData::alloc(BufferType::IndexBuffer, ibSize, BufferAccessType::ReadOnly);
+    m_ActiveGeo->m_ib->copyFrom(indices, ibSize);
+
+    m_ActiveGeo->m_material = Scene::MaterialBuilder::createBuildinMaterial(type);
 }
 
 void MeshBuilder::allocLineList( VertexType type, BufferAccessType access, ui32 numLines, 
@@ -386,17 +451,17 @@ void MeshBuilder::allocPoints( VertexType type, BufferAccessType access, ui32 nu
     m_ActiveGeo = ptGeo;
 }
 
-static const ui32 NumQuadVert = 4;
+static const size_t NumQuadVert = 4;
 
-static ui32 getNumTextVerts( const String &text ) {
-    const ui32 NumTextVerts = NumQuadVert * text.size();
+static size_t getNumTextVerts( const String &text ) {
+    const size_t NumTextVerts = NumQuadVert * text.size();
     return NumTextVerts;
 }
 
 static const ui32 NumQuadIndices = 6;
 
-static ui32 getNumTextIndices(const String &text) {
-    const ui32 numIndices = NumQuadIndices * text.size();
+static size_t getNumTextIndices(const String &text) {
+    const size_t numIndices = NumQuadIndices * text.size();
     return numIndices;
 }
 

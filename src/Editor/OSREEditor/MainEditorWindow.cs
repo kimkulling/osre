@@ -32,9 +32,7 @@ namespace OSREEditor
             // empty
         }
 
-        public void Dispose() {
-            this.MouseClick -= Window_MouseClick;
-        }
+        public void Dispose() => this.MouseClick -= Window_MouseClick;
 
         private void quitToolStripMenuItem_Quit_Click(object sender, EventArgs e)
         {

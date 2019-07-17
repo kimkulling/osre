@@ -38,7 +38,9 @@ ParticleGenerator::ParticleGenerator( RenderBackendService *rbSrv )
 , m_col( nullptr )
 , m_pos( nullptr )
 , m_pt_indices( nullptr )
-, m_ptGeo( nullptr ) {
+, m_ptGeo( nullptr )
+, m_useBounds( false )
+, m_bounds() {
     // empty
 }
 
@@ -100,6 +102,13 @@ void ParticleGenerator::update( d32 tick ) {
         const f32 y = static_cast< f32 >( generator.get( -10, 10 ) ) / 100.0f;
         const f32 z = static_cast< f32 >( generator.get( -10, 10 ) ) / 100.0f;
         m_pos[ i ] += glm::vec3( x, y, z );
+        if (m_useBounds) {
+            TVec3<f32> pt(m_pos[i].x, m_pos[i].y, m_pos[i].z);
+            if (!m_bounds.isIn(pt)) {
+                m_pos[i] -= m_pos[i];
+                m_pos[i] -= m_pos[i];
+            }
+        }
     }
 
     ui32 offset( 0 );
@@ -108,6 +117,11 @@ void ParticleGenerator::update( d32 tick ) {
         ::memcpy( &ptr[ offset ], &m_pos[ i ], sizeof( glm::vec3 ) );
         offset += sizeof( ColorVert );
     }
+}
+
+void ParticleGenerator::setBounds(const Collision::TAABB<f32>& bounds) {
+    m_useBounds = true;
+    m_bounds = bounds;
 }
 
 Mesh* ParticleGenerator::getMesh() const {

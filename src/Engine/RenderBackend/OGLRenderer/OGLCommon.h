@@ -72,7 +72,7 @@ struct OGLVertexAttribute {
 ///	@brief
 struct OGLVertexArray {
     GLuint m_id;
-    ui32   m_slot;
+    size_t m_slot;
 
     OGLVertexArray()
     : m_id( 0 )

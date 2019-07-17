@@ -102,6 +102,7 @@ AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const Strin
 , m_world( nullptr )
 , m_uiScreen( nullptr )
 , m_uiRenderer( nullptr )
+, m_ids( nullptr )
 , m_mouseEvListener( nullptr )
 , m_shutdownRequested( false ) {
     m_settings = new Properties::Settings;
@@ -320,6 +321,7 @@ bool AppBase::onCreate() {
         return false;
     }
 
+    m_ids = new Common::Ids;
 
     // create the asset registry
     Assets::AssetRegistry *registry( Assets::AssetRegistry::create() );
@@ -396,7 +398,7 @@ bool AppBase::onDestroy() {
         osre_debug( Tag, "AppBase::State not in proper state: Running." );
         return false;
     }
-
+    
     Assets::AssetRegistry::destroy();
     ServiceProvider::destroy();
 
@@ -410,6 +412,9 @@ bool AppBase::onDestroy() {
 
     delete m_world;
     m_world = nullptr;
+
+    delete m_ids;
+    m_ids = nullptr;
 
     osre_debug( Tag, "Set application state to destroyed." );
     m_state = State::Destroyed;
@@ -435,6 +440,11 @@ void AppBase::onUpdate() {
 const ArgumentParser &AppBase::getArgumentParser() const {
     return m_argParser;
 }
+
+Ids* AppBase::getIdContainer() const {
+    return m_ids;
+}
+
 
 RenderBackend::Pipeline *AppBase::createDefaultPipeline() {
     Pipeline *pipeline = new Pipeline;

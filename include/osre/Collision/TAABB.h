@@ -50,6 +50,9 @@ public:
     void updateFromVector3Array( VecType *vecArray, ui32 numVectors );
     T getDiameter() const;
     TVec3<T> getCenter() const;
+    bool isIn(const VecType& pt) const;
+    bool operator == (const TAABB<T>& rhs) const;
+    bool operator != (const TAABB<T>& rhs) const;
 
 private:
     VecType m_min;
@@ -173,6 +176,32 @@ TVec3<T> TAABB<T>::getCenter() const {
     TVec3<T> center = ( m_min + m_max ) * 0.5f;
 
     return center;
+}
+
+template<class T>
+inline
+bool TAABB<T>::isIn(const VecType& pt) const {
+    if (pt.v[0] < m_min.v[0] || pt.v[1] < m_min.v[1] || pt.v[2] < m_min.v[2]) {
+        return false;
+    }
+    
+    if (pt.v[0] > m_max.v[0] || pt.v[1] < m_max.v[1] || pt.v[2]< m_max.v[2]) {
+        return false;
+    }
+
+    return true;
+}
+
+template<class T>
+inline
+bool TAABB<T>::operator == (const TAABB<T>& rhs) const {
+    return (m_max == rhs.m_max && m_min == rhs.m_min);
+}
+
+template<class T>
+inline
+bool TAABB<T>::operator != (const TAABB<T>& rhs) const {
+    return !(*this == rhs);
 }
 
 } // Namespace Collision

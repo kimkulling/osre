@@ -31,6 +31,7 @@ namespace OSRE {
 // Forward declarations
 namespace Common {
     class ArgumentParser;
+    class Ids;
 }
 
 namespace Scene {
@@ -95,6 +96,11 @@ public:
     /// @brief  Updates the current frame.
     virtual void update();
 
+    /// @brief  Will perform a resize for the root window.
+    /// @param  x   [in] X-coordinate of origin.
+    /// @param  y   [in] Y-coordinate of origin.
+    /// @param  w   [in] The width for the window.
+    /// @param  h   [in] The height for the window.
     virtual void resize(i32 x, i32 y, i32 w, i32 h);
 
     /// @brief  Requests a new frame.
@@ -160,6 +166,8 @@ public:
     /// @param  title       [in] The new windows title.
     virtual void setWindowsTitle( const String &title );
 
+    virtual Common::Ids *getIdContainer() const;
+
     /// @brief  Will create the default pipeline for rendering.
     /// @return The default pipeline.
     static RenderBackend::Pipeline *createDefaultPipeline();
@@ -198,6 +206,7 @@ private:
     UI::Screen *m_uiScreen;
     UI::UiRenderer *m_uiRenderer;
     MouseEventListener *m_mouseEvListener;
+    Common::Ids *m_ids;
     bool m_shutdownRequested;
 };
 

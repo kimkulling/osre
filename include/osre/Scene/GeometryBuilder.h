@@ -88,7 +88,7 @@ public:
 
     void allocUiQuad( const Rect2ui &dim, RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic );
     
-    void allocCube( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
+    void allocCube( RenderBackend::VertexType type, f32 w, f32 h, f32 d, RenderBackend::BufferAccessType access );
 
     ///	@brief  Will allocate vertices for a list of lines.
     ///	@param  type        [in] The vertex type.
