@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/UiRenderer.h>
 #include <osre/RenderBackend/Pipeline.h>
 #include <osre/UI/Screen.h>
+#include <osre/Scene/GeometryBuilder.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
@@ -48,14 +49,34 @@ void UiRenderer::render( UI::Screen *screen, RenderBackendService *rbService ) {
     rbService->beginPass(PipelinePass::getPassNameById(UiPassId));
     rbService->beginRenderBatch("b1");
         
-    CPPCore::TArray<Mesh*> geoCache;
+    UiVertexCache vc; 
+    UiIndexCache ic;
+
+    const Rect2ui& rect = screen->getRect();
+
     for ( ui32 i = 0; i < cache.size(); ++i ) {
         UiRenderCmd *currentCmd( cache[ i ] );
-        Mesh *geo = UIRenderUtils::createGeoFromCache( currentCmd->m_vc, currentCmd->m_ic, currentCmd->m_mat );
-        geoCache.add( geo );
+        if (currentCmd == nullptr) {
+            continue;
+        }
 
-        rbService->addMesh( geoCache, 0 );
+        const UiVertexCache &currentVC = currentCmd->m_vc;
+        const UiIndexCache &currentIC = currentCmd->m_ic;
+        if (currentVC.numVertices() > 0) {
+            for (ui32 j = 0; j < currentVC.numVertices(); ++j) {
+                vc.add(currentVC.m_cache[j]);
+            }
+
+            for (ui32 j = 0; j < currentIC.numIndices(); ++j) {
+                ic.add(currentIC.m_cache[j]);
+            }
+        }
     }
+
+    Scene::MeshBuilder meshBuilder;
+    meshBuilder.allocUiQuad(rect, vc, ic);
+    Mesh* uiMesh = meshBuilder.getMesh();
+    rbService->addMesh(uiMesh, 0);
 
     rbService->endRenderBatch();
     rbService->endPass();

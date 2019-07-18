@@ -28,7 +28,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace UI {
 
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -42,7 +41,6 @@ public:
     bool isEnabled( ui32 flag ) const;
     void setHeadline( const String &headline );
     const String &getHeadline() const;
-    
 
 protected:
     void onLayout() override;

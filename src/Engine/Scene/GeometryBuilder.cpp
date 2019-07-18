@@ -290,10 +290,10 @@ MeshBuilder &MeshBuilder::allocQuads( VertexType type, BufferAccessType access )
 }
 
 MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, RenderBackend::UiIndexCache &ic ) {
-    const f32 x = (ui32) dim.getX1();
-    const f32 y = (ui32)dim.getY1();
-    const f32 w = (ui32)dim.getWidth();
-    const f32 h = (ui32)dim.getHeight();
+    const f32 x = (f32) dim.getX1();
+    const f32 y = (f32) dim.getY1();
+    const f32 w = (f32) dim.getWidth();
+    const f32 h = (f32) dim.getHeight();
 
     // setup triangle vertices    
     static const ui32 NumVert = 4;
