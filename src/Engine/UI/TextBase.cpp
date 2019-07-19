@@ -24,7 +24,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Common/Tokenizer.h>
-//#include <osre/RenderBackend/FontBase.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
 #include "UIRenderUtils.h"
