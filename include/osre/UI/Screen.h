@@ -51,7 +51,7 @@ public:
     Screen( const String &name, Widget *parent, ui32 x, ui32 y, ui32 width, ui32 height );
     virtual ~Screen();
     virtual void setSurface( Platform::AbstractWindow *surface );
-    const RenderBackend::TransformMatrixBlock &getMVP() const;
+    const RenderBackend::TransformMatrixBlock &getTransform() const;
 
 protected:
     void onLayout() override;

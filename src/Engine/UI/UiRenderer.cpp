@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/Screen.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
 #include "UIRenderUtils.h"
@@ -47,25 +48,32 @@ void UiRenderer::render( Stage* stage, Screen *screen, RenderBackendService *rbS
     if (nullptr == screen) {
         return;
     }
-    UiRenderCmdCache cache;
-    screen->render( cache, rbService );
 
-    rbService->beginPass(PipelinePass::getPassNameById(UiPassId));
-    rbService->beginRenderBatch("b1");
-        
+    UiRenderCmdCache cache;
+    screen->render( cache, rbSrv );
+    if (cache.isEmpty()) {
+        return;
+    }
+
+    const TransformMatrixBlock &tmBlock = screen->getTransform();
+
+    rbSrv->beginPass(PipelinePass::getPassNameById(UiPassId));
+    rbSrv->beginRenderBatch("b1");
+    rbSrv->setMatrix(MatrixType::Model, tmBlock.m_model);
+    rbSrv->setMatrix(MatrixType::Projection, tmBlock.m_projection);
+
     UiVertexCache vc; 
     UiIndexCache ic;
-
-    const Rect2ui& rect = screen->getRect();
-
+    RenderBackend::Material *mat(nullptr);
     for ( ui32 i = 0; i < cache.size(); ++i ) {
         UiRenderCmd *currentCmd( cache[ i ] );
         if (currentCmd == nullptr) {
             continue;
         }
-
+        
+        mat = currentCmd->m_mat;
         const UiVertexCache &currentVC = currentCmd->m_vc;
-        const UiIndexCache &currentIC = currentCmd->m_ic;
+        const UiIndexCache  &currentIC = currentCmd->m_ic;
         if (currentVC.numVertices() > 0) {
             // Copy all vertices
             vc.add( &currentVC.m_cache[0], currentVC.numVertices());
@@ -75,13 +83,15 @@ void UiRenderer::render( Stage* stage, Screen *screen, RenderBackendService *rbS
         }
     }
 
-    Scene::MeshBuilder meshBuilder;
-    meshBuilder.allocUiQuad(rect, vc, ic);
-    Mesh* uiMesh = meshBuilder.getMesh();
-    rbService->addMesh(uiMesh, 0);
+    Mesh *mesh = UIRenderUtils::createGeoFromCache( vc, ic, mat);
+    if (nullptr == mesh) {
+        return;
+    }
+    
+    rbSrv->addMesh(mesh, 0);
 
-    rbService->endRenderBatch();
-    rbService->endPass();
+    rbSrv->endRenderBatch();
+    rbSrv->endPass();
 }
 
 } // Namespace UI

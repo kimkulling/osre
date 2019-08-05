@@ -40,7 +40,7 @@ Screen::Screen( const String &name, Widget *parent, ui32 x, ui32 y, ui32 width, 
 }
 
 Screen::~Screen() {
-    // empty
+    m_surface = nullptr;
 }
 
 void Screen::setSurface( AbstractWindow *surface ) {
@@ -53,19 +53,17 @@ void Screen::setSurface( AbstractWindow *surface ) {
         return;
     }
 
-    WindowsProperties *props( surface->getProperties() );
-    if ( nullptr == props ) {
+    WindowsProperties *winProperties( surface->getProperties() );
+    if ( nullptr == winProperties ) {
         return;
     }
-    const ui32 x( props->m_x );
-    const ui32 y( props->m_y );
-    const ui32 w( props->m_width );
-    const ui32 h( props->m_height );
-    Rect2ui dim( x, y, w, h );
+
+    Rect2ui dim;
+    winProperties->getDimension(dim);
     WidgetCoordMapping::init( dim );
 }
 
-const RenderBackend::TransformMatrixBlock &Screen::getMVP() const {
+const TransformMatrixBlock &Screen::getTransform() const {
     return m_transformMatrix;
 }
 
@@ -84,7 +82,7 @@ void Screen::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *r
     m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
     m_transformMatrix.update();
     const size_t numChildren( getNumWidgets() );
-    for ( ui32 i=0; i<numChildren; ++i ) {
+    for ( size_t i=0; i<numChildren; ++i ) {
         Widget *currentChild( getWidgetAt( i ) );
         if ( nullptr == currentChild ) {
             continue;
