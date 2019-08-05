@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 #include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/Stage.h>
 #include <osre/UI/Screen.h>
 #include <osre/UI/UiItemFactory.h>
 #include <osre/UI/TextBase.h>
@@ -39,19 +40,27 @@ namespace OSRE {
 namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Scene;
 using namespace ::OSRE::UI;
 
 static const c8 *Tag = "UiRenderTest";
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	RenderTest
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 class UiRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
     Screen *m_screen;
+    Stage *m_stage;
     UiRenderer *m_uiRenderer;
 
 public:
     UiRenderTest()
     : AbstractRenderTest( "rendertest/UiRenderTest" )
     , m_screen( nullptr )
+    , m_stage( nullptr )
     , m_uiRenderer( nullptr ) {
         // empty
     }
@@ -62,6 +71,9 @@ public:
 
     bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
+
+        m_stage = new Stage("ui_stage", rbSrv);
+
         UiItemFactory::createInstance(getWindow());
         m_uiRenderer = new UiRenderer;
         m_screen = (Screen*)UiItemFactory::getInstance()->create(WidgetType::Screen, getTestName(), nullptr);
@@ -89,7 +101,7 @@ public:
     }
 
     bool onRender( RenderBackendService *rbSrv ) override {
-        m_uiRenderer->render(m_screen, rbSrv);
+        m_uiRenderer->render(m_stage, m_screen, rbSrv);
 
         return true;
     }
@@ -103,5 +115,5 @@ public:
 
 ATTACH_RENDERTEST( UiRenderTest )
 
-}
-}
+} // Namespace RenderTest
+} // Namespace OSRE

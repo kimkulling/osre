@@ -38,7 +38,7 @@ using namespace ::OSRE::Scene;
 float angle = 0.0f;
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup	Test
+///	@ingroup	RenderTest
 ///
 ///	@brief  This class implements a base triangle render test.
 //-------------------------------------------------------------------------------------------------

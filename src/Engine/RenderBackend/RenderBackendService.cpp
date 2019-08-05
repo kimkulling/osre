@@ -301,8 +301,8 @@ PassData *RenderBackendService::beginPass(const c8 *id) {
     }
 
     m_currentPass = getPassById(id);
-    if (nullptr == m_currentPass) {
-        m_currentPass = new PassData(id);
+    if ( nullptr == m_currentPass ) {
+        m_currentPass = new PassData(id, nullptr );
     }
     m_dirty = true;
     
@@ -443,7 +443,7 @@ bool RenderBackendService::endRenderBatch() {
     }
 
     if (nullptr == m_currentPass) {
-        m_currentPass = new PassData("defaultPass");
+        m_currentPass = new PassData("defaultPass", nullptr );
     }
     
     if (-1 == hasBatch(m_currentBatch->m_id, m_currentPass->m_geoBatches)) {

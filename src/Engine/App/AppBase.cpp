@@ -189,7 +189,7 @@ void AppBase::requestNextFrame() {
 
     m_world->draw( m_rbService );
     if (nullptr != m_uiScreen) {
-        m_uiRenderer->render( m_uiScreen, m_rbService );
+        m_uiRenderer->render( m_world->getActiveStage(), m_uiScreen, m_rbService );
     }
     m_rbService->update();
 }
@@ -433,7 +433,7 @@ void AppBase::onUpdate() {
     }
 
     if (nullptr != m_uiRenderer && nullptr != m_uiScreen) {
-        m_uiRenderer->render(m_uiScreen, m_rbService);
+        m_uiRenderer->render(m_world->getActiveStage(), m_uiScreen, m_rbService);
     }
 }
 

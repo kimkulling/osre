@@ -34,6 +34,11 @@ namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	RenderTest
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 class DbgFontRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
     ui32 m_frameCount;

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -23,62 +23,39 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "AbstractRenderTest.h"
 #include "RenderTestUtils.h"
 
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/GeometryBuilder.h>
-#include <osre/Scene/DbgRenderer.h>
-
-#include <iomanip>
-
 namespace OSRE {
 namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
+
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class AABBDbgRenderTest : public AbstractRenderTest {
-    TransformMatrixBlock m_transformMatrix;
-
+class RenderTargetRenderTest : public AbstractRenderTest {
 public:
-    AABBDbgRenderTest()
-    : AbstractRenderTest( "rendertest/AABBDbgRenderTest" ) {
+    RenderTargetRenderTest()
+    : AbstractRenderTest("rendertest/rendertargetrendertest") {
         // empty
     }
 
-    ~AABBDbgRenderTest() override {
-        // empty
-    }
-
-    bool onCreate( RenderBackendService *rbSrv ) override {
-        rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
-
-        TVec3<f32> min( -1, -1, -1 ), max( 1, 1, 1 );
-        Collision::TAABB<f32> aabb( min, max );
-        m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
-        m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, glm::vec3(.5, .5, .5));
-        Scene::DbgRenderer::getInstance()->renderAABB(m_transformMatrix.m_model, aabb );
-
+protected:
+    bool onCreate( RenderBackendService *rbSrv) override {
         return true;
     }
 
-    bool onRender( RenderBackendService *rbSrv ) override {
-        rbSrv->beginPass(PipelinePass::getPassNameById( DbgPassId ));
-        rbSrv->beginRenderBatch("dbgFontBatch");
-                
-        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
-        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
-                
-        rbSrv->endRenderBatch();
-        rbSrv->endPass();
+    bool onDestroy( RenderBackendService *rbSrv) override {
+        return true;
+    }
 
+    bool onRender( RenderBackendService *rbSrv) override {
         return true;
     }
 };
 
-ATTACH_RENDERTEST( AABBDbgRenderTest )
+ATTACH_RENDERTEST(RenderTargetRenderTest)
 
 } // Namespace RenderTest
 } // Namespace OSRE

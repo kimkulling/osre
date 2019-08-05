@@ -39,6 +39,7 @@ namespace RenderBackend {
 
 // Forward declarations
 struct UniformVar;
+struct FrameBuffer;
 
 class Mesh;
 class Shader;
@@ -448,7 +449,6 @@ struct OSRE_EXPORT Texture {
 
 static const ui32 MaxShaderTypes = static_cast<ui32>( ShaderType::NumShaderTypes );
 
-
 static const ui32 MaxMatColorType = static_cast<ui32>( MaterialColorType::NumMaterialColorTypes );
 
 using ShaderSourceArray = CPPCore::TStaticArray<String, MaxShaderTypes>;
@@ -700,17 +700,19 @@ struct GeoBatchData {
         // empty
     }
 
-    MeshEntry *getMeshEntryByName(const c8 *name);
+    MeshEntry  *getMeshEntryByName(const c8 *name);
     UniformVar *getVarByName(const c8 *name);
 };
 
 struct PassData {
     const c8 *m_id;
+    FrameBuffer *m_renderTarget;
     CPPCore::TArray<GeoBatchData*> m_geoBatches;
     bool m_isDirty;
 
-    PassData(const c8 *id)
+    PassData(const c8 *id, FrameBuffer *fb )
     : m_id(id)
+    , m_renderTarget( fb )
     , m_geoBatches()
     , m_isDirty( true ) {
         // empty
@@ -873,6 +875,27 @@ struct Frame {
     Frame(const Frame &) = delete;
     Frame(Frame &&) = delete;
     Frame& operator = (const Frame &) = delete;
+};
+
+struct FrameBuffer {
+    i32 m_width;
+    i32 m_height;
+    i32 m_depth;
+
+    FrameBuffer(i32 w, i32 h, i32 d)
+    : m_width(w)
+    , m_height(h)
+    , m_depth(d) {
+        // empty
+    }
+
+    ~FrameBuffer() {
+        // empty
+    }
+
+    FrameBuffer(const FrameBuffer&) = delete;
+    FrameBuffer(FrameBuffer&&) = delete;
+    FrameBuffer& operator = (const FrameBuffer&) = delete;
 };
 
 } // Namespace RenderBackend

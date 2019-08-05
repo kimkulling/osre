@@ -24,6 +24,7 @@ SET ( rendertest_src
 	src/RenderBufferAccessTest.cpp
 	src/StaticTextRenderTest.cpp
 	src/SwitchCmdBufferRenderTest.cpp
+	src/RenderTargetRenderTest.cpp
     src/RenderTestSuite.h
     src/RenderTestUtils.h
     src/main.cpp

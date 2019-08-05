@@ -35,6 +35,11 @@ namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	RenderTest
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 class GeoModelMatrixRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
 

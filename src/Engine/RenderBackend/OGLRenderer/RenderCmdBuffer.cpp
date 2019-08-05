@@ -47,7 +47,7 @@ RenderCmdBuffer::RenderCmdBuffer( OGLRenderBackend *renderBackend, AbstractOGLRe
     OSRE_ASSERT( nullptr != m_renderCtx );
     OSRE_ASSERT( nullptr != m_pipeline );
 
-    m_clearState.m_state =  (i32) ClearState::ClearBitType::ColorBit | (int) ClearState::ClearBitType::DepthBit;
+    m_clearState.m_state =  (i32) ClearState::ClearBitType::ColorBit | (i32) ClearState::ClearBitType::DepthBit;
 }
 
 RenderCmdBuffer::~RenderCmdBuffer() {

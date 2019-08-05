@@ -79,6 +79,8 @@ public:
     OGLRenderBackend();
     /// The class destructor.
     ~OGLRenderBackend();
+    /// 
+    void enumerateGPUCaps();
     /// Will set the requested global matrix for the frame.
     void setMatrix( MatrixType type, const glm::mat4 &mat );
     /// All matrix values will be applied to the current frame.

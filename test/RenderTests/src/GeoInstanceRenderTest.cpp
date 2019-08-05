@@ -73,7 +73,7 @@ const String FsSrc =
     "}\n";
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup	Test
+///	@ingroup	RenderTest
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
@@ -88,7 +88,9 @@ public:
     : AbstractRenderTest( "rendertest/geoinstancerendertest" )
     , m_angle( 0.02f )
     , m_transformMatrix() {
-        // empty
+        for (ui32 i = 0; i < NumInstances; ++i) {
+            m_mat[i] = glm::mat4(1.0f);
+        }
     } 
 
     virtual ~GeoInstanceRenderTest() {

@@ -70,10 +70,7 @@ OGLRenderBackend::OGLRenderBackend()
 , m_oglCapabilities( nullptr )
 , m_framebuffers() {
     m_fpState = new RenderStates;
-    m_oglCapabilities = new OGLCapabilities;
-    glGetFloatv( GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &m_oglCapabilities->m_maxAniso );
-    i32 mask;
-    glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &mask );
+    enumerateGPUCaps();
 }
 
 OGLRenderBackend::~OGLRenderBackend( ) {
@@ -90,6 +87,12 @@ OGLRenderBackend::~OGLRenderBackend( ) {
     releaseAllBuffers();
     releaseAllParameters();
     releaseAllPrimitiveGroups();
+}
+
+void OGLRenderBackend::enumerateGPUCaps() {
+    m_oglCapabilities = new OGLCapabilities;
+    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &m_oglCapabilities->m_maxAniso);
+    glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &m_oglCapabilities->m_contextMask);
 }
 
 void OGLRenderBackend::setMatrix( MatrixType type, const glm::mat4 &mat ) {
@@ -515,21 +518,24 @@ OGLShader *OGLRenderBackend::createShader( const String &name, Shader *shaderInf
     if( shaderInfo ) {
         bool result( false );
         if( !shaderInfo->m_src[ static_cast<int>( ShaderType::SH_VertexShaderType ) ].empty() ) {
-            result = oglShader->loadFromSource( ShaderType::SH_VertexShaderType, shaderInfo->m_src[ static_cast<int>( ShaderType::SH_VertexShaderType ) ] );
+            result = oglShader->loadFromSource( ShaderType::SH_VertexShaderType, 
+                shaderInfo->m_src[ static_cast<int>( ShaderType::SH_VertexShaderType ) ] );
             if( !result ) {
                 osre_error( Tag, "Error while compiling VertexShader." );
             }
         }
 
         if( !shaderInfo->m_src[ static_cast<int>( ShaderType::SH_FragmentShaderType ) ].empty( ) ) {
-            result = oglShader->loadFromSource( ShaderType::SH_FragmentShaderType, shaderInfo->m_src[ static_cast<int>( ShaderType::SH_FragmentShaderType ) ] );
+            result = oglShader->loadFromSource( ShaderType::SH_FragmentShaderType, 
+                shaderInfo->m_src[ static_cast<int>( ShaderType::SH_FragmentShaderType ) ] );
             if( !result ) {
                 osre_error( Tag, "Error while compiling FragmentShader." );
             }
         }
 
         if( !shaderInfo->m_src[ static_cast<int>( ShaderType::SH_GeometryShaderType ) ].empty( ) ) {
-            result = oglShader->loadFromSource( ShaderType::SH_GeometryShaderType, shaderInfo->m_src[ static_cast<int>( ShaderType::SH_GeometryShaderType ) ] );
+            result = oglShader->loadFromSource( ShaderType::SH_GeometryShaderType, 
+                shaderInfo->m_src[ static_cast<int>( ShaderType::SH_GeometryShaderType ) ] );
             if( !result ) {
                 osre_error( Tag, "Error while compiling GeometryShader." );
             }
@@ -561,8 +567,8 @@ OGLShader *OGLRenderBackend::getShader( const String &name ) {
 }
 
 bool OGLRenderBackend::useShader( OGLShader *shader ) {
-    // shader already in use
     if ( m_shaderInUse == shader ) {
+        // shader already in use
         return true;
     }
 

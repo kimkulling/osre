@@ -233,7 +233,13 @@ struct DrawPrimitivesCmdData {
 
 struct OGLCapabilities {
     GLfloat m_maxAniso;
+    i32     m_contextMask;
 
+    OGLCapabilities()
+    : m_maxAniso(0.0f)
+    , m_contextMask(0) {
+        // empty
+    }
 };
 
 struct OGLFrameBuffer {

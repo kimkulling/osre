@@ -33,6 +33,7 @@ namespace OSRE {
 namespace UI {
 
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Scene;
 
 UiRenderer::UiRenderer() {
     // empty
@@ -42,7 +43,10 @@ UiRenderer::~UiRenderer() {
     // empty
 }
 
-void UiRenderer::render( UI::Screen *screen, RenderBackendService *rbService ) {
+void UiRenderer::render( Stage* stage, Screen *screen, RenderBackendService *rbService ) {
+    if (nullptr == screen) {
+        return;
+    }
     UiRenderCmdCache cache;
     screen->render( cache, rbService );
 
@@ -63,13 +67,11 @@ void UiRenderer::render( UI::Screen *screen, RenderBackendService *rbService ) {
         const UiVertexCache &currentVC = currentCmd->m_vc;
         const UiIndexCache &currentIC = currentCmd->m_ic;
         if (currentVC.numVertices() > 0) {
-            for (ui32 j = 0; j < currentVC.numVertices(); ++j) {
-                vc.add(currentVC.m_cache[j]);
-            }
-
-            for (ui32 j = 0; j < currentIC.numIndices(); ++j) {
-                ic.add(currentIC.m_cache[j]);
-            }
+            // Copy all vertices
+            vc.add( &currentVC.m_cache[0], currentVC.numVertices());
+            
+            // Copy all indices
+            ic.add( &currentIC.m_cache[0], currentIC.numIndices());
         }
     }
 

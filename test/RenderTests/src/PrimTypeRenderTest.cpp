@@ -42,6 +42,11 @@ namespace RenderTest {
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	RenderTest
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 class PrimTypeRenderTest : public AbstractRenderTest {
     static const ui32 NumPoints = 3;
     static const ui32 PtNumIndices = 3;

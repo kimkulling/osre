@@ -33,6 +33,11 @@ namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	RenderTest
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 class StaticTextRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
     ui32 m_frameCount;
