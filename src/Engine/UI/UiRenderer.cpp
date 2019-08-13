@@ -44,7 +44,7 @@ UiRenderer::~UiRenderer() {
     // empty
 }
 
-void UiRenderer::render( Stage* stage, Screen *screen, RenderBackendService *rbService ) {
+void UiRenderer::render( Stage* stage, Screen *screen, RenderBackendService * rbSrv) {
     if (nullptr == screen) {
         return;
     }

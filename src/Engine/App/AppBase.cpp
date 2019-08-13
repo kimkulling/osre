@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AppBase.h>
 #include <osre/App/ServiceProvider.h>
 #include <osre/Common/TObjPtr.h>
+#include <osre/Common/Environment.h>
 #include <osre/IO/IOService.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Platform/PlatformInterface.h>
@@ -95,6 +96,7 @@ private:
 AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
 : m_state( State::Uninited )
 , m_argParser( argc, argv, supportedArgs, desc )
+, m_environment( nullptr )
 , m_settings( nullptr )
 , m_platformInterface( nullptr )
 , m_timer( nullptr )
@@ -322,7 +324,8 @@ bool AppBase::onCreate() {
     }
 
     m_ids = new Common::Ids;
-
+    m_environment = new Common::Environment;
+    
     // create the asset registry
     Assets::AssetRegistry *registry( Assets::AssetRegistry::create() );
     OSRE_ASSERT( nullptr!=registry );
@@ -356,6 +359,10 @@ bool AppBase::onCreate() {
         m_rbService = nullptr;
         return false;
     }
+
+    const String &api = m_rbService->getSettings()->getString(Properties::Settings::RenderAPI);
+    m_environment->addStrVar("api", api.c_str());
+
     m_platformInterface->getPlatformEventHandler()->setRenderBackendService( m_rbService );
     
     // enable render-back-end

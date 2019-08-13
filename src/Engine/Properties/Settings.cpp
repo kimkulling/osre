@@ -87,7 +87,7 @@ bool Settings::setString( Settings::ConfigKey key, const String &strValue ) {
     return true;
 }
 
-String Settings::getString( ConfigKey key ) {
+String Settings::getString( ConfigKey key ) const {
     const CPPCore::Variant &v = get( key );
     return v.getString();
 }
@@ -104,7 +104,7 @@ bool Settings::setInt( ConfigKey key, i32 intValue ) {
     return true;
 }
 
-i32 Settings::getInt( ConfigKey key ) {
+i32 Settings::getInt( ConfigKey key ) const {
     const CPPCore::Variant &v = get( key );
     return v.getInt();
 }
@@ -121,7 +121,7 @@ bool Settings::setBool( ConfigKey key, bool val ) {
     return true;
 }
 
-bool Settings::getBool( ConfigKey key ) {
+bool Settings::getBool( ConfigKey key ) const {
     const CPPCore::Variant &v = get( key );
     return v.getBool();
 }
@@ -137,7 +137,7 @@ bool Settings::setFloat( ConfigKey key, f32 floatValue ) {
     return true;
 }
 
-f32 Settings::getFloat( ConfigKey key ) {
+f32 Settings::getFloat( ConfigKey key ) const {
     const CPPCore::Variant &v = get( key );
     return v.getFloat();
 }

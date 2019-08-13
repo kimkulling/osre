@@ -155,6 +155,10 @@ View *Stage::addView( const String &name, Node *parent ) {
 }
 
 void Stage::clear() {
+    if (nullptr == m_root) {
+        return;
+    }
+
     releaseChildNodes( m_root );
 }
 

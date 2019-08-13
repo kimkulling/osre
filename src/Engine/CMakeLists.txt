@@ -68,6 +68,7 @@ SET( assets_src
 #==============================================================================
 SET( common_inc
 	${HEADER_PATH}/Common/Common.h
+	${HEADER_PATH}/Common/Environment.h
     ${HEADER_PATH}/Common/TCommand.h
     ${HEADER_PATH}/Common/AbstractCodec.h
     ${HEADER_PATH}/Common/AbstractEventHandler.h
@@ -96,6 +97,7 @@ SET( common_src
     Common/DateTime.cpp
     Common/Event.cpp
     Common/EventTriggerer.cpp
+	Common/Environment.cpp
     Common/Ids.cpp
     Common/Logger.cpp
     Common/Object.cpp

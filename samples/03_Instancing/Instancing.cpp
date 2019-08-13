@@ -37,6 +37,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/DbgRenderer.h>
 #include <osre/Scene/Component.h>
+#include <osre/Collision/GeometryProcessor.h>
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>
 
@@ -99,11 +101,15 @@ protected:
             view->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.0001f, 1000.f);
 
             Scene::MeshBuilder meshBuilder;
-            meshBuilder.allocCube(VertexType::RenderVertex, 1, 2, 3, BufferAccessType::ReadWrite);
-
-            RenderBackend::Mesh* mesh = meshBuilder.getMesh();
+            RenderBackend::Mesh* mesh = meshBuilder.allocCube(VertexType::RenderVertex, 1, 2, 3, BufferAccessType::ReadWrite).getMesh();
             if (nullptr != mesh) {
                 geoNode->addMesh(mesh);
+                m_stage->setRoot(geoNode);
+                Collision::GeometryProcessor process;
+                process.addGeo(mesh);
+                Scene::Node::AABB aabb = process.getAABB();
+                geoNode->setAABB(aabb);
+                view->observeBoundingBox(aabb);
             }
         }
 
