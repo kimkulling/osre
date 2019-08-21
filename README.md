@@ -1,15 +1,15 @@
 # OSRE - Just another Open Source Render Engine
 
-Just another open-source renderer. Feel free to play around with it!
+Just another open-source renderer made by me for just playing around.
 
 The core-features:
-- Multithreaded rendering + instanced-rendering
+- Multithreaded rendering 
 - Platform abstraction-layer
 - OS-independent task-support to make multi-threaded rendering more easy
 - Model-import provided by Asset-Importer-Lib ( see https://github.com/assimp/assimp )
 - Bitmap-Font-Rendering
 - Simple scenegraph-module
-- Simple UI-module providing Panels Buttons and some more stuff
+- Simple UI-module providing Panels Buttons and some more stuff ( under construction )
 - CMake base build environment
 
 Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
