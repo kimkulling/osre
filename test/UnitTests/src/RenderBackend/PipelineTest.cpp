@@ -59,7 +59,7 @@ TEST_F( PipelineTest, create_success ) {
 TEST_F( PipelineTest, accessPass_success ) {
     Pipeline pipeline;
 
-    ui32 numPasses = pipeline.getNumPasses();
+    size_t numPasses = pipeline.getNumPasses();
     EXPECT_EQ( 0u, numPasses );
     pipeline.addPass( m_pass1 );
     numPasses = pipeline.getNumPasses();
@@ -75,7 +75,7 @@ TEST_F( PipelineTest, iterateThroughPasses_success ) {
     pipeline.addPass( m_pass1 );
     pipeline.addPass( m_pass2 );
 
-    ui32 numPasses = pipeline.beginFrame();
+    size_t numPasses = pipeline.beginFrame();
     EXPECT_EQ( 2u, numPasses );
     for ( ui32 i = 0; i < numPasses; i++ ) {
         PipelinePass *pass = pipeline.beginPass( i );

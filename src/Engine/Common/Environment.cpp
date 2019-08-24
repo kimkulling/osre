@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,45 +20,58 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/Common/AbstractProcessor.h>
-#include <osre/Collision/TAABB.h>
-#include <osre/Scene/Node.h>
-
-#include <cppcore/Container/TArray.h>
+#include <osre/Common/Environment.h>
+#include <osre/common/StringUtils.h>
 
 namespace OSRE {
+namespace Common {
 
-namespace RenderBackend {
-    class Mesh;
+Environment::Environment() 
+: mEnvVariables() {
+    // empty
 }
 
-namespace Collision {
-        
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT GeometryProcessor : public Common::AbstractProcessor {
-public:
-    using GeoArray = CPPCore::TArray<RenderBackend::Mesh*>;
+Environment::~Environment() {
+    // empty
+}
 
-    GeometryProcessor();
-    ~GeometryProcessor();
-    bool execute() override;
-    void addGeo( RenderBackend::Mesh *geo );
-    const Scene::Node::AABB &getAABB() const;
+EnvVar* Environment::findVar(const c8* varName) const {
+    if (nullptr == varName) {
+        return nullptr;
+    }
+    EnvVar* var(nullptr);
+    if (mEnvVariables.getValue(StringUtils::hashName(varName), var)) {
+        return var;
+    }
 
-private:
-    void handleGeometry( RenderBackend::Mesh *geo );
+    return nullptr;
+}
 
-private:
-    GeoArray m_geoArray;
-    Scene::Node::AABB m_aabb;
-    i32 m_dirty;
-};
+void Environment::addIntVar(const c8* name, int value) {
+    if (nullptr != findVar(name)) {
+        return;
+    }
 
-} // Namespace Collision
+    EnvVar* var = new EnvVar(name, value);
+    mEnvVariables.insert(StringUtils::hashName(var->m_name.c_str()), var);
+}
+
+void Environment::addStrVar(const c8* name, const c8* value) {
+    if (nullptr != findVar(name)) {
+        return;
+    }
+
+    EnvVar* var = new EnvVar(name, value);
+    mEnvVariables.insert(StringUtils::hashName(name), var );
+}
+
+void Environment::addVariable( EnvVar *var) {
+    if (nullptr == findVar(var->m_name.c_str())) {
+        return;
+    }
+
+    mEnvVariables.insert(StringUtils::hashName(var->m_name.c_str()), var);
+}
+
+} // Namespace Common
 } // Namespace OSRE

@@ -26,11 +26,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-static const c8* RenderPassNames[] = {
-    "RenderPass",
-    "UiPass",
-    "DbgPass"
-};
+    namespace Details {
+        static const c8* RenderPassNames[] = {
+            "RenderPass",
+            "UiPass",
+            "DbgPass"
+        };
+    } // Namespace Details
 
 PipelinePass::PipelinePass(ui32 id, Shader *shader )
 : m_id(id )
@@ -114,7 +116,7 @@ const c8 *PipelinePass::getPassNameById( ui32 id ) {
         return nullptr;
     }
 
-    return RenderPassNames[ id ];
+    return Details::RenderPassNames[ id ];
 }
 
 bool PipelinePass::operator == ( const PipelinePass &rhs ) const {
@@ -150,17 +152,17 @@ void Pipeline::addPass( PipelinePass *pass ) {
     m_passes.add( pass );
 }
 
-ui32 Pipeline::getNumPasses() const {
+size_t Pipeline::getNumPasses() const {
     return m_passes.size();
 }
 
-ui32 Pipeline::beginFrame() {
+size_t Pipeline::beginFrame() {
     if ( m_inFrame ) {
-        return 0;
+        return 0L;
     }
 
     if ( m_passes.isEmpty() ) {
-        return 0;
+        return 0L;
     }
 
     m_inFrame = true;

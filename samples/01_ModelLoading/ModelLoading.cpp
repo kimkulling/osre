@@ -103,8 +103,6 @@ protected:
         AssimpWrapper assimpWrapper(*getIdContainer());
         IO::Uri modelLoc( ModelPath );
         if ( assimpWrapper.importAsset( modelLoc, 0 ) ) {
-            Model *model = assimpWrapper.getModel();
-            
             RenderBackendService *rbSrv( getRenderBackendService() );
             if (nullptr != rbSrv) {
                 Platform::AbstractWindow *rootWindow(getRootWindow());
@@ -119,6 +117,7 @@ protected:
 
                 const Rect2ui &windowsRect = rootWindow->getWindowsRect();
                 view->setProjectionParameters( 60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.0001f, 1000.f );
+                Model* model = assimpWrapper.getModel();
                 view->observeBoundingBox( model->getAABB() );
 
                 m_stage->setRoot( model->getRootNode() );
