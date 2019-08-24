@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/TextBase.h>
 #include <osre/UI/Image.h>
 #include <osre/UI/Panel.h>
-#include <osre/UI/Screen.h>
+#include <osre/UI/Canvas.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Debugging/osre_debugging.h>
 
@@ -71,10 +71,10 @@ Widget *UiItemFactory::create( WidgetType type, const String &uiName, Widget *pa
         case WidgetType::Panel:
             item = new Panel( uiName, 0, parent );
             break;
-        case WidgetType::Screen: {
+        case WidgetType::Canvas: {
                 const ui32 w( m_surface->getProperties()->m_width );
                 const ui32 h( m_surface->getProperties()->m_height );
-                item = new Screen( uiName, parent, 0, 0, w, h );
+                item = new Canvas( uiName, 0, 0, w, h );
             }
             break;
 

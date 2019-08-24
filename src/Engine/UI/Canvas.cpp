@@ -20,7 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/UI/Screen.h>
+#include <osre/UI/Canvas.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -33,17 +33,17 @@ namespace UI {
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Platform;
 
-Screen::Screen( const String &name, Widget *parent, ui32 x, ui32 y, ui32 width, ui32 height )
-: Widget( name, parent )
+Canvas::Canvas( const String &name, ui32 x, ui32 y, ui32 width, ui32 height )
+: Widget( name, nullptr )
 , m_surface( nullptr ) {
     Widget::setRect(x, y, width, height);
 }
 
-Screen::~Screen() {
+Canvas::~Canvas() {
     m_surface = nullptr;
 }
 
-void Screen::setSurface( AbstractWindow *surface ) {
+void Canvas::setSurface( AbstractWindow *surface ) {
     if ( surface == m_surface ) {
         return;
     }
@@ -63,15 +63,15 @@ void Screen::setSurface( AbstractWindow *surface ) {
     WidgetCoordMapping::init( dim );
 }
 
-const TransformMatrixBlock &Screen::getTransform() const {
+const TransformMatrixBlock &Canvas::getTransform() const {
     return m_transformMatrix;
 }
 
-void Screen::onLayout() {
+void Canvas::onLayout() {
 
 }
 
-void Screen::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
+void Canvas::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
     if ( nullptr == m_surface ) {
         return;
     }
@@ -92,7 +92,7 @@ void Screen::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *r
     }
 }
 
-void Screen::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
+void Canvas::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
     Rect2ui dim( x, y, w, h );
     WidgetCoordMapping::init( dim );
 }

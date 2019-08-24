@@ -23,7 +23,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/UI/Widget.h>
+#include <osre/Common/TObjPtr.h>
 #include <osre/RenderBackend/RenderCommon.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -46,10 +48,10 @@ namespace UI {
 ///
 ///	@brief  
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Screen : public Widget {
+class OSRE_EXPORT Canvas : public Widget {
 public:
-    Screen( const String &name, Widget *parent, ui32 x, ui32 y, ui32 width, ui32 height );
-    virtual ~Screen();
+    Canvas( const String &name, ui32 x, ui32 y, ui32 width, ui32 height );
+    virtual ~Canvas();
     virtual void setSurface( Platform::AbstractWindow *surface );
     const RenderBackend::TransformMatrixBlock &getTransform() const;
 

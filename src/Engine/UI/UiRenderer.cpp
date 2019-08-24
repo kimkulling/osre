@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/UI/UiRenderer.h>
 #include <osre/RenderBackend/Pipeline.h>
-#include <osre/UI/Screen.h>
+#include <osre/UI/Canvas.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
@@ -44,18 +44,18 @@ UiRenderer::~UiRenderer() {
     // empty
 }
 
-void UiRenderer::render( Stage* stage, Screen *screen, RenderBackendService *rbService ) {
-    if (nullptr == screen) {
+void UiRenderer::render(  Canvas *canvas, RenderBackendService * rbSrv) {
+    if (nullptr == canvas) {
         return;
     }
 
     UiRenderCmdCache cache;
-    screen->render( cache, rbSrv );
+    canvas->render( cache, rbSrv );
     if (cache.isEmpty()) {
         return;
     }
 
-    const TransformMatrixBlock &tmBlock = screen->getTransform();
+    const TransformMatrixBlock &tmBlock = canvas->getTransform();
 
     rbSrv->beginPass(PipelinePass::getPassNameById(UiPassId));
     rbSrv->beginRenderBatch("b1");

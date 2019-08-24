@@ -66,7 +66,7 @@ public:
 
     /// @brief  Will return the number of stages in the world. 
     /// @return The number of stages.
-    ui32 getNumStages() const;
+    size_t getNumStages() const;
 
     /// @brief  Returns the stage at the given index.
     /// @param  i       [in] The index for the stage.
@@ -93,7 +93,7 @@ public:
 
     /// @brief  Will return the number of assigned views.
     /// @return The number of assigned views.
-    ui32 getNumViews() const;
+    size_t getNumViews() const;
 
     /// @brief  Will return the view at the given index.
     /// @param  i       [in] The index.

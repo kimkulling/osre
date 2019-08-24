@@ -34,10 +34,11 @@ using namespace ::OSRE::RenderBackend;
 static const c8 *Tag = "View";
 
 View::View(const String &name, Common::Ids &ids, Node *parent )
-: Node( name, ids, RenderCompRequest::NoRenderComp, TransformCompRequest::TransformCompRequested, parent )
+: Node( name, ids, parent )
 , m_fov( 60.0f )
 , m_w( 0.0f )
 , m_h( 0.0f )
+, m_near( 0.0001f )
 , m_far( 1000.0f )
 , m_observedNode( nullptr )
 , m_eye( 1, 1, 1 )

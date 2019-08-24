@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/UI/Screen.h>
+#include <osre/UI/Canvas.h>
 #include <osre/UI/ButtonBase.h>
 #include <osre/UI/TextBase.h>
 #include <osre/UI/Panel.h>
@@ -42,13 +42,13 @@ static const c8 Tag[] = "ModelLoadingApp";
 
 // The example application, will create the render environment and render a simple triangle onto it
 class UIDemoApp : public App::AppBase {
-    Screen *m_screen;
+    Canvas *m_canvas;
     TransformMatrixBlock m_transformMatrix;
 
 public:
     UIDemoApp( int argc, char *argv[] )
     : AppBase( argc, argv )
-    , m_screen( nullptr )
+    , m_canvas( nullptr )
     , m_transformMatrix() {
         // empty
     }
@@ -84,9 +84,9 @@ protected:
         Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
 #endif
 
-        m_screen = AppBase::createScreen( "UiDemo" );
+        m_canvas = AppBase::createScreen( "UiDemo" );
 
-        Panel *panel = new Panel( "panel", UiFlags::Resizable, m_screen );
+        Panel *panel = new Panel( "panel", UiFlags::Resizable, m_canvas );
 //        panel->setRect( 10, 10, 500, 500 );
         ButtonBase *btnOpenFile = new ButtonBase( "Open file", nullptr );
         btnOpenFile->registerCallback(WidgetState::Pressed, UiFunctor::Make(this, &UIDemoApp::openFileCallback));
@@ -98,7 +98,7 @@ protected:
         btnQuit->setRect( 400, 20, 100, 20 );
         btnQuit->registerCallback(WidgetState::Pressed, UiFunctor::Make( this, &UIDemoApp::quitCallback ) );
 
-        TextBase *tb = new TextBase( "test", m_screen);
+        TextBase *tb = new TextBase( "test", m_canvas);
         tb->setLabel( "Test" );
         tb->setRect( 80, 20, 400, 60 );
 

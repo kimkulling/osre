@@ -36,7 +36,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 // Forward declarations
-
 namespace Assets {
     class Model;
 }
@@ -65,19 +64,12 @@ public:
 
     /// The type of component
     enum class ComponentType {
-        RenderComponentType,    ///< Renderable component
-        TransformComponentType, ///< Transformable component
-        CollisionComponent      ///< For collision 
-    };
-
-    enum class RenderCompRequest {
-        RenderCompRequested,
-        NoRenderComp
-    };
-
-    enum class TransformCompRequest {
-        TransformCompRequested,
-        NoTransformComp
+        RenderComponentType,     ///< Renderable component
+        TransformComponentType,  ///< Transformable component
+        CollisionComponent,      ///< For collision
+        ScriptComponent,         ///< For scripting events 
+        MaxNumComponents,
+        InvalidComponent
     };
 
     enum class TraverseMode {
@@ -86,25 +78,25 @@ public:
     };
 
 public:
-    Node( const String &name, Common::Ids &ids, RenderCompRequest renderEnabled, 
-            TransformCompRequest transformEnabled, Node *parent = nullptr );
+    Node( const String &name, Common::Ids &ids, Node *parent = nullptr );
     virtual ~Node();
     virtual void setParent( Node *parent );
     virtual Node *getParent() const;
     virtual void addChild( Node *child );
     virtual bool removeChild( const String &name, TraverseMode mode );
     virtual Node *findChild( const String &name ) const;
-    virtual ui32 getNumChildren() const;
+    virtual size_t getNumChildren() const;
     virtual Node *getChildAt( ui32 idx ) const;
     virtual void releaseChildren();
     virtual void addModel( Assets::Model *model );
     virtual void addMesh( RenderBackend::Mesh *geo );
-    virtual ui32 getNumMeshes() const;
+    virtual size_t getNumMeshes() const;
     virtual RenderBackend::Mesh *getMeshAt(ui32 idx) const;
     virtual void update(Time dt);
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
     virtual void setAABB(const AABB &aabb);
     virtual const AABB &getAABB() const;
+    virtual void addComponent(Component *newComp);
     virtual Component *getComponent( ComponentType type ) const;
     virtual void setActive( bool isActive );
     virtual bool isActive() const;
@@ -152,8 +144,7 @@ const Node::AABB &Node::getAABB() const {
 
 class OSRE_EXPORT LightNode : public Node {
 public:
-    LightNode(const String &name, Common::Ids &ids, RenderCompRequest renderEnabled,
-        TransformCompRequest transformEnabled, Node *parent = nullptr);
+    LightNode(const String &name, Common::Ids &ids, Node *parent = nullptr);
     ~LightNode();
     void setLight(const RenderBackend::Light &light);
     const RenderBackend::Light &getLight() const;

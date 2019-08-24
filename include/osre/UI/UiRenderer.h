@@ -32,10 +32,6 @@ namespace RenderBackend {
     class RenderBackendService;
 }
 
-namespace Scene {
-    class Stage;
-}
-
 namespace UI {
 
 //-------------------------------------------------------------------------------------------------
@@ -47,7 +43,7 @@ class OSRE_EXPORT UiRenderer {
 public:
     UiRenderer();
     ~UiRenderer();
-    void render( Scene::Stage *stage, Screen *screen, RenderBackend::RenderBackendService *rbService );
+    void render( Canvas *canvas, RenderBackend::RenderBackendService *rbService );
 };
 
 } // Namespace UI

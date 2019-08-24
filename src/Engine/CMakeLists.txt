@@ -316,7 +316,8 @@ SET( scene_inc
     ${HEADER_PATH}/Scene/GeometryBuilder.h
     ${HEADER_PATH}/Scene/MaterialBuilder.h
     ${HEADER_PATH}/Scene/Node.h
-    ${HEADER_PATH}/Scene/Stage.h
+    ${HEADER_PATH}/Scene/Node2D.h
+	${HEADER_PATH}/Scene/Stage.h
     ${HEADER_PATH}/Scene/TrackBall.h
     ${HEADER_PATH}/Scene/View.h
     ${HEADER_PATH}/Scene/World.h
@@ -329,6 +330,7 @@ SET( scene_src
     Scene/GeometryBuilder.cpp
     Scene/MaterialBuilder.cpp
     Scene/Node.cpp
+	Scene/Node2D.cpp
     Scene/Stage.cpp
     Scene/TrackBall.cpp
     Scene/View.cpp
@@ -415,7 +417,7 @@ SET( ui_src
     UI/UIRenderUtils.h
     UI/ButtonBase.cpp
     UI/Panel.cpp
-    UI/Screen.cpp
+    UI/Canvas.cpp
     UI/TextBase.cpp
     UI/UiItemFactory.cpp
 )
@@ -426,7 +428,7 @@ SET( ui_inc
     ${HEADER_PATH}/UI/Widget.h
     ${HEADER_PATH}/UI/ButtonBase.h
     ${HEADER_PATH}/UI/Panel.h
-    ${HEADER_PATH}/UI/Screen.h
+    ${HEADER_PATH}/UI/Canvas.h
 	${HEADER_PATH}/UI/TextBase.h
 	${HEADER_PATH}/UI/UiRenderer.h
 	${HEADER_PATH}/UI/UiItemFactory.h

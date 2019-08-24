@@ -36,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/World.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Assets/AssetRegistry.h>
-#include <osre/UI/Screen.h>
+#include <osre/UI/Canvas.h>
 #include <osre/UI/UiItemFactory.h>
 #include <osre/UI/UiRenderer.h>
 
@@ -67,11 +67,11 @@ public:
         // empty
     }
 
-    void setScreen( UI::Screen *screen ) {
+    void setScreen( UI::Canvas *screen ) {
         m_uiScreen = screen;
     }
 
-    Screen *getScreen() const {
+    Canvas *getScreen() const {
         return m_uiScreen.getPtr();
     }
 
@@ -89,7 +89,7 @@ public:
     }
 
 private:
-    Common::TObjPtr<UI::Screen> m_uiScreen;
+    Common::TObjPtr<UI::Canvas> m_uiScreen;
 };
 
 AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
@@ -189,7 +189,7 @@ void AppBase::requestNextFrame() {
 
     m_world->draw( m_rbService );
     if (nullptr != m_uiScreen) {
-        m_uiRenderer->render( m_world->getActiveStage(), m_uiScreen, m_rbService );
+        m_uiRenderer->render( m_uiScreen, m_rbService );
     }
     m_rbService->update();
 }
@@ -265,18 +265,18 @@ bool AppBase::shutdownRequested() const {
     return m_shutdownRequested;
 }
 
-UI::Screen *AppBase::createScreen( const String &name ) {
+UI::Canvas *AppBase::createScreen( const String &name ) {
     if ( name.empty() ) {
         return nullptr;
     }
 
-    UI::Screen *newScreen = ( Screen* ) UiItemFactory::getInstance()->create( WidgetType::Screen, name, nullptr );
+    UI::Canvas *newScreen = ( Canvas* ) UiItemFactory::getInstance()->create( WidgetType::Canvas, name, nullptr );
     setUIScreen( newScreen );
 
     return newScreen;
 }
 
-void AppBase::setUIScreen( UI::Screen *uiScreen ) {
+void AppBase::setUIScreen( UI::Canvas *uiScreen ) {
     if ( m_uiScreen != uiScreen ) {
         m_uiScreen = uiScreen;
         AbstractWindow *surface( m_platformInterface->getRootWindow() );
@@ -433,7 +433,7 @@ void AppBase::onUpdate() {
     }
 
     if (nullptr != m_uiRenderer && nullptr != m_uiScreen) {
-        m_uiRenderer->render(m_world->getActiveStage(), m_uiScreen, m_rbService);
+        m_uiRenderer->render( m_uiScreen, m_rbService);
     }
 }
 

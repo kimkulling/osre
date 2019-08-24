@@ -110,7 +110,7 @@ bool World::setActiveStage( const String &stageName ) {
     return false;
 }
 
-ui32 World::getNumStages() const {
+size_t World::getNumStages() const {
     return m_stages.size();
 }
 
@@ -135,7 +135,7 @@ void World::addView( View *view ) {
     m_lookupViews.insert( hash, view );
 }
 
-ui32 World::getNumViews() const {
+size_t World::getNumViews() const {
     return m_views.size();
 }
 
