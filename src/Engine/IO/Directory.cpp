@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -27,6 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifdef OSRE_WINDOWS
 #   include <osre/Platform/Windows/MinWindows.h>
+#else
+#   include <unistd.h>
 #endif // OSRE_WINDOWS
 
 namespace OSRE {
@@ -78,7 +80,7 @@ bool Directory::setCurrentDirectory(const String& absPath) {
 #ifdef OSRE_WINDOWS
     return TRUE == ::SetCurrentDirectory(absPath.c_str());
 #else
-    return 0 == chdir(absPath.c_str());
+    return 0 == ::chdir(absPath.c_str());
 #endif
 }
 
@@ -93,7 +95,7 @@ String Directory::getCurrentDirectory() {
     }
     return "";
 #else
-    buffer = getcwd(buffer, BufferSize);
+    buffer = ::getcwd(buffer, BufferSize);
     String path(buffer);
     return path;
 #endif
@@ -107,7 +109,7 @@ bool Directory::createDirectory(const c8* name) {
 #ifdef OSRE_WINDOWS
     return TRUE == ::CreateDirectory(name, nullptr);
 #else
-    return 0 == mkdir(name);
+    return 0 == ::mkdir(name);
 #endif
 }
 
