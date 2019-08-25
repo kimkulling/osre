@@ -109,7 +109,7 @@ bool Directory::createDirectory(const c8* name) {
 #ifdef OSRE_WINDOWS
     return TRUE == ::CreateDirectory(name, nullptr);
 #else
-    return 0 == ::mkdir(name);
+    return 0 == ::mkdir(name, 0777);
 #endif
 }
 
