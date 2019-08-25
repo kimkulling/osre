@@ -73,6 +73,8 @@ EnvVar::Type EnvVar::getType() const {
             return EnvVar::Int;
         case  ::CPPCore::Variant::String:
             return EnvVar::Str;
+        default:
+            break;
     }
     return EnvVar::None;
 }
