@@ -16,10 +16,7 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 
 # Supported platforms:
 - Windows ( [![Build status](https://ci.appveyor.com/api/projects/status/q2ivokgqcit9k5w1/branch/master?svg=true)](https://ci.appveyor.com/project/kimkulling/osre/branch/master) ): 
-  + OpenGL-Renderbackend
-  + Vulkan-Renderbackend
 - Linux ( [![Build Status](https://travis-ci.org/kimkulling/osre.png)](https://travis-ci.org/kimkulling/osre) ): 
-  + OpenGL-Renderbackend
 
 # Static code analysis
 - Coverity Status: [![Coverity Scan Build Status](https://scan.coverity.com/projects/13242/badge.svg)](https://scan.coverity.com/projects/kimkulling-osre)
@@ -102,4 +99,3 @@ This example will show you how to create a window, load a model using assimp and
 This example will show you how to create a simple dialog and add your own callbacks.
 
 [02-UIDemo](https://github.com/kimkulling/osre/tree/master/samples/02_UIDemo)
-  
