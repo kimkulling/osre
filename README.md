@@ -2,20 +2,7 @@
 
 Just another open-source renderer made by me for just playing around.
 
-# Supported platforms:
-.. |AppVeyor| image:: https://ci.appveyor.com/api/projects/status/q2ivokgqcit9k5w1/branch/master?svg=true
-  :target: https://ci.appveyor.com/project/kimkulling/osre/branch/master
-
-.. |TravisCI| image:: https://travis-ci.org/kimkulling/osre.png
-  :target: https://travis-ci.org/kimkulling/osre
-
-========== ==========
-Linux/OSX  Windows
-========== ==========
-|TravisCI| |AppVeyor|
-========== ==========
-
-# The core-features:
+The core-features:
 - Multithreaded rendering 
 - Platform abstraction-layer
 - OS-independent task-support to make multi-threaded rendering more easy
@@ -26,6 +13,10 @@ Linux/OSX  Windows
 - CMake base build environment
 
 Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+# Supported platforms:
+- Windows ( [![Build status](https://ci.appveyor.com/api/projects/status/q2ivokgqcit9k5w1/branch/master?svg=true)](https://ci.appveyor.com/project/kimkulling/osre/branch/master) ): 
+- Linux ( [![Build Status](https://travis-ci.org/kimkulling/osre.png)](https://travis-ci.org/kimkulling/osre) ): 
 
 # Static code analysis
 - Coverity Status: [![Coverity Scan Build Status](https://scan.coverity.com/projects/13242/badge.svg)](https://scan.coverity.com/projects/kimkulling-osre)
@@ -108,4 +99,3 @@ This example will show you how to create a window, load a model using assimp and
 This example will show you how to create a simple dialog and add your own callbacks.
 
 [02-UIDemo](https://github.com/kimkulling/osre/tree/master/samples/02_UIDemo)
-  
