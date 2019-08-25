@@ -104,8 +104,8 @@ AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const Strin
 , m_world( nullptr )
 , m_uiScreen( nullptr )
 , m_uiRenderer( nullptr )
-, m_ids( nullptr )
 , m_mouseEvListener( nullptr )
+, m_ids(nullptr)
 , m_shutdownRequested( false ) {
     m_settings = new Properties::Settings;
     m_settings->setString( Properties::Settings::RenderAPI, "opengl" );

@@ -95,8 +95,8 @@ String Directory::getCurrentDirectory() {
     }
     return "";
 #else
-    buffer = ::getcwd(buffer, BufferLen);
-    String path(buffer);
+    char *b = ::getcwd(buffer, BufferLen);
+    String path( b );
     return path;
 #endif
 }
