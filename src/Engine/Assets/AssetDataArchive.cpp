@@ -42,12 +42,12 @@ namespace Assets {
 using namespace ::OSRE::IO;
 using namespace ::OSRE::Scene;
 
-static const String Tag = "AssetData";
+static const c8 *Tag = "AssetData";
 
 namespace Token {
-    static const String Type = "type";
-    static const String Name = "Name";
-    static const String StageAttrib_ActiveState = "activeStage";
+    static const c8 *Type = "type";
+    static const c8 *Name = "Name";
+    static const c8 *StageAttrib_ActiveState = "activeStage";
 }
 
 AssetDataArchive::AssetDataArchive( i32 majorVersion, i32 minorVersion )
