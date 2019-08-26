@@ -22,8 +22,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Common/osre_common.h>
+
 namespace OSRE {
 namespace Collision {
+
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -33,27 +36,58 @@ namespace Collision {
 template<class T>
 class TQuadTree {
 public:
-    TQuadTree();
-    ~TQuadTree()
+    using Rect  = Common::TRect2D<T>;
+    using Point = Common::TPoint2<T>;
+
+    TQuadTree(const Rect& rc);
+    ~TQuadTree();
+    void add(const Point& pt);
 
 private:
-    struct Node {
-
+    struct QuadNode {
+        Rect m_rect;
+        QuadNode*m_children[4];
+        
+        QuadNode(const Rect &rc) 
+        : m_rect( rc ) {
+            m_children[0] = m_children[1] = m_children[2] = m_children[3] = nullptr;
+        }
+        
+        QuadNode *isIn(const Point& pt) const {
+            if (m_rect.isIn(pt)) {
+                for (ui32 i = 0; i < 4; ++i) {
+                    if (nullptr != m_children[i]) {
+                        return m_children[i]->isIn(pt);
+                    }
+                }
+                
+                return this;
+            }
+        }
     };
+
+    QuadNode*m_root;
 };
 
 template<class T>
 inline
-TQuadTree<T>::TQuadTree() {
-
+TQuadTree<T>::TQuadTree(const Rect &rc)
+: m_root( nullptr ) {
+    m_root = new Node(rc);
 }
 
 template<class T>
 inline
 TQuadTree<T>::~TQuadTree() {
-
+    delete m_root;
+    m_root = nullptr;
 }
 
+template<class T>
+inline
+void TQuadTree<T>::add(const Point& pt) {
+
+}
 } // Namespace Collision
 } // Namespace OSRE
 
