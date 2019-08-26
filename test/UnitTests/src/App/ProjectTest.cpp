@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
 #include <osre/App/Project.h>
+#include <osre/Common/osre_common.h>
 #include <osre/IO/Directory.h>
 
 namespace OSRE {
@@ -68,9 +69,9 @@ TEST_F(ProjectTest, loadsaveTest) {
     //// Load test ////
 
     Project myProject1;
-    i32 major(-1), minor(-1);
+    i32 majorVersion(-1), minorVersion(-1);
     oldPath = Directory::getCurrentDirectory();
-    res = myProject1.load("test", major, minor, 0);
+    res = myProject1.load("test", majorVersion, minorVersion, 0);
     EXPECT_TRUE(res);
     newPath = Directory::getCurrentDirectory();
     EXPECT_EQ(oldPath, newPath);

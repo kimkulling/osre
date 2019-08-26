@@ -38,8 +38,7 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Assets;
 
-Node::Node( const String &name, Ids &ids, RenderCompRequest renderEnabled, TransformCompRequest transformEnabled, 
-        Node *parent )
+Node::Node( const String &name, Ids &ids, Node *parent )
 : Object( name )
 , m_children()
 , m_parent( parent )
@@ -49,15 +48,11 @@ Node::Node( const String &name, Ids &ids, RenderCompRequest renderEnabled, Trans
 , m_ids( &ids )
 , m_propMap()
 , m_aabb() {
-    if (TransformCompRequest::TransformCompRequested == transformEnabled) {
-        m_transformComp = new TransformComponent( this, m_ids->getUniqueId() );
-        m_components.add( m_transformComp );
-    }
+    m_transformComp = new TransformComponent( this, m_ids->getUniqueId() );
+    m_components.add( m_transformComp );
 
-	if (RenderCompRequest::RenderCompRequested == renderEnabled ) {
-        m_renderComp = new RenderComponent( this, m_ids->getUniqueId() );
-        m_components.add( m_renderComp );
-    }
+    m_renderComp = new RenderComponent( this, m_ids->getUniqueId() );
+    m_components.add( m_renderComp );
 
     if ( nullptr != m_parent ) {
         m_parent->addChild( this );
@@ -144,7 +139,7 @@ Node *Node::findChild( const String &name ) const {
     return nullptr;
 }
 
-ui32 Node::getNumChildren() const {
+size_t Node::getNumChildren() const {
     return m_children.size();
 }
 
@@ -182,7 +177,7 @@ void Node::addMesh( RenderBackend::Mesh *geo ) {
     }
 }
 
-ui32 Node::getNumMeshes() const {
+size_t Node::getNumMeshes() const {
     if ( nullptr != m_renderComp ) {
         return m_renderComp->getNumGeometry();
     }
@@ -218,6 +213,14 @@ void Node::render( RenderBackendService *renderBackendSrv ) {
     if ( nullptr != m_renderComp ) {
         m_renderComp->draw( renderBackendSrv );
     }
+}
+
+void Node::addComponent(Component* newComp) {
+    if (nullptr == newComp) {
+        return;
+    }
+
+    m_components.add(newComp);
 }
 
 Component *Node::getComponent( ComponentType type ) const {
@@ -260,9 +263,8 @@ void Node::onRender( RenderBackendService* ) {
     // empty
 }
 
-LightNode::LightNode(const String &name, Common::Ids &ids, RenderCompRequest renderEnabled,
-        TransformCompRequest transformEnabled, Node *parent)
-: Node(name, ids, renderEnabled, transformEnabled, parent)
+LightNode::LightNode(const String &name, Common::Ids &ids, Node *parent)
+: Node(name, ids, parent)
 , m_light() {
     // empty
 }

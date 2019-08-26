@@ -32,7 +32,7 @@ using namespace ::OSRE::Scene;
 using namespace ::OSRE::RenderBackend;
 
 Grid::Grid( Common::Ids &ids )
-: Node( "grid", ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested )
+: Node( "grid", ids )
 , m_mesh( nullptr ) {
     // empty
 }

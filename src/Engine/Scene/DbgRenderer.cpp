@@ -238,7 +238,7 @@ void DbgRenderer::clearDbgRenderPass() {
 
 }
 
-ui32 DbgRenderer::numDbgTexts() const {
+size_t DbgRenderer::numDbgTexts() const {
     return m_tbArray.size();
 }
 

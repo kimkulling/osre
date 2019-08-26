@@ -271,7 +271,7 @@ void BufferData::copyFrom( void *data, size_t size ) {
 }
 
 void BufferData::attach( void *data, size_t size ) {
-    const ui32 newSize(m_buffer.m_size + size );
+    const size_t newSize(m_buffer.m_size + size );
     if ( newSize < m_cap ) {
         void *ptr = ( (uc8*) m_buffer.m_data ) + m_buffer.m_size;
         ::memcpy( ptr, data, size );

@@ -38,7 +38,7 @@ namespace UI {
 class Widget;
 class Image;
 class TextBase;
-class Screen;
+class Canvas;
 
 struct UiFlags {
     static const ui32 Resizable = 0x001;

@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/UI/Widget.h>
-#include <osre/UI/Screen.h>
+#include <osre/UI/Canvas.h>
 #include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
@@ -354,11 +354,15 @@ WidgetState Widget::getWidgetState() const {
 }
 
 void Widget::checkChildren( const Point2ui &pt, void *data, WidgetState state) {
-    for (ui32 i = 0; i < getNumWidgets(); i++) {
+    for (ui32 i = 0; i < getNumWidgets(); ++i ) {
         Widget *child(getWidgetAt(i));
         const Rect2ui &r = child->getRect();
         if (r.isIn(pt)) {
-            child->onMouseDown(pt, data );
+            if (state == WidgetState::Pressed) {
+                child->onMouseDown(pt, data);
+            } else if (state == WidgetState::Released) {
+                child->onMouseUp(pt, data);
+            }
         }
     }
 }

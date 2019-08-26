@@ -566,7 +566,7 @@ struct TVertexCache {
         m_cache.reserve(m_cache.size() + newSize);
     }
 
-    void add(T *vertices, ui32 numItems) {
+    void add(T *vertices, size_t numItems) {
         if (nullptr == vertices || 0 == numItems) {
             return;
         }

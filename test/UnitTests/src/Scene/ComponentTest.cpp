@@ -69,7 +69,7 @@ TEST_F(ComponentTest, accessNodeTest) {
     String name = "test";
     Common::Ids *ids = new Common::Ids;
 
-    Node *n(new Node(name, *ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, nullptr));
+    Node *n(new Node(name, *ids, nullptr));
     MockComponent myComp( n, 0);
 
     EXPECT_EQ(n, myComp.getOwnerNode());
@@ -79,7 +79,7 @@ TEST_F(ComponentTest, accessNodeTest) {
 TEST_F( ComponentTest, accessIdTest ) {
     String name = "test";
     Common::Ids *ids = new Common::Ids;
-    Node *n(new Node(name, *ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, nullptr));
+    Node *n(new Node(name, *ids, nullptr));
 
     Component *tc = n->getComponent(Node::ComponentType::TransformComponentType);
     EXPECT_NE(nullptr, tc);

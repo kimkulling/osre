@@ -70,11 +70,7 @@ Stage::Stage( const String &name, RenderBackendService *rbService )
 , m_rbService( rbService )
 , m_ids( nullptr ) {
     m_ids = new Ids;
-    m_root = new Node( "name" + String( ".root" ), *m_ids, 
-        Node::RenderCompRequest::RenderCompRequested, 
-        Node::TransformCompRequest::TransformCompRequested, 
-        nullptr 
-    );
+    m_root = new Node( "name" + String( ".root" ), *m_ids, nullptr );
 }
 
 Stage::~Stage() {
@@ -97,12 +93,7 @@ Node *Stage::createNode( const String &name, Node *parent, const String &type ) 
 
     Node *newNode( nullptr );
     if ( "default" == type ) {
-        newNode = new Node( name, 
-                           *m_ids, 
-                            Node::RenderCompRequest::RenderCompRequested,
-                            Node::TransformCompRequest::TransformCompRequested, 
-                            parent 
-                        );
+        newNode = new Node( name, *m_ids, parent );
         if( nullptr == parent ) {
             m_root->addChild( newNode );
         }
@@ -123,7 +114,7 @@ bool Stage::registerNodeFactory( AbstractNodeFactory *factory ) {
     if ( nullptr == factory ) {
         return false;
     }
-    const ui32 hash( calcHash( factory->getType() ) );
+    const size_t hash( calcHash( factory->getType() ) );
     if ( m_registeredFactories.hasKey( hash ) ) {
         return false;
     }
@@ -180,8 +171,8 @@ static void renderNode( Node *current, bool traverse, RenderBackendService *rb )
 
     // traverse all children, if requested
     if (traverse) {
-        const ui32 numChilds( current->getNumChildren() );
-        for (ui32 i = 0; i < numChilds; ++i) {
+        const size_t numChilds( current->getNumChildren() );
+        for ( size_t i = 0; i < numChilds; ++i) {
             Node *child( current->getChildAt( i ) );
             renderNode( child, traverse, rb );
         }

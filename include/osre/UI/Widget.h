@@ -106,7 +106,7 @@ enum class WidgetType {
     Text,
     Image,
     Panel,
-    Screen
+    Canvas
 };
 
 using UiFunctor = Common::Functor<void, ui32, void *>;

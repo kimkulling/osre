@@ -47,7 +47,7 @@ TEST_F( ModelTest, createTest ) {
 
 TEST_F( ModelTest, access_root_node_Test ) {
     Common::Ids ids;
-    Node myNode( "test", ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, nullptr );
+    Node myNode( "test", ids, nullptr );
     Model myModel;
     myModel.setRootNode( &myNode );
     EXPECT_EQ( &myNode, myModel.getRootNode() );

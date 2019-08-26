@@ -291,10 +291,7 @@ void AssimpWrapper::impotNode( aiNode *node, Scene::Node *parent ) {
         return;
     }
     
-    Node *newNode = new Node( node->mName.C_Str(), m_ids, 
-            Node::RenderCompRequest::RenderCompRequested,
-            Node::TransformCompRequest::TransformCompRequested, 
-            parent );
+    Node *newNode = new Node( node->mName.C_Str(), m_ids, parent );
     
     // If this is the root-node of the model, set it as the root for the model
     if ( nullptr == m_parent ) {

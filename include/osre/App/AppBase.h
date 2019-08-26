@@ -46,7 +46,7 @@ namespace Properties {
 }
 
 namespace UI {
-    class Screen;
+    class Canvas;
     class UiRenderer;
 }
 
@@ -145,11 +145,11 @@ public:
     /// @brief  Will create a new UI-Screen.
     /// @param  name        [in] The name for the screen.
     /// @return The new created ui-screen.
-    virtual UI::Screen *createScreen( const String &name );
+    virtual UI::Canvas *createScreen( const String &name );
     
     /// @brief  Will set a ui-screen to active, if any screen was active before it will be deactivated.
     /// @param  uiScreen    [in] The new ui-screen to activate. 
-    virtual void setUIScreen( UI::Screen *uiScreen );
+    virtual void setUIScreen( UI::Canvas *uiScreen );
 
     /// @brief  Will return the active time or nullptr, if none is active.
     /// @return Pointer showing to the active timer.
@@ -205,7 +205,7 @@ private:
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
     Scene::World *m_world;
-    UI::Screen *m_uiScreen;
+    UI::Canvas *m_uiScreen;
     UI::UiRenderer *m_uiRenderer;
     MouseEventListener *m_mouseEvListener;
     Common::Ids *m_ids;

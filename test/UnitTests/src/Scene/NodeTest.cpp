@@ -51,15 +51,15 @@ protected:
         m_nodes.resize( 0 );
     }
 
-    Node *createNode( const String &name, Common::Ids &ids, Node::RenderCompRequest renderingRequested, Node::TransformCompRequest transformRequested, Node *parent ) {
-        Node *n( new Node( name, ids, renderingRequested, transformRequested, parent ) );
+    Node *createNode( const String &name, Common::Ids &ids, Node *parent ) {
+        Node *n( new Node( name, ids, parent ) );
         addNodeForRelease( n );
         
         return n;
     }
 
-    LightNode *createLightNode(const String &name, Common::Ids &ids, Node::RenderCompRequest renderingRequested, Node::TransformCompRequest transformRequested, Node *parent) {
-        LightNode *ln = new LightNode(name, ids, renderingRequested, transformRequested, parent);
+    LightNode *createLightNode(const String &name, Common::Ids &ids, Node *parent) {
+        LightNode *ln = new LightNode(name, ids, parent);
         addNodeForRelease(ln);
 
         return ln;
@@ -72,18 +72,9 @@ protected:
 TEST_F( NodeTest, createTest ) {
     bool ok( true );
     try {
-        Node *myNode_transform_render = createNode( "testnode1", *m_ids, Node::RenderCompRequest::RenderCompRequested, 
-			                                        Node::TransformCompRequest::TransformCompRequested, nullptr );
-        EXPECT_TRUE( nullptr != myNode_transform_render->getComponent( Node::ComponentType::TransformComponentType ) );
-        EXPECT_TRUE( nullptr != myNode_transform_render->getComponent( Node::ComponentType::RenderComponentType ) );
-        
-        Node *myNode_transform = createNode( "testnode2", *m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::NoTransformComp, nullptr );
-        EXPECT_TRUE( nullptr == myNode_transform->getComponent( Node::ComponentType::TransformComponentType ) );
-        EXPECT_TRUE( nullptr != myNode_transform->getComponent( Node::ComponentType::RenderComponentType ) );
-
-        Node *myNode = createNode( "testnode3", *m_ids, Node::RenderCompRequest::NoRenderComp, Node::TransformCompRequest::NoTransformComp, nullptr );
-        EXPECT_TRUE( nullptr == myNode->getComponent( Node::ComponentType::TransformComponentType ) );
-        EXPECT_TRUE( nullptr == myNode->getComponent( Node::ComponentType::RenderComponentType ) );
+        Node *myNode_transform_render = createNode( "testnode1", *m_ids, nullptr );
+        EXPECT_NE( nullptr, myNode_transform_render->getComponent( Node::ComponentType::TransformComponentType ) );
+        EXPECT_NE( nullptr, myNode_transform_render->getComponent( Node::ComponentType::RenderComponentType ) );
     } catch ( ... ) {
         ok = false;
     }
@@ -91,9 +82,9 @@ TEST_F( NodeTest, createTest ) {
 }
 
 TEST_F( NodeTest, accessChilds ) {
-    Node *parent = createNode( "parent", *m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, nullptr );
-    Node *myNode1 = createNode( "testnode1", *m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, parent );
-    Node *myNode2 = createNode( "testnode2", *m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, parent );
+    Node *parent = createNode( "parent", *m_ids, nullptr );
+    Node *myNode1 = createNode( "testnode1", *m_ids, parent );
+    Node *myNode2 = createNode( "testnode2", *m_ids, parent );
 
     EXPECT_EQ( 2u, parent->getNumChildren() );
     EXPECT_TRUE( nullptr != myNode1->getParent() );
@@ -116,7 +107,7 @@ TEST_F( NodeTest, accessChilds ) {
 }
 
 TEST_F( NodeTest, activeTest ) {
-    Node *myNode = createNode( "parent", *m_ids, Node::RenderCompRequest::RenderCompRequested, Node::TransformCompRequest::TransformCompRequested, nullptr );
+    Node *myNode = createNode( "parent", *m_ids, nullptr );
     EXPECT_TRUE( myNode->isActive() );
 
     myNode->setActive( false );
@@ -124,14 +115,12 @@ TEST_F( NodeTest, activeTest ) {
 }
 
 TEST_F( NodeTest, onUpdateTest ) {
-    Node *myNode = createNode( "parent", *m_ids, Node::RenderCompRequest::RenderCompRequested, 
-        Node::TransformCompRequest::TransformCompRequested, nullptr );
+    Node *myNode = createNode( "parent", *m_ids, nullptr );
     EXPECT_NE(nullptr, myNode);
 }
 
 TEST_F(NodeTest, lightNodeTransformTest) {
-    LightNode *ln = createLightNode("test", *m_ids, Node::RenderCompRequest::RenderCompRequested,
-        Node::TransformCompRequest::TransformCompRequested, nullptr);
+    LightNode *ln = createLightNode("test", *m_ids, nullptr);
     EXPECT_NE(nullptr, ln);
 
     RenderBackend::Light light;
@@ -156,4 +145,3 @@ TEST_F(NodeTest, lightNodeTransformTest) {
 
 } // Namespace UnitTest
 } // Namespace OSRE
-

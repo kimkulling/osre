@@ -51,5 +51,5 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  define OSRE_ASSERT2( statement, msg )  if ( !(statement) ) (::OSRE::Common::warnPrint( __FILE__ ,__FILE__, __LINE__, msg ) );
 #  define OSRE_VALIDATE( statement, msg ) statement
 #  define OSRE_CHECK_NOENTRY()
-#  define OSRE_CHECK_NOENTRY2()
+#  define OSRE_CHECK_NOENTRY2( msg )
 #endif

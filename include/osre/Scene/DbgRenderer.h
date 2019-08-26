@@ -49,7 +49,7 @@ public:
     void renderAABB( const glm::mat4 &transform, const Collision::TAABB<f32> &aabb );
     void clearDbgTextCache();
     void clearDbgRenderPass();
-    ui32 numDbgTexts() const;
+    size_t numDbgTexts() const;
     void addLine( const RenderBackend::ColorVert &v0, const RenderBackend::ColorVert &v1 );
     void addTriangle( const RenderBackend::ColorVert &v0, const RenderBackend::ColorVert &v1, const RenderBackend::ColorVert &v2 );
     
