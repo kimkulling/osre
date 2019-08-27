@@ -205,7 +205,7 @@ MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType acce
     geo->m_vb = allocVertices( geo->m_vertextype,  NumVert, pos, col, nullptr, access );
 
     // setup triangle indices
-    static const ui32 NumIndices = 3;
+    static const size_t NumIndices = 3;
     GLushort  indices[ NumIndices ];
     indices[ 0 ] = 0;
     indices[ 1 ] = 2;
