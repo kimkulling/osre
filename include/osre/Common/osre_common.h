@@ -614,11 +614,11 @@ typedef TPoint2<ui32> Point2ui;
 
 /// @brief  Helper class t represent a 2D rectangle.
 template<class T>
-struct TRect2D {
+struct TRectangle {
     T m_x1, m_y1, m_x2, m_y2, m_width, m_height;
 
     /// @brief  The default class constructor.
-    TRect2D()
+    TRectangle()
     : m_x1( 0 )
     , m_y1( 0 )
     , m_x2( 0 )
@@ -631,7 +631,7 @@ struct TRect2D {
     /// @brief  The class constructor with width and height, x and 0 are set to 0,0.
     /// @param  width   [in] The width of the rectangle.
     /// @param  height  [in] The height of the rectangle.
-    TRect2D( T width, T height )
+    TRectangle( T width, T height )
     : m_x1( 0 )
     , m_y1( 0 )
     , m_x2( width )
@@ -646,7 +646,7 @@ struct TRect2D {
     /// @param  y       [in] Y coordinate of upper left corner.
     /// @param  width   [in] The width of the rectangle.
     /// @param  height  [in] The height of the rectangle.
-    TRect2D( T x, T y, T width, T height )
+    TRectangle( T x, T y, T width, T height )
     : m_x1( x )
     , m_y1( y )
     , m_x2( x + width )
@@ -657,7 +657,7 @@ struct TRect2D {
     }
 
     /// @brief  The class destructor.
-    ~TRect2D() {
+    ~TRectangle() {
         // empty
     }
 
@@ -725,17 +725,17 @@ struct TRect2D {
         return false;
     }
 
-    const bool operator == ( const TRect2D<T> &rhs ) const {
+    const bool operator == ( const TRectangle<T> &rhs ) const {
         return ( m_x1 == rhs.m_x1 && m_y1 == rhs.m_y1 && m_width == rhs.m_width && m_height == rhs.m_height );
     }
 
-    const bool operator != ( const TRect2D<T> &rhs ) const {
+    const bool operator != ( const TRectangle<T> &rhs ) const {
         return ( m_x1 != rhs.m_x1 || m_y1 != rhs.m_y1 || m_width != rhs.m_width || m_height != rhs.m_height );
     }
 };
 
-typedef TRect2D<ui32> Rect2ui;
-typedef TRect2D<i32>  Rect2i;
+typedef TRectangle<ui32> Rect2ui;
+typedef TRectangle<i32>  Rect2i;
 
 struct float4 {
     union {

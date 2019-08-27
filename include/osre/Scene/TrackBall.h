@@ -64,7 +64,7 @@ public:
 
 private:
     Vec3f m_StartVector, m_EndVector;
-    TRect2D<ui32> m_Dimension;
+    TRectangle<ui32> m_Dimension;
     Quatf m_rotation;
     bool m_bLeftMButtonClicked;
     bool m_bMiddleClicked;
