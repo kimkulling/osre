@@ -34,6 +34,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sstream>
 #include <iostream>
 
+#include <stdio.h>
+
 namespace OSRE {
 namespace Scene {
 
@@ -187,45 +189,47 @@ MeshBuilder &MeshBuilder::allocEmptyMesh( VertexType type, ui32 numMeshes ) {
 }
 
 MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
+    printf("1\n");
     Mesh *geo = Mesh::create( 1 );
     geo->m_vertextype = type;
     geo->m_indextype = IndexType::UnsignedShort;
-
+printf("2\n");
     // setup triangle vertices    
     static const ui32 NumVert = 3;
     glm::vec3 col[ NumVert ];
     col[ 0 ] = glm::vec3( 1, 0, 0 );
     col[ 1 ] = glm::vec3( 0, 1, 0 );
     col[ 2 ] = glm::vec3( 0, 0, 1 );
-
+printf("3\n");
     glm::vec3 pos[ NumVert ];
     pos[ 0 ] = glm::vec3( -1, -1, 0 );
     pos[ 1 ] = glm::vec3( 0, 1, 0 );
     pos[ 2 ] = glm::vec3( 1, -1, 0 );
     geo->m_vb = allocVertices( geo->m_vertextype,  NumVert, pos, col, nullptr, access );
-
+printf("4\n");
     // setup triangle indices
     static const size_t NumIndices = 3;
     GLushort  indices[ NumIndices ];
     indices[ 0 ] = 0;
     indices[ 1 ] = 2;
     indices[ 2 ] = 1;
-    
+printf("5\n");
     ui32 size = sizeof( GLushort ) * NumIndices;
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, access );
     ::memcpy( geo->m_ib->getData(), indices, size );
-
-	// setup primitives
+printf("6\n");
+    // setup primitives
     geo->m_numPrimGroups = 1;
     geo->m_primGroups   = new PrimitiveGroup[ geo->m_numPrimGroups ];
     geo->m_primGroups[ 0 ].m_indexType     = IndexType::UnsignedShort;
     geo->m_primGroups[ 0 ].m_numIndices = 3 * geo->m_numPrimGroups;
     geo->m_primGroups[ 0 ].m_primitive     = PrimitiveType::TriangleList;
     geo->m_primGroups[ 0 ].m_startIndex    = 0;
-
-	// setup material
+printf("7\n");
+    // setup material
     geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
+printf("8\n");
     m_ActiveGeo = geo;
 
     return *this;
