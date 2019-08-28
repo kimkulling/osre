@@ -81,14 +81,17 @@ void Canvas::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *r
     m_transformMatrix.m_projection = glm::ortho( r.getX1(), r.getWidth(), r.getHeight(), r.getY1() );
     m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
     m_transformMatrix.update();
-    const size_t numChildren( getNumWidgets() );
+    
+    const size_t numChildren = getNumWidgets();
+    if (0 == numChildren) {
+        return;
+    }
+
     for ( size_t i=0; i<numChildren; ++i ) {
         Widget *currentChild( getWidgetAt( i ) );
         if ( nullptr == currentChild ) {
-            continue;
+            currentChild->render(renderCmdCache, rbSrv);
         }
-
-        currentChild->render( renderCmdCache, rbSrv );
     }
 }
 
