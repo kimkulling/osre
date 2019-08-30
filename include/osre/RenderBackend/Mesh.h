@@ -35,9 +35,18 @@ struct OSRE_EXPORT VertexWeight {
 };
 
 struct OSRE_EXPORT Bone {
-    String m_name;
-    CPPCore::TArray<VertexWeight*> m_vertexWeights;
-    glm::mat4 m_offsetMatrix;
+    using VertexWeightArray = CPPCore::TArray<VertexWeight*>;
+
+    String            m_name;
+    VertexWeightArray m_vertexWeights;
+    glm::mat4         m_offsetMatrix;
+
+    Bone()
+    : m_name()
+    , m_vertexWeights()
+    , m_offsetMatrix() {
+        // empty
+    }
 };
 
 class OSRE_EXPORT Mesh {

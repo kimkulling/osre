@@ -51,6 +51,8 @@ public:
     static RenderBackend::Mesh *createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, 
         RenderBackend::Material *material );
     
+    static void drawRect(const Rect2ui& rect, Canvas* canvas);
+    
 private:
     UIRenderUtils();
     ~UIRenderUtils();

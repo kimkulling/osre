@@ -34,6 +34,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sstream>
 #include <iostream>
 
+#include <stdio.h>
+
 namespace OSRE {
 namespace Scene {
 
@@ -188,40 +190,48 @@ MeshBuilder &MeshBuilder::allocEmptyMesh( VertexType type, ui32 numMeshes ) {
 
 MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
     Mesh *mesh = Mesh::create( 1 );
+printf("1\n");
     mesh->m_vertextype = type;
     mesh->m_indextype = IndexType::UnsignedShort;
-
+printf("2\n");
     // setup triangle vertices    
     static const ui32 NumVert = 3;
     glm::vec3 col[ NumVert ];
     col[ 0 ] = glm::vec3( 1, 0, 0 );
     col[ 1 ] = glm::vec3( 0, 1, 0 );
     col[ 2 ] = glm::vec3( 0, 0, 1 );
-
+printf("3\n");
     glm::vec3 pos[ NumVert ];
     pos[ 0 ] = glm::vec3( -1, -1, 0 );
     pos[ 1 ] = glm::vec3( 0, 1, 0 );
     pos[ 2 ] = glm::vec3( 1, -1, 0 );
     mesh->m_vb = allocVertices( mesh->m_vertextype,  NumVert, pos, col, nullptr, access );
 
+printf("4\n");
     // setup triangle indices
-    static const ui32 NumIndices = 3;
+    static const size_t NumIndices = 3;
     GLushort  indices[ NumIndices ];
     indices[ 0 ] = 0;
     indices[ 1 ] = 2;
     indices[ 2 ] = 1;
-    
+printf("5\n");
     ui32 size = sizeof( GLushort ) * NumIndices;
     mesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, access );
     ::memcpy( mesh->m_ib->getData(), indices, size );
 
 	// setup primitives
     mesh->createPrimitiveGroup(IndexType::UnsignedShort, 3, PrimitiveType::TriangleList, 0);
+printf("6\n");
 
 	// setup material
     mesh->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
     m_ActiveGeo = mesh;
+printf("7\n");
+    // setup material
+mesh->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
+
+printf("8\n");
 
     return *this;
 }
@@ -488,7 +498,7 @@ static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const 
     pos[2] = glm::vec3(x + textSize, y, 0);
     pos[3] = glm::vec3(x + textSize, y + textSize, 0);
 
-    const ui32 NumTextVerts = getNumTextVerts(text);
+    const size_t NumTextVerts = getNumTextVerts(text);
     *textPos = new glm::vec3[NumTextVerts];
     *colors = new glm::vec3[NumTextVerts];
     *tex0 = new glm::vec2[NumTextVerts];
@@ -578,7 +588,7 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
     geo->m_vb = allocVertices( geo->m_vertextype, text.size() * NumQuadVert, textPos, colors, tex0, access );
 
     // setup triangle indices
-    ui32 size = sizeof( GLushort ) * 6 * text.size();
+    size_t size = sizeof( GLushort ) * 6 * text.size();
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
     geo->m_ib->copyFrom( textIndices, size );
 
@@ -626,8 +636,8 @@ void MeshBuilder::allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text,
         vc.add(v);
     }
 
-    const ui32 numIndices(getNumTextIndices(text));
-    for (ui32 i = 0; i < numIndices; ++i) {
+    const size_t numIndices(getNumTextIndices(text));
+    for (size_t i = 0; i < numIndices; ++i) {
         ic.add(textIndices[i]);
     }
 
@@ -642,7 +652,7 @@ void MeshBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text ) {
         return;
     }
 
-    const ui32 numTextVerts( getNumTextVerts( text ) );
+    const size_t numTextVerts( getNumTextVerts( text ) );
     glm::vec2 *tex0 = new glm::vec2[ numTextVerts ];
 
     // setup triangle vertices    
@@ -694,10 +704,10 @@ void MeshBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text ) {
     delete[] tex0;
 }
 
-BufferData *MeshBuilder::allocVertices( VertexType type, ui32 numVerts, glm::vec3 *pos, 
+BufferData *MeshBuilder::allocVertices( VertexType type, size_t numVerts, glm::vec3 *pos,
                                             glm::vec3 *col1, glm::vec2 *tex0, BufferAccessType access ) {
     BufferData *data( nullptr );
-    ui32 size( 0 );
+    size_t size( 0 );
     switch (type) {
         case VertexType::ColorVertex: {
             ColorVert *colVerts = new ColorVert[ numVerts ];

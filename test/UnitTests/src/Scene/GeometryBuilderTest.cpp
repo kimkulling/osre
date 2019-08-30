@@ -50,14 +50,19 @@ TEST_F( MeshBuilderTest, allocEmptyGeometryTest ) {
 
 TEST_F( MeshBuilderTest, allocTrianglesTest ) {
     MeshBuilder meshBuilder;
+    printf("1\n");
     meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+    printf("2\n");
     Mesh *mesh = meshBuilder.getMesh();
-    EXPECT_NE( mesh, nullptr );
+    printf("3\n");
+    ASSERT_NE( mesh, nullptr );
     EXPECT_EQ( mesh->m_vertextype, VertexType::ColorVertex );
     EXPECT_NE( mesh->m_vb, nullptr );
     EXPECT_NE( mesh->m_ib, nullptr );
     EXPECT_NE( mesh->m_material, nullptr );
+    printf("4\n");
     Mesh::destroy( &mesh );
+    printf("5\n");
 }
 
 TEST_F( MeshBuilderTest, allocLineListTest ) {

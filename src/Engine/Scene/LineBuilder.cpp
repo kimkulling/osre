@@ -98,14 +98,11 @@ Mesh *LineBuilder::getMesh() {
         return m_activeMesh;
     }
 
-    ui32 size = 0;
+    size_t size = 0;
     if (m_activeMesh->m_vertextype == VertexType::RenderVertex) {
         size = sizeof(RenderVert) * m_posCache.size();
-
-    }
-    else if (m_activeMesh->m_vertextype == VertexType::ColorVertex) {
+    } else if (m_activeMesh->m_vertextype == VertexType::ColorVertex) {
         size = sizeof(ColorVert) * m_posCache.size();
-
     }
 
     m_activeMesh->m_vb = BufferData::alloc(BufferType::VertexBuffer, size, BufferAccessType::ReadOnly);
