@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -109,34 +109,35 @@ Rect2ui UIRenderUtils::computeTextBox( const String &text, f32 textSize ) {
 }
 
 RenderBackend::Mesh *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, Material *material ) {
-    Mesh *geo = Mesh::create( 1 );
+    Mesh *uiMesh = Mesh::create( 1 );
 
-    geo->m_vertextype = VertexType::RenderVertex;
-    geo->m_indextype = IndexType::UnsignedShort;
+    uiMesh->m_vertextype = VertexType::RenderVertex;
+    uiMesh->m_indextype = IndexType::UnsignedShort;
 
     if (vertexCache.sizeInBytes() > 0) {
-        geo->m_vb = BufferData::alloc(BufferType::VertexBuffer, vertexCache.sizeInBytes(), BufferAccessType::ReadOnly);
-        geo->m_vb->copyFrom(&vertexCache.m_cache[0], vertexCache.sizeInBytes());
+        uiMesh->m_vb = BufferData::alloc(BufferType::VertexBuffer, vertexCache.sizeInBytes(), BufferAccessType::ReadOnly);
+        uiMesh->m_vb->copyFrom(&vertexCache.m_cache[0], vertexCache.sizeInBytes());
 
-        geo->m_ib = BufferData::alloc(BufferType::IndexBuffer, indexCache.sizeInBytes(), BufferAccessType::ReadOnly);
-        geo->m_ib->copyFrom(&indexCache.m_cache[0], indexCache.sizeInBytes());
+        uiMesh->m_ib = BufferData::alloc(BufferType::IndexBuffer, indexCache.sizeInBytes(), BufferAccessType::ReadOnly);
+        uiMesh->m_ib->copyFrom(&indexCache.m_cache[0], indexCache.sizeInBytes());
     }
 
     // use default ui material
     if ( nullptr == material ) {
-        geo->m_material = Scene::MaterialBuilder::createBuildinUiMaterial();
+        uiMesh->m_material = Scene::MaterialBuilder::createBuildinUiMaterial();
     } else {
-        geo->m_material = material;
+        uiMesh->m_material = material;
     }
 
-    geo->m_numPrimGroups = 1;
-    geo->m_primGroups = new PrimitiveGroup[ 1 ];
-    geo->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_primGroups[ 0 ].m_numIndices = (ui32) indexCache.numIndices();
-    geo->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-    geo->m_primGroups[ 0 ].m_startIndex = 0;
+    uiMesh->createPrimitiveGroup(IndexType::UnsignedShort, indexCache.numIndices(), PrimitiveType::TriangleList, 0);
+    /*uiMesh->m_numPrimGroups = 1;
+    uiMesh->m_primGroups = new PrimitiveGroup[ 1 ];
+    uiMesh->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
+    uiMesh->m_primGroups[ 0 ].m_numIndices = (ui32) indexCache.numIndices();
+    uiMesh->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
+    uiMesh->m_primGroups[ 0 ].m_startIndex = 0;*/
 
-    return geo;
+    return uiMesh;
 }
 
 } // Namespace UI

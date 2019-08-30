@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/Mesh.h>
+#include <osre/Debugging/osre_debugging.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/Ids.h>
 
@@ -100,6 +101,39 @@ ui32 Mesh::getVertexSize( VertexType vertextype ) {
     }
 
     return vertexSize;
+}
+
+PrimitiveGroup *Mesh::createPrimitiveGroups(size_t numPrimGroups, IndexType* types, size_t* numIndices, PrimitiveType* primTypes, ui32* startIndices) {
+    if (0 == numPrimGroups) {
+        return nullptr;
+    }
+
+    OSRE_ASSERT(nullptr != types);
+    OSRE_ASSERT(nullptr != numIndices);
+    OSRE_ASSERT(nullptr != primTypes);
+    OSRE_ASSERT(nullptr != startIndices);
+
+    m_numPrimGroups = numPrimGroups;
+    m_primGroups = new PrimitiveGroup[m_numPrimGroups];
+    for (size_t i = 0; i < m_numPrimGroups; ++i) {
+        m_primGroups[i].m_indexType = types[i];
+        m_primGroups[i].m_numIndices = numIndices[i];
+        m_primGroups[i].m_primitive = primTypes[i];
+        m_primGroups[i].m_startIndex = startIndices[i];
+    }
+
+    return m_primGroups;
+}
+
+PrimitiveGroup *Mesh::createPrimitiveGroup(IndexType type, size_t numIndices, PrimitiveType primType, ui32 startIndex) {
+    m_numPrimGroups = 1;
+    m_primGroups = new PrimitiveGroup[m_numPrimGroups];
+    m_primGroups[0].m_indexType = type;
+    m_primGroups[0].m_numIndices = numIndices;
+    m_primGroups[0].m_primitive = primType;
+    m_primGroups[0].m_startIndex = startIndex;
+
+    return m_primGroups;
 }
 
 } // Namespace RenderBackend

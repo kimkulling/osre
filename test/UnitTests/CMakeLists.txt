@@ -74,6 +74,7 @@ SET ( unittest_rb_src
     src/RenderBackend/CullStateTest.cpp
     src/RenderBackend/RenderCommonTest.cpp
     src/RenderBackend/PipelineTest.cpp
+	src/RenderBackend/MeshTest.cpp
 )
 
 SET( unittest_rb_oglrenderer_src 

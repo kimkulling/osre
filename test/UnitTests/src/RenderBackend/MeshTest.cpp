@@ -20,25 +20,31 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Math/BaseMath.h>
+#include "osre_testcommon.h"
+#include <osre/RenderBackend/Mesh.h>
 
 namespace OSRE {
-namespace Math {
+namespace UnitTest {
 
-BaseMath::BaseMath() {
+using namespace ::OSRE::RenderBackend;
+
+class MeshTest : public ::testing::Test {
     // empty
+};
+
+TEST_F(MeshTest, createTest) {
+    Mesh *meshes = Mesh::create(10);
+    EXPECT_NE(nullptr, meshes);
+    
+    Mesh::destroy(&meshes);
+    EXPECT_EQ(nullptr, meshes);
 }
 
-BaseMath::~BaseMath() {
-    // empty
-}
-
-f32 BaseMath::getSPEPS() {
-	return 0.000001f;
-}
-
-f32 BaseMath::getPI() {
-	return 3.141592653589f;
+TEST_F(MeshTest, createPrimitiveGroupsTest) {
+    Mesh* mesh = Mesh::create(1);
+    PrimitiveGroup* group = mesh->createPrimitiveGroup(IndexType::UnsignedByte, 10, PrimitiveType::TriangleList, 0);
+    EXPECT_EQ(1, mesh->m_numPrimGroups);
+    EXPECT_NE(nullptr, group);
 }
 
 }

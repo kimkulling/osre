@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -187,9 +187,9 @@ MeshBuilder &MeshBuilder::allocEmptyMesh( VertexType type, ui32 numMeshes ) {
 }
 
 MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
-    Mesh *geo = Mesh::create( 1 );
-    geo->m_vertextype = type;
-    geo->m_indextype = IndexType::UnsignedShort;
+    Mesh *mesh = Mesh::create( 1 );
+    mesh->m_vertextype = type;
+    mesh->m_indextype = IndexType::UnsignedShort;
 
     // setup triangle vertices    
     static const ui32 NumVert = 3;
@@ -202,7 +202,7 @@ MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType acce
     pos[ 0 ] = glm::vec3( -1, -1, 0 );
     pos[ 1 ] = glm::vec3( 0, 1, 0 );
     pos[ 2 ] = glm::vec3( 1, -1, 0 );
-    geo->m_vb = allocVertices( geo->m_vertextype,  NumVert, pos, col, nullptr, access );
+    mesh->m_vb = allocVertices( mesh->m_vertextype,  NumVert, pos, col, nullptr, access );
 
     // setup triangle indices
     static const ui32 NumIndices = 3;
@@ -212,29 +212,24 @@ MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType acce
     indices[ 2 ] = 1;
     
     ui32 size = sizeof( GLushort ) * NumIndices;
-    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, access );
-    ::memcpy( geo->m_ib->getData(), indices, size );
+    mesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, access );
+    ::memcpy( mesh->m_ib->getData(), indices, size );
 
 	// setup primitives
-    geo->m_numPrimGroups = 1;
-    geo->m_primGroups   = new PrimitiveGroup[ geo->m_numPrimGroups ];
-    geo->m_primGroups[ 0 ].m_indexType     = IndexType::UnsignedShort;
-    geo->m_primGroups[ 0 ].m_numIndices = 3 * geo->m_numPrimGroups;
-    geo->m_primGroups[ 0 ].m_primitive     = PrimitiveType::TriangleList;
-    geo->m_primGroups[ 0 ].m_startIndex    = 0;
+    mesh->createPrimitiveGroup(IndexType::UnsignedShort, 3, PrimitiveType::TriangleList, 0);
 
 	// setup material
-    geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
+    mesh->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
-    m_ActiveGeo = geo;
+    m_ActiveGeo = mesh;
 
     return *this;
 }
 
 MeshBuilder &MeshBuilder::allocQuads( VertexType type, BufferAccessType access ) {
-    Mesh *geo = Mesh::create( 1 );
-    geo->m_vertextype = type;
-    geo->m_indextype = IndexType::UnsignedShort;
+    Mesh *mesh = Mesh::create( 1 );
+    mesh->m_vertextype = type;
+    mesh->m_indextype = IndexType::UnsignedShort;
 
     // setup triangle vertices    
     static const ui32 NumVert = 4;
@@ -256,7 +251,7 @@ MeshBuilder &MeshBuilder::allocQuads( VertexType type, BufferAccessType access )
     tex0[ 2 ] = glm::vec2( 1, 0 );
     tex0[ 3 ] = glm::vec2( 1, 1 );
 
-    geo->m_vb = allocVertices( geo->m_vertextype, NumVert, pos, col, tex0, access );
+    mesh->m_vb = allocVertices( mesh->m_vertextype, NumVert, pos, col, tex0, access );
 
     // setup triangle indices
     static const ui32 NumIndices = 6;
@@ -270,21 +265,16 @@ MeshBuilder &MeshBuilder::allocQuads( VertexType type, BufferAccessType access )
     indices[ 5 ] = 3;
 
     ui32 size = sizeof( GLushort ) * NumIndices;
-    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
-    ::memcpy( geo->m_ib->getData(), indices, size );
+    mesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
+    ::memcpy( mesh->m_ib->getData(), indices, size );
 
     // setup primitives
-    geo->m_numPrimGroups = 1;
-    geo->m_primGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
-    geo->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_primGroups[ 0 ].m_numIndices = NumIndices * geo->m_numPrimGroups;
-    geo->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-    geo->m_primGroups[ 0 ].m_startIndex = 0;
+    mesh->createPrimitiveGroup(IndexType::UnsignedShort, NumIndices, PrimitiveType::TriangleList, 0);
 
     // setup material
-    geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
+    mesh->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
-    m_ActiveGeo = geo;
+    m_ActiveGeo = mesh;
 
     return *this;
 }
