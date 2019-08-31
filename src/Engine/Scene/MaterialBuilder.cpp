@@ -225,6 +225,7 @@ printf("2\n");
 printf("3\n");
     ShaderSourceArray arr;
     arr[ static_cast<ui32>( ShaderType::SH_VertexShaderType ) ] = vs;
+printf("3.1\n");
     arr[ static_cast<ui32>( ShaderType::SH_FragmentShaderType ) ] = fs;
 printf("4\n");
     mat->createShader(arr);
