@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -44,7 +44,7 @@ LineBuilder::LineBuilder()
 , m_indexCache()
 , m_primGroupCache()
 , m_isDirty()
-, m_ActiveGeo( nullptr ) {
+, m_activeMesh( nullptr ) {
     // empty
 }
 
@@ -91,24 +91,21 @@ LineBuilder &LineBuilder::addLines(Vec3f *pos0, Vec3f *pos1, ui32 numLines) {
 
 Mesh *LineBuilder::getMesh() {
     if (!m_isDirty) {
-        return m_ActiveGeo;
+        return m_activeMesh;
     }
 
     if (m_posCache.isEmpty()) {
-        return m_ActiveGeo;
+        return m_activeMesh;
     }
 
-    ui32 size = 0;
-    if (m_ActiveGeo->m_vertextype == VertexType::RenderVertex) {
+    size_t size = 0;
+    if (m_activeMesh->m_vertextype == VertexType::RenderVertex) {
         size = sizeof(RenderVert) * m_posCache.size();
-
-    }
-    else if (m_ActiveGeo->m_vertextype == VertexType::ColorVertex) {
+    } else if (m_activeMesh->m_vertextype == VertexType::ColorVertex) {
         size = sizeof(ColorVert) * m_posCache.size();
-
     }
 
-    m_ActiveGeo->m_vb = BufferData::alloc(BufferType::VertexBuffer, size, BufferAccessType::ReadOnly);
+    m_activeMesh->m_vb = BufferData::alloc(BufferType::VertexBuffer, size, BufferAccessType::ReadOnly);
     ui32 offset = 0;
     for (ui32 i = 0; i < m_posCache.size(); ++i) {
         RenderVert v;
@@ -122,23 +119,23 @@ Mesh *LineBuilder::getMesh() {
         if (!m_tex0Cache.isEmpty()) {
             v.tex0 = m_tex0Cache[i];
         }
-        c8 *ptr = (c8*)m_ActiveGeo->m_vb->getData();
+        c8 *ptr = (c8*)m_activeMesh->m_vb->getData();
         ::memcpy(&ptr[offset], &v, sizeof(RenderVert));
         offset += sizeof(RenderVert);
     }
 
     // setup indices
     size = sizeof(GLushort) * m_indexCache.size();
-    m_ActiveGeo->m_ib = BufferData::alloc(BufferType::IndexBuffer, size, BufferAccessType::ReadOnly);
-    m_ActiveGeo->m_ib->copyFrom(&m_indexCache[0], size);
+    m_activeMesh->m_ib = BufferData::alloc(BufferType::IndexBuffer, size, BufferAccessType::ReadOnly);
+    m_activeMesh->m_ib->copyFrom(&m_indexCache[0], size);
 
     // setup primitives
-    m_ActiveGeo->m_numPrimGroups = m_primGroupCache.size();
-    m_ActiveGeo->m_primGroups = new PrimitiveGroup[m_ActiveGeo->m_numPrimGroups];
-    ::memcpy(m_ActiveGeo->m_primGroups, &m_primGroupCache[0], m_primGroupCache.size());
+    m_activeMesh->m_numPrimGroups = m_primGroupCache.size();
+    m_activeMesh->m_primGroups = new PrimitiveGroup[m_activeMesh->m_numPrimGroups];
+    ::memcpy(m_activeMesh->m_primGroups, &m_primGroupCache[0], m_primGroupCache.size());
     m_isDirty = false;
 
-    return m_ActiveGeo;
+    return m_activeMesh;
 }
 
 void LineBuilder::preparePrimGroups() {
@@ -148,7 +145,7 @@ void LineBuilder::preparePrimGroups() {
             pg->m_primitive = PrimitiveType::LineList;
             m_primGroupCache.add(pg);
             m_activePrimGroup = pg;
-            m_activePrimGroup->m_indexType = m_ActiveGeo->m_indextype;
+            m_activePrimGroup->m_indexType = m_activeMesh->m_indextype;
         }
     }
     else {
@@ -156,7 +153,7 @@ void LineBuilder::preparePrimGroups() {
         pg->m_primitive = PrimitiveType::LineList;
         m_primGroupCache.add(pg);
         m_activePrimGroup = pg;
-        m_activePrimGroup->m_indexType = m_ActiveGeo->m_indextype;
+        m_activePrimGroup->m_indexType = m_activeMesh->m_indextype;
         m_activePrimGroup->m_startIndex = m_indexCache.size();
     }
 }

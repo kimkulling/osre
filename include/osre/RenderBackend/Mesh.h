@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -59,13 +59,15 @@ public:
     BufferData            *m_vb;
     IndexType              m_indextype;
     BufferData            *m_ib;
-    ui32                   m_numPrimGroups;
+    size_t                 m_numPrimGroups;
     PrimitiveGroup        *m_primGroups;
     ui32                   m_id;
 
     static Mesh *create( ui32 numGeo );
     static void destroy( Mesh **geo );
     static ui32 getVertexSize( VertexType vertextype );
+    PrimitiveGroup *createPrimitiveGroups(size_t numPrimGroups, IndexType *types, size_t *numIndices, PrimitiveType *primTypes, ui32 *startIndices);
+    PrimitiveGroup *createPrimitiveGroup( IndexType type, size_t numIndices, PrimitiveType primTypes, ui32 startIndex);
 
     OSRE_NON_COPYABLE( Mesh )
 

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -22,6 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/RenderBackend/Shader.h>
+
+#include <stdio.h>
 
 namespace OSRE {
 namespace Scene {
@@ -205,7 +207,7 @@ MaterialBuilder::~MaterialBuilder() {
 
  Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
     Material *mat = new Material( "shadermaterial", MaterialType::ShaderMaterial);
-
+printf("1\n");
     String vs, fs;
     if ( type == VertexType::ColorVertex ) {
         vs = GLSLVsSrc;
@@ -214,30 +216,38 @@ MaterialBuilder::~MaterialBuilder() {
         vs = GLSLVsSrcRV;
         fs = GLSLFsSrcRV;
     }
-    
+printf("2\n");
     if ( vs.empty() || fs.empty() ) {
         delete mat;
         return nullptr;
     }
 
+printf("3\n");
     ShaderSourceArray arr;
     arr[ static_cast<ui32>( ShaderType::SH_VertexShaderType ) ] = vs;
+printf("3.1\n");
     arr[ static_cast<ui32>( ShaderType::SH_FragmentShaderType ) ] = fs;
+printf("4\n");
     mat->createShader(arr);
+printf("5\n");
 
     // Setup shader attributes and variables
     if ( nullptr != mat->m_shader ) {
         if ( type == VertexType::ColorVertex ) {
+printf("6\n");
             ui32 numAttribs( ColorVert::getNumAttributes() );
             const String *attribs( ColorVert::getAttributes() );
             mat->m_shader->m_attributes.add( attribs, numAttribs );
         } else if ( type == VertexType::RenderVertex ) {
+printf("7\n");
             ui32 numAttribs( RenderVert::getNumAttributes() );
             const String *attribs( RenderVert::getAttributes() );
             mat->m_shader->m_attributes.add( attribs, numAttribs );
         }
+printf("8\n");
 
         mat->m_shader->m_parameters.add( "MVP" );
+printf("9\n");
     }
 
     return mat;
@@ -252,10 +262,12 @@ Material *MaterialBuilder::createBuildinUiMaterial() {
 
     // setup shader attributes and variables
     if ( nullptr != mat->m_shader ) {
-        ui32 numAttribs( RenderVert::getNumAttributes() );
+        size_t numAttribs( RenderVert::getNumAttributes() );
         const String *attribs( RenderVert::getAttributes() );
-        mat->m_shader->m_attributes.add( attribs, numAttribs );
-        mat->m_shader->m_parameters.add( "MVP" );
+        if (numAttribs > 0) {
+            mat->m_shader->m_attributes.add(attribs, numAttribs);
+            mat->m_shader->m_parameters.add("MVP");
+        }
     }
 
     return mat;

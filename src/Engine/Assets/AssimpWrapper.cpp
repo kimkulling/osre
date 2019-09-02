@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -273,13 +273,7 @@ void AssimpWrapper::importMeshes( aiMesh *mesh ) {
     currentMesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( ui32 ) * indexArray.size(), BufferAccessType::ReadOnly );
     currentMesh->m_ib->copyFrom( &indexArray[ 0 ], currentMesh->m_ib->getSize());
 
-    currentMesh->m_numPrimGroups = 1;
-    currentMesh->m_primGroups = new PrimitiveGroup[ currentMesh->m_numPrimGroups ];
-    currentMesh->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedInt;
-    currentMesh->m_primGroups[ 0 ].m_numIndices = indexArray.size();
-    currentMesh->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-    currentMesh->m_primGroups[ 0 ].m_startIndex = 0;
-
+    currentMesh->createPrimitiveGroup(IndexType::UnsignedInt, indexArray.size(), PrimitiveType::TriangleList, 0);
     currentMesh->m_material = m_matArray[matIdx];
     
     m_meshArray.add( currentMesh );
