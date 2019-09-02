@@ -74,7 +74,7 @@ void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, c
     vertices[ 3 ].tex0 = glm::vec2( 1, 1 );
 
     size_t vertOffset = vertexCache.numVertices();
-    vertexCache.increaseSize(4);
+    //vertexCache.increaseSize(4);
     for ( ui32 i = 0; i < 4; ++i ) {
         vertexCache.add( vertices[ i ] );
     }
@@ -89,9 +89,10 @@ void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, c
     indices[ 4 ] = 1;
     indices[ 5 ] = 3;
 
-    indexCache.increaseSize( 6 );
+    //indexCache.increaseSize( 6 );
     for ( ui32 i = 0; i < 6; ++i ) {
-        indexCache.add( static_cast<ui16>(vertOffset) + indices[ i ] );
+        ui16 index = static_cast<ui16>(vertOffset) + indices[i];
+        indexCache.add( index );
     }
 }
 
@@ -109,34 +110,34 @@ Rect2ui UIRenderUtils::computeTextBox( const String &text, f32 textSize ) {
 }
 
 RenderBackend::Mesh *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, Material *material ) {
-    Mesh *geo = Mesh::create( 1 );
+    Mesh *mesh = Mesh::create( 1 );
 
-    geo->m_vertextype = VertexType::RenderVertex;
-    geo->m_indextype = IndexType::UnsignedShort;
+    mesh->m_vertextype = VertexType::RenderVertex;
+    mesh->m_indextype = IndexType::UnsignedShort;
 
     if (vertexCache.sizeInBytes() > 0) {
-        geo->m_vb = BufferData::alloc(BufferType::VertexBuffer, vertexCache.sizeInBytes(), BufferAccessType::ReadOnly);
-        geo->m_vb->copyFrom(&vertexCache.m_cache[0], vertexCache.sizeInBytes());
+        mesh->m_vb = BufferData::alloc(BufferType::VertexBuffer, vertexCache.sizeInBytes(), BufferAccessType::ReadOnly);
+        mesh->m_vb->copyFrom(&vertexCache.m_cache[0], vertexCache.sizeInBytes());
 
-        geo->m_ib = BufferData::alloc(BufferType::IndexBuffer, indexCache.sizeInBytes(), BufferAccessType::ReadOnly);
-        geo->m_ib->copyFrom(&indexCache.m_cache[0], indexCache.sizeInBytes());
+        mesh->m_ib = BufferData::alloc(BufferType::IndexBuffer, indexCache.sizeInBytes(), BufferAccessType::ReadOnly);
+        mesh->m_ib->copyFrom(&indexCache.m_cache[0], indexCache.sizeInBytes());
     }
 
     // use default ui material
     if ( nullptr == material ) {
-        geo->m_material = Scene::MaterialBuilder::createBuildinUiMaterial();
+        mesh->m_material = Scene::MaterialBuilder::createBuildinUiMaterial();
     } else {
-        geo->m_material = material;
+        mesh->m_material = material;
     }
 
-    geo->m_numPrimGroups = 1;
-    geo->m_primGroups = new PrimitiveGroup[ 1 ];
-    geo->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_primGroups[ 0 ].m_numIndices = (ui32) indexCache.numIndices();
-    geo->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-    geo->m_primGroups[ 0 ].m_startIndex = 0;
+    mesh->m_numPrimGroups = 1;
+    mesh->m_primGroups = new PrimitiveGroup[ 1 ];
+    mesh->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
+    mesh->m_primGroups[ 0 ].m_numIndices = (ui32) indexCache.numIndices();
+    mesh->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
+    mesh->m_primGroups[ 0 ].m_startIndex = 0;
 
-    return geo;
+    return mesh;
 }
 
 } // Namespace UI

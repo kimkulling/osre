@@ -87,20 +87,19 @@ protected:
         m_canvas = AppBase::createScreen( "UiDemo" );
 
         Panel *panel = new Panel( "panel", UiFlags::Resizable, m_canvas );
-//        panel->setRect( 10, 10, 500, 500 );
+        panel->setRect( 10, 10, 500, 500 );
         ButtonBase *btnOpenFile = new ButtonBase( "Open file", nullptr );
         btnOpenFile->registerCallback(WidgetState::Pressed, UiFunctor::Make(this, &UIDemoApp::openFileCallback));
         panel->addWidget(btnOpenFile);
-//        btnOpenFile->setRect( 20, 20, 100, 20 );
-        //btnClick->setLabel( "Open file" );
+        btnOpenFile->setRect( 20, 20, 100, 20 );
 
         ButtonBase *btnQuit  = new ButtonBase( "Quit", panel );
         btnQuit->setRect( 400, 20, 100, 20 );
         btnQuit->registerCallback(WidgetState::Pressed, UiFunctor::Make( this, &UIDemoApp::quitCallback ) );
 
-        TextBase *tb = new TextBase( "test", m_canvas);
-        tb->setLabel( "Test" );
-        tb->setRect( 80, 20, 400, 60 );
+        //TextBase *tb = new TextBase( "test", m_canvas);
+        //tb->setLabel( "Test" );
+        //tb->setRect( 80, 20, 400, 60 );
 
         return true;
     }

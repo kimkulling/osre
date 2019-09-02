@@ -79,6 +79,7 @@ void Canvas::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *r
     // push 2D render mode
     const Rect2ui& r = Widget::getRect();
     m_transformMatrix.m_projection = glm::ortho( r.getX1(), r.getWidth(), r.getHeight(), r.getY1() );
+    m_transformMatrix.m_view = glm::mat4(1);
     m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
     m_transformMatrix.update();
     
@@ -89,7 +90,7 @@ void Canvas::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *r
 
     for ( size_t i=0; i<numChildren; ++i ) {
         Widget *currentChild( getWidgetAt( i ) );
-        if ( nullptr == currentChild ) {
+        if ( nullptr != currentChild ) {
             currentChild->render(renderCmdCache, rbSrv);
         }
     }

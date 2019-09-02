@@ -59,8 +59,8 @@ void UiRenderer::render(  Canvas *canvas, RenderBackendService * rbSrv) {
 
     rbSrv->beginPass(PipelinePass::getPassNameById(UiPassId));
     rbSrv->beginRenderBatch("b1");
-    rbSrv->setMatrix(MatrixType::Model, tmBlock.m_model);
-    rbSrv->setMatrix(MatrixType::Projection, tmBlock.m_projection);
+    //rbSrv->setMatrix(MatrixType::Model, tmBlock.m_model);
+    //rbSrv->setMatrix(MatrixType::Projection, tmBlock.m_projection);
 
     UiVertexCache vc; 
     UiIndexCache ic;
