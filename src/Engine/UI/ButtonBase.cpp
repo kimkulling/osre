@@ -140,13 +140,12 @@ void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendServic
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const Rect2ui &rect( getRect() );
 
-    UiVertexCache vertexCache;
-    UiIndexCache indexCache;
-    UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, vertexCache, indexCache );
+    const size_t startIndex = renderCmdCache.m_ic.numIndices();
+    UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic);
     UiRenderCmd *cmd( new UiRenderCmd );
-    cmd->m_ic = indexCache;
-    cmd->m_vc = vertexCache;
-    renderCmdCache.add( cmd );
+    cmd->m_startIndex = startIndex;
+    cmd->m_numIndices = renderCmdCache.m_ic.numIndices() - startIndex;
+    renderCmdCache.m_renderCmds.add(cmd);
 }
 
 void ButtonBase::onMouseDown( const Point2ui &pt, void *data) {

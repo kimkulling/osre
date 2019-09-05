@@ -44,14 +44,14 @@ UiRenderer::~UiRenderer() {
     // empty
 }
 
-void UiRenderer::render(  Canvas *canvas, RenderBackendService * rbSrv) {
+void UiRenderer::render( Canvas *canvas, RenderBackendService * rbSrv) {
     if (nullptr == canvas) {
         return;
     }
 
     UiRenderCmdCache cache;
     canvas->render( cache, rbSrv );
-    if (cache.isEmpty()) {
+    if (cache.m_renderCmds.isEmpty()) {
         return;
     }
 
@@ -62,28 +62,8 @@ void UiRenderer::render(  Canvas *canvas, RenderBackendService * rbSrv) {
     //rbSrv->setMatrix(MatrixType::Model, tmBlock.m_model);
     //rbSrv->setMatrix(MatrixType::Projection, tmBlock.m_projection);
 
-    UiVertexCache vc; 
-    UiIndexCache ic;
-    RenderBackend::Material *mat(nullptr);
-    for ( ui32 i = 0; i < cache.size(); ++i ) {
-        UiRenderCmd *currentCmd( cache[ i ] );
-        if (currentCmd == nullptr) {
-            continue;
-        }
-        
-        mat = currentCmd->m_mat;
-        const UiVertexCache &currentVC = currentCmd->m_vc;
-        const UiIndexCache  &currentIC = currentCmd->m_ic;
-        if (currentVC.numVertices() > 0) {
-            // Copy all vertices
-            vc.add( &currentVC.m_cache[0], currentVC.numVertices());
-            
-            // Copy all indices
-            ic.add( &currentIC.m_cache[0], currentIC.numIndices());
-        }
-    }
-
-    Mesh *mesh = UIRenderUtils::createGeoFromCache( vc, ic, mat);
+    Material* mat = cache.m_renderCmds[0]->m_mat;
+    Mesh *mesh = UIRenderUtils::createGeoFromCache(cache.m_vc, cache.m_ic, mat, cache.m_renderCmds);
     if (nullptr == mesh) {
         return;
     }

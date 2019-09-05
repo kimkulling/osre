@@ -109,8 +109,8 @@ void WidgetCoordMapping::mapPosToWorld( const Rect2ui &rect, ui32 x, ui32 y, f32
 }
 
 UiRenderCmd::UiRenderCmd()
-: m_vc()
-, m_ic()
+: m_startIndex(0)
+, m_numIndices(0)
 , m_mat( nullptr ) {
     // empty
 }

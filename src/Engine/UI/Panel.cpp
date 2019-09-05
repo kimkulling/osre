@@ -79,15 +79,15 @@ void Panel::onLayout() {
 void Panel::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService* ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const Rect2ui &rect( getRect() );
-    UiVertexCache vertexCache;
-    UiIndexCache indexCache;
-    UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle, vertexCache, indexCache );
+
+    const size_t startIndex = renderCmdCache.m_ic.numIndices();
+    UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic);
 
     UiRenderCmd *cmd( new UiRenderCmd );
-    cmd->m_vc = vertexCache;
-    cmd->m_ic = indexCache;
 
-    renderCmdCache.add( cmd );
+    cmd->m_startIndex = startIndex;
+    cmd->m_numIndices = renderCmdCache.m_ic.numIndices() - startIndex;
+    renderCmdCache.m_renderCmds.add(cmd);
 }
 
 } // Namespace UI

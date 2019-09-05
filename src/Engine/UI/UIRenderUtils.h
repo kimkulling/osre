@@ -49,9 +49,8 @@ public:
         UiIndexCache &indexCache );
     static Rect2ui computeTextBox( const String &text, f32 textSize );
     static RenderBackend::Mesh *createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, 
-        RenderBackend::Material *material );
+        RenderBackend::Material *material, const CPPCore::TArray<UiRenderCmd*>& renderCmds);
     
-    static void drawRect(const Rect2ui& rect, Canvas* canvas);
     
 private:
     UIRenderUtils();

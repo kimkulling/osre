@@ -101,8 +101,8 @@ using RenderBackend::UiVertexCache;
 using RenderBackend::UiIndexCache;
 
 struct UiRenderCmd {
-    UiVertexCache            m_vc;  ///< Will store all vertices
-    UiIndexCache             m_ic;  ///< Will store all indices
+    ui32 m_startIndex;
+    ui32 m_numIndices;
     RenderBackend::Material *m_mat; ///< Will store the material
 
     UiRenderCmd();
@@ -111,7 +111,13 @@ struct UiRenderCmd {
     OSRE_NON_COPYABLE(UiRenderCmd)
 };
 
-using UiRenderCmdCache = CPPCore::TArray<UiRenderCmd*>;
+struct UiRenderCmdCache {
+    UiVertexCache            m_vc;  ///< Will store all vertices
+    UiIndexCache             m_ic;  ///< Will store all indices
+    CPPCore::TArray<UiRenderCmd*> m_renderCmds;
+    
+
+};
 
 } // Namespace UI
 } // Namespace OSRE

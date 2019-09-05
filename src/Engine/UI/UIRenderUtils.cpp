@@ -109,7 +109,8 @@ Rect2ui UIRenderUtils::computeTextBox( const String &text, f32 textSize ) {
     return box;
 }
 
-RenderBackend::Mesh *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, Material *material ) {
+RenderBackend::Mesh *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, Material *material, 
+        const CPPCore::TArray<UiRenderCmd*> &renderCmds) {
     Mesh *mesh = Mesh::create( 1 );
 
     mesh->m_vertextype = VertexType::RenderVertex;
@@ -130,12 +131,14 @@ RenderBackend::Mesh *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCac
         mesh->m_material = material;
     }
 
-    mesh->m_numPrimGroups = 1;
-    mesh->m_primGroups = new PrimitiveGroup[ 1 ];
-    mesh->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    mesh->m_primGroups[ 0 ].m_numIndices = (ui32) indexCache.numIndices();
-    mesh->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-    mesh->m_primGroups[ 0 ].m_startIndex = 0;
+    mesh->m_numPrimGroups = renderCmds.size();
+    mesh->m_primGroups = new PrimitiveGroup[mesh->m_numPrimGroups];
+    for (size_t i = 0; i < renderCmds.size(); ++i ) {
+        mesh->m_primGroups[i].m_indexType = IndexType::UnsignedShort;
+        mesh->m_primGroups[i].m_numIndices = (ui32)renderCmds[i]->m_numIndices;
+        mesh->m_primGroups[i].m_primitive = PrimitiveType::TriangleList;
+        mesh->m_primGroups[i].m_startIndex = (ui32)renderCmds[i]->m_startIndex;
+    }
 
     return mesh;
 }

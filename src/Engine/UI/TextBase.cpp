@@ -80,31 +80,30 @@ void TextBase::onLayout() {
 
 static const ui32 NumQuadVert = 4;
 
-void TextBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
-    if ( m_text.empty() ) {
+void TextBase::onRender(UiRenderCmdCache& renderCmdCache, RenderBackendService* rbSrv) {
+    if (m_text.empty()) {
         return;
     }
     f32 fontSize = 0.1f;
-    if ( nullptr != m_font ) {
-        fontSize = static_cast<f32>( m_font->getSize() );
+    if (nullptr != m_font) {
+        fontSize = static_cast<f32>(m_font->getSize());
     }
 
-    const i32 stackId( getStackIndex() + 1 );
-    const f32 z( static_cast<f32>( stackId ) );
-    f32 x( static_cast<f32>( Widget::getRect().getX1() ) );
-    f32 y( static_cast<f32>( Widget::getRect().getY1() ) );
-    WidgetCoordMapping::mapPosToWorld( static_cast<ui32>(x), static_cast<ui32>(y), x, y );
+    const i32 stackId(getStackIndex() + 1);
+    const f32 z(static_cast<f32>(stackId));
+    f32 x(static_cast<f32>(Widget::getRect().getX1()));
+    f32 y(static_cast<f32>(Widget::getRect().getY1()));
+    WidgetCoordMapping::mapPosToWorld(static_cast<ui32>(x), static_cast<ui32>(y), x, y);
 
-    UiVertexCache vertexCache;
-    UiIndexCache indexCache;
-    
-    Scene::MeshBuilder::allocUiTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite, vertexCache, indexCache);
 
-    UiRenderCmd *cmd( new UiRenderCmd );
-    cmd->m_vc = vertexCache;
-    cmd->m_ic = indexCache;
+    const size_t startIndex = renderCmdCache.m_ic.numIndices();
+    Scene::MeshBuilder::allocUiTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite, renderCmdCache.m_vc, renderCmdCache.m_ic);
+
+    UiRenderCmd* cmd(new UiRenderCmd);
+    cmd->m_startIndex = startIndex;
+    cmd->m_numIndices = (ui32)(renderCmdCache.m_ic.numIndices() - startIndex);
     cmd->m_mat = Scene::MaterialBuilder::createBuildinUiMaterial();;
-    renderCmdCache.add( cmd );
+    renderCmdCache.m_renderCmds.add(cmd);
 }
 
 } // Namespace UI
