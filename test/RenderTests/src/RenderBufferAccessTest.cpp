@@ -41,7 +41,7 @@ using namespace ::OSRE::RenderBackend;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
 ///
-///	@brief
+///	@brief  A render buffer access - rendering test
 //-------------------------------------------------------------------------------------------------
 class RenderBufferAccessTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
@@ -52,7 +52,7 @@ class RenderBufferAccessTest : public AbstractRenderTest {
 
 public:
     RenderBufferAccessTest()
-        : AbstractRenderTest( "rendertest/RenderBufferAccessTest" ) {
+    : AbstractRenderTest( "rendertest/RenderBufferAccessTest" ) {
         // empty
     }
 

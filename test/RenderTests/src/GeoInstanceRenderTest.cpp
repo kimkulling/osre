@@ -75,7 +75,7 @@ const String FsSrc =
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
 ///
-///	@brief
+///	@brief  A instancing render-call - rendering test
 //-------------------------------------------------------------------------------------------------
 class GeoInstanceRenderTest : public AbstractRenderTest {
     static const ui32    NumInstances = 25;

@@ -37,7 +37,7 @@ using namespace ::OSRE::RenderBackend;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
 ///
-///	@brief
+///	@brief  A debug font - rendering test
 //-------------------------------------------------------------------------------------------------
 class DbgFontRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;

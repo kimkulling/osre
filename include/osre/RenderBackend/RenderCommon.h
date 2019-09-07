@@ -558,6 +558,10 @@ struct TVertexCache {
         m_cache.clear();
     }
 
+    bool isEmpty() const {
+        return m_cache.isEmpty();
+    }
+
     void increaseSize(size_t newSize) {
         if (0 == newSize) {
             return;
@@ -613,6 +617,10 @@ struct TIndexCache {
 
     void clear() {
         m_cache.clear();
+    }
+
+    bool isEmpty() const {
+        return m_cache.isEmpty();
     }
 
     void increaseSize(size_t newSize ) {

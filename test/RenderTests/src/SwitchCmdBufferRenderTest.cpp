@@ -76,7 +76,7 @@ const String FsSrc =
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Test
 ///
-///	@brief
+///	@brief  A command buffer switch - rendering test
 //-------------------------------------------------------------------------------------------------
 class SwitchCmdBufferRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;

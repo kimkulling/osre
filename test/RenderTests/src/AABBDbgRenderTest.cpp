@@ -37,7 +37,7 @@ using namespace ::OSRE::RenderBackend;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
 ///
-///	@brief
+///	@brief  A debug AABB - rendering test
 //-------------------------------------------------------------------------------------------------
 class AABBDbgRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;

@@ -124,9 +124,11 @@ SET( collision_src
 SET( debugging_inc
     ${HEADER_PATH}/Debugging/AssertHandler.h
     ${HEADER_PATH}/Debugging/osre_debugging.h
+	${HEADER_PATH}/Debugging/MeshDiagnostic.h
 )
 SET( debugging_src
     Debugging/AssertHandler.cpp
+	Debugging/MeshDiagnostic.cpp
 )
 
 #==============================================================================

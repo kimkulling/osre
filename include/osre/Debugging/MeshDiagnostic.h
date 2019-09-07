@@ -23,39 +23,41 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-#include <osre/UI/Widget.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 namespace OSRE {
-    
-// forward declarations
-namespace RenderBackend {
-    class Mesh;
-
-    struct Material;
-}
-
-namespace UI {
-
-struct Style;
+namespace Debugging {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief  This utility class is used to inspect mesh data.
 //-------------------------------------------------------------------------------------------------
-class UIRenderUtils {
+class OSRE_EXPORT MeshDiagnostic {
 public:
-    static void createRectFromStyle( WidgetType Type, const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
-        UiIndexCache &indexCache, ui32 stackIndex);
-    static Rect2ui computeTextBox( const String &text, f32 textSize );
-    static RenderBackend::Mesh *createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, 
-        RenderBackend::Material *material, const CPPCore::TArray<UiRenderCmd*>& renderCmds);
-    
-    
-private:
-    UIRenderUtils();
-    ~UIRenderUtils();
+    /// @brief  Will dump the vertex data of a text-box.
+    static void dumpTextBox(ui32 i, glm::vec3* textPos, ui32 VertexOffset);
+    /// @brief  Will dump the vertex-texture-coordinates data of a text-box.
+    static void dumpTextTex0Box(ui32 i, glm::vec2* tex0Pos, ui32 VertexOffset);
+    /// @brief  Will dump the vertex data of given vertices.
+    static void dumpVertices(RenderBackend::RenderVert* renderVertices, ui32 numverices);
+    /// 
+    static void dumpUiVertexCache(const RenderBackend::UiVertexCache& indexCache);
+    /// @brief  Will dump the vertex data of given vertices.
+    static void dumpVertices(const CPPCore::TArray<RenderBackend::RenderVert>& renderVertices);
+    /// @brief  Will dump the index data of given indices.
+    static void dumpIndices(const CPPCore::TArray<ui16>& indexArray);
+    /// @brief  Will dump the index data of given indices.
+    static void dumpIndices(ui16* indices, ui32 numIndices);
+    /// @brief  Will dump an index cache
+    static void dumpUiIndexCache(const RenderBackend::UiIndexCache &indexCache);
+    /// @brief  Will dump the index data of given indices.
+    static void dumpIndices(const CPPCore::TArray<ui32>& indexArray);
+
+    MeshDiagnostic() = delete;
+    MeshDiagnostic(const MeshDiagnostic&) = delete;
+    MeshDiagnostic& operator = (const MeshDiagnostic&) = delete;
 };
 
-} // Namespace UI
-} // Namespace OSRE
+}
+}
