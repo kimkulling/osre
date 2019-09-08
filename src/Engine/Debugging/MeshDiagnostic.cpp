@@ -85,7 +85,6 @@ void MeshDiagnostic::dumpUiVertexCache(const UiVertexCache& vertexCache) {
     }
     stream << "\n";
     osre_info(Tag, stream.str());
-
 }
 
 void MeshDiagnostic::dumpVertices(const CPPCore::TArray<RenderBackend::RenderVert>& renderVertices) {

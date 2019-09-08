@@ -52,10 +52,10 @@ void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, c
 
     // setup triangle vertices
     RenderVert vertices[ 4 ];
-    vertices[ 0 ].position = glm::vec3( x1, y1, (f32)stackIndex*0.01f);
-    vertices[ 1 ].position = glm::vec3( x1, y2, (f32)stackIndex * 0.01f);
-    vertices[ 2 ].position = glm::vec3( x2, y1, (f32)stackIndex * 0.01f);
-    vertices[ 3 ].position = glm::vec3( x2, y2, (f32)stackIndex * 0.01f);
+    vertices[ 0 ].position = glm::vec3( x1, y1, (f32)stackIndex * -0.01f);
+    vertices[ 1 ].position = glm::vec3( x1, y2, (f32)stackIndex * -0.01f);
+    vertices[ 2 ].position = glm::vec3( x2, y1, (f32)stackIndex * -0.01f);
+    vertices[ 3 ].position = glm::vec3( x2, y2, (f32)stackIndex * -0.01f);
 
     Color4 col;
     if ( WidgetType::Panel == type ) {
@@ -74,7 +74,7 @@ void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, c
     vertices[ 3 ].tex0 = glm::vec2( 1, 1 );
 
     size_t vertOffset = vertexCache.numVertices();
-    //vertexCache.increaseSize(4);
+    vertexCache.increaseSize(4);
     for ( ui32 i = 0; i < 4; ++i ) {
         vertexCache.add( vertices[ i ] );
     }
@@ -89,7 +89,7 @@ void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, c
     indices[ 4 ] = 1;
     indices[ 5 ] = 3;
 
-    //indexCache.increaseSize( 6 );
+    indexCache.increaseSize( 6 );
     for ( ui32 i = 0; i < 6; ++i ) {
         ui16 index = static_cast<ui16>(vertOffset) + indices[i];
         indexCache.add( index );
@@ -131,17 +131,9 @@ RenderBackend::Mesh *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCac
         mesh->m_material = material;
     }
 
-/*    mesh->m_numPrimGroups = renderCmds.size();
-    mesh->m_primGroups = new PrimitiveGroup[mesh->m_numPrimGroups];
-    for (size_t i = 0; i < renderCmds.size(); ++i ) {
-        mesh->m_primGroups[i].m_indexType = IndexType::UnsignedShort;
-        mesh->m_primGroups[i].m_numIndices = (ui32)renderCmds[i]->m_numIndices;
-        mesh->m_primGroups[i].m_primitive = PrimitiveType::TriangleList;
-        mesh->m_primGroups[i].m_startIndex = (ui32)renderCmds[i]->m_startIndex;
-    }*/
     mesh->m_numPrimGroups = 1;
     mesh->m_primGroups = new PrimitiveGroup[mesh->m_numPrimGroups];
-    for (size_t i = 0; i < renderCmds.size(); ++i) {
+    for (size_t i = 0; i < mesh->m_numPrimGroups; ++i) {
         mesh->m_primGroups[i].m_indexType = IndexType::UnsignedShort;
         mesh->m_primGroups[i].m_numIndices = (ui32)indexCache.numIndices();
         mesh->m_primGroups[i].m_primitive = PrimitiveType::TriangleList;

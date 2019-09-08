@@ -36,7 +36,7 @@ namespace UI {
 class OSRE_EXPORT Panel : public Widget {
 public:
     Panel( const String &name, ui32 flags, Widget *parent );
-    virtual ~Panel();
+    ~Panel()  override;
     ui32 getFlags() const;
     bool isEnabled( ui32 flag ) const;
     void setHeadline( const String &headline );

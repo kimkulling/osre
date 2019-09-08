@@ -36,7 +36,8 @@ namespace UI {
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
 
-UiRenderer::UiRenderer() {
+UiRenderer::UiRenderer() 
+: m_uiMaterial( nullptr ) {
     // empty
 }
 

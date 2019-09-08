@@ -99,7 +99,7 @@ public:
     static RenderBackend::BufferData *allocVertices(RenderBackend::VertexType type, size_t numVerts, ::glm::vec3 *pos,
             ::glm::vec3 *col1, ::glm::vec2 *tex0, RenderBackend::BufferAccessType access );
 
-    static void updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, RenderBackend::BufferData *vb );
+    static void updateTextVertices( size_t numVerts, ::glm::vec2 *tex0, RenderBackend::BufferData *vb );
 
     RenderBackend::Mesh *getMesh();
 

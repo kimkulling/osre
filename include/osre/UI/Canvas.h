@@ -51,7 +51,7 @@ namespace UI {
 class OSRE_EXPORT Canvas : public Widget {
 public:
     Canvas( const String &name, ui32 x, ui32 y, ui32 width, ui32 height );
-    virtual ~Canvas();
+    ~Canvas() override;
     virtual void setSurface( Platform::AbstractWindow *surface );
     const RenderBackend::TransformMatrixBlock &getTransform() const;
 

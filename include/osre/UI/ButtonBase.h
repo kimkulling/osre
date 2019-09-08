@@ -47,7 +47,7 @@ namespace UI {
 class OSRE_EXPORT ButtonBase : public Widget {
 public:
     ButtonBase( const String &name, Widget *parent );
-    virtual ~ButtonBase();
+    ~ButtonBase() override;
     virtual void setLabel( const String &label );
     virtual const String &getLabel() const;
     virtual void setImage( Image &image );
