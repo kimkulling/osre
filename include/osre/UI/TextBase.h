@@ -33,6 +33,11 @@ namespace RenderBackend {
 
 namespace UI {
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT TextBase : public Widget {
 public:
     TextBase( const String &name, Widget *parent );

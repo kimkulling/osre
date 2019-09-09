@@ -31,32 +31,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Scene {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  This utility class is used to inspect mesh data.
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT MeshDiagnostic {
-public:
-    /// @brief  Will dump the vertex data of a text-box.
-	static void dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset );
-    /// @brief  Will dump the vertex-texture-coordinates data of a text-box.
-    static void dumpTextTex0Box(ui32 i, glm::vec2 *tex0Pos, ui32 VertexOffset);
-    /// @brief  Will dump the vertex data of given vertices.
-    static void dumpVertices( RenderBackend::RenderVert *renderVertices, ui32 numverices );
-    /// @brief  Will dump the vertex data of given vertices.
-    static void dumpVertices( const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices );
-    /// @brief  Will dump the index data of given indices.
-    static void dumpIndices(const CPPCore::TArray<ui16> &indexArray);
-    /// @brief  Will dump the index data of given indices.
-    static void dumpIndices( ui16 *indices, ui32 numIndices );
-    /// @brief  Will dump the index data of given indices.
-    static void dumpIndices( const CPPCore::TArray<ui32> &indexArray );
-
-    MeshDiagnostic() = delete;
-    MeshDiagnostic(const MeshDiagnostic &) = delete;
-    MeshDiagnostic &operator = (const MeshDiagnostic &) = delete;
-};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -125,7 +99,7 @@ public:
     static RenderBackend::BufferData *allocVertices(RenderBackend::VertexType type, size_t numVerts, ::glm::vec3 *pos,
             ::glm::vec3 *col1, ::glm::vec2 *tex0, RenderBackend::BufferAccessType access );
 
-    static void updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, RenderBackend::BufferData *vb );
+    static void updateTextVertices( size_t numVerts, ::glm::vec2 *tex0, RenderBackend::BufferData *vb );
 
     RenderBackend::Mesh *getMesh();
 

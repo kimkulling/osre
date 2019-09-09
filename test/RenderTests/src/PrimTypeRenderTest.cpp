@@ -30,12 +30,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
 
-/*#include <GL/glew.h>
-#include <GL/gl.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>*/
-
 namespace OSRE {
 namespace RenderTest {
 
@@ -45,7 +39,7 @@ using namespace ::OSRE::Scene;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
 ///
-///	@brief
+///	@brief  A primitive meshes - rendering test
 //-------------------------------------------------------------------------------------------------
 class PrimTypeRenderTest : public AbstractRenderTest {
     static const ui32 NumPoints = 3;
@@ -78,11 +72,6 @@ public:
         points[ 1 ] = glm::vec3(  0,    0.5, 0 );
         points[ 2 ] = glm::vec3(  0.5, -0.5, 0 );
         
-       /* GLushort pt_indices[ PtNumIndices ];
-        pt_indices[ 0 ] = 0;
-        pt_indices[ 1 ] = 1;
-        pt_indices[ 2 ] = 2;*/
-
         // line segment coordinates
         glm::vec3 pos[ NumPoints ];
         pos[ 0 ] = glm::vec3( -1, -1, 0 );

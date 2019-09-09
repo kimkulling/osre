@@ -36,7 +36,7 @@ using namespace ::OSRE::RenderBackend;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
 ///
-///	@brief
+///	@brief  A static text - rendering test
 //-------------------------------------------------------------------------------------------------
 class StaticTextRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;

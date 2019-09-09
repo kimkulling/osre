@@ -83,91 +83,6 @@ const String TextFsSrc =
     "    vFragColor = texture( tex0, UV );\n"
 	"};\n";
 
-void MeshDiagnostic::dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset ) {
-    std::stringstream stream;
-    stream << std::endl;
-    stream << "i = " << i << " : " << textPos[ VertexOffset + 0 ].x << ", " << textPos[ VertexOffset + 0 ].y << ", " << textPos[ VertexOffset + 0 ].z << "\n";
-    stream << "i = " << i << " : " << textPos[ VertexOffset + 1 ].x << ", " << textPos[ VertexOffset + 1 ].y << ", " << textPos[ VertexOffset + 1 ].z << "\n";
-    stream << "i = " << i << " : " << textPos[ VertexOffset + 2 ].x << ", " << textPos[ VertexOffset + 2 ].y << ", " << textPos[ VertexOffset + 2 ].z << "\n";
-    stream << "i = " << i << " : " << textPos[ VertexOffset + 3 ].x << ", " << textPos[ VertexOffset + 3 ].y << ", " << textPos[ VertexOffset + 3 ].z << "\n";
-    osre_info( Tag, stream.str() );
-}
-
-void MeshDiagnostic::dumpTextTex0Box( ui32 i, glm::vec2 *tex0Pos, ui32 VertexOffset ) {
-    std::stringstream stream;
-    stream << std::endl;
-    stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 0 ].x << ", " << tex0Pos[ VertexOffset + 0 ].y << "\n";
-    stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 1 ].x << ", " << tex0Pos[ VertexOffset + 1 ].y << "\n";
-    stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 2 ].x << ", " << tex0Pos[ VertexOffset + 2 ].y << "\n";
-    stream << "i = " << i << " : " << tex0Pos[ VertexOffset + 3 ].x << ", " << tex0Pos[ VertexOffset + 3 ].y << "\n";
-    osre_info( Tag, stream.str() );
-}
-
-static void dumpRenderVertex( ui32 idx, const RenderBackend::RenderVert &vertex ) {
-    std::cout << "v[" << idx << "].position = " << vertex.position.x << "|" << vertex.position.y << "|" << vertex.position.z << "\n";
-    std::cout << "v[" << idx << "].normal   = " << vertex.normal.x   << "|" << vertex.normal.y   << "|" << vertex.normal.z   << "\n";
-    std::cout << "v[" << idx << "].color0   = " << vertex.color0.x   << "|" << vertex.color0.y   << "|" << vertex.color0.z   << "\n";
-    std::cout << "v[" << idx << "].tex0     = " << vertex.tex0.x     << "|" << vertex.tex0.y     << "\n";
-}
-
-void MeshDiagnostic::dumpVertices( RenderBackend::RenderVert *renderVertices, ui32 numVertices ) {
-    if ( 0 == numVertices || nullptr == renderVertices ) {
-        return;
-    }
-
-    for ( ui32 i = 0; i < numVertices; i++ ) {
-        dumpRenderVertex( i, renderVertices[ i ] );
-    }
-}
-
-void MeshDiagnostic::dumpVertices(const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices) {
-	if ( renderVertices.isEmpty() ) {
-		return;
-	}
-	for (ui32 i = 0; i < renderVertices.size(); i++ ) {
-        dumpRenderVertex( i, renderVertices[ i ] );
-	}
-}
-
-void MeshDiagnostic::dumpIndices(const CPPCore::TArray<ui16> &indexArray) {
-	if ( indexArray.isEmpty() ) {
-		return;
-	}
-    std::stringstream stream;
-    stream << std::endl;
-
-	for (ui32 i = 0; i<indexArray.size(); i++) {
-		std::cout << indexArray[i] << ", ";
-	}
-	std::cout << "\n";
-}
-
-void MeshDiagnostic::dumpIndices( ui16 *indices, ui32 numIndices ) {
-    if ( nullptr == indices || 0 == numIndices ) {
-        return;
-    }
-
-    std::stringstream stream;
-    stream << std::endl;
-    for ( ui32 i = 0; i < numIndices; i++ ) {
-        stream << indices[ i ] << ", ";
-    }
-    stream << "\n";
-    osre_info( Tag, stream.str() );
-}
-
-void MeshDiagnostic::dumpIndices( const CPPCore::TArray<ui32> &indexArray ) {
-    if ( indexArray.isEmpty() ) {
-        return;
-    }
-
-    for ( ui32 i = 0; i < indexArray.size(); i++ ) {
-        std::cout << indexArray[ i ] << ", ";
-    }
-    std::cout << "\n";
-
-}
-
 MeshBuilder::MeshBuilder() 
 : m_ActiveGeo( nullptr )
 , m_isDirty( false ) {
@@ -190,48 +105,43 @@ MeshBuilder &MeshBuilder::allocEmptyMesh( VertexType type, ui32 numMeshes ) {
 
 MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
     Mesh *mesh = Mesh::create( 1 );
-printf("1\n");
     mesh->m_vertextype = type;
     mesh->m_indextype = IndexType::UnsignedShort;
-printf("2\n");
+
     // setup triangle vertices    
     static const ui32 NumVert = 3;
     glm::vec3 col[ NumVert ];
     col[ 0 ] = glm::vec3( 1, 0, 0 );
     col[ 1 ] = glm::vec3( 0, 1, 0 );
     col[ 2 ] = glm::vec3( 0, 0, 1 );
-printf("3\n");
+
     glm::vec3 pos[ NumVert ];
     pos[ 0 ] = glm::vec3( -1, -1, 0 );
     pos[ 1 ] = glm::vec3( 0, 1, 0 );
     pos[ 2 ] = glm::vec3( 1, -1, 0 );
     mesh->m_vb = allocVertices( mesh->m_vertextype,  NumVert, pos, col, nullptr, access );
 
-printf("4\n");
     // setup triangle indices
     static const size_t NumIndices = 3;
     GLushort  indices[ NumIndices ];
     indices[ 0 ] = 0;
     indices[ 1 ] = 2;
     indices[ 2 ] = 1;
-printf("5\n");
+
     ui32 size = sizeof( GLushort ) * NumIndices;
     mesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, access );
     ::memcpy( mesh->m_ib->getData(), indices, size );
 
 	// setup primitives
     mesh->createPrimitiveGroup(IndexType::UnsignedShort, 3, PrimitiveType::TriangleList, 0);
-printf("6\n");
 
 	// setup material
     mesh->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
     m_ActiveGeo = mesh;
-printf("7\n");
     // setup material
-mesh->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
+    mesh->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
-printf("8\n");
 
     return *this;
 }
@@ -760,10 +670,12 @@ BufferData *MeshBuilder::allocVertices( VertexType type, size_t numVerts, glm::v
     return data;
 }
 
-void MeshBuilder::updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, BufferData *vb ) {
-    if ( nullptr == tex0 || nullptr == vb ) {
+void MeshBuilder::updateTextVertices( size_t numVerts, ::glm::vec2 *tex0, BufferData *vb ) {
+    if (0 == numVerts) {
         return;
     }
+    OSRE_ASSERT(nullptr != tex0);
+    OSRE_ASSERT(nullptr != vb);
 
     RenderVert *vert = new RenderVert[ numVerts ];
     ::memcpy( &vert[ 0 ].position, vb->getData(), vb->getSize() );

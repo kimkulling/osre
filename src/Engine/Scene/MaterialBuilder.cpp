@@ -207,7 +207,6 @@ MaterialBuilder::~MaterialBuilder() {
 
  Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
     Material *mat = new Material( "shadermaterial", MaterialType::ShaderMaterial);
-printf("1\n");
     String vs, fs;
     if ( type == VertexType::ColorVertex ) {
         vs = GLSLVsSrc;
@@ -216,38 +215,29 @@ printf("1\n");
         vs = GLSLVsSrcRV;
         fs = GLSLFsSrcRV;
     }
-printf("2\n");
     if ( vs.empty() || fs.empty() ) {
         delete mat;
         return nullptr;
     }
 
-printf("3\n");
     ShaderSourceArray arr;
     arr[ static_cast<ui32>( ShaderType::SH_VertexShaderType ) ] = vs;
-printf("3.1\n");
     arr[ static_cast<ui32>( ShaderType::SH_FragmentShaderType ) ] = fs;
-printf("4\n");
     mat->createShader(arr);
-printf("5\n");
 
     // Setup shader attributes and variables
     if ( nullptr != mat->m_shader ) {
         if ( type == VertexType::ColorVertex ) {
-printf("6\n");
             ui32 numAttribs( ColorVert::getNumAttributes() );
             const String *attribs( ColorVert::getAttributes() );
             mat->m_shader->m_attributes.add( attribs, numAttribs );
         } else if ( type == VertexType::RenderVertex ) {
-printf("7\n");
             ui32 numAttribs( RenderVert::getNumAttributes() );
             const String *attribs( RenderVert::getAttributes() );
             mat->m_shader->m_attributes.add( attribs, numAttribs );
         }
-printf("8\n");
 
         mat->m_shader->m_parameters.add( "MVP" );
-printf("9\n");
     }
 
     return mat;

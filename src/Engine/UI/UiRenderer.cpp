@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-
+#include <osre/Debugging/MeshDiagnostic.h>
 #include "UIRenderUtils.h"
 
 namespace OSRE {
@@ -36,7 +36,8 @@ namespace UI {
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
 
-UiRenderer::UiRenderer() {
+UiRenderer::UiRenderer() 
+: m_uiMaterial( nullptr ) {
     // empty
 }
 
@@ -63,6 +64,8 @@ void UiRenderer::render( Canvas *canvas, RenderBackendService * rbSrv) {
     //rbSrv->setMatrix(MatrixType::Projection, tmBlock.m_projection);
 
     Material* mat = cache.m_renderCmds[0]->m_mat;
+    Debugging::MeshDiagnostic::dumpUiIndexCache(cache.m_ic);
+    Debugging::MeshDiagnostic::dumpUiVertexCache(cache.m_vc);
     Mesh *mesh = UIRenderUtils::createGeoFromCache(cache.m_vc, cache.m_ic, mat, cache.m_renderCmds);
     if (nullptr == mesh) {
         return;

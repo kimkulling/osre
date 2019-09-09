@@ -27,12 +27,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations
 namespace Platform {
     class AbstractWindow;
 }
 
 namespace UI {
-
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -52,9 +52,8 @@ private:
 
 private:
     static UiItemFactory *s_instance;
-
     Platform::AbstractWindow *m_surface;
 };
 
-}
-}
+} // Namespace UI
+} // Namespace OSRE

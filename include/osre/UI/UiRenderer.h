@@ -30,6 +30,8 @@ namespace OSRE {
 // Forward declarations
 namespace RenderBackend {
     class RenderBackendService;
+
+    struct Material;
 }
 
 namespace UI {
@@ -44,6 +46,9 @@ public:
     UiRenderer();
     ~UiRenderer();
     void render( Canvas *canvas, RenderBackend::RenderBackendService *rbService );
+
+private:
+    RenderBackend::Material *m_uiMaterial;
 };
 
 } // Namespace UI
