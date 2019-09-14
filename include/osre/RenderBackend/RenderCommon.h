@@ -385,8 +385,8 @@ struct OSRE_EXPORT VertexLayout {
 ///	@brief  This struct is used to describe data for a GPU buffer.
 struct OSRE_EXPORT BufferData {
     BufferType       m_type;    ///< The buffer type ( @see BufferType )
-    MemoryBuffer     m_buffer;
-    size_t           m_cap;
+    MemoryBuffer     m_buffer;  ///< The memory buffer
+    size_t           m_cap;     ///<
     BufferAccessType m_access;  ///< Access token ( @see BufferAccessType )
 
     BufferData();

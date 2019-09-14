@@ -419,7 +419,7 @@ ID3D11Buffer *DX11Renderer::createBuffer(BufferType type, BufferData *bd, Buffer
     // Set up the description for the buffer.
     D3D11_BUFFER_DESC bufferDesc;
     bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    bufferDesc.ByteWidth = bd->getSize();
+    bufferDesc.ByteWidth = (UINT) bd->getSize();
     bufferDesc.BindFlags = translateVBEnum2DX11(type);
     bufferDesc.CPUAccessFlags = translateAccessFlag(usage);
     bufferDesc.MiscFlags = 0;
@@ -540,9 +540,9 @@ DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, DX11Sha
     // Create the vertex shader from the buffer.
     String name;
     DXGI_FORMAT dx11Format;
-    const ui32 numComps = layout->m_components.size();
+    const size_t numComps = layout->m_components.size();
     D3D11_INPUT_ELEMENT_DESC *dx11VertexDecl = new D3D11_INPUT_ELEMENT_DESC[numComps];
-    for (ui32 i = 0; i < numComps; ++i) {
+    for (size_t i = 0; i < numComps; ++i) {
         VertComponent &comp = layout->getAt( i );
         getDx11Component(comp.m_attrib, name, dx11Format);
         dx11VertexDecl[ i ].SemanticName = name.c_str();
@@ -558,7 +558,7 @@ DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, DX11Sha
         dx11VertexDecl[i].InputSlot = 0;
     }
     ID3D11InputLayout *dx11Layout( nullptr );
-    result = m_device->CreateInputLayout(dx11VertexDecl, numComps, shader->m_vsBuffer->GetBufferPointer(),
+    result = m_device->CreateInputLayout(dx11VertexDecl, (UINT) numComps, shader->m_vsBuffer->GetBufferPointer(),
         shader->m_vsBuffer->GetBufferSize(), &dx11Layout);
     if (FAILED(result)) {
         return nullptr;
@@ -618,11 +618,18 @@ DX11Shader *DX11Renderer::createShader(Shader *shader) {
         }
 
         dx11Shader = new DX11Shader;
-        if (static_cast<ShaderType>(i) == ShaderType::SH_VertexShaderType) {
-            result = m_device->CreateVertexShader(buffer, buffer->GetBufferSize(), NULL, &dx11Shader->m_vertexShader);
-            dx11Shader->m_vsBuffer = buffer;
-        } else if (static_cast<ShaderType>(i) == ShaderType::SH_FragmentShaderType) {
-            result = m_device->CreatePixelShader(buffer, buffer->GetBufferSize(), NULL, &dx11Shader->m_pixelShader);
+        const ShaderType type(static_cast<ShaderType>(i));
+        switch( type ) {
+            case ShaderType::SH_VertexShaderType:
+                result = m_device->CreateVertexShader(buffer, buffer->GetBufferSize(), NULL, &dx11Shader->m_vertexShader);
+                dx11Shader->m_vsBuffer = buffer;
+                break;
+            case ShaderType::SH_GeometryShaderType:
+            case ShaderType::SH_TesselationShaderType:
+                break;
+            case ShaderType::SH_FragmentShaderType:
+                result = m_device->CreatePixelShader(buffer, buffer->GetBufferSize(), NULL, &dx11Shader->m_pixelShader);
+                break;
         }
     }
 

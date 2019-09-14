@@ -38,9 +38,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma warning( push )
 #   pragma warning( disable : 4005 )
 #   include <d3d11.h>
-//#   include <D3Dcompiler.h>
 #pragma warning( pop )
-//#include <d3d11.h>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -52,12 +50,15 @@ using namespace ::CPPCore;
 static const c8 *Tag = "DX11RenderEventHandler";
 
 static void setConstantBuffers(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj, DX11Renderer *dx11Renderer ) {
+    OSRE_ASSERT(nullptr != dx11Renderer);
+
     dx11Renderer->setMatrix(MatrixType::Model, model);
     dx11Renderer->setMatrix(MatrixType::View, view);
     dx11Renderer->setMatrix(MatrixType::Projection, proj);
 }
 
 static void setupUniforms( void *bufferData, DX11Renderer *dx11Renderer ) {
+    OSRE_ASSERT(nullptr != dx11Renderer);
 
 }
 
@@ -139,7 +140,8 @@ bool DX11RenderEventHandler::onCreateRenderer(const EventData *eventData) {
     bool result( false );
     result = m_dx11Renderer->create(activeSurface);
     if (!result) {
-        osre_error( Tag, "Error occurred while creating DX11Renderer.")
+        osre_error(Tag, "Error occurred while creating DX11Renderer.");
+        return false;
     }
     
     // Create Matrix buffer

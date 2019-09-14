@@ -88,8 +88,9 @@ void WidgetCoordMapping::mapPosArrayToWorld( ui32 *x, ui32 *y, ui32 numPoints, f
     OSRE_ASSERT( nullptr != y );
     OSRE_ASSERT( nullptr != mappedX );
     OSRE_ASSERT( nullptr != mappedY );
+
     for ( ui32 i = 0; i < numPoints; ++i ) {
-        mapPosToWorld(s_dim, x[i], y[i], mappedX[i], mappedY[i] );
+        mapPosToWorld(s_dim, x[ i ], y[ i ], mappedX[ i ], mappedY[ i ] );
     }
 }
 
@@ -146,6 +147,7 @@ void Widget::setParent( Widget *parent ) {
     if ( nullptr != m_parent ) {
         m_parent->removeWidget( this );
     }
+
     m_parent = parent;
     m_parent->addWidget( this );
 }
