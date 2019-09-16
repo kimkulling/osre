@@ -210,7 +210,9 @@ bool DX11RenderEventHandler::onInitRenderPasses( const EventData *eventData ) {
     Frame *frame = frameToCommitData->m_frame;
     for (ui32 passIdx = 0; passIdx < frame->m_newPasses.size(); ++passIdx) {
         PassData *currentPass = frame->m_newPasses[passIdx];
-        OSRE_ASSERT(nullptr != currentPass);
+        if (nullptr == currentPass) {
+            continue;
+        }
 
         if (!currentPass->m_isDirty) {
             continue;
