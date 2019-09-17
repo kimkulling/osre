@@ -62,6 +62,10 @@ static void setupUniforms( void *bufferData, DX11Renderer *dx11Renderer ) {
 
 }
 
+static void setupConstantBuffer(void* bufferData, DX11Renderer* dx11Renderer) {
+    OSRE_ASSERT(nullptr != dx11Renderer);
+}
+
 DX11RenderEventHandler::DX11RenderEventHandler()
 : AbstractEventHandler()
 , m_isRunning( true )
@@ -230,7 +234,7 @@ bool DX11RenderEventHandler::onInitRenderPasses( const EventData *eventData ) {
             // set uniforms
             for (ui32 uniformIdx = 0; uniformIdx < currentBatchData->m_uniforms.size(); ++uniformIdx) {
                 setupUniforms(nullptr, m_dx11Renderer);
-                //setupConstantBuffer(currentBatchData->m_uniforms[uniformIdx], m_oglBackend, this);
+                setupConstantBuffer(currentBatchData->m_uniforms[uniformIdx], m_oglBackend, this);
             }
 
             // set meshes
