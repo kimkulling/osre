@@ -92,11 +92,12 @@ protected:
         btnOpenFile->registerCallback(WidgetState::Pressed, UiFunctor::Make(this, &UIDemoApp::openFileCallback));
         //panel->addWidget(btnOpenFile);
         btnOpenFile->setRect( 20, 20, 100, 20 );
+        btnOpenFile->setLabel("Open file");
 
         ButtonBase *btnQuit  = new ButtonBase( "Quit", panel );
         btnQuit->setRect( 400, 20, 100, 20 );
         btnQuit->registerCallback(WidgetState::Pressed, UiFunctor::Make( this, &UIDemoApp::quitCallback ) );
-
+        
         TextBase *tb = new TextBase( "test", panel);
         tb->setLabel( "Test" );
         tb->setRect( 80, 20, 400, 60 );

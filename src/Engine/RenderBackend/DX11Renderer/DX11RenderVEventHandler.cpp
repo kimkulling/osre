@@ -57,12 +57,11 @@ static void setConstantBuffers(const glm::mat4 &model, const glm::mat4 &view, co
     dx11Renderer->setMatrix(MatrixType::Projection, proj);
 }
 
-static void setupUniforms( void *bufferData, DX11Renderer *dx11Renderer ) {
+static void setupUniforms( void *bufferData, DX11Renderer *dx11Renderer, DX11RenderEventHandler *eh) {
     OSRE_ASSERT(nullptr != dx11Renderer);
-
 }
 
-static void setupConstantBuffer(void* bufferData, DX11Renderer* dx11Renderer) {
+static void setupConstantBuffer(void* bufferData, DX11Renderer* dx11Renderer, DX11RenderEventHandler *eh) {
     OSRE_ASSERT(nullptr != dx11Renderer);
 }
 
@@ -233,8 +232,8 @@ bool DX11RenderEventHandler::onInitRenderPasses( const EventData *eventData ) {
 
             // set uniforms
             for (ui32 uniformIdx = 0; uniformIdx < currentBatchData->m_uniforms.size(); ++uniformIdx) {
-                setupUniforms(nullptr, m_dx11Renderer);
-                setupConstantBuffer(currentBatchData->m_uniforms[uniformIdx], m_oglBackend, this);
+                setupUniforms(nullptr, m_dx11Renderer, this );
+                setupConstantBuffer(currentBatchData->m_uniforms[uniformIdx], m_dx11Renderer, this);
             }
 
             // set meshes

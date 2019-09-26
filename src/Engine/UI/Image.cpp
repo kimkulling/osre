@@ -61,9 +61,8 @@ void Image::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rb
     UiIndexCache indexCache;
 
     MeshBuilder builder;
-    const Rect2ui &dim = Widget::getRect();
-    builder.allocUiQuad( dim, vertexCache, indexCache );
-    
+    const Rect2ui &imageRect = Widget::getRect();
+    builder.allocUiQuad( imageRect, vertexCache, indexCache );   
 }
 
 } // Namespace UI

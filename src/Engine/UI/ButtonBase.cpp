@@ -74,6 +74,11 @@ void ButtonBase::setLabel( const String &label ) {
             if ( nullptr == m_textWidget ) {
                 m_textWidget = new TextBase( getName() + ".label", this );
                 m_textWidget->setLabel( m_label );
+                const f32 x1 = getRect().getX1();
+                const f32 y1 = getRect().getY1();
+                const f32 w = x1 + getRect().getWidth() - 2;
+                const f32 h = y1 + getRect().getHeight() - 2;
+                m_textWidget->setRect(x1 + 1, y1 + 1, w, h);
             }
         }
         Widget::requestRedraw();

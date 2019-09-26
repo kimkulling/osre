@@ -532,23 +532,27 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
     return *this;
 }
 
-void MeshBuilder::allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access,
+void MeshBuilder::allocUiTextBox(f32 x, f32 y, f32 z, f32 textSize, const String &text, BufferAccessType access,
         UiVertexCache &vc, UiIndexCache &ic) {
     glm::vec3 *textPos(nullptr), *colors(nullptr);
     glm::vec2 *tex0(nullptr);
     GLushort *textIndices(nullptr);
     generateTextBoxVerticesAndIndices(x, y, textSize, text, &textPos, &colors, &tex0, &textIndices);
-    for (ui32 i = 0; i < text.size(); i++) {
+    const ui32 offset = vc.numVertices();
+    const ui32 numNewVerts = getNumTextVerts(text);
+    for (ui32 i = 0; i < numNewVerts; i++) {
         RenderVert v;
         v.position = textPos[i];
+        v.position.z = z;
         v.color0 = colors[i];
         v.tex0 = tex0[i];
         vc.add(v);
     }
 
     const size_t numIndices(getNumTextIndices(text));
+    
     for (size_t i = 0; i < numIndices; ++i) {
-        ic.add(textIndices[i]);
+        ic.add(textIndices[i] + offset);
     }
 
     delete[] textIndices;

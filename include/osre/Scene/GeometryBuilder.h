@@ -81,7 +81,7 @@ public:
     MeshBuilder& allocTextBox( f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access );
 
     /// @brief  Helper method to create text-box mesh.
-    static void allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access, 
+    static void allocUiTextBox(f32 x, f32 y, f32 z, f32 textSize, const String &text, RenderBackend::BufferAccessType access,
                 RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic);
 
     /// @brief  Will update the vertices of a text box.
