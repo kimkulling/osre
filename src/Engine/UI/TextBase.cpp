@@ -54,6 +54,8 @@ void TextBase::setLabel( const String &text ) {
     }
     
     m_text = text;
+    
+    Widget::requestLayouting();
     Widget::requestRedraw();
 }
 
@@ -75,12 +77,11 @@ RenderBackend::FontBase *TextBase::getFont() const {
 }
 
 void TextBase::onLayout() {
-
 }
 
-static const ui32 NumQuadVert = 4;
+//static const ui32 NumQuadVert = 4;
 
-void TextBase::onRender(UiRenderCmdCache& renderCmdCache, RenderBackendService* rbSrv) {
+void TextBase::onRender(UiRenderCmdCache& renderCmdCache, RenderBackendService* ) {
     if (m_text.empty()) {
         return;
     }
@@ -97,7 +98,7 @@ void TextBase::onRender(UiRenderCmdCache& renderCmdCache, RenderBackendService* 
     Scene::MeshBuilder::allocUiTextBox(x, y, z, fontSize, m_text, BufferAccessType::ReadWrite, renderCmdCache.m_vc, renderCmdCache.m_ic);
 
     UiRenderCmd* cmd(new UiRenderCmd);
-    cmd->m_startIndex = startIndex;
+    cmd->m_startIndex = (ui32) startIndex;
     cmd->m_numIndices = (ui32)(renderCmdCache.m_ic.numIndices() - startIndex);
     cmd->m_mat = Scene::MaterialBuilder::createBuildinUiMaterial();;
     renderCmdCache.m_renderCmds.add(cmd);

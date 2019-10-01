@@ -164,6 +164,7 @@ bool Widget::addWidget( Widget *child ) {
     if (!hasWidget(child)) {
         m_children.add(child);
         child->get();
+        requestRedraw();
     } else {
         osre_debug(Tag, "Tried to add child again.");
     }
@@ -181,6 +182,7 @@ bool Widget::removeWidget( Widget *child ) {
     if ( m_children.end() != it ) {
         (*it)->release();
         m_children.remove( it );
+        requestRedraw();
         ok = true;
     }
 
@@ -215,6 +217,7 @@ Widget &Widget::setRect( ui32 x, ui32 y, ui32 w, ui32 h ) {
     Rect2ui newRect( x,y,w,h );
     if ( m_rect != newRect ) {
         m_rect = newRect;
+        requestLayouting();
         requestRedraw();
     }
     
@@ -310,6 +313,10 @@ void Widget::render( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbS
         return;
     }
 
+    if (layoutingRequested()) {
+        layout();
+    }
+
     if ( redrawRequested() ) {
         onRender( renderCmdCache, rbSrv );
         redrawDone();
@@ -358,6 +365,10 @@ WidgetState Widget::getWidgetState() const {
 void Widget::checkChildren( const Point2ui &pt, void *data, WidgetState state) {
     for (ui32 i = 0; i < getNumWidgets(); ++i ) {
         Widget *child(getWidgetAt(i));
+        if (nullptr == child) {
+            continue;
+        }
+
         const Rect2ui &r = child->getRect();
         if (r.isIn(pt)) {
             if (state == WidgetState::Pressed) {
@@ -376,7 +387,6 @@ void Widget::onMouseDown( const Point2ui &pt, void *data) {
 void Widget::onMouseUp( const Point2ui &pt, void *data) {
     checkChildren(pt, data, WidgetState::Released);
 }
-
 
 void Widget::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
     const Rect2ui &r( getRect() );

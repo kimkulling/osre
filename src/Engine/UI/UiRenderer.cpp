@@ -60,8 +60,6 @@ void UiRenderer::render( Canvas *canvas, RenderBackendService * rbSrv) {
 
     rbSrv->beginPass(PipelinePass::getPassNameById(UiPassId));
     rbSrv->beginRenderBatch("b1");
-    //rbSrv->setMatrix(MatrixType::Model, tmBlock.m_model);
-    //rbSrv->setMatrix(MatrixType::Projection, tmBlock.m_projection);
 
     Material* mat = cache.m_renderCmds[0]->m_mat;
     Debugging::MeshDiagnostic::dumpUiIndexCache(cache.m_ic);

@@ -142,20 +142,5 @@ const Node::AABB &Node::getAABB() const {
     return m_aabb;
 }
 
-class OSRE_EXPORT LightNode : public Node {
-public:
-    LightNode(const String &name, Common::Ids &ids, Node *parent = nullptr);
-    ~LightNode();
-    void setLight(const RenderBackend::Light &light);
-    const RenderBackend::Light &getLight() const;
-
-protected:
-    void onUpdate(Time dt) override;
-    virtual void onRender(RenderBackend::RenderBackendService *renderBackendSrv);
-
-private:
-    RenderBackend::Light m_light;
-};
-
 } // Namespace Scene
 } // namespace OSRE

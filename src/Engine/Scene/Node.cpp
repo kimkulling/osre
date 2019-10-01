@@ -263,37 +263,5 @@ void Node::onRender( RenderBackendService* ) {
     // empty
 }
 
-LightNode::LightNode(const String &name, Common::Ids &ids, Node *parent)
-: Node(name, ids, parent)
-, m_light() {
-    // empty
-}
-
-LightNode::~LightNode() {
-
-}
-
-void LightNode::setLight(const Light &light) {
-    m_light = light;
-}
-
-const Light &LightNode::getLight() const {
-    return m_light;
-}
-
-void LightNode::onUpdate(Time dt) {
-    TransformComponent *comp( ( TransformComponent* ) getComponent( Node::ComponentType::TransformComponentType ) );
-    if (nullptr != comp) {
-        const TransformState &transformState(comp->getTransformState());
-        glm::mat4 m(1.0f);
-        transformState.toMatrix( m );
-        m_light.m_position = m * m_light.m_position;
-    }
-}
-
-void LightNode::onRender( RenderBackendService *renderBackendSrv) {
-
-}
-
 } // Namespace Scene
 } // namespace OSRE

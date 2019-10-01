@@ -98,9 +98,9 @@ protected:
         btnQuit->setRect( 400, 20, 100, 20 );
         btnQuit->registerCallback(WidgetState::Pressed, UiFunctor::Make( this, &UIDemoApp::quitCallback ) );
         
-        TextBase *tb = new TextBase( "test", panel);
-        tb->setLabel( "Test" );
-        tb->setRect( 80, 20, 400, 60 );
+        //TextBase *tb = new TextBase( "test", panel);
+        //tb->setLabel( "Test" );
+        //tb->setRect( 80, 20, 400, 60 );
 
         return true;
     }

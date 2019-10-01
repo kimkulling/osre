@@ -103,7 +103,7 @@ using RenderBackend::UiIndexCache;
 struct UiRenderCmd {
     ui32 m_startIndex;
     ui32 m_numIndices;
-    RenderBackend::Material *m_mat; ///< Will store the material
+    RenderBackend::Material *m_mat;
 
     UiRenderCmd();
     ~UiRenderCmd();
