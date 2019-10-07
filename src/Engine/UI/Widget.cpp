@@ -38,6 +38,7 @@ Style &StyleProvider::getCurrentStyle() {
     if ( nullptr == s_instance ) {
         s_instance = new StyleProvider;
     }
+
     return s_instance->m_activeStyle;
 }
 
@@ -45,6 +46,7 @@ void StyleProvider::setStyle( const Style &newStyle ) {
     if ( nullptr == s_instance ) {
         static_cast<void>( StyleProvider::getCurrentStyle() );
     }
+
     if ( nullptr == s_instance ) {
         osre_debug( Tag, "Singleton instance is nullptr." );
         return;
@@ -129,7 +131,8 @@ Widget::Widget( const String &name, Widget *parent )
 , m_stackIndex( 1 )
 , m_dirtyState( 0 )
 , m_isVisible( true )
-, m_isActive( true ) {
+, m_isActive( true )
+, m_layoutPolicy( LayoutPolicy::Auto ){
     Widget::setParent( parent );
     Widget::requestRedraw();
     Widget::requestLayouting();
@@ -250,6 +253,14 @@ void Widget::layoutingDone() {
 
 bool Widget::layoutingRequested() const {
     return m_dirtyState & LayourRequest;
+}
+
+void Widget::setLayoutPolicy(LayoutPolicy layoutPolicy) {
+    m_layoutPolicy = layoutPolicy;
+}
+
+LayoutPolicy Widget::getLayoutPolicy() const {
+    return m_layoutPolicy;
 }
 
 void Widget::setProperty( UiProperty *prop ) {

@@ -43,18 +43,22 @@ DbgRenderer *DbgRenderer::s_instance = nullptr;
 DbgRenderer::DbgRenderer( RenderBackend::RenderBackendService *rbSrv )
 : m_rbSrv( rbSrv )
 , m_textBoxes()
-, m_tbArray() {
+, m_tbArray()
+, m_debugMesh( nullptr )
+, m_lastIndex( 0 ) {
     OSRE_ASSERT( nullptr != m_rbSrv );
 }
 
 DbgRenderer::~DbgRenderer() {
     clearDbgTextCache();
+    Mesh::destroy(&m_debugMesh);
 }
 
 bool DbgRenderer::create( RenderBackend::RenderBackendService *rbSrv ) {
     if ( nullptr != s_instance ) {
         return false;
     }
+
     s_instance = new DbgRenderer( rbSrv );
     return true;
 }
@@ -148,7 +152,7 @@ static ui16 indices[ NumIndices ] = {
 void DbgRenderer::renderAABB( const glm::mat4 &transform, const Collision::TAABB<f32> &aabb ) {
     MeshBuilder meshBuilder;
     meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 1);
-    Mesh *geo = meshBuilder.getMesh();
+    Mesh *mesh = meshBuilder.getMesh();
 
     static const ui32 NumVertices = 8;
     ColorVert vertices[ NumVertices ];
@@ -188,31 +192,30 @@ void DbgRenderer::renderAABB( const glm::mat4 &transform, const Collision::TAABB
     vertices[ 7 ].position.z = z1;
 
     const size_t vertexSize( sizeof( ColorVert )*NumVertices );
-    geo->m_vb = BufferData::alloc( BufferType::VertexBuffer, vertexSize, BufferAccessType::ReadOnly );
-    geo->m_vb->copyFrom( &vertices[ 0 ], vertexSize );
+    mesh->m_vb = BufferData::alloc( BufferType::VertexBuffer, vertexSize, BufferAccessType::ReadOnly );
+    mesh->m_vb->copyFrom( &vertices[ 0 ], vertexSize );
     const size_t indexSize( sizeof( ui16 )*NumIndices );
-    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, indexSize, BufferAccessType::ReadOnly );
-    geo->m_indextype = IndexType::UnsignedShort;
-    geo->m_ib->copyFrom( &indices[ 0 ], indexSize );
+    mesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, indexSize, BufferAccessType::ReadOnly );
+    mesh->m_indextype = IndexType::UnsignedShort;
+    mesh->m_ib->copyFrom( &indices[ 0 ], indexSize );
 
     // setup primitives
-    geo->m_model = transform;
-    geo->m_numPrimGroups = 1;
+    mesh->m_model = transform;
+    mesh->m_numPrimGroups = 1;
     
-    geo->m_primGroups = new PrimitiveGroup[ 1 ];
-    geo->m_primGroups[ 0 ].init( IndexType::UnsignedShort, NumIndices, PrimitiveType::LineList, 0 );
+    mesh->m_primGroups = new PrimitiveGroup[ 1 ];
+    mesh->m_primGroups[ 0 ].init( IndexType::UnsignedShort, NumIndices, PrimitiveType::LineList, 0 );
 
     // setup material
-    geo->m_material = MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
+    mesh->m_material = MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
 
-    geo->m_model = transform;
+    mesh->m_model = transform;
 
-    
     m_rbSrv->beginPass( PipelinePass::getPassNameById( DbgPassId ) );
     m_rbSrv->beginRenderBatch("dbgFontBatch");
 
     m_rbSrv->setMatrix(MatrixType::Model, transform);
-    m_rbSrv->addMesh( geo, 0 );
+    m_rbSrv->addMesh( mesh, 0 );
 
     m_rbSrv->endRenderBatch();
     m_rbSrv->endPass();
@@ -243,6 +246,26 @@ size_t DbgRenderer::numDbgTexts() const {
 }
 
 void DbgRenderer::addLine( const ColorVert &v0, const ColorVert &v1 ) {
+    if (nullptr == m_debugMesh) {
+        m_debugMesh = Mesh::create(1);
+    }
+    
+    ColorVert vertices[2];
+    vertices[0] = v0;
+    vertices[1] = v1;
+    
+    m_debugMesh->m_vb->attach(&vertices[0], sizeof(ColorVert) * 2);
+    ui16 indices[2];
+    indices[0] = m_lastIndex;
+    m_lastIndex++;
+    indices[1] = m_lastIndex;
+    m_lastIndex++;
+
+    m_debugMesh->m_ib->attach(&indices[0], sizeof(ui16) * 2);
+
+    m_debugMesh->m_primGroups = new PrimitiveGroup[1];
+    m_debugMesh->m_primGroups[0].init(IndexType::UnsignedShort, NumIndices, PrimitiveType::LineList, 0);
+
 }
 
 void DbgRenderer::addTriangle( const ColorVert &v0, const ColorVert &v1, const ColorVert &v2 ) {

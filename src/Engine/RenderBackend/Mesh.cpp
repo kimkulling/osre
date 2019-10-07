@@ -103,7 +103,8 @@ ui32 Mesh::getVertexSize( VertexType vertextype ) {
     return vertexSize;
 }
 
-PrimitiveGroup *Mesh::createPrimitiveGroups(size_t numPrimGroups, IndexType* types, size_t* numIndices, PrimitiveType* primTypes, ui32* startIndices) {
+PrimitiveGroup *Mesh::createPrimitiveGroups(size_t numPrimGroups, IndexType* types, size_t* numIndices,
+        PrimitiveType* primTypes, ui32* startIndices) {
     if (0 == numPrimGroups) {
         return nullptr;
     }

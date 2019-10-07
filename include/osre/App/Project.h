@@ -54,6 +54,7 @@ protected:
 
 private:
     Version m_version;
+    i32 m_flags;
     String m_projectName;
     Scene::World *m_activeWorld;
 };

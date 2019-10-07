@@ -149,53 +149,55 @@ public:
     };
 
     virtual ~Widget();
-    virtual void setParent( Widget *parent );
-    virtual Widget *getParent() const;
-    virtual bool addWidget( Widget *child );
-    virtual bool removeWidget( Widget *child );
-    virtual bool hasWidget(Widget *child);
+    virtual void setParent(Widget* parent);
+    virtual Widget* getParent() const;
+    virtual bool addWidget(Widget* child);
+    virtual bool removeWidget(Widget* child);
+    virtual bool hasWidget(Widget* child);
     virtual size_t getNumWidgets() const;
-    virtual Widget *getWidgetAt(size_t idx ) const;
-    virtual Widget &setRect( ui32 x, ui32 y, ui32 w, ui32 h );
-    virtual const Rect2ui &getRect() const;
+    virtual Widget* getWidgetAt(size_t idx) const;
+    virtual Widget& setRect(ui32 x, ui32 y, ui32 w, ui32 h);
+    virtual const Rect2ui& getRect() const;
     virtual void requestRedraw();
     virtual void redrawDone();
     virtual bool redrawRequested() const;
     virtual void requestLayouting();
     virtual void layoutingDone();
     virtual bool layoutingRequested() const;
-    virtual void setProperty( UiProperty *prop );
-    virtual UiProperty *getProperty( const String &name ) const;
-    virtual bool hasProperty( const String &name ) const;
-    virtual void setStackIndex( i32 index );
+    virtual void setLayoutPolicy(LayoutPolicy layoutPolicy);
+    virtual LayoutPolicy getLayoutPolicy() const;
+    virtual void setProperty(UiProperty* prop);
+    virtual UiProperty* getProperty(const String& name) const;
+    virtual bool hasProperty(const String& name) const;
+    virtual void setStackIndex(i32 index);
     virtual i32 getStackIndex() const;
-    virtual void setVisible( bool visible );
+    virtual void setVisible(bool visible);
     virtual bool isVisible() const;
     virtual void setActive(bool isActive);
     virtual bool isActive() const;
-    virtual void render( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv );
-    virtual void mouseDown( const Point2ui &pt, void *data);
-    virtual void mouseUp( const Point2ui &pt, void *data);
-    virtual void resize( ui32 x, ui32 y, ui32 w, ui32 h );
+    virtual void render(UiRenderCmdCache& renderCmdCache, RenderBackend::RenderBackendService* rbSrv);
+    virtual void mouseDown(const Point2ui& pt, void* data);
+    virtual void mouseUp(const Point2ui& pt, void* data);
+    virtual void resize(ui32 x, ui32 y, ui32 w, ui32 h);
     virtual void layout();
     virtual void setState(WidgetState state);
     virtual WidgetState getWidgetState() const;
 
 protected:
-    Widget( const String &name, Widget *parent );
-    void checkChildren(const Point2ui &pt, void *data, WidgetState state );
+    Widget(const String& name, Widget* parent);
+    void checkChildren(const Point2ui& pt, void* data, WidgetState state);
     virtual void onLayout() = 0;
-    virtual void onResize( ui32 x, ui32 y, ui32 w, ui32 h );
-    virtual void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) = 0;
-    virtual void onMouseDown( const Point2ui &pt, void *data);
-    virtual void onMouseUp( const Point2ui &pt, void *data);
+    virtual void onResize(ui32 x, ui32 y, ui32 w, ui32 h);
+    virtual void onRender(UiRenderCmdCache& renderCmdCache, RenderBackend::RenderBackendService* rbSrv) = 0;
+    virtual void onMouseDown(const Point2ui& pt, void* data);
+    virtual void onMouseUp(const Point2ui& pt, void* data);
 
 private:
     enum UpdateRequest {
         RedrawRequest = 1,
         LayourRequest = 2
     };
-    Widget *m_parent;
+    Widget* m_parent;
     CPPCore::TArray<Widget*> m_children;
     CPPCore::TArray<UiProperty*> m_properties;
     Rect2ui m_rect;
@@ -204,6 +206,7 @@ private:
     bool m_isVisible;
     bool m_isActive;
     WidgetState m_state;
+    LayoutPolicy m_layoutPolicy;
 };
 
 inline

@@ -74,6 +74,7 @@ namespace Details {
 Project::Project()
 : Object("App/Project")
 , m_version(-1, -1)
+, m_flags(-1)
 , m_projectName()
 , m_activeWorld( nullptr ) {
     // empty
@@ -140,7 +141,7 @@ bool Project::load(const String& name, i32 &major, i32 &minor, i32 flags) {
     }
 
     m_projectName = name;
-    
+    m_flags = flags;
     String oldPath = Directory::getCurrentDirectory();
     if (!Directory::setCurrentDirectory(name)) {
         return false;
@@ -233,15 +234,16 @@ bool Project::loadMetadata(i32& major, i32& minor) {
     m_version.mMajor = major;
     m_version.mMinor = minor;
 
+    bool result = true;
     m_projectName = meta.get("name", Details::EmptyAttributeToken).asCString();
     String activeWorldName  = meta.get("activeWorld", Details::EmptyAttributeToken).asCString();
     if (activeWorldName != String(Details::EmptyAttributeToken)) {
         AssetDataArchive archive(major, minor);
         IO::Uri uri(m_projectName);
-        bool res = archive.load(uri);
+        result = archive.load(uri);
     }
 
-    return true;
+    return result;
 }
 
 bool Project::saveMetadata(i32 major, i32 minor, Json::StreamWriter* streamWriter) {

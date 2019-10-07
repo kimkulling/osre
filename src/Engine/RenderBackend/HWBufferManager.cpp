@@ -117,7 +117,7 @@ Buffer *HWBufferManager::createBuffer( const VertexLayout &vertexLayout, BufferA
     ui32 hash( 0 );
     getBufferKey( vertexLayout, access, hash );
     m_bufferDict.insert(hash, buffer );
-    ui32 id = m_buffers.size();
+    const size_t id = m_buffers.size();
     m_buffers.add( buffer );
     buffer->m_id = id;
 

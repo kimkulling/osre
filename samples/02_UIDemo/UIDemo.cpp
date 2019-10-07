@@ -86,7 +86,7 @@ protected:
 
         m_canvas = AppBase::createScreen( "UiDemo" );
 
-        Panel *panel = new Panel( "panel", UiFlags::Resizable, m_canvas );
+        Panel *panel = new Panel( "panel", m_canvas );
         panel->setRect( 10, 10, 500, 500 );
         ButtonBase *btnOpenFile = new ButtonBase( "Open file", panel);
         btnOpenFile->registerCallback(WidgetState::Pressed, UiFunctor::Make(this, &UIDemoApp::openFileCallback));
@@ -94,9 +94,9 @@ protected:
         btnOpenFile->setRect( 20, 20, 100, 20 );
         btnOpenFile->setLabel("Open file");
 
-        ButtonBase *btnQuit  = new ButtonBase( "Quit", panel );
+        /*ButtonBase *btnQuit  = new ButtonBase( "Quit", panel );
         btnQuit->setRect( 400, 20, 100, 20 );
-        btnQuit->registerCallback(WidgetState::Pressed, UiFunctor::Make( this, &UIDemoApp::quitCallback ) );
+        btnQuit->registerCallback(WidgetState::Pressed, UiFunctor::Make( this, &UIDemoApp::quitCallback ) );*/
         
         //TextBase *tb = new TextBase( "test", panel);
         //tb->setLabel( "Test" );

@@ -44,9 +44,6 @@ struct UiFlags {
     static const ui32 Resizable = 0x001;
 };
 
-/// @brief  Behavior-flags for the widgets
-static const ui32 WidgetResizable = 1;
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -68,6 +65,14 @@ struct OSRE_EXPORT Style {
     Style()
     : m_properties()
     , m_font(nullptr) {
+        initClassicDesign();
+    }
+    
+    ~Style() {
+        // empty
+    }
+
+    void initClassicDesign() {
         // color panel
         m_properties.add(Color4(1.f, 1.f, 1.f, 1.f));
         m_properties.add(Color4(0.9f, 0.9f, 0.9f, 1.f));
@@ -115,8 +120,6 @@ struct UiRenderCmdCache {
     UiVertexCache            m_vc;  ///< Will store all vertices
     UiIndexCache             m_ic;  ///< Will store all indices
     CPPCore::TArray<UiRenderCmd*> m_renderCmds;
-    
-
 };
 
 } // Namespace UI

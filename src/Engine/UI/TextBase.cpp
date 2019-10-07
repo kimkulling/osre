@@ -79,8 +79,6 @@ RenderBackend::FontBase *TextBase::getFont() const {
 void TextBase::onLayout() {
 }
 
-//static const ui32 NumQuadVert = 4;
-
 void TextBase::onRender(UiRenderCmdCache& renderCmdCache, RenderBackendService* ) {
     if (m_text.empty()) {
         return;
@@ -92,8 +90,8 @@ void TextBase::onRender(UiRenderCmdCache& renderCmdCache, RenderBackendService* 
 
     f32 x(static_cast<f32>(Widget::getRect().getX1()));
     f32 y(static_cast<f32>(Widget::getRect().getY1()));
+    const f32 z(getStackIndex() * -0.01f);
     WidgetCoordMapping::mapPosToWorld(static_cast<ui32>(x), static_cast<ui32>(y), x, y);
-    const f32 z( getStackIndex() * - 0.01f);
     const size_t startIndex = renderCmdCache.m_ic.numIndices();
     Scene::MeshBuilder::allocUiTextBox(x, y, z, fontSize, m_text, BufferAccessType::ReadWrite, renderCmdCache.m_vc, renderCmdCache.m_ic);
 

@@ -68,6 +68,9 @@ private:
     RenderBackend::TransformMatrixBlock m_transformMatrix;
     TextBoxHashMap m_textBoxes;
     TextBoxArray m_tbArray;
+
+    RenderBackend::Mesh *m_debugMesh;
+    ui16 m_lastIndex;
 };
 
 } // Namespace Scene

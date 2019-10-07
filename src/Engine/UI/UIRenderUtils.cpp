@@ -43,7 +43,17 @@ UIRenderUtils::~UIRenderUtils() {
     // empty
 }
 
-void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, const Style &style,
+static const ui16 RectIndices[6] = {
+    0, 1, 2, // first triangle
+    2, 1, 3  // second triangle
+};
+
+static f32 getZbyStackIndex(ui32 stackIndex ) {
+    const f32 result = (f32)stackIndex * -0.01f;
+    return result;
+}
+
+void UIRenderUtils::drawRectFromStyle( WidgetType type, const Rect2ui &rect, const Style &style,
         UiVertexCache &vertexCache, UiIndexCache &indexCache, ui32 stackIndex ) {
 
     f32 x1, y1, x2, y2;
@@ -52,10 +62,10 @@ void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, c
 
     // setup triangle vertices
     RenderVert vertices[ 4 ];
-    vertices[ 0 ].position = glm::vec3( x1, y1, (f32)stackIndex * -0.01f);
-    vertices[ 1 ].position = glm::vec3( x1, y2, (f32)stackIndex * -0.01f);
-    vertices[ 2 ].position = glm::vec3( x2, y1, (f32)stackIndex * -0.01f);
-    vertices[ 3 ].position = glm::vec3( x2, y2, (f32)stackIndex * -0.01f);
+    vertices[ 0 ].position = glm::vec3( x1, y1, getZbyStackIndex( stackIndex ) );
+    vertices[ 1 ].position = glm::vec3( x1, y2, getZbyStackIndex( stackIndex ) );
+    vertices[ 2 ].position = glm::vec3( x2, y1, getZbyStackIndex( stackIndex ) );
+    vertices[ 3 ].position = glm::vec3( x2, y2, getZbyStackIndex( stackIndex ) );
 
     Color4 col;
     if ( WidgetType::Panel == type ) {
@@ -79,24 +89,14 @@ void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, c
         vertexCache.add( vertices[ i ] );
     }
 
-    // setup triangle indices
-    ui16 indices[ 6 ];
-    indices[ 0 ] = 0;
-    indices[ 1 ] = 1;
-    indices[ 2 ] = 2;
-
-    indices[ 3 ] = 2;
-    indices[ 4 ] = 1;
-    indices[ 5 ] = 3;
-
     indexCache.increaseSize( 6 );
     for ( ui32 i = 0; i < 6; ++i ) {
-        ui16 index = static_cast<ui16>(vertOffset) + indices[i];
+        ui16 index = static_cast<ui16>(vertOffset) + RectIndices[i];
         indexCache.add( index );
     }
 }
 
-Rect2ui UIRenderUtils::computeTextBox( const String &text, f32 textSize ) {
+Rect2ui UIRenderUtils::drawTextBox( const String &text, f32 textSize ) {
     ui32 width = 0, height = static_cast<ui32>(textSize);
     for ( ui32 i = 0; i < text.size(); ++i ) {
         if ( text[ i ] == '\n' ) {

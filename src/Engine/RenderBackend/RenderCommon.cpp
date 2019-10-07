@@ -692,7 +692,7 @@ void UniformVar::destroy(UniformVar *param) {
     }
 }
 
-ui32 UniformVar::getSize() {
+size_t UniformVar::getSize() {
     // len of name | name | buffer
     return m_name.size() + 1 + m_data.m_size;
 }

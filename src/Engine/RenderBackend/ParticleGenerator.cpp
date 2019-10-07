@@ -95,7 +95,7 @@ void ParticleGenerator::init( ui32 numPoints ) {
     m_ptGeo->m_material = mat;
 }
 
-void ParticleGenerator::update( d32 tick ) {
+void ParticleGenerator::update( d32 /*tick*/ ) {
     CPPCore::RandomGenerator generator;
     for ( ui32 i = 0; i < m_numPoints; i++ ) {
         const f32 x = static_cast< f32 >( generator.get( -10, 10 ) ) / 100.0f;

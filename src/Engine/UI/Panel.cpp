@@ -40,10 +40,9 @@ namespace UI {
 
 using namespace ::OSRE::RenderBackend;
 
-Panel::Panel( const String &name, ui32 flags, Widget *parent )
+Panel::Panel( const String &name, Widget *parent )
 : Widget( name, parent )
 , m_angle( 0.02f )
-, m_flags( flags )
 , m_headline()
 , m_transformMatrix() {
     // empty
@@ -51,14 +50,6 @@ Panel::Panel( const String &name, ui32 flags, Widget *parent )
 
 Panel::~Panel() {
     // empty
-}
-
-ui32 Panel::getFlags() const {
-    return m_flags;
-}
-
-bool Panel::isEnabled( ui32 flag ) const {
-    return m_flags & static_cast<ui32>( flag );
 }
 
 void Panel::setHeadline( const String &headline ) {
@@ -81,7 +72,7 @@ void Panel::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService* ) 
     const Rect2ui &rect( getRect() );
 
     const size_t startIndex = renderCmdCache.m_ic.numIndices();
-    UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic, Widget::getStackIndex());
+    UIRenderUtils::drawRectFromStyle( WidgetType::Panel, rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic, Widget::getStackIndex());
 
     UiRenderCmd *cmd( new UiRenderCmd );
 

@@ -45,12 +45,11 @@ struct Style;
 //-------------------------------------------------------------------------------------------------
 class UIRenderUtils {
 public:
-    static void createRectFromStyle( WidgetType Type, const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
+    static void drawRectFromStyle( WidgetType Type, const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
         UiIndexCache &indexCache, ui32 stackIndex);
-    static Rect2ui computeTextBox( const String &text, f32 textSize );
+    static Rect2ui drawTextBox( const String &text, f32 textSize );
     static RenderBackend::Mesh *createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, 
         RenderBackend::Material *material, const CPPCore::TArray<UiRenderCmd*>& renderCmds);
-    
     
 private:
     UIRenderUtils();
