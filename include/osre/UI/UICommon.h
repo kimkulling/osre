@@ -106,8 +106,8 @@ using RenderBackend::UiVertexCache;
 using RenderBackend::UiIndexCache;
 
 struct UiRenderCmd {
-    ui32 m_startIndex;
-    ui32 m_numIndices;
+    ui32   m_startIndex;
+    size_t m_numIndices;
     RenderBackend::Material *m_mat;
 
     UiRenderCmd();

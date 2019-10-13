@@ -42,15 +42,15 @@ public:
     }
 
 protected:
-    bool onCreate( RenderBackendService *rbSrv) override {
+    bool onCreate( RenderBackendService * ) override {
         return true;
     }
 
-    bool onDestroy( RenderBackendService *rbSrv) override {
+    bool onDestroy( RenderBackendService * ) override {
         return true;
     }
 
-    bool onRender( RenderBackendService *rbSrv) override {
+    bool onRender( RenderBackendService * ) override {
         return true;
     }
 };

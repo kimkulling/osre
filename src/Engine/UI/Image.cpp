@@ -56,7 +56,7 @@ void Image::onLayout() {
 
 }
 
-void Image::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
+void Image::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService * ) {
     UiVertexCache vertexCache;
     UiIndexCache indexCache;
 

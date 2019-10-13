@@ -120,7 +120,7 @@ public:
 
     /// @brief  Will return the number of references.
     /// @return The number of references.
-    ui32 getNumRefs() const;
+    size_t getNumRefs() const;
     
     /// @brief  Will return the parent task.
     /// @return The parent task, nullptr if root.

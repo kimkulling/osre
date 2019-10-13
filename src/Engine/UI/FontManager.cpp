@@ -68,13 +68,9 @@ RenderBackend::FontBase *FontManager::getFontByName( const String &fontName ) co
     return font;
 }
 
-bool FontManager::loadFont( const String &name ) {
-    return false;
-}
-
 FontManager::FontManager()
 : m_fontHashMap() {
-
+    // empty
 }
 
 FontManager::~FontManager() {

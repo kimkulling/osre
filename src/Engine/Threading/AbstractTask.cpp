@@ -87,7 +87,7 @@ void AbstractTask::enqueue( AbstractTask *pTask ) {
     }
 }
 
-ui32 AbstractTask::getNumChildTasks() const {
+size_t AbstractTask::getNumChildTasks() const {
     return m_childTasks.size();
 }
 

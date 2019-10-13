@@ -163,7 +163,7 @@ bool Project::load(const String& name, i32 &major, i32 &minor, i32 flags) {
     return true;
 }
 
-bool Project::save(const String &name, i32 flags) {
+bool Project::save(const String &name, i32 /*flags*/ ) {
     if (!isCreated()) {
         return false;
     }
