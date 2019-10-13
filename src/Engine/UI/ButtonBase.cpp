@@ -141,8 +141,8 @@ void ButtonBase::onLayout() {
     if (nullptr != m_textWidget) {
         const f32 x1 = getRect().getX1();
         const f32 y1 = getRect().getY1();
-        const f32 w = x1 + getRect().getWidth() - 2;
-        const f32 h = y1 + getRect().getHeight() - 2;
+        const f32 w  = getRect().getWidth() - 2;
+        const f32 h  = getRect().getHeight() - 2;
         m_textWidget->setRect(x1 + 1, y1 + 1, w, h);
     }
     
