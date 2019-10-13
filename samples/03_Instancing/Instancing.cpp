@@ -75,8 +75,6 @@ protected:
         }
         AppBase::setWindowsTitle("Instancing sample!");
 
-        const Common::ArgumentParser& parser = AppBase::getArgumentParser();
-
 #ifdef OSRE_WINDOWS
         AssetRegistry::registerAssetPath("assets", "../../media");
 #else

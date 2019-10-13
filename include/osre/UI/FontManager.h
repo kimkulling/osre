@@ -46,7 +46,6 @@ public:
     static void destroy();
     static FontManager *getInstance();
     RenderBackend::FontBase *getFontByName( const String &fontName ) const;
-    bool loadFont( const String &name );
 
 private:
     FontManager();
