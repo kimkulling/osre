@@ -238,8 +238,6 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
     c8 *slv = (c8*)glGetString(GL_SHADING_LANGUAGE_VERSION);
     osre_debug(Tag, "Supported GLSL language " + String(slv));
 
-    RenderBackend::OGLCapabilities *caps = new RenderBackend::OGLCapabilities;
-
     m_dc = dc;
     m_rc = rc;
 
@@ -248,7 +246,7 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
     glDisable( GL_LIGHTING );
     
     glEnable(GL_DEPTH_TEST);
-    glDepthMask(GL_LESS);
+    glDepthMask( (GLboolean) GL_LESS);
 
     return true;
 }

@@ -596,7 +596,7 @@ void UniformDataBlob::clear() {
     m_size = 0;
 }
 
-UniformDataBlob *UniformDataBlob::create(ParameterType type, ui32 arraySize) {
+UniformDataBlob *UniformDataBlob::create(ParameterType type, size_t arraySize) {
     UniformDataBlob *blob = new UniformDataBlob;
     switch (type) {
         case ParameterType::PT_Int:

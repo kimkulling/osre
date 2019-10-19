@@ -34,7 +34,7 @@ class StyleProviderTest : public ::testing::Test {
 
 TEST_F( StyleProviderTest, accessStyleTest ) {
     Style testStyle;
-    testStyle.m_properties[ (ui32) Style::ColorTable::FGColorPanel ] = Color4( 0.5, 0.5, 0.5, 0.5 );
+    testStyle.m_colors[ (ui32) Style::ColorTable::FGColorWidget ] = Color4( 0.5, 0.5, 0.5, 0.5 );
     const Style &style = StyleProvider::getCurrentStyle();
     EXPECT_NE( testStyle, style );
 }

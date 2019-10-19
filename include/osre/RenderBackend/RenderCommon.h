@@ -405,12 +405,12 @@ struct OSRE_EXPORT BufferData {
 
 inline
 size_t BufferData::getSize() const {
-    return (nullptr != m_buffer.m_data ? m_buffer.m_size : 0L);
+    return (nullptr != m_buffer.data() ? m_buffer.size() : 0L);
 }
 
 inline
 c8 *BufferData::getData() const {
-    return m_buffer.m_data;
+    return m_buffer.data();
 }
 
 
@@ -738,7 +738,7 @@ struct OSRE_EXPORT UniformDataBlob {
     void *getData() const;
     void clear();
 
-    static UniformDataBlob *create(ParameterType type, ui32 arraySize);
+    static UniformDataBlob *create(ParameterType type, size_t arraySize);
 };
 
 struct OSRE_EXPORT UniformVar {
@@ -792,22 +792,20 @@ struct UniformBuffer {
     : m_numvars(0)
     , m_pos(0L)
     , m_buffer() {
-
+        // empty
     }
 
     size_t getSize() const {
-        return m_buffer.m_size;
+        return m_buffer.size();
     }
 
     void create(size_t size = 1024*1024) {
-        m_buffer.m_size = size;
-        m_buffer.m_data = new c8[size];
+        m_buffer.resize(size);
         m_pos = 0;
     }
 
     void destroy() {
-        delete[] m_buffer.m_data;
-        m_buffer.m_size = 0;
+        m_buffer.clear();
         m_pos = 0;
 
     }
@@ -830,6 +828,10 @@ struct UniformBuffer {
     }
 
     void writeVar(UniformVar *var) {
+        if (nullptr == var) {
+            return;
+        }
+
         ++m_numvars;
         ui32 varInfo = encode( (ui16) var->m_name.size(), (ui16) var->m_data.m_size );
         write( (c8*) &varInfo, sizeof(ui32) );
@@ -847,24 +849,25 @@ struct UniformBuffer {
     }
 
     void read(c8 *data, size_t size ) {
-        if ((m_pos + size) > m_buffer.m_size || 0 == size) {
+        if ((m_pos + size) > m_buffer.size() || 0 == size) {
             return;
         }
-        ::memcpy(data, &m_buffer.m_data[m_pos], size );
+
+        ::memcpy(data, &m_buffer[ m_pos ], size );
         m_pos += size;
     }
     
     void write( c8 *data, size_t size ) {
-        if (0 == size || ( m_pos + size ) > m_buffer.m_size ) {
+        if ( 0 == size || ( m_pos + size ) > m_buffer.size() ) {
             return;
         }
 
-        ::memcpy(&m_buffer.m_data[m_pos], data, size);
+        ::memcpy( &m_buffer[ m_pos ], data, size );
         m_pos += size;
     }
 
     size_t m_numvars;
-    ui64 m_pos;
+    size_t m_pos;
     MemoryBuffer m_buffer;
 };
 

@@ -1,17 +1,17 @@
 SET( LIBRARY_VERSION "0.1.0" )
 
-SET( HEADER_PATH ${PROJECT_SOURCE_DIR}/include/osre/ )
+SET( HEADER_PATH ${PROJECT_SOURCE_DIR}/include/osre )
 add_definitions( -DOSRE_BUILD_EXPORT )
 
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
-    ${HEADER_PATH}/include
-    ../../3dparty/cppcore/include
-    ../../3dparty/glew/include
-    ../../3dparty/glm/
-    ../../3dparty/unzip/
-    ../../3dparty/zlib/
-    ../../3dparty/assimp/include
+	${HEADER_PATH}
+    ${PROJECT_SOURCE_DIR}/3dparty/cppcore/include
+    ${PROJECT_SOURCE_DIR}/3dparty/glew/include
+    ${PROJECT_SOURCE_DIR}/3dparty/glm/
+    ${PROJECT_SOURCE_DIR}/3dparty/unzip/
+    ${PROJECT_SOURCE_DIR}/3dparty/zlib/
+    ${PROJECT_SOURCE_DIR}/3dparty/assimp/include
 )
 
 # For Vulkan support

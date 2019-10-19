@@ -51,20 +51,24 @@ struct UiFlags {
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT Style {
     enum class ColorTable {
-        FGColorPanel = 0,
-        BGColorPanel,
-        FGColorWidget,
+        FGColorWidget = 0,
         BGColorWidget,
+        FGColorHeadLine,
+        BGColorHeadline,
         TextColor,
         Max
     };
 
-    CPPCore::TArray<Color4> m_properties;
+    CPPCore::TArray<Color4> m_colors;
     RenderBackend::FontBase *m_font;
+    i32 m_horizontalMargin;
+    i32 m_verticalMargin;
 
     Style()
-    : m_properties()
-    , m_font(nullptr) {
+    : m_colors()
+    , m_font(nullptr)
+    , m_horizontalMargin( -1 )
+    , m_verticalMargin( -1 ) {
         initClassicDesign();
     }
     
@@ -73,21 +77,25 @@ struct OSRE_EXPORT Style {
     }
 
     void initClassicDesign() {
-        // color panel
-        m_properties.add(Color4(1.f, 1.f, 1.f, 1.f));
-        m_properties.add(Color4(0.9f, 0.9f, 0.9f, 1.f));
+        // color widgets
+        m_colors.add(Color4(1.f, 1.f, 1.f, 1.f));
+        m_colors.add(Color4(0.9f, 0.9f, 0.9f, 1.f));
 
-        // color button
-        m_properties.add(Color4(1.f, 1.f, 1.f, 1.f));
-        m_properties.add(Color4(0.5f, 0.5f, 0.5f, 1.f));
+        // colors headline
+        m_colors.add(Color4(1.f, 1.f, 1.f, 1.f));
+        m_colors.add(Color4(0.5f, 0.5f, 0.5f, 1.f));
 
         // color text
-        m_properties.add(Color4(1.f, 1.f, 1.f, 1.f));
+        m_colors.add(Color4(1.f, 1.f, 1.f, 1.f));
+
+        // Margins
+        m_horizontalMargin = 1;
+        m_verticalMargin = 1;
     }
 
     bool operator == (const Style &rhs) const {
         for (ui32 i = 0; i < (ui32)ColorTable::Max; i++) {
-            if (m_properties[i] != rhs.m_properties[i]) {
+            if (m_colors[i] != rhs.m_colors[i]) {
                 return false;
             }
             if (m_font != rhs.m_font) {
@@ -106,7 +114,7 @@ using RenderBackend::UiVertexCache;
 using RenderBackend::UiIndexCache;
 
 struct UiRenderCmd {
-    ui32   m_startIndex;
+    size_t m_startIndex;
     size_t m_numIndices;
     RenderBackend::Material *m_mat;
 

@@ -139,10 +139,10 @@ ButtonBase *ButtonBase::createBaseButton( const String &name, const String &labe
 
 void ButtonBase::onLayout() {
     if (nullptr != m_textWidget) {
-        const f32 x1 = (f32) getRect().getX1();
-        const f32 y1 = (f32) getRect().getY1();
-        const f32 w  = (f32) ( getRect().getWidth()  - 2 );
-        const f32 h  = (f32) ( getRect().getHeight() - 2 );
+        const ui32 x1 = getRect().getX1();
+        const ui32 y1 = getRect().getY1();
+        const ui32 w  = getRect().getWidth()  - 2;
+        const ui32 h  = getRect().getHeight() - 2;
         m_textWidget->setRect(x1 + 1, y1 + 1, w, h);
     }
     
@@ -155,7 +155,7 @@ void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendServic
     const Rect2ui &rect( getRect() );
 
     const size_t startIndex = renderCmdCache.m_ic.numIndices();
-    UIRenderUtils::drawRectFromStyle( WidgetType::Button, rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic, Widget::getStackIndex() );
+    UIRenderUtils::drawRectFromStyle( rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic, Widget::getStackIndex() );
     UiRenderCmd *cmd( new UiRenderCmd );
     cmd->m_startIndex = startIndex;
     cmd->m_numIndices = renderCmdCache.m_ic.numIndices() - startIndex;

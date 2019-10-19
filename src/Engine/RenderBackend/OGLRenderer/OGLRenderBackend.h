@@ -97,16 +97,16 @@ public:
     void bindBuffer( ui32 handle );
     void bindBuffer( OGLBuffer *pBuffer );
     void unbindBuffer( OGLBuffer *pBuffer );
-    void copyDataToBuffer( OGLBuffer *pBuffer, void *pData, ui32 size, BufferAccessType usage );
+    void copyDataToBuffer( OGLBuffer *pBuffer, void *pData, size_t size, BufferAccessType usage );
     void releaseBuffer( OGLBuffer *pBuffer );
     void releaseAllBuffers();
     bool createVertexCompArray( const VertexLayout *layout, OGLShader *pShader, VertAttribArray &attributes );
     bool createVertexCompArray( VertexType type, OGLShader *pShader, VertAttribArray &attributes );
     void releaseVertexCompArray( CPPCore::TArray<OGLVertexAttribute*> &attributes );
     OGLVertexArray *createVertexArray();
-    bool bindVertexLayout( OGLVertexArray *pVertexArray, OGLShader *pShader, ui32 stride, GLint loc, 
+    bool bindVertexLayout( OGLVertexArray *pVertexArray, OGLShader *pShader, size_t stride, GLint loc, 
             OGLVertexAttribute* attrib );
-    bool bindVertexLayout( OGLVertexArray *pVertexArray, OGLShader *pShader, ui32 stride, 
+    bool bindVertexLayout( OGLVertexArray *pVertexArray, OGLShader *pShader, size_t stride, 
             const CPPCore::TArray<OGLVertexAttribute*> &attributes );
     void destroyVertexArray( OGLVertexArray *pVertexArray );
     OGLVertexArray *getVertexArraybyId( ui32 id ) const;
@@ -120,17 +120,17 @@ public:
     bool releaseShader( OGLShader *pShader );
     void releaseAllShaders();
     OGLTexture *createEmptyTexture( const String &name, TextureTargetType target, TextureFormatType format, ui32 width, ui32 height, ui32 channels );
-    void updateTexture( OGLTexture *pOGLTextue, ui32 offsetX, ui32 offsetY, c8 *data, ui32 size );
+    void updateTexture( OGLTexture *pOGLTextue, ui32 offsetX, ui32 offsetY, c8 *data, size_t size );
     OGLTexture *createTextureFromFile( const String &name, const IO::Uri &fileloc );
     OGLTexture *createTextureFromStream( const String &name, IO::Stream &stream, ui32 width, ui32 height, ui32 channels );
     OGLTexture *findTexture( const String &name ) const;
     bool bindTexture( OGLTexture *pOGLTextue, TextureStageType stageType );
     void releaseTexture( OGLTexture *pTexture );
     void releaseAllTextures();
-    OGLParameter *createParameter( const String &name, ParameterType type, UniformDataBlob *blob, ui32 numItems );    
+    OGLParameter *createParameter( const String &name, ParameterType type, UniformDataBlob *blob, size_t numItems );    
     OGLParameter *getParameter( const String &name ) const;
     void setParameter( OGLParameter *param );
-    void setParameter( OGLParameter **param, ui32 numParam );
+    void setParameter( OGLParameter **param, size_t numParam );
     void releaseAllParameters();
     size_t addPrimitiveGroup( PrimitiveGroup *grp );
     void releaseAllPrimitiveGroups();
@@ -139,7 +139,7 @@ public:
     OGLFrameBuffer* getFrameBufferByName(const String &name) const;
     void releaseFrameBuffer(OGLFrameBuffer* oglFB);
     void render( ui32 grimpGrpIdx );
-    void render( ui32 primpGrpIdx, ui32 numInstances );
+    void render( ui32 primpGrpIdx, size_t numInstances );
     void renderFrame();
     FontBase *createFont( const IO::Uri &font );
 	void selectFont( FontBase *font );
@@ -157,10 +157,10 @@ private:
 	GLuint                           m_activeVertexArray;
     CPPCore::TArray<OGLShader*>      m_shaders;
     CPPCore::TArray<OGLTexture*>     m_textures;
-    CPPCore::TArray<ui32>            m_freeTexSlots;
+    CPPCore::TArray<size_t>          m_freeTexSlots;
     CPPCore::TArray<FontBase*>       m_fonts;
     FontBase                        *m_activeFont;
-    std::map<String, ui32>           m_texLookupMap;
+    std::map<String, size_t>         m_texLookupMap;
     CPPCore::TArray<OGLParameter*>   m_parameters;
     OGLShader                       *m_shaderInUse;
     CPPCore::TArray<size_t>          m_freeBufferSlots;

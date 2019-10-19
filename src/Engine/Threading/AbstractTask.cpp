@@ -60,7 +60,7 @@ void AbstractTask::removeDependency()  {
     }
 }
 
-ui32 AbstractTask::getNumRefs() const {
+size_t AbstractTask::getNumRefs() const {
     if ( m_pRefCount ) {
         const ui32 numRefs = m_pRefCount->getValue();
         return numRefs;

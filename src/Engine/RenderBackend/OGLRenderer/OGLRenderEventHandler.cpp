@@ -64,7 +64,7 @@ static bool setupTextures( Material *mat, OGLRenderBackend *rb, TArray<OGLTextur
         return false;
     }
 
-    const ui32 numTextures( mat->m_numTextures );
+    const size_t numTextures( mat->m_numTextures );
     if( 0 == numTextures ) {
         return true;
     }
@@ -501,7 +501,7 @@ bool OGLRenderEventHandler::onInitRenderPasses( const Common::EventData *eventDa
 
                     // register primitive groups to render
                     for (ui32 i = 0; i < currentMesh->m_numPrimGroups; ++i) {
-                        const ui32 primIdx(m_oglBackend->addPrimitiveGroup(&currentMesh->m_primGroups[i]));
+                        const size_t primIdx(m_oglBackend->addPrimitiveGroup(&currentMesh->m_primGroups[i]));
                         primGroups.add(primIdx);
                     }
 
@@ -559,7 +559,7 @@ bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData)
             ::memset(name, '\0', 255);
             ::strncpy(name, &cmd->m_data[1], cmd->m_data[0]);
             ui32 offset = cmd->m_data[0] + 1;
-            ui32 size = cmd->m_size - offset;
+            size_t size = cmd->m_size - offset;
             OGLParameter *oglParam = m_oglBackend->getParameter(name);
             ::memcpy(oglParam->m_data->getData(), &cmd->m_data[offset], size);
         } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateBuffer) {

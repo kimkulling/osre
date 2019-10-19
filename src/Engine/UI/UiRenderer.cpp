@@ -64,7 +64,7 @@ void UiRenderer::render( Canvas *canvas, RenderBackendService * rbSrv) {
     Material* mat = cache.m_renderCmds[0]->m_mat;
     Debugging::MeshDiagnostic::dumpUiIndexCache(cache.m_ic);
     Debugging::MeshDiagnostic::dumpUiVertexCache(cache.m_vc);
-    Mesh *mesh = UIRenderUtils::createGeoFromCache(cache.m_vc, cache.m_ic, mat, cache.m_renderCmds);
+    Mesh *mesh = UIRenderUtils::createGeoFromCache(cache.m_vc, cache.m_ic, mat );
     if (nullptr == mesh) {
         return;
     }

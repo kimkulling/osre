@@ -72,7 +72,7 @@ void Panel::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService* ) 
     const Rect2ui &rect( getRect() );
 
     const size_t startIndex = renderCmdCache.m_ic.numIndices();
-    UIRenderUtils::drawRectFromStyle( WidgetType::Panel, rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic, Widget::getStackIndex());
+    UIRenderUtils::drawRectFromStyle( rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic, Widget::getStackIndex() );
 
     UiRenderCmd *cmd( new UiRenderCmd );
 

@@ -248,7 +248,7 @@ bool RenderCmdBuffer::onDrawPrimitivesInstancesCmd( DrawInstancePrimitivesCmdDat
     return true;
 }
 
-bool RenderCmdBuffer::onSetRenderTargetCmd( SetRenderTargetCmdData *data ) {
+bool RenderCmdBuffer::onSetRenderTargetCmd( SetRenderTargetCmdData * ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
 
     return true;

@@ -1,5 +1,6 @@
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
+	${PROJECT_SOURCE_DIR}/test/RenderTests/src
     ../../3dparty/cppcore/include
     ../../3dparty/glew/include
     ../../3dparty/assimp/include
@@ -25,6 +26,7 @@ SET ( rendertest_src
 	src/StaticTextRenderTest.cpp
 	src/SwitchCmdBufferRenderTest.cpp
 	src/RenderTargetRenderTest.cpp
+	src/Textures/3DTexttureRenderTest.cpp
     src/RenderTestSuite.h
     src/RenderTestUtils.h
     src/main.cpp

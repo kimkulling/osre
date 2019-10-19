@@ -136,7 +136,7 @@ public:
     
     /// @brief  Will return the number of enqueued child tasks.
     /// @return The number of enqueued child tasks.
-    ui32 getNumChildTasks() const;
+    size_t getNumChildTasks() const;
 
     /// @brief  Returns the child task by its index.
     /// @param  idx         [in] The child task index.

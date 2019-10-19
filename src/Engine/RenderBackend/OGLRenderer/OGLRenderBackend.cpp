@@ -91,8 +91,10 @@ OGLRenderBackend::~OGLRenderBackend( ) {
 
 void OGLRenderBackend::enumerateGPUCaps() {
     m_oglCapabilities = new OGLCapabilities;
+
     glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &m_oglCapabilities->m_maxAniso);
     glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &m_oglCapabilities->m_contextMask);
+    glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &m_oglCapabilities->m_max3DTextureSize);
 }
 
 void OGLRenderBackend::setMatrix( MatrixType type, const glm::mat4 &mat ) {
@@ -256,7 +258,7 @@ void OGLRenderBackend::unbindBuffer( OGLBuffer *buffer ) {
     CHECKOGLERRORSTATE();
 }
 
-void OGLRenderBackend::copyDataToBuffer( OGLBuffer *buffer, void *data, ui32 size, BufferAccessType usage ) {
+void OGLRenderBackend::copyDataToBuffer( OGLBuffer *buffer, void *data, size_t size, BufferAccessType usage ) {
     if ( nullptr == buffer ) {
         osre_debug( Tag, "Pointer to buffer is nullptr" );
         return;
@@ -417,7 +419,7 @@ OGLVertexArray *OGLRenderBackend::createVertexArray() {
     return vertexArray;
 }
 
-bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, ui32 stride, GLint loc, 
+bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, size_t stride, GLint loc,
                                          OGLVertexAttribute* attrib ) {
     if( nullptr == va || nullptr == shader || nullptr == attrib ) {
         return false;
@@ -427,13 +429,13 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
     glVertexAttribPointer( loc,(GLint) attrib->m_size,
                            attrib->m_type,
                            GL_FALSE,
-                           stride,
+                           (GLsizei) stride,
                            attrib->m_ptr );
 
     return true;
 }
 
-bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, ui32 stride, 
+bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, size_t stride,
                                              const TArray<OGLVertexAttribute*> &attributes ) {
     if( nullptr == va || nullptr == shader ) {
         return false;
@@ -448,7 +450,7 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
             glVertexAttribPointer( loc, (GLint) attributes[ i ]->m_size,
                                    attributes[ i ]->m_type,
                                    GL_FALSE,
-                                   stride,
+                                  (GLsizei) stride,
                                    attributes[ i ]->m_ptr );
         } else {
             String msg = "Cannot find " + String( attribName );
@@ -677,7 +679,7 @@ OGLTexture *OGLRenderBackend::createEmptyTexture( const String &name, TextureTar
     return tex;
 }
 
-void OGLRenderBackend::updateTexture( OGLTexture *oglTextue, ui32 offsetX, ui32 offsetY, c8 *data, ui32 size ) {
+void OGLRenderBackend::updateTexture( OGLTexture *oglTextue, ui32 offsetX, ui32 offsetY, c8 *data, size_t size ) {
 	if( nullptr == oglTextue ) {
         osre_error( Tag, "Pointer to texture is a nullptr." );
         return;
@@ -755,7 +757,7 @@ OGLTexture *OGLRenderBackend::findTexture( const String &name ) const {
         return nullptr;
     }
 
-    std::map<String, ui32>::const_iterator it( m_texLookupMap.find( name ) );
+    std::map<String, size_t>::const_iterator it( m_texLookupMap.find( name ) );
     if( it == m_texLookupMap.end() ) {
         return nullptr;
     }
@@ -788,7 +790,7 @@ void OGLRenderBackend::releaseTexture( OGLTexture *oglTexture ) {
 
     m_freeTexSlots.add( oglTexture->m_slot );
 
-    std::map<String, ui32>::iterator it( m_texLookupMap.find( oglTexture->m_name ) );
+    std::map<String, size_t>::iterator it( m_texLookupMap.find( oglTexture->m_name ) );
     if( m_texLookupMap.end() != it ) {
         it = m_texLookupMap.erase( it );
     }
@@ -807,7 +809,7 @@ void OGLRenderBackend::releaseAllTextures( ) {
 }
 
 OGLParameter *OGLRenderBackend::createParameter( const String &name, ParameterType type,  
-        UniformDataBlob *blob, ui32 numItems ) {    
+        UniformDataBlob *blob, size_t numItems ) {
     // Check if the parameter is already there
     OGLParameter *param = getParameter( name );
     if ( nullptr != param ) {
@@ -950,7 +952,7 @@ void OGLRenderBackend::releaseAllParameters() {
     ContainerClear( m_parameters );
 }
 
-void OGLRenderBackend::setParameter( OGLParameter **param, ui32 numParam ) {
+void OGLRenderBackend::setParameter( OGLParameter **param, size_t numParam ) {
     if( nullptr == m_shaderInUse ) {
         return;
     }
@@ -1073,7 +1075,7 @@ void OGLRenderBackend::render( ui32 primpGrpIdx ) {
     }
 }
 
-void OGLRenderBackend::render( ui32 primpGrpIdx, ui32 numInstances ) {
+void OGLRenderBackend::render( ui32 primpGrpIdx, size_t numInstances ) {
     OGLPrimGroup *grp( m_primitives[ primpGrpIdx ] );
     if ( nullptr != grp ) {
         glDrawArraysInstanced( grp->m_primitive, 
