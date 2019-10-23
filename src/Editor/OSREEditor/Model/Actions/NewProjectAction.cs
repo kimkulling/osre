@@ -26,22 +26,40 @@ using System.Windows.Forms;
 
 namespace OSREEditor.Model.Actions
 {
+    /// <summary>
+    /// This class implements the new project action.
+    /// </summary>
     public class NewProjectAction : IAction
     {
+        /// <summary>
+        /// The project name property access.
+        /// </summary>
         public string ProjectName { get; set; }
 
         private IntPtr mHandle;
 
         private Form mMainWindow;
 
+        /// <summary>
+        /// The current project property access.
+        /// </summary>
         public Project CurrentProject { get; set; }
 
+        /// <summary>
+        /// The class constructor with all parameters.
+        /// </summary>
+        /// <param name="handle">The window handle</param>
+        /// <param name="mainWindow">The main window instance</param>
         public NewProjectAction(IntPtr handle, Form mainWindow)
         {
             mHandle = handle;
             mMainWindow = mainWindow;
         }
 
+        /// <summary>
+        /// Will create the new project.
+        /// </summary>
+        /// <returns>true if successful, false in case of an error.</returns>
         public bool Execute()
         {
             if (mHandle == null)
@@ -61,8 +79,8 @@ namespace OSREEditor.Model.Actions
             {
                 ProjectName = ProjectName
             };
-            int retCode = 0;
-            retCode = OSREWrapper.CreateEditorApp( mHandle );
+            
+            int retCode = OSREWrapper.CreateEditorApp( mHandle );
             OSREWrapper.NewProject(CurrentProject.ProjectName);
 
             return 0 == retCode;

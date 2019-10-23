@@ -2,7 +2,9 @@
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace OSREEditor.View {
+namespace OSREEditor.View 
+{
+
     /// <summary>
     /// The OSRE native wrapper, contains prototypes for calling native methods from OSRE.
     /// </summary>

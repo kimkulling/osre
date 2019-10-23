@@ -6,6 +6,9 @@ using System.Windows.Forms;
 
 namespace OSREEditor
 {
+    /// <summary>
+    /// This class implements the main form.
+    /// </summary>
     public partial class MainEditorWindow : Form, IDisposable
     {
         private Project _project;
@@ -14,6 +17,9 @@ namespace OSREEditor
 
         private readonly OSREWrapper _osreWrapper;
 
+        /// <summary>
+        /// The class constructor.
+        /// </summary>
         public MainEditorWindow()
         {
             InitializeComponent();
@@ -27,11 +33,17 @@ namespace OSREEditor
             _osreWrapper.InitCSharpModules();
         }
 
+        /// <summary>
+        /// The class destructor.
+        /// </summary>
         ~MainEditorWindow()
         {
             // empty
         }
 
+        /// <summary>
+        /// The dispose method.
+        /// </summary>
         public void Dispose() => this.MouseClick -= Window_MouseClick;
 
         private void quitToolStripMenuItem_Quit_Click(object sender, EventArgs e)

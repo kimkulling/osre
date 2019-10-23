@@ -26,41 +26,69 @@ using System.Collections.Generic;
 namespace OSREEditor.Model
 {
 
+    /// <summary>
+    /// The c# proxy class for node instances.
+    /// </summary>
     public class Node
     {
+        /// <summary>
+        /// The class constructor.
+        /// </summary>
         public Node()
         {
-
+            // empty
         }
     }
 
+    /// <summary>
+    /// The c# proxy class for stage instances.
+    /// </summary>
     public class Stage
     {
+        /// <summary>
+        /// The class constructor.
+        /// </summary>
         public Stage()
         {
-
+            // empty
         }
     }
 
+    /// <summary>
+    /// The c# proxy class for world instances.
+    /// </summary>
     public class WorldProxy
     {
         private IList<Stage> _stages;
 
+        /// <summary>
+        /// The class constructor.
+        /// </summary>
         public WorldProxy()
         {
             _stages = new List<Stage>();
         }
 
+        /// <summary>
+        /// Will load an existing project file.
+        /// </summary>
+        /// <param name="name">The project-file</param>
+        /// <param name="flags">Flags.</param>
+        /// <returns></returns>
         public bool LoadWorld(string name, int flags)
         {
-            int retCode = OSREWrapper.LoadProject(name, flags);
-            return retCode == 0;
+            return OSREWrapper.LoadProject(name, flags) == 0;
         }
 
+        /// <summary>
+        /// Will save the current project into a file.
+        /// </summary>
+        /// <param name="name">The project-file</param>
+        /// <param name="flags">Flags.</param>
+        /// <returns></returns>
         public bool SaveWorld(string name, int flags)
         {
-            int retCode = OSREWrapper.SaveProject(name, flags);
-            return retCode == 0;
+            return OSREWrapper.SaveProject(name, flags) == 0;
         }
     }
 }

@@ -31,10 +31,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  define VK_EXPORTED_FUNCTION( fun )
 #endif
 
+
 VK_EXPORTED_FUNCTION( vkGetInstanceProcAddr )
 
 #undef VK_EXPORTED_FUNCTION
-
 
 // ************************************************************ //
 // Global level functions                                       //
@@ -66,6 +66,9 @@ VK_GLOBAL_LEVEL_FUNCTION( vkEnumerateInstanceExtensionProperties )
 #endif
 
 #define USE_SWAPCHAIN_EXTENSIONS
+
+#pragma warning ( push )
+#pragma warning ( disable:4706 )
 
 VK_INSTANCE_LEVEL_FUNCTION( vkEnumeratePhysicalDevices )
 VK_INSTANCE_LEVEL_FUNCTION( vkGetPhysicalDeviceProperties )

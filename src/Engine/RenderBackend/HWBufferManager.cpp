@@ -35,6 +35,10 @@ Buffer::Buffer()
     // empty
 }
 
+Buffer::~Buffer() {
+    // empty
+}
+
 HWBufferManager::HWBufferManager()
 : m_buffers()
 , m_bufferDict () {

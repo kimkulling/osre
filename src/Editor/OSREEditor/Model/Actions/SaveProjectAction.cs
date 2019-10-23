@@ -41,10 +41,20 @@ namespace OSREEditor.Model.Actions
             SaveFlags = 0;
         }
 
+        /// <summary>
+        /// The filename property access.
+        /// </summary>
         public string Filename { get; set; }
 
+        /// <summary>
+        /// The save flags property access.
+        /// </summary>
         public int SaveFlags { get; set; }
 
+        /// <summary>
+        /// Will perform the save op.
+        /// </summary>
+        /// <returns>tue if successful, false in case of an error.</returns>
         public bool Execute()
         {
             if (null == _project)

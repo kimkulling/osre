@@ -138,8 +138,8 @@ public:
     void bindFrameBuffer(OGLFrameBuffer *oglFB);
     OGLFrameBuffer* getFrameBufferByName(const String &name) const;
     void releaseFrameBuffer(OGLFrameBuffer* oglFB);
-    void render( ui32 grimpGrpIdx );
-    void render( ui32 primpGrpIdx, size_t numInstances );
+    void render( size_t grimpGrpIdx );
+    void render( size_t primpGrpIdx, size_t numInstances );
     void renderFrame();
     FontBase *createFont( const IO::Uri &font );
 	void selectFont( FontBase *font );

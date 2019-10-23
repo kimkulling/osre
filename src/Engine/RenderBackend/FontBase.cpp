@@ -31,6 +31,7 @@ FontBase::FontBase( const String &name )
 , m_texName()
 , m_numCols( 0 )
 , m_numRows( 0 )
+, m_texture( nullptr )
 , m_fontAtlas( nullptr )
 , m_uri() {
     // empty
@@ -55,6 +56,14 @@ void FontBase::setUri( const IO::Uri &uri ) {
 
 void FontBase::setTextureName( const String &name ) {
     m_texName = name;
+}
+
+void FontBase::setTexture(Texture* texture) {
+    m_texture = texture;
+}
+
+Texture* FontBase::getTexture() const {
+    return m_texture;
 }
 
 const String &FontBase::getTextureName() const {

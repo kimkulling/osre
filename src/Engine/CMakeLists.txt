@@ -369,6 +369,8 @@ SET( renderbackend_src
 SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLCommon.h
     RenderBackend/OGLRenderer/OGLCommon.cpp
+	RenderBackend/OGLRenderer/OGLRenderCommands.h
+	RenderBackend/OGLRenderer/OGLRenderCommands.cpp
     RenderBackend/OGLRenderer/OGLEnum.cpp
     RenderBackend/OGLRenderer/OGLEnum.h
     RenderBackend/OGLRenderer/OGLRenderBackend.cpp

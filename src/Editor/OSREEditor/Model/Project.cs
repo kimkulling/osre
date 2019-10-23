@@ -23,36 +23,66 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSREEditor.Model
 {
+    /// <summary>
+    /// The enum to describe the project type.
+    /// </summary>
     public enum ProjectType
     {
+        /// <summary>2D-project </summary>
         Project2D,
+        /// <summary>3D-project </summary>
         Project3D
     }
 
+    /// <summary>
+    /// This class stores all project-relevant data.
+    /// </summary>
     public class Project
     {
-        private string _projectName;
-
         private WorldProxy _world;
 
         public static Project Instance { get; set; }
 
+        /// <summary>
+        /// The class constructor.
+        /// </summary>
         public Project()
         {
-            _projectName = "untitled";
+            ProjectName = "untitled";
             _world = new WorldProxy();
         }
 
+        /// <summary>
+        /// The project-name property access.
+        /// </summary>
         public string ProjectName { get; set; }
 
+        /// <summary>
+        /// The project-author property access.
+        /// </summary>
         public string ProjectAuthor { get; set; }
 
+        /// <summary>
+        /// The major-version property access.
+        /// </summary>
         public int MajorVersion { get; set; }
 
+        /// <summary>
+        /// The minor-version property access.
+        /// </summary>
         public int MinorVersion { get; set; }
 
+        /// <summary>
+        /// The project-type property access.
+        /// </summary>
         public ProjectType CurrentProjectType { get; set; }
 
+        /// <summary>
+        /// Will load an existing project file.
+        /// </summary>
+        /// <param name="name">The project-file</param>
+        /// <param name="flags">Flags.</param>
+        /// <returns></returns>
         public bool LoadProject(string name, int flags)
         {
             if (_world == null)
@@ -63,6 +93,12 @@ namespace OSREEditor.Model
             return _world.LoadWorld(name, flags);
         }
 
+        /// <summary>
+        /// Will save the current project into a file.
+        /// </summary>
+        /// <param name="name">The project-file</param>
+        /// <param name="flags">Flags.</param>
+        /// <returns></returns>
         public bool SaveProject(string name, int flags)
         {
             if (_world == null)

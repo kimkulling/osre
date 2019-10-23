@@ -21,6 +21,8 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/UI/FontManager.h>
+#include <osre/UI/Widget.h>
+#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Common/StringUtils.h>
 
 namespace OSRE {
@@ -68,8 +70,74 @@ RenderBackend::FontBase *FontManager::getFontByName( const String &fontName ) co
     return font;
 }
 
+void FontManager::setDefaultFont(RenderBackend::FontBase* defaultFont) {
+    if (nullptr != defaultFont) {
+        return;
+    }
+    
+    m_defaultFont = defaultFont;
+}
+
+RenderBackend::FontBase* FontManager::getDefaultFont() const {
+    return m_defaultFont;
+}
+
+RenderBackend::Texture* FontManager::getDefaultFontAsTexture() const {
+    if (nullptr == m_defaultFont) {
+        return nullptr;
+    }
+
+    Texture *tex = new Texture;
+    tex->m_textureName = m_defaultFont->getTextureName();
+}
+
+void FontManager::registerForUpdates(Widget* widget) {
+    for (size_t i = 0; i < m_updateRegistry.size(); ++i) {
+        if (m_updateRegistry[i] == widget) {
+            return;
+        }
+    }
+    m_updateRegistry.add(widget);
+}
+
+void FontManager::unregisterFromeUpdates(Widget* widget) {
+    if (m_updateRegistry.isEmpty()) {
+        return;
+    }
+
+    for (size_t i = 0; i < m_updateRegistry.size(); ++i) {
+        if (m_updateRegistry[i] == widget) {
+            m_updateRegistry.remove(i);
+        }
+    }
+}
+
+void FontManager::unregisterAllFromUpdates() {
+    if (m_updateRegistry.isEmpty()) {
+        return;
+    }
+
+    m_updateRegistry.clear();
+}
+
+void FontManager::notifyUpdate() {
+    if (m_updateRegistry.isEmpty()) {
+        return;
+    }
+
+    for (size_t i = 0; i<m_updateRegistry.size(); ++i) {
+        Widget* currentWidget = m_updateRegistry[i];
+        if ( nullptr == currentWidget ) {
+            continue;
+        }
+        currentWidget->requestLayouting();
+    }
+}
+
 FontManager::FontManager()
-: m_fontHashMap() {
+: m_fontHashMap()
+, m_defaultFont( nullptr )
+, m_updateRegistry() {
     // empty
 }
 

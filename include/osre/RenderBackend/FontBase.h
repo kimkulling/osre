@@ -30,6 +30,7 @@ namespace OSRE {
 namespace RenderBackend {
 
 struct OGLTexture;
+struct Texture;
 
 class OGLRenderBackend;
 
@@ -46,6 +47,8 @@ public:
     virtual ui32 getSize() const;
     virtual void setUri( const IO::Uri &uri );
     virtual void setTextureName( const String &name );
+    virtual void setTexture(Texture* texture);
+    virtual Texture* getTexture() const;
     virtual const String &getTextureName() const;
     virtual void setAtlasCols( ui32 numCols );
     virtual void setAtlasRows( ui32 numRows );
@@ -55,6 +58,7 @@ private:
     ui32 m_size;
     String m_texName;
     ui32 m_numCols, m_numRows;
+    Texture *m_texture;
     OGLTexture *m_fontAtlas;
     IO::Uri m_uri;
 };

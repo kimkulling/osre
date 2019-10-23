@@ -114,12 +114,12 @@ void WidgetCoordMapping::mapPosToWorld( const Rect2ui &rect, ui32 x, ui32 y, f32
 UiRenderCmd::UiRenderCmd()
 : m_startIndex(0)
 , m_numIndices(0)
-, m_mat( nullptr ) {
+, m_texture( nullptr ) {
     // empty
 }
 
 UiRenderCmd::~UiRenderCmd() {
-    m_mat = nullptr;
+    // empty
 }
 
 Widget::Widget( const String &name, Widget *parent )

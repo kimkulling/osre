@@ -231,19 +231,15 @@ BufferData::BufferData()
 }
 
 BufferData::~BufferData() {
-    delete[] m_buffer.m_data;
-    m_buffer.m_data = nullptr;
-    m_buffer.m_size = 0;
     m_cap = 0;
 }
 
 BufferData* BufferData::alloc( BufferType type, size_t sizeInBytes, BufferAccessType access ) {
     BufferData *buffer        = new BufferData;
-    buffer->m_buffer.m_size   = sizeInBytes;
     buffer->m_cap             = sizeInBytes;
     buffer->m_access          = access;
     buffer->m_type            = type;
-    buffer->m_buffer.m_data   = new c8[ sizeInBytes ];
+    buffer->m_buffer.resize(sizeInBytes);
 
     return buffer;
 }
@@ -266,25 +262,15 @@ void BufferData::copyFrom( void *data, size_t size ) {
         return;
     }
 
-    m_buffer.m_size = size;
-    ::memcpy(m_buffer.m_data, data, size );
+    ::memcpy(&m_buffer[0], data, size );
 }
 
-void BufferData::attach( void *data, size_t size ) {
-    const size_t newSize(m_buffer.m_size + size );
-    if ( newSize < m_cap ) {
-        void *ptr = ( (uc8*) m_buffer.m_data ) + m_buffer.m_size;
-        ::memcpy( ptr, data, size );
-        m_buffer.m_size += size;
-        return;
+void BufferData::attach( const void *data, size_t size ) {
+    c8* ptr = (c8*)data;
+    for (size_t i = 0; i < size; ++i) {
+        m_buffer.add( ptr );
+        ptr++;
     }
-    
-    c8 *newData = new c8[ newSize ];
-    ::memcpy( newData, m_buffer.m_data, m_buffer.m_size );
-    ::memcpy( &newData[m_buffer.m_size ], data, size );
-    delete[] m_buffer.m_data;
-    m_buffer.m_data = newData;
-    m_buffer.m_size += size;
 }
 
 BufferType BufferData::getBufferType() const {

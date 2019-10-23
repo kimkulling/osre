@@ -394,23 +394,23 @@ struct OSRE_EXPORT BufferData {
     static BufferData *alloc( BufferType type, size_t sizeInBytes, BufferAccessType access );
 	static void free( BufferData *data );
     void copyFrom( void *data, size_t size );
-    void attach( void *data, size_t size );
+    void attach( const void *data, size_t size );
     BufferType getBufferType() const;
     BufferAccessType getBufferAccessType() const;
     size_t getSize() const;
-    c8 *getData() const;
+    c8 *getData();
 
     OSRE_NON_COPYABLE( BufferData )
 };
 
 inline
 size_t BufferData::getSize() const {
-    return (nullptr != m_buffer.data() ? m_buffer.size() : 0L);
+    return m_buffer.size();
 }
 
 inline
-c8 *BufferData::getData() const {
-    return m_buffer.data();
+c8 *BufferData::getData() {
+    return (c8*)&m_buffer[0];
 }
 
 

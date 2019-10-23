@@ -881,7 +881,7 @@ void OGLRenderBackend::setParameter( OGLParameter *param ) {
         
         case ParameterType::PT_IntArray:
         {
-            glUniform1iv( param->m_loc, param->m_numItems, (i32*) param->m_data->getData() );
+            glUniform1iv( param->m_loc, (GLsizei) param->m_numItems, (i32*) param->m_data->getData() );
         }
         break;
 
@@ -895,7 +895,7 @@ void OGLRenderBackend::setParameter( OGLParameter *param ) {
 
         case ParameterType::PT_FloatArray:
         {
-            glUniform1fv( param->m_loc, param->m_numItems, (f32*) param->m_data->getData() );
+            glUniform1fv( param->m_loc, (GLsizei) param->m_numItems, (f32*) param->m_data->getData() );
 
         }
         break;
@@ -910,7 +910,7 @@ void OGLRenderBackend::setParameter( OGLParameter *param ) {
         
         case ParameterType::PT_Float2Array:
         {
-            glUniform2fv( param->m_loc, param->m_numItems, ( f32* )param->m_data->getData() );
+            glUniform2fv( param->m_loc, (GLsizei) param->m_numItems, ( f32* )param->m_data->getData() );
         }
         break;
 
@@ -924,7 +924,7 @@ void OGLRenderBackend::setParameter( OGLParameter *param ) {
 
         case ParameterType::PT_Float3Array:
         {
-            glUniform3fv( param->m_loc, param->m_numItems, ( f32* )param->m_data->getData() );
+            glUniform3fv( param->m_loc, (GLsizei) param->m_numItems, ( f32* )param->m_data->getData() );
 
         }
         break;
@@ -938,7 +938,7 @@ void OGLRenderBackend::setParameter( OGLParameter *param ) {
 
         case ParameterType::PT_Mat4Array:
         {
-            glUniformMatrix4fv( param->m_loc, param->m_numItems, GL_FALSE, ( f32* ) param->m_data->getData() );
+            glUniformMatrix4fv( param->m_loc, (GLsizei) param->m_numItems, GL_FALSE, ( f32* ) param->m_data->getData() );
         }
         break;
 
@@ -974,7 +974,7 @@ size_t OGLRenderBackend::addPrimitiveGroup( PrimitiveGroup *grp ) {
     OGLPrimGroup *oglGrp = new OGLPrimGroup;
     oglGrp->m_primitive  = OGLEnum::getGLPrimitiveType( grp->m_primitive );
     oglGrp->m_indexType  = OGLEnum::getGLIndexType( grp->m_indexType );
-    oglGrp->m_startIndex = grp->m_startIndex;
+    oglGrp->m_startIndex = (ui32) grp->m_startIndex;
     oglGrp->m_numIndices = grp->m_numIndices;
     
     const size_t idx( m_primitives.size() );
@@ -992,7 +992,6 @@ OGLFrameBuffer* OGLRenderBackend::createFrameBuffer(const String& name, ui32 wid
     glGenFramebuffers(1, &oglFB->m_bufferId);
     glBindFramebuffer(GL_FRAMEBUFFER, oglFB->m_bufferId );
 
-    GLuint renderedTexture;
     glGenTextures(1, &oglFB->m_renderedTexture);
     glBindTexture(GL_TEXTURE_2D, oglFB->m_renderedTexture );
 
@@ -1065,23 +1064,23 @@ void OGLRenderBackend::releaseFrameBuffer(OGLFrameBuffer* oglFB) {
     }
 }
 
-void OGLRenderBackend::render( ui32 primpGrpIdx ) {
+void OGLRenderBackend::render( size_t primpGrpIdx ) {
     OGLPrimGroup *grp( m_primitives[ primpGrpIdx ] );
     if( nullptr != grp ) {
         glDrawElements( grp->m_primitive, 
-                        grp->m_numIndices, 
-                        grp->m_indexType, 
-                        ( const GLvoid* ) grp->m_startIndex );
+            (GLsizei) grp->m_numIndices,
+            grp->m_indexType, 
+            ( const GLvoid* ) grp->m_startIndex );
     }
 }
 
-void OGLRenderBackend::render( ui32 primpGrpIdx, size_t numInstances ) {
+void OGLRenderBackend::render( size_t primpGrpIdx, size_t numInstances ) {
     OGLPrimGroup *grp( m_primitives[ primpGrpIdx ] );
     if ( nullptr != grp ) {
         glDrawArraysInstanced( grp->m_primitive, 
-                               grp->m_startIndex, 
-                               grp->m_numIndices, 
-                               numInstances );
+            grp->m_startIndex, 
+            (GLsizei) grp->m_numIndices,
+            (GLsizei)numInstances );
     }
 }
 

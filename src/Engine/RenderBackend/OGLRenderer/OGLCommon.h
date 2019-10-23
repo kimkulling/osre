@@ -199,10 +199,10 @@ struct SetRenderTargetCmdData {
 
 ///	@brief
 struct DrawInstancePrimitivesCmdData {
-    OGLVertexArray        *m_vertexArray;
-    ui32                   m_numInstances;
-    CPPCore::TArray<ui32>  m_primitives;
-    const char *m_id;
+    OGLVertexArray         *m_vertexArray;
+    size_t                  m_numInstances;
+    CPPCore::TArray<size_t> m_primitives;
+    const char             *m_id;
 
     DrawInstancePrimitivesCmdData()
     : m_vertexArray( nullptr )
@@ -215,11 +215,11 @@ struct DrawInstancePrimitivesCmdData {
 
 ///	@brief
 struct DrawPrimitivesCmdData {
-    bool                   m_localMatrix;
-    glm::mat4              m_model;
-    OGLVertexArray        *m_vertexArray;
-    CPPCore::TArray<ui32>  m_primitives;
-    const char *m_id;
+    bool                    m_localMatrix;
+    glm::mat4               m_model;
+    OGLVertexArray         *m_vertexArray;
+    CPPCore::TArray<size_t> m_primitives;
+    const char             *m_id;
 
     DrawPrimitivesCmdData()
     : m_localMatrix( false )

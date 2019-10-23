@@ -25,15 +25,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 
 #include <cppcore/Container/THashMap.h>
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
 
 // Forward declarations
 namespace RenderBackend {
     class FontBase;
+
+    struct Texture;
 }
 
 namespace UI {
+
+class Widget;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -45,7 +50,18 @@ public:
     static FontManager *create();
     static void destroy();
     static FontManager *getInstance();
+    FontBase* create(const IO::Uri& font);
     RenderBackend::FontBase *getFontByName( const String &fontName ) const;
+    void setDefaultFont(RenderBackend::FontBase* defaultFont);
+    RenderBackend::FontBase *getDefaultFont() const;
+    RenderBackend::Texture *getDefaultFontAsTexture() const;
+
+    void registerForUpdates(Widget* widget);
+    void unregisterFromeUpdates(Widget* widget);
+    void unregisterAllFromUpdates();
+
+protected:
+    void notifyUpdate();
 
 private:
     FontManager();
@@ -54,8 +70,12 @@ private:
 private:
     static FontManager *s_instance;
 
-    typedef CPPCore::THashMap<ui32, RenderBackend::FontBase*> FontHashMap;
+    using FontHashMap = CPPCore::THashMap<ui32, RenderBackend::FontBase*>;
+    using UpdateRegistryArray = CPPCore::TArray<Widget*>;
+
     FontHashMap m_fontHashMap;
+    UpdateRegistryArray m_updateRegistry;
+    RenderBackend::FontBase *m_defaultFont;
 };
 
 } // Namespace UI

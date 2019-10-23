@@ -116,7 +116,7 @@ using RenderBackend::UiIndexCache;
 struct UiRenderCmd {
     size_t m_startIndex;
     size_t m_numIndices;
-    RenderBackend::Material *m_mat;
+    RenderBackend::Texture *m_texture;
 
     UiRenderCmd();
     ~UiRenderCmd();
@@ -125,9 +125,11 @@ struct UiRenderCmd {
 };
 
 struct UiRenderCmdCache {
-    UiVertexCache            m_vc;  ///< Will store all vertices
-    UiIndexCache             m_ic;  ///< Will store all indices
-    CPPCore::TArray<UiRenderCmd*> m_renderCmds;
+    using RenderCmdArray = CPPCore::TArray<UiRenderCmd*>;
+
+    UiVertexCache m_vc;             ///< Will store all vertices
+    UiIndexCache  m_ic;             ///< Will store all indices
+    RenderCmdArray m_renderCmds;    ///< Will store all render commands
 };
 
 } // Namespace UI

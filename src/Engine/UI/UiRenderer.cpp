@@ -61,10 +61,13 @@ void UiRenderer::render( Canvas *canvas, RenderBackendService * rbSrv) {
     rbSrv->beginPass(PipelinePass::getPassNameById(UiPassId));
     rbSrv->beginRenderBatch("b1");
 
-    Material* mat = cache.m_renderCmds[0]->m_mat;
     Debugging::MeshDiagnostic::dumpUiIndexCache(cache.m_ic);
     Debugging::MeshDiagnostic::dumpUiVertexCache(cache.m_vc);
-    Mesh *mesh = UIRenderUtils::createGeoFromCache(cache.m_vc, cache.m_ic, mat );
+    Texture* tex(nullptr);
+    if (nullptr != cache.m_renderCmds[0]->m_texture) {
+        tex = cache.m_renderCmds[0]->m_texture;
+    }
+    Mesh *mesh = UIRenderUtils::createGeoFromCache(cache.m_vc, cache.m_ic, tex);
     if (nullptr == mesh) {
         return;
     }
