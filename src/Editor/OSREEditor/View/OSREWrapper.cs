@@ -129,6 +129,10 @@ namespace OSREEditor.View
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         private static extern void RegisterLogCallback(IntPtr fc);
 
+        /// <summary>
+        /// The class constructor.
+        /// </summary>
+        /// <param name="logWindow">The window to log into.</param>
         public OSREWrapper(TextBox logWindow) {
             _logger = logWindow;
         }

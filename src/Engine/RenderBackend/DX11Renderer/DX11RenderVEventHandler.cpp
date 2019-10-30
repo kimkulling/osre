@@ -298,6 +298,9 @@ bool DX11RenderEventHandler::onCommitNexFrame(const EventData *eventData) {
     }
 
     Frame *frame = frameToCommitData->m_frame;
+    if (nullptr == frame) {
+        return true;
+    }
 
     return true;
 }

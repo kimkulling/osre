@@ -41,6 +41,9 @@ namespace OSREEditor.Model
     {
         private WorldProxy _world;
 
+        /// <summary>
+        /// The project instance property access.
+        /// </summary>
         public static Project Instance { get; set; }
 
         /// <summary>

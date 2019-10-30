@@ -38,13 +38,8 @@ namespace OSREEditor
         /// </summary>
         ~MainEditorWindow()
         {
-            // empty
+            this.MouseClick -= Window_MouseClick;
         }
-
-        /// <summary>
-        /// The dispose method.
-        /// </summary>
-        public void Dispose() => this.MouseClick -= Window_MouseClick;
 
         private void quitToolStripMenuItem_Quit_Click(object sender, EventArgs e)
         {

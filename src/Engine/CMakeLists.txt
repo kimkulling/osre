@@ -85,6 +85,7 @@ SET( common_inc
     ${HEADER_PATH}/Common/Object.h
     ${HEADER_PATH}/Common/StringUtils.h
     ${HEADER_PATH}/Common/TFunctor.h
+	${HEADER_PATH}/Common/TResource.h
 	${HEADER_PATH}/Common/TResourceCache.h
     ${HEADER_PATH}/Common/TObjPtr.h
     ${HEADER_PATH}/Common/Tokenizer.h
@@ -349,7 +350,6 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/Mesh.h
     ${HEADER_PATH}/RenderBackend/FontBase.h
     ${HEADER_PATH}/RenderBackend/HWBufferManager.h
-    ${HEADER_PATH}/RenderBackend/FontBase.h
     ${HEADER_PATH}/RenderBackend/ParticleGenerator.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
@@ -415,7 +415,6 @@ SET( scripting_mono_inc
 # UI
 #==============================================================================
 SET( ui_src
-    UI/FontManager.cpp
     UI/Image.cpp
     UI/Widget.cpp
     UI/UiRenderer.cpp
@@ -429,7 +428,6 @@ SET( ui_src
 )
 SET( ui_inc
     ${HEADER_PATH}/UI/UICommon.h
-    ${HEADER_PATH}/UI/FontManager.h
 	${HEADER_PATH}/UI/Image.h
     ${HEADER_PATH}/UI/Widget.h
     ${HEADER_PATH}/UI/ButtonBase.h

@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <osre/Common/TResource.h>
 #include <osre/RenderBackend/FontBase.h>
 #include <osre/IO/Uri.h>
 
@@ -446,6 +447,25 @@ struct OSRE_EXPORT Texture {
     OSRE_NON_COPYABLE( Texture )
 };
 
+class TextureLoader {
+public:
+    TextureLoader();
+    ~TextureLoader();
+    size_t load(const IO::Uri& uri, Texture* tex);
+    bool unload(Texture* tex);
+};
+
+class TextureResource : public Common::TResource<Texture, TextureLoader> {
+public:
+    TextureResource( const String &name);
+    ~TextureResource() override;
+
+protected:
+    void onLoad(const IO::Uri& uri, TextureLoader& loader) override;
+    void onUnload(TextureLoader& loader) override;
+
+private:
+};
 
 static const ui32 MaxShaderTypes = static_cast<ui32>( ShaderType::NumShaderTypes );
 

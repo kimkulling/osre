@@ -21,7 +21,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/UI/TextBase.h>
-#include <osre/ui/FontManager.h>
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Common/Tokenizer.h>
@@ -102,16 +101,7 @@ void TextBase::onRender(UiRenderCmdCache& renderCmdCache, RenderBackendService* 
     cmd->m_numIndices = (ui32)(renderCmdCache.m_ic.numIndices() - startIndex);
     
     //
-    FontBase *defaultFont = FontManager::getInstance()->getDefaultFont();
-    if (nullptr == defaultFont) {
-        Texture* tex = new Texture;
-        tex->m_textureName = Platform::PlatformInterface::getInstance()->getDefaultFontName();
-        
-        defaultFont->setTexture(tex);
-        FontManager::getInstance()->setDefaultFont(defaultFont);
-    }
-
-    cmd->m_texture = FontManager::getInstance()->getDefaultFont()->getTexture();
+    //cmd->m_texture = 
     renderCmdCache.m_renderCmds.add(cmd);
 }
 

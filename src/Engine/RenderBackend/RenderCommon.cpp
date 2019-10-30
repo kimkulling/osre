@@ -25,7 +25,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/Ids.h>
+#include <osre/IO/Uri.h>
+
 #include <glm/gtc/matrix_transform.inl>
+
+#include "SOIL.h"
 
 namespace OSRE {
 namespace RenderBackend {
@@ -317,6 +321,118 @@ Texture::Texture()
 Texture::~Texture() {
     delete[] m_data;
     m_data = nullptr;
+}
+
+size_t TextureLoader::load(const IO::Uri& uri, Texture *tex ) {
+    if (nullptr == tex) {
+        return 0;
+    }
+    
+    const String filename = uri.getAbsPath();
+    i32 width(0), height(0), channels(0);
+    tex->m_data = SOIL_load_image(filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
+    if (nullptr == tex->m_data ) {
+        osre_debug(Tag, "Cannot load texture " + filename);
+        return 0;
+    }
+    tex->m_width = width;
+    tex->m_height = height;
+    tex->m_channels = channels;
+
+    // swap the texture data
+    for (i32 j = 0; j * 2 < height; ++j) {
+        i32 index1 = j * width * channels;
+        i32 index2 = (height - 1 - j) * width * channels;
+        for (i32 i = width * channels; i > 0; --i) {
+            uc8 temp = tex->m_data[index1];
+            tex->m_data[index1] = tex->m_data[index2];
+            tex->m_data[index2] = temp;
+            ++index1;
+            ++index2;
+        }
+    }
+
+    const size_t size = width * height * channels;
+
+    return size;
+}
+
+bool TextureLoader::unload(Texture* tex) {
+    if (nullptr == tex) {
+        return false;
+    }
+
+    SOIL_free_image_data(tex->m_data);
+    tex->m_data = nullptr;
+    tex->m_width = 0;
+    tex->m_height = 0;
+    tex->m_channels = 0;
+
+    return true;
+}
+
+TextureResource::TextureResource(const String& name)
+: TResource(name) {
+    // empty
+}
+
+TextureResource::~TextureResource() {
+    // empty
+}
+
+TextureLoader::TextureLoader() {
+    // empty
+}
+
+TextureLoader::~TextureLoader() {
+    // empty
+}
+
+void TextureResource::onLoad(const IO::Uri& uri, TextureLoader& loader) {
+    if (getState() == Loaded) {
+        return;
+    }
+    create();
+    Texture* tex = get();
+    getStats().m_memory = loader.load(uri, tex);
+    if ( 0 == getStats().m_memory ) {
+        setState(Error);
+        osre_debug(Tag, "Cannot load texture " + uri.getAbsPath() );
+        return;
+    }
+    /*const String filename = uri.getAbsPath();
+    i32 width(0), height(0), channels(0);
+    uc8 *data = SOIL_load_image(filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
+    if (!data) {
+        setState(Error);
+        osre_debug(Tag, "Cannot load texture " + filename);
+        return;
+    }
+
+    // swap the texture data
+    for (i32 j = 0; j * 2 < height; ++j) {
+        i32 index1 = j * width * channels;
+        i32 index2 = (height - 1 - j) * width * channels;
+        for (i32 i = width * channels; i > 0; --i) {
+            uc8 temp = data[index1];
+            data[index1] = data[index2];
+            data[index2] = temp;
+            ++index1;
+            ++index2;
+        }
+    }*/
+
+    setState(Loaded);
+}
+
+void TextureResource::onUnload(TextureLoader& loader) {
+    if (getState() == Unloaded) {
+        return;
+    }
+
+    loader.unload(get());
+    getStats().m_memory = 0;
+    setState(Unloaded);
 }
 
 Material::Material( const String &name )

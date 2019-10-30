@@ -28,6 +28,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Event.h>
 #include <osre/Platform/KeyTypes.h>
 #include <osre/Platform/PluginType.h>
+#include <osre/Common/TResource.h>
+#include <osre/Common/TResourceCache.h>
 
 #include <cppcore/Container/TList.h>
 
@@ -183,6 +185,21 @@ public:
     i32 m_absY;		///< The absolute Y-position of the mouse cursor
 };
 
+
+struct ApplicationContext {
+    const Properties::Settings* m_config;
+    PluginType m_type;
+    AbstractWindow* m_rootSurface;
+    AbstractPlatformEventQueue* m_oseventHandler;
+    AbstractOGLRenderContext* m_renderContext;
+    AbstractTimer* m_timer;
+    AbstractDynamicLoader* m_dynLoader;
+    AbstractSystemInfo* m_systemInfo;
+
+    ApplicationContext(const Properties::Settings* config);
+    ~ApplicationContext();
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -216,14 +233,15 @@ private:
 private:
     static PlatformInterface *s_instance;
     
-    const Properties::Settings *m_config;
+    ApplicationContext *m_context;
+    /*const Properties::Settings *m_config;
     PluginType m_type;
     AbstractWindow *m_rootSurface;
     AbstractPlatformEventQueue *m_oseventHandler;
     AbstractOGLRenderContext *m_renderContext;
     AbstractTimer *m_timer;
     AbstractDynamicLoader *m_dynLoader;
-    AbstractSystemInfo *m_systemInfo;
+    AbstractSystemInfo *m_systemInfo;*/
 };
 
 } // Namespace Platform
