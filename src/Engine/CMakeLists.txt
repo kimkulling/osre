@@ -38,6 +38,7 @@ SET( app_inc
     ${HEADER_PATH}/App/ServiceProvider.h
     ${HEADER_PATH}/App/Project.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
+	${HEADER_PATH}/App/ResourceCacheService.h
 )
 
 SET( app_src
@@ -70,12 +71,10 @@ SET( common_inc
 	${HEADER_PATH}/Common/Common.h
 	${HEADER_PATH}/Common/Environment.h
     ${HEADER_PATH}/Common/TCommand.h
-    ${HEADER_PATH}/Common/AbstractCodec.h
     ${HEADER_PATH}/Common/AbstractEventHandler.h
     ${HEADER_PATH}/Common/AbstractProcessor.h
     ${HEADER_PATH}/Common/ArgumentParser.h
     ${HEADER_PATH}/Common/AbstractService.h
-    ${HEADER_PATH}/Common/CodecRegistry.h
     ${HEADER_PATH}/Common/ColorRGBA.h
     ${HEADER_PATH}/Common/DateTime.h
     ${HEADER_PATH}/Common/Event.h
@@ -92,9 +91,7 @@ SET( common_inc
     ${HEADER_PATH}/Common/osre_common.h
 )
 SET( common_src
-    Common/AbstractCodec.cpp
     Common/ArgumentParser.cpp
-    Common/CodecRegistry.cpp
     Common/DateTime.cpp
     Common/Event.cpp
     Common/EventTriggerer.cpp
@@ -146,8 +143,6 @@ SET( io_src
     IO/Directory.cpp
     IO/FileStream.cpp
     IO/FileStream.h
-    IO/ImageCodec.h
-    IO/ImageCodec.cpp
     IO/IOService.cpp
     IO/LocaleFileSystem.cpp
     IO/LocaleFileSystem.h

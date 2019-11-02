@@ -337,7 +337,7 @@ static void setTexture( const String &resolvedPath, const aiString &texPath, Tex
     IO::Uri::normalizePath( temp, '\\', temp1 );
     texname += temp1;
 
-    TextureResource* texRes = new TextureResource(texname, IO::Uri(texname), TextureTargetType::Texture2D);
+    TextureResource* texRes = new TextureResource(texname, IO::Uri(texname) );
     texResArray.add(texRes);
 }
 

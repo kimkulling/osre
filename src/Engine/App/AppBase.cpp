@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
 #include <osre/App/ServiceProvider.h>
+#include <osre/App/ResourceCacheService.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/Common/Environment.h>
 #include <osre/IO/IOService.h>
@@ -377,7 +378,10 @@ bool AppBase::onCreate() {
     Scene::RenderMode mode = static_cast<Scene::RenderMode>( m_settings->get( Properties::Settings::RenderMode ).getInt() );
     m_world = new Scene::World( "world", mode );
     
-    ServiceProvider::create( m_rbService );
+
+    ResourceCacheService *rcSrv = new ResourceCacheService;
+
+    ServiceProvider::create( m_rbService, rcSrv );
 
     // Setup onMouse event-listener
     AbstractPlatformEventQueue *evHandler = m_platformInterface->getPlatformEventHandler();

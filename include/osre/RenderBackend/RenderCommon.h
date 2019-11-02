@@ -459,9 +459,11 @@ public:
 ///	@brief
 class OSRE_EXPORT TextureResource : public Common::TResource<Texture, TextureLoader> {
 public:
-    TextureResource( const String &name, const IO::Uri& uri, TextureTargetType targetType );
+    TextureResource( const String &name, const IO::Uri& uri );
     ~TextureResource() override;
-    
+    void setTargetType( TextureTargetType targetType );
+    TextureTargetType getTargetType() const;
+
 protected:
     void onLoad(const IO::Uri& uri, TextureLoader& loader) override;
     void onUnload(TextureLoader& loader) override;

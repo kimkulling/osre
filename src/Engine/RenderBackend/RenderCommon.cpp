@@ -377,14 +377,22 @@ bool TextureLoader::unload(Texture* tex) {
     return true;
 }
 
-TextureResource::TextureResource(const String& name, const IO::Uri& uri, TextureTargetType targetType)
+TextureResource::TextureResource(const String& name, const IO::Uri& uri )
 : TResource(name, uri)
-, m_targetType( targetType ) {
+, m_targetType( TextureTargetType::Texture2D ) {
     // empty
 }
 
 TextureResource::~TextureResource() {
     // empty
+}
+
+void TextureResource::setTargetType( TextureTargetType targetType ) {
+    m_targetType = targetType;
+}
+
+TextureTargetType TextureResource::getTargetType() const {
+    return m_targetType;
 }
 
 TextureLoader::TextureLoader() {

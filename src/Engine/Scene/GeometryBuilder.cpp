@@ -511,29 +511,10 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
     mesh->m_primGroups[ 0 ].m_startIndex = 0;
 
     // setup material
-    //mesh->m_material = Scene::MaterialBuilder::createBuildinMaterial( VertexType::RenderVertex );
-
-    // setup the texture
-
     CPPCore::TArray<TextureResource*> texResArray;;
-    TextureResource* texRes = new TextureResource("buildin_arial", IO::Uri("file://assets/Textures/Fonts/buildin_arial.bmp"), TextureTargetType::Texture2D);
+    TextureResource* texRes = new TextureResource("buildin_arial", IO::Uri("file://assets/Textures/Fonts/buildin_arial.bmp"));
     texResArray.add(texRes);
     mesh->m_material = Scene::MaterialBuilder::createTexturedMaterial("SpiderTex", texResArray, VertexType::RenderVertex );
-
-
-    /*mesh->m_material->m_numTextures = 1;
-    mesh->m_material->m_textures = new Texture*[ 1 ];
-    mesh->m_material->m_textures[ 0 ] = new Texture;
-    mesh->m_material->m_textures[ 0 ]->m_textureName = "buildin_arial";
-    mesh->m_material->m_textures[ 0 ]->m_loc = IO::Uri( "file://assets/Textures/Fonts/buildin_arial.bmp" );
-
-    mesh->m_material->m_textures[0]->m_targetType = TextureTargetType::Texture2D;
-    mesh->m_material->m_textures[0]->m_width = 0;
-    mesh->m_material->m_textures[0]->m_height = 0;
-    mesh->m_material->m_textures[0]->m_channels = 0;
-    mesh->m_material->m_textures[0]->m_data = nullptr;
-    mesh->m_material->m_textures[0]->m_size = 0;*/
-
     m_ActiveGeo = mesh;
 
     return *this;
@@ -545,9 +526,9 @@ void MeshBuilder::allocUiTextBox(f32 x, f32 y, f32 z, f32 textSize, const String
     glm::vec2 *tex0(nullptr);
     GLushort *textIndices(nullptr);
     generateTextBoxVerticesAndIndices(x, y, textSize, text, &textPos, &colors, &tex0, &textIndices);
-    const ui32 offset = vc.numVertices();
-    const ui32 numNewVerts = getNumTextVerts(text);
-    for (ui32 i = 0; i < numNewVerts; i++) {
+    const size_t offset = vc.numVertices();
+    const size_t numNewVerts = getNumTextVerts(text);
+    for (size_t i = 0; i < numNewVerts; i++) {
         RenderVert v;
         v.position = textPos[i];
         v.position.z = z;
@@ -559,7 +540,7 @@ void MeshBuilder::allocUiTextBox(f32 x, f32 y, f32 z, f32 textSize, const String
     const size_t numIndices(getNumTextIndices(text));
     
     for (size_t i = 0; i < numIndices; ++i) {
-        ic.add(textIndices[i] + offset);
+        ic.add(textIndices[i] + ( GLushort ) offset);
     }
 
     delete[] textIndices;
