@@ -39,6 +39,10 @@ public:
     ~MaterialBuilder();
     static RenderBackend::Material *createBuildinMaterial( RenderBackend::VertexType type );
     static RenderBackend::Material *createBuildinUiMaterial();
+    static RenderBackend::Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
+        RenderBackend::VertexType type );
+    static RenderBackend::Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
+        const String& VsSrc, const String& FsSrc);
 };
 
 } // Namespace Scene

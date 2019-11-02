@@ -51,13 +51,14 @@ bool setupTextures(Material* mat, OGLRenderBackend* rb, TArray<OGLTexture*>& tex
     for (ui32 i = 0; i < numTextures; ++i) {
         Texture* tex(mat->m_textures[i]);
         if (!tex->m_textureName.empty()) {
-            String root = Assets::AssetRegistry::getPath("media");
+            /*String root = Assets::AssetRegistry::getPath("media");
             String path = Assets::AssetRegistry::resolvePathFromUri(tex->m_loc);
 
             IO::Uri loc(tex->m_loc);
-            loc.setPath(path);
+            loc.setPath(path);*/
 
-            OGLTexture* oglTexture = rb->createTextureFromFile(tex->m_textureName, loc);
+            OGLTexture* oglTexture = rb->createTexture(tex->m_textureName, tex);
+            //OGLTexture* oglTexture = rb->createTextureFromFile(tex->m_textureName, loc);
             if (nullptr != oglTexture) {
                 textures.add(oglTexture);
             }

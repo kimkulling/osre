@@ -121,6 +121,7 @@ public:
     void releaseAllShaders();
     OGLTexture *createEmptyTexture( const String &name, TextureTargetType target, TextureFormatType format, ui32 width, ui32 height, ui32 channels );
     void updateTexture( OGLTexture *pOGLTextue, ui32 offsetX, ui32 offsetY, c8 *data, size_t size );
+    OGLTexture* createTexture(const String& name, Texture *tex);
     OGLTexture *createTextureFromFile( const String &name, const IO::Uri &fileloc );
     OGLTexture *createTextureFromStream( const String &name, IO::Stream &stream, ui32 width, ui32 height, ui32 channels );
     OGLTexture *findTexture( const String &name ) const;

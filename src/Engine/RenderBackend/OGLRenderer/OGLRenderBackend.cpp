@@ -693,6 +693,24 @@ void OGLRenderBackend::updateTexture( OGLTexture *oglTextue, ui32 offsetX, ui32 
                      oglTextue->m_height, oglTextue->m_format, GL_UNSIGNED_BYTE, data );
 }
 
+OGLTexture* OGLRenderBackend::createTexture(const String& name, Texture* tex) {
+    if (nullptr == tex) {
+        return nullptr;
+    }
+
+    OGLTexture* glTex(findTexture(name));
+    if (nullptr != glTex) {
+        return glTex;
+    }
+
+    
+    glTex = createEmptyTexture(name, tex->m_targetType, TextureFormatType::R8G8B8, tex->m_width, tex->m_height, tex->m_channels);
+    glTexImage2D(glTex->m_target, 0, GL_RGB, tex->m_width, tex->m_height, 0, glTex->m_format, GL_UNSIGNED_BYTE, tex->m_data);
+    glBindTexture(glTex->m_target, 0);
+
+    return glTex;
+}
+
 OGLTexture *OGLRenderBackend::createTextureFromFile( const String &name, const IO::Uri &fileloc ) {
     OGLTexture *tex( findTexture( name ) );
     if( tex ) {

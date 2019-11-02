@@ -48,15 +48,17 @@ public:
         Error
     };
 
-    TResource(const String& name);
+    TResource(const String& name, const IO::Uri& uri );
     virtual ~TResource();
+    void setUri(const IO::Uri& uri);
+    const IO::Uri& getUri() const;
     ResourceState getState() const;
-    virtual void load( const IO::Uri& uri, TResLoader& loader);
+    virtual void load( TResLoader& loader);
     virtual void unload(TResLoader& loader);
+    TResType* get();
 
 protected:
     void create();
-    TResType *get();
     ResourceStatistics& getStats();
     virtual void setState(ResourceState newState);
     virtual void onLoad(const IO::Uri& uri, TResLoader& loader) = 0;
@@ -65,14 +67,16 @@ protected:
 private:
     ResourceState m_state;
     ResourceStatistics m_stats;
+    IO::Uri m_uri;
     TResType *m_res;
 };
 
 template<class TResType, class TResLoader>
 inline
-TResource<TResType, TResLoader>::TResource(const String& name)
+TResource<TResType, TResLoader>::TResource(const String& name, const IO::Uri& uri)
 : Object(name)
 , m_state(Uninitialized)
+, m_uri(uri)
 , m_res( nullptr ) {
     ::memset(&m_stats, 0, sizeof(ResourceStatistics));
 }
@@ -81,6 +85,22 @@ template<class TResType, class TResLoader>
 inline
 TResource<TResType, TResLoader>::~TResource() {
     // empty
+}
+
+template<class TResType, class TResLoader>
+inline
+void TResource<TResType, TResLoader>::setUri(const IO::Uri& uri) {
+    if (m_uri == uri) {
+        return;
+    }
+
+    m_uri = uri;
+}
+
+template<class TResType, class TResLoader>
+inline
+const IO::Uri& TResource<TResType, TResLoader>::getUri() const {
+    return m_uri;
 }
 
 template<class TResType, class TResLoader>
@@ -109,8 +129,8 @@ ResourceStatistics& TResource<TResType, TResLoader>::getStats() {
 
 template<class TResType, class TResLoader>
 inline
-void TResource<TResType, TResLoader>::load(const IO::Uri& uri, TResLoader& loader) {
-    onLoad(uri, loader);
+void TResource<TResType, TResLoader>::load( TResLoader& loader) {
+    onLoad(getUri(), loader);
 }
 
 template<class TResType, class TResLoader>

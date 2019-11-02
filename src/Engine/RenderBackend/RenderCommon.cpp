@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Shader.h>
 #include <osre/RenderBackend/Mesh.h>
+#include <osre/Assets/AssetRegistry.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/Ids.h>
 #include <osre/IO/Uri.h>
@@ -329,8 +330,13 @@ size_t TextureLoader::load(const IO::Uri& uri, Texture *tex ) {
     }
     
     const String filename = uri.getAbsPath();
+
+    String root = Assets::AssetRegistry::getPath("media");
+    String path = Assets::AssetRegistry::resolvePathFromUri(uri);
+
+
     i32 width(0), height(0), channels(0);
-    tex->m_data = SOIL_load_image(filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
+    tex->m_data = SOIL_load_image(path.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
     if (nullptr == tex->m_data ) {
         osre_debug(Tag, "Cannot load texture " + filename);
         return 0;
@@ -371,8 +377,9 @@ bool TextureLoader::unload(Texture* tex) {
     return true;
 }
 
-TextureResource::TextureResource(const String& name)
-: TResource(name) {
+TextureResource::TextureResource(const String& name, const IO::Uri& uri, TextureTargetType targetType)
+: TResource(name, uri)
+, m_targetType( targetType ) {
     // empty
 }
 
@@ -392,35 +399,17 @@ void TextureResource::onLoad(const IO::Uri& uri, TextureLoader& loader) {
     if (getState() == Loaded) {
         return;
     }
+    
     create();
     Texture* tex = get();
+    tex->m_textureName = getName();
     getStats().m_memory = loader.load(uri, tex);
+    tex->m_targetType = m_targetType;
     if ( 0 == getStats().m_memory ) {
         setState(Error);
         osre_debug(Tag, "Cannot load texture " + uri.getAbsPath() );
         return;
     }
-    /*const String filename = uri.getAbsPath();
-    i32 width(0), height(0), channels(0);
-    uc8 *data = SOIL_load_image(filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
-    if (!data) {
-        setState(Error);
-        osre_debug(Tag, "Cannot load texture " + filename);
-        return;
-    }
-
-    // swap the texture data
-    for (i32 j = 0; j * 2 < height; ++j) {
-        i32 index1 = j * width * channels;
-        i32 index2 = (height - 1 - j) * width * channels;
-        for (i32 i = width * channels; i > 0; --i) {
-            uc8 temp = data[index1];
-            data[index1] = data[index2];
-            data[index2] = temp;
-            ++index1;
-            ++index2;
-        }
-    }*/
 
     setState(Loaded);
 }

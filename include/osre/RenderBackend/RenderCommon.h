@@ -447,7 +447,8 @@ struct OSRE_EXPORT Texture {
     OSRE_NON_COPYABLE( Texture )
 };
 
-class TextureLoader {
+///	@brief
+class OSRE_EXPORT TextureLoader {
 public:
     TextureLoader();
     ~TextureLoader();
@@ -455,17 +456,21 @@ public:
     bool unload(Texture* tex);
 };
 
-class TextureResource : public Common::TResource<Texture, TextureLoader> {
+///	@brief
+class OSRE_EXPORT TextureResource : public Common::TResource<Texture, TextureLoader> {
 public:
-    TextureResource( const String &name);
+    TextureResource( const String &name, const IO::Uri& uri, TextureTargetType targetType );
     ~TextureResource() override;
-
+    
 protected:
     void onLoad(const IO::Uri& uri, TextureLoader& loader) override;
     void onUnload(TextureLoader& loader) override;
 
 private:
+    TextureTargetType m_targetType;
 };
+
+using TextureResourceArray = CPPCore::TArray<RenderBackend::TextureResource*>;
 
 static const ui32 MaxShaderTypes = static_cast<ui32>( ShaderType::NumShaderTypes );
 
