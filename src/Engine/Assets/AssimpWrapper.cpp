@@ -328,8 +328,6 @@ using IO::Stream;
 using IO::AbstractFileSystem;
 
 static void setTexture( const String &resolvedPath, const aiString &texPath, TextureResourceArray &texResArray ) {
-    //Texture *tex = new Texture;
-    //textures.add( tex );
     String texname;
     texname += "file://";
     texname += resolvedPath;
@@ -352,7 +350,11 @@ void AssimpWrapper::importMaterial( aiMaterial *material ) {
     if ( AI_SUCCESS == material->GetTexture( aiTextureType_DIFFUSE, texIndex, &texPath ) ) {
         setTexture(m_root, texPath, texResArray);
     }
-    Material* osreMat = MaterialBuilder::createTexturedMaterial(texPath.C_Str(), texResArray, RenderBackend::VertexType::RenderVertex);
+    String matName = texPath.C_Str();
+    if (matName.empty()) {
+        matName = "material1";
+    }
+    Material* osreMat = MaterialBuilder::createTexturedMaterial( matName, texResArray, RenderBackend::VertexType::RenderVertex);
     m_matArray.add(osreMat);
     //    assignTexturesToMat( osreMat, textures );
 
