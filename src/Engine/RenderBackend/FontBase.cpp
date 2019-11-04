@@ -41,11 +41,11 @@ FontBase::~FontBase() {
     // empty
 }
     
-void FontBase::setSize( ui32 size ) {
+void FontBase::setSize( size_t size ) {
     m_size = size;
 }
     
-ui32 FontBase::getSize() const {
+size_t FontBase::getSize() const {
     return m_size;
 }
 

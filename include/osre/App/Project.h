@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Object.h>
 #include <osre/Scene/SceneCommon.h>
 
+// Forward declarations
 namespace Json {
     class StreamWriter;
 }

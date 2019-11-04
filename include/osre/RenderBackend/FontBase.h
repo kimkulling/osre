@@ -43,8 +43,8 @@ class FontBase : public Common::Object {
 public:
     FontBase( const String &name );
     virtual ~FontBase();
-    virtual void setSize( ui32 size );
-    virtual ui32 getSize() const;
+    virtual void setSize( size_t size );
+    virtual size_t getSize() const;
     virtual void setUri( const IO::Uri &uri );
     virtual void setTextureName( const String &name );
     virtual void setTexture(Texture* texture);
@@ -55,7 +55,7 @@ public:
     virtual bool loadFromStream( OGLRenderBackend *rb );
 
 private:
-    ui32 m_size;
+    size_t m_size;
     String m_texName;
     ui32 m_numCols, m_numRows;
     Texture *m_texture;
