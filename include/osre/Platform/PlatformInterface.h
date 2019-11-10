@@ -234,14 +234,6 @@ private:
     static PlatformInterface *s_instance;
     
     ApplicationContext *m_context;
-    /*const Properties::Settings *m_config;
-    PluginType m_type;
-    AbstractWindow *m_rootSurface;
-    AbstractPlatformEventQueue *m_oseventHandler;
-    AbstractOGLRenderContext *m_renderContext;
-    AbstractTimer *m_timer;
-    AbstractDynamicLoader *m_dynLoader;
-    AbstractSystemInfo *m_systemInfo;*/
 };
 
 } // Namespace Platform

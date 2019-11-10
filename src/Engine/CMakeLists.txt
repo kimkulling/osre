@@ -411,6 +411,7 @@ SET( scripting_mono_inc
 #==============================================================================
 SET( ui_src
     UI/Image.cpp
+	UI/FocusControl.cpp
     UI/Widget.cpp
     UI/UiRenderer.cpp
     UI/UIRenderUtils.cpp
@@ -423,6 +424,7 @@ SET( ui_src
 )
 SET( ui_inc
     ${HEADER_PATH}/UI/UICommon.h
+	${HEADER_PATH}/UI/FocusControl.h
 	${HEADER_PATH}/UI/Image.h
     ${HEADER_PATH}/UI/Widget.h
     ${HEADER_PATH}/UI/ButtonBase.h

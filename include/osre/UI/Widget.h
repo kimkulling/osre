@@ -25,11 +25,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/UICommon.h>
 #include <osre/Common/Object.h>
 #include <osre/Common/TFunctor.h>
+#include <osre/Platform/KeyTypes.h>
+
 #include <cppcore/Common/Variant.h>
 
 namespace OSRE {
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 namespace RenderBackend {
     class RenderBackendService;
     class FontBase;
@@ -102,11 +104,14 @@ private:
 
 /// This enum is used to describe the widget type.
 enum class WidgetType {
-    Button,
+    Button = 0,
     Text,
     Image,
     Panel,
-    Canvas
+    Canvas,
+    NumWidgets,
+    
+    InvalidWidgetType
 };
 
 using UiFunctor = Common::Functor<void, ui32, void *>;
@@ -178,6 +183,8 @@ public:
     virtual void render(UiRenderCmdCache& renderCmdCache, RenderBackend::RenderBackendService* rbSrv);
     virtual void mouseDown(const Point2ui& pt, void* data);
     virtual void mouseUp(const Point2ui& pt, void* data);
+    virtual void keyPressed( Platform::Key key);
+    virtual void keyReleased( Platform::Key key );
     virtual void resize(ui32 x, ui32 y, ui32 w, ui32 h);
     virtual void layout();
     virtual void setState(WidgetState state);
@@ -185,12 +192,15 @@ public:
 
 protected:
     Widget(const String& name, Widget* parent);
-    void checkChildren(const Point2ui& pt, void* data, WidgetState state);
+    void checkChildrenForMouseClick(const Point2ui& pt, void* data, WidgetState state);
+    void checkChildrenForKey( Platform::Key key, bool pressed );
     virtual void onLayout() = 0;
     virtual void onResize(ui32 x, ui32 y, ui32 w, ui32 h);
     virtual void onRender(UiRenderCmdCache& renderCmdCache, RenderBackend::RenderBackendService* rbSrv) = 0;
     virtual void onMouseDown(const Point2ui& pt, void* data);
     virtual void onMouseUp(const Point2ui& pt, void* data);
+    virtual void onKeyPressed( Platform::Key key );
+    virtual void onKeyReleased( Platform::Key key );
 
 private:
     enum UpdateRequest {

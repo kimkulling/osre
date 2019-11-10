@@ -57,28 +57,45 @@ using namespace ::OSRE::IO;
 const String API_Arg = "api";
 const String Tag     = "AppBase";
 
+class KeyboardEventListener : public Platform::OSEventListener {
+public:
+    KeyboardEventListener()
+    : OSEventListener( "App/KeyboardEventListener" ) {
+        // empty
+    }
+
+    ~KeyboardEventListener() override {
+        // empty
+    }
+
+    void onOSEvent( const Event &osEvent, const EventData *data ) override {
+        if (osEvent == KeyboardButtonDownEvent ) {
+        }
+    }
+};
+
 class MouseEventListener : public Platform::OSEventListener {
 public:
     MouseEventListener()
     : OSEventListener( "App/MouseEventListener" )
-    , m_uiScreen() {
+    , m_uiCanvas() {
         // empty
     }
 
-    ~MouseEventListener() {
+    ~MouseEventListener() override {
         // empty
     }
 
-    void setScreen( UI::Canvas *screen ) {
-        m_uiScreen = screen;
+    void setCanvas( UI::Canvas *screen ) {
+        m_uiCanvas = screen;
     }
 
-    Canvas *getScreen() const {
-        return m_uiScreen.getPtr();
+    Canvas *getCanvas() const {
+        return m_uiCanvas.getPtr();
     }
 
     void onOSEvent( const Event &osEvent, const EventData *data ) override {
-        if (!m_uiScreen.isValid()) {
+        if (!m_uiCanvas.isValid()) {
             return;
         }
 
@@ -86,12 +103,12 @@ public:
         if ( osEvent == MouseButtonDownEvent ) {
             MouseButtonEventData *mouseBtnData( ( MouseButtonEventData* )data );
             const Point2ui pt( mouseBtnData->m_AbsX, mouseBtnData->m_AbsY );
-            m_uiScreen->mouseDown( pt, nullptr );
+            m_uiCanvas->mouseDown( pt, nullptr );
         }
     }
 
 private:
-    Common::TObjPtr<UI::Canvas> m_uiScreen;
+    Common::TObjPtr<UI::Canvas> m_uiCanvas;
 };
 
 AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
@@ -285,7 +302,7 @@ void AppBase::setUIScreen( UI::Canvas *uiScreen ) {
         AbstractWindow *surface( m_platformInterface->getRootWindow() );
         if ( nullptr != surface ) {
             m_uiScreen->setSurface( surface );
-            m_mouseEvListener->setScreen( m_uiScreen );
+            m_mouseEvListener->setCanvas( m_uiScreen );
             m_rbService->setUiScreen( uiScreen );
         }
     }

@@ -42,8 +42,8 @@ static const c8 Tag[] = "ModelLoadingApp";
 
 // The example application, will create the render environment and render a simple triangle onto it
 class UIDemoApp : public App::AppBase {
-    Canvas *m_canvas;
-    TransformMatrixBlock m_transformMatrix;
+    Canvas               *m_canvas;
+    TransformMatrixBlock  m_transformMatrix;
 
 public:
     UIDemoApp( int argc, char *argv[] )

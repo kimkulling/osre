@@ -350,6 +350,15 @@ void Widget::mouseUp( const Point2ui &pt, void *data) {
     onMouseUp( pt, data );
 }
 
+void Widget::keyPressed( Platform::Key key ) {
+    onKeyPressed( key );
+}
+
+void Widget::keyReleased( Platform::Key key ) {
+    onKeyReleased( key );
+}
+
+
 void Widget::layout() {
     if (layoutingRequested()) {
         onLayout();
@@ -373,7 +382,7 @@ WidgetState Widget::getWidgetState() const {
     return m_state;
 }
 
-void Widget::checkChildren( const Point2ui &pt, void *data, WidgetState state) {
+void Widget::checkChildrenForMouseClick( const Point2ui &pt, void *data, WidgetState state) {
     for (ui32 i = 0; i < getNumWidgets(); ++i ) {
         Widget *child(getWidgetAt(i));
         if (nullptr == child) {
@@ -391,12 +400,33 @@ void Widget::checkChildren( const Point2ui &pt, void *data, WidgetState state) {
     }
 }
 
+void Widget::checkChildrenForKey( Platform::Key key, bool pressed ) {
+    for (ui32 i = 0; i < getNumWidgets(); ++i) {
+        Widget *child( getWidgetAt( i ) );
+        if (nullptr != child) {
+            if (pressed) {
+                child->onKeyPressed( key );
+            } else {
+                child->onKeyReleased( key );
+            }
+        }
+    }
+}
+
 void Widget::onMouseDown( const Point2ui &pt, void *data) {
-    checkChildren(pt, data, WidgetState::Pressed);
+    checkChildrenForMouseClick(pt, data, WidgetState::Pressed);
 }
 
 void Widget::onMouseUp( const Point2ui &pt, void *data) {
-    checkChildren(pt, data, WidgetState::Released);
+    checkChildrenForMouseClick(pt, data, WidgetState::Released);
+}
+
+void Widget::onKeyPressed( Platform::Key key ) {
+    checkChildrenForKey( key, true );
+}
+
+void Widget::onKeyReleased( Platform::Key key ) {
+    checkChildrenForKey( key, false );
 }
 
 void Widget::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
