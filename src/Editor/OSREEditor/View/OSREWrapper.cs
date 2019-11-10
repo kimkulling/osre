@@ -11,8 +11,11 @@ namespace OSREEditor.View
     public class OSREWrapper : IDisposable {
         #region Private Attributes
 
+#if DEBUG
+        private const string EditorDllName = "osre_nativeeditord.dll";
+#else
         private const string EditorDllName = "osre_nativeeditor.dll";
-
+#endif
         private static TextBox _logger;
 
         #endregion
@@ -124,7 +127,7 @@ namespace OSREEditor.View
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         public static extern void EditorResize(int x, int y, int w, int h);
 
-        #endregion
+#endregion
 
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         private static extern void RegisterLogCallback(IntPtr fc);

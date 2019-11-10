@@ -24,7 +24,10 @@ namespace OSREEditor
         {
             InitializeComponent();
 
-            this.MouseClick += Window_MouseClick;
+            this.panel3d.MouseClick += Window_MouseClick;
+            this.panel3d.MouseMove += Window_MouseMove;
+
+            this.MouseWheel += Window_MouseWheel;
             this.Resize += OnResize;
             
             _project = new Project();
@@ -38,7 +41,9 @@ namespace OSREEditor
         /// </summary>
         ~MainEditorWindow()
         {
-            this.MouseClick -= Window_MouseClick;
+            this.MouseWheel -= Window_MouseWheel;
+            this.panel3d.MouseClick -= Window_MouseClick;
+            this.panel3d.MouseMove -= Window_MouseMove;
         }
 
         private void quitToolStripMenuItem_Quit_Click(object sender, EventArgs e)
@@ -46,14 +51,17 @@ namespace OSREEditor
             Application.Exit();
         }
 
-        private void newToolStripMenuItem_New_Click(object sender, EventArgs e) {
+        private void newToolStripMenuItem_New_Click(object sender, EventArgs e) 
+        {
             IntPtr windowsHandle = this.panel3d.Handle;
-            if ( windowsHandle == null ) {
+            if ( windowsHandle == null ) 
+            {
                 return;
             }
 
             NewProject npDialog = new NewProject( windowsHandle, this );
-            if (npDialog.ShowDialog() == DialogResult.OK) {
+            if (npDialog.ShowDialog() == DialogResult.OK) 
+            {
                 _project = Project.Instance;
             }
         }
@@ -77,18 +85,21 @@ namespace OSREEditor
             }
         }
 
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e) 
+        {
             SaveFileDialog saveFileDlg = new SaveFileDialog();
             saveFileDlg.InitialDirectory = "c:\\";
             saveFileDlg.Filter = "txt files (*.osa)|*.osa|All files (*.*)|*.*";
             saveFileDlg.FilterIndex = 2;
             saveFileDlg.RestoreDirectory = true;
 
-            if (saveFileDlg.ShowDialog() == DialogResult.OK) {
+            if (saveFileDlg.ShowDialog() == DialogResult.OK) 
+            {
                 SaveProjectAction action = new SaveProjectAction(_project);
                 action.Filename = saveFileDlg.FileName;
                 action.SaveFlags = 0;
-                if (!action.Execute()) {
+                if (!action.Execute()) 
+                {
                     System.Console.WriteLine("Error while saving project.");
                 }
             }
@@ -113,19 +124,21 @@ namespace OSREEditor
                     _projectTreeView.NewProjectView(name);
                 }
             }
+            OSREWrapper.EditorRequestNextFrame();
         }
 
         private bool IsDown(int numClicks)
         {
             bool down = true;
-            if (numClicks % 2 != 0)
+            if (numClicks % 2 == 0)
             {
                 down = false;
             }
             return down;
         }
 
-        private void Window_MouseWheel(object sender, MouseEventArgs e) {
+        private void Window_MouseWheel(object sender, MouseEventArgs e) 
+        {
             bool isDown = IsDown(e.Clicks);
 
             OSREWrapper.EditorRequestNextFrame();
@@ -134,26 +147,27 @@ namespace OSREEditor
         private void Window_MouseClick(object sender, MouseEventArgs e)
         {
             bool isDown = IsDown(e.Clicks);
+            OSREWrapper.LeftMousePressed(e.X, e.Y, isDown);
             OSREWrapper.EditorRequestNextFrame();
-            /*int clicked = 0;
-            if (isDown) {
-                clicked = 1;
-            }
+        }
 
-            OSREWrapper.CSharpEvent ev;
-            ev.x = e.X;
-            ev.y = e.Y;*/
+        private void Window_MouseMove(object sender, MouseEventArgs e) 
+        {
+            bool isDown = IsDown(e.Clicks);
+
         }
 
         private void OnResize(object sender, System.EventArgs e) {
             MainEditorWindow mainWindow = (MainEditorWindow) sender;
-            if ( mainWindow != null) {
+            if ( mainWindow != null) 
+            {
                 var parentSize = mainWindow.panel3d.Size;
                 OSREWrapper.EditorResize(0, 0, parentSize.Width, parentSize.Height);
             }
         }
 
-        private void versionInfoToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void versionInfoToolStripMenuItem_Click(object sender, EventArgs e) 
+        {
             InfoDialog infoDialog = new InfoDialog();
             infoDialog.ShowDialog();
         }
