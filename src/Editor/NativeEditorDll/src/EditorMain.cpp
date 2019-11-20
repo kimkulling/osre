@@ -128,6 +128,7 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
 
         evQueue->registerEventListener( eventArray, listener );
 
+
         s_EditorApplication->requestNextFrame();
     }
 #endif // OSRE_WINDOWS

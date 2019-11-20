@@ -103,7 +103,7 @@ public:
     virtual ~Stage();
     virtual void setRoot( Node *root );
     virtual Node *getRoot() const;
-    virtual Node *createNode( const String &name, Node *parent, const String &type="default" );
+    virtual Node *addNode( const String &name, Node *parent, const String &type="default" );
     virtual bool registerNodeFactory( AbstractNodeFactory *factory );
     virtual Node *findNode( const String &name ) const;
     virtual View *addView( const String &name, Node *parent );

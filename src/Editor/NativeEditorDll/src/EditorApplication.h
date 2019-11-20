@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 namespace Scene {
     class World;
     class Stage;
@@ -90,9 +90,8 @@ private:
     Scene::Node::NodePtr m_modelNode;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
     Platform::PlatformInterface* m_platformInterface;
-    String m_projectName;
-
     App::Project m_project;
+    f32 m_angle;
 };
 
 } // Namespace NativeEditor

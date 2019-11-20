@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/UI/Canvas.h>
+#include <osre/UI/FocusControl.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -35,12 +36,17 @@ using namespace ::OSRE::Platform;
 
 Canvas::Canvas( const String &name, ui32 x, ui32 y, ui32 width, ui32 height )
 : Widget( name, nullptr )
-, m_surface( nullptr ) {
+, m_surface( nullptr )
+, m_focusControl( nullptr ) {
     Widget::setRect(x, y, width, height);
+    m_focusControl = new FocusControl;
 }
 
 Canvas::~Canvas() {
     m_surface = nullptr;
+    
+    delete m_focusControl;
+    m_focusControl = nullptr;
 }
 
 void Canvas::setSurface( AbstractWindow *surface ) {
@@ -65,6 +71,10 @@ void Canvas::setSurface( AbstractWindow *surface ) {
 
 const TransformMatrixBlock &Canvas::getTransform() const {
     return m_transformMatrix;
+}
+
+FocusControl *Canvas::getFocusControl() const {
+    return m_focusControl;
 }
 
 void Canvas::onLayout() {

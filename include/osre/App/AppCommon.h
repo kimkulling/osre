@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations ---------------------------------------------------------------------------
 namespace RenderBackend {
     class Pipeline;
     class RenderBackendService;
@@ -34,6 +35,7 @@ namespace RenderBackend {
 namespace App {
 
 class MouseEventListener;
+class KeyboardEventListener;
 
 template<class T> class TAbstractCtrlBase;
 

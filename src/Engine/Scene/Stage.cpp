@@ -86,7 +86,7 @@ Node *Stage::getRoot() const {
     return m_root;
 }
 
-Node *Stage::createNode( const String &name, Node *parent, const String &type ) {
+Node *Stage::addNode( const String &name, Node *parent, const String &type ) {
     if( name.empty() ) {
         return nullptr;
     }
