@@ -125,6 +125,7 @@ SET( debugging_inc
 	${HEADER_PATH}/Debugging/MeshDiagnostic.h
 )
 SET( debugging_src
+	Debugging/Debug.cpp
     Debugging/AssertHandler.cpp
 	Debugging/MeshDiagnostic.cpp
 )
@@ -311,12 +312,12 @@ SET ( properties_src
 #==============================================================================
 SET( scene_inc
     ${HEADER_PATH}/Scene/SceneCommon.h
-    ${HEADER_PATH}/Scene/DbgRenderer.h
+    ${HEADER_PATH}/Scene/AnimatorBase.h
+	${HEADER_PATH}/Scene/DbgRenderer.h
     ${HEADER_PATH}/Scene/Component.h
     ${HEADER_PATH}/Scene/GeometryBuilder.h
     ${HEADER_PATH}/Scene/MaterialBuilder.h
     ${HEADER_PATH}/Scene/Node.h
-    ${HEADER_PATH}/Scene/Node2D.h
 	${HEADER_PATH}/Scene/Stage.h
     ${HEADER_PATH}/Scene/TrackBall.h
     ${HEADER_PATH}/Scene/View.h
@@ -330,7 +331,6 @@ SET( scene_src
     Scene/GeometryBuilder.cpp
     Scene/MaterialBuilder.cpp
     Scene/Node.cpp
-	Scene/Node2D.cpp
     Scene/Stage.cpp
     Scene/TrackBall.cpp
     Scene/View.cpp
