@@ -35,6 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/Node.h>
 #include <osre/Scene/World.h>
 #include <osre/Scene/View.h>
+#include <osre/Scene/TrackBall.h>
 #include <osre/IO/IOService.h>
 #include <osre/Assets/AssimpWrapper.h>
 #include <osre/Assets/AssetDataArchive.h>
@@ -67,7 +68,8 @@ EditorApplication::EditorApplication( int argc, char *argv[] )
 , m_transformMatrix()
 , m_platformInterface( nullptr )
 , m_project()
-, m_angle( 0.01){
+, m_trackball( nullptr )
+, m_angle( 0.01f){
     // empty
 }
 
@@ -130,14 +132,20 @@ int EditorApplication::importAsset( const String &filename, int flags ) {
             if (nullptr == rootWindow) {
                 return false;
             }
-
-            m_stage = AppBase::createStage("ModelLoading");
-            AppBase::setActiveStage(m_stage);
-            Scene::View *view = m_stage->addView("default_view", nullptr);
+            
+            if (nullptr == m_stage) {
+                m_stage = AppBase::createStage( "ModelLoading" );
+                AppBase::setActiveStage( m_stage );
+            }
+            
+            Scene::View *view = m_stage->findView( "default_view" );
+            if (nullptr == view) {
+                view = m_stage->addView( "default_view", nullptr );
+            }
             AppBase::setActiveView(view);
 
             const Rect2ui &windowsRect = rootWindow->getWindowsRect();
-            view->setProjectionParameters(60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.0001f, 1000.f);
+            view->setProjectionParameters(60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.001f, 1000.f);
             view->observeBoundingBox(model->getAABB());
 
             m_stage->setRoot(model->getRootNode());
@@ -193,12 +201,6 @@ bool EditorApplication::onCreate() {
     m_platformInterface = Platform::PlatformInterface::getInstance();
     AppBase::activateStage( m_stage->getName() );
 
-    MeshBuilder builder;
-    builder.allocCube( VertexType::RenderVertex, 1, 2, 3, BufferAccessType::ReadWrite );
-    Mesh *testMesh = builder.getMesh();
-    Node *node = m_stage->addNode( "cube", nullptr );
-    node->addMesh( testMesh );
-
     Scene::View *view = m_stage->addView( "default_view", nullptr );
     AppBase::setActiveView( view );
 
@@ -209,7 +211,6 @@ bool EditorApplication::onCreate() {
 
     const Rect2ui &windowsRect = rootWindow->getWindowsRect();
     view->setProjectionParameters( 60.f, ( f32 )windowsRect.m_width, ( f32 )windowsRect.m_height, 0.0001f, 1000.f );
-    view->observeBoundingBox( node->getAABB() );
 
     return true;
 }
@@ -224,7 +225,6 @@ void EditorApplication::onUpdate() {
     m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
 
     m_angle += 0.01f;
-    RenderBackendService *rbSrv( getRenderBackendService() );
 
     rbSrv->beginPass( PipelinePass::getPassNameById( RenderPassId ) );
     rbSrv->beginRenderBatch( "b1" );

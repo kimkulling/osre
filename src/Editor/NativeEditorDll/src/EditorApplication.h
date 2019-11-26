@@ -36,6 +36,7 @@ namespace OSRE {
 namespace Scene {
     class World;
     class Stage;
+    class TrackBall;
 }
 
 namespace Platform {
@@ -91,6 +92,7 @@ private:
     RenderBackend::TransformMatrixBlock m_transformMatrix;
     Platform::PlatformInterface* m_platformInterface;
     App::Project m_project;
+    Scene::TrackBall *m_trackball;
     f32 m_angle;
 };
 

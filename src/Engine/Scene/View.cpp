@@ -111,7 +111,7 @@ const glm::mat4 &View::getProjection() const {
 }
 
 void View::onUpdate( Time dt ) {
-    // empty
+    ( void )dt;
 }
 
 void View::onRender( RenderBackendService *rbSrv ) {

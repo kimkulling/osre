@@ -107,6 +107,7 @@ public:
     virtual bool registerNodeFactory( AbstractNodeFactory *factory );
     virtual Node *findNode( const String &name ) const;
     virtual View *addView( const String &name, Node *parent );
+    virtual View *findView( const String &name ) const;
     virtual void clear();
     virtual void update(Time dt );
     virtual void draw( RenderBackend::RenderBackendService *renderBackendSrv );
