@@ -86,7 +86,7 @@ Node *Stage::getRoot() const {
     return m_root;
 }
 
-Node *Stage::createNode( const String &name, Node *parent, const String &type ) {
+Node *Stage::addNode( const String &name, Node *parent, const String &type ) {
     if( name.empty() ) {
         return nullptr;
     }
@@ -145,6 +145,23 @@ View *Stage::addView( const String &name, Node *parent ) {
     return view;
 }
 
+View *Stage::findView( const String &name ) const {
+    if (name.empty()) {
+        return nullptr;
+    }
+    
+    if (nullptr == m_root) {
+        return nullptr;
+    }
+    for (size_t i = 0; i < m_views.size(); ++i) {
+        if (m_views[ i ]->getName() == name) {
+            return m_views[ i ];
+        }
+    }
+
+    return nullptr;
+}
+ 
 void Stage::clear() {
     if (nullptr == m_root) {
         return;

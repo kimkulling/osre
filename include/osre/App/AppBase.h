@@ -28,7 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 namespace Common {
     class ArgumentParser;
     class Environment;
@@ -52,7 +52,6 @@ namespace UI {
 
 namespace App {
         
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -208,6 +207,7 @@ private:
     UI::Canvas *m_uiScreen;
     UI::UiRenderer *m_uiRenderer;
     MouseEventListener *m_mouseEvListener;
+    KeyboardEventListener *m_keyboardEvListener;
     Common::Ids *m_ids;
     bool m_shutdownRequested;
 };

@@ -22,43 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Object.h>
-#include <osre/Scene/SceneCommon.h>
-
-// Forward declarations ---------------------------------------------------------------------------
-namespace Json {
-    class StreamWriter;
-}
+#include <osre/Common/osre_common.h>
 
 namespace OSRE {
-namespace App {
-	
-class OSRE_EXPORT Project : public Common::Object {
-public:
-	Project();
-	~Project();
-    bool create(const String &name, i32 major, i32 minor);
-    bool isCreated() const;
-    bool destroy();
-    void setProjectName(const String& projectName);
-    const String& getProjectName() const;
-    void setActiveWorld(Scene::World* activeWorld);
-    Scene::World* getActiveWorld() const;
-    i32 getMajorVersion() const;
-    i32 getMinorVersion() const;
-    bool load(const String& name, i32& major, i32& minor, i32 flags);
-	bool save( const String &name, i32 flags);
+namespace Debugging {
 
-protected:
-    bool loadMetadata(i32& major, i32& minor);
-    bool saveMetadata(i32 major, i32 minor, Json::StreamWriter *streamWriter);
+OSRE_EXPORT void  debugBreak();
 
-private:
-    Version m_version;
-    i32 m_flags;
-    String m_projectName;
-    Scene::World *m_activeWorld;
-};
+} // Namespace Debugging
+} // Namespace Common
 
-} // Namespace App
-} // Namespace OSRE

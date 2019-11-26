@@ -93,7 +93,7 @@ protected:
             AppBase::setActiveStage(m_stage);
             Scene::View* view = m_stage->addView("default_view", nullptr);
             AppBase::setActiveView(view);
-            Scene::Node* geoNode = m_stage->createNode("geo", nullptr);
+            Scene::Node* geoNode = m_stage->addNode("geo", nullptr);
 
             const Rect2ui& windowsRect = rootWindow->getWindowsRect();
             view->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.0001f, 1000.f);

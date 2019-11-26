@@ -57,7 +57,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.treeView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.treeView1.Location = new System.Drawing.Point(1255, 3);
-            this.treeView1.Name = "Scene";
+            this.treeView1.Name = "treeView1";
             this.treeView1.Size = new System.Drawing.Size(167, 870);
             this.treeView1.TabIndex = 0;
             // 

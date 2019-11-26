@@ -35,6 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/Node.h>
 #include <osre/Scene/World.h>
 #include <osre/Scene/View.h>
+#include <osre/Scene/TrackBall.h>
 #include <osre/IO/IOService.h>
 #include <osre/Assets/AssimpWrapper.h>
 #include <osre/Assets/AssetDataArchive.h>
@@ -43,6 +44,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 
 #include <src/Engine/Platform/win32/Win32Window.h>
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
 
 namespace OSRE {
 namespace NativeEditor {
@@ -63,8 +67,9 @@ EditorApplication::EditorApplication( int argc, char *argv[] )
 , m_modelNode()
 , m_transformMatrix()
 , m_platformInterface( nullptr )
-, m_projectName( "untitled" )
-, m_project() {
+, m_project()
+, m_trackball( nullptr )
+, m_angle( 0.01f){
     // empty
 }
 
@@ -87,17 +92,17 @@ int EditorApplication::enqueueEvent( const Event *ev, EventData *evData ) {
 }
 
 void EditorApplication::newProject( const String &name ) {
-    if ( name != m_projectName ) {
-        m_projectName = name;
+    if ( name != m_project.getName()) {
+        m_project.destroy();
     }
 
-    if (!m_project.create(m_projectName, 0, 1)) {
+    if (!m_project.create( name, 0, 1 ) ) {
         return;
     }
 
     Platform::AbstractWindow *rootWindow( getRootWindow() );
     if (nullptr != rootWindow) {
-        rootWindow->setWindowsTitle( m_projectName );
+        rootWindow->setWindowsTitle( m_project.getName() );
     }
 }
 
@@ -127,14 +132,20 @@ int EditorApplication::importAsset( const String &filename, int flags ) {
             if (nullptr == rootWindow) {
                 return false;
             }
-
-            m_stage = AppBase::createStage("ModelLoading");
-            AppBase::setActiveStage(m_stage);
-            Scene::View *view = m_stage->addView("default_view", nullptr);
+            
+            if (nullptr == m_stage) {
+                m_stage = AppBase::createStage( "ModelLoading" );
+                AppBase::setActiveStage( m_stage );
+            }
+            
+            Scene::View *view = m_stage->findView( "default_view" );
+            if (nullptr == view) {
+                view = m_stage->addView( "default_view", nullptr );
+            }
             AppBase::setActiveView(view);
 
             const Rect2ui &windowsRect = rootWindow->getWindowsRect();
-            view->setProjectionParameters(60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.0001f, 1000.f);
+            view->setProjectionParameters(60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.001f, 1000.f);
             view->observeBoundingBox(model->getAABB());
 
             m_stage->setRoot(model->getRootNode());
@@ -178,7 +189,7 @@ bool EditorApplication::saveProject( const char *filelocation, int flags ) {
 bool EditorApplication::onCreate() {
     Properties::Settings *baseSettings(AppBase::getSettings());
     baseSettings->setBool( Settings::ChildWindow, true );
-    baseSettings->setString( Properties::Settings::WindowsTitle, m_projectName );
+    baseSettings->setString( Properties::Settings::WindowsTitle, m_project.getName() );
     if (!AppBase::onCreate()) {
         return false;
     }
@@ -190,6 +201,17 @@ bool EditorApplication::onCreate() {
     m_platformInterface = Platform::PlatformInterface::getInstance();
     AppBase::activateStage( m_stage->getName() );
 
+    Scene::View *view = m_stage->addView( "default_view", nullptr );
+    AppBase::setActiveView( view );
+
+    Platform::AbstractWindow *rootWindow( getRootWindow() );
+    if (nullptr == rootWindow) {
+        return false;
+    }
+
+    const Rect2ui &windowsRect = rootWindow->getWindowsRect();
+    view->setProjectionParameters( 60.f, ( f32 )windowsRect.m_width, ( f32 )windowsRect.m_height, 0.0001f, 1000.f );
+
     return true;
 }
 
@@ -199,20 +221,21 @@ void EditorApplication::onUpdate() {
         return;
     }
 
-    // Rotate the model
-    /*glm::mat4 rot(1.0);
-    m_transformMatrix.m_model = glm::rotate(rot, m_angle, glm::vec3(1, 1, 0));
+    glm::mat4 rot( 1.0 );
+    m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
 
     m_angle += 0.01f;
-    rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
-    rbSrv->beginRenderBatch("b1");
 
-    rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+    rbSrv->beginPass( PipelinePass::getPassNameById( RenderPassId ) );
+    rbSrv->beginRenderBatch( "b1" );
+
+    rbSrv->setMatrix( MatrixType::Model, m_transformMatrix.m_model );
 
     rbSrv->endRenderBatch();
-    rbSrv->endPass();*/
+    rbSrv->endPass();
 
     AppBase::onUpdate();
+    requestNextFrame();
 }
 
 }

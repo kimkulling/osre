@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 namespace RenderBackend {
     class RenderBackendService;
 }
@@ -42,6 +42,8 @@ namespace Platform {
 }
 
 namespace UI {
+
+class FocusControl;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -54,6 +56,7 @@ public:
     ~Canvas() override;
     virtual void setSurface( Platform::AbstractWindow *surface );
     const RenderBackend::TransformMatrixBlock &getTransform() const;
+    FocusControl *getFocusControl() const;
 
 protected:
     void onLayout() override;
@@ -63,6 +66,7 @@ protected:
 private:
     Platform::AbstractWindow *m_surface;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
+    FocusControl *m_focusControl;
 };
 
 } // Namespace UI

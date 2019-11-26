@@ -77,7 +77,7 @@ protected:
         m_stage = AppBase::createStage( "HelloWorld" );
         AppBase::activateStage( m_stage->getName() );
 
-        Scene::Node *geoNode = m_stage->createNode( "geo", nullptr );
+        Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
         Scene::MeshBuilder meshBuilder;
         meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
         RenderBackend::Mesh *mesh = meshBuilder.getMesh();

@@ -333,6 +333,10 @@ static void setTexture( const String &resolvedPath, const aiString &texPath, Tex
     texname += resolvedPath;
     String temp( texPath.C_Str() ), temp1;
     IO::Uri::normalizePath( temp, '\\', temp1 );
+    String::size_type pos = temp1.find( "./" );
+    if (String::npos != pos) {
+        temp1 = temp1.substr( pos + 2, temp1.size() + pos + 2 );
+    }
     texname += temp1;
 
     TextureResource *texRes = new TextureResource(texname, IO::Uri(texname) );

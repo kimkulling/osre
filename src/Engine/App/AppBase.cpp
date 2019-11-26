@@ -40,6 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/UiItemFactory.h>
+#include <osre/UI/FocusControl.h>
 #include <osre/UI/UiRenderer.h>
 
 // private includes
@@ -60,7 +61,8 @@ const String Tag     = "AppBase";
 class KeyboardEventListener : public Platform::OSEventListener {
 public:
     KeyboardEventListener()
-    : OSEventListener( "App/KeyboardEventListener" ) {
+    : OSEventListener( "App/KeyboardEventListener" )
+    , m_uiCanvas() {
         // empty
     }
 
@@ -68,10 +70,35 @@ public:
         // empty
     }
 
+    void setCanvas( UI::Canvas *screen ) {
+        m_uiCanvas = screen;
+    }
+
+    Canvas *getCanvas() const {
+        return m_uiCanvas.getPtr();
+    }
+
     void onOSEvent( const Event &osEvent, const EventData *data ) override {
         if (osEvent == KeyboardButtonDownEvent ) {
+            Widget *widget = m_uiCanvas->getFocusControl()->getInputFocusWidget();
+            if (nullptr == widget) {
+                return;
+            }
+            KeyboardButtonEventData *keyData = ( KeyboardButtonEventData * )data;
+            widget->keyPressed( keyData->m_key );
+        }
+        else if ( osEvent == KeyboardButtonUpEvent ) {
+            Widget *widget = m_uiCanvas->getFocusControl()->getInputFocusWidget();
+            if (nullptr == widget) {
+                return;
+            }
+            KeyboardButtonEventData *keyData = ( KeyboardButtonEventData * )data;
+            widget->keyReleased( keyData->m_key );
         }
     }
+
+private:
+    Common::TObjPtr<UI::Canvas> m_uiCanvas;
 };
 
 class MouseEventListener : public Platform::OSEventListener {
@@ -123,6 +150,7 @@ AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const Strin
 , m_uiScreen( nullptr )
 , m_uiRenderer( nullptr )
 , m_mouseEvListener( nullptr )
+, m_keyboardEvListener( nullptr )
 , m_ids(nullptr)
 , m_shutdownRequested( false ) {
     m_settings = new Properties::Settings;
@@ -303,6 +331,7 @@ void AppBase::setUIScreen( UI::Canvas *uiScreen ) {
         if ( nullptr != surface ) {
             m_uiScreen->setSurface( surface );
             m_mouseEvListener->setCanvas( m_uiScreen );
+            m_keyboardEvListener->setCanvas( m_uiScreen );
             m_rbService->setUiScreen( uiScreen );
         }
     }
@@ -408,6 +437,12 @@ bool AppBase::onCreate() {
         eventArray.add( &MouseButtonUpEvent );
         m_mouseEvListener = new MouseEventListener;
         evHandler->registerEventListener( eventArray, m_mouseEvListener );
+
+        eventArray.resize( 0 );
+        eventArray.add( &KeyboardButtonDownEvent );
+        eventArray.add( &KeyboardButtonUpEvent );
+        m_keyboardEvListener = new KeyboardEventListener;
+        evHandler->registerEventListener( eventArray, m_keyboardEvListener );
     }
 
     IO::IOService::create();

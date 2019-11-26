@@ -20,45 +20,22 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
+#include <osre/Debugging/Debug.h>
 
-#include <osre/Common/Object.h>
-#include <osre/Scene/SceneCommon.h>
-
-// Forward declarations ---------------------------------------------------------------------------
-namespace Json {
-    class StreamWriter;
-}
+#ifdef OSRE_WINDOWS
+#   include <osre/Platform/Windows/MinWindows.h>
+#endif
 
 namespace OSRE {
-namespace App {
-	
-class OSRE_EXPORT Project : public Common::Object {
-public:
-	Project();
-	~Project();
-    bool create(const String &name, i32 major, i32 minor);
-    bool isCreated() const;
-    bool destroy();
-    void setProjectName(const String& projectName);
-    const String& getProjectName() const;
-    void setActiveWorld(Scene::World* activeWorld);
-    Scene::World* getActiveWorld() const;
-    i32 getMajorVersion() const;
-    i32 getMinorVersion() const;
-    bool load(const String& name, i32& major, i32& minor, i32 flags);
-	bool save( const String &name, i32 flags);
+namespace Debugging {
 
-protected:
-    bool loadMetadata(i32& major, i32& minor);
-    bool saveMetadata(i32 major, i32 minor, Json::StreamWriter *streamWriter);
+void debugBreak() {
+#ifdef _MSC_VER
+    __debugbreak();
+#elif BX_CPU_ARM
+    __asm__( "int $3" );
+#endif 
+}
 
-private:
-    Version m_version;
-    i32 m_flags;
-    String m_projectName;
-    Scene::World *m_activeWorld;
-};
-
-} // Namespace App
-} // Namespace OSRE
+} // Namespace Debugging
+} // Namespace Common
