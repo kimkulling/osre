@@ -377,9 +377,10 @@ bool TextureLoader::unload(Texture* tex) {
     return true;
 }
 
-TextureResource::TextureResource(const String& name, const IO::Uri& uri )
-: TResource(name, uri)
-, m_targetType( TextureTargetType::Texture2D ) {
+TextureResource::TextureResource( const String &name, const IO::Uri &uri )
+: TResource( name, uri )
+, m_targetType( TextureTargetType::Texture2D )
+, m_stage( TextureStageType::TextureStage0 ) {
     // empty
 }
 
@@ -393,6 +394,14 @@ void TextureResource::setTargetType( TextureTargetType targetType ) {
 
 TextureTargetType TextureResource::getTargetType() const {
     return m_targetType;
+}
+
+void TextureResource::setTextureStage( TextureStageType stage ) {
+    m_stage = stage;
+}
+
+TextureStageType TextureResource::setTextureStage() const {
+    return m_stage;
 }
 
 TextureLoader::TextureLoader() {

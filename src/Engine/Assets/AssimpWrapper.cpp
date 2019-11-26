@@ -327,7 +327,7 @@ static void setColor4( const aiColor4D &aiCol, Color4 &col ) {
 using IO::Stream;
 using IO::AbstractFileSystem;
 
-static void setTexture( const String &resolvedPath, const aiString &texPath, TextureResourceArray &texResArray ) {
+static void setTexture( const String &resolvedPath, const aiString &texPath, TextureResourceArray &texResArray, TextureStageType stage ) {
     String texname;
     texname += "file://";
     texname += resolvedPath;
@@ -335,7 +335,8 @@ static void setTexture( const String &resolvedPath, const aiString &texPath, Tex
     IO::Uri::normalizePath( temp, '\\', temp1 );
     texname += temp1;
 
-    TextureResource* texRes = new TextureResource(texname, IO::Uri(texname) );
+    TextureResource *texRes = new TextureResource(texname, IO::Uri(texname) );
+    texRes->setTextureStage( stage );
     texResArray.add(texRes);
 }
 
@@ -348,15 +349,19 @@ void AssimpWrapper::importMaterial( aiMaterial *material ) {
     aiString texPath;	// contains filename of texture
     TextureResourceArray texResArray;
     if ( AI_SUCCESS == material->GetTexture( aiTextureType_DIFFUSE, texIndex, &texPath ) ) {
-        setTexture(m_root, texPath, texResArray);
+        setTexture(m_root, texPath, texResArray, TextureStageType::TextureStage0 );
     }
     String matName = texPath.C_Str();
     if (matName.empty()) {
         matName = "material1";
     }
     Material* osreMat = MaterialBuilder::createTexturedMaterial( matName, texResArray, RenderBackend::VertexType::RenderVertex);
+    if (nullptr == osreMat) {
+        osre_error( Tag, "Err ehilr creating material for " + matName );
+        return;
+    }
+
     m_matArray.add(osreMat);
-    //    assignTexturesToMat( osreMat, textures );
 
     aiColor4D diffuse;
     if ( AI_SUCCESS == aiGetMaterialColor( material, AI_MATKEY_COLOR_DIFFUSE, &diffuse ) ) {

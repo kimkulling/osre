@@ -463,6 +463,8 @@ public:
     ~TextureResource() override;
     void setTargetType( TextureTargetType targetType );
     TextureTargetType getTargetType() const;
+    void (setTextureStage)( TextureStageType stage );
+    TextureStageType setTextureStage() const;
 
 protected:
     void onLoad(const IO::Uri& uri, TextureLoader& loader) override;
@@ -470,6 +472,7 @@ protected:
 
 private:
     TextureTargetType m_targetType;
+    TextureStageType m_stage;
 };
 
 using TextureResourceArray = CPPCore::TArray<RenderBackend::TextureResource*>;

@@ -118,6 +118,9 @@ Win32EventQueue::~Win32EventQueue( ) {
 
 bool Win32EventQueue::update() {
     EventDataList *pActiveEventQueue = getActiveEventDataList();
+    if ( nullptr == pActiveEventQueue ) {
+        return false;
+    }
     MSG	Program;
     if( !m_shutdownRequested && m_updateInstance->update( Program ) ) {
         switch( Program.message ) {
