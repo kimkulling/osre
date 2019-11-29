@@ -66,7 +66,11 @@ public:
 
 protected:
     bool onCreate() override {
-        AppBase::setWindowsTitle("Hello-World sample!");
+        if (!AppBase::onCreate()) {
+            return false;
+        }
+
+        AppBase::setWindowsTitle( "Hello-World sample!" );
 
 #ifdef OSRE_WINDOWS
         Assets::AssetRegistry::registerAssetPath( "assets", "../../media" );

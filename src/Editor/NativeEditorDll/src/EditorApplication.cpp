@@ -194,23 +194,21 @@ bool EditorApplication::onCreate() {
         return false;
     }
 
-    m_world = new World( "HelloWorld", RenderMode::Render3D );
-    m_stage = AppBase::createStage( "HelloWorld" );
-    m_world->addStage( m_stage );
-
     m_platformInterface = Platform::PlatformInterface::getInstance();
+
+    m_stage = AppBase::createStage( "HelloWorld" );
     AppBase::activateStage( m_stage->getName() );
 
-    Scene::View *view = m_stage->addView( "default_view", nullptr );
-    AppBase::setActiveView( view );
-
-    Platform::AbstractWindow *rootWindow( getRootWindow() );
-    if (nullptr == rootWindow) {
-        return false;
+    Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
+    Scene::MeshBuilder meshBuilder;
+    meshBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
+    RenderBackend::Mesh *mesh = meshBuilder.getMesh();
+    if (nullptr != mesh) {
+        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+        m_transformMatrix.update();
+        getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
+        geoNode->addMesh( mesh );
     }
-
-    const Rect2ui &windowsRect = rootWindow->getWindowsRect();
-    view->setProjectionParameters( 60.f, ( f32 )windowsRect.m_width, ( f32 )windowsRect.m_height, 0.0001f, 1000.f );
 
     return true;
 }
@@ -221,7 +219,7 @@ void EditorApplication::onUpdate() {
         return;
     }
 
-    glm::mat4 rot( 1.0 );
+    /*glm::mat4 rot( 1.0 );
     m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
 
     m_angle += 0.01f;
@@ -234,8 +232,8 @@ void EditorApplication::onUpdate() {
     rbSrv->endRenderBatch();
     rbSrv->endPass();
 
-    AppBase::onUpdate();
-    requestNextFrame();
+    AppBase::onUpdate();*/
+    //requestNextFrame();
 }
 
 }

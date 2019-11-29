@@ -248,13 +248,12 @@ bool AppBase::handleEvents() {
         return false;
     }
 
-    bool retCode = m_platformInterface->update();
-
+    bool result = m_platformInterface->update();
     if (shutdownRequested()) {
         return false;
     }
     
-    return retCode;
+    return result;
 }
 
 Properties::Settings *AppBase::getSettings() const {

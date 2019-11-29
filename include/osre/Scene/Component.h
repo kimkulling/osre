@@ -79,8 +79,8 @@ public:
     virtual ~RenderComponent();
     void update( Time dt ) override;
     void draw( RenderBackend::RenderBackendService *renderBackendSrv ) override;
-    ui32 getNumGeometry() const;
-    RenderBackend::Mesh *getGeoAt(ui32 idx) const;
+    size_t getNumGeometry() const;
+    RenderBackend::Mesh *getGeoAt(size_t idx) const;
     void addStaticGeometry( RenderBackend::Mesh *geo );
 
 private:

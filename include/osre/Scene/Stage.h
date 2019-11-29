@@ -120,7 +120,7 @@ protected:
 
 private:
     using ViewArray = CPPCore::TArray<View*>;
-    using NodeFactoryMap = CPPCore::THashMap<ui32, AbstractNodeFactory*>;
+    using NodeFactoryMap = CPPCore::THashMap<size_t, AbstractNodeFactory*>;
 
     Node *m_root;
     ViewArray m_views;

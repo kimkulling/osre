@@ -86,7 +86,7 @@ public:
     virtual bool removeChild( const String &name, TraverseMode mode );
     virtual Node *findChild( const String &name ) const;
     virtual size_t getNumChildren() const;
-    virtual Node *getChildAt( ui32 idx ) const;
+    virtual Node *getChildAt( size_t idx ) const;
     virtual void releaseChildren();
     virtual void addModel( Assets::Model *model );
     virtual void addMesh( RenderBackend::Mesh *geo );

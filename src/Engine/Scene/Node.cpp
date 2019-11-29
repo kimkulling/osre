@@ -143,7 +143,7 @@ size_t Node::getNumChildren() const {
     return m_children.size();
 }
 
-Node *Node::getChildAt( ui32 idx ) const {
+Node *Node::getChildAt( size_t idx ) const {
     if( idx >= m_children.size() ) {
         return nullptr;
     }
