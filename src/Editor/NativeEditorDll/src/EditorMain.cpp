@@ -150,6 +150,7 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorRequestNextFrame() {
         return 1;
     }
 
+    s_EditorApplication->handleEvents();
     s_EditorApplication->requestNextFrame();
 
     return 0;

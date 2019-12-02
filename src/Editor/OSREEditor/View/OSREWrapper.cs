@@ -31,6 +31,13 @@ namespace OSREEditor.View
         public static extern int CreateEditorApp(IntPtr handle);
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [DllImport(EditorDllName)]
+        public static extern int EditorUpdate();
+
+        /// <summary>
         /// Will request the next frame to render
         /// </summary>
         /// <returns>0 for successful, != 0 in case of an error.</returns>

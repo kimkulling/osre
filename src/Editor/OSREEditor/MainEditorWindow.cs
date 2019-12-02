@@ -36,6 +36,14 @@ namespace OSREEditor
             _osreWrapper.InitCSharpModules();
         }
 
+        public void RequestNextFrame() 
+        {
+            OSREWrapper.EditorUpdate();
+            OSREWrapper.EditorRequestNextFrame();
+            this.Update();
+
+        }
+
         /// <summary>
         /// The class destructor.
         /// </summary>
@@ -66,7 +74,8 @@ namespace OSREEditor
             }
         }
 
-        private void openToolStripMenuItem_Open_Click(object sender, EventArgs e) {
+        private void openToolStripMenuItem_Open_Click(object sender, EventArgs e) 
+        {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
             openFileDialog.InitialDirectory = "c:\\";
@@ -157,7 +166,8 @@ namespace OSREEditor
 
         }
 
-        private void OnResize(object sender, System.EventArgs e) {
+        private void OnResize(object sender, System.EventArgs e) 
+        {
             MainEditorWindow mainWindow = (MainEditorWindow) sender;
             if ( mainWindow != null) 
             {

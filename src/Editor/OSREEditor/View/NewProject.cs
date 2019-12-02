@@ -12,7 +12,7 @@ namespace OSREEditor.View
     {
         private readonly IntPtr _handle;
 
-        private readonly Form _parent;
+        private readonly MainEditorWindow _parent;
 
         /// <summary>
         /// The class constructor with the parameters.
@@ -23,7 +23,7 @@ namespace OSREEditor.View
         {
             InitializeComponent();
             _handle = handle;
-            _parent = parent;
+            _parent = (MainEditorWindow) parent;
             this.ProjectType.Select(0, 1);
         }
 
@@ -44,6 +44,7 @@ namespace OSREEditor.View
                 this.DialogResult = DialogResult.Cancel;
             }
             this.Close();
+            _parent.RequestNextFrame();
         }
 
         private void CancelProjectButton_Click(object sender, EventArgs e)
