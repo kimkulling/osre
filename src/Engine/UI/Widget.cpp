@@ -324,10 +324,6 @@ void Widget::render( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbS
         return;
     }
 
-    if (layoutingRequested()) {
-        layout();
-    }
-
     if ( redrawRequested() ) {
         onRender( renderCmdCache, rbSrv );
         redrawDone();

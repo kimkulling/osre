@@ -45,6 +45,7 @@ class OSRE_EXPORT UiRenderer {
 public:
     UiRenderer();
     ~UiRenderer();
+    void layout( Canvas *canvas );
     void render( Canvas *canvas, RenderBackend::RenderBackendService *rbService );
 
 private:

@@ -36,6 +36,9 @@ namespace OSREEditor
             _osreWrapper.InitCSharpModules();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void RequestNextFrame() 
         {
             OSREWrapper.EditorUpdate();
