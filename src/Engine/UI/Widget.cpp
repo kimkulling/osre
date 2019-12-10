@@ -30,41 +30,7 @@ namespace UI {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-static const c8 *Tag = "StyleProvider";
-
-StyleProvider *StyleProvider::s_instance = nullptr;
-
-Style &StyleProvider::getCurrentStyle() {
-    if ( nullptr == s_instance ) {
-        s_instance = new StyleProvider;
-    }
-
-    return s_instance->m_activeStyle;
-}
-
-void StyleProvider::setStyle( const Style &newStyle ) {
-    if ( nullptr == s_instance ) {
-        static_cast<void>( StyleProvider::getCurrentStyle() );
-    }
-
-    if ( nullptr == s_instance ) {
-        osre_debug( Tag, "Singleton instance is nullptr." );
-        return;
-    }
-
-    if ( newStyle != s_instance->m_activeStyle ) {
-        s_instance->m_activeStyle = newStyle;
-    }
-}
-
-StyleProvider::StyleProvider()
-: m_activeStyle() {
-    // empty
-}
-
-StyleProvider::~StyleProvider() {
-    // empty
-}
+static const c8 *Tag = "Widget";
 
 Rect2ui WidgetCoordMapping::s_dim = Rect2ui( 0, 0, 0, 0 );
 

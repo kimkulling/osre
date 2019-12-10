@@ -94,9 +94,9 @@ protected:
         btnOpenFile->setRect( 20, 20, 100, 20 );
         btnOpenFile->setLabel("Open file");
 
-        /*ButtonBase *btnQuit  = new ButtonBase( "Quit", panel );
+        ButtonBase *btnQuit  = new ButtonBase( "Quit", panel );
         btnQuit->setRect( 400, 20, 100, 20 );
-        btnQuit->registerCallback(WidgetState::Pressed, UiFunctor::Make( this, &UIDemoApp::quitCallback ) );*/
+        btnQuit->registerCallback(WidgetState::Pressed, UiFunctor::Make( this, &UIDemoApp::quitCallback ) );
         
         //TextBase *tb = new TextBase( "test", panel);
         //tb->setLabel( "Test" );

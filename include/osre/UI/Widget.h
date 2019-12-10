@@ -24,10 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/UI/UICommon.h>
 #include <osre/Common/Object.h>
-#include <osre/Common/TFunctor.h>
 #include <osre/Platform/KeyTypes.h>
-
-#include <cppcore/Common/Variant.h>
 
 namespace OSRE {
 
@@ -39,25 +36,6 @@ namespace RenderBackend {
 }
 
 namespace UI {
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT StyleProvider {
-public:
-    static Style &getCurrentStyle();
-    static void setStyle( const Style &newStyle );
-
-private:
-    StyleProvider();
-    ~StyleProvider();
-
-private:
-    static StyleProvider *s_instance;
-    Style m_activeStyle;
-};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -100,42 +78,6 @@ struct OSRE_EXPORT WidgetCoordMapping {
 
 private:
     static Rect2ui s_dim;
-};
-
-/// This enum is used to describe the widget type.
-enum class WidgetType {
-    Button = 0,
-    Text,
-    Image,
-    Panel,
-    Canvas,
-    NumWidgets,
-    
-    InvalidWidgetType
-};
-
-using UiFunctor = Common::Functor<void, ui32, void *>;
-
-/// @brief  Description of a single 
-struct UiProperty {
-    String m_name;
-    CPPCore::Variant m_data;
-};
-
-enum class WidgetState {
-    Pressed = 0,
-    Released = 1,
-    NumWidgetState,
-
-    InvalidWidgetState
-};
-
-enum class LayoutPolicy {
-    Auto = 0,
-    Fixed,
-    NumLayoutPolicies,
-
-    InvalidLayoutPolicy
 };
 
 //-------------------------------------------------------------------------------------------------

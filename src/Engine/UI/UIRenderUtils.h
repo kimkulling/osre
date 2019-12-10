@@ -46,7 +46,7 @@ struct Style;
 class UIRenderUtils {
 public:
     static void drawRectFromStyle( const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
-        UiIndexCache &indexCache, ui32 stackIndex);
+        UiIndexCache &indexCache, ui32 stackIndex, WidgetType type );
     static Rect2ui drawTextBox( const String &text, f32 textSize );
     static RenderBackend::Mesh *createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, 
         RenderBackend::Texture *texture );

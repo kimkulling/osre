@@ -155,7 +155,7 @@ void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendServic
     const Rect2ui &rect( getRect() );
 
     const size_t startIndex = renderCmdCache.m_ic.numIndices();
-    UIRenderUtils::drawRectFromStyle( rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic, Widget::getStackIndex() );
+    UIRenderUtils::drawRectFromStyle( rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic, Widget::getStackIndex(), WidgetType::Button );
     UiRenderCmd *cmd( new UiRenderCmd );
     cmd->m_startIndex = startIndex;
     cmd->m_numIndices = renderCmdCache.m_ic.numIndices() - startIndex;
