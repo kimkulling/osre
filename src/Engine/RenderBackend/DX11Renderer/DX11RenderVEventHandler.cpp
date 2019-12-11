@@ -232,8 +232,8 @@ bool DX11RenderEventHandler::onInitRenderPasses( const EventData *eventData ) {
 
             // set uniforms
             for (ui32 uniformIdx = 0; uniformIdx < currentBatchData->m_uniforms.size(); ++uniformIdx) {
-                setupUniforms(nullptr, m_dx11Backend);
-                setupConstantBuffer( currentBatchData->m_uniforms[uniformIdx], m_dx11Backend );
+                setupUniforms(nullptr, m_dx11Backend, this);
+                setupConstantBuffer( currentBatchData->m_uniforms[uniformIdx], m_dx11Backend, this );
             }
 
             // set meshes
