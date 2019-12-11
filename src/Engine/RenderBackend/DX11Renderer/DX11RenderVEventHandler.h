@@ -66,7 +66,7 @@ protected:
 
 private:
     bool m_isRunning;
-    DX11Renderer *m_dx11Renderer;
+    DX11Renderer *m_dx11Backend;
     CPPCore::TArray<RenderCmd*> m_renderCmds;
     ID3D11Buffer *m_matrixBuffer;
     DX11VertexLayout *m_currentLayout;

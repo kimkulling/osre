@@ -69,7 +69,7 @@ static void setupConstantBuffer(void* bufferData, DX11Renderer* dx11Renderer) {
 DX11RenderEventHandler::DX11RenderEventHandler()
 : AbstractEventHandler()
 , m_isRunning( true )
-, m_dx11Renderer( nullptr )
+, m_dx11Backend( nullptr )
 , m_renderCmds()
 , m_matrixBuffer( nullptr )
 , m_currentLayout( nullptr ) {
@@ -124,11 +124,11 @@ bool DX11RenderEventHandler::onDetached(const EventData *) {
 }
 
 bool DX11RenderEventHandler::onCreateRenderer(const EventData *eventData) {
-    if (nullptr != m_dx11Renderer) {
+    if (nullptr != m_dx11Backend) {
         return false;
     }
 
-    m_dx11Renderer = new DX11Renderer();
+    m_dx11Backend = new DX11Renderer();
     CreateRendererEventData *createRendererEvData = (CreateRendererEventData*)eventData;
     AbstractWindow *activeSurface = createRendererEvData->m_activeSurface;
     if (nullptr == activeSurface) {
@@ -142,7 +142,7 @@ bool DX11RenderEventHandler::onCreateRenderer(const EventData *eventData) {
     }
 
     bool result( false );
-    result = m_dx11Renderer->create(activeSurface);
+    result = m_dx11Backend->create(activeSurface);
     if (!result) {
         osre_error(Tag, "Error occurred while creating DX11Renderer.");
         return false;
@@ -155,21 +155,21 @@ bool DX11RenderEventHandler::onCreateRenderer(const EventData *eventData) {
         glm::mat4 projection;
     };
     BufferData *data = BufferData::alloc(BufferType::ConstantBuffer, sizeof(MatrixBuffer), BufferAccessType::ReadWrite);
-    m_matrixBuffer = m_dx11Renderer->createBuffer(BufferType::ConstantBuffer, data, BufferAccessType::ReadWrite);
+    m_matrixBuffer = m_dx11Backend->createBuffer(BufferType::ConstantBuffer, data, BufferAccessType::ReadWrite);
     
     return result;
 }
 
 bool DX11RenderEventHandler::onDestroyRenderer(const EventData *) {
-    if (nullptr == m_dx11Renderer) {
+    if (nullptr == m_dx11Backend) {
         return false;
     }
 
-    m_dx11Renderer->releaseBuffer(m_matrixBuffer);
+    m_dx11Backend->releaseBuffer(m_matrixBuffer);
     m_matrixBuffer = nullptr;
 
-    delete m_dx11Renderer;
-    m_dx11Renderer = nullptr;
+    delete m_dx11Backend;
+    m_dx11Backend = nullptr;
 
     return true;
 }
@@ -187,23 +187,23 @@ bool DX11RenderEventHandler::onClearGeo(const EventData *) {
 }
 
 bool DX11RenderEventHandler::onRenderFrame(const EventData *) {
-    OSRE_ASSERT(nullptr != m_dx11Renderer);
+    OSRE_ASSERT(nullptr != m_dx11Backend);
 
     // triggers the render frame loop
     Color4 clear(0, 1, 0, 0);
-    m_dx11Renderer->beginScene(clear);
+    m_dx11Backend->beginScene(clear);
     
     for (ui32 i = 0; i < m_renderCmds.size(); ++i) {
-        m_dx11Renderer->render(m_renderCmds[i]);
+        m_dx11Backend->render(m_renderCmds[i]);
     }
 
-    m_dx11Renderer->endScene();
+    m_dx11Backend->endScene();
 
     return true;
 }
 
 bool DX11RenderEventHandler::onInitRenderPasses( const EventData *eventData ) {
-    OSRE_ASSERT(nullptr != m_dx11Renderer);
+    OSRE_ASSERT(nullptr != m_dx11Backend);
 
     InitPassesEventData *frameToCommitData = (InitPassesEventData*)eventData;
     if (nullptr == frameToCommitData) {
@@ -229,12 +229,12 @@ bool DX11RenderEventHandler::onInitRenderPasses( const EventData *eventData ) {
 
             // set the matrix
             MatrixBuffer &matrixBuffer = currentBatchData->m_matrixBuffer;
-            setConstantBuffers(matrixBuffer.m_model, matrixBuffer.m_view, matrixBuffer.m_proj, m_dx11Renderer );
+            setConstantBuffers(matrixBuffer.m_model, matrixBuffer.m_view, matrixBuffer.m_proj, m_dx11Backend );
 
             // set uniforms
             for (ui32 uniformIdx = 0; uniformIdx < currentBatchData->m_uniforms.size(); ++uniformIdx) {
-                setupUniforms(nullptr, m_dx11Renderer);
-                setupConstantBuffer(currentBatchData->m_uniforms[uniformIdx], m_oglBackend, this);
+                setupUniforms(nullptr, m_dx11Backend);
+                setupConstantBuffer( currentBatchData->m_uniforms[uniformIdx], m_dx11Backend );
             }
 
             // set meshes
@@ -291,7 +291,7 @@ bool DX11RenderEventHandler::onInitRenderPasses( const EventData *eventData ) {
 }
 
 bool DX11RenderEventHandler::onCommitNexFrame(const EventData *eventData) {
-    OSRE_ASSERT(nullptr != m_dx11Renderer);
+    OSRE_ASSERT(nullptr != m_dx11Backend);
 
     CommitFrameEventData *frameToCommitData = (CommitFrameEventData*)eventData;
     if (nullptr == frameToCommitData) {
