@@ -71,7 +71,7 @@ public:
 
     ///	@brief	The number of stored items in the list will be returned.
     ///	@return	The number of enqueued items in the queue.
-    ui32 size();
+    size_t size();
 
     ///	@brief	Returns true, if the queue is empty.
     ///	@return	true, if no item was enqueued.
@@ -118,7 +118,7 @@ TAsyncQueue<T>::~TAsyncQueue() {
 template<class T>
 inline
 void TAsyncQueue<T>::enqueue( const T &item ) {
-    assert( nullptr != m_criticalSection );
+    OSRE_ASSERT( nullptr != m_criticalSection );
 
     m_criticalSection->enter();
     
@@ -171,7 +171,7 @@ void TAsyncQueue<T>::signalEnqueuedItem() {
 
 template<class T>
 inline
-ui32 TAsyncQueue<T>::size() {
+size_t TAsyncQueue<T>::size() {
     OSRE_ASSERT(nullptr != m_criticalSection);
 
     m_criticalSection->enter( );

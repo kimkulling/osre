@@ -74,11 +74,11 @@ void RenderComponent::addStaticGeometry( Mesh *geo ) {
     m_newGeo.add( geo );
 }
 
-ui32 RenderComponent::getNumGeometry() const {
+size_t RenderComponent::getNumGeometry() const {
     return m_newGeo.size();
 }
 
-Mesh *RenderComponent::getGeoAt(ui32 idx) const {
+Mesh *RenderComponent::getGeoAt( size_t idx) const {
     return m_newGeo[idx];
 }
 

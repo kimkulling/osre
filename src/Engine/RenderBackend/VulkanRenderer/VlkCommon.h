@@ -26,9 +26,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <functional>
 
 #include "vulkan.h"
+
 #ifdef OSRE_WINDOWS
 #  include <osre/Platform/Windows/MinWindows.h>
 #endif // OSRE_WINDOWS
+
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {

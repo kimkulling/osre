@@ -35,10 +35,8 @@ namespace UI {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Panel : public Widget {
 public:
-    Panel( const String &name, ui32 flags, Widget *parent );
-    ~Panel()  override;
-    ui32 getFlags() const;
-    bool isEnabled( ui32 flag ) const;
+    Panel( const String &name, Widget *parent );
+    ~Panel() override;
     void setHeadline( const String &headline );
     const String &getHeadline() const;
 
@@ -48,7 +46,6 @@ protected:
 
 private:
     f32 m_angle;
-    ui32 m_flags;
     String m_headline;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
 };

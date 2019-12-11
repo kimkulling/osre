@@ -175,8 +175,8 @@ bool Uri::parse() {
 	}
 
 	// get the length
-	const ui32 resLen = m_URI.size() - pos1;
-	const ui32 len    = m_URI.size() - pos0 - resLen - 2;
+	const size_t resLen = m_URI.size() - pos1;
+	const size_t len    = m_URI.size() - pos0 - resLen - 2;
 	
 	// get the components
 	m_Path     = m_URI.substr( pos0 + 3, len );

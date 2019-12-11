@@ -20,21 +20,22 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
+#include <osre/Debugging/Debug.h>
 
-#include <osre/Common/AbstractCodec.h>
+#ifdef OSRE_WINDOWS
+#   include <osre/Platform/Windows/MinWindows.h>
+#endif
 
 namespace OSRE {
-namespace IO {
+namespace Debugging {
 
-class ImageCodec : public Common::AbstractCodec {
-public:
-    ImageCodec();
-    virtual ~ImageCodec();
-    bool encode( IO::Stream *inStream, uc8 *data, ui32 &size ) override;
-    bool decode( IO::Stream *outStream ) override ;
-    void releaseData( uc8 *data ) override;
-};
-
-} // Namespace IO
+void debugBreak() {
+#ifdef _MSC_VER
+    __debugbreak();
+#elif BX_CPU_ARM
+    __asm__( "int $3" );
+#endif 
 }
+
+} // Namespace Debugging
+} // Namespace Common

@@ -327,51 +327,20 @@ static void setColor4( const aiColor4D &aiCol, Color4 &col ) {
 using IO::Stream;
 using IO::AbstractFileSystem;
 
-static void setTexture( const String &resolvedPath, const aiString &texPath, CPPCore::TArray<Texture*> &textures ) {
-    Texture *tex = new Texture;
-    textures.add( tex );
+static void setTexture( const String &resolvedPath, const aiString &texPath, TextureResourceArray &texResArray ) {
     String texname;
     texname += "file://";
     texname += resolvedPath;
     String temp( texPath.C_Str() ), temp1;
     IO::Uri::normalizePath( temp, '\\', temp1 );
+    String::size_type pos = temp1.find( "./" );
+    if (String::npos != pos) {
+        temp1 = temp1.substr( pos + 2, temp1.size() + pos + 2 );
+    }
     texname += temp1;
 
-    tex->m_loc = IO::Uri( texname );
-    String::size_type pos = texname.rfind( "/" );
-    if ( pos != String::npos ) {
-        texname = texname.substr( pos, texname.size() - pos );
-    }
-    if (IO::IOService::getInstance()->fileExists(tex->m_loc)) {
-        IO::AbstractFileSystem *fs = IO::IOService::getInstance()->getFileSystem("file");
-        IO::Stream *file = fs->open(tex->m_loc, IO::Stream::AccessMode::ReadAccess);
-        tex->m_size = file->getSize();
-        file->read(tex->m_data, tex->m_size);
-        fs->close(&file);
-    }
-        
-    tex->m_textureName = texname;
-    tex->m_width = 0;
-    tex->m_height = 0;
-    tex->m_channels = 0;
-    tex->m_data = nullptr;
-    tex->m_size = 0;
-}
-
-static void assignTexturesToMat( Material *osreMat, CPPCore::TArray<Texture*> &textures ) {
-    if ( nullptr == osreMat ) {
-        return;
-    }
-
-    osreMat->m_numTextures = textures.size();
-    if ( textures.isEmpty() ) {
-        return;
-    }
-
-    osreMat->m_textures = new Texture *[ osreMat->m_numTextures ];
-    for ( ui32 i = 0; i < osreMat->m_numTextures; ++i ) {
-        osreMat->m_textures[ i ] = textures[ i ];
-    }
+    TextureResource* texRes = new TextureResource(texname, IO::Uri(texname) );
+    texResArray.add(texRes);
 }
 
 void AssimpWrapper::importMaterial( aiMaterial *material ) {
@@ -379,16 +348,19 @@ void AssimpWrapper::importMaterial( aiMaterial *material ) {
         return;
     }
     
-    Material *osreMat( MaterialBuilder::createBuildinMaterial( RenderBackend::VertexType::RenderVertex ) );
-    m_matArray.add( osreMat );
-
     i32 texIndex( 0 );
     aiString texPath;	// contains filename of texture
-    CPPCore::TArray<Texture*> textures;
+    TextureResourceArray texResArray;
     if ( AI_SUCCESS == material->GetTexture( aiTextureType_DIFFUSE, texIndex, &texPath ) ) {
-        setTexture( m_root, texPath, textures );
+        setTexture(m_root, texPath, texResArray);
     }
-    assignTexturesToMat( osreMat, textures );
+    String matName = texPath.C_Str();
+    if (matName.empty()) {
+        matName = "material1";
+    }
+    Material* osreMat = MaterialBuilder::createTexturedMaterial( matName, texResArray, RenderBackend::VertexType::RenderVertex);
+    m_matArray.add(osreMat);
+    //    assignTexturesToMat( osreMat, textures );
 
     aiColor4D diffuse;
     if ( AI_SUCCESS == aiGetMaterialColor( material, AI_MATKEY_COLOR_DIFFUSE, &diffuse ) ) {

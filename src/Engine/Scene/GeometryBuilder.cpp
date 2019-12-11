@@ -484,9 +484,9 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
 		return *this;
 	}
 
-    Mesh *geo = Mesh::create( 1 );
-    geo->m_vertextype = VertexType::RenderVertex;
-    geo->m_indextype = IndexType::UnsignedShort;
+    Mesh *mesh = Mesh::create( 1 );
+    mesh->m_vertextype = VertexType::RenderVertex;
+    mesh->m_indextype = IndexType::UnsignedShort;
 
     glm::vec3 *textPos( nullptr ), *colors(nullptr );
     glm::vec2 *tex0(nullptr);
@@ -495,60 +495,52 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
 
     //GeometryDiagnosticUtils::dumpIndices( textIndices, 6 * text.size() );
 
-    geo->m_vb = allocVertices( geo->m_vertextype, text.size() * NumQuadVert, textPos, colors, tex0, access );
+    mesh->m_vb = allocVertices( mesh->m_vertextype, text.size() * NumQuadVert, textPos, colors, tex0, access );
 
     // setup triangle indices
     size_t size = sizeof( GLushort ) * 6 * text.size();
-    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
-    geo->m_ib->copyFrom( textIndices, size );
+    mesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
+    mesh->m_ib->copyFrom( textIndices, size );
 
     // setup primitives
-    geo->m_numPrimGroups = 1;
-    geo->m_primGroups = new PrimitiveGroup[ 1 ];
-    geo->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_primGroups[ 0 ].m_numIndices = 6 * text.size();
-    geo->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-    geo->m_primGroups[ 0 ].m_startIndex = 0;
+    mesh->m_numPrimGroups = 1;
+    mesh->m_primGroups = new PrimitiveGroup[ 1 ];
+    mesh->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
+    mesh->m_primGroups[ 0 ].m_numIndices = 6 * text.size();
+    mesh->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
+    mesh->m_primGroups[ 0 ].m_startIndex = 0;
 
     // setup material
-    geo->m_material = Scene::MaterialBuilder::createBuildinMaterial( VertexType::RenderVertex );
-
-    // setup the texture
-    geo->m_material->m_numTextures = 1;
-    geo->m_material->m_textures = new Texture*[ 1 ];
-    geo->m_material->m_textures[ 0 ] = new Texture;
-    geo->m_material->m_textures[ 0 ]->m_textureName = "buildin_arial";
-    geo->m_material->m_textures[ 0 ]->m_loc = IO::Uri( "file://assets/Textures/Fonts/buildin_arial.bmp" );
-
-    geo->m_material->m_textures[0]->m_targetType = TextureTargetType::Texture2D;
-    geo->m_material->m_textures[0]->m_width = 0;
-    geo->m_material->m_textures[0]->m_height = 0;
-    geo->m_material->m_textures[0]->m_channels = 0;
-    geo->m_material->m_textures[0]->m_data = nullptr;
-    geo->m_material->m_textures[0]->m_size = 0;
-
-    m_ActiveGeo = geo;
+    CPPCore::TArray<TextureResource*> texResArray;;
+    TextureResource* texRes = new TextureResource("buildin_arial", IO::Uri("file://assets/Textures/Fonts/buildin_arial.bmp"));
+    texResArray.add(texRes);
+    mesh->m_material = Scene::MaterialBuilder::createTexturedMaterial("SpiderTex", texResArray, VertexType::RenderVertex );
+    m_ActiveGeo = mesh;
 
     return *this;
 }
 
-void MeshBuilder::allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access,
+void MeshBuilder::allocUiTextBox(f32 x, f32 y, f32 z, f32 textSize, const String &text, BufferAccessType access,
         UiVertexCache &vc, UiIndexCache &ic) {
     glm::vec3 *textPos(nullptr), *colors(nullptr);
     glm::vec2 *tex0(nullptr);
     GLushort *textIndices(nullptr);
     generateTextBoxVerticesAndIndices(x, y, textSize, text, &textPos, &colors, &tex0, &textIndices);
-    for (ui32 i = 0; i < text.size(); i++) {
+    const size_t offset = vc.numVertices();
+    const size_t numNewVerts = getNumTextVerts(text);
+    for (size_t i = 0; i < numNewVerts; i++) {
         RenderVert v;
         v.position = textPos[i];
+        v.position.z = z;
         v.color0 = colors[i];
         v.tex0 = tex0[i];
         vc.add(v);
     }
 
     const size_t numIndices(getNumTextIndices(text));
+    
     for (size_t i = 0; i < numIndices; ++i) {
-        ic.add(textIndices[i]);
+        ic.add(textIndices[i] + ( GLushort ) offset);
     }
 
     delete[] textIndices;

@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Object.h>
 #include <osre/Scene/SceneCommon.h>
 
+// Forward declarations ---------------------------------------------------------------------------
 namespace Json {
     class StreamWriter;
 }
@@ -54,6 +55,7 @@ protected:
 
 private:
     Version m_version;
+    i32 m_flags;
     String m_projectName;
     Scene::World *m_activeWorld;
 };

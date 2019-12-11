@@ -69,7 +69,7 @@ Widget *UiItemFactory::create( WidgetType type, const String &uiName, Widget *pa
             item = new Image( uiName, parent );
             break;
         case WidgetType::Panel:
-            item = new Panel( uiName, 0, parent );
+            item = new Panel( uiName, parent );
             break;
         case WidgetType::Canvas: {
                 const ui32 w( m_surface->getProperties()->m_width );

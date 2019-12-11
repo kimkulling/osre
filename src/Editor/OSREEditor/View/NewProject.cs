@@ -5,23 +5,31 @@ using System.Windows.Forms;
 
 namespace OSREEditor.View
 {
+    /// <summary>
+    /// this class implements the dialog to create a new project.
+    /// </summary>
     public partial class NewProject : Form
     {
-        private IntPtr mHandle;
+        private readonly IntPtr _handle;
 
-        private Form mParent;
+        private readonly MainEditorWindow _parent;
 
+        /// <summary>
+        /// The class constructor with the parameters.
+        /// </summary>
+        /// <param name="handle">The windows handle of the engine surface.</param>
+        /// <param name="parent">The parent form.</param>
         public NewProject(IntPtr handle, Form parent )
         {
             InitializeComponent();
-            mHandle = handle;
-            mParent = parent;
+            _handle = handle;
+            _parent = (MainEditorWindow) parent;
             this.ProjectType.Select(0, 1);
         }
 
         private void NewProjectButton_Click(object sender, EventArgs e)
         {
-            NewProjectAction projectAction = new NewProjectAction(mHandle, mParent);
+            NewProjectAction projectAction = new NewProjectAction(_handle, _parent);
             projectAction.ProjectName = this.ProjectName.Text;
             if (projectAction.Execute())
             {
@@ -36,6 +44,7 @@ namespace OSREEditor.View
                 this.DialogResult = DialogResult.Cancel;
             }
             this.Close();
+            _parent.RequestNextFrame();
         }
 
         private void CancelProjectButton_Click(object sender, EventArgs e)

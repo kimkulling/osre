@@ -91,7 +91,7 @@ struct OGLTexture {
     String m_name;
     GLenum m_target;
     GLenum m_format;
-    ui32   m_slot;
+    size_t m_slot;
     ui32   m_width;
     ui32   m_height;
     ui32   m_channels;
@@ -159,7 +159,7 @@ struct OGLParameter {
     GLint            m_loc;
     ParameterType    m_type;
     UniformDataBlob *m_data;
-    ui32             m_numItems;
+    size_t           m_numItems;
 
     OGLParameter()
     : m_name( "" )
@@ -174,7 +174,7 @@ struct OGLParameter {
 struct OGLPrimGroup {
     GLenum m_primitive;
     ui32   m_startIndex;
-    ui32   m_numIndices;
+    size_t m_numIndices;
     GLenum m_indexType;
 };
 
@@ -199,10 +199,10 @@ struct SetRenderTargetCmdData {
 
 ///	@brief
 struct DrawInstancePrimitivesCmdData {
-    OGLVertexArray        *m_vertexArray;
-    ui32                   m_numInstances;
-    CPPCore::TArray<ui32>  m_primitives;
-    const char *m_id;
+    OGLVertexArray         *m_vertexArray;
+    size_t                  m_numInstances;
+    CPPCore::TArray<size_t> m_primitives;
+    const char             *m_id;
 
     DrawInstancePrimitivesCmdData()
     : m_vertexArray( nullptr )
@@ -215,11 +215,11 @@ struct DrawInstancePrimitivesCmdData {
 
 ///	@brief
 struct DrawPrimitivesCmdData {
-    bool                   m_localMatrix;
-    glm::mat4              m_model;
-    OGLVertexArray        *m_vertexArray;
-    CPPCore::TArray<ui32>  m_primitives;
-    const char *m_id;
+    bool                    m_localMatrix;
+    glm::mat4               m_model;
+    OGLVertexArray         *m_vertexArray;
+    CPPCore::TArray<size_t> m_primitives;
+    const char             *m_id;
 
     DrawPrimitivesCmdData()
     : m_localMatrix( false )
@@ -234,10 +234,12 @@ struct DrawPrimitivesCmdData {
 struct OGLCapabilities {
     GLfloat m_maxAniso;
     i32     m_contextMask;
+    i32     m_max3DTextureSize;
 
     OGLCapabilities()
     : m_maxAniso(0.0f)
-    , m_contextMask(0) {
+    , m_contextMask(0)
+    , m_max3DTextureSize( 0 ) {
         // empty
     }
 };

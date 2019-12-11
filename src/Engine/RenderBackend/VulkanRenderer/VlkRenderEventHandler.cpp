@@ -32,6 +32,8 @@ namespace RenderBackend {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 
+static const c8 *Tag = "VlkRenderEventHandler";
+
 VlkRenderEventHandler::VlkRenderEventHandler()
 : AbstractEventHandler()
 , m_vlkBackend( nullptr ) {
@@ -71,16 +73,25 @@ bool VlkRenderEventHandler::onEvent( const Event &ev, const EventData *data ) {
     return result;
 }
  
-bool VlkRenderEventHandler::onAttached( const Common::EventData *eventData ) {
-    return true;
-}
+bool VlkRenderEventHandler::onAttached( const Common::EventData * ) {
+    if (nullptr != m_vlkBackend) {
+        osre_debug(Tag, "Vuilkan renderbackend already created.");
+        return false;
+    }
 
-bool VlkRenderEventHandler::onDetached( const Common::EventData *eventData ) {
-    return true;
-}
-
-bool VlkRenderEventHandler::onCreateRenderer( const Common::EventData *eventData ) {
     m_vlkBackend = new VlkRenderBackend;
+
+    return true;
+}
+
+bool VlkRenderEventHandler::onDetached( const Common::EventData *) {
+    delete m_vlkBackend;
+    m_vlkBackend = nullptr;
+
+    return true;
+}
+
+bool VlkRenderEventHandler::onCreateRenderer( const Common::EventData * ) {
     AbstractWindow *surface( PlatformInterface::getInstance()->getRootWindow() );
     if ( nullptr == surface ) {
         return false;
@@ -117,42 +128,42 @@ bool VlkRenderEventHandler::onCreateRenderer( const Common::EventData *eventData
     return true;
 }
 
-bool VlkRenderEventHandler::onDestroyRenderer( const Common::EventData *eventData ) {
+bool VlkRenderEventHandler::onDestroyRenderer( const Common::EventData * ) {
     delete m_vlkBackend;
     m_vlkBackend = nullptr;
 
     return true;
 }
 
-bool VlkRenderEventHandler::onAttachView( const Common::EventData *eventData ) {
+bool VlkRenderEventHandler::onAttachView( const Common::EventData * ) {
     return true;
 }
 
-bool VlkRenderEventHandler::onDetachView( const Common::EventData *eventData ) {
+bool VlkRenderEventHandler::onDetachView( const Common::EventData * ) {
     return true;
 }
 
-bool VlkRenderEventHandler::onAttachGeo( const Common::EventData *eventData ) {
+bool VlkRenderEventHandler::onAttachGeo( const Common::EventData * ) {
     return true;
 }
 
-bool VlkRenderEventHandler::onDetachGeo( const Common::EventData *eventData ) {
+bool VlkRenderEventHandler::onDetachGeo( const Common::EventData * ) {
     return true;
 }
 
-bool VlkRenderEventHandler::onClearGeo( const Common::EventData *eventData ) {
+bool VlkRenderEventHandler::onClearGeo( const Common::EventData * ) {
     return true;
 }
 
-bool VlkRenderEventHandler::onRenderFrame( const Common::EventData *eventData ) {
+bool VlkRenderEventHandler::onRenderFrame( const Common::EventData * ) {
     return true;
 }
 
-bool VlkRenderEventHandler::onUpdateParameter( const Common::EventData *eventData ) {
+bool VlkRenderEventHandler::onUpdateParameter( const Common::EventData * ) {
     return true;
 }
 
-bool VlkRenderEventHandler::onRenderText( const Common::EventData *eventData ) {
+bool VlkRenderEventHandler::onRenderText( const Common::EventData * ) {
     return true;
 }
 

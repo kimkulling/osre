@@ -24,8 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/osre_common.h>
 
-#include "vulkan.h"
 #include "VlkCommon.h"
+#include "vulkan.h"
 
 #include <cppcore/Container/TArray.h>
 

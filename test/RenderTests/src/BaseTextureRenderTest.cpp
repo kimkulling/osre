@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/MaterialBuilder.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 
 #include <iostream>
@@ -119,31 +120,19 @@ public:
         rbSrv->beginRenderBatch("b1");
         rbSrv->addMesh( mesh, 0 );
 
-        // use default material
-        mesh->m_material = AbstractRenderTest::createMaterial( "renderVertexMat", VsSrc, FsSrc );
-        if( nullptr != mesh->m_material->m_shader ) {
-            mesh->m_material->m_shader->m_attributes.add( "position" );
-            mesh->m_material->m_shader->m_attributes.add( "normal" );
-            mesh->m_material->m_shader->m_attributes.add( "color0" );
-            mesh->m_material->m_shader->m_attributes.add( "texcoord0" );
+        // use textured material
+        TextureResourceArray texResArray;;
+        TextureResource* texRes = new TextureResource("SpiderTex", IO::Uri("file://assets/Models/Obj/SpiderTex.jpg") );
+        texResArray.add(texRes);
+        mesh->m_material = Scene::MaterialBuilder::createTexturedMaterial("SpiderTex", texResArray, VsSrc, FsSrc);
+        if (nullptr != mesh->m_material->m_shader) {
+            mesh->m_material->m_shader->m_attributes.add("position");
+            mesh->m_material->m_shader->m_attributes.add("normal");
+            mesh->m_material->m_shader->m_attributes.add("color0");
+            mesh->m_material->m_shader->m_attributes.add("texcoord0");
 
-            mesh->m_material->m_shader->m_parameters.add( "MVP" );
+            mesh->m_material->m_shader->m_parameters.add("MVP");
         }
-
-        mesh->m_material->m_numTextures = 1;
-        mesh->m_material->m_textures = new Texture*[ 1 ];
-        Texture *tex = new Texture[ 1 ];
-
-        tex->m_textureName = "SpiderTex";
-        tex->m_loc = IO::Uri( "file://assets/Models/Obj/SpiderTex.jpg" );
-
-        tex->m_targetType = TextureTargetType::Texture2D;
-        tex->m_width = 0;
-        tex->m_height = 0;
-        tex->m_channels = 0;
-        tex->m_data = nullptr;
-        tex->m_size = 0;
-        mesh->m_material->m_textures[ 0 ] = tex;
 
         m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, m_angle, glm::vec3( 1, 1, 0 ) );
         rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);

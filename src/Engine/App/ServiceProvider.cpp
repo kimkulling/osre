@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/ServiceProvider.h>
 #include <osre/Debugging/osre_debugging.h>
+#include <osre/App/ResourceCacheService.h>
 
 namespace OSRE {
 namespace App {
@@ -30,11 +31,11 @@ using namespace ::OSRE::RenderBackend;
 
 ServiceProvider *ServiceProvider::s_instance = nullptr;
 
-ServiceProvider *ServiceProvider::create( RenderBackendService *rbService ) {
+ServiceProvider *ServiceProvider::create( RenderBackendService *rbService, ResourceCacheService *resCacheService ) {
     OSRE_ASSERT(nullptr != rbService);
 
     if ( nullptr == s_instance ) {
-        s_instance = new ServiceProvider( rbService );
+        s_instance = new ServiceProvider( rbService, resCacheService );
     }
     return s_instance;
 }
@@ -53,13 +54,24 @@ RenderBackend::RenderBackendService *ServiceProvider::getRenderBackendService() 
     return s_instance->m_rbService;
 }
 
-ServiceProvider::ServiceProvider(RenderBackend::RenderBackendService *rbService)
-: m_rbService( rbService ){
-    // empty
+ResourceCacheService *ServiceProvider::getResourceCacheService() {
+    if (nullptr == s_instance) {
+        return nullptr;
+    }
+    return s_instance->m_resCacheService;
+}
+
+ServiceProvider::ServiceProvider(RenderBackend::RenderBackendService *rbService,
+                                 ResourceCacheService *resCacheService)
+: m_rbService(rbService)
+, m_resCacheService(resCacheService) {
+    OSRE_ASSERT(nullptr != m_rbService);
+    OSRE_ASSERT( nullptr != m_resCacheService );
 }
 
 ServiceProvider::~ServiceProvider() {
-
+    m_rbService = nullptr;
+    m_resCacheService = nullptr;
 }
 
 } // Namespace App

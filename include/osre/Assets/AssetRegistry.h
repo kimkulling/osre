@@ -65,7 +65,7 @@ private:
 private:
     static AssetRegistry *s_instance;
 
-    typedef CPPCore::THashMap<size_t, String> Name2PathMap;
+    typedef CPPCore::THashMap<ui32, String> Name2PathMap;
     Name2PathMap m_name2pathMap;
 };
 

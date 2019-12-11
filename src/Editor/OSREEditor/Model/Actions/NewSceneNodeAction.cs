@@ -33,14 +33,25 @@ namespace OSREEditor.Model.Actions
 
         private string _type;
 
+        /// <summary>
+        /// The class constructor with all parameters.
+        /// </summary>
+        /// <param name="name">The name for the new scenenode.</param>
+        /// <param name="type">The requested type.</param>
         public NewSceneNodeAction(string name, string type)
         {
             _name = name;
             _type = type;
         }
 
+        /// <summary>
+        /// Will perform the creation.
+        /// </summary>
+        /// <returns>true if successful,, false in case of an error.</returns>
         public bool Execute()
         {
+            // Todo!
+
             return true;
         }
     }

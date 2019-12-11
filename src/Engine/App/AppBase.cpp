@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
 #include <osre/App/ServiceProvider.h>
+#include <osre/App/ResourceCacheService.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/Common/Environment.h>
 #include <osre/IO/IOService.h>
@@ -39,6 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/UiItemFactory.h>
+#include <osre/UI/FocusControl.h>
 #include <osre/UI/UiRenderer.h>
 
 // private includes
@@ -56,28 +58,71 @@ using namespace ::OSRE::IO;
 const String API_Arg = "api";
 const String Tag     = "AppBase";
 
+class KeyboardEventListener : public Platform::OSEventListener {
+public:
+    KeyboardEventListener()
+    : OSEventListener( "App/KeyboardEventListener" )
+    , m_uiCanvas() {
+        // empty
+    }
+
+    ~KeyboardEventListener() override {
+        // empty
+    }
+
+    void setCanvas( UI::Canvas *screen ) {
+        m_uiCanvas = screen;
+    }
+
+    Canvas *getCanvas() const {
+        return m_uiCanvas.getPtr();
+    }
+
+    void onOSEvent( const Event &osEvent, const EventData *data ) override {
+        if (osEvent == KeyboardButtonDownEvent ) {
+            Widget *widget = m_uiCanvas->getFocusControl()->getInputFocusWidget();
+            if (nullptr == widget) {
+                return;
+            }
+            KeyboardButtonEventData *keyData = ( KeyboardButtonEventData * )data;
+            widget->keyPressed( keyData->m_key );
+        }
+        else if ( osEvent == KeyboardButtonUpEvent ) {
+            Widget *widget = m_uiCanvas->getFocusControl()->getInputFocusWidget();
+            if (nullptr == widget) {
+                return;
+            }
+            KeyboardButtonEventData *keyData = ( KeyboardButtonEventData * )data;
+            widget->keyReleased( keyData->m_key );
+        }
+    }
+
+private:
+    Common::TObjPtr<UI::Canvas> m_uiCanvas;
+};
+
 class MouseEventListener : public Platform::OSEventListener {
 public:
     MouseEventListener()
     : OSEventListener( "App/MouseEventListener" )
-    , m_uiScreen() {
+    , m_uiCanvas() {
         // empty
     }
 
-    ~MouseEventListener() {
+    ~MouseEventListener() override {
         // empty
     }
 
-    void setScreen( UI::Canvas *screen ) {
-        m_uiScreen = screen;
+    void setCanvas( UI::Canvas *screen ) {
+        m_uiCanvas = screen;
     }
 
-    Canvas *getScreen() const {
-        return m_uiScreen.getPtr();
+    Canvas *getCanvas() const {
+        return m_uiCanvas.getPtr();
     }
 
     void onOSEvent( const Event &osEvent, const EventData *data ) override {
-        if (!m_uiScreen.isValid()) {
+        if (!m_uiCanvas.isValid()) {
             return;
         }
 
@@ -85,12 +130,12 @@ public:
         if ( osEvent == MouseButtonDownEvent ) {
             MouseButtonEventData *mouseBtnData( ( MouseButtonEventData* )data );
             const Point2ui pt( mouseBtnData->m_AbsX, mouseBtnData->m_AbsY );
-            m_uiScreen->mouseDown( pt, nullptr );
+            m_uiCanvas->mouseDown( pt, nullptr );
         }
     }
 
 private:
-    Common::TObjPtr<UI::Canvas> m_uiScreen;
+    Common::TObjPtr<UI::Canvas> m_uiCanvas;
 };
 
 AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
@@ -105,6 +150,7 @@ AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const Strin
 , m_uiScreen( nullptr )
 , m_uiRenderer( nullptr )
 , m_mouseEvListener( nullptr )
+, m_keyboardEvListener( nullptr )
 , m_ids(nullptr)
 , m_shutdownRequested( false ) {
     m_settings = new Properties::Settings;
@@ -191,6 +237,7 @@ void AppBase::requestNextFrame() {
 
     m_world->draw( m_rbService );
     if (nullptr != m_uiScreen) {
+        m_uiRenderer->layout( m_uiScreen );
         m_uiRenderer->render( m_uiScreen, m_rbService );
     }
     m_rbService->update();
@@ -202,13 +249,12 @@ bool AppBase::handleEvents() {
         return false;
     }
 
-    bool retCode = m_platformInterface->update();
-
+    bool result = m_platformInterface->update();
     if (shutdownRequested()) {
         return false;
     }
     
-    return retCode;
+    return result;
 }
 
 Properties::Settings *AppBase::getSettings() const {
@@ -284,7 +330,8 @@ void AppBase::setUIScreen( UI::Canvas *uiScreen ) {
         AbstractWindow *surface( m_platformInterface->getRootWindow() );
         if ( nullptr != surface ) {
             m_uiScreen->setSurface( surface );
-            m_mouseEvListener->setScreen( m_uiScreen );
+            m_mouseEvListener->setCanvas( m_uiScreen );
+            m_keyboardEvListener->setCanvas( m_uiScreen );
             m_rbService->setUiScreen( uiScreen );
         }
     }
@@ -377,7 +424,10 @@ bool AppBase::onCreate() {
     Scene::RenderMode mode = static_cast<Scene::RenderMode>( m_settings->get( Properties::Settings::RenderMode ).getInt() );
     m_world = new Scene::World( "world", mode );
     
-    ServiceProvider::create( m_rbService );
+
+    ResourceCacheService *rcSrv = new ResourceCacheService;
+
+    ServiceProvider::create( m_rbService, rcSrv );
 
     // Setup onMouse event-listener
     AbstractPlatformEventQueue *evHandler = m_platformInterface->getPlatformEventHandler();
@@ -387,6 +437,12 @@ bool AppBase::onCreate() {
         eventArray.add( &MouseButtonUpEvent );
         m_mouseEvListener = new MouseEventListener;
         evHandler->registerEventListener( eventArray, m_mouseEvListener );
+
+        eventArray.resize( 0 );
+        eventArray.add( &KeyboardButtonDownEvent );
+        eventArray.add( &KeyboardButtonUpEvent );
+        m_keyboardEvListener = new KeyboardEventListener;
+        evHandler->registerEventListener( eventArray, m_keyboardEvListener );
     }
 
     IO::IOService::create();
@@ -440,6 +496,7 @@ void AppBase::onUpdate() {
     }
 
     if (nullptr != m_uiRenderer && nullptr != m_uiScreen) {
+        m_uiRenderer->layout( m_uiScreen );
         m_uiRenderer->render( m_uiScreen, m_rbService);
     }
 }

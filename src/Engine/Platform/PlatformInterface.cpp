@@ -24,7 +24,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <src/Engine/Platform/PlatformPluginFactory.h>
 #include <osre/Common/EventTriggerer.h>
 #include <osre/Properties/Settings.h>
-#include <osre/UI/FontManager.h>
 #include <osre/UI/UiItemFactory.h>
 #ifdef OSRE_WINDOWS
 #   include <src/Engine/Platform/win32/Win32OGLRenderContext.h>
@@ -47,6 +46,26 @@ using namespace ::OSRE::UI;
 
 PlatformInterface *PlatformInterface::s_instance( nullptr );
 
+ApplicationContext::ApplicationContext(const Settings* config)
+: m_config(config)
+#ifdef OSRE_WINDOWS
+, m_type(PluginType::WindowsPlugin)
+#else
+, m_type(PluginType::SDL2Plugin)
+#endif // OSRE_WINDOWS
+, m_rootSurface(nullptr)
+, m_oseventHandler(nullptr)
+, m_renderContext(nullptr)
+, m_timer(nullptr)
+, m_dynLoader(nullptr)
+, m_systemInfo(nullptr) {
+    // empty
+}
+
+ApplicationContext::~ApplicationContext() {
+    m_config = nullptr;
+}
+
 static const String PlatformPluginName[ static_cast<i32>( PluginType::MaxPlugin ) ] = {
 #ifdef OSRE_WINDOWS
     "WindowsPlugin",
@@ -58,23 +77,13 @@ static const c8 *Tag = "PlatformInterface";
 
 PlatformInterface::PlatformInterface( const Settings *config )
 : AbstractService( "platform/platforminterface" )
-, m_config( config )
-#ifdef OSRE_WINDOWS
-, m_type( PluginType::WindowsPlugin )
-#else
-, m_type( PluginType::SDL2Plugin )
-#endif // OSRE_WINDOWS
-, m_rootSurface( nullptr )
-, m_oseventHandler( nullptr )
-, m_renderContext( nullptr )
-, m_timer( nullptr )
-, m_dynLoader( nullptr )
-, m_systemInfo( nullptr ) {
-    // empty
+, m_context( nullptr ) {
+    m_context = new ApplicationContext(config);
 }
 
 PlatformInterface::~PlatformInterface() {
-    m_config = nullptr;
+    delete m_context;
+    m_context = nullptr;
 }
 
 PlatformInterface *PlatformInterface::create( const Settings *config ) {
@@ -100,36 +109,36 @@ PlatformInterface *PlatformInterface::getInstance( ) {
 }
 
 AbstractPlatformEventQueue *PlatformInterface::getPlatformEventHandler() const {
-    return m_oseventHandler;
+    return m_context->m_oseventHandler;
 }
 
 AbstractOGLRenderContext *PlatformInterface::getRenderContext() const {
-    return m_renderContext;
+    return m_context->m_renderContext;
 }
 
 AbstractWindow *PlatformInterface::getRootWindow() const {
-    return m_rootSurface;
+    return m_context->m_rootSurface;
 }
 
 AbstractTimer *PlatformInterface::getTimer() const {
-    return m_timer;
+    return m_context->m_timer;
 }
 
 AbstractDynamicLoader *PlatformInterface::getDynamicLoader() const {
-    return m_dynLoader;
+    return m_context->m_dynLoader;
 }
 
 AbstractSystemInfo *PlatformInterface::getSystemInfo() const {
-    return m_systemInfo;
+    return m_context->m_systemInfo;
 }
 
 const String &PlatformInterface::getDefaultFontName() const {
-    if ( nullptr == m_config ) {
+    if ( nullptr == m_context->m_config ) {
         static const String dummy( "none" );
         return dummy;
     }
 
-    static const String font( m_config->get( Settings::DefaultFont ).getString() );
+    static const String font(m_context->m_config->get( Settings::DefaultFont ).getString() );
     return font;
 }
 
@@ -161,102 +170,102 @@ String PlatformInterface::getOSPluginName( PluginType type ) {
 }
 
 bool PlatformInterface::onOpen() {
-    if( !m_config ) {
-        assert( nullptr != m_config );
+    if( !m_context->m_config ) {
+        assert( nullptr != m_context->m_config );
         osre_debug( Tag, "Invalid pointer to configuration." );
         return false;
     }
 
     Settings::WorkingModeType appType = 
-        static_cast<Settings::WorkingModeType>( m_config->get( Settings::AppType ).getInt() );
+        static_cast<Settings::WorkingModeType>(m_context->m_config->get( Settings::AppType ).getInt() );
 
     WindowsProperties *props( nullptr );
     bool polls( false );
+    const Properties::Settings* config = m_context->m_config;
     if( appType == Settings::GfxApp ) {
         // get the configuration values for the window
         props = new WindowsProperties;
         bool fullscreen = false;
-        props->m_x = m_config->get( Settings::WinX ).getInt();
-        props->m_y = m_config->get( Settings::WinY ).getInt();
-        props->m_width = m_config->get( Settings::WinWidth ).getInt();
-        props->m_height = m_config->get( Settings::WinHeight ).getInt();
-        props->m_colordepth = m_config->get( Settings::BPP ).getByte();
-        props->m_depthbufferdepth = m_config->get( Settings::DepthBufferDepth ).getByte();
-        props->m_stencildepth = m_config->get( Settings::StencilBufferDepth ).getByte();
+        props->m_x = config->get( Settings::WinX ).getInt();
+        props->m_y = config->get( Settings::WinY ).getInt();
+        props->m_width = config->get( Settings::WinWidth ).getInt();
+        props->m_height = config->get( Settings::WinHeight ).getInt();
+        props->m_colordepth = config->get( Settings::BPP ).getByte();
+        props->m_depthbufferdepth = config->get( Settings::DepthBufferDepth ).getByte();
+        props->m_stencildepth = config->get( Settings::StencilBufferDepth ).getByte();
         props->m_fullscreen = fullscreen;
-        props->m_resizable = m_config->get( Settings::WindowsResizable ).getBool();
-        props->m_childWindow = m_config->get(Settings::ChildWindow).getBool();
-        props->m_title = m_config->get( Settings::WindowsTitle ).getString();
-        polls = m_config->get( Settings::PollingMode ).getBool();
+        props->m_resizable = config->get( Settings::WindowsResizable ).getBool();
+        props->m_childWindow = config->get(Settings::ChildWindow).getBool();
+        props->m_title = config->get( Settings::WindowsTitle ).getString();
+        polls = config->get( Settings::PollingMode ).getBool();
     }
 
     String appName = "My OSRE-Application";
-    m_type = static_cast<PluginType>( m_config->get( Settings::PlatformPlugin ).getInt( ) );
+    m_context->m_type = static_cast<PluginType>(config->get( Settings::PlatformPlugin ).getInt( ) );
 
-    PlatformPluginFactory::init( m_type );
-    osre_info( Tag, "Platform plugin created for " + PlatformInterface::getOSPluginName( m_type ) );
+    PlatformPluginFactory::init( m_context->m_type );
+    osre_info( Tag, "Platform plugin created for " + PlatformInterface::getOSPluginName(m_context->m_type ) );
 
-    m_dynLoader = PlatformPluginFactory::createDynmicLoader( m_type );
+    m_context->m_dynLoader = PlatformPluginFactory::createDynmicLoader(m_context->m_type );
     bool result( true );
     if( appType == Settings::GfxApp ) {
         result = setupGfx( props, polls );
     }
 
-    m_systemInfo = PlatformPluginFactory::createSystemInfo( m_type );
+    m_context->m_systemInfo = PlatformPluginFactory::createSystemInfo(m_context->m_type );
 
     return result;
 }
 
 bool PlatformInterface::onClose( ) {
-    PlatformPluginFactory::release( m_type );
+    PlatformPluginFactory::release(m_context->m_type );
 
-    delete m_oseventHandler;
-    m_oseventHandler = nullptr;
+    delete m_context->m_oseventHandler;
+    m_context->m_oseventHandler = nullptr;
 
-    if( nullptr != m_renderContext ) {
-        m_renderContext->destroy();
-        delete m_renderContext;
-        m_renderContext = nullptr;
+    if( nullptr != m_context->m_renderContext ) {
+        m_context->m_renderContext->destroy();
+        delete m_context->m_renderContext;
+        m_context->m_renderContext = nullptr;
     }
 
     return true;
 }
 
 bool PlatformInterface::onUpdate() {
-    if (nullptr == m_oseventHandler) {
+    if (nullptr == m_context->m_oseventHandler) {
         return false;
     }
 
-    return m_oseventHandler->update();
+    return m_context->m_oseventHandler->update();
 }
 
 bool PlatformInterface::setupGfx( WindowsProperties *props, bool polls ) {
     // create the root surface
-    m_rootSurface = PlatformPluginFactory::createSurface( m_type, props );
-    if( !m_rootSurface->create() ) {
-        delete m_rootSurface;
+    m_context->m_rootSurface = PlatformPluginFactory::createSurface(m_context->m_type, props );
+    if( !m_context->m_rootSurface->create() ) {
+        delete m_context->m_rootSurface;
         osre_error( Tag, "Error while creating platform root surface." );
 
-        m_rootSurface = nullptr;
+        m_context->m_rootSurface = nullptr;
         return false;
     }
 
     // install the platform event handler
-    m_oseventHandler = PlatformPluginFactory::createPlatformEventHandler( m_type, m_rootSurface );
-    if( !m_oseventHandler ) {
+    m_context->m_oseventHandler = PlatformPluginFactory::createPlatformEventHandler(m_context->m_type, m_context->m_rootSurface );
+    if( !m_context->m_oseventHandler ) {
         osre_error( Tag, "Error while creating platform event handler." );
-        m_rootSurface->destroy();
-        m_rootSurface = nullptr;
+        m_context->m_rootSurface->destroy();
+        m_context->m_rootSurface = nullptr;
         return false;
     }
-    m_oseventHandler->enablePolling( polls );
-    m_timer = PlatformPluginFactory::createTimer( m_type );
+    m_context->m_oseventHandler->enablePolling( polls );
+    m_context->m_timer = PlatformPluginFactory::createTimer(m_context->m_type );
 
     // setup the render context
-    m_renderContext = PlatformPluginFactory::createRenderContext( m_type );
+    m_context->m_renderContext = PlatformPluginFactory::createRenderContext(m_context->m_type );
 
     UiItemFactory::createInstance( getRootWindow() );
-    FontManager::create();
         
     return true;
 }

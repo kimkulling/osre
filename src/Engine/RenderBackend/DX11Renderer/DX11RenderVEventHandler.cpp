@@ -57,12 +57,11 @@ static void setConstantBuffers(const glm::mat4 &model, const glm::mat4 &view, co
     dx11Renderer->setMatrix(MatrixType::Projection, proj);
 }
 
-static void setupUniforms( void *bufferData, DX11Renderer *dx11Renderer ) {
+static void setupUniforms( void *bufferData, DX11Renderer *dx11Renderer, DX11RenderEventHandler *eh) {
     OSRE_ASSERT(nullptr != dx11Renderer);
-
 }
 
-static void setupConstantBuffer(void* bufferData, DX11Renderer* dx11Renderer) {
+static void setupConstantBuffer(void* bufferData, DX11Renderer* dx11Renderer, DX11RenderEventHandler *eh) {
     OSRE_ASSERT(nullptr != dx11Renderer);
 }
 
@@ -299,6 +298,9 @@ bool DX11RenderEventHandler::onCommitNexFrame(const EventData *eventData) {
     }
 
     Frame *frame = frameToCommitData->m_frame;
+    if (nullptr == frame) {
+        return true;
+    }
 
     return true;
 }

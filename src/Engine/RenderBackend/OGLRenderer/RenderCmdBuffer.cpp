@@ -65,7 +65,7 @@ OGLShader *RenderCmdBuffer::getActiveShader() const {
     return m_activeShader;
 }
 
-void RenderCmdBuffer::enqueueRenderCmd( const String &groupName, OGLRenderCmd *renderCmd, EnqueueType type ) {
+void RenderCmdBuffer::enqueueRenderCmd( OGLRenderCmd *renderCmd, EnqueueType type ) {
     if ( nullptr == renderCmd ) {
         osre_debug( Tag, "Nullptr to render-command detected." );
         return;
@@ -110,7 +110,10 @@ void RenderCmdBuffer::onPreRenderFrame() {
 void RenderCmdBuffer::onRenderFrame( const EventData * ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
 
-    ui32 numPasses = m_pipeline->beginFrame();
+    size_t numPasses = m_pipeline->beginFrame();
+    if (0 == numPasses) {
+        return;
+    }
 
     for ( ui32 passId = 0; passId < numPasses; passId++ ) {
         PipelinePass *pass = m_pipeline->beginPass( passId );
@@ -227,7 +230,7 @@ bool RenderCmdBuffer::onDrawPrimitivesCmd( DrawPrimitivesCmdData *data ) {
         m_renderbackend->setMatrix( MatrixType::Model, data->m_model );
         m_renderbackend->applyMatrix();
     }
-    for( ui32 i = 0; i < data->m_primitives.size(); ++i ) {
+    for( size_t i = 0; i < data->m_primitives.size(); ++i ) {
         m_renderbackend->render( data->m_primitives[ i ] );
     }
 
@@ -241,14 +244,14 @@ bool RenderCmdBuffer::onDrawPrimitivesInstancesCmd( DrawInstancePrimitivesCmdDat
     }
 
     m_renderbackend->bindVertexArray( data->m_vertexArray );
-    for( ui32 i = 0; i < data->m_primitives.size(); i++ ) {
+    for( size_t i = 0; i < data->m_primitives.size(); i++ ) {
         m_renderbackend->render( data->m_primitives[ i ], data->m_numInstances );
     }
 
     return true;
 }
 
-bool RenderCmdBuffer::onSetRenderTargetCmd( SetRenderTargetCmdData *data ) {
+bool RenderCmdBuffer::onSetRenderTargetCmd( SetRenderTargetCmdData * ) {
     OSRE_ASSERT( nullptr != m_renderbackend );
 
     return true;

@@ -2,21 +2,20 @@
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace OSREEditor.View {
-    
+namespace OSREEditor.View 
+{
+
     /// <summary>
     /// The OSRE native wrapper, contains prototypes for calling native methods from OSRE.
     /// </summary>
     public class OSREWrapper : IDisposable {
         #region Private Attributes
 
-
 #if DEBUG
         private const string EditorDllName = "osre_nativeeditord.dll";
 #else
         private const string EditorDllName = "osre_nativeeditor.dll";
 #endif
-
         private static TextBox _logger;
 
 #endregion
@@ -30,6 +29,13 @@ namespace OSREEditor.View {
         /// <returns>0 for successful, != 0 in case of an error.</returns>
         [DllImport(EditorDllName)]
         public static extern int CreateEditorApp(IntPtr handle);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [DllImport(EditorDllName)]
+        public static extern int EditorUpdate();
 
         /// <summary>
         /// Will request the next frame to render
@@ -133,6 +139,10 @@ namespace OSREEditor.View {
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         private static extern void RegisterLogCallback(IntPtr fc);
 
+        /// <summary>
+        /// The class constructor.
+        /// </summary>
+        /// <param name="logWindow">The window to log into.</param>
         public OSREWrapper(TextBox logWindow) {
             _logger = logWindow;
         }

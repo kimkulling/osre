@@ -71,12 +71,15 @@ void ButtonBase::setLabel( const String &label ) {
     if ( m_label != label ) {
         m_label = label;
         if ( !label.empty() ) {
-            if ( nullptr == m_textWidget ) {
-                m_textWidget = new TextBase( getName() + ".label", this );
-                m_textWidget->setLabel( m_label );
+            if (nullptr == m_textWidget) {
+                m_textWidget = new TextBase(getName() + ".label", this);
             }
+            
+            m_textWidget->setLabel( m_label );
         }
+
         Widget::requestRedraw();
+        Widget::requestLayouting();
     }
 }
 
@@ -90,6 +93,7 @@ void ButtonBase::setImage( Image &image ) {
         m_imageWidget = &image;
         m_image = newName;
         Widget::requestRedraw();
+        Widget::requestLayouting();
     }
 }
 
@@ -106,6 +110,7 @@ void ButtonBase::setImage( const String &name ) {
         m_imageWidget->setUri( imageUri );
     }
     Widget::requestRedraw();
+    Widget::requestLayouting();
 }
 
 const String &ButtonBase::getImage() const {
@@ -133,7 +138,16 @@ ButtonBase *ButtonBase::createBaseButton( const String &name, const String &labe
 }
 
 void ButtonBase::onLayout() {
+    if (nullptr != m_textWidget) {
+        const ui32 x1 = getRect().getX1();
+        const ui32 y1 = getRect().getY1();
+        const ui32 w  = getRect().getWidth()  - 2;
+        const ui32 h  = getRect().getHeight() - 2;
+        m_textWidget->setRect(x1 + 1, y1 + 1, w, h);
+    }
     
+    Widget::layoutingDone();
+
 }
 
 void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService* ) {
@@ -141,7 +155,7 @@ void ButtonBase::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendServic
     const Rect2ui &rect( getRect() );
 
     const size_t startIndex = renderCmdCache.m_ic.numIndices();
-    UIRenderUtils::createRectFromStyle( WidgetType::Button, rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic, Widget::getStackIndex() );
+    UIRenderUtils::drawRectFromStyle( rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic, Widget::getStackIndex(), WidgetType::Button );
     UiRenderCmd *cmd( new UiRenderCmd );
     cmd->m_startIndex = startIndex;
     cmd->m_numIndices = renderCmdCache.m_ic.numIndices() - startIndex;

@@ -53,17 +53,21 @@ const IO::Uri &Image::getUri() const {
 }
 
 void Image::onLayout() {
+    if (m_imageUri.isEmpty()) {
+        return;
+    }
 
+    if ( LayoutPolicy::Auto == getLayoutPolicy() ) {
+        
+    } else if (LayoutPolicy::Fixed == getLayoutPolicy()) {
+
+    }
 }
 
-void Image::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
-    UiVertexCache vertexCache;
-    UiIndexCache indexCache;
-
+void Image::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService * ) {
     MeshBuilder builder;
-    const Rect2ui &dim = Widget::getRect();
-    builder.allocUiQuad( dim, vertexCache, indexCache );
-    
+    const Rect2ui &imageRect = Widget::getRect();
+    builder.allocUiQuad( imageRect, renderCmdCache.m_vc, renderCmdCache.m_ic );
 }
 
 } // Namespace UI

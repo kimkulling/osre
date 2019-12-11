@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/UI/Canvas.h>
+#include <osre/UI/FocusControl.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -35,12 +36,17 @@ using namespace ::OSRE::Platform;
 
 Canvas::Canvas( const String &name, ui32 x, ui32 y, ui32 width, ui32 height )
 : Widget( name, nullptr )
-, m_surface( nullptr ) {
+, m_surface( nullptr )
+, m_focusControl( nullptr ) {
     Widget::setRect(x, y, width, height);
+    m_focusControl = new FocusControl;
 }
 
 Canvas::~Canvas() {
     m_surface = nullptr;
+    
+    delete m_focusControl;
+    m_focusControl = nullptr;
 }
 
 void Canvas::setSurface( AbstractWindow *surface ) {
@@ -67,6 +73,10 @@ const TransformMatrixBlock &Canvas::getTransform() const {
     return m_transformMatrix;
 }
 
+FocusControl *Canvas::getFocusControl() const {
+    return m_focusControl;
+}
+
 void Canvas::onLayout() {
 
 }
@@ -78,7 +88,7 @@ void Canvas::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *r
 
     // push 2D render mode
     const Rect2ui& r = Widget::getRect();
-    m_transformMatrix.m_projection = glm::ortho( r.getX1(), r.getWidth(), r.getHeight(), r.getY1() );
+    m_transformMatrix.m_projection = glm::ortho( (i32 )r.getX1(), (i32) r.getWidth(), (i32)r.getHeight(), (i32)r.getY1() );
     m_transformMatrix.m_view = glm::mat4(1);
     m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
     m_transformMatrix.update();

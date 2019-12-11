@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/RenderBackend/Shader.h>
+#include <osre/IO/Uri.h>
 
 #include <stdio.h>
 
@@ -129,8 +130,6 @@ const String GLSLFsSrcRV =
     "{\n"
     "    // set the interpolated color as the shader output\n"
     "    vFragColor = texture( tex0, vUV );\n"
-    //"    vec4 texColor = texture( tex0, vUV );\n"
-	//"    vFragColor = texColor + vSmoothColor;\n"
     "}\n";
 
 const String GLSLVsSrcUI =
@@ -156,8 +155,7 @@ const String GLSLVsSrcUI =
     "\n"
     + GLSLCombinedMVPUniformSrc +
     "\n"
-    "void main()\n"
-    "{\n"
+    "void main() {\n"
     "    //assign the per-vertex color to vSmoothColor varying\n"
     "    vSmoothColor = vec4(color0,1);\n"
     "\n"
@@ -178,8 +176,7 @@ const String GLSLFsSrcUI =
     "smooth in vec2 vUV;\n"
     "uniform sampler2D tex0;\n"
     "\n"
-    "void main()\n"
-    "{\n"
+    "void main() {\n"
     "    // set the interpolated color as the shader output\n"
     "    vFragColor = vSmoothColor;\n"
     "}\n";
@@ -228,13 +225,11 @@ MaterialBuilder::~MaterialBuilder() {
     // Setup shader attributes and variables
     if ( nullptr != mat->m_shader ) {
         if ( type == VertexType::ColorVertex ) {
-            ui32 numAttribs( ColorVert::getNumAttributes() );
-            const String *attribs( ColorVert::getAttributes() );
-            mat->m_shader->m_attributes.add( attribs, numAttribs );
+            mat->m_shader->m_attributes.add( ColorVert::getAttributes(),
+                                             ColorVert::getNumAttributes() );
         } else if ( type == VertexType::RenderVertex ) {
-            ui32 numAttribs( RenderVert::getNumAttributes() );
-            const String *attribs( RenderVert::getAttributes() );
-            mat->m_shader->m_attributes.add( attribs, numAttribs );
+            mat->m_shader->m_attributes.add(RenderVert::getAttributes(),
+                                            RenderVert::getNumAttributes());
         }
 
         mat->m_shader->m_parameters.add( "MVP" );
@@ -259,6 +254,84 @@ Material *MaterialBuilder::createBuildinUiMaterial() {
             mat->m_shader->m_parameters.add("MVP");
         }
     }
+
+    return mat;
+}
+
+RenderBackend::Material* MaterialBuilder::createTexturedMaterial(const String& matName, TextureResourceArray& texResArray,
+        RenderBackend::VertexType type) {
+    if (matName.empty()) {
+        return nullptr;
+    }
+    Material* mat = new Material(matName, MaterialType::ShaderMaterial);
+    mat->m_numTextures = texResArray.size();
+    mat->m_textures = new Texture * [texResArray.size()];
+    for (size_t i = 0; i < texResArray.size(); ++i) {
+        TextureResource* texRes = texResArray[i];
+        IO::Uri uri = texRes->getUri();
+        TextureLoader loader;
+        texRes->load(loader);
+        mat->m_textures[i] = texRes->get();
+    }
+
+    String vs, fs;
+    if (type == VertexType::ColorVertex) {
+        vs = GLSLVsSrc;
+        fs = GLSLFsSrc;
+    } else if (type == VertexType::RenderVertex) {
+        vs = GLSLVsSrcRV;
+        fs = GLSLFsSrcRV;
+    }
+
+    if (vs.empty() || fs.empty()) {
+        delete mat;
+        return nullptr;
+    }
+
+    ShaderSourceArray arr;
+    arr[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = vs;
+    arr[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = fs;
+    mat->createShader(arr);
+
+    // Setup shader attributes and variables
+    if (nullptr != mat->m_shader) {
+        if (type == VertexType::ColorVertex) {
+            mat->m_shader->m_attributes.add(ColorVert::getAttributes(), ColorVert::getNumAttributes());
+        } else if (type == VertexType::RenderVertex) {
+            mat->m_shader->m_attributes.add( RenderVert::getAttributes(), RenderVert::getNumAttributes() );
+        }
+
+        mat->m_shader->m_parameters.add("MVP");
+    }
+
+    return mat;
+}
+
+RenderBackend::Material* MaterialBuilder::createTexturedMaterial(const String &matName, TextureResourceArray&texResArray, 
+        const String& VsSrc, const String& FsSrc) {
+    if (matName.empty()) {
+        return nullptr;
+    }
+
+    if (VsSrc.empty() || FsSrc.empty()) {
+        return nullptr;
+    }
+
+    Material *mat = new Material(matName, MaterialType::ShaderMaterial );
+    mat->m_numTextures = texResArray.size();
+    mat->m_textures = new Texture*[texResArray.size()];
+    for (size_t i = 0; i < texResArray.size(); ++i) {
+        TextureResource* texRes = texResArray[i];
+        IO::Uri uri = texRes->getUri();
+        TextureLoader loader;
+        texRes->load( loader);
+        mat->m_textures[i] = texRes->get();
+    }
+    
+    ShaderSourceArray shArray;
+    shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = VsSrc;
+    shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = FsSrc;
+    mat->createShader(shArray);
 
     return mat;
 }

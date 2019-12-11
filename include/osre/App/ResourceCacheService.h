@@ -22,28 +22,42 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <cppcore/Container/TArray.h>
+#include <osre/Common/TResourceCache.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Common/TResource.h>
 
 namespace OSRE {
-namespace Common {
-        
-class AbstractCodec;
+namespace App {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup    Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT CodecRegistry {
+using TextureResourceFactory = Common::TResourceFactory <RenderBackend::TextureResource> ;
+using TextureResourceCache   = Common::TResourceCache<TextureResourceFactory, RenderBackend::TextureResource>;
+
+class ResourceCacheService {
 public:
-    static void registerCodec( AbstractCodec *newCodec );
-    static AbstractCodec *getRegistryByExt( const String &ext );
-    static void clear();
+    ResourceCacheService();
+    ~ResourceCacheService();
+    TextureResourceCache *getTextureResourceCache() const;
 
 private:
-    static CPPCore::TArray<AbstractCodec*> s_registry;
+    TextureResourceCache *m_texResCache;
 };
-    
-} // Namespace Common
+
+inline
+ResourceCacheService::ResourceCacheService()
+: m_texResCache( new TextureResourceCache ) {
+    //
+}
+
+inline
+ResourceCacheService::~ResourceCacheService() {
+    delete m_texResCache;
+    m_texResCache;
+}
+
+inline
+TextureResourceCache *ResourceCacheService::getTextureResourceCache() const {
+    return m_texResCache;
+}
+
+} // Namespace App
 } // Namespace OSRE

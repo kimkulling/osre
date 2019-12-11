@@ -27,6 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 
+class ResourceCacheService;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -34,18 +36,22 @@ namespace App {
 //-------------------------------------------------------------------------------------------------
 class ServiceProvider {
 public:
-    static ServiceProvider *create( RenderBackend::RenderBackendService *rbService );
+    static ServiceProvider *create( RenderBackend::RenderBackendService *rbService, 
+        ResourceCacheService *resCacheService );
     static void destroy();
     static RenderBackend::RenderBackendService *getRenderBackendService();
+    static ResourceCacheService *getResourceCacheService();
 
 private:
-    explicit ServiceProvider( RenderBackend::RenderBackendService *rbService );
+    explicit ServiceProvider(RenderBackend::RenderBackendService *rbService,
+                             ResourceCacheService *resCacheService);
     ~ServiceProvider();
 
 private:
     static ServiceProvider *s_instance;
 
     RenderBackend::RenderBackendService *m_rbService;
+    ResourceCacheService *m_resCacheService;
 };
 
 } // Namespace App

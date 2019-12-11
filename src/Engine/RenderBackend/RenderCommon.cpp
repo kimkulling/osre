@@ -23,9 +23,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Shader.h>
 #include <osre/RenderBackend/Mesh.h>
+#include <osre/Assets/AssetRegistry.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/Ids.h>
+#include <osre/IO/Uri.h>
+
 #include <glm/gtc/matrix_transform.inl>
+
+#include "SOIL.h"
 
 namespace OSRE {
 namespace RenderBackend {
@@ -231,19 +236,15 @@ BufferData::BufferData()
 }
 
 BufferData::~BufferData() {
-    delete[] m_buffer.m_data;
-    m_buffer.m_data = nullptr;
-    m_buffer.m_size = 0;
     m_cap = 0;
 }
 
 BufferData* BufferData::alloc( BufferType type, size_t sizeInBytes, BufferAccessType access ) {
     BufferData *buffer        = new BufferData;
-    buffer->m_buffer.m_size   = sizeInBytes;
     buffer->m_cap             = sizeInBytes;
     buffer->m_access          = access;
     buffer->m_type            = type;
-    buffer->m_buffer.m_data   = new c8[ sizeInBytes ];
+    buffer->m_buffer.resize(sizeInBytes);
 
     return buffer;
 }
@@ -266,25 +267,15 @@ void BufferData::copyFrom( void *data, size_t size ) {
         return;
     }
 
-    m_buffer.m_size = size;
-    ::memcpy(m_buffer.m_data, data, size );
+    ::memcpy(&m_buffer[0], data, size );
 }
 
-void BufferData::attach( void *data, size_t size ) {
-    const size_t newSize(m_buffer.m_size + size );
-    if ( newSize < m_cap ) {
-        void *ptr = ( (uc8*) m_buffer.m_data ) + m_buffer.m_size;
-        ::memcpy( ptr, data, size );
-        m_buffer.m_size += size;
-        return;
+void BufferData::attach( const void *data, size_t size ) {
+    c8* ptr = (c8*)data;
+    for (size_t i = 0; i < size; ++i) {
+        m_buffer.add( ptr );
+        ptr++;
     }
-    
-    c8 *newData = new c8[ newSize ];
-    ::memcpy( newData, m_buffer.m_data, m_buffer.m_size );
-    ::memcpy( &newData[m_buffer.m_size ], data, size );
-    delete[] m_buffer.m_data;
-    m_buffer.m_data = newData;
-    m_buffer.m_size += size;
 }
 
 BufferType BufferData::getBufferType() const {
@@ -331,6 +322,114 @@ Texture::Texture()
 Texture::~Texture() {
     delete[] m_data;
     m_data = nullptr;
+}
+
+size_t TextureLoader::load(const IO::Uri& uri, Texture *tex ) {
+    if (nullptr == tex) {
+        return 0;
+    }
+    
+    const String filename = uri.getAbsPath();
+
+    String root = Assets::AssetRegistry::getPath("media");
+    String path = Assets::AssetRegistry::resolvePathFromUri(uri);
+
+
+    i32 width(0), height(0), channels(0);
+    tex->m_data = SOIL_load_image(path.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
+    if (nullptr == tex->m_data ) {
+        osre_debug(Tag, "Cannot load texture " + filename);
+        return 0;
+    }
+    tex->m_width = width;
+    tex->m_height = height;
+    tex->m_channels = channels;
+
+    // swap the texture data
+    for (i32 j = 0; j * 2 < height; ++j) {
+        i32 index1 = j * width * channels;
+        i32 index2 = (height - 1 - j) * width * channels;
+        for (i32 i = width * channels; i > 0; --i) {
+            uc8 temp = tex->m_data[index1];
+            tex->m_data[index1] = tex->m_data[index2];
+            tex->m_data[index2] = temp;
+            ++index1;
+            ++index2;
+        }
+    }
+
+    const size_t size = width * height * channels;
+
+    return size;
+}
+
+bool TextureLoader::unload(Texture* tex) {
+    if (nullptr == tex) {
+        return false;
+    }
+
+    SOIL_free_image_data(tex->m_data);
+    tex->m_data = nullptr;
+    tex->m_width = 0;
+    tex->m_height = 0;
+    tex->m_channels = 0;
+
+    return true;
+}
+
+TextureResource::TextureResource(const String& name, const IO::Uri& uri )
+: TResource(name, uri)
+, m_targetType( TextureTargetType::Texture2D ) {
+    // empty
+}
+
+TextureResource::~TextureResource() {
+    // empty
+}
+
+void TextureResource::setTargetType( TextureTargetType targetType ) {
+    m_targetType = targetType;
+}
+
+TextureTargetType TextureResource::getTargetType() const {
+    return m_targetType;
+}
+
+TextureLoader::TextureLoader() {
+    // empty
+}
+
+TextureLoader::~TextureLoader() {
+    // empty
+}
+
+void TextureResource::onLoad(const IO::Uri& uri, TextureLoader& loader) {
+    if (getState() == Loaded) {
+        return;
+    }
+    
+    create();
+    Texture* tex = get();
+    tex->m_textureName = getName();
+    getStats().m_memory = loader.load(uri, tex);
+    tex->m_targetType = m_targetType;
+    if ( 0 == getStats().m_memory ) {
+        setState(Error);
+        osre_debug(Tag, "Cannot load texture " + uri.getAbsPath() );
+        return;
+    }
+
+    setState(Loaded);
+}
+
+void TextureResource::onUnload(TextureLoader& loader) {
+    if (getState() == Unloaded) {
+        return;
+    }
+
+    loader.unload(get());
+    getStats().m_memory = 0;
+    setState(Unloaded);
 }
 
 Material::Material( const String &name )
@@ -596,7 +695,7 @@ void UniformDataBlob::clear() {
     m_size = 0;
 }
 
-UniformDataBlob *UniformDataBlob::create(ParameterType type, ui32 arraySize) {
+UniformDataBlob *UniformDataBlob::create(ParameterType type, size_t arraySize) {
     UniformDataBlob *blob = new UniformDataBlob;
     switch (type) {
         case ParameterType::PT_Int:
@@ -692,7 +791,7 @@ void UniformVar::destroy(UniformVar *param) {
     }
 }
 
-ui32 UniformVar::getSize() {
+size_t UniformVar::getSize() {
     // len of name | name | buffer
     return m_name.size() + 1 + m_data.m_size;
 }

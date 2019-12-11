@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Common/Tokenizer.h>
+#include <osre/Platform/PlatformInterface.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
 #include "UIRenderUtils.h"
@@ -54,6 +55,8 @@ void TextBase::setLabel( const String &text ) {
     }
     
     m_text = text;
+    
+    Widget::requestLayouting();
     Widget::requestRedraw();
 }
 
@@ -75,12 +78,9 @@ RenderBackend::FontBase *TextBase::getFont() const {
 }
 
 void TextBase::onLayout() {
-
 }
 
-static const ui32 NumQuadVert = 4;
-
-void TextBase::onRender(UiRenderCmdCache& renderCmdCache, RenderBackendService* rbSrv) {
+void TextBase::onRender(UiRenderCmdCache& renderCmdCache, RenderBackendService* ) {
     if (m_text.empty()) {
         return;
     }
@@ -89,20 +89,19 @@ void TextBase::onRender(UiRenderCmdCache& renderCmdCache, RenderBackendService* 
         fontSize = static_cast<f32>(m_font->getSize());
     }
 
-    const i32 stackId(getStackIndex() + 1);
-    const f32 z(static_cast<f32>(stackId));
     f32 x(static_cast<f32>(Widget::getRect().getX1()));
     f32 y(static_cast<f32>(Widget::getRect().getY1()));
+    const f32 z(getStackIndex() * -0.01f);
     WidgetCoordMapping::mapPosToWorld(static_cast<ui32>(x), static_cast<ui32>(y), x, y);
-
-
     const size_t startIndex = renderCmdCache.m_ic.numIndices();
-    Scene::MeshBuilder::allocUiTextBox(x, y, fontSize, m_text, BufferAccessType::ReadWrite, renderCmdCache.m_vc, renderCmdCache.m_ic);
+    Scene::MeshBuilder::allocUiTextBox(x, y, z, fontSize, m_text, BufferAccessType::ReadWrite, renderCmdCache.m_vc, renderCmdCache.m_ic);
 
     UiRenderCmd* cmd(new UiRenderCmd);
-    cmd->m_startIndex = startIndex;
+    cmd->m_startIndex = (ui32) startIndex;
     cmd->m_numIndices = (ui32)(renderCmdCache.m_ic.numIndices() - startIndex);
-    cmd->m_mat = Scene::MaterialBuilder::createBuildinUiMaterial();;
+    
+    //
+    //cmd->m_texture = 
     renderCmdCache.m_renderCmds.add(cmd);
 }
 

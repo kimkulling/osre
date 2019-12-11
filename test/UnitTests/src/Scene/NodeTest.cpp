@@ -58,12 +58,6 @@ protected:
         return n;
     }
 
-    LightNode *createLightNode(const String &name, Common::Ids &ids, Node *parent) {
-        LightNode *ln = new LightNode(name, ids, parent);
-        addNodeForRelease(ln);
-
-        return ln;
-    }
     void addNodeForRelease( Node *node ) {
         m_nodes.push_back( node );
     }
@@ -117,30 +111,6 @@ TEST_F( NodeTest, activeTest ) {
 TEST_F( NodeTest, onUpdateTest ) {
     Node *myNode = createNode( "parent", *m_ids, nullptr );
     EXPECT_NE(nullptr, myNode);
-}
-
-TEST_F(NodeTest, lightNodeTransformTest) {
-    LightNode *ln = createLightNode("test", *m_ids, nullptr);
-    EXPECT_NE(nullptr, ln);
-
-    RenderBackend::Light light;
-    
-    light.m_position.x = 10.0f;
-    light.m_position.y = 0.0f;
-    light.m_position.z = 0.0f;
-
-    ln->setLight(light);
-    TransformComponent *tc = (TransformComponent*)ln->getComponent(Node::ComponentType::TransformComponentType);
-    EXPECT_NE(nullptr, tc);
-    tc->setTranslation(glm::vec3(10.0f, 20.0f, 30.0f));
-
-    Time dt;
-    ln->update(dt);
-
-    light = ln->getLight();
-    EXPECT_FLOAT_EQ(20.0f, light.m_position.x);
-    EXPECT_FLOAT_EQ(20.0f, light.m_position.y);
-    EXPECT_FLOAT_EQ(30.0f, light.m_position.z);
 }
 
 } // Namespace UnitTest

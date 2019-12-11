@@ -36,6 +36,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   define OSRE_ANDROID
 #endif
 
+#include <cppcore/Container/TArray.h>
+
 #include <string>
 #include <sstream>
 #include <string.h>
@@ -161,19 +163,7 @@ struct Handle {
     }
 };
 
-struct MemoryBuffer {
-    size_t m_size;
-    c8    *m_data;
-
-    MemoryBuffer();
-};
-
-inline
-MemoryBuffer::MemoryBuffer()
-: m_size(0)
-, m_data(nullptr) {
-    // empty
-}
+using MemoryBuffer = CPPCore::TArray<c8*>;
 
 struct Time {
     i64 m_microseconds;

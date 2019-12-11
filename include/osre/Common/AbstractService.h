@@ -92,17 +92,19 @@ AbstractService::~AbstractService() {
 
 inline
 bool AbstractService::open() {
-    if ( !m_isOpen ) {
-        m_isOpen = onOpen();
-        return m_isOpen;
+    if ( m_isOpen ) {
+        osre_debug( getName(), "Cannot open, service already opened." );
+        return false;
     }
+    m_isOpen = onOpen();
 
-    return false;
+    return m_isOpen;
 }
 
 inline
 bool AbstractService::close() {
     if ( m_isOpen )	{
+        osre_debug( getName(), "Cannot close, service not open." );
         m_isOpen = false;
         return onClose();
     }
@@ -118,6 +120,7 @@ bool AbstractService::isOpen() {
 inline
 bool AbstractService::update() {
     if ( !isOpen() ) {
+        osre_debug( getName(), "Cannot update, service not open." );
         return false;
     }
 

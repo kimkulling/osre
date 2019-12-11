@@ -86,7 +86,7 @@ public:
     virtual bool removeChild( const String &name, TraverseMode mode );
     virtual Node *findChild( const String &name ) const;
     virtual size_t getNumChildren() const;
-    virtual Node *getChildAt( ui32 idx ) const;
+    virtual Node *getChildAt( size_t idx ) const;
     virtual void releaseChildren();
     virtual void addModel( Assets::Model *model );
     virtual void addMesh( RenderBackend::Mesh *geo );
@@ -141,21 +141,6 @@ inline
 const Node::AABB &Node::getAABB() const {
     return m_aabb;
 }
-
-class OSRE_EXPORT LightNode : public Node {
-public:
-    LightNode(const String &name, Common::Ids &ids, Node *parent = nullptr);
-    ~LightNode();
-    void setLight(const RenderBackend::Light &light);
-    const RenderBackend::Light &getLight() const;
-
-protected:
-    void onUpdate(Time dt) override;
-    virtual void onRender(RenderBackend::RenderBackendService *renderBackendSrv);
-
-private:
-    RenderBackend::Light m_light;
-};
 
 } // Namespace Scene
 } // namespace OSRE
