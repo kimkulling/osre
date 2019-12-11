@@ -211,8 +211,8 @@ bool SDL2EventHandler::update() {
 
                     case SDL_WINDOWEVENT_RESIZED: {
                         WindowsResizeEventData *data = new WindowsResizeEventData( m_eventTriggerer );
-                        data->m_w = ( ui32 )ev.window.data1;
-                        data->m_h = ( ui32 )ev.window.data1;
+                        data->m_w = ( ui32 ) ev.window.data1;
+                        data->m_h = ( ui32 ) ev.window.data2;
                         activeEventQueue->addBack( data );
                     }
                     break;
