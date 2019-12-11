@@ -3,19 +3,25 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace OSREEditor.View {
+    
     /// <summary>
     /// The OSRE native wrapper, contains prototypes for calling native methods from OSRE.
     /// </summary>
     public class OSREWrapper : IDisposable {
         #region Private Attributes
 
+
+#if DEBUG
+        private const string EditorDllName = "osre_nativeeditord.dll";
+#else
         private const string EditorDllName = "osre_nativeeditor.dll";
+#endif
 
         private static TextBox _logger;
 
-        #endregion
+#endregion
 
-        #region Native Interface Wrapper
+#region Native Interface Wrapper
 
         /// <summary>
         /// Will create the editor native application instance.
@@ -122,7 +128,7 @@ namespace OSREEditor.View {
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         public static extern void EditorResize(int x, int y, int w, int h);
 
-        #endregion
+#endregion
 
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         private static extern void RegisterLogCallback(IntPtr fc);
