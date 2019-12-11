@@ -18,9 +18,9 @@ namespace OSREEditor.View
 #endif
         private static TextBox _logger;
 
-        #endregion
+#endregion
 
-        #region Native Interface Wrapper
+#region Native Interface Wrapper
 
         /// <summary>
         /// Will create the editor native application instance.
