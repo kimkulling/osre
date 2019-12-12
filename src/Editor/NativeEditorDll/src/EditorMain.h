@@ -60,6 +60,18 @@ struct CSharpEvent {
     int mouseBtnState;
 };
 
+struct NativeOSREWorld {
+    int NumStages;
+};
+
+struct NativeOSREStage {
+
+};
+
+struct NativeOSRENode {
+    int mNumChildren;
+};
+
 extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp(int* mainWindowHandle );
 
 extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorUpdate();

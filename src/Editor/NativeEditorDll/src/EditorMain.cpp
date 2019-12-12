@@ -237,6 +237,33 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL ImportAsset( const char *filename, int
     return s_EditorApplication->importAsset( filename, flags );
 }
 
+extern "C" OSRE_EDITOR_EXPORT int STDCALL OpenActiveWorld( NativeOSREWorld * world ) {
+    Scene::World *activeWorld = s_EditorApplication->openWorld();
+    if (nullptr == activeWorld) {
+        world = nullptr;
+        return -1;
+    }
+
+    world = new NativeOSREWorld;
+    world->NumStages = (int) activeWorld->getNumStages();
+
+    return 1;
+}
+
+extern "C" OSRE_EDITOR_EXPORT int STDCALL GetStageByIndex( int index, NativeOSREStage * stage ) {
+    if (nullptr == s_EditorApplication) {
+        return -1;
+    }
+
+    Scene::World *world = s_EditorApplication->openWorld();
+    Scene::Stage *currentStage = world->getStageAt( index );
+    if (nullptr != currentStage) {
+        stage = new NativeOSREStage;
+    }
+
+    return 0;
+}
+
 extern "C" OSRE_EDITOR_EXPORT void STDCALL RegisterLogCallback(fnc_log_callback *fnc) {
     fnc_log_callback ptr = (fnc_log_callback)fnc;
     g_fnc_log_callback = ptr;

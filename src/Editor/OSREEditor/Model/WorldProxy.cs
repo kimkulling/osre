@@ -29,12 +29,14 @@ namespace OSREEditor.Model
     /// <summary>
     /// The c# proxy class for node instances.
     /// </summary>
-    public class Node
+    public class NodeProxy
     {
+        public string Name { get; set; }
+
         /// <summary>
         /// The class constructor.
         /// </summary>
-        public Node()
+        public NodeProxy()
         {
             // empty
         }
@@ -43,12 +45,14 @@ namespace OSREEditor.Model
     /// <summary>
     /// The c# proxy class for stage instances.
     /// </summary>
-    public class Stage
+    public class StageProxy
     {
+        public string Name { get; set; }
+
         /// <summary>
         /// The class constructor.
         /// </summary>
-        public Stage()
+        public StageProxy()
         {
             // empty
         }
@@ -59,14 +63,14 @@ namespace OSREEditor.Model
     /// </summary>
     public class WorldProxy
     {
-        private IList<Stage> _stages;
+        private IList<StageProxy> _stages;
 
         /// <summary>
         /// The class constructor.
         /// </summary>
         public WorldProxy()
         {
-            _stages = new List<Stage>();
+            _stages = new List<StageProxy>();
         }
 
         /// <summary>
@@ -89,6 +93,35 @@ namespace OSREEditor.Model
         public bool SaveWorld(string name, int flags)
         {
             return OSREWrapper.SaveProject(name, flags) == 0;
+        }
+
+        /// <summary>
+        /// Will add a new stage.
+        /// </summary>
+        /// <param name="newStage"></param>
+        public void AddStage( StageProxy newStage ) 
+        {
+            if ( GetStage(newStage.Name)==null)
+            {
+                _stages.Add(newStage);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public StageProxy GetStage(string name) 
+        {
+            foreach ( var currentStage in _stages) 
+            {
+                if ( currentStage.Name == name )
+                {
+                    return currentStage;
+                }
+            }
+            return null;
         }
     }
 }

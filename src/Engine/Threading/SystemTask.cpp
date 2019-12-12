@@ -330,7 +330,7 @@ bool SystemTask::sendEvent( const Event *ev, const EventData *eventData ) {
     return true;
 }
 
-ui32 SystemTask::getEvetQueueSize() const {
+size_t SystemTask::getEvetQueueSize() const {
     OSRE_ASSERT( nullptr != m_asyncQueue);
 
     return m_asyncQueue->size();

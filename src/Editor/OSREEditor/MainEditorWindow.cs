@@ -44,7 +44,6 @@ namespace OSREEditor
             OSREWrapper.EditorUpdate();
             OSREWrapper.EditorRequestNextFrame();
             this.Update();
-
         }
 
         /// <summary>
@@ -117,7 +116,8 @@ namespace OSREEditor
             }
         }
 
-        private void importAssetToolStripMenuItem_Click(object sender, EventArgs e) {
+        private unsafe  void importAssetToolStripMenuItem_Click(object sender, EventArgs e) 
+        {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
             openFileDialog.InitialDirectory = "c:\\";
@@ -131,9 +131,16 @@ namespace OSREEditor
                 var retValue = OSREWrapper.ImportAsset(filename, 0);
                 if (0 == retValue)
                 {
+                    OSREWorld activeWorld;
+                    OSREWrapper.GetActiveWorld( &activeWorld );
+                    if ( activeWorld.NumStages > 0 )
+                    {
+
+                    }
                     string[] sepFolders = filename.Split('\\');
                     string name = sepFolders[sepFolders.Length - 1];
                     _projectTreeView.NewProjectView(name);
+                    
                 }
             }
             OSREWrapper.EditorRequestNextFrame();
@@ -169,11 +176,9 @@ namespace OSREEditor
 
         }
 
-        private void OnResize(object sender, System.EventArgs e) 
-        {
+        private void OnResize(object sender, System.EventArgs e)  {
             MainEditorWindow mainWindow = (MainEditorWindow) sender;
-            if ( mainWindow != null) 
-            {
+            if ( mainWindow != null) {
                 var parentSize = mainWindow.panel3d.Size;
                 OSREWrapper.EditorResize(0, 0, parentSize.Width, parentSize.Height);
             }

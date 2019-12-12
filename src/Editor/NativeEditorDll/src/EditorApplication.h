@@ -69,13 +69,24 @@ public:
     }
 };
 
+struct SceneContext {
+    Scene::World *ActiveWorld;
+    int StageIndex;
+    Scene::Stage ActiveStage;
+};
+
 class EditorApplication : public App::AppBase {
 public:
     EditorApplication( int argc, char *argv[] );
     ~EditorApplication() override;
     int enqueueEvent( const Common::Event *ev, Common::EventData *evData );
     void newProject( const String &name );
-    Scene::World *getWorld() const;
+    void openWorldAccess();
+    void openStageAccess();
+    void openNodeAccess();
+    void closeNodeAccess();
+    void closeStageAccess();
+    void closeWorldAccess();
     int importAsset( const String &filename, int flags );
     Platform::PlatformInterface *getPlatformInterface() const;
     bool loadProject( const char *filelocation, int flags );
@@ -86,6 +97,7 @@ protected:
     void onUpdate() override;
 
 private:
+    bool m_worldAccess;
     Scene::World* m_world;
     Scene::Stage* m_stage;
     Scene::Node::NodePtr m_modelNode;

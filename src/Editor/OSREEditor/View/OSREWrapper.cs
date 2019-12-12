@@ -4,11 +4,29 @@ using System.Windows.Forms;
 
 namespace OSREEditor.View 
 {
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct OSREWorld 
+    {
+        public int NumStages;   
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct OSREStage 
+    {
+
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct OSRENode 
+    {
+
+    }
 
     /// <summary>
     /// The OSRE native wrapper, contains prototypes for calling native methods from OSRE.
     /// </summary>
     public class OSREWrapper : IDisposable {
+        
         #region Private Attributes
 
 #if DEBUG
@@ -20,7 +38,7 @@ namespace OSREEditor.View
 
 #endregion
 
-#region Native Interface Wrapper
+        #region Native Interface Wrapper
 
         /// <summary>
         /// Will create the editor native application instance.
@@ -67,6 +85,9 @@ namespace OSREEditor.View
         /// <returns>0 for successful, != 0 in case of an error.</returns>
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         public static extern int ImportAsset([MarshalAs(UnmanagedType.LPStr)] string name, int flags);
+
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern unsafe int OpenActiveWorld( OSREWorld *world);
 
         /// <summary>
         /// Will load a project.
@@ -134,7 +155,7 @@ namespace OSREEditor.View
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         public static extern void EditorResize(int x, int y, int w, int h);
 
-#endregion
+        #endregion
 
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         private static extern void RegisterLogCallback(IntPtr fc);

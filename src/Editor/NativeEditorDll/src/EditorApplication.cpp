@@ -62,6 +62,7 @@ static const c8 *Tag = "EditorApplication";
 
 EditorApplication::EditorApplication( int argc, char *argv[] )
 : AppBase( argc, argv )
+, m_worldAccess( false )
 , m_world( nullptr )
 , m_stage( nullptr )
 , m_modelNode()
@@ -106,9 +107,12 @@ void EditorApplication::newProject( const String &name ) {
     }
 }
 
-World *EditorApplication::getWorld() const {
-    return m_world;
-}
+void openWorldAccess();
+void openStageAccess();
+void openNodeAccess();
+void closeNodeAccess();
+void closeStageAccess();
+void closeWorldAccess();
 
 int EditorApplication::importAsset( const String &filename, int flags ) {
     if (filename.empty()) {
