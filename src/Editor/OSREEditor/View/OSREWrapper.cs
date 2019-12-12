@@ -86,8 +86,21 @@ namespace OSREEditor.View
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         public static extern int ImportAsset([MarshalAs(UnmanagedType.LPStr)] string name, int flags);
 
+        /// <summary>
+        /// todo!
+        /// </summary>
+        /// <param name="world"></param>
+        /// <returns></returns>
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
-        public static extern unsafe int OpenActiveWorld( OSREWorld *world);
+        public static extern unsafe int openWorldAccess( OSREWorld *world);
+
+        /// <summary>
+        /// todo!
+        /// </summary>
+        /// <param name="world"></param>
+        /// <returns></returns>
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern unsafe int closeWorldAccess(OSREWorld* world);
 
         /// <summary>
         /// Will load a project.

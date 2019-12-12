@@ -107,12 +107,29 @@ void EditorApplication::newProject( const String &name ) {
     }
 }
 
-void openWorldAccess();
-void openStageAccess();
-void openNodeAccess();
-void closeNodeAccess();
-void closeStageAccess();
-void closeWorldAccess();
+int EditorApplication::openWorldAccess() {
+    return -1;
+}
+
+int EditorApplication::openStageAccess() {
+    return -1;
+}
+
+int EditorApplication::openNodeAccess() {
+    return -1;
+}
+
+int EditorApplication::closeNodeAccess() {
+    return -1;
+}
+
+int EditorApplication::closeStageAccess() {
+    return -1;
+}
+
+int EditorApplication::closeWorldAccess() {
+    return -1;
+}
 
 int EditorApplication::importAsset( const String &filename, int flags ) {
     if (filename.empty()) {

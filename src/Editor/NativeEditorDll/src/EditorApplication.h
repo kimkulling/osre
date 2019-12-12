@@ -81,12 +81,12 @@ public:
     ~EditorApplication() override;
     int enqueueEvent( const Common::Event *ev, Common::EventData *evData );
     void newProject( const String &name );
-    void openWorldAccess();
-    void openStageAccess();
-    void openNodeAccess();
-    void closeNodeAccess();
-    void closeStageAccess();
-    void closeWorldAccess();
+    int  openWorldAccess();
+    int  openStageAccess();
+    int  openNodeAccess();
+    int  closeNodeAccess();
+    int  closeStageAccess();
+    int  closeWorldAccess();
     int importAsset( const String &filename, int flags );
     Platform::PlatformInterface *getPlatformInterface() const;
     bool loadProject( const char *filelocation, int flags );
