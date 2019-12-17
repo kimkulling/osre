@@ -40,6 +40,9 @@ EnvVar* Environment::findVar(const c8* varName) const {
         return nullptr;
     }
     EnvVar* var(nullptr);
+    if ( !mEnvVariables.hasKey(StringUtils::hashName(varName)) ) {
+        return nullptr;
+    }
     if (mEnvVariables.getValue(StringUtils::hashName(varName), var)) {
         return var;
     }
