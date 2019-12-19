@@ -114,6 +114,12 @@ public:
     /// @return The global settings.
     virtual Properties::Settings *getSettings() const;
 
+    virtual Scene::World *createWorld( const String &name );
+
+    virtual Scene::World *findWorld( const String &name ) const;
+    virtual bool setActiveWorld( const String &name );
+    virtual Scene::World *getActiveWorld() const;
+
     /// @brief  Will create a new stage and set it as the active one.
     /// @param  name        [in] The name for the stage.
     /// @return The new stage instance or nullptr if the stage exists already.
@@ -203,6 +209,7 @@ private:
     Platform::PlatformInterface *m_platformInterface;
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
+    CPPCore::TArray<Scene::World *> m_worlds;
     Scene::World *m_world;
     UI::Canvas *m_uiScreen;
     UI::UiRenderer *m_uiRenderer;

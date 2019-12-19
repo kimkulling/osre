@@ -60,9 +60,14 @@ using namespace ::OSRE::Assets;
 
 static const c8 *Tag = "EditorApplication";
 
+static const i32 UIED_ERROR = -1;
+static const i32 UIED_WORLDACCESS_ERROR = -2;
+
 EditorApplication::EditorApplication( int argc, char *argv[] )
 : AppBase( argc, argv )
 , m_worldAccess( false )
+, m_stageAccess( false )
+, m_nodeAccess( false )
 , m_world( nullptr )
 , m_stage( nullptr )
 , m_modelNode()
@@ -107,16 +112,40 @@ void EditorApplication::newProject( const String &name ) {
     }
 }
 
-int EditorApplication::openWorldAccess() {
+int EditorApplication::openWorldAccess( const String &name ) {
+    if (m_worldAccess) {
+        return UIED_WORLDACCESS_ERROR;
+    }
+    m_worldAccess = true;
+    if (!name.empty()) {
+        Scene::World *world = AppBase::findWorld( name );
+        if (nullptr == world) {
+            world = AppBase::createWorld( name );
+            AppBase::setActiveWorld();
+        }
+
+        return 0;
+    }
+
     return -1;
 }
 
-int EditorApplication::openStageAccess() {
+int EditorApplication::openStageAccess( const String &name ) {
+    if (!m_worldAccess || m_stageAccess ) {
+        return -1;
+    }
+
+    m_stageAccess = true;
+
     return -1;
 }
 
-int EditorApplication::openNodeAccess() {
+int EditorApplication::openNodeAccess( const String &name ) {
     return -1;
+}
+
+int EditorApplication::createNode( const String &name, const String &parentNode ) {
+
 }
 
 int EditorApplication::closeNodeAccess() {
@@ -128,6 +157,11 @@ int EditorApplication::closeStageAccess() {
 }
 
 int EditorApplication::closeWorldAccess() {
+    if (!m_worldAccess) {
+        return UIED_WORLDACCESS_ERROR;
+    }
+    m_worldAccess = false;
+    
     return -1;
 }
 

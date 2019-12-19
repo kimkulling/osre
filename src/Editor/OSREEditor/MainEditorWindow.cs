@@ -131,12 +131,7 @@ namespace OSREEditor
                 var retValue = OSREWrapper.ImportAsset(filename, 0);
                 if (0 == retValue)
                 {
-                    OSREWorld activeWorld;
-                    OSREWrapper.GetActiveWorld( &activeWorld );
-                    if ( activeWorld.NumStages > 0 )
-                    {
-
-                    }
+                    int retCode = OSREWrapper.openWorldAccess("default");
                     string[] sepFolders = filename.Split('\\');
                     string name = sepFolders[sepFolders.Length - 1];
                     _projectTreeView.NewProjectView(name);

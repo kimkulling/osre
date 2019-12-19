@@ -261,6 +261,45 @@ Properties::Settings *AppBase::getSettings() const {
     return m_settings;
 }
 
+Scene::World *AppBase::createWorld( const String &name ) {
+    if (name.empty()) {
+        osre_debug( Tag, "Invalid name for a new world." );
+        return nullptr;
+    }
+
+    m_world = new Scene::World( name );
+    m_worlds.add( m_world );
+    
+    return m_world;
+}
+
+Scene::World *AppBase::findWorld( const String &name ) const {
+    if (m_worlds.isEmpty()) {
+        return nullptr;
+    }
+
+    for (size_t i = 0; i < m_worlds.size(); ++i) {
+        if (m_worlds[ i ]->getName() == name) {
+            return m_worlds[ i ];
+        }
+    }
+
+    return nullptr;
+}
+
+bool AppBase::setActiveWorld( const String &name ) {
+    if (name.empty()) {
+        return false;
+    }
+    
+    m_world = findWorld( name );
+    return ( nullptr != m_world );
+}
+
+Scene::World *AppBase::getActiveWorld() const {
+    return m_world;
+}
+
 Scene::Stage *AppBase::createStage( const String &name ) {
     if ( nullptr == m_world ) {
         osre_debug( Tag, "No world to add state to." );

@@ -81,12 +81,13 @@ public:
     ~EditorApplication() override;
     int enqueueEvent( const Common::Event *ev, Common::EventData *evData );
     void newProject( const String &name );
-    int  openWorldAccess();
-    int  openStageAccess();
-    int  openNodeAccess();
-    int  closeNodeAccess();
-    int  closeStageAccess();
-    int  closeWorldAccess();
+    int openWorldAccess( const String &name );
+    int openStageAccess( const String &name );
+    int openNodeAccess( const String &name );
+    int closeNodeAccess();
+    int createNode( const String &name, const String &parentNode );
+    int closeStageAccess();
+    int closeWorldAccess();
     int importAsset( const String &filename, int flags );
     Platform::PlatformInterface *getPlatformInterface() const;
     bool loadProject( const char *filelocation, int flags );
@@ -98,6 +99,8 @@ protected:
 
 private:
     bool m_worldAccess;
+    bool m_stageAccess;
+    bool m_nodeAccess;
     Scene::World* m_world;
     Scene::Stage* m_stage;
     Scene::Node::NodePtr m_modelNode;
