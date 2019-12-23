@@ -82,9 +82,9 @@ void World::addStage( Stage *stage ) {
     stage->setIdContainer( m_ids );
 }
 
-bool World::setActiveStage( Stage *activeStage ) {
+Stage *World::setActiveStage( Stage *activeStage ) {
     if ( m_activeStage == activeStage ) {
-        return false;
+        return nullptr;
     }
 
     m_activeStage = activeStage;
@@ -92,22 +92,21 @@ bool World::setActiveStage( Stage *activeStage ) {
         m_stages.add(activeStage);
     }
 
-    return true;
+    return m_activeStage;
 }
 
-bool World::setActiveStage( const String &stageName ) {
+Stage *World::setActiveStage( const String &stageName ) {
     const ui32 hash( StringUtils::hashName( stageName.c_str() ) );
     if ( !m_lookupStates.hasKey( hash ) ) {
-        return false;
+        return nullptr;
     }
     
     Stage *activeStage( nullptr );
     if ( m_lookupStates.getValue( hash, activeStage ) ) {
-        setActiveStage(activeStage);
-        return true;
+        return setActiveStage(activeStage);
     }
 
-    return false;
+    return nullptr;
 }
 
 size_t World::getNumStages() const {
@@ -147,9 +146,9 @@ View *World::getViewAt(ui32 i) const {
     return m_views[ i ];
 }
 
-bool World::setActiveView( View *activeView ) {
+View *World::setActiveView( View *activeView ) {
     if ( m_activeView == activeView ) {
-        return true;
+        return nullptr;
     }
     
     m_activeView = activeView;
@@ -157,22 +156,22 @@ bool World::setActiveView( View *activeView ) {
         m_views.add(activeView);
     }
 
-    return true;
+    return activeView;
 }
 
-bool World::setActiveView( const String &viewName ) {
+View *World::setActiveView( const String &viewName ) {
     const ui32 hash(StringUtils::hashName( viewName ) );
     if ( !m_lookupViews.hasKey( hash ) ) {
-        return false;
+        return nullptr;
     }
 
     View *activeView( nullptr );
     if ( m_lookupViews.getValue( hash, activeView ) ) {
         setActiveView(activeView);
-        return true;
+        return activeView;
     }
 
-    return false;
+    return nullptr;
 }
 
 View *World::getActiveView() const {

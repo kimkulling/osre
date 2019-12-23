@@ -146,7 +146,7 @@ AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const Strin
 , m_platformInterface( nullptr )
 , m_timer( nullptr )
 , m_rbService( nullptr )
-, m_world( nullptr )
+, m_activeWorld( nullptr )
 , m_uiScreen( nullptr )
 , m_uiRenderer( nullptr )
 , m_mouseEvListener( nullptr )
@@ -231,11 +231,11 @@ void AppBase::requestNextFrame() {
     OSRE_ASSERT( nullptr != m_uiRenderer );
     OSRE_ASSERT( nullptr != m_rbService );
 
-    if (nullptr == m_world) {
+    if (nullptr == m_activeWorld) {
         return;
     }
 
-    m_world->draw( m_rbService );
+    m_activeWorld->draw( m_rbService );
     if (nullptr != m_uiScreen) {
         m_uiRenderer->layout( m_uiScreen );
         m_uiRenderer->render( m_uiScreen, m_rbService );
@@ -267,10 +267,10 @@ Scene::World *AppBase::createWorld( const String &name ) {
         return nullptr;
     }
 
-    m_world = new Scene::World( name );
-    m_worlds.add( m_world );
+    m_activeWorld = new Scene::World( name );
+    m_worlds.add( m_activeWorld );
     
-    return m_world;
+    return m_activeWorld;
 }
 
 Scene::World *AppBase::findWorld( const String &name ) const {
@@ -292,16 +292,16 @@ bool AppBase::setActiveWorld( const String &name ) {
         return false;
     }
     
-    m_world = findWorld( name );
-    return ( nullptr != m_world );
+    m_activeWorld = findWorld( name );
+    return ( nullptr != m_activeWorld );
 }
 
 Scene::World *AppBase::getActiveWorld() const {
-    return m_world;
+    return m_activeWorld;
 }
 
 Scene::Stage *AppBase::createStage( const String &name ) {
-    if ( nullptr == m_world ) {
+    if ( nullptr == m_activeWorld ) {
         osre_debug( Tag, "No world to add state to." );
         return nullptr;
     }
@@ -313,36 +313,36 @@ Scene::Stage *AppBase::createStage( const String &name ) {
 
     Scene::Stage *stage( new Scene::Stage(stageName, m_rbService ) );
     if ( nullptr != stage ) {
-        m_world->addStage( stage );
+        m_activeWorld->addStage( stage );
     }
 
     return stage;
 }
 
-bool AppBase::setActiveStage( Scene::Stage *stage ) {
-    if ( nullptr == m_world ) {
+Scene::Stage *AppBase::setActiveStage( Scene::Stage *stage ) {
+    if ( nullptr == m_activeWorld ) {
         osre_debug( Tag, "No world to activate state to." );
         return false;
     }
     
-    return m_world->setActiveStage( stage );
+    return m_activeWorld->setActiveStage( stage );
 }
 
-bool AppBase::setActiveView(Scene::View *view) {
-    if (nullptr == m_world) {
+Scene::View *AppBase::setActiveView(Scene::View *view) {
+    if (nullptr == m_activeWorld) {
         osre_debug(Tag, "No world to activate state to.");
-        return false;
+        return nullptr;
     }
-    return m_world->setActiveView(view);
+    return m_activeWorld->setActiveView(view);
 }
 
-bool AppBase::activateStage( const String &name ) {
-    if ( nullptr == m_world ) {
+Scene::Stage *AppBase::activateStage( const String &name ) {
+    if ( nullptr == m_activeWorld ) {
         osre_debug( Tag, "No world to activate state to." );
-        return false;
+        return nullptr;
     }
 
-    return m_world->setActiveStage( name );
+    return m_activeWorld->setActiveStage( name );
 }
 void AppBase::requestShutdown() {
     m_shutdownRequested = true;
@@ -461,7 +461,7 @@ bool AppBase::onCreate() {
 
     // create our world
     Scene::RenderMode mode = static_cast<Scene::RenderMode>( m_settings->get( Properties::Settings::RenderMode ).getInt() );
-    m_world = new Scene::World( "world", mode );
+    m_activeWorld = new Scene::World( "world", mode );
     
 
     ResourceCacheService *rcSrv = new ResourceCacheService;
@@ -512,8 +512,8 @@ bool AppBase::onDestroy() {
     delete m_uiScreen;
     delete m_uiRenderer;
 
-    delete m_world;
-    m_world = nullptr;
+    delete m_activeWorld;
+    m_activeWorld = nullptr;
 
     delete m_ids;
     m_ids = nullptr;
@@ -530,8 +530,8 @@ static const i64 Conversion2Micro = 1000;
 void AppBase::onUpdate() {
     i64 microsecs = m_timer->getMilliCurrentSeconds() * Conversion2Micro;
     Time dt( microsecs );
-    if ( nullptr != m_world ) {
-        m_world->update( dt );
+    if ( nullptr != m_activeWorld ) {
+        m_activeWorld->update( dt );
     }
 
     if (nullptr != m_uiRenderer && nullptr != m_uiScreen) {

@@ -50,7 +50,7 @@ public:
     const ModelAABB &getAABB() const;
 
 private:
-    RenderBackend::MeshArray m_meshArray;
+    RenderBackend::MeshArray *m_meshArray;
     Scene::Node *m_root;
     Collision::TAABB<f32> m_aabb;
 };

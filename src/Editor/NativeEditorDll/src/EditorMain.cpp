@@ -243,7 +243,8 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL ImportAsset( const char *filename, int
     return s_EditorApplication->importAsset( filename, flags );
 }
 
-extern "C" OSRE_EDITOR_EXPORT int STDCALL openWorldAccess( const char *name ) {
+// Scene access ---------------------------------------------------------------
+extern "C" OSRE_EDITOR_EXPORT int STDCALL OpenWorldAccess( const char *name ) {
     if (nullptr == s_EditorApplication) {
         return -1;
     }
@@ -259,8 +260,7 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL openWorldAccess( const char *name ) {
     return retCode;
 }
 
-// Scene access
-extern "C" OSRE_EDITOR_EXPORT int STDCALL openStageAccess( const char *name ) {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL OpenStageAccess( const char *name ) {
     if (nullptr == s_EditorApplication) {
         return -1;
     }
@@ -268,7 +268,7 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL openStageAccess( const char *name ) {
     return s_EditorApplication->openStageAccess( name );
 }
 
-extern "C" OSRE_EDITOR_EXPORT int STDCALL openNodeAccess( const char *name ) {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL OpenNodeAccess( const char *name ) {
     if (nullptr == s_EditorApplication) {
         return -1;
     }
@@ -276,14 +276,14 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL openNodeAccess( const char *name ) {
     return s_EditorApplication->openNodeAccess( name );
 }
 
-extern "C" OSRE_EDITOR_EXPORT int STDCALL createNode( const char *name ) {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateNode( const char *name, const char *parent ) {
     if (nullptr == s_EditorApplication) {
         return -1;
     }
 
-
+    return s_EditorApplication->createNode( name, parent );
 }
-extern "C" OSRE_EDITOR_EXPORT int STDCALL closeNodeAccess( void ) {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL CloseNodeAccess( void ) {
     if (nullptr == s_EditorApplication) {
         return -1;
     }
@@ -291,14 +291,14 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL closeNodeAccess( void ) {
     return s_EditorApplication->closeNodeAccess();
 }
 
-extern "C" OSRE_EDITOR_EXPORT int STDCALL closeStageAccess( void ) {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL CloseStageAccess( void ) {
     if (nullptr == s_EditorApplication) {
         return -1;
     }
     return s_EditorApplication->closeStageAccess();
 }
 
-extern "C" OSRE_EDITOR_EXPORT int STDCALL closeWorldAccess( void ) {
+extern "C" OSRE_EDITOR_EXPORT int STDCALL CloseWorldAccess( void ) {
     if (nullptr == s_EditorApplication) {
         return -1;
     }

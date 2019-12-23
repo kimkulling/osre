@@ -63,32 +63,45 @@ static const c8 *Tag = "EditorApplication";
 static const i32 UIED_ERROR = -1;
 static const i32 UIED_WORLDACCESS_ERROR = -2;
 
+struct SceneContext {
+    Scene::World *ActiveWorld;
+    int StageIndex;
+    Scene::Stage *ActiveStage;
+    Scene::Node *ActiveNode;
+};
+
+struct EditorApplication::Impl {
+    bool m_worldAccess;
+    bool m_stageAccess;
+    bool m_nodeAccess;
+    Scene::World *m_world;
+    Scene::Stage *m_stage;
+    Scene::Node *m_node;
+    Scene::Node::NodePtr m_modelNode;
+    RenderBackend::TransformMatrixBlock m_transformMatrix;
+    Platform::PlatformInterface *m_platformInterface;
+    App::Project m_project;
+    Scene::TrackBall *m_trackball;
+    f32 m_angle;
+};
+
 EditorApplication::EditorApplication( int argc, char *argv[] )
 : AppBase( argc, argv )
-, m_worldAccess( false )
-, m_stageAccess( false )
-, m_nodeAccess( false )
-, m_world( nullptr )
-, m_stage( nullptr )
-, m_modelNode()
-, m_transformMatrix()
-, m_platformInterface( nullptr )
-, m_project()
-, m_trackball( nullptr )
-, m_angle( 0.01f){
+, m_impl( new Impl ) {
     // empty
 }
 
 EditorApplication::~EditorApplication() {
-    // empty
+    delete m_impl;
+    m_impl = nullptr;
 }
 
 int EditorApplication::enqueueEvent( const Event *ev, EventData *evData ) {
-    if (nullptr == m_platformInterface) {
+    if (nullptr == m_impl->m_platformInterface) {
         return 1;
     }
 
-    AbstractPlatformEventQueue *queue = m_platformInterface->getInstance()->getPlatformEventHandler();
+    AbstractPlatformEventQueue *queue = m_impl->m_platformInterface->getInstance()->getPlatformEventHandler();
     if (nullptr == queue) {
         return 1;
     }
@@ -98,30 +111,30 @@ int EditorApplication::enqueueEvent( const Event *ev, EventData *evData ) {
 }
 
 void EditorApplication::newProject( const String &name ) {
-    if ( name != m_project.getName()) {
-        m_project.destroy();
+    if ( name != m_impl->m_project.getName()) {
+        m_impl->m_project.destroy();
     }
 
-    if (!m_project.create( name, 0, 1 ) ) {
+    if (!m_impl->m_project.create( name, 0, 1 ) ) {
         return;
     }
 
     Platform::AbstractWindow *rootWindow( getRootWindow() );
     if (nullptr != rootWindow) {
-        rootWindow->setWindowsTitle( m_project.getName() );
+        rootWindow->setWindowsTitle( m_impl->m_project.getName() );
     }
 }
 
 int EditorApplication::openWorldAccess( const String &name ) {
-    if (m_worldAccess) {
+    if (m_impl->m_worldAccess) {
         return UIED_WORLDACCESS_ERROR;
     }
-    m_worldAccess = true;
+    m_impl->m_worldAccess = true;
     if (!name.empty()) {
         Scene::World *world = AppBase::findWorld( name );
         if (nullptr == world) {
             world = AppBase::createWorld( name );
-            AppBase::setActiveWorld();
+            AppBase::setActiveWorld( name );
         }
 
         return 0;
@@ -131,36 +144,92 @@ int EditorApplication::openWorldAccess( const String &name ) {
 }
 
 int EditorApplication::openStageAccess( const String &name ) {
-    if (!m_worldAccess || m_stageAccess ) {
+    if (!m_impl->m_worldAccess || m_impl->m_stageAccess ) {
         return -1;
     }
 
-    m_stageAccess = true;
+    if (name.empty()) {
+        return -2;
+    }
+
+    Stage *stage = m_impl->m_world->setActiveStage( name );
+    if (nullptr == stage) {
+        return -1;
+    }
+    
+    m_impl->m_stage = stage;
+    m_impl->m_stageAccess = true;
 
     return -1;
 }
 
 int EditorApplication::openNodeAccess( const String &name ) {
-    return -1;
+    if (m_impl->m_nodeAccess || !m_impl->m_stageAccess) {
+        return -1;
+    }
+
+    if (name.empty()) {
+        return -2;
+    }
+
+    m_impl->m_node = m_impl->m_stage->findNode( name );
+    if (nullptr == m_impl->m_node) {
+        return -1;
+    }
+    m_impl->m_nodeAccess = true;
+
+    return 0;
 }
 
 int EditorApplication::createNode( const String &name, const String &parentNode ) {
+    if (!m_impl->m_stageAccess) {
+        return -1;
+    }
 
+    Node *parent( nullptr );
+    if (!parentNode.empty()) {
+        parent = m_impl->m_stage->findNode( parentNode );
+        if (nullptr == parent) {
+            return -3;
+        }
+    }
+
+    m_impl->m_node = m_impl->m_stage->addNode( name, parent );
+    if (nullptr == m_impl->m_node) {
+        return -1;
+    }
+
+    return 0;
 }
 
 int EditorApplication::closeNodeAccess() {
-    return -1;
+    if (!m_impl->m_nodeAccess) {
+        return -1;
+    }
+
+    m_impl->m_node = nullptr;
+    m_impl->m_nodeAccess = false;
+
+    return 0;
 }
 
 int EditorApplication::closeStageAccess() {
+    if (!m_impl->m_stageAccess) {
+        return -1;
+    }
+
+    m_impl->m_stage = nullptr;
+    m_impl->m_stageAccess = false;
     return -1;
 }
 
 int EditorApplication::closeWorldAccess() {
-    if (!m_worldAccess) {
+    if (!m_impl->m_worldAccess) {
         return UIED_WORLDACCESS_ERROR;
     }
-    m_worldAccess = false;
+
+    m_impl->m_world = nullptr;
+    m_impl->m_worldAccess = false;
     
     return -1;
 }
@@ -188,14 +257,14 @@ int EditorApplication::importAsset( const String &filename, int flags ) {
                 return false;
             }
             
-            if (nullptr == m_stage) {
-                m_stage = AppBase::createStage( "ModelLoading" );
-                AppBase::setActiveStage( m_stage );
+            if (nullptr == m_impl->m_stage) {
+                m_impl->m_stage = AppBase::createStage( "ModelLoading" );
+                AppBase::setActiveStage( m_impl->m_stage );
             }
             
-            Scene::View *view = m_stage->findView( "default_view" );
+            Scene::View *view = m_impl->m_stage->findView( "default_view" );
             if (nullptr == view) {
-                view = m_stage->addView( "default_view", nullptr );
+                view = m_impl->m_stage->addView( "default_view", nullptr );
             }
             AppBase::setActiveView(view);
 
@@ -203,8 +272,8 @@ int EditorApplication::importAsset( const String &filename, int flags ) {
             view->setProjectionParameters(60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.001f, 1000.f);
             view->observeBoundingBox(model->getAABB());
 
-            m_stage->setRoot(model->getRootNode());
-            m_modelNode = m_stage->getRoot();
+            m_impl->m_stage->setRoot(model->getRootNode());
+            m_impl->m_modelNode = m_impl->m_stage->getRoot();
         }
 
         AppBase::onUpdate();
@@ -214,7 +283,7 @@ int EditorApplication::importAsset( const String &filename, int flags ) {
 }
 
 PlatformInterface *EditorApplication::getPlatformInterface() const {
-    return m_platformInterface;
+    return m_impl->m_platformInterface;
 }
 
 bool EditorApplication::loadProject( const char *filelocation, int flags ) {
@@ -234,7 +303,7 @@ bool EditorApplication::saveProject( const char *filelocation, int flags ) {
         return false;
     }
 
-    const bool result = m_project.save(filelocation, flags);
+    const bool result = m_impl->m_project.save(filelocation, flags);
 
     return result;
 }
@@ -242,24 +311,24 @@ bool EditorApplication::saveProject( const char *filelocation, int flags ) {
 bool EditorApplication::onCreate() {
     Properties::Settings *baseSettings(AppBase::getSettings());
     baseSettings->setBool( Settings::ChildWindow, true );
-    baseSettings->setString( Properties::Settings::WindowsTitle, m_project.getName() );
+    baseSettings->setString( Properties::Settings::WindowsTitle, m_impl->m_project.getName() );
     if (!AppBase::onCreate()) {
         return false;
     }
 
-    m_platformInterface = Platform::PlatformInterface::getInstance();
+    m_impl->m_platformInterface = Platform::PlatformInterface::getInstance();
+    m_impl->m_stage = AppBase::createStage( "HelloWorld" );
+    AppBase::activateStage( m_impl->m_stage->getName() );
+    Stage *stage = m_impl->m_stage;
 
-    m_stage = AppBase::createStage( "HelloWorld" );
-    AppBase::activateStage( m_stage->getName() );
-
-    Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
+    Scene::Node *geoNode = stage->addNode( "geo", nullptr );
     Scene::MeshBuilder meshBuilder;
     meshBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
     RenderBackend::Mesh *mesh = meshBuilder.getMesh();
     if (nullptr != mesh) {
-        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
-        m_transformMatrix.update();
-        getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
+        m_impl->m_transformMatrix.m_model = glm::rotate( m_impl->m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+        m_impl->m_transformMatrix.update();
+        getRenderBackendService()->setMatrix( "MVP", m_impl->m_transformMatrix.m_mvp );
         geoNode->addMesh( mesh );
     }
 
@@ -273,9 +342,9 @@ void EditorApplication::onUpdate() {
     }
 
     glm::mat4 rot( 1.0 );
-    m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
-    m_transformMatrix.update();
-    m_angle += 0.01f;
+    m_impl->m_transformMatrix.m_model = glm::rotate( rot, m_impl->m_angle, glm::vec3( 1, 1, 0 ) );
+    m_impl->m_transformMatrix.update();
+    m_impl->m_angle += 0.01f;
     /*
     rbSrv->beginPass( PipelinePass::getPassNameById( RenderPassId ) );
     rbSrv->beginRenderBatch( "b1" );

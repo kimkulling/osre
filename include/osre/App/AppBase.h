@@ -128,17 +128,17 @@ public:
     /// @brief  Will activate a stage.
     /// @param  stage       [in] The stage to activate.
     /// @return true if successful, false in case of an error.
-    virtual bool setActiveStage( Scene::Stage *stage );
+    virtual Scene::Stage *setActiveStage( Scene::Stage *stage );
 
     /// @brief  Will activate the given view in the active world instance.
     /// @param  view        [in] A pointer showing to the view.
     /// @return true, if the view activation was successful, false if not.
-    virtual bool setActiveView(Scene::View *view);
+    virtual Scene::View *setActiveView(Scene::View *view);
 
     /// @brief  Activates a stage.
     /// @param  name        [in] The name of the stage.
     /// @return true if successful,  false if not.
-    virtual bool activateStage( const String &name );
+    virtual Scene::Stage *activateStage( const String &name );
 
     /// @brief  Will requested a shutdown.
     virtual void requestShutdown();
@@ -210,7 +210,7 @@ private:
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
     CPPCore::TArray<Scene::World *> m_worlds;
-    Scene::World *m_world;
+    Scene::World *m_activeWorld;
     UI::Canvas *m_uiScreen;
     UI::UiRenderer *m_uiRenderer;
     MouseEventListener *m_mouseEvListener;
