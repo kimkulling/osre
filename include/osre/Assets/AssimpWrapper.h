@@ -53,9 +53,12 @@ namespace Scene {
     class Node;
 }
 
+namespace App {
+    class Entity;
+}
+
 namespace Assets {
 
-class Model;
 
 struct BoneInfo;
 
@@ -69,7 +72,7 @@ public:
     AssimpWrapper( Common::Ids &ids );
     ~AssimpWrapper();
     bool importAsset( const IO::Uri &file, ui32 flags );
-    Model *getModel() const;
+    App::Entity *getEntity() const;
 
 protected:
     Model *convertSceneToModel();
@@ -85,7 +88,6 @@ private:
     
 	using MaterialArray = CPPCore::TArray<RenderBackend::Material*> ;
     MaterialArray m_matArray;
-    Model *m_model;
     Scene::Node *m_parent;
     Common::Ids &m_ids;
     RenderBackend::UniformVar *m_mvpParam;

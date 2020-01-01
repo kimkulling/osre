@@ -21,8 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/Node.h>
-#include <osre/Scene/Component.h>
-#include <osre/Assets/Model.h>
+#include <osre/App/Component.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/Ids.h>
@@ -252,10 +251,49 @@ Properties::Property *Node::getProperty(const String name) const {
     return nullptr;
 }
 
+void TransformComponent::setTranslation( const glm::vec3 &pos ) {
+    m_localTransformState.m_translate = glm::vec3( pos );
+    m_dirty = NeedsTransform;
+}
+
+const glm::vec3 &Node::getTranslation() const {
+    return m_localTransformState.m_translate;
+}
+
+void Node::setScale( const glm::vec3 &scale ) {
+    m_localTransformState.m_scale = glm::vec3( scale );;
+    m_dirty = NeedsTransform;
+}
+
+const glm::vec3 &Node::getScale() const {
+    return m_localTransformState.m_scale;
+}
+
+void Node::setTransformationMatrix( const glm::mat4 &m ) {
+    m_transform = m;
+}
+
+const glm::mat4 &Node::getTransformationMatrix() const {
+    return m_transform;
+}
+
+glm::mat4 Node::getWorlTransformMatrix() {
+    glm::mat4 wt( 1.0 );
+    for (const Node *node = this(); node != nullptr; node = node->getParent()) {
+        wt = node->getTransformationMatrix() * wt;
+    }
+
+    return wt;
+}
+
+const RenderBackend::TransformState &Node::getTransformState() const {
+    return m_localTransformState;
+}
+
 void Node::onUpdate(Time dt) {
-    TransformComponent *comp((TransformComponent*)getComponent(Node::ComponentType::TransformComponentType));
-    if (nullptr != comp) {
-        comp->update(dt);
+    if (m_dirty == NeedsTransform) {
+        m_localTransformState.toMatrix( m_transform );
+        m_dirty = NotDirty;
     }
 }
 

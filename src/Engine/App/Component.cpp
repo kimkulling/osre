@@ -20,31 +20,31 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Scene/Component.h>
-#include <osre/Scene/Node.h>
+#include <osre/App/Component.h>
+#include <osre/App/Entity.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
 namespace OSRE {
-namespace Scene {
+namespace App {
     
 using namespace ::OSRE::RenderBackend;
 using namespace ::CPPCore;
 
 static const glm::vec3 Dummy = glm::vec3( -1, -1, -1);
 
-Component::Component(Node *node, ui32 id )
-: m_owner( node )
+Component::Component( Entity *owner, ui32 id )
+: m_owner( owner )
 , m_id( id ) {
-	// empty
+    OSRE_ASSERT( nullptr != owner );
 }
 
 Component::~Component() {
 	// empty
 }
 
-RenderComponent::RenderComponent(Node *node, ui32 id )
-: Component(node, id )
+RenderComponent::RenderComponent(Entity *owner, ui32 id )
+: Component( owner, id )
 , m_newGeo() {
     // empty
 }
@@ -53,17 +53,8 @@ RenderComponent::~RenderComponent() {
     // empty
 }
 
-void RenderComponent::update( Time ) {
+void RenderComponent::update( Time dt ) {
     // empty
-}
-
-void RenderComponent::draw( RenderBackendService *renderBackendSrv ) {
-    if( !m_newGeo.isEmpty() ) {
-        for ( ui32 i = 0; i < m_newGeo.size(); i++ ) {
-            renderBackendSrv->addMesh( m_newGeo[ i ], 0 );
-        }
-        m_newGeo.resize( 0 );
-    }
 }
 
 void RenderComponent::addStaticGeometry( Mesh *geo ) {
@@ -78,117 +69,31 @@ size_t RenderComponent::getNumGeometry() const {
     return m_newGeo.size();
 }
 
-Mesh *RenderComponent::getGeoAt( size_t idx) const {
+Mesh *RenderComponent::getMeshAt( size_t idx) const {
     return m_newGeo[idx];
 }
 
-TransformComponent::TransformComponent(Node *node, ui32 id)
-: Component(node, id)
-, m_dirty(NotDirty)
-, m_localTransformState()
-, m_transform( 1.0f ) {
-	// empty
+bool RenderComponent::onPreprocess() {
+    return true;
 }
 
-TransformComponent::~TransformComponent() {
-	// empty
+bool RenderComponent::onUpdate( Time dt ) {
+    return true;
 }
 
-void TransformComponent::update( Time ) {
-    if (m_dirty == NeedsTransform) {
-        m_localTransformState.toMatrix(m_transform);
-        m_dirty = NotDirty;
-    }
-}
-
-void TransformComponent::draw( RenderBackendService *rbSrv ) {
-    //rbSrv->setMatrix(MatrixType::Model, m_transform);
-}
-
-void TransformComponent::setTranslation( const glm::vec3 &pos ) {
-    m_localTransformState.m_translate = glm::vec3( pos );
-    m_dirty = NeedsTransform;
-}
-
-const glm::vec3 &TransformComponent::getTranslation() const {
-    return m_localTransformState.m_translate;
-}
-
-void TransformComponent::setScale( const glm::vec3 &scale ) {
-    m_localTransformState.m_scale = glm::vec3( scale );;
-    m_dirty = NeedsTransform;
-}
-
-const glm::vec3 &TransformComponent::getScale() const {
-    return m_localTransformState.m_scale;
-}
-
-void TransformComponent::setTransformationMatrix(const glm::mat4 &m) {
-    m_transform = m;
-}
-
-const glm::mat4 &TransformComponent::getTransformationMatrix() const {
-    return m_transform;
-}
-
-glm::mat4 TransformComponent::getWorlTransformMatrix() {
-    glm::mat4 wt(1.0);
-    for (const Node *node = getOwnerNode(); node != nullptr; node = node->getParent() ) {
-        TransformComponent *comp = (TransformComponent*) node->getComponent(Node::ComponentType::TransformComponentType);
-        if (nullptr != comp) {
-            wt = comp->getTransformationMatrix() * wt;
+bool RenderComponent::onRender( RenderBackendService *renderBackendSrv ) {
+    if (!m_newGeo.isEmpty()) {
+        for (ui32 i = 0; i < m_newGeo.size(); i++) {
+            renderBackendSrv->addMesh( m_newGeo[ i ], 0 );
         }
+        m_newGeo.resize( 0 );
     }
 
-    return wt;
+    return true;
 }
 
-const RenderBackend::TransformState &TransformComponent::getTransformState() const {
-    return m_localTransformState;
-}
-
-CollisionComponent::CollisionComponent(Node *node, ui32 id )
-: Component( node, id ) {
-    // empty
-}
-
-CollisionComponent::~CollisionComponent() {
-    // empty
-}
-
-void CollisionComponent::update( Time ) {
-    // empty
-}
-
-LightComponent::LightComponent(Node *node, ui32 id)
-: Component(node, id)
-, m_light()
-, m_radius(10.f) {
-    // empty
-}
-
-LightComponent::~LightComponent() {
-    // empty
-}
-
-void LightComponent::update(Time dt) {
-
-}
-
-void LightComponent::setLight(RenderBackend::Light &light) {
-    m_light = light;
-}
-
-const RenderBackend::Light &LightComponent::getLight() const {
-    return m_light;
-}
-
-void LightComponent::setRadius(f32 r) {
-    m_radius = r;
-}
-
-f32 LightComponent::getRadius() const {
-    return m_radius;
+bool RenderComponent::onPostprocess() {
+    return true;
 }
 
 } // Namespace Scene

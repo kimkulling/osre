@@ -21,7 +21,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Assets/AssimpWrapper.h>
-#include <osre/Assets/Model.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/Directory.h>
 #include <osre/Common/Logger.h>
@@ -32,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Assets/AssetRegistry.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
-#include <osre/Scene/Component.h>
+#include <osre/App/Component.h>
 #include <osre/Scene/Node.h>
 #include <osre/Collision/TAABB.h>
 #include <osre/IO/IOService.h>
@@ -285,7 +284,7 @@ void AssimpWrapper::impotNode( aiNode *node, Scene::Node *parent ) {
         return;
     }
     
-    Node *newNode = new Node( node->mName.C_Str(), m_ids, parent );
+    Entity *newNode = new Entity( node->mName.C_Str(), m_ids, parent );
     
     // If this is the root-node of the model, set it as the root for the model
     if ( nullptr == m_parent ) {

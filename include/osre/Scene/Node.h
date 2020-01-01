@@ -88,20 +88,24 @@ public:
     virtual size_t getNumChildren() const;
     virtual Node *getChildAt( size_t idx ) const;
     virtual void releaseChildren();
-    virtual void addModel( Assets::Model *model );
-    virtual void addMesh( RenderBackend::Mesh *geo );
-    virtual size_t getNumMeshes() const;
-    virtual RenderBackend::Mesh *getMeshAt(ui32 idx) const;
     virtual void update(Time dt);
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
     virtual void setAABB(const AABB &aabb);
     virtual const AABB &getAABB() const;
-    virtual void addComponent(Component *newComp);
-    virtual Component *getComponent( ComponentType type ) const;
     virtual void setActive( bool isActive );
     virtual bool isActive() const;
     virtual void setProperty( Properties::Property *prop );
     virtual Properties::Property *getProperty(const String name) const;
+
+    void setTranslation( const glm::vec3 &pos );
+    const glm::vec3 &getTranslation() const;
+    void setScale( const glm::vec3 &pos );
+    const glm::vec3 &getScale() const;
+    void setTransformationMatrix( const glm::mat4 &m );
+    const glm::mat4 &getTransformationMatrix() const;
+    glm::mat4 getWorlTransformMatrix();
+    const RenderBackend::TransformState &getTransformState() const;
+
 
 protected:
     virtual void onUpdate(Time dt);
@@ -120,6 +124,13 @@ private:
     Common::Ids *m_ids;
     PropertyMap m_propMap;
     AABB m_aabb;
+    enum DirtyFrag {
+        NotDirty = 0,
+        NeedsTransform = 1
+    };
+    ui32 m_dirty;
+    RenderBackend::TransformState m_localTransformState;
+    glm::mat4 m_transform;
 };
 
 inline

@@ -24,11 +24,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Ids.h>
 #include <osre/Scene/Node.h>
-#include <osre/Scene/Component.h>
+#include <osre/App/Component.h>
 
 namespace OSRE {
 namespace UnitTest {
         
+using namespace ::OSRE::App;
 using namespace ::OSRE::Scene;
 
 class ComponentTest : public ::testing::Test {
@@ -37,8 +38,8 @@ class ComponentTest : public ::testing::Test {
 
 class MockComponent : public Component {
 public:
-    MockComponent( Node *node, ui32 id ) 
-    : Component( node, id ) {
+    MockComponent( Entity *owner, ui32 id ) 
+    : Component( owner, id ) {
         // empty
     }
 
