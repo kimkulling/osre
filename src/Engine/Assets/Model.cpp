@@ -31,14 +31,14 @@ using namespace ::OSRE::Collision;
 using namespace ::OSRE::RenderBackend;
 
 Model::Model() 
-: m_meshArray()
+: m_meshArray( nullptr )
 , m_root( nullptr )
 , m_aabb() {
     // empty
 }
 
 Model::Model( MeshArray *geoArray, Scene::Node *root, ModelAABB &aabb )
-: m_meshArray( *geoArray )
+: m_meshArray( geoArray )
 , m_root( root )
 , m_aabb( aabb ) {
     // empty
@@ -49,17 +49,24 @@ Model::~Model() {
 }
 
 void Model::setMeshArray( MeshArray &geoArray ) {
-    m_meshArray = geoArray;
+    m_meshArray = &geoArray;
 }
 
+static const MeshArray Empty; 
+
 const RenderBackend::MeshArray &Model::getMeshArray() const {
-    return m_meshArray;
+    if (nullptr == m_meshArray) {
+        return Empty;
+    }
+    
+    return *m_meshArray;
 }
 
 void Model::setRootNode( Scene::Node *root ) {
     if ( nullptr != m_root ) {
         m_root->release();
     }
+
     m_root = root;
     if ( nullptr != m_root ) {
         m_root->get();

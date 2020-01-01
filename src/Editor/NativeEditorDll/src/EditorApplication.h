@@ -36,6 +36,7 @@ namespace OSRE {
 namespace Scene {
     class World;
     class Stage;
+    class Node;
     class TrackBall;
 }
 
@@ -69,11 +70,6 @@ public:
     }
 };
 
-struct SceneContext {
-    Scene::World *ActiveWorld;
-    int StageIndex;
-    Scene::Stage ActiveStage;
-};
 
 class EditorApplication : public App::AppBase {
 public:
@@ -81,12 +77,13 @@ public:
     ~EditorApplication() override;
     int enqueueEvent( const Common::Event *ev, Common::EventData *evData );
     void newProject( const String &name );
-    int  openWorldAccess();
-    int  openStageAccess();
-    int  openNodeAccess();
-    int  closeNodeAccess();
-    int  closeStageAccess();
-    int  closeWorldAccess();
+    int openWorldAccess( const String &name );
+    int openStageAccess( const String &name );
+    int openNodeAccess( const String &name );
+    int closeNodeAccess();
+    int createNode( const String &name, const String &parentNode );
+    int closeStageAccess();
+    int closeWorldAccess();
     int importAsset( const String &filename, int flags );
     Platform::PlatformInterface *getPlatformInterface() const;
     bool loadProject( const char *filelocation, int flags );
@@ -97,15 +94,8 @@ protected:
     void onUpdate() override;
 
 private:
-    bool m_worldAccess;
-    Scene::World* m_world;
-    Scene::Stage* m_stage;
-    Scene::Node::NodePtr m_modelNode;
-    RenderBackend::TransformMatrixBlock m_transformMatrix;
-    Platform::PlatformInterface* m_platformInterface;
-    App::Project m_project;
-    Scene::TrackBall *m_trackball;
-    f32 m_angle;
+    struct Impl;
+    Impl *m_impl;
 };
 
 } // Namespace NativeEditor

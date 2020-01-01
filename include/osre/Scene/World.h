@@ -57,12 +57,12 @@ public:
     /// @brief  Will set the active stage.
     /// @param  activeStage     [in] A pointer showing to the active stage.
     /// @return true, if successful, false if stage was not attached before.
-    bool setActiveStage( Stage *activeStage );
+    Stage *setActiveStage( Stage *activeStage );
 
     /// @brief  Will set the active stage.
     /// @param  stageName       [in] The name of the stage-
     /// @return true, if successful, false if stage was not attached before.
-    bool setActiveStage( const String &stageName );
+    Stage *setActiveStage( const String &stageName );
 
     /// @brief  Will return the number of stages in the world. 
     /// @return The number of stages.
@@ -84,12 +84,12 @@ public:
     /// @brief  Will set the active view.
     /// @param  activeView  [i] A pointer showing to the active view.
     /// @return true, if set was successful, false if the view is not part of the world.
-    bool setActiveView( View *activeView );
+    View *setActiveView( View *activeView );
 
     /// @brief  Will set the active view.
     /// @param  viewName    [in] The name of the view.
     /// @return true, if set was successful, false if the view is not part of the world.
-    bool setActiveView( const String &viewName );
+    View *setActiveView( const String &viewName );
 
     /// @brief  Will return the number of assigned views.
     /// @return The number of assigned views.

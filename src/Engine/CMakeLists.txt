@@ -34,7 +34,10 @@ ENDIF( WIN32 )
 #==============================================================================
 SET( app_inc
     ${HEADER_PATH}/App/AppCommon.h
+    ${HEADER_PATH}/App/AbstractBehaviour.h
     ${HEADER_PATH}/App/AppBase.h
+    ${HEADER_PATH}/App/Component.h
+    ${HEADER_PATH}/App/GameObject.h
     ${HEADER_PATH}/App/ServiceProvider.h
     ${HEADER_PATH}/App/Project.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
@@ -43,6 +46,8 @@ SET( app_inc
 
 SET( app_src
     App/AppBase.cpp
+    App/Component.cpp
+    App/GameObject.cpp
     App/ServiceProvider.cpp
 	App/Project.cpp
 )
@@ -314,7 +319,6 @@ SET( scene_inc
     ${HEADER_PATH}/Scene/SceneCommon.h
     ${HEADER_PATH}/Scene/AnimatorBase.h
 	${HEADER_PATH}/Scene/DbgRenderer.h
-    ${HEADER_PATH}/Scene/Component.h
     ${HEADER_PATH}/Scene/GeometryBuilder.h
     ${HEADER_PATH}/Scene/MaterialBuilder.h
     ${HEADER_PATH}/Scene/Node.h
@@ -326,7 +330,6 @@ SET( scene_inc
 )
 SET( scene_src
     Scene/DbgRenderer.cpp
-    Scene/Component.cpp
     Scene/LineBuilder.cpp
     Scene/GeometryBuilder.cpp
     Scene/MaterialBuilder.cpp

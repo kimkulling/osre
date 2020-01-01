@@ -51,15 +51,19 @@ using namespace ::OSRE;
 #   define STDCALL
 #endif
 
-typedef void(STDCALL *fnc_log_callback) (int, const char*);
+static const i32 OsreError = -1;
+static const i32 OsreInvalidParameterError = -2;
+static const i32 OsreInvalidNodeError = -3;
 
+typedef void(STDCALL *fnc_log_callback) (int, const char*);
+/*
 struct CSharpEvent {
     int type;
     int x;
     int y;
     int mouseBtnState;
 };
-
+*/
 struct NativeOSREWorld {
     int NumStages;
 };
@@ -72,28 +76,24 @@ struct NativeOSRENode {
     int mNumChildren;
 };
 
-extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp(int* mainWindowHandle );
-
-extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorUpdate();
-
-extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorRequestNextFrame();
-
-extern "C" OSRE_EDITOR_EXPORT int STDCALL DestroyEditorApp();
-
-extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorResize(i32 x, i32 y, i32 w, i32 h);
-
-extern "C" OSRE_EDITOR_EXPORT int STDCALL NewProject(const char *name);
-
-extern "C" OSRE_EDITOR_EXPORT int STDCALL LoadProject(const char *filelocation, int flags);
-
-extern "C" OSRE_EDITOR_EXPORT int STDCALL SaveProject(const char *filelocation, int flags );
-
-extern "C" OSRE_EDITOR_EXPORT int STDCALL ImportAsset(const char *filename, int flags);
-
+// Exported API for C# --------------------------------------------------------
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL CreateEditorApp(int* mainWindowHandle );
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL EditorUpdate();
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL EditorRequestNextFrame();
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL DestroyEditorApp();
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL EditorResize(i32 x, i32 y, i32 w, i32 h);
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL NewProject(const char *name);
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL LoadProject(const char *filelocation, int flags);
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL SaveProject(const char *filelocation, int flags );
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL ImportAsset(const char *filename, int flags);
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL OpenWorldAccess( const char *name );
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL OpenStageAccess( const char *name );
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL OpenNodeAccess( const char *name );
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL CreateNode( const char *name, const char *parent );
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL CloseNodeAccess( void );
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL CloseStageAccess( void );
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL CloseWorldAccess( void );
 extern "C" OSRE_EDITOR_EXPORT void STDCALL RegisterLogCallback(fnc_log_callback* fnc);
-
-extern "C" OSRE_EDITOR_EXPORT int STDCALL LeftMousePressed(int x, int y, bool pressed);
-
-extern "C" OSRE_EDITOR_EXPORT int STDCALL MiddleMousePressed(int x, int y, bool pressed);
-
-extern "C" OSRE_EDITOR_EXPORT int STDCALL RightMousePressed(int x, int y, bool pressed);
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL LeftMousePressed(int x, int y, bool pressed);
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL MiddleMousePressed(int x, int y, bool pressed);
+extern "C" OSRE_EDITOR_EXPORT int  STDCALL RightMousePressed(int x, int y, bool pressed);

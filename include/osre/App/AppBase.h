@@ -114,6 +114,12 @@ public:
     /// @return The global settings.
     virtual Properties::Settings *getSettings() const;
 
+    virtual Scene::World *createWorld( const String &name );
+
+    virtual Scene::World *findWorld( const String &name ) const;
+    virtual bool setActiveWorld( const String &name );
+    virtual Scene::World *getActiveWorld() const;
+
     /// @brief  Will create a new stage and set it as the active one.
     /// @param  name        [in] The name for the stage.
     /// @return The new stage instance or nullptr if the stage exists already.
@@ -122,17 +128,17 @@ public:
     /// @brief  Will activate a stage.
     /// @param  stage       [in] The stage to activate.
     /// @return true if successful, false in case of an error.
-    virtual bool setActiveStage( Scene::Stage *stage );
+    virtual Scene::Stage *setActiveStage( Scene::Stage *stage );
 
     /// @brief  Will activate the given view in the active world instance.
     /// @param  view        [in] A pointer showing to the view.
     /// @return true, if the view activation was successful, false if not.
-    virtual bool setActiveView(Scene::View *view);
+    virtual Scene::View *setActiveView(Scene::View *view);
 
     /// @brief  Activates a stage.
     /// @param  name        [in] The name of the stage.
     /// @return true if successful,  false if not.
-    virtual bool activateStage( const String &name );
+    virtual Scene::Stage *activateStage( const String &name );
 
     /// @brief  Will requested a shutdown.
     virtual void requestShutdown();
@@ -203,7 +209,8 @@ private:
     Platform::PlatformInterface *m_platformInterface;
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
-    Scene::World *m_world;
+    CPPCore::TArray<Scene::World *> m_worlds;
+    Scene::World *m_activeWorld;
     UI::Canvas *m_uiScreen;
     UI::UiRenderer *m_uiRenderer;
     MouseEventListener *m_mouseEvListener;

@@ -86,13 +86,34 @@ namespace OSREEditor.View
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         public static extern int ImportAsset([MarshalAs(UnmanagedType.LPStr)] string name, int flags);
 
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int openWorldAccess([MarshalAs(UnmanagedType.LPStr)] string name);
+
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int openStageAccess([MarshalAs(UnmanagedType.LPStr)] string name );
+
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int openNodeAccess([MarshalAs(UnmanagedType.LPStr)] string name);
+        
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int createNode([MarshalAs(UnmanagedType.LPStr)] string name, [MarshalAs(UnmanagedType.LPStr)] string parent );
+        
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int closeNodeAccess();
+
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int closeStageAccess();
+
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int closeWorldAccess();
+
         /// <summary>
         /// todo!
         /// </summary>
         /// <param name="world"></param>
         /// <returns></returns>
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
-        public static extern unsafe int openWorldAccess( OSREWorld *world);
+        public static extern unsafe int OpenWorldAccess( string name );
 
         /// <summary>
         /// todo!
