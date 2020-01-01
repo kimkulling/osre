@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -30,6 +30,7 @@ namespace OSRE {
 namespace RenderBackend {
 
 struct OGLTexture;
+struct Texture;
 
 class OGLRenderBackend;
 
@@ -42,19 +43,22 @@ class FontBase : public Common::Object {
 public:
     FontBase( const String &name );
     virtual ~FontBase();
-    virtual void setSize( ui32 size );
-    virtual ui32 getSize() const;
+    virtual void setSize( size_t size );
+    virtual size_t getSize() const;
     virtual void setUri( const IO::Uri &uri );
     virtual void setTextureName( const String &name );
+    virtual void setTexture(Texture* texture);
+    virtual Texture* getTexture() const;
     virtual const String &getTextureName() const;
     virtual void setAtlasCols( ui32 numCols );
     virtual void setAtlasRows( ui32 numRows );
     virtual bool loadFromStream( OGLRenderBackend *rb );
 
 private:
-    ui32 m_size;
+    size_t m_size;
     String m_texName;
     ui32 m_numCols, m_numRows;
+    Texture *m_texture;
     OGLTexture *m_fontAtlas;
     IO::Uri m_uri;
 };

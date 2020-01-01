@@ -1,17 +1,17 @@
 SET( LIBRARY_VERSION "0.1.0" )
 
-SET( HEADER_PATH ${PROJECT_SOURCE_DIR}/include/osre/ )
+SET( HEADER_PATH ${PROJECT_SOURCE_DIR}/include/osre )
 add_definitions( -DOSRE_BUILD_EXPORT )
 
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
-    ${HEADER_PATH}/include
-    ../../3dparty/cppcore/include
-    ../../3dparty/glew/include
-    ../../3dparty/glm/
-    ../../3dparty/unzip/
-    ../../3dparty/zlib/
-    ../../3dparty/assimp/include
+	${HEADER_PATH}
+    ${PROJECT_SOURCE_DIR}/3dparty/cppcore/include
+    ${PROJECT_SOURCE_DIR}/3dparty/glew/include
+    ${PROJECT_SOURCE_DIR}/3dparty/glm/
+    ${PROJECT_SOURCE_DIR}/3dparty/unzip/
+    ${PROJECT_SOURCE_DIR}/3dparty/zlib/
+    ${PROJECT_SOURCE_DIR}/3dparty/assimp/include
 )
 
 # For Vulkan support
@@ -38,6 +38,7 @@ SET( app_inc
     ${HEADER_PATH}/App/ServiceProvider.h
     ${HEADER_PATH}/App/Project.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
+	${HEADER_PATH}/App/ResourceCacheService.h
 )
 
 SET( app_src
@@ -70,12 +71,10 @@ SET( common_inc
 	${HEADER_PATH}/Common/Common.h
 	${HEADER_PATH}/Common/Environment.h
     ${HEADER_PATH}/Common/TCommand.h
-    ${HEADER_PATH}/Common/AbstractCodec.h
     ${HEADER_PATH}/Common/AbstractEventHandler.h
     ${HEADER_PATH}/Common/AbstractProcessor.h
     ${HEADER_PATH}/Common/ArgumentParser.h
     ${HEADER_PATH}/Common/AbstractService.h
-    ${HEADER_PATH}/Common/CodecRegistry.h
     ${HEADER_PATH}/Common/ColorRGBA.h
     ${HEADER_PATH}/Common/DateTime.h
     ${HEADER_PATH}/Common/Event.h
@@ -85,15 +84,14 @@ SET( common_inc
     ${HEADER_PATH}/Common/Object.h
     ${HEADER_PATH}/Common/StringUtils.h
     ${HEADER_PATH}/Common/TFunctor.h
+	${HEADER_PATH}/Common/TResource.h
 	${HEADER_PATH}/Common/TResourceCache.h
     ${HEADER_PATH}/Common/TObjPtr.h
     ${HEADER_PATH}/Common/Tokenizer.h
     ${HEADER_PATH}/Common/osre_common.h
 )
 SET( common_src
-    Common/AbstractCodec.cpp
     Common/ArgumentParser.cpp
-    Common/CodecRegistry.cpp
     Common/DateTime.cpp
     Common/Event.cpp
     Common/EventTriggerer.cpp
@@ -124,9 +122,12 @@ SET( collision_src
 SET( debugging_inc
     ${HEADER_PATH}/Debugging/AssertHandler.h
     ${HEADER_PATH}/Debugging/osre_debugging.h
+	${HEADER_PATH}/Debugging/MeshDiagnostic.h
 )
 SET( debugging_src
+	Debugging/Debug.cpp
     Debugging/AssertHandler.cpp
+	Debugging/MeshDiagnostic.cpp
 )
 
 #==============================================================================
@@ -143,8 +144,6 @@ SET( io_src
     IO/Directory.cpp
     IO/FileStream.cpp
     IO/FileStream.h
-    IO/ImageCodec.h
-    IO/ImageCodec.cpp
     IO/IOService.cpp
     IO/LocaleFileSystem.cpp
     IO/LocaleFileSystem.h
@@ -313,12 +312,12 @@ SET ( properties_src
 #==============================================================================
 SET( scene_inc
     ${HEADER_PATH}/Scene/SceneCommon.h
-    ${HEADER_PATH}/Scene/DbgRenderer.h
+    ${HEADER_PATH}/Scene/AnimatorBase.h
+	${HEADER_PATH}/Scene/DbgRenderer.h
     ${HEADER_PATH}/Scene/Component.h
     ${HEADER_PATH}/Scene/GeometryBuilder.h
     ${HEADER_PATH}/Scene/MaterialBuilder.h
     ${HEADER_PATH}/Scene/Node.h
-    ${HEADER_PATH}/Scene/Node2D.h
 	${HEADER_PATH}/Scene/Stage.h
     ${HEADER_PATH}/Scene/TrackBall.h
     ${HEADER_PATH}/Scene/View.h
@@ -332,7 +331,6 @@ SET( scene_src
     Scene/GeometryBuilder.cpp
     Scene/MaterialBuilder.cpp
     Scene/Node.cpp
-	Scene/Node2D.cpp
     Scene/Stage.cpp
     Scene/TrackBall.cpp
     Scene/View.cpp
@@ -347,7 +345,6 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/Mesh.h
     ${HEADER_PATH}/RenderBackend/FontBase.h
     ${HEADER_PATH}/RenderBackend/HWBufferManager.h
-    ${HEADER_PATH}/RenderBackend/FontBase.h
     ${HEADER_PATH}/RenderBackend/ParticleGenerator.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
@@ -367,6 +364,8 @@ SET( renderbackend_src
 SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLCommon.h
     RenderBackend/OGLRenderer/OGLCommon.cpp
+	RenderBackend/OGLRenderer/OGLRenderCommands.h
+	RenderBackend/OGLRenderer/OGLRenderCommands.cpp
     RenderBackend/OGLRenderer/OGLEnum.cpp
     RenderBackend/OGLRenderer/OGLEnum.h
     RenderBackend/OGLRenderer/OGLRenderBackend.cpp
@@ -411,8 +410,9 @@ SET( scripting_mono_inc
 # UI
 #==============================================================================
 SET( ui_src
-    UI/FontManager.cpp
+	UI/UICommon.cpp
     UI/Image.cpp
+	UI/FocusControl.cpp
     UI/Widget.cpp
     UI/UiRenderer.cpp
     UI/UIRenderUtils.cpp
@@ -425,7 +425,8 @@ SET( ui_src
 )
 SET( ui_inc
     ${HEADER_PATH}/UI/UICommon.h
-    ${HEADER_PATH}/UI/FontManager.h
+	${HEADER_PATH}/UI/FocusControl.h
+	${HEADER_PATH}/UI/Layouter.h
 	${HEADER_PATH}/UI/Image.h
     ${HEADER_PATH}/UI/Widget.h
     ${HEADER_PATH}/UI/ButtonBase.h

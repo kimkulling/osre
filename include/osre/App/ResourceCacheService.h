@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,42 +20,44 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Common/CodecRegistry.h>
-#include <osre/Common/AbstractCodec.h>
+#pragma once
+
+#include <osre/Common/TResourceCache.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Common/TResource.h>
 
 namespace OSRE {
-namespace Common {
+namespace App {
 
-CPPCore::TArray<AbstractCodec*> CodecRegistry::s_registry;
+using TextureResourceFactory = Common::TResourceFactory <RenderBackend::TextureResource> ;
+using TextureResourceCache   = Common::TResourceCache<TextureResourceFactory, RenderBackend::TextureResource>;
 
-void CodecRegistry::registerCodec( AbstractCodec *newCodec ) {
-    if( nullptr == newCodec ) {
-        return;
-    }
+class ResourceCacheService {
+public:
+    ResourceCacheService();
+    ~ResourceCacheService();
+    TextureResourceCache *getTextureResourceCache() const;
 
-    s_registry.add( newCodec );
+private:
+    TextureResourceCache *m_texResCache;
+};
+
+inline
+ResourceCacheService::ResourceCacheService()
+: m_texResCache( new TextureResourceCache ) {
+    //
 }
 
-AbstractCodec *CodecRegistry::getRegistryByExt( const String &ext ) {
-    if( ext.empty() ) {
-        return nullptr;
-    }
-
-    for( ui32 i = 0; i < s_registry.size(); i++ ) {
-        if( s_registry[ i ]->getCodecExt() == ext ) {
-            return s_registry[ i ];
-        }
-    }
-
-    return nullptr;
+inline
+ResourceCacheService::~ResourceCacheService() {
+    delete m_texResCache;
+    m_texResCache;
 }
 
-void CodecRegistry::clear() {
-    for( ui32 i = 0; i < s_registry.size(); i++ ) {
-        delete s_registry[ i ];
-    }
-    s_registry.clear();
+inline
+TextureResourceCache *ResourceCacheService::getTextureResourceCache() const {
+    return m_texResCache;
 }
 
-} // Namespace Common
+} // Namespace App
 } // Namespace OSRE

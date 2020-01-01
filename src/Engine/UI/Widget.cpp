@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -30,39 +30,7 @@ namespace UI {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-static const c8 *Tag = "StyleProvider";
-
-StyleProvider *StyleProvider::s_instance = nullptr;
-
-Style &StyleProvider::getCurrentStyle() {
-    if ( nullptr == s_instance ) {
-        s_instance = new StyleProvider;
-    }
-    return s_instance->m_activeStyle;
-}
-
-void StyleProvider::setStyle( const Style &newStyle ) {
-    if ( nullptr == s_instance ) {
-        static_cast<void>( StyleProvider::getCurrentStyle() );
-    }
-    if ( nullptr == s_instance ) {
-        osre_debug( Tag, "Singleton instance is nullptr." );
-        return;
-    }
-
-    if ( newStyle != s_instance->m_activeStyle ) {
-        s_instance->m_activeStyle = newStyle;
-    }
-}
-
-StyleProvider::StyleProvider()
-: m_activeStyle() {
-    // empty
-}
-
-StyleProvider::~StyleProvider() {
-    // empty
-}
+static const c8 *Tag = "Widget";
 
 Rect2ui WidgetCoordMapping::s_dim = Rect2ui( 0, 0, 0, 0 );
 
@@ -88,8 +56,9 @@ void WidgetCoordMapping::mapPosArrayToWorld( ui32 *x, ui32 *y, ui32 numPoints, f
     OSRE_ASSERT( nullptr != y );
     OSRE_ASSERT( nullptr != mappedX );
     OSRE_ASSERT( nullptr != mappedY );
+
     for ( ui32 i = 0; i < numPoints; ++i ) {
-        mapPosToWorld(s_dim, x[i], y[i], mappedX[i], mappedY[i] );
+        mapPosToWorld(s_dim, x[ i ], y[ i ], mappedX[ i ], mappedY[ i ] );
     }
 }
 
@@ -109,14 +78,14 @@ void WidgetCoordMapping::mapPosToWorld( const Rect2ui &rect, ui32 x, ui32 y, f32
 }
 
 UiRenderCmd::UiRenderCmd()
-: m_vc()
-, m_ic()
-, m_mat( nullptr ) {
+: m_startIndex(0)
+, m_numIndices(0)
+, m_texture( nullptr ) {
     // empty
 }
 
 UiRenderCmd::~UiRenderCmd() {
-    m_mat = nullptr;
+    // empty
 }
 
 Widget::Widget( const String &name, Widget *parent )
@@ -128,7 +97,8 @@ Widget::Widget( const String &name, Widget *parent )
 , m_stackIndex( 1 )
 , m_dirtyState( 0 )
 , m_isVisible( true )
-, m_isActive( true ) {
+, m_isActive( true )
+, m_layoutPolicy( LayoutPolicy::Auto ){
     Widget::setParent( parent );
     Widget::requestRedraw();
     Widget::requestLayouting();
@@ -146,6 +116,7 @@ void Widget::setParent( Widget *parent ) {
     if ( nullptr != m_parent ) {
         m_parent->removeWidget( this );
     }
+
     m_parent = parent;
     m_parent->addWidget( this );
 }
@@ -162,6 +133,7 @@ bool Widget::addWidget( Widget *child ) {
     if (!hasWidget(child)) {
         m_children.add(child);
         child->get();
+        requestRedraw();
     } else {
         osre_debug(Tag, "Tried to add child again.");
     }
@@ -179,6 +151,7 @@ bool Widget::removeWidget( Widget *child ) {
     if ( m_children.end() != it ) {
         (*it)->release();
         m_children.remove( it );
+        requestRedraw();
         ok = true;
     }
 
@@ -213,6 +186,7 @@ Widget &Widget::setRect( ui32 x, ui32 y, ui32 w, ui32 h ) {
     Rect2ui newRect( x,y,w,h );
     if ( m_rect != newRect ) {
         m_rect = newRect;
+        requestLayouting();
         requestRedraw();
     }
     
@@ -245,6 +219,14 @@ void Widget::layoutingDone() {
 
 bool Widget::layoutingRequested() const {
     return m_dirtyState & LayourRequest;
+}
+
+void Widget::setLayoutPolicy(LayoutPolicy layoutPolicy) {
+    m_layoutPolicy = layoutPolicy;
+}
+
+LayoutPolicy Widget::getLayoutPolicy() const {
+    return m_layoutPolicy;
 }
 
 void Widget::setProperty( UiProperty *prop ) {
@@ -330,6 +312,15 @@ void Widget::mouseUp( const Point2ui &pt, void *data) {
     onMouseUp( pt, data );
 }
 
+void Widget::keyPressed( Platform::Key key ) {
+    onKeyPressed( key );
+}
+
+void Widget::keyReleased( Platform::Key key ) {
+    onKeyReleased( key );
+}
+
+
 void Widget::layout() {
     if (layoutingRequested()) {
         onLayout();
@@ -353,9 +344,13 @@ WidgetState Widget::getWidgetState() const {
     return m_state;
 }
 
-void Widget::checkChildren( const Point2ui &pt, void *data, WidgetState state) {
+void Widget::checkChildrenForMouseClick( const Point2ui &pt, void *data, WidgetState state) {
     for (ui32 i = 0; i < getNumWidgets(); ++i ) {
         Widget *child(getWidgetAt(i));
+        if (nullptr == child) {
+            continue;
+        }
+
         const Rect2ui &r = child->getRect();
         if (r.isIn(pt)) {
             if (state == WidgetState::Pressed) {
@@ -367,14 +362,34 @@ void Widget::checkChildren( const Point2ui &pt, void *data, WidgetState state) {
     }
 }
 
+void Widget::checkChildrenForKey( Platform::Key key, bool pressed ) {
+    for (ui32 i = 0; i < getNumWidgets(); ++i) {
+        Widget *child( getWidgetAt( i ) );
+        if (nullptr != child) {
+            if (pressed) {
+                child->onKeyPressed( key );
+            } else {
+                child->onKeyReleased( key );
+            }
+        }
+    }
+}
+
 void Widget::onMouseDown( const Point2ui &pt, void *data) {
-    checkChildren(pt, data, WidgetState::Pressed);
+    checkChildrenForMouseClick(pt, data, WidgetState::Pressed);
 }
 
 void Widget::onMouseUp( const Point2ui &pt, void *data) {
-    checkChildren(pt, data, WidgetState::Released);
+    checkChildrenForMouseClick(pt, data, WidgetState::Released);
 }
 
+void Widget::onKeyPressed( Platform::Key key ) {
+    checkChildrenForKey( key, true );
+}
+
+void Widget::onKeyReleased( Platform::Key key ) {
+    checkChildrenForKey( key, false );
+}
 
 void Widget::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
     const Rect2ui &r( getRect() );

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -24,12 +24,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/UI/UICommon.h>
 #include <osre/Common/Object.h>
-#include <osre/Common/TFunctor.h>
-#include <cppcore/Common/Variant.h>
+#include <osre/Platform/KeyTypes.h>
 
 namespace OSRE {
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 namespace RenderBackend {
     class RenderBackendService;
     class FontBase;
@@ -37,25 +36,6 @@ namespace RenderBackend {
 }
 
 namespace UI {
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT StyleProvider {
-public:
-    static Style &getCurrentStyle();
-    static void setStyle( const Style &newStyle );
-
-private:
-    StyleProvider();
-    ~StyleProvider();
-
-private:
-    static StyleProvider *s_instance;
-    Style m_activeStyle;
-};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -100,39 +80,6 @@ private:
     static Rect2ui s_dim;
 };
 
-/// This enum is used to describe the widget type.
-enum class WidgetType {
-    Button,
-    Text,
-    Image,
-    Panel,
-    Canvas
-};
-
-using UiFunctor = Common::Functor<void, ui32, void *>;
-
-/// @brief  Description of a single 
-struct UiProperty {
-    String m_name;
-    CPPCore::Variant m_data;
-};
-
-enum class WidgetState {
-    Pressed = 0,
-    Released = 1,
-    NumWidgetState,
-
-    InvalidWidgetState
-};
-
-enum class LayoutPolicy {
-    Auto = 0,
-    Fixed,
-    NumLayoutPolicies,
-
-    InvalidLayoutPolicy
-};
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -149,53 +96,60 @@ public:
     };
 
     virtual ~Widget();
-    virtual void setParent( Widget *parent );
-    virtual Widget *getParent() const;
-    virtual bool addWidget( Widget *child );
-    virtual bool removeWidget( Widget *child );
-    virtual bool hasWidget(Widget *child);
+    virtual void setParent(Widget* parent);
+    virtual Widget* getParent() const;
+    virtual bool addWidget(Widget* child);
+    virtual bool removeWidget(Widget* child);
+    virtual bool hasWidget(Widget* child);
     virtual size_t getNumWidgets() const;
-    virtual Widget *getWidgetAt(size_t idx ) const;
-    virtual Widget &setRect( ui32 x, ui32 y, ui32 w, ui32 h );
-    virtual const Rect2ui &getRect() const;
+    virtual Widget* getWidgetAt(size_t idx) const;
+    virtual Widget& setRect(ui32 x, ui32 y, ui32 w, ui32 h);
+    virtual const Rect2ui& getRect() const;
     virtual void requestRedraw();
     virtual void redrawDone();
     virtual bool redrawRequested() const;
     virtual void requestLayouting();
     virtual void layoutingDone();
     virtual bool layoutingRequested() const;
-    virtual void setProperty( UiProperty *prop );
-    virtual UiProperty *getProperty( const String &name ) const;
-    virtual bool hasProperty( const String &name ) const;
-    virtual void setStackIndex( i32 index );
+    virtual void setLayoutPolicy(LayoutPolicy layoutPolicy);
+    virtual LayoutPolicy getLayoutPolicy() const;
+    virtual void setProperty(UiProperty* prop);
+    virtual UiProperty* getProperty(const String& name) const;
+    virtual bool hasProperty(const String& name) const;
+    virtual void setStackIndex(i32 index);
     virtual i32 getStackIndex() const;
-    virtual void setVisible( bool visible );
+    virtual void setVisible(bool visible);
     virtual bool isVisible() const;
     virtual void setActive(bool isActive);
     virtual bool isActive() const;
-    virtual void render( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv );
-    virtual void mouseDown( const Point2ui &pt, void *data);
-    virtual void mouseUp( const Point2ui &pt, void *data);
-    virtual void resize( ui32 x, ui32 y, ui32 w, ui32 h );
+    virtual void render(UiRenderCmdCache& renderCmdCache, RenderBackend::RenderBackendService* rbSrv);
+    virtual void mouseDown(const Point2ui& pt, void* data);
+    virtual void mouseUp(const Point2ui& pt, void* data);
+    virtual void keyPressed( Platform::Key key);
+    virtual void keyReleased( Platform::Key key );
+    virtual void resize(ui32 x, ui32 y, ui32 w, ui32 h);
     virtual void layout();
     virtual void setState(WidgetState state);
     virtual WidgetState getWidgetState() const;
 
 protected:
-    Widget( const String &name, Widget *parent );
-    void checkChildren(const Point2ui &pt, void *data, WidgetState state );
+    Widget(const String& name, Widget* parent);
+    void checkChildrenForMouseClick(const Point2ui& pt, void* data, WidgetState state);
+    void checkChildrenForKey( Platform::Key key, bool pressed );
     virtual void onLayout() = 0;
-    virtual void onResize( ui32 x, ui32 y, ui32 w, ui32 h );
-    virtual void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) = 0;
-    virtual void onMouseDown( const Point2ui &pt, void *data);
-    virtual void onMouseUp( const Point2ui &pt, void *data);
+    virtual void onResize(ui32 x, ui32 y, ui32 w, ui32 h);
+    virtual void onRender(UiRenderCmdCache& renderCmdCache, RenderBackend::RenderBackendService* rbSrv) = 0;
+    virtual void onMouseDown(const Point2ui& pt, void* data);
+    virtual void onMouseUp(const Point2ui& pt, void* data);
+    virtual void onKeyPressed( Platform::Key key );
+    virtual void onKeyReleased( Platform::Key key );
 
 private:
     enum UpdateRequest {
         RedrawRequest = 1,
         LayourRequest = 2
     };
-    Widget *m_parent;
+    Widget* m_parent;
     CPPCore::TArray<Widget*> m_children;
     CPPCore::TArray<UiProperty*> m_properties;
     Rect2ui m_rect;
@@ -204,6 +158,7 @@ private:
     bool m_isVisible;
     bool m_isActive;
     WidgetState m_state;
+    LayoutPolicy m_layoutPolicy;
 };
 
 inline

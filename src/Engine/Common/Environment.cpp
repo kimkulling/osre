@@ -40,10 +40,15 @@ EnvVar* Environment::findVar(const c8* varName) const {
         return nullptr;
     }
     EnvVar* var(nullptr);
-    if ( !mEnvVariables.hasKey(StringUtils::hashName(varName)) ) {
+    HashId id = StringUtils::hashName(varName);
+    if ( !mEnvVariables.hasKey( id ) ) {
         return nullptr;
     }
-    if (mEnvVariables.getValue(StringUtils::hashName(varName), var)) {
+    if (!mEnvVariables.hasKey(id)) {
+        return nullptr;
+    }
+
+    if (mEnvVariables.getValue(id, var)) {
         return var;
     }
 
@@ -78,3 +83,4 @@ void Environment::addVariable( EnvVar *var) {
 
 } // Namespace Common
 } // Namespace OSRE
+

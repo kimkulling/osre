@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -22,19 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/AbstractCodec.h>
+#include <osre/Common/osre_common.h>
 
 namespace OSRE {
-namespace IO {
+namespace Debugging {
 
-class ImageCodec : public Common::AbstractCodec {
-public:
-    ImageCodec();
-    virtual ~ImageCodec();
-    bool encode( IO::Stream *inStream, uc8 *data, ui32 &size ) override;
-    bool decode( IO::Stream *outStream ) override ;
-    void releaseData( uc8 *data ) override;
-};
+OSRE_EXPORT void  debugBreak();
 
-} // Namespace IO
-}
+} // Namespace Debugging
+} // Namespace Common
+

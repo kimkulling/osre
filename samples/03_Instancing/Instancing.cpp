@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -75,8 +75,6 @@ protected:
         }
         AppBase::setWindowsTitle("Instancing sample!");
 
-        const Common::ArgumentParser& parser = AppBase::getArgumentParser();
-
 #ifdef OSRE_WINDOWS
         AssetRegistry::registerAssetPath("assets", "../../media");
 #else
@@ -95,7 +93,7 @@ protected:
             AppBase::setActiveStage(m_stage);
             Scene::View* view = m_stage->addView("default_view", nullptr);
             AppBase::setActiveView(view);
-            Scene::Node* geoNode = m_stage->createNode("geo", nullptr);
+            Scene::Node* geoNode = m_stage->addNode("geo", nullptr);
 
             const Rect2ui& windowsRect = rootWindow->getWindowsRect();
             view->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.0001f, 1000.f);

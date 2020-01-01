@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -40,10 +40,9 @@ namespace UI {
 
 using namespace ::OSRE::RenderBackend;
 
-Panel::Panel( const String &name, ui32 flags, Widget *parent )
+Panel::Panel( const String &name, Widget *parent )
 : Widget( name, parent )
 , m_angle( 0.02f )
-, m_flags( flags )
 , m_headline()
 , m_transformMatrix() {
     // empty
@@ -51,14 +50,6 @@ Panel::Panel( const String &name, ui32 flags, Widget *parent )
 
 Panel::~Panel() {
     // empty
-}
-
-ui32 Panel::getFlags() const {
-    return m_flags;
-}
-
-bool Panel::isEnabled( ui32 flag ) const {
-    return m_flags & static_cast<ui32>( flag );
 }
 
 void Panel::setHeadline( const String &headline ) {
@@ -79,15 +70,15 @@ void Panel::onLayout() {
 void Panel::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService* ) {
     const Style &activeStyle = StyleProvider::getCurrentStyle();
     const Rect2ui &rect( getRect() );
-    UiVertexCache vertexCache;
-    UiIndexCache indexCache;
-    UIRenderUtils::createRectFromStyle( WidgetType::Panel, rect, activeStyle, vertexCache, indexCache );
+
+    const size_t startIndex = renderCmdCache.m_ic.numIndices();
+    UIRenderUtils::drawRectFromStyle( rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic, Widget::getStackIndex(), WidgetType::Panel );
 
     UiRenderCmd *cmd( new UiRenderCmd );
-    cmd->m_vc = vertexCache;
-    cmd->m_ic = indexCache;
 
-    renderCmdCache.add( cmd );
+    cmd->m_startIndex = startIndex;
+    cmd->m_numIndices = renderCmdCache.m_ic.numIndices() - startIndex;
+    renderCmdCache.m_renderCmds.add(cmd);
 }
 
 } // Namespace UI

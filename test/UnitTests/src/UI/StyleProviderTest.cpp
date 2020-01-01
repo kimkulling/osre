@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -34,7 +34,7 @@ class StyleProviderTest : public ::testing::Test {
 
 TEST_F( StyleProviderTest, accessStyleTest ) {
     Style testStyle;
-    testStyle.m_properties[ (ui32) Style::ColorTable::FGColorPanel ] = Color4( 0.5, 0.5, 0.5, 0.5 );
+    testStyle.m_colors[ (ui32) Style::ColorTable::FGColorWidget ] = Color4( 0.5, 0.5, 0.5, 0.5 );
     const Style &style = StyleProvider::getCurrentStyle();
     EXPECT_NE( testStyle, style );
 }

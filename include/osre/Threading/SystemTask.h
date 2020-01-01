@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -97,7 +97,7 @@ public:
     
     ///	@brief	Returns the number of enqueued jobs.
     ///	@return	The number of attached jobs.
-    virtual ui32 getEvetQueueSize() const;
+    virtual size_t getEvetQueueSize() const;
     
     ///	@brief	The factory method, creates a new instance of the system task.
     static SystemTask *create( const String &rTaskName );

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -27,6 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 
+class ResourceCacheService;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -34,18 +36,22 @@ namespace App {
 //-------------------------------------------------------------------------------------------------
 class ServiceProvider {
 public:
-    static ServiceProvider *create( RenderBackend::RenderBackendService *rbService );
+    static ServiceProvider *create( RenderBackend::RenderBackendService *rbService, 
+        ResourceCacheService *resCacheService );
     static void destroy();
     static RenderBackend::RenderBackendService *getRenderBackendService();
+    static ResourceCacheService *getResourceCacheService();
 
 private:
-    explicit ServiceProvider( RenderBackend::RenderBackendService *rbService );
+    explicit ServiceProvider(RenderBackend::RenderBackendService *rbService,
+                             ResourceCacheService *resCacheService);
     ~ServiceProvider();
 
 private:
     static ServiceProvider *s_instance;
 
     RenderBackend::RenderBackendService *m_rbService;
+    ResourceCacheService *m_resCacheService;
 };
 
 } // Namespace App

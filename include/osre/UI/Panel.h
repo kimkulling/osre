@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -35,10 +35,8 @@ namespace UI {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Panel : public Widget {
 public:
-    Panel( const String &name, ui32 flags, Widget *parent );
-    virtual ~Panel();
-    ui32 getFlags() const;
-    bool isEnabled( ui32 flag ) const;
+    Panel( const String &name, Widget *parent );
+    ~Panel() override;
     void setHeadline( const String &headline );
     const String &getHeadline() const;
 
@@ -48,7 +46,6 @@ protected:
 
 private:
     f32 m_angle;
-    ui32 m_flags;
     String m_headline;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
 };

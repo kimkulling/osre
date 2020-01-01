@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -24,77 +24,131 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/osre_common.h>
 #include <osre/Common/Logger.h>
+#include <osre/IO/Uri.h>
+#include <map>
 
 namespace OSRE {
+
 namespace Common {
 
-static const c8 Tag[] = "TResourceCache";
+static const c8 *ResTag= "TResourceCache";
 
-template<class TResId, class TResource>
+template<class TResource>
+class TResourceFactory {
+public:
+    TResourceFactory();
+    virtual ~TResourceFactory();
+    virtual TResource* create(const String& name, const IO::Uri &uri );
+};
+
+template<class TResource>
+inline
+TResourceFactory<TResource>::TResourceFactory() {
+    // empty
+}
+
+template<class TResource>
+inline
+TResourceFactory<TResource>::~TResourceFactory() {
+    // empty
+}
+
+template<class TResource>
+inline
+TResource* TResourceFactory<TResource>::create(const String& name, const IO::Uri &uri ) {
+    if (name.empty()) {
+        return nullptr;
+    }
+
+    TResource* res = new TResource(name, uri);
+
+    return res;
+}
+
+template<class TResourceFactory, class TResource>
 class TResourceCache {
 public:
     TResourceCache();
     ~TResourceCache();
-    void load( TResId id, const String &filename );
-    TResource &get( TResId id );
-    TResource &get( TResId id ) const;
+    void registerFactory(TResourceFactory& factory);
+    TResource* create(const String& name);
+    TResource* find(const String& name) const;
     void clear();
 
 private:
-    using ResourceMap = std::map<TResId, std::unique_ptr<TResource>>;
-    ResourceMap mResourceMap;
+    using ResourceMap = std::map<String, TResource*>;
+    ResourceMap m_resourceMap;
+    TResourceFactory* m_factory;
+    bool m_owner;
 };
 
-template<class TResId, class TResource>
+template<class TResourceFactory, class TResource>
 inline
-TResourceCache<TResId, TResource>::TResourceCache()
-    : mResourceMap() {
+TResourceCache<TResourceFactory, TResource>::TResourceCache()
+: m_resourceMap()
+, m_factory(new TResourceFactory)
+, m_owner(true) {
     // empty
 }
 
-template<class TResId, class TResource>
+template<class TResourceFactory, class TResource>
 inline
-TResourceCache<TResId, TResource>::~TResourceCache() {
+TResourceCache<TResourceFactory, TResource>::~TResourceCache() {
     clear();
+    if (m_owner) {
+        delete m_factory;
+    }
+    m_factory = nullptr;
 }
 
-template<class TResId, class TResource>
+template<class TResourceFactory, class TResource>
 inline
-void TResourceCache<TResId, TResource >::load( TResId id, const String &filename ) {
-    if ( filename.empty() ) {
-        osre_warn( Tag, "Filename is empty." );
-        return;
+void TResourceCache<TResourceFactory, TResource>::registerFactory(TResourceFactory& factory) {
+    if (nullptr != m_factory) {
+        if (m_owner) {
+            delete m_factory;
+            m_owner = false;
+        }
+    }
+    m_factory = &factory;
+}
+
+template<class TResourceFactory, class TResource>
+inline
+TResource* TResourceCache<TResourceFactory, TResource>::create(const String& name) {
+    TResource* resource = m_factory->create(name);
+    if (nullptr == resource) {
+        return nullptr;
+    }
+    m_resourceMap[name] = resource;
+
+    return resource;
+}
+
+template<class TResourceFactory, class TResource>
+inline
+TResource* TResourceCache<TResourceFactory, TResource>::find(const String& name) const {
+    if (name.empty()) {
+        return nullptr;
     }
 
-    std::unique_ptr<TResource> texPtr( new TResource );
-    bool res = texPtr->loadFromFile( filename );
-    if ( res ) {
-        auto inserted = mResourceMap.insert( std::make_pair( id, std::move( texPtr ) ) );
-        assert( inserted.second );
-    } else {
-        osre_warn( Tag, "Cannot load texture " + filename );
+    typename ResourceMap::const_iterator it = m_resourceMap.find(name);
+    if ( m_resourceMap.end() == it ) {
+        return nullptr;
     }
+    
+    return it->second;
 }
 
-template<class TResId, class TResource>
+template<class TResourceFactory, class TResource>
 inline
-TResource &TResourceCache<TResId, TResource>::get( TResId id ) {
-    auto found = mResourceMap.find( id );
-    return *found->second;
+void TResourceCache<TResourceFactory, TResource>::clear() {
+    typename ResourceMap::iterator it(m_resourceMap.begin());
+    for (; it != m_resourceMap.end(); ++it) {
+        delete it->second;
+    }
+    m_resourceMap.clear();
 }
 
-template<class TResId, class TResource>
-inline
-TResource &TResourceCache<TResId, TResource>::get( TResId id ) const {
-    auto found = mResourceMap.find( id );
-    return *found->second;
-}
-
-template<class TResId, class TResource>
-inline
-void TResourceCache<TResId, TResource>::clear() {
-    mResourceMap.clear();
-}
-
-}
-}
+} // Namespace Common
+} // Namespace OSRE

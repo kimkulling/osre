@@ -1,7 +1,7 @@
 ﻿/*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -41,10 +41,20 @@ namespace OSREEditor.Model.Actions
             SaveFlags = 0;
         }
 
+        /// <summary>
+        /// The filename property access.
+        /// </summary>
         public string Filename { get; set; }
 
+        /// <summary>
+        /// The save flags property access.
+        /// </summary>
         public int SaveFlags { get; set; }
 
+        /// <summary>
+        /// Will perform the save op.
+        /// </summary>
+        /// <returns>tue if successful, false in case of an error.</returns>
         public bool Execute()
         {
             if (null == _project)

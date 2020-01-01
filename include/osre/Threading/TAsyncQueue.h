@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -71,7 +71,7 @@ public:
 
     ///	@brief	The number of stored items in the list will be returned.
     ///	@return	The number of enqueued items in the queue.
-    ui32 size();
+    size_t size();
 
     ///	@brief	Returns true, if the queue is empty.
     ///	@return	true, if no item was enqueued.
@@ -118,7 +118,7 @@ TAsyncQueue<T>::~TAsyncQueue() {
 template<class T>
 inline
 void TAsyncQueue<T>::enqueue( const T &item ) {
-    assert( nullptr != m_criticalSection );
+    OSRE_ASSERT( nullptr != m_criticalSection );
 
     m_criticalSection->enter();
     
@@ -171,7 +171,7 @@ void TAsyncQueue<T>::signalEnqueuedItem() {
 
 template<class T>
 inline
-ui32 TAsyncQueue<T>::size() {
+size_t TAsyncQueue<T>::size() {
     OSRE_ASSERT(nullptr != m_criticalSection);
 
     m_criticalSection->enter( );

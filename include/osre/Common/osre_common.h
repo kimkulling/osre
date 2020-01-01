@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -35,6 +35,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #elif defined(__ANDROID__)
 #   define OSRE_ANDROID
 #endif
+
+#include <cppcore/Container/TArray.h>
 
 #include <string>
 #include <sstream>
@@ -161,19 +163,7 @@ struct Handle {
     }
 };
 
-struct MemoryBuffer {
-    size_t m_size;
-    c8    *m_data;
-
-    MemoryBuffer();
-};
-
-inline
-MemoryBuffer::MemoryBuffer()
-: m_size(0)
-, m_data(nullptr) {
-    // empty
-}
+using MemoryBuffer = CPPCore::TArray<c8*>;
 
 struct Time {
     i64 m_microseconds;

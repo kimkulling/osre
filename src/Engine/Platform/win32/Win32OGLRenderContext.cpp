@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -238,8 +238,6 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
     c8 *slv = (c8*)glGetString(GL_SHADING_LANGUAGE_VERSION);
     osre_debug(Tag, "Supported GLSL language " + String(slv));
 
-    RenderBackend::OGLCapabilities *caps = new RenderBackend::OGLCapabilities;
-
     m_dc = dc;
     m_rc = rc;
 
@@ -248,7 +246,7 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
     glDisable( GL_LIGHTING );
     
     glEnable(GL_DEPTH_TEST);
-    glDepthMask(GL_LESS);
+    glDepthMask( (GLboolean) GL_LESS);
 
     return true;
 }

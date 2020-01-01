@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -69,7 +69,7 @@ Widget *UiItemFactory::create( WidgetType type, const String &uiName, Widget *pa
             item = new Image( uiName, parent );
             break;
         case WidgetType::Panel:
-            item = new Panel( uiName, 0, parent );
+            item = new Panel( uiName, parent );
             break;
         case WidgetType::Canvas: {
                 const ui32 w( m_surface->getProperties()->m_width );

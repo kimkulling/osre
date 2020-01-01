@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Uri.h>
 #include <osre/IO/Stream.h>
 #include <osre/IO/IOService.h>
+#include <osre/Common/Logger.h>
 
 #include <json/json.h>
 #include <json/reader.h>
@@ -51,16 +52,17 @@ namespace Token {
 }
 
 AssetDataArchive::AssetDataArchive( i32 majorVersion, i32 minorVersion )
-:mVersion(majorVersion, minorVersion ){
+: mVersion(majorVersion, minorVersion ){
     // empty
 }
 
 AssetDataArchive::~AssetDataArchive() {
-
+    // empty 
 }
 
 Scene::World *AssetDataArchive::load( const IO::Uri &fileLocation ) {
     if (fileLocation.isEmpty()) {
+	osre_debug( Tag, "File location is empty.");
         return nullptr;
     }
 

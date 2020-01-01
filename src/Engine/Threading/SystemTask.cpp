@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -330,7 +330,7 @@ bool SystemTask::sendEvent( const Event *ev, const EventData *eventData ) {
     return true;
 }
 
-ui32 SystemTask::getEvetQueueSize() const {
+size_t SystemTask::getEvetQueueSize() const {
     OSRE_ASSERT( nullptr != m_asyncQueue);
 
     return m_asyncQueue->size();

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -39,6 +39,10 @@ public:
     ~MaterialBuilder();
     static RenderBackend::Material *createBuildinMaterial( RenderBackend::VertexType type );
     static RenderBackend::Material *createBuildinUiMaterial();
+    static RenderBackend::Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
+        RenderBackend::VertexType type );
+    static RenderBackend::Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
+        const String& VsSrc, const String& FsSrc);
 };
 
 } // Namespace Scene

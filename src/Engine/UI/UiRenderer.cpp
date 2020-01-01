@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-
+#include <osre/Debugging/MeshDiagnostic.h>
 #include "UIRenderUtils.h"
 
 namespace OSRE {
@@ -36,7 +36,8 @@ namespace UI {
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
 
-UiRenderer::UiRenderer() {
+UiRenderer::UiRenderer() 
+: m_uiMaterial( nullptr ) {
     // empty
 }
 
@@ -44,14 +45,22 @@ UiRenderer::~UiRenderer() {
     // empty
 }
 
-void UiRenderer::render(  Canvas *canvas, RenderBackendService * rbSrv) {
+void UiRenderer::layout( Canvas *canvas ) {
+    if (nullptr == canvas) {
+        return;
+    }
+
+    canvas->layout();
+}
+
+void UiRenderer::render( Canvas *canvas, RenderBackendService * rbSrv) {
     if (nullptr == canvas) {
         return;
     }
 
     UiRenderCmdCache cache;
     canvas->render( cache, rbSrv );
-    if (cache.isEmpty()) {
+    if (cache.m_renderCmds.isEmpty()) {
         return;
     }
 
@@ -59,31 +68,14 @@ void UiRenderer::render(  Canvas *canvas, RenderBackendService * rbSrv) {
 
     rbSrv->beginPass(PipelinePass::getPassNameById(UiPassId));
     rbSrv->beginRenderBatch("b1");
-    rbSrv->setMatrix(MatrixType::Model, tmBlock.m_model);
-    rbSrv->setMatrix(MatrixType::Projection, tmBlock.m_projection);
 
-    UiVertexCache vc; 
-    UiIndexCache ic;
-    RenderBackend::Material *mat(nullptr);
-    for ( ui32 i = 0; i < cache.size(); ++i ) {
-        UiRenderCmd *currentCmd( cache[ i ] );
-        if (currentCmd == nullptr) {
-            continue;
-        }
-        
-        mat = currentCmd->m_mat;
-        const UiVertexCache &currentVC = currentCmd->m_vc;
-        const UiIndexCache  &currentIC = currentCmd->m_ic;
-        if (currentVC.numVertices() > 0) {
-            // Copy all vertices
-            vc.add( &currentVC.m_cache[0], currentVC.numVertices());
-            
-            // Copy all indices
-            ic.add( &currentIC.m_cache[0], currentIC.numIndices());
-        }
+    Debugging::MeshDiagnostic::dumpUiIndexCache(cache.m_ic);
+    Debugging::MeshDiagnostic::dumpUiVertexCache(cache.m_vc);
+    Texture* tex(nullptr);
+    if (nullptr != cache.m_renderCmds[0]->m_texture) {
+        tex = cache.m_renderCmds[0]->m_texture;
     }
-
-    Mesh *mesh = UIRenderUtils::createGeoFromCache( vc, ic, mat);
+    Mesh *mesh = UIRenderUtils::createGeoFromCache(cache.m_vc, cache.m_ic, tex);
     if (nullptr == mesh) {
         return;
     }

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 namespace RenderBackend {
     class RenderBackendService;
 }
@@ -43,6 +43,8 @@ namespace Platform {
 
 namespace UI {
 
+class FocusControl;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -51,9 +53,10 @@ namespace UI {
 class OSRE_EXPORT Canvas : public Widget {
 public:
     Canvas( const String &name, ui32 x, ui32 y, ui32 width, ui32 height );
-    virtual ~Canvas();
+    ~Canvas() override;
     virtual void setSurface( Platform::AbstractWindow *surface );
     const RenderBackend::TransformMatrixBlock &getTransform() const;
+    FocusControl *getFocusControl() const;
 
 protected:
     void onLayout() override;
@@ -63,6 +66,7 @@ protected:
 private:
     Platform::AbstractWindow *m_surface;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
+    FocusControl *m_focusControl;
 };
 
 } // Namespace UI

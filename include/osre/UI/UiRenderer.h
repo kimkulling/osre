@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -30,6 +30,8 @@ namespace OSRE {
 // Forward declarations
 namespace RenderBackend {
     class RenderBackendService;
+
+    struct Material;
 }
 
 namespace UI {
@@ -43,7 +45,11 @@ class OSRE_EXPORT UiRenderer {
 public:
     UiRenderer();
     ~UiRenderer();
+    void layout( Canvas *canvas );
     void render( Canvas *canvas, RenderBackend::RenderBackendService *rbService );
+
+private:
+    RenderBackend::Material *m_uiMaterial;
 };
 
 } // Namespace UI

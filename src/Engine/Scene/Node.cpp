@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -143,7 +143,7 @@ size_t Node::getNumChildren() const {
     return m_children.size();
 }
 
-Node *Node::getChildAt( ui32 idx ) const {
+Node *Node::getChildAt( size_t idx ) const {
     if( idx >= m_children.size() ) {
         return nullptr;
     }
@@ -261,38 +261,6 @@ void Node::onUpdate(Time dt) {
 
 void Node::onRender( RenderBackendService* ) {
     // empty
-}
-
-LightNode::LightNode(const String &name, Common::Ids &ids, Node *parent)
-: Node(name, ids, parent)
-, m_light() {
-    // empty
-}
-
-LightNode::~LightNode() {
-
-}
-
-void LightNode::setLight(const Light &light) {
-    m_light = light;
-}
-
-const Light &LightNode::getLight() const {
-    return m_light;
-}
-
-void LightNode::onUpdate(Time dt) {
-    TransformComponent *comp( ( TransformComponent* ) getComponent( Node::ComponentType::TransformComponentType ) );
-    if (nullptr != comp) {
-        const TransformState &transformState(comp->getTransformState());
-        glm::mat4 m(1.0f);
-        transformState.toMatrix( m );
-        m_light.m_position = m * m_light.m_position;
-    }
-}
-
-void LightNode::onRender( RenderBackendService *renderBackendSrv) {
-
 }
 
 } // Namespace Scene

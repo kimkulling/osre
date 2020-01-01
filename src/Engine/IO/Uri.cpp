@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -175,8 +175,8 @@ bool Uri::parse() {
 	}
 
 	// get the length
-	const ui32 resLen = m_URI.size() - pos1;
-	const ui32 len    = m_URI.size() - pos0 - resLen - 2;
+	const size_t resLen = m_URI.size() - pos1;
+	const size_t len    = m_URI.size() - pos0 - resLen - 2;
 	
 	// get the components
 	m_Path     = m_URI.substr( pos0 + 3, len );

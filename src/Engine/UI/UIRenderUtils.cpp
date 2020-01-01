@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -43,8 +43,17 @@ UIRenderUtils::~UIRenderUtils() {
     // empty
 }
 
-void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, const Style &style,
-        UiVertexCache &vertexCache, UiIndexCache &indexCache ) {
+static const ui16 RectIndices[6] = {
+    0, 1, 2, // first triangle
+    2, 1, 3  // second triangle
+};
+
+static f32 getZbyStackIndex(ui32 stackIndex ) {
+    const f32 result = (f32)stackIndex * -0.1f;
+    return result;
+}
+
+void UIRenderUtils::drawRectFromStyle( const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache, UiIndexCache &indexCache, ui32 stackIndex, WidgetType type ) {
 
     f32 x1, y1, x2, y2;
     WidgetCoordMapping::mapPosToWorld( rect.getX1(), rect.getY1(), x1, y1 );
@@ -52,17 +61,22 @@ void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, c
 
     // setup triangle vertices
     RenderVert vertices[ 4 ];
-    vertices[ 0 ].position = glm::vec3( x1, y1, 0 );
-    vertices[ 1 ].position = glm::vec3( x1, y2, 0 );
-    vertices[ 2 ].position = glm::vec3( x2, y1, 0 );
-    vertices[ 3 ].position = glm::vec3( x2, y2, 0 );
+    vertices[ 0 ].position = glm::vec3( x1, y1, getZbyStackIndex( stackIndex ) );
+    vertices[ 1 ].position = glm::vec3( x1, y2, getZbyStackIndex( stackIndex ) );
+    vertices[ 2 ].position = glm::vec3( x2, y1, getZbyStackIndex( stackIndex ) );
+    vertices[ 3 ].position = glm::vec3( x2, y2, getZbyStackIndex( stackIndex ) );
 
     Color4 col;
-    if ( WidgetType::Panel == type ) {
-        col = style.m_properties[ ( ui32 ) Style::ColorTable::BGColorPanel ];
-    } else if ( WidgetType::Button == type ) {
-        col = style.m_properties[ ( ui32 ) Style::ColorTable::BGColorWidget ];
+    switch (type) {
+    case WidgetType::Panel:
+        col = style.m_colors[ ( ui32 )Style::ColorTable::BGColoPanel ];
+        break;
+    case WidgetType::Button:
+    default:
+        col = style.m_colors[ ( ui32 )Style::ColorTable::BGColorWidget ];
+        break;
     }
+
     vertices[ 0 ].color0 = glm::vec3( col.m_r, col.m_g, col.m_b );
     vertices[ 1 ].color0 = glm::vec3( col.m_r, col.m_g, col.m_b );
     vertices[ 2 ].color0 = glm::vec3( col.m_r, col.m_g, col.m_b );
@@ -79,23 +93,14 @@ void UIRenderUtils::createRectFromStyle( WidgetType type, const Rect2ui &rect, c
         vertexCache.add( vertices[ i ] );
     }
 
-    // setup triangle indices
-    ui16 indices[ 6 ];
-    indices[ 0 ] = 0;
-    indices[ 1 ] = 1;
-    indices[ 2 ] = 2;
-
-    indices[ 3 ] = 2;
-    indices[ 4 ] = 1;
-    indices[ 5 ] = 3;
-
     indexCache.increaseSize( 6 );
     for ( ui32 i = 0; i < 6; ++i ) {
-        indexCache.add( static_cast<ui16>(vertOffset) + indices[ i ] );
+        ui16 index = static_cast<ui16>(vertOffset) + RectIndices[i];
+        indexCache.add( index );
     }
 }
 
-Rect2ui UIRenderUtils::computeTextBox( const String &text, f32 textSize ) {
+Rect2ui UIRenderUtils::drawTextBox( const String &text, f32 textSize ) {
     ui32 width = 0, height = static_cast<ui32>(textSize);
     for ( ui32 i = 0; i < text.size(); ++i ) {
         if ( text[ i ] == '\n' ) {
@@ -108,35 +113,38 @@ Rect2ui UIRenderUtils::computeTextBox( const String &text, f32 textSize ) {
     return box;
 }
 
-RenderBackend::Mesh *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, Material *material ) {
-    Mesh *geo = Mesh::create( 1 );
+RenderBackend::Mesh *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, Texture* texture ) {
+    Mesh *mesh = Mesh::create( 1 );
 
-    geo->m_vertextype = VertexType::RenderVertex;
-    geo->m_indextype = IndexType::UnsignedShort;
+    mesh->m_vertextype = VertexType::RenderVertex;
+    mesh->m_indextype = IndexType::UnsignedShort;
 
     if (vertexCache.sizeInBytes() > 0) {
-        geo->m_vb = BufferData::alloc(BufferType::VertexBuffer, vertexCache.sizeInBytes(), BufferAccessType::ReadOnly);
-        geo->m_vb->copyFrom(&vertexCache.m_cache[0], vertexCache.sizeInBytes());
+        mesh->m_vb = BufferData::alloc(BufferType::VertexBuffer, vertexCache.sizeInBytes(), BufferAccessType::ReadOnly);
+        mesh->m_vb->copyFrom(&vertexCache.m_cache[0], vertexCache.sizeInBytes());
 
-        geo->m_ib = BufferData::alloc(BufferType::IndexBuffer, indexCache.sizeInBytes(), BufferAccessType::ReadOnly);
-        geo->m_ib->copyFrom(&indexCache.m_cache[0], indexCache.sizeInBytes());
+        mesh->m_ib = BufferData::alloc(BufferType::IndexBuffer, indexCache.sizeInBytes(), BufferAccessType::ReadOnly);
+        mesh->m_ib->copyFrom(&indexCache.m_cache[0], indexCache.sizeInBytes());
     }
 
     // use default ui material
-    if ( nullptr == material ) {
-        geo->m_material = Scene::MaterialBuilder::createBuildinUiMaterial();
-    } else {
-        geo->m_material = material;
+    mesh->m_material = Scene::MaterialBuilder::createBuildinUiMaterial();
+    if ( nullptr != texture ) {
+        mesh->m_material->m_numTextures = 1;
+        mesh->m_material->m_textures = new Texture *[mesh->m_material->m_numTextures];
+        mesh->m_material->m_textures[0] = texture;
     }
 
-    geo->m_numPrimGroups = 1;
-    geo->m_primGroups = new PrimitiveGroup[ 1 ];
-    geo->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    geo->m_primGroups[ 0 ].m_numIndices = (ui32) indexCache.numIndices();
-    geo->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-    geo->m_primGroups[ 0 ].m_startIndex = 0;
+    mesh->m_numPrimGroups = 1;
+    mesh->m_primGroups = new PrimitiveGroup[mesh->m_numPrimGroups];
+    for (size_t i = 0; i < mesh->m_numPrimGroups; ++i) {
+        mesh->m_primGroups[i].m_indexType = IndexType::UnsignedShort;
+        mesh->m_primGroups[i].m_numIndices = (ui32)indexCache.numIndices();
+        mesh->m_primGroups[i].m_primitive = PrimitiveType::TriangleList;
+        mesh->m_primGroups[i].m_startIndex = 0;
+    }
 
-    return geo;
+    return mesh;
 }
 
 } // Namespace UI

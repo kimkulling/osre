@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -23,12 +23,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "osre_testcommon.h"
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Debugging/MeshDiagnostic.h>
 #include <osre/RenderBackend/Mesh.h>
 
 namespace OSRE {
 namespace UnitTest {
 
 using namespace ::OSRE::Scene;
+using namespace ::OSRE::Debugging;
 using namespace ::OSRE::RenderBackend;
 
 class MeshBuilderTest : public ::testing::Test {
@@ -50,14 +52,19 @@ TEST_F( MeshBuilderTest, allocEmptyGeometryTest ) {
 
 TEST_F( MeshBuilderTest, allocTrianglesTest ) {
     MeshBuilder meshBuilder;
+    printf("1\n");
     meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+    printf("2\n");
     Mesh *mesh = meshBuilder.getMesh();
-    EXPECT_NE( mesh, nullptr );
+    printf("3\n");
+    ASSERT_NE( mesh, nullptr );
     EXPECT_EQ( mesh->m_vertextype, VertexType::ColorVertex );
     EXPECT_NE( mesh->m_vb, nullptr );
     EXPECT_NE( mesh->m_ib, nullptr );
     EXPECT_NE( mesh->m_material, nullptr );
+    printf("4\n");
     Mesh::destroy( &mesh );
+    printf("5\n");
 }
 
 TEST_F( MeshBuilderTest, allocLineListTest ) {

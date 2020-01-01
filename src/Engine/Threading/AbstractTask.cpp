@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -60,7 +60,7 @@ void AbstractTask::removeDependency()  {
     }
 }
 
-ui32 AbstractTask::getNumRefs() const {
+size_t AbstractTask::getNumRefs() const {
     if ( m_pRefCount ) {
         const ui32 numRefs = m_pRefCount->getValue();
         return numRefs;
@@ -87,7 +87,7 @@ void AbstractTask::enqueue( AbstractTask *pTask ) {
     }
 }
 
-ui32 AbstractTask::getNumChildTasks() const {
+size_t AbstractTask::getNumChildTasks() const {
     return m_childTasks.size();
 }
 

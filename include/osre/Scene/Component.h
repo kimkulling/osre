@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -79,8 +79,8 @@ public:
     virtual ~RenderComponent();
     void update( Time dt ) override;
     void draw( RenderBackend::RenderBackendService *renderBackendSrv ) override;
-    ui32 getNumGeometry() const;
-    RenderBackend::Mesh *getGeoAt(ui32 idx) const;
+    size_t getNumGeometry() const;
+    RenderBackend::Mesh *getGeoAt(size_t idx) const;
     void addStaticGeometry( RenderBackend::Mesh *geo );
 
 private:

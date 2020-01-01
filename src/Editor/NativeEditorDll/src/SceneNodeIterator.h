@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -51,7 +51,7 @@ SceneNodeIterator::SceneNodeIterator(Scene::Node *root)
         
 inline
 SceneNodeIterator::~SceneNodeIterator() {
-
+    // empty
 }
 
 inline
@@ -60,7 +60,7 @@ bool SceneNodeIterator::hasNextChild() const {
         return false;
     }
 
-    const i32 numChildren = m_currentNode->getNumChildren();
+    const size_t numChildren = m_currentNode->getNumChildren();
     if ((m_currentIndex + 1) < numChildren) {
         return true;
     }
@@ -71,7 +71,7 @@ bool SceneNodeIterator::hasNextChild() const {
 inline
 Scene::Node *SceneNodeIterator::getNextChild() {
     if (hasNextChild()) {
-        m_currentIndex++;
+        ++m_currentIndex;
         return m_currentNode->getChildAt(m_currentIndex);
     }
 

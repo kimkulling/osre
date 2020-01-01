@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -35,6 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/Node.h>
 #include <osre/Scene/World.h>
 #include <osre/Scene/View.h>
+#include <osre/Scene/TrackBall.h>
 #include <osre/IO/IOService.h>
 #include <osre/Assets/AssimpWrapper.h>
 #include <osre/Assets/AssetDataArchive.h>
@@ -43,6 +44,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 
 #include <src/Engine/Platform/win32/Win32Window.h>
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
 
 namespace OSRE {
 namespace NativeEditor {
@@ -58,13 +62,15 @@ static const c8 *Tag = "EditorApplication";
 
 EditorApplication::EditorApplication( int argc, char *argv[] )
 : AppBase( argc, argv )
+, m_worldAccess( false )
 , m_world( nullptr )
 , m_stage( nullptr )
 , m_modelNode()
 , m_transformMatrix()
 , m_platformInterface( nullptr )
-, m_projectName( "untitled" )
-, m_project() {
+, m_project()
+, m_trackball( nullptr )
+, m_angle( 0.01f){
     // empty
 }
 
@@ -87,22 +93,42 @@ int EditorApplication::enqueueEvent( const Event *ev, EventData *evData ) {
 }
 
 void EditorApplication::newProject( const String &name ) {
-    if ( name != m_projectName ) {
-        m_projectName = name;
+    if ( name != m_project.getName()) {
+        m_project.destroy();
     }
 
-    if (!m_project.create(m_projectName, 0, 1)) {
+    if (!m_project.create( name, 0, 1 ) ) {
         return;
     }
 
     Platform::AbstractWindow *rootWindow( getRootWindow() );
     if (nullptr != rootWindow) {
-        rootWindow->setWindowsTitle( m_projectName );
+        rootWindow->setWindowsTitle( m_project.getName() );
     }
 }
 
-World *EditorApplication::getWorld() const {
-    return m_world;
+int EditorApplication::openWorldAccess() {
+    return -1;
+}
+
+int EditorApplication::openStageAccess() {
+    return -1;
+}
+
+int EditorApplication::openNodeAccess() {
+    return -1;
+}
+
+int EditorApplication::closeNodeAccess() {
+    return -1;
+}
+
+int EditorApplication::closeStageAccess() {
+    return -1;
+}
+
+int EditorApplication::closeWorldAccess() {
+    return -1;
 }
 
 int EditorApplication::importAsset( const String &filename, int flags ) {
@@ -127,14 +153,20 @@ int EditorApplication::importAsset( const String &filename, int flags ) {
             if (nullptr == rootWindow) {
                 return false;
             }
-
-            m_stage = AppBase::createStage("ModelLoading");
-            AppBase::setActiveStage(m_stage);
-            Scene::View *view = m_stage->addView("default_view", nullptr);
+            
+            if (nullptr == m_stage) {
+                m_stage = AppBase::createStage( "ModelLoading" );
+                AppBase::setActiveStage( m_stage );
+            }
+            
+            Scene::View *view = m_stage->findView( "default_view" );
+            if (nullptr == view) {
+                view = m_stage->addView( "default_view", nullptr );
+            }
             AppBase::setActiveView(view);
 
             const Rect2ui &windowsRect = rootWindow->getWindowsRect();
-            view->setProjectionParameters(60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.0001f, 1000.f);
+            view->setProjectionParameters(60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.001f, 1000.f);
             view->observeBoundingBox(model->getAABB());
 
             m_stage->setRoot(model->getRootNode());
@@ -142,8 +174,6 @@ int EditorApplication::importAsset( const String &filename, int flags ) {
         }
 
         AppBase::onUpdate();
-        
-        requestNextFrame();
     }
 
     return 0;
@@ -178,17 +208,26 @@ bool EditorApplication::saveProject( const char *filelocation, int flags ) {
 bool EditorApplication::onCreate() {
     Properties::Settings *baseSettings(AppBase::getSettings());
     baseSettings->setBool( Settings::ChildWindow, true );
-    baseSettings->setString( Properties::Settings::WindowsTitle, m_projectName );
+    baseSettings->setString( Properties::Settings::WindowsTitle, m_project.getName() );
     if (!AppBase::onCreate()) {
         return false;
     }
 
-    m_world = new World( "HelloWorld", RenderMode::Render3D );
-    m_stage = AppBase::createStage( "HelloWorld" );
-    m_world->addStage( m_stage );
-
     m_platformInterface = Platform::PlatformInterface::getInstance();
+
+    m_stage = AppBase::createStage( "HelloWorld" );
     AppBase::activateStage( m_stage->getName() );
+
+    Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
+    Scene::MeshBuilder meshBuilder;
+    meshBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
+    RenderBackend::Mesh *mesh = meshBuilder.getMesh();
+    if (nullptr != mesh) {
+        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+        m_transformMatrix.update();
+        getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
+        geoNode->addMesh( mesh );
+    }
 
     return true;
 }
@@ -199,20 +238,19 @@ void EditorApplication::onUpdate() {
         return;
     }
 
-    // Rotate the model
-    /*glm::mat4 rot(1.0);
-    m_transformMatrix.m_model = glm::rotate(rot, m_angle, glm::vec3(1, 1, 0));
-
+    glm::mat4 rot( 1.0 );
+    m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
+    m_transformMatrix.update();
     m_angle += 0.01f;
-    rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
-    rbSrv->beginRenderBatch("b1");
+    /*
+    rbSrv->beginPass( PipelinePass::getPassNameById( RenderPassId ) );
+    rbSrv->beginRenderBatch( "b1" );
 
-    rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+    rbSrv->setMatrix( MatrixType::Model, m_transformMatrix.m_model );
 
     rbSrv->endRenderBatch();
-    rbSrv->endPass();*/
-
-    AppBase::onUpdate();
+    rbSrv->endPass();
+    */
 }
 
 }

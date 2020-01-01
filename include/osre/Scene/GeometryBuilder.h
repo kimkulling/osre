@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -31,32 +31,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Scene {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  This utility class is used to inspect mesh data.
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT MeshDiagnostic {
-public:
-    /// @brief  Will dump the vertex data of a text-box.
-	static void dumpTextBox( ui32 i, glm::vec3 *textPos, ui32 VertexOffset );
-    /// @brief  Will dump the vertex-texture-coordinates data of a text-box.
-    static void dumpTextTex0Box(ui32 i, glm::vec2 *tex0Pos, ui32 VertexOffset);
-    /// @brief  Will dump the vertex data of given vertices.
-    static void dumpVertices( RenderBackend::RenderVert *renderVertices, ui32 numverices );
-    /// @brief  Will dump the vertex data of given vertices.
-    static void dumpVertices( const CPPCore::TArray<RenderBackend::RenderVert> &renderVertices );
-    /// @brief  Will dump the index data of given indices.
-    static void dumpIndices(const CPPCore::TArray<ui16> &indexArray);
-    /// @brief  Will dump the index data of given indices.
-    static void dumpIndices( ui16 *indices, ui32 numIndices );
-    /// @brief  Will dump the index data of given indices.
-    static void dumpIndices( const CPPCore::TArray<ui32> &indexArray );
-
-    MeshDiagnostic() = delete;
-    MeshDiagnostic(const MeshDiagnostic &) = delete;
-    MeshDiagnostic &operator = (const MeshDiagnostic &) = delete;
-};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -107,7 +81,7 @@ public:
     MeshBuilder& allocTextBox( f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access );
 
     /// @brief  Helper method to create text-box mesh.
-    static void allocUiTextBox(f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access, 
+    static void allocUiTextBox(f32 x, f32 y, f32 z, f32 textSize, const String &text, RenderBackend::BufferAccessType access,
                 RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic);
 
     /// @brief  Will update the vertices of a text box.
@@ -122,15 +96,18 @@ public:
     ///	@param  pos         [in] Pointer to array with vec3-positions, set to nullptr if nothing shall prepared
     ///	@param  col1        [in] Pointer to array with vec3-diffuse colors, set to nullptr if nothing shall prepared
     /// @return The allocated buffer data.
-    static RenderBackend::BufferData *allocVertices(RenderBackend::VertexType type, ui32 numVerts, ::glm::vec3 *pos, 
+    static RenderBackend::BufferData *allocVertices(RenderBackend::VertexType type, size_t numVerts, ::glm::vec3 *pos,
             ::glm::vec3 *col1, ::glm::vec2 *tex0, RenderBackend::BufferAccessType access );
 
-    static void updateTextVertices( ui32 numVerts, ::glm::vec2 *tex0, RenderBackend::BufferData *vb );
+    static void updateTextVertices( size_t numVerts, ::glm::vec2 *tex0, RenderBackend::BufferData *vb );
 
+    /// @brief  Will return the mesh instance.
+    /// @return The mesh instance.
     RenderBackend::Mesh *getMesh();
 
     /// No copying.
     MeshBuilder( const MeshBuilder& ) = delete;
+    MeshBuilder(MeshBuilder&&) = delete;
     MeshBuilder &operator = ( const MeshBuilder& ) = delete;
 
 private:

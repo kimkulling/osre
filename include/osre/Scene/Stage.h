@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -103,10 +103,11 @@ public:
     virtual ~Stage();
     virtual void setRoot( Node *root );
     virtual Node *getRoot() const;
-    virtual Node *createNode( const String &name, Node *parent, const String &type="default" );
+    virtual Node *addNode( const String &name, Node *parent, const String &type="default" );
     virtual bool registerNodeFactory( AbstractNodeFactory *factory );
     virtual Node *findNode( const String &name ) const;
     virtual View *addView( const String &name, Node *parent );
+    virtual View *findView( const String &name ) const;
     virtual void clear();
     virtual void update(Time dt );
     virtual void draw( RenderBackend::RenderBackendService *renderBackendSrv );
@@ -119,7 +120,7 @@ protected:
 
 private:
     using ViewArray = CPPCore::TArray<View*>;
-    using NodeFactoryMap = CPPCore::THashMap<ui32, AbstractNodeFactory*>;
+    using NodeFactoryMap = CPPCore::THashMap<size_t, AbstractNodeFactory*>;
 
     Node *m_root;
     ViewArray m_views;

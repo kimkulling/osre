@@ -1,7 +1,7 @@
 ﻿/*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -33,14 +33,25 @@ namespace OSREEditor.Model.Actions
 
         private string _type;
 
+        /// <summary>
+        /// The class constructor with all parameters.
+        /// </summary>
+        /// <param name="name">The name for the new scenenode.</param>
+        /// <param name="type">The requested type.</param>
         public NewSceneNodeAction(string name, string type)
         {
             _name = name;
             _type = type;
         }
 
+        /// <summary>
+        /// Will perform the creation.
+        /// </summary>
+        /// <returns>true if successful,, false in case of an error.</returns>
         public bool Execute()
         {
+            // Todo!
+
             return true;
         }
     }

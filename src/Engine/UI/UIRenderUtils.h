@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -45,11 +45,11 @@ struct Style;
 //-------------------------------------------------------------------------------------------------
 class UIRenderUtils {
 public:
-    static void createRectFromStyle( WidgetType Type, const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
-        UiIndexCache &indexCache );
-    static Rect2ui computeTextBox( const String &text, f32 textSize );
+    static void drawRectFromStyle( const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
+        UiIndexCache &indexCache, ui32 stackIndex, WidgetType type );
+    static Rect2ui drawTextBox( const String &text, f32 textSize );
     static RenderBackend::Mesh *createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, 
-        RenderBackend::Material *material );
+        RenderBackend::Texture *texture );
     
 private:
     UIRenderUtils();

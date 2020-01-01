@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -31,6 +31,7 @@ FontBase::FontBase( const String &name )
 , m_texName()
 , m_numCols( 0 )
 , m_numRows( 0 )
+, m_texture( nullptr )
 , m_fontAtlas( nullptr )
 , m_uri() {
     // empty
@@ -40,11 +41,11 @@ FontBase::~FontBase() {
     // empty
 }
     
-void FontBase::setSize( ui32 size ) {
+void FontBase::setSize( size_t size ) {
     m_size = size;
 }
     
-ui32 FontBase::getSize() const {
+size_t FontBase::getSize() const {
     return m_size;
 }
 
@@ -55,6 +56,14 @@ void FontBase::setUri( const IO::Uri &uri ) {
 
 void FontBase::setTextureName( const String &name ) {
     m_texName = name;
+}
+
+void FontBase::setTexture(Texture* texture) {
+    m_texture = texture;
+}
+
+Texture* FontBase::getTexture() const {
+    return m_texture;
 }
 
 const String &FontBase::getTextureName() const {

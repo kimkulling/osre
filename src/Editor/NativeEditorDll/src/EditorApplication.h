@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,10 +32,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 namespace Scene {
     class World;
     class Stage;
+    class TrackBall;
 }
 
 namespace Platform {
@@ -68,13 +69,24 @@ public:
     }
 };
 
+struct SceneContext {
+    Scene::World *ActiveWorld;
+    int StageIndex;
+    Scene::Stage ActiveStage;
+};
+
 class EditorApplication : public App::AppBase {
 public:
     EditorApplication( int argc, char *argv[] );
     ~EditorApplication() override;
     int enqueueEvent( const Common::Event *ev, Common::EventData *evData );
     void newProject( const String &name );
-    Scene::World *getWorld() const;
+    int  openWorldAccess();
+    int  openStageAccess();
+    int  openNodeAccess();
+    int  closeNodeAccess();
+    int  closeStageAccess();
+    int  closeWorldAccess();
     int importAsset( const String &filename, int flags );
     Platform::PlatformInterface *getPlatformInterface() const;
     bool loadProject( const char *filelocation, int flags );
@@ -85,14 +97,15 @@ protected:
     void onUpdate() override;
 
 private:
+    bool m_worldAccess;
     Scene::World* m_world;
     Scene::Stage* m_stage;
     Scene::Node::NodePtr m_modelNode;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
     Platform::PlatformInterface* m_platformInterface;
-    String m_projectName;
-
     App::Project m_project;
+    Scene::TrackBall *m_trackball;
+    f32 m_angle;
 };
 
 } // Namespace NativeEditor

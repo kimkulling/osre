@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,66 +20,32 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/UI/FontManager.h>
-#include <osre/Common/StringUtils.h>
+#include "osre_testcommon.h"
+#include <osre/RenderBackend/Mesh.h>
 
 namespace OSRE {
-namespace UI {
+namespace UnitTest {
 
-using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-FontManager *FontManager::s_instance = nullptr;
-
-static ui32 calcHash( const String &name ) {
-    const ui32 hash( StringUtils::hashName( name.c_str() ) );
-    return hash;
-}
-
-FontManager *FontManager::create() {
-    if ( nullptr == s_instance ) {
-        s_instance = new FontManager;
-    }
-    return s_instance;
-}
-
-void FontManager::destroy() {
-    if ( nullptr != s_instance ) {
-        delete s_instance;
-        s_instance = nullptr;
-    }
-}
-
-FontManager *FontManager::getInstance() {
-    return s_instance;
-}
-
-RenderBackend::FontBase *FontManager::getFontByName( const String &fontName ) const {
-    if ( fontName.empty() ) {
-        return nullptr;
-    }
-    
-    FontBase *font( nullptr );
-    const ui32 hash( calcHash( fontName ) );
-    if ( m_fontHashMap.hasKey( hash ) ) {
-        m_fontHashMap.getValue( hash, font );
-    }
-    
-    return font;
-}
-
-bool FontManager::loadFont( const String &name ) {
-    return false;
-}
-
-FontManager::FontManager()
-: m_fontHashMap() {
-
-}
-
-FontManager::~FontManager() {
+class MeshTest : public ::testing::Test {
     // empty
+};
+
+TEST_F(MeshTest, createTest) {
+    Mesh *meshes = Mesh::create(10);
+    EXPECT_NE(nullptr, meshes);
+    
+    Mesh::destroy(&meshes);
+    EXPECT_EQ(nullptr, meshes);
 }
 
-} // Namespace UI
-} // Namespace OSRE
+TEST_F(MeshTest, createPrimitiveGroupsTest) {
+    Mesh* mesh = Mesh::create(1);
+    PrimitiveGroup* group = mesh->createPrimitiveGroup(IndexType::UnsignedByte, 10, PrimitiveType::TriangleList, 0);
+    EXPECT_EQ(1, mesh->m_numPrimGroups);
+    EXPECT_NE(nullptr, group);
+}
+
+}
+}

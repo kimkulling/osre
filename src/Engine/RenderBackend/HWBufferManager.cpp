@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,6 +32,10 @@ Buffer::Buffer()
 : m_id( 0 )
 , m_ptr( nullptr )
 , m_size( 0 ) {
+    // empty
+}
+
+Buffer::~Buffer() {
     // empty
 }
 
@@ -117,7 +121,7 @@ Buffer *HWBufferManager::createBuffer( const VertexLayout &vertexLayout, BufferA
     ui32 hash( 0 );
     getBufferKey( vertexLayout, access, hash );
     m_bufferDict.insert(hash, buffer );
-    ui32 id = m_buffers.size();
+    const size_t id = m_buffers.size();
     m_buffers.add( buffer );
     buffer->m_id = id;
 

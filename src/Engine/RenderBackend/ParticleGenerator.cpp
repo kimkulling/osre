@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -95,7 +95,7 @@ void ParticleGenerator::init( ui32 numPoints ) {
     m_ptGeo->m_material = mat;
 }
 
-void ParticleGenerator::update( d32 tick ) {
+void ParticleGenerator::update( d32 /*tick*/ ) {
     CPPCore::RandomGenerator generator;
     for ( ui32 i = 0; i < m_numPoints; i++ ) {
         const f32 x = static_cast< f32 >( generator.get( -10, 10 ) ) / 100.0f;

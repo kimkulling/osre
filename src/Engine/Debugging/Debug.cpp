@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,30 +20,22 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
+#include <osre/Debugging/Debug.h>
 
-#include <osre/Common/osre_common.h>
-#include <cppcore/Container/TArray.h>
+#ifdef OSRE_WINDOWS
+#   include <osre/Platform/Windows/MinWindows.h>
+#endif
 
 namespace OSRE {
-namespace Common {
-        
-class AbstractCodec;
+namespace Debugging {
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup    Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT CodecRegistry {
-public:
-    static void registerCodec( AbstractCodec *newCodec );
-    static AbstractCodec *getRegistryByExt( const String &ext );
-    static void clear();
+void debugBreak() {
+#ifdef _MSC_VER
+    __debugbreak();
+#elif BX_CPU_ARM
+    __asm__( "int $3" );
+#endif 
+}
 
-private:
-    static CPPCore::TArray<AbstractCodec*> s_registry;
-};
-    
+} // Namespace Debugging
 } // Namespace Common
-} // Namespace OSRE

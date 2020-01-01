@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -53,17 +53,21 @@ const IO::Uri &Image::getUri() const {
 }
 
 void Image::onLayout() {
+    if (m_imageUri.isEmpty()) {
+        return;
+    }
 
+    if ( LayoutPolicy::Auto == getLayoutPolicy() ) {
+        
+    } else if (LayoutPolicy::Fixed == getLayoutPolicy()) {
+
+    }
 }
 
-void Image::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
-    UiVertexCache vertexCache;
-    UiIndexCache indexCache;
-
+void Image::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService * ) {
     MeshBuilder builder;
-    const Rect2ui &dim = Widget::getRect();
-    builder.allocUiQuad( dim, vertexCache, indexCache );
-    
+    const Rect2ui &imageRect = Widget::getRect();
+    builder.allocUiQuad( imageRect, renderCmdCache.m_vc, renderCmdCache.m_ic );
 }
 
 } // Namespace UI

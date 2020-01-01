@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -94,7 +94,7 @@ public:
         TextBase *text = (TextBase*) UiItemFactory::getInstance()->create(WidgetType::Text, getTestName() + ".test", panel2);
         text->setLabel( "Huhu" );
 
-        Panel *panel3 = (Panel*)UiItemFactory::getInstance()->create(WidgetType::Panel, getTestName() + ".panel2", m_canvas);
+        Panel *panel3 = (Panel*)UiItemFactory::getInstance()->create(WidgetType::Panel, getTestName() + ".panel3", m_canvas);
         panel3->setRect(450, 10, 200, 200);
 
         return true;

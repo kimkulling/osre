@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <osre/Common/TResource.h>
 #include <osre/RenderBackend/FontBase.h>
 #include <osre/IO/Uri.h>
 
@@ -385,8 +386,8 @@ struct OSRE_EXPORT VertexLayout {
 ///	@brief  This struct is used to describe data for a GPU buffer.
 struct OSRE_EXPORT BufferData {
     BufferType       m_type;    ///< The buffer type ( @see BufferType )
-    MemoryBuffer     m_buffer;
-    size_t           m_cap;
+    MemoryBuffer     m_buffer;  ///< The memory buffer
+    size_t           m_cap;     ///<
     BufferAccessType m_access;  ///< Access token ( @see BufferAccessType )
 
     BufferData();
@@ -394,23 +395,23 @@ struct OSRE_EXPORT BufferData {
     static BufferData *alloc( BufferType type, size_t sizeInBytes, BufferAccessType access );
 	static void free( BufferData *data );
     void copyFrom( void *data, size_t size );
-    void attach( void *data, size_t size );
+    void attach( const void *data, size_t size );
     BufferType getBufferType() const;
     BufferAccessType getBufferAccessType() const;
     size_t getSize() const;
-    c8 *getData() const;
+    c8 *getData();
 
     OSRE_NON_COPYABLE( BufferData )
 };
 
 inline
 size_t BufferData::getSize() const {
-    return (nullptr != m_buffer.m_data ? m_buffer.m_size : 0L);
+    return m_buffer.size();
 }
 
 inline
-c8 *BufferData::getData() const {
-    return m_buffer.m_data;
+c8 *BufferData::getData() {
+    return (c8*)&m_buffer[0];
 }
 
 
@@ -446,6 +447,32 @@ struct OSRE_EXPORT Texture {
     OSRE_NON_COPYABLE( Texture )
 };
 
+///	@brief
+class OSRE_EXPORT TextureLoader {
+public:
+    TextureLoader();
+    ~TextureLoader();
+    size_t load(const IO::Uri& uri, Texture* tex);
+    bool unload(Texture* tex);
+};
+
+///	@brief
+class OSRE_EXPORT TextureResource : public Common::TResource<Texture, TextureLoader> {
+public:
+    TextureResource( const String &name, const IO::Uri& uri );
+    ~TextureResource() override;
+    void setTargetType( TextureTargetType targetType );
+    TextureTargetType getTargetType() const;
+
+protected:
+    void onLoad(const IO::Uri& uri, TextureLoader& loader) override;
+    void onUnload(TextureLoader& loader) override;
+
+private:
+    TextureTargetType m_targetType;
+};
+
+using TextureResourceArray = CPPCore::TArray<RenderBackend::TextureResource*>;
 
 static const ui32 MaxShaderTypes = static_cast<ui32>( ShaderType::NumShaderTypes );
 
@@ -558,6 +585,10 @@ struct TVertexCache {
         m_cache.clear();
     }
 
+    bool isEmpty() const {
+        return m_cache.isEmpty();
+    }
+
     void increaseSize(size_t newSize) {
         if (0 == newSize) {
             return;
@@ -613,6 +644,10 @@ struct TIndexCache {
 
     void clear() {
         m_cache.clear();
+    }
+
+    bool isEmpty() const {
+        return m_cache.isEmpty();
     }
 
     void increaseSize(size_t newSize ) {
@@ -722,15 +757,15 @@ struct PassData {
 };
 
 struct OSRE_EXPORT UniformDataBlob {
-    void *m_data;
-    ui32  m_size;
+    void  *m_data;
+    size_t m_size;
 
     UniformDataBlob();
     ~UniformDataBlob();
     void *getData() const;
     void clear();
 
-    static UniformDataBlob *create(ParameterType type, ui32 arraySize);
+    static UniformDataBlob *create(ParameterType type, size_t arraySize);
 };
 
 struct OSRE_EXPORT UniformVar {
@@ -744,7 +779,7 @@ struct OSRE_EXPORT UniformVar {
     static UniformVar *create(const String &name, ParameterType type, ui32 arraySize = 1);
     static void destroy(UniformVar *param);
 
-    ui32 getSize();
+    size_t getSize();
 
 private:
     UniformVar();
@@ -784,22 +819,20 @@ struct UniformBuffer {
     : m_numvars(0)
     , m_pos(0L)
     , m_buffer() {
-
+        // empty
     }
 
     size_t getSize() const {
-        return m_buffer.m_size;
+        return m_buffer.size();
     }
 
     void create(size_t size = 1024*1024) {
-        m_buffer.m_size = size;
-        m_buffer.m_data = new c8[size];
+        m_buffer.resize(size);
         m_pos = 0;
     }
 
     void destroy() {
-        delete[] m_buffer.m_data;
-        m_buffer.m_size = 0;
+        m_buffer.clear();
         m_pos = 0;
 
     }
@@ -822,6 +855,10 @@ struct UniformBuffer {
     }
 
     void writeVar(UniformVar *var) {
+        if (nullptr == var) {
+            return;
+        }
+
         ++m_numvars;
         ui32 varInfo = encode( (ui16) var->m_name.size(), (ui16) var->m_data.m_size );
         write( (c8*) &varInfo, sizeof(ui32) );
@@ -839,24 +876,25 @@ struct UniformBuffer {
     }
 
     void read(c8 *data, size_t size ) {
-        if ((m_pos + size) > m_buffer.m_size || 0 == size) {
+        if ((m_pos + size) > m_buffer.size() || 0 == size) {
             return;
         }
-        ::memcpy(data, &m_buffer.m_data[m_pos], size );
+
+        ::memcpy(data, &m_buffer[ m_pos ], size );
         m_pos += size;
     }
     
     void write( c8 *data, size_t size ) {
-        if (0 == size || ( m_pos + size ) > m_buffer.m_size ) {
+        if ( 0 == size || ( m_pos + size ) > m_buffer.size() ) {
             return;
         }
 
-        ::memcpy(&m_buffer.m_data[m_pos], data, size);
+        ::memcpy( &m_buffer[ m_pos ], data, size );
         m_pos += size;
     }
 
     size_t m_numvars;
-    ui64 m_pos;
+    size_t m_pos;
     MemoryBuffer m_buffer;
 };
 

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -95,34 +95,42 @@ protected:
             m_assetFolder = parser.getArgument( AssetFolderArg );
         }
 
+        IO::Uri modelLoc(ModelPath);
+        if (parser.hasArgument(ModelArg)) {
+            String modelArg = parser.getArgument(ModelArg);
+            String model = "file://assets/" + modelArg;
+            modelLoc.setPath(model);
+        }
+
 #ifdef OSRE_WINDOWS
         AssetRegistry::registerAssetPath( "assets", "../../media" );
 #else
         AssetRegistry::registerAssetPath( "assets", "../media" );
 #endif 
         AssimpWrapper assimpWrapper(*getIdContainer());
-        IO::Uri modelLoc( ModelPath );
         if ( assimpWrapper.importAsset( modelLoc, 0 ) ) {
             RenderBackendService *rbSrv( getRenderBackendService() );
-            if (nullptr != rbSrv) {
-                Platform::AbstractWindow *rootWindow(getRootWindow());
-                if (nullptr == rootWindow) {
-                    return false;
-                }
-
-                m_stage = AppBase::createStage("ModelLoading");
-                AppBase::setActiveStage(m_stage);
-                Scene::View *view = m_stage->addView("default_view", nullptr);
-                AppBase::setActiveView(view);
-
-                const Rect2ui &windowsRect = rootWindow->getWindowsRect();
-                view->setProjectionParameters( 60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.0001f, 1000.f );
-                Model* model = assimpWrapper.getModel();
-                view->observeBoundingBox( model->getAABB() );
-
-                m_stage->setRoot( model->getRootNode() );
-                m_modelNode = m_stage->getRoot();
+            if (nullptr == rbSrv) {
+                return false;
             }
+                
+            Platform::AbstractWindow *rootWindow(getRootWindow());
+            if (nullptr == rootWindow) {
+                return false;
+            }
+
+            m_stage = AppBase::createStage("ModelLoading");
+            AppBase::setActiveStage(m_stage);
+            Scene::View *view = m_stage->addView("default_view", nullptr);
+            AppBase::setActiveView(view);
+
+            const Rect2ui &windowsRect = rootWindow->getWindowsRect();
+            view->setProjectionParameters( 60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.0001f, 1000.f );
+            Model* model = assimpWrapper.getModel();
+            view->observeBoundingBox( model->getAABB() );
+
+            m_stage->setRoot( model->getRootNode() );
+            m_modelNode = m_stage->getRoot();
         }
 
         return true;

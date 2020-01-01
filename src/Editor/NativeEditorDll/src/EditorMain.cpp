@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -128,6 +128,7 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
 
         evQueue->registerEventListener( eventArray, listener );
 
+
         s_EditorApplication->requestNextFrame();
     }
 #endif // OSRE_WINDOWS
@@ -149,6 +150,7 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorRequestNextFrame() {
         return 1;
     }
 
+    s_EditorApplication->handleEvents();
     s_EditorApplication->requestNextFrame();
 
     return 0;
@@ -225,14 +227,22 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL SaveProject( const char *filelocation,
 
 extern "C" OSRE_EDITOR_EXPORT int STDCALL ImportAsset( const char *filename, int flags ) {
     if (nullptr == s_EditorApplication) {
-        return 1;
+        return -1;
     }
 
     if (nullptr == filename) {
-        return 1;
+        return -1;
     }
 
     return s_EditorApplication->importAsset( filename, flags );
+}
+
+extern "C" OSRE_EDITOR_EXPORT int STDCALL openWorldAccess( NativeOSREWorld * world ) {
+    return -1;
+}
+
+extern "C" OSRE_EDITOR_EXPORT int STDCALL closeWorldAccess( NativeOSREWorld * world ) {
+    return -1;
 }
 
 extern "C" OSRE_EDITOR_EXPORT void STDCALL RegisterLogCallback(fnc_log_callback *fnc) {
