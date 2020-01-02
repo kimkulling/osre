@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AppBase.h>
 #include <osre/App/ServiceProvider.h>
 #include <osre/App/ResourceCacheService.h>
+#include <osre/App/AssetRegistry.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/Common/Environment.h>
 #include <osre/IO/IOService.h>
@@ -37,7 +38,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/View.h>
 #include <osre/Scene/World.h>
 #include <osre/Debugging/osre_debugging.h>
-#include <osre/Assets/AssetRegistry.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/UiItemFactory.h>
 #include <osre/UI/FocusControl.h>
@@ -413,7 +413,7 @@ bool AppBase::onCreate() {
     m_environment = new Common::Environment;
     
     // create the asset registry
-    Assets::AssetRegistry *registry( Assets::AssetRegistry::create() );
+    AssetRegistry *registry( AssetRegistry::create() );
     OSRE_ASSERT( nullptr!=registry );
     if ( nullptr==registry ) {
         osre_debug( Tag, "Cannot create asset registry." );
@@ -501,7 +501,7 @@ bool AppBase::onDestroy() {
         return false;
     }
     
-    Assets::AssetRegistry::destroy();
+    AssetRegistry::destroy();
     ServiceProvider::destroy();
 
     if( m_platformInterface ) {

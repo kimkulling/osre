@@ -23,51 +23,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-#include <cppcore/Container/THashMap.h>
+
 
 namespace OSRE {
-    
-// Forward declarations
-namespace IO {
-    class Stream;
-    class Uri;
-}
-
-namespace RenderBackend {
-    struct BufferData;
-}
-
-namespace Scene {
-    class World;
-}
-
 namespace Assets {
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup    Engine
-///
-///	@brief  
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AssetRegistry {
-public:
-    static AssetRegistry *create();
-    static void destroy();
-    static bool registerAssetPath( const String &mount, const String &path );
-    static bool hasPath( const String &mount );
-    static String getPath( const String &mount );
-    static String resolvePathFromUri( const IO::Uri &location );
-    static bool clear();
-
-private:
-    AssetRegistry();
-    ~AssetRegistry();
-
-private:
-    static AssetRegistry *s_instance;
-
-    typedef CPPCore::THashMap<ui32, String> Name2PathMap;
-    Name2PathMap m_name2pathMap;
-};
 
 } // Namespace Assets
 } // Namespace OSRE

@@ -42,7 +42,7 @@ class OSRE_EXPORT Component {
 public:
     virtual ~Component();
     virtual void update( Time dt ) = 0;
-    virtual void draw( RenderBackend::RenderBackendService *renderBackendSrv ) = 0;
+    virtual void render( RenderBackend::RenderBackendService *renderBackendSrv );
     virtual void setId( ui32 id );
     virtual ui32 getId() const;
     virtual Entity *getOwner() const;
@@ -91,7 +91,7 @@ public:
 protected:
     bool onPreprocess() override;
     bool onUpdate( Time dt ) override;
-    bool onRender( RenderBackend::RenderBackendService *renderBackendSrv ) override;
+    bool onRender( RenderBackend::RenderBackendService *rbSrv ) override;
     bool onPostprocess() override;
 
 private:

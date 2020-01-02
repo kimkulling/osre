@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Assets/AssetsCommon.h>
+#include <osre/App/AssetsCommon.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Common/Ids.h>
 #include <osre/Collision/TAABB.h>
@@ -30,6 +30,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 
 #include <map>
+
+// Forward declarations ---------------------------------------------------------------------------
+struct aiScene;
+struct aiMesh;
+struct aiNode;
+struct aiMaterial;
+struct aiAnimation;
 
 namespace OSRE {
 
@@ -52,14 +59,10 @@ namespace IO {
 namespace Scene {
     class Node;
 }
-
+    
 namespace App {
-    class Entity;
-}
 
-namespace Assets {
-
-
+class Entity;
 struct BoneInfo;
 
 //-------------------------------------------------------------------------------------------------
@@ -72,10 +75,10 @@ public:
     AssimpWrapper( Common::Ids &ids );
     ~AssimpWrapper();
     bool importAsset( const IO::Uri &file, ui32 flags );
-    App::Entity *getEntity() const;
+    Entity *getEntity() const;
 
 protected:
-    Model *convertSceneToModel();
+    Entity *convertScene();
     void importMeshes( aiMesh *mesh );
 	void importBones(aiMesh* mesh);
     void impotNode( aiNode *node, Scene::Node *parent );
@@ -85,6 +88,7 @@ protected:
 private:
 	const aiScene *m_scene;
 	RenderBackend::MeshArray m_meshArray;
+    Entity *m_entity;
     
 	using MaterialArray = CPPCore::TArray<RenderBackend::Material*> ;
     MaterialArray m_matArray;

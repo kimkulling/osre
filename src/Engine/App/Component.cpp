@@ -53,10 +53,6 @@ RenderComponent::~RenderComponent() {
     // empty
 }
 
-void RenderComponent::update( Time dt ) {
-    // empty
-}
-
 void RenderComponent::addStaticGeometry( Mesh *geo ) {
     if ( nullptr == geo ) {
         return;

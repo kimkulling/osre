@@ -35,11 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
-// Forward declarations
-namespace Assets {
-    class Model;
-}
-
+// Forward declarations ---------------------------------------------------------------------------
 namespace Properties {
     class Property;
 }
@@ -61,16 +57,6 @@ class OSRE_EXPORT Node : public Common::Object {
 public:
     using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::Scene::Node>;
     using AABB    = ::OSRE::Collision::TAABB<f32>;
-
-    /// The type of component
-    enum class ComponentType {
-        RenderComponentType,     ///< Renderable component
-        TransformComponentType,  ///< Transformable component
-        CollisionComponent,      ///< For collision
-        ScriptComponent,         ///< For scripting events 
-        MaxNumComponents,
-        InvalidComponent
-    };
 
     enum class TraverseMode {
         FlatMode,
@@ -118,9 +104,6 @@ private:
     ChildrenArray m_children;
     Node *m_parent;
     bool m_isActive;
-    RenderComponent *m_renderComp;
-    TransformComponent *m_transformComp;
-    CPPCore::TArray<Component*> m_components;
     Common::Ids *m_ids;
     PropertyMap m_propMap;
     AABB m_aabb;

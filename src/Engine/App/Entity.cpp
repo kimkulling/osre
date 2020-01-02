@@ -1,5 +1,6 @@
 #include <osre/App/Entity.h>
 #include <osre/App/AbstractBehaviour.h>
+#include <osre/app/Component.h>
 
 namespace OSRE {
 namespace App {
@@ -7,8 +8,9 @@ namespace App {
 Entity::Entity( const String &name )
 : Object( name )
 , m_behaviour( nullptr ) 
+, m_renderComponent( nullptr )
 , m_node( nullptr ) {
-    // empty
+    m_renderComponent = new RenderComponent( this, 1 );
 }
 
 Entity::~Entity() {
@@ -28,12 +30,17 @@ bool Entity::preprocess() {
 }
 
 bool Entity::update( Time dt ) {
+    return true;
 }
 
-bool Entity::render() {
+bool Entity::render( RenderBackend::RenderBackendService *rbSrv ) {
+    m_renderComponent->render( rbSrv );
+
+    return true;
 }
 
 bool Entity::postprocess() {
+    return true;
 }
 
 } // Namespace App
