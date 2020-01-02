@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 
 namespace OSRE {
-namespace Collision {
+namespace Scene {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

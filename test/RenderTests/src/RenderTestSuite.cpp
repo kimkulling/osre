@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractPlatformEventQueue.h>
 #include <osre/Platform/AbstractTimer.h>
-#include <osre/Assets/AssetRegistry.h>
+#include <osre/App/AssetRegistry.h>
 #include <osre/UI/Widget.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/IO/IOService.h>
@@ -152,7 +152,7 @@ bool RenderTestSuite::setup( const String &API ) {
     }
     m_pTimer = PlatformInterface::getInstance()->getTimer();
     
-    Assets::AssetRegistry *registry( Assets::AssetRegistry::create() );
+    App::AssetRegistry *registry( App::AssetRegistry::create() );
     if ( nullptr!=registry ) {
 #ifdef OSRE_WINDOWS
         registry->registerAssetPath( "assets", getMediaPath() );

@@ -20,38 +20,45 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <gtest/gtest.h>
-#include <osre/Assets/Model.h>
+#pragma once
+
+#include <osre/Common/AbstractProcessor.h>
+#include <osre/Scene/TAABB.h>
 #include <osre/Scene/Node.h>
-#include <osre/Common/Ids.h>
+
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
-namespace UnitTest {
 
-using namespace ::OSRE::Assets;
-using namespace ::OSRE::Scene;
+namespace RenderBackend {
+    class Mesh;
+}
 
-class ModelTest : public ::testing::Test {
-    // empty
+namespace Scene {
+        
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
+class OSRE_EXPORT GeometryProcessor : public Common::AbstractProcessor {
+public:
+    using GeoArray = CPPCore::TArray<RenderBackend::Mesh*>;
+
+    GeometryProcessor();
+    ~GeometryProcessor();
+    bool execute() override;
+    void addGeo( RenderBackend::Mesh *geo );
+    const Scene::Node::AABB &getAABB() const;
+
+private:
+    void handleGeometry( RenderBackend::Mesh *geo );
+
+private:
+    GeoArray m_geoArray;
+    Node::AABB m_aabb;
+    i32 m_dirty;
 };
 
-TEST_F( ModelTest, createTest ) {
-    bool ok( true );
-    try {
-        Model myModel;
-    } catch ( ... ) {
-        ok = false;
-    }
-    EXPECT_TRUE( ok );
-}
-
-TEST_F( ModelTest, access_root_node_Test ) {
-    Common::Ids ids;
-    Node myNode( "test", ids, nullptr );
-    Model myModel;
-    myModel.setRootNode( &myNode );
-    EXPECT_EQ( &myNode, myModel.getRootNode() );
-}
-
-} // Namespace UnitTest
+} // Namespace Scene
 } // Namespace OSRE

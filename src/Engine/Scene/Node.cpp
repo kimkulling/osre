@@ -35,12 +35,12 @@ namespace Scene {
 
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Common;
-using namespace ::OSRE::Assets;
 
 Node::Node( const String &name, Ids &ids, Node *parent )
 : Object( name )
 , m_children()
 , m_parent( parent )
+, m_meshRefererenceArray()
 , m_isActive( true )
 , m_ids( &ids )
 , m_propMap()
@@ -220,6 +220,7 @@ const RenderBackend::TransformState &Node::getTransformState() const {
     return m_localTransformState;
 }
 
+
 void Node::onUpdate(Time dt) {
     if (m_dirty == NeedsTransform) {
         m_localTransformState.toMatrix( m_transform );
@@ -229,6 +230,25 @@ void Node::onUpdate(Time dt) {
 
 void Node::onRender( RenderBackendService* ) {
     // empty
+}
+
+void Node::addMeshReference( size_t entityMeshIdx ) {
+    MeshReferenceArray::Iterator it = m_meshRefererenceArray.find(entityMeshIdx);
+    if ( m_meshRefererenceArray.end() == it ) {
+        m_meshRefererenceArray.add(entityMeshIdx);
+    }
+}
+
+size_t Node::getNumMeshReferences() const {
+    return m_meshRefererenceArray.size();
+}
+
+size_t Node::getMeshReferenceAt( size_t index ) const {
+    if ( index >= m_meshRefererenceArray.size() ) {
+        return 99999999;
+    }
+
+    return m_meshRefererenceArray[index];
 }
 
 } // Namespace Scene

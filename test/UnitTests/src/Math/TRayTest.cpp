@@ -20,46 +20,27 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Collision/TAABB.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <GL/glew.h>
-#include <GL/gl.h>
+#include <gtest/gtest.h>
+#include <osre/Math/TRay.h>
 
 namespace OSRE {
-namespace RenderBackend {
+namespace UnitTest {
 
-class RenderBackendService;
+using namespace ::OSRE::Collision;
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief	This class offers some system-specific functions.
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT ParticleGenerator {
-public:
-    ParticleGenerator( RenderBackendService *rbSrv );
-    ~ParticleGenerator();
-    void init( ui32 numPoints );
-    void update( d32 tick );
-    void setBounds(const Collision::TAABB<f32>& bounds);
-    Mesh* getMesh() const;
-
-private:
-    RenderBackendService *m_rbSrv;
-    ui32 m_numPoints;
-    glm::vec3 *m_col;
-    glm::vec3 *m_pos;
-    GLushort *m_pt_indices;
-    Mesh *m_ptGeo;
-    bool m_useBounds;
-    Collision::TAABB<f32> m_bounds;
+class TRayTest : public ::testing::Test {
+    // empty
 };
 
-} // Namespace RenderBackend
+TEST_F( TRayTest, createTest ) {
+    bool ok( true );
+    try {
+        TRay<f32> ray;
+    } catch (...) {
+        ok = false;
+    }
+    EXPECT_TRUE( ok );
+}
+
+} // Namespace Unittest
 } // Namespace OSRE

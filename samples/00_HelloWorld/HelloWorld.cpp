@@ -21,12 +21,14 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
+#include <osre/App/Entity.h>
+#include <osre/App/Component.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Common/Logger.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
-#include <osre/Assets/AssetRegistry.h>
+#include <osre/App/AssetRegistry.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Profiling/PerformanceCounterRegistry.h>
@@ -38,6 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <iomanip>
 
 using namespace ::OSRE;
+using namespace ::OSRE::App;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Properties;
 
@@ -51,11 +54,14 @@ class HelloWorldApp : public App::AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock m_transformMatrix;
 
+    Entity *m_entity;
+
 public:
     /// The class constructor with the incoming arguments from the command line.
     HelloWorldApp( int argc, char *argv[] )
     : AppBase( argc, argv )
-    , m_stage( nullptr ) {
+    , m_stage( nullptr )
+    , m_entity( nullptr ){
         // empty
     }
 
@@ -73,14 +79,16 @@ protected:
         AppBase::setWindowsTitle( "Hello-World sample!" );
 
 #ifdef OSRE_WINDOWS
-        Assets::AssetRegistry::registerAssetPath( "assets", "../../media" );
+        App::AssetRegistry::registerAssetPath( "assets", "../../media" );
 #else
-        Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
+        App::AssetRegistry::registerAssetPath( "assets", "../media" );
 #endif 
 
         m_stage = AppBase::createStage( "HelloWorld" );
         AppBase::activateStage( m_stage->getName() );
 
+        m_entity = new Entity("entity", AppBase::getIdContainer() );
+        RenderComponent *rc = (RenderComponent*) m_entity->getComponent( Entity::ComponentType::RenderComponentType );
         Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
         Scene::MeshBuilder meshBuilder;
         meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
@@ -89,7 +97,8 @@ protected:
 			m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
             m_transformMatrix.update();
             getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
-            geoNode->addMesh( mesh );
+            rc->addStaticMesh(mesh);
+            geoNode->addMeshReference( 0 );
 		}
 
         return true;

@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AppBase.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Common/Logger.h>
-#include <osre/Assets/AssetRegistry.h>
+#include <osre/App/AssetRegistry.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/UI/Canvas.h>
@@ -79,9 +79,9 @@ protected:
         }
 
 #ifdef OSRE_WINDOWS
-        Assets::AssetRegistry::registerAssetPath( "assets", "../../media" );
+        App::AssetRegistry::registerAssetPath( "assets", "../../media" );
 #else
-        Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
+        App::AssetRegistry::registerAssetPath( "assets", "../media" );
 #endif
 
         m_canvas = AppBase::createScreen( "UiDemo" );

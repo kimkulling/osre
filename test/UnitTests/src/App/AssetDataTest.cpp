@@ -21,55 +21,51 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
-#include <osre/Assets/AssetRegistry.h>
+#include <osre/App/AssetDataArchive.h>
+#include <osre/Scene/World.h>
+#include <osre/Scene/Stage.h>
+#include <osre/Scene/View.h>
 #include <osre/IO/Uri.h>
 
 namespace OSRE {
 namespace UnitTest {
-
+        
 using namespace ::OSRE::Assets;
 
-class AssetRegistryTest : public ::testing::Test {
-protected:
-    virtual void SetUp() {
-        AssetRegistry *reg( AssetRegistry::create() );
-        EXPECT_NE( nullptr, reg );
-#ifdef OSRE_WINDOWS
-        Assets::AssetRegistry::registerAssetPath( "assets", "../../media" );
-#else
-        Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
-#endif 
-    }
-
-    virtual void TearDown() {
-        AssetRegistry::destroy();
-    }
+class AssetDataTest : public ::testing::Test {
+    // empty
 };
 
-TEST_F( AssetRegistryTest, createTest ) {
+TEST_F( AssetDataTest, createTest ) {
     bool ok( true );
     try {
-        AssetRegistry *reg( AssetRegistry::create() );
-        EXPECT_NE( nullptr, reg );
-
-        AssetRegistry::destroy();
-    } catch ( ... ) {
+        AssetDataArchive myData( 1, 0 );
+    }
+    catch ( ... ) {
         ok = false;
     }
     EXPECT_TRUE( ok );
 }
 
-TEST_F( AssetRegistryTest, resolve_uri_from_mount_Test ) {
-    static const String ModelPath = "file://assets/Models/Obj/spider.obj";
-    IO::Uri fileUri( ModelPath );
-    String loc = AssetRegistry::resolvePathFromUri( fileUri );
-#ifdef OSRE_WINDOWS
-    static const String expRes = "../../media/Models/Obj/spider.obj";
-#else
-    static const String expRes = "../media/Models/Obj/spider.obj";
-#endif
-    EXPECT_EQ( expRes, loc );
+TEST_F( AssetDataTest, load_save_Test ) {
+    AssetDataArchive archive( 1, 0 );
+    IO::Uri uri( "file://test.osr" );
+    
+    // nullptr for world, must return false
+    bool ok = archive.save( nullptr, uri );
+    EXPECT_FALSE( ok );
+
+    Scene::World *world = new Scene::World("test");
+    Scene::Stage *stage = new Scene::Stage("stage", nullptr);
+    world->setActiveStage(stage);
+    Common::Ids ids;
+    Scene::View *view = new Scene::View("view", ids);
+    world->setActiveView(view);
+    ok = archive.save(world, uri);
+    EXPECT_TRUE(ok);
+
+    world->release();
 }
 
-}
-}
+} // Namespace UnitTest
+} // Namespace OSRE

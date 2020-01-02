@@ -331,8 +331,8 @@ size_t TextureLoader::load(const IO::Uri& uri, Texture *tex ) {
     
     const String filename = uri.getAbsPath();
 
-    String root = Assets::AssetRegistry::getPath("media");
-    String path = Assets::AssetRegistry::resolvePathFromUri(uri);
+    String root = App::AssetRegistry::getPath("media");
+    String path = App::AssetRegistry::resolvePathFromUri(uri);
 
 
     i32 width(0), height(0), channels(0);

@@ -21,14 +21,15 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
+#include <osre/App/Entity.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
 #include <osre/Scene/View.h>
 #include <osre/Scene/World.h>
-#include <osre/Assets/AssetRegistry.h>
-#include <osre/Assets/AssimpWrapper.h>
-#include <osre/Assets/Model.h>
+#include <osre/App/AssetRegistry.h>
+#include <osre/App/AssimpWrapper.h>
+#include <osre/App/Component.h>
 #include <osre/IO/Uri.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -36,14 +37,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Ids.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/DbgRenderer.h>
-#include <osre/Scene/Component.h>
-#include <osre/Collision/GeometryProcessor.h>
+#include <osre/Scene/GeometryProcessor.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>
 
 using namespace ::OSRE;
-using namespace ::OSRE::Assets;
+using namespace ::OSRE::App;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
@@ -53,14 +53,16 @@ static const c8* Tag = "InstancingApp";
 
 /// The example application, will create the render environment and render a simple triangle onto it
 class InstancingApp : public App::AppBase {
-    Scene::Stage* m_stage;
-    Scene::View* m_view;
+    App::Entity  *m_entity;
+    Scene::Stage *m_stage;
+    Scene::View  *m_view;
 
 public:
     InstancingApp(int argc, char* argv[])
     : AppBase(argc, argv, "api:model", "The render API:The model to load")
-    , m_stage(nullptr)
-    , m_view(nullptr) {
+    , m_entity( nullptr )
+    , m_stage( nullptr )
+    , m_view( nullptr ) {
         // empty
     }
 
@@ -79,7 +81,6 @@ protected:
         AssetRegistry::registerAssetPath("assets", "../../media");
 #else
         AssetRegistry::registerAssetPath("assets", "../media");
-
 #endif 
 
         RenderBackendService* rbSrv(getRenderBackendService());
@@ -101,9 +102,10 @@ protected:
             Scene::MeshBuilder meshBuilder;
             RenderBackend::Mesh* mesh = meshBuilder.allocCube(VertexType::RenderVertex, 1, 2, 3, BufferAccessType::ReadWrite).getMesh();
             if (nullptr != mesh) {
-                geoNode->addMesh(mesh);
+                RenderComponent *rc = (RenderComponent*) m_entity->getComponent( Entity::ComponentType::RenderComponentType );
+                rc->addStaticMesh( mesh );
                 m_stage->setRoot(geoNode);
-                Collision::GeometryProcessor process;
+                Scene::GeometryProcessor process;
                 process.addGeo(mesh);
                 Scene::Node::AABB aabb = process.getAABB();
                 geoNode->setAABB(aabb);

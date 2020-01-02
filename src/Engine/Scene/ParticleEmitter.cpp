@@ -119,7 +119,7 @@ void ParticleGenerator::update( d32 /*tick*/ ) {
     }
 }
 
-void ParticleGenerator::setBounds(const Collision::TAABB<f32>& bounds) {
+void ParticleGenerator::setBounds(const TAABB<f32>& bounds) {
     m_useBounds = true;
     m_bounds = bounds;
 }

@@ -149,7 +149,7 @@ static ui16 indices[ NumIndices ] = {
     3, 7
 };
 
-void DbgRenderer::renderAABB( const glm::mat4 &transform, const Collision::TAABB<f32> &aabb ) {
+void DbgRenderer::renderAABB( const glm::mat4 &transform, const TAABB<f32> &aabb ) {
     MeshBuilder meshBuilder;
     meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 1);
     Mesh *mesh = meshBuilder.getMesh();

@@ -24,6 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Scene/SceneCommon.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Common/TObjPtr.h>
+
 #include <cppcore/Container/TArray.h>
 
 #include <glm/glm.hpp>
@@ -97,6 +99,29 @@ protected:
 
 private:
     CPPCore::TArray<RenderBackend::Mesh*> m_newGeo;
+};
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief Describes the render component
+//-------------------------------------------------------------------------------------------------
+class OSRE_EXPORT TransformComponent : public Component {
+public:
+    TransformComponent( Entity *owner, ui32 id );
+    ~TransformComponent() override;
+    void update( Time dt ) override;
+    void setNode( Scene::Node *node );
+    Scene::Node *getNode() const;
+
+protected:
+    bool onPreprocess() override;
+    bool onUpdate( Time dt ) override;
+    bool onRender( RenderBackend::RenderBackendService *rbSrv ) override;
+    bool onPostprocess() override;
+
+private:
+    Common::TObjPtr<Scene::Node*> m_node;
 };
 
 } // Namespace Scene

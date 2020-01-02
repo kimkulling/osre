@@ -51,7 +51,7 @@ ResourceCacheService::ResourceCacheService()
 inline
 ResourceCacheService::~ResourceCacheService() {
     delete m_texResCache;
-    m_texResCache;
+    m_texResCache = nullptr;
 }
 
 inline

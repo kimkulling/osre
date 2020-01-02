@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/Project.h>
-#include <osre/Assets/AssetDataArchive.h>
+#include <osre/App/AssetDataArchive.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/Directory.h>
 #include <osre/Scene/World.h>

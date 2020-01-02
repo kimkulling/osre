@@ -51,8 +51,25 @@ public:
         // empty
     }
 
-    void draw( RenderBackend::RenderBackendService* ) override {
+    void render( RenderBackend::RenderBackendService* ) override {
         // empty
+    }
+
+protected:
+    bool onPreprocess() override {
+        return true;
+    }
+
+    bool onUpdate( Time dt ) override {
+        return true;
+    }
+
+    bool onRender( RenderBackend::RenderBackendService *renderBackendSrv ) override {
+        return true;
+    }
+
+    bool onPostprocess() override {
+        return true;
     }
 };
 
@@ -70,11 +87,10 @@ TEST_F(ComponentTest, accessNodeTest) {
     String name = "test";
     Common::Ids *ids = new Common::Ids;
 
-    Node *n(new Node(name, *ids, nullptr));
-    MockComponent myComp( n, 0);
+    Entity *entity = new Entity(name, *ids);
+    MockComponent myComp( entity, 0);
 
-    EXPECT_EQ(n, myComp.getOwnerNode());
-
+    EXPECT_EQ(entity, myComp.getOwner());
 }
 
 TEST_F( ComponentTest, accessIdTest ) {

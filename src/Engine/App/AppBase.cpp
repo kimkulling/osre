@@ -322,7 +322,7 @@ Scene::Stage *AppBase::createStage( const String &name ) {
 Scene::Stage *AppBase::setActiveStage( Scene::Stage *stage ) {
     if ( nullptr == m_activeWorld ) {
         osre_debug( Tag, "No world to activate state to." );
-        return false;
+        return nullptr;
     }
     
     return m_activeWorld->setActiveStage( stage );

@@ -1,17 +1,18 @@
 #include <osre/App/Entity.h>
 #include <osre/App/AbstractBehaviour.h>
-#include <osre/app/Component.h>
+#include <osre/App/Component.h>
 
 namespace OSRE {
 namespace App {
 
 using namespace ::OSRE::Scene;
 
-Entity::Entity( const String &name )
+Entity::Entity( const String &name, const Common::Ids &ids )
 : Object( name )
 , m_behaviour( nullptr ) 
 , m_renderComponent( nullptr )
 , m_node( nullptr )
+, m_ids( ids )
 , m_aabb() {
     m_renderComponent = new RenderComponent( this, 1 );
 }

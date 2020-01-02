@@ -57,6 +57,7 @@ template<class TResource>
 inline
 TResource* TResourceFactory<TResource>::create(const String& name, const IO::Uri &uri ) {
     if (name.empty()) {
+        osre_debug( ResTag, "Name is empty.");
         return nullptr;
     }
 

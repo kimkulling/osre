@@ -3,9 +3,13 @@
 #include <osre/Common/Object.h>
 #include <osre/App/AppCommon.h>
 #include <osre/Scene/Node.h>
-#include <osre/Collision/TAABB.h>
+#include <osre/Scene/TAABB.h>
 
 namespace OSRE {
+
+namespace Common {
+    class Ids;
+}
 
 namespace Scene {
     class Node;
@@ -29,7 +33,7 @@ public:
         InvalidComponent
     };
 
-    Entity( const String &name );
+    Entity( const String &name, const Common::Ids &ids );
     virtual ~Entity();
     virtual void setBehaviourControl(AbstractBehaviour *behaviour );
     virtual void setNode( Scene::Node *node );
@@ -45,6 +49,7 @@ private:
     AbstractBehaviour *m_behaviour;
     RenderComponent *m_renderComponent;
     Scene::Node *m_node;
+    const Common::Ids &m_ids;
     Scene::Node::AABB m_aabb;
 };
 

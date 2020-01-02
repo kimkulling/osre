@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Component.h>
 #include <osre/App/Entity.h>
 #include <osre/Scene/Node.h>
-#include <osre/Collision/TAABB.h>
+#include <osre/Scene/TAABB.h>
 #include <osre/IO/IOService.h>
 #include <osre/IO/AbstractFileSystem.h>
 
@@ -53,7 +53,6 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::IO;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
-using namespace ::OSRE::Collision;
 
 static const c8* Tag = "AssimpWrapper";
 
@@ -64,8 +63,8 @@ struct BoneInfo {
 AssimpWrapper::AssimpWrapper( Common::Ids &ids )
 : m_scene( nullptr )
 , m_meshArray()
-, m_matArray()
 , m_entity( nullptr )
+, m_matArray()
 , m_parent( nullptr )
 , m_ids( ids )
 , m_mvpParam( nullptr )
@@ -130,7 +129,7 @@ Entity *AssimpWrapper::convertScene() {
         return nullptr;
     }
 
-    m_entity = new Entity(m_absPathWithFile);
+    m_entity = new Entity(m_absPathWithFile, m_ids);
     if (m_scene->HasMaterials() ) {
         for ( ui32 i = 0; i < m_scene->mNumMaterials; ++i ) {
             aiMaterial *currentMat(m_scene->mMaterials[ i ] );
@@ -289,12 +288,12 @@ void AssimpWrapper::impotNode( aiNode *node, Scene::Node *parent ) {
         return;
     }
     
-    Entity *newNode = new Entity( node->mName.C_Str(), m_ids, parent );
+    Node *newNode = new Node( node->mName.C_Str(), m_ids, parent );
     
     // If this is the root-node of the model, set it as the root for the model
     if ( nullptr == m_parent ) {
         m_parent = newNode;
-        m_model->setRootNode( m_parent );
+        m_entity->setNode( newNode );
     }
 
     if ( node->mNumMeshes > 0 ) {
@@ -306,7 +305,7 @@ void AssimpWrapper::impotNode( aiNode *node, Scene::Node *parent ) {
 
             Mesh *geo( m_meshArray[ meshIdx ] );
             if ( nullptr != geo ) {
-                newNode->addMesh( geo );
+                newNode->addMeshReference( meshIdx );
             }
         }
     }

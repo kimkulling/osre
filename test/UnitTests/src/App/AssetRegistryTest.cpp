@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2019 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -21,26 +21,55 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
-#include <osre/Collision/TRay.h>
+#include <osre/App/AssetRegistry.h>
+#include <osre/IO/Uri.h>
 
 namespace OSRE {
 namespace UnitTest {
 
-using namespace ::OSRE::Collision;
+using namespace ::OSRE::App;
 
-class TRayTest : public ::testing::Test {
-    // empty
+class AssetRegistryTest : public ::testing::Test {
+protected:
+    virtual void SetUp() {
+        AssetRegistry *reg( AssetRegistry::create() );
+        EXPECT_NE( nullptr, reg );
+#ifdef OSRE_WINDOWS
+        AssetRegistry::registerAssetPath( "assets", "../../media" );
+#else
+        AssetRegistry::registerAssetPath( "assets", "../media" );
+#endif 
+    }
+
+    virtual void TearDown() {
+        AssetRegistry::destroy();
+    }
 };
 
-TEST_F( TRayTest, createTest ) {
+TEST_F( AssetRegistryTest, createTest ) {
     bool ok( true );
     try {
-        TRay<f32> ray;
-    } catch (...) {
+        AssetRegistry *reg( AssetRegistry::create() );
+        EXPECT_NE( nullptr, reg );
+
+        AssetRegistry::destroy();
+    } catch ( ... ) {
         ok = false;
     }
     EXPECT_TRUE( ok );
 }
 
-} // Namespace Unittest
-} // Namespace OSRE
+TEST_F( AssetRegistryTest, resolve_uri_from_mount_Test ) {
+    static const String ModelPath = "file://assets/Models/Obj/spider.obj";
+    IO::Uri fileUri( ModelPath );
+    String loc = AssetRegistry::resolvePathFromUri( fileUri );
+#ifdef OSRE_WINDOWS
+    static const String expRes = "../../media/Models/Obj/spider.obj";
+#else
+    static const String expRes = "../media/Models/Obj/spider.obj";
+#endif
+    EXPECT_EQ( expRes, loc );
+}
+
+}
+}

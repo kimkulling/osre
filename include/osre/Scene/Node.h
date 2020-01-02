@@ -25,9 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Common.h>
 #include <osre/Scene/SceneCommon.h>
+#include <osre/Scene/TAABB.h>
 #include <osre/Common/Object.h>
 #include <osre/Common/TObjPtr.h>
-#include <osre/Collision/TAABB.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
 #include <cppcore/Container/TArray.h>
@@ -56,7 +56,7 @@ namespace Scene {
 class OSRE_EXPORT Node : public Common::Object {
 public:
     using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::Scene::Node>;
-    using AABB    = ::OSRE::Collision::TAABB<f32>;
+    using AABB    = ::OSRE::Scene::TAABB<f32>;
 
     enum class TraverseMode {
         FlatMode,
@@ -92,6 +92,9 @@ public:
     glm::mat4 getWorlTransformMatrix();
     const RenderBackend::TransformState &getTransformState() const;
 
+    void addMeshReference( size_t entityMeshIdx );
+    size_t getNumMeshReferences() const;
+    size_t getMeshReferenceAt(size_t index) const;
 
 protected:
     virtual void onUpdate(Time dt);
@@ -99,10 +102,13 @@ protected:
 
 private:
     using ChildrenArray = CPPCore::TArray<Node*>;
+    using MeshReferenceArray = ::CPPCore::TArray<size_t>;
+
     using PropertyMap = CPPCore::THashMap<ui32, Properties::Property*>;
 
     ChildrenArray m_children;
     Node *m_parent;
+    MeshReferenceArray m_meshRefererenceArray;
     bool m_isActive;
     Common::Ids *m_ids;
     PropertyMap m_propMap;

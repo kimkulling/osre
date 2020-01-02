@@ -21,27 +21,27 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
+#include <osre/App/Entity.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
 #include <osre/Scene/View.h>
 #include <osre/Scene/World.h>
-#include <osre/Assets/AssetRegistry.h>
-#include <osre/Assets/AssimpWrapper.h>
-#include <osre/Assets/Model.h>
+#include <osre/App/AssetRegistry.h>
+#include <osre/App/AssimpWrapper.h>
+#include <osre/App/Component.h>
 #include <osre/IO/Uri.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/DbgRenderer.h>
-#include <osre/Scene/Component.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/glm.hpp>
 
 using namespace ::OSRE;
-using namespace ::OSRE::Assets;
+using namespace ::OSRE::App;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
@@ -126,8 +126,8 @@ protected:
 
             const Rect2ui &windowsRect = rootWindow->getWindowsRect();
             view->setProjectionParameters( 60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.0001f, 1000.f );
-            Model* model = assimpWrapper.getModel();
-            view->observeBoundingBox( model->getAABB() );
+            Entity *entity = assimpWrapper.getEntity();
+            view->observeBoundingBox( entity->getAABB() );
 
             m_stage->setRoot( model->getRootNode() );
             m_modelNode = m_stage->getRoot();

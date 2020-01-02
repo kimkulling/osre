@@ -22,43 +22,44 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/AbstractProcessor.h>
-#include <osre/Collision/TAABB.h>
-#include <osre/Scene/Node.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Scene/TAABB.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-#include <cppcore/Container/TArray.h>
+#include <GL/glew.h>
+#include <GL/gl.h>
 
 namespace OSRE {
-
 namespace RenderBackend {
-    class Mesh;
-}
 
-namespace Collision {
-        
+class RenderBackendService;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief	This class offers some system-specific functions.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT GeometryProcessor : public Common::AbstractProcessor {
+class OSRE_EXPORT ParticleGenerator {
 public:
-    using GeoArray = CPPCore::TArray<RenderBackend::Mesh*>;
-
-    GeometryProcessor();
-    ~GeometryProcessor();
-    bool execute() override;
-    void addGeo( RenderBackend::Mesh *geo );
-    const Scene::Node::AABB &getAABB() const;
-
-private:
-    void handleGeometry( RenderBackend::Mesh *geo );
+    ParticleGenerator( RenderBackendService *rbSrv );
+    ~ParticleGenerator();
+    void init( ui32 numPoints );
+    void update( d32 tick );
+    void setBounds(const Scene::TAABB<f32>& bounds);
+    Mesh* getMesh() const;
 
 private:
-    GeoArray m_geoArray;
-    Scene::Node::AABB m_aabb;
-    i32 m_dirty;
+    RenderBackendService *m_rbSrv;
+    ui32 m_numPoints;
+    glm::vec3 *m_col;
+    glm::vec3 *m_pos;
+    GLushort *m_pt_indices;
+    Mesh *m_ptGeo;
+    bool m_useBounds;
+    Scene::TAABB<f32> m_bounds;
 };
 
-} // Namespace Collision
+} // Namespace RenderBackend
 } // Namespace OSRE

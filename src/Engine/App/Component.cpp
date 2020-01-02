@@ -92,5 +92,53 @@ bool RenderComponent::onPostprocess() {
     return true;
 }
 
+TransformComponent::TransformComponent( Entity *owner, ui32 id )
+: Component( owner, id )
+, m_node( nullptr ) {
+    // empty
+}
+
+TransformComponent::~TransformComponent()  {
+    // empty
+}
+
+void TransformComponent::update( Time dt ) {
+
+}
+
+void TransformComponent::setNode( Scene::Node *node ) {
+    if ( m_node == node ) {
+        return;
+    }
+
+    m_node = node;
+}
+
+Scene::Node *TransformComponent::getNode() const {
+    return m_node;
+}
+
+bool TransformComponent::onPreprocess() {
+    return true;
+}
+
+bool TransformComponent::onUpdate( Time dt ) {
+    if ( nullptr == m_node ) {
+        return true;
+    }
+
+    m_node->update(dt);
+
+    return true;
+}
+
+bool TransformComponent::onRender( RenderBackend::RenderBackendService *rbSrv ) {
+    return true;
+}
+
+bool TransformComponent::onPostprocess() {
+    return true;
+}
+
 } // Namespace Scene
 } // Namespace OSRE
