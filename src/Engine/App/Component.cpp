@@ -53,7 +53,7 @@ RenderComponent::~RenderComponent() {
     // empty
 }
 
-void RenderComponent::addStaticGeometry( Mesh *geo ) {
+void RenderComponent::addStaticMesh( Mesh *geo ) {
     if ( nullptr == geo ) {
         return;
     }

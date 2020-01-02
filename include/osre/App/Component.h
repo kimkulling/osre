@@ -86,7 +86,8 @@ public:
     void update( Time dt ) override;
     size_t getNumGeometry() const;
     RenderBackend::Mesh *getMeshAt(size_t idx) const;
-    void addStaticGeometry( RenderBackend::Mesh *geo );
+    void addStaticMesh( RenderBackend::Mesh *geo );
+    void addStaticMeshArray( RenderBackend::MeshArray &array );
 
 protected:
     bool onPreprocess() override;

@@ -112,7 +112,10 @@ bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
         return false;
     }
     convertScene();
-    m_model->setMeshArray( m_meshArray );
+    RenderComponent *comp  = (RenderComponent*) m_entity->getComponent( Entity::ComponentType::RenderComponentType );
+    if (nullptr != comp) {
+        comp->addStaticMeshArray( m_meshArray );
+    }
 
     return true;
 }
@@ -159,7 +162,7 @@ Entity *AssimpWrapper::convertScene() {
         }
     }
 
-    return m_model;
+    return m_entity;
 }
 
 static void copyAiMatrix4(const aiMatrix4x4 &aiMat, glm::mat4 &mat) {
@@ -189,7 +192,7 @@ void AssimpWrapper::importMeshes( aiMesh *mesh ) {
         return;
     }
 
-    TAABB<f32> aabb = m_model->getAABB();
+    TAABB<f32> aabb = m_entity->getAABB();
     Mesh *currentMesh( Mesh::create( 1 ) );
 	currentMesh->m_vertextype = VertexType::RenderVertex;
     ui32 numVertices( mesh->mNumVertices );
@@ -278,7 +281,7 @@ void AssimpWrapper::importMeshes( aiMesh *mesh ) {
     currentMesh->m_material = m_matArray[matIdx];
     
     m_meshArray.add( currentMesh );
-    m_model->setAABB( aabb );
+    m_entity->setAABB( aabb );
 }
 
 void AssimpWrapper::impotNode( aiNode *node, Scene::Node *parent ) {

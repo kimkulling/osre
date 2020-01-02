@@ -2,6 +2,9 @@
 
 #include <osre/Common/Object.h>
 #include <osre/App/AppCommon.h>
+#include <osre/Scene/Node.h>
+#include <osre/Collision/TAABB.h>
+
 namespace OSRE {
 
 namespace Scene {
@@ -11,6 +14,7 @@ namespace Scene {
 namespace App {
 
 class AbstractBehaviour;
+class Component;
 class RenderComponent;
 
 class Entity : public Common::Object {
@@ -33,11 +37,15 @@ public:
     virtual bool update( Time dt );
     virtual bool render( RenderBackend::RenderBackendService *rbSrv );
     virtual bool postprocess();
+    Component *getComponent( ComponentType type ) const;
+    virtual void setAABB( const Scene::Node::AABB &aabb );
+    virtual const Scene::Node::AABB &getAABB() const;
 
 private:
     AbstractBehaviour *m_behaviour;
     RenderComponent *m_renderComponent;
     Scene::Node *m_node;
+    Scene::Node::AABB m_aabb;
 };
 
 } // Namespace App
