@@ -73,7 +73,7 @@ template<class T>
 inline
 TQuadTree<T>::TQuadTree(const Rect &rc)
 : m_root( nullptr ) {
-    m_root = new Node(rc);
+    m_root = new Entity(rc);
 }
 
 template<class T>

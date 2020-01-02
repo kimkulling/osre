@@ -29,7 +29,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/glm.hpp>
 
 namespace OSRE {
-namespace Scene {
+namespace App {
+
+class Entity;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -40,16 +42,20 @@ class OSRE_EXPORT Component {
 public:
     virtual ~Component();
     virtual void update( Time dt ) = 0;
-    virtual void draw( RenderBackend::RenderBackendService *renderBackendSrv ) = 0;
-    void setId( ui32 id );
-    ui32 getId() const;
-    Node *getOwnerNode() const;
+    virtual void render( RenderBackend::RenderBackendService *renderBackendSrv );
+    virtual void setId( ui32 id );
+    virtual ui32 getId() const;
+    virtual Entity *getOwner() const;
 
 protected:
-    Component( Node *node, ui32 id );
+    Component( Entity *owner, ui32 id );
+    virtual bool onPreprocess() = 0;
+    virtual bool onUpdate( Time dt ) = 0;
+    virtual bool onRender( RenderBackend::RenderBackendService *renderBackendSrv ) = 0;
+    virtual bool onPostprocess() = 0;
 
 private:
-    Node *m_owner;
+    Entity *m_owner;
     ui32 m_id;
 };
 
@@ -64,7 +70,7 @@ ui32 Component::getId() const {
 }
 
 inline
-Node *Component::getOwnerNode() const {
+Entity *Component::getOwner() const {
     return m_owner;
 }
 
@@ -75,73 +81,22 @@ Node *Component::getOwnerNode() const {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT RenderComponent : public Component {
 public:
-    RenderComponent(Node *node, ui32 id );
-    virtual ~RenderComponent();
+    RenderComponent( Entity *owner, ui32 id );
+    ~RenderComponent() override;
     void update( Time dt ) override;
-    void draw( RenderBackend::RenderBackendService *renderBackendSrv ) override;
     size_t getNumGeometry() const;
-    RenderBackend::Mesh *getGeoAt(size_t idx) const;
-    void addStaticGeometry( RenderBackend::Mesh *geo );
+    RenderBackend::Mesh *getMeshAt(size_t idx) const;
+    void addStaticMesh( RenderBackend::Mesh *geo );
+    void addStaticMeshArray( RenderBackend::MeshArray &array );
+
+protected:
+    bool onPreprocess() override;
+    bool onUpdate( Time dt ) override;
+    bool onRender( RenderBackend::RenderBackendService *rbSrv ) override;
+    bool onPostprocess() override;
 
 private:
     CPPCore::TArray<RenderBackend::Mesh*> m_newGeo;
-};
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief Describes the transformation component.
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT TransformComponent : public Component {
-public:
-    TransformComponent(Node *node, ui32 id );
-    virtual ~TransformComponent();
-    void update( Time dt ) override;
-    void draw( RenderBackend::RenderBackendService *renderBackendSrv ) override;
-    void setTranslation( const glm::vec3 &pos );
-    const glm::vec3 &getTranslation() const;
-    void setScale( const glm::vec3 &pos );
-    const glm::vec3 &getScale() const;
-    void setTransformationMatrix(const glm::mat4 &m);
-    const glm::mat4 &getTransformationMatrix() const;
-    glm::mat4 getWorlTransformMatrix();
-    const RenderBackend::TransformState &getTransformState() const;
-
-private:
-    enum DirtyFrag {
-        NotDirty = 0,
-        NeedsTransform = 1
-    };
-    ui32 m_dirty;
-    RenderBackend::TransformState m_localTransformState;
-    glm::mat4 m_transform;
-};
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief Describes the collision component.
-//-------------------------------------------------------------------------------------------------
-class CollisionComponent : public Component {
-public:
-    CollisionComponent(Node *node, ui32 id );
-    virtual ~CollisionComponent();
-    void update( Time dt ) override;
-};
-
-class LightComponent : public Component {
-public:
-    LightComponent(Node *node, ui32 id);
-    virtual ~LightComponent();
-    void update(Time dt) override;
-    void setLight( RenderBackend::Light &light );
-    const RenderBackend::Light &getLight() const;
-    void setRadius(f32 r);
-    f32 getRadius() const;
-
-private:
-    RenderBackend::Light m_light;
-    f32 m_radius;
 };
 
 } // Namespace Scene

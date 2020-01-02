@@ -37,36 +37,26 @@ SET( app_inc
     ${HEADER_PATH}/App/AbstractBehaviour.h
     ${HEADER_PATH}/App/AppBase.h
     ${HEADER_PATH}/App/Component.h
-    ${HEADER_PATH}/App/GameObject.h
+    ${HEADER_PATH}/App/Entity.h
     ${HEADER_PATH}/App/ServiceProvider.h
     ${HEADER_PATH}/App/Project.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
 	${HEADER_PATH}/App/ResourceCacheService.h
+    ${HEADER_PATH}/App/AssetsCommon.h
+    ${HEADER_PATH}/App/AssetRegistry.h
+    ${HEADER_PATH}/App/AssetDataArchive.h
+    ${HEADER_PATH}/App/AssimpWrapper.h
 )
 
 SET( app_src
     App/AppBase.cpp
     App/Component.cpp
-    App/GameObject.cpp
+    App/Entity.cpp
     App/ServiceProvider.cpp
 	App/Project.cpp
-)
-
-#==============================================================================
-# Assets
-#==============================================================================
-SET( assets_inc
-    ${HEADER_PATH}/Assets/AssetsCommon.h
-    ${HEADER_PATH}/Assets/AssetRegistry.h
-    ${HEADER_PATH}/Assets/AssetDataArchive.h
-    ${HEADER_PATH}/Assets/AssimpWrapper.h
-    ${HEADER_PATH}/Assets/Model.h
-)
-SET( assets_src
-    Assets/AssetRegistry.cpp
-    Assets/AssetDataArchive.cpp
-    Assets/AssimpWrapper.cpp
-    Assets/Model.cpp
+    App/AssetRegistry.cpp
+    App/AssetDataArchive.cpp
+    App/AssimpWrapper.cpp
 )
 
 #==============================================================================
@@ -523,7 +513,6 @@ add_definitions( -D${USE_PLATFORM} )
 ADD_LIBRARY( osre SHARED
     ../../README.md
     ${app_inc}
-    ${assets_inc}
     ${debugging_inc}
     ${doc_inc}
     ${common_inc}
@@ -550,7 +539,6 @@ ADD_LIBRARY( osre SHARED
     ${math_inc}
 
     ${app_src}
-    ${assets_src}
     ${Common_src}
     ${components_src}
     ${debugging_src}

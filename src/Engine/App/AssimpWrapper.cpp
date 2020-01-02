@@ -20,8 +20,8 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Assets/AssimpWrapper.h>
-#include <osre/Assets/Model.h>
+#include <osre/App/AssimpWrapper.h>
+#include <osre/App/AssetRegistry.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/Directory.h>
 #include <osre/Common/Logger.h>
@@ -29,10 +29,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/StringUtils.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
-#include <osre/Assets/AssetRegistry.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
-#include <osre/Scene/Component.h>
+#include <osre/App/Component.h>
+#include <osre/App/Entity.h>
 #include <osre/Scene/Node.h>
 #include <osre/Collision/TAABB.h>
 #include <osre/IO/IOService.h>
@@ -46,7 +46,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <iostream>
 
 namespace OSRE {
-namespace Assets {
+namespace App {
     
 using namespace ::Assimp;
 using namespace ::OSRE::Common;
@@ -65,7 +65,7 @@ AssimpWrapper::AssimpWrapper( Common::Ids &ids )
 : m_scene( nullptr )
 , m_meshArray()
 , m_matArray()
-, m_model( nullptr )
+, m_entity( nullptr )
 , m_parent( nullptr )
 , m_ids( ids )
 , m_mvpParam( nullptr )
@@ -111,22 +111,26 @@ bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
         m_absPathWithFile = "";
         return false;
     }
-    convertSceneToModel();
-    m_model->setMeshArray( m_meshArray );
+    convertScene();
+    RenderComponent *comp  = (RenderComponent*) m_entity->getComponent( Entity::ComponentType::RenderComponentType );
+    if (nullptr != comp) {
+        comp->addStaticMeshArray( m_meshArray );
+    }
 
     return true;
 }
 
-Model *AssimpWrapper::getModel() const {
-    return m_model;
+Entity *AssimpWrapper::getEntity() const {
+    return m_entity;
 }
 
-Model *AssimpWrapper::convertSceneToModel() {
+
+Entity *AssimpWrapper::convertScene() {
     if ( nullptr == m_scene) {
         return nullptr;
     }
 
-    m_model = new Model;
+    m_entity = new Entity(m_absPathWithFile);
     if (m_scene->HasMaterials() ) {
         for ( ui32 i = 0; i < m_scene->mNumMaterials; ++i ) {
             aiMaterial *currentMat(m_scene->mMaterials[ i ] );
@@ -158,7 +162,7 @@ Model *AssimpWrapper::convertSceneToModel() {
         }
     }
 
-    return m_model;
+    return m_entity;
 }
 
 static void copyAiMatrix4(const aiMatrix4x4 &aiMat, glm::mat4 &mat) {
@@ -188,7 +192,7 @@ void AssimpWrapper::importMeshes( aiMesh *mesh ) {
         return;
     }
 
-    TAABB<f32> aabb = m_model->getAABB();
+    TAABB<f32> aabb = m_entity->getAABB();
     Mesh *currentMesh( Mesh::create( 1 ) );
 	currentMesh->m_vertextype = VertexType::RenderVertex;
     ui32 numVertices( mesh->mNumVertices );
@@ -277,7 +281,7 @@ void AssimpWrapper::importMeshes( aiMesh *mesh ) {
     currentMesh->m_material = m_matArray[matIdx];
     
     m_meshArray.add( currentMesh );
-    m_model->setAABB( aabb );
+    m_entity->setAABB( aabb );
 }
 
 void AssimpWrapper::impotNode( aiNode *node, Scene::Node *parent ) {
@@ -285,7 +289,7 @@ void AssimpWrapper::impotNode( aiNode *node, Scene::Node *parent ) {
         return;
     }
     
-    Node *newNode = new Node( node->mName.C_Str(), m_ids, parent );
+    Entity *newNode = new Entity( node->mName.C_Str(), m_ids, parent );
     
     // If this is the root-node of the model, set it as the root for the model
     if ( nullptr == m_parent ) {

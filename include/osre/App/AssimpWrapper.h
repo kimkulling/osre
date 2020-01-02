@@ -22,51 +22,87 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <cppcore/Container/THashMap.h>
+#include <osre/App/AssetsCommon.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Common/Ids.h>
+#include <osre/Collision/TAABB.h>
+
+#include <cppcore/Container/TArray.h>
+
+#include <map>
+
+// Forward declarations ---------------------------------------------------------------------------
+struct aiScene;
+struct aiMesh;
+struct aiNode;
+struct aiMaterial;
+struct aiAnimation;
 
 namespace OSRE {
-    
-// Forward declarations
-namespace IO {
-    class Stream;
-    class Uri;
+
+// Froward declarations
+namespace Common {
+    class Ids;
 }
 
 namespace RenderBackend {
-    struct BufferData;
+    class Mesh;
+
+    struct UniformVar;
+    struct Material;
+}
+
+namespace IO {
+    class Uri;
 }
 
 namespace Scene {
-    class World;
+    class Node;
 }
+    
+namespace App {
 
-namespace Assets {
+class Entity;
+struct BoneInfo;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///
 ///	@brief  
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AssetRegistry {
+class OSRE_EXPORT AssimpWrapper {
 public:
-    static AssetRegistry *create();
-    static void destroy();
-    static bool registerAssetPath( const String &mount, const String &path );
-    static bool hasPath( const String &mount );
-    static String getPath( const String &mount );
-    static String resolvePathFromUri( const IO::Uri &location );
-    static bool clear();
+    AssimpWrapper( Common::Ids &ids );
+    ~AssimpWrapper();
+    bool importAsset( const IO::Uri &file, ui32 flags );
+    Entity *getEntity() const;
+
+protected:
+    Entity *convertScene();
+    void importMeshes( aiMesh *mesh );
+	void importBones(aiMesh* mesh);
+    void impotNode( aiNode *node, Scene::Node *parent );
+    void importMaterial( aiMaterial *material );
+    void importAnimation( aiAnimation *animation );
 
 private:
-    AssetRegistry();
-    ~AssetRegistry();
+	const aiScene *m_scene;
+	RenderBackend::MeshArray m_meshArray;
+    Entity *m_entity;
+    
+	using MaterialArray = CPPCore::TArray<RenderBackend::Material*> ;
+    MaterialArray m_matArray;
+    Scene::Node *m_parent;
+    Common::Ids &m_ids;
+    RenderBackend::UniformVar *m_mvpParam;
+    String m_root;
+    String m_absPathWithFile;
 
-private:
-    static AssetRegistry *s_instance;
+	using BoneInfoArray = ::CPPCore::TArray<BoneInfo*>;
+	BoneInfoArray m_boneInfoArray;
 
-    typedef CPPCore::THashMap<ui32, String> Name2PathMap;
-    Name2PathMap m_name2pathMap;
+	using Bone2NodeMap = std::map<const char*, const aiNode*>;
+	Bone2NodeMap m_bone2NodeMap;
 };
 
 } // Namespace Assets

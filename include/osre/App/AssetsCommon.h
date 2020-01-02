@@ -20,70 +20,13 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Assets/Model.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/Node.h>
+#pragma once
+
+#include <osre/Common/osre_common.h>
+
 
 namespace OSRE {
 namespace Assets {
-
-using namespace ::OSRE::Collision;
-using namespace ::OSRE::RenderBackend;
-
-Model::Model() 
-: m_meshArray( nullptr )
-, m_root( nullptr )
-, m_aabb() {
-    // empty
-}
-
-Model::Model( MeshArray *geoArray, Scene::Node *root, ModelAABB &aabb )
-: m_meshArray( geoArray )
-, m_root( root )
-, m_aabb( aabb ) {
-    // empty
-}
-
-Model::~Model() {
-    // empty
-}
-
-void Model::setMeshArray( MeshArray &geoArray ) {
-    m_meshArray = &geoArray;
-}
-
-static const MeshArray Empty; 
-
-const RenderBackend::MeshArray &Model::getMeshArray() const {
-    if (nullptr == m_meshArray) {
-        return Empty;
-    }
-    
-    return *m_meshArray;
-}
-
-void Model::setRootNode( Scene::Node *root ) {
-    if ( nullptr != m_root ) {
-        m_root->release();
-    }
-
-    m_root = root;
-    if ( nullptr != m_root ) {
-        m_root->get();
-    }
-}
-
-Scene::Node *Model::getRootNode() const {
-    return m_root;
-}
-
-void Model::setAABB( const TAABB<f32> &aabb ) {
-    m_aabb = aabb;
-}
-
-const TAABB<f32> &Model::getAABB() const {
-    return m_aabb;
-}
 
 } // Namespace Assets
 } // Namespace OSRE

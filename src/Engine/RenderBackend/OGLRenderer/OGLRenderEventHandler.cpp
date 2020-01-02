@@ -38,7 +38,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/HWBufferManager.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Uri.h>
-#include <osre/Assets/AssetRegistry.h>
+#include <osre/App/AssetRegistry.h>
 
 #include <cppcore/Container/TArray.h>
 

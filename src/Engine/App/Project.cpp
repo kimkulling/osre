@@ -69,6 +69,7 @@ namespace Details {
 
         return true;
     }
+
 } // Namespace Details
 
 Project::Project()
