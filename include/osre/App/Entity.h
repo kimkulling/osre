@@ -4,6 +4,7 @@
 #include <osre/App/AppCommon.h>
 #include <osre/Scene/Node.h>
 #include <osre/Scene/TAABB.h>
+#include <osre/App/Component.h>
 
 namespace OSRE {
 
@@ -24,15 +25,6 @@ class RenderComponent;
 class Entity : public Common::Object {
 public:
     /// The type of component
-    enum class ComponentType {
-        RenderComponentType,     ///< Renderable component
-        TransformComponentType,  ///< Transformable component
-        CollisionComponent,      ///< For collision
-        ScriptComponent,         ///< For scripting events 
-        MaxNumComponents,
-        InvalidComponent
-    };
-
     Entity( const String &name, const Common::Ids &ids );
     virtual ~Entity();
     virtual void setBehaviourControl(AbstractBehaviour *behaviour );

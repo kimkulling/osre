@@ -107,7 +107,7 @@ void TransformComponent::update( Time dt ) {
 }
 
 void TransformComponent::setNode( Scene::Node *node ) {
-    if ( m_node == node ) {
+    if ( m_node.getPtr() == node ) {
         return;
     }
 
@@ -115,7 +115,7 @@ void TransformComponent::setNode( Scene::Node *node ) {
 }
 
 Scene::Node *TransformComponent::getNode() const {
-    return m_node;
+    return m_node.getPtr();
 }
 
 bool TransformComponent::onPreprocess() {
@@ -123,7 +123,7 @@ bool TransformComponent::onPreprocess() {
 }
 
 bool TransformComponent::onUpdate( Time dt ) {
-    if ( nullptr == m_node ) {
+    if ( !m_node.isValid() ) {
         return true;
     }
 

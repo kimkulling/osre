@@ -20,7 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/RenderBackend/ParticleGenerator.h>
+#include <osre/Scene/ParticleEmitter.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
@@ -30,9 +30,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Random/RandomGenerator.h>
 
 namespace OSRE {
-namespace RenderBackend {
+namespace Scene {
 
-ParticleGenerator::ParticleGenerator( RenderBackendService *rbSrv )
+using namespace ::OSRE::RenderBackend;
+
+ParticleEmitter::ParticleEmitter( RenderBackendService *rbSrv )
 : m_rbSrv( rbSrv )
 , m_numPoints( 0 )
 , m_col( nullptr )
@@ -44,12 +46,12 @@ ParticleGenerator::ParticleGenerator( RenderBackendService *rbSrv )
     // empty
 }
 
-ParticleGenerator::~ParticleGenerator() {
+ParticleEmitter::~ParticleEmitter() {
     delete[] m_col;
     delete[] m_pos;
 }
 
-void ParticleGenerator::init( ui32 numPoints ) {
+void ParticleEmitter::init( ui32 numPoints ) {
     m_numPoints = numPoints;
     m_col = new glm::vec3[ numPoints ];
     m_pos = new glm::vec3[ numPoints ];
@@ -95,7 +97,7 @@ void ParticleGenerator::init( ui32 numPoints ) {
     m_ptGeo->m_material = mat;
 }
 
-void ParticleGenerator::update( d32 /*tick*/ ) {
+void ParticleEmitter::update( d32 /*tick*/ ) {
     CPPCore::RandomGenerator generator;
     for ( ui32 i = 0; i < m_numPoints; i++ ) {
         const f32 x = static_cast< f32 >( generator.get( -10, 10 ) ) / 100.0f;
@@ -119,12 +121,12 @@ void ParticleGenerator::update( d32 /*tick*/ ) {
     }
 }
 
-void ParticleGenerator::setBounds(const TAABB<f32>& bounds) {
+void ParticleEmitter::setBounds(const TAABB<f32>& bounds) {
     m_useBounds = true;
     m_bounds = bounds;
 }
 
-Mesh* ParticleGenerator::getMesh() const {
+Mesh* ParticleEmitter::getMesh() const {
     return m_ptGeo;
 }
 

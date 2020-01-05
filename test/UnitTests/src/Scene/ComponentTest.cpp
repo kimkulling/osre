@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Ids.h>
 #include <osre/Scene/Node.h>
 #include <osre/App/Component.h>
+#include <osre/App/Entity.h>
 
 namespace OSRE {
 namespace UnitTest {
@@ -33,7 +34,16 @@ using namespace ::OSRE::App;
 using namespace ::OSRE::Scene;
 
 class ComponentTest : public ::testing::Test {
-    // empty
+protected:
+    Common::Ids *m_ids;
+
+    void SetUp() override {
+        m_ids = new Common::Ids;
+    }
+
+    void TearDown() override {
+        delete m_ids;
+    }
 };
 
 class MockComponent : public Component {
@@ -85,9 +95,8 @@ TEST_F( ComponentTest, createTest ) {
 
 TEST_F(ComponentTest, accessNodeTest) {
     String name = "test";
-    Common::Ids *ids = new Common::Ids;
 
-    Entity *entity = new Entity(name, *ids);
+    Entity *entity = new Entity(name, *m_ids);
     MockComponent myComp( entity, 0);
 
     EXPECT_EQ(entity, myComp.getOwner());
@@ -95,14 +104,14 @@ TEST_F(ComponentTest, accessNodeTest) {
 
 TEST_F( ComponentTest, accessIdTest ) {
     String name = "test";
-    Common::Ids *ids = new Common::Ids;
-    Node *n(new Node(name, *ids, nullptr));
 
-    Component *tc = n->getComponent(Node::ComponentType::TransformComponentType);
+    Entity *entity = new Entity(name, *m_ids);
+
+    Component *tc = entity->getComponent(ComponentType::TransformComponentType);
     EXPECT_NE(nullptr, tc);
     const ui32 id1 = tc->getId();
 
-    Component *rc = n->getComponent(Node::ComponentType::RenderComponentType);
+    Component *rc = entity->getComponent(ComponentType::RenderComponentType);
     EXPECT_NE(nullptr, rc);
     const ui32 id2 = rc->getId();
 

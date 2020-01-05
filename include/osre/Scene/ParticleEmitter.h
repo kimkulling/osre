@@ -32,33 +32,36 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <GL/gl.h>
 
 namespace OSRE {
-namespace RenderBackend {
 
-class RenderBackendService;
+namespace RenderBackend {
+    class RenderBackendService;
+}
+
+namespace Scene {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
 ///	@brief	This class offers some system-specific functions.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT ParticleGenerator {
+class OSRE_EXPORT ParticleEmitter {
 public:
-    ParticleGenerator( RenderBackendService *rbSrv );
-    ~ParticleGenerator();
+    ParticleEmitter( RenderBackend::RenderBackendService *rbSrv );
+    ~ParticleEmitter();
     void init( ui32 numPoints );
     void update( d32 tick );
-    void setBounds(const Scene::TAABB<f32>& bounds);
-    Mesh* getMesh() const;
+    void setBounds(const TAABB<f32>& bounds);
+    RenderBackend::Mesh* getMesh() const;
 
 private:
-    RenderBackendService *m_rbSrv;
+    RenderBackend::RenderBackendService *m_rbSrv;
     ui32 m_numPoints;
     glm::vec3 *m_col;
     glm::vec3 *m_pos;
     GLushort *m_pt_indices;
-    Mesh *m_ptGeo;
+    RenderBackend::Mesh *m_ptGeo;
     bool m_useBounds;
-    Scene::TAABB<f32> m_bounds;
+    TAABB<f32> m_bounds;
 };
 
 } // Namespace RenderBackend

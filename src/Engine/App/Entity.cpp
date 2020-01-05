@@ -49,17 +49,17 @@ bool Entity::postprocess() {
 
 Component *Entity::getComponent( ComponentType type ) const {
     switch (type) {
-        case OSRE::App::Entity::ComponentType::RenderComponentType:
+        case OSRE::App::ComponentType::RenderComponentType:
             return m_renderComponent;
-        case OSRE::App::Entity::ComponentType::TransformComponentType:
+        case OSRE::App::ComponentType::TransformComponentType:
             break;
-        case OSRE::App::Entity::ComponentType::CollisionComponent:
+        case OSRE::App::ComponentType::CollisionComponent:
             break;
-        case OSRE::App::Entity::ComponentType::ScriptComponent:
+        case OSRE::App::ComponentType::ScriptComponent:
             break;
-        case OSRE::App::Entity::ComponentType::MaxNumComponents:
+        case OSRE::App::ComponentType::MaxNumComponents:
             break;
-        case OSRE::App::Entity::ComponentType::InvalidComponent:
+        case OSRE::App::ComponentType::InvalidComponent:
             break;
         default:
             break;

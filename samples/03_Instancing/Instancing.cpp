@@ -102,7 +102,7 @@ protected:
             Scene::MeshBuilder meshBuilder;
             RenderBackend::Mesh* mesh = meshBuilder.allocCube(VertexType::RenderVertex, 1, 2, 3, BufferAccessType::ReadWrite).getMesh();
             if (nullptr != mesh) {
-                RenderComponent *rc = (RenderComponent*) m_entity->getComponent( Entity::ComponentType::RenderComponentType );
+                RenderComponent *rc = (RenderComponent*) m_entity->getComponent( ComponentType::RenderComponentType );
                 rc->addStaticMesh( mesh );
                 m_stage->setRoot(geoNode);
                 Scene::GeometryProcessor process;

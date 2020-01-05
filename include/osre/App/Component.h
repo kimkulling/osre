@@ -35,6 +35,15 @@ namespace App {
 
 class Entity;
 
+enum class ComponentType {
+    RenderComponentType,     ///< Renderable component
+    TransformComponentType,  ///< Transformable component
+    CollisionComponent,      ///< For collision
+    ScriptComponent,         ///< For scripting events
+    MaxNumComponents,
+    InvalidComponent
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -121,7 +130,7 @@ protected:
     bool onPostprocess() override;
 
 private:
-    Common::TObjPtr<Scene::Node*> m_node;
+    Common::TObjPtr<Scene::Node> m_node;
 };
 
 } // Namespace Scene

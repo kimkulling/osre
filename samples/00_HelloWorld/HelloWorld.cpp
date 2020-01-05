@@ -87,8 +87,8 @@ protected:
         m_stage = AppBase::createStage( "HelloWorld" );
         AppBase::activateStage( m_stage->getName() );
 
-        m_entity = new Entity("entity", AppBase::getIdContainer() );
-        RenderComponent *rc = (RenderComponent*) m_entity->getComponent( Entity::ComponentType::RenderComponentType );
+        m_entity = new Entity("entity", *AppBase::getIdContainer() );
+        RenderComponent *rc = (RenderComponent*) m_entity->getComponent( ComponentType::RenderComponentType );
         Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
         Scene::MeshBuilder meshBuilder;
         meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);

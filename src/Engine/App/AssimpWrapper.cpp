@@ -111,7 +111,7 @@ bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
         return false;
     }
     convertScene();
-    RenderComponent *comp  = (RenderComponent*) m_entity->getComponent( Entity::ComponentType::RenderComponentType );
+    RenderComponent *comp  = (RenderComponent*) m_entity->getComponent( ComponentType::RenderComponentType );
     if (nullptr != comp) {
         comp->addStaticMeshArray( m_meshArray );
     }
