@@ -61,6 +61,9 @@ void RenderComponent::addStaticMesh( Mesh *geo ) {
     m_newGeo.add( geo );
 }
 
+void addStaticMeshArray( RenderBackend::MeshArray &array );
+
+
 size_t RenderComponent::getNumGeometry() const {
     return m_newGeo.size();
 }

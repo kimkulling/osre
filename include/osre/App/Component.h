@@ -94,7 +94,6 @@ class OSRE_EXPORT RenderComponent : public Component {
 public:
     RenderComponent( Entity *owner, ui32 id );
     ~RenderComponent() override;
-    void update( Time dt ) override;
     size_t getNumGeometry() const;
     RenderBackend::Mesh *getMeshAt(size_t idx) const;
     void addStaticMesh( RenderBackend::Mesh *geo );
