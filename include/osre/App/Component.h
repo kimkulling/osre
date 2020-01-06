@@ -52,7 +52,7 @@ enum class ComponentType {
 class OSRE_EXPORT Component {
 public:
     virtual ~Component();
-    virtual void update( Time dt ) = 0;
+    virtual void update( Time dt );
     virtual void render( RenderBackend::RenderBackendService *renderBackendSrv );
     virtual void setId( ui32 id );
     virtual ui32 getId() const;
