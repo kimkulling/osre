@@ -43,6 +43,14 @@ Component::~Component() {
 	// empty
 }
 
+void Component::update( Time dt ) {
+    onUpdate( dt );
+}
+
+void Component::render( RenderBackend::RenderBackendService *renderBackendSrv ) {
+    onRender(renderBackendSrv);
+}
+
 RenderComponent::RenderComponent(Entity *owner, ui32 id )
 : Component( owner, id )
 , m_newGeo() {
@@ -51,6 +59,7 @@ RenderComponent::RenderComponent(Entity *owner, ui32 id )
 
 RenderComponent::~RenderComponent() {
     // empty
+
 }
 
 void RenderComponent::addStaticMesh( Mesh *geo ) {
