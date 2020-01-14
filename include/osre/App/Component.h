@@ -38,7 +38,6 @@ class Entity;
 enum class ComponentType {
     RenderComponentType,     ///< Renderable component
     TransformComponentType,  ///< Transformable component
-    CollisionComponent,      ///< For collision
     ScriptComponent,         ///< For scripting events
     MaxNumComponents,
     InvalidComponent

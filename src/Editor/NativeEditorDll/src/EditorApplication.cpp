@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Ids.h>
 #include <osre/Common/Event.h>
 #include <osre/App/AppBase.h>
+#include <osre/App/Entity.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/PlatformInterface.h>
@@ -37,9 +38,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/View.h>
 #include <osre/Scene/TrackBall.h>
 #include <osre/IO/IOService.h>
-#include <osre/Assets/AssimpWrapper.h>
-#include <osre/Assets/AssetDataArchive.h>
-#include <osre/Assets/Model.h>
+#include <osre/App/AssimpWrapper.h>
+#include <osre/App/AssetDataArchive.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
@@ -51,12 +51,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace NativeEditor {
 
+using namespace ::OSRE::App;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Properties;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::Scene;
-using namespace ::OSRE::Assets;
 
 static const c8 *Tag = "EditorApplication";
 
@@ -74,6 +74,7 @@ struct EditorApplication::Impl {
     bool m_worldAccess;
     bool m_stageAccess;
     bool m_nodeAccess;
+    Common::Ids m_ids;
     Scene::World *m_world;
     Scene::Stage *m_stage;
     Scene::Node *m_node;
@@ -240,7 +241,7 @@ int EditorApplication::importAsset( const String &filename, int flags ) {
     }
 
     Ids ids;
-    Assets::AssimpWrapper assimpWrapper( ids );
+    AssimpWrapper assimpWrapper( ids );
     String normalizedFilename;
 #ifdef OSRE_WINDOWS
     IO::Uri::normalizePath( filename, '\\', normalizedFilename );
@@ -249,7 +250,7 @@ int EditorApplication::importAsset( const String &filename, int flags ) {
 #endif
     IO::Uri modelLoc( normalizedFilename );
     if (assimpWrapper.importAsset( modelLoc, flags )) {
-        Model *model = assimpWrapper.getModel();
+        Entity *entity = assimpWrapper.getEntity();
         RenderBackendService *rbSrv(getRenderBackendService());
         if (nullptr != rbSrv) {
             Platform::AbstractWindow *rootWindow(getRootWindow());
@@ -270,9 +271,9 @@ int EditorApplication::importAsset( const String &filename, int flags ) {
 
             const Rect2ui &windowsRect = rootWindow->getWindowsRect();
             view->setProjectionParameters(60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.001f, 1000.f);
-            view->observeBoundingBox(model->getAABB());
+            view->observeBoundingBox(entity->getAABB());
 
-            m_impl->m_stage->setRoot(model->getRootNode());
+            m_impl->m_stage->setRoot( entity->getNode() );
             m_impl->m_modelNode = m_impl->m_stage->getRoot();
         }
 
@@ -321,7 +322,13 @@ bool EditorApplication::onCreate() {
     AppBase::activateStage( m_impl->m_stage->getName() );
     Stage *stage = m_impl->m_stage;
 
+    // the scene object
+    Entity *entity = new Entity( "model", m_impl->m_ids );
+
+    // position of the entity
     Scene::Node *geoNode = stage->addNode( "geo", nullptr );
+
+    // the meshes
     Scene::MeshBuilder meshBuilder;
     meshBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
     RenderBackend::Mesh *mesh = meshBuilder.getMesh();
@@ -329,7 +336,10 @@ bool EditorApplication::onCreate() {
         m_impl->m_transformMatrix.m_model = glm::rotate( m_impl->m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
         m_impl->m_transformMatrix.update();
         getRenderBackendService()->setMatrix( "MVP", m_impl->m_transformMatrix.m_mvp );
-        geoNode->addMesh( mesh );
+        
+        RenderComponent *comp = ( RenderComponent * )entity->getComponent( ComponentType::RenderComponentType );
+        comp->addStaticMesh( mesh );
+        entity->setNode( geoNode );
     }
 
     return true;

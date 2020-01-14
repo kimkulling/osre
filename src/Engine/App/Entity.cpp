@@ -25,8 +25,12 @@ void Entity::setBehaviourControl( AbstractBehaviour *behaviour ) {
     m_behaviour = behaviour;
 }
 
-void Entity::setNode( Scene::Node *node ) {
+void Entity::setNode( Node *node ) {
     m_node = node;
+}
+
+Node *Entity::getNode() const {
+    return m_node;
 }
 
 bool Entity::preprocess() {
@@ -52,8 +56,6 @@ Component *Entity::getComponent( ComponentType type ) const {
         case OSRE::App::ComponentType::RenderComponentType:
             return m_renderComponent;
         case OSRE::App::ComponentType::TransformComponentType:
-            break;
-        case OSRE::App::ComponentType::CollisionComponent:
             break;
         case OSRE::App::ComponentType::ScriptComponent:
             break;

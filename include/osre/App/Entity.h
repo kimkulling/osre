@@ -24,11 +24,11 @@ class RenderComponent;
 
 class Entity : public Common::Object {
 public:
-    /// The type of component
     Entity( const String &name, const Common::Ids &ids );
     virtual ~Entity();
     virtual void setBehaviourControl(AbstractBehaviour *behaviour );
     virtual void setNode( Scene::Node *node );
+    virtual Scene::Node *getNode() const;
     virtual bool preprocess();
     virtual bool update( Time dt );
     virtual bool render( RenderBackend::RenderBackendService *rbSrv );

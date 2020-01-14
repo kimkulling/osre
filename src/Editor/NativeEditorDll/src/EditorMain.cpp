@@ -37,9 +37,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/Node.h>
 #include <osre/Scene/World.h>
 #include <osre/IO/IOService.h>
-#include <osre/Assets/AssimpWrapper.h>
-#include <osre/Assets/AssetDataArchive.h>
-#include <osre/Assets/Model.h>
+#include <osre/App/AssimpWrapper.h>
+#include <osre/App/AssetDataArchive.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 

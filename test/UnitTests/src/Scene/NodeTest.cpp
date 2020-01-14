@@ -67,6 +67,7 @@ TEST_F( NodeTest, createTest ) {
     bool ok( true );
     try {
         Node *myNode_transform_render = createNode( "testnode1", *m_ids, nullptr );
+        EXPECT_NE( nullptr, myNode_transform_render );
     } catch ( ... ) {
         ok = false;
     }
