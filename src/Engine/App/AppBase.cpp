@@ -557,7 +557,6 @@ Ids* AppBase::getIdContainer() const {
     return m_ids;
 }
 
-
 RenderBackend::Pipeline *AppBase::createDefaultPipeline() {
     Pipeline *pipeline = new Pipeline;
     PipelinePass *renderPass = new PipelinePass(RenderPassId, nullptr);

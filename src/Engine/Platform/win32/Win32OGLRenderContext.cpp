@@ -246,8 +246,9 @@ bool Win32RenderContext::onCreate( AbstractWindow *surface )  {
     glDisable( GL_LIGHTING );
     
     glEnable(GL_DEPTH_TEST);
-    glDepthMask( (GLboolean) GL_LESS);
-
+    glDepthMask( GL_TRUE );
+    glDepthFunc( GL_LESS);
+    
     return true;
 }
 
