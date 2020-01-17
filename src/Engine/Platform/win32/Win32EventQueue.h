@@ -59,10 +59,11 @@ public:
     AbstractWindow *getRootSurface() const;
     void enablePolling( bool enabled ) override;
     bool isPolling() const;
-    void registerEventListener( const CPPCore::TArray<const Common::Event*> &rEvents, OSEventListener *pListener ) override;
-    void unregisterEventListener( const CPPCore::TArray<const Common::Event*> &rEvents, OSEventListener *pListener ) override;
-    static void registerEventQueue( Win32EventQueue *pServer, HWND hWnd );
-    static void unregisterEventQueue( Win32EventQueue *pServer, HWND hWnd );
+    void registerEventListener( const Common::EventPtrArray &events, OSEventListener *listener ) override;
+    void unregisterEventListener( const Common::EventPtrArray &events, OSEventListener *listener ) override;
+    void unregisterAllEventHandler(const Common::EventPtrArray &events) override;
+    static void registerEventQueue( Win32EventQueue *server, HWND hWnd );
+    static void unregisterEventQueue( Win32EventQueue *server, HWND hWnd );
     static Win32EventQueue *getInstance( HWND hWnd );
 
 protected:

@@ -49,12 +49,11 @@ static const ui16 RectIndices[6] = {
 };
 
 static f32 getZbyStackIndex(ui32 stackIndex ) {
-    const f32 result = (f32)stackIndex * -0.01f;
+    const f32 result = (f32)stackIndex * -0.1f;
     return result;
 }
 
-void UIRenderUtils::drawRectFromStyle( const Rect2ui &rect, const Style &style,
-        UiVertexCache &vertexCache, UiIndexCache &indexCache, ui32 stackIndex ) {
+void UIRenderUtils::drawRectFromStyle( const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache, UiIndexCache &indexCache, ui32 stackIndex, WidgetType type ) {
 
     f32 x1, y1, x2, y2;
     WidgetCoordMapping::mapPosToWorld( rect.getX1(), rect.getY1(), x1, y1 );
@@ -67,7 +66,16 @@ void UIRenderUtils::drawRectFromStyle( const Rect2ui &rect, const Style &style,
     vertices[ 2 ].position = glm::vec3( x2, y1, getZbyStackIndex( stackIndex ) );
     vertices[ 3 ].position = glm::vec3( x2, y2, getZbyStackIndex( stackIndex ) );
 
-    Color4 col = style.m_colors[ ( ui32 ) Style::ColorTable::BGColorWidget ];
+    Color4 col;
+    switch (type) {
+    case WidgetType::Panel:
+        col = style.m_colors[ ( ui32 )Style::ColorTable::BGColoPanel ];
+        break;
+    case WidgetType::Button:
+    default:
+        col = style.m_colors[ ( ui32 )Style::ColorTable::BGColorWidget ];
+        break;
+    }
 
     vertices[ 0 ].color0 = glm::vec3( col.m_r, col.m_g, col.m_b );
     vertices[ 1 ].color0 = glm::vec3( col.m_r, col.m_g, col.m_b );

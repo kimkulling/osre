@@ -21,12 +21,12 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
-#include <osre/Collision/TAABB.h>
+#include <osre/Scene/TAABB.h>
 
 namespace OSRE {
 namespace UnitTest {
 
-using namespace ::OSRE::Collision;
+using namespace ::OSRE::Scene;
 
 class TAABBTest : public ::testing::Test {
     // empty

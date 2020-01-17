@@ -21,9 +21,9 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 
-namespace OSREEditor.Model
-{
-    class MarshallingHelper
+namespace OSREEditor.Model 
+{ 
+    public class MarshallingHelper
     {
     }
 }

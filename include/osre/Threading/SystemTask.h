@@ -97,7 +97,7 @@ public:
     
     ///	@brief	Returns the number of enqueued jobs.
     ///	@return	The number of attached jobs.
-    virtual ui32 getEvetQueueSize() const;
+    virtual size_t getEvetQueueSize() const;
     
     ///	@brief	The factory method, creates a new instance of the system task.
     static SystemTask *create( const String &rTaskName );

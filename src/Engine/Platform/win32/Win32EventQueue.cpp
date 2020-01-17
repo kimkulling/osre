@@ -346,19 +346,39 @@ bool Win32EventQueue::isPolling( ) const {
     return m_isPolling;
 }
 
-void Win32EventQueue::registerEventListener( const CPPCore::TArray<const Common::Event*> &events, 
-        OSEventListener *pListener ) {
-    OSRE_ASSERT( nullptr != m_eventTriggerer );
+void Win32EventQueue::registerEventListener( const EventPtrArray &events, OSEventListener *pListener ) {
+    OSRE_ASSERT(nullptr != m_eventTriggerer);
+
+    if (nullptr == m_eventTriggerer) {
+        osre_error(Tag, "Pointer to event-triggerer is nullptr.");
+        return;
+    }
 
     m_eventTriggerer->addEventListener( events, Common::EventFunctor::Make( pListener,
         &OSEventListener::onOSEvent ) );
 }
 
-void Win32EventQueue::unregisterEventListener( const CPPCore::TArray<const Common::Event*> &events, OSEventListener *pListener ) {
+void Win32EventQueue::unregisterEventListener( const EventPtrArray &events, OSEventListener *pListener ) {
     OSRE_ASSERT( nullptr != m_eventTriggerer );
+
+    if (nullptr == m_eventTriggerer) {
+        osre_error(Tag, "Pointer to event-triggerer is nullptr.");
+        return;
+    }
 
     m_eventTriggerer->removeEventListener( events, Common::EventFunctor::Make( pListener,
         &OSEventListener::onOSEvent ) );
+}
+
+void Win32EventQueue::unregisterAllEventHandler(const EventPtrArray &events) {
+    OSRE_ASSERT(nullptr != m_eventTriggerer);
+
+    if (nullptr == m_eventTriggerer) {
+        osre_error(Tag, "Pointer to event-triggerer is nullptr.");
+        return;
+    }
+
+    m_eventTriggerer->removeAllEventListeners(events);
 }
 
 } // Namespace Platform

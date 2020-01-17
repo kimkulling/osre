@@ -77,7 +77,7 @@ void View::draw( RenderBackendService *rbSrv ) {
     onRender( rbSrv );
 }
 
-void View::observeBoundingBox( const Collision::TAABB<f32> &aabb) {
+void View::observeBoundingBox( const TAABB<f32> &aabb) {
     const f32 diam = aabb.getDiameter();
     const Vec3f center = aabb.getCenter();
 

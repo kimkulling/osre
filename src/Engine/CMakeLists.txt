@@ -34,42 +34,37 @@ ENDIF( WIN32 )
 #==============================================================================
 SET( app_inc
     ${HEADER_PATH}/App/AppCommon.h
+    ${HEADER_PATH}/App/AbstractBehaviour.h
     ${HEADER_PATH}/App/AppBase.h
+    ${HEADER_PATH}/App/Component.h
+    ${HEADER_PATH}/App/Entity.h
     ${HEADER_PATH}/App/ServiceProvider.h
     ${HEADER_PATH}/App/Project.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
-	${HEADER_PATH}/App/ResourceCacheService.h
+    ${HEADER_PATH}/App/ResourceCacheService.h
+    ${HEADER_PATH}/App/AssetsCommon.h
+    ${HEADER_PATH}/App/AssetRegistry.h
+    ${HEADER_PATH}/App/AssetDataArchive.h
+    ${HEADER_PATH}/App/AssimpWrapper.h
 )
 
 SET( app_src
     App/AppBase.cpp
+    App/Component.cpp
+    App/Entity.cpp
     App/ServiceProvider.cpp
-	App/Project.cpp
-)
-
-#==============================================================================
-# Assets
-#==============================================================================
-SET( assets_inc
-    ${HEADER_PATH}/Assets/AssetsCommon.h
-    ${HEADER_PATH}/Assets/AssetRegistry.h
-    ${HEADER_PATH}/Assets/AssetDataArchive.h
-    ${HEADER_PATH}/Assets/AssimpWrapper.h
-    ${HEADER_PATH}/Assets/Model.h
-)
-SET( assets_src
-    Assets/AssetRegistry.cpp
-    Assets/AssetDataArchive.cpp
-    Assets/AssimpWrapper.cpp
-    Assets/Model.cpp
+    App/Project.cpp
+    App/AssetRegistry.cpp
+    App/AssetDataArchive.cpp
+    App/AssimpWrapper.cpp
 )
 
 #==============================================================================
 # Common
 #==============================================================================
 SET( common_inc
-	${HEADER_PATH}/Common/Common.h
-	${HEADER_PATH}/Common/Environment.h
+    ${HEADER_PATH}/Common/Common.h
+    ${HEADER_PATH}/Common/Environment.h
     ${HEADER_PATH}/Common/TCommand.h
     ${HEADER_PATH}/Common/AbstractEventHandler.h
     ${HEADER_PATH}/Common/AbstractProcessor.h
@@ -84,8 +79,8 @@ SET( common_inc
     ${HEADER_PATH}/Common/Object.h
     ${HEADER_PATH}/Common/StringUtils.h
     ${HEADER_PATH}/Common/TFunctor.h
-	${HEADER_PATH}/Common/TResource.h
-	${HEADER_PATH}/Common/TResourceCache.h
+    ${HEADER_PATH}/Common/TResource.h
+    ${HEADER_PATH}/Common/TResourceCache.h
     ${HEADER_PATH}/Common/TObjPtr.h
     ${HEADER_PATH}/Common/Tokenizer.h
     ${HEADER_PATH}/Common/osre_common.h
@@ -95,25 +90,11 @@ SET( common_src
     Common/DateTime.cpp
     Common/Event.cpp
     Common/EventTriggerer.cpp
-	Common/Environment.cpp
+    Common/Environment.cpp
     Common/Ids.cpp
     Common/Logger.cpp
     Common/Object.cpp
     Common/Tokenizer.cpp
-)
-
-#==============================================================================
-# Collision
-#==============================================================================
-SET( collision_inc
-    ${HEADER_PATH}/Collision/CollisionCommon.h
-    ${HEADER_PATH}/Collision/GeometryProcessor.h
-    ${HEADER_PATH}/Collision/TAABB.h
-    ${HEADER_PATH}/Collision/TQuadTree.h
-    ${HEADER_PATH}/Collision/TRay.h
-)
-SET( collision_src
-    Collision/GeometryProcessor.cpp
 )
 
 #==============================================================================
@@ -122,12 +103,12 @@ SET( collision_src
 SET( debugging_inc
     ${HEADER_PATH}/Debugging/AssertHandler.h
     ${HEADER_PATH}/Debugging/osre_debugging.h
-	${HEADER_PATH}/Debugging/MeshDiagnostic.h
+    ${HEADER_PATH}/Debugging/MeshDiagnostic.h
 )
 SET( debugging_src
-	Debugging/Debug.cpp
+    Debugging/Debug.cpp
     Debugging/AssertHandler.cpp
-	Debugging/MeshDiagnostic.cpp
+    Debugging/MeshDiagnostic.cpp
 )
 
 #==============================================================================
@@ -174,6 +155,7 @@ SET( math_src
 )
 SET( math_inc
     ${HEADER_PATH}/Math/BaseMath.h
+    ${HEADER_PATH}/Math/TRay.h
 )
 
 #==============================================================================
@@ -192,7 +174,7 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/AbstractOGLRenderContext.h
     ${HEADER_PATH}/Platform/AbstractWindow.h
     ${HEADER_PATH}/Platform/AbstractTimer.h
-	${HEADER_PATH}/Platform/AbstractSystemInfo.h
+    ${HEADER_PATH}/Platform/AbstractSystemInfo.h
     ${HEADER_PATH}/Platform/CPUInfo.h
     ${HEADER_PATH}/Platform/SystemInfo.h
     ${HEADER_PATH}/Platform/SystemUtils.h
@@ -203,7 +185,7 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/AbstractMutex.h
 )
 SET( platform_win_inc
-	${HEADER_PATH}/Platform/Windows/MinWindows.h
+    ${HEADER_PATH}/Platform/Windows/MinWindows.h
 )
 SET( platform_src
     Platform/CPUInfo.cpp
@@ -218,7 +200,7 @@ SET( platform_src
     Platform/PlatformOperations.cpp
 )
 SET( platform_win32_src
-	Platform/win32/Win32SystemInfo.h
+    Platform/win32/Win32SystemInfo.h
     Platform/win32/Win32Atomic.h
     Platform/win32/Win32DbgLogStream.h
     Platform/win32/Win32Window.cpp
@@ -267,7 +249,7 @@ SET( platform_sdl2_src
     Platform/sdl2/SDL2ThreadLocalStorage.h
     Platform/sdl2/SDL2DynamicLoader.cpp
     Platform/sdl2/SDL2DynamicLoader.h
-	Platform/sdl2/SDL2SystemInfo.h
+    Platform/sdl2/SDL2SystemInfo.h
     Platform/sdl2/SDL2OSService.h
     Platform/sdl2/SDL2OSService.cpp
     Platform/sdl2/SDL2Mutex.h
@@ -312,29 +294,33 @@ SET ( properties_src
 #==============================================================================
 SET( scene_inc
     ${HEADER_PATH}/Scene/SceneCommon.h
-    #${HEADER_PATH}/Scene/AnimatorBase.h
-	${HEADER_PATH}/Scene/DbgRenderer.h
-    ${HEADER_PATH}/Scene/Component.h
+    ${HEADER_PATH}/Scene/GeometryProcessor.h
+    ${HEADER_PATH}/Scene/AnimatorBase.h
+    ${HEADER_PATH}/Scene/DbgRenderer.h
     ${HEADER_PATH}/Scene/GeometryBuilder.h
     ${HEADER_PATH}/Scene/MaterialBuilder.h
     ${HEADER_PATH}/Scene/Node.h
-	${HEADER_PATH}/Scene/Stage.h
+    ${HEADER_PATH}/Scene/Stage.h
     ${HEADER_PATH}/Scene/TrackBall.h
     ${HEADER_PATH}/Scene/View.h
     ${HEADER_PATH}/Scene/World.h
     ${HEADER_PATH}/Scene/LineBuilder.h
+    ${HEADER_PATH}/Scene/TAABB.h
+    ${HEADER_PATH}/Scene/TQuadTree.h
+    ${HEADER_PATH}/Scene/ParticleEmitter.h
 )
 SET( scene_src
     Scene/DbgRenderer.cpp
-    Scene/Component.cpp
     Scene/LineBuilder.cpp
     Scene/GeometryBuilder.cpp
+    Scene/GeometryProcessor.cpp
     Scene/MaterialBuilder.cpp
     Scene/Node.cpp
     Scene/Stage.cpp
     Scene/TrackBall.cpp
     Scene/View.cpp
     Scene/World.cpp
+    Scene/ParticleEmitter.cpp
 )
 
 #==============================================================================
@@ -345,10 +331,9 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/Mesh.h
     ${HEADER_PATH}/RenderBackend/FontBase.h
     ${HEADER_PATH}/RenderBackend/HWBufferManager.h
-    ${HEADER_PATH}/RenderBackend/ParticleGenerator.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
-	${HEADER_PATH}/RenderBackend/RenderStates.h
+    ${HEADER_PATH}/RenderBackend/RenderStates.h
     ${HEADER_PATH}/RenderBackend/Shader.h
 )
 SET( renderbackend_src
@@ -357,7 +342,6 @@ SET( renderbackend_src
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
     RenderBackend/Pipeline.cpp
-    RenderBackend/ParticleGenerator.cpp
     RenderBackend/HWBufferManager.cpp
     RenderBackend/Shader.cpp
 )
@@ -410,8 +394,9 @@ SET( scripting_mono_inc
 # UI
 #==============================================================================
 SET( ui_src
+    UI/UICommon.cpp
     UI/Image.cpp
-	UI/FocusControl.cpp
+    UI/FocusControl.cpp
     UI/Widget.cpp
     UI/UiRenderer.cpp
     UI/UIRenderUtils.cpp
@@ -424,15 +409,16 @@ SET( ui_src
 )
 SET( ui_inc
     ${HEADER_PATH}/UI/UICommon.h
-	${HEADER_PATH}/UI/FocusControl.h
-	${HEADER_PATH}/UI/Image.h
+    ${HEADER_PATH}/UI/FocusControl.h
+    ${HEADER_PATH}/UI/Layouter.h
+    ${HEADER_PATH}/UI/Image.h
     ${HEADER_PATH}/UI/Widget.h
     ${HEADER_PATH}/UI/ButtonBase.h
     ${HEADER_PATH}/UI/Panel.h
     ${HEADER_PATH}/UI/Canvas.h
-	${HEADER_PATH}/UI/TextBase.h
-	${HEADER_PATH}/UI/UiRenderer.h
-	${HEADER_PATH}/UI/UiItemFactory.h
+    ${HEADER_PATH}/UI/TextBase.h
+    ${HEADER_PATH}/UI/UiRenderer.h
+    ${HEADER_PATH}/UI/UiItemFactory.h
 )
 
 #==============================================================================
@@ -466,7 +452,6 @@ SOURCE_GROUP( App                 FILES ${app_src} )
 SOURCE_GROUP( Assets              FILES ${assets_src} )
 SOURCE_GROUP( Common              FILES ${common_src} )
 SOURCE_GROUP( Components          FILES ${components_src} )
-SOURCE_GROUP( Collision           FILES ${collision_src} )
 SOURCE_GROUP( Debugging           FILES ${debugging_src} )
 SOURCE_GROUP( Debugging\\Win32    FILES ${debugging_windows_src} )
 SOURCE_GROUP( IO                  FILES ${io_src} )
@@ -485,28 +470,26 @@ SOURCE_GROUP( Resources           FILES ${resources_src} )
 SOURCE_GROUP( Scene               FILES ${scene_src} )
 SOURCE_GROUP( Threading           FILES ${threading_src} )
 SOURCE_GROUP( UI                  FILES ${ui_src} )
-SOURCE_GROUP( Include\\App        FILES ${app_inc} )
-SOURCE_GROUP( Include\\Assets     FILES ${assets_inc} )
-SOURCE_GROUP( Include\\Debugging  FILES ${debugging_inc} )
-SOURCE_GROUP( Include\\Common     FILES ${common_inc} )
-SOURCE_GROUP( Include\\Components FILES ${components_inc} )
-SOURCE_GROUP( Include\\Collision  FILES ${collision_inc} )
-SOURCE_GROUP( Include\\Debugging  FILES ${debugging_inc} )
-SOURCE_GROUP( Include\\System     FILES ${system_inc} )
-SOURCE_GROUP( Include\\Utils      FILES ${utils_inc} )
-SOURCE_GROUP( Include\\IO         FILES ${io_inc} )
-SOURCE_GROUP( Include\\Math          FILES ${math_inc} )
-SOURCE_GROUP( Include\\Memory        FILES ${memory_inc} )
-SOURCE_GROUP( Include\\Properties    FILES ${properties_inc} )
-SOURCE_GROUP( Include\\Platform      FILES ${platform_inc} )
-SOURCE_GROUP( Include\\Platform\\Windows FILES ${platform_win_inc} )
-SOURCE_GROUP( Include\\Profiling     FILES ${profiling_inc} )
-SOURCE_GROUP( Include\\Resources     FILES ${resources_inc} )
-SOURCE_GROUP( Include\\RenderBackend FILES ${renderbackend_inc} )
-SOURCE_GROUP( Include\\Scene         FILES ${scene_inc} )
-SOURCE_GROUP( Include\\Scripting     FILES ${scripting_mono_inc} )
-SOURCE_GROUP( Include\\Threading     FILES ${threading_inc} )
-SOURCE_GROUP( Include\\UI            FILES ${ui_inc} )
+SOURCE_GROUP( Include\\osre\\App        FILES ${app_inc} )
+SOURCE_GROUP( Include\\osre\\Assets     FILES ${assets_inc} )
+SOURCE_GROUP( Include\\osre\\Debugging  FILES ${debugging_inc} )
+SOURCE_GROUP( Include\\osre\\Common     FILES ${common_inc} )
+SOURCE_GROUP( Include\\osre\\Debugging  FILES ${debugging_inc} )
+SOURCE_GROUP( Include\\osre\\System     FILES ${system_inc} )
+SOURCE_GROUP( Include\\osre\\Utils      FILES ${utils_inc} )
+SOURCE_GROUP( Include\\osre\\IO         FILES ${io_inc} )
+SOURCE_GROUP( Include\\osre\\Math          FILES ${math_inc} )
+SOURCE_GROUP( Include\\osre\\Memory        FILES ${memory_inc} )
+SOURCE_GROUP( Include\\osre\\Properties    FILES ${properties_inc} )
+SOURCE_GROUP( Include\\osre\\Platform      FILES ${platform_inc} )
+SOURCE_GROUP( Include\\osre\\Platform\\Windows FILES ${platform_win_inc} )
+SOURCE_GROUP( Include\\osre\\Profiling     FILES ${profiling_inc} )
+SOURCE_GROUP( Include\\osre\\Resources     FILES ${resources_inc} )
+SOURCE_GROUP( Include\\osre\\RenderBackend FILES ${renderbackend_inc} )
+SOURCE_GROUP( Include\\osre\\Scene         FILES ${scene_inc} )
+SOURCE_GROUP( Include\\osre\\Scripting     FILES ${scripting_mono_inc} )
+SOURCE_GROUP( Include\\osre\\Threading     FILES ${threading_inc} )
+SOURCE_GROUP( Include\\osre\\UI            FILES ${ui_inc} )
 
 SOURCE_GROUP( Documentation          FILES ${doc_inc} )
 
@@ -518,7 +501,6 @@ add_definitions( -D${USE_PLATFORM} )
 ADD_LIBRARY( osre SHARED
     ../../README.md
     ${app_inc}
-    ${assets_inc}
     ${debugging_inc}
     ${doc_inc}
     ${common_inc}
@@ -545,7 +527,6 @@ ADD_LIBRARY( osre SHARED
     ${math_inc}
 
     ${app_src}
-    ${assets_src}
     ${Common_src}
     ${components_src}
     ${debugging_src}

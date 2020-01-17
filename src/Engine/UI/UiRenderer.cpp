@@ -45,6 +45,14 @@ UiRenderer::~UiRenderer() {
     // empty
 }
 
+void UiRenderer::layout( Canvas *canvas ) {
+    if (nullptr == canvas) {
+        return;
+    }
+
+    canvas->layout();
+}
+
 void UiRenderer::render( Canvas *canvas, RenderBackendService * rbSrv) {
     if (nullptr == canvas) {
         return;

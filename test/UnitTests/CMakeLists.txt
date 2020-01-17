@@ -18,23 +18,19 @@ INCLUDE_DIRECTORIES(
     ../../3dparty/glm/
     ../../3dparty/soil/src
     ${GMOCK_PATH}
-	${GTEST_PATH}
+    ${GTEST_PATH}
     ${GTEST_PATH}/include
     .././
-	src
-)
-
-SET ( unittest_assets_src
-    src/Assets/ModelTest.cpp
-    src/Assets/AssetRegistryTest.cpp
-    src/Assets/AssetDataTest.cpp
-    src/Assets/AssetWrapperTest.cpp
-    src/Assets/AssetDataArchiveTest.cpp
+    src
 )
 
 SET ( unittest_app_src
     src/App/TAbstractCtrlBaseTest.cpp
-	src/App/ProjectTest.cpp
+    src/App/ProjectTest.cpp
+    src/App/AssetRegistryTest.cpp
+    src/App/AssetDataTest.cpp
+    src/App/AssetWrapperTest.cpp
+    src/App/AssetDataArchiveTest.cpp
 )
 
 SET ( unittest_common_src
@@ -48,8 +44,6 @@ SET ( unittest_common_src
 )
 
 SET ( unittest_collision_src
-    src/Collision/TAABBTest.cpp
-    src/Collision/TRayTest.cpp
 )
 
 SET ( unittest_debugging_src
@@ -62,6 +56,7 @@ SET( unittest_io_src
 
 SET( unittest_math_src
     src/Math/BaseMathTest.cpp
+    src/Math/TRayTest.cpp
 )
 
 SET( unittest_platform_src
@@ -74,7 +69,7 @@ SET ( unittest_rb_src
     src/RenderBackend/CullStateTest.cpp
     src/RenderBackend/RenderCommonTest.cpp
     src/RenderBackend/PipelineTest.cpp
-	src/RenderBackend/MeshTest.cpp
+    src/RenderBackend/MeshTest.cpp
 )
 
 SET( unittest_rb_oglrenderer_src 
@@ -97,6 +92,7 @@ SET ( unittest_scene_src
     src/Scene/GeometryBuilderTest.cpp
     src/Scene/NodeTest.cpp
     src/Scene/WorldTest.cpp
+    src/Scene/TAABBTest.cpp
 )
 
 SET ( gtest_src
@@ -115,7 +111,6 @@ SOURCE_GROUP( src\\App                        FILES ${unittest_app_src} )
 SOURCE_GROUP( src\\Common                     FILES ${unittest_common_src} )
 SOURCE_GROUP( src\\Collision                  FILES ${unittest_collision_src})
 SOURCE_GROUP( src\\Debugging                  FILES ${unittest_debugging_src})
-SOURCE_GROUP( src\\Assets                     FILES ${unittest_assets_src} )
 SOURCE_GROUP( src\\IO                         FILES ${unittest_io_src} )
 SOURCE_GROUP( src\\Math                       FILES ${unittest_math_src} )
 SOURCE_GROUP( src\\Platform                   FILES ${unittest_platform_src})
@@ -129,16 +124,15 @@ SOURCE_GROUP( src\\GTest                      FILES ${gtest_src} )
 ADD_EXECUTABLE( osre_unittest
     src/osre_testcommon.h
     ${unittest_app_src}
-	${unittest_assets_src}    
     ${unittest_common_src}
     ${unittest_collision_src}
     ${unittest_debugging_src}
-	${unittest_io_src}
+    ${unittest_io_src}
     ${unittest_math_src}
-	${unittest_platform_src}    
-	${unittest_profiling_src}
-	${unittest_rb_src}
-	${unittest_rb_oglrenderer_src}
+    ${unittest_platform_src}
+    ${unittest_profiling_src}
+    ${unittest_rb_src}
+    ${unittest_rb_oglrenderer_src}
     ${unittest_ui_src}
     ${unittest_scene_src}
     ${gtest_src}
@@ -157,4 +151,3 @@ ENDIF( WIN32 )
 
 target_link_libraries ( osre_unittest osre ${platform_libs} ) 
 set_target_properties(  osre_unittest PROPERTIES FOLDER Tests )
-

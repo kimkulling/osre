@@ -26,9 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/AbstractEventHandler.h>
 #include <osre/Common/EventTriggerer.h>
+#include <osre/Common/Event.h>
 #include <osre/Common/Object.h>
-#include <cppcore/Container/TArray.h>
-#include <cppcore/Container/TList.h>
 #include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
@@ -39,9 +38,6 @@ namespace RenderBackend {
 }
 
 namespace Platform {
-
-using EventDataList = CPPCore::TList<Common::EventData*> ;
-using EventPtrArray = CPPCore::TArray<const Common::Event*>;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -56,13 +52,16 @@ public:
     ///	@brief  Used to register a event listener.
     ///	@param  events      [in] List of events.
     /// @param  listener    [in] The listener instance
-    virtual void registerEventListener( const EventPtrArray &events, OSEventListener *listener) = 0;
+    virtual void registerEventListener( const Common::EventPtrArray &events, OSEventListener *listener) = 0;
     
     ///	@brief  Used to unregister a event listener.
     ///	@param  events      [in] List of events.
     /// @param  listener    [in] The listener instance
-    virtual void unregisterEventListener( const EventPtrArray &events, OSEventListener *listener) = 0;
+    virtual void unregisterEventListener( const Common::EventPtrArray &events, OSEventListener *listener) = 0;
     
+    /// @brief  Will unregister all registered event handler.
+    virtual void unregisterAllEventHandler(const Common::EventPtrArray &events) = 0;
+
     ///	@brief  Set the polling state.
     ///	@param  enabled     true for enabling polling.
     virtual void enablePolling( bool enabled ) = 0;
@@ -97,11 +96,11 @@ protected:
     
     ///	@brief  Returns the active event data list.
     /// @return The active event data list.
-    EventDataList *getActiveEventDataList();
+    Common::EventDataList *getActiveEventDataList();
 
     ///	@brief  Returns the active event data list.
     /// @return The pending event data list.
-    EventDataList *getPendingEventDataList();
+    Common::EventDataList *getPendingEventDataList();
     
     ///	@brief  Toggles between the active and pending list.
     void switchEventDataList();
@@ -110,7 +109,7 @@ private:
     enum {
         numEventQueues = 2
     };
-    EventDataList m_eventQueues[ numEventQueues ];
+    Common::EventDataList m_eventQueues[ numEventQueues ];
     ui32 m_activeList;
     RenderBackend::RenderBackendService *m_rbSrv;
 };
@@ -134,7 +133,7 @@ void AbstractPlatformEventQueue::processEvents( Common::EventTriggerer *triggere
         return;
     }
 
-    EventDataList *theList = getActiveEventDataList();
+    Common::EventDataList *theList = getActiveEventDataList();
     if ( nullptr == theList ) {
         return;
     }
@@ -151,16 +150,16 @@ void AbstractPlatformEventQueue::processEvents( Common::EventTriggerer *triggere
 }
 
 inline
-EventDataList *AbstractPlatformEventQueue::getActiveEventDataList() {
-    EventDataList *activeEventQueue( &m_eventQueues[ m_activeList ] );
+Common::EventDataList *AbstractPlatformEventQueue::getActiveEventDataList() {
+    Common::EventDataList *activeEventQueue( &m_eventQueues[ m_activeList ] );
     return activeEventQueue;
 }
 
 inline
-EventDataList *AbstractPlatformEventQueue::getPendingEventDataList() {
+Common::EventDataList *AbstractPlatformEventQueue::getPendingEventDataList() {
     ui32 queueToProcess = ( m_activeList + 1 ) % numEventQueues;
     m_eventQueues[ queueToProcess ].clear( );
-    EventDataList *pendingEventQueue( &m_eventQueues[ queueToProcess ] );
+    Common::EventDataList *pendingEventQueue( &m_eventQueues[ queueToProcess ] );
 
     return pendingEventQueue;
 }

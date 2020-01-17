@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Shader.h>
 #include <osre/RenderBackend/Mesh.h>
-#include <osre/Assets/AssetRegistry.h>
+#include <osre/App/AssetRegistry.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/Ids.h>
 #include <osre/IO/Uri.h>
@@ -331,8 +331,8 @@ size_t TextureLoader::load(const IO::Uri& uri, Texture *tex ) {
     
     const String filename = uri.getAbsPath();
 
-    String root = Assets::AssetRegistry::getPath("media");
-    String path = Assets::AssetRegistry::resolvePathFromUri(uri);
+    String root = App::AssetRegistry::getPath("media");
+    String path = App::AssetRegistry::resolvePathFromUri(uri);
 
 
     i32 width(0), height(0), channels(0);

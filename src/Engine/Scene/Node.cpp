@@ -21,8 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Scene/Node.h>
-#include <osre/Scene/Component.h>
-#include <osre/Assets/Model.h>
+#include <osre/App/Component.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/Ids.h>
@@ -36,35 +35,22 @@ namespace Scene {
 
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Common;
-using namespace ::OSRE::Assets;
 
 Node::Node( const String &name, Ids &ids, Node *parent )
 : Object( name )
 , m_children()
 , m_parent( parent )
+, m_meshRefererenceArray()
 , m_isActive( true )
-, m_renderComp( nullptr )
-, m_transformComp( nullptr )
 , m_ids( &ids )
 , m_propMap()
 , m_aabb() {
-    m_transformComp = new TransformComponent( this, m_ids->getUniqueId() );
-    m_components.add( m_transformComp );
-
-    m_renderComp = new RenderComponent( this, m_ids->getUniqueId() );
-    m_components.add( m_renderComp );
-
     if ( nullptr != m_parent ) {
         m_parent->addChild( this );
     }
 }
 
 Node::~Node() {
-    for ( ui32 i = 0; i < m_components.size(); i++ ) {
-        delete m_components[ i ];
-    }
-    m_components.clear();
-
     if( !m_children.isEmpty() ) {
         for( size_t i = 0; i < m_children.size(); i++ ) {
             m_children[ i ]->setParent(nullptr);
@@ -143,7 +129,7 @@ size_t Node::getNumChildren() const {
     return m_children.size();
 }
 
-Node *Node::getChildAt( ui32 idx ) const {
+Node *Node::getChildAt( size_t idx ) const {
     if( idx >= m_children.size() ) {
         return nullptr;
     }
@@ -164,73 +150,16 @@ void Node::releaseChildren() {
     }
 }
 
-void Node::addModel( Model *model ) {
-    Node *root = model->getRootNode();
-    if ( nullptr != root ) {
-        addChild( root );
-    }
-}
-
-void Node::addMesh( RenderBackend::Mesh *geo ) {
-    if ( nullptr != m_renderComp ) {
-        m_renderComp->addStaticGeometry( geo );
-    }
-}
-
-size_t Node::getNumMeshes() const {
-    if ( nullptr != m_renderComp ) {
-        return m_renderComp->getNumGeometry();
-    }
-
-    return 0;
-}
-
-RenderBackend::Mesh *Node::getMeshAt(ui32 idx) const {
-    if ( nullptr != m_renderComp ) {
-        return m_renderComp->getGeoAt( idx );
-    }
-
-    return nullptr;
-}
-
 void Node::update(Time dt) {
     onUpdate(dt);
 }
 
 void Node::render( RenderBackendService *renderBackendSrv ) {
-    if ( nullptr == renderBackendSrv || nullptr == m_renderComp ) {
+    if ( nullptr == renderBackendSrv ) {
         return;
     }
 
     onRender( renderBackendSrv );
-
-    // at first we need to update the transformations
-    if ( nullptr != m_transformComp ) {
-        m_transformComp->draw( renderBackendSrv );
-    }
-
-    // now e can render the scene
-    if ( nullptr != m_renderComp ) {
-        m_renderComp->draw( renderBackendSrv );
-    }
-}
-
-void Node::addComponent(Component* newComp) {
-    if (nullptr == newComp) {
-        return;
-    }
-
-    m_components.add(newComp);
-}
-
-Component *Node::getComponent( ComponentType type ) const {
-    if ( ComponentType::RenderComponentType == type ) {
-        return m_renderComp;
-    } else if ( ComponentType::TransformComponentType == type ) {
-        return m_transformComp;
-    }
-
-    return nullptr;
 }
 
 void Node::setProperty( Properties::Property *prop) {
@@ -252,15 +181,74 @@ Properties::Property *Node::getProperty(const String name) const {
     return nullptr;
 }
 
+void Node::setTranslation( const glm::vec3 &pos ) {
+    m_localTransformState.m_translate = glm::vec3( pos );
+    m_dirty = NeedsTransform;
+}
+
+const glm::vec3 &Node::getTranslation() const {
+    return m_localTransformState.m_translate;
+}
+
+void Node::setScale( const glm::vec3 &scale ) {
+    m_localTransformState.m_scale = glm::vec3( scale );;
+    m_dirty = NeedsTransform;
+}
+
+const glm::vec3 &Node::getScale() const {
+    return m_localTransformState.m_scale;
+}
+
+void Node::setTransformationMatrix( const glm::mat4 &m ) {
+    m_transform = m;
+}
+
+const glm::mat4 &Node::getTransformationMatrix() const {
+    return m_transform;
+}
+
+glm::mat4 Node::getWorlTransformMatrix() {
+    glm::mat4 wt( 1.0 );
+    for (const Node *node = this; node != nullptr; node = node->getParent()) {
+        wt = node->getTransformationMatrix() * wt;
+    }
+
+    return wt;
+}
+
+const RenderBackend::TransformState &Node::getTransformState() const {
+    return m_localTransformState;
+}
+
+
 void Node::onUpdate(Time dt) {
-    TransformComponent *comp((TransformComponent*)getComponent(Node::ComponentType::TransformComponentType));
-    if (nullptr != comp) {
-        comp->update(dt);
+    if (m_dirty == NeedsTransform) {
+        m_localTransformState.toMatrix( m_transform );
+        m_dirty = NotDirty;
     }
 }
 
 void Node::onRender( RenderBackendService* ) {
     // empty
+}
+
+void Node::addMeshReference( size_t entityMeshIdx ) {
+    MeshReferenceArray::Iterator it = m_meshRefererenceArray.find(entityMeshIdx);
+    if ( m_meshRefererenceArray.end() == it ) {
+        m_meshRefererenceArray.add(entityMeshIdx);
+    }
+}
+
+size_t Node::getNumMeshReferences() const {
+    return m_meshRefererenceArray.size();
+}
+
+size_t Node::getMeshReferenceAt( size_t index ) const {
+    if ( index >= m_meshRefererenceArray.size() ) {
+        return 99999999;
+    }
+
+    return m_meshRefererenceArray[index];
 }
 
 } // Namespace Scene

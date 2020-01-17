@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractTimer.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/Common/ArgumentParser.h>
-#include <osre/Assets/AssetRegistry.h>
+#include <osre/App/AssetRegistry.h>
 
 #include "RenderTestSuite.h"
 

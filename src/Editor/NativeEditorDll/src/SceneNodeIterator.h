@@ -61,7 +61,7 @@ bool SceneNodeIterator::hasNextChild() const {
     }
 
     const size_t numChildren = m_currentNode->getNumChildren();
-    if ((m_currentIndex + 1) < numChildren) {
+    if (static_cast<size_t>(m_currentIndex + 1) < numChildren) {
         return true;
     }
     

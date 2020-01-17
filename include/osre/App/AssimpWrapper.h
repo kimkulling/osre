@@ -22,43 +22,88 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/AbstractProcessor.h>
-#include <osre/Collision/TAABB.h>
-#include <osre/Scene/Node.h>
+#include <osre/App/AssetsCommon.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Common/Ids.h>
+#include <osre/Scene/TAABB.h>
 
 #include <cppcore/Container/TArray.h>
 
+#include <map>
+
+// Forward declarations ---------------------------------------------------------------------------
+struct aiScene;
+struct aiMesh;
+struct aiNode;
+struct aiMaterial;
+struct aiAnimation;
+
 namespace OSRE {
+
+// Froward declarations
+namespace Common {
+    class Ids;
+}
 
 namespace RenderBackend {
     class Mesh;
+
+    struct UniformVar;
+    struct Material;
 }
 
-namespace Collision {
-        
+namespace IO {
+    class Uri;
+}
+
+namespace Scene {
+    class Node;
+}
+    
+namespace App {
+
+class Entity;
+struct BoneInfo;
+
 //-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
+///	@ingroup    Engine
 ///
-///	@brief
+///	@brief  
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT GeometryProcessor : public Common::AbstractProcessor {
+class OSRE_EXPORT AssimpWrapper {
 public:
-    using GeoArray = CPPCore::TArray<RenderBackend::Mesh*>;
+    AssimpWrapper( Common::Ids &ids );
+    ~AssimpWrapper();
+    bool importAsset( const IO::Uri &file, ui32 flags );
+    Entity *getEntity() const;
 
-    GeometryProcessor();
-    ~GeometryProcessor();
-    bool execute() override;
-    void addGeo( RenderBackend::Mesh *geo );
-    const Scene::Node::AABB &getAABB() const;
+protected:
+    Entity *convertScene();
+    void importMeshes( aiMesh *mesh );
+	void importBones(aiMesh* mesh);
+    void impotNode( aiNode *node, Scene::Node *parent );
+    void importMaterial( aiMaterial *material );
+    void importAnimation( aiAnimation *animation );
 
 private:
-    void handleGeometry( RenderBackend::Mesh *geo );
+	const aiScene *m_scene;
+	RenderBackend::MeshArray m_meshArray;
+    Entity *m_entity;
+    
+	using MaterialArray = CPPCore::TArray<RenderBackend::Material*> ;
+    MaterialArray m_matArray;
+    Scene::Node *m_parent;
+    Common::Ids &m_ids;
+    RenderBackend::UniformVar *m_mvpParam;
+    String m_root;
+    String m_absPathWithFile;
 
-private:
-    GeoArray m_geoArray;
-    Scene::Node::AABB m_aabb;
-    i32 m_dirty;
+	using BoneInfoArray = ::CPPCore::TArray<BoneInfo*>;
+	BoneInfoArray m_boneInfoArray;
+
+	using Bone2NodeMap = std::map<const char*, const aiNode*>;
+	Bone2NodeMap m_bone2NodeMap;
 };
 
-} // Namespace Collision
+} // Namespace Assets
 } // Namespace OSRE

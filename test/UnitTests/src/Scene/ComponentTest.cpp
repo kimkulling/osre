@@ -24,21 +24,32 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Ids.h>
 #include <osre/Scene/Node.h>
-#include <osre/Scene/Component.h>
+#include <osre/App/Component.h>
+#include <osre/App/Entity.h>
 
 namespace OSRE {
 namespace UnitTest {
         
+using namespace ::OSRE::App;
 using namespace ::OSRE::Scene;
 
 class ComponentTest : public ::testing::Test {
-    // empty
+protected:
+    Common::Ids *m_ids;
+
+    void SetUp() override {
+        m_ids = new Common::Ids;
+    }
+
+    void TearDown() override {
+        delete m_ids;
+    }
 };
 
 class MockComponent : public Component {
 public:
-    MockComponent( Node *node, ui32 id ) 
-    : Component( node, id ) {
+    MockComponent( Entity *owner, ui32 id ) 
+    : Component( owner, id ) {
         // empty
     }
 
@@ -50,8 +61,27 @@ public:
         // empty
     }
 
-    void draw( RenderBackend::RenderBackendService* ) override {
+    void render( RenderBackend::RenderBackendService* ) override {
         // empty
+    }
+
+protected:
+    bool onPreprocess() override {
+        return true;
+    }
+
+    bool onUpdate( Time dt ) override {
+        return true;
+    }
+
+    bool onRender( RenderBackend::RenderBackendService *renderBackendSrv ) override {
+        EXPECT_NE(nullptr, renderBackendSrv);
+
+        return true;
+    }
+
+    bool onPostprocess() override {
+        return true;
     }
 };
 
@@ -67,25 +97,23 @@ TEST_F( ComponentTest, createTest ) {
 
 TEST_F(ComponentTest, accessNodeTest) {
     String name = "test";
-    Common::Ids *ids = new Common::Ids;
 
-    Node *n(new Node(name, *ids, nullptr));
-    MockComponent myComp( n, 0);
+    Entity *entity = new Entity(name, *m_ids);
+    MockComponent myComp( entity, 0);
 
-    EXPECT_EQ(n, myComp.getOwnerNode());
-
+    EXPECT_EQ(entity, myComp.getOwner());
 }
 
 TEST_F( ComponentTest, accessIdTest ) {
     String name = "test";
-    Common::Ids *ids = new Common::Ids;
-    Node *n(new Node(name, *ids, nullptr));
 
-    Component *tc = n->getComponent(Node::ComponentType::TransformComponentType);
+    Entity *entity = new Entity(name, *m_ids);
+
+    Component *tc = entity->getComponent(ComponentType::TransformComponentType);
     EXPECT_NE(nullptr, tc);
     const ui32 id1 = tc->getId();
 
-    Component *rc = n->getComponent(Node::ComponentType::RenderComponentType);
+    Component *rc = entity->getComponent(ComponentType::RenderComponentType);
     EXPECT_NE(nullptr, rc);
     const ui32 id2 = rc->getId();
 

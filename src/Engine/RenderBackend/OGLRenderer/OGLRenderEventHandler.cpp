@@ -38,7 +38,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/HWBufferManager.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Uri.h>
-#include <osre/Assets/AssetRegistry.h>
+#include <osre/App/AssetRegistry.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -177,8 +177,8 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
 
     const String defaultFont( PlatformInterface::getInstance()->getDefaultFontName() );
     IO::Uri fontUri( "file://assets/Textures/Fonts/" + defaultFont );
-    String root = Assets::AssetRegistry::getPath( "media" );
-    String path = Assets::AssetRegistry::resolvePathFromUri( fontUri );
+    String root = App::AssetRegistry::getPath( "media" );
+    String path = App::AssetRegistry::resolvePathFromUri( fontUri );
     fontUri.setPath( path );
     m_oglBackend->createFont( fontUri );
     m_renderCmdBuffer = new RenderCmdBuffer( m_oglBackend, m_renderCtx, createRendererEvData->m_pipeline );

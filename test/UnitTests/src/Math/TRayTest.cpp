@@ -20,40 +20,27 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
+#include <gtest/gtest.h>
+#include <osre/Math/TRay.h>
 
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Collision/TAABB.h>
-#include <cppcore/Container/TArray.h>
-
-// Forward declarations
 namespace OSRE {
+namespace UnitTest {
 
-namespace Scene {
-    class Node;
-}
+using namespace ::OSRE::Collision;
 
-namespace Assets {
-
-class OSRE_EXPORT Model {
-public: 
-    using ModelAABB = Collision::TAABB<f32>;
-
-    Model();
-    Model(RenderBackend::MeshArray *geoArray, Scene::Node *root, ModelAABB &aabb );
-    ~Model();
-    void setMeshArray(RenderBackend::MeshArray &geoArray );
-    const RenderBackend::MeshArray &getMeshArray() const;
-    void setRootNode( Scene::Node *root );
-    Scene::Node *getRootNode() const;
-    void setAABB( const Collision::TAABB<f32> &aabb );
-    const ModelAABB &getAABB() const;
-
-private:
-    RenderBackend::MeshArray m_meshArray;
-    Scene::Node *m_root;
-    Collision::TAABB<f32> m_aabb;
+class TRayTest : public ::testing::Test {
+    // empty
 };
 
-} // Namespace Assets
+TEST_F( TRayTest, createTest ) {
+    bool ok( true );
+    try {
+        TRay<f32> ray;
+    } catch (...) {
+        ok = false;
+    }
+    EXPECT_TRUE( ok );
+}
+
+} // Namespace Unittest
 } // Namespace OSRE

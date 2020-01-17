@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/Node.h>
-#include <osre/Scene/Component.h>
+#include <osre/App/Component.h>
 #include <osre/Common/Ids.h>
 
 namespace OSRE {
@@ -67,8 +67,7 @@ TEST_F( NodeTest, createTest ) {
     bool ok( true );
     try {
         Node *myNode_transform_render = createNode( "testnode1", *m_ids, nullptr );
-        EXPECT_NE( nullptr, myNode_transform_render->getComponent( Node::ComponentType::TransformComponentType ) );
-        EXPECT_NE( nullptr, myNode_transform_render->getComponent( Node::ComponentType::RenderComponentType ) );
+        EXPECT_NE( nullptr, myNode_transform_render );
     } catch ( ... ) {
         ok = false;
     }

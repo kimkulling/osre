@@ -98,7 +98,7 @@ Node *Stage::addNode( const String &name, Node *parent, const String &type ) {
             m_root->addChild( newNode );
         }
     } else {
-        const ui32 hash( calcHash( type ) );
+        const size_t hash( calcHash( type ) );
         if ( m_registeredFactories.hasKey( hash ) ) {
             AbstractNodeFactory *factory( nullptr );
             if ( m_registeredFactories.getValue( hash, factory ) ) {

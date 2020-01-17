@@ -20,16 +20,17 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Assets/AssetDataArchive.h>
+#include <osre/App/AssetDataArchive.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Scene/World.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/View.h>
 #include <osre/Scene/Node.h>
-#include <osre/Scene/Component.h>
+#include <osre/App/Component.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/Stream.h>
 #include <osre/IO/IOService.h>
+#include <osre/Common/Logger.h>
 
 #include <json/json.h>
 #include <json/reader.h>
@@ -51,16 +52,17 @@ namespace Token {
 }
 
 AssetDataArchive::AssetDataArchive( i32 majorVersion, i32 minorVersion )
-:mVersion(majorVersion, minorVersion ){
+: mVersion(majorVersion, minorVersion ){
     // empty
 }
 
 AssetDataArchive::~AssetDataArchive() {
-
+    // empty 
 }
 
 Scene::World *AssetDataArchive::load( const IO::Uri &fileLocation ) {
     if (fileLocation.isEmpty()) {
+	osre_debug( Tag, "File location is empty.");
         return nullptr;
     }
 
@@ -103,35 +105,22 @@ static bool writeNode(Scene::Node *currentNode, Json::StreamWriter *sw ) {
     Json::Value value;
     value["name"] = currentNode->getName();
     value["type"] = "scene::node";
-    Component *comp(nullptr);
-    comp = currentNode->getComponent(Node::ComponentType::RenderComponentType);
-    if (nullptr != comp) {
-        RenderComponent *renderComp = static_cast<RenderComponent*>(comp);
-        Json::Value renderCompObj;
-        renderCompObj["id"] = renderComp->getId();
-        renderCompObj["type"] = "scene::rendercomponent";
-        value["renderComp"] = renderCompObj;
-    }
 
-    comp  = currentNode->getComponent(Node::ComponentType::TransformComponentType);
-    if (nullptr != comp) {
-        TransformComponent *transformComp = static_cast<TransformComponent*>(comp);
-        Json::Value transformCompObj;
-        transformCompObj["id"] = transformComp->getId();
-        transformCompObj["type"] = "scene::transformcomponent";
+    Json::Value transformCompObj;
+    transformCompObj["id"] = currentNode->getName();
+    transformCompObj["type"] = "scene::transformcomponent";
         
-        const glm::vec3 &pos = transformComp->getTranslation();
-        transformCompObj["transform.x"] = pos.x;
-        transformCompObj["transform.y"] = pos.y;
-        transformCompObj["transform.z"] = pos.z;
+    const glm::vec3 &pos = currentNode->getTranslation();
+    transformCompObj["transform.x"] = pos.x;
+    transformCompObj["transform.y"] = pos.y;
+    transformCompObj["transform.z"] = pos.z;
 
-        const glm::vec3 &scale = transformComp->getScale();
-        transformCompObj["scale.x"] = scale.x;
-        transformCompObj["scale.y"] = scale.y;
-        transformCompObj["scale.z"] = scale.z;
+    const glm::vec3 &scale = currentNode->getScale();
+    transformCompObj["scale.x"] = scale.x;
+    transformCompObj["scale.y"] = scale.y;
+    transformCompObj["scale.z"] = scale.z;
 
-        value["transformComp"] = transformCompObj;
-    }
+    value["transformComp"] = transformCompObj;
 
     return true;
 }
@@ -233,7 +222,7 @@ void AssetDataArchive::traverseChildren( Node *currentNode, Json::StreamWriter *
     writeNode( currentNode, sw );
 
     // Loop over all children
-	Node *currentChild( nullptr );
+    Node *currentChild( nullptr );
     for ( ui32 i = 0; i < currentNode->getNumChildren(); ++i ) {
         currentChild = currentNode->getChildAt( i );
         if ( nullptr == currentChild ) {

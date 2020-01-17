@@ -211,8 +211,8 @@ bool SDL2EventHandler::update() {
 
                     case SDL_WINDOWEVENT_RESIZED: {
                         WindowsResizeEventData *data = new WindowsResizeEventData( m_eventTriggerer );
-                        data->m_w = ( ui32 )ev.window.data1;
-                        data->m_h = ( ui32 )ev.window.data1;
+                        data->m_w = ( ui32 ) ev.window.data1;
+                        data->m_h = ( ui32 ) ev.window.data2;
                         activeEventQueue->addBack( data );
                     }
                     break;
@@ -232,6 +232,11 @@ bool SDL2EventHandler::update() {
 }
 
 void SDL2EventHandler::registerEventListener( const EventArray &events, OSEventListener *listener ) {
+    if (nullptr == m_eventTriggerer) {
+        osre_error(Tag, "Pointer to event-triggerer is nullptr.");
+        return;
+    }
+
     if ( nullptr == listener ) {
         osre_error( Tag, "Pointer to listener is nullptr." );
         return;
@@ -241,6 +246,11 @@ void SDL2EventHandler::registerEventListener( const EventArray &events, OSEventL
 }
 
 void SDL2EventHandler::unregisterEventListener( const EventArray &events, OSEventListener *listener ) {
+    if (nullptr == m_eventTriggerer) {
+        osre_error(Tag, "Pointer to event-triggerer is nullptr.");
+        return;
+    }
+
     if (nullptr == listener) {
         osre_error(Tag, "Pointer to listener is nullptr.");
         return;
@@ -249,6 +259,15 @@ void SDL2EventHandler::unregisterEventListener( const EventArray &events, OSEven
     m_eventTriggerer->removeEventListener( events, EventFunctor::Make( listener, &OSEventListener::onOSEvent ) );
 }
         
+void SDL2EventHandler::unregisterAllEventHandler(const EventPtrArray &events) {
+    if (nullptr == m_eventTriggerer) {
+        osre_error(Tag, "Pointer to event-triggerer is nullptr.");
+        return;
+    }
+
+    m_eventTriggerer->removeAllEventListeners(events);
+}
+
 void SDL2EventHandler::enablePolling( bool enabled ) {
     if( enabled == m_isPolling ) {
         return;

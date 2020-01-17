@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/ParticleGenerator.h>
+#include <osre/Scene/ParticleEmitter.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
@@ -36,6 +36,7 @@ namespace OSRE {
 namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Scene;
 
 const String VsSrc =
     "#version 400 core\n"
@@ -82,7 +83,7 @@ class SwitchCmdBufferRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
     static const ui32 NumPoints = 1000;
     Mesh *m_pointMesh;
-    ParticleGenerator *m_particeGen;
+    ParticleEmitter *m_particeGen;
 
 public:
     SwitchCmdBufferRenderTest()
@@ -103,7 +104,7 @@ public:
         rbSrv->beginPass(PipelinePass::getPassNameById( RenderPassId ) );
         rbSrv->beginRenderBatch("b1");
 
-        m_particeGen = new ParticleGenerator( rbSrv );
+        m_particeGen = new ParticleEmitter( rbSrv );
         m_particeGen->init( NumPoints );
 
         m_transformMatrix.update();

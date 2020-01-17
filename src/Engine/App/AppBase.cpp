@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AppBase.h>
 #include <osre/App/ServiceProvider.h>
 #include <osre/App/ResourceCacheService.h>
+#include <osre/App/AssetRegistry.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/Common/Environment.h>
 #include <osre/IO/IOService.h>
@@ -37,7 +38,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/View.h>
 #include <osre/Scene/World.h>
 #include <osre/Debugging/osre_debugging.h>
-#include <osre/Assets/AssetRegistry.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/UiItemFactory.h>
 #include <osre/UI/FocusControl.h>
@@ -55,8 +55,8 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::UI;
 using namespace ::OSRE::IO;
 
-const String API_Arg = "api";
-const String Tag     = "AppBase";
+static const c8 *API_Arg = "api";
+static const c8 *Tag     = "AppBase";
 
 class KeyboardEventListener : public Platform::OSEventListener {
 public:
@@ -79,19 +79,19 @@ public:
     }
 
     void onOSEvent( const Event &osEvent, const EventData *data ) override {
+        if ( !m_uiCanvas.isValid() ) {
+            return;
+        }
+
+        Widget *widget = m_uiCanvas->getFocusControl()->getInputFocusWidget();
+        if (nullptr == widget) {
+            return;
+        }
+
         if (osEvent == KeyboardButtonDownEvent ) {
-            Widget *widget = m_uiCanvas->getFocusControl()->getInputFocusWidget();
-            if (nullptr == widget) {
-                return;
-            }
             KeyboardButtonEventData *keyData = ( KeyboardButtonEventData * )data;
             widget->keyPressed( keyData->m_key );
-        }
-        else if ( osEvent == KeyboardButtonUpEvent ) {
-            Widget *widget = m_uiCanvas->getFocusControl()->getInputFocusWidget();
-            if (nullptr == widget) {
-                return;
-            }
+        } else if ( osEvent == KeyboardButtonUpEvent ) {
             KeyboardButtonEventData *keyData = ( KeyboardButtonEventData * )data;
             widget->keyReleased( keyData->m_key );
         }
@@ -146,7 +146,7 @@ AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const Strin
 , m_platformInterface( nullptr )
 , m_timer( nullptr )
 , m_rbService( nullptr )
-, m_world( nullptr )
+, m_activeWorld( nullptr )
 , m_uiScreen( nullptr )
 , m_uiRenderer( nullptr )
 , m_mouseEvListener( nullptr )
@@ -231,12 +231,13 @@ void AppBase::requestNextFrame() {
     OSRE_ASSERT( nullptr != m_uiRenderer );
     OSRE_ASSERT( nullptr != m_rbService );
 
-    if (nullptr == m_world) {
+    if (nullptr == m_activeWorld) {
         return;
     }
 
-    m_world->draw( m_rbService );
+    m_activeWorld->draw( m_rbService );
     if (nullptr != m_uiScreen) {
+        m_uiRenderer->layout( m_uiScreen );
         m_uiRenderer->render( m_uiScreen, m_rbService );
     }
     m_rbService->update();
@@ -248,21 +249,59 @@ bool AppBase::handleEvents() {
         return false;
     }
 
-    bool retCode = m_platformInterface->update();
-
+    bool result = m_platformInterface->update();
     if (shutdownRequested()) {
         return false;
     }
     
-    return retCode;
+    return result;
 }
 
 Properties::Settings *AppBase::getSettings() const {
     return m_settings;
 }
 
+Scene::World *AppBase::createWorld( const String &name ) {
+    if (name.empty()) {
+        osre_debug( Tag, "Invalid name for a new world." );
+        return nullptr;
+    }
+
+    m_activeWorld = new Scene::World( name );
+    m_worlds.add( m_activeWorld );
+    
+    return m_activeWorld;
+}
+
+Scene::World *AppBase::findWorld( const String &name ) const {
+    if (m_worlds.isEmpty()) {
+        return nullptr;
+    }
+
+    for (size_t i = 0; i < m_worlds.size(); ++i) {
+        if (m_worlds[ i ]->getName() == name) {
+            return m_worlds[ i ];
+        }
+    }
+
+    return nullptr;
+}
+
+bool AppBase::setActiveWorld( const String &name ) {
+    if (name.empty()) {
+        return false;
+    }
+    
+    m_activeWorld = findWorld( name );
+    return ( nullptr != m_activeWorld );
+}
+
+Scene::World *AppBase::getActiveWorld() const {
+    return m_activeWorld;
+}
+
 Scene::Stage *AppBase::createStage( const String &name ) {
-    if ( nullptr == m_world ) {
+    if ( nullptr == m_activeWorld ) {
         osre_debug( Tag, "No world to add state to." );
         return nullptr;
     }
@@ -274,36 +313,36 @@ Scene::Stage *AppBase::createStage( const String &name ) {
 
     Scene::Stage *stage( new Scene::Stage(stageName, m_rbService ) );
     if ( nullptr != stage ) {
-        m_world->addStage( stage );
+        m_activeWorld->addStage( stage );
     }
 
     return stage;
 }
 
-bool AppBase::setActiveStage( Scene::Stage *stage ) {
-    if ( nullptr == m_world ) {
+Scene::Stage *AppBase::setActiveStage( Scene::Stage *stage ) {
+    if ( nullptr == m_activeWorld ) {
         osre_debug( Tag, "No world to activate state to." );
-        return false;
+        return nullptr;
     }
     
-    return m_world->setActiveStage( stage );
+    return m_activeWorld->setActiveStage( stage );
 }
 
-bool AppBase::setActiveView(Scene::View *view) {
-    if (nullptr == m_world) {
+Scene::View *AppBase::setActiveView(Scene::View *view) {
+    if (nullptr == m_activeWorld) {
         osre_debug(Tag, "No world to activate state to.");
-        return false;
+        return nullptr;
     }
-    return m_world->setActiveView(view);
+    return m_activeWorld->setActiveView(view);
 }
 
-bool AppBase::activateStage( const String &name ) {
-    if ( nullptr == m_world ) {
+Scene::Stage *AppBase::activateStage( const String &name ) {
+    if ( nullptr == m_activeWorld ) {
         osre_debug( Tag, "No world to activate state to." );
-        return false;
+        return nullptr;
     }
 
-    return m_world->setActiveStage( name );
+    return m_activeWorld->setActiveStage( name );
 }
 void AppBase::requestShutdown() {
     m_shutdownRequested = true;
@@ -374,7 +413,7 @@ bool AppBase::onCreate() {
     m_environment = new Common::Environment;
     
     // create the asset registry
-    Assets::AssetRegistry *registry( Assets::AssetRegistry::create() );
+    AssetRegistry *registry( AssetRegistry::create() );
     OSRE_ASSERT( nullptr!=registry );
     if ( nullptr==registry ) {
         osre_debug( Tag, "Cannot create asset registry." );
@@ -422,7 +461,7 @@ bool AppBase::onCreate() {
 
     // create our world
     Scene::RenderMode mode = static_cast<Scene::RenderMode>( m_settings->get( Properties::Settings::RenderMode ).getInt() );
-    m_world = new Scene::World( "world", mode );
+    m_activeWorld = new Scene::World( "world", mode );
     
 
     ResourceCacheService *rcSrv = new ResourceCacheService;
@@ -462,7 +501,16 @@ bool AppBase::onDestroy() {
         return false;
     }
     
-    Assets::AssetRegistry::destroy();
+    AbstractPlatformEventQueue *evHandler = m_platformInterface->getPlatformEventHandler();
+    if (nullptr != evHandler) {
+        Common::EventPtrArray eventArray;
+        eventArray.add(&MouseButtonDownEvent);
+        eventArray.add(&MouseButtonUpEvent);
+        eventArray.add(&KeyboardButtonDownEvent);
+        eventArray.add(&KeyboardButtonUpEvent);
+        evHandler->unregisterAllEventHandler(eventArray);
+    }
+    AssetRegistry::destroy();
     ServiceProvider::destroy();
 
     if( m_platformInterface ) {
@@ -473,8 +521,8 @@ bool AppBase::onDestroy() {
     delete m_uiScreen;
     delete m_uiRenderer;
 
-    delete m_world;
-    m_world = nullptr;
+    delete m_activeWorld;
+    m_activeWorld = nullptr;
 
     delete m_ids;
     m_ids = nullptr;
@@ -491,11 +539,12 @@ static const i64 Conversion2Micro = 1000;
 void AppBase::onUpdate() {
     i64 microsecs = m_timer->getMilliCurrentSeconds() * Conversion2Micro;
     Time dt( microsecs );
-    if ( nullptr != m_world ) {
-        m_world->update( dt );
+    if ( nullptr != m_activeWorld ) {
+        m_activeWorld->update( dt );
     }
 
     if (nullptr != m_uiRenderer && nullptr != m_uiScreen) {
+        m_uiRenderer->layout( m_uiScreen );
         m_uiRenderer->render( m_uiScreen, m_rbService);
     }
 }
@@ -507,7 +556,6 @@ const ArgumentParser &AppBase::getArgumentParser() const {
 Ids* AppBase::getIdContainer() const {
     return m_ids;
 }
-
 
 RenderBackend::Pipeline *AppBase::createDefaultPipeline() {
     Pipeline *pipeline = new Pipeline;

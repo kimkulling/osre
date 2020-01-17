@@ -4,11 +4,29 @@ using System.Windows.Forms;
 
 namespace OSREEditor.View 
 {
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct OSREWorld 
+    {
+        public int NumStages;   
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct OSREStage 
+    {
+
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct OSRENode 
+    {
+
+    }
 
     /// <summary>
     /// The OSRE native wrapper, contains prototypes for calling native methods from OSRE.
     /// </summary>
     public class OSREWrapper : IDisposable {
+        
         #region Private Attributes
 
 #if DEBUG
@@ -18,7 +36,7 @@ namespace OSREEditor.View
 #endif
         private static TextBox _logger;
 
-        #endregion
+#endregion
 
         #region Native Interface Wrapper
 
@@ -29,6 +47,13 @@ namespace OSREEditor.View
         /// <returns>0 for successful, != 0 in case of an error.</returns>
         [DllImport(EditorDllName)]
         public static extern int CreateEditorApp(IntPtr handle);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [DllImport(EditorDllName)]
+        public static extern int EditorUpdate();
 
         /// <summary>
         /// Will request the next frame to render
@@ -60,6 +85,43 @@ namespace OSREEditor.View
         /// <returns>0 for successful, != 0 in case of an error.</returns>
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         public static extern int ImportAsset([MarshalAs(UnmanagedType.LPStr)] string name, int flags);
+
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int openWorldAccess([MarshalAs(UnmanagedType.LPStr)] string name);
+
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int openStageAccess([MarshalAs(UnmanagedType.LPStr)] string name );
+
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int openNodeAccess([MarshalAs(UnmanagedType.LPStr)] string name);
+        
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int createNode([MarshalAs(UnmanagedType.LPStr)] string name, [MarshalAs(UnmanagedType.LPStr)] string parent );
+        
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int closeNodeAccess();
+
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int closeStageAccess();
+
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern int closeWorldAccess();
+
+        /// <summary>
+        /// todo!
+        /// </summary>
+        /// <param name="world"></param>
+        /// <returns></returns>
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern unsafe int OpenWorldAccess( string name );
+
+        /// <summary>
+        /// todo!
+        /// </summary>
+        /// <param name="world"></param>
+        /// <returns></returns>
+        [DllImport(EditorDllName, CharSet = CharSet.Auto)]
+        public static extern unsafe int closeWorldAccess(OSREWorld* world);
 
         /// <summary>
         /// Will load a project.
@@ -127,7 +189,7 @@ namespace OSREEditor.View
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         public static extern void EditorResize(int x, int y, int w, int h);
 
-#endregion
+        #endregion
 
         [DllImport(EditorDllName, CharSet = CharSet.Auto)]
         private static extern void RegisterLogCallback(IntPtr fc);

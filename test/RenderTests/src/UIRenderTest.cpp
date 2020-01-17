@@ -94,7 +94,7 @@ public:
         TextBase *text = (TextBase*) UiItemFactory::getInstance()->create(WidgetType::Text, getTestName() + ".test", panel2);
         text->setLabel( "Huhu" );
 
-        Panel *panel3 = (Panel*)UiItemFactory::getInstance()->create(WidgetType::Panel, getTestName() + ".panel2", m_canvas);
+        Panel *panel3 = (Panel*)UiItemFactory::getInstance()->create(WidgetType::Panel, getTestName() + ".panel3", m_canvas);
         panel3->setRect(450, 10, 200, 200);
 
         return true;

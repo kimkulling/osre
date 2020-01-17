@@ -67,8 +67,11 @@ VK_GLOBAL_LEVEL_FUNCTION( vkEnumerateInstanceExtensionProperties )
 
 #define USE_SWAPCHAIN_EXTENSIONS
 
-#pragma warning ( push )
-#pragma warning ( disable:4706 )
+
+#if ( _MSC_VER > 1900 )
+#   pragma warning ( push )
+#   pragma warning ( disable:4706 )
+#endif // _MSC_VER > 1900
 
 VK_INSTANCE_LEVEL_FUNCTION( vkEnumeratePhysicalDevices )
 VK_INSTANCE_LEVEL_FUNCTION( vkGetPhysicalDeviceProperties )
@@ -108,9 +111,6 @@ VK_INSTANCE_LEVEL_FUNCTION( vkGetPhysicalDeviceMemoryProperties )
 #if !defined(VK_DEVICE_LEVEL_FUNCTION)
 #  define VK_DEVICE_LEVEL_FUNCTION( fun )
 #endif
-
-#pragma warning(push)
-#pragma warning( disable : 4706 )
 
 VK_DEVICE_LEVEL_FUNCTION( vkGetDeviceQueue )
 VK_DEVICE_LEVEL_FUNCTION( vkDeviceWaitIdle )
@@ -171,7 +171,9 @@ VK_DEVICE_LEVEL_FUNCTION( vkFreeMemory )
 VK_DEVICE_LEVEL_FUNCTION( vkDestroyBuffer )
 VK_DEVICE_LEVEL_FUNCTION( vkDestroyFence )
 
-#pragma warning(pop)
+#if ( _MSC_VER > 1900 )
+#   pragma warning(pop)
+#endif // _MSC_VER > 1900
 
 #undef VK_DEVICE_LEVEL_FUNCTION
 

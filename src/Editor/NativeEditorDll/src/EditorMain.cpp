@@ -37,9 +37,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/Node.h>
 #include <osre/Scene/World.h>
 #include <osre/IO/IOService.h>
-#include <osre/Assets/AssimpWrapper.h>
-#include <osre/Assets/AssetDataArchive.h>
-#include <osre/Assets/Model.h>
+#include <osre/App/AssimpWrapper.h>
+#include <osre/App/AssetDataArchive.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
@@ -101,20 +100,27 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
             HWND childHandle = window->getHWnd();
             if (childHandle == nullptr) {
                 osre_error(Tag, "Cannot get window handle from editor instance.");
-                return 1;
+                return -1;
             }
 
-            ::SetParent( childHandle, mainWH );
+            HWND wnd = ::SetParent( childHandle, mainWH );
+            if (!wnd) {
+                osre_error( Tag, "Cannot set parent window." );
+                return -1;
+            }
 
             RECT rect;
             if (TRUE != GetClientRect(mainWH, &rect)) {
                 osre_error(Tag, "Cannot get geometry from parent window.");
-                return 1;
+                return -1;
             }
 
             const ui32 w = rect.right - rect.left;
             const ui32 h = rect.bottom - rect.top;
-            ::MoveWindow( childHandle, rect.left, rect.top, w, h, TRUE );
+            if (FALSE == ::MoveWindow( childHandle, rect.left, rect.top, w, h, TRUE )) {
+                osre_error( Tag, "Cannot move window." );
+                return -1;
+            }
         }
 
         ::CPPCore::TArray<const Common::Event*> eventArray;
@@ -123,11 +129,10 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
         AbstractPlatformEventQueue *evQueue = s_EditorApplication->getPlatformInterface()->getPlatformEventHandler();
         if (nullptr == evQueue) {
             osre_error(Tag, "Cannot get event queue.");
-            return 1;
+            return -1;
         }
 
         evQueue->registerEventListener( eventArray, listener );
-
 
         s_EditorApplication->requestNextFrame();
     }
@@ -137,7 +142,7 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
 
 extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorUpdate() {
     if (nullptr == s_EditorApplication) {
-        return 1;
+        return -1;
     }
 
     s_EditorApplication->update();
@@ -147,9 +152,10 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorUpdate() {
 
 extern "C" OSRE_EDITOR_EXPORT int STDCALL EditorRequestNextFrame() {
     if (nullptr == s_EditorApplication) {
-        return 1;
+        return -1;
     }
 
+    s_EditorApplication->handleEvents();
     s_EditorApplication->requestNextFrame();
 
     return 0;
@@ -226,14 +232,77 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL SaveProject( const char *filelocation,
 
 extern "C" OSRE_EDITOR_EXPORT int STDCALL ImportAsset( const char *filename, int flags ) {
     if (nullptr == s_EditorApplication) {
-        return 1;
+        return -1;
     }
 
     if (nullptr == filename) {
-        return 1;
+        return -1;
     }
 
     return s_EditorApplication->importAsset( filename, flags );
+}
+
+// Scene access ---------------------------------------------------------------
+extern "C" OSRE_EDITOR_EXPORT int STDCALL OpenWorldAccess( const char *name ) {
+    if (nullptr == s_EditorApplication) {
+        return -1;
+    }
+
+    if (nullptr == name) {
+        return -1;
+    }
+
+    int retCode = s_EditorApplication->openWorldAccess( name );
+    if (-1 != retCode) {
+
+    }
+    return retCode;
+}
+
+extern "C" OSRE_EDITOR_EXPORT int STDCALL OpenStageAccess( const char *name ) {
+    if (nullptr == s_EditorApplication) {
+        return -1;
+    }
+
+    return s_EditorApplication->openStageAccess( name );
+}
+
+extern "C" OSRE_EDITOR_EXPORT int STDCALL OpenNodeAccess( const char *name ) {
+    if (nullptr == s_EditorApplication) {
+        return -1;
+    }
+
+    return s_EditorApplication->openNodeAccess( name );
+}
+
+extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateNode( const char *name, const char *parent ) {
+    if (nullptr == s_EditorApplication) {
+        return -1;
+    }
+
+    return s_EditorApplication->createNode( name, parent );
+}
+extern "C" OSRE_EDITOR_EXPORT int STDCALL CloseNodeAccess( void ) {
+    if (nullptr == s_EditorApplication) {
+        return -1;
+    }
+    
+    return s_EditorApplication->closeNodeAccess();
+}
+
+extern "C" OSRE_EDITOR_EXPORT int STDCALL CloseStageAccess( void ) {
+    if (nullptr == s_EditorApplication) {
+        return -1;
+    }
+    return s_EditorApplication->closeStageAccess();
+}
+
+extern "C" OSRE_EDITOR_EXPORT int STDCALL CloseWorldAccess( void ) {
+    if (nullptr == s_EditorApplication) {
+        return -1;
+    }
+
+    return s_EditorApplication->closeWorldAccess();
 }
 
 extern "C" OSRE_EDITOR_EXPORT void STDCALL RegisterLogCallback(fnc_log_callback *fnc) {

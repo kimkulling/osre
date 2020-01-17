@@ -80,8 +80,8 @@ RenderBackendService::RenderBackendService()
 , m_renderFrame(&m_frames[0])
 , m_submitFrame(&m_frames[1])
 , m_screen( nullptr )
-, m_passes()
 , m_dirty(false)
+, m_passes()
 , m_currentPass(nullptr)
 , m_currentBatch( nullptr )  {
     // empty

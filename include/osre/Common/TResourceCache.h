@@ -57,6 +57,7 @@ template<class TResource>
 inline
 TResource* TResourceFactory<TResource>::create(const String& name, const IO::Uri &uri ) {
     if (name.empty()) {
+        osre_debug( ResTag, "Name is empty.");
         return nullptr;
     }
 
@@ -132,7 +133,7 @@ TResource* TResourceCache<TResourceFactory, TResource>::find(const String& name)
         return nullptr;
     }
 
-    ResourceMap::const_iterator it = m_resourceMap.find(name);
+    typename ResourceMap::const_iterator it = m_resourceMap.find(name);
     if ( m_resourceMap.end() == it ) {
         return nullptr;
     }
@@ -143,7 +144,7 @@ TResource* TResourceCache<TResourceFactory, TResource>::find(const String& name)
 template<class TResourceFactory, class TResource>
 inline
 void TResourceCache<TResourceFactory, TResource>::clear() {
-    ResourceMap::iterator it(m_resourceMap.begin());
+    typename ResourceMap::iterator it(m_resourceMap.begin());
     for (; it != m_resourceMap.end(); ++it) {
         delete it->second;
     }

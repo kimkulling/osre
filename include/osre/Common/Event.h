@@ -25,6 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/TFunctor.h>
 #include <osre/Common/StringUtils.h>
 
+#include <cppcore/Container/TList.h>
+#include <cppcore/Container/TArray.h>
+
 namespace OSRE {
 namespace Common {
 
@@ -174,6 +177,9 @@ private:
 
 ///	Base event functor.
 typedef Functor<void, const Event&, const EventData*> EventFunctor;
+
+using EventDataList = CPPCore::TList<Common::EventData*>;
+using EventPtrArray = CPPCore::TArray<const Common::Event*>;
 
 } // Namespace Common
 } // Namespace OSRE

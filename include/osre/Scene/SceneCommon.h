@@ -40,9 +40,6 @@ class Node;
 class World;
 class Stage;
 class View;
-class Component;
-class RenderComponent;
-class TransformComponent;
 
 /// @brief  The provided render modes for a world.
 enum class RenderMode {

@@ -22,52 +22,47 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <cppcore/Container/THashMap.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Scene/TAABB.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include <GL/glew.h>
+#include <GL/gl.h>
 
 namespace OSRE {
-    
-// Forward declarations
-namespace IO {
-    class Stream;
-    class Uri;
-}
 
 namespace RenderBackend {
-    struct BufferData;
+    class RenderBackendService;
 }
 
 namespace Scene {
-    class World;
-}
-
-namespace Assets {
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup    Engine
+///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief	This class offers some system-specific functions.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AssetRegistry {
+class OSRE_EXPORT ParticleEmitter {
 public:
-    static AssetRegistry *create();
-    static void destroy();
-    static bool registerAssetPath( const String &mount, const String &path );
-    static bool hasPath( const String &mount );
-    static String getPath( const String &mount );
-    static String resolvePathFromUri( const IO::Uri &location );
-    static bool clear();
+    ParticleEmitter( RenderBackend::RenderBackendService *rbSrv );
+    ~ParticleEmitter();
+    void init( ui32 numPoints );
+    void update( d32 tick );
+    void setBounds(const TAABB<f32>& bounds);
+    RenderBackend::Mesh* getMesh() const;
 
 private:
-    AssetRegistry();
-    ~AssetRegistry();
-
-private:
-    static AssetRegistry *s_instance;
-
-    typedef CPPCore::THashMap<ui32, String> Name2PathMap;
-    Name2PathMap m_name2pathMap;
+    RenderBackend::RenderBackendService *m_rbSrv;
+    ui32 m_numPoints;
+    glm::vec3 *m_col;
+    glm::vec3 *m_pos;
+    GLushort *m_pt_indices;
+    RenderBackend::Mesh *m_ptGeo;
+    bool m_useBounds;
+    TAABB<f32> m_bounds;
 };
 
-} // Namespace Assets
+} // Namespace RenderBackend
 } // Namespace OSRE

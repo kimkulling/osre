@@ -21,13 +21,13 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
-#include <osre/Assets/AssetRegistry.h>
+#include <osre/App/AssetRegistry.h>
 #include <osre/IO/Uri.h>
 
 namespace OSRE {
 namespace UnitTest {
 
-using namespace ::OSRE::Assets;
+using namespace ::OSRE::App;
 
 class AssetRegistryTest : public ::testing::Test {
 protected:
@@ -35,9 +35,9 @@ protected:
         AssetRegistry *reg( AssetRegistry::create() );
         EXPECT_NE( nullptr, reg );
 #ifdef OSRE_WINDOWS
-        Assets::AssetRegistry::registerAssetPath( "assets", "../../media" );
+        AssetRegistry::registerAssetPath( "assets", "../../media" );
 #else
-        Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
+        AssetRegistry::registerAssetPath( "assets", "../media" );
 #endif 
     }
 
