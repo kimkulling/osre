@@ -118,8 +118,6 @@ public:
     TransformComponent( Entity *owner, ui32 id );
     ~TransformComponent() override;
     void update( Time dt ) override;
-    void setNode( Scene::Node *node );
-    Scene::Node *getNode() const;
 
 protected:
     bool onPreprocess() override;
@@ -128,7 +126,7 @@ protected:
     bool onPostprocess() override;
 
 private:
-    Common::TObjPtr<Scene::Node> m_node;
+    RenderBackend::MatrixBuffer m_mb;
 };
 
 } // Namespace Scene

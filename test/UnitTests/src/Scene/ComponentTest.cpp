@@ -75,6 +75,8 @@ protected:
     }
 
     bool onRender( RenderBackend::RenderBackendService *renderBackendSrv ) override {
+        EXPECT_NE(nullptr, renderBackendSrv);
+
         return true;
     }
 

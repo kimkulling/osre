@@ -128,9 +128,7 @@ protected:
             view->setProjectionParameters( 60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.0001f, 1000.f );
             Entity *entity = assimpWrapper.getEntity();
             view->observeBoundingBox( entity->getAABB() );
-            TransformComponent *tc = (TransformComponent*) entity->getComponent( ComponentType::TransformComponentType );
-            m_stage->setRoot( tc->getNode() );
-            m_modelNode = m_stage->getRoot();
+            m_modelNode = entity->getNode();
         }
 
         return true;

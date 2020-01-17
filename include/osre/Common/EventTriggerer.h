@@ -51,23 +51,23 @@ public:
     ///	@param	ev	Reference to listened event
     ///	@param	func	Reference to called functor
     void addEventListener( const Event& ev, const EventFunctor &func );
-    void addEventListener( const CPPCore::TArray<const Event*> &rEvents, const EventFunctor &func );
+    void addEventListener( const EventPtrArray &events, const EventFunctor &func );
 
     ///	@brief Remove an listener for an event
     ///	@param ev	Reference to event
     ///	@param func	Reference to functor
     void removeEventListener( const Event& ev, const EventFunctor& func);
-    void removeEventListener( const CPPCore::TArray<const Event*> &rEvents, const EventFunctor &func );
+    void removeEventListener( const EventPtrArray &events, const EventFunctor &func );
 
     ///	@brief Remove all listener from the trigger.
     ///	@param	ev	Event which triggers are connected to.
-    void removeAllEventListeners( const Event& ev );
+    void removeAllEventListeners(const EventPtrArray &events);
 
     ///	@brief Test, if this instance can trigger an event.
     ///	@return true, if instance can trigger
     bool isEventTriggerable(const Event& ev);
 
-    ///	@brief	Adds a new triggerable event.
+    ///	@brief	Adds a new triggeable event.
     ///	@param	ev		[in] The event to add.
     virtual void addTriggerableEvent( const Event& ev );
     

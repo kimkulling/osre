@@ -1,5 +1,7 @@
 #pragma once
 
+#include <osre/Common/osre_common.h>
+
 namespace OSRE {
 namespace App {
 
@@ -9,8 +11,8 @@ public:
         // empty
     }
 
-    virtual bool update() {
-        return onUpdate();
+    virtual bool update(Time dt ) {
+        return onUpdate(dt);
     }
 
     virtual bool mouseDown() {
@@ -34,7 +36,7 @@ protected:
         // empty
     }
 
-    virtual bool onUpdate() {
+    virtual bool onUpdate(Time dt) {
         return true;
     }
 

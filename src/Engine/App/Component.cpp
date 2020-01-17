@@ -93,7 +93,7 @@ bool RenderComponent::onPreprocess() {
     return true;
 }
 
-bool RenderComponent::onUpdate( Time dt ) {
+bool RenderComponent::onUpdate( Time ) {
     return true;
 }
 
@@ -114,7 +114,7 @@ bool RenderComponent::onPostprocess() {
 
 TransformComponent::TransformComponent( Entity *owner, ui32 id )
 : Component( owner, id )
-, m_node( nullptr ) {
+, m_mb() {
     // empty
 }
 
@@ -122,20 +122,8 @@ TransformComponent::~TransformComponent()  {
     // empty
 }
 
-void TransformComponent::update( Time dt ) {
+void TransformComponent::update( Time ) {
 
-}
-
-void TransformComponent::setNode( Scene::Node *node ) {
-    if ( m_node.getPtr() == node ) {
-        return;
-    }
-
-    m_node = node;
-}
-
-Scene::Node *TransformComponent::getNode() const {
-    return m_node.getPtr();
 }
 
 bool TransformComponent::onPreprocess() {
@@ -143,16 +131,10 @@ bool TransformComponent::onPreprocess() {
 }
 
 bool TransformComponent::onUpdate( Time dt ) {
-    if ( !m_node.isValid() ) {
-        return true;
-    }
-
-    m_node->update(dt);
-
     return true;
 }
 
-bool TransformComponent::onRender( RenderBackend::RenderBackendService *rbSrv ) {
+bool TransformComponent::onRender( RenderBackend::RenderBackendService* ) {
     return true;
 }
 
@@ -161,4 +143,4 @@ bool TransformComponent::onPostprocess() {
 }
 
 } // Namespace Scene
-} // Namespace OSRE
+} // Namespace OSREB

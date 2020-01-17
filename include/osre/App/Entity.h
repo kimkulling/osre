@@ -21,8 +21,9 @@ namespace App {
 class AbstractBehaviour;
 class Component;
 class RenderComponent;
+class TransformComponent;
 
-class Entity : public Common::Object {
+class OSRE_EXPORT Entity : public Common::Object {
 public:
     Entity( const String &name, const Common::Ids &ids );
     virtual ~Entity();
@@ -40,6 +41,7 @@ public:
 private:
     AbstractBehaviour *m_behaviour;
     RenderComponent *m_renderComponent;
+    TransformComponent *m_transformComponent;
     Scene::Node *m_node;
     const Common::Ids &m_ids;
     Scene::Node::AABB m_aabb;

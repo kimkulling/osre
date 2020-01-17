@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Platform/AbstractPlatformEventQueue.h>
+#include <osre/Common/Event.h>
 
 #include <map>
 
@@ -49,8 +50,9 @@ public:
     SDL2EventHandler( AbstractWindow *window );
     virtual ~SDL2EventHandler();
     bool update() override;
-    void registerEventListener( const EventArray &events, OSEventListener *listener ) override;
-    void unregisterEventListener( const EventArray &events, OSEventListener *listener ) override;
+    void registerEventListener( const Common::EventPtrArray &events, OSEventListener *listener ) override;
+    void unregisterEventListener( const Common::EventPtrArray &events, OSEventListener *listener ) override;
+    void unregisterAllEventHandler(const Common::EventPtrArray &events) override;
     void enablePolling( bool enabled ) override;
     bool isPolling() const override;
 

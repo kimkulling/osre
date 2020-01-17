@@ -11,6 +11,7 @@ Entity::Entity( const String &name, const Common::Ids &ids )
 : Object( name )
 , m_behaviour( nullptr ) 
 , m_renderComponent( nullptr )
+, m_transformComponent( nullptr )
 , m_node( nullptr )
 , m_ids( ids )
 , m_aabb() {
@@ -18,7 +19,8 @@ Entity::Entity( const String &name, const Common::Ids &ids )
 }
 
 Entity::~Entity() {
-    // empty
+    delete m_renderComponent;
+    delete m_transformComponent;
 }
  
 void Entity::setBehaviourControl( AbstractBehaviour *behaviour ) {
@@ -38,6 +40,10 @@ bool Entity::preprocess() {
 }
 
 bool Entity::update( Time dt ) {
+    if (nullptr != m_behaviour) {
+        m_behaviour->update(dt);
+    }
+
     return true;
 }
 
@@ -56,7 +62,7 @@ Component *Entity::getComponent( ComponentType type ) const {
         case OSRE::App::ComponentType::RenderComponentType:
             return m_renderComponent;
         case OSRE::App::ComponentType::TransformComponentType:
-            break;
+            return m_transformComponent;
         case OSRE::App::ComponentType::ScriptComponent:
             break;
         case OSRE::App::ComponentType::MaxNumComponents:

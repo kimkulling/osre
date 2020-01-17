@@ -79,8 +79,12 @@ void EventTriggerer::removeEventListener( const TArray<const Event*> &events, co
     }
 }
 
-void EventTriggerer::removeAllEventListeners(const Event& ev) {
-    m_EventList[ ev.getHash() ].clear();
+void EventTriggerer::removeAllEventListeners(const TArray<const Event*> &events) {
+    for (ui32 i = 0; i < events.size(); ++i) {
+        if (nullptr != events[i]) {
+            m_EventList[events[i]->getHash()].clear();
+        }
+    }
 }
 
 bool EventTriggerer::isEventTriggerable(const Event& ev) {

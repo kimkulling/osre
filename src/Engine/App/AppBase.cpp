@@ -79,19 +79,19 @@ public:
     }
 
     void onOSEvent( const Event &osEvent, const EventData *data ) override {
+        if ( !m_uiCanvas.isValid() ) {
+            return;
+        }
+
+        Widget *widget = m_uiCanvas->getFocusControl()->getInputFocusWidget();
+        if (nullptr == widget) {
+            return;
+        }
+
         if (osEvent == KeyboardButtonDownEvent ) {
-            Widget *widget = m_uiCanvas->getFocusControl()->getInputFocusWidget();
-            if (nullptr == widget) {
-                return;
-            }
             KeyboardButtonEventData *keyData = ( KeyboardButtonEventData * )data;
             widget->keyPressed( keyData->m_key );
-        }
-        else if ( osEvent == KeyboardButtonUpEvent ) {
-            Widget *widget = m_uiCanvas->getFocusControl()->getInputFocusWidget();
-            if (nullptr == widget) {
-                return;
-            }
+        } else if ( osEvent == KeyboardButtonUpEvent ) {
             KeyboardButtonEventData *keyData = ( KeyboardButtonEventData * )data;
             widget->keyReleased( keyData->m_key );
         }
@@ -501,6 +501,15 @@ bool AppBase::onDestroy() {
         return false;
     }
     
+    AbstractPlatformEventQueue *evHandler = m_platformInterface->getPlatformEventHandler();
+    if (nullptr != evHandler) {
+        Common::EventPtrArray eventArray;
+        eventArray.add(&MouseButtonDownEvent);
+        eventArray.add(&MouseButtonUpEvent);
+        eventArray.add(&KeyboardButtonDownEvent);
+        eventArray.add(&KeyboardButtonUpEvent);
+        evHandler->unregisterAllEventHandler(eventArray);
+    }
     AssetRegistry::destroy();
     ServiceProvider::destroy();
 

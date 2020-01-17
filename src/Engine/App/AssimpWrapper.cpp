@@ -123,7 +123,6 @@ Entity *AssimpWrapper::getEntity() const {
     return m_entity;
 }
 
-
 Entity *AssimpWrapper::convertScene() {
     if ( nullptr == m_scene) {
         return nullptr;
