@@ -467,8 +467,8 @@ public:
     TextureStageType setTextureStage() const;
 
 protected:
-    void onLoad(const IO::Uri& uri, TextureLoader& loader) override;
-    void onUnload(TextureLoader& loader) override;
+    TextureResource::ResourceState onLoad(const IO::Uri& uri, TextureLoader& loader) override;
+    TextureResource::ResourceState onUnload(TextureLoader& loader) override;
 
 private:
     TextureTargetType m_targetType;

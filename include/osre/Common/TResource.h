@@ -53,16 +53,16 @@ public:
     void setUri(const IO::Uri& uri);
     const IO::Uri& getUri() const;
     ResourceState getState() const;
-    virtual void load( TResLoader& loader);
-    virtual void unload(TResLoader& loader);
+    virtual ResourceState load( TResLoader& loader);
+    virtual ResourceState unload(TResLoader& loader);
     TResType* get();
 
 protected:
     void create();
     ResourceStatistics& getStats();
     virtual void setState(ResourceState newState);
-    virtual void onLoad(const IO::Uri& uri, TResLoader& loader) = 0;
-    virtual void onUnload(TResLoader& loader) = 0;
+    virtual ResourceState onLoad(const IO::Uri& uri, TResLoader& loader) = 0;
+    virtual ResourceState onUnload(TResLoader& loader) = 0;
 
 private:
     ResourceState m_state;
@@ -129,14 +129,14 @@ ResourceStatistics& TResource<TResType, TResLoader>::getStats() {
 
 template<class TResType, class TResLoader>
 inline
-void TResource<TResType, TResLoader>::load( TResLoader& loader) {
-    onLoad(getUri(), loader);
+typename TResource<TResType, TResLoader>::ResourceState TResource<TResType, TResLoader>::load( TResLoader& loader) {
+    return onLoad(getUri(), loader);
 }
 
 template<class TResType, class TResLoader>
 inline
-void TResource<TResType, TResLoader>::unload(TResLoader& loader) {
-    onUnload(loader);
+typename TResource<TResType, TResLoader>::ResourceState TResource<TResType, TResLoader>::unload(TResLoader& loader) {
+    return onUnload(loader);
 }
 
 template<class TResType, class TResLoader>

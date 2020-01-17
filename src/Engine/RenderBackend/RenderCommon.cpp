@@ -412,9 +412,9 @@ TextureLoader::~TextureLoader() {
     // empty
 }
 
-void TextureResource::onLoad(const IO::Uri& uri, TextureLoader& loader) {
+TextureResource::ResourceState TextureResource::onLoad(const IO::Uri& uri, TextureLoader& loader) {
     if (getState() == Loaded) {
-        return;
+        return Error;
     }
     
     create();
@@ -425,20 +425,24 @@ void TextureResource::onLoad(const IO::Uri& uri, TextureLoader& loader) {
     if ( 0 == getStats().m_memory ) {
         setState(Error);
         osre_debug(Tag, "Cannot load texture " + uri.getAbsPath() );
-        return;
+        return Error;
     }
 
     setState(Loaded);
+
+    return Loaded;
 }
 
-void TextureResource::onUnload(TextureLoader& loader) {
+TextureResource::ResourceState TextureResource::onUnload(TextureLoader& loader) {
     if (getState() == Unloaded) {
-        return;
+        return Error;
     }
 
     loader.unload(get());
     getStats().m_memory = 0;
     setState(Unloaded);
+
+    return Unloaded;
 }
 
 Material::Material( const String &name )

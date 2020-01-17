@@ -312,7 +312,7 @@ SET ( properties_src
 #==============================================================================
 SET( scene_inc
     ${HEADER_PATH}/Scene/SceneCommon.h
-    ${HEADER_PATH}/Scene/AnimatorBase.h
+    #${HEADER_PATH}/Scene/AnimatorBase.h
 	${HEADER_PATH}/Scene/DbgRenderer.h
     ${HEADER_PATH}/Scene/Component.h
     ${HEADER_PATH}/Scene/GeometryBuilder.h
