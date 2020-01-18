@@ -20,7 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Scene/World.h>
+#include <osre/App/World.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/View.h>
 #include <osre/RenderBackend/RenderBackendService.h>
@@ -28,11 +28,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
-namespace Scene {
+namespace App {
 
 using namespace ::CPPCore;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Scene;
 
 template<class T>
 void lookupMapDeleterFunc( TArray<T> &ctr ) {
@@ -210,5 +211,5 @@ RenderMode World::getRenderMode() const {
     return m_renderMode;
 }
 
-} // Namespace Scene
+} // Namespace App
 } // namespace OSRE

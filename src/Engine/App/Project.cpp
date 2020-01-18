@@ -22,9 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/Project.h>
 #include <osre/App/AssetDataArchive.h>
+#include <osre/App/World.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/Directory.h>
-#include <osre/Scene/World.h>
 #include <osre/Common/Logger.h>
 
 #include <json/json.h>
