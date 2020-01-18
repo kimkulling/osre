@@ -37,7 +37,6 @@ namespace RenderBackend {
 namespace Scene {
 
 class Node;
-class World;
 class Stage;
 class View;
 

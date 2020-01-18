@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
 #include <osre/Scene/View.h>
-#include <osre/Scene/World.h>
+#include <osre/App/World.h>
 #include <osre/App/AssetRegistry.h>
 #include <osre/App/AssimpWrapper.h>
 #include <osre/App/Component.h>

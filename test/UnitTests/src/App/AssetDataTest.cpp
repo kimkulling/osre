@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
 #include <osre/App/AssetDataArchive.h>
-#include <osre/Scene/World.h>
+#include <osre/App/World.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/View.h>
 #include <osre/IO/Uri.h>
@@ -31,6 +31,7 @@ namespace OSRE {
 namespace UnitTest {
         
 using namespace ::OSRE::Assets;
+using namespace ::OSRE::App;
 
 class AssetDataTest : public ::testing::Test {
     // empty
@@ -55,7 +56,7 @@ TEST_F( AssetDataTest, load_save_Test ) {
     bool ok = archive.save( nullptr, uri );
     EXPECT_FALSE( ok );
 
-    Scene::World *world = new Scene::World("test");
+    World *world = new World("test");
     Scene::Stage *stage = new Scene::Stage("stage", nullptr);
     world->setActiveStage(stage);
     Common::Ids ids;

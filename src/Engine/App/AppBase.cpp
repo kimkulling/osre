@@ -261,19 +261,19 @@ Properties::Settings *AppBase::getSettings() const {
     return m_settings;
 }
 
-Scene::World *AppBase::createWorld( const String &name ) {
+World *AppBase::createWorld( const String &name ) {
     if (name.empty()) {
         osre_debug( Tag, "Invalid name for a new world." );
         return nullptr;
     }
 
-    m_activeWorld = new Scene::World( name );
+    m_activeWorld = new World( name );
     m_worlds.add( m_activeWorld );
     
     return m_activeWorld;
 }
 
-Scene::World *AppBase::findWorld( const String &name ) const {
+World *AppBase::findWorld( const String &name ) const {
     if (m_worlds.isEmpty()) {
         return nullptr;
     }
@@ -296,7 +296,7 @@ bool AppBase::setActiveWorld( const String &name ) {
     return ( nullptr != m_activeWorld );
 }
 
-Scene::World *AppBase::getActiveWorld() const {
+World *AppBase::getActiveWorld() const {
     return m_activeWorld;
 }
 
@@ -461,7 +461,7 @@ bool AppBase::onCreate() {
 
     // create our world
     Scene::RenderMode mode = static_cast<Scene::RenderMode>( m_settings->get( Properties::Settings::RenderMode ).getInt() );
-    m_activeWorld = new Scene::World( "world", mode );
+    m_activeWorld = new World( "world", mode );
     
 
     ResourceCacheService *rcSrv = new ResourceCacheService;

@@ -21,12 +21,12 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "osre_testcommon.h"
-#include <osre/Scene/World.h>
+#include <osre/App/World.h>
 
 namespace OSRE {
 namespace UnitTest {
 
-using namespace ::OSRE::Scene;
+using namespace ::OSRE::App;
 
 class WorldTest : public ::testing::Test {
     // empty

@@ -37,11 +37,9 @@ namespace RenderBackend {
     struct BufferData;
 }
 
-namespace Scene {
-    class World;
-}
-
 namespace App {
+
+class World;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine

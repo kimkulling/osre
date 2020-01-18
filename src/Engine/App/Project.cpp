@@ -119,11 +119,11 @@ const String& Project::getProjectName() const {
     return m_projectName;
 }
 
-void Project::setActiveWorld(Scene::World* activeWorld) {
+void Project::setActiveWorld(World* activeWorld) {
     m_activeWorld = activeWorld;
 }
 
-Scene::World* Project::getActiveWorld() const {
+World* Project::getActiveWorld() const {
     return m_activeWorld;
 }
 

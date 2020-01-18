@@ -42,6 +42,7 @@ namespace Assets {
 
 using namespace ::OSRE::IO;
 using namespace ::OSRE::Scene;
+using namespace ::OSRE::App;
 
 static const c8 *Tag = "AssetData";
 
@@ -60,7 +61,7 @@ AssetDataArchive::~AssetDataArchive() {
     // empty 
 }
 
-Scene::World *AssetDataArchive::load( const IO::Uri &fileLocation ) {
+World *AssetDataArchive::load( const IO::Uri &fileLocation ) {
     if (fileLocation.isEmpty()) {
 	osre_debug( Tag, "File location is empty.");
         return nullptr;
@@ -125,7 +126,7 @@ static bool writeNode(Scene::Node *currentNode, Json::StreamWriter *sw ) {
     return true;
 }
 
-bool AssetDataArchive::save( Scene::World *world, const IO::Uri &fileLocation ) {
+bool AssetDataArchive::save( App::World *world, const IO::Uri &fileLocation ) {
     if ( nullptr == world ) {
         return false;
     }
@@ -234,7 +235,7 @@ void AssetDataArchive::traverseChildren( Node *currentNode, Json::StreamWriter *
     }
 }
 
-bool AssetDataArchive::parseType( Scene::World *world ) {
+bool AssetDataArchive::parseType( App::World *world ) {
     if (nullptr == world) {
         return false;
     }

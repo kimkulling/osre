@@ -35,7 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
-#include <osre/Scene/World.h>
+#include <osre/App/World.h>
 #include <osre/IO/IOService.h>
 #include <osre/App/AssimpWrapper.h>
 #include <osre/App/AssetDataArchive.h>

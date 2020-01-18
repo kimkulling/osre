@@ -31,6 +31,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 
+class Entity;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -104,6 +106,9 @@ public:
     /// @return A pointer showing to the active view or nullptr, if no view is currently active.
     Scene::View *getActiveView() const;
 
+    void addEntity( Entity *entity );
+    Entity *getEntityByName( const String &name ) const;
+
     /// @brief  Will update the world.
     /// @param  dt      [in] The current delta time-tick.
     void update( Time dt );
@@ -121,6 +126,7 @@ private:
     CPPCore::THashMap<ui32, Scene::Stage*> m_lookupStates;
     CPPCore::TArray<Scene::View*> m_views;
     CPPCore::THashMap<ui32, Scene::View*> m_lookupViews;
+    CPPCore::TArray<Entity *> m_entities;
     Scene::Stage *m_activeStage;
     Scene::View *m_activeView;
     Common::Ids m_ids;

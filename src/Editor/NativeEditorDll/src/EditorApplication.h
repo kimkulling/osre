@@ -34,10 +34,13 @@ namespace OSRE {
 
 // Forward declarations ---------------------------------------------------------------------------
 namespace Scene {
-    class World;
     class Stage;
     class Node;
     class TrackBall;
+}
+
+namespace App {
+    class World;
 }
 
 namespace Platform {

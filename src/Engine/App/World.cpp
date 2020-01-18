@@ -21,10 +21,12 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/World.h>
+#include <osre/app/Entity.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/View.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/StringUtils.h>
+#include <osre/Common/Logger.h>
 #include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
@@ -35,11 +37,14 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
 
+static const c8 *Tag = "World";
+
 template<class T>
 void lookupMapDeleterFunc( TArray<T> &ctr ) {
     for ( ui32 i = 0; i < ctr.size(); ++i ) {
         if ( nullptr != ctr[ i ] ) {
             ctr[ i ]->release();
+            ctr[ i ] = nullptr;
         }
     }
     ctr.clear();
@@ -51,6 +56,7 @@ World::World( const String &worldName, RenderMode renderMode )
 , m_lookupStates()
 , m_views()
 , m_lookupViews()
+, m_entities()
 , m_activeStage( nullptr )
 , m_activeView( nullptr )
 , m_ids()
@@ -177,6 +183,29 @@ View *World::setActiveView( const String &viewName ) {
 
 View *World::getActiveView() const {
     return m_activeView;
+}
+
+void World::addEntity( Entity *entity ) {
+    if (nullptr == entity) {
+        osre_debug( Tag, "Pointer to entity are nullptr" );
+        return;
+    }
+}
+
+Entity *World::getEntityByName( const String &name ) const {
+    if (name.empty()) {
+        return nullptr;
+    }
+
+    for (size_t i = 0; i < m_entities.size(); ++i) {
+        if (nullptr != m_entities[ i ]) {
+            if (m_entities[ i ]->getName() == name) {
+                return m_entities[ i ];
+            }
+        }
+    }
+
+    return nullptr;
 }
 
 void World::update( Time dt ) {

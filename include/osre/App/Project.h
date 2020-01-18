@@ -33,6 +33,8 @@ namespace Json {
 namespace OSRE {
 namespace App {
 	
+class World;
+
 class OSRE_EXPORT Project : public Common::Object {
 public:
 	Project();
@@ -42,8 +44,8 @@ public:
     bool destroy();
     void setProjectName(const String& projectName);
     const String& getProjectName() const;
-    void setActiveWorld(Scene::World* activeWorld);
-    Scene::World* getActiveWorld() const;
+    void setActiveWorld(World* activeWorld);
+    World* getActiveWorld() const;
     i32 getMajorVersion() const;
     i32 getMinorVersion() const;
     bool load(const String& name, i32& major, i32& minor, i32 flags);
@@ -57,7 +59,7 @@ private:
     Version m_version;
     i32 m_flags;
     String m_projectName;
-    Scene::World *m_activeWorld;
+    World *m_activeWorld;
 };
 
 } // Namespace App

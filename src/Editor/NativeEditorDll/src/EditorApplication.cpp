@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Event.h>
 #include <osre/App/AppBase.h>
 #include <osre/App/Entity.h>
+#include <osre/app/World.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/PlatformInterface.h>
@@ -34,7 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
-#include <osre/Scene/World.h>
+#include <osre/App/World.h>
 #include <osre/Scene/View.h>
 #include <osre/Scene/TrackBall.h>
 #include <osre/IO/IOService.h>
@@ -64,7 +65,7 @@ static const i32 UIED_ERROR = -1;
 static const i32 UIED_WORLDACCESS_ERROR = -2;
 
 struct SceneContext {
-    Scene::World *ActiveWorld;
+    App::World *ActiveWorld;
     int StageIndex;
     Scene::Stage *ActiveStage;
     Scene::Node *ActiveNode;
@@ -75,7 +76,7 @@ struct EditorApplication::Impl {
     bool m_stageAccess;
     bool m_nodeAccess;
     Common::Ids m_ids;
-    Scene::World *m_world;
+    App::World *m_world;
     Scene::Stage *m_stage;
     Scene::Node *m_node;
     Scene::Node::NodePtr m_modelNode;
@@ -132,7 +133,7 @@ int EditorApplication::openWorldAccess( const String &name ) {
     }
     m_impl->m_worldAccess = true;
     if (!name.empty()) {
-        Scene::World *world = AppBase::findWorld( name );
+        World *world = AppBase::findWorld( name );
         if (nullptr == world) {
             world = AppBase::createWorld( name );
             AppBase::setActiveWorld( name );

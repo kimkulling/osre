@@ -38,7 +38,6 @@ namespace Common {
 namespace Scene {
     class View;
     class Stage;
-    class World;
 }
 
 namespace Properties {
@@ -51,7 +50,9 @@ namespace UI {
 }
 
 namespace App {
-        
+
+class World;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -114,11 +115,13 @@ public:
     /// @return The global settings.
     virtual Properties::Settings *getSettings() const;
 
-    virtual Scene::World *createWorld( const String &name );
+    virtual World *createWorld( const String &name );
 
-    virtual Scene::World *findWorld( const String &name ) const;
+    virtual World *findWorld( const String &name ) const;
+    
     virtual bool setActiveWorld( const String &name );
-    virtual Scene::World *getActiveWorld() const;
+    
+    virtual World *getActiveWorld() const;
 
     /// @brief  Will create a new stage and set it as the active one.
     /// @param  name        [in] The name for the stage.
@@ -209,8 +212,8 @@ private:
     Platform::PlatformInterface *m_platformInterface;
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
-    CPPCore::TArray<Scene::World *> m_worlds;
-    Scene::World *m_activeWorld;
+    CPPCore::TArray<World *> m_worlds;
+    World *m_activeWorld;
     UI::Canvas *m_uiScreen;
     UI::UiRenderer *m_uiRenderer;
     MouseEventListener *m_mouseEvListener;

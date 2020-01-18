@@ -42,26 +42,29 @@ namespace RenderBackend {
 }
 
 namespace Scene {
-    class World;
     class Stage;
     class Node;
     class View;
 }
 
+namespace App {
+    class World;
+}
+
 namespace Assets {
-    
+
 class OSRE_EXPORT AssetDataArchive {
 public:
     AssetDataArchive(i32 majorVersion = CurrentMajorVersion, i32 minorVersion = CurrentMinorVersion);
     ~AssetDataArchive();
-    Scene::World *load( const IO::Uri & fileLocation );
-    bool save( Scene::World *world, const IO::Uri & fileLocation );
+    App::World *load( const IO::Uri & fileLocation );
+    bool save( App::World *world, const IO::Uri & fileLocation );
     bool saveStage( Scene::Stage *stage, Json::Value &parent, Json::StreamWriter *sw, std::ofstream &stream);
     bool saveView(Scene::View *view, Json::Value &parent, Json::StreamWriter *sw, std::ofstream &stream);
     void traverseChildren(Scene::Node *currentNode, Json::StreamWriter *sw, std::ofstream &stream);
 
 private:
-    bool parseType(Scene::World *world);
+    bool parseType( App::World *world );
 
 private:
     Version mVersion;
