@@ -34,33 +34,32 @@ set( BIN_INSTALL_DIR "bin" CACHE PATH
 
 INCLUDE_DIRECTORIES( BEFORE
     include/
-    3dparty/glew/include
-    3dparty/cppcore/include
-    3dparty/cppcore/contrib/gtest-1.7.0/include
-    3dparty/cppcore/contrib/gtest-1.7.0/
-    3dparty/assimp/contrib/irrXML
-    3dparty/zlib
-    3dparty/jsoncpp-1.8.4/include
-	3dparty/lua-5.3.5/src
-    "c:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include"
-    3dparty/soil/src
     /usr/include/SDL2/
     /usr/include/
-	src/
-	$ENV{SDL_PATH}/include
-	SDL2-devel-2.0.5-VC.zip/include
+    ${CMAKE_HOME_DIRECTORY}/3dparty/glew/include
+    ${CMAKE_HOME_DIRECTORY}/3dparty/cppcore/include
+    ${CMAKE_HOME_DIRECTORY}/3dparty/cppcore/contrib/gtest-1.7.0/include
+    ${CMAKE_HOME_DIRECTORY}/3dparty/cppcore/contrib/gtest-1.7.0/
+    ${CMAKE_HOME_DIRECTORY}/3dparty/assimp/contrib/irrXML
+    ${CMAKE_HOME_DIRECTORY}/3dparty/zlib
+    ${CMAKE_HOME_DIRECTORY}/3dparty/jsoncpp-1.8.4/include
+	${CMAKE_HOME_DIRECTORY}/3dparty/lua-5.3.5/src
+    "c:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include"
+    ${CMAKE_HOME_DIRECTORY}/3dparty/soil/src
+    ${CMAKE_HOME_DIRECTORY}/3dparty/sdl2/include
+	${CMAKE_HOME_DIRECTORY}/src/
 )
 message( ${CMAKE_GENERATOR} )
 
 if( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR "${CMAKE_GENERATOR}" MATCHES "16 2019")
 	link_directories(
-		$ENV{SDL_PATH}/lib/x64
+        ${CMAKE_HOME_DIRECTORY}/3dparty/sdl2/lib/x64
 		${CMAKE_HOME_DIRECTORY}/lib
 		${CMAKE_HOME_DIRECTORY}/bin
 	)
 else()
 	link_directories(
-		$ENV{SDL_PATH}/lib/x86
+        ${CMAKE_HOME_DIRECTORY}/3dparty/sdl2/lib/x86
 		${CMAKE_HOME_DIRECTORY}/lib
 		${CMAKE_HOME_DIRECTORY}/bin
 	)

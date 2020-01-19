@@ -127,6 +127,9 @@ protected:
             const Rect2ui &windowsRect = rootWindow->getWindowsRect();
             view->setProjectionParameters( 60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.0001f, 1000.f );
             Entity *entity = assimpWrapper.getEntity();
+            
+            World *world = getActiveWorld();
+            world->addEntity( entity );
             view->observeBoundingBox( entity->getAABB() );
             m_modelNode = entity->getNode();
         }
