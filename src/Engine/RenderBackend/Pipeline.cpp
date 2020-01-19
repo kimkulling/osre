@@ -36,9 +36,9 @@ namespace RenderBackend {
 
 PipelinePass::PipelinePass(ui32 id, Shader *shader )
 : m_id(id )
-,  m_shader( shader )
 , m_renderTarget()
-, m_states() {
+, m_states()
+,  m_shader( shader ) {
     // empty
 }
 
