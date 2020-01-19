@@ -16,6 +16,7 @@ Entity::Entity( const String &name, const Common::Ids &ids )
 , m_ids( ids )
 , m_aabb() {
     m_renderComponent = new RenderComponent( this, 1 );
+    m_transformComponent = new TransformComponent( this, 2 );
 }
 
 Entity::~Entity() {
