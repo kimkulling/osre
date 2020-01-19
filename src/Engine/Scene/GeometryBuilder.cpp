@@ -104,9 +104,11 @@ MeshBuilder &MeshBuilder::allocEmptyMesh( VertexType type, ui32 numMeshes ) {
 }
 
 MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
+    printf("1\n");
     Mesh *mesh = Mesh::create( 1 );
     mesh->m_vertextype = type;
     mesh->m_indextype = IndexType::UnsignedShort;
+    printf("2\n");
 
     // setup triangle vertices    
     static const ui32 NumVert = 3;
@@ -114,12 +116,14 @@ MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType acce
     col[ 0 ] = glm::vec3( 1, 0, 0 );
     col[ 1 ] = glm::vec3( 0, 1, 0 );
     col[ 2 ] = glm::vec3( 0, 0, 1 );
+    printf("3\n");
 
     glm::vec3 pos[ NumVert ];
     pos[ 0 ] = glm::vec3( -1, -1, 0 );
     pos[ 1 ] = glm::vec3( 0, 1, 0 );
     pos[ 2 ] = glm::vec3( 1, -1, 0 );
     mesh->m_vb = allocVertices( mesh->m_vertextype,  NumVert, pos, col, nullptr, access );
+    printf("4\n");
 
     // setup triangle indices
     static const size_t NumIndices = 3;
@@ -127,17 +131,21 @@ MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType acce
     indices[ 0 ] = 0;
     indices[ 1 ] = 2;
     indices[ 2 ] = 1;
+    printf("5\n");
 
     ui32 size = sizeof( GLushort ) * NumIndices;
     mesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, access );
     ::memcpy( mesh->m_ib->getData(), indices, size );
+    printf("6\n");
 
-	// setup primitives
+    // setup primitives
     mesh->createPrimitiveGroup(IndexType::UnsignedShort, 3, PrimitiveType::TriangleList, 0);
 
-	// setup material
+    printf("7\n");
+    // setup material
     mesh->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
+    printf("8\n");
     m_ActiveGeo = mesh;
 
     return *this;
