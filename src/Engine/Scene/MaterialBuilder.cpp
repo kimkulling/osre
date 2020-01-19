@@ -220,12 +220,12 @@ MaterialBuilder::~MaterialBuilder() {
     printf("1\n");
     ShaderSourceArray arr;
     printf("2\n");
-    arr[ static_cast<ui32>( ShaderType::SH_VertexShaderType ) ] = vs;
+    arr[ static_cast<size_t>( ShaderType::SH_VertexShaderType ) ] = vs;
     printf("3\n");
-    arr[ static_cast<ui32>( ShaderType::SH_FragmentShaderType ) ] = fs;
+    arr[ static_cast<size_t>( ShaderType::SH_FragmentShaderType ) ] = fs;
     printf("4\n");
     mat->createShader(arr);
-    printf("5\n");
+    printf("5,\n");
 
     // Setup shader attributes and variables
     if ( nullptr != mat->m_shader ) {
