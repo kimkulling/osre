@@ -84,8 +84,8 @@ const String TextFsSrc =
 	"};\n";
 
 MeshBuilder::MeshBuilder() 
-: m_ActiveGeo( nullptr )
-, m_isDirty( false ) {
+: m_isDirty( false )
+, m_ActiveGeo( nullptr ) {
     // empty
 }
 
@@ -139,9 +139,6 @@ MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType acce
     mesh->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
     m_ActiveGeo = mesh;
-    // setup material
-    mesh->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
-
 
     return *this;
 }
@@ -572,12 +569,9 @@ void MeshBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text ) {
 
     const f32 invCol = 1.f / 16.f;
     const f32 invRow = 1.f / 16.f;
-    ui32 textCol( 0 ), textRow( 0 );
     for ( ui32 i = 0; i < text.size(); i++ ) {
         const c8 ch = text[ i ];
         if ( Tokenizer::isLineBreak( ch ) ) {
-            textCol = 0;
-            ++textRow;
             continue;
         }
 
