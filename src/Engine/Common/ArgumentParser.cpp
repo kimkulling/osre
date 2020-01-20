@@ -62,7 +62,7 @@ static void parseExpectedArgs( const String &userDefinedArgs, const String &desc
     }
 }
 
-ArgumentParser::ArgumentParser( i32 argc, c8 *ppArgv[], const String &supportedArgs, const String &desc )
+ArgumentParser::ArgumentParser( i32 argc, const c8 *ppArgv[], const String &supportedArgs, const String &desc )
 : m_SupportedArguments()
 , m_StoredArguments()
 , m_CurrentIndex( 0 )
@@ -285,7 +285,7 @@ String ArgumentParser::getBlankArgument( const String &argument ) {
     return blankArg;
 }
 
-bool ArgumentParser::validateArguments( i32 argc, c8 *ppArgv[] ) {
+bool ArgumentParser::validateArguments( i32 argc, const c8 *ppArgv[] ) {
     bool valid( true );
     for ( ui32 i = 1; i < static_cast< ui32 >( argc ); ++i ) {
         String incomingArg( ppArgv[ i ] );

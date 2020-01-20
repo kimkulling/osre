@@ -47,7 +47,7 @@ class UIDemoApp : public App::AppBase {
 
 public:
     UIDemoApp( int argc, char *argv[] )
-    : AppBase( argc, argv )
+    : AppBase( argc, (const char** ) argv )
     , m_canvas( nullptr )
     , m_transformMatrix() {
         // empty

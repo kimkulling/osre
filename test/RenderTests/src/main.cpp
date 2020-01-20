@@ -37,7 +37,7 @@ using namespace ::OSRE::RenderTest;
 using namespace ::OSRE::Platform;
 
 int main( int argc, char *argv[] ) {
-    Common::ArgumentParser argParser( argc, argv, "api:media", "The render API:The media to load" );
+    Common::ArgumentParser argParser( argc, (const char**) argv, "api:media", "The render API:The media to load" );
     String renderAPI( "opengl" );
     //String renderAPI( "vulkan" );
     if ( argParser.hasArgument( "api" ) ) {
@@ -71,3 +71,5 @@ int main( int argc, char *argv[] ) {
 
     return 0;
 }
+
+

@@ -36,7 +36,7 @@ TEST_F( ArgumentParserTest, createTest ) {
     bool ok( true );
     try {
         i32 argc = 2;
-        c8 *ppArgv[] = { "testApp", "--api" };
+        const c8 *ppArgv[] = { "testApp", "--api" };
         ArgumentParser testParser( argc, ppArgv, "api", "bla" );
     } catch( ... ) {
         ok = false;
@@ -49,7 +49,7 @@ TEST_F( ArgumentParserTest, parseArgTest ) {
     static const String Descs = "Shows the help:The render API:Generates a template project:Path to media";
 
     i32 argc = 2;
-    c8 *ppArgv[] = { "testApp", "--api" };
+    const c8 *ppArgv[] = { "testApp", "--api" };
     ArgumentParser testParser( argc, ppArgv, SupportedArgs, Descs );
     EXPECT_TRUE( testParser.hasValidArgs() );
 }
@@ -59,7 +59,7 @@ TEST_F(ArgumentParserTest, getArgTest) {
     static const String Descs = "Shows the help:The render API:Generates a template project:Path to media";
 
     i32 argc = 3;
-    c8 *ppArgv[] = { "testApp", "--api", "opengl" };
+    const c8 *ppArgv[] = { "testApp", "--api", "opengl" };
     ArgumentParser testParser(argc, ppArgv, SupportedArgs, Descs);
 
     bool ok = testParser.hasArgument("api");
@@ -77,3 +77,4 @@ TEST_F(ArgumentParserTest, getArgTest) {
 
 }
 }
+

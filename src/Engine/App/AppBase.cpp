@@ -138,7 +138,7 @@ private:
     Common::TObjPtr<UI::Canvas> m_uiCanvas;
 };
 
-AppBase::AppBase( i32 argc, c8 *argv[], const String &supportedArgs, const String &desc )
+AppBase::AppBase( i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc )
 : m_state( State::Uninited )
 , m_argParser( argc, argv, supportedArgs, desc )
 , m_environment( nullptr )
