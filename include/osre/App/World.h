@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/App/AppCommon.h>
 #include <osre/Scene/SceneCommon.h>
 #include <osre/Common/Object.h>
 #include <osre/Common/Ids.h>
@@ -47,7 +48,7 @@ public:
     /// @brief  The class constructor with the name and the requested render-mode.
     /// @param  worldName   [in] The world name.
     /// @param  renderMode  [in] The requested render mode. @see RenderMode
-    explicit World( const String &worldName, Scene::RenderMode renderMode = Scene::RenderMode::Render3D );
+    explicit World( const String &worldName, RenderMode renderMode = RenderMode::Render3D );
 
     /// @brief  The class destructor.
     virtual ~World();
@@ -119,7 +120,7 @@ public:
 
     /// @brief  Will return the active render mode.
     /// @return The active render mode, @see RenderMode .
-    Scene::RenderMode getRenderMode() const;
+    RenderMode getRenderMode() const;
 
 private:
     CPPCore::TArray<Scene::Stage*> m_stages;
@@ -130,7 +131,7 @@ private:
     Scene::Stage *m_activeStage;
     Scene::View *m_activeView;
     Common::Ids m_ids;
-    Scene::RenderMode m_renderMode;
+    RenderMode m_renderMode;
 };
 
 } // Namespace App

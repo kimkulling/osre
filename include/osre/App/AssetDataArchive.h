@@ -31,7 +31,7 @@ namespace Json {
 
 namespace OSRE {
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 namespace IO {
     class Stream;
     class Uri;

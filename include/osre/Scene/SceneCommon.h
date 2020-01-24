@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 namespace RenderBackend {
     class RenderBackendService;
     class Mesh;
@@ -39,12 +39,6 @@ namespace Scene {
 class Node;
 class Stage;
 class View;
-
-/// @brief  The provided render modes for a world.
-enum class RenderMode {
-    Render2D = 0,   ///< A 2D-render environment
-    Render3D        ///< A 3D-render environment
-};
 
 } // Namespace Scene
 } // Namespace OSRE

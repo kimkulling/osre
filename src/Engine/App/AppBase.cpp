@@ -460,7 +460,7 @@ bool AppBase::onCreate() {
     m_timer = Platform::PlatformInterface::getInstance()->getTimer();
 
     // create our world
-    Scene::RenderMode mode = static_cast<Scene::RenderMode>( m_settings->get( Properties::Settings::RenderMode ).getInt() );
+    RenderMode mode = static_cast<RenderMode>( m_settings->get( Properties::Settings::RenderMode ).getInt() );
     m_activeWorld = new World( "world", mode );
     
 

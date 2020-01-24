@@ -1088,7 +1088,7 @@ void OGLRenderBackend::render( size_t primpGrpIdx ) {
         glDrawElements( grp->m_primitive, 
             (GLsizei) grp->m_numIndices,
             grp->m_indexType, 
-            ( const GLvoid* ) grp->m_startIndex );
+            ( const GLvoid* ) &grp->m_startIndex );
     }
 }
 

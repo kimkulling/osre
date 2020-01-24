@@ -52,5 +52,11 @@ enum class RenderBackendType {
     VulkanRenderBackend         ///< Vulkan render API.
 };
 
+/// @brief  The provided render modes for a world.
+enum class RenderMode {
+    Render2D = 0,   ///< A 2D-render environment
+    Render3D        ///< A 3D-render environment
+};
+
 } // Namespace App
 } // Namespace OSRE
