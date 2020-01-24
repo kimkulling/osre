@@ -68,7 +68,7 @@ class ModelLoadingApp : public App::AppBase {
 
 public:
     ModelLoadingApp( int argc, char *argv[] )
-    : AppBase( argc, argv, "api:model", "The render API:The model to load")
+    : AppBase( argc, (const char**) argv, "api:model", "The render API:The model to load")
     , m_assetFolder("")
     , m_stage( nullptr )
     , m_view( nullptr )
@@ -127,6 +127,9 @@ protected:
             const Rect2ui &windowsRect = rootWindow->getWindowsRect();
             view->setProjectionParameters( 60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.0001f, 1000.f );
             Entity *entity = assimpWrapper.getEntity();
+            
+            World *world = getActiveWorld();
+            world->addEntity( entity );
             view->observeBoundingBox( entity->getAABB() );
             m_modelNode = entity->getNode();
         }

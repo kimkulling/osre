@@ -59,7 +59,7 @@ class InstancingApp : public App::AppBase {
 
 public:
     InstancingApp(int argc, char* argv[])
-    : AppBase(argc, argv, "api:model", "The render API:The model to load")
+    : AppBase(argc, (const char**) argv, "api:model", "The render API:The model to load")
     , m_entity( nullptr )
     , m_stage( nullptr )
     , m_view( nullptr ) {

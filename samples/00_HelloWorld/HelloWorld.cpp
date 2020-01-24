@@ -59,7 +59,7 @@ class HelloWorldApp : public App::AppBase {
 public:
     /// The class constructor with the incoming arguments from the command line.
     HelloWorldApp( int argc, char *argv[] )
-    : AppBase( argc, argv )
+    : AppBase( argc, (const char ** ) argv )
     , m_stage( nullptr )
     , m_entity( nullptr ){
         // empty

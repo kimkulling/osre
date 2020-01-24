@@ -49,7 +49,7 @@ HWBufferManager::~HWBufferManager() {
     // empty
 }
 
-static c8 *getVertexCompShortCut( VertexAttribute &attrib ) {
+static const c8 *getVertexCompShortCut( VertexAttribute &attrib ) {
     switch (attrib) {
         case VertexAttribute::Position:
             return "p";
@@ -90,14 +90,12 @@ static c8 *getVertexCompShortCut( VertexAttribute &attrib ) {
     return nullptr;
 }
 
-static c8 *getAccessShortCut( BufferAccessType access ) {
+static const c8 *getAccessShortCut( BufferAccessType access ) {
     switch (access) {
         case BufferAccessType::ReadOnly:
             return "r";
         case BufferAccessType::WriteOnly:
             return "w";
-        case BufferAccessType::ReadWrite:
-            return "rw";
         default:
             break;
     }
