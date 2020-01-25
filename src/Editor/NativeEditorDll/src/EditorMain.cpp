@@ -83,7 +83,7 @@ extern "C" OSRE_EDITOR_EXPORT int STDCALL CreateEditorApp( int *mainWindowHandle
 
         mainWH = (HWND) mainWindowHandle;
 
-        char *argc[] = { 
+        const char *argc[] = { 
             "CreateEditorApp" 
         };
         s_EditorApplication = new EditorApplication( 1, argc );

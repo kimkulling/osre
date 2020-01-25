@@ -87,7 +87,7 @@ struct EditorApplication::Impl {
     f32 m_angle;
 };
 
-EditorApplication::EditorApplication( int argc, char *argv[] )
+EditorApplication::EditorApplication( int argc, const char *argv[] )
 : AppBase( argc, argv )
 , m_impl( new Impl ) {
     // empty

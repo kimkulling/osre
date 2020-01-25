@@ -190,6 +190,8 @@ void World::addEntity( Entity *entity ) {
         osre_debug( Tag, "Pointer to entity are nullptr" );
         return;
     }
+
+    m_entities.add( entity );
 }
 
 Entity *World::getEntityByName( const String &name ) const {
@@ -216,6 +218,15 @@ void World::update( Time dt ) {
     if (nullptr != m_activeView) {
         m_activeView->update( dt );
     }
+
+    for (ui32 i = 0; i < m_entities.size(); ++i) {
+        Entity *entity = m_entities[ i ];
+        if (nullptr == entity) {
+            continue;
+        }
+
+        entity->update( dt );
+    }
 }
 
 void World::draw( RenderBackendService *rbSrv ) {
@@ -230,6 +241,15 @@ void World::draw( RenderBackendService *rbSrv ) {
 
     if ( nullptr != m_activeView ) {
         m_activeView->draw( rbSrv );
+    }
+
+    for (ui32 i = 0; i < m_entities.size(); ++i) {
+        Entity *entity = m_entities[ i ];
+        if (nullptr == entity) {
+            continue;
+        }
+
+        entity->render( rbSrv );
     }
 
     rbSrv->endRenderBatch();

@@ -76,7 +76,7 @@ public:
 
 class EditorApplication : public App::AppBase {
 public:
-    EditorApplication( int argc, char *argv[] );
+    EditorApplication( int argc, const char *argv[] );
     ~EditorApplication() override;
     int enqueueEvent( const Common::Event *ev, Common::EventData *evData );
     void newProject( const String &name );

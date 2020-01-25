@@ -443,7 +443,10 @@ bool OGLRenderBackend::bindVertexLayout( OGLVertexArray *va, OGLShader *shader, 
 
     for( ui32 i = 0; i < attributes.size(); ++i ) {
         const c8 *attribName = attributes[ i ]->m_pAttributeName;
-        OSRE_ASSERT( nullptr != attribName );
+        if (nullptr == attribName) {
+            continue;
+        }
+
         const GLint loc = ( *shader )[ attribName ];
         if( -1 != loc ) {
             glEnableVertexAttribArray( loc );
@@ -1088,7 +1091,7 @@ void OGLRenderBackend::render( size_t primpGrpIdx ) {
         glDrawElements( grp->m_primitive, 
             (GLsizei) grp->m_numIndices,
             grp->m_indexType, 
-            ( const GLvoid* ) &grp->m_startIndex );
+            ( const GLvoid* ) grp->m_startIndex );
     }
 }
 

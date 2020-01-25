@@ -541,6 +541,7 @@ void AppBase::onUpdate() {
     Time dt( microsecs );
     if ( nullptr != m_activeWorld ) {
         m_activeWorld->update( dt );
+        m_activeWorld->draw( m_rbService );
     }
 
     if (nullptr != m_uiRenderer && nullptr != m_uiScreen) {
