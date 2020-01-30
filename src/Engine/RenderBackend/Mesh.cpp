@@ -53,7 +53,6 @@ Mesh::Mesh()
 }
 
 Mesh::~Mesh() {
-    delete m_material;
     m_material = nullptr;
 
     delete m_vb;
@@ -80,9 +79,9 @@ Mesh *Mesh::create( ui32 numGeo ) {
     return geoArray;
 }
 
-void Mesh::destroy( Mesh **geo ) {
-    delete[] * geo;
-    ( *geo ) = nullptr;
+void Mesh::destroy( Mesh **meshes ) {
+    delete[] * meshes;
+    ( *meshes ) = nullptr;
 }
 
 ui32 Mesh::getVertexSize( VertexType vertextype ) {
@@ -105,7 +104,8 @@ ui32 Mesh::getVertexSize( VertexType vertextype ) {
 
 PrimitiveGroup *Mesh::createPrimitiveGroups(size_t numPrimGroups, IndexType* types, size_t* numIndices,
         PrimitiveType* primTypes, ui32* startIndices) {
-    if (0 == numPrimGroups) {
+    if (0 == numPrimGroups || nullptr == types || nullptr == numIndices || nullptr == primTypes 
+            || nullptr == startIndices ) {
         return nullptr;
     }
 

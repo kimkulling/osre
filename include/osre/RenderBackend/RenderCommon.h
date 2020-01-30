@@ -383,12 +383,24 @@ struct OSRE_EXPORT VertexLayout {
     OSRE_NON_COPYABLE( VertexLayout )
 };
 
+struct BufferDesc {
+    IndexType m_indexType;
+    VertexType m_vertexType;
+
+    BufferDesc()
+    : m_indexType( IndexType::InvalidIndexType )
+    , m_vertexType( VertexType::InvalidVertexType ) {
+        // empty
+    }
+};
+
 ///	@brief  This struct is used to describe data for a GPU buffer.
 struct OSRE_EXPORT BufferData {
     BufferType       m_type;    ///< The buffer type ( @see BufferType )
     MemoryBuffer     m_buffer;  ///< The memory buffer
     size_t           m_cap;     ///<
     BufferAccessType m_access;  ///< Access token ( @see BufferAccessType )
+    BufferDesc       m_bufferDesc;
 
     BufferData();
     ~BufferData();

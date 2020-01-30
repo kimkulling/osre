@@ -28,6 +28,7 @@ public:
     Entity( const String &name, const Common::Ids &ids );
     virtual ~Entity();
     virtual void setBehaviourControl(AbstractBehaviour *behaviour );
+    virtual void addStaticMeshes( const RenderBackend::MeshArray &meshArray );
     virtual void setNode( Scene::Node *node );
     virtual Scene::Node *getNode() const;
     virtual bool preprocess();

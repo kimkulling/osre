@@ -163,7 +163,7 @@ struct Handle {
     }
 };
 
-using MemoryBuffer = CPPCore::TArray<c8*>;
+using MemoryBuffer = CPPCore::TArray<c8>;
 
 struct Time {
     i64 m_microseconds;
