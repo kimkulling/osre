@@ -231,7 +231,8 @@ BufferData::BufferData()
 : m_type( BufferType::EmptyBuffer )
 , m_buffer()
 , m_cap( 0 )
-, m_access( BufferAccessType::ReadOnly ) {
+, m_access( BufferAccessType::ReadOnly )
+, m_bufferDesc() {
     // empty
 }
 
@@ -271,10 +272,10 @@ void BufferData::copyFrom( void *data, size_t size ) {
 }
 
 void BufferData::attach( const void *data, size_t size ) {
-    c8* ptr = (c8*)data;
+    c8* ptr = (c8*) data;
     for (size_t i = 0; i < size; ++i) {
-        m_buffer.add( ptr );
-        ptr++;
+        m_buffer.add( *ptr );
+        ++ptr;
     }
 }
 

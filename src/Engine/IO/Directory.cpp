@@ -47,21 +47,23 @@ bool Directory::exists(const String &dir) {
     return false;
 }
 
-void Directory::getDirectoryAndFile(const String &pathAndFilename, String &path, String &filename) {
+bool Directory::getDirectoryAndFile(const String &pathAndFilename, String &path, String &filename) {
     path.clear();
     filename.clear();
     if (pathAndFilename.empty()) {
-        return;
+        return false;
     }
 
     String::size_type pos = pathAndFilename.rfind("/");
     if (String::npos == pos) {
         filename = pathAndFilename;
-        return;
+        return false;
     }
 
     path = pathAndFilename.substr(0, pos + 1);
     filename = pathAndFilename.substr(pos + 1, pathAndFilename.size() - pos - 1);
+
+    return true;
 }
 
 String Directory::getDirSeparator() {

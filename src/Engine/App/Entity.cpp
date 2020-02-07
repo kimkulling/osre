@@ -6,6 +6,7 @@ namespace OSRE {
 namespace App {
 
 using namespace ::OSRE::Scene;
+using namespace ::OSRE::RenderBackend;
 
 Entity::Entity( const String &name, const Common::Ids &ids )
 : Object( name )
@@ -26,6 +27,17 @@ Entity::~Entity() {
  
 void Entity::setBehaviourControl( AbstractBehaviour *behaviour ) {
     m_behaviour = behaviour;
+}
+
+void Entity::addStaticMeshes( const MeshArray &meshArray ) {
+    if (meshArray.isEmpty()) {
+        return;
+    }
+
+    RenderComponent *comp = ( RenderComponent* ) getComponent( ComponentType::RenderComponentType );
+    if (nullptr != comp) {
+        comp->addStaticMeshArray( meshArray );
+    }
 }
 
 void Entity::setNode( Node *node ) {

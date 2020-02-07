@@ -96,7 +96,7 @@ public:
     size_t getNumGeometry() const;
     RenderBackend::Mesh *getMeshAt(size_t idx) const;
     void addStaticMesh( RenderBackend::Mesh *geo );
-    void addStaticMeshArray( RenderBackend::MeshArray &array );
+    void addStaticMeshArray( const RenderBackend::MeshArray &array );
 
 protected:
     bool onPreprocess() override;

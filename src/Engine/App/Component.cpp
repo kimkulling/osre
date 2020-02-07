@@ -70,7 +70,7 @@ void RenderComponent::addStaticMesh( Mesh *geo ) {
     m_newGeo.add( geo );
 }
 
-void RenderComponent::addStaticMeshArray( RenderBackend::MeshArray &array ) {
+void RenderComponent::addStaticMeshArray( const RenderBackend::MeshArray &array ) {
     if ( array.isEmpty() ) {
         return;
     }

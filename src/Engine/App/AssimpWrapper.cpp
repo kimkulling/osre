@@ -101,7 +101,10 @@ bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
     m_absPathWithFile = AssetRegistry::resolvePathFromUri( file );
 
     String filename;
-    Directory::getDirectoryAndFile(m_absPathWithFile, m_root, filename);
+    if (!Directory::getDirectoryAndFile( m_absPathWithFile, m_root, filename )) {
+        return false;
+    }
+
     filename = m_root + filename;
     Importer myImporter;
     m_scene = myImporter.ReadFile( filename, flags );
@@ -111,10 +114,6 @@ bool AssimpWrapper::importAsset( const IO::Uri &file, ui32 flags ) {
         return false;
     }
     convertScene();
-    RenderComponent *comp  = (RenderComponent*) m_entity->getComponent( ComponentType::RenderComponentType );
-    if (nullptr != comp) {
-        comp->addStaticMeshArray( m_meshArray );
-    }
 
     return true;
 }
@@ -128,7 +127,8 @@ Entity *AssimpWrapper::convertScene() {
         return nullptr;
     }
 
-    m_entity = new Entity(m_absPathWithFile, m_ids);
+    m_entity = new Entity( m_absPathWithFile, m_ids );
+
     if (m_scene->HasMaterials() ) {
         for ( ui32 i = 0; i < m_scene->mNumMaterials; ++i ) {
             aiMaterial *currentMat(m_scene->mMaterials[ i ] );
@@ -151,13 +151,21 @@ Entity *AssimpWrapper::convertScene() {
     }
 
     if ( nullptr != m_scene->mRootNode ) {
-        impotNode(m_scene->mRootNode, nullptr );
+        importNode(m_scene->mRootNode, nullptr );
     }
 
     if (nullptr != m_scene->mAnimations) {
         for (ui32 i = 0 ; i < m_scene->mNumAnimations; ++i) {
             importAnimation(m_scene->mAnimations[i]);
         }
+    }
+
+#ifdef OSRE_EXPERIMENTAL
+    optimizeVertexBuffer();
+#endif OSRE_EXPERIMENTAL
+    
+    if (!m_meshArray.isEmpty()) {
+        m_entity->addStaticMeshes( m_meshArray );
     }
 
     return m_entity;
@@ -282,7 +290,7 @@ void AssimpWrapper::importMeshes( aiMesh *mesh ) {
     m_entity->setAABB( aabb );
 }
 
-void AssimpWrapper::impotNode( aiNode *node, Scene::Node *parent ) {
+void AssimpWrapper::importNode( aiNode *node, Scene::Node *parent ) {
     if ( nullptr == node) {
         return;
     }
@@ -315,7 +323,7 @@ void AssimpWrapper::impotNode( aiNode *node, Scene::Node *parent ) {
             continue;
         }
 
-        impotNode( currentNode, newNode );
+        importNode( currentNode, newNode );
     }
 }
 
@@ -404,10 +412,81 @@ void AssimpWrapper::importAnimation(aiAnimation *animation) {
     if (nullptr == animation) {
         return;
     }
+}
 
+void AssimpWrapper::optimizeVertexBuffer() {
+    if (m_meshArray.isEmpty() ) {
+        return;
+    }
 
+    using Material2MeshMap = std::map<const char*, MeshArray*>;
+    Material2MeshMap mat2Mesh;
+    for (ui32 i = 0; i < m_meshArray.size(); ++i) {
+        Mesh *mesh = m_meshArray[ i ];
+        if (nullptr == mesh) {
+            continue;
+        }
+        
+        if (nullptr != mesh->m_material) {
+            const char *matname = mesh->m_material->m_name.c_str();
+            Material2MeshMap::iterator it = mat2Mesh.find( matname );
+            if (mat2Mesh.end() == it) {
+                MeshArray *meshArray( new MeshArray );
+                meshArray->add( mesh );
+                mat2Mesh[ matname ] = meshArray;
+            } else {
+                MeshArray *meshArray = it->second;
+                meshArray->add( mesh );
+            }
+        }
+    }
 
-    
+    MeshArray newMeshArray;
+    for (ui32 i = 0; i < m_matArray.size(); ++i) {
+        Material *material = m_matArray[ i ];
+        if (nullptr == material) {
+            continue;
+        }
+        const char *matname = material->m_name.c_str();
+        Material2MeshMap::iterator it = mat2Mesh.find( matname );
+        if (mat2Mesh.end() != it) {
+            MeshArray *meshArray = it->second;
+            if (nullptr != meshArray) {
+                size_t vertexSize( 0 ), indexSize( 0 );
+                BufferData newVertexBuffer;
+                for (ui32 j = 0; j < meshArray->size(); ++j) {
+                    Mesh *mesh = (*meshArray)[ j ];
+                    vertexSize += mesh->m_vb->getSize();
+                    indexSize += mesh->m_ib->getSize();
+                }
+
+                Mesh *newMesh = Mesh::create( 1 );
+                newMesh->m_vb = BufferData::alloc( BufferType::VertexBuffer, vertexSize, BufferAccessType::ReadWrite );
+                newMesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, indexSize, BufferAccessType::ReadWrite );
+                size_t vbOffset( 0 ), ibOffset( 0 );
+                c8 *vbData = newMesh->m_vb->getData();
+                c8 *ibData = newMesh->m_ib->getData();
+                
+                ui32 startIdx = 0; // fixme
+                for (ui32 j = 0; j < meshArray->size(); ++j) {
+                    Mesh *mesh = ( *meshArray )[ j ];
+                    ::memcpy( &vbData[ vbOffset ], mesh->m_vb->getData(), mesh->m_vb->getSize() );
+                    vbOffset += mesh->m_vb->getSize();
+
+                    ::memcpy( &ibData[ ibOffset ], mesh->m_ib->getData(), mesh->m_ib->getSize() );
+                    ibOffset += mesh->m_ib->getSize();
+                }
+                newMesh->m_material = material;
+                newMeshArray.add( newMesh );
+            }
+        }
+    }
+
+    for (ui32 j = 0; j < m_meshArray.size(); ++j) {
+        Mesh::destroy( &m_meshArray[ j ] );
+    }
+
+    m_meshArray = newMeshArray;
 }
 
 } // Namespace Assets

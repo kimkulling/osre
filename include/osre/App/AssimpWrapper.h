@@ -81,9 +81,10 @@ protected:
     Entity *convertScene();
     void importMeshes( aiMesh *mesh );
 	void importBones(aiMesh* mesh);
-    void impotNode( aiNode *node, Scene::Node *parent );
+    void importNode( aiNode *node, Scene::Node *parent );
     void importMaterial( aiMaterial *material );
     void importAnimation( aiAnimation *animation );
+    void optimizeVertexBuffer();
 
 private:
 	const aiScene *m_scene;
