@@ -67,7 +67,6 @@ Component *Entity::getComponent( ComponentType type ) const {
         case OSRE::App::ComponentType::ScriptComponent:
             break;
         case OSRE::App::ComponentType::MaxNumComponents:
-            break;
         case OSRE::App::ComponentType::InvalidComponent:
             break;
         default:
