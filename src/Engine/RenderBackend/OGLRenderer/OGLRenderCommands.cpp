@@ -1,3 +1,25 @@
+/*-----------------------------------------------------------------------------------------------
+The MIT License (MIT)
+
+Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-----------------------------------------------------------------------------------------------*/
 #include "OGLRenderCommands.h"
 
 #include "OGLRenderBackend.h"
@@ -18,7 +40,6 @@
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Uri.h>
 #include <osre/App/AssetRegistry.h>
-
 
 namespace OSRE {
 namespace RenderBackend {
@@ -51,14 +72,7 @@ bool setupTextures(Material* mat, OGLRenderBackend* rb, TArray<OGLTexture*>& tex
     for (ui32 i = 0; i < numTextures; ++i) {
         Texture* tex(mat->m_textures[i]);
         if (!tex->m_textureName.empty()) {
-            /*String root = Assets::AssetRegistry::getPath("media");
-            String path = Assets::AssetRegistry::resolvePathFromUri(tex->m_loc);
-
-            IO::Uri loc(tex->m_loc);
-            loc.setPath(path);*/
-
             OGLTexture* oglTexture = rb->createTexture(tex->m_textureName, tex);
-            //OGLTexture* oglTexture = rb->createTextureFromFile(tex->m_textureName, loc);
             if (nullptr != oglTexture) {
                 textures.add(oglTexture);
             }
@@ -72,7 +86,10 @@ SetMaterialStageCmdData* setupMaterial(Material* material, OGLRenderBackend* rb,
     OSRE_ASSERT(nullptr != eh);
     OSRE_ASSERT(nullptr != material);
     OSRE_ASSERT(nullptr != rb);
-
+    
+    if (nullptr == material || nullptr == rb || nullptr == eh) {
+        return nullptr;
+    }
     SetMaterialStageCmdData* matData = new SetMaterialStageCmdData;
     switch (material->m_type) {
         case MaterialType::ShaderMaterial: {
@@ -88,9 +105,7 @@ SetMaterialStageCmdData* setupMaterial(Material* material, OGLRenderBackend* rb,
                 matData->m_shader = shader;
                 for (ui32 i = 0; i < material->m_shader->m_attributes.size(); i++) {
                     const String& attribute = material->m_shader->m_attributes[i];
-                    //if ( shader->hasAttribute( attribute ) ) {
                     shader->addAttribute(attribute);
-                    //}
                 }
 
                 for (ui32 i = 0; i < material->m_shader->m_parameters.size(); i++) {
@@ -104,7 +119,6 @@ SetMaterialStageCmdData* setupMaterial(Material* material, OGLRenderBackend* rb,
             eh->enqueueRenderCmd(renderMatCmd);
         }
                                          break;
-
         default:
             break;
     }
@@ -117,7 +131,7 @@ void setupParameter(UniformVar* param, OGLRenderBackend* rb, OGLRenderEventHandl
     OSRE_ASSERT(nullptr != rb);
     OSRE_ASSERT(nullptr != ev);
 
-    if (!param) {
+    if ( nullptr == param || nullptr == rb || nullptr == ev ) {
         return;
     }
 
@@ -125,8 +139,7 @@ void setupParameter(UniformVar* param, OGLRenderBackend* rb, OGLRenderEventHandl
     OGLParameter* oglParam = rb->getParameter(param->m_name);
     if (nullptr == oglParam) {
         oglParam = rb->createParameter(param->m_name, param->m_type, &param->m_data, param->m_numItems);
-    }
-    else {
+    } else {
         ::memcpy(oglParam->m_data->getData(), param->m_data.getData(), param->m_data.m_size);
     }
 
@@ -139,11 +152,15 @@ OGLVertexArray* setupBuffers(Mesh* mesh, OGLRenderBackend* rb, OGLShader* oglSha
     OSRE_ASSERT(nullptr != rb);
     OSRE_ASSERT(nullptr != oglShader);
 
+    if (nullptr == mesh || nullptr == rb || nullptr == oglShader ) {
+        return nullptr;
+    }
+
     rb->useShader(oglShader);
 
     OGLVertexArray* vertexArray = rb->createVertexArray();
     rb->bindVertexArray(vertexArray);
-    BufferData* vertices = mesh->m_vb;
+    BufferData *vertices = mesh->m_vb;
     if (nullptr == vertices) {
         osre_debug(Tag, "No vertex buffer data for setting up data.");
         return nullptr;
@@ -231,4 +248,3 @@ void setupInstancedDrawCmd(const char* id, const TArray<size_t>& ids, OGLRenderB
 
 } // Namespace RenderBackend
 } // Namespace OSRE
-
