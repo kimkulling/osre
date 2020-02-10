@@ -73,7 +73,6 @@ namespace OSRE {
 #  pragma warning( disable : 4251 ) // class 'type' needs to have dll-interface to be used by clients of class 'type2'
 #  pragma warning( disable : 4275 ) // non DLL-interface classkey 'identifier' used as base for DLL-interface classkey 'identifier'
 #  pragma warning( disable : 4127 )	// Conditional expression is constant
-//#  pragma warning( disable : 4100 ) // identifier' : unreferenced formal parameter
 #  pragma warning( disable : 4201 ) // No standard extension
 #  pragma warning( disable : 4316 ) // Object allocated on the heap may not be aligned for this type
 #  pragma warning( disable : 4996 ) // 
@@ -241,7 +240,6 @@ struct Color4 {
 
         return 0.0f;
     }
-
 };
 
 template<class T>
@@ -328,8 +326,8 @@ TVec2<T> operator * ( T scalar, TVec2<T> vec ) {
     return res;
 }
 
-typedef TVec2<i32> Vec2i;
-typedef TVec2<f32> Vec2f;
+using Vec2i = TVec2<i32>;
+using Vec2f = TVec2<f32>;
 
 template<class T>
 struct TVec3 {
@@ -465,9 +463,8 @@ TVec3<T> operator * ( T scalar, TVec3<T> vec ) {
     return res;
 }
 
-
-typedef TVec3<i32> Vec3i;
-typedef TVec3<f32> Vec3f;
+using Vec3i = TVec3<i32>;
+using Vec3f = TVec3<f32>;
 
 template<class T>
 struct TVec4 {
@@ -599,8 +596,8 @@ struct TPoint2 {
     }
 };
 
-typedef TPoint2<i32>  Point2i;
-typedef TPoint2<ui32> Point2ui;
+using Point2i = TPoint2<i32>;
+using Point2ui = TPoint2<ui32>;
 
 /// @brief  Helper class t represent a 2D rectangle.
 template<class T>
@@ -724,8 +721,8 @@ struct TRectangle {
     }
 };
 
-typedef TRectangle<ui32> Rect2ui;
-typedef TRectangle<i32>  Rect2i;
+using Rect2ui = TRectangle<ui32>;
+using Rect2i  = TRectangle<i32>;
 
 struct float4 {
     union {

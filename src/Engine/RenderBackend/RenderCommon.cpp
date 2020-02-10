@@ -231,8 +231,7 @@ BufferData::BufferData()
 : m_type( BufferType::EmptyBuffer )
 , m_buffer()
 , m_cap( 0 )
-, m_access( BufferAccessType::ReadOnly )
-, m_bufferDesc() {
+, m_access( BufferAccessType::ReadOnly ) {
     // empty
 }
 

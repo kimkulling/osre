@@ -4,18 +4,27 @@ using System.Windows.Forms;
 
 namespace OSREEditor.View 
 {
+    /// <summary>
+    /// The world struct
+    /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct OSREWorld 
     {
         public int NumStages;   
     }
 
+    /// <summary>
+    /// The stage struct
+    /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct OSREStage 
     {
 
     }
 
+    /// <summary>
+    /// The node struct
+    /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct OSRENode 
     {

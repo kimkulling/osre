@@ -63,7 +63,7 @@ public:
     PrimitiveGroup        *m_primGroups;
     ui32                   m_id;
 
-    static Mesh *create( ui32 numGeo );
+    static Mesh *create( size_t numGeo );
     static void destroy( Mesh **geo );
     static ui32 getVertexSize( VertexType vertextype );
     PrimitiveGroup *createPrimitiveGroups(size_t numPrimGroups, IndexType *types, size_t *numIndices, PrimitiveType *primTypes, ui32 *startIndices);

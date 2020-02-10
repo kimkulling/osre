@@ -67,7 +67,7 @@ Mesh::~Mesh() {
     s_Ids.releaseId( m_id );
 }
 
-Mesh *Mesh::create( ui32 numGeo ) {
+Mesh *Mesh::create( size_t numGeo ) {
     if ( 0 == numGeo ) {
         osre_debug( Tag, "Number of static geo to create is zero." );
         return nullptr;
