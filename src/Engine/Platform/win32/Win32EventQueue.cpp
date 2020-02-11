@@ -117,8 +117,8 @@ Win32EventQueue::~Win32EventQueue( ) {
 }
 
 bool Win32EventQueue::update() {
-    EventDataList *pActiveEventQueue = getActiveEventDataList();
-    if ( nullptr == pActiveEventQueue ) {
+    EventDataList *activeEventQueue = getActiveEventDataList();
+    if ( nullptr == activeEventQueue ) {
         return false;
     }
     MSG	Program;
@@ -126,7 +126,7 @@ bool Win32EventQueue::update() {
         switch( Program.message ) {
             case WM_ACTIVATE: {
                 Common::EventData *data = new Common::EventData( AppFocusEvent, m_eventTriggerer );
-                pActiveEventQueue->addBack( data );
+                activeEventQueue->addBack( data );
             }
             break;
 
@@ -153,7 +153,7 @@ bool Win32EventQueue::update() {
                 MouseButtonEventData *data = new MouseButtonEventData( true, m_eventTriggerer );
                 data->m_Button = MouseButtonEventData::LeftButton;
                 getXYPosFromLParam( Program.lParam, data->m_AbsX, data->m_AbsY );
-                pActiveEventQueue->addBack( data );
+                activeEventQueue->addBack( data );
             }
             break;
 
@@ -161,7 +161,7 @@ bool Win32EventQueue::update() {
                 MouseButtonEventData *data = new MouseButtonEventData( false, m_eventTriggerer );
                 data->m_Button = MouseButtonEventData::LeftButton;
                 getXYPosFromLParam( Program.lParam, data->m_AbsX, data->m_AbsY );
-                pActiveEventQueue->addBack( data );
+                activeEventQueue->addBack( data );
             }
             break;
 
@@ -169,7 +169,7 @@ bool Win32EventQueue::update() {
                 MouseButtonEventData *data = new MouseButtonEventData( true, m_eventTriggerer );
                 data->m_Button = MouseButtonEventData::MiddleButton;
                 getXYPosFromLParam( Program.lParam, data->m_AbsX, data->m_AbsY );
-                pActiveEventQueue->addBack( data );
+                activeEventQueue->addBack( data );
             }
             break;
 
@@ -177,7 +177,7 @@ bool Win32EventQueue::update() {
                 MouseButtonEventData *data = new MouseButtonEventData( false, m_eventTriggerer );
                 data->m_Button = MouseButtonEventData::MiddleButton;
                 getXYPosFromLParam( Program.lParam, data->m_AbsX, data->m_AbsY );
-                pActiveEventQueue->addBack( data );
+                activeEventQueue->addBack( data );
             }
             break;
 
@@ -185,7 +185,7 @@ bool Win32EventQueue::update() {
                 MouseButtonEventData *data = new MouseButtonEventData( true, m_eventTriggerer );
                 data->m_Button = MouseButtonEventData::RightButton;
                 getXYPosFromLParam( Program.lParam, data->m_AbsX, data->m_AbsY );
-                pActiveEventQueue->addBack( data );
+                activeEventQueue->addBack( data );
             }
             break;
 
@@ -193,14 +193,14 @@ bool Win32EventQueue::update() {
                 MouseButtonEventData *data = new MouseButtonEventData( false, m_eventTriggerer );
                 data->m_Button = MouseButtonEventData::RightButton;
                 getXYPosFromLParam( Program.lParam, data->m_AbsX, data->m_AbsY );
-                pActiveEventQueue->addBack( data );
+                activeEventQueue->addBack( data );
             }
             break;
 
             case WM_MOUSEMOVE: {
                 MouseMoveEventData *data = new MouseMoveEventData( m_eventTriggerer );
                 getXYPosFromLParam( Program.lParam, data->m_absX, data->m_absY );
-                pActiveEventQueue->addBack( data );
+                activeEventQueue->addBack( data );
             }
             break;
 
@@ -208,7 +208,7 @@ bool Win32EventQueue::update() {
             case WM_KEYUP: {
                 KeyboardButtonEventData *data = new KeyboardButtonEventData( Program.message == WM_KEYDOWN, m_eventTriggerer );
                 data->m_key = ( Key ) Program.wParam;
-                pActiveEventQueue->addBack( data );
+                activeEventQueue->addBack( data );
             }
             break;
 
@@ -224,11 +224,11 @@ bool Win32EventQueue::update() {
                     ui32 w = rcClient.right - rcClient.left;
                     ui32 h = rcClient.bottom - rcClient.top;
 
-                    RenderBackend::RenderBackendService *rbSrv(getRenderBackendService());
+                    /*RenderBackend::RenderBackendService *rbSrv(getRenderBackendService());
                     if (nullptr != rbSrv) {
                         rbSrv->resize(x, y, w, h);
-                    }
-                    pActiveEventQueue->addBack( data );
+                    }*/
+                    activeEventQueue->addBack( data );
                 }
             }
             break;

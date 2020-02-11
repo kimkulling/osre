@@ -38,7 +38,6 @@ Win32Window::~Win32Window( ) {
     // empty
 }
 
-
 void Win32Window::setWindowsTitle( const String &title ) {
     if ( nullptr == m_wnd ) {
         return;
