@@ -98,9 +98,9 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
     m_rbSrv->beginPass( PipelinePass::getPassNameById( DbgPassId ) );
     m_rbSrv->beginRenderBatch("dbgFontBatch");
     
+    f32 xTrans(0), yTrans(0);
+    UI::WidgetCoordMapping::mapPosToWorld(x , y, xTrans, yTrans);
     if ( !m_textBoxes.hasKey( id ) ) {
-        f32 xTrans(0), yTrans(0);
-        UI::WidgetCoordMapping::mapPosToWorld(x , y, xTrans, yTrans);
         MeshBuilder geoBuilder;
         geoBuilder.allocTextBox(xTrans, yTrans, scale, text, BufferAccessType::ReadWrite);
         Mesh *mesh = geoBuilder.getMesh();
@@ -116,7 +116,7 @@ void DbgRenderer::renderDbgText( ui32 x, ui32 y, ui32 id, const String &text ) {
 				Mesh* geo(nullptr);
 				if (text.size() > entry->m_text.size()) {
 					MeshBuilder geoBuilder;
-					geoBuilder.allocTextBox(0, 0, 0.1f, text, BufferAccessType::ReadWrite);
+                    geoBuilder.allocTextBox(xTrans, yTrans, 0.1f, text, BufferAccessType::ReadWrite);
 					geo = geoBuilder.getMesh();
 					entry->m_geo = geo;
 				} else {

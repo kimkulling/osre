@@ -44,7 +44,10 @@ Node::Node( const String &name, Ids &ids, Node *parent )
 , m_isActive( true )
 , m_ids( &ids )
 , m_propMap()
-, m_aabb() {
+, m_aabb()
+, m_dirty( 0 )
+, m_localTransformState()
+, m_transform() {
     if ( nullptr != m_parent ) {
         m_parent->addChild( this );
     }

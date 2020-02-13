@@ -141,13 +141,7 @@ Entity *AssimpWrapper::convertScene() {
     }
     
     if (m_scene->HasMeshes() ) {
-        for ( ui32 i = 0; i < m_scene->mNumMeshes; ++i ) {
-            aiMesh *currentMesh( m_scene->mMeshes[ i ] );
-            if ( nullptr == currentMesh ) {
-                continue;
-            }
-            importMeshes( currentMesh );
-        }
+        importMeshes( m_scene->mMeshes, m_scene->mNumMeshes );
     }
 
     if ( nullptr != m_scene->mRootNode ) {
@@ -160,10 +154,6 @@ Entity *AssimpWrapper::convertScene() {
         }
     }
 
-#ifdef OSRE_EXPERIMENTAL
-    optimizeVertexBuffer();
-#endif OSRE_EXPERIMENTAL
-    
     if (!m_meshArray.isEmpty()) {
         m_entity->addStaticMeshes( m_meshArray );
     }
@@ -193,101 +183,172 @@ static void copyAiMatrix4(const aiMatrix4x4 &aiMat, glm::mat4 &mat) {
     mat[3].w = aiMat.d4;
 }
 
-void AssimpWrapper::importMeshes( aiMesh *mesh ) {
-    if ( nullptr == mesh ) {
+using MeshIdxArray = ::CPPCore::TArray<size_t>;
+using Mat2MeshMap = std::map<aiMaterial *, MeshIdxArray *>;
+
+static size_t countVertices( MeshIdxArray &miArray, const aiScene *scene ) {
+    if (nullptr == scene) {
+        return 0;
+    }
+
+    size_t numVertices = 0;
+    for (unsigned int i = 0; i < miArray.size();  ++i) {
+        numVertices += static_cast< size_t >( scene->mMeshes[ miArray[i] ]->mNumVertices );
+    }
+
+    return numVertices;
+}
+
+void AssimpWrapper::importMeshes( aiMesh **meshes, ui32 numMeshes ) {
+    if ( nullptr == meshes || 0 == numMeshes ) {
+        osre_debug( Tag, "No meshes, aborting." );
         return;
     }
 
     TAABB<f32> aabb = m_entity->getAABB();
-    Mesh *currentMesh( Mesh::create( 1 ) );
-	currentMesh->m_vertextype = VertexType::RenderVertex;
-    ui32 numVertices( mesh->mNumVertices );
-    RenderVert *vertices = new RenderVert[ numVertices ];
-    for ( ui32 i = 0; i < numVertices; i++ ) {
-        if ( mesh->HasPositions() ) {
-            aiVector3D &vec3 = mesh->mVertices[ i ];
-            vertices[ i ].position.x = vec3.x;
-            vertices[ i ].position.y = vec3.y;
-            vertices[ i ].position.z = vec3.z;
 
-            aabb.merge( vec3.x, vec3.y, vec3.z );
+    Mat2MeshMap mat2MeshMap;
+    for (ui32 i = 0; i < numMeshes; ++i) {
+        aiMesh *currentMesh = meshes[ i ];
+        if (nullptr == currentMesh) {
+            osre_debug( Tag, "Invalid mesh instance found." );
+            continue;
         }
 
-        if ( mesh->HasNormals() ) {
-            aiVector3D &normal = mesh->mNormals[ i ];
-            vertices[ i ].normal.x = normal.x;
-            vertices[ i ].normal.y = normal.y;
-            vertices[ i ].normal.z = normal.z;
+        aiMaterial *mat = m_scene->mMaterials[ currentMesh->mMaterialIndex ];
+        if (nullptr == mat) {
+            continue;
         }
-
-        if ( mesh->HasVertexColors( 0 ) ) {
-            aiColor4D &diffuse = mesh->mColors[ 0 ][ i ];
-            vertices[ i ].color0.r = diffuse.r;
-            vertices[ i ].color0.g = diffuse.g;
-            vertices[ i ].color0.b = diffuse.b;
+        Mat2MeshMap::const_iterator it = mat2MeshMap.find( mat );
+        MeshIdxArray *miArray = nullptr;
+        if (mat2MeshMap.end() == it) {
+            miArray = new MeshIdxArray;
+            mat2MeshMap[ mat ] = miArray;
+        } else {
+            miArray = it->second;
         }
-
-        for ( ui32 texIdx =0; texIdx<AI_MAX_NUMBER_OF_TEXTURECOORDS; texIdx++ ) {
-            if ( mesh->HasTextureCoords( texIdx ) ) {
-                if ( 0 == texIdx ) {
-                    aiVector3D &tex0 = mesh->mTextureCoords[ texIdx ][ i ];
-                    vertices[ i ].tex0.x = tex0.x;
-                    vertices[ i ].tex0.y = tex0.y;
-                }
-            }
-        }
+        miArray->add( ( size_t ) i );
     }
-    //GeometryDiagnosticUtils::dumVertices( vertices, numVertices );
 
-    if (mesh->HasBones()) {
-        for (ui32 i = 0; i < mesh->mNumBones; ++i) {
-            aiBone *currentBone(mesh->mBones[i]);
-            if (nullptr == currentBone) {
+    for (size_t i = 0; i < mat2MeshMap.size(); ++i) {
+        m_meshArray.add( Mesh::create( 1 ) );
+    }
+
+    size_t i = 0;
+    aiMesh *currentMesh = nullptr;
+    for (Mat2MeshMap::iterator it = mat2MeshMap.begin(); it != mat2MeshMap.end(); ++it) {
+        MeshIdxArray *miArray = it->second;
+        if (nullptr == miArray) {
+            continue;
+        }
+
+        CPPCore::TArray<ui32> indexArray;
+
+        size_t numVerts = countVertices( *miArray, m_scene );
+        RenderVert *vertices = new RenderVert[ numVerts ];
+
+        Mesh &newMesh = *m_meshArray[ i ];
+        newMesh.m_vertextype = VertexType::RenderVertex;
+        size_t vertexOffset = 0, indexOffset=0;
+        for (ui32 j = 0; j < miArray->size(); ++j) {
+            const size_t meshIndex = ( *miArray )[ j ];
+            currentMesh = m_scene->mMeshes[ meshIndex ];
+            if (nullptr == currentMesh) {
                 continue;
             }
+            for (ui32 k = 0; k < currentMesh->mNumVertices; ++k) {
+                if (currentMesh->HasPositions()) {
+                    aiVector3D &vec3 = currentMesh->mVertices[ k ];
+                    vertices[ vertexOffset ].position.x = vec3.x;
+                    vertices[ vertexOffset ].position.y = vec3.y;
+                    vertices[ vertexOffset ].position.z = vec3.z;
 
-            Bone *bone = new Bone;
-            bone->m_name = currentBone->mName.C_Str();
-            copyAiMatrix4(currentBone->mOffsetMatrix, bone->m_offsetMatrix);
-            for (ui32 weightIdx = 0; weightIdx < currentBone->mNumWeights; ++weightIdx) {
-                aiVertexWeight &aiVW = currentBone->mWeights[i];
-                VertexWeight *w = new VertexWeight;
-                w->m_vertexIdx = aiVW.mVertexId;
-                w->m_vertexWeight = aiVW.mWeight;
-                bone->m_vertexWeights.add(w);
+                    aabb.merge( vec3.x, vec3.y, vec3.z );
+                }
+
+                if (currentMesh->HasNormals()) {
+                    aiVector3D &normal = currentMesh->mNormals[ k ];
+                    vertices[ vertexOffset ].normal.x = normal.x;
+                    vertices[ vertexOffset ].normal.y = normal.y;
+                    vertices[ vertexOffset ].normal.z = normal.z;
+                }
+
+                if (currentMesh->HasVertexColors( 0 )) {
+                    aiColor4D &diffuse = currentMesh->mColors[ 0 ][ k ];
+                    vertices[ vertexOffset ].color0.r = diffuse.r;
+                    vertices[ vertexOffset ].color0.g = diffuse.g;
+                    vertices[ vertexOffset ].color0.b = diffuse.b;
+                }
+
+                for (ui32 texIdx = 0; texIdx < AI_MAX_NUMBER_OF_TEXTURECOORDS; texIdx++) {
+                    if (currentMesh->HasTextureCoords( texIdx )) {
+                        if (0 == texIdx) {
+                            aiVector3D &tex0 = currentMesh->mTextureCoords[ texIdx ][ k ];
+                            vertices[ vertexOffset ].tex0.x = tex0.x;
+                            vertices[ vertexOffset ].tex0.y = tex0.y;
+                        }
+                    }
+                }
+
+                for (ui32 faceIdx = 0; faceIdx < currentMesh->mNumFaces; ++faceIdx ) {
+                    aiFace &currentFace = currentMesh->mFaces[ faceIdx ];
+                    for (ui32 idx = 0; idx < currentFace.mNumIndices; idx++) {
+                        const ui32 currentIndex = currentFace.mIndices[ idx ];
+                        indexArray.add( static_cast<ui32>( currentIndex + indexOffset ) );
+                    }
+                }
+
+                if (currentMesh->HasBones()) {
+                    for (ui32 l = 0; l < currentMesh->mNumBones; ++l) {
+                        aiBone *currentBone( currentMesh->mBones[ l ] );
+                        if (nullptr == currentBone) {
+                            osre_debug( Tag, "Invalid bone instance found." );
+                            continue;
+                        }
+
+                        Bone *bone = new Bone;
+                        bone->m_name = currentBone->mName.C_Str();
+                        copyAiMatrix4( currentBone->mOffsetMatrix, bone->m_offsetMatrix );
+                        for (ui32 weightIdx = 0; weightIdx < currentBone->mNumWeights; ++weightIdx) {
+                            aiVertexWeight &aiVW = currentBone->mWeights[ l ];
+                            VertexWeight *w = new VertexWeight;
+                            w->m_vertexIdx = aiVW.mVertexId;
+                            w->m_vertexWeight = aiVW.mWeight;
+                            bone->m_vertexWeights.add( w );
+                        }
+                        const aiNode *node = m_scene->mRootNode->FindNode( bone->m_name.c_str() );
+                        if (nullptr != node) {
+                            m_bone2NodeMap[ bone->m_name.c_str() ] = node;
+                        }
+                    }
+                }
+                indexOffset += currentMesh->mNumVertices;
+                ++vertexOffset;
             }
-			const aiNode* node = m_scene->mRootNode->FindNode(bone->m_name.c_str());
-			if (nullptr != node) {
-				m_bone2NodeMap[bone->m_name.c_str() ]= node;
-			}
+
+            const size_t matIdx( currentMesh->mMaterialIndex );
+            Material *osreMat = m_matArray[ matIdx ];
+            newMesh.m_material = osreMat;
+
+            const size_t vbSize( sizeof( RenderVert ) *numVerts );
+            newMesh.m_vb = BufferData::alloc( BufferType::VertexBuffer, vbSize, BufferAccessType::ReadOnly );
+            newMesh.m_vb->copyFrom( &vertices[ 0 ], vbSize );
+
+            //Scene::GeometryDiagnosticUtils::dumpIndices( indexArray );
+
+            newMesh.m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( ui32 ) * indexArray.size(), BufferAccessType::ReadOnly );
+            newMesh.m_ib->copyFrom( &indexArray[ 0 ], newMesh.m_ib->getSize() );
+
+            newMesh.createPrimitiveGroup( IndexType::UnsignedInt, indexArray.size(), PrimitiveType::TriangleList, 0 );
+            newMesh.m_material = m_matArray[ matIdx ];
         }
+
+        ++i;
     }
-
-    const ui32 matIdx( mesh->mMaterialIndex );
-    Material *osreMat = m_matArray[ matIdx ];
-    currentMesh->m_material = osreMat;
-    const ui32 vbSize( sizeof( RenderVert ) * numVertices );
-    currentMesh->m_vb = BufferData::alloc( BufferType::VertexBuffer, vbSize, BufferAccessType::ReadOnly );
-    currentMesh->m_vb->copyFrom( &vertices[ 0 ], vbSize );
-
-    CPPCore::TArray<ui32> indexArray;
-    for ( ui32 i = 0; i < mesh->mNumFaces; i++ ) {
-        aiFace &currentFace = mesh->mFaces[ i ];
-        for ( ui32 idx = 0; idx < currentFace.mNumIndices; idx++ ) {
-            const ui32 index = currentFace.mIndices[ idx ];
-            indexArray.add( index );
-        }
-    }
-	//Scene::GeometryDiagnosticUtils::dumpIndices( indexArray );
-
-    currentMesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( ui32 ) * indexArray.size(), BufferAccessType::ReadOnly );
-    currentMesh->m_ib->copyFrom( &indexArray[ 0 ], currentMesh->m_ib->getSize());
-
-    currentMesh->createPrimitiveGroup(IndexType::UnsignedInt, indexArray.size(), PrimitiveType::TriangleList, 0);
-    currentMesh->m_material = m_matArray[matIdx];
-    
-    m_meshArray.add( currentMesh );
     m_entity->setAABB( aabb );
+
+
+    //GeometryDiagnosticUtils::dumVertices( vertices, numVertices );
 }
 
 void AssimpWrapper::importNode( aiNode *node, Scene::Node *parent ) {
@@ -412,81 +473,6 @@ void AssimpWrapper::importAnimation(aiAnimation *animation) {
     if (nullptr == animation) {
         return;
     }
-}
-
-void AssimpWrapper::optimizeVertexBuffer() {
-    if (m_meshArray.isEmpty() ) {
-        return;
-    }
-
-    using Material2MeshMap = std::map<const char*, MeshArray*>;
-    Material2MeshMap mat2Mesh;
-    for (ui32 i = 0; i < m_meshArray.size(); ++i) {
-        Mesh *mesh = m_meshArray[ i ];
-        if (nullptr == mesh) {
-            continue;
-        }
-        
-        if (nullptr != mesh->m_material) {
-            const char *matname = mesh->m_material->m_name.c_str();
-            Material2MeshMap::iterator it = mat2Mesh.find( matname );
-            if (mat2Mesh.end() == it) {
-                MeshArray *meshArray( new MeshArray );
-                meshArray->add( mesh );
-                mat2Mesh[ matname ] = meshArray;
-            } else {
-                MeshArray *meshArray = it->second;
-                meshArray->add( mesh );
-            }
-        }
-    }
-
-    MeshArray newMeshArray;
-    for (ui32 i = 0; i < m_matArray.size(); ++i) {
-        Material *material = m_matArray[ i ];
-        if (nullptr == material) {
-            continue;
-        }
-        const char *matname = material->m_name.c_str();
-        Material2MeshMap::iterator it = mat2Mesh.find( matname );
-        if (mat2Mesh.end() != it) {
-            MeshArray *meshArray = it->second;
-            if (nullptr != meshArray) {
-                size_t vertexSize( 0 ), indexSize( 0 );
-                BufferData newVertexBuffer;
-                for (ui32 j = 0; j < meshArray->size(); ++j) {
-                    Mesh *mesh = (*meshArray)[ j ];
-                    vertexSize += mesh->m_vb->getSize();
-                    indexSize += mesh->m_ib->getSize();
-                }
-
-                Mesh *newMesh = Mesh::create( 1 );
-                newMesh->m_vb = BufferData::alloc( BufferType::VertexBuffer, vertexSize, BufferAccessType::ReadWrite );
-                newMesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, indexSize, BufferAccessType::ReadWrite );
-                size_t vbOffset( 0 ), ibOffset( 0 );
-                c8 *vbData = newMesh->m_vb->getData();
-                c8 *ibData = newMesh->m_ib->getData();
-                
-                ui32 startIdx = 0; // fixme
-                for (ui32 j = 0; j < meshArray->size(); ++j) {
-                    Mesh *mesh = ( *meshArray )[ j ];
-                    ::memcpy( &vbData[ vbOffset ], mesh->m_vb->getData(), mesh->m_vb->getSize() );
-                    vbOffset += mesh->m_vb->getSize();
-
-                    ::memcpy( &ibData[ ibOffset ], mesh->m_ib->getData(), mesh->m_ib->getSize() );
-                    ibOffset += mesh->m_ib->getSize();
-                }
-                newMesh->m_material = material;
-                newMeshArray.add( newMesh );
-            }
-        }
-    }
-
-    for (ui32 j = 0; j < m_meshArray.size(); ++j) {
-        Mesh::destroy( &m_meshArray[ j ] );
-    }
-
-    m_meshArray = newMeshArray;
 }
 
 } // Namespace Assets
