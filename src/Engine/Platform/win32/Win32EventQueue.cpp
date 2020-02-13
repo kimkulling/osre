@@ -223,11 +223,10 @@ bool Win32EventQueue::update() {
                     ui32 y = rcClient.top;
                     ui32 w = rcClient.right - rcClient.left;
                     ui32 h = rcClient.bottom - rcClient.top;
-
-                    /*RenderBackend::RenderBackendService *rbSrv(getRenderBackendService());
+                    RenderBackend::RenderBackendService *rbSrv = getRenderBackendService();
                     if (nullptr != rbSrv) {
-                        rbSrv->resize(x, y, w, h);
-                    }*/
+                        rbSrv->resize( x, y, w, h );
+                    }
                     activeEventQueue->addBack( data );
                 }
             }
