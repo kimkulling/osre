@@ -35,6 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Entity.h>
 #include <osre/Scene/Node.h>
 #include <osre/Scene/TAABB.h>
+#include <osre/Debugging/MeshDiagnostic.h>
 #include <osre/IO/IOService.h>
 #include <osre/IO/AbstractFileSystem.h>
 
@@ -237,25 +238,26 @@ void AssimpWrapper::importMeshes( aiMesh **meshes, ui32 numMeshes ) {
     size_t i = 0;
     aiMesh *currentMesh = nullptr;
     for (Mat2MeshMap::iterator it = mat2MeshMap.begin(); it != mat2MeshMap.end(); ++it) {
+        CPPCore::TArray<ui32> indexArray;
         MeshIdxArray *miArray = it->second;
         if (nullptr == miArray) {
             continue;
         }
 
-        CPPCore::TArray<ui32> indexArray;
 
         size_t numVerts = countVertices( *miArray, m_scene );
         RenderVert *vertices = new RenderVert[ numVerts ];
 
         Mesh &newMesh = *m_meshArray[ i ];
         newMesh.m_vertextype = VertexType::RenderVertex;
-        size_t vertexOffset = 0, indexOffset=0;
+        size_t vertexOffset = 0, indexOffset = 0;
         for (ui32 j = 0; j < miArray->size(); ++j) {
             const size_t meshIndex = ( *miArray )[ j ];
             currentMesh = m_scene->mMeshes[ meshIndex ];
             if (nullptr == currentMesh) {
                 continue;
             }
+
             for (ui32 k = 0; k < currentMesh->mNumVertices; ++k) {
                 if (currentMesh->HasPositions()) {
                     aiVector3D &vec3 = currentMesh->mVertices[ k ];
@@ -290,14 +292,6 @@ void AssimpWrapper::importMeshes( aiMesh **meshes, ui32 numMeshes ) {
                     }
                 }
 
-                for (ui32 faceIdx = 0; faceIdx < currentMesh->mNumFaces; ++faceIdx ) {
-                    aiFace &currentFace = currentMesh->mFaces[ faceIdx ];
-                    for (ui32 idx = 0; idx < currentFace.mNumIndices; idx++) {
-                        const ui32 currentIndex = currentFace.mIndices[ idx ];
-                        indexArray.add( static_cast<ui32>( currentIndex + indexOffset ) );
-                    }
-                }
-
                 if (currentMesh->HasBones()) {
                     for (ui32 l = 0; l < currentMesh->mNumBones; ++l) {
                         aiBone *currentBone( currentMesh->mBones[ l ] );
@@ -322,25 +316,34 @@ void AssimpWrapper::importMeshes( aiMesh **meshes, ui32 numMeshes ) {
                         }
                     }
                 }
-                indexOffset += currentMesh->mNumVertices;
+
                 ++vertexOffset;
             }
+            for (ui32 faceIdx = 0; faceIdx < currentMesh->mNumFaces; ++faceIdx) {
+                aiFace &currentFace = currentMesh->mFaces[ faceIdx ];
+                for (ui32 idx = 0; idx < currentFace.mNumIndices; idx++) {
+                    const ui32 currentIndex = currentFace.mIndices[ idx ];
+                    indexArray.add( static_cast< ui32 >( currentIndex + indexOffset ) );
+                }
+            }
 
-            const size_t matIdx( currentMesh->mMaterialIndex );
-            Material *osreMat = m_matArray[ matIdx ];
-            newMesh.m_material = osreMat;
+            indexOffset += currentMesh->mNumVertices;
 
             const size_t vbSize( sizeof( RenderVert ) *numVerts );
             newMesh.m_vb = BufferData::alloc( BufferType::VertexBuffer, vbSize, BufferAccessType::ReadOnly );
             newMesh.m_vb->copyFrom( &vertices[ 0 ], vbSize );
 
-            //Scene::GeometryDiagnosticUtils::dumpIndices( indexArray );
 
             newMesh.m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( ui32 ) * indexArray.size(), BufferAccessType::ReadOnly );
             newMesh.m_ib->copyFrom( &indexArray[ 0 ], newMesh.m_ib->getSize() );
 
+//            Debugging::MeshDiagnostic::dumpIndices( indexArray );
+
             newMesh.createPrimitiveGroup( IndexType::UnsignedInt, indexArray.size(), PrimitiveType::TriangleList, 0 );
-            newMesh.m_material = m_matArray[ matIdx ];
+
+            const size_t matIdx( currentMesh->mMaterialIndex );
+            Material *osreMat = m_matArray[ matIdx ];
+            newMesh.m_material = osreMat;
         }
 
         ++i;

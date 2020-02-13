@@ -195,27 +195,19 @@ bool SDL2EventHandler::update() {
             case SDL_WINDOWEVENT: {
                 if ( ev.window.windowID == windowID ) {
                     switch ( ev.window.event ) {
-                    case SDL_WINDOWEVENT_MOVED: {
-                        ui32 x = ( ui32 )ev.window.data1;
-                        ui32 y = ( ui32 )ev.window.data1;
-                        getRenderBackendService()->resize( x, y, m_window->getProperties()->m_width, m_window->getProperties()->m_width );
-                    }
-                    break;
+                        case SDL_WINDOWEVENT_MOVED: {
+                            ui32 x = ( ui32 )ev.window.data1;
+                            ui32 y = ( ui32 )ev.window.data2;
+                            getRenderBackendService()->resize( x, y, m_window->getProperties()->m_width, m_window->getProperties()->m_width );
+                        }
+                        break;
 
-                    case SDL_WINDOWEVENT_SIZE_CHANGED: {
-                        ui32 w = ev.window.data1;
-                        ui32 h = ev.window.data2;
-                        getRenderBackendService()->resize( m_window->getProperties()->m_x, m_window->getProperties()->m_y, w, h );
-                    }
-                    break;
-
-                    case SDL_WINDOWEVENT_RESIZED: {
-                        WindowsResizeEventData *data = new WindowsResizeEventData( m_eventTriggerer );
-                        data->m_w = ( ui32 ) ev.window.data1;
-                        data->m_h = ( ui32 ) ev.window.data2;
-                        activeEventQueue->addBack( data );
-                    }
-                    break;
+                        case SDL_WINDOWEVENT_SIZE_CHANGED: {
+                            ui32 w = ev.window.data1;
+                            ui32 h = ev.window.data2;
+                            getRenderBackendService()->resize( m_window->getProperties()->m_x, m_window->getProperties()->m_y, w, h );
+                        }
+                        break;
                     }
                 }
             }
