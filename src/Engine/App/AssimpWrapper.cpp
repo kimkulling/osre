@@ -237,6 +237,7 @@ void AssimpWrapper::importMeshes( aiMesh **meshes, ui32 numMeshes ) {
 
     size_t i = 0;
     aiMesh *currentMesh = nullptr;
+    ::CPPCore::TArray<RenderVert> vertices;
     for (Mat2MeshMap::iterator it = mat2MeshMap.begin(); it != mat2MeshMap.end(); ++it) {
         CPPCore::TArray<ui32> indexArray;
         MeshIdxArray *miArray = it->second;
@@ -244,10 +245,8 @@ void AssimpWrapper::importMeshes( aiMesh **meshes, ui32 numMeshes ) {
             continue;
         }
 
-
-        size_t numVerts = countVertices( *miArray, m_scene );
-        RenderVert *vertices = new RenderVert[ numVerts ];
-
+        const size_t numVerts = countVertices( *miArray, m_scene );
+        vertices.resize( numVerts );
         Mesh &newMesh = *m_meshArray[ i ];
         newMesh.m_vertextype = VertexType::RenderVertex;
         size_t vertexOffset = 0, indexOffset = 0;
@@ -319,11 +318,12 @@ void AssimpWrapper::importMeshes( aiMesh **meshes, ui32 numMeshes ) {
 
                 ++vertexOffset;
             }
+
             for (ui32 faceIdx = 0; faceIdx < currentMesh->mNumFaces; ++faceIdx) {
                 aiFace &currentFace = currentMesh->mFaces[ faceIdx ];
-                for (ui32 idx = 0; idx < currentFace.mNumIndices; idx++) {
+                for (ui32 idx = 0; idx < currentFace.mNumIndices; ++idx ) {
                     const ui32 currentIndex = currentFace.mIndices[ idx ];
-                    indexArray.add( static_cast< ui32 >( currentIndex + indexOffset ) );
+                    indexArray.add( static_cast<ui32>( currentIndex + indexOffset ) );
                 }
             }
 
@@ -332,7 +332,6 @@ void AssimpWrapper::importMeshes( aiMesh **meshes, ui32 numMeshes ) {
             const size_t vbSize( sizeof( RenderVert ) *numVerts );
             newMesh.m_vb = BufferData::alloc( BufferType::VertexBuffer, vbSize, BufferAccessType::ReadOnly );
             newMesh.m_vb->copyFrom( &vertices[ 0 ], vbSize );
-
 
             newMesh.m_ib = BufferData::alloc( BufferType::IndexBuffer, sizeof( ui32 ) * indexArray.size(), BufferAccessType::ReadOnly );
             newMesh.m_ib->copyFrom( &indexArray[ 0 ], newMesh.m_ib->getSize() );
@@ -344,12 +343,17 @@ void AssimpWrapper::importMeshes( aiMesh **meshes, ui32 numMeshes ) {
             const size_t matIdx( currentMesh->mMaterialIndex );
             Material *osreMat = m_matArray[ matIdx ];
             newMesh.m_material = osreMat;
+
         }
 
         ++i;
     }
     m_entity->setAABB( aabb );
 
+    for (Mat2MeshMap::iterator it = mat2MeshMap.begin(); it != mat2MeshMap.end(); ++it) {
+        delete it->second;
+    }
+    mat2MeshMap.clear();
 
     //GeometryDiagnosticUtils::dumVertices( vertices, numVertices );
 }
