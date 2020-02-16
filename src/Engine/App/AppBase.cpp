@@ -55,7 +55,6 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::UI;
 using namespace ::OSRE::IO;
 
-static const c8 *API_Arg = "api";
 static const c8 *Tag     = "AppBase";
 
 class KeyboardEventListener : public Platform::OSEventListener {
@@ -452,11 +451,10 @@ bool AppBase::onCreate() {
     m_platformInterface->getPlatformEventHandler()->setRenderBackendService( m_rbService );
     
     // enable render-back-end
-    if( m_platformInterface ) {
-        RenderBackend::CreateRendererEventData *data = new RenderBackend::CreateRendererEventData( m_platformInterface->getRootWindow() );
-        data->m_pipeline = createDefaultPipeline();
-        m_rbService->sendEvent( &RenderBackend::OnCreateRendererEvent, data );
-    }
+    RenderBackend::CreateRendererEventData *data = new RenderBackend::CreateRendererEventData( m_platformInterface->getRootWindow() );
+    data->m_pipeline = createDefaultPipeline();
+    m_rbService->sendEvent( &RenderBackend::OnCreateRendererEvent, data );
+
     m_timer = Platform::PlatformInterface::getInstance()->getTimer();
 
     // create our world
@@ -488,10 +486,9 @@ bool AppBase::onCreate() {
 
     m_uiRenderer = new UI::UiRenderer;
 
-    // set application state to "Created"
-    osre_debug( Tag, "Set application state to Created." );
     m_state = State::Created;
-    
+    osre_debug( Tag, "Set application state to Created." );
+
     return true;
 }
 

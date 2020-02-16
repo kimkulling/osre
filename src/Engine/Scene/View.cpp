@@ -115,6 +115,11 @@ void View::onUpdate( Time dt ) {
 }
 
 void View::onRender( RenderBackendService *rbSrv ) {
+    if ( nullptr == rbSrv ) {
+        osre_debug( Tag, "Pointer to renderbackend service is nullptr.");
+        return;
+    }
+
     rbSrv->setMatrix(MatrixType::View, m_view );
     rbSrv->setMatrix(MatrixType::Projection, m_projection);
 }

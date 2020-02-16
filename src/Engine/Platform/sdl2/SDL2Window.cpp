@@ -44,7 +44,8 @@ void SDL2Surface::setWindowsTitle( const String &title ) {
     if ( nullptr == m_surface ) {
         return;
     }
-    SDL_SetWindowTitle( m_surface, title.c_str() );
+
+    ::SDL_SetWindowTitle( m_surface, title.c_str() );
 }
 
 SDL_Window *SDL2Surface::getSDLSurface() const {
@@ -52,16 +53,18 @@ SDL_Window *SDL2Surface::getSDLSurface() const {
 }
 
 bool SDL2Surface::onCreate() {
-    // Turn on double buffering with a 24bit Z buffer
-    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-    SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 24 );
-
-    // Create our window centered at 512x512 resolution
     WindowsProperties *prop = getProperties();
-    if( !prop ) {
+    if( nullptr == prop  ) {
         return false;
     }
-    
+
+    // Turn on double buffering with a 24bit Z buffer
+    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
+    SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, prop->m_depthbufferdepth );
+
+    // Create our window centered at 512x512 resolution
+
+
     const ui32 w( prop->m_width );
     const ui32 h( prop->m_height );
     ui32 sdl2Flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
@@ -69,16 +72,16 @@ bool SDL2Surface::onCreate() {
         sdl2Flags |= SDL_WINDOW_RESIZABLE;
     }
         
-    m_surface = SDL_CreateWindow( prop->m_title.c_str(), 
+    m_surface = ::SDL_CreateWindow( prop->m_title.c_str(),
                                   SDL_WINDOWPOS_CENTERED, 
                                   SDL_WINDOWPOS_CENTERED, 
                                   w, h,
                                   sdl2Flags );
-    if( !m_surface ) {
+    if( nullptr == m_surface ) {
         osre_error( Tag, "Error while creating window." );
         return false;
     }
-    SDL_ShowWindow( m_surface );
+    ::SDL_ShowWindow( m_surface );
 
     return true;
 }

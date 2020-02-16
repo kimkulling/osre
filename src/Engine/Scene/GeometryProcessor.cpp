@@ -79,15 +79,13 @@ void GeometryProcessor::handleGeometry( Mesh *geo ) {
         return;
     }
 
-    ui32 offsetPos( 0 ), stride( 0 );
+    ui32 stride( 0 );
     switch ( geo->m_vertextype ) {
         case VertexType::RenderVertex:
-            offsetPos = 0;
             stride = sizeof( RenderVert );
             break;
 
         case VertexType::ColorVertex:
-            offsetPos = 0;
             stride = sizeof( ColorVert );
             break;
 

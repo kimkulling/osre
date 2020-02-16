@@ -33,8 +33,6 @@ namespace Scene {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-static const c8 *Tag = "LineBuilder";
-
 LineBuilder::LineBuilder() 
 : m_posCache()
 , m_diffuseColCache()

@@ -161,14 +161,14 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
     if( nullptr !=  m_renderCtx ) {
         result = m_renderCtx->create( activeSurface );
         if( !result ) {
-            osre_debug( Tag, "Cannot create render context." );
+            osre_debug( Tag, "Cannot create render-context." );
             return false;
         }
     }
 
     m_oglBackend->setRenderContext( m_renderCtx );
     if ( !m_renderCtx->isActive() ) {
-        osre_debug( Tag, "Error while activafing render context." );
+        osre_debug( Tag, "Error while activating render-context." );
         return false;
     }
 
