@@ -294,7 +294,11 @@ bool OGLRenderEventHandler::onInitRenderPasses( const Common::EventData *eventDa
             // set meshes
             for (ui32 meshEntryIdx = 0; meshEntryIdx < currentBatchData->m_meshArray.size(); ++meshEntryIdx) {
                 MeshEntry *currentMeshEntry = currentBatchData->m_meshArray[meshEntryIdx];
-                OSRE_ASSERT(nullptr != currentMeshEntry);
+                if (nullptr == currentMeshEntry) {
+                    OSRE_ASSERT( nullptr != currentMeshEntry );
+                    continue;
+                }
+
                 if (!currentMeshEntry->m_isDirty) {
                     continue;
                 }
