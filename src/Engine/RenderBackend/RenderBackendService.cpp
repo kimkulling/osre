@@ -83,7 +83,7 @@ RenderBackendService::RenderBackendService()
 , m_dirty(false)
 , m_passes()
 , m_currentPass(nullptr)
-, m_currentBatch( nullptr )  {
+, m_currentBatch( nullptr ) {
     // empty
 }
 

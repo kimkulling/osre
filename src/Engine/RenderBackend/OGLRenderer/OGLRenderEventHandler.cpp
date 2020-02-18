@@ -180,7 +180,7 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
     String root = App::AssetRegistry::getPath( "media" );
     String path = App::AssetRegistry::resolvePathFromUri( fontUri );
     fontUri.setPath( path );
-    m_oglBackend->createFont( fontUri );
+    //m_oglBackend->createFont( fontUri );
     m_renderCmdBuffer = new RenderCmdBuffer( m_oglBackend, m_renderCtx, createRendererEvData->m_pipeline );
 
     bool ok( Profiling::PerformanceCounterRegistry::create() );

@@ -743,8 +743,8 @@ struct GeoBatchData {
 };
 
 struct PassData {
-    const c8 *m_id;
-    FrameBuffer *m_renderTarget;
+    const c8                      *m_id;
+    FrameBuffer                   *m_renderTarget;
     CPPCore::TArray<GeoBatchData*> m_geoBatches;
     bool m_isDirty;
 
@@ -902,20 +902,19 @@ struct UniformBuffer {
 };
 
 struct Frame {
-    ::CPPCore::TArray<PassData*> m_newPasses;
+    ::CPPCore::TArray<PassData*>       m_newPasses;
     ::CPPCore::TArray<FrameSubmitCmd*> m_submitCmds;
-    FrameSubmitCmdAllocator m_submitCmdAllocator;
-    UniformBuffer *m_uniforBuffers;
-    Pipeline *m_pipeline;
+    FrameSubmitCmdAllocator            m_submitCmdAllocator;
+    UniformBuffer                     *m_uniforBuffers;
+    Pipeline                          *m_pipeline;
 
     Frame();
     ~Frame();
-    void init(::CPPCore::TArray<PassData*> &newPasses);
+    void init( ::CPPCore::TArray<PassData *> &newPasses );
     FrameSubmitCmd *enqueue();
-
-    Frame(const Frame &) = delete;
-    Frame(Frame &&) = delete;
-    Frame& operator = (const Frame &) = delete;
+    Frame( const Frame & ) = delete;
+    Frame( Frame && ) = delete;
+    Frame &operator = ( const Frame & ) = delete;
 };
 
 struct FrameBuffer {

@@ -255,17 +255,16 @@ void DbgRenderer::addLine( const ColorVert &v0, const ColorVert &v1 ) {
     vertices[1] = v1;
     
     m_debugMesh->m_vb->attach(&vertices[0], sizeof(ColorVert) * 2);
-    ui16 indices[2];
-    indices[0] = m_lastIndex;
+    ui16 lineIndices[2];
+    lineIndices[0] = m_lastIndex;
     m_lastIndex++;
-    indices[1] = m_lastIndex;
+    lineIndices[1] = m_lastIndex;
     m_lastIndex++;
 
-    m_debugMesh->m_ib->attach(&indices[0], sizeof(ui16) * 2);
+    m_debugMesh->m_ib->attach(&lineIndices[0], sizeof(ui16) * 2);
 
     m_debugMesh->m_primGroups = new PrimitiveGroup[1];
     m_debugMesh->m_primGroups[0].init(IndexType::UnsignedShort, NumIndices, PrimitiveType::LineList, 0);
-
 }
 
 void DbgRenderer::addTriangle( const ColorVert &v0, const ColorVert &v1, const ColorVert &v2 ) {

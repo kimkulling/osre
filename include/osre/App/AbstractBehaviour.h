@@ -36,7 +36,7 @@ protected:
         // empty
     }
 
-    virtual bool onUpdate(Time dt) {
+    virtual bool onUpdate(Time ) {
         return true;
     }
 
