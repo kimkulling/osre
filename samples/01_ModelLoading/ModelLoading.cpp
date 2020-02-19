@@ -125,7 +125,7 @@ protected:
             AppBase::setActiveView(view);
 
             const Rect2ui &windowsRect = rootWindow->getWindowsRect();
-            view->setProjectionParameters( 60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.0001f, 1000.f );
+            view->setProjectionParameters( 60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.01f, 1000.f );
             Entity *entity = assimpWrapper.getEntity();
             
             World *world = getActiveWorld();
@@ -138,9 +138,10 @@ protected:
     }
 
     void onUpdate() override {
+        
         // Rotate the model
         glm::mat4 rot( 1.0 );
-        m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
+        m_transformMatrix.m_model = glm::rotate( rot, m_angle, glm::vec3( 0, 1, 1 ) );
 
         m_angle += 0.01f;
         RenderBackendService *rbSrv( getRenderBackendService() );

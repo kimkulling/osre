@@ -558,7 +558,7 @@ Ids* AppBase::getIdContainer() const {
 RenderBackend::Pipeline *AppBase::createDefaultPipeline() {
     Pipeline *pipeline = new Pipeline;
     PipelinePass *renderPass = new PipelinePass(RenderPassId, nullptr);
-    CullState cullState( CullState::CullMode::CCW, CullState::CullFace::Front );
+    CullState cullState( CullState::CullMode::CCW, CullState::CullFace::Back );
     renderPass->setCullState( cullState );
     pipeline->addPass(renderPass);
     

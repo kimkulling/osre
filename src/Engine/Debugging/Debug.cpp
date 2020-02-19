@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Debugging/Debug.h>
 
 #ifdef OSRE_WINDOWS
-#   include <osre/Platform/Windows/MinWindows.h>
+#include <osre/Platform/Windows/MinWindows.h>
 #endif
 
 namespace OSRE {
@@ -33,9 +33,16 @@ void debugBreak() {
 #ifdef _MSC_VER
     __debugbreak();
 #elif BX_CPU_ARM
-    __asm__( "int $3" );
-#endif 
+    __asm__("int $3");
+#endif
 }
 
+bool isDebuggerAttached() {
+#ifdef OSRE_WINDOWS
+    return IsDebuggerPresent() == TRUE;
+#else
+    return false;
+#endif
+}
 } // Namespace Debugging
-} // Namespace Common
+} // namespace OSRE

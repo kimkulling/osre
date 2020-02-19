@@ -166,7 +166,8 @@ bool OGLRenderEventHandler::onCreateRenderer( const EventData *eventData ) {
         }
     }
 
-    m_oglBackend->setRenderContext( m_renderCtx );
+    //m_oglBackend->setRenderContext(  );
+    m_oglBackend->create(m_renderCtx);
     if ( !m_renderCtx->isActive() ) {
         osre_debug( Tag, "Error while activating render-context." );
         return false;

@@ -22,13 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Scene/SceneCommon.h>
-#include <osre/Scene/Node.h>
 #include <osre/Common/Object.h>
+#include <osre/Scene/Node.h>
+#include <osre/Scene/SceneCommon.h>
 #include <osre/Scene/TAABB.h>
 
-#include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp>
 
 namespace OSRE {
 namespace Scene {
@@ -40,30 +40,51 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT View : public Node {
 public:
-    View( const String &name, Common::Ids &ids, Node *parent = nullptr );
-    virtual ~View();
-    virtual void setProjectionParameters(f32 fov, f32 w, f32 h, f32 near, f32 far);
-    virtual void update( Time dt );
-    virtual void draw( RenderBackend::RenderBackendService *renderBackendSrv );
-    virtual void observeBoundingBox(const TAABB<f32> &box);
-    virtual void setLookAt( const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up );
-    virtual void setProjectionMode( f32 fov, f32 aspectRatio, f32 near, f32 far );
-    virtual void setOrthoMode( f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far );
-    virtual const glm::mat4 &getView() const;
-    virtual const glm::mat4 &getProjection() const;
+    View(const String &name, Common::Ids &ids, Node *parent = nullptr);
+    ~View() override;
+    void setProjectionParameters(f32 fov, f32 w, f32 h, f32 near, f32 far);
+    void update(Time dt);
+    void draw(RenderBackend::RenderBackendService *renderBackendSrv);
+    void observeBoundingBox(const TAABB<f32> &box);
+    void setLookAt(const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up);
+    void setProjectionMode(f32 fov, f32 aspectRatio, f32 near, f32 far);
+    void setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
+    const glm::mat4 &getView() const;
+    const glm::mat4 &getProjection() const;
+    f32 getFov() const;
+    f32 getAspectRatio() const;
+    f32 getNear() const;
+    f32 getFar() const;
 
 protected:
-    virtual void onUpdate( Time dt );
-    virtual void onRender( RenderBackend::RenderBackendService *renderBackendSrv );
+    virtual void onUpdate(Time dt);
+    virtual void onRender(RenderBackend::RenderBackendService *renderBackendSrv);
 
 private:
     f32 m_fov;
     f32 m_w, m_h;
     f32 m_near, m_far;
+    f32 m_aspectRatio;
     Node *m_observedNode;
     glm::vec3 m_eye, m_center, m_up;
     glm::mat4 m_view, m_projection;
 };
+
+inline f32 View::getFov() const {
+    return m_fov;
+}
+
+inline f32 View::getAspectRatio() const {
+    return m_aspectRatio;
+}
+
+inline f32 View::getNear() const {
+    return m_near;
+}
+
+inline f32 View::getFar() const {
+    return m_far;
+}
 
 } // Namespace Scene
 } // Namespace OSRE

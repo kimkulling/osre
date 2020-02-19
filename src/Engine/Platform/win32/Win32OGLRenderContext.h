@@ -38,8 +38,6 @@ class Win32RenderContext : public AbstractOGLRenderContext {
 public:
     Win32RenderContext();
     virtual ~Win32RenderContext();
-    void setExtensions( const String &extensions );
-    const String &getExtensions() const;
 
 protected:
     bool onCreate( AbstractWindow *pSurface ) override;
@@ -48,10 +46,10 @@ protected:
     bool onActivate() override;
 
 private:
-    i32 m_OpenGLVersion[ 2 ];
+    //i32 m_OpenGLVersion[ 2 ];
     HDC m_dc;
     HGLRC m_rc;
-    String m_extensions;
+    //String m_extensions;
     bool m_active;
 };
 

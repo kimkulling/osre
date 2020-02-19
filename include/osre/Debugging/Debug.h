@@ -27,7 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Debugging {
 
-OSRE_EXPORT void  debugBreak();
+OSRE_EXPORT void debugBreak();
+OSRE_EXPORT bool isDebuggerAttached();
 
 } // Namespace Debugging
 } // Namespace Common

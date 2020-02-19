@@ -31,33 +31,30 @@ namespace Platform {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief	This class implements a log-stream, which will be visible in the Windows-Debugger 
+///	@brief	This class implements a log-stream, which will be visible in the Windows-Debugger
 ///	output window.
 //-------------------------------------------------------------------------------------------------
 class Win32DbgLogStream : public Common::AbstractLogStream {
 public:
-    ///	Constructor.
+    ///	The class constructor.
     Win32DbgLogStream();
-    ///	Destructor, non virtual.
+    ///	The class destructor, non virtual.
     ~Win32DbgLogStream();
     ///	Writes the message into the debug output buffer.
-    void write( const String &msg );
+    void write(const String &msg);
 };
 
-inline
-Win32DbgLogStream::Win32DbgLogStream() {
+inline Win32DbgLogStream::Win32DbgLogStream() {
     // empty
 }
 
-inline
-Win32DbgLogStream::~Win32DbgLogStream() {
+inline Win32DbgLogStream::~Win32DbgLogStream() {
     // empty
 }
 
-inline
-void Win32DbgLogStream::write( const String &msg ) {
-    if ( !msg.empty() ) {
-        ::OutputDebugString( msg.c_str() );
+inline void Win32DbgLogStream::write(const String &msg) {
+    if (!msg.empty()) {
+        ::OutputDebugString(msg.c_str());
     }
 }
 
