@@ -126,6 +126,7 @@ ADD_SUBDIRECTORY( src/Engine )
 if ( OSRE_BUILD_CSHARP_EDITOR )
   if ( WIN32)
     ADD_SUBDIRECTORY( src/Editor )
+    set_target_properties(  OSREEditor       PROPERTIES FOLDER Editor )
   ENDIF( WIN32 )
 endif()
 
@@ -175,8 +176,3 @@ set_target_properties(  assimp             PROPERTIES FOLDER ThirdParty )
 #set_target_properties(  zlib               PROPERTIES FOLDER ThirdParty )
 #set_target_properties(  zlibstatic         PROPERTIES FOLDER ThirdParty )
 #set_target_properties(  unit               PROPERTIES FOLDER ThirdParty )
-
-if( WIN32 )
-    set_target_properties(  OSREEditor       PROPERTIES FOLDER Editor )
-endif( WIN32 )
-
