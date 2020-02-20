@@ -20,9 +20,9 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Scene/View.h>
-#include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/Logger.h>
+#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/Scene/View.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -33,19 +33,8 @@ using namespace ::OSRE::RenderBackend;
 
 static const c8 *Tag = "View";
 
-View::View(const String &name, Common::Ids &ids, Node *parent )
-: Node( name, ids, parent )
-, m_fov( 60.0f )
-, m_w( 0.0f )
-, m_h( 0.0f )
-, m_near( 0.0001f )
-, m_far( 1000.0f )
-, m_observedNode( nullptr )
-, m_eye( 1, 1, 1 )
-, m_center( 0, 0, 0 )
-, m_up( 0, 0, 1 )
-, m_view()
-, m_projection() {
+View::View(const String &name, Common::Ids &ids, Node *parent) :
+        Node(name, ids, parent), m_fov(60.0f), m_w(0.0f), m_h(0.0f), m_near(0.0001f), m_far(1000.0f), m_aspectRatio(1.0), m_observedNode(nullptr), m_eye(1, 1, 1), m_center(0, 0, 0), m_up(0, 0, 1), m_view(), m_projection() {
     // empty
 }
 
@@ -57,27 +46,28 @@ void View::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
     m_fov = fov;
     m_w = w;
     m_h = h;
-
+    m_near = zNear;
+    m_far = zFar;
     f32 aspect = 1.0f;
     if (0.0f != h) {
-        aspect = w / h;
+        m_aspectRatio = w / h;
     }
-    m_projection = glm::perspective(glm::radians(m_fov), aspect, zNear, zFar);
+    m_projection = glm::perspective(glm::radians(m_fov), m_aspectRatio, zNear, zFar);
 }
 
-void View::update( Time dt ) {
-    onUpdate( dt );
+void View::update(Time dt) {
+    onUpdate(dt);
 }
 
-void View::draw( RenderBackendService *rbSrv ) {
-    if ( nullptr == rbSrv ) {
+void View::draw(RenderBackendService *rbSrv) {
+    if (nullptr == rbSrv) {
         return;
     }
-    
-    onRender( rbSrv );
+
+    onRender(rbSrv);
 }
 
-void View::observeBoundingBox( const TAABB<f32> &aabb) {
+void View::observeBoundingBox(const TAABB<f32> &aabb) {
     const f32 diam = aabb.getDiameter();
     const Vec3f center = aabb.getCenter();
 
@@ -86,20 +76,29 @@ void View::observeBoundingBox( const TAABB<f32> &aabb) {
     setLookAt(eye, c, up);
 }
 
-void View::setLookAt( const glm::vec3 &eye, const glm::vec3 &center, const glm::vec3 &up ) {
-    m_eye    = eye;
+void View::setLookAt(const glm::vec3 &eye, const glm::vec3 &center, const glm::vec3 &up) {
+    m_eye = eye;
     m_center = center;
-    m_up     = up;
+    m_up = up;
 
-    m_view = glm::lookAt( eye, center, up );
+    m_view = glm::lookAt(eye, center, up);
 }
 
-void View::setProjectionMode( f32 fov, f32 aspectRatio, f32 near, f32 far ) {
-    m_projection = glm::perspective( fov, aspectRatio, near, far );
+void View::setProjectionMode(f32 fov, f32 aspectRatio, f32 near, f32 far) {
+    m_fov = fov;
+    m_aspectRatio = aspectRatio;
+    m_near = near;
+    m_far = far;
+    m_projection = glm::perspective(fov, aspectRatio, near, far);
 }
 
-void View::setOrthoMode( f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far ) {
-    m_projection = glm::ortho( left, right, bottom, top, near, far );
+void View::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far) {
+    m_w = right - left;
+    m_h = bottom - top;
+
+    m_near = near;
+    m_far = far;
+    m_projection = glm::ortho(left, right, bottom, top, near, far);
 }
 
 const glm::mat4 &View::getView() const {
@@ -110,17 +109,17 @@ const glm::mat4 &View::getProjection() const {
     return m_projection;
 }
 
-void View::onUpdate( Time dt ) {
-    ( void )dt;
+void View::onUpdate(Time dt) {
+    (void)dt;
 }
 
-void View::onRender( RenderBackendService *rbSrv ) {
-    if ( nullptr == rbSrv ) {
-        osre_debug( Tag, "Pointer to renderbackend service is nullptr.");
+void View::onRender(RenderBackendService *rbSrv) {
+    if (nullptr == rbSrv) {
+        osre_debug(Tag, "Pointer to renderbackend service is nullptr.");
         return;
     }
 
-    rbSrv->setMatrix(MatrixType::View, m_view );
+    rbSrv->setMatrix(MatrixType::View, m_view);
     rbSrv->setMatrix(MatrixType::Projection, m_projection);
 }
 

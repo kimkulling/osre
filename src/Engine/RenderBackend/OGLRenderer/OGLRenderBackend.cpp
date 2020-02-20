@@ -53,8 +53,6 @@ OGLRenderBackend::OGLRenderBackend() :
 		m_activeVertexArray(OGLNotSetId), m_shaders(), m_textures(), m_freeTexSlots(), 
 		m_activeFont(nullptr), m_texLookupMap(), m_parameters(), m_shaderInUse(nullptr), m_freeBufferSlots(), 
 		m_primitives(), m_fpState(nullptr), m_fpsCounter(nullptr), m_oglCapabilities(nullptr), m_framebuffers() {
-	m_fpState = new RenderStates;
-	enumerateGPUCaps();
 }
 
 OGLRenderBackend::~OGLRenderBackend() {
@@ -133,6 +131,47 @@ void OGLRenderBackend::applyMatrix() {
 
 bool OGLRenderBackend::create(Platform::AbstractOGLRenderContext *renderCtx) {
 	setRenderContext(renderCtx);
+
+	m_fpState = new RenderStates;
+    enumerateGPUCaps();
+    ::memset(m_OpenGLVersion, 0, sizeof(i32) * 2);
+
+	// checking the supported GL version
+    const char *GLVendorString = (const char *)glGetString(GL_VENDOR);
+    if (GLVendorString) {
+        String vendor(GLVendorString);
+        osre_info(Tag, vendor);
+    }
+    const char *GLRendererString = (const char *)glGetString(GL_RENDERER);
+    if (GLRendererString) {
+        String renderer(GLRendererString);
+        osre_info(Tag, renderer);
+    }
+    const char *GLVersionString = (const char *)glGetString(GL_VERSION);
+    if (GLVersionString) {
+        String version(GLVersionString);
+        osre_info(Tag, version);
+    }
+    const char *GLExtensions = (const char *)glGetString(GL_EXTENSIONS);
+    if (GLExtensions) {
+        String extensions(GLExtensions);
+        setExtensions(extensions);
+    }
+    // or better yet, use the GL4.x way to get the version number
+    glGetIntegerv(GL_MAJOR_VERSION, &m_OpenGLVersion[0]);
+    glGetIntegerv(GL_MINOR_VERSION, &m_OpenGLVersion[1]);
+
+    c8 *slv = (c8 *)glGetString(GL_SHADING_LANGUAGE_VERSION);
+    osre_debug(Tag, "Supported GLSL language " + String(slv));
+
+	glEnable(GL_TEXTURE_2D);
+    glEnable(GL_TEXTURE_3D);
+    glDisable(GL_LIGHTING);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_MULTISAMPLE);
 
 	return true;
 }
@@ -1101,6 +1140,7 @@ void OGLRenderBackend::setFixedPipelineStates(const RenderStates &states) {
 		glDisable(GL_CULL_FACE);
 	} else {
 		glEnable(GL_CULL_FACE);
+		glCullFace(OGLEnum::getOGLCullFace(m_fpState->m_cullState.m_cullFace));
 		glPolygonMode(OGLEnum::getOGLCullFace(m_fpState->m_cullState.m_cullFace),
 				OGLEnum::getOGLPolygonMode(m_fpState->m_polygonState.m_polyMode));
 		glFrontFace(OGLEnum::getOGLCullState(m_fpState->m_cullState.m_cullMode));
@@ -1112,6 +1152,14 @@ void OGLRenderBackend::setFixedPipelineStates(const RenderStates &states) {
 		glEnable(GL_BLEND);
 	}
 	m_fpState->m_applied = true;
+}
+
+void OGLRenderBackend::setExtensions(const String &extensions) {
+    m_extensions = extensions;
+}
+
+const String &OGLRenderBackend::getExtensions() const {
+    return m_extensions;
 }
 
 } // Namespace RenderBackend

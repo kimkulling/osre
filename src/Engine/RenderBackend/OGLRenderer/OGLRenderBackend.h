@@ -146,6 +146,8 @@ public:
 	void render(size_t primpGrpIdx, size_t numInstances);
 	void renderFrame();
 	void setFixedPipelineStates(const RenderStates &states);
+    void setExtensions(const String &extensions);
+    const String &getExtensions() const;
 
 private:
 	Platform::AbstractOGLRenderContext *m_renderCtx;
@@ -167,6 +169,8 @@ private:
 	Profiling::FPSCounter *m_fpsCounter;
 	OGLCapabilities *m_oglCapabilities;
 	CPPCore::TArray<OGLFrameBuffer *> m_framebuffers;
+    String m_extensions;
+    i32 m_OpenGLVersion[ 2 ];
 };
 
 } // Namespace RenderBackend
