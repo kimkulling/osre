@@ -148,3 +148,4 @@ TEST_F( GeometryDiagnosticUtilsTest, dumpVerticesTest_invalidInput ) {
 
 } // Namespace UnitTest
 } // Namespace OSRE
+
