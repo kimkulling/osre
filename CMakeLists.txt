@@ -24,6 +24,11 @@ OPTION( OSRE_BUILD_DOC
   OFF
 )
 
+OPTION( OSRE_BUILD_CSHARP_EDITOR
+  "Build the c# editor of OSRE."
+  OFF
+)
+
 # Cache these to allow the user to override them manually.
 set( LIB_INSTALL_DIR "lib" CACHE PATH
     "Path the built library files are installed to." )
@@ -118,9 +123,11 @@ set( ASSIMP_BUILD_TESTS OFF )
 
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
-IF ( WIN32)
-  ADD_SUBDIRECTORY( src/Editor )
-ENDIF( WIN32 )
+if ( OSRE_BUILD_CSHARP_EDITOR )
+  if ( WIN32)
+    ADD_SUBDIRECTORY( src/Editor )
+  ENDIF( WIN32 )
+endif()
 
 IF ( OSRE_BUILD_TESTS )
     ADD_SUBDIRECTORY( test/RenderTests )
