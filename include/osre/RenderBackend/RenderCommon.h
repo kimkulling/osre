@@ -233,7 +233,7 @@ enum class MaterialType {
 };
 
 ///	@brief  This enum describes the different shader types, which are supported by the OSRE-engine.
-enum class ShaderType : ui32 {
+enum class ShaderType {
     SH_VertexShaderType = 0,    ///< The shader is a vertex shader, used for each vertex.
     SH_GeometryShaderType,      ///< The shader is a geometry shader, used for tesselation.
     SH_TesselationShaderType,   ///< The tesselation evaluation shader.
