@@ -78,7 +78,7 @@ bool SDL2Surface::onCreate() {
                                   w, h,
                                   sdl2Flags );
     if( nullptr == m_surface ) {
-        osre_error( Tag, "Error while creating window." );
+        osre_error( Tag, "Error while creating window, error: " + std::string( SDL_GetError() ) );
         return false;
     }
     ::SDL_ShowWindow( m_surface );
