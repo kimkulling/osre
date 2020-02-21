@@ -216,6 +216,7 @@ void Settings::initDefaults() {
     m_propertyMap->setProperty( FSAA, ConfigKeyStringTable[ FSAA ], value );
     value.setInt( 32 );
     m_propertyMap->setProperty( BPP, ConfigKeyStringTable[ BPP ], value );
+    value.setInt( 24 );
     m_propertyMap->setProperty( DepthBufferDepth, ConfigKeyStringTable[ DepthBufferDepth ], value );
     m_propertyMap->setProperty( StencilBufferDepth, ConfigKeyStringTable[ StencilBufferDepth ], value ); 
     
