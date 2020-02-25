@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/AbstractService.h>
 #include <osre/Common/Event.h>
 #include <osre/Threading/SystemTask.h>
+#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Pipeline.h>
 #include <cppcore/Container/THashMap.h>
 

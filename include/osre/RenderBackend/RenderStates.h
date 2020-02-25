@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Common/osre_common.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
 namespace OSRE {
@@ -30,7 +31,7 @@ namespace RenderBackend {
 /// @brief  The clear state.
 struct ClearState {
     /// The provided clear buffer bits
-    enum ClearBitType : int {
+    enum class ClearBitType : int {
         ColorBit   = 1 << 0,    ///< Clear the color buffer.
         DepthBit   = 1 << 1,    ///< Clear the depth buffer.
         StencilBit = 1 << 2     ///< Clear the stencil buffer.
@@ -72,14 +73,14 @@ bool ClearState::operator != (const ClearState &rhs) const {
 }
 
 struct DepthState {
-    enum DepthStateType {
+    enum class DepthStateType {
         Enabled = 0,
         Disabled,
         NumDepthStates,
         InvalidDepthState
     };
 
-    enum DepthFuncType {
+    enum class DepthFuncType {
         Always = 0,
         Never,
         Less,
@@ -102,9 +103,9 @@ struct DepthState {
 };
 
 inline
-DepthState::DepthState()
-: m_type(Enabled)
-, m_func(Always) {
+DepthState::DepthState() :
+        m_type(DepthStateType::Enabled),
+        m_func(DepthFuncType::Always) {
     // empty
 }
 
