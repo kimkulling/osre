@@ -46,6 +46,9 @@ via -G )
 ```
 [Special build instructions for Windows](doc/Build_Windows.md)
 
+## How to contribute
+Please check [How to contribute](CONTRIBUTING.md)
+
 ## Run the tests
 Navigate to bin\debug or bin\release and run our test suite for rendering:
 ```
