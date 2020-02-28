@@ -1,4 +1,6 @@
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
+message(STATUS "The CMake version used is ${CMAKE_VERSION}")
+cmake_minimum_required(VERSION 3.5...${CMAKE_VERSION})
+
 PROJECT( osre )
 set ( OSRE_VERSION_MAJOR 0 )
 set ( OSRE_VERSION_MINOR 1 )
