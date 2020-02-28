@@ -39,7 +39,7 @@ Now update all used submodule, which are usep by OSRE:
 > git submodule init
 > git submodule update -r
 ```
-Generate a build environment of your choise ( you can choose your own build environment by selecting it
+Generate a build environment of your choice ( you can choose your own build environment by selecting it
 via -G )
 ```
 > cmake CMakeLists.txt [-G <makefile generator>]
