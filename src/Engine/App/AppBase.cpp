@@ -37,6 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Pipeline.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/View.h>
+#include <osre/scene/MaterialBuilder.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/UiItemFactory.h>
@@ -461,6 +462,7 @@ bool AppBase::onCreate() {
     RenderMode mode = static_cast<RenderMode>( m_settings->get( Properties::Settings::RenderMode ).getInt() );
     m_activeWorld = new World( "world", mode );
     
+    Scene::MaterialBuilder::create();
 
     ResourceCacheService *rcSrv = new ResourceCacheService;
 
@@ -517,6 +519,8 @@ bool AppBase::onDestroy() {
 
     delete m_uiScreen;
     delete m_uiRenderer;
+
+    Scene::MaterialBuilder::destroy();
 
     delete m_activeWorld;
     m_activeWorld = nullptr;
