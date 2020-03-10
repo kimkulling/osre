@@ -37,7 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Pipeline.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/View.h>
-#include <osre/scene/MaterialBuilder.h>
+#include <osre/Scene/MaterialBuilder.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/UiItemFactory.h>
