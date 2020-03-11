@@ -1,4 +1,6 @@
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
+message(STATUS "The CMake version used is ${CMAKE_VERSION}")
+cmake_minimum_required(VERSION 3.5...${CMAKE_VERSION})
+
 PROJECT( osre )
 set ( OSRE_VERSION_MAJOR 0 )
 set ( OSRE_VERSION_MINOR 1 )
@@ -123,6 +125,7 @@ set( ASSIMP_BUILD_TESTS OFF )
 
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
+ADD_SUBDIRECTORY( src/Editor_cpp )
 if ( OSRE_BUILD_CSHARP_EDITOR )
   if ( WIN32)
     ADD_SUBDIRECTORY( src/Editor )

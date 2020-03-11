@@ -39,12 +39,15 @@ Now update all used submodule, which are usep by OSRE:
 > git submodule init
 > git submodule update -r
 ```
-Generate a build environment of your choise ( you can choose your own build environment by selecting it
+Generate a build environment of your choice ( you can choose your own build environment by selecting it
 via -G )
 ```
 > cmake CMakeLists.txt [-G <makefile generator>]
 ```
 [Special build instructions for Windows](doc/Build_Windows.md)
+
+## How to contribute
+Please check [How to contribute](CONTRIBUTING.md)
 
 ## Run the tests
 Navigate to bin\debug or bin\release and run our test suite for rendering:
