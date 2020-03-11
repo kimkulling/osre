@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Debugging/MeshDiagnostic.h>
+#include <osre/Scene/MaterialBuilder.h>
 #include <osre/RenderBackend/Mesh.h>
 
 namespace OSRE {
@@ -34,7 +35,14 @@ using namespace ::OSRE::Debugging;
 using namespace ::OSRE::RenderBackend;
 
 class MeshBuilderTest : public ::testing::Test {
-    // empty
+protected:
+    void SetUp() override {
+        MaterialBuilder::create();
+    }
+
+    void TearDown() override {
+        MaterialBuilder::destroy();
+    }
 };
 
 TEST_F( MeshBuilderTest, allocEmptyGeometryTest ) {
