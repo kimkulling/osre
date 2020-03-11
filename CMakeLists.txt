@@ -125,6 +125,7 @@ set( ASSIMP_BUILD_TESTS OFF )
 
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
+ADD_SUBDIRECTORY( src/Editor_cpp )
 if ( OSRE_BUILD_CSHARP_EDITOR )
   if ( WIN32)
     ADD_SUBDIRECTORY( src/Editor )
