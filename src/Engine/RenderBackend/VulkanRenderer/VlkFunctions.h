@@ -25,12 +25,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+#pragma warning(push)
+#pragma warning(disable : 4706)
+
 #define VK_EXPORTED_FUNCTION( fun ) extern PFN_##fun fun;
 #define VK_GLOBAL_LEVEL_FUNCTION( fun) extern PFN_##fun fun;
 #define VK_INSTANCE_LEVEL_FUNCTION( fun ) extern PFN_##fun fun;
 #define VK_DEVICE_LEVEL_FUNCTION( fun ) extern PFN_##fun fun;
 
 #include "VlkExportedFunctions.inl"
+
+#pragma warning(pop)
 
 } // Namespace RenderBackend
 } // Namespace OSRE

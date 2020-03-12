@@ -31,7 +31,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  define VK_EXPORTED_FUNCTION( fun )
 #endif
 
-
 VK_EXPORTED_FUNCTION( vkGetInstanceProcAddr )
 
 #undef VK_EXPORTED_FUNCTION
@@ -66,12 +65,6 @@ VK_GLOBAL_LEVEL_FUNCTION( vkEnumerateInstanceExtensionProperties )
 #endif
 
 #define USE_SWAPCHAIN_EXTENSIONS
-
-
-#if ( _MSC_VER > 1900 )
-#   pragma warning ( push )
-#   pragma warning ( disable:4706 )
-#endif // _MSC_VER > 1900
 
 VK_INSTANCE_LEVEL_FUNCTION( vkEnumeratePhysicalDevices )
 VK_INSTANCE_LEVEL_FUNCTION( vkGetPhysicalDeviceProperties )
@@ -170,10 +163,6 @@ VK_DEVICE_LEVEL_FUNCTION( vkResetFences )
 VK_DEVICE_LEVEL_FUNCTION( vkFreeMemory )
 VK_DEVICE_LEVEL_FUNCTION( vkDestroyBuffer )
 VK_DEVICE_LEVEL_FUNCTION( vkDestroyFence )
-
-#if ( _MSC_VER > 1900 )
-#   pragma warning(pop)
-#endif // _MSC_VER > 1900
 
 #undef VK_DEVICE_LEVEL_FUNCTION
 

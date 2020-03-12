@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Scene/SceneCommon.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Common/TResourceCache.h>
 
 namespace OSRE {
 namespace Scene {
@@ -35,14 +36,23 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT MaterialBuilder {
 public:
-    MaterialBuilder();
-    ~MaterialBuilder();
+    static void create();
+    static void destroy();
     static RenderBackend::Material *createBuildinMaterial( RenderBackend::VertexType type );
     static RenderBackend::Material *createBuildinUiMaterial();
     static RenderBackend::Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
         RenderBackend::VertexType type );
     static RenderBackend::Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
         const String& VsSrc, const String& FsSrc);
+
+private:
+    MaterialBuilder();
+    ~MaterialBuilder();
+
+private:
+    using MaterialFactory = Common::TResourceFactory<RenderBackend::Material>;
+    using MaterialCache = Common::TResourceCache<MaterialFactory, RenderBackend::Material>;
+    static MaterialCache *s_materialCache;
 };
 
 } // Namespace Scene

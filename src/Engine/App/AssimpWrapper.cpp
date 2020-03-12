@@ -437,6 +437,7 @@ void AssimpWrapper::importMaterial( aiMaterial *material ) {
     if (matName.empty()) {
         matName = "material1";
     }
+
     Material* osreMat = MaterialBuilder::createTexturedMaterial( matName, texResArray, RenderBackend::VertexType::RenderVertex);
     if (nullptr == osreMat) {
         osre_error( Tag, "Err ehilr creating material for " + matName );

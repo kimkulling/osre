@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "osre_testcommon.h"
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/Scene/MaterialBuilder.h>
 #include <osre/Scene/DbgRenderer.h>
 
 namespace OSRE {
@@ -36,7 +37,14 @@ public:
 using namespace ::OSRE::Scene;
 
 class DbgRendererTest : public ::testing::Test {
-    // empty
+protected:
+    void SetUp() override {
+        MaterialBuilder::create();
+    }
+
+    void TearDown() override {
+        MaterialBuilder::destroy();
+    }
 };
 
 TEST_F( DbgRendererTest, create_Success ) {

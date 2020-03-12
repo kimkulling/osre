@@ -512,7 +512,7 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
     CPPCore::TArray<TextureResource*> texResArray;;
     TextureResource* texRes = new TextureResource("buildin_arial", IO::Uri("file://assets/Textures/Fonts/buildin_arial.bmp"));
     texResArray.add(texRes);
-    mesh->m_material = Scene::MaterialBuilder::createTexturedMaterial("SpiderTex", texResArray, VertexType::RenderVertex );
+    mesh->m_material = Scene::MaterialBuilder::createTexturedMaterial("text_box_tex", texResArray, VertexType::RenderVertex );
     m_ActiveGeo = mesh;
 
     return *this;

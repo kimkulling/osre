@@ -31,6 +31,8 @@ namespace Scene {
         
 using namespace ::OSRE::RenderBackend;
 
+MaterialBuilder::MaterialCache *MaterialBuilder::s_materialCache = nullptr;
+
 static const String GLSLVersionString_330 =
     "#version 330 core\n";
 
@@ -202,8 +204,25 @@ MaterialBuilder::~MaterialBuilder() {
     // empty
 }
 
- Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
-    Material *mat = new Material( "shadermaterial", MaterialType::ShaderMaterial);
+void MaterialBuilder::create() {
+    if (nullptr == s_materialCache) {
+        s_materialCache = new MaterialBuilder::MaterialCache;
+    }
+}
+
+void MaterialBuilder::destroy() {
+    delete s_materialCache;
+    s_materialCache = nullptr;
+}
+
+
+Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
+    Material *mat = s_materialCache->find("buildinShaderMaterial");
+    if (nullptr != mat) {
+        return mat;
+    }
+    mat = s_materialCache->create("buildinShaderMaterial", IO::Uri() );
+    //mat = new Material( "buildinShaderMaterial", MaterialType::ShaderMaterial);
     String vs, fs;
     if ( type == VertexType::ColorVertex ) {
         vs = GLSLVsSrc;
@@ -239,7 +258,12 @@ MaterialBuilder::~MaterialBuilder() {
 }
 
 Material *MaterialBuilder::createBuildinUiMaterial() {
-    Material *mat = new Material( "shadermaterial", MaterialType::ShaderMaterial );
+    Material *mat = s_materialCache->find("buildinUiShaderMaterial");
+    if (nullptr != mat) {
+        return mat;
+    }
+
+    mat = s_materialCache->create("buildinUiShaderMaterial", IO::Uri());
     ShaderSourceArray arr;
     arr[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = GLSLVsSrcUI;
     arr[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = GLSLFsSrcUI;
@@ -263,12 +287,17 @@ RenderBackend::Material* MaterialBuilder::createTexturedMaterial(const String& m
     if (matName.empty()) {
         return nullptr;
     }
-    Material* mat = new Material(matName, MaterialType::ShaderMaterial);
+
+    Material *mat = s_materialCache->find(matName);
+    if (nullptr != mat) {
+        return mat;
+    }
+
+    mat = s_materialCache->create(matName);
     mat->m_numTextures = texResArray.size();
     mat->m_textures = new Texture * [texResArray.size()];
     for (size_t i = 0; i < texResArray.size(); ++i) {
         TextureResource* texRes = texResArray[i];
-        IO::Uri uri = texRes->getUri();
         TextureLoader loader;
         texRes->load(loader);
         mat->m_textures[i] = texRes->get();
@@ -317,7 +346,12 @@ RenderBackend::Material* MaterialBuilder::createTexturedMaterial(const String &m
         return nullptr;
     }
 
-    Material *mat = new Material(matName, MaterialType::ShaderMaterial );
+    Material *mat = s_materialCache->find(matName);
+    if (nullptr != mat) {
+        return mat;
+    }
+
+    mat = s_materialCache->create(matName);
     mat->m_numTextures = texResArray.size();
     mat->m_textures = new Texture*[texResArray.size()];
     for (size_t i = 0; i < texResArray.size(); ++i) {
