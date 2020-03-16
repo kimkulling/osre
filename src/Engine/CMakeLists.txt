@@ -29,6 +29,19 @@ ELSE( WIN32 )
     SET( platform_libs SDL2 )
 ENDIF( WIN32 )
 
+
+SET( imgui_src
+    ../../3dparty/imgui/imconfig.h
+    ../../3dparty/imgui/imgui.cpp
+    ../../3dparty/imgui/imgui.h 
+    ../../3dparty/imgui/imgui_draw.cpp
+    ../../3dparty/imgui/imgui_internal.h 
+    ../../3dparty/imgui/imgui_widgets.cpp
+    ../../3dparty/imgui/imstb_rectpack.h
+    ../../3dparty/imgui/imstb_textedit.h
+    ../../3dparty/imgui/imstb_truetype.h
+)
+
 #==============================================================================
 # App
 #==============================================================================
@@ -470,6 +483,8 @@ SOURCE_GROUP( Resources           FILES ${resources_src} )
 SOURCE_GROUP( Scene               FILES ${scene_src} )
 SOURCE_GROUP( Threading           FILES ${threading_src} )
 SOURCE_GROUP( UI                  FILES ${ui_src} )
+SOURCE_GROUP( 3dparty\\ImGui      FILES ${imgui_src} )
+
 SOURCE_GROUP( Include\\osre\\App        FILES ${app_inc} )
 SOURCE_GROUP( Include\\osre\\Assets     FILES ${assets_inc} )
 SOURCE_GROUP( Include\\osre\\Debugging  FILES ${debugging_inc} )
@@ -551,6 +566,7 @@ ADD_LIBRARY( osre SHARED
     ${threading_src}
         ${threading_impl_src}
     ${ui_src}
+    ${imgui_src}
 )
 
 target_link_libraries ( osre cppcore zlib Unzip glew soil jsoncpp_lib_static ${platform_libs} assimp )
