@@ -33,6 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/Widget.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/IO/IOService.h>
+#include <osre/Scene/MaterialBuilder.h>
 
 #include <iostream>
 
@@ -161,6 +162,8 @@ bool RenderTestSuite::setup( const String &API ) {
 #endif 
     }
 
+    Scene::MaterialBuilder::create();
+
     return true;
 }
 
@@ -170,6 +173,8 @@ bool RenderTestSuite::teardown() {
         m_pRenderBackendServer->release();
         m_pRenderBackendServer = nullptr;
     }
+
+    Scene::MaterialBuilder::destroy();
 
     IO::IOService::getInstance()->close();
     IO::IOService::getInstance()->release();
