@@ -124,7 +124,8 @@ protected:
             Scene::View *view = m_stage->addView("default_view", nullptr);
             AppBase::setActiveView(view);
 
-            const Rect2ui &windowsRect = rootWindow->getWindowsRect();
+            Rect2ui windowsRect;
+            rootWindow->getWindowsRect(windowsRect);
             view->setProjectionParameters( 60.f, (f32) windowsRect.m_width, (f32) windowsRect.m_height, 0.01f, 1000.f );
             Entity *entity = assimpWrapper.getEntity();
             

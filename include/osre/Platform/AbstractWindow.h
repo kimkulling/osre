@@ -141,7 +141,7 @@ public:
     /// @
     virtual void resize( ui32 x, ui32 y, ui32 w, ui32 h );
 
-    virtual Rect2ui getWindowsRect() const;
+    virtual void getWindowsRect(Rect2ui &rect) const;
 
 protected:
     /// @brief  Callback to override on creation.

@@ -96,7 +96,8 @@ protected:
             AppBase::setActiveView(view);
             Scene::Node* geoNode = m_stage->addNode("geo", nullptr);
 
-            const Rect2ui& windowsRect = rootWindow->getWindowsRect();
+            Rect2ui windowsRect;
+            rootWindow->getWindowsRect(windowsRect);
             view->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.0001f, 1000.f);
 
             Scene::MeshBuilder meshBuilder;

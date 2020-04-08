@@ -4,6 +4,3 @@
 [submodule "3dparty/assimp"]
 	path = 3dparty/assimp
 	url = https://github.com/assimp/assimp.git
-[submodule "3dparty/imgui"]
-	path = 3dparty/imgui
-	url = https://github.com/ocornut/imgui.git

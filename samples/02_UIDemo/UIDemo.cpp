@@ -90,7 +90,6 @@ protected:
         panel->setRect( 10, 10, 500, 500 );
         ButtonBase *btnOpenFile = new ButtonBase( "Open file", panel);
         btnOpenFile->registerCallback(WidgetState::Pressed, UiFunctor::Make(this, &UIDemoApp::openFileCallback));
-        //panel->addWidget(btnOpenFile);
         btnOpenFile->setRect( 20, 20, 100, 20 );
         btnOpenFile->setLabel("Open file");
 

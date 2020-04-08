@@ -1,10 +1,5 @@
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
-    ../3dparty/cppcore/include
-    ../3dparty/glew/include
-    ../3dparty/assimp/include
-    ../3dparty/glm/
-    ../3dparty/soil/src
     ../
 )
 

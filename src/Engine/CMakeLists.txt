@@ -24,23 +24,10 @@ if( NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*" )
 endif()
 
 IF( WIN32 )
-    SET( platform_libs comctl32.lib Winmm.lib opengl32.lib glu32.lib SDL2 )
+    SET( platform_libs comctl32.lib Winmm.lib opengl32.lib glu32.lib Shcore.lib SDL2 )
 ELSE( WIN32 )
     SET( platform_libs SDL2 )
 ENDIF( WIN32 )
-
-
-SET( imgui_src
-    ../../3dparty/imgui/imconfig.h
-    ../../3dparty/imgui/imgui.cpp
-    ../../3dparty/imgui/imgui.h 
-    ../../3dparty/imgui/imgui_draw.cpp
-    ../../3dparty/imgui/imgui_internal.h 
-    ../../3dparty/imgui/imgui_widgets.cpp
-    ../../3dparty/imgui/imstb_rectpack.h
-    ../../3dparty/imgui/imstb_textedit.h
-    ../../3dparty/imgui/imstb_truetype.h
-)
 
 #==============================================================================
 # App
@@ -198,6 +185,7 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/PlatformInterface.h
     ${HEADER_PATH}/Platform/PlatformOperations.h
     ${HEADER_PATH}/Platform/AbstractMutex.h
+    ${HEADER_PATH}/Platform/AbstractDisplayInterface.h
 )
 SET( platform_win_inc
     ${HEADER_PATH}/Platform/Windows/MinWindows.h
@@ -215,6 +203,8 @@ SET( platform_src
     Platform/PlatformOperations.cpp
 )
 SET( platform_win32_src
+    Platform/win32/Win32DisplayInterface.h
+    Platform/win32/Win32DisplayInterface.cpp
     Platform/win32/Win32SystemInfo.h
     Platform/win32/Win32Atomic.h
     Platform/win32/Win32DbgLogStream.h
@@ -243,6 +233,8 @@ SET( platform_win32_src
     Platform/win32/Win32Mutex.cpp
 )
 SET( platform_sdl2_src
+    Platform/sdl2/SDL2DisplayInterface.h
+    Platform/sdl2/SDL2DisplayInterface.cpp
     Platform/sdl2/SDL2Atomic.h
     Platform/sdl2/SDL2CriticalSection.h
     Platform/sdl2/SDL2EventQueue.cpp
@@ -483,7 +475,6 @@ SOURCE_GROUP( Resources           FILES ${resources_src} )
 SOURCE_GROUP( Scene               FILES ${scene_src} )
 SOURCE_GROUP( Threading           FILES ${threading_src} )
 SOURCE_GROUP( UI                  FILES ${ui_src} )
-SOURCE_GROUP( 3dparty\\ImGui      FILES ${imgui_src} )
 
 SOURCE_GROUP( Include\\osre\\App        FILES ${app_inc} )
 SOURCE_GROUP( Include\\osre\\Assets     FILES ${assets_inc} )
@@ -566,7 +557,6 @@ ADD_LIBRARY( osre SHARED
     ${threading_src}
         ${threading_impl_src}
     ${ui_src}
-    ${imgui_src}
 )
 
 target_link_libraries ( osre cppcore zlib Unzip glew soil jsoncpp_lib_static ${platform_libs} assimp )

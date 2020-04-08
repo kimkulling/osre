@@ -35,7 +35,7 @@ public:
     virtual bool update( Time dt );
     virtual bool render( RenderBackend::RenderBackendService *rbSrv );
     virtual bool postprocess();
-    Component *getComponent( ComponentType type ) const;
+    virtual Component *getComponent(ComponentType type) const;
     virtual void setAABB( const Scene::Node::AABB &aabb );
     virtual const Scene::Node::AABB &getAABB() const;
 

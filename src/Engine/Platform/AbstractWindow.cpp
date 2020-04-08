@@ -131,15 +131,12 @@ WindowsProperties *AbstractWindow::getProperties( ) {
     return m_properties;
 }
 
-Rect2ui AbstractWindow::getWindowsRect() const {
-    Rect2ui r;
+void AbstractWindow::getWindowsRect(Rect2ui &rect) const {
     if (nullptr == m_properties) {
-        return r;
+        return;
     }
 
-    r.set(m_properties->m_x, m_properties->m_y, m_properties->m_width, m_properties->m_height);
-
-    return r;
+    rect.set(m_properties->m_x, m_properties->m_y, m_properties->m_width, m_properties->m_height);
 }
 
 } // Namespace Platform

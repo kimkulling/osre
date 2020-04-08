@@ -43,6 +43,11 @@ INCLUDE_DIRECTORIES( BEFORE
     include/
     /usr/include/SDL2/
     /usr/include/
+    3dparty/cppcore/include
+    3dparty/glew/include
+    3dparty/assimp/include
+    3dparty/glm/
+    3dparty/soil/src
     ${CMAKE_HOME_DIRECTORY}/3dparty/glew/include
     ${CMAKE_HOME_DIRECTORY}/3dparty/cppcore/include
     ${CMAKE_HOME_DIRECTORY}/3dparty/cppcore/contrib/gtest-1.7.0/include
