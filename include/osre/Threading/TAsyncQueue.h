@@ -22,9 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Platform/AbstractCriticalSection.h>
-#include <osre/Platform/AbstractThreadEvent.h>
-#include <osre/Platform/AbstractThreadFactory.h>
+//#include <osre/Platform/AbstractCriticalSection.h>
+//#include <osre/Platform/AbstractThreadEvent.h>
+#include <osre/Platform/Threading.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Common/Logger.h>
 
@@ -46,7 +46,7 @@ class TAsyncQueue {
 public:
     ///	@brief	The constructor with the thread factory.
     ///	@param	pThreadFactory	The thread factory.
-    TAsyncQueue( Platform::AbstractThreadFactory *pThreadFactory );
+    TAsyncQueue( Platform::ThreadFactory *pThreadFactory );
 
     ///	@brief	The destructor, not virtual.
     ~TAsyncQueue();
@@ -85,14 +85,14 @@ public:
     TAsyncQueue &operator = ( const TAsyncQueue<T> & ) = delete;
 
 private:
-    Platform::AbstractCriticalSection *m_criticalSection;
-    Platform::AbstractThreadEvent *m_enqueueEvent;
+    Platform::CriticalSection *m_criticalSection;
+    Platform::ThreadEvent *m_enqueueEvent;
     CPPCore::TQueue<T> m_ItemQueue;
 };
 
 template<class T>
 inline
-TAsyncQueue<T>::TAsyncQueue( Platform::AbstractThreadFactory *threadFactory )
+TAsyncQueue<T>::TAsyncQueue( Platform::ThreadFactory *threadFactory )
 : m_criticalSection( nullptr )
 , m_enqueueEvent( nullptr )
 , m_ItemQueue() {

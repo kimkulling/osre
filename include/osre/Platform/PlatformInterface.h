@@ -22,14 +22,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Platform/PlatformCommon.h>
-#include <osre/Common/AbstractService.h>
 #include <osre/Common/AbstractEventHandler.h>
+#include <osre/Common/AbstractService.h>
 #include <osre/Common/Event.h>
-#include <osre/Platform/KeyTypes.h>
-#include <osre/Platform/PluginType.h>
 #include <osre/Common/TResource.h>
 #include <osre/Common/TResourceCache.h>
+#include <osre/Platform/KeyTypes.h>
+#include <osre/Platform/PlatformCommon.h>
+#include <osre/Platform/PluginType.h>
 
 #include <cppcore/Container/TList.h>
 
@@ -55,26 +55,26 @@ public:
     ///	@brief	The os-event callback, override this for your own implementation.
     ///	@param	osEvent			[in] The incoming event.
     ///	@param	pData			[in] A pointer showing to the event data.
-    virtual void onOSEvent( const Common::Event &osEvent, const Common::EventData *pData ) = 0;
+    virtual void onOSEvent(const Common::Event &osEvent, const Common::EventData *pData) = 0;
 
 protected:
     ///	@brief	The class constructor.
     ///	@param	OSListenerName	[in] The instance name.
-    OSEventListener( const String &OSListenerName ) 
-    : Object( OSListenerName ) {
+    OSEventListener(const String &OSListenerName) :
+            Object(OSListenerName) {
         // empty
     }
 };
 
-DECL_EVENT( KeyboardButtonDownEvent );
-DECL_EVENT( KeyboardButtonUpEvent );
-DECL_EVENT( MouseButtonDownEvent );
-DECL_EVENT( MouseButtonUpEvent );
-DECL_EVENT( MouseMoveEvent );
-DECL_EVENT( QuitEvent );
-DECL_EVENT( AppFocusEvent );
-DECL_EVENT( WindowsMoveEvent );
-DECL_EVENT( WindowsResizeEvent );
+DECL_EVENT(KeyboardButtonDownEvent);
+DECL_EVENT(KeyboardButtonUpEvent);
+DECL_EVENT(MouseButtonDownEvent);
+DECL_EVENT(MouseButtonUpEvent);
+DECL_EVENT(MouseMoveEvent);
+DECL_EVENT(QuitEvent);
+DECL_EVENT(AppFocusEvent);
+DECL_EVENT(WindowsMoveEvent);
+DECL_EVENT(WindowsResizeEvent);
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -83,10 +83,8 @@ DECL_EVENT( WindowsResizeEvent );
 //-------------------------------------------------------------------------------------------------
 class WindowsMoveEventData : public Common::EventData {
 public:
-    WindowsMoveEventData( Common::EventTriggerer* c )
-    : Common::EventData( WindowsResizeEvent, c )
-    , m_x( 0 )
-    , m_y( 0 ) {
+    WindowsMoveEventData(Common::EventTriggerer *c) :
+            Common::EventData(WindowsResizeEvent, c), m_x(0), m_y(0) {
         // empty
     }
 
@@ -100,15 +98,11 @@ public:
 //-------------------------------------------------------------------------------------------------
 class WindowsResizeEventData : public Common::EventData {
 public:
-    WindowsResizeEventData( Common::EventTriggerer* c )
-    : Common::EventData( WindowsResizeEvent, c )
-    , m_x( 0 )
-    , m_y( 0 )
-    , m_w( 0 )
-    , m_h( 0 ) {
+    WindowsResizeEventData(Common::EventTriggerer *c) :
+            Common::EventData(WindowsResizeEvent, c), m_x(0), m_y(0), m_w(0), m_h(0) {
         // empty
     }
-    
+
     ui32 m_x, m_y, m_w, m_h;
 };
 
@@ -122,15 +116,13 @@ public:
     ///	@brief	The class constructor.
     ///	@param	down	[in] true, if button is pressed, false if button is releases.
     ///	@param	c		[in] The event trigger sender.
-    KeyboardButtonEventData( bool down, Common::EventTriggerer* c ) 
-    : Common::EventData( down ? KeyboardButtonDownEvent : KeyboardButtonUpEvent, c )
-    , m_key( KEY_UNKNOWN )
-    , m_unicode( 0 ) {
-            // empty
+    KeyboardButtonEventData(bool down, Common::EventTriggerer *c) :
+            Common::EventData(down ? KeyboardButtonDownEvent : KeyboardButtonUpEvent, c), m_key(KEY_UNKNOWN), m_unicode(0) {
+        // empty
     }
 
-    Key  m_key;		///< Key code for the pressed/released keyboard button
-    ui16 m_unicode;	///< The Unicode character for the pressed/released key
+    Key m_key; ///< Key code for the pressed/released keyboard button
+    ui16 m_unicode; ///< The Unicode character for the pressed/released key
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -150,19 +142,15 @@ public:
     ///	@param	down	[in] true, if the mouse button was pressed, false if the mouse button was
     ///					released.
     ///	@param	c		[in] The event trigger sender.
-    MouseButtonEventData( bool down, Common::EventTriggerer *c ) 
-    : Common::EventData( down ? MouseButtonDownEvent : MouseButtonUpEvent, c )
-    , m_Button( 0 )
-    , m_AbsX( 0 )
-    , m_AbsY( 0 )
-    , m_Pressed( false ) {
+    MouseButtonEventData(bool down, Common::EventTriggerer *c) :
+            Common::EventData(down ? MouseButtonDownEvent : MouseButtonUpEvent, c), m_Button(0), m_AbsX(0), m_AbsY(0), m_Pressed(false) {
         // empty
     }
 
-    ui32 m_Button;	///< pressed button (0=left, 1=middle, 2=right )
-    i32  m_AbsX;	///< absolute X-position of the mouse cursor
-    i32  m_AbsY;	///< absolute Y-position of the mouse cursor
-    bool m_Pressed;	///< True, if the button was pressed
+    ui32 m_Button; ///< pressed button (0=left, 1=middle, 2=right )
+    i32 m_AbsX; ///< absolute X-position of the mouse cursor
+    i32 m_AbsY; ///< absolute Y-position of the mouse cursor
+    bool m_Pressed; ///< True, if the button was pressed
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -174,29 +162,26 @@ class OSRE_EXPORT MouseMoveEventData : public Common::EventData {
 public:
     ///	@brief	The class constructor.
     ///	@param	c		[in] The event trigger sender.
-    MouseMoveEventData( Common::EventTriggerer *c ) 
-    : Common::EventData( MouseMoveEvent, c )
-    , m_absX( 0 )
-    , m_absY( 0 ) {
+    MouseMoveEventData(Common::EventTriggerer *c) :
+            Common::EventData(MouseMoveEvent, c), m_absX(0), m_absY(0) {
         // empty
     }
 
-    i32 m_absX;		///< The absolute X-position of the mouse cursor
-    i32 m_absY;		///< The absolute Y-position of the mouse cursor
+    i32 m_absX; ///< The absolute X-position of the mouse cursor
+    i32 m_absY; ///< The absolute Y-position of the mouse cursor
 };
 
-
 struct ApplicationContext {
-    const Properties::Settings* m_config;
+    const Properties::Settings *m_config;
     PluginType m_type;
-    AbstractWindow* m_rootSurface;
-    AbstractPlatformEventQueue* m_oseventHandler;
-    AbstractOGLRenderContext* m_renderContext;
-    AbstractTimer* m_timer;
-    AbstractDynamicLoader* m_dynLoader;
-    AbstractSystemInfo* m_systemInfo;
+    AbstractWindow *m_rootSurface;
+    AbstractPlatformEventQueue *m_oseventHandler;
+    AbstractOGLRenderContext *m_renderContext;
+    AbstractTimer *m_timer;
+    AbstractDynamicLoader *m_dynLoader;
+    AbstractSystemInfo *m_systemInfo;
 
-    ApplicationContext(const Properties::Settings* config);
+    ApplicationContext(const Properties::Settings *config);
     ~ApplicationContext();
 };
 
@@ -207,11 +192,11 @@ struct ApplicationContext {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT PlatformInterface : public Common::AbstractService {
 public:
-    static PlatformInterface *create( const Properties::Settings *pConfiguration );
+    static PlatformInterface *create(const Properties::Settings *pConfiguration);
     static void destroy();
     static PlatformInterface *getInstance();
     static PluginType getOSPluginType();
-    static String getOSPluginName( PluginType type );
+    static String getOSPluginName(PluginType type);
     AbstractWindow *getRootWindow() const;
     AbstractPlatformEventQueue *getPlatformEventHandler() const;
     AbstractOGLRenderContext *getRenderContext() const;
@@ -224,15 +209,15 @@ protected:
     bool onOpen() override;
     bool onClose() override;
     bool onUpdate() override;
-    virtual bool setupGfx( WindowsProperties *props, bool polls );
+    virtual bool setupGfx(WindowsProperties *props, bool polls);
 
 private:
-    explicit PlatformInterface( const Properties::Settings *configuration );
+    explicit PlatformInterface(const Properties::Settings *configuration);
     virtual ~PlatformInterface();
 
 private:
     static PlatformInterface *s_instance;
-    
+
     ApplicationContext *m_context;
 };
 

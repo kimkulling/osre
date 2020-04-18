@@ -25,10 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/SceneCommon.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Common/TObjPtr.h>
+#include <osre/Math/BaseMath.h>
 
 #include <cppcore/Container/TArray.h>
-
-#include <glm/glm.hpp>
 
 namespace OSRE {
 namespace App {

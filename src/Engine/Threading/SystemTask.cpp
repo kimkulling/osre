@@ -65,11 +65,11 @@ static bool DebugQueueSize = false;
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-#ifdef OSRE_WINDOWS
-class SystemTaskThread : public Win32Thread {
-#else
-class SystemTaskThread : public SDL2Thread {
-#endif
+//#ifdef OSRE_WINDOWS
+class SystemTaskThread : public Thread {
+//#else
+//class SystemTaskThread : public SDL2Thread {
+//#endif
 
 public:
     enum {
@@ -77,20 +77,11 @@ public:
     };
 
 public:
-#ifdef OSRE_WINDOWS
-    SystemTaskThread( const String &threadName, TAsyncQueue<const TaskJob*> *jobQueue )
-    : Win32Thread( threadName, StackSize )
-#else
-    SystemTaskThread( const String &threadName, TAsyncQueue<const TaskJob*> *jobQueue )
-    : SDL2Thread( threadName, StackSize )
-#endif
-    , m_updateEvent( nullptr )
-    , m_stopEvent( nullptr )
-    , m_activeJobQueue( jobQueue )
-    , m_eventHandler( nullptr ) {
+    SystemTaskThread( const String &threadName, TAsyncQueue<const TaskJob*> *jobQueue ) : 
+            Thread( threadName, StackSize ) , m_updateEvent( nullptr ), m_stopEvent( nullptr ), m_activeJobQueue( jobQueue ), m_eventHandler( nullptr ) {
         OSRE_ASSERT(nullptr != jobQueue);
 
-        AbstractThreadFactory *threadFactory( AbstractThreadFactory::getInstance() );
+        ThreadFactory *threadFactory( ThreadFactory::getInstance() );
         if ( threadFactory ) {
             m_updateEvent = threadFactory->createThreadEvent();
             m_stopEvent = threadFactory->createThreadEvent();

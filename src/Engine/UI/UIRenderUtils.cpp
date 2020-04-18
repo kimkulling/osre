@@ -69,11 +69,11 @@ void UIRenderUtils::drawRectFromStyle( const Rect2ui &rect, const Style &style, 
     Color4 col;
     switch (type) {
     case WidgetType::Panel:
-        col = style.m_colors[ ( ui32 )Style::ColorTable::BGColoPanel ];
+        col = style.StyleColors[ ( ui32 )Style::ColorTable::BGColoPanel ];
         break;
     case WidgetType::Button:
     default:
-        col = style.m_colors[ ( ui32 )Style::ColorTable::BGColorWidget ];
+        col = style.StyleColors[ ( ui32 )Style::ColorTable::BGColorWidget ];
         break;
     }
 

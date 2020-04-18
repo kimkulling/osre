@@ -34,7 +34,19 @@ using namespace ::OSRE::RenderBackend;
 static const c8 *Tag = "View";
 
 View::View(const String &name, Common::Ids &ids, Node *parent) :
-        Node(name, ids, parent), m_fov(60.0f), m_w(0.0f), m_h(0.0f), m_near(0.0001f), m_far(1000.0f), m_aspectRatio(1.0), m_observedNode(nullptr), m_eye(1, 1, 1), m_center(0, 0, 0), m_up(0, 0, 1), m_view(), m_projection() {
+        Node(name, ids, parent),
+        m_fov(60.0f),
+        m_w(0.0f),
+        m_h(0.0f),
+        m_near(0.0001f),
+        m_far(1000.0f),
+        m_aspectRatio(1.0),
+        m_observedNode(nullptr),
+        m_eye(1, 1, 1),
+        m_center(0, 0, 0),
+        m_up(0, 0, 1),
+        m_view(),
+        m_projection() {
     // empty
 }
 
@@ -48,7 +60,7 @@ void View::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
     m_h = h;
     m_near = zNear;
     m_far = zFar;
-    f32 aspect = 1.0f;
+    m_aspectRatio = 1.0f;
     if (0.0f != h) {
         m_aspectRatio = w / h;
     }
