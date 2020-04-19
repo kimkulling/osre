@@ -214,10 +214,10 @@ SET( platform_win32_src
     Platform/win32/Win32DynamicLoader.h
     Platform/win32/Win32OSService.cpp
     Platform/win32/Win32OSService.h
-    Platform/win32/Threading.cpp
+    Platform/win32/Threading_win32.cpp
 )
 SET( platform_sdl2_src
-    Platform/sdl2/Threading.cpp
+    Platform/sdl2/Threading_sdl2.cpp
     Platform/sdl2/SDL2DisplayInterface.h
     Platform/sdl2/SDL2DisplayInterface.cpp
     Platform/sdl2/SDL2Atomic.h
@@ -250,7 +250,9 @@ SET( platform_sdl2_src
 
 IF( WIN32 )
     SET( platform_impl_src ${platform_win32_src} )
-ENDIF( WIN32 )
+ELSE()
+    SET( platform_impl_src ${platform_sdl2_src} )
+ENDIF()
 
 #==============================================================================
 # Profiling
@@ -431,7 +433,6 @@ SET( threading_inc
 )
 SET( threading_src
     Threading/AbstractTask.cpp
-    Threading/AbstractThreadFactory.cpp
     Threading/SystemTask.cpp
 )
 
@@ -541,7 +542,6 @@ ADD_LIBRARY( osre SHARED
     ${profiling_src}
     ${platform_src}
         ${platform_impl_src}
-        ${platform_sdl2_src}
     ${utils_src}
     ${resources_src}
     ${renderbackend_src}
@@ -552,6 +552,7 @@ ADD_LIBRARY( osre SHARED
     ${threading_src}
         ${threading_impl_src}
     ${ui_src}
+    ${ui_common_src}
     ${ui_winmanager_src}
 )
 

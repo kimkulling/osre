@@ -54,34 +54,31 @@ struct WindowsProperties;
 //-------------------------------------------------------------------------------------------------
 struct PlatformPluginFactory {
     /// @brief  Will init the factory.
-    static bool init( PluginType type );
+    static bool init();
 
     /// @brief  Will release the factory.
-    static bool release( PluginType type );
+    static bool release();
 
     /// @brief  Creates a platform-specific event handler instance.
-    static AbstractPlatformEventQueue *createPlatformEventHandler( PluginType type, AbstractWindow *rootSurface );
+    static AbstractPlatformEventQueue *createPlatformEventHandler( AbstractWindow *rootSurface );
 
     /// @brief  Creates a platform-specific surface instance.
-    static AbstractWindow *createSurface( PluginType type, WindowsProperties *pProps );
+    static AbstractWindow *createSurface(WindowsProperties *pProps );
 
     /// @brief  Creates a platform-specific render context.
-    static AbstractOGLRenderContext *createRenderContext( PluginType type );
+    static AbstractOGLRenderContext *createRenderContext();
 
     /// @brief  Creates a platform-specific timer instance.
-    static AbstractTimer *createTimer( PluginType type );
-
-    /// @brief  Creates a platform-specific thread factory instance.
-    static AbstractThreadFactory *createThreadFactory( PluginType type );
+    static AbstractTimer *createTimer();
 
     ///	@brief  Creates a platform-specific log stream, if any available.
     static Common::AbstractLogStream *createPlatformLogStream();
 
     ///	@brief  Creates a platform-specific dynamic-library loader.
-    static AbstractDynamicLoader *createDynmicLoader( PluginType type );
+    static AbstractDynamicLoader *createDynmicLoader();
 
     /// @brief  CReates the platform-specific system, info instance.
-    static AbstractSystemInfo *createSystemInfo( PluginType type );
+    static AbstractSystemInfo *createSystemInfo();
 };
 
 } // Namespace Platform

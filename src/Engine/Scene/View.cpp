@@ -96,21 +96,21 @@ void View::setLookAt(const glm::vec3 &eye, const glm::vec3 &center, const glm::v
     m_view = glm::lookAt(eye, center, up);
 }
 
-void View::setProjectionMode(f32 fov, f32 aspectRatio, f32 near, f32 far) {
+void View::setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farPlane) {
     m_fov = fov;
     m_aspectRatio = aspectRatio;
-    m_near = near;
-    m_far = far;
-    m_projection = glm::perspective(fov, aspectRatio, near, far);
+    m_near = nearPlane;
+    m_far = farPlane;
+    m_projection = glm::perspective(fov, aspectRatio, nearPlane, farPlane);
 }
 
-void View::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far) {
+void View::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane, f32 farPlane) {
     m_w = right - left;
     m_h = bottom - top;
 
-    m_near = near;
-    m_far = far;
-    m_projection = glm::ortho(left, right, bottom, top, near, far);
+    m_near = nearPlane;
+    m_far = farPlane;
+    m_projection = glm::ortho(left, right, bottom, top, nearPlane, farPlane);
 }
 
 const glm::mat4 &View::getView() const {

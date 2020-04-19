@@ -26,10 +26,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-enum class PluginType : i32 {
+enum class PluginType {
 #ifdef OSRE_WINDOWS
     WindowsPlugin = 0,
-    SDL2Plugin,
 #else
     SDL2Plugin = 0,
 #endif // OSRE_WINDOWS

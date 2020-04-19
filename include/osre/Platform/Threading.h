@@ -111,7 +111,7 @@ public:
     Thread(const String &name, ui32 stacksize);
 
     ///	@brief	The class destructor.
-    ~Thread();
+    virtual ~Thread();
 
     ///	@brief	The thread will be started.
     ///	@param	pData	[in] The data pointer.

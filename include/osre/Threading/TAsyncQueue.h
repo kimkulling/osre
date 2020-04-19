@@ -46,7 +46,7 @@ class TAsyncQueue {
 public:
     ///	@brief	The constructor with the thread factory.
     ///	@param	pThreadFactory	The thread factory.
-    TAsyncQueue( Platform::ThreadFactory *pThreadFactory );
+    TAsyncQueue();
 
     ///	@brief	The destructor, not virtual.
     ~TAsyncQueue();
@@ -92,14 +92,12 @@ private:
 
 template<class T>
 inline
-TAsyncQueue<T>::TAsyncQueue( Platform::ThreadFactory *threadFactory )
+TAsyncQueue<T>::TAsyncQueue()
 : m_criticalSection( nullptr )
 , m_enqueueEvent( nullptr )
-, m_ItemQueue() {
-    OSRE_ASSERT( nullptr != threadFactory );
-  
-    m_criticalSection = threadFactory->createCriticalSection();
-    m_enqueueEvent = threadFactory->createThreadEvent();
+, m_ItemQueue() {  
+    m_criticalSection = new CriticalSection;
+    m_enqueueEvent = new ThreadEvent;
 }
 
 template<class T>
@@ -109,10 +107,7 @@ TAsyncQueue<T>::~TAsyncQueue() {
     dequeueAll( dummy );
     
     delete m_enqueueEvent;
-    m_enqueueEvent = nullptr;
-
     delete m_criticalSection;
-    m_criticalSection = nullptr;
 }
 
 template<class T>

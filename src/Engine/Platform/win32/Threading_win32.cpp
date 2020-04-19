@@ -368,34 +368,5 @@ void ThreadLocalStorage::set(void *data) {
     ::TlsSetValue(m_index, data);
 }
 
-ThreadFactory::ThreadFactory() {
-        //AbstractThreadFactory("platform/threadfactory") {
-    // empty
-}
-
-ThreadFactory::~ThreadFactory() {
-    // empty
-}
-
-Thread *ThreadFactory::createThread(const String &name, ui32 stacksize) {
-    return new Thread(name, stacksize);
-}
-
-CriticalSection *ThreadFactory::createCriticalSection() {
-    return new CriticalSection;
-}
-
-ThreadEvent *ThreadFactory::createThreadEvent() {
-    return new ThreadEvent;
-}
-
-AtomicInt *ThreadFactory::createAtomicInt(i32 val) {
-    return new AtomicInt(val);
-}
-
-ThreadLocalStorage *ThreadFactory::createThreadLocalStorage() {
-    return new ThreadLocalStorage;
-}
-
 } // Namespace Platform
 } // Namespace OSRE

@@ -32,6 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLRenderer/OGLRenderEventHandler.h"
 #include "VulkanRenderer/VlkRenderEventHandler.h"
 #ifdef OSRE_WINDOWS
+#include <osre/Platform/Windows/MinWindows.h>
 #   include "DX11Renderer/DX11Renderer.h"
 #   include "DX11Renderer/DX11RenderVEventHandler.h"
 #endif

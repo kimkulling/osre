@@ -21,17 +21,17 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "osre_testcommon.h"
-#include <osre/Platform/AbstractThread.h>
+#include <osre/Platform/Threading.h>
 
 namespace OSRE {
 namespace UnitTest {
 
 using namespace ::OSRE::Platform;
 
-class TestThread : public AbstractThread {
+class TestThread : public Thread {
 public:
-    TestThread() 
-    : AbstractThread() {
+    TestThread() :
+            Thread("testthreat", 1024) {
         // empty
     }
 
@@ -68,7 +68,7 @@ public:
         // empty
     }
 
-    virtual AbstractThreadEvent *getThreadEvent() const {
+    virtual ThreadEvent *getThreadEvent() const {
         return nullptr;
     }
 
@@ -77,7 +77,7 @@ public:
     }
 
     virtual Priority getPriority() const {
-        return AbstractThread::Priority::Normal;
+        return Thread::Priority::Normal;
     }
 
     virtual const String &getThreadName() const {
@@ -85,11 +85,11 @@ public:
         return ThreadName;
     }
 
-    virtual AbstractThreadLocalStorage *getThreadLocalStorage() {
+    virtual ThreadLocalStorage *getThreadLocalStorage() {
         return nullptr;
     }
 
-    virtual void setThreadLocalStorage( AbstractThreadLocalStorage* ) {
+    virtual void setThreadLocalStorage( ThreadLocalStorage* ) {
         // empty
     }
     
@@ -134,7 +134,7 @@ TEST_F( AbstractThreadTest, createTest ) {
 TEST_F( AbstractThreadTest, accessStateTest ) {
     TestThread test_thread;
 
-    EXPECT_EQ( AbstractThread::ThreadState::New, test_thread.getCurrentState() );
+    EXPECT_EQ( Thread::ThreadState::New, test_thread.getCurrentState() );
 }
 
 } // Namespace UnitTest
