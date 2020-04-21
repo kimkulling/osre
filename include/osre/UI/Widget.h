@@ -103,6 +103,7 @@ public:
     virtual bool hasWidget(Widget* child);
     virtual size_t getNumWidgets() const;
     virtual Widget* getWidgetAt(size_t idx) const;
+    virtual Widget &setRect(const Rect2ui &r);
     virtual Widget& setRect(ui32 x, ui32 y, ui32 w, ui32 h);
     virtual const Rect2ui& getRect() const;
     virtual void requestRedraw();

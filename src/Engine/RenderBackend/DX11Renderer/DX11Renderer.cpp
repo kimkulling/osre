@@ -22,22 +22,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "DX11Renderer.h"
 #include <osre/Common/Logger.h>
-#include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/AbstractOGLRenderContext.h>
+#include <osre/Platform/AbstractWindow.h>
 #include <osre/RenderBackend/Shader.h>
 #include <src/Engine/Platform/win32/Win32Window.h>
 
-#pragma warning( push )
-#   pragma warning( disable : 4005 )
-#   include <d3d11.h>
-#   include <D3Dcompiler.h>
-#pragma warning( pop )
+#pragma warning(push)
+#pragma warning(disable : 4005)
+#include <D3Dcompiler.h>
+#include <d3d11.h>
+#pragma warning(pop)
 
-#pragma warning( push )
-#   pragma warning( disable : 4201 )
-#   include <glm/gtc/matrix_transform.hpp>
-#pragma warning( pop )
-
+#pragma warning(push)
+#pragma warning(disable : 4201)
+#include <glm/gtc/matrix_transform.hpp>
+#pragma warning(pop)
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3d11.lib")
@@ -47,24 +46,24 @@ namespace OSRE {
 namespace RenderBackend {
 
 static const c8 *DefaultVertexShader = "";
-    
+
 static const c8 *DefaultPixelShader = "";
 
 using namespace ::OSRE::Common;
 
 static const c8 *Tag = "DX11Renderer";
 
-DX11Renderer::DX11Renderer() 
-: m_vsync_enabled( true )
-, m_videoCardMemory( 0 )
-, m_swapChain( nullptr )
-, m_device( nullptr )
-, m_deviceContext( nullptr )
-, m_renderTargetView( nullptr )
-, m_depthStencilBuffer( nullptr )
-, m_depthStencilState( nullptr )
-, m_depthStencilView( nullptr )
-, m_rasterState( nullptr ) {
+DX11Renderer::DX11Renderer() :
+        m_vsync_enabled(true),
+        m_videoCardMemory(0),
+        m_swapChain(nullptr),
+        m_device(nullptr),
+        m_deviceContext(nullptr),
+        m_renderTargetView(nullptr),
+        m_depthStencilBuffer(nullptr),
+        m_depthStencilState(nullptr),
+        m_depthStencilView(nullptr),
+        m_rasterState(nullptr) {
     ::memset(m_videoCardDescription, '\0', 128);
 }
 
@@ -79,7 +78,7 @@ bool DX11Renderer::create(Platform::AbstractWindow *surface) {
 
     DXGI_SWAP_CHAIN_DESC swapChainDesc;
     D3D_FEATURE_LEVEL featureLevel;
-    ID3D11Texture2D* backBufferPtr;
+    ID3D11Texture2D *backBufferPtr;
     D3D11_TEXTURE2D_DESC depthBufferDesc;
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
     D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
@@ -89,7 +88,7 @@ bool DX11Renderer::create(Platform::AbstractWindow *surface) {
 
     // Create a DirectX graphics interface factory.
     IDXGIFactory *factory;
-    HRESULT result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
+    HRESULT result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void **)&factory);
     if (FAILED(result)) {
         return false;
     }
@@ -132,9 +131,9 @@ bool DX11Renderer::create(Platform::AbstractWindow *surface) {
     // When a match is found store the numerator and denominator of the refresh rate for that monitor.
     ui32 screenWidth = surface->getProperties()->m_width;
     ui32 screenHeight = surface->getProperties()->m_height;
-    ui32 numerator(0), denominator( 0 );
+    ui32 numerator(0), denominator(0);
     for (ui32 i = 0; i < numModes; i++) {
-        if (displayModeList[i].Width == (unsigned int)screenWidth) {
+        if (displayModeList[i].Width == (UINT) screenWidth) {
             if (displayModeList[i].Height == (unsigned int)screenHeight) {
                 numerator = displayModeList[i].RefreshRate.Numerator;
                 denominator = displayModeList[i].RefreshRate.Denominator;
@@ -154,7 +153,7 @@ bool DX11Renderer::create(Platform::AbstractWindow *surface) {
     // Convert the name of the video card to a character array and store it.
     size_t stringLength(0);
     i32 error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
-    if ( 0 != error ) {
+    if (0 != error) {
         return false;
     }
 
@@ -197,7 +196,7 @@ bool DX11Renderer::create(Platform::AbstractWindow *surface) {
     swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
     // Set the handle for the window to render to.
-    Platform::Win32Window *osSurface = (Platform::Win32Window*)surface;
+    Platform::Win32Window *osSurface = (Platform::Win32Window *)surface;
     swapChainDesc.OutputWindow = osSurface->getHWnd();
 
     // Turn multi-sampling off.
@@ -227,13 +226,13 @@ bool DX11Renderer::create(Platform::AbstractWindow *surface) {
 
     // Create the swap chain, Direct3D device, and Direct3D device context.
     result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featureLevel, 1,
-        D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, NULL, &m_deviceContext);
+            D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, NULL, &m_deviceContext);
     if (FAILED(result)) {
         return false;
     }
 
     // Get the pointer to the back buffer.
-    result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
+    result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID *)&backBufferPtr);
     if (FAILED(result)) {
         return false;
     }
@@ -303,7 +302,6 @@ bool DX11Renderer::create(Platform::AbstractWindow *surface) {
     // Set the depth stencil state.
     m_deviceContext->OMSetDepthStencilState(m_depthStencilState, 1);
 
-
     // Initialize the depth stencil view.
     ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
 
@@ -359,13 +357,13 @@ bool DX11Renderer::create(Platform::AbstractWindow *surface) {
 
     // Create the projection matrix for 3D rendering.
     f32 screenNear = 0.1f, screenDepth = 1000.0f;
-    m_projectionMatrix = glm::perspectiveFovLH( fieldOfView, (float)screenWidth, (float)screenHeight, screenNear, screenDepth );
-    
+    m_projectionMatrix = glm::perspectiveFovLH(fieldOfView, (float)screenWidth, (float)screenHeight, screenNear, screenDepth);
+
     // Initialize the world matrix to the identity matrix.
-    m_worldMatrix = glm::mat4( 1 );
+    m_worldMatrix = glm::mat4(1);
 
     // Create an orthographic projection matrix for 2D rendering.
-    m_orthoMatrix = glm::orthoLH( 0.f, (f32) screenWidth, 0.f, (f32) screenHeight, screenNear, screenDepth );
+    m_orthoMatrix = glm::orthoLH(0.f, (f32)screenWidth, 0.f, (f32)screenHeight, screenNear, screenDepth);
 
     return true;
 }
@@ -383,7 +381,7 @@ bool DX11Renderer::destroy() {
     SafeRelease(m_deviceContext);
     SafeRelease(m_device);
     SafeRelease(m_swapChain);
-    
+
     return true;
 }
 
@@ -419,7 +417,7 @@ ID3D11Buffer *DX11Renderer::createBuffer(BufferType type, BufferData *bd, Buffer
     // Set up the description for the buffer.
     D3D11_BUFFER_DESC bufferDesc;
     bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    bufferDesc.ByteWidth = (UINT) bd->getSize();
+    bufferDesc.ByteWidth = (UINT)bd->getSize();
     bufferDesc.BindFlags = translateVBEnum2DX11(type);
     bufferDesc.CPUAccessFlags = translateAccessFlag(usage);
     bufferDesc.MiscFlags = 0;
@@ -449,7 +447,7 @@ void DX11Renderer::releaseBuffer(ID3D11Buffer *buffer) {
     SafeRelease(buffer);
 }
 
-static bool getDx11Component(VertexAttribute attrib, String &name, DXGI_FORMAT &dx11Format ) {
+static bool getDx11Component(VertexAttribute attrib, String &name, DXGI_FORMAT &dx11Format) {
     bool result(true);
     switch (attrib) {
         case VertexAttribute::Position:
@@ -528,7 +526,7 @@ static bool getDx11Component(VertexAttribute attrib, String &name, DXGI_FORMAT &
     return result;
 }
 
-DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, DX11Shader *shader ) {
+DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, DX11Shader *shader) {
     if (nullptr == layout || nullptr == shader) {
         return nullptr;
     }
@@ -543,12 +541,12 @@ DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, DX11Sha
     const size_t numComps = layout->m_components.size();
     D3D11_INPUT_ELEMENT_DESC *dx11VertexDecl = new D3D11_INPUT_ELEMENT_DESC[numComps];
     for (size_t i = 0; i < numComps; ++i) {
-        VertComponent &comp = layout->getAt( i );
+        VertComponent &comp = layout->getAt(i);
         getDx11Component(comp.m_attrib, name, dx11Format);
-        dx11VertexDecl[ i ].SemanticName = name.c_str();
-        dx11VertexDecl[ i ].SemanticIndex = 0;
-        dx11VertexDecl[ i ].Format = dx11Format;
-        dx11VertexDecl[ i ].InputSlot = 0;
+        dx11VertexDecl[i].SemanticName = name.c_str();
+        dx11VertexDecl[i].SemanticIndex = 0;
+        dx11VertexDecl[i].Format = dx11Format;
+        dx11VertexDecl[i].InputSlot = 0;
         if (0 == i) {
             dx11VertexDecl[i].AlignedByteOffset = 0;
         } else {
@@ -557,30 +555,30 @@ DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, DX11Sha
         dx11VertexDecl[i].InputSlot = D3D11_INPUT_PER_VERTEX_DATA;
         dx11VertexDecl[i].InputSlot = 0;
     }
-    ID3D11InputLayout *dx11Layout( nullptr );
-    result = m_device->CreateInputLayout(dx11VertexDecl, (UINT) numComps, shader->m_vsBuffer->GetBufferPointer(),
-        shader->m_vsBuffer->GetBufferSize(), &dx11Layout);
+    ID3D11InputLayout *dx11Layout(nullptr);
+    result = m_device->CreateInputLayout(dx11VertexDecl, (UINT)numComps, shader->m_vsBuffer->GetBufferPointer(),
+            shader->m_vsBuffer->GetBufferSize(), &dx11Layout);
     if (FAILED(result)) {
         return nullptr;
     }
-    
+
     // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
     matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    matrixBufferDesc.ByteWidth = sizeof( MatrixBufferType );
+    matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
     matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     matrixBufferDesc.MiscFlags = 0;
     matrixBufferDesc.StructureByteStride = 0;
 
     // Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-    result = m_device->CreateBuffer( &matrixBufferDesc, NULL, &m_matrixBuffer );
-    if (FAILED( result )) {
+    result = m_device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
+    if (FAILED(result)) {
         return nullptr;
     }
 
     DX11VertexLayout *vl = new DX11VertexLayout;
     vl->m_desc = dx11VertexDecl;
-    
+
     return vl;
 }
 
@@ -589,8 +587,8 @@ static void ShowCompileError(ID3D10Blob *errorMessage) {
         return;
     }
 
-    const char *compileErrors = static_cast<char*>(errorMessage->GetBufferPointer());
-    const size_t size( errorMessage->GetBufferSize() );
+    const char *compileErrors = static_cast<char *>(errorMessage->GetBufferPointer());
+    const size_t size(errorMessage->GetBufferSize());
     if (nullptr != compileErrors) {
         osre_error(Tag, compileErrors);
     }
@@ -606,20 +604,20 @@ DX11Shader *DX11Renderer::createShader(Shader *shader) {
     String src;
     ID3D10Blob *buffer, *errorMessage;
     for (ui32 i = 0; i < static_cast<ui32>(ShaderType::NumShaderTypes); ++i) {
-        src = shader->m_src[ i ];
-        result = D3DCompile(src.c_str(), src.size(), NULL, NULL, NULL, "ColorVertexShader", "vs_5_0", 
-            D3D10_SHADER_ENABLE_STRICTNESS, 0, &buffer, &errorMessage);
+        src = shader->m_src[i];
+        result = D3DCompile(src.c_str(), src.size(), NULL, NULL, NULL, "ColorVertexShader", "vs_5_0",
+                D3D10_SHADER_ENABLE_STRICTNESS, 0, &buffer, &errorMessage);
         if (FAILED(result)) {
             if (nullptr != errorMessage) {
                 ShowCompileError(errorMessage);
-            } 
+            }
 
             return dx11Shader;
         }
 
         dx11Shader = new DX11Shader;
         const ShaderType type(static_cast<ShaderType>(i));
-        switch( type ) {
+        switch (type) {
             case ShaderType::SH_VertexShaderType:
                 result = m_device->CreateVertexShader(buffer, buffer->GetBufferSize(), NULL, &dx11Shader->m_vertexShader);
                 dx11Shader->m_vsBuffer = buffer;
@@ -699,7 +697,7 @@ void DX11Renderer::render(RenderCmd *cmd) {
     ui32 offset = 0;
 
     // Set the vertex buffer to active in the input assembler so it can be rendered.
-    
+
     m_deviceContext->IASetVertexBuffers(0, 1, &cmd->m_vb, &stride, &offset);
 
     // Set the index buffer to active in the input assembler so it can be rendered.

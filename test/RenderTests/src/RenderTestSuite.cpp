@@ -108,13 +108,6 @@ bool RenderTestSuite::setup( const String &API ) {
     settings->setString( Properties::Settings::RenderAPI, m_renderAPI );
     settings->setBool( Properties::Settings::PollingMode, true );
 
-#ifdef OSRE_WINDOWS
-    //pConfig->setInt( Properties::ConfigurationMap::PlatformPlugin, static_cast<i32>( Platform::SDL2Plugin) );
-    settings->setInt( Properties::Settings::PlatformPlugin, static_cast< i32 >( Platform::PluginType::WindowsPlugin ) );
-#else
-    settings->setInt( Properties::Settings::PlatformPlugin, static_cast<i32>( Platform::PluginType::SDL2Plugin) );
-#endif
-
     // create the platform abstraction
     m_pPlatformInterface = Platform::PlatformInterface::create( settings );
     if( m_pPlatformInterface ) {

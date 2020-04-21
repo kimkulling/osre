@@ -41,13 +41,13 @@ namespace Platform {
 // Forward declarations
 class AbstractWindow;
 class OSEventListener;
-class AbstractThreadEvent;
-class AbstractThreadLocalStorage;
-class AbstractCriticalSection;
-class AbstractThreadEvent;
-class AbstractThread;
-class AbstractAtomic;
-class AbstractThreadLocalStorage;
+class ThreadEvent;
+class ThreadLocalStorage;
+class CriticalSection;
+class ThreadEvent;
+class Thread;
+class Atomic;
+class ThreadLocalStorage;
 class AbstractTimer;
 class AbstractPlatformEventQueue;
 class AbstractOGLRenderContext;

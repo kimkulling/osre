@@ -20,164 +20,104 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <src/Engine/Platform/PlatformPluginFactory.h>
 #include <osre/Common/Logger.h>
 #include <osre/Debugging/osre_debugging.h>
+#include <src/Engine/Platform/PlatformPluginFactory.h>
 #ifdef OSRE_WINDOWS
-#   include <src/Engine/Platform/win32/Win32Window.h>
-#   include <src/Engine/Platform/win32/Win32EventQueue.h>
-#   include <src/Engine//Platform/win32/Win32Timer.h>
-#   include <src/Engine//Platform/win32/Win32OGLRenderContext.h>
-#   include <src/Engine/Platform/win32/Win32ThreadFactory.h>
-#   include <src/Engine/Platform/win32/Win32DbgLogStream.h>
-#   include <src/Engine/Platform/win32/Win32DynamicLoader.h>
-#   include "Engine/Platform/win32/Win32SystemInfo.h"
+#    include "Engine/Platform/win32/Win32SystemInfo.h"
+#    include <src/Engine/Platform/win32/Win32OGLRenderContext.h>
+#    include <src/Engine/Platform/win32/Win32Timer.h>
+#    include <src/Engine/Platform/win32/Win32DbgLogStream.h>
+#    include <src/Engine/Platform/win32/Win32DynamicLoader.h>
+#    include <src/Engine/Platform/win32/Win32EventQueue.h>
+#    include <src/Engine/Platform/win32/Win32Window.h>
+#else
+#    include <src/Engine/Platform/sdl2/SDL2DynamicLoader.h>
+#    include <src/Engine/Platform/sdl2/SDL2EventQueue.h>
+#    include <src/Engine/Platform/sdl2/SDL2Initializer.h>
+#    include <src/Engine/Platform/sdl2/SDL2OGLRenderContext.h>
+#    include <src/Engine/Platform/sdl2/SDL2SystemInfo.h>
+#    include <src/Engine/Platform/sdl2/SDL2ThreadFactory.h>
+#    include <src/Engine/Platform/sdl2/SDL2Timer.h>
+#    include <src/Engine/Platform/sdl2/SDL2Window.h>
 #endif
-#include <src/Engine/Platform/sdl2/SDL2Window.h>
-#include <src/Engine/Platform/sdl2/SDL2EventQueue.h>
-#include <src/Engine/Platform/sdl2/SDL2OGLRenderContext.h>
-#include <src/Engine/Platform/sdl2/SDL2Timer.h>
-#include <src/Engine/Platform/sdl2/SDL2ThreadFactory.h>
-#include <src/Engine/Platform/sdl2/SDL2Initializer.h>
-#include <src/Engine/Platform/sdl2/SDL2DynamicLoader.h>
-#include <src/Engine/Platform/sdl2/SDL2SystemInfo.h>
 
 namespace OSRE {
 namespace Platform {
 
 static const c8 *Tag = "PlatformPluginFactory";
 
-bool PlatformPluginFactory::init( PluginType type ) {
-    static_cast< void >( createThreadFactory( type ) );
-    if ( type == PluginType::SDL2Plugin ) {
-        return SDL2Initializer::init();
-    }
+bool PlatformPluginFactory::init() {
+#ifndef OSRE_WINDOWS
+    return SDL2Initializer::init();
+#endif
 
     return true;
 }
 
-bool PlatformPluginFactory::release( PluginType type ) {
-    if( type == PluginType::SDL2Plugin ) {
+bool PlatformPluginFactory::release() {
+#ifdef OSRE_LINUX
+    if (type == PluginType::SDL2Plugin) {
         return SDL2Initializer::release();
     }
+#endif
     return true;
 }
 
-AbstractPlatformEventQueue *PlatformPluginFactory::createPlatformEventHandler( PluginType type, AbstractWindow *rootSurface ) {
-    AbstractPlatformEventQueue *eventHandler( nullptr );
-    switch( type ) {
+AbstractPlatformEventQueue *PlatformPluginFactory::createPlatformEventHandler(AbstractWindow *rootSurface) {
+    AbstractPlatformEventQueue *eventHandler(nullptr);
 #ifdef OSRE_WINDOWS
-        case Platform::PluginType::WindowsPlugin: {
-                Win32Window *win32Surface = static_cast<Win32Window*>( rootSurface );
-                if( win32Surface ) {
-                    eventHandler = new Win32EventQueue( win32Surface );
-                    Win32EventQueue::registerEventQueue( ( Win32EventQueue* ) eventHandler, win32Surface->getHWnd() );
-                }
-            }
-            break;
-#endif // OSRE_WINDOWS
-
-        case Platform::PluginType::SDL2Plugin:
-            eventHandler = new SDL2EventHandler( rootSurface );
-            break;
-
-        default:
-            break;
+    Win32Window *win32Surface = static_cast<Win32Window *>(rootSurface);
+    if (win32Surface) {
+        eventHandler = new Win32EventQueue(win32Surface);
+        Win32EventQueue::registerEventQueue((Win32EventQueue *)eventHandler, win32Surface->getHWnd());
     }
+#else
+    eventHandler = new SDL2EventHandler(rootSurface);
+#endif // OSRE_WINDOWS
 
     OSRE_ASSERT(nullptr != eventHandler);
 
     return eventHandler;
 }
 
-AbstractWindow *PlatformPluginFactory::createSurface( PluginType type, WindowsProperties *pProps ) {
-    AbstractWindow *surface( nullptr );
-    switch( type ) {
+AbstractWindow *PlatformPluginFactory::createSurface(WindowsProperties *pProps) {
+    AbstractWindow *surface(nullptr);
 #ifdef OSRE_WINDOWS
-        case Platform::PluginType::WindowsPlugin:
-            surface = new Win32Window( pProps );
-            break;
+    surface = new Win32Window(pProps);
+#else
+    surface = new SDL2Surface(pProps);
 #endif // OSRE_WINDOWS
-
-        case Platform::PluginType::SDL2Plugin:
-            surface = new SDL2Surface( pProps );
-            break;
-
-        default:
-            osre_info( Tag, "Enum value not handled." );
-            break;
-    }
-    OSRE_ASSERT( nullptr != surface);
+    OSRE_ASSERT(nullptr != surface);
 
     return surface;
 }
 
-AbstractOGLRenderContext *PlatformPluginFactory::createRenderContext( PluginType type ) {
-    AbstractOGLRenderContext *renderCtx( nullptr );
-    switch( type ) {
+AbstractOGLRenderContext *PlatformPluginFactory::createRenderContext() {
+    AbstractOGLRenderContext *renderCtx(nullptr);
 #ifdef OSRE_WINDOWS
-        case Platform::PluginType::WindowsPlugin:
-            renderCtx = new Win32RenderContext();
-            break;
+    renderCtx = new Win32RenderContext();
+#else
+    renderCtx = new SDL2RenderContext();
 #endif // OSRE_WINDOWS
-
-        case Platform::PluginType::SDL2Plugin:
-            renderCtx = new SDL2RenderContext();
-            break;
-
-        default:
-            osre_error( Tag, "Enum value not handled." );
-            break;
-    }
     OSRE_ASSERT(nullptr != renderCtx);
 
     return renderCtx;
 }
 
-AbstractTimer *PlatformPluginFactory::createTimer( PluginType type ) {
-    AbstractTimer *timer( nullptr );
-    switch( type ) {
+AbstractTimer *PlatformPluginFactory::createTimer() {
+    AbstractTimer *timer(nullptr);
 #ifdef OSRE_WINDOWS
-        case Platform::PluginType::WindowsPlugin:
-            timer = new Win32Timer();
-            break;
+    timer = new Win32Timer();
+#else
+    timer = new SDL2Timer();
 #endif // OSRE_WINDOWS
 
-        case Platform::PluginType::SDL2Plugin:
-            timer = new SDL2Timer();
-            break;
-
-        default:
-            break;
-    }
     return timer;
 }
 
-AbstractThreadFactory *PlatformPluginFactory::createThreadFactory( PluginType type ) {
-    AbstractThreadFactory *instance( nullptr );
-    switch( type ) {
-#ifdef OSRE_WINDOWS
-        case Platform::PluginType::WindowsPlugin:
-            instance = new Win32ThreadFactory();
-            break;
-#endif // OSRE_WINDOWS
-
-        case Platform::PluginType::SDL2Plugin:
-            instance = new SDL2ThreadFactory();
-            break;
-
-        default:
-            break;
-    }
-
-    osre_info( Tag, "Set thread factory." );
-    AbstractThreadFactory::setInstance( instance );
-
-    return instance;
-}
-
 Common::AbstractLogStream *PlatformPluginFactory::createPlatformLogStream() {
-    Common::AbstractLogStream *stream( nullptr );
+    Common::AbstractLogStream *stream(nullptr);
 #ifdef OSRE_WINDOWS
     stream = new Win32DbgLogStream;
 #endif // OSRE_WINDOWS
@@ -185,42 +125,24 @@ Common::AbstractLogStream *PlatformPluginFactory::createPlatformLogStream() {
     return stream;
 }
 
-AbstractDynamicLoader *PlatformPluginFactory::createDynmicLoader( PluginType type ) {
-    AbstractDynamicLoader *dynloader( nullptr );
-    switch ( type ) {
+AbstractDynamicLoader *PlatformPluginFactory::createDynmicLoader() {
+    AbstractDynamicLoader *dynloader(nullptr);
 #ifdef OSRE_WINDOWS
-        case Platform::PluginType::WindowsPlugin:
-            dynloader = new Win32DynamicLoader;
-            break;
+    dynloader = new Win32DynamicLoader;
+#else
+    dynloader = new SDL2DynamicLoader();
 #endif // OSRE_WINDOWS
-
-        case Platform::PluginType::SDL2Plugin:
-            dynloader = new SDL2DynamicLoader();
-            break;
-
-    default:
-        break;
-    }
 
     return dynloader;
 }
 
-AbstractSystemInfo *PlatformPluginFactory::createSystemInfo( PluginType type ) {
-    AbstractSystemInfo *sysInfo( nullptr );
-    switch ( type ) {
+AbstractSystemInfo *PlatformPluginFactory::createSystemInfo() {
+    AbstractSystemInfo *sysInfo(nullptr);
 #ifdef OSRE_WINDOWS
-    case Platform::PluginType::WindowsPlugin:
-        sysInfo = new Win32SystemInfo;
-        break;
+    sysInfo = new Win32SystemInfo;
+#else
+    sysInfo = new SDL2SystemInfo;
 #endif // OSRE_WINDOWS
-
-    case Platform::PluginType::SDL2Plugin:
-        sysInfo = new SDL2SystemInfo();
-        break;
-
-    default:
-        break;
-    }
 
     return sysInfo;
 }

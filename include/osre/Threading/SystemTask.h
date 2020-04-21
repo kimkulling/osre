@@ -59,7 +59,7 @@ public:
     virtual BufferMode getBufferMode() const;
 
     ///	@brief	Overwritten, @see AbstractTask.
-    virtual bool start( Platform::AbstractThread *pThread );
+    virtual bool start( Platform::Thread *pThread );
 
     ///	@brief	Overwritten, @see AbstractTask.
     virtual bool stop();
@@ -71,7 +71,7 @@ public:
     virtual bool execute();
 
     ///	@brief	Overwritten, @see AbstractTask.
-    virtual void setThreadInstance( Platform::AbstractThread *pThreadInstance );
+    virtual void setThreadInstance( Platform::Thread *pThreadInstance );
     
     ///	@brief	Overwritten, @see AbstractTask.
     virtual void onUpdate();

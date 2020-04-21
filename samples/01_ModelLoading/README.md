@@ -19,9 +19,7 @@ This sample shows how to import a model using Assimp.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/DbgRenderer.h>
-
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/glm.hpp>
+#include <osre/Math/BaseMath.h>
 
 using namespace ::OSRE;
 using namespace ::OSRE::App;

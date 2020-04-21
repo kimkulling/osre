@@ -68,9 +68,10 @@ ApplicationContext::~ApplicationContext() {
 
 static const String PlatformPluginName[ static_cast<i32>( PluginType::MaxPlugin ) ] = {
 #ifdef OSRE_WINDOWS
-    "WindowsPlugin",
-#endif // OSRE_WINDOWS
+    "WindowsPlugin"
+#else
     "SDL2Plugin"
+#endif // OSRE_WINDOWS
 };
 
 static const c8 *Tag = "PlatformInterface";
@@ -157,11 +158,11 @@ String PlatformInterface::getOSPluginName( PluginType type ) {
         case PluginType::WindowsPlugin:
             name = PlatformPluginName[ static_cast<i32>( PluginType::WindowsPlugin ) ];
             break;
-#endif // OSRE_WINDOWS
-
+#else
         case PluginType::SDL2Plugin:
             name = PlatformPluginName[ static_cast<i32>( PluginType::SDL2Plugin ) ];
             break;
+#endif // OSRE_WINDOWS
         default:
             break;
     }
@@ -201,24 +202,26 @@ bool PlatformInterface::onOpen() {
     }
 
     String appName = "My OSRE-Application";
-    m_context->m_type = static_cast<PluginType>(config->get( Settings::PlatformPlugin ).getInt( ) );
 
-    PlatformPluginFactory::init( m_context->m_type );
-    osre_info( Tag, "Platform plugin created for " + PlatformInterface::getOSPluginName(m_context->m_type ) );
-
-    m_context->m_dynLoader = PlatformPluginFactory::createDynmicLoader(m_context->m_type );
+    PlatformPluginFactory::init();
+#ifdef OSRE_WINDOWS
+    osre_info( Tag, "Platform plugin created for Windows.");
+#else
+    osre_info(Tag, "Platform plugin created for Linux.");
+#endif
+    m_context->m_dynLoader = PlatformPluginFactory::createDynmicLoader();
     bool result( true );
     if( appType == Settings::GfxApp ) {
         result = setupGfx( props, polls );
     }
 
-    m_context->m_systemInfo = PlatformPluginFactory::createSystemInfo(m_context->m_type );
+    m_context->m_systemInfo = PlatformPluginFactory::createSystemInfo();
 
     return result;
 }
 
 bool PlatformInterface::onClose( ) {
-    PlatformPluginFactory::release(m_context->m_type );
+    PlatformPluginFactory::release();
 
     delete m_context->m_oseventHandler;
     m_context->m_oseventHandler = nullptr;
@@ -242,7 +245,7 @@ bool PlatformInterface::onUpdate() {
 
 bool PlatformInterface::setupGfx( WindowsProperties *props, bool polls ) {
     // create the root surface
-    m_context->m_rootSurface = PlatformPluginFactory::createSurface(m_context->m_type, props );
+    m_context->m_rootSurface = PlatformPluginFactory::createSurface( props );
     if( !m_context->m_rootSurface->create() ) {
         delete m_context->m_rootSurface;
         osre_error( Tag, "Error while creating platform root surface." );
@@ -252,7 +255,7 @@ bool PlatformInterface::setupGfx( WindowsProperties *props, bool polls ) {
     }
 
     // install the platform event handler
-    m_context->m_oseventHandler = PlatformPluginFactory::createPlatformEventHandler(m_context->m_type, m_context->m_rootSurface );
+    m_context->m_oseventHandler = PlatformPluginFactory::createPlatformEventHandler(m_context->m_rootSurface );
     if( !m_context->m_oseventHandler ) {
         osre_error( Tag, "Error while creating platform event handler." );
         m_context->m_rootSurface->destroy();
@@ -260,10 +263,10 @@ bool PlatformInterface::setupGfx( WindowsProperties *props, bool polls ) {
         return false;
     }
     m_context->m_oseventHandler->enablePolling( polls );
-    m_context->m_timer = PlatformPluginFactory::createTimer(m_context->m_type );
+    m_context->m_timer = PlatformPluginFactory::createTimer();
 
     // setup the render context
-    m_context->m_renderContext = PlatformPluginFactory::createRenderContext(m_context->m_type );
+    m_context->m_renderContext = PlatformPluginFactory::createRenderContext();
 
     UiItemFactory::createInstance( getRootWindow() );
         

@@ -23,6 +23,7 @@ protected:
 
 private:
     UI::Canvas *m_canvas;
+    UI::Panel *m_mainPanel;
     UI::Panel *m_logPanel;
     UI::Panel *m_modelPanel;
 };
