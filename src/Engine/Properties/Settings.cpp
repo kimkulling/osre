@@ -178,7 +178,7 @@ static i32 mapPlatformtype2Int( PluginType type ) {
 
 void Settings::initDefaults() {
     CPPCore::Variant appName, windowsTitle, renderAPI, value;
-    appName.setString("OSRE Application");
+    appName.setStdString("OSRE Application");
     m_propertyMap->setProperty(AppName, ConfigKeyStringTable[AppName], appName);
 
     value.setInt(static_cast<i32>(GfxApp));
@@ -192,12 +192,12 @@ void Settings::initDefaults() {
     value.setInt(0);
     m_propertyMap->setProperty(AppVersionPatch, ConfigKeyStringTable[AppVersionPatch], value);
 
-    windowsTitle.setString( "The OSRE experience" );
+    windowsTitle.setStdString("The OSRE experience");
     const i32 pluginType( mapPlatformtype2Int( Platform::PlatformInterface::getOSPluginType() ) );
     value.setInt( pluginType );
     m_propertyMap->setProperty( PlatformPlugin, ConfigKeyStringTable[ PlatformPlugin  ], value );
     m_propertyMap->setProperty( WindowsTitle, ConfigKeyStringTable[ WindowsTitle ], windowsTitle );
-    renderAPI.setString( "opengl" );
+    renderAPI.setStdString("opengl");
     m_propertyMap->setProperty( RenderAPI, ConfigKeyStringTable[ RenderAPI ], renderAPI );
 
     value.setInt( 0 );
@@ -225,7 +225,7 @@ void Settings::initDefaults() {
     value.setBool( false );
     m_propertyMap->setProperty( PollingMode, ConfigKeyStringTable[ PollingMode ], value );
 
-    value.setString( "buildin_arial.bmp" );
+    value.setStdString( "buildin_arial.bmp" );
     m_propertyMap->setProperty( DefaultFont, ConfigKeyStringTable[ DefaultFont ], value );
 
     value.setInt( 1 );
