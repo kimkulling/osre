@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Platform/PlatformCommon.h>
-#include <osre/Platform/AbstractThread.h>
+#include <osre/Platform/Threading.h>
 #include <map>
 
 #ifdef OSRE_WINDOWS

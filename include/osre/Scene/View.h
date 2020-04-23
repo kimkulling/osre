@@ -42,13 +42,13 @@ class OSRE_EXPORT View : public Node {
 public:
     View(const String &name, Common::Ids &ids, Node *parent = nullptr);
     ~View() override;
-    void setProjectionParameters(f32 fov, f32 w, f32 h, f32 near, f32 far);
+    void setProjectionParameters(f32 fov, f32 w, f32 h, f32 nearPlane, f32 farPlane);
     void update(Time dt);
     void draw(RenderBackend::RenderBackendService *renderBackendSrv);
     void observeBoundingBox(const TAABB<f32> &box);
     void setLookAt(const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up);
-    void setProjectionMode(f32 fov, f32 aspectRatio, f32 near, f32 far);
-    void setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far);
+    void setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farPlane);
+    void setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane, f32 farPlane);
     const glm::mat4 &getView() const;
     const glm::mat4 &getProjection() const;
     f32 getFov() const;

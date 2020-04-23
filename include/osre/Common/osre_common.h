@@ -22,73 +22,73 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#if defined( _WIN32 ) || defined( _WIN64 )
-#   define OSRE_WINDOWS
-#   define _CRT_SECURE_NO_WARNINGS
-#   ifndef WIN32_LEAN_AND_MEAN 
-#       define WIN32_LEAN_AND_MEAN // Minimal windows header
-#   endif // WIN32_LEAN_AND_MEAN
+#if defined(_WIN32) || defined(_WIN64)
+#    define OSRE_WINDOWS
+#    define _CRT_SECURE_NO_WARNINGS
+#    ifndef WIN32_LEAN_AND_MEAN
+#        define WIN32_LEAN_AND_MEAN // Minimal windows header
+#    endif // WIN32_LEAN_AND_MEAN
 #elif defined(__gnu_linux__)
-#   define OSRE_GNU_LINUX
-#elif defined(__APPLE__) || defined (__MACH__)
-#   error "Currently not supported platform"
+#    define OSRE_GNU_LINUX
+#elif defined(__APPLE__) || defined(__MACH__)
+#    error "Currently not supported platform"
 #elif defined(__ANDROID__)
-#   define OSRE_ANDROID
+#    define OSRE_ANDROID
 #endif
 
 #include <cppcore/Container/TArray.h>
 
-#include <string>
-#include <sstream>
-#include <string.h>
-#include <stdio.h>
-#include <cstddef>
-#include <cmath>
 #include <emmintrin.h>
+#include <stdio.h>
+#include <string.h>
+#include <cmath>
+#include <cstddef>
+#include <sstream>
+#include <string>
 
 #ifndef OSRE_WINDOWS
-#  include <inttypes.h>
-#endif 
+#    include <inttypes.h>
+#endif
 
 namespace OSRE {
 
 #ifdef OSRE_WINDOWS
-#  define TAG_DLL_EXPORT __declspec(dllexport)
-#  define TAG_DLL_IMPORT __declspec(dllimport )
-#endif 
+#    define OSRE_TAG_DLL_EXPORT __declspec(dllexport)
+#    define OSRE_TAG_DLL_IMPORT __declspec(dllimport)
+#endif
 
 #ifdef OSRE_WINDOWS
-#   ifdef OSRE_BUILD_EXPORT
-#       define OSRE_EXPORT TAG_DLL_EXPORT
-#   else
-#       define OSRE_EXPORT TAG_DLL_IMPORT
-#   endif
+#    ifdef OSRE_BUILD_EXPORT
+#        define OSRE_EXPORT OSRE_TAG_DLL_EXPORT
+#    else
+#        define OSRE_EXPORT OSRE_TAG_DLL_IMPORT
+#    endif
 #else
-#   define OSRE_EXPORT  __attribute__ ((visibility("default")))
+#    define OSRE_EXPORT __attribute__((visibility("default")))
 #endif
 
 #if _MSC_VER >= 1200
-#  pragma warning( disable : 4006 ) // Ignore double defined symbols warning
-#  pragma warning( disable : 4786 ) // Identifier was truncated to 'number' characters in the debug information
-#  pragma warning( disable : 4251 ) // class 'type' needs to have dll-interface to be used by clients of class 'type2'
-#  pragma warning( disable : 4275 ) // non DLL-interface classkey 'identifier' used as base for DLL-interface classkey 'identifier'
-#  pragma warning( disable : 4127 )	// Conditional expression is constant
-#  pragma warning( disable : 4201 ) // No standard extension
-#  pragma warning( disable : 4316 ) // Object allocated on the heap may not be aligned for this type
-#  pragma warning( disable : 4996 ) // 
+#    pragma warning(disable : 4006) // Ignore double defined symbols warning
+#    pragma warning(disable : 4786) // Identifier was truncated to 'number' characters in the debug information
+#    pragma warning(disable : 4251) // class 'type' needs to have dll-interface to be used by clients of class 'type2'
+#    pragma warning(disable : 4275) // non DLL-interface classkey 'identifier' used as base for DLL-interface classkey 'identifier'
+#    pragma warning(disable : 4127) // Conditional expression is constant
+#    pragma warning(disable : 4201) // No standard extension
+#    pragma warning(disable : 4316) // Object allocated on the heap may not be aligned for this type
+#    pragma warning(disable : 4996) //
 #endif
 
 // Declares thread-local data
 #ifdef OSRE_WINDOWS
-#   define ThreadLocal __declspec(thread)
+#    define ThreadLocal __declspec(thread)
 #else
-#   define ThreadLocal __thread
+#    define ThreadLocal __thread
 #endif
 
 // Platform-specific data types
 #if defined(__MINGW32__) || defined(__MINGW64__)
-#   include <stdio.h>
-    typedef int errno_t;
+#    include <stdio.h>
+typedef int errno_t;
 #endif
 
 ///	The data type unsigned char, 1 byte long.
@@ -104,7 +104,7 @@ typedef unsigned short ui16;
 typedef signed short i16;
 
 ///	The data type signed int, 4 byte long.
-typedef int	i32;
+typedef int i32;
 
 ///	The data type unsigned int, 4 byte long.
 typedef unsigned short ui16;
@@ -114,11 +114,11 @@ typedef unsigned int ui32;
 
 ///	The data type for signed and unsigned int 8 bytes long.
 #ifdef OSRE_WINDOWS
-typedef __int64           i64;
-typedef unsigned __int64  ui64;
+typedef __int64 i64;
+typedef unsigned __int64 ui64;
 #else
-typedef int64_t           i64;
-typedef uint64_t          ui64;
+typedef int64_t i64;
+typedef uint64_t ui64;
 #endif
 
 /// The data type for hash ids.
@@ -140,25 +140,25 @@ typedef std::string String;
 struct Handle {
     i32 m_idx;
 
-    Handle()
-    : m_idx( -1 ) {
+    Handle() :
+            m_idx(-1) {
         // empty
     }
 
-    explicit Handle( i32 idx ) {
-        init( idx );
+    explicit Handle(i32 idx) {
+        init(idx);
     }
 
-    void init( i32 idx ) {
+    void init(i32 idx) {
         m_idx = idx;
     }
 
-    bool operator == ( const Handle &rhs ) const {
+    bool operator==(const Handle &rhs) const {
         return m_idx == rhs.m_idx;
     }
 
-    bool operator != ( const Handle &rhs ) const {
-        return !(*this == rhs );
+    bool operator!=(const Handle &rhs) const {
+        return !(*this == rhs);
     }
 };
 
@@ -168,68 +168,57 @@ struct Time {
     i64 m_microseconds;
 
     Time();
-    Time( i64 microseconds );
+    Time(i64 microseconds);
     f32 asSeconds() const;
     i32 asMilliSeconds() const;
     i64 asMicroSeconds() const;
 };
 
-inline
-Time::Time()
-: m_microseconds(0) {
+inline Time::Time() :
+        m_microseconds(0) {
     // empty
 }
 
-inline
-Time::Time( i64 microseconds )
-: m_microseconds( microseconds ) {
+inline Time::Time(i64 microseconds) :
+        m_microseconds(microseconds) {
     // empty
 }
 
-inline 
-f32 Time::asSeconds() const {
+inline f32 Time::asSeconds() const {
     return m_microseconds / 1000000.f;
 }
 
-inline
-i32 Time::asMilliSeconds() const {
-    return static_cast<i32>( m_microseconds / 1000 );
+inline i32 Time::asMilliSeconds() const {
+    return static_cast<i32>(m_microseconds / 1000);
 }
 
-inline
-i64 Time::asMicroSeconds() const {
+inline i64 Time::asMicroSeconds() const {
     return m_microseconds;
 }
 
 struct Color4 {
     f32 m_r, m_g, m_b, m_a;
 
-    Color4()
-    : m_r( 1.f )
-    , m_g( 1.f )
-    , m_b( 1.f )
-    , m_a( 1.f ) {
+    Color4() :
+            m_r(1.f), m_g(1.f), m_b(1.f), m_a(1.f) {
         // empty
     }
 
-    Color4( f32 r, f32 _g, f32 b, f32 a )
-    : m_r( r )
-    , m_g( _g )
-    , m_b( b )
-    , m_a( a ) {
+    Color4(f32 r, f32 _g, f32 b, f32 a) :
+            m_r(r), m_g(_g), m_b(b), m_a(a) {
         // empty
     }
 
-    bool operator == ( const Color4 & rhs ) const {
-        return ( m_r == rhs.m_r && m_g == rhs.m_g && m_b == rhs.m_b && m_a == rhs.m_a );
+    bool operator==(const Color4 &rhs) const {
+        return (m_r == rhs.m_r && m_g == rhs.m_g && m_b == rhs.m_b && m_a == rhs.m_a);
     }
 
-    bool operator != ( const Color4 & rhs ) const {
-        return !( *this == rhs );
+    bool operator!=(const Color4 &rhs) const {
+        return !(*this == rhs);
     }
 
-    f32 operator [] ( ui32 index ) const {
-        switch ( index ) {
+    f32 operator[](ui32 index) const {
+        switch (index) {
             case 0: return m_r;
             case 1: return m_g;
             case 2: return m_b;
@@ -242,321 +231,314 @@ struct Color4 {
     }
 };
 
-template<class T>
+template <class T>
 struct TVec2 {
-    T v[ 2 ];
+    T v[2];
 
     TVec2() {
-        set( 0, 0 );
+        set(0, 0);
     }
 
-    TVec2( T x, T y ) {
-        set( x, y );
+    TVec2(T x, T y) {
+        set(x, y);
     }
 
-    void set( T x, T y ) {
-        v[ 0 ] = x;
-        v[ 1 ] = y;
+    void set(T x, T y) {
+        v[0] = x;
+        v[1] = y;
     }
 
     T getX() const {
-        return v[ 0 ];
+        return v[0];
     }
 
-    void setX( T x ) {
-        v[ 0 ] = x;
+    void setX(T x) {
+        v[0] = x;
     }
 
     T getY() const {
-        return v[ 1 ];
+        return v[1];
     }
 
-    void setY( T y ) {
-        v[ 1 ] = y;
+    void setY(T y) {
+        v[1] = y;
     }
 
     T getSquaredLength() {
-        return ( ( v[ 0 ] * v[ 0 ] ) + ( v[ 1 ] * v[ 1 ] ) );
+        return ((v[0] * v[0]) + (v[1] * v[1]));
     }
 
     T getLength() {
-        return ::sqrt( getSquaredLength() );
+        return ::sqrt(getSquaredLength());
     }
 
-    T dotProduct( const TVec2<T> &rhs ) const {
-        return ( this->v[ 0 ] * rhs.v[ 0 ] + this->v[ 1 ] * rhs.v[1] );
+    T dotProduct(const TVec2<T> &rhs) const {
+        return (this->v[0] * rhs.v[0] + this->v[1] * rhs.v[1]);
     }
 
-    TVec2<T> crossProduct( const TVec2<T> &rhs ) const {
-        return TVec2<T>( this->v[ 0 ] * rhs.v[ 1 ], this->v[ 1 ] * rhs.v[ 0 ] );
+    TVec2<T> crossProduct(const TVec2<T> &rhs) const {
+        return TVec2<T>(this->v[0] * rhs.v[1], this->v[1] * rhs.v[0]);
     }
 
-    TVec2<T> operator + ( const TVec2<T> &rhs ) const {
-        TVec2<T> res( v[ 0 ] + rhs.v[ 0 ], v[ 1 ] + rhs.v[ 1 ] );
+    TVec2<T> operator+(const TVec2<T> &rhs) const {
+        TVec2<T> res(v[0] + rhs.v[0], v[1] + rhs.v[1]);
         return res;
     }
 
-    TVec2<T> operator - ( const TVec2<T> &rhs )  const {
-        TVec2<T> res( v[ 0 ] - rhs.v[ 0 ], v[ 1 ] - rhs.v[ 1 ] );
+    TVec2<T> operator-(const TVec2<T> &rhs) const {
+        TVec2<T> res(v[0] - rhs.v[0], v[1] - rhs.v[1]);
         return res;
     }
 
-    TVec2<T> operator * ( T scalar ) const {
-        TVec2<T> res( v[ 0 ] * scalar, v[ 1 ] * scalar );
+    TVec2<T> operator*(T scalar) const {
+        TVec2<T> res(v[0] * scalar, v[1] * scalar);
         return res;
     }
 
-    bool operator == ( const TVec2<T> &rhs ) const {
-        return ( v[ 0 ] == rhs.v[ 0 ] && v[ 1 ] );
+    bool operator==(const TVec2<T> &rhs) const {
+        return (v[0] == rhs.v[0] && v[1]);
     }
 
-    bool operator != ( const TVec2<T> &rhs ) const {
-        return !( this == rhs );
+    bool operator!=(const TVec2<T> &rhs) const {
+        return !(this == rhs);
     }
 
-    T operator [] ( ui32 index ) const {
-        return v[ index ];
+    T operator[](ui32 index) const {
+        return v[index];
     }
 };
 
-template<class T>
-inline
-TVec2<T> operator * ( T scalar, TVec2<T> vec ) {
-    TVec2<T> res( vec.v[ 0 ] * scalar, vec.v[ 1 ] * scalar );
+template <class T>
+inline TVec2<T> operator*(T scalar, TVec2<T> vec) {
+    TVec2<T> res(vec.v[0] * scalar, vec.v[1] * scalar);
     return res;
 }
 
 using Vec2i = TVec2<i32>;
 using Vec2f = TVec2<f32>;
 
-template<class T>
+template <class T>
 struct TVec3 {
-    T v[ 3 ];
+    T v[3];
 
     TVec3() {
-        set( 0, 0, 0 );
+        set(0, 0, 0);
     }
 
-    TVec3( T x, T y, T z ) {
-        set( x, y, z );
+    TVec3(T x, T y, T z) {
+        set(x, y, z);
     }
 
-    void set( T x, T y, T z ) {
-        v[ 0 ] = x;
-        v[ 1 ] = y;
-        v[ 2 ] = z;
+    void set(T x, T y, T z) {
+        v[0] = x;
+        v[1] = y;
+        v[2] = z;
     }
 
     T getX() const {
-        return v[ 0 ];
+        return v[0];
     }
 
-    void setX( T x ) {
-        v[ 0 ] = x;
+    void setX(T x) {
+        v[0] = x;
     }
 
     T getY() const {
-        return v[ 1 ];
+        return v[1];
     }
 
-    void setY( T y ) {
-        v[ 1 ] = y;
+    void setY(T y) {
+        v[1] = y;
     }
 
     T getZ() const {
-        return v[ 2 ];
+        return v[2];
     }
 
-    void setZ( T z ) {
-        v[ 2 ] = z;
+    void setZ(T z) {
+        v[2] = z;
     }
 
-    T getSquaredLength()  const {
-        return ( ( v[ 0 ] * v[ 0 ] ) + ( v[ 1 ] * v[ 1 ] ) + ( v[ 2 ] * v[ 2 ] ) );
+    T getSquaredLength() const {
+        return ((v[0] * v[0]) + (v[1] * v[1]) + (v[2] * v[2]));
     }
 
     T getLength() {
-        return ::sqrt( getSquaredLength() );
+        return ::sqrt(getSquaredLength());
     }
 
-    T  dotProduct( const TVec3<T> &rhs ) const {
-        return v[ 0 ] * rhs.v[ 0 ] + v[ 1 ] * rhs.v[ 1 ] + v[ 2 ] * rhs.v[ 2 ];
+    T dotProduct(const TVec3<T> &rhs) const {
+        return v[0] * rhs.v[0] + v[1] * rhs.v[1] + v[2] * rhs.v[2];
     }
 
-    TVec3<T> crossProduct( const TVec3<T> &rhs ) const {
-        return TVec3<T>( v[ 1 ] * rhs.v[ 2 ]- v[ 2 ] * rhs.v[ 1 ]
-            , v[ 2 ] * rhs.v[ 0 ] - v[ 0 ] * rhs.v[ 2 ]
-            , v[ 0 ] * rhs.v[ 1 ] - v[ 1 ] * rhs.v[ 0 ] );
+    TVec3<T> crossProduct(const TVec3<T> &rhs) const {
+        return TVec3<T>(v[1] * rhs.v[2] - v[2] * rhs.v[1], v[2] * rhs.v[0] - v[0] * rhs.v[2], v[0] * rhs.v[1] - v[1] * rhs.v[0]);
     }
 
     bool isZero() const {
-        if ( v[ 0 ] <= 0 && v[ 1 ] <= 0 && v[ 2 ] <= 0 ) {
+        if (v[0] <= 0 && v[1] <= 0 && v[2] <= 0) {
             return true;
         }
         return false;
     }
 
-    TVec3<T> &operator += ( const TVec3<T> &rhs ) {
-        v[ 0 ] += rhs.v[ 0 ];
-        v[ 1 ] += rhs.v[ 1 ];
-        v[ 2 ] += rhs.v[ 2 ];
+    TVec3<T> &operator+=(const TVec3<T> &rhs) {
+        v[0] += rhs.v[0];
+        v[1] += rhs.v[1];
+        v[2] += rhs.v[2];
 
         return *this;
     }
 
-    TVec3<T> &operator += ( T val ) {
-        v[ 0 ] += val;
-        v[ 1 ] += val;
-        v[ 2 ] += val;
+    TVec3<T> &operator+=(T val) {
+        v[0] += val;
+        v[1] += val;
+        v[2] += val;
 
         return *this;
     }
 
-    TVec3<T> &operator -= ( const TVec3<T> &rhs ) {
-        v[ 0 ] -= rhs.v[ 0 ];
-        v[ 1 ] -= rhs.v[ 1 ];
-        v[ 2 ] -= rhs.v[ 2 ];
+    TVec3<T> &operator-=(const TVec3<T> &rhs) {
+        v[0] -= rhs.v[0];
+        v[1] -= rhs.v[1];
+        v[2] -= rhs.v[2];
 
         return *this;
     }
 
-    TVec3<T> &operator -= ( T val ) {
-        v[ 0 ] -= val;
-        v[ 1 ] -= val;
-        v[ 2 ] -= val;
+    TVec3<T> &operator-=(T val) {
+        v[0] -= val;
+        v[1] -= val;
+        v[2] -= val;
 
         return *this;
     }
 
-    TVec3<T> operator * (  T scalar )  const {
-        TVec3<T> res( v[ 0 ] * scalar, v[ 1 ] * scalar, v[ 2 ] * scalar );
+    TVec3<T> operator*(T scalar) const {
+        TVec3<T> res(v[0] * scalar, v[1] * scalar, v[2] * scalar);
         return res;
     }
 
-    TVec3<T> operator + ( const TVec3<T> &rhs ) const {
-        TVec3<T> res( v[ 0 ] + rhs.v[ 0 ], v[ 1 ] + rhs.v[ 1 ], v[ 2 ] + rhs.v[ 2 ] );
+    TVec3<T> operator+(const TVec3<T> &rhs) const {
+        TVec3<T> res(v[0] + rhs.v[0], v[1] + rhs.v[1], v[2] + rhs.v[2]);
         return res;
     }
 
-    TVec3<T> operator - ( const TVec3<T> &rhs )  const {
-        TVec3<T> res( v[ 0 ] - rhs.v[ 0 ], v[ 1 ] - rhs.v[ 1 ], v[ 2 ] - rhs.v[ 2 ] );
+    TVec3<T> operator-(const TVec3<T> &rhs) const {
+        TVec3<T> res(v[0] - rhs.v[0], v[1] - rhs.v[1], v[2] - rhs.v[2]);
         return res;
     }
 
-    bool operator == ( const TVec3<T> &rhs ) const {
-        return ( v[ 0 ] == rhs.v[ 0 ] && v[ 1 ] == rhs.v[ 1 ] && v[ 2 ] == rhs.v[ 2 ] );
+    bool operator==(const TVec3<T> &rhs) const {
+        return (v[0] == rhs.v[0] && v[1] == rhs.v[1] && v[2] == rhs.v[2]);
     }
 
-    bool operator != ( const TVec3<T> &rhs ) const {
-        return !( *this == rhs );
+    bool operator!=(const TVec3<T> &rhs) const {
+        return !(*this == rhs);
     }
 
-    T operator [] ( ui32 index ) const {
-        return v[ index ];
+    T operator[](ui32 index) const {
+        return v[index];
     }
 };
 
-template<class T>
-inline
-TVec3<T> operator * ( T scalar, TVec3<T> vec ) {
-    TVec3<T> res( vec.v[ 0 ] * scalar, vec.v[ 1 ] * scalar, vec.v[ 2 ] * scalar );
+template <class T>
+inline TVec3<T> operator*(T scalar, TVec3<T> vec) {
+    TVec3<T> res(vec.v[0] * scalar, vec.v[1] * scalar, vec.v[2] * scalar);
     return res;
 }
 
 using Vec3i = TVec3<i32>;
 using Vec3f = TVec3<f32>;
 
-template<class T>
+template <class T>
 struct TVec4 {
-    T v[ 4 ];
+    T v[4];
 
     TVec4() {
-        set( 0, 0, 0, 1 );
+        set(0, 0, 0, 1);
     }
 
-    TVec4( T x, T y, T z, T w ) {
-        set( x, y, z, w );
+    TVec4(T x, T y, T z, T w) {
+        set(x, y, z, w);
     }
 
-    void set( T x, T y, T z, T w ) {
-        v[ 0 ] = x;
-        v[ 1 ] = y;
-        v[ 2 ] = z;
-        v[ 3 ] = w;
+    void set(T x, T y, T z, T w) {
+        v[0] = x;
+        v[1] = y;
+        v[2] = z;
+        v[3] = w;
     }
 
     T getX() const {
-        return v[ 0 ];
+        return v[0];
     }
 
-    void setX( T x ) {
-        v[ 0 ] = x;
+    void setX(T x) {
+        v[0] = x;
     }
 
     T getY() const {
-        return v[ 1 ];
+        return v[1];
     }
 
-    void setY( T y ) {
-        v[ 1 ] = y;
+    void setY(T y) {
+        v[1] = y;
     }
 
     T getZ() const {
-        return v[ 2 ];
+        return v[2];
     }
 
-    void setZ( T z ) {
-        v[ 2 ] = z;
+    void setZ(T z) {
+        v[2] = z;
     }
 
     T getW() const {
-        return v[ 3 ];
+        return v[3];
     }
 
-    void setW( T w ) {
-        v[ 3 ] = w;
+    void setW(T w) {
+        v[3] = w;
     }
 
-    TVec4<T> operator + ( const TVec4<T> &rhs )  const {
-        TVec4<T> res( v[ 0 ] + rhs.v[ 0 ], v[ 1 ] + rhs.v[ 1 ], v[ 2 ] + rhs.v[ 2 ], 1 );
+    TVec4<T> operator+(const TVec4<T> &rhs) const {
+        TVec4<T> res(v[0] + rhs.v[0], v[1] + rhs.v[1], v[2] + rhs.v[2], 1);
         return res;
     }
 
-    TVec4<T> operator - ( const TVec4<T> &rhs ) const {
-        TVec4<T> res( v[ 0 ] - rhs.v[ 0 ], v[ 1 ] - rhs.v[ 1 ], v[ 2 ] - rhs.v[ 2 ], 1 );
+    TVec4<T> operator-(const TVec4<T> &rhs) const {
+        TVec4<T> res(v[0] - rhs.v[0], v[1] - rhs.v[1], v[2] - rhs.v[2], 1);
         return res;
     }
 
-    TVec4<T> operator * ( T scalar )  const {
-        TVec4<T> res( v[ 0 ] * scalar, v[ 1 ] * scalar, v[ 2 ] * scalar, 1 );
+    TVec4<T> operator*(T scalar) const {
+        TVec4<T> res(v[0] * scalar, v[1] * scalar, v[2] * scalar, 1);
         return res;
     }
 
-    bool operator == ( const TVec4<T> &rhs ) const {
-        return ( v[ 0 ] == rhs.v[ 0 ] && v[ 1 ] == rhs.v[ 1 ] && v[ 2 ] == rhs.v[ 2 ] && v[ 3 ] == rhs.v[ 3 ] );
+    bool operator==(const TVec4<T> &rhs) const {
+        return (v[0] == rhs.v[0] && v[1] == rhs.v[1] && v[2] == rhs.v[2] && v[3] == rhs.v[3]);
     }
 
-    bool operator != ( const TVec4<T> &rhs ) const {
-        return !( this == rhs );
+    bool operator!=(const TVec4<T> &rhs) const {
+        return !(this == rhs);
     }
 
-    T operator [] ( ui32 index ) const {
-        return v[ index ];
+    T operator[](ui32 index) const {
+        return v[index];
     }
 };
 
 using Vec4i = TVec4<i32>;
 using Vec4f = TVec4<f32>;
 
-template<class T>
+template <class T>
 struct OSRE_EXPORT TQuat {
     T m_x, m_y, m_z, m_w;
 
-    TQuat()
-        : m_x(0)
-        , m_y(0)
-        , m_z(0)
-        , m_w(1) {
+    TQuat() :
+            m_x(0), m_y(0), m_z(0), m_w(1) {
         // empty
     }
 
@@ -570,29 +552,26 @@ struct OSRE_EXPORT TQuat {
 
 using Quatf = TQuat<f32>;
 
-template<class T>
+template <class T>
 struct TPoint2 {
     T m_x, m_y;
 
-    TPoint2()
-    : m_x(0)
-    , m_y(0) {
+    TPoint2() :
+            m_x(0), m_y(0) {
         // empty
     }
 
-
-    TPoint2( T x, T y )
-    : m_x( x )
-    , m_y( y ) {
+    TPoint2(T x, T y) :
+            m_x(x), m_y(y) {
         // empty
     }
 
-    bool operator == ( const TPoint2<T> &rhs ) const {
-        return ( m_x == rhs.m_x && m_y == rhs.m_y );
+    bool operator==(const TPoint2<T> &rhs) const {
+        return (m_x == rhs.m_x && m_y == rhs.m_y);
     }
 
-    bool operator != (const TPoint2<T> &rhs) const {
-        return !( *this == rhs );
+    bool operator!=(const TPoint2<T> &rhs) const {
+        return !(*this == rhs);
     }
 };
 
@@ -600,31 +579,21 @@ using Point2i = TPoint2<i32>;
 using Point2ui = TPoint2<ui32>;
 
 /// @brief  Helper class t represent a 2D rectangle.
-template<class T>
+template <class T>
 struct TRectangle {
     T m_x1, m_y1, m_x2, m_y2, m_width, m_height;
 
     /// @brief  The default class constructor.
-    TRectangle()
-    : m_x1( 0 )
-    , m_y1( 0 )
-    , m_x2( 0 )
-    , m_y2(  0 )
-    , m_width( 0 )
-    , m_height( 0 ) {
+    TRectangle() :
+            m_x1(0), m_y1(0), m_x2(0), m_y2(0), m_width(0), m_height(0) {
         // empty
     }
 
     /// @brief  The class constructor with width and height, x and 0 are set to 0,0.
     /// @param  width   [in] The width of the rectangle.
     /// @param  height  [in] The height of the rectangle.
-    TRectangle( T width, T height )
-    : m_x1( 0 )
-    , m_y1( 0 )
-    , m_x2( width )
-    , m_y2( height )
-    , m_width( width )
-    , m_height( height ) {
+    TRectangle(T width, T height) :
+            m_x1(0), m_y1(0), m_x2(width), m_y2(height), m_width(width), m_height(height) {
         // empty
     }
 
@@ -633,13 +602,8 @@ struct TRectangle {
     /// @param  y       [in] Y coordinate of upper left corner.
     /// @param  width   [in] The width of the rectangle.
     /// @param  height  [in] The height of the rectangle.
-    TRectangle( T x, T y, T width, T height )
-    : m_x1( x )
-    , m_y1( y )
-    , m_x2( x + width )
-    , m_y2( y + height )
-    , m_width( width )
-    , m_height( height ) {
+    TRectangle(T x, T y, T width, T height) :
+            m_x1(x), m_y1(y), m_x2(x + width), m_y2(y + height), m_width(width), m_height(height) {
         // empty
     }
 
@@ -704,25 +668,25 @@ struct TRectangle {
         return m_height;
     }
 
-    bool isIn( const TPoint2<T> &pt ) const {
-        if ( pt.m_x >= m_x1 && pt.m_y >= m_y1 && pt.m_x <= m_x2 && pt.m_y <= m_y2 ) {
+    bool isIn(const TPoint2<T> &pt) const {
+        if (pt.m_x >= m_x1 && pt.m_y >= m_y1 && pt.m_x <= m_x2 && pt.m_y <= m_y2) {
             return true;
         }
-        
+
         return false;
     }
 
-    const bool operator == ( const TRectangle<T> &rhs ) const {
-        return ( m_x1 == rhs.m_x1 && m_y1 == rhs.m_y1 && m_width == rhs.m_width && m_height == rhs.m_height );
+    const bool operator==(const TRectangle<T> &rhs) const {
+        return (m_x1 == rhs.m_x1 && m_y1 == rhs.m_y1 && m_width == rhs.m_width && m_height == rhs.m_height);
     }
 
-    const bool operator != ( const TRectangle<T> &rhs ) const {
-        return ( m_x1 != rhs.m_x1 || m_y1 != rhs.m_y1 || m_width != rhs.m_width || m_height != rhs.m_height );
+    const bool operator!=(const TRectangle<T> &rhs) const {
+        return (m_x1 != rhs.m_x1 || m_y1 != rhs.m_y1 || m_width != rhs.m_width || m_height != rhs.m_height);
     }
 };
 
 using Rect2ui = TRectangle<ui32>;
-using Rect2i  = TRectangle<i32>;
+using Rect2i = TRectangle<i32>;
 
 struct float4 {
     union {
@@ -733,65 +697,57 @@ struct float4 {
     float4();
     float4(f32 a, f32 b, f32 c, f32 d);
     float4(const float4 &rhs);
-    const float4 operator += (const float4 &v);
-    const float4 operator -= (const float4 &v);
-    const float4 operator *= (const float4 &v);
-    const float4 operator /= (const float4 &v);
+    const float4 operator+=(const float4 &v);
+    const float4 operator-=(const float4 &v);
+    const float4 operator*=(const float4 &v);
+    const float4 operator/=(const float4 &v);
 };
 
-inline
-float4::float4() {
+inline float4::float4() {
     m_vals[0] = 0.0f;
     m_vals[1] = 0.0f;
     m_vals[2] = 0.0f;
     m_vals[3] = 0.0f;
 }
-    
-inline
-float4::float4(f32 a, f32 b, f32 c, f32 d) 
-: m_val4(_mm_set_ps(d, c, b, a)) {
+
+inline float4::float4(f32 a, f32 b, f32 c, f32 d) :
+        m_val4(_mm_set_ps(d, c, b, a)) {
     // empty
 }
 
-inline
-float4::float4(const float4 &rhs) 
-: m_val4(rhs.m_val4) { 
+inline float4::float4(const float4 &rhs) :
+        m_val4(rhs.m_val4) {
     // empty
 }
 
-inline
-const float4 float4::operator += (const float4 &v) { 
-    m_val4 = _mm_add_ps(m_val4, v.m_val4); 
-    return *this; 
+inline const float4 float4::operator+=(const float4 &v) {
+    m_val4 = _mm_add_ps(m_val4, v.m_val4);
+    return *this;
 }
 
-inline
-const float4 float4::operator -= (const float4 &v) {
-    m_val4 = _mm_sub_ps(m_val4, v.m_val4); 
-    return *this; 
+inline const float4 float4::operator-=(const float4 &v) {
+    m_val4 = _mm_sub_ps(m_val4, v.m_val4);
+    return *this;
 }
 
-inline
-const float4 float4::operator *= (const float4 &v) {
-    m_val4 = _mm_mul_ps(m_val4, v.m_val4); 
-    return *this; 
+inline const float4 float4::operator*=(const float4 &v) {
+    m_val4 = _mm_mul_ps(m_val4, v.m_val4);
+    return *this;
 }
 
-inline
-const float4 float4::operator /= (const float4 &v) {
-    m_val4 = _mm_div_ps(m_val4, v.m_val4); 
-    return *this; 
+inline const float4 float4::operator/=(const float4 &v) {
+    m_val4 = _mm_div_ps(m_val4, v.m_val4);
+    return *this;
 }
 
 ///	@brief  Shortcut to avoid copy operations.
-#define OSRE_NON_COPYABLE( NAME ) \
-private: \
-    NAME( const NAME & ) = delete;        \
-    NAME& operator = ( const NAME & ) = delete;
+#define OSRE_NON_COPYABLE(NAME)  \
+private:                         \
+    NAME(const NAME &) = delete; \
+    NAME &operator=(const NAME &) = delete;
 
-template<class T>
-inline
-String osre_to_string(T val) {
+template <class T>
+inline String osre_to_string(T val) {
     std::stringstream str;
     str << val;
 
@@ -806,9 +762,8 @@ struct Version {
     i32 mMajor;
     i32 mMinor;
 
-    Version(i32 major, i32 minor)
-    : mMajor(major)
-    , mMinor(minor) {
+    Version(i32 major, i32 minor) :
+            mMajor(major), mMinor(minor) {
         // empty
     }
 };

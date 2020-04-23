@@ -20,12 +20,12 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Properties/Settings.h>
+#include <cppcore/Common/Variant.h>
+#include <osre/Platform/AbstractWindow.h>
+#include <osre/Platform/PlatformInterface.h>
 #include <osre/Properties/BasePropertyMap.h>
 #include <osre/Properties/Property.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <osre/Platform/AbstractWindow.h>
-#include <cppcore/Common/Variant.h>
+#include <osre/Properties/Settings.h>
 
 namespace OSRE {
 namespace Properties {
@@ -33,13 +33,12 @@ namespace Properties {
 using namespace ::OSRE::Platform;
 
 static const CPPCore::Variant EmptyVariant;
-static const String           ConfigKeyStringTable[ Settings::MaxKonfigKey ] = {
+static const String ConfigKeyStringTable[Settings::MaxKonfigKey] = {
     "AppName",
     "AppType",
     "AppVersionMajor",
     "AppVersionMinor",
     "AppVersionPatch",
-    "PlatformPlugin",
     "WindowsTitle",
     "RenderAPI",
     "WinX",
@@ -59,8 +58,8 @@ static const String           ConfigKeyStringTable[ Settings::MaxKonfigKey ] = {
     "RenderMode"
 };
 
-Settings::Settings() 
-: m_propertyMap(new Properties::BasePropertyMap) {
+Settings::Settings() :
+        m_propertyMap(new Properties::BasePropertyMap) {
     initDefaults();
 }
 
@@ -69,108 +68,106 @@ Settings::~Settings() {
     m_propertyMap = nullptr;
 }
 
-bool Settings::configure( const String &initScriptFile ) {
-    String filename( initScriptFile );
+bool Settings::configure(const String &initScriptFile) {
+    String filename(initScriptFile);
 
     return true;
 }
 
-bool Settings::setString( Settings::ConfigKey key, const String &strValue ) {
-    if( strValue.empty( ) || key >= MaxKonfigKey || key < 0 ) {
+bool Settings::setString(Settings::ConfigKey key, const String &strValue) {
+    if (strValue.empty() || key >= MaxKonfigKey || key < 0) {
         return false;
     }
 
     CPPCore::Variant value;
-    value.setStdString( strValue );
-    m_propertyMap->setProperty( static_cast<ui32>( key ), "", value );
+    value.setStdString(strValue);
+    m_propertyMap->setProperty(static_cast<ui32>(key), "", value);
 
     return true;
 }
 
-String Settings::getString( ConfigKey key ) const {
-    const CPPCore::Variant &v = get( key );
+String Settings::getString(ConfigKey key) const {
+    const CPPCore::Variant &v = get(key);
     return v.getString();
 }
 
-bool Settings::setInt( ConfigKey key, i32 intValue ) {
-    if ( key >= MaxKonfigKey ) {
+bool Settings::setInt(ConfigKey key, i32 intValue) {
+    if (key >= MaxKonfigKey) {
         return false;
     }
 
     CPPCore::Variant value;
-    value.setInt( intValue );
-    m_propertyMap->setProperty( key, "", value );
+    value.setInt(intValue);
+    m_propertyMap->setProperty(key, "", value);
 
     return true;
 }
 
-i32 Settings::getInt( ConfigKey key ) const {
-    const CPPCore::Variant &v = get( key );
+i32 Settings::getInt(ConfigKey key) const {
+    const CPPCore::Variant &v = get(key);
     return v.getInt();
 }
 
-bool Settings::setBool( ConfigKey key, bool val ) {
-    if ( key >= MaxKonfigKey ) {
+bool Settings::setBool(ConfigKey key, bool val) {
+    if (key >= MaxKonfigKey) {
         return false;
     }
 
     CPPCore::Variant value;
-    value.setBool( val );
-    m_propertyMap->setProperty( key, "", value );
+    value.setBool(val);
+    m_propertyMap->setProperty(key, "", value);
 
     return true;
 }
 
-bool Settings::getBool( ConfigKey key ) const {
-    const CPPCore::Variant &v = get( key );
+bool Settings::getBool(ConfigKey key) const {
+    const CPPCore::Variant &v = get(key);
     return v.getBool();
 }
 
-bool Settings::setFloat( ConfigKey key, f32 floatValue ) {
-    if ( key >= MaxKonfigKey ) {
+bool Settings::setFloat(ConfigKey key, f32 floatValue) {
+    if (key >= MaxKonfigKey) {
         return false;
     }
     CPPCore::Variant value;
-    value.setFloat( floatValue );
-    m_propertyMap->setProperty( key, "", value );
+    value.setFloat(floatValue);
+    m_propertyMap->setProperty(key, "", value);
 
     return true;
 }
 
-f32 Settings::getFloat( ConfigKey key ) const {
-    const CPPCore::Variant &v = get( key );
+f32 Settings::getFloat(ConfigKey key) const {
+    const CPPCore::Variant &v = get(key);
     return v.getFloat();
 }
 
-const CPPCore::Variant &Settings::get( ConfigKey key ) const {
-    Properties::Property *pProperty = m_propertyMap->getProperty( key );
-    if( !pProperty ) {
+const CPPCore::Variant &Settings::get(ConfigKey key) const {
+    Properties::Property *pProperty = m_propertyMap->getProperty(key);
+    if (!pProperty) {
         return EmptyVariant;
     }
 
     return pProperty->getValue();
 }
 
-const String &Settings::getKeyAsString( ConfigKey key ) const {
-    return ConfigKeyStringTable[ key ];
+const String &Settings::getKeyAsString(ConfigKey key) const {
+    return ConfigKeyStringTable[key];
 }
 
 void Settings::clear() {
-    if ( nullptr != m_propertyMap ) {
+    if (nullptr != m_propertyMap) {
         m_propertyMap->clear();
     }
 }
 
-static i32 mapPlatformtype2Int( PluginType type ) {
+static i32 mapPlatformtype2Int(PluginType type) {
 #ifdef OSRE_WINDOWS
-    if ( PluginType::WindowsPlugin == type ) {
+    if (PluginType::WindowsPlugin == type) {
         return 0;
-    } else if ( PluginType::SDL2Plugin == type ) {
-        return 1;
     }
-#elif defined(OSRE_GNU_LINUX)
-    if ( PluginType::SDL2Plugin == type ) {
-            return 1;
+#else
+    if (PluginType::SDL2Plugin == type) {
+        return 1;
     }
 #endif
     return -1;

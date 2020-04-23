@@ -34,7 +34,19 @@ using namespace ::OSRE::RenderBackend;
 static const c8 *Tag = "View";
 
 View::View(const String &name, Common::Ids &ids, Node *parent) :
-        Node(name, ids, parent), m_fov(60.0f), m_w(0.0f), m_h(0.0f), m_near(0.0001f), m_far(1000.0f), m_aspectRatio(1.0), m_observedNode(nullptr), m_eye(1, 1, 1), m_center(0, 0, 0), m_up(0, 0, 1), m_view(), m_projection() {
+        Node(name, ids, parent),
+        m_fov(60.0f),
+        m_w(0.0f),
+        m_h(0.0f),
+        m_near(0.0001f),
+        m_far(1000.0f),
+        m_aspectRatio(1.0),
+        m_observedNode(nullptr),
+        m_eye(1, 1, 1),
+        m_center(0, 0, 0),
+        m_up(0, 0, 1),
+        m_view(),
+        m_projection() {
     // empty
 }
 
@@ -48,7 +60,7 @@ void View::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
     m_h = h;
     m_near = zNear;
     m_far = zFar;
-    f32 aspect = 1.0f;
+    m_aspectRatio = 1.0f;
     if (0.0f != h) {
         m_aspectRatio = w / h;
     }
@@ -84,21 +96,21 @@ void View::setLookAt(const glm::vec3 &eye, const glm::vec3 &center, const glm::v
     m_view = glm::lookAt(eye, center, up);
 }
 
-void View::setProjectionMode(f32 fov, f32 aspectRatio, f32 near, f32 far) {
+void View::setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farPlane) {
     m_fov = fov;
     m_aspectRatio = aspectRatio;
-    m_near = near;
-    m_far = far;
-    m_projection = glm::perspective(fov, aspectRatio, near, far);
+    m_near = nearPlane;
+    m_far = farPlane;
+    m_projection = glm::perspective(fov, aspectRatio, nearPlane, farPlane);
 }
 
-void View::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 near, f32 far) {
+void View::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane, f32 farPlane) {
     m_w = right - left;
     m_h = bottom - top;
 
-    m_near = near;
-    m_far = far;
-    m_projection = glm::ortho(left, right, bottom, top, near, far);
+    m_near = nearPlane;
+    m_far = farPlane;
+    m_projection = glm::ortho(left, right, bottom, top, nearPlane, farPlane);
 }
 
 const glm::mat4 &View::getView() const {

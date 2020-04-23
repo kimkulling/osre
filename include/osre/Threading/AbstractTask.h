@@ -36,7 +36,7 @@ namespace Common {
 
 namespace Platform {
     class AtomicInt;
-    class AbstractThread;
+    class Thread;
 }
 
 namespace Threading {
@@ -101,7 +101,7 @@ public:
 
     ///	@brief	A new thread instance will be assigned to the task. The task must be stopped.
     ///	@param	pThreadInstance		[in] A pointer showing to the current thread instance.
-    virtual void setThreadInstance( Platform::AbstractThread *pThreadInstance ) = 0;
+    virtual void setThreadInstance( Platform::Thread *pThreadInstance ) = 0;
 
     ///	@brief	The update callback.
     virtual void onUpdate() = 0;

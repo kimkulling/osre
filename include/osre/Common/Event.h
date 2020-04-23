@@ -107,8 +107,6 @@ struct OSRE_EXPORT Event {
     ///	@brief	An owned reference will be released.
     void release();
 
-    bool isEqual(const String &id) const;
-
     ///	@brief	Implementation of == operator.
     ///	@param	other	Instance to compare.
     ///	@return	true, if both instances are equal, else false.

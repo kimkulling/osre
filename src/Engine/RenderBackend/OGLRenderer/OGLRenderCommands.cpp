@@ -22,35 +22,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "OGLRenderCommands.h"
 
-#include "OGLRenderBackend.h"
-#include "OGLShader.h"
 #include "OGLCommon.h"
+#include "OGLRenderBackend.h"
 #include "OGLRenderEventHandler.h"
+#include "OGLShader.h"
 #include "RenderCmdBuffer.h"
 
+#include <osre/App/AssetRegistry.h>
 #include <osre/Common/Logger.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <osre/Platform/AbstractWindow.h>
-#include <osre/Platform/AbstractOGLRenderContext.h>
-#include <osre/Profiling/PerformanceCounterRegistry.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Shader.h>
-#include <osre/RenderBackend/Mesh.h>
-#include <osre/RenderBackend/HWBufferManager.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Uri.h>
-#include <osre/App/AssetRegistry.h>
+#include <osre/Platform/AbstractOGLRenderContext.h>
+#include <osre/Platform/AbstractWindow.h>
+#include <osre/Platform/PlatformInterface.h>
+#include <osre/Profiling/PerformanceCounterRegistry.h>
+#include <osre/RenderBackend/HWBufferManager.h>
+#include <osre/RenderBackend/Mesh.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/Shader.h>
 
 namespace OSRE {
 namespace RenderBackend {
 
-static const c8* Tag = "OGLRenderCommands";
+static const c8 *Tag = "OGLRenderCommands";
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::CPPCore;
 
-bool setupTextures(Material* mat, OGLRenderBackend* rb, TArray<OGLTexture*>& textures) {
+bool setupTextures(Material *mat, OGLRenderBackend *rb, TArray<OGLTexture *> &textures) {
     OSRE_ASSERT(nullptr != mat);
     OSRE_ASSERT(nullptr != rb);
 
@@ -70,9 +70,9 @@ bool setupTextures(Material* mat, OGLRenderBackend* rb, TArray<OGLTexture*>& tex
     }
 
     for (ui32 i = 0; i < numTextures; ++i) {
-        Texture* tex(mat->m_textures[i]);
+        Texture *tex(mat->m_textures[i]);
         if (!tex->m_textureName.empty()) {
-            OGLTexture* oglTexture = rb->createTexture(tex->m_textureName, tex);
+            OGLTexture *oglTexture = rb->createTexture(tex->m_textureName, tex);
             if (nullptr != oglTexture) {
                 textures.add(oglTexture);
             }
@@ -82,29 +82,29 @@ bool setupTextures(Material* mat, OGLRenderBackend* rb, TArray<OGLTexture*>& tex
     return true;
 }
 
-SetMaterialStageCmdData* setupMaterial(Material* material, OGLRenderBackend* rb, OGLRenderEventHandler* eh) {
+SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb, OGLRenderEventHandler *eh) {
     OSRE_ASSERT(nullptr != eh);
     OSRE_ASSERT(nullptr != material);
     OSRE_ASSERT(nullptr != rb);
-    
+
     if (nullptr == material || nullptr == rb || nullptr == eh) {
         return nullptr;
     }
-    SetMaterialStageCmdData* matData = new SetMaterialStageCmdData;
+    SetMaterialStageCmdData *matData = new SetMaterialStageCmdData;
     switch (material->m_type) {
         case MaterialType::ShaderMaterial: {
-            TArray<OGLTexture*> textures;
+            TArray<OGLTexture *> textures;
             setupTextures(material, rb, textures);
-            OGLRenderCmd* renderMatCmd = OGLRenderCmdAllocator::alloc(OGLRenderCmdType::SetMaterialCmd, nullptr);
+            OGLRenderCmd *renderMatCmd = OGLRenderCmdAllocator::alloc(OGLRenderCmdType::SetMaterialCmd, nullptr);
             if (!textures.isEmpty()) {
                 matData->m_textures = textures;
             }
 
-            OGLShader* shader = rb->createShader("mat", material->m_shader);
+            OGLShader *shader = rb->createShader("mat", material->m_shader);
             if (nullptr != shader) {
                 matData->m_shader = shader;
                 for (ui32 i = 0; i < material->m_shader->m_attributes.size(); i++) {
-                    const String& attribute = material->m_shader->m_attributes[i];
+                    const String &attribute = material->m_shader->m_attributes[i];
                     shader->addAttribute(attribute);
                 }
 
@@ -117,8 +117,7 @@ SetMaterialStageCmdData* setupMaterial(Material* material, OGLRenderBackend* rb,
             }
             renderMatCmd->m_data = matData;
             eh->enqueueRenderCmd(renderMatCmd);
-        }
-                                         break;
+        } break;
         default:
             break;
     }
@@ -126,17 +125,17 @@ SetMaterialStageCmdData* setupMaterial(Material* material, OGLRenderBackend* rb,
     return matData;
 }
 
-void setupParameter(UniformVar* param, OGLRenderBackend* rb, OGLRenderEventHandler* ev) {
+void setupParameter(UniformVar *param, OGLRenderBackend *rb, OGLRenderEventHandler *ev) {
     OSRE_ASSERT(nullptr != param);
     OSRE_ASSERT(nullptr != rb);
     OSRE_ASSERT(nullptr != ev);
 
-    if ( nullptr == param || nullptr == rb || nullptr == ev ) {
+    if (nullptr == param || nullptr == rb || nullptr == ev) {
         return;
     }
 
-    ::CPPCore::TArray<OGLParameter*> paramArray;
-    OGLParameter* oglParam = rb->getParameter(param->m_name);
+    ::CPPCore::TArray<OGLParameter *> paramArray;
+    OGLParameter *oglParam = rb->getParameter(param->m_name);
     if (nullptr == oglParam) {
         oglParam = rb->createParameter(param->m_name, param->m_type, &param->m_data, param->m_numItems);
     } else {
@@ -147,18 +146,18 @@ void setupParameter(UniformVar* param, OGLRenderBackend* rb, OGLRenderEventHandl
     ev->setParameter(paramArray);
 }
 
-OGLVertexArray* setupBuffers(Mesh* mesh, OGLRenderBackend* rb, OGLShader* oglShader) {
+OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglShader) {
     OSRE_ASSERT(nullptr != mesh);
     OSRE_ASSERT(nullptr != rb);
     OSRE_ASSERT(nullptr != oglShader);
 
-    if (nullptr == mesh || nullptr == rb || nullptr == oglShader ) {
+    if (nullptr == mesh || nullptr == rb || nullptr == oglShader) {
         return nullptr;
     }
 
     rb->useShader(oglShader);
 
-    OGLVertexArray* vertexArray = rb->createVertexArray();
+    OGLVertexArray *vertexArray = rb->createVertexArray();
     rb->bindVertexArray(vertexArray);
     BufferData *vertices = mesh->m_vb;
     if (nullptr == vertices) {
@@ -166,27 +165,27 @@ OGLVertexArray* setupBuffers(Mesh* mesh, OGLRenderBackend* rb, OGLShader* oglSha
         return nullptr;
     }
 
-    BufferData* indices = mesh->m_ib;
+    BufferData *indices = mesh->m_ib;
     if (nullptr == indices) {
         osre_debug(Tag, "No index buffer data for setting up data.");
         return nullptr;
     }
 
     // create vertex buffer and  and pass triangle vertex to buffer object
-    OGLBuffer* vb = rb->createBuffer(vertices->m_type);
+    OGLBuffer *vb = rb->createBuffer(vertices->m_type);
     vb->m_geoId = mesh->m_id;
     rb->bindBuffer(vb);
     rb->copyDataToBuffer(vb, vertices->getData(), vertices->getSize(), vertices->m_access);
 
     // enable vertex attribute arrays
-    TArray<OGLVertexAttribute*> attributes;
+    TArray<OGLVertexAttribute *> attributes;
     rb->createVertexCompArray(mesh->m_vertextype, oglShader, attributes);
     const ui32 stride = Mesh::getVertexSize(mesh->m_vertextype);
     rb->bindVertexLayout(vertexArray, oglShader, stride, attributes);
     rb->releaseVertexCompArray(attributes);
 
     // create index buffer and pass indices to element array buffer
-    OGLBuffer* ib = rb->createBuffer(indices->m_type);
+    OGLBuffer *ib = rb->createBuffer(indices->m_type);
     ib->m_geoId = mesh->m_id;
     rb->bindBuffer(ib);
     rb->copyDataToBuffer(ib, indices->getData(), indices->getSize(), indices->m_access);
@@ -196,9 +195,9 @@ OGLVertexArray* setupBuffers(Mesh* mesh, OGLRenderBackend* rb, OGLShader* oglSha
     return vertexArray;
 }
 
-void setupPrimDrawCmd(const char* id, bool useLocalMatrix, const glm::mat4& model,
-        const TArray<size_t>& primGroups, OGLRenderBackend* rb,
-        OGLRenderEventHandler* eh, OGLVertexArray* va) {
+void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat4 &model,
+        const TArray<size_t> &primGroups, OGLRenderBackend *rb,
+        OGLRenderEventHandler *eh, OGLVertexArray *va) {
     OSRE_ASSERT(nullptr != rb);
     OSRE_ASSERT(nullptr != eh);
 
@@ -206,8 +205,8 @@ void setupPrimDrawCmd(const char* id, bool useLocalMatrix, const glm::mat4& mode
         return;
     }
 
-    OGLRenderCmd* renderCmd = OGLRenderCmdAllocator::alloc(OGLRenderCmdType::DrawPrimitivesCmd, nullptr);
-    DrawPrimitivesCmdData* data = new DrawPrimitivesCmdData;
+    OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc(OGLRenderCmdType::DrawPrimitivesCmd, nullptr);
+    DrawPrimitivesCmdData *data = new DrawPrimitivesCmdData;
     if (useLocalMatrix) {
         data->m_model = model;
         data->m_localMatrix = useLocalMatrix;
@@ -218,13 +217,13 @@ void setupPrimDrawCmd(const char* id, bool useLocalMatrix, const glm::mat4& mode
     for (ui32 i = 0; i < primGroups.size(); ++i) {
         data->m_primitives.add(primGroups[i]);
     }
-    renderCmd->m_data = static_cast<void*>(data);
+    renderCmd->m_data = static_cast<void *>(data);
 
     eh->enqueueRenderCmd(renderCmd);
 }
 
-void setupInstancedDrawCmd(const char* id, const TArray<size_t>& ids, OGLRenderBackend* rb,
-        OGLRenderEventHandler* eh, OGLVertexArray* va, size_t numInstances) {
+void setupInstancedDrawCmd(const char *id, const TArray<size_t> &ids, OGLRenderBackend *rb,
+        OGLRenderEventHandler *eh, OGLVertexArray *va, size_t numInstances) {
     OSRE_ASSERT(nullptr != rb);
     OSRE_ASSERT(nullptr != eh);
 
@@ -232,9 +231,9 @@ void setupInstancedDrawCmd(const char* id, const TArray<size_t>& ids, OGLRenderB
         return;
     }
 
-    OGLRenderCmd* renderCmd = OGLRenderCmdAllocator::alloc(OGLRenderCmdType::DrawPrimitivesInstancesCmd, nullptr);
+    OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc(OGLRenderCmdType::DrawPrimitivesInstancesCmd, nullptr);
 
-    DrawInstancePrimitivesCmdData* data = new DrawInstancePrimitivesCmdData;
+    DrawInstancePrimitivesCmdData *data = new DrawInstancePrimitivesCmdData;
     data->m_id = id;
     data->m_vertexArray = va;
     data->m_numInstances = numInstances;
@@ -242,7 +241,7 @@ void setupInstancedDrawCmd(const char* id, const TArray<size_t>& ids, OGLRenderB
     for (ui32 j = 0; j < ids.size(); ++j) {
         data->m_primitives.add(ids[j]);
     }
-    renderCmd->m_data = static_cast<void*>(data);
+    renderCmd->m_data = static_cast<void *>(data);
     eh->enqueueRenderCmd(renderCmd);
 }
 

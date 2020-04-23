@@ -56,7 +56,10 @@ namespace Scene {
 class OSRE_EXPORT Node : public Common::Object {
 public:
     using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::Scene::Node>;
+    using NodeArray = CPPCore::TArray<Node *>;
     using AABB    = ::OSRE::Scene::TAABB<f32>;
+    using MeshReferenceArray = ::CPPCore::TArray<size_t>;
+    using PropertyMap = CPPCore::THashMap<ui32, Properties::Property *>;
 
     enum class TraverseMode {
         FlatMode,
@@ -101,12 +104,8 @@ protected:
     virtual void onRender(RenderBackend::RenderBackendService *renderBackendSrv);
 
 private:
-    using ChildrenArray = CPPCore::TArray<Node*>;
-    using MeshReferenceArray = ::CPPCore::TArray<size_t>;
 
-    using PropertyMap = CPPCore::THashMap<ui32, Properties::Property*>;
-
-    ChildrenArray m_children;
+    NodeArray m_children;
     Node *m_parent;
     MeshReferenceArray m_meshRefererenceArray;
     bool m_isActive;

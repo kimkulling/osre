@@ -55,6 +55,7 @@ Panel::~Panel() {
 void Panel::setHeadline( const String &headline ) {
     if ( m_headline != headline ) {
         m_headline = headline;
+        Widget::requestLayouting();
         Widget::requestRedraw();
     }
 }

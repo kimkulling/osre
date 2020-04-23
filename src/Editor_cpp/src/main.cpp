@@ -1,41 +1,22 @@
-#include <osre/App/AppBase.h>
+#include "OsreEdApp.h"
 #include <iostream>
 
 using namespace ::OSRE;
 using namespace ::OSRE::App;
 using namespace ::OSRE::UI;
-
-class OsreEdApp : public App::AppBase {
-public:
-    OsreEdApp(int argc, char *argv[]) :
-            AppBase(argc, (const char **)argv, "api", "The render API"),
-            m_canvas(nullptr){
-        // empty
-    }
-
-    ~OsreEdApp() override {
-        // empty
-    }
-
-protected:
-    bool onCreate() override {
-
-        return true;
-    }
-
-    void onUpdate() override {
-
-    }
-
-    bool onDestroy() override {
-        return true;
-    }
-
-private:
-    Canvas *m_canvas;
-};
+using namespace ::OSRE::Editor;
 
 int main(int argc, char *argv[]) {
-    std::cout << "Hello, editor.\n";
+    OsreEdApp app(argc, argv);
+
+    if (!app.create()) {
+        return 1;
+    }
+
+    while (app.handleEvents()) {
+        app.update();
+        app.requestNextFrame();
+    }
+
     return 0;
 }

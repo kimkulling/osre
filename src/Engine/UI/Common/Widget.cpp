@@ -184,12 +184,16 @@ Widget *Widget::getWidgetAt( size_t idx ) const {
 
 Widget &Widget::setRect( ui32 x, ui32 y, ui32 w, ui32 h ) {
     Rect2ui newRect( x,y,w,h );
-    if ( m_rect != newRect ) {
-        m_rect = newRect;
+    return setRect(newRect);
+}
+
+Widget &Widget::setRect( const Rect2ui &r ) {
+    if (m_rect != r) {
+        m_rect = r;
         requestLayouting();
         requestRedraw();
     }
-    
+
     return *this;
 }
 

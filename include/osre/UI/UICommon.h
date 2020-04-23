@@ -22,17 +22,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
 #include <osre/Common/TFunctor.h>
+#include <osre/Common/osre_common.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
-#include <cppcore/Container/TArray.h>
 #include <cppcore/Common/Variant.h>
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
 
 namespace RenderBackend {
-    class FontBase;
+class FontBase;
 }
 
 namespace UI {
@@ -49,7 +49,7 @@ struct UiFlags {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT Style {
     enum class ColorTable {
@@ -60,66 +60,76 @@ struct OSRE_EXPORT Style {
         FGColorHeadLine,
         BGColorHeadline,
         TextColor,
+        BorderColor,
         Max
     };
 
-    CPPCore::TArray<Color4> m_colors;
-    RenderBackend::FontBase *m_font;
-    i32 m_horizontalMargin;
-    i32 m_verticalMargin;
+    CPPCore::TArray<Color4> StyleColors;
+    RenderBackend::FontBase *StyleFont;
+    i32 HorizontalMargin;
+    i32 VerticalMargin;
+    bool HasBorder;
 
-    Style()
-    : m_colors()
-    , m_font(nullptr)
-    , m_horizontalMargin( -1 )
-    , m_verticalMargin( -1 ) {
+    Style() :
+            StyleColors(),
+            StyleFont(nullptr),
+            HorizontalMargin(-1),
+            VerticalMargin(-1),
+            HasBorder(true) {
         initClassicDesign();
     }
-    
+
     ~Style() {
         // empty
     }
 
     void initClassicDesign() {
         // colors widgets
-        m_colors.add(Color4(1.f, 1.f, 1.f, 1.f));
-        m_colors.add(Color4(0.9f, 0.9f, 0.9f, 1.f));
+        StyleColors.add(Color4(1.f, 1.f, 1.f, 1.f));
+        StyleColors.add(Color4(0.9f, 0.9f, 0.9f, 1.f));
 
         // colors headline
-        m_colors.add(Color4(1.f, 1.f, 1.f, 1.f));
-        m_colors.add(Color4(0.5f, 0.5f, 0.5f, 1.f));
+        StyleColors.add(Color4(1.f, 1.f, 1.f, 1.f));
+        StyleColors.add(Color4(0.5f, 0.5f, 0.5f, 1.f));
 
         // colors panel
-        m_colors.add( Color4( 1.f, 1.f, 1.f, 1.f ) );
-        m_colors.add( Color4( 0.7f, 0.7f, 0.7f, 1.f ) );
+        StyleColors.add(Color4(1.f, 1.f, 1.f, 1.f));
+        StyleColors.add(Color4(0.7f, 0.7f, 0.7f, 1.f));
 
         // colors text
-        m_colors.add(Color4(1.f, 1.f, 1.f, 1.f));
+        StyleColors.add(Color4(1.f, 1.f, 1.f, 1.f));
+
+        // border color
+        StyleColors.add(Color4(1.f, 1.f, 1.f, 1.f));
 
         // Margins
-        m_horizontalMargin = 1;
-        m_verticalMargin = 1;
+        HorizontalMargin = 1;
+        VerticalMargin = 1;
+
+        HasBorder = true;
     }
 
-    bool operator == (const Style &rhs) const {
+    bool operator==(const Style &rhs) const {
         for (ui32 i = 0; i < (ui32)ColorTable::Max; i++) {
-            if (m_colors[i] != rhs.m_colors[i]) {
+            if (StyleColors[i] != rhs.StyleColors[i]) {
                 return false;
             }
-            if (m_font != rhs.m_font) {
+            
+            if (StyleFont != rhs.StyleFont) {
                 return false;
             }
         }
+
         return true;
     }
 
-    bool operator != (const Style &rhs) const {
+    bool operator!=(const Style &rhs) const {
         return !(*this == rhs);
     }
 };
 
-using RenderBackend::UiVertexCache;
 using RenderBackend::UiIndexCache;
+using RenderBackend::UiVertexCache;
 
 struct UiRenderCmd {
     size_t m_startIndex;
@@ -133,11 +143,11 @@ struct UiRenderCmd {
 };
 
 struct UiRenderCmdCache {
-    using RenderCmdArray = CPPCore::TArray<UiRenderCmd*>;
+    using RenderCmdArray = CPPCore::TArray<UiRenderCmd *>;
 
-    UiVertexCache m_vc;             ///< Will store all vertices
-    UiIndexCache  m_ic;             ///< Will store all indices
-    RenderCmdArray m_renderCmds;    ///< Will store all render commands
+    UiVertexCache m_vc; ///< Will store all vertices
+    UiIndexCache m_ic; ///< Will store all indices
+    RenderCmdArray m_renderCmds; ///< Will store all render commands
 };
 
 /// This enum is used to describe the widget type.
@@ -154,7 +164,7 @@ enum class WidgetType {
 
 using UiFunctor = Common::Functor<void, ui32, void *>;
 
-/// @brief  Description of a single 
+/// @brief  Description of a single
 struct UiProperty {
     String m_name;
     CPPCore::Variant m_data;
@@ -176,23 +186,28 @@ enum class LayoutPolicy {
     InvalidLayoutPolicy
 };
 
+class Canvas;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT StyleProvider {
 public:
+    static void setUsingCanvas(Canvas *canvas);
     static Style &getCurrentStyle();
-    static void setStyle( const Style &newStyle );
+    static void setStyle(const Style &newStyle);
 
 private:
     StyleProvider();
     ~StyleProvider();
+    void notifyCanvas();
 
 private:
     static StyleProvider *s_instance;
     Style m_activeStyle;
+    Canvas *m_canvas;
 };
 
 } // Namespace UI

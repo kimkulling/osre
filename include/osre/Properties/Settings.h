@@ -51,7 +51,6 @@ public:
         AppVersionMajor,        ///< The application major version.
         AppVersionMinor,        ///< The application minor version.
         AppVersionPatch,        ///< The application version, patch level.
-        PlatformPlugin,         ///< The platform plugin type.
         WindowsTitle,			///< The title of the main window.
         RenderAPI,				///< The requested render API.
         WinX,					///< The x coordinate of the upper left window point.

@@ -166,12 +166,7 @@ SET( math_inc
 SET( platform_inc
     ${HEADER_PATH}/Platform/PlatformCommon.h
     ${HEADER_PATH}/Platform/AbstractOSService.h
-    ${HEADER_PATH}/Platform/AbstractThread.h
-    ${HEADER_PATH}/Platform/AbstractThreadEvent.h
-    ${HEADER_PATH}/Platform/AbstractThreadFactory.h
-    ${HEADER_PATH}/Platform/AbstractThreadLocalStorage.h
-    ${HEADER_PATH}/Platform/AbstractCriticalSection.h
-    ${HEADER_PATH}/Platform/AtomicInt.h
+    ${HEADER_PATH}/Platform/Threading.h
     ${HEADER_PATH}/Platform/AbstractPlatformEventQueue.h
     ${HEADER_PATH}/Platform/AbstractOGLRenderContext.h
     ${HEADER_PATH}/Platform/AbstractWindow.h
@@ -184,7 +179,6 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/PluginType.h
     ${HEADER_PATH}/Platform/PlatformInterface.h
     ${HEADER_PATH}/Platform/PlatformOperations.h
-    ${HEADER_PATH}/Platform/AbstractMutex.h
     ${HEADER_PATH}/Platform/AbstractDisplayInterface.h
 )
 SET( platform_win_inc
@@ -194,7 +188,6 @@ SET( platform_src
     Platform/CPUInfo.cpp
     Platform/SystemInfo.cpp
     Platform/SystemUtils.cpp
-    Platform/AtomicInt.cpp
     Platform/AbstractWindow.cpp
     Platform/PlatformInterface.cpp
     Platform/PlatformPluginFactory.cpp
@@ -206,7 +199,6 @@ SET( platform_win32_src
     Platform/win32/Win32DisplayInterface.h
     Platform/win32/Win32DisplayInterface.cpp
     Platform/win32/Win32SystemInfo.h
-    Platform/win32/Win32Atomic.h
     Platform/win32/Win32DbgLogStream.h
     Platform/win32/Win32Window.cpp
     Platform/win32/Win32Window.h
@@ -216,23 +208,16 @@ SET( platform_win32_src
     Platform/win32/Win32OGLRenderContext.h
     Platform/win32/Win32Timer.cpp
     Platform/win32/Win32Timer.h
-    Platform/win32/Win32CriticalSection.h
-    Platform/win32/Win32Thread.cpp
-    Platform/win32/Win32Thread.h
-    Platform/win32/Win32ThreadEvent.cpp
-    Platform/win32/Win32ThreadEvent.h
-    Platform/win32/Win32ThreadFactory.cpp
-    Platform/win32/Win32ThreadFactory.h
     Platform/win32/Win32Timer.cpp
     Platform/win32/Win32Timer.h
     Platform/win32/Win32DynamicLoader.cpp
     Platform/win32/Win32DynamicLoader.h
     Platform/win32/Win32OSService.cpp
     Platform/win32/Win32OSService.h
-    Platform/win32/Win32Mutex.h
-    Platform/win32/Win32Mutex.cpp
+    Platform/win32/Threading_win32.cpp
 )
 SET( platform_sdl2_src
+    Platform/sdl2/Threading_sdl2.cpp
     Platform/sdl2/SDL2DisplayInterface.h
     Platform/sdl2/SDL2DisplayInterface.cpp
     Platform/sdl2/SDL2Atomic.h
@@ -265,7 +250,9 @@ SET( platform_sdl2_src
 
 IF( WIN32 )
     SET( platform_impl_src ${platform_win32_src} )
-ENDIF( WIN32 )
+ELSE()
+    SET( platform_impl_src ${platform_sdl2_src} )
+ENDIF()
 
 #==============================================================================
 # Profiling
@@ -398,11 +385,14 @@ SET( scripting_mono_inc
 #==============================================================================
 # UI
 #==============================================================================
+SET( ui_common_src
+    UI/Common/Widget.cpp
+)
+
 SET( ui_src
     UI/UICommon.cpp
     UI/Image.cpp
     UI/FocusControl.cpp
-    UI/Widget.cpp
     UI/UiRenderer.cpp
     UI/UIRenderUtils.cpp
     UI/UIRenderUtils.h
@@ -425,6 +415,11 @@ SET( ui_inc
     ${HEADER_PATH}/UI/UiRenderer.h
     ${HEADER_PATH}/UI/UiItemFactory.h
 )
+SET( ui_winmanager_src
+    UI/WinManager/WMButton.h
+    UI/WinManager/WMDialog.h
+    UI/WinManager/WMDialog.cpp
+)
 
 #==============================================================================
 # Threading
@@ -438,7 +433,6 @@ SET( threading_inc
 )
 SET( threading_src
     Threading/AbstractTask.cpp
-    Threading/AbstractThreadFactory.cpp
     Threading/SystemTask.cpp
 )
 
@@ -484,20 +478,22 @@ SOURCE_GROUP( Include\\osre\\Debugging  FILES ${debugging_inc} )
 SOURCE_GROUP( Include\\osre\\System     FILES ${system_inc} )
 SOURCE_GROUP( Include\\osre\\Utils      FILES ${utils_inc} )
 SOURCE_GROUP( Include\\osre\\IO         FILES ${io_inc} )
-SOURCE_GROUP( Include\\osre\\Math          FILES ${math_inc} )
-SOURCE_GROUP( Include\\osre\\Memory        FILES ${memory_inc} )
-SOURCE_GROUP( Include\\osre\\Properties    FILES ${properties_inc} )
-SOURCE_GROUP( Include\\osre\\Platform      FILES ${platform_inc} )
+SOURCE_GROUP( Include\\osre\\Math              FILES ${math_inc} )
+SOURCE_GROUP( Include\\osre\\Memory            FILES ${memory_inc} )
+SOURCE_GROUP( Include\\osre\\Properties        FILES ${properties_inc} )
+SOURCE_GROUP( Include\\osre\\Platform          FILES ${platform_inc} )
 SOURCE_GROUP( Include\\osre\\Platform\\Windows FILES ${platform_win_inc} )
-SOURCE_GROUP( Include\\osre\\Profiling     FILES ${profiling_inc} )
-SOURCE_GROUP( Include\\osre\\Resources     FILES ${resources_inc} )
-SOURCE_GROUP( Include\\osre\\RenderBackend FILES ${renderbackend_inc} )
-SOURCE_GROUP( Include\\osre\\Scene         FILES ${scene_inc} )
-SOURCE_GROUP( Include\\osre\\Scripting     FILES ${scripting_mono_inc} )
-SOURCE_GROUP( Include\\osre\\Threading     FILES ${threading_inc} )
-SOURCE_GROUP( Include\\osre\\UI            FILES ${ui_inc} )
-
-SOURCE_GROUP( Documentation          FILES ${doc_inc} )
+SOURCE_GROUP( Include\\osre\\Profiling         FILES ${profiling_inc} )
+SOURCE_GROUP( Include\\osre\\Resources         FILES ${resources_inc} )
+SOURCE_GROUP( Include\\osre\\RenderBackend     FILES ${renderbackend_inc} )
+SOURCE_GROUP( Include\\osre\\Scene             FILES ${scene_inc} )
+SOURCE_GROUP( Include\\osre\\Scripting         FILES ${scripting_mono_inc} )
+SOURCE_GROUP( Include\\osre\\Threading         FILES ${threading_inc} )
+SOURCE_GROUP( Include\\osre\\UI                FILES ${ui_inc} )
+SOURCE_GROUP( Include\\osre\\UI\\Common        FILES ${ui_common_src} )
+SOURCE_GROUP( Include\\osre\\UI\\Ingame        FILES ${ui_ingame_src} )
+SOURCE_GROUP( Include\\osre\\UI\\WinManager    FILES ${ui_winmanager_src} )
+SOURCE_GROUP( Documentation                    FILES ${doc_inc} )
 
 add_definitions( -D${USE_PLATFORM} )
 
@@ -546,7 +542,6 @@ ADD_LIBRARY( osre SHARED
     ${profiling_src}
     ${platform_src}
         ${platform_impl_src}
-        ${platform_sdl2_src}
     ${utils_src}
     ${resources_src}
     ${renderbackend_src}
@@ -557,6 +552,8 @@ ADD_LIBRARY( osre SHARED
     ${threading_src}
         ${threading_impl_src}
     ${ui_src}
+    ${ui_common_src}
+    ${ui_winmanager_src}
 )
 
 target_link_libraries ( osre cppcore zlib Unzip glew soil jsoncpp_lib_static ${platform_libs} assimp )

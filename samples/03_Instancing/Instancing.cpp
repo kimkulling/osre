@@ -38,9 +38,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/GeometryBuilder.h>
 #include <osre/Scene/DbgRenderer.h>
 #include <osre/Scene/GeometryProcessor.h>
-
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/glm.hpp>
+#include <osre/Math/BaseMath.h>
 
 using namespace ::OSRE;
 using namespace ::OSRE::App;
