@@ -192,7 +192,6 @@ void Settings::initDefaults() {
     windowsTitle.setStdString("The OSRE experience");
     const i32 pluginType( mapPlatformtype2Int( Platform::PlatformInterface::getOSPluginType() ) );
     value.setInt( pluginType );
-    m_propertyMap->setProperty( PlatformPlugin, ConfigKeyStringTable[ PlatformPlugin  ], value );
     m_propertyMap->setProperty( WindowsTitle, ConfigKeyStringTable[ WindowsTitle ], windowsTitle );
     renderAPI.setStdString("opengl");
     m_propertyMap->setProperty( RenderAPI, ConfigKeyStringTable[ RenderAPI ], renderAPI );
