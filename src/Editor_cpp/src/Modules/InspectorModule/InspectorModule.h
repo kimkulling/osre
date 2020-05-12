@@ -22,37 +22,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Object.h>
+#include "Modules/ModuleBase.h"
 
 namespace OSRE {
 namespace Editor {
 
-class IModuleView;
-
-class ModuleBase : Common::Object {
+class InspectorModule : public ModuleBase {
 public:
-    virtual ~ModuleBase();
-    virtual void setModulelView(IModuleView *view);
-    virtual IModuleView *getModuleView() const; 
-    virtual bool load();
-    virtual bool unload();
-    virtual void update();
+    InspectorModule(const String &name);
+    ~InspectorModule() override;
 
 protected:
-    ModuleBase( const String &name );
     virtual bool onLoad();
     virtual bool onUnload();
     virtual void onUpdate();
-
-private:
-    enum LoadState {
-        Init,
-        Loaded,
-        Unloaded,
-        Error
-    } mState;
-    IModuleView *mView;
 };
-
 } // namespace Editor
 } // namespace OSRE

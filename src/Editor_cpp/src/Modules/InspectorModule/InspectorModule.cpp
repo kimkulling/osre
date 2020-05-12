@@ -20,39 +20,28 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/Common/Object.h>
+#include "Modules/InspectorModule/InspectorModule.h"
 
 namespace OSRE {
 namespace Editor {
 
-class IModuleView;
+InspectorModule::InspectorModule(const String &name) :
+        ModuleBase(name) {
+}
 
-class ModuleBase : Common::Object {
-public:
-    virtual ~ModuleBase();
-    virtual void setModulelView(IModuleView *view);
-    virtual IModuleView *getModuleView() const; 
-    virtual bool load();
-    virtual bool unload();
-    virtual void update();
+InspectorModule::~InspectorModule() {
+}
 
-protected:
-    ModuleBase( const String &name );
-    virtual bool onLoad();
-    virtual bool onUnload();
-    virtual void onUpdate();
+bool InspectorModule::onLoad() {
+    return true;
+}
 
-private:
-    enum LoadState {
-        Init,
-        Loaded,
-        Unloaded,
-        Error
-    } mState;
-    IModuleView *mView;
-};
+bool InspectorModule::onUnload() {
+    return true;
+}
+
+void InspectorModule::onUpdate() {
+}
 
 } // namespace Editor
 } // namespace OSRE

@@ -22,21 +22,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/IO/Directory.h>
 
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 #ifdef OSRE_WINDOWS
-#   include <osre/Platform/Windows/MinWindows.h>
+#    include <osre/Platform/Windows/MinWindows.h>
 #else
-#   include <unistd.h>
+#    include <dirent.h>
+#    include <unistd.h>
 #endif // OSRE_WINDOWS
 
 namespace OSRE {
 namespace IO {
-        
+
 bool Directory::exists(const String &dir) {
     struct stat info;
-    if ( -1 == ::stat( dir.c_str(), &info ) ) {
+    if (-1 == ::stat(dir.c_str(), &info)) {
         return false;
     }
 
@@ -75,7 +76,7 @@ String Directory::getDirSeparator() {
     return sep;
 }
 
-bool Directory::setCurrentDirectory(const String& absPath) {
+bool Directory::setCurrentDirectory(const String &absPath) {
     if (absPath.empty()) {
         return false;
     }
@@ -91,19 +92,19 @@ String Directory::getCurrentDirectory() {
     c8 buffer[BufferLen];
 #ifdef OSRE_WINDOWS
     DWORD len = ::GetCurrentDirectory(BufferLen, buffer);
-    if (len>0) {
+    if (len > 0) {
         String path(buffer);
         return path;
     }
     return "";
 #else
     char *b = ::getcwd(buffer, BufferLen);
-    String path( b );
+    String path(b);
     return path;
 #endif
 }
 
-bool Directory::createDirectory(const c8* name) {
+bool Directory::createDirectory(const c8 *name) {
     if (nullptr == name) {
         return false;
     }
@@ -113,6 +114,34 @@ bool Directory::createDirectory(const c8* name) {
 #else
     return 0 == ::mkdir(name, 0777);
 #endif
+}
+bool Directory::getFileList(const String &absPath, FileList &files) {
+    if (absPath.empty()) {
+        return false;
+    }
+
+#ifdef OSRE_WINDOWS
+    WIN32_FIND_DATA data;
+    HANDLE hFind;
+    if ((hFind = FindFirstFile(absPath.c_str(), &data)) != INVALID_HANDLE_VALUE) {
+        do {
+            files.add(data.cFileName);
+        } while (FindNextFile(hFind, &data) != 0);
+        FindClose(hFind);
+    }
+#else
+    DIR *dir;
+    struct dirent *ent;
+    if ((dir = opendir(absPath.c_str())) != NULL) {
+        /* print all the files and directories within directory */
+        while ((ent = readdir(dir)) != NULL) {
+            files.add(ent->d_name);
+        }
+        closedir(dir);
+    }
+#endif
+
+    return true;
 }
 
 } // Namespace IO

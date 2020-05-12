@@ -1,8 +1,16 @@
 INCLUDE_DIRECTORIES(
+    ./
+    ./src
     ${PROJECT_SOURCE_DIR}
 )
 
+SET( inspector_module_src 
+    src/Modules/InspectorModule/InspectorModule.cpp
+    src/Modules/InspectorModule/InspectorModule.h
+)
+
 SET( modules_src 
+    src/Modules/IModuleView.h
     src/Modules/ModuleBase.cpp
     src/Modules/ModuleBase.h
 )
@@ -13,10 +21,12 @@ SET( scripting_src
     src/Scripting/LuaBase.h
 )
 
-SOURCE_GROUP( src\\Modules\\    FILES ${modules_src} )
-SOURCE_GROUP( src\\Scripting\\  FILES ${scripting_src} )
+SOURCE_GROUP( Modules\\InspectorModule FILES ${inspector_module_src} )
+SOURCE_GROUP( Modules\\                FILES ${modules_src} )
+SOURCE_GROUP( Scripting\\              FILES ${scripting_src} )
 
 ADD_EXECUTABLE( osre_ed
+    ${inspector_module_src}
     ${modules_src}
     ${scripting_src}
     src/OsreEdApp.cpp

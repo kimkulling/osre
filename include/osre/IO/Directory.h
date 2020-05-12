@@ -34,6 +34,8 @@ namespace IO {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Directory {
 public:
+    using FileList = ::CPPCore::TArray<String>;
+
     /// @brief  Will return true, when the directory exists.
     /// @param  dir     [in] The name of the directory.
     /// @return true, when the directory exists.
@@ -50,9 +52,16 @@ public:
     /// @remark For instance using a Unix platform / will be returned.
     static String getDirSeparator();
 
+    ///	@brief	Will set the current working directory.
+    /// @param  absPath     [in] The new directory.
+    /// @return true, if the directory exists, false if not.
     static bool setCurrentDirectory(const String& absPath);
+
+    /// @brief  Will return The current working directory.
+    /// @return The current working directory.
     static String getCurrentDirectory();
     static bool createDirectory( const c8 *name );
+    static bool getFileList(const String &absPath, FileList &files);
 };
 
 } // Namespace IO

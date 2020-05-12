@@ -27,32 +27,32 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Editor {
 
-class IModuleView;
-
-class ModuleBase : Common::Object {
+class IModuleView : Common::Object {
 public:
-    virtual ~ModuleBase();
-    virtual void setModulelView(IModuleView *view);
-    virtual IModuleView *getModuleView() const; 
-    virtual bool load();
-    virtual bool unload();
+    virtual ~IModuleView();
     virtual void update();
 
 protected:
-    ModuleBase( const String &name );
-    virtual bool onLoad();
-    virtual bool onUnload();
+    IModuleView(const String &name);
     virtual void onUpdate();
-
-private:
-    enum LoadState {
-        Init,
-        Loaded,
-        Unloaded,
-        Error
-    } mState;
-    IModuleView *mView;
 };
+
+inline IModuleView::IModuleView( const String &name ) :
+        Object( name ) {
+    // empty
+}
+
+inline IModuleView::~IModuleView() {
+    // empty
+}
+
+inline void IModuleView::update() {
+    // empty
+}
+
+inline void IModuleView::onUpdate() {
+    // empty
+}
 
 } // namespace Editor
 } // namespace OSRE
