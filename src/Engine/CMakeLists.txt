@@ -288,10 +288,10 @@ SET ( properties_src
 #==============================================================================
 SET( scene_inc
     ${HEADER_PATH}/Scene/SceneCommon.h
-    ${HEADER_PATH}/Scene/GeometryProcessor.h
+    ${HEADER_PATH}/Scene/MeshProcessor.h
+    ${HEADER_PATH}/Scene/MeshBuilder.h
     ${HEADER_PATH}/Scene/AnimatorBase.h
     ${HEADER_PATH}/Scene/DbgRenderer.h
-    ${HEADER_PATH}/Scene/GeometryBuilder.h
     ${HEADER_PATH}/Scene/MaterialBuilder.h
     ${HEADER_PATH}/Scene/Node.h
     ${HEADER_PATH}/Scene/Stage.h
@@ -304,9 +304,9 @@ SET( scene_inc
 )
 SET( scene_src
     Scene/DbgRenderer.cpp
+    Scene/MeshProcessor.cpp
+    Scene/MeshBuilder.cpp
     Scene/LineBuilder.cpp
-    Scene/GeometryBuilder.cpp
-    Scene/GeometryProcessor.cpp
     Scene/MaterialBuilder.cpp
     Scene/Node.cpp
     Scene/Stage.cpp

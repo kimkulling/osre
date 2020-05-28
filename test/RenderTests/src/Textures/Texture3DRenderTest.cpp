@@ -25,58 +25,57 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/MeshBuilder.h>
-#include <osre/RenderBackend/Mesh.h>
-#include <osre/Scene/DbgRenderer.h>
-
-#include <iomanip>
 
 namespace OSRE {
 namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	RenderTest
-///
-///	@brief  A geo-model - rendering test
-//-------------------------------------------------------------------------------------------------
-class GeoModelMatrixRenderTest : public AbstractRenderTest {
+static const c8 *Tag = "Texture3DRenderTest";
+
+class Texture3DRenderTest : public AbstractRenderTest {
+    f32 m_angle;
     TransformMatrixBlock m_transformMatrix;
 
 public:
-    GeoModelMatrixRenderTest()
-    : AbstractRenderTest( "rendertest/GeoModelMatrixRenderTest" ) {
+    Texture3DRenderTest() :
+            AbstractRenderTest("rendertest/texture3drendertest"),
+            m_angle(0.02f),
+            m_transformMatrix() {
         // empty
     }
 
-    virtual ~GeoModelMatrixRenderTest() {
+    ~Texture3DRenderTest() override {
         // empty
     }
 
-    bool onCreate( RenderBackendService *rbSrv ) override {
-        rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
+protected:
+    bool onCreate(RenderBackendService *rbSrv) override {
+        rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
-        Scene::MeshBuilder myBuilder;
-        myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
-        Mesh *mesh1 = myBuilder.getMesh();
-        mesh1->m_localMatrix = true; 
-        TransformState transform;
-        transform.setTranslation( 0.5f, 0, 0 );
-        transform.setScale(0.2f, 0.2f, 0.2f);
-        transform.toMatrix( mesh1->m_model );
-        
-        rbSrv->beginPass( PipelinePass::getPassNameById( RenderPassId ) );
+        Scene::MeshBuilder meshBuilder;
+        meshBuilder.allocCube(VertexType::RenderVertex, 1, 1, 1, BufferAccessType::ReadOnly);
+        Mesh *mesh = meshBuilder.getMesh();
+
+        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        {
+            rbSrv->beginRenderBatch("b1");
+            {
+                rbSrv->addMesh(mesh, 0);
+            }
+            rbSrv->endRenderBatch();
+        }
+        rbSrv->endPass();
+
+        return true;
+    }
+
+    bool onRender(RenderBackendService *rbSrv) override {
+        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
-        
-        rbSrv->addMesh( mesh1, 0 );
 
-        myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
-        Mesh *mesh2 = myBuilder.getMesh();
-        mesh2->m_localMatrix = true;
-        transform.setTranslation( -0.5f, 0, 0 );
-        transform.setScale(0.2f, 0.2f, 0.2f);
-        transform.toMatrix( mesh2->m_model );
-        rbSrv->addMesh( mesh2, 0 );
+        m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, m_angle, glm::vec3(1, 1, 0));
+        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
 
         rbSrv->endRenderBatch();
         rbSrv->endPass();
@@ -85,7 +84,7 @@ public:
     }
 };
 
-ATTACH_RENDERTEST( GeoModelMatrixRenderTest )
+ATTACH_RENDERTEST(Texture3DRenderTest)
 
-} // Namespace RenderTest
-} // Namespace OSRE
+} // namespace RenderTest
+}

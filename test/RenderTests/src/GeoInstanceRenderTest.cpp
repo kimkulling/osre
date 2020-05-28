@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
-#include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/MeshBuilder.h>
 
 namespace OSRE {
 namespace RenderTest {

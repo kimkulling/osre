@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Shader.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
-#include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 
@@ -121,7 +121,7 @@ public:
         rbSrv->addMesh( mesh, 0 );
 
         // use textured material
-        TextureResourceArray texResArray;;
+        TextureResourceArray texResArray;
         TextureResource* texRes = new TextureResource("SpiderTex", IO::Uri("file://assets/Models/Obj/SpiderTex.jpg") );
         texResArray.add(texRes);
         mesh->m_material = Scene::MaterialBuilder::createTexturedMaterial("SpiderTex", texResArray, VsSrc, FsSrc);

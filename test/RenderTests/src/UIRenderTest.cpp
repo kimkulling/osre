@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
-#include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/Stage.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/UiItemFactory.h>
