@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Component.h>
 #include <osre/Properties/Settings.h>
 #include <osre/Common/Logger.h>
-#include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/Stage.h>
 #include <osre/Scene/Node.h>
 #include <osre/App/AssetRegistry.h>

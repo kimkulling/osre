@@ -19,23 +19,28 @@ SET ( rendertest_src
     src/RenderTestSuite.cpp
     src/PrimTypeRenderTest.cpp
     src/BaseTriangleRenderTest.cpp
-    src/BaseTextureRenderTest.cpp
     src/DbgFontRenderTest.cpp
     src/GeoInstanceRenderTest.cpp
 	src/RenderBufferAccessTest.cpp
 	src/StaticTextRenderTest.cpp
 	src/SwitchCmdBufferRenderTest.cpp
 	src/RenderTargetRenderTest.cpp
-	src/Textures/3DTexttureRenderTest.cpp
     src/RenderTestSuite.h
     src/RenderTestUtils.h
     src/main.cpp
 )
 
-SOURCE_GROUP( src          FILES ${rendertest_src} )
+SET ( rendertest_texture_src
+	src/Textures/Texture3DRenderTest.cpp
+    src/Textures/BaseTextureRenderTest.cpp
+)
+
+SOURCE_GROUP( src           FILES ${rendertest_src} )
+SOURCE_GROUP( src\\Textures FILES ${rendertest_texture_src} )
 
 ADD_EXECUTABLE( osre_rendertest
     ${rendertest_src}
+    ${rendertest_texture_src}
 )
 
 link_directories( 

@@ -35,9 +35,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Common/Ids.h>
-#include <osre/Scene/GeometryBuilder.h>
+#include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/DbgRenderer.h>
-#include <osre/Scene/GeometryProcessor.h>
+#include <osre/Scene/MeshProcessor.h>
 #include <osre/Math/BaseMath.h>
 
 using namespace ::OSRE;
