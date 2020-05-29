@@ -155,7 +155,6 @@ ADD_SUBDIRECTORY( 3dparty/soil )
 set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "no assimp tools")
 ADD_SUBDIRECTORY( 3dparty/assimp )
 ADD_SUBDIRECTORY( 3dparty/jsoncpp-1.8.4 )
-ADD_SUBDIRECTORY( 3dparty/lua-5.3.5 )
 
 # Include the doc component
 IF( OSRE_BUILD_DOC )

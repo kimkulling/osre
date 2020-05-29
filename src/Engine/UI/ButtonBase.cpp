@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/UI/ButtonBase.h>
 #include <osre/UI/Image.h>
+#include <osre/UI/StyleProvider.h>
 #include <osre/UI/TextBase.h>
 
 #include "UIRenderUtils.h"
@@ -46,7 +47,12 @@ ButtonBase::FunctorContainer::~FunctorContainer() {
 }
 
 ButtonBase::ButtonBase(const String &name, Widget *parent) :
-        Widget(name, parent), m_label(), m_image(), m_imageWidget(nullptr), m_textWidget(nullptr), m_callback(new FunctorContainer[(ui32)WidgetState::NumWidgetState]) {
+        Widget(name, parent),
+        m_label(),
+        m_image(),
+        m_imageWidget(nullptr),
+        m_textWidget(nullptr),
+        m_callback(new FunctorContainer[(ui32)WidgetState::NumWidgetState]) {
     static_cast<void>(StyleProvider::getCurrentStyle());
     if (nullptr != parent) {
         setStackIndex(parent->getStackIndex() + 1);
@@ -59,19 +65,21 @@ ButtonBase::~ButtonBase() {
 }
 
 void ButtonBase::setLabel(const String &label) {
-    if (m_label != label) {
-        m_label = label;
-        if (!label.empty()) {
-            if (nullptr == m_textWidget) {
-                m_textWidget = new TextBase(getName() + ".label", this);
-            }
-
-            m_textWidget->setLabel(m_label);
+    if (m_label == label) {
+        return;
+    }
+     
+    m_label = label;
+    if (!label.empty()) {
+        if (nullptr == m_textWidget) {
+            m_textWidget = new TextBase(getName() + ".label", this);
         }
 
-        Widget::requestRedraw();
-        Widget::requestLayouting();
+        m_textWidget->setLabel(m_label);
     }
+
+    Widget::requestRedraw();
+    Widget::requestLayouting();
 }
 
 const String &ButtonBase::getLabel() const {
@@ -133,8 +141,8 @@ void ButtonBase::onLayout() {
     if (nullptr != m_textWidget) {
         const ui32 x1 = getRect().getX1();
         const ui32 y1 = getRect().getY1();
-        const ui32 w = getRect().getWidth() - style.HorizontalMargin*2;
-        const ui32 h = getRect().getHeight() - style.VerticalMargin*2;
+        const ui32 w = getRect().getWidth() - style.HorizontalMargin * 2;
+        const ui32 h = getRect().getHeight() - style.VerticalMargin * 2;
         m_textWidget->setRect(x1 + style.HorizontalMargin, y1 + style.VerticalMargin, w, h);
     }
 

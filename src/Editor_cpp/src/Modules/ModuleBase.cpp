@@ -1,6 +1,8 @@
 #include "ModuleBase.h"
 #include "IModuleView.h"
 
+#include <osre/App/AppBase.h>
+
 namespace OSRE {
 namespace Editor {
 
@@ -23,12 +25,12 @@ IModuleView *ModuleBase::getModuleView() const {
     return mView;
 }
 
-bool ModuleBase::load() {
+bool ModuleBase::load(OsreEdApp *parent) {
     if (mState != Init) {
         return false;
     }
 
-    if (onLoad()) {
+    if (onLoad(parent)) {
         mState = Loaded;
     } else {
         mState = Error;
@@ -37,11 +39,11 @@ bool ModuleBase::load() {
     return mState == Loaded;
 }
 
-bool ModuleBase::unload() {
+bool ModuleBase::unload(OsreEdApp *parent) {
     if (mState != Loaded) {
         return false;
     }
-    if (onUnload()) {
+    if (onUnload(parent)) {
         mState = Unloaded;
     } else {
         mState = Error;
@@ -60,11 +62,11 @@ void ModuleBase::update() {
     }
 }
 
-bool ModuleBase::onLoad() {
+bool ModuleBase::onLoad(OsreEdApp *parent) {
     return true;
 }
 
-bool ModuleBase::onUnload() {
+bool ModuleBase::onUnload(OsreEdApp *parent) {
     return true;
 }
 

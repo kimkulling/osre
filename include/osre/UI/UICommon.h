@@ -46,87 +46,6 @@ struct UiFlags {
     static const ui32 Resizable = 0x001;
 };
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-struct OSRE_EXPORT Style {
-    enum class ColorTable {
-        FGColorWidget = 0,
-        BGColorWidget,
-        FGColorPanel,
-        BGColoPanel,
-        FGColorHeadLine,
-        BGColorHeadline,
-        TextColor,
-        BorderColor,
-        Max
-    };
-
-    CPPCore::TArray<Color4> StyleColors;
-    RenderBackend::FontBase *StyleFont;
-    i32 HorizontalMargin;
-    i32 VerticalMargin;
-    bool HasBorder;
-
-    Style() :
-            StyleColors(),
-            StyleFont(nullptr),
-            HorizontalMargin(-1),
-            VerticalMargin(-1),
-            HasBorder(true) {
-        initClassicDesign();
-    }
-
-    ~Style() {
-        // empty
-    }
-
-    void initClassicDesign() {
-        // colors widgets
-        StyleColors.add(Color4(1.f, 1.f, 1.f, 1.f));
-        StyleColors.add(Color4(0.9f, 0.9f, 0.9f, 1.f));
-
-        // colors headline
-        StyleColors.add(Color4(1.f, 1.f, 1.f, 1.f));
-        StyleColors.add(Color4(0.5f, 0.5f, 0.5f, 1.f));
-
-        // colors panel
-        StyleColors.add(Color4(1.f, 1.f, 1.f, 1.f));
-        StyleColors.add(Color4(0.7f, 0.7f, 0.7f, 1.f));
-
-        // colors text
-        StyleColors.add(Color4(1.f, 1.f, 1.f, 1.f));
-
-        // border color
-        StyleColors.add(Color4(1.f, 1.f, 1.f, 1.f));
-
-        // Margins
-        HorizontalMargin = 1;
-        VerticalMargin = 1;
-
-        HasBorder = true;
-    }
-
-    bool operator==(const Style &rhs) const {
-        for (ui32 i = 0; i < (ui32)ColorTable::Max; i++) {
-            if (StyleColors[i] != rhs.StyleColors[i]) {
-                return false;
-            }
-            
-            if (StyleFont != rhs.StyleFont) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    bool operator!=(const Style &rhs) const {
-        return !(*this == rhs);
-    }
-};
 
 using RenderBackend::UiIndexCache;
 using RenderBackend::UiVertexCache;
@@ -184,30 +103,6 @@ enum class LayoutPolicy {
     NumLayoutPolicies,
 
     InvalidLayoutPolicy
-};
-
-class Canvas;
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT StyleProvider {
-public:
-    static void setUsingCanvas(Canvas *canvas);
-    static Style &getCurrentStyle();
-    static void setStyle(const Style &newStyle);
-
-private:
-    StyleProvider();
-    ~StyleProvider();
-    void notifyCanvas();
-
-private:
-    static StyleProvider *s_instance;
-    Style m_activeStyle;
-    Canvas *m_canvas;
 };
 
 } // Namespace UI

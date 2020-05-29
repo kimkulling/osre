@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "UIRenderUtils.h"
-
+#include <osre/UI/StyleProvider.h>
 #include <osre/UI/Widget.h>
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -53,7 +53,8 @@ static f32 getZbyStackIndex(ui32 stackIndex ) {
     return result;
 }
 
-void UIRenderUtils::drawRectFromStyle( const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache, UiIndexCache &indexCache, ui32 stackIndex, WidgetType type ) {
+void UIRenderUtils::drawRectFromStyle( const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
+        UiIndexCache &indexCache, ui32 stackIndex, WidgetType type ) {
 
     f32 x1, y1, x2, y2;
     WidgetCoordMapping::mapPosToWorld( rect.getX1(), rect.getY1(), x1, y1 );

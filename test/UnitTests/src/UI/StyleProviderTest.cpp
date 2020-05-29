@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
 #include <osre/UI/Widget.h>
+#include <osre/UI/StyleProvider.h>
 
 namespace OSRE {
 namespace UnitTest {

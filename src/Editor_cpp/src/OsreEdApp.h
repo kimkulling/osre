@@ -17,12 +17,14 @@ class ModuleBase;
 class OsreEdApp : public App::AppBase {
     using ModuleArray = ::CPPCore::TArray<ModuleBase *>;
     using ModulePathArray = ::CPPCore::TArray<String>;
+
 public:
     OsreEdApp(int argc, char *argv[]);
     ~OsreEdApp() override;
     bool addModulePath(const String &path);
     bool registerModule(ModuleBase *mod);
     bool loadModules();
+    UI::Panel *getRootPanel() const;
 
 protected:
     bool onCreate() override;

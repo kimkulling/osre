@@ -25,18 +25,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Editor {
 
-InspectorModule::InspectorModule(const String &name) :
-        ModuleBase(name) {
+InspectorModule::InspectorModule() :
+        ModuleBase("InspectionModule") {
 }
 
 InspectorModule::~InspectorModule() {
 }
 
-bool InspectorModule::onLoad() {
+bool InspectorModule::onLoad(OsreEdApp *parent) {
     return true;
 }
 
-bool InspectorModule::onUnload() {
+bool InspectorModule::onUnload(OsreEdApp *parent) {
     return true;
 }
 

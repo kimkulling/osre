@@ -20,57 +20,19 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Common/Logger.h>
 #include <osre/UI/UICommon.h>
-#include <osre/ui/Canvas.h>
 
 namespace OSRE {
 namespace UI {
 
-static const c8 *Tag = "StyleProvider";
-
-StyleProvider *StyleProvider::s_instance = nullptr;
-
-void StyleProvider::setUsingCanvas(Canvas *canvas) {
-    if (s_instance->m_canvas != canvas) {
-        s_instance->m_canvas = canvas;
-        if (nullptr != s_instance->m_canvas) {
-            s_instance->m_canvas->requestLayouting();
-            s_instance->m_canvas->requestRedraw();
-        }
-    }
-}
-
-Style &StyleProvider::getCurrentStyle() {
-    if (nullptr == s_instance) {
-        s_instance = new StyleProvider;
-    }
-
-    return s_instance->m_activeStyle;
-}
-
-void StyleProvider::setStyle(const Style &newStyle) {
-    if (nullptr == s_instance) {
-        static_cast<void>(StyleProvider::getCurrentStyle());
-    }
-
-    if (nullptr == s_instance) {
-        osre_debug(Tag, "Singleton instance is nullptr.");
-        return;
-    }
-
-    if (newStyle != s_instance->m_activeStyle) {
-        s_instance->m_activeStyle = newStyle;
-    }
-}
-
-StyleProvider::StyleProvider() :
-        m_activeStyle(),
-        m_canvas(nullptr) {
+UiRenderCmd::UiRenderCmd() :
+        m_startIndex( 0 ),
+        m_numIndices( 0 ),
+        m_texture( nullptr ) {
     // empty
 }
 
-StyleProvider::~StyleProvider() {
+UiRenderCmd::~UiRenderCmd() {
     // empty
 }
 

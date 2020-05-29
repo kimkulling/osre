@@ -401,9 +401,11 @@ SET( ui_src
     UI/Canvas.cpp
     UI/TextBase.cpp
     UI/UiItemFactory.cpp
+    UI/StyleProvider.cpp
 )
 SET( ui_inc
     ${HEADER_PATH}/UI/UICommon.h
+    ${HEADER_PATH}/UI/StyleProvider.h
     ${HEADER_PATH}/UI/FocusControl.h
     ${HEADER_PATH}/UI/Layouter.h
     ${HEADER_PATH}/UI/Image.h

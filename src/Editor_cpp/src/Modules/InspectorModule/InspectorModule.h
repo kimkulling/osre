@@ -25,17 +25,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Modules/ModuleBase.h"
 
 namespace OSRE {
+
+namespace UI {
+class Panel;
+
+}
+
 namespace Editor {
 
 class InspectorModule : public ModuleBase {
 public:
-    InspectorModule(const String &name);
+    InspectorModule();
     ~InspectorModule() override;
 
 protected:
-    virtual bool onLoad();
-    virtual bool onUnload();
+    virtual bool onLoad(OsreEdApp *parent);
+    virtual bool onUnload(OsreEdApp *parent);
     virtual void onUpdate();
+
+private:
+    UI::Panel *mPanel;
 };
+
 } // namespace Editor
 } // namespace OSRE

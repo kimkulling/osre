@@ -1,6 +1,6 @@
 #include "OsreEdApp.h"
 #include "Modules/ModuleBase.h"
-
+#include "Modules/InspectorModule/InspectorModule.h"
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/Panel.h>
@@ -60,7 +60,7 @@ bool OsreEdApp::loadModules() {
     // Load registered modules
     for (size_t i = 0; i < mModuleArray.size(); ++i) {
         ModuleBase *mod = mModuleArray[i];
-        if (!mod->load()) {
+        if (!mod->load(this)) {
             return false;
         }
     }
@@ -68,10 +68,17 @@ bool OsreEdApp::loadModules() {
     return true;
 }
 
+UI::Panel *OsreEdApp::getRootPanel() const {
+    return mUiScreen.m_mainPanel;
+}
+
 bool OsreEdApp::onCreate() {
     if (!AppBase::onCreate()) {
         return false;
     }
+
+    registerModule(new InspectorModule());
+    loadModules();
 
     Rect2ui r;
     AppBase::getRootWindow()->getWindowsRect(r);
@@ -82,7 +89,8 @@ bool OsreEdApp::onCreate() {
     mUiScreen.m_mainPanel->setRect(r);
     mUiScreen.m_logPanel = new UI::Panel("log_panel", mUiScreen.m_mainPanel);
     mUiScreen.m_logPanel->setHeadline("Log");
-    mUiScreen.m_logPanel->setRect(r.getX1() + HorizontalMargin, r.getY1() + r.getHeight() / 3, r.getWidth() - 2 * HorizontalMargin, r.getHeight() - (r.getY1() + r.getHeight() / 3) - 2 * VerticalMargin);
+    mUiScreen.m_logPanel->setRect(r.getX1() + HorizontalMargin, r.getY1() + r.getHeight() / 3, 
+        r.getWidth() - 2 * HorizontalMargin, r.getHeight() - (r.getY1() + r.getHeight() / 3) - 2 * VerticalMargin);
     mUiScreen.m_modelPanel = new UI::Panel("model_panel", mUiScreen.m_mainPanel);
     mUiScreen.m_modelPanel->setHeadline("Model");
 

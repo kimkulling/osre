@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Editor {
 
+class OsreEdApp;
 class IModuleView;
 
 class ModuleBase : Common::Object {
@@ -34,14 +35,14 @@ public:
     virtual ~ModuleBase();
     virtual void setModulelView(IModuleView *view);
     virtual IModuleView *getModuleView() const; 
-    virtual bool load();
-    virtual bool unload();
+    virtual bool load(OsreEdApp *parent);
+    virtual bool unload(OsreEdApp *parent);
     virtual void update();
 
 protected:
-    ModuleBase( const String &name );
-    virtual bool onLoad();
-    virtual bool onUnload();
+    ModuleBase(const String &name );
+    virtual bool onLoad(OsreEdApp *parent);
+    virtual bool onUnload(OsreEdApp *parent);
     virtual void onUpdate();
 
 private:

@@ -77,17 +77,6 @@ void WidgetCoordMapping::mapPosToWorld( const Rect2ui &rect, ui32 x, ui32 y, f32
     }
 }
 
-UiRenderCmd::UiRenderCmd()
-: m_startIndex(0)
-, m_numIndices(0)
-, m_texture( nullptr ) {
-    // empty
-}
-
-UiRenderCmd::~UiRenderCmd() {
-    // empty
-}
-
 Widget::Widget( const String &name, Widget *parent )
 : Object( name )
 , m_parent( nullptr )

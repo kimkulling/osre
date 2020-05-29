@@ -22,22 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/UI/UICommon.h>
-#include <osre/UI/Widget.h>
+#include <osre/ui/UICommon.h>
 
 namespace OSRE {
-
-// Forward declarations
-namespace Platform {
-
-class AbstractWindow;
-
-}
-
-namespace RenderBackend {
-class RenderBackendService;
-}
-
 namespace UI {
 
 //-------------------------------------------------------------------------------------------------
@@ -45,31 +32,54 @@ namespace UI {
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT ButtonBase : public Widget {
-public:
-    ButtonBase(const String &name, Widget *parent);
-    ~ButtonBase() override;
-    virtual void setLabel(const String &label);
-    virtual const String &getLabel() const;
-    virtual void setImage(Image &image);
-    virtual void setImage(const String &name);
-    virtual const String &getImage() const;
-    void registerCallback(WidgetState state, UiFunctor functor);
-    static ButtonBase *createIconButton(const String &name, Image &icon, Widget *parent);
-    static ButtonBase *createBaseButton(const String &name, const String &label, Widget *parent);
+struct OSRE_EXPORT Style {
+    enum class ColorTable {
+        FGColorWidget = 0,
+        BGColorWidget,
+        FGColorPanel,
+        BGColoPanel,
+        FGColorHeadLine,
+        BGColorHeadline,
+        TextColor,
+        BorderColor,
+        Max
+    };
 
-protected:
-    void onLayout() override;
-    void onRender(UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv) override;
-    void onMouseDown(const Point2ui &pt, void *data) override;
-    void onMouseUp(const Point2ui &pt, void *data) override;
+    CPPCore::TArray<Color4> StyleColors;
+    RenderBackend::FontBase *StyleFont;
+    i32 HorizontalMargin;
+    i32 VerticalMargin;
+    bool HasBorder;
+
+    Style();
+    ~Style();
+    void initClassicDesign();
+    bool operator==(const Style &rhs) const;
+    bool operator!=(const Style &rhs) const;
+};
+
+class Canvas;
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
+class OSRE_EXPORT StyleProvider {
+public:
+    static void setUsingCanvas(Canvas *canvas);
+    static Style &getCurrentStyle();
+    static void setStyle(const Style &newStyle);
 
 private:
-    String m_label;
-    IO::Uri m_image;
-    Image *m_imageWidget;
-    TextBase *m_textWidget;
-    FunctorContainer *m_callback;
+    StyleProvider();
+    ~StyleProvider();
+    void notifyCanvas();
+
+private:
+    static StyleProvider *s_instance;
+    Style m_activeStyle;
+    Canvas *m_canvas;
 };
 
 } // Namespace UI
