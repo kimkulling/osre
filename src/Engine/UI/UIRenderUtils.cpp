@@ -21,11 +21,11 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "UIRenderUtils.h"
+#include <osre/RenderBackend/Mesh.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Scene/MaterialBuilder.h>
 #include <osre/UI/StyleProvider.h>
 #include <osre/UI/Widget.h>
-#include <osre/Scene/MaterialBuilder.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Mesh.h>
 
 #include <cppcore/Memory/MemUtils.h>
 
@@ -43,79 +43,121 @@ UIRenderUtils::~UIRenderUtils() {
     // empty
 }
 
-static const ui16 RectIndices[6] = {
+static const ui16 RectIndices[12] = {
     0, 1, 2, // first triangle
-    2, 1, 3  // second triangle
+    2, 1, 3, // second triangle
+
+    4, 5, 6, // second triangle
+    6, 5, 7 // second triangle
 };
 
-static f32 getZbyStackIndex(ui32 stackIndex ) {
-    const f32 result = (f32)stackIndex * -0.1f;
+static f32 getZbyStackIndex(f32 stackIndex) {
+    const f32 result = stackIndex * -0.1f;
     return result;
 }
 
-void UIRenderUtils::drawRectFromStyle( const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
-        UiIndexCache &indexCache, ui32 stackIndex, WidgetType type ) {
-
-    f32 x1, y1, x2, y2;
-    WidgetCoordMapping::mapPosToWorld( rect.getX1(), rect.getY1(), x1, y1 );
-    WidgetCoordMapping::mapPosToWorld( rect.getX2(), rect.getY2(), x2, y2 );
-
-    // setup triangle vertices
-    RenderVert vertices[ 4 ];
-    vertices[ 0 ].position = glm::vec3( x1, y1, getZbyStackIndex( stackIndex ) );
-    vertices[ 1 ].position = glm::vec3( x1, y2, getZbyStackIndex( stackIndex ) );
-    vertices[ 2 ].position = glm::vec3( x2, y1, getZbyStackIndex( stackIndex ) );
-    vertices[ 3 ].position = glm::vec3( x2, y2, getZbyStackIndex( stackIndex ) );
-
-    Color4 col;
-    switch (type) {
-    case WidgetType::Panel:
-        col = style.StyleColors[ ( ui32 )Style::ColorTable::BGColoPanel ];
-        break;
-    case WidgetType::Button:
-    default:
-        col = style.StyleColors[ ( ui32 )Style::ColorTable::BGColorWidget ];
-        break;
+static void drawFilledRect(RenderVert *vertices, ui32 x1, ui32 y1, ui32 x2, ui32 y2, f32 stackIndex, Color4 col) {
+    if (nullptr == vertices) {    
+        return;
     }
 
-    vertices[ 0 ].color0 = glm::vec3( col.m_r, col.m_g, col.m_b );
-    vertices[ 1 ].color0 = glm::vec3( col.m_r, col.m_g, col.m_b );
-    vertices[ 2 ].color0 = glm::vec3( col.m_r, col.m_g, col.m_b );
-    vertices[ 3 ].color0 = glm::vec3( col.m_r, col.m_g, col.m_b );
+    f32 screenX1=0, screenY1=0, screenX2=0, screenY2=0;
+    WidgetCoordMapping::mapPosToWorld(x1, y1, screenX1, screenY1);
+    WidgetCoordMapping::mapPosToWorld(x2, y2, screenX2, screenY2);
 
-    vertices[ 0 ].tex0 = glm::vec2( 0, 0 );
-    vertices[ 1 ].tex0 = glm::vec2( 0, 1 );
-    vertices[ 2 ].tex0 = glm::vec2( 1, 0 );
-    vertices[ 3 ].tex0 = glm::vec2( 1, 1 );
+    // setup triangle vertices
+    const f32 z = getZbyStackIndex(stackIndex);
+    vertices[0].position = glm::vec3(screenX1, screenY1, z);
+    vertices[1].position = glm::vec3(screenX1, screenY2, z);
+    vertices[2].position = glm::vec3(screenX2, screenY1, z);
+    vertices[3].position = glm::vec3(screenX2, screenY2, z);
+
+    vertices[0].color0 = glm::vec3(col.m_r, col.m_g, col.m_b);
+    vertices[1].color0 = glm::vec3(col.m_r, col.m_g, col.m_b);
+    vertices[2].color0 = glm::vec3(col.m_r, col.m_g, col.m_b);
+    vertices[3].color0 = glm::vec3(col.m_r, col.m_g, col.m_b);
+
+    vertices[0].tex0 = glm::vec2(0, 0);
+    vertices[1].tex0 = glm::vec2(0, 1);
+    vertices[2].tex0 = glm::vec2(1, 0);
+    vertices[3].tex0 = glm::vec2(1, 1);
+}
+
+void UIRenderUtils::drawRectFromStyle(const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
+        UiIndexCache &indexCache, ui32 stackIndex, WidgetType type) {
+    Color4 col;
+    switch (type) {
+        case WidgetType::Panel:
+            col = style.StyleColors[(ui32)Style::ColorTable::BGColoPanel];
+            break;
+        case WidgetType::Button:
+        default:
+            col = style.StyleColors[(ui32)Style::ColorTable::BGColorWidget];
+            break;
+    }
+
+    RenderVert vertices[4];
+    drawFilledRect(vertices, rect.getX1(), rect.getY1(), rect.getX2(), rect.getY2(), static_cast<f32>(stackIndex), col);
 
     size_t vertOffset = vertexCache.numVertices();
     vertexCache.increaseSize(4);
-    for ( ui32 i = 0; i < 4; ++i ) {
-        vertexCache.add( vertices[ i ] );
+    for (ui32 i = 0; i < 4; ++i) {
+        vertexCache.add(vertices[i]);
     }
 
-    indexCache.increaseSize( 6 );
-    for ( ui32 i = 0; i < 6; ++i ) {
+    indexCache.increaseSize(6);
+    for (ui32 i = 0; i < 6; ++i) {
         ui16 index = static_cast<ui16>(vertOffset) + RectIndices[i];
-        indexCache.add( index );
+        indexCache.add(index);
     }
 }
 
-Rect2ui UIRenderUtils::drawTextBox( const String &text, f32 textSize ) {
-    ui32 width = 0, height = static_cast<ui32>(textSize);
-    for ( ui32 i = 0; i < text.size(); ++i ) {
-        if ( text[ i ] == '\n' ) {
-            height += static_cast<ui32>( textSize );
-        }
-        width += static_cast<ui32>( textSize );
+void UIRenderUtils::drawBorderRectFromStyle( const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
+        UiIndexCache &indexCache, ui32 stackIndex, WidgetType type ) {
+    RenderVert vertices[8];
+    Color4 col, borderCol(0.4f, 0.4f, 0.4f, 0.4f);
+    switch (type) {
+        case WidgetType::Panel:
+            col = style.StyleColors[(ui32)Style::ColorTable::BGColoPanel];
+            break;
+        case WidgetType::Button:
+        default:
+            col = style.StyleColors[(ui32)Style::ColorTable::BGColorWidget];
+            break;
     }
-    const Rect2ui box( 0, 0, width, height );
-    
+
+    ui32 borderWidth = 2;
+    drawFilledRect(vertices, rect.getX1(), rect.getY1(), rect.getX2(), rect.getY2(), static_cast<f32>(stackIndex), borderCol);
+    drawFilledRect(&vertices[4], rect.getX1() + borderWidth, rect.getY1() + borderWidth, rect.getX2() - borderWidth, rect.getY2() - borderWidth, static_cast<f32>(stackIndex) + 0.5f, col);
+
+    size_t vertOffset = vertexCache.numVertices();
+    vertexCache.increaseSize(8);
+    for (ui32 i = 0; i < 8; ++i) {
+        vertexCache.add(vertices[i]);
+    }
+
+    indexCache.increaseSize(12);
+    for (ui32 i = 0; i < 12; ++i) {
+        ui16 index = static_cast<ui16>(vertOffset) + RectIndices[i];
+        indexCache.add(index);
+    }
+}
+
+Rect2ui UIRenderUtils::drawTextBox(const String &text, f32 textSize) {
+    ui32 width = 0, height = static_cast<ui32>(textSize);
+    for (ui32 i = 0; i < text.size(); ++i) {
+        if (text[i] == '\n') {
+            height += static_cast<ui32>(textSize);
+        }
+        width += static_cast<ui32>(textSize);
+    }
+    const Rect2ui box(0, 0, width, height);
+
     return box;
 }
 
-RenderBackend::Mesh *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, Texture* texture ) {
-    Mesh *mesh = Mesh::create( 1 );
+RenderBackend::Mesh *UIRenderUtils::createGeoFromCache(UiVertexCache &vertexCache, UiIndexCache &indexCache, Texture *texture) {
+    Mesh *mesh = Mesh::create(1);
 
     mesh->m_vertextype = VertexType::RenderVertex;
     mesh->m_indextype = IndexType::UnsignedShort;
@@ -130,7 +172,7 @@ RenderBackend::Mesh *UIRenderUtils::createGeoFromCache( UiVertexCache &vertexCac
 
     // use default ui material
     mesh->m_material = Scene::MaterialBuilder::createBuildinUiMaterial();
-    if ( nullptr != texture ) {
+    if (nullptr != texture) {
         mesh->m_material->m_numTextures = 1;
         mesh->m_material->m_textures = new Texture *[mesh->m_material->m_numTextures];
         mesh->m_material->m_textures[0] = texture;
