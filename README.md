@@ -101,4 +101,4 @@ This example will show you how to create a window, load a model using assimp and
 ## Sample 3: UI-Demo
 This example will show you how to create a simple dialog and add your own callbacks.
 
-[03-UIDemo](https://github.com/kimkulling/osre/tree/master/samples/02_UIDemo)
+[02-UIDemo](https://github.com/kimkulling/osre/tree/master/samples/02_UIDemo)
