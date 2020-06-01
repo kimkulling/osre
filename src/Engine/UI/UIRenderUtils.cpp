@@ -156,7 +156,7 @@ Rect2ui UIRenderUtils::drawTextBox(const String &text, f32 textSize) {
     return box;
 }
 
-RenderBackend::Mesh *UIRenderUtils::createGeoFromCache(UiVertexCache &vertexCache, UiIndexCache &indexCache, Texture *texture) {
+RenderBackend::Mesh *UIRenderUtils::createGeoFromCache(UiVertexCache &vertexCache, UiIndexCache &indexCache, Material *material) {
     Mesh *mesh = Mesh::create(1);
 
     mesh->m_vertextype = VertexType::RenderVertex;
@@ -171,11 +171,9 @@ RenderBackend::Mesh *UIRenderUtils::createGeoFromCache(UiVertexCache &vertexCach
     }
 
     // use default ui material
-    mesh->m_material = Scene::MaterialBuilder::createBuildinUiMaterial();
-    if (nullptr != texture) {
-        mesh->m_material->m_numTextures = 1;
-        mesh->m_material->m_textures = new Texture *[mesh->m_material->m_numTextures];
-        mesh->m_material->m_textures[0] = texture;
+    mesh->m_material = material;
+    if (nullptr == material) {
+        mesh->m_material = Scene::MaterialBuilder::createBuildinUiMaterial();
     }
 
     mesh->m_numPrimGroups = 1;

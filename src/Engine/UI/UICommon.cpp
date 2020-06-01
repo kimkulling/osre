@@ -28,7 +28,7 @@ namespace UI {
 UiRenderCmd::UiRenderCmd() :
         m_startIndex( 0 ),
         m_numIndices( 0 ),
-        m_texture( nullptr ) {
+        mMaterial( nullptr ) {
     // empty
 }
 

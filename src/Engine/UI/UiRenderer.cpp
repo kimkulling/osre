@@ -71,11 +71,11 @@ void UiRenderer::render( Canvas *canvas, RenderBackendService * rbSrv) {
 
     Debugging::MeshDiagnostic::dumpUiIndexCache(cache.m_ic);
     Debugging::MeshDiagnostic::dumpUiVertexCache(cache.m_vc);
-    Texture* tex(nullptr);
-    if (nullptr != cache.m_renderCmds[0]->m_texture) {
-        tex = cache.m_renderCmds[0]->m_texture;
+    Material *mat = nullptr;
+    if (nullptr != cache.m_renderCmds[0]->mMaterial) {
+        mat = cache.m_renderCmds[0]->mMaterial;
     }
-    Mesh *mesh = UIRenderUtils::createGeoFromCache(cache.m_vc, cache.m_ic, tex);
+    Mesh *mesh = UIRenderUtils::createGeoFromCache(cache.m_vc, cache.m_ic, mat);
     if (nullptr == mesh) {
         return;
     }

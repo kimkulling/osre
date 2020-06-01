@@ -53,7 +53,7 @@ using RenderBackend::UiVertexCache;
 struct UiRenderCmd {
     size_t m_startIndex;
     size_t m_numIndices;
-    RenderBackend::Texture *m_texture;
+    RenderBackend::Material *mMaterial;
 
     UiRenderCmd();
     ~UiRenderCmd();

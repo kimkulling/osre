@@ -51,7 +51,7 @@ public:
             UiIndexCache &indexCache, ui32 stackIndex, WidgetType type);
     static Rect2ui drawTextBox(const String &text, f32 textSize);
     static RenderBackend::Mesh *createGeoFromCache( UiVertexCache &vertexCache, UiIndexCache &indexCache, 
-        RenderBackend::Texture *texture );
+        RenderBackend::Material *material );
     
 private:
     UIRenderUtils();
