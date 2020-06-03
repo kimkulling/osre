@@ -76,6 +76,7 @@ void ButtonBase::setLabel(const String &label) {
         }
 
         m_textWidget->setLabel(m_label);
+        m_textWidget->setStackIndex(getStackIndex() + 2);
     }
 
     Widget::requestRedraw();
@@ -139,11 +140,11 @@ ButtonBase *ButtonBase::createBaseButton(const String &name, const String &label
 void ButtonBase::onLayout() {
     Style &style = StyleProvider::getCurrentStyle();
     if (nullptr != m_textWidget) {
-        const ui32 x1 = getRect().getX1();
-        const ui32 y1 = getRect().getY1();
+        const ui32 x1 = getRect().getX1() + style.HorizontalMargin;
+        const ui32 y1 = getRect().getY1() + style.VerticalMargin;
         const ui32 w = getRect().getWidth() - style.HorizontalMargin * 2;
         const ui32 h = getRect().getHeight() - style.VerticalMargin * 2;
-        m_textWidget->setRect(x1 + style.HorizontalMargin, y1 + style.VerticalMargin, w, h);
+        m_textWidget->setRect(x1, y1, w, h);
     }
 
     Widget::layoutingDone();
@@ -159,7 +160,7 @@ void ButtonBase::onRender(UiRenderCmdCache &renderCmdCache, RenderBackendService
     } else {
         UIRenderUtils::drawRectFromStyle(rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic, Widget::getStackIndex(), WidgetType::Button);
     }
-    UiRenderCmd *cmd(new UiRenderCmd);
+    UiRenderCmd *cmd = new UiRenderCmd;
     cmd->m_startIndex = startIndex;
     cmd->m_numIndices = renderCmdCache.m_ic.numIndices() - startIndex;
     renderCmdCache.m_renderCmds.add(cmd);

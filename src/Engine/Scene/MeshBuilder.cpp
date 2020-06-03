@@ -419,7 +419,7 @@ static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const 
         const c8 ch = text[i];
         if (Tokenizer::isLineBreak(ch)) {
             textCol = 0;
-            textRow++;
+            ++textRow;
             continue;
         }
 
@@ -517,8 +517,12 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
 
     return *this;
 }
+static f32 getZbyStackIndex(f32 stackIndex) {
+    const f32 result = stackIndex * -0.1f;
+    return result;
+}
 
-void MeshBuilder::allocUiTextBox(f32 x, f32 y, f32 z, f32 textSize, const String &text, BufferAccessType access,
+void MeshBuilder::allocUiTextBox(f32 x, f32 y, i32 stackIndex, f32 textSize, const String &text, BufferAccessType access,
         UiVertexCache &vc, UiIndexCache &ic) {
     glm::vec3 *textPos(nullptr), *colors(nullptr);
     glm::vec2 *tex0(nullptr);
@@ -529,7 +533,7 @@ void MeshBuilder::allocUiTextBox(f32 x, f32 y, f32 z, f32 textSize, const String
     for (size_t i = 0; i < numNewVerts; i++) {
         RenderVert v;
         v.position = textPos[i];
-        v.position.z = z;
+        v.position.z = getZbyStackIndex(stackIndex);
         v.color0 = colors[i];
         v.tex0 = tex0[i];
         vc.add(v);
