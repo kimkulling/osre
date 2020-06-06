@@ -57,11 +57,11 @@ static f32 getZbyStackIndex(f32 stackIndex) {
 }
 
 static void drawFilledRect(RenderVert *vertices, ui32 x1, ui32 y1, ui32 x2, ui32 y2, f32 stackIndex, Color4 col) {
-    if (nullptr == vertices) {    
+    if (nullptr == vertices) {
         return;
     }
 
-    f32 screenX1=0, screenY1=0, screenX2=0, screenY2=0;
+    f32 screenX1 = 0, screenY1 = 0, screenX2 = 0, screenY2 = 0;
     WidgetCoordMapping::mapPosToWorld(x1, y1, screenX1, screenY1);
     WidgetCoordMapping::mapPosToWorld(x2, y2, screenX2, screenY2);
 
@@ -112,8 +112,8 @@ void UIRenderUtils::drawRectFromStyle(const Rect2ui &rect, const Style &style, U
     }
 }
 
-void UIRenderUtils::drawBorderRectFromStyle( const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
-        UiIndexCache &indexCache, ui32 stackIndex, WidgetType type ) {
+void UIRenderUtils::drawBorderRectFromStyle(const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
+        UiIndexCache &indexCache, ui32 stackIndex, WidgetType type) {
     RenderVert vertices[8];
     Color4 col, borderCol(0.4f, 0.4f, 0.4f, 0.4f);
     switch (type) {
@@ -158,6 +158,9 @@ Rect2ui UIRenderUtils::drawTextBox(const String &text, f32 textSize) {
 
 RenderBackend::Mesh *UIRenderUtils::createGeoFromCache(UiVertexCache &vertexCache, UiIndexCache &indexCache, Material *material) {
     Mesh *mesh = Mesh::create(1);
+    if (nullptr == mesh) {
+        return nullptr;
+    }
 
     mesh->m_vertextype = VertexType::RenderVertex;
     mesh->m_indextype = IndexType::UnsignedShort;

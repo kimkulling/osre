@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Common/Tokenizer.h>
 #include <osre/Debugging/osre_debugging.h>
+#include <osre/UI/Widget.h>
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -531,16 +532,19 @@ void MeshBuilder::allocUiTextBox(f32 x, f32 y, i32 stackIndex, f32 textSize, con
     const size_t offset = vc.numVertices();
     const size_t numNewVerts = getNumTextVerts(text);
     for (size_t i = 0; i < numNewVerts; i++) {
+
         RenderVert v;
         v.position = textPos[i];
+        UI::WidgetCoordMapping::mapPosToWorld(static_cast<ui32>(v.position.x), static_cast<ui32>(v.position.y), v.position.x, v.position.y);
+
+
         v.position.z = getZbyStackIndex(stackIndex);
         v.color0 = colors[i];
         v.tex0 = tex0[i];
         vc.add(v);
     }
 
-    const size_t numIndices(getNumTextIndices(text));
-    
+    const size_t numIndices = getNumTextIndices(text);
     for (size_t i = 0; i < numIndices; ++i) {
         ic.add(textIndices[i] + ( GLushort ) offset);
     }
