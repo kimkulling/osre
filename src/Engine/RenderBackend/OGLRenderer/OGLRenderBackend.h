@@ -129,6 +129,7 @@ public:
 	OGLTexture *createTextureFromStream(const String &name, IO::Stream &stream, ui32 width, ui32 height, ui32 channels);
 	OGLTexture *findTexture(const String &name) const;
 	bool bindTexture(OGLTexture *pOGLTextue, TextureStageType stageType);
+    bool unbindTexture( TextureStageType stageType);
 	void releaseTexture(OGLTexture *pTexture);
 	void releaseAllTextures();
 	OGLParameter *createParameter(const String &name, ParameterType type, UniformDataBlob *blob, size_t numItems);
@@ -151,24 +152,25 @@ public:
 
 private:
 	Platform::AbstractOGLRenderContext *m_renderCtx;
-	CPPCore::TArray<OGLBuffer *> m_buffers;
+	CPPCore::TArray<OGLBuffer*> m_buffers;
 	GLuint m_activeVB;
 	GLuint m_activeIB;
-	CPPCore::TArray<OGLVertexArray *> m_vertexarrays;
+	CPPCore::TArray<OGLVertexArray*> m_vertexarrays;
 	GLuint m_activeVertexArray;
 	CPPCore::TArray<OGLShader *> m_shaders;
 	CPPCore::TArray<OGLTexture *> m_textures;
+    CPPCore::TArray<OGLTexture *> mBindedTextures;
 	CPPCore::TArray<size_t> m_freeTexSlots;
 	FontBase *m_activeFont;
 	std::map<String, size_t> m_texLookupMap;
 	CPPCore::TArray<OGLParameter *> m_parameters;
 	OGLShader *m_shaderInUse;
 	CPPCore::TArray<size_t> m_freeBufferSlots;
-	CPPCore::TArray<OGLPrimGroup *> m_primitives;
+	CPPCore::TArray<OGLPrimGroup*> m_primitives;
 	RenderStates *m_fpState;
 	Profiling::FPSCounter *m_fpsCounter;
 	OGLCapabilities *m_oglCapabilities;
-	CPPCore::TArray<OGLFrameBuffer *> m_framebuffers;
+	CPPCore::TArray<OGLFrameBuffer*> m_framebuffers;
     String m_extensions;
     i32 m_OpenGLVersion[ 2 ];
 };
