@@ -36,6 +36,8 @@ namespace RenderBackend {
 
 namespace UI {
 
+class FontRenderer;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -50,6 +52,7 @@ public:
 
 private:
     RenderBackend::Material *m_uiMaterial;
+    FontRenderer *mFontRenderer;
 };
 
 } // Namespace UI

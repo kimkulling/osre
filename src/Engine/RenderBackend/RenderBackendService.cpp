@@ -20,21 +20,21 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
+#include <osre/Profiling/PerformanceCounterRegistry.h>
+#include <osre/Properties/Settings.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Mesh.h>
-#include <osre/Properties/Settings.h>
-#include <osre/Profiling/PerformanceCounterRegistry.h>
-#include <osre/Threading/SystemTask.h>
 #include <osre/Scene/DbgRenderer.h>
+#include <osre/Threading/SystemTask.h>
 #include <osre/UI/Widget.h>
 
 #include "OGLRenderer/OGLRenderEventHandler.h"
 #include "VulkanRenderer/VlkRenderEventHandler.h"
 #ifdef OSRE_WINDOWS
+#include "DX11Renderer/DX11RenderVEventHandler.h"
+#include "DX11Renderer/DX11Renderer.h"
 #include <osre/Platform/Windows/MinWindows.h>
-#   include "DX11Renderer/DX11Renderer.h"
-#   include "DX11Renderer/DX11RenderVEventHandler.h"
 #endif
 
 namespace OSRE {
@@ -54,7 +54,7 @@ static const c8 *DX11_API = "dx11";
 
 #endif // OSRE_WINDOWS
 
-static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData*> &passDataArray) {
+static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataArray) {
     for (ui32 i = 0; i < passDataArray.size(); ++i) {
         if (0 == strncmp(passDataArray[i]->m_id, id, strlen(id))) {
             return i;
@@ -63,7 +63,7 @@ static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData*> &passDataArr
     return -1;
 }
 
-static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<GeoBatchData*> &batchDataArray) {
+static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<GeoBatchData *> &batchDataArray) {
     for (ui32 i = 0; i < batchDataArray.size(); ++i) {
         if (0 == strncmp(batchDataArray[i]->m_id, id, strlen(id))) {
             return i;
@@ -72,68 +72,67 @@ static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<GeoBatchData*> &batchD
     return -1;
 }
 
-RenderBackendService::RenderBackendService()
-: AbstractService( "renderbackend/renderbackendserver" )
-, m_renderTaskPtr()
-, m_settings( nullptr )
-, m_ownsSettingsConfig( false )
-, m_frameCreated( false )
-, m_renderFrame(&m_frames[0])
-, m_submitFrame(&m_frames[1])
-, m_screen( nullptr )
-, m_dirty(false)
-, m_passes()
-, m_currentPass(nullptr)
-, m_currentBatch( nullptr ) {
+RenderBackendService::RenderBackendService() :
+        AbstractService("renderbackend/renderbackendserver"),
+        m_renderTaskPtr(),
+        m_settings(nullptr),
+        m_ownsSettingsConfig(false),
+        m_frameCreated(false),
+        m_renderFrame(&m_frames[0]),
+        m_submitFrame(&m_frames[1]),
+        m_screen(nullptr),
+        m_dirty(false),
+        m_passes(),
+        m_currentPass(nullptr),
+        m_currentBatch(nullptr) {
     // empty
 }
 
 RenderBackendService::~RenderBackendService() {
-    if( m_ownsSettingsConfig ) {
+    if (m_ownsSettingsConfig) {
         delete m_settings;
         m_settings = nullptr;
     }
 }
 
 bool RenderBackendService::onOpen() {
-    if ( nullptr == m_settings ) {
+    if (nullptr == m_settings) {
         m_settings = new Settings;
         m_ownsSettingsConfig = true;
     }
 
-    if( !m_renderTaskPtr.isValid() ) {
-        m_renderTaskPtr.init( SystemTask::create( "render_task" ) );
+    // Spawn the thread
+    if (!m_renderTaskPtr.isValid()) {
+        m_renderTaskPtr.init(SystemTask::create("render_task"));
     }
-
-    bool ok( true );
 
     // Run the render task
-    ok = m_renderTaskPtr->start( nullptr );
-    if ( !ok ) {
-        osre_error( Tag, "Cannot run render task." );
+    bool ok = m_renderTaskPtr->start(nullptr);
+    if (!ok) {
+        osre_error(Tag, "Cannot run render task.");
         return ok;
     }
-    
+
     // Create render event handler for back-end
-    const String api = m_settings->get( Settings::RenderAPI ).getString();
-    if ( api == OGL_API ) {
-        m_renderTaskPtr->attachEventHandler( new OGLRenderEventHandler );
-    } else if ( api == Vulkan_API ) {
-        m_renderTaskPtr->attachEventHandler( new VlkRenderEventHandler );
-    } 
+    const String api = m_settings->get(Settings::RenderAPI).getString();
+    if (api == OGL_API) {
+        m_renderTaskPtr->attachEventHandler(new OGLRenderEventHandler);
+    } else if (api == Vulkan_API) {
+        m_renderTaskPtr->attachEventHandler(new VlkRenderEventHandler);
+    }
 #ifdef OSRE_WINDOWS
     else if (api == DX11_API) {
-        m_renderTaskPtr->attachEventHandler( new DX11RenderEventHandler );
-    } 
+        m_renderTaskPtr->attachEventHandler(new DX11RenderEventHandler);
+    }
 #endif // OSRE_WINDOWS
     else {
-        osre_error( Tag, "Requested render-api unknown: " + api );
+        osre_error(Tag, "Requested render-api unknown: " + api);
         ok = false;
     }
 
     // Create the debug renderer instance
-    if ( !Scene::DbgRenderer::create( this ) ) {
-        osre_error( Tag, "Cannot create Debug renderer" );
+    if (!Scene::DbgRenderer::create(this)) {
+        osre_error(Tag, "Cannot create Debug renderer");
         ok = false;
     }
 
@@ -141,15 +140,15 @@ bool RenderBackendService::onOpen() {
 }
 
 bool RenderBackendService::onClose() {
-    if( !m_renderTaskPtr.isValid() ) {
+    if (!m_renderTaskPtr.isValid()) {
         return false;
     }
 
-    if ( !Scene::DbgRenderer::destroy() ) {
-        osre_error( Tag, "Cannot destroy Debug renderer" );
+    if (!Scene::DbgRenderer::destroy()) {
+        osre_error(Tag, "Cannot destroy Debug renderer");
     }
-    if ( m_renderTaskPtr->isRunning() ) {
-        m_renderTaskPtr->detachEventHandler();        
+    if (m_renderTaskPtr->isRunning()) {
+        m_renderTaskPtr->detachEventHandler();
         m_renderTaskPtr->stop();
     }
 
@@ -157,7 +156,7 @@ bool RenderBackendService::onClose() {
 }
 
 bool RenderBackendService::onUpdate() {
-    if ( !m_renderTaskPtr.isValid() ) {
+    if (!m_renderTaskPtr.isValid()) {
         return false;
     }
 
@@ -169,14 +168,14 @@ bool RenderBackendService::onUpdate() {
     commitNextFrame();
 
     // Synchronizing event with render back-end
-    auto result( m_renderTaskPtr->sendEvent( &OnRenderFrameEvent, nullptr ) );
+    auto result(m_renderTaskPtr->sendEvent(&OnRenderFrameEvent, nullptr));
     m_renderTaskPtr->awaitUpdate();
 
     return result;
 }
 
-void RenderBackendService::setSettings( const Settings *config, bool moveOwnership ) {
-    if ( m_ownsSettingsConfig && m_settings != nullptr ) {
+void RenderBackendService::setSettings(const Settings *config, bool moveOwnership) {
+    if (m_ownsSettingsConfig && m_settings != nullptr) {
         delete m_settings;
         m_settings = nullptr;
         m_ownsSettingsConfig = false;
@@ -202,7 +201,7 @@ void RenderBackendService::initPasses() {
 }
 
 void RenderBackendService::commitNextFrame() {
-    if ( !m_renderTaskPtr.isValid() ) {
+    if (!m_renderTaskPtr.isValid()) {
         return;
     }
 
@@ -212,17 +211,17 @@ void RenderBackendService::commitNextFrame() {
         PassData *currentPass = m_passes[i];
         for (ui32 j = 0; j < currentPass->m_geoBatches.size(); ++j) {
             GeoBatchData *currentBatch = currentPass->m_geoBatches[j];
-            if ( currentBatch->m_dirtyFlag & GeoBatchData::MatrixBufferDirty ) {
+            if (currentBatch->m_dirtyFlag & GeoBatchData::MatrixBufferDirty) {
                 FrameSubmitCmd *cmd = m_submitFrame->enqueue();
                 cmd->m_passId = currentPass->m_id;
                 cmd->m_batchId = currentBatch->m_id;
-                cmd->m_updateFlags |= (ui32) FrameSubmitCmd::UpdateMatrixes;
+                cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateMatrixes;
                 cmd->m_size = sizeof(MatrixBuffer);
                 cmd->m_data = new c8[cmd->m_size];
                 ::memcpy(cmd->m_data, &currentBatch->m_matrixBuffer, cmd->m_size);
             } else if (currentBatch->m_dirtyFlag & GeoBatchData::UniformBufferDirty) {
                 UniformBuffer &uniformBuffer = data->m_frame->m_uniforBuffers[i];
-                
+
                 for (ui32 k = 0; k < currentBatch->m_uniforms.size(); ++k) {
                     FrameSubmitCmd *cmd = m_submitFrame->enqueue();
                     cmd->m_passId = currentPass->m_id;
@@ -246,7 +245,7 @@ void RenderBackendService::commitNextFrame() {
                     ::memcpy(&cmd->m_data[offset], var->m_data.getData(), var->m_data.m_size);
                 }
             } else if (currentBatch->m_dirtyFlag & GeoBatchData::MeshUpdateDirty) {
-                for (ui32 k = 0; k<currentBatch->m_updateMeshArray.size(); ++k) {
+                for (ui32 k = 0; k < currentBatch->m_updateMeshArray.size(); ++k) {
                     FrameSubmitCmd *cmd = m_submitFrame->enqueue();
                     cmd->m_passId = currentPass->m_id;
                     cmd->m_batchId = currentBatch->m_id;
@@ -262,16 +261,16 @@ void RenderBackendService::commitNextFrame() {
             currentBatch->m_dirtyFlag = 0;
         }
     }
-    
+
     data->m_frame = m_submitFrame;
     std::swap(m_submitFrame, m_renderFrame);
 
-    m_renderTaskPtr->sendEvent( &OnCommitFrameEvent, data );
+    m_renderTaskPtr->sendEvent(&OnCommitFrameEvent, data);
 }
 
-void RenderBackendService::sendEvent( const Event *ev, const EventData *eventData ) {
-    if ( m_renderTaskPtr.isValid() ) {
-        m_renderTaskPtr->sendEvent( ev, eventData );
+void RenderBackendService::sendEvent(const Event *ev, const EventData *eventData) {
+    if (m_renderTaskPtr.isValid()) {
+        m_renderTaskPtr->sendEvent(ev, eventData);
     }
 }
 
@@ -302,11 +301,11 @@ PassData *RenderBackendService::beginPass(const c8 *id) {
     }
 
     m_currentPass = getPassById(id);
-    if ( nullptr == m_currentPass ) {
-        m_currentPass = new PassData(id, nullptr );
+    if (nullptr == m_currentPass) {
+        m_currentPass = new PassData(id, nullptr);
     }
     m_dirty = true;
-    
+
     return m_currentPass;
 }
 
@@ -315,7 +314,7 @@ GeoBatchData *RenderBackendService::beginRenderBatch(const c8 *id) {
         osre_warn(Tag, "Pass recording not active.");
         return nullptr;
     }
-    
+
     m_currentBatch = m_currentPass->getBatchById(id);
     if (nullptr == m_currentBatch) {
         m_currentBatch = new GeoBatchData(id);
@@ -354,20 +353,20 @@ void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
     }
 }
 
-void RenderBackendService::setMatrix( const String &name, const glm::mat4 &matrix ) {
+void RenderBackendService::setMatrix(const String &name, const glm::mat4 &matrix) {
     if (nullptr == m_currentBatch) {
         osre_error(Tag, "No active batch.");
         return;
     }
 
     UniformVar *var = m_currentBatch->getVarByName(name.c_str());
-    if ( nullptr == var ) {
-        var = UniformVar::create( name, ParameterType::PT_Mat4 );
+    if (nullptr == var) {
+        var = UniformVar::create(name, ParameterType::PT_Mat4);
         m_currentBatch->m_uniforms.add(var);
-    }    
-    
+    }
+
     m_currentBatch->m_dirtyFlag |= GeoBatchData::UniformBufferDirty;
-    ::memcpy( var->m_data.m_data, glm::value_ptr( matrix ), sizeof( glm::mat4 ) );
+    ::memcpy(var->m_data.m_data, glm::value_ptr(matrix), sizeof(glm::mat4));
 }
 
 void RenderBackendService::setUniform(UniformVar *var) {
@@ -377,7 +376,7 @@ void RenderBackendService::setUniform(UniformVar *var) {
     }
 
     if (nullptr != m_currentBatch) {
-        m_currentBatch->m_uniforms.add( var );
+        m_currentBatch->m_uniforms.add(var);
         m_currentBatch->m_dirtyFlag |= GeoBatchData::UniformBufferDirty;
     }
 }
@@ -393,14 +392,14 @@ void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const
         var = UniformVar::create(name, ParameterType::PT_Mat4Array, numMat);
         m_currentBatch->m_uniforms.add(var);
     }
-    
+
     ::memcpy(var->m_data.m_data, glm::value_ptr(matrixArray[0]), sizeof(glm::mat4) * numMat);
-    m_currentBatch->m_dirtyFlag |= GeoBatchData::UniformBufferDirty;    
+    m_currentBatch->m_dirtyFlag |= GeoBatchData::UniformBufferDirty;
 }
 
-void RenderBackendService::addMesh( Mesh *mesh, ui32 numInstances ) {
-    if ( nullptr == mesh) {
-        osre_debug( Tag, "Pointer to geometry is nullptr." );
+void RenderBackendService::addMesh(Mesh *mesh, ui32 numInstances) {
+    if (nullptr == mesh) {
+        osre_debug(Tag, "Pointer to geometry is nullptr.");
         return;
     }
 
@@ -416,7 +415,7 @@ void RenderBackendService::addMesh( Mesh *mesh, ui32 numInstances ) {
     m_currentBatch->m_dirtyFlag |= GeoBatchData::MeshDirty;
 }
 
-void RenderBackendService::addMesh( const CPPCore::TArray<Mesh*> &geoArray, ui32 numInstances ) {
+void RenderBackendService::addMesh(const CPPCore::TArray<Mesh *> &geoArray, ui32 numInstances) {
     if (nullptr == m_currentBatch) {
         osre_error(Tag, "No active batch.");
         return;
@@ -424,7 +423,7 @@ void RenderBackendService::addMesh( const CPPCore::TArray<Mesh*> &geoArray, ui32
 
     MeshEntry *entry = new MeshEntry;
     entry->numInstances = numInstances;
-    entry->m_geo.add( &geoArray[ 0 ], geoArray.size() );
+    entry->m_geo.add(&geoArray[0], geoArray.size());
     m_currentBatch->m_meshArray.add(entry);
     m_currentBatch->m_dirtyFlag |= GeoBatchData::MeshDirty;
 }
@@ -444,9 +443,9 @@ bool RenderBackendService::endRenderBatch() {
     }
 
     if (nullptr == m_currentPass) {
-        m_currentPass = new PassData("defaultPass", nullptr );
+        m_currentPass = new PassData("defaultPass", nullptr);
     }
-    
+
     if (-1 == hasBatch(m_currentBatch->m_id, m_currentPass->m_geoBatches)) {
         m_currentPass->m_geoBatches.add(m_currentBatch);
     }
@@ -480,17 +479,15 @@ void RenderBackendService::clearPasses() {
 }
 
 void RenderBackendService::attachView() {
-
 }
 
-void RenderBackendService::resize( ui32 x, ui32 y, ui32 w, ui32 h ) {
-    ResizeEventData *data = new ResizeEventData( x, y, w, h );
-    m_renderTaskPtr->sendEvent( &OnResizeEvent, data );
+void RenderBackendService::resize(ui32 x, ui32 y, ui32 w, ui32 h) {
+    ResizeEventData *data = new ResizeEventData(x, y, w, h);
+    m_renderTaskPtr->sendEvent(&OnResizeEvent, data);
 
-    if ( m_screen != nullptr ) {
-        m_screen->resize( x, y, w, h );
+    if (m_screen != nullptr) {
+        m_screen->resize(x, y, w, h);
     }
-
 }
 
 void RenderBackendService::focusLost() {

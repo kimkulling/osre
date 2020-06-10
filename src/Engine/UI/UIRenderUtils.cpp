@@ -46,9 +46,8 @@ UIRenderUtils::~UIRenderUtils() {
 static const ui16 RectIndices[12] = {
     0, 1, 2, // first triangle
     2, 1, 3, // second triangle
-
-    4, 5, 6, // second triangle
-    6, 5, 7 // second triangle
+    4, 5, 6, // third triangle
+    6, 5, 7  // fourth triangle
 };
 
 static f32 getZbyStackIndex(f32 stackIndex) {
@@ -96,17 +95,19 @@ void UIRenderUtils::drawRectFromStyle(const Rect2ui &rect, const Style &style, U
             break;
     }
 
-    RenderVert vertices[4];
+    static const size_t NumQuadVertices = 4;
+    RenderVert vertices[NumQuadVertices];
     drawFilledRect(vertices, rect.getX1(), rect.getY1(), rect.getX2(), rect.getY2(), static_cast<f32>(stackIndex), col);
 
     size_t vertOffset = vertexCache.numVertices();
-    vertexCache.increaseSize(4);
-    for (ui32 i = 0; i < 4; ++i) {
+    vertexCache.increaseSize(NumQuadVertices);
+    for (ui32 i = 0; i < NumQuadVertices; ++i) {
         vertexCache.add(vertices[i]);
     }
+    static const size_t NumQuadIndices = 6;
 
-    indexCache.increaseSize(6);
-    for (ui32 i = 0; i < 6; ++i) {
+    indexCache.increaseSize(NumQuadIndices);
+    for (ui32 i = 0; i < NumQuadIndices; ++i) {
         ui16 index = static_cast<ui16>(vertOffset) + RectIndices[i];
         indexCache.add(index);
     }

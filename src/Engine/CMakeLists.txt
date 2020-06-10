@@ -396,6 +396,8 @@ SET( ui_src
     UI/UiRenderer.cpp
     UI/UIRenderUtils.cpp
     UI/UIRenderUtils.h
+    UI/FontRenderer.cpp
+    UI/FontRenderer.h
     UI/ButtonBase.cpp
     UI/Panel.cpp
     UI/Canvas.cpp

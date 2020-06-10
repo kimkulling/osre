@@ -96,8 +96,8 @@ void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui32 id, const String &text) {
     UI::WidgetCoordMapping::mapPosToWorld(x, y, xTrans, yTrans);
     if (!m_textBoxes.hasKey(id)) {
         MeshBuilder geoBuilder;
-        geoBuilder.allocTextBox(xTrans, yTrans, scale, text, BufferAccessType::ReadWrite);
-        Mesh *mesh = geoBuilder.getMesh();
+        Mesh *mesh = geoBuilder.allocTextBox(xTrans, yTrans, scale, text, BufferAccessType::ReadWrite)
+                .getMesh();
         m_rbSrv->addMesh(mesh, 0);
         insertTextEntry(id, mesh, text, m_textBoxes);
         mesh->m_localMatrix = true;

@@ -99,8 +99,12 @@ void TextBase::onRender(UiRenderCmdCache& renderCmdCache, RenderBackendService* 
     cmd->m_startIndex = (ui32) startIndex;
     cmd->m_numIndices = (ui32)(renderCmdCache.m_ic.numIndices() - startIndex);
     
+    CPPCore::TArray<TextureResource *> texResArray;
+    TextureResource *texRes = new TextureResource("buildin_arial", IO::Uri("file://assets/Textures/Fonts/buildin_arial.bmp"));
+    texResArray.add(texRes);
+    cmd->mMaterial = Scene::MaterialBuilder::createTexturedMaterial("text_box_tex", texResArray, VertexType::RenderVertex);
+
     //
-    //cmd->m_texture = 
     renderCmdCache.m_renderCmds.add(cmd);
 }
 
