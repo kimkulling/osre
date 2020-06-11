@@ -46,37 +46,41 @@ class BaseTriangleRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
 
 public:
-    BaseTriangleRenderTest()
-    : AbstractRenderTest( "rendertest/basetrianglerendertest" ) {
+    BaseTriangleRenderTest() :
+            AbstractRenderTest("rendertest/basetrianglerendertest") {
         // empty
     }
 
-    virtual ~BaseTriangleRenderTest() {
+    ~BaseTriangleRenderTest() override {
         // empty
     }
 
-    virtual bool onCreate( RenderBackendService *rbSrv ) override {
-        rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
-        
-        CPPCore::TArray<Mesh*> meshArray;
+    bool onCreate(RenderBackendService *rbSrv) override {
+        rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
+
+        CPPCore::TArray<Mesh *> meshArray;
         MeshBuilder meshBuilder;
-        meshBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
+        meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
         meshArray.add(meshBuilder.getMesh());
-        
-        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
-        
-        rbSrv->beginPass( PipelinePass::getPassNameById( RenderPassId ) );
-        rbSrv->beginRenderBatch("b1");
-        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
-        rbSrv->addMesh( meshArray, 0 );
-        rbSrv->endRenderBatch();
+
+        m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
+
+        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        {
+            rbSrv->beginRenderBatch("b1");
+            {
+                rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+                rbSrv->addMesh(meshArray, 0);
+            }
+            rbSrv->endRenderBatch();
+        }
         rbSrv->endPass();
 
         return true;
     }
 };
 
-ATTACH_RENDERTEST( BaseTriangleRenderTest )
+ATTACH_RENDERTEST(BaseTriangleRenderTest)
 
 } // Namespace RenderTest
 } // Namespace OSRE

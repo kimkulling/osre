@@ -28,20 +28,24 @@ namespace OSRE {
 
 // Forward declarations
 namespace Platform {
-    class AbstractWindow;
+
+class AbstractWindow;
+
 }
 
 namespace RenderBackend {
-    class RenderBackendService;
-    struct Material;
-}
+
+class RenderBackendService;
+struct Material;
+
+} // namespace RenderBackend
 
 namespace RenderTest {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
 ///
-///	@brief	The abstract base interface for a render test. Render tests shall be used to define a 
+///	@brief	The abstract base interface for a render test. Render tests shall be used to define a
 ///	reference rendering behavior for the validation.
 //-------------------------------------------------------------------------------------------------
 class AbstractRenderTest {
@@ -52,25 +56,25 @@ public:
     /// @brief  Will create the rendertest.
     /// @param  rbSrv       [in] The render backend to use.
     /// @return true if successful.
-    bool create( RenderBackend::RenderBackendService *rbSrv );
-    
+    bool create(RenderBackend::RenderBackendService *rbSrv);
+
     /// @brief  Will destroy the rendertest.
     /// @param  rbSrv       [in] The render backend to use.
     /// @return true if successful.
-    bool destroy( RenderBackend::RenderBackendService *rbSrv );
-    
+    bool destroy(RenderBackend::RenderBackendService *rbSrv);
+
     /// @brief  Will render the rendertest.
     /// @param  rbSrv       [in] The render backend to use.
     /// @return true if successful.
-    bool render( RenderBackend::RenderBackendService *rbSrv );
+    bool render(RenderBackend::RenderBackendService *rbSrv);
 
     ///	@brief	Will create the render data.
     ///	@return	true if creation was successful, false if not.
-    virtual void setup( RenderBackend::RenderBackendService *rbSrv );
+    virtual void setup(RenderBackend::RenderBackendService *rbSrv);
 
     ///	@brief	Will destroy the render data.
     ///	@return	true if destroying was successful, false if not.
-    virtual void teardown( RenderBackend::RenderBackendService *rbSrv );
+    virtual void teardown(RenderBackend::RenderBackendService *rbSrv);
 
     ///	@brief	Returns the name of the render test.
     ///	@return	The name of the render test.
@@ -81,7 +85,7 @@ public:
     /// @param  VsSrc       [in] The vertex-shader-code.
     /// @param  FsSrc       [in] The fragment-shader-code.
     /// @return The new created material.
-    RenderBackend::Material *createMaterial( const String &matName, const String &VsSrc, const String &FsSrc );
+    RenderBackend::Material *createMaterial(const String &matName, const String &VsSrc, const String &FsSrc);
 
     /// @brief  Will return the active window.
     /// @return A pointer sowing to the active window.
@@ -90,32 +94,32 @@ public:
 protected:
     /// @brief  The class constructor.
     /// @param  renderTestName  [in] The name for the render test.
-    explicit AbstractRenderTest( const String &renderTestName );
+    explicit AbstractRenderTest(const String &renderTestName);
 
     /// @brief  The onCreate-callback.
     /// @param  rbSrv   [in] The render backend to use.
     /// @return true if successful.
-    virtual bool onCreate( RenderBackend::RenderBackendService *rbSrv );
+    virtual bool onCreate(RenderBackend::RenderBackendService *rbSrv);
 
     /// @brief  The onDestroy-callback.
     /// @param  rbSrv   [in] The render backend to use.
     /// @return true if successful.
-    virtual bool onDestroy( RenderBackend::RenderBackendService *rbSrv );
+    virtual bool onDestroy(RenderBackend::RenderBackendService *rbSrv);
 
     /// @brief  The onRender-callback.
     /// @param  rbSrv       [in] The render backend to use.
     /// @return true if successful.
-    virtual bool onRender( RenderBackend::RenderBackendService *rbSrv );
+    virtual bool onRender(RenderBackend::RenderBackendService *rbSrv);
 
     // Avoid copying
     AbstractRenderTest() = delete;
-    AbstractRenderTest( const AbstractRenderTest & ) = delete;
-    AbstractRenderTest &operator = ( const AbstractRenderTest & ) = delete;
+    AbstractRenderTest(const AbstractRenderTest &) = delete;
+    AbstractRenderTest &operator=(const AbstractRenderTest &) = delete;
 
 private:
     const String m_renderTestName;
     Platform::AbstractWindow *m_window;
 };
 
-} // Namespace RenderTest
-} // Namespace OSRE
+} // namespace RenderTest
+} // namespace OSRE

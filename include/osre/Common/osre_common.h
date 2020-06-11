@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+// clang-format off
 #if defined(_WIN32) || defined(_WIN64)
 #    define OSRE_WINDOWS
 #    define _CRT_SECURE_NO_WARNINGS
@@ -90,6 +91,7 @@ namespace OSRE {
 #    include <stdio.h>
 typedef int errno_t;
 #endif
+// clang-format on
 
 ///	The data type unsigned char, 1 byte long.
 typedef unsigned char uc8;
@@ -113,13 +115,19 @@ typedef unsigned short ui16;
 typedef unsigned int ui32;
 
 ///	The data type for signed and unsigned int 8 bytes long.
+// clang-format off
 #ifdef OSRE_WINDOWS
+
 typedef __int64 i64;
 typedef unsigned __int64 ui64;
+
 #else
+
 typedef int64_t i64;
 typedef uint64_t ui64;
+
 #endif
+// clang-format on
 
 /// The data type for hash ids.
 typedef unsigned long HashId;
@@ -200,12 +208,18 @@ struct Color4 {
     f32 m_r, m_g, m_b, m_a;
 
     Color4() :
-            m_r(1.f), m_g(1.f), m_b(1.f), m_a(1.f) {
+            m_r(1.f),
+            m_g(1.f),
+            m_b(1.f),
+            m_a(1.f) {
         // empty
     }
 
     Color4(f32 r, f32 _g, f32 b, f32 a) :
-            m_r(r), m_g(_g), m_b(b), m_a(a) {
+            m_r(r),
+            m_g(_g),
+            m_b(b),
+            m_a(a) {
         // empty
     }
 
@@ -557,12 +571,14 @@ struct TPoint2 {
     T m_x, m_y;
 
     TPoint2() :
-            m_x(0), m_y(0) {
+            m_x(0),
+            m_y(0) {
         // empty
     }
 
     TPoint2(T x, T y) :
-            m_x(x), m_y(y) {
+            m_x(x),
+            m_y(y) {
         // empty
     }
 
@@ -585,7 +601,12 @@ struct TRectangle {
 
     /// @brief  The default class constructor.
     TRectangle() :
-            m_x1(0), m_y1(0), m_x2(0), m_y2(0), m_width(0), m_height(0) {
+            m_x1(0),
+            m_y1(0),
+            m_x2(0),
+            m_y2(0),
+            m_width(0),
+            m_height(0) {
         // empty
     }
 
@@ -593,7 +614,12 @@ struct TRectangle {
     /// @param  width   [in] The width of the rectangle.
     /// @param  height  [in] The height of the rectangle.
     TRectangle(T width, T height) :
-            m_x1(0), m_y1(0), m_x2(width), m_y2(height), m_width(width), m_height(height) {
+            m_x1(0),
+            m_y1(0),
+            m_x2(width),
+            m_y2(height),
+            m_width(width),
+            m_height(height) {
         // empty
     }
 
@@ -603,7 +629,12 @@ struct TRectangle {
     /// @param  width   [in] The width of the rectangle.
     /// @param  height  [in] The height of the rectangle.
     TRectangle(T x, T y, T width, T height) :
-            m_x1(x), m_y1(y), m_x2(x + width), m_y2(y + height), m_width(width), m_height(height) {
+            m_x1(x),
+            m_y1(y),
+            m_x2(x + width),
+            m_y2(y + height),
+            m_width(width),
+            m_height(height) {
         // empty
     }
 
@@ -767,4 +798,5 @@ struct Version {
         // empty
     }
 };
+
 } // Namespace OSRE
