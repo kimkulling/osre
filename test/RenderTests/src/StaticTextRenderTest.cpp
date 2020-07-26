@@ -56,13 +56,13 @@ public:
     bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
-        Scene::DbgRenderer::getInstance()->renderDbgText( 0, 0, 2U, "This is a test-text!\nAnd another one!" );
+        Scene::DbgRenderer::getInstance()->renderDbgText( 2U, 0, 0, "This is a test-text!\nAnd another one!" );
 
         return true;
     }
 
     bool onDestroy( RenderBackendService * ) override {
-        Scene::DbgRenderer::getInstance()->clearDbgTextCache();
+        Scene::DbgRenderer::getInstance()->clear();
         return true;
     }
 };

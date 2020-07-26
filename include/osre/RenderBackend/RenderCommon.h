@@ -24,7 +24,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/osre_common.h>
 #include <osre/Common/TResource.h>
-#include <osre/RenderBackend/FontBase.h>
 #include <osre/IO/Uri.h>
 
 #include <cppcore/Container/TArray.h>

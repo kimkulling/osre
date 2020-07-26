@@ -111,16 +111,15 @@ public:
     MeshBuilder &operator = ( const MeshBuilder& ) = delete;
 
 private:
-    CPPCore::TArray<glm::vec3> m_posCache;
-    CPPCore::TArray<glm::vec3> m_diffuseColCache;
-    CPPCore::TArray<glm::vec3> m_normalCache;
-    CPPCore::TArray<glm::vec2> m_tex0Cache;
-    RenderBackend::PrimitiveGroup *m_activePrimGroup;
-    CPPCore::TArray<ui32> m_indexCache;
-
-    CPPCore::TArray<RenderBackend::PrimitiveGroup*> m_primGroupCache;
-    bool m_isDirty;
-    RenderBackend::Mesh *m_ActiveGeo;
+    CPPCore::TArray<glm::vec3> mPosCache;
+    CPPCore::TArray<glm::vec3> mDiffuseColCache;
+    CPPCore::TArray<glm::vec3> mNormalCache;
+    CPPCore::TArray<glm::vec2> mTex0Cache;
+    RenderBackend::PrimitiveGroup *mActivePrimGroup;
+    CPPCore::TArray<ui32> mIndexCache;
+    CPPCore::TArray<RenderBackend::PrimitiveGroup*> mPrimGroupCache;
+    bool mIsDirty;
+    RenderBackend::Mesh *mActiveGeo;
 };
 
 } // Namespace Scene

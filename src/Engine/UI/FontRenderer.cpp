@@ -47,7 +47,7 @@ FontRenderer::~FontRenderer() {
     clear();
 }
 
-void FontRenderer::renderText(ui32 x, ui32 y, ui32 id, const String &text, RenderBackendService *rbSrv) {
+void FontRenderer::AddRenderText(ui32 id, ui32 x, ui32 y, const String &text, RenderBackendService *rbSrv) {
     if (text.empty() || nullptr == rbSrv) {
         return;
     }
@@ -64,22 +64,21 @@ void FontRenderer::renderText(ui32 x, ui32 y, ui32 id, const String &text, Rende
 
     f32 xTrans(0), yTrans(0);
     UI::WidgetCoordMapping::mapPosToWorld(x, y, xTrans, yTrans);
+    MeshBuilder meshBuilder;
     if (!mTextBoxes.hasKey(id)) {
-        MeshBuilder geoBuilder;
-        Mesh *mesh = geoBuilder.allocTextBox(xTrans, yTrans, scale, text, BufferAccessType::ReadWrite)
+        Mesh *mesh = meshBuilder.allocTextBox(xTrans, yTrans, scale, text, BufferAccessType::ReadWrite)
                              .getMesh();
         rbSrv->addMesh(mesh, 0);
         insertTextEntry(id, mesh, text, mTextBoxes);
         mesh->m_localMatrix = true;
         mesh->m_model = m_transformMatrix.m_model;
     } else {
-        FontTextEntry *entry(nullptr);
+        FontTextEntry *entry = nullptr;
         if (mTextBoxes.getValue(id, entry)) {
             if (nullptr != entry) {
                 if (entry->mText != text) {
                     Mesh *mesh(nullptr);
                     if (text.size() > entry->mText.size()) {
-                        MeshBuilder meshBuilder;
                         meshBuilder.allocTextBox(xTrans, yTrans, 0.1f, text, BufferAccessType::ReadWrite);
                         mesh = meshBuilder.getMesh();
                         entry->mMesh = mesh;

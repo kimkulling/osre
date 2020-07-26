@@ -24,8 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderTestUtils.h"
 
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/DbgRenderer.h>
+#include <osre/Scene/MeshBuilder.h>
 
 #include <iomanip>
 
@@ -44,9 +44,8 @@ class DbgFontRenderTest : public AbstractRenderTest {
     ui32 m_frameCount;
 
 public:
-    DbgFontRenderTest()
-    : AbstractRenderTest( "rendertest/DbgFontRenderTest" )
-        , m_frameCount( 0 ) {
+    DbgFontRenderTest() :
+            AbstractRenderTest("rendertest/DbgFontRenderTest"), m_frameCount(0) {
         // empty
     }
 
@@ -54,29 +53,29 @@ public:
         // empty
     }
 
-    bool onCreate( RenderBackendService *rbSrv ) override {
-        rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
-        
-        Scene::DbgRenderer::getInstance()->renderDbgText( 1, 1, 1U, "XXX" );
+    bool onCreate(RenderBackendService *rbSrv) override {
+        rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
+
+        Scene::DbgRenderer::getInstance()->renderDbgText(1, 1, 1U, "XXX");
 
         return true;
     }
 
-    bool onDestroy( RenderBackendService * ) override {
-        Scene::DbgRenderer::getInstance()->clearDbgTextCache();
+    bool onDestroy(RenderBackendService *) override {
+        Scene::DbgRenderer::getInstance()->clear();
         return true;
     }
 
-    bool onRender( RenderBackend::RenderBackendService * ) override {
+    bool onRender(RenderBackend::RenderBackendService *) override {
         m_frameCount++;
         std::stringstream stream;
-        stream << std::setfill( '0' ) << std::setw( 3 ) << m_frameCount;
-        Scene::DbgRenderer::getInstance()->renderDbgText( 10, 10, 1, stream.str() );
+        stream << std::setfill('0') << std::setw(3) << m_frameCount;
+        Scene::DbgRenderer::getInstance()->renderDbgText(10, 10, 1, stream.str());
         return true;
     }
 };
 
-ATTACH_RENDERTEST( DbgFontRenderTest )
+ATTACH_RENDERTEST(DbgFontRenderTest)
 
 } // Namespace RenderTest
 } // Namespace OSRE

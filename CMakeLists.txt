@@ -125,8 +125,8 @@ add_definitions( -DGLM_ENABLE_EXPERIMENTAL )
 
 # Configuring assimp
 set( BUILD_SHARED_LIBS OFF )
-set( ASSIMP_BUILD_ASSIMP_TOOLS OFF )
-set( ASSIMP_BUILD_TESTS OFF )
+#set( ASSIMP_BUILD_ASSIMP_TOOLS OFF )
+#set( ASSIMP_BUILD_TESTS OFF )
 
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )

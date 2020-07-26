@@ -321,7 +321,6 @@ SET( scene_src
 SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
     ${HEADER_PATH}/RenderBackend/Mesh.h
-    ${HEADER_PATH}/RenderBackend/FontBase.h
     ${HEADER_PATH}/RenderBackend/HWBufferManager.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
@@ -330,7 +329,6 @@ SET( renderbackend_inc
 )
 SET( renderbackend_src
     RenderBackend/Mesh.cpp
-    RenderBackend/FontBase.cpp
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
     RenderBackend/Pipeline.cpp
@@ -396,6 +394,7 @@ SET( ui_src
     UI/UiRenderer.cpp
     UI/UIRenderUtils.cpp
     UI/UIRenderUtils.h
+    UI/FontBase.cpp
     UI/FontRenderer.cpp
     UI/FontRenderer.h
     UI/ButtonBase.cpp
@@ -409,6 +408,7 @@ SET( ui_inc
     ${HEADER_PATH}/UI/UICommon.h
     ${HEADER_PATH}/UI/StyleProvider.h
     ${HEADER_PATH}/UI/FocusControl.h
+    ${HEADER_PATH}/UI/FontBase.h
     ${HEADER_PATH}/UI/Layouter.h
     ${HEADER_PATH}/UI/Image.h
     ${HEADER_PATH}/UI/Widget.h

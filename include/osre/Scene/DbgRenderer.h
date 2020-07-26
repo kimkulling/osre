@@ -22,13 +22,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <cppcore/Container/TArray.h>
+#include <cppcore/Container/THashMap.h>
+#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/SceneCommon.h>
 #include <osre/Scene/TAABB.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <cppcore/Container/THashMap.h>
-#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
+
+namespace UI {
+
+class FontRenderer;
+}
+
 namespace Scene {
 
 //-------------------------------------------------------------------------------------------------
@@ -38,27 +44,17 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT DbgRenderer {
 public:
-    struct DbgTextEntry {
-        String m_text;
-        RenderBackend::Mesh *m_geo;
-    };
-    using TextBoxHashMap = CPPCore::THashMap<ui32, DbgTextEntry*>;
-    using TextBoxArray = CPPCore::TArray<DbgTextEntry*>;
+    void renderDbgText(ui32 x, ui32 y, ui32 id, const String &text);
+    void renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb);
+    void clear();
+    void addLine(const RenderBackend::ColorVert &v0, const RenderBackend::ColorVert &v1);
 
-    void renderDbgText( ui32 x, ui32 y, ui32 id, const String &text );
-    void renderAABB( const glm::mat4 &transform, const TAABB<f32> &aabb );
-    void clearDbgTextCache();
-    void clearDbgRenderPass();
-    size_t numDbgTexts() const;
-    void addLine( const RenderBackend::ColorVert &v0, const RenderBackend::ColorVert &v1 );
-    void addTriangle( const RenderBackend::ColorVert &v0, const RenderBackend::ColorVert &v1, const RenderBackend::ColorVert &v2 );
-    
-    static bool create( RenderBackend::RenderBackendService *rbSrv );
+    static bool create(RenderBackend::RenderBackendService *rbSrv);
     static bool destroy();
     static DbgRenderer *getInstance();
 
 private:
-    DbgRenderer( RenderBackend::RenderBackendService *rbSrv );
+    DbgRenderer(RenderBackend::RenderBackendService *rbSrv);
     ~DbgRenderer();
 
 private:
@@ -66,9 +62,7 @@ private:
 
     RenderBackend::RenderBackendService *m_rbSrv;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
-    TextBoxHashMap m_textBoxes;
-    TextBoxArray m_tbArray;
-
+    UI::FontRenderer *mFontRenderer;
     RenderBackend::Mesh *m_debugMesh;
     ui16 m_lastIndex;
 };

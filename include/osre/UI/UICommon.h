@@ -30,13 +30,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
-
-namespace RenderBackend {
-class FontBase;
-}
-
 namespace UI {
 
+class FontBase;
 class Widget;
 class Image;
 class TextBase;
@@ -61,12 +57,21 @@ struct UiRenderCmd {
     OSRE_NON_COPYABLE(UiRenderCmd)
 };
 
+struct TextEntry {
+    ui32 x;
+    ui32 y;
+    ui32 stackId;
+    String text;
+};
+
 struct UiRenderCmdCache {
     using RenderCmdArray = CPPCore::TArray<UiRenderCmd *>;
+    using TextCmdArray = CPPCore::TArray<TextEntry*>;
 
     UiVertexCache m_vc; ///< Will store all vertices
     UiIndexCache m_ic; ///< Will store all indices
     RenderCmdArray m_renderCmds; ///< Will store all render commands
+    TextCmdArray mTextCmdArray;
 };
 
 /// This enum is used to describe the widget type.

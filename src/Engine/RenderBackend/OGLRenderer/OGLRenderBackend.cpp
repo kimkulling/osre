@@ -59,7 +59,6 @@ OGLRenderBackend::OGLRenderBackend() :
         m_shaders(),
         m_textures(),
         m_freeTexSlots(),
-        m_activeFont(nullptr),
         m_texLookupMap(),
         m_parameters(),
         m_shaderInUse(nullptr),
