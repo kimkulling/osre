@@ -24,12 +24,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderTestUtils.h"
 
 #include <osre/Common/Logger.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/RenderBackend/Shader.h>
-#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
-#include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
+#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/Shader.h>
 #include <osre/Scene/MeshBuilder.h>
+#include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 
 namespace OSRE {
 namespace RenderTest {
@@ -37,40 +37,40 @@ namespace RenderTest {
 using namespace ::OSRE::RenderBackend;
 
 const String VsSrc =
-    "#version 400 core\n"
-    "\n"
-    "layout(location = 0) in vec3 position;	     // object space vertex position\n"
-    "layout(location = 1) in vec3 normal;	     // object space vertex normal\n"
-    "layout(location = 2) in vec3 color0;        // per-vertex colour\n"
-    "\n"
-    "// output from the vertex shader\n"
-    "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
-    "\n"
-    "// uniform\n"
-    "uniform mat4 M[25];	// model matrix per instance\n"
-    "uniform mat4 VP;	    // combined modelview projection matrix\n"
-    "\n"
-    "void main() {\n"
-    "    //assign the per-vertex color to vSmoothColor varying\n"
-    "    vSmoothColor = vec4(color0,1);\n"
-    "\n"
-    "    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
-    "    //vertex position\n"
-    "    gl_Position = VP*M[ gl_InstanceID ]*vec4(position,1);\n"
-    "}\n";
+        "#version 400 core\n"
+        "\n"
+        "layout(location = 0) in vec3 position;	     // object space vertex position\n"
+        "layout(location = 1) in vec3 normal;	     // object space vertex normal\n"
+        "layout(location = 2) in vec3 color0;        // per-vertex colour\n"
+        "\n"
+        "// output from the vertex shader\n"
+        "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
+        "\n"
+        "// uniform\n"
+        "uniform mat4 M[25];	// model matrix per instance\n"
+        "uniform mat4 VP;	    // combined modelview projection matrix\n"
+        "\n"
+        "void main() {\n"
+        "    //assign the per-vertex color to vSmoothColor varying\n"
+        "    vSmoothColor = vec4(color0,1);\n"
+        "\n"
+        "    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
+        "    //vertex position\n"
+        "    gl_Position = VP*M[ gl_InstanceID ]*vec4(position,1);\n"
+        "}\n";
 
 const String FsSrc =
-    "#version 400 core\n"
-    "\n"
-    "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
-    "\n"
-    "//input form the vertex shader\n"
-    "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
-    "\n"
-    "void main() {\n"
-    "    //set the interpolated color as the shader output\n"
-    "    vFragColor = vSmoothColor;\n"
-    "}\n";
+        "#version 400 core\n"
+        "\n"
+        "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
+        "\n"
+        "//input form the vertex shader\n"
+        "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
+        "\n"
+        "void main() {\n"
+        "    //set the interpolated color as the shader output\n"
+        "    vFragColor = vSmoothColor;\n"
+        "}\n";
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
@@ -78,91 +78,97 @@ const String FsSrc =
 ///	@brief  A instancing render-call - rendering test
 //-------------------------------------------------------------------------------------------------
 class GeoInstanceRenderTest : public AbstractRenderTest {
-    static const ui32    NumInstances = 25;
+    static const ui32 NumInstances = 25;
     f32 m_angle;
-    glm::mat4            m_mat[ NumInstances ];
+    glm::mat4 m_mat[NumInstances];
     TransformMatrixBlock m_transformMatrix;
 
 public:
-    GeoInstanceRenderTest()
-    : AbstractRenderTest( "rendertest/geoinstancerendertest" )
-    , m_angle( 0.02f )
-    , m_transformMatrix() {
+    GeoInstanceRenderTest() :
+            AbstractRenderTest("rendertest/geoinstancerendertest"),
+            m_angle(0.02f),
+            m_transformMatrix() {
         for (ui32 i = 0; i < NumInstances; ++i) {
             m_mat[i] = glm::mat4(1.0f);
         }
-    } 
+    }
 
-    virtual ~GeoInstanceRenderTest() {
+    ~GeoInstanceRenderTest() override {
         // empty
     }
 
-    bool onCreate( RenderBackendService *rbSrv ) override {
-        rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
+    bool onCreate(RenderBackendService *rbSrv) override {
+        rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
-        rbSrv->beginPass( PipelinePass::getPassNameById( RenderPassId ) );
-        rbSrv->beginRenderBatch("b1");
-        Scene::MeshBuilder myBuilder;
-        myBuilder.allocTriangles( VertexType::ColorVertex, BufferAccessType::ReadOnly );
-        Mesh *mesh = myBuilder.getMesh();
-        rbSrv->addMesh( mesh, NumInstances );
+        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        {
+            rbSrv->beginRenderBatch("b1");
+            {
+                Scene::MeshBuilder myBuilder;
+                myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+                Mesh *mesh = myBuilder.getMesh();
+                rbSrv->addMesh(mesh, NumInstances);
 
-        // use a default material
-        mesh->m_material = AbstractRenderTest::createMaterial( "ColorVertexMat", VsSrc, FsSrc );
-        if( nullptr != mesh->m_material->m_shader ) {
-            mesh->m_material->m_shader->m_attributes.add( "position" );
-            mesh->m_material->m_shader->m_attributes.add( "normal" );
-            mesh->m_material->m_shader->m_attributes.add( "color0" );
+                // use a default material
+                mesh->m_material = AbstractRenderTest::createMaterial("ColorVertexMat", VsSrc, FsSrc);
+                if (nullptr != mesh->m_material->m_shader) {
+                    mesh->m_material->m_shader->m_attributes.add("position");
+                    mesh->m_material->m_shader->m_attributes.add("normal");
+                    mesh->m_material->m_shader->m_attributes.add("color0");
 
-            mesh->m_material->m_shader->m_parameters.add( "VP" );
-            mesh->m_material->m_shader->m_parameters.add( "M" );
+                    mesh->m_material->m_shader->m_parameters.add("VP");
+                    mesh->m_material->m_shader->m_parameters.add("M");
+                }
+
+                m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
+                m_transformMatrix.update();
+
+                glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+                i32 idx = 0;
+                f32 x(-2.0f), y(-2.0f);
+                for (i32 i = 0; i < 5; ++i) {
+                    x = -2.0f;
+                    for (auto j = 0; j < 5; ++j) {
+                        m_mat[idx] = glm::translate(scale, glm::vec3(x, y, 0.f));
+                        x += 2.0f;
+                        ++idx;
+                    }
+                    y += 2.0f;
+                }
+
+                rbSrv->setMatrix("VP", m_transformMatrix.m_mvp);
+                rbSrv->setMatrixArray("M", NumInstances, m_mat);
+            }
+            rbSrv->endRenderBatch();
         }
-
-        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
-        m_transformMatrix.update();
-
-        glm::mat4 scale = glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.1f ) );        
-		auto idx( 0 );
-		auto x( -2.0f ), y( -2.0f );
-		for (auto i = 0; i < 5; i++) {
-			x = -2.0f;
-			for ( auto j = 0; j < 5; j++ ) {
-                m_mat[ idx ] = glm::translate( scale, glm::vec3( x, y, 0.f ) );
-				x += 2.0f;
-				++idx;
-			}
-			y += 2.0f;
-		}
-        
-        rbSrv->setMatrix( "VP", m_transformMatrix.m_mvp );
-        rbSrv->setMatrixArray( "M", NumInstances, m_mat);
-
-        rbSrv->endRenderBatch();
         rbSrv->endPass();
 
         return true;
     }
 
-    bool onRender( RenderBackendService *rbSrv ) override {
-        glm::mat4 rot( 1.0 );
-        rot = glm::rotate( rot, m_angle, glm::vec3( 1, 1, 0 ) );
-        for ( ui32 i = 0; i < NumInstances; i++ ) {
-            m_mat[ i ] = m_mat[ i ] * rot;
+    bool onRender(RenderBackendService *rbSrv) override {
+        glm::mat4 rot(1.0);
+        rot = glm::rotate(rot, m_angle, glm::vec3(1, 1, 0));
+        for ( size_t i = 0; i < NumInstances; ++i ) {
+            m_mat[i] = m_mat[i] * rot;
         }
-        rbSrv->beginPass(PipelinePass::getPassNameById( RenderPassId ) );
-        rbSrv->beginRenderBatch("b1");
 
-        rbSrv->setMatrix( "VP", m_transformMatrix.m_mvp );
-        rbSrv->setMatrixArray( "M", NumInstances, m_mat );
-
-        rbSrv->endRenderBatch();
+        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        {
+            rbSrv->beginRenderBatch("b1");
+            {
+                rbSrv->setMatrix("VP", m_transformMatrix.m_mvp);
+                rbSrv->setMatrixArray("M", NumInstances, m_mat);
+            }
+            rbSrv->endRenderBatch();
+        }
         rbSrv->endPass();
 
         return true;
     }
 };
 
-ATTACH_RENDERTEST( GeoInstanceRenderTest )
+ATTACH_RENDERTEST(GeoInstanceRenderTest)
 
 } // Namespace RenderTest
 } // Namespace OSRE

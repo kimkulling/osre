@@ -72,12 +72,15 @@ protected:
 
     bool onRender(RenderBackendService *rbSrv) override {
         rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
-        rbSrv->beginRenderBatch("b1");
+        {
+            rbSrv->beginRenderBatch("b1");
+            {
 
-        m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, m_angle, glm::vec3(1, 1, 0));
-        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
-
-        rbSrv->endRenderBatch();
+                m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, m_angle, glm::vec3(1, 1, 0));
+                rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+            }
+            rbSrv->endRenderBatch();
+        }
         rbSrv->endPass();
 
         return true;
@@ -87,4 +90,4 @@ protected:
 ATTACH_RENDERTEST(Texture3DRenderTest)
 
 } // namespace RenderTest
-}
+} // namespace OSRE

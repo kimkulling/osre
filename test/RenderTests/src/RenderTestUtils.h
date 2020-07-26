@@ -28,8 +28,8 @@ template<class T>
 class AutoAttach {
 public:
     AutoAttach() {
-        T *pInstance = ::new T;
-        ::OSRE::RenderTest::RenderTestSuite::getInstance()->attachRenderTest(pInstance);
+        T *instance = ::new T;
+        ::OSRE::RenderTest::RenderTestSuite::getInstance()->attachRenderTest(instance);
     }
 };
 

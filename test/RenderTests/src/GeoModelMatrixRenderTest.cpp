@@ -23,10 +23,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "AbstractRenderTest.h"
 #include "RenderTestUtils.h"
 
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/MeshBuilder.h>
 #include <osre/RenderBackend/Mesh.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/DbgRenderer.h>
+#include <osre/Scene/MeshBuilder.h>
 
 #include <iomanip>
 
@@ -44,48 +44,50 @@ class GeoModelMatrixRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
 
 public:
-    GeoModelMatrixRenderTest()
-    : AbstractRenderTest( "rendertest/GeoModelMatrixRenderTest" ) {
+    GeoModelMatrixRenderTest() :
+            AbstractRenderTest("rendertest/GeoModelMatrixRenderTest") {
         // empty
     }
 
-    virtual ~GeoModelMatrixRenderTest() {
+    ~GeoModelMatrixRenderTest() override {
         // empty
     }
 
-    bool onCreate( RenderBackendService *rbSrv ) override {
-        rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
+    bool onCreate(RenderBackendService *rbSrv) override {
+        rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
         Scene::MeshBuilder myBuilder;
         myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
         Mesh *mesh1 = myBuilder.getMesh();
-        mesh1->m_localMatrix = true; 
+        mesh1->m_localMatrix = true;
         TransformState transform;
-        transform.setTranslation( 0.5f, 0, 0 );
+        transform.setTranslation(0.5f, 0, 0);
         transform.setScale(0.2f, 0.2f, 0.2f);
-        transform.toMatrix( mesh1->m_model );
-        
-        rbSrv->beginPass( PipelinePass::getPassNameById( RenderPassId ) );
-        rbSrv->beginRenderBatch("b1");
-        
-        rbSrv->addMesh( mesh1, 0 );
+        transform.toMatrix(mesh1->m_model);
 
-        myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
-        Mesh *mesh2 = myBuilder.getMesh();
-        mesh2->m_localMatrix = true;
-        transform.setTranslation( -0.5f, 0, 0 );
-        transform.setScale(0.2f, 0.2f, 0.2f);
-        transform.toMatrix( mesh2->m_model );
-        rbSrv->addMesh( mesh2, 0 );
+        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        {
+            rbSrv->beginRenderBatch("b1");
+            {
+                rbSrv->addMesh(mesh1, 0);
 
-        rbSrv->endRenderBatch();
+                myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+                Mesh *mesh2 = myBuilder.getMesh();
+                mesh2->m_localMatrix = true;
+                transform.setTranslation(-0.5f, 0, 0);
+                transform.setScale(0.2f, 0.2f, 0.2f);
+                transform.toMatrix(mesh2->m_model);
+                rbSrv->addMesh(mesh2, 0);
+            }
+            rbSrv->endRenderBatch();
+        }
         rbSrv->endPass();
 
         return true;
     }
 };
 
-ATTACH_RENDERTEST( GeoModelMatrixRenderTest )
+ATTACH_RENDERTEST(GeoModelMatrixRenderTest)
 
-} // Namespace RenderTest
-} // Namespace OSRE
+} // namespace RenderTest
+} // namespace OSRE

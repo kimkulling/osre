@@ -45,11 +45,16 @@ class DbgFontRenderTest : public AbstractRenderTest {
 
 public:
     DbgFontRenderTest() :
+<<<<<<< HEAD
             AbstractRenderTest("rendertest/DbgFontRenderTest"), m_frameCount(0) {
+=======
+            AbstractRenderTest("rendertest/DbgFontRenderTest"),
+            m_frameCount(0) {
+>>>>>>> master
         // empty
     }
 
-    virtual ~DbgFontRenderTest() {
+    ~DbgFontRenderTest() override {
         // empty
     }
 
@@ -62,7 +67,11 @@ public:
     }
 
     bool onDestroy(RenderBackendService *) override {
+<<<<<<< HEAD
         Scene::DbgRenderer::getInstance()->clear();
+=======
+        Scene::DbgRenderer::getInstance()->clearDbgTextCache();
+>>>>>>> master
         return true;
     }
 
@@ -77,5 +86,5 @@ public:
 
 ATTACH_RENDERTEST(DbgFontRenderTest)
 
-} // Namespace RenderTest
-} // Namespace OSRE
+} // namespace RenderTest
+} // namespace OSRE

@@ -24,8 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderTestUtils.h"
 
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/DbgRenderer.h>
+#include <osre/Scene/MeshBuilder.h>
 
 #include <iomanip>
 
@@ -43,8 +43,8 @@ class AABBDbgRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
 
 public:
-    AABBDbgRenderTest()
-    : AbstractRenderTest( "rendertest/AABBDbgRenderTest" ) {
+    AABBDbgRenderTest() :
+            AbstractRenderTest("rendertest/AABBDbgRenderTest") {
         // empty
     }
 
@@ -52,33 +52,35 @@ public:
         // empty
     }
 
-    bool onCreate( RenderBackendService *rbSrv ) override {
-        rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
+    bool onCreate(RenderBackendService *rbSrv) override {
+        rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
-        TVec3<f32> min( -1, -1, -1 ), max( 1, 1, 1 );
-        Scene::TAABB<f32> aabb( min, max );
+        TVec3<f32> min(-1, -1, -1), max(1, 1, 1);
+        Scene::TAABB<f32> aabb(min, max);
         m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
         m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, glm::vec3(.5, .5, .5));
-        Scene::DbgRenderer::getInstance()->renderAABB(m_transformMatrix.m_model, aabb );
+        Scene::DbgRenderer::getInstance()->renderAABB(m_transformMatrix.m_model, aabb);
 
         return true;
     }
 
-    bool onRender( RenderBackendService *rbSrv ) override {
-        rbSrv->beginPass(PipelinePass::getPassNameById( DbgPassId ));
-        rbSrv->beginRenderBatch("dbgFontBatch");
-                
-        m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
-        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
-                
-        rbSrv->endRenderBatch();
+    bool onRender(RenderBackendService *rbSrv) override {
+        rbSrv->beginPass(PipelinePass::getPassNameById(DbgPassId));
+        {
+            rbSrv->beginRenderBatch("dbgFontBatch");
+            {
+                m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.01f, glm::vec3(1, 1, 0));
+                rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+            }
+            rbSrv->endRenderBatch();
+        }
         rbSrv->endPass();
 
         return true;
     }
 };
 
-ATTACH_RENDERTEST( AABBDbgRenderTest )
+ATTACH_RENDERTEST(AABBDbgRenderTest)
 
-} // Namespace RenderTest
-} // Namespace OSRE
+} // namespace RenderTest
+} // namespace OSRE

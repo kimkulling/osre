@@ -22,12 +22,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "AbstractRenderTest.h"
 
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/IO/IOService.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <osre/Platform/AbstractWindow.h>
 #include <osre/Common/Logger.h>
 #include <osre/Debugging/osre_debugging.h>
+#include <osre/IO/IOService.h>
+#include <osre/Platform/AbstractWindow.h>
+#include <osre/Platform/PlatformInterface.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 namespace OSRE {
 namespace RenderTest {
@@ -36,9 +36,9 @@ using namespace ::OSRE::RenderBackend;
 
 static const c8 *Tag = "AbstractRenderTest";
 
-AbstractRenderTest::AbstractRenderTest( const String &renderTestName )
-: m_renderTestName( renderTestName )
-, m_window( nullptr ) {
+AbstractRenderTest::AbstractRenderTest(const String &renderTestName) :
+        m_renderTestName(renderTestName),
+        m_window(nullptr) {
     // empty
 }
 
@@ -46,50 +46,50 @@ AbstractRenderTest::~AbstractRenderTest() {
     // empty
 }
 
-bool AbstractRenderTest::create( RenderBackendService *rbSrv ) {
-    OSRE_ASSERT( nullptr != rbSrv );
-    
-    osre_info( m_renderTestName, "=> Creating test." );
-    const String &name( getTestName() );
+bool AbstractRenderTest::create(RenderBackendService *rbSrv) {
+    OSRE_ASSERT(nullptr != rbSrv);
+
+    osre_info(m_renderTestName, "=> Creating test.");
+    const String &name(getTestName());
     m_window = Platform::PlatformInterface::getInstance()->getRootWindow();
-    if (nullptr != m_window ) {
-        m_window->setWindowsTitle( "Performing test " + name );
+    if (nullptr != m_window) {
+        m_window->setWindowsTitle("Performing test " + name);
     }
-    
-    return onCreate( rbSrv );
+
+    return onCreate(rbSrv);
 }
 
-bool AbstractRenderTest::destroy( RenderBackendService *rbSrv ) {
-    OSRE_ASSERT( nullptr != rbSrv );
-    
-    osre_info( m_renderTestName, "<= Destroying test." );
+bool AbstractRenderTest::destroy(RenderBackendService *rbSrv) {
+    OSRE_ASSERT(nullptr != rbSrv);
 
-    return onDestroy( rbSrv );
+    osre_info(m_renderTestName, "<= Destroying test.");
+
+    return onDestroy(rbSrv);
 }
 
-bool AbstractRenderTest::render( RenderBackendService *rbSrv ) {
-    OSRE_ASSERT( nullptr != rbSrv );
+bool AbstractRenderTest::render(RenderBackendService *rbSrv) {
+    OSRE_ASSERT(nullptr != rbSrv);
 
-    return onRender( rbSrv );
+    return onRender(rbSrv);
 }
 
-bool AbstractRenderTest::onCreate( RenderBackendService * ) {
+bool AbstractRenderTest::onCreate(RenderBackendService *) {
     return true;
 }
 
-bool AbstractRenderTest::onDestroy( RenderBackendService * ) {
+bool AbstractRenderTest::onDestroy(RenderBackendService *) {
     return true;
 }
 
-bool AbstractRenderTest::onRender( RenderBackendService * ) {
+bool AbstractRenderTest::onRender(RenderBackendService *) {
     return true;
 }
 
-void AbstractRenderTest::setup( RenderBackendService * ) {
+void AbstractRenderTest::setup(RenderBackendService *) {
     // empty
 }
 
-void AbstractRenderTest::teardown( RenderBackendService * ) {
+void AbstractRenderTest::teardown(RenderBackendService *) {
     // empty
 }
 
@@ -97,14 +97,14 @@ const String &AbstractRenderTest::getTestName() const {
     return m_renderTestName;
 }
 
-Material *AbstractRenderTest::createMaterial( const String &matName, const String &VsSrc, const String &FsSrc ) {
-    if ( matName.empty() ) {
+Material *AbstractRenderTest::createMaterial(const String &matName, const String &VsSrc, const String &FsSrc) {
+    if (matName.empty()) {
         return nullptr;
     }
 
-    Material *mat = new Material( matName );
+    Material *mat = new Material(matName);
     mat->m_numTextures = 0;
-    mat->m_type        = MaterialType::ShaderMaterial;
+    mat->m_type = MaterialType::ShaderMaterial;
     ShaderSourceArray shArray;
     shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = VsSrc;
     shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = FsSrc;
