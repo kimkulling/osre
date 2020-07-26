@@ -148,7 +148,7 @@ IF ( OSRE_BUILD_SAMPLES )
 ENDIF(OSRE_BUILD_SAMPLES)
 
 ADD_SUBDIRECTORY( 3dparty/glew )
-ADD_SUBDIRECTORY( 3dparty/cppcore/build )
+ADD_SUBDIRECTORY( 3dparty/cppcore )
 ADD_SUBDIRECTORY( 3dparty/zlib )
 ADD_SUBDIRECTORY( 3dparty/unzip )
 ADD_SUBDIRECTORY( 3dparty/soil )
