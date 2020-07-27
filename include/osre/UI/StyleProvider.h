@@ -46,7 +46,7 @@ struct OSRE_EXPORT Style {
     };
 
     CPPCore::TArray<Color4> StyleColors;
-    RenderBackend::FontBase *StyleFont;
+    FontBase *StyleFont;
     i32 HorizontalMargin;
     i32 VerticalMargin;
     bool HasBorder;

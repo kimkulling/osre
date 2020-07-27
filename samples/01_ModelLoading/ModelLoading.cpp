@@ -153,7 +153,7 @@ protected:
         rbSrv->endRenderBatch();
         rbSrv->endPass();
 
-        Scene::DbgRenderer::getInstance()->renderDbgText(-1, -1, 2U, "XXX");
+        Scene::DbgRenderer::getInstance()->renderDbgText(2U, -1, -1, "XXX");
 
         AppBase::onUpdate();
     }

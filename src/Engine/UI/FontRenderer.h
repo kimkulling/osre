@@ -11,13 +11,16 @@
 namespace OSRE {
 
 namespace RenderBackend {
-
-class RenderBackendService;
-class Mesh;
-
+    class RenderBackendService;
+    class Mesh;
 }
 
 namespace UI {
+
+struct Glyph {
+    f32 x;
+    f32 y;
+};
 
 class FontRenderer {
 public:
@@ -35,7 +38,7 @@ public:
 
     FontRenderer();
     ~FontRenderer();
-    void renderText(ui32 x, ui32 y, ui32 id, const String &text, RenderBackend::RenderBackendService *rbSrv);
+    void AddRenderText(ui32 id, ui32 x, ui32 y, const String &text, RenderBackend::RenderBackendService *rbSrv);
     void clear();
 
 private:
