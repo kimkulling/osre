@@ -37,7 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #    include <src/Engine/Platform/sdl2/SDL2Initializer.h>
 #    include <src/Engine/Platform/sdl2/SDL2OGLRenderContext.h>
 #    include <src/Engine/Platform/sdl2/SDL2SystemInfo.h>
-#    include <src/Engine/Platform/sdl2/SDL2ThreadFactory.h>
+//#    include <src/Engine/Platform/sdl2/SDL2ThreadFactory.h>
 #    include <src/Engine/Platform/sdl2/SDL2Timer.h>
 #    include <src/Engine/Platform/sdl2/SDL2Window.h>
 #endif

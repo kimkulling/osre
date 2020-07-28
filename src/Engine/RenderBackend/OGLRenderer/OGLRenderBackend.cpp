@@ -1121,8 +1121,10 @@ void OGLRenderBackend::releaseFrameBuffer(OGLFrameBuffer *oglFB) {
     }
 }
 
-#pragma warning(push)
-#pragma warning(disable : 4312)
+#if _MSC_VER > 1920 && !defined(__clang__)
+#   pragma warning(push)
+#   pragma warning(disable : 4312)
+#endif
 
 void OGLRenderBackend::render(size_t primpGrpIdx) {
     OGLPrimGroup *grp(m_primitives[primpGrpIdx]);
@@ -1134,7 +1136,9 @@ void OGLRenderBackend::render(size_t primpGrpIdx) {
     }
 }
 
-#pragma warning(pop)
+#if _MSC_VER > 1920 && !defined(__clang__)
+#   pragma warning(pop)
+#endif
 
 void OGLRenderBackend::render(size_t primpGrpIdx, size_t numInstances) {
     OGLPrimGroup *grp(m_primitives[primpGrpIdx]);

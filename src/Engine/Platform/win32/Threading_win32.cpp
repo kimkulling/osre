@@ -105,8 +105,8 @@ Thread::Thread(const String &name, ui32 stacksize) :
         m_pThreadSignal(NULL),
         m_Prio(Priority::Normal),
         m_threadState(ThreadState::New),
-        m_tls(nullptr),
-        m_ThreadName(name),
+        mTls(nullptr),
+        mThreadName(name),
         m_id(),
         m_stacksize(stacksize) {
     // empty
@@ -204,16 +204,6 @@ bool Thread::resume() {
     return true;
 }
 
-void Thread::setName(const String &rName) {
-    assert(!rName.empty());
-
-    m_ThreadName = rName;
-}
-
-const String &Thread::getName() const {
-    return m_ThreadName;
-}
-
 void Thread::waitForTimeout(ui32 ms) {
     if (!m_pThreadSignal) {
         osre_debug(Tag, "Invalid pointer to thread signal.");
@@ -264,16 +254,12 @@ Thread::Priority Thread::getPriority() const {
     return m_Prio;
 }
 
-const String &Thread::getThreadName() const {
-    return m_ThreadName;
-}
-
 ThreadLocalStorage *Thread::getThreadLocalStorage() {
-    return m_tls;
+    return mTls;
 }
 
 void Thread::setThreadLocalStorage(ThreadLocalStorage *tls) {
-    m_tls = (ThreadLocalStorage *)tls;
+    mTls = (ThreadLocalStorage *)tls;
 }
 
 ui32 WINAPI Thread::ThreadFunc(LPVOID data) {

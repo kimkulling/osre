@@ -16,11 +16,11 @@ INCLUDE_DIRECTORIES(
 
 # For Vulkan support
 if( NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*" )
-	if( WIN32 )
-		set( USE_PLATFORM "VK_USE_PLATFORM_WIN32_KHR" )
-	elseif( UNIX )
-		set( USE_PLATFORM "VK_USE_PLATFORM_XCB_KHR" )
-	endif()
+    if( WIN32 )
+        set( USE_PLATFORM "VK_USE_PLATFORM_WIN32_KHR" )
+    elseif( UNIX )
+        set( USE_PLATFORM "VK_USE_PLATFORM_XCB_KHR" )
+    endif()
 endif()
 
 IF( WIN32 )
@@ -220,8 +220,6 @@ SET( platform_sdl2_src
     Platform/sdl2/Threading_sdl2.cpp
     Platform/sdl2/SDL2DisplayInterface.h
     Platform/sdl2/SDL2DisplayInterface.cpp
-    Platform/sdl2/SDL2Atomic.h
-    Platform/sdl2/SDL2CriticalSection.h
     Platform/sdl2/SDL2EventQueue.cpp
     Platform/sdl2/SDL2EventQueue.h
     Platform/sdl2/SDL2Initializer.cpp
@@ -232,20 +230,12 @@ SET( platform_sdl2_src
     Platform/sdl2/SDL2Timer.h
     Platform/sdl2/SDL2OGLRenderContext.cpp
     Platform/sdl2/SDL2OGLRenderContext.h
-    Platform/sdl2/SDL2Thread.cpp
-    Platform/sdl2/SDL2Thread.h
-    Platform/sdl2/SDL2ThreadEvent.cpp
-    Platform/sdl2/SDL2ThreadEvent.h
-    Platform/sdl2/SDL2ThreadFactory.cpp
-    Platform/sdl2/SDL2ThreadFactory.h
     Platform/sdl2/SDL2ThreadLocalStorage.h
     Platform/sdl2/SDL2DynamicLoader.cpp
     Platform/sdl2/SDL2DynamicLoader.h
     Platform/sdl2/SDL2SystemInfo.h
     Platform/sdl2/SDL2OSService.h
     Platform/sdl2/SDL2OSService.cpp
-    Platform/sdl2/SDL2Mutex.h
-    Platform/sdl2/SDL2Mutex.cpp
 )
 
 IF( WIN32 )
