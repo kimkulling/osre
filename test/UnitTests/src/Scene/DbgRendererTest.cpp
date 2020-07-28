@@ -54,23 +54,5 @@ TEST_F( DbgRendererTest, create_Success ) {
     delete tstRBSrv;
 }
 
-TEST_F( DbgRendererTest, clearDbgCache_Success ) {
-#ifdef OSRE_WINDOWS
-    
-    RenderBackend::RenderBackendService *tstRBSrv = new TestRenderBackendService;
-    DbgRenderer::create( tstRBSrv );
-
-    DbgRenderer::getInstance()->renderDbgText( 1, 1, 1, "xxx" );
-    const size_t num_1( DbgRenderer::getInstance()->numDbgTexts() );
-    EXPECT_EQ( 0, num_1 );
-    DbgRenderer::getInstance()->clearDbgTextCache();
-    const size_t num_2( DbgRenderer::getInstance()->numDbgTexts() );
-    EXPECT_EQ( 0, num_2  );
-    DbgRenderer::destroy();
-    delete tstRBSrv;
-
-#endif
-}
-
 } // Namespace UnitTest
 } // Namespace OSRE

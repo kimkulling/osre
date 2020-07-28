@@ -64,9 +64,8 @@ public:
 ///	@param	val2	[in] The value 2.
 ///	@return	The minimal value.
 //-------------------------------------------------------------------------------------------------
-template<class T>
-inline
-T osre_min( T val1, T val2 ) {
+template <class T>
+inline T osre_min(T val1, T val2) {
     return val1 < val2 ? val1 : val2;
 }
 
@@ -78,9 +77,8 @@ T osre_min( T val1, T val2 ) {
 ///	@param	val2	[in] The value 2.
 ///	@return	The maximal value.
 //-------------------------------------------------------------------------------------------------
-template<class T>
-inline
-T osre_max( T val1, T val2 ) {
+template <class T>
+inline T osre_max(T val1, T val2) {
     return val1 > val2 ? val1 : val2;
 }
 
@@ -94,9 +92,8 @@ T osre_max( T val1, T val2 ) {
 ///	@return	The interpolated value.
 //-------------------------------------------------------------------------------------------------
 template <typename T>
-inline T 
-osre_lerp( T v0, T v1, T t ) {
-    return (1-t)*v0 + t*v1;
+inline T osre_lerp(T v0, T v1, T t) {
+    return (1 - t) * v0 + t * v1;
 }
 
 } // Namespace Math

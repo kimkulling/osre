@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Tokenizer.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/ui/FontBase.h>
 
 #include "UIRenderUtils.h"
 
@@ -73,7 +74,7 @@ void TextBase::setFont( FontBase *font ) {
     Widget::requestRedraw();
 }
 
-RenderBackend::FontBase *TextBase::getFont() const {
+FontBase *TextBase::getFont() const {
     return m_font;
 }
 
@@ -84,6 +85,7 @@ void TextBase::onRender(UiRenderCmdCache& renderCmdCache, RenderBackendService* 
     if (m_text.empty()) {
         return;
     }
+
     f32 fontSize = 16.f;
     if (nullptr != m_font) {
         fontSize = static_cast<f32>(m_font->getSize());
@@ -91,21 +93,14 @@ void TextBase::onRender(UiRenderCmdCache& renderCmdCache, RenderBackendService* 
 
     f32 x = static_cast<f32>(Widget::getRect().getX1());
     f32 y = static_cast<f32>(Widget::getRect().getY1());
+    
     //WidgetCoordMapping::mapPosToWorld(static_cast<ui32>(x), static_cast<ui32>(y), x, y);
     const size_t startIndex = renderCmdCache.m_ic.numIndices();
-    Scene::MeshBuilder::allocUiTextBox(x, y, getStackIndex(), fontSize, m_text, BufferAccessType::ReadWrite, renderCmdCache.m_vc, renderCmdCache.m_ic);
-
-    UiRenderCmd* cmd(new UiRenderCmd);
-    cmd->m_startIndex = (ui32) startIndex;
-    cmd->m_numIndices = (ui32)(renderCmdCache.m_ic.numIndices() - startIndex);
-    
-    CPPCore::TArray<TextureResource *> texResArray;
-    TextureResource *texRes = new TextureResource("buildin_arial", IO::Uri("file://assets/Textures/Fonts/buildin_arial.bmp"));
-    texResArray.add(texRes);
-    cmd->mMaterial = Scene::MaterialBuilder::createTexturedMaterial("text_box_tex", texResArray, VertexType::RenderVertex);
-
-    //
-    renderCmdCache.m_renderCmds.add(cmd);
+    TextEntry *entry(new TextEntry);
+    entry->x = x;
+    entry->y = y;
+    entry->text = m_text;
+    renderCmdCache.mTextCmdArray.add(entry);
 }
 
 } // Namespace UI

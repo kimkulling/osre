@@ -85,8 +85,8 @@ const String TextFsSrc =
 	"};\n";
 
 MeshBuilder::MeshBuilder() 
-: m_isDirty( false )
-, m_ActiveGeo( nullptr ) {
+: mIsDirty( false )
+, mActiveGeo( nullptr ) {
     // empty
 }
 
@@ -95,10 +95,10 @@ MeshBuilder::~MeshBuilder() {
 }
 
 MeshBuilder &MeshBuilder::allocEmptyMesh( VertexType type, ui32 numMeshes ) {
-    m_ActiveGeo = Mesh::create(numMeshes);
+    mActiveGeo = Mesh::create(numMeshes);
     for (ui32 i = 0; i < numMeshes; ++i) {
-        m_ActiveGeo[ i ].m_vertextype = type;
-        m_ActiveGeo[ i ].m_indextype = IndexType::UnsignedShort;
+        mActiveGeo[ i ].m_vertextype = type;
+        mActiveGeo[ i ].m_indextype = IndexType::UnsignedShort;
     }
 
     return *this;
@@ -140,7 +140,7 @@ MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType acce
     // setup material
     mesh->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
-    m_ActiveGeo = mesh;
+    mActiveGeo = mesh;
 
     return *this;
 }
@@ -193,7 +193,7 @@ MeshBuilder &MeshBuilder::allocQuads( VertexType type, BufferAccessType access )
     // setup material
     mesh->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
 
-    m_ActiveGeo = mesh;
+    mActiveGeo = mesh;
 
     return *this;
 }
@@ -251,7 +251,7 @@ MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, Re
 }
 
 MeshBuilder &MeshBuilder::allocCube( RenderBackend::VertexType type, f32 w, f32 h, f32 d, RenderBackend::BufferAccessType access ) {
-    m_ActiveGeo = Mesh::create( 1 );
+    mActiveGeo = Mesh::create( 1 );
     RenderVert v[8];
 
     //glm::vec3 v[8];
@@ -302,21 +302,21 @@ MeshBuilder &MeshBuilder::allocCube( RenderBackend::VertexType type, f32 w, f32 
         6,7,4
     }; 
 
-    m_ActiveGeo->m_vertextype = type;
-    m_ActiveGeo->m_indextype = IndexType::UnsignedShort;
-    m_ActiveGeo->m_numPrimGroups = 1;
-    m_ActiveGeo->m_primGroups = new PrimitiveGroup[m_ActiveGeo->m_numPrimGroups];
-    m_ActiveGeo->m_primGroups[0].init(IndexType::UnsignedShort, 12, PrimitiveType::TriangleList, 0);
+    mActiveGeo->m_vertextype = type;
+    mActiveGeo->m_indextype = IndexType::UnsignedShort;
+    mActiveGeo->m_numPrimGroups = 1;
+    mActiveGeo->m_primGroups = new PrimitiveGroup[mActiveGeo->m_numPrimGroups];
+    mActiveGeo->m_primGroups[0].init(IndexType::UnsignedShort, 12, PrimitiveType::TriangleList, 0);
 
     const size_t vbSize = sizeof(RenderVert) * 8;
-    m_ActiveGeo->m_vb = BufferData::alloc(BufferType::VertexBuffer, vbSize, access);
-    m_ActiveGeo->m_vb->copyFrom(&v[0].position.x, vbSize);
+    mActiveGeo->m_vb = BufferData::alloc(BufferType::VertexBuffer, vbSize, access);
+    mActiveGeo->m_vb->copyFrom(&v[0].position.x, vbSize);
 
     const size_t ibSize = sizeof(GLushort) * 36;
-    m_ActiveGeo->m_ib = BufferData::alloc(BufferType::IndexBuffer, ibSize, BufferAccessType::ReadOnly);
-    m_ActiveGeo->m_ib->copyFrom(indices, ibSize);
+    mActiveGeo->m_ib = BufferData::alloc(BufferType::IndexBuffer, ibSize, BufferAccessType::ReadOnly);
+    mActiveGeo->m_ib->copyFrom(indices, ibSize);
 
-    m_ActiveGeo->m_material = Scene::MaterialBuilder::createBuildinMaterial(type);
+    mActiveGeo->m_material = Scene::MaterialBuilder::createBuildinMaterial(type);
 
     return *this;
 }
@@ -337,7 +337,7 @@ MeshBuilder &MeshBuilder::allocLineList( VertexType type, BufferAccessType acces
     geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
     geo->m_ib->copyFrom( indices, size );
 
-    m_ActiveGeo = geo;
+    mActiveGeo = geo;
 
     return *this;
 }
@@ -369,7 +369,7 @@ MeshBuilder &MeshBuilder::allocPoints( VertexType type, BufferAccessType access,
     // setup material
     ptGeo->m_material = MaterialBuilder::createBuildinMaterial( type );;
 
-    m_ActiveGeo = ptGeo;
+    mActiveGeo = ptGeo;
 
     return *this;
 }
@@ -514,7 +514,7 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
     TextureResource* texRes = new TextureResource("buildin_arial", IO::Uri("file://assets/Textures/Fonts/buildin_arial.bmp"));
     texResArray.add(texRes);
     mesh->m_material = Scene::MaterialBuilder::createTexturedMaterial("text_box_tex", texResArray, VertexType::RenderVertex );
-    m_ActiveGeo = mesh;
+    mActiveGeo = mesh;
 
     return *this;
 }
@@ -538,7 +538,7 @@ void MeshBuilder::allocUiTextBox(f32 x, f32 y, i32 stackIndex, f32 textSize, con
         UI::WidgetCoordMapping::mapPosToWorld(static_cast<ui32>(v.position.x), static_cast<ui32>(v.position.y), v.position.x, v.position.y);
 
 
-        v.position.z = getZbyStackIndex(stackIndex);
+        v.position.z = (f32) getZbyStackIndex((f32)stackIndex);
         v.color0 = colors[i];
         v.tex0 = tex0[i];
         vc.add(v);
@@ -682,7 +682,7 @@ void MeshBuilder::updateTextVertices( size_t numVerts, ::glm::vec2 *tex0, Buffer
 }
 
 RenderBackend::Mesh *MeshBuilder::getMesh() {
-    return m_ActiveGeo;
+    return mActiveGeo;
 }
 
 } // Namespace Scene

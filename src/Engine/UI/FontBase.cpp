@@ -20,49 +20,50 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/RenderBackend/FontBase.h>
-#include <src/Engine/RenderBackend/OGLRenderer/OGLRenderBackend.h>
+#include <osre/UI/FontBase.h>
 
 namespace OSRE {
-namespace RenderBackend {
- 
-FontBase::FontBase( const String &name )
-: Object( name )
-, m_texName()
-, m_numCols( 0 )
-, m_numRows( 0 )
-, m_texture( nullptr )
-, m_fontAtlas( nullptr )
-, m_uri() {
+namespace UI {
+
+using namespace ::OSRE::RenderBackend;
+
+FontBase::FontBase(const String &name) :
+        Object(name),
+        m_texName(),
+        m_numCols(0),
+        m_numRows(0),
+        m_texture(nullptr),
+        m_fontAtlas(nullptr),
+        m_uri() {
     // empty
 }
 
 FontBase::~FontBase() {
     // empty
 }
-    
-void FontBase::setSize( size_t size ) {
+
+void FontBase::setSize(size_t size) {
     m_size = size;
 }
-    
+
 size_t FontBase::getSize() const {
     return m_size;
 }
 
-void FontBase::setUri( const IO::Uri &uri ) {
+void FontBase::setUri(const IO::Uri &uri) {
     m_uri = uri;
     m_texName = m_uri.getResource();
 }
 
-void FontBase::setTextureName( const String &name ) {
+void FontBase::setTextureName(const String &name) {
     m_texName = name;
 }
 
-void FontBase::setTexture(Texture* texture) {
+void FontBase::setTexture(Texture *texture) {
     m_texture = texture;
 }
 
-Texture* FontBase::getTexture() const {
+Texture *FontBase::getTexture() const {
     return m_texture;
 }
 
@@ -70,15 +71,15 @@ const String &FontBase::getTextureName() const {
     return m_texName;
 }
 
-void FontBase::setAtlasCols( ui32 numCols ) {
+void FontBase::setAtlasCols(ui32 numCols) {
     m_numCols = numCols;
 }
 
-void FontBase::setAtlasRows( ui32 numRows ) {
+void FontBase::setAtlasRows(ui32 numRows) {
     m_numRows = numRows;
 }
 
-bool FontBase::loadFromStream( OGLRenderBackend *rb ) {
+/*bool FontBase::loadFromStream( OGLRenderBackend *rb ) {
     if ( m_uri.isEmpty() || nullptr == rb ) {
         return false;
     }
@@ -97,7 +98,7 @@ bool FontBase::loadFromStream( OGLRenderBackend *rb ) {
     m_numCols = 16;
 
     return true;
-}
+}*/
 
-} // Namespace RenderBackend
+} // namespace UI
 } // Namespace OSRE

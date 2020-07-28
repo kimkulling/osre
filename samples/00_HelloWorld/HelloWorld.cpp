@@ -21,23 +21,24 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
-#include <osre/App/Entity.h>
-#include <osre/App/Component.h>
-#include <osre/Properties/Settings.h>
-#include <osre/Common/Logger.h>
-#include <osre/Scene/MeshBuilder.h>
-#include <osre/Scene/Stage.h>
-#include <osre/Scene/Node.h>
 #include <osre/App/AssetRegistry.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/App/Component.h>
+#include <osre/App/Entity.h>
+#include <osre/App/World.h>
+#include <osre/Common/Logger.h>
 #include <osre/Profiling/PerformanceCounterRegistry.h>
+#include <osre/Properties/Settings.h>
+#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Scene/MeshBuilder.h>
+#include <osre/Scene/Node.h>
+#include <osre/Scene/Stage.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 
 using namespace ::OSRE;
 using namespace ::OSRE::App;
@@ -45,23 +46,23 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Properties;
 
 // To identify local log entries we will define this tag.
-static const c8 *Tag = "HelloWorldApp"; 
+static const c8 *Tag = "HelloWorldApp";
 
 /// The example application, will create the render environment and render a simple triangle onto it
 class HelloWorldApp : public App::AppBase {
     /// The main state, is used to describe a scene to render
-    Scene::Stage *m_stage;
+    Scene::Stage *mStage;
     /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock m_transformMatrix;
 
-    Entity *m_entity;
+    Entity *mEntity;
 
 public:
     /// The class constructor with the incoming arguments from the command line.
-    HelloWorldApp( int argc, char *argv[] )
-    : AppBase( argc, (const char ** ) argv )
-    , m_stage( nullptr )
-    , m_entity( nullptr ){
+    HelloWorldApp(int argc, char *argv[]) :
+            AppBase(argc, (const char **)argv),
+            mStage(nullptr),
+            mEntity(nullptr) {
         // empty
     }
 
@@ -76,39 +77,40 @@ protected:
             return false;
         }
 
-        AppBase::setWindowsTitle( "Hello-World sample!" );
+        AppBase::setWindowsTitle("Hello-World sample!");
 
 #ifdef OSRE_WINDOWS
-        App::AssetRegistry::registerAssetPath( "assets", "../../media" );
+        App::AssetRegistry::registerAssetPath("assets", "../../media");
 #else
-        App::AssetRegistry::registerAssetPath( "assets", "../media" );
-#endif 
+        App::AssetRegistry::registerAssetPath("assets", "../media");
+#endif
 
-        m_stage = AppBase::createStage( "HelloWorld" );
-        AppBase::activateStage( m_stage->getName() );
+        mStage = AppBase::createStage("HelloWorld");
+        AppBase::activateStage(mStage->getName());
 
-        m_entity = new Entity("entity", *AppBase::getIdContainer() );
-        RenderComponent *rc = (RenderComponent*) m_entity->getComponent( ComponentType::RenderComponentType );
-        Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
+        mEntity = new Entity("entity", *AppBase::getIdContainer());
+        AppBase::getActiveWorld()->addEntity(mEntity);
+        RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
+        Scene::Node *geoNode = mStage->addNode("geo", nullptr);
         Scene::MeshBuilder meshBuilder;
         meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
         RenderBackend::Mesh *mesh = meshBuilder.getMesh();
-        if( nullptr != mesh ) {
-			m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
+        if (nullptr != mesh) {
+            m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
             m_transformMatrix.update();
-            getRenderBackendService()->setMatrix( "MVP", m_transformMatrix.m_mvp );
+            getRenderBackendService()->setMatrix("MVP", m_transformMatrix.m_mvp);
             rc->addStaticMesh(mesh);
-            geoNode->addMeshReference( 0 );
-		}
+            geoNode->addMeshReference(0);
+        }
 
         return true;
     }
 
     void onUpdate() override {
-        ui32 fps( 0 );
-        Profiling::PerformanceCounterRegistry::queryCounter( "fps", fps );
+        ui32 fps(0);
+        Profiling::PerformanceCounterRegistry::queryCounter("fps", fps);
         std::stringstream stream;
-        stream << std::setfill( '0' ) << std::setw( 2 ) << fps;
+        stream << std::setfill('0') << std::setw(2) << fps;
         //Scene::DbgRenderer::getInstance()->renderDbgText( 10, 10, 1, stream.str() );
 
         AppBase::onUpdate();
@@ -116,4 +118,4 @@ protected:
 };
 
 /// Will generate the main function.
-OSRE_MAIN( HelloWorldApp )
+OSRE_MAIN(HelloWorldApp)

@@ -26,12 +26,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Uri.h>
 
 namespace OSRE {
+
 namespace RenderBackend {
 
 struct OGLTexture;
 struct Texture;
 
 class OGLRenderBackend;
+
+}
+
+namespace UI {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -46,19 +51,19 @@ public:
     virtual size_t getSize() const;
     virtual void setUri( const IO::Uri &uri );
     virtual void setTextureName( const String &name );
-    virtual void setTexture(Texture* texture);
-    virtual Texture* getTexture() const;
+    virtual void setTexture(RenderBackend::Texture * texture);
+    virtual RenderBackend::Texture *getTexture() const;
     virtual const String &getTextureName() const;
     virtual void setAtlasCols( ui32 numCols );
     virtual void setAtlasRows( ui32 numRows );
-    virtual bool loadFromStream( OGLRenderBackend *rb );
+    //virtual bool loadFromStream( OGLRenderBackend *rb );
 
 private:
     size_t m_size;
     String m_texName;
     ui32 m_numCols, m_numRows;
-    Texture *m_texture;
-    OGLTexture *m_fontAtlas;
+    RenderBackend::Texture *m_texture;
+    RenderBackend::OGLTexture *m_fontAtlas;
     IO::Uri m_uri;
 };
 

@@ -161,7 +161,6 @@ private:
 	CPPCore::TArray<OGLTexture *> m_textures;
     CPPCore::TArray<OGLTexture *> mBindedTextures;
 	CPPCore::TArray<size_t> m_freeTexSlots;
-	FontBase *m_activeFont;
 	std::map<String, size_t> m_texLookupMap;
 	CPPCore::TArray<OGLParameter *> m_parameters;
 	OGLShader *m_shaderInUse;
