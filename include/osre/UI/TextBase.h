@@ -25,13 +25,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/Widget.h>
 
 namespace OSRE {
-
-// Forward declarations
-namespace RenderBackend {
-    class FontBase;
-}
-
 namespace UI {
+
+class FontBase;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -44,15 +40,15 @@ public:
     ~TextBase();
     void setLabel( const String &text );
     const String &getLabel() const;
-    void setFont( RenderBackend::FontBase *font );
-    RenderBackend::FontBase *getFont() const;
+    void setFont( FontBase *font );
+    FontBase *getFont() const;
 
 protected:
     void onLayout() override;
     void onRender( UiRenderCmdCache &renderCmdCache, RenderBackend::RenderBackendService *rbSrv ) override;
 
 private:
-    RenderBackend::FontBase *m_font;
+    FontBase *m_font;
     String m_text;
 };
 

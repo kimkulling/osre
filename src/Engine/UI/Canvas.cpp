@@ -20,11 +20,11 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
+#include <osre/Platform/AbstractWindow.h>
+#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/FocusControl.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Platform/AbstractWindow.h>
-#include <osre/RenderBackend/RenderCommon.h>
 
 #include "UIRenderUtils.h"
 
@@ -34,39 +34,39 @@ namespace UI {
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Platform;
 
-Canvas::Canvas( const String &name, ui32 x, ui32 y, ui32 width, ui32 height )
-: Widget( name, nullptr )
-, m_surface( nullptr )
-, m_focusControl( nullptr ) {
+Canvas::Canvas(const String &name, ui32 x, ui32 y, ui32 width, ui32 height) :
+        Widget(name, nullptr),
+        m_surface(nullptr),
+        m_focusControl(nullptr) {
     Widget::setRect(x, y, width, height);
     m_focusControl = new FocusControl;
 }
 
 Canvas::~Canvas() {
     m_surface = nullptr;
-    
+
     delete m_focusControl;
     m_focusControl = nullptr;
 }
 
-void Canvas::setSurface( AbstractWindow *surface ) {
-    if ( surface == m_surface ) {
-        return;
-    }
-    
-    m_surface = surface;
-    if ( nullptr == surface ) {
+void Canvas::setSurface(AbstractWindow *surface) {
+    if (surface == m_surface) {
         return;
     }
 
-    WindowsProperties *winProperties( surface->getProperties() );
-    if ( nullptr == winProperties ) {
+    m_surface = surface;
+    if (nullptr == surface) {
+        return;
+    }
+
+    WindowsProperties *winProperties(surface->getProperties());
+    if (nullptr == winProperties) {
         return;
     }
 
     Rect2ui dim;
     winProperties->getDimension(dim);
-    WidgetCoordMapping::init( dim );
+    WidgetCoordMapping::init(dim);
 }
 
 const TransformMatrixBlock &Canvas::getTransform() const {
@@ -78,37 +78,36 @@ FocusControl *Canvas::getFocusControl() const {
 }
 
 void Canvas::onLayout() {
-
 }
 
-void Canvas::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv ) {
-    if ( nullptr == m_surface ) {
+void Canvas::onRender(UiRenderCmdCache &renderCmdCache, RenderBackendService *rbSrv) {
+    if (nullptr == m_surface) {
         return;
     }
 
     // push 2D render mode
-    const Rect2ui& r = Widget::getRect();
-    m_transformMatrix.m_projection = glm::ortho( (i32 )r.getX1(), (i32) r.getWidth(), (i32)r.getHeight(), (i32)r.getY1() );
+    const Rect2ui &r = Widget::getRect();
+    m_transformMatrix.m_projection = glm::ortho((i32)r.getX1(), (i32)r.getWidth(), (i32)r.getHeight(), (i32)r.getY1());
     m_transformMatrix.m_view = glm::mat4(1);
-    m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.01f, glm::vec3( 1, 1, 0 ) );
+    m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.01f, glm::vec3(1, 1, 0));
     m_transformMatrix.update();
-    
+
     const size_t numChildren = getNumWidgets();
     if (0 == numChildren) {
         return;
     }
 
-    for ( size_t i=0; i<numChildren; ++i ) {
-        Widget *currentChild( getWidgetAt( i ) );
-        if ( nullptr != currentChild ) {
+    for (size_t i = 0; i < numChildren; ++i) {
+        Widget *currentChild(getWidgetAt(i));
+        if (nullptr != currentChild) {
             currentChild->render(renderCmdCache, rbSrv);
         }
     }
 }
 
-void Canvas::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
-    Rect2ui dim( x, y, w, h );
-    WidgetCoordMapping::init( dim );
+void Canvas::onResize(ui32 x, ui32 y, ui32 w, ui32 h) {
+    Rect2ui dim(x, y, w, h);
+    WidgetCoordMapping::init(dim);
 }
 
 } // Namespace UI

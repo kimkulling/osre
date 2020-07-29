@@ -63,7 +63,7 @@ public:
     }
 
     bool onDestroy(RenderBackendService *) override {
-        Scene::DbgRenderer::getInstance()->clearDbgTextCache();
+        Scene::DbgRenderer::getInstance()->clear();
         return true;
     }
 

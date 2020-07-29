@@ -44,8 +44,8 @@ struct RenderTarget {
 };
 
 static const ui32 RenderPassId = 0;
-static const ui32 UiPassId     = 1;
-static const ui32 DbgPassId    = 2;
+static const ui32 UiPassId = 1;
+static const ui32 DbgPassId = 2;
 static const ui32 MaxDbgPasses = 3;
 
 //-------------------------------------------------------------------------------------------------
@@ -55,27 +55,27 @@ static const ui32 MaxDbgPasses = 3;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT PipelinePass {
 public:
-    PipelinePass( ui32 id, Shader *shader );
+    PipelinePass(ui32 id, Shader *shader);
     ~PipelinePass();
-    void set( RenderTarget &rt, RenderStates &states );
+    void set(RenderTarget &rt, RenderStates &states);
     void setPolygonState(PolygonState polyState);
     PolygonState getPolygonState() const;
-    void setCullState( CullState &cullstate );
+    void setCullState(CullState &cullstate);
     CullState getCullState() const;
-    void setBlendState( BlendState &blendState );
+    void setBlendState(BlendState &blendState);
     const BlendState &getBlendState() const;
-    void setSamplerState( SamplerState &samplerState );
+    void setSamplerState(SamplerState &samplerState);
     const SamplerState &getSamplerState() const;
-    void setClearState( ClearState &clearState );
+    void setClearState(ClearState &clearState);
     const ClearState &getClearState() const;
-    void setStencilState( StencilState &stencilState );
+    void setStencilState(StencilState &stencilState);
     const StencilState &getStencilState() const;
-    void setShader( Shader *shader );
+    void setShader(Shader *shader);
     Shader *getShader() const;
     ui32 getId() const;
-    static const c8 *getPassNameById( ui32 id );
-    bool operator == ( const PipelinePass &rhs ) const;
-    bool operator != ( const PipelinePass &rhs ) const;
+    static const c8 *getPassNameById(ui32 id);
+    bool operator==(const PipelinePass &rhs) const;
+    bool operator!=(const PipelinePass &rhs) const;
 
 private:
     ui32 m_id;
@@ -93,16 +93,16 @@ class OSRE_EXPORT Pipeline {
 public:
     Pipeline();
     ~Pipeline();
-    void addPass( PipelinePass *pass );
+    void addPass(PipelinePass *pass);
     size_t getNumPasses() const;
     size_t beginFrame();
-    PipelinePass *beginPass( ui32 passId );
-    bool endPass( ui32 passId );
+    PipelinePass *beginPass(ui32 passId);
+    bool endPass(ui32 passId);
     void endFrame();
     void clear();
 
 private:
-    using PipelinePassArray = TArray<PipelinePass*>;
+    using PipelinePassArray = TArray<PipelinePass *>;
     PipelinePassArray m_passes;
     i32 m_currentPassId;
     bool m_inFrame;

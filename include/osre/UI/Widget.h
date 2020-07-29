@@ -32,12 +32,13 @@ namespace OSRE {
 namespace RenderBackend {
 
 class RenderBackendService;
-class FontBase;
 class Mesh;
 
 } // namespace RenderBackend
 
 namespace UI {
+
+class FontBase;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

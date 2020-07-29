@@ -34,12 +34,12 @@ BaseMath::~BaseMath() {
 }
 
 f32 BaseMath::getSPEPS() {
-	return 0.000001f;
+    return 0.000001f;
 }
 
 f32 BaseMath::getPI() {
-	return 3.141592653589f;
+    return 3.141592653589f;
 }
 
-}
-}
+} // namespace Math
+} // namespace OSRE

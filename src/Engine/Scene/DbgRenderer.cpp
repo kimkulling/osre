@@ -21,15 +21,17 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Debugging/osre_debugging.h>
+#include <osre/Math/BaseMath.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/Pipeline.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/DbgRenderer.h>
-#include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/MaterialBuilder.h>
+#include <osre/Scene/MeshBuilder.h>
 #include <osre/UI/Widget.h>
-#include <osre/Math/BaseMath.h>
+
+#include "src/Engine/UI/FontRenderer.h"
 
 namespace OSRE {
 namespace Scene {
@@ -39,12 +41,14 @@ using namespace ::OSRE::RenderBackend;
 DbgRenderer *DbgRenderer::s_instance = nullptr;
 
 DbgRenderer::DbgRenderer(RenderBackend::RenderBackendService *rbSrv) :
-        m_rbSrv(rbSrv), m_textBoxes(), m_tbArray(), m_debugMesh(nullptr), m_lastIndex(0) {
+        m_rbSrv(rbSrv),
+        m_debugMesh(nullptr),
+        mFontRenderer(nullptr),
+        m_lastIndex(0) {
     OSRE_ASSERT(nullptr != m_rbSrv);
 }
 
 DbgRenderer::~DbgRenderer() {
-    clearDbgTextCache();
     Mesh::destroy(&m_debugMesh);
 }
 
@@ -70,61 +74,16 @@ DbgRenderer *DbgRenderer::getInstance() {
     return s_instance;
 }
 
-static void insertTextEntry(ui32 id, Mesh *geo, const String &text, DbgRenderer::TextBoxHashMap &textBoxes) {
-    DbgRenderer::DbgTextEntry *entry(new DbgRenderer::DbgTextEntry);
-    entry->m_geo = geo;
-    entry->m_text = text;
-    textBoxes.insert(id, entry);
-}
-
 void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui32 id, const String &text) {
     if (text.empty()) {
         return;
     }
 
-    f32 scale = 0.2f;
-    glm::vec3 translate(0.f, 0.f, 0);
-    m_transformMatrix.init();
-    m_transformMatrix.m_model = glm::translate(m_transformMatrix.m_model, translate);
-    m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, glm::vec3(scale, scale, scale));
-    m_transformMatrix.update();
-
-    m_rbSrv->beginPass(PipelinePass::getPassNameById(DbgPassId));
-    m_rbSrv->beginRenderBatch("dbgFontBatch");
-
-    f32 xTrans(0), yTrans(0);
-    UI::WidgetCoordMapping::mapPosToWorld(x, y, xTrans, yTrans);
-    if (!m_textBoxes.hasKey(id)) {
-        MeshBuilder geoBuilder;
-        Mesh *mesh = geoBuilder.allocTextBox(xTrans, yTrans, scale, text, BufferAccessType::ReadWrite)
-                .getMesh();
-        m_rbSrv->addMesh(mesh, 0);
-        insertTextEntry(id, mesh, text, m_textBoxes);
-        mesh->m_localMatrix = true;
-        mesh->m_model = m_transformMatrix.m_model;
-    } else {
-        DbgTextEntry *entry(nullptr);
-        if (m_textBoxes.getValue(id, entry)) {
-            if (nullptr != entry) {
-                if (entry->m_text != text) {
-                    Mesh *geo(nullptr);
-                    if (text.size() > entry->m_text.size()) {
-                        MeshBuilder geoBuilder;
-                        geoBuilder.allocTextBox(xTrans, yTrans, 0.1f, text, BufferAccessType::ReadWrite);
-                        geo = geoBuilder.getMesh();
-                        entry->m_geo = geo;
-                    } else {
-                        MeshBuilder::updateTextBox(entry->m_geo, 0.1f, text);
-                        geo = entry->m_geo;
-                    }
-                    m_rbSrv->updateMesh(geo);
-                }
-            }
-        }
+    if (nullptr == mFontRenderer) {
+        mFontRenderer = new UI::FontRenderer();
     }
 
-    m_rbSrv->endRenderBatch();
-    m_rbSrv->endPass();
+    mFontRenderer->AddRenderText(x, y, id, text, m_rbSrv);
 }
 
 static const ui32 NumIndices = 24;
@@ -216,27 +175,7 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb)
     m_rbSrv->endPass();
 }
 
-void DbgRenderer::clearDbgTextCache() {
-    if (m_textBoxes.isEmpty()) {
-        return;
-    }
-
-    for (ui32 i = 0; i < m_tbArray.size(); i++) {
-        if (nullptr != m_tbArray[i]) {
-            delete m_tbArray[i];
-        }
-    }
-    m_textBoxes.clear();
-    m_textBoxes.init(100);
-    m_tbArray.resize(0);
-    m_textBoxes.init(100);
-}
-
-void DbgRenderer::clearDbgRenderPass() {
-}
-
-size_t DbgRenderer::numDbgTexts() const {
-    return m_tbArray.size();
+void DbgRenderer::clear() {
 }
 
 void DbgRenderer::addLine(const ColorVert &v0, const ColorVert &v1) {
@@ -259,9 +198,6 @@ void DbgRenderer::addLine(const ColorVert &v0, const ColorVert &v1) {
 
     m_debugMesh->m_primGroups = new PrimitiveGroup[1];
     m_debugMesh->m_primGroups[0].init(IndexType::UnsignedShort, NumIndices, PrimitiveType::LineList, 0);
-}
-
-void DbgRenderer::addTriangle(const ColorVert &v0, const ColorVert &v1, const ColorVert &v2) {
 }
 
 } // Namespace Scene

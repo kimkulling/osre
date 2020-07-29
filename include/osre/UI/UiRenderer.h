@@ -29,10 +29,10 @@ namespace OSRE {
 
 // Forward declarations
 namespace RenderBackend {
-    class RenderBackendService;
+class RenderBackendService;
 
-    struct Material;
-}
+struct Material;
+} // namespace RenderBackend
 
 namespace UI {
 
@@ -41,14 +41,15 @@ class FontRenderer;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT UiRenderer {
 public:
     UiRenderer();
     ~UiRenderer();
-    void layout( Canvas *canvas );
-    void render( Canvas *canvas, RenderBackend::RenderBackendService *rbService );
+    void layout(Canvas *canvas);
+    void render(Canvas *canvas, RenderBackend::RenderBackendService *rbService);
+    void renderFont(TextEntry *entry, ui32 id, RenderBackend::RenderBackendService *rbSrv);
 
 private:
     RenderBackend::Material *m_uiMaterial;
