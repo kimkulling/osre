@@ -67,8 +67,6 @@ void UiRenderer::render(Canvas *canvas, RenderBackendService *rbSrv) {
         return;
     }
 
-    const TransformMatrixBlock &tmBlock = canvas->getTransform();
-
     rbSrv->beginPass(PipelinePass::getPassNameById(UiPassId));
     rbSrv->beginRenderBatch("b1");
 
