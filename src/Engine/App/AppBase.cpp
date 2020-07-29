@@ -61,7 +61,8 @@ static const c8 *Tag = "AppBase";
 class KeyboardEventListener : public Platform::OSEventListener {
 public:
     KeyboardEventListener() :
-            OSEventListener("App/KeyboardEventListener"), m_uiCanvas() {
+            OSEventListener("App/KeyboardEventListener"),
+            m_uiCanvas() {
         // empty
     }
 
@@ -103,7 +104,8 @@ private:
 class MouseEventListener : public Platform::OSEventListener {
 public:
     MouseEventListener() :
-            OSEventListener("App/MouseEventListener"), m_uiCanvas() {
+            OSEventListener("App/MouseEventListener"),
+            m_uiCanvas() {
         // empty
     }
 
@@ -357,7 +359,7 @@ UI::Canvas *AppBase::createScreen(const String &name) {
 void AppBase::setUIScreen(UI::Canvas *uiScreen) {
     if (m_uiScreen != uiScreen) {
         m_uiScreen = uiScreen;
-        AbstractWindow *surface(m_platformInterface->getRootWindow());
+        AbstractWindow *surface = m_platformInterface->getRootWindow();
         if (nullptr != surface) {
             m_uiScreen->setSurface(surface);
             m_mouseEvListener->setCanvas(m_uiScreen);
