@@ -24,7 +24,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Platform/PlatformCommon.h>
 #ifdef OSRE_WINDOWS
-#include <osre/Platform/Windows/MinWindows.h>
+#   include <osre/Platform/Windows/MinWindows.h>
+#else
+#   include <SDL.h>
+
+class ThreadEvent;
+class ThreadLocalStorage;
+
 #endif
 
 namespace OSRE {
@@ -54,7 +60,11 @@ public:
     void leave();
 
 private:
+#ifdef OSRE_WINDOWS
     CRITICAL_SECTION m_CriticalSection;
+#else
+    SDL_SpinLock m_spinlock;
+#endif
 };
 
 /// @brief  Manages platform-independent thread id
@@ -192,22 +202,39 @@ protected:
     ///	@param	newState	[in] The new state.
     virtual void setState(ThreadState newState);
 
+#ifdef OSRE_WINDOWS
     static ui32 WINAPI ThreadFunc(LPVOID data);
+#else
+    static int sdl2threadfunc( void *data );
+#endif
+
     ///	Will assign a thread name.
     static void setThreadName(const c8 *pName);
 
 private:
-#ifdef OSRE_WINDOWS
     ThreadState m_threadState;
-    HANDLE m_ThreadHandle;
-    ThreadEvent *m_pThreadSignal;
-    Priority m_Prio;
-    ThreadLocalStorage *m_tls;
-    String m_ThreadName;
     ThreadId m_id;
     ui32 m_stacksize;
+    String mThreadName;
+    Priority m_Prio;
+
+#ifdef OSRE_WINDOWS
+    HANDLE m_ThreadHandle;
+    ThreadEvent *m_pThreadSignal;
+#else
+    SDL_Thread *m_thread;
+    ThreadEvent *m_threadSignal;
 #endif
+    ThreadLocalStorage *mTls;
 };
+
+inline void Thread::setName( const String &name ) {
+    mThreadName = name;
+}
+
+inline const String &Thread::getName() const {
+    return mThreadName;
+}
 
 inline void Thread::onNewState() {
     // override me!
@@ -240,7 +267,11 @@ public:
     void set(void *data);
 
 private:
+#ifdef OSRE_WINDOWS
     DWORD m_index;
+#else
+    SDL_TLSID m_index;
+#endif
 };
 
 class OSRE_EXPORT Mutex {
@@ -254,8 +285,10 @@ public:
 private:
 #ifdef OSRE_WINDOWS
     HANDLE m_handle;
-    ui32 m_timeout;
+#else
+    SDL_mutex *m_mutex;
 #endif // _WIN32
+    ui32 m_timeout;
 };
 
 class ThreadEvent {
@@ -280,6 +313,10 @@ public:
 private:
 #ifdef OSRE_WINDOWS
     HANDLE m_EventHandle;
+#else
+    i32 m_bool;
+    SDL_mutex *m_lock;
+    SDL_cond *m_event;
 #endif // _WIN32
 };
 
@@ -328,9 +365,14 @@ public:
     i32 dec();
 
 private:
+#ifdef OSRE_WINDOWS
     mutable long m_value;
+#else
+    SDL_atomic_t m_value;
+#endif
 };
 
+#ifdef OSRE_WINDOWS
 
 inline AtomicInt::AtomicInt(i32 val) :
         m_value(val) {
@@ -360,6 +402,40 @@ inline i32 AtomicInt::inc() {
 inline i32 AtomicInt::dec() {
     return _InterlockedDecrement(&m_value);
 }
+
+#else
+
+inline AtomicInt::AtomicInt( i32 value ) {
+    SDL_AtomicSet( &m_value, value );
+}
+
+inline AtomicInt::~AtomicInt( ) {
+    // empty
+}
+
+inline void AtomicInt::incValue( i32 value ) {
+    SDL_AtomicAdd( &m_value, value );
+}
+
+inline void AtomicInt::decValue( i32 value ) {
+    SDL_AtomicAdd( &m_value, -value );
+}
+
+inline i32 AtomicInt::getValue( ) {
+    return ( SDL_AtomicGet( &m_value ) );
+}
+
+inline i32 AtomicInt::inc( ) {
+    SDL_AtomicIncRef( &m_value );
+    return getValue();
+}
+
+inline i32 AtomicInt::dec( ) {
+    SDL_AtomicDecRef( &m_value );
+    return getValue();
+}
+
+#endif
 
 class ThreadFactory {
 public:

@@ -22,8 +22,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-//#include <osre/Platform/AbstractCriticalSection.h>
-//#include <osre/Platform/AbstractThreadEvent.h>
 #include <osre/Platform/Threading.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Common/Logger.h>
@@ -91,18 +89,16 @@ private:
 };
 
 template<class T>
-inline
-TAsyncQueue<T>::TAsyncQueue()
-: m_criticalSection( nullptr )
-, m_enqueueEvent( nullptr )
-, m_ItemQueue() {  
-    m_criticalSection = new CriticalSection;
-    m_enqueueEvent = new ThreadEvent;
+inline TAsyncQueue<T>::TAsyncQueue() :
+        m_criticalSection( nullptr ),
+        m_enqueueEvent( nullptr ),
+        m_ItemQueue() {
+    m_criticalSection = new Platform::CriticalSection;
+    m_enqueueEvent = new Platform::ThreadEvent;
 }
 
 template<class T>
-inline
-TAsyncQueue<T>::~TAsyncQueue() {
+inline TAsyncQueue<T>::~TAsyncQueue() {
     CPPCore::TList<T> dummy;
     dequeueAll( dummy );
     
@@ -111,8 +107,7 @@ TAsyncQueue<T>::~TAsyncQueue() {
 }
 
 template<class T>
-inline
-void TAsyncQueue<T>::enqueue( const T &item ) {
+inline void TAsyncQueue<T>::enqueue( const T &item ) {
     OSRE_ASSERT( nullptr != m_criticalSection );
 
     m_criticalSection->enter();

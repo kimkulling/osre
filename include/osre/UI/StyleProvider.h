@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/ui/UICommon.h>
+#include <osre/UI/UICommon.h>
 
 namespace OSRE {
 namespace UI {
