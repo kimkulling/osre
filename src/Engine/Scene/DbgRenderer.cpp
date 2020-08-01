@@ -82,8 +82,13 @@ void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui32 id, const String &text) {
     if (nullptr == mFontRenderer) {
         mFontRenderer = new UI::FontRenderer();
     }
+    m_rbSrv->beginPass(PipelinePass::getPassNameById(DbgPassId));
+    m_rbSrv->beginRenderBatch("dbgFontBatch");
 
     mFontRenderer->AddRenderText(x, y, id, text, m_rbSrv);
+
+        m_rbSrv->endRenderBatch();
+    m_rbSrv->endPass();
 }
 
 static const ui32 NumIndices = 24;
