@@ -20,10 +20,10 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/RenderBackend/Mesh.h>
-#include <osre/Debugging/osre_debugging.h>
-#include <osre/Common/Logger.h>
 #include <osre/Common/Ids.h>
+#include <osre/Common/Logger.h>
+#include <osre/Debugging/osre_debugging.h>
+#include <osre/RenderBackend/Mesh.h>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -36,19 +36,19 @@ static Ids s_Ids;
 // The log tag for messages
 static const c8 *Tag = "Mesh";
 
-Mesh::Mesh()
-: m_localMatrix( false )
-, m_model( 1.0f )
-, m_material( nullptr )
-, m_vertextype( VertexType::RenderVertex )
-, m_vb( nullptr )
-, m_ib( nullptr )
-, m_numPrimGroups( 0 )
-, m_primGroups( nullptr )
-, m_id( 99999999 )
-, m_vertexData()
-, m_indexData()
-, m_lastIndex( 0 ) {
+Mesh::Mesh() :
+        m_localMatrix(false),
+        m_model(1.0f),
+        m_material(nullptr),
+        m_vertextype(VertexType::RenderVertex),
+        m_vb(nullptr),
+        m_ib(nullptr),
+        m_numPrimGroups(0),
+        m_primGroups(nullptr),
+        m_id(99999999),
+        m_vertexData(),
+        m_indexData(),
+        m_lastIndex(0) {
     // empty
 }
 
@@ -64,35 +64,35 @@ Mesh::~Mesh() {
     delete[] m_primGroups;
     m_primGroups = nullptr;
 
-    s_Ids.releaseId( m_id );
+    s_Ids.releaseId(m_id);
 }
 
-Mesh *Mesh::create( size_t numGeo ) {
-    if ( 0 == numGeo ) {
-        osre_debug( Tag, "Number of static geo to create is zero." );
+Mesh *Mesh::create(size_t numGeo) {
+    if (0 == numGeo) {
+        osre_debug(Tag, "Number of static geo to create is zero.");
         return nullptr;
     }
-    Mesh *geoArray( new Mesh[ numGeo ] );
-    for ( ui32 i = 0; i < numGeo; i++ ) {
-        geoArray[ i ].m_id = s_Ids.getUniqueId();
+    Mesh *geoArray(new Mesh[numGeo]);
+    for (ui32 i = 0; i < numGeo; i++) {
+        geoArray[i].m_id = s_Ids.getUniqueId();
     }
     return geoArray;
 }
 
-void Mesh::destroy( Mesh **meshes ) {
+void Mesh::destroy(Mesh **meshes) {
     delete[] * meshes;
-    ( *meshes ) = nullptr;
+    (*meshes) = nullptr;
 }
 
-ui32 Mesh::getVertexSize( VertexType vertextype ) {
-    ui32 vertexSize( 0 );
-    switch ( vertextype ) {
+ui32 Mesh::getVertexSize(VertexType vertextype) {
+    ui32 vertexSize(0);
+    switch (vertextype) {
         case VertexType::ColorVertex:
-            vertexSize = sizeof( ColorVert );
+            vertexSize = sizeof(ColorVert);
             break;
 
         case VertexType::RenderVertex:
-            vertexSize = sizeof( RenderVert );
+            vertexSize = sizeof(RenderVert);
             break;
 
         default:
@@ -102,10 +102,9 @@ ui32 Mesh::getVertexSize( VertexType vertextype ) {
     return vertexSize;
 }
 
-PrimitiveGroup *Mesh::createPrimitiveGroups(size_t numPrimGroups, IndexType* types, size_t* numIndices,
-        PrimitiveType* primTypes, ui32* startIndices) {
-    if (0 == numPrimGroups || nullptr == types || nullptr == numIndices || nullptr == primTypes 
-            || nullptr == startIndices ) {
+PrimitiveGroup *Mesh::createPrimitiveGroups(size_t numPrimGroups, IndexType *types, size_t *numIndices,
+        PrimitiveType *primTypes, ui32 *startIndices) {
+    if (0 == numPrimGroups || nullptr == types || nullptr == numIndices || nullptr == primTypes || nullptr == startIndices) {
         return nullptr;
     }
 

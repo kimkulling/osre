@@ -111,6 +111,7 @@ protected:
             mStage->setRoot(geoNode);
             Scene::GeometryProcessor process;
             process.addGeo(mesh);
+            process.execute();
             Scene::Node::AABB aabb = process.getAABB();
             geoNode->setAABB(aabb);
             view->observeBoundingBox(aabb);
@@ -131,7 +132,7 @@ protected:
         rbSrv->endRenderBatch();
         rbSrv->endPass();
 
-        Scene::DbgRenderer::getInstance()->renderDbgText(0, 0, 2U, "XXX");
+        // Scene::DbgRenderer::getInstance()->renderDbgText(0, 0, 2U, "XXX");
 
         AppBase::onUpdate();
     }

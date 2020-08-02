@@ -59,9 +59,6 @@ void FontRenderer::AddRenderText(ui32 id, ui32 x, ui32 y, const String &text, Re
     m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, glm::vec3(scale, scale, scale));
     m_transformMatrix.update();
 
-    rbSrv->beginPass(PipelinePass::getPassNameById(UiPassId));
-    rbSrv->beginRenderBatch("fontBatch");
-
     f32 xTrans(0), yTrans(0);
     UI::WidgetCoordMapping::mapPosToWorld(x, y, xTrans, yTrans);
     MeshBuilder meshBuilder;
@@ -74,26 +71,24 @@ void FontRenderer::AddRenderText(ui32 id, ui32 x, ui32 y, const String &text, Re
         mesh->m_model = m_transformMatrix.m_model;
     } else {
         FontTextEntry *entry = nullptr;
-        if (mTextBoxes.getValue(id, entry)) {
-            if (nullptr != entry) {
-                if (entry->mText != text) {
-                    Mesh *mesh(nullptr);
-                    if (text.size() > entry->mText.size()) {
-                        meshBuilder.allocTextBox(xTrans, yTrans, 0.1f, text, BufferAccessType::ReadWrite);
-                        mesh = meshBuilder.getMesh();
-                        entry->mMesh = mesh;
-                    } else {
-                        MeshBuilder::updateTextBox(entry->mMesh, 0.1f, text);
-                        mesh = entry->mMesh;
-                    }
-                    rbSrv->updateMesh(mesh);
-                }
+        if (!mTextBoxes.getValue(id, entry)) {
+            return;
+        }
+        
+        if (nullptr == entry) {
+            return;
+        }
+
+        if (entry->mText != text) {
+            if (text.size() > entry->mText.size()) {
+                meshBuilder.allocTextBox(xTrans, yTrans, scale, text, BufferAccessType::ReadWrite);
+                entry->mMesh = meshBuilder.getMesh();
+            } else {
+                MeshBuilder::updateTextBox(entry->mMesh, scale, text);
             }
+            rbSrv->updateMesh(entry->mMesh);
         }
     }
-
-    rbSrv->endRenderBatch();
-    rbSrv->endPass();
 }
 
 void FontRenderer::clear() {

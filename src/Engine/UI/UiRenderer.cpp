@@ -84,13 +84,12 @@ void UiRenderer::render(Canvas *canvas, RenderBackendService *rbSrv) {
     }
 
     rbSrv->addMesh(mesh, 0);
-
-    rbSrv->endRenderBatch();
-    rbSrv->endPass();
-
     for (size_t i = 0; i < cache.mTextCmdArray.size(); ++i) {
         renderFont(cache.mTextCmdArray[i], static_cast<ui32>(i), rbSrv);
     }
+
+    rbSrv->endRenderBatch();
+    rbSrv->endPass();
 }
 
 void UiRenderer::renderFont(TextEntry *entry, ui32 id, RenderBackendService *rbSrv) {

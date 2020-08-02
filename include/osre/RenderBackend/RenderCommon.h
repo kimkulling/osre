@@ -714,7 +714,7 @@ struct MeshEntry {
     CPPCore::TArray<Mesh*> m_geo;
 };
 
-struct GeoBatchData {
+struct RenderBatchData {
     enum DirtyMode {
         MatrixBufferDirty = 1,
         UniformBufferDirty = 2,
@@ -729,7 +729,7 @@ struct GeoBatchData {
     CPPCore::TArray<Mesh*>       m_updateMeshArray;
     ui32 m_dirtyFlag;
 
-    GeoBatchData(const c8 *id)
+    RenderBatchData(const c8 *id)
     : m_id(id)
     , m_matrixBuffer()
     , m_uniforms()
@@ -746,7 +746,7 @@ struct GeoBatchData {
 struct PassData {
     const c8                      *m_id;
     FrameBuffer                   *m_renderTarget;
-    CPPCore::TArray<GeoBatchData*> m_geoBatches;
+    CPPCore::TArray<RenderBatchData *> m_geoBatches;
     bool m_isDirty;
 
     PassData(const c8 *id, FrameBuffer *fb )
@@ -757,7 +757,7 @@ struct PassData {
         // empty
     }
 
-    GeoBatchData *getBatchById(const c8 *id) const;
+    RenderBatchData *getBatchById(const c8 *id) const;
 };
 
 struct OSRE_EXPORT UniformDataBlob {

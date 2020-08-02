@@ -281,7 +281,7 @@ bool OGLRenderEventHandler::onInitRenderPasses( const Common::EventData *eventDa
 
         // ToDo: create pipeline pass for the name.
         for (ui32 batchIdx = 0; batchIdx < currentPass->m_geoBatches.size(); ++batchIdx) {
-            GeoBatchData *currentBatchData = currentPass->m_geoBatches[batchIdx];
+            RenderBatchData *currentBatchData = currentPass->m_geoBatches[batchIdx];
             OSRE_ASSERT(nullptr != currentBatchData);
 
             // set the matrix
