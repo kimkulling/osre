@@ -1145,6 +1145,10 @@ void OGLRenderBackend::render(size_t primpGrpIdx, size_t numInstances) {
     }
 }
 
+void OGLRenderBackend::render2DPanel(const Rect2ui &panel) {
+    
+}
+
 void OGLRenderBackend::renderFrame() {
     OSRE_ASSERT(nullptr != m_renderCtx);
 
