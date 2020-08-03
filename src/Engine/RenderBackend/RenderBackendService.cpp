@@ -63,7 +63,7 @@ static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataAr
     return -1;
 }
 
-static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<GeoBatchData *> &batchDataArray) {
+static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<RenderBatchData *> &batchDataArray) {
     for (ui32 i = 0; i < batchDataArray.size(); ++i) {
         if (0 == strncmp(batchDataArray[i]->m_id, id, strlen(id))) {
             return i;
@@ -210,8 +210,8 @@ void RenderBackendService::commitNextFrame() {
     for (ui32 i = 0; i < m_passes.size(); ++i) {
         PassData *currentPass = m_passes[i];
         for (ui32 j = 0; j < currentPass->m_geoBatches.size(); ++j) {
-            GeoBatchData *currentBatch = currentPass->m_geoBatches[j];
-            if (currentBatch->m_dirtyFlag & GeoBatchData::MatrixBufferDirty) {
+            RenderBatchData *currentBatch = currentPass->m_geoBatches[j];
+            if (currentBatch->m_dirtyFlag & RenderBatchData::MatrixBufferDirty) {
                 FrameSubmitCmd *cmd = m_submitFrame->enqueue();
                 cmd->m_passId = currentPass->m_id;
                 cmd->m_batchId = currentBatch->m_id;
@@ -219,7 +219,7 @@ void RenderBackendService::commitNextFrame() {
                 cmd->m_size = sizeof(MatrixBuffer);
                 cmd->m_data = new c8[cmd->m_size];
                 ::memcpy(cmd->m_data, &currentBatch->m_matrixBuffer, cmd->m_size);
-            } else if (currentBatch->m_dirtyFlag & GeoBatchData::UniformBufferDirty) {
+            } else if (currentBatch->m_dirtyFlag & RenderBatchData::UniformBufferDirty) {
                 UniformBuffer &uniformBuffer = data->m_frame->m_uniforBuffers[i];
 
                 for (ui32 k = 0; k < currentBatch->m_uniforms.size(); ++k) {
@@ -244,7 +244,7 @@ void RenderBackendService::commitNextFrame() {
                     offset += var->m_name.size();
                     ::memcpy(&cmd->m_data[offset], var->m_data.getData(), var->m_data.m_size);
                 }
-            } else if (currentBatch->m_dirtyFlag & GeoBatchData::MeshUpdateDirty) {
+            } else if (currentBatch->m_dirtyFlag & RenderBatchData::MeshUpdateDirty) {
                 for (ui32 k = 0; k < currentBatch->m_updateMeshArray.size(); ++k) {
                     FrameSubmitCmd *cmd = m_submitFrame->enqueue();
                     cmd->m_passId = currentPass->m_id;
@@ -309,7 +309,7 @@ PassData *RenderBackendService::beginPass(const c8 *id) {
     return m_currentPass;
 }
 
-GeoBatchData *RenderBackendService::beginRenderBatch(const c8 *id) {
+RenderBatchData *RenderBackendService::beginRenderBatch(const c8 *id) {
     if (nullptr == m_currentPass) {
         osre_warn(Tag, "Pass recording not active.");
         return nullptr;
@@ -317,7 +317,7 @@ GeoBatchData *RenderBackendService::beginRenderBatch(const c8 *id) {
 
     m_currentBatch = m_currentPass->getBatchById(id);
     if (nullptr == m_currentBatch) {
-        m_currentBatch = new GeoBatchData(id);
+        m_currentBatch = new RenderBatchData(id);
     }
 
     return m_currentBatch;
@@ -333,19 +333,19 @@ void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
         case MatrixType::Model:
             if (nullptr != m_currentBatch) {
                 m_currentBatch->m_matrixBuffer.m_model = m;
-                m_currentBatch->m_dirtyFlag |= GeoBatchData::MatrixBufferDirty;
+                m_currentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
             }
             break;
         case MatrixType::View:
             if (nullptr != m_currentBatch) {
                 m_currentBatch->m_matrixBuffer.m_view = m;
-                m_currentBatch->m_dirtyFlag |= GeoBatchData::MatrixBufferDirty;
+                m_currentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
             }
             break;
         case MatrixType::Projection:
             if (nullptr != m_currentBatch) {
                 m_currentBatch->m_matrixBuffer.m_proj = m;
-                m_currentBatch->m_dirtyFlag |= GeoBatchData::MatrixBufferDirty;
+                m_currentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
             }
             break;
         default:
@@ -365,7 +365,7 @@ void RenderBackendService::setMatrix(const String &name, const glm::mat4 &matrix
         m_currentBatch->m_uniforms.add(var);
     }
 
-    m_currentBatch->m_dirtyFlag |= GeoBatchData::UniformBufferDirty;
+    m_currentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
     ::memcpy(var->m_data.m_data, glm::value_ptr(matrix), sizeof(glm::mat4));
 }
 
@@ -377,7 +377,7 @@ void RenderBackendService::setUniform(UniformVar *var) {
 
     if (nullptr != m_currentBatch) {
         m_currentBatch->m_uniforms.add(var);
-        m_currentBatch->m_dirtyFlag |= GeoBatchData::UniformBufferDirty;
+        m_currentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
     }
 }
 
@@ -394,7 +394,7 @@ void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const
     }
 
     ::memcpy(var->m_data.m_data, glm::value_ptr(matrixArray[0]), sizeof(glm::mat4) * numMat);
-    m_currentBatch->m_dirtyFlag |= GeoBatchData::UniformBufferDirty;
+    m_currentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
 }
 
 void RenderBackendService::addMesh(Mesh *mesh, ui32 numInstances) {
@@ -412,7 +412,7 @@ void RenderBackendService::addMesh(Mesh *mesh, ui32 numInstances) {
     entry->m_geo.add(mesh);
     entry->numInstances = numInstances;
     m_currentBatch->m_meshArray.add(entry);
-    m_currentBatch->m_dirtyFlag |= GeoBatchData::MeshDirty;
+    m_currentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
 }
 
 void RenderBackendService::addMesh(const CPPCore::TArray<Mesh *> &geoArray, ui32 numInstances) {
@@ -425,7 +425,7 @@ void RenderBackendService::addMesh(const CPPCore::TArray<Mesh *> &geoArray, ui32
     entry->numInstances = numInstances;
     entry->m_geo.add(&geoArray[0], geoArray.size());
     m_currentBatch->m_meshArray.add(entry);
-    m_currentBatch->m_dirtyFlag |= GeoBatchData::MeshDirty;
+    m_currentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
 }
 
 void RenderBackendService::updateMesh(Mesh *mesh) {
@@ -434,7 +434,7 @@ void RenderBackendService::updateMesh(Mesh *mesh) {
         return;
     }
     m_currentBatch->m_updateMeshArray.add(mesh);
-    m_currentBatch->m_dirtyFlag |= GeoBatchData::MeshUpdateDirty;
+    m_currentBatch->m_dirtyFlag |= RenderBatchData::MeshUpdateDirty;
 }
 
 bool RenderBackendService::endRenderBatch() {

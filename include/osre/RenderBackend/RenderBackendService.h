@@ -22,12 +22,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <cppcore/Container/THashMap.h>
 #include <osre/Common/AbstractService.h>
 #include <osre/Common/Event.h>
-#include <osre/Threading/SystemTask.h>
-#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Pipeline.h>
-#include <cppcore/Container/THashMap.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Threading/SystemTask.h>
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -35,19 +35,19 @@ namespace OSRE {
 
 // Forward declarations
 namespace Platform {
-    class AbstractWindow;
+class AbstractWindow;
 }
 
 namespace Properties {
-    class Settings;
+class Settings;
 }
 
 namespace UI {
-    class Widget;
+class Widget;
 }
 
 namespace Threading {
-    class SystemTask;
+class SystemTask;
 }
 
 namespace RenderBackend {
@@ -60,21 +60,21 @@ struct UniformVar;
 struct TransformMatrixBlock;
 
 // Event declarations
-DECL_EVENT( OnAttachEventHandlerEvent );
-DECL_EVENT( OnDetatachEventHandlerEvent );
-DECL_EVENT( OnCreateRendererEvent );
-DECL_EVENT( OnDestroyRendererEvent );
-DECL_EVENT( OnAttachViewEvent );
-DECL_EVENT( OnDetachViewEvent );
-DECL_EVENT( OnClearSceneEvent );
-DECL_EVENT( OnDetachSceneEvent );
-DECL_EVENT( OnSetRenderStates );
-DECL_EVENT( OnRenderFrameEvent );
-DECL_EVENT( OnSetParameterEvent );
-DECL_EVENT( OnInitPassesEvent);
-DECL_EVENT( OnCommitFrameEvent );
-DECL_EVENT( OnShutdownRequest );
-DECL_EVENT( OnResizeEvent );
+DECL_EVENT(OnAttachEventHandlerEvent);
+DECL_EVENT(OnDetatachEventHandlerEvent);
+DECL_EVENT(OnCreateRendererEvent);
+DECL_EVENT(OnDestroyRendererEvent);
+DECL_EVENT(OnAttachViewEvent);
+DECL_EVENT(OnDetachViewEvent);
+DECL_EVENT(OnClearSceneEvent);
+DECL_EVENT(OnDetachSceneEvent);
+DECL_EVENT(OnSetRenderStates);
+DECL_EVENT(OnRenderFrameEvent);
+DECL_EVENT(OnSetParameterEvent);
+DECL_EVENT(OnInitPassesEvent);
+DECL_EVENT(OnCommitFrameEvent);
+DECL_EVENT(OnShutdownRequest);
+DECL_EVENT(OnResizeEvent);
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -82,17 +82,14 @@ DECL_EVENT( OnResizeEvent );
 ///	@brief  Will create an event, which shall trigger the generation of a render instance.
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT CreateRendererEventData : public Common::EventData {
-    CreateRendererEventData( Platform::AbstractWindow *pSurface )
-    : EventData( OnCreateRendererEvent, nullptr )
-    , m_activeSurface( pSurface ) 
-    , m_defaultFont( "" )
-    , m_pipeline( nullptr ) {
+    CreateRendererEventData(Platform::AbstractWindow *pSurface) :
+            EventData(OnCreateRendererEvent, nullptr), m_activeSurface(pSurface), m_defaultFont(""), m_pipeline(nullptr) {
         // empty
     }
 
     Platform::AbstractWindow *m_activeSurface;
-    String                     m_defaultFont;
-    Pipeline                  *m_pipeline;
+    String m_defaultFont;
+    Pipeline *m_pipeline;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -101,8 +98,8 @@ struct OSRE_EXPORT CreateRendererEventData : public Common::EventData {
 ///	@brief
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT AttachViewEventData : public Common::EventData {
-    AttachViewEventData()
-    : EventData( OnAttachViewEvent, nullptr ) {
+    AttachViewEventData() :
+            EventData(OnAttachViewEvent, nullptr) {
         // empty
     }
 };
@@ -113,10 +110,9 @@ struct OSRE_EXPORT AttachViewEventData : public Common::EventData {
 ///	@brief
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT InitPassesEventData : Common::EventData {
-    InitPassesEventData()
-    : EventData(OnInitPassesEvent, nullptr)
-    , m_frame(nullptr) {
-        // empty            
+    InitPassesEventData() :
+            EventData(OnInitPassesEvent, nullptr), m_frame(nullptr) {
+        // empty
     }
 
     Frame *m_frame;
@@ -128,10 +124,9 @@ struct OSRE_EXPORT InitPassesEventData : Common::EventData {
 ///	@brief
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
-    CommitFrameEventData()
-    : EventData( OnCommitFrameEvent, nullptr )
-    , m_frame( nullptr ) {
-        // empty            
+    CommitFrameEventData() :
+            EventData(OnCommitFrameEvent, nullptr), m_frame(nullptr) {
+        // empty
     }
 
     Frame *m_frame;
@@ -143,9 +138,8 @@ struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
 ///	@brief
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT ResizeEventData : Common::EventData {
-    ResizeEventData( ui32 x, ui32 y, ui32 w, ui32 h )
-    : EventData( OnResizeEvent, nullptr )
-    , m_x(x), m_y( y ), m_w( w ), m_h( h ) {
+    ResizeEventData(ui32 x, ui32 y, ui32 w, ui32 h) :
+            EventData(OnResizeEvent, nullptr), m_x(x), m_y(y), m_w(w), m_h(h) {
         // empty
     }
     ui32 m_x, m_y, m_w, m_h;
@@ -156,8 +150,8 @@ struct OSRE_EXPORT ResizeEventData : Common::EventData {
 ///
 ///	@brief  This class implements the render back-end service.
 ///
-/// A render service implements the low-level API of the rendering. The API-calls will be performed 
-/// in its separate render system task. The render back-end handling is implemented by a 
+/// A render service implements the low-level API of the rendering. The API-calls will be performed
+/// in its separate render system task. The render back-end handling is implemented by a
 /// API-specific render event handler.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT RenderBackendService : public Common::AbstractService {
@@ -171,34 +165,34 @@ public:
     /// @brief  Set the configuration for the render service.
     /// @param  config          [in] The render configuration.
     /// @param  moveOwnership   [in] true when ownership shall be moved.
-    void setSettings( const Properties::Settings *config, bool moveOwnership );
-    
+    void setSettings(const Properties::Settings *config, bool moveOwnership);
+
     /// @brief  Returns the render configuration.
     /// @return The render configuration.
     const Properties::Settings *getSettings() const;
-        
+
     /// @brief  Will send a new event to the render system task.
     /// @param  ev          [in] The event identifier.
     /// @param  eventData   [in] The event data.
-    void sendEvent( const Common::Event *ev, const Common::EventData *eventData );
+    void sendEvent(const Common::Event *ev, const Common::EventData *eventData);
 
     PassData *getPassById(const c8 *id) const;
 
     PassData *beginPass(const c8 *id);
-    
-    GeoBatchData *beginRenderBatch(const c8 *id);
 
-    void setMatrix(MatrixType type, const glm::mat4 &m );
-    
-    void setMatrix( const String &name, const glm::mat4 &matrix );
+    RenderBatchData *beginRenderBatch(const c8 *id);
+
+    void setMatrix(MatrixType type, const glm::mat4 &m);
+
+    void setMatrix(const String &name, const glm::mat4 &matrix);
 
     void setUniform(UniformVar *var);
 
-    void setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray );
+    void setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray);
 
-    void addMesh( Mesh *geo, ui32 numInstances );
+    void addMesh(Mesh *geo, ui32 numInstances);
 
-    void addMesh( const CPPCore::TArray<Mesh*> &geoArray, ui32 numInstances );
+    void addMesh(const CPPCore::TArray<Mesh *> &geoArray, ui32 numInstances);
 
     void updateMesh(Mesh *mesh);
 
@@ -210,11 +204,11 @@ public:
 
     void attachView();
 
-    void resize( ui32 x, ui32 y, ui32 w, ui32 h);
+    void resize(ui32 x, ui32 y, ui32 w, ui32 h);
 
     void focusLost();
 
-    void setUiScreen( UI::Widget *screen );
+    void setUiScreen(UI::Widget *screen);
 
 protected:
     /// @brief  The open callback.
@@ -222,7 +216,7 @@ protected:
 
     /// @brief  The close callback.
     virtual bool onClose();
-    
+
     /// @brief  The update callback.
     virtual bool onUpdate();
 
@@ -236,18 +230,17 @@ private:
     const Properties::Settings *m_settings;
     bool m_ownsSettingsConfig;
     bool m_frameCreated;
-    Frame  m_frames[2];
+    Frame m_frames[2];
     Frame *m_renderFrame;
     Frame *m_submitFrame;
     UI::Widget *m_screen;
     bool m_dirty;
-    CPPCore::TArray<PassData*> m_passes;
+    CPPCore::TArray<PassData *> m_passes;
     PassData *m_currentPass;
-    GeoBatchData *m_currentBatch;
+    RenderBatchData *m_currentBatch;
 };
 
-inline 
-void RenderBackendService::setUiScreen( UI::Widget *screen ) {
+inline void RenderBackendService::setUiScreen(UI::Widget *screen) {
     m_screen = screen;
 }
 
