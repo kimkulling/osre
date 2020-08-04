@@ -95,7 +95,8 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
         case MaterialType::ShaderMaterial: {
             TArray<OGLTexture *> textures;
             setupTextures(material, rb, textures);
-            OGLRenderCmd *renderMatCmd = OGLRenderCmdAllocator::alloc(OGLRenderCmdType::SetMaterialCmd, nullptr);
+            OGLRenderCmd *renderMatCmd = new OGLRenderCmd(OGLRenderCmdType::SetMaterialCmd);
+            //OGLRenderCmdAllocator::alloc(OGLRenderCmdType::SetMaterialCmd, nullptr);
             if (!textures.isEmpty()) {
                 matData->m_textures = textures;
             }
@@ -205,7 +206,7 @@ void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat4 &mode
         return;
     }
 
-    OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc(OGLRenderCmdType::DrawPrimitivesCmd, nullptr);
+    OGLRenderCmd *renderCmd = new OGLRenderCmd(OGLRenderCmdType::DrawPrimitivesCmd);
     DrawPrimitivesCmdData *data = new DrawPrimitivesCmdData;
     if (useLocalMatrix) {
         data->m_model = model;
@@ -231,7 +232,7 @@ void setupInstancedDrawCmd(const char *id, const TArray<size_t> &ids, OGLRenderB
         return;
     }
 
-    OGLRenderCmd *renderCmd = OGLRenderCmdAllocator::alloc(OGLRenderCmdType::DrawPrimitivesInstancesCmd, nullptr);
+    OGLRenderCmd *renderCmd = new OGLRenderCmd(OGLRenderCmdType::DrawPrimitivesInstancesCmd);
 
     DrawInstancePrimitivesCmdData *data = new DrawInstancePrimitivesCmdData;
     data->m_id = id;

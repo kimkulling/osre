@@ -1,5 +1,10 @@
 #pragma once
 
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "Dxgi.lib")
+#pragma comment(lib, "d3dcompiler.lib")
+#pragma comment(lib, "dxguid.lib")
+
 #include <DirectXMath.h>	
 #pragma warning(push)
 #   pragma warning(disable : 4201)
@@ -32,7 +37,7 @@ struct RenderCmd {
     ID3D11Buffer *m_ib;
 };
 
-struct MatrixBufferType {
+struct ConstantBuffer {
     XMMATRIX world;
     XMMATRIX view;
     XMMATRIX projection;

@@ -29,8 +29,6 @@ namespace RenderBackend {
 
 static const c8 *Tag = "OGLRenderBackend";
 
-ui32 OGLRenderCmdAllocator::m_lastid( 0 );
-
 void checkOGLErrorState( const c8 *file, ui32 line ) {
 	GLenum error = glGetError();
 	if (GL_NO_ERROR == error) {

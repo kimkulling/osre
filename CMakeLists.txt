@@ -61,7 +61,6 @@ INCLUDE_DIRECTORIES( BEFORE
     ${CMAKE_HOME_DIRECTORY}/3dparty/sdl2/include
 	${CMAKE_HOME_DIRECTORY}/src/
 )
-message( ${CMAKE_GENERATOR} )
 
 if( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR "${CMAKE_GENERATOR}" MATCHES "16 2019")
 	link_directories(
@@ -121,6 +120,7 @@ add_definitions( -DGLM_ENABLE_EXPERIMENTAL )
 
 # Configuring assimp
 set( BUILD_SHARED_LIBS OFF )
+set( ASSIMP_BUILD_ZLIB ON )
 
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
