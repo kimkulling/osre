@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Uri.h>
 #include <osre/Math/BaseMath.h>
 #include <osre/Platform/AbstractWindow.h>
+#include <osre/Platform/PlatformOperations.h>
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -47,12 +48,6 @@ using namespace ::OSRE::Scene;
 // To identify local log entries
 static const c8 *Tag = "ModelLoadingApp";
 
-// The file to load
-static const char *ModelPath = "file://assets/Models/Obj/spider.obj";
-
-static const char *AssetFolderArg = "asset_folder";
-
-static const char *ModelArg = "model";
 
 /// The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
@@ -66,7 +61,7 @@ class ModelLoadingApp : public App::AppBase {
 
 public:
     ModelLoadingApp(int argc, char *argv[]) :
-            AppBase(argc, (const char **)argv, "api:model", "The render API:The model to load"),
+            AppBase(argc, (const char **)argv, "api", "The render API"),
             m_assetFolder(""),
             m_stage(nullptr),
             m_view(nullptr),
@@ -77,8 +72,12 @@ public:
         // empty
     }
 
-    virtual ~ModelLoadingApp() {
+    ~ModelLoadingApp() override {
         // empty
+    }
+
+    bool hasModel() const {
+        return m_modelNode.isValid();
     }
 
 protected:
@@ -86,57 +85,51 @@ protected:
         if (!AppBase::onCreate()) {
             return false;
         }
-        AppBase::setWindowsTitle("ModelLoader sample!");
 
-        const Common::ArgumentParser &parser = AppBase::getArgumentParser();
-        if (parser.hasArgument(AssetFolderArg)) {
-            m_assetFolder = parser.getArgument(AssetFolderArg);
-        }
-
-        IO::Uri modelLoc(ModelPath);
-        if (parser.hasArgument(ModelArg)) {
-            String modelArg = parser.getArgument(ModelArg);
-            String model = "file://assets/" + modelArg;
-            modelLoc.setPath(model);
-        }
-
-#ifdef OSRE_WINDOWS
-        AssetRegistry::registerAssetPath("assets", "../../media");
-#else
-        AssetRegistry::registerAssetPath("assets", "../media");
-#endif
-        AssimpWrapper assimpWrapper(*getIdContainer());
-        if (assimpWrapper.importAsset(modelLoc, 0)) {
-            RenderBackendService *rbSrv(getRenderBackendService());
-            if (nullptr == rbSrv) {
-                return false;
-            }
-
-            Platform::AbstractWindow *rootWindow(getRootWindow());
-            if (nullptr == rootWindow) {
-                return false;
-            }
-
-            m_stage = AppBase::createStage("ModelLoading");
-            AppBase::setActiveStage(m_stage);
-            Scene::View *view = m_stage->addView("default_view", nullptr);
-            AppBase::setActiveView(view);
-
-            Rect2ui windowsRect;
-            rootWindow->getWindowsRect(windowsRect);
-            view->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.01f, 1000.f);
-            Entity *entity = assimpWrapper.getEntity();
-
-            World *world = getActiveWorld();
-            world->addEntity(entity);
-            view->observeBoundingBox(entity->getAABB());
-            m_modelNode = entity->getNode();
-        }
+        AppBase::setWindowsTitle("ModelLoader sample! Press o to import an Asset");
 
         return true;
     }
 
+    void loadAsset(const IO::Uri &modelLoc) {
+        AssimpWrapper assimpWrapper(*getIdContainer());
+        if (!assimpWrapper.importAsset(modelLoc, 0)) {
+            return;
+        }
+
+        RenderBackendService *rbSrv = getRenderBackendService();
+        if (nullptr == rbSrv) {
+            return;
+        }
+        Platform::AbstractWindow *rootWindow = getRootWindow();
+        if (nullptr == rootWindow) {
+            return;
+        }
+        m_stage = AppBase::createStage("ModelLoading");
+        AppBase::setActiveStage(m_stage);
+        m_view = m_stage->addView("default_view", nullptr);
+        AppBase::setActiveView(m_view);
+
+        Rect2ui windowsRect;
+        rootWindow->getWindowsRect(windowsRect);
+        m_view->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.01f, 1000.f);
+        Entity *entity = assimpWrapper.getEntity();
+
+        World *world = getActiveWorld();
+        world->addEntity(entity);
+        m_view->observeBoundingBox(entity->getAABB());
+        m_modelNode = entity->getNode();
+
+        
+    }
     void onUpdate() override {
+        if (AppBase::isKeyPressed(Platform::KEY_O)) {
+            IO::Uri modelLoc;
+            Platform::PlatformOperations::getFileOpenDialog("*", modelLoc);
+            if ( modelLoc.isValid()) {
+                loadAsset(modelLoc);
+            }
+        }
 
         // Rotate the model
         glm::mat4 rot(1.0);
@@ -153,8 +146,6 @@ protected:
         rbSrv->endRenderBatch();
         rbSrv->endPass();
 
-        Scene::DbgRenderer::getInstance()->renderDbgText(2U, -1, -1, "XXX");
-
         AppBase::onUpdate();
     }
 };
@@ -167,7 +158,9 @@ int main(int argc, char *argv[]) {
 
     while (myApp.handleEvents()) {
         myApp.update();
-        myApp.requestNextFrame();
+        if (myApp.hasModel()) {
+            myApp.requestNextFrame();
+        }
     }
 
     myApp.destroy();

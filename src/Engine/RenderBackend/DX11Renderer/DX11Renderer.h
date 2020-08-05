@@ -72,7 +72,7 @@ private:
     glm::mat4 m_worldMatrix;
     glm::mat4 m_orthoMatrix;
     ID3D11Buffer* m_matrixBuffer;
-    MatrixBufferType m_matrixBufferData;
+    ConstantBuffer m_matrixBufferData;
 };
 
 } // Namespace RenderBackend

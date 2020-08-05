@@ -42,13 +42,13 @@ void checkOGLErrorState(const c8 *file, ui32 line);
 /// @brief  This macro will check the OpenGL-error state and write a message into the log.
 //-------------------------------------------------------------------------------------------------
 #ifdef _DEBUG
-#    define CHECKOGLERRORSTATE() checkOGLErrorState(__FILE__, __LINE__)
+#define CHECKOGLERRORSTATE() checkOGLErrorState(__FILE__, __LINE__)
 #else
-#    define CHECKOGLERRORSTATE()
+#define CHECKOGLERRORSTATE()
 #endif // _DEBUG
 
 static const GLuint OGLNotSetId = 999999;
-static const GLint  NoneLocation = -1;
+static const GLint NoneLocation = -1;
 
 ///	@brief
 struct OGLBuffer {
@@ -74,7 +74,8 @@ struct OGLVertexArray {
     size_t m_slot;
 
     OGLVertexArray() :
-            m_id(0), m_slot(99999999) {
+            m_id(0),
+            m_slot(99999999) {
         // empty
     }
 
@@ -105,46 +106,21 @@ enum class OGLRenderCmdType {
     None
 };
 
-struct OGLRenderCmdAllocator;
-
 ///	@brief
 struct OGLRenderCmd {
-    friend struct OGLRenderCmdAllocator;
-
     OGLRenderCmdType m_type;
     ui32 m_id;
     void *m_data;
 
-private:
-    OGLRenderCmd();
+    OGLRenderCmd(OGLRenderCmdType type);
 };
 
-inline OGLRenderCmd::OGLRenderCmd() :
-        m_type(OGLRenderCmdType::None), m_id(999999), m_data(nullptr) {
+inline OGLRenderCmd::OGLRenderCmd(OGLRenderCmdType type) :
+        m_type(type),
+        m_id(999999),
+        m_data(nullptr) {
     // empty
 }
-
-///	@brief
-struct OGLRenderCmdAllocator {
-    static ui32 m_lastid;
-
-    static OGLRenderCmd *alloc(OGLRenderCmdType type, void *data) {
-        OGLRenderCmd *cmd = new OGLRenderCmd;
-        cmd->m_type = type;
-        cmd->m_id = m_lastid;
-        cmd->m_data = data;
-        ++m_lastid;
-
-        return cmd;
-    }
-
-    static void free(OGLRenderCmd *cmd) {
-        delete cmd;
-    }
-
-    OGLRenderCmdAllocator() = delete;
-    ~OGLRenderCmdAllocator() = delete;
-};
 
 struct UniformDataBlob;
 
@@ -181,7 +157,9 @@ struct SetMaterialStageCmdData {
     OGLVertexArray *m_vertexArray;
 
     SetMaterialStageCmdData() :
-            m_shader(nullptr), m_textures(), m_vertexArray(nullptr) {
+            m_shader(nullptr),
+            m_textures(),
+            m_vertexArray(nullptr) {
         // empty
     }
 };
@@ -199,7 +177,22 @@ struct DrawInstancePrimitivesCmdData {
     const char *m_id;
 
     DrawInstancePrimitivesCmdData() :
-            m_vertexArray(nullptr), m_numInstances(0), m_primitives(), m_id(nullptr) {
+            m_vertexArray(nullptr),
+            m_numInstances(0),
+            m_primitives(),
+            m_id(nullptr) {
+        // empty
+    }
+};
+
+///	@brief
+struct DrawPanelsCmdData {
+    size_t mNumPanels;
+    Rect2ui *mPanels;
+
+    DrawPanelsCmdData() :
+            mNumPanels(0),
+            mPanels(nullptr) {
         // empty
     }
 };
@@ -213,18 +206,30 @@ struct DrawPrimitivesCmdData {
     const char *m_id;
 
     DrawPrimitivesCmdData() :
-            m_localMatrix(false), m_model(), m_vertexArray(nullptr), m_primitives(), m_id(nullptr) {
+            m_localMatrix(false),
+            m_model(),
+            m_vertexArray(nullptr),
+            m_primitives(),
+            m_id(nullptr) {
         // empty
     }
 };
 
 struct OGLCapabilities {
-    GLfloat m_maxAniso;
-    i32 m_contextMask;
-    i32 m_max3DTextureSize;
+    GLfloat mMaxAniso;
+    i32 mContextMask;
+    i32 mMax3DTextureSize;
+    i32 mMaxTextureUnits;
+    i32 mMaxTextureImageUnits;
+    i32 mMaxTextureCoords;
 
     OGLCapabilities() :
-            m_maxAniso(0.0f), m_contextMask(0), m_max3DTextureSize(0) {
+            mMaxAniso(0.0f),
+            mContextMask(0),
+            mMax3DTextureSize(0),
+            mMaxTextureUnits(0),
+            mMaxTextureImageUnits(0),
+            mMaxTextureCoords(0) {
         // empty
     }
 };
@@ -238,7 +243,12 @@ struct OGLFrameBuffer {
     ui32 m_height;
 
     OGLFrameBuffer(const char *name, ui32 w, ui32 h) :
-            m_name(name), m_bufferId(0), m_depthrenderbufferId(0), m_renderedTexture(0), m_width(w), m_height(h) {
+            m_name(name),
+            m_bufferId(0),
+            m_depthrenderbufferId(0),
+            m_renderedTexture(0),
+            m_width(w),
+            m_height(h) {
         // empty
     }
 };

@@ -305,7 +305,7 @@ enum Key {
     KEY_UNDO = 322,	///< Atari keyboard has Undo
 
     /* Add any other keys here */
-    KEY_LAST
+    KEY_LAST = 323
 };
 
 } // Namespace Platform
