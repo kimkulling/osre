@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AppCommon.h>
 #include <osre/Platform/PlatformCommon.h>
 #include <osre/Common/ArgumentParser.h>
+#include <osre/Platform/KeyTypes.h>
 
 namespace OSRE {
 
@@ -183,7 +184,9 @@ public:
     /// @return The default pipeline.
     static RenderBackend::Pipeline *createDefaultPipeline();
 
-protected:
+    bool isKeyPressed(Platform::Key key) const;
+
+ protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
     /// @return true if successful,  false if not.
     virtual bool onCreate();

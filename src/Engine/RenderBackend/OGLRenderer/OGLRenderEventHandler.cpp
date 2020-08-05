@@ -358,7 +358,6 @@ bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData)
         if (nullptr == cmd) {
             continue;
         }
-
         if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateMatrixes) {
             MatrixBuffer *buffer = (MatrixBuffer *)cmd->m_data;
             m_renderCmdBuffer->setMatrixBuffer(cmd->m_batchId, buffer);

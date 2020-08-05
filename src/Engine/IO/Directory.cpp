@@ -57,8 +57,11 @@ bool Directory::getDirectoryAndFile(const String &pathAndFilename, String &path,
 
     String::size_type pos = pathAndFilename.rfind("/");
     if (String::npos == pos) {
-        filename = pathAndFilename;
-        return false;
+        pos = pathAndFilename.rfind("\\");
+        if (String::npos == pos) {
+            filename = pathAndFilename;
+            return false;
+        }
     }
 
     path = pathAndFilename.substr(0, pos + 1);

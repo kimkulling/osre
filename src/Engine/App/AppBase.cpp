@@ -63,7 +63,7 @@ public:
     KeyboardEventListener() :
             OSEventListener("App/KeyboardEventListener"),
             m_uiCanvas() {
-        // empty
+        clearKeyMap();
     }
 
     ~KeyboardEventListener() override {
@@ -79,6 +79,13 @@ public:
     }
 
     void onOSEvent(const Event &osEvent, const EventData *data) override {
+        KeyboardButtonEventData *keyData = (KeyboardButtonEventData *)data;
+        if (osEvent == KeyboardButtonDownEvent) {
+            mKeymap[keyData->m_key] = 1;
+        } else {
+            mKeymap[keyData->m_key] = 0;
+        }
+
         if (!m_uiCanvas.isValid()) {
             return;
         }
@@ -89,16 +96,23 @@ public:
         }
 
         if (osEvent == KeyboardButtonDownEvent) {
-            KeyboardButtonEventData *keyData = (KeyboardButtonEventData *)data;
             widget->keyPressed(keyData->m_key);
         } else if (osEvent == KeyboardButtonUpEvent) {
-            KeyboardButtonEventData *keyData = (KeyboardButtonEventData *)data;
             widget->keyReleased(keyData->m_key);
         }
     }
 
+    bool isKeyPressed(Key key) const {
+        return mKeymap[key] == 1;
+    }
+
+    void clearKeyMap() {
+        ::memset(mKeymap, 0, sizeof(char) * KEY_LAST);
+    }
+
 private:
     Common::TObjPtr<UI::Canvas> m_uiCanvas;
+    char mKeymap[KEY_LAST];
 };
 
 class MouseEventListener : public Platform::OSEventListener {
@@ -542,6 +556,8 @@ void AppBase::onUpdate() {
         m_uiRenderer->layout(m_uiScreen);
         m_uiRenderer->render(m_uiScreen, m_rbService);
     }
+
+    m_keyboardEvListener->clearKeyMap();
 }
 
 const ArgumentParser &AppBase::getArgumentParser() const {
@@ -560,6 +576,14 @@ RenderBackend::Pipeline *AppBase::createDefaultPipeline() {
     pipeline->addPass(renderPass);
 
     return pipeline;
+}
+
+bool AppBase::isKeyPressed(Key key) const {
+    if (nullptr == m_keyboardEvListener) {
+        return false;
+    }
+
+    return m_keyboardEvListener->isKeyPressed(key);
 }
 
 } // Namespace App
