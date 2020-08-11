@@ -119,9 +119,8 @@ protected:
         world->addEntity(entity);
         m_view->observeBoundingBox(entity->getAABB());
         m_modelNode = entity->getNode();
-
-        
     }
+    
     void onUpdate() override {
         if (AppBase::isKeyPressed(Platform::KEY_O)) {
             IO::Uri modelLoc;

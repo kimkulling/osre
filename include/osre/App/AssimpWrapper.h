@@ -40,7 +40,6 @@ struct aiAnimation;
 
 namespace OSRE {
 
-// Froward declarations
 namespace Common {
     class Ids;
 }
@@ -72,7 +71,11 @@ struct BoneInfo;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AssimpWrapper {
 public:
-    AssimpWrapper( Common::Ids &ids );
+    using MaterialArray = CPPCore::TArray<RenderBackend::Material *>;
+    using BoneInfoArray = ::CPPCore::TArray<BoneInfo *>;
+    using Bone2NodeMap = std::map<const char *, const aiNode *>;
+
+    AssimpWrapper(Common::Ids &ids);
     ~AssimpWrapper();
     bool importAsset( const IO::Uri &file, ui32 flags );
     Entity *getEntity() const;
@@ -90,19 +93,13 @@ private:
 	const aiScene *m_scene;
 	RenderBackend::MeshArray m_meshArray;
     Entity *m_entity;
-    
-	using MaterialArray = CPPCore::TArray<RenderBackend::Material*> ;
     MaterialArray m_matArray;
     Scene::Node *m_parent;
     Common::Ids &m_ids;
     RenderBackend::UniformVar *m_mvpParam;
     String m_root;
     String m_absPathWithFile;
-
-	using BoneInfoArray = ::CPPCore::TArray<BoneInfo*>;
 	BoneInfoArray m_boneInfoArray;
-
-	using Bone2NodeMap = std::map<const char*, const aiNode*>;
 	Bone2NodeMap m_bone2NodeMap;
 };
 
