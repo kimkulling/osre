@@ -21,16 +21,16 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
-#include <osre/Properties/Settings.h>
-#include <osre/Common/Logger.h>
 #include <osre/App/AssetRegistry.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/UI/Canvas.h>
-#include <osre/UI/ButtonBase.h>
-#include <osre/UI/TextBase.h>
-#include <osre/UI/Panel.h>
+#include <osre/Common/Logger.h>
 #include <osre/Platform/PlatformOperations.h>
+#include <osre/Properties/Settings.h>
+#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/UI/ButtonBase.h>
+#include <osre/UI/Canvas.h>
+#include <osre/UI/Panel.h>
+#include <osre/UI/TextBase.h>
 
 using namespace ::OSRE;
 using namespace ::OSRE::RenderBackend;
@@ -42,14 +42,14 @@ static const c8 Tag[] = "ModelLoadingApp";
 
 // The example application, will create the render environment and render a simple triangle onto it
 class UIDemoApp : public App::AppBase {
-    Canvas               *m_canvas;
-    TransformMatrixBlock  m_transformMatrix;
+    Canvas *m_canvas;
+    TransformMatrixBlock m_transformMatrix;
 
 public:
-    UIDemoApp( int argc, char *argv[] )
-    : AppBase( argc, (const char** ) argv )
-    , m_canvas( nullptr )
-    , m_transformMatrix() {
+    UIDemoApp(int argc, char *argv[]) :
+            AppBase(argc, (const char **)argv),
+            m_canvas(nullptr),
+            m_transformMatrix() {
         // empty
     }
 
@@ -57,37 +57,37 @@ public:
         // empty
     }
 
-    void openFileCallback( ui32, void* ) {
+    void openFileCallback(ui32, void *) {
         IO::Uri loc;
-        PlatformOperations::getFileOpenDialog( "All\0 *.*\0", loc );
+        PlatformOperations::getFileOpenDialog("All\0 *.*\0", loc);
     }
 
-    void quitCallback( ui32, void * ) {
+    void quitCallback(ui32, void *) {
         AppBase::requestShutdown();
     }
 
 protected:
     bool onCreate() override {
-        Properties::Settings *baseSettings( AppBase::getSettings() );
-        if ( nullptr == baseSettings ) {
+        Properties::Settings *baseSettings(AppBase::getSettings());
+        if (nullptr == baseSettings) {
             return false;
         }
 
-        baseSettings->setString( Properties::Settings::WindowsTitle, "Demo UI!" );
-        if ( !AppBase::onCreate() ) {
+        baseSettings->setString(Properties::Settings::WindowsTitle, "Demo UI!");
+        if (!AppBase::onCreate()) {
             return false;
         }
 
 #ifdef OSRE_WINDOWS
-        App::AssetRegistry::registerAssetPath( "assets", "../../media" );
+        App::AssetRegistry::registerAssetPath("assets", "../../media");
 #else
-        App::AssetRegistry::registerAssetPath( "assets", "../media" );
+        App::AssetRegistry::registerAssetPath("assets", "../media");
 #endif
 
-        m_canvas = AppBase::createScreen( "UiDemo" );
+        m_canvas = AppBase::createScreen("UiDemo");
 
-        Panel *panel = new Panel( "panel", m_canvas );
-        panel->setRect( 10, 10, 500, 500 );
+        Panel *panel = new Panel("panel", m_canvas);
+        panel->setRect(10, 10, 500, 500);
         /*ButtonBase *btnOpenFile = new ButtonBase( "Open file", panel);
         btnOpenFile->registerCallback(WidgetState::Pressed, UiFunctor::Make(this, &UIDemoApp::openFileCallback));
         btnOpenFile->setRect( 20, 20, 100, 20 );
@@ -96,13 +96,13 @@ protected:
         ButtonBase *btnQuit  = new ButtonBase( "Quit", panel );
         btnQuit->setRect( 400, 20, 100, 20 );
         btnQuit->registerCallback(WidgetState::Pressed, UiFunctor::Make( this, &UIDemoApp::quitCallback ) );*/
-        
-        TextBase *tb = new TextBase( "test", panel);
-        tb->setLabel( "Test" );
-        tb->setRect( 20, 20, 400, 60 );
+
+        TextBase *tb = new TextBase("test", panel);
+        tb->setLabel("Test");
+        tb->setRect(20, 20, 400, 60);
 
         return true;
     }
 };
 
-OSRE_MAIN( UIDemoApp )
+OSRE_MAIN(UIDemoApp)

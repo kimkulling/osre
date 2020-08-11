@@ -564,7 +564,7 @@ Light::~Light() {
     // empty
 }
 
-MeshEntry *GeoBatchData::getMeshEntryByName(const c8 *name) {
+MeshEntry *RenderBatchData::getMeshEntryByName(const c8 *name) {
     if (nullptr == name) {
         return nullptr;
     }
@@ -580,7 +580,7 @@ MeshEntry *GeoBatchData::getMeshEntryByName(const c8 *name) {
     return nullptr;
 }
 
-UniformVar *GeoBatchData::getVarByName(const c8 *name) {
+UniformVar *RenderBatchData::getVarByName(const c8 *name) {
     if (nullptr == name) {
         return nullptr;
     }
@@ -594,7 +594,7 @@ UniformVar *GeoBatchData::getVarByName(const c8 *name) {
     return nullptr;
 }
 
-GeoBatchData *PassData::getBatchById(const c8 *id) const {
+RenderBatchData *PassData::getBatchById(const c8 *id) const {
     if (nullptr == id) {
         return nullptr;
     }

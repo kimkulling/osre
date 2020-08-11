@@ -145,6 +145,7 @@ public:
 	void releaseFrameBuffer(OGLFrameBuffer *oglFB);
 	void render(size_t grimpGrpIdx);
 	void render(size_t primpGrpIdx, size_t numInstances);
+    void render2DPanels(const Rect2ui &panel);
 	void renderFrame();
 	void setFixedPipelineStates(const RenderStates &states);
     void setExtensions(const String &extensions);
@@ -172,6 +173,7 @@ private:
 	CPPCore::TArray<OGLFrameBuffer*> m_framebuffers;
     String m_extensions;
     i32 m_OpenGLVersion[ 2 ];
+    Viewport mViewport;
 };
 
 } // Namespace RenderBackend

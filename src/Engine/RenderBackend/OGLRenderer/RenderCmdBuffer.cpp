@@ -20,11 +20,12 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
+#include <osre/RenderBackend/Shader.h>
+#include "Engine/RenderBackend/OGLRenderer/RenderCmdBuffer.h"
 #include "OGLCommon.h"
 #include "OGLRenderBackend.h"
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Platform/AbstractOGLRenderContext.h>
-#include <src/Engine/RenderBackend/OGLRenderer/RenderCmdBuffer.h>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -35,7 +36,15 @@ using namespace ::OSRE::Platform;
 static const c8 *Tag = "RenderCmdBuffer";
 
 RenderCmdBuffer::RenderCmdBuffer(OGLRenderBackend *renderBackend, AbstractOGLRenderContext *ctx, Pipeline *pipeline) :
-        m_renderbackend(renderBackend), m_renderCtx(ctx), m_activeShader(nullptr), m_primitives(), m_materials(), m_paramArray(), m_matrixBuffer(), m_pipeline(pipeline) {
+        m_renderbackend(renderBackend),
+        m_renderCtx(ctx),
+        m_activeShader(nullptr),
+        m_2dShader(nullptr),
+        m_primitives(),
+        m_materials(),
+        m_paramArray(),
+        m_matrixBuffer(),
+        m_pipeline(pipeline) {
     OSRE_ASSERT(nullptr != m_renderbackend);
     OSRE_ASSERT(nullptr != m_renderCtx);
     OSRE_ASSERT(nullptr != m_pipeline);
@@ -246,6 +255,41 @@ bool RenderCmdBuffer::onDrawPrimitivesInstancesCmd(DrawInstancePrimitivesCmdData
     }
 
     return true;
+}
+
+const String shader_2d_vs = 
+		"#version 410\n"
+        "in vec2 vp;"
+        "uniform mat4 V, P;"
+        "out vec2 st;"
+        "void main () {"
+        "  st = (vp + 1.0) * 0.5;"
+        "  gl_Position = P * V * vec4 (10.0 * vp.x, -1.0, 10.0 * -vp.y, 1.0);"
+        "}";
+
+const String shader_2d_fs =
+        "in vec2 st;"
+        "uniform sampler2D tex;"
+        "out vec4 frag_colour;"
+        "void main () {"
+        "  frag_colour = texture (tex, st);"
+        "}";
+
+        
+bool RenderCmdBuffer::onDrawPanelCmd(DrawPanelsCmdData *data) {
+    OSRE_ASSERT(nullptr != m_renderbackend);
+    if (nullptr == data) {
+        return false;
+    }
+    if (nullptr == m_2dShader) {
+        Shader shader_2d;
+        shader_2d.setSource(ShaderType::SH_VertexShaderType, shader_2d_vs);
+        shader_2d.setSource(ShaderType::SH_FragmentShaderType, shader_2d_fs);
+        m_2dShader = m_renderbackend->createShader("2d", &shader_2d);
+    }
+    m_renderbackend->useShader(m_2dShader); 
+    for (size_t i = 0; i < data->mNumPanels; ++i) {
+    }
 }
 
 bool RenderCmdBuffer::onSetRenderTargetCmd(SetRenderTargetCmdData *) {

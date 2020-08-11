@@ -564,7 +564,7 @@ DX11VertexLayout *DX11Renderer::createVertexLayout(VertexLayout *layout, DX11Sha
 
     // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
     matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
+    matrixBufferDesc.ByteWidth = sizeof(ConstantBuffer);
     matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     matrixBufferDesc.MiscFlags = 0;

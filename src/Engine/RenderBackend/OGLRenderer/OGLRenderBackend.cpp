@@ -92,9 +92,12 @@ OGLRenderBackend::~OGLRenderBackend() {
 void OGLRenderBackend::enumerateGPUCaps() {
     m_oglCapabilities = new OGLCapabilities;
 
-    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &m_oglCapabilities->m_maxAniso);
-    glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &m_oglCapabilities->m_contextMask);
-    glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &m_oglCapabilities->m_max3DTextureSize);
+    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &m_oglCapabilities->mMaxAniso);
+    glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &m_oglCapabilities->mContextMask);
+    glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &m_oglCapabilities->mMax3DTextureSize);
+    glGetIntegerv(GL_MAX_TEXTURE_UNITS, &m_oglCapabilities->mMaxTextureUnits);
+    glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &m_oglCapabilities->mMaxTextureImageUnits);
+    glGetIntegerv(GL_MAX_TEXTURE_COORDS, &m_oglCapabilities->mMaxTextureCoords);
 }
 
 void OGLRenderBackend::setMatrix(MatrixType type, const glm::mat4 &mat) {
@@ -232,6 +235,10 @@ void OGLRenderBackend::clearRenderTarget(const ClearState &clearState) {
 
 void OGLRenderBackend::setViewport(i32 x, i32 y, i32 w, i32 h) {
     glViewport(x, y, w, h);
+    mViewport.m_x = x;
+    mViewport.m_y = y;
+    mViewport.m_w = w;
+    mViewport.m_h = h;
 }
 
 OGLBuffer *OGLRenderBackend::createBuffer(BufferType type) {
@@ -718,7 +725,7 @@ OGLTexture *OGLRenderBackend::createEmptyTexture(const String &name, TextureTarg
     glTexParameteri(tex->m_target, OGLEnum::getGLTextureEnum(TextureParameterName::TextureParamWrapS), GL_CLAMP);
     glTexParameteri(tex->m_target, OGLEnum::getGLTextureEnum(TextureParameterName::TextureParamWrapT), GL_CLAMP);
 
-    glTexParameterf(tex->m_target, GL_TEXTURE_MAX_ANISOTROPY_EXT, m_oglCapabilities->m_maxAniso);
+    glTexParameterf(tex->m_target, GL_TEXTURE_MAX_ANISOTROPY_EXT, m_oglCapabilities->mMaxAniso);
 
     return tex;
 }
@@ -750,7 +757,7 @@ OGLTexture *OGLRenderBackend::createTexture(const String &name, Texture *tex) {
     glTex = createEmptyTexture(name, tex->m_targetType, TextureFormatType::R8G8B8, tex->m_width, tex->m_height, tex->m_channels);
     glTexImage2D(glTex->m_target, 0, GL_RGB, tex->m_width, tex->m_height, 0, glTex->m_format, GL_UNSIGNED_BYTE, tex->m_data);
     glGenerateMipmap(glTex->m_target);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, m_oglCapabilities->m_maxAniso);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, m_oglCapabilities->mMaxAniso);
     glBindTexture(glTex->m_target, 0);
 
     return glTex;
@@ -1147,6 +1154,10 @@ void OGLRenderBackend::render(size_t primpGrpIdx, size_t numInstances) {
                 (GLsizei)grp->m_numIndices,
                 (GLsizei)numInstances);
     }
+}
+
+void OGLRenderBackend::render2DPanels(const Rect2ui &panel) {
+    
 }
 
 void OGLRenderBackend::renderFrame() {

@@ -27,65 +27,62 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 namespace App {
-    
+
 using namespace ::OSRE::RenderBackend;
 using namespace ::CPPCore;
 
-static const glm::vec3 Dummy = glm::vec3( -1, -1, -1);
+static const glm::vec3 Dummy = glm::vec3(-1, -1, -1);
 
-Component::Component( Entity *owner, ui32 id )
-: m_owner( owner )
-, m_id( id ) {
-    OSRE_ASSERT( nullptr != owner );
+Component::Component(Entity *owner, ui32 id) :
+        m_owner(owner),
+        m_id(id) {
+    OSRE_ASSERT(nullptr != owner);
 }
 
 Component::~Component() {
-	// empty
+    // empty
 }
 
-void Component::update( Time dt ) {
-    onUpdate( dt );
+void Component::update(Time dt) {
+    onUpdate(dt);
 }
 
-void Component::render( RenderBackend::RenderBackendService *renderBackendSrv ) {
+void Component::render(RenderBackend::RenderBackendService *renderBackendSrv) {
     onRender(renderBackendSrv);
 }
 
-RenderComponent::RenderComponent(Entity *owner, ui32 id )
-: Component( owner, id )
-, m_newGeo() {
+RenderComponent::RenderComponent(Entity *owner, ui32 id) :
+        Component(owner, id), m_newGeo() {
     // empty
 }
 
 RenderComponent::~RenderComponent() {
     // empty
-
 }
 
-void RenderComponent::addStaticMesh( Mesh *geo ) {
-    if ( nullptr == geo ) {
+void RenderComponent::addStaticMesh(Mesh *geo) {
+    if (nullptr == geo) {
         return;
     }
 
-    m_newGeo.add( geo );
+    m_newGeo.add(geo);
 }
 
-void RenderComponent::addStaticMeshArray( const RenderBackend::MeshArray &array ) {
-    if ( array.isEmpty() ) {
+void RenderComponent::addStaticMeshArray(const RenderBackend::MeshArray &array) {
+    if (array.isEmpty()) {
         return;
     }
 
-    for ( size_t i=0; i<array.size(); ++i ) {
+    for (size_t i = 0; i < array.size(); ++i) {
         m_newGeo.add(array[i]);
     }
 }
-
 
 size_t RenderComponent::getNumGeometry() const {
     return m_newGeo.size();
 }
 
-Mesh *RenderComponent::getMeshAt( size_t idx) const {
+Mesh *RenderComponent::getMeshAt(size_t idx) const {
     return m_newGeo[idx];
 }
 
@@ -93,16 +90,16 @@ bool RenderComponent::onPreprocess() {
     return true;
 }
 
-bool RenderComponent::onUpdate( Time ) {
+bool RenderComponent::onUpdate(Time) {
     return true;
 }
 
-bool RenderComponent::onRender( RenderBackendService *renderBackendSrv ) {
+bool RenderComponent::onRender(RenderBackendService *renderBackendSrv) {
     if (!m_newGeo.isEmpty()) {
         for (ui32 i = 0; i < m_newGeo.size(); i++) {
-            renderBackendSrv->addMesh( m_newGeo[ i ], 0 );
+            renderBackendSrv->addMesh(m_newGeo[i], 0);
         }
-        m_newGeo.resize( 0 );
+        m_newGeo.resize(0);
     }
 
     return true;
@@ -112,29 +109,27 @@ bool RenderComponent::onPostprocess() {
     return true;
 }
 
-TransformComponent::TransformComponent( Entity *owner, ui32 id )
-: Component( owner, id )
-, m_mb() {
+TransformComponent::TransformComponent(Entity *owner, ui32 id) :
+        Component(owner, id), m_mb() {
     // empty
 }
 
-TransformComponent::~TransformComponent()  {
+TransformComponent::~TransformComponent() {
     // empty
 }
 
-void TransformComponent::update( Time ) {
-
+void TransformComponent::update(Time) {
 }
 
 bool TransformComponent::onPreprocess() {
     return true;
 }
 
-bool TransformComponent::onUpdate( Time dt ) {
+bool TransformComponent::onUpdate(Time dt) {
     return true;
 }
 
-bool TransformComponent::onRender( RenderBackend::RenderBackendService* ) {
+bool TransformComponent::onRender(RenderBackend::RenderBackendService *) {
     return true;
 }
 
@@ -142,5 +137,5 @@ bool TransformComponent::onPostprocess() {
     return true;
 }
 
-} // Namespace Scene
-} // Namespace OSREB
+} // namespace App
+} // namespace OSRE

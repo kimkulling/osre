@@ -59,6 +59,7 @@ void PlatformOperations::getFileOpenDialog( const c8 *extensions, IO::Uri &locat
     if ( TRUE == GetOpenFileName( &ofn ) ) {
         String filename = ofn.lpstrFile;
         location.setResource( filename );
+        location.parse();
     } else {
         location.clear();
     }

@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AppCommon.h>
 #include <osre/Platform/PlatformCommon.h>
 #include <osre/Common/ArgumentParser.h>
+#include <osre/Platform/KeyTypes.h>
 
 namespace OSRE {
 
@@ -69,7 +70,8 @@ public:
     /// @param  argv            [in] The argument array.
     /// @param  supportedArgs   [in] A list of supported arguments, separated by a :
     /// @param  desc            [in] The description for the arguments.
-    AppBase( i32 argc, const c8 *argv[], const String &supportedArgs = "api", const String &desc = "The render API" );
+    AppBase( i32 argc, const c8 *argv[], const String &supportedArgs = "api", 
+        const String &desc = "The render API" );
 
     /// @brief  The class destructor, virtual.
     virtual ~AppBase();
@@ -83,7 +85,8 @@ public:
     /// @param  fullscreen  [in] true for fullscreen mode, false for windowed mode.
     /// @param  renderer    [in] The requested render mode.
     /// @return true, if the window was generated.
-    virtual bool initWindow( ui32 x, ui32 y, ui32 width, ui32 height, const String &title, bool fullscreen, RenderBackendType renderer );
+    virtual bool initWindow( ui32 x, ui32 y, ui32 width, ui32 height, const String &title, 
+        bool fullscreen, RenderBackendType renderer );
 
     /// @brief  Creates the application.
     /// @param  settings         [in] The user-defined settings.
@@ -181,7 +184,9 @@ public:
     /// @return The default pipeline.
     static RenderBackend::Pipeline *createDefaultPipeline();
 
-protected:
+    bool isKeyPressed(Platform::Key key) const;
+
+ protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
     /// @return true if successful,  false if not.
     virtual bool onCreate();
