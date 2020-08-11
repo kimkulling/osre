@@ -2,12 +2,18 @@
 #include "Modules/ModuleBase.h"
 #include "Modules/InspectorModule/InspectorModule.h"
 #include <osre/Platform/AbstractWindow.h>
+#include <osre/App/AssimpWrapper.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/Panel.h>
 #include <osre/IO/Directory.h>
+#include <osre/IO/Uri.h>
+#include <osre/App/Entity.h>
 
 namespace OSRE {
 namespace Editor {
+
+using namespace ::OSRE::App;
+using namespace ::OSRE::RenderBackend;
 
 static const ui32 HorizontalMargin = 2;
 static const ui32 VerticalMargin = 2;
@@ -82,7 +88,7 @@ bool OsreEdApp::onCreate() {
 
     Rect2ui r;
     AppBase::getRootWindow()->getWindowsRect(r);
-    mUiScreen.m_canvas = AppBase::createScreen("OsreEd");
+    /*mUiScreen.m_canvas = AppBase::createScreen("OsreEd");
     mUiScreen.m_canvas->setRect(r);
 
     mUiScreen.m_mainPanel = new UI::Panel("main_panel", mUiScreen.m_canvas);
@@ -92,9 +98,39 @@ bool OsreEdApp::onCreate() {
     mUiScreen.m_logPanel->setRect(r.getX1() + HorizontalMargin, r.getY1() + r.getHeight() / 3, 
         r.getWidth() - 2 * HorizontalMargin, r.getHeight() - (r.getY1() + r.getHeight() / 3) - 2 * VerticalMargin);
     mUiScreen.m_modelPanel = new UI::Panel("model_panel", mUiScreen.m_mainPanel);
-    mUiScreen.m_modelPanel->setHeadline("Model");
+    mUiScreen.m_modelPanel->setHeadline("Model");*/
 
     return true;
+}
+
+void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
+    AssimpWrapper assimpWrapper(*getIdContainer());
+    if (!assimpWrapper.importAsset(modelLoc, 0)) {
+        return;
+    }
+
+    RenderBackendService *rbSrv = getRenderBackendService();
+    if (nullptr == rbSrv) {
+        return;
+    }
+    Platform::AbstractWindow *rootWindow = getRootWindow();
+    if (nullptr == rootWindow) {
+        return;
+    }
+    m_stage = AppBase::createStage("ModelLoading");
+    AppBase::setActiveStage(m_stage);
+    m_view = m_stage->addView("default_view", nullptr);
+    AppBase::setActiveView(m_view);
+
+    Rect2ui windowsRect;
+    rootWindow->getWindowsRect(windowsRect);
+    m_view->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.01f, 1000.f);
+    Entity *entity = assimpWrapper.getEntity();
+
+    World *world = getActiveWorld();
+    world->addEntity(entity);
+    m_view->observeBoundingBox(entity->getAABB());
+    m_modelNode = entity->getNode();
 }
 
 void OsreEdApp::onUpdate() {
