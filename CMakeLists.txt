@@ -125,12 +125,7 @@ set( BUILD_SHARED_LIBS OFF )
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
 ADD_SUBDIRECTORY( src/Editor_cpp )
-if ( OSRE_BUILD_CSHARP_EDITOR )
-  if ( WIN32)
-    ADD_SUBDIRECTORY( src/Editor )
-    set_target_properties(  OSREEditor       PROPERTIES FOLDER Editor )
-  ENDIF( WIN32 )
-endif()
+set_target_properties(  osre_ed       PROPERTIES FOLDER Editor )
 
 IF ( OSRE_BUILD_TESTS )
     ADD_SUBDIRECTORY( test/RenderTests )
