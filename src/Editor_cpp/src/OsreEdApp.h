@@ -36,6 +36,9 @@ public:
     bool loadModules();
     UI::Panel *getRootPanel() const;
     void loadAsset(const IO::Uri &modelLoc);
+    bool hasModel() const {
+        return m_modelNode.isValid();
+    }
 
 protected:
     bool onCreate() override;
@@ -55,7 +58,7 @@ private:
     ModuleArray mModuleArray;
     ModulePathArray mModulePathArray;
 
-    Scene::Stage *m_stage;
+    Scene::Stage *mStage;
     Scene::View *m_view;
     f32 m_angle;
     glm::mat4 m_model;

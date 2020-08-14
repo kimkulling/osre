@@ -8,14 +8,15 @@ using namespace ::OSRE::Editor;
 
 int main(int argc, char *argv[]) {
     OsreEdApp app(argc, argv);
-
-    if (!app.create()) {
+    if (!app.initWindow(10, 10, 1024, 768, "ModelLoader-Sample", false, App::RenderBackendType::OpenGLRenderBackend)) {
         return 1;
     }
 
     while (app.handleEvents()) {
         app.update();
-        app.requestNextFrame();
+        if (app.hasModel()) {
+            app.requestNextFrame();
+        }
     }
 
     return 0;

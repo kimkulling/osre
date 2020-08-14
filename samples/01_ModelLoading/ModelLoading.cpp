@@ -135,7 +135,7 @@ protected:
         m_transformMatrix.m_model = glm::rotate(rot, m_angle, glm::vec3(0, 1, 1));
 
         m_angle += 0.01f;
-        RenderBackendService *rbSrv(getRenderBackendService());
+        RenderBackendService *rbSrv = getRenderBackendService();
 
         rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");

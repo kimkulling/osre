@@ -2,6 +2,9 @@
 #include "Modules/ModuleBase.h"
 #include "Modules/InspectorModule/InspectorModule.h"
 #include <osre/Platform/AbstractWindow.h>
+#include <osre/Platform/PlatformOperations.h>
+#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/App/AssimpWrapper.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/Panel.h>
@@ -83,11 +86,11 @@ bool OsreEdApp::onCreate() {
         return false;
     }
 
-    registerModule(new InspectorModule());
-    loadModules();
+    //registerModule(new InspectorModule());
+    //loadModules();
 
-    Rect2ui r;
-    AppBase::getRootWindow()->getWindowsRect(r);
+    /*Rect2ui r;
+    AppBase::getRootWindow()->getWindowsRect(r);*/
     /*mUiScreen.m_canvas = AppBase::createScreen("OsreEd");
     mUiScreen.m_canvas->setRect(r);
 
@@ -99,6 +102,8 @@ bool OsreEdApp::onCreate() {
         r.getWidth() - 2 * HorizontalMargin, r.getHeight() - (r.getY1() + r.getHeight() / 3) - 2 * VerticalMargin);
     mUiScreen.m_modelPanel = new UI::Panel("model_panel", mUiScreen.m_mainPanel);
     mUiScreen.m_modelPanel->setHeadline("Model");*/
+
+    AppBase::setWindowsTitle("OSRE ED! Press o to import an Asset");
 
     return true;
 }
@@ -117,9 +122,9 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     if (nullptr == rootWindow) {
         return;
     }
-    m_stage = AppBase::createStage("ModelLoading");
-    AppBase::setActiveStage(m_stage);
-    m_view = m_stage->addView("default_view", nullptr);
+    mStage = AppBase::createStage("ModelLoading");
+    AppBase::setActiveStage(mStage);
+    m_view = mStage->addView("default_view", nullptr);
     AppBase::setActiveView(m_view);
 
     Rect2ui windowsRect;
@@ -134,9 +139,35 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
 }
 
 void OsreEdApp::onUpdate() {
-    for (ui32 i = 0; i < mModuleArray.size(); ++i) {
-        mModuleArray[i]->update();
+    if (AppBase::isKeyPressed(Platform::KEY_O)) {
+        IO::Uri modelLoc;
+        Platform::PlatformOperations::getFileOpenDialog("*", modelLoc);
+        if (modelLoc.isValid()) {
+            loadAsset(modelLoc);
+        }
     }
+
+
+    /*for (ui32 i = 0; i < mModuleArray.size(); ++i) {
+        mModuleArray[i]->update();
+    }*/
+
+            // Rotate the model
+    glm::mat4 rot(1.0);
+    m_transformMatrix.m_model = glm::rotate(rot, m_angle, glm::vec3(0, 1, 1));
+
+    m_angle += 0.01f;
+    RenderBackendService *rbSrv = getRenderBackendService();
+
+    rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+    rbSrv->beginRenderBatch("b1");
+
+    rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+
+    rbSrv->endRenderBatch();
+    rbSrv->endPass();
+
+    AppBase::onUpdate();
 }
 
 bool OsreEdApp::onDestroy() {
