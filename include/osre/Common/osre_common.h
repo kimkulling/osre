@@ -556,6 +556,10 @@ struct OSRE_EXPORT TQuat {
         // empty
     }
 
+    TQuat(T x, T y, T z, T w) :
+            m_x(x), m_y(y), m_z(z), m_w(1) {
+        // empty
+    }
     void set(T x, T y, T z, T w) {
         m_x = x;
         m_y = y;

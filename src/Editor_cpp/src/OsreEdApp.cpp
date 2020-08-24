@@ -5,6 +5,7 @@
 #include <osre/Platform/PlatformOperations.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Scene/TrackBall.h>
 #include <osre/App/AssimpWrapper.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/Panel.h>
@@ -33,7 +34,8 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         AppBase(argc, (const char **)argv, "api", "The render API"),
         mUiScreen(),
         mModuleArray(),
-        mModulePathArray() {
+        mModulePathArray(),
+        mTrackBall( nullptr ){
     // empty
 }
 
@@ -129,6 +131,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
 
     Rect2ui windowsRect;
     rootWindow->getWindowsRect(windowsRect);
+    mTrackBall = new Scene::TrackBall("trackball", windowsRect.getWidth(), windowsRect.getHeight());
     m_view->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.01f, 1000.f);
     Entity *entity = assimpWrapper.getEntity();
 
@@ -145,6 +148,10 @@ void OsreEdApp::onUpdate() {
         if (modelLoc.isValid()) {
             loadAsset(modelLoc);
         }
+    }
+    i32 x = 0, y = 0;
+    if (AppBase::isMouseMoved(x, y)) {
+    
     }
 
 

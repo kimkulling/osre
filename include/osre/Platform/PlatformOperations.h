@@ -49,7 +49,7 @@ public:
     static void getFileOpenDialog( const c8 *extensions, IO::Uri &location );
     static void getFileSaveDialog( const c8 *extensions, IO::Uri &location );
     static void getDialog( const String &title, const String &question, ui32 requestedButtons, DlgResults &result );
-    
+
     PlatformOperations() = delete;
     PlatformOperations(const PlatformOperations &) = delete;
     ~PlatformOperations() = delete;

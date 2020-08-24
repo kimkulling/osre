@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Math/BaseMath.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Scene/TrackBall.h>
+#include <osre/Scene/Node.h>
 
 namespace OSRE {
 namespace Scene {
@@ -36,6 +37,7 @@ TrackBall::TrackBall(const String &trackBallObjName, ui32 w, ui32 h) :
         m_EndVector(0, 0, 0),
         m_Dimension(w, h),
         m_rotation(),
+        mNode(nullptr),
         m_bLeftMButtonClicked(false),
         m_bMiddleClicked(false),
         m_bRightMButtonClicked(false),
@@ -61,11 +63,11 @@ TrackBall::~TrackBall() {
     // empty
 }
 
-void TrackBall::onOSEvent(const Common::Event &rOSEvent, const Common::EventData *pData) {
-    /*	if ( rOSEvent == Interface::MouseButtonDownEvent ) {
-        Interface::MouseButtonEventData *pMBData = (Interface::MouseButtonEventData*) pData;
+void TrackBall::onOSEvent(const Common::Event &osEvent, const Common::EventData *data) {
+    if (osEvent == Platform::MouseButtonDownEvent) {
+        Platform::MouseButtonEventData *pMBData = (Platform::MouseButtonEventData *)data;
         if ( 0 == pMBData->m_Button ) {
-            Math::Vector2f pos( static_cast<f32>( pMBData->m_AbsX ), static_cast<f32>( pMBData->m_AbsY ) );
+            Vec2f pos( static_cast<f32>( pMBData->m_AbsX ), static_cast<f32>( pMBData->m_AbsY ) );
             mapToSphere( &pos, &m_EndVector );
             m_bLeftMButtonClicked = true;
         } else if ( 1 == pMBData->m_Button ) {
@@ -73,21 +75,21 @@ void TrackBall::onOSEvent(const Common::Event &rOSEvent, const Common::EventData
         } else {
             m_bRightMButtonClicked = true;
         }
-    } else if ( rOSEvent == Interface::MouseMoveEvent ) {
-        const MouseMoveEventData *pMMData = reinterpret_cast<const MouseMoveEventData*>( pData );
+    } else if ( osEvent == Platform::MouseMoveEvent ) {
+        const MouseMoveEventData *pMMData = (Platform::MouseMoveEventData*) (data);
         if ( m_bLeftMButtonClicked ) {
-            Math::Vector2f pos( static_cast<f32>( pMMData->m_AbsX ), static_cast<f32>( pMMData->m_AbsY ) );
+            Vec2f pos(static_cast<f32>(pMMData->m_absX), static_cast<f32>(pMMData->m_absY));
             m_StartVector = m_EndVector;
             mapToSphere( &pos, &m_EndVector );
             computeRotation();
         } else if ( m_bMiddleClicked ) {
-            computeScaling( pMMData->m_AbsY );
+            computeScaling( pMMData->m_absY );
         }
-    } else if (rOSEvent == Interface::MouseButtonUpEvent ) {
-        m_nodePtr->setScale( ZFXCE2::Math::Vector3f( 1,1,1 ) );
-        m_nodePtr->setRotation( ZFXCE2::Math::Quaternionf( 0,0,0,1 ) );
+    } else if (osEvent == Platform::MouseButtonUpEvent) {
+        mNode->setScale(glm::vec3(1, 1, 1));
+        mNode->setRotation(Quatf(0, 0, 0, 1));
         m_screenYOld = 0;
-        const MouseButtonEventData *pMBData = reinterpret_cast<const MouseButtonEventData*>( pData );
+        const MouseButtonEventData *pMBData = reinterpret_cast<const MouseButtonEventData*>( data );
         if ( 0 == pMBData->m_Button ) {
             m_bLeftMButtonClicked = false;
         } else if ( 1 == pMBData->m_Button ) {
@@ -95,7 +97,7 @@ void TrackBall::onOSEvent(const Common::Event &rOSEvent, const Common::EventData
         } else {
             m_bRightMButtonClicked = false;
         }
-    }*/
+    }
 }
 
 void TrackBall::mapToSphere(const Vec2f *pNewPt, Vec3f *NewVec) {
@@ -131,7 +133,7 @@ void TrackBall::computeRotation() {
         m_rotation.set(0.0f, 0.0f, 0.0f, 1.0f);
     }
 
-    //m_nodePtr->setRotation( m_Rotation );
+    mNode->setRotation( m_rotation );
 }
 
 void TrackBall::computeScaling(ui32 y) {

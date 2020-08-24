@@ -202,6 +202,20 @@ const glm::vec3 &Node::getScale() const {
     return m_localTransformState.m_scale;
 }
 
+void Node::setRotation( const Quatf &rotation ) {
+    m_localTransformState.m_rotation = glm::vec4(rotation.m_x, rotation.m_y, rotation.m_z, 1);
+}
+
+Quatf Node::getRotation() const {
+    Quatf q;
+    q.m_x = m_localTransformState.m_rotation.x;
+    q.m_y = m_localTransformState.m_rotation.y;
+    q.m_z = m_localTransformState.m_rotation.z;
+    q.m_w = 1;
+
+    return q;
+}
+
 void Node::setTransformationMatrix( const glm::mat4 &m ) {
     m_transform = m;
 }

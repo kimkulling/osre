@@ -20,6 +20,10 @@ namespace IO {
     class Uri;
 }
 
+namespace Scene {
+    class TrackBall;
+}
+
 namespace Editor {
 
 class ModuleBase;
@@ -64,6 +68,7 @@ private:
     glm::mat4 m_model;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
     Scene::Node::NodePtr m_modelNode;
+    Scene::TrackBall *mTrackBall;
 };
 
 } // namespace Editor

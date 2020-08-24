@@ -29,6 +29,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Scene {
 
+class Node;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -66,6 +68,7 @@ private:
     Vec3f m_StartVector, m_EndVector;
     TRectangle<ui32> m_Dimension;
     Quatf m_rotation;
+    Node *mNode;
     bool m_bLeftMButtonClicked;
     bool m_bMiddleClicked;
     bool m_bRightMButtonClicked;

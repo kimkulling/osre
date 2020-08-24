@@ -40,7 +40,7 @@ public:
     /// The class constructor.
     Win32Window( WindowsProperties *properties );
     /// The class destructor, virtual.
-    virtual ~Win32Window();
+    ~Win32Window() override;
     /// Will set the windows title.
     void setWindowsTitle( const String &title ) override;
     /// Returns the windows handle.
@@ -59,7 +59,6 @@ protected:
     bool onUpdateProperies() override;
     /// The resize callback implementation.
     void onResize( ui32 x, ui32 y, ui32 w, ui32 h ) override;
-
 
 private:
     HINSTANCE m_hInstance;

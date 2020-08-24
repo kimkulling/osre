@@ -33,7 +33,7 @@ namespace Platform {
 ///	@brief  This struct stores all information regarding any resolution.
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT Resolution {
-    enum ResRequest {
+    enum class ResRequest {
         Res640x480,
         Res800x600,
         Res1024x768,
@@ -43,10 +43,10 @@ struct OSRE_EXPORT Resolution {
         Res1920x1080
     };
 
-    ui32 m_width;   ///< The resolution in x.
-    ui32 m_height;  ///< The resolution in y.
+    ui32 m_width; ///< The resolution in x.
+    ui32 m_height; ///< The resolution in y.
 
-    explicit Resolution( ResRequest req );
+    explicit Resolution(ResRequest req);
     Resolution();
     ~Resolution();
 };
@@ -57,25 +57,24 @@ struct OSRE_EXPORT Resolution {
 ///	@brief  This struct stores all surface related information.
 //-------------------------------------------------------------------------------------------------
 struct WindowsProperties {
-    ui32   m_x;                   ///< Upper left x coordinate.
-    ui32   m_y;                   ///< Upper left y coordinate.
-    ui32   m_width;               ///< Width of the surface.
-    ui32   m_height;              ///< Height of the surface.
-    uc8    m_colordepth;          ///< Color depth.
-    uc8    m_depthbufferdepth;    ///< Z-Depth.
-    uc8    m_stencildepth;        ///< Stencil depth.
-    String m_title;               ///< Window title.
-    bool   m_fullscreen;          ///< true for full screen.
-    bool   m_resizable;           ///< true, if window wan be resized.
-    bool   m_childWindow;         ///< true, if the window is a child window, for embedding
-    bool   m_open;                ///< Window is open flag.
+    ui32 m_x; ///< Upper left x coordinate.
+    ui32 m_y; ///< Upper left y coordinate.
+    ui32 m_width; ///< Width of the surface.
+    ui32 m_height; ///< Height of the surface.
+    uc8 m_colordepth; ///< Color depth.
+    uc8 m_depthbufferdepth; ///< Z-Depth.
+    uc8 m_stencildepth; ///< Stencil depth.
+    String m_title; ///< Window title.
+    bool m_fullscreen; ///< true for full screen.
+    bool m_resizable; ///< true, if window wan be resized.
+    bool m_childWindow; ///< true, if the window is a child window, for embedding
+    bool m_open; ///< Window is open flag.
 
     /// Will return the dimension as a rectangle.
     void getDimension(Rect2ui &rect);
 };
 
-inline
-void WindowsProperties::getDimension(Rect2ui &rect) {
+inline void WindowsProperties::getDimension(Rect2ui &rect) {
     rect.set(m_x, m_y, m_width, m_height);
 }
 
@@ -83,23 +82,23 @@ void WindowsProperties::getDimension(Rect2ui &rect) {
 ///	@ingroup	Engine
 ///
 ///	@brief  This abstract class declares the interface for a render surface.
-/// 
-/// A render surface could be a window on a desktop system for instance or a rectangle on an 
+///
+/// A render surface could be a window on a desktop system for instance or a rectangle on an
 /// embedded device.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractWindow {
 public:
     /// @brief  The Windows flags.
-    enum SurfaceFlagType {
+    enum class SurfaceFlagType {
         SF_PropertiesClean = 0,
-        SF_WinTitleDirty   = ( 1 << 1 ),
-        SF_WinResize       = ( 1 << 2 ),
-        SF_ChildWindow     = ( 1 << 3 )
+        SF_WinTitleDirty = (1 << 1),
+        SF_WinResize = (1 << 2),
+        SF_ChildWindow = (1 << 3)
     };
 
     /// @brief  The class constructor.
     /// @param  props       [in] The surface properties.
-    explicit AbstractWindow( WindowsProperties *props );
+    explicit AbstractWindow(WindowsProperties *props);
 
     /// @brief  The class destructor, virtual.
     virtual ~AbstractWindow();
@@ -116,19 +115,19 @@ public:
     /// @return true will be returned, when creation was successful.
     virtual bool updateProperties();
 
-    /// @brief  Setter to update all properties. updateProperties must be called to 
+    /// @brief  Setter to update all properties. updateProperties must be called to
     ///         apply changed properties.
     /// @param  props       [in] The new properties.
-    virtual void setProperties( WindowsProperties *props );
+    virtual void setProperties(WindowsProperties *props);
 
-    /// @brief  Returns a non-const pointer to the window properties. setFlags must 
+    /// @brief  Returns a non-const pointer to the window properties. setFlags must
     ///         be called manually followed by updateProperties to apply changes.
     /// @return Pointer showing to the surface properties.
     virtual WindowsProperties *getProperties();
-    
+
     /// @brief  Setting of a new flag.
     /// @param  flags       [in] The new flags.
-    virtual void setFlags( SurfaceFlagType flags );
+    virtual void setFlags(SurfaceFlagType flags);
 
     /// @brief  Returns the surface flags.
     /// @return The surface flags.
@@ -136,10 +135,10 @@ public:
 
     /// @brief  Will set the windows title.
     /// @param  title       [in] The new windows title.
-    virtual void setWindowsTitle( const String &title ) = 0;
+    virtual void setWindowsTitle(const String &title) = 0;
 
     /// @
-    virtual void resize( ui32 x, ui32 y, ui32 w, ui32 h );
+    virtual void resize(ui32 x, ui32 y, ui32 w, ui32 h);
 
     virtual void getWindowsRect(Rect2ui &rect) const;
 
@@ -151,12 +150,13 @@ protected:
     /// @brief  Callback to override on updates.
     virtual bool onUpdateProperies() = 0;
     /// @brief  The onResize callback.
-    virtual void onResize( ui32 x, ui32 y, ui32 w, ui32 h ) = 0;
+    virtual void onResize(ui32 x, ui32 y, ui32 w, ui32 h) = 0;
 
 private:
     ui32 m_flags;
     WindowsProperties *m_properties;
     bool m_isCreated;
+    void *mIcon;
 };
 
 } // Namespace Platform

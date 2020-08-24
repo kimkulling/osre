@@ -186,6 +186,8 @@ public:
 
     bool isKeyPressed(Platform::Key key) const;
 
+    bool isMouseMoved(i32 &xDiff, i32 &yDiff) const;
+
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
     /// @return true if successful,  false if not.

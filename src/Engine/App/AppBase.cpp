@@ -120,7 +120,7 @@ public:
     MouseEventListener() :
             OSEventListener("App/MouseEventListener"),
             m_uiCanvas() {
-        // empty
+        ::memset(mLastMouseMove, 0, sizeof(i32) * 2);
     }
 
     ~MouseEventListener() override {
@@ -146,10 +146,22 @@ public:
             const Point2ui pt(mouseBtnData->m_AbsX, mouseBtnData->m_AbsY);
             m_uiCanvas->mouseDown(pt, nullptr);
         }
+        if (osEvent == MouseMoveEvent) {
+            MouseMoveEventData *moveData = (MouseMoveEventData *)data;
+            mLastMouseMove[0] = moveData->m_absX;
+            mLastMouseMove[1] = moveData->m_absY;
+        }
+    }
+
+    void getLastMoves( i32 &x, i32 &y ) {
+        x = mLastMouseMove[0];
+        y = mLastMouseMove[1];
+        ::memset(mLastMouseMove, 0, sizeof(i32) * 2);
     }
 
 private:
     Common::TObjPtr<UI::Canvas> m_uiCanvas;
+    i32 mLastMouseMove[2];
 };
 
 AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
@@ -584,6 +596,15 @@ bool AppBase::isKeyPressed(Key key) const {
     }
 
     return m_keyboardEvListener->isKeyPressed(key);
+}
+
+bool AppBase::isMouseMoved(i32 &xDiff, i32 &yDiff) const {
+    if (nullptr == m_mouseEvListener) {
+        return false;
+    }
+    
+    m_mouseEvListener->getLastMoves(xDiff, yDiff);
+    return true;
 }
 
 } // Namespace App

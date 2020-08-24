@@ -203,11 +203,11 @@ bool Win32Window::onDestroy() {
 
 bool Win32Window::onUpdateProperies() {
     const ui32 flags(AbstractWindow::getFlags());
-    if (flags | SF_WinTitleDirty) {
+    if (flags | (ui32)SurfaceFlagType::SF_WinTitleDirty) {
         const String &title(AbstractWindow::getProperties()->m_title);
         ::SetWindowText(getHWnd(), title.c_str());
     }
-    AbstractWindow::setFlags(SF_PropertiesClean);
+    AbstractWindow::setFlags(SurfaceFlagType::SF_PropertiesClean);
 
     return true;
 }

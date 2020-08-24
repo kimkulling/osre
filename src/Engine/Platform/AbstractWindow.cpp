@@ -31,23 +31,22 @@ static const c8 *Tag = "AbstractSurface";
 Resolution::Resolution( ResRequest req )
 : m_width( 0 )
 , m_height( 0 ) {
-    if ( Res640x480 == req ) {
+    if (ResRequest::Res640x480 == req) {
         m_width = 640;
         m_height = 480;
-    } else if ( Res800x600 == req ) {
+    } else if (ResRequest::Res800x600 == req) {
         m_width = 800;
         m_height = 600;
-    } else if ( Res1024x768 == req ) {
+    } else if (ResRequest::Res1024x768 == req) {
         m_width = 1024;
         m_height = 768;
-    } else if ( Res1176x664 == req ) {
+    } else if (ResRequest::Res1176x664 == req) {
         m_width = 1176;
         m_height = 664;
-
-    } else if ( Res1768x992 == req ) {
+    } else if (ResRequest::Res1768x992 == req) {
         m_width = 1768;
         m_height = 992;
-    } else if ( Res1920x1080 == req ) {
+    } else if (ResRequest::Res1920x1080 == req) {
         m_width = 1920;
         m_height = 1080;
     }
@@ -63,9 +62,8 @@ Resolution::~Resolution() {
     // empty
 }
 
-AbstractWindow::AbstractWindow( WindowsProperties *properties )
-: m_flags( SF_PropertiesClean )
-, m_properties( properties )
+AbstractWindow::AbstractWindow( WindowsProperties *properties ) :
+        m_flags((ui32)SurfaceFlagType::SF_PropertiesClean), m_properties( properties )
 , m_isCreated( false ) {
     // empty    
 }
@@ -116,7 +114,7 @@ void AbstractWindow::setFlags( SurfaceFlagType flags ) {
     if ( m_flags == static_cast<ui32>( flags ) ) {
         return;
     }
-    m_flags = flags;
+    m_flags = (ui32)flags;
 }
 
 ui32 AbstractWindow::getFlags() const {
