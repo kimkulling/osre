@@ -47,8 +47,13 @@ static const String GLSLRenderVertexLayout =
 	"layout(location = 3) in vec2 texcoord0;  // per-vertex tex coord, stage 0\n"
 	"\n";
 
+static const String GLSLMatrices =
+    "uniform mat4 ModelViewMatrix;\n"
+    "uniform mat3 NormalMatrix;\n"
+    "uniform mat4 ProjectionMatrix;\n";
+
 static const String GLSLCombinedMVPUniformSrc =
-    "// uniform\n"
+    "// uniforms\n"
     "uniform mat4 MVP;	//combined modelview projection matrix\n";
 
 static const String GLSLVsSrc =
@@ -102,9 +107,13 @@ const String GLSLVsSrcRV =
     "\n"
     "// output from the vertex shader\n"
     "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
-    "smooth out vec2 vUV;\n"
+    "smooth out vec2 TexCoord;\n"
+    "out vec3 Position;\n"
+    "out vec3 Normal;\n"
     "\n"
     + GLSLCombinedMVPUniformSrc +
+    "\n" 
+    + GLSLMatrices + 
     "\n"
     "void main()\n"
     "{\n"
@@ -113,25 +122,62 @@ const String GLSLVsSrcRV =
     "\n"
     "    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
     "    //vertex position\n"
+    "    Position = (MVP*vec4(position,1)).xyz;\n"
     "    gl_Position = MVP*vec4(position,1);\n"
     "    vSmoothColor = vec4( color0, 1 );\n"
-    "    vUV = texcoord0;\n"
+    "    TexCoord = texcoord0;\n"
     "}\n";
 
 const String GLSLFsSrcRV =
     GLSLVersionString_400 +
     "\n"
-    "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
+    "layout(location=0) out vec4 FragColor; //fragment shader output\n"
     "\n"
     "//input form the vertex shader\n"
     "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
-    "smooth in vec2 vUV;\n"
+    "smooth in vec2 TexCoord;\n"
+    "\n"
+    "in vec3 Position;\n"
+    "in vec3 Normal;\n"
     "uniform sampler2D tex0;\n"
+    "\n"
+    "struct LightInfo {\n"
+    "    vec4 Position;\n"
+    "    vec3 La;\n"
+    "    vec3 Ld;\n"
+    "    vec3 Ls;\n"
+    "};\n"
+    "uniform LightInfo Light;\n"
+    "\n"
+    "struct MaterialInfo {\n"
+    "    vec3 Ka;\n"
+    "    vec3 Kd;\n"
+    "    vec3 Ks;\n"
+    "    float shineness;\n"
+    "};\n"
+    "uniform MaterialInfo Material;\n"
+    "\n"
+    "vec3 phongModel(vec3 position, vec3 normal) {\n"
+    "    vec3 s = normalize(Light.Position.xyz - position);\n"
+    "    vec3 v = normalize(-position);\n"
+    "    vec3 r = reflect(-s, normal);\n"
+    "    vec3 ambient = Light.La * Material.Ka;\n"
+    "    float sDotN = max(dot(s, normal),0.0);\n"
+    "    vec3 diffuse = Light.Ld * Material.Kd * sDotN;\n"
+    "    vec3 spec = vec3(0.0);\n"
+    "    if ( sDotN > 0.0)\n"
+    "        spec = Light.Ls * Material.Ks * pow(max(dot(r,v),0.0), Material.shineness);\n"
+    "    return ( ambient + diffuse + spec );\n"
+    "}\n"
     "\n"
     "void main()\n"
     "{\n"
     "    // set the interpolated color as the shader output\n"
-    "    vFragColor = texture( tex0, vUV );\n"
+    "    vec3 ambAndDiff;\n"
+    "    vec4 texColor = texture( tex0, TexCoord );\n" 
+    
+    "    ambAndDiff = phongModel(Position, Normal);"
+    "    FragColor = vec4(ambAndDiff, 1.0) * texColor;\n"
     "}\n";
 
 const String GLSLVsSrcUI =

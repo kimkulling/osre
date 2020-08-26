@@ -487,6 +487,8 @@ struct OSRE_EXPORT Material {
     ui32 m_numParameters;
     UniformVar *m_parameters;
     Color4 m_color[MaxMatColorType];
+    f32 mShineness;
+    f32 mShinenessStrength; 
     IO::Uri m_uri;
 
     Material(const String &name);

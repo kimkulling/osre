@@ -22,17 +22,8 @@ using namespace ::OSRE::RenderBackend;
 static const ui32 HorizontalMargin = 2;
 static const ui32 VerticalMargin = 2;
 
-OsreEdApp::UiScreen::UiScreen() :
-        m_canvas( nullptr ),
-        m_mainPanel( nullptr ),
-        m_logPanel( nullptr ),
-        m_modelPanel( nullptr ) {
-    // empty
-}
-
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         AppBase(argc, (const char **)argv, "api", "The render API"),
-        mUiScreen(),
         mModuleArray(),
         mModulePathArray(),
         mTrackBall( nullptr ){
@@ -79,31 +70,13 @@ bool OsreEdApp::loadModules() {
     return true;
 }
 
-UI::Panel *OsreEdApp::getRootPanel() const {
-    return mUiScreen.m_mainPanel;
-}
-
 bool OsreEdApp::onCreate() {
     if (!AppBase::onCreate()) {
         return false;
     }
 
-    //registerModule(new InspectorModule());
+    registerModule(new InspectorModule());
     //loadModules();
-
-    /*Rect2ui r;
-    AppBase::getRootWindow()->getWindowsRect(r);*/
-    /*mUiScreen.m_canvas = AppBase::createScreen("OsreEd");
-    mUiScreen.m_canvas->setRect(r);
-
-    mUiScreen.m_mainPanel = new UI::Panel("main_panel", mUiScreen.m_canvas);
-    mUiScreen.m_mainPanel->setRect(r);
-    mUiScreen.m_logPanel = new UI::Panel("log_panel", mUiScreen.m_mainPanel);
-    mUiScreen.m_logPanel->setHeadline("Log");
-    mUiScreen.m_logPanel->setRect(r.getX1() + HorizontalMargin, r.getY1() + r.getHeight() / 3, 
-        r.getWidth() - 2 * HorizontalMargin, r.getHeight() - (r.getY1() + r.getHeight() / 3) - 2 * VerticalMargin);
-    mUiScreen.m_modelPanel = new UI::Panel("model_panel", mUiScreen.m_mainPanel);
-    mUiScreen.m_modelPanel->setHeadline("Model");*/
 
     AppBase::setWindowsTitle("OSRE ED! Press o to import an Asset");
 
@@ -139,6 +112,9 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     world->addEntity(entity);
     m_view->observeBoundingBox(entity->getAABB());
     m_modelNode = entity->getNode();
+
+    std::string model = modelLoc.getResource();
+    getRootWindow()->setWindowsTitle("Model " + model);
 }
 
 void OsreEdApp::onUpdate() {
