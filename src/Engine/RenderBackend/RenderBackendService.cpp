@@ -478,12 +478,14 @@ void RenderBackendService::clearPasses() {
     m_frameCreated = false;
 }
 
-void RenderBackendService::attachView() {
+void RenderBackendService::attachView() {    
 }
 
 void RenderBackendService::resize(ui32 x, ui32 y, ui32 w, ui32 h) {
-    ResizeEventData *data = new ResizeEventData(x, y, w, h);
-    m_renderTaskPtr->sendEvent(&OnResizeEvent, data);
+    if (mBehaviour.ResizeViewport) {
+        ResizeEventData *data = new ResizeEventData(x, y, w, h);
+        m_renderTaskPtr->sendEvent(&OnResizeEvent, data);
+    }
 
     if (m_screen != nullptr) {
         m_screen->resize(x, y, w, h);

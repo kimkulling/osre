@@ -218,7 +218,7 @@ void Win32Window::onResize(ui32 x, ui32 y, ui32 w, ui32 h) {
     }
 
     ::MoveWindow(m_wnd, x, y, w, h, TRUE);
-    WindowsProperties *props(AbstractWindow::getProperties());
+    WindowsProperties *props = AbstractWindow::getProperties();
     if (nullptr != props) {
         props->m_x = x;
         props->m_y = y;

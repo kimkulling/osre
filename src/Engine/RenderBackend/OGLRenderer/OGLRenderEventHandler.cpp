@@ -159,12 +159,14 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
     bool result = false;
     m_renderCtx = PlatformInterface::getInstance()->getRenderContext();
 
-    if (nullptr != m_renderCtx) {
-        result = m_renderCtx->create(activeSurface);
-        if (!result) {
-            osre_debug(Tag, "Cannot create render-context.");
-            return false;
-        }
+    if (nullptr == m_renderCtx) {
+        osre_debug(Tag, "Rendercontext is nullptr.");
+        return result;
+    }
+        
+    if (!m_renderCtx->create(activeSurface)) {
+        osre_debug(Tag, "Cannot create render-context.");
+        return false;
     }
 
     m_oglBackend->create(m_renderCtx);
@@ -386,8 +388,6 @@ bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData)
 }
 
 bool OGLRenderEventHandler::onShutdownRequest(const Common::EventData *eventData) {
-    OSRE_ASSERT(nullptr != eventData);
-
     m_isRunning = false;
 
     return true;
@@ -397,11 +397,13 @@ bool OGLRenderEventHandler::onResizeRenderTarget(const Common::EventData *eventD
     OSRE_ASSERT(nullptr != eventData);
 
     ResizeEventData *data = (ResizeEventData *)eventData;
-    const ui32 x(data->m_x);
-    const ui32 y(data->m_y);
-    const ui32 w(data->m_w);
-    const ui32 h(data->m_h);
-    m_oglBackend->setViewport(x, y, w, h);
+    if (nullptr != data) {
+        const ui32 x = data->m_x;
+        const ui32 y = data->m_y;
+        const ui32 w = data->m_w;
+        const ui32 h = data->m_h;
+        m_oglBackend->setViewport(x, y, w, h);
+    }
 
     return true;
 }

@@ -123,6 +123,8 @@ bool OsreEdApp::onCreate() {
         AddFileMenus(w->getHWnd());
     }
 
+    AppBase::getRenderBackendService()->setBehaviour(false);
+
     return true;
 }
 
