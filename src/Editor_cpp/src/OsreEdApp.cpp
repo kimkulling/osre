@@ -13,6 +13,8 @@
 #include <osre/IO/Uri.h>
 #include <osre/App/Entity.h>
 
+#include "Engine/Platform/win32/Win32Window.h"
+
 namespace OSRE {
 namespace Editor {
 
@@ -21,6 +23,42 @@ using namespace ::OSRE::RenderBackend;
 
 static const ui32 HorizontalMargin = 2;
 static const ui32 VerticalMargin = 2;
+
+#ifdef OSRE_WINDOWS
+
+#define IDM_FILE_NEW 1
+#define IDM_FILE_OPEN 2
+#define IDM_FILE_SAVE 3
+#define IDM_FILE_IMPORT 4
+#define IDM_FILE_QUIT 5
+
+#define IDM_INFO_VERSION 6
+
+void AddFileMenus(HWND hwnd) {
+    HMENU hMenubar;
+    HMENU hMenu;
+
+    hMenubar = CreateMenu();
+    hMenu = CreateMenu();
+
+    AppendMenuW(hMenu, MF_STRING, IDM_FILE_NEW, L"&New");
+    AppendMenuW(hMenu, MF_STRING, IDM_FILE_OPEN, L"&Open Project");
+    AppendMenuW(hMenu, MF_STRING, IDM_FILE_SAVE, L"&Save Project");
+    AppendMenuW(hMenu, MF_SEPARATOR, 0, NULL);
+    AppendMenuW(hMenu, MF_STRING, IDM_FILE_OPEN, L"&Import");
+    AppendMenuW(hMenu, MF_SEPARATOR, 0, NULL);
+    AppendMenuW(hMenu, MF_STRING, IDM_FILE_QUIT, L"&Quit");
+
+    AppendMenuW(hMenubar, MF_POPUP, (UINT_PTR)hMenu, L"&File");
+
+    hMenu = CreateMenu();
+    AppendMenuW(hMenu, MF_STRING, IDM_INFO_VERSION, L"&Version");
+    AppendMenuW(hMenubar, MF_POPUP, (UINT_PTR)hMenu, L"&Info");
+
+    SetMenu(hwnd, hMenubar);
+}
+
+#endif // OSRE_WINDOWS
 
 OsreEdApp::UiScreen::UiScreen() :
         m_canvas( nullptr ),
@@ -106,6 +144,11 @@ bool OsreEdApp::onCreate() {
     mUiScreen.m_modelPanel->setHeadline("Model");*/
 
     AppBase::setWindowsTitle("OSRE ED! Press o to import an Asset");
+
+    Platform::Win32Window *w = (Platform::Win32Window *)getRootWindow();
+    if (nullptr != w) {
+        AddFileMenus(w->getHWnd());
+    }
 
     return true;
 }
