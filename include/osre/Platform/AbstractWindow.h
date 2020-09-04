@@ -107,6 +107,10 @@ public:
     /// @return true will be returned, when creation was successful.
     virtual bool create();
 
+    /// @brief  Will return true, if the window is already created.
+    /// @return The creation state.
+    virtual bool isCeated() const;
+
     /// @brief  Will destroy the surface.
     /// @return true will be returned, when creation was successful.
     virtual bool destroy();
@@ -153,10 +157,9 @@ protected:
     virtual void onResize(ui32 x, ui32 y, ui32 w, ui32 h) = 0;
 
 private:
-    ui32 m_flags;
-    WindowsProperties *m_properties;
-    bool m_isCreated;
-    void *mIcon;
+    ui32 mFlags;
+    WindowsProperties *mProperties;
+    bool mIsCreated;
 };
 
 } // Namespace Platform

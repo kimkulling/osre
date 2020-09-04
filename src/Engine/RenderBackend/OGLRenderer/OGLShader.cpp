@@ -23,105 +23,105 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLShader.h"
 #include "OGLEnum.h"
 #include <osre/Common/Logger.h>
-#include <osre/IO/Stream.h>
 #include <osre/Debugging/osre_debugging.h>
+#include <osre/IO/Stream.h>
 
 namespace OSRE {
 namespace RenderBackend {
 
-static const GLint  ErrorId = -1;
-static const String Tag     = "OGLShader";
+static const GLint ErrorId = -1;
+static const String Tag = "OGLShader";
 
-OGLShader::OGLShader( const String &name )
-: Object( name )
-, m_attribParams()
-, m_uniformParams()
-, m_shaderprog( 0 )
-, m_numShader( 0 )
-, m_attributeMap()
-, m_uniformLocationMap()
-, m_isCompiledAndLinked( false )
-, m_isInUse( false ) {
-    ::memset( m_shaders, 0, sizeof( unsigned int ) * 3 );
+OGLShader::OGLShader(const String &name) :
+        Object(name),
+        m_attribParams(),
+        m_uniformParams(),
+        m_shaderprog(0),
+        m_numShader(0),
+        m_attributeMap(),
+        m_uniformLocationMap(),
+        m_isCompiledAndLinked(false),
+        m_isInUse(false) {
+    ::memset(m_shaders, 0, sizeof(unsigned int) * 3);
 }
 
-OGLShader::~OGLShader( ) {
-    if ( m_isInUse ) {
+OGLShader::~OGLShader() {
+    if (m_isInUse) {
         osre_warn(Tag, "Destroying shader which is still in use.");
     }
 
-    CPPCore::ContainerClear( m_attribParams );
-    CPPCore::ContainerClear( m_uniformParams );
-    for ( ui32 i=0; i<3; ++i ) {
-        if ( 0 != m_shaders[ i ] ) {
-            glDeleteShader( m_shaders[ i ] );
-            m_shaders[ i ] = 0;
+    CPPCore::ContainerClear(m_attribParams);
+    CPPCore::ContainerClear(m_uniformParams);
+    for (ui32 i = 0; i < 3; ++i) {
+        if (0 != m_shaders[i]) {
+            glDeleteShader(m_shaders[i]);
+            m_shaders[i] = 0;
         }
     }
 
-    if ( 0 != m_shaderprog ) {
-        glDeleteProgram( m_shaderprog );
+    if (0 != m_shaderprog) {
+        glDeleteProgram(m_shaderprog);
         m_shaderprog = 0;
     }
 }
 
-bool OGLShader::loadFromSource( ShaderType type, const String &src ) {
-    if ( src.empty() ) {
+bool OGLShader::loadFromSource(ShaderType type, const String &src) {
+    if (src.empty()) {
         return false;
     }
-    GLuint shader = glCreateShader( OGLEnum::getOGLShaderType( type ) );
-    m_shaders[ static_cast<int>( type ) ] = shader;
+    GLuint shader = glCreateShader(OGLEnum::getOGLShaderType(type));
+    m_shaders[static_cast<int>(type)] = shader;
 
     const char *tmp = src.c_str();
-    glShaderSource( shader, 1, &tmp, nullptr );
+    glShaderSource(shader, 1, &tmp, nullptr);
 
     return true;
 }
 
-bool OGLShader::loadFromStream( ShaderType type, IO::Stream &stream ) {
-    if ( !stream.isOpen() ) {
+bool OGLShader::loadFromStream(ShaderType type, IO::Stream &stream) {
+    if (!stream.isOpen()) {
         return false;
     }
 
-    const ui32 filesize( stream.getSize() );
-    if ( 0 == filesize ) {
+    const ui32 filesize(stream.getSize());
+    if (0 == filesize) {
         return true;
     }
 
-    c8 *data = new c8[ filesize ];
-    stream.read( data, filesize);
-    
-    const bool retCode( loadFromSource( type, String( data ) ) );
-    delete [] data;
+    c8 *data = new c8[filesize];
+    stream.read(data, filesize);
+
+    const bool retCode(loadFromSource(type, String(data)));
+    delete[] data;
 
     return retCode;
 }
 
 bool OGLShader::createAndLink() {
-	if ( isCompiled() ) {
-		osre_info(Tag, "Trying to compile shader program, which was compiled before.");
-		return true;
-	}
-    
-	m_shaderprog = glCreateProgram();
-    if ( 0 == m_shaderprog ) {
-        osre_error( Tag, "Error while creating shader program." );
-        return false;
-    }
-    if ( 0 != m_shaders[ static_cast<i32>( ShaderType::SH_VertexShaderType ) ] ) {
-        glAttachShader( m_shaderprog, m_shaders[ static_cast<i32>( ShaderType::SH_VertexShaderType  )] );
-    }
-    if ( 0 != m_shaders[ static_cast<i32>( ShaderType::SH_FragmentShaderType ) ] ) {
-        glAttachShader( m_shaderprog, m_shaders[ static_cast<i32>( ShaderType::SH_FragmentShaderType ) ] );
-    }
-    if ( 0 != m_shaders[ static_cast<i32>( ShaderType::SH_GeometryShaderType  ) ] ) {
-        glAttachShader( m_shaderprog, m_shaders[ static_cast<i32>( ShaderType::SH_GeometryShaderType ) ] );
+    if (isCompiled()) {
+        osre_info(Tag, "Trying to compile shader program, which was compiled before.");
+        return true;
     }
 
-    bool result( true );
-    GLint status( 0 );
-    glLinkProgram( m_shaderprog );
-    glGetProgramiv( m_shaderprog, GL_LINK_STATUS, &status );
+    m_shaderprog = glCreateProgram();
+    if (0 == m_shaderprog) {
+        osre_error(Tag, "Error while creating shader program.");
+        return false;
+    }
+    if (0 != m_shaders[static_cast<i32>(ShaderType::SH_VertexShaderType)]) {
+        glAttachShader(m_shaderprog, m_shaders[static_cast<i32>(ShaderType::SH_VertexShaderType)]);
+    }
+    if (0 != m_shaders[static_cast<i32>(ShaderType::SH_FragmentShaderType)]) {
+        glAttachShader(m_shaderprog, m_shaders[static_cast<i32>(ShaderType::SH_FragmentShaderType)]);
+    }
+    if (0 != m_shaders[static_cast<i32>(ShaderType::SH_GeometryShaderType)]) {
+        glAttachShader(m_shaderprog, m_shaders[static_cast<i32>(ShaderType::SH_GeometryShaderType)]);
+    }
+
+    bool result(true);
+    GLint status(0);
+    glLinkProgram(m_shaderprog);
+    glGetProgramiv(m_shaderprog, GL_LINK_STATUS, &status);
     if (status == GL_FALSE) {
         logCompileOrLinkError(m_shaderprog);
         result = false;
@@ -134,138 +134,150 @@ bool OGLShader::createAndLink() {
     return result;
 }
 
-void OGLShader::use( ) {
-	m_isInUse = true;
-    glUseProgram( m_shaderprog );
+void OGLShader::use() {
+    m_isInUse = true;
+    glUseProgram(m_shaderprog);
 }
 
 void OGLShader::unuse() {
-	m_isInUse = false;
-    glUseProgram( 0 );
+    m_isInUse = false;
+    glUseProgram(0);
 }
 
-bool OGLShader::hasAttribute( const String& attribute ) {
-    if ( 0 == m_shaderprog ) {
+bool OGLShader::hasAttribute(const String &attribute) {
+    if (0 == m_shaderprog) {
         return false;
     }
 
-    const GLint location = glGetAttribLocation( m_shaderprog, attribute.c_str() );
+    const GLint location = glGetAttribLocation(m_shaderprog, attribute.c_str());
     return -1 != location;
 }
 
-void OGLShader::addAttribute( const String& attribute ) {
-    const GLint location = glGetAttribLocation( m_shaderprog, attribute.c_str( ) );
-    m_attributeMap[ attribute ] = location;
-    if( ErrorId == location ) {
-        osre_debug( Tag, "Cannot find attribute " + attribute + " in shader." );
+void OGLShader::addAttribute(const String &attribute) {
+    const GLint location = glGetAttribLocation(m_shaderprog, attribute.c_str());
+    m_attributeMap[attribute] = location;
+    if (ErrorId == location) {
+        osre_debug(Tag, "Cannot find attribute " + attribute + " in shader.");
     }
 }
 
-bool OGLShader::hasUniform( const String& uniform ) {
-    if ( 0 == m_shaderprog ) {
+bool OGLShader::hasUniform(const String &uniform) {
+    if (0 == m_shaderprog) {
         return false;
     }
-    const GLint location = glGetUniformLocation( m_shaderprog, uniform.c_str() );
+    const GLint location = glGetUniformLocation(m_shaderprog, uniform.c_str());
     return -1 != location;
 }
 
-void OGLShader::addUniform( const String& uniform ) {
-    const GLint location = glGetUniformLocation( m_shaderprog, uniform.c_str( ) );
-    m_uniformLocationMap[ uniform ] = location;
-    if( ErrorId == location ) {
-        osre_debug( Tag, "Cannot find uniform variable " + uniform + " in shader." );
+void OGLShader::addUniform(const String &uniform) {
+    const GLint location = glGetUniformLocation(m_shaderprog, uniform.c_str());
+    m_uniformLocationMap[uniform] = location;
+    if (ErrorId == location) {
+        osre_debug(Tag, "Cannot find uniform variable " + uniform + " in shader.");
     }
 }
 
-
-static i32 getActiveParam( ui32 progId, GLenum type ) {
-    if ( 0 == progId ) {
+static i32 getActiveParam(ui32 progId, GLenum type) {
+    if (0 == progId) {
         return -1;
     }
 
-    i32 params( -1 );
-    glGetProgramiv( progId, type, &params );
-    
+    i32 params(-1);
+    glGetProgramiv(progId, type, &params);
+
     return params;
 }
 
 void OGLShader::getActiveAttributeList() {
-    const i32 numAtttibs( getActiveParam( m_shaderprog, GL_ACTIVE_ATTRIBUTES ) );
-    if ( numAtttibs < 1 ) {
+    const i32 numAtttibs(getActiveParam(m_shaderprog, GL_ACTIVE_ATTRIBUTES));
+    if (numAtttibs < 1) {
         return;
     }
-    
-    for ( i32 i = 0; i < numAtttibs; i++ ) {
-        GLint actual_length( 0 ), size( 0 );
+
+    for (i32 i = 0; i < numAtttibs; i++) {
+        GLint actual_length(0), size(0);
         GLenum type;
-        c8 name[ MaxLen ];
-        glGetActiveAttrib( m_shaderprog, i, MaxLen, &actual_length, &size, &type, name );
-        if ( size > 1 ) {
-            for ( i32 attribIdx = 0; attribIdx < size; attribIdx++ ) {
+        c8 name[MaxLen];
+        glGetActiveAttrib(m_shaderprog, i, MaxLen, &actual_length, &size, &type, name);
+        if (size > 1) {
+            for (i32 attribIdx = 0; attribIdx < size; attribIdx++) {
                 ActiveParameter *attribParam = new ActiveParameter;
                 std::stringstream stream;
                 stream << name << attribIdx;
-                strncpy( attribParam->m_name, stream.str().c_str(), stream.str().size() );
-                attribParam->m_location = glGetAttribLocation( m_shaderprog, attribParam->m_name );
-                m_attribParams.add( attribParam );
+                strncpy(attribParam->m_name, stream.str().c_str(), stream.str().size());
+                attribParam->m_location = glGetAttribLocation(m_shaderprog, attribParam->m_name);
+                m_attribParams.add(attribParam);
             }
         } else {
             ActiveParameter *attribParam = new ActiveParameter;
-            strncpy( attribParam->m_name, name, strlen( name ) );
-            attribParam->m_location = glGetAttribLocation( m_shaderprog, attribParam->m_name );
-            m_attribParams.add( attribParam );
+            strncpy(attribParam->m_name, name, strlen(name));
+            attribParam->m_location = glGetAttribLocation(m_shaderprog, attribParam->m_name);
+            m_attribParams.add(attribParam);
         }
     }
 }
 
 void OGLShader::getActiveUniformList() {
-    const i32 numUniforms( getActiveParam( m_shaderprog, GL_ACTIVE_UNIFORMS ) );
-    if ( numUniforms < 1 ) {
+    const i32 numUniforms(getActiveParam(m_shaderprog, GL_ACTIVE_UNIFORMS));
+    if (numUniforms < 1) {
         return;
     }
 
-    for ( i32 i = 0; i < numUniforms; i++ ) {
-        GLint actual_length( 0 ), size( 0 );
+    for (i32 i = 0; i < numUniforms; i++) {
+        GLint actual_length(0), size(0);
         GLenum type;
-        c8 name[ MaxLen ];
-        ::memset(name, '\0', sizeof(c8)*MaxLen);
-        glGetActiveUniform( m_shaderprog, i, MaxLen, &actual_length, &size, &type, name );
+        c8 name[MaxLen];
+        ::memset(name, '\0', sizeof(c8) * MaxLen);
+        glGetActiveUniform(m_shaderprog, i, MaxLen, &actual_length, &size, &type, name);
         ActiveParameter *attribParam = new ActiveParameter;
-        strncpy( attribParam->m_name, name, strlen( name ) );
-        attribParam->m_location = glGetUniformLocation( m_shaderprog, name );
-        m_attribParams.add( attribParam );        
+        strncpy(attribParam->m_name, name, strlen(name));
+        attribParam->m_location = glGetUniformLocation(m_shaderprog, name);
+        m_attribParams.add(attribParam);
     }
 }
 
-void OGLShader::logCompileOrLinkError( ui32 shaderprog ) {
-    GLint infoLogLength( 0 );
-    glGetProgramiv( shaderprog, GL_INFO_LOG_LENGTH, &infoLogLength);
-    GLchar *infoLog= new GLchar[infoLogLength];
-    ::memset( infoLog, 0, infoLogLength );
-    glGetProgramInfoLog( shaderprog, infoLogLength, NULL, infoLog);
-    String error( infoLog );
-    osre_debug( Tag, "Link log: " + error + "\n" );
-    delete [] infoLog;
+void OGLShader::logCompileOrLinkError(ui32 shaderprog) {
+    GLint infoLogLength(0);
+    glGetProgramiv(shaderprog, GL_INFO_LOG_LENGTH, &infoLogLength);
+    GLchar *infoLog = new GLchar[infoLogLength];
+    ::memset(infoLog, 0, infoLogLength);
+    glGetProgramInfoLog(shaderprog, infoLogLength, NULL, infoLog);
+    String error(infoLog);
+    osre_debug(Tag, "Link log: " + error + "\n");
+    delete[] infoLog;
 }
 
 bool OGLShader::isCompiled() const {
     return m_isCompiledAndLinked;
 }
 
-GLint OGLShader::operator[] ( const String &attribute ) {
-    const GLint loc( m_attributeMap[ attribute ] );
+GLint OGLShader::getAttributeLocation(const String &attribute) {
+    const GLint loc(m_attributeMap[attribute]);
     return loc;
 }
 
-GLint OGLShader::operator() ( const String &uniform ) {
-	std::map<String, GLint>::iterator it( m_uniformLocationMap.find( uniform ) );
-	if (m_uniformLocationMap.end() == it ) {
-		osre_error(Tag, "Cannot find uniform " + uniform + ".");
-	}
-    const GLint loc( m_uniformLocationMap[ uniform ] );
+GLint OGLShader::getUniformLocation(const String &uniform) {
+    std::map<String, GLint>::iterator it(m_uniformLocationMap.find(uniform));
+    if (m_uniformLocationMap.end() == it) {
+        osre_error(Tag, "Cannot find uniform " + uniform + ".");
+    }
+    const GLint loc(m_uniformLocationMap[uniform]);
     return loc;
 }
+
+/*GLint OGLShader::operator[](const String &attribute) {
+    const GLint loc(m_attributeMap[attribute]);
+    return loc;
+}
+
+GLint OGLShader::operator()(const String &uniform) {
+    std::map<String, GLint>::iterator it(m_uniformLocationMap.find(uniform));
+    if (m_uniformLocationMap.end() == it) {
+        osre_error(Tag, "Cannot find uniform " + uniform + ".");
+    }
+    const GLint loc(m_uniformLocationMap[uniform]);
+    return loc;
+}*/
 
 } // Namespace RenderBackend
 } // Namespace OSRE
-

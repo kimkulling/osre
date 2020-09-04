@@ -148,8 +148,8 @@ bool DX11RenderEventHandler::onCreateRenderer(const EventData *eventData) {
         glm::mat4 view;
         glm::mat4 projection;
     };
-    BufferData *data = BufferData::alloc(BufferType::ConstantBuffer, sizeof(MatrixBuffer), BufferAccessType::ReadWrite);
-    m_matrixBuffer = m_dx11Backend->createBuffer(BufferType::ConstantBuffer, data, BufferAccessType::ReadWrite);
+    BufferData *data = BufferData::alloc(BufferType::UniformBuffer, sizeof(MatrixBuffer), BufferAccessType::ReadWrite);
+    m_matrixBuffer = m_dx11Backend->createBuffer(BufferType::UniformBuffer, data, BufferAccessType::ReadWrite);
 
     return result;
 }

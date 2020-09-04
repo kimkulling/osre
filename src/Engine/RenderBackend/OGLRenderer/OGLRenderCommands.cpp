@@ -96,7 +96,6 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
             TArray<OGLTexture *> textures;
             setupTextures(material, rb, textures);
             OGLRenderCmd *renderMatCmd = new OGLRenderCmd(OGLRenderCmdType::SetMaterialCmd);
-            //OGLRenderCmdAllocator::alloc(OGLRenderCmdType::SetMaterialCmd, nullptr);
             if (!textures.isEmpty()) {
                 matData->m_textures = textures;
             }

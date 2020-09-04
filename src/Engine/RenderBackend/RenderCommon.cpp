@@ -423,17 +423,35 @@ TextureResource::onUnload(TextureLoader &loader) {
 }
 
 Material::Material(const String &name) :
-        m_name(name), m_type(MaterialType::ShaderMaterial), m_numTextures(0), m_textures(nullptr), m_shader(nullptr), m_numParameters(0), m_parameters(nullptr), m_uri() {
+        m_name(name),
+        m_type(MaterialType::ShaderMaterial),
+        m_numTextures(0),
+        m_textures(nullptr),
+        m_shader(nullptr),
+        m_numParameters(0),
+        m_parameters(nullptr),
+        mShineness(0.0f),
+        mShinenessStrength(0.0f),
+        m_uri() {
     // empty
 }
 
 //Material(const String &name, );
 Material::Material(const String &name, const IO::Uri &uri) :
-        m_name(name), m_type(MaterialType::ShaderMaterial), m_numTextures(0), m_textures(nullptr), m_shader(nullptr), m_numParameters(0), m_parameters(nullptr), m_uri(uri) {
+        m_name(name),
+        m_type(MaterialType::ShaderMaterial),
+        m_numTextures(0),
+        m_textures(nullptr),
+        m_shader(nullptr),
+        m_numParameters(0),
+        m_parameters(nullptr),
+        mShineness(0.0f),
+        mShinenessStrength(0.0f),
+        m_uri(uri) {
     // empty
 }
 
-void Material::setMaterialType( MaterialType matType ) {
+void Material::setMaterialType(MaterialType matType) {
     m_type = matType;
 }
 

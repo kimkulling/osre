@@ -63,42 +63,46 @@ Resolution::~Resolution() {
 }
 
 AbstractWindow::AbstractWindow( WindowsProperties *properties ) :
-        m_flags((ui32)SurfaceFlagType::SF_PropertiesClean), m_properties( properties )
-, m_isCreated( false ) {
+        mFlags((ui32)SurfaceFlagType::SF_PropertiesClean), mProperties( properties )
+, mIsCreated( false ) {
     // empty    
 }
 
 AbstractWindow::~AbstractWindow( ) {
-    delete m_properties;
-    m_properties = nullptr;
+    delete mProperties;
+    mProperties = nullptr;
 }
 
 bool AbstractWindow::create( ) {
-    if ( m_isCreated ) {
+    if ( mIsCreated ) {
         osre_warn( Tag, "Surface already created." );
         return true;
     }
 
-    m_isCreated = onCreate();
+    mIsCreated = onCreate();
 
-    return m_isCreated;
+    return mIsCreated;
 }
 
 bool AbstractWindow::destroy( ) {
-    if ( !m_isCreated ) {
+    if ( !mIsCreated ) {
         osre_warn( Tag, "Surface not valid, cannot be destoyed." );
         return false;
     }
     
     if ( onDestroy() ) {
-        m_isCreated = false;
+        mIsCreated = false;
     }
 
-    return ( false == m_isCreated );
+    return ( false == mIsCreated );
+}
+
+bool AbstractWindow::isCeated() const {
+    return mIsCreated;
 }
 
 void AbstractWindow::resize( ui32 x, ui32 y, ui32 w, ui32 h ) {
-    if ( !m_isCreated ) {
+    if ( !mIsCreated ) {
         osre_warn( Tag, "Surface not valid, cannot be resized." );
         return;
     }
@@ -111,30 +115,30 @@ bool AbstractWindow::updateProperties() {
 }
 
 void AbstractWindow::setFlags( SurfaceFlagType flags ) {
-    if ( m_flags == static_cast<ui32>( flags ) ) {
+    if ( mFlags == static_cast<ui32>( flags ) ) {
         return;
     }
-    m_flags = (ui32)flags;
+    mFlags = (ui32)flags;
 }
 
 ui32 AbstractWindow::getFlags() const {
-    return m_flags;
+    return mFlags;
 }
 
 void AbstractWindow::setProperties( WindowsProperties *pProperties ) {
-    m_properties = pProperties;
+    mProperties = pProperties;
 }
 
 WindowsProperties *AbstractWindow::getProperties( ) {
-    return m_properties;
+    return mProperties;
 }
 
 void AbstractWindow::getWindowsRect(Rect2ui &rect) const {
-    if (nullptr == m_properties) {
+    if (nullptr == mProperties) {
         return;
     }
 
-    rect.set(m_properties->m_x, m_properties->m_y, m_properties->m_width, m_properties->m_height);
+    rect.set(mProperties->m_x, mProperties->m_y, mProperties->m_width, mProperties->m_height);
 }
 
 } // Namespace Platform

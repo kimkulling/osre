@@ -58,7 +58,7 @@ enum class BufferType {
     VertexBuffer, ///< Vertex buffer, stores vertex data inside.
     IndexBuffer, ///< Index buffer, stores indices inside.
     InstanceBuffer, ///< Instance buffer, will store instance-specific data.
-    ConstantBuffer, ///< Uniform buffer, used for structured uniform data.
+    UniformBuffer, ///< Uniform buffer, used for structured uniform data.
     NumBufferTypes, ///< Number of enums.
 
     InvalidBufferType ///< Enum for invalid enum.
@@ -487,6 +487,8 @@ struct OSRE_EXPORT Material {
     ui32 m_numParameters;
     UniformVar *m_parameters;
     Color4 m_color[MaxMatColorType];
+    f32 mShineness;
+    f32 mShinenessStrength; 
     IO::Uri m_uri;
 
     Material(const String &name);
