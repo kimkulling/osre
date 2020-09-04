@@ -149,9 +149,11 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
         return false;
     }
 
-    if (!activeSurface->create()) {
-        osre_debug(Tag, "Cannot create active surface.");
-        return false;
+    if (!activeSurface->isCeated()) {
+        if (!activeSurface->create()) {
+            osre_debug(Tag, "Cannot create active surface.");
+            return false;
+        }
     }
 
     bool result = false;
