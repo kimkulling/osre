@@ -391,7 +391,7 @@ ui32 translateVBEnum2DX11(BufferType type) {
             return D3D11_BIND_VERTEX_BUFFER;
         case BufferType::IndexBuffer:
             return D3D11_BIND_INDEX_BUFFER;
-        case BufferType::ConstantBuffer:
+        case BufferType::UniformBuffer:
             return D3D11_BIND_CONSTANT_BUFFER;
         default:
             break;

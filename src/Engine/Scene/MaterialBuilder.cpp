@@ -101,6 +101,44 @@ const String RVLightVS =
     "}\n";
 
 const String GLSLVsSrcRV =
+        GLSLVersionString_400 +
+        "\n" + GLSLRenderVertexLayout +
+        "\n"
+        "// output from the vertex shader\n"
+        "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
+        "smooth out vec2 vUV;\n"
+        "\n" +
+        GLSLCombinedMVPUniformSrc +
+        "\n"
+        "void main()\n"
+        "{\n"
+        "    //assign the per-vertex color to vSmoothColor varying\n"
+        "    vSmoothColor = vec4(color0,1);\n"
+        "\n"
+        "    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
+        "    //vertex position\n"
+        "    gl_Position = MVP*vec4(position,1);\n"
+        "    vSmoothColor = vec4( color0, 1 );\n"
+        "    vUV = texcoord0;\n"
+        "}\n";
+
+const String GLSLFsSrcRV =
+        GLSLVersionString_400 +
+        "\n"
+        "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
+        "\n"
+        "//input form the vertex shader\n"
+        "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
+        "smooth in vec2 vUV;\n"
+        "uniform sampler2D tex0;\n"
+        "\n"
+        "void main()\n"
+        "{\n"
+        "    // set the interpolated color as the shader output\n"
+        "    vFragColor = texture( tex0, vUV );\n"
+        "}\n";
+
+const String GLSLVsSrcRV_Editor =
     GLSLVersionString_400 +
     "\n"
 	+ GLSLRenderVertexLayout +
@@ -128,7 +166,7 @@ const String GLSLVsSrcRV =
     "    TexCoord = texcoord0;\n"
     "}\n";
 
-const String GLSLFsSrcRV =
+const String GLSLFsSrcRV_Editor =
     GLSLVersionString_400 +
     "\n"
     "layout(location=0) out vec4 FragColor; //fragment shader output\n"

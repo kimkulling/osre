@@ -150,7 +150,7 @@ public:
 	void setFixedPipelineStates(const RenderStates &states);
     void setExtensions(const String &extensions);
     const String &getExtensions() const;
-
+    
 private:
 	Platform::AbstractOGLRenderContext *m_renderCtx;
 	CPPCore::TArray<OGLBuffer*> m_buffers;

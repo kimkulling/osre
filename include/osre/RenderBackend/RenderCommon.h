@@ -58,7 +58,7 @@ enum class BufferType {
     VertexBuffer, ///< Vertex buffer, stores vertex data inside.
     IndexBuffer, ///< Index buffer, stores indices inside.
     InstanceBuffer, ///< Instance buffer, will store instance-specific data.
-    ConstantBuffer, ///< Uniform buffer, used for structured uniform data.
+    UniformBuffer, ///< Uniform buffer, used for structured uniform data.
     NumBufferTypes, ///< Number of enums.
 
     InvalidBufferType ///< Enum for invalid enum.
