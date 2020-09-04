@@ -290,6 +290,8 @@ bool RenderCmdBuffer::onDrawPanelCmd(DrawPanelsCmdData *data) {
     m_renderbackend->useShader(m_2dShader); 
     for (size_t i = 0; i < data->mNumPanels; ++i) {
     }
+
+    return true;
 }
 
 bool RenderCmdBuffer::onSetRenderTargetCmd(SetRenderTargetCmdData *) {

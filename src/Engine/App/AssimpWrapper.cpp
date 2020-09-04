@@ -463,11 +463,11 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
     ai_real shininess, strength;
     unsigned int max; // changed: to unsigned
     if (AI_SUCCESS == aiGetMaterialFloatArray(material, AI_MATKEY_SHININESS, &shininess, &max)) {
-        // todo
+        osreMat->mShineness = shininess;
     }
 
     if (AI_SUCCESS == aiGetMaterialFloatArray(material, AI_MATKEY_SHININESS_STRENGTH, &strength, &max)) {
-        // todo
+        osreMat->mShinenessStrength = strength;
     }
 }
 

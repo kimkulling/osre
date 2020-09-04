@@ -38,7 +38,6 @@ public:
     bool addModulePath(const String &path);
     bool registerModule(ModuleBase *mod);
     bool loadModules();
-    UI::Panel *getRootPanel() const;
     void loadAsset(const IO::Uri &modelLoc);
     bool hasModel() const {
         return m_modelNode.isValid();
@@ -50,15 +49,6 @@ protected:
     bool onDestroy() override;
 
 private:
-    struct UiScreen {
-        UI::Canvas *m_canvas;
-        UI::Panel  *m_mainPanel;
-        UI::Panel  *m_logPanel;
-        UI::Panel  *m_modelPanel;
-
-        UiScreen();
-    };
-    UiScreen mUiScreen;
     ModuleArray mModuleArray;
     ModulePathArray mModulePathArray;
 

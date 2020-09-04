@@ -215,7 +215,7 @@ void RenderBackendService::commitNextFrame() {
                 FrameSubmitCmd *cmd = m_submitFrame->enqueue();
                 cmd->m_passId = currentPass->m_id;
                 cmd->m_batchId = currentBatch->m_id;
-                cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateMatrixes;
+                cmd->m_updateFlags |= (ui32) FrameSubmitCmd::UpdateMatrixes;
                 cmd->m_size = sizeof(MatrixBuffer);
                 cmd->m_data = new c8[cmd->m_size];
                 ::memcpy(cmd->m_data, &currentBatch->m_matrixBuffer, cmd->m_size);

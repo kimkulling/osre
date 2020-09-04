@@ -44,18 +44,6 @@ bool LogModule::onLoad(OsreEdApp *parent) {
         return true;
     }
 
-    Rect2ui r;
-    rootWindow->getWindowsRect(r);
-
-    mPanel = new Panel("log.panel", parent->getRootPanel());
-    mPanel->setHeadline("Log");
-
-    UI::Style &style = UI::StyleProvider::getCurrentStyle();
-    mPanel->setRect(r.getX1() + style.HorizontalMargin, 
-        r.getY1() + r.getHeight() / 3,
-        r.getWidth() - 2 * style.HorizontalMargin, 
-        r.getHeight() - (r.getY1() + r.getHeight() / 3) - 2 * style.VerticalMargin);
-
     return true;
 }
 
