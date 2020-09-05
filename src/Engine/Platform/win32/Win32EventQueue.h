@@ -62,7 +62,8 @@ public:
     void registerEventListener( const Common::EventPtrArray &events, OSEventListener *listener ) override;
     void unregisterEventListener( const Common::EventPtrArray &events, OSEventListener *listener ) override;
     void unregisterAllEventHandler(const Common::EventPtrArray &events) override;
-    static void registerEventQueue( Win32EventQueue *server, HWND hWnd );
+    void registerMenuCommands(ui32 id, MenuFunctor func) override;
+    static void registerEventQueue(Win32EventQueue *server, HWND hWnd);
     static void unregisterEventQueue( Win32EventQueue *server, HWND hWnd );
     static Win32EventQueue *getInstance( HWND hWnd );
 
@@ -71,14 +72,13 @@ protected:
 
 private:
     static std::map<HWND, Win32EventQueue*> s_WindowsServerMap;
+    static std::map<ui32, MenuFunctor> s_MenuFunctorMap;
     AbstractInputUpdate *m_updateInstance;
     Common::EventTriggerer *m_eventTriggerer;
     AbstractWindow *m_rootWindow;
     bool m_shutdownRequested;
     bool m_isPolling;
 };
-
-//-------------------------------------------------------------------------------------------------
 
 } // Namespace Platform
 } // Namespace OSRE

@@ -34,6 +34,7 @@ namespace Platform {
 using namespace ::OSRE::Common;
 
 std::map<HWND, Win32EventQueue*> Win32EventQueue::s_WindowsServerMap;
+std::map<ui32, MenuFunctor> Win32EventQueue::s_MenuFunctorMap;
 
 static const c8 *Tag = "Win32Eventhandler";
 
@@ -242,6 +243,7 @@ bool Win32EventQueue::update() {
     return !m_shutdownRequested;
 }
 
+
 LRESULT Win32EventQueue::winproc( HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam ) {
     Win32EventQueue *pEventHandler = Win32EventQueue::getInstance( hWnd );
     switch( Message ) {
@@ -270,6 +272,14 @@ LRESULT Win32EventQueue::winproc( HWND hWnd, UINT Message, WPARAM wParam, LPARAM
             ::PostQuitMessage( NULL );
             return 1;
         }
+
+        case WM_COMMAND:
+            ui32 id = LOWORD(wParam);
+            std::map<ui32, MenuFunctor>::iterator it = s_MenuFunctorMap.find(id);
+            if (it != s_MenuFunctorMap.end()) {
+                (it->second)(id, nullptr);
+            }
+        break;
     }
 
     return ::DefWindowProc( hWnd, Message, wParam, lParam );
@@ -378,6 +388,11 @@ void Win32EventQueue::unregisterAllEventHandler(const EventPtrArray &events) {
     }
 
     m_eventTriggerer->removeAllEventListeners(events);
+}
+
+void Win32EventQueue::registerMenuCommands( ui32 id, MenuFunctor func ) {
+    s_MenuFunctorMap[id] = func;
+    func.incRef();
 }
 
 } // Namespace Platform

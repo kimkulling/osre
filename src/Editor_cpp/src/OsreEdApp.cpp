@@ -2,24 +2,30 @@
 #include "Modules/ModuleBase.h"
 #include "Modules/InspectorModule/InspectorModule.h"
 #include <osre/Platform/AbstractWindow.h>
+#include <osre/Common/TCommand.h>
 #include <osre/Platform/PlatformOperations.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/TrackBall.h>
 #include <osre/App/AssimpWrapper.h>
+#include <osre/app/Project.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/Panel.h>
 #include <osre/IO/Directory.h>
 #include <osre/IO/Uri.h>
 #include <osre/App/Entity.h>
 
+#include <osre/Platform/PlatformInterface.h>
 #include "Engine/Platform/win32/Win32Window.h"
+#include "Engine/Platform/win32/Win32EventQueue.h"
 
 namespace OSRE {
 namespace Editor {
 
 using namespace ::OSRE::App;
+using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Platform;
 
 static const ui32 HorizontalMargin = 2;
 static const ui32 VerticalMargin = 2;
@@ -45,7 +51,7 @@ void AddFileMenus(HWND hwnd) {
     AppendMenuW(hMenu, MF_STRING, IDM_FILE_OPEN, L"&Open Project");
     AppendMenuW(hMenu, MF_STRING, IDM_FILE_SAVE, L"&Save Project");
     AppendMenuW(hMenu, MF_SEPARATOR, 0, NULL);
-    AppendMenuW(hMenu, MF_STRING, IDM_FILE_OPEN, L"&Import");
+    AppendMenuW(hMenu, MF_STRING, IDM_FILE_IMPORT, L"&Import Asset");
     AppendMenuW(hMenu, MF_SEPARATOR, 0, NULL);
     AppendMenuW(hMenu, MF_STRING, IDM_FILE_QUIT, L"&Quit");
 
@@ -64,7 +70,14 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         AppBase(argc, (const char **)argv, "api", "The render API"),
         mModuleArray(),
         mModulePathArray(),
-        mTrackBall( nullptr ){
+        mStage(nullptr),
+        m_view(nullptr),
+        m_angle(0.f),
+        m_model(),
+        m_transformMatrix(),
+        m_modelNode(),
+        mTrackBall( nullptr ),
+        mProject(nullptr) {
     // empty
 }
 
@@ -116,11 +129,19 @@ bool OsreEdApp::onCreate() {
     registerModule(new InspectorModule());
     //loadModules();
 
-    AppBase::setWindowsTitle("OSRE ED! Press o to import an Asset");
+    AppBase::setWindowsTitle("OSRE ED!");
 
     Platform::Win32Window *w = (Platform::Win32Window *)getRootWindow();
     if (nullptr != w) {
         AddFileMenus(w->getHWnd());
+        Platform::AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
+        if (queue != nullptr) {
+            queue->registerMenuCommands(IDM_FILE_NEW, Platform::MenuFunctor::Make(this, &OsreEdApp::newProject));
+            queue->registerMenuCommands(IDM_FILE_OPEN, Platform::MenuFunctor::Make(this, &OsreEdApp::loadProject));
+            queue->registerMenuCommands(IDM_FILE_SAVE, Platform::MenuFunctor::Make(this, &OsreEdApp::saveProject));
+            queue->registerMenuCommands(IDM_FILE_IMPORT, Platform::MenuFunctor::Make(this, &OsreEdApp::importAsset));
+            queue->registerMenuCommands(IDM_FILE_QUIT, Platform::MenuFunctor::Make(this, &OsreEdApp::quitEditor));
+        }
     }
 
     AppBase::getRenderBackendService()->setBehaviour(false);
@@ -160,6 +181,37 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
 
     std::string model = modelLoc.getResource();
     getRootWindow()->setWindowsTitle("Model " + model);
+}
+
+void OsreEdApp::newProject( ui32, void * ) {
+    mProject = new App::Project();
+    mProject->create("New project", 0, 1);
+    const String &projectName = mProject->getProjectName();
+    AppBase::setWindowsTitle("OSRE ED!" + String(" Project: ") + projectName);
+}
+
+void OsreEdApp::loadProject( ui32, void * ) {
+
+}
+
+void OsreEdApp::saveProject( ui32, void * ) {
+
+}
+
+void OsreEdApp::importAsset(ui32, void *) {
+    IO::Uri modelLoc;
+    Platform::PlatformOperations::getFileOpenDialog("*", modelLoc);
+    if (modelLoc.isValid()) {
+        loadAsset(modelLoc);
+    }
+}
+
+void OsreEdApp::quitEditor( ui32, void * ) {
+    Platform::PlatformOperations::DlgResults result;
+    Platform::PlatformOperations::getDialog("Really quit?", "Do you really quite OSRE-Ed?", Platform::PlatformOperations::DlgButton_YesNo, result);
+    if (result == Platform::PlatformOperations::DlgButtonRes_Yes) {
+        AppBase::requestShutdown();
+    }
 }
 
 void OsreEdApp::onUpdate() {

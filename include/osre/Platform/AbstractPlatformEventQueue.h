@@ -39,6 +39,8 @@ namespace RenderBackend {
 
 namespace Platform {
 
+using MenuFunctor = Common::Functor<void, ui32, void *>;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -85,6 +87,8 @@ public:
     /// @brief  Enqueues a new event into the active event queue.
     /// @param  ev      [in] The event to enqueue.
     virtual void enqueueEvent(const Common::Event &ev, Common::EventData *data);
+
+    virtual void registerMenuCommands(ui32 id, MenuFunctor func)=0;
 
 protected:
     /// @brief  The class constructor.

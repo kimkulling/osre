@@ -103,7 +103,7 @@ void PlatformOperations::getFileSaveDialog( const c8 *extensions, IO::Uri &locat
 
 void PlatformOperations::getDialog( const String &title, const String &question, ui32 requestedButtons, DlgResults &result ) {
 #ifdef OSRE_WINDOWS
-    ui32 flags( 0 );
+    ui32 flags = 0;
     if ( requestedButtons & PlatformOperations::DlgButton_YesNo )  {
         flags |= MB_YESNO;
     }

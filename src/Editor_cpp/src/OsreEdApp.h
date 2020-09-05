@@ -11,6 +11,10 @@
 
 namespace OSRE {
 
+namespace App {
+    class Project;
+}
+
 namespace UI {
     class Canvas;
     class Panel;
@@ -38,6 +42,11 @@ public:
     bool addModulePath(const String &path);
     bool registerModule(ModuleBase *mod);
     bool loadModules();
+    void newProject(ui32, void *);
+    void loadProject(ui32, void *);
+    void saveProject(ui32, void *);
+    void importAsset(ui32, void *);
+    void quitEditor(ui32, void *);
     void loadAsset(const IO::Uri &modelLoc);
     bool hasModel() const {
         return m_modelNode.isValid();
@@ -59,6 +68,7 @@ private:
     RenderBackend::TransformMatrixBlock m_transformMatrix;
     Scene::Node::NodePtr m_modelNode;
     Scene::TrackBall *mTrackBall;
+    App::Project *mProject;
 };
 
 } // namespace Editor
