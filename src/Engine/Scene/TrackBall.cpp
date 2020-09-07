@@ -33,10 +33,11 @@ using namespace OSRE::Platform;
 
 TrackBall::TrackBall(const String &trackBallObjName, ui32 w, ui32 h) :
         OSEventListener(trackBallObjName),
-        m_StartVector(0, 0, 0),
-        m_EndVector(0, 0, 0),
+        mStartVector(0, 0, 0),
+        mEndVector(0, 0, 0),
         m_Dimension(w, h),
         m_rotation(),
+        mScale(1,1,1),
         mNode(nullptr),
         m_bLeftMButtonClicked(false),
         m_bMiddleClicked(false),
@@ -68,7 +69,7 @@ void TrackBall::onOSEvent(const Common::Event &osEvent, const Common::EventData 
         Platform::MouseButtonEventData *pMBData = (Platform::MouseButtonEventData *)data;
         if ( 0 == pMBData->m_Button ) {
             Vec2f pos( static_cast<f32>( pMBData->m_AbsX ), static_cast<f32>( pMBData->m_AbsY ) );
-            mapToSphere( &pos, &m_EndVector );
+            mapToSphere( &pos, &mEndVector );
             m_bLeftMButtonClicked = true;
         } else if ( 1 == pMBData->m_Button ) {
             m_bMiddleClicked = true;
@@ -79,8 +80,8 @@ void TrackBall::onOSEvent(const Common::Event &osEvent, const Common::EventData 
         const MouseMoveEventData *pMMData = (Platform::MouseMoveEventData*) (data);
         if ( m_bLeftMButtonClicked ) {
             Vec2f pos(static_cast<f32>(pMMData->m_absX), static_cast<f32>(pMMData->m_absY));
-            m_StartVector = m_EndVector;
-            mapToSphere( &pos, &m_EndVector );
+            mStartVector = mEndVector;
+            mapToSphere( &pos, &mEndVector );
             computeRotation();
         } else if ( m_bMiddleClicked ) {
             computeScaling( pMMData->m_absY );
@@ -100,7 +101,7 @@ void TrackBall::onOSEvent(const Common::Event &osEvent, const Common::EventData 
     }
 }
 
-void TrackBall::mapToSphere(const Vec2f *pNewPt, Vec3f *NewVec) {
+void TrackBall::mapToSphere(const Vec2f *pNewPt, Vec3f *newVector) {
     // copy parameter into temp point
     Vec2f tempPt(*pNewPt);
 
@@ -118,17 +119,17 @@ void TrackBall::mapToSphere(const Vec2f *pNewPt, Vec3f *NewVec) {
         f32 norm = 1.0f / sqrt(length);
 
         // return the "normalized" vector, a point on the sphere
-        NewVec->set(tempPt.getX() * norm, tempPt.getY() * norm, 0.0f);
+        newVector->set(tempPt.getX() * norm, tempPt.getY() * norm, 0.0f);
     } else { // else it's on the inside
         // return a vector to a point mapped inside the sphere sqrt(radius squared - length)
-        NewVec->set(tempPt.getX(), tempPt.getY(), sqrt(1.0f - length));
+        newVector->set(tempPt.getX(), tempPt.getY(), sqrt(1.0f - length));
     }
 }
 
 void TrackBall::computeRotation() {
-    Vec3f perp = m_StartVector.crossProduct(m_EndVector);
+    Vec3f perp = mStartVector.crossProduct(mEndVector);
     if (perp.getLength() > Math::BaseMath::getSPEPS()) {
-        m_rotation.set(perp.getX(), perp.getY(), perp.getZ(), m_StartVector.dotProduct(m_EndVector));
+        m_rotation.set(perp.getX(), perp.getY(), perp.getZ(), mStartVector.dotProduct(mEndVector));
     } else {
         m_rotation.set(0.0f, 0.0f, 0.0f, 1.0f);
     }
@@ -143,12 +144,10 @@ void TrackBall::computeScaling(ui32 y) {
     if (m_screenYOld) {
         i32 diff = m_screenY - m_screenYOld;
         const f32 scaleFactor = offset * (f32)diff;
-        Vec3f scale /* = m_nodePtr->getScale()*/;
-        scale += scaleFactor;
-        if (scale.isZero()) {
-            scale.set(0, 0, 0);
+        mScale += scaleFactor;
+        if (mScale.isZero()) {
+            mScale.set(0, 0, 0);
         }
-        /*m_nodePtr->setScale( scale )*/;
     }
 }
 

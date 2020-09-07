@@ -136,11 +136,11 @@ bool OsreEdApp::onCreate() {
         AddFileMenus(w->getHWnd());
         Platform::AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
         if (queue != nullptr) {
-            queue->registerMenuCommands(IDM_FILE_NEW, Platform::MenuFunctor::Make(this, &OsreEdApp::newProject));
-            queue->registerMenuCommands(IDM_FILE_OPEN, Platform::MenuFunctor::Make(this, &OsreEdApp::loadProject));
-            queue->registerMenuCommands(IDM_FILE_SAVE, Platform::MenuFunctor::Make(this, &OsreEdApp::saveProject));
-            queue->registerMenuCommands(IDM_FILE_IMPORT, Platform::MenuFunctor::Make(this, &OsreEdApp::importAsset));
-            queue->registerMenuCommands(IDM_FILE_QUIT, Platform::MenuFunctor::Make(this, &OsreEdApp::quitEditor));
+            queue->registerMenuCommand(IDM_FILE_NEW, Platform::MenuFunctor::Make(this, &OsreEdApp::newProject));
+            queue->registerMenuCommand(IDM_FILE_OPEN, Platform::MenuFunctor::Make(this, &OsreEdApp::loadProject));
+            queue->registerMenuCommand(IDM_FILE_SAVE, Platform::MenuFunctor::Make(this, &OsreEdApp::saveProject));
+            queue->registerMenuCommand(IDM_FILE_IMPORT, Platform::MenuFunctor::Make(this, &OsreEdApp::importAsset));
+            queue->registerMenuCommand(IDM_FILE_QUIT, Platform::MenuFunctor::Make(this, &OsreEdApp::quitEditor));
         }
     }
 
@@ -224,7 +224,7 @@ void OsreEdApp::onUpdate() {
     }
     i32 x = 0, y = 0;
     if (AppBase::isMouseMoved(x, y)) {
-    
+    //    mTrackBall->
     }
 
 

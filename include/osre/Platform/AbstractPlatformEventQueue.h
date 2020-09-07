@@ -64,6 +64,12 @@ public:
     /// @brief  Will unregister all registered event handler.
     virtual void unregisterAllEventHandler(const Common::EventPtrArray &events) = 0;
 
+    /// @brief  Will register a new menu command.
+    virtual void registerMenuCommand(ui32 id, MenuFunctor func) = 0;
+
+    /// @brief  Will unregister all registered menu commands.
+    virtual void unregisterAllMenuCommands() = 0;
+
     ///	@brief  Set the polling state.
     ///	@param  enabled     true for enabling polling.
     virtual void enablePolling( bool enabled ) = 0;
@@ -88,11 +94,12 @@ public:
     /// @param  ev      [in] The event to enqueue.
     virtual void enqueueEvent(const Common::Event &ev, Common::EventData *data);
 
-    virtual void registerMenuCommands(ui32 id, MenuFunctor func)=0;
-
 protected:
     /// @brief  The class constructor.
     AbstractPlatformEventQueue();
+
+    /// @brief  The quit handler.
+    virtual void onQuit() = 0;
 
     ///	@brief  Will be called to process events.
     /// @param  pTriggerer  The event trigger.

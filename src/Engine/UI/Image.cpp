@@ -20,8 +20,8 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/UI/Image.h>
 #include <osre/Scene/MeshBuilder.h>
+#include <osre/UI/Image.h>
 
 namespace OSRE {
 namespace UI {
@@ -29,9 +29,8 @@ namespace UI {
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
 
-Image::Image( const String &name, Widget *parent )
-: Widget( name, parent ) 
-, m_imageUri() {
+Image::Image(const String &name, Widget *parent) :
+        Widget(name, parent), m_imageUri() {
     // empty
 }
 
@@ -39,11 +38,11 @@ Image::~Image() {
     // empty
 }
 
-void Image::setUri( const IO::Uri &imageUri ) {
-    if ( m_imageUri == imageUri ) {
+void Image::setUri(const IO::Uri &imageUri) {
+    if (m_imageUri == imageUri) {
         return;
     }
-    
+
     m_imageUri = imageUri;
     Widget::requestRedraw();
 }
@@ -57,17 +56,16 @@ void Image::onLayout() {
         return;
     }
 
-    if ( LayoutPolicy::Auto == getLayoutPolicy() ) {
-        
-    } else if (LayoutPolicy::Fixed == getLayoutPolicy()) {
+    if (LayoutPolicy::Auto == getLayoutPolicy()) {
 
+    } else if (LayoutPolicy::Fixed == getLayoutPolicy()) {
     }
 }
 
-void Image::onRender( UiRenderCmdCache &renderCmdCache, RenderBackendService * ) {
+void Image::onRender(UiRenderCmdCache &renderCmdCache, RenderBackendService *) {
     MeshBuilder builder;
     const Rect2ui &imageRect = Widget::getRect();
-    builder.allocUiQuad( imageRect, renderCmdCache.m_vc, renderCmdCache.m_ic );
+    builder.allocUiQuad(imageRect, renderCmdCache.m_vc, renderCmdCache.m_ic);
 }
 
 } // Namespace UI

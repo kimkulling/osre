@@ -51,28 +51,54 @@ struct AbstractInputUpdate;
 //-------------------------------------------------------------------------------------------------
 class Win32EventQueue : public AbstractPlatformEventQueue {
 public:
+    /// The class constructor with the win32-based root-window.
     Win32EventQueue( AbstractWindow *rootWindow );
-    virtual ~Win32EventQueue() override;
-    virtual bool update() override;
-    static LRESULT CALLBACK winproc( HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam );
-    void setRootSurface( AbstractWindow *window );
+    /// The class destructor.
+    ~Win32EventQueue() override;
+    /// The update method.
+    bool update() override;
+    /// The root surface setter.
+    void setRootSurface(AbstractWindow *window);
+    /// The root surface getter.
     AbstractWindow *getRootSurface() const;
-    void enablePolling( bool enabled ) override;
-    bool isPolling() const;
-    void registerEventListener( const Common::EventPtrArray &events, OSEventListener *listener ) override;
-    void unregisterEventListener( const Common::EventPtrArray &events, OSEventListener *listener ) override;
+    /// Will enable the event polling mode.
+    void enablePolling(bool enabled) override;
+    /// Returns the event polling mode enabled.
+    bool isPolling() const override;
+    /// Registers an event listener.
+    void registerEventListener(const Common::EventPtrArray &events, OSEventListener *listener) override;
+    /// Unregisters an event listener.
+    void unregisterEventListener(const Common::EventPtrArray &events, OSEventListener *listener) override;
+    /// Will unregister all registered handler at once.
     void unregisterAllEventHandler(const Common::EventPtrArray &events) override;
-    void registerMenuCommands(ui32 id, MenuFunctor func) override;
+    /// 
+    void registerMenuCommand(ui32 id, MenuFunctor func) override;
+    ///
+    void unregisterAllMenuCommands() override;
+    ///
     static void registerEventQueue(Win32EventQueue *server, HWND hWnd);
-    static void unregisterEventQueue( Win32EventQueue *server, HWND hWnd );
-    static Win32EventQueue *getInstance( HWND hWnd );
+    ///
+    static void unregisterEventQueue(Win32EventQueue *server, HWND hWnd);
+    ///
+    static Win32EventQueue *getInstance(HWND hWnd);
+    ///
+    static LRESULT CALLBACK winproc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam);
+
+    // No copying
+    Win32EventQueue() = delete;
+    Win32EventQueue(const Win32EventQueue &) = delete;
+    Win32EventQueue &operator = (const Win32EventQueue &) = delete;
 
 protected:
-    virtual bool onQuit();
+    ///
+    void onQuit() override;
 
 private:
-    static std::map<HWND, Win32EventQueue*> s_WindowsServerMap;
-    static std::map<ui32, MenuFunctor> s_MenuFunctorMap;
+    using WindowServerMap = std::map<HWND, Win32EventQueue*>;
+    using MenuFuncMap = std::map<ui32, MenuFunctor>;
+
+    static WindowServerMap s_WindowsServerMap;
+    static MenuFuncMap s_MenuFunctorMap;
     AbstractInputUpdate *m_updateInstance;
     Common::EventTriggerer *m_eventTriggerer;
     AbstractWindow *m_rootWindow;

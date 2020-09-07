@@ -49,8 +49,8 @@ public:
 
     ///	@brief	The event callback.
     ///	@param	osEvent		[in] The incoming event from the operation system.
-    ///	@param	pData		[in] The event data.
-    void onOSEvent( const Common::Event &osEvent, const Common::EventData *pData );
+    ///	@param	data		[in] The event data.
+    void onOSEvent( const Common::Event &osEvent, const Common::EventData *data );
     
     ///	@brief	Maps a 2D-point to a sphere and returns the 3D-coordinate.
     ///	@param	pNewPt		[in] The 2D-point to map.
@@ -63,11 +63,14 @@ public:
     ///	@brief	Calculates the current scaling.
     ///	@param	y			[in] The current y value for the scaling.
     void computeScaling( ui32 y );
+    const Quatf &getRotation() const;
+    const Vec3f &getScale() const;
 
 private:
-    Vec3f m_StartVector, m_EndVector;
+    Vec3f mStartVector, mEndVector;
     TRectangle<ui32> m_Dimension;
     Quatf m_rotation;
+    Vec3f mScale;
     Node *mNode;
     bool m_bLeftMButtonClicked;
     bool m_bMiddleClicked;
@@ -78,6 +81,14 @@ private:
     ui32 m_screenY;
     ui32 m_screenYOld;
 };
+
+inline const Quatf &TrackBall::getRotation() const {
+    return m_rotation;
+}
+
+inline const Vec3f &TrackBall::getScale() const {
+    return mScale;
+}
 
 } // Namespace Scene
 } // namespace OSRE
