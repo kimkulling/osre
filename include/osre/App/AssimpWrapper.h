@@ -92,6 +92,7 @@ protected:
 private:
 	const aiScene *m_scene;
 	RenderBackend::MeshArray m_meshArray;
+    RenderBackend::Texture *mDefaultTexture;
     Entity *m_entity;
     MaterialArray m_matArray;
     Scene::Node *m_parent;

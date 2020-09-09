@@ -27,8 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-Win32OSService::Win32OSService()
-: AbstractOSService() {
+Win32OSService::Win32OSService() :
+        AbstractOSService() {
     // empty
 }
 
@@ -38,6 +38,11 @@ Win32OSService::~Win32OSService() {
 
 void Win32OSService::showCursor(bool enabled) {
     ::ShowCursor(enabled);
+}
+
+void Win32OSService::getMonitorResolution(ui32 &width, ui32 &heigt) {
+    width = GetSystemMetrics(SM_CXSCREEN);
+    heigt = GetSystemMetrics(SM_CYSCREEN);
 }
 
 } // Namespace Platform

@@ -95,7 +95,10 @@ static const String RenderVertAttributes[NumRenderVertAttributes] = {
 };
 
 RenderVert::RenderVert() :
-        position(), normal(), color0(1, 1, 1), tex0() {
+        position(),
+        normal(),
+        color0(1, 1, 1),
+        tex0() {
     // empty
 }
 
@@ -134,7 +137,8 @@ VertComponent::VertComponent() :
 }
 
 VertComponent::VertComponent(VertexAttribute attrib, VertexFormat format) :
-        m_attrib(attrib), m_format(format) {
+        m_attrib(attrib),
+        m_format(format) {
     // empty
 }
 
@@ -143,7 +147,11 @@ VertComponent::~VertComponent() {
 }
 
 VertexLayout::VertexLayout() :
-        m_attributes(nullptr), m_components(), m_offsets(), m_currentOffset(0), m_sizeInBytes(0) {
+        m_attributes(nullptr),
+        m_components(),
+        m_offsets(),
+        m_currentOffset(0),
+        m_sizeInBytes(0) {
     // empty
 }
 
@@ -218,7 +226,10 @@ const String *VertexLayout::getAttributes() {
 }
 
 BufferData::BufferData() :
-        m_type(BufferType::EmptyBuffer), m_buffer(), m_cap(0), m_access(BufferAccessType::ReadOnly) {
+        m_type(BufferType::EmptyBuffer),
+        m_buffer(),
+        m_cap(0),
+        m_access(BufferAccessType::ReadOnly) {
     // empty
 }
 
@@ -226,8 +237,7 @@ BufferData::~BufferData() {
     m_cap = 0;
 }
 
-BufferData *BufferData::alloc(BufferType type, size_t sizeInBytes,
-        BufferAccessType access) {
+BufferData *BufferData::alloc(BufferType type, size_t sizeInBytes, BufferAccessType access) {
     BufferData *buffer = new BufferData;
     buffer->m_cap = sizeInBytes;
     buffer->m_access = access;
@@ -283,8 +293,7 @@ PrimitiveGroup::~PrimitiveGroup() {
     // empty
 }
 
-void PrimitiveGroup::init(IndexType indexType, size_t numPrimitives,
-        PrimitiveType primType, size_t startIdx) {
+void PrimitiveGroup::init(IndexType indexType, size_t numPrimitives, PrimitiveType primType, size_t startIdx) {
     m_indexType = indexType;
     m_numIndices = numPrimitives;
     m_primitive = primType;
@@ -292,7 +301,15 @@ void PrimitiveGroup::init(IndexType indexType, size_t numPrimitives,
 }
 
 Texture::Texture() :
-        m_textureName(""), m_loc(), m_targetType(TextureTargetType::Texture2D), m_size(0), m_data(nullptr), m_width(0), m_height(0), m_channels(0), m_texHandle() {
+        m_textureName(""),
+        m_loc(),
+        m_targetType(TextureTargetType::Texture2D),
+        m_size(0),
+        m_data(nullptr),
+        m_width(0),
+        m_height(0),
+        m_channels(0),
+        m_texHandle() {
     // empty
 }
 
@@ -307,13 +324,14 @@ size_t TextureLoader::load(const IO::Uri &uri, Texture *tex) {
     }
 
     const String filename = uri.getAbsPath();
-
+    if (filename.find("$default") != String::npos) {
+        tex = TextureLoader::getDefaultTexture();
+    }
     String root = App::AssetRegistry::getPath("media");
     String path = App::AssetRegistry::resolvePathFromUri(uri);
 
-    i32 width(0), height(0), channels(0);
-    tex->m_data =
-            SOIL_load_image(path.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
+    i32 width = 0, height = 0, channels = 0;
+    tex->m_data = SOIL_load_image(path.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
     if (nullptr == tex->m_data) {
         osre_debug(Tag, "Cannot load texture " + filename);
         return 0;
@@ -340,6 +358,27 @@ size_t TextureLoader::load(const IO::Uri &uri, Texture *tex) {
     return size;
 }
 
+static Texture *DefaultTexture = nullptr;
+
+RenderBackend::Texture *TextureLoader::getDefaultTexture() {
+    if (nullptr == DefaultTexture) {
+        DefaultTexture = new Texture;
+    }
+
+    DefaultTexture->m_channels = 3;
+    DefaultTexture->m_width = 1;
+    DefaultTexture->m_height = 1;
+    DefaultTexture->m_targetType = TextureTargetType::Texture2D;
+    DefaultTexture->m_data = new uc8[4];
+    DefaultTexture->m_data[0] = 255;
+    DefaultTexture->m_data[1] = 255;
+    DefaultTexture->m_data[2] = 255;
+    DefaultTexture->m_data[3] = 255;
+    DefaultTexture->m_textureName = "default";
+
+    return DefaultTexture;
+}
+
 bool TextureLoader::unload(Texture *tex) {
     if (nullptr == tex) {
         return false;
@@ -355,7 +394,9 @@ bool TextureLoader::unload(Texture *tex) {
 }
 
 TextureResource::TextureResource(const String &name, const IO::Uri &uri) :
-        TResource(name, uri), m_targetType(TextureTargetType::Texture2D), m_stage(TextureStageType::TextureStage0) {
+        TResource(name, uri),
+        m_targetType(TextureTargetType::Texture2D),
+        m_stage(TextureStageType::TextureStage0) {
     // empty
 }
 
@@ -395,7 +436,17 @@ TextureResource::ResourceState TextureResource::onLoad(const IO::Uri &uri,
 
     create();
     Texture *tex = get();
+    if (nullptr == tex) {
+        return Error;
+    }
+
     tex->m_textureName = getName();
+    if (tex->m_textureName.find("$default") != String::npos) {
+        tex = TextureLoader::getDefaultTexture();
+        setState(Loaded);
+        return Loaded;
+    }
+
     getStats().m_memory = loader.load(uri, tex);
     tex->m_targetType = m_targetType;
     if (0 == getStats().m_memory) {

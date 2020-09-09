@@ -67,6 +67,7 @@ struct BoneInfo {
 AssimpWrapper::AssimpWrapper(Common::Ids &ids) :
         m_scene(nullptr),
         m_meshArray(),
+        mDefaultTexture(nullptr),
         m_entity(nullptr),
         m_matArray(),
         m_parent(nullptr),
@@ -81,6 +82,9 @@ AssimpWrapper::AssimpWrapper(Common::Ids &ids) :
 
 AssimpWrapper::~AssimpWrapper() {
     ::CPPCore::ContainerClear(m_boneInfoArray);
+
+    delete mDefaultTexture;
+    mDefaultTexture = nullptr;
 }
 
 bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
@@ -426,7 +430,8 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
     TextureResourceArray texResArray;
     if (AI_SUCCESS == material->GetTexture(aiTextureType_DIFFUSE, texIndex, &texPath)) {
         setTexture(m_root, texPath, texResArray, TextureStageType::TextureStage0);
-    }
+    } 
+
     String matName = texPath.C_Str();
     if (matName.empty()) {
         matName = "material1";

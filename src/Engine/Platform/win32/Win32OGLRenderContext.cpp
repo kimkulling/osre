@@ -116,7 +116,7 @@ bool Win32RenderContext::onCreate(AbstractWindow *surface) {
     pfd.nVersion = 1;
     pfd.dwFlags = PFD_DOUBLEBUFFER | PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW;
     pfd.iPixelType = PFD_TYPE_RGBA;
-     pfd.cColorBits = props->m_colordepth;
+    pfd.cColorBits = props->m_colordepth;
     pfd.cDepthBits = props->m_depthbufferdepth;
     pfd.cStencilBits = props->m_stencildepth;
     pfd.iLayerType = PFD_MAIN_PLANE;
