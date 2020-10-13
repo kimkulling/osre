@@ -227,10 +227,11 @@ void OGLRenderBackend::clearRenderTarget(const ClearState &clearState) {
         glTarget |= GL_DEPTH_BUFFER_BIT;
     }
     if (clear & (int)ClearState::ClearBitType::StencilBit) {
-        glTarget |= GL_STENCIL_BUFFER_BIT;
+        glTarget |= GL_STENCIL_BUFFER_BIT; 
     }
 
     glClear(glTarget);
+    glClearColor(1, 1, 1, 1);
 }
 
 void OGLRenderBackend::setViewport(i32 x, i32 y, i32 w, i32 h) {

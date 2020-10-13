@@ -448,6 +448,7 @@ public:
     ~TextureLoader();
     size_t load(const IO::Uri &uri, Texture *tex);
     bool unload(Texture *tex);
+    static RenderBackend::Texture *getDefaultTexture();
 };
 
 ///	@brief

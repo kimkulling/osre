@@ -1,23 +1,23 @@
 #include "OsreEdApp.h"
-#include "Modules/ModuleBase.h"
 #include "Modules/InspectorModule/InspectorModule.h"
-#include <osre/Platform/AbstractWindow.h>
+#include "Modules/ModuleBase.h"
+#include <osre/App/AssimpWrapper.h>
+#include <osre/App/Entity.h>
 #include <osre/Common/TCommand.h>
+#include <osre/IO/Directory.h>
+#include <osre/IO/Uri.h>
+#include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/PlatformOperations.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/TrackBall.h>
-#include <osre/App/AssimpWrapper.h>
-#include <osre/app/Project.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/Panel.h>
-#include <osre/IO/Directory.h>
-#include <osre/IO/Uri.h>
-#include <osre/App/Entity.h>
-
+#include <osre/app/Project.h>
 #include <osre/Platform/PlatformInterface.h>
-#include "Engine/Platform/win32/Win32Window.h"
+
 #include "Engine/Platform/win32/Win32EventQueue.h"
+#include "Engine/Platform/win32/Win32Window.h"
 
 #include <winuser.h>
 #include <windows.h>
@@ -94,7 +94,7 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         m_model(),
         m_transformMatrix(),
         m_modelNode(),
-        mTrackBall( nullptr ),
+        mTrackBall(nullptr),
         mProject(nullptr) {
     // empty
 }
@@ -103,7 +103,7 @@ OsreEdApp::~OsreEdApp() {
     // empty
 }
 
-bool OsreEdApp::addModulePath( const String &path ) {
+bool OsreEdApp::addModulePath(const String &path) {
     if (path.empty()) {
         return false;
     }
@@ -115,12 +115,12 @@ bool OsreEdApp::addModulePath( const String &path ) {
     return true;
 }
 
-bool OsreEdApp::registerModule( ModuleBase *mod ) {
+bool OsreEdApp::registerModule(ModuleBase *mod) {
     if (nullptr == mod) {
         return false;
     }
 
-    if (nullptr == mModuleArray.find(mod) ) {
+    if (nullptr == mModuleArray.find(mod)) {
         mModuleArray.add(mod);
     }
 
@@ -202,19 +202,17 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     getRootWindow()->setWindowsTitle("Model " + model);
 }
 
-void OsreEdApp::newProject( ui32, void * ) {
+void OsreEdApp::newProject(ui32, void *) {
     mProject = new App::Project();
     mProject->create("New project", 0, 1);
     const String &projectName = mProject->getProjectName();
     AppBase::setWindowsTitle("OSRE ED!" + String(" Project: ") + projectName);
 }
 
-void OsreEdApp::loadProject( ui32, void * ) {
-
+void OsreEdApp::loadProject(ui32, void *) {
 }
 
-void OsreEdApp::saveProject( ui32, void * ) {
-
+void OsreEdApp::saveProject(ui32, void *) {
 }
 
 void OsreEdApp::importAsset(ui32, void *) {
@@ -225,7 +223,7 @@ void OsreEdApp::importAsset(ui32, void *) {
     }
 }
 
-void OsreEdApp::quitEditor( ui32, void * ) {
+void OsreEdApp::quitEditor(ui32, void *) {
     Platform::PlatformOperations::DlgResults result;
     Platform::PlatformOperations::getDialog("Really quit?", "Do you really quite OSRE-Ed?", Platform::PlatformOperations::DlgButton_YesNo, result);
     if (result == Platform::PlatformOperations::DlgButtonRes_Yes) {
@@ -242,14 +240,15 @@ void OsreEdApp::onUpdate() {
         }
     }
     i32 x = 0, y = 0;
-    //    mTrackBall->
-
+    if (AppBase::isMouseMoved(x, y)) {
+        //    mTrackBall->
+    }
 
     /*for (ui32 i = 0; i < mModuleArray.size(); ++i) {
         mModuleArray[i]->update();
     }*/
 
-            // Rotate the model
+    // Rotate the model
     glm::mat4 rot(1.0);
     m_transformMatrix.m_model = glm::rotate(rot, m_angle, glm::vec3(0, 1, 1));
 

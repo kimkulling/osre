@@ -31,6 +31,7 @@ class Win32OSService : public AbstractOSService {
 public:
     Win32OSService();
     ~Win32OSService() override;
+    void getMonitorResolution(ui32 &width, ui32 &heigt);
     void showCursor(bool enabled) override;
 };
 
