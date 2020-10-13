@@ -19,6 +19,11 @@
 #include "Engine/Platform/win32/Win32Window.h"
 #include "Engine/Platform/win32/Win32EventQueue.h"
 
+#include <winuser.h>
+#include <windows.h>
+#include <commctrl.h>
+#include <strsafe.h>
+
 namespace OSRE {
 namespace Editor {
 
@@ -39,6 +44,10 @@ static const ui32 VerticalMargin = 2;
 #define IDM_FILE_QUIT 5
 
 #define IDM_INFO_VERSION 6
+
+#define ID_STATIC 7
+
+HWND hStatic = NULL;
 
 void AddFileMenus(HWND hwnd) {
     HMENU hMenubar;
@@ -62,6 +71,15 @@ void AddFileMenus(HWND hwnd) {
     AppendMenuW(hMenubar, MF_POPUP, (UINT_PTR)hMenu, L"&Info");
 
     SetMenu(hwnd, hMenubar);
+}
+
+void SetFPSText(HWND hwnd, ui32 fps) {
+    if (hStatic == NULL) {
+        hStatic = ::CreateWindow("FPS", "0", WS_CHILD | WS_VISIBLE | SS_LEFT, 15, 60, 300, 230, hwnd, (HMENU)ID_STATIC, NULL, NULL);
+    }
+    std::stringstream stream;
+    stream << "FPS: " << fps;
+    SetWindowText(hStatic, stream.str().c_str());
 }
 
 #endif // OSRE_WINDOWS
@@ -134,6 +152,7 @@ bool OsreEdApp::onCreate() {
     Platform::Win32Window *w = (Platform::Win32Window *)getRootWindow();
     if (nullptr != w) {
         AddFileMenus(w->getHWnd());
+        SetFPSText(w->getHWnd(), 60);
         Platform::AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
         if (queue != nullptr) {
             queue->registerMenuCommand(IDM_FILE_NEW, Platform::MenuFunctor::Make(this, &OsreEdApp::newProject));
@@ -223,9 +242,7 @@ void OsreEdApp::onUpdate() {
         }
     }
     i32 x = 0, y = 0;
-    if (AppBase::isMouseMoved(x, y)) {
     //    mTrackBall->
-    }
 
 
     /*for (ui32 i = 0; i < mModuleArray.size(); ++i) {
@@ -248,6 +265,8 @@ void OsreEdApp::onUpdate() {
     rbSrv->endPass();
 
     AppBase::onUpdate();
+
+    //SetFPSText()
 }
 
 bool OsreEdApp::onDestroy() {
