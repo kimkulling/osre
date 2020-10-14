@@ -45,11 +45,11 @@ struct Style;
 //-------------------------------------------------------------------------------------------------
 class UIRenderUtils {
 public:
-    static void drawRectFromStyle( const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
+    static void createRectFromStyle( const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
         UiIndexCache &indexCache, ui32 stackIndex, WidgetType type );
-    static void drawBorderRectFromStyle(const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
+    static void createBorderRectFromStyle(const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
             UiIndexCache &indexCache, ui32 stackIndex, WidgetType type);
-    static Rect2ui drawTextBox(const String &text, f32 textSize);
+    static Rect2ui createTextBox(const String &text, f32 textSize);
     static RenderBackend::Mesh *createGeoFromCache(UiVertexCache &vertexCache, UiIndexCache &indexCache, 
         RenderBackend::Material *material );
     

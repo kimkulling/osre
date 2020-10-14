@@ -1042,7 +1042,7 @@ size_t OGLRenderBackend::addPrimitiveGroup(PrimitiveGroup *grp) {
     oglGrp->m_startIndex = (ui32)grp->m_startIndex;
     oglGrp->m_numIndices = grp->m_numIndices;
 
-    const size_t idx(m_primitives.size());
+    const size_t idx = m_primitives.size();
     m_primitives.add(oglGrp);
 
     return idx;

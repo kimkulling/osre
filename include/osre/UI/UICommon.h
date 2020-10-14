@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Common/Variant.h>
 #include <cppcore/Container/TArray.h>
+#include <cppcore/Memory/TPoolAllocator.h>
 
 namespace OSRE {
 namespace UI {
@@ -47,10 +48,17 @@ using RenderBackend::UiIndexCache;
 using RenderBackend::UiVertexCache;
 
 struct UiRenderCmd {
+    using RenderCmdAllocator = ::CPPCore::TPoolAllocator<UiRenderCmd>;
+    friend RenderCmdAllocator;
+    static RenderCmdAllocator sRenderCmdAllocator;
     size_t m_startIndex;
     size_t m_numIndices;
     RenderBackend::Material *mMaterial;
 
+public:
+    static UiRenderCmd *create();
+
+private:
     UiRenderCmd();
     ~UiRenderCmd();
 

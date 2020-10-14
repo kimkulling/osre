@@ -25,6 +25,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace UI {
 
+UiRenderCmd::RenderCmdAllocator UiRenderCmd::sRenderCmdAllocator(256);
+
+UiRenderCmd *UiRenderCmd::create() {
+    UiRenderCmd *cmd = sRenderCmdAllocator.alloc();
+    return cmd;
+}
+
 UiRenderCmd::UiRenderCmd() :
         m_startIndex( 0 ),
         m_numIndices( 0 ),
