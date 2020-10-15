@@ -225,6 +225,8 @@ const String *VertexLayout::getAttributes() {
     return m_attributes;
 }
 
+BufferData::BufferDataAllocator BufferData::sBufferDataAllocator(256);
+
 BufferData::BufferData() :
         m_type(BufferType::EmptyBuffer),
         m_buffer(),
@@ -238,7 +240,7 @@ BufferData::~BufferData() {
 }
 
 BufferData *BufferData::alloc(BufferType type, size_t sizeInBytes, BufferAccessType access) {
-    BufferData *buffer = new BufferData;
+    BufferData *buffer = sBufferDataAllocator.alloc();
     buffer->m_cap = sizeInBytes;
     buffer->m_access = access;
     buffer->m_type = type;
@@ -251,9 +253,6 @@ void BufferData::free(BufferData *data) {
     if (nullptr == data) {
         return;
     }
-
-    delete data;
-    data = nullptr;
 }
 
 void BufferData::copyFrom(void *data, size_t size) {
@@ -533,7 +532,7 @@ GeoInstanceData::GeoInstanceData() :
 }
 
 GeoInstanceData::~GeoInstanceData() {
-    delete m_data;
+    BufferData::free(m_data);
     m_data = nullptr;
 }
 

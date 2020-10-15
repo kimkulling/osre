@@ -51,6 +51,7 @@ struct UiRenderCmd {
     using RenderCmdAllocator = ::CPPCore::TPoolAllocator<UiRenderCmd>;
     friend RenderCmdAllocator;
     static RenderCmdAllocator sRenderCmdAllocator;
+
     size_t m_startIndex;
     size_t m_numIndices;
     RenderBackend::Material *mMaterial;

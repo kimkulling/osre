@@ -55,10 +55,10 @@ Mesh::Mesh() :
 Mesh::~Mesh() {
     m_material = nullptr;
 
-    delete m_vb;
+    BufferData::free(m_vb);
     m_vb = nullptr;
 
-    delete m_ib;
+    BufferData::free(m_ib);
     m_ib = nullptr;
 
     delete[] m_primGroups;

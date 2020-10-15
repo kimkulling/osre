@@ -382,13 +382,15 @@ struct OSRE_EXPORT VertexLayout {
 
 ///	@brief  This struct is used to describe data for a GPU buffer.
 struct OSRE_EXPORT BufferData {
+    using BufferDataAllocator = ::CPPCore::TPoolAllocator<BufferData>;
+    friend BufferDataAllocator;
+    static BufferDataAllocator sBufferDataAllocator;
+
     BufferType m_type; ///< The buffer type ( @see BufferType )
     MemoryBuffer m_buffer; ///< The memory buffer
     size_t m_cap; ///<
     BufferAccessType m_access; ///< Access token ( @see BufferAccessType )
 
-    BufferData();
-    ~BufferData();
     static BufferData *alloc(BufferType type, size_t sizeInBytes, BufferAccessType access);
     static void free(BufferData *data);
     void copyFrom(void *data, size_t size);
@@ -397,6 +399,10 @@ struct OSRE_EXPORT BufferData {
     BufferAccessType getBufferAccessType() const;
     size_t getSize() const;
     c8 *getData();
+
+private:
+    BufferData();
+    ~BufferData();
 
     OSRE_NON_COPYABLE(BufferData)
 };
