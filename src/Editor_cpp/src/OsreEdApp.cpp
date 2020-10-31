@@ -74,12 +74,17 @@ void AddFileMenus(HWND hwnd) {
 }
 
 void SetFPSText(HWND hwnd, ui32 fps) {
-    if (hStatic == NULL) {
-        hStatic = ::CreateWindow("FPS", "0", WS_CHILD | WS_VISIBLE | SS_LEFT, 15, 60, 300, 230, hwnd, (HMENU)ID_STATIC, NULL, NULL);
-    }
     std::stringstream stream;
     stream << "FPS: " << fps;
-    SetWindowText(hStatic, stream.str().c_str());
+    RECT r;
+    
+    r.left = 10;
+    r.right = 100;
+    r.top = 10;
+    r.bottom = 20;
+    UINT format = 0;
+    
+    //DrawTextEx(GetDC(hwnd), stream.str().c_str(), stream.str().size(), &r, format, NULL);
 }
 
 #endif // OSRE_WINDOWS
