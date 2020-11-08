@@ -46,20 +46,20 @@ TEST_F( IdsTest, createTest ) {
 TEST_F( IdsTest, allocIdsTest ) {
     Ids myIds( 0 );
 
-    const ui32 id1 = myIds.getUniqueId();
-    const ui32 id2 = myIds.getUniqueId();
+    const ui64 id1 = myIds.getUniqueId();
+    const ui64 id2 = myIds.getUniqueId();
     EXPECT_NE( id1, id2 );
 }
 
 TEST_F( IdsTest, releaseIdsTest ) {
     Ids myIds( 0 );
 
-    const ui32 id1 = myIds.getUniqueId();
-    const ui32 id2 = myIds.getUniqueId();
+    const ui64 id1 = myIds.getUniqueId();
+    const ui64 id2 = myIds.getUniqueId();
     EXPECT_NE( id1, id2 );
 
     myIds.releaseId( id2 );
-    const ui32 id3 = myIds.getUniqueId();
+    const ui64 id3 = myIds.getUniqueId();
     EXPECT_EQ( id2, id3 );
 }
 

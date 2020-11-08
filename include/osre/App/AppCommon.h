@@ -45,7 +45,7 @@ class KeyboardEventListener;
 
 template<class T> class TAbstractCtrlBase;
 
-/// @brief  Describes the requested render API.
+/// @brief  Describes the requested render API for the backend.
 enum class RenderBackendType {
     OpenGLRenderBackend = 0,    ///< OpenGL render API.
     VulkanRenderBackend         ///< Vulkan render API.

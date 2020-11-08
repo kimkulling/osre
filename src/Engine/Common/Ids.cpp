@@ -25,15 +25,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
-Ids::Ids()
-: m_freeIds()
-, m_last( 0 ) {
+Ids::Ids() :
+        m_freeIds(),
+        m_last(0) {
     // empty
 }
 
-Ids::Ids( ui32 startId )
-: m_freeIds()
-, m_last( startId ) {
+Ids::Ids(ui64 startId) :
+        m_freeIds(),
+        m_last(startId) {
     // empty
 }
 
@@ -41,22 +41,22 @@ Ids::~Ids() {
     // empty
 }
 
-ui32 Ids::getUniqueId() {
-    if ( m_freeIds.isEmpty() ) {
-        ui32 id( m_last );
+ui64 Ids::getUniqueId() {
+    if (m_freeIds.isEmpty()) {
+        ui64 id(m_last);
         ++m_last;
         return id;
-    } 
+    }
 
-    const ui32 id( m_freeIds.back() );
+    const ui64 id = m_freeIds.back();
     m_freeIds.removeBack();
 
     return id;
 }
 
-void Ids::releaseId( ui32 id ) {
-    m_freeIds.add( id );
+void Ids::releaseId(ui64 id) {
+    m_freeIds.add(id);
 }
-    
+
 } // Namespace Common
 } // Namespace OSRE

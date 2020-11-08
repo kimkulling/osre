@@ -38,6 +38,17 @@ struct ResourceStatistics {
     }
 };
 
+class ResourceId {
+public:
+    ResourceId(ui64 id) :
+            mResId(id){
+        // empty
+    }
+
+private:
+    ui64 mResId;
+};
+
 template <class TResType, class TResLoader>
 class TResource : public Object {
 public:

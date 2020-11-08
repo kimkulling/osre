@@ -84,8 +84,8 @@ void Mesh::destroy(Mesh **meshes) {
     (*meshes) = nullptr;
 }
 
-ui32 Mesh::getVertexSize(VertexType vertextype) {
-    ui32 vertexSize(0);
+size_t Mesh::getVertexSize(VertexType vertextype) {
+    size_t vertexSize = 0;
     switch (vertextype) {
         case VertexType::ColorVertex:
             vertexSize = sizeof(ColorVert);
