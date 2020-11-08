@@ -44,7 +44,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/UI/UiItemFactory.h>
 #include <osre/UI/UiRenderer.h>
 
-// private includes
 #include "src/Engine/Platform/PlatformPluginFactory.h"
 
 namespace OSRE {
@@ -202,8 +201,6 @@ bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &
 
     if (renderer == RenderBackendType::OpenGLRenderBackend) {
         m_settings->setString(Properties::Settings::RenderAPI, "opengl");
-    } else if (renderer == RenderBackendType::DX11Backend) {
-        m_settings->setString(Properties::Settings::RenderAPI, "dx11");
     } else if (renderer == RenderBackendType::VulkanRenderBackend) {
         m_settings->setString(Properties::Settings::RenderAPI, "vulkan");
     }

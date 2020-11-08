@@ -31,45 +31,43 @@ namespace RenderBackend {
 
 struct OSRE_EXPORT VertexWeight {
     ui32 m_vertexIdx;
-    f32  m_vertexWeight;
+    f32 m_vertexWeight;
 };
 
 struct OSRE_EXPORT Bone {
-    using VertexWeightArray = CPPCore::TArray<VertexWeight*>;
+    using VertexWeightArray = CPPCore::TArray<VertexWeight *>;
 
-    String            m_name;
+    String m_name;
     VertexWeightArray m_vertexWeights;
-    glm::mat4         m_offsetMatrix;
+    glm::mat4 m_offsetMatrix;
 
-    Bone()
-    : m_name()
-    , m_vertexWeights()
-    , m_offsetMatrix() {
+    Bone() :
+            m_name(), m_vertexWeights(), m_offsetMatrix() {
         // empty
     }
 };
 
 class OSRE_EXPORT Mesh {
 public:
-    String                 m_name;
-    bool                   m_localMatrix;
-    glm::mat4              m_model;
-    Material              *m_material;
-    VertexType             m_vertextype;
-    BufferData            *m_vb;
-    IndexType              m_indextype;
-    BufferData            *m_ib;
-    size_t                 m_numPrimGroups;
-    PrimitiveGroup        *m_primGroups;
-    ui32                   m_id;
+    String m_name;
+    bool m_localMatrix;
+    glm::mat4 m_model;
+    Material *m_material;
+    VertexType m_vertextype;
+    BufferData *m_vb;
+    IndexType m_indextype;
+    BufferData *m_ib;
+    size_t m_numPrimGroups;
+    PrimitiveGroup *m_primGroups;
+    ui64 m_id;
 
-    static Mesh *create( size_t numGeo );
-    static void destroy( Mesh **geo );
-    static ui32 getVertexSize( VertexType vertextype );
+    static Mesh *create(size_t numGeo);
+    static void destroy(Mesh **geo);
+    static size_t getVertexSize(VertexType vertextype);
     PrimitiveGroup *createPrimitiveGroups(size_t numPrimGroups, IndexType *types, size_t *numIndices, PrimitiveType *primTypes, ui32 *startIndices);
-    PrimitiveGroup *createPrimitiveGroup( IndexType type, size_t numIndices, PrimitiveType primTypes, ui32 startIndex);
+    PrimitiveGroup *createPrimitiveGroup(IndexType type, size_t numIndices, PrimitiveType primTypes, ui32 startIndex);
 
-    OSRE_NON_COPYABLE( Mesh )
+    OSRE_NON_COPYABLE(Mesh)
 
 private:
     Mesh();
@@ -81,10 +79,9 @@ private:
     ui32 m_lastIndex;
 };
 
-template<class TVertexType>
-inline
-ui32 getVertexTypeSize() {
-    return sizeof( TVertexType );
+template <class TVertexType>
+inline size_t getVertexTypeSize() {
+    return sizeof(TVertexType);
 }
 
 } // Namespace RenderBackend

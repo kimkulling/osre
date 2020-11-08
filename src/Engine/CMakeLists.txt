@@ -328,8 +328,8 @@ SET( renderbackend_src
 SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLCommon.h
     RenderBackend/OGLRenderer/OGLCommon.cpp
-	RenderBackend/OGLRenderer/OGLRenderCommands.h
-	RenderBackend/OGLRenderer/OGLRenderCommands.cpp
+    RenderBackend/OGLRenderer/OGLRenderCommands.h
+    RenderBackend/OGLRenderer/OGLRenderCommands.cpp
     RenderBackend/OGLRenderer/OGLEnum.cpp
     RenderBackend/OGLRenderer/OGLEnum.h
     RenderBackend/OGLRenderer/OGLRenderBackend.cpp
@@ -351,15 +351,6 @@ SET( renderbackend_vulkanrenderer_src
     RenderBackend/VulkanRenderer/VlkRenderEventHandler.h
     RenderBackend/VulkanRenderer/VlkRenderEventHandler.cpp
 )
-IF( WIN32 )
-    SET( renderbackend_dx11renderer_src
-        RenderBackend/DX11Renderer/DX11Common.h
-        RenderBackend/DX11Renderer/DX11Renderer.h
-        RenderBackend/DX11Renderer/DX11Renderer.cpp
-        RenderBackend/DX11Renderer/DX11RenderVEventHandler.h
-        RenderBackend/DX11Renderer/DX11RenderVEventHandler.cpp
-    )
-ENDIF( WIN32 )
 
 #==============================================================================
 # Scripting with Mono
@@ -458,7 +449,6 @@ SOURCE_GROUP( Properties          FILES ${properties_src} )
 SOURCE_GROUP( RenderBackend       FILES ${renderbackend_src} )
 SOURCE_GROUP( RenderBackend\\OGLRenderer    FILES ${renderbackend_oglrenderer_src} )
 SOURCE_GROUP( RenderBackend\\VulkanRenderer FILES ${renderbackend_vulkanrenderer_src} )
-SOURCE_GROUP( RenderBackend\\DX11Renderer FILES ${renderbackend_dx11renderer_src} )
 SOURCE_GROUP( Resources           FILES ${resources_src} )
 SOURCE_GROUP( Scene               FILES ${scene_src} )
 SOURCE_GROUP( Threading           FILES ${threading_src} )
@@ -541,7 +531,6 @@ ADD_LIBRARY( osre SHARED
     ${renderbackend_src}
         ${renderbackend_oglrenderer_src}
         ${renderbackend_vulkanrenderer_src}
-        ${renderbackend_dx11renderer_src}
     ${scene_src}
     ${threading_src}
         ${threading_impl_src}
