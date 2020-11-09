@@ -20,12 +20,12 @@ jobs:
         submodules: true
 
     - name: Create Build Environment
-      working-directory: ${{runner.workspace}}/.
+      #working-directory: ${{runner.workspace}}/.
       shell: bash
       run: cmake CMakeLists.txt 
 
     - name: Build
-      working-directory: ${{runner.workspace}}/.
+      #working-directory: ${{runner.workspace}}/.
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: cmake --build .
