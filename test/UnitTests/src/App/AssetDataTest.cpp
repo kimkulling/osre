@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <gtest/gtest.h>
 #include <osre/App/AssetDataArchive.h>
 #include <osre/App/World.h>
-#include <osre/Scene/View.h>
+#include <osre/Scene/Camera.h>
 #include <osre/IO/Uri.h>
 
 namespace OSRE {

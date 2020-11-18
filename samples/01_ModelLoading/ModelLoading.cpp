@@ -36,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/DbgRenderer.h>
 #include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/Node.h>
-#include <osre/Scene/View.h>
+#include <osre/Scene/Camera.h>
 
 using namespace ::OSRE;
 using namespace ::OSRE::App;

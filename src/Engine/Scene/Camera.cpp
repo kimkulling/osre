@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/View.h>
+#include <osre/Scene/Camera.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -31,7 +31,7 @@ namespace Scene {
 
 using namespace ::OSRE::RenderBackend;
 
-static const c8 *Tag = "View";
+static const c8 *Tag = "Camera";
 
 Camera::Camera(const String &name, Common::Ids &ids, Node *parent) :
         Node(name, ids, parent),

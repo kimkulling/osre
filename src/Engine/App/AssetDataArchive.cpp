@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AssetDataArchive.h>
 #include <osre/App/World.h>
 #include <osre/Debugging/osre_debugging.h>
-#include <osre/Scene/View.h>
+#include <osre/Scene/Camera.h>
 #include <osre/Scene/Node.h>
 #include <osre/App/Component.h>
 #include <osre/IO/Uri.h>
