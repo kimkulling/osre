@@ -63,13 +63,13 @@ public:
     ///	@brief	Calculates the current scaling.
     ///	@param	y			[in] The current y value for the scaling.
     void computeScaling( ui32 y );
-    const Quatf &getRotation() const;
+    const glm::quat &getRotation() const;
     const Vec3f &getScale() const;
 
 private:
     Vec3f mStartVector, mEndVector;
     TRectangle<ui32> m_Dimension;
-    Quatf m_rotation;
+    glm::quat m_rotation;
     Vec3f mScale;
     Node *mNode;
     bool m_bLeftMButtonClicked;
@@ -82,7 +82,7 @@ private:
     ui32 m_screenYOld;
 };
 
-inline const Quatf &TrackBall::getRotation() const {
+inline const glm::quat &TrackBall::getRotation() const {
     return m_rotation;
 }
 

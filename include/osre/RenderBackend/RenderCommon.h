@@ -522,7 +522,7 @@ struct OSRE_EXPORT GeoInstanceData {
 struct OSRE_EXPORT TransformState {
     glm::vec3 m_translate;
     glm::vec3 m_scale;
-    glm::vec4 m_rotation;
+    glm::mat4 m_rotation;
 
     TransformState();
     ~TransformState();

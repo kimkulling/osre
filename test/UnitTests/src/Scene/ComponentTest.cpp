@@ -94,7 +94,7 @@ TEST_F(ComponentTest, createTest) {
 	bool ok(true);
 	try {
 		Common::Ids ids;
-		Entity entity("test", ids);
+		Entity entity("test", ids, nullptr);
 		MockComponent myComp(&entity, 0);
 	} catch (...) {
 		ok = false;
@@ -105,7 +105,7 @@ TEST_F(ComponentTest, createTest) {
 TEST_F(ComponentTest, accessNodeTest) {
 	String name = "test";
 
-	Entity *entity = new Entity(name, *m_ids);
+	Entity *entity = new Entity(name, *m_ids, nullptr);
 	MockComponent myComp(entity, 0);
 
 	EXPECT_EQ(entity, myComp.getOwner());
@@ -114,7 +114,7 @@ TEST_F(ComponentTest, accessNodeTest) {
 TEST_F(ComponentTest, accessIdTest) {
 	String name = "test";
 
-	Entity *entity = new Entity(name, *m_ids);
+	Entity *entity = new Entity(name, *m_ids, nullptr);
 
 	Component *tc = entity->getComponent(ComponentType::TransformComponentType);
 	EXPECT_NE(nullptr, tc);

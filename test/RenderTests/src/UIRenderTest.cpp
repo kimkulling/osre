@@ -27,7 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/MeshBuilder.h>
-#include <osre/Scene/Stage.h>
 #include <osre/UI/ButtonBase.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/Panel.h>
@@ -53,12 +52,11 @@ static const c8 *Tag = "UiRenderTest";
 class UiRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
     Canvas *m_canvas;
-    Stage *m_stage;
     UiRenderer *m_uiRenderer;
 
 public:
     UiRenderTest() :
-            AbstractRenderTest("rendertest/UiRenderTest"), m_canvas(nullptr), m_stage(nullptr), m_uiRenderer(nullptr) {
+            AbstractRenderTest("rendertest/UiRenderTest"), m_canvas(nullptr), m_uiRenderer(nullptr) {
         // empty
     }
 
@@ -69,7 +67,6 @@ public:
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
-        m_stage = new Stage("ui_stage", rbSrv);
 
         UiItemFactory::createInstance(getWindow());
         m_uiRenderer = new UiRenderer;

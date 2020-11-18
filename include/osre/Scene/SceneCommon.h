@@ -37,8 +37,7 @@ namespace RenderBackend {
 namespace Scene {
 
 class Node;
-class Stage;
-class View;
+class Camera;
 
 } // Namespace Scene
 } // Namespace OSRE

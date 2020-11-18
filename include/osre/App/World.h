@@ -53,62 +53,39 @@ public:
     /// @brief  The class destructor.
     virtual ~World();
 
-    /// @brief  Will add a new stage to the world. @see Stage
-    /// @param  stage       [in] A pointer showing to the new stage.
-    void addStage( Scene::Stage *stage );
-
-    /// @brief  Will set the active stage.
-    /// @param  activeStage     [in] A pointer showing to the active stage.
-    /// @return true, if successful, false if stage was not attached before.
-    Scene::Stage *setActiveStage( Scene::Stage *activeStage );
-
-    /// @brief  Will set the active stage.
-    /// @param  stageName       [in] The name of the stage-
-    /// @return true, if successful, false if stage was not attached before.
-    Scene::Stage *setActiveStage( const String &stageName );
-
-    /// @brief  Will return the number of stages in the world. 
-    /// @return The number of stages.
-    size_t getNumStages() const;
-
-    /// @brief  Returns the stage at the given index.
-    /// @param  i       [in] The index for the stage.
-    /// @return A pointer showing to the stage or nullptr if the index is invalid.
-    Scene::Stage *getStageAt(ui32 i) const;
-
-    /// @brief  Will return a pointer showing to the active stage.
-    /// @return A pointer showing to the active stage or nullptr if no active stage was set before.
-    Scene::Stage *getActiveStage() const;
-
     /// @brief  Will add a new view.
     /// @param  view        [in] A pointer showing to the view.
-    void addView( Scene::View *view);
+    Scene::Camera *addCamera(const String &name);
 
     /// @brief  Will set the active view.
     /// @param  activeView  [i] A pointer showing to the active view.
     /// @return true, if set was successful, false if the view is not part of the world.
-    Scene::View *setActiveView( Scene::View *activeView );
+    Scene::Camera *setActiveCamera( Scene::Camera *activeView );
 
     /// @brief  Will set the active view.
     /// @param  viewName    [in] The name of the view.
     /// @return true, if set was successful, false if the view is not part of the world.
-    Scene::View *setActiveView( const String &viewName );
+    Scene::Camera *setActiveCamera( const String &viewName );
 
     /// @brief  Will return the number of assigned views.
     /// @return The number of assigned views.
-    size_t getNumViews() const;
+    size_t getNumCameras() const;
 
     /// @brief  Will return the view at the given index.
     /// @param  i       [in] The index.
     /// @return A pointer showing to the view or a nullptr in case of an error.
-    Scene::View *getViewAt(ui32 i) const;
+    Scene::Camera *getCameraAt(ui32 i) const;
 
     /// @brief  Will return the active view.
     /// @return A pointer showing to the active view or nullptr, if no view is currently active.
-    Scene::View *getActiveView() const;
+    Scene::Camera *getActiveView() const;
 
     void addEntity( Entity *entity );
+    void removeEntity(Entity *entity);
     Entity *getEntityByName( const String &name ) const;
+
+    void setSceneRoot(Scene::Node *root);
+    Scene::Node *getRootNode() const;
 
     /// @brief  Will update the world.
     /// @param  dt      [in] The current delta time-tick.
@@ -122,14 +99,16 @@ public:
     /// @return The active render mode, @see RenderMode .
     RenderMode getRenderMode() const;
 
+    const Common::Ids &getIds() const {
+        return m_ids;
+    }
+    
 private:
-    CPPCore::TArray<Scene::Stage*> m_stages;
-    CPPCore::THashMap<ui32, Scene::Stage*> m_lookupStates;
-    CPPCore::TArray<Scene::View*> m_views;
-    CPPCore::THashMap<ui32, Scene::View*> m_lookupViews;
-    CPPCore::TArray<Entity *> m_entities;
-    Scene::Stage *m_activeStage;
-    Scene::View *m_activeView;
+    CPPCore::TArray<Scene::Camera*> m_views;
+    CPPCore::THashMap<ui32, Scene::Camera*> m_lookupViews;
+    CPPCore::TArray<Entity*> m_entities;
+    Scene::Camera *m_activeCamera;
+    Scene::Node *mRoot;
     Common::Ids m_ids;
     RenderMode m_renderMode;
 };

@@ -62,6 +62,8 @@ namespace Scene {
 namespace App {
 
 class Entity;
+class World;
+
 struct BoneInfo;
 
 //-------------------------------------------------------------------------------------------------
@@ -75,7 +77,7 @@ public:
     using BoneInfoArray = ::CPPCore::TArray<BoneInfo *>;
     using Bone2NodeMap = std::map<const char *, const aiNode *>;
 
-    AssimpWrapper(Common::Ids &ids);
+    AssimpWrapper(Common::Ids &ids, World *world);
     ~AssimpWrapper();
     bool importAsset( const IO::Uri &file, ui32 flags );
     Entity *getEntity() const;
@@ -94,6 +96,7 @@ private:
 	RenderBackend::MeshArray m_meshArray;
     RenderBackend::Texture *mDefaultTexture;
     Entity *m_entity;
+    World *mWorld;
     MaterialArray m_matArray;
     Scene::Node *m_parent;
     Common::Ids &m_ids;

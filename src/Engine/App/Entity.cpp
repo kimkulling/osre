@@ -1,6 +1,7 @@
 #include <osre/App/AbstractBehaviour.h>
 #include <osre/App/Component.h>
 #include <osre/App/Entity.h>
+#include <osre/App/World.h>
 
 namespace OSRE {
 namespace App {
@@ -8,21 +9,28 @@ namespace App {
 using namespace ::OSRE::Scene;
 using namespace ::OSRE::RenderBackend;
 
-Entity::Entity(const String &name, const Common::Ids &ids) :
+Entity::Entity(const String &name, const Common::Ids &ids, World *world) :
         Object(name),
         m_behaviour(nullptr),
         m_renderComponent(nullptr),
         m_transformComponent(nullptr),
         m_node(nullptr),
         m_ids(ids),
-        m_aabb() {
+        m_aabb(),
+        mOwner(world) {
     m_renderComponent = new RenderComponent(this, 1);
     m_transformComponent = new TransformComponent(this, 2);
+    if (nullptr != world) {
+        mOwner->addEntity(this);
+    }
 }
 
 Entity::~Entity() {
     delete m_renderComponent;
     delete m_transformComponent;
+    if (nullptr != mOwner) {
+        mOwner->removeEntity(this);
+    }
 }
 
 void Entity::setBehaviourControl(AbstractBehaviour *behaviour) {

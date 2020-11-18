@@ -548,7 +548,7 @@ using Vec4i = TVec4<i32>;
 using Vec4f = TVec4<f32>;
 
 template <class T>
-struct OSRE_EXPORT TQuat {
+struct TQuat {
     T m_x, m_y, m_z, m_w;
 
     TQuat() :
@@ -560,6 +560,7 @@ struct OSRE_EXPORT TQuat {
             m_x(x), m_y(y), m_z(z), m_w(1) {
         // empty
     }
+    
     void set(T x, T y, T z, T w) {
         m_x = x;
         m_y = y;

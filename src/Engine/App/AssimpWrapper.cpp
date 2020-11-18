@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AssimpWrapper.h>
 #include <osre/App/Component.h>
 #include <osre/App/Entity.h>
+#include <osre/App/World.h>
 #include <osre/Common/Ids.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/StringUtils.h>
@@ -64,11 +65,12 @@ const unsigned int DefaultImportFlags = aiProcess_CalcTangentSpace | aiProcess_G
 struct BoneInfo {
 };
 
-AssimpWrapper::AssimpWrapper(Common::Ids &ids) :
+AssimpWrapper::AssimpWrapper(Common::Ids &ids, World *world) :
         m_scene(nullptr),
         m_meshArray(),
         mDefaultTexture(nullptr),
         m_entity(nullptr),
+        mWorld(world),
         m_matArray(),
         m_parent(nullptr),
         m_ids(ids),
@@ -126,8 +128,11 @@ Entity *AssimpWrapper::convertScene() {
     if (nullptr == m_scene) {
         return nullptr;
     }
+    if (nullptr == mWorld) {
+        mWorld = new World("scene");
+    }
 
-    m_entity = new Entity(m_absPathWithFile, m_ids);
+    m_entity = new Entity(m_absPathWithFile, m_ids, mWorld);
 
     if (m_scene->HasMaterials()) {
         for (ui32 i = 0; i < m_scene->mNumMaterials; ++i) {

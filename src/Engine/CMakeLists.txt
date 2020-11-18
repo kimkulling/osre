@@ -284,9 +284,8 @@ SET( scene_inc
     ${HEADER_PATH}/Scene/DbgRenderer.h
     ${HEADER_PATH}/Scene/MaterialBuilder.h
     ${HEADER_PATH}/Scene/Node.h
-    ${HEADER_PATH}/Scene/Stage.h
     ${HEADER_PATH}/Scene/TrackBall.h
-    ${HEADER_PATH}/Scene/View.h
+    ${HEADER_PATH}/Scene/Camera.h
     ${HEADER_PATH}/Scene/LineBuilder.h
     ${HEADER_PATH}/Scene/TAABB.h
     ${HEADER_PATH}/Scene/TQuadTree.h
@@ -299,9 +298,8 @@ SET( scene_src
     Scene/LineBuilder.cpp
     Scene/MaterialBuilder.cpp
     Scene/Node.cpp
-    Scene/Stage.cpp
     Scene/TrackBall.cpp
-    Scene/View.cpp
+    Scene/Camera.cpp
     Scene/ParticleEmitter.cpp
 )
 

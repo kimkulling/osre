@@ -23,8 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AssetDataArchive.h>
 #include <osre/App/World.h>
 #include <osre/Debugging/osre_debugging.h>
-#include <osre/Scene/Stage.h>
-#include <osre/Scene/View.h>
+#include <osre/Scene/Camera.h>
 #include <osre/Scene/Node.h>
 #include <osre/App/Component.h>
 #include <osre/IO/Uri.h>
@@ -107,22 +106,6 @@ static bool writeNode(Scene::Node *currentNode, Json::StreamWriter *sw ) {
     value["name"] = currentNode->getName();
     value["type"] = "scene::node";
 
-    Json::Value transformCompObj;
-    transformCompObj["id"] = currentNode->getName();
-    transformCompObj["type"] = "scene::transformcomponent";
-        
-    const glm::vec3 &pos = currentNode->getTranslation();
-    transformCompObj["transform.x"] = pos.x;
-    transformCompObj["transform.y"] = pos.y;
-    transformCompObj["transform.z"] = pos.z;
-
-    const glm::vec3 &scale = currentNode->getScale();
-    transformCompObj["scale.x"] = scale.x;
-    transformCompObj["scale.y"] = scale.y;
-    transformCompObj["scale.z"] = scale.z;
-
-    value["transformComp"] = transformCompObj;
-
     return true;
 }
 
@@ -146,25 +129,13 @@ bool AssetDataArchive::save( App::World *world, const IO::Uri &fileLocation ) {
     worldObj["type"] = "scene::world";;
     worldObj["name"] = name;
 
-    for (ui32 i = 0; i < world->getNumStages(); ++i) {
-        Stage *currentStage(world->getStageAt(i));
-        if (nullptr != currentStage) {
-            saveStage(currentStage, worldObj, sw, stream);
-        }
-    }
-
-    Stage *activeStage = world->getActiveStage();
-    if ( nullptr != activeStage ) {
-        worldObj["activeStage"] = activeStage->getName();
-    }
-
-    for (ui32 i = 0; i < world->getNumViews(); ++i) {
-        View *currentView(world->getViewAt(i));
+    for (ui32 i = 0; i < world->getNumCameras(); ++i) {
+        Camera *currentView(world->getCameraAt(i));
         if (nullptr != currentView) {
-            saveView(currentView, worldObj, sw, stream);
+            saveCamera(currentView, worldObj, sw, stream);
         }
     }
-    View *activeView = world->getActiveView();
+    Camera *activeView = world->getActiveView();
     if (nullptr != activeView) {
         worldObj["activeView"] = activeView->getName();
     }
@@ -175,30 +146,7 @@ bool AssetDataArchive::save( App::World *world, const IO::Uri &fileLocation ) {
     return true;
 }
 
-bool AssetDataArchive::saveStage(Scene::Stage *stage, Json::Value &parent, Json::StreamWriter *sw, std::ofstream &stream) {
-    Node *rootNode = stage->getRoot();
-    if (nullptr == rootNode) {
-        return true;
-    }
-
-    String name(stage->getName());
-    if (name.empty()) {
-        name = "stage_1";
-    }
-
-    Json::Value stageObj;
-    stageObj[Token::Type] = "scene::stage";
-    stageObj[Token::Name] = name;
-    
-    parent[Token::StageAttrib_ActiveState] = stageObj;
-
-    traverseChildren(rootNode, sw, stream);
-    sw->write(parent, &stream);
-
-    return true;
-}
-
-bool AssetDataArchive::saveView(Scene::View *view, Json::Value &parent, Json::StreamWriter *sw, std::ofstream &stream) {
+bool AssetDataArchive::saveCamera(Scene::Camera *view, Json::Value &parent, Json::StreamWriter *sw, std::ofstream &stream) {
     String name(view->getName());
     if (name.empty()) {
         name = "view_1";

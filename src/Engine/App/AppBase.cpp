@@ -37,8 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Pipeline.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/MaterialBuilder.h>
-#include <osre/Scene/Stage.h>
-#include <osre/Scene/View.h>
+#include <osre/Scene/Camera.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/FocusControl.h>
 #include <osre/UI/UiItemFactory.h>
@@ -316,50 +315,15 @@ World *AppBase::getActiveWorld() const {
     return m_activeWorld;
 }
 
-Scene::Stage *AppBase::createStage(const String &name) {
-    if (nullptr == m_activeWorld) {
-        osre_debug(Tag, "No world to add state to.");
-        return nullptr;
-    }
 
-    String stageName(name);
-    if (stageName.empty()) {
-        stageName = "new_stage";
-    }
-
-    Scene::Stage *stage(new Scene::Stage(stageName, m_rbService));
-    if (nullptr != stage) {
-        m_activeWorld->addStage(stage);
-    }
-
-    return stage;
-}
-
-Scene::Stage *AppBase::setActiveStage(Scene::Stage *stage) {
+Scene::Camera *AppBase::setActiveCamera(Scene::Camera *view) {
     if (nullptr == m_activeWorld) {
         osre_debug(Tag, "No world to activate state to.");
         return nullptr;
     }
-
-    return m_activeWorld->setActiveStage(stage);
+    return m_activeWorld->setActiveCamera(view);
 }
 
-Scene::View *AppBase::setActiveView(Scene::View *view) {
-    if (nullptr == m_activeWorld) {
-        osre_debug(Tag, "No world to activate state to.");
-        return nullptr;
-    }
-    return m_activeWorld->setActiveView(view);
-}
-
-Scene::Stage *AppBase::activateStage(const String &name) {
-    if (nullptr == m_activeWorld) {
-        osre_debug(Tag, "No world to activate state to.");
-        return nullptr;
-    }
-
-    return m_activeWorld->setActiveStage(name);
-}
 void AppBase::requestShutdown() {
     m_shutdownRequested = true;
 }
@@ -501,6 +465,11 @@ bool AppBase::onCreate() {
     }
 
     IO::IOService::create();
+#ifdef OSRE_WINDOWS
+    App::AssetRegistry::registerAssetPath("assets", "../../media");
+#else
+    App::AssetRegistry::registerAssetPath("assets", "../media");
+#endif
 
     m_uiRenderer = new UI::UiRenderer;
 

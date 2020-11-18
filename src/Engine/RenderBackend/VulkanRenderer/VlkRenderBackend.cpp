@@ -27,12 +27,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Stream.h>
 #include <osre/Platform/AbstractDynamicLoader.h>
 #include <osre/Platform/PlatformInterface.h>
+// clang-format off
 #ifdef OSRE_WINDOWS
-#include <src/Engine/Platform/win32/Win32Window.h>
+#   include <src/Engine/Platform/win32/Win32Window.h>
 #else
-#include <src/Engine/Platform/sdl2/SDL2Window.h>
+#   include <src/Engine/Platform/sdl2/SDL2Window.h>
 #endif
-
+// clang-format on
 namespace OSRE {
 namespace RenderBackend {
 
@@ -1245,8 +1246,7 @@ VlkShaderModule *VlkRenderBackend::createShaderModule(IO::Stream &stream) {
         size, // size_t                         codeSize
         reinterpret_cast<const uint32_t *>(&buffer) // const uint32_t                *pCode
     };
-    VlkShaderModule *mod(new VlkShaderModule);
-    VkShaderModule shader_module;
+    VlkShaderModule *mod = new VlkShaderModule;
     if (vkCreateShaderModule(getDevice(), &shader_module_create_info, nullptr, &mod->m_module) != VK_SUCCESS) {
         osre_error(Tag, "Could not create shader module.");
         return nullptr;
