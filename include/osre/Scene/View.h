@@ -38,10 +38,10 @@ namespace Scene {
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT View : public Node {
+class OSRE_EXPORT Camera : public Node {
 public:
-    View(const String &name, Common::Ids &ids, Node *parent = nullptr);
-    ~View() override;
+    Camera(const String &name, Common::Ids &ids, Node *parent = nullptr);
+    ~Camera() override;
     void setProjectionParameters(f32 fov, f32 w, f32 h, f32 nearPlane, f32 farPlane);
     void update(Time dt);
     void draw(RenderBackend::RenderBackendService *renderBackendSrv);
@@ -70,19 +70,19 @@ private:
     glm::mat4 m_view, m_projection;
 };
 
-inline f32 View::getFov() const {
+inline f32 Camera::getFov() const {
     return m_fov;
 }
 
-inline f32 View::getAspectRatio() const {
+inline f32 Camera::getAspectRatio() const {
     return m_aspectRatio;
 }
 
-inline f32 View::getNear() const {
+inline f32 Camera::getNear() const {
     return m_near;
 }
 
-inline f32 View::getFar() const {
+inline f32 Camera::getFar() const {
     return m_far;
 }
 

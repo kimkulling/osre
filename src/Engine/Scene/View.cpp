@@ -33,7 +33,7 @@ using namespace ::OSRE::RenderBackend;
 
 static const c8 *Tag = "View";
 
-View::View(const String &name, Common::Ids &ids, Node *parent) :
+Camera::Camera(const String &name, Common::Ids &ids, Node *parent) :
         Node(name, ids, parent),
         m_fov(60.0f),
         m_w(0.0f),
@@ -50,11 +50,11 @@ View::View(const String &name, Common::Ids &ids, Node *parent) :
     // empty
 }
 
-View::~View() {
+Camera::~Camera() {
     // empty
 }
 
-void View::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
+void Camera::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
     m_fov = fov;
     m_w = w;
     m_h = h;
@@ -67,11 +67,11 @@ void View::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
     m_projection = glm::perspective(glm::radians(m_fov), m_aspectRatio, zNear, zFar);
 }
 
-void View::update(Time dt) {
+void Camera::update(Time dt) {
     onUpdate(dt);
 }
 
-void View::draw(RenderBackendService *rbSrv) {
+void Camera::draw(RenderBackendService *rbSrv) {
     if (nullptr == rbSrv) {
         return;
     }
@@ -79,7 +79,7 @@ void View::draw(RenderBackendService *rbSrv) {
     onRender(rbSrv);
 }
 
-void View::observeBoundingBox(const TAABB<f32> &aabb) {
+void Camera::observeBoundingBox(const TAABB<f32> &aabb) {
     const f32 diam = aabb.getDiameter();
     const Vec3f center = aabb.getCenter();
 
@@ -88,7 +88,7 @@ void View::observeBoundingBox(const TAABB<f32> &aabb) {
     setLookAt(eye, c, up);
 }
 
-void View::setLookAt(const glm::vec3 &eye, const glm::vec3 &center, const glm::vec3 &up) {
+void Camera::setLookAt(const glm::vec3 &eye, const glm::vec3 &center, const glm::vec3 &up) {
     m_eye = eye;
     m_center = center;
     m_up = up;
@@ -96,7 +96,7 @@ void View::setLookAt(const glm::vec3 &eye, const glm::vec3 &center, const glm::v
     m_view = glm::lookAt(eye, center, up);
 }
 
-void View::setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farPlane) {
+void Camera::setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farPlane) {
     m_fov = fov;
     m_aspectRatio = aspectRatio;
     m_near = nearPlane;
@@ -104,7 +104,7 @@ void View::setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farPla
     m_projection = glm::perspective(fov, aspectRatio, nearPlane, farPlane);
 }
 
-void View::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane, f32 farPlane) {
+void Camera::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane, f32 farPlane) {
     m_w = right - left;
     m_h = bottom - top;
 
@@ -113,19 +113,19 @@ void View::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane,
     m_projection = glm::ortho(left, right, bottom, top, nearPlane, farPlane);
 }
 
-const glm::mat4 &View::getView() const {
+const glm::mat4 &Camera::getView() const {
     return m_view;
 }
 
-const glm::mat4 &View::getProjection() const {
+const glm::mat4 &Camera::getProjection() const {
     return m_projection;
 }
 
-void View::onUpdate(Time dt) {
+void Camera::onUpdate(Time dt) {
     (void)dt;
 }
 
-void View::onRender(RenderBackendService *rbSrv) {
+void Camera::onRender(RenderBackendService *rbSrv) {
     if (nullptr == rbSrv) {
         osre_debug(Tag, "Pointer to renderbackend service is nullptr.");
         return;

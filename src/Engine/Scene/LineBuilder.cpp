@@ -61,7 +61,7 @@ LineBuilder &LineBuilder::addLine(const Vec3f &pos0, const Vec3f &pos1) {
     m_activePrimGroup->m_startIndex = m_indexCache.size();
     m_activePrimGroup->m_numIndices += 2;
 
-    m_indexCache.add(m_activePrimGroup->m_startIndex);
+    m_indexCache.add((ui32) m_activePrimGroup->m_startIndex);
     m_isDirty = true;
 
     return *this;
@@ -80,7 +80,7 @@ LineBuilder &LineBuilder::addLines(Vec3f *pos0, Vec3f *pos1, ui32 numLines) {
     m_activePrimGroup->m_startIndex = m_indexCache.size();
     m_activePrimGroup->m_numIndices += numLines;
     for (ui32 i = 0; i < numLines; ++i) {
-        m_indexCache.add(m_activePrimGroup->m_startIndex + i);
+        m_indexCache.add((ui32)m_activePrimGroup->m_startIndex + i);
     }
     m_isDirty = true;
 

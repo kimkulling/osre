@@ -48,6 +48,36 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
+///	@brief  This class is used to declare user-defined node factories.
+//-------------------------------------------------------------------------------------------------
+struct AbstractNodeFactory {
+    String m_type; ///< The type descriptor.
+
+    /// @brief  The class constructor.
+    /// @param  type    [in] The type descriptor.
+    AbstractNodeFactory(const String &type) :
+            m_type(type) {
+        // empty
+    }
+
+    /// @brief  The class destructor, virtual.
+    virtual ~AbstractNodeFactory() {
+        // empty
+    }
+
+    /// @brief  Will return the type.
+    /// @return The type.
+    virtual const String &getType() const {
+        return m_type;
+    }
+
+    virtual Node *create(const String &name, Common::Ids &ids, bool transformEnabled,
+            bool renderEnabled, Node *parent) = 0;
+};
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
 ///	@brief  This class is used to represents a simple node in the stage hierarchy. You can add
 /// several functionalities by adding components to is. Each component implements functionality
 /// like render geometry or transformation information.
@@ -70,6 +100,7 @@ public:
     virtual ~Node();
     virtual void setParent(Node *parent);
     virtual Node *getParent() const;
+    virtual Node *createChild(const String &name);
     virtual void addChild(Node *child);
     virtual bool removeChild(const String &name, TraverseMode mode);
     virtual Node *findChild(const String &name) const;
@@ -85,16 +116,13 @@ public:
     virtual void setProperty(Properties::Property *prop);
     virtual Properties::Property *getProperty(const String name) const;
 
-    void setTranslation(const glm::vec3 &pos);
-    const glm::vec3 &getTranslation() const;
-    void setScale(const glm::vec3 &pos);
-    const glm::vec3 &getScale() const;
-    void setRotation(const Quatf &rotation);
-    Quatf getRotation() const;
+    void translate(const glm::vec3 &pos);
+    void scale(const glm::vec3 &pos);
+    void rotate(f32 angle, const glm::vec3 &axis);
+    void setRotation(glm::quat &rotation);
     void setTransformationMatrix(const glm::mat4 &m);
     const glm::mat4 &getTransformationMatrix() const;
     glm::mat4 getWorlTransformMatrix();
-    const RenderBackend::TransformState &getTransformState() const;
 
     void addMeshReference(size_t entityMeshIdx);
     size_t getNumMeshReferences() const;
@@ -112,14 +140,7 @@ private:
     Common::Ids *m_ids;
     PropertyMap m_propMap;
     AABB m_aabb;
-    enum DirtyFrag {
-        NotDirty = 0,
-        NeedsTransform = 1
-    };
-    ui32 m_dirty;
-    RenderBackend::TransformState m_localTransformState;
-    glm::mat4 m_transform;
-    Quatf mRotation;
+    glm::mat4 m_localTransform;
 };
 
 inline void Node::setActive(bool isActive) {

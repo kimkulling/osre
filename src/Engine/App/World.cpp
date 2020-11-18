@@ -26,7 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/StringUtils.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/Stage.h>
 #include <osre/Scene/View.h>
 
 namespace OSRE {
@@ -52,100 +51,36 @@ void lookupMapDeleterFunc(TArray<T> &ctr) {
 
 World::World(const String &worldName, RenderMode renderMode) :
         Object(worldName),
-        m_stages(),
-        m_lookupStates(),
         m_views(),
         m_lookupViews(),
         m_entities(),
-        m_activeStage(nullptr),
-        m_activeView(nullptr),
+        m_activeCamera(nullptr),
+        mRoot(nullptr),
         m_ids(),
         m_renderMode(renderMode) {
     // empty
 }
 
 World::~World() {
-    ContainerClear<TArray<View *>>(m_views, lookupMapDeleterFunc);
+    ContainerClear<TArray<Camera *>>(m_views, lookupMapDeleterFunc);
     m_lookupViews.clear();
-    m_activeView = nullptr;
-
-    ContainerClear<TArray<Stage *>>(m_stages, lookupMapDeleterFunc);
-    m_lookupStates.clear();
-    m_activeStage = nullptr;
+    m_activeCamera = nullptr;
 }
 
-void World::addStage(Stage *stage) {
-    if (nullptr == stage) {
-        return;
-    }
-
-    const ui32 hash(StringUtils::hashName(stage->getName()));
-    if (m_lookupStates.hasKey(hash)) {
-        return;
-    }
-
-    m_stages.add(stage);
-    m_lookupStates.insert(hash, stage);
-    stage->setIdContainer(m_ids);
+Scene::Camera *World::addCamera(const String &name) {
+    m_activeCamera = new Scene::Camera(name, m_ids, mRoot);
+    m_views.add(m_activeCamera);
+    const ui32 hash = StringUtils::hashName(m_activeCamera->getName());
+    m_lookupViews.insert(hash, m_activeCamera);
+    
+    return m_activeCamera;
 }
 
-Stage *World::setActiveStage(Stage *activeStage) {
-    if (m_activeStage == activeStage) {
-        return nullptr;
-    }
-
-    m_activeStage = activeStage;
-    if (nullptr == m_stages.find(activeStage)) {
-        m_stages.add(activeStage);
-    }
-
-    return m_activeStage;
-}
-
-Stage *World::setActiveStage(const String &stageName) {
-    const ui32 hash(StringUtils::hashName(stageName.c_str()));
-    if (!m_lookupStates.hasKey(hash)) {
-        return nullptr;
-    }
-
-    Stage *activeStage(nullptr);
-    if (m_lookupStates.getValue(hash, activeStage)) {
-        return setActiveStage(activeStage);
-    }
-
-    return nullptr;
-}
-
-size_t World::getNumStages() const {
-    return m_stages.size();
-}
-
-Stage *World::getStageAt(ui32 i) const {
-    if (i >= m_stages.size()) {
-        return nullptr;
-    }
-    return m_stages[i];
-}
-
-Stage *World::getActiveStage() const {
-    return m_activeStage;
-}
-
-void World::addView(View *view) {
-    if (nullptr == view) {
-        return;
-    }
-
-    m_activeView = view;
-    const ui32 hash(StringUtils::hashName(view->getName()));
-    m_lookupViews.insert(hash, view);
-}
-
-size_t World::getNumViews() const {
+size_t World::getNumCameras() const {
     return m_views.size();
 }
 
-View *World::getViewAt(ui32 i) const {
+Camera *World::getCameraAt(ui32 i) const {
     if (i >= m_views.size()) {
         return nullptr;
     }
@@ -153,12 +88,12 @@ View *World::getViewAt(ui32 i) const {
     return m_views[i];
 }
 
-View *World::setActiveView(View *activeView) {
-    if (m_activeView == activeView) {
+Camera *World::setActiveCamera(Camera *activeView) {
+    if (m_activeCamera == activeView) {
         return nullptr;
     }
 
-    m_activeView = activeView;
+    m_activeCamera = activeView;
     if (nullptr == m_views.find(activeView)) {
         m_views.add(activeView);
     }
@@ -166,23 +101,23 @@ View *World::setActiveView(View *activeView) {
     return activeView;
 }
 
-View *World::setActiveView(const String &viewName) {
+Camera *World::setActiveCamera(const String &viewName) {
     const ui32 hash(StringUtils::hashName(viewName));
     if (!m_lookupViews.hasKey(hash)) {
         return nullptr;
     }
 
-    View *activeView(nullptr);
+    Camera *activeView(nullptr);
     if (m_lookupViews.getValue(hash, activeView)) {
-        setActiveView(activeView);
+        setActiveCamera(activeView);
         return activeView;
     }
 
     return nullptr;
 }
 
-View *World::getActiveView() const {
-    return m_activeView;
+Camera *World::getActiveView() const {
+    return m_activeCamera;
 }
 
 void World::addEntity(Entity *entity) {
@@ -192,6 +127,17 @@ void World::addEntity(Entity *entity) {
     }
 
     m_entities.add(entity);
+}
+
+void World::removeEntity( Entity *entity ) {
+    if (nullptr == entity) {
+        return;
+    }
+    
+    CPPCore::TArray<Entity*>::Iterator it = m_entities.find(entity);
+    if (m_entities.end() != it) {
+        m_entities.remove(it);
+    }
 }
 
 Entity *World::getEntityByName(const String &name) const {
@@ -210,13 +156,21 @@ Entity *World::getEntityByName(const String &name) const {
     return nullptr;
 }
 
-void World::update(Time dt) {
-    if (nullptr != m_activeStage) {
-        m_activeStage->update(dt);
+void World::setSceneRoot( Scene::Node *root ) {
+    if (nullptr == root) {
+        mRoot = nullptr;
+        return;
     }
+    mRoot = root;
+}
 
-    if (nullptr != m_activeView) {
-        m_activeView->update(dt);
+Scene::Node *World::getRootNode() const {
+    return mRoot;
+}
+
+void World::update(Time dt) {
+    if (nullptr != m_activeCamera) {
+        m_activeCamera->update(dt);
     }
 
     for (ui32 i = 0; i < m_entities.size(); ++i) {
@@ -235,12 +189,8 @@ void World::draw(RenderBackendService *rbSrv) {
     rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
     rbSrv->beginRenderBatch("b1");
 
-    if (nullptr != m_activeStage) {
-        m_activeStage->draw(rbSrv);
-    }
-
-    if (nullptr != m_activeView) {
-        m_activeView->draw(rbSrv);
+    if (nullptr != m_activeCamera) {
+        m_activeCamera->draw(rbSrv);
     }
 
     for (ui32 i = 0; i < m_entities.size(); ++i) {

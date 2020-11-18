@@ -93,8 +93,7 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         AppBase(argc, (const char **)argv, "api", "The render API"),
         mModuleArray(),
         mModulePathArray(),
-        mStage(nullptr),
-        m_view(nullptr),
+        mCamera(nullptr),
         m_angle(0.f),
         m_model(),
         m_transformMatrix(),
@@ -174,7 +173,7 @@ bool OsreEdApp::onCreate() {
 }
 
 void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
-    AssimpWrapper assimpWrapper(*getIdContainer());
+    AssimpWrapper assimpWrapper(*getIdContainer(), getActiveWorld());
     if (!assimpWrapper.importAsset(modelLoc, 0)) {
         return;
     }
@@ -187,20 +186,17 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     if (nullptr == rootWindow) {
         return;
     }
-    mStage = AppBase::createStage("ModelLoading");
-    AppBase::setActiveStage(mStage);
-    m_view = mStage->addView("default_view", nullptr);
-    AppBase::setActiveView(m_view);
 
     Rect2ui windowsRect;
     rootWindow->getWindowsRect(windowsRect);
+    World *world = getActiveWorld();
+    mCamera = world->addCamera("camera_1");
     mTrackBall = new Scene::TrackBall("trackball", windowsRect.getWidth(), windowsRect.getHeight());
-    m_view->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.01f, 1000.f);
+    mCamera->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.01f, 1000.f);
     Entity *entity = assimpWrapper.getEntity();
 
-    World *world = getActiveWorld();
     world->addEntity(entity);
-    m_view->observeBoundingBox(entity->getAABB());
+    mCamera->observeBoundingBox(entity->getAABB());
     m_modelNode = entity->getNode();
 
     std::string model = modelLoc.getResource();

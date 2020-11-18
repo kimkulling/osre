@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <gtest/gtest.h>
 #include <osre/App/AssetDataArchive.h>
 #include <osre/App/World.h>
-#include <osre/Scene/Stage.h>
 #include <osre/Scene/View.h>
 #include <osre/IO/Uri.h>
 
@@ -57,11 +56,9 @@ TEST_F( AssetDataTest, load_save_Test ) {
     EXPECT_FALSE( ok );
 
     World *world = new World("test");
-    Scene::Stage *stage = new Scene::Stage("stage", nullptr);
-    world->setActiveStage(stage);
     Common::Ids ids;
-    Scene::View *view = new Scene::View("view", ids);
-    world->setActiveView(view);
+    Scene::Camera *camera = new Scene::Camera("view", ids);
+    world->setActiveCamera(camera);
     ok = archive.save(world, uri);
     EXPECT_TRUE(ok);
 

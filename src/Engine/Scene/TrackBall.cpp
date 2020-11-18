@@ -87,8 +87,8 @@ void TrackBall::onOSEvent(const Common::Event &osEvent, const Common::EventData 
             computeScaling( pMMData->m_absY );
         }
     } else if (osEvent == Platform::MouseButtonUpEvent) {
-        mNode->setScale(glm::vec3(1, 1, 1));
-        mNode->setRotation(Quatf(0, 0, 0, 1));
+        mNode->scale(glm::vec3(1, 1, 1));
+        mNode->setRotation(glm::quat(0, 0, 0, 1));
         m_screenYOld = 0;
         const MouseButtonEventData *pMBData = reinterpret_cast<const MouseButtonEventData*>( data );
         if ( 0 == pMBData->m_Button ) {
@@ -129,9 +129,15 @@ void TrackBall::mapToSphere(const Vec2f *pNewPt, Vec3f *newVector) {
 void TrackBall::computeRotation() {
     Vec3f perp = mStartVector.crossProduct(mEndVector);
     if (perp.getLength() > Math::BaseMath::getSPEPS()) {
-        m_rotation.set(perp.getX(), perp.getY(), perp.getZ(), mStartVector.dotProduct(mEndVector));
+        m_rotation.x = perp.getX();
+        m_rotation.y = perp.getX();
+        m_rotation.z = perp.getZ();
+        m_rotation.w = mStartVector.dotProduct(mEndVector);
     } else {
-        m_rotation.set(0.0f, 0.0f, 0.0f, 1.0f);
+        m_rotation.x = 0;
+        m_rotation.y = 0;
+        m_rotation.z = 0;
+        m_rotation.w = 1;
     }
 
     mNode->setRotation( m_rotation );

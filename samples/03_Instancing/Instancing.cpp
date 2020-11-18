@@ -37,7 +37,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/MeshProcessor.h>
 #include <osre/Scene/Node.h>
-#include <osre/Scene/Stage.h>
 #include <osre/Scene/View.h>
 
 using namespace ::OSRE;
@@ -52,15 +51,13 @@ static const c8 *Tag = "InstancingApp";
 /// The example application, will create the render environment and render a simple triangle onto it
 class InstancingApp : public App::AppBase {
     App::Entity *mEntity;
-    Scene::Stage *mStage;
-    Scene::View *mView;
+    Scene::Camera *mCamera;
 
 public:
     InstancingApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv, "api:model", "The render API:The model to load"),
             mEntity(nullptr),
-            mStage(nullptr),
-            mView(nullptr) {
+            mCamera(nullptr) {
         // empty
     }
 
@@ -91,16 +88,12 @@ protected:
             return false;
         }
 
-        mStage = AppBase::createStage("Instancing");
-        AppBase::setActiveStage(mStage);
-        Scene::View *view = mStage->addView("default_view", nullptr);
-        AppBase::setActiveView(view);
-        Scene::Node *geoNode = mStage->addNode("geo", nullptr);
-
         Rect2ui windowsRect;
         rootWindow->getWindowsRect(windowsRect);
-        view->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.0001f, 1000.f);
-        mEntity = new App::Entity("instance", *mStage->getIdContainer());
+
+        Camera *camera = getActiveWorld()->addCamera("cam1");
+        camera->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.0001f, 1000.f);
+        mEntity = new App::Entity("instance", getActiveWorld()->getIds(), getActiveWorld());
         Scene::MeshBuilder meshBuilder;
         AppBase::getActiveWorld()->addEntity(mEntity);
 //        RenderBackend::Mesh *mesh = meshBuilder.allocCube(VertexType::RenderVertex, 1, 2, 3, BufferAccessType::ReadWrite).getMesh();
@@ -108,13 +101,14 @@ protected:
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
-            mStage->setRoot(geoNode);
             Scene::GeometryProcessor process;
             process.addGeo(mesh);
             process.execute();
             Scene::Node::AABB aabb = process.getAABB();
+            Node *root = getActiveWorld()->getRootNode();
+            Node *geoNode = root->createChild("mesh_node");
             geoNode->setAABB(aabb);
-            view->observeBoundingBox(aabb);
+            camera->observeBoundingBox(aabb);
         }
 
         return true;

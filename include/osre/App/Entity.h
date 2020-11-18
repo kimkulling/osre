@@ -22,10 +22,12 @@ class AbstractBehaviour;
 class Component;
 class RenderComponent;
 class TransformComponent;
+class AppBase;
+class World;
 
 class OSRE_EXPORT Entity : public Common::Object {
 public:
-    Entity( const String &name, const Common::Ids &ids );
+    Entity( const String &name, const Common::Ids &ids, World *world );
     virtual ~Entity();
     virtual void setBehaviourControl(AbstractBehaviour *behaviour );
     virtual void addStaticMeshes( const RenderBackend::MeshArray &meshArray );
@@ -46,6 +48,7 @@ private:
     Scene::Node *m_node;
     const Common::Ids &m_ids;
     Scene::Node::AABB m_aabb;
+    World *mOwner;
 };
 
 } // Namespace App

@@ -36,7 +36,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/DbgRenderer.h>
 #include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/Node.h>
-#include <osre/Scene/Stage.h>
 #include <osre/Scene/View.h>
 
 using namespace ::OSRE;
@@ -52,8 +51,7 @@ static const c8 *Tag = "ModelLoadingApp";
 /// The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
     String m_assetFolder;
-    Scene::Stage *m_stage;
-    Scene::View *m_view;
+    Scene::Camera *m_camera;
     f32 m_angle;
     glm::mat4 m_model;
     TransformMatrixBlock m_transformMatrix;
@@ -63,8 +61,7 @@ public:
     ModelLoadingApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv, "api", "The render API"),
             m_assetFolder(""),
-            m_stage(nullptr),
-            m_view(nullptr),
+            m_camera(nullptr),
             m_angle(0.0f),
             m_model(),
             m_transformMatrix(),
@@ -92,7 +89,7 @@ protected:
     }
 
     void loadAsset(const IO::Uri &modelLoc) {
-        AssimpWrapper assimpWrapper(*getIdContainer());
+        AssimpWrapper assimpWrapper(*getIdContainer(), getActiveWorld());
         if (!assimpWrapper.importAsset(modelLoc, 0)) {
             return;
         }
@@ -105,19 +102,16 @@ protected:
         if (nullptr == rootWindow) {
             return;
         }
-        m_stage = AppBase::createStage("ModelLoading");
-        AppBase::setActiveStage(m_stage);
-        m_view = m_stage->addView("default_view", nullptr);
-        AppBase::setActiveView(m_view);
 
         Rect2ui windowsRect;
         rootWindow->getWindowsRect(windowsRect);
-        m_view->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.01f, 1000.f);
+        World *world = getActiveWorld();
+        m_camera = world->addCamera("camera");
+        m_camera->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.01f, 1000.f);
         Entity *entity = assimpWrapper.getEntity();
 
-        World *world = getActiveWorld();
         world->addEntity(entity);
-        m_view->observeBoundingBox(entity->getAABB());
+        m_camera->observeBoundingBox(entity->getAABB());
         m_modelNode = entity->getNode();
     }
     

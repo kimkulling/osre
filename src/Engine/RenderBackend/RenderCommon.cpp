@@ -567,11 +567,10 @@ bool TransformState::operator!=(const TransformState &rhs) const {
 }
 
 void TransformState::toMatrix(mat4 &m) const {
-    mat4 mvp = mat4(1.0f);
-    mvp *= glm::translate(m, m_translate);
-    mvp *= mat4(1.0f);
-    mvp *= glm::scale(m, m_scale);
-    m *= mvp;
+    glm::mat4 local(1);
+    m *= glm::translate(m, m_translate);
+    m *= glm::scale(m, m_scale);
+    m *= m_rotation;
 }
 
 TransformMatrixBlock::TransformMatrixBlock() :

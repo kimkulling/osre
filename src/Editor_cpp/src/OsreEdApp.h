@@ -3,7 +3,6 @@
 #include <osre/App/AppBase.h>
 #include <osre/App/World.h>
 #include <osre/Scene/Node.h>
-#include <osre/Scene/Stage.h>
 #include <osre/Scene/View.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
@@ -61,8 +60,7 @@ private:
     ModuleArray mModuleArray;
     ModulePathArray mModulePathArray;
 
-    Scene::Stage *mStage;
-    Scene::View *m_view;
+    Scene::Camera *mCamera;
     f32 m_angle;
     glm::mat4 m_model;
     RenderBackend::TransformMatrixBlock m_transformMatrix;

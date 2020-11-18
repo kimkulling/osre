@@ -29,10 +29,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Profiling/PerformanceCounterRegistry.h>
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/Node.h>
-#include <osre/Scene/Stage.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -50,18 +48,15 @@ static const c8 *Tag = "HelloWorldApp";
 
 /// The example application, will create the render environment and render a simple triangle onto it
 class HelloWorldApp : public App::AppBase {
-    /// The main state, is used to describe a scene to render
-    Scene::Stage *mStage;
     /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock m_transformMatrix;
-
+    /// 
     Entity *mEntity;
 
 public:
     /// The class constructor with the incoming arguments from the command line.
     HelloWorldApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv),
-            mStage(nullptr),
             mEntity(nullptr) {
         // empty
     }
@@ -79,19 +74,8 @@ protected:
 
         AppBase::setWindowsTitle("Hello-World sample!");
 
-#ifdef OSRE_WINDOWS
-        App::AssetRegistry::registerAssetPath("assets", "../../media");
-#else
-        App::AssetRegistry::registerAssetPath("assets", "../media");
-#endif
-
-        mStage = AppBase::createStage("HelloWorld");
-        AppBase::activateStage(mStage->getName());
-
-        mEntity = new Entity("entity", *AppBase::getIdContainer());
-        AppBase::getActiveWorld()->addEntity(mEntity);
+        mEntity = new Entity("entity", *AppBase::getIdContainer(), AppBase::getActiveWorld());
         RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
-        Scene::Node *geoNode = mStage->addNode("geo", nullptr);
         Scene::MeshBuilder meshBuilder;
         meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
         RenderBackend::Mesh *mesh = meshBuilder.getMesh();
@@ -100,7 +84,6 @@ protected:
             m_transformMatrix.update();
             getRenderBackendService()->setMatrix("MVP", m_transformMatrix.m_mvp);
             rc->addStaticMesh(mesh);
-            geoNode->addMeshReference(0);
         }
 
         return true;
