@@ -35,7 +35,7 @@ public:
     bool registerModule(ModuleBase *mod);
     bool loadModules();
     UI::Panel *getRootPanel() const;
-    void loadAsset(const IO::Uri &modelLoc);
+    void öimportAsset(const IO::Uri &modelLoc);
 
 protected:
     bool onCreate() override;

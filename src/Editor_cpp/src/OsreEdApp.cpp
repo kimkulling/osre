@@ -103,7 +103,7 @@ bool OsreEdApp::onCreate() {
     return true;
 }
 
-void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
+void OsreEdApp::importAsset(const IO::Uri &modelLoc) {
     AssimpWrapper assimpWrapper(*getIdContainer());
     if (!assimpWrapper.importAsset(modelLoc, 0)) {
         return;
