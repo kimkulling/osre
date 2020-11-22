@@ -38,7 +38,6 @@ TrackBall::TrackBall(const String &trackBallObjName, ui32 w, ui32 h) :
         m_Dimension(w, h),
         m_rotation(),
         mScale(1,1,1),
-        mNode(nullptr),
         m_bLeftMButtonClicked(false),
         m_bMiddleClicked(false),
         m_bRightMButtonClicked(false),
@@ -46,7 +45,8 @@ TrackBall::TrackBall(const String &trackBallObjName, ui32 w, ui32 h) :
         m_adjWidth(0.0f),
         m_adjHeight(0.0f),
         m_screenY(0),
-        m_screenYOld(0) {
+        m_screenYOld(0),
+        mRadius (1.0f) {
     // adjust the width for to sphere mapping
     const f32 width = static_cast<f32>(m_Dimension.getWidth());
     if (width) {
@@ -62,6 +62,12 @@ TrackBall::TrackBall(const String &trackBallObjName, ui32 w, ui32 h) :
 
 TrackBall::~TrackBall() {
     // empty
+}
+
+void TrackBall::rotateTo( const Vec2f &from, Vec2f &to ) {
+    mapToSphere(&from, &mStartVector);
+    mapToSphere(&to, &mEndVector);
+    computeRotation();
 }
 
 void TrackBall::onOSEvent(const Common::Event &osEvent, const Common::EventData *data) {
@@ -87,8 +93,6 @@ void TrackBall::onOSEvent(const Common::Event &osEvent, const Common::EventData 
             computeScaling( pMMData->m_absY );
         }
     } else if (osEvent == Platform::MouseButtonUpEvent) {
-        mNode->scale(glm::vec3(1, 1, 1));
-        mNode->setRotation(glm::quat(0, 0, 0, 1));
         m_screenYOld = 0;
         const MouseButtonEventData *pMBData = reinterpret_cast<const MouseButtonEventData*>( data );
         if ( 0 == pMBData->m_Button ) {
@@ -107,22 +111,22 @@ void TrackBall::mapToSphere(const Vec2f *pNewPt, Vec3f *newVector) {
 
     // adjust point coordinates and scale down to range of [-1 ... 1]
     f32 x = (tempPt.getX() * m_adjWidth) - 1.0f;
-    f32 y = /*1.0f -*/ (tempPt.getY() * m_adjHeight);
+    f32 y = tempPt.getY() * m_adjHeight;
     tempPt.set(x, y);
 
     // compute the square of the length of the vector to the point from the center
     f32 length = (tempPt.getX() * tempPt.getX()) + (tempPt.getY() * tempPt.getY());
 
     // if the point is mapped outside of the sphere... (length > radius squared)
-    if (length > 1.0f) {
+    if (length > mRadius) {
         // compute a normalizing factor (radius / sqrt(length))
-        f32 norm = 1.0f / sqrt(length);
+        f32 norm = mRadius / sqrt(length);
 
         // return the "normalized" vector, a point on the sphere
         newVector->set(tempPt.getX() * norm, tempPt.getY() * norm, 0.0f);
     } else { // else it's on the inside
         // return a vector to a point mapped inside the sphere sqrt(radius squared - length)
-        newVector->set(tempPt.getX(), tempPt.getY(), sqrt(1.0f - length));
+        newVector->set(tempPt.getX(), tempPt.getY(), sqrt(mRadius - length));
     }
 }
 
@@ -139,17 +143,15 @@ void TrackBall::computeRotation() {
         m_rotation.z = 0;
         m_rotation.w = 1;
     }
-
-    mNode->setRotation( m_rotation );
 }
 
 void TrackBall::computeScaling(ui32 y) {
     m_screenYOld = m_screenY;
     m_screenY = y;
-    static const f32 offset = 0.001f;
+    const f32 offset = 0.0001f;
     if (m_screenYOld) {
         i32 diff = m_screenY - m_screenYOld;
-        const f32 scaleFactor = offset * (f32)diff;
+        const f32 scaleFactor = offset * static_cast<f32>(diff);
         mScale += scaleFactor;
         if (mScale.isZero()) {
             mScale.set(0, 0, 0);

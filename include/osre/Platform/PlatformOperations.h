@@ -33,17 +33,18 @@ namespace IO {
 
 namespace Platform {
 
+
+enum class DlgResults {
+    DlgButtonRes_Yes = 1,
+    DlgButtonRes_No,
+    DlgButtonRes_Ok
+};
+
 class OSRE_EXPORT PlatformOperations {
 public:
     enum {
         DlgButton_YesNo = 1,
         DlgButton_ok = 2
-    };
-
-    enum DlgResults {
-        DlgButtonRes_Yes = 1,
-        DlgButtonRes_No,
-        DlgButtonRes_Ok
     };
 
     static void getFileOpenDialog( const c8 *extensions, IO::Uri &location );

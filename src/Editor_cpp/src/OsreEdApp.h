@@ -61,12 +61,12 @@ private:
     ModulePathArray mModulePathArray;
 
     Scene::Camera *mCamera;
-    f32 m_angle;
     glm::mat4 m_model;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
     Scene::Node::NodePtr m_modelNode;
     Scene::TrackBall *mTrackBall;
     App::Project *mProject;
+    Vec2f mOld;
 };
 
 } // namespace Editor

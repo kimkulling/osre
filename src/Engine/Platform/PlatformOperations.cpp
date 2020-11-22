@@ -120,13 +120,13 @@ void PlatformOperations::getDialog( const String &title, const String &question,
 
     switch ( msgboxID ) {
         case IDYES:
-            result = DlgButtonRes_Yes;
+            result = DlgResults::DlgButtonRes_Yes;
             break;
         case IDNO:
-            result = DlgButtonRes_No;
+            result = DlgResults::DlgButtonRes_No;
             break;
         case IDOK:
-            result = DlgButtonRes_Ok;
+            result = DlgResults::DlgButtonRes_Ok;
             break;
         default:
             osre_debug( Tag, "Unsupported id detected " + std::to_string( msgboxID ) );
