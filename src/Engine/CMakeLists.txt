@@ -59,6 +59,8 @@ SET( app_src
     App/AssetDataArchive.cpp
     App/AssimpWrapper.cpp
     App/World.cpp
+    App/MouseEventListener.cpp
+    App/MouseEventListener.h
 )
 
 #==============================================================================

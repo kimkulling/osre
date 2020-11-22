@@ -18,6 +18,8 @@
 
 #include "Engine/Platform/win32/Win32EventQueue.h"
 #include "Engine/Platform/win32/Win32Window.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include <winuser.h>
 #include <windows.h>
@@ -94,7 +96,6 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         mModuleArray(),
         mModulePathArray(),
         mCamera(nullptr),
-        m_angle(0.f),
         m_model(),
         m_transformMatrix(),
         m_modelNode(),
@@ -153,17 +154,17 @@ bool OsreEdApp::onCreate() {
 
     AppBase::setWindowsTitle("OSRE ED!");
 
-    Platform::Win32Window *w = (Platform::Win32Window *)getRootWindow();
+    Platform::Win32Window *w = (Win32Window *)getRootWindow();
     if (nullptr != w) {
         AddFileMenus(w->getHWnd());
         SetFPSText(w->getHWnd(), 60);
-        Platform::AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
+        AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
         if (queue != nullptr) {
-            queue->registerMenuCommand(IDM_FILE_NEW, Platform::MenuFunctor::Make(this, &OsreEdApp::newProject));
-            queue->registerMenuCommand(IDM_FILE_OPEN, Platform::MenuFunctor::Make(this, &OsreEdApp::loadProject));
-            queue->registerMenuCommand(IDM_FILE_SAVE, Platform::MenuFunctor::Make(this, &OsreEdApp::saveProject));
-            queue->registerMenuCommand(IDM_FILE_IMPORT, Platform::MenuFunctor::Make(this, &OsreEdApp::importAsset));
-            queue->registerMenuCommand(IDM_FILE_QUIT, Platform::MenuFunctor::Make(this, &OsreEdApp::quitEditor));
+            queue->registerMenuCommand(IDM_FILE_NEW, MenuFunctor::Make(this, &OsreEdApp::newProject));
+            queue->registerMenuCommand(IDM_FILE_OPEN, MenuFunctor::Make(this, &OsreEdApp::loadProject));
+            queue->registerMenuCommand(IDM_FILE_SAVE, MenuFunctor::Make(this, &OsreEdApp::saveProject));
+            queue->registerMenuCommand(IDM_FILE_IMPORT, MenuFunctor::Make(this, &OsreEdApp::importAsset));
+            queue->registerMenuCommand(IDM_FILE_QUIT, MenuFunctor::Make(this, &OsreEdApp::quitEditor));
         }
     }
 
@@ -207,6 +208,7 @@ void OsreEdApp::newProject(ui32, void *) {
     mProject = new App::Project();
     mProject->create("New project", 0, 1);
     const String &projectName = mProject->getProjectName();
+    
     AppBase::setWindowsTitle("OSRE ED!" + String(" Project: ") + projectName);
 }
 
@@ -218,16 +220,16 @@ void OsreEdApp::saveProject(ui32, void *) {
 
 void OsreEdApp::importAsset(ui32, void *) {
     IO::Uri modelLoc;
-    Platform::PlatformOperations::getFileOpenDialog("*", modelLoc);
+    PlatformOperations::getFileOpenDialog("*", modelLoc);
     if (modelLoc.isValid()) {
         loadAsset(modelLoc);
     }
 }
 
 void OsreEdApp::quitEditor(ui32, void *) {
-    Platform::PlatformOperations::DlgResults result;
-    Platform::PlatformOperations::getDialog("Really quit?", "Do you really quite OSRE-Ed?", Platform::PlatformOperations::DlgButton_YesNo, result);
-    if (result == Platform::PlatformOperations::DlgButtonRes_Yes) {
+    DlgResults result;
+    PlatformOperations::getDialog("Really quit?", "Do you really quite OSRE-Ed?", Platform::PlatformOperations::DlgButton_YesNo, result);
+    if (result == Platform::DlgResults::DlgButtonRes_Yes) {
         AppBase::requestShutdown();
     }
 }
@@ -235,30 +237,42 @@ void OsreEdApp::quitEditor(ui32, void *) {
 void OsreEdApp::onUpdate() {
     if (AppBase::isKeyPressed(Platform::KEY_O)) {
         IO::Uri modelLoc;
-        Platform::PlatformOperations::getFileOpenDialog("*", modelLoc);
+        PlatformOperations::getFileOpenDialog("*", modelLoc);
         if (modelLoc.isValid()) {
             loadAsset(modelLoc);
         }
     }
-    i32 x = 0, y = 0;
-    if (AppBase::isMouseMoved(x, y)) {
-        //    mTrackBall->
-    }
 
+    const MouseState &ms = AppBase::getMouseState();
+    if (ms.LeftButtonPressed) {
+        Vec2f current(ms.mLastMouseMove.getX(), ms.mLastMouseMove.getY());
+        mTrackBall->rotateTo(mOld, current);
+        mOld = current;
+    }
+    Vec3f scale(1, 1, 1);
+    if (ms.MittleButtonPressed) {
+        mTrackBall->computeScaling(ms.mLastMouseMove.getY());
+        scale = mTrackBall->getScale();
+    }
+    if (ms.RightButtonPressed) {
+        Vec2f current(ms.mLastMouseMove.getX(), ms.mLastMouseMove.getY());
+        Vec2f dir =mOld - current;        
+    }
     /*for (ui32 i = 0; i < mModuleArray.size(); ++i) {
         mModuleArray[i]->update();
     }*/
 
-    // Rotate the model
-    glm::mat4 rot(1.0);
-    m_transformMatrix.m_model = glm::rotate(rot, m_angle, glm::vec3(0, 1, 1));
-
-    m_angle += 0.01f;
     RenderBackendService *rbSrv = getRenderBackendService();
 
     rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
     rbSrv->beginRenderBatch("b1");
 
+    if (nullptr != mTrackBall) {
+        glm::vec3 s(scale.getX(), scale.getY(), scale.getZ());
+        m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, s);
+        m_transformMatrix.m_model *= glm::toMat4(mTrackBall->getRotation());
+    }
+    
     rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
 
     rbSrv->endRenderBatch();

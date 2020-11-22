@@ -53,6 +53,23 @@ namespace App {
 
 class World;
 
+struct MouseState {
+    bool LeftButtonPressed;
+    bool MittleButtonPressed;
+    bool RightButtonPressed;
+    bool MouseMoved;
+    Vec2i mLastMouseMove;
+
+    MouseState() :
+            LeftButtonPressed(false),
+            MittleButtonPressed(false),
+            RightButtonPressed(false),
+            MouseMoved(false),
+            mLastMouseMove(0, 0) {
+        // empty
+    }
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -170,7 +187,7 @@ public:
 
     bool isKeyPressed(Platform::Key key) const;
 
-    bool isMouseMoved(i32 &xDiff, i32 &yDiff) const;
+    const MouseState &getMouseState() const;
 
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.

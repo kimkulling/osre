@@ -52,6 +52,8 @@ public:
     ///	@param	data		[in] The event data.
     void onOSEvent( const Common::Event &osEvent, const Common::EventData *data );
     
+    void rotateTo(const Vec2f &from, Vec2f &to);
+
     ///	@brief	Maps a 2D-point to a sphere and returns the 3D-coordinate.
     ///	@param	pNewPt		[in] The 2D-point to map.
     ///	@param	NewVec		[out] The mapped 3D-point.
@@ -71,7 +73,6 @@ private:
     TRectangle<ui32> m_Dimension;
     glm::quat m_rotation;
     Vec3f mScale;
-    Node *mNode;
     bool m_bLeftMButtonClicked;
     bool m_bMiddleClicked;
     bool m_bRightMButtonClicked;
@@ -80,6 +81,7 @@ private:
     f32 m_adjHeight;
     ui32 m_screenY;
     ui32 m_screenYOld;
+    f32 mRadius;
 };
 
 inline const glm::quat &TrackBall::getRotation() const {
