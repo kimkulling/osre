@@ -26,10 +26,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
         
-Event::Event( const String &id )
-: m_numRefs( 1 )
-, m_hash( StringUtils::hashName( id.c_str() ) )
-, m_eventData( nullptr ) {
+Event::Event( const String &id ) :
+        m_numRefs( 1 ), 
+        m_hash( StringUtils::hashName( id.c_str() ) ),
+        m_eventData( nullptr ) {
     // empty
 }
 
@@ -64,11 +64,10 @@ bool Event::operator == ( const Event &rhs ) const {
     return ( m_hash == rhs.m_hash );
 }
 
-EventData::EventData( const Event& e, EventTriggerer* c )
-: m_Event( e )
-, m_Source( c )
-, m_timestamp( 0.0 )
-, m_numRefs( 1 ) {
+EventData::EventData( const Event& e, EventTriggerer* c ) :
+        m_Event( e ),
+        m_Source( c ), m_timestamp( 0.0 ),
+        m_numRefs( 1 ) {
     // empty
 }
 
