@@ -100,48 +100,13 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         m_transformMatrix(),
         m_modelNode(),
         mTrackBall(nullptr),
-        mProject(nullptr) {
+        mProject(nullptr),
+        mLast(false) {
     // empty
 }
 
 OsreEdApp::~OsreEdApp() {
     // empty
-}
-
-bool OsreEdApp::addModulePath(const String &path) {
-    if (path.empty()) {
-        return false;
-    }
-
-    if (mModulePathArray.find(path) == nullptr) {
-        mModulePathArray.add(path);
-    }
-
-    return true;
-}
-
-bool OsreEdApp::registerModule(ModuleBase *mod) {
-    if (nullptr == mod) {
-        return false;
-    }
-
-    if (nullptr == mModuleArray.find(mod)) {
-        mModuleArray.add(mod);
-    }
-
-    return true;
-}
-
-bool OsreEdApp::loadModules() {
-    // Load registered modules
-    for (size_t i = 0; i < mModuleArray.size(); ++i) {
-        ModuleBase *mod = mModuleArray[i];
-        if (!mod->load(this)) {
-            return false;
-        }
-    }
-
-    return true;
 }
 
 bool OsreEdApp::onCreate() {
@@ -247,8 +212,10 @@ void OsreEdApp::onUpdate() {
     if (ms.LeftButtonPressed || ms.MittleButtonPressed || ms.RightButtonPressed) {
         Vec2f current(ms.mLastMouseMove.getX(), ms.mLastMouseMove.getY());
         if (ms.LeftButtonPressed) {
-            mTrackBall->rotate(mOld, current);
-            m_transformMatrix.m_model *= glm::toMat4(mTrackBall->getRotation());
+            if (mLast) {
+                mTrackBall->rotate(mOld, current);
+                m_transformMatrix.m_model *= glm::toMat4(mTrackBall->getRotation());
+            }
         }
         if (ms.MittleButtonPressed) {
             mTrackBall->zoom(ms.mLastMouseMove.getY());
@@ -260,9 +227,7 @@ void OsreEdApp::onUpdate() {
         }
         mOld = current;
     }
-    /*for (ui32 i = 0; i < mModuleArray.size(); ++i) {
-        mModuleArray[i]->update();
-    }*/
+    mLast = ms.LeftButtonPressed;
 
     RenderBackendService *rbSrv = getRenderBackendService();
 
@@ -283,5 +248,6 @@ bool OsreEdApp::onDestroy() {
     return true;
 }
 
+void handleMouse();
 } // namespace Editor
 } // namespace OSRE
