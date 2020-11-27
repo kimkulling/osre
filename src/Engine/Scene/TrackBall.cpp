@@ -31,13 +31,12 @@ namespace Scene {
 using namespace OSRE::Common;
 using namespace OSRE::Platform;
 
-TrackBall::TrackBall(const String &trackBallObjName, ui32 w, ui32 h) :
-        OSEventListener(trackBallObjName),
+TrackBall::TrackBall(const String &trackBallObjName, ui32 w, ui32 h, Ids &ids) :
+        Camera(trackBallObjName, ids),
         mStartVector(0, 0, 0),
         mEndVector(0, 0, 0),
         m_Dimension(w, h),
         m_rotation(),
-        mScale(1,1,1),
         m_bLeftMButtonClicked(false),
         m_bMiddleClicked(false),
         m_bRightMButtonClicked(false),
@@ -64,10 +63,18 @@ TrackBall::~TrackBall() {
     // empty
 }
 
-void TrackBall::rotateTo( const Vec2f &from, Vec2f &to ) {
+void TrackBall::rotate( const Vec2f &from, Vec2f &to ) {
     mapToSphere(&from, &mStartVector);
     mapToSphere(&to, &mEndVector);
     computeRotation();
+}
+
+void TrackBall::pan( f32 x, f32 y ) {
+    glm::vec3 lookAt = normalize(getEye() - getCenter());
+    glm::vec3 up = getUp();
+    glm::vec3 right = glm::cross(lookAt, up);
+    right *= x;
+    up *= y;
 }
 
 void TrackBall::onOSEvent(const Common::Event &osEvent, const Common::EventData *data) {
@@ -90,7 +97,7 @@ void TrackBall::onOSEvent(const Common::Event &osEvent, const Common::EventData 
             mapToSphere( &pos, &mEndVector );
             computeRotation();
         } else if ( m_bMiddleClicked ) {
-            computeScaling( pMMData->m_absY );
+            zoom( pMMData->m_absY );
         }
     } else if (osEvent == Platform::MouseButtonUpEvent) {
         m_screenYOld = 0;
@@ -145,19 +152,20 @@ void TrackBall::computeRotation() {
     }
 }
 
-void TrackBall::computeScaling(ui32 y) {
+void TrackBall::zoom(ui32 y) {
     m_screenYOld = m_screenY;
     m_screenY = y;
-    const f32 offset = 0.0001f;
+    const f32 offset = 0.00005f;
     if (m_screenYOld) {
-        i32 diff = m_screenY - m_screenYOld;
-        const f32 scaleFactor = offset * static_cast<f32>(diff);
-        mScale += scaleFactor;
-        if (mScale.isZero()) {
-            mScale.set(0, 0, 0);
-        }
+        const i32 diff = m_screenY - m_screenYOld;
+        mRadius += offset * static_cast<f32>(diff);
     }
 }
+
+void TrackBall::reset() {
+    m_screenYOld = 0;
+}
+
 
 } // namespace Scene
 } // namespace OSRE

@@ -100,48 +100,13 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         m_transformMatrix(),
         m_modelNode(),
         mTrackBall(nullptr),
-        mProject(nullptr) {
+        mProject(nullptr),
+        mLast(false) {
     // empty
 }
 
 OsreEdApp::~OsreEdApp() {
     // empty
-}
-
-bool OsreEdApp::addModulePath(const String &path) {
-    if (path.empty()) {
-        return false;
-    }
-
-    if (mModulePathArray.find(path) == nullptr) {
-        mModulePathArray.add(path);
-    }
-
-    return true;
-}
-
-bool OsreEdApp::registerModule(ModuleBase *mod) {
-    if (nullptr == mod) {
-        return false;
-    }
-
-    if (nullptr == mModuleArray.find(mod)) {
-        mModuleArray.add(mod);
-    }
-
-    return true;
-}
-
-bool OsreEdApp::loadModules() {
-    // Load registered modules
-    for (size_t i = 0; i < mModuleArray.size(); ++i) {
-        ModuleBase *mod = mModuleArray[i];
-        if (!mod->load(this)) {
-            return false;
-        }
-    }
-
-    return true;
 }
 
 bool OsreEdApp::onCreate() {
@@ -192,7 +157,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     rootWindow->getWindowsRect(windowsRect);
     World *world = getActiveWorld();
     mCamera = world->addCamera("camera_1");
-    mTrackBall = new Scene::TrackBall("trackball", windowsRect.getWidth(), windowsRect.getHeight());
+    mTrackBall = new Scene::TrackBall("trackball", windowsRect.getWidth(), windowsRect.getHeight(), *getIdContainer());
     mCamera->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.01f, 1000.f);
     Entity *entity = assimpWrapper.getEntity();
 
@@ -244,34 +209,30 @@ void OsreEdApp::onUpdate() {
     }
 
     const MouseState &ms = AppBase::getMouseState();
-    if (ms.LeftButtonPressed) {
+    if (ms.LeftButtonPressed || ms.MittleButtonPressed || ms.RightButtonPressed) {
         Vec2f current(ms.mLastMouseMove.getX(), ms.mLastMouseMove.getY());
-        mTrackBall->rotateTo(mOld, current);
+        if (ms.LeftButtonPressed) {
+            if (mLast) {
+                mTrackBall->rotate(mOld, current);
+                m_transformMatrix.m_model *= glm::toMat4(mTrackBall->getRotation());
+            }
+        }
+        if (ms.MittleButtonPressed) {
+            mTrackBall->zoom(ms.mLastMouseMove.getY());
+            m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, mTrackBall->getScale());
+        }
+        if (ms.RightButtonPressed) {
+            Vec2f dir = mOld - current;
+            mTrackBall->pan(current.getX(), current.getY());
+        }
         mOld = current;
     }
-    Vec3f scale(1, 1, 1);
-    if (ms.MittleButtonPressed) {
-        mTrackBall->computeScaling(ms.mLastMouseMove.getY());
-        scale = mTrackBall->getScale();
-    }
-    if (ms.RightButtonPressed) {
-        Vec2f current(ms.mLastMouseMove.getX(), ms.mLastMouseMove.getY());
-        Vec2f dir =mOld - current;        
-    }
-    /*for (ui32 i = 0; i < mModuleArray.size(); ++i) {
-        mModuleArray[i]->update();
-    }*/
+    mLast = ms.LeftButtonPressed;
 
     RenderBackendService *rbSrv = getRenderBackendService();
 
     rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
     rbSrv->beginRenderBatch("b1");
-
-    if (nullptr != mTrackBall) {
-        glm::vec3 s(scale.getX(), scale.getY(), scale.getZ());
-        m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, s);
-        m_transformMatrix.m_model *= glm::toMat4(mTrackBall->getRotation());
-    }
     
     rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
 
@@ -287,5 +248,6 @@ bool OsreEdApp::onDestroy() {
     return true;
 }
 
+void handleMouse();
 } // namespace Editor
 } // namespace OSRE

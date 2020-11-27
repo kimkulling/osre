@@ -115,81 +115,6 @@ private:
 };
 
 
-/*class MouseEventListener : public Platform::OSEventListener {
-public:
-    MouseEventListener() :
-            OSEventListener("App/MouseEventListener"),
-            mMouseState(),
-            m_uiCanvas() {
-        // empty
-    }
-
-    ~MouseEventListener() override {
-        // empty
-    }
-
-    void setCanvas(UI::Canvas *screen) {
-        m_uiCanvas = screen;
-    }
-
-    Canvas *getCanvas() const {
-        return m_uiCanvas.getPtr();
-    }
-
-    void onOSEvent(const Event &osEvent, const EventData *data) override {
-        osre_debug(Tag, "listener called");
-
-        mMouseState.MouseMoved = false;
-        if (osEvent == MouseButtonDownEvent) {
-            MouseButtonEventData *btnData = (MouseButtonEventData *)data;
-            if (btnData->m_Button == MouseButtonEventData::LeftButton) {
-                mMouseState.LeftButtonPressed = true;            
-            } 
-            if (btnData->m_Button == MouseButtonEventData::MiddleButton) {
-                mMouseState.MittleButtonPressed = true;
-            }
-            if (btnData->m_Button == MouseButtonEventData::RightButton) {
-                mMouseState.RightButtonPressed = true;
-            }
-        }
-        if (osEvent == MouseButtonUpEvent) {
-            MouseButtonEventData *btnData = (MouseButtonEventData *)data;
-            if (btnData->m_Button == MouseButtonEventData::LeftButton) {
-                mMouseState.LeftButtonPressed = false;
-            }
-            if (btnData->m_Button == MouseButtonEventData::MiddleButton) {
-                mMouseState.MittleButtonPressed = false;
-            }
-            if (btnData->m_Button == MouseButtonEventData::RightButton) {
-                mMouseState.RightButtonPressed = false;
-            }
-        }
-
-        if (osEvent == MouseMoveEvent || mMouseState.LeftButtonPressed) {
-            MouseMoveEventData *moveData = (MouseMoveEventData *)data;
-            mMouseState.mLastMouseMove.setX(moveData->m_absX);
-            mMouseState.mLastMouseMove.setY(moveData->m_absY);
-            mMouseState.MouseMoved = true;
-        }
-
-        if (m_uiCanvas.isValid()) {
-            if (osEvent == MouseButtonDownEvent) {
-                MouseButtonEventData *mouseBtnData((MouseButtonEventData *)data);
-                const Point2ui pt(mouseBtnData->m_AbsX, mouseBtnData->m_AbsY);
-                m_uiCanvas->mouseDown(pt, nullptr);
-            }
-        }
-    }
-
-    const MouseState &getMouseState() const {
-        return mMouseState;
-    }
-
-private:
-    Common::TObjPtr<UI::Canvas> m_uiCanvas;
-    MouseState mMouseState;
-};*/
-
 AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
         m_state(State::Uninited),
         m_argParser(argc, argv, supportedArgs, desc),
@@ -559,8 +484,6 @@ void AppBase::onUpdate() {
         m_activeWorld->draw(m_rbService);
     }
 
-    if (m_mouseEvListener->getMouseState().LeftButtonPressed) {
-    }
     if (nullptr != m_uiRenderer && nullptr != m_uiScreen) {
         m_uiRenderer->layout(m_uiScreen);
         m_uiRenderer->render(m_uiScreen, m_rbService);

@@ -31,35 +31,66 @@ namespace Editor {
 
 class ModuleBase;
 
+//-------------------------------------------------------------------------------------------------
+/// @brief  The main application of the OSRE-Editor.
+//-------------------------------------------------------------------------------------------------
 class OsreEdApp : public App::AppBase {
+public:
+    /// Local usings
     using ModuleArray = ::CPPCore::TArray<ModuleBase *>;
     using ModulePathArray = ::CPPCore::TArray<String>;
 
-public:
+    /// @brief  The class constructor.
+    /// @param  argc    [in] The number of command-line parameters.
+    /// @param  argv    [in] The command-line arguments.
     OsreEdApp(int argc, char *argv[]);
+
+    /// @brief  The class destructor.
     ~OsreEdApp() override;
-    bool addModulePath(const String &path);
-    bool registerModule(ModuleBase *mod);
-    bool loadModules();
-    void newProject(ui32, void *);
-    void loadProject(ui32, void *);
-    void saveProject(ui32, void *);
-    void importAsset(ui32, void *);
-    void quitEditor(ui32, void *);
+
+    /// The New-project callback.
+    /// @param  cmdId   [in] The command id.
+    /// @param  data    [in] The parameters.
+    void newProject(ui32 cmdId, void *data);
+
+    /// The Load-project callback.
+    /// @param  cmdId   [in] The command id.
+    /// @param  data    [in] The parameters.
+    void loadProject(ui32 cmdId, void *data);
+
+    /// The Save-project callback.
+    /// @param  cmdId   [in] The command id.
+    /// @param  data    [in] The parameters.
+    void saveProject(ui32 cmdId, void *data);
+
+    /// The Import-Asset callback.
+    /// @param  cmdId   [in] The command id.
+    /// @param  data    [in] The parameters.
+    void importAsset(ui32 cmdId, void *data);
+
+    /// The Quit callback.
+    /// @param  cmdId   [in] The command id.
+    /// @param  data    [in] The parameters.
+    void quitEditor(ui32 cmdId, void *data);
+
+    /// @brief  Will load an asset from a given uri.
+    /// @para   modelLoc    [in] The model location.
     void loadAsset(const IO::Uri &modelLoc);
-    bool hasModel() const {
-        return m_modelNode.isValid();
-    }
+
+    /// @brief  Will return true, if a model was loaded.
+    bool hasModel() const;
 
 protected:
+    /// The onCreate callback
     bool onCreate() override;
+
+    /// The onUpdate callback.
     void onUpdate() override;
+
+    /// The onDestrox callback.
     bool onDestroy() override;
 
 private:
-    ModuleArray mModuleArray;
-    ModulePathArray mModulePathArray;
-
     Scene::Camera *mCamera;
     glm::mat4 m_model;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
@@ -67,7 +98,12 @@ private:
     Scene::TrackBall *mTrackBall;
     App::Project *mProject;
     Vec2f mOld;
+    bool mLast;
 };
+
+inline bool OsreEdApp::hasModel() const {
+    return m_modelNode.isValid();
+}
 
 } // namespace Editor
 } // namespace OSRE
