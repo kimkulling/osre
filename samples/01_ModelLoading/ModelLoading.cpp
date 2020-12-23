@@ -126,7 +126,7 @@ protected:
 
         // Rotate the model
         glm::mat4 rot(1.0);
-        m_transformMatrix.m_model = glm::rotate(rot, m_angle, glm::vec3(0, 1, 1));
+        //m_transformMatrix.m_model = glm::rotate(rot, m_angle, glm::vec3(0, 1, 1));
 
         m_angle += 0.01f;
         RenderBackendService *rbSrv = getRenderBackendService();
@@ -134,7 +134,7 @@ protected:
         rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 
-        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+        //rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
 
         rbSrv->endRenderBatch();
         rbSrv->endPass();

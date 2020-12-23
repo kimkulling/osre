@@ -36,11 +36,11 @@ class ModuleBase;
 //-------------------------------------------------------------------------------------------------
 class OsreEdApp : public App::AppBase {
 public:
-    /// Local usings
+    /// Local using-declarations.
     using ModuleArray = ::CPPCore::TArray<ModuleBase *>;
     using ModulePathArray = ::CPPCore::TArray<String>;
 
-    /// @brief  The class constructor.
+    /// @brief  The class constructor with the incoming command line arguments.
     /// @param  argc    [in] The number of command-line parameters.
     /// @param  argv    [in] The command-line arguments.
     OsreEdApp(int argc, char *argv[]);
@@ -98,7 +98,6 @@ private:
     Scene::TrackBall *mTrackBall;
     App::Project *mProject;
     Vec2f mOld;
-    bool mLast;
 };
 
 inline bool OsreEdApp::hasModel() const {

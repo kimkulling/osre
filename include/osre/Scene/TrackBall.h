@@ -44,7 +44,7 @@ public:
     TrackBall( const String &objName, ui32 w, ui32 h, Common::Ids &ids );
 
     ///	@brief	The class destructor.
-    ~TrackBall();
+    ~TrackBall() override;
 
     ///	@brief	The event callback.
     ///	@param	osEvent		[in] The incoming event from the operation system.

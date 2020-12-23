@@ -101,7 +101,7 @@ protected:
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
-            Scene::GeometryProcessor process;
+            Scene::MeshProcessor process;
             process.addGeo(mesh);
             process.execute();
             Scene::Node::AABB aabb = process.getAABB();

@@ -47,13 +47,13 @@ TrackBall::TrackBall(const String &trackBallObjName, ui32 w, ui32 h, Ids &ids) :
         m_screenYOld(0),
         mRadius (1.0f) {
     // adjust the width for to sphere mapping
-    const f32 width = static_cast<f32>(m_Dimension.getWidth());
+    const f32 width = static_cast<f32>(w);
     if (width) {
         m_adjWidth = 1.0f / (width - 1.0f);
     }
 
     // adjust the height for to sphere mapping
-    const f32 height = static_cast<f32>(m_Dimension.getHeight());
+    const f32 height = static_cast<f32>(h);
     if (height) {
         m_adjHeight = 1.0f / (height - 1.0f);
     }
@@ -82,7 +82,7 @@ void TrackBall::onOSEvent(const Common::Event &osEvent, const Common::EventData 
         Platform::MouseButtonEventData *pMBData = (Platform::MouseButtonEventData *)data;
         if ( 0 == pMBData->m_Button ) {
             Vec2f pos( static_cast<f32>( pMBData->m_AbsX ), static_cast<f32>( pMBData->m_AbsY ) );
-            mapToSphere( &pos, &mEndVector );
+            mapToSphere( &pos, &mStartVector );
             m_bLeftMButtonClicked = true;
         } else if ( 1 == pMBData->m_Button ) {
             m_bMiddleClicked = true;

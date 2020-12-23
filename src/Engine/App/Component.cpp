@@ -109,33 +109,5 @@ bool RenderComponent::onPostprocess() {
     return true;
 }
 
-TransformComponent::TransformComponent(Entity *owner, ui32 id) :
-        Component(owner, id), m_mb() {
-    // empty
-}
-
-TransformComponent::~TransformComponent() {
-    // empty
-}
-
-void TransformComponent::update(Time) {
-}
-
-bool TransformComponent::onPreprocess() {
-    return true;
-}
-
-bool TransformComponent::onUpdate(Time dt) {
-    return true;
-}
-
-bool TransformComponent::onRender(RenderBackend::RenderBackendService *) {
-    return true;
-}
-
-bool TransformComponent::onPostprocess() {
-    return true;
-}
-
 } // namespace App
 } // namespace OSRE
