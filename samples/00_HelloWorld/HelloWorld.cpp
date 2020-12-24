@@ -30,7 +30,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/MeshBuilder.h>
-#include <osre/Scene/Node.h>
+#include <osre/Scene/Camera.h>
+#include <osre/Platform/AbstractWindow.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -62,7 +63,7 @@ public:
     }
 
     /// The class destructor.
-    virtual ~HelloWorldApp() {
+    ~HelloWorldApp() override {
         // empty
     }
 
@@ -75,15 +76,19 @@ protected:
         AppBase::setWindowsTitle("Hello-World sample!");
 
         mEntity = new Entity("entity", *AppBase::getIdContainer(), AppBase::getActiveWorld());
-        RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
+        Scene::Camera *camera = AppBase::getActiveWorld()->addCamera("camera_1");
+        Rect2ui windowsRect;
+        Platform::AbstractWindow *rootWindow = getRootWindow();
+        rootWindow->getWindowsRect(windowsRect);
+        
+        camera->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.001f, 1000.f);
+
         Scene::MeshBuilder meshBuilder;
-        meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
-        RenderBackend::Mesh *mesh = meshBuilder.getMesh();
+        RenderBackend::Mesh *mesh = meshBuilder.allocTriangles(VertexType::ColorVertex, 
+            BufferAccessType::ReadOnly).getMesh();
         if (nullptr != mesh) {
-            m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
-            m_transformMatrix.update();
-            getRenderBackendService()->setMatrix("MVP", m_transformMatrix.m_mvp);
-            rc->addStaticMesh(mesh);
+            mEntity->addStaticMesh(mesh);
+            camera->observeBoundingBox(mEntity->getAABB());
         }
 
         return true;

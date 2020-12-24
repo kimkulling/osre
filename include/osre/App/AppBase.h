@@ -53,23 +53,6 @@ namespace App {
 
 class World;
 
-struct MouseState {
-    bool LeftButtonPressed;
-    bool MittleButtonPressed;
-    bool RightButtonPressed;
-    bool MouseMoved;
-    Vec2i mLastMouseMove;
-
-    MouseState() :
-            LeftButtonPressed(false),
-            MittleButtonPressed(false),
-            RightButtonPressed(false),
-            MouseMoved(false),
-            mLastMouseMove(0, 0) {
-        // empty
-    }
-};
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -187,8 +170,6 @@ public:
 
     bool isKeyPressed(Platform::Key key) const;
 
-    const MouseState &getMouseState() const;
-
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
     /// @return true if successful,  false if not.
@@ -197,6 +178,9 @@ public:
     /// @brief  The onDestroy callback, override this for your own destroying stuff.
     /// @return true if successful,  false if not.
     virtual bool onDestroy();
+
+    /// @brief  The onRener callback.
+    virtual void onRender();
 
     /// @brief  The onUpdate callback, override this for your own update stuff.
     virtual void onUpdate();

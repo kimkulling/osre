@@ -481,7 +481,6 @@ void AppBase::onUpdate() {
     Time dt(microsecs);
     if (nullptr != m_activeWorld) {
         m_activeWorld->update(dt);
-        m_activeWorld->draw(m_rbService);
     }
 
     if (nullptr != m_uiRenderer && nullptr != m_uiScreen) {
@@ -490,6 +489,16 @@ void AppBase::onUpdate() {
     }
 
     m_keyboardEvListener->clearKeyMap();
+}
+
+void AppBase::onRender() {
+    if (nullptr != m_activeWorld) {
+        m_activeWorld->draw(m_rbService);
+    }
+
+    if (nullptr != m_uiRenderer && nullptr != m_uiScreen) {
+        m_uiRenderer->render(m_uiScreen, m_rbService);
+    }
 }
 
 const ArgumentParser &AppBase::getArgumentParser() const {
@@ -516,15 +525,6 @@ bool AppBase::isKeyPressed(Key key) const {
     }
 
     return m_keyboardEvListener->isKeyPressed(key);
-}
-
-const MouseState &AppBase::getMouseState() const {
-    static const MouseState defaultMS;
-    if (nullptr == m_mouseEvListener) {
-        return defaultMS;
-    }
-
-    return m_mouseEvListener->getMouseState();
 }
 
 } // Namespace App

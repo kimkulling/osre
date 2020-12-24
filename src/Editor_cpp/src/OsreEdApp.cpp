@@ -75,33 +75,16 @@ void AddFileMenus(HWND hwnd) {
     SetMenu(hwnd, hMenubar);
 }
 
-void SetFPSText(HWND hwnd, ui32 fps) {
-    std::stringstream stream;
-    stream << "FPS: " << fps;
-    RECT r;
-    
-    r.left = 10;
-    r.right = 100;
-    r.top = 10;
-    r.bottom = 20;
-    UINT format = 0;
-    
-    //DrawTextEx(GetDC(hwnd), stream.str().c_str(), stream.str().size(), &r, format, NULL);
-}
-
 #endif // OSRE_WINDOWS
 
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         AppBase(argc, (const char **)argv, "api", "The render API"),
-        mModuleArray(),
-        mModulePathArray(),
         mCamera(nullptr),
         m_model(),
         m_transformMatrix(),
         m_modelNode(),
         mTrackBall(nullptr),
-        mProject(nullptr),
-        mLast(false) {
+        mProject(nullptr) {
     // empty
 }
 
@@ -114,7 +97,7 @@ bool OsreEdApp::onCreate() {
         return false;
     }
 
-    registerModule(new InspectorModule());
+    //registerModule(new InspectorModule());
     //loadModules();
 
     AppBase::setWindowsTitle("OSRE ED!");
@@ -122,7 +105,6 @@ bool OsreEdApp::onCreate() {
     Platform::Win32Window *w = (Win32Window *)getRootWindow();
     if (nullptr != w) {
         AddFileMenus(w->getHWnd());
-        SetFPSText(w->getHWnd(), 60);
         AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
         if (queue != nullptr) {
             queue->registerMenuCommand(IDM_FILE_NEW, MenuFunctor::Make(this, &OsreEdApp::newProject));
@@ -208,27 +190,6 @@ void OsreEdApp::onUpdate() {
         }
     }
 
-    const MouseState &ms = AppBase::getMouseState();
-    if (ms.LeftButtonPressed || ms.MittleButtonPressed || ms.RightButtonPressed) {
-        Vec2f current(ms.mLastMouseMove.getX(), ms.mLastMouseMove.getY());
-        if (ms.LeftButtonPressed) {
-            if (mLast) {
-                mTrackBall->rotate(mOld, current);
-                m_transformMatrix.m_model *= glm::toMat4(mTrackBall->getRotation());
-            }
-        }
-        if (ms.MittleButtonPressed) {
-            mTrackBall->zoom(ms.mLastMouseMove.getY());
-            m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, mTrackBall->getScale());
-        }
-        if (ms.RightButtonPressed) {
-            Vec2f dir = mOld - current;
-            mTrackBall->pan(current.getX(), current.getY());
-        }
-        mOld = current;
-    }
-    mLast = ms.LeftButtonPressed;
-
     RenderBackendService *rbSrv = getRenderBackendService();
 
     rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
@@ -241,13 +202,11 @@ void OsreEdApp::onUpdate() {
 
     AppBase::onUpdate();
 
-    //SetFPSText()
 }
 
 bool OsreEdApp::onDestroy() {
     return true;
 }
 
-void handleMouse();
 } // namespace Editor
 } // namespace OSRE

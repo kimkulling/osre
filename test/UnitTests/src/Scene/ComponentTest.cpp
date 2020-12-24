@@ -115,16 +115,8 @@ TEST_F(ComponentTest, accessIdTest) {
 	String name = "test";
 
 	Entity *entity = new Entity(name, *m_ids, nullptr);
-
-	Component *tc = entity->getComponent(ComponentType::TransformComponentType);
-	EXPECT_NE(nullptr, tc);
-	const ui32 id1 = tc->getId();
-
 	Component *rc = entity->getComponent(ComponentType::RenderComponentType);
 	EXPECT_NE(nullptr, rc);
-	const ui32 id2 = rc->getId();
-
-	EXPECT_NE(id1, id2);
 }
 
 } // Namespace UnitTest
