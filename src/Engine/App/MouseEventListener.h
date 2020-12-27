@@ -3,7 +3,7 @@
 #include <osre/Common/osre_common.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/Platform/PlatformInterface.h>
-#include <osre/app/AppBase.h>
+#include <osre/App/AppBase.h>
 
 namespace OSRE {
 
