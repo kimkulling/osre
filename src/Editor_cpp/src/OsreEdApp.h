@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Modules/ModuleBase.h"
+
 #include <osre/App/AppBase.h>
 #include <osre/App/World.h>
 #include <osre/Scene/Node.h>
@@ -29,15 +31,11 @@ namespace Scene {
 
 namespace Editor {
 
-class ModuleBase;
-
 //-------------------------------------------------------------------------------------------------
 /// @brief  The main application of the OSRE-Editor.
 //-------------------------------------------------------------------------------------------------
 class OsreEdApp : public App::AppBase {
 public:
-    /// Local using-declarations.
-    using ModuleArray = ::CPPCore::TArray<ModuleBase *>;
     using ModulePathArray = ::CPPCore::TArray<String>;
 
     /// @brief  The class constructor with the incoming command line arguments.
@@ -80,6 +78,10 @@ public:
     /// @brief  Will return true, if a model was loaded.
     bool hasModel() const;
 
+    bool registerModule(ModuleBase *mod);
+    ModuleBase *findModule(const String &name) const;
+    bool unregisterModule(ModuleBase *moc);
+
 protected:
     /// The onCreate callback
     bool onCreate() override;
@@ -98,6 +100,7 @@ private:
     Scene::TrackBall *mTrackBall;
     App::Project *mProject;
     Vec2f mOld;
+    ModuleArray mModules;
 };
 
 inline bool OsreEdApp::hasModel() const {

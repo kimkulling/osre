@@ -97,7 +97,7 @@ bool OsreEdApp::onCreate() {
         return false;
     }
 
-    //registerModule(new InspectorModule());
+    registerModule(new InspectorModule(this));
     //loadModules();
 
     AppBase::setWindowsTitle("OSRE ED!");
@@ -147,7 +147,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     mCamera->observeBoundingBox(entity->getAABB());
     m_modelNode = entity->getNode();
 
-    std::string model = modelLoc.getResource();
+    const std::string &model = modelLoc.getResource();
     getRootWindow()->setWindowsTitle("Model " + model);
 }
 
@@ -181,6 +181,36 @@ void OsreEdApp::quitEditor(ui32, void *) {
     }
 }
 
+bool OsreEdApp::registerModule(ModuleBase *mod) {
+    if (nullptr == mod) {
+        return false;
+    }
+
+    if (nullptr == findModule(mod->getName())) {
+        mModules.add(mod);
+    }
+
+    return true;
+}
+
+ModuleBase *OsreEdApp::findModule( const String &name ) const {
+    if (name.empty()) {
+        return nullptr;
+    }
+
+    for (ui32 i = 0; i < mModules.size(); ++i) {
+        if (name == mModules[i]->getName()) {
+            return mModules[i];
+        }
+    }
+
+    return nullptr;
+}
+
+bool OsreEdApp::unregisterModule( ModuleBase *mod ) {
+    return true;
+}
+
 void OsreEdApp::onUpdate() {
     if (AppBase::isKeyPressed(Platform::KEY_O)) {
         IO::Uri modelLoc;
@@ -190,18 +220,12 @@ void OsreEdApp::onUpdate() {
         }
     }
 
-    RenderBackendService *rbSrv = getRenderBackendService();
-
-    rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
-    rbSrv->beginRenderBatch("b1");
-    
-    rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
-
-    rbSrv->endRenderBatch();
-    rbSrv->endPass();
-
+    for (ui32 i = 0; i < mModules.size(); ++i) {
+        ModuleBase *module = mModules[i];
+        module->update();
+        module->render();
+    }
     AppBase::onUpdate();
-
 }
 
 bool OsreEdApp::onDestroy() {
