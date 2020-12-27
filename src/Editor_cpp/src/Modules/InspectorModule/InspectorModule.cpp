@@ -25,22 +25,28 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Editor {
 
-InspectorModule::InspectorModule() :
-        ModuleBase("InspectionModule") {
+using namespace OSRE::App;
+
+InspectorModule::InspectorModule(AppBase *parentApp) :
+        ModuleBase("inspector.module", parentApp) {
 }
 
 InspectorModule::~InspectorModule() {
 }
 
-bool InspectorModule::onLoad(OsreEdApp *parent) {
+bool InspectorModule::onLoad() {
     return true;
 }
 
-bool InspectorModule::onUnload(OsreEdApp *parent) {
+bool InspectorModule::onUnload() {
     return true;
 }
 
 void InspectorModule::onUpdate() {
+}
+
+void InspectorModule::onRender() {
+
 }
 
 } // namespace Editor

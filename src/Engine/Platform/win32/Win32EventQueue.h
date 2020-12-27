@@ -95,7 +95,6 @@ protected:
 
 private:
     using WindowServerMap = std::map<HWND, Win32EventQueue*>;
-    using MenuFuncMap = std::map<ui32, MenuFunctor>;
 
     static WindowServerMap s_WindowsServerMap;
     static MenuFuncMap s_MenuFunctorMap;
