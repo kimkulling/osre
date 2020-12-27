@@ -24,36 +24,51 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Object.h>
 
+#include <cppcore/Container/TArray.h>
+
 namespace OSRE {
+
+namespace App {
+
+class AppBase;
+
+}
+
 namespace Editor {
 
 class OsreEdApp;
 class IModuleView;
 
-class ModuleBase : Common::Object {
+class ModuleBase : public Common::Object {
 public:
     virtual ~ModuleBase();
     virtual void setModulelView(IModuleView *view);
     virtual IModuleView *getModuleView() const; 
-    virtual bool load(OsreEdApp *parent);
-    virtual bool unload(OsreEdApp *parent);
+    virtual bool load();
+    virtual bool unload();
     virtual void update();
+    virtual void render();
+    virtual App::AppBase *getParentApp() const;
 
 protected:
-    ModuleBase(const String &name );
-    virtual bool onLoad(OsreEdApp *parent);
-    virtual bool onUnload(OsreEdApp *parent);
+    ModuleBase(const String &name, App::AppBase *parentApp);
+    virtual bool onLoad();
+    virtual bool onUnload();
     virtual void onUpdate();
+    virtual void onRender();
 
 private:
-    enum LoadState {
+    enum class ModuleState {
         Init,
         Loaded,
         Unloaded,
         Error
     } mState;
     IModuleView *mView;
+    App::AppBase *mParentApp;
 };
+
+using ModuleArray = CPPCore::TArray<ModuleBase*>;
 
 } // namespace Editor
 } // namespace OSRE

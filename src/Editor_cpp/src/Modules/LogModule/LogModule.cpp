@@ -11,6 +11,7 @@ namespace OSRE {
 namespace Editor {
 
 using namespace OSRE::UI;
+using namespace OSRE::App;
 
 class LogView : public IModuleView {
 public:
@@ -29,8 +30,8 @@ protected:
     }
 };
 
-LogModule::LogModule() :
-        ModuleBase( "log.module" ),
+LogModule::LogModule(AppBase *parentApp) :
+        ModuleBase( "log.module", parentApp ),
         mPanel(nullptr){
 }
                 
@@ -38,8 +39,9 @@ LogModule::~LogModule() {
     mPanel = nullptr;
 }
 
-bool LogModule::onLoad(OsreEdApp *parent) {
-    Platform::AbstractWindow *rootWindow = parent->getRootWindow();
+bool LogModule::onLoad() {
+    AppBase *parentApp = getParentApp();
+    Platform::AbstractWindow *rootWindow = parentApp->getRootWindow();
     if (nullptr == rootWindow) {
         return true;
     }
@@ -47,7 +49,7 @@ bool LogModule::onLoad(OsreEdApp *parent) {
     return true;
 }
 
-bool LogModule::onUnload(OsreEdApp *parent) {
+bool LogModule::onUnload() {
     return true;
 }
 
