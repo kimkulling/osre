@@ -25,8 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformCommon.h>
 
 #include <osre/Common/AbstractEventHandler.h>
-#include <osre/Common/EventTriggerer.h>
 #include <osre/Common/Event.h>
+#include <osre/Common/EventTriggerer.h>
 #include <osre/Common/Object.h>
 #include <osre/Debugging/osre_debugging.h>
 
@@ -34,11 +34,12 @@ namespace OSRE {
 
 // Forward declarations
 namespace RenderBackend {
-    class RenderBackendService;
+class RenderBackendService;
 }
 
 namespace Platform {
 
+/// @brief
 using MenuFunctor = Common::Functor<void, ui32, void *>;
 
 //-------------------------------------------------------------------------------------------------
@@ -48,19 +49,21 @@ using MenuFunctor = Common::Functor<void, ui32, void *>;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractPlatformEventQueue : public Common::Object {
 public:
+    using MenuFuncMap = std::map<ui32, MenuFunctor>;
+
     ///	@brief  The class destructor, virtual.
     virtual ~AbstractPlatformEventQueue();
-    
+
     ///	@brief  Used to register a event listener.
     ///	@param  events      [in] List of events.
     /// @param  listener    [in] The listener instance
-    virtual void registerEventListener( const Common::EventPtrArray &events, OSEventListener *listener) = 0;
-    
+    virtual void registerEventListener(const Common::EventPtrArray &events, OSEventListener *listener) = 0;
+
     ///	@brief  Used to unregister a event listener.
     ///	@param  events      [in] List of events.
     /// @param  listener    [in] The listener instance
-    virtual void unregisterEventListener( const Common::EventPtrArray &events, OSEventListener *listener) = 0;
-    
+    virtual void unregisterEventListener(const Common::EventPtrArray &events, OSEventListener *listener) = 0;
+
     /// @brief  Will unregister all registered event handler.
     virtual void unregisterAllEventHandler(const Common::EventPtrArray &events) = 0;
 
@@ -72,7 +75,7 @@ public:
 
     ///	@brief  Set the polling state.
     ///	@param  enabled     true for enabling polling.
-    virtual void enablePolling( bool enabled ) = 0;
+    virtual void enablePolling(bool enabled) = 0;
 
     /// @brief  Returns the currently active polling state.
     /// @return The active polling state.
@@ -84,8 +87,8 @@ public:
 
     /// @brief  Will set the render back-end service.
     /// @param  rbSrv   [in] The pointer showing to the render back-end.
-    virtual void setRenderBackendService( RenderBackend::RenderBackendService *rbSrv );
-    
+    virtual void setRenderBackendService(RenderBackend::RenderBackendService *rbSrv);
+
     /// @brief  Will return the render back-end.
     /// @return The render back-end service, pointer is nullptr if the service was not set.
     virtual RenderBackend::RenderBackendService *getRenderBackendService() const;
@@ -103,8 +106,8 @@ protected:
 
     ///	@brief  Will be called to process events.
     /// @param  pTriggerer  The event trigger.
-    void processEvents( Common::EventTriggerer *pTriggerer );
-    
+    void processEvents(Common::EventTriggerer *pTriggerer);
+
     ///	@brief  Returns the active event data list.
     /// @return The active event data list.
     Common::EventDataList *getActiveEventDataList();
@@ -112,7 +115,7 @@ protected:
     ///	@brief  Returns the active event data list.
     /// @return The pending event data list.
     Common::EventDataList *getPendingEventDataList();
-    
+
     ///	@brief  Toggles between the active and pending list.
     void switchEventDataList();
 
@@ -120,39 +123,34 @@ private:
     enum {
         numEventQueues = 2
     };
-    Common::EventDataList m_eventQueues[ numEventQueues ];
+    Common::EventDataList m_eventQueues[numEventQueues];
     ui32 m_activeList;
     RenderBackend::RenderBackendService *m_rbSrv;
 };
 
-inline
-AbstractPlatformEventQueue::AbstractPlatformEventQueue()
-: Object("Platform/AbstractPlatformEventQueue")
-, m_activeList( 0 )
-, m_rbSrv( nullptr ) {
+inline AbstractPlatformEventQueue::AbstractPlatformEventQueue() :
+        Object("Platform/AbstractPlatformEventQueue"), m_activeList(0), m_rbSrv(nullptr) {
     // empty
 }
 
-inline
-AbstractPlatformEventQueue::~AbstractPlatformEventQueue( ) {
+inline AbstractPlatformEventQueue::~AbstractPlatformEventQueue() {
     // empty
 }
 
-inline
-void AbstractPlatformEventQueue::processEvents( Common::EventTriggerer *triggerer ) {
-    if ( nullptr == triggerer ) {
+inline void AbstractPlatformEventQueue::processEvents(Common::EventTriggerer *triggerer) {
+    if (nullptr == triggerer) {
         return;
     }
 
     Common::EventDataList *theList = getActiveEventDataList();
-    if ( nullptr == theList ) {
+    if (nullptr == theList) {
         return;
     }
 
-    while( !theList->isEmpty() ) {
+    while (!theList->isEmpty()) {
         Common::EventData *eventData = theList->front();
-        if ( nullptr != eventData ) {
-            triggerer->triggerEvent( eventData->getEvent(), eventData );
+        if (nullptr != eventData) {
+            triggerer->triggerEvent(eventData->getEvent(), eventData);
             theList->removeFront();
             eventData->release();
         }
@@ -160,38 +158,32 @@ void AbstractPlatformEventQueue::processEvents( Common::EventTriggerer *triggere
     switchEventDataList();
 }
 
-inline
-Common::EventDataList *AbstractPlatformEventQueue::getActiveEventDataList() {
-    Common::EventDataList *activeEventQueue( &m_eventQueues[ m_activeList ] );
+inline Common::EventDataList *AbstractPlatformEventQueue::getActiveEventDataList() {
+    Common::EventDataList *activeEventQueue(&m_eventQueues[m_activeList]);
     return activeEventQueue;
 }
 
-inline
-Common::EventDataList *AbstractPlatformEventQueue::getPendingEventDataList() {
-    ui32 queueToProcess = ( m_activeList + 1 ) % numEventQueues;
-    m_eventQueues[ queueToProcess ].clear( );
-    Common::EventDataList *pendingEventQueue( &m_eventQueues[ queueToProcess ] );
+inline Common::EventDataList *AbstractPlatformEventQueue::getPendingEventDataList() {
+    ui32 queueToProcess = (m_activeList + 1) % numEventQueues;
+    m_eventQueues[queueToProcess].clear();
+    Common::EventDataList *pendingEventQueue(&m_eventQueues[queueToProcess]);
 
     return pendingEventQueue;
 }
 
-inline
-void AbstractPlatformEventQueue::switchEventDataList() {
-    m_activeList = ( m_activeList + 1 ) % numEventQueues;
+inline void AbstractPlatformEventQueue::switchEventDataList() {
+    m_activeList = (m_activeList + 1) % numEventQueues;
 }
 
-inline
-void AbstractPlatformEventQueue::setRenderBackendService( RenderBackend::RenderBackendService *rbSrv ) {
+inline void AbstractPlatformEventQueue::setRenderBackendService(RenderBackend::RenderBackendService *rbSrv) {
     m_rbSrv = rbSrv;
 }
 
-inline
-RenderBackend::RenderBackendService *AbstractPlatformEventQueue::getRenderBackendService() const {
+inline RenderBackend::RenderBackendService *AbstractPlatformEventQueue::getRenderBackendService() const {
     return m_rbSrv;
 }
 
-inline
-void AbstractPlatformEventQueue::enqueueEvent(const Common::Event &ev, Common::EventData *data) {
+inline void AbstractPlatformEventQueue::enqueueEvent(const Common::Event &ev, Common::EventData *data) {
     OSRE_ASSERT(nullptr != data);
 
     if (ev == data->getEvent()) {
