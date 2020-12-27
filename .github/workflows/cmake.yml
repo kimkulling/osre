@@ -23,7 +23,10 @@ jobs:
       #working-directory: ${{runner.workspace}}/.
       shell: bash
       run: cmake CMakeLists.txt 
-
+    - name: Install dependencies
+      shell: bash
+      run: sudo apt-get update && sudo apt-get install libsdl2-dev 
+      
     - name: Build
       #working-directory: ${{runner.workspace}}/.
       shell: bash
