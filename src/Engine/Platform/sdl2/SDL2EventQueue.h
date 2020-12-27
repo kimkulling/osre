@@ -58,6 +58,9 @@ public:
     void enablePolling(bool enabled) override;
     bool isPolling() const override;
 
+protected:
+    void onQuit() override {}
+
 private:
     static std::map<SDL_Window*, SDL2EventHandler*> s_windowsServerMap;
     bool m_isPolling;

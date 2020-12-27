@@ -13,7 +13,7 @@
 #include <osre/Scene/TrackBall.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/Panel.h>
-#include <osre/app/Project.h>
+#include <osre/App/Project.h>
 #include <osre/Platform/PlatformInterface.h>
 
 #include "Engine/Platform/win32/Win32EventQueue.h"

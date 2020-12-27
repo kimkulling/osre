@@ -1,6 +1,6 @@
 #include "Modules/EditorModule/EditorModule.h"
 
-#include <osre/app/AppBase.h>
+#include <osre/App/AppBase.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
 namespace OSRE {

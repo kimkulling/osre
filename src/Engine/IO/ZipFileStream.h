@@ -42,15 +42,15 @@ public:
 	///	The class constructor.
 	ZipFileStream( const Uri &rURI, unzFile zipFile );
 	///	The class destructor.
-	~ZipFileStream();
+	~ZipFileStream() override;
 	///	Read operations are supported.
-	bool canRead() const;
+	bool canRead() const override;
 	///	Reads data from a file in a zip archive.
-	ui32 read( void *pBuffer, size_t size );
+	ui32 read( void *pBuffer, ui32 size ) override;
 	///	Returns the file size for a file stored in a zip archive.
-	ui32 getSize() const;
+	ui32 getSize() const override;
 	///	Returns true, if the file is currently open.
-	bool isOpen() const;
+	bool isOpen() const override;
 
 private:
 	void sortFiles();
