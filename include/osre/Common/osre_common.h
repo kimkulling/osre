@@ -123,7 +123,7 @@ using ui64 = unsigned __int64;
 
 #else
 
-using i61 = int64_t i64;
+using i64 = int64_t;
 using ui64 = uint64_t ;
 
 #endif

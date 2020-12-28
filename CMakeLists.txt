@@ -121,9 +121,10 @@ add_definitions( -DGLM_ENABLE_EXPERIMENTAL )
 
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
-ADD_SUBDIRECTORY( src/Editor_cpp )
-set_target_properties(  osre_ed       PROPERTIES FOLDER Editor )
-
+IF(WIN32)
+    ADD_SUBDIRECTORY( src/Editor_cpp )
+    set_target_properties(  osre_ed       PROPERTIES FOLDER Editor )
+ENDIF()
 IF ( OSRE_BUILD_TESTS )
     ADD_SUBDIRECTORY( test/RenderTests )
     ADD_SUBDIRECTORY( test/UnitTests )

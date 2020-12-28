@@ -13,18 +13,21 @@
 #include <osre/Scene/TrackBall.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/Panel.h>
-#include <osre/app/Project.h>
+#include <osre/App/Project.h>
 #include <osre/Platform/PlatformInterface.h>
-
+#ifdef OSRE_WINDOWS
 #include "Engine/Platform/win32/Win32EventQueue.h"
 #include "Engine/Platform/win32/Win32Window.h"
+#endif
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
+#ifdef OSRE_WINDOWS
 #include <winuser.h>
 #include <windows.h>
 #include <commctrl.h>
 #include <strsafe.h>
+#endif
 
 namespace OSRE {
 namespace Editor {

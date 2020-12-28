@@ -49,7 +49,7 @@ bool ZipFileStream::canRead() const {
 	return true;
 }
 
-ui32 ZipFileStream::read( void *buffer, size_t size ) {
+ui32 ZipFileStream::read( void *buffer, ui32 size ) {
 	assert( NULL != buffer );
 	assert( NULL != m_zipFile );
 	
