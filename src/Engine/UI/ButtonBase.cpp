@@ -156,11 +156,12 @@ void ButtonBase::onRender(UiRenderCmdCache &renderCmdCache, RenderBackendService
 
     const size_t startIndex = renderCmdCache.m_ic.numIndices();
     if (activeStyle.HasBorder) {
-        UIRenderUtils::drawBorderRectFromStyle(rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic, Widget::getStackIndex(), WidgetType::Button);
+        UIRenderUtils::createBorderRectFromStyle(rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic, Widget::getStackIndex(), WidgetType::Button);
     } else {
-        UIRenderUtils::drawRectFromStyle(rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic, Widget::getStackIndex(), WidgetType::Button);
+        UIRenderUtils::createRectFromStyle(rect, activeStyle, renderCmdCache.m_vc, renderCmdCache.m_ic, Widget::getStackIndex(), WidgetType::Button);
     }
-    UiRenderCmd *cmd = new UiRenderCmd;
+
+    UiRenderCmd *cmd = UiRenderCmd::create();
     cmd->m_startIndex = startIndex;
     cmd->m_numIndices = renderCmdCache.m_ic.numIndices() - startIndex;
     renderCmdCache.m_renderCmds.add(cmd);
@@ -172,6 +173,7 @@ void ButtonBase::onMouseDown(const Point2ui &pt, void *data) {
         const FunctorContainer &ct(m_callback[index]);
         ct.m_callback(Widget::getId(), nullptr);
     }
+
     Widget::onMouseDown(pt, data);
     Widget::requestRedraw();
 }

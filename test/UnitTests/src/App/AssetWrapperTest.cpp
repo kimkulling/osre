@@ -38,7 +38,7 @@ TEST_F( AssimpWrapperTest, createTest ) {
 
     try {
         Common::Ids ids;
-        AssimpWrapper assimpWrapper( ids );
+        AssimpWrapper assimpWrapper( ids, nullptr );
     } catch (...) {
         ok = false;
     }

@@ -20,10 +20,10 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Scene/MeshProcessor.h>
 #include <osre/Debugging/osre_debugging.h>
-#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Scene/MeshProcessor.h>
 
 namespace OSRE {
 namespace Scene {
@@ -32,26 +32,26 @@ using namespace ::OSRE::RenderBackend;
 
 static const i32 NeedsUpdate = 1;
 
-GeometryProcessor::GeometryProcessor()
-: AbstractProcessor()
-, m_geoArray()
-, m_aabb()
-, m_dirty( 0 ) {
+MeshProcessor::MeshProcessor() :
+        AbstractProcessor(),
+        m_geoArray(),
+        m_aabb(),
+        m_dirty(0) {
     // empty
 }
-        
-GeometryProcessor::~GeometryProcessor() {
+
+MeshProcessor::~MeshProcessor() {
     // empty
 }
-        
-bool GeometryProcessor::execute() {
-    if ( m_geoArray.isEmpty() ) {
+
+bool MeshProcessor::execute() {
+    if (m_geoArray.isEmpty()) {
         return true;
     }
 
-    if ( m_dirty &= NeedsUpdate ) {
-        for ( ui32 i = 0; i < m_geoArray.size(); i++ ) {
-            handleGeometry( m_geoArray[ i ] );
+    if (m_dirty &= NeedsUpdate) {
+        for (ui32 i = 0; i < m_geoArray.size(); i++) {
+            handleGeometry(m_geoArray[i]);
         }
     }
 
@@ -60,33 +60,33 @@ bool GeometryProcessor::execute() {
     return true;
 }
 
-void GeometryProcessor::addGeo( Mesh *geo ) {
-    if ( nullptr == geo ) {
+void MeshProcessor::addGeo(Mesh *geo) {
+    if (nullptr == geo) {
         return;
     }
-    
-    m_geoArray.add( geo );
-    
+
+    m_geoArray.add(geo);
+
     m_dirty |= NeedsUpdate;
 }
-        
-const Scene::Node::AABB &GeometryProcessor::getAABB() const {
+
+const Scene::Node::AABB &MeshProcessor::getAABB() const {
     return m_aabb;
 }
 
-void GeometryProcessor::handleGeometry( Mesh *geo ) {
-    if ( nullptr == geo ) {
+void MeshProcessor::handleGeometry(Mesh *geo) {
+    if (nullptr == geo) {
         return;
     }
 
-    ui32 stride( 0 );
-    switch ( geo->m_vertextype ) {
+    ui32 stride(0);
+    switch (geo->m_vertextype) {
         case VertexType::RenderVertex:
-            stride = sizeof( RenderVert );
+            stride = sizeof(RenderVert);
             break;
 
         case VertexType::ColorVertex:
-            stride = sizeof( ColorVert );
+            stride = sizeof(ColorVert);
             break;
 
         default:
@@ -94,20 +94,20 @@ void GeometryProcessor::handleGeometry( Mesh *geo ) {
     }
 
     BufferData *data = geo->m_vb;
-    if ( nullptr == data || 0L == data->getSize() ) {
+    if (nullptr == data || 0L == data->getSize()) {
         return;
     }
 
-    ui32 offset( 0 );
-    const ui32 numVertices = (ui32) data->getSize() / stride;
-    for ( ui32 i = 0; i < numVertices; i++ ) {
+    ui32 offset(0);
+    const ui32 numVertices = (ui32)data->getSize() / stride;
+    for (ui32 i = 0; i < numVertices; i++) {
         glm::vec3 pos;
-        uc8 *ptr = (uc8*) data->getData();
-        ::memcpy( &pos.x, &ptr[offset], sizeof( glm::vec3 ) );
+        uc8 *ptr = (uc8 *)data->getData();
+        ::memcpy(&pos.x, &ptr[offset], sizeof(glm::vec3));
         offset += stride;
-        m_aabb.merge( pos.x, pos.y, pos.z );
+        m_aabb.merge(pos.x, pos.y, pos.z);
     }
 }
 
-} // Namespace Collision
+} // namespace Scene
 } // Namespace OSRE

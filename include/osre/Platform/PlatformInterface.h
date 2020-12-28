@@ -172,7 +172,7 @@ public:
 };
 
 struct ApplicationContext {
-    const Properties::Settings *m_config;
+    const Properties::Settings *mSettings;
     PluginType m_type;
     AbstractWindow *m_rootSurface;
     AbstractPlatformEventQueue *m_oseventHandler;
@@ -216,9 +216,9 @@ private:
     virtual ~PlatformInterface();
 
 private:
-    static PlatformInterface *s_instance;
+    static PlatformInterface *sInstance;
 
-    ApplicationContext *m_context;
+    ApplicationContext *mContext;
 };
 
 } // Namespace Platform

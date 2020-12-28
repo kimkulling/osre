@@ -1,36 +1,90 @@
 #include "OsreEdApp.h"
-#include "Modules/ModuleBase.h"
 #include "Modules/InspectorModule/InspectorModule.h"
-#include <osre/Platform/AbstractWindow.h>
+#include "Modules/ModuleBase.h"
 #include <osre/App/AssimpWrapper.h>
-#include <osre/UI/Canvas.h>
-#include <osre/UI/Panel.h>
+#include <osre/App/Entity.h>
+#include <osre/Common/TCommand.h>
 #include <osre/IO/Directory.h>
 #include <osre/IO/Uri.h>
-#include <osre/App/Entity.h>
+#include <osre/Platform/AbstractWindow.h>
+#include <osre/Platform/PlatformOperations.h>
+#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Scene/TrackBall.h>
+#include <osre/UI/Canvas.h>
+#include <osre/UI/Panel.h>
+#include <osre/app/Project.h>
+#include <osre/Platform/PlatformInterface.h>
+
+#include "Engine/Platform/win32/Win32EventQueue.h"
+#include "Engine/Platform/win32/Win32Window.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/quaternion.hpp>
+
+#include <winuser.h>
+#include <windows.h>
+#include <commctrl.h>
+#include <strsafe.h>
 
 namespace OSRE {
 namespace Editor {
 
 using namespace ::OSRE::App;
+using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Platform;
 
 static const ui32 HorizontalMargin = 2;
 static const ui32 VerticalMargin = 2;
 
-OsreEdApp::UiScreen::UiScreen() :
-        m_canvas( nullptr ),
-        m_mainPanel( nullptr ),
-        m_logPanel( nullptr ),
-        m_modelPanel( nullptr ) {
-    // empty
+#ifdef OSRE_WINDOWS
+
+#define IDM_FILE_NEW 1
+#define IDM_FILE_OPEN 2
+#define IDM_FILE_SAVE 3
+#define IDM_FILE_IMPORT 4
+#define IDM_FILE_QUIT 5
+
+#define IDM_INFO_VERSION 6
+
+#define ID_STATIC 7
+
+HWND hStatic = NULL;
+
+void AddFileMenus(HWND hwnd) {
+    HMENU hMenubar;
+    HMENU hMenu;
+
+    hMenubar = CreateMenu();
+    hMenu = CreateMenu();
+
+    AppendMenuW(hMenu, MF_STRING, IDM_FILE_NEW, L"&New");
+    AppendMenuW(hMenu, MF_STRING, IDM_FILE_OPEN, L"&Open Project");
+    AppendMenuW(hMenu, MF_STRING, IDM_FILE_SAVE, L"&Save Project");
+    AppendMenuW(hMenu, MF_SEPARATOR, 0, NULL);
+    AppendMenuW(hMenu, MF_STRING, IDM_FILE_IMPORT, L"&Import Asset");
+    AppendMenuW(hMenu, MF_SEPARATOR, 0, NULL);
+    AppendMenuW(hMenu, MF_STRING, IDM_FILE_QUIT, L"&Quit");
+
+    AppendMenuW(hMenubar, MF_POPUP, (UINT_PTR)hMenu, L"&File");
+
+    hMenu = CreateMenu();
+    AppendMenuW(hMenu, MF_STRING, IDM_INFO_VERSION, L"&Version");
+    AppendMenuW(hMenubar, MF_POPUP, (UINT_PTR)hMenu, L"&Info");
+
+    SetMenu(hwnd, hMenubar);
 }
+
+#endif // OSRE_WINDOWS
 
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         AppBase(argc, (const char **)argv, "api", "The render API"),
-        mUiScreen(),
-        mModuleArray(),
-        mModulePathArray() {
+        mCamera(nullptr),
+        m_model(),
+        m_transformMatrix(),
+        m_modelNode(),
+        mTrackBall(nullptr),
+        mProject(nullptr) {
     // empty
 }
 
@@ -38,73 +92,36 @@ OsreEdApp::~OsreEdApp() {
     // empty
 }
 
-bool OsreEdApp::addModulePath( const String &path ) {
-    if (path.empty()) {
-        return false;
-    }
-
-    if (mModulePathArray.find(path) == nullptr) {
-        mModulePathArray.add(path);
-    }
-
-    return true;
-}
-
-bool OsreEdApp::registerModule( ModuleBase *mod ) {
-    if (nullptr == mod) {
-        return false;
-    }
-
-    if (nullptr == mModuleArray.find(mod) ) {
-        mModuleArray.add(mod);
-    }
-
-    return true;
-}
-
-bool OsreEdApp::loadModules() {
-    // Load registered modules
-    for (size_t i = 0; i < mModuleArray.size(); ++i) {
-        ModuleBase *mod = mModuleArray[i];
-        if (!mod->load(this)) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-UI::Panel *OsreEdApp::getRootPanel() const {
-    return mUiScreen.m_mainPanel;
-}
-
 bool OsreEdApp::onCreate() {
     if (!AppBase::onCreate()) {
         return false;
     }
 
-    registerModule(new InspectorModule());
-    loadModules();
+    registerModule(new InspectorModule(this));
+    //loadModules();
 
-    Rect2ui r;
-    AppBase::getRootWindow()->getWindowsRect(r);
-    /*mUiScreen.m_canvas = AppBase::createScreen("OsreEd");
-    mUiScreen.m_canvas->setRect(r);
+    AppBase::setWindowsTitle("OSRE ED!");
 
-    mUiScreen.m_mainPanel = new UI::Panel("main_panel", mUiScreen.m_canvas);
-    mUiScreen.m_mainPanel->setRect(r);
-    mUiScreen.m_logPanel = new UI::Panel("log_panel", mUiScreen.m_mainPanel);
-    mUiScreen.m_logPanel->setHeadline("Log");
-    mUiScreen.m_logPanel->setRect(r.getX1() + HorizontalMargin, r.getY1() + r.getHeight() / 3, 
-        r.getWidth() - 2 * HorizontalMargin, r.getHeight() - (r.getY1() + r.getHeight() / 3) - 2 * VerticalMargin);
-    mUiScreen.m_modelPanel = new UI::Panel("model_panel", mUiScreen.m_mainPanel);
-    mUiScreen.m_modelPanel->setHeadline("Model");*/
+    Platform::Win32Window *w = (Win32Window *)getRootWindow();
+    if (nullptr != w) {
+        AddFileMenus(w->getHWnd());
+        AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
+        if (queue != nullptr) {
+            queue->registerMenuCommand(IDM_FILE_NEW, MenuFunctor::Make(this, &OsreEdApp::newProject));
+            queue->registerMenuCommand(IDM_FILE_OPEN, MenuFunctor::Make(this, &OsreEdApp::loadProject));
+            queue->registerMenuCommand(IDM_FILE_SAVE, MenuFunctor::Make(this, &OsreEdApp::saveProject));
+            queue->registerMenuCommand(IDM_FILE_IMPORT, MenuFunctor::Make(this, &OsreEdApp::importAsset));
+            queue->registerMenuCommand(IDM_FILE_QUIT, MenuFunctor::Make(this, &OsreEdApp::quitEditor));
+        }
+    }
+
+    AppBase::getRenderBackendService()->setBehaviour(false);
 
     return true;
 }
 
-void OsreEdApp::importAsset(const IO::Uri &modelLoc) {
-    AssimpWrapper assimpWrapper(*getIdContainer());
+void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
+    AssimpWrapper assimpWrapper(*getIdContainer(), getActiveWorld());
     if (!assimpWrapper.importAsset(modelLoc, 0)) {
         return;
     }
@@ -117,26 +134,98 @@ void OsreEdApp::importAsset(const IO::Uri &modelLoc) {
     if (nullptr == rootWindow) {
         return;
     }
-    m_stage = AppBase::createStage("ModelLoading");
-    AppBase::setActiveStage(m_stage);
-    m_view = m_stage->addView("default_view", nullptr);
-    AppBase::setActiveView(m_view);
 
     Rect2ui windowsRect;
     rootWindow->getWindowsRect(windowsRect);
-    m_view->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.01f, 1000.f);
+    World *world = getActiveWorld();
+    mCamera = world->addCamera("camera_1");
+    mTrackBall = new Scene::TrackBall("trackball", windowsRect.getWidth(), windowsRect.getHeight(), *getIdContainer());
+    mCamera->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.01f, 1000.f);
     Entity *entity = assimpWrapper.getEntity();
 
-    World *world = getActiveWorld();
     world->addEntity(entity);
-    m_view->observeBoundingBox(entity->getAABB());
+    mCamera->observeBoundingBox(entity->getAABB());
     m_modelNode = entity->getNode();
+
+    const std::string &model = modelLoc.getResource();
+    getRootWindow()->setWindowsTitle("Model " + model);
+}
+
+void OsreEdApp::newProject(ui32, void *) {
+    mProject = new App::Project();
+    mProject->create("New project", 0, 1);
+    const String &projectName = mProject->getProjectName();
+    
+    AppBase::setWindowsTitle("OSRE ED!" + String(" Project: ") + projectName);
+}
+
+void OsreEdApp::loadProject(ui32, void *) {
+}
+
+void OsreEdApp::saveProject(ui32, void *) {
+}
+
+void OsreEdApp::importAsset(ui32, void *) {
+    IO::Uri modelLoc;
+    PlatformOperations::getFileOpenDialog("*", modelLoc);
+    if (modelLoc.isValid()) {
+        loadAsset(modelLoc);
+    }
+}
+
+void OsreEdApp::quitEditor(ui32, void *) {
+    DlgResults result;
+    PlatformOperations::getDialog("Really quit?", "Do you really quite OSRE-Ed?", Platform::PlatformOperations::DlgButton_YesNo, result);
+    if (result == Platform::DlgResults::DlgButtonRes_Yes) {
+        AppBase::requestShutdown();
+    }
+}
+
+bool OsreEdApp::registerModule(ModuleBase *mod) {
+    if (nullptr == mod) {
+        return false;
+    }
+
+    if (nullptr == findModule(mod->getName())) {
+        mModules.add(mod);
+    }
+
+    return true;
+}
+
+ModuleBase *OsreEdApp::findModule( const String &name ) const {
+    if (name.empty()) {
+        return nullptr;
+    }
+
+    for (ui32 i = 0; i < mModules.size(); ++i) {
+        if (name == mModules[i]->getName()) {
+            return mModules[i];
+        }
+    }
+
+    return nullptr;
+}
+
+bool OsreEdApp::unregisterModule( ModuleBase *mod ) {
+    return true;
 }
 
 void OsreEdApp::onUpdate() {
-    for (ui32 i = 0; i < mModuleArray.size(); ++i) {
-        mModuleArray[i]->update();
+    if (AppBase::isKeyPressed(Platform::KEY_O)) {
+        IO::Uri modelLoc;
+        PlatformOperations::getFileOpenDialog("*", modelLoc);
+        if (modelLoc.isValid()) {
+            loadAsset(modelLoc);
+        }
     }
+
+    for (ui32 i = 0; i < mModules.size(); ++i) {
+        ModuleBase *module = mModules[i];
+        module->update();
+        module->render();
+    }
+    AppBase::onUpdate();
 }
 
 bool OsreEdApp::onDestroy() {

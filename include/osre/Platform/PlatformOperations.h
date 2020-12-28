@@ -33,6 +33,13 @@ namespace IO {
 
 namespace Platform {
 
+
+enum class DlgResults {
+    DlgButtonRes_Yes = 1,
+    DlgButtonRes_No,
+    DlgButtonRes_Ok
+};
+
 class OSRE_EXPORT PlatformOperations {
 public:
     enum {
@@ -40,16 +47,10 @@ public:
         DlgButton_ok = 2
     };
 
-    enum DlgResults {
-        DlgButtonRes_Yes = 1,
-        DlgButtonRes_No,
-        DlgButtonRes_Ok
-    };
-
     static void getFileOpenDialog( const c8 *extensions, IO::Uri &location );
     static void getFileSaveDialog( const c8 *extensions, IO::Uri &location );
     static void getDialog( const String &title, const String &question, ui32 requestedButtons, DlgResults &result );
-    
+
     PlatformOperations() = delete;
     PlatformOperations(const PlatformOperations &) = delete;
     ~PlatformOperations() = delete;

@@ -103,7 +103,7 @@ void PlatformOperations::getFileSaveDialog( const c8 *extensions, IO::Uri &locat
 
 void PlatformOperations::getDialog( const String &title, const String &question, ui32 requestedButtons, DlgResults &result ) {
 #ifdef OSRE_WINDOWS
-    ui32 flags( 0 );
+    ui32 flags = 0;
     if ( requestedButtons & PlatformOperations::DlgButton_YesNo )  {
         flags |= MB_YESNO;
     }
@@ -120,13 +120,13 @@ void PlatformOperations::getDialog( const String &title, const String &question,
 
     switch ( msgboxID ) {
         case IDYES:
-            result = DlgButtonRes_Yes;
+            result = DlgResults::DlgButtonRes_Yes;
             break;
         case IDNO:
-            result = DlgButtonRes_No;
+            result = DlgResults::DlgButtonRes_No;
             break;
         case IDOK:
-            result = DlgButtonRes_Ok;
+            result = DlgResults::DlgButtonRes_Ok;
             break;
         default:
             osre_debug( Tag, "Unsupported id detected " + std::to_string( msgboxID ) );

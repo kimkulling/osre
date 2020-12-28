@@ -1,6 +1,30 @@
+/*-----------------------------------------------------------------------------------------------
+The MIT License (MIT)
+
+Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-----------------------------------------------------------------------------------------------*/
 #include <osre/App/AbstractBehaviour.h>
 #include <osre/App/Component.h>
 #include <osre/App/Entity.h>
+#include <osre/App/World.h>
+#include <osre/Scene/MeshProcessor.h>
 
 namespace OSRE {
 namespace App {
@@ -8,25 +32,45 @@ namespace App {
 using namespace ::OSRE::Scene;
 using namespace ::OSRE::RenderBackend;
 
-Entity::Entity(const String &name, const Common::Ids &ids) :
+Entity::Entity(const String &name, const Common::Ids &ids, World *world) :
         Object(name),
         m_behaviour(nullptr),
         m_renderComponent(nullptr),
-        m_transformComponent(nullptr),
         m_node(nullptr),
         m_ids(ids),
-        m_aabb() {
+        m_aabb(),
+        mOwner(world) {
     m_renderComponent = new RenderComponent(this, 1);
-    m_transformComponent = new TransformComponent(this, 2);
+    if (nullptr != world) {
+        mOwner->addEntity(this);
+    }
 }
 
 Entity::~Entity() {
     delete m_renderComponent;
-    delete m_transformComponent;
+    if (nullptr != mOwner) {
+        mOwner->removeEntity(this);
+    }
 }
 
 void Entity::setBehaviourControl(AbstractBehaviour *behaviour) {
     m_behaviour = behaviour;
+}
+
+void Entity::addStaticMesh(RenderBackend::Mesh *mesh ) {
+    if (nullptr == mesh) {
+        return;
+    }
+    RenderComponent *comp = (RenderComponent *)getComponent(ComponentType::RenderComponentType);
+    if (nullptr == comp) {
+        return;
+    }
+    comp->addStaticMesh(mesh);
+    Scene::MeshProcessor processor;
+    processor.addGeo(mesh);
+    if (processor.execute()) {
+        setAABB(processor.getAABB());
+    }
 }
 
 void Entity::addStaticMeshes(const MeshArray &meshArray) {
@@ -37,6 +81,15 @@ void Entity::addStaticMeshes(const MeshArray &meshArray) {
     RenderComponent *comp = (RenderComponent *)getComponent(ComponentType::RenderComponentType);
     if (nullptr != comp) {
         comp->addStaticMeshArray(meshArray);
+    }
+
+    Scene::MeshProcessor processor;
+    for (ui32 i = 0; i < meshArray.size(); ++i) {
+        processor.addGeo(meshArray[i]);
+    }
+
+    if (processor.execute()) {
+        setAABB(processor.getAABB());
     }
 }
 
@@ -74,8 +127,6 @@ Component *Entity::getComponent(ComponentType type) const {
     switch (type) {
         case OSRE::App::ComponentType::RenderComponentType:
             return m_renderComponent;
-        case OSRE::App::ComponentType::TransformComponentType:
-            return m_transformComponent;
         case OSRE::App::ComponentType::ScriptComponent:
             break;
         case OSRE::App::ComponentType::MaxNumComponents:

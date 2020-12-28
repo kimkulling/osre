@@ -37,15 +37,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Pipeline.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/MaterialBuilder.h>
-#include <osre/Scene/Stage.h>
-#include <osre/Scene/View.h>
+#include <osre/Scene/Camera.h>
 #include <osre/UI/Canvas.h>
 #include <osre/UI/FocusControl.h>
 #include <osre/UI/UiItemFactory.h>
 #include <osre/UI/UiRenderer.h>
 
-// private includes
 #include "src/Engine/Platform/PlatformPluginFactory.h"
+#include "src/Engine/App/MouseEventListener.h"
 
 namespace OSRE {
 namespace App {
@@ -115,42 +114,6 @@ private:
     char mKeymap[KEY_LAST];
 };
 
-class MouseEventListener : public Platform::OSEventListener {
-public:
-    MouseEventListener() :
-            OSEventListener("App/MouseEventListener"),
-            m_uiCanvas() {
-        // empty
-    }
-
-    ~MouseEventListener() override {
-        // empty
-    }
-
-    void setCanvas(UI::Canvas *screen) {
-        m_uiCanvas = screen;
-    }
-
-    Canvas *getCanvas() const {
-        return m_uiCanvas.getPtr();
-    }
-
-    void onOSEvent(const Event &osEvent, const EventData *data) override {
-        if (!m_uiCanvas.isValid()) {
-            return;
-        }
-
-        osre_debug(Tag, "listener called");
-        if (osEvent == MouseButtonDownEvent) {
-            MouseButtonEventData *mouseBtnData((MouseButtonEventData *)data);
-            const Point2ui pt(mouseBtnData->m_AbsX, mouseBtnData->m_AbsY);
-            m_uiCanvas->mouseDown(pt, nullptr);
-        }
-    }
-
-private:
-    Common::TObjPtr<UI::Canvas> m_uiCanvas;
-};
 
 AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
         m_state(State::Uninited),
@@ -190,8 +153,6 @@ bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &
 
     if (renderer == RenderBackendType::OpenGLRenderBackend) {
         m_settings->setString(Properties::Settings::RenderAPI, "opengl");
-    } else if (renderer == RenderBackendType::DX11Backend) {
-        m_settings->setString(Properties::Settings::RenderAPI, "dx11");
     } else if (renderer == RenderBackendType::VulkanRenderBackend) {
         m_settings->setString(Properties::Settings::RenderAPI, "vulkan");
     }
@@ -307,50 +268,15 @@ World *AppBase::getActiveWorld() const {
     return m_activeWorld;
 }
 
-Scene::Stage *AppBase::createStage(const String &name) {
-    if (nullptr == m_activeWorld) {
-        osre_debug(Tag, "No world to add state to.");
-        return nullptr;
-    }
 
-    String stageName(name);
-    if (stageName.empty()) {
-        stageName = "new_stage";
-    }
-
-    Scene::Stage *stage(new Scene::Stage(stageName, m_rbService));
-    if (nullptr != stage) {
-        m_activeWorld->addStage(stage);
-    }
-
-    return stage;
-}
-
-Scene::Stage *AppBase::setActiveStage(Scene::Stage *stage) {
+Scene::Camera *AppBase::setActiveCamera(Scene::Camera *view) {
     if (nullptr == m_activeWorld) {
         osre_debug(Tag, "No world to activate state to.");
         return nullptr;
     }
-
-    return m_activeWorld->setActiveStage(stage);
+    return m_activeWorld->setActiveCamera(view);
 }
 
-Scene::View *AppBase::setActiveView(Scene::View *view) {
-    if (nullptr == m_activeWorld) {
-        osre_debug(Tag, "No world to activate state to.");
-        return nullptr;
-    }
-    return m_activeWorld->setActiveView(view);
-}
-
-Scene::Stage *AppBase::activateStage(const String &name) {
-    if (nullptr == m_activeWorld) {
-        osre_debug(Tag, "No world to activate state to.");
-        return nullptr;
-    }
-
-    return m_activeWorld->setActiveStage(name);
-}
 void AppBase::requestShutdown() {
     m_shutdownRequested = true;
 }
@@ -481,6 +407,7 @@ bool AppBase::onCreate() {
         TArray<const Common::Event *> eventArray;
         eventArray.add(&MouseButtonDownEvent);
         eventArray.add(&MouseButtonUpEvent);
+        eventArray.add(&MouseMoveEvent);
         m_mouseEvListener = new MouseEventListener;
         evHandler->registerEventListener(eventArray, m_mouseEvListener);
 
@@ -492,6 +419,11 @@ bool AppBase::onCreate() {
     }
 
     IO::IOService::create();
+#ifdef OSRE_WINDOWS
+    App::AssetRegistry::registerAssetPath("assets", "../../media");
+#else
+    App::AssetRegistry::registerAssetPath("assets", "../media");
+#endif
 
     m_uiRenderer = new UI::UiRenderer;
 
@@ -549,7 +481,6 @@ void AppBase::onUpdate() {
     Time dt(microsecs);
     if (nullptr != m_activeWorld) {
         m_activeWorld->update(dt);
-        m_activeWorld->draw(m_rbService);
     }
 
     if (nullptr != m_uiRenderer && nullptr != m_uiScreen) {
@@ -558,6 +489,16 @@ void AppBase::onUpdate() {
     }
 
     m_keyboardEvListener->clearKeyMap();
+}
+
+void AppBase::onRender() {
+    if (nullptr != m_activeWorld) {
+        m_activeWorld->draw(m_rbService);
+    }
+
+    if (nullptr != m_uiRenderer && nullptr != m_uiScreen) {
+        m_uiRenderer->render(m_uiScreen, m_rbService);
+    }
 }
 
 const ArgumentParser &AppBase::getArgumentParser() const {

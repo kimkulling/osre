@@ -22,13 +22,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-
 #include <osre/Common/Common.h>
-#include <osre/Scene/SceneCommon.h>
-#include <osre/Scene/TAABB.h>
 #include <osre/Common/Object.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Scene/SceneCommon.h>
+#include <osre/Scene/TAABB.h>
 
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>
@@ -37,11 +36,11 @@ namespace OSRE {
 
 // Forward declarations ---------------------------------------------------------------------------
 namespace Properties {
-    class Property;
+class Property;
 }
 
 namespace RenderBackend {
-    struct TransformState;
+struct TransformState;
 }
 
 namespace Scene {
@@ -49,15 +48,45 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This class is used to represents a simple node in the stage hierarchy. You can add  
-/// several functionalities by adding components to is. Each component implements functionality 
+///	@brief  This class is used to declare user-defined node factories.
+//-------------------------------------------------------------------------------------------------
+struct AbstractNodeFactory {
+    String m_type; ///< The type descriptor.
+
+    /// @brief  The class constructor.
+    /// @param  type    [in] The type descriptor.
+    AbstractNodeFactory(const String &type) :
+            m_type(type) {
+        // empty
+    }
+
+    /// @brief  The class destructor, virtual.
+    virtual ~AbstractNodeFactory() {
+        // empty
+    }
+
+    /// @brief  Will return the type.
+    /// @return The type.
+    virtual const String &getType() const {
+        return m_type;
+    }
+
+    virtual Node *create(const String &name, Common::Ids &ids, bool transformEnabled,
+            bool renderEnabled, Node *parent) = 0;
+};
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  This class is used to represents a simple node in the stage hierarchy. You can add
+/// several functionalities by adding components to is. Each component implements functionality
 /// like render geometry or transformation information.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Node : public Common::Object {
 public:
     using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::Scene::Node>;
     using NodeArray = CPPCore::TArray<Node *>;
-    using AABB    = ::OSRE::Scene::TAABB<f32>;
+    using AABB = ::OSRE::Scene::TAABB<f32>;
     using MeshReferenceArray = ::CPPCore::TArray<size_t>;
     using PropertyMap = CPPCore::THashMap<ui32, Properties::Property *>;
 
@@ -67,35 +96,35 @@ public:
     };
 
 public:
-    Node( const String &name, Common::Ids &ids, Node *parent = nullptr );
+    Node(const String &name, Common::Ids &ids, Node *parent = nullptr);
     virtual ~Node();
-    virtual void setParent( Node *parent );
+    virtual void setParent(Node *parent);
     virtual Node *getParent() const;
-    virtual void addChild( Node *child );
-    virtual bool removeChild( const String &name, TraverseMode mode );
-    virtual Node *findChild( const String &name ) const;
+    virtual Node *createChild(const String &name);
+    virtual void addChild(Node *child);
+    virtual bool removeChild(const String &name, TraverseMode mode);
+    virtual Node *findChild(const String &name) const;
     virtual size_t getNumChildren() const;
-    virtual Node *getChildAt( size_t idx ) const;
+    virtual Node *getChildAt(size_t idx) const;
     virtual void releaseChildren();
     virtual void update(Time dt);
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
     virtual void setAABB(const AABB &aabb);
     virtual const AABB &getAABB() const;
-    virtual void setActive( bool isActive );
+    virtual void setActive(bool isActive);
     virtual bool isActive() const;
-    virtual void setProperty( Properties::Property *prop );
+    virtual void setProperty(Properties::Property *prop);
     virtual Properties::Property *getProperty(const String name) const;
 
-    void setTranslation( const glm::vec3 &pos );
-    const glm::vec3 &getTranslation() const;
-    void setScale( const glm::vec3 &pos );
-    const glm::vec3 &getScale() const;
-    void setTransformationMatrix( const glm::mat4 &m );
+    void translate(const glm::vec3 &pos);
+    void scale(const glm::vec3 &pos);
+    void rotate(f32 angle, const glm::vec3 &axis);
+    void setRotation(glm::quat &rotation);
+    void setTransformationMatrix(const glm::mat4 &m);
     const glm::mat4 &getTransformationMatrix() const;
     glm::mat4 getWorlTransformMatrix();
-    const RenderBackend::TransformState &getTransformState() const;
 
-    void addMeshReference( size_t entityMeshIdx );
+    void addMeshReference(size_t entityMeshIdx);
     size_t getNumMeshReferences() const;
     size_t getMeshReferenceAt(size_t index) const;
 
@@ -104,7 +133,6 @@ protected:
     virtual void onRender(RenderBackend::RenderBackendService *renderBackendSrv);
 
 private:
-
     NodeArray m_children;
     Node *m_parent;
     MeshReferenceArray m_meshRefererenceArray;
@@ -112,32 +140,22 @@ private:
     Common::Ids *m_ids;
     PropertyMap m_propMap;
     AABB m_aabb;
-    enum DirtyFrag {
-        NotDirty = 0,
-        NeedsTransform = 1
-    };
-    ui32 m_dirty;
-    RenderBackend::TransformState m_localTransformState;
-    glm::mat4 m_transform;
+    glm::mat4 m_localTransform;
 };
 
-inline
-void Node::setActive(bool isActive) {
+inline void Node::setActive(bool isActive) {
     m_isActive = isActive;
 }
 
-inline
-bool Node::isActive() const {
+inline bool Node::isActive() const {
     return m_isActive;
 }
 
-inline
-void Node::setAABB(const AABB &aabb) {
+inline void Node::setAABB(const AABB &aabb) {
     m_aabb = aabb;
 }
 
-inline
-const Node::AABB &Node::getAABB() const {
+inline const Node::AABB &Node::getAABB() const {
     return m_aabb;
 }
 

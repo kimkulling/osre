@@ -22,10 +22,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Scene/SceneCommon.h>
-#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/Math/BaseMath.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Scene/SceneCommon.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -35,9 +35,9 @@ namespace App {
 class Entity;
 
 enum class ComponentType {
-    RenderComponentType,     ///< Renderable component
-    TransformComponentType,  ///< Transformable component
-    ScriptComponent,         ///< For scripting events
+    RenderComponentType, ///< Renderable component
+    ScriptComponent, ///< For scripting events
+
     MaxNumComponents,
     InvalidComponent
 };
@@ -50,17 +50,17 @@ enum class ComponentType {
 class OSRE_EXPORT Component {
 public:
     virtual ~Component();
-    virtual void update( Time dt );
-    virtual void render( RenderBackend::RenderBackendService *renderBackendSrv );
-    virtual void setId( ui32 id );
+    virtual void update(Time dt);
+    virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
+    virtual void setId(ui32 id);
     virtual ui32 getId() const;
     virtual Entity *getOwner() const;
 
 protected:
-    Component( Entity *owner, ui32 id );
+    Component(Entity *owner, ui32 id);
     virtual bool onPreprocess() = 0;
-    virtual bool onUpdate( Time dt ) = 0;
-    virtual bool onRender( RenderBackend::RenderBackendService *renderBackendSrv ) = 0;
+    virtual bool onUpdate(Time dt) = 0;
+    virtual bool onRender(RenderBackend::RenderBackendService *renderBackendSrv) = 0;
     virtual bool onPostprocess() = 0;
 
 private:
@@ -68,18 +68,15 @@ private:
     ui32 m_id;
 };
 
-inline
-void Component::setId( ui32 id) {
+inline void Component::setId(ui32 id) {
     m_id = id;
 }
 
-inline
-ui32 Component::getId() const {
+inline ui32 Component::getId() const {
     return m_id;
 }
 
-inline
-Entity *Component::getOwner() const {
+inline Entity *Component::getOwner() const {
     return m_owner;
 }
 
@@ -90,43 +87,22 @@ Entity *Component::getOwner() const {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT RenderComponent : public Component {
 public:
-    RenderComponent( Entity *owner, ui32 id );
+    RenderComponent(Entity *owner, ui32 id);
     ~RenderComponent() override;
     size_t getNumGeometry() const;
     RenderBackend::Mesh *getMeshAt(size_t idx) const;
-    void addStaticMesh( RenderBackend::Mesh *geo );
-    void addStaticMeshArray( const RenderBackend::MeshArray &array );
+    void addStaticMesh(RenderBackend::Mesh *geo);
+    void addStaticMeshArray(const RenderBackend::MeshArray &array);
 
 protected:
     bool onPreprocess() override;
-    bool onUpdate( Time dt ) override;
-    bool onRender( RenderBackend::RenderBackendService *rbSrv ) override;
+    bool onUpdate(Time dt) override;
+    bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
     bool onPostprocess() override;
 
 private:
-    CPPCore::TArray<RenderBackend::Mesh*> m_newGeo;
+    CPPCore::TArray<RenderBackend::Mesh *> m_newGeo;
 };
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief Describes the render component
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT TransformComponent : public Component {
-public:
-    TransformComponent( Entity *owner, ui32 id );
-    ~TransformComponent() override;
-    void update( Time dt ) override;
-
-protected:
-    bool onPreprocess() override;
-    bool onUpdate( Time dt ) override;
-    bool onRender( RenderBackend::RenderBackendService *rbSrv ) override;
-    bool onPostprocess() override;
-
-private:
-    RenderBackend::MatrixBuffer m_mb;
-};
-
-} // Namespace Scene
+} // namespace App
 } // namespace OSRE

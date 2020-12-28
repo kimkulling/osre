@@ -6,10 +6,11 @@
 namespace OSRE {
 namespace Editor {
 
-ModuleBase::ModuleBase(const String &name) :
+ModuleBase::ModuleBase(const String &name, App::AppBase *parentApp) :
         Object(name),
-        mState(Init),
-        mView(nullptr) {
+        mState(ModuleState::Init),
+        mView(nullptr),
+        mParentApp(parentApp) {
     // empty
 }
 
@@ -25,31 +26,31 @@ IModuleView *ModuleBase::getModuleView() const {
     return mView;
 }
 
-bool ModuleBase::load(OsreEdApp *parent) {
-    if (mState != Init) {
+bool ModuleBase::load() {
+    if (mState != ModuleState::Init) {
         return false;
     }
 
-    if (onLoad(parent)) {
-        mState = Loaded;
+    if (onLoad()) {
+        mState = ModuleState::Loaded;
     } else {
-        mState = Error;
+        mState = ModuleState::Error;
     }
 
-    return mState == Loaded;
+    return mState == ModuleState::Loaded;
 }
 
-bool ModuleBase::unload(OsreEdApp *parent) {
-    if (mState != Loaded) {
+bool ModuleBase::unload() {
+    if (mState != ModuleState::Loaded) {
         return false;
     }
-    if (onUnload(parent)) {
-        mState = Unloaded;
+    if (onUnload()) {
+        mState = ModuleState::Unloaded;
     } else {
-        mState = Error;
+        mState = ModuleState::Error;
     }
 
-    return mState == Unloaded;
+    return mState == ModuleState::Unloaded;
 }
 
 void ModuleBase::update() {
@@ -62,15 +63,27 @@ void ModuleBase::update() {
     }
 }
 
-bool ModuleBase::onLoad(OsreEdApp *parent) {
+void ModuleBase::render() {
+    onRender();
+}
+
+App::AppBase *ModuleBase::getParentApp() const {
+    return mParentApp;
+}
+
+bool ModuleBase::onLoad() {
     return true;
 }
 
-bool ModuleBase::onUnload(OsreEdApp *parent) {
+bool ModuleBase::onUnload() {
     return true;
 }
 
 void ModuleBase::onUpdate() {
+    // empty
+}
+
+void ModuleBase::onRender() {
     // empty
 }
 

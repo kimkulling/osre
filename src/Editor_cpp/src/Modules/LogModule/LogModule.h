@@ -5,21 +5,20 @@
 namespace OSRE {
 
 namespace UI {
-class Panel;
-
+    class Panel;
 }
 
 namespace Editor {
 
 class LogModule : public ModuleBase {
 public:
-    LogModule();
+    LogModule(App::AppBase *parentApp);
     ~LogModule() override;
 
 protected:
-    virtual bool onLoad(OsreEdApp *parent);
-    virtual bool onUnload(OsreEdApp *parent);
-    virtual void onUpdate();
+    bool onLoad() override;
+    bool onUnload() override;
+    void onUpdate() override;
 
 private:
     UI::Panel *mPanel;

@@ -79,26 +79,5 @@ void FontBase::setAtlasRows(ui32 numRows) {
     m_numRows = numRows;
 }
 
-/*bool FontBase::loadFromStream( OGLRenderBackend *rb ) {
-    if ( m_uri.isEmpty() || nullptr == rb ) {
-        return false;
-    }
-
-    const String texName( Object::getName() );
-    if( nullptr != m_fontAtlas ) {
-        rb->releaseTexture( m_fontAtlas );
-        m_fontAtlas = nullptr;
-    }
-
-    m_fontAtlas = rb->createTextureFromFile( m_texName, m_uri );
-    if( nullptr == m_fontAtlas ) {
-        return false;
-    }
-    m_numRows = 16;
-    m_numCols = 16;
-
-    return true;
-}*/
-
 } // namespace UI
 } // Namespace OSRE

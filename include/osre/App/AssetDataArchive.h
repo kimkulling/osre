@@ -44,7 +44,7 @@ namespace RenderBackend {
 namespace Scene {
     class Stage;
     class Node;
-    class View;
+    class Camera;
 }
 
 namespace App {
@@ -59,8 +59,7 @@ public:
     ~AssetDataArchive();
     App::World *load( const IO::Uri & fileLocation );
     bool save( App::World *world, const IO::Uri & fileLocation );
-    bool saveStage( Scene::Stage *stage, Json::Value &parent, Json::StreamWriter *sw, std::ofstream &stream);
-    bool saveView(Scene::View *view, Json::Value &parent, Json::StreamWriter *sw, std::ofstream &stream);
+    bool saveCamera(Scene::Camera *view, Json::Value &parent, Json::StreamWriter *sw, std::ofstream &stream);
     void traverseChildren(Scene::Node *currentNode, Json::StreamWriter *sw, std::ofstream &stream);
 
 private:

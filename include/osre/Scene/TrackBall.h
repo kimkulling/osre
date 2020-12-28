@@ -22,34 +22,38 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <osre/Common/TObjPtr.h>
+#include <osre/Scene/Camera.h>
 #include <osre/Platform/PlatformInterface.h>
 
 namespace OSRE {
 namespace Scene {
+
+class Node;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
 ///	@brief	this class implements a simple trackball. You can use it to rotate a model.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT TrackBall : public Platform::OSEventListener {
+class OSRE_EXPORT TrackBall : public Camera {
 public:
     ///	@brief	The class constructor.
     ///	@param	objName		[in] The name for the instance.
     ///	@param	w			[in] The width of the view-port to navigate in
     ///	@param	h			[in] The height of the view-port to navigate in
-    TrackBall( const String &objName, ui32 w, ui32 h );
+    TrackBall( const String &objName, ui32 w, ui32 h, Common::Ids &ids );
 
     ///	@brief	The class destructor.
-    ~TrackBall();
+    ~TrackBall() override;
 
     ///	@brief	The event callback.
     ///	@param	osEvent		[in] The incoming event from the operation system.
-    ///	@param	pData		[in] The event data.
-    void onOSEvent( const Common::Event &osEvent, const Common::EventData *pData );
+    ///	@param	data		[in] The event data.
+    void onOSEvent( const Common::Event &osEvent, const Common::EventData *data );
     
+    void rotate(const Vec2f &from, Vec2f &to);
+    void pan(f32 x, f32 y);
+
     ///	@brief	Maps a 2D-point to a sphere and returns the 3D-coordinate.
     ///	@param	pNewPt		[in] The 2D-point to map.
     ///	@param	NewVec		[out] The mapped 3D-point.
@@ -60,12 +64,15 @@ public:
 
     ///	@brief	Calculates the current scaling.
     ///	@param	y			[in] The current y value for the scaling.
-    void computeScaling( ui32 y );
+    void zoom(ui32 y);
+    const glm::quat &getRotation() const;
+    glm::vec3 getScale() const;
+    void reset();
 
 private:
-    Vec3f m_StartVector, m_EndVector;
+    Vec3f mStartVector, mEndVector;
     TRectangle<ui32> m_Dimension;
-    Quatf m_rotation;
+    glm::quat m_rotation;
     bool m_bLeftMButtonClicked;
     bool m_bMiddleClicked;
     bool m_bRightMButtonClicked;
@@ -74,7 +81,16 @@ private:
     f32 m_adjHeight;
     ui32 m_screenY;
     ui32 m_screenYOld;
+    f32 mRadius;
 };
+
+inline const glm::quat &TrackBall::getRotation() const {
+    return m_rotation;
+}
+
+inline glm::vec3 TrackBall::getScale() const {
+    return glm::vec3(mRadius, mRadius, mRadius);
+}
 
 } // Namespace Scene
 } // namespace OSRE

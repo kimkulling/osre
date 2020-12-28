@@ -58,7 +58,7 @@ enum class BufferType {
     VertexBuffer, ///< Vertex buffer, stores vertex data inside.
     IndexBuffer, ///< Index buffer, stores indices inside.
     InstanceBuffer, ///< Instance buffer, will store instance-specific data.
-    ConstantBuffer, ///< Uniform buffer, used for structured uniform data.
+    UniformBuffer, ///< Uniform buffer, used for structured uniform data.
     NumBufferTypes, ///< Number of enums.
 
     InvalidBufferType ///< Enum for invalid enum.
@@ -382,13 +382,15 @@ struct OSRE_EXPORT VertexLayout {
 
 ///	@brief  This struct is used to describe data for a GPU buffer.
 struct OSRE_EXPORT BufferData {
+    using BufferDataAllocator = ::CPPCore::TPoolAllocator<BufferData>;
+    friend BufferDataAllocator;
+    static BufferDataAllocator sBufferDataAllocator;
+
     BufferType m_type; ///< The buffer type ( @see BufferType )
     MemoryBuffer m_buffer; ///< The memory buffer
     size_t m_cap; ///<
     BufferAccessType m_access; ///< Access token ( @see BufferAccessType )
 
-    BufferData();
-    ~BufferData();
     static BufferData *alloc(BufferType type, size_t sizeInBytes, BufferAccessType access);
     static void free(BufferData *data);
     void copyFrom(void *data, size_t size);
@@ -397,6 +399,10 @@ struct OSRE_EXPORT BufferData {
     BufferAccessType getBufferAccessType() const;
     size_t getSize() const;
     c8 *getData();
+
+private:
+    BufferData();
+    ~BufferData();
 
     OSRE_NON_COPYABLE(BufferData)
 };
@@ -448,6 +454,7 @@ public:
     ~TextureLoader();
     size_t load(const IO::Uri &uri, Texture *tex);
     bool unload(Texture *tex);
+    static RenderBackend::Texture *getDefaultTexture();
 };
 
 ///	@brief
@@ -487,6 +494,8 @@ struct OSRE_EXPORT Material {
     ui32 m_numParameters;
     UniformVar *m_parameters;
     Color4 m_color[MaxMatColorType];
+    f32 mShineness;
+    f32 mShinenessStrength; 
     IO::Uri m_uri;
 
     Material(const String &name);
@@ -513,7 +522,7 @@ struct OSRE_EXPORT GeoInstanceData {
 struct OSRE_EXPORT TransformState {
     glm::vec3 m_translate;
     glm::vec3 m_scale;
-    glm::vec4 m_rotation;
+    glm::mat4 m_rotation;
 
     TransformState();
     ~TransformState();

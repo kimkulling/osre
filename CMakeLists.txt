@@ -7,6 +7,7 @@ set ( OSRE_VERSION_MINOR 1 )
 set ( OSRE_VERSION_PATCH 0 )
 set ( OSRE_VERSION ${OSRE_VERSION_MAJOR}.${OSRE_VERSION_MINOR}.${OSRE_VERSION_PATCH} )
 set ( PROJECT_VERSION "${OSRE_VERSION}" )
+set_property( GLOBAL PROPERTY CXX_STANDARD 11 )
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/3dparty/assimp/cmake-modules/")
 message(${CMAKE_MODULE_PATH})
@@ -118,10 +119,6 @@ ENDIF()
 
 add_definitions( -DGLM_ENABLE_EXPERIMENTAL )
 
-# Configuring assimp
-set( BUILD_SHARED_LIBS OFF )
-set( ASSIMP_BUILD_ZLIB ON )
-
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
 ADD_SUBDIRECTORY( src/Editor_cpp )
@@ -142,6 +139,7 @@ ADD_SUBDIRECTORY( 3dparty/zlib )
 ADD_SUBDIRECTORY( 3dparty/unzip )
 ADD_SUBDIRECTORY( 3dparty/soil )
 set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "no assimp tools")
+set( ASSIMP_BUILD_ZLIB On CACHE BOOL "no assimp tools" )
 ADD_SUBDIRECTORY( 3dparty/assimp )
 ADD_SUBDIRECTORY( 3dparty/jsoncpp-1.8.4 )
 

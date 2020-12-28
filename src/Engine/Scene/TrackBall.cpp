@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Math/BaseMath.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Scene/TrackBall.h>
+#include <osre/Scene/Node.h>
 
 namespace OSRE {
 namespace Scene {
@@ -30,10 +31,10 @@ namespace Scene {
 using namespace OSRE::Common;
 using namespace OSRE::Platform;
 
-TrackBall::TrackBall(const String &trackBallObjName, ui32 w, ui32 h) :
-        OSEventListener(trackBallObjName),
-        m_StartVector(0, 0, 0),
-        m_EndVector(0, 0, 0),
+TrackBall::TrackBall(const String &trackBallObjName, ui32 w, ui32 h, Ids &ids) :
+        Camera(trackBallObjName, ids),
+        mStartVector(0, 0, 0),
+        mEndVector(0, 0, 0),
         m_Dimension(w, h),
         m_rotation(),
         m_bLeftMButtonClicked(false),
@@ -43,15 +44,16 @@ TrackBall::TrackBall(const String &trackBallObjName, ui32 w, ui32 h) :
         m_adjWidth(0.0f),
         m_adjHeight(0.0f),
         m_screenY(0),
-        m_screenYOld(0) {
+        m_screenYOld(0),
+        mRadius (1.0f) {
     // adjust the width for to sphere mapping
-    const f32 width = static_cast<f32>(m_Dimension.getWidth());
+    const f32 width = static_cast<f32>(w);
     if (width) {
         m_adjWidth = 1.0f / (width - 1.0f);
     }
 
     // adjust the height for to sphere mapping
-    const f32 height = static_cast<f32>(m_Dimension.getHeight());
+    const f32 height = static_cast<f32>(h);
     if (height) {
         m_adjHeight = 1.0f / (height - 1.0f);
     }
@@ -61,33 +63,45 @@ TrackBall::~TrackBall() {
     // empty
 }
 
-void TrackBall::onOSEvent(const Common::Event &rOSEvent, const Common::EventData *pData) {
-    /*	if ( rOSEvent == Interface::MouseButtonDownEvent ) {
-        Interface::MouseButtonEventData *pMBData = (Interface::MouseButtonEventData*) pData;
+void TrackBall::rotate( const Vec2f &from, Vec2f &to ) {
+    mapToSphere(&from, &mStartVector);
+    mapToSphere(&to, &mEndVector);
+    computeRotation();
+}
+
+void TrackBall::pan( f32 x, f32 y ) {
+    glm::vec3 lookAt = normalize(getEye() - getCenter());
+    glm::vec3 up = getUp();
+    glm::vec3 right = glm::cross(lookAt, up);
+    right *= x;
+    up *= y;
+}
+
+void TrackBall::onOSEvent(const Common::Event &osEvent, const Common::EventData *data) {
+    if (osEvent == Platform::MouseButtonDownEvent) {
+        Platform::MouseButtonEventData *pMBData = (Platform::MouseButtonEventData *)data;
         if ( 0 == pMBData->m_Button ) {
-            Math::Vector2f pos( static_cast<f32>( pMBData->m_AbsX ), static_cast<f32>( pMBData->m_AbsY ) );
-            mapToSphere( &pos, &m_EndVector );
+            Vec2f pos( static_cast<f32>( pMBData->m_AbsX ), static_cast<f32>( pMBData->m_AbsY ) );
+            mapToSphere( &pos, &mStartVector );
             m_bLeftMButtonClicked = true;
         } else if ( 1 == pMBData->m_Button ) {
             m_bMiddleClicked = true;
         } else {
             m_bRightMButtonClicked = true;
         }
-    } else if ( rOSEvent == Interface::MouseMoveEvent ) {
-        const MouseMoveEventData *pMMData = reinterpret_cast<const MouseMoveEventData*>( pData );
+    } else if ( osEvent == Platform::MouseMoveEvent ) {
+        const MouseMoveEventData *pMMData = (Platform::MouseMoveEventData*) (data);
         if ( m_bLeftMButtonClicked ) {
-            Math::Vector2f pos( static_cast<f32>( pMMData->m_AbsX ), static_cast<f32>( pMMData->m_AbsY ) );
-            m_StartVector = m_EndVector;
-            mapToSphere( &pos, &m_EndVector );
+            Vec2f pos(static_cast<f32>(pMMData->m_absX), static_cast<f32>(pMMData->m_absY));
+            mStartVector = mEndVector;
+            mapToSphere( &pos, &mEndVector );
             computeRotation();
         } else if ( m_bMiddleClicked ) {
-            computeScaling( pMMData->m_AbsY );
+            zoom( pMMData->m_absY );
         }
-    } else if (rOSEvent == Interface::MouseButtonUpEvent ) {
-        m_nodePtr->setScale( ZFXCE2::Math::Vector3f( 1,1,1 ) );
-        m_nodePtr->setRotation( ZFXCE2::Math::Quaternionf( 0,0,0,1 ) );
+    } else if (osEvent == Platform::MouseButtonUpEvent) {
         m_screenYOld = 0;
-        const MouseButtonEventData *pMBData = reinterpret_cast<const MouseButtonEventData*>( pData );
+        const MouseButtonEventData *pMBData = reinterpret_cast<const MouseButtonEventData*>( data );
         if ( 0 == pMBData->m_Button ) {
             m_bLeftMButtonClicked = false;
         } else if ( 1 == pMBData->m_Button ) {
@@ -95,60 +109,63 @@ void TrackBall::onOSEvent(const Common::Event &rOSEvent, const Common::EventData
         } else {
             m_bRightMButtonClicked = false;
         }
-    }*/
+    }
 }
 
-void TrackBall::mapToSphere(const Vec2f *pNewPt, Vec3f *NewVec) {
+void TrackBall::mapToSphere(const Vec2f *pNewPt, Vec3f *newVector) {
     // copy parameter into temp point
     Vec2f tempPt(*pNewPt);
 
     // adjust point coordinates and scale down to range of [-1 ... 1]
     f32 x = (tempPt.getX() * m_adjWidth) - 1.0f;
-    f32 y = /*1.0f -*/ (tempPt.getY() * m_adjHeight);
+    f32 y = tempPt.getY() * m_adjHeight;
     tempPt.set(x, y);
 
     // compute the square of the length of the vector to the point from the center
     f32 length = (tempPt.getX() * tempPt.getX()) + (tempPt.getY() * tempPt.getY());
 
     // if the point is mapped outside of the sphere... (length > radius squared)
-    if (length > 1.0f) {
+    if (length > mRadius) {
         // compute a normalizing factor (radius / sqrt(length))
-        f32 norm = 1.0f / sqrt(length);
+        f32 norm = mRadius / sqrt(length);
 
         // return the "normalized" vector, a point on the sphere
-        NewVec->set(tempPt.getX() * norm, tempPt.getY() * norm, 0.0f);
+        newVector->set(tempPt.getX() * norm, tempPt.getY() * norm, 0.0f);
     } else { // else it's on the inside
         // return a vector to a point mapped inside the sphere sqrt(radius squared - length)
-        NewVec->set(tempPt.getX(), tempPt.getY(), sqrt(1.0f - length));
+        newVector->set(tempPt.getX(), tempPt.getY(), sqrt(mRadius - length));
     }
 }
 
 void TrackBall::computeRotation() {
-    Vec3f perp = m_StartVector.crossProduct(m_EndVector);
+    Vec3f perp = mStartVector.crossProduct(mEndVector);
     if (perp.getLength() > Math::BaseMath::getSPEPS()) {
-        m_rotation.set(perp.getX(), perp.getY(), perp.getZ(), m_StartVector.dotProduct(m_EndVector));
+        m_rotation.x = perp.getX();
+        m_rotation.y = perp.getX();
+        m_rotation.z = perp.getZ();
+        m_rotation.w = mStartVector.dotProduct(mEndVector);
     } else {
-        m_rotation.set(0.0f, 0.0f, 0.0f, 1.0f);
+        m_rotation.x = 0;
+        m_rotation.y = 0;
+        m_rotation.z = 0;
+        m_rotation.w = 1;
     }
-
-    //m_nodePtr->setRotation( m_Rotation );
 }
 
-void TrackBall::computeScaling(ui32 y) {
+void TrackBall::zoom(ui32 y) {
     m_screenYOld = m_screenY;
     m_screenY = y;
-    static const f32 offset = 0.001f;
+    const f32 offset = 0.00005f;
     if (m_screenYOld) {
-        i32 diff = m_screenY - m_screenYOld;
-        const f32 scaleFactor = offset * (f32)diff;
-        Vec3f scale /* = m_nodePtr->getScale()*/;
-        scale += scaleFactor;
-        if (scale.isZero()) {
-            scale.set(0, 0, 0);
-        }
-        /*m_nodePtr->setScale( scale )*/;
+        const i32 diff = m_screenY - m_screenYOld;
+        mRadius += offset * static_cast<f32>(diff);
     }
 }
+
+void TrackBall::reset() {
+    m_screenYOld = 0;
+}
+
 
 } // namespace Scene
 } // namespace OSRE

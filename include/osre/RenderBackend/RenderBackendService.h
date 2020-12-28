@@ -206,6 +206,10 @@ public:
 
     void resize(ui32 x, ui32 y, ui32 w, ui32 h);
 
+    void setBehaviour( bool resizeViewport ) {
+        mBehaviour.ResizeViewport = resizeViewport;
+    }
+
     void focusLost();
 
     void setUiScreen(UI::Widget *screen);
@@ -238,6 +242,11 @@ private:
     CPPCore::TArray<PassData *> m_passes;
     PassData *m_currentPass;
     RenderBatchData *m_currentBatch;
+    struct Behaviour {
+        bool ResizeViewport;
+
+        Behaviour() : ResizeViewport(true) {}
+    } mBehaviour;
 };
 
 inline void RenderBackendService::setUiScreen(UI::Widget *screen) {

@@ -37,8 +37,7 @@ namespace Common {
 }
 
 namespace Scene {
-    class View;
-    class Stage;
+    class Camera;
 }
 
 namespace Properties {
@@ -126,25 +125,10 @@ public:
     
     virtual World *getActiveWorld() const;
 
-    /// @brief  Will create a new stage and set it as the active one.
-    /// @param  name        [in] The name for the stage.
-    /// @return The new stage instance or nullptr if the stage exists already.
-    virtual Scene::Stage *createStage( const String &name );
-
-    /// @brief  Will activate a stage.
-    /// @param  stage       [in] The stage to activate.
-    /// @return true if successful, false in case of an error.
-    virtual Scene::Stage *setActiveStage( Scene::Stage *stage );
-
     /// @brief  Will activate the given view in the active world instance.
     /// @param  view        [in] A pointer showing to the view.
     /// @return true, if the view activation was successful, false if not.
-    virtual Scene::View *setActiveView(Scene::View *view);
-
-    /// @brief  Activates a stage.
-    /// @param  name        [in] The name of the stage.
-    /// @return true if successful,  false if not.
-    virtual Scene::Stage *activateStage( const String &name );
+    virtual Scene::Camera *setActiveCamera(Scene::Camera *view);
 
     /// @brief  Will requested a shutdown.
     virtual void requestShutdown();
@@ -194,6 +178,9 @@ public:
     /// @brief  The onDestroy callback, override this for your own destroying stuff.
     /// @return true if successful,  false if not.
     virtual bool onDestroy();
+
+    /// @brief  The onRener callback.
+    virtual void onRender();
 
     /// @brief  The onUpdate callback, override this for your own update stuff.
     virtual void onUpdate();

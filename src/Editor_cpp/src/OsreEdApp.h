@@ -1,15 +1,20 @@
 #pragma once
 
+#include "Modules/ModuleBase.h"
+
 #include <osre/App/AppBase.h>
 #include <osre/App/World.h>
 #include <osre/Scene/Node.h>
-#include <osre/Scene/Stage.h>
-#include <osre/Scene/View.h>
+#include <osre/Scene/Camera.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
+
+namespace App {
+    class Project;
+}
 
 namespace UI {
     class Canvas;
@@ -20,48 +25,87 @@ namespace IO {
     class Uri;
 }
 
+namespace Scene {
+    class TrackBall;
+}
+
 namespace Editor {
 
-class ModuleBase;
-
+//-------------------------------------------------------------------------------------------------
+/// @brief  The main application of the OSRE-Editor.
+//-------------------------------------------------------------------------------------------------
 class OsreEdApp : public App::AppBase {
-    using ModuleArray = ::CPPCore::TArray<ModuleBase *>;
+public:
     using ModulePathArray = ::CPPCore::TArray<String>;
 
-public:
+    /// @brief  The class constructor with the incoming command line arguments.
+    /// @param  argc    [in] The number of command-line parameters.
+    /// @param  argv    [in] The command-line arguments.
     OsreEdApp(int argc, char *argv[]);
+
+    /// @brief  The class destructor.
     ~OsreEdApp() override;
-    bool addModulePath(const String &path);
+
+    /// The New-project callback.
+    /// @param  cmdId   [in] The command id.
+    /// @param  data    [in] The parameters.
+    void newProject(ui32 cmdId, void *data);
+
+    /// The Load-project callback.
+    /// @param  cmdId   [in] The command id.
+    /// @param  data    [in] The parameters.
+    void loadProject(ui32 cmdId, void *data);
+
+    /// The Save-project callback.
+    /// @param  cmdId   [in] The command id.
+    /// @param  data    [in] The parameters.
+    void saveProject(ui32 cmdId, void *data);
+
+    /// The Import-Asset callback.
+    /// @param  cmdId   [in] The command id.
+    /// @param  data    [in] The parameters.
+    void importAsset(ui32 cmdId, void *data);
+
+    /// The Quit callback.
+    /// @param  cmdId   [in] The command id.
+    /// @param  data    [in] The parameters.
+    void quitEditor(ui32 cmdId, void *data);
+
+    /// @brief  Will load an asset from a given uri.
+    /// @para   modelLoc    [in] The model location.
+    void loadAsset(const IO::Uri &modelLoc);
+
+    /// @brief  Will return true, if a model was loaded.
+    bool hasModel() const;
+
     bool registerModule(ModuleBase *mod);
-    bool loadModules();
-    UI::Panel *getRootPanel() const;
-    void öimportAsset(const IO::Uri &modelLoc);
+    ModuleBase *findModule(const String &name) const;
+    bool unregisterModule(ModuleBase *moc);
 
 protected:
+    /// The onCreate callback
     bool onCreate() override;
+
+    /// The onUpdate callback.
     void onUpdate() override;
+
+    /// The onDestrox callback.
     bool onDestroy() override;
 
 private:
-    struct UiScreen {
-        UI::Canvas *m_canvas;
-        UI::Panel  *m_mainPanel;
-        UI::Panel  *m_logPanel;
-        UI::Panel  *m_modelPanel;
-
-        UiScreen();
-    };
-    UiScreen mUiScreen;
-    ModuleArray mModuleArray;
-    ModulePathArray mModulePathArray;
-
-    Scene::Stage *m_stage;
-    Scene::View *m_view;
-    f32 m_angle;
+    Scene::Camera *mCamera;
     glm::mat4 m_model;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
     Scene::Node::NodePtr m_modelNode;
+    Scene::TrackBall *mTrackBall;
+    App::Project *mProject;
+    Vec2f mOld;
+    ModuleArray mModules;
 };
+
+inline bool OsreEdApp::hasModel() const {
+    return m_modelNode.isValid();
+}
 
 } // namespace Editor
 } // namespace OSRE

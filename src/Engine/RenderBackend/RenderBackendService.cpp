@@ -31,12 +31,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "OGLRenderer/OGLRenderEventHandler.h"
 #include "VulkanRenderer/VlkRenderEventHandler.h"
+// clang-format off
 #ifdef OSRE_WINDOWS
-#include "DX11Renderer/DX11RenderVEventHandler.h"
-#include "DX11Renderer/DX11Renderer.h"
-#include <osre/Platform/Windows/MinWindows.h>
+#   include <osre/Platform/Windows/MinWindows.h>
 #endif
-
+// clang-format on
 namespace OSRE {
 namespace RenderBackend {
 
@@ -48,11 +47,6 @@ static const c8 *Tag = "RenderBackendService";
 
 static const c8 *OGL_API = "opengl";
 static const c8 *Vulkan_API = "vulkan";
-#ifdef OSRE_WINDOWS
-
-static const c8 *DX11_API = "dx11";
-
-#endif // OSRE_WINDOWS
 
 static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataArray) {
     for (ui32 i = 0; i < passDataArray.size(); ++i) {
@@ -119,13 +113,7 @@ bool RenderBackendService::onOpen() {
         m_renderTaskPtr->attachEventHandler(new OGLRenderEventHandler);
     } else if (api == Vulkan_API) {
         m_renderTaskPtr->attachEventHandler(new VlkRenderEventHandler);
-    }
-#ifdef OSRE_WINDOWS
-    else if (api == DX11_API) {
-        m_renderTaskPtr->attachEventHandler(new DX11RenderEventHandler);
-    }
-#endif // OSRE_WINDOWS
-    else {
+    } else {
         osre_error(Tag, "Requested render-api unknown: " + api);
         ok = false;
     }
@@ -215,7 +203,7 @@ void RenderBackendService::commitNextFrame() {
                 FrameSubmitCmd *cmd = m_submitFrame->enqueue();
                 cmd->m_passId = currentPass->m_id;
                 cmd->m_batchId = currentBatch->m_id;
-                cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateMatrixes;
+                cmd->m_updateFlags |= (ui32) FrameSubmitCmd::UpdateMatrixes;
                 cmd->m_size = sizeof(MatrixBuffer);
                 cmd->m_data = new c8[cmd->m_size];
                 ::memcpy(cmd->m_data, &currentBatch->m_matrixBuffer, cmd->m_size);
@@ -478,12 +466,14 @@ void RenderBackendService::clearPasses() {
     m_frameCreated = false;
 }
 
-void RenderBackendService::attachView() {
+void RenderBackendService::attachView() {    
 }
 
 void RenderBackendService::resize(ui32 x, ui32 y, ui32 w, ui32 h) {
-    ResizeEventData *data = new ResizeEventData(x, y, w, h);
-    m_renderTaskPtr->sendEvent(&OnResizeEvent, data);
+    if (mBehaviour.ResizeViewport) {
+        ResizeEventData *data = new ResizeEventData(x, y, w, h);
+        m_renderTaskPtr->sendEvent(&OnResizeEvent, data);
+    }
 
     if (m_screen != nullptr) {
         m_screen->resize(x, y, w, h);

@@ -227,10 +227,11 @@ void OGLRenderBackend::clearRenderTarget(const ClearState &clearState) {
         glTarget |= GL_DEPTH_BUFFER_BIT;
     }
     if (clear & (int)ClearState::ClearBitType::StencilBit) {
-        glTarget |= GL_STENCIL_BUFFER_BIT;
+        glTarget |= GL_STENCIL_BUFFER_BIT; 
     }
 
     glClear(glTarget);
+    glClearColor(0.5, 0.5, 0.5, 0.5);
 }
 
 void OGLRenderBackend::setViewport(i32 x, i32 y, i32 w, i32 h) {
@@ -360,7 +361,7 @@ bool OGLRenderBackend::createVertexCompArray(const VertexLayout *layout, OGLShad
         VertComponent &comp(layout->getAt(i));
         attribute = new OGLVertexAttribute;
         attribute->m_pAttributeName = getVertCompName(comp.m_attrib).c_str();
-        attribute->m_index = ((*shader)[attribute->m_pAttributeName]);
+        attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
         attribute->m_size = OGLEnum::getOGLSizeForFormat(comp.m_format);
         attribute->m_type = OGLEnum::getOGLTypeForFormat(comp.m_format);
         attribute->m_ptr = (GLvoid *)index;
@@ -382,7 +383,7 @@ bool OGLRenderBackend::createVertexCompArray(VertexType type, OGLShader *shader,
         case VertexType::ColorVertex:
             attribute = new OGLVertexAttribute;
             attribute->m_pAttributeName = getVertCompName(VertexAttribute::Position).c_str();
-            attribute->m_index = ((*shader)[attribute->m_pAttributeName]);
+            attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = 0;
@@ -390,7 +391,7 @@ bool OGLRenderBackend::createVertexCompArray(VertexType type, OGLShader *shader,
 
             attribute = new OGLVertexAttribute;
             attribute->m_pAttributeName = getVertCompName(VertexAttribute::Normal).c_str();
-            attribute->m_index = (*shader)[attribute->m_pAttributeName];
+            attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = (const GLvoid *)offsetof(ColorVert, normal);
@@ -398,7 +399,7 @@ bool OGLRenderBackend::createVertexCompArray(VertexType type, OGLShader *shader,
 
             attribute = new OGLVertexAttribute;
             attribute->m_pAttributeName = getVertCompName(VertexAttribute::Color0).c_str();
-            attribute->m_index = (*shader)[attribute->m_pAttributeName];
+            attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = (const GLvoid *)offsetof(ColorVert, color0);
@@ -408,7 +409,7 @@ bool OGLRenderBackend::createVertexCompArray(VertexType type, OGLShader *shader,
         case VertexType::RenderVertex:
             attribute = new OGLVertexAttribute;
             attribute->m_pAttributeName = getVertCompName(VertexAttribute::Position).c_str();
-            attribute->m_index = ((*shader)[attribute->m_pAttributeName]);
+            attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = 0;
@@ -416,7 +417,7 @@ bool OGLRenderBackend::createVertexCompArray(VertexType type, OGLShader *shader,
 
             attribute = new OGLVertexAttribute;
             attribute->m_pAttributeName = getVertCompName(VertexAttribute::Normal).c_str();
-            attribute->m_index = (*shader)[attribute->m_pAttributeName];
+            attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = (const GLvoid *)offsetof(RenderVert, normal);
@@ -424,7 +425,7 @@ bool OGLRenderBackend::createVertexCompArray(VertexType type, OGLShader *shader,
 
             attribute = new OGLVertexAttribute;
             attribute->m_pAttributeName = getVertCompName(VertexAttribute::Color0).c_str();
-            attribute->m_index = (*shader)[attribute->m_pAttributeName];
+            attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
             attribute->m_size = 3;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = (const GLvoid *)offsetof(RenderVert, color0);
@@ -432,7 +433,7 @@ bool OGLRenderBackend::createVertexCompArray(VertexType type, OGLShader *shader,
 
             attribute = new OGLVertexAttribute;
             attribute->m_pAttributeName = getVertCompName(VertexAttribute::TexCoord0).c_str();
-            attribute->m_index = (*shader)[attribute->m_pAttributeName];
+            attribute->m_index = shader->getAttributeLocation(attribute->m_pAttributeName);
             attribute->m_size = 2;
             attribute->m_type = GL_FLOAT;
             attribute->m_ptr = (const GLvoid *)offsetof(RenderVert, tex0);
@@ -495,7 +496,7 @@ bool OGLRenderBackend::bindVertexLayout(OGLVertexArray *va, OGLShader *shader, s
             continue;
         }
 
-        const GLint loc = (*shader)[attribName];
+        const GLint loc = shader->getAttributeLocation(attribName);
         if (-1 != loc) {
             glEnableVertexAttribArray(loc);
             glVertexAttribPointer(loc, (GLint)attributes[i]->m_size,
@@ -945,7 +946,8 @@ void OGLRenderBackend::setParameter(OGLParameter *param) {
     }
 
     if (NoneLocation == param->m_loc) {
-        param->m_loc = (*m_shaderInUse)(param->m_name);
+        param->m_loc = m_shaderInUse->getUniformLocation(param->m_name);
+        //(*m_shaderInUse)(param->m_name);
         if (NoneLocation == param->m_loc) {
             osre_debug(Tag, "Cannot location for parameter " + param->m_name + " in shader " + m_shaderInUse->getName() + ".");
             return;
@@ -1040,7 +1042,7 @@ size_t OGLRenderBackend::addPrimitiveGroup(PrimitiveGroup *grp) {
     oglGrp->m_startIndex = (ui32)grp->m_startIndex;
     oglGrp->m_numIndices = grp->m_numIndices;
 
-    const size_t idx(m_primitives.size());
+    const size_t idx = m_primitives.size();
     m_primitives.add(oglGrp);
 
     return idx;

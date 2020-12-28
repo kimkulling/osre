@@ -36,29 +36,67 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  This class declares a base camera node within a scene-graph. 
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT View : public Node {
+class OSRE_EXPORT Camera : public Node {
 public:
-    View(const String &name, Common::Ids &ids, Node *parent = nullptr);
-    ~View() override;
+    /// @brief  The class constructor.
+    Camera(const String &name, Common::Ids &ids, Node *parent = nullptr);
+
+    /// @brief
+    ~Camera() override;
+
+    /// @brief
     void setProjectionParameters(f32 fov, f32 w, f32 h, f32 nearPlane, f32 farPlane);
-    void update(Time dt);
+
+    /// @brief
+    void update(Time dt) override;
+
+    /// @brief
     void draw(RenderBackend::RenderBackendService *renderBackendSrv);
+
+    /// @brief
     void observeBoundingBox(const TAABB<f32> &box);
-    void setLookAt(const glm::vec3 &pos, const glm::vec3 &view, const glm::vec3 &up);
+
+    /// @brief
+    void setLookAt(const glm::vec3 &eye, const glm::vec3 &center, const glm::vec3 &up);
+
+    /// @brief
     void setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farPlane);
+
+    /// @brief
     void setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane, f32 farPlane);
+
+    /// @brief
     const glm::mat4 &getView() const;
+
+    /// @brief
     const glm::mat4 &getProjection() const;
+
+    /// @brief
     f32 getFov() const;
+
+    /// @brief
     f32 getAspectRatio() const;
+
+    /// @brief
     f32 getNear() const;
+
+    /// @brief
     f32 getFar() const;
 
+    /// @brief
+    const glm::vec3 &getEye() const;
+
+    /// @brief
+    const glm::vec3 &getCenter() const;
+
+    /// @brief
+    const glm::vec3 &getUp() const;
+
 protected:
-    virtual void onUpdate(Time dt);
-    virtual void onRender(RenderBackend::RenderBackendService *renderBackendSrv);
+    void onUpdate(Time dt) override;
+    void onRender(RenderBackend::RenderBackendService *renderBackendSrv) override;
 
 private:
     f32 m_fov;
@@ -70,20 +108,32 @@ private:
     glm::mat4 m_view, m_projection;
 };
 
-inline f32 View::getFov() const {
+inline f32 Camera::getFov() const {
     return m_fov;
 }
 
-inline f32 View::getAspectRatio() const {
+inline f32 Camera::getAspectRatio() const {
     return m_aspectRatio;
 }
 
-inline f32 View::getNear() const {
+inline f32 Camera::getNear() const {
     return m_near;
 }
 
-inline f32 View::getFar() const {
+inline f32 Camera::getFar() const {
     return m_far;
+}
+
+inline const glm::vec3 &Camera::getEye() const {
+    return m_eye;
+}
+
+inline const glm::vec3 &Camera::getCenter() const {
+    return m_center;
+}
+
+inline const glm::vec3 &Camera::getUp() const {
+    return m_up;
 }
 
 } // Namespace Scene

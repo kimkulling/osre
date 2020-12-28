@@ -27,21 +27,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 namespace UI {
-class Panel;
-
+    class Panel;
 }
 
 namespace Editor {
 
 class InspectorModule : public ModuleBase {
 public:
-    InspectorModule();
+    InspectorModule(App::AppBase *parentApp);
     ~InspectorModule() override;
 
 protected:
-    virtual bool onLoad(OsreEdApp *parent);
-    virtual bool onUnload(OsreEdApp *parent);
-    virtual void onUpdate();
+    bool onLoad() override;
+    bool onUnload() override;
+    void onUpdate() override;
+    void onRender() override;
 
 private:
     UI::Panel *mPanel;

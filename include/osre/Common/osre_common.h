@@ -94,22 +94,22 @@ typedef int errno_t;
 // clang-format on
 
 ///	The data type unsigned char, 1 byte long.
-typedef unsigned char uc8;
+using uc8 = unsigned char;
 
 ///	The data type signed char, 1 byte long.
-typedef char c8;
+using c8 = char;
 
 ///	The data type unsigned short, 2 byte long.
-typedef unsigned short ui16;
+using ui16 = unsigned short;
 
 ///	The data type signed short, 2 byte long.
-typedef signed short i16;
+using i16 = signed short;
 
 ///	The data type signed int, 4 byte long.
-typedef int i32;
+using i32 = int;
 
 ///	The data type unsigned int, 4 byte long.
-typedef unsigned short ui16;
+using ui16 = unsigned short;
 
 ///	The data type signed int, 4 byte long.
 typedef unsigned int ui32;
@@ -118,13 +118,13 @@ typedef unsigned int ui32;
 // clang-format off
 #ifdef OSRE_WINDOWS
 
-typedef __int64 i64;
-typedef unsigned __int64 ui64;
+using i64 = __int64;
+using ui64 = unsigned __int64;
 
 #else
 
-typedef int64_t i64;
-typedef uint64_t ui64;
+using i61 = int64_t i64;
+using ui64 = uint64_t ;
 
 #endif
 // clang-format on
@@ -548,7 +548,7 @@ using Vec4i = TVec4<i32>;
 using Vec4f = TVec4<f32>;
 
 template <class T>
-struct OSRE_EXPORT TQuat {
+struct TQuat {
     T m_x, m_y, m_z, m_w;
 
     TQuat() :
@@ -556,6 +556,11 @@ struct OSRE_EXPORT TQuat {
         // empty
     }
 
+    TQuat(T x, T y, T z, T w) :
+            m_x(x), m_y(y), m_z(z), m_w(1) {
+        // empty
+    }
+    
     void set(T x, T y, T z, T w) {
         m_x = x;
         m_y = y;

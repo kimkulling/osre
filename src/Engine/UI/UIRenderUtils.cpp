@@ -82,7 +82,7 @@ static void drawFilledRect(RenderVert *vertices, ui32 x1, ui32 y1, ui32 x2, ui32
     vertices[3].tex0 = glm::vec2(1, 1);
 }
 
-void UIRenderUtils::drawRectFromStyle(const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
+void UIRenderUtils::createRectFromStyle(const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
         UiIndexCache &indexCache, ui32 stackIndex, WidgetType type) {
     Color4 col;
     switch (type) {
@@ -113,7 +113,7 @@ void UIRenderUtils::drawRectFromStyle(const Rect2ui &rect, const Style &style, U
     }
 }
 
-void UIRenderUtils::drawBorderRectFromStyle(const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
+void UIRenderUtils::createBorderRectFromStyle(const Rect2ui &rect, const Style &style, UiVertexCache &vertexCache,
         UiIndexCache &indexCache, ui32 stackIndex, WidgetType type) {
     RenderVert vertices[8];
     Color4 col, borderCol(0.4f, 0.4f, 0.4f, 0.4f);
@@ -144,7 +144,7 @@ void UIRenderUtils::drawBorderRectFromStyle(const Rect2ui &rect, const Style &st
     }
 }
 
-Rect2ui UIRenderUtils::drawTextBox(const String &text, f32 textSize) {
+Rect2ui UIRenderUtils::createTextBox(const String &text, f32 textSize) {
     ui32 width = 0, height = static_cast<ui32>(textSize);
     for (ui32 i = 0; i < text.size(); ++i) {
         if (text[i] == '\n') {

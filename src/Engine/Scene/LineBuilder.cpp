@@ -20,12 +20,12 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Scene/LineBuilder.h>
-#include <osre/RenderBackend/Mesh.h>
 #include <osre/Common/Logger.h>
+#include <osre/RenderBackend/Mesh.h>
+#include <osre/Scene/LineBuilder.h>
 
-#include <GL/glew.h>
-#include <GL/gl.h>
+//#include <GL/gl.h>
+//#include <GL/glew.h>
 
 namespace OSRE {
 namespace Scene {
@@ -33,21 +33,21 @@ namespace Scene {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-LineBuilder::LineBuilder() 
-: m_posCache()
-, m_diffuseColCache()
-, m_normalCache()
-, m_tex0Cache()
-, m_activePrimGroup( nullptr )
-, m_indexCache()
-, m_primGroupCache()
-, m_isDirty()
-, m_activeMesh( nullptr ) {
+LineBuilder::LineBuilder() :
+        m_posCache(),
+        m_diffuseColCache(),
+        m_normalCache(),
+        m_tex0Cache(),
+        m_activePrimGroup(nullptr),
+        m_indexCache(),
+        m_primGroupCache(),
+        m_isDirty(),
+        m_activeMesh(nullptr) {
     // empty
 }
 
 LineBuilder::~LineBuilder() {
-
+    // empty
 }
 
 LineBuilder &LineBuilder::addLine(const Vec3f &pos0, const Vec3f &pos1) {
@@ -61,7 +61,7 @@ LineBuilder &LineBuilder::addLine(const Vec3f &pos0, const Vec3f &pos1) {
     m_activePrimGroup->m_startIndex = m_indexCache.size();
     m_activePrimGroup->m_numIndices += 2;
 
-    m_indexCache.add(m_activePrimGroup->m_startIndex);
+    m_indexCache.add((ui32) m_activePrimGroup->m_startIndex);
     m_isDirty = true;
 
     return *this;
@@ -80,7 +80,7 @@ LineBuilder &LineBuilder::addLines(Vec3f *pos0, Vec3f *pos1, ui32 numLines) {
     m_activePrimGroup->m_startIndex = m_indexCache.size();
     m_activePrimGroup->m_numIndices += numLines;
     for (ui32 i = 0; i < numLines; ++i) {
-        m_indexCache.add(m_activePrimGroup->m_startIndex + i);
+        m_indexCache.add((ui32)m_activePrimGroup->m_startIndex + i);
     }
     m_isDirty = true;
 
@@ -117,13 +117,13 @@ Mesh *LineBuilder::getMesh() {
         if (!m_tex0Cache.isEmpty()) {
             v.tex0 = m_tex0Cache[i];
         }
-        c8 *ptr = (c8*)m_activeMesh->m_vb->getData();
+        c8 *ptr = (c8 *)m_activeMesh->m_vb->getData();
         ::memcpy(&ptr[offset], &v, sizeof(RenderVert));
         offset += sizeof(RenderVert);
     }
 
     // setup indices
-    size = sizeof(GLushort) * m_indexCache.size();
+    size = sizeof(ui16) * m_indexCache.size();
     m_activeMesh->m_ib = BufferData::alloc(BufferType::IndexBuffer, size, BufferAccessType::ReadOnly);
     m_activeMesh->m_ib->copyFrom(&m_indexCache[0], size);
 
@@ -145,8 +145,7 @@ void LineBuilder::preparePrimGroups() {
             m_activePrimGroup = pg;
             m_activePrimGroup->m_indexType = m_activeMesh->m_indextype;
         }
-    }
-    else {
+    } else {
         PrimitiveGroup *pg = new PrimitiveGroup;
         pg->m_primitive = PrimitiveType::LineList;
         m_primGroupCache.add(pg);

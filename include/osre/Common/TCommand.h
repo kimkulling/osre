@@ -29,61 +29,55 @@ namespace App {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
-///	@brief	This class is used to define a command. Commands are actions which can be bounded to 
-///	events. When a new event will be fired a command will be enqueued to ensure that the ordering 
+///	@brief	This class is used to define a command. Commands are actions which can be bounded to
+///	events. When a new event will be fired a command will be enqueued to ensure that the ordering
 ///	of the events will not be changed.
 ///	The command encapsulates a function with its parameter. So when you just want to bind an action
-///	like highlighting an object when its get clicked create a function with the instance of the 
-///	object as parameter. 
+///	like highlighting an object when its get clicked create a function with the instance of the
+///	object as parameter.
 //-------------------------------------------------------------------------------------------------
-template<class TParam, class TFunc>
+template <class TParam, class TFunc>
 class TCommand {
 public:
-	///	@brief	The default class constructor.
+    ///	@brief	The default class constructor.
     TCommand();
-	
-	///	@brief	The class constructor with the function and the parameter.
-	///	@param	func		[in] The function stored as a functor.
-    explicit TCommand( TFunc func );
-	
-	///	@brief	The class destructor.
+
+    ///	@brief	The class constructor with the function and the parameter.
+    ///	@param	func		[in] The function stored as a functor.
+    explicit TCommand(TFunc func);
+
+    ///	@brief	The class destructor.
     ~TCommand();
-	
-	///	@brief	Will execute the function.
-	///	@param	param		[in] The function parameter.
-	///	@return true, if the fnction call was successful, false if not.
-    bool execute( TParam param );
+
+    ///	@brief	Will execute the function.
+    ///	@param	param		[in] The function parameter.
+    ///	@return true, if the function call was successful, false if not.
+    bool execute(TParam param);
 
 private:
     TParam m_param;
     TFunc m_funcBinding;
 };
 
-template<class TParam, class TFunc>
-inline
-TCommand<TParam, TFunc>::TCommand()
-: m_param()
-, m_funcBinding() {
+template <class TParam, class TFunc>
+inline TCommand<TParam, TFunc>::TCommand() :
+        m_param(), m_funcBinding() {
     // empty
 }
 
-template<class TParam, class TFunc>
-inline
-TCommand<TParam, TFunc>::TCommand( TFunc func )
-: m_param()
-, m_funcBinding( func ) {
+template <class TParam, class TFunc>
+inline TCommand<TParam, TFunc>::TCommand(TFunc func) :
+        m_param(), m_funcBinding(func) {
     // empty
 }
 
-template<class TParam, class TFunc>
-inline
-TCommand<TParam, TFunc>::~TCommand() {
+template <class TParam, class TFunc>
+inline TCommand<TParam, TFunc>::~TCommand() {
     // empty
 }
 
-template<class TParam, class TFunc>
-inline
-bool TCommand<TParam, TFunc>::execute( TParam param ) {
+template <class TParam, class TFunc>
+inline bool TCommand<TParam, TFunc>::execute(TParam param) {
     if (nullptr == m_funcBinding) {
         return false;
     }
@@ -92,5 +86,5 @@ bool TCommand<TParam, TFunc>::execute( TParam param ) {
     return true;
 }
 
-} // Namespace Common
+} // namespace App
 } // Namespace OSRE

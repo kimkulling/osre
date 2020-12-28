@@ -53,7 +53,9 @@ public:
     void registerEventListener( const Common::EventPtrArray &events, OSEventListener *listener ) override;
     void unregisterEventListener( const Common::EventPtrArray &events, OSEventListener *listener ) override;
     void unregisterAllEventHandler(const Common::EventPtrArray &events) override;
-    void enablePolling( bool enabled ) override;
+    void registerMenuCommand(ui32 id, MenuFunctor func) override;
+    void unregisterAllMenuCommands() override;
+    void enablePolling(bool enabled) override;
     bool isPolling() const override;
 
 private:

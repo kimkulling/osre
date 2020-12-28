@@ -41,12 +41,12 @@ namespace Scene {
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT GeometryProcessor : public Common::AbstractProcessor {
+class OSRE_EXPORT MeshProcessor : public Common::AbstractProcessor {
 public:
     using GeoArray = CPPCore::TArray<RenderBackend::Mesh*>;
 
-    GeometryProcessor();
-    ~GeometryProcessor();
+    MeshProcessor();
+    ~MeshProcessor();
     bool execute() override;
     void addGeo( RenderBackend::Mesh *geo );
     const Scene::Node::AABB &getAABB() const;

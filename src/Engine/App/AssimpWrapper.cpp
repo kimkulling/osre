@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AssimpWrapper.h>
 #include <osre/App/Component.h>
 #include <osre/App/Entity.h>
+#include <osre/App/World.h>
 #include <osre/Common/Ids.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/StringUtils.h>
@@ -64,10 +65,12 @@ const unsigned int DefaultImportFlags = aiProcess_CalcTangentSpace | aiProcess_G
 struct BoneInfo {
 };
 
-AssimpWrapper::AssimpWrapper(Common::Ids &ids) :
+AssimpWrapper::AssimpWrapper(Common::Ids &ids, World *world) :
         m_scene(nullptr),
         m_meshArray(),
+        mDefaultTexture(nullptr),
         m_entity(nullptr),
+        mWorld(world),
         m_matArray(),
         m_parent(nullptr),
         m_ids(ids),
@@ -81,6 +84,9 @@ AssimpWrapper::AssimpWrapper(Common::Ids &ids) :
 
 AssimpWrapper::~AssimpWrapper() {
     ::CPPCore::ContainerClear(m_boneInfoArray);
+
+    delete mDefaultTexture;
+    mDefaultTexture = nullptr;
 }
 
 bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
@@ -122,8 +128,11 @@ Entity *AssimpWrapper::convertScene() {
     if (nullptr == m_scene) {
         return nullptr;
     }
+    if (nullptr == mWorld) {
+        mWorld = new World("scene");
+    }
 
-    m_entity = new Entity(m_absPathWithFile, m_ids);
+    m_entity = new Entity(m_absPathWithFile, m_ids, mWorld);
 
     if (m_scene->HasMaterials()) {
         for (ui32 i = 0; i < m_scene->mNumMaterials; ++i) {
@@ -426,7 +435,8 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
     TextureResourceArray texResArray;
     if (AI_SUCCESS == material->GetTexture(aiTextureType_DIFFUSE, texIndex, &texPath)) {
         setTexture(m_root, texPath, texResArray, TextureStageType::TextureStage0);
-    }
+    } 
+
     String matName = texPath.C_Str();
     if (matName.empty()) {
         matName = "material1";
@@ -463,11 +473,11 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
     ai_real shininess, strength;
     unsigned int max; // changed: to unsigned
     if (AI_SUCCESS == aiGetMaterialFloatArray(material, AI_MATKEY_SHININESS, &shininess, &max)) {
-        // todo
+        osreMat->mShineness = shininess;
     }
 
     if (AI_SUCCESS == aiGetMaterialFloatArray(material, AI_MATKEY_SHININESS_STRENGTH, &strength, &max)) {
-        // todo
+        osreMat->mShinenessStrength = strength;
     }
 }
 

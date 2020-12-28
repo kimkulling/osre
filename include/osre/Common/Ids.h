@@ -40,26 +40,26 @@ public:
 
     /// @brief  The class constructor with the start id.
     /// @param  startId     [in] The start id.
-    Ids( ui32 startId );
+    Ids(ui64 startId);
 
     /// @brief  The class destructor.
     ~Ids();
 
     /// @brief  Returns an unique id.
     /// @return The unique id.
-    ui32 getUniqueId();
+    ui64 getUniqueId();
 
     /// @brief  Will release a unique id.
     /// @param  id      [in] The unique id to release.
-    void releaseId( ui32 id );
+    void releaseId(ui64 id);
 
     // Copying is not allowed
     Ids(const Ids &) = delete;
     Ids &operator = (const Ids &) = delete;
 
 private:
-    CPPCore::TArray<ui32> m_freeIds;
-    ui32 m_last;
+    CPPCore::TArray<ui64> m_freeIds;
+    ui64 m_last;
 };
 
 } // Namespace Common

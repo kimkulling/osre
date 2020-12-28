@@ -111,15 +111,18 @@ public:
 	///	@return	true, if the shader is compiled with success, false if not.
 	bool isCompiled() const;
 
+    GLint getAttributeLocation(const String &attribute);
+    GLint getUniformLocation(const String &uniform);
+
     /// @brief  returns the location of the attribute.
     /// @param  attribute   [in] The name of the attribute.
     /// @return Its location or -1 for an error.
-    GLint operator[] (const String& attribute);
+    //GLint operator[] (const String& attribute);
     
     /// @brief  returns the location of the uniform.
     /// @param  uniform     [in] The name of the uniform.
     /// @return Its location or -1 for an error.
-    GLint operator() (const String& uniform);
+    //GLint operator() (const String& uniform);
 
 	// No copying
     OGLShader( const OGLShader & ) = delete;
