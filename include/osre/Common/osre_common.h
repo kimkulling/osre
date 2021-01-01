@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -40,8 +40,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 
 #include <emmintrin.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 #include <cmath>
 #include <cstddef>
 #include <sstream>
@@ -804,4 +804,23 @@ struct Version {
     }
 };
 
+class OSRE_EXPORT MemoryStatistics {
+public:
+    static size_t sAllocated;
+    static size_t sNumNew;
+    static size_t sActiveAllocs;
+
+    static void addAllocated(size_t allocSize);
+    static void releaseAlloc();
+    static void showStatistics();
+};
+
 } // Namespace OSRE
+
+void *operator new(size_t size);
+void operator delete(void *ptr) noexcept;
+
+#define osre_new(T) new T()
+#define osre_new_array(T, len) new T[len]
+#define osre_delete delete
+#define osre_delete_array delete[]

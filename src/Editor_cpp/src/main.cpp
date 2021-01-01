@@ -12,8 +12,12 @@ using namespace ::OSRE::Platform;
 #include <osre/Platform/Windows/MinWindows.h>
 
 void getMonitorResolution(ui32 &width, ui32 &heigt) {
+#ifdef OSRE_WINDOWS
     width = GetSystemMetrics(SM_CXSCREEN);
     heigt = GetSystemMetrics(SM_CYSCREEN);
+#else
+    width = heigt = 0;
+#endif
 }
 
 int main(int argc, char *argv[]) {
@@ -31,6 +35,8 @@ int main(int argc, char *argv[]) {
             app.requestNextFrame();
         }
     }
+
+    MemoryStatistics::showStatistics();
 
     return 0;
 }
