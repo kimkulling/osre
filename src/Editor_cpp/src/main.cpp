@@ -32,5 +32,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    MemoryStatistics::showStatistics();
+
     return 0;
 }
