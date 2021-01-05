@@ -36,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Profiling/PerformanceCounterRegistry.h>
-#include <osre/RenderBackend/HWBufferManager.h>
+#include <osre/RenderBackend/THWBufferManager.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Shader.h>

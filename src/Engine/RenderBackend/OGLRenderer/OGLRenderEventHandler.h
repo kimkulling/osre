@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/AbstractEventHandler.h>
 #include <osre/Common/Event.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/RenderBackend/HWBufferManager.h>
+#include <osre/RenderBackend/THWBufferManager.h>
 
 #include <GL/glew.h>
 #include <GL/gl.h>

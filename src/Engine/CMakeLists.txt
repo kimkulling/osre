@@ -312,7 +312,7 @@ SET( scene_src
 SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
     ${HEADER_PATH}/RenderBackend/Mesh.h
-    ${HEADER_PATH}/RenderBackend/HWBufferManager.h
+    ${HEADER_PATH}/RenderBackend/THWBufferManager.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
     ${HEADER_PATH}/RenderBackend/RenderStates.h
@@ -323,7 +323,7 @@ SET( renderbackend_src
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
     RenderBackend/Pipeline.cpp
-    RenderBackend/HWBufferManager.cpp
+    RenderBackend/THWBufferManager.cpp
     RenderBackend/Shader.cpp
 )
 SET( renderbackend_oglrenderer_src
