@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/AbstractEventHandler.h>
 #include <osre/Common/Event.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/HWBufferManager.h>
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -46,7 +47,6 @@ class OGLRenderContext;
 class OGLRenderBackend;
 class OGLShader;
 class RenderCmdBuffer;
-class HWBufferManager;
 
 struct Vertex;
 struct OGLVertexArray;
@@ -58,6 +58,7 @@ struct SetTextureStageCmdData;
 struct SetShaderStageCmdData;
 struct SetRenderTargetCmdData;
 struct OGLParameter;
+struct OGLBuffer;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -113,7 +114,7 @@ private:
     RenderCmdBuffer *m_renderCmdBuffer;
     Platform::AbstractOGLRenderContext *m_renderCtx;
     OGLVertexArray *m_vertexArray;
-    HWBufferManager *m_hwBufferManager;
+    HWBufferManager<OGLBuffer> *mHwBufferManager;
 };
 
 } // Namespace RenderBackend

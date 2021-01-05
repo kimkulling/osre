@@ -28,28 +28,8 @@ namespace RenderBackend {
 
 using namespace ::OSRE::Common;
 
-Buffer::Buffer()
-: m_id( 0 )
-, m_ptr( nullptr )
-, m_size( 0 ) {
-    // empty
-}
 
-Buffer::~Buffer() {
-    // empty
-}
-
-HWBufferManager::HWBufferManager()
-: m_buffers()
-, m_bufferDict () {
-    // empty
-}
-
-HWBufferManager::~HWBufferManager() {
-    // empty
-}
-
-static const c8 *getVertexCompShortCut( VertexAttribute &attrib ) {
+const c8 *getVertexCompShortCut( VertexAttribute &attrib ) {
     switch (attrib) {
         case VertexAttribute::Position:
             return "p";
@@ -90,7 +70,7 @@ static const c8 *getVertexCompShortCut( VertexAttribute &attrib ) {
     return nullptr;
 }
 
-static const c8 *getAccessShortCut( BufferAccessType access ) {
+const c8 *getAccessShortCut( BufferAccessType access ) {
     switch (access) {
         case BufferAccessType::ReadOnly:
             return "r";
@@ -103,51 +83,7 @@ static const c8 *getAccessShortCut( BufferAccessType access ) {
     return nullptr;
 }
 
-void getBufferKey( const VertexLayout &vertexLayout, BufferAccessType access, ui32 &hash ) {
-    String key;
-    for (ui32 i = 0; i < vertexLayout.numComponents(); ++i) {
-        VertComponent &vc = vertexLayout.getAt( i );
-        key += getVertexCompShortCut( vc.m_attrib );
-    }
-    key += getAccessShortCut( access );
-    hash = StringUtils::hashName( key );
-}
 
-Buffer *HWBufferManager::createBuffer( const VertexLayout &vertexLayout, BufferAccessType access ) {
-    Buffer *buffer = new Buffer();
-    
-    ui32 hash( 0 );
-    getBufferKey( vertexLayout, access, hash );
-    m_bufferDict.insert(hash, buffer );
-    const size_t id = m_buffers.size();
-    m_buffers.add( buffer );
-    buffer->m_id = id;
-
-    return buffer;
-}
-
-Buffer *HWBufferManager::getBufferByDesc( VertexLayout vertexLayout, BufferAccessType access ) {
-    if ( m_buffers.isEmpty()) {
-        return nullptr;
-    }
-    
-    ui32 hash(0);
-    getBufferKey( vertexLayout, access, hash );
-    Buffer *buffer( nullptr );
-    if (m_bufferDict.hasKey( hash )) {
-        m_bufferDict.getValue( hash, buffer );
-    }
-
-    return buffer;
-}
-
-void HWBufferManager::clear() {
-    for (ui32 i = 0; i < m_buffers.size(); ++i) {
-        delete m_buffers[ i ];
-    }
-    m_buffers.clear();
-    m_bufferDict.clear();
-}
 
 }
 }

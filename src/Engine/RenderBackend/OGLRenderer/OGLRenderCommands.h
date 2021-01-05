@@ -34,7 +34,7 @@ class OGLRenderContext;
 class OGLRenderBackend;
 class OGLShader;
 class RenderCmdBuffer;
-class HWBufferManager;
+//class HWBufferManager;
 class OGLRenderEventHandler;
 class Mesh;
 

@@ -32,20 +32,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// clang-format off
+
 // Forward declarations ---------------------------------------------------------------------------
 namespace IO {
-
-class Stream;
-class Uri;
+	class Stream;
+	class Uri;
 
 } // namespace IO
 
 namespace Platform {
-
-class AbstractOGLRenderContext;
-class AbstractTimer;
+	class AbstractOGLRenderContext;
+	class AbstractTimer;
 
 } // namespace Platform
+
+// clang-format on
 
 namespace RenderBackend {
 

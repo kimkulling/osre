@@ -58,13 +58,13 @@ OGLRenderEventHandler::OGLRenderEventHandler() :
         m_renderCmdBuffer(nullptr),
         m_renderCtx(nullptr),
         m_vertexArray(nullptr),
-        m_hwBufferManager(nullptr) {
+        mHwBufferManager(nullptr) {
     // empty
 }
 
 OGLRenderEventHandler::~OGLRenderEventHandler() {
-    delete m_hwBufferManager;
-    m_hwBufferManager = nullptr;
+    delete mHwBufferManager;
+    mHwBufferManager = nullptr;
 }
 
 bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
@@ -121,7 +121,7 @@ bool OGLRenderEventHandler::onAttached(const EventData *) {
 
     m_oglBackend = new OGLRenderBackend;
     m_oglBackend->setTimer(PlatformInterface::getInstance()->getTimer());
-    m_hwBufferManager = new HWBufferManager;
+    mHwBufferManager = new HWBufferManager<OGLBuffer>;
 
     return true;
 }
