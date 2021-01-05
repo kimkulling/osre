@@ -319,22 +319,16 @@ void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
 
     switch (type) {
         case MatrixType::Model:
-            if (nullptr != m_currentBatch) {
-                m_currentBatch->m_matrixBuffer.m_model = m;
-                m_currentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
-            }
+            m_currentBatch->m_matrixBuffer.m_model = m;
+            m_currentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
             break;
         case MatrixType::View:
-            if (nullptr != m_currentBatch) {
-                m_currentBatch->m_matrixBuffer.m_view = m;
-                m_currentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
-            }
+            m_currentBatch->m_matrixBuffer.m_view = m;
+            m_currentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
             break;
         case MatrixType::Projection:
-            if (nullptr != m_currentBatch) {
-                m_currentBatch->m_matrixBuffer.m_proj = m;
-                m_currentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
-            }
+            m_currentBatch->m_matrixBuffer.m_proj = m;
+            m_currentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
             break;
         default:
             break;

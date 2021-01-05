@@ -91,6 +91,7 @@ SET( common_inc
 )
 SET( common_src
     Common/ArgumentParser.cpp
+    Common/Common.cpp
     Common/DateTime.cpp
     Common/Event.cpp
     Common/EventTriggerer.cpp

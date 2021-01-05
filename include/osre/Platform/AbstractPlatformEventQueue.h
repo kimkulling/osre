@@ -120,16 +120,16 @@ protected:
     void switchEventDataList();
 
 private:
-    enum {
-        numEventQueues = 2
-    };
+    static const size_t numEventQueues = 2;
     Common::EventDataList m_eventQueues[numEventQueues];
-    ui32 m_activeList;
-    RenderBackend::RenderBackendService *m_rbSrv;
+    ui32 mActiveList;
+    RenderBackend::RenderBackendService *mRenderBackendSrv;
 };
 
 inline AbstractPlatformEventQueue::AbstractPlatformEventQueue() :
-        Object("Platform/AbstractPlatformEventQueue"), m_activeList(0), m_rbSrv(nullptr) {
+        Object("Platform/AbstractPlatformEventQueue"), 
+    mActiveList(0), 
+    mRenderBackendSrv(nullptr) {
     // empty
 }
 
@@ -159,12 +159,12 @@ inline void AbstractPlatformEventQueue::processEvents(Common::EventTriggerer *tr
 }
 
 inline Common::EventDataList *AbstractPlatformEventQueue::getActiveEventDataList() {
-    Common::EventDataList *activeEventQueue(&m_eventQueues[m_activeList]);
+    Common::EventDataList *activeEventQueue(&m_eventQueues[mActiveList]);
     return activeEventQueue;
 }
 
 inline Common::EventDataList *AbstractPlatformEventQueue::getPendingEventDataList() {
-    ui32 queueToProcess = (m_activeList + 1) % numEventQueues;
+    ui32 queueToProcess = (mActiveList + 1) % numEventQueues;
     m_eventQueues[queueToProcess].clear();
     Common::EventDataList *pendingEventQueue(&m_eventQueues[queueToProcess]);
 
@@ -172,15 +172,15 @@ inline Common::EventDataList *AbstractPlatformEventQueue::getPendingEventDataLis
 }
 
 inline void AbstractPlatformEventQueue::switchEventDataList() {
-    m_activeList = (m_activeList + 1) % numEventQueues;
+    mActiveList = (mActiveList + 1) % numEventQueues;
 }
 
 inline void AbstractPlatformEventQueue::setRenderBackendService(RenderBackend::RenderBackendService *rbSrv) {
-    m_rbSrv = rbSrv;
+    mRenderBackendSrv = rbSrv;
 }
 
 inline RenderBackend::RenderBackendService *AbstractPlatformEventQueue::getRenderBackendService() const {
-    return m_rbSrv;
+    return mRenderBackendSrv;
 }
 
 inline void AbstractPlatformEventQueue::enqueueEvent(const Common::Event &ev, Common::EventData *data) {
