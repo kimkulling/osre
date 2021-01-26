@@ -427,49 +427,48 @@ TextureLoader::~TextureLoader() {
     // empty
 }
 
-TextureResource::ResourceState TextureResource::onLoad(const IO::Uri &uri,
+ResourceState TextureResource::onLoad(const IO::Uri &uri,
         TextureLoader &loader) {
-    if (getState() == Loaded) {
-        return Error;
+    if (getState() == ResourceState::Loaded) {
+        return getState();
     }
 
     create();
     Texture *tex = get();
     if (nullptr == tex) {
-        return Error;
+        return ResourceState::Error;
     }
 
     tex->m_textureName = getName();
     if (tex->m_textureName.find("$default") != String::npos) {
         tex = TextureLoader::getDefaultTexture();
-        setState(Loaded);
-        return Loaded;
+        setState(ResourceState::Loaded);
+        return getState();
     }
 
     getStats().m_memory = loader.load(uri, tex);
     tex->m_targetType = m_targetType;
     if (0 == getStats().m_memory) {
-        setState(Error);
+        setState(ResourceState::Error);
         osre_debug(Tag, "Cannot load texture " + uri.getAbsPath());
-        return Error;
+        return getState();
     }
 
-    setState(Loaded);
+    setState(ResourceState::Loaded);
 
-    return Loaded;
+    return getState();
 }
 
-TextureResource::ResourceState
-TextureResource::onUnload(TextureLoader &loader) {
-    if (getState() == Unloaded) {
-        return Error;
+ResourceState TextureResource::onUnload(TextureLoader &loader) {
+    if (getState() == ResourceState::Unloaded) {
+        return getState();
     }
 
     loader.unload(get());
     getStats().m_memory = 0;
-    setState(Unloaded);
+    setState(ResourceState::Unloaded);
 
-    return Unloaded;
+    return getState();
 }
 
 Material::Material(const String &name) :

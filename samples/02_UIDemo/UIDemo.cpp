@@ -36,6 +36,7 @@ using namespace ::OSRE;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::UI;
 using namespace ::OSRE::Platform;
+using namespace ::OSRE::App;
 
 // To identify local log entries
 static const c8 Tag[] = "ModelLoadingApp";
@@ -79,9 +80,9 @@ protected:
         }
 
 #ifdef OSRE_WINDOWS
-        App::AssetRegistry::registerAssetPath("assets", "../../media");
+        AssetRegistry::registerAssetPath("assets", "../../assets");
 #else
-        App::AssetRegistry::registerAssetPath("assets", "../media");
+        AssetRegistry::registerAssetPath("assets", "../assets");
 #endif
 
         m_canvas = AppBase::createScreen("UiDemo");

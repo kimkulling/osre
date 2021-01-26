@@ -31,7 +31,7 @@ Ids::Ids() :
     // empty
 }
 
-Ids::Ids(ui64 startId) :
+Ids::Ids(guid startId) :
         m_freeIds(),
         m_last(startId) {
     // empty
@@ -41,20 +41,20 @@ Ids::~Ids() {
     // empty
 }
 
-ui64 Ids::getUniqueId() {
+guid Ids::getUniqueId() {
     if (m_freeIds.isEmpty()) {
-        ui64 id(m_last);
+        const guid id = m_last;
         ++m_last;
         return id;
     }
 
-    const ui64 id = m_freeIds.back();
+    const guid id = m_freeIds.back();
     m_freeIds.removeBack();
 
     return id;
 }
 
-void Ids::releaseId(ui64 id) {
+void Ids::releaseId(guid id) {
     m_freeIds.add(id);
 }
 

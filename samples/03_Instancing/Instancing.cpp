@@ -73,9 +73,9 @@ protected:
         AppBase::setWindowsTitle("Instancing sample!");
 
 #ifdef OSRE_WINDOWS
-        AssetRegistry::registerAssetPath("assets", "../../media");
+        AssetRegistry::registerAssetPath("assets", "../../assets");
 #else
-        AssetRegistry::registerAssetPath("assets", "../media");
+        AssetRegistry::registerAssetPath("assets", "../assets");
 #endif
 
         RenderBackendService *rbSrv = getRenderBackendService();

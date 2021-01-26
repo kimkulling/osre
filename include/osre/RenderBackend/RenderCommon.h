@@ -468,8 +468,8 @@ public:
     TextureStageType setTextureStage() const;
 
 protected:
-    TextureResource::ResourceState onLoad(const IO::Uri &uri, TextureLoader &loader) override;
-    TextureResource::ResourceState onUnload(TextureLoader &loader) override;
+    Common::ResourceState onLoad(const IO::Uri &uri, TextureLoader &loader) override;
+    Common::ResourceState onUnload(TextureLoader &loader) override;
 
 private:
     TextureTargetType m_targetType;
@@ -802,7 +802,7 @@ struct FrameSubmitCmd {
         UpdateUniforms = 8
     };
 
-    ui32 m_meshId;
+    guid m_meshId;
     const c8 *m_passId;
     const c8 *m_batchId;
     ui32 m_updateFlags;

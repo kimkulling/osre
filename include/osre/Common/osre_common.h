@@ -112,7 +112,7 @@ using i32 = int;
 using ui16 = unsigned short;
 
 ///	The data type signed int, 4 byte long.
-typedef unsigned int ui32;
+using ui32 = unsigned int;
 
 ///	The data type for signed and unsigned int 8 bytes long.
 // clang-format off
@@ -130,19 +130,22 @@ using ui64 = uint64_t ;
 // clang-format on
 
 /// The data type for hash ids.
-typedef unsigned long HashId;
+using HashId = unsigned long;
 
 ///	The data type float, 4 byte long.
-typedef float f32;
+using f32 = float;
 
 ///	The data type double, 8 byte long.
-typedef double d32;
+using d32 = double;
 
 ///	The data type Object id.
-typedef int ObjectId;
+using ObjectId = int;
+
+/// The id for unique ids.
+using guid = ui64;
 
 ///	The data type for strings
-typedef std::string String;
+using String = std::string;
 
 /// A handle struct.
 struct Handle {
