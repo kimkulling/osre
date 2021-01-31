@@ -3,7 +3,7 @@ The MIT License (MIT)
 
 Copyright (c) 2015-2018 OSRE ( Open Source Render Engine ) by Kim Kulling
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kullingopy of
+Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kullingopy of
 this software and associated documentation files (the "Software"), to deal in
 the Software without restriction, including without limitation the rights to
 use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of

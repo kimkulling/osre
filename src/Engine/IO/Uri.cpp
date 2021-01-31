@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -196,6 +196,21 @@ void Uri::clear() {
 	m_AbsPath.clear();
 	m_Resource.clear();
     m_URI.clear();
+}
+
+String Uri::getExtension() const {
+    String ext;
+	if (!isValid() || isEmpty()) {
+        return ext;
+	}
+
+	String ::size_type pos = m_Resource.rfind('.');
+    if (pos == String::npos) {
+        return ext;
+	}
+
+	ext = m_Resource.substr(pos + 1, m_Resource.size() - pos - 1);
+    return ext;
 }
 
 bool Uri::normalizePath(const String &path, const c8 sep, String &normalized) {

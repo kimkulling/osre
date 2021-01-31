@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -38,7 +38,7 @@ public:
     Shader();
     ~Shader();
     void setSource(ShaderType type, const String &src);
-
+    static ShaderType getTypeFromeExtension(const String &extension);
 
     OSRE_NON_COPYABLE(Shader)
 
@@ -51,6 +51,24 @@ private:
     };
 
     CompileState m_compileState[MaxCompileState];
+};
+
+class ShaderLoader {
+public:
+    ShaderLoader();
+    ~ShaderLoader();
+    size_t load(const IO::Uri &uri, Shader *shader);
+    bool unload(Shader *shader);
+};
+
+class ShaderResource : public Common::TResource<Shader, ShaderLoader> {
+public:
+    ShaderResource(const String &shaderName, const IO::Uri &uri);
+    ~ShaderResource() override;
+
+protected:
+    Common::ResourceState onLoad(const IO::Uri &uri, ShaderLoader &loader) override;
+    Common::ResourceState onUnload(ShaderLoader &loader) override;
 };
 
 } // Namespace RenderBackend

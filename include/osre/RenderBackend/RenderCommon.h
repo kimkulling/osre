@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -168,6 +168,7 @@ enum class MatrixType {
     InvalidMatrixType ///< Enum for invalid values.
 };
 
+/// @brief  This enum is used to describe the data-type of a parameter.
 enum class ParameterType {
     PT_None,
     PT_Int,
@@ -241,7 +242,7 @@ enum class ShaderType {
     InvalidShaderType ///< Enum for invalid enum.
 };
 
-///	@brief
+///	@brief  This enum describes the color type for the material.
 enum class MaterialColorType : ui32 {
     Mat_Diffuse = 0, ///<
     Mat_Specular, ///<

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -322,7 +322,7 @@ size_t TextureLoader::load(const IO::Uri &uri, Texture *tex) {
         return 0;
     }
 
-    const String filename = uri.getAbsPath();
+    const String &filename = uri.getAbsPath();
     if (filename.find("$default") != String::npos) {
         tex = TextureLoader::getDefaultTexture();
     }
@@ -427,14 +427,12 @@ TextureLoader::~TextureLoader() {
     // empty
 }
 
-ResourceState TextureResource::onLoad(const IO::Uri &uri,
-        TextureLoader &loader) {
+ResourceState TextureResource::onLoad(const IO::Uri &uri, TextureLoader &loader) {
     if (getState() == ResourceState::Loaded) {
         return getState();
     }
 
-    create();
-    Texture *tex = get();
+    Texture *tex = create();
     if (nullptr == tex) {
         return ResourceState::Error;
     }
@@ -536,7 +534,9 @@ GeoInstanceData::~GeoInstanceData() {
 }
 
 TransformState::TransformState() :
-        m_translate(), m_scale(1.0f), m_rotation() {
+        m_translate(),
+        m_scale(1.0f),
+        m_rotation() {
     // empty
 }
 
@@ -573,7 +573,11 @@ void TransformState::toMatrix(mat4 &m) const {
 }
 
 TransformMatrixBlock::TransformMatrixBlock() :
-        m_projection(1.0f), m_model(1.0f), m_view(1.0f), m_normal(1.0f), m_mvp(1.0f) {
+        m_projection(1.0f),
+        m_model(1.0f),
+        m_view(1.0f),
+        m_normal(1.0f),
+        m_mvp(1.0f) {
     init();
 }
 
@@ -622,7 +626,13 @@ bool Viewport::operator!=(const Viewport &rhs) const {
 }
 
 Light::Light() :
-        m_position(0.0f, 0.0f, 0.0f, 1.0f), m_specular(1.0f, 1.0f, 1.0f), m_diffuse(1.0f, 1.0f, 1.0f), m_ambient(1.0f, 1.0f, 1.0f), m_direction(0.0f, 0.0f, 1.0f, 1.0f), m_specularExp(1.0f), m_type(LightType::InvalidLightType) {
+        m_position(0.0f, 0.0f, 0.0f, 1.0f),
+        m_specular(1.0f, 1.0f, 1.0f),
+        m_diffuse(1.0f, 1.0f, 1.0f),
+        m_ambient(1.0f, 1.0f, 1.0f),
+        m_direction(0.0f, 0.0f, 1.0f, 1.0f),
+        m_specularExp(1.0f),
+        m_type(LightType::InvalidLightType) {
     // empty
 }
 
@@ -635,10 +645,10 @@ MeshEntry *RenderBatchData::getMeshEntryByName(const c8 *name) {
         return nullptr;
     }
 
-    for (ui32 i = 0; i < m_meshArray.size(); ++i) {
-        for (ui32 j = 0; j < m_meshArray[i]->m_geo.size(); ++j) {
-            if (m_meshArray[i]->m_geo[j]->m_name == name) {
-                return m_meshArray[i];
+    for (auto &i : m_meshArray) {
+        for (ui32 j = 0; j < i->m_geo.size(); ++j) {
+            if (i->m_geo[j]->m_name == name) {
+                return i;
             }
         }
     }
@@ -651,9 +661,9 @@ UniformVar *RenderBatchData::getVarByName(const c8 *name) {
         return nullptr;
     }
 
-    for (ui32 i = 0; i < m_uniforms.size(); ++i) {
-        if (m_uniforms[i]->m_name == name) {
-            return m_uniforms[i];
+    for (auto &uniform : m_uniforms) {
+        if (uniform->m_name == name) {
+            return uniform;
         }
     }
 
@@ -666,7 +676,6 @@ RenderBatchData *PassData::getBatchById(const c8 *id) const {
     }
 
     for (ui32 i = 0; i < m_geoBatches.size(); ++i) {
-
         if (0 == strncmp(m_geoBatches[i]->m_id, id, strlen(id))) {
             return m_geoBatches[i];
         }
@@ -678,7 +687,11 @@ RenderBatchData *PassData::getBatchById(const c8 *id) const {
 static const ui32 MaxSubmitCmds = 500;
 
 Frame::Frame() :
-        m_newPasses(), m_submitCmds(), m_submitCmdAllocator(), m_uniforBuffers(nullptr), m_pipeline(nullptr) {
+        m_newPasses(),
+        m_submitCmds(),
+        m_submitCmdAllocator(),
+        m_uniforBuffers(nullptr),
+        m_pipeline(nullptr) {
     m_submitCmdAllocator.reserve(MaxSubmitCmds);
 }
 
@@ -691,8 +704,8 @@ void Frame::init(TArray<PassData *> &newPasses) {
     if (newPasses.isEmpty()) {
         return;
     }
-    for (ui32 i = 0; i < newPasses.size(); ++i) {
-        m_newPasses.add(newPasses[i]);
+    for (auto newPasse : newPasses) {
+        m_newPasses.add(newPasse);
     }
     m_uniforBuffers = new UniformBuffer[newPasses.size()];
 }
@@ -707,7 +720,8 @@ FrameSubmitCmd *Frame::enqueue() {
 }
 
 UniformDataBlob::UniformDataBlob() :
-        m_data(nullptr), m_size(0) {
+        m_data(nullptr),
+        m_size(0) {
     // empty
 }
 
@@ -757,7 +771,10 @@ UniformDataBlob *UniformDataBlob::create(ParameterType type, size_t arraySize) {
 }
 
 UniformVar::UniformVar() :
-        m_name(""), m_type(ParameterType::PT_None), m_numItems(1), m_next(nullptr) {
+        m_name(""),
+        m_type(ParameterType::PT_None),
+        m_numItems(1),
+        m_next(nullptr) {
     // empty
 }
 

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -70,7 +70,7 @@ public:
     TResType *get();
 
 protected:
-    void create();
+    TResType *create();
     ResourceStatistics &getStats();
     virtual void setState(ResourceState newState);
     virtual ResourceState onLoad(const IO::Uri &uri, TResLoader &loader) = 0;
@@ -117,8 +117,9 @@ inline ResourceState TResource<TResType, TResLoader>::getState() const {
 }
 
 template <class TResType, class TResLoader>
-inline void TResource<TResType, TResLoader>::create() {
+inline TResType *TResource<TResType, TResLoader>::create() {
     m_res = new TResType;
+    return m_res;
 }
 
 template <class TResType, class TResLoader>
