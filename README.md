@@ -21,6 +21,9 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 # Static code analysis
 - Coverity Status: [![Coverity Scan Build Status](https://scan.coverity.com/projects/13242/badge.svg)](https://scan.coverity.com/projects/kimkulling-osre)
 
+# Documentation status
+- [![Documentation Status](https://readthedocs.org/projects/osre-doc/badge/?version=latest)](https://osre-doc.readthedocs.io/en/latest/?badge=latest)
+
 # Getting started
 ## What you need to install it?
 - A Linux or Windows-PC with a more or less modern GPU
