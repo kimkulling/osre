@@ -82,8 +82,8 @@ If you want to contribute just use the github project page or reach us via Gitte
 - Working on Vulkan support
 - Working on editor + MeshViewer
 
-## Reference doc
-Check our doxygen reference doc: http://kimkulling.github.io/osre/doc/html/index.html
+## Documentation
+Please check [OSRE-Docs](https://osre.readthedocs.io/en/latest/).
 
 # Samples
 ## Sample 1: Hello world
