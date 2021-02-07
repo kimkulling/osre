@@ -21,6 +21,9 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 # Static code analysis
 - Coverity Status: [![Coverity Scan Build Status](https://scan.coverity.com/projects/13242/badge.svg)](https://scan.coverity.com/projects/kimkulling-osre)
 
+# Documentation status
+- [![Documentation Status](https://readthedocs.org/projects/osre-doc/badge/?version=latest)](https://osre-doc.readthedocs.io/en/latest/?badge=latest)
+
 # Getting started
 ## What you need to install it?
 - A Linux or Windows-PC with a more or less modern GPU
@@ -82,8 +85,8 @@ If you want to contribute just use the github project page or reach us via Gitte
 - Working on Vulkan support
 - Working on editor + MeshViewer
 
-## Reference doc
-Check our doxygen reference doc: http://kimkulling.github.io/osre/doc/html/index.html
+## Documentation
+Please check [OSRE-Docs](https://osre.readthedocs.io/en/latest/).
 
 # Samples
 ## Sample 1: Hello world
