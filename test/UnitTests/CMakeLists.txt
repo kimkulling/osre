@@ -70,6 +70,7 @@ SET ( unittest_rb_src
     src/RenderBackend/RenderCommonTest.cpp
     src/RenderBackend/PipelineTest.cpp
     src/RenderBackend/MeshTest.cpp
+    src/RenderBackend/ShaderTest.cpp
 )
 
 SET( unittest_rb_oglrenderer_src 

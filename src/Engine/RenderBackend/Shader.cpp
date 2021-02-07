@@ -84,6 +84,11 @@ bool ShaderLoader::unload( Shader *shader ) {
         return false;
     }
 
+    shader->setSource(ShaderType::SH_VertexShaderType, "");
+    shader->setSource(ShaderType::SH_FragmentShaderType, "");
+    shader->setSource(ShaderType::SH_GeometryShaderType, "");
+    shader->setSource(ShaderType::SH_TesselationShaderType, "");
+
     return true;
 }
 

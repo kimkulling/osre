@@ -53,15 +53,15 @@ private:
     CompileState m_compileState[MaxCompileState];
 };
 
-class ShaderLoader {
+class OSRE_EXPORT ShaderLoader {
 public:
     ShaderLoader();
-    ~ShaderLoader();
-    size_t load(const IO::Uri &uri, Shader *shader);
-    bool unload(Shader *shader);
+    virtual ~ShaderLoader();
+    virtual size_t load(const IO::Uri &uri, Shader *shader);
+    virtual bool unload(Shader *shader);
 };
 
-class ShaderResource : public Common::TResource<Shader, ShaderLoader> {
+class OSRE_EXPORT ShaderResource : public Common::TResource<Shader, ShaderLoader> {
 public:
     ShaderResource(const String &shaderName, const IO::Uri &uri);
     ~ShaderResource() override;

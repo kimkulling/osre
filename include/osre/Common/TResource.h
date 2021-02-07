@@ -38,17 +38,6 @@ struct ResourceStatistics {
     }
 };
 
-class ResourceId {
-public:
-    ResourceId(ui64 id) :
-            mResId(id){
-        // empty
-    }
-
-private:
-    ui64 mResId;
-};
-
 enum class ResourceState {
     Uninitialized,
     Unloaded,
@@ -59,7 +48,6 @@ enum class ResourceState {
 template <class TResType, class TResLoader>
 class TResource : public Object {
 public:
-
     TResource(const String &name, const IO::Uri &uri);
     virtual ~TResource();
     void setUri(const IO::Uri &uri);

@@ -20,76 +20,62 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
+
 #include "osre_testcommon.h"
-#include <osre/RenderBackend/Pipeline.h>
+
+#include <osre/RenderBackend/Shader.h>
+#include <osre/IO/Uri.h>
 
 namespace OSRE {
 namespace UnitTest {
 
 using namespace ::OSRE::RenderBackend;
 
-class PipelineTest : public ::testing::Test {
-protected:
-    PipelinePass *m_pass1;
-    PipelinePass *m_pass2;
-
+class ShaderTest : public ::testing::Test {
 protected:
     void SetUp() override {
-        m_pass1 = new PipelinePass( RenderPassId, nullptr );
-        m_pass2 = new PipelinePass( DbgPassId, nullptr );
     }
 
     void TearDown() override {
-        delete m_pass2;
-        delete m_pass1;
     }
 };
 
-TEST_F( PipelineTest, create_success ) {
-    bool ok( true );
-    try {
-        Pipeline pipeline;
-    }
-    catch ( ... ) {
-        ok = false;
-    }
-    EXPECT_TRUE( ok );
-}
+class TestShaderLoader : public ShaderLoader {
+public:
+    int mCalled;
 
-TEST_F( PipelineTest, accessPass_success ) {
-    Pipeline pipeline;
-
-    size_t numPasses = pipeline.getNumPasses();
-    EXPECT_EQ( 0u, numPasses );
-    pipeline.addPass( m_pass1 );
-    numPasses = pipeline.getNumPasses();
-    EXPECT_EQ( 1u, numPasses );
-
-    pipeline.clear();
-    numPasses = pipeline.getNumPasses();
-    EXPECT_EQ( 0u, numPasses );
-}
-
-TEST_F( PipelineTest, iterateThroughPasses_success ) {
-    Pipeline pipeline;
-    pipeline.addPass( m_pass1 );
-    pipeline.addPass( m_pass2 );
-
-    size_t numPasses = pipeline.beginFrame();
-    EXPECT_EQ( 2u, numPasses );
-    for ( ui32 i = 0; i < numPasses; i++ ) {
-        PipelinePass *pass = pipeline.beginPass( i );
-        EXPECT_NE( nullptr, pass );
-        pipeline.endPass( i );
+    TestShaderLoader() :
+            ShaderLoader(),
+            mCalled(0) {
+        // empty
     }
 
-    pipeline.endFrame();
-    pipeline.clear();
+    ~TestShaderLoader() override {
+        // empty
+    }
+
+    size_t load( const IO::Uri &uri, Shader *shader ) override {
+        mCalled++;
+        return 0;
+    }
+    
+    bool unload(Shader *shader) override {
+        mCalled--;
+        return true;
+    }
+};
+
+TEST_F(ShaderTest, create_success) {
+    IO::Uri location("file:\\temp");
+    ShaderResource res("test", location);
+    
+    Shader *shader = res.get();
+    EXPECT_EQ(nullptr, shader);
+    ShaderLoader *loader = new TestShaderLoader();
+    res.load(*loader);
+    shader = res.get();
+    EXPECT_NE(nullptr, shader);
 }
 
-TEST_F( PipelineTest, comparePipelinePasses_success ) {
-    EXPECT_NE( *m_pass1, *m_pass2 );
-}
-
-} // Namespace UnitTest
-} // Namespace OSRE
+} // namespace UnitTest
+} // namespace OSRE
