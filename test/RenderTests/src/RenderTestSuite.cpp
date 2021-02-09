@@ -23,17 +23,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderTestSuite.h"
 #include "AbstractRenderTest.h"
 #include <osre/App/AppBase.h>
-#include <osre/Properties/Settings.h>
-#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/App/AssetRegistry.h>
 #include <osre/Debugging/osre_debugging.h>
-#include <osre/Platform/PlatformInterface.h>
+#include <osre/IO/IOService.h>
 #include <osre/Platform/AbstractPlatformEventQueue.h>
 #include <osre/Platform/AbstractTimer.h>
-#include <osre/App/AssetRegistry.h>
-#include <osre/UI/Widget.h>
 #include <osre/Platform/AbstractWindow.h>
-#include <osre/IO/IOService.h>
+#include <osre/Platform/PlatformInterface.h>
+#include <osre/Properties/Settings.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/MaterialBuilder.h>
+#include <osre/UI/Widget.h>
 
 #include <iostream>
 
@@ -47,32 +47,31 @@ using namespace ::CPPCore;
 
 // static member initialization
 RenderTestSuite *RenderTestSuite::s_pInstance = nullptr;
-static const     String Tag                   = "RenderTestSuite";
-static const     ui32 AllTestsDone            = 999999;
+static const String Tag = "RenderTestSuite";
+static const ui32 AllTestsDone = 999999;
 
 // our base keyboard event listener, for switching to the next test case
 class KeyboardEventListener : public Platform::OSEventListener {
 public:
-    KeyboardEventListener( RenderTestSuite *renderTestSuite )
-    : OSEventListener( "rendertest/keyboardeventlistener" )
-    , m_testSuite( renderTestSuite ) {
-        OSRE_ASSERT( nullptr != renderTestSuite );
+    KeyboardEventListener(RenderTestSuite *renderTestSuite) :
+            OSEventListener("rendertest/keyboardeventlistener"), m_testSuite(renderTestSuite) {
+        OSRE_ASSERT(nullptr != renderTestSuite);
     }
 
     ~KeyboardEventListener() {
         // empty
     }
 
-    void onOSEvent( const Event &osEvent, const EventData *data ) override {
-         if( osEvent == KeyboardButtonDownEvent ) {
-            if( data ) {
-                bool result( false );
-                ui32 next( 0 );
-                Key key = reinterpret_cast< const KeyboardButtonEventData* >( data )->m_key;
-                if( key == KEY_SPACE ) {
-                    result = m_testSuite->requestNextTest( next );
-                    if ( !result ) {
-                        osre_info( Tag, "All tests done." );
+    void onOSEvent(const Event &osEvent, const EventData *data) override {
+        if (osEvent == KeyboardButtonDownEvent) {
+            if (data) {
+                bool result(false);
+                ui32 next(0);
+                Key key = reinterpret_cast<const KeyboardButtonEventData *>(data)->m_key;
+                if (key == KEY_SPACE) {
+                    result = m_testSuite->requestNextTest(next);
+                    if (!result) {
+                        osre_info(Tag, "All tests done.");
                     }
                 }
             }
@@ -83,9 +82,9 @@ private:
     RenderTestSuite *m_testSuite;
 };
 
-RenderTestSuite *RenderTestSuite::create(const String &suiteName ) {
+RenderTestSuite *RenderTestSuite::create(const String &suiteName) {
     if (!s_pInstance) {
-        s_pInstance = new RenderTestSuite( suiteName );
+        s_pInstance = new RenderTestSuite(suiteName);
     }
 
     return s_pInstance;
@@ -93,50 +92,50 @@ RenderTestSuite *RenderTestSuite::create(const String &suiteName ) {
 
 RenderTestSuite *RenderTestSuite::getInstance() {
     if (!s_pInstance) {
-        // in case of an invalid call use opengl backend as the fallback
-        static_cast<void>( RenderTestSuite::create("tests" ) );
-        osre_error( Tag, "RenderTestSuite::getInstance called before RenderTestSuite::create, using fallback backend" );
+        // in case of an invalid call use opengl backend as the fall-back
+        static_cast<void>(RenderTestSuite::create("tests"));
+        osre_error(Tag, "RenderTestSuite::getInstance called before RenderTestSuite::create, using fallback backend");
     }
 
     return s_pInstance;
 }
 
-bool RenderTestSuite::setup( const String &API ) {
+bool RenderTestSuite::setup(const String &API) {
     // get configuration parameter
-    setRenderAPI( API );
+    setRenderAPI(API);
     Properties::Settings *settings = new Properties::Settings;
-    settings->setString( Properties::Settings::RenderAPI, m_renderAPI );
-    settings->setBool( Properties::Settings::PollingMode, true );
+    settings->setString(Properties::Settings::RenderAPI, m_renderAPI);
+    settings->setBool(Properties::Settings::PollingMode, true);
 
     // create the platform abstraction
-    m_pPlatformInterface = Platform::PlatformInterface::create( settings );
-    if( m_pPlatformInterface ) {
-        if( !m_pPlatformInterface->open() ) {
+    m_pPlatformInterface = Platform::PlatformInterface::create(settings);
+    if (m_pPlatformInterface) {
+        if (!m_pPlatformInterface->open()) {
             return false;
         }
     }
 
     IO::IOService *ioSrv = IO::IOService::create();
-    if ( !ioSrv->open() ) {
+    if (!ioSrv->open()) {
         ioSrv->release();
         return false;
     }
-    IO::IOService::setInstance( ioSrv );
+    IO::IOService::setInstance(ioSrv);
 
     m_pRenderBackendServer = new RenderBackendService();
-    m_pRenderBackendServer->setSettings( settings, false );
-    if ( !m_pRenderBackendServer->open()) {
+    m_pRenderBackendServer->setSettings(settings, false);
+    if (!m_pRenderBackendServer->open()) {
         m_pRenderBackendServer->release();
         m_pRenderBackendServer = nullptr;
     }
     m_pPlatformInterface->getPlatformEventHandler()->setRenderBackendService(m_pRenderBackendServer);
 
-    if( m_pPlatformInterface ) {
-        CreateRendererEventData *data = new CreateRendererEventData( m_pPlatformInterface->getRootWindow() );
+    if (m_pPlatformInterface) {
+        CreateRendererEventData *data = new CreateRendererEventData(m_pPlatformInterface->getRootWindow());
         data->m_defaultFont = m_pPlatformInterface->getDefaultFontName();
-        
+
         data->m_pipeline = App::AppBase::createDefaultPipeline();
-        m_pRenderBackendServer->sendEvent( &OnCreateRendererEvent, data );
+        m_pRenderBackendServer->sendEvent(&OnCreateRendererEvent, data);
     }
     Platform::AbstractWindow *window = m_pPlatformInterface->getRootWindow();
     if (nullptr != window) {
@@ -145,14 +144,14 @@ bool RenderTestSuite::setup( const String &API ) {
         UI::WidgetCoordMapping::init(rect);
     }
     m_pTimer = PlatformInterface::getInstance()->getTimer();
-    
-    App::AssetRegistry *registry( App::AssetRegistry::create() );
-    if ( nullptr!=registry ) {
+
+    App::AssetRegistry *registry(App::AssetRegistry::create());
+    if (nullptr != registry) {
 #ifdef OSRE_WINDOWS
-        registry->registerAssetPath( "assets", getMediaPath() );
+        registry->registerAssetPath("assets", getMediaPath());
 #else
-        registry->registerAssetPath( "assets", getMediaPath() );
-#endif 
+        registry->registerAssetPath("assets", getMediaPath());
+#endif
     }
 
     Scene::MaterialBuilder::create();
@@ -161,7 +160,7 @@ bool RenderTestSuite::setup( const String &API ) {
 }
 
 bool RenderTestSuite::teardown() {
-    if( m_pRenderBackendServer ) {
+    if (m_pRenderBackendServer) {
         m_pRenderBackendServer->close();
         m_pRenderBackendServer->release();
         m_pRenderBackendServer = nullptr;
@@ -172,24 +171,24 @@ bool RenderTestSuite::teardown() {
     IO::IOService::getInstance()->close();
     IO::IOService::getInstance()->release();
 
-    if ( m_pTimer ) {
+    if (m_pTimer) {
         m_pTimer->release();
         m_pTimer = nullptr;
     }
-    
-    if( m_pPlatformInterface ) {
+
+    if (m_pPlatformInterface) {
         PlatformInterface::destroy();
         m_pPlatformInterface = nullptr;
     }
 
-    osre_info( Tag, " RenderTestSuite::teardown()" );
+    osre_info(Tag, " RenderTestSuite::teardown()");
 
     return true;
 }
 
 void RenderTestSuite::kill() {
-    OSRE_ASSERT( nullptr!=s_pInstance );
-    if ( s_pInstance ) {
+    OSRE_ASSERT(nullptr != s_pInstance);
+    if (s_pInstance) {
         s_pInstance->teardown();
         delete s_pInstance;
         s_pInstance = nullptr;
@@ -197,14 +196,14 @@ void RenderTestSuite::kill() {
     }
 }
 
-void RenderTestSuite::attachRenderTest( AbstractRenderTest *pRenderTest ) {
-    OSRE_ASSERT( nullptr!=pRenderTest );
+void RenderTestSuite::attachRenderTest(AbstractRenderTest *pRenderTest) {
+    OSRE_ASSERT(nullptr != pRenderTest);
 
-    m_attachedRenderTests.add( pRenderTest );
+    m_attachedRenderTests.add(pRenderTest);
 }
 
 ui32 RenderTestSuite::getNumRenderTests() const {
-    return static_cast<ui32>( m_attachedRenderTests.size() );
+    return static_cast<ui32>(m_attachedRenderTests.size());
 }
 
 void RenderTestSuite::startTests() {
@@ -218,8 +217,9 @@ void RenderTestSuite::showTestReport() {
         return;
     }
 
-    std::cout << "Errors:" << std::endl << "=======" << std::endl;
-    for ( TArray<String>::Iterator it = m_FailureLog.begin(); it != m_FailureLog.end(); ++it) {
+    std::cout << "Errors:" << std::endl
+              << "=======" << std::endl;
+    for (TArray<String>::Iterator it = m_FailureLog.begin(); it != m_FailureLog.end(); ++it) {
         String msg(*it);
         std::cout << msg << std::endl;
     }
@@ -233,7 +233,7 @@ const String &RenderTestSuite::getRenderAPI() const {
     return m_renderAPI;
 }
 
-void RenderTestSuite::setMediaPath( const String &mediaPath ) {
+void RenderTestSuite::setMediaPath(const String &mediaPath) {
     m_mediaPath = mediaPath;
 }
 
@@ -246,68 +246,68 @@ AbstractTimer *RenderTestSuite::getTimer() const {
 }
 
 bool RenderTestSuite::update() {
-    if( !m_pPlatformInterface ) {
+    if (!m_pPlatformInterface) {
         return false;
     }
 
-    TArray<const Common::Event*> eventArray;
-    eventArray.add( &KeyboardButtonDownEvent );    
-    m_pListener = new KeyboardEventListener( this );
-    AbstractPlatformEventQueue *evQueue = m_pPlatformInterface->getPlatformEventHandler( );
-    evQueue->registerEventListener( eventArray, m_pListener );
+    TArray<const Common::Event *> eventArray;
+    eventArray.add(&KeyboardButtonDownEvent);
+    m_pListener = new KeyboardEventListener(this);
+    AbstractPlatformEventQueue *evQueue = m_pPlatformInterface->getPlatformEventHandler();
+    evQueue->registerEventListener(eventArray, m_pListener);
 
-    while( m_pPlatformInterface->update() ) {
-        if( m_activeTestIdx == AllTestsDone ) {
+    while (m_pPlatformInterface->update()) {
+        if (m_activeTestIdx == AllTestsDone) {
             break;
         }
 
-        if( m_pActiveRenderTest != m_attachedRenderTests[ m_activeTestIdx ] ) {
-            if( m_pActiveRenderTest ) {
-                m_pActiveRenderTest->destroy( m_pRenderBackendServer );
+        if (m_pActiveRenderTest != m_attachedRenderTests[m_activeTestIdx]) {
+            if (m_pActiveRenderTest) {
+                m_pActiveRenderTest->destroy(m_pRenderBackendServer);
                 clearTestEnv();
             }
-            
-            m_pActiveRenderTest = m_attachedRenderTests[ m_activeTestIdx ];
-            if( m_pActiveRenderTest ) {
-                m_pActiveRenderTest->create( m_pRenderBackendServer );
+
+            m_pActiveRenderTest = m_attachedRenderTests[m_activeTestIdx];
+            if (m_pActiveRenderTest) {
+                m_pActiveRenderTest->create(m_pRenderBackendServer);
             }
         }
-        
-        if( m_pActiveRenderTest ) {
-            m_pActiveRenderTest->setup( m_pRenderBackendServer );
-            if( !m_pActiveRenderTest->render( m_pRenderBackendServer ) ) {
-                addFailureLog( "Error : Cannot render test " + m_pActiveRenderTest->getTestName( ) + "\n" );
+
+        if (m_pActiveRenderTest) {
+            m_pActiveRenderTest->setup(m_pRenderBackendServer);
+            if (!m_pActiveRenderTest->render(m_pRenderBackendServer)) {
+                addFailureLog("Error : Cannot render test " + m_pActiveRenderTest->getTestName() + "\n");
             }
 
             m_pRenderBackendServer->update();
 
-            m_pActiveRenderTest->teardown( m_pRenderBackendServer );
+            m_pActiveRenderTest->teardown(m_pRenderBackendServer);
         }
     }
-    if( m_pActiveRenderTest ) {
-        m_pActiveRenderTest->destroy( m_pRenderBackendServer );
+    if (m_pActiveRenderTest) {
+        m_pActiveRenderTest->destroy(m_pRenderBackendServer);
         clearTestEnv();
     }
 
-    evQueue->unregisterEventListener( eventArray, m_pListener );
+    evQueue->unregisterEventListener(eventArray, m_pListener);
 
     return false;
 }
 
 bool RenderTestSuite::clearTestEnv() {
-    if ( nullptr == m_pRenderBackendServer ) {
+    if (nullptr == m_pRenderBackendServer) {
         return false;
     }
 
-    m_pRenderBackendServer->sendEvent( &OnClearSceneEvent, nullptr );
+    m_pRenderBackendServer->sendEvent(&OnClearSceneEvent, nullptr);
     m_pRenderBackendServer->clearPasses();
 
     return true;
 }
 
-bool RenderTestSuite::requestNextTest( ui32 &next ) {
+bool RenderTestSuite::requestNextTest(ui32 &next) {
     ++m_activeTestIdx;
-    if( m_activeTestIdx >= m_attachedRenderTests.size() ) {
+    if (m_activeTestIdx >= m_attachedRenderTests.size()) {
         m_activeTestIdx = AllTestsDone;
         next = AllTestsDone;
         return false;
@@ -317,36 +317,35 @@ bool RenderTestSuite::requestNextTest( ui32 &next ) {
     return true;
 }
 
-void RenderTestSuite::addFailureLog( const String &logEntry ) {
+void RenderTestSuite::addFailureLog(const String &logEntry) {
     if (!logEntry.empty()) {
         m_FailureLog.add(logEntry);
     }
 }
 
-RenderTestSuite::RenderTestSuite( const String &suiteName )
-: AbstractTestFixture( suiteName )
-, m_pActiveRenderTest( nullptr )
-, m_activeTestIdx( 0 )
-, m_attachedRenderTests()
-, m_FailureLog()
-, m_pPlatformInterface( nullptr )
-, m_pListener( nullptr )
-, m_pTimer( nullptr )
-, m_pRenderBackendServer( nullptr )
-, m_renderAPI( "none" )
-, m_mediaPath() {
-    OSRE_ASSERT( !suiteName.empty() );
+RenderTestSuite::RenderTestSuite(const String &suiteName) :
+        AbstractTestFixture(suiteName),
+        m_pActiveRenderTest(nullptr),
+        m_activeTestIdx(0),
+        m_attachedRenderTests(),
+        m_FailureLog(),
+        m_pPlatformInterface(nullptr),
+        m_pListener(nullptr),
+        m_pTimer(nullptr),
+        m_pRenderBackendServer(nullptr),
+        m_renderAPI("none"),
+        m_mediaPath() {
+    OSRE_ASSERT(!suiteName.empty());
 }
 
 RenderTestSuite::~RenderTestSuite() {
     delete m_pListener;
     m_pListener = nullptr;
 
-    for( ui32 i = 0; i < m_attachedRenderTests.size(); i++ ) {
-        delete m_attachedRenderTests[ i ];
+    for (ui32 i = 0; i < m_attachedRenderTests.size(); i++) {
+        delete m_attachedRenderTests[i];
     }
 }
 
 } // Namespace RenderTest
 } // Namespace OSRE
- 

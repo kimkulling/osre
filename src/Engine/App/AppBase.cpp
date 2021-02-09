@@ -178,7 +178,6 @@ void AppBase::update() {
         m_state = State::Running;
         osre_debug(Tag, "Set application state to running.");
     }
-
     onUpdate();
 }
 
@@ -267,7 +266,6 @@ bool AppBase::setActiveWorld(const String &name) {
 World *AppBase::getActiveWorld() const {
     return m_activeWorld;
 }
-
 
 Scene::Camera *AppBase::setActiveCamera(Scene::Camera *view) {
     if (nullptr == m_activeWorld) {
@@ -420,9 +418,9 @@ bool AppBase::onCreate() {
 
     IO::IOService::create();
 #ifdef OSRE_WINDOWS
-    App::AssetRegistry::registerAssetPath("assets", "../../media");
-#else
-    App::AssetRegistry::registerAssetPath("assets", "../media");
+    App::AssetRegistry::registerAssetPath("assets", "../../assets");
+#else 
+    App::AssetRegistry::registerAssetPath("assets", "../assets");
 #endif
 
     m_uiRenderer = new UI::UiRenderer;
