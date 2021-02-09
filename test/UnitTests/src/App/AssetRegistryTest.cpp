@@ -31,17 +31,17 @@ using namespace ::OSRE::App;
 
 class AssetRegistryTest : public ::testing::Test {
 protected:
-    virtual void SetUp() {
+    void SetUp() override{
         AssetRegistry *reg( AssetRegistry::create() );
         EXPECT_NE( nullptr, reg );
 #ifdef OSRE_WINDOWS
-        AssetRegistry::registerAssetPath( "assets", "../../media" );
+        AssetRegistry::registerAssetPath( "assets", "../../assets" );
 #else
-        AssetRegistry::registerAssetPath( "assets", "../media" );
+        AssetRegistry::registerAssetPath( "assets", "../assets" );
 #endif 
     }
 
-    virtual void TearDown() {
+    void TearDown() override {
         AssetRegistry::destroy();
     }
 };

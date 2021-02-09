@@ -64,9 +64,9 @@ protected:
         }
 
 #ifdef OSRE_WINDOWS
-        Assets::AssetRegistry::registerAssetPath( "assets", "../../media" );
+        Assets::AssetRegistry::registerAssetPath( "assets", "../../assets" );
 #else
-        Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
+        Assets::AssetRegistry::registerAssetPath( "assets", "../assets" );
 #endif
 
         m_screen = AppBase::createScreen( "HelloWorld" );

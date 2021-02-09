@@ -84,9 +84,9 @@ protected:
         }
 
 #ifdef OSRE_WINDOWS
-        AssetRegistry::registerAssetPath( "assets", "../../media" );
+        AssetRegistry::registerAssetPath( "assets", "../../assets" );
 #else
-        AssetRegistry::registerAssetPath( "assets", "../media" );
+        AssetRegistry::registerAssetPath( "assets", "../assets" );
 #endif 
         AssimpWrapper assimpWrapper(*getIdContainer());
         if ( assimpWrapper.importAsset( modelLoc, 0 ) ) {
