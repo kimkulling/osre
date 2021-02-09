@@ -1,5 +1,5 @@
 ## Mesh Loader
-![A simple box](../../media/Images/01_box.png)
+![A simple box](../../assets/Images/01_box.png)
 This sample shows how to import a model using Assimp.
 
 ```cpp
@@ -81,9 +81,9 @@ protected:
         }
 
 #ifdef OSRE_WINDOWS
-        Assets::AssetRegistry::registerAssetPath( "assets", "../../media" );
+        Assets::AssetRegistry::registerAssetPath( "assets", "../../assets" );
 #else
-        Assets::AssetRegistry::registerAssetPath( "assets", "../media" );
+        Assets::AssetRegistry::registerAssetPath( "assets", "../assets" );
 #endif 
         Scene::DbgRenderer::getInstance()->renderDbgText( 0, 0, 2U, "XXX" );
 
