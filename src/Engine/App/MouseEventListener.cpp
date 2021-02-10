@@ -52,8 +52,6 @@ Canvas *MouseEventListener::getCanvas() const {
 }
 
 void MouseEventListener::onOSEvent(const Event &osEvent, const EventData *data) {
-    osre_debug(Tag, "listener called");
-
     if (m_uiCanvas.isValid()) {
         if (osEvent == MouseButtonDownEvent) {
             MouseButtonEventData *mouseBtnData((MouseButtonEventData *)data);

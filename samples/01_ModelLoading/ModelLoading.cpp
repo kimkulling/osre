@@ -78,16 +78,6 @@ public:
     }
 
 protected:
-    bool onCreate() override {
-        if (!AppBase::onCreate()) {
-            return false;
-        }
-
-        AppBase::setWindowsTitle("ModelLoader sample! Press o to import an Asset");
-
-        return true;
-    }
-
     void loadAsset(const IO::Uri &modelLoc) {
         AssimpWrapper assimpWrapper(*getIdContainer(), getActiveWorld());
         if (!assimpWrapper.importAsset(modelLoc, 0)) {
@@ -124,17 +114,28 @@ protected:
             }
         }
 
-        // Rotate the model
         glm::mat4 rot(1.0);
-        //m_transformMatrix.m_model = glm::rotate(rot, m_angle, glm::vec3(0, 1, 1));
+        if (AppBase::isKeyPressed(Platform::KEY_A)) {
+            m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
 
-        m_angle += 0.01f;
+        }
+        if (AppBase::isKeyPressed(Platform::KEY_S)) {
+            m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
+        }
+        
+        if (AppBase::isKeyPressed(Platform::KEY_W)) {
+            m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
+        }
+
+        if (AppBase::isKeyPressed(Platform::KEY_D)) {
+            m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
+        }
         RenderBackendService *rbSrv = getRenderBackendService();
 
         rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 
-        //rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
 
         rbSrv->endRenderBatch();
         rbSrv->endPass();
@@ -145,7 +146,7 @@ protected:
 
 int main(int argc, char *argv[]) {
     ModelLoadingApp myApp(argc, argv);
-    if (!myApp.initWindow(10, 10, 1024, 768, "ModelLoader-Sample", false, App::RenderBackendType::OpenGLRenderBackend)) {
+    if (!myApp.initWindow(10, 10, 1024, 768, "ModelLoader sample! Press o to import an Asset", false, App::RenderBackendType::OpenGLRenderBackend)) {
         return 1;
     }
 

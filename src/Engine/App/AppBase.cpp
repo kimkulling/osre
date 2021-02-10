@@ -148,9 +148,8 @@ bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &
     m_settings->setInt(Properties::Settings::WinY, y);
     m_settings->setInt(Properties::Settings::WinWidth, width);
     m_settings->setInt(Properties::Settings::WinHeight, height);
-    m_settings->setString(Properties::Settings::WindowsTitle, title);
     m_settings->setBool(Properties::Settings::FullScreen, fullscreen);
-
+    m_settings->setString(Properties::Settings::WindowsTitle, title);
     if (renderer == RenderBackendType::OpenGLRenderBackend) {
         m_settings->setString(Properties::Settings::RenderAPI, "opengl");
     } else if (renderer == RenderBackendType::VulkanRenderBackend) {
@@ -523,6 +522,18 @@ bool AppBase::isKeyPressed(Key key) const {
     }
 
     return m_keyboardEvListener->isKeyPressed(key);
+}
+
+void AppBase::getResolution( ui32 &w, ui32 &h ) {
+    w = h = 0;
+    Rect2ui windowsRect;
+    Platform::AbstractWindow *rootWindow = getRootWindow();
+    if (nullptr == rootWindow) {
+        return;
+    }
+    rootWindow->getWindowsRect(windowsRect);
+    w = windowsRect.getWidth();
+    h = windowsRect.getHeight();
 }
 
 } // Namespace App

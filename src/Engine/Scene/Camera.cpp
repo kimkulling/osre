@@ -36,17 +36,17 @@ static const c8 *Tag = "Camera";
 Camera::Camera(const String &name, Common::Ids &ids, Node *parent) :
         Node(name, ids, parent),
         m_fov(60.0f),
-        m_w(0.0f),
-        m_h(0.0f),
-        m_near(0.0001f),
+        m_w(1.0f),
+        m_h(1.0f),
+        m_near(0.001f),
         m_far(1000.0f),
         m_aspectRatio(1.0),
         m_observedNode(nullptr),
         m_eye(1, 1, 1),
         m_center(0, 0, 0),
         m_up(0, 0, 1),
-        m_view(),
-        m_projection() {
+        m_view(1),
+        m_projection(1) {
     // empty
 }
 
@@ -83,7 +83,7 @@ void Camera::observeBoundingBox(const TAABB<f32> &aabb) {
     const f32 diam = aabb.getDiameter();
     const Vec3f center = aabb.getCenter();
 
-    glm::vec3 eye(diam, 0, 0), up(0, 0, 1);
+    glm::vec3 eye(-diam / 2, -diam / 2, diam / 2), up(0, 0, 1);
     glm::vec3 c(center.getX(), center.getY(), center.getZ());
     setLookAt(eye, c, up);
 }

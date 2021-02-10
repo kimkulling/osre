@@ -947,7 +947,6 @@ void OGLRenderBackend::setParameter(OGLParameter *param) {
 
     if (NoneLocation == param->m_loc) {
         param->m_loc = m_shaderInUse->getUniformLocation(param->m_name);
-        //(*m_shaderInUse)(param->m_name);
         if (NoneLocation == param->m_loc) {
             osre_debug(Tag, "Cannot location for parameter " + param->m_name + " in shader " + m_shaderInUse->getName() + ".");
             return;

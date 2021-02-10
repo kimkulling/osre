@@ -26,8 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Entity.h>
 #include <osre/App/World.h>
 #include <osre/Common/Logger.h>
-#include <osre/Profiling/PerformanceCounterRegistry.h>
-#include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/Camera.h>
@@ -36,13 +34,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <iomanip>
-#include <iostream>
-
 using namespace ::OSRE;
 using namespace ::OSRE::App;
 using namespace ::OSRE::RenderBackend;
-using namespace ::OSRE::Properties;
 
 // To identify local log entries we will define this tag.
 static const c8 *Tag = "HelloWorldApp";
@@ -51,13 +45,14 @@ static const c8 *Tag = "HelloWorldApp";
 class HelloWorldApp : public App::AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock m_transformMatrix;
-    /// 
+    /// The entity to render
     Entity *mEntity;
 
 public:
     /// The class constructor with the incoming arguments from the command line.
     HelloWorldApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv),
+            m_transformMatrix(),
             mEntity(nullptr) {
         // empty
     }
@@ -73,21 +68,19 @@ protected:
             return false;
         }
 
-        AppBase::setWindowsTitle("Hello-World sample!");
-
-        mEntity = new Entity("entity", *AppBase::getIdContainer(), AppBase::getActiveWorld());
-        Scene::Camera *camera = AppBase::getActiveWorld()->addCamera("camera_1");
-        Rect2ui windowsRect;
-        Platform::AbstractWindow *rootWindow = getRootWindow();
-        rootWindow->getWindowsRect(windowsRect);
-        
-        camera->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.001f, 1000.f);
+        AppBase::setWindowsTitle("Hello-World sample! Rotate with wasd, scroll with qe");
+        World *world = getActiveWorld();
+        mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
+        Scene::Camera *camera = world->addCamera("camera_1");
+        ui32 w, h;
+        AppBase::getResolution(w, h);        
+        camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
 
         Scene::MeshBuilder meshBuilder;
-        RenderBackend::Mesh *mesh = meshBuilder.allocTriangles(VertexType::ColorVertex, 
-            BufferAccessType::ReadOnly).getMesh();
+        RenderBackend::Mesh *mesh = meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly).getMesh();
         if (nullptr != mesh) {
             mEntity->addStaticMesh(mesh);
+            world->addEntity(mEntity);            
             camera->observeBoundingBox(mEntity->getAABB());
         }
 
@@ -95,11 +88,39 @@ protected:
     }
 
     void onUpdate() override {
-        ui32 fps(0);
-        Profiling::PerformanceCounterRegistry::queryCounter("fps", fps);
-        std::stringstream stream;
-        stream << std::setfill('0') << std::setw(2) << fps;
-        //Scene::DbgRenderer::getInstance()->renderDbgText( 10, 10, 1, stream.str() );
+        glm::mat4 rot(1.0);
+        if (AppBase::isKeyPressed(Platform::KEY_A)) {
+            m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
+        }
+        if (AppBase::isKeyPressed(Platform::KEY_D)) {
+            m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
+        }
+
+        if (AppBase::isKeyPressed(Platform::KEY_W)) {
+            m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
+        }
+
+        if (AppBase::isKeyPressed(Platform::KEY_S)) {
+            m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
+        }
+
+        if (AppBase::isKeyPressed(Platform::KEY_Q)) {
+            m_transformMatrix.m_model *= glm::scale(rot, glm::vec3(1.01f, 1.01, 1.01f));
+        }
+
+        if (AppBase::isKeyPressed(Platform::KEY_E)) {
+            m_transformMatrix.m_model *= glm::scale(rot, glm::vec3(0.99f, 0.99f, 0.99f));
+        }
+
+        RenderBackendService *rbSrv = getRenderBackendService();
+
+        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginRenderBatch("b1");
+
+        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
 
         AppBase::onUpdate();
     }

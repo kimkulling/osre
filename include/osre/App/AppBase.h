@@ -170,6 +170,8 @@ public:
 
     bool isKeyPressed(Platform::Key key) const;
 
+    void getResolution(ui32 &w, ui32 &h);
+
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
     /// @return true if successful,  false if not.
