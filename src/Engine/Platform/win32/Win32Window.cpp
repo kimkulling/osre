@@ -20,14 +20,15 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <src/Engine/Platform/win32/Win32EventQueue.h>
 #include <src/Engine/Platform/win32/Win32Window.h>
 
 namespace OSRE {
 namespace Platform {
 
+static const c8 *Tag = "Win32Window";
+
 Win32Window::Win32Window(WindowsProperties *properties) :
-        AbstractWindow(properties), m_hInstance(nullptr), m_wnd(nullptr), m_dc(nullptr) {
+        AbstractWindow(properties), m_hInstance(nullptr), m_wnd(nullptr), m_dc(nullptr), mMenu(nullptr), mMenuCreateState(false) {
     // empty
 }
 
@@ -53,6 +54,48 @@ HDC Win32Window::getDeviceContext() const {
 
 HINSTANCE Win32Window::getModuleHandle() const {
     return m_hInstance;
+}
+
+HMENU Win32Window::getMenuHandle() {
+    if (nullptr == mMenu) {
+        mMenu = CreateMenu();
+    }
+    return mMenu;
+}
+
+HMENU Win32Window::beginMenu() {
+    if (mMenuCreateState) {
+        return nullptr;
+    }
+    HMENU handle = getMenuHandle();
+    mMenuCreateState = true;
+
+    return handle;
+}
+
+void Win32Window::addSubMenues(HMENU parent, AbstractPlatformEventQueue *queue, wchar_t *title,
+        MenuEntry *menu_entries, size_t numItems) {
+    if (!mMenuCreateState || nullptr == queue) {
+        osre_debug(Tag, "Not in proper state for adding sub-menues.");
+        return;
+    }
+    
+    if (nullptr == parent) {
+        parent = getMenuHandle();
+    }
+    HMENU hMenu = CreateMenu();
+    for (size_t i = 0; i < numItems; ++i) {
+        AppendMenuW(hMenu, menu_entries[i].Type, menu_entries[i].Id, menu_entries[i].Name);
+        if (0 != menu_entries[i].Id) {
+            queue->registerMenuCommand(menu_entries[i].Id, menu_entries[i].Func);
+        }
+    }
+    AppendMenuW(parent, MF_POPUP, (UINT_PTR)hMenu, title);
+}
+
+void Win32Window::endMenu() {
+    SetMenu(m_wnd, mMenu);
+    mMenuCreateState = false;
 }
 
 bool Win32Window::onCreate() {
@@ -213,11 +256,11 @@ bool Win32Window::onUpdateProperies() {
 }
 
 void Win32Window::onResize(ui32 x, ui32 y, ui32 w, ui32 h) {
-    if (NULL == m_wnd) {
+    if (nullptr == m_wnd) {
         return;
     }
 
-    ::MoveWindow(m_wnd, x, y, w, h, TRUE);
+    ::MoveWindow(m_wnd, x, y, w, h, NULL);
     WindowsProperties *props = AbstractWindow::getProperties();
     if (nullptr != props) {
         props->m_x = x;

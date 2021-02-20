@@ -206,9 +206,7 @@ public:
 
     void resize(ui32 x, ui32 y, ui32 w, ui32 h);
 
-    void setBehaviour( bool resizeViewport ) {
-        mBehaviour.ResizeViewport = resizeViewport;
-    }
+    void enableAutoResizing(bool enabled);
 
     void focusLost();
 
@@ -216,14 +214,15 @@ public:
 
 protected:
     /// @brief  The open callback.
-    virtual bool onOpen();
+    bool onOpen() override;
 
     /// @brief  The close callback.
-    virtual bool onClose();
+    bool onClose() override;
 
     /// @brief  The update callback.
-    virtual bool onUpdate();
+    bool onUpdate() override;
 
+    /// @brief  All render passes will be initialized
     void initPasses();
 
     /// @brief  Will apply all used parameters
@@ -251,6 +250,10 @@ private:
 
 inline void RenderBackendService::setUiScreen(UI::Widget *screen) {
     m_screen = screen;
+}
+
+inline void RenderBackendService::enableAutoResizing(bool enabled) {
+    mBehaviour.ResizeViewport = enabled;
 }
 
 } // Namespace RenderBackend

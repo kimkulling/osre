@@ -46,36 +46,47 @@ public:
     /// @brief  The class destructor.
     ~OsreEdApp() override;
 
-    /// The New-project callback.
+    /// The New-project command.
     /// @param  cmdId   [in] The command id.
     /// @param  data    [in] The parameters.
-    void newProject(ui32 cmdId, void *data);
+    void newProjectCmd(ui32 cmdId, void *data);
 
-    /// The Load-project callback.
+    /// The Load-project command.
     /// @param  cmdId   [in] The command id.
     /// @param  data    [in] The parameters.
-    void loadProject(ui32 cmdId, void *data);
+    void loadProjectCmd(ui32 cmdId, void *data);
 
-    /// The Save-project callback.
+    /// The Save-project command.
     /// @param  cmdId   [in] The command id.
     /// @param  data    [in] The parameters.
-    void saveProject(ui32 cmdId, void *data);
+    void saveProjectCmd(ui32 cmdId, void *data);
 
-    /// The Import-Asset callback.
+    /// The Import-Asset command.
     /// @param  cmdId   [in] The command id.
     /// @param  data    [in] The parameters.
-    void importAsset(ui32 cmdId, void *data);
+    void importAssetCmd(ui32 cmdId, void *data);
 
-    /// The Quit callback.
+    /// The Quit command.
     /// @param  cmdId   [in] The command id.
     /// @param  data    [in] The parameters.
-    void quitEditor(ui32 cmdId, void *data);
+    void quitEditorCmd(ui32 cmdId, void *data);
 
     /// @brief  Will load an asset from a given uri.
     /// @para   modelLoc    [in] The model location.
     void loadAsset(const IO::Uri &modelLoc);
 
+    /// @brief  The Getting help command implementation.
+    /// @param  cmdId   [in] The command id.
+    /// @param  data    [in] The parameters.
+    void gettingHelpCmd(ui32 cmdId, void *data);
+
+    /// @brief  The show version command.
+    /// @param  cmdId   [in] The command id.
+    /// @param  data    [in] The parameters.
+    void showVersionCmd(ui32 cmdId, void *data);
+
     /// @brief  Will return true, if a model was loaded.
+    /// @return true, if a model is stored.
     bool hasModel() const;
 
     bool registerModule(ModuleBase *mod);

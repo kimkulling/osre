@@ -20,17 +20,16 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Platform/AbstractWindow.h>
 #include <osre/Common/Logger.h>
+#include <osre/Platform/AbstractWindow.h>
 
 namespace OSRE {
 namespace Platform {
 
 static const c8 *Tag = "AbstractSurface";
 
-Resolution::Resolution( ResRequest req )
-: m_width( 0 )
-, m_height( 0 ) {
+Resolution::Resolution(ResRequest req) :
+        m_width(0), m_height(0) {
     if (ResRequest::Res640x480 == req) {
         m_width = 640;
         m_height = 480;
@@ -52,9 +51,8 @@ Resolution::Resolution( ResRequest req )
     }
 }
 
-Resolution::Resolution()
-: m_width( 0 )
-, m_height( 0 ) {
+Resolution::Resolution() :
+        m_width(0), m_height(0) {
     // empty
 }
 
@@ -62,20 +60,21 @@ Resolution::~Resolution() {
     // empty
 }
 
-AbstractWindow::AbstractWindow( WindowsProperties *properties ) :
-        mFlags((ui32)SurfaceFlagType::SF_PropertiesClean), mProperties( properties )
-, mIsCreated( false ) {
-    // empty    
+AbstractWindow::AbstractWindow(WindowsProperties *properties) :
+        mFlags((ui32)SurfaceFlagType::SF_PropertiesClean),
+        mProperties(properties),
+        mIsCreated(false) {
+    // empty
 }
 
-AbstractWindow::~AbstractWindow( ) {
+AbstractWindow::~AbstractWindow() {
     delete mProperties;
     mProperties = nullptr;
 }
 
-bool AbstractWindow::create( ) {
-    if ( mIsCreated ) {
-        osre_warn( Tag, "Surface already created." );
+bool AbstractWindow::create() {
+    if (mIsCreated) {
+        osre_warn(Tag, "Surface already created.");
         return true;
     }
 
@@ -84,38 +83,38 @@ bool AbstractWindow::create( ) {
     return mIsCreated;
 }
 
-bool AbstractWindow::destroy( ) {
-    if ( !mIsCreated ) {
-        osre_warn( Tag, "Surface not valid, cannot be destoyed." );
+bool AbstractWindow::destroy() {
+    if (!mIsCreated) {
+        osre_warn(Tag, "Surface not valid, cannot be destoyed.");
         return false;
     }
-    
-    if ( onDestroy() ) {
+
+    if (onDestroy()) {
         mIsCreated = false;
     }
 
-    return ( false == mIsCreated );
+    return (false == mIsCreated);
 }
 
 bool AbstractWindow::isCeated() const {
     return mIsCreated;
 }
 
-void AbstractWindow::resize( ui32 x, ui32 y, ui32 w, ui32 h ) {
-    if ( !mIsCreated ) {
-        osre_warn( Tag, "Surface not valid, cannot be resized." );
+void AbstractWindow::resize(ui32 x, ui32 y, ui32 w, ui32 h) {
+    if (!mIsCreated) {
+        osre_warn(Tag, "Surface not valid, cannot be resized.");
         return;
     }
 
-    onResize( x, y, w, h );
+    onResize(x, y, w, h);
 }
 
 bool AbstractWindow::updateProperties() {
     return onUpdateProperies();
 }
 
-void AbstractWindow::setFlags( SurfaceFlagType flags ) {
-    if ( mFlags == static_cast<ui32>( flags ) ) {
+void AbstractWindow::setFlags(SurfaceFlagType flags) {
+    if (mFlags == static_cast<ui32>(flags)) {
         return;
     }
     mFlags = (ui32)flags;
@@ -125,11 +124,11 @@ ui32 AbstractWindow::getFlags() const {
     return mFlags;
 }
 
-void AbstractWindow::setProperties( WindowsProperties *pProperties ) {
-    mProperties = pProperties;
+void AbstractWindow::setProperties(WindowsProperties *properties) {
+    mProperties = properties;
 }
 
-WindowsProperties *AbstractWindow::getProperties( ) {
+WindowsProperties *AbstractWindow::getProperties() {
     return mProperties;
 }
 

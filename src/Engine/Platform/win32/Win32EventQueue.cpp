@@ -290,7 +290,7 @@ void Win32EventQueue::unregisterEventQueue(Win32EventQueue *server, HWND hWnd) {
 }
 
 Win32EventQueue *Win32EventQueue::getInstance(HWND hWnd) {
-    std::map<HWND, Win32EventQueue *>::iterator it = s_WindowsServerMap.find(hWnd);
+    auto it = s_WindowsServerMap.find(hWnd);
     if (s_WindowsServerMap.end() != it) {
         return it->second;
     }

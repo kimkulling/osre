@@ -180,7 +180,7 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
     // enable vertex attribute arrays
     TArray<OGLVertexAttribute *> attributes;
     rb->createVertexCompArray(mesh->m_vertextype, oglShader, attributes);
-    const ui32 stride = Mesh::getVertexSize(mesh->m_vertextype);
+    const size_t stride = Mesh::getVertexSize(mesh->m_vertextype);
     rb->bindVertexLayout(vertexArray, oglShader, stride, attributes);
     rb->releaseVertexCompArray(attributes);
 

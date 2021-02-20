@@ -16,15 +16,15 @@
 #include <osre/App/Project.h>
 #include <osre/Platform/PlatformInterface.h>
 #ifdef OSRE_WINDOWS
-#include "Engine/Platform/win32/Win32EventQueue.h"
-#include "Engine/Platform/win32/Win32Window.h"
+#  include "Engine/Platform/win32/Win32EventQueue.h"
+#  include "Engine/Platform/win32/Win32Window.h"
 #endif
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
 #ifdef OSRE_WINDOWS
-#include <winuser.h>
-#include <windows.h>
+#  include <winuser.h>
+#  include <windows.h>
 #include <commctrl.h>
 #include <strsafe.h>
 #endif
@@ -48,36 +48,22 @@ static const ui32 VerticalMargin = 2;
 #define IDM_FILE_IMPORT 4
 #define IDM_FILE_QUIT 5
 
-#define IDM_INFO_VERSION 6
+#define IDM_GETTING_HELP 6
+#define IDM_INFO_VERSION 7
 
-#define ID_STATIC 7
+#define ID_STATIC 8
 
 HWND hStatic = NULL;
 
-void AddFileMenus(HWND hwnd) {
-    HMENU hMenubar;
-    HMENU hMenu;
 
-    hMenubar = CreateMenu();
-    hMenu = CreateMenu();
-
-    AppendMenuW(hMenu, MF_STRING, IDM_FILE_NEW, L"&New");
-    AppendMenuW(hMenu, MF_STRING, IDM_FILE_OPEN, L"&Open Project");
-    AppendMenuW(hMenu, MF_STRING, IDM_FILE_SAVE, L"&Save Project");
-    AppendMenuW(hMenu, MF_SEPARATOR, 0, NULL);
-    AppendMenuW(hMenu, MF_STRING, IDM_FILE_IMPORT, L"&Import Asset");
-    AppendMenuW(hMenu, MF_SEPARATOR, 0, NULL);
-    AppendMenuW(hMenu, MF_STRING, IDM_FILE_QUIT, L"&Quit");
-
-    AppendMenuW(hMenubar, MF_POPUP, (UINT_PTR)hMenu, L"&File");
-
-    hMenu = CreateMenu();
+/*void AddMenu(HWND hwnd, HMENU hMenubar, wchar_t *title, MenuEntry *me, size_t numItems) {
+    HMENU hMenu = CreateMenu();
     AppendMenuW(hMenu, MF_STRING, IDM_INFO_VERSION, L"&Version");
     AppendMenuW(hMenubar, MF_POPUP, (UINT_PTR)hMenu, L"&Info");
 
     SetMenu(hwnd, hMenubar);
 }
-
+*/
 #endif // OSRE_WINDOWS
 
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
@@ -101,24 +87,34 @@ bool OsreEdApp::onCreate() {
     }
 
     registerModule(new InspectorModule(this));
-    //loadModules();
 
     AppBase::setWindowsTitle("OSRE ED!");
 
-    Platform::Win32Window *w = (Win32Window *)getRootWindow();
-    if (nullptr != w) {
-        AddFileMenus(w->getHWnd());
-        AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
-        if (queue != nullptr) {
-            queue->registerMenuCommand(IDM_FILE_NEW, MenuFunctor::Make(this, &OsreEdApp::newProject));
-            queue->registerMenuCommand(IDM_FILE_OPEN, MenuFunctor::Make(this, &OsreEdApp::loadProject));
-            queue->registerMenuCommand(IDM_FILE_SAVE, MenuFunctor::Make(this, &OsreEdApp::saveProject));
-            queue->registerMenuCommand(IDM_FILE_IMPORT, MenuFunctor::Make(this, &OsreEdApp::importAsset));
-            queue->registerMenuCommand(IDM_FILE_QUIT, MenuFunctor::Make(this, &OsreEdApp::quitEditor));
-        }
+    auto *w = (Win32Window *)getRootWindow();
+    AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
+    if (nullptr != w && nullptr != queue) {
+        w->beginMenu();
+        MenuEntry FileMenu[8] = {
+            { MF_STRING, IDM_FILE_NEW, L"&New", MenuFunctor::Make(this, &OsreEdApp::newProjectCmd) },
+            { MF_STRING, IDM_FILE_OPEN, L"&Open Project", MenuFunctor::Make(this, &OsreEdApp::loadProjectCmd) },
+            { MF_STRING, IDM_FILE_SAVE, L"&Save Project", MenuFunctor::Make(this, &OsreEdApp::saveProjectCmd) },
+            { MF_SEPARATOR, 0, nullptr },
+            { MF_STRING, IDM_FILE_IMPORT, L"&Import Asset", MenuFunctor::Make(this, &OsreEdApp::importAssetCmd) },
+            { MF_SEPARATOR, 0, nullptr },
+            { MF_STRING, IDM_FILE_QUIT, L"&Quit", MenuFunctor::Make(this, &OsreEdApp::quitEditorCmd) },
+        };
+        w->addSubMenues(nullptr, queue, L"File", FileMenu, 8);
+
+        MenuEntry InfoMenu[2] = {
+            { MF_STRING, IDM_GETTING_HELP, L"&Getting Help", MenuFunctor::Make(this, &OsreEdApp::gettingHelpCmd) },
+            { MF_STRING, IDM_INFO_VERSION, L"&Version", MenuFunctor::Make(this, &OsreEdApp::showVersionCmd) }
+        };
+        w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
+
+        w->endMenu();
     }
 
-    AppBase::getRenderBackendService()->setBehaviour(false);
+    AppBase::getRenderBackendService()->enableAutoResizing(false);
 
     return true;
 }
@@ -154,7 +150,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     getRootWindow()->setWindowsTitle("Model " + model);
 }
 
-void OsreEdApp::newProject(ui32, void *) {
+void OsreEdApp::newProjectCmd(ui32, void *) {
     mProject = new App::Project();
     mProject->create("New project", 0, 1);
     const String &projectName = mProject->getProjectName();
@@ -162,13 +158,13 @@ void OsreEdApp::newProject(ui32, void *) {
     AppBase::setWindowsTitle("OSRE ED!" + String(" Project: ") + projectName);
 }
 
-void OsreEdApp::loadProject(ui32, void *) {
+void OsreEdApp::loadProjectCmd(ui32, void *) {
 }
 
-void OsreEdApp::saveProject(ui32, void *) {
+void OsreEdApp::saveProjectCmd(ui32, void *) {
 }
 
-void OsreEdApp::importAsset(ui32, void *) {
+void OsreEdApp::importAssetCmd(ui32, void *) {
     IO::Uri modelLoc;
     PlatformOperations::getFileOpenDialog("*", modelLoc);
     if (modelLoc.isValid()) {
@@ -176,12 +172,21 @@ void OsreEdApp::importAsset(ui32, void *) {
     }
 }
 
-void OsreEdApp::quitEditor(ui32, void *) {
+void OsreEdApp::quitEditorCmd(ui32, void *) {
     DlgResults result;
     PlatformOperations::getDialog("Really quit?", "Do you really quite OSRE-Ed?", Platform::PlatformOperations::DlgButton_YesNo, result);
     if (result == Platform::DlgResults::DlgButtonRes_Yes) {
         AppBase::requestShutdown();
     }
+}
+
+void OsreEdApp::gettingHelpCmd(ui32 cmdId, void *data) {
+
+}
+
+void OsreEdApp::showVersionCmd(ui32 cmdId, void *data) {
+    DlgResults res;
+    PlatformOperations::getDialog("Version Info", "OSRE Version 0.0.1", IDOK, res);
 }
 
 bool OsreEdApp::registerModule(ModuleBase *mod) {

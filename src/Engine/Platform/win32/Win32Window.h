@@ -24,16 +24,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/osre_common.h>
 #include <osre/Platform/AbstractWindow.h>
-
 #include <osre/Platform/Windows/MinWindows.h>
+
+#include "Engine/Platform/win32/Win32EventQueue.h"
 
 namespace OSRE {
 namespace Platform {
 
+/// @brief  This struct is used to define a single menu entry.
+/// To  add an entry you have to add The menu-type from the WIN32-API, its id, the name as a unicode
+/// string and a functor, which contains the command functor.
+struct MenuEntry {
+    i32 Type;           /// The menu type
+    i32 Id;             /// The menu id, must be zero if no command shall be coupled
+    wchar_t *Name;      /// The Menu item name
+    MenuFunctor Func;   /// The functor which stores the command for the menu entry.
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This class implements the surface API by using Win32-API.
+///	@brief  This class implements the windows-surface API by using Win32-API.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Win32Window : public AbstractWindow {
 public:
@@ -49,7 +60,15 @@ public:
     HDC getDeviceContext() const;
     /// Returns the module handle of the window.
     HINSTANCE getModuleHandle() const;
-
+    /// Will return the menu handle
+    HMENU getMenuHandle();
+    /// Will begin to add a new menu to the window.
+    HMENU beginMenu();
+    /// Will add a sub-menu.    
+    void addSubMenues(HMENU parent, AbstractPlatformEventQueue *queue, wchar_t *title, MenuEntry *menu_entries, size_t numItems);
+    /// Will end the menu creation.
+    void endMenu();
+    
 protected:
     /// The create callback implementation.
     bool onCreate() override;
@@ -64,6 +83,8 @@ private:
     HINSTANCE m_hInstance;
     HWND m_wnd;
     HDC m_dc;
+    HMENU mMenu;
+    bool mMenuCreateState;
 };
 
 } // Namespace Platform
