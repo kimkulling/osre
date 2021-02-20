@@ -1,7 +1,7 @@
 # Hello World
 ![HelloWorld](../../assets/Images/HelloWorld.png)
-This sample just shows a simple HelloWorld application. The creation of the render window 
-and the base setup is included.
+This sample just shows a simple Triangle. The creation of the render window and the base setup is included. 
+You can rotate the triangle with your keyboard.
 
 ## The main application
 At first we are including all needed dependecies, use the OSRE namespace and the Renderbackend-namespace. 
@@ -9,74 +9,113 @@ The we will generate our simple model-, view- and projection-matrix.
 
 ```cpp
 #include <osre/App/AppBase.h>
-#include <osre/Properties/Settings.h>
+#include <osre/App/Component.h>
+#include <osre/App/Entity.h>
+#include <osre/App/World.h>
 #include <osre/Common/Logger.h>
-#include <osre/Scene/GeometryBuilder.h>
-#include <osre/Scene/Stage.h>
-#include <osre/Scene/Node.h>
-#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/Scene/MeshBuilder.h>
+#include <osre/Scene/Camera.h>
+#include <osre/Platform/AbstractWindow.h>
 
-// for the transform ops
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-using namespace OSRE;
-using namespace OSRE::RenderBackend;
+using namespace ::OSRE;
+using namespace ::OSRE::App;
+using namespace ::OSRE::RenderBackend;
 
-// to identify local log entries 
-static const String Tag    = "HelloWorld"; 
-```
+// To identify local log entries we will define this tag.
+static const c8 *Tag = "HelloWorldApp";
 
-To start OSRE you cann use the base class for main applications. Just rderive from App::AppBase:
-
-```cpp
+/// The example application, will create the render environment and render a simple triangle onto it
 class HelloWorldApp : public App::AppBase {
-    Scene::Stage *m_stage;
+    /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock m_transformMatrix;
+    /// The entity to render
+    Entity *mEntity;
 
 public:
-    HelloWorldApp( int argc, char *argv[] )
-    : AppBase( argc, argv )
-    , m_stage( nullptr ) {
-
+    /// The class constructor with the incoming arguments from the command line.
+    HelloWorldApp(int argc, char *argv[]) :
+            AppBase(argc, (const char **)argv),
+            m_transformMatrix(),
+            mEntity(nullptr) {
+        // empty
     }
 
-    virtual ~HelloWorldApp() {
-
+    /// The class destructor.
+    ~HelloWorldApp() override {
+        // empty
     }
 
 protected:
-    virtual bool onCreate( Properties::Settings *config = nullptr ) {
-        AppBase::getConfig()->setString( Properties::Settings::WindowsTitle, "HelloWorld!" );
-
-        if( !AppBase::onCreate( config ) ) {
+    bool onCreate() override {
+        if (!AppBase::onCreate()) {
             return false;
         }
 
-        m_stage = AppBase::createStage( "HelloWorld" );
-        Scene::Node *geoNode = m_stage->addNode( "geo", nullptr );
-        Scene::GeometryBuilder myBuilder;
-        RenderBackend::Geometry *geo = myBuilder.createTriangle();
-        if( nullptr != geo ) {
-                m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
+        AppBase::setWindowsTitle("Hello-World sample! Rotate with wasd, scroll with qe");
+        World *world = getActiveWorld();
+        mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
+        Scene::Camera *camera = world->addCamera("camera_1");
+        ui32 w, h;
+        AppBase::getResolution(w, h);        
+        camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
 
-                Parameter *parameter = Parameter::create("MVP", PT_Mat4);
-                ::memcpy(parameter->m_data.m_data,glm::value_ptr(m_transformMatrix.m_projection*m_transformMatrix.m_view*m_transformMatrix.m_model), sizeof(glm::mat4));
-
-                geo->m_parameter = parameter;
-                geo->m_numParameter++;
-
-                geoNode->addGeometry(geo);
+        Scene::MeshBuilder meshBuilder;
+        RenderBackend::Mesh *mesh = meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly).getMesh();
+        if (nullptr != mesh) {
+            mEntity->addStaticMesh(mesh);
+            world->addEntity(mEntity);            
+            camera->observeBoundingBox(mEntity->getAABB());
         }
 
         return true;
     }
 
-    virtual void onUpdate()  {
-        m_stage->update();
+    void onUpdate() override {
+        glm::mat4 rot(1.0);
+        if (AppBase::isKeyPressed(Platform::KEY_A)) {
+            m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
+        }
+        if (AppBase::isKeyPressed(Platform::KEY_D)) {
+            m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
+        }
+
+        if (AppBase::isKeyPressed(Platform::KEY_W)) {
+            m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
+        }
+
+        if (AppBase::isKeyPressed(Platform::KEY_S)) {
+            m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
+        }
+
+        if (AppBase::isKeyPressed(Platform::KEY_Q)) {
+            m_transformMatrix.m_model *= glm::scale(rot, glm::vec3(1.01f, 1.01, 1.01f));
+        }
+
+        if (AppBase::isKeyPressed(Platform::KEY_E)) {
+            m_transformMatrix.m_model *= glm::scale(rot, glm::vec3(0.99f, 0.99f, 0.99f));
+        }
+
+        // Set the model-matrix in the renderpass
+        RenderBackendService *rbSrv = getRenderBackendService();
+
+        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginRenderBatch("b1");
+
+        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
+
+        AppBase::onUpdate();
     }
 };
+
+/// Will generate the main function.
+OSRE_MAIN(HelloWorldApp)
 ```
 At first we add a stage as an member attribute of your Hello-World. A stage stores the current scene.
 Then we need a transformation to move somthing inside of your scene, so we need another member attribute for the transformation.
