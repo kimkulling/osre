@@ -124,11 +124,10 @@ public:
 	OGLShader *getActiveShader() const;
 	bool releaseShader(OGLShader *pShader);
 	void releaseAllShaders();
-	OGLTexture *createEmptyTexture(const String &name, TextureTargetType target, TextureFormatType format, ui32 width, ui32 height, ui32 channels);
+	OGLTexture *createEmptyTexture(const String &name, TextureTargetType target, PixelFormatType pixelFormat, ui32 width, ui32 height, ui32 channels);
 	void updateTexture(OGLTexture *pOGLTextue, ui32 offsetX, ui32 offsetY, c8 *data, size_t size);
 	OGLTexture *createTexture(const String &name, Texture *tex);
 	OGLTexture *createTextureFromFile(const String &name, const IO::Uri &fileloc);
-	OGLTexture *createTextureFromStream(const String &name, IO::Stream &stream, ui32 width, ui32 height, ui32 channels);
 	OGLTexture *findTexture(const String &name) const;
 	bool bindTexture(OGLTexture *pOGLTextue, TextureStageType stageType);
     bool unbindTexture( TextureStageType stageType);
@@ -141,7 +140,7 @@ public:
 	void releaseAllParameters();
 	size_t addPrimitiveGroup(PrimitiveGroup *grp);
 	void releaseAllPrimitiveGroups();
-	OGLFrameBuffer *createFrameBuffer(const String &name, ui32 width, ui32 height, bool depthBuffer);
+    OGLFrameBuffer *createFrameBuffer(const String &name, ui32 width, ui32 height, PixelFormatType pixelFormat, bool depthBuffer);
 	void bindFrameBuffer(OGLFrameBuffer *oglFB);
 	OGLFrameBuffer *getFrameBufferByName(const String &name) const;
 	void releaseFrameBuffer(OGLFrameBuffer *oglFB);
@@ -154,27 +153,27 @@ public:
     const String &getExtensions() const;
     
 private:
-	Platform::AbstractOGLRenderContext *m_renderCtx;
-	CPPCore::TArray<OGLBuffer*> m_buffers;
-	GLuint m_activeVB;
-	GLuint m_activeIB;
-	CPPCore::TArray<OGLVertexArray*> m_vertexarrays;
-	GLuint m_activeVertexArray;
-	CPPCore::TArray<OGLShader *> m_shaders;
-	CPPCore::TArray<OGLTexture *> m_textures;
+	Platform::AbstractOGLRenderContext *mRenderCtx;
+	CPPCore::TArray<OGLBuffer*> mBuffers;
+	GLuint mActiveVB;
+	GLuint mActiveIB;
+	CPPCore::TArray<OGLVertexArray*> mVertexArrays;
+	GLuint mActiveVertexArray;
+	CPPCore::TArray<OGLShader *> mShaders;
+	CPPCore::TArray<OGLTexture *> mTextures;
     CPPCore::TArray<OGLTexture *> mBindedTextures;
-	CPPCore::TArray<size_t> m_freeTexSlots;
+	CPPCore::TArray<size_t> mFreeTexSlots;
 	std::map<String, size_t> m_texLookupMap;
-	CPPCore::TArray<OGLParameter *> m_parameters;
-	OGLShader *m_shaderInUse;
-	CPPCore::TArray<size_t> m_freeBufferSlots;
-	CPPCore::TArray<OGLPrimGroup*> m_primitives;
-	RenderStates *m_fpState;
-	Profiling::FPSCounter *m_fpsCounter;
-	OGLCapabilities *m_oglCapabilities;
-	CPPCore::TArray<OGLFrameBuffer*> m_framebuffers;
-    String m_extensions;
-    i32 m_OpenGLVersion[ 2 ];
+	CPPCore::TArray<OGLParameter *> mParameters;
+	OGLShader *mShaderInUse;
+	CPPCore::TArray<size_t> mFreeBufferSlots;
+	CPPCore::TArray<OGLPrimGroup*> mPrimitives;
+	RenderStates *mFpState;
+	Profiling::FPSCounter *mFpsCounter;
+	OGLCapabilities mOglCapabilities;
+	CPPCore::TArray<OGLFrameBuffer*> mFrameFuffers;
+    String mExtensions;
+    i32 mOpenGLVersion[2];
     Viewport mViewport;
 };
 

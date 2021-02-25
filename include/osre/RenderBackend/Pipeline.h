@@ -102,7 +102,7 @@ public:
     void clear();
 
 private:
-    using PipelinePassArray = TArray<PipelinePass *>;
+    using PipelinePassArray = TArray<PipelinePass*>;
     PipelinePassArray m_passes;
     i32 m_currentPassId;
     bool m_inFrame;

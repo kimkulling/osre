@@ -222,14 +222,16 @@ struct OGLCapabilities {
     i32 mMaxTextureUnits;
     i32 mMaxTextureImageUnits;
     i32 mMaxTextureCoords;
+    bool mInstancing;
 
     OGLCapabilities() :
             mMaxAniso(0.0f),
-            mContextMask(0),
-            mMax3DTextureSize(0),
-            mMaxTextureUnits(0),
-            mMaxTextureImageUnits(0),
-            mMaxTextureCoords(0) {
+            mContextMask(-1),
+            mMax3DTextureSize(-1),
+            mMaxTextureUnits(-1),
+            mMaxTextureImageUnits(-1),
+            mMaxTextureCoords(-1),
+            mInstancing(true) {
         // empty
     }
 };

@@ -50,24 +50,24 @@ static const String Tag = "OGLRenderBackend";
 static const ui32 NotInitedHandle = 9999999;
 
 OGLRenderBackend::OGLRenderBackend() :
-        m_renderCtx(nullptr),
-        m_buffers(),
-        m_activeVB(NotInitedHandle),
-        m_activeIB(NotInitedHandle),
-        m_vertexarrays(),
-        m_activeVertexArray(OGLNotSetId),
-        m_shaders(),
-        m_textures(),
-        m_freeTexSlots(),
+        mRenderCtx(nullptr),
+        mBuffers(),
+        mActiveVB(NotInitedHandle),
+        mActiveIB(NotInitedHandle),
+        mVertexArrays(),
+        mActiveVertexArray(OGLNotSetId),
+        mShaders(),
+        mTextures(),
+        mFreeTexSlots(),
         m_texLookupMap(),
-        m_parameters(),
-        m_shaderInUse(nullptr),
-        m_freeBufferSlots(),
-        m_primitives(),
-        m_fpState(nullptr),
-        m_fpsCounter(nullptr),
-        m_oglCapabilities(nullptr),
-        m_framebuffers() {
+        mParameters(),
+        mShaderInUse(nullptr),
+        mFreeBufferSlots(),
+        mPrimitives(),
+        mFpState(nullptr),
+        mFpsCounter(nullptr),
+        mOglCapabilities(),
+        mFrameFuffers() {
     mBindedTextures.resize((size_t)TextureStageType::NumTextureStageTypes);
     for (size_t i = 0; i < (size_t)TextureStageType::NumTextureStageTypes; ++i) {
         mBindedTextures[i] = nullptr;
@@ -75,11 +75,8 @@ OGLRenderBackend::OGLRenderBackend() :
 }
 
 OGLRenderBackend::~OGLRenderBackend() {
-    delete m_fpState;
-    m_fpState = nullptr;
-
-    delete m_oglCapabilities;
-    m_oglCapabilities = nullptr;
+    delete mFpState;
+    mFpState = nullptr;
 
     releaseAllShaders();
     releaseAllTextures();
@@ -90,14 +87,12 @@ OGLRenderBackend::~OGLRenderBackend() {
 }
 
 void OGLRenderBackend::enumerateGPUCaps() {
-    m_oglCapabilities = new OGLCapabilities;
-
-    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &m_oglCapabilities->mMaxAniso);
-    glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &m_oglCapabilities->mContextMask);
-    glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &m_oglCapabilities->mMax3DTextureSize);
-    glGetIntegerv(GL_MAX_TEXTURE_UNITS, &m_oglCapabilities->mMaxTextureUnits);
-    glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &m_oglCapabilities->mMaxTextureImageUnits);
-    glGetIntegerv(GL_MAX_TEXTURE_COORDS, &m_oglCapabilities->mMaxTextureCoords);
+    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &mOglCapabilities.mMaxAniso);
+    glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &mOglCapabilities.mContextMask);
+    glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &mOglCapabilities.mMax3DTextureSize);
+    glGetIntegerv(GL_MAX_TEXTURE_UNITS, &mOglCapabilities.mMaxTextureUnits);
+    glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &mOglCapabilities.mMaxTextureImageUnits);
+    glGetIntegerv(GL_MAX_TEXTURE_COORDS, &mOglCapabilities.mMaxTextureCoords);
 }
 
 void OGLRenderBackend::setMatrix(MatrixType type, const glm::mat4 &mat) {
@@ -154,9 +149,9 @@ void OGLRenderBackend::applyMatrix() {
 bool OGLRenderBackend::create(Platform::AbstractOGLRenderContext *renderCtx) {
     setRenderContext(renderCtx);
 
-    m_fpState = new RenderStates;
+    mFpState = new RenderStates;
     enumerateGPUCaps();
-    ::memset(m_OpenGLVersion, 0, sizeof(i32) * 2);
+    ::memset(mOpenGLVersion, 0, sizeof(i32) * 2);
 
     // checking the supported GL version
     const char *GLVendorString = (const char *)glGetString(GL_VENDOR);
@@ -180,8 +175,8 @@ bool OGLRenderBackend::create(Platform::AbstractOGLRenderContext *renderCtx) {
         setExtensions(extensions);
     }
     // or better yet, use the GL4.x way to get the version number
-    glGetIntegerv(GL_MAJOR_VERSION, &m_OpenGLVersion[0]);
-    glGetIntegerv(GL_MINOR_VERSION, &m_OpenGLVersion[1]);
+    glGetIntegerv(GL_MAJOR_VERSION, &mOpenGLVersion[0]);
+    glGetIntegerv(GL_MINOR_VERSION, &mOpenGLVersion[1]);
 
     c8 *slv = (c8 *)glGetString(GL_SHADING_LANGUAGE_VERSION);
     osre_debug(Tag, "Supported GLSL language " + String(slv));
@@ -203,16 +198,16 @@ bool OGLRenderBackend::destroy() {
 }
 
 void OGLRenderBackend::setTimer(Platform::AbstractTimer *timer) {
-    if (nullptr == m_fpsCounter) {
-        m_fpsCounter = new Profiling::FPSCounter(timer);
+    if (nullptr == mFpsCounter) {
+        mFpsCounter = new Profiling::FPSCounter(timer);
     }
 }
 
 void OGLRenderBackend::setRenderContext(Platform::AbstractOGLRenderContext *renderCtx) {
-    if (m_renderCtx != renderCtx) {
-        m_renderCtx = renderCtx;
-        if (nullptr != m_renderCtx) {
-            m_renderCtx->activate();
+    if (mRenderCtx != renderCtx) {
+        mRenderCtx = renderCtx;
+        if (nullptr != mRenderCtx) {
+            mRenderCtx->activate();
         }
     }
 }
@@ -247,14 +242,14 @@ OGLBuffer *OGLRenderBackend::createBuffer(BufferType type) {
     GLuint bufferId(OGLNotSetId);
     glGenBuffers(1, &bufferId);
     OGLBuffer *buffer(nullptr);
-    if (m_freeBufferSlots.isEmpty()) {
+    if (mFreeBufferSlots.isEmpty()) {
         buffer = new OGLBuffer;
-        handle = m_buffers.size();
-        m_buffers.add(buffer);
+        handle = mBuffers.size();
+        mBuffers.add(buffer);
     } else {
-        handle = m_freeBufferSlots.back();
-        buffer = m_buffers[handle];
-        m_freeBufferSlots.removeBack();
+        handle = mFreeBufferSlots.back();
+        buffer = mBuffers[handle];
+        mFreeBufferSlots.removeBack();
     }
     buffer->m_handle = handle;
     buffer->m_type = type;
@@ -266,9 +261,9 @@ OGLBuffer *OGLRenderBackend::createBuffer(BufferType type) {
 
 OGLBuffer *OGLRenderBackend::getBufferById(ui32 geoId) {
     OGLBuffer *buffer(nullptr);
-    for (ui32 i = 0; i < m_buffers.size(); i++) {
-        if (m_buffers[i]->m_geoId == geoId) {
-            buffer = m_buffers[i];
+    for (ui32 i = 0; i < mBuffers.size(); i++) {
+        if (mBuffers[i]->m_geoId == geoId) {
+            buffer = mBuffers[i];
             break;
         }
     }
@@ -288,7 +283,7 @@ void OGLRenderBackend::bindBuffer(OGLBuffer *buffer) {
 }
 
 void OGLRenderBackend::bindBuffer(ui32 handle) {
-    OGLBuffer *buf(m_buffers[handle]);
+    OGLBuffer *buf(mBuffers[handle]);
     if (nullptr != buf) {
         bindBuffer(buf);
     }
@@ -299,8 +294,8 @@ void OGLRenderBackend::unbindBuffer(OGLBuffer *buffer) {
         osre_debug(Tag, "Pointer to buffer is nullptr");
         return;
     }
-    m_activeVB = NotInitedHandle;
-    m_activeIB = NotInitedHandle;
+    mActiveVB = NotInitedHandle;
+    mActiveIB = NotInitedHandle;
     GLenum target = OGLEnum::getGLBufferType(buffer->m_type);
     glBindBuffer(target, 0);
 
@@ -328,20 +323,20 @@ void OGLRenderBackend::releaseBuffer(OGLBuffer *buffer) {
     buffer->m_handle = OGLNotSetId;
     buffer->m_type = BufferType::EmptyBuffer;
     buffer->m_oglId = OGLNotSetId;
-    m_freeBufferSlots.add(slot);
+    mFreeBufferSlots.add(slot);
 }
 
 void OGLRenderBackend::releaseAllBuffers() {
-    for (ui32 i = 0; i < m_buffers.size(); ++i) {
-        OGLBuffer *buffer = m_buffers[i];
+    for (ui32 i = 0; i < mBuffers.size(); ++i) {
+        OGLBuffer *buffer = mBuffers[i];
         if (nullptr != buffer) {
             if (buffer->m_type != BufferType::EmptyBuffer) {
                 releaseBuffer(buffer);
             }
         }
     }
-    m_buffers.clear();
-    m_freeBufferSlots.clear();
+    mBuffers.clear();
+    mFreeBufferSlots.clear();
 }
 
 bool OGLRenderBackend::createVertexCompArray(const VertexLayout *layout, OGLShader *shader, VertAttribArray &attributes) {
@@ -461,8 +456,8 @@ void OGLRenderBackend::releaseVertexCompArray(TArray<OGLVertexAttribute *> &attr
 OGLVertexArray *OGLRenderBackend::createVertexArray() {
     OGLVertexArray *vertexArray = new OGLVertexArray;
     glGenVertexArrays(1, &vertexArray->m_id);
-    const size_t id = m_vertexarrays.size();
-    m_vertexarrays.add(vertexArray);
+    const size_t id = mVertexArrays.size();
+    mVertexArrays.add(vertexArray);
     vertexArray->m_slot = id;
 
     return vertexArray;
@@ -524,8 +519,8 @@ void OGLRenderBackend::destroyVertexArray(OGLVertexArray *vertexArray) {
 
 OGLVertexArray *OGLRenderBackend::getVertexArraybyId(ui32 id) const {
     OGLVertexArray *va(nullptr);
-    if (id < m_vertexarrays.size()) {
-        va = m_vertexarrays[id];
+    if (id < mVertexArrays.size()) {
+        va = mVertexArrays[id];
     }
 
     return va;
@@ -537,23 +532,23 @@ void OGLRenderBackend::bindVertexArray(OGLVertexArray *vertexArray) {
         return;
     }
 
-    if ((m_activeVertexArray == OGLNotSetId) || (m_activeVertexArray != vertexArray->m_id)) {
-        m_activeVertexArray = vertexArray->m_id;
-        glBindVertexArray(m_activeVertexArray);
+    if ((mActiveVertexArray == OGLNotSetId) || (mActiveVertexArray != vertexArray->m_id)) {
+        mActiveVertexArray = vertexArray->m_id;
+        glBindVertexArray(mActiveVertexArray);
         CHECKOGLERRORSTATE();
     }
 }
 
 void OGLRenderBackend::unbindVertexArray() {
     glBindVertexArray(0);
-    m_activeVertexArray = OGLNotSetId;
+    mActiveVertexArray = OGLNotSetId;
 }
 
 void OGLRenderBackend::releaseAllVertexArrays() {
-    for (ui32 i = 0; i < m_vertexarrays.size(); ++i) {
-        destroyVertexArray(m_vertexarrays[i]);
+    for (ui32 i = 0; i < mVertexArrays.size(); ++i) {
+        destroyVertexArray(mVertexArrays[i]);
     }
-    m_vertexarrays.clear();
+    mVertexArrays.clear();
 }
 
 OGLShader *OGLRenderBackend::createShader(const String &name, Shader *shaderInfo) {
@@ -568,7 +563,7 @@ OGLShader *OGLRenderBackend::createShader(const String &name, Shader *shaderInfo
     }
 
     oglShader = new OGLShader(name);
-    m_shaders.add(oglShader);
+    mShaders.add(oglShader);
     if (shaderInfo) {
         bool result(false);
         if (!shaderInfo->m_src[static_cast<int>(ShaderType::SH_VertexShaderType)].empty()) {
@@ -610,9 +605,9 @@ OGLShader *OGLRenderBackend::getShader(const String &name) {
     }
 
     OGLShader *shader(nullptr);
-    for (ui32 i = 0; i < m_shaders.size(); ++i) {
-        if (m_shaders[i]->getName() == name) {
-            shader = m_shaders[i];
+    for (ui32 i = 0; i < mShaders.size(); ++i) {
+        if (mShaders[i]->getName() == name) {
+            shader = mShaders[i];
             break;
         }
     }
@@ -621,27 +616,27 @@ OGLShader *OGLRenderBackend::getShader(const String &name) {
 }
 
 bool OGLRenderBackend::useShader(OGLShader *shader) {
-    if (m_shaderInUse == shader) {
+    if (mShaderInUse == shader) {
         // shader already in use
         return true;
     }
 
     // unuse an older shader
-    if (nullptr != m_shaderInUse) {
-        m_shaderInUse->unuse();
+    if (nullptr != mShaderInUse) {
+        mShaderInUse->unuse();
     }
 
     // use new shader
-    m_shaderInUse = shader;
-    if (nullptr != m_shaderInUse) {
-        m_shaderInUse->use();
+    mShaderInUse = shader;
+    if (nullptr != mShaderInUse) {
+        mShaderInUse->use();
     }
 
     return true;
 }
 
 OGLShader *OGLRenderBackend::getActiveShader() const {
-    return m_shaderInUse;
+    return mShaderInUse;
 }
 
 bool OGLRenderBackend::releaseShader(OGLShader *shader) {
@@ -652,8 +647,8 @@ bool OGLRenderBackend::releaseShader(OGLShader *shader) {
     // look for the shader
     ui32 idx(0);
     bool found(false);
-    for (ui32 i = 0; i < m_shaders.size(); ++i) {
-        if (m_shaders[i] == shader) {
+    for (ui32 i = 0; i < mShaders.size(); ++i) {
+        if (mShaders[i] == shader) {
             found = true;
             idx = i;
             break;
@@ -662,26 +657,26 @@ bool OGLRenderBackend::releaseShader(OGLShader *shader) {
 
     // remove shader from list
     if (found) {
-        delete m_shaders[idx];
-        m_shaders.remove(idx);
+        delete mShaders[idx];
+        mShaders.remove(idx);
     }
 
     return found;
 }
 
 void OGLRenderBackend::releaseAllShaders() {
-    for (ui32 i = 0; i < m_shaders.size(); ++i) {
-        if (nullptr != m_shaders[i]) {
-            if (m_shaderInUse == m_shaders[i]) {
+    for (ui32 i = 0; i < mShaders.size(); ++i) {
+        if (nullptr != mShaders[i]) {
+            if (mShaderInUse == mShaders[i]) {
                 useShader(nullptr);
             }
-            delete m_shaders[i];
+            delete mShaders[i];
         }
     }
-    m_shaders.clear();
+    mShaders.clear();
 }
 
-OGLTexture *OGLRenderBackend::createEmptyTexture(const String &name, TextureTargetType target, TextureFormatType format,
+OGLTexture *OGLRenderBackend::createEmptyTexture(const String &name, TextureTargetType target, PixelFormatType format,
         ui32 width, ui32 height, ui32 channels) {
     if (name.empty()) {
         osre_debug(Tag, "Texture anme is empty.");
@@ -689,21 +684,21 @@ OGLTexture *OGLRenderBackend::createEmptyTexture(const String &name, TextureTarg
     }
 
     // lookup for texture
-    OGLTexture *tex(findTexture(name));
+    OGLTexture *tex = findTexture(name);
     if (tex) {
         return tex;
     }
 
     // get texture slot
-    size_t slot(0);
-    if (m_freeTexSlots.isEmpty()) {
-        slot = m_textures.size();
+    size_t slot = 0;
+    if (mFreeTexSlots.isEmpty()) {
+        slot = mTextures.size();
         tex = new OGLTexture;
-        m_textures.add(tex);
+        mTextures.add(tex);
     } else {
-        slot = m_freeTexSlots.back();
-        m_freeTexSlots.removeBack();
-        tex = m_textures[slot];
+        slot = mFreeTexSlots.back();
+        mFreeTexSlots.removeBack();
+        tex = mTextures[slot];
     }
     tex->m_slot = slot;
     m_texLookupMap[name] = slot;
@@ -726,7 +721,7 @@ OGLTexture *OGLRenderBackend::createEmptyTexture(const String &name, TextureTarg
     glTexParameteri(tex->m_target, OGLEnum::getGLTextureEnum(TextureParameterName::TextureParamWrapS), GL_CLAMP);
     glTexParameteri(tex->m_target, OGLEnum::getGLTextureEnum(TextureParameterName::TextureParamWrapT), GL_CLAMP);
 
-    glTexParameterf(tex->m_target, GL_TEXTURE_MAX_ANISOTROPY_EXT, m_oglCapabilities->mMaxAniso);
+    glTexParameterf(tex->m_target, GL_TEXTURE_MAX_ANISOTROPY_EXT, mOglCapabilities.mMaxAniso);
 
     return tex;
 }
@@ -755,24 +750,24 @@ OGLTexture *OGLRenderBackend::createTexture(const String &name, Texture *tex) {
         return glTex;
     }
 
-    glTex = createEmptyTexture(name, tex->m_targetType, TextureFormatType::R8G8B8, tex->m_width, tex->m_height, tex->m_channels);
+    glTex = createEmptyTexture(name, tex->m_targetType, tex->mPixelFormat, tex->m_width, tex->m_height, tex->m_channels);
     glTexImage2D(glTex->m_target, 0, GL_RGB, tex->m_width, tex->m_height, 0, glTex->m_format, GL_UNSIGNED_BYTE, tex->m_data);
     glGenerateMipmap(glTex->m_target);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, m_oglCapabilities->mMaxAniso);
+    glTexParameterf(glTex->m_target, GL_TEXTURE_MAX_ANISOTROPY_EXT, mOglCapabilities.mMaxAniso);
     glBindTexture(glTex->m_target, 0);
 
     return glTex;
 }
 
 OGLTexture *OGLRenderBackend::createTextureFromFile(const String &name, const IO::Uri &fileloc) {
-    OGLTexture *tex(findTexture(name));
-    if (tex) {
+    OGLTexture *tex = findTexture(name);
+    if (nullptr == tex) {
         return tex;
     }
 
     // import the texture
     const String filename = fileloc.getAbsPath();
-    i32 width(0), height(0), channels(0);
+    i32 width = 0, height = 0, channels = 0;
     GLubyte *data = SOIL_load_image(filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
     if (!data) {
         osre_debug(Tag, "Cannot load texture " + filename);
@@ -794,31 +789,11 @@ OGLTexture *OGLRenderBackend::createTextureFromFile(const String &name, const IO
     }
 
     // create texture and fill it
-    tex = createEmptyTexture(name, TextureTargetType::Texture2D, TextureFormatType::R8G8B8, width, height, channels);
+    tex = createEmptyTexture(name, TextureTargetType::Texture2D, PixelFormatType::R8G8B8, width, height, channels);
     glTexImage2D(tex->m_target, 0, GL_RGB, width, height, 0, tex->m_format, GL_UNSIGNED_BYTE, data);
     glBindTexture(tex->m_target, 0);
 
     SOIL_free_image_data(data);
-
-    return tex;
-}
-
-OGLTexture *OGLRenderBackend::createTextureFromStream(const String &name, IO::Stream &stream,
-        ui32 width, ui32 height, ui32 channels) {
-    OGLTexture *tex(findTexture(name));
-    if (nullptr != tex) {
-        return tex;
-    }
-
-    const ui32 size = stream.getSize();
-    uc8 *data = new uc8[size];
-    stream.read(data, size);
-
-    // create texture and fill it
-    tex = createEmptyTexture(name, TextureTargetType::Texture2D, TextureFormatType::R8G8B8, width, height, channels);
-    glTexImage2D(tex->m_target, 0, GL_RGB, width, height, 0, tex->m_format, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(tex->m_target);
-    delete[] data;
 
     return tex;
 }
@@ -828,12 +803,12 @@ OGLTexture *OGLRenderBackend::findTexture(const String &name) const {
         return nullptr;
     }
 
-    std::map<String, size_t>::const_iterator it(m_texLookupMap.find(name));
+    std::map<String, size_t>::const_iterator it = m_texLookupMap.find(name);
     if (it == m_texLookupMap.end()) {
         return nullptr;
     }
 
-    return m_textures[it->second];
+    return mTextures[it->second];
 }
 
 bool OGLRenderBackend::bindTexture(OGLTexture *oglTexture, TextureStageType stageType) {
@@ -865,7 +840,7 @@ bool OGLRenderBackend::unbindTexture( TextureStageType stageType ) {
 }
 
 void OGLRenderBackend::releaseTexture(OGLTexture *oglTexture) {
-    if (nullptr == m_textures[oglTexture->m_slot]) {
+    if (nullptr == mTextures[oglTexture->m_slot]) {
         return;
     }
 
@@ -875,7 +850,7 @@ void OGLRenderBackend::releaseTexture(OGLTexture *oglTexture) {
     oglTexture->m_height = 0;
     oglTexture->m_channels = 0;
 
-    m_freeTexSlots.add(oglTexture->m_slot);
+    mFreeTexSlots.add(oglTexture->m_slot);
 
     std::map<String, size_t>::iterator it(m_texLookupMap.find(oglTexture->m_name));
     if (m_texLookupMap.end() != it) {
@@ -885,13 +860,13 @@ void OGLRenderBackend::releaseTexture(OGLTexture *oglTexture) {
 }
 
 void OGLRenderBackend::releaseAllTextures() {
-    for (ui32 i = 0; i < m_textures.size(); ++i) {
-        if (m_textures[i]->m_textureId != OGLNotSetId) {
-            releaseTexture(m_textures[i]);
+    for (ui32 i = 0; i < mTextures.size(); ++i) {
+        if (mTextures[i]->m_textureId != OGLNotSetId) {
+            releaseTexture(mTextures[i]);
         }
     }
-    m_freeTexSlots.clear();
-    m_textures.clear();
+    mFreeTexSlots.clear();
+    mTextures.clear();
     m_texLookupMap.clear();
 }
 
@@ -915,7 +890,7 @@ OGLParameter *OGLRenderBackend::createParameter(const String &name, ParameterTyp
             ::memcpy(param->m_data->getData(), blob->getData(), blob->m_size);
         }
     }
-    m_parameters.add(param);
+    mParameters.add(param);
 
     return param;
 }
@@ -925,9 +900,9 @@ OGLParameter *OGLRenderBackend::getParameter(const String &name) const {
         return nullptr;
     }
 
-    for (ui32 i = 0; i < m_parameters.size(); ++i) {
-        if (m_parameters[i]->m_name == name) {
-            return m_parameters[i];
+    for (ui32 i = 0; i < mParameters.size(); ++i) {
+        if (mParameters[i]->m_name == name) {
+            return mParameters[i];
         }
     }
 
@@ -940,15 +915,15 @@ void OGLRenderBackend::setParameter(OGLParameter *param) {
         return;
     }
 
-    if (nullptr == m_shaderInUse) {
+    if (nullptr == mShaderInUse) {
         osre_debug(Tag, "Cannot set parameter, no shader in use.");
         return;
     }
 
     if (NoneLocation == param->m_loc) {
-        param->m_loc = m_shaderInUse->getUniformLocation(param->m_name);
+        param->m_loc = mShaderInUse->getUniformLocation(param->m_name);
         if (NoneLocation == param->m_loc) {
-            osre_debug(Tag, "Cannot location for parameter " + param->m_name + " in shader " + m_shaderInUse->getName() + ".");
+            osre_debug(Tag, "Cannot location for parameter " + param->m_name + " in shader " + mShaderInUse->getName() + ".");
             return;
         }
     }
@@ -1013,11 +988,11 @@ void OGLRenderBackend::setParameter(OGLParameter *param) {
 }
 
 void OGLRenderBackend::releaseAllParameters() {
-    ContainerClear(m_parameters);
+    ContainerClear(mParameters);
 }
 
 void OGLRenderBackend::setParameter(OGLParameter **param, size_t numParam) {
-    if (nullptr == m_shaderInUse) {
+    if (nullptr == mShaderInUse) {
         return;
     }
 
@@ -1041,17 +1016,17 @@ size_t OGLRenderBackend::addPrimitiveGroup(PrimitiveGroup *grp) {
     oglGrp->m_startIndex = (ui32)grp->m_startIndex;
     oglGrp->m_numIndices = grp->m_numIndices;
 
-    const size_t idx = m_primitives.size();
-    m_primitives.add(oglGrp);
+    const size_t idx = mPrimitives.size();
+    mPrimitives.add(oglGrp);
 
     return idx;
 }
 
 void OGLRenderBackend::releaseAllPrimitiveGroups() {
-    ContainerClear(m_primitives);
+    ContainerClear(mPrimitives);
 }
 
-OGLFrameBuffer *OGLRenderBackend::createFrameBuffer(const String &name, ui32 width, ui32 height, bool depthBuffer) {
+OGLFrameBuffer *OGLRenderBackend::createFrameBuffer(const String &name, ui32 width, ui32 height, PixelFormatType pixelFormat, bool depthBuffer) {
     OGLFrameBuffer *oglFB = new OGLFrameBuffer(name.c_str(), width, height);
     glGenFramebuffers(1, &oglFB->m_bufferId);
     glBindFramebuffer(GL_FRAMEBUFFER, oglFB->m_bufferId);
@@ -1060,7 +1035,8 @@ OGLFrameBuffer *OGLRenderBackend::createFrameBuffer(const String &name, ui32 wid
     glBindTexture(GL_TEXTURE_2D, oglFB->m_renderedTexture);
 
     // Give an empty image to OpenGL ( the last "0" )
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    GLenum glPixelFormat = OGLEnum::getGLTextureFormat(pixelFormat);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, glPixelFormat, GL_UNSIGNED_BYTE, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
@@ -1084,7 +1060,7 @@ OGLFrameBuffer *OGLRenderBackend::createFrameBuffer(const String &name, ui32 wid
     }
 
     if (nullptr != oglFB) {
-        m_framebuffers.add(oglFB);
+        mFrameFuffers.add(oglFB);
     }
 
     return oglFB;
@@ -1105,9 +1081,9 @@ OGLFrameBuffer *OGLRenderBackend::getFrameBufferByName(const String &name) const
         return nullptr;
     }
 
-    for (ui32 i = 0; i < m_framebuffers.size(); ++i) {
-        if (0 == strncmp(name.c_str(), m_framebuffers[i]->m_name, name.size())) {
-            return m_framebuffers[i];
+    for (ui32 i = 0; i < mFrameFuffers.size(); ++i) {
+        if (0 == strncmp(name.c_str(), mFrameFuffers[i]->m_name, name.size())) {
+            return mFrameFuffers[i];
         }
     }
 
@@ -1119,11 +1095,11 @@ void OGLRenderBackend::releaseFrameBuffer(OGLFrameBuffer *oglFB) {
         return;
     }
 
-    for (ui32 i = 0; i < m_framebuffers.size(); ++i) {
-        if (m_framebuffers[i] == oglFB) {
+    for (ui32 i = 0; i < mFrameFuffers.size(); ++i) {
+        if (mFrameFuffers[i] == oglFB) {
             glDeleteFramebuffers(1, &oglFB->m_bufferId);
             glDeleteTextures(1, &oglFB->m_renderedTexture);
-            m_framebuffers.remove(i);
+            mFrameFuffers.remove(i);
         }
     }
 }
@@ -1134,7 +1110,7 @@ void OGLRenderBackend::releaseFrameBuffer(OGLFrameBuffer *oglFB) {
 #endif
 
 void OGLRenderBackend::render(size_t primpGrpIdx) {
-    OGLPrimGroup *grp(m_primitives[primpGrpIdx]);
+    OGLPrimGroup *grp(mPrimitives[primpGrpIdx]);
     if (nullptr != grp) {
         glDrawElements(grp->m_primitive,
                 (GLsizei)grp->m_numIndices,
@@ -1148,7 +1124,7 @@ void OGLRenderBackend::render(size_t primpGrpIdx) {
 #endif
 
 void OGLRenderBackend::render(size_t primpGrpIdx, size_t numInstances) {
-    OGLPrimGroup *grp(m_primitives[primpGrpIdx]);
+    OGLPrimGroup *grp(mPrimitives[primpGrpIdx]);
     if (nullptr != grp) {
         glDrawArraysInstanced(grp->m_primitive,
                 grp->m_startIndex,
@@ -1162,55 +1138,55 @@ void OGLRenderBackend::render2DPanels(const Rect2ui &panel) {
 }
 
 void OGLRenderBackend::renderFrame() {
-    OSRE_ASSERT(nullptr != m_renderCtx);
+    OSRE_ASSERT(nullptr != mRenderCtx);
 
-    m_renderCtx->update();
-    if (nullptr != m_fpsCounter) {
-        const ui32 fps = m_fpsCounter->getFPS();
+    mRenderCtx->update();
+    if (nullptr != mFpsCounter) {
+        const ui32 fps = mFpsCounter->getFPS();
         Profiling::PerformanceCounterRegistry::setCounter("fps", fps);
     }
 }
 
 void OGLRenderBackend::setFixedPipelineStates(const RenderStates &states) {
-    OSRE_ASSERT(nullptr != m_fpState);
+    OSRE_ASSERT(nullptr != mFpState);
 
-    if (m_fpState->m_applied) {
-        if (m_fpState->isEqual(states.m_clearState, states.m_depthState, states.m_transformState, states.m_polygonState,
+    if (mFpState->m_applied) {
+        if (mFpState->isEqual(states.m_clearState, states.m_depthState, states.m_transformState, states.m_polygonState,
                     states.m_cullState, states.m_blendState, states.m_samplerState, states.m_stencilState)) {
             return;
         }
     }
 
-    m_fpState->m_polygonState = states.m_polygonState;
-    m_fpState->m_blendState = states.m_blendState;
-    m_fpState->m_cullState = states.m_cullState;
-    m_fpState->m_samplerState = states.m_samplerState;
-    m_fpState->m_stencilState = states.m_stencilState;
+    mFpState->m_polygonState = states.m_polygonState;
+    mFpState->m_blendState = states.m_blendState;
+    mFpState->m_cullState = states.m_cullState;
+    mFpState->m_samplerState = states.m_samplerState;
+    mFpState->m_stencilState = states.m_stencilState;
 
-    if (m_fpState->m_cullState.m_cullMode == CullState::CullMode::Off) {
+    if (mFpState->m_cullState.m_cullMode == CullState::CullMode::Off) {
         glDisable(GL_CULL_FACE);
     } else {
         glEnable(GL_CULL_FACE);
-        glCullFace(OGLEnum::getOGLCullFace(m_fpState->m_cullState.m_cullFace));
-        glPolygonMode(OGLEnum::getOGLCullFace(m_fpState->m_cullState.m_cullFace),
-                OGLEnum::getOGLPolygonMode(m_fpState->m_polygonState.m_polyMode));
-        glFrontFace(OGLEnum::getOGLCullState(m_fpState->m_cullState.m_cullMode));
+        glCullFace(OGLEnum::getOGLCullFace(mFpState->m_cullState.m_cullFace));
+        glPolygonMode(OGLEnum::getOGLCullFace(mFpState->m_cullState.m_cullFace),
+                OGLEnum::getOGLPolygonMode(mFpState->m_polygonState.m_polyMode));
+        glFrontFace(OGLEnum::getOGLCullState(mFpState->m_cullState.m_cullMode));
     }
 
-    if (m_fpState->m_blendState.m_blendFunc == BlendState::BlendFunc::Off) {
+    if (mFpState->m_blendState.m_blendFunc == BlendState::BlendFunc::Off) {
         glDisable(GL_BLEND);
     } else {
         glEnable(GL_BLEND);
     }
-    m_fpState->m_applied = true;
+    mFpState->m_applied = true;
 }
 
 void OGLRenderBackend::setExtensions(const String &extensions) {
-    m_extensions = extensions;
+    mExtensions = extensions;
 }
 
 const String &OGLRenderBackend::getExtensions() const {
-    return m_extensions;
+    return mExtensions;
 }
 
 } // Namespace RenderBackend

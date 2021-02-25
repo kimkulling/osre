@@ -303,6 +303,7 @@ Texture::Texture() :
         m_textureName(""),
         m_loc(),
         m_targetType(TextureTargetType::Texture2D),
+        mPixelFormat(PixelFormatType::R8G8B8),
         m_size(0),
         m_data(nullptr),
         m_width(0),

@@ -74,7 +74,7 @@ enum class BufferAccessType {
     InvalidBufferAccessType ///< Enum for invalid enum.
 };
 
-enum class TextureFormatType {
+enum class PixelFormatType {
     R8G8B8,
     R8G8B8A8,
     InvaliTextureType
@@ -435,6 +435,7 @@ struct OSRE_EXPORT Texture {
     String m_textureName;
     IO::Uri m_loc;
     TextureTargetType m_targetType;
+    PixelFormatType mPixelFormat;
     ui32 m_size;
     uc8 *m_data;
     ui32 m_width;
