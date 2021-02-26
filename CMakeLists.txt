@@ -44,23 +44,20 @@ INCLUDE_DIRECTORIES( BEFORE
     include/
     /usr/include/SDL2/
     /usr/include/
-    3dparty/cppcore/include
-    3dparty/glew/include
-    3dparty/assimp/include
-    3dparty/glm/
-    3dparty/soil/src
+    contrib/assimp/include
+    contrib/glm/
+    contrib/soil/src
     ${CMAKE_HOME_DIRECTORY}/3dparty/glew/include
     ${CMAKE_HOME_DIRECTORY}/3dparty/cppcore/include
     ${CMAKE_HOME_DIRECTORY}/3dparty/cppcore/contrib/gtest-1.7.0/include
     ${CMAKE_HOME_DIRECTORY}/3dparty/cppcore/contrib/gtest-1.7.0/
-    ${CMAKE_HOME_DIRECTORY}/3dparty/assimp/contrib/irrXML
     ${CMAKE_HOME_DIRECTORY}/3dparty/zlib
     ${CMAKE_HOME_DIRECTORY}/3dparty/jsoncpp-1.8.4/include
-	${CMAKE_HOME_DIRECTORY}/3dparty/lua-5.3.5/src
+    ${CMAKE_HOME_DIRECTORY}/3dparty/lua-5.3.5/src
     "c:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include"
     ${CMAKE_HOME_DIRECTORY}/3dparty/soil/src
     ${CMAKE_HOME_DIRECTORY}/3dparty/sdl2/include
-	${CMAKE_HOME_DIRECTORY}/src/
+    ${CMAKE_HOME_DIRECTORY}/src/
 )
 
 if( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR "${CMAKE_GENERATOR}" MATCHES "16 2019")
@@ -134,15 +131,15 @@ IF ( OSRE_BUILD_SAMPLES )
     ADD_SUBDIRECTORY( samples )
 ENDIF(OSRE_BUILD_SAMPLES)
 
-ADD_SUBDIRECTORY( 3dparty/glew )
-ADD_SUBDIRECTORY( 3dparty/cppcore )
-ADD_SUBDIRECTORY( 3dparty/zlib )
-ADD_SUBDIRECTORY( 3dparty/unzip )
-ADD_SUBDIRECTORY( 3dparty/soil )
+ADD_SUBDIRECTORY( contrib/glew )
+ADD_SUBDIRECTORY( contrib/cppcore )
+ADD_SUBDIRECTORY( contrib/zlib )
+ADD_SUBDIRECTORY( contrib/unzip )
+ADD_SUBDIRECTORY( contrib/soil )
 set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "no assimp tools")
 set( ASSIMP_BUILD_ZLIB On CACHE BOOL "no assimp tools" )
-ADD_SUBDIRECTORY( 3dparty/assimp )
-ADD_SUBDIRECTORY( 3dparty/jsoncpp-1.8.4 )
+ADD_SUBDIRECTORY( contrib/assimp )
+ADD_SUBDIRECTORY( contrib/jsoncpp-1.8.4 )
 
 # Include the doc component
 IF( OSRE_BUILD_DOC )

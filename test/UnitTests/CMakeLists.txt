@@ -1,4 +1,4 @@
-SET ( GMOCK_PATH ../../3dparty/gmock-1.7.0/ )
+SET ( GMOCK_PATH ../../contrib/gmock-1.7.0/ )
 SET ( GTEST_PATH ${GMOCK_PATH}gtest/ )
 
 if (MSVC)
@@ -12,11 +12,11 @@ endif()
 
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
-    ../../3dparty/cppcore/include
-    ../../3dparty/assimp/include
-    ../../3dparty/glew/include
-    ../../3dparty/glm/
-    ../../3dparty/soil/src
+    ../../contrib/cppcore/include
+    ../../contrib/assimp/include
+    ../../contrib/glew/include
+    ../../contrib/glm/
+    ../../contrib/soil/src
     ${GMOCK_PATH}
     ${GTEST_PATH}
     ${GTEST_PATH}/include
