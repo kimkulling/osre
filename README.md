@@ -9,6 +9,7 @@ The core-features:
 - Model-import provided by Asset-Importer-Lib ( see https://github.com/assimp/assimp )
 - Bitmap-Font-Rendering
 - Simple scenegraph-module
+- Virtual file-system for reading zip-archives
 - Simple UI-module providing Panels Buttons and some more stuff ( under construction )
 - CMake base build environment
 
