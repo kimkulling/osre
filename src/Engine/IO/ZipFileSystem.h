@@ -23,8 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/IO/AbstractFileSystem.h>
-#include "unzip.h"
-#include <map>
+#include "contrib/unzip/unzip.h"
+
 #include <vector>
 
 namespace OSRE {
