@@ -57,17 +57,17 @@ using namespace ::OSRE::IO;
 
 static const c8 *Tag = "AppBase";
 
-KeyboardTransformController::KeyboardTransformController(AppBase *app, TransformMatrixBlock &tmb) :
+KeyboardInputController::KeyboardInputController(AppBase *app, TransformMatrixBlock &tmb) :
         mTransform(tmb),
         mApp( app ) {
     // empty
 }
     
-KeyboardTransformController::~KeyboardTransformController() {
+KeyboardInputController::~KeyboardInputController() {
     mApp = nullptr;
 }
 
-void KeyboardTransformController::update(RenderBackendService *rbSrv) {
+void KeyboardInputController::update(RenderBackendService *rbSrv) {
     glm::mat4 rot(1.0);
     if (mApp->isKeyPressed(Platform::KEY_A)) {
         mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
@@ -350,10 +350,10 @@ RenderBackend::RenderBackendService *AppBase::getRenderBackendService() const {
     return m_rbService;
 }
 
-KeyboardTransformController *AppBase::getDefaultController(DefaultControllerType type, TransformMatrixBlock &tmb) {
+InputControllerBase *AppBase::getDefaultController(DefaultControllerType type, TransformMatrixBlock &tmb) {
     switch (type) {
         case OSRE::App::DefaultControllerType::KeyboardCtrl:
-            return new KeyboardTransformController(this, tmb);
+            return new KeyboardInputController(this, tmb);
         default:
             break;
     }

@@ -47,7 +47,7 @@ class HelloWorldApp : public App::AppBase {
     /// The entity to render
     Entity *mEntity;
     /// 
-    App::KeyboardTransformController *mKeyboardTransCtrl;
+    App::InputControllerBase *mKeyboardTransCtrl;
 
 public:
     /// The class constructor with the incoming arguments from the command line.
