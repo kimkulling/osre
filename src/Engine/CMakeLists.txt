@@ -6,12 +6,12 @@ add_definitions( -DOSRE_BUILD_EXPORT )
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
 	${HEADER_PATH}
-    ${PROJECT_SOURCE_DIR}/3dparty/cppcore/include
-    ${PROJECT_SOURCE_DIR}/3dparty/glew/include
-    ${PROJECT_SOURCE_DIR}/3dparty/glm/
-    ${PROJECT_SOURCE_DIR}/3dparty/unzip/
-    ${PROJECT_SOURCE_DIR}/3dparty/zlib/
-    ${PROJECT_SOURCE_DIR}/3dparty/assimp/include
+    ${PROJECT_SOURCE_DIR}/contrib/cppcore/include
+    ${PROJECT_SOURCE_DIR}/contrib/glew/include
+    ${PROJECT_SOURCE_DIR}/contrib/glm/
+    ${PROJECT_SOURCE_DIR}/contrib/unzip/
+    ${PROJECT_SOURCE_DIR}/contrib/zlib/
+    ${PROJECT_SOURCE_DIR}/contrib/assimp/include
 )
 
 # For Vulkan support
