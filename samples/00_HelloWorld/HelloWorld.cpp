@@ -46,13 +46,16 @@ class HelloWorldApp : public App::AppBase {
     TransformMatrixBlock m_transformMatrix;
     /// The entity to render
     Entity *mEntity;
+    /// 
+    App::KeyboardTransformController *mKeyboardTransCtrl;
 
 public:
     /// The class constructor with the incoming arguments from the command line.
     HelloWorldApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv),
             m_transformMatrix(),
-            mEntity(nullptr) {
+            mEntity(nullptr),
+            mKeyboardTransCtrl(nullptr) {
         // empty
     }
 
@@ -67,7 +70,7 @@ protected:
             return false;
         }
 
-        AppBase::setWindowsTitle("Hello-World sample! Rotate with wasd, scroll with qe");
+        AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
         World *world = getActiveWorld();
         mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
         Scene::Camera *camera = world->addCamera("camera_1");
@@ -82,36 +85,14 @@ protected:
             world->addEntity(mEntity);            
             camera->observeBoundingBox(mEntity->getAABB());
         }
+        mKeyboardTransCtrl = AppBase::getDefaultController(DefaultControllerType::KeyboardCtrl, m_transformMatrix);
 
         return true;
     }
 
     void onUpdate() override {
-        glm::mat4 rot(1.0);
-        if (AppBase::isKeyPressed(Platform::KEY_A)) {
-            m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
-        }
-        if (AppBase::isKeyPressed(Platform::KEY_D)) {
-            m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
-        }
-
-        if (AppBase::isKeyPressed(Platform::KEY_W)) {
-            m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
-        }
-
-        if (AppBase::isKeyPressed(Platform::KEY_S)) {
-            m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
-        }
-
-        if (AppBase::isKeyPressed(Platform::KEY_Q)) {
-            m_transformMatrix.m_model *= glm::scale(rot, glm::vec3(1.01f, 1.01, 1.01f));
-        }
-
-        if (AppBase::isKeyPressed(Platform::KEY_E)) {
-            m_transformMatrix.m_model *= glm::scale(rot, glm::vec3(0.99f, 0.99f, 0.99f));
-        }
-
         RenderBackendService *rbSrv = getRenderBackendService();
+        mKeyboardTransCtrl->update(rbSrv);
 
         rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");

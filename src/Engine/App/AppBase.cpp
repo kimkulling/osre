@@ -57,7 +57,44 @@ using namespace ::OSRE::IO;
 
 static const c8 *Tag = "AppBase";
 
-class KeyboardEventListener : public Platform::OSEventListener {
+KeyboardTransformController::KeyboardTransformController(AppBase *app, TransformMatrixBlock &tmb) :
+        mTransform(tmb),
+        mApp( app ) {
+    // empty
+}
+    
+KeyboardTransformController::~KeyboardTransformController() {
+    mApp = nullptr;
+}
+
+void KeyboardTransformController::update(RenderBackendService *rbSrv) {
+    glm::mat4 rot(1.0);
+    if (mApp->isKeyPressed(Platform::KEY_A)) {
+        mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
+    }
+        
+    if (mApp->isKeyPressed(Platform::KEY_D)) {
+        mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
+    }
+
+    if (mApp->isKeyPressed(Platform::KEY_W)) {
+        mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
+    }
+
+    if (mApp->isKeyPressed(Platform::KEY_S)) {
+        mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
+    }
+
+    if (mApp->isKeyPressed(Platform::KEY_Q)) {
+        mTransform.m_model *= glm::scale(rot, glm::vec3(1.01f, 1.01, 1.01f));
+    }
+
+    if (mApp->isKeyPressed(Platform::KEY_E)) {
+        mTransform.m_model *= glm::scale(rot, glm::vec3(0.99f, 0.99f, 0.99f));
+    }
+}
+
+class KeyboardEventListener : public OSEventListener {
 public:
     KeyboardEventListener() :
             OSEventListener("App/KeyboardEventListener"),
@@ -78,7 +115,7 @@ public:
     }
 
     void onOSEvent(const Event &osEvent, const EventData *data) override {
-        KeyboardButtonEventData *keyData = (KeyboardButtonEventData *)data;
+        auto keyData = (KeyboardButtonEventData *)data;
         if (osEvent == KeyboardButtonDownEvent) {
             mKeymap[keyData->m_key] = 1;
         } else {
@@ -113,7 +150,6 @@ private:
     Common::TObjPtr<UI::Canvas> m_uiCanvas;
     char mKeymap[KEY_LAST];
 };
-
 
 AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
         m_state(State::Uninited),
@@ -185,7 +221,7 @@ void AppBase::resize(i32 x, i32 y, i32 w, i32 h) {
         return;
     }
 
-    Platform::AbstractWindow *rootWindow = m_platformInterface->getRootWindow();
+    AbstractWindow *rootWindow = m_platformInterface->getRootWindow();
     if (nullptr == rootWindow) {
         return;
     }
@@ -287,7 +323,7 @@ UI::Canvas *AppBase::createScreen(const String &name) {
         return nullptr;
     }
 
-    UI::Canvas *newScreen = (Canvas *)UiItemFactory::getInstance()->create(WidgetType::Canvas, name, nullptr);
+    auto newScreen = (Canvas *)UiItemFactory::getInstance()->create(WidgetType::Canvas, name, nullptr);
     setUIScreen(newScreen);
 
     return newScreen;
@@ -312,6 +348,16 @@ Platform::AbstractTimer *AppBase::getActiveTimer() const {
 
 RenderBackend::RenderBackendService *AppBase::getRenderBackendService() const {
     return m_rbService;
+}
+
+KeyboardTransformController *AppBase::getDefaultController(DefaultControllerType type, TransformMatrixBlock &tmb) {
+    switch (type) {
+        case OSRE::App::DefaultControllerType::KeyboardCtrl:
+            return new KeyboardTransformController(this, tmb);
+        default:
+            break;
+    }
+    return nullptr;
 }
 
 Platform::AbstractWindow *AppBase::getRootWindow() const {
@@ -368,7 +414,7 @@ bool AppBase::onCreate() {
     }
 
     // create the render back-end
-    m_rbService = new RenderBackend::RenderBackendService();
+    m_rbService = new RenderBackendService();
     m_rbService->setSettings(m_settings, false);
     if (!m_rbService->open()) {
         m_rbService->release();
@@ -382,7 +428,7 @@ bool AppBase::onCreate() {
     m_platformInterface->getPlatformEventHandler()->setRenderBackendService(m_rbService);
 
     // enable render-back-end
-    RenderBackend::CreateRendererEventData *data = new RenderBackend::CreateRendererEventData(m_platformInterface->getRootWindow());
+    RenderBackend::CreateRendererEventData *data = new CreateRendererEventData(m_platformInterface->getRootWindow());
     data->m_pipeline = createDefaultPipeline();
     m_rbService->sendEvent(&RenderBackend::OnCreateRendererEvent, data);
 

@@ -49,9 +49,34 @@ namespace UI {
     class UiRenderer;
 }
 
+namespace RenderBackend {
+    struct TransformMatrixBlock;
+}
+
 namespace App {
 
 class World;
+class AppBase;
+
+
+///	@brief  This enum describes the default controller type.
+enum class DefaultControllerType {
+    KeyboardCtrl    ///< Use the keyboard default controller.
+};
+
+//-------------------------------------------------------------------------------------------------
+///	@brief  This class implements the default keyboard controlling.
+//-------------------------------------------------------------------------------------------------
+class OSRE_EXPORT KeyboardTransformController {
+public:
+    KeyboardTransformController(AppBase *app, RenderBackend::TransformMatrixBlock &tmb);
+    ~KeyboardTransformController();
+    void update(RenderBackend::RenderBackendService *rbSrv);
+
+private:
+    RenderBackend::TransformMatrixBlock &mTransform;
+    AppBase *mApp;
+};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -171,6 +196,8 @@ public:
     bool isKeyPressed(Platform::Key key) const;
 
     void getResolution(ui32 &w, ui32 &h);
+
+    KeyboardTransformController *getDefaultController(DefaultControllerType type, RenderBackend::TransformMatrixBlock &tmb);
 
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.

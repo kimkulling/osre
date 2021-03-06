@@ -26,7 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Debugging/osre_debugging.h>
 
-#include "unzip.h"
 #include <algorithm>
 #include <cassert>
 

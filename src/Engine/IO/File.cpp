@@ -20,44 +20,35 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/IO/Stream.h>
-
-#include "contrib/unzip/unzip.h"
+#include <osre/IO/File.h>
+#include <cstdio>
 
 namespace OSRE {
 namespace IO {
 
-//--------------------------------------------------------------------------------------------------------------------
-///	@class		::OSRE::IO::ZipFileStream
-///	@ingroup	Infrastructure
-///
-///	@brief	File instance for files stored in a zip archive. 
-///
-/// If you requests access to data in a zip archive the zip file-system will return you a pointer to a zip file. 
-//--------------------------------------------------------------------------------------------------------------------
-class ZipFileStream : public Stream {
-public:
-	///	The class constructor.
-	ZipFileStream( const Uri &rURI, unzFile zipFile );
-	///	The class destructor.
-	~ZipFileStream() override;
-	///	Read operations are supported.
-	bool canRead() const override;
-	///	Reads data from a file in a zip archive.
-	ui32 read( void *pBuffer, ui32 size ) override;
-	///	Returns the file size for a file stored in a zip archive.
-	ui32 getSize() const override;
-	///	Returns true, if the file is currently open.
-	bool isOpen() const override;
+File::File() {
+    // empty
+}
 
-private:
-	unzFile m_zipFile;
-	bool m_bDirty;
-};
+File::~File() {
+    // empty
+}
 
-//--------------------------------------------------------------------------------------------------------------------
+bool File::exists(const String &filename) {
+    bool exists = false;
+    FILE *pFileStream = nullptr;
+#ifdef OSRE_WINDOWS
+    errno_t err = ::fopen_s(&pFileStream, filename.c_str(), "r");
+#else
+    pFileStream = ::fopen(filename.getAbsPath().c_str(), "r");
+#endif
 
-} // Namespace IO
-} // Namespace OSRE
+    if (pFileStream) {
+        exists = true;
+        ::fclose(pFileStream);
+    }
+    return exists;
+}
+
+} // namespace IO
+} // namespace OSRE

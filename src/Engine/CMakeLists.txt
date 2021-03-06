@@ -128,6 +128,7 @@ SET( doc_inc
 #==============================================================================
 SET( io_src
     IO/Directory.cpp
+    IO/File.cpp
     IO/FileStream.cpp
     IO/FileStream.h
     IO/IOService.cpp
@@ -145,6 +146,7 @@ SET( io_src
 SET( io_inc
     ${HEADER_PATH}/IO/IOCommon.h
     ${HEADER_PATH}/IO/Directory.h
+    ${HEADER_PATH}/IO/File.h
     ${HEADER_PATH}/IO/Stream.h
     ${HEADER_PATH}/IO/AbstractFileSystem.h
     ${HEADER_PATH}/IO/IOService.h

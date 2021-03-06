@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "LocaleFileSystem.h"
 #include "FileStream.h"
-
+#include <osre/IO/File.h>
 #include <osre/Common/Logger.h>
 #include <cassert>
 
@@ -103,23 +103,7 @@ bool LocaleFileSystem::fileExist( const Uri &filename ) {
         return false;
     }
 
-    bool exists( false );
-    FILE *pFileStream( nullptr );
-#ifdef OSRE_WINDOWS
-    errno_t err = ::fopen_s( &pFileStream, filename.getAbsPath().c_str(), "r" );
-    if ( 0 != err ) {
-        osre_debug( Tag, "Error while opening the file." );
-    }
-#else
-    pFileStream = ::fopen(  filename.getAbsPath().c_str(), "r" );
-#endif
-
-    if ( pFileStream ) {
-        exists = true;
-        ::fclose( pFileStream );
-    }
-
-    return exists;
+    return File::exists(filename.getAbsPath());
 }
 
 Stream *LocaleFileSystem::find( const Uri &file, Stream::AccessMode mode,  TArray<String> *searchPaths ) {

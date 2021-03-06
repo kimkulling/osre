@@ -60,7 +60,7 @@ class ModelLoadingApp : public App::AppBase {
 public:
     ModelLoadingApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv, "api", "The render API"),
-            m_assetFolder(""),
+            m_assetFolder(),
             m_camera(nullptr),
             m_angle(0.0f),
             m_model(),

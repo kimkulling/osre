@@ -60,7 +60,11 @@ public:
     /// @brief  Will return The current working directory.
     /// @return The current working directory.
     static String getCurrentDirectory();
+    
+    /// 
     static bool createDirectory( const c8 *name );
+
+    ///
     static bool getFileList(const String &absPath, FileList &files);
 };
 

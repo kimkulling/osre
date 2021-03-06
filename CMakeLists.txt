@@ -47,28 +47,28 @@ INCLUDE_DIRECTORIES( BEFORE
     contrib/assimp/include
     contrib/glm/
     contrib/soil/src
-    ${CMAKE_HOME_DIRECTORY}/3dparty/glew/include
-    ${CMAKE_HOME_DIRECTORY}/3dparty/cppcore/include
-    ${CMAKE_HOME_DIRECTORY}/3dparty/cppcore/contrib/gtest-1.7.0/include
-    ${CMAKE_HOME_DIRECTORY}/3dparty/cppcore/contrib/gtest-1.7.0/
-    ${CMAKE_HOME_DIRECTORY}/3dparty/zlib
-    ${CMAKE_HOME_DIRECTORY}/3dparty/jsoncpp-1.8.4/include
-    ${CMAKE_HOME_DIRECTORY}/3dparty/lua-5.3.5/src
+    ${CMAKE_HOME_DIRECTORY}/contrib/glew/include
+    ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/include
+    ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/include
+    ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/
+    ${CMAKE_HOME_DIRECTORY}/contrib/zlib
+    ${CMAKE_HOME_DIRECTORY}/contrib/jsoncpp-1.8.4/include
+    ${CMAKE_HOME_DIRECTORY}/contrib/lua-5.3.5/src
     "c:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include"
-    ${CMAKE_HOME_DIRECTORY}/3dparty/soil/src
-    ${CMAKE_HOME_DIRECTORY}/3dparty/sdl2/include
+    ${CMAKE_HOME_DIRECTORY}/contrib/soil/src
+    ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/include
     ${CMAKE_HOME_DIRECTORY}/src/
 )
 
 if( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR "${CMAKE_GENERATOR}" MATCHES "16 2019")
 	link_directories(
-        ${CMAKE_HOME_DIRECTORY}/3dparty/sdl2/lib/x64
+        ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x64
 		${CMAKE_HOME_DIRECTORY}/lib
 		${CMAKE_HOME_DIRECTORY}/bin
 	)
 else()
 	link_directories(
-        ${CMAKE_HOME_DIRECTORY}/3dparty/sdl2/lib/x86
+        ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x86
 		${CMAKE_HOME_DIRECTORY}/lib
 		${CMAKE_HOME_DIRECTORY}/bin
 	)

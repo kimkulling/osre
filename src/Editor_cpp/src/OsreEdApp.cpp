@@ -1,11 +1,35 @@
+/*-----------------------------------------------------------------------------------------------
+The MIT License (MIT)
+
+Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-----------------------------------------------------------------------------------------------*/
 #include "OsreEdApp.h"
 #include "Modules/InspectorModule/InspectorModule.h"
 #include "Modules/ModuleBase.h"
 #include <osre/App/AssimpWrapper.h>
+#include <osre/App/AssetRegistry.h>
 #include <osre/App/Entity.h>
 #include <osre/Common/TCommand.h>
 #include <osre/IO/Directory.h>
 #include <osre/IO/Uri.h>
+#include <osre/IO/File.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/PlatformOperations.h>
 #include <osre/RenderBackend/RenderBackendService.h>
@@ -18,6 +42,7 @@
 #ifdef OSRE_WINDOWS
 #  include "Engine/Platform/win32/Win32EventQueue.h"
 #  include "Engine/Platform/win32/Win32Window.h"
+#  include <CommCtrl.h>
 #endif
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -53,17 +78,10 @@ static const ui32 VerticalMargin = 2;
 
 #define ID_STATIC 8
 
+#define ID_TREEVIEW 100
+
 HWND hStatic = NULL;
 
-
-/*void AddMenu(HWND hwnd, HMENU hMenubar, wchar_t *title, MenuEntry *me, size_t numItems) {
-    HMENU hMenu = CreateMenu();
-    AppendMenuW(hMenu, MF_STRING, IDM_INFO_VERSION, L"&Version");
-    AppendMenuW(hMenubar, MF_POPUP, (UINT_PTR)hMenu, L"&Info");
-
-    SetMenu(hwnd, hMenubar);
-}
-*/
 #endif // OSRE_WINDOWS
 
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
@@ -112,10 +130,13 @@ bool OsreEdApp::onCreate() {
         w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
 
         w->endMenu();
+        Rect2ui rect;
+        w->getWindowsRect(rect);
+        createSceneTreeview(rect.getWidth() / 2, rect.getHeight());
     }
 
     AppBase::getRenderBackendService()->enableAutoResizing(false);
-
+    
     return true;
 }
 
@@ -217,6 +238,66 @@ ModuleBase *OsreEdApp::findModule( const String &name ) const {
 
 bool OsreEdApp::unregisterModule( ModuleBase *mod ) {
     return true;
+}
+
+BOOL InitTreeViewImageLists(HWND tvh, Win32Window *w) {
+    HIMAGELIST himl; // handle to image list
+    HBITMAP hbmp; // handle to bitmap
+
+    String path = App::AssetRegistry::getPath("assets");
+
+    // Create the image list.
+    if ((himl = ImageList_Create(16, 16, FALSE, 2, 0)) == NULL)
+        return FALSE;
+
+    // Add the open file, closed file, and document bitmaps.
+    auto hInstance = w->getModuleHandle();
+    String icon;
+    icon = path + String("/Icons/Editor/node.bmp");
+    
+    if (IO::File::exists(icon)) {
+        hbmp = LoadBitmap(hInstance, icon.c_str());
+        int nodeId = ImageList_Add(himl, hbmp, (HBITMAP)NULL);
+        DeleteObject(hbmp);
+    }
+    icon = path + String("/Icons/Editor/attribute.bmp");
+    if (IO::File::exists(icon)) {
+        hbmp = LoadBitmap(hInstance, icon.c_str());
+        int attribute = ImageList_Add(himl, hbmp, (HBITMAP)NULL);
+        DeleteObject(hbmp);
+    }
+
+    // Fail if not all of the images were added.
+    if (ImageList_GetImageCount(himl) < 3)
+        return FALSE;
+
+    // Associate the image list with the tree-view control.
+    TreeView_SetImageList(tvh, himl, TVSIL_NORMAL);
+
+    return TRUE;
+} 
+
+void OsreEdApp::createSceneTreeview( ui32 x, ui32 y ) {
+    InitCommonControls();
+    RECT rcClient; // dimensions of client area
+
+    auto *w = (Win32Window *)getRootWindow();
+    HWND hParent = w->getHWnd();
+    
+    GetClientRect(hParent, &rcClient);
+    HWND hTree = CreateWindowEx(0,
+            WC_TREEVIEW,
+            TEXT("Tree View"),
+            WS_VISIBLE | WS_CHILD | WS_BORDER | TVS_HASLINES,
+            x,
+            y,
+            rcClient.right,
+            rcClient.bottom,
+            hParent,
+            (HMENU)ID_TREEVIEW,
+            w->getModuleHandle(),
+            NULL);
+    InitTreeViewImageLists(hTree, w);
 }
 
 void OsreEdApp::onUpdate() {
