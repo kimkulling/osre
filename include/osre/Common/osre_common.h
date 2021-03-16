@@ -779,6 +779,16 @@ inline const float4 float4::operator/=(const float4 &v) {
     return *this;
 }
 
+template<class T>
+struct TResolution {
+    T Width, Height;
+    
+    TResolution( T w, T h ) :
+            Width( w ), Height( h ) {
+        // empty
+    }
+};
+
 ///	@brief  Shortcut to avoid copy operations.
 #define OSRE_NON_COPYABLE(NAME)  \
 private:                         \

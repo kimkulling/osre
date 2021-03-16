@@ -66,10 +66,9 @@ public:
     ///	@brief	Clears the TaskJob-instance.
     void clear();
 
-private:
-    TaskJob();
-    TaskJob( const TaskJob & );
-    TaskJob &operator = ( const TaskJob & );
+    TaskJob() = delete;
+    TaskJob( const TaskJob & ) = delete;
+    TaskJob &operator = ( const TaskJob & ) = delete;
 
 private:
     const Common::Event *m_event;

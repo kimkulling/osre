@@ -36,8 +36,7 @@ static const c8 *Tag = "Camera";
 Camera::Camera(const String &name, Common::Ids &ids, Node *parent) :
         Node(name, ids, parent),
         m_fov(60.0f),
-        m_w(1.0f),
-        m_h(1.0f),
+        mResolution(1.0f, 1.0f),
         m_near(0.001f),
         m_far(1000.0f),
         m_aspectRatio(1.0),
@@ -56,8 +55,8 @@ Camera::~Camera() {
 
 void Camera::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
     m_fov = fov;
-    m_w = w;
-    m_h = h;
+    mResolution.Width = w;
+    mResolution.Height = h;
     m_near = zNear;
     m_far = zFar;
     m_aspectRatio = 1.0f;
@@ -105,8 +104,8 @@ void Camera::setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farP
 }
 
 void Camera::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane, f32 farPlane) {
-    m_w = right - left;
-    m_h = bottom - top;
+    mResolution.Width = right - left;
+    mResolution.Height = bottom - top;
 
     m_near = nearPlane;
     m_far = farPlane;

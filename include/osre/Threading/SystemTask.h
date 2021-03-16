@@ -114,7 +114,7 @@ private:
     WorkingMode m_workingMode;
     BufferMode m_buffermode;
     SystemTaskThread *m_taskThread;
-    typedef Threading::TAsyncQueue<const TaskJob*> TaskQueue;
+    using TaskQueue = Threading::TAsyncQueue<const TaskJob*>;
     TaskQueue *m_asyncQueue;
 };
 

@@ -100,7 +100,7 @@ protected:
 
 private:
     f32 m_fov;
-    f32 m_w, m_h;
+    TResolution<f32> mResolution;
     f32 m_near, m_far;
     f32 m_aspectRatio;
     Node *m_observedNode;
