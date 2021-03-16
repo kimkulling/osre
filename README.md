@@ -17,7 +17,7 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 
 # Supported platforms:
 - Windows ( [![Build status](https://ci.appveyor.com/api/projects/status/q2ivokgqcit9k5w1/branch/master?svg=true)](https://ci.appveyor.com/project/kimkulling/osre/branch/master) ): 
-- Linux ( [![Build Status](https://travis-ci.org/kimkulling/osre.png)](https://travis-ci.org/kimkulling/osre) ): 
+- Linux ( [![Build Status](https://travis-ci.com/kimkulling/osre.svg?branch=master)](https://travis-ci.com/kimkulling/osre) ): 
 # Supported compilers
 - Windows:
   - Visual Studio 2017
