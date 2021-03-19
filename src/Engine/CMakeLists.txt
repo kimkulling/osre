@@ -371,42 +371,10 @@ SET( ui_common_src
     UI/Common/Widget.cpp
 )
 
-SET( ui_src
-    UI/UICommon.cpp
-    UI/Image.cpp
-    UI/FocusControl.cpp
-    UI/UiRenderer.cpp
-    UI/UIRenderUtils.cpp
-    UI/UIRenderUtils.h
-    UI/FontBase.cpp
-    UI/FontRenderer.cpp
-    UI/FontRenderer.h
-    UI/ButtonBase.cpp
-    UI/Panel.cpp
-    UI/Canvas.cpp
-    UI/TextBase.cpp
-    UI/UiItemFactory.cpp
-    UI/StyleProvider.cpp
-)
-SET( ui_inc
-    ${HEADER_PATH}/UI/UICommon.h
-    ${HEADER_PATH}/UI/StyleProvider.h
-    ${HEADER_PATH}/UI/FocusControl.h
-    ${HEADER_PATH}/UI/FontBase.h
-    ${HEADER_PATH}/UI/Layouter.h
-    ${HEADER_PATH}/UI/Image.h
-    ${HEADER_PATH}/UI/Widget.h
-    ${HEADER_PATH}/UI/ButtonBase.h
-    ${HEADER_PATH}/UI/Panel.h
-    ${HEADER_PATH}/UI/Canvas.h
-    ${HEADER_PATH}/UI/TextBase.h
-    ${HEADER_PATH}/UI/UiRenderer.h
-    ${HEADER_PATH}/UI/UiItemFactory.h
-)
-SET( ui_winmanager_src
-    UI/WinManager/WMButton.h
-    UI/WinManager/WMDialog.h
-    UI/WinManager/WMDialog.cpp
+SET( winmanager_src
+    WinManager/WMButton.h
+    WinManager/WMDialog.h
+    WinManager/WMDialog.cpp
 )
 
 #==============================================================================
@@ -512,7 +480,6 @@ ADD_LIBRARY( osre SHARED
 	${scripting_mono_inc}
     ${threading_inc}
     ${renderbackend_inc}
-    ${ui_inc}
     ${math_inc}
 
     ${app_src}
@@ -537,9 +504,7 @@ ADD_LIBRARY( osre SHARED
     ${scene_src}
     ${threading_src}
         ${threading_impl_src}
-    ${ui_src}
-    ${ui_common_src}
-    ${ui_winmanager_src}
+    ${winmanager_src}
 )
 
 target_link_libraries ( osre cppcore zlib Unzip glew soil jsoncpp_lib_static ${platform_libs} assimp )

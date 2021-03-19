@@ -77,12 +77,6 @@ SET( unittest_rb_oglrenderer_src
     src/RenderBackend/OGLRenderer/GLEnumTest.cpp
 )
 
-SET( unittest_ui_src
-    src/UI/WidgetTest.cpp
-    src/UI/ButtonBaseTest.cpp
-    src/UI/StyleProviderTest.cpp
-)
-
 SET ( unittest_profiling_src
     src/Profiling/PerformanceCountersTest.cpp
 )
@@ -118,7 +112,6 @@ SOURCE_GROUP( src\\Platform                   FILES ${unittest_platform_src})
 SOURCE_GROUP( src\\Profiling                  FILES ${unittest_profiling_src})
 SOURCE_GROUP( src\\RenderBackend              FILES ${unittest_rb_src} )
 SOURCE_GROUP( src\\RenderBackend\\OGLRenderer FILES ${unittest_rb_oglrenderer_src} )
-SOURCE_GROUP( src\\UI                         FILES ${unittest_ui_src} )
 SOURCE_GROUP( src\\Scene                      FILES ${unittest_scene_src} )
 SOURCE_GROUP( src\\GTest                      FILES ${gtest_src} )
 
