@@ -2,9 +2,6 @@
 #include "Modules/IModuleView.h"
 #include "OsreEdApp.h"
 
-#include <osre/UI/Canvas.h>
-#include <osre/UI/Panel.h>
-#include <osre/UI/StyleProvider.h>
 #include <osre/Platform/AbstractWindow.h>
 
 namespace OSRE {

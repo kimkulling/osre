@@ -44,11 +44,6 @@ namespace Properties {
     class Settings;
 }
 
-namespace UI {
-    class Canvas;
-    class UiRenderer;
-}
-
 namespace RenderBackend {
     struct TransformMatrixBlock;
 }
@@ -166,16 +161,7 @@ public:
     /// @brief  Will return true, if a shutdown is requested by the user.
     /// @return true, if a shutdown is requested.
     virtual bool shutdownRequested() const;
-    
-    /// @brief  Will create a new UI-Screen.
-    /// @param  name        [in] The name for the screen.
-    /// @return The new created ui-screen.
-    virtual UI::Canvas *createScreen( const String &name );
-    
-    /// @brief  Will set a ui-screen to active, if any screen was active before it will be deactivated.
-    /// @param  uiScreen    [in] The new ui-screen to activate. 
-    virtual void setUIScreen( UI::Canvas *uiScreen );
-
+        
     /// @brief  Will return the active time or nullptr, if none is active.
     /// @return Pointer showing to the active timer.
     virtual Platform::AbstractTimer *getActiveTimer() const;
@@ -240,8 +226,6 @@ private:
     RenderBackend::RenderBackendService *m_rbService;
     CPPCore::TArray<World *> m_worlds;
     World *m_activeWorld;
-    UI::Canvas *m_uiScreen;
-    UI::UiRenderer *m_uiRenderer;
     MouseEventListener *m_mouseEvListener;
     KeyboardEventListener *m_keyboardEvListener;
     Common::Ids *m_ids;

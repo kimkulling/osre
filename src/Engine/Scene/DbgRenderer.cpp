@@ -29,9 +29,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/DbgRenderer.h>
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/Scene/MeshBuilder.h>
-#include <osre/UI/Widget.h>
-
-#include "src/Engine/UI/FontRenderer.h"
 
 namespace OSRE {
 namespace Scene {
@@ -79,15 +76,10 @@ void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui32 id, const String &text) {
         return;
     }
 
-    if (nullptr == mFontRenderer) {
-        mFontRenderer = new UI::FontRenderer();
-    }
     m_rbSrv->beginPass(PipelinePass::getPassNameById(DbgPassId));
     m_rbSrv->beginRenderBatch("dbgFontBatch");
 
-    mFontRenderer->AddRenderText(x, y, id, text, m_rbSrv);
-
-        m_rbSrv->endRenderBatch();
+    m_rbSrv->endRenderBatch();
     m_rbSrv->endPass();
 }
 

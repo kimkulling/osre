@@ -38,10 +38,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/Scene/Camera.h>
-#include <osre/UI/Canvas.h>
-#include <osre/UI/FocusControl.h>
-#include <osre/UI/UiItemFactory.h>
-#include <osre/UI/UiRenderer.h>
 
 #include "src/Engine/Platform/PlatformPluginFactory.h"
 #include "src/Engine/App/MouseEventListener.h"
@@ -97,21 +93,12 @@ void KeyboardInputController::update(RenderBackendService *rbSrv) {
 class KeyboardEventListener : public OSEventListener {
 public:
     KeyboardEventListener() :
-            OSEventListener("App/KeyboardEventListener"),
-            m_uiCanvas() {
+            OSEventListener("App/KeyboardEventListener") {
         clearKeyMap();
     }
 
     ~KeyboardEventListener() override {
         // empty
-    }
-
-    void setCanvas(UI::Canvas *screen) {
-        m_uiCanvas = screen;
-    }
-
-    Canvas *getCanvas() const {
-        return m_uiCanvas.getPtr();
     }
 
     void onOSEvent(const Event &osEvent, const EventData *data) override {
@@ -120,21 +107,6 @@ public:
             mKeymap[keyData->m_key] = 1;
         } else {
             mKeymap[keyData->m_key] = 0;
-        }
-
-        if (!m_uiCanvas.isValid()) {
-            return;
-        }
-
-        Widget *widget = m_uiCanvas->getFocusControl()->getInputFocusWidget();
-        if (nullptr == widget) {
-            return;
-        }
-
-        if (osEvent == KeyboardButtonDownEvent) {
-            widget->keyPressed(keyData->m_key);
-        } else if (osEvent == KeyboardButtonUpEvent) {
-            widget->keyReleased(keyData->m_key);
         }
     }
 
@@ -147,7 +119,6 @@ public:
     }
 
 private:
-    Common::TObjPtr<UI::Canvas> m_uiCanvas;
     char mKeymap[KEY_LAST];
 };
 
@@ -160,8 +131,6 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         m_timer(nullptr),
         m_rbService(nullptr),
         m_activeWorld(nullptr),
-        m_uiScreen(nullptr),
-        m_uiRenderer(nullptr),
         m_mouseEvListener(nullptr),
         m_keyboardEvListener(nullptr),
         m_ids(nullptr),
@@ -230,7 +199,6 @@ void AppBase::resize(i32 x, i32 y, i32 w, i32 h) {
 }
 
 void AppBase::requestNextFrame() {
-    OSRE_ASSERT(nullptr != m_uiRenderer);
     OSRE_ASSERT(nullptr != m_rbService);
 
     if (nullptr == m_activeWorld) {
@@ -238,10 +206,6 @@ void AppBase::requestNextFrame() {
     }
 
     m_activeWorld->draw(m_rbService);
-    if (nullptr != m_uiScreen) {
-        m_uiRenderer->layout(m_uiScreen);
-        m_uiRenderer->render(m_uiScreen, m_rbService);
-    }
     m_rbService->update();
 }
 
@@ -316,30 +280,6 @@ void AppBase::requestShutdown() {
 
 bool AppBase::shutdownRequested() const {
     return m_shutdownRequested;
-}
-
-UI::Canvas *AppBase::createScreen(const String &name) {
-    if (name.empty()) {
-        return nullptr;
-    }
-
-    auto newScreen = (Canvas *)UiItemFactory::getInstance()->create(WidgetType::Canvas, name, nullptr);
-    setUIScreen(newScreen);
-
-    return newScreen;
-}
-
-void AppBase::setUIScreen(UI::Canvas *uiScreen) {
-    if (m_uiScreen != uiScreen) {
-        m_uiScreen = uiScreen;
-        AbstractWindow *surface = m_platformInterface->getRootWindow();
-        if (nullptr != surface) {
-            m_uiScreen->setSurface(surface);
-            m_mouseEvListener->setCanvas(m_uiScreen);
-            m_keyboardEvListener->setCanvas(m_uiScreen);
-            m_rbService->setUiScreen(uiScreen);
-        }
-    }
 }
 
 Platform::AbstractTimer *AppBase::getActiveTimer() const {
@@ -468,8 +408,6 @@ bool AppBase::onCreate() {
     App::AssetRegistry::registerAssetPath("assets", "../assets");
 #endif
 
-    m_uiRenderer = new UI::UiRenderer;
-
     m_state = State::Created;
     osre_debug(Tag, "Set application state to Created.");
 
@@ -499,9 +437,6 @@ bool AppBase::onDestroy() {
         m_platformInterface = nullptr;
     }
 
-    delete m_uiScreen;
-    delete m_uiRenderer;
-
     Scene::MaterialBuilder::destroy();
 
     delete m_activeWorld;
@@ -526,21 +461,12 @@ void AppBase::onUpdate() {
         m_activeWorld->update(dt);
     }
 
-    if (nullptr != m_uiRenderer && nullptr != m_uiScreen) {
-        m_uiRenderer->layout(m_uiScreen);
-        m_uiRenderer->render(m_uiScreen, m_rbService);
-    }
-
     m_keyboardEvListener->clearKeyMap();
 }
 
 void AppBase::onRender() {
     if (nullptr != m_activeWorld) {
         m_activeWorld->draw(m_rbService);
-    }
-
-    if (nullptr != m_uiRenderer && nullptr != m_uiScreen) {
-        m_uiRenderer->render(m_uiScreen, m_rbService);
     }
 }
 

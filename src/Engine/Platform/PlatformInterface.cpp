@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/EventTriggerer.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Properties/Settings.h>
-#include <osre/UI/UiItemFactory.h>
 #include <src/Engine/Platform/PlatformPluginFactory.h>
 #ifdef OSRE_WINDOWS
 #include <src/Engine/Platform/win32/Win32OGLRenderContext.h>
@@ -42,7 +41,6 @@ namespace Platform {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Properties;
-using namespace ::OSRE::UI;
 
 PlatformInterface *PlatformInterface::sInstance(nullptr);
 
@@ -269,8 +267,6 @@ bool PlatformInterface::setupGfx(WindowsProperties *props, bool polls) {
 
     // setup the render context
     mContext->m_renderContext = PlatformPluginFactory::createRenderContext();
-
-    UiItemFactory::createInstance(getRootWindow());
 
     return true;
 }

@@ -28,23 +28,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AppBase.h>
 
 namespace OSRE {
-
-namespace UI {
-    class Canvas;
-}
-
 namespace App {
 
 class MouseEventListener : public Platform::OSEventListener {
 public:
     MouseEventListener();
     ~MouseEventListener() override;
-    UI::Canvas *getCanvas() const;
     void onOSEvent(const Common::Event &osEvent, const Common::EventData *data) override;
-    void setCanvas(UI::Canvas *screen);
 
 private:
-    Common::TObjPtr<UI::Canvas> m_uiCanvas;
 };
 
 } // Namespace App

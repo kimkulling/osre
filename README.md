@@ -10,7 +10,6 @@ The core-features:
 - Bitmap-Font-Rendering
 - Simple scenegraph-module
 - Virtual file-system for reading zip-archives
-- Simple UI-module providing Panels Buttons and some more stuff ( under construction )
 - CMake base build environment
 
 Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -106,9 +105,3 @@ This example will show you how to create a window and add a simple stage to it.
 This example will show you how to create a window, load a model using assimp and render it into a new created stage.
 
 [01-ModelLoading](https://github.com/kimkulling/osre/blob/master/samples/01_ModelLoading/)
-
-
-## Sample 3: UI-Demo
-This example will show you how to create a simple dialog and add your own callbacks.
-
-[02-UIDemo](https://github.com/kimkulling/osre/tree/master/samples/02_UIDemo)

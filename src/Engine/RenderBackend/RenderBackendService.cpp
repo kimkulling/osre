@@ -27,7 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/DbgRenderer.h>
 #include <osre/Threading/SystemTask.h>
-#include <osre/UI/Widget.h>
 
 #include "OGLRenderer/OGLRenderEventHandler.h"
 #include "VulkanRenderer/VlkRenderEventHandler.h"
@@ -467,10 +466,6 @@ void RenderBackendService::resize(ui32 x, ui32 y, ui32 w, ui32 h) {
     if (mBehaviour.ResizeViewport) {
         ResizeEventData *data = new ResizeEventData(x, y, w, h);
         m_renderTaskPtr->sendEvent(&OnResizeEvent, data);
-    }
-
-    if (m_screen != nullptr) {
-        m_screen->resize(x, y, w, h);
     }
 }
 

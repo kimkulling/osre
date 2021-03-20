@@ -26,7 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Common/Tokenizer.h>
 #include <osre/Debugging/osre_debugging.h>
-#include <osre/UI/Widget.h>
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -535,7 +534,7 @@ void MeshBuilder::allocUiTextBox(f32 x, f32 y, i32 stackIndex, f32 textSize, con
 
         RenderVert v;
         v.position = textPos[i];
-        UI::WidgetCoordMapping::mapPosToWorld(static_cast<ui32>(v.position.x), static_cast<ui32>(v.position.y), v.position.x, v.position.y);
+//        UI::WidgetCoordMapping::mapPosToWorld(static_cast<ui32>(v.position.x), static_cast<ui32>(v.position.y), v.position.x, v.position.y);
 
 
         v.position.z = (f32) getZbyStackIndex((f32)stackIndex);

@@ -35,8 +35,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/TrackBall.h>
-#include <osre/UI/Canvas.h>
-#include <osre/UI/Panel.h>
 #include <osre/App/Project.h>
 #include <osre/Platform/PlatformInterface.h>
 #ifdef OSRE_WINDOWS

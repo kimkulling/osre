@@ -6,8 +6,8 @@ namespace OSRE {
 namespace UI {
 
 
-WMDialog::WMDialog(const String &name, Widget *parent) :
-        Widget(name, parent) {
+WMDialog::WMDialog(const String &name ) :
+        Object(name) {
 }
 
 WMDialog::~WMDialog() {

@@ -33,7 +33,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/MaterialBuilder.h>
-#include <osre/UI/Widget.h>
 
 #include <iostream>
 
@@ -137,12 +136,7 @@ bool RenderTestSuite::setup(const String &API) {
         data->m_pipeline = App::AppBase::createDefaultPipeline();
         m_pRenderBackendServer->sendEvent(&OnCreateRendererEvent, data);
     }
-    Platform::AbstractWindow *window = m_pPlatformInterface->getRootWindow();
-    if (nullptr != window) {
-        Rect2ui rect;
-        window->getProperties()->getDimension(rect);
-        UI::WidgetCoordMapping::init(rect);
-    }
+
     m_pTimer = PlatformInterface::getInstance()->getTimer();
 
     App::AssetRegistry *registry(App::AssetRegistry::create());
