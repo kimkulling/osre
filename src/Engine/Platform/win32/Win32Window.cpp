@@ -50,13 +50,15 @@ void Win32Window::setWindowsTitle(const String &title) {
 }
 
 void Win32Window::setWindowsMouseCursor(DefaultMouseCursorType ct){
+    HCURSOR c;
     if (ct == DefaultMouseCursorType::WaitCursor) {
-        LoadCursorA(mInstance, IDC_WAIT);
+        c = LoadCursorA(mInstance, IDC_WAIT);
     } else if ( ct == DefaultMouseCursorType::SelectCursor) {
-        LoadCursorA(mInstance, IDC_CROSS);
+        c = LoadCursorA(mInstance, IDC_CROSS);
     } else {
-        LoadCursorA(mInstance, IDC_ARROW);
+        c = LoadCursorA(mInstance, IDC_ARROW);
     }
+    SetCursor(c);
 }
 
 
