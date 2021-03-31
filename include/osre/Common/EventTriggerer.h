@@ -51,13 +51,21 @@ public:
     ///	@param	ev	Reference to listened event
     ///	@param	func	Reference to called functor
     void addEventListener( const Event& ev, const EventFunctor &func );
-    void addEventListener( const EventPtrArray &events, const EventFunctor &func );
+
+    ///	@brief	Add an listener for an event
+    ///	@param	ev	    Reference to listened event-array.
+    ///	@param	func	Reference to called functor
+    void addEventListener(const EventPtrArray &events, const EventFunctor &func);
 
     ///	@brief Remove an listener for an event
     ///	@param ev	Reference to event
     ///	@param func	Reference to functor
     void removeEventListener( const Event& ev, const EventFunctor& func);
-    void removeEventListener( const EventPtrArray &events, const EventFunctor &func );
+
+    ///	@brief Remove an listener for an event
+    ///	@param ev	Reference to event-array.
+    ///	@param func	Reference to functor
+    void removeEventListener(const EventPtrArray &events, const EventFunctor &func);
 
     ///	@brief Remove all listener from the trigger.
     ///	@param	ev	Event which triggers are connected to.
@@ -67,7 +75,7 @@ public:
     ///	@return true, if instance can trigger
     bool isEventTriggerable(const Event& ev);
 
-    ///	@brief	Adds a new triggeable event.
+    ///	@brief	Adds a new event for triggering.
     ///	@param	ev		[in] The event to add.
     virtual void addTriggerableEvent( const Event& ev );
     
@@ -80,9 +88,9 @@ public:
     void clear();
 
 private:
-    typedef std::list<EventFunctor> FunctorList;
-    typedef std::map<ui32, FunctorList> FunctorMap;
-    FunctorMap m_EventList;
+    using FunctorList = std::list<EventFunctor>;
+    using FunctorMap = std::map<ui32, FunctorList>;
+    FunctorMap mEventList;
 };
 
 } // Namespace Common

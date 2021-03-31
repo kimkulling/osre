@@ -38,20 +38,24 @@ namespace App {
     class Project;
 }
 
-namespace UI {
-    class Canvas;
-    class Panel;
-}
-
 namespace IO {
     class Uri;
 }
 
 namespace Scene {
-    class TrackBall;
+    class World;
 }
 
 namespace Editor {
+
+struct SceneData {
+    String Name;
+    Scene::Node::NodePtr m_modelNode;
+    Scene::Camera *mCamera;
+    Scene::World *mWorld;
+
+    SceneData();
+};
 
 //-------------------------------------------------------------------------------------------------
 /// @brief  The main application of the OSRE-Editor.
@@ -126,19 +130,21 @@ protected:
     /// The onDestrox callback.
     bool onDestroy() override;
 
+    bool loadSceneData(const IO::Uri &filename, SceneData &sd);
+    
+    bool saveSceneData(const IO::Uri &filename, SceneData &sd);
+
 private:
-    Scene::Camera *mCamera;
     glm::mat4 m_model;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
-    Scene::Node::NodePtr m_modelNode;
-    Scene::TrackBall *mTrackBall;
+    SceneData mSceneData;
     App::Project *mProject;
-    Vec2f mOld;
     ModuleArray mModules;
+    Rect2ui mResolution;
 };
 
 inline bool OsreEdApp::hasModel() const {
-    return m_modelNode.isValid();
+    return mSceneData.m_modelNode.isValid();
 }
 
 } // namespace Editor

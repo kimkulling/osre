@@ -169,9 +169,9 @@ TEST_F( RenderCommonTest, geometryIdTest ) {
     ui32 ids[ NumGeo ];
     ::memset( ids, 0, sizeof( ui32 ) * NumGeo );
     Mesh *mesh = Mesh::create( NumGeo );
-    ui32 oldId( mesh[ 0 ].m_id );
+    ui64 oldId = mesh[0].m_id;
     for ( ui32 i = 1; i < NumGeo; i++ ) {
-        ui32 id( mesh[ i ].m_id );
+        ui64 id = mesh[ i ].m_id;
         EXPECT_EQ( id, oldId + 1 );
         oldId = id;
     }

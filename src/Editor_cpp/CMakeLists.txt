@@ -44,6 +44,8 @@ ADD_EXECUTABLE( osre_ed
     ${editor_module_src}
     ${modules_src}
     ${scripting_src}
+    src/ProgressReporter.cpp
+    src/ProgressReporter.h
     src/OsreEdApp.cpp
     src/OsreEdApp.h
     src/main.cpp

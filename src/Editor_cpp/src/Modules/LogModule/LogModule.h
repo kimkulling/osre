@@ -4,11 +4,9 @@
 
 namespace OSRE {
 
-namespace UI {
-    class Panel;
-}
-
 namespace Editor {
+
+class LogView;
 
 class LogModule : public ModuleBase {
 public:
@@ -21,7 +19,7 @@ protected:
     void onUpdate() override;
 
 private:
-    UI::Panel *mPanel;
+    LogView *mLogView;
 };
 
 } // namespace Editor

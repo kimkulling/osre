@@ -83,7 +83,7 @@ private:
 class OSRE_EXPORT Logger {
 public:
     ///	@brief	Describes the 
-    enum class Severity {
+    enum class VerboseMode {
         Normal,		///< Only warnings and errors will be logged.
         Verbose,	///< Normal messages will be logged as well.
         Debug		///< All debug messages will be logged as well.
@@ -110,11 +110,11 @@ public:
     ///	@brief	Set the severity of the logger.
     ///	@param	sev		The new severity of the logger.
     ///	@see	Severity
-    void setSeverity( Severity sev );
+    void setVerboceMode( VerboseMode sev );
     
     ///	@brief	Returns	the current severity of the logger.
     ///	@return	The current severity.
-    Severity getSeverity() const;
+    VerboseMode getSeverity() const;
 
     ///	@brief	Logs a debug message.
     ///	@param	msg	The message to log.
@@ -159,12 +159,12 @@ private:
     public:
         StdLogStream();
         ~StdLogStream();
-        void write( const String &msg );
+        void write( const String &msg ) override;
     };
 
     static Logger *s_logger;
 
-    typedef CPPCore::TArray<AbstractLogStream*> LogStreamArray;
+    using LogStreamArray = CPPCore::TArray<AbstractLogStream*>;
     LogStreamArray m_LogStreams;
     ui32 m_intention;
 };

@@ -365,12 +365,8 @@ SET( scripting_mono_inc
 )
 
 #==============================================================================
-# UI
+# WindowsManager
 #==============================================================================
-SET( ui_common_src
-    UI/Common/Widget.cpp
-)
-
 SET( winmanager_src
     WinManager/WMButton.h
     WinManager/WMDialog.h
@@ -423,7 +419,7 @@ SOURCE_GROUP( RenderBackend\\VulkanRenderer FILES ${renderbackend_vulkanrenderer
 SOURCE_GROUP( Resources           FILES ${resources_src} )
 SOURCE_GROUP( Scene               FILES ${scene_src} )
 SOURCE_GROUP( Threading           FILES ${threading_src} )
-SOURCE_GROUP( UI                  FILES ${ui_src} )
+SOURCE_GROUP( WinManager          FILES ${winmanager_src} )
 SOURCE_GROUP( UI\\Common          FILES ${ui_common_src} )
 
 SOURCE_GROUP( Include\\osre\\App        FILES ${app_inc} )
@@ -445,9 +441,6 @@ SOURCE_GROUP( Include\\osre\\RenderBackend     FILES ${renderbackend_inc} )
 SOURCE_GROUP( Include\\osre\\Scene             FILES ${scene_inc} )
 SOURCE_GROUP( Include\\osre\\Scripting         FILES ${scripting_mono_inc} )
 SOURCE_GROUP( Include\\osre\\Threading         FILES ${threading_inc} )
-SOURCE_GROUP( Include\\osre\\UI                FILES ${ui_inc} )
-SOURCE_GROUP( Include\\osre\\UI\\Ingame        FILES ${ui_ingame_src} )
-SOURCE_GROUP( Include\\osre\\UI\\WinManager    FILES ${ui_winmanager_src} )
 SOURCE_GROUP( Documentation                    FILES ${doc_inc} )
 
 add_definitions( -D${USE_PLATFORM} )

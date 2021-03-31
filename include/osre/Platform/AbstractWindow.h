@@ -78,6 +78,14 @@ inline void WindowsProperties::getDimension(Rect2ui &rect) {
     rect.set(m_x, m_y, m_width, m_height);
 }
 
+enum class DefaultMouseCursorType {
+    ComonCursor,
+    SelectCursor,
+    WaitCursor
+};
+
+
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -141,10 +149,18 @@ public:
     /// @param  title       [in] The new windows title.
     virtual void setWindowsTitle(const String &title) = 0;
 
-    /// @
+    /// @brief  Will resize the window.
+    /// @param  x   [in] The x-coordinate of the upper left edge-
+    /// @param  y   [in] The y-coordinate of the upper left edge.
+    /// @param  w   [in] The windows width.
+    /// @param  h   [in] The windows height.
     virtual void resize(ui32 x, ui32 y, ui32 w, ui32 h);
 
+    /// @brief  Will return the windows rectangle.
+    /// @param  rect    [out] The windows rect.
     virtual void getWindowsRect(Rect2ui &rect) const;
+
+    virtual void setWindowsMouseCursor(DefaultMouseCursorType ct) = 0;
 
 protected:
     /// @brief  Callback to override on creation.

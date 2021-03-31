@@ -5,7 +5,6 @@
 
 using namespace ::OSRE;
 using namespace ::OSRE::App;
-using namespace ::OSRE::UI;
 using namespace ::OSRE::Editor;
 using namespace ::OSRE::Platform;
 

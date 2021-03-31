@@ -1,11 +1,11 @@
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
 	${PROJECT_SOURCE_DIR}/test/RenderTests/src
-    ../../3dparty/cppcore/include
-    ../../3dparty/glew/include
-    ../../3dparty/assimp/include
-    ../../3dparty/glm/
-    ../../3dparty/soil/src
+    ../../contrib/cppcore/include
+    ../../contrib/glew/include
+    ../../contrib/assimp/include
+    ../../contrib/glm/
+    ../../contrib/soil/src
     .././
 )
 

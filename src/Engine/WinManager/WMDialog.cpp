@@ -14,8 +14,8 @@ WMDialog::~WMDialog() {
 
 }
 
-bool WMDialog::openFileOpenDialog(const c8 *extensions, IO::Uri &location) {
-    Platform::PlatformOperations::getFileOpenDialog(extensions, location);
+bool WMDialog::openFileOpenDialog(const String &title, const c8 *extensions, IO::Uri &location) {
+    Platform::PlatformOperations::getFileOpenDialog(title, extensions, location);
     return location.isEmpty() ? true : false;
 }
 

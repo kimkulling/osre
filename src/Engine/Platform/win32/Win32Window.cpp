@@ -28,7 +28,12 @@ namespace Platform {
 static const c8 *Tag = "Win32Window";
 
 Win32Window::Win32Window(WindowsProperties *properties) :
-        AbstractWindow(properties), m_hInstance(nullptr), m_wnd(nullptr), m_dc(nullptr), mMenu(nullptr), mMenuCreateState(false) {
+        AbstractWindow(properties),
+        mInstance(nullptr),
+        mWnd(nullptr),
+        mDC(nullptr),
+        mMenu(nullptr),
+        mMenuCreateState(false) {
     // empty
 }
 
@@ -37,23 +42,34 @@ Win32Window::~Win32Window() {
 }
 
 void Win32Window::setWindowsTitle(const String &title) {
-    if (nullptr == m_wnd) {
+    if (nullptr == mWnd) {
         return;
     }
 
-    ::SetWindowText(m_wnd, title.c_str());
+    ::SetWindowText(mWnd, title.c_str());
 }
 
+void Win32Window::setWindowsMouseCursor(DefaultMouseCursorType ct){
+    if (ct == DefaultMouseCursorType::WaitCursor) {
+        LoadCursorA(mInstance, IDC_WAIT);
+    } else if ( ct == DefaultMouseCursorType::SelectCursor) {
+        LoadCursorA(mInstance, IDC_CROSS);
+    } else {
+        LoadCursorA(mInstance, IDC_ARROW);
+    }
+}
+
+
 HWND Win32Window::getHWnd() const {
-    return m_wnd;
+    return mWnd;
 }
 
 HDC Win32Window::getDeviceContext() const {
-    return m_dc;
+    return mDC;
 }
 
 HINSTANCE Win32Window::getModuleHandle() const {
-    return m_hInstance;
+    return mInstance;
 }
 
 HMENU Win32Window::getMenuHandle() {
@@ -79,7 +95,7 @@ void Win32Window::addSubMenues(HMENU parent, AbstractPlatformEventQueue *queue, 
         osre_debug(Tag, "Not in proper state for adding sub-menues.");
         return;
     }
-    
+
     if (nullptr == parent) {
         parent = getMenuHandle();
     }
@@ -94,7 +110,7 @@ void Win32Window::addSubMenues(HMENU parent, AbstractPlatformEventQueue *queue, 
 }
 
 void Win32Window::endMenu() {
-    SetMenu(m_wnd, mMenu);
+    SetMenu(mWnd, mMenu);
     mMenuCreateState = false;
 }
 
@@ -123,12 +139,12 @@ bool Win32Window::onCreate() {
 
     ui32 cx = prop->m_width / 2;
     ui32 cy = prop->m_height / 2;
-    m_hInstance = ::GetModuleHandle(NULL);
+    mInstance = ::GetModuleHandle(NULL);
     sWC.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
     sWC.lpfnWndProc = (WNDPROC)Win32EventQueue::winproc;
     sWC.cbClsExtra = 0;
     sWC.cbWndExtra = 0;
-    sWC.hInstance = m_hInstance;
+    sWC.hInstance = mInstance;
     sWC.hIcon = ::LoadIcon(NULL, IDI_WINLOGO);
     sWC.hCursor = ::LoadCursor(NULL, IDC_ARROW);
     sWC.hbrBackground = (HBRUSH)::GetStockObject(BLACK_BRUSH);
@@ -170,7 +186,7 @@ bool Win32Window::onCreate() {
         }
     }
 
-    m_wnd = ::CreateWindowEx(dwExStyle,
+    mWnd = ::CreateWindowEx(dwExStyle,
             prop->m_title.c_str(),
             prop->m_title.c_str(),
             dwStyle,
@@ -180,27 +196,27 @@ bool Win32Window::onCreate() {
             realHeight,
             NULL,
             NULL,
-            m_hInstance,
+            mInstance,
             NULL);
 
-    if (!m_wnd) {
+    if (!mWnd) {
         MessageBox(NULL, "Cannot create the application window.", "Abort application",
                 MB_OK | MB_ICONEXCLAMATION);
         return false;
     }
 
     if (prop->m_childWindow) {
-        SetWindowLong(m_wnd, GWL_STYLE, 0);
+        SetWindowLong(mWnd, GWL_STYLE, 0);
     }
-    m_dc = ::GetDC(m_wnd);
-    if (!m_dc) {
+    mDC = ::GetDC(mWnd);
+    if (!mDC) {
         ::MessageBox(NULL, "Cannot create a device context.", "Abort application",
                 MB_OK | MB_ICONEXCLAMATION);
         return false;
     }
-    ::ShowWindow(m_wnd, SW_SHOW);
-    ::SetForegroundWindow(m_wnd);
-    ::SetFocus(m_wnd);
+    ::ShowWindow(mWnd, SW_SHOW);
+    ::SetForegroundWindow(mWnd);
+    ::SetFocus(mWnd);
     ::SetCursorPos(cx, cy);
     prop->m_open = true;
 
@@ -221,22 +237,22 @@ bool Win32Window::onDestroy() {
         ::ChangeDisplaySettings(NULL, 0);
     }
 
-    if (m_dc && !::ReleaseDC(m_wnd, m_dc)) {
+    if (mDC && !::ReleaseDC(mWnd, mDC)) {
         MessageBox(NULL, "Cannot release the device context.",
                 "Abort application", MB_OK | MB_ICONEXCLAMATION);
-        m_dc = NULL;
+        mDC = NULL;
     }
 
-    if (m_wnd && !::DestroyWindow(m_wnd)) {
+    if (mWnd && !::DestroyWindow(mWnd)) {
         ::MessageBox(NULL, "Cannot destroy the window.",
                 "Abort application", MB_OK | MB_ICONEXCLAMATION);
-        m_wnd = NULL;
+        mWnd = NULL;
     }
 
-    if (!::UnregisterClass(prop->m_title.c_str(), m_hInstance)) {
+    if (!::UnregisterClass(prop->m_title.c_str(), mInstance)) {
         ::MessageBox(NULL, "Cannot unregister the application .",
                 "Abort application", MB_OK | MB_ICONEXCLAMATION);
-        m_hInstance = NULL;
+        mInstance = NULL;
     }
 
     prop->m_open = false;
@@ -256,11 +272,11 @@ bool Win32Window::onUpdateProperies() {
 }
 
 void Win32Window::onResize(ui32 x, ui32 y, ui32 w, ui32 h) {
-    if (nullptr == m_wnd) {
+    if (nullptr == mWnd) {
         return;
     }
 
-    ::MoveWindow(m_wnd, x, y, w, h, NULL);
+    ::MoveWindow(mWnd, x, y, w, h, NULL);
     WindowsProperties *props = AbstractWindow::getProperties();
     if (nullptr != props) {
         props->m_x = x;

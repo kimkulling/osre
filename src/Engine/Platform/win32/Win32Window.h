@@ -54,6 +54,8 @@ public:
     ~Win32Window() override;
     /// Will set the windows title.
     void setWindowsTitle( const String &title ) override;
+    /// 
+    void setWindowsMouseCursor(DefaultMouseCursorType ct) override;
     /// Returns the windows handle.
     HWND getHWnd() const;
     /// Returns the device context.
@@ -80,9 +82,9 @@ protected:
     void onResize( ui32 x, ui32 y, ui32 w, ui32 h ) override;
 
 private:
-    HINSTANCE m_hInstance;
-    HWND m_wnd;
-    HDC m_dc;
+    HINSTANCE mInstance;
+    HWND mWnd;
+    HDC mDC;
     HMENU mMenu;
     bool mMenuCreateState;
 };

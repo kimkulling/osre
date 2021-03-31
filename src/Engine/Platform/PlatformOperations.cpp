@@ -34,7 +34,7 @@ namespace Platform {
 
 static const c8 *Tag = "PlatformOperations";
 
-void PlatformOperations::getFileOpenDialog( const c8 *extensions, IO::Uri &location ) {
+void PlatformOperations::getFileOpenDialog(const String &title, const c8 *extensions, IO::Uri &location) {
 #ifdef OSRE_WINDOWS
     OPENFILENAME ofn;  
     char szFile[ 260 ];
@@ -46,6 +46,7 @@ void PlatformOperations::getFileOpenDialog( const c8 *extensions, IO::Uri &locat
     
     // Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
     // use the contents of szFile to initialize itself.
+    ofn.lpstrTitle = title.c_str();
     ofn.lpstrFile[ 0 ] = '\0';
     ofn.nMaxFile = sizeof( szFile );
     ofn.lpstrFilter = extensions;
@@ -68,7 +69,7 @@ void PlatformOperations::getFileOpenDialog( const c8 *extensions, IO::Uri &locat
 #endif // OSRE_WINDOWS
 }
 
-void PlatformOperations::getFileSaveDialog( const c8 *extensions, IO::Uri &location ) {
+void PlatformOperations::getFileSaveDialog(const String &title, const c8 *extensions, IO::Uri &location) {
 #ifdef OSRE_WINDOWS
     OPENFILENAME ofn;
     char szFile[ 260 ];
@@ -80,6 +81,7 @@ void PlatformOperations::getFileSaveDialog( const c8 *extensions, IO::Uri &locat
 
     // Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
     // use the contents of szFile to initialize itself.
+    ofn.lpstrTitle = title.c_str();
     ofn.lpstrFile[ 0 ] = '\0';
     ofn.nMaxFile = sizeof( szFile );
     ofn.lpstrFilter = extensions;

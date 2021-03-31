@@ -47,8 +47,8 @@ public:
         DlgButton_ok = 2
     };
 
-    static void getFileOpenDialog( const c8 *extensions, IO::Uri &location );
-    static void getFileSaveDialog( const c8 *extensions, IO::Uri &location );
+    static void getFileOpenDialog( const String &title, const c8 *extensions, IO::Uri &location );
+    static void getFileSaveDialog(const String &title, const c8 *extensions, IO::Uri &location);
     static void getDialog( const String &title, const String &question, ui32 requestedButtons, DlgResults &result );
 
     PlatformOperations() = delete;

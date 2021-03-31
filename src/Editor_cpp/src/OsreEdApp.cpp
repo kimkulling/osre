@@ -21,8 +21,10 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "OsreEdApp.h"
+#include "ProgressReporter.h"
 #include "Modules/InspectorModule/InspectorModule.h"
 #include "Modules/ModuleBase.h"
+
 #include <osre/App/AssimpWrapper.h>
 #include <osre/App/AssetRegistry.h>
 #include <osre/App/Entity.h>
@@ -30,27 +32,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Directory.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/File.h>
+#include <osre/IO/IOService.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/PlatformOperations.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/TrackBall.h>
 #include <osre/App/Project.h>
 #include <osre/Platform/PlatformInterface.h>
 #ifdef OSRE_WINDOWS
-#  include "Engine/Platform/win32/Win32EventQueue.h"
-#  include "Engine/Platform/win32/Win32Window.h"
-#  include <CommCtrl.h>
+#   include "Engine/Platform/win32/Win32EventQueue.h"
+#   include "Engine/Platform/win32/Win32Window.h"
+#   include <CommCtrl.h>
+#   include <winuser.h>
+#   include <windows.h>
+#   include <commctrl.h>
+#   include <strsafe.h>
 #endif
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
-
-#ifdef OSRE_WINDOWS
-#  include <winuser.h>
-#  include <windows.h>
-#include <commctrl.h>
-#include <strsafe.h>
-#endif
 
 namespace OSRE {
 namespace Editor {
@@ -59,6 +58,7 @@ using namespace ::OSRE::App;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Platform;
+using namespace ::OSRE::IO;
 
 static const ui32 HorizontalMargin = 2;
 static const ui32 VerticalMargin = 2;
@@ -82,14 +82,21 @@ HWND hStatic = NULL;
 
 #endif // OSRE_WINDOWS
 
+SceneData::SceneData() :
+        Name(),
+        m_modelNode(),
+        mCamera( nullptr ),
+        mWorld( nullptr ) {
+    // empty
+}
+
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         AppBase(argc, (const char **)argv, "api", "The render API"),
-        mCamera(nullptr),
         m_model(),
         m_transformMatrix(),
-        m_modelNode(),
-        mTrackBall(nullptr),
-        mProject(nullptr) {
+        mSceneData(),
+        mProject(nullptr),
+        mResolution() {
     // empty
 }
 
@@ -128,9 +135,8 @@ bool OsreEdApp::onCreate() {
         w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
 
         w->endMenu();
-        Rect2ui rect;
-        w->getWindowsRect(rect);
-        createSceneTreeview(rect.getWidth() / 2, rect.getHeight());
+        w->getWindowsRect(mResolution);
+        createSceneTreeview(mResolution.getWidth() / 2, mResolution.getHeight());
     }
 
     AppBase::getRenderBackendService()->enableAutoResizing(false);
@@ -139,34 +145,39 @@ bool OsreEdApp::onCreate() {
 }
 
 void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
+    Platform::AbstractWindow *rootWindow = getRootWindow();
+    if (nullptr == rootWindow) {
+        return;
+    }
+    ProgressReporter reporter(rootWindow);
+    reporter.start();
     AssimpWrapper assimpWrapper(*getIdContainer(), getActiveWorld());
     if (!assimpWrapper.importAsset(modelLoc, 0)) {
+        reporter.stop();
         return;
     }
 
     RenderBackendService *rbSrv = getRenderBackendService();
     if (nullptr == rbSrv) {
-        return;
-    }
-    Platform::AbstractWindow *rootWindow = getRootWindow();
-    if (nullptr == rootWindow) {
+        reporter.stop();
         return;
     }
 
     Rect2ui windowsRect;
     rootWindow->getWindowsRect(windowsRect);
     World *world = getActiveWorld();
-    mCamera = world->addCamera("camera_1");
-    mTrackBall = new Scene::TrackBall("trackball", windowsRect.getWidth(), windowsRect.getHeight(), *getIdContainer());
-    mCamera->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.01f, 1000.f);
+    mSceneData.mCamera = world->addCamera("camera_1");
+    mSceneData.mCamera->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.01f, 1000.f);
     Entity *entity = assimpWrapper.getEntity();
 
     world->addEntity(entity);
-    mCamera->observeBoundingBox(entity->getAABB());
-    m_modelNode = entity->getNode();
+    mSceneData.mCamera->observeBoundingBox(entity->getAABB());
+    mSceneData.m_modelNode = entity->getNode();
 
     const std::string &model = modelLoc.getResource();
-    getRootWindow()->setWindowsTitle("Model " + model);
+    rootWindow->setWindowsTitle("Model " + model);
+
+    reporter.stop();
 }
 
 void OsreEdApp::newProjectCmd(ui32, void *) {
@@ -178,14 +189,24 @@ void OsreEdApp::newProjectCmd(ui32, void *) {
 }
 
 void OsreEdApp::loadProjectCmd(ui32, void *) {
+    IO::Uri projectLoc;
+    PlatformOperations::getFileOpenDialog("Select project file", "*", projectLoc);
+    if (projectLoc.isValid()) {
+        loadSceneData(projectLoc, mSceneData);
+    }
 }
 
 void OsreEdApp::saveProjectCmd(ui32, void *) {
+    IO::Uri projectLoc;
+    PlatformOperations::getFileSaveDialog("Select project file", "*", projectLoc);
+    if (projectLoc.isValid()) {
+        saveSceneData(projectLoc, mSceneData);
+    }
 }
 
 void OsreEdApp::importAssetCmd(ui32, void *) {
     IO::Uri modelLoc;
-    PlatformOperations::getFileOpenDialog("*", modelLoc);
+    PlatformOperations::getFileOpenDialog("Select asset for import", "*", modelLoc);
     if (modelLoc.isValid()) {
         loadAsset(modelLoc);
     }
@@ -299,16 +320,13 @@ void OsreEdApp::createSceneTreeview( ui32 x, ui32 y ) {
 }
 
 void OsreEdApp::onUpdate() {
-    if (AppBase::isKeyPressed(Platform::KEY_O)) {
-        IO::Uri modelLoc;
-        PlatformOperations::getFileOpenDialog("*", modelLoc);
-        if (modelLoc.isValid()) {
-            loadAsset(modelLoc);
-        }
-    }
-
     for (ui32 i = 0; i < mModules.size(); ++i) {
         ModuleBase *module = mModules[i];
+        if (nullptr == module) {
+            OSRE_ASSERT(nullptr != module);
+            continue;
+        }
+
         module->update();
         module->render();
     }
@@ -316,6 +334,37 @@ void OsreEdApp::onUpdate() {
 }
 
 bool OsreEdApp::onDestroy() {
+    return true;
+}
+
+bool OsreEdApp::loadSceneData(const IO::Uri &filename, SceneData &sd) {
+    if (filename.isEmpty()) {
+        return false;
+    }
+
+    Stream *stream = IOService::getInstance()->openStream(filename, Stream::AccessMode::ReadAccess);
+    if (nullptr == stream) {
+        return false;
+    }
+
+    stream->close();
+
+    return true;
+}
+
+bool OsreEdApp::saveSceneData(const IO::Uri &filename, SceneData &sd) {
+    if (filename.isEmpty()) {
+        return false;
+    }
+
+    Stream *stream = IOService::getInstance()->openStream(filename, Stream::AccessMode::WriteAccess);
+    if (nullptr == stream) {
+        return false;
+    }
+
+
+    stream->close();
+
     return true;
 }
 

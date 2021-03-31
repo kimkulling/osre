@@ -10,7 +10,7 @@ class WMDialog : public Common::Object {
 public:
     WMDialog(const String &name);
     ~WMDialog() override;
-    static bool openFileOpenDialog(const c8 *extensions, IO::Uri &location);
+    static bool openFileOpenDialog(const String &title, const c8 *extensions, IO::Uri &location);
 };
 
 } // namespace UI
