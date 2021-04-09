@@ -92,7 +92,7 @@ If you want to contribute just use the github project page or reach us via Gitte
 - Working on editor + MeshViewer
 
 ## Documentation
-Please check [OSRE-Docs](https://osre.readthedocs.io/en/latest/).
+Please check [OSRE-Docs](https://osre-doc.readthedocs.io/en/latest/).
 
 # Samples
 ## Sample 1: Hello world
