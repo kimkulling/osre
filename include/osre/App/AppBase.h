@@ -59,18 +59,19 @@ enum class DefaultControllerType {
     KeyboardCtrl    ///< Use the keyboard default controller.
 };
 
-class InputControllerBase {
+class TransformControllerBase {
 public:
-    virtual ~InputControllerBase() = default;
+    virtual ~TransformControllerBase() = default;
     virtual void update(RenderBackend::RenderBackendService *rbSrv) = 0;
 };
-        //-------------------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------------------
 ///	@brief  This class implements the default keyboard controlling.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT KeyboardInputController : public InputControllerBase {
+class OSRE_EXPORT KeyboardTransformController : public TransformControllerBase {
 public:
-    KeyboardInputController(AppBase *app, RenderBackend::TransformMatrixBlock &tmb);
-    ~KeyboardInputController() override;
+    KeyboardTransformController(AppBase *app, RenderBackend::TransformMatrixBlock &tmb);
+    ~KeyboardTransformController() override;
     void update(RenderBackend::RenderBackendService *rbSrv) override;
 
 private:
@@ -188,7 +189,7 @@ public:
 
     void getResolution(ui32 &w, ui32 &h);
 
-    InputControllerBase *getDefaultController(DefaultControllerType type, RenderBackend::TransformMatrixBlock &tmb);
+    TransformControllerBase *getTransformController(DefaultControllerType type, RenderBackend::TransformMatrixBlock &tmb);
 
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.

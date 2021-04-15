@@ -35,56 +35,58 @@ protected:
 
 protected:
     void SetUp() override {
-        m_pass1 = new PipelinePass( RenderPassId, nullptr );
-        m_pass2 = new PipelinePass( DbgPassId, nullptr );
+        m_pass1 = PipelinePass::create(RenderPassId, nullptr);
+        m_pass2 = PipelinePass::create(DbgPassId, nullptr);
     }
 
     void TearDown() override {
-        delete m_pass2;
-        delete m_pass1;
+        PipelinePass::destroy(m_pass2);
+        PipelinePass::destroy(m_pass1);
     }
 };
 
 TEST_F( PipelineTest, create_success ) {
     bool ok( true );
     try {
-        Pipeline pipeline;
-    }
-    catch ( ... ) {
+        Pipeline *pipeline = Pipeline::create();
+        Pipeline::destroy(pipeline);
+    } catch ( ... ) {
         ok = false;
     }
     EXPECT_TRUE( ok );
 }
 
 TEST_F( PipelineTest, accessPass_success ) {
-    Pipeline pipeline;
+    Pipeline *pipeline = Pipeline::create();
 
-    size_t numPasses = pipeline.getNumPasses();
+    size_t numPasses = pipeline->getNumPasses();
     EXPECT_EQ( 0u, numPasses );
-    pipeline.addPass( m_pass1 );
-    numPasses = pipeline.getNumPasses();
+    pipeline->addPass( m_pass1 );
+    numPasses = pipeline->getNumPasses();
     EXPECT_EQ( 1u, numPasses );
 
-    pipeline.clear();
-    numPasses = pipeline.getNumPasses();
+    pipeline->clear();
+    numPasses = pipeline->getNumPasses();
     EXPECT_EQ( 0u, numPasses );
 }
 
 TEST_F( PipelineTest, iterateThroughPasses_success ) {
-    Pipeline pipeline;
-    pipeline.addPass( m_pass1 );
-    pipeline.addPass( m_pass2 );
+    Pipeline *pipeline = Pipeline::create();
+    pipeline->addPass(m_pass1);
+    pipeline->addPass(m_pass2);
 
-    size_t numPasses = pipeline.beginFrame();
+    size_t numPasses = pipeline->beginFrame();
     EXPECT_EQ( 2u, numPasses );
     for ( ui32 i = 0; i < numPasses; i++ ) {
-        PipelinePass *pass = pipeline.beginPass( i );
+        PipelinePass *pass = pipeline->beginPass(i);
         EXPECT_NE( nullptr, pass );
-        pipeline.endPass( i );
+        pipeline->endPass( i );
     }
 
-    pipeline.endFrame();
-    pipeline.clear();
+    pipeline->endFrame();
+    pipeline->clear();
+
+    Pipeline::destroy(pipeline);
 }
 
 TEST_F( PipelineTest, comparePipelinePasses_success ) {

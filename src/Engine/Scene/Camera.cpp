@@ -35,12 +35,17 @@ static const c8 *Tag = "Camera";
 
 Camera::Camera(const String &name, Common::Ids &ids, Node *parent) :
         Node(name, ids, parent),
+        mRecalculateRequested(true),
+        mCameraModel(CameraModel::Perspective),
         m_fov(60.0f),
         mResolution(1.0f, 1.0f),
         m_near(0.001f),
         m_far(1000.0f),
         m_aspectRatio(1.0),
-        m_observedNode(nullptr),
+        m_left(0.0f),
+        m_right(1.0f),
+        m_top(0.0f),
+        m_bottom(1.0f),
         m_eye(1, 1, 1),
         m_center(0, 0, 0),
         m_up(0, 0, 1),
@@ -54,7 +59,7 @@ Camera::~Camera() {
 }
 
 void Camera::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
-    m_fov = fov;
+    m_fov = glm::radians(fov);
     mResolution.Width = w;
     mResolution.Height = h;
     m_near = zNear;
@@ -63,7 +68,8 @@ void Camera::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar)
     if (0.0f != h) {
         m_aspectRatio = w / h;
     }
-    m_projection = glm::perspective(glm::radians(m_fov), m_aspectRatio, zNear, zFar);
+
+    setCameraModel(CameraModel::Perspective);
 }
 
 void Camera::update(Time dt) {
@@ -84,15 +90,14 @@ void Camera::observeBoundingBox(const TAABB<f32> &aabb) {
 
     glm::vec3 eye(-diam / 2, -diam / 2, diam / 2), up(0, 0, 1);
     glm::vec3 c(center.getX(), center.getY(), center.getZ());
+
     setLookAt(eye, c, up);
 }
 
-void Camera::setLookAt(const glm::vec3 &eye, const glm::vec3 &center, const glm::vec3 &up) {
-    m_eye = eye;
+void Camera::setLookAt(const glm::vec3 &eyePosition, const glm::vec3 &center, const glm::vec3 &up) {
+    m_eye = eyePosition;
     m_center = center;
     m_up = up;
-
-    m_view = glm::lookAt(eye, center, up);
 }
 
 void Camera::setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farPlane) {
@@ -100,16 +105,21 @@ void Camera::setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farP
     m_aspectRatio = aspectRatio;
     m_near = nearPlane;
     m_far = farPlane;
-    m_projection = glm::perspective(fov, aspectRatio, nearPlane, farPlane);
+
+    setCameraModel(CameraModel::Perspective);
 }
 
 void Camera::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane, f32 farPlane) {
     mResolution.Width = right - left;
     mResolution.Height = bottom - top;
-
+    m_left = left;
+    m_right = right;
+    m_bottom = bottom;
+    m_top = top;
     m_near = nearPlane;
     m_far = farPlane;
-    m_projection = glm::ortho(left, right, bottom, top, nearPlane, farPlane);
+
+    setCameraModel(CameraModel::Orthogonal);
 }
 
 const glm::mat4 &Camera::getView() const {
@@ -121,7 +131,13 @@ const glm::mat4 &Camera::getProjection() const {
 }
 
 void Camera::onUpdate(Time dt) {
-    (void)dt;
+    const CameraModel cm = getCameraModel();
+    if (cm == CameraModel::Perspective) {
+        m_projection = glm::perspective(m_fov, m_aspectRatio, m_near, m_far);
+    } else if (cm == CameraModel::Orthogonal) {
+        m_projection = glm::ortho(m_left, m_right, m_bottom, m_top, m_near, m_far);
+    }
+    m_view = glm::lookAt(m_eye, m_center, m_up);
 }
 
 void Camera::onRender(RenderBackendService *rbSrv) {

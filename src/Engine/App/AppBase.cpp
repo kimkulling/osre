@@ -53,17 +53,17 @@ using namespace ::OSRE::IO;
 
 static const c8 *Tag = "AppBase";
 
-KeyboardInputController::KeyboardInputController(AppBase *app, TransformMatrixBlock &tmb) :
+KeyboardTransformController::KeyboardTransformController(AppBase *app, TransformMatrixBlock &tmb) :
         mTransform(tmb),
         mApp( app ) {
     // empty
 }
     
-KeyboardInputController::~KeyboardInputController() {
+KeyboardTransformController::~KeyboardTransformController() {
     mApp = nullptr;
 }
 
-void KeyboardInputController::update(RenderBackendService *rbSrv) {
+void KeyboardTransformController::update(RenderBackendService *rbSrv) {
     glm::mat4 rot(1.0);
     if (mApp->isKeyPressed(Platform::KEY_A)) {
         mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
@@ -286,14 +286,14 @@ Platform::AbstractTimer *AppBase::getActiveTimer() const {
     return m_timer;
 }
 
-RenderBackend::RenderBackendService *AppBase::getRenderBackendService() const {
+RenderBackendService *AppBase::getRenderBackendService() const {
     return m_rbService;
 }
 
-InputControllerBase *AppBase::getDefaultController(DefaultControllerType type, TransformMatrixBlock &tmb) {
+TransformControllerBase *AppBase::getTransformController(DefaultControllerType type, TransformMatrixBlock &tmb) {
     switch (type) {
         case OSRE::App::DefaultControllerType::KeyboardCtrl:
-            return new KeyboardInputController(this, tmb);
+            return new KeyboardTransformController(this, tmb);
         default:
             break;
     }
@@ -478,9 +478,9 @@ Ids *AppBase::getIdContainer() const {
     return m_ids;
 }
 
-RenderBackend::Pipeline *AppBase::createDefaultPipeline() {
-    Pipeline *pipeline = new Pipeline;
-    PipelinePass *renderPass = new PipelinePass(RenderPassId, nullptr);
+Pipeline *AppBase::createDefaultPipeline() {
+    Pipeline *pipeline = Pipeline::create();
+    PipelinePass *renderPass = PipelinePass::create(RenderPassId, nullptr);
     CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
     renderPass->setCullState(cullState);
     pipeline->addPass(renderPass);

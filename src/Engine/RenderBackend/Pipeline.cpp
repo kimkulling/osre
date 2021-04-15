@@ -34,11 +34,21 @@ static const c8 *RenderPassNames[] = {
 };
 } // Namespace Details
 
+PipelinePass *PipelinePass::create(ui32 id, Shader *shader) {
+    return new PipelinePass(id, shader);
+}
+
+void PipelinePass::destroy(PipelinePass *plp) {
+    if (nullptr != plp) {
+        delete plp;
+    }
+}
+
 PipelinePass::PipelinePass(ui32 id, Shader *shader) :
-        m_id(id),
-        m_renderTarget(),
-        m_states(),
-        m_shader(shader) {
+        mId(id),
+        mRenderTarget(),
+        mStates(),
+        mShader(shader) {
     // empty
 }
 
@@ -47,68 +57,68 @@ PipelinePass::~PipelinePass() {
 }
 
 void PipelinePass::set(RenderTarget &rt, RenderStates &states) {
-    m_renderTarget = rt;
-    m_states = states;
+    mRenderTarget = rt;
+    mStates = states;
 }
 
 void PipelinePass::setPolygonState(PolygonState polyState) {
-    m_states.m_polygonState = polyState;
+    mStates.m_polygonState = polyState;
 }
 
 PolygonState PipelinePass::getPolygonState() const {
-    return m_states.m_polygonState;
+    return mStates.m_polygonState;
 }
 
 void PipelinePass::setCullState(CullState &cullstate) {
-    m_states.m_cullState = cullstate;
+    mStates.m_cullState = cullstate;
 }
 
 CullState PipelinePass::getCullState() const {
-    return m_states.m_cullState;
+    return mStates.m_cullState;
 }
 
 void PipelinePass::setBlendState(BlendState &blendState) {
-    m_states.m_blendState = blendState;
+    mStates.m_blendState = blendState;
 }
 
 const BlendState &PipelinePass::getBlendState() const {
-    return m_states.m_blendState;
+    return mStates.m_blendState;
 }
 
 void PipelinePass::setSamplerState(SamplerState &samplerState) {
-    m_states.m_samplerState = samplerState;
+    mStates.m_samplerState = samplerState;
 }
 
 const SamplerState &PipelinePass::getSamplerState() const {
-    return m_states.m_samplerState;
+    return mStates.m_samplerState;
 }
 
 void PipelinePass::setClearState(ClearState &clearState) {
-    m_states.m_clearState = clearState;
+    mStates.m_clearState = clearState;
 }
 
 const ClearState &PipelinePass::getClearState() const {
-    return m_states.m_clearState;
+    return mStates.m_clearState;
 }
 
 void PipelinePass::setStencilState(StencilState &stencilState) {
-    m_states.m_stencilState = stencilState;
+    mStates.m_stencilState = stencilState;
 }
 
 const StencilState &PipelinePass::getStencilState() const {
-    return m_states.m_stencilState;
+    return mStates.m_stencilState;
 }
 
 void PipelinePass::setShader(Shader *shader) {
-    m_shader = shader;
+    mShader = shader;
 }
 
 Shader *PipelinePass::getShader() const {
-    return m_shader;
+    return mShader;
 }
 
 ui32 PipelinePass::getId() const {
-    return m_id;
+    return mId;
 }
 
 const c8 *PipelinePass::getPassNameById(ui32 id) {
@@ -120,25 +130,37 @@ const c8 *PipelinePass::getPassNameById(ui32 id) {
 }
 
 bool PipelinePass::operator==(const PipelinePass &rhs) const {
-    return (m_id == rhs.m_id && m_states.m_polygonState == rhs.m_states.m_polygonState &&
-            m_states.m_cullState == rhs.m_states.m_cullState && m_states.m_blendState == rhs.m_states.m_blendState &&
-            m_states.m_samplerState == rhs.m_states.m_samplerState && m_states.m_clearState == rhs.m_states.m_clearState &&
-            m_states.m_stencilState == rhs.m_states.m_stencilState);
+    return (mId == rhs.mId && mStates.m_polygonState == rhs.mStates.m_polygonState &&
+            mStates.m_cullState == rhs.mStates.m_cullState && mStates.m_blendState == rhs.mStates.m_blendState &&
+            mStates.m_samplerState == rhs.mStates.m_samplerState && mStates.m_clearState == rhs.mStates.m_clearState &&
+            mStates.m_stencilState == rhs.mStates.m_stencilState);
 }
 
 bool PipelinePass::operator!=(const PipelinePass &rhs) const {
     return !(*this == rhs);
 }
 
+Pipeline *Pipeline::create() {
+    return new Pipeline;
+}
+
+void Pipeline::destroy(Pipeline *pl) {
+    if (nullptr != pl) {
+        delete pl;
+    }
+}
+
 Pipeline::Pipeline() :
-        m_passes(),
-        m_currentPassId(-1),
-        m_inFrame(false) {
+        mPasses(),
+        mCurrentPassId(-1),
+        mInFrame(false) {
     // empty
 }
 
 Pipeline::~Pipeline() {
-    CPPCore::ContainerClear<PipelinePassArray>(m_passes);
+    for (ui32 i = 0; i < mPasses.size(); ++i) {
+        PipelinePass::destroy(mPasses[i]);
+    }
 }
 
 void Pipeline::addPass(PipelinePass *pass) {
@@ -146,34 +168,34 @@ void Pipeline::addPass(PipelinePass *pass) {
         return;
     }
 
-    m_passes.add(pass);
+    mPasses.add(pass);
 }
 
 size_t Pipeline::getNumPasses() const {
-    return m_passes.size();
+    return mPasses.size();
 }
 
 size_t Pipeline::beginFrame() {
-    if (m_inFrame) {
+    if (mInFrame) {
         return 0L;
     }
 
-    if (m_passes.isEmpty()) {
+    if (mPasses.isEmpty()) {
         return 0L;
     }
 
-    m_inFrame = true;
+    mInFrame = true;
 
-    return m_passes.size();
+    return mPasses.size();
 }
 
 PipelinePass *Pipeline::beginPass(ui32 passId) {
-    if (!m_inFrame) {
+    if (!mInFrame) {
         return nullptr;
     }
 
-    m_currentPassId = passId;
-    PipelinePass *pass = m_passes[passId];
+    mCurrentPassId = passId;
+    PipelinePass *pass = mPasses[passId];
     if (nullptr == pass) {
         return nullptr;
     }
@@ -182,23 +204,23 @@ PipelinePass *Pipeline::beginPass(ui32 passId) {
 }
 
 bool Pipeline::endPass(ui32 passId) {
-    if (static_cast<i32>(passId) != m_currentPassId || !m_inFrame) {
+    if (static_cast<i32>(passId) != mCurrentPassId || !mInFrame) {
         return false;
     }
 
-    m_currentPassId = -1;
+    mCurrentPassId = -1;
 
     return true;
 }
 
 void Pipeline::endFrame() {
-    m_inFrame = false;
+    mInFrame = false;
 }
 
 void Pipeline::clear() {
-    m_currentPassId = -1;
-    m_inFrame = false;
-    m_passes.resize(0);
+    mCurrentPassId = -1;
+    mInFrame = false;
+    mPasses.resize(0);
 }
 
 } // Namespace RenderBackend

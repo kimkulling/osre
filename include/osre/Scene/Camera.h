@@ -33,23 +33,44 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Scene {
 
+enum class CameraModel {
+    Perspective,
+    Orthogonal
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This class declares a base camera node within a scene-graph. 
+///	@brief  This class declares a base camera node within a scene-graph.
+/// There are two camera options supported:
+/// 1. Perspective camera model
+/// 2. Orthogonal camera model
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Camera : public Node {
 public:
     /// @brief  The class constructor.
+    /// @param  name        [in] The name for the camera node instance.
+    /// @param  ids         [in] The id container, for unique ids.
+    /// parent              [in] The parent node, nullptr for a root node.
     Camera(const String &name, Common::Ids &ids, Node *parent = nullptr);
 
-    /// @brief
+    /// @brief The class destructor.
     ~Camera() override;
 
-    /// @brief
+    /// @brief  Will set the projection parameter.
+    /// @param  fov         [in] The file of view, describes the angle of the view frustum.
+    /// @param  w           [in] The width of the viewport.
+    /// @param  h           [in] The height of the viewport.
+    /// @param  nearPlane   [in] The distance to the near plane of the view frustum.
+    /// @param  farPlane    [in] The distance to the far plane of the view frustum.
     void setProjectionParameters(f32 fov, f32 w, f32 h, f32 nearPlane, f32 farPlane);
 
-    /// @brief
+    void setCameraModel(CameraModel cm);
+
+    CameraModel getCameraModel() const;
+
+    /// @brief  Will update the camera node once per frame.
+    /// @param  dt  [in] The time tick diff since the last tick.
     void update(Time dt) override;
 
     /// @brief
@@ -59,7 +80,9 @@ public:
     void observeBoundingBox(const TAABB<f32> &box);
 
     /// @brief
-    void setLookAt(const glm::vec3 &eye, const glm::vec3 &center, const glm::vec3 &up);
+    void setLookAt(const glm::vec3 &eyePosition, const glm::vec3 &center, const glm::vec3 &up);
+
+    void setEyePos(const glm::vec3 &eyePosistion);
 
     /// @brief
     void setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farPlane);
@@ -99,14 +122,28 @@ protected:
     void onRender(RenderBackend::RenderBackendService *renderBackendSrv) override;
 
 private:
+    bool mRecalculateRequested;
+    CameraModel mCameraModel;
     f32 m_fov;
     TResolution<f32> mResolution;
     f32 m_near, m_far;
     f32 m_aspectRatio;
-    Node *m_observedNode;
+    f32 m_left, m_right, m_top, m_bottom;
     glm::vec3 m_eye, m_center, m_up;
     glm::mat4 m_view, m_projection;
 };
+
+inline void Camera::setCameraModel(CameraModel cm) {
+    mCameraModel = cm;
+}
+
+inline CameraModel Camera::getCameraModel() const {
+    return mCameraModel;
+}
+
+inline void Camera::setEyePos(const glm::vec3 &eyePosistion) {
+    m_eye = eyePosistion;
+}
 
 inline f32 Camera::getFov() const {
     return m_fov;

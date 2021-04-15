@@ -555,15 +555,21 @@ struct TQuat {
     T m_x, m_y, m_z, m_w;
 
     TQuat() :
-            m_x(0), m_y(0), m_z(0), m_w(1) {
+            m_x(0),
+            m_y(0),
+            m_z(0),
+            m_w(1) {
         // empty
     }
 
     TQuat(T x, T y, T z, T w) :
-            m_x(x), m_y(y), m_z(z), m_w(1) {
+            m_x(x),
+            m_y(y),
+            m_z(z),
+            m_w(1) {
         // empty
     }
-    
+
     void set(T x, T y, T z, T w) {
         m_x = x;
         m_y = y;
@@ -779,13 +785,18 @@ inline const float4 float4::operator/=(const float4 &v) {
     return *this;
 }
 
-template<class T>
+template <class T>
 struct TResolution {
     T Width, Height;
-    
-    TResolution( T w, T h ) :
-            Width( w ), Height( h ) {
+
+    TResolution(T w, T h) :
+            Width(w),
+            Height(h) {
         // empty
+    }
+
+    T getArea() const {
+        return Width * Height;
     }
 };
 
@@ -812,7 +823,8 @@ struct Version {
     i32 mMinor;
 
     Version(i32 major, i32 minor) :
-            mMajor(major), mMinor(minor) {
+            mMajor(major),
+            mMinor(minor) {
         // empty
     }
 };

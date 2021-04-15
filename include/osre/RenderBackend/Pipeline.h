@@ -55,8 +55,8 @@ static const ui32 MaxDbgPasses = 3;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT PipelinePass {
 public:
-    PipelinePass(ui32 id, Shader *shader);
-    ~PipelinePass();
+    static PipelinePass *create(ui32 id, Shader *shader);
+    static void destroy(PipelinePass *plp);
     void set(RenderTarget &rt, RenderStates &states);
     void setPolygonState(PolygonState polyState);
     PolygonState getPolygonState() const;
@@ -78,10 +78,14 @@ public:
     bool operator!=(const PipelinePass &rhs) const;
 
 private:
-    ui32 m_id;
-    RenderTarget m_renderTarget;
-    RenderStates m_states;
-    Shader *m_shader;
+    PipelinePass(ui32 id, Shader *shader);
+    ~PipelinePass();
+
+private:
+    ui32 mId;
+    RenderTarget mRenderTarget;
+    RenderStates mStates;
+    Shader *mShader;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -91,8 +95,8 @@ private:
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Pipeline {
 public:
-    Pipeline();
-    ~Pipeline();
+    static Pipeline *create();
+    static void destroy(Pipeline *pl);
     void addPass(PipelinePass *pass);
     size_t getNumPasses() const;
     size_t beginFrame();
@@ -102,10 +106,14 @@ public:
     void clear();
 
 private:
+    Pipeline();
+    ~Pipeline();
+
+private:
     using PipelinePassArray = TArray<PipelinePass*>;
-    PipelinePassArray m_passes;
-    i32 m_currentPassId;
-    bool m_inFrame;
+    PipelinePassArray mPasses;
+    i32 mCurrentPassId;
+    bool mInFrame;
 };
 
 } // Namespace RenderBackend

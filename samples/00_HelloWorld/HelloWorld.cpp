@@ -47,7 +47,7 @@ class HelloWorldApp : public App::AppBase {
     /// The entity to render
     Entity *mEntity;
     /// 
-    App::InputControllerBase *mKeyboardTransCtrl;
+    App::TransformControllerBase *mKeyboardTransCtrl;
 
 public:
     /// The class constructor with the incoming arguments from the command line.
@@ -85,7 +85,7 @@ protected:
             world->addEntity(mEntity);            
             camera->observeBoundingBox(mEntity->getAABB());
         }
-        mKeyboardTransCtrl = AppBase::getDefaultController(DefaultControllerType::KeyboardCtrl, m_transformMatrix);
+        mKeyboardTransCtrl = AppBase::getTransformController(DefaultControllerType::KeyboardCtrl, m_transformMatrix);
 
         return true;
     }
