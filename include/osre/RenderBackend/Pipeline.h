@@ -51,7 +51,7 @@ static const ui32 MaxDbgPasses = 3;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  Describes one pass in a render pipeline.
+///	@brief  This class is used to describes one pass in a render pipeline.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT PipelinePass {
 public:
@@ -91,22 +91,47 @@ private:
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief Describes a pipeline used for rendering.
+///	@brief This class is used to describes a pipeline used for rendering. A pipeline contains 
+/// passes. Each frame which will be rendered by the pipeline walks through all the passes. So
+/// a pipeline could look like:
+/// MyPipeline:
+///   1.) ClearPass ( will clear all the buffers)
+///   2.) Render all static meshes
+///   3.) Render special tiles for lightning
+///   4.) UI-Rendering 
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Pipeline {
+class OSRE_EXPORT Pipeline : public Common::Object {
 public:
-    static Pipeline *create();
+    /// @brief  Will create a new pipeline.
+    /// @return The new created pipeline instance.
+    static Pipeline *create(const String &pipelineName);
+
+    /// @brief
     static void destroy(Pipeline *pl);
+
+    /// @brief
     void addPass(PipelinePass *pass);
+
+    /// @brief
     size_t getNumPasses() const;
+
+    /// @brief
     size_t beginFrame();
+
+    /// @brief
     PipelinePass *beginPass(ui32 passId);
+
+    /// @brief
     bool endPass(ui32 passId);
+
+    /// @brief
     void endFrame();
+
+    /// @brief
     void clear();
 
 private:
-    Pipeline();
+    Pipeline(const String &pipelineName);
     ~Pipeline();
 
 private:

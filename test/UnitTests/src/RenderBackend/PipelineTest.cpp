@@ -48,7 +48,7 @@ protected:
 TEST_F( PipelineTest, create_success ) {
     bool ok( true );
     try {
-        Pipeline *pipeline = Pipeline::create();
+        Pipeline *pipeline = Pipeline::create("p1");
         Pipeline::destroy(pipeline);
     } catch ( ... ) {
         ok = false;
@@ -57,7 +57,7 @@ TEST_F( PipelineTest, create_success ) {
 }
 
 TEST_F( PipelineTest, accessPass_success ) {
-    Pipeline *pipeline = Pipeline::create();
+    Pipeline *pipeline = Pipeline::create("p1");
 
     size_t numPasses = pipeline->getNumPasses();
     EXPECT_EQ( 0u, numPasses );
@@ -71,7 +71,7 @@ TEST_F( PipelineTest, accessPass_success ) {
 }
 
 TEST_F( PipelineTest, iterateThroughPasses_success ) {
-    Pipeline *pipeline = Pipeline::create();
+    Pipeline *pipeline = Pipeline::create("p1");
     pipeline->addPass(m_pass1);
     pipeline->addPass(m_pass2);
 

@@ -27,12 +27,16 @@ namespace OSRE {
 namespace RenderBackend {
 
 namespace Details {
+
 static const c8 *RenderPassNames[] = {
     "RenderPass",
     "UiPass",
     "DbgPass"
 };
+
 } // Namespace Details
+
+constexpr i32 InvalidPassIdx = -1;
 
 PipelinePass *PipelinePass::create(ui32 id, Shader *shader) {
     return new PipelinePass(id, shader);
@@ -140,8 +144,8 @@ bool PipelinePass::operator!=(const PipelinePass &rhs) const {
     return !(*this == rhs);
 }
 
-Pipeline *Pipeline::create() {
-    return new Pipeline;
+Pipeline *Pipeline::create(const String &pipelineName) {
+    return new Pipeline(pipelineName);
 }
 
 void Pipeline::destroy(Pipeline *pl) {
@@ -150,9 +154,10 @@ void Pipeline::destroy(Pipeline *pl) {
     }
 }
 
-Pipeline::Pipeline() :
+Pipeline::Pipeline(const String &pipelineName) :
+        Object(pipelineName),
         mPasses(),
-        mCurrentPassId(-1),
+        mCurrentPassId(InvalidPassIdx),
         mInFrame(false) {
     // empty
 }
@@ -208,7 +213,7 @@ bool Pipeline::endPass(ui32 passId) {
         return false;
     }
 
-    mCurrentPassId = -1;
+    mCurrentPassId = InvalidPassIdx;
 
     return true;
 }
@@ -218,7 +223,7 @@ void Pipeline::endFrame() {
 }
 
 void Pipeline::clear() {
-    mCurrentPassId = -1;
+    mCurrentPassId = InvalidPassIdx;
     mInFrame = false;
     mPasses.resize(0);
 }

@@ -54,18 +54,39 @@ class World;
 class AppBase;
 
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
 ///	@brief  This enum describes the default controller type.
+//-------------------------------------------------------------------------------------------------
 enum class DefaultControllerType {
     KeyboardCtrl    ///< Use the keyboard default controller.
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief This class declares the basic interface for transformation update controllers. 
+///        A transform controller will perform different animations for transform blocks.
+//-------------------------------------------------------------------------------------------------
 class TransformControllerBase {
 public:
+    /// @brief  The class destructor, virtual.
     virtual ~TransformControllerBase() = default;
+
+    /// @brief  The update, override this for your own proposes.
     virtual void update(RenderBackend::RenderBackendService *rbSrv) = 0;
+
+    TransformControllerBase(const TransformControllerBase &) = delete;
+    TransformControllerBase &operator=(const TransformControllerBase &) = delete;
+
+protected:
+    TransformControllerBase() = default;
 };
 
 //-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
 ///	@brief  This class implements the default keyboard controlling.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT KeyboardTransformController : public TransformControllerBase {
@@ -82,11 +103,18 @@ private:
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This class implements the basics for a new OSRE-application. It helps you to 
-/// - create all subsystems on startup
-/// - prepares the ServiceProvider
-/// - destroy all subsystems on shutdown
-/// - managing stages and views for a running application.
+///	@brief  This class provides the basic API for managing a OSRE_base application.
+/// The following features are currently provided:
+/// - Create all subsystems on startup
+/// - Prepares the ServiceProvider
+/// - Destroy all subsystems on shutdown
+/// - Managing worlds and their scene-graphs for rendering.
+/// - Manages all render-pipelines for the frame-rendering.
+/// - Setting up a root window
+/// - Managing easy user-inputs.
+/// - Hooks for creating, rendering, frame-updates and destroying. Each Hook is called on<Event> 
+///   like onUpdate for the update hook. So if you want to write a bundle of updates you can derive 
+///   your class from AppBase, override the onUpdate method with your own updates for the scene etc
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AppBase {
 public:
@@ -143,12 +171,23 @@ public:
     /// @return The global settings.
     virtual Properties::Settings *getSettings() const;
 
-    virtual World *createWorld( const String &name );
+    /// @brief  Will create a new world instance.
+    /// @param  name    [in] The name for the world.
+    /// @return The new created world instance.
+    virtual World *createWorld(const String &name);
 
-    virtual World *findWorld( const String &name ) const;
+    /// @brief  Will look for an existing world described by its name.
+    /// @param  name    [in9 The name to look for.
+    /// @return The found world of nullptr if nothing was found.
+    virtual World *findWorld(const String &name) const;
     
-    virtual bool setActiveWorld( const String &name );
+    /// @brief  Will set a world to the active on.
+    /// @param  name    [in] The name of the world for activation.
+    /// @return true if the world was activated, false if not.
+    virtual bool setActiveWorld(const String &name);
     
+    /// @brief  Will return the activated world.
+    /// @return The activated world or a nullptr if none was activated.
     virtual World *getActiveWorld() const;
 
     /// @brief  Will activate the given view in the active world instance.
@@ -179,17 +218,45 @@ public:
     /// @param  title       [in] The new windows title.
     virtual void setWindowsTitle( const String &title );
 
+    /// @brief  Will return the id-container of the application
+    /// @return The id container.
     virtual Common::Ids *getIdContainer() const;
 
     /// @brief  Will create the default pipeline for rendering.
     /// @return The default pipeline.
     static RenderBackend::Pipeline *createDefaultPipeline();
 
-    bool isKeyPressed(Platform::Key key) const;
+    /// @brief  Will create a new render pipeline.
+    /// @param  name        [in] The name for the new pipeline. 
+    /// @return The new created instance will be returned. If a pipeline with the 
+    ///         same name already exists this instance will be returned.
+    virtual RenderBackend::Pipeline *createPipeline(const String &name);
 
-    void getResolution(ui32 &w, ui32 &h);
+    /// @brief  Will search for < pipeline by its name.
+    /// @param  name        [in] The name of the pipeline to look for.
+    /// @return The found pipeline instance or nullptr if no pipeline with this name was found.
+    virtual RenderBackend::Pipeline *findPipeline(const String &name);
 
-    TransformControllerBase *getTransformController(DefaultControllerType type, RenderBackend::TransformMatrixBlock &tmb);
+    /// @brief  Will destroy a stored pipeline described by its name.
+    /// @param  name        [in9 The name for the pipeline to destroy.
+    /// @return true if the pipeline was destroyed, false if not.
+    virtual bool destroyPipeline(const String &name);
+
+    /// @brief  Checks if the key was pressed in this frame.
+    /// @param  key     [in] The key-code to look for.
+    /// @return true if the key was pressed, false if not.
+    virtual bool isKeyPressed(Platform::Key key) const;
+
+    /// @brief  Will return the resolution of the root render surface.
+    /// @param  w       [out] The width.
+    /// @param  height  [out] The width.
+    virtual void getResolution(ui32 &w, ui32 &h);
+
+    /// @brief  Will return the default transform controller.
+    /// @param  type    [in] The requested controller type.
+    /// @param  tb      [in] The controlled transform block.
+    /// @return The transform controller or nullptr if none is there.
+    virtual TransformControllerBase *getTransformController(DefaultControllerType type, RenderBackend::TransformMatrixBlock &tmb);
 
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
@@ -225,8 +292,9 @@ private:
     Platform::PlatformInterface *m_platformInterface;
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
-    CPPCore::TArray<World *> m_worlds;
+    CPPCore::TArray<World*> m_worlds;
     World *m_activeWorld;
+    CPPCore::TArray<RenderBackend::Pipeline *> mPipelines;
     MouseEventListener *m_mouseEvListener;
     KeyboardEventListener *m_keyboardEvListener;
     Common::Ids *m_ids;

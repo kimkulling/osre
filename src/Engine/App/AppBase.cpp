@@ -36,11 +36,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/Pipeline.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/MaterialBuilder.h>
 #include <osre/Scene/Camera.h>
+#include <osre/Scene/MaterialBuilder.h>
 
-#include "src/Engine/Platform/PlatformPluginFactory.h"
 #include "src/Engine/App/MouseEventListener.h"
+#include "src/Engine/Platform/PlatformPluginFactory.h"
 
 namespace OSRE {
 namespace App {
@@ -55,10 +55,10 @@ static const c8 *Tag = "AppBase";
 
 KeyboardTransformController::KeyboardTransformController(AppBase *app, TransformMatrixBlock &tmb) :
         mTransform(tmb),
-        mApp( app ) {
+        mApp(app) {
     // empty
 }
-    
+
 KeyboardTransformController::~KeyboardTransformController() {
     mApp = nullptr;
 }
@@ -68,7 +68,7 @@ void KeyboardTransformController::update(RenderBackendService *rbSrv) {
     if (mApp->isKeyPressed(Platform::KEY_A)) {
         mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
     }
-        
+
     if (mApp->isKeyPressed(Platform::KEY_D)) {
         mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
     }
@@ -130,7 +130,9 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         m_platformInterface(nullptr),
         m_timer(nullptr),
         m_rbService(nullptr),
+        m_worlds(),
         m_activeWorld(nullptr),
+        mPipelines(),
         m_mouseEvListener(nullptr),
         m_keyboardEvListener(nullptr),
         m_ids(nullptr),
@@ -180,8 +182,9 @@ bool AppBase::destroy() {
 void AppBase::update() {
     if (m_state == State::Created) {
         m_state = State::Running;
-        osre_debug(Tag, "Set application state to running.");
+        osre_debug(Tag, "Set application state to running, missed to call create?");
     }
+    
     onUpdate();
 }
 
@@ -404,7 +407,7 @@ bool AppBase::onCreate() {
     IO::IOService::create();
 #ifdef OSRE_WINDOWS
     App::AssetRegistry::registerAssetPath("assets", "../../assets");
-#else 
+#else
     App::AssetRegistry::registerAssetPath("assets", "../assets");
 #endif
 
@@ -441,6 +444,11 @@ bool AppBase::onDestroy() {
 
     delete m_activeWorld;
     m_activeWorld = nullptr;
+
+    for (ui32 i = 0; i < mPipelines.size(); ++i) {
+        Pipeline::destroy(mPipelines[i]);
+    }
+    mPipelines.clear();
 
     delete m_ids;
     m_ids = nullptr;
@@ -479,13 +487,52 @@ Ids *AppBase::getIdContainer() const {
 }
 
 Pipeline *AppBase::createDefaultPipeline() {
-    Pipeline *pipeline = Pipeline::create();
+    Pipeline *pipeline = Pipeline::create("pipeline.default");
     PipelinePass *renderPass = PipelinePass::create(RenderPassId, nullptr);
     CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
     renderPass->setCullState(cullState);
     pipeline->addPass(renderPass);
 
     return pipeline;
+}
+
+RenderBackend::Pipeline *AppBase::createPipeline(const String &name) {
+    Pipeline *p = findPipeline(name);
+    if (nullptr == p) {
+        p = Pipeline::create(name);
+        mPipelines.add(p);
+    }
+
+    return p;
+}
+
+RenderBackend::Pipeline *AppBase::findPipeline(const String &name) {
+    if (name.empty()) {
+        return nullptr;
+    }
+    
+    for (ui32 i = 0; i < mPipelines.size(); ++i) {
+        if (mPipelines[i]->getName() == name) {
+            return mPipelines[i];
+        }
+    }
+
+    return nullptr;
+}
+
+bool AppBase::destroyPipeline(const String &name) {
+    if (name.empty()) {
+        return false;
+    }
+
+    for (ui32 i = 0; i < mPipelines.size(); ++i) {
+        if (mPipelines[i]->getName() == name) {
+            mPipelines.remove(i);
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool AppBase::isKeyPressed(Key key) const {
@@ -496,16 +543,17 @@ bool AppBase::isKeyPressed(Key key) const {
     return m_keyboardEvListener->isKeyPressed(key);
 }
 
-void AppBase::getResolution( ui32 &w, ui32 &h ) {
-    w = h = 0;
+void AppBase::getResolution(ui32 &width, ui32 &height) {
+    width = height = 0;
     Rect2ui windowsRect;
     Platform::AbstractWindow *rootWindow = getRootWindow();
     if (nullptr == rootWindow) {
         return;
     }
+
     rootWindow->getWindowsRect(windowsRect);
-    w = windowsRect.getWidth();
-    h = windowsRect.getHeight();
+    width = windowsRect.getWidth();
+    height = windowsRect.getHeight();
 }
 
 } // Namespace App
