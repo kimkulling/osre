@@ -385,7 +385,7 @@ bool AppBase::onCreate() {
 
     ResourceCacheService *rcSrv = new ResourceCacheService;
 
-    ServiceProvider::create(m_rbService, rcSrv);
+    ServiceProvider::create(m_rbService, rcSrv, IOService::getInstance());
 
     // Setup onMouse event-listener
     AbstractPlatformEventQueue *evHandler = m_platformInterface->getPlatformEventHandler();

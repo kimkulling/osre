@@ -116,9 +116,9 @@ bool Win32DisplayInterface::getDisplayDPI(ui32 displayIndex, DisplayDPIInfo *ddp
         return false;
     }
 
-    ddpiinfo->ddpi = ::sqrt(dpiX * dpiX + dpiY * dpiY);
-    ddpiinfo->hdpi = dpiX;
-    ddpiinfo->vdpi = dpiY;
+    ddpiinfo->ddpi = static_cast<f32>(::sqrt(dpiX * dpiX + dpiY * dpiY));
+    ddpiinfo->hdpi = static_cast<f32>(dpiX);
+    ddpiinfo->vdpi = static_cast<f32>(dpiY);
 
     return true;
 }

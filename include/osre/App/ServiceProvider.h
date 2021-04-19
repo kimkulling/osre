@@ -37,14 +37,15 @@ class ResourceCacheService;
 class ServiceProvider {
 public:
     static ServiceProvider *create( RenderBackend::RenderBackendService *rbService, 
-        ResourceCacheService *resCacheService );
+        ResourceCacheService *resCacheService, IO::IOService *ioService);
     static void destroy();
     static RenderBackend::RenderBackendService *getRenderBackendService();
     static ResourceCacheService *getResourceCacheService();
+    static IO::IOService *getIOService();
 
 private:
     explicit ServiceProvider(RenderBackend::RenderBackendService *rbService,
-                             ResourceCacheService *resCacheService);
+            ResourceCacheService *resCacheService, IO::IOService *ioService);
     ~ServiceProvider();
 
 private:
@@ -52,6 +53,7 @@ private:
 
     RenderBackend::RenderBackendService *m_rbService;
     ResourceCacheService *m_resCacheService;
+    IO::IOService *mIOService;
 };
 
 } // Namespace App

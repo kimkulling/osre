@@ -30,7 +30,9 @@ namespace OSRE {
 namespace IO {
 
 ZipFileStream::ZipFileStream(const Uri &uri, unzFile zipFile) :
-        Stream(uri, AccessMode::ReadAccess), m_zipFile(zipFile), m_bDirty(true) {
+        Stream(uri, AccessMode::ReadAccess),
+        m_zipFile(zipFile),
+        m_bDirty(true) {
     assert(nullptr != zipFile);
 }
 
@@ -45,11 +47,11 @@ bool ZipFileStream::canRead() const {
     return true;
 }
 
-ui32 ZipFileStream::read(void *buffer, ui32 size) {
+size_t ZipFileStream::read(void *buffer, size_t size) {
     assert(nullptr != buffer);
     assert(nullptr != m_zipFile);
 
-    ui32 filesize = 0;
+    size_t filesize = 0;
     if (0 == size) {
         return filesize;
     }
@@ -82,7 +84,7 @@ ui32 ZipFileStream::read(void *buffer, ui32 size) {
     return filesize;
 }
 
-ui32 ZipFileStream::getSize() const {
+size_t ZipFileStream::getSize() const {
     // get the filename
     const String &abspath = getUri().getAbsPath();
 

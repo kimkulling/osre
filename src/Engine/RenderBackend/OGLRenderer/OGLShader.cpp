@@ -83,7 +83,7 @@ bool OGLShader::loadFromStream(ShaderType type, IO::Stream &stream) {
         return false;
     }
 
-    const ui32 filesize(stream.getSize());
+    const size_t filesize = stream.getSize();
     if (0 == filesize) {
         return true;
     }

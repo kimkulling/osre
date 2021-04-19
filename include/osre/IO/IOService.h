@@ -49,14 +49,14 @@ public:
 
     ///	@brief	Will open the access to the IOServer.
     ///	@return	true, if the access was opened properly, false if not.
-    bool onOpen();
+    bool onOpen() override;
 
     ///	@brief	Will close the access to the IOServer.
     ///	@return	true, if the access was opened properly, false if not.
-    bool onClose();
+    bool onClose() override;
     
     ///	@brief	The update callback, will be called once per frame.
-    bool onUpdate();
+    bool onUpdate() override;
 
     /// @brief  A new file system will be added.
     ///	@param	name		[in] The name of the new file system.

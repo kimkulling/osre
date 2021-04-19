@@ -41,37 +41,37 @@ public:
     /// The class constructor with URI and access mode.
     FileStream(const Uri &uri, AccessMode requestedAccess);
     /// The class destructor.
-    ~FileStream();
+    ~FileStream() override;
     /// true for files with permission.
-    bool canRead() const;
+    bool canRead() const override;
     /// true for files with permission.
-    bool canWrite() const;
+    bool canWrite() const override;
     /// true for files with permission.
-    bool canSeek() const;
+    bool canSeek() const override;
     /// Opens the file.
-    bool open();
+    bool open() override;
     /// Close the file.
-    bool close();
+    bool close() override;
     /// Returns file size.
-    ui32 getSize() const;
+    size_t getSize() const override;
     /// Reads from file.
-    ui32 read(void *pBuffer, ui32 size);
+    size_t read(void *pBuffer, size_t size) override;
     /// Writes into file.
-    ui32 write(const void *pBuffer, ui32 size);
+    size_t write(const void *pBuffer, size_t size) override;
     /// Reads a single integer value.
-    ui32 readI32(i32 &value);
+    size_t readI32(i32 &value) override;
     /// Writes a single integer value.
-    ui32 writeI32(i32 value);
+    size_t writeI32(i32 value) override;
     /// Reads a single unsigned integer value.
-    ui32 readUI32(ui32 &value);
+    size_t readUI32(ui32 &value) override;
     /// Writes a single unsigned integer value.
-    ui32 writeUI32(ui32 value);
+    size_t writeUI32(ui32 value) override;
     /// Moves to given position.
-    Position seek(Offset offset, Origin origin);
+    Position seek(Offset offset, Origin origin) override;
     /// Position in the file.
-    Position tell();
+    Position tell() override;
     /// Returns true, when the stream access is open.
-    bool isOpen() const;
+    bool isOpen() const override;
 
 private:
     FILE *m_file;

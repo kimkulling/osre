@@ -57,6 +57,8 @@ struct SceneData {
     SceneData();
 };
 
+class TreeViewBase;
+
 //-------------------------------------------------------------------------------------------------
 /// @brief  The main application of the OSRE-Editor.
 //-------------------------------------------------------------------------------------------------
@@ -120,7 +122,7 @@ public:
     ModuleBase *findModule(const String &name) const;
     bool unregisterModule(ModuleBase *moc);
 
-    void createSceneTreeview(ui32 x, ui32 y);
+    TreeViewBase *createSceneTreeview(ui32 x, ui32 y);
 
 protected:
     /// The onCreate callback
@@ -141,6 +143,7 @@ private:
     App::Project *mProject;
     ModuleArray mModules;
     Rect2ui mResolution;
+    TreeViewBase *mTreeView;
 };
 
 inline bool OsreEdApp::hasModel() const {
