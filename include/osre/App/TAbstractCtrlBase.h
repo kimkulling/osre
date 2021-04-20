@@ -22,8 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/App/AppCommon.h>
 #include <cppcore/Container/TArray.h>
+#include <osre/App/AppCommon.h>
 
 namespace OSRE {
 namespace App {
@@ -31,118 +31,110 @@ namespace App {
 //--------------------------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///
-///	@brief	The abstract base class for application controller. 
+///	@brief	The abstract base class for application controller.
 //--------------------------------------------------------------------------------------------------------------------
-template<class TEnum>
+template <class TEnum>
 class TAbstractCtrlStateListener {
 public:
     virtual ~TAbstractCtrlStateListener();
-    virtual void onStateChanged( TEnum newState ) = 0;
+    virtual void onStateChanged(TEnum newState) = 0;
 
 protected:
-    TAbstractCtrlStateListener( TAbstractCtrlBase<TEnum> *ctrl );
+    TAbstractCtrlStateListener(TAbstractCtrlBase<TEnum> *ctrl);
 
 private:
     TAbstractCtrlBase<TEnum> *m_instance;
 };
 
-template<class TEnum>
-inline
-TAbstractCtrlStateListener<TEnum>::TAbstractCtrlStateListener( TAbstractCtrlBase<TEnum> *ctrl )
-: m_instance( ctrl ) {
+template <class TEnum>
+inline TAbstractCtrlStateListener<TEnum>::TAbstractCtrlStateListener(TAbstractCtrlBase<TEnum> *ctrl) :
+        m_instance(ctrl) {
     // empty
 }
 
-template<class TEnum>
-inline
-    TAbstractCtrlStateListener<TEnum>::~TAbstractCtrlStateListener() {
+template <class TEnum>
+inline TAbstractCtrlStateListener<TEnum>::~TAbstractCtrlStateListener() {
     // empty
 }
 
 //--------------------------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///
-///	@brief	The abstract base class for application controller. 
+///	@brief	The abstract base class for application controller.
 //--------------------------------------------------------------------------------------------------------------------
-template<class T>
+template <class T>
 class TAbstractCtrlBase {
 public:
     virtual ~TAbstractCtrlBase();
-    bool registerListener( TAbstractCtrlStateListener<T> *listener );
-    bool unregisterListener( TAbstractCtrlStateListener<T> *listener );
-    bool gotoState( T newState );
+    bool registerListener(TAbstractCtrlStateListener<T> *listener);
+    bool unregisterListener(TAbstractCtrlStateListener<T> *listener);
+    bool gotoState(T newState);
     T getState() const;
-    bool update( d32 timetick );
+    bool update(d32 timetick);
 
 protected:
-    TAbstractCtrlBase( T initialState );
+    TAbstractCtrlBase(T initialState);
     void notifyListener();
-    virtual bool onStateEnter( T newState );
+    virtual bool onStateEnter(T newState);
     virtual bool onState() = 0;
-    virtual bool onUpdate( d32 timetick );
-    virtual bool onStateLeave( T oldState );
+    virtual bool onUpdate(d32 timetick);
+    virtual bool onStateLeave(T oldState);
 
 private:
-    typedef typename CPPCore::TArray<TAbstractCtrlStateListener<T>* >::Iterator ListenerIt;
-    CPPCore::TArray<TAbstractCtrlStateListener<T>* > m_listener;
+    typedef typename CPPCore::TArray<TAbstractCtrlStateListener<T> *>::Iterator ListenerIt;
+    CPPCore::TArray<TAbstractCtrlStateListener<T> *> m_listener;
     T m_state;
 };
 
-template<class T>
-inline
-TAbstractCtrlBase<T>::TAbstractCtrlBase( T initialState )
-: m_listener()
-, m_state( initialState ) {
+template <class T>
+inline TAbstractCtrlBase<T>::TAbstractCtrlBase(T initialState) :
+        m_listener(), m_state(initialState) {
     // empty
 }
 
-template<class T>
-inline
-TAbstractCtrlBase<T>::~TAbstractCtrlBase() {
+template <class T>
+inline TAbstractCtrlBase<T>::~TAbstractCtrlBase() {
     // empty
 }
 
-template<class T>
-inline
-bool TAbstractCtrlBase<T>::registerListener( TAbstractCtrlStateListener<T> *listener ) {
-    if ( nullptr == listener ) {
+template <class T>
+inline bool TAbstractCtrlBase<T>::registerListener(TAbstractCtrlStateListener<T> *listener) {
+    if (nullptr == listener) {
         return false;
     }
 
-    m_listener.add( listener );
+    m_listener.add(listener);
 
     return true;
 }
 
-template<class T>
-inline
-bool TAbstractCtrlBase<T>::unregisterListener( TAbstractCtrlStateListener<T> *listener ) {
-    if ( nullptr == listener ) {
+template <class T>
+inline bool TAbstractCtrlBase<T>::unregisterListener(TAbstractCtrlStateListener<T> *listener) {
+    if (nullptr == listener) {
         return false;
     }
 
-    ListenerIt it = m_listener.find( listener );
-    if ( it == m_listener.end() ) {
+    ListenerIt it = m_listener.find(listener);
+    if (it == m_listener.end()) {
         return false;
     }
 
-    m_listener.remove( it );
+    m_listener.remove(it);
 
     return true;
 }
 
-template<class T>
-inline
-bool TAbstractCtrlBase<T>::gotoState( T newState ) {
-    if ( !onStateLeave( m_state ) ) {
+template <class T>
+inline bool TAbstractCtrlBase<T>::gotoState(T newState) {
+    if (!onStateLeave(m_state)) {
         return false;
     }
-    if ( !onStateEnter( newState ) ) {
+    if (!onStateEnter(newState)) {
         return false;
     }
 
     m_state = newState;
-    if ( !onState() ) {
+    if (!onState()) {
         return false;
     }
 
@@ -151,46 +143,40 @@ bool TAbstractCtrlBase<T>::gotoState( T newState ) {
     return true;
 }
 
-template<class T>
-inline
-T TAbstractCtrlBase<T>::getState() const {
+template <class T>
+inline T TAbstractCtrlBase<T>::getState() const {
     return m_state;
 }
 
-template<class T>
-inline
-bool TAbstractCtrlBase<T>::update( d32 timetick ) {
-    if ( onState() ) {
-        return onUpdate( timetick );
+template <class T>
+inline bool TAbstractCtrlBase<T>::update(d32 timetick) {
+    if (onState()) {
+        return onUpdate(timetick);
     }
     return false;
 }
 
-template<class T>
-inline
-void TAbstractCtrlBase<T>::notifyListener() {
-for ( ui32 i = 0; i < m_listener.size(); i++ ) {
-        if ( nullptr != m_listener[ i ] ) {
-            m_listener[ i ]->onStateChanged( m_state );
+template <class T>
+inline void TAbstractCtrlBase<T>::notifyListener() {
+    for (ui32 i = 0; i < m_listener.size(); i++) {
+        if (nullptr != m_listener[i]) {
+            m_listener[i]->onStateChanged(m_state);
         }
     }
 }
 
-template<class T>
-inline
-bool TAbstractCtrlBase<T>::onStateEnter( T ) {
+template <class T>
+inline bool TAbstractCtrlBase<T>::onStateEnter(T) {
     return true;
 }
 
-template<class T>
-inline
-bool TAbstractCtrlBase<T>::onUpdate( d32 ) {
+template <class T>
+inline bool TAbstractCtrlBase<T>::onUpdate(d32) {
     return true;
 }
 
-template<class T>
-inline
-bool TAbstractCtrlBase<T>::onStateLeave( T ) {
+template <class T>
+inline bool TAbstractCtrlBase<T>::onStateLeave(T) {
     return true;
 }
 
