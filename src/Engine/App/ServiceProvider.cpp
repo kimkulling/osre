@@ -20,9 +20,10 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
+#include <osre/App/ResourceCacheService.h>
 #include <osre/App/ServiceProvider.h>
 #include <osre/Debugging/osre_debugging.h>
-#include <osre/App/ResourceCacheService.h>
+#include <osre/IO/IOService.h>
 
 namespace OSRE {
 namespace App {
@@ -31,24 +32,24 @@ using namespace ::OSRE::RenderBackend;
 
 ServiceProvider *ServiceProvider::s_instance = nullptr;
 
-ServiceProvider *ServiceProvider::create( RenderBackendService *rbService, ResourceCacheService *resCacheService ) {
+ServiceProvider *ServiceProvider::create(RenderBackendService *rbService, ResourceCacheService *resCacheService, IO::IOService *ioService) {
     OSRE_ASSERT(nullptr != rbService);
 
-    if ( nullptr == s_instance ) {
-        s_instance = new ServiceProvider( rbService, resCacheService );
+    if (nullptr == s_instance) {
+        s_instance = new ServiceProvider(rbService, resCacheService, ioService);
     }
     return s_instance;
 }
 
 void ServiceProvider::destroy() {
-    if ( nullptr != s_instance ) {
+    if (nullptr != s_instance) {
         delete s_instance;
         s_instance = nullptr;
     }
 }
 
 RenderBackend::RenderBackendService *ServiceProvider::getRenderBackendService() {
-    if ( nullptr == s_instance) {
+    if (nullptr == s_instance) {
         return nullptr;
     }
     return s_instance->m_rbService;
@@ -61,12 +62,17 @@ ResourceCacheService *ServiceProvider::getResourceCacheService() {
     return s_instance->m_resCacheService;
 }
 
-ServiceProvider::ServiceProvider(RenderBackend::RenderBackendService *rbService,
-                                 ResourceCacheService *resCacheService)
-: m_rbService(rbService)
-, m_resCacheService(resCacheService) {
+IO::IOService *ServiceProvider::getIOService() {
+    if (nullptr == s_instance) {
+        return nullptr;
+    }
+    return s_instance->mIOService;
+}
+
+ServiceProvider::ServiceProvider(RenderBackend::RenderBackendService *rbService, ResourceCacheService *resCacheService, IO::IOService *ioService) :
+        m_rbService(rbService), m_resCacheService(resCacheService), mIOService(ioService) {
     OSRE_ASSERT(nullptr != m_rbService);
-    OSRE_ASSERT( nullptr != m_resCacheService );
+    OSRE_ASSERT(nullptr != m_resCacheService);
 }
 
 ServiceProvider::~ServiceProvider() {
@@ -76,4 +82,3 @@ ServiceProvider::~ServiceProvider() {
 
 } // Namespace App
 } // Namespace OSRE
-

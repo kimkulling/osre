@@ -112,59 +112,59 @@ public:
     
     /// @brief  Returns the file size.
     /// @return The file size.
-    virtual ui32 getSize() const;
+    virtual size_t getSize() const;
     
     /// @brief  Reads a given number of bytes from the stream.
     /// @param  buffer          [in] The buffer to read in.
     /// @param  size            [in] The number of bytes to read.
     /// @return The number of read bytes.
-    virtual ui32 read( void *buffer, ui32 size );
+    virtual size_t read(void *buffer, size_t size);
     
     /// @brief  Writes a given number of bytes into the stream.
     /// @param  buffer          [out] The buffer to write.
     /// @param  size            [in] The number of bytes to write.
     /// @return The number of written bytes.
-    virtual ui32 write( const void *buffer, ui32 size );
+    virtual size_t write(const void *buffer, size_t size);
     
     /// @brief  Reads a given i32 value.
     /// @param  value       [out] The i32-value to read-
     /// @return The number of written bytes.
-    virtual ui32 readI32( i32 &value );
+    virtual size_t readI32(i32 &value);
 
     /// @brief  Writes a given i32 value into the stream.
     /// @param  value       [in] The i32-value to write.
     /// @return The number of written bytes.
-    virtual ui32 writeI32( i32 value );
+    virtual size_t writeI32(i32 value);
 
     /// @brief  Reads a given ui32 value.
     /// @param  value       [out] The ui32-value to read.
     /// @return The number of read bytes.
-    virtual ui32 readUI32( ui32 &value );
+    virtual size_t readUI32(ui32 &value);
 
     /// @brief  Writes a given ui32 value into the stream.
     /// @param  value       [in] The ui32-value to write.
     /// @return The number of written bytes.
-    virtual ui32 writeUI32( ui32 value );
+    virtual size_t writeUI32(ui32 value);
 
     /// @brief  Reads a given f32 value.
     /// @param  value       [out] The f32-value to read.
     /// @return The number of read bytes.
-    virtual ui32 readF32( f32 &value );
+    virtual size_t readF32(f32 &value);
 
     /// @brief  Writes a given f32 value into the stream.
     /// @param  value       [in] The f32-value to write.
     /// @return The number of written bytes.
-    virtual ui32 writeF32( f32 value );
+    virtual size_t writeF32(f32 value);
 
     /// @brief  Reads a given d32 value.
     /// @param  value       [out] The d32-value to read.
     /// @return The number of read bytes.
-    virtual ui32 readD32( d32 &value );
+    virtual size_t readD32(d32 &value);
 
     /// @brief  Writes a given d32 value into the stream.
     /// @param  value       [in] The d32-value to write.
     /// @return The number of written bytes.
-    virtual ui32 writeD32( d32 value );
+    virtual size_t writeD32(d32 value);
 
     /// @brief  Moves to the current position.
     /// @param  offset          [in] The offset.

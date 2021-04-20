@@ -1232,7 +1232,7 @@ const CPPCore::TArray<VkExtensionProperties> &VlkRenderBackend::getExtensions() 
 }
 
 VlkShaderModule *VlkRenderBackend::createShaderModule(IO::Stream &stream) {
-    const ui32 size(stream.getSize());
+    const size_t size = stream.getSize();
     if (0 == size) {
         return nullptr;
     }

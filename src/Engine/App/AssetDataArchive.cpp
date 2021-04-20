@@ -71,7 +71,7 @@ World *AssetDataArchive::load( const IO::Uri &fileLocation ) {
         return nullptr;
     }
     
-    const ui32 size(file->getSize());
+    const size_t size = file->getSize();
     std::string doc;
     doc.resize(size);
     file->read(&doc[0], size);

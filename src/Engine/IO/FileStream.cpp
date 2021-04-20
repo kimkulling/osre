@@ -108,7 +108,7 @@ bool FileStream::close() {
     return false;
 }
 
-ui32 FileStream::getSize() const {
+size_t FileStream::getSize() const {
     OSRE_ASSERT(!m_Uri.getAbsPath().empty());
 
     const String &abspath(m_Uri.getAbsPath());
@@ -132,7 +132,7 @@ ui32 FileStream::getSize() const {
 #endif
 }
 
-ui32 FileStream::read(void *buffer, ui32 size) {
+size_t FileStream::read(void *buffer, size_t size) {
     if (!buffer || 0 == size) {
         return 0;
     }
@@ -143,12 +143,12 @@ ui32 FileStream::read(void *buffer, ui32 size) {
 
     OSRE_ASSERT(nullptr != m_file);
     if (m_file) {
-        return (static_cast<ui32>(::fread(buffer, sizeof(uc8), size, m_file)));
+        return ::fread(buffer, sizeof(uc8), size, m_file);
     }
     return 0;
 }
 
-ui32 FileStream::write(const void *buffer, ui32 size) {
+size_t FileStream::write(const void *buffer, size_t size) {
     OSRE_ASSERT(nullptr != buffer);
     if (!isOpen() || 0 == size || !buffer) {
         return 0;
@@ -156,43 +156,43 @@ ui32 FileStream::write(const void *buffer, ui32 size) {
 
     OSRE_ASSERT(nullptr != m_file);
     if (m_file) {
-        return (static_cast<ui32>(::fwrite(buffer, sizeof(c8), size, m_file)));
+        return ::fwrite(buffer, sizeof(c8), size, m_file);
     }
 
     return 0;
 }
 
-ui32 FileStream::readI32(i32 &value) {
+size_t FileStream::readI32(i32 &value) {
     OSRE_ASSERT(nullptr != m_file);
     if (m_file) {
-        return (static_cast<ui32>(::fread(&value, sizeof(i32), 1, m_file)));
+        return ::fread(&value, sizeof(i32), 1, m_file);
     }
 
     return 0;
 }
 
-ui32 FileStream::writeI32(i32 value) {
+size_t FileStream::writeI32(i32 value) {
     OSRE_ASSERT(nullptr != m_file);
     if (m_file) {
-        return (static_cast<ui32>(::fwrite(&value, sizeof(i32), 1, m_file)));
+        return ::fwrite(&value, sizeof(i32), 1, m_file);
     }
 
     return 0;
 }
 
-ui32 FileStream::readUI32(ui32 &value) {
+size_t FileStream::readUI32(ui32 &value) {
     OSRE_ASSERT(nullptr != m_file);
     if (m_file) {
-        return (static_cast<ui32>(::fread(&value, sizeof(ui32), 1, m_file)));
+        return ::fread(&value, sizeof(ui32), 1, m_file);
     }
 
     return 0;
 }
 
-ui32 FileStream::writeUI32(ui32 value) {
+size_t FileStream::writeUI32(ui32 value) {
     OSRE_ASSERT(nullptr != m_file);
     if (m_file) {
-        return (static_cast<ui32>(::fwrite(&value, sizeof(ui32), 1, m_file)));
+        return ::fwrite(&value, sizeof(ui32), 1, m_file);
     }
 
     return 0;

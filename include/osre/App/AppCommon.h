@@ -38,6 +38,10 @@ namespace RenderBackend {
     class RenderBackendService;
 }
 
+namespace IO {
+    class IOService;
+}
+
 namespace App {
 
 class MouseEventListener;

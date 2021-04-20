@@ -46,9 +46,9 @@ public:
 	///	Read operations are supported.
 	bool canRead() const override;
 	///	Reads data from a file in a zip archive.
-	ui32 read( void *pBuffer, ui32 size ) override;
+    size_t read(void *pBuffer, size_t size) override;
 	///	Returns the file size for a file stored in a zip archive.
-	ui32 getSize() const override;
+    size_t getSize() const override;
 	///	Returns true, if the file is currently open.
 	bool isOpen() const override;
 

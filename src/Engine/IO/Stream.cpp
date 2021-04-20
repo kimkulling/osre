@@ -25,116 +25,114 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace IO {
 
-Stream::Stream() noexcept
-: m_Uri()
-, m_AccessMode() {
-	// empty
+Stream::Stream() noexcept :
+        m_Uri(), m_AccessMode() {
+    // empty
 }
 
-Stream::Stream( const Uri &uri, AccessMode mode ) 
-: m_Uri( uri )
-, m_AccessMode( mode ) {
-	// empty
+Stream::Stream(const Uri &uri, AccessMode mode) :
+        m_Uri(uri), m_AccessMode(mode) {
+    // empty
 }
 
 Stream::~Stream() {
-	// empty
+    // empty
 }
 
-void Stream::setUri( const Uri &rURI ) {
-	m_Uri = rURI;
+void Stream::setUri(const Uri &rURI) {
+    m_Uri = rURI;
 }
 
 const Uri &Stream::getUri() const {
-	return m_Uri;
+    return m_Uri;
 }
 
 bool Stream::canRead() const {
-	return false;
+    return false;
 }
 
 bool Stream::canWrite() const {
-	return false;
+    return false;
 }
 
 bool Stream::canSeek() const {
-	return false;
+    return false;
 }
 
 bool Stream::canBeMapped() const {
-	return false;
+    return false;
 }
 
-void Stream::setAccessMode( AccessMode accessMode ) {
-	m_AccessMode = accessMode;
+void Stream::setAccessMode(AccessMode accessMode) {
+    m_AccessMode = accessMode;
 }
 
 Stream::AccessMode Stream::getAccessMode() const {
-	return m_AccessMode;
+    return m_AccessMode;
 }
 
-ui32 Stream::getSize() const {
-	return 0;
-}
-
-ui32 Stream::read( void *, ui32 ) {
-	return 0;
-}
-
-ui32 Stream::write( const void *, ui32 ) {
-	return 0;
-}
-
-ui32 Stream::readI32( i32 & ) {
+size_t Stream::getSize() const {
     return 0;
 }
 
-ui32 Stream::writeI32( i32 ) {
+size_t Stream::read(void *, size_t) {
     return 0;
 }
 
-ui32 Stream::readUI32( ui32 & ) {
+size_t Stream::write(const void *, size_t) {
     return 0;
 }
 
-ui32 Stream::writeUI32( ui32  ) {
+size_t Stream::readI32(i32 &) {
     return 0;
 }
 
-ui32 Stream::readF32( f32 & ) {
+size_t Stream::writeI32(i32) {
     return 0;
 }
 
-ui32 Stream::writeF32( f32  ) {
+size_t Stream::readUI32(ui32 &) {
     return 0;
 }
 
-ui32 Stream::readD32( d32 & ) {
+size_t Stream::writeUI32(ui32) {
     return 0;
 }
 
-ui32 Stream::writeD32( d32  ) {
+size_t Stream::readF32(f32 &) {
     return 0;
 }
 
-Stream::Position Stream::seek( Offset , Origin  ) {
-	return 0;
+size_t Stream::writeF32(f32) {
+    return 0;
+}
+
+size_t Stream::readD32(d32 &) {
+    return 0;
+}
+
+size_t Stream::writeD32(d32) {
+    return 0;
+}
+
+Stream::Position Stream::seek(Offset, Origin) {
+    return 0;
 }
 
 Stream::Position Stream::tell() {
-	return 0;
+    return 0;
 }
 
 bool Stream::isOpen() const {
-	return false;
+    return false;
 }
 
 bool Stream::open() {
-	return false;
+    return false;
 }
 
 bool Stream::close() {
-	return false;
+    return false;
 }
 
 } // Namespace IO
