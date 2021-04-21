@@ -112,9 +112,8 @@ void EventTriggerer::triggerEvent(const Event &ev, const EventData *data) {
 }
 
 void EventTriggerer::clear() {
-    FunctorMap::iterator it(mEventList.begin());
-    for (; it != mEventList.end(); ++it) {
-        FunctorList &currentList(it->second);
+    for (auto it : mEventList) {
+        FunctorList &currentList = it.second;
         currentList.clear();
     }
     mEventList.clear();

@@ -48,6 +48,7 @@ namespace App {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Scene;
 using namespace ::OSRE::UI;
 using namespace ::OSRE::IO;
 
@@ -293,7 +294,7 @@ RenderBackendService *AppBase::getRenderBackendService() const {
     return m_rbService;
 }
 
-TransformControllerBase *AppBase::getTransformController(DefaultControllerType type, TransformMatrixBlock &tmb) {
+AnimationControllerBase *AppBase::getTransformController(DefaultControllerType type, TransformMatrixBlock &tmb) {
     switch (type) {
         case OSRE::App::DefaultControllerType::KeyboardCtrl:
             return new KeyboardTransformController(this, tmb);
@@ -332,8 +333,7 @@ bool AppBase::onCreate() {
     m_environment = new Common::Environment;
 
     // create the asset registry
-    AssetRegistry *registry(AssetRegistry::create());
-    OSRE_ASSERT(nullptr != registry);
+    AssetRegistry *registry = AssetRegistry::create();
     if (nullptr == registry) {
         osre_debug(Tag, "Cannot create asset registry.");
     }

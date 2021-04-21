@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformCommon.h>
 #include <osre/Common/ArgumentParser.h>
 #include <osre/Platform/KeyTypes.h>
+#include <osre/Scene/AnimatorBase.h>
 
 namespace OSRE {
 
@@ -63,33 +64,13 @@ enum class DefaultControllerType {
     KeyboardCtrl    ///< Use the keyboard default controller.
 };
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief This class declares the basic interface for transformation update controllers. 
-///        A transform controller will perform different animations for transform blocks.
-//-------------------------------------------------------------------------------------------------
-class TransformControllerBase {
-public:
-    /// @brief  The class destructor, virtual.
-    virtual ~TransformControllerBase() = default;
-
-    /// @brief  The update, override this for your own proposes.
-    virtual void update(RenderBackend::RenderBackendService *rbSrv) = 0;
-
-    TransformControllerBase(const TransformControllerBase &) = delete;
-    TransformControllerBase &operator=(const TransformControllerBase &) = delete;
-
-protected:
-    TransformControllerBase() = default;
-};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
 ///	@brief  This class implements the default keyboard controlling.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT KeyboardTransformController : public TransformControllerBase {
+class OSRE_EXPORT KeyboardTransformController : public Scene::AnimationControllerBase {
 public:
     KeyboardTransformController(AppBase *app, RenderBackend::TransformMatrixBlock &tmb);
     ~KeyboardTransformController() override;
@@ -254,9 +235,9 @@ public:
 
     /// @brief  Will return the default transform controller.
     /// @param  type    [in] The requested controller type.
-    /// @param  tb      [in] The controlled transform block.
+    /// @param  tmb     [in] The controlled transform block.
     /// @return The transform controller or nullptr if none is there.
-    virtual TransformControllerBase *getTransformController(DefaultControllerType type, RenderBackend::TransformMatrixBlock &tmb);
+    virtual Scene::AnimationControllerBase *getTransformController(DefaultControllerType type, RenderBackend::TransformMatrixBlock &tmb);
 
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
