@@ -15,8 +15,8 @@ The core-features:
 Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Build Status
-( [![Build status](https://ci.appveyor.com/api/projects/status/q2ivokgqcit9k5w1/branch/master?svg=true)](https://ci.appveyor.com/project/kimkulling/osre/branch/master) ) 
-( [![Build Status](https://travis-ci.com/kimkulling/osre.svg?branch=master)](https://travis-ci.com/kimkulling/osre) ): 
+[![Build status](https://ci.appveyor.com/api/projects/status/q2ivokgqcit9k5w1/branch/master?svg=true)](https://ci.appveyor.com/project/kimkulling/osre/branch/master)
+[![Build Status](https://travis-ci.com/kimkulling/osre.svg?branch=master)](https://travis-ci.com/kimkulling/osre)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/13242/badge.svg)](https://scan.coverity.com/projects/kimkulling-osre)
 [![Documentation Status](https://readthedocs.org/projects/osre-doc/badge/?version=latest)](https://osre-doc.readthedocs.io/en/latest/?badge=latest)
 
