@@ -2,7 +2,7 @@
 
 Just another open-source renderer made by me for just playing around.
 
-The core-features:
+# The Core-Features:
 - Multithreaded rendering 
 - Platform abstraction-layer
 - OS-independent task-support to make multi-threaded rendering more easy
@@ -13,6 +13,9 @@ The core-features:
 - CMake base build environment
 
 Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+# Documentation
+- Please check [OSRE-Docs](https://osre-doc.readthedocs.io/en/latest/).
 
 # Build Status
 [![Build status](https://ci.appveyor.com/api/projects/status/q2ivokgqcit9k5w1/branch/master?svg=true)](https://ci.appveyor.com/project/kimkulling/osre/branch/master)
@@ -27,9 +30,6 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 - Linux:
   - GCC
   - Clang
-
-# Documentation
-- Please check [OSRE-Docs](https://osre-doc.readthedocs.io/en/latest/).
 
 # Get involved
 If you want to contribute just use the github project page or reach us via Gitter:
