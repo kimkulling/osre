@@ -6,7 +6,7 @@ Just another open-source renderer made by me for just playing around.
 - Multithreaded rendering 
 - Platform abstraction-layer
 - OS-independent task-support to make multi-threaded rendering more easy
-- Model-import provided by Asset-Importer-Lib ( see https://github.com/assimp/assimp )
+- Model-import provided by Asset-Importer-Lib (see https://github.com/assimp/assimp)
 - Bitmap-Font-Rendering
 - Simple scenegraph-module
 - Virtual file-system for reading zip-archives
@@ -36,4 +36,4 @@ If you want to contribute just use the github project page or reach us via Gitte
 [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # What is cooking?
-[https://github.com/kimkulling/osre/projects/1](The Project Roadmap)
+The project roadmap https://github.com/kimkulling/osre/projects/1
