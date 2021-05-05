@@ -17,6 +17,7 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 # Supported platforms:
 - Windows ( [![Build status](https://ci.appveyor.com/api/projects/status/q2ivokgqcit9k5w1/branch/master?svg=true)](https://ci.appveyor.com/project/kimkulling/osre/branch/master) ): 
 - Linux ( [![Build Status](https://travis-ci.com/kimkulling/osre.svg?branch=master)](https://travis-ci.com/kimkulling/osre) ): 
+- Coverity Status: [![Coverity Scan Build Status](https://scan.coverity.com/projects/13242/badge.svg)](https://scan.coverity.com/projects/kimkulling-osre)
 
 # Supported compilers
 - Windows:
@@ -26,16 +27,13 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
   - GCC
   - Clang
 
-# Static code analysis
-- Coverity Status: [![Coverity Scan Build Status](https://scan.coverity.com/projects/13242/badge.svg)](https://scan.coverity.com/projects/kimkulling-osre)
-
-## Documentation
+# Documentation
 - Please check [OSRE-Docs](https://osre-doc.readthedocs.io/en/latest/).
 - [![Documentation Status](https://readthedocs.org/projects/osre-doc/badge/?version=latest)](https://osre-doc.readthedocs.io/en/latest/?badge=latest)
 
-## Get involved
+# Get involved
 If you want to contribute just use the github project page or reach us via Gitter:
 [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-## What is cooking?
+# What is cooking?
 [https://github.com/kimkulling/osre/projects/1](The Project Roadmap)
