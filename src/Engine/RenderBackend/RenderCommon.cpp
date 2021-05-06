@@ -130,6 +130,20 @@ const String &getVertCompName(VertexAttribute attrib) {
     return VertCompName[static_cast<int>(attrib)];
 }
 
+const size_t NumUIVertAttributes = 2;
+
+static const String UIVertAttributes[NumUIVertAttributes] = {
+    "position", "color0"
+};
+
+size_t UIVert::getNumAttributes() {
+    return NumUIVertAttributes;
+}
+
+const String *UIVert::getAttributes() {
+    return UIVertAttributes;
+}
+
 VertComponent::VertComponent() :
         m_attrib(VertexAttribute::InvalidVertexAttr),
         m_format(VertexFormat::InvalidVertexFormat) {

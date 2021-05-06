@@ -298,6 +298,20 @@ struct OSRE_EXPORT RenderVert {
 
 OSRE_EXPORT const String &getVertCompName(VertexAttribute attrib);
 
+struct OSRE_EXPORT UIVert {
+    glm::vec2 position; ///< The position ( x|y )
+    glm::vec4 color0;   ///< The diffuse color ( r|g|b|a )
+
+    UIVert() = default;
+    ~UIVert() = default;
+    
+    /// @brief  Returns the number of attributes.
+    static size_t getNumAttributes();
+
+    /// @brief  Returns the attribute array.
+    static const String *getAttributes();
+};
+
 ///	@brief  Utility function for calculate the vertex format size.
 inline size_t getVertexFormatSize(VertexFormat format) {
     ui32 size(0);

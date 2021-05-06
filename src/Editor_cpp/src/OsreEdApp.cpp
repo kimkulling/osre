@@ -37,8 +37,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformOperations.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/App/Project.h>
 #include <osre/Platform/PlatformInterface.h>
+
 #ifdef OSRE_WINDOWS
 #   include "Engine/Platform/win32/Win32EventQueue.h"
 #   include "Engine/Platform/win32/Win32Window.h"
@@ -97,7 +99,7 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         mSceneData(),
         mProject(nullptr),
         mResolution(),
-        mTreeView(nullptr) {
+        mMesh2D(nullptr) {
     // empty
 }
 
@@ -137,11 +139,12 @@ bool OsreEdApp::onCreate() {
 
         w->endMenu();
         w->getWindowsRect(mResolution);
-        mTreeView = createSceneTreeview(mResolution.getWidth() / 2, mResolution.getHeight());
     }
 
     AppBase::getRenderBackendService()->enableAutoResizing(false);
     
+    createUI();
+
     return true;
 }
 
@@ -260,201 +263,48 @@ bool OsreEdApp::unregisterModule( ModuleBase *mod ) {
     return true;
 }
 
+struct Widget {
+    Widget *mParent;
+    CPPCore::TArray<Widget *> mChildren;
+    Rect2ui mRect;
+};
+
+struct Label : Widget {
+    String mLabel;
+};
+
+struct Headline : Widget {
+    Label mName;
+};
+struct Panel : Widget {
+    Headline mHeadline;
+};
+
+struct Button : Widget {
+    Label mLabel;
+};
+
 struct TreeViewItem {
-    TVITEM tvi;
-    CPPCore::TArray<TreeViewItem *> mChildren;
-    i32 mImageIndex;
-    
-    TreeViewItem() :
-            tvi(),
-            mChildren(),
-            mImageIndex(-1) {
-        // empty
-    }
+    String Name;
+    CPPCore::TArray<TreeViewItem *> Children;
 };
 
-struct ImageList {
-    HIMAGELIST himl;
-
-    ImageList() :
-            himl( nullptr ) {
-        // empty
-    }
+struct TreeView : Widget {
+    Label mLabel;
+    TreeViewItem *mRoot;
 };
 
-class TreeViewBase : public Common::Object {
-public:
-    virtual ~TreeViewBase() {
-        // empty
-    }
+void drawRect(Rect2ui r) {
+    glm::vec2 p0(r.m_x1, r.m_y1), p1(r.getX1(), r.getY2()), p2(r.getX2(), r.getY2()), p3(r.getX2(), r.getY2());
 
-    virtual void create(AbstractWindow *window, ui32 x, ui32 y) = 0;
-    virtual void destroy() = 0;
-
-protected:
-    TreeViewBase( const String &name ) :
-            Object( name ) {
-        // empty
-    }
-};
-
-class Win32TreeView : public TreeViewBase {
-public:
-    Win32TreeView( const String &name ) :
-            TreeViewBase( name ),
-            mRoot(),
-            mHandleTree(nullptr), 
-            mImageList() {
-        // empty
-    }
-
-    ~Win32TreeView() override {
-
-    }
-
-    void create(AbstractWindow *window, ui32 x, ui32 y) override {
-        InitCommonControls();
-        
-        auto *w = (Win32Window *) window;
-        HWND hParent = w->getHWnd();
-        RECT rcClient; // dimensions of client area
-        GetClientRect(hParent, &rcClient);
-        HWND hTree = CreateWindowEx(0,
-                WC_TREEVIEW,
-                TEXT("Tree View"),
-                WS_VISIBLE | WS_CHILD | WS_BORDER | TVS_HASLINES,
-                x,
-                y,
-                rcClient.right,
-                rcClient.bottom,
-                hParent,
-                (HMENU)ID_TREEVIEW,
-                w->getModuleHandle(),
-                NULL);
-        ShowWindow(hTree, SW_SHOW);
-        InitTreeViewImageLists(hTree, w, mImageList);
-    }
-
-    void destroy() override {
-
-    }
-
-protected:
-    HTREEITEM AddItemToTree(HWND hwndTV, const String &itemName, int nLevel, TreeViewItem &treeViewItem, TreeViewItem &parent, int imageIndex) {
-        TVINSERTSTRUCT tvins;
-        static HTREEITEM hPrev = (HTREEITEM)TVI_FIRST;
-        static HTREEITEM hPrevRootItem = NULL;
-        static HTREEITEM hPrevLev2Item = NULL;
-        HTREEITEM hti;
-
-        treeViewItem.tvi.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_PARAM;
-
-        // Set the text of the item.
-        treeViewItem.tvi.pszText = (LPSTR) itemName.c_str();
-        treeViewItem.tvi.cchTextMax = sizeof(treeViewItem.tvi.pszText) / sizeof(treeViewItem.tvi.pszText[0]);
-
-        // Assume the item is not a parent item, so give it a
-        // document image.
-        treeViewItem.tvi.iImage = imageIndex;
-        treeViewItem.tvi.iSelectedImage = imageIndex;
-
-        // Save the heading level in the item's application-defined
-        // data area.
-        treeViewItem.tvi.lParam = (LPARAM)nLevel;
-        tvins.item = treeViewItem.tvi;
-        tvins.hInsertAfter = hPrev;
-
-        // Set the parent item based on the specified level.
-        if (nLevel == 1)
-            tvins.hParent = TVI_ROOT;
-        else if (nLevel == 2)
-            tvins.hParent = hPrevRootItem;
-        else
-            tvins.hParent = hPrevLev2Item;
-
-        // Add the item to the tree-view control.
-        hPrev = (HTREEITEM)SendMessage(hwndTV, TVM_INSERTITEM,
-                0, (LPARAM)(LPTVINSERTSTRUCT)&tvins);
-
-        if (hPrev == NULL)
-            return NULL;
-
-        // Save the handle to the item.
-        if (nLevel == 1)
-            hPrevRootItem = hPrev;
-        else if (nLevel == 2)
-            hPrevLev2Item = hPrev;
-
-        // The new item is a child item. Give the parent item a
-        // closed folder bitmap to indicate it now has child items.
-        if (nLevel > 1) {
-            hti = TreeView_GetParent(hwndTV, hPrev);
-            treeViewItem.tvi.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-            treeViewItem.tvi.hItem = hti;
-            treeViewItem.tvi.iImage = imageIndex;
-            treeViewItem.tvi.iSelectedImage = imageIndex;
-            TreeView_SetItem(hwndTV, &treeViewItem);
-        }
-
-        return hPrev;
-    }
-
-    BOOL InitTreeViewImageLists(HWND tvh, Win32Window *w, ImageList &il) {
-        HBITMAP hbmp; // handle to bitmap
-
-        String path = App::AssetRegistry::getPath("assets");
-        if (path.empty()) {
-            return FALSE;
-        }
-
-        // Create the image list.
-        if ((il.himl = ImageList_Create(16, 16, FALSE, 2, 0)) == NULL)
-            return FALSE;
-
-        // Add the open file, closed file, and document bitmaps.
-        auto hInstance = w->getModuleHandle();
-        String icon;
-        icon = path + String("/Icons/Editor/node.bmp");
-
-        if (IO::File::exists(icon)) {
-            hbmp = LoadBitmap(hInstance, icon.c_str());
-            int nodeId = ImageList_Add(il.himl, hbmp, (HBITMAP)NULL);
-            DeleteObject(hbmp);
-        }
-        icon = path + String("/Icons/Editor/attribute.bmp");
-        if (IO::File::exists(icon)) {
-            hbmp = LoadBitmap(hInstance, icon.c_str());
-            int attribute = ImageList_Add(il.himl, hbmp, (HBITMAP)NULL);
-            DeleteObject(hbmp);
-        }
-
-        // Fail if not all of the images were added.
-        if (ImageList_GetImageCount(il.himl) < 2)
-            return FALSE;
-
-        // Associate the image list with the tree-view control.
-        TreeView_SetImageList(tvh, il.himl, TVSIL_NORMAL);
-
-        return TRUE;
-    }
-
-private:
-    TreeViewItem mRoot;
-    HWND mHandleTree;
-    ImageList mImageList;
-};
-                              
-TreeViewBase *OsreEdApp::createSceneTreeview(ui32 x, ui32 y) {
-    mTreeView = new Win32TreeView("scene-graph.view");
-    AbstractWindow *w = getRootWindow();
-    mTreeView->create(w, x, y);
-
-    return mTreeView;
 }
 
-using ImageArray = CPPCore::TArray<String>;
+void drawLabel(Label &label, Mesh *mesh2D) {
+}
 
-/// 
+void OsreEdApp::createUI() {
+    mMesh2D = Mesh::create(1);
+}
 
 void OsreEdApp::onUpdate() {
     for (ui32 i = 0; i < mModules.size(); ++i) {
@@ -471,6 +321,9 @@ void OsreEdApp::onUpdate() {
 }
 
 bool OsreEdApp::onDestroy() {
+    Mesh::destroy(&mMesh2D);
+    mMesh2D = nullptr;
+
     return true;
 }
 
