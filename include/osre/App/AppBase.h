@@ -213,6 +213,10 @@ public:
     ///         same name already exists this instance will be returned.
     virtual RenderBackend::Pipeline *createPipeline(const String &name);
 
+    /// @brief 
+    /// @param  
+    virtual void addPipeline(RenderBackend::Pipeline *);
+
     /// @brief  Will search for < pipeline by its name.
     /// @param  name        [in] The name of the pipeline to look for.
     /// @return The found pipeline instance or nullptr if no pipeline with this name was found.

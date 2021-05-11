@@ -815,7 +815,8 @@ struct FrameSubmitCmd {
         CreatePasses = 1,
         UpdateBuffer = 2,
         UpdateMatrixes = 4,
-        UpdateUniforms = 8
+        UpdateUniforms = 8,
+        AddRenderData = 16
     };
 
     guid m_meshId;

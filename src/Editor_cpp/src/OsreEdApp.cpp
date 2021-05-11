@@ -36,6 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/PlatformOperations.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/App/Project.h>
@@ -171,7 +172,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     rootWindow->getWindowsRect(windowsRect);
     World *world = getActiveWorld();
     mSceneData.mCamera = world->addCamera("camera_1");
-    mSceneData.mCamera->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.01f, 1000.f);
+    mSceneData.mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
     Entity *entity = assimpWrapper.getEntity();
 
     world->addEntity(entity);
@@ -294,9 +295,39 @@ struct TreeView : Widget {
     TreeViewItem *mRoot;
 };
 
-void drawRect(Rect2ui r) {
-    glm::vec2 p0(r.m_x1, r.m_y1), p1(r.getX1(), r.getY2()), p2(r.getX2(), r.getY2()), p3(r.getX2(), r.getY2());
+struct Style {
+    Color4 FG;
+    Color4 BG;
+};
 
+void createRect2D(Rect2ui r, Mesh *mesh2D, Style &style) {
+    if (nullptr == mesh2D) {
+        return;
+    }
+
+    glm::vec2 p0(r.x1, r.y1), p1(r.getX1(), r.getY2()), p2(r.getX2(), r.getY2()), p3(r.getX2(), r.getY2());
+    UIVert edges[4];
+    edges[0].position = p0;
+    edges[1].position = p1;
+    edges[2].position = p2;
+    edges[3].position = p3;
+    edges[0].color0 = style.BG.toVec4();
+    edges[1].color0 = style.BG.toVec4();
+    edges[2].color0 = style.BG.toVec4();
+    edges[3].color0 = style.BG.toVec4();
+    CPPCore::TArray<ui16> indices;
+    indices.resize(6);
+    indices[0] = 0;
+    indices[1] = 2;
+    indices[2] = 1;
+
+    indices[3] = 1;
+    indices[4] = 2;
+    indices[5] = 3;
+
+    mesh2D->attachVertices(&edges[0], sizeof(glm::vec2) * 4);
+    mesh2D->attachIndices(&indices[0], sizeof(ui32) * 6);
+    mesh2D->createPrimitiveGroup(IndexType::UnsignedShort, 6, PrimitiveType::TriangleList, 0);
 }
 
 void drawLabel(Label &label, Mesh *mesh2D) {
@@ -304,6 +335,26 @@ void drawLabel(Label &label, Mesh *mesh2D) {
 
 void OsreEdApp::createUI() {
     mMesh2D = Mesh::create(1);
+    Rect2ui r(100, 100, 200, 200);
+    Style style;
+    style.BG.m_r = 1;
+    style.BG.m_g = 1;
+    createRect2D(r, mMesh2D, style);
+
+    Pipeline *pl = AppBase::findPipeline(DefaultPipelines::Pipeline_Default);
+    if (nullptr != pl) {
+        RenderBackend::Shader *shader = nullptr;
+        PipelinePass *uiPass = PipelinePass::create(UiPassId, shader);
+        pl->addPass(uiPass);
+        RenderBackendService *rbSrv = AppBase::getRenderBackendService();
+        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        {
+            rbSrv->beginRenderBatch("ui");
+            rbSrv->addMesh(mMesh2D, 1);
+            rbSrv->endRenderBatch();
+        }
+        rbSrv->endPass();
+    }
 }
 
 void OsreEdApp::onUpdate() {

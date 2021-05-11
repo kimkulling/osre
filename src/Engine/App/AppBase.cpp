@@ -373,6 +373,7 @@ bool AppBase::onCreate() {
     // enable render-back-end
     RenderBackend::CreateRendererEventData *data = new CreateRendererEventData(m_platformInterface->getRootWindow());
     data->m_pipeline = createDefaultPipeline();
+    addPipeline(data->m_pipeline);
     m_rbService->sendEvent(&RenderBackend::OnCreateRendererEvent, data);
 
     m_timer = Platform::PlatformInterface::getInstance()->getTimer();
@@ -385,7 +386,6 @@ bool AppBase::onCreate() {
 
     ResourceCacheService *rcSrv = new ResourceCacheService;
 
-    ServiceProvider::create(m_rbService, rcSrv, IOService::getInstance());
 
     // Setup onMouse event-listener
     AbstractPlatformEventQueue *evHandler = m_platformInterface->getPlatformEventHandler();
@@ -410,6 +410,8 @@ bool AppBase::onCreate() {
 #else
     App::AssetRegistry::registerAssetPath("assets", "../assets");
 #endif
+
+    ServiceProvider::create(m_rbService, rcSrv, IOService::getInstance());
 
     m_state = State::Created;
     osre_debug(Tag, "Set application state to Created.");
@@ -487,7 +489,7 @@ Ids *AppBase::getIdContainer() const {
 }
 
 Pipeline *AppBase::createDefaultPipeline() {
-    Pipeline *pipeline = Pipeline::create("pipeline.default");
+    Pipeline *pipeline = Pipeline::create(DefaultPipelines::Pipeline_Default);
     PipelinePass *renderPass = PipelinePass::create(RenderPassId, nullptr);
     CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
     renderPass->setCullState(cullState);
@@ -505,6 +507,14 @@ RenderBackend::Pipeline *AppBase::createPipeline(const String &name) {
 
     return p;
 }
+
+void AppBase::addPipeline( RenderBackend::Pipeline *pipeline ) {
+    if (nullptr != findPipeline(pipeline->getName())) {
+        return;
+    }
+    mPipelines.add(pipeline);
+}
+
 
 RenderBackend::Pipeline *AppBase::findPipeline(const String &name) {
     if (name.empty()) {

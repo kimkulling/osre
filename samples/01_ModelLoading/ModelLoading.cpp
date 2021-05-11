@@ -97,7 +97,7 @@ protected:
         rootWindow->getWindowsRect(windowsRect);
         World *world = getActiveWorld();
         m_camera = world->addCamera("camera");
-        m_camera->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.01f, 1000.f);
+        m_camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
         Entity *entity = assimpWrapper.getEntity();
 
         world->addEntity(entity);

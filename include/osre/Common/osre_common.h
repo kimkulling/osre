@@ -38,7 +38,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #include <cppcore/Container/TArray.h>
-
+#include <glm/glm.hpp>
 #include <emmintrin.h>
 #include <cstdio>
 #include <cstring>
@@ -232,6 +232,15 @@ struct Color4 {
 
     bool operator!=(const Color4 &rhs) const {
         return !(*this == rhs);
+    }
+
+    glm::vec4 toVec4() {
+        glm::vec4 col;
+        col.r = m_r;
+        col.g = m_g;
+        col.b = m_b;
+        col.a = m_a;
+        return col;
     }
 
     f32 operator[](ui32 index) const {
@@ -611,16 +620,16 @@ using Point2ui = TPoint2<ui32>;
 /// @brief  Helper class t represent a 2D rectangle.
 template <class T>
 struct TRectangle {
-    T m_x1, m_y1, m_x2, m_y2, m_width, m_height;
+    T x1, y1, x2, y2, width, height;
 
     /// @brief  The default class constructor.
     TRectangle() :
-            m_x1(0),
-            m_y1(0),
-            m_x2(0),
-            m_y2(0),
-            m_width(0),
-            m_height(0) {
+            x1(0),
+            y1(0),
+            x2(0),
+            y2(0),
+            width(0),
+            height(0) {
         // empty
     }
 
@@ -628,12 +637,12 @@ struct TRectangle {
     /// @param  width   [in] The width of the rectangle.
     /// @param  height  [in] The height of the rectangle.
     TRectangle(T width, T height) :
-            m_x1(0),
-            m_y1(0),
-            m_x2(width),
-            m_y2(height),
-            m_width(width),
-            m_height(height) {
+            x1(0),
+            y1(0),
+            x2(width),
+            y2(height),
+            width(width),
+            height(height) {
         // empty
     }
 
@@ -643,12 +652,12 @@ struct TRectangle {
     /// @param  width   [in] The width of the rectangle.
     /// @param  height  [in] The height of the rectangle.
     TRectangle(T x, T y, T width, T height) :
-            m_x1(x),
-            m_y1(y),
-            m_x2(x + width),
-            m_y2(y + height),
-            m_width(width),
-            m_height(height) {
+            x1(x),
+            y1(y),
+            x2(x + width),
+            y2(y + height),
+            width(width),
+            height(height) {
         // empty
     }
 
@@ -663,12 +672,12 @@ struct TRectangle {
     /// @param  width   [in] The width of the rectangle.
     /// @param  height  [in] The height of the rectangle.
     void set(T x, T y, T width, T height) {
-        m_x1 = x;
-        m_y1 = y;
-        m_x2 = x + width;
-        m_y2 = y + height;
-        m_width = width;
-        m_height = height;
+        x1 = x;
+        y1 = y;
+        x2 = x + width;
+        y2 = y + height;
+        width = width;
+        height = height;
     }
 
     /// @brief  Will set the rectangle-geometry with the upper left corner and the lower right corner.
@@ -677,44 +686,44 @@ struct TRectangle {
     /// @param  x2      [in] X coordinate of the lower right corner.
     /// @param  y2      [in] Y coordinate of the lower right corner.
     void setEdges(T x1, T y1, T x2, T y2) {
-        m_x1 = x1;
-        m_y1 = y1;
-        m_x2 = x2;
-        m_y2 = y2;
-        m_width = x2 - x1;
-        m_height = y2 - y1;
+        x1 = x1;
+        y1 = y1;
+        x2 = x2;
+        y2 = y2;
+        width = x2 - x1;
+        height = y2 - y1;
     }
 
     /// @brief  Return the X-coordinate of the upper left corner.
     /// @brief  The x-coordinate.
     T getX1() const {
-        return m_x1;
+        return x1;
     }
 
     /// @brief  Return the X-coordinate of the upper left corner.
     /// @brief  The y-coordinate.
     T getY1() const {
-        return m_y1;
+        return y1;
     }
 
     T getX2() const {
-        return m_x2;
+        return x2;
     }
 
     T getY2() const {
-        return m_y2;
+        return y2;
     }
 
     T getWidth() const {
-        return m_width;
+        return width;
     }
 
     T getHeight() const {
-        return m_height;
+        return height;
     }
 
     bool isIn(const TPoint2<T> &pt) const {
-        if (pt.m_x >= m_x1 && pt.m_y >= m_y1 && pt.m_x <= m_x2 && pt.m_y <= m_y2) {
+        if (pt.m_x >= x1 && pt.m_y >= y1 && pt.m_x <= x2 && pt.m_y <= y2) {
             return true;
         }
 
@@ -722,11 +731,11 @@ struct TRectangle {
     }
 
     const bool operator==(const TRectangle<T> &rhs) const {
-        return (m_x1 == rhs.m_x1 && m_y1 == rhs.m_y1 && m_width == rhs.m_width && m_height == rhs.m_height);
+        return (x1 == rhs.m_x1 && y1 == rhs.m_y1 && width == rhs.m_width && height == rhs.m_height);
     }
 
     const bool operator!=(const TRectangle<T> &rhs) const {
-        return (m_x1 != rhs.m_x1 || m_y1 != rhs.m_y1 || m_width != rhs.m_width || m_height != rhs.m_height);
+        return (x1 != rhs.m_x1 || y1 != rhs.m_y1 || width != rhs.m_width || height != rhs.m_height);
     }
 };
 

@@ -209,12 +209,12 @@ TEST_F( CommonTest, TPoint2_Test ) {
 
 TEST_F( CommonTest, TRect2D_Create ) {
     Rect2ui rect( 0, 0, 100, 20 );
-    EXPECT_EQ( 0, rect.m_x1 );
-    EXPECT_EQ( 0, rect.m_y1 );
-    EXPECT_EQ( 100, rect.m_x2 );
-    EXPECT_EQ( 20, rect.m_y2 );
-    EXPECT_EQ( 100, rect.m_width );
-    EXPECT_EQ( 20, rect.m_height );
+    EXPECT_EQ( 0, rect.x1 );
+    EXPECT_EQ( 0, rect.y1 );
+    EXPECT_EQ( 100, rect.x2 );
+    EXPECT_EQ( 20, rect.y2 );
+    EXPECT_EQ( 100, rect.width );
+    EXPECT_EQ( 20, rect.height );
 }
 
 TEST_F(CommonTest, TRect2D_IsIn ) {

@@ -92,7 +92,7 @@ protected:
         rootWindow->getWindowsRect(windowsRect);
 
         Camera *camera = getActiveWorld()->addCamera("cam1");
-        camera->setProjectionParameters(60.f, (f32)windowsRect.m_width, (f32)windowsRect.m_height, 0.0001f, 1000.f);
+        camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.0001f, 1000.f);
         mEntity = new App::Entity("instance", getActiveWorld()->getIds(), getActiveWorld());
         Scene::MeshBuilder meshBuilder;
         AppBase::getActiveWorld()->addEntity(mEntity);

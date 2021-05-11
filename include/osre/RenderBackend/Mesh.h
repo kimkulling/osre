@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/RenderBackend/RenderCommon.h>
+#include <glm/glm.hpp>
 
 #include <cppcore/Container/TArray.h>
 
@@ -64,6 +65,27 @@ public:
     static Mesh *create(size_t numGeo);
     static void destroy(Mesh **geo);
     static size_t getVertexSize(VertexType vertextype);
+    
+    template<class T>
+    void attachVertices( T *vertice, size_t size ) {
+        if (m_vb == nullptr) {
+            m_vb = BufferData::alloc(BufferType::VertexBuffer, size, BufferAccessType::ReadWrite);
+            ::memcpy(m_vb->getData(), vertice, size);
+        } else {
+            m_vb->attach(vertice, size);
+        }
+    }
+
+    template <class T>
+    void attachIndices(T *indices, size_t size) {
+        if (m_ib == nullptr) {
+            m_ib = BufferData::alloc(BufferType::IndexBuffer, size, BufferAccessType::ReadWrite);
+            ::memcpy(m_ib->getData(), indices, size);
+        } else {
+            m_vb->attach(indices, size);
+        }
+    }
+
     PrimitiveGroup *createPrimitiveGroups(size_t numPrimGroups, IndexType *types, size_t *numIndices, PrimitiveType *primTypes, ui32 *startIndices);
     PrimitiveGroup *createPrimitiveGroup(IndexType type, size_t numIndices, PrimitiveType primTypes, ui32 startIndex);
 

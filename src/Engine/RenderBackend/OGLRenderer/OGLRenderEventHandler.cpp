@@ -177,14 +177,13 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
 
     Rect2ui rect;
     activeSurface->getWindowsRect(rect);
-    m_oglBackend->setViewport(rect.m_x1, rect.m_y1, rect.m_width, rect.m_height);
+    m_oglBackend->setViewport(rect.x1, rect.y1, rect.width, rect.height);
 
     const String defaultFont(PlatformInterface::getInstance()->getDefaultFontName());
     IO::Uri fontUri("file://assets/Textures/Fonts/" + defaultFont);
     String root = App::AssetRegistry::getPath("media");
     String path = App::AssetRegistry::resolvePathFromUri(fontUri);
     fontUri.setPath(path);
-    //m_oglBackend->createFont( fontUri );
     m_renderCmdBuffer = new RenderCmdBuffer(m_oglBackend, m_renderCtx, createRendererEvData->m_pipeline);
 
     bool ok(Profiling::PerformanceCounterRegistry::create());
@@ -273,17 +272,18 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
 
     CPPCore::TArray<size_t> primGroups;
     Frame *frame = frameToCommitData->m_frame;
-    for (ui32 passIdx = 0; passIdx < frame->m_newPasses.size(); ++passIdx) {
-        PassData *currentPass = frame->m_newPasses[passIdx];
-        OSRE_ASSERT(nullptr != currentPass);
+    for (OSRE::RenderBackend::PassData * currentPass : frame->m_newPasses) {
+        if (nullptr == currentPass) {
+            OSRE_ASSERT(nullptr != currentPass);
+            continue;
+        }
 
         if (!currentPass->m_isDirty) {
             continue;
         }
 
         // ToDo: create pipeline pass for the name.
-        for (ui32 batchIdx = 0; batchIdx < currentPass->m_geoBatches.size(); ++batchIdx) {
-            RenderBatchData *currentBatchData = currentPass->m_geoBatches[batchIdx];
+        for (OSRE::RenderBackend::RenderBatchData * currentBatchData : currentPass->m_geoBatches) {
             OSRE_ASSERT(nullptr != currentBatchData);
 
             // set the matrix
@@ -291,8 +291,8 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
             getRenderCmdBuffer()->setMatrixes(matrixBuffer.m_model, matrixBuffer.m_view, matrixBuffer.m_proj);
 
             // set uniforms
-            for (ui32 uniformIdx = 0; uniformIdx < currentBatchData->m_uniforms.size(); ++uniformIdx) {
-                setupParameter(currentBatchData->m_uniforms[uniformIdx], m_oglBackend, this);
+            for (auto & uniform : currentBatchData->m_uniforms) {
+                setupParameter(uniform, m_oglBackend, this);
             }
 
             // set meshes
@@ -309,7 +309,10 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
 
                 for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->m_geo.size(); ++meshIdx) {
                     Mesh *currentMesh = currentMeshEntry->m_geo[meshIdx];
-                    OSRE_ASSERT(nullptr != currentMesh);
+                    if (nullptr == currentMesh) {
+                        OSRE_ASSERT(nullptr != currentMesh);
+                        continue;
+                    }
 
                     // register primitive groups to render
                     for (size_t i = 0; i < currentMesh->m_numPrimGroups; ++i) {

@@ -88,6 +88,13 @@ private:
     Shader *mShader;
 };
 
+
+namespace DefaultPipelines {
+
+static const c8 *Pipeline_Default = "pipeline.default";
+
+}
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
