@@ -20,10 +20,10 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
+#include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Profiling/PerformanceCounterRegistry.h>
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/Mesh.h>
-#include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/DbgRenderer.h>
 #include <osre/Threading/SystemTask.h>
@@ -34,6 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifdef OSRE_WINDOWS
 #   include <osre/Platform/Windows/MinWindows.h>
 #endif
+
 // clang-format on
 namespace OSRE {
 namespace RenderBackend {
