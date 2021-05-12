@@ -29,11 +29,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Scene {
 
+using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
+using namespace ::glm;
 
 static const c8 *Tag = "Camera";
 
-Camera::Camera(const String &name, Common::Ids &ids, Node *parent) :
+Camera::Camera(const String &name, Ids &ids, Node *parent) :
         Node(name, ids, parent),
         mRecalculateRequested(true),
         mCameraModel(CameraModel::Perspective),
