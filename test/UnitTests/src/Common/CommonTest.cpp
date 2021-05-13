@@ -196,12 +196,12 @@ TEST_F( CommonTest, TQuatTest ) {
 
 TEST_F( CommonTest, TPoint2_Test ) {
     Point2ui pt1;
-    EXPECT_EQ(0, pt1.m_x);
-    EXPECT_EQ(0, pt1.m_y);
+    EXPECT_EQ(0, pt1.x);
+    EXPECT_EQ(0, pt1.y);
     
     Point2ui pt2( 1, 2 );
-    EXPECT_EQ( 1, pt2.m_x );
-    EXPECT_EQ( 2, pt2.m_y );
+    EXPECT_EQ( 1, pt2.x );
+    EXPECT_EQ( 2, pt2.y );
 
     EXPECT_NE( pt1, pt2 );
     EXPECT_EQ( pt2, pt2 );

@@ -262,6 +262,46 @@ bool OGLRenderEventHandler::onRenderFrame(const EventData *eventData) {
     return true;
 }
 
+bool OGLRenderEventHandler::addMeshes(RenderBatchData *currentBatchData, CPPCore::TArray<size_t> &primGroups, MeshEntry *currentMeshEntry) {
+    for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->m_geo.size(); ++meshIdx) {
+        Mesh *currentMesh = currentMeshEntry->m_geo[meshIdx];
+        if (nullptr == currentMesh) {
+            OSRE_ASSERT(nullptr != currentMesh);
+            continue;
+        }
+
+        // register primitive groups to render
+        for (size_t i = 0; i < currentMesh->m_numPrimGroups; ++i) {
+            const size_t primIdx(m_oglBackend->addPrimitiveGroup(&currentMesh->m_primGroups[i]));
+            primGroups.add(primIdx);
+        }
+
+        // create the default material
+        SetMaterialStageCmdData *data = setupMaterial(currentMesh->m_material, m_oglBackend, this);
+
+        // setup vertex array, vertex and index buffers
+        m_vertexArray = setupBuffers(currentMesh, m_oglBackend, m_renderCmdBuffer->getActiveShader());
+        if (nullptr == m_vertexArray) {
+            osre_debug(Tag, "Vertex-Array-pointer is a nullptr.");
+            return false;
+        }
+        data->m_vertexArray = m_vertexArray;
+
+        // setup the draw calls
+        if (0 == currentMeshEntry->numInstances) {
+            setupPrimDrawCmd(currentBatchData->m_id, currentMesh->m_localMatrix, currentMesh->m_model,
+                    primGroups, m_oglBackend, this, m_vertexArray);
+        } else {
+            setupInstancedDrawCmd(currentBatchData->m_id, primGroups, m_oglBackend, this, m_vertexArray,
+                    currentMeshEntry->numInstances);
+        }
+
+        primGroups.resize(0);
+
+    }
+    return true;
+}
+ 
 bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventData) {
     OSRE_ASSERT(nullptr != m_oglBackend);
 
@@ -272,7 +312,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
 
     CPPCore::TArray<size_t> primGroups;
     Frame *frame = frameToCommitData->m_frame;
-    for (OSRE::RenderBackend::PassData * currentPass : frame->m_newPasses) {
+    for (PassData *currentPass : frame->m_newPasses) {
         if (nullptr == currentPass) {
             OSRE_ASSERT(nullptr != currentPass);
             continue;
@@ -283,8 +323,10 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
         }
 
         // ToDo: create pipeline pass for the name.
-        for (OSRE::RenderBackend::RenderBatchData * currentBatchData : currentPass->m_geoBatches) {
-            OSRE_ASSERT(nullptr != currentBatchData);
+        for (RenderBatchData * currentBatchData : currentPass->m_geoBatches) {
+            if (nullptr == currentBatchData) {
+                continue;   
+            }
 
             // set the matrix
             MatrixBuffer &matrixBuffer = currentBatchData->m_matrixBuffer;
@@ -342,6 +384,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
 
                     primGroups.resize(0);
                 }
+                //addMeshes(currentBatchData, primGroups, currentMeshEntry);
                 currentMeshEntry->m_isDirty = false;
             }
         }

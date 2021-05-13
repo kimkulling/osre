@@ -591,24 +591,30 @@ using Quatf = TQuat<f32>;
 
 template <class T>
 struct TPoint2 {
-    T m_x, m_y;
+    T x, y;
 
+    /// @brief  The default class constructor.
     TPoint2() :
-            m_x(0),
-            m_y(0) {
+            x(0),
+            y(0) {
         // empty
     }
 
-    TPoint2(T x, T y) :
-            m_x(x),
-            m_y(y) {
+    /// @brief  The class constructor with the values.
+    /// @param  x   [in] The x-component.
+    /// @param  y   [in] The y-component.
+    TPoint2(T x_, T y_) :
+            x(x_),
+            y(y_) {
         // empty
     }
 
+    /// @brief  The compare operator.
     bool operator==(const TPoint2<T> &rhs) const {
-        return (m_x == rhs.m_x && m_y == rhs.m_y);
+        return (x == rhs.x && y == rhs.y);
     }
 
+    /// @brief  The not-equal operator.
     bool operator!=(const TPoint2<T> &rhs) const {
         return !(*this == rhs);
     }
@@ -630,19 +636,6 @@ struct TRectangle {
             y2(0),
             width(0),
             height(0) {
-        // empty
-    }
-
-    /// @brief  The class constructor with width and height, x and 0 are set to 0,0.
-    /// @param  width   [in] The width of the rectangle.
-    /// @param  height  [in] The height of the rectangle.
-    TRectangle(T width, T height) :
-            x1(0),
-            y1(0),
-            x2(width),
-            y2(height),
-            width(width),
-            height(height) {
         // empty
     }
 
@@ -669,27 +662,27 @@ struct TRectangle {
     /// @brief  Will set the rectangle-geometry with the upper left corner, width and height.
     /// @param  x       [in] X coordinate of upper left corner.
     /// @param  y       [in] Y coordinate of upper left corner.
-    /// @param  width   [in] The width of the rectangle.
-    /// @param  height  [in] The height of the rectangle.
-    void set(T x, T y, T width, T height) {
+    /// @param  width_  [in] The width of the rectangle.
+    /// @param  height_ [in] The height of the rectangle.
+    void set(T x, T y, T width_, T height_) {
         x1 = x;
         y1 = y;
         x2 = x + width;
         y2 = y + height;
-        width = width;
-        height = height;
+        width = width_;
+        height = height_;
     }
 
     /// @brief  Will set the rectangle-geometry with the upper left corner and the lower right corner.
-    /// @param  x1      [in] X coordinate of the upper left corner.
-    /// @param  y1      [in] Y coordinate of the upper left corner.
-    /// @param  x2      [in] X coordinate of the lower right corner.
-    /// @param  y2      [in] Y coordinate of the lower right corner.
-    void setEdges(T x1, T y1, T x2, T y2) {
-        x1 = x1;
-        y1 = y1;
-        x2 = x2;
-        y2 = y2;
+    /// @param  x1_     [in] X coordinate of the upper left corner.
+    /// @param  y1_     [in] Y coordinate of the upper left corner.
+    /// @param  x2_     [in] X coordinate of the lower right corner.
+    /// @param  y2_     [in] Y coordinate of the lower right corner.
+    void setEdges(T x1_, T y1_, T x2_, T y2_) {
+        x1 = x1_;
+        y1 = y1_;
+        x2 = x2_;
+        y2 = y2_;
         width = x2 - x1;
         height = y2 - y1;
     }
@@ -700,42 +693,55 @@ struct TRectangle {
         return x1;
     }
 
-    /// @brief  Return the X-coordinate of the upper left corner.
+    /// @brief  Return the y-coordinate of the upper left corner.
     /// @brief  The y-coordinate.
     T getY1() const {
         return y1;
     }
 
+    /// @brief  Return the X-coordinate of the lower right corner.
+    /// @brief  The x-coordinate.
     T getX2() const {
         return x2;
     }
 
+    /// @brief  Return the Y-coordinate of the lower right corner.
+    /// @brief  The y-coordinate.
     T getY2() const {
         return y2;
     }
 
+    /// @brief  Return the width of the rect.
+    /// @brief  The width.
     T getWidth() const {
         return width;
     }
 
+    /// @brief  Return the height of the rect.
+    /// @brief  The height.
     T getHeight() const {
         return height;
     }
 
+    /// @brief  Returns true, if he point is in the rect.
+    /// @param  pt  [in] The 2D-point to check.
+    /// @return true if the point is in the rectangle, false if not.
     bool isIn(const TPoint2<T> &pt) const {
-        if (pt.m_x >= x1 && pt.m_y >= y1 && pt.m_x <= x2 && pt.m_y <= y2) {
+        if (pt.x >= x1 && pt.y >= y1 && pt.x <= x2 && pt.y <= y2) {
             return true;
         }
 
         return false;
     }
 
+    /// @brief  The compare operator.
     const bool operator==(const TRectangle<T> &rhs) const {
-        return (x1 == rhs.m_x1 && y1 == rhs.m_y1 && width == rhs.m_width && height == rhs.m_height);
+        return (x1 == rhs.x1 && y1 == rhs.y1 && width == rhs.width && height == rhs.height);
     }
 
+    /// @brief  The not-equal operator.
     const bool operator!=(const TRectangle<T> &rhs) const {
-        return (x1 != rhs.m_x1 || y1 != rhs.m_y1 || width != rhs.m_width || height != rhs.m_height);
+        return (x1 != rhs.x1 || y1 != rhs.y1 || width != rhs.width || height != rhs.height);
     }
 };
 

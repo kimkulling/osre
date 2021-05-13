@@ -144,7 +144,7 @@ bool OsreEdApp::onCreate() {
 
     AppBase::getRenderBackendService()->enableAutoResizing(false);
     
-    createUI();
+    //createUI();
 
     return true;
 }
@@ -334,6 +334,7 @@ void drawLabel(Label &label, Mesh *mesh2D) {
 }
 
 void OsreEdApp::createUI() {
+    return;
     mMesh2D = Mesh::create(1);
     Rect2ui r(100, 100, 200, 200);
     Style style;

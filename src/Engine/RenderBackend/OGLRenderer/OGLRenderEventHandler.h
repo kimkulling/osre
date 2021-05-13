@@ -82,6 +82,8 @@ public:
 
     RenderCmdBuffer *getRenderCmdBuffer() const { return m_renderCmdBuffer; }
 
+    bool addMeshes(RenderBatchData *currentBatchData, CPPCore::TArray<size_t> &primGroups, MeshEntry *currentMeshEntry);
+
 protected:
 	///	@brief	Callback for attaching the event handler.
     virtual bool onAttached( const Common::EventData *eventData ) override;

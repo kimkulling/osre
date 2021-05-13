@@ -35,7 +35,7 @@ TrackBall::TrackBall(const String &trackBallObjName, ui32 w, ui32 h, Ids &ids) :
         Camera(trackBallObjName, ids),
         mStartVector(0, 0, 0),
         mEndVector(0, 0, 0),
-        m_Dimension(w, h),
+        m_Dimension(0,0,w, h),
         m_rotation(),
         m_bLeftMButtonClicked(false),
         m_bMiddleClicked(false),
