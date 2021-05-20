@@ -47,6 +47,7 @@ static const c8 *Tag = "RenderBackendService";
 
 static const c8 *OGL_API = "opengl";
 static const c8 *Vulkan_API = "vulkan";
+static const i32 IdxNotFound = -1;
 
 static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataArray) {
     for (ui32 i = 0; i < passDataArray.size(); ++i) {
@@ -54,7 +55,7 @@ static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataAr
             return i;
         }
     }
-    return -1;
+    return IdxNotFound;
 }
 
 static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<RenderBatchData *> &batchDataArray) {
@@ -63,7 +64,7 @@ static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<RenderBatchData *> &ba
             return i;
         }
     }
-    return -1;
+    return IdxNotFound;
 }
 
 RenderBackendService::RenderBackendService() :
@@ -95,7 +96,7 @@ bool RenderBackendService::onOpen() {
         m_ownsSettingsConfig = true;
     }
 
-    // Spawn the thread
+    // Spawn the thread for our render task
     if (!m_renderTaskPtr.isValid()) {
         m_renderTaskPtr.init(SystemTask::create("render_task"));
     }
@@ -209,7 +210,6 @@ void RenderBackendService::commitNextFrame() {
                 ::memcpy(cmd->m_data, &currentBatch->m_matrixBuffer, cmd->m_size);
             } else if (currentBatch->m_dirtyFlag & RenderBatchData::UniformBufferDirty) {
                 UniformBuffer &uniformBuffer = data->m_frame->m_uniforBuffers[i];
-
                 for (ui32 k = 0; k < currentBatch->m_uniforms.size(); ++k) {
                     FrameSubmitCmd *cmd = m_submitFrame->enqueue();
                     cmd->m_passId = currentPass->m_id;
@@ -243,6 +243,18 @@ void RenderBackendService::commitNextFrame() {
                     cmd->m_size = currentMesh->m_vb->getSize();
                     cmd->m_data = new c8[cmd->m_size];
                     ::memcpy(cmd->m_data, currentMesh->m_vb->getData(), cmd->m_size);
+                }
+            } else if (currentBatch->m_dirtyFlag & RenderBatchData::AddMeshDirty) {
+                for (ui32 k = 0; k < currentBatch->m_meshArray.size(); ++k) {
+                    MeshEntry *entry = currentBatch->m_meshArray[k];
+                    if (entry->m_isDirty) {
+                        FrameSubmitCmd *cmd = m_submitFrame->enqueue();
+                        cmd->m_passId = currentPass->m_id;
+                        cmd->m_batchId = currentBatch->m_id;
+                        cmd->m_updateFlags |= (ui32)FrameSubmitCmd::AddRenderData;
+                        
+
+                    }
                 }
             }
 

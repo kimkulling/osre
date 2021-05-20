@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "OsreEdApp.h"
 #include "ProgressReporter.h"
+#include "Gui/UIElements.h"
 #include "Modules/InspectorModule/InspectorModule.h"
 #include "Modules/ModuleBase.h"
 
@@ -85,8 +86,61 @@ HWND hStatic = NULL;
 
 #endif // OSRE_WINDOWS
 
+static void createTitleString( const SceneData &sd, String &titleString ) {
+    titleString.clear();
+    titleString += "OSRE ED!";
+
+    titleString += " Project: ";
+    titleString += sd.ProjectName;
+
+    titleString += " Current Asset: ";
+    titleString += sd.AssetName;
+}
+
+static Mesh *createGrid(ui32 numLines) {
+    if (0 == numLines) {
+        return nullptr;
+    }
+
+    Mesh *grid = Mesh::create(1);
+    f32 currentX = -10.0f, currentY = -10.0f;
+    f32 diffX = 20.0 / numLines;
+    f32 diffY = 20.0 / numLines;
+    CPPCore::TArray<RenderBackend::RenderVert> lineData;
+    CPPCore::TArray<ui16> lineIndices;
+    ui16 currentIndex = 0;
+    for (ui32 y = 0; y < numLines + 1; ++y) {
+        for (ui32 x = 0; x < numLines + 1; ++x) {
+            RenderVert v1, v2;
+            v1.position.x = currentX;
+            v1.position.y = currentY;
+            v1.position.z = 0.0f;
+            v1.color0 = glm::vec3(0.5, 0.5, 0.5);
+            currentX += diffX;
+            v2.position.x = currentX;
+            v2.position.y = currentY;
+            v2.position.z = 0.0f;
+            v2.color0 = glm::vec3(0.5, 0.5, 0.5);
+            lineData.add(v1);
+            lineData.add(v2);
+            lineIndices.add(currentIndex);
+            currentIndex++;
+            lineIndices.add(currentIndex);
+            currentIndex++;
+        }
+        currentY += diffY;
+    }
+    grid->attachVertices(&lineData[0], sizeof(RenderVert) * lineData.size());
+    grid->attachIndices(&lineIndices[0], sizeof(ui16) * lineIndices.size());
+    grid->createPrimitiveGroup(IndexType::UnsignedShort, lineData.size() / 2, PrimitiveType::LineList, 0);
+
+    return grid;
+}
+
 SceneData::SceneData() :
         Name(),
+        ProjectName("none"),
+        AssetName("none"),
         m_modelNode(),
         mCamera( nullptr ),
         mWorld( nullptr ) {
@@ -114,40 +168,48 @@ bool OsreEdApp::onCreate() {
     }
 
     registerModule(new InspectorModule(this));
-
-    AppBase::setWindowsTitle("OSRE ED!");
+    String title;
+    createTitleString(mSceneData, title);
+    AppBase::setWindowsTitle(title);
 
     auto *w = (Win32Window *)getRootWindow();
     AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
-    if (nullptr != w && nullptr != queue) {
-        w->beginMenu();
-        MenuEntry FileMenu[8] = {
-            { MF_STRING, IDM_FILE_NEW, L"&New", MenuFunctor::Make(this, &OsreEdApp::newProjectCmd) },
-            { MF_STRING, IDM_FILE_OPEN, L"&Open Project", MenuFunctor::Make(this, &OsreEdApp::loadProjectCmd) },
-            { MF_STRING, IDM_FILE_SAVE, L"&Save Project", MenuFunctor::Make(this, &OsreEdApp::saveProjectCmd) },
-            { MF_SEPARATOR, 0, nullptr },
-            { MF_STRING, IDM_FILE_IMPORT, L"&Import Asset", MenuFunctor::Make(this, &OsreEdApp::importAssetCmd) },
-            { MF_SEPARATOR, 0, nullptr },
-            { MF_STRING, IDM_FILE_QUIT, L"&Quit", MenuFunctor::Make(this, &OsreEdApp::quitEditorCmd) },
-        };
-        w->addSubMenues(nullptr, queue, L"File", FileMenu, 8);
-
-        MenuEntry InfoMenu[2] = {
-            { MF_STRING, IDM_GETTING_HELP, L"&Getting Help", MenuFunctor::Make(this, &OsreEdApp::gettingHelpCmd) },
-            { MF_STRING, IDM_INFO_VERSION, L"&Version", MenuFunctor::Make(this, &OsreEdApp::showVersionCmd) }
-        };
-        w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
-
-        w->endMenu();
-        w->getWindowsRect(mResolution);
+    if (nullptr == w || nullptr == queue) {
+        return false;
     }
 
+    w->beginMenu();
+    MenuEntry FileMenu[8] = {
+        { MF_STRING, IDM_FILE_NEW, L"&New", MenuFunctor::Make(this, &OsreEdApp::newProjectCmd) },
+        { MF_STRING, IDM_FILE_OPEN, L"&Open Project", MenuFunctor::Make(this, &OsreEdApp::loadProjectCmd) },
+        { MF_STRING, IDM_FILE_SAVE, L"&Save Project", MenuFunctor::Make(this, &OsreEdApp::saveProjectCmd) },
+        { MF_SEPARATOR, 0, nullptr },
+        { MF_STRING, IDM_FILE_IMPORT, L"&Import Asset", MenuFunctor::Make(this, &OsreEdApp::importAssetCmd) },
+        { MF_SEPARATOR, 0, nullptr },
+        { MF_STRING, IDM_FILE_QUIT, L"&Quit", MenuFunctor::Make(this, &OsreEdApp::quitEditorCmd) },
+    };
+    w->addSubMenues(nullptr, queue, L"File", FileMenu, 8);
+
+    MenuEntry InfoMenu[2] = {
+        { MF_STRING, IDM_GETTING_HELP, L"&Getting Help", MenuFunctor::Make(this, &OsreEdApp::gettingHelpCmd) },
+        { MF_STRING, IDM_INFO_VERSION, L"&Version", MenuFunctor::Make(this, &OsreEdApp::showVersionCmd) }
+    };
+    w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
+
+    w->endMenu();
+    w->getWindowsRect(mResolution);
+
     AppBase::getRenderBackendService()->enableAutoResizing(false);
-    
+
+    World *world = getActiveWorld();
+    Entity *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
+    Mesh *grid = createGrid(20);
+    editorEntity->addStaticMesh(grid);
     //createUI();
 
     return true;
 }
+
 
 void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     Platform::AbstractWindow *rootWindow = getRootWindow();
@@ -179,8 +241,10 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     mSceneData.mCamera->observeBoundingBox(entity->getAABB());
     mSceneData.m_modelNode = entity->getNode();
 
-    const std::string &model = modelLoc.getResource();
-    rootWindow->setWindowsTitle("Model " + model);
+    mSceneData.AssetName = modelLoc.getResource();
+    String title;
+    createTitleString(mSceneData, title);
+    rootWindow->setWindowsTitle(title);
 
     reporter.stop();
 }
@@ -190,7 +254,9 @@ void OsreEdApp::newProjectCmd(ui32, void *) {
     mProject->create("New project", 0, 1);
     const String &projectName = mProject->getProjectName();
     
-    AppBase::setWindowsTitle("OSRE ED!" + String(" Project: ") + projectName);
+    String title;
+    createTitleString(mSceneData, title);
+    AppBase::setWindowsTitle(title);
 }
 
 void OsreEdApp::loadProjectCmd(ui32, void *) {
@@ -263,42 +329,6 @@ ModuleBase *OsreEdApp::findModule( const String &name ) const {
 bool OsreEdApp::unregisterModule( ModuleBase *mod ) {
     return true;
 }
-
-struct Widget {
-    Widget *mParent;
-    CPPCore::TArray<Widget *> mChildren;
-    Rect2ui mRect;
-};
-
-struct Label : Widget {
-    String mLabel;
-};
-
-struct Headline : Widget {
-    Label mName;
-};
-struct Panel : Widget {
-    Headline mHeadline;
-};
-
-struct Button : Widget {
-    Label mLabel;
-};
-
-struct TreeViewItem {
-    String Name;
-    CPPCore::TArray<TreeViewItem *> Children;
-};
-
-struct TreeView : Widget {
-    Label mLabel;
-    TreeViewItem *mRoot;
-};
-
-struct Style {
-    Color4 FG;
-    Color4 BG;
-};
 
 void createRect2D(Rect2ui r, Mesh *mesh2D, Style &style) {
     if (nullptr == mesh2D) {

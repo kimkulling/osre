@@ -189,8 +189,7 @@ void VertexLayout::clear() {
 size_t VertexLayout::sizeInBytes() {
     if (0 == m_sizeInBytes) {
         for (size_t i = 0; i < m_components.size(); ++i) {
-            const size_t compSizeInBytes(
-                    getVertexFormatSize(m_components[i]->m_format));
+            const size_t compSizeInBytes = getVertexFormatSize(m_components[i]->m_format);
             m_sizeInBytes += compSizeInBytes;
         }
     }
@@ -206,6 +205,7 @@ VertexLayout &VertexLayout::add(VertComponent *comp) {
     if (nullptr == comp) {
         return *this;
     }
+
     m_components.add(comp);
     const size_t offset(getVertexFormatSize(comp->m_format));
     m_offsets.add(m_currentOffset);

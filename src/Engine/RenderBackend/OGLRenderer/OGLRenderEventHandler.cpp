@@ -424,6 +424,8 @@ bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData)
             m_oglBackend->bindBuffer(buffer);
             m_oglBackend->copyDataToBuffer(buffer, cmd->m_data, cmd->m_size, BufferAccessType::ReadWrite);
             m_oglBackend->unbindBuffer(buffer);
+        } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::AddRenderData) {
+            //addMeshes(currentBatchData, primGroups, currentMeshEntry);
         }
         cmd->m_updateFlags = 0;
     }

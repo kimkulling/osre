@@ -36,23 +36,22 @@ namespace OSRE {
 
 namespace App {
     class Project;
-}
+    class World;
+} // namespace App
 
 namespace IO {
     class Uri;
-}
-
-namespace Scene {
-    class World;
 }
 
 namespace Editor {
 
 struct SceneData {
     String Name;
+    String ProjectName;
+    String AssetName;
     Scene::Node::NodePtr m_modelNode;
     Scene::Camera *mCamera;
-    Scene::World *mWorld;
+    App::World *mWorld;
 
     SceneData();
 };

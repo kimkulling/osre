@@ -300,11 +300,11 @@ OSRE_EXPORT const String &getVertCompName(VertexAttribute attrib);
 
 struct OSRE_EXPORT UIVert {
     glm::vec2 position; ///< The position ( x|y )
-    glm::vec4 color0;   ///< The diffuse color ( r|g|b|a )
+    glm::vec4 color0; ///< The diffuse color ( r|g|b|a )
 
     UIVert() = default;
     ~UIVert() = default;
-    
+
     /// @brief  Returns the number of attributes.
     static size_t getNumAttributes();
 
@@ -511,7 +511,7 @@ struct OSRE_EXPORT Material {
     UniformVar *m_parameters;
     Color4 m_color[MaxMatColorType];
     f32 mShineness;
-    f32 mShinenessStrength; 
+    f32 mShinenessStrength;
     IO::Uri m_uri;
 
     Material(const String &name);
@@ -739,7 +739,8 @@ struct RenderBatchData {
         MatrixBufferDirty = 1,
         UniformBufferDirty = 2,
         MeshDirty = 4,
-        MeshUpdateDirty = 8
+        MeshUpdateDirty = 8,
+        AddMeshDirty = 16
     };
 
     const c8 *m_id;
@@ -774,6 +775,10 @@ struct PassData {
             m_renderTarget(fb),
             m_geoBatches(),
             m_isDirty(true) {
+        // empty
+    }
+
+    ~PassData() {
         // empty
     }
 
@@ -825,14 +830,21 @@ struct FrameSubmitCmd {
     ui32 m_updateFlags;
     size_t m_size;
     c8 *m_data;
+    ::CPPCore::TArray<MeshEntry*> m_newMeshes;
 
     FrameSubmitCmd() :
-            m_meshId(999999), m_passId(nullptr), m_batchId(nullptr), m_updateFlags(0), m_size(0), m_data(nullptr) {
+            m_meshId(999999),
+            m_passId(nullptr),
+            m_batchId(nullptr),
+            m_updateFlags(0),
+            m_size(0),
+            m_data(nullptr),
+            m_newMeshes() {
         // empty
     }
 };
 
-using FrameSubmitCmdAllocator = CPPCore::TPoolAllocator<FrameSubmitCmd>;
+using FrameSubmitCmdAllocator = ::CPPCore::TPoolAllocator<FrameSubmitCmd>;
 
 struct UniformBuffer {
     UniformBuffer() :
