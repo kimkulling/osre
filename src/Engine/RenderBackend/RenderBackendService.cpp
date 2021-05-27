@@ -208,7 +208,9 @@ void RenderBackendService::commitNextFrame() {
                 cmd->m_size = sizeof(MatrixBuffer);
                 cmd->m_data = new c8[cmd->m_size];
                 ::memcpy(cmd->m_data, &currentBatch->m_matrixBuffer, cmd->m_size);
-            } else if (currentBatch->m_dirtyFlag & RenderBatchData::UniformBufferDirty) {
+            } 
+            
+            if (currentBatch->m_dirtyFlag & RenderBatchData::UniformBufferDirty) {
                 UniformBuffer &uniformBuffer = data->m_frame->m_uniforBuffers[i];
                 for (ui32 k = 0; k < currentBatch->m_uniforms.size(); ++k) {
                     FrameSubmitCmd *cmd = m_submitFrame->enqueue();
@@ -232,7 +234,9 @@ void RenderBackendService::commitNextFrame() {
                     offset += var->m_name.size();
                     ::memcpy(&cmd->m_data[offset], var->m_data.getData(), var->m_data.m_size);
                 }
-            } else if (currentBatch->m_dirtyFlag & RenderBatchData::MeshUpdateDirty) {
+            } 
+            
+            if (currentBatch->m_dirtyFlag & RenderBatchData::MeshUpdateDirty) {
                 for (ui32 k = 0; k < currentBatch->m_updateMeshArray.size(); ++k) {
                     FrameSubmitCmd *cmd = m_submitFrame->enqueue();
                     cmd->m_passId = currentPass->m_id;
@@ -244,7 +248,8 @@ void RenderBackendService::commitNextFrame() {
                     cmd->m_data = new c8[cmd->m_size];
                     ::memcpy(cmd->m_data, currentMesh->m_vb->getData(), cmd->m_size);
                 }
-            } else if (currentBatch->m_dirtyFlag & RenderBatchData::AddMeshDirty) {
+            } 
+            if (currentBatch->m_dirtyFlag & RenderBatchData::MeshDirty) {
                 for (ui32 k = 0; k < currentBatch->m_meshArray.size(); ++k) {
                     MeshEntry *entry = currentBatch->m_meshArray[k];
                     if (entry->m_isDirty) {

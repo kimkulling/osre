@@ -739,8 +739,7 @@ struct RenderBatchData {
         MatrixBufferDirty = 1,
         UniformBufferDirty = 2,
         MeshDirty = 4,
-        MeshUpdateDirty = 8,
-        AddMeshDirty = 16
+        MeshUpdateDirty = 8
     };
 
     const c8 *m_id;
