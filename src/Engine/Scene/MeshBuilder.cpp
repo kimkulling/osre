@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sstream>
 #include <iostream>
 
-#include <stdio.h>
+#include <cstdio>
 
 namespace OSRE {
 namespace Scene {
@@ -119,7 +119,6 @@ MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType acce
     pos[ 1 ] = glm::vec3( 0, 1, 0 );
     pos[ 2 ] = glm::vec3( 1, -1, 0 );
     mesh->m_vb = allocVertices( mesh->m_vertextype,  NumVert, pos, col, nullptr, access );
-    printf("4\n");
 
     // setup triangle indices
     static const size_t NumIndices = 3;
@@ -144,8 +143,7 @@ MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType acce
 }
 
 MeshBuilder &MeshBuilder::allocQuads( VertexType type, BufferAccessType access ) {
-    Mesh *mesh = Mesh::create(1, VertexType::RenderVertex);
-    mesh->m_vertextype = type;
+    Mesh *mesh = Mesh::create(1, type);
     mesh->m_indextype = IndexType::UnsignedShort;
 
     // setup triangle vertices    
@@ -248,7 +246,7 @@ MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, Re
     return *this;
 }
 
-MeshBuilder &MeshBuilder::allocCube( RenderBackend::VertexType type, f32 w, f32 h, f32 d, RenderBackend::BufferAccessType access ) {
+MeshBuilder &MeshBuilder::allocCube(VertexType type, f32 w, f32 h, f32 d, BufferAccessType access ) {
     mActiveGeo = Mesh::create(1,VertexType::RenderVertex);
     RenderVert v[8];
 
@@ -321,8 +319,7 @@ MeshBuilder &MeshBuilder::allocCube( RenderBackend::VertexType type, f32 w, f32 
 
 MeshBuilder &MeshBuilder::allocLineList( VertexType type, BufferAccessType access, ui32 numLines,
                                           glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices ) {
-    Mesh *geo = Mesh::create(1, VertexType::RenderVertex);
-    geo->m_vertextype = type;
+    Mesh *geo = Mesh::create(1, type);
     geo->m_indextype = IndexType::UnsignedShort;
 
     geo->m_numPrimGroups = 1;
@@ -349,8 +346,7 @@ MeshBuilder &MeshBuilder::allocPoints( VertexType type, BufferAccessType access,
         indices[ i ] = i;
     }
 
-    Mesh *ptGeo = Mesh::create(1, VertexType::ColorVertex);
-    ptGeo->m_vertextype = type;
+    Mesh *ptGeo = Mesh::create(1, type);
 
     ptGeo->m_vb = Scene::MeshBuilder::allocVertices(VertexType::ColorVertex, numPoints, posArray, 
                         colorArray, nullptr, access );
@@ -484,7 +480,7 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
     Mesh *mesh = Mesh::create(1, VertexType::RenderVertex);
     mesh->m_indextype = IndexType::UnsignedShort;
 
-    glm::vec3 *textPos( nullptr ), *colors(nullptr );
+    glm::vec3 *textPos(nullptr), *colors(nullptr);
     glm::vec2 *tex0(nullptr);
     GLushort *textIndices(nullptr);
     generateTextBoxVerticesAndIndices(x,y,textSize, text, &textPos, &colors, &tex0, &textIndices);
@@ -496,7 +492,7 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
     // setup triangle indices
     size_t size = sizeof( GLushort ) * 6 * text.size();
     mesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
-    mesh->m_ib->copyFrom( textIndices, size );
+    mesh->m_ib->copyFrom(textIndices, size);
 
     // setup primitives
     mesh->m_numPrimGroups = 1;
@@ -515,6 +511,7 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
 
     return *this;
 }
+
 static f32 getZbyStackIndex(f32 stackIndex) {
     const f32 result = stackIndex * -0.1f;
     return result;

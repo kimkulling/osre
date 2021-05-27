@@ -252,7 +252,6 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
         const size_t numVerts = countVertices(*miArray, m_scene);
         vertices.resize(numVerts);
         Mesh &newMesh = *m_meshArray[i];
-        newMesh.m_vertextype = VertexType::RenderVertex;
         size_t vertexOffset = 0, indexOffset = 0;
         for (ui32 j = 0; j < miArray->size(); ++j) {
             const size_t meshIndex = (*miArray)[j];

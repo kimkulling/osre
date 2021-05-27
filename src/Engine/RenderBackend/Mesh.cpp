@@ -77,8 +77,8 @@ Mesh *Mesh::create(size_t numGeo, VertexType type) {
         osre_debug(Tag, "Number of static geo to create is zero.");
         return nullptr;
     }
-    
-    Mesh *geoArray = new Mesh;
+
+    Mesh *geoArray = new Mesh[numGeo];
     for (ui32 i = 0; i < numGeo; i++) {
         geoArray[i].m_vertextype = type;
         geoArray[i].m_id = s_Ids.getUniqueId();
