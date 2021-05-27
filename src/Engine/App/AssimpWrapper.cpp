@@ -236,7 +236,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
     }
 
     for (size_t i = 0; i < mat2MeshMap.size(); ++i) {
-        m_meshArray.add(Mesh::create(1));
+        m_meshArray.add(Mesh::create(1, VertexType::RenderVertex));
     }
 
     size_t i = 0;

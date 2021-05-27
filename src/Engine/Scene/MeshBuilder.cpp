@@ -94,9 +94,8 @@ MeshBuilder::~MeshBuilder() {
 }
 
 MeshBuilder &MeshBuilder::allocEmptyMesh( VertexType type, ui32 numMeshes ) {
-    mActiveGeo = Mesh::create(numMeshes);
+    mActiveGeo = Mesh::create(numMeshes, type);
     for (ui32 i = 0; i < numMeshes; ++i) {
-        mActiveGeo[ i ].m_vertextype = type;
         mActiveGeo[ i ].m_indextype = IndexType::UnsignedShort;
     }
 
@@ -104,7 +103,7 @@ MeshBuilder &MeshBuilder::allocEmptyMesh( VertexType type, ui32 numMeshes ) {
 }
 
 MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
-    Mesh *mesh = Mesh::create( 1 );
+    Mesh *mesh = Mesh::create(1, VertexType::RenderVertex);
     mesh->m_vertextype = type;
     mesh->m_indextype = IndexType::UnsignedShort;
 
@@ -145,7 +144,7 @@ MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType acce
 }
 
 MeshBuilder &MeshBuilder::allocQuads( VertexType type, BufferAccessType access ) {
-    Mesh *mesh = Mesh::create( 1 );
+    Mesh *mesh = Mesh::create(1, VertexType::RenderVertex);
     mesh->m_vertextype = type;
     mesh->m_indextype = IndexType::UnsignedShort;
 
@@ -250,7 +249,7 @@ MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, Re
 }
 
 MeshBuilder &MeshBuilder::allocCube( RenderBackend::VertexType type, f32 w, f32 h, f32 d, RenderBackend::BufferAccessType access ) {
-    mActiveGeo = Mesh::create( 1 );
+    mActiveGeo = Mesh::create(1,VertexType::RenderVertex);
     RenderVert v[8];
 
     //glm::vec3 v[8];
@@ -322,7 +321,7 @@ MeshBuilder &MeshBuilder::allocCube( RenderBackend::VertexType type, f32 w, f32 
 
 MeshBuilder &MeshBuilder::allocLineList( VertexType type, BufferAccessType access, ui32 numLines,
                                           glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices ) {
-    Mesh *geo = Mesh::create( 1 );
+    Mesh *geo = Mesh::create(1, VertexType::RenderVertex);
     geo->m_vertextype = type;
     geo->m_indextype = IndexType::UnsignedShort;
 
@@ -350,10 +349,10 @@ MeshBuilder &MeshBuilder::allocPoints( VertexType type, BufferAccessType access,
         indices[ i ] = i;
     }
 
-    Mesh *ptGeo = Mesh::create( 1 );
+    Mesh *ptGeo = Mesh::create(1, VertexType::ColorVertex);
     ptGeo->m_vertextype = type;
 
-    ptGeo->m_vb = Scene::MeshBuilder::allocVertices( VertexType::ColorVertex, numPoints, posArray, 
+    ptGeo->m_vb = Scene::MeshBuilder::allocVertices(VertexType::ColorVertex, numPoints, posArray, 
                         colorArray, nullptr, access );
     ptGeo->m_indextype = IndexType::UnsignedShort;
     ui32 pt_size = sizeof( GLushort ) * numPoints;
@@ -482,8 +481,7 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
 		return *this;
 	}
 
-    Mesh *mesh = Mesh::create( 1 );
-    mesh->m_vertextype = VertexType::RenderVertex;
+    Mesh *mesh = Mesh::create(1, VertexType::RenderVertex);
     mesh->m_indextype = IndexType::UnsignedShort;
 
     glm::vec3 *textPos( nullptr ), *colors(nullptr );

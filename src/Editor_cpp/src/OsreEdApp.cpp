@@ -41,6 +41,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/App/Project.h>
+#include <osre/Scene/MaterialBuilder.h>
 #include <osre/Platform/PlatformInterface.h>
 
 #ifdef OSRE_WINDOWS
@@ -82,7 +83,7 @@ static const ui32 VerticalMargin = 2;
 
 #define ID_TREEVIEW 100
 
-HWND hStatic = NULL;
+//HWND hStatic = NULL;
 
 #endif // OSRE_WINDOWS
 
@@ -97,42 +98,61 @@ static void createTitleString( const SceneData &sd, String &titleString ) {
     titleString += sd.AssetName;
 }
 
+namespace Colors {
+    const glm::vec3 Black(0, 0, 0);
+    const glm::vec3 White(1, 1, 1);
+    const glm::vec3 Grey(0.5, 0.5, 0.5);
+}
+
 static Mesh *createGrid(ui32 numLines) {
     if (0 == numLines) {
         return nullptr;
     }
 
-    Mesh *grid = Mesh::create(1);
-    f32 currentX = -10.0f, currentY = -10.0f;
-    f32 diffX = 20.0 / numLines;
-    f32 diffY = 20.0 / numLines;
-    CPPCore::TArray<RenderBackend::RenderVert> lineData;
+    Mesh *grid = Mesh::create(1, VertexType::ColorVertex);
+    f32 currentX = -100.0f, currentY = -100.0f;
+    f32 diffX = 200.0 / numLines;
+    f32 diffY = 200.0 / numLines;
+    CPPCore::TArray<RenderBackend::ColorVert> lineData;
     CPPCore::TArray<ui16> lineIndices;
     ui16 currentIndex = 0;
-    for (ui32 y = 0; y < numLines + 1; ++y) {
-        for (ui32 x = 0; x < numLines + 1; ++x) {
-            RenderVert v1, v2;
-            v1.position.x = currentX;
-            v1.position.y = currentY;
-            v1.position.z = 0.0f;
-            v1.color0 = glm::vec3(0.5, 0.5, 0.5);
-            currentX += diffX;
-            v2.position.x = currentX;
-            v2.position.y = currentY;
-            v2.position.z = 0.0f;
-            v2.color0 = glm::vec3(0.5, 0.5, 0.5);
-            lineData.add(v1);
-            lineData.add(v2);
-            lineIndices.add(currentIndex);
-            currentIndex++;
-            lineIndices.add(currentIndex);
-            currentIndex++;
-        }
-        currentY += diffY;
+    for (ui32 x = 0; x < numLines + 1; ++x) {
+        ColorVert v1, v2;
+        v1.position.x = v2.position.x = currentX;
+        currentX += diffX;
+
+        v1.position.y = -100;
+        v2.position.y = 100;
+
+        v1.position.z = v2.position.z = 0.0f;
+        v1.color0 = v2.color0 = Colors::Grey;
+
+        lineData.add(v1);
+        lineData.add(v2);
+        lineIndices.add(currentIndex);
+        ++currentIndex;
+        lineIndices.add(currentIndex);
+        ++currentIndex;
     }
-    grid->attachVertices(&lineData[0], sizeof(RenderVert) * lineData.size());
+    for (ui32 y = 0; y < numLines + 1; ++y) {
+        ColorVert v1, v2;
+        v1.position.x = -100;
+        v2.position.x = 100;
+        v1.position.y = v2.position.y = currentY;
+        currentY += diffY;
+        v1.position.z = v2.position.z = 0.0f;
+        v1.color0 = v2.color0 = Colors::Grey;
+        lineData.add(v1);
+        lineData.add(v2);        
+        lineIndices.add(currentIndex);
+        ++currentIndex;
+        lineIndices.add(currentIndex);
+        ++currentIndex;
+    }
+    grid->attachVertices(&lineData[0], sizeof(ColorVert) * lineData.size());
     grid->attachIndices(&lineIndices[0], sizeof(ui16) * lineIndices.size());
-    grid->createPrimitiveGroup(IndexType::UnsignedShort, lineData.size() / 2, PrimitiveType::LineList, 0);
+    grid->createPrimitiveGroup(IndexType::UnsignedShort, lineData.size(), PrimitiveType::LineList, 0);
+    grid->m_material = Scene::MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex);
 
     return grid;
 }
@@ -202,6 +222,10 @@ bool OsreEdApp::onCreate() {
     AppBase::getRenderBackendService()->enableAutoResizing(false);
 
     World *world = getActiveWorld();
+    if (nullptr == world) {
+        return false;
+    }
+
     Entity *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
     Mesh *grid = createGrid(20);
     editorEntity->addStaticMesh(grid);
@@ -356,7 +380,7 @@ void createRect2D(Rect2ui r, Mesh *mesh2D, Style &style) {
     indices[5] = 3;
 
     mesh2D->attachVertices(&edges[0], sizeof(glm::vec2) * 4);
-    mesh2D->attachIndices(&indices[0], sizeof(ui32) * 6);
+    mesh2D->attachIndices(&indices[0], sizeof(ui16) * 6);
     mesh2D->createPrimitiveGroup(IndexType::UnsignedShort, 6, PrimitiveType::TriangleList, 0);
 }
 
@@ -365,7 +389,7 @@ void drawLabel(Label &label, Mesh *mesh2D) {
 
 void OsreEdApp::createUI() {
     return;
-    mMesh2D = Mesh::create(1);
+    mMesh2D = Mesh::create(1, VertexType::RenderVertex);
     Rect2ui r(100, 100, 200, 200);
     Style style;
     style.BG.m_r = 1;
