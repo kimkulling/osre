@@ -250,17 +250,11 @@ void RenderBackendService::commitNextFrame() {
                 }
             } 
             if (currentBatch->m_dirtyFlag & RenderBatchData::MeshDirty) {
-                for (ui32 k = 0; k < currentBatch->m_meshArray.size(); ++k) {
-                    MeshEntry *entry = currentBatch->m_meshArray[k];
-                    if (entry->m_isDirty) {
-                        FrameSubmitCmd *cmd = m_submitFrame->enqueue();
-                        cmd->m_passId = currentPass->m_id;
-                        cmd->m_batchId = currentBatch->m_id;
-                        cmd->m_updateFlags |= (ui32)FrameSubmitCmd::AddRenderData;
-                        
-
-                    }
-                }
+                FrameSubmitCmd *cmd = m_submitFrame->enqueue();
+                PassData *pd = new PassData(currentPass->m_id, nullptr);
+                pd->m_geoBatches.add(currentBatch);
+                cmd->m_updatedPasses.add(pd);
+                cmd->m_updateFlags |= (ui32)FrameSubmitCmd::AddRenderData;
             }
 
             currentBatch->m_dirtyFlag = 0;
@@ -478,6 +472,7 @@ void RenderBackendService::clearPasses() {
 }
 
 void RenderBackendService::attachView() {    
+    // empty
 }
 
 void RenderBackendService::resize(ui32 x, ui32 y, ui32 w, ui32 h) {

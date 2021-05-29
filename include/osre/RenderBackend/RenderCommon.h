@@ -830,6 +830,7 @@ struct FrameSubmitCmd {
     size_t m_size;
     c8 *m_data;
     ::CPPCore::TArray<MeshEntry*> m_newMeshes;
+    ::CPPCore::TArray<PassData*> m_updatedPasses;
 
     FrameSubmitCmd() :
             m_meshId(999999),
