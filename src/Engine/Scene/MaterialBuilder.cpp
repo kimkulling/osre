@@ -293,7 +293,6 @@ Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
         return mat;
     }
     mat = s_materialCache->create("buildinShaderMaterial", IO::Uri());
-    //mat = new Material( "buildinShaderMaterial", MaterialType::ShaderMaterial);
     String vs, fs;
     if (type == VertexType::ColorVertex) {
         vs = GLSLVsSrc;
