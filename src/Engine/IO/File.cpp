@@ -40,7 +40,7 @@ bool File::exists(const String &filename) {
 #ifdef OSRE_WINDOWS
     errno_t err = ::fopen_s(&pFileStream, filename.c_str(), "r");
 #else
-    pFileStream = ::fopen(filename.getAbsPath().c_str(), "r");
+    pFileStream = ::fopen(filename.c_str(), "r");
 #endif
 
     if (pFileStream) {

@@ -102,8 +102,51 @@ namespace Colors {
     const glm::vec3 Black(0, 0, 0);
     const glm::vec3 White(1, 1, 1);
     const glm::vec3 Grey(0.5, 0.5, 0.5);
-}
+    const glm::vec3 Red(1, 0, 0);
+    }
 
+static Mesh *createCoordAxis() {
+    Mesh *axis = Mesh::create(1, VertexType::ColorVertex);
+    ColorVert v1, v2, v3, v4;
+    v1.position.x = v1.position.y = v1.position.z = 0;
+    v1.color0 = Colors::Red;
+
+    v2.position.x = 10;
+    v2.position.y = v2.position.z = 0;
+    v2.color0 = Colors::Red;
+
+    v3.position.y = 10;
+    v3.position.x = v2.position.z = 0;
+    v3.color0 = Colors::Red;
+
+    v4.position.z = 10;
+    v4.position.y = v2.position.z = 0;
+    v4.color0 = Colors::Red;
+
+    CPPCore::TArray<RenderBackend::ColorVert> axisData;
+    axisData.add(v1);
+    axisData.add(v2);
+    axisData.add(v3);
+    axisData.add(v4);
+
+    axis->attachVertices(&axisData[0], sizeof(ColorVert) * axisData.size());
+    
+    CPPCore::TArray<ui16> axisIndices;
+    axisIndices.add(0);
+    axisIndices.add(1);
+
+    axisIndices.add(0);
+    axisIndices.add(2);
+
+    axisIndices.add(0);
+    axisIndices.add(3);
+    axis->attachIndices(&axisIndices[0], sizeof(ui16) * axisIndices.size());
+    axis->createPrimitiveGroup(IndexType::UnsignedShort, axisData.size(), PrimitiveType::LineList, 0);
+    axis->m_material = Scene::MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex);
+
+    return axis;
+}
+ 
 static Mesh *createGrid(ui32 numLines) {
     if (0 == numLines) {
         return nullptr;
@@ -229,6 +272,7 @@ bool OsreEdApp::onCreate() {
     Entity *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
     Mesh *grid = createGrid(20);
     editorEntity->addStaticMesh(grid);
+    editorEntity->addStaticMesh(createCoordAxis());
     //createUI();
 
     return true;
