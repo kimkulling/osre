@@ -68,7 +68,9 @@ inline bool ClearState::operator!=(const ClearState &rhs) const {
     return !(*this == rhs);
 }
 
+/// @brief 
 struct DepthState {
+    /// @brief 
     enum class DepthStateType {
         Enabled = 0,
         Disabled,
@@ -76,6 +78,7 @@ struct DepthState {
         InvalidDepthState
     };
 
+    /// @brief 
     enum class DepthFuncType {
         Always = 0,
         Never,
@@ -92,8 +95,17 @@ struct DepthState {
     DepthStateType m_type;
     DepthFuncType m_func;
 
+    /// @brief The default class constructor.
     DepthState();
+
+    /// @brief The class constructor with all parameters.
+    /// @param stateType        [in] The state type enum.
+    /// @param depthFuncType    [in] The depth function type.
     DepthState(DepthStateType stateType, DepthFuncType depthFuncType);
+    
+    /// @brief The compare constructor.
+    /// @param rhs      [in] Right hand side to compare
+    /// @return true if equal.
     bool operator==(const DepthState &rhs) const;
     bool operator!=(const DepthState &rhs) const;
 };
@@ -385,14 +397,29 @@ struct RenderStates {
     bool m_applied;
 
     RenderStates() :
-            m_clearState(), m_depthState(), m_transformState(), m_polygonState(), m_blendState(), m_cullState(), m_samplerState(), m_stencilState(), m_applied(false) {
+            m_clearState(),
+            m_depthState(),
+            m_transformState(),
+            m_polygonState(),
+            m_blendState(),
+            m_cullState(),
+            m_samplerState(),
+            m_stencilState(),
+            m_applied(false) {
         // empty
     }
 
     bool isEqual(const ClearState &ClearState, const DepthState &depthState, const TransformState &transformState,
             const PolygonState &polygonState, const CullState &cullstate, const BlendState &blendState,
             const SamplerState &samplerState, const StencilState &stencilState) const {
-        return (ClearState == m_clearState && depthState == m_depthState && transformState == m_transformState && polygonState == m_polygonState && blendState == m_blendState && cullstate == m_cullState && samplerState == m_samplerState && stencilState == m_stencilState);
+        return (ClearState == m_clearState &&
+                depthState == m_depthState &&
+                transformState == m_transformState &&
+                polygonState == m_polygonState &&
+                blendState == m_blendState &&
+                cullstate == m_cullState &&
+                samplerState == m_samplerState &&
+                stencilState == m_stencilState);
     }
 };
 

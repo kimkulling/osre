@@ -36,29 +36,28 @@ namespace OSRE {
 
 namespace App {
     class Project;
-}
+    class World;
+} // namespace App
 
 namespace IO {
     class Uri;
-}
-
-namespace Scene {
-    class World;
 }
 
 namespace Editor {
 
 struct SceneData {
     String Name;
+    String ProjectName;
+    String AssetName;
     Scene::Node::NodePtr m_modelNode;
     Scene::Camera *mCamera;
-    Scene::World *mWorld;
+    App::World *mWorld;
 
     SceneData();
 };
 
 //-------------------------------------------------------------------------------------------------
-/// @brief  The main application of the OSRE-Editor.
+/// @brief  The main-application-class of the OSRE-Editor.
 //-------------------------------------------------------------------------------------------------
 class OsreEdApp : public App::AppBase {
 public:
@@ -116,21 +115,47 @@ public:
     /// @return true, if a model is stored.
     bool hasModel() const;
 
+    /// @brief 
+    /// @param mod 
+    /// @return 
     bool registerModule(ModuleBase *mod);
+
+    /// @brief 
+    /// @param name 
+    /// @return 
     ModuleBase *findModule(const String &name) const;
+    
+    /// @brief 
+    /// @param moc 
+    /// @return 
     bool unregisterModule(ModuleBase *moc);
+    
+    /// @brief 
     void createUI();
 
 protected:
-    /// The onCreate callback
+    /// @brief The onCreate callback
+    /// @return true, if successful, false in case of an error.
     bool onCreate() override;
-    /// The onUpdate callback.
-    void onUpdate() override;
-    /// The onDestrox callback.
-    bool onDestroy() override;
 
+    /// @brief The onUpdate callback.
+    /// @return true, if successful, false in case of an error.
+    void onUpdate() override;
+
+    /// @brief The onDestrox callback.
+    /// @return true, if successful, false in case of an error.
+    bool onDestroy() override;
+    
+    /// @brief 
+    /// @param filename 
+    /// @param sd 
+    /// @return 
     bool loadSceneData(const IO::Uri &filename, SceneData &sd);
     
+    /// @brief 
+    /// @param filename 
+    /// @param sd 
+    /// @return 
     bool saveSceneData(const IO::Uri &filename, SceneData &sd);
 
 private:

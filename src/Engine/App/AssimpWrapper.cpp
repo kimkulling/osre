@@ -236,15 +236,15 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
     }
 
     for (size_t i = 0; i < mat2MeshMap.size(); ++i) {
-        m_meshArray.add(Mesh::create(1));
+        m_meshArray.add(Mesh::create(1, VertexType::RenderVertex));
     }
 
     size_t i = 0;
     aiMesh *currentMesh = nullptr;
     ::CPPCore::TArray<RenderVert> vertices;
-    for (Mat2MeshMap::iterator it = mat2MeshMap.begin(); it != mat2MeshMap.end(); ++it) {
+    for (auto & it : mat2MeshMap) {
         CPPCore::TArray<ui32> indexArray;
-        MeshIdxArray *miArray = it->second;
+        MeshIdxArray *miArray = it.second;
         if (nullptr == miArray) {
             continue;
         }
@@ -252,10 +252,8 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
         const size_t numVerts = countVertices(*miArray, m_scene);
         vertices.resize(numVerts);
         Mesh &newMesh = *m_meshArray[i];
-        newMesh.m_vertextype = VertexType::RenderVertex;
         size_t vertexOffset = 0, indexOffset = 0;
-        for (ui32 j = 0; j < miArray->size(); ++j) {
-            const size_t meshIndex = (*miArray)[j];
+        for (unsigned long long meshIndex : *miArray) {
             currentMesh = m_scene->mMeshes[meshIndex];
             if (nullptr == currentMesh) {
                 continue;
@@ -353,8 +351,8 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
     }
     m_entity->setAABB(aabb);
 
-    for (Mat2MeshMap::iterator it = mat2MeshMap.begin(); it != mat2MeshMap.end(); ++it) {
-        delete it->second;
+    for (auto &it : mat2MeshMap) {
+        delete it.second;
     }
     mat2MeshMap.clear();
 
@@ -430,7 +428,7 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
         return;
     }
 
-    i32 texIndex(0);
+    i32 texIndex = 0;
     aiString texPath; // contains filename of texture
     TextureResourceArray texResArray;
     if (AI_SUCCESS == material->GetTexture(aiTextureType_DIFFUSE, texIndex, &texPath)) {
@@ -442,7 +440,7 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
         matName = "material1";
     }
 
-    Material *osreMat = MaterialBuilder::createTexturedMaterial(matName, texResArray, RenderBackend::VertexType::RenderVertex);
+    Material *osreMat = MaterialBuilder::createTexturedMaterial(matName, texResArray, VertexType::RenderVertex);
     if (nullptr == osreMat) {
         osre_error(Tag, "Err ehilr creating material for " + matName);
         return;

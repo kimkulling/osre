@@ -36,11 +36,11 @@ namespace OSRE {
 
 // Forward declarations ---------------------------------------------------------------------------
 namespace Properties {
-class Property;
+    class Property;
 }
 
 namespace RenderBackend {
-struct TransformState;
+    struct TransformState;
 }
 
 namespace Scene {

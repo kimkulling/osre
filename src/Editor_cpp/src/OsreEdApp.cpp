@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "OsreEdApp.h"
 #include "ProgressReporter.h"
+#include "Gui/UIElements.h"
 #include "Modules/InspectorModule/InspectorModule.h"
 #include "Modules/ModuleBase.h"
 
@@ -40,6 +41,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/App/Project.h>
+#include <osre/Scene/MaterialBuilder.h>
 #include <osre/Platform/PlatformInterface.h>
 
 #ifdef OSRE_WINDOWS
@@ -81,12 +83,127 @@ static const ui32 VerticalMargin = 2;
 
 #define ID_TREEVIEW 100
 
-HWND hStatic = NULL;
+//HWND hStatic = NULL;
 
 #endif // OSRE_WINDOWS
 
+static void createTitleString( const SceneData &sd, String &titleString ) {
+    titleString.clear();
+    titleString += "OSRE ED!";
+
+    titleString += " Project: ";
+    titleString += sd.ProjectName;
+
+    titleString += " Current Asset: ";
+    titleString += sd.AssetName;
+}
+
+namespace Colors {
+    const glm::vec3 Black(0, 0, 0);
+    const glm::vec3 White(1, 1, 1);
+    const glm::vec3 Grey(0.5, 0.5, 0.5);
+    const glm::vec3 Red(1, 0, 0);
+    }
+
+static Mesh *createCoordAxis() {
+    Mesh *axis = Mesh::create(1, VertexType::ColorVertex);
+    ColorVert v1, v2, v3, v4;
+    v1.position.x = v1.position.y = v1.position.z = 0;
+    v1.color0 = Colors::Red;
+
+    v2.position.x = 10;
+    v2.position.y = v2.position.z = 0;
+    v2.color0 = Colors::Red;
+
+    v3.position.y = 10;
+    v3.position.x = v2.position.z = 0;
+    v3.color0 = Colors::Red;
+
+    v4.position.z = 10;
+    v4.position.y = v2.position.z = 0;
+    v4.color0 = Colors::Red;
+
+    CPPCore::TArray<RenderBackend::ColorVert> axisData;
+    axisData.add(v1);
+    axisData.add(v2);
+    axisData.add(v3);
+    axisData.add(v4);
+
+    axis->attachVertices(&axisData[0], sizeof(ColorVert) * axisData.size());
+    
+    CPPCore::TArray<ui16> axisIndices;
+    axisIndices.add(0);
+    axisIndices.add(1);
+
+    axisIndices.add(0);
+    axisIndices.add(2);
+
+    axisIndices.add(0);
+    axisIndices.add(3);
+    axis->attachIndices(&axisIndices[0], sizeof(ui16) * axisIndices.size());
+    axis->createPrimitiveGroup(IndexType::UnsignedShort, axisData.size(), PrimitiveType::LineList, 0);
+    axis->m_material = Scene::MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex);
+
+    return axis;
+}
+ 
+static Mesh *createGrid(ui32 numLines) {
+    if (0 == numLines) {
+        return nullptr;
+    }
+
+    Mesh *grid = Mesh::create(1, VertexType::ColorVertex);
+    f32 currentX = -100.0f, currentY = -100.0f;
+    f32 diffX = 200.0 / numLines;
+    f32 diffY = 200.0 / numLines;
+    CPPCore::TArray<RenderBackend::ColorVert> lineData;
+    CPPCore::TArray<ui16> lineIndices;
+    ui16 currentIndex = 0;
+    for (ui32 x = 0; x < numLines + 1; ++x) {
+        ColorVert v1, v2;
+        v1.position.x = v2.position.x = currentX;
+        currentX += diffX;
+
+        v1.position.y = -100;
+        v2.position.y = 100;
+
+        v1.position.z = v2.position.z = 0.0f;
+        v1.color0 = v2.color0 = Colors::Grey;
+
+        lineData.add(v1);
+        lineData.add(v2);
+        lineIndices.add(currentIndex);
+        ++currentIndex;
+        lineIndices.add(currentIndex);
+        ++currentIndex;
+    }
+    for (ui32 y = 0; y < numLines + 1; ++y) {
+        ColorVert v1, v2;
+        v1.position.x = -100;
+        v2.position.x = 100;
+        v1.position.y = v2.position.y = currentY;
+        currentY += diffY;
+        v1.position.z = v2.position.z = 0.0f;
+        v1.color0 = v2.color0 = Colors::Grey;
+        lineData.add(v1);
+        lineData.add(v2);        
+        lineIndices.add(currentIndex);
+        ++currentIndex;
+        lineIndices.add(currentIndex);
+        ++currentIndex;
+    }
+    grid->attachVertices(&lineData[0], sizeof(ColorVert) * lineData.size());
+    grid->attachIndices(&lineIndices[0], sizeof(ui16) * lineIndices.size());
+    grid->createPrimitiveGroup(IndexType::UnsignedShort, lineData.size(), PrimitiveType::LineList, 0);
+    grid->m_material = Scene::MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex);
+
+    return grid;
+}
+
 SceneData::SceneData() :
         Name(),
+        ProjectName("none"),
+        AssetName("none"),
         m_modelNode(),
         mCamera( nullptr ),
         mWorld( nullptr ) {
@@ -114,40 +231,53 @@ bool OsreEdApp::onCreate() {
     }
 
     registerModule(new InspectorModule(this));
-
-    AppBase::setWindowsTitle("OSRE ED!");
+    String title;
+    createTitleString(mSceneData, title);
+    AppBase::setWindowsTitle(title);
 
     auto *w = (Win32Window *)getRootWindow();
     AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
-    if (nullptr != w && nullptr != queue) {
-        w->beginMenu();
-        MenuEntry FileMenu[8] = {
-            { MF_STRING, IDM_FILE_NEW, L"&New", MenuFunctor::Make(this, &OsreEdApp::newProjectCmd) },
-            { MF_STRING, IDM_FILE_OPEN, L"&Open Project", MenuFunctor::Make(this, &OsreEdApp::loadProjectCmd) },
-            { MF_STRING, IDM_FILE_SAVE, L"&Save Project", MenuFunctor::Make(this, &OsreEdApp::saveProjectCmd) },
-            { MF_SEPARATOR, 0, nullptr },
-            { MF_STRING, IDM_FILE_IMPORT, L"&Import Asset", MenuFunctor::Make(this, &OsreEdApp::importAssetCmd) },
-            { MF_SEPARATOR, 0, nullptr },
-            { MF_STRING, IDM_FILE_QUIT, L"&Quit", MenuFunctor::Make(this, &OsreEdApp::quitEditorCmd) },
-        };
-        w->addSubMenues(nullptr, queue, L"File", FileMenu, 8);
-
-        MenuEntry InfoMenu[2] = {
-            { MF_STRING, IDM_GETTING_HELP, L"&Getting Help", MenuFunctor::Make(this, &OsreEdApp::gettingHelpCmd) },
-            { MF_STRING, IDM_INFO_VERSION, L"&Version", MenuFunctor::Make(this, &OsreEdApp::showVersionCmd) }
-        };
-        w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
-
-        w->endMenu();
-        w->getWindowsRect(mResolution);
+    if (nullptr == w || nullptr == queue) {
+        return false;
     }
 
+    w->beginMenu();
+    MenuEntry FileMenu[8] = {
+        { MF_STRING, IDM_FILE_NEW, L"&New", MenuFunctor::Make(this, &OsreEdApp::newProjectCmd) },
+        { MF_STRING, IDM_FILE_OPEN, L"&Open Project", MenuFunctor::Make(this, &OsreEdApp::loadProjectCmd) },
+        { MF_STRING, IDM_FILE_SAVE, L"&Save Project", MenuFunctor::Make(this, &OsreEdApp::saveProjectCmd) },
+        { MF_SEPARATOR, 0, nullptr },
+        { MF_STRING, IDM_FILE_IMPORT, L"&Import Asset", MenuFunctor::Make(this, &OsreEdApp::importAssetCmd) },
+        { MF_SEPARATOR, 0, nullptr },
+        { MF_STRING, IDM_FILE_QUIT, L"&Quit", MenuFunctor::Make(this, &OsreEdApp::quitEditorCmd) },
+    };
+    w->addSubMenues(nullptr, queue, L"File", FileMenu, 8);
+
+    MenuEntry InfoMenu[2] = {
+        { MF_STRING, IDM_GETTING_HELP, L"&Getting Help", MenuFunctor::Make(this, &OsreEdApp::gettingHelpCmd) },
+        { MF_STRING, IDM_INFO_VERSION, L"&Version", MenuFunctor::Make(this, &OsreEdApp::showVersionCmd) }
+    };
+    w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
+
+    w->endMenu();
+    w->getWindowsRect(mResolution);
+
     AppBase::getRenderBackendService()->enableAutoResizing(false);
-    
+
+    World *world = getActiveWorld();
+    if (nullptr == world) {
+        return false;
+    }
+
+    Entity *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
+    Mesh *grid = createGrid(20);
+    editorEntity->addStaticMesh(grid);
+    editorEntity->addStaticMesh(createCoordAxis());
     //createUI();
 
     return true;
 }
+
 
 void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     Platform::AbstractWindow *rootWindow = getRootWindow();
@@ -179,8 +309,10 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     mSceneData.mCamera->observeBoundingBox(entity->getAABB());
     mSceneData.m_modelNode = entity->getNode();
 
-    const std::string &model = modelLoc.getResource();
-    rootWindow->setWindowsTitle("Model " + model);
+    mSceneData.AssetName = modelLoc.getResource();
+    String title;
+    createTitleString(mSceneData, title);
+    rootWindow->setWindowsTitle(title);
 
     reporter.stop();
 }
@@ -190,7 +322,9 @@ void OsreEdApp::newProjectCmd(ui32, void *) {
     mProject->create("New project", 0, 1);
     const String &projectName = mProject->getProjectName();
     
-    AppBase::setWindowsTitle("OSRE ED!" + String(" Project: ") + projectName);
+    String title;
+    createTitleString(mSceneData, title);
+    AppBase::setWindowsTitle(title);
 }
 
 void OsreEdApp::loadProjectCmd(ui32, void *) {
@@ -264,42 +398,6 @@ bool OsreEdApp::unregisterModule( ModuleBase *mod ) {
     return true;
 }
 
-struct Widget {
-    Widget *mParent;
-    CPPCore::TArray<Widget *> mChildren;
-    Rect2ui mRect;
-};
-
-struct Label : Widget {
-    String mLabel;
-};
-
-struct Headline : Widget {
-    Label mName;
-};
-struct Panel : Widget {
-    Headline mHeadline;
-};
-
-struct Button : Widget {
-    Label mLabel;
-};
-
-struct TreeViewItem {
-    String Name;
-    CPPCore::TArray<TreeViewItem *> Children;
-};
-
-struct TreeView : Widget {
-    Label mLabel;
-    TreeViewItem *mRoot;
-};
-
-struct Style {
-    Color4 FG;
-    Color4 BG;
-};
-
 void createRect2D(Rect2ui r, Mesh *mesh2D, Style &style) {
     if (nullptr == mesh2D) {
         return;
@@ -326,7 +424,7 @@ void createRect2D(Rect2ui r, Mesh *mesh2D, Style &style) {
     indices[5] = 3;
 
     mesh2D->attachVertices(&edges[0], sizeof(glm::vec2) * 4);
-    mesh2D->attachIndices(&indices[0], sizeof(ui32) * 6);
+    mesh2D->attachIndices(&indices[0], sizeof(ui16) * 6);
     mesh2D->createPrimitiveGroup(IndexType::UnsignedShort, 6, PrimitiveType::TriangleList, 0);
 }
 
@@ -335,7 +433,7 @@ void drawLabel(Label &label, Mesh *mesh2D) {
 
 void OsreEdApp::createUI() {
     return;
-    mMesh2D = Mesh::create(1);
+    mMesh2D = Mesh::create(1, VertexType::RenderVertex);
     Rect2ui r(100, 100, 200, 200);
     Style style;
     style.BG.m_r = 1;

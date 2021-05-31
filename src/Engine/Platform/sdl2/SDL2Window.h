@@ -36,14 +36,27 @@ namespace Platform {
 //-------------------------------------------------------------------------------------------------
 class SDL2Surface : public AbstractWindow {
 public:
-    /// The class constructor.
+    /// 
+
+    /// @brief The class constructor.
+    /// @param props    [in] The windows title.
     SDL2Surface( WindowsProperties *props );
-    /// The class destructor, virtual.
-    virtual ~SDL2Surface();
-    /// Will return a pointer showing to the SDL_Window.
+
+    ///	@brief  The class destructor.
+    ~SDL2Surface() override;
+
+    /// @brief Will return a pointer showing to the SDL_Window.
+    /// @return The sdl surface pointer.
     SDL_Window *getSDLSurface() const;
-    /// Will set a new windows title.
+    /// 
+
+    /// @brief Will set a new windows title.
+    /// @param title    [in] The new windows title.
     void setWindowsTitle( const String &title ) override;
+    
+    /// @brief 
+    /// @param ct 
+    void setWindowsMouseCursor(DefaultMouseCursorType ct) override;
 
 protected:
     /// The onCreate callback implementation.

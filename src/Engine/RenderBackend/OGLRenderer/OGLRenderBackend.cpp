@@ -226,7 +226,7 @@ void OGLRenderBackend::clearRenderTarget(const ClearState &clearState) {
     }
 
     glClear(glTarget);
-    glClearColor(0.5, 0.5, 0.5, 0.5);
+    glClearColor(0.3, 0.3, 0.3, 0.3);
 }
 
 void OGLRenderBackend::setViewport(i32 x, i32 y, i32 w, i32 h) {

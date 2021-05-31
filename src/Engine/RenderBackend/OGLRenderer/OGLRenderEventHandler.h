@@ -67,39 +67,80 @@ struct OGLBuffer;
 //-------------------------------------------------------------------------------------------------
 class OGLRenderEventHandler : public Common::AbstractEventHandler {
 public:
-    /// The class constructor.
+    /// @brief The default class constructor.
     OGLRenderEventHandler();
-    /// The class destructor, virtual.
-    virtual ~OGLRenderEventHandler();
-    /// The OnEvent-callback.
-    virtual bool onEvent( const Common::Event &ev, const Common::EventData *pEventData ) override;
-    /// Will set the active shader.
+
+    ///	@brief  The class destructor.
+    ~OGLRenderEventHandler() override;
+
+    /// @brief The OnEvent-callback.
+    /// @param ev 
+    /// @param pEventData 
+    /// @return 
+    bool onEvent( const Common::Event &ev, const Common::EventData *pEventData ) override;
+
+    /// @brief Will set the active shader.
+    /// @param pOGLShader 
     void setActiveShader( OGLShader *pOGLShader );
-    /// Will enqueue a new render command.
+    
+    /// @brief Will enqueue a new render command.
+    /// @param pOGLRenderCmd 
     void enqueueRenderCmd( OGLRenderCmd *pOGLRenderCmd );
 
-    void setParameter( const ::CPPCore::TArray<OGLParameter*> &paramArray );
+    /// @brief Will set all parameters.
+    /// @param paramArray   [in]    The array with the parameters.
+    void setParameter(const CPPCore::TArray<OGLParameter*> &paramArray);
 
-    RenderCmdBuffer *getRenderCmdBuffer() const { return m_renderCmdBuffer; }
+    /// @brief  Will return the active render command buffer.
+    /// @return Pointer showing to the render command buffer.
+    RenderCmdBuffer *getRenderCmdBuffer() const;
 
-    bool addMeshes(RenderBatchData *currentBatchData, CPPCore::TArray<size_t> &primGroups, MeshEntry *currentMeshEntry);
+    /// @brief 
+    /// @param id 
+    /// @param primGroups 
+    /// @param currentMeshEntry 
+    /// @return 
+    bool addMeshes(const c8 *id, CPPCore::TArray<size_t> &primGroups, MeshEntry *currentMeshEntry);
 
 protected:
-	///	@brief	Callback for attaching the event handler.
-    virtual bool onAttached( const Common::EventData *eventData ) override;
-	///	@brief	Callback for detaching the event handler.
-	virtual bool onDetached( const Common::EventData *eventData ) override;
-	///	@brief	Callback for render backend creation.
-	virtual bool onCreateRenderer( const Common::EventData *eventData );
-	///	@brief	Callback for render backend destroying.
-	virtual bool onDestroyRenderer( const Common::EventData *eventData );
-	///	@brief	Callback for attaching a new view onto a stage.
+    /// @brief Callback for attaching the event handler.
+    /// @param eventData 
+    /// @return 
+    bool onAttached( const Common::EventData *eventData ) override;
+
+	/// @brief Callback for detaching the event handler.
+	/// @param eventData 
+	/// @return 
+	bool onDetached( const Common::EventData *eventData ) override;
+
+	/// @brief Callback for render backend creation.
+	/// @param eventData 
+	/// @return 
+	bool onCreateRenderer( const Common::EventData *eventData );
+
+	/// @brief Callback for render backend destroying.
+	/// @param eventData 
+	/// @return 
+	bool onDestroyRenderer( const Common::EventData *eventData );
+
+	/// @brief Callback for attaching a new view onto a stage.
+	/// @param eventData 
+	/// @return 
 	virtual bool onAttachView( const Common::EventData *eventData );
-    ///	@brief	Callback for detaching a new view onto a stage.
+
+    /// @brief Callback for detaching a new view onto a stage.
+    /// @param eventData 
+    /// @return 
     virtual bool onDetachView( const Common::EventData *eventData );
-    ///	@brief	Callback for clearing all geometry from a stage.
+
+	/// @brief Callback for clearing all geometry from a stage.
+	/// @param eventData 
+	/// @return 
 	virtual bool onClearGeo( const Common::EventData *eventData );
-    ///	@brief	Callback for the render frame.
+
+	/// @brief Callback for the render frame.
+	/// @param eventData 
+	/// @return 
 	virtual bool onRenderFrame( const Common::EventData *eventData );
     /// @brief  Callback to init the passes.
     virtual bool onInitRenderPasses(const Common::EventData *eventData);
@@ -118,6 +159,10 @@ private:
     OGLVertexArray *m_vertexArray;
     HWBufferManager<OGLBuffer> *mHwBufferManager;
 };
+
+inline RenderCmdBuffer *OGLRenderEventHandler::getRenderCmdBuffer() const {
+    return m_renderCmdBuffer;
+}
 
 } // Namespace RenderBackend
 } // Namespace OSRE
