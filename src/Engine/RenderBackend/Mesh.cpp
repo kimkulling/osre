@@ -37,10 +37,15 @@ static Ids s_Ids;
 static const c8 *Tag = "Mesh";
 
 Mesh::Mesh() :
+        Mesh(VertexType::RenderVertex) {
+    // empty
+}
+
+Mesh::Mesh(VertexType type) :
         m_localMatrix(false),
         m_model(1.0f),
         m_material(nullptr),
-        m_vertextype(VertexType::RenderVertex),
+        m_vertextype(type),
         m_vb(nullptr),
         m_ib(nullptr),
         m_numPrimGroups(0),
@@ -67,15 +72,18 @@ Mesh::~Mesh() {
     s_Ids.releaseId(m_id);
 }
 
-Mesh *Mesh::create(size_t numGeo) {
+Mesh *Mesh::create(size_t numGeo, VertexType type) {
     if (0 == numGeo) {
         osre_debug(Tag, "Number of static geo to create is zero.");
         return nullptr;
     }
-    Mesh *geoArray(new Mesh[numGeo]);
+
+    Mesh *geoArray = new Mesh[numGeo];
     for (ui32 i = 0; i < numGeo; i++) {
+        geoArray[i].m_vertextype = type;
         geoArray[i].m_id = s_Ids.getUniqueId();
     }
+
     return geoArray;
 }
 

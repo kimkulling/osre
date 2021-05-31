@@ -177,7 +177,7 @@ void DbgRenderer::clear() {
 
 void DbgRenderer::addLine(const ColorVert &v0, const ColorVert &v1) {
     if (nullptr == m_debugMesh) {
-        m_debugMesh = Mesh::create(1);
+        m_debugMesh = Mesh::create(1, VertexType::ColorVertex);
     }
 
     ColorVert vertices[2];

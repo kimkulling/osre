@@ -48,6 +48,10 @@ void SDL2Surface::setWindowsTitle( const String &title ) {
     ::SDL_SetWindowTitle( m_surface, title.c_str() );
 }
 
+void SDL2Surface::setWindowsMouseCursor(DefaultMouseCursorType ct) {
+
+}
+
 SDL_Window *SDL2Surface::getSDLSurface() const {
     return m_surface;
 }

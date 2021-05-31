@@ -47,6 +47,7 @@ static const c8 *Tag = "RenderBackendService";
 
 static const c8 *OGL_API = "opengl";
 static const c8 *Vulkan_API = "vulkan";
+static const i32 IdxNotFound = -1;
 
 static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataArray) {
     for (ui32 i = 0; i < passDataArray.size(); ++i) {
@@ -54,7 +55,7 @@ static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataAr
             return i;
         }
     }
-    return -1;
+    return IdxNotFound;
 }
 
 static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<RenderBatchData *> &batchDataArray) {
@@ -63,7 +64,7 @@ static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<RenderBatchData *> &ba
             return i;
         }
     }
-    return -1;
+    return IdxNotFound;
 }
 
 RenderBackendService::RenderBackendService() :
@@ -95,7 +96,7 @@ bool RenderBackendService::onOpen() {
         m_ownsSettingsConfig = true;
     }
 
-    // Spawn the thread
+    // Spawn the thread for our render task
     if (!m_renderTaskPtr.isValid()) {
         m_renderTaskPtr.init(SystemTask::create("render_task"));
     }
@@ -207,9 +208,10 @@ void RenderBackendService::commitNextFrame() {
                 cmd->m_size = sizeof(MatrixBuffer);
                 cmd->m_data = new c8[cmd->m_size];
                 ::memcpy(cmd->m_data, &currentBatch->m_matrixBuffer, cmd->m_size);
-            } else if (currentBatch->m_dirtyFlag & RenderBatchData::UniformBufferDirty) {
+            } 
+            
+            if (currentBatch->m_dirtyFlag & RenderBatchData::UniformBufferDirty) {
                 UniformBuffer &uniformBuffer = data->m_frame->m_uniforBuffers[i];
-
                 for (ui32 k = 0; k < currentBatch->m_uniforms.size(); ++k) {
                     FrameSubmitCmd *cmd = m_submitFrame->enqueue();
                     cmd->m_passId = currentPass->m_id;
@@ -232,7 +234,9 @@ void RenderBackendService::commitNextFrame() {
                     offset += var->m_name.size();
                     ::memcpy(&cmd->m_data[offset], var->m_data.getData(), var->m_data.m_size);
                 }
-            } else if (currentBatch->m_dirtyFlag & RenderBatchData::MeshUpdateDirty) {
+            } 
+            
+            if (currentBatch->m_dirtyFlag & RenderBatchData::MeshUpdateDirty) {
                 for (ui32 k = 0; k < currentBatch->m_updateMeshArray.size(); ++k) {
                     FrameSubmitCmd *cmd = m_submitFrame->enqueue();
                     cmd->m_passId = currentPass->m_id;
@@ -244,6 +248,13 @@ void RenderBackendService::commitNextFrame() {
                     cmd->m_data = new c8[cmd->m_size];
                     ::memcpy(cmd->m_data, currentMesh->m_vb->getData(), cmd->m_size);
                 }
+            } 
+            if (currentBatch->m_dirtyFlag & RenderBatchData::MeshDirty) {
+                FrameSubmitCmd *cmd = m_submitFrame->enqueue();
+                PassData *pd = new PassData(currentPass->m_id, nullptr);
+                pd->m_geoBatches.add(currentBatch);
+                cmd->m_updatedPasses.add(pd);
+                cmd->m_updateFlags |= (ui32)FrameSubmitCmd::AddRenderData;
             }
 
             currentBatch->m_dirtyFlag = 0;
@@ -461,6 +472,7 @@ void RenderBackendService::clearPasses() {
 }
 
 void RenderBackendService::attachView() {    
+    // empty
 }
 
 void RenderBackendService::resize(ui32 x, ui32 y, ui32 w, ui32 h) {

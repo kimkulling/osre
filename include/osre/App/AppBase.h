@@ -270,7 +270,7 @@ private:
         Destroyed
     };
 
-    State m_state;
+    State mAppState;
     Common::ArgumentParser m_argParser;
     Common::Environment* m_environment;
     Properties::Settings *m_settings;

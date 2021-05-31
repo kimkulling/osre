@@ -33,15 +33,17 @@ class MeshTest : public ::testing::Test {
 };
 
 TEST_F(MeshTest, createTest) {
-    Mesh *meshes = Mesh::create(10);
+    Mesh *meshes = Mesh::create(10, VertexType::RenderVertex);
     EXPECT_NE(nullptr, meshes);
-    
+    for (size_t i = 0; i < 10; ++i) {
+        EXPECT_EQ(VertexType::RenderVertex, meshes[i].m_vertextype);
+    }    
     Mesh::destroy(&meshes);
     EXPECT_EQ(nullptr, meshes);
 }
 
 TEST_F(MeshTest, createPrimitiveGroupsTest) {
-    Mesh* mesh = Mesh::create(1);
+    Mesh *mesh = Mesh::create(1, VertexType::RenderVertex);
     PrimitiveGroup* group = mesh->createPrimitiveGroup(IndexType::UnsignedByte, 10, PrimitiveType::TriangleList, 0);
     EXPECT_EQ(1, mesh->m_numPrimGroups);
     EXPECT_NE(nullptr, group);

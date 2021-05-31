@@ -124,7 +124,7 @@ private:
 };
 
 AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
-        m_state(State::Uninited),
+        mAppState(State::Uninited),
         m_argParser(argc, argv, supportedArgs, desc),
         m_environment(nullptr),
         m_settings(nullptr),
@@ -181,8 +181,8 @@ bool AppBase::destroy() {
 }
 
 void AppBase::update() {
-    if (m_state == State::Created) {
-        m_state = State::Running;
+    if (mAppState == State::Created) {
+        mAppState = State::Running;
         osre_debug(Tag, "Set application state to running, missed to call create?");
     }
     
@@ -324,7 +324,7 @@ void AppBase::setWindowsTitle(const String &title) {
 }
 
 bool AppBase::onCreate() {
-    if (m_state != State::Uninited) {
+    if (mAppState != State::Uninited) {
         osre_debug(Tag, "AppBase::State not in proper state: Uninited.");
         return false;
     }
@@ -413,14 +413,14 @@ bool AppBase::onCreate() {
 
     ServiceProvider::create(m_rbService, rcSrv, IOService::getInstance());
 
-    m_state = State::Created;
+    mAppState = State::Created;
     osre_debug(Tag, "Set application state to Created.");
 
     return true;
 }
 
 bool AppBase::onDestroy() {
-    if (m_state != State::Running) {
+    if (mAppState != State::Running) {
         osre_debug(Tag, "AppBase::State not in proper state: Running.");
         return false;
     }
@@ -456,7 +456,7 @@ bool AppBase::onDestroy() {
     m_ids = nullptr;
 
     osre_debug(Tag, "Set application state to destroyed.");
-    m_state = State::Destroyed;
+    mAppState = State::Destroyed;
     Logger::kill();
 
     return true;

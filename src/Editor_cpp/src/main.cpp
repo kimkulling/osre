@@ -30,9 +30,7 @@ int main(int argc, char *argv[]) {
 
     while (app.handleEvents()) {
         app.update();
-        if (app.hasModel()) {
-            app.requestNextFrame();
-        }
+        app.requestNextFrame();
     }
 
     MemoryStatistics::showStatistics();

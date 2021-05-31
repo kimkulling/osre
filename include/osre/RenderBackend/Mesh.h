@@ -62,17 +62,17 @@ public:
     PrimitiveGroup *m_primGroups;
     ui64 m_id;
 
-    static Mesh *create(size_t numGeo);
+    static Mesh *create(size_t numGeo, VertexType type);
     static void destroy(Mesh **geo);
     static size_t getVertexSize(VertexType vertextype);
     
     template<class T>
-    void attachVertices( T *vertice, size_t size ) {
+    void attachVertices(T *vertices, size_t size) {
         if (m_vb == nullptr) {
             m_vb = BufferData::alloc(BufferType::VertexBuffer, size, BufferAccessType::ReadWrite);
-            ::memcpy(m_vb->getData(), vertice, size);
+            ::memcpy(m_vb->getData(), vertices, size);
         } else {
-            m_vb->attach(vertice, size);
+            m_vb->attach(vertices, size);
         }
     }
 
@@ -93,6 +93,7 @@ public:
 
 private:
     Mesh();
+    Mesh(VertexType type);
     ~Mesh();
 
 private:

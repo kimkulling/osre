@@ -262,7 +262,7 @@ bool OGLRenderEventHandler::onRenderFrame(const EventData *eventData) {
     return true;
 }
 
-bool OGLRenderEventHandler::addMeshes(RenderBatchData *currentBatchData, CPPCore::TArray<size_t> &primGroups, MeshEntry *currentMeshEntry) {
+bool OGLRenderEventHandler::addMeshes(const c8 *id, CPPCore::TArray<size_t> &primGroups, MeshEntry *currentMeshEntry) {
     for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->m_geo.size(); ++meshIdx) {
         Mesh *currentMesh = currentMeshEntry->m_geo[meshIdx];
         if (nullptr == currentMesh) {
@@ -289,16 +289,17 @@ bool OGLRenderEventHandler::addMeshes(RenderBatchData *currentBatchData, CPPCore
 
         // setup the draw calls
         if (0 == currentMeshEntry->numInstances) {
-            setupPrimDrawCmd(currentBatchData->m_id, currentMesh->m_localMatrix, currentMesh->m_model,
+            setupPrimDrawCmd(id, currentMesh->m_localMatrix, currentMesh->m_model,
                     primGroups, m_oglBackend, this, m_vertexArray);
         } else {
-            setupInstancedDrawCmd(currentBatchData->m_id, primGroups, m_oglBackend, this, m_vertexArray,
+            setupInstancedDrawCmd(id, primGroups, m_oglBackend, this, m_vertexArray,
                     currentMeshEntry->numInstances);
         }
 
         primGroups.resize(0);
 
     }
+
     return true;
 }
  
@@ -397,14 +398,17 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
     return true;
 }
 
-bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData) {
+bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
     CommitFrameEventData *data = (CommitFrameEventData *)eventData;
     if (nullptr == data) {
         return false;
     }
 
-    for (ui32 i = 0; i < data->m_frame->m_submitCmds.size(); ++i) {
-        FrameSubmitCmd *cmd = data->m_frame->m_submitCmds[i];
+    if (nullptr == m_oglBackend) {
+        return false;
+    }
+
+    for (FrameSubmitCmd *cmd : data->m_frame->m_submitCmds) {
         if (nullptr == cmd) {
             continue;
         }
@@ -424,6 +428,16 @@ bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData)
             m_oglBackend->bindBuffer(buffer);
             m_oglBackend->copyDataToBuffer(buffer, cmd->m_data, cmd->m_size, BufferAccessType::ReadWrite);
             m_oglBackend->unbindBuffer(buffer);
+        } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::AddRenderData) {
+            for (ui32 i = 0; i < cmd->m_updatedPasses.size(); ++i) {
+                PassData *pd = cmd->m_updatedPasses[i];
+                for (RenderBatchData *rbd : pd->m_geoBatches) {
+                    for (MeshEntry *entry : rbd->m_meshArray) {
+                        CPPCore::TArray<size_t> primGroups;
+                        addMeshes(cmd->m_batchId, primGroups, entry);
+                    }
+                }
+            }
         }
         cmd->m_updateFlags = 0;
     }
@@ -433,13 +447,13 @@ bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData)
     return true;
 }
 
-bool OGLRenderEventHandler::onShutdownRequest(const Common::EventData *eventData) {
+bool OGLRenderEventHandler::onShutdownRequest(const EventData *eventData) {
     m_isRunning = false;
 
     return true;
 }
 
-bool OGLRenderEventHandler::onResizeRenderTarget(const Common::EventData *eventData) {
+bool OGLRenderEventHandler::onResizeRenderTarget(const EventData *eventData) {
     OSRE_ASSERT(nullptr != eventData);
 
     ResizeEventData *data = (ResizeEventData *)eventData;

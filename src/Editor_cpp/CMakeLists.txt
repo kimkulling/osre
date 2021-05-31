@@ -25,12 +25,17 @@ SET( modules_src
     src/Modules/ModuleBase.h
 )
 
+SET( gui_src
+    src/Gui/UIElements.cpp
+    src/Gui/UIElements.h
+)
 
 SET( scripting_src 
     src/Scripting/LuaBase.cpp
     src/Scripting/LuaBase.h
 )
 
+SOURCE_GROUP( Gui                      FILES ${gui_src})
 SOURCE_GROUP( Modules\\InspectorModule FILES ${inspector_module_src} )
 SOURCE_GROUP( Modules\\LogModule       FILES ${log_module_src} )
 SOURCE_GROUP( Modules\\EditorModule    FILES ${editor_module_src} )
@@ -39,6 +44,7 @@ SOURCE_GROUP( Modules\\                FILES ${modules_src} )
 SOURCE_GROUP( Scripting\\              FILES ${scripting_src} )
 
 ADD_EXECUTABLE( osre_ed
+    ${gui_src}
     ${inspector_module_src}
     ${log_module_src}
     ${editor_module_src}

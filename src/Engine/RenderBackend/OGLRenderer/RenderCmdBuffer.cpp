@@ -132,9 +132,8 @@ void RenderCmdBuffer::onRenderFrame(const EventData *) {
         states.m_stencilState = pass->getStencilState();
         m_renderbackend->setFixedPipelineStates(states);
 
-        for (ui32 i = 0; i < m_cmdbuffer.size(); ++i) {
+        for (OGLRenderCmd *renderCmd : m_cmdbuffer) {
             // only valid pointers are allowed
-            OGLRenderCmd *renderCmd = m_cmdbuffer[i];
             OSRE_ASSERT(nullptr != renderCmd);
             if (nullptr == renderCmd) {
                 continue;

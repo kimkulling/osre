@@ -147,16 +147,16 @@ TEST_F( RenderCommonTest, copyBufferDataTest ) {
 
 TEST_F( RenderCommonTest, accessGeometryTest ) {
     Mesh *geo( nullptr );
-    geo = Mesh::create( 0 );
+    geo = Mesh::create(0, VertexType::RenderVertex);
     EXPECT_EQ( geo, nullptr );
-    geo = Mesh::create( 1 );
+    geo = Mesh::create(1, VertexType::RenderVertex);
     EXPECT_NE( geo, nullptr );
     Mesh::destroy( &geo );
     EXPECT_EQ( geo, nullptr );
 }
 
 TEST_F(RenderCommonTest, initGeometryTest) {
-    Mesh *mesh = Mesh::create( 1 );
+    Mesh *mesh = Mesh::create(1, VertexType::RenderVertex);
     EXPECT_NE( mesh, nullptr );
     EXPECT_EQ( VertexType::RenderVertex, mesh->m_vertextype );
     EXPECT_EQ( nullptr, mesh->m_ib );
@@ -168,7 +168,7 @@ TEST_F( RenderCommonTest, geometryIdTest ) {
     static const ui32 NumGeo = 10;
     ui32 ids[ NumGeo ];
     ::memset( ids, 0, sizeof( ui32 ) * NumGeo );
-    Mesh *mesh = Mesh::create( NumGeo );
+    Mesh *mesh = Mesh::create(NumGeo, VertexType::RenderVertex);
     ui64 oldId = mesh[0].m_id;
     for ( ui32 i = 1; i < NumGeo; i++ ) {
         ui64 id = mesh[ i ].m_id;
