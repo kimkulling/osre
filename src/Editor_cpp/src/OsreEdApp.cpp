@@ -81,9 +81,6 @@ static const ui32 VerticalMargin = 2;
 
 #define ID_STATIC 8
 
-#define ID_TREEVIEW 100
-
-//HWND hStatic = NULL;
 
 #endif // OSRE_WINDOWS
 
@@ -103,31 +100,41 @@ namespace Colors {
     const glm::vec3 White(1, 1, 1);
     const glm::vec3 Grey(0.5, 0.5, 0.5);
     const glm::vec3 Red(1, 0, 0);
-    }
+    const glm::vec3 Green(0, 1, 0);
+    const glm::vec3 Blue(0, 0, 1);
+}
 
 static Mesh *createCoordAxis() {
     Mesh *axis = Mesh::create(1, VertexType::ColorVertex);
-    ColorVert v1, v2, v3, v4;
+    ColorVert v1, v2, v3, v4, v5, v6;
     v1.position.x = v1.position.y = v1.position.z = 0;
     v1.color0 = Colors::Red;
 
-    v2.position.x = 10;
+    v2.position.x = 1000;
     v2.position.y = v2.position.z = 0;
     v2.color0 = Colors::Red;
 
-    v3.position.y = 10;
-    v3.position.x = v2.position.z = 0;
-    v3.color0 = Colors::Red;
+    v3.position.x = v3.position.y = v3.position.z = 0;
+    v3.color0 = Colors::Green;
 
-    v4.position.z = 10;
-    v4.position.y = v2.position.z = 0;
-    v4.color0 = Colors::Red;
+    v4.position.y = 1000;
+    v4.position.x = v4.position.z = 0;
+    v4.color0 = Colors::Green;
+
+    v5.position.x = v5.position.y = v5.position.z = 0;
+    v5.color0 = Colors::Blue;
+
+    v6.position.z = 1000;
+    v6.position.x = v6.position.y = 0;
+    v6.color0 = Colors::Blue;
 
     CPPCore::TArray<RenderBackend::ColorVert> axisData;
     axisData.add(v1);
     axisData.add(v2);
     axisData.add(v3);
     axisData.add(v4);
+    axisData.add(v5);
+    axisData.add(v6);
 
     axis->attachVertices(&axisData[0], sizeof(ColorVert) * axisData.size());
     
@@ -135,11 +142,12 @@ static Mesh *createCoordAxis() {
     axisIndices.add(0);
     axisIndices.add(1);
 
-    axisIndices.add(0);
     axisIndices.add(2);
-
-    axisIndices.add(0);
     axisIndices.add(3);
+
+    axisIndices.add(4);
+    axisIndices.add(5);
+
     axis->attachIndices(&axisIndices[0], sizeof(ui16) * axisIndices.size());
     axis->createPrimitiveGroup(IndexType::UnsignedShort, axisData.size(), PrimitiveType::LineList, 0);
     axis->m_material = Scene::MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex);
@@ -153,9 +161,9 @@ static Mesh *createGrid(ui32 numLines) {
     }
 
     Mesh *grid = Mesh::create(1, VertexType::ColorVertex);
-    f32 currentX = -100.0f, currentY = -100.0f;
-    f32 diffX = 200.0 / numLines;
-    f32 diffY = 200.0 / numLines;
+    f32 currentX = -300.0f, currentY = -300.0f;
+    f32 diffX = 600.0 / numLines;
+    f32 diffY = 600.0 / numLines;
     CPPCore::TArray<RenderBackend::ColorVert> lineData;
     CPPCore::TArray<ui16> lineIndices;
     ui16 currentIndex = 0;
@@ -164,8 +172,8 @@ static Mesh *createGrid(ui32 numLines) {
         v1.position.x = v2.position.x = currentX;
         currentX += diffX;
 
-        v1.position.y = -100;
-        v2.position.y = 100;
+        v1.position.y = -300;
+        v2.position.y = 300;
 
         v1.position.z = v2.position.z = 0.0f;
         v1.color0 = v2.color0 = Colors::Grey;
@@ -179,8 +187,8 @@ static Mesh *createGrid(ui32 numLines) {
     }
     for (ui32 y = 0; y < numLines + 1; ++y) {
         ColorVert v1, v2;
-        v1.position.x = -100;
-        v2.position.x = 100;
+        v1.position.x = -300;
+        v2.position.x = 300;
         v1.position.y = v2.position.y = currentY;
         currentY += diffY;
         v1.position.z = v2.position.z = 0.0f;
@@ -270,7 +278,7 @@ bool OsreEdApp::onCreate() {
     }
 
     Entity *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
-    Mesh *grid = createGrid(20);
+    Mesh *grid = createGrid(60);
     editorEntity->addStaticMesh(grid);
     editorEntity->addStaticMesh(createCoordAxis());
     //createUI();
@@ -457,8 +465,7 @@ void OsreEdApp::createUI() {
 }
 
 void OsreEdApp::onUpdate() {
-    for (ui32 i = 0; i < mModules.size(); ++i) {
-        ModuleBase *module = mModules[i];
+    for (ModuleBase * module : mModules) {
         if (nullptr == module) {
             OSRE_ASSERT(nullptr != module);
             continue;

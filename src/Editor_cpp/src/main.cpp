@@ -22,9 +22,10 @@ void getMonitorResolution(ui32 &width, ui32 &heigt) {
 int main(int argc, char *argv[]) {
     OsreEdApp app(argc, argv);
 
+    const ui32 Margin = 10;
     ui32 width = 0, height = 0;
     getMonitorResolution(width, height);
-    if (!app.initWindow(10, 10, width-10, height-10, "ModelLoader-Sample", false, App::RenderBackendType::OpenGLRenderBackend)) {
+    if (!app.initWindow(Margin, Margin, width - Margin, height - Margin, "OSRE-Ed", false, RenderBackendType::OpenGLRenderBackend)) {
         return 1;
     }
 
