@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/Windows/MinWindows.h>
+#include <cppcore/Container/TArray.h>
 
 #include "Engine/Platform/win32/Win32EventQueue.h"
 
@@ -35,10 +36,20 @@ namespace Platform {
 /// To  add an entry you have to add The menu-type from the WIN32-API, its id, the name as a unicode
 /// string and a functor, which contains the command functor.
 struct MenuEntry {
-    i32 Type;           /// The menu type
-    i32 Id;             /// The menu id, must be zero if no command shall be coupled
-    wchar_t *Name;      /// The Menu item name
-    MenuFunctor Func;   /// The functor which stores the command for the menu entry.
+    i32 Type; /// The menu type
+    i32 Id; /// The menu id, must be zero if no command shall be coupled
+    wchar_t *Name; /// The Menu item name
+    MenuFunctor Func; /// The functor which stores the command for the menu entry.
+};
+
+struct StatusBarField {
+    ui32 Width;
+    String Text;
+};
+
+struct StatusBarContent {
+    ui32 NumFields;
+    CPPCore::TArray<StatusBarField*> StatusBarFields;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -49,12 +60,12 @@ struct MenuEntry {
 class OSRE_EXPORT Win32Window : public AbstractWindow {
 public:
     /// The class constructor.
-    Win32Window( WindowsProperties *properties );
+    Win32Window(WindowsProperties *properties);
     /// The class destructor, virtual.
     ~Win32Window() override;
     /// Will set the windows title.
-    void setWindowsTitle( const String &title ) override;
-    /// 
+    void setWindowsTitle(const String &title) override;
+    /// Will set the windows mouse cursor.
     void setWindowsMouseCursor(DefaultMouseCursorType ct) override;
     /// Returns the windows handle.
     HWND getHWnd() const;
@@ -66,11 +77,17 @@ public:
     HMENU getMenuHandle();
     /// Will begin to add a new menu to the window.
     HMENU beginMenu();
-    /// Will add a sub-menu.    
+    /// Will add a sub-menu.
     void addSubMenues(HMENU parent, AbstractPlatformEventQueue *queue, wchar_t *title, MenuEntry *menu_entries, size_t numItems);
     /// Will end the menu creation.
     void endMenu();
-    
+    ///
+    HWND createStatusBar(UINT ResID, ui32 numFields);
+    ///
+    HWND getStatusBarHandle() const;
+    ///
+    void setStatusText(ui32 index, char *Text);
+
 protected:
     /// The create callback implementation.
     bool onCreate() override;
@@ -79,13 +96,14 @@ protected:
     /// The updateProperties callback implementation.
     bool onUpdateProperies() override;
     /// The resize callback implementation.
-    void onResize( ui32 x, ui32 y, ui32 w, ui32 h ) override;
+    void onResize(ui32 x, ui32 y, ui32 w, ui32 h) override;
 
 private:
     HINSTANCE mInstance;
-    HWND mWnd;
+    HWND mWnd, mHandleStatusBar;
     HDC mDC;
     HMENU mMenu;
+    StatusBarContent mStatusBarContent;
     bool mMenuCreateState;
 };
 

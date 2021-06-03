@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <src/Engine/Platform/win32/Win32Window.h>
+#include "commctrl.h"
 
 namespace OSRE {
 namespace Platform {
@@ -31,8 +32,10 @@ Win32Window::Win32Window(WindowsProperties *properties) :
         AbstractWindow(properties),
         mInstance(nullptr),
         mWnd(nullptr),
+        mHandleStatusBar(nullptr),
         mDC(nullptr),
         mMenu(nullptr),
+        mStatusBarContent(),
         mMenuCreateState(false) {
     // empty
 }
@@ -50,6 +53,10 @@ void Win32Window::setWindowsTitle(const String &title) {
 }
 
 void Win32Window::setWindowsMouseCursor(DefaultMouseCursorType ct){
+    if (nullptr == mInstance) {
+        return;
+    }
+
     HCURSOR c;
     if (ct == DefaultMouseCursorType::WaitCursor) {
         c = LoadCursorA(mInstance, IDC_WAIT);
@@ -60,7 +67,6 @@ void Win32Window::setWindowsMouseCursor(DefaultMouseCursorType ct){
     }
     SetCursor(c);
 }
-
 
 HWND Win32Window::getHWnd() const {
     return mWnd;
@@ -116,6 +122,39 @@ void Win32Window::endMenu() {
     mMenuCreateState = false;
 }
 
+HWND Win32Window::createStatusBar(UINT ResID, ui32 numFields) {
+    mHandleStatusBar = CreateWindowEx(0L, // extended style
+            STATUSCLASSNAME, (PCTSTR)NULL,
+            SBARS_SIZEGRIP | // includes a sizing grip
+            WS_CHILD | WS_VISIBLE, // window styles
+            0, 0, 0, 0, // x, y, width, height
+            mWnd, (HMENU) 1000, mInstance, NULL);
+    CPPCore::TArray<ui32> fields;
+    
+    for (ui32 i = 0; i < numFields; ++i) {
+        mStatusBarContent.StatusBarFields.add(new StatusBarField);
+        fields.add(200);
+    }
+    fields.add(-1);
+
+    SendMessage(mHandleStatusBar, SB_SETPARTS, numFields, (LPARAM) &fields[0]);
+
+    return mHandleStatusBar;
+}
+
+HWND Win32Window::getStatusBarHandle() const {
+    return mHandleStatusBar;
+}
+
+void Win32Window::setStatusText(ui32 index, char *text) {
+    if (index >= mStatusBarContent.StatusBarFields.size()) {
+        return;
+    }
+
+    mStatusBarContent.StatusBarFields[index]->Text = text;
+    ::SendMessage(mHandleStatusBar, SB_SETTEXT, index, (LPARAM) text);
+}
+
 bool Win32Window::onCreate() {
     WindowsProperties *prop = getProperties();
     if (nullptr == prop) {
@@ -136,8 +175,8 @@ bool Win32Window::onCreate() {
     }
 
     ::AdjustWindowRect(&clientSize, style, FALSE);
-    const ui32 realWidth(clientSize.right - clientSize.left);
-    const ui32 realHeight(clientSize.bottom - clientSize.top);
+    const ui32 realWidth = clientSize.right - clientSize.left;
+    const ui32 realHeight = clientSize.bottom - clientSize.top;
 
     ui32 cx = prop->m_width / 2;
     ui32 cy = prop->m_height / 2;
@@ -201,7 +240,7 @@ bool Win32Window::onCreate() {
             mInstance,
             NULL);
 
-    if (!mWnd) {
+    if (nullptr == mWnd) {
         MessageBox(NULL, "Cannot create the application window.", "Abort application",
                 MB_OK | MB_ICONEXCLAMATION);
         return false;
@@ -216,6 +255,7 @@ bool Win32Window::onCreate() {
                 MB_OK | MB_ICONEXCLAMATION);
         return false;
     }
+
     ::ShowWindow(mWnd, SW_SHOW);
     ::SetForegroundWindow(mWnd);
     ::SetFocus(mWnd);
@@ -240,9 +280,14 @@ bool Win32Window::onDestroy() {
     }
 
     if (mDC && !::ReleaseDC(mWnd, mDC)) {
-        MessageBox(NULL, "Cannot release the device context.",
+        ::MessageBox(NULL, "Cannot release the device context.",
                 "Abort application", MB_OK | MB_ICONEXCLAMATION);
         mDC = NULL;
+    }
+
+    if (nullptr != mHandleStatusBar) {
+        ::DestroyWindow(mHandleStatusBar);
+        mHandleStatusBar = nullptr;
     }
 
     if (mWnd && !::DestroyWindow(mWnd)) {
@@ -265,7 +310,7 @@ bool Win32Window::onDestroy() {
 bool Win32Window::onUpdateProperies() {
     const ui32 flags(AbstractWindow::getFlags());
     if (flags | (ui32)SurfaceFlagType::SF_WinTitleDirty) {
-        const String &title(AbstractWindow::getProperties()->m_title);
+        const String &title = AbstractWindow::getProperties()->m_title;
         ::SetWindowText(getHWnd(), title.c_str());
     }
     AbstractWindow::setFlags(SurfaceFlagType::SF_PropertiesClean);

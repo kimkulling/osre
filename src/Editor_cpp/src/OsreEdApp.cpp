@@ -268,6 +268,9 @@ bool OsreEdApp::onCreate() {
     w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
 
     w->endMenu();
+    w->createStatusBar(100, 1);
+    w->setStatusText(0, "Test");
+
     w->getWindowsRect(mResolution);
 
     AppBase::getRenderBackendService()->enableAutoResizing(false);
