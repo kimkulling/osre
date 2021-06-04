@@ -286,7 +286,6 @@ bool OsreEdApp::onCreate() {
     return true;
 }
 
-
 void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     Platform::AbstractWindow *rootWindow = getRootWindow();
     if (nullptr == rootWindow) {

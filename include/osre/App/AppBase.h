@@ -81,6 +81,9 @@ private:
     AppBase *mApp;
 };
 
+class OSRE_EXPORT MouseTransformController : public Scene::AnimationControllerBase {
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
