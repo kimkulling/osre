@@ -268,6 +268,9 @@ bool OsreEdApp::onCreate() {
     w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
 
     w->endMenu();
+    w->createStatusBar(100, 1);
+    w->setStatusText(0, "Test");
+
     w->getWindowsRect(mResolution);
 
     AppBase::getRenderBackendService()->enableAutoResizing(false);
@@ -372,7 +375,7 @@ void OsreEdApp::gettingHelpCmd(ui32 cmdId, void *data) {
 
 void OsreEdApp::showVersionCmd(ui32 cmdId, void *data) {
     DlgResults res;
-    PlatformOperations::getDialog("Version Info", "OSRE Version 0.0.1", IDOK, res);
+    PlatformOperations::getDialog("Version Info", "OSRE Version 0.0.1", PlatformOperations::DlgButton_ok, res);
 }
 
 bool OsreEdApp::registerModule(ModuleBase *mod) {
