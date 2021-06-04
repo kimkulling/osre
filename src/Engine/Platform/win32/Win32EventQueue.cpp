@@ -211,10 +211,12 @@ bool Win32EventQueue::update() {
                 RECT rcClient;
                 Win32Window *s = (Win32Window *)m_rootWindow;
                 RECT rSB;
-                GetWindowRect(s->getStatusBarHandle(), &rSB);
-                SendMessage(s->getStatusBarHandle(), WM_SIZE, 0, 0);
-                //MoveWindow(s->getStatusBarHandle(), 0, HIWORD(Program.lParam) - 10, LOWORD(Program.lParam), HIWORD(Program.lParam), TRUE);
                 if (nullptr != s) {
+                auto handle = s->getStatusBarHandle();
+                    if (nullptr != handle) {
+                        GetWindowRect(s->getStatusBarHandle(), &rSB);
+                        SendMessage(s->getStatusBarHandle(), WM_SIZE, 0, 0);
+                    }
                     GetClientRect(s->getHWnd(), &rcClient);
                     ui32 x = rcClient.left;
                     ui32 y = rcClient.top;
