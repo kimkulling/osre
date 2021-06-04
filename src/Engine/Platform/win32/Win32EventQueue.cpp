@@ -210,7 +210,13 @@ bool Win32EventQueue::update() {
                 WindowsResizeEventData *data = new WindowsResizeEventData(m_eventTriggerer);
                 RECT rcClient;
                 Win32Window *s = (Win32Window *)m_rootWindow;
+                RECT rSB;
                 if (nullptr != s) {
+                    auto handle = s->getStatusBarHandle();
+                    if (nullptr != handle) {
+                        GetWindowRect(s->getStatusBarHandle(), &rSB);
+                        SendMessage(s->getStatusBarHandle(), WM_SIZE, 0, 0);
+                    }
                     GetClientRect(s->getHWnd(), &rcClient);
                     ui32 x = rcClient.left;
                     ui32 y = rcClient.top;
