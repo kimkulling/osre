@@ -18,8 +18,7 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 - Please check [OSRE-Docs](https://osre-doc.readthedocs.io/en/latest/).
 
 # Build Status
-[![Build status](https://ci.appveyor.com/api/projects/status/q2ivokgqcit9k5w1/branch/master?svg=true)](https://ci.appveyor.com/project/kimkulling/osre/branch/master)
-[![Build Status](https://travis-ci.com/kimkulling/osre.svg?branch=master)](https://travis-ci.com/kimkulling/osre)
+[![Build status](https://github.com/kimkulling/osre/actions/workflows/cmake.yml/badge.svg)](https://github.com/kimkulling/osre/actions/workflows/cmake.yml)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/13242/badge.svg)](https://scan.coverity.com/projects/kimkulling-osre)
 [![Documentation Status](https://readthedocs.org/projects/osre-doc/badge/?version=latest)](https://osre-doc.readthedocs.io/en/latest/?badge=latest)
 
