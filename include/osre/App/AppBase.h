@@ -61,7 +61,8 @@ class AppBase;
 ///	@brief  This enum describes the default controller type.
 //-------------------------------------------------------------------------------------------------
 enum class DefaultControllerType {
-    KeyboardCtrl    ///< Use the keyboard default controller.
+    KeyboardCtrl,   ///< Use the keyboard default controller.
+    MouseCtrl       ///< Use the mouse default controller.
 };
 
 
@@ -82,6 +83,13 @@ private:
 };
 
 class OSRE_EXPORT MouseTransformController : public Scene::AnimationControllerBase {
+public:
+    MouseTransformController(MouseEventListener *listener, RenderBackend::TransformMatrixBlock &tmb);
+    ~MouseTransformController() override;
+    void update(RenderBackend::RenderBackendService *rbSrv) override;
+
+private:
+    MouseEventListener *mMouseEventListener;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -246,6 +254,9 @@ public:
     /// @return The transform controller or nullptr if none is there.
     virtual Scene::AnimationControllerBase *getTransformController(DefaultControllerType type, RenderBackend::TransformMatrixBlock &tmb);
 
+    MouseEventListener *getMouseEventListener() const {
+        return m_mouseEvListener;
+    }
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
     /// @return true if successful,  false if not.

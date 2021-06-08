@@ -42,12 +42,12 @@ struct MenuEntry {
     MenuFunctor Func; /// The functor which stores the command for the menu entry.
 };
 
-struct StatusBarField {
+struct OSRE_EXPORT StatusBarField {
     ui32 Width;
     String Text;
 };
 
-struct StatusBarContent {
+struct OSRE_EXPORT StatusBarContent {
     ui32 NumFields;
     CPPCore::TArray<StatusBarField*> StatusBarFields;
 };

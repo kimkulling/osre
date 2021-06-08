@@ -91,6 +91,19 @@ void KeyboardTransformController::update(RenderBackendService *rbSrv) {
     }
 }
 
+MouseTransformController::MouseTransformController(MouseEventListener *listener, TransformMatrixBlock &tmb) :
+        mMouseEventListener(listener) {
+    // empty
+}
+
+MouseTransformController::~MouseTransformController() {
+    // empty
+}
+
+void MouseTransformController::update( RenderBackend::RenderBackendService *rbSrv ) {
+
+}
+
 class KeyboardEventListener : public OSEventListener {
 public:
     KeyboardEventListener() :
@@ -296,8 +309,10 @@ RenderBackendService *AppBase::getRenderBackendService() const {
 
 AnimationControllerBase *AppBase::getTransformController(DefaultControllerType type, TransformMatrixBlock &tmb) {
     switch (type) {
-        case OSRE::App::DefaultControllerType::KeyboardCtrl:
+        case DefaultControllerType::KeyboardCtrl:
             return new KeyboardTransformController(this, tmb);
+        case DefaultControllerType::MouseCtrl:
+            return new MouseTransformController(this->getMouseEventListener(), tmb);
         default:
             break;
     }

@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Gui/UIElements.h"
 #include "Modules/InspectorModule/InspectorModule.h"
 #include "Modules/ModuleBase.h"
+#include "Scripting/PythonInterface.h"
 
 #include <osre/App/AssimpWrapper.h>
 #include <osre/App/AssetRegistry.h>
@@ -84,7 +85,9 @@ static const ui32 VerticalMargin = 2;
 
 #endif // OSRE_WINDOWS
 
-static void createTitleString( const SceneData &sd, String &titleString ) {
+static const c8 *Tag = "OsreApp";
+
+static void createTitleString(const SceneData &sd, String &titleString) {
     titleString.clear();
     titleString += "OSRE ED!";
 
@@ -225,7 +228,8 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         mSceneData(),
         mProject(nullptr),
         mResolution(),
-        mMesh2D(nullptr) {
+        mMesh2D(nullptr),
+        mPythonInterface(nullptr) {
     // empty
 }
 
@@ -286,6 +290,13 @@ bool OsreEdApp::onCreate() {
     editorEntity->addStaticMesh(createCoordAxis());
     //createUI();
 
+    mPythonInterface = new PythonInterface;
+    if (!mPythonInterface->create()) {
+        osre_error(Tag, "Error while creating Python Interface.");
+        return false;
+    }
+    mPythonInterface->runScript();
+ 
     return true;
 }
 
@@ -294,6 +305,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     if (nullptr == rootWindow) {
         return;
     }
+    
     ProgressReporter reporter(rootWindow);
     reporter.start();
     AssimpWrapper assimpWrapper(*getIdContainer(), getActiveWorld());
@@ -480,6 +492,9 @@ void OsreEdApp::onUpdate() {
 }
 
 bool OsreEdApp::onDestroy() {
+    delete mPythonInterface;
+    mPythonInterface = nullptr;
+
     Mesh::destroy(&mMesh2D);
     mMesh2D = nullptr;
 

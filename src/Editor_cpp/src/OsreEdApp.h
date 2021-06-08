@@ -45,6 +45,8 @@ namespace IO {
 
 namespace Editor {
 
+class PythonInterface;
+
 struct SceneData {
     String Name;
     String ProjectName;
@@ -166,6 +168,7 @@ private:
     ModuleArray mModules;
     Rect2ui mResolution;
     RenderBackend::Mesh *mMesh2D;
+    PythonInterface *mPythonInterface;
 };
 
 inline bool OsreEdApp::hasModel() const {

@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/TObjPtr.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/App/AppBase.h>
+#include <cppcore/Common/TBitField.h>
 
 namespace OSRE {
 namespace App {
@@ -35,9 +36,29 @@ public:
     MouseEventListener();
     ~MouseEventListener() override;
     void onOSEvent(const Common::Event &osEvent, const Common::EventData *data) override;
+    bool leftButttonPressed() const;
+    bool middleButttonPressed() const;
+    bool rightButttonPressed() const;
 
 private:
+    const ui32 LBtn = 1;
+    const ui32 MBtn = 2;
+    const ui32 RBtn = 3;
+    ui32 mX, mY;
+    CPPCore::TBitField<ui32> mMouseButtonState;
 };
+
+inline bool MouseEventListener::leftButttonPressed() const {
+    return mMouseButtonState.getBit(1);
+}
+
+inline bool MouseEventListener::middleButttonPressed() const {
+    return mMouseButtonState.getBit(2);
+}
+
+inline bool MouseEventListener::rightButttonPressed() const {
+    return mMouseButtonState.getBit(3);
+}
 
 } // Namespace App
 } // Namespace OSRE

@@ -32,7 +32,10 @@ using namespace OSRE::Common;
 using namespace OSRE::Platform;
 
 MouseEventListener::MouseEventListener() :
-        OSEventListener("App/MouseEventListener") {
+        OSEventListener("App/MouseEventListener"),
+        mX(0),
+        mY(0),    
+        mMouseButtonState() {
     // empty
 }
 
@@ -41,6 +44,32 @@ MouseEventListener::~MouseEventListener() {
 }
 
 void MouseEventListener::onOSEvent(const Event &osEvent, const EventData *data) {
+    MouseButtonEventData *mouseEventData = (MouseButtonEventData *)data;
+    mX = mouseEventData->m_AbsX;
+    mY = mouseEventData->m_AbsY;
+    if (mouseEventData->m_Button == MouseButtonEventData::LeftButton) {
+        if (mouseEventData->m_Pressed) {
+            mMouseButtonState.setBit(1);
+        } else {
+            mMouseButtonState.clearBit(1);
+        }
+    }
+    
+    if (mouseEventData->m_Button == MouseButtonEventData::MiddleButton) {
+        if (mouseEventData->m_Pressed) {
+            mMouseButtonState.setBit(2);
+        } else {
+            mMouseButtonState.clearBit(2);
+        }
+    }
+    
+    if (mouseEventData->m_Button == MouseButtonEventData::RightButton) {
+        if (mouseEventData->m_Pressed) {
+            mMouseButtonState.setBit(3);
+        } else {
+            mMouseButtonState.clearBit(3);
+        }
+    }
 }
 
 } // Namespace App
