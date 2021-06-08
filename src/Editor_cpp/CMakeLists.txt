@@ -38,8 +38,6 @@ SET( gui_src
 )
 
 SET( scripting_src 
-    src/Scripting/LuaBase.cpp
-    src/Scripting/LuaBase.h
     src/Scripting/PythonInterface.cpp
     src/Scripting/PythonInterface.h
 )
