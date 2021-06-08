@@ -1,7 +1,14 @@
+find_package(Python COMPONENTS Interpreter Development)
+
 INCLUDE_DIRECTORIES(
     ./
     ./src
+    ${Python_INCLUDE_DIRS}
     ${PROJECT_SOURCE_DIR}
+)
+
+link_directories(
+    ${Python_LIBRARY_DIRS}
 )
 
 SET( inspector_module_src 
@@ -33,6 +40,8 @@ SET( gui_src
 SET( scripting_src 
     src/Scripting/LuaBase.cpp
     src/Scripting/LuaBase.h
+    src/Scripting/PythonInterface.cpp
+    src/Scripting/PythonInterface.h
 )
 
 SOURCE_GROUP( Gui                      FILES ${gui_src})

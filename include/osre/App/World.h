@@ -48,7 +48,7 @@ public:
     /// @brief  The class constructor with the name and the requested render-mode.
     /// @param  worldName   [in] The world name.
     /// @param  renderMode  [in] The requested render mode. @see RenderMode
-    explicit World( const String &worldName, RenderMode renderMode = RenderMode::Render3D );
+    explicit World(const String &worldName, RenderMode renderMode = RenderMode::Render3D);
 
     /// @brief  The class destructor.
     virtual ~World();
