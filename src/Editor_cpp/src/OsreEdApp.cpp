@@ -295,7 +295,10 @@ bool OsreEdApp::onCreate() {
         osre_error(Tag, "Error while creating Python Interface.");
         return false;
     }
-    mPythonInterface->runScript();
+    const String src = "from time import time,ctime\n"
+                 "print('Today is', ctime(time()))\n";
+                 
+    mPythonInterface->runScript(src);
  
     return true;
 }
