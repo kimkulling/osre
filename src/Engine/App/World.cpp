@@ -129,15 +129,19 @@ void World::addEntity(Entity *entity) {
     m_entities.add(entity);
 }
 
-void World::removeEntity( Entity *entity ) {
+bool World::removeEntity(Entity *entity) {
     if (nullptr == entity) {
-        return;
+        return false;
     }
     
+    bool found = false;
     CPPCore::TArray<Entity*>::Iterator it = m_entities.find(entity);
     if (m_entities.end() != it) {
         m_entities.remove(it);
+        found = true;
     }
+
+    return found;
 }
 
 Entity *World::getEntityByName(const String &name) const {
@@ -156,15 +160,16 @@ Entity *World::getEntityByName(const String &name) const {
     return nullptr;
 }
 
-void World::setSceneRoot( Scene::Node *root ) {
+void World::setSceneRoot(Node *root ) {
     if (nullptr == root) {
         mRoot = nullptr;
         return;
     }
+
     mRoot = root;
 }
 
-Scene::Node *World::getRootNode() const {
+Node *World::getRootNode() const {
     return mRoot;
 }
 
@@ -173,13 +178,10 @@ void World::update(Time dt) {
         m_activeCamera->update(dt);
     }
 
-    for (ui32 i = 0; i < m_entities.size(); ++i) {
-        Entity *entity = m_entities[i];
+    for (Entity *entity : m_entities) {
         if (nullptr == entity) {
-            continue;
+            entity->update(dt);
         }
-
-        entity->update(dt);
     }
 }
 
@@ -193,13 +195,10 @@ void World::draw(RenderBackendService *rbSrv) {
         m_activeCamera->draw(rbSrv);
     }
 
-    for (ui32 i = 0; i < m_entities.size(); ++i) {
-        Entity *entity = m_entities[i];
+    for (Entity *entity : m_entities) {
         if (nullptr == entity) {
-            continue;
+            entity->render(rbSrv);
         }
-
-        entity->render(rbSrv);
     }
 
     rbSrv->endRenderBatch();

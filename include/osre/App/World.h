@@ -80,8 +80,17 @@ public:
     /// @return A pointer showing to the active view or nullptr, if no view is currently active.
     Scene::Camera *getActiveView() const;
 
+    /// @brief 
+    /// @param entity 
     void addEntity( Entity *entity );
-    void removeEntity(Entity *entity);
+    
+    /// @brief 
+    /// @param entity 
+    bool removeEntity(Entity *entity);
+    
+    /// @brief 
+    /// @param name 
+    /// @return 
     Entity *getEntityByName( const String &name ) const;
 
     void setSceneRoot(Scene::Node *root);
@@ -99,9 +108,9 @@ public:
     /// @return The active render mode, @see RenderMode .
     RenderMode getRenderMode() const;
 
-    const Common::Ids &getIds() const {
-        return m_ids;
-    }
+    /// @brief  Will return the id container.
+    /// @return The Id container.    
+    const Common::Ids &getIds() const;
     
 private:
     CPPCore::TArray<Scene::Camera*> m_views;
@@ -112,6 +121,10 @@ private:
     Common::Ids m_ids;
     RenderMode m_renderMode;
 };
+
+inline const Common::Ids &World::getIds() const {
+    return m_ids;
+}
 
 } // Namespace App
 } // Namespace OSRE

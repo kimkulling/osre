@@ -135,6 +135,7 @@ public:
     /// @brief 
     void createUI();
 
+    //void setStatusBarText(const String &mode, const String &Model, const String &numVertices);
 protected:
     /// @brief The onCreate callback
     /// @return true, if successful, false in case of an error.
