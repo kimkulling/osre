@@ -196,7 +196,7 @@ void World::draw(RenderBackendService *rbSrv) {
     }
 
     for (Entity *entity : m_entities) {
-        if (nullptr == entity) {
+        if (nullptr != entity) {
             entity->render(rbSrv);
         }
     }
