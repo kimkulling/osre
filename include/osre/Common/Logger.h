@@ -110,35 +110,44 @@ public:
     ///	@brief	Set the severity of the logger.
     ///	@param	sev		The new severity of the logger.
     ///	@see	Severity
-    void setVerboceMode( VerboseMode sev );
+    void setVerboseMode( VerboseMode sev );
     
     ///	@brief	Returns	the current severity of the logger.
     ///	@return	The current severity.
-    VerboseMode getSeverity() const;
+    VerboseMode getVerboseMode() const;
+
+    /// @brief  Logs a trace message.
+    /// @param  domain  [in] The domain.
+    ///	@param	msg     [in] The message to log.
+    void trace(const String &domain, const String &msg);
 
     ///	@brief	Logs a debug message.
     ///	@param	msg	The message to log.
-    void debug( const String &domain, const String &msg );
+    void debug(const String &domain, const String &msg);
 
     ///	@brief	Logs an info message.
-    ///	@param	msg	The message to log.
-    void info( const String &domain, const String &msg );
+    /// @param  domain  [in] The domain.
+    ///	@param	msg     [in] The message to log.
+    void info(const String &domain, const String &msg);
 
     ///	@brief	Logs a print message.
     ///	@param	rMessage	The message to log.
     void print( const String &rMessage, PrintMode mode = PrintMode::WithDateTime );
 
     ///	@brief	Logs a warn message.
-    ///	@param	msg	The message to log.
+    /// @param  domain  [in] The domain.
+    ///	@param	msg     [in] The message to log.
     void warn( const String &domain, const String &msg );
 
     ///	@brief	Logs a error message.
-    ///	@param	msg	The message to log.
-    void error( const String &domain, const String &msg );
+    /// @param  domain  [in] The domain.
+    ///	@param	msg     [in] The message to log.
+    void error(const String &domain, const String &msg);
 
     ///	@brief	Logs a fatal error message.
-    ///	@param	msg	The message to log.
-    void fatal( const String &domain, const String &msg );
+    /// @param  domain  [in] The domain.
+    ///	@param	msg     [in] The message to log.
+    void fatal(const String &domain, const String &msg);
 
     ///	@brief	Registers a new log stream.
     ///	@param	pLogStream	A pointer showing to the log stream.
@@ -154,19 +163,26 @@ private:
     String getDateTime();
 
 private:
-    //	The Standard log stream.
+    //  @brief  The Standard log stream.
     class StdLogStream : public AbstractLogStream {
     public:
+        /// @brief  The class constructor.
         StdLogStream();
+
+        /// @brief  The class destructor.
         ~StdLogStream();
-        void write( const String &msg ) override;
+
+        /// @brief  Will write a message into the stream.
+        /// @param  msg     [in] The message to write.
+        void write(const String &msg) override;
     };
 
-    static Logger *s_logger;
+    static Logger *sLogger;
 
     using LogStreamArray = CPPCore::TArray<AbstractLogStream*>;
-    LogStreamArray m_LogStreams;
-    ui32 m_intention;
+    LogStreamArray mLogStreams;
+    VerboseMode mVerboseMode;
+    ui32 mIntention;
 };
 
 // Logger helper functions.

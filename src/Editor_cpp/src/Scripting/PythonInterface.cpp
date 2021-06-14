@@ -143,9 +143,7 @@ static PyTypeObject WorldPyObject = {
     PyWorld_new /* tp_new */
 };
 
-
-
-PyMODINIT_FUNC PyInit_custom(void) {
+PyMODINIT_FUNC PyInit_custom() {
     PyObject *m;
     if (PyType_Ready(&WorldPyObject) < 0)
         return NULL;

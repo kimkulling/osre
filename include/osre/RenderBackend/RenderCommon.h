@@ -931,7 +931,7 @@ struct UniformBuffer {
 
 struct Frame {
     ::CPPCore::TArray<PassData *> m_newPasses;
-    ::CPPCore::TArray<FrameSubmitCmd *> m_submitCmds;
+    ::CPPCore::TArray<FrameSubmitCmd*> m_submitCmds;
     FrameSubmitCmdAllocator m_submitCmdAllocator;
     UniformBuffer *m_uniforBuffers;
     Pipeline *m_pipeline;
