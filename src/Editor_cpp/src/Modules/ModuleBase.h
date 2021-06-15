@@ -68,7 +68,6 @@ private:
     App::AppBase *mParentApp;
 };
 
-using ModuleArray = CPPCore::TArray<ModuleBase*>;
 
 } // namespace Editor
 } // namespace OSRE

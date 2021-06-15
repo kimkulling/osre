@@ -211,6 +211,39 @@ static Mesh *createGrid(ui32 numLines) {
     return grid;
 }
 
+void createRect2D(Rect2ui r, Mesh *mesh2D, Style &style) {
+    if (nullptr == mesh2D) {
+        return;
+    }
+
+    glm::vec2 p0(r.x1, r.y1), p1(r.getX1(), r.getY2()), p2(r.getX2(), r.getY2()), p3(r.getX2(), r.getY2());
+    UIVert edges[4];
+    edges[0].position = p0;
+    edges[1].position = p1;
+    edges[2].position = p2;
+    edges[3].position = p3;
+    edges[0].color0 = style.BG.toVec4();
+    edges[1].color0 = style.BG.toVec4();
+    edges[2].color0 = style.BG.toVec4();
+    edges[3].color0 = style.BG.toVec4();
+    CPPCore::TArray<ui16> indices;
+    indices.resize(6);
+    indices[0] = 0;
+    indices[1] = 2;
+    indices[2] = 1;
+
+    indices[3] = 1;
+    indices[4] = 2;
+    indices[5] = 3;
+
+    mesh2D->attachVertices(&edges[0], sizeof(glm::vec2) * 4);
+    mesh2D->attachIndices(&indices[0], sizeof(ui16) * 6);
+    mesh2D->createPrimitiveGroup(IndexType::UnsignedShort, 6, PrimitiveType::TriangleList, 0);
+}
+
+void drawLabel(Label &label, Mesh *mesh2D) {
+}
+
 SceneData::SceneData() :
         Name(),
         ProjectName("none"),
@@ -227,9 +260,11 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         m_transformMatrix(),
         mSceneData(),
         mProject(nullptr),
+        mModuleRegistry(),
         mResolution(),
         mMesh2D(nullptr),
-        mPythonInterface(nullptr) {
+        mPythonInterface(nullptr),
+        mMouseController(nullptr) {
     // empty
 }
 
@@ -242,12 +277,12 @@ bool OsreEdApp::onCreate() {
         return false;
     }
 
-    registerModule(new InspectorModule(this));
+    mModuleRegistry.registerModule(new InspectorModule(this));
     String title;
     createTitleString(mSceneData, title);
     AppBase::setWindowsTitle(title);
 
-    auto *w = (Win32Window *)getRootWindow();
+    Win32Window *w = (Win32Window *)getRootWindow();
     AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
     if (nullptr == w || nullptr == queue) {
         return false;
@@ -299,7 +334,9 @@ bool OsreEdApp::onCreate() {
                  "print('Today is', ctime(time()))\n";
                  
     mPythonInterface->runScript(src);
- 
+
+    mMouseController = AppBase::getTransformController(DefaultControllerType::MouseCtrl, m_transformMatrix);
+
     return true;
 }
 
@@ -393,67 +430,8 @@ void OsreEdApp::showVersionCmd(ui32 cmdId, void *data) {
     PlatformOperations::getDialog("Version Info", "OSRE Version 0.0.1", PlatformOperations::DlgButton_ok, res);
 }
 
-bool OsreEdApp::registerModule(ModuleBase *mod) {
-    if (nullptr == mod) {
-        return false;
-    }
-
-    if (nullptr == findModule(mod->getName())) {
-        mModules.add(mod);
-    }
-
-    return true;
-}
-
-ModuleBase *OsreEdApp::findModule( const String &name ) const {
-    if (name.empty()) {
-        return nullptr;
-    }
-
-    for (ui32 i = 0; i < mModules.size(); ++i) {
-        if (name == mModules[i]->getName()) {
-            return mModules[i];
-        }
-    }
-
-    return nullptr;
-}
-
-bool OsreEdApp::unregisterModule( ModuleBase *mod ) {
-    return true;
-}
-
-void createRect2D(Rect2ui r, Mesh *mesh2D, Style &style) {
-    if (nullptr == mesh2D) {
-        return;
-    }
-
-    glm::vec2 p0(r.x1, r.y1), p1(r.getX1(), r.getY2()), p2(r.getX2(), r.getY2()), p3(r.getX2(), r.getY2());
-    UIVert edges[4];
-    edges[0].position = p0;
-    edges[1].position = p1;
-    edges[2].position = p2;
-    edges[3].position = p3;
-    edges[0].color0 = style.BG.toVec4();
-    edges[1].color0 = style.BG.toVec4();
-    edges[2].color0 = style.BG.toVec4();
-    edges[3].color0 = style.BG.toVec4();
-    CPPCore::TArray<ui16> indices;
-    indices.resize(6);
-    indices[0] = 0;
-    indices[1] = 2;
-    indices[2] = 1;
-
-    indices[3] = 1;
-    indices[4] = 2;
-    indices[5] = 3;
-
-    mesh2D->attachVertices(&edges[0], sizeof(glm::vec2) * 4);
-    mesh2D->attachIndices(&indices[0], sizeof(ui16) * 6);
-    mesh2D->createPrimitiveGroup(IndexType::UnsignedShort, 6, PrimitiveType::TriangleList, 0);
-}
-
-void drawLabel(Label &label, Mesh *mesh2D) {
+ModuleRegistry &OsreEdApp::getModuleRegistry() {
+    return mModuleRegistry;
 }
 
 void OsreEdApp::createUI() {
@@ -482,19 +460,45 @@ void OsreEdApp::createUI() {
 }
 
 void OsreEdApp::onUpdate() {
-    for (ModuleBase * module : mModules) {
-        if (nullptr == module) {
-            OSRE_ASSERT(nullptr != module);
-            continue;
-        }
-
-        module->update();
-        module->render();
+    mMouseController->update(getRenderBackendService());
+    glm::mat4 rot(1.0);
+    if (AppBase::isKeyPressed(Platform::KEY_A)) {
+        m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
     }
+    if (AppBase::isKeyPressed(Platform::KEY_S)) {
+        m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
+    }
+
+    if (AppBase::isKeyPressed(Platform::KEY_W)) {
+        m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
+    }
+
+    if (AppBase::isKeyPressed(Platform::KEY_D)) {
+        m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
+    }
+    RenderBackendService *rbSrv = getRenderBackendService();
+
+    rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+    rbSrv->beginRenderBatch("b1");
+
+    rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+    
+    mModuleRegistry.update();
+    
+    rbSrv->endRenderBatch();
+    rbSrv->endPass();
+
     AppBase::onUpdate();
 }
 
+void OsreEdApp::onRender() {
+    mModuleRegistry.render();
+    AppBase::onRender();
+}
+
 bool OsreEdApp::onDestroy() {
+    mMouseController = nullptr;
+
     delete mPythonInterface;
     mPythonInterface = nullptr;
 
