@@ -86,7 +86,7 @@ public:
     ///
     HWND getStatusBarHandle() const;
     ///
-    void setStatusText(ui32 index, char *Text);
+    void setStatusText(ui32 index, const char *Text);
 
 protected:
     /// The create callback implementation.

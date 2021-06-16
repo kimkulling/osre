@@ -135,7 +135,12 @@ public:
     /// @brief 
     void createUI();
 
-    //void setStatusBarText(const String &mode, const String &Model, const String &numVertices);
+    /// @brief 
+    /// @param mode 
+    /// @param Model 
+    /// @param numVertices 
+    void setStatusBarText(const String &mode, const String &Model, i32 numVertices, i32 numTriangles);
+
 protected:
     /// @brief The onCreate callback
     /// @return true, if successful, false in case of an error.
@@ -170,6 +175,7 @@ private:
     Rect2ui mResolution;
     RenderBackend::Mesh *mMesh2D;
     PythonInterface *mPythonInterface;
+    Scene::AnimationControllerBase *mMouseController;
 };
 
 inline bool OsreEdApp::hasModel() const {

@@ -130,14 +130,13 @@ HWND Win32Window::createStatusBar(UINT ResID, ui32 numFields) {
             0, 0, 0, 0, // x, y, width, height
             mWnd, (HMENU) 1000, mInstance, NULL);
     CPPCore::TArray<ui32> fields;
-    
     for (ui32 i = 0; i < numFields; ++i) {
         mStatusBarContent.StatusBarFields.add(new StatusBarField);
-        fields.add(200);
+        fields.add(20);
     }
     fields.add(-1);
 
-    SendMessage(mHandleStatusBar, SB_SETPARTS, numFields, (LPARAM) &fields[0]);
+    SendMessage(mHandleStatusBar, SB_SETPARTS, fields.size(), (LPARAM)&fields[0]);
 
     return mHandleStatusBar;
 }
@@ -146,7 +145,7 @@ HWND Win32Window::getStatusBarHandle() const {
     return mHandleStatusBar;
 }
 
-void Win32Window::setStatusText(ui32 index, char *text) {
+void Win32Window::setStatusText(ui32 index, const char *text) {
     if (index >= mStatusBarContent.StatusBarFields.size()) {
         return;
     }

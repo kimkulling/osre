@@ -89,6 +89,7 @@ public:
     void update(RenderBackend::RenderBackendService *rbSrv) override;
 
 private:
+    RenderBackend::TransformMatrixBlock &mTransform;
     MouseEventListener *mMouseEventListener;
 };
 

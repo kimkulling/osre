@@ -229,7 +229,8 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         mProject(nullptr),
         mResolution(),
         mMesh2D(nullptr),
-        mPythonInterface(nullptr) {
+        mPythonInterface(nullptr),
+        mMouseController(nullptr) {
     // empty
 }
 
@@ -272,7 +273,7 @@ bool OsreEdApp::onCreate() {
     w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
 
     w->endMenu();
-    w->createStatusBar(100, 1);
+    w->createStatusBar(100, 4);
     w->setStatusText(0, "Test");
 
     w->getWindowsRect(mResolution);
@@ -299,6 +300,9 @@ bool OsreEdApp::onCreate() {
                  "print('Today is', ctime(time()))\n";
                  
     mPythonInterface->runScript(src);
+
+    mMouseController = AppBase::getTransformController(DefaultControllerType::MouseCtrl, m_transformMatrix);
+
  
     return true;
 }
@@ -339,6 +343,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     createTitleString(mSceneData, title);
     rootWindow->setWindowsTitle(title);
 
+    setStatusBarText("View", mSceneData.AssetName, 1, 1);
     reporter.stop();
 }
 
@@ -480,6 +485,38 @@ void OsreEdApp::createUI() {
         rbSrv->endPass();
     }
 }
+
+void OsreEdApp::setStatusBarText(const String &mode, const String &model, i32 numVertices, i32 numTriangles) {
+    Win32Window *win = (Win32Window *)getRootWindow();
+    if (nullptr == win) {
+        return;
+    }
+
+    if (!mode.empty()) {
+        win->setStatusText(0, mode.c_str());
+    }
+
+    if (!mode.empty()) {
+        String modelName = "Model: ";
+        modelName += model;
+        win->setStatusText(1, modelName.c_str());
+    }
+
+    if (-1 != numVertices) {
+        c8 buffer[1024];
+        memset(buffer, '\0', 1024);
+        sprintf(buffer, "Number of vertices: %d", numVertices);
+        win->setStatusText(2, buffer);
+    }
+
+    if (-1 != numTriangles) {
+        c8 buffer[1024];
+        memset(buffer, '\0', 1024);
+        sprintf(buffer, "Number of triangles: %d", numTriangles);
+        win->setStatusText(3, buffer);    
+    }
+}
+
 
 void OsreEdApp::onUpdate() {
     for (ModuleBase * module : mModules) {
