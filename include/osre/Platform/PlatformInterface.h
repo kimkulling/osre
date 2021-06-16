@@ -143,7 +143,11 @@ public:
     ///					released.
     ///	@param	c		[in] The event trigger sender.
     MouseButtonEventData(bool down, Common::EventTriggerer *c) :
-            Common::EventData(down ? MouseButtonDownEvent : MouseButtonUpEvent, c), m_Button(0), m_AbsX(0), m_AbsY(0), m_Pressed(false) {
+            Common::EventData(down ? MouseButtonDownEvent : MouseButtonUpEvent, c),
+            m_Button(0),
+            m_AbsX(0),
+            m_AbsY(0),
+            m_Pressed(down) {
         // empty
     }
 
