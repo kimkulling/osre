@@ -22,25 +22,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "Modules/ModuleBase.h"
+#include "Modules/ModuleRegistry.h"
 
 #include <osre/App/AppBase.h>
 #include <osre/App/World.h>
-#include <osre/Scene/Node.h>
-#include <osre/Scene/Camera.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Scene/Camera.h>
+#include <osre/Scene/Node.h>
 
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
 
 namespace App {
-    class Project;
-    class World;
+class Project;
+class World;
 } // namespace App
 
 namespace IO {
-    class Uri;
+class Uri;
 }
 
 namespace Editor {
@@ -59,6 +59,8 @@ struct SceneData {
 };
 
 //-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
 /// @brief  The main-application-class of the OSRE-Editor.
 //-------------------------------------------------------------------------------------------------
 class OsreEdApp : public App::AppBase {
@@ -117,22 +119,11 @@ public:
     /// @return true, if a model is stored.
     bool hasModel() const;
 
-    /// @brief 
-    /// @param mod 
-    /// @return 
-    bool registerModule(ModuleBase *mod);
+    /// @brief  Will return the module registry.
+    /// @return The module registry.
+    ModuleRegistry &getModuleRegistry();
 
-    /// @brief 
-    /// @param name 
-    /// @return 
-    ModuleBase *findModule(const String &name) const;
-    
-    /// @brief 
-    /// @param moc 
-    /// @return 
-    bool unregisterModule(ModuleBase *moc);
-    
-    /// @brief 
+    /// @brief  Will create the ui.
     void createUI();
 
     /// @brief 
@@ -147,23 +138,25 @@ protected:
     bool onCreate() override;
 
     /// @brief The onUpdate callback.
-    /// @return true, if successful, false in case of an error.
     void onUpdate() override;
+
+    /// @brief The onRender callback.
+    void onRender() override;
 
     /// @brief The onDestrox callback.
     /// @return true, if successful, false in case of an error.
     bool onDestroy() override;
-    
-    /// @brief 
-    /// @param filename 
-    /// @param sd 
-    /// @return 
+
+    /// @brief
+    /// @param filename
+    /// @param sd
+    /// @return
     bool loadSceneData(const IO::Uri &filename, SceneData &sd);
-    
-    /// @brief 
-    /// @param filename 
-    /// @param sd 
-    /// @return 
+
+    /// @brief
+    /// @param filename
+    /// @param sd
+    /// @return
     bool saveSceneData(const IO::Uri &filename, SceneData &sd);
 
 private:
@@ -171,7 +164,7 @@ private:
     RenderBackend::TransformMatrixBlock m_transformMatrix;
     SceneData mSceneData;
     App::Project *mProject;
-    ModuleArray mModules;
+    ModuleRegistry mModuleRegistry;
     Rect2ui mResolution;
     RenderBackend::Mesh *mMesh2D;
     PythonInterface *mPythonInterface;

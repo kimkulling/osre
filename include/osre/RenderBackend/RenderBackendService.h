@@ -111,7 +111,8 @@ struct OSRE_EXPORT AttachViewEventData : public Common::EventData {
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT InitPassesEventData : Common::EventData {
     InitPassesEventData() :
-            EventData(OnInitPassesEvent, nullptr), m_frame(nullptr) {
+            EventData(OnInitPassesEvent, nullptr), 
+            m_frame(nullptr) {
         // empty
     }
 
@@ -125,7 +126,8 @@ struct OSRE_EXPORT InitPassesEventData : Common::EventData {
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
     CommitFrameEventData() :
-            EventData(OnCommitFrameEvent, nullptr), m_frame(nullptr) {
+            EventData(OnCommitFrameEvent, nullptr), 
+            m_frame(nullptr) {
         // empty
     }
 
@@ -139,7 +141,11 @@ struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT ResizeEventData : Common::EventData {
     ResizeEventData(ui32 x, ui32 y, ui32 w, ui32 h) :
-            EventData(OnResizeEvent, nullptr), m_x(x), m_y(y), m_w(w), m_h(h) {
+            EventData(OnResizeEvent, nullptr), 
+            m_x(x), 
+            m_y(y), 
+            m_w(w), 
+            m_h(h) {
         // empty
     }
     ui32 m_x, m_y, m_w, m_h;
@@ -212,6 +218,8 @@ public:
 
     void setUiScreen(UI::Widget *screen);
 
+    void syncRenderThread();
+
 protected:
     /// @brief  The open callback.
     bool onOpen() override;
@@ -238,7 +246,7 @@ private:
     Frame *m_submitFrame;
     UI::Widget *m_screen;
     bool m_dirty;
-    CPPCore::TArray<PassData *> m_passes;
+    CPPCore::TArray<PassData*> m_passes;
     PassData *m_currentPass;
     RenderBatchData *m_currentBatch;
     struct Behaviour {

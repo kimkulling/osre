@@ -143,9 +143,7 @@ static PyTypeObject WorldPyObject = {
     PyWorld_new /* tp_new */
 };
 
-
-
-PyMODINIT_FUNC PyInit_custom(void) {
+PyMODINIT_FUNC PyInit_custom() {
     PyObject *m;
     if (PyType_Ready(&WorldPyObject) < 0)
         return NULL;
@@ -156,7 +154,7 @@ PyMODINIT_FUNC PyInit_custom(void) {
 
 PythonInterface::PythonInterface() :
         mCreated(false),
-        mPathes() {
+        mPaths() {
     // empty
 }
 
@@ -198,7 +196,7 @@ void PythonInterface::addPath( const String &path ) {
     if (path.empty()) {
         return;
     }
-    mPathes.add(path);
+    mPaths.add(path);
 }
 
 bool PythonInterface::runScript(const String &src) {

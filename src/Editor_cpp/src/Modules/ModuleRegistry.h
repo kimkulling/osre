@@ -22,35 +22,62 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "Modules/ModuleBase.h"
+#include <osre/Common/osre_common.h>
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
-
-namespace UI {
-    class Panel;
-}
-
 namespace Editor {
+
+class ModuleBase;
+
+/// @brief  The type to store modules in an array.
+using ModuleArray = CPPCore::TArray<ModuleBase*>;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor
 ///
-/// @brief
+/// @brief  This class is the registry for all given modules.
 //-------------------------------------------------------------------------------------------------
-class InspectorModule : public ModuleBase {
+class ModuleRegistry {
 public:
-    InspectorModule(App::AppBase *parentApp);
-    ~InspectorModule() override;
+    /// @brief  Type to store the paths to the modules.
+    using ModulePathArray = ::CPPCore::TArray<String>;
 
-protected:
-    bool onLoad() override;
-    bool onUnload() override;
-    void onUpdate() override;
-    void onRender() override;
+    /// @brief  The class constructor.
+    ModuleRegistry();
+
+    /// @brief  The class destructor.
+    ~ModuleRegistry();
+
+    /// @brief  Will add a search path.
+    /// @param  path    [in] The path to add.
+    void addPath(const String &path);
+
+    /// @brief  Will register a new module.
+    /// @param  mod     [in] The module to register.
+    /// @return true if successful. False in case of an error.
+    bool registerModule(ModuleBase *mod);
+
+    /// @brief  Will search for a given module name.
+    /// @param  name    [in] The module name to search for.
+    /// @return The found module or a nullptr.
+    ModuleBase *findModule(const String &name) const;
+    
+    /// @brief  Will unregister the given module.
+    /// @param  mod     [in] The module to unregister.
+    /// @return true if successful.
+    bool unregisterModule(ModuleBase *mod);
+    
+    /// @brief  All registered module will get an update.
+    void update();
+
+    /// @brief  All registered module will get rendered.
+    void render();
 
 private:
-    UI::Panel *mPanel;
+    ModuleArray mModules;
+    ModulePathArray mPaths;
 };
 
-} // namespace Editor
-} // namespace OSRE
+} // Namespace Editor
+} // Namespace OSRE

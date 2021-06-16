@@ -28,6 +28,11 @@ namespace Platform {
 }
 namespace Editor {
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+/// @brief
+//-------------------------------------------------------------------------------------------------
 class ProgressReporter {
 public:
     ProgressReporter(Platform::AbstractWindow* window);

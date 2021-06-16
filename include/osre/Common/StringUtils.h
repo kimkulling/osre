@@ -29,17 +29,15 @@ namespace Common {
 
 class OSRE_EXPORT StringUtils {
 public:
-    static HashId hashName( const String &str );
-    static HashId hashName( char const *pIdentStr );
+    static HashId hashName(const String &str);
+    static HashId hashName(char const *pIdentStr);
 };
 
-inline
-HashId StringUtils::hashName(const String &str) {
+inline HashId StringUtils::hashName(const String &str) {
     return hashName(str.c_str());
 }
 
-inline
-HashId StringUtils::hashName( char const *pIdentStr ) {
+inline HashId StringUtils::hashName(char const *pIdentStr) {
     // Relatively simple hash of arbitrary text string into a
     // 32-bit identifier Output value is
     // input-valid-deterministic, but no guarantees are made
@@ -63,45 +61,57 @@ HashId StringUtils::hashName( char const *pIdentStr ) {
     // (n+1)(BASE-1) <= 2^32-1
     unsigned long NMAX = 5552;
 
-#define DO1(buf,i)  {s1 += tolower(buf[i]); s2 += s1;}
-#define DO2(buf,i)  DO1(buf,i); DO1(buf,i+1);
-#define DO4(buf,i)  DO2(buf,i); DO2(buf,i+2);
-#define DO8(buf,i)  DO4(buf,i); DO4(buf,i+4);
-#define DO16(buf)   DO8(buf,0); DO8(buf,8);
+#define DO1(buf, i)            \
+    {                          \
+        s1 += tolower(buf[i]); \
+        s2 += s1;              \
+    }
+#define DO2(buf, i) \
+    DO1(buf, i);    \
+    DO1(buf, i + 1);
+#define DO4(buf, i) \
+    DO2(buf, i);    \
+    DO2(buf, i + 2);
+#define DO8(buf, i) \
+    DO4(buf, i);    \
+    DO4(buf, i + 4);
+#define DO16(buf) \
+    DO8(buf, 0);  \
+    DO8(buf, 8);
 
-    if (pIdentStr == nullptr )
+    if (pIdentStr == nullptr)
         return 0L;
 
     unsigned long s1 = 0;
     unsigned long s2 = 0;
 
-    for ( size_t len = strlen( pIdentStr ); len > 0 ; ) {
-        unsigned long k = static_cast<unsigned long>( len < NMAX ? len : NMAX );
+    for (size_t len = strlen(pIdentStr); len > 0;) {
+        unsigned long k = static_cast<unsigned long>(len < NMAX ? len : NMAX);
         len -= k;
 
-        while (k >= 16)	{
+        while (k >= 16) {
             DO16(pIdentStr);
             pIdentStr += 16;
             k -= 16;
         }
 
         if (k != 0) do {
-            s1 += tolower( *pIdentStr++ );
-            s2 += s1;
-        } while (--k);
+                s1 += tolower(*pIdentStr++);
+                s2 += s1;
+            } while (--k);
 
         s1 %= BASE;
         s2 %= BASE;
     }
 
 #ifdef OSRE_WINDOWS
-#   pragma warning(push)
-#   pragma warning(disable : 4312)
+#pragma warning(push)
+#pragma warning(disable : 4312)
 #endif // OSRE_WINDOWS
-    return static_cast<HashId>( (s2 << 16) | s1 );
+    return static_cast<HashId>((s2 << 16) | s1);
 
 #ifdef OSRE_WINDOWS
-#   pragma warning(pop)
+#pragma warning(pop)
 #endif // OSRE_WINDOWS
 #undef DO1
 #undef DO2

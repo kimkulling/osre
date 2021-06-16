@@ -22,11 +22,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <osre/Common/TObjPtr.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <osre/App/AppBase.h>
 #include <cppcore/Common/TBitField.h>
+#include <osre/App/AppBase.h>
+#include <osre/Common/TObjPtr.h>
+#include <osre/Common/osre_common.h>
+#include <osre/Platform/PlatformInterface.h>
 
 namespace OSRE {
 namespace App {
@@ -39,25 +39,46 @@ public:
     bool leftButttonPressed() const;
     bool middleButttonPressed() const;
     bool rightButttonPressed() const;
+    i32 getRelativeX() const;
+    i32 getRelativeY() const;
+    i32 getAbsoluteX() const;
+    i32 getAbsoluteY() const;
 
 private:
-    const ui32 LBtn = 1;
-    const ui32 MBtn = 2;
-    const ui32 RBtn = 3;
-    ui32 mX, mY;
+    const ui32 LeftButton = 1;
+    const ui32 MiddleButton = 2;
+    const ui32 RightButton = 3;
+    i32 mRelX, mRelY, mAbsX, mAbsY;
+    ui32 mLastX, mLastY;
     CPPCore::TBitField<ui32> mMouseButtonState;
 };
 
 inline bool MouseEventListener::leftButttonPressed() const {
-    return mMouseButtonState.getBit(1);
+    return mMouseButtonState.getBit(LeftButton);
 }
 
 inline bool MouseEventListener::middleButttonPressed() const {
-    return mMouseButtonState.getBit(2);
+    return mMouseButtonState.getBit(MiddleButton);
 }
 
 inline bool MouseEventListener::rightButttonPressed() const {
-    return mMouseButtonState.getBit(3);
+    return mMouseButtonState.getBit(RightButton);
+}
+
+inline i32 MouseEventListener::getRelativeX() const {
+    return mRelX;
+}
+
+inline i32 MouseEventListener::getRelativeY() const {
+    return mRelY;
+}
+
+inline i32 MouseEventListener::getAbsoluteX() const {
+    return mAbsX;
+}
+
+inline i32 MouseEventListener::getAbsoluteY() const {
+    return mAbsY;
 }
 
 } // Namespace App

@@ -33,8 +33,12 @@ using namespace OSRE::Platform;
 
 MouseEventListener::MouseEventListener() :
         OSEventListener("App/MouseEventListener"),
-        mX(0),
-        mY(0),    
+        mRelX(0),
+        mRelY(0),
+        mAbsX(0),
+        mAbsY(0),
+        mLastX(0),
+        mLastY(0),
         mMouseButtonState() {
     // empty
 }
@@ -45,29 +49,39 @@ MouseEventListener::~MouseEventListener() {
 
 void MouseEventListener::onOSEvent(const Event &osEvent, const EventData *data) {
     MouseButtonEventData *mouseEventData = (MouseButtonEventData *)data;
-    mX = mouseEventData->m_AbsX;
-    mY = mouseEventData->m_AbsY;
+    mLastX = mAbsX;
+    mLastY = mAbsY;
+    mAbsX = mouseEventData->m_AbsX;
+    mAbsY = mouseEventData->m_AbsY;
+    mRelX = mLastX - mAbsX;
+    mRelY = mLastY - mAbsY;
     if (mouseEventData->m_Button == MouseButtonEventData::LeftButton) {
         if (mouseEventData->m_Pressed) {
-            mMouseButtonState.setBit(1);
+            mMouseButtonState.setBit(LeftButton);
         } else {
-            mMouseButtonState.clearBit(1);
+            mMouseButtonState.clearBit(LeftButton);
+            mAbsX = mAbsY = 0;
+            mRelY = mRelX = 0;
         }
     }
     
     if (mouseEventData->m_Button == MouseButtonEventData::MiddleButton) {
         if (mouseEventData->m_Pressed) {
-            mMouseButtonState.setBit(2);
+            mMouseButtonState.setBit(MiddleButton);
         } else {
-            mMouseButtonState.clearBit(2);
+            mMouseButtonState.clearBit(MiddleButton);
+            mAbsX = mAbsY = 0;
+            mRelY = mRelX = 0;
         }
     }
     
     if (mouseEventData->m_Button == MouseButtonEventData::RightButton) {
         if (mouseEventData->m_Pressed) {
-            mMouseButtonState.setBit(3);
+            mMouseButtonState.setBit(RightButton);
         } else {
-            mMouseButtonState.clearBit(3);
+            mMouseButtonState.clearBit(RightButton);
+            mAbsX = mAbsY = 0;
+            mRelY = mRelX = 0;
         }
     }
 }

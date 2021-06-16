@@ -157,7 +157,7 @@ bool RenderBackendService::onUpdate() {
     commitNextFrame();
 
     // Synchronizing event with render back-end
-    auto result(m_renderTaskPtr->sendEvent(&OnRenderFrameEvent, nullptr));
+    auto result = m_renderTaskPtr->sendEvent(&OnRenderFrameEvent, nullptr);
     m_renderTaskPtr->awaitUpdate();
 
     return result;
@@ -484,6 +484,12 @@ void RenderBackendService::resize(ui32 x, ui32 y, ui32 w, ui32 h) {
 
 void RenderBackendService::focusLost() {
     // todo: implement me
+}
+
+void RenderBackendService::syncRenderThread() {
+    // Synchronizing event with render back-end
+    auto result = m_renderTaskPtr->sendEvent(&OnRenderFrameEvent, nullptr);
+    m_renderTaskPtr->awaitUpdate();
 }
 
 } // Namespace RenderBackend

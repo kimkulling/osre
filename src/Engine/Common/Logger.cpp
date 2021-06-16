@@ -36,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
-static const String Line =
+static const c8 *Line =
         "====================================================================================================";
 
 static void appendDomain(const String &domain, String &logMsg) {
@@ -68,40 +68,59 @@ bool AbstractLogStream::isActive() const {
     return m_IsActive;
 }
 
-Logger *Logger::s_logger = nullptr;
+Logger *Logger::sLogger = nullptr;
 
 Logger *Logger::create() {
-    if (nullptr == s_logger) {
-        s_logger = new Logger;
+    if (nullptr == sLogger) {
+        sLogger = new Logger;
     }
 
-    return s_logger;
+    return sLogger;
 }
 
 Logger *Logger::getInstance() {
-    if (nullptr == s_logger) {
+    if (nullptr == sLogger) {
         static_cast<void>(Logger::create());
     }
 
-    return s_logger;
+    return sLogger;
 }
 
 void Logger::kill() {
-    if (s_logger) {
-        delete s_logger;
-        s_logger = nullptr;
+    if (sLogger) {
+        delete sLogger;
+        sLogger = nullptr;
+    }
+}
+
+void Logger::setVerboseMode(VerboseMode sev) {
+    mVerboseMode = sev;
+}
+
+Logger::VerboseMode Logger::getVerboseMode() const {
+    return mVerboseMode;
+}
+
+void Logger::trace(const String &domain, const String &msg) {
+    if (getVerboseMode() == VerboseMode::Debug) {
+        String logMsg;
+        logMsg += "Trace: ";
+        logMsg += msg;
+        appendDomain(domain, logMsg);
+
+        print(logMsg);        
     }
 }
 
 void Logger::debug(const String &domain, const String &msg) {
-    String logMsg;
+    if (getVerboseMode() == VerboseMode::Verbose) {
+        String logMsg;
+        logMsg += "Dbg:  ";
+        logMsg += msg;
+        appendDomain(domain, logMsg);
 
-    logMsg += "Dbg:  ";
-    logMsg += msg;
-
-    appendDomain(domain, logMsg);
-
-    print(logMsg);
+        print(logMsg);
+    }
 }
 
 void Logger::info(const String &domain, const String &msg) {
@@ -122,13 +141,13 @@ void Logger::print(const String &msg, PrintMode mode) {
 
     if (msg.size() > 8) {
         if (msg[6] == '<' && msg[7] == '=') {
-            m_intention -= 2;
+            mIntention -= 2;
         }
     }
 
     String logMsg;
-    if (0 != m_intention) {
-        for (ui32 i = 0; i < m_intention; i++) {
+    if (0 != mIntention) {
+        for (ui32 i = 0; i < mIntention; i++) {
             logMsg += " ";
         }
     }
@@ -141,8 +160,8 @@ void Logger::print(const String &msg, PrintMode mode) {
     }
 
     logMsg += " \n";
-    for (ui32 i = 0; i < m_LogStreams.size(); ++i) {
-        AbstractLogStream *stream = m_LogStreams[i];
+    for (ui32 i = 0; i < mLogStreams.size(); ++i) {
+        AbstractLogStream *stream = mLogStreams[i];
         if (stream) {
             stream->write(logMsg);
         }
@@ -150,7 +169,7 @@ void Logger::print(const String &msg, PrintMode mode) {
 
     if (msg.size() > 8) {
         if (msg[6] == '=' && msg[7] == '>') {
-            m_intention += 2;
+            mIntention += 2;
         }
     }
 }
@@ -187,7 +206,7 @@ void Logger::registerLogStream(AbstractLogStream *pLogStream) {
         return;
     }
 
-    m_LogStreams.add(pLogStream);
+    mLogStreams.add(pLogStream);
 }
 
 void Logger::unregisterLogStream(AbstractLogStream *logStream) {
@@ -195,20 +214,22 @@ void Logger::unregisterLogStream(AbstractLogStream *logStream) {
         return;
     }
 
-    for (ui32 i = 0; i < m_LogStreams.size(); ++i) {
-        if (m_LogStreams[i] == logStream) {
-            delete m_LogStreams[i];
-            m_LogStreams.remove(i);
+    for (ui32 i = 0; i < mLogStreams.size(); ++i) {
+        if (mLogStreams[i] == logStream) {
+            delete mLogStreams[i];
+            mLogStreams.remove(i);
         }
     }
 }
 
 Logger::Logger() :
-        m_LogStreams(), m_intention(0) {
-    m_LogStreams.add(new StdLogStream);
+        mLogStreams(), 
+        mVerboseMode(VerboseMode::Normal),
+        mIntention(0) {
+    mLogStreams.add(new StdLogStream);
 
 #ifdef OSRE_WINDOWS
-    m_LogStreams.add(new Platform::Win32DbgLogStream);
+    mLogStreams.add(new Platform::Win32DbgLogStream);
 #endif // OSRE_WINDOWS
 
     print(Line, PrintMode::WhithoutDateTime);
@@ -221,8 +242,8 @@ Logger::~Logger() {
     print("OSRE run ended.");
     print(Line, PrintMode::WhithoutDateTime);
 
-    for (ui32 i = 0; i < m_LogStreams.size(); ++i) {
-        delete m_LogStreams[i];
+    for (ui32 i = 0; i < mLogStreams.size(); ++i) {
+        delete mLogStreams[i];
     }
 }
 

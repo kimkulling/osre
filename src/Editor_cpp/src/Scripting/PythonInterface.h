@@ -23,15 +23,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
 namespace Editor {
 
-/// @brief This class implements the global python entry points.
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+/// @brief This class implements the global python entry points. This class implements the main 
+/// fascade to the python scripting. 
+//-------------------------------------------------------------------------------------------------
 class PythonInterface {
 public:
+    /// @brief  The class constructor.
     PythonInterface();
+
+    /// @brief  The class destructor.
     ~PythonInterface();
     bool create();
     bool destroy();
@@ -40,7 +49,7 @@ public:
 
 private:
     bool mCreated;
-    ::CPPCore::TArray<String> mPathes;
+    ::CPPCore::TArray<String> mPaths;
 };
 
 } // Namespace Editor
