@@ -33,7 +33,11 @@ class ModuleBase;
 /// @brief  The type to store modules in an array.
 using ModuleArray = CPPCore::TArray<ModuleBase*>;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
 /// @brief  This class is the registry for all given modules.
+//-------------------------------------------------------------------------------------------------
 class ModuleRegistry {
 public:
     /// @brief  Type to store the paths to the modules.

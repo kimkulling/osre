@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Modules/InspectorModule/InspectorModule.h"
 #include "Modules/ModuleBase.h"
 #include "Scripting/PythonInterface.h"
-
+#include "Engine/App/MouseEventListener.h"
 #include <osre/App/AssimpWrapper.h>
 #include <osre/App/AssetRegistry.h>
 #include <osre/App/Entity.h>
@@ -307,7 +307,7 @@ bool OsreEdApp::onCreate() {
     w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
 
     w->endMenu();
-    w->createStatusBar(100, 1);
+    w->createStatusBar(100, 3);
     w->setStatusText(0, "Test");
 
     w->getWindowsRect(mResolution);
@@ -462,6 +462,14 @@ void OsreEdApp::createUI() {
 void OsreEdApp::onUpdate() {
     mMouseController->update(getRenderBackendService());
     glm::mat4 rot(1.0);
+    MouseEventListener *listener = AppBase::getMouseEventListener();
+    if (listener->leftButttonPressed()) {
+        i32 x = listener->getRelativeX();
+        i32 y = listener->getRelativeY();
+        char buffer[512];
+        sprintf(buffer, "x: %d, y:%d", x, y);
+        osre_info(Tag, "Pressed! "  + String(buffer));
+    }
     if (AppBase::isKeyPressed(Platform::KEY_A)) {
         m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
     }

@@ -93,28 +93,28 @@ typedef int errno_t;
 #endif
 // clang-format on
 
-///	The data type unsigned char, 1 byte long.
+/// @brief  The data type unsigned char, 1 byte long.
 using uc8 = unsigned char;
 
-///	The data type signed char, 1 byte long.
+/// @brief  The data type signed char, 1 byte long.
 using c8 = char;
 
-///	The data type unsigned short, 2 byte long.
+/// @brief  The data type unsigned short, 2 byte long.
 using ui16 = unsigned short;
 
-///	The data type signed short, 2 byte long.
+/// @brief  The data type signed short, 2 byte long.
 using i16 = signed short;
 
-///	The data type signed int, 4 byte long.
+/// @brief  The data type signed int, 4 byte long.
 using i32 = int;
 
-///	The data type unsigned int, 4 byte long.
+/// @brief  The data type unsigned int, 4 byte long.
 using ui16 = unsigned short;
 
-///	The data type signed int, 4 byte long.
+/// @brief  The data type signed int, 4 byte long.
 using ui32 = unsigned int;
 
-///	The data type for signed and unsigned int 8 bytes long.
+/// @brief  The data type for signed and unsigned int 8 bytes long.
 // clang-format off
 #ifdef OSRE_WINDOWS
 
@@ -129,25 +129,25 @@ using ui64 = uint64_t ;
 #endif
 // clang-format on
 
-/// The data type for hash ids.
+/// @brief  The data type for hash ids.
 using HashId = unsigned long;
 
-///	The data type float, 4 byte long.
+/// @brief  The data type float, 4 byte long.
 using f32 = float;
 
-///	The data type double, 8 byte long.
+/// @brief  The data type double, 8 byte long.
 using d32 = double;
 
-///	The data type Object id.
+/// @brief  The data type Object id.
 using ObjectId = int;
 
-/// The id for unique ids.
+/// @brief  The id for unique ids.
 using guid = ui64;
 
-///	The data type for strings
+/// @brief  The data type for strings
 using String = std::string;
 
-/// A handle struct.
+/// @brief  A handle struct.
 struct Handle {
     i32 m_idx;
 
@@ -173,8 +173,10 @@ struct Handle {
     }
 };
 
+/// @brief  This type shall be used to store binary data.
 using MemoryBuffer = CPPCore::TArray<c8>;
 
+/// @brief  A time stamp.
 struct Time {
     i64 m_microseconds;
 
@@ -207,6 +209,7 @@ inline i64 Time::asMicroSeconds() const {
     return m_microseconds;
 }
 
+/// @brief  This type can be used to define a color with 4 colors.
 struct Color4 {
     f32 m_r, m_g, m_b, m_a;
 
@@ -257,6 +260,7 @@ struct Color4 {
     }
 };
 
+/// @brief  A vector with 2 components.
 template <class T>
 struct TVec2 {
     T v[2];
@@ -343,6 +347,7 @@ inline TVec2<T> operator*(T scalar, TVec2<T> vec) {
 using Vec2i = TVec2<i32>;
 using Vec2f = TVec2<f32>;
 
+/// @brief  A vector with 3 components.
 template <class T>
 struct TVec3 {
     T v[3];
@@ -477,6 +482,7 @@ inline TVec3<T> operator*(T scalar, TVec3<T> vec) {
 using Vec3i = TVec3<i32>;
 using Vec3f = TVec3<f32>;
 
+/// @brief  A vector with 4 components.
 template <class T>
 struct TVec4 {
     T v[4];
@@ -559,6 +565,7 @@ struct TVec4 {
 using Vec4i = TVec4<i32>;
 using Vec4f = TVec4<f32>;
 
+/// @brief  A quaternion type.
 template <class T>
 struct TQuat {
     T m_x, m_y, m_z, m_w;
@@ -589,6 +596,7 @@ struct TQuat {
 
 using Quatf = TQuat<f32>;
 
+/// @brief  a 2D point.
 template <class T>
 struct TPoint2 {
     T x, y;
@@ -748,6 +756,7 @@ struct TRectangle {
 using Rect2ui = TRectangle<ui32>;
 using Rect2i = TRectangle<i32>;
 
+/// @brief  a float4 representation type.
 struct float4 {
     union {
         __m128 m_val4;
@@ -800,6 +809,7 @@ inline const float4 float4::operator/=(const float4 &v) {
     return *this;
 }
 
+/// @brief  The resolution type
 template <class T>
 struct TResolution {
     T Width, Height;
@@ -833,6 +843,7 @@ inline String osre_to_string(T val) {
 static const i32 CurrentMajorVersion = 0;
 static const i32 CurrentMinorVersion = 1;
 
+/// @brief  The version type
 struct Version {
     i32 mMajor;
     i32 mMinor;

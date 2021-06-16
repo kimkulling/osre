@@ -28,17 +28,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// clang-format off
 namespace App {
-
-class AppBase;
-
+    class AppBase;
 }
+// clang-format on
 
 namespace Editor {
 
 class OsreEdApp;
 class IModuleView;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+/// @brief
+//-------------------------------------------------------------------------------------------------
 class ModuleBase : public Common::Object {
 public:
     virtual ~ModuleBase();

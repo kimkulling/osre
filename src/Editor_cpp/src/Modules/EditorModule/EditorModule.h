@@ -7,6 +7,11 @@
 namespace OSRE {
 namespace Editor {
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+/// @brief  
+//-------------------------------------------------------------------------------------------------
 class EditorModule : public ModuleBase {
 public:
     EditorModule(App::AppBase *parentApp);

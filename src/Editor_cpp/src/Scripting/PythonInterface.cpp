@@ -154,7 +154,7 @@ PyMODINIT_FUNC PyInit_custom() {
 
 PythonInterface::PythonInterface() :
         mCreated(false),
-        mPathes() {
+        mPaths() {
     // empty
 }
 
@@ -196,7 +196,7 @@ void PythonInterface::addPath( const String &path ) {
     if (path.empty()) {
         return;
     }
-    mPathes.add(path);
+    mPaths.add(path);
 }
 
 bool PythonInterface::runScript(const String &src) {

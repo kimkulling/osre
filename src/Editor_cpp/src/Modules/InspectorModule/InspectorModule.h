@@ -32,6 +32,11 @@ namespace UI {
 
 namespace Editor {
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+/// @brief
+//-------------------------------------------------------------------------------------------------
 class InspectorModule : public ModuleBase {
 public:
     InspectorModule(App::AppBase *parentApp);

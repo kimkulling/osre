@@ -30,6 +30,11 @@ namespace Editor {
 
 class LogView;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+/// @brief
+//-------------------------------------------------------------------------------------------------
 class LogModule : public ModuleBase {
 public:
     LogModule(App::AppBase *parentApp);
