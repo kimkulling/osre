@@ -168,7 +168,7 @@ inline bool TAABB<T>::isIn(const VecType &pt) const {
         return false;
     }
 
-    if (pt.v[0] > m_max.v[0] || pt.v[1] < m_max.v[1] || pt.v[2] < m_max.v[2]) {
+    if (pt.v[0] > m_max.v[0] || pt.v[1] > m_max.v[1] || pt.v[2] > m_max.v[2]) {
         return false;
     }
 

@@ -165,8 +165,8 @@ static Mesh *createGrid(ui32 numLines) {
 
     Mesh *grid = Mesh::create(1, VertexType::ColorVertex);
     f32 currentX = -300.0f, currentY = -300.0f;
-    f32 diffX = 600.0 / numLines;
-    f32 diffY = 600.0 / numLines;
+    f32 diffX = 600.0f / numLines;
+    f32 diffY = 600.0f / numLines;
     CPPCore::TArray<RenderBackend::ColorVert> lineData;
     CPPCore::TArray<ui16> lineIndices;
     ui16 currentIndex = 0;

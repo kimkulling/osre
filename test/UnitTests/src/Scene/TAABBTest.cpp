@@ -106,5 +106,46 @@ TEST_F( TAABBTest, getCenterTest ) {
 	EXPECT_EQ( res, center );
 }
 
+TEST_F(TAABBTest, isInTest) {
+    Vec3f min(-1, -1, -1), max(1, 1, 1);
+    TAABB<f32> aabb(min, max);
+
+    Vec3f pt(0, 0, 0);
+    bool result = aabb.isIn(pt);
+    EXPECT_TRUE(result);
+
+    pt.set(-2, -2, -2);
+    result = aabb.isIn(pt);
+    EXPECT_FALSE(result);
+
+    pt.set(-2, 0, 0);
+    result = aabb.isIn(pt);
+    EXPECT_FALSE(result);
+
+    pt.set(0, -2, 0);
+    result = aabb.isIn(pt);
+    EXPECT_FALSE(result);
+
+    pt.set(0, 0, -2);
+    result = aabb.isIn(pt);
+    EXPECT_FALSE(result);
+
+    pt.set(2, 2, 2);
+    result = aabb.isIn(pt);
+    EXPECT_FALSE(result);
+
+    pt.set(2, 0, 0);
+    result = aabb.isIn(pt);
+    EXPECT_FALSE(result);
+
+    pt.set(0, 2, 0);
+    result = aabb.isIn(pt);
+    EXPECT_FALSE(result);
+
+    pt.set(0, 0, 2);
+    result = aabb.isIn(pt);
+    EXPECT_FALSE(result);
+}
+
 } // Namespace Unittest
 } // Namespace OSRE
