@@ -22,16 +22,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "Modules/LogModule/LogModule.h"
 #include "Modules/IModuleView.h"
-#include <osre/Common/Logger.h>
 #include "OsreEdApp.h"
+
+#include <osre/Common/Logger.h>
 #include <osre/Common/osre_common.h>
 #include <osre/Common/Logger.h>
 #include <osre/Platform/AbstractWindow.h>
 
-//#include <osre/Platform/Windows/MinWindows.h>
 #include "windows.h"
 #include "winuser.h"
-#include <vector>
+//#include <vector>
 #include <osre/Platform/Windows/MinWindows.h>
 
 #include "src/Engine/Platform/win32/Win32Window.h"
@@ -147,7 +147,7 @@ public:
         entry.mColor = Details::getColorBySeverity(sev);
         entry.mText = text;
         entry.mStartTicks = time;
-        mEntries.emplace_back(entry);
+        mEntries.add(entry);
     }
 
 protected:
@@ -158,7 +158,6 @@ protected:
     }
 
     void onUpdate() override {
-        Win32Window *w = (Win32Window *)mRootWindow;
         for (size_t i = 0; i < mEntries.size(); ++i) {
             const LogEntry &entry = mEntries[i];
             HDC dc = GetDC(mLogWndHandle);
@@ -168,7 +167,7 @@ protected:
     }
 
 private:
-    std::vector<LogEntry> mEntries;
+    CPPCore::TArray<LogEntry> mEntries;
     Platform::AbstractWindow *mRootWindow;
     Rect2ui mRect;
     HWND mLogWndHandle;

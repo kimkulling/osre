@@ -213,8 +213,8 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
     TAABB<f32> aabb = m_entity->getAABB();
 
     Mat2MeshMap mat2MeshMap;
-    for (ui32 i = 0; i < numMeshes; ++i) {
-        aiMesh *currentMesh = meshes[i];
+    for (ui32 meshIndex = 0; meshIndex < numMeshes; ++meshIndex) {
+        aiMesh *currentMesh = meshes[meshIndex];
         if (nullptr == currentMesh) {
             osre_debug(Tag, "Invalid mesh instance found.");
             continue;
@@ -232,10 +232,10 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
         } else {
             miArray = it->second;
         }
-        miArray->add((size_t)i);
+        miArray->add(static_cast<size_t>(meshIndex));
     }
 
-    for (size_t i = 0; i < mat2MeshMap.size(); ++i) {
+    for (size_t mat2MeshIdx = 0; mat2MeshIdx < mat2MeshMap.size(); ++mat2MeshIdx) {
         m_meshArray.add(Mesh::create(1, VertexType::RenderVertex));
     }
 
@@ -425,6 +425,7 @@ static void setTexture(const String &resolvedPath, const aiString &texPath, Text
 
 void AssimpWrapper::importMaterial(aiMaterial *material) {
     if (nullptr == material) {
+        osre_trace(Tag, "Nullptr for material detected.");
         return;
     }
 

@@ -56,13 +56,14 @@ public:
     ///	@return	true, if the stream is active, else false will be returned.
     virtual bool isActive() const;
 
+    // No copying
+    AbstractLogStream(const AbstractLogStream &) = delete;
+    AbstractLogStream &operator=(const AbstractLogStream &) = delete;
+
 protected:
     ///	@brief	The default class constructor.
     AbstractLogStream();
 
-private:
-    AbstractLogStream( const AbstractLogStream  & ) = delete;
-    AbstractLogStream &operator = ( const AbstractLogStream & ) = delete;
 
 private:
     bool m_IsActive;
@@ -86,7 +87,8 @@ public:
     enum class VerboseMode {
         Normal,		///< Only warnings and errors will be logged.
         Verbose,	///< Normal messages will be logged as well.
-        Debug		///< All debug messages will be logged as well.
+        Debug,		///< All debug messages will be logged as well.
+        Trace       ///< Will enable the tracing.
     };
 
     ///	@brief	Describes the mode for prints into the active log stream.
@@ -185,8 +187,9 @@ private:
     ui32 mIntention;
 };
 
-// Logger helper functions.
-void OSRE_EXPORT debugPrint( const String &domain, const String &file, int line, const String &msg );
+// Logger helper function prototypes
+void OSRE_EXPORT tracePrint(const String &domain, const String &file, int line, const String &msg);
+void OSRE_EXPORT debugPrint(const String &domain, const String &file, int line, const String &msg);
 void OSRE_EXPORT infoPrint( const String &domain, const String &file, int line, const String &msg );
 void OSRE_EXPORT warnPrint( const String &domain, const String &file, int line, const String &msg );
 void OSRE_EXPORT errorPrint( const String &domain, const String &file, int line, const String &msg );
@@ -196,12 +199,20 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 } // Namespace Common
 
 //-------------------------------------------------------------------------------------------------
+///	@fn		osre_trace
+///	@brief	This helper macro will write the trace message into the logger.
+/// @param  domain      The domain to log for.
+///	@param	message		The message to log.
+//-------------------------------------------------------------------------------------------------
+#define osre_trace(domain, msg) ::OSRE::Common::tracePrint(domain, __FILE__, __LINE__, msg);
+
+//-------------------------------------------------------------------------------------------------
 ///	@fn		osre_debug
 ///	@brief	This helper macro will write the debug message into the logger.
 /// @param  domain      The domain to log for.
 ///	@param	message		The message to log.
 //-------------------------------------------------------------------------------------------------
-#define osre_debug( domain, msg ) ::OSRE::Common::debugPrint( domain, __FILE__, __LINE__, msg );
+#define osre_debug(domain, msg) ::OSRE::Common::debugPrint( domain, __FILE__, __LINE__, msg );
 
 //-------------------------------------------------------------------------------------------------
 ///	@fn		osre_log
@@ -209,7 +220,7 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 /// @param  domain      The domain to log for.
 ///	@param	message		The message to log.
 //-------------------------------------------------------------------------------------------------
-#define osre_info( domain, msg )  ::OSRE::Common::infoPrint(  domain,  __FILE__, __LINE__, msg );
+#define osre_info(domain, msg)  ::OSRE::Common::infoPrint(  domain,  __FILE__, __LINE__, msg );
 
 //-------------------------------------------------------------------------------------------------
 ///	@fn		ce_warn
@@ -217,7 +228,7 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 /// @param  domain      The domain to log for.
 ///	@param	message		The warning to writhe into the log.
 //-------------------------------------------------------------------------------------------------
-#define osre_warn( domain, message )  ::OSRE::Common::warnPrint(  domain, __FILE__, __LINE__, message );
+#define osre_warn(domain, message)  ::OSRE::Common::warnPrint(  domain, __FILE__, __LINE__, message );
 
 //-------------------------------------------------------------------------------------------------
 ///	@fn		osre_error
@@ -225,7 +236,7 @@ void OSRE_EXPORT fatalPrint( const String &domain, const String &file, int line,
 /// @param  domain      The domain to log for.
 ///	@param	message		The warning to writhe into the log.
 //-------------------------------------------------------------------------------------------------
-#define osre_error( domain, message ) ::OSRE::Common::errorPrint( domain, __FILE__, __LINE__, message );
+#define osre_error(domain, message) ::OSRE::Common::errorPrint( domain, __FILE__, __LINE__, message );
 
 //-------------------------------------------------------------------------------------------------
 ///	@fn		ce_fatal

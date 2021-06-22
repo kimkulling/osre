@@ -24,9 +24,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Object.h>
 #include <osre/Common/osre_common.h>
+
 namespace OSRE {
 namespace Editor {
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
 /// @brief
 //-------------------------------------------------------------------------------------------------
 class IModuleView : Common::Object {

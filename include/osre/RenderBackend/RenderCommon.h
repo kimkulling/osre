@@ -31,7 +31,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TStaticArray.h>
 #include <cppcore/Memory/TPoolAllocator.h>
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4201)
+#endif // _MSC_VER
+
 #include <glm/glm.hpp>
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif // _MSC_VER
 
 namespace OSRE {
 namespace RenderBackend {

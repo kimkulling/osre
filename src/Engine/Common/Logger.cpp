@@ -102,7 +102,7 @@ Logger::VerboseMode Logger::getVerboseMode() const {
 }
 
 void Logger::trace(const String &domain, const String &msg) {
-    if (getVerboseMode() == VerboseMode::Debug) {
+    if (getVerboseMode() == VerboseMode::Trace) {
         String logMsg;
         logMsg += "Trace: ";
         logMsg += msg;
@@ -272,6 +272,19 @@ Logger::StdLogStream::~StdLogStream() {
 
 void Logger::StdLogStream::write(const String &msg) {
     std::cout << msg;
+}
+
+void tracePrint(const String &domain, const String &file, int line, const String &msg) {
+    String message;
+    message += msg;
+    message += " (";
+    message += file;
+    message += ", ";
+    std::stringstream ss;
+    ss << line;
+    message += ss.str();
+    message += ")";
+    Logger::getInstance()->trace(domain, message);
 }
 
 void debugPrint(const String &domain, const String &file, int line, const String &msg) {
