@@ -25,22 +25,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/TResource.h>
 #include <osre/Common/osre_common.h>
 #include <osre/IO/Uri.h>
+#include <osre/Common/glm_common.h>
 
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>
 #include <cppcore/Container/TStaticArray.h>
 #include <cppcore/Memory/TPoolAllocator.h>
-
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4201)
-#endif // _MSC_VER
-
-#include <glm/glm.hpp>
-
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif // _MSC_VER
 
 namespace OSRE {
 namespace RenderBackend {

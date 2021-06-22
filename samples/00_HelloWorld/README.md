@@ -17,9 +17,7 @@ The we will generate our simple model-, view- and projection-matrix.
 #include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/Camera.h>
 #include <osre/Platform/AbstractWindow.h>
-
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <osre/RenderBackend/glm_common.h>
 
 using namespace ::OSRE;
 using namespace ::OSRE::App;

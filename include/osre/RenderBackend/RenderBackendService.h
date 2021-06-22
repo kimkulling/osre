@@ -28,8 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Pipeline.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Threading/SystemTask.h>
-
-#include <glm/gtc/type_ptr.hpp>
+#include <osre/Common/glm_common.h>
 
 namespace OSRE {
 

@@ -26,9 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/Node.h>
 #include <osre/Scene/SceneCommon.h>
 #include <osre/Scene/TAABB.h>
-
-#include <glm/mat4x4.hpp>
-#include <glm/vec3.hpp>
+#include <osre/Common/glm_common.h>
 
 namespace OSRE {
 namespace Scene {

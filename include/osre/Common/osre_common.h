@@ -38,7 +38,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #include <cppcore/Container/TArray.h>
-#include <glm/glm.hpp>
+#include <osre/Common/glm_common.h>
 #include <emmintrin.h>
 #include <cstdio>
 #include <cstring>

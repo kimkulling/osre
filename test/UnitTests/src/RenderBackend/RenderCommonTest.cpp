@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Shader.h>
 #include <osre/RenderBackend/Mesh.h>
-#include <glm/gtc/matrix_transform.hpp>
+#include <osre/Common/glm_common.h>
 
 namespace OSRE {
 namespace UnitTest {

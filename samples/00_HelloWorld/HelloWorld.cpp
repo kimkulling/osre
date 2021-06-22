@@ -29,9 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/Camera.h>
 #include <osre/Platform/AbstractWindow.h>
-
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <osre/Common/glm_common.h>
 
 using namespace ::OSRE;
 using namespace ::OSRE::App;
