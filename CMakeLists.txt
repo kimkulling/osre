@@ -40,6 +40,10 @@ set( INCLUDE_INSTALL_DIR "osre" CACHE PATH
 set( BIN_INSTALL_DIR "bin" CACHE PATH
     "Path the tool executables are installed to." )
 
+if (UNIX)
+    find_package(wxWidgets REQUIRED COMPONENTS net core base)
+endif (UNIX)
+
 INCLUDE_DIRECTORIES( BEFORE
     include/
     /usr/include/SDL2/
@@ -47,6 +51,7 @@ INCLUDE_DIRECTORIES( BEFORE
     contrib/assimp/include
     contrib/glm/
     contrib/soil/src
+    ${wxWidgets_INCLUDE_DIRS}
     ${CMAKE_HOME_DIRECTORY}/contrib/glew/include
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/include
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/include
