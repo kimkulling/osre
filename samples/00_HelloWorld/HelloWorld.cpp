@@ -85,6 +85,8 @@ protected:
         }
         mKeyboardTransCtrl = AppBase::getTransformController(DefaultControllerType::KeyboardCtrl, m_transformMatrix);
 
+        osre_info(Tag, "Creation finished.");
+
         return true;
     }
 

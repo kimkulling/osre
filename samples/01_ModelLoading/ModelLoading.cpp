@@ -44,10 +44,6 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
 
-// To identify local log entries
-static const c8 *Tag = "ModelLoadingApp";
-
-
 /// The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
     String m_assetFolder;

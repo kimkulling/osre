@@ -26,8 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 
-static const c8 *Tag = "MouseEventListener";
-
 using namespace OSRE::Common;
 using namespace OSRE::Platform;
 
@@ -47,12 +45,18 @@ MouseEventListener::~MouseEventListener() {
     // empty
 }
 
+static void clearCoords(i32 &relX, i32 &relY, i32 &absX, i32 &absY) {
+    relX = relY = 0;
+    absX = absY = 0;
+}
+
 void MouseEventListener::onOSEvent(const Event &osEvent, const EventData *data) {
     MouseButtonEventData *mouseEventData = (MouseButtonEventData *)data;
     mLastX = mAbsX;
     mLastY = mAbsY;
     mAbsX = mouseEventData->m_AbsX;
     mAbsY = mouseEventData->m_AbsY;
+    clearCoords(mRelX, mRelY, mAbsX, mAbsY);
     mRelX = mLastX - mAbsX;
     mRelY = mLastY - mAbsY;
     if (mouseEventData->m_Button == MouseButtonEventData::LeftButton) {
@@ -60,8 +64,7 @@ void MouseEventListener::onOSEvent(const Event &osEvent, const EventData *data) 
             mMouseButtonState.setBit(LeftButton);
         } else {
             mMouseButtonState.clearBit(LeftButton);
-            mAbsX = mAbsY = 0;
-            mRelY = mRelX = 0;
+            clearCoords(mRelX, mRelY, mAbsX, mAbsY);
         }
     }
     
@@ -70,8 +73,7 @@ void MouseEventListener::onOSEvent(const Event &osEvent, const EventData *data) 
             mMouseButtonState.setBit(MiddleButton);
         } else {
             mMouseButtonState.clearBit(MiddleButton);
-            mAbsX = mAbsY = 0;
-            mRelY = mRelX = 0;
+            clearCoords(mRelX, mRelY, mAbsX, mAbsY);
         }
     }
     
@@ -80,8 +82,7 @@ void MouseEventListener::onOSEvent(const Event &osEvent, const EventData *data) 
             mMouseButtonState.setBit(RightButton);
         } else {
             mMouseButtonState.clearBit(RightButton);
-            mAbsX = mAbsY = 0;
-            mRelY = mRelX = 0;
+            clearCoords(mRelX, mRelY, mAbsX, mAbsY);
         }
     }
 }

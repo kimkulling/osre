@@ -68,6 +68,7 @@ public:
 protected:
     bool onCreate() override {
         if (!AppBase::onCreate()) {
+            osre_debug(Tag, "Error while creating.");
             return false;
         }
         AppBase::setWindowsTitle("Instancing sample!");

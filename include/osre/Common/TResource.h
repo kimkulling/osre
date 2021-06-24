@@ -75,9 +75,10 @@ template <class TResType, class TResLoader>
 inline TResource<TResType, TResLoader>::TResource(const String &name, const IO::Uri &uri) :
         Object(name),
         m_state(ResourceState::Uninitialized),
+        m_stats(),
         m_uri(uri),
         m_res(nullptr) {
-    ::memset(&m_stats, 0, sizeof(ResourceStatistics));
+    // empty
 }
 
 template <class TResType, class TResLoader>

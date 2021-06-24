@@ -90,9 +90,7 @@ private:
 
 
 namespace DefaultPipelines {
-
-static const c8 *Pipeline_Default = "pipeline.default";
-
+    extern const c8 *Pipeline_Default;
 }
 
 //-------------------------------------------------------------------------------------------------

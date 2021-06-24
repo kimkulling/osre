@@ -92,8 +92,8 @@ void KeyboardTransformController::update(RenderBackendService *rbSrv) {
 }
 
 MouseTransformController::MouseTransformController(MouseEventListener *listener, TransformMatrixBlock &tmb) :
-        mMouseEventListener(listener),
-        mTransform(tmb) {
+        mTransform(tmb),
+        mMouseEventListener(listener) {
     // empty
 }
 

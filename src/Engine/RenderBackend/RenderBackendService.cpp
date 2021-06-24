@@ -489,6 +489,9 @@ void RenderBackendService::focusLost() {
 void RenderBackendService::syncRenderThread() {
     // Synchronizing event with render back-end
     auto result = m_renderTaskPtr->sendEvent(&OnRenderFrameEvent, nullptr);
+    if(!result) {
+        osre_debug(Tag, "Error while requesting next frame.");
+    }
     m_renderTaskPtr->awaitUpdate();
 }
 
