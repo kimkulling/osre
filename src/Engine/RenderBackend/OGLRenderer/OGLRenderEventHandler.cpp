@@ -179,14 +179,14 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
     activeSurface->getWindowsRect(rect);
     m_oglBackend->setViewport(rect.x1, rect.y1, rect.width, rect.height);
 
-    const String defaultFont(PlatformInterface::getInstance()->getDefaultFontName());
+    const String defaultFont = PlatformInterface::getInstance()->getDefaultFontName();
     IO::Uri fontUri("file://assets/Textures/Fonts/" + defaultFont);
     String root = App::AssetRegistry::getPath("media");
     String path = App::AssetRegistry::resolvePathFromUri(fontUri);
     fontUri.setPath(path);
     m_renderCmdBuffer = new RenderCmdBuffer(m_oglBackend, m_renderCtx, createRendererEvData->m_pipeline);
 
-    bool ok(Profiling::PerformanceCounterRegistry::create());
+    bool ok = Profiling::PerformanceCounterRegistry::create();
     if (!ok) {
         osre_error(Tag, "Error while destroying performance counters.");
         return false;

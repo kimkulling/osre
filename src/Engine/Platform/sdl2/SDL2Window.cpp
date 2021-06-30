@@ -20,7 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <src/Engine/Platform/sdl2/SDL2Window.h>
+#include "src/Engine/Platform/sdl2/SDL2Window.h"
 #include <osre/Common/Logger.h>
 
 #include <SDL.h>
@@ -30,9 +30,9 @@ namespace Platform {
 
 static const c8 *Tag = "SDL2Surface";
 
-SDL2Surface::SDL2Surface( WindowsProperties *props )
-: AbstractWindow( props )
-, m_surface( nullptr ) {
+SDL2Surface::SDL2Surface(WindowsProperties *props) :
+        AbstractWindow(props),
+        m_surface(nullptr) {
     // empty
 }
 
@@ -40,7 +40,7 @@ SDL2Surface::~SDL2Surface( ) {
     // empty
 }
 
-void SDL2Surface::setWindowsTitle( const String &title ) {
+void SDL2Surface::setWindowsTitle(const String &title) {
     if ( nullptr == m_surface ) {
         return;
     }
