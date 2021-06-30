@@ -32,21 +32,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 namespace Platform {
-class AbstractWindow;
+    class AbstractWindow;
 }
 
 namespace Properties {
-class Settings;
+    class Settings;
 }
 
 namespace UI {
-class Widget;
+    class Widget;
 }
 
 namespace Threading {
-class SystemTask;
+    class SystemTask;
 }
 
 namespace RenderBackend {

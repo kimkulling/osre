@@ -591,28 +591,37 @@ struct TVertexCache {
     using CacheType = ::CPPCore::TArray<T>;
     CacheType m_cache;
 
+    /// @brief 
+    /// @param size 
     TVertexCache(size_t size) :
             m_cache(size) {
         // empty
     }
 
+    /// @brief 
     TVertexCache() :
             m_cache() {
         // empty
     }
 
+    ///	@brief
     ~TVertexCache() {
         // empty
     }
 
+    /// @brief 
     void clear() {
         m_cache.clear();
     }
 
+    /// @brief 
+    /// @return 
     bool isEmpty() const {
         return m_cache.isEmpty();
     }
 
+    /// @brief 
+    /// @param newSize 
     void increaseSize(size_t newSize) {
         if (0 == newSize) {
             return;
@@ -620,6 +629,9 @@ struct TVertexCache {
         m_cache.reserve(m_cache.size() + newSize);
     }
 
+    /// @brief 
+    /// @param vertices 
+    /// @param numItems 
     void add(T *vertices, size_t numItems) {
         if (nullptr == vertices || 0 == numItems) {
             return;
@@ -627,14 +639,20 @@ struct TVertexCache {
         m_cache.add(vertices, numItems);
     }
 
+    /// @brief 
+    /// @param vertex 
     void add(const T &vertex) {
         m_cache.add(vertex);
     }
 
+    /// @brief 
+    /// @return 
     size_t numVertices() const {
         return m_cache.size();
     }
 
+    /// @brief 
+    /// @return 
     size_t sizeInBytes() const {
         return m_cache.size() * sizeof(T);
     }
@@ -651,36 +669,50 @@ struct TIndexCache {
 
     CacheType m_cache;
 
+    /// @brief 
+    /// @param size 
     TIndexCache(size_t size) :
             m_cache(size) {
         // empty
     }
 
+    /// @brief 
     TIndexCache() :
             m_cache() {
         // empty
     }
 
+    ///	@brief
     ~TIndexCache() {
         // empty
     }
 
+    ///	@brief
     void clear() {
         m_cache.clear();
     }
 
+    ///	@brief
+    /// @return 
     bool isEmpty() const {
         return m_cache.isEmpty();
     }
 
+    ///	@brief
+    /// @param newSize 
     void increaseSize(size_t newSize) {
         m_cache.reserve(m_cache.size() + newSize);
     }
 
+    ///	@brief
+    /// @param index 
     void add(const T &index) {
         m_cache.add(index);
     }
 
+    /// @brief 
+    /// @param index 
+    /// @param numItems 
     void add(T *index, size_t numItems) {
         if (nullptr == index || 0 == numItems) {
             return;
@@ -688,10 +720,14 @@ struct TIndexCache {
         m_cache.add(index, numItems);
     }
 
+    /// @brief 
+    /// @return 
     size_t numIndices() const {
         return m_cache.size();
     }
 
+    ///	@brief
+    /// @return 
     size_t sizeInBytes() const {
         return m_cache.size() * sizeof(T);
     }

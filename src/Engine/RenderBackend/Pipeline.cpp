@@ -26,10 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-namespace DefaultPipelines {
-    const c8 *Pipeline_Default = "pipeline.default";
-}
-
 namespace Details {
 
 static const c8 *RenderPassNames[] = {

@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/World.h>
 #include <osre/Common/Environment.h>
 #include <osre/Common/TObjPtr.h>
+#include <osre/Common/CommandQueue.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/IOService.h>
 #include <osre/Platform/AbstractPlatformEventQueue.h>
@@ -141,6 +142,7 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         mAppState(State::Uninited),
         m_argParser(argc, argv, supportedArgs, desc),
         m_environment(nullptr),
+        mCommandQueue(nullptr),
         m_settings(nullptr),
         m_platformInterface(nullptr),
         m_timer(nullptr),
@@ -372,6 +374,8 @@ bool AppBase::onCreate() {
         Logger::getInstance()->registerLogStream(stream);
     }
 
+    mCommandQueue = new Common::CommandQueue();
+
     // create the render back-end
     m_rbService = new RenderBackendService();
     m_rbService->setSettings(m_settings, false);
@@ -453,6 +457,12 @@ bool AppBase::onDestroy() {
     AssetRegistry::destroy();
     ServiceProvider::destroy();
 
+    if (!mCommandQueue->isEmpty()) {
+        mCommandQueue->clear();
+    }
+    delete mCommandQueue;
+    mCommandQueue = nullptr;
+
     if (m_platformInterface) {
         Platform::PlatformInterface::destroy();
         m_platformInterface = nullptr;
@@ -483,6 +493,12 @@ static const i64 Conversion2Micro = 1000;
 void AppBase::onUpdate() {
     i64 microsecs = m_timer->getMilliCurrentSeconds() * Conversion2Micro;
     Time dt(microsecs);
+    while (!mCommandQueue->isEmpty()) {
+        Command *cmd = mCommandQueue->dequeue();
+        if (nullptr != cmd) {
+            (*cmd)(nullptr, nullptr);
+        }
+    }
     if (nullptr != m_activeWorld) {
         m_activeWorld->update(dt);
     }

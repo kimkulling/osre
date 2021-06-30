@@ -69,7 +69,7 @@ SET( app_src
 SET( common_inc
     ${HEADER_PATH}/Common/Common.h
     ${HEADER_PATH}/Common/Environment.h
-    ${HEADER_PATH}/Common/TCommand.h
+    ${HEADER_PATH}/Common/CommandQueue.h
     ${HEADER_PATH}/Common/AbstractEventHandler.h
     ${HEADER_PATH}/Common/AbstractProcessor.h
     ${HEADER_PATH}/Common/ArgumentParser.h
@@ -93,6 +93,7 @@ SET( common_inc
 SET( common_src
     Common/ArgumentParser.cpp
     Common/Common.cpp
+    Common/CommandQueue.cpp
     Common/DateTime.cpp
     Common/Event.cpp
     Common/EventTriggerer.cpp

@@ -109,13 +109,17 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
 
     filename = m_root + filename;
     Importer myImporter;
+    osre_debug(Tag, "Start importing " + filename);
     m_scene = myImporter.ReadFile(filename, flags);
     if (nullptr == m_scene) {
+        osre_error(Tag, "Start importing " + filename);
         m_root = "";
         m_absPathWithFile = "";
         return false;
     }
+    osre_debug(Tag, "Importing " + filename + " finished.");
     convertScene();
+    osre_debug(Tag, "Converting " + filename + " finished.");
 
     return true;
 }
@@ -294,26 +298,29 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
                 }
 
                 if (currentMesh->HasBones()) {
+                    Bone *bones = new Bone[currentMesh->mNumBones];
                     for (ui32 l = 0; l < currentMesh->mNumBones; ++l) {
-                        aiBone *currentBone(currentMesh->mBones[l]);
+                        aiBone *currentBone = currentMesh->mBones[l];
                         if (nullptr == currentBone) {
                             osre_debug(Tag, "Invalid bone instance found.");
                             continue;
                         }
 
-                        Bone *bone = new Bone;
-                        bone->m_name = currentBone->mName.C_Str();
-                        copyAiMatrix4(currentBone->mOffsetMatrix, bone->m_offsetMatrix);
+                        Bone &bone = bones[l];
+                        bone.m_name = currentBone->mName.C_Str();
+                        copyAiMatrix4(currentBone->mOffsetMatrix, bone.m_offsetMatrix);
+                        VertexWeight *wArray = new VertexWeight[currentBone->mNumWeights];
+                        
                         for (ui32 weightIdx = 0; weightIdx < currentBone->mNumWeights; ++weightIdx) {
                             aiVertexWeight &aiVW = currentBone->mWeights[l];
-                            VertexWeight *w = new VertexWeight;
-                            w->m_vertexIdx = aiVW.mVertexId;
-                            w->m_vertexWeight = aiVW.mWeight;
-                            bone->m_vertexWeights.add(w);
+                            VertexWeight &w = wArray[weightIdx];
+                            w.m_vertexIdx = aiVW.mVertexId;
+                            w.m_vertexWeight = aiVW.mWeight;
                         }
-                        const aiNode *node = m_scene->mRootNode->FindNode(bone->m_name.c_str());
+                        bone.m_vertexWeights.add(wArray, currentBone->mNumWeights);
+                        const aiNode *node = m_scene->mRootNode->FindNode(bone.m_name.c_str());
                         if (nullptr != node) {
-                            m_bone2NodeMap[bone->m_name.c_str()] = node;
+                            m_bone2NodeMap[bone.m_name.c_str()] = node;
                         }
                     }
                 }

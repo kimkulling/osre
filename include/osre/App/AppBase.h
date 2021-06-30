@@ -35,6 +35,7 @@ namespace Common {
     class ArgumentParser;
     class Environment;
     class Ids;
+    class CommandQueue;
 }
 
 namespace Scene {
@@ -288,6 +289,7 @@ private:
     State mAppState;
     Common::ArgumentParser m_argParser;
     Common::Environment* m_environment;
+    Common::CommandQueue *mCommandQueue;
     Properties::Settings *m_settings;
     Platform::PlatformInterface *m_platformInterface;
     Platform::AbstractTimer *m_timer;
