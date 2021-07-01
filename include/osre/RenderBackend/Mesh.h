@@ -22,8 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Common/glm_common.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -33,17 +33,27 @@ namespace RenderBackend {
 struct OSRE_EXPORT VertexWeight {
     ui32 m_vertexIdx;
     f32 m_vertexWeight;
+
+    bool operator == ( const VertexWeight &rhs ) {
+        return (m_vertexIdx == rhs.m_vertexIdx && m_vertexWeight == rhs.m_vertexWeight);
+    }
+
+    bool operator != (const VertexWeight &rhs) {
+        return !(*this == rhs);
+    }
 };
 
 struct OSRE_EXPORT Bone {
-    using VertexWeightArray = CPPCore::TArray<VertexWeight *>;
+    using VertexWeightArray = CPPCore::TArray<VertexWeight>;
 
     String m_name;
     VertexWeightArray m_vertexWeights;
     glm::mat4 m_offsetMatrix;
 
     Bone() :
-            m_name(), m_vertexWeights(), m_offsetMatrix() {
+            m_name(),
+            m_vertexWeights(),
+            m_offsetMatrix() {
         // empty
     }
 };
@@ -65,8 +75,8 @@ public:
     static Mesh *create(size_t numGeo, VertexType type);
     static void destroy(Mesh **geo);
     static size_t getVertexSize(VertexType vertextype);
-    
-    template<class T>
+
+    template <class T>
     void attachVertices(T *vertices, size_t size) {
         if (m_vb == nullptr) {
             m_vb = BufferData::alloc(BufferType::VertexBuffer, size, BufferAccessType::ReadWrite);

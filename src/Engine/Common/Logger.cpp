@@ -113,7 +113,7 @@ void Logger::trace(const String &domain, const String &msg) {
 }
 
 void Logger::debug(const String &domain, const String &msg) {
-    if (getVerboseMode() == VerboseMode::Verbose) {
+    if (getVerboseMode() == VerboseMode::Debug || getVerboseMode() == VerboseMode::Trace) {
         String logMsg;
         logMsg += "Dbg:  ";
         logMsg += msg;
@@ -124,14 +124,16 @@ void Logger::debug(const String &domain, const String &msg) {
 }
 
 void Logger::info(const String &domain, const String &msg) {
-    String logMsg;
+    if (getVerboseMode() == VerboseMode::Verbose || getVerboseMode() == VerboseMode::Debug || getVerboseMode() == VerboseMode::Trace) {
+        String logMsg;
 
-    logMsg += "Info: ";
-    logMsg += msg;
+        logMsg += "Info: ";
+        logMsg += msg;
 
-    appendDomain(domain, logMsg);
+        appendDomain(domain, logMsg);
 
-    print(logMsg);
+        print(logMsg);
+    }
 }
 
 void Logger::print(const String &msg, PrintMode mode) {
