@@ -37,15 +37,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #    include <src/Engine/Platform/sdl2/SDL2Initializer.h>
 #    include <src/Engine/Platform/sdl2/SDL2OGLRenderContext.h>
 #    include <src/Engine/Platform/sdl2/SDL2SystemInfo.h>
-//#    include <src/Engine/Platform/sdl2/SDL2ThreadFactory.h>
 #    include <src/Engine/Platform/sdl2/SDL2Timer.h>
 #    include <src/Engine/Platform/sdl2/SDL2Window.h>
 #endif
 
 namespace OSRE {
 namespace Platform {
-
-static const c8 *Tag = "PlatformPluginFactory";
 
 bool PlatformPluginFactory::init() {
 #ifndef OSRE_WINDOWS
@@ -68,7 +65,7 @@ AbstractPlatformEventQueue *PlatformPluginFactory::createPlatformEventHandler(Ab
     AbstractPlatformEventQueue *eventHandler(nullptr);
 #ifdef OSRE_WINDOWS
     Win32Window *win32Surface = static_cast<Win32Window *>(rootSurface);
-    if (win32Surface) {
+    if (nullptr != win32Surface) {
         eventHandler = new Win32EventQueue(win32Surface);
         Win32EventQueue::registerEventQueue((Win32EventQueue *)eventHandler, win32Surface->getHWnd());
     }
@@ -81,12 +78,12 @@ AbstractPlatformEventQueue *PlatformPluginFactory::createPlatformEventHandler(Ab
     return eventHandler;
 }
 
-AbstractWindow *PlatformPluginFactory::createSurface(WindowsProperties *pProps) {
+AbstractWindow *PlatformPluginFactory::createSurface(WindowsProperties *props) {
     AbstractWindow *surface(nullptr);
 #ifdef OSRE_WINDOWS
-    surface = new Win32Window(pProps);
+    surface = new Win32Window(props);
 #else
-    surface = new SDL2Surface(pProps);
+    surface = new SDL2Surface(props);
 #endif // OSRE_WINDOWS
     OSRE_ASSERT(nullptr != surface);
 
