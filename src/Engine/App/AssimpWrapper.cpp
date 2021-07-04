@@ -265,7 +265,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
 
             for (ui32 k = 0; k < currentMesh->mNumVertices; ++k) {
                 if (currentMesh->HasPositions()) {
-                    aiVector3D &vec3 = currentMesh->mVertices[k];
+                    const aiVector3D &vec3 = currentMesh->mVertices[k];
                     vertices[vertexOffset].position.x = vec3.x;
                     vertices[vertexOffset].position.y = vec3.y;
                     vertices[vertexOffset].position.z = vec3.z;
@@ -274,14 +274,14 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
                 }
 
                 if (currentMesh->HasNormals()) {
-                    aiVector3D &normal = currentMesh->mNormals[k];
+                    const aiVector3D &normal = currentMesh->mNormals[k];
                     vertices[vertexOffset].normal.x = normal.x;
                     vertices[vertexOffset].normal.y = normal.y;
                     vertices[vertexOffset].normal.z = normal.z;
                 }
 
                 if (currentMesh->HasVertexColors(0)) {
-                    aiColor4D &diffuse = currentMesh->mColors[0][k];
+                    const aiColor4D &diffuse = currentMesh->mColors[0][k];
                     vertices[vertexOffset].color0.r = diffuse.r;
                     vertices[vertexOffset].color0.g = diffuse.g;
                     vertices[vertexOffset].color0.b = diffuse.b;
@@ -417,7 +417,7 @@ static void setTexture(const String &resolvedPath, const aiString &texPath, Text
     String texname;
     texname += "file://";
     texname += resolvedPath;
-    String temp(texPath.C_Str()), temp1;
+    String temp = texPath.C_Str(), temp1;
     IO::Uri::normalizePath(temp, '\\', temp1);
     String::size_type pos = temp1.find("./");
     if (String::npos != pos) {

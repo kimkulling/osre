@@ -75,6 +75,8 @@ bool setupTextures(Material *mat, OGLRenderBackend *rb, TArray<OGLTexture *> &te
             OGLTexture *oglTexture = rb->createTexture(tex->m_textureName, tex);
             if (nullptr != oglTexture) {
                 textures.add(oglTexture);
+            } else {
+                textures.add(rb->createDefaultTexture(tex->m_targetType, tex->mPixelFormat, tex->m_width, tex->m_height));
             }
         }
     }

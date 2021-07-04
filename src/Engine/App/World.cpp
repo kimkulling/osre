@@ -76,10 +76,6 @@ Scene::Camera *World::addCamera(const String &name) {
     return m_activeCamera;
 }
 
-size_t World::getNumCameras() const {
-    return m_views.size();
-}
-
 Camera *World::getCameraAt(ui32 i) const {
     if (i >= m_views.size()) {
         return nullptr;
@@ -169,9 +165,6 @@ void World::setSceneRoot(Node *root ) {
     mRoot = root;
 }
 
-Node *World::getRootNode() const {
-    return mRoot;
-}
 
 void World::update(Time dt) {
     if (nullptr != m_activeCamera) {
@@ -205,9 +198,6 @@ void World::draw(RenderBackendService *rbSrv) {
     rbSrv->endPass();
 }
 
-RenderMode World::getRenderMode() const {
-    return m_renderMode;
-}
 
 } // Namespace App
 } // namespace OSRE

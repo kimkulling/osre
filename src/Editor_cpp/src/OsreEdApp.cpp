@@ -44,6 +44,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Scene/MeshBuilder.h>
+#include <osre/Scene/AnimatorBase.h>
+#include <osre/Common/CommandQueue.h>
 
 #ifdef OSRE_WINDOWS
 #   include "Engine/Platform/win32/Win32EventQueue.h"
@@ -85,6 +87,69 @@ static const ui32 VerticalMargin = 2;
 #endif // OSRE_WINDOWS
 
 static const c8 *Tag = "OsreApp";
+
+struct KeyMove {
+    TransformCommandType mTransformCommandType;
+    RenderBackend::TransformMatrixBlock &mTransform;
+
+    KeyMove(TransformCommandType cmd, RenderBackend::TransformMatrixBlock &tmb) :
+            mTransformCommandType(cmd),
+            mTransform(tmb) {
+        // empty
+    }
+
+    void execute() {
+        glm::mat4 rot(1.0);
+        if (mTransformCommandType == TransformCommandType::RotateXCommandNegative) {
+            mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
+        }
+
+        if (mTransformCommandType == TransformCommandType::RotateXCommandPositive) {
+                mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
+            }
+
+        if (mTransformCommandType == TransformCommandType::RotateYCommandPositive) {
+            mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
+        }
+
+        if (mTransformCommandType == TransformCommandType::RotateYCommandNegative) {
+            mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
+        }
+
+        /*if (mApp->isKeyPressed(Platform::KEY_Q)) {
+            mTransform.m_model *= glm::scale(rot, glm::vec3(1.01f, 1.01, 1.01f));
+        }
+
+        if (mApp->isKeyPressed(Platform::KEY_E)) {
+            mTransform.m_model *= glm::scale(rot, glm::vec3(0.99f, 0.99f, 0.99f));
+        }*/
+    }
+};
+
+static TransformCommandType getKeyBinding(Key key) {
+    switch (key) {
+        case Platform::KEY_A:
+            return TransformCommandType::RotateXCommandPositive;
+        case Platform::KEY_D:
+            return TransformCommandType::RotateXCommandNegative;
+        case Platform::KEY_W:
+            return TransformCommandType::RotateYCommandPositive;
+        case Platform::KEY_S:
+            return TransformCommandType::RotateYCommandNegative;
+        case Platform::KEY_Q:
+            return TransformCommandType::RotateZCommandPositive;
+        case Platform::KEY_E:
+            return TransformCommandType::RotateZCommandNegative;
+        case Platform::KEY_PLUS:
+            return TransformCommandType::ScaleInCommand;
+        case Platform::KEY_MINUS:
+            return TransformCommandType::ScaleOutCommand;
+        default:
+            break;
+    }
+
+    return TransformCommandType::InvalidCommand;
+}
 
 static void createTitleString(const SceneData &sd, String &titleString) {
     titleString.clear();

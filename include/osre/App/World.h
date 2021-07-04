@@ -93,7 +93,12 @@ public:
     /// @return 
     Entity *getEntityByName( const String &name ) const;
 
+    ///	@brief
+    /// @param root 
     void setSceneRoot(Scene::Node *root);
+    
+    /// @brief 
+    /// @return 
     Scene::Node *getRootNode() const;
 
     /// @brief  Will update the world.
@@ -121,6 +126,18 @@ private:
     Common::Ids m_ids;
     RenderMode m_renderMode;
 };
+
+inline size_t World::getNumCameras() const {
+    return m_views.size();
+}
+
+inline Scene::Node *World::getRootNode() const {
+    return mRoot;
+}
+
+inline RenderMode World::getRenderMode() const {
+    return m_renderMode;
+}
 
 inline const Common::Ids &World::getIds() const {
     return m_ids;

@@ -23,10 +23,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/Object.h>
+#include <osre/Common/glm_common.h>
 #include <osre/Scene/Node.h>
 #include <osre/Scene/SceneCommon.h>
 #include <osre/Scene/TAABB.h>
-#include <osre/Common/glm_common.h>
 
 namespace OSRE {
 namespace Scene {
@@ -63,15 +63,20 @@ public:
     /// @param  farPlane    [in] The distance to the far plane of the view frustum.
     void setProjectionParameters(f32 fov, f32 w, f32 h, f32 nearPlane, f32 farPlane);
 
+    ///	@brief
+    /// @param cm 
     void setCameraModel(CameraModel cm);
 
+    /// @brief  Will return the camera model.
+    /// @return The current camera model.
     CameraModel getCameraModel() const;
 
     /// @brief  Will update the camera node once per frame.
     /// @param  dt  [in] The time tick diff since the last tick.
     void update(Time dt) override;
 
-    /// @brief
+    /// @brief The draw callback.
+    /// @param renderBackendSrv     [in] The RenderBackend-Server.
     void draw(RenderBackend::RenderBackendService *renderBackendSrv);
 
     /// @brief

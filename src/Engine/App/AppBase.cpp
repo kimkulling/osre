@@ -55,46 +55,44 @@ using namespace ::OSRE::IO;
 
 static const c8 *Tag = "AppBase";
 
-KeyboardTransformController::KeyboardTransformController(AppBase *app, TransformMatrixBlock &tmb) :
-        mTransform(tmb),
-        mApp(app) {
+KeyboardTransformController::KeyboardTransformController(TransformMatrixBlock &tmb) :
+        mTransform(tmb) {
     // empty
 }
 
 KeyboardTransformController::~KeyboardTransformController() {
-    mApp = nullptr;
+    // empty
 }
 
-void KeyboardTransformController::update(RenderBackendService *rbSrv) {
+void KeyboardTransformController::update(TransformCommandType cmdType) {
     glm::mat4 rot(1.0);
-    if (mApp->isKeyPressed(Platform::KEY_A)) {
+    if (cmdType == Scene::TransformCommandType::RotateXCommandPositive) {
         mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
     }
 
-    if (mApp->isKeyPressed(Platform::KEY_D)) {
+    if (cmdType == Scene::TransformCommandType::RotateXCommandNegative) {
         mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
     }
 
-    if (mApp->isKeyPressed(Platform::KEY_W)) {
+    if (cmdType == Scene::TransformCommandType::RotateYCommandPositive) {
         mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
     }
 
-    if (mApp->isKeyPressed(Platform::KEY_S)) {
+    if (cmdType == Scene::TransformCommandType::RotateYCommandNegative) {
         mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
     }
 
-    if (mApp->isKeyPressed(Platform::KEY_Q)) {
-        mTransform.m_model *= glm::scale(rot, glm::vec3(1.01f, 1.01, 1.01f));
+    /*if (mApp->isKeyPressed(Platform::KEY_Q)) {
+        mTransform.m_model *= glm::scale(rot, glm::vec3(1.1f, 1.1, 1.1f));
     }
 
     if (mApp->isKeyPressed(Platform::KEY_E)) {
-        mTransform.m_model *= glm::scale(rot, glm::vec3(0.99f, 0.99f, 0.99f));
-    }
+        mTransform.m_model *= glm::scale(rot, glm::vec3(0.9f, 0.9f, 0.9f));
+    }*/
 }
 
-MouseTransformController::MouseTransformController(MouseEventListener *listener, TransformMatrixBlock &tmb) :
-        mTransform(tmb),
-        mMouseEventListener(listener) {
+MouseTransformController::MouseTransformController(TransformMatrixBlock &tmb) :
+        mTransform(tmb) {
     // empty
 }
 
@@ -102,41 +100,10 @@ MouseTransformController::~MouseTransformController() {
     // empty
 }
 
-void MouseTransformController::update( RenderBackendService *rbSrv ) {
+void MouseTransformController::update(TransformCommandType cmdType) {
     glm::mat4 rot(1.0);    
 }
 
-class KeyboardEventListener : public OSEventListener {
-public:
-    KeyboardEventListener() :
-            OSEventListener("App/KeyboardEventListener") {
-        clearKeyMap();
-    }
-
-    ~KeyboardEventListener() override {
-        // empty
-    }
-
-    void onOSEvent(const Event &osEvent, const EventData *data) override {
-        auto keyData = (KeyboardButtonEventData *)data;
-        if (osEvent == KeyboardButtonDownEvent) {
-            mKeymap[keyData->m_key] = 1;
-        } else {
-            mKeymap[keyData->m_key] = 0;
-        }
-    }
-
-    bool isKeyPressed(Key key) const {
-        return mKeymap[key] == 1;
-    }
-
-    void clearKeyMap() {
-        ::memset(mKeymap, 0, sizeof(char) * KEY_LAST);
-    }
-
-private:
-    char mKeymap[KEY_LAST];
-};
 
 AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
         mAppState(State::Uninited),
@@ -313,9 +280,9 @@ RenderBackendService *AppBase::getRenderBackendService() const {
 AnimationControllerBase *AppBase::getTransformController(DefaultControllerType type, TransformMatrixBlock &tmb) {
     switch (type) {
         case DefaultControllerType::KeyboardCtrl:
-            return new KeyboardTransformController(this, tmb);
+            return new KeyboardTransformController(tmb);
         case DefaultControllerType::MouseCtrl:
-            return new MouseTransformController(this->getMouseEventListener(), tmb);
+            return new MouseTransformController(tmb);
         default:
             break;
     }
@@ -492,7 +459,7 @@ static const i64 Conversion2Micro = 1000;
 
 void AppBase::onUpdate() {
     i64 microsecs = m_timer->getMilliCurrentSeconds() * Conversion2Micro;
-    Time dt(microsecs);
+    Time dt(microsecs);    
     while (!mCommandQueue->isEmpty()) {
         Command *cmd = mCommandQueue->dequeue();
         if (nullptr != cmd) {

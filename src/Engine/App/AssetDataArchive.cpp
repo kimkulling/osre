@@ -62,11 +62,11 @@ AssetDataArchive::~AssetDataArchive() {
 
 World *AssetDataArchive::load( const IO::Uri &fileLocation ) {
     if (fileLocation.isEmpty()) {
-	osre_debug( Tag, "File location is empty.");
+	    osre_debug( Tag, "File location is empty.");
         return nullptr;
     }
 
-    IO::Stream *file = IO::IOService::getInstance()->openStream(fileLocation, IO::Stream::AccessMode::ReadAccess);
+    IO::Stream *file = IOService::getInstance()->openStream(fileLocation, Stream::AccessMode::ReadAccess);
     if (nullptr == file) {
         return nullptr;
     }

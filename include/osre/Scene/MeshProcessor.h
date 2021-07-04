@@ -43,7 +43,7 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT MeshProcessor : public Common::AbstractProcessor {
 public:
-    using GeoArray = CPPCore::TArray<RenderBackend::Mesh*>;
+    using MeshArray = CPPCore::TArray<RenderBackend::Mesh*>;
 
     MeshProcessor();
     ~MeshProcessor();
@@ -55,7 +55,7 @@ private:
     void handleGeometry( RenderBackend::Mesh *geo );
 
 private:
-    GeoArray m_geoArray;
+    MeshArray m_geoArray;
     Node::AABB m_aabb;
     i32 m_dirty;
 };

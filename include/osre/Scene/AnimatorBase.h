@@ -27,9 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 namespace RenderBackend {
-
-class RenderBackendService;
-
+    class RenderBackendService;
 }
 
 namespace Scene {
@@ -40,6 +38,21 @@ struct AnimationBase {
         out = a + ( b - a ) * d;
     }
 };
+
+enum class TransformCommandType {
+    RotateXCommandPositive,
+    RotateXCommandNegative,
+    RotateYCommandPositive,
+    RotateYCommandNegative,
+    RotateZCommandPositive,
+    RotateZCommandNegative,
+    ScaleInCommand,
+    ScaleOutCommand,
+    TransformCommand,
+    MaxCommands,
+    InvalidCommand
+};
+
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -53,7 +66,7 @@ public:
     virtual ~AnimationControllerBase() = default;
 
     /// @brief  The update, override this for your own proposes.
-    virtual void update(RenderBackend::RenderBackendService *rbSrv) = 0;
+    virtual void update(TransformCommandType cmdType) = 0;
 
     AnimationControllerBase(const AnimationControllerBase &) = delete;
     AnimationControllerBase &operator=(const AnimationControllerBase &) = delete;

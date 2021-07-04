@@ -219,6 +219,8 @@ public:
 
     void syncRenderThread();
 
+    Texture *getDefaultTexture() const;
+
 protected:
     /// @brief  The open callback.
     bool onOpen() override;

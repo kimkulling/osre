@@ -726,6 +726,30 @@ OGLTexture *OGLRenderBackend::createEmptyTexture(const String &name, TextureTarg
     return tex;
 }
 
+static const c8 *DefaultTextureName = "default_tex";
+
+OGLTexture *OGLRenderBackend::createDefaultTexture(TextureTargetType target, PixelFormatType pixelFormat, ui32 width, ui32 height) {
+    OGLTexture *glTex = createEmptyTexture(DefaultTextureName, target, pixelFormat, width, height, 1);
+    c8 *imageData = new c8[width * height];
+    int value;
+    size_t offset = 0;
+    for (int row = 0; row < 16; row++) {
+        for (int col = 0; col < 16; col++) {
+            // Each cell is 8x8, value is 0 or 255 (black or white)
+            value = (((row & 0x8) == 0) ^ ((col & 0x8) == 0)) * 255;
+            imageData[offset] = (GLubyte)value;
+            offset++;
+        }
+    }
+
+    glTexImage2D(glTex->m_target, 0, GL_RGB, width, height, 0, OGLEnum::getGLTextureFormat(pixelFormat), GL_UNSIGNED_BYTE, imageData);
+    glGenerateMipmap(glTex->m_target);
+    glTexParameterf(glTex->m_target, GL_TEXTURE_MAX_ANISOTROPY_EXT, mOglCapabilities.mMaxAniso);
+    glBindTexture(glTex->m_target, 0);
+
+    return glTex;
+}
+
 void OGLRenderBackend::updateTexture(OGLTexture *oglTextue, ui32 offsetX, ui32 offsetY, c8 *data, size_t size) {
     if (nullptr == oglTextue) {
         osre_error(Tag, "Pointer to texture is a nullptr.");
@@ -745,7 +769,7 @@ OGLTexture *OGLRenderBackend::createTexture(const String &name, Texture *tex) {
         return nullptr;
     }
 
-    OGLTexture *glTex(findTexture(name));
+    OGLTexture *glTex = findTexture(name);
     if (nullptr != glTex) {
         return glTex;
     }

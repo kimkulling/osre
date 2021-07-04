@@ -22,15 +22,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Common/TResource.h>
 #include <osre/Common/TResourceCache.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Common/TResource.h>
 
 namespace OSRE {
 namespace App {
 
-using TextureResourceFactory = Common::TResourceFactory <RenderBackend::TextureResource> ;
-using TextureResourceCache   = Common::TResourceCache<TextureResourceFactory, RenderBackend::TextureResource>;
+using TextureResourceFactory = Common::TResourceFactory<RenderBackend::TextureResource>;
+using TextureResourceCache = Common::TResourceCache<TextureResourceFactory, RenderBackend::TextureResource>;
 
 class ResourceCacheService {
 public:
@@ -42,20 +42,17 @@ private:
     TextureResourceCache *m_texResCache;
 };
 
-inline
-ResourceCacheService::ResourceCacheService()
-: m_texResCache( new TextureResourceCache ) {
+inline ResourceCacheService::ResourceCacheService() :
+        m_texResCache(new TextureResourceCache) {
     //
 }
 
-inline
-ResourceCacheService::~ResourceCacheService() {
+inline ResourceCacheService::~ResourceCacheService() {
     delete m_texResCache;
     m_texResCache = nullptr;
 }
 
-inline
-TextureResourceCache *ResourceCacheService::getTextureResourceCache() const {
+inline TextureResourceCache *ResourceCacheService::getTextureResourceCache() const {
     return m_texResCache;
 }
 

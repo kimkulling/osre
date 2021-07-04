@@ -24,9 +24,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/App/AppCommon.h>
 #include <osre/Platform/PlatformCommon.h>
+#include <osre/Platform/PlatformInterface.h>
 #include <osre/Common/ArgumentParser.h>
 #include <osre/Platform/KeyTypes.h>
 #include <osre/Scene/AnimatorBase.h>
+
+#include <cppcore/Container/TQueue.h>
 
 namespace OSRE {
 
@@ -67,6 +70,39 @@ enum class DefaultControllerType {
 };
 
 
+class KeyboardEventListener : public Platform::OSEventListener {
+public:
+    KeyboardEventListener() :
+            OSEventListener("App/KeyboardEventListener") {
+        clearKeyMap();
+    }
+
+    ~KeyboardEventListener() override {
+        // empty
+    }
+
+    void onOSEvent(const Common::Event &osEvent, const Common::EventData *data) override {
+        auto keyData = (Platform::KeyboardButtonEventData *)data;
+        if (osEvent == Platform::KeyboardButtonDownEvent) {
+            mKeymap[keyData->m_key] = 1;
+        } else {
+            mKeymap[keyData->m_key] = 0;
+        }
+    }
+
+    bool isKeyPressed(Platform::Key key) const {
+        return mKeymap[key] == 1;
+    }
+
+    void clearKeyMap() {
+        ::memset(mKeymap, 0, sizeof(char) * Platform::KEY_LAST);
+    }
+
+private:
+    char mKeymap[Platform::KEY_LAST];
+};
+
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -74,24 +110,22 @@ enum class DefaultControllerType {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT KeyboardTransformController : public Scene::AnimationControllerBase {
 public:
-    KeyboardTransformController(AppBase *app, RenderBackend::TransformMatrixBlock &tmb);
+    KeyboardTransformController(RenderBackend::TransformMatrixBlock &tmb);
     ~KeyboardTransformController() override;
-    void update(RenderBackend::RenderBackendService *rbSrv) override;
+    void update(Scene::TransformCommandType cmdType) override;
 
 private:
     RenderBackend::TransformMatrixBlock &mTransform;
-    AppBase *mApp;
 };
 
 class OSRE_EXPORT MouseTransformController : public Scene::AnimationControllerBase {
 public:
-    MouseTransformController(MouseEventListener *listener, RenderBackend::TransformMatrixBlock &tmb);
+    MouseTransformController(RenderBackend::TransformMatrixBlock &tmb);
     ~MouseTransformController() override;
-    void update(RenderBackend::RenderBackendService *rbSrv) override;
+    void update(Scene::TransformCommandType cmdType) override;
 
 private:
     RenderBackend::TransformMatrixBlock &mTransform;
-    MouseEventListener *mMouseEventListener;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -259,6 +293,15 @@ public:
     MouseEventListener *getMouseEventListener() const {
         return m_mouseEvListener;
     }
+
+    KeyboardEventListener *getKeyboardEventListener() const {
+        return m_keyboardEvListener;
+    }
+
+    Common::CommandQueue *getCommandQueue() const {
+        return mCommandQueue;
+    }
+
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
     /// @return true if successful,  false if not.
