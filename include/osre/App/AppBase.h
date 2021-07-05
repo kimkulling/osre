@@ -73,7 +73,8 @@ enum class DefaultControllerType {
 class KeyboardEventListener : public Platform::OSEventListener {
 public:
     KeyboardEventListener() :
-            OSEventListener("App/KeyboardEventListener") {
+            OSEventListener("App/KeyboardEventListener"),
+            mLast('\0') {
         clearKeyMap();
     }
 
@@ -85,8 +86,10 @@ public:
         auto keyData = (Platform::KeyboardButtonEventData *)data;
         if (osEvent == Platform::KeyboardButtonDownEvent) {
             mKeymap[keyData->m_key] = 1;
+            mLast = keyData->m_key;
         } else {
             mKeymap[keyData->m_key] = 0;
+            mLast = '\0';
         }
     }
 
@@ -94,11 +97,16 @@ public:
         return mKeymap[key] == 1;
     }
 
+    char getLastKey() const {
+        return mLast; 
+    }
+
     void clearKeyMap() {
         ::memset(mKeymap, 0, sizeof(char) * Platform::KEY_LAST);
     }
 
 private:
+    char mLast;
     char mKeymap[Platform::KEY_LAST];
 };
 

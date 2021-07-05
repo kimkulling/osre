@@ -92,7 +92,8 @@ protected:
 
     void onUpdate() override {
         RenderBackendService *rbSrv = getRenderBackendService();
-        mKeyboardTransCtrl->update(rbSrv);
+
+        mKeyboardTransCtrl->update(AppBase::getKeyboardEventListener()->getLastKey());
 
         rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
