@@ -89,69 +89,6 @@ static const ui32 VerticalMargin = 2;
 
 static const c8 *Tag = "OsreApp";
 
-struct KeyMove {
-    TransformCommandType mTransformCommandType;
-    RenderBackend::TransformMatrixBlock &mTransform;
-
-    KeyMove(TransformCommandType cmd, RenderBackend::TransformMatrixBlock &tmb) :
-            mTransformCommandType(cmd),
-            mTransform(tmb) {
-        // empty
-    }
-
-    void execute() {
-        glm::mat4 rot(1.0);
-        if (mTransformCommandType == TransformCommandType::RotateXCommandNegative) {
-            mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
-        }
-
-        if (mTransformCommandType == TransformCommandType::RotateXCommandPositive) {
-                mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
-            }
-
-        if (mTransformCommandType == TransformCommandType::RotateYCommandPositive) {
-            mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
-        }
-
-        if (mTransformCommandType == TransformCommandType::RotateYCommandNegative) {
-            mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
-        }
-
-        /*if (mApp->isKeyPressed(Platform::KEY_Q)) {
-            mTransform.m_model *= glm::scale(rot, glm::vec3(1.01f, 1.01, 1.01f));
-        }
-
-        if (mApp->isKeyPressed(Platform::KEY_E)) {
-            mTransform.m_model *= glm::scale(rot, glm::vec3(0.99f, 0.99f, 0.99f));
-        }*/
-    }
-};
-
-static TransformCommandType getKeyBinding(Key key) {
-    switch (key) {
-        case Platform::KEY_A:
-            return TransformCommandType::RotateXCommandPositive;
-        case Platform::KEY_D:
-            return TransformCommandType::RotateXCommandNegative;
-        case Platform::KEY_W:
-            return TransformCommandType::RotateYCommandPositive;
-        case Platform::KEY_S:
-            return TransformCommandType::RotateYCommandNegative;
-        case Platform::KEY_Q:
-            return TransformCommandType::RotateZCommandPositive;
-        case Platform::KEY_E:
-            return TransformCommandType::RotateZCommandNegative;
-        case Platform::KEY_PLUS:
-            return TransformCommandType::ScaleInCommand;
-        case Platform::KEY_MINUS:
-            return TransformCommandType::ScaleOutCommand;
-        default:
-            break;
-    }
-
-    return TransformCommandType::InvalidCommand;
-}
-
 static void createTitleString(const SceneData &sd, String &titleString) {
     titleString.clear();
     titleString += "OSRE ED!";
@@ -327,7 +264,7 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         mResolution(),
         mMesh2D(nullptr),
         mPythonInterface(nullptr),
-        mMouseController(nullptr) {
+        mTransformController(nullptr) {
     // empty
 }
 
@@ -398,7 +335,7 @@ bool OsreEdApp::onCreate() {
                  
     mPythonInterface->runScript(src);
 
-    mMouseController = AppBase::getTransformController(DefaultControllerType::MouseCtrl, m_transformMatrix);
+    mTransformController = AppBase::getTransformController(m_transformMatrix);
 
 #ifdef _DEBUG
     Logger::getInstance()->setVerboseMode(Logger::VerboseMode::Debug);
@@ -560,7 +497,8 @@ void OsreEdApp::setStatusBarText(const String &mode, const String &model, i32 nu
 
 
 void OsreEdApp::onUpdate() {
-    mMouseController->update(getRenderBackendService());
+    Key key = AppBase::getKeyboardEventListener()->getLastKey();
+    mTransformController->update(TransformController::getKeyBinding(key));
     glm::mat4 rot(1.0);
     MouseEventListener *listener = AppBase::getMouseEventListener();
     if (listener->leftButttonPressed()) {
@@ -569,20 +507,6 @@ void OsreEdApp::onUpdate() {
         char buffer[512];
         sprintf(buffer, "x: %d, y:%d", x, y);
         osre_info(Tag, "Pressed! "  + String(buffer));
-    }
-    if (AppBase::isKeyPressed(Platform::KEY_A)) {
-        m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
-    }
-    if (AppBase::isKeyPressed(Platform::KEY_S)) {
-        m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
-    }
-
-    if (AppBase::isKeyPressed(Platform::KEY_W)) {
-        m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
-    }
-
-    if (AppBase::isKeyPressed(Platform::KEY_D)) {
-        m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
     }
     RenderBackendService *rbSrv = getRenderBackendService();
 
@@ -605,7 +529,7 @@ void OsreEdApp::onRender() {
 }
 
 bool OsreEdApp::onDestroy() {
-    mMouseController = nullptr;
+    mTransformController = nullptr;
 
     delete mPythonInterface;
     mPythonInterface = nullptr;

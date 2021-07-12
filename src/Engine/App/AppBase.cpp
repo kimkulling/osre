@@ -55,16 +55,41 @@ using namespace ::OSRE::IO;
 
 static const c8 *Tag = "AppBase";
 
-KeyboardTransformController::KeyboardTransformController(TransformMatrixBlock &tmb) :
+TransformController::TransformController(TransformMatrixBlock &tmb) :
         mTransform(tmb) {
     // empty
 }
 
-KeyboardTransformController::~KeyboardTransformController() {
+TransformController::~TransformController() {
     // empty
 }
 
-void KeyboardTransformController::update(TransformCommandType cmdType) {
+TransformCommandType TransformController::getKeyBinding(Key key) {
+    switch (key) {
+        case Platform::KEY_A:
+            return TransformCommandType::RotateXCommandPositive;
+        case Platform::KEY_D:
+            return TransformCommandType::RotateXCommandNegative;
+        case Platform::KEY_W:
+            return TransformCommandType::RotateYCommandPositive;
+        case Platform::KEY_S:
+            return TransformCommandType::RotateYCommandNegative;
+        case Platform::KEY_Q:
+            return TransformCommandType::RotateZCommandPositive;
+        case Platform::KEY_E:
+            return TransformCommandType::RotateZCommandNegative;
+        case Platform::KEY_PLUS:
+            return TransformCommandType::ScaleInCommand;
+        case Platform::KEY_MINUS:
+            return TransformCommandType::ScaleOutCommand;
+        default:
+            break;
+    }
+
+    return TransformCommandType::InvalidCommand;
+}
+
+void TransformController::update(TransformCommandType cmdType) {
     glm::mat4 rot(1.0);
     if (cmdType == Scene::TransformCommandType::RotateXCommandPositive) {
         mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
@@ -82,28 +107,14 @@ void KeyboardTransformController::update(TransformCommandType cmdType) {
         mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
     }
 
-    /*if (mApp->isKeyPressed(Platform::KEY_Q)) {
-        mTransform.m_model *= glm::scale(rot, glm::vec3(1.1f, 1.1, 1.1f));
+    if (cmdType == Scene::TransformCommandType::RotateZCommandNegative) {
+        mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 0, 1));
     }
 
-    if (mApp->isKeyPressed(Platform::KEY_E)) {
-        mTransform.m_model *= glm::scale(rot, glm::vec3(0.9f, 0.9f, 0.9f));
-    }*/
+    if (cmdType == Scene::TransformCommandType::RotateZCommandPositive) {
+        mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 0, 1));
+    }
 }
-
-MouseTransformController::MouseTransformController(TransformMatrixBlock &tmb) :
-        mTransform(tmb) {
-    // empty
-}
-
-MouseTransformController::~MouseTransformController() {
-    // empty
-}
-
-void MouseTransformController::update(TransformCommandType cmdType) {
-    glm::mat4 rot(1.0);    
-}
-
 
 AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
         mAppState(State::Uninited),
@@ -277,16 +288,8 @@ RenderBackendService *AppBase::getRenderBackendService() const {
     return m_rbService;
 }
 
-AnimationControllerBase *AppBase::getTransformController(DefaultControllerType type, TransformMatrixBlock &tmb) {
-    switch (type) {
-        case DefaultControllerType::KeyboardCtrl:
-            return new KeyboardTransformController(tmb);
-        case DefaultControllerType::MouseCtrl:
-            return new MouseTransformController(tmb);
-        default:
-            break;
-    }
-    return nullptr;
+AnimationControllerBase *AppBase::getTransformController(TransformMatrixBlock &tmb) {
+    return new TransformController(tmb);
 }
 
 Platform::AbstractWindow *AppBase::getRootWindow() const {

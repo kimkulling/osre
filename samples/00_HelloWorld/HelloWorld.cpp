@@ -83,7 +83,7 @@ protected:
             world->addEntity(mEntity);            
             camera->observeBoundingBox(mEntity->getAABB());
         }
-        mKeyboardTransCtrl = AppBase::getTransformController(DefaultControllerType::KeyboardCtrl, m_transformMatrix);
+        mKeyboardTransCtrl = AppBase::getTransformController(m_transformMatrix);
 
         osre_info(Tag, "Creation finished.");
 
@@ -92,8 +92,9 @@ protected:
 
     void onUpdate() override {
         RenderBackendService *rbSrv = getRenderBackendService();
-
-        mKeyboardTransCtrl->update(AppBase::getKeyboardEventListener()->getLastKey());
+        Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey();
+                
+        mKeyboardTransCtrl->update(TransformController::getKeyBinding(key));
 
         rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");

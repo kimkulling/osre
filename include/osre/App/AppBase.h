@@ -58,23 +58,11 @@ namespace App {
 class World;
 class AppBase;
 
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  This enum describes the default controller type.
-//-------------------------------------------------------------------------------------------------
-enum class DefaultControllerType {
-    KeyboardCtrl,   ///< Use the keyboard default controller.
-    MouseCtrl       ///< Use the mouse default controller.
-};
-
-
 class KeyboardEventListener : public Platform::OSEventListener {
 public:
     KeyboardEventListener() :
             OSEventListener("App/KeyboardEventListener"),
-            mLast('\0') {
+            mLast(Platform::KEY_UNKNOWN) {
         clearKeyMap();
     }
 
@@ -89,7 +77,7 @@ public:
             mLast = keyData->m_key;
         } else {
             mKeymap[keyData->m_key] = 0;
-            mLast = '\0';
+            mLast = Platform::KEY_UNKNOWN;
         }
     }
 
@@ -97,39 +85,29 @@ public:
         return mKeymap[key] == 1;
     }
 
-    char getLastKey() const {
+    Platform::Key getLastKey() const {
         return mLast; 
     }
-
+    
     void clearKeyMap() {
         ::memset(mKeymap, 0, sizeof(char) * Platform::KEY_LAST);
     }
 
 private:
-    char mLast;
+    Platform::Key mLast;
     char mKeymap[Platform::KEY_LAST];
 };
-
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
 ///	@brief  This class implements the default keyboard controlling.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT KeyboardTransformController : public Scene::AnimationControllerBase {
+class OSRE_EXPORT TransformController : public Scene::AnimationControllerBase {
 public:
-    KeyboardTransformController(RenderBackend::TransformMatrixBlock &tmb);
-    ~KeyboardTransformController() override;
-    void update(Scene::TransformCommandType cmdType) override;
-
-private:
-    RenderBackend::TransformMatrixBlock &mTransform;
-};
-
-class OSRE_EXPORT MouseTransformController : public Scene::AnimationControllerBase {
-public:
-    MouseTransformController(RenderBackend::TransformMatrixBlock &tmb);
-    ~MouseTransformController() override;
+    TransformController(RenderBackend::TransformMatrixBlock &tmb);
+    ~TransformController() override;
+    static Scene::TransformCommandType getKeyBinding(Platform::Key key);
     void update(Scene::TransformCommandType cmdType) override;
 
 private:
@@ -296,7 +274,7 @@ public:
     /// @param  type    [in] The requested controller type.
     /// @param  tmb     [in] The controlled transform block.
     /// @return The transform controller or nullptr if none is there.
-    virtual Scene::AnimationControllerBase *getTransformController(DefaultControllerType type, RenderBackend::TransformMatrixBlock &tmb);
+    virtual Scene::AnimationControllerBase *getTransformController(RenderBackend::TransformMatrixBlock &tmb);
 
     MouseEventListener *getMouseEventListener() const {
         return m_mouseEvListener;
