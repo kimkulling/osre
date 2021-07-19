@@ -50,7 +50,7 @@ static void clearCoords(i32 &relX, i32 &relY, i32 &absX, i32 &absY) {
     absX = absY = 0;
 }
 
-void MouseEventListener::onOSEvent(const Event &osEvent, const EventData *data) {
+void MouseEventListener::onOSEvent(const Event&, const EventData *data) {
     MouseButtonEventData *mouseEventData = (MouseButtonEventData *)data;
     mLastX = mAbsX;
     mLastY = mAbsY;
