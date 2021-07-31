@@ -33,19 +33,19 @@ class OGLEnumTest : public ::testing::Test {
     // empty
 };
 
-TEST_F( OGLEnumTest, access_cullstate_success ) {
+TEST_F(OGLEnumTest, access_cullstate_success) {
     CullState state;
     state.m_cullMode = CullState::CullMode::CW;
-    EXPECT_EQ( GL_CW, OGLEnum::getOGLCullState( state.m_cullMode) );
+    EXPECT_EQ( GL_CW, (GLint) OGLEnum::getOGLCullState(state.m_cullMode));
 
     state.m_cullMode = CullState::CullMode::CCW;
-    EXPECT_EQ( GL_CCW, OGLEnum::getOGLCullState( state.m_cullMode) );
+    EXPECT_EQ(GL_CCW, (GLint) OGLEnum::getOGLCullState(state.m_cullMode));
 }
 
 TEST_F( OGLEnumTest, access_cullFace_success ) {
     CullState state;
     state.m_cullFace = CullState::CullFace::Front;
-    EXPECT_EQ( GL_FRONT, OGLEnum::getOGLCullFace( state.m_cullFace ) );
+    EXPECT_EQ( GL_FRONT, (GLint) OGLEnum::getOGLCullFace( state.m_cullFace ) );
 }
 
 } // Namespace UnitTest
