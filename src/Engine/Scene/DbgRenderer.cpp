@@ -76,7 +76,7 @@ void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui32 id, const String &text) {
         return;
     }
 
-    m_rbSrv->beginPass(PipelinePass::getPassNameById(DbgPassId));
+    m_rbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
     m_rbSrv->beginRenderBatch("dbgFontBatch");
 
     m_rbSrv->endRenderBatch();
@@ -162,7 +162,7 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb)
 
     mesh->m_model = transform;
 
-    m_rbSrv->beginPass(PipelinePass::getPassNameById(DbgPassId));
+    m_rbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
     m_rbSrv->beginRenderBatch("dbgFontBatch");
 
     m_rbSrv->setMatrix(MatrixType::Model, transform);

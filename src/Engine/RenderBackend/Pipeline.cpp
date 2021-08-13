@@ -38,17 +38,17 @@ static const c8 *RenderPassNames[] = {
 
 constexpr i32 InvalidPassIdx = -1;
 
-PipelinePass *PipelinePass::create(ui32 id, Shader *shader) {
-    return new PipelinePass(id, shader);
+RenderPass *RenderPass::create(ui32 id, Shader *shader) {
+    return new RenderPass(id, shader);
 }
 
-void PipelinePass::destroy(PipelinePass *plp) {
+void RenderPass::destroy(RenderPass *plp) {
     if (nullptr != plp) {
         delete plp;
     }
 }
 
-PipelinePass::PipelinePass(ui32 id, Shader *shader) :
+RenderPass::RenderPass(ui32 id, Shader *shader) :
         mId(id),
         mRenderTarget(),
         mStates(),
@@ -56,76 +56,92 @@ PipelinePass::PipelinePass(ui32 id, Shader *shader) :
     // empty
 }
 
-PipelinePass::~PipelinePass() {
+RenderPass::~RenderPass() {
     // empty
 }
 
-void PipelinePass::set(RenderTarget &rt, RenderStates &states) {
+RenderPass &RenderPass::set(RenderTarget &rt, RenderStates &states) {
     mRenderTarget = rt;
     mStates = states;
+
+    return *this;
 }
 
-void PipelinePass::setPolygonState(PolygonState polyState) {
+RenderPass &RenderPass::setPolygonState(PolygonState polyState) {
     mStates.m_polygonState = polyState;
+
+    return *this;
 }
 
-PolygonState PipelinePass::getPolygonState() const {
+PolygonState RenderPass::getPolygonState() const {
     return mStates.m_polygonState;
 }
 
-void PipelinePass::setCullState(CullState &cullstate) {
+RenderPass &RenderPass::setCullState(CullState &cullstate) {
     mStates.m_cullState = cullstate;
+
+    return *this;
 }
 
-CullState PipelinePass::getCullState() const {
+CullState RenderPass::getCullState() const {
     return mStates.m_cullState;
 }
 
-void PipelinePass::setBlendState(BlendState &blendState) {
+RenderPass &RenderPass::setBlendState(BlendState &blendState) {
     mStates.m_blendState = blendState;
+
+    return *this;
 }
 
-const BlendState &PipelinePass::getBlendState() const {
+const BlendState &RenderPass::getBlendState() const {
     return mStates.m_blendState;
 }
 
-void PipelinePass::setSamplerState(SamplerState &samplerState) {
+RenderPass &RenderPass::setSamplerState(SamplerState &samplerState) {
     mStates.m_samplerState = samplerState;
+
+    return *this;
 }
 
-const SamplerState &PipelinePass::getSamplerState() const {
+const SamplerState &RenderPass::getSamplerState() const {
     return mStates.m_samplerState;
 }
 
-void PipelinePass::setClearState(ClearState &clearState) {
+RenderPass &RenderPass::setClearState(ClearState &clearState) {
     mStates.m_clearState = clearState;
+
+    return *this;
 }
 
-const ClearState &PipelinePass::getClearState() const {
+const ClearState &RenderPass::getClearState() const {
     return mStates.m_clearState;
 }
 
-void PipelinePass::setStencilState(StencilState &stencilState) {
+RenderPass &RenderPass::setStencilState(StencilState &stencilState) {
     mStates.m_stencilState = stencilState;
+
+    return *this;
 }
 
-const StencilState &PipelinePass::getStencilState() const {
+const StencilState &RenderPass::getStencilState() const {
     return mStates.m_stencilState;
 }
 
-void PipelinePass::setShader(Shader *shader) {
+RenderPass &RenderPass::setShader(Shader *shader) {
     mShader = shader;
+
+    return *this;
 }
 
-Shader *PipelinePass::getShader() const {
+Shader *RenderPass::getShader() const {
     return mShader;
 }
 
-ui32 PipelinePass::getId() const {
+ui32 RenderPass::getId() const {
     return mId;
 }
 
-const c8 *PipelinePass::getPassNameById(ui32 id) {
+const c8 *RenderPass::getPassNameById(ui32 id) {
     if (id >= MaxDbgPasses) {
         return nullptr;
     }
@@ -133,25 +149,15 @@ const c8 *PipelinePass::getPassNameById(ui32 id) {
     return Details::RenderPassNames[id];
 }
 
-bool PipelinePass::operator==(const PipelinePass &rhs) const {
+bool RenderPass::operator==(const RenderPass &rhs) const {
     return (mId == rhs.mId && mStates.m_polygonState == rhs.mStates.m_polygonState &&
             mStates.m_cullState == rhs.mStates.m_cullState && mStates.m_blendState == rhs.mStates.m_blendState &&
             mStates.m_samplerState == rhs.mStates.m_samplerState && mStates.m_clearState == rhs.mStates.m_clearState &&
             mStates.m_stencilState == rhs.mStates.m_stencilState);
 }
 
-bool PipelinePass::operator!=(const PipelinePass &rhs) const {
+bool RenderPass::operator!=(const RenderPass &rhs) const {
     return !(*this == rhs);
-}
-
-Pipeline *Pipeline::create(const String &pipelineName) {
-    return new Pipeline(pipelineName);
-}
-
-void Pipeline::destroy(Pipeline *pl) {
-    if (nullptr != pl) {
-        delete pl;
-    }
 }
 
 Pipeline::Pipeline(const String &pipelineName) :
@@ -164,11 +170,11 @@ Pipeline::Pipeline(const String &pipelineName) :
 
 Pipeline::~Pipeline() {
     for (ui32 i = 0; i < mPasses.size(); ++i) {
-        PipelinePass::destroy(mPasses[i]);
+        RenderPass::destroy(mPasses[i]);
     }
 }
 
-void Pipeline::addPass(PipelinePass *pass) {
+void Pipeline::addPass(RenderPass *pass) {
     if (nullptr == pass) {
         return;
     }
@@ -194,13 +200,13 @@ size_t Pipeline::beginFrame() {
     return mPasses.size();
 }
 
-PipelinePass *Pipeline::beginPass(ui32 passId) {
+RenderPass *Pipeline::beginPass(ui32 passId) {
     if (!mInFrame) {
         return nullptr;
     }
 
     mCurrentPassId = passId;
-    PipelinePass *pass = mPasses[passId];
+    RenderPass *pass = mPasses[passId];
     if (nullptr == pass) {
         return nullptr;
     }

@@ -65,7 +65,7 @@ public:
 
         m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
 
-        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("b1");
             {

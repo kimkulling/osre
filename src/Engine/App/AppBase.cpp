@@ -444,7 +444,7 @@ bool AppBase::onDestroy() {
     m_activeWorld = nullptr;
 
     for (ui32 i = 0; i < mPipelines.size(); ++i) {
-        Pipeline::destroy(mPipelines[i]);
+        delete mPipelines[i];
     }
     mPipelines.clear();
 
@@ -491,8 +491,8 @@ Ids *AppBase::getIdContainer() const {
 }
 
 Pipeline *AppBase::createDefaultPipeline() {
-    Pipeline *pipeline = Pipeline::create(DefaultPipelines::Pipeline_Default);
-    PipelinePass *renderPass = PipelinePass::create(RenderPassId, nullptr);
+    Pipeline *pipeline = new Pipeline(DefaultPipelines::Pipeline_Default);
+    RenderPass *renderPass = RenderPass::create(RenderPassId, nullptr);
     CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
     renderPass->setCullState(cullState);
     pipeline->addPass(renderPass);
@@ -503,7 +503,7 @@ Pipeline *AppBase::createDefaultPipeline() {
 RenderBackend::Pipeline *AppBase::createPipeline(const String &name) {
     Pipeline *p = findPipeline(name);
     if (nullptr == p) {
-        p = Pipeline::create(name);
+        p = new Pipeline(name);
         mPipelines.add(p);
     }
 

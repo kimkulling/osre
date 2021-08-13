@@ -451,10 +451,10 @@ void OsreEdApp::createUI() {
     Pipeline *pl = AppBase::findPipeline(DefaultPipelines::Pipeline_Default);
     if (nullptr != pl) {
         RenderBackend::Shader *shader = nullptr;
-        PipelinePass *uiPass = PipelinePass::create(UiPassId, shader);
+        RenderPass *uiPass = RenderPass::create(UiPassId, shader);
         pl->addPass(uiPass);
         RenderBackendService *rbSrv = AppBase::getRenderBackendService();
-        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("ui");
             rbSrv->addMesh(mMesh2D, 1);
@@ -510,7 +510,7 @@ void OsreEdApp::onUpdate() {
     }
     RenderBackendService *rbSrv = getRenderBackendService();
 
-    rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+    rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
     rbSrv->beginRenderBatch("b1");
 
     rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);

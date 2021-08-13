@@ -181,7 +181,7 @@ void World::update(Time dt) {
 void World::draw(RenderBackendService *rbSrv) {
     OSRE_ASSERT(nullptr != rbSrv);
 
-    rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+    rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
     rbSrv->beginRenderBatch("b1");
 
     if (nullptr != m_activeCamera) {

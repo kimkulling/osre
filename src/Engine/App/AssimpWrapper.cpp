@@ -65,6 +65,31 @@ const unsigned int DefaultImportFlags = aiProcess_CalcTangentSpace | aiProcess_G
 struct BoneInfo {
 };
 
+static void setColor4(const aiColor4D &aiCol, Color4 &col) {
+    col.m_r = aiCol.r;
+    col.m_g = aiCol.g;
+    col.m_b = aiCol.b;
+    col.m_a = aiCol.a;
+}
+
+static void setTexture(const String &resolvedPath, const aiString &texPath, 
+        TextureResourceArray &texResArray, TextureStageType stage) {
+    String texname;
+    texname += "file://";
+    texname += resolvedPath;
+    String temp = texPath.C_Str(), temp1;
+    IO::Uri::normalizePath(temp, '\\', temp1);
+    String::size_type pos = temp1.find("./");
+    if (String::npos != pos) {
+        temp1 = temp1.substr(pos + 2, temp1.size() + pos + 2);
+    }
+    texname += temp1;
+
+    TextureResource *texRes = new TextureResource(texname, Uri(texname));
+    texRes->setTextureStage(stage);
+    texResArray.add(texRes);
+}
+
 AssimpWrapper::AssimpWrapper(Common::Ids &ids, World *world) :
         m_scene(nullptr),
         m_meshArray(),
@@ -403,33 +428,6 @@ void AssimpWrapper::importNode(aiNode *node, Scene::Node *parent) {
     }
 }
 
-static void setColor4(const aiColor4D &aiCol, Color4 &col) {
-    col.m_r = aiCol.r;
-    col.m_g = aiCol.g;
-    col.m_b = aiCol.b;
-    col.m_a = aiCol.a;
-}
-
-using IO::AbstractFileSystem;
-using IO::Stream;
-
-static void setTexture(const String &resolvedPath, const aiString &texPath, TextureResourceArray &texResArray, TextureStageType stage) {
-    String texname;
-    texname += "file://";
-    texname += resolvedPath;
-    String temp = texPath.C_Str(), temp1;
-    IO::Uri::normalizePath(temp, '\\', temp1);
-    String::size_type pos = temp1.find("./");
-    if (String::npos != pos) {
-        temp1 = temp1.substr(pos + 2, temp1.size() + pos + 2);
-    }
-    texname += temp1;
-
-    TextureResource *texRes = new TextureResource(texname, IO::Uri(texname));
-    texRes->setTextureStage(stage);
-    texResArray.add(texRes);
-}
-
 void AssimpWrapper::importMaterial(aiMaterial *material) {
     if (nullptr == material) {
         osre_trace(Tag, "Nullptr for material detected.");
@@ -456,27 +454,28 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
 
     m_matArray.add(osreMat);
 
-    aiColor4D diffuse;
+    const aiColor4D defaultColor(1, 1, 1, 1);
+    aiColor4D diffuse = defaultColor;
     if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse)) {
         setColor4(diffuse, osreMat->m_color[(ui32)MaterialColorType::Mat_Diffuse]);
     }
 
-    aiColor4D specular;
+    aiColor4D specular = defaultColor;
     if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &specular)) {
         setColor4(specular, osreMat->m_color[(ui32)MaterialColorType::Mat_Specular]);
     }
 
-    aiColor4D ambient;
+    aiColor4D ambient = defaultColor;
     if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &ambient)) {
         setColor4(ambient, osreMat->m_color[(ui32)MaterialColorType::Mat_Ambient]);
     }
 
-    aiColor4D emission;
+    aiColor4D emission = defaultColor;
     if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_EMISSIVE, &emission)) {
         setColor4(emission, osreMat->m_color[(ui32)MaterialColorType::Mat_Emission]);
     }
 
-    ai_real shininess, strength;
+    ai_real shininess = 1.0, strength=1.0;
     unsigned int max; // changed: to unsigned
     if (AI_SUCCESS == aiGetMaterialFloatArray(material, AI_MATKEY_SHININESS, &shininess, &max)) {
         osreMat->mShineness = shininess;

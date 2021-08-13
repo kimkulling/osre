@@ -95,7 +95,7 @@ public:
         meshBuilder.allocPoints(VertexType::ColorVertex, BufferAccessType::ReadOnly, NumPoints, points, col);
         Mesh *ptMesh = meshBuilder.getMesh();
 
-        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("batch1");
             {

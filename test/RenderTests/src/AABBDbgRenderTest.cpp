@@ -65,7 +65,7 @@ public:
     }
 
     bool onRender(RenderBackendService *rbSrv) override {
-        rbSrv->beginPass(PipelinePass::getPassNameById(DbgPassId));
+        rbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
         {
             rbSrv->beginRenderBatch("dbgFontBatch");
             {

@@ -101,7 +101,7 @@ public:
     bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
-        rbSrv->beginPass(PipelinePass::getPassNameById( RenderPassId ) );
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 
         m_particeGen = new ParticleEmitter( rbSrv );
@@ -119,7 +119,7 @@ public:
     bool onRender( RenderBackend::RenderBackendService *rbSrv) override {
         m_particeGen->update( NumPoints );
 
-        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 
         rbSrv->updateMesh( m_particeGen->getMesh() );

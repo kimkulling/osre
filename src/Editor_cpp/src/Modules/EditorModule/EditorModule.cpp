@@ -38,7 +38,7 @@ void EditorModule::onRender() {
     AppBase *parentApp = getParentApp();
     RenderBackend::RenderBackendService *rbService = parentApp->getRenderBackendService();
 
-    rbService->beginPass(PipelinePass::getPassNameById(RenderPassId));
+    rbService->beginPass(RenderPass::getPassNameById(RenderPassId));
     rbService->beginRenderBatch("b1");
 
     rbService->setMatrix(MatrixType::Model, m_transformMatrix.m_model);

@@ -36,8 +36,15 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT MaterialBuilder {
 public:
+    /// @brief Will create the material builder instance.
     static void create();
+
+    /// @brief Will destroy the material builder instance.
     static void destroy();
+    
+    /// @brief  Will create the build-in material for the given type of vertex.
+    /// @param  type    The vertx type.
+    /// @return The build-in material instance.
     static RenderBackend::Material *createBuildinMaterial( RenderBackend::VertexType type );
     static RenderBackend::Material *createBuildinUiMaterial();
     static RenderBackend::Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
@@ -46,7 +53,10 @@ public:
         const String& VsSrc, const String& FsSrc);
 
 private:
+    /// @brief The default class constructor.
     MaterialBuilder();
+
+    ///	@brief The class destructor.
     ~MaterialBuilder();
 
 private:

@@ -85,7 +85,7 @@ public:
         meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 1);
         m_pointMesh = meshBuilder.getMesh();
 
-        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("particle");
             {
@@ -136,7 +136,7 @@ public:
             offset += sizeof(ColorVert);
         }
 
-        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("particle");
             {

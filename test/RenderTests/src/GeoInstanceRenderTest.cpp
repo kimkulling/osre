@@ -100,7 +100,7 @@ public:
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
-        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("b1");
             {
@@ -153,7 +153,7 @@ public:
             m_mat[i] = m_mat[i] * rot;
         }
 
-        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("b1");
             {

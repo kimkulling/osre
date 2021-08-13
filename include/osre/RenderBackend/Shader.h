@@ -29,15 +29,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+///	@brief  This class represents a container for all used shaders in the OSRE-runtime.
 class OSRE_EXPORT Shader {
 public:
+    /// @brief The list of parameters
     CPPCore::TArray<String>  m_parameters;
+    /// @brief The list of attributes
     CPPCore::TArray<String>  m_attributes;
+    /// @brief The loaded source
     String                   m_src[MaxShaderTypes];
 
+    /// @brief The default class constructor.
     Shader();
+
+    ///	@brief  The class destructor.
     ~Shader();
+
+    /// @brief  Will set the sours for a given shader type.
+    /// @param  type    The shader type.
+    /// @param  src     The source for the shader type.
     void setSource(ShaderType type, const String &src);
+    
+    /// @brief  Will return the type of a shader from its extension.
+    /// @param  extension   The extension.
+    /// @return The shader type.
     static ShaderType getTypeFromeExtension(const String &extension);
 
     OSRE_NON_COPYABLE(Shader)
@@ -53,21 +68,48 @@ private:
     CompileState m_compileState[MaxCompileState];
 };
 
+///	@brief  This class is sued to load a shader.
 class OSRE_EXPORT ShaderLoader {
 public:
+    /// @brief  The default class constructor.
     ShaderLoader();
+    
+    /// @brief  The class destructor.
     virtual ~ShaderLoader();
+    
+    /// @brief 
+    /// @param uri 
+    /// @param shader 
+    /// @return 
     virtual size_t load(const IO::Uri &uri, Shader *shader);
+    
+    /// @brief 
+    /// @param shader 
+    /// @return 
     virtual bool unload(Shader *shader);
 };
 
+/// @brief 
 class OSRE_EXPORT ShaderResource : public Common::TResource<Shader, ShaderLoader> {
 public:
+    /// @brief 
+    /// @param shaderName 
+    /// @param uri 
     ShaderResource(const String &shaderName, const IO::Uri &uri);
+    
+    ///	@brief
     ~ShaderResource() override;
 
 protected:
+    /// @brief 
+    /// @param uri 
+    /// @param loader 
+    /// @return 
     Common::ResourceState onLoad(const IO::Uri &uri, ShaderLoader &loader) override;
+    
+    /// @brief 
+    /// @param loader 
+    /// @return 
     Common::ResourceState onUnload(ShaderLoader &loader) override;
 };
 

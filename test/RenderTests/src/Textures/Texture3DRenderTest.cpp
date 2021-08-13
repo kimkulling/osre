@@ -57,7 +57,7 @@ protected:
         meshBuilder.allocCube(VertexType::RenderVertex, 1, 1, 1, BufferAccessType::ReadOnly);
         Mesh *mesh = meshBuilder.getMesh();
 
-        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("b1");
             {
@@ -71,7 +71,7 @@ protected:
     }
 
     bool onRender(RenderBackendService *rbSrv) override {
-        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("b1");
             {

@@ -118,7 +118,7 @@ void RenderCmdBuffer::onRenderFrame(const EventData *) {
     }
 
     for (ui32 passId = 0; passId < numPasses; passId++) {
-        PipelinePass *pass = m_pipeline->beginPass(passId);
+        RenderPass *pass = m_pipeline->beginPass(passId);
         if (nullptr == pass) {
             osre_debug(Tag, "Ponter to pipeline pass is nullptr.");
             continue;

@@ -65,7 +65,7 @@ public:
         transform.setScale(0.2f, 0.2f, 0.2f);
         transform.toMatrix(mesh1->m_model);
 
-        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("b1");
             {

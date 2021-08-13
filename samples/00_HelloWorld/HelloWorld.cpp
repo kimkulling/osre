@@ -96,7 +96,7 @@ protected:
                 
         mKeyboardTransCtrl->update(TransformController::getKeyBinding(key));
 
-        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 
         rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);

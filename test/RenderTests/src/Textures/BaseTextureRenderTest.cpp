@@ -115,7 +115,7 @@ public:
         geoBuilder.allocQuads(VertexType::RenderVertex, BufferAccessType::ReadOnly);
         Mesh *mesh = geoBuilder.getMesh();
 
-        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("b1");
             {
@@ -152,7 +152,7 @@ public:
     }
 
     bool onRender(RenderBackendService *rbSrv) override {
-        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("b1");
             {

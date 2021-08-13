@@ -34,7 +34,7 @@ class Shader;
 
 using CPPCore::TArray;
 
-enum RenderPass : ui32 {
+enum RenderPassType : ui32 {
     StaticRenderPass,
     UiRenderPass
 };
@@ -53,33 +53,33 @@ static const ui32 MaxDbgPasses = 3;
 ///
 ///	@brief  This class is used to describes one pass in a render pipeline.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT PipelinePass {
+class OSRE_EXPORT RenderPass {
 public:
-    static PipelinePass *create(ui32 id, Shader *shader);
-    static void destroy(PipelinePass *plp);
-    void set(RenderTarget &rt, RenderStates &states);
-    void setPolygonState(PolygonState polyState);
+    static RenderPass *create(ui32 id, Shader *shader);
+    static void destroy(RenderPass *plp);
+    RenderPass &set(RenderTarget &rt, RenderStates &states);
+    RenderPass &setPolygonState(PolygonState polyState);
     PolygonState getPolygonState() const;
-    void setCullState(CullState &cullstate);
+    RenderPass &setCullState(CullState &cullstate);
     CullState getCullState() const;
-    void setBlendState(BlendState &blendState);
+    RenderPass &setBlendState(BlendState &blendState);
     const BlendState &getBlendState() const;
-    void setSamplerState(SamplerState &samplerState);
+    RenderPass &setSamplerState(SamplerState &samplerState);
     const SamplerState &getSamplerState() const;
-    void setClearState(ClearState &clearState);
+    RenderPass &setClearState(ClearState &clearState);
     const ClearState &getClearState() const;
-    void setStencilState(StencilState &stencilState);
+    RenderPass &setStencilState(StencilState &stencilState);
     const StencilState &getStencilState() const;
-    void setShader(Shader *shader);
+    RenderPass &setShader(Shader *shader);
     Shader *getShader() const;
     ui32 getId() const;
     static const c8 *getPassNameById(ui32 id);
-    bool operator==(const PipelinePass &rhs) const;
-    bool operator!=(const PipelinePass &rhs) const;
+    bool operator==(const RenderPass &rhs) const;
+    bool operator!=(const RenderPass &rhs) const;
 
 private:
-    PipelinePass(ui32 id, Shader *shader);
-    ~PipelinePass();
+    RenderPass(ui32 id, Shader *shader);
+    ~RenderPass();
 
 private:
     ui32 mId;
@@ -107,15 +107,12 @@ namespace DefaultPipelines {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Pipeline : public Common::Object {
 public:
-    /// @brief  Will create a new pipeline.
-    /// @return The new created pipeline instance.
-    static Pipeline *create(const String &pipelineName);
+    /// @brief
+    Pipeline(const String &pipelineName);
+    ~Pipeline();
 
     /// @brief
-    static void destroy(Pipeline *pl);
-
-    /// @brief
-    void addPass(PipelinePass *pass);
+    void addPass(RenderPass *pass);
 
     /// @brief
     size_t getNumPasses() const;
@@ -124,7 +121,7 @@ public:
     size_t beginFrame();
 
     /// @brief
-    PipelinePass *beginPass(ui32 passId);
+    RenderPass *beginPass(ui32 passId);
 
     /// @brief
     bool endPass(ui32 passId);
@@ -136,11 +133,9 @@ public:
     void clear();
 
 private:
-    Pipeline(const String &pipelineName);
-    ~Pipeline();
 
 private:
-    using PipelinePassArray = TArray<PipelinePass*>;
+    using PipelinePassArray = TArray<RenderPass*>;
     PipelinePassArray mPasses;
     i32 mCurrentPassId;
     bool mInFrame;

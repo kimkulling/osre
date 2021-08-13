@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Shader.h>
 #include <osre/Scene/MaterialBuilder.h>
 
-#include <stdio.h>
+#include <cstdio>
 
 namespace OSRE {
 namespace Scene {
@@ -89,32 +89,42 @@ const String GLSLFsSrc =
         "    vFragColor = vSmoothColor;\n"
         "}\n";
 
-const String GLSLVsSrcRV =
+const String GLSLVertexShaderSrcRV =
         GLSLVersionString_400 +
         "\n" + GLSLRenderVertexLayout +
         "\n"
         "// output from the vertex shader\n"
         "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
         "smooth out vec2 vUV;\n"
+        "\n"
+        "vec3 light_pos = vec3(0.0, 0.0, 2.0);\n"
+        "vec3 Ls        = vec3(1.0, 1.0, 1.0);\n"
+        "vec3 Ld        = vec3(0.7, 0.7, 0.7);\n"
+        "vec3 La        = vec3(0.7, 0.7, 0.7);\n"
+        "\n"
+        "vec3 Ks = vec3(1.0, 1.0, 1.0);\n"
+        "vec3 Kd = vec3(1.0, 0.5, 0.0);\n"
+        "vec3 Ka = vec3(1.0, 1.0, 1.0);\n"
+        "float specular_exponent = 100.0;\n"
         "\n" +
         GLSLCombinedMVPUniformSrc +
         "\n"
         "void main()\n"
         "{\n"
-        "    //assign the per-vertex color to vSmoothColor varying\n"
-        "    vSmoothColor = vec4(color0,1);\n"
-        "\n"
+        "    vec3 Ia = La * Ka;\n"
+        "    vec3 Id = vec3(0.0, 0.0, 0.0);\n"
+        "    vec3 Is = vec3(0.0, 0.0, 0.0);\n"
         "    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
         "    //vertex position\n"
         "    gl_Position = MVP*vec4(position,1);\n"
-        "    vSmoothColor = vec4( color0, 1 );\n"
+        "    vSmoothColor = vec4(Is + Id + Ia, 1.0);\n"
         "    vUV = texcoord0;\n"
         "}\n";
 
-const String GLSLFsSrcRV =
+const String GLSLFragmentShaderSrcRV =
         GLSLVersionString_400 +
         "\n"
-        "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
+        "layout(location=0) out vec4 frag_volor; //fragment shader output\n"
         "\n"
         "//input form the vertex shader\n"
         "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
@@ -124,9 +134,7 @@ const String GLSLFsSrcRV =
         "void main()\n"
         "{\n"
         "    // set the interpolated color as the shader output\n"
-        "    vec4 texColor = texture( tex0, vUV );\n"
-        //"    vFragColor = vSmoothColor * texColor;\n"
-        "    vFragColor = texture( tex0, vUV );\n"
+        "    frag_volor = texture(tex0, vUV) * vSmoothColor;\n"
         "}\n";
 
 const String GLSLVsSrcRV_Editor =
@@ -298,8 +306,8 @@ Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
         vs = GLSLVsSrc;
         fs = GLSLFsSrc;
     } else if (type == VertexType::RenderVertex) {
-        vs = GLSLVsSrcRV;
-        fs = GLSLFsSrcRV;
+        vs = GLSLVertexShaderSrcRV;
+        fs = GLSLFragmentShaderSrcRV;
     }
     if (vs.empty() || fs.empty()) {
         delete mat;
@@ -378,8 +386,8 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
         vs = GLSLVsSrc;
         fs = GLSLFsSrc;
     } else if (type == VertexType::RenderVertex) {
-        vs = GLSLVsSrcRV;
-        fs = GLSLFsSrcRV;
+        vs = GLSLVertexShaderSrcRV;
+        fs = GLSLFragmentShaderSrcRV;
     }
 
     if (vs.empty() || fs.empty()) {

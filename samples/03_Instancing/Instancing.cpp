@@ -121,7 +121,7 @@ protected:
 
         RenderBackendService *rbSrv(getRenderBackendService());
 
-        rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 
         rbSrv->endRenderBatch();

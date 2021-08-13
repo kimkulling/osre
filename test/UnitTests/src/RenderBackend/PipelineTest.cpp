@@ -30,26 +30,26 @@ using namespace ::OSRE::RenderBackend;
 
 class PipelineTest : public ::testing::Test {
 protected:
-    PipelinePass *m_pass1;
-    PipelinePass *m_pass2;
+    RenderPass *m_pass1;
+    RenderPass *m_pass2;
 
 protected:
     void SetUp() override {
-        m_pass1 = PipelinePass::create(RenderPassId, nullptr);
-        m_pass2 = PipelinePass::create(DbgPassId, nullptr);
+        m_pass1 = RenderPass::create(RenderPassId, nullptr);
+        m_pass2 = RenderPass::create(DbgPassId, nullptr);
     }
 
     void TearDown() override {
-        PipelinePass::destroy(m_pass2);
-        PipelinePass::destroy(m_pass1);
+        RenderPass::destroy(m_pass2);
+        RenderPass::destroy(m_pass1);
     }
 };
 
 TEST_F( PipelineTest, create_success ) {
     bool ok( true );
     try {
-        Pipeline *pipeline = Pipeline::create("p1");
-        Pipeline::destroy(pipeline);
+        Pipeline *pipeline = new Pipeline("p1");
+        delete (pipeline);
     } catch ( ... ) {
         ok = false;
     }
@@ -57,7 +57,7 @@ TEST_F( PipelineTest, create_success ) {
 }
 
 TEST_F( PipelineTest, accessPass_success ) {
-    Pipeline *pipeline = Pipeline::create("p1");
+    Pipeline *pipeline = new Pipeline("p1");
 
     size_t numPasses = pipeline->getNumPasses();
     EXPECT_EQ( 0u, numPasses );
@@ -71,14 +71,14 @@ TEST_F( PipelineTest, accessPass_success ) {
 }
 
 TEST_F( PipelineTest, iterateThroughPasses_success ) {
-    Pipeline *pipeline = Pipeline::create("p1");
+    Pipeline *pipeline = new Pipeline("p1");
     pipeline->addPass(m_pass1);
     pipeline->addPass(m_pass2);
 
     size_t numPasses = pipeline->beginFrame();
     EXPECT_EQ( 2u, numPasses );
     for ( ui32 i = 0; i < numPasses; i++ ) {
-        PipelinePass *pass = pipeline->beginPass(i);
+        RenderPass *pass = pipeline->beginPass(i);
         EXPECT_NE( nullptr, pass );
         pipeline->endPass( i );
     }
@@ -86,7 +86,7 @@ TEST_F( PipelineTest, iterateThroughPasses_success ) {
     pipeline->endFrame();
     pipeline->clear();
 
-    Pipeline::destroy(pipeline);
+    delete pipeline;
 }
 
 TEST_F( PipelineTest, comparePipelinePasses_success ) {

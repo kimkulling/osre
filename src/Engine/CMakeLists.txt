@@ -285,6 +285,7 @@ SET ( properties_src
 #==============================================================================
 SET( scene_inc
     ${HEADER_PATH}/Scene/SceneCommon.h
+    ${HEADER_PATH}/Scene/PipelineBuilder.h
     ${HEADER_PATH}/Scene/MeshProcessor.h
     ${HEADER_PATH}/Scene/MeshBuilder.h
     ${HEADER_PATH}/Scene/AnimatorBase.h
@@ -299,6 +300,7 @@ SET( scene_inc
     ${HEADER_PATH}/Scene/ParticleEmitter.h
 )
 SET( scene_src
+    Scene/PipelineBuilder.cpp
     Scene/DbgRenderer.cpp
     Scene/MeshProcessor.cpp
     Scene/MeshBuilder.cpp
@@ -310,6 +312,10 @@ SET( scene_src
     Scene/ParticleEmitter.cpp
 )
 
+SET(scene_shader_src
+    Scene/Shader/DefaultRenderVertex.vs
+    Scene/Shader/DefaultRenderVertex.fs
+)
 #==============================================================================
 # RenderBackend
 #==============================================================================
@@ -420,6 +426,7 @@ SOURCE_GROUP( RenderBackend\\OGLRenderer    FILES ${renderbackend_oglrenderer_sr
 SOURCE_GROUP( RenderBackend\\VulkanRenderer FILES ${renderbackend_vulkanrenderer_src} )
 SOURCE_GROUP( Resources           FILES ${resources_src} )
 SOURCE_GROUP( Scene               FILES ${scene_src} )
+SOURCE_GROUP( Scene\\Shader       FILES ${scene_shader_src})
 SOURCE_GROUP( Threading           FILES ${threading_src} )
 SOURCE_GROUP( WinManager          FILES ${winmanager_src} )
 SOURCE_GROUP( UI\\Common          FILES ${ui_common_src} )
@@ -497,6 +504,7 @@ ADD_LIBRARY( osre SHARED
         ${renderbackend_oglrenderer_src}
         ${renderbackend_vulkanrenderer_src}
     ${scene_src}
+        ${scene_shader_src}
     ${threading_src}
         ${threading_impl_src}
     ${winmanager_src}
