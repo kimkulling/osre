@@ -560,6 +560,9 @@ struct OSRE_EXPORT TransformMatrixBlock {
     ~TransformMatrixBlock();
     void init();
     void update();
+    const float *getModel();
+    const float *getView();
+    const float *getProjection();
     const float *getMVP();
 
     OSRE_NON_COPYABLE(TransformMatrixBlock)

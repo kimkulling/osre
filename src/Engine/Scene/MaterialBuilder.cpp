@@ -47,13 +47,11 @@ static const String GLSLRenderVertexLayout =
         "layout(location = 3) in vec2 texcoord0;  // per-vertex tex coord, stage 0\n"
         "\n";
 
-static const String GLSLMatrices =
-        "uniform mat4 ModelViewMatrix;\n"
-        "uniform mat3 NormalMatrix;\n"
-        "uniform mat4 ProjectionMatrix;\n";
-
 static const String GLSLCombinedMVPUniformSrc =
         "// uniforms\n"
+        "uniform mat4 Model;\n"
+        "uniform mat4 View;\n"
+        "uniform mat4 Projection;\n"
         "uniform mat4 MVP;	//combined modelview projection matrix\n";
 
 static const String GLSLVsSrc =
@@ -93,6 +91,7 @@ const String GLSLVertexShaderSrcRV =
         GLSLVersionString_400 +
         "\n" + GLSLRenderVertexLayout +
         "\n"
+        "out vec3 position_eye, normal_eye;\n"
         "// output from the vertex shader\n"
         "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
         "smooth out vec2 vUV;\n"
@@ -110,11 +109,19 @@ const String GLSLVertexShaderSrcRV =
         GLSLCombinedMVPUniformSrc +
         "\n"
         "void main()\n"
-        "{\n"
+        "{\n" 
+        "    position_eye = vec3(View * Model * vec4(position, 1.0));\n"
+        "    normal_eye = vec3(View * Model * vec4(normal, 0.0));\n"
         "    vec3 Ia = La * Ka;\n"
-        "    vec3 Id = vec3(0.0, 0.0, 0.0);\n"
         "    vec3 Is = vec3(0.0, 0.0, 0.0);\n"
-        "    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
+        "    //get the clip space position by multiplying the combined MVP matrix with the object space\n" 
+        "    vec3 light_position_eye = vec3(View * vec4(light_pos, 1.0));\n"
+        "    vec3 distance_to_light_eye = light_position_eye - position_eye;\n" 
+        "    vec3 direction_to_light_eye = normalize (distance_to_light_eye);\n"
+        "    float dot_prod = dot (direction_to_light_eye, normal_eye);\n"
+        "    dot_prod = max (dot_prod, 0.0); "
+        "    vec3 Id = Ld * Kd * dot_prod;\n"
+        "\n"
         "    //vertex position\n"
         "    gl_Position = MVP*vec4(position,1);\n"
         "    vSmoothColor = vec4(Is + Id + Ia, 1.0);\n"
@@ -124,6 +131,7 @@ const String GLSLVertexShaderSrcRV =
 const String GLSLFragmentShaderSrcRV =
         GLSLVersionString_400 +
         "\n"
+        "in vec3 position_eye, normal_eye;\n"
         "layout(location=0) out vec4 frag_volor; //fragment shader output\n"
         "\n"
         "//input form the vertex shader\n"
@@ -148,7 +156,6 @@ const String GLSLVsSrcRV_Editor =
         "out vec3 Normal;\n"
         "\n" +
         GLSLCombinedMVPUniformSrc +
-        "\n" + GLSLMatrices +
         "\n"
         "void main()\n"
         "{\n"

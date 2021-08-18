@@ -612,6 +612,18 @@ void TransformMatrixBlock::update() {
     m_normal = transpose(inverse(modelView));
 }
 
+const float *TransformMatrixBlock::getModel() {
+    return glm::value_ptr(m_model);
+}
+
+const float *TransformMatrixBlock::getView() {
+    return glm::value_ptr(m_view);
+}
+
+const float *TransformMatrixBlock::getProjection() {
+    return glm::value_ptr(m_projection);
+}
+
 const float *TransformMatrixBlock::getMVP() {
     return glm::value_ptr(m_mvp);
 }
