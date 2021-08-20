@@ -76,7 +76,6 @@ TEST_F( RenderCommonTest, clearCompVertexLayoutTest ) {
     EXPECT_EQ( 1u, layout.numComponents() );
     layout.clear();
     EXPECT_EQ( 0u, layout.numComponents() );
-    delete comp;
 }
 
 TEST_F( RenderCommonTest, sizeInBytesTest ) {
@@ -97,8 +96,6 @@ TEST_F( RenderCommonTest, sizeInBytesTest ) {
     layout.add( comp2 );
     size = layout.sizeInBytes();
     EXPECT_EQ( 12u, size );
-    delete comp1;
-    delete comp2;
 }
 
 TEST_F( RenderCommonTest, getVertCompNameTest ) {

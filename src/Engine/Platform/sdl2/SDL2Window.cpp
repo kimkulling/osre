@@ -69,8 +69,8 @@ bool SDL2Surface::onCreate() {
     // Create our window centered at 512x512 resolution
 
 
-    const ui32 w( prop->m_width );
-    const ui32 h( prop->m_height );
+    const ui32 w = prop->m_width;
+    const ui32 h = prop->m_height;
     ui32 sdl2Flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
     if ( prop->m_resizable ) {
         sdl2Flags |= SDL_WINDOW_RESIZABLE;
@@ -106,6 +106,7 @@ bool SDL2Surface::onUpdateProperies() {
 }
 
 void SDL2Surface::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
+    printf("resizing\n");
     if ( nullptr == m_surface ) {
         return;
     }
