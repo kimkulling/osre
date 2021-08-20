@@ -51,7 +51,7 @@ TEST_F( RenderCommonTest, createVertComponentTest ) {
 }
 
 TEST_F( RenderCommonTest, createVertexLayoutTest ) {
-    bool ok( true );
+    bool ok = true;
     try {
         VertexLayout layout;
     } catch( ... ) {
@@ -66,6 +66,7 @@ TEST_F( RenderCommonTest, addCompVertexLayoutTest ) {
     EXPECT_EQ( 0u, layout.numComponents() );
     layout.add( comp );
     EXPECT_EQ( 1u, layout.numComponents() );
+    delete comp;
 }
 
 TEST_F( RenderCommonTest, clearCompVertexLayoutTest ) {
@@ -75,6 +76,7 @@ TEST_F( RenderCommonTest, clearCompVertexLayoutTest ) {
     EXPECT_EQ( 1u, layout.numComponents() );
     layout.clear();
     EXPECT_EQ( 0u, layout.numComponents() );
+    delete comp;
 }
 
 TEST_F( RenderCommonTest, sizeInBytesTest ) {
@@ -95,16 +97,18 @@ TEST_F( RenderCommonTest, sizeInBytesTest ) {
     layout.add( comp2 );
     size = layout.sizeInBytes();
     EXPECT_EQ( 12u, size );
+    delete comp1;
+    delete comp2;
 }
 
 TEST_F( RenderCommonTest, getVertCompNameTest ) {
     String name;
-    name = getVertCompName( VertexAttribute::Position );
-    EXPECT_NE( static_cast<ui32>( 0 ), name.size() );
+    name = getVertCompName(VertexAttribute::Position);
+    EXPECT_NE(static_cast<ui32>(0), name.size());
 
-    name = getVertCompName( VertexAttribute::InvalidVertexAttr );
-    EXPECT_NE( static_cast<ui32>( 0 ), name.size() );
-    EXPECT_EQ( "Error", name );
+    name = getVertCompName(VertexAttribute::InvalidVertexAttr);
+    EXPECT_NE(static_cast<ui32>(0), name.size());
+    EXPECT_EQ("Error", name );
 }
 
 TEST_F(RenderCommonTest, viewportTest) {
@@ -125,34 +129,35 @@ TEST_F(RenderCommonTest, viewportTest) {
 }
 
 TEST_F( RenderCommonTest, allocBufferDataTest ) {
-    BufferData *data( BufferData::alloc( BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite ) );
-    EXPECT_NE( data, nullptr );
-    EXPECT_EQ( data->m_access, BufferAccessType::ReadWrite );
-    EXPECT_EQ( data->getSize(), 100u );
-    EXPECT_EQ( data->m_type, BufferType::VertexBuffer );
+    BufferData *data = BufferData::alloc( BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite );
+    EXPECT_NE(data, nullptr);
+    EXPECT_EQ(data->m_access, BufferAccessType::ReadWrite);
+    EXPECT_EQ(data->getSize(), 100u);
+    EXPECT_EQ(data->m_type, BufferType::VertexBuffer);
 
-    BufferData::free( data );
+    BufferData::free(data);
 }
 
 TEST_F( RenderCommonTest, copyBufferDataTest ) {
-    BufferData *data( BufferData::alloc( BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite ) );
+    BufferData *data = BufferData::alloc( BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite );
 
     static const ui32 size = 100;
     static const unsigned char Value = 9;
-    void *buffer( new unsigned char[ size ] );
-    ::memset( buffer, Value, size );
-    data->copyFrom( buffer, size );
-    BufferData::free( data );
+    void *buffer = new unsigned char[ size ];
+    ::memset(buffer, Value, size);
+    data->copyFrom(buffer, size);
+    BufferData::free(data);
 }
 
 TEST_F( RenderCommonTest, accessGeometryTest ) {
-    Mesh *geo( nullptr );
+    Mesh *geo = nullptr;
     geo = Mesh::create(0, VertexType::RenderVertex);
     EXPECT_EQ( geo, nullptr );
     geo = Mesh::create(1, VertexType::RenderVertex);
     EXPECT_NE( geo, nullptr );
     Mesh::destroy( &geo );
     EXPECT_EQ( geo, nullptr );
+    Mesh::destroy(&geo);
 }
 
 TEST_F(RenderCommonTest, initGeometryTest) {
@@ -162,6 +167,7 @@ TEST_F(RenderCommonTest, initGeometryTest) {
     EXPECT_EQ( nullptr, mesh->m_ib );
     EXPECT_EQ( nullptr, mesh->m_vb );
     EXPECT_EQ( nullptr, mesh->m_material );
+    Mesh::destroy(&mesh);
 }
 
 TEST_F( RenderCommonTest, geometryIdTest ) {
@@ -175,7 +181,7 @@ TEST_F( RenderCommonTest, geometryIdTest ) {
         EXPECT_EQ( id, oldId + 1 );
         oldId = id;
     }
-    Mesh::destroy( &mesh );
+    Mesh::destroy(&mesh);
 }
 
 TEST_F( RenderCommonTest, accessTransformMatrixBlockTest ) {
@@ -201,7 +207,7 @@ TEST_F( RenderCommonTest, accessMaterialTest ) {
     } catch ( ... ) {
         ok = false;
     }
-    EXPECT_TRUE( ok );
+    EXPECT_TRUE(ok);
 }
 
 TEST_F(RenderCommonTest, access_material_param_Test) {
@@ -227,9 +233,9 @@ static bool isEqual(c8 *buf, c8 v, ui32 size) {
 
 TEST_F(RenderCommonTest, uniformBufferReadWriteTest) {
     UniformBuffer buffer;
-    EXPECT_EQ(0, buffer.getSize());
+    EXPECT_EQ(0u, buffer.getSize());
     buffer.create(1024);
-    EXPECT_EQ(1024, buffer.getSize());
+    EXPECT_EQ(1024u, buffer.getSize());
 
     c8 buf[100];
     ::memset(buf, 1, 100);
