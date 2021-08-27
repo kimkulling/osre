@@ -64,7 +64,9 @@ public:
     }
 
     /// The class destructor.
-    ~QuickStartdApp() override {}
+    ~QuickStartdApp() override {
+        // empty
+    }
 
 protected:
     bool onCreate() override {
