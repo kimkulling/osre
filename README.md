@@ -32,7 +32,7 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 
 # Quick Start
 
-´´´cpp
+```cpp
 #include <osre/App/AppBase.h>
 #include <osre/App/Component.h>
 #include <osre/App/Entity.h>
@@ -133,9 +133,8 @@ protected:
     }
 };
 
-/// Will generate the main function.
 OSRE_MAIN(QuickStartdApp)
-´´´
+```
 
 # Get involved
 If you want to contribute just use the github project page or reach us via Gitter:
