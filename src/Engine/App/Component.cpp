@@ -36,7 +36,7 @@ static const glm::vec3 Dummy = glm::vec3(-1, -1, -1);
 Component::Component(Entity *owner, ui32 id) :
         m_owner(owner),
         m_id(id) {
-    OSRE_ASSERT(nullptr != owner);
+    osre_assert(nullptr != owner);
 }
 
 Component::~Component() {

@@ -38,15 +38,15 @@ using namespace ::OSRE::RenderBackend;
 DbgRenderer *DbgRenderer::s_instance = nullptr;
 
 DbgRenderer::DbgRenderer(RenderBackend::RenderBackendService *rbSrv) :
-        m_rbSrv(rbSrv),
-        m_debugMesh(nullptr),
+        mRbSrv(rbSrv),
+        mDebugGeometry(nullptr),
         mFontRenderer(nullptr),
-        m_lastIndex(0) {
-    OSRE_ASSERT(nullptr != m_rbSrv);
+        mLastIndex(0) {
+    osre_assert(nullptr != mRbSrv);
 }
 
 DbgRenderer::~DbgRenderer() {
-    Mesh::destroy(&m_debugMesh);
+    Mesh::destroy(&mDebugGeometry);
 }
 
 bool DbgRenderer::create(RenderBackend::RenderBackendService *rbSrv) {
@@ -76,11 +76,11 @@ void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui32 id, const String &text) {
         return;
     }
 
-    m_rbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
-    m_rbSrv->beginRenderBatch("dbgFontBatch");
+    mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
+    mRbSrv->beginRenderBatch("dbgFontBatch");
 
-    m_rbSrv->endRenderBatch();
-    m_rbSrv->endPass();
+    mRbSrv->endRenderBatch();
+    mRbSrv->endPass();
 }
 
 static const ui32 NumIndices = 24;
@@ -162,39 +162,39 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb)
 
     mesh->m_model = transform;
 
-    m_rbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
-    m_rbSrv->beginRenderBatch("dbgFontBatch");
+    mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
+    mRbSrv->beginRenderBatch("dbgFontBatch");
 
-    m_rbSrv->setMatrix(MatrixType::Model, transform);
-    m_rbSrv->addMesh(mesh, 0);
+    mRbSrv->setMatrix(MatrixType::Model, transform);
+    mRbSrv->addMesh(mesh, 0);
 
-    m_rbSrv->endRenderBatch();
-    m_rbSrv->endPass();
+    mRbSrv->endRenderBatch();
+    mRbSrv->endPass();
 }
 
 void DbgRenderer::clear() {
 }
 
 void DbgRenderer::addLine(const ColorVert &v0, const ColorVert &v1) {
-    if (nullptr == m_debugMesh) {
-        m_debugMesh = Mesh::create(1, VertexType::ColorVertex);
+    if (nullptr == mDebugGeometry) {
+        mDebugGeometry = Mesh::create(1, VertexType::ColorVertex);
     }
 
     ColorVert vertices[2];
     vertices[0] = v0;
     vertices[1] = v1;
 
-    m_debugMesh->m_vb->attach(&vertices[0], sizeof(ColorVert) * 2);
+    mDebugGeometry->m_vb->attach(&vertices[0], sizeof(ColorVert) * 2);
     ui16 lineIndices[2];
-    lineIndices[0] = m_lastIndex;
-    m_lastIndex++;
-    lineIndices[1] = m_lastIndex;
-    m_lastIndex++;
+    lineIndices[0] = mLastIndex;
+    mLastIndex++;
+    lineIndices[1] = mLastIndex;
+    mLastIndex++;
 
-    m_debugMesh->m_ib->attach(&lineIndices[0], sizeof(ui16) * 2);
+    mDebugGeometry->m_ib->attach(&lineIndices[0], sizeof(ui16) * 2);
 
-    m_debugMesh->m_primGroups = new PrimitiveGroup[1];
-    m_debugMesh->m_primGroups[0].init(IndexType::UnsignedShort, NumIndices, PrimitiveType::LineList, 0);
+    mDebugGeometry->m_primGroups = new PrimitiveGroup[1];
+    mDebugGeometry->m_primGroups[0].init(IndexType::UnsignedShort, NumIndices, PrimitiveType::LineList, 0);
 }
 
 } // Namespace Scene

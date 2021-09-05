@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
 #include <osre/Scene/SceneCommon.h>
 #include <osre/Scene/TAABB.h>
 
@@ -60,11 +61,11 @@ private:
 private:
     static DbgRenderer *s_instance;
 
-    RenderBackend::RenderBackendService *m_rbSrv;
-    RenderBackend::TransformMatrixBlock m_transformMatrix;
+    RenderBackend::RenderBackendService *mRbSrv;
+    RenderBackend::TransformMatrixBlock mTransformMatrix;
     UI::FontRenderer *mFontRenderer;
-    RenderBackend::Mesh *m_debugMesh;
-    ui16 m_lastIndex;
+    RenderBackend::Mesh *mDebugGeometry;
+    ui16 mLastIndex;
 };
 
 } // Namespace Scene

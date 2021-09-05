@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Profiling/FPSCounter.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
 
 #include "OGLCommon.h"
 #include <map>
@@ -76,8 +77,6 @@ struct PrimitiveGroup;
 //-------------------------------------------------------------------------------------------------
 class OGLRenderBackend {
 public:
-	TransformMatrixBlock m_mvp;
-
 	using VertAttribArray = CPPCore::TArray<OGLVertexAttribute *>;
 
 	/// The default class constructor.
@@ -154,7 +153,8 @@ public:
     const String &getExtensions() const;
     
 private:
-	Platform::AbstractOGLRenderContext *mRenderCtx;
+    TransformMatrixBlock mMatrixBlock;
+    Platform::AbstractOGLRenderContext *mRenderCtx;
 	CPPCore::TArray<OGLBuffer*> mBuffers;
 	GLuint mActiveVB;
 	GLuint mActiveIB;

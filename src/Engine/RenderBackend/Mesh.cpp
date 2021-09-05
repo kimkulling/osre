@@ -116,10 +116,10 @@ PrimitiveGroup *Mesh::createPrimitiveGroups(size_t numPrimGroups, IndexType *typ
         return nullptr;
     }
 
-    OSRE_ASSERT(nullptr != types);
-    OSRE_ASSERT(nullptr != numIndices);
-    OSRE_ASSERT(nullptr != primTypes);
-    OSRE_ASSERT(nullptr != startIndices);
+    osre_assert(nullptr != types);
+    osre_assert(nullptr != numIndices);
+    osre_assert(nullptr != primTypes);
+    osre_assert(nullptr != startIndices);
 
     m_numPrimGroups = numPrimGroups;
     m_primGroups = new PrimitiveGroup[m_numPrimGroups];

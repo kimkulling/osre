@@ -33,7 +33,7 @@ class DebuggingTest : public ::testing::Test {
 TEST_F(DebuggingTest, ValidateTest) {
     bool ok = true;
     try {
-        OSRE_VALIDATE(false, "haha");
+        osre_validate(false, "haha");
     } catch( ...) {
         ok = false;
     }

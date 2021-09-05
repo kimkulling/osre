@@ -75,7 +75,7 @@ static void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint i
             break;
 
         default:
-            OSRE_ASSERT(false);
+            osre_assert(false);
             break;
     }
     std::cout << std::endl;

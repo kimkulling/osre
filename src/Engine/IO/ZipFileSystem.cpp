@@ -85,7 +85,7 @@ Stream *ZipFileSystem::open( const Uri &file, Stream::AccessMode mode ) {
 }
 
 void ZipFileSystem::close( Stream **ppZipFileStream ) {
-    OSRE_ASSERT( nullptr != *ppZipFileStream );
+    osre_assert( nullptr != *ppZipFileStream );
     
     const String &name = ( *ppZipFileStream )->getUri().getResource();
     StreamMap::iterator it = m_FileMap.find( name );
@@ -157,7 +157,7 @@ void ZipFileSystem::getFileList( std::vector<String> &rFileList ) {
 }
 
 bool ZipFileSystem::openArchive() {
-    OSRE_ASSERT(nullptr == m_ZipFileHandle );
+    osre_assert(nullptr == m_ZipFileHandle );
 
     String current_dir = IOSystemInfo::getCurrentDirectory();
     if (m_ArchiveName.empty()) {
@@ -177,7 +177,7 @@ bool ZipFileSystem::isOpened() const {
 }
 
 void ZipFileSystem::mapArchive() {
-    OSRE_ASSERT(nullptr != m_ZipFileHandle );
+    osre_assert(nullptr != m_ZipFileHandle );
 
     if (!m_FileList.empty()) {
         m_FileList.resize(0);

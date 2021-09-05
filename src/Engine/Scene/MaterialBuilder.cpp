@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Uri.h>
 #include <osre/RenderBackend/Shader.h>
 #include <osre/Scene/MaterialBuilder.h>
-
+#include <osre/Debugging/osre_debugging.h>
 #include <cstdio>
 
 namespace OSRE {
@@ -51,8 +51,7 @@ static const String GLSLCombinedMVPUniformSrc =
         "// uniforms\n"
         "uniform mat4 Model;\n"
         "uniform mat4 View;\n"
-        "uniform mat4 Projection;\n"
-        "uniform mat4 MVP;	//combined modelview projection matrix\n";
+        "uniform mat4 Projection;\n";
 
 static const String GLSLVsSrc =
         GLSLVersionString_400 +
@@ -67,6 +66,8 @@ static const String GLSLVsSrc =
         GLSLCombinedMVPUniformSrc +
         "\n"
         "void main() {\n"
+        "    mat4 ModelView = View * Model;\n"
+        "    mat4 MVP = Projection * ModelView;\n"
         "    // assign the per-vertex color to vSmoothColor varying\n"
         "    vSmoothColor = vec4(color0,1);\n"
         "    // get the clip space position by multiplying the combined MVP matrix with the object space\n"
@@ -116,7 +117,7 @@ const String GLSLVertexShaderSrcRV =
         "    // get the clip space position by multiplying the combined MVP matrix with the object space\n" 
         "    vec3 light_position_eye = vec3(View * vec4(light_pos, 1.0));\n"
         "    vec3 distance_to_light_eye = light_position_eye - position_eye;\n" 
-        "    vec3 direction_to_light_eye = normalize (distance_to_light_eye);\n"
+        "    vec3 direction_to_light_eye = normalize(distance_to_light_eye);\n"
         "    vec3 reflection_eye = reflect(-direction_to_light_eye, normal_eye);\n"
         "    vec3 surface_to_viewer_eye = normalize(-position_eye);\n"
         "    float dot_prod_specular = dot(reflection_eye, surface_to_viewer_eye);\n" 
@@ -129,8 +130,8 @@ const String GLSLVertexShaderSrcRV =
         "    vec3 Is = Ls * Ks * specular_factor; // final specular intensity\n"
         "    vec3 Id = Ld * Kd * dot_prod;\n"
         "\n"
-        "    //vertex position\n"
-        "    gl_Position = MVP*vec4(position,1);\n"
+        "    //vertex position\n" 
+        "    gl_Position = Projection * vec4(position_eye, 1.0);\n"
         "    vSmoothColor = vec4(Is + Id + Ia, 1.0);\n"
         "    vUV = texcoord0;\n"
         "}\n";
@@ -171,6 +172,8 @@ const String GLSLVsSrcRV_Editor =
         "\n"
         "    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
         "    //vertex position\n"
+        "    mat4 ModelView = View * Model;\n"
+        "    mat4 MVP = Projection * ModelView;\n"
         "    Position = (MVP*vec4(position,1)).xyz;\n"
         "    gl_Position = MVP*vec4(position,1);\n"
         "    vSmoothColor = vec4( color0, 1 );\n"
@@ -309,6 +312,14 @@ void MaterialBuilder::destroy() {
     s_materialCache = nullptr;
 }
 
+static void addMaterialParameter(Material *mat) {
+    osre_assert(nullptr != mat);
+
+    mat->m_shader->m_parameters.add("Model");
+    mat->m_shader->m_parameters.add("View");
+    mat->m_shader->m_parameters.add("Projection");
+}
+
 Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
     Material *mat = s_materialCache->find("buildinShaderMaterial");
     if (nullptr != mat) {
@@ -343,7 +354,7 @@ Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
                     RenderVert::getNumAttributes());
         }
 
-        mat->m_shader->m_parameters.add("MVP");
+        addMaterialParameter(mat);
     }
 
     return mat;
@@ -367,8 +378,8 @@ Material *MaterialBuilder::createBuildinUiMaterial() {
         const String *attribs(RenderVert::getAttributes());
         if (numAttribs > 0) {
             mat->m_shader->m_attributes.add(attribs, numAttribs);
-            mat->m_shader->m_parameters.add("MVP");
         }
+        addMaterialParameter(mat);
     }
 
     return mat;
@@ -422,7 +433,7 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
             mat->m_shader->m_attributes.add(RenderVert::getAttributes(), RenderVert::getNumAttributes());
         }
 
-        mat->m_shader->m_parameters.add("MVP");
+        addMaterialParameter(mat);
     }
 
     return mat;

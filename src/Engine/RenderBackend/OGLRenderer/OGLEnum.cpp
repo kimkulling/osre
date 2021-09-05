@@ -37,7 +37,7 @@ GLenum OGLEnum::getGLBufferType( BufferType type ) {
             return GL_UNIFORM_BUFFER;
         case BufferType::EmptyBuffer:
         default:
-            OSRE_ASSERT2( false, "Unknown enum for BufferType." );
+            osre_assert2( false, "Unknown enum for BufferType." );
             break;
     }
 
@@ -53,7 +53,7 @@ GLenum OGLEnum::getGLBufferAccessType( BufferAccessType type ) {
         case BufferAccessType::ReadWrite:
             return GL_DYNAMIC_DRAW;
         default:
-            OSRE_ASSERT2( false, "Unknown enum for buffer BufferAccessType." );
+            osre_assert2( false, "Unknown enum for buffer BufferAccessType." );
             break;
     }
 
@@ -75,7 +75,7 @@ GLenum OGLEnum::getGLPrimitiveType( PrimitiveType primType ) {
         case PrimitiveType::TriangleFan:
             return GL_TRIANGLE_FAN;
         default:
-            OSRE_ASSERT2( false, "Unknown enum for PrimitiveType." );
+            osre_assert2( false, "Unknown enum for PrimitiveType." );
             break;
     }
 
@@ -91,7 +91,7 @@ GLenum OGLEnum::getGLIndexType( IndexType indexType ) {
         case IndexType::UnsignedInt:
             return GL_UNSIGNED_INT;
         default:
-            OSRE_ASSERT2( false, "Unknown enum for IndexType." );
+            osre_assert2( false, "Unknown enum for IndexType." );
             break;
     }
 
@@ -107,7 +107,7 @@ GLenum OGLEnum::getGLTextureTarget( TextureTargetType type ) {
         case TextureTargetType::Texture3D:
             return GL_TEXTURE_3D;
         default:
-            OSRE_ASSERT2( false, "Unknown enum for TextureTargetType." );
+            osre_assert2( false, "Unknown enum for TextureTargetType." );
             break;
     }
 
@@ -125,7 +125,7 @@ GLenum OGLEnum::getGLTextureEnum( TextureParameterName name ) {
         case TextureParameterName::TextureParamWrapT:
             return GL_TEXTURE_WRAP_T;
         default:
-            OSRE_ASSERT2( false, "Unknown enum for TextureParameterName." );
+            osre_assert2( false, "Unknown enum for TextureParameterName." );
             break;
     }
 
@@ -140,7 +140,7 @@ GLenum  OGLEnum::getGLTextureFormat(PixelFormatType texFormat) {
             return GL_RGBA;
         case PixelFormatType::InvaliTextureType:
         default:
-            OSRE_ASSERT2( false, "Unknown enum for TextureParameterName." );
+            osre_assert2( false, "Unknown enum for TextureParameterName." );
             break;
     }
 
@@ -158,7 +158,7 @@ GLenum OGLEnum::getGLTextureStage( TextureStageType texType ) {
         case TextureStageType::TextureStage3:
             return GL_TEXTURE3;
         default:
-            OSRE_ASSERT2( false, "Unknown enum for TextureStageType." );
+            osre_assert2( false, "Unknown enum for TextureStageType." );
             break;
     }
 
@@ -182,7 +182,7 @@ GLenum OGLEnum::getOGLTypeForFormat( VertexFormat format ) {
         case VertexFormat::NumVertexFormats:
         case VertexFormat::InvalidVertexFormat:
         default:
-            OSRE_ASSERT2( false, "Unknown enum for VertexFormat." );
+            osre_assert2( false, "Unknown enum for VertexFormat." );
             break;
     }
 
@@ -207,7 +207,7 @@ ui32 OGLEnum::getOGLSizeForFormat( VertexFormat format ) {
         case VertexFormat::InvalidVertexFormat:
             return 0;
         default:
-            OSRE_ASSERT2( false, "Unknown enum for VertexFormat." );
+            osre_assert2( false, "Unknown enum for VertexFormat." );
             break;
     }
 
@@ -221,7 +221,7 @@ GLenum OGLEnum::getOGLCullState( CullState::CullMode cullMode ) {
         case CullState::CullMode::CCW:
             return GL_CCW;
         default:
-            OSRE_ASSERT2( false, "Unknown enum for CullState::CullMode." );
+            osre_assert2( false, "Unknown enum for CullState::CullMode." );
             break;
     }
 
@@ -237,7 +237,7 @@ GLenum OGLEnum::getOGLCullFace( CullState::CullFace cullFace ) {
         case CullState::CullFace::FrontAndBack:
             return GL_FRONT_AND_BACK;
         default:
-            OSRE_ASSERT2( false, "Unknown enum for CullState::CullFace." );
+            osre_assert2( false, "Unknown enum for CullState::CullFace." );
             break;
     }
     
@@ -253,7 +253,7 @@ GLenum OGLEnum::getOGLPolygonMode( PolygonState::PolygonMode polyMode ) {
         case PolygonState::PolygonMode::Fill:
             return GL_FILL;
         default:
-            OSRE_ASSERT2(false, "Unknown enum for PolygonState::PolygonMode.");
+            osre_assert2(false, "Unknown enum for PolygonState::PolygonMode.");
             break;
     }
 
@@ -271,7 +271,7 @@ GLuint OGLEnum::getOGLShaderType( ShaderType type ) {
     case ShaderType::SH_TesselationShaderType:
         return GL_TESS_EVALUATION_SHADER;
     default:
-        OSRE_ASSERT2( false, "Unknown enum for ShaderType." );
+        osre_assert2( false, "Unknown enum for ShaderType." );
         break;
     }
 

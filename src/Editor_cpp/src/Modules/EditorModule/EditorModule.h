@@ -3,6 +3,7 @@
 #include "Modules/ModuleBase.h"
 
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
 
 namespace OSRE {
 namespace Editor {
@@ -24,7 +25,7 @@ protected:
     void onRender() override;
 
 private:
-    RenderBackend::TransformMatrixBlock m_transformMatrix;
+    RenderBackend::TransformMatrixBlock mTransformMatrix;
 };
 
 }

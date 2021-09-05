@@ -323,6 +323,7 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
     ${HEADER_PATH}/RenderBackend/Mesh.h
     ${HEADER_PATH}/RenderBackend/THWBufferManager.h
+    ${HEADER_PATH}/RenderBackend/TransformMatrixBlock.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
     ${HEADER_PATH}/RenderBackend/RenderStates.h
@@ -334,6 +335,7 @@ SET( renderbackend_src
     RenderBackend/RenderCommon.cpp
     RenderBackend/Pipeline.cpp
     RenderBackend/THWBufferManager.cpp
+    RenderBackend/TransformMatrixBlock.cpp
     RenderBackend/Shader.cpp
 )
 SET( renderbackend_oglrenderer_src

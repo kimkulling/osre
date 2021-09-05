@@ -79,7 +79,7 @@ inline
 TaskJob::TaskJob( const Common::Event *pEvent, const Common::EventData *pEventData ) 
 : m_event( pEvent )
 , m_eventData( pEventData ) {
-    OSRE_ASSERT(nullptr != pEvent);
+    osre_assert(nullptr != pEvent);
 }
 
 inline

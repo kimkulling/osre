@@ -51,9 +51,6 @@ using namespace ::OSRE::Platform;
 using namespace ::CPPCore;
 
 bool setupTextures(Material *mat, OGLRenderBackend *rb, TArray<OGLTexture *> &textures) {
-    OSRE_ASSERT(nullptr != mat);
-    OSRE_ASSERT(nullptr != rb);
-
     if (nullptr == mat) {
         osre_debug(Tag, "Material is nullptr.");
         return false;
@@ -85,19 +82,20 @@ bool setupTextures(Material *mat, OGLRenderBackend *rb, TArray<OGLTexture *> &te
 }
 
 SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb, OGLRenderEventHandler *eh) {
-    OSRE_ASSERT(nullptr != eh);
-    OSRE_ASSERT(nullptr != material);
-    OSRE_ASSERT(nullptr != rb);
+    osre_assert(nullptr != eh);
+    osre_assert(nullptr != material);
+    osre_assert(nullptr != rb);
 
     if (nullptr == material || nullptr == rb || nullptr == eh) {
         return nullptr;
     }
-    SetMaterialStageCmdData *matData = new SetMaterialStageCmdData;
+    
+    auto *matData = new SetMaterialStageCmdData;
     switch (material->m_type) {
         case MaterialType::ShaderMaterial: {
             TArray<OGLTexture *> textures;
             setupTextures(material, rb, textures);
-            OGLRenderCmd *renderMatCmd = new OGLRenderCmd(OGLRenderCmdType::SetMaterialCmd);
+            auto *renderMatCmd = new OGLRenderCmd(OGLRenderCmdType::SetMaterialCmd);
             if (!textures.isEmpty()) {
                 matData->m_textures = textures;
             }
@@ -106,13 +104,12 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
             OGLShader *shader = rb->createShader(name, material->m_shader);
             if (nullptr != shader) {
                 matData->m_shader = shader;
-                for (ui32 i = 0; i < material->m_shader->m_attributes.size(); i++) {
-                    const String &attribute = material->m_shader->m_attributes[i];
+                for (const OSRE::String & attribute : material->m_shader->m_attributes) {
                     shader->addAttribute(attribute);
                 }
 
-                for (ui32 i = 0; i < material->m_shader->m_parameters.size(); i++) {
-                    shader->addUniform(material->m_shader->m_parameters[i]);
+                for (auto & parameter : material->m_shader->m_parameters) {
+                    shader->addUniform(parameter);
                 }
 
                 // for setting up all buffer objects
@@ -129,9 +126,9 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
 }
 
 void setupParameter(UniformVar *param, OGLRenderBackend *rb, OGLRenderEventHandler *ev) {
-    OSRE_ASSERT(nullptr != param);
-    OSRE_ASSERT(nullptr != rb);
-    OSRE_ASSERT(nullptr != ev);
+    osre_assert(nullptr != param);
+    osre_assert(nullptr != rb);
+    osre_assert(nullptr != ev);
 
     if (nullptr == param || nullptr == rb || nullptr == ev) {
         return;
@@ -150,9 +147,9 @@ void setupParameter(UniformVar *param, OGLRenderBackend *rb, OGLRenderEventHandl
 }
 
 OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglShader) {
-    OSRE_ASSERT(nullptr != mesh);
-    OSRE_ASSERT(nullptr != rb);
-    OSRE_ASSERT(nullptr != oglShader);
+    osre_assert(nullptr != mesh);
+    osre_assert(nullptr != rb);
+    osre_assert(nullptr != oglShader);
 
     if (nullptr == mesh || nullptr == rb || nullptr == oglShader) {
         return nullptr;
@@ -201,15 +198,15 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
 void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat4 &model,
         const TArray<size_t> &primGroups, OGLRenderBackend *rb,
         OGLRenderEventHandler *eh, OGLVertexArray *va) {
-    OSRE_ASSERT(nullptr != rb);
-    OSRE_ASSERT(nullptr != eh);
+    osre_assert(nullptr != rb);
+    osre_assert(nullptr != eh);
 
     if (primGroups.isEmpty()) {
         return;
     }
 
-    OGLRenderCmd *renderCmd = new OGLRenderCmd(OGLRenderCmdType::DrawPrimitivesCmd);
-    DrawPrimitivesCmdData *data = new DrawPrimitivesCmdData;
+    auto *renderCmd = new OGLRenderCmd(OGLRenderCmdType::DrawPrimitivesCmd);
+    auto *data = new DrawPrimitivesCmdData;
     if (useLocalMatrix) {
         data->m_model = model;
         data->m_localMatrix = useLocalMatrix;
@@ -227,8 +224,8 @@ void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat4 &mode
 
 void setupInstancedDrawCmd(const char *id, const TArray<size_t> &ids, OGLRenderBackend *rb,
         OGLRenderEventHandler *eh, OGLVertexArray *va, size_t numInstances) {
-    OSRE_ASSERT(nullptr != rb);
-    OSRE_ASSERT(nullptr != eh);
+    osre_assert(nullptr != rb);
+    osre_assert(nullptr != eh);
 
     if (ids.isEmpty()) {
         return;

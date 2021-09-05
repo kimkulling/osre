@@ -25,9 +25,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Random/RandomGenerator.h>
 #include <osre/Common/Logger.h>
+#include <osre/Common/glm_common.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/Scene/MeshBuilder.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>

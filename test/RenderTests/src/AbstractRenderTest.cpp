@@ -47,7 +47,7 @@ AbstractRenderTest::~AbstractRenderTest() {
 }
 
 bool AbstractRenderTest::create(RenderBackendService *rbSrv) {
-    OSRE_ASSERT(nullptr != rbSrv);
+    osre_assert(nullptr != rbSrv);
 
     osre_info(m_renderTestName, "=> Creating test.");
     const String &name(getTestName());
@@ -60,7 +60,7 @@ bool AbstractRenderTest::create(RenderBackendService *rbSrv) {
 }
 
 bool AbstractRenderTest::destroy(RenderBackendService *rbSrv) {
-    OSRE_ASSERT(nullptr != rbSrv);
+    osre_assert(nullptr != rbSrv);
 
     osre_info(m_renderTestName, "<= Destroying test.");
 
@@ -68,7 +68,7 @@ bool AbstractRenderTest::destroy(RenderBackendService *rbSrv) {
 }
 
 bool AbstractRenderTest::render(RenderBackendService *rbSrv) {
-    OSRE_ASSERT(nullptr != rbSrv);
+    osre_assert(nullptr != rbSrv);
 
     return onRender(rbSrv);
 }

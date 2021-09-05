@@ -37,6 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/Pipeline.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
 #include <osre/Scene/Camera.h>
 #include <osre/Scene/MaterialBuilder.h>
 
@@ -144,7 +145,7 @@ AppBase::~AppBase() {
 
 bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &title, bool fullscreen,
         RenderBackendType renderer) {
-    OSRE_ASSERT(nullptr != m_settings);
+    osre_assert(nullptr != m_settings);
 
     m_settings->setInt(Properties::Settings::WinX, x);
     m_settings->setInt(Properties::Settings::WinY, y);
@@ -197,7 +198,7 @@ void AppBase::resize(i32 x, i32 y, i32 w, i32 h) {
 }
 
 void AppBase::requestNextFrame() {
-    OSRE_ASSERT(nullptr != m_rbService);
+    osre_assert(nullptr != m_rbService);
 
     if (nullptr == m_activeWorld) {
         return;

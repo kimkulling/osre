@@ -32,7 +32,7 @@ namespace Platform {
 static const c8 *Tag = "Threading.win32";
 
 CriticalSection::CriticalSection() {
-    OSRE_VALIDATE(InitializeCriticalSectionAndSpinCount(&m_CriticalSection, 1024), "Error while InitializeCriticalSectionAndSpinCount");
+    osre_validate(InitializeCriticalSectionAndSpinCount(&m_CriticalSection, 1024), "Error while InitializeCriticalSectionAndSpinCount");
 }
 
 CriticalSection::~CriticalSection() {
@@ -66,7 +66,7 @@ Mutex::~Mutex() {
 }
 
 void Mutex::lock() {
-    OSRE_ASSERT(nullptr != m_handle);
+    osre_assert(nullptr != m_handle);
 
     if (nullptr != m_handle) {
         ::WaitForSingleObject(m_handle, INFINITE);
@@ -74,7 +74,7 @@ void Mutex::lock() {
 }
 
 bool Mutex::tryLock() {
-    OSRE_ASSERT(nullptr != m_handle);
+    osre_assert(nullptr != m_handle);
 
     bool ok(false);
     if (nullptr != m_handle) {
@@ -87,7 +87,7 @@ bool Mutex::tryLock() {
 }
 
 bool Mutex::unlock() {
-    OSRE_ASSERT(nullptr != m_handle);
+    osre_assert(nullptr != m_handle);
 
     bool ok = false;
     if (nullptr != m_handle) {
@@ -361,23 +361,23 @@ HANDLE ThreadEvent::getHandle() const {
 ThreadLocalStorage::ThreadLocalStorage() :
         m_index(TLS_OUT_OF_INDEXES) {
     m_index = ::TlsAlloc();
-    OSRE_ASSERT(TLS_OUT_OF_INDEXES != m_index);
+    osre_assert(TLS_OUT_OF_INDEXES != m_index);
 }
 
 ThreadLocalStorage::~ThreadLocalStorage() {
-    OSRE_ASSERT(TLS_OUT_OF_INDEXES != m_index);
+    osre_assert(TLS_OUT_OF_INDEXES != m_index);
 
     ::TlsFree(m_index);
 }
 
 void *ThreadLocalStorage::get() {
-    OSRE_ASSERT(TLS_OUT_OF_INDEXES != m_index);
+    osre_assert(TLS_OUT_OF_INDEXES != m_index);
 
     return ::TlsGetValue(m_index);
 }
 
 void ThreadLocalStorage::set(void *data) {
-    OSRE_ASSERT(TLS_OUT_OF_INDEXES != m_index);
+    osre_assert(TLS_OUT_OF_INDEXES != m_index);
 
     ::TlsSetValue(m_index, data);
 }
