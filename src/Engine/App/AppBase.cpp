@@ -115,6 +115,15 @@ void TransformController::update(TransformCommandType cmdType) {
     if (cmdType == Scene::TransformCommandType::RotateZCommandPositive) {
         mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 0, 1));
     }
+
+    glm::mat4 scale(1.0);
+    if (cmdType == Scene::TransformCommandType::ScaleInCommand) {
+        mTransform.m_model *= glm::scale(scale, glm::vec3(1.01, 1.01, 1.01));    
+    }
+
+    if (cmdType == Scene::TransformCommandType::ScaleOutCommand) {
+        mTransform.m_model *= glm::scale(scale, glm::vec3(0.99, 0.99, 0.99));
+    }
 }
 
 AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
