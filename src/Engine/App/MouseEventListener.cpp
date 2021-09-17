@@ -56,7 +56,6 @@ void MouseEventListener::onOSEvent(const Event&, const EventData *data) {
     mLastY = mAbsY;
     mAbsX = mouseEventData->m_AbsX;
     mAbsY = mouseEventData->m_AbsY;
-    clearCoords(mRelX, mRelY, mAbsX, mAbsY);
     mRelX = mLastX - mAbsX;
     mRelY = mLastY - mAbsY;
     if (mouseEventData->m_Button == MouseButtonEventData::LeftButton) {
@@ -64,7 +63,6 @@ void MouseEventListener::onOSEvent(const Event&, const EventData *data) {
             mMouseButtonState.setBit(LeftButton);
         } else {
             mMouseButtonState.clearBit(LeftButton);
-            clearCoords(mRelX, mRelY, mAbsX, mAbsY);
         }
     }
     
@@ -73,7 +71,6 @@ void MouseEventListener::onOSEvent(const Event&, const EventData *data) {
             mMouseButtonState.setBit(MiddleButton);
         } else {
             mMouseButtonState.clearBit(MiddleButton);
-            clearCoords(mRelX, mRelY, mAbsX, mAbsY);
         }
     }
     
@@ -82,7 +79,6 @@ void MouseEventListener::onOSEvent(const Event&, const EventData *data) {
             mMouseButtonState.setBit(RightButton);
         } else {
             mMouseButtonState.clearBit(RightButton);
-            clearCoords(mRelX, mRelY, mAbsX, mAbsY);
         }
     }
 }

@@ -4,6 +4,19 @@
 namespace OSRE {
 namespace Scene {
 
+bool parseInclude(const String &line, String &includeFile) {
+    String::size_type pos = line.find(ShaderToken::IncludeToken);
+    if (pos == String::npos) {
+        return false;
+    }
+
+    String::size_type start = line.find('"');
+    String::size_type end = line.rfind('"');
+    includeFile = line.substr(start + 1, end - start - 2);
+
+    return !includeFile.empty();
+}
+    
 PipelineBuilder::PipelineBuilder() :
         mPipeline(nullptr) {
     // empty

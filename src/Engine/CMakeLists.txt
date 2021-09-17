@@ -69,7 +69,6 @@ SET( app_src
 SET( common_inc
     ${HEADER_PATH}/Common/Common.h
     ${HEADER_PATH}/Common/Environment.h
-    ${HEADER_PATH}/Common/CommandQueue.h
     ${HEADER_PATH}/Common/AbstractEventHandler.h
     ${HEADER_PATH}/Common/AbstractProcessor.h
     ${HEADER_PATH}/Common/ArgumentParser.h

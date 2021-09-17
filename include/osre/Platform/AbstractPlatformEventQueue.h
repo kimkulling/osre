@@ -34,7 +34,7 @@ namespace OSRE {
 
 // Forward declarations
 namespace RenderBackend {
-class RenderBackendService;
+    class RenderBackendService;
 }
 
 namespace Platform {
