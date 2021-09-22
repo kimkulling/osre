@@ -76,6 +76,7 @@ SET( common_inc
     ${HEADER_PATH}/Common/ColorRGBA.h
     ${HEADER_PATH}/Common/DateTime.h
     ${HEADER_PATH}/Common/Event.h
+    ${HEADER_PATH}/Common/EventBus.h
     ${HEADER_PATH}/Common/EventTriggerer.h
     ${HEADER_PATH}/Common/Ids.h
     ${HEADER_PATH}/Common/Logger.h
@@ -95,6 +96,7 @@ SET( common_src
     Common/CommandQueue.cpp
     Common/DateTime.cpp
     Common/Event.cpp
+    Common/EventBus.cpp
     Common/EventTriggerer.cpp
     Common/Environment.cpp
     Common/Ids.cpp

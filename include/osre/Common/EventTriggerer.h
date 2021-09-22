@@ -50,7 +50,7 @@ public:
     ///	@brief	Add an listener for an event
     ///	@param	ev	Reference to listened event
     ///	@param	func	Reference to called functor
-    void addEventListener( const Event& ev, const EventFunctor &func );
+    void addEventListener(const Event& ev, const EventFunctor &func );
 
     ///	@brief	Add an listener for an event
     ///	@param	ev	    Reference to listened event-array.

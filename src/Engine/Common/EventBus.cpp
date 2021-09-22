@@ -1,0 +1,123 @@
+/*-----------------------------------------------------------------------------------------------
+The MIT License (MIT)
+
+Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-----------------------------------------------------------------------------------------------*/
+#include <osre/Common/EventBus.h>
+#include <osre/Common/Event.h>
+#include <osre/Common/AbstractEventHandler.h>
+#include <cppcore/Memory/TPoolAllocator.h>
+
+namespace OSRE {
+namespace Common {
+
+CPPCore::TPoolAllocator<QueueEntry> QueueEntryAlloctor;
+
+EventBus::EventBus() :
+        mSuscribedHandler(), mRegisteredTriggerer(), mQueueEntryArray(), mCreated(false) {
+    // empty
+}
+
+EventBus::~EventBus() {
+    // empty
+}
+
+bool EventBus::create() {
+    if (mCreated) {
+        return false;
+    }
+
+    mCreated = true;
+    QueueEntryAlloctor.reserve(1000);
+    
+    return mCreated;
+}
+
+bool EventBus::isCreated() const {
+    return mCreated;
+
+}
+
+bool EventBus::destroy() {
+    if (!mCreated) {
+        return false;
+    }
+    
+    QueueEntryAlloctor.clear();
+    mCreated = false;
+
+    return true;
+}
+
+void EventBus::update() {
+    if (mQueueEntryArray.isEmpty()) {
+        return;
+    }
+
+    for (ui32 i = 0; i < mQueueEntryArray.size(); ++i) {
+        const QueueEntry *entry = mQueueEntryArray[i];
+        if (nullptr == entry) {
+            continue;
+        }
+
+        const ui32 id = entry->mEvent->getHash();
+        if (mSuscribedHandler.hasKey(id)) {
+            EventHandlerArray *ehArray = nullptr;
+            mSuscribedHandler.getValue(id, ehArray);
+            for (ui32 j = 0; j < ehArray->size(); ++j) {
+                AbstractEventHandler *eh = (*ehArray)[j];
+                eh->onEvent(*entry->mEvent, entry->mEventData);
+            }
+        }
+    }
+}
+
+void EventBus::suscribeEventHandler( AbstractEventHandler *handler, const Event &ev ) {
+    if (nullptr == handler) {
+        return;
+    }
+
+}
+
+void EventBus::unsuscribeEventHandler( AbstractEventHandler *handler, const Event &ev ) {
+    if (nullptr == handler) {
+        return;
+    }
+}
+
+void EventBus::registerEventTrigger(EventTriggerer *triggerer, const Event &ev) {
+    if (nullptr == triggerer) {
+        return;
+    }
+}
+
+void EventBus::unregisterEventTrigger(EventTriggerer *triggerer, const Event &ev) {
+
+}
+
+void EventBus::enqueueEvent( const Event &ev, const EventData *eventData ) {
+    QueueEntry *entry = QueueEntryAlloctor.alloc();
+    entry->mEvent = &ev;
+    entry->mEventData = eventData;
+    mQueueEntryArray.add(entry);
+}
+
+} // namespace Common
+} // namespace OSRE

@@ -101,6 +101,8 @@ struct OSRE_EXPORT Event {
     /// @return The hash id.
     ui32 getHash() const;
 
+    const String &getId() const;
+
     ///	@brief	A reference ownership will be marked.
     void get();
 
@@ -118,6 +120,7 @@ struct OSRE_EXPORT Event {
 
     ui32 m_numRefs;
     HashId m_hash;
+    const String mId;
     const EventData *m_eventData;
 
 };
