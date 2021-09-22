@@ -55,16 +55,12 @@ public:
     void update();
     void suscribeEventHandler(AbstractEventHandler *handler, const Event &ev);
     void unsuscribeEventHandler(AbstractEventHandler *handler, const Event &ev);
-    void registerEventTrigger(EventTriggerer *triggerer, const Event &ev);
-    void unregisterEventTrigger(EventTriggerer *triggerer, const Event &ev);
     void enqueueEvent(const Event &ev, const EventData *eventData);
 
 private:
     using EventHandlerArray = CPPCore::TArray<AbstractEventHandler*>;
     using SuscribedHandler = CPPCore::THashMap<ui32, EventHandlerArray*>;
     SuscribedHandler mSuscribedHandler;
-    using RegisteredTriggerer = CPPCore::TArray<EventTriggerer*>;
-    RegisteredTriggerer mRegisteredTriggerer;
     using QueueEntryArray = CPPCore::TArray<QueueEntry*>;
     QueueEntryArray mQueueEntryArray;
     bool mCreated;

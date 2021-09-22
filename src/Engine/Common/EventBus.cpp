@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Common/EventBus.h>
 #include <osre/Common/Event.h>
+#include <osre/Debugging/osre_debugging.h>
 #include <osre/Common/AbstractEventHandler.h>
 #include <cppcore/Memory/TPoolAllocator.h>
 
@@ -31,7 +32,7 @@ namespace Common {
 CPPCore::TPoolAllocator<QueueEntry> QueueEntryAlloctor;
 
 EventBus::EventBus() :
-        mSuscribedHandler(), mRegisteredTriggerer(), mQueueEntryArray(), mCreated(false) {
+        mSuscribedHandler(), mQueueEntryArray(), mCreated(false) {
     // empty
 }
 
@@ -89,27 +90,37 @@ void EventBus::update() {
     }
 }
 
-void EventBus::suscribeEventHandler( AbstractEventHandler *handler, const Event &ev ) {
+void EventBus::suscribeEventHandler(AbstractEventHandler *handler, const Event &ev) {
     if (nullptr == handler) {
         return;
     }
 
+    const ui32 id = ev.getHash();
+    EventHandlerArray *ehArray = nullptr;
+    if (mSuscribedHandler.hasKey(id)) {
+        mSuscribedHandler.getValue(id, ehArray);            
+    } else {
+        ehArray = new EventHandlerArray;
+        mSuscribedHandler.insert(id, ehArray);
+    }
+    osre_assert(nullptr != ehArray);
+    ehArray->add(handler);
 }
 
-void EventBus::unsuscribeEventHandler( AbstractEventHandler *handler, const Event &ev ) {
+void EventBus::unsuscribeEventHandler(AbstractEventHandler *handler, const Event &ev) {
     if (nullptr == handler) {
         return;
     }
-}
-
-void EventBus::registerEventTrigger(EventTriggerer *triggerer, const Event &ev) {
-    if (nullptr == triggerer) {
-        return;
+    const ui32 id = ev.getHash();
+    if (mSuscribedHandler.hasKey(id)) {
+        EventHandlerArray *ehArray = nullptr;
+        mSuscribedHandler.getValue(id, ehArray);
+        for (ui32 i = 0; i < ehArray->size(); ++i) {
+            if ((*ehArray)[i] == handler) {
+                ehArray->remove(i);
+            }
+        }
     }
-}
-
-void EventBus::unregisterEventTrigger(EventTriggerer *triggerer, const Event &ev) {
-
 }
 
 void EventBus::enqueueEvent( const Event &ev, const EventData *eventData ) {
