@@ -20,12 +20,12 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/App/Project.h>
 #include <osre/App/AssetDataArchive.h>
+#include <osre/App/Project.h>
 #include <osre/App/World.h>
-#include <osre/IO/Uri.h>
-#include <osre/IO/Directory.h>
 #include <osre/Common/Logger.h>
+#include <osre/IO/Directory.h>
+#include <osre/IO/Uri.h>
 
 #include <json/json.h>
 #include <json/reader.h>
@@ -42,42 +42,42 @@ using namespace ::OSRE::Assets;
 using namespace ::OSRE::IO;
 
 namespace Details {
-    static const c8* Tag = "Project";
-    static const c8* EmptyAttributeToken = "empty";
+static const c8 *Tag = "Project";
+static const c8 *EmptyAttributeToken = "empty";
 
-    static String buildVersionString(i32 major, i32 minor) {
-        std::stringstream stream;
+static String buildVersionString(i32 major, i32 minor) {
+    std::stringstream stream;
 
-        stream << "v" << major << "." << minor;
-        const String version = stream.str();
+    stream << "v" << major << "." << minor;
+    const String version = stream.str();
 
-        return version;
+    return version;
+}
+
+static bool parseVersionString(const String &version, i32 &major, i32 &minor) {
+    major = minor = -1;
+    if (version.empty()) {
+        return false;
     }
 
-    static bool parseVersionString(const String& version, i32& major, i32& minor) {
-        major = minor = -1;
-        if (version.empty()) {
-            return false;
-        }
-
-        const char* ptr = &version[1];
-        major = ::atoi(ptr);
-        while (*ptr != '.') {
-            ++ptr;
-        }
-        minor = ::atoi(++ptr);
-
-        return true;
+    const char *ptr = &version[1];
+    major = ::atoi(ptr);
+    while (*ptr != '.') {
+        ++ptr;
     }
+    minor = ::atoi(++ptr);
+
+    return true;
+}
 
 } // Namespace Details
 
-Project::Project()
-: Object("App/Project")
-, m_version(-1, -1)
-, m_flags(-1)
-, m_projectName()
-, m_activeWorld( nullptr ) {
+Project::Project() :
+        Object("App/Project"),
+        m_version(-1, -1),
+        m_flags(-1),
+        m_projectName(),
+        m_activeWorld(nullptr) {
     // empty
 }
 
@@ -98,7 +98,7 @@ bool Project::create(const String &name, i32 major, i32 minor) {
 }
 
 bool Project::isCreated() const {
-    return ( !m_projectName.empty() );
+    return (!m_projectName.empty());
 }
 
 bool Project::destroy() {
@@ -109,21 +109,21 @@ bool Project::destroy() {
     return true;
 }
 
-void Project::setProjectName(const String& projectName) {
+void Project::setProjectName(const String &projectName) {
     if (m_projectName != projectName) {
         m_projectName = projectName;
     }
 }
 
-const String& Project::getProjectName() const {
+const String &Project::getProjectName() const {
     return m_projectName;
 }
 
-void Project::setActiveWorld(World* activeWorld) {
+void Project::setActiveWorld(World *activeWorld) {
     m_activeWorld = activeWorld;
 }
 
-World* Project::getActiveWorld() const {
+World *Project::getActiveWorld() const {
     return m_activeWorld;
 }
 
@@ -135,7 +135,7 @@ i32 Project::getMinorVersion() const {
     return m_version.mMinor;
 }
 
-bool Project::load(const String& name, i32 &major, i32 &minor, i32 flags) {
+bool Project::load(const String &name, i32 &major, i32 &minor, i32 flags) {
     if (name.empty()) {
         osre_warn(Details::Tag, "Project name is empty.");
         return false;
@@ -155,16 +155,16 @@ bool Project::load(const String& name, i32 &major, i32 &minor, i32 flags) {
 
     IO::Uri uri(m_projectName);
     if (uri.isValid()) {
-        AssetDataArchive importer(major, minor );
+        AssetDataArchive importer(major, minor);
         m_activeWorld = importer.load(uri);
     }
 
     Directory::setCurrentDirectory(oldPath);
-    
+
     return true;
 }
 
-bool Project::save(const String &name, i32 /*flags*/ ) {
+bool Project::save(const String &name, i32 /*flags*/) {
     if (!isCreated()) {
         return false;
     }
@@ -188,13 +188,13 @@ bool Project::save(const String &name, i32 /*flags*/ ) {
             return false;
         }
     }
-    
+
     if (!Directory::setCurrentDirectory(path)) {
         return false;
     }
 
     Json::StreamWriterBuilder builder;
-    Json::StreamWriter* sw = builder.newStreamWriter();
+    Json::StreamWriter *sw = builder.newStreamWriter();
 
     saveMetadata(m_version.mMajor, m_version.mMinor, sw);
 
@@ -215,7 +215,7 @@ bool Project::save(const String &name, i32 /*flags*/ ) {
     return res;
 }
 
-bool Project::loadMetadata(i32& major, i32& minor) {
+bool Project::loadMetadata(i32 &major, i32 &minor) {
     String metaName = m_projectName + ".proj";
 
     std::ifstream file;
@@ -224,7 +224,7 @@ bool Project::loadMetadata(i32& major, i32& minor) {
         return false;
     }
 
-    Json::Value  meta;
+    Json::Value meta;
     file >> meta;
 
     String version = meta.get("version", "v0.0").asCString();
@@ -237,7 +237,7 @@ bool Project::loadMetadata(i32& major, i32& minor) {
 
     bool result = true;
     m_projectName = meta.get("name", Details::EmptyAttributeToken).asCString();
-    String activeWorldName  = meta.get("activeWorld", Details::EmptyAttributeToken).asCString();
+    String activeWorldName = meta.get("activeWorld", Details::EmptyAttributeToken).asCString();
     if (activeWorldName != String(Details::EmptyAttributeToken)) {
         AssetDataArchive archive(major, minor);
         IO::Uri uri(m_projectName);
@@ -247,7 +247,7 @@ bool Project::loadMetadata(i32& major, i32& minor) {
     return result;
 }
 
-bool Project::saveMetadata(i32 major, i32 minor, Json::StreamWriter* streamWriter) {
+bool Project::saveMetadata(i32 major, i32 minor, Json::StreamWriter *streamWriter) {
     String metaName = m_projectName + ".proj";
     Json::Value meta;
     meta["name"] = m_projectName;
@@ -263,8 +263,8 @@ bool Project::saveMetadata(i32 major, i32 minor, Json::StreamWriter* streamWrite
     if (!file.is_open()) {
         return false;
     }
-     
-    return ( 0 == streamWriter->write(meta, &file ) );
+
+    return (0 == streamWriter->write(meta, &file));
 }
 
 } // Namespace App

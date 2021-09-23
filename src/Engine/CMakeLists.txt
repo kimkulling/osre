@@ -192,6 +192,7 @@ SET( platform_win_inc
     ${HEADER_PATH}/Platform/Windows/MinWindows.h
 )
 SET( platform_src
+    Platform/AbstractPlatformEventQueue.cpp
     Platform/CPUInfo.cpp
     Platform/SystemInfo.cpp
     Platform/SystemUtils.cpp
