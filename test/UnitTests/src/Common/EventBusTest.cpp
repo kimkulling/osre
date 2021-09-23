@@ -21,9 +21,9 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "osre_testcommon.h"
-#include <osre/Common/EventBus.h>
-#include <osre/Common/Event.h>
 #include <osre/Common/AbstractEventHandler.h>
+#include <osre/Common/Event.h>
+#include <osre/Common/EventBus.h>
 
 namespace OSRE {
 namespace UnitTest {
@@ -46,7 +46,7 @@ public:
         // empty
     }
 
-    bool onEvent( const Event &ev, const EventData *eventData ) override {
+    bool onEvent(const Event &ev, const EventData *) override {
         bool handled = false;
         if (ev == TestEvent1) {
             EventCount1++;
@@ -60,15 +60,15 @@ public:
     }
 
 protected:
-    bool onAttached( const EventData *eventData ) override {
+    bool onAttached(const EventData *) override {
         return true;
     }
 
-    bool onDetached( const EventData *eventData ) override {
+    bool onDetached(const EventData *) override {
         return true;
     }
 };
-                         
+
 TEST_F(EventBusTest, createTest) {
     EventBus bus;
     EXPECT_FALSE(bus.isCreated());
@@ -94,6 +94,8 @@ TEST_F(EventBusTest, enqueueEventTest) {
     bus.update();
     EXPECT_EQ(1, h->EventCount1);
     EXPECT_EQ(1, h->EventCount1);
+    bus.destroy();
+    delete handler;
 }
 
 } // namespace UnitTest
