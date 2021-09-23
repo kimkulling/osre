@@ -28,7 +28,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-///	@brief
+///	@brief  This class is used to describe the global transformation matrixes.
+/// - You can get and set each matrix (model, view, projection, normal or the computed MVP).
+/// - You can use these matrices in your shader.
 struct OSRE_EXPORT TransformMatrixBlock {
     glm::mat4 m_projection;
     glm::mat4 m_model;
@@ -36,17 +38,45 @@ struct OSRE_EXPORT TransformMatrixBlock {
     glm::mat4 m_normal;
     glm::mat4 m_mvp;
 
+    ///	@brief The class constructor.
     TransformMatrixBlock();
+    
+    ///	@brief The class destructor.
     ~TransformMatrixBlock();
+    
+    ///	@brief Will init the data, all matrixes ar unit-matrices again.
     void init();
+    
+    /// @brief All matrices will be recomputed.
     void update();
+    
+    /// @brief The model matrix getter.
+    /// @return const reference to the model matrix.
     const glm::mat4 &getModel() const;
+    
+    /// @brief The view matrix getter.
+    /// @return const reference to the view matrix.
     const glm::mat4 &getView() const;
+
+    /// @brief The projection matrix getter.
+    /// @return const reference to the projection matrix.
     const glm::mat4 &getProjection() const;
+
+    /// @brief The model matrix getter.
+    /// @return Pointer to the model matrix.
     const float *getModelPtr() const;
+
+    /// @brief The view matrix getter.
+    /// @return Pointer to the view matrix.
     const float *getViewPtr() const;
+
+    /// @brief The projection matrix getter.
+    /// @return Pointer to the projection matrix.
     const float *getProjectionPtr() const;
-    const float *TransformMatrixBlock::getMVP();
+
+    /// @brief The model-view-projection matrix getter.
+    /// @return Pointer to the model-view-projection matrix.
+    const float *getMVP();
 
     OSRE_NON_COPYABLE(TransformMatrixBlock)
 };
