@@ -140,7 +140,7 @@ bool OGLRenderEventHandler::onDetached(const EventData *) {
 }
 
 bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
-    OSRE_ASSERT(nullptr != m_oglBackend);
+    osre_assert(nullptr != m_oglBackend);
 
     CreateRendererEventData *createRendererEvData = (CreateRendererEventData *)eventData;
     AbstractWindow *activeSurface = createRendererEvData->m_activeSurface;
@@ -198,7 +198,7 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
 }
 
 bool OGLRenderEventHandler::onDestroyRenderer(const Common::EventData *) {
-    OSRE_ASSERT(nullptr != m_oglBackend);
+    osre_assert(nullptr != m_oglBackend);
 
     if (nullptr != m_renderCtx) {
         return false;
@@ -220,19 +220,19 @@ bool OGLRenderEventHandler::onDestroyRenderer(const Common::EventData *) {
 }
 
 bool OGLRenderEventHandler::onAttachView(const EventData *) {
-    OSRE_ASSERT(nullptr != m_oglBackend);
+    osre_assert(nullptr != m_oglBackend);
 
     return true;
 }
 
 bool OGLRenderEventHandler::onDetachView(const EventData *) {
-    OSRE_ASSERT(nullptr != m_oglBackend);
+    osre_assert(nullptr != m_oglBackend);
 
     return true;
 }
 
 bool OGLRenderEventHandler::onClearGeo(const EventData *) {
-    OSRE_ASSERT(nullptr != m_oglBackend);
+    osre_assert(nullptr != m_oglBackend);
 
     m_oglBackend->releaseAllBuffers();
     m_oglBackend->releaseAllShaders();
@@ -244,14 +244,14 @@ bool OGLRenderEventHandler::onClearGeo(const EventData *) {
 }
 
 bool OGLRenderEventHandler::onRenderFrame(const EventData *eventData) {
-    OSRE_ASSERT(nullptr != m_oglBackend);
+    osre_assert(nullptr != m_oglBackend);
 
     if (nullptr == m_renderCtx) {
         osre_debug(Tag, "Render context is nullptr.");
         return false;
     }
 
-    OSRE_ASSERT(nullptr != m_renderCmdBuffer);
+    osre_assert(nullptr != m_renderCmdBuffer);
 
     m_renderCmdBuffer->onPreRenderFrame();
 
@@ -266,7 +266,7 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, CPPCore::TArray<size_t> &pri
     for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->m_geo.size(); ++meshIdx) {
         Mesh *currentMesh = currentMeshEntry->m_geo[meshIdx];
         if (nullptr == currentMesh) {
-            OSRE_ASSERT(nullptr != currentMesh);
+            osre_assert(nullptr != currentMesh);
             continue;
         }
 
@@ -304,7 +304,7 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, CPPCore::TArray<size_t> &pri
 }
  
 bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventData) {
-    OSRE_ASSERT(nullptr != m_oglBackend);
+    osre_assert(nullptr != m_oglBackend);
 
     InitPassesEventData *frameToCommitData = (InitPassesEventData *)eventData;
     if (nullptr == frameToCommitData) {
@@ -315,7 +315,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
     Frame *frame = frameToCommitData->m_frame;
     for (PassData *currentPass : frame->m_newPasses) {
         if (nullptr == currentPass) {
-            OSRE_ASSERT(nullptr != currentPass);
+            osre_assert(nullptr != currentPass);
             continue;
         }
 
@@ -342,7 +342,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
             for (ui32 meshEntryIdx = 0; meshEntryIdx < currentBatchData->m_meshArray.size(); ++meshEntryIdx) {
                 MeshEntry *currentMeshEntry = currentBatchData->m_meshArray[meshEntryIdx];
                 if (nullptr == currentMeshEntry) {
-                    OSRE_ASSERT(nullptr != currentMeshEntry);
+                    osre_assert(nullptr != currentMeshEntry);
                     continue;
                 }
 
@@ -353,7 +353,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
                 for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->m_geo.size(); ++meshIdx) {
                     Mesh *currentMesh = currentMeshEntry->m_geo[meshIdx];
                     if (nullptr == currentMesh) {
-                        OSRE_ASSERT(nullptr != currentMesh);
+                        osre_assert(nullptr != currentMesh);
                         continue;
                     }
 
@@ -454,7 +454,7 @@ bool OGLRenderEventHandler::onShutdownRequest(const EventData *eventData) {
 }
 
 bool OGLRenderEventHandler::onResizeRenderTarget(const EventData *eventData) {
-    OSRE_ASSERT(nullptr != eventData);
+    osre_assert(nullptr != eventData);
 
     ResizeEventData *data = (ResizeEventData *)eventData;
     if (nullptr != data) {

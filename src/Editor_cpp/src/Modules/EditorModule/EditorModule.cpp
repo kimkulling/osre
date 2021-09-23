@@ -41,7 +41,7 @@ void EditorModule::onRender() {
     rbService->beginPass(RenderPass::getPassNameById(RenderPassId));
     rbService->beginRenderBatch("b1");
 
-    rbService->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+    rbService->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
 
     rbService->endRenderBatch();
     rbService->endPass();

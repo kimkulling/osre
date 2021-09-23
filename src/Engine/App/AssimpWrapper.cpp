@@ -74,6 +74,9 @@ static void setColor4(const aiColor4D &aiCol, Color4 &col) {
 
 static void setTexture(const String &resolvedPath, const aiString &texPath, 
         TextureResourceArray &texResArray, TextureStageType stage) {
+    if (resolvedPath[0] == '*') {
+        
+    }
     String texname;
     texname += "file://";
     texname += resolvedPath;
@@ -99,7 +102,6 @@ AssimpWrapper::AssimpWrapper(Common::Ids &ids, World *world) :
         m_matArray(),
         m_parent(nullptr),
         m_ids(ids),
-        m_mvpParam(nullptr),
         m_root(),
         m_absPathWithFile(),
         m_boneInfoArray(),
@@ -157,12 +159,12 @@ Entity *AssimpWrapper::convertScene() {
     if (nullptr == m_scene) {
         return nullptr;
     }
+
     if (nullptr == mWorld) {
         mWorld = new World("scene");
     }
 
     m_entity = new Entity(m_absPathWithFile, m_ids, mWorld);
-
     if (m_scene->HasMaterials()) {
         for (ui32 i = 0; i < m_scene->mNumMaterials; ++i) {
             aiMaterial *currentMat(m_scene->mMaterials[i]);
@@ -310,6 +312,10 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
                     vertices[vertexOffset].color0.r = diffuse.r;
                     vertices[vertexOffset].color0.g = diffuse.g;
                     vertices[vertexOffset].color0.b = diffuse.b;
+                } else {
+                    vertices[vertexOffset].color0.r = 0.5;
+                    vertices[vertexOffset].color0.g = 0.5;
+                    vertices[vertexOffset].color0.b = 0.5;
                 }
 
                 for (ui32 texIdx = 0; texIdx < AI_MAX_NUMBER_OF_TEXTURECOORDS; texIdx++) {

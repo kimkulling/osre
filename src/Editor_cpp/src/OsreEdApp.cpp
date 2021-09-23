@@ -45,7 +45,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/AnimatorBase.h>
-#include <osre/Common/CommandQueue.h>
 
 #ifdef OSRE_WINDOWS
 #   include "Engine/Platform/win32/Win32EventQueue.h"
@@ -264,7 +263,9 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         mResolution(),
         mMesh2D(nullptr),
         mPythonInterface(nullptr),
-        mTransformController(nullptr) {
+        mTransformController(nullptr),
+        mLastMouseX(0),
+        mLastMouseY(0) {
     // empty
 }
 
@@ -495,19 +496,41 @@ void OsreEdApp::setStatusBarText(const String &mode, const String &model, i32 nu
     }
 }
 
+void getMouseBinding(i32 x, i32 lastX, i32 y, i32 lastY, TArray<TransformCommandType> &transformCmds) {
+    i32 dX = lastX - x;
+    i32 dY = lastY - y;
+    if (dX > 0)
+        transformCmds.add(TransformCommandType::RotateXCommandPositive);
+    else if (dX < 0)
+        transformCmds.add(TransformCommandType::RotateXCommandNegative);
+
+    if (dY > 0)
+        transformCmds.add(TransformCommandType::RotateZCommandPositive);
+    else if (dY < 0)
+        transformCmds.add(TransformCommandType::RotateZCommandNegative);
+}
 
 void OsreEdApp::onUpdate() {
     Key key = AppBase::getKeyboardEventListener()->getLastKey();
-    mTransformController->update(TransformController::getKeyBinding(key));
     glm::mat4 rot(1.0);
     MouseEventListener *listener = AppBase::getMouseEventListener();
+    TArray<TransformCommandType> transformCmds;
     if (listener->leftButttonPressed()) {
-        i32 x = listener->getRelativeX();
-        i32 y = listener->getRelativeY();
+        i32 x = listener->getAbsoluteX();
+        i32 y = listener->getAbsoluteY();
+        getMouseBinding(x, mLastMouseX, y, mLastMouseY, transformCmds);
+        mLastMouseX = x;
+        mLastMouseY = y;
+
         char buffer[512];
         sprintf(buffer, "x: %d, y:%d", x, y);
         osre_info(Tag, "Pressed! "  + String(buffer));
     }
+    mTransformController->update(TransformController::getKeyBinding(key));
+    for (ui32 i = 0; i < transformCmds.size(); ++i) {
+        mTransformController->update(transformCmds[i]);
+    }
+    transformCmds.clear();
     RenderBackendService *rbSrv = getRenderBackendService();
 
     rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));

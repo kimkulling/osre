@@ -114,17 +114,7 @@ public:
     GLint getAttributeLocation(const String &attribute);
     GLint getUniformLocation(const String &uniform);
 
-    /// @brief  returns the location of the attribute.
-    /// @param  attribute   [in] The name of the attribute.
-    /// @return Its location or -1 for an error.
-    //GLint operator[] (const String& attribute);
-    
-    /// @brief  returns the location of the uniform.
-    /// @param  uniform     [in] The name of the uniform.
-    /// @return Its location or -1 for an error.
-    //GLint operator() (const String& uniform);
-
-	// No copying
+    // No copying
     OGLShader( const OGLShader & ) = delete;
     OGLShader &operator = ( const OGLShader & ) = delete;
 

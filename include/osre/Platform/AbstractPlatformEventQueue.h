@@ -34,7 +34,7 @@ namespace OSRE {
 
 // Forward declarations
 namespace RenderBackend {
-class RenderBackendService;
+    class RenderBackendService;
 }
 
 namespace Platform {
@@ -184,7 +184,7 @@ inline RenderBackend::RenderBackendService *AbstractPlatformEventQueue::getRende
 }
 
 inline void AbstractPlatformEventQueue::enqueueEvent(const Common::Event &ev, Common::EventData *data) {
-    OSRE_ASSERT(nullptr != data);
+    osre_assert(nullptr != data);
 
     if (ev == data->getEvent()) {
         getActiveEventDataList()->addBack(data);

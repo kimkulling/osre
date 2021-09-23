@@ -24,8 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/osre_common.h>
 
-#include <cppcore/Container/THashMap.h>
 #include <cppcore/Common/Variant.h>
+#include <cppcore/Container/THashMap.h>
 
 namespace OSRE {
 namespace Common {
@@ -37,41 +37,35 @@ struct EnvVar {
         None
     };
 
-    String           m_name;
+    String m_name;
     CPPCore::Variant m_value;
-    
-    EnvVar(const String& key, int value);
-    EnvVar(const String& key, const String &value);
+
+    EnvVar(const String &key, int value);
+    EnvVar(const String &key, const String &value);
     ~EnvVar();
     Type getType() const;
 };
 
-inline
-EnvVar::EnvVar(const String& key, int value)
-: m_name(key)
-, m_value() {
+inline EnvVar::EnvVar(const String &key, int value) :
+        m_name(key), m_value() {
     m_value.setInt(value);
 }
 
-inline
-EnvVar::EnvVar(const String& key, const String& value)
-: m_name(key)
-, m_value() {
+inline EnvVar::EnvVar(const String &key, const String &value) :
+        m_name(key), m_value() {
     m_value.setStdString(value);
 }
 
-inline
-EnvVar::~EnvVar() {
+inline EnvVar::~EnvVar() {
     // empty
 }
 
-inline
-EnvVar::Type EnvVar::getType() const {
+inline EnvVar::Type EnvVar::getType() const {
     ::CPPCore::Variant::Type t = m_value.getType();
     switch (t) {
         case ::CPPCore::Variant::Int:
             return EnvVar::Int;
-        case  ::CPPCore::Variant::String:
+        case ::CPPCore::Variant::String:
             return EnvVar::Str;
         default:
             break;
@@ -79,20 +73,44 @@ EnvVar::Type EnvVar::getType() const {
     return EnvVar::None;
 }
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Engine
+///
+///	@brief	This class is used to define environment variables in an application context. It will 
+/// be available within your app-context.
+//-------------------------------------------------------------------------------------------------
 class Environment {
 public:
+    /// @brief  The class constructor.
     Environment();
+
+    ///	@brief  The class destructor.
     ~Environment();
-    EnvVar *findVar(const c8* var) const;
-    void addIntVar(const c8* name, int value);
-    void addStrVar(const c8* name, const c8 *value);
-    void addVariable( EnvVar *var);
+
+    /// @brief  Will search for a variable by its name.
+    /// @param[in] var     The variable name.
+    /// @return The variable or nullptr.
+    EnvVar *findVar(const c8 *var) const;
+
+    /// @brief Will add a new int variable.
+    /// @param[in] name     The variable name.
+    /// @param[in] value    The variable instance.
+    void addIntVar(const c8 *name, int value);
+
+    /// @brief Will add a new string variable.
+    /// @param[in] name     The variable name.
+    /// @param[in] value    The variable instance.
+    void addStrVar(const c8 *name, const c8 *value);
+    
+    /// @brief Will add a new generic variable.
+    /// @param[in] name     The variable name.
+    /// @param[in] value    The variable instance.
+    void addVariable(EnvVar *var);
 
 private:
-    using EnvVariables = ::CPPCore::THashMap<ui32, EnvVar*>;
+    using EnvVariables = ::CPPCore::THashMap<ui32, EnvVar *>;
     EnvVariables mEnvVariables;
 };
 
 } // Namespace Common
 } // Namespace OSRE
-

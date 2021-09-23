@@ -89,7 +89,7 @@ bool ModuleRegistry::unregisterModule(ModuleBase *mod) {
 void ModuleRegistry::update() {
     for (ModuleBase *module : mModules) {
         if (nullptr == module) {
-            OSRE_ASSERT(nullptr != module);
+            osre_assert(nullptr != module);
             continue;
         }
 
@@ -100,7 +100,7 @@ void ModuleRegistry::update() {
 void ModuleRegistry::render() {
     for (ModuleBase *module : mModules) {
         if (nullptr == module) {
-            OSRE_ASSERT(nullptr != module);
+            osre_assert(nullptr != module);
             continue;
         }
 

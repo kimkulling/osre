@@ -11,7 +11,7 @@ namespace Scene {
 
 namespace ShaderToken {
 
-static const char *const IncludeToken = "#include";
+    static const char *const IncludeToken = "#include";
 
 }
 
@@ -19,6 +19,7 @@ class PipelineBuilder {
 public:
     PipelineBuilder();
     ~PipelineBuilder();
+    void clear();
     PipelineBuilder &create(const String &name);
     RenderBackend::Pipeline *getPipeline() const;
     PipelineBuilder &addPipelinePass(RenderBackend::RenderPass *pipelinePass);

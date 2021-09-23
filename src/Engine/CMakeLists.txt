@@ -69,7 +69,6 @@ SET( app_src
 SET( common_inc
     ${HEADER_PATH}/Common/Common.h
     ${HEADER_PATH}/Common/Environment.h
-    ${HEADER_PATH}/Common/CommandQueue.h
     ${HEADER_PATH}/Common/AbstractEventHandler.h
     ${HEADER_PATH}/Common/AbstractProcessor.h
     ${HEADER_PATH}/Common/ArgumentParser.h
@@ -77,6 +76,7 @@ SET( common_inc
     ${HEADER_PATH}/Common/ColorRGBA.h
     ${HEADER_PATH}/Common/DateTime.h
     ${HEADER_PATH}/Common/Event.h
+    ${HEADER_PATH}/Common/EventBus.h
     ${HEADER_PATH}/Common/EventTriggerer.h
     ${HEADER_PATH}/Common/Ids.h
     ${HEADER_PATH}/Common/Logger.h
@@ -93,9 +93,9 @@ SET( common_inc
 SET( common_src
     Common/ArgumentParser.cpp
     Common/Common.cpp
-    Common/CommandQueue.cpp
     Common/DateTime.cpp
     Common/Event.cpp
+    Common/EventBus.cpp
     Common/EventTriggerer.cpp
     Common/Environment.cpp
     Common/Ids.cpp
@@ -323,6 +323,7 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
     ${HEADER_PATH}/RenderBackend/Mesh.h
     ${HEADER_PATH}/RenderBackend/THWBufferManager.h
+    ${HEADER_PATH}/RenderBackend/TransformMatrixBlock.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
     ${HEADER_PATH}/RenderBackend/RenderStates.h
@@ -334,6 +335,7 @@ SET( renderbackend_src
     RenderBackend/RenderCommon.cpp
     RenderBackend/Pipeline.cpp
     RenderBackend/THWBufferManager.cpp
+    RenderBackend/TransformMatrixBlock.cpp
     RenderBackend/Shader.cpp
 )
 SET( renderbackend_oglrenderer_src

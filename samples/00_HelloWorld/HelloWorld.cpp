@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/World.h>
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
 #include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/Camera.h>
 #include <osre/Platform/AbstractWindow.h>

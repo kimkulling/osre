@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLShader.h"
 
 #include <osre/Common/Logger.h>
+#include <osre/Common/glm_common.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Stream.h>
 #include <osre/IO/Uri.h>
@@ -98,81 +99,71 @@ void OGLRenderBackend::enumerateGPUCaps() {
 void OGLRenderBackend::setMatrix(MatrixType type, const glm::mat4 &mat) {
     switch (type) {
         case MatrixType::Model:
-            m_mvp.m_model = mat;
+            mMatrixBlock.m_model = mat;
             break;
         case MatrixType::View:
-            m_mvp.m_view = mat;
+            mMatrixBlock.m_view = mat;
             break;
         case MatrixType::Projection:
-            m_mvp.m_projection = mat;
+            mMatrixBlock.m_projection = mat;
             break;
         case MatrixType::Normal:
-            m_mvp.m_normal = mat;
+            mMatrixBlock.m_normal = mat;
             break;
         default:
             osre_debug(Tag, "Not supported enum " + osre_to_string((i32)type));
             break;
     }
-    m_mvp.update();
+    mMatrixBlock.update();
 }
 
 const glm::mat4 &OGLRenderBackend::getMatrix(MatrixType type) const {
     switch (type) {
         case MatrixType::Model:
-            return m_mvp.m_model;
+            return mMatrixBlock.m_model;
         case MatrixType::View:
-            return m_mvp.m_view;
+            return mMatrixBlock.m_view;
         case MatrixType::Projection:
-            return m_mvp.m_projection;
+            return mMatrixBlock.m_projection;
         case MatrixType::Normal:
-            return m_mvp.m_normal;
+            return mMatrixBlock.m_normal;
         default:
             osre_debug(Tag, "Not supported enum " + osre_to_string((i32)type));
             break;
     }
-    return m_mvp.m_model;
+    return mMatrixBlock.m_model;
 }
 
 void OGLRenderBackend::applyMatrix() {
     OGLParameter *model = getParameter("Model");
     if (nullptr == model) {
         UniformDataBlob *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
-        ::memcpy(blob->m_data, m_mvp.getModel(), sizeof(glm::mat4));
+        ::memcpy(blob->m_data, mMatrixBlock.getModelPtr(), sizeof(glm::mat4));
         model = createParameter("Model", ParameterType::PT_Mat4, blob, 1);
     } else {
-        memcpy(model->m_data->m_data, m_mvp.getModel(), sizeof(glm::mat4));
+        memcpy(model->m_data->m_data, mMatrixBlock.getModelPtr(), sizeof(glm::mat4));
     }
     setParameter(model);
 
     OGLParameter *view = getParameter("View");
     if (nullptr == view) {
         UniformDataBlob *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
-        ::memcpy(blob->m_data, m_mvp.getView(), sizeof(glm::mat4));
+        ::memcpy(blob->m_data, mMatrixBlock.getViewPtr(), sizeof(glm::mat4));
         view = createParameter("View", ParameterType::PT_Mat4, blob, 1);
     } else {
-        memcpy(view->m_data->m_data, m_mvp.getView(), sizeof(glm::mat4));
+        memcpy(view->m_data->m_data, mMatrixBlock.getViewPtr(), sizeof(glm::mat4));
     }
     setParameter(view);
 
     OGLParameter *projection = getParameter("Projection");
     if (nullptr == projection) {
         UniformDataBlob *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
-        ::memcpy(blob->m_data, m_mvp.getProjection(), sizeof(glm::mat4));
+        ::memcpy(blob->m_data, mMatrixBlock.getProjectionPtr(), sizeof(glm::mat4));
         projection = createParameter("Projection", ParameterType::PT_Mat4, blob, 1);
     } else {
-        memcpy(projection->m_data->m_data, m_mvp.getProjection(), sizeof(glm::mat4));
+        memcpy(projection->m_data->m_data, mMatrixBlock.getProjectionPtr(), sizeof(glm::mat4));
     }
     setParameter(projection);
-
-    OGLParameter *mvp = getParameter("MVP");
-    if (nullptr == mvp) {
-        UniformDataBlob *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
-        ::memcpy(blob->m_data, m_mvp.getMVP(), sizeof(glm::mat4));
-        mvp = createParameter("MVP", ParameterType::PT_Mat4, blob, 1);
-    } else {
-        memcpy(mvp->m_data->m_data, m_mvp.getMVP(), sizeof(glm::mat4));
-    }
-    setParameter(mvp);
 }
 
 bool OGLRenderBackend::create(Platform::AbstractOGLRenderContext *renderCtx) {
@@ -528,9 +519,6 @@ bool OGLRenderBackend::bindVertexLayout(OGLVertexArray *va, OGLShader *shader, s
                     GL_FALSE,
                     (GLsizei)stride,
                     attributes[i]->m_ptr);
-        } else {
-            String msg = "Cannot find " + String(attribName);
-            osre_debug(Tag, msg);
         }
     }
 
@@ -788,7 +776,7 @@ void OGLRenderBackend::updateTexture(OGLTexture *oglTextue, ui32 offsetX, ui32 o
     const ui32 diffX(oglTextue->m_width - offsetX);
     const ui32 diffY(oglTextue->m_height - offsetY);
     const ui32 subSize(diffX * diffY * oglTextue->m_channels);
-    OSRE_VALIDATE(size < subSize, "Invalid size");
+    osre_validate(size < subSize, "Invalid size");
     glTexSubImage2D(oglTextue->m_target, 0, offsetX, offsetY, oglTextue->m_width,
             oglTextue->m_height, oglTextue->m_format, GL_UNSIGNED_BYTE, data);
 }
@@ -1191,7 +1179,7 @@ void OGLRenderBackend::render2DPanels(const Rect2ui &panel) {
 }
 
 void OGLRenderBackend::renderFrame() {
-    OSRE_ASSERT(nullptr != mRenderCtx);
+    osre_assert(nullptr != mRenderCtx);
 
     mRenderCtx->update();
     if (nullptr != mFpsCounter) {
@@ -1201,7 +1189,7 @@ void OGLRenderBackend::renderFrame() {
 }
 
 void OGLRenderBackend::setFixedPipelineStates(const RenderStates &states) {
-    OSRE_ASSERT(nullptr != mFpState);
+    osre_assert(nullptr != mFpState);
 
     if (mFpState->m_applied) {
         if (mFpState->isEqual(states.m_clearState, states.m_depthState, states.m_transformState, states.m_polygonState,

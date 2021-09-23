@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
 #include <osre/Scene/ParticleEmitter.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 #include <osre/Scene/MeshBuilder.h>
@@ -107,8 +108,10 @@ public:
         m_particeGen = new ParticleEmitter( rbSrv );
         m_particeGen->init( NumPoints );
 
-        m_transformMatrix.update();
-        rbSrv->setMatrix( "MVP", m_transformMatrix.m_mvp );
+
+        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.getModel());
+        rbSrv->setMatrix(MatrixType::View, m_transformMatrix.getView());
+        rbSrv->setMatrix(MatrixType::Projection, m_transformMatrix.getProjection());
 
         rbSrv->endRenderBatch();
         rbSrv->endPass();

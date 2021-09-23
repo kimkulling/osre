@@ -45,9 +45,9 @@ RenderCmdBuffer::RenderCmdBuffer(OGLRenderBackend *renderBackend, AbstractOGLRen
         m_paramArray(),
         m_matrixBuffer(),
         m_pipeline(pipeline) {
-    OSRE_ASSERT(nullptr != m_renderbackend);
-    OSRE_ASSERT(nullptr != m_renderCtx);
-    OSRE_ASSERT(nullptr != m_pipeline);
+    osre_assert(nullptr != m_renderbackend);
+    osre_assert(nullptr != m_renderCtx);
+    osre_assert(nullptr != m_pipeline);
 
     m_clearState.m_state = (i32)ClearState::ClearBitType::ColorBit | (i32)ClearState::ClearBitType::DepthBit;
 }
@@ -99,7 +99,7 @@ void RenderCmdBuffer::enqueueRenderCmdGroup(const String &groupName, CPPCore::TA
 }
 
 void RenderCmdBuffer::onPreRenderFrame() {
-    OSRE_ASSERT(nullptr != m_renderbackend);
+    osre_assert(nullptr != m_renderbackend);
 
     if (nullptr == m_renderCtx) {
         return;
@@ -110,7 +110,7 @@ void RenderCmdBuffer::onPreRenderFrame() {
 }
 
 void RenderCmdBuffer::onRenderFrame(const EventData *) {
-    OSRE_ASSERT(nullptr != m_renderbackend);
+    osre_assert(nullptr != m_renderbackend);
 
     size_t numPasses = m_pipeline->beginFrame();
     if (0 == numPasses) {
@@ -134,7 +134,7 @@ void RenderCmdBuffer::onRenderFrame(const EventData *) {
 
         for (OGLRenderCmd *renderCmd : m_cmdbuffer) {
             // only valid pointers are allowed
-            OSRE_ASSERT(nullptr != renderCmd);
+            osre_assert(nullptr != renderCmd);
             if (nullptr == renderCmd) {
                 continue;
             }
@@ -160,7 +160,7 @@ void RenderCmdBuffer::onRenderFrame(const EventData *) {
 }
 
 void RenderCmdBuffer::onPostRenderFrame() {
-    OSRE_ASSERT(nullptr != m_renderbackend);
+    osre_assert(nullptr != m_renderbackend);
 
     // unbind the active shader
     m_renderbackend->useShader(nullptr);
@@ -213,13 +213,13 @@ void RenderCmdBuffer::setMatrixes(const glm::mat4 &model, const glm::mat4 &view,
 }
 
 void RenderCmdBuffer::setMatrixBuffer(const c8 *id, MatrixBuffer *buffer) {
-    OSRE_ASSERT(nullptr != id);
+    osre_assert(nullptr != id);
 
     m_matrixBuffer[id] = buffer;
 }
 
 bool RenderCmdBuffer::onDrawPrimitivesCmd(DrawPrimitivesCmdData *data) {
-    OSRE_ASSERT(nullptr != m_renderbackend);
+    osre_assert(nullptr != m_renderbackend);
     if (nullptr == data) {
         return false;
     }
@@ -243,7 +243,7 @@ bool RenderCmdBuffer::onDrawPrimitivesCmd(DrawPrimitivesCmdData *data) {
 }
 
 bool RenderCmdBuffer::onDrawPrimitivesInstancesCmd(DrawInstancePrimitivesCmdData *data) {
-    OSRE_ASSERT(nullptr != m_renderbackend);
+    osre_assert(nullptr != m_renderbackend);
     if (nullptr == data) {
         return false;
     }
@@ -276,7 +276,7 @@ const String shader_2d_fs =
 
         
 bool RenderCmdBuffer::onDrawPanelCmd(DrawPanelsCmdData *data) {
-    OSRE_ASSERT(nullptr != m_renderbackend);
+    osre_assert(nullptr != m_renderbackend);
     if (nullptr == data) {
         return false;
     }
@@ -294,13 +294,13 @@ bool RenderCmdBuffer::onDrawPanelCmd(DrawPanelsCmdData *data) {
 }
 
 bool RenderCmdBuffer::onSetRenderTargetCmd(SetRenderTargetCmdData *) {
-    OSRE_ASSERT(nullptr != m_renderbackend);
+    osre_assert(nullptr != m_renderbackend);
 
     return true;
 }
 
 bool RenderCmdBuffer::onSetMaterialStageCmd(SetMaterialStageCmdData *data) {
-    OSRE_ASSERT(nullptr != m_renderbackend);
+    osre_assert(nullptr != m_renderbackend);
 
     m_renderbackend->bindVertexArray(data->m_vertexArray);
     m_renderbackend->useShader(data->m_shader);

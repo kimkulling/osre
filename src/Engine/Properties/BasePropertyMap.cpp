@@ -20,9 +20,9 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
+#include <osre/Debugging/osre_debugging.h>
 #include <osre/Properties/BasePropertyMap.h>
 #include <osre/Properties/Property.h>
-#include <osre/Debugging/osre_debugging.h>
 
 #include <cassert>
 
@@ -31,79 +31,79 @@ namespace Properties {
 
 using namespace ::CPPCore;
 
-BasePropertyMap::BasePropertyMap() 
-: m_PropertyLookupMap() {
+BasePropertyMap::BasePropertyMap() :
+        m_PropertyLookupMap() {
     // empty
 }
 
 BasePropertyMap::~BasePropertyMap() {
-    for ( PropertyLookupMap::iterator it = m_PropertyLookupMap.begin(); it != m_PropertyLookupMap.end(); ++it )	{
-        OSRE_ASSERT( nullptr != it->second );
-        delete it->second;
+    for (auto & it : m_PropertyLookupMap) {
+        osre_assert(nullptr != it.second);
+        delete it.second;
     }
 }
 
-void BasePropertyMap::setProperty( ui32 id, const String &rName, const Variant &val ) {
-    if ( hasProperty( id ) ) {
-        removeProperty( id );
+void BasePropertyMap::setProperty(ui32 id, const String &rName, const Variant &val) {
+    if (hasProperty(id)) {
+        removeProperty(id);
     }
-    
-    Property *pProperty = new Property( id, "", val );
-    if ( !rName.empty() ) {
-        pProperty->setPropertyName( rName );
+
+    Property *pProperty = new Property(id, "", val);
+    if (!rName.empty()) {
+        pProperty->setPropertyName(rName);
     }
-    m_PropertyLookupMap[ id ] = pProperty;
+    m_PropertyLookupMap[id] = pProperty;
 }
 
-void BasePropertyMap::setProperty( ui32 id, Property *pProperty ) {
-    OSRE_ASSERT( NULL != pProperty );
+void BasePropertyMap::setProperty(ui32 id, Property *pProperty) {
+    osre_assert(NULL != pProperty);
 
-    if ( hasProperty( id ) ) {
-        removeProperty( id );
+    if (hasProperty(id)) {
+        removeProperty(id);
     }
 
-    m_PropertyLookupMap[ id ] = pProperty;
+    m_PropertyLookupMap[id] = pProperty;
 }
 
-bool BasePropertyMap::hasProperty( ui32 id ) const {
-    if ( Property::NotSet == id ) {
+bool BasePropertyMap::hasProperty(ui32 id) const {
+    if (Property::NotSet == id) {
         return false;
     }
 
-    PropertyLookupMap::const_iterator it = m_PropertyLookupMap.find( id );
-    if ( m_PropertyLookupMap.end() == it ) {
+    PropertyLookupMap::const_iterator it = m_PropertyLookupMap.find(id);
+    if (m_PropertyLookupMap.end() == it) {
         return false;
     }
 
     return true;
 }
 
-Property *BasePropertyMap::getProperty( ui32 id ) const {
-    if ( Property::NotSet == id ) {
+Property *BasePropertyMap::getProperty(ui32 id) const {
+    if (Property::NotSet == id) {
         return nullptr;
     }
 
-    PropertyLookupMap::const_iterator it = m_PropertyLookupMap.find( id );
-    if ( m_PropertyLookupMap.end() == it ) {
+    PropertyLookupMap::const_iterator it = m_PropertyLookupMap.find(id);
+    if (m_PropertyLookupMap.end() == it) {
         return nullptr;
     }
 
     return it->second;
 }
 
-bool BasePropertyMap::removeProperty( ui32 id ) {
-    PropertyLookupMap::iterator it = m_PropertyLookupMap.find( id );
-    if ( m_PropertyLookupMap.end() == it ) {
+bool BasePropertyMap::removeProperty(ui32 id) {
+    PropertyLookupMap::iterator it = m_PropertyLookupMap.find(id);
+    if (m_PropertyLookupMap.end() == it) {
         return false;
     }
 
-    m_PropertyLookupMap.erase( it );
-    
+    m_PropertyLookupMap.erase(it);
+
     return true;
 }
 
 ui32 BasePropertyMap::size() const {
-    return static_cast<ui32>( m_PropertyLookupMap.size() );
+    return static_cast<ui32>(m_PropertyLookupMap.size());
 }
 
 bool BasePropertyMap::isEmpty() const {
@@ -111,7 +111,7 @@ bool BasePropertyMap::isEmpty() const {
 }
 
 void BasePropertyMap::clear() {
-    for ( PropertyLookupMap::iterator it = m_PropertyLookupMap.begin(); it != m_PropertyLookupMap.end(); ++it ) {
+    for (PropertyLookupMap::iterator it = m_PropertyLookupMap.begin(); it != m_PropertyLookupMap.end(); ++it) {
         delete it->second;
     }
     m_PropertyLookupMap.clear();

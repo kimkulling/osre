@@ -49,13 +49,13 @@ ThreadLocalStorage::~ThreadLocalStorage() {
 }
 
 void *ThreadLocalStorage::get() {
-    OSRE_ASSERT( 99999999 != m_index );
+    osre_assert( 99999999 != m_index );
 
     return ::SDL_TLSGet( m_index );
 }
 
 void ThreadLocalStorage::set( void *data ) {
-    OSRE_ASSERT( 99999999 != m_index );
+    osre_assert( 99999999 != m_index );
 
     ::SDL_TLSSet( m_index, data, 0 );
 }
@@ -150,9 +150,9 @@ void Thread::waitForTimeout( ui32 ms ) {
     if ( !m_threadSignal ) {
         osre_debug( Tag, "Invalid pointer to thread signal." );
         return;
-    } else {
-        m_threadSignal->waitForTimeout( ms );
-    }
+    } 
+    
+    m_threadSignal->waitForTimeout( ms );
 }
 
 void Thread::wait( ) {
@@ -180,8 +180,8 @@ ThreadLocalStorage *Thread::getThreadLocalStorage() {
     return mTls;
 }
 
-void Thread::setThreadLocalStorage( ThreadLocalStorage *tls ) {
-    mTls = ( ThreadLocalStorage* ) tls;
+void Thread::setThreadLocalStorage(ThreadLocalStorage *tls) {
+    mTls = (ThreadLocalStorage*) tls;
 }
 
 void Thread::setThreadId(const ThreadId &id) {
@@ -193,7 +193,7 @@ ThreadId Thread::getThreadId() {
 }
 
 i32 Thread::sdl2threadfunc( void *data ) {
-    i32 retCode( 0 );
+    i32 retCode = 0;
     if( nullptr != data ) {
         Thread *instance = ( Thread* ) data;
         switch( instance->getPriority() ) {
@@ -210,6 +210,7 @@ i32 Thread::sdl2threadfunc( void *data ) {
                 retCode = 1;
                 break;
         }
+        
         if( 0 == retCode ) {
             ThreadId id;
             id.Id = ( unsigned long ) SDL_ThreadID();
@@ -231,10 +232,8 @@ i32 Thread::run( ) {
     return 0;
 }
 
-ThreadEvent::ThreadEvent()
-: m_bool( SDL_FALSE )
-, m_lock( nullptr )
-, m_event( nullptr ) {
+ThreadEvent::ThreadEvent() : 
+        m_bool( SDL_FALSE ), m_lock( nullptr ), m_event( nullptr ) {
     m_lock = SDL_CreateMutex();
     m_event = SDL_CreateCond();
 }
@@ -272,7 +271,6 @@ void ThreadEvent::waitForAll() {
     SDL_UnlockMutex( m_lock );
 }
 
-
 void ThreadEvent::waitForTimeout( ui32 ms ) {
     m_bool = SDL_FALSE;
     SDL_LockMutex( m_lock );
@@ -294,13 +292,13 @@ Mutex::~Mutex() {
 }
 
 void Mutex::lock() {
-    OSRE_ASSERT(nullptr != m_mutex);
+    osre_assert(nullptr != m_mutex);
 
     static_cast<void>(SDL_LockMutex(m_mutex));
 }
 
 bool Mutex::tryLock() {
-    OSRE_ASSERT(nullptr != m_mutex);
+    osre_assert(nullptr != m_mutex);
 
     bool ok = false;
     i32 status = SDL_TryLockMutex(m_mutex);
@@ -312,10 +310,10 @@ bool Mutex::tryLock() {
 }
 
 bool Mutex::unlock() {
-    OSRE_ASSERT(nullptr != m_mutex);
+    osre_assert(nullptr != m_mutex);
 
     return 0 == SDL_UnlockMutex(m_mutex);
 }
 
-}
-}
+} // namespace Platform
+} // namespace OSRE

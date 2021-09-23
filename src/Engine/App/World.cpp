@@ -179,7 +179,7 @@ void World::update(Time dt) {
 }
 
 void World::draw(RenderBackendService *rbSrv) {
-    OSRE_ASSERT(nullptr != rbSrv);
+    osre_assert(nullptr != rbSrv);
 
     rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
     rbSrv->beginRenderBatch("b1");

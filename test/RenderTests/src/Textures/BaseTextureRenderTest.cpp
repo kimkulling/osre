@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
 #include <osre/RenderBackend/Shader.h>
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/Scene/MeshBuilder.h>

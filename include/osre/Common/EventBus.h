@@ -22,21 +22,49 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Platform/PlatformCommon.h>
+#include <osre/Common/osre_common.h>
+#include <cppcore/Container/TQueue.h>
+#include <cppcore/Container/THashMap.h>
 
 namespace OSRE {
-namespace Platform {
+namespace Common {
 
-class OSRE_EXPORT AbstractOSService {
-public:
-    virtual ~AbstractOSService();
-    virtual void getMonitorResolution(ui32 &width, ui32 &heigth) = 0;
-    virtual void showCursor(bool enabled) = 0;
+class AbstractEventHandler;
+class EventTriggerer;
+struct Event;
+struct EventData;
+
+struct QueueEntry {
+    const Event *mEvent;
+    const EventData *mEventData;
+
+    QueueEntry() :
+            mEvent(nullptr),
+            mEventData(nullptr) {
+        // empty
+    }
 };
 
-inline AbstractOSService::~AbstractOSService() {
-    // empty
-}
+class OSRE_EXPORT EventBus {
+public:
+    EventBus();
+    ~EventBus();
+    bool create();
+    bool isCreated() const;
+    bool destroy();
+    void update();
+    void suscribeEventHandler(AbstractEventHandler *handler, const Event &ev);
+    void unsuscribeEventHandler(AbstractEventHandler *handler, const Event &ev);
+    void enqueueEvent(const Event &ev, const EventData *eventData);
 
-} // namespace Platform
+private:
+    using EventHandlerArray = CPPCore::TArray<AbstractEventHandler*>;
+    using SuscribedHandler = CPPCore::THashMap<ui32, EventHandlerArray*>;
+    SuscribedHandler mSuscribedHandler;
+    using QueueEntryArray = CPPCore::TArray<QueueEntry*>;
+    QueueEntryArray mQueueEntryArray;
+    bool mCreated;
+};
+
+} // namespace Common
 } // namespace OSRE

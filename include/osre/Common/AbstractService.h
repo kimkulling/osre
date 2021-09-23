@@ -87,7 +87,7 @@ AbstractService::AbstractService( const String &serverName )
 
 inline 
 AbstractService::~AbstractService() {
-    OSRE_ASSERT( !m_isOpen );
+    osre_assert( !m_isOpen );
 }
 
 inline
@@ -136,7 +136,7 @@ bool AbstractService::update() {
 public:                                                                           \
     static type * s_instance;                                                \
     static type * getInstance() {                                                 \
-        OSRE_ASSERT( nullptr != s_instance );                                \
+        osre_assert(nullptr != s_instance);                                \
         return s_instance;                                                   \
     }                                                                             \
     static void setInstance( type *instance ) { s_instance = instance; } \
@@ -156,7 +156,7 @@ private:
 /// @brief  Helper macro to create a macro from a given class.
 //-------------------------------------------------------------------------------------------------
 #define CREATE_SINGLETON( type )                 \
-    OSRE_ASSERT( nullptr == s_instance );        \
+    osre_assert(nullptr == s_instance);        \
     s_instance = this;         
 
 //-------------------------------------------------------------------------------------------------
@@ -165,7 +165,7 @@ private:
 /// @brief  Helper macro to destroy a macro from a given class.
 //-------------------------------------------------------------------------------------------------
 #define DESTROY_SINGLETON( type )                \
-    OSRE_ASSERT( nullptr != s_instance );        \
+    osre_assert(nullptr != s_instance);        \
     s_instance = nullptr;         
 
 } // Namespace Common

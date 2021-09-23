@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-static const GLint ErrorId = -1;
+static const GLint InvalidLocationId = -1;
 static const String Tag = "OGLShader";
 
 OGLShader::OGLShader(const String &name) :
@@ -150,13 +150,13 @@ bool OGLShader::hasAttribute(const String &attribute) {
     }
 
     const GLint location = glGetAttribLocation(m_shaderprog, attribute.c_str());
-    return -1 != location;
+    return InvalidLocationId != location;
 }
 
 void OGLShader::addAttribute(const String &attribute) {
     const GLint location = glGetAttribLocation(m_shaderprog, attribute.c_str());
     m_attributeMap[attribute] = location;
-    if (ErrorId == location) {
+    if (InvalidLocationId == location) {
         osre_debug(Tag, "Cannot find attribute " + attribute + " in shader.");
     }
 }
@@ -166,13 +166,13 @@ bool OGLShader::hasUniform(const String &uniform) {
         return false;
     }
     const GLint location = glGetUniformLocation(m_shaderprog, uniform.c_str());
-    return -1 != location;
+    return InvalidLocationId != location;
 }
 
 void OGLShader::addUniform(const String &uniform) {
     const GLint location = glGetUniformLocation(m_shaderprog, uniform.c_str());
     m_uniformLocationMap[uniform] = location;
-    if (ErrorId == location) {
+    if (InvalidLocationId == location) {
         osre_debug(Tag, "Cannot find uniform variable " + uniform + " in shader.");
     }
 }
@@ -252,32 +252,22 @@ bool OGLShader::isCompiled() const {
 }
 
 GLint OGLShader::getAttributeLocation(const String &attribute) {
-    const GLint loc(m_attributeMap[attribute]);
+    const GLint loc = m_attributeMap[attribute];
     return loc;
 }
 
 GLint OGLShader::getUniformLocation(const String &uniform) {
-    std::map<String, GLint>::iterator it(m_uniformLocationMap.find(uniform));
-    if (m_uniformLocationMap.end() == it) {
-        osre_error(Tag, "Cannot find uniform " + uniform + ".");
+    if (uniform.empty()) {
+        return InvalidLocationId;
     }
-    const GLint loc(m_uniformLocationMap[uniform]);
+
+    std::map<String, GLint>::iterator it = m_uniformLocationMap.find(uniform);
+    if (m_uniformLocationMap.end() == it) {
+        return InvalidLocationId;
+    }
+    const GLint loc = m_uniformLocationMap[uniform];
     return loc;
 }
-
-/*GLint OGLShader::operator[](const String &attribute) {
-    const GLint loc(m_attributeMap[attribute]);
-    return loc;
-}
-
-GLint OGLShader::operator()(const String &uniform) {
-    std::map<String, GLint>::iterator it(m_uniformLocationMap.find(uniform));
-    if (m_uniformLocationMap.end() == it) {
-        osre_error(Tag, "Cannot find uniform " + uniform + ".");
-    }
-    const GLint loc(m_uniformLocationMap[uniform]);
-    return loc;
-}*/
 
 } // Namespace RenderBackend
 } // Namespace OSRE

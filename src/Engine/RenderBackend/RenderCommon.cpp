@@ -496,7 +496,6 @@ Material::Material(const String &name) :
     // empty
 }
 
-//Material(const String &name, );
 Material::Material(const String &name, const IO::Uri &uri) :
         m_name(name),
         m_type(MaterialType::ShaderMaterial),
@@ -583,49 +582,6 @@ void TransformState::toMatrix(mat4 &m) const {
     m *= glm::translate(m, m_translate);
     m *= glm::scale(m, m_scale);
     m *= m_rotation;
-}
-
-TransformMatrixBlock::TransformMatrixBlock() :
-        m_projection(1.0f),
-        m_model(1.0f),
-        m_view(1.0f),
-        m_normal(1.0f),
-        m_mvp(1.0f) {
-    init();
-}
-
-TransformMatrixBlock::~TransformMatrixBlock() {
-    // empty
-}
-
-void TransformMatrixBlock::init() {
-    m_projection = glm::mat4(1.0f);
-    m_model = glm::mat4(1.0f);
-    m_view = glm::mat4(1.0f);
-    m_normal = glm::mat4(1.0f);
-    m_mvp = glm::mat4(1.0f);
-}
-
-void TransformMatrixBlock::update() {
-    const glm::mat4 modelView = m_view * m_model;
-    m_mvp = m_projection * modelView;
-    m_normal = transpose(inverse(modelView));
-}
-
-const float *TransformMatrixBlock::getModel() {
-    return glm::value_ptr(m_model);
-}
-
-const float *TransformMatrixBlock::getView() {
-    return glm::value_ptr(m_view);
-}
-
-const float *TransformMatrixBlock::getProjection() {
-    return glm::value_ptr(m_projection);
-}
-
-const float *TransformMatrixBlock::getMVP() {
-    return glm::value_ptr(m_mvp);
 }
 
 Viewport::Viewport() :

@@ -112,9 +112,9 @@ SDL2EventHandler::SDL2EventHandler(AbstractWindow *window) :
         m_inputUpdate(nullptr),
         m_window(nullptr),
         m_eventTriggerer(nullptr) {
-    OSRE_ASSERT(nullptr != window);
+    osre_assert(nullptr != window);
     m_window = (SDL2Surface *)window;
-    OSRE_ASSERT(nullptr != m_window);
+    osre_assert(nullptr != m_window);
 
     m_inputUpdate = new SDL2GetInputUpdate;
     m_eventTriggerer = new EventTriggerer;
