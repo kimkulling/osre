@@ -50,6 +50,10 @@ static const c8 *Vulkan_API = "vulkan";
 static const i32 IdxNotFound = -1;
 
 static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataArray) {
+    if (nullptr == id) {
+        return IdxNotFound;
+    }
+
     for (ui32 i = 0; i < passDataArray.size(); ++i) {
         if (0 == strncmp(passDataArray[i]->m_id, id, strlen(id))) {
             return i;
@@ -59,6 +63,10 @@ static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataAr
 }
 
 static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<RenderBatchData *> &batchDataArray) {
+    if (nullptr == id) {
+        return IdxNotFound;
+    }
+
     for (ui32 i = 0; i < batchDataArray.size(); ++i) {
         if (0 == strncmp(batchDataArray[i]->m_id, id, strlen(id))) {
             return i;
@@ -227,9 +235,9 @@ void RenderBackendService::commitNextFrame() {
                     // todo: replace by uniform buffer.
                     cmd->m_size = var->getSize();
                     cmd->m_data = new c8[cmd->m_size];
-                    size_t offset(0);
+                    size_t offset = 0;
                     cmd->m_data[offset] = var->m_name.size() > 255 ? 255 : static_cast<c8>(var->m_name.size());
-                    offset++;
+                    ++offset;
                     ::memcpy(&cmd->m_data[offset], var->m_name.c_str(), var->m_name.size());
                     offset += var->m_name.size();
                     ::memcpy(&cmd->m_data[offset], var->m_data.getData(), var->m_data.m_size);
