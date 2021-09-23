@@ -43,7 +43,6 @@ template <class T>
 class TAsyncQueue {
 public:
     ///	@brief	The constructor with the thread factory.
-    ///	@param	pThreadFactory	The thread factory.
     TAsyncQueue();
 
     ///	@brief	The destructor, not virtual.
