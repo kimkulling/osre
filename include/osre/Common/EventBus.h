@@ -45,7 +45,7 @@ struct QueueEntry {
     }
 };
 
-class EventBus {
+class OSRE_EXPORT EventBus {
 public:
     EventBus();
     ~EventBus();

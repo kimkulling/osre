@@ -68,6 +68,7 @@ bool EventBus::destroy() {
 }
 
 void EventBus::update() {
+    osre_assert(mCreated);
     if (mQueueEntryArray.isEmpty()) {
         return;
     }
@@ -91,6 +92,7 @@ void EventBus::update() {
 }
 
 void EventBus::suscribeEventHandler(AbstractEventHandler *handler, const Event &ev) {
+    osre_assert(mCreated);
     if (nullptr == handler) {
         return;
     }
@@ -108,6 +110,7 @@ void EventBus::suscribeEventHandler(AbstractEventHandler *handler, const Event &
 }
 
 void EventBus::unsuscribeEventHandler(AbstractEventHandler *handler, const Event &ev) {
+    osre_assert(mCreated);
     if (nullptr == handler) {
         return;
     }
@@ -124,6 +127,7 @@ void EventBus::unsuscribeEventHandler(AbstractEventHandler *handler, const Event
 }
 
 void EventBus::enqueueEvent( const Event &ev, const EventData *eventData ) {
+    osre_assert(mCreated);
     QueueEntry *entry = QueueEntryAlloctor.alloc();
     entry->mEvent = &ev;
     entry->mEventData = eventData;

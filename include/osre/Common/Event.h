@@ -22,11 +22,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/TFunctor.h>
 #include <osre/Common/StringUtils.h>
+#include <osre/Common/TFunctor.h>
 
-#include <cppcore/Container/TList.h>
 #include <cppcore/Container/TArray.h>
+#include <cppcore/Container/TList.h>
 
 namespace OSRE {
 namespace Common {
@@ -43,16 +43,15 @@ struct EventData;
 ///	@brief	An object id, stores the hash id coing from a name as a string.
 //-------------------------------------------------------------------------------------------------
 struct ObjectId {
-	String m_id;
-	HashId m_hash;
+    String m_id;
+    HashId m_hash;
 
     /// @brief  The class constructor.
     /// @param  id  [in] The object name.
-	ObjectId( const String &id ) 
-	: m_id( id )
-	, m_hash( 0 ) {
-		m_hash = StringUtils::hashName( m_id.c_str() );
-	}
+    ObjectId(const String &id) :
+            m_id(id), m_hash(0) {
+        m_hash = StringUtils::hashName(m_id.c_str());
+    }
 
     /// @brief  The class destructor.
     ~ObjectId() {
@@ -60,19 +59,19 @@ struct ObjectId {
     }
 
     /// @brief  The hash value getter.
-	HashId getHash() const {
-		return m_hash;
-	}
+    HashId getHash() const {
+        return m_hash;
+    }
 };
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///
-///	@brief	Event type declaration helper macro. This is a shortcut to define global events like 
+///	@brief	Event type declaration helper macro. This is a shortcut to define global events like
 ///	windows messages.
 //-------------------------------------------------------------------------------------------------
-#define DECL_EVENT( NAME ) const Common::Event NAME ( #NAME )
-    
+#define DECL_EVENT(NAME) const Common::Event NAME(#NAME)
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -84,19 +83,19 @@ struct OSRE_EXPORT Event {
 
     ///	@brief	the class constructor with description id.
     ///	@param	id	Id description, will be used to describe the event type.
-    Event( const String &id );
+    Event(const String &id);
 
     ///	@brief The class destructor, virtual.
     virtual ~Event();
-    
+
     ///	@brief	Assigns a new event data instance to the event instance.
     ///	@param	pData	Pointer to event data instance.
-    void setEventData( const EventData *pData);
+    void setEventData(const EventData *pData);
 
     ///	@brief	Event data getter.
     ///	@return	Pointer to assigned event data instance.
     const EventData *getEventData() const;
-    
+
     /// @brief  Returns the hash id of the event id.
     /// @return The hash id.
     ui32 getHash() const;
@@ -112,46 +111,45 @@ struct OSRE_EXPORT Event {
     ///	@brief	Implementation of == operator.
     ///	@param	other	Instance to compare.
     ///	@return	true, if both instances are equal, else false.
-    bool operator == (const Event &other) const;
+    bool operator==(const Event &other) const;
 
     // No copying
     Event(const Event &) = delete;
-    Event &operator = (const Event &) = delete;
+    Event &operator=(const Event &) = delete;
 
     ui32 m_numRefs;
     HashId m_hash;
     const String mId;
     const EventData *m_eventData;
-
 };
 
 //--------------------------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
 ///	@brief	The base class for event specific data. For instance if you get a mouse event from your
-///	input device the assigned event-data-instance will hold the assigned data like mouse button 
-///	clicked or the current position of the mouse cursor. Each event data instance holds a reference 
+///	input device the assigned event-data-instance will hold the assigned data like mouse button
+///	clicked or the current position of the mouse cursor. Each event data instance holds a reference
 ///	to its assigned event-instance.
 //--------------------------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT EventData {
     ///	@brief	The class constructor with event and trigger.
     ///	@param	ev		[in] Owning event.
     ///	@param	sender	[in] Event-triggering instance.
-    EventData( const Event &ev, EventTriggerer *sender );
-    
+    EventData(const Event &ev, EventTriggerer *sender);
+
     ///	@brief	The class copy constructor.
     ///	@param	other	Instance to copy from.
-    
+
     ///	@brief The class destructor, virtual.
     virtual ~EventData();
 
     ///	@brief	Returns assigned event.
     ///	@return	Assigned event instance.
-    const Event& getEvent() const;
+    const Event &getEvent() const;
 
     ///	@brief	Returns event-trigger instance.
     ///	@return	Pointer to assigned event instance.
-    EventTriggerer* getEventSender() const;
+    EventTriggerer *getEventSender() const;
 
     ///	@brief  Adds another reference ownership.
     void get();
@@ -162,25 +160,25 @@ struct OSRE_EXPORT EventData {
     ///	@brief	Equal operator implementation.
     ///	@param	other	Instance to compare.
     ///	@return	true, if both instances are equal.
-    bool operator == (const EventData &other) const;
+    bool operator==(const EventData &other) const;
 
     // removed functions
     EventData() = delete;
-    EventData( const EventData & ) = delete;
-    EventData &operator = ( const EventData & ) = delete;
+    EventData(const EventData &) = delete;
+    EventData &operator=(const EventData &) = delete;
 
 private:
-    const Event& m_Event;
-    EventTriggerer* m_Source;
+    const Event &m_Event;
+    EventTriggerer *m_Source;
     d32 m_timestamp;
     ui32 m_numRefs;
 };
 
 ///	Base event functor.
-typedef Functor<void, const Event&, const EventData*> EventFunctor;
+typedef Functor<void, const Event &, const EventData *> EventFunctor;
 
-using EventDataList = CPPCore::TList<Common::EventData*>;
-using EventPtrArray = CPPCore::TArray<const Common::Event*>;
+using EventDataList = CPPCore::TList<Common::EventData *>;
+using EventPtrArray = CPPCore::TArray<const Common::Event *>;
 
 } // Namespace Common
 } // Namespace OSRE
