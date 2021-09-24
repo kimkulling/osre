@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2016 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -69,15 +69,30 @@ public:
     /// @return The function pointer or nullptr, if the function was not found.
     virtual void *loadFunction( const String &name ) = 0;
 
-public:
+    /// @brief  Will add a new library.
+    /// @param[in] libName      The library name
+    /// @param[in] libHandle    The handle of the loaded lib.
     void addLib( const String &libName, LibHandle *libHandle );
+    
+    /// @brief  Will remove a library from the loader.
+    /// @param[in] libName      The name of the lib.
     void removeLib( const String &libName );
+
+    /// @brief Lookup function to find a lib by its name.
+    /// @param[in] libName  The lib name
+    /// @return The handle of the lib or nullptr, if not found.
     LibHandle *findLib( const String &libName );
+
+    /// @brief  Will set the active library.
+    /// @param[in] handle   The lib handle.
     void setActiveLib( LibHandle *handle );
+    
+    /// @brief Active lib getter.
+    /// @return The lib handle.
     LibHandle *getActiveLib() const;
 
 protected:
-    /// @brief  The class constructor.
+    /// @brief  The default class constructor.
     AbstractDynamicLoader();
 
 private:

@@ -22,8 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Platform/AbstractPlatformEventQueue.h>
 #include <cppcore/Container/TArray.h>
+#include <osre/Platform/AbstractPlatformEventQueue.h>
 
 #include <osre/Platform/Windows/MinWindows.h>
 #include <map>
@@ -32,10 +32,10 @@ namespace OSRE {
 
 // Forward declarations
 namespace Common {
-    struct Event;
-    struct EventData;
-    class EventTriggerer;
-}
+struct Event;
+struct EventData;
+class EventTriggerer;
+} // namespace Common
 
 namespace Platform {
 
@@ -52,7 +52,7 @@ struct AbstractInputUpdate;
 class Win32EventQueue : public AbstractPlatformEventQueue {
 public:
     /// The class constructor with the win32-based root-window.
-    Win32EventQueue( AbstractWindow *rootWindow );
+    Win32EventQueue(AbstractWindow *rootWindow);
     /// The class destructor.
     ~Win32EventQueue() override;
     /// The update method.
@@ -71,7 +71,7 @@ public:
     void unregisterEventListener(const Common::EventPtrArray &events, OSEventListener *listener) override;
     /// Will unregister all registered handler at once.
     void unregisterAllEventHandler(const Common::EventPtrArray &events) override;
-    /// 
+    ///
     void registerMenuCommand(ui32 id, MenuFunctor func) override;
     ///
     void unregisterAllMenuCommands() override;
@@ -87,14 +87,14 @@ public:
     // No copying
     Win32EventQueue() = delete;
     Win32EventQueue(const Win32EventQueue &) = delete;
-    Win32EventQueue &operator = (const Win32EventQueue &) = delete;
+    Win32EventQueue &operator=(const Win32EventQueue &) = delete;
 
 protected:
     ///
     void onQuit() override;
 
 private:
-    using WindowServerMap = std::map<HWND, Win32EventQueue*>;
+    using WindowServerMap = std::map<HWND, Win32EventQueue *>;
 
     static WindowServerMap s_WindowsServerMap;
     static MenuFuncMap s_MenuFunctorMap;
