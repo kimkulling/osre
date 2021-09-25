@@ -54,7 +54,7 @@ public:
         // empty
     }
 
-    size_t load( const IO::Uri &uri, Shader *shader ) override {
+    size_t load(const IO::Uri&, Shader*) override {
         mCalled++;
         return 0;
     }
