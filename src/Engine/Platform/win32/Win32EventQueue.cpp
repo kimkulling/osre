@@ -290,7 +290,7 @@ void Win32EventQueue::unregisterEventQueue(Win32EventQueue *server, HWND hWnd) {
     std::map<HWND, Win32EventQueue *>::iterator it = s_WindowsServerMap.find(hWnd);
     if (s_WindowsServerMap.end() != it) {
         if (server != it->second) {
-            osre_debug(Tag, "Invalid assignment frin eventqueue to window handle.");
+            osre_debug(Tag, "Invalid assignment from eventqueue to window handle.");
         }
         s_WindowsServerMap.erase(it);
     }
