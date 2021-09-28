@@ -43,7 +43,7 @@ AbstractPlatformEventQueue::~AbstractPlatformEventQueue() {
     delete mEventBus;
 }
 
-/*void AbstractPlatformEventQueue::processEvents() {
+void AbstractPlatformEventQueue::processEvents(Common::EventTriggerer *triggerer) {
     Common::EventDataList *theList = getActiveEventDataList();
     if (nullptr == theList) {
         return;
@@ -62,7 +62,7 @@ AbstractPlatformEventQueue::~AbstractPlatformEventQueue() {
     }
     switchEventDataList();
 }
-*/
+
 Common::EventDataList *AbstractPlatformEventQueue::getActiveEventDataList() {
     Common::EventDataList *activeEventQueue(&m_eventQueues[mActiveList]);
     return activeEventQueue;
