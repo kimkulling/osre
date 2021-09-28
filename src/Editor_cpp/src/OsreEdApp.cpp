@@ -263,9 +263,7 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         mResolution(),
         mMesh2D(nullptr),
         mPythonInterface(nullptr),
-        mTransformController(nullptr),
-        mLastMouseX(0),
-        mLastMouseY(0) {
+        mTransformController(nullptr) {
     // empty
 }
 
@@ -515,17 +513,6 @@ void OsreEdApp::onUpdate() {
     glm::mat4 rot(1.0);
     MouseEventListener *listener = AppBase::getMouseEventListener();
     TArray<TransformCommandType> transformCmds;
-    if (listener->leftButttonPressed()) {
-        i32 x = listener->getAbsoluteX();
-        i32 y = listener->getAbsoluteY();
-        getMouseBinding(x, mLastMouseX, y, mLastMouseY, transformCmds);
-        mLastMouseX = x;
-        mLastMouseY = y;
-
-        char buffer[512];
-        sprintf(buffer, "x: %d, y:%d", x, y);
-        osre_info(Tag, "Pressed! "  + String(buffer));
-    }
     mTransformController->update(TransformController::getKeyBinding(key));
     for (ui32 i = 0; i < transformCmds.size(); ++i) {
         mTransformController->update(transformCmds[i]);
