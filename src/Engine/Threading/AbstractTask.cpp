@@ -20,17 +20,15 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Threading/AbstractTask.h>
 #include <osre/Platform/Threading.h>
+#include <osre/Threading/AbstractTask.h>
 
 namespace OSRE {
 namespace Threading {
 
-AbstractTask::AbstractTask( const String &taskName )
-: Object( taskName )
-, m_pRefCount( nullptr )
-, m_pParent( nullptr ) {
-    m_pRefCount = new Platform::AtomicInt( 0 );
+AbstractTask::AbstractTask(const String &taskName) :
+        Object(taskName), m_pRefCount(nullptr), m_pParent(nullptr) {
+    m_pRefCount = new Platform::AtomicInt(0);
 }
 
 AbstractTask::~AbstractTask() {
@@ -43,7 +41,7 @@ bool AbstractTask::preExecute() {
 }
 
 bool AbstractTask::postExecute() {
-    if ( m_pParent ) {
+    if (m_pParent) {
         m_pParent->removeDependency();
     }
 
@@ -51,39 +49,38 @@ bool AbstractTask::postExecute() {
 }
 
 void AbstractTask::addDependency() {
-    m_pRefCount->incValue( 1 );
+    m_pRefCount->incValue(1);
 }
 
-void AbstractTask::removeDependency()  {
-    if ( m_pRefCount->getValue() > 0 ) {
-        m_pRefCount->decValue( 1 );
+void AbstractTask::removeDependency() {
+    if (m_pRefCount->getValue() > 0) {
+        m_pRefCount->decValue(1);
     }
 }
 
 size_t AbstractTask::getNumRefs() const {
-    if ( m_pRefCount ) {
+    if (m_pRefCount) {
         const ui32 numRefs = m_pRefCount->getValue();
         return numRefs;
-    } else {
-        return 0;
-    }
+    } 
+    return 0;
 }
 
 AbstractTask *AbstractTask::getParent() const {
     return m_pParent;
 }
 
-void AbstractTask::setParent( AbstractTask *pParent ) {
+void AbstractTask::setParent(AbstractTask *pParent) {
     m_pParent = pParent;
-    if ( m_pParent ) {
+    if (m_pParent) {
         m_pParent->addDependency();
     }
 }
 
-void AbstractTask::enqueue( AbstractTask *pTask ) {
-    if ( pTask ) {
-        pTask->setParent( this );
-        m_childTasks.add( pTask );
+void AbstractTask::enqueue(AbstractTask *pTask) {
+    if (pTask) {
+        pTask->setParent(this);
+        m_childTasks.add(pTask);
     }
 }
 
@@ -91,8 +88,8 @@ size_t AbstractTask::getNumChildTasks() const {
     return m_childTasks.size();
 }
 
-AbstractTask *AbstractTask::getChildTask( ui32 idx ) const {
-    return m_childTasks[ idx ];
+AbstractTask *AbstractTask::getChildTask(ui32 idx) const {
+    return m_childTasks[idx];
 }
 
 } // Namespace Threading

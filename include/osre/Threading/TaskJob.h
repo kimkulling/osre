@@ -34,6 +34,8 @@ namespace Common {
 
 namespace Threading {
 
+using TaskJobFunctor = Common::Functor<void, ui32, void *>;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -42,10 +44,11 @@ namespace Threading {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT TaskJob {
 public:
+    TaskJob(const Common::Event *pEvent, const Common::EventData *pEventData);
     ///	@brief	The class constructor with the event and the event data.
     ///	@param	pEvent		[in] A pointer showing to the event.
     ///	@param	pEventData	[in] A pointer showing to the event data.
-    TaskJob( const Common::Event *pEvent, const Common::EventData *pEventData );
+    TaskJob(const Common::Event *pEvent, const Common::EventData *pEventData, TaskJobFunctor &tj);
 
     ///	@brief	The class destructor.
     ~TaskJob();
@@ -73,12 +76,21 @@ public:
 private:
     const Common::Event *m_event;
     const Common::EventData *m_eventData;
+    TaskJobFunctor &mFunctor;
+
 };
 
-inline
-TaskJob::TaskJob( const Common::Event *pEvent, const Common::EventData *pEventData ) 
-: m_event( pEvent )
-, m_eventData( pEventData ) {
+static TaskJobFunctor DummyFunc;
+
+TaskJob::TaskJob(const Common::Event *pEvent, const Common::EventData *pEventData) :
+        m_event(pEvent),
+        m_eventData(pEventData),
+        mFunctor(DummyFunc) {
+    osre_assert(nullptr != pEvent);
+}
+    
+inline TaskJob::TaskJob( const Common::Event *pEvent, const Common::EventData *pEventData, TaskJobFunctor &tj ) : 
+        m_event( pEvent ), m_eventData(pEventData), mFunctor(tj){
     osre_assert(nullptr != pEvent);
 }
 
