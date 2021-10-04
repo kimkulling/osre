@@ -22,10 +22,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Common/osre_common.h>
+
 namespace OSRE {
+
+struct ProgressBar;
+
 namespace Platform {
     class AbstractWindow;
 }
+
 namespace Editor {
 
 //-------------------------------------------------------------------------------------------------
@@ -39,10 +45,13 @@ public:
     ~ProgressReporter();
     void start();
     void stop();
-    void update();
+    void update(i32 percent);
+    void reset();
 
 protected:
     Platform::AbstractWindow *mWindow;
+    i32 mProgress;
+    ProgressBar *mProgressBar;
 };
 
 }

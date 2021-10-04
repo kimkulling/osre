@@ -136,6 +136,11 @@ protected:
 OSRE_MAIN(QuickStartdApp)
 ```
 
+# OSRE-Ed
+![ESRE-Ed](../../assets/Images/sponza.png)
+
+The engine provdes an 3D-Editor called OSRE-Ed. It is still experimental:
+
 # Get involved
 If you want to contribute just use the github project page or reach us via Gitter:
 [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)

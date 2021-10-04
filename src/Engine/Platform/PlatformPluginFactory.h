@@ -79,6 +79,10 @@ struct PlatformPluginFactory {
 
     /// @brief  CReates the platform-specific system, info instance.
     static AbstractSystemInfo *createSystemInfo();
+
+    ///	@brief  Will create the OS-Service.
+    /// @return The OS-Serviec instance.
+    static AbstractOSService *createOSService();
 };
 
 } // Namespace Platform

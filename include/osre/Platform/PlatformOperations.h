@@ -34,10 +34,11 @@ namespace IO {
 namespace Platform {
 
 
+///	@brief  Enumerator the a dialog result.
 enum class DlgResults {
-    DlgButtonRes_Yes = 1,
-    DlgButtonRes_No,
-    DlgButtonRes_Ok
+    DlgButtonRes_Yes = 1,   ///< Yes-button
+    DlgButtonRes_No,        ///< No-button
+    DlgButtonRes_Ok         ///< Ok-button
 };
 
 class OSRE_EXPORT PlatformOperations {

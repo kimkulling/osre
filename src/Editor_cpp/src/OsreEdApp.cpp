@@ -351,12 +351,13 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     
     ProgressReporter reporter(rootWindow);
     reporter.start();
+    reporter.update(10);
     AssimpWrapper assimpWrapper(*getIdContainer(), getActiveWorld());
     if (!assimpWrapper.importAsset(modelLoc, 0)) {
         reporter.stop();
         return;
     }
-
+    reporter.update(10);
     RenderBackendService *rbSrv = getRenderBackendService();
     if (nullptr == rbSrv) {
         reporter.stop();
@@ -370,6 +371,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     mSceneData.mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
     Entity *entity = assimpWrapper.getEntity();
 
+    reporter.update(10);
     world->addEntity(entity);
     mSceneData.mCamera->observeBoundingBox(entity->getAABB());
     mSceneData.m_modelNode = entity->getNode();
@@ -380,6 +382,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     rootWindow->setWindowsTitle(title);
 
     setStatusBarText("View", mSceneData.AssetName, 1, 1);
+    reporter.update(70);
     reporter.stop();
 }
 

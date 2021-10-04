@@ -28,9 +28,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 namespace Common {
-    struct Event;
-    struct EventData;
-}
+struct Event;
+struct EventData;
+} // namespace Common
 
 namespace Threading {
 
@@ -39,7 +39,7 @@ using TaskJobFunctor = Common::Functor<void, ui32, void *>;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief This class implements a simple container for events as ids and the assigned data, which 
+///	@brief This class implements a simple container for events as ids and the assigned data, which
 ///	are implemented as subclasses from the Common::EventData class ( @see Common::EventData ).
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT TaskJob {
@@ -54,7 +54,7 @@ public:
     ~TaskJob();
 
     ///	@brief	Returns a pointer showing to the assigned event.
-    ///	@return	The event 
+    ///	@return	The event
     const Common::Event *getEvent() const;
 
     ///	@brief	Returns a pointer showing to the assigned event data.
@@ -64,20 +64,19 @@ public:
     ///	@brief	Set new data.
     ///	@param	pEvent		A pointer showing to the event.
     ///	@param	pEventData	A pointer showing to the event data.
-    void set( const Common::Event *pEvent, const Common::EventData *pEventData );
+    void set(const Common::Event *pEvent, const Common::EventData *pEventData);
 
     ///	@brief	Clears the TaskJob-instance.
     void clear();
 
     TaskJob() = delete;
-    TaskJob( const TaskJob & ) = delete;
-    TaskJob &operator = ( const TaskJob & ) = delete;
+    TaskJob(const TaskJob &) = delete;
+    TaskJob &operator=(const TaskJob &) = delete;
 
 private:
     const Common::Event *m_event;
     const Common::EventData *m_eventData;
     TaskJobFunctor &mFunctor;
-
 };
 
 static TaskJobFunctor DummyFunc;
@@ -88,35 +87,30 @@ TaskJob::TaskJob(const Common::Event *pEvent, const Common::EventData *pEventDat
         mFunctor(DummyFunc) {
     osre_assert(nullptr != pEvent);
 }
-    
-inline TaskJob::TaskJob( const Common::Event *pEvent, const Common::EventData *pEventData, TaskJobFunctor &tj ) : 
-        m_event( pEvent ), m_eventData(pEventData), mFunctor(tj){
+
+inline TaskJob::TaskJob(const Common::Event *pEvent, const Common::EventData *pEventData, TaskJobFunctor &tj) :
+        m_event(pEvent), m_eventData(pEventData), mFunctor(tj) {
     osre_assert(nullptr != pEvent);
 }
 
-inline
-TaskJob::~TaskJob() {
+inline TaskJob::~TaskJob() {
     clear();
 }
 
-inline
-const Common::Event *TaskJob::getEvent() const {
+inline const Common::Event *TaskJob::getEvent() const {
     return m_event;
 }
 
-inline
-const Common::EventData *TaskJob::getEventData() const {
+inline const Common::EventData *TaskJob::getEventData() const {
     return m_eventData;
 }
 
-inline
-void TaskJob::set(  const Common::Event *pEvent, const Common::EventData *pEventData ) {
+inline void TaskJob::set(const Common::Event *pEvent, const Common::EventData *pEventData) {
     m_event = pEvent;
     m_eventData = pEventData;
 }
 
-inline
-void TaskJob::clear() {
+inline void TaskJob::clear() {
     m_event = nullptr;
     m_eventData = nullptr;
 }

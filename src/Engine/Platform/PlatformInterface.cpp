@@ -59,7 +59,8 @@ ApplicationContext::ApplicationContext(const Settings *settings) :
         m_renderContext(nullptr),
         m_timer(nullptr),
         m_dynLoader(nullptr),
-        m_systemInfo(nullptr) {
+        m_systemInfo(nullptr),
+        mAbstractOSService(nullptr) {
     // empty
 }
 
@@ -131,6 +132,10 @@ AbstractDynamicLoader *PlatformInterface::getDynamicLoader() const {
 
 AbstractSystemInfo *PlatformInterface::getSystemInfo() const {
     return mContext->m_systemInfo;
+}
+
+AbstractOSService *PlatformInterface::getOSServices() const {
+    return mContext->mAbstractOSService;
 }
 
 const String &PlatformInterface::getDefaultFontName() const {
@@ -216,7 +221,7 @@ bool PlatformInterface::onOpen() {
     }
 
     mContext->m_systemInfo = PlatformPluginFactory::createSystemInfo();
-
+    mContext->mAbstractOSService = PlatformPluginFactory::createOSService();
     return result;
 }
 
