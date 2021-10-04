@@ -137,7 +137,7 @@ OSRE_MAIN(QuickStartdApp)
 ```
 
 # OSRE-Ed
-![ESRE-Ed](../../assets/Images/sponza.png)
+![ESRE-Ed](assets/Images/sponza.png)
 
 The engine provdes an 3D-Editor called OSRE-Ed. It is still experimental:
 
