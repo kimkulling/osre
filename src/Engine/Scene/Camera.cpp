@@ -93,7 +93,8 @@ void Camera::observeBoundingBox(const TAABB<f32> &aabb) {
     }
 
     const Vec3f center = aabb.getCenter();
-    glm::vec3 eye(-diam / 2, -diam / 2, diam / 2), up(0, 0, 1);
+    
+    glm::vec3 eye(-diam *0.5f, -diam *0.5f, diam *0.5f), up(0, 0, 1);
     glm::vec3 c(center.getX(), center.getY(), center.getZ());
 
     setLookAt(eye, c, up);

@@ -26,16 +26,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 namespace Platform {
-        
-SDL2OSService::SDL2OSService()
-: AbstractOSService() {
+
+SDL2OSService::SDL2OSService() :
+        AbstractOSService() {
     // empty
 }
-    
-SDL2OSService::~SDL2OSService() {
 
+SDL2OSService::~SDL2OSService() {
 }
-    
+
+void SDL2OSService::getMonitorResolution( ui32 &width, ui32 &height ) {
+    SDL_DisplayMode DM;
+    SDL_GetCurrentDisplayMode(0, &DM);
+    width = DM.w;
+    height = DM.h;
+}
+
 void SDL2OSService::showCursor(bool enabled) {
     int flag = SDL_ENABLE;
     if (!enabled) {
