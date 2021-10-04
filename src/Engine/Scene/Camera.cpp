@@ -86,9 +86,13 @@ void Camera::draw(RenderBackendService *rbSrv) {
 }
 
 void Camera::observeBoundingBox(const TAABB<f32> &aabb) {
-    const f32 diam = aabb.getDiameter();
-    const Vec3f center = aabb.getCenter();
+    f32 diam = aabb.getDiameter();
+    const f32 maxDist = m_far - m_near;
+    if (diam > maxDist) {
+        diam = maxDist - 100.0f;
+    }
 
+    const Vec3f center = aabb.getCenter();
     glm::vec3 eye(-diam / 2, -diam / 2, diam / 2), up(0, 0, 1);
     glm::vec3 c(center.getX(), center.getY(), center.getZ());
 
