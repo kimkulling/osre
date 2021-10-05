@@ -134,6 +134,8 @@ IF ( OSRE_BUILD_SAMPLES )
 ENDIF(OSRE_BUILD_SAMPLES)
 
 ADD_SUBDIRECTORY( contrib/glew )
+
+set(CPPCORE_BUILD_UNITTESTS OFF CACHE BOOL "no cppcore unittests")
 ADD_SUBDIRECTORY( contrib/cppcore )
 ADD_SUBDIRECTORY( contrib/zlib )
 ADD_SUBDIRECTORY( contrib/unzip )
