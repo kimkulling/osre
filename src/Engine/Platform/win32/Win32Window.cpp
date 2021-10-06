@@ -59,11 +59,11 @@ void Win32Window::setWindowsMouseCursor(DefaultMouseCursorType ct){
 
     HCURSOR c;
     if (ct == DefaultMouseCursorType::WaitCursor) {
-        c = LoadCursorA(mInstance, IDC_WAIT);
+        c = LoadCursorA(nullptr, IDC_APPSTARTING);
     } else if ( ct == DefaultMouseCursorType::SelectCursor) {
-        c = LoadCursorA(mInstance, IDC_CROSS);
+        c = LoadCursorA(nullptr, IDC_CROSS);
     } else {
-        c = LoadCursorA(mInstance, IDC_ARROW);
+        c = LoadCursorA(nullptr, IDC_ARROW);
     }
     SetCursor(c);
 }
