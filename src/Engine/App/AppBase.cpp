@@ -185,7 +185,6 @@ bool AppBase::destroy() {
 void AppBase::update() {
     if (mAppState == State::Created) {
         mAppState = State::Running;
-        osre_debug(Tag, "Set application state to running, missed to call create?");
     }
     
     onUpdate();
