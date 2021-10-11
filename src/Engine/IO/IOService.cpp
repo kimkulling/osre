@@ -109,8 +109,9 @@ void IOService::umountFileSystem( const String &schema, AbstractFileSystem *pFil
     if ( m_mountedMap.end() == it ) {
         return;
     }
-
-    m_mountedMap.erase( it );
+    if (it->second == pFileSystem) {
+        m_mountedMap.erase(it);
+    }
 }
 
 Stream *IOService::openStream( const Uri &file, Stream::AccessMode mode ) {

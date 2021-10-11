@@ -128,7 +128,7 @@ HWND Win32Window::createStatusBar(UINT ResID, ui32 numFields) {
             SBARS_SIZEGRIP | // includes a sizing grip
             WS_CHILD | WS_VISIBLE, // window styles
             0, 0, 0, 0, // x, y, width, height
-            mWnd, (HMENU) 1000, mInstance, NULL);
+            mWnd, (HMENU) ResID, mInstance, NULL);
     CPPCore::TArray<ui32> fields;
     for (ui32 i = 0; i < numFields; ++i) {
         mStatusBarContent.StatusBarWidths.add(100);

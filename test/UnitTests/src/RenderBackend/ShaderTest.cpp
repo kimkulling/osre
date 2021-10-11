@@ -59,7 +59,7 @@ public:
         return 0;
     }
     
-    bool unload(Shader *shader) override {
+    bool unload(Shader*) override {
         mCalled--;
         return true;
     }
