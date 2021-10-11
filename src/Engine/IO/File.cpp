@@ -39,11 +39,14 @@ bool File::exists(const String &filename) {
     FILE *pFileStream = nullptr;
 #ifdef OSRE_WINDOWS
     errno_t err = ::fopen_s(&pFileStream, filename.c_str(), "r");
+    if (0 != err) {
+        return false;
+    }
 #else
     pFileStream = ::fopen(filename.c_str(), "r");
 #endif
 
-    if (pFileStream) {
+    if (nullptr != pFileStream) {
         exists = true;
         ::fclose(pFileStream);
     }

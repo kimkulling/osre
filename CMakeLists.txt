@@ -49,9 +49,9 @@ INCLUDE_DIRECTORIES( BEFORE
     contrib/soil/src
     ${CMAKE_HOME_DIRECTORY}/contrib/glew/include
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/include
+    ${CMAKE_HOME_DIRECTORY}/contrib/assimp/contrib/zlib
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/include
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/
-    ${CMAKE_HOME_DIRECTORY}/contrib/zlib
     ${CMAKE_HOME_DIRECTORY}/contrib/jsoncpp-1.8.4/include
     ${CMAKE_HOME_DIRECTORY}/contrib/lua-5.3.5/src
     "c:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include"
@@ -137,7 +137,6 @@ ADD_SUBDIRECTORY( contrib/glew )
 
 set(CPPCORE_BUILD_UNITTESTS OFF CACHE BOOL "no cppcore unittests")
 ADD_SUBDIRECTORY( contrib/cppcore )
-ADD_SUBDIRECTORY( contrib/zlib )
 ADD_SUBDIRECTORY( contrib/unzip )
 ADD_SUBDIRECTORY( contrib/soil )
 set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "no assimp tools")

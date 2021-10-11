@@ -45,11 +45,6 @@ MouseEventListener::~MouseEventListener() {
     // empty
 }
 
-static void clearCoords(i32 &relX, i32 &relY, i32 &absX, i32 &absY) {
-    relX = relY = 0;
-    absX = absY = 0;
-}
-
 void MouseEventListener::onOSEvent(const Event &ev, const EventData *data) {
     mLastX = mAbsX;
     mLastY = mAbsY;
