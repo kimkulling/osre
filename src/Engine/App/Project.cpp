@@ -20,16 +20,11 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/App/AssetDataArchive.h>
 #include <osre/App/Project.h>
 #include <osre/App/World.h>
 #include <osre/Common/Logger.h>
 #include <osre/IO/Directory.h>
 #include <osre/IO/Uri.h>
-
-#include <json/json.h>
-#include <json/reader.h>
-#include <json/writer.h>
 
 #include <fstream>
 #include <sstream>
@@ -38,7 +33,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 
-using namespace ::OSRE::Assets;
 using namespace ::OSRE::IO;
 
 namespace Details {
@@ -155,8 +149,6 @@ bool Project::load(const String &name, i32 &major, i32 &minor, i32 flags) {
 
     IO::Uri uri(m_projectName);
     if (uri.isValid()) {
-        AssetDataArchive importer(major, minor);
-        m_activeWorld = importer.load(uri);
     }
 
     Directory::setCurrentDirectory(oldPath);
@@ -193,10 +185,6 @@ bool Project::save(const String &name, i32 /*flags*/) {
         return false;
     }
 
-    Json::StreamWriterBuilder builder;
-    Json::StreamWriter *sw = builder.newStreamWriter();
-
-    saveMetadata(m_version.mMajor, m_version.mMinor, sw);
 
     if (nullptr == m_activeWorld) {
         Directory::setCurrentDirectory(oldPath);
@@ -207,8 +195,6 @@ bool Project::save(const String &name, i32 /*flags*/) {
 
     IO::Uri uri(name);
     if (uri.isValid()) {
-        AssetDataArchive archive(m_version.mMajor, m_version.mMinor);
-        res = archive.save(m_activeWorld, uri);
     }
     Directory::setCurrentDirectory(oldPath);
 
@@ -216,55 +202,11 @@ bool Project::save(const String &name, i32 /*flags*/) {
 }
 
 bool Project::loadMetadata(i32 &major, i32 &minor) {
-    String metaName = m_projectName + ".proj";
-
-    std::ifstream file;
-    file.open(metaName);
-    if (!file.is_open()) {
-        return false;
-    }
-
-    Json::Value meta;
-    file >> meta;
-
-    String version = meta.get("version", "v0.0").asCString();
-    if (!Details::parseVersionString(version, major, minor)) {
-        return false;
-    }
-
-    m_version.mMajor = major;
-    m_version.mMinor = minor;
-
-    bool result = true;
-    m_projectName = meta.get("name", Details::EmptyAttributeToken).asCString();
-    String activeWorldName = meta.get("activeWorld", Details::EmptyAttributeToken).asCString();
-    if (activeWorldName != String(Details::EmptyAttributeToken)) {
-        AssetDataArchive archive(major, minor);
-        IO::Uri uri(m_projectName);
-        result = archive.load(uri);
-    }
-
-    return result;
+    return false;
 }
 
-bool Project::saveMetadata(i32 major, i32 minor, Json::StreamWriter *streamWriter) {
-    String metaName = m_projectName + ".proj";
-    Json::Value meta;
-    meta["name"] = m_projectName;
-    meta["version"] = Details::buildVersionString(major, minor);
-    if (nullptr != m_activeWorld) {
-        meta["activeWorld"] = m_activeWorld->getName();
-    } else {
-        meta["activeWorld"] = Details::EmptyAttributeToken;
-    }
-
-    std::ofstream file;
-    file.open(metaName, std::ofstream::out);
-    if (!file.is_open()) {
-        return false;
-    }
-
-    return (0 == streamWriter->write(meta, &file));
+bool Project::saveMetadata(i32 major, i32 minor) {
+    return false;
 }
 
 } // Namespace App

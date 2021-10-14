@@ -143,7 +143,6 @@ set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "no assimp tools")
 set(ASSIMP_BUILD_ZLIB ON CACHE BOOL "no assimp tools" )
 set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "no assimp tools" )
 ADD_SUBDIRECTORY( contrib/assimp )
-ADD_SUBDIRECTORY( contrib/jsoncpp-1.8.4 )
 
 # Include the doc component
 IF( OSRE_BUILD_DOC )
