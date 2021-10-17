@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <cppcore/Container/TArray.h>
-#include <osre/Math/BaseMath.h>
+#include <osre/Common/BaseMath.h>
 #include <osre/RenderBackend/RenderStates.h>
 
 #include <map>

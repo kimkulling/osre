@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,22 +20,26 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "osre_testcommon.h"
-#include <osre/Math/BaseMath.h>
+#include <osre/Common/BaseMath.h>
 
 namespace OSRE {
-namespace UnitTest {
+namespace Common {
 
-using namespace ::OSRE::Math;
-
-class BaseMathTest : public testing::Test {
+BaseMath::BaseMath() {
     // empty
-};
-
-TEST_F( BaseMathTest, lerpTest ) {
-    f32 res = osre_lerp<f32>( 0.0f, 1.0f, 0.5f );
-    EXPECT_FLOAT_EQ( 0.5f, res );
 }
 
+BaseMath::~BaseMath() {
+    // empty
 }
+
+f32 BaseMath::getSPEPS() {
+    return 0.000001f;
 }
+
+f32 BaseMath::getPI() {
+    return 3.141592653589f;
+}
+
+} // namespace Common
+} // namespace OSRE

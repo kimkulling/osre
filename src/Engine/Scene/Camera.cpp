@@ -147,10 +147,7 @@ void Camera::onUpdate(Time dt) {
 }
 
 void Camera::onRender(RenderBackendService *rbSrv) {
-    if (nullptr == rbSrv) {
-        osre_debug(Tag, "Pointer to renderbackend service is nullptr.");
-        return;
-    }
+    osre_assert(nullptr != rbSrv);
 
     rbSrv->setMatrix(MatrixType::View, m_view);
     rbSrv->setMatrix(MatrixType::Projection, m_projection);

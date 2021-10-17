@@ -108,27 +108,27 @@ namespace Colors {
     const glm::vec3 Blue(0, 0, 1);
 }
 
-static Mesh *createCoordAxis() {
+static Mesh *createCoordAxis(ui32 size) {
     Mesh *axis = Mesh::create(1, VertexType::ColorVertex);
     ColorVert v1, v2, v3, v4, v5, v6;
     v1.position.x = v1.position.y = v1.position.z = 0;
     v1.color0 = Colors::Red;
 
-    v2.position.x = 1000;
+    v2.position.x = size;
     v2.position.y = v2.position.z = 0;
     v2.color0 = Colors::Red;
 
     v3.position.x = v3.position.y = v3.position.z = 0;
     v3.color0 = Colors::Green;
 
-    v4.position.y = 1000;
+    v4.position.y = size;
     v4.position.x = v4.position.z = 0;
     v4.color0 = Colors::Green;
 
     v5.position.x = v5.position.y = v5.position.z = 0;
     v5.color0 = Colors::Blue;
 
-    v6.position.z = 1000;
+    v6.position.z = size;
     v6.position.x = v6.position.y = 0;
     v6.color0 = Colors::Blue;
 
@@ -321,7 +321,7 @@ bool OsreEdApp::onCreate() {
     Entity *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
     Mesh *grid = createGrid(60);
     editorEntity->addStaticMesh(grid);
-    editorEntity->addStaticMesh(createCoordAxis());
+    editorEntity->addStaticMesh(createCoordAxis(1000));
     //createUI();
 
     mPythonInterface = new PythonInterface;
