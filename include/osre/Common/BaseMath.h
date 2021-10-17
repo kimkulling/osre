@@ -22,13 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
 #include <osre/Common/glm_common.h>
+#include <osre/Common/osre_common.h>
 
 #include <cmath>
 
 namespace OSRE {
-namespace Math {
+namespace Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@class		::OSRE::Math::BaseMath
@@ -93,5 +93,5 @@ inline T osre_lerp(T v0, T v1, T t) {
     return (1 - t) * v0 + t * v1;
 }
 
-} // Namespace Math
+} // Namespace Common
 } // Namespace OSRE

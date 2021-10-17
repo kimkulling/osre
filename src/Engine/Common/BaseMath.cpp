@@ -20,47 +20,26 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/TAABB.h>
 #include <osre/Common/BaseMath.h>
 
-#include <GL/glew.h>
-#include <GL/gl.h>
-
 namespace OSRE {
+namespace Common {
 
-namespace RenderBackend {
-    class RenderBackendService;
+BaseMath::BaseMath() {
+    // empty
 }
 
-namespace Scene {
+BaseMath::~BaseMath() {
+    // empty
+}
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief	This class offers some system-specific functions.
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT ParticleEmitter {
-public:
-    ParticleEmitter( RenderBackend::RenderBackendService *rbSrv );
-    ~ParticleEmitter();
-    void init( ui32 numPoints );
-    void update( d32 tick );
-    void setBounds(const TAABB<f32>& bounds);
-    RenderBackend::Mesh* getMesh() const;
+f32 BaseMath::getSPEPS() {
+    return 0.000001f;
+}
 
-private:
-    RenderBackend::RenderBackendService *m_rbSrv;
-    ui32 m_numPoints;
-    glm::vec3 *m_col;
-    glm::vec3 *m_pos;
-    GLushort *m_pt_indices;
-    RenderBackend::Mesh *m_ptGeo;
-    bool m_useBounds;
-    TAABB<f32> m_bounds;
-};
+f32 BaseMath::getPI() {
+    return 3.141592653589f;
+}
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // namespace Common
+} // namespace OSRE

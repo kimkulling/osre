@@ -28,7 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/World.h>
 #include <osre/Common/Ids.h>
 #include <osre/IO/Uri.h>
-#include <osre/Math/BaseMath.h>
+#include <osre/Common/BaseMath.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>

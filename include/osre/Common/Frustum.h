@@ -22,45 +22,69 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/TAABB.h>
-#include <osre/Common/BaseMath.h>
-
-#include <GL/glew.h>
-#include <GL/gl.h>
+#include <osre/Common/osre_common.h>
+#include <osre/Common/glm_common.h>
 
 namespace OSRE {
+namespace Common {
 
-namespace RenderBackend {
-    class RenderBackendService;
-}
-
-namespace Scene {
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief	This class offers some system-specific functions.
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT ParticleEmitter {
+class Frustum {
 public:
-    ParticleEmitter( RenderBackend::RenderBackendService *rbSrv );
-    ~ParticleEmitter();
-    void init( ui32 numPoints );
-    void update( d32 tick );
-    void setBounds(const TAABB<f32>& bounds);
-    RenderBackend::Mesh* getMesh() const;
+    enum {
+        Top = 0,
+        Bottom, 
+        Left,
+        Right,
+        NearP, 
+        FarP
+    };
+
+    Frustum();
+    ~Frustum() = default;
+    bool isIn(glm::vec3 &point);
+    void extractFrom(const glm::mat4 &vp);
+    void clear();
 
 private:
-    RenderBackend::RenderBackendService *m_rbSrv;
-    ui32 m_numPoints;
-    glm::vec3 *m_col;
-    glm::vec3 *m_pos;
-    GLushort *m_pt_indices;
-    RenderBackend::Mesh *m_ptGeo;
-    bool m_useBounds;
-    TAABB<f32> m_bounds;
+    glm::vec4 mPlanes[6];
 };
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+inline Frustum::Frustum() {
+    clear();
+}
+
+inline bool Frustum::isIn( glm::vec3 &point ) {
+    bool in = true;
+    for (auto & plane : mPlanes) {
+        const f32 d = plane.x * point.x + plane.y * point.y + plane.z * point.z + plane.w;
+        if (d < 0.0f) {
+            in = false;
+            break;
+        }
+    }
+    
+    return in;
+}
+
+inline void Frustum::extractFrom(const glm::mat4 &vp) {
+    glm::vec4 rowX = glm::row(vp, 0);
+    glm::vec4 rowY = glm::row(vp, 1);
+    glm::vec4 rowZ = glm::row(vp, 2);
+    glm::vec4 rowW = glm::row(vp, 3);
+
+    mPlanes[0] = normalize(rowW + rowX);
+    mPlanes[1] = normalize(rowW - rowX);
+    mPlanes[2] = normalize(rowW + rowY);
+    mPlanes[3] = normalize(rowW - rowY);
+    mPlanes[4] = normalize(rowW + rowZ);
+    mPlanes[5] = normalize(rowW - rowZ);
+}
+
+inline void Frustum::clear() {
+    for (auto &plane : mPlanes) {
+        plane.x = plane.y = plane.z = plane.w = 0.0f;
+    }
+}
+
+} // namespace Common
+} // namespace OSRE
