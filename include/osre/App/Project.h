@@ -26,10 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/SceneCommon.h>
 
 // Forward declarations ---------------------------------------------------------------------------
-namespace Json {
-    class StreamWriter;
-}
-
 namespace OSRE {
 namespace App {
 	
@@ -53,7 +49,7 @@ public:
 
 protected:
     bool loadMetadata(i32& major, i32& minor);
-    bool saveMetadata(i32 major, i32 minor, Json::StreamWriter *streamWriter);
+    bool saveMetadata(i32 major, i32 minor);
 
 private:
     Version m_version;

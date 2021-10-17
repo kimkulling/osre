@@ -44,7 +44,6 @@ SET( app_inc
     ${HEADER_PATH}/App/ResourceCacheService.h
     ${HEADER_PATH}/App/AssetsCommon.h
     ${HEADER_PATH}/App/AssetRegistry.h
-    ${HEADER_PATH}/App/AssetDataArchive.h
     ${HEADER_PATH}/App/AssimpWrapper.h
     ${HEADER_PATH}/App/World.h
 )
@@ -56,7 +55,6 @@ SET( app_src
     App/ServiceProvider.cpp
     App/Project.cpp
     App/AssetRegistry.cpp
-    App/AssetDataArchive.cpp
     App/AssimpWrapper.cpp
     App/World.cpp
     App/MouseEventListener.cpp
@@ -504,5 +502,5 @@ ADD_LIBRARY( osre SHARED
     ${winmanager_src}
 )
 
-target_link_libraries ( osre cppcore zlibstatic Unzip glew soil jsoncpp_lib_static ${platform_libs} assimp )
+target_link_libraries ( osre cppcore zlibstatic Unzip glew soil ${platform_libs} assimp )
 set_target_properties(  osre PROPERTIES FOLDER Engine )

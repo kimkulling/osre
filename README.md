@@ -1,6 +1,6 @@
 # OSRE - Just another Open Source Render Engine
 
-Just another open-source renderer made by me for just playing around.
+Just another open-source render-engine made by Kim Kulling. This is a playground project for myself to work on my own side-projects.
 
 # The Core-Features:
 - Multithreaded rendering 

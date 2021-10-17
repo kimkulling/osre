@@ -28,9 +28,7 @@ SET ( unittest_app_src
     src/App/TAbstractCtrlBaseTest.cpp
     src/App/ProjectTest.cpp
     src/App/AssetRegistryTest.cpp
-    src/App/AssetDataTest.cpp
     src/App/AssetWrapperTest.cpp
-    src/App/AssetDataArchiveTest.cpp
 )
 
 SET ( unittest_common_src
