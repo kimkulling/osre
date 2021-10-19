@@ -22,11 +22,6 @@ OPTION( OSRE_BUILD_TESTS
   ON
 )
 
-OPTION( OSRE_BUILD_DOC
-  "Build the doxygen-based documentationof OSRE."
-  OFF
-)
-
 OPTION( OSRE_BUILD_CSHARP_EDITOR
   "Build the c# editor of OSRE."
   OFF
@@ -144,22 +139,6 @@ set(ASSIMP_BUILD_ZLIB ON CACHE BOOL "no assimp tools" )
 set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "no assimp tools" )
 ADD_SUBDIRECTORY( contrib/assimp )
 
-# Include the doc component
-IF( OSRE_BUILD_DOC )
-  find_package(Doxygen)
-  IF ( DOXYGEN_FOUND )
-      CONFIGURE_FILE( doc/Doxygen/osre_doxygen.in doc/Doxygen/osre_doxyfile @ONLY )
-      ADD_CUSTOM_TARGET( doc ALL ${DOXYGEN_EXECUTABLE} doc/Doxygen/osre_doxyfile
-          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-          COMMENT "Generating OSRE-API documentation with Doxygen" VERBATIM
-      )
-  else (DOXYGEN_FOUND)
-      message("Doxygen need to be installed to generate the doxygen documentation")
-  ENDIF ( DOXYGEN_FOUND )
-ENDIF( OSRE_BUILD_DOC )
 
-IF ( OSRE_BUILD_DOC )  
-  set_target_properties(  doc                PROPERTIES FOLDER Documentation )
-ENDIF( OSRE_BUILD_DOC )
 set_target_properties(  cppcore            PROPERTIES FOLDER ThirdParty )
 set_target_properties(  assimp             PROPERTIES FOLDER ThirdParty )
