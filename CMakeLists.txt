@@ -22,11 +22,6 @@ OPTION( OSRE_BUILD_TESTS
   ON
 )
 
-OPTION( OSRE_BUILD_CSHARP_EDITOR
-  "Build the c# editor of OSRE."
-  OFF
-)
-
 # Cache these to allow the user to override them manually.
 set( LIB_INSTALL_DIR "lib" CACHE PATH
     "Path the built library files are installed to." )
@@ -111,7 +106,7 @@ ELSEIF( CMAKE_COMPILER_IS_MINGW )
   ADD_DEFINITIONS( -U__STRICT_ANSI__ )
 ENDIF()
 
-add_definitions( -DGLM_ENABLE_EXPERIMENTAL )
+add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
 
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
@@ -138,7 +133,6 @@ set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "no assimp tools")
 set(ASSIMP_BUILD_ZLIB ON CACHE BOOL "no assimp tools" )
 set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "no assimp tools" )
 ADD_SUBDIRECTORY( contrib/assimp )
-
 
 set_target_properties(  cppcore            PROPERTIES FOLDER ThirdParty )
 set_target_properties(  assimp             PROPERTIES FOLDER ThirdParty )
