@@ -1,11 +1,11 @@
-SET( LIBRARY_VERSION "0.1.0" )
+SET(LIBRARY_VERSION "0.1.0" )
 
-SET( HEADER_PATH ${PROJECT_SOURCE_DIR}/include/osre )
+SET(HEADER_PATH ${PROJECT_SOURCE_DIR}/include/osre )
 add_definitions( -DOSRE_BUILD_EXPORT )
 
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
-	${HEADER_PATH}
+    ${HEADER_PATH}
     ${PROJECT_SOURCE_DIR}/contrib/cppcore/include
     ${PROJECT_SOURCE_DIR}/contrib/glew/include
     ${PROJECT_SOURCE_DIR}/contrib/glm/
@@ -15,7 +15,7 @@ INCLUDE_DIRECTORIES(
 )
 
 # For Vulkan support
-if( NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*" )
+if(NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*" )
     if( WIN32 )
         set( USE_PLATFORM "VK_USE_PLATFORM_WIN32_KHR" )
     elseif( UNIX )
@@ -32,7 +32,7 @@ ENDIF( WIN32 )
 #==============================================================================
 # App
 #==============================================================================
-SET( app_inc
+SET(app_inc
     ${HEADER_PATH}/App/AppCommon.h
     ${HEADER_PATH}/App/AbstractBehaviour.h
     ${HEADER_PATH}/App/AppBase.h
@@ -48,7 +48,7 @@ SET( app_inc
     ${HEADER_PATH}/App/World.h
 )
 
-SET( app_src
+SET(app_src
     App/AppBase.cpp
     App/Component.cpp
     App/Entity.cpp
@@ -64,8 +64,7 @@ SET( app_src
 #==============================================================================
 # Common
 #==============================================================================
-SET( common_inc
-    ${HEADER_PATH}/Common/Common.h
+SET(common_inc
     ${HEADER_PATH}/Common/Environment.h
     ${HEADER_PATH}/Common/AbstractEventHandler.h
     ${HEADER_PATH}/Common/AbstractProcessor.h
@@ -91,7 +90,7 @@ SET( common_inc
     ${HEADER_PATH}/Common/BaseMath.h
     ${HEADER_PATH}/Common/TRay.h
 )
-SET( common_src
+SET(common_src
     Common/ArgumentParser.cpp
     Common/BaseMath.cpp
     Common/Common.cpp
@@ -109,12 +108,12 @@ SET( common_src
 #==============================================================================
 # Debugging
 #==============================================================================
-SET( debugging_inc
+SET(debugging_inc
     ${HEADER_PATH}/Debugging/AssertHandler.h
     ${HEADER_PATH}/Debugging/osre_debugging.h
     ${HEADER_PATH}/Debugging/MeshDiagnostic.h
 )
-SET( debugging_src
+SET(debugging_src
     Debugging/Debug.cpp
     Debugging/AssertHandler.cpp
     Debugging/MeshDiagnostic.cpp
@@ -123,7 +122,7 @@ SET( debugging_src
 #==============================================================================
 # IO
 #==============================================================================
-SET( io_src
+SET(io_src
     IO/Directory.cpp
     IO/File.cpp
     IO/FileStream.cpp
@@ -140,7 +139,7 @@ SET( io_src
     IO/ZipFileStream.h
     IO/IOSystemInfo.cpp
 )
-SET( io_inc
+SET(io_inc
     ${HEADER_PATH}/IO/IOCommon.h
     ${HEADER_PATH}/IO/Directory.h
     ${HEADER_PATH}/IO/File.h
@@ -154,7 +153,7 @@ SET( io_inc
 #==============================================================================
 # Platform
 #==============================================================================
-SET( platform_inc
+SET(platform_inc
     ${HEADER_PATH}/Platform/PlatformCommon.h
     ${HEADER_PATH}/Platform/AbstractOSService.h
     ${HEADER_PATH}/Platform/Threading.h
@@ -172,10 +171,10 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/PlatformOperations.h
     ${HEADER_PATH}/Platform/AbstractDisplayInterface.h
 )
-SET( platform_win_inc
+SET(platform_win_inc
     ${HEADER_PATH}/Platform/Windows/MinWindows.h
 )
-SET( platform_src
+SET(platform_src
     Platform/AbstractPlatformEventQueue.cpp
     Platform/CPUInfo.cpp
     Platform/SystemInfo.cpp
@@ -187,7 +186,7 @@ SET( platform_src
     Platform/AbstractDynamicLoader.cpp
     Platform/PlatformOperations.cpp
 )
-SET( platform_win32_src
+SET(platform_win32_src
     Platform/win32/Win32DisplayInterface.h
     Platform/win32/Win32DisplayInterface.cpp
     Platform/win32/Win32SystemInfo.h
@@ -208,7 +207,7 @@ SET( platform_win32_src
     Platform/win32/Win32OSService.h
     Platform/win32/Threading_win32.cpp
 )
-SET( platform_sdl2_src
+SET(platform_sdl2_src
     Platform/sdl2/Threading_sdl2.cpp
     Platform/sdl2/SDL2DisplayInterface.h
     Platform/sdl2/SDL2DisplayInterface.cpp
@@ -230,21 +229,21 @@ SET( platform_sdl2_src
     Platform/sdl2/SDL2OSService.cpp
 )
 
-IF( WIN32 )
-    SET( platform_impl_src ${platform_win32_src} )
+IF(WIN32)
+    SET(platform_impl_src ${platform_win32_src})
 ELSE()
-    SET( platform_impl_src ${platform_sdl2_src} )
+    SET(platform_impl_src ${platform_sdl2_src})
 ENDIF()
 
 #==============================================================================
 # Profiling
 #==============================================================================
-SET( profiling_inc
+SET(profiling_inc
     ${HEADER_PATH}/Profiling/ProfilingCommon.h
     ${HEADER_PATH}/Profiling/FPSCounter.h
     ${HEADER_PATH}/Profiling/PerformanceCounterRegistry.h
 )
-SET( profiling_src
+SET(profiling_src
     Profiling/FPSCounter.cpp
     Profiling/PerformanceCounterRegistry.cpp
 )
@@ -252,14 +251,14 @@ SET( profiling_src
 #==============================================================================
 # Properties
 #==============================================================================
-SET ( properties_inc
+SET (properties_inc
     ${HEADER_PATH}/Properties/PropertiesCommon.h
     ${HEADER_PATH}/Properties/BasePropertyMap.h
     ${HEADER_PATH}/Properties/AbstractPropertyMap.h
     ${HEADER_PATH}/Properties/Property.h
     ${HEADER_PATH}/Properties/Settings.h
 )
-SET ( properties_src
+SET (properties_src
     Properties/BasePropertyMap.cpp
     Properties/Settings.cpp
     Properties/Property.cpp
@@ -268,7 +267,7 @@ SET ( properties_src
 #==============================================================================
 # Scene
 #==============================================================================
-SET( scene_inc
+SET(scene_inc
     ${HEADER_PATH}/Scene/SceneCommon.h
     ${HEADER_PATH}/Scene/PipelineBuilder.h
     ${HEADER_PATH}/Scene/MeshProcessor.h
@@ -284,7 +283,7 @@ SET( scene_inc
     ${HEADER_PATH}/Scene/TQuadTree.h
     ${HEADER_PATH}/Scene/ParticleEmitter.h
 )
-SET( scene_src
+SET(scene_src
     Scene/PipelineBuilder.cpp
     Scene/DbgRenderer.cpp
     Scene/MeshProcessor.cpp
@@ -304,7 +303,7 @@ SET(scene_shader_src
 #==============================================================================
 # RenderBackend
 #==============================================================================
-SET( renderbackend_inc
+SET(renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
     ${HEADER_PATH}/RenderBackend/Mesh.h
     ${HEADER_PATH}/RenderBackend/THWBufferManager.h
@@ -314,7 +313,7 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderStates.h
     ${HEADER_PATH}/RenderBackend/Shader.h
 )
-SET( renderbackend_src
+SET(renderbackend_src
     RenderBackend/Mesh.cpp
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
@@ -323,7 +322,7 @@ SET( renderbackend_src
     RenderBackend/TransformMatrixBlock.cpp
     RenderBackend/Shader.cpp
 )
-SET( renderbackend_oglrenderer_src
+SET(renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLCommon.h
     RenderBackend/OGLRenderer/OGLCommon.cpp
     RenderBackend/OGLRenderer/OGLRenderCommands.h
@@ -339,7 +338,7 @@ SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLShader.cpp
     RenderBackend/OGLRenderer/OGLShader.h
 )
-SET( renderbackend_vulkanrenderer_src
+SET(renderbackend_vulkanrenderer_src
     RenderBackend/VulkanRenderer/VlkFunctions.h
     RenderBackend/VulkanRenderer/VlkFunctions.cpp
     RenderBackend/VulkanRenderer/VlkExportedFunctions.inl
@@ -353,16 +352,16 @@ SET( renderbackend_vulkanrenderer_src
 #==============================================================================
 # Scripting with Mono
 #==============================================================================
-SET( scripting_mono_src
+SET(scripting_mono_src
 )
-SET( scripting_mono_inc
-	${HEADER_PATH}/Scripting/osre_scripting.h
+SET(scripting_mono_inc
+    ${HEADER_PATH}/Scripting/osre_scripting.h
 )
 
 #==============================================================================
 # WindowsManager
 #==============================================================================
-SET( winmanager_src
+SET(winmanager_src
     WinManager/WMButton.h
     WinManager/WMDialog.h
     WinManager/WMDialog.cpp
@@ -371,73 +370,76 @@ SET( winmanager_src
 #==============================================================================
 # Threading
 #==============================================================================
-SET( threading_inc
+SET(threading_inc
     ${HEADER_PATH}/Threading/ThreadingCommon.h
     ${HEADER_PATH}/Threading/AbstractTask.h
     ${HEADER_PATH}/Threading/SystemTask.h
     ${HEADER_PATH}/Threading/TaskJob.h
     ${HEADER_PATH}/Threading/TAsyncQueue.h
 )
-SET( threading_src
+SET(threading_src
     Threading/AbstractTask.cpp
     Threading/SystemTask.cpp
 )
 
-if( NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*" )
-	if( WIN32 )
-		set( USE_PLATFORM "VK_USE_PLATFORM_WIN32_KHR" )
-	elseif( UNIX )
-		set( USE_PLATFORM "VK_USE_PLATFORM_XCB_KHR" )
-	endif()
+if(NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*")
+    if(WIN32)
+        set( USE_PLATFORM "VK_USE_PLATFORM_WIN32_KHR" )
+    elseif( UNIX )
+        set( USE_PLATFORM "VK_USE_PLATFORM_XCB_KHR" )
+    endif()
 endif()
 
 #==============================================================================
 # Defined Source groups
 #==============================================================================
-SOURCE_GROUP( App                 FILES ${app_src} )
-SOURCE_GROUP( Assets              FILES ${assets_src} )
-SOURCE_GROUP( Common              FILES ${common_src} )
-SOURCE_GROUP( Components          FILES ${components_src} )
-SOURCE_GROUP( Debugging           FILES ${debugging_src} )
-SOURCE_GROUP( Debugging\\Win32    FILES ${debugging_windows_src} )
-SOURCE_GROUP( IO                  FILES ${io_src} )
-SOURCE_GROUP( Math                FILES ${math_src} )
-SOURCE_GROUP( Memory              FILES ${memory_src} )
-SOURCE_GROUP( Platform            FILES ${platform_src} )
-SOURCE_GROUP( Platform\\Win32     FILES ${platform_impl_src} )
-SOURCE_GROUP( Platform\\sdl2      FILES ${platform_sdl2_src} )
-SOURCE_GROUP( Profiling           FILES ${profiling_src} )
-SOURCE_GROUP( Properties          FILES ${properties_src} )
-SOURCE_GROUP( RenderBackend       FILES ${renderbackend_src} )
-SOURCE_GROUP( RenderBackend\\OGLRenderer    FILES ${renderbackend_oglrenderer_src} )
-SOURCE_GROUP( RenderBackend\\VulkanRenderer FILES ${renderbackend_vulkanrenderer_src} )
-SOURCE_GROUP( Resources           FILES ${resources_src} )
-SOURCE_GROUP( Scene               FILES ${scene_src} )
-SOURCE_GROUP( Scene\\Shader       FILES ${scene_shader_src})
-SOURCE_GROUP( Threading           FILES ${threading_src} )
-SOURCE_GROUP( WinManager          FILES ${winmanager_src} )
-SOURCE_GROUP( UI\\Common          FILES ${ui_common_src} )
+SOURCE_GROUP(App                           FILES ${app_src})
+SOURCE_GROUP(Assets                        FILES ${assets_src})
+SOURCE_GROUP(Common                        FILES ${common_src})
+SOURCE_GROUP(Components                    FILES ${components_src})
+SOURCE_GROUP(Debugging                     FILES ${debugging_src})
+SOURCE_GROUP(Debugging\\Win32              FILES ${debugging_windows_src})
+SOURCE_GROUP(IO                            FILES ${io_src})
+SOURCE_GROUP(Math                          FILES ${math_src})
+SOURCE_GROUP(Memory                        FILES ${memory_src})
+SOURCE_GROUP(Platform                      FILES ${platform_src})
+SOURCE_GROUP(Platform\\Win32               FILES ${platform_impl_src})
+SOURCE_GROUP(Platform\\sdl2                FILES ${platform_sdl2_src})
+SOURCE_GROUP(Profiling                     FILES ${profiling_src})
+SOURCE_GROUP(Properties                    FILES ${properties_src})
+SOURCE_GROUP(RenderBackend                 FILES ${renderbackend_src})
+SOURCE_GROUP(RenderBackend\\OGLRenderer    FILES ${renderbackend_oglrenderer_src})
+SOURCE_GROUP(RenderBackend\\VulkanRenderer FILES ${renderbackend_vulkanrenderer_src})
+SOURCE_GROUP(Resources                     FILES ${resources_src})
+SOURCE_GROUP(Scene                         FILES ${scene_src})
+SOURCE_GROUP(Scene\\Shader                 FILES ${scene_shader_src})
+SOURCE_GROUP(Threading                     FILES ${threading_src})
+SOURCE_GROUP(WinManager                    FILES ${winmanager_src})
+SOURCE_GROUP(UI\\Common                    FILES ${ui_common_src})
 
-SOURCE_GROUP( Include\\osre\\App        FILES ${app_inc} )
-SOURCE_GROUP( Include\\osre\\Assets     FILES ${assets_inc} )
-SOURCE_GROUP( Include\\osre\\Debugging  FILES ${debugging_inc} )
-SOURCE_GROUP( Include\\osre\\Common     FILES ${common_inc} )
-SOURCE_GROUP( Include\\osre\\Debugging  FILES ${debugging_inc} )
-SOURCE_GROUP( Include\\osre\\System     FILES ${system_inc} )
-SOURCE_GROUP( Include\\osre\\Utils      FILES ${utils_inc} )
-SOURCE_GROUP( Include\\osre\\IO         FILES ${io_inc} )
-SOURCE_GROUP( Include\\osre\\Math              FILES ${math_inc} )
-SOURCE_GROUP( Include\\osre\\Memory            FILES ${memory_inc} )
-SOURCE_GROUP( Include\\osre\\Properties        FILES ${properties_inc} )
-SOURCE_GROUP( Include\\osre\\Platform          FILES ${platform_inc} )
-SOURCE_GROUP( Include\\osre\\Platform\\Windows FILES ${platform_win_inc} )
-SOURCE_GROUP( Include\\osre\\Profiling         FILES ${profiling_inc} )
-SOURCE_GROUP( Include\\osre\\Resources         FILES ${resources_inc} )
-SOURCE_GROUP( Include\\osre\\RenderBackend     FILES ${renderbackend_inc} )
-SOURCE_GROUP( Include\\osre\\Scene             FILES ${scene_inc} )
-SOURCE_GROUP( Include\\osre\\Scripting         FILES ${scripting_mono_inc} )
-SOURCE_GROUP( Include\\osre\\Threading         FILES ${threading_inc} )
-SOURCE_GROUP( Documentation                    FILES ${doc_inc} )
+#==============================================================================
+# Defined Include groups
+#==============================================================================
+SOURCE_GROUP(Include\\osre\\App               FILES ${app_inc})
+SOURCE_GROUP(Include\\osre\\Assets            FILES ${assets_inc})
+SOURCE_GROUP(Include\\osre\\Debugging         FILES ${debugging_inc})
+SOURCE_GROUP(Include\\osre\\Common            FILES ${common_inc})
+SOURCE_GROUP(Include\\osre\\Debugging         FILES ${debugging_inc})
+SOURCE_GROUP(Include\\osre\\System            FILES ${system_inc})
+SOURCE_GROUP(Include\\osre\\Utils             FILES ${utils_inc})
+SOURCE_GROUP(Include\\osre\\IO                FILES ${io_inc})
+SOURCE_GROUP(Include\\osre\\Math              FILES ${math_inc})
+SOURCE_GROUP(Include\\osre\\Memory            FILES ${memory_inc})
+SOURCE_GROUP(Include\\osre\\Properties        FILES ${properties_inc})
+SOURCE_GROUP(Include\\osre\\Platform          FILES ${platform_inc})
+SOURCE_GROUP(Include\\osre\\Platform\\Windows FILES ${platform_win_inc})
+SOURCE_GROUP(Include\\osre\\Profiling         FILES ${profiling_inc})
+SOURCE_GROUP(Include\\osre\\Resources         FILES ${resources_inc})
+SOURCE_GROUP(Include\\osre\\RenderBackend     FILES ${renderbackend_inc})
+SOURCE_GROUP(Include\\osre\\Scene             FILES ${scene_inc})
+SOURCE_GROUP(Include\\osre\\Scripting         FILES ${scripting_mono_inc})
+SOURCE_GROUP(Include\\osre\\Threading         FILES ${threading_inc})
+SOURCE_GROUP(Documentation                    FILES ${doc_inc})
 
 add_definitions( -D${USE_PLATFORM} )
 
