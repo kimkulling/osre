@@ -22,12 +22,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Common.h>
 #include <osre/Common/Object.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/SceneCommon.h>
-#include <osre/Scene/TAABB.h>
+#include <osre/Scene/AABB.h>
 
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>
@@ -91,8 +90,10 @@ public:
     using PropertyMap = CPPCore::THashMap<ui32, Properties::Property *>;
 
     enum class TraverseMode {
-        FlatMode,
-        RecursiveMode
+        FlatMode = 0,
+        RecursiveMode,
+        NumTraverseModes,
+        InvalidaTraverseMode
     };
 
 public:
