@@ -91,8 +91,10 @@ public:
     using PropertyMap = CPPCore::THashMap<ui32, Properties::Property *>;
 
     enum class TraverseMode {
-        FlatMode,
-        RecursiveMode
+        FlatMode = 0,
+        RecursiveMode,
+        NumTraverseModes,
+        InvalidaTraverseMode
     };
 
 public:
