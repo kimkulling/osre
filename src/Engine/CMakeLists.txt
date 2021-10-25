@@ -1,7 +1,7 @@
 SET(LIBRARY_VERSION "0.1.0" )
 
 SET(HEADER_PATH ${PROJECT_SOURCE_DIR}/include/osre )
-add_definitions( -DOSRE_BUILD_EXPORT )
+add_definitions(-DOSRE_BUILD_EXPORT)
 
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
@@ -15,15 +15,15 @@ INCLUDE_DIRECTORIES(
 )
 
 # For Vulkan support
-if(NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*" )
-    if( WIN32 )
-        set( USE_PLATFORM "VK_USE_PLATFORM_WIN32_KHR" )
-    elseif( UNIX )
-        set( USE_PLATFORM "VK_USE_PLATFORM_XCB_KHR" )
+if (NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*" )
+    if (WIN32)
+        set(USE_PLATFORM "VK_USE_PLATFORM_WIN32_KHR" )
+    elseif (UNIX)
+        set(USE_PLATFORM "VK_USE_PLATFORM_XCB_KHR" )
     endif()
 endif()
 
-IF( WIN32 )
+IF (WIN32)
     SET( platform_libs comctl32.lib Winmm.lib opengl32.lib glu32.lib Shcore.lib SDL2 )
 ELSE( WIN32 )
     SET( platform_libs SDL2 )
@@ -238,12 +238,12 @@ ENDIF()
 #==============================================================================
 # Profiling
 #==============================================================================
-SET(profiling_inc
+set(profiling_inc
     ${HEADER_PATH}/Profiling/ProfilingCommon.h
     ${HEADER_PATH}/Profiling/FPSCounter.h
     ${HEADER_PATH}/Profiling/PerformanceCounterRegistry.h
 )
-SET(profiling_src
+set(profiling_src
     Profiling/FPSCounter.cpp
     Profiling/PerformanceCounterRegistry.cpp
 )
@@ -251,14 +251,14 @@ SET(profiling_src
 #==============================================================================
 # Properties
 #==============================================================================
-SET (properties_inc
+set(properties_inc
     ${HEADER_PATH}/Properties/PropertiesCommon.h
     ${HEADER_PATH}/Properties/BasePropertyMap.h
     ${HEADER_PATH}/Properties/AbstractPropertyMap.h
     ${HEADER_PATH}/Properties/Property.h
     ${HEADER_PATH}/Properties/Settings.h
 )
-SET (properties_src
+set(properties_src
     Properties/BasePropertyMap.cpp
     Properties/Settings.cpp
     Properties/Property.cpp
@@ -279,7 +279,7 @@ SET(scene_inc
     ${HEADER_PATH}/Scene/TrackBall.h
     ${HEADER_PATH}/Scene/Camera.h
     ${HEADER_PATH}/Scene/LineBuilder.h
-    ${HEADER_PATH}/Scene/TAABB.h
+    ${HEADER_PATH}/Scene/AABB.h
     ${HEADER_PATH}/Scene/TQuadTree.h
     ${HEADER_PATH}/Scene/ParticleEmitter.h
 )
