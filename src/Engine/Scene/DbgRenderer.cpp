@@ -100,47 +100,46 @@ static ui16 indices[NumIndices] = {
     3, 7
 };
 
-void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb) {
+void DbgRenderer::renderAABB(const glm::mat4 &transform, const AABB &aabb) {
     MeshBuilder meshBuilder;
     meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 1);
     Mesh *mesh = meshBuilder.getMesh();
 
     static const ui32 NumVertices = 8;
     ColorVert vertices[NumVertices];
-    const OSRE::Vec3f &min(aabb.getMin());
-    const OSRE::Vec3f &max(aabb.getMax());
-    f32 x0(min.getX()), y0(min.getY()), z0(min.getZ()), x1(max.getX()), y1(max.getY()), z1(max.getZ());
-    vertices[0].position.x = x0;
-    vertices[0].position.y = y0;
-    vertices[0].position.z = z0;
+    const glm::vec3 &min = aabb.getMin();
+    const glm::vec3 &max = aabb.getMax();
+    vertices[0].position.x = min.x;
+    vertices[0].position.y = min.y;
+    vertices[0].position.z = min.z;
 
-    vertices[1].position.x = x1;
-    vertices[1].position.y = y0;
-    vertices[1].position.z = z0;
+    vertices[1].position.x = max.x;
+    vertices[1].position.y = min.y;
+    vertices[1].position.z = min.z;
 
-    vertices[2].position.x = x1;
-    vertices[2].position.y = y1;
-    vertices[2].position.z = z0;
+    vertices[2].position.x = max.x;
+    vertices[2].position.y = max.y;
+    vertices[2].position.z = min.z;
 
-    vertices[3].position.x = x0;
-    vertices[3].position.y = y1;
-    vertices[3].position.z = z0;
+    vertices[3].position.x = min.x;
+    vertices[3].position.y = max.y;
+    vertices[3].position.z = min.z;
 
-    vertices[4].position.x = x0;
-    vertices[4].position.y = y0;
-    vertices[4].position.z = z1;
+    vertices[4].position.x = min.x;
+    vertices[4].position.y = min.y;
+    vertices[4].position.z = max.z;
 
-    vertices[5].position.x = x1;
-    vertices[5].position.y = y0;
-    vertices[5].position.z = z1;
+    vertices[5].position.x = max.x;
+    vertices[5].position.y = min.y;
+    vertices[5].position.z = max.z;
 
-    vertices[6].position.x = x1;
-    vertices[6].position.y = y1;
-    vertices[6].position.z = z1;
+    vertices[6].position.x = max.x;
+    vertices[6].position.y = max.y;
+    vertices[6].position.z = max.z;
 
-    vertices[7].position.x = x0;
-    vertices[7].position.y = y1;
-    vertices[7].position.z = z1;
+    vertices[7].position.x = min.x;
+    vertices[7].position.y = max.y;
+    vertices[7].position.z = max.z;
 
     const size_t vertexSize(sizeof(ColorVert) * NumVertices);
     mesh->m_vb = BufferData::alloc(BufferType::VertexBuffer, vertexSize, BufferAccessType::ReadOnly);

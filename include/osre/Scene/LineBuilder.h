@@ -38,8 +38,8 @@ class OSRE_EXPORT LineBuilder {
 public:
     LineBuilder();
     ~LineBuilder();
-    LineBuilder &addLine(const Vec3f &pos0, const Vec3f &pos1);
-    LineBuilder &addLines(Vec3f *pos0, Vec3f *pos1, ui32 numLines);
+    LineBuilder &addLine(const glm::vec3 &pos0, const glm::vec3 &pos1);
+    LineBuilder &addLines(glm::vec3 *pos0, glm::vec3 *pos1, ui32 numLines);
     RenderBackend::Mesh *getMesh();
 
     /// No copying.

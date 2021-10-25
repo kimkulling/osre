@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/AbstractProcessor.h>
-#include <osre/Scene/TAABB.h>
+#include <osre/Scene/AABB.h>
 #include <osre/Scene/Node.h>
 
 #include <cppcore/Container/TArray.h>

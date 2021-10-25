@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/glm_common.h>
 #include <osre/Scene/Node.h>
 #include <osre/Scene/SceneCommon.h>
-#include <osre/Scene/TAABB.h>
+#include <osre/Scene/AABB.h>
 
 namespace OSRE {
 namespace Scene {
@@ -80,7 +80,7 @@ public:
     void draw(RenderBackend::RenderBackendService *renderBackendSrv);
 
     /// @brief
-    void observeBoundingBox(const TAABB<f32> &box);
+    void observeBoundingBox(const AABB &box);
 
     /// @brief
     void setLookAt(const glm::vec3 &eyePosition, const glm::vec3 &center, const glm::vec3 &up);

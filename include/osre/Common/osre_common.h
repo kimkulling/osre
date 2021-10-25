@@ -260,95 +260,9 @@ struct Color4 {
     }
 };
 
-/// @brief  A vector with 2 components.
-template <class T>
-struct TVec2 {
-    T v[2];
-
-    TVec2() {
-        set(0, 0);
-    }
-
-    TVec2(T x, T y) {
-        set(x, y);
-    }
-
-    void set(T x, T y) {
-        v[0] = x;
-        v[1] = y;
-    }
-
-    T getX() const {
-        return v[0];
-    }
-
-    void setX(T x) {
-        v[0] = x;
-    }
-
-    T getY() const {
-        return v[1];
-    }
-
-    void setY(T y) {
-        v[1] = y;
-    }
-
-    T getSquaredLength() {
-        return ((v[0] * v[0]) + (v[1] * v[1]));
-    }
-
-    T getLength() {
-        return ::sqrt(getSquaredLength());
-    }
-
-    T dotProduct(const TVec2<T> &rhs) const {
-        return (this->v[0] * rhs.v[0] + this->v[1] * rhs.v[1]);
-    }
-
-    TVec2<T> crossProduct(const TVec2<T> &rhs) const {
-        return TVec2<T>(this->v[0] * rhs.v[1], this->v[1] * rhs.v[0]);
-    }
-
-    TVec2<T> operator+(const TVec2<T> &rhs) const {
-        TVec2<T> res(v[0] + rhs.v[0], v[1] + rhs.v[1]);
-        return res;
-    }
-
-    TVec2<T> operator-(const TVec2<T> &rhs) const {
-        TVec2<T> res(v[0] - rhs.v[0], v[1] - rhs.v[1]);
-        return res;
-    }
-
-    TVec2<T> operator*(T scalar) const {
-        TVec2<T> res(v[0] * scalar, v[1] * scalar);
-        return res;
-    }
-
-    bool operator==(const TVec2<T> &rhs) const {
-        return (v[0] == rhs.v[0] && v[1]);
-    }
-
-    bool operator!=(const TVec2<T> &rhs) const {
-        return !(this == rhs);
-    }
-
-    T operator[](ui32 index) const {
-        return v[index];
-    }
-};
-
-template <class T>
-inline TVec2<T> operator*(T scalar, TVec2<T> vec) {
-    TVec2<T> res(vec.v[0] * scalar, vec.v[1] * scalar);
-    return res;
-}
-
-using Vec2i = TVec2<i32>;
-using Vec2f = TVec2<f32>;
 
 /// @brief  A vector with 3 components.
-template <class T>
+/*template <class T>
 struct TVec3 {
     T v[3];
 
@@ -472,8 +386,8 @@ struct TVec3 {
         return v[index];
     }
 };
-
-template <class T>
+*/
+/*template <class T>
 inline TVec3<T> operator*(T scalar, TVec3<T> vec) {
     TVec3<T> res(vec.v[0] * scalar, vec.v[1] * scalar, vec.v[2] * scalar);
     return res;
@@ -595,7 +509,7 @@ struct TQuat {
 };
 
 using Quatf = TQuat<f32>;
-
+*/
 /// @brief  a 2D point.
 template <class T>
 struct TPoint2 {

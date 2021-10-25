@@ -22,12 +22,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Common.h>
+#include <osre/Common/Ids.h>
 #include <osre/Common/Object.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/SceneCommon.h>
-#include <osre/Scene/TAABB.h>
+#include <osre/Scene/AABB.h>
 
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>
@@ -86,7 +86,7 @@ class OSRE_EXPORT Node : public Common::Object {
 public:
     using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::Scene::Node>;
     using NodeArray = CPPCore::TArray<Node *>;
-    using AABB = ::OSRE::Scene::TAABB<f32>;
+    using AABB = ::OSRE::Scene::AABB;
     using MeshReferenceArray = ::CPPCore::TArray<size_t>;
     using PropertyMap = CPPCore::THashMap<ui32, Properties::Property *>;
 

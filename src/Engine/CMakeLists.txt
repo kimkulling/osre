@@ -65,7 +65,6 @@ SET( app_src
 # Common
 #==============================================================================
 SET( common_inc
-    ${HEADER_PATH}/Common/Common.h
     ${HEADER_PATH}/Common/Environment.h
     ${HEADER_PATH}/Common/AbstractEventHandler.h
     ${HEADER_PATH}/Common/AbstractProcessor.h
@@ -280,7 +279,7 @@ SET( scene_inc
     ${HEADER_PATH}/Scene/TrackBall.h
     ${HEADER_PATH}/Scene/Camera.h
     ${HEADER_PATH}/Scene/LineBuilder.h
-    ${HEADER_PATH}/Scene/TAABB.h
+    ${HEADER_PATH}/Scene/AABB.h
     ${HEADER_PATH}/Scene/TQuadTree.h
     ${HEADER_PATH}/Scene/ParticleEmitter.h
 )

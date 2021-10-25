@@ -50,11 +50,9 @@ LineBuilder::~LineBuilder() {
     // empty
 }
 
-LineBuilder &LineBuilder::addLine(const Vec3f &pos0, const Vec3f &pos1) {
-    glm::vec3 position0(pos0.getX(), pos0.getY(), pos0.getZ());
-    m_posCache.add(position0);
-    glm::vec3 position1(pos1.getX(), pos1.getY(), pos1.getZ());
-    m_posCache.add(position1);
+LineBuilder &LineBuilder::addLine(const glm::vec3 &pos0, const glm::vec3 &pos1) {
+    m_posCache.add(pos0);
+    m_posCache.add(pos1);
 
     preparePrimGroups();
 
@@ -67,12 +65,10 @@ LineBuilder &LineBuilder::addLine(const Vec3f &pos0, const Vec3f &pos1) {
     return *this;
 }
 
-LineBuilder &LineBuilder::addLines(Vec3f *pos0, Vec3f *pos1, ui32 numLines) {
+LineBuilder &LineBuilder::addLines(glm::vec3 *pos0, glm::vec3 *pos1, ui32 numLines) {
     for (ui32 i = 0; i < numLines; ++i) {
-        glm::vec3 position0(pos0[i].getX(), pos0[i].getY(), pos0[i].getZ());
-        m_posCache.add(position0);
-        glm::vec3 position1(pos1[i].getX(), pos1[i].getY(), pos1[i].getZ());
-        m_posCache.add(position1);
+        m_posCache.add(pos0[i]);
+        m_posCache.add(pos1[i]);
     }
 
     preparePrimGroups();

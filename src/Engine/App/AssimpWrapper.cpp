@@ -38,7 +38,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/Scene/MeshBuilder.h>
 #include <osre/Scene/Node.h>
-#include <osre/Scene/TAABB.h>
+#include <osre/Scene/AABB.h>
 
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -241,7 +241,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
         return;
     }
 
-    TAABB<f32> aabb = m_entity->getAABB();
+    AABB aabb = m_entity->getAABB();
 
     Mat2MeshMap mat2MeshMap;
     for (ui32 meshIndex = 0; meshIndex < numMeshes; ++meshIndex) {
