@@ -34,9 +34,6 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 
 ```cpp
 #include <osre/App/AppBase.h>
-#include <osre/App/Component.h>
-#include <osre/App/Entity.h>
-#include <osre/App/World.h>
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/MeshBuilder.h>
@@ -48,7 +45,7 @@ using namespace ::OSRE;
 using namespace ::OSRE::App;
 using namespace ::OSRE::RenderBackend;
 
-class QuickStartdApp : public App::AppBase {
+class QuickStarterApp : public App::AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock m_transformMatrix;
     /// The entity to render
@@ -56,7 +53,7 @@ class QuickStartdApp : public App::AppBase {
 
 public:
     /// The class constructor with the incoming arguments from the command line.
-    QuickStartdApp(int argc, char *argv[]) :
+    QuickStarterApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv),
             m_transformMatrix(),
             mEntity(nullptr) {
@@ -64,7 +61,7 @@ public:
     }
 
     /// The class destructor.
-    ~QuickStartdApp() override {
+    ~QuickStarterApp() override {
         // empty
     }
 
@@ -133,7 +130,7 @@ protected:
     }
 };
 
-OSRE_MAIN(QuickStartdApp)
+OSRE_MAIN(QuickStarterApp)
 ```
 
 # OSRE-Ed
