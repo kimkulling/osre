@@ -23,6 +23,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/App/AppCommon.h>
+#include <osre/App/Component.h>
+#include <osre/App/Entity.h>
+#include <osre/App/World.h>
 #include <osre/Platform/PlatformCommon.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Common/ArgumentParser.h>
@@ -55,7 +58,6 @@ namespace RenderBackend {
 
 namespace App {
 
-class World;
 class AppBase;
 
 class KeyboardEventListener : public Platform::OSEventListener {
@@ -246,9 +248,9 @@ public:
     ///         same name already exists this instance will be returned.
     virtual RenderBackend::Pipeline *createPipeline(const String &name);
 
-    /// @brief 
-    /// @param  
-    virtual void addPipeline(RenderBackend::Pipeline *);
+    /// @brief  Will add a new pipeline.
+    /// @param[in] pipeline   The new pipeline to add.
+    virtual void addPipeline(RenderBackend::Pipeline *pipeline);
 
     /// @brief  Will search for < pipeline by its name.
     /// @param  name        [in] The name of the pipeline to look for.
@@ -276,10 +278,14 @@ public:
     /// @return The transform controller or nullptr if none is there.
     virtual Scene::AnimationControllerBase *getTransformController(RenderBackend::TransformMatrixBlock &tmb);
 
+    /// @brief  Will return the mouse event listener instance.
+    /// @return The mouse event listener instance.
     MouseEventListener *getMouseEventListener() const {
         return m_mouseEvListener;
     }
 
+    /// @brief  Will return the keyboard event-listener instance.
+    /// @return The keyboard event-listener instance.
     KeyboardEventListener *getKeyboardEventListener() const {
         return m_keyboardEvListener;
     }
