@@ -36,13 +36,34 @@ namespace Collision {
 template<class T>
 class TRay {
 public:
+    /// @brief  The default class constructor.
     TRay();
+    
+    /// @brief  The constructor with the ray parameters.
+    /// @param[in] origin     The ray origin
+    /// @param[in] direction  The director for the ray
     TRay(const glm::vec3 &origin, const glm::vec3 &direction);
+
+    /// @brief  The default class destructor.
     ~TRay();
+    
+    /// @brief  Will validate the length for a given vector for a given time(scaling).
+    /// @param[in] time  The scaling.
+    /// @return The validated vector.
     glm::vec3 validate(T time);
+    
+    /// @brief  Returns the origin of the ray.
+    /// @return The origin.
     const glm::vec3 &getOrigin() const;
+    
+    /// @brief  Returns the direction of the ray.
+    /// @return The direction.
     const glm::vec3 &getDirection() const;
+    
+    /// @brief The compare operator.
     bool operator == ( const TRay<T> &rhs) const;
+    
+    /// @brief The not-equal operator.
     bool operator != (const TRay<T> &rhs) const;
 
 private:
@@ -51,28 +72,27 @@ private:
 };
 
 template<class T>
-inline
-TRay<T>::TRay()
-: m_origin()
-, m_direction() {
+inline TRay<T>::TRay() :
+        m_origin(), 
+        m_direction() {
     // empty
 }
 
 template<class T>
 inline TRay<T>::TRay(const glm::vec3 &origin, const glm::vec3 &direction) :
-        m_origin(origin), m_direction(direction) {
+        m_origin(origin), 
+        m_direction(direction) {
     // empty
 }
 
 template<class T>
-inline
-TRay<T>::~TRay() {
+inline TRay<T>::~TRay() {
     // empty
 }
 
 template<class T>
 inline glm::vec3 TRay<T>::validate(T time) {
-    const TVec3<T> res = m_origin + time * m_direction;
+    const glm::vec3 res = m_origin + time * m_direction;
     return res;
 }
 
@@ -87,14 +107,12 @@ inline const glm::vec3  &TRay<T>::getDirection() const {
 }
 
 template<class T>
-inline
-bool TRay<T>::operator == (const TRay<T> &rhs) const {
+inline bool TRay<T>::operator == (const TRay<T> &rhs) const {
     return ( m_origin == rhs.m_origin && m_direction == rhs.m_direction );
 }
 
 template<class T>
-inline
-bool TRay<T>::operator != (const TRay<T> &rhs) const {
+inline bool TRay<T>::operator != (const TRay<T> &rhs) const {
     return !( *this == rhs );
 }
 
