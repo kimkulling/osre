@@ -42,7 +42,7 @@ SET ( unittest_common_src
     src/Common/IdsTest.cpp
     src/Common/FrustumTest.cpp
     src/Common/BaseMathTest.cpp
-    src/Common/TRayTest.cpp
+    src/Common/RayTest.cpp
 )
 
 SET ( unittest_collision_src
