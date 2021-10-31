@@ -42,5 +42,5 @@ TEST_F( TRayTest, createTest ) {
     EXPECT_TRUE( ok );
 }
 
-} // Namespace Unittest
+} // Namespace UnitTest
 } // Namespace OSRE
