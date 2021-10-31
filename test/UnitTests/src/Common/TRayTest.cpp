@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace UnitTest {
 
-using namespace ::OSRE::Collision;
+using namespace ::OSRE::Common;
 
 class TRayTest : public ::testing::Test {
     // empty
@@ -35,7 +35,7 @@ class TRayTest : public ::testing::Test {
 TEST_F( TRayTest, createTest ) {
     bool ok( true );
     try {
-        TRay<f32> ray;
+        Ray ray;
     } catch (...) {
         ok = false;
     }

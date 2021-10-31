@@ -55,8 +55,7 @@ bool setupTextures(Material* mat, OGLRenderBackend* rb, CPPCore::TArray<OGLTextu
 SetMaterialStageCmdData* setupMaterial(Material* material, OGLRenderBackend* rb, OGLRenderEventHandler* eh);
 void setupParameter(UniformVar* param, OGLRenderBackend* rb, OGLRenderEventHandler* ev);
 OGLVertexArray* setupBuffers(Mesh* mesh, OGLRenderBackend* rb, OGLShader* oglShader);
-void setupPrimDrawCmd(const char* id, bool useLocalMatrix, const glm::mat4& model,
-    const CPPCore::TArray<size_t>& primGroups, OGLRenderBackend* rb,
+void setupPrimDrawCmd(const char* id, const CPPCore::TArray<size_t>& primGroups, OGLRenderBackend* rb,
     OGLRenderEventHandler* eh, OGLVertexArray* va);
 void setupInstancedDrawCmd(const char* id, const CPPCore::TArray<size_t>& ids, OGLRenderBackend* rb,
     OGLRenderEventHandler* eh, OGLVertexArray* va, size_t numInstances);

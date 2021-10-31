@@ -289,8 +289,7 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, CPPCore::TArray<size_t> &pri
 
         // setup the draw calls
         if (0 == currentMeshEntry->numInstances) {
-            setupPrimDrawCmd(id, currentMesh->m_localMatrix, currentMesh->m_model,
-                    primGroups, m_oglBackend, this, m_vertexArray);
+            setupPrimDrawCmd(id, primGroups, m_oglBackend, this, m_vertexArray);
         } else {
             setupInstancedDrawCmd(id, primGroups, m_oglBackend, this, m_vertexArray,
                     currentMeshEntry->numInstances);
@@ -376,8 +375,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
 
                     // setup the draw calls
                     if (0 == currentMeshEntry->numInstances) {
-                        setupPrimDrawCmd(currentBatchData->m_id, currentMesh->m_localMatrix, currentMesh->m_model,
-                                primGroups, m_oglBackend, this, m_vertexArray);
+                        setupPrimDrawCmd(currentBatchData->m_id, primGroups, m_oglBackend, this, m_vertexArray);
                     } else {
                         setupInstancedDrawCmd(currentBatchData->m_id, primGroups, m_oglBackend, this, m_vertexArray,
                                 currentMeshEntry->numInstances);

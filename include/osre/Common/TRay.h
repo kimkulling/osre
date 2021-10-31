@@ -26,31 +26,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/glm_common.h>
 
 namespace OSRE {
-namespace Collision {
+namespace Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  This class implements a ray with a origin and a distance.
 //-------------------------------------------------------------------------------------------------
-template<class T>
-class TRay {
+class Ray {
 public:
     /// @brief  The default class constructor.
-    TRay();
+    Ray();
     
     /// @brief  The constructor with the ray parameters.
     /// @param[in] origin     The ray origin
     /// @param[in] direction  The director for the ray
-    TRay(const glm::vec3 &origin, const glm::vec3 &direction);
+    Ray(const glm::vec3 &origin, const glm::vec3 &direction);
 
     /// @brief  The default class destructor.
-    ~TRay();
+    ~Ray();
     
     /// @brief  Will validate the length for a given vector for a given time(scaling).
     /// @param[in] time  The scaling.
     /// @return The validated vector.
-    glm::vec3 validate(T time);
+    glm::vec3 validate(f32 time);
     
     /// @brief  Returns the origin of the ray.
     /// @return The origin.
@@ -61,58 +60,50 @@ public:
     const glm::vec3 &getDirection() const;
     
     /// @brief The compare operator.
-    bool operator == ( const TRay<T> &rhs) const;
+    bool operator == ( const Ray &rhs) const;
     
     /// @brief The not-equal operator.
-    bool operator != (const TRay<T> &rhs) const;
+    bool operator != (const Ray &rhs) const;
 
 private:
     glm::vec3 m_origin;
     glm::vec3 m_direction;
 };
 
-template<class T>
-inline TRay<T>::TRay() :
+inline Ray::Ray() :
         m_origin(), 
         m_direction() {
     // empty
 }
 
-template<class T>
-inline TRay<T>::TRay(const glm::vec3 &origin, const glm::vec3 &direction) :
+inline Ray::Ray(const glm::vec3 &origin, const glm::vec3 &direction) :
         m_origin(origin), 
         m_direction(direction) {
     // empty
 }
 
-template<class T>
-inline TRay<T>::~TRay() {
+inline Ray::~Ray() {
     // empty
 }
 
-template<class T>
-inline glm::vec3 TRay<T>::validate(T time) {
+inline glm::vec3 Ray::validate(f32 time) {
     const glm::vec3 res = m_origin + time * m_direction;
     return res;
 }
 
-template<class T>
-inline const glm::vec3 &TRay<T>::getOrigin() const {
+inline const glm::vec3 &Ray::getOrigin() const {
     return m_origin;
 }
 
-template<class T>
-inline const glm::vec3  &TRay<T>::getDirection() const {
+inline const glm::vec3  &Ray::getDirection() const {
     return m_direction;
 }
 
-template<class T>
-inline bool TRay<T>::operator == (const TRay<T> &rhs) const {
+inline bool Ray::operator == (const Ray &rhs) const {
     return ( m_origin == rhs.m_origin && m_direction == rhs.m_direction );
 }
 
-template<class T>
-inline bool TRay<T>::operator != (const TRay<T> &rhs) const {
+inline bool Ray::operator != (const Ray &rhs) const {
     return !( *this == rhs );
 }
 
