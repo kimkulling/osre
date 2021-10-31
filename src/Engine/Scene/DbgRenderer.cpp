@@ -150,7 +150,6 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const AABB &aabb) {
     mesh->m_ib->copyFrom(&indices[0], indexSize);
 
     // setup primitives
-    mesh->m_model = transform;
     mesh->m_numPrimGroups = 1;
 
     mesh->m_primGroups = new PrimitiveGroup[1];
@@ -158,8 +157,6 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const AABB &aabb) {
 
     // setup material
     mesh->m_material = MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex);
-
-    mesh->m_model = transform;
 
     mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
     mRbSrv->beginRenderBatch("dbgFontBatch");

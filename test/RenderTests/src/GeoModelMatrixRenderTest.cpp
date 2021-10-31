@@ -59,11 +59,11 @@ public:
         Scene::MeshBuilder myBuilder;
         myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
         Mesh *mesh1 = myBuilder.getMesh();
-        mesh1->m_localMatrix = true;
         TransformState transform;
         transform.setTranslation(0.5f, 0, 0);
         transform.setScale(0.2f, 0.2f, 0.2f);
-        transform.toMatrix(mesh1->m_model);
+        glm::mat4 m;
+        transform.toMatrix(m);
 
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
@@ -73,10 +73,11 @@ public:
 
                 myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
                 Mesh *mesh2 = myBuilder.getMesh();
-                mesh2->m_localMatrix = true;
                 transform.setTranslation(-0.5f, 0, 0);
                 transform.setScale(0.2f, 0.2f, 0.2f);
-                transform.toMatrix(mesh2->m_model);
+                glm::mat4 m;
+                transform.toMatrix(m);
+
                 rbSrv->addMesh(mesh2, 0);
             }
             rbSrv->endRenderBatch();

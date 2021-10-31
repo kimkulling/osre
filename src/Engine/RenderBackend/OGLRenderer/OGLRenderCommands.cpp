@@ -195,8 +195,7 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
     return vertexArray;
 }
 
-void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat4 &model,
-        const TArray<size_t> &primGroups, OGLRenderBackend *rb,
+void setupPrimDrawCmd(const char *id, const TArray<size_t> &primGroups, OGLRenderBackend *rb,
         OGLRenderEventHandler *eh, OGLVertexArray *va) {
     osre_assert(nullptr != rb);
     osre_assert(nullptr != eh);
@@ -207,10 +206,6 @@ void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat4 &mode
 
     auto *renderCmd = new OGLRenderCmd(OGLRenderCmdType::DrawPrimitivesCmd);
     auto *data = new DrawPrimitivesCmdData;
-    if (useLocalMatrix) {
-        data->m_model = model;
-        data->m_localMatrix = useLocalMatrix;
-    }
     data->m_id = id;
     data->m_vertexArray = va;
     data->m_primitives.reserve(primGroups.size());

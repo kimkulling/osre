@@ -88,7 +88,7 @@ SET(common_inc
     ${HEADER_PATH}/Common/osre_common.h
     ${HEADER_PATH}/Common/glm_common.h
     ${HEADER_PATH}/Common/BaseMath.h
-    ${HEADER_PATH}/Common/TRay.h
+    ${HEADER_PATH}/Common/Ray.h
 )
 SET(common_src
     Common/ArgumentParser.cpp

@@ -42,8 +42,6 @@ Mesh::Mesh() :
 }
 
 Mesh::Mesh(VertexType type) :
-        m_localMatrix(false),
-        m_model(1.0f),
         m_material(nullptr),
         m_vertextype(type),
         m_vb(nullptr),

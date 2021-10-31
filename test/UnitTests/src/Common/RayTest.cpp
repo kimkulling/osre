@@ -21,12 +21,12 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
-#include <osre/Common/TRay.h>
+#include <osre/Common/Ray.h>
 
 namespace OSRE {
 namespace UnitTest {
 
-using namespace ::OSRE::Collision;
+using namespace ::OSRE::Common;
 
 class TRayTest : public ::testing::Test {
     // empty
@@ -35,12 +35,12 @@ class TRayTest : public ::testing::Test {
 TEST_F( TRayTest, createTest ) {
     bool ok( true );
     try {
-        TRay<f32> ray;
+        Ray ray;
     } catch (...) {
         ok = false;
     }
     EXPECT_TRUE( ok );
 }
 
-} // Namespace Unittest
+} // Namespace UnitTest
 } // Namespace OSRE
