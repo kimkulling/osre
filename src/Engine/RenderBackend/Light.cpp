@@ -20,27 +20,56 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <gtest/gtest.h>
-#include <osre/Common/Ray.h>
+#include <osre/RenderBackend/Light.h>
 
 namespace OSRE {
-namespace UnitTest {
+namespace RenderBackend {
 
-using namespace ::OSRE::Common;
+namespace {
 
-class TRayTest : public ::testing::Test {
-    // empty
-};
-
-TEST_F(TRayTest, createTest ){
-    bool ok( true );
-    try {
-        Ray ray;
-    } catch (...) {
-        ok = false;
+void initColors(glm::vec3 *cols, size_t numColors, f32 comp) {
+    for (size_t i = 0; i < numColors; ++i) {
+        cols[i].r = cols[i].g = cols[i].b = comp;
     }
-    EXPECT_TRUE( ok );
 }
 
-} // Namespace UnitTest
-} // Namespace OSRE
+} // namespace
+
+Light::Light() :
+        mType(LigthType::PointLight),
+        mRadius(1.0f) {
+    initColors(mColors, 3, 0.5f);
+}
+
+Light::Light( LigthType type, f32 radius ) :
+        mType( type ),
+        mRadius( radius ) {
+    initColors(mColors, 3, 0.5f);
+}
+
+Light::~Light() {
+    // empty
+}
+
+void Light::setLightType( LigthType type ) {
+    mType = type;
+}
+
+LigthType Light::getLightType() const {
+    return mType;
+}
+
+f32 Light::getRadius() const {
+    return mRadius;
+}
+
+void Light::setColor( const glm::vec3 &col, ui32 index ) {
+    mColors[index] = col;
+}
+
+const glm::vec3 &Light::getColor( ui32 index ) const {
+    return mColors[index];
+}
+
+} // namespace RenderBackend
+} // namespace OSRE

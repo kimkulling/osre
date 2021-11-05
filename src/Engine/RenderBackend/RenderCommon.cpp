@@ -606,21 +606,6 @@ bool Viewport::operator!=(const Viewport &rhs) const {
     return !(*this == rhs);
 }
 
-Light::Light() :
-        m_position(0.0f, 0.0f, 0.0f, 1.0f),
-        m_specular(1.0f, 1.0f, 1.0f),
-        m_diffuse(1.0f, 1.0f, 1.0f),
-        m_ambient(1.0f, 1.0f, 1.0f),
-        m_direction(0.0f, 0.0f, 1.0f, 1.0f),
-        m_specularExp(1.0f),
-        m_type(LightType::InvalidLightType) {
-    // empty
-}
-
-Light::~Light() {
-    // empty
-}
-
 MeshEntry *RenderBatchData::getMeshEntryByName(const c8 *name) {
     if (nullptr == name) {
         return nullptr;

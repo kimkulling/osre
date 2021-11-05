@@ -306,6 +306,7 @@ SET(scene_shader_src
 SET(renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
     ${HEADER_PATH}/RenderBackend/Mesh.h
+    ${HEADER_PATH}/RenderBackend/Light.h
     ${HEADER_PATH}/RenderBackend/THWBufferManager.h
     ${HEADER_PATH}/RenderBackend/TransformMatrixBlock.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
@@ -315,6 +316,7 @@ SET(renderbackend_inc
 )
 SET(renderbackend_src
     RenderBackend/Mesh.cpp
+    RenderBackend/Light.cpp
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
     RenderBackend/Pipeline.cpp

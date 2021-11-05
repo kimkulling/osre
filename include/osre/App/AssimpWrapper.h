@@ -34,6 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Forward declarations ---------------------------------------------------------------------------
 struct aiScene;
 struct aiMesh;
+struct aiLight;
 struct aiNode;
 struct aiMaterial;
 struct aiAnimation;
@@ -46,6 +47,7 @@ namespace Common {
 
 namespace RenderBackend {
     class Mesh;
+    class Light;
 
     struct UniformVar;
     struct Material;
@@ -81,15 +83,15 @@ public:
     ~AssimpWrapper();
     bool importAsset( const IO::Uri &file, ui32 flags );
     Entity *getEntity() const;
+    void reset();
 
 protected:
     Entity *convertScene();
     void importMeshes( aiMesh **meshes, ui32 numMeshes );
-	void importBones(aiMesh* mesh);
     void importNode( aiNode *node, Scene::Node *parent );
-    void importMaterial( aiMaterial *material );
-    void importAnimation( aiAnimation *animation );
-    void optimizeVertexBuffer();
+    void importMaterial(aiMaterial *material );
+    void importAnimation(aiAnimation *animation );
+    void importLight(aiLight *light);
 
 private:
 	const aiScene *m_scene;
@@ -104,6 +106,8 @@ private:
     String m_absPathWithFile;
 	BoneInfoArray m_boneInfoArray;
 	Bone2NodeMap m_bone2NodeMap;
+    using LightArray = CPPCore::TArray<RenderBackend::Light*>;
+    LightArray mLightArray;
 };
 
 } // Namespace Assets
