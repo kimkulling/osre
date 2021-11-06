@@ -48,11 +48,16 @@ public:
         String m_desc;      // The description for the argument ( used for help texts ).
         ui32 m_numArgs;		// The number of expected arguments for it.
 
+        /// @brief The default class constructor.
         Argument();
+
+        /// @brief  The class constructor with all argument parameters
+        /// @param[in] arg      The arguments separatet by one |.
+        /// @param[in] desc     The description for the argument.
+        /// @param[in] numArgs  The number of arguments stored in the argument string.-
         Argument( const String &arg, const String &desc, ui32 numArgs );
     };
 
-public:
     ///	@brief	The class constructor with arguments and the requested argument support.
     ///	@param	argc            [in] The number of incoming arguments.
     ///	@param	ppArgv          [in] The arguments itself.
@@ -125,9 +130,11 @@ public:
 
 protected:
     /// @brief	Will validate the args.
-    /// @param	iArgc	[in] Number of incomping args.
-    ///	@param	ppArgv	[in] The arguments.
+    /// @param	iArgc	[in] Number of incoming arguments.
+    ///	@param	ppArgv	[in] The argument array.
     bool validateArguments( i32 iArgc, const c8 *ppArgv[] );
+    
+    /// @brief Marks the arguments as invalid, parsing was not successful.
     void setInvalid();
 
 private:

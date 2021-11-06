@@ -290,6 +290,12 @@ public:
         return m_keyboardEvListener;
     }
 
+    /// @brief Will return the environment
+    /// @return Pointer showing to the environment.
+    Common::Environment *getEnvironment() const {
+        return m_environment;
+    }
+
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
     /// @return true if successful,  false if not.

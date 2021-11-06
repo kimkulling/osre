@@ -32,8 +32,8 @@ namespace Common {
 ///	@ingroup    Engine
 ///
 ///	@brief	This class is the base interface for all server classes.
-/// A server provides services like a render interface for instance. To access a service you have 
-/// to open it at first and close it and the end. 
+/// A server provides services like a render interface for instance. To access a service you have
+/// to open it at first and close it and the end.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractService : public Object {
 public:
@@ -43,7 +43,7 @@ public:
     ///	@brief	Will open the access to the server interface, must be in closed state.
     ///	@return	true, if access was opened, false if not.
     virtual bool open();
-    
+
     ///	@brief	Will close the access to the server interface, must be opened before.
     ///	@return	true, if access was closed, false if not.
     virtual bool close();
@@ -59,7 +59,7 @@ public:
 protected:
     ///	@brief	The default class constructor.
     ///	@param	serverName	[in] The server name.
-    AbstractService( const String &serverName );
+    AbstractService(const String &serverName);
 
     /// @brief  Will be called, when server access is opened.
     /// @return true for success, false for error.
@@ -78,22 +78,18 @@ private:
     bool m_isOpen;
 };
 
-inline
-AbstractService::AbstractService( const String &serverName )
-: Object( serverName )
-, m_isOpen( false ) {
+inline AbstractService::AbstractService(const String &serverName) :
+        Object(serverName), m_isOpen(false) {
     // empty
 }
 
-inline 
-AbstractService::~AbstractService() {
-    osre_assert( !m_isOpen );
+inline AbstractService::~AbstractService() {
+    osre_assert(!m_isOpen);
 }
 
-inline
-bool AbstractService::open() {
-    if ( m_isOpen ) {
-        osre_debug( getName(), "Cannot open, service already opened." );
+inline bool AbstractService::open() {
+    if (m_isOpen) {
+        osre_debug(getName(), "Cannot open, service already opened.");
         return false;
     }
     m_isOpen = onOpen();
@@ -101,10 +97,9 @@ bool AbstractService::open() {
     return m_isOpen;
 }
 
-inline
-bool AbstractService::close() {
-    if ( m_isOpen )	{
-        osre_debug( getName(), "Cannot close, service not open." );
+inline bool AbstractService::close() {
+    if (m_isOpen) {
+        osre_debug(getName(), "Cannot close, service not open.");
         m_isOpen = false;
         return onClose();
     }
@@ -112,15 +107,13 @@ bool AbstractService::close() {
     return false;
 }
 
-inline
-bool AbstractService::isOpen() {
+inline bool AbstractService::isOpen() {
     return m_isOpen;
 }
 
-inline
-bool AbstractService::update() {
-    if ( !isOpen() ) {
-        osre_debug( getName(), "Cannot update, service not open." );
+inline bool AbstractService::update() {
+    if (!isOpen()) {
+        osre_debug(getName(), "Cannot update, service not open.");
         return false;
     }
 
@@ -132,14 +125,15 @@ bool AbstractService::update() {
 ///
 /// @brief  Helper macro to define a singleton and declare all needed methods.
 //-------------------------------------------------------------------------------------------------
-#define DECLARE_SINGLETON( type )                                                 \
-public:                                                                           \
-    static type * s_instance;                                                \
-    static type * getInstance() {                                                 \
-        osre_assert(nullptr != s_instance);                                \
-        return s_instance;                                                   \
-    }                                                                             \
-    static void setInstance( type *instance ) { s_instance = instance; } \
+#define DECLARE_SINGLETON(type)                                        \
+public:                                                                \
+    static type *s_instance;                                           \
+    static type *getInstance() {                                       \
+        osre_assert(nullptr != s_instance);                            \
+        return s_instance;                                             \
+    }                                                                  \
+    static void setInstance(type *instance) { s_instance = instance; } \
+                                                                       \
 private:
 
 //-------------------------------------------------------------------------------------------------
@@ -147,26 +141,26 @@ private:
 ///
 /// @brief  Helper macro to define a singleton and implement all needed methods.
 //-------------------------------------------------------------------------------------------------
-#define IMPLEMENT_SINGLETON( type )                 \
-    type * type::s_instance( nullptr );
+#define IMPLEMENT_SINGLETON(type) \
+    type *type::s_instance(nullptr);
 
 //-------------------------------------------------------------------------------------------------
 /// @ingroup    Engine
 ///
 /// @brief  Helper macro to create a macro from a given class.
 //-------------------------------------------------------------------------------------------------
-#define CREATE_SINGLETON( type )                 \
-    osre_assert(nullptr == s_instance);        \
-    s_instance = this;         
+#define CREATE_SINGLETON(type)          \
+    osre_assert(nullptr == s_instance); \
+    s_instance = this;
 
 //-------------------------------------------------------------------------------------------------
 /// @ingroup    Engine
 ///
 /// @brief  Helper macro to destroy a macro from a given class.
 //-------------------------------------------------------------------------------------------------
-#define DESTROY_SINGLETON( type )                \
-    osre_assert(nullptr != s_instance);        \
-    s_instance = nullptr;         
+#define DESTROY_SINGLETON(type)         \
+    osre_assert(nullptr != s_instance); \
+    s_instance = nullptr;
 
 } // Namespace Common
 } // Namespace OSRE

@@ -26,24 +26,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
-Environment::Environment() 
-: mEnvVariables() {
+Environment::Environment() :
+        mEnvVariables(),
+        mVars() {
     // empty
 }
 
 Environment::~Environment() {
-    // empty
+    ::CPPCore::ContainerClear(mVars);
 }
 
-EnvVar* Environment::findVar(const c8* varName) const {
+EnvVar *Environment::findVar(const c8 *varName) const {
     if (nullptr == varName) {
         return nullptr;
     }
-    EnvVar* var(nullptr);
+
+    EnvVar *var = nullptr;
     HashId id = StringUtils::hashName(varName);
-    if ( !mEnvVariables.hasKey( id ) ) {
+    if (!mEnvVariables.hasKey(id)) {
         return nullptr;
     }
+
     if (!mEnvVariables.hasKey(id)) {
         return nullptr;
     }
@@ -55,32 +58,38 @@ EnvVar* Environment::findVar(const c8* varName) const {
     return nullptr;
 }
 
-void Environment::addIntVar(const c8* name, int value) {
+void Environment::addIntVar(const c8 *name, int value) {
     if (nullptr != findVar(name)) {
         return;
     }
 
-    EnvVar* var = new EnvVar(name, value);
+    auto *var = new EnvVar(name, value);
     mEnvVariables.insert(StringUtils::hashName(var->m_name.c_str()), var);
+    mVars.add(var);
 }
 
-void Environment::addStrVar(const c8* name, const c8* value) {
+void Environment::addStrVar(const c8 *name, const c8 *value) {
     if (nullptr != findVar(name)) {
         return;
     }
 
-    EnvVar* var = new EnvVar(name, value);
-    mEnvVariables.insert(StringUtils::hashName(name), var );
+    auto *var = new EnvVar(name, value);
+    mEnvVariables.insert(StringUtils::hashName(name), var);
+    mVars.add(var);
 }
 
-void Environment::addVariable( EnvVar *var) {
+void Environment::addVariable(EnvVar *var) {
+    if (nullptr == var) {
+        return;
+    }
+
     if (nullptr == findVar(var->m_name.c_str())) {
         return;
     }
 
     mEnvVariables.insert(StringUtils::hashName(var->m_name.c_str()), var);
+    mVars.add(var);
 }
 
 } // Namespace Common
 } // Namespace OSRE
-

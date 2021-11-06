@@ -1,6 +1,7 @@
 #include "OsreEdApp.h"
 #include <osre/Platform/AbstractOSService.h>
 #include <osre/Platform/PlatformInterface.h>
+#include <osre/Common/Environment.h>
 #include <iostream>
 
 using namespace ::OSRE;
@@ -25,9 +26,20 @@ int main(int argc, char *argv[]) {
     const ui32 Margin = 100;
     ui32 width = 0, height = 0;
     getMonitorResolution(width, height);
-    if (!app.initWindow(10, 10, width - Margin, height - Margin, "OSRE-Ed", false, RenderBackendType::OpenGLRenderBackend)) {
+    width -= Margin;
+    height -= Margin;
+    if (!app.initWindow(10, 10, width, height, "OSRE-Ed", false, RenderBackendType::OpenGLRenderBackend)) {
         return 1;
     }
+
+    Common::Environment *env = app.getEnvironment();
+    if (nullptr == env) {
+        return 1;
+    }
+
+    env->addIntVar("MainWindow.width", width);
+    env->addIntVar("MainWindow.height", height);
+
 
     while (app.handleEvents()) {
         app.update();
