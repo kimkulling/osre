@@ -86,6 +86,9 @@ public:
     ///	@return	The number of token.
     size_t tokenize( const String& str, const String& delimiters );
 
+    /// @brief Will check if the character is a line break.
+    /// @param c    The character to check.
+    /// @return true, if the chraracter is a line break.
     static bool isLineBreak( c8 c );
 
 private:
