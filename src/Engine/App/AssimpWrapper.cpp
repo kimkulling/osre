@@ -34,6 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/IOService.h>
 #include <osre/IO/Uri.h>
 #include <osre/RenderBackend/Mesh.h>
+#include <osre/RenderBackend/Light.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/Scene/MeshBuilder.h>
@@ -110,10 +111,7 @@ AssimpWrapper::AssimpWrapper(Common::Ids &ids, World *world) :
 }
 
 AssimpWrapper::~AssimpWrapper() {
-    ::CPPCore::ContainerClear(m_boneInfoArray);
-
-    delete mDefaultTexture;
-    mDefaultTexture = nullptr;
+    reset();
 }
 
 bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
@@ -155,6 +153,13 @@ Entity *AssimpWrapper::getEntity() const {
     return m_entity;
 }
 
+void AssimpWrapper::reset() {
+    ::CPPCore::ContainerClear(m_boneInfoArray);
+    ::CPPCore::ContainerClear(mLightArray);
+    delete mDefaultTexture;
+    mDefaultTexture = nullptr;
+}
+
 Entity *AssimpWrapper::convertScene() {
     if (nullptr == m_scene) {
         return nullptr;
@@ -187,6 +192,12 @@ Entity *AssimpWrapper::convertScene() {
     if (nullptr != m_scene->mAnimations) {
         for (ui32 i = 0; i < m_scene->mNumAnimations; ++i) {
             importAnimation(m_scene->mAnimations[i]);
+        }
+    }
+
+    if (nullptr != m_scene->mLights) {
+        for (ui32 i = 0; i<m_scene->mNumLights; ++i) {
+            importLight(m_scene->mLights[i]);
         }
     }
 
@@ -496,6 +507,22 @@ void AssimpWrapper::importAnimation(aiAnimation *animation) {
     if (nullptr == animation) {
         return;
     }
+}
+
+void AssimpWrapper::importLight( aiLight *light ) {
+    if (nullptr == light) {
+        return;
+    }
+    
+    Light *osreLight = new Light();
+    if (light->mType == aiLightSource_DIRECTIONAL) {
+        osreLight->setLightType(LigthType::DirectionalLight);
+    } else if (light->mType == aiLightSource_POINT) {
+        osreLight->setLightType(LigthType::PointLight);
+    } else if (light->mType == aiLightSource_DIRECTIONAL) {
+        osreLight->setLightType(LigthType::DirectionalLight);
+    }
+    mLightArray.add(osreLight);
 }
 
 } // namespace App

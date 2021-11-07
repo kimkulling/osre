@@ -252,16 +252,6 @@ enum class MaterialColorType : ui32 {
     InvalidMaterialColorType ///< Enum for invalid enum.
 };
 
-///	@brief
-enum class LightType {
-    Directional = 0,
-    Point,
-    Spot,
-    NumLightTypes,
-
-    InvalidLightType ///< Enum for invalid enum.
-};
-
 ///	@brief  This struct declares a render vertex for textured geometry.
 struct OSRE_EXPORT ColorVert {
     glm::vec3 position; ///< The position ( x|y|z )
@@ -714,20 +704,6 @@ struct TIndexCache {
     size_t sizeInBytes() const {
         return m_cache.size() * sizeof(T);
     }
-};
-
-///	@brief
-struct OSRE_EXPORT Light {
-    glm::vec4 m_position;
-    glm::vec3 m_specular;
-    glm::vec3 m_diffuse;
-    glm::vec3 m_ambient;
-    glm::vec4 m_direction;
-    f32 m_specularExp;
-    LightType m_type;
-
-    Light();
-    ~Light();
 };
 
 using UiVertexCache = RenderBackend::TVertexCache<RenderBackend::RenderVert>;

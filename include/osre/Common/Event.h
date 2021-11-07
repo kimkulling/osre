@@ -100,6 +100,8 @@ struct OSRE_EXPORT Event {
     /// @return The hash id.
     ui32 getHash() const;
 
+    /// @brief Will return the id as a string.
+    /// @return The id as a astring.
     const String &getId() const;
 
     ///	@brief	A reference ownership will be marked.
@@ -111,7 +113,7 @@ struct OSRE_EXPORT Event {
     ///	@brief	Implementation of == operator.
     ///	@param	other	Instance to compare.
     ///	@return	true, if both instances are equal, else false.
-    bool operator==(const Event &other) const;
+    bool operator == (const Event &other) const;
 
     // No copying
     Event(const Event &) = delete;

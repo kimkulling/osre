@@ -34,10 +34,12 @@ class EventTriggerer;
 struct Event;
 struct EventData;
 
+///	@brief An entry for the event-bus queue.
 struct QueueEntry {
-    const Event *mEvent;
-    const EventData *mEventData;
+    const Event *mEvent;            ///< The event
+    const EventData *mEventData;    ///< The event-data.
 
+    /// @brief The default class constructor.
     QueueEntry() :
             mEvent(nullptr),
             mEventData(nullptr) {
@@ -52,7 +54,7 @@ struct QueueEntry {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT EventBus {
 public:
-    /// @brief  The class constructor.
+    /// @brief  The default class constructor.
     EventBus();
 
     ///	@brief  The class destructor.

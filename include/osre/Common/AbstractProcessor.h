@@ -26,23 +26,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 namespace Common {
-        
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This abstract class is used to define any kind of data processors. Each processor stores 
-/// its list of preconditions, which can be resolved by performing these processes.
+///	@brief  This abstract class is used to define any kind of data processors. Each processor
+/// stores its list of preconditions, which can be resolved by performing these processes.
 //-------------------------------------------------------------------------------------------------
 class AbstractProcessor {
 public:
-    using ProcessorArray = ::CPPCore::TArray<AbstractProcessor*>;
+    using ProcessorArray = ::CPPCore::TArray<AbstractProcessor *>;
 
     /// @brief  The class destructor, virtual.
     virtual ~AbstractProcessor();
 
     /// @brief  Will add a precondition.
     /// @param  precondition    [in] Process which need to get executed before this.
-    virtual void addDependency( AbstractProcessor *precondition );
+    virtual void addDependency(AbstractProcessor *precondition);
 
     /// @brief  Will return the list of preconditions.
     /// @return The list of preconditions.
@@ -60,26 +60,22 @@ private:
     ProcessorArray m_preconditions;
 };
 
-inline
-AbstractProcessor::AbstractProcessor() 
-: m_preconditions() {
+inline AbstractProcessor::AbstractProcessor() :
+        m_preconditions() {
     // empty
 }
 
-inline
-AbstractProcessor::~AbstractProcessor() {
-    // empty    
+inline AbstractProcessor::~AbstractProcessor() {
+    // empty
 }
 
-inline
-void AbstractProcessor::addDependency( AbstractProcessor *precondition ) {
-    if ( nullptr != precondition ) {
-        m_preconditions.add( precondition );
+inline void AbstractProcessor::addDependency(AbstractProcessor *precondition) {
+    if (nullptr != precondition) {
+        m_preconditions.add(precondition);
     }
 }
 
-inline
-const AbstractProcessor::ProcessorArray &AbstractProcessor::getPreconditions() const {
+inline const AbstractProcessor::ProcessorArray &AbstractProcessor::getPreconditions() const {
     return m_preconditions;
 }
 

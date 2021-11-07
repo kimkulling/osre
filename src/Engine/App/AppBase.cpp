@@ -450,6 +450,9 @@ bool AppBase::onDestroy() {
     delete m_ids;
     m_ids = nullptr;
 
+    //delete m_environment;
+    m_environment = nullptr;
+
     osre_debug(Tag, "Set application state to destroyed.");
     mAppState = State::Destroyed;
     Logger::kill();

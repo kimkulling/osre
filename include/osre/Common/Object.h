@@ -58,8 +58,12 @@ public:
     ///	@return	The name of the object.
     const String &getName() const;
 
+    /// @brief Will assign a new id.
+    /// @param[in] id   The new id.
     void setId(HashId  id);
     
+    /// @brief The id getter.
+    /// @return Returs the id.
     HashId getId() const;
 
     /// No copying

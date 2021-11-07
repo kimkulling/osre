@@ -30,19 +30,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
+/// @brief Struct to describe one environment variable. 
+/// Variables are globally defined.
 struct EnvVar {
-    enum Type {
-        Int,
+    enum class Type {
+        Int = 0,
         Str,
-        None
+        None,
+        NumTypes,
+        InvalidType
     };
 
-    String m_name;
-    CPPCore::Variant m_value;
+    String m_name;              ///< The variable name.
+    CPPCore::Variant m_value;   ///< The variable value.
 
+    /// @brief The class constructor for an integer value.
+    /// @param[in] key      The key name
+    /// @param[in] value    The integer value.
     EnvVar(const String &key, int value);
+
+    /// @brief The class constructor for a string value.
+    /// @param key 
+    /// @param value 
     EnvVar(const String &key, const String &value);
+    
+    ///	@brief  The class destructor.
     ~EnvVar();
+
+    /// @brief Will return the value type.
+    /// @return The type.
     Type getType() const;
 };
 
@@ -64,13 +80,13 @@ inline EnvVar::Type EnvVar::getType() const {
     ::CPPCore::Variant::Type t = m_value.getType();
     switch (t) {
         case ::CPPCore::Variant::Int:
-            return EnvVar::Int;
+            return EnvVar::Type::Int;
         case ::CPPCore::Variant::String:
-            return EnvVar::Str;
+            return EnvVar::Type::Str;
         default:
             break;
     }
-    return EnvVar::None;
+    return EnvVar::Type::None;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -79,9 +95,9 @@ inline EnvVar::Type EnvVar::getType() const {
 ///	@brief	This class is used to define environment variables in an application context. It will 
 /// be available within your app-context.
 //-------------------------------------------------------------------------------------------------
-class Environment {
+class OSRE_EXPORT Environment {
 public:
-    /// @brief  The class constructor.
+    /// @brief  The default class constructor.
     Environment();
 
     ///	@brief  The class destructor.
@@ -107,9 +123,14 @@ public:
     /// @param[in] value    The variable instance.
     void addVariable(EnvVar *var);
 
+    // No copying
+    Environment(const Environment &) = delete;
+    Environment &operator=(const Environment &) = delete;
+
 private:
     using EnvVariables = ::CPPCore::THashMap<ui32, EnvVar *>;
     EnvVariables mEnvVariables;
+    CPPCore::TArray<EnvVar *> mVars;
 };
 
 } // Namespace Common

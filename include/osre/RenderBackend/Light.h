@@ -20,27 +20,37 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <gtest/gtest.h>
-#include <osre/Common/Ray.h>
+#pragma once
+
+#include <osre/Common/osre_common.h>
 
 namespace OSRE {
-namespace UnitTest {
+namespace RenderBackend {
 
-using namespace ::OSRE::Common;
-
-class TRayTest : public ::testing::Test {
-    // empty
+enum class LigthType {
+    PointLight = 0,
+    SpotLight,
+    DirectionalLight,
+    NumLightTypes,
+    InvalidLightType
 };
 
-TEST_F(TRayTest, createTest ){
-    bool ok( true );
-    try {
-        Ray ray;
-    } catch (...) {
-        ok = false;
-    }
-    EXPECT_TRUE( ok );
-}
+class Light {
+public:
+    Light();
+    Light(LigthType type, f32 radius);
+    ~Light();
+    void setLightType(LigthType type);
+    LigthType getLightType() const;
+    f32 getRadius() const;
+    void setColor(const glm::vec3 &col, ui32 index);
+    const glm::vec3 &getColor(ui32 index) const;
 
-} // Namespace UnitTest
-} // Namespace OSRE
+private:
+    LigthType mType;
+    f32 mRadius;
+    glm::vec3 mColors[3];
+};
+
+} // namespace RenderBackend
+} // namespace OSRE

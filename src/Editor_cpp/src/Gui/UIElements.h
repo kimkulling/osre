@@ -27,6 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/Windows/MinWindows.h>
 #include <Commctrl.h>
 
+#include <cppcore/Common/Variant.h>
+
 namespace OSRE {
 
 struct ProgressBar;
@@ -36,8 +38,14 @@ ProgressBar *createProgressBar(int id, HWND hWnd, const Rect2ui &dimension);
 void updateProgressBar(ProgressBar *pb, ui32 step);
 void deleteProgressBar(ProgressBar *pb);
 
+struct Attribute {
+    const c8 *mName;
+    CPPCore::Variant mData;
+};
+
 struct Widget {
     Widget *mParent;
+    CPPCore::TArray<Attribute *> mAttributes;
     CPPCore::TArray<Widget*> mChildren;
     Rect2ui mRect;
 };

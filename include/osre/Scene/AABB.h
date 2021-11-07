@@ -136,7 +136,7 @@ inline f32 AABB::getDiameter() const {
         return m_diameter;
     }
 
-    f32 len = (m_max - m_min).length();
+    f32 len =static_cast<f32>((m_max - m_min).length());
 
     return len;
 }

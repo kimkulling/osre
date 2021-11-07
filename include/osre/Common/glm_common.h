@@ -22,14 +22,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+// clang-format off
 #ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4201)
+#   pragma warning(push)
+#   pragma warning(disable : 4201)
 #endif // _MSC_VER
 
 #ifndef GLM_ENABLE_EXPERIMENTAL
-#define GLM_ENABLE_EXPERIMENTAL
-#endif
+#   define GLM_ENABLE_EXPERIMENTAL
+#endif // GLM_ENABLE_EXPERIMENTAL
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -42,5 +43,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <glm/common.hpp>
 
 #ifdef _MSC_VER
-#pragma warning(pop)
+#   pragma warning(pop)
 #endif // _MSC_VER
+// clang-format on

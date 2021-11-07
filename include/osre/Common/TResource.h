@@ -29,33 +29,67 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
+/// @brief Data collection about resources in use.
 struct ResourceStatistics {
-    size_t m_memory;
+    size_t m_memory;    ///< Memory usage.
 
+    /// @brief The default class constructor.
     ResourceStatistics() :
             m_memory(0) {
         // empty
     }
 };
 
+///	@brief  This enum is used to describe the resource state.
+/// Uninitialized -> Unloaded
+///                      | |   -> Error
+///                  Loaded
 enum class ResourceState {
-    Uninitialized,
-    Unloaded,
-    Loaded,
-    Error
+    Uninitialized,  ///< Uninitialized.
+    Unloaded,       ///< Initialized, but not loaded.
+    Loaded,         ///< Loaded.
+    Error           ///< An error has occurred.
 };
 
+/// @brief This template class is used to define resources.
+/// @tparam TResType   The resource type. 
+/// @tparam TResLoader The resource loader class.
 template <class TResType, class TResLoader>
 class TResource : public Object {
 public:
+    /// @brief The class constructor.
+    /// @param[in] name     The resource name
+    /// @param[in] uri      The uri to load the resource.
     TResource(const String &name, const IO::Uri &uri);
+
+    /// @brief The class destructor, virtual.
     virtual ~TResource();
-    void setUri(const IO::Uri &uri);
-    const IO::Uri &getUri() const;
-    ResourceState getState() const;
+
+    /// @brief Will assign a new uri, resource state will unloaded.
+    /// @param[in] uri  The new uri.
+    virtual void setUri(const IO::Uri &uri);
+    
+    /// @brief  Will return the uri.
+    /// @return The uri.
+    virtual const IO::Uri &getUri() const;
+    
+    /// @brief  Will return the resource state.
+    /// @return The resource state.
+    virtual ResourceState getState() const;
+    
+    /// @brief Loads the resource.
+    /// @param[in] loader 
+    /// @return 
     virtual ResourceState load(TResLoader &loader);
+
+    /// @brief  Unloads the resource.
+    /// @param[in] loader   The resource loader.
+    /// @return     The new resource state.
     virtual ResourceState unload(TResLoader &loader);
-    TResType *get();
+    
+    /// @brief  Will return the resource instance.
+    /// @return The resource instance.
+    virtual TResType *get();
 
 protected:
     TResType *create();
