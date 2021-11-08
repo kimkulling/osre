@@ -3,12 +3,12 @@
 Just another open-source render-engine made by Kim Kulling. This is a playground project for myself to work on my own side-projects.
 
 # The Core-Features:
-- Multithreaded rendering 
+- Multithread Renderer
 - Platform abstraction-layer
-- OS-independent task-support to make multi-threaded rendering more easy
+- Simple scenegraph-module
+- Simple Model-Viewer
 - Model-import provided by Asset-Importer-Lib (see https://github.com/assimp/assimp)
 - Bitmap-Font-Rendering
-- Simple scenegraph-module
 - Virtual file-system for reading zip-archives
 - CMake base build environment
 
