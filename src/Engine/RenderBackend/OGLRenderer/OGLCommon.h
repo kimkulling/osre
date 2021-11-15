@@ -50,41 +50,58 @@ void checkOGLErrorState(const c8 *file, ui32 line);
 static const GLuint OGLNotSetId = 999999;
 static const GLint NoneLocation = -1;
 
-///	@brief
+///	@brief  This struct stores data for a OpenGL-based buffer.
 struct OGLBuffer {
     size_t m_handle;
     BufferType m_type;
     GLuint m_oglId;
     size_t m_geoId;
     size_t m_size;
+
+    /// @brief The default class constructor.
+    OGLBuffer() :
+            m_handle(0),
+            m_type(BufferType::InvalidBufferType ),
+            m_oglId(0),
+            m_geoId(0),
+            m_size(0) {
+        // empty
+    }
 };
 
-///	@brief
+///	@brief  This struct stores data for a OpenGL-based vertex attribute.
 struct OGLVertexAttribute {
     GLuint m_index;
     const c8 *m_pAttributeName;
     size_t m_size;
     GLenum m_type;
     const GLvoid *m_ptr;
+
+    /// @brief The default class constructor.
+    OGLVertexAttribute() :
+            m_index( NoneLocation ),
+            m_pAttributeName( nullptr ),
+            m_size( 0 ),
+            m_type( 0 ),
+            m_ptr( nullptr ) {
+        // empty
+    }
 };
 
-///	@brief
+///	@brief  Stis struct stores data for a OpenGL-based vertex-array.
 struct OGLVertexArray {
     GLuint m_id;
     size_t m_slot;
 
+    /// @brief The default class constructor.
     OGLVertexArray() :
             m_id(0),
             m_slot(99999999) {
         // empty
     }
-
-    ~OGLVertexArray() {
-        // empty
-    }
 };
 
-///	@brief
+///	@brief  This struct stores data for a OpenGL-based texture.
 struct OGLTexture {
     GLuint m_textureId;
     String m_name;
@@ -94,9 +111,21 @@ struct OGLTexture {
     ui32 m_width;
     ui32 m_height;
     ui32 m_channels;
+
+    OGLTexture():
+            m_textureId(0),
+            m_name(),
+            m_target(0),
+            m_format( 0 ),
+            m_slot( 0 ),
+            m_width( 0 ),
+            m_height( 0 ),
+            m_channels( 0 ) {
+        // empty
+    }
 };
 
-///	@brief
+///	@brief  This enum describes the provided types of render commands.
 enum class OGLRenderCmdType {
     SetParameterCmd,
     SetRenderTargetCmd,
@@ -112,6 +141,7 @@ struct OGLRenderCmd {
     ui32 m_id;
     void *m_data;
 
+    /// @brief The default class constructor.
     OGLRenderCmd(OGLRenderCmdType type);
 };
 
@@ -124,7 +154,7 @@ inline OGLRenderCmd::OGLRenderCmd(OGLRenderCmdType type) :
 
 struct UniformDataBlob;
 
-///	@brief
+///	@brief  This struct stores data for a opengl parameter aka uniform.
 struct OGLParameter {
     String m_name;
     GLint m_loc;
@@ -132,8 +162,9 @@ struct OGLParameter {
     UniformDataBlob *m_data;
     size_t m_numItems;
 
+    /// @brief The default class constructor.
     OGLParameter() :
-            m_name(""),
+            m_name(),
             m_loc(NoneLocation),
             m_type(ParameterType::PT_None),
             m_data(nullptr),
@@ -142,7 +173,7 @@ struct OGLParameter {
     }
 };
 
-///	@brief
+///	@brief  This struct describes a primitive group.
 struct OGLPrimGroup {
     GLenum m_primitive;
     ui32 m_startIndex;
@@ -150,12 +181,24 @@ struct OGLPrimGroup {
     GLenum m_indexType;
 };
 
-///	@brief
+///	@brief  This struct stores data for the uniform setup for render batches.
+struct SetParameterCmdData {
+    MatrixBuffer *mBuffer;
+
+    /// @brief The default class constructor.
+    SetParameterCmdData() :
+            mBuffer( nullptr ) {
+        // empty
+    }
+};
+
+///	@brief  This struct stores data for a material setup command.
 struct SetMaterialStageCmdData {
     OGLShader *m_shader;
     CPPCore::TArray<OGLTexture *> m_textures;
     OGLVertexArray *m_vertexArray;
 
+    /// @brief The default class constructor.
     SetMaterialStageCmdData() :
             m_shader(nullptr),
             m_textures(),
@@ -164,18 +207,24 @@ struct SetMaterialStageCmdData {
     }
 };
 
-///	@brief
+///	@brief  This struct stores data for the setup of a render-target.
 struct SetRenderTargetCmdData {
     ClearState m_clearState;
+
+    /// @brief The default class constructor.
+    SetRenderTargetCmdData() {
+        // empty
+    }
 };
 
-///	@brief
+///	@brief  This struct stores data for a instanced primitive render call.
 struct DrawInstancePrimitivesCmdData {
     OGLVertexArray *m_vertexArray;
     size_t m_numInstances;
     CPPCore::TArray<size_t> m_primitives;
     const char *m_id;
 
+    /// @brief The default class constructor.
     DrawInstancePrimitivesCmdData() :
             m_vertexArray(nullptr),
             m_numInstances(0),
@@ -185,19 +234,7 @@ struct DrawInstancePrimitivesCmdData {
     }
 };
 
-///	@brief
-struct DrawPanelsCmdData {
-    size_t mNumPanels;
-    Rect2ui *mPanels;
-
-    DrawPanelsCmdData() :
-            mNumPanels(0),
-            mPanels(nullptr) {
-        // empty
-    }
-};
-
-///	@brief
+///	@brief  This struct stores data for a primitive render call.
 struct DrawPrimitivesCmdData {
     bool m_localMatrix;
     glm::mat4 m_model;
@@ -205,6 +242,7 @@ struct DrawPrimitivesCmdData {
     CPPCore::TArray<size_t> m_primitives;
     const char *m_id;
 
+    /// @brief The default class constructor.
     DrawPrimitivesCmdData() :
             m_localMatrix(false),
             m_model(),
@@ -215,6 +253,7 @@ struct DrawPrimitivesCmdData {
     }
 };
 
+/// @brief This struct collects all capabilities of the current opengl render-context.
 struct OGLCapabilities {
     GLfloat mMaxAniso;
     i32 mContextMask;
@@ -224,6 +263,7 @@ struct OGLCapabilities {
     i32 mMaxTextureCoords;
     bool mInstancing;
 
+    /// @brief The default class constructor.
     OGLCapabilities() :
             mMaxAniso(0.0f),
             mContextMask(-1),
@@ -237,13 +277,17 @@ struct OGLCapabilities {
 };
 
 struct OGLFrameBuffer {
-    const char *m_name;
-    GLuint m_bufferId;
-    GLuint m_depthrenderbufferId;
-    GLuint m_renderedTexture;
-    ui32 m_width;
-    ui32 m_height;
+    const char *m_name;             ///<
+    GLuint m_bufferId;              ///<
+    GLuint m_depthrenderbufferId;   ///<
+    GLuint m_renderedTexture;       ///<
+    ui32 m_width;                   ///< The width
+    ui32 m_height;                  ///<
 
+    /// @brief The class constructor with the framebuffer parameter.
+    /// @param name     The framebuffer name.
+    /// @param w        The width for the framebuffer.
+    /// @param h        The height for the framebuffer.
     OGLFrameBuffer(const char *name, ui32 w, ui32 h) :
             m_name(name),
             m_bufferId(0),
