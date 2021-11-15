@@ -548,7 +548,7 @@ GeoInstanceData::~GeoInstanceData() {
 TransformState::TransformState() :
         m_translate(),
         m_scale(1.0f),
-        m_rotation() {
+        m_rotation(1.0f) {
     // empty
 }
 
