@@ -256,43 +256,6 @@ bool RenderCmdBuffer::onDrawPrimitivesInstancesCmd(DrawInstancePrimitivesCmdData
     return true;
 }
 
-const String shader_2d_vs = 
-		"#version 410\n"
-        "in vec2 vp;"
-        "uniform mat4 V, P;"
-        "out vec2 st;"
-        "void main () {"
-        "  st = (vp + 1.0) * 0.5;"
-        "  gl_Position = P * V * vec4 (10.0 * vp.x, -1.0, 10.0 * -vp.y, 1.0);"
-        "}";
-
-const String shader_2d_fs =
-        "in vec2 st;"
-        "uniform sampler2D tex;"
-        "out vec4 frag_colour;"
-        "void main () {"
-        "  frag_colour = texture (tex, st);"
-        "}";
-
-        
-bool RenderCmdBuffer::onDrawPanelCmd(DrawPanelsCmdData *data) {
-    osre_assert(nullptr != m_renderbackend);
-    if (nullptr == data) {
-        return false;
-    }
-    if (nullptr == m_2dShader) {
-        Shader shader_2d;
-        shader_2d.setSource(ShaderType::SH_VertexShaderType, shader_2d_vs);
-        shader_2d.setSource(ShaderType::SH_FragmentShaderType, shader_2d_fs);
-        m_2dShader = m_renderbackend->createShader("2d", &shader_2d);
-    }
-    m_renderbackend->useShader(m_2dShader); 
-    for (size_t i = 0; i < data->mNumPanels; ++i) {
-    }
-
-    return true;
-}
-
 bool RenderCmdBuffer::onSetRenderTargetCmd(SetRenderTargetCmdData *) {
     osre_assert(nullptr != m_renderbackend);
 
