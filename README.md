@@ -16,7 +16,7 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 
 # Documentation
 - Please check [OSRE-Docs](https://osre-doc.readthedocs.io/en/latest/). 
-- If you want to report any issues in the documentation:  [OSRE--Docs on Github](https://github.com/kimkulling/osre_doc
+- If you want to report any issues in the documentation:  [OSRE--Docs on Github](https://github.com/kimkulling/osre_doc)
 
 # Build Status
 [![Build status](https://github.com/kimkulling/osre/actions/workflows/cmake.yml/badge.svg)](https://github.com/kimkulling/osre/actions/workflows/cmake.yml)
