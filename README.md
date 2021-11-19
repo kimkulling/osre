@@ -49,7 +49,7 @@ using namespace ::OSRE::RenderBackend;
 /// The main application, this will be used to initialize the engine
 class QuickStarterApp : public AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
-    TransformMatrixBlock m_transformMatrix;
+    TransformMatrixBlock mTransformMatrix;
     /// The entity to render
     Entity *mEntity;
 
@@ -57,7 +57,7 @@ public:
     /// The class constructor with the incoming arguments from the command line.
     QuickStarterApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv),
-            m_transformMatrix(),
+            mTransformMatrix(),
             mEntity(nullptr) {
         // empty
     }
@@ -95,26 +95,26 @@ protected:
     void onUpdate() override {
         glm::mat4 rot(1.0);
         if (AppBase::isKeyPressed(Platform::KEY_A)) {
-            m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
+            mTransformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
         }
         if (AppBase::isKeyPressed(Platform::KEY_D)) {
-            m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
+            mTransformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
         }
 
         if (AppBase::isKeyPressed(Platform::KEY_W)) {
-            m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
+            mTransformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
         }
 
         if (AppBase::isKeyPressed(Platform::KEY_S)) {
-            m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
+            mTransformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
         }
 
         if (AppBase::isKeyPressed(Platform::KEY_Q)) {
-            m_transformMatrix.m_model *= glm::scale(rot, glm::vec3(1.01f, 1.01, 1.01f));
+            mTransformMatrix.m_model *= glm::scale(rot, glm::vec3(1.01f, 1.01, 1.01f));
         }
 
         if (AppBase::isKeyPressed(Platform::KEY_E)) {
-            m_transformMatrix.m_model *= glm::scale(rot, glm::vec3(0.99f, 0.99f, 0.99f));
+            mTransformMatrix.m_model *= glm::scale(rot, glm::vec3(0.99f, 0.99f, 0.99f));
         }
 
         // Set the model-matrix in the renderpass
