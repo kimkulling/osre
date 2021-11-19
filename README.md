@@ -15,7 +15,8 @@ Just another open-source render-engine made by Kim Kulling. This is a playground
 Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Documentation
-- Please check [OSRE-Docs](https://osre-doc.readthedocs.io/en/latest/).
+- Please check [OSRE-Docs](https://osre-doc.readthedocs.io/en/latest/). 
+- If you want to report any issues in the documentation:  [OSRE--Docs on Github](https://github.com/kimkulling/osre_doc
 
 # Build Status
 [![Build status](https://github.com/kimkulling/osre/actions/workflows/cmake.yml/badge.svg)](https://github.com/kimkulling/osre/actions/workflows/cmake.yml)
