@@ -16,7 +16,7 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 
 # Documentation
 - Please check [OSRE-Docs](https://osre-doc.readthedocs.io/en/latest/). 
-- If you want to report any issues in the documentation:  [OSRE--Docs on Github](https://github.com/kimkulling/osre_doc)
+- If you want to report any issues in the documentation:  [OSRE-Docs on Github](https://github.com/kimkulling/osre_doc)
 
 # Build Status
 [![Build status](https://github.com/kimkulling/osre/actions/workflows/cmake.yml/badge.svg)](https://github.com/kimkulling/osre/actions/workflows/cmake.yml)
@@ -136,9 +136,9 @@ OSRE_MAIN(QuickStarterApp)
 ```
 
 # OSRE-Ed
-![ESRE-Ed](assets/Images/sponza.png)
-
 The engine provdes an 3D-Editor called OSRE-Ed. It is still experimental:
+
+![OSRE-Ed](assets/Images/sponza.png)
 
 # Get involved
 If you want to contribute just use the github project page or reach us via Gitter:
