@@ -99,6 +99,18 @@ static void createTitleString(const SceneData &sd, String &titleString) {
     titleString += sd.AssetName;
 }
 
+static void moveWindowsToForeground(AbstractWindow *win) {
+    Win32Window *w = (Win32Window *) win;
+    if (nullptr != w) {
+        BOOL res = ::BringWindowToTop(w->getHWnd());
+        if (!res) {
+            osre_debug(Tag, "Cannot bring window to foreground.");
+        } else {
+            printf("done!\n");
+        }
+    }
+}
+
 namespace Colors {
     const glm::vec3 Black(0, 0, 0);
     const glm::vec3 White(1, 1, 1);
@@ -281,7 +293,7 @@ bool OsreEdApp::onCreate() {
     createTitleString(mSceneData, title);
     AppBase::setWindowsTitle(title);
 
-    Win32Window *w = (Win32Window *)getRootWindow();
+    auto *w = static_cast<Win32Window*>(getRootWindow());
     AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
     if (nullptr == w || nullptr == queue) {
         return false;
@@ -318,7 +330,7 @@ bool OsreEdApp::onCreate() {
         return false;
     }
 
-    Entity *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
+    auto *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
     Mesh *grid = createGrid(60);
     editorEntity->addStaticMesh(grid);
     editorEntity->addStaticMesh(createCoordAxis(1000));
@@ -416,6 +428,7 @@ void OsreEdApp::importAssetCmd(ui32, void *) {
     IO::Uri modelLoc;
     PlatformOperations::getFileOpenDialog("Select asset for import", "*", modelLoc);
     if (modelLoc.isValid()) {
+        moveWindowsToForeground(getRootWindow());
         loadAsset(modelLoc);
     }
 }
@@ -467,7 +480,7 @@ void OsreEdApp::createUI() {
 }
 
 void OsreEdApp::setStatusBarText(const String &mode, const String &model, i32 numVertices, i32 numTriangles) {
-    Win32Window *win = (Win32Window *)getRootWindow();
+    auto *win = static_cast<Win32Window*>(getRootWindow());
     if (nullptr == win) {
         return;
     }
@@ -517,8 +530,8 @@ void OsreEdApp::onUpdate() {
     MouseEventListener *listener = AppBase::getMouseEventListener();
     TArray<TransformCommandType> transformCmds;
     mTransformController->update(TransformController::getKeyBinding(key));
-    for (ui32 i = 0; i < transformCmds.size(); ++i) {
-        mTransformController->update(transformCmds[i]);
+    for (auto & transformCmd : transformCmds) {
+        mTransformController->update(transformCmd);
     }
     transformCmds.clear();
     RenderBackendService *rbSrv = getRenderBackendService();
@@ -536,9 +549,17 @@ void OsreEdApp::onUpdate() {
     AppBase::onUpdate();
 }
 
+void OsreEdApp::onPreRender() {
+    AppBase::onPreRender();
+}
+
 void OsreEdApp::onRender() {
     mModuleRegistry.render();
     AppBase::onRender();
+}
+
+void OsreEdApp::onPostRender() {
+    AppBase::onPostRender();
 }
 
 bool OsreEdApp::onDestroy() {
