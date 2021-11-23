@@ -138,11 +138,15 @@ protected:
     /// @return true, if successful, false in case of an error.
     bool onCreate() override;
 
+    void onPreRender() override;
+
     /// @brief The onUpdate callback.
     void onUpdate() override;
 
     /// @brief The onRender callback.
     void onRender() override;
+
+    void onPostRender() override;
 
     /// @brief The onDestrox callback.
     /// @return true, if successful, false in case of an error.

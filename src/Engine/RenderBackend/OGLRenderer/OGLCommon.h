@@ -236,16 +236,12 @@ struct DrawInstancePrimitivesCmdData {
 
 ///	@brief  This struct stores data for a primitive render call.
 struct DrawPrimitivesCmdData {
-    bool m_localMatrix;
-    glm::mat4 m_model;
     OGLVertexArray *m_vertexArray;
     CPPCore::TArray<size_t> m_primitives;
     const char *m_id;
 
     /// @brief The default class constructor.
     DrawPrimitivesCmdData() :
-            m_localMatrix(false),
-            m_model(),
             m_vertexArray(nullptr),
             m_primitives(),
             m_id(nullptr) {

@@ -137,7 +137,7 @@ const glm::mat4 &OGLRenderBackend::getMatrix(MatrixType type) const {
 void OGLRenderBackend::applyMatrix() {
     OGLParameter *model = getParameter("Model");
     if (nullptr == model) {
-        UniformDataBlob *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
+        auto *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
         ::memcpy(blob->m_data, mMatrixBlock.getModelPtr(), sizeof(glm::mat4));
         model = createParameter("Model", ParameterType::PT_Mat4, blob, 1);
     } else {
@@ -147,7 +147,7 @@ void OGLRenderBackend::applyMatrix() {
 
     OGLParameter *view = getParameter("View");
     if (nullptr == view) {
-        UniformDataBlob *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
+        auto *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
         ::memcpy(blob->m_data, mMatrixBlock.getViewPtr(), sizeof(glm::mat4));
         view = createParameter("View", ParameterType::PT_Mat4, blob, 1);
     } else {
@@ -157,7 +157,7 @@ void OGLRenderBackend::applyMatrix() {
 
     OGLParameter *projection = getParameter("Projection");
     if (nullptr == projection) {
-        UniformDataBlob *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
+        auto *blob = UniformDataBlob::create(ParameterType::PT_Mat4, 1);
         ::memcpy(blob->m_data, mMatrixBlock.getProjectionPtr(), sizeof(glm::mat4));
         projection = createParameter("Projection", ParameterType::PT_Mat4, blob, 1);
     } else {

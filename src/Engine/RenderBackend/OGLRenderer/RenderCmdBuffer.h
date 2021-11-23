@@ -47,9 +47,9 @@ class Pipeline;
 
 struct OGLVertexArray;
 struct OGLRenderCmd;
+struct SetParameterCmdData;
 struct DrawPrimitivesCmdData;
 struct DrawInstancePrimitivesCmdData;
-struct DrawPanelsCmdData;
 struct SetMaterialStageCmdData;
 struct SetRenderTargetCmdData;
 struct DrawTextCmdData;
@@ -104,12 +104,12 @@ public:
     void setMatrixBuffer(const c8 *id, MatrixBuffer *buffer);
 
 protected:
+    /// The set parameter callback.
+    virtual bool onSetParameterCmd(SetParameterCmdData *data);
     /// The draw primitive callback.
     virtual bool onDrawPrimitivesCmd(DrawPrimitivesCmdData *data);
     /// The draw primitive instances callback.
     virtual bool onDrawPrimitivesInstancesCmd(DrawInstancePrimitivesCmdData *data);
-    ///
-    virtual bool onDrawPanelCmd(DrawPanelsCmdData *data);
     /// The set render target callback.
     virtual bool onSetRenderTargetCmd(SetRenderTargetCmdData *data);
     /// The set material callback.

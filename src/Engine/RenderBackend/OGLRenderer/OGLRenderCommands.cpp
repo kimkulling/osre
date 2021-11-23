@@ -226,9 +226,9 @@ void setupInstancedDrawCmd(const char *id, const TArray<size_t> &ids, OGLRenderB
         return;
     }
 
-    OGLRenderCmd *renderCmd = new OGLRenderCmd(OGLRenderCmdType::DrawPrimitivesInstancesCmd);
+    auto *renderCmd = new OGLRenderCmd(OGLRenderCmdType::DrawPrimitivesInstancesCmd);
 
-    DrawInstancePrimitivesCmdData *data = new DrawInstancePrimitivesCmdData;
+    auto *data = new DrawInstancePrimitivesCmdData;
     data->m_id = id;
     data->m_vertexArray = va;
     data->m_numInstances = numInstances;

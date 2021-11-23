@@ -139,7 +139,11 @@ void RenderCmdBuffer::onRenderFrame(const EventData *) {
                 continue;
             }
 
-            if (renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesCmd) {
+            if (renderCmd->m_type == OGLRenderCmdType::SetParameterCmd) {
+                SetParameterCmdData *data = (SetParameterCmdData*)renderCmd->m_data;
+                m_renderbackend->setMatrix(MatrixType::Model, data->mBuffer->m_model);
+                m_renderbackend->applyMatrix();
+            } else if (renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesCmd) {
                 onDrawPrimitivesCmd((DrawPrimitivesCmdData *)renderCmd->m_data);
             } else if (renderCmd->m_type == OGLRenderCmdType::DrawPrimitivesInstancesCmd) {
                 onDrawPrimitivesInstancesCmd((DrawInstancePrimitivesCmdData *)renderCmd->m_data);
@@ -150,6 +154,9 @@ void RenderCmdBuffer::onRenderFrame(const EventData *) {
             } else {
                 osre_error(Tag, "Unsupported render command type: " + static_cast<ui32>(renderCmd->m_type));
             }
+            m_renderbackend->setMatrix(MatrixType::View, m_view);
+            m_renderbackend->setMatrix(MatrixType::Projection, m_proj);
+            m_renderbackend->applyMatrix();
         }
 
         m_pipeline->endPass(passId);
@@ -218,23 +225,37 @@ void RenderCmdBuffer::setMatrixBuffer(const c8 *id, MatrixBuffer *buffer) {
     m_matrixBuffer[id] = buffer;
 }
 
+bool RenderCmdBuffer::onSetParameterCmd( SetParameterCmdData *data ) {
+    osre_assert(nullptr != m_renderbackend);
+    if (nullptr == data) {
+        return false;
+    }
+
+    MatrixBuffer *buffer = data->mBuffer;
+    if (nullptr == buffer) {
+        return false;
+    }
+
+    setMatrixes(buffer->m_model, buffer->m_view, buffer->m_proj);
+    m_renderbackend->applyMatrix();
+
+    return true;
+}
+
 bool RenderCmdBuffer::onDrawPrimitivesCmd(DrawPrimitivesCmdData *data) {
     osre_assert(nullptr != m_renderbackend);
     if (nullptr == data) {
         return false;
     }
 
-    std::map<const char *, MatrixBuffer *>::iterator it = m_matrixBuffer.find(data->m_id);
+    auto it = m_matrixBuffer.find(data->m_id);
     if (it != m_matrixBuffer.end()) {
         MatrixBuffer *buffer = it->second;
         setMatrixes(buffer->m_model, buffer->m_view, buffer->m_proj);
+        m_renderbackend->applyMatrix();
     }
 
     m_renderbackend->bindVertexArray(data->m_vertexArray);
-    if (data->m_localMatrix) {
-        m_renderbackend->setMatrix(MatrixType::Model, data->m_model);
-        m_renderbackend->applyMatrix();
-    }
     for (size_t i = 0; i < data->m_primitives.size(); ++i) {
         m_renderbackend->render(data->m_primitives[i]);
     }
@@ -251,43 +272,6 @@ bool RenderCmdBuffer::onDrawPrimitivesInstancesCmd(DrawInstancePrimitivesCmdData
     m_renderbackend->bindVertexArray(data->m_vertexArray);
     for (size_t i = 0; i < data->m_primitives.size(); i++) {
         m_renderbackend->render(data->m_primitives[i], data->m_numInstances);
-    }
-
-    return true;
-}
-
-const String shader_2d_vs = 
-		"#version 410\n"
-        "in vec2 vp;"
-        "uniform mat4 V, P;"
-        "out vec2 st;"
-        "void main () {"
-        "  st = (vp + 1.0) * 0.5;"
-        "  gl_Position = P * V * vec4 (10.0 * vp.x, -1.0, 10.0 * -vp.y, 1.0);"
-        "}";
-
-const String shader_2d_fs =
-        "in vec2 st;"
-        "uniform sampler2D tex;"
-        "out vec4 frag_colour;"
-        "void main () {"
-        "  frag_colour = texture (tex, st);"
-        "}";
-
-        
-bool RenderCmdBuffer::onDrawPanelCmd(DrawPanelsCmdData *data) {
-    osre_assert(nullptr != m_renderbackend);
-    if (nullptr == data) {
-        return false;
-    }
-    if (nullptr == m_2dShader) {
-        Shader shader_2d;
-        shader_2d.setSource(ShaderType::SH_VertexShaderType, shader_2d_vs);
-        shader_2d.setSource(ShaderType::SH_FragmentShaderType, shader_2d_fs);
-        m_2dShader = m_renderbackend->createShader("2d", &shader_2d);
-    }
-    m_renderbackend->useShader(m_2dShader); 
-    for (size_t i = 0; i < data->mNumPanels; ++i) {
     }
 
     return true;

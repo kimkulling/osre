@@ -305,8 +305,12 @@ public:
     /// @return true if successful,  false if not.
     virtual bool onDestroy();
 
+    virtual void onPreRender();
+
     /// @brief  The onRener callback.
     virtual void onRender();
+
+    virtual void onPostRender();
 
     /// @brief  The onUpdate callback, override this for your own update stuff.
     virtual void onUpdate();

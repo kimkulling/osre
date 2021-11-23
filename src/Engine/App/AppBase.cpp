@@ -472,6 +472,9 @@ void AppBase::onUpdate() {
 
     m_keyboardEvListener->clearKeyMap();
 }
+void AppBase::onPreRender() {
+
+}
 
 void AppBase::onRender() {
     if (nullptr != m_activeWorld) {
@@ -479,6 +482,10 @@ void AppBase::onRender() {
     }
 }
 
+void AppBase::onPostRender() {
+    
+}
+        
 const ArgumentParser &AppBase::getArgumentParser() const {
     return m_argParser;
 }
@@ -488,7 +495,7 @@ Ids *AppBase::getIdContainer() const {
 }
 
 Pipeline *AppBase::createDefaultPipeline() {
-    Pipeline *pipeline = new Pipeline(DefaultPipelines::Pipeline_Default);
+    auto *pipeline = new Pipeline(DefaultPipelines::Pipeline_Default);
     RenderPass *renderPass = RenderPass::create(RenderPassId, nullptr);
     CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
     renderPass->setCullState(cullState);
@@ -520,9 +527,9 @@ RenderBackend::Pipeline *AppBase::findPipeline(const String &name) {
         return nullptr;
     }
     
-    for (ui32 i = 0; i < mPipelines.size(); ++i) {
-        if (mPipelines[i]->getName() == name) {
-            return mPipelines[i];
+    for (auto & mPipeline : mPipelines) {
+        if (mPipeline->getName() == name) {
+            return mPipeline;
         }
     }
 

@@ -41,7 +41,7 @@ using namespace ::OSRE::RenderBackend;
 ///	@brief  A geo-model - rendering test
 //-------------------------------------------------------------------------------------------------
 class GeoModelMatrixRenderTest : public AbstractRenderTest {
-    TransformMatrixBlock m_transformMatrix;
+    TransformMatrixBlock mTransformMatrix;
 
 public:
     GeoModelMatrixRenderTest() :
@@ -57,30 +57,34 @@ public:
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
         Scene::MeshBuilder myBuilder;
-        myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
-        Mesh *mesh1 = myBuilder.getMesh();
         TransformState transform;
-        transform.setTranslation(0.5f, 0, 0);
-        transform.setScale(0.2f, 0.2f, 0.2f);
-        glm::mat4 m;
-        transform.toMatrix(m);
 
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("b1");
             {
+                myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+                Mesh *mesh1 = myBuilder.getMesh();
+                transform.setTranslation(0.5f, 0, 0);
+                transform.setScale(0.2f, 0.2f, 0.2f);
+                glm::mat4 m(1);
+                transform.toMatrix(m);
+                rbSrv->setMatrix(MatrixType::Model, m);
                 rbSrv->addMesh(mesh1, 0);
+            }
+            rbSrv->endRenderBatch();
 
+            rbSrv->beginRenderBatch("b2");
+            {
                 myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
                 Mesh *mesh2 = myBuilder.getMesh();
                 transform.setTranslation(-0.5f, 0, 0);
                 transform.setScale(0.2f, 0.2f, 0.2f);
-                glm::mat4 m;
+                glm::mat4 m(1);
                 transform.toMatrix(m);
-
+                rbSrv->setMatrix(MatrixType::Model, m);
                 rbSrv->addMesh(mesh2, 0);
             }
-            rbSrv->endRenderBatch();
         }
         rbSrv->endPass();
 

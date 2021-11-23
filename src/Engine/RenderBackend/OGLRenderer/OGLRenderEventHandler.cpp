@@ -68,11 +68,11 @@ OGLRenderEventHandler::~OGLRenderEventHandler() {
 }
 
 bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
-    bool result(false);
     if (!m_isRunning) {
         return true;
     }
 
+    bool result = false;
     if (OnAttachEventHandlerEvent == ev) {
         result = onAttached(data);
     } else if (OnDetatachEventHandlerEvent == ev) {
@@ -103,14 +103,17 @@ bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
 }
 
 void OGLRenderEventHandler::setActiveShader(OGLShader *oglShader) {
+    osre_assert(nullptr != m_renderCmdBuffer);
     m_renderCmdBuffer->setActiveShader(oglShader);
 }
 
 void OGLRenderEventHandler::enqueueRenderCmd(OGLRenderCmd *oglRenderCmd) {
+    osre_assert(nullptr != m_renderCmdBuffer);
     m_renderCmdBuffer->enqueueRenderCmd(oglRenderCmd);
 }
 
 void OGLRenderEventHandler::setParameter(const ::CPPCore::TArray<OGLParameter *> &paramArray) {
+    osre_assert(nullptr != m_renderCmdBuffer);
     m_renderCmdBuffer->setParameter(paramArray);
 }
 
@@ -142,7 +145,7 @@ bool OGLRenderEventHandler::onDetached(const EventData *) {
 bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
     osre_assert(nullptr != m_oglBackend);
 
-    CreateRendererEventData *createRendererEvData = (CreateRendererEventData *)eventData;
+    auto *createRendererEvData = (CreateRendererEventData *)eventData;
     AbstractWindow *activeSurface = createRendererEvData->m_activeSurface;
     if (nullptr == activeSurface) {
         osre_debug(Tag, "No active surface, pointer is nullptr.");
@@ -204,7 +207,7 @@ bool OGLRenderEventHandler::onDestroyRenderer(const Common::EventData *) {
         return false;
     }
 
-    bool ok(Profiling::PerformanceCounterRegistry::destroy());
+    bool ok = Profiling::PerformanceCounterRegistry::destroy();
     if (!ok) {
         osre_error(Tag, "Error while destroying performance counters.");
     }
@@ -296,7 +299,6 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, CPPCore::TArray<size_t> &pri
         }
 
         primGroups.resize(0);
-
     }
 
     return true;
@@ -305,7 +307,7 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, CPPCore::TArray<size_t> &pri
 bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventData) {
     osre_assert(nullptr != m_oglBackend);
 
-    InitPassesEventData *frameToCommitData = (InitPassesEventData *)eventData;
+    auto *frameToCommitData = (InitPassesEventData *)eventData;
     if (nullptr == frameToCommitData) {
         return false;
     }
@@ -397,7 +399,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
 }
 
 bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
-    CommitFrameEventData *data = (CommitFrameEventData *)eventData;
+    auto *data = (CommitFrameEventData *)eventData;
     if (nullptr == data) {
         return false;
     }
@@ -410,8 +412,9 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
         if (nullptr == cmd) {
             continue;
         }
+
         if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateMatrixes) {
-            MatrixBuffer *buffer = (MatrixBuffer *)cmd->m_data;
+            auto *buffer = (MatrixBuffer *)cmd->m_data;
             m_renderCmdBuffer->setMatrixBuffer(cmd->m_batchId, buffer);
         } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateUniforms) {
             c8 name[255];
@@ -430,6 +433,13 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
             for (ui32 i = 0; i < cmd->m_updatedPasses.size(); ++i) {
                 PassData *pd = cmd->m_updatedPasses[i];
                 for (RenderBatchData *rbd : pd->m_geoBatches) {
+                    auto *renderCmd = new OGLRenderCmd(OGLRenderCmdType::SetParameterCmd);
+                    auto *data = new SetParameterCmdData;
+                    data->mBuffer = &rbd->m_matrixBuffer;
+                    renderCmd->m_data = (void *)data;
+                    
+                    getRenderCmdBuffer()->enqueueRenderCmd(renderCmd);
+                    m_oglBackend->setMatrix(MatrixType::Model, rbd->m_matrixBuffer.m_model);
                     for (MeshEntry *entry : rbd->m_meshArray) {
                         CPPCore::TArray<size_t> primGroups;
                         addMeshes(cmd->m_batchId, primGroups, entry);
@@ -454,7 +464,7 @@ bool OGLRenderEventHandler::onShutdownRequest(const EventData *eventData) {
 bool OGLRenderEventHandler::onResizeRenderTarget(const EventData *eventData) {
     osre_assert(nullptr != eventData);
 
-    ResizeEventData *data = (ResizeEventData *)eventData;
+    auto *data = (ResizeEventData *)eventData;
     if (nullptr != data) {
         const ui32 x = data->m_x;
         const ui32 y = data->m_y;
