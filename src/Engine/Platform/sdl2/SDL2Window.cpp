@@ -41,7 +41,7 @@ SDL2Surface::~SDL2Surface( ) {
 }
 
 void SDL2Surface::setWindowsTitle(const String &title) {
-    if ( nullptr == m_surface ) {
+    if (nullptr == m_surface) {
         return;
     }
 
@@ -49,7 +49,7 @@ void SDL2Surface::setWindowsTitle(const String &title) {
 }
 
 void SDL2Surface::setWindowsMouseCursor(DefaultMouseCursorType ct) {
-
+    // todo
 }
 
 SDL_Window *SDL2Surface::getSDLSurface() const {
@@ -67,10 +67,8 @@ bool SDL2Surface::onCreate() {
     SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, prop->m_depthbufferdepth );
 
     // Create our window centered at 512x512 resolution
-
-
-    const ui32 w( prop->m_width );
-    const ui32 h( prop->m_height );
+    const ui32 w = prop->m_width;
+    const ui32 h = prop->m_height;
     ui32 sdl2Flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
     if ( prop->m_resizable ) {
         sdl2Flags |= SDL_WINDOW_RESIZABLE;
@@ -95,7 +93,7 @@ bool SDL2Surface::onDestroy( ) {
         return false;
     }
 
-    SDL_DestroyWindow( m_surface );
+    SDL_DestroyWindow(m_surface);
     m_surface = nullptr;
 
     return true;
@@ -109,11 +107,14 @@ void SDL2Surface::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
     if ( nullptr == m_surface ) {
         return;
     }
-
-    SDL_SetWindowPosition( m_surface, x, y );
-    SDL_SetWindowSize( m_surface, w, h );
-    WindowsProperties *props( AbstractWindow::getProperties() );
-    if ( nullptr != props ) {
+    WindowsProperties *props = AbstractWindow::getProperties();
+    if (props->m_x == x && props->m_y == y && props->m_width == w && props->m_height == h) {
+        return;
+    }
+        
+    SDL_SetWindowPosition(m_surface, x, y);
+    SDL_SetWindowSize(m_surface, w, h);
+    if (nullptr != props) {
         props->m_x = x;
         props->m_y = y;
         props->m_width = w;
