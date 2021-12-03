@@ -35,7 +35,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Profiling/PerformanceCounterRegistry.h>
-#include <osre/RenderBackend/THWBufferManager.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Shader.h>
@@ -57,14 +56,12 @@ OGLRenderEventHandler::OGLRenderEventHandler() :
         m_oglBackend(nullptr),
         m_renderCmdBuffer(nullptr),
         m_renderCtx(nullptr),
-        m_vertexArray(nullptr),
-        mHwBufferManager(nullptr) {
+        m_vertexArray(nullptr) {
     // empty
 }
 
 OGLRenderEventHandler::~OGLRenderEventHandler() {
-    delete mHwBufferManager;
-    mHwBufferManager = nullptr;
+    // empty
 }
 
 bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
@@ -121,7 +118,6 @@ bool OGLRenderEventHandler::onAttached(const EventData *) {
 
     m_oglBackend = new OGLRenderBackend;
     m_oglBackend->setTimer(PlatformInterface::getInstance()->getTimer());
-    mHwBufferManager = new HWBufferManager<OGLBuffer>;
 
     return true;
 }
@@ -439,7 +435,7 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
                 }
             }
         }
-        cmd->m_updateFlags = 0;
+        cmd->m_updateFlags = 0u;
     }
     data->m_frame->m_submitCmds.resize(0);
     data->m_frame->m_submitCmdAllocator.release();
@@ -447,7 +443,7 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
     return true;
 }
 
-bool OGLRenderEventHandler::onShutdownRequest(const EventData *eventData) {
+bool OGLRenderEventHandler::onShutdownRequest(const EventData*) {
     m_isRunning = false;
 
     return true;
