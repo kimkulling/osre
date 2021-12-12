@@ -57,42 +57,6 @@ void Entity::setBehaviourControl(AbstractBehaviour *behaviour) {
     m_behaviour = behaviour;
 }
 
-void Entity::addStaticMesh(RenderBackend::Mesh *mesh ) {
-    if (nullptr == mesh) {
-        return;
-    }
-    RenderComponent *comp = (RenderComponent *)getComponent(ComponentType::RenderComponentType);
-    if (nullptr == comp) {
-        return;
-    }
-    comp->addStaticMesh(mesh);
-    Scene::MeshProcessor processor;
-    processor.addGeo(mesh);
-    if (processor.execute()) {
-        setAABB(processor.getAABB());
-    }
-}
-
-void Entity::addStaticMeshes(const MeshArray &meshArray) {
-    if (meshArray.isEmpty()) {
-        return;
-    }
-
-    RenderComponent *comp = (RenderComponent *)getComponent(ComponentType::RenderComponentType);
-    if (nullptr != comp) {
-        comp->addStaticMeshArray(meshArray);
-    }
-
-    Scene::MeshProcessor processor;
-    for (ui32 i = 0; i < meshArray.size(); ++i) {
-        processor.addGeo(meshArray[i]);
-    }
-
-    if (processor.execute()) {
-        setAABB(processor.getAABB());
-    }
-}
-
 void Entity::setNode(Node *node) {
     m_node = node;
 }

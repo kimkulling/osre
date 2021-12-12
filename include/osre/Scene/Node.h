@@ -114,6 +114,7 @@ public:
     virtual void setActive(bool isActive);
     virtual bool isActive() const;
     virtual void setProperty(Properties::Property *prop);
+    virtual void getPropertyArray(::CPPCore::TArray<Properties::Property *> &propArray);
     virtual Properties::Property *getProperty(const String name) const;
 
     void translate(const glm::vec3 &pos);
@@ -138,6 +139,7 @@ private:
     MeshReferenceArray m_meshRefererenceArray;
     bool m_isActive;
     Common::Ids *m_ids;
+    ::CPPCore::TArray<Properties::Property *> mPropertyArray;
     PropertyMap m_propMap;
     AABB m_aabb;
     glm::mat4 m_localTransform;

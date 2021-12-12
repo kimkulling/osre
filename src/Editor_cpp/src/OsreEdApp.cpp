@@ -320,8 +320,9 @@ bool OsreEdApp::onCreate() {
 
     Entity *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
     Mesh *grid = createGrid(60);
-    editorEntity->addStaticMesh(grid);
-    editorEntity->addStaticMesh(createCoordAxis(1000));
+    RenderComponent *rc = (RenderComponent *)editorEntity->getComponent(ComponentType::RenderComponentType);
+    rc->addStaticMesh(grid);
+    //editorEntity->addStaticMesh(createCoordAxis(1000));
     //createUI();
 
     mPythonInterface = new PythonInterface;
@@ -388,10 +389,8 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
 
 void OsreEdApp::newProjectCmd(ui32, void *) {
     mProject = new App::Project();
-    mProject->create("New project", 0, 1);
-    const String &projectName = mProject->getProjectName();
-    
-    String title;
+    mProject->setProjectName("New project");    
+    String title = mProject->getProjectName();
     createTitleString(mSceneData, title);
     AppBase::setWindowsTitle(title);
 }
@@ -553,7 +552,7 @@ bool OsreEdApp::onDestroy() {
     return true;
 }
 
-bool OsreEdApp::loadSceneData(const IO::Uri &filename, SceneData &sd) {
+bool OsreEdApp::loadSceneData(const IO::Uri &filename, SceneData&) {
     if (filename.isEmpty()) {
         return false;
     }

@@ -51,6 +51,10 @@ static PyObject *PyWorld_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 }
 
 static int PyWorldObject_init(PyWorldObject *self, PyObject *args, PyObject *kwds) {
+    if (nullptr == self) {
+        return -1;
+    }
+
     return 0; // success (of init)
 }
 
@@ -78,11 +82,13 @@ static PyObject *PyWorld_getitem(PyWorldObject *self, PyObject *args) {
 static int PyWorld_setitem(PyWorldObject *self, PyObject *ix, PyObject *val) {
     return 0;
 }
+
 static PyMappingMethods PyWorld_mappings = {
     (lenfunc)PyWorld_len,
     (binaryfunc)PyWorld_getitem,
     (objobjargproc)PyWorld_setitem
 };
+
 static PyMemberDef PyWorldObject_members[] = {
     //{ "capacity", T_PYSSIZET, offsetof(PyWorldObject, len), READONLY, "" },
     { NULL, 0, 0, 0, NULL }
@@ -94,6 +100,18 @@ static PyObject *create_world(PyObject *self, PyObject *args) {
     }
 
     return nullptr;
+}
+
+static PyObject *add_node(PyObject *self, PyObject *args) {
+    if (!PyArg_ParseTuple(args, "s")) {
+        return nullptr;
+    }
+}
+
+static PyObject *get_Node(PyObject *self, PyObject *args) {
+    if (!PyArg_ParseTuple(args, "s")) {
+        return nullptr;
+    }
 }
 
 static PyMethodDef PyWorld_methods[] = {
@@ -210,5 +228,5 @@ bool PythonInterface::runScript(const String &src) {
     return true;
 }
 
-} // Namespace Editor
+} // namespace Editor
 } // namespace OSRE
