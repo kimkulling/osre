@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/AbstractProcessor.h>
+#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/TAABB.h>
 #include <osre/Scene/Node.h>
 
@@ -43,21 +44,19 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT MeshProcessor : public Common::AbstractProcessor {
 public:
-    using MeshArray = CPPCore::TArray<RenderBackend::Mesh*>;
-
     MeshProcessor();
     ~MeshProcessor();
     bool execute() override;
-    void addGeo( RenderBackend::Mesh *geo );
+    void addMesh( RenderBackend::Mesh *geo );
     const Scene::Node::AABB &getAABB() const;
 
 private:
-    void handleGeometry( RenderBackend::Mesh *geo );
+    void handleMesh( RenderBackend::Mesh *mesh );
 
 private:
-    MeshArray m_geoArray;
-    Node::AABB m_aabb;
-    i32 m_dirty;
+    RenderBackend::MeshArray mMeshArray;
+    Node::AABB mAabb;
+    i32 mDirty;
 };
 
 } // Namespace Scene
