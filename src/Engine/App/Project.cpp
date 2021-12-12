@@ -21,57 +21,31 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/Project.h>
-#include <osre/App/World.h>
 #include <osre/Common/Logger.h>
-#include <osre/IO/Directory.h>
+#include <osre/Debugging/osre_debugging.h>
+#include <osre/Properties/Property.h>
 #include <osre/IO/Uri.h>
-
-#include <fstream>
-#include <sstream>
-#include <string>
+#include <osre/App/World.h>
+#include <osre/App/Entity.h>
+#include <osre/RenderBackend/Mesh.h>
+#include <osre/Scene/Node.h>
+#include <osre/Scene/TAABB.h>
 
 namespace OSRE {
 namespace App {
 
 using namespace ::OSRE::IO;
+using namespace ::OSRE::Scene;
+using namespace ::OSRE::RenderBackend;
 
-namespace Details {
 static const c8 *Tag = "Project";
-static const c8 *EmptyAttributeToken = "empty";
-
-static String buildVersionString(i32 major, i32 minor) {
-    std::stringstream stream;
-
-    stream << "v" << major << "." << minor;
-    const String version = stream.str();
-
-    return version;
-}
-
-static bool parseVersionString(const String &version, i32 &major, i32 &minor) {
-    major = minor = -1;
-    if (version.empty()) {
-        return false;
-    }
-
-    const char *ptr = &version[1];
-    major = ::atoi(ptr);
-    while (*ptr != '.') {
-        ++ptr;
-    }
-    minor = ::atoi(++ptr);
-
-    return true;
-}
-
-} // Namespace Details
+static const ui32 MajorProjectVerion = 0;
+static const ui32 MinorProjectVerion = 1;
 
 Project::Project() :
         Object("App/Project"),
-        m_version(-1, -1),
-        m_flags(-1),
-        m_projectName(),
-        m_activeWorld(nullptr) {
+        mProjectName(),
+        mStage() {
     // empty
 }
 
@@ -79,134 +53,226 @@ Project::~Project() {
     // empty}
 }
 
-bool Project::create(const String &name, i32 major, i32 minor) {
-    if (isCreated()) {
-        return false;
-    }
-
-    m_version.mMajor = major;
-    m_version.mMinor = minor;
-    m_projectName = name;
-
-    return true;
-}
-
-bool Project::isCreated() const {
-    return (!m_projectName.empty());
-}
-
-bool Project::destroy() {
-    if (!isCreated()) {
-        return false;
-    }
-
-    return true;
-}
-
 void Project::setProjectName(const String &projectName) {
-    if (m_projectName != projectName) {
-        m_projectName = projectName;
+    if (mProjectName != projectName) {
+        mProjectName = projectName;
     }
 }
 
 const String &Project::getProjectName() const {
-    return m_projectName;
+    return mProjectName;
 }
 
-void Project::setActiveWorld(World *activeWorld) {
-    m_activeWorld = activeWorld;
-}
-
-World *Project::getActiveWorld() const {
-    return m_activeWorld;
-}
-
-i32 Project::getMajorVersion() const {
-    return m_version.mMajor;
-}
-
-i32 Project::getMinorVersion() const {
-    return m_version.mMinor;
-}
-
-bool Project::load(const String &name, i32 &major, i32 &minor, i32 flags) {
+bool Project::load(const String &name) {
     if (name.empty()) {
-        osre_warn(Details::Tag, "Project name is empty.");
+        osre_warn(Tag, "Project name is empty.");
         return false;
     }
 
-    m_projectName = name;
-    m_flags = flags;
-    String oldPath = Directory::getCurrentDirectory();
-    if (!Directory::setCurrentDirectory(name)) {
-        return false;
-    }
-
-    if (!loadMetadata(major, minor)) {
-        Directory::setCurrentDirectory(oldPath);
-        return false;
-    }
-
-    IO::Uri uri(m_projectName);
-    if (uri.isValid()) {
-    }
-
-    Directory::setCurrentDirectory(oldPath);
+    mProjectName = name;
 
     return true;
 }
 
-bool Project::save(const String &name, i32 /*flags*/) {
-    if (!isCreated()) {
-        return false;
+static void setNameChunk(const String &name, ChunkName &cn) {
+    if (name.empty()) {
+        cn.mLenChunkName = 0;
+        cn.mChunkName = nullptr;
+        return;
     }
 
+    cn.mLenChunkName = (i32) name.size();
+    cn.mChunkName = new c8[cn.mLenChunkName];
+    ::memcpy(cn.mChunkName, name.c_str(), cn.mLenChunkName);
+}
+    
+static size_t getNumNodes(Node *node, size_t currentNodeCount) {
+    if (node->getNumChildren() == 0) {
+        return currentNodeCount;
+    }
+    size_t numChildren = node->getNumChildren();
+    currentNodeCount += numChildren;
+    for (size_t i = 0; i < numChildren; ++i) {
+        Node *child = node->getChildAt(i);        
+        if (child != nullptr) {
+            currentNodeCount = getNumNodes(child, currentNodeCount);
+        }
+    }
+
+    return currentNodeCount;
+}
+
+static void storeAABB(const Scene::Node::AABB &aabb, NodeData &nd) {
+    TVec3<f32> min = aabb.getMin();
+    TVec3<f32> max = aabb.getMax();
+    nd.mAABB[0] = min.getX();
+    nd.mAABB[1] = min.getY();
+    nd.mAABB[2] = min.getZ();
+
+    nd.mAABB[3] = max.getX();
+    nd.mAABB[4] = max.getY();
+    nd.mAABB[5] = max.getZ();
+}
+
+static size_t getPropertyDataSize(const ::CPPCore::TArray<Properties::Property *> &propArray) {
+    if (propArray.isEmpty()) {
+        return 0;
+    }
+    size_t size = 0;
+    for (ui32 i = 0; i < propArray.size(); ++i) {
+        Properties::Property *p = propArray[i];
+        if (p == nullptr) {
+            continue;
+        }
+        size += sizeof(i32);
+        size += p->getPropertyName().size();
+        CPPCore::Variant v = p->getValue();
+        size += v.getSize();
+    }
+
+    return size;
+}
+ 
+static void storeProperties(const ::CPPCore::TArray<Properties::Property *> &propArray, NodeData &curNodeData) {
+    curNodeData.mNumProperties = (i32) propArray.size();
+    curNodeData.mPropertyDataSize = (i32) getPropertyDataSize(propArray);
+    curNodeData.mPropertyData = new c8[curNodeData.mPropertyDataSize];
+    size_t idx = 0;
+    for (ui32 i = 0; i < propArray.size(); ++i) {
+        Properties::Property *p = propArray[i];
+        const size_t nameLen = p->getPropertyName().size();
+        memcpy(&curNodeData.mPropertyData[idx], &nameLen, sizeof(i32));
+        idx += sizeof(i32);
+        memcpy(&curNodeData.mPropertyData[idx], p->getPropertyName().c_str(), nameLen);
+        idx += nameLen;
+        
+        memcpy(&curNodeData.mPropertyData[idx], p->getValue().getPtr(), p->getValue().getSize());
+        idx += p->getValue().getSize();
+    }
+}
+
+static void storeNodes(Node *currentNode, NodeData *nd, size_t &index) {
+    if (currentNode == nullptr || nd == nullptr) {
+        return;
+    }
+
+    NodeData &curNodeData = nd[index];    
+    setNameChunk(currentNode->getName(), curNodeData.mNodeName);
+    storeAABB(currentNode->getAABB(), curNodeData);
+    ::CPPCore::TArray<Properties::Property *> propArray;
+    currentNode->getPropertyArray(propArray);
+    if (!propArray.isEmpty()) {
+        storeProperties(propArray, curNodeData);
+        
+    }
+    curNodeData.mNumChildren = (ui32) currentNode->getNumChildren();
+    curNodeData.mChildrenIndices = new i32[curNodeData.mNumChildren];
+    size_t current_child = 0;
+    for (size_t i = 0; i < curNodeData.mNumChildren; i++) {
+        Node *child = currentNode->getChildAt(i);
+        curNodeData.mChildrenIndices[current_child] = (i32) i;
+        current_child++;
+        ++index;
+        storeNodes(child, nd, index);
+    }
+}
+
+static void storeMeshes(MeshArray &meshes, MeshData *md) {
+    osre_assert(md != nullptr);
+
+    for (size_t i = 0; i < meshes.size(); ++i) {
+        Mesh *mesh = meshes[i];
+        if (mesh == nullptr) {
+            continue;
+        }
+        
+        // Todo!
+    }
+}
+
+static void storeEntities(const CPPCore::TArray<Entity *> &entities, WorldData &wd) {
+    if (entities.isEmpty()) {
+        return;
+    }
+    
+    size_t numMeshes = 0;
+    wd.mNumEntities = (i32)entities.size();
+    wd.mEntityData = new EntityData[wd.mNumEntities];
+    for (size_t i = 0; i < entities.size(); ++i) {
+        const Entity *entity = entities[i];
+        if (entity == nullptr) {
+            continue;
+        }
+
+        auto *rc = (RenderComponent *)entity->getComponent(ComponentType::RenderComponentType);
+        numMeshes += rc->getNumGeometry();
+    }
+
+    MeshData *md = new MeshData[numMeshes];
+    for (size_t i = 0; i < entities.size(); ++i) {
+        const Entity *entity = entities[i];
+        if (entity == nullptr) {
+            continue;
+        }
+
+        auto *rc = (RenderComponent *)entity->getComponent(ComponentType::RenderComponentType);
+        MeshArray ma;
+        rc->getMeshArray(ma);
+        storeMeshes(ma, md);
+    }
+}
+
+static bool saveWorld(World *world, WorldData &wd) {
+    setNameChunk(world->getName(), wd.mWorldName);
+
+    Scene::Node *root = world->getRootNode();
+    if (nullptr == root) {
+        return true;
+    }
+
+    size_t numNodes = 1;
+    wd.mNumNodes = (i32) getNumNodes(root, numNodes);
+    wd.mNodes = new NodeData[wd.mNumNodes];
+    size_t index = 0;
+    storeNodes(root, wd.mNodes, index);
+    CPPCore::TArray<Entity *> entities;
+    world->getEntityArray(entities);
+    storeEntities(entities, wd);
+
+    return true;
+}
+
+static bool saveStage(const String &name, const Stage &stage, StageData *sd) {
+    String stageName = name;
+    if (name.empty()) {
+        stageName = "Empty Stage";
+    }
+
+    setNameChunk(stageName, sd->mStageName);
+    sd->mMajorVersion = MajorProjectVerion;
+    sd->mMinorVersion = MinorProjectVerion;
+    World *world = stage.getCurrentWorld();
+    if (world == nullptr) {
+        return true;
+    }
+
+    sd->mNumWorlds = 1;
+    sd->mWorldData = new WorldData[sd->mNumWorlds];
+    return saveWorld(world, *(sd->mWorldData));
+}
+
+bool Project::save(const String &name) {
     if (name.empty()) {
         return false;
     }
 
-    String oldPath, path, file;
-    oldPath = Directory::getCurrentDirectory();
-    Directory::getDirectoryAndFile(name, path, file);
-    if (path.empty()) {
-        path = file;
-        if (m_projectName.empty()) {
-            m_projectName = file;
-        }
-    }
-
-    if (!Directory::exists(path)) {
-        if (!Directory::createDirectory(path.c_str())) {
-            return false;
-        }
-    }
-
-    if (!Directory::setCurrentDirectory(path)) {
-        return false;
-    }
-
-
-    if (nullptr == m_activeWorld) {
-        Directory::setCurrentDirectory(oldPath);
+    if (mStage.isEmpty()) {
         return true;
     }
-
-    bool res(false);
-
-    IO::Uri uri(name);
-    if (uri.isValid()) {
-    }
-    Directory::setCurrentDirectory(oldPath);
-
-    return res;
-}
-
-bool Project::loadMetadata(i32 &major, i32 &minor) {
-    return false;
-}
-
-bool Project::saveMetadata(i32 major, i32 minor) {
-    return false;
+    
+    StageData *sd = new StageData;
+    
+    return saveStage(name, mStage, sd);
 }
 
 } // Namespace App
