@@ -32,7 +32,7 @@ namespace App {
 using namespace ::OSRE::Common;
 
 AssetRegistry *AssetRegistry::s_instance = nullptr;
-static const   String Tag                = "AssetRegistry";
+static const c8 *Tag                = "AssetRegistry";
 
 AssetRegistry *AssetRegistry::create() {
     if ( nullptr == s_instance ) {
@@ -97,6 +97,7 @@ String AssetRegistry::getPath( const String &mount ) {
 
 String AssetRegistry::resolvePathFromUri( const IO::Uri &location ) {
     if ( location.isEmpty() ) {
+        osre_debug(Tag, "Enpty path detected.");
         return Dummy;
     }
 
@@ -109,7 +110,7 @@ String AssetRegistry::resolvePathFromUri( const IO::Uri &location ) {
         absPath = getPath( mountPoint );
         if ( absPath[ absPath.size()-1 ]!='/' ) {
             absPath += '/';
-            offset++;
+            ++offset;
         }
         const String rest = pathToCheck.substr( pos+1, pathToCheck.size() - pos-1 );
         absPath += rest;
@@ -128,8 +129,8 @@ bool AssetRegistry::clear() {
     return true;
 }
 
-AssetRegistry::AssetRegistry() 
-: m_name2pathMap() {
+AssetRegistry::AssetRegistry() :
+        m_name2pathMap() {
     // empty
 }
 

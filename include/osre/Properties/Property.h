@@ -41,18 +41,18 @@ public:
 
 public:
     Property( ui32 id, const String &name, const CPPCore::Variant &value );
-    ~Property();
+    ~Property() = default;
     void setPropertyName( const String &rName );
     const String &getPropertyName() const;
     void set( ui32 id, const String &rName, const CPPCore::Variant &rValue );
     void setPropertyId( ui32 id );
     ui32 getPropertyId() const;
     const CPPCore::Variant &getValue( ) const;
+    bool operator == (const Property &rhs) const;
 
-private:
-    Property( const Property &rhs );
-    Property &operator = ( const Property &rhs );
-    bool operator == ( const Property &rhs ) const;
+    // No copying
+    Property( const Property &rhs ) = delete;
+    Property &operator = ( const Property &rhs ) = delete;
 
 private:
     ui32 m_Id;

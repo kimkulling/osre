@@ -26,6 +26,7 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 - Windows:
   - Visual Studio 2017
   - Visual Studio 2019
+  - Visual Studio 2022
 - Linux:
   - GCC
   - Clang
@@ -125,6 +126,7 @@ protected:
         rbSrv->beginRenderBatch("b1");
 
         rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+A
 
         rbSrv->endRenderBatch();
         rbSrv->endPass();
@@ -137,6 +139,7 @@ OSRE_MAIN(QuickStartdApp)
 ```
 
 # OSRE-Ed
+A
 ![ESRE-Ed](assets/Images/sponza.png)
 
 The engine provdes an 3D-Editor called OSRE-Ed. It is still experimental:

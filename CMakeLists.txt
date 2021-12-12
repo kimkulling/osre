@@ -44,9 +44,9 @@ INCLUDE_DIRECTORIES( BEFORE
     include/
     /usr/include/SDL2/
     /usr/include/
-    contrib/assimp/include
-    contrib/glm/
-    contrib/soil/src
+    ${CMAKE_HOME_DIRECTORY}/contrib/assimp/include
+    ${CMAKE_HOME_DIRECTORY}/contrib/glm/
+    ${CMAKE_HOME_DIRECTORY}/contrib/soil/src
     ${CMAKE_HOME_DIRECTORY}/contrib/glew/include
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/include
     ${CMAKE_HOME_DIRECTORY}/contrib/assimp/contrib/zlib

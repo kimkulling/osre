@@ -91,6 +91,7 @@ public:
     ~RenderComponent() override;
     size_t getNumGeometry() const;
     RenderBackend::Mesh *getMeshAt(size_t idx) const;
+    void getMeshArray(RenderBackend::MeshArray &array);
     void addStaticMesh(RenderBackend::Mesh *geo);
     void addStaticMeshArray(const RenderBackend::MeshArray &array);
 

@@ -103,7 +103,7 @@ protected:
             RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
             Scene::MeshProcessor process;
-            process.addGeo(mesh);
+            process.addMesh(mesh);
             process.execute();
             Scene::Node::AABB aabb = process.getAABB();
             Node *root = getActiveWorld()->getRootNode();

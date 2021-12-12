@@ -90,20 +90,31 @@ protected:
     void importMaterial( aiMaterial *material );
     void importAnimation( aiAnimation *animation );
     void optimizeVertexBuffer();
+    void postProcess();
 
 private:
-	const aiScene *m_scene;
-	RenderBackend::MeshArray m_meshArray;
-    RenderBackend::Texture *mDefaultTexture;
-    Entity *m_entity;
-    World *mWorld;
-    MaterialArray m_matArray;
-    Scene::Node *m_parent;
-    Common::Ids &m_ids;
-    String m_root;
-    String m_absPathWithFile;
-	BoneInfoArray m_boneInfoArray;
-	Bone2NodeMap m_bone2NodeMap;
+    struct AssetContext {
+        const aiScene *mScene;
+        RenderBackend::MeshArray mMeshArray;
+        RenderBackend::Texture *mDefaultTexture;
+        Entity *mEntity;
+        World *mWorld;
+        MaterialArray mMatArray;
+        Scene::Node *mParentNode;
+        Common::Ids &mIds;
+        String mRoot;
+        String mAbsPathWithFile;
+        BoneInfoArray mBoneInfoArray;
+        Bone2NodeMap mBone2NodeMap;
+
+        AssetContext(Common::Ids &ids, World *world);
+        ~AssetContext();
+
+        AssetContext(const AssetContext &) = delete;
+        AssetContext &operator=(const AssetContext&) = delete;
+    };
+
+    AssetContext mAssetContext;
 };
 
 } // Namespace Assets

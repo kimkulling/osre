@@ -80,7 +80,8 @@ protected:
         Scene::MeshBuilder meshBuilder;
         RenderBackend::Mesh *mesh = meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly).getMesh();
         if (nullptr != mesh) {
-            mEntity->addStaticMesh(mesh);
+            RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
+            rc->addStaticMesh(mesh);
             world->addEntity(mEntity);            
             camera->observeBoundingBox(mEntity->getAABB());
         }

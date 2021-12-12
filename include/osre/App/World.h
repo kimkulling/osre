@@ -93,6 +93,10 @@ public:
     /// @return 
     Entity *getEntityByName( const String &name ) const;
 
+    void getEntityArray( CPPCore::TArray<Entity *> &entities ) {
+        entities = m_entities;
+    }
+
     ///	@brief
     /// @param root 
     void setSceneRoot(Scene::Node *root);

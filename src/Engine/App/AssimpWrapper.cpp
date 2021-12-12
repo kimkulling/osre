@@ -37,6 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/Scene/MeshBuilder.h>
+#include <osre/Scene/MeshProcessor.h>
 #include <osre/Scene/Node.h>
 #include <osre/Scene/TAABB.h>
 
@@ -77,6 +78,7 @@ static void setTexture(const String &resolvedPath, const aiString &texPath,
     if (resolvedPath[0] == '*') {
         
     }
+    
     String texname;
     texname += "file://";
     texname += resolvedPath;
@@ -93,27 +95,36 @@ static void setTexture(const String &resolvedPath, const aiString &texPath,
     texResArray.add(texRes);
 }
 
-AssimpWrapper::AssimpWrapper(Common::Ids &ids, World *world) :
-        m_scene(nullptr),
-        m_meshArray(),
+AssimpWrapper::AssetContext::AssetContext(Common::Ids &ids, World *world) :
+        mScene(nullptr),
+        mMeshArray(),
         mDefaultTexture(nullptr),
-        m_entity(nullptr),
+        mEntity(nullptr),
         mWorld(world),
-        m_matArray(),
-        m_parent(nullptr),
-        m_ids(ids),
-        m_root(),
-        m_absPathWithFile(),
-        m_boneInfoArray(),
-        m_bone2NodeMap() {
+        mMatArray(),
+        mParentNode(nullptr),
+        mIds(ids),
+        mRoot(),
+        mAbsPathWithFile(),
+        mBoneInfoArray(),
+        mBone2NodeMap() {
+    // empty
+}
+ 
+AssimpWrapper::AssetContext::~AssetContext() {
+    ::CPPCore::ContainerClear(mBoneInfoArray);
+
+    delete mDefaultTexture;
+    mDefaultTexture = nullptr;
+}
+
+AssimpWrapper::AssimpWrapper( Common::Ids &ids, World *world ) :
+        mAssetContext(ids, world) {
     // empty
 }
 
 AssimpWrapper::~AssimpWrapper() {
-    ::CPPCore::ContainerClear(m_boneInfoArray);
-
-    delete mDefaultTexture;
-    mDefaultTexture = nullptr;
+    // empty
 }
 
 bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
@@ -126,48 +137,52 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
         flags = DefaultImportFlags;
     }
 
-    m_root = AssetRegistry::getPath("media");
-    m_absPathWithFile = AssetRegistry::resolvePathFromUri(file);
+    mAssetContext.mRoot = AssetRegistry::getPath("media");
+    mAssetContext.mAbsPathWithFile = AssetRegistry::resolvePathFromUri(file);
 
     String filename;
-    if (!Directory::getDirectoryAndFile(m_absPathWithFile, m_root, filename)) {
+    if (!Directory::getDirectoryAndFile(mAssetContext.mAbsPathWithFile, mAssetContext.mRoot, filename)) {
         return false;
     }
 
-    filename = m_root + filename;
+    filename = mAssetContext.mRoot + filename;
     Importer myImporter;
     osre_debug(Tag, "Start importing " + filename);
-    m_scene = myImporter.ReadFile(filename, flags);
-    if (nullptr == m_scene) {
+    mAssetContext.mScene = myImporter.ReadFile(filename, flags);
+    if (nullptr == mAssetContext.mScene) {
         osre_error(Tag, "Start importing " + filename);
-        m_root = "";
-        m_absPathWithFile = "";
+        mAssetContext.mRoot = "";
+        mAssetContext.mAbsPathWithFile = "";
         return false;
     }
     osre_debug(Tag, "Importing " + filename + " finished.");
     convertScene();
     osre_debug(Tag, "Converting " + filename + " finished.");
+    
+    osre_debug(Tag, "Starting post-processing " + filename);
+    postProcess();
+    osre_debug(Tag, "Post-processing " + filename + " finished.");
 
     return true;
 }
 
 Entity *AssimpWrapper::getEntity() const {
-    return m_entity;
+    return mAssetContext.mEntity;
 }
 
 Entity *AssimpWrapper::convertScene() {
-    if (nullptr == m_scene) {
+    if (nullptr == mAssetContext.mScene) {
         return nullptr;
     }
 
-    if (nullptr == mWorld) {
-        mWorld = new World("scene");
+    if (nullptr == mAssetContext.mWorld) {
+        mAssetContext.mWorld = new World("scene");
     }
 
-    m_entity = new Entity(m_absPathWithFile, m_ids, mWorld);
-    if (m_scene->HasMaterials()) {
-        for (ui32 i = 0; i < m_scene->mNumMaterials; ++i) {
-            aiMaterial *currentMat(m_scene->mMaterials[i]);
+    mAssetContext.mEntity = new Entity(mAssetContext.mAbsPathWithFile, mAssetContext.mIds, mAssetContext.mWorld);
+    if (mAssetContext.mScene->HasMaterials()) {
+        for (ui32 i = 0; i < mAssetContext.mScene->mNumMaterials; ++i) {
+            aiMaterial *currentMat = mAssetContext.mScene->mMaterials[i];
             if (nullptr == currentMat) {
                 continue;
             }
@@ -176,28 +191,29 @@ Entity *AssimpWrapper::convertScene() {
         }
     }
 
-    if (m_scene->HasMeshes()) {
-        importMeshes(m_scene->mMeshes, m_scene->mNumMeshes);
+    if (mAssetContext.mScene->HasMeshes()) {
+        importMeshes(mAssetContext.mScene->mMeshes, mAssetContext.mScene->mNumMeshes);
     }
 
-    if (nullptr != m_scene->mRootNode) {
-        importNode(m_scene->mRootNode, nullptr);
+    if (nullptr != mAssetContext.mScene->mRootNode) {
+        importNode(mAssetContext.mScene->mRootNode, nullptr);
     }
 
-    if (nullptr != m_scene->mAnimations) {
-        for (ui32 i = 0; i < m_scene->mNumAnimations; ++i) {
-            importAnimation(m_scene->mAnimations[i]);
+    if (nullptr != mAssetContext.mScene->mAnimations) {
+        for (ui32 i = 0; i < mAssetContext.mScene->mNumAnimations; ++i) {
+            importAnimation(mAssetContext.mScene->mAnimations[i]);
         }
     }
 
-    if (!m_meshArray.isEmpty()) {
-        m_entity->addStaticMeshes(m_meshArray);
+    if (!mAssetContext.mMeshArray.isEmpty()) {
+        RenderComponent *rc = (RenderComponent*) mAssetContext.mEntity->getComponent(ComponentType::RenderComponentType);
+        rc->addStaticMeshArray(mAssetContext.mMeshArray);
     }
 
-    return m_entity;
+    return mAssetContext.mEntity;
 }
 
-static void copyAiMatrix4(const aiMatrix4x4 &aiMat, glm::mat4 &mat) {
+static void copyAiMatrix4x4(const aiMatrix4x4 &aiMat, glm::mat4 &mat) {
     mat[0].x = aiMat.a1;
     mat[0].y = aiMat.a2;
     mat[0].z = aiMat.a3;
@@ -241,7 +257,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
         return;
     }
 
-    TAABB<f32> aabb = m_entity->getAABB();
+    TAABB<f32> aabb = mAssetContext.mEntity->getAABB();
 
     Mat2MeshMap mat2MeshMap;
     for (ui32 meshIndex = 0; meshIndex < numMeshes; ++meshIndex) {
@@ -251,10 +267,11 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
             continue;
         }
 
-        aiMaterial *mat = m_scene->mMaterials[currentMesh->mMaterialIndex];
+        aiMaterial *mat = mAssetContext.mScene->mMaterials[currentMesh->mMaterialIndex];
         if (nullptr == mat) {
             continue;
         }
+        
         Mat2MeshMap::const_iterator it = mat2MeshMap.find(mat);
         MeshIdxArray *miArray = nullptr;
         if (mat2MeshMap.end() == it) {
@@ -267,7 +284,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
     }
 
     for (size_t mat2MeshIdx = 0; mat2MeshIdx < mat2MeshMap.size(); ++mat2MeshIdx) {
-        m_meshArray.add(Mesh::create(1, VertexType::RenderVertex));
+        mAssetContext.mMeshArray.add(Mesh::create(1, VertexType::RenderVertex));
     }
 
     size_t i = 0;
@@ -280,12 +297,12 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
             continue;
         }
 
-        const size_t numVerts = countVertices(*miArray, m_scene);
+        const size_t numVerts = countVertices(*miArray, mAssetContext.mScene);
         vertices.resize(numVerts);
-        Mesh &newMesh = *m_meshArray[i];
+        Mesh &newMesh = *mAssetContext.mMeshArray[i];
         size_t vertexOffset = 0, indexOffset = 0;
         for (unsigned long long meshIndex : *miArray) {
-            currentMesh = m_scene->mMeshes[meshIndex];
+            currentMesh = mAssetContext.mScene->mMeshes[meshIndex];
             if (nullptr == currentMesh) {
                 continue;
             }
@@ -339,7 +356,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
 
                         Bone &bone = bones[l];
                         bone.m_name = currentBone->mName.C_Str();
-                        copyAiMatrix4(currentBone->mOffsetMatrix, bone.m_offsetMatrix);
+                        copyAiMatrix4x4(currentBone->mOffsetMatrix, bone.m_offsetMatrix);
                         VertexWeight *wArray = new VertexWeight[currentBone->mNumWeights];
                         
                         for (ui32 weightIdx = 0; weightIdx < currentBone->mNumWeights; ++weightIdx) {
@@ -349,9 +366,9 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
                             w.m_vertexWeight = aiVW.mWeight;
                         }
                         bone.m_vertexWeights.add(wArray, currentBone->mNumWeights);
-                        const aiNode *node = m_scene->mRootNode->FindNode(bone.m_name.c_str());
+                        const aiNode *node = mAssetContext.mScene->mRootNode->FindNode(bone.m_name.c_str());
                         if (nullptr != node) {
-                            m_bone2NodeMap[bone.m_name.c_str()] = node;
+                            mAssetContext.mBone2NodeMap[bone.m_name.c_str()] = node;
                         }
                     }
                 }
@@ -380,14 +397,14 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
 
             newMesh.createPrimitiveGroup(IndexType::UnsignedInt, indexArray.size(), PrimitiveType::TriangleList, 0);
 
-            const size_t matIdx(currentMesh->mMaterialIndex);
-            Material *osreMat = m_matArray[matIdx];
+            const size_t matIdx = currentMesh->mMaterialIndex;
+            Material *osreMat = mAssetContext.mMatArray[matIdx];
             newMesh.m_material = osreMat;
         }
 
         ++i;
     }
-    m_entity->setAABB(aabb);
+    mAssetContext.mEntity->setAABB(aabb);
 
     for (auto &it : mat2MeshMap) {
         delete it.second;
@@ -402,29 +419,29 @@ void AssimpWrapper::importNode(aiNode *node, Scene::Node *parent) {
         return;
     }
 
-    Node *newNode = new Node(node->mName.C_Str(), m_ids, parent);
+    Node *newNode = new Node(node->mName.C_Str(), mAssetContext.mIds, parent);
 
     // If this is the root-node of the model, set it as the root for the model
-    if (nullptr == m_parent) {
-        m_parent = newNode;
-        m_entity->setNode(newNode);
+    if (nullptr == mAssetContext.mParentNode) {
+        mAssetContext.mParentNode = newNode;
+        mAssetContext.mEntity->setNode(newNode);
     }
 
     if (node->mNumMeshes > 0) {
-        for (ui32 i = 0; i < node->mNumMeshes; i++) {
+        for (ui32 i = 0; i < node->mNumMeshes; ++i) {
             const ui32 meshIdx(node->mMeshes[i]);
-            if (meshIdx >= m_meshArray.size()) {
+            if (meshIdx >= mAssetContext.mMeshArray.size()) {
                 continue;
             }
 
-            Mesh *geo(m_meshArray[meshIdx]);
-            if (nullptr != geo) {
+            Mesh *mesh = mAssetContext.mMeshArray[meshIdx];
+            if (nullptr != mesh) {
                 newNode->addMeshReference(meshIdx);
             }
         }
     }
 
-    for (ui32 i = 0; i < node->mNumChildren; i++) {
+    for (ui32 i = 0; i < node->mNumChildren; ++i) {
         aiNode *currentNode = node->mChildren[i];
         if (nullptr == currentNode) {
             continue;
@@ -444,7 +461,7 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
     aiString texPath; // contains filename of texture
     TextureResourceArray texResArray;
     if (AI_SUCCESS == material->GetTexture(aiTextureType_DIFFUSE, texIndex, &texPath)) {
-        setTexture(m_root, texPath, texResArray, TextureStageType::TextureStage0);
+        setTexture(mAssetContext.mRoot, texPath, texResArray, TextureStageType::TextureStage0);
     } 
 
     String matName = texPath.C_Str();
@@ -454,11 +471,11 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
 
     Material *osreMat = MaterialBuilder::createTexturedMaterial(matName, texResArray, VertexType::RenderVertex);
     if (nullptr == osreMat) {
-        osre_error(Tag, "Err ehilr creating material for " + matName);
+        osre_error(Tag, "Error while creating material for " + matName);
         return;
     }
 
-    m_matArray.add(osreMat);
+    mAssetContext.mMatArray.add(osreMat);
 
     const aiColor4D defaultColor(1, 1, 1, 1);
     aiColor4D diffuse = defaultColor;
@@ -495,6 +512,22 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
 void AssimpWrapper::importAnimation(aiAnimation *animation) {
     if (nullptr == animation) {
         return;
+    }
+}
+
+void AssimpWrapper::postProcess() {
+    if (mAssetContext.mEntity == nullptr) {
+        return;
+    }
+
+    Scene::MeshProcessor processor;
+    RenderComponent *rc = (RenderComponent *) mAssetContext.mEntity->getComponent(ComponentType::RenderComponentType);
+    for (ui32 i = 0; i < rc->getNumGeometry(); ++i) {
+        processor.addMesh(rc->getMeshAt(i));
+    }
+
+    if (processor.execute()) {
+        mAssetContext.mEntity->setAABB(processor.getAABB());
     }
 }
 
