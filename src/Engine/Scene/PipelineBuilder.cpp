@@ -1,8 +1,11 @@
 #include <osre/Scene/PipelineBuilder.h>
 #include <osre/RenderBackend/Pipeline.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 
 namespace OSRE {
 namespace Scene {
+
+using namespace ::OSRE::RenderBackend;
 
 bool parseInclude(const String &line, String &includeFile) {
     String::size_type pos = line.find(ShaderToken::IncludeToken);
@@ -17,8 +20,9 @@ bool parseInclude(const String &line, String &includeFile) {
     return !includeFile.empty();
 }
     
-PipelineBuilder::PipelineBuilder() :
-        mPipeline(nullptr) {
+PipelineBuilder::PipelineBuilder(RenderBackendService *rbService) :
+        mPipeline(nullptr),
+        mRbService(nullptr) {
     // empty
 }
 
@@ -31,7 +35,7 @@ PipelineBuilder &PipelineBuilder::create(const String &name) {
         return *this;
     }
 
-    mPipeline = new RenderBackend::Pipeline(name);
+    mPipeline = new RenderBackend::Pipeline(name, mRbService);
     
     return *this;
 }

@@ -237,8 +237,9 @@ public:
     virtual Common::Ids *getIdContainer() const;
 
     /// @brief  Will create the default pipeline for rendering.
+    /// @param  rbService   The renderbackend service instance.
     /// @return The default pipeline.
-    static RenderBackend::Pipeline *createDefaultPipeline();
+    static RenderBackend::Pipeline *createDefaultPipeline(RenderBackend::RenderBackendService *rbService);
 
     /// @brief  Will create a new render pipeline.
     /// @param  name        [in] The name for the new pipeline. 
@@ -246,9 +247,9 @@ public:
     ///         same name already exists this instance will be returned.
     virtual RenderBackend::Pipeline *createPipeline(const String &name);
 
-    /// @brief 
-    /// @param  
-    virtual void addPipeline(RenderBackend::Pipeline *);
+    /// @brief  Will add a new render pipeline to the render pipelines.
+    /// @param  pipeline    The new pipeline.
+    virtual void addPipeline(RenderBackend::Pipeline *pipeline);
 
     /// @brief  Will search for < pipeline by its name.
     /// @param  name        [in] The name of the pipeline to look for.

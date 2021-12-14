@@ -367,7 +367,7 @@ bool AppBase::onCreate() {
 
     // enable render-back-end
     RenderBackend::CreateRendererEventData *data = new CreateRendererEventData(m_platformInterface->getRootWindow());
-    data->m_pipeline = createDefaultPipeline();
+    data->m_pipeline = createDefaultPipeline(m_rbService);
     addPipeline(data->m_pipeline);
     m_rbService->sendEvent(&RenderBackend::OnCreateRendererEvent, data);
 
@@ -484,8 +484,8 @@ Ids *AppBase::getIdContainer() const {
     return m_ids;
 }
 
-Pipeline *AppBase::createDefaultPipeline() {
-    Pipeline *pipeline = new Pipeline(DefaultPipelines::Pipeline_Default);
+Pipeline *AppBase::createDefaultPipeline(RenderBackendService *rbService) {
+    Pipeline *pipeline = new Pipeline(DefaultPipelines::Pipeline_Default, rbService);
     RenderPass *renderPass = RenderPass::create(RenderPassId, nullptr);
     CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
     renderPass->setCullState(cullState);
@@ -497,7 +497,7 @@ Pipeline *AppBase::createDefaultPipeline() {
 RenderBackend::Pipeline *AppBase::createPipeline(const String &name) {
     Pipeline *p = findPipeline(name);
     if (nullptr == p) {
-        p = new Pipeline(name);
+        p = new Pipeline(name, m_rbService);
         mPipelines.add(p);
     }
 

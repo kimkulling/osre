@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "osre_testcommon.h"
 #include <osre/RenderBackend/Pipeline.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 
 namespace OSRE {
 namespace UnitTest {
@@ -30,11 +31,13 @@ using namespace ::OSRE::RenderBackend;
 
 class PipelineTest : public ::testing::Test {
 protected:
+    RenderBackendService *mRbService;
     RenderPass *m_pass1;
     RenderPass *m_pass2;
 
 protected:
     void SetUp() override {
+        mRbService = new RenderBackendService;
         m_pass1 = RenderPass::create(RenderPassId, nullptr);
         m_pass2 = RenderPass::create(DbgPassId, nullptr);
     }
@@ -42,13 +45,14 @@ protected:
     void TearDown() override {
         RenderPass::destroy(m_pass2);
         RenderPass::destroy(m_pass1);
+        delete mRbService;
     }
 };
 
 TEST_F( PipelineTest, create_success ) {
     bool ok( true );
     try {
-        Pipeline *pipeline = new Pipeline("p1");
+        Pipeline *pipeline = new Pipeline("p1", mRbService);
         delete (pipeline);
     } catch ( ... ) {
         ok = false;
@@ -57,7 +61,7 @@ TEST_F( PipelineTest, create_success ) {
 }
 
 TEST_F( PipelineTest, accessPass_success ) {
-    Pipeline *pipeline = new Pipeline("p1");
+    Pipeline *pipeline = new Pipeline("p1", mRbService);
 
     size_t numPasses = pipeline->getNumPasses();
     EXPECT_EQ( 0u, numPasses );
@@ -71,7 +75,7 @@ TEST_F( PipelineTest, accessPass_success ) {
 }
 
 TEST_F( PipelineTest, iterateThroughPasses_success ) {
-    Pipeline *pipeline = new Pipeline("p1");
+    Pipeline *pipeline = new Pipeline("p1", mRbService);
     pipeline->addPass(m_pass1);
     pipeline->addPass(m_pass2);
 

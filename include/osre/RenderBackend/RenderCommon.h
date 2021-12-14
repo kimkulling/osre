@@ -785,12 +785,16 @@ struct PassData {
     const c8 *m_id;
     FrameBuffer *m_renderTarget;
     CPPCore::TArray<RenderBatchData *> m_geoBatches;
+    glm::mat4 mView;
+    glm::mat4 mProj;
     bool m_isDirty;
 
     PassData(const c8 *id, FrameBuffer *fb) :
             m_id(id),
             m_renderTarget(fb),
             m_geoBatches(),
+            mView(1),
+            mProj(1),
             m_isDirty(true) {
         // empty
     }
