@@ -45,7 +45,7 @@ static const ui32 MinorProjectVerion = 1;
 Project::Project() :
         Object("App/Project"),
         mProjectName(),
-        mStage() {
+        mStage("") {
     // empty
 }
 
@@ -251,7 +251,7 @@ static bool saveStage(const String &name, const Stage &stage, StageData *sd) {
     setNameChunk(stageName, sd->mStageName);
     sd->mMajorVersion = MajorProjectVerion;
     sd->mMinorVersion = MinorProjectVerion;
-    World *world = stage.getCurrentWorld();
+    World *world = stage.getActiveWorld();
     if (world == nullptr) {
         return true;
     }

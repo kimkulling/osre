@@ -45,6 +45,7 @@ SET( app_inc
     ${HEADER_PATH}/App/AssetsCommon.h
     ${HEADER_PATH}/App/AssetRegistry.h
     ${HEADER_PATH}/App/AssimpWrapper.h
+    ${HEADER_PATH}/App/Stage.h
     ${HEADER_PATH}/App/World.h
 )
 
@@ -57,6 +58,7 @@ SET( app_src
     App/AssetRegistry.cpp
     App/AssimpWrapper.cpp
     App/World.cpp
+    App/Stage.cpp
     App/MouseEventListener.cpp
     App/MouseEventListener.h
 )

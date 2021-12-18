@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Component.h>
 #include <osre/App/Entity.h>
 #include <osre/App/World.h>
+#include <osre/App/Stage.h>
 #include <osre/Common/Ids.h>
 #include <osre/IO/Uri.h>
 #include <osre/Common/BaseMath.h>
@@ -92,11 +93,12 @@ protected:
         Rect2ui windowsRect;
         rootWindow->getWindowsRect(windowsRect);
 
-        Camera *camera = getActiveWorld()->addCamera("cam1");
+        Camera *camera = getStage()->getActiveWorld()->addCamera("cam1");
         camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.0001f, 1000.f);
-        mEntity = new App::Entity("instance", getActiveWorld()->getIds(), getActiveWorld());
+        World *world = getStage()->getActiveWorld();
+        mEntity = new App::Entity("instance", world->getIds(), world);
         Scene::MeshBuilder meshBuilder;
-        AppBase::getActiveWorld()->addEntity(mEntity);
+        AppBase::getStage()->getActiveWorld()->addEntity(mEntity);
 //        RenderBackend::Mesh *mesh = meshBuilder.allocCube(VertexType::RenderVertex, 1, 2, 3, BufferAccessType::ReadWrite).getMesh();
         RenderBackend::Mesh *mesh = meshBuilder.allocTriangles(VertexType::RenderVertex, BufferAccessType::ReadWrite).getMesh();
         if (nullptr != mesh) {
@@ -106,7 +108,7 @@ protected:
             process.addMesh(mesh);
             process.execute();
             Scene::Node::AABB aabb = process.getAABB();
-            Node *root = getActiveWorld()->getRootNode();
+            Node *root = getStage()->getActiveWorld()->getRootNode();
             Node *geoNode = root->createChild("mesh_node");
             geoNode->setAABB(aabb);
             camera->observeBoundingBox(aabb);

@@ -57,6 +57,7 @@ World::World(const String &worldName, RenderMode renderMode) :
         m_activeCamera(nullptr),
         mRoot(nullptr),
         m_ids(),
+        mPipeline(nullptr),
         m_renderMode(renderMode) {
     // empty
 }
@@ -180,6 +181,7 @@ void World::update(Time dt) {
 
 void World::draw(RenderBackendService *rbSrv) {
     osre_assert(nullptr != rbSrv);
+
 
     rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
     rbSrv->beginRenderBatch("b1");

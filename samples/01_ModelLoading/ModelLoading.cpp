@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Component.h>
 #include <osre/App/Entity.h>
 #include <osre/App/World.h>
+#include <osre/App/Stage.h>
 #include <osre/IO/Uri.h>
 #include <osre/Common/BaseMath.h>
 #include <osre/Platform/AbstractWindow.h>
@@ -75,7 +76,7 @@ public:
 
 protected:
     void loadAsset(const IO::Uri &modelLoc) {
-        AssimpWrapper assimpWrapper(*getIdContainer(), getActiveWorld());
+        AssimpWrapper assimpWrapper(*getIdContainer(), getStage()->getActiveWorld());
         if (!assimpWrapper.importAsset(modelLoc, 0)) {
             return;
         }
@@ -91,7 +92,7 @@ protected:
 
         Rect2ui windowsRect;
         rootWindow->getWindowsRect(windowsRect);
-        World *world = getActiveWorld();
+        World *world = getStage()->getActiveWorld();
         m_camera = world->addCamera("camera");
         m_camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
         Entity *entity = assimpWrapper.getEntity();

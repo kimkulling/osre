@@ -38,6 +38,7 @@ namespace OSRE {
 namespace App {
 class Project;
 class World;
+
 } // namespace App
 
 namespace IO {

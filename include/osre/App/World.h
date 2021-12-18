@@ -93,9 +93,8 @@ public:
     /// @return 
     Entity *getEntityByName( const String &name ) const;
 
-    void getEntityArray( CPPCore::TArray<Entity *> &entities ) {
-        entities = m_entities;
-    }
+    ///	@brief
+    void getEntityArray(CPPCore::TArray<Entity *> &entities);
 
     ///	@brief
     /// @param root 
@@ -121,6 +120,7 @@ public:
     /// @return The Id container.    
     const Common::Ids &getIds() const;
     
+
 private:
     CPPCore::TArray<Scene::Camera*> m_views;
     CPPCore::THashMap<ui32, Scene::Camera*> m_lookupViews;
@@ -128,6 +128,7 @@ private:
     Scene::Camera *m_activeCamera;
     Scene::Node *mRoot;
     Common::Ids m_ids;
+    RenderBackend::Pipeline *mPipeline;
     RenderMode m_renderMode;
 };
 
@@ -137,6 +138,10 @@ inline size_t World::getNumCameras() const {
 
 inline Scene::Node *World::getRootNode() const {
     return mRoot;
+}
+
+inline void World::getEntityArray(CPPCore::TArray<Entity *> &entities) {
+    entities = m_entities;
 }
 
 inline RenderMode World::getRenderMode() const {

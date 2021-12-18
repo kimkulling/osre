@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/ResourceCacheService.h>
 #include <osre/App/ServiceProvider.h>
 #include <osre/App/World.h>
+#include <osre/App//Stage.h>
 #include <osre/Common/Environment.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/Debugging/osre_debugging.h>
@@ -134,7 +135,7 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         m_timer(nullptr),
         m_rbService(nullptr),
         m_worlds(),
-        m_activeWorld(nullptr),
+        mStage(nullptr),
         mPipelines(),
         m_mouseEvListener(nullptr),
         m_keyboardEvListener(nullptr),
@@ -206,11 +207,11 @@ void AppBase::resize(i32 x, i32 y, i32 w, i32 h) {
 void AppBase::requestNextFrame() {
     osre_assert(nullptr != m_rbService);
 
-    if (nullptr == m_activeWorld) {
+    if (mStage == nullptr) {
         return;
     }
 
-    m_activeWorld->draw(m_rbService);
+    mStage->draw(m_rbService);
     m_rbService->update();
 }
 
@@ -232,51 +233,12 @@ Properties::Settings *AppBase::getSettings() const {
     return m_settings;
 }
 
-World *AppBase::createWorld(const String &name) {
-    if (name.empty()) {
-        osre_debug(Tag, "Invalid name for a new world.");
-        return nullptr;
-    }
-
-    m_activeWorld = new World(name);
-    m_worlds.add(m_activeWorld);
-
-    return m_activeWorld;
-}
-
-World *AppBase::findWorld(const String &name) const {
-    if (m_worlds.isEmpty()) {
-        return nullptr;
-    }
-
-    for (size_t i = 0; i < m_worlds.size(); ++i) {
-        if (m_worlds[i]->getName() == name) {
-            return m_worlds[i];
-        }
-    }
-
-    return nullptr;
-}
-
-bool AppBase::setActiveWorld(const String &name) {
-    if (name.empty()) {
-        return false;
-    }
-
-    m_activeWorld = findWorld(name);
-    return (nullptr != m_activeWorld);
-}
-
-World *AppBase::getActiveWorld() const {
-    return m_activeWorld;
-}
-
 Scene::Camera *AppBase::setActiveCamera(Scene::Camera *view) {
-    if (nullptr == m_activeWorld) {
+    if (nullptr == mStage) {
         osre_debug(Tag, "No world to activate state to.");
         return nullptr;
     }
-    return m_activeWorld->setActiveCamera(view);
+    return getStage()->getActiveWorld()->setActiveCamera(view);
 }
 
 void AppBase::requestShutdown() {
@@ -360,6 +322,11 @@ bool AppBase::onCreate() {
         return false;
     }
 
+    // Create our world
+    mStage = new Stage("stage");
+    mStage->createWorld("world");
+
+
     const String &api = m_rbService->getSettings()->getString(Properties::Settings::RenderAPI);
     m_environment->addStrVar("api", api.c_str());
 
@@ -373,14 +340,9 @@ bool AppBase::onCreate() {
 
     m_timer = Platform::PlatformInterface::getInstance()->getTimer();
 
-    // create our world
     RenderMode mode = static_cast<RenderMode>(m_settings->get(Properties::Settings::RenderMode).getInt());
-    m_activeWorld = new World("world", mode);
-
     Scene::MaterialBuilder::create();
-
     ResourceCacheService *rcSrv = new ResourceCacheService;
-
 
     // Setup onMouse event-listener
     AbstractPlatformEventQueue *evHandler = m_platformInterface->getPlatformEventHandler();
@@ -439,8 +401,8 @@ bool AppBase::onDestroy() {
 
     Scene::MaterialBuilder::destroy();
 
-    delete m_activeWorld;
-    m_activeWorld = nullptr;
+    delete mStage;
+    mStage = nullptr;
 
     for (ui32 i = 0; i < mPipelines.size(); ++i) {
         delete mPipelines[i];
@@ -463,16 +425,16 @@ void AppBase::onUpdate() {
     i64 microsecs = m_timer->getMilliCurrentSeconds() * Conversion2Micro;
     Time dt(microsecs);    
 
-    if (nullptr != m_activeWorld) {
-        m_activeWorld->update(dt);
+    if (nullptr != mStage) {
+        mStage->update(dt);
     }
 
     m_keyboardEvListener->clearKeyMap();
 }
 
 void AppBase::onRender() {
-    if (nullptr != m_activeWorld) {
-        m_activeWorld->draw(m_rbService);
+    if (nullptr != mStage) {
+        mStage->draw(m_rbService);
     }
 }
 

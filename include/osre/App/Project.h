@@ -24,46 +24,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Object.h>
 #include <osre/Scene/SceneCommon.h>
+#include <osre/App/Stage.h>
 
 // Forward declarations ---------------------------------------------------------------------------
 namespace OSRE {
 namespace App {
 	
 class World;
-
-class Stage {
-public:
-    Stage() : mWorlds() {
-        // empty
-    }
-
-    ~Stage() {
-        // empty
-    }
-
-    bool isEmpty() const {
-        return mWorlds.mCurrentWorld == nullptr;
-    }
-
-    World *getCurrentWorld() const {
-        return mWorlds.mCurrentWorld;
-    }
-
-private:
-    struct Worlds {
-        World *mCurrentWorld;
-        World *mPrev;
-        World *mNext;
-
-        Worlds() :
-                mCurrentWorld( nullptr ),
-                mPrev( nullptr ),
-                mNext( nullptr ) {
-            // empty
-        }
-    };
-    Worlds mWorlds;
-};
 
 constexpr i32 NotInited = -1;
 

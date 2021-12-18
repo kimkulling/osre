@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AssimpWrapper.h>
 #include <osre/App/AssetRegistry.h>
 #include <osre/App/Entity.h>
+#include <osre/App/Stage.h>
 #include <osre/IO/Directory.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/File.h>
@@ -313,7 +314,7 @@ bool OsreEdApp::onCreate() {
 
     AppBase::getRenderBackendService()->enableAutoResizing(false);
 
-    World *world = getActiveWorld();
+    World *world = getStage()->getActiveWorld();
     if (nullptr == world) {
         return false;
     }
@@ -353,7 +354,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     ProgressReporter reporter(rootWindow);
     reporter.start();
     reporter.update(10);
-    AssimpWrapper assimpWrapper(*getIdContainer(), getActiveWorld());
+    AssimpWrapper assimpWrapper(*getIdContainer(), getStage()->getActiveWorld());
     if (!assimpWrapper.importAsset(modelLoc, 0)) {
         reporter.stop();
         return;
@@ -367,7 +368,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
 
     Rect2ui windowsRect;
     rootWindow->getWindowsRect(windowsRect);
-    World *world = getActiveWorld();
+    World *world = getStage()->getActiveWorld();
     mSceneData.mCamera = world->addCamera("camera_1");
     mSceneData.mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
     Entity *entity = assimpWrapper.getEntity();
