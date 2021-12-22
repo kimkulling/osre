@@ -30,13 +30,7 @@ namespace OSRE {
 
 using namespace ::OSRE::RenderBackend;
 
-void drawLabel(Label &label, Style &style) {
-    Scene::MeshBuilder mb;
-    Rect2ui r = label.mRect;
-    mb.allocTextBox(r.getX1(), r.getY1(), style.DefaultFontSize, label.mLabel, BufferAccessType::ReadWrite);
-}
-
-ProgressBar *createProgressBar(int id, HWND hWnd, const Rect2ui &dimension) {
+ProgressBar *UIElements::createProgressBar(int id, HWND hWnd, const Rect2ui &dimension) {
     ProgressBar *pb = new ProgressBar;
     pb->mHWnd = CreateWindowEx(
             0,
@@ -68,11 +62,11 @@ ProgressBar *createProgressBar(int id, HWND hWnd, const Rect2ui &dimension) {
     return pb;
 }
 
-void updateProgressBar(ProgressBar *pb, ui32 step) {
+void UIElements::updateProgressBar(ProgressBar *pb, ui32 step) {
     SendMessage(pb->mHWnd, PBM_SETPOS, (WPARAM)step, 0);
 }
     
-void deleteProgressBar(ProgressBar *pb) {
+void UIElements::deleteProgressBar(ProgressBar *pb) {
     ::CloseWindow(pb->mHWnd);
     delete pb;
 }

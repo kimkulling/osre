@@ -32,9 +32,12 @@ namespace OSRE {
 struct ProgressBar;
         
 // OS-specific API
-ProgressBar *createProgressBar(int id, HWND hWnd, const Rect2ui &dimension);
-void updateProgressBar(ProgressBar *pb, ui32 step);
-void deleteProgressBar(ProgressBar *pb);
+class UIElements {
+public:
+    static ProgressBar *createProgressBar(int id, HWND hWnd, const Rect2ui &dimension);
+    static void updateProgressBar(ProgressBar *pb, ui32 step);
+    static void deleteProgressBar(ProgressBar *pb);
+};
 
 struct Widget {
     Widget *mParent;

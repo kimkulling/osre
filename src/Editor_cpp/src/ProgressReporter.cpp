@@ -41,7 +41,7 @@ ProgressReporter::ProgressReporter(Platform::AbstractWindow *window) :
 
 ProgressReporter::~ProgressReporter() {
     if (nullptr != mProgressBar) {
-        deleteProgressBar(mProgressBar);
+        UIElements::deleteProgressBar(mProgressBar);
         mProgressBar = nullptr;
     }
     mWindow = nullptr;
@@ -65,20 +65,20 @@ void ProgressReporter::start() {
         return;
     }
 
-    mProgressBar = createProgressBar(1, w->getHWnd(), r);
+    mProgressBar = UIElements::createProgressBar(1, w->getHWnd(), r);
 }
 
 void ProgressReporter::stop() {
     if (nullptr != mWindow) {
         mWindow->setWindowsMouseCursor(Platform::DefaultMouseCursorType::ComonCursor);
-        deleteProgressBar(mProgressBar);
+        UIElements::deleteProgressBar(mProgressBar);
         mProgressBar = nullptr;
     }
 }
 
 void ProgressReporter::update(i32 percent) {
     mProgress = percent;
-    updateProgressBar(mProgressBar, percent);
+    UIElements::updateProgressBar(mProgressBar, percent);
 }
 
 void ProgressReporter::reset() {
