@@ -42,6 +42,7 @@ Node::Node(const String &name, Ids &ids, Node *parent) :
         m_meshRefererenceArray(),
         m_isActive(true),
         m_ids(&ids),
+        mPropertyArray(),
         m_propMap(),
         m_aabb(),
         m_localTransform() {
@@ -169,8 +170,17 @@ void Node::render(RenderBackendService *renderBackendSrv) {
 }
 
 void Node::setProperty(Properties::Property *prop) {
+    if (prop == nullptr) {
+        return;
+    }
+
     const ui32 hashId = StringUtils::hashName(prop->getPropertyName().c_str());
     m_propMap.insert(hashId, prop);
+    mPropertyArray.add(prop);
+}
+
+void Node::getPropertyArray( ::CPPCore::TArray<Properties::Property *> &propArray ) {
+    propArray = mPropertyArray;
 }
 
 Properties::Property *Node::getProperty(const String name) const {

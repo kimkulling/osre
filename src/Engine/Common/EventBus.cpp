@@ -24,12 +24,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Event.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Common/AbstractEventHandler.h>
-#include <cppcore/Memory/TPoolAllocator.h>
+#include <cppcore/Memory/TStackAllocator.h>
 
 namespace OSRE {
 namespace Common {
 
-CPPCore::TPoolAllocator<QueueEntry> QueueEntryAlloctor;
+CPPCore::TStackAllocator<QueueEntry> QueueEntryAlloctor;
 
 EventBus::EventBus() :
         mSuscribedHandler(), mQueueEntryArray(), mCreated(false) {
@@ -53,7 +53,6 @@ bool EventBus::create() {
 
 bool EventBus::isCreated() const {
     return mCreated;
-
 }
 
 bool EventBus::destroy() {
@@ -89,9 +88,11 @@ void EventBus::update() {
             }
         }
     }
+    mQueueEntryArray.resize(0);
+    QueueEntryAlloctor.reset();
 }
 
-void EventBus::suscribeEventHandler(AbstractEventHandler *handler, const Event &ev) {
+void EventBus::subscribeEventHandler(AbstractEventHandler *handler, const Event &ev) {
     osre_assert(mCreated);
     if (nullptr == handler) {
         return;
@@ -109,8 +110,9 @@ void EventBus::suscribeEventHandler(AbstractEventHandler *handler, const Event &
     ehArray->add(handler);
 }
 
-void EventBus::unsuscribeEventHandler(AbstractEventHandler *handler, const Event &ev) {
+void EventBus::unsubscribeEventHandler(AbstractEventHandler *handler, const Event &ev) {
     osre_assert(mCreated);
+
     if (nullptr == handler) {
         return;
     }
@@ -126,9 +128,10 @@ void EventBus::unsuscribeEventHandler(AbstractEventHandler *handler, const Event
     }
 }
 
-void EventBus::enqueueEvent( const Event &ev, const EventData *eventData ) {
+void EventBus::publish( const Event &ev, const EventData *eventData ) {
     osre_assert(mCreated);
-    QueueEntry *entry = QueueEntryAlloctor.alloc();
+
+    QueueEntry *entry = QueueEntryAlloctor.alloc(1);
     entry->mEvent = &ev;
     entry->mEventData = eventData;
     mQueueEntryArray.add(entry);

@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-#include <osre/Math/BaseMath.h>
+#include <osre/Common/BaseMath.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -34,7 +34,6 @@ class OGLRenderContext;
 class OGLRenderBackend;
 class OGLShader;
 class RenderCmdBuffer;
-//class HWBufferManager;
 class OGLRenderEventHandler;
 class Mesh;
 

@@ -54,12 +54,12 @@ public:
         // empty
     }
 
-    size_t load( const IO::Uri &uri, Shader *shader ) override {
+    size_t load(const IO::Uri&, Shader*) override {
         mCalled++;
         return 0;
     }
     
-    bool unload(Shader *shader) override {
+    bool unload(Shader*) override {
         mCalled--;
         return true;
     }

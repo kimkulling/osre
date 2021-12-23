@@ -128,7 +128,7 @@ public:
     }
 
 protected:
-    i32 run() {
+    i32 run() override {
         osre_assert(nullptr != m_activeJobQueue);
 
         osre_debug(Tag, "SystemThread::run");

@@ -279,7 +279,7 @@ OGLBuffer *OGLRenderBackend::createBuffer(BufferType type) {
     return buffer;
 }
 
-OGLBuffer *OGLRenderBackend::getBufferById(ui32 geoId) {
+OGLBuffer *OGLRenderBackend::getBufferById(guid geoId) {
     OGLBuffer *buffer(nullptr);
     for (ui32 i = 0; i < mBuffers.size(); i++) {
         if (mBuffers[i]->m_geoId == geoId) {

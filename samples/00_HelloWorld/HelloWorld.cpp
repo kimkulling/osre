@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Component.h>
 #include <osre/App/Entity.h>
 #include <osre/App/World.h>
+#include <osre/App/Stage.h>
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
@@ -70,7 +71,7 @@ protected:
         }
 
         AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
-        World *world = getActiveWorld();
+        World *world = getStage()->getActiveWorld();
         mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
         Scene::Camera *camera = world->addCamera("camera_1");
         ui32 w, h;
@@ -80,7 +81,8 @@ protected:
         Scene::MeshBuilder meshBuilder;
         RenderBackend::Mesh *mesh = meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly).getMesh();
         if (nullptr != mesh) {
-            mEntity->addStaticMesh(mesh);
+            RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
+            rc->addStaticMesh(mesh);
             world->addEntity(mEntity);            
             camera->observeBoundingBox(mEntity->getAABB());
         }

@@ -45,17 +45,52 @@ struct QueueEntry {
     }
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Engine
+///
+///	@brief	This class is used to provide global published events to other subscriptions.
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT EventBus {
 public:
+    /// @brief  The class constructor.
     EventBus();
+
+    ///	@brief  The class destructor.
     ~EventBus();
+
+    ///	@brief  Will create the event bus, allocator will get prepared.
+    /// @return true if successful, false in case of an error.
     bool create();
+
+    /// @brief  Returns the creation state of the event bus.
+    /// @return true for created, false for not.
     bool isCreated() const;
+
+    ///	@brief  Will destroy the event bus, all events will be releases.
+    /// @return true if successful, false if not.
     bool destroy();
+
+    /// @brief  Performs an update, all event-subscribers will get their callback.
     void update();
-    void suscribeEventHandler(AbstractEventHandler *handler, const Event &ev);
-    void unsuscribeEventHandler(AbstractEventHandler *handler, const Event &ev);
-    void enqueueEvent(const Event &ev, const EventData *eventData);
+    
+    ///	@brief  Will subscribe an event-handler to a given event type.
+    /// @param[in] handler  The handler to subscribe.
+    /// @param[in] ev       The event type.
+    void subscribeEventHandler(AbstractEventHandler *handler, const Event &ev);
+    
+    /// @brief  Will unsubscribe an event-handler from a given event type.
+    /// @param[in] handler  The handler to subscribe.
+    /// @param[in] ev       The event type.
+    void unsubscribeEventHandler(AbstractEventHandler *handler, const Event &ev);
+    
+    ///	@brief  Will publish an event with its data, all subscribers will get notified.
+    /// @param[in] ev           The event type
+    /// @param[in] eventData    The event data
+    void publish(const Event &ev, const EventData *eventData);
+
+    // No copying.
+    EventBus &operator = (const EventBus &) = delete;
+    EventBus(const EventBus &) = delete;
 
 private:
     using EventHandlerArray = CPPCore::TArray<AbstractEventHandler*>;

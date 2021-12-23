@@ -86,10 +86,15 @@ void Camera::draw(RenderBackendService *rbSrv) {
 }
 
 void Camera::observeBoundingBox(const TAABB<f32> &aabb) {
-    const f32 diam = aabb.getDiameter();
-    const Vec3f center = aabb.getCenter();
+    f32 diam = aabb.getDiameter();
+    const f32 maxDist = m_far - m_near;
+    if (diam > maxDist) {
+        diam = maxDist - 100.0f;
+    }
 
-    glm::vec3 eye(-diam / 2, -diam / 2, diam / 2), up(0, 0, 1);
+    const Vec3f center = aabb.getCenter();
+    
+    glm::vec3 eye(-diam *0.5f, -diam *0.5f, diam *0.5f), up(0, 0, 1);
     glm::vec3 c(center.getX(), center.getY(), center.getZ());
 
     setLookAt(eye, c, up);
@@ -142,10 +147,7 @@ void Camera::onUpdate(Time dt) {
 }
 
 void Camera::onRender(RenderBackendService *rbSrv) {
-    if (nullptr == rbSrv) {
-        osre_debug(Tag, "Pointer to renderbackend service is nullptr.");
-        return;
-    }
+    osre_assert(nullptr != rbSrv);
 
     rbSrv->setMatrix(MatrixType::View, m_view);
     rbSrv->setMatrix(MatrixType::Projection, m_projection);

@@ -25,5 +25,5 @@ else()
     ADD_LIBRARY( Unzip SHARED ${unzip_src} )
 endif()
 
-target_link_libraries ( Unzip zlib ) 
+target_link_libraries ( Unzip zlibstatic ) 
 set_target_properties(  Unzip PROPERTIES FOLDER ThirdParty )

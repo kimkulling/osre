@@ -87,8 +87,11 @@ size_t ShaderLoader::load( const IO::Uri &uri, Shader *shader ) {
     CPPCore::TArray<c8> buffer;
     buffer.resize(size);
     size_t readSize = stream->read( &buffer[0], size);
-    String shaderSrc = &buffer[0];
+    if (readSize == 0) {
+        return 0;
+    }
 
+    String shaderSrc = &buffer[0];
     ShaderType type = Shader::getTypeFromeExtension(ext);
     if (type == ShaderType::InvalidShaderType) {
         stream->close();

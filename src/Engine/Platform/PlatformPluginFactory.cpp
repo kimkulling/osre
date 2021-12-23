@@ -31,6 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #    include <src/Engine/Platform/win32/Win32DynamicLoader.h>
 #    include <src/Engine/Platform/win32/Win32EventQueue.h>
 #    include <src/Engine/Platform/win32/Win32Window.h>
+#    include <src/Engine/Platform/win32/Win32OSService.h>
 #else
 #    include <src/Engine/Platform/sdl2/SDL2DynamicLoader.h>
 #    include <src/Engine/Platform/sdl2/SDL2EventQueue.h>
@@ -39,6 +40,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #    include <src/Engine/Platform/sdl2/SDL2SystemInfo.h>
 #    include <src/Engine/Platform/sdl2/SDL2Timer.h>
 #    include <src/Engine/Platform/sdl2/SDL2Window.h>
+#    include <src/Engine/Platform/sdl2/SDL2OSService.h>
 #endif
 
 namespace OSRE {
@@ -142,6 +144,17 @@ AbstractSystemInfo *PlatformPluginFactory::createSystemInfo() {
 #endif // OSRE_WINDOWS
 
     return sysInfo;
+}
+
+AbstractOSService *PlatformPluginFactory::createOSService() {
+    AbstractOSService *osService(nullptr);
+#ifdef OSRE_WINDOWS
+    osService = new Win32OSService;
+#else
+    osService = new SDL2OSService;
+#endif
+
+    return osService;
 }
 
 } // Namespace Platform

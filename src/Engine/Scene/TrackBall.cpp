@@ -20,7 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Math/BaseMath.h>
+#include <osre/Common/BaseMath.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Scene/TrackBall.h>
 #include <osre/Scene/Node.h>
@@ -139,7 +139,7 @@ void TrackBall::mapToSphere(const Vec2f *pNewPt, Vec3f *newVector) {
 
 void TrackBall::computeRotation() {
     Vec3f perp = mStartVector.crossProduct(mEndVector);
-    if (perp.getLength() > Math::BaseMath::getSPEPS()) {
+    if (perp.getLength() > Common::BaseMath::getSPEPS()) {
         m_rotation.x = perp.getX();
         m_rotation.y = perp.getX();
         m_rotation.z = perp.getZ();

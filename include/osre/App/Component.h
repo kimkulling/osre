@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/TObjPtr.h>
-#include <osre/Math/BaseMath.h>
+#include <osre/Common/BaseMath.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/SceneCommon.h>
 
@@ -91,6 +91,7 @@ public:
     ~RenderComponent() override;
     size_t getNumGeometry() const;
     RenderBackend::Mesh *getMeshAt(size_t idx) const;
+    void getMeshArray(RenderBackend::MeshArray &array);
     void addStaticMesh(RenderBackend::Mesh *geo);
     void addStaticMeshArray(const RenderBackend::MeshArray &array);
 

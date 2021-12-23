@@ -31,6 +31,7 @@ class SDL2OSService : public AbstractOSService {
 public:
     SDL2OSService();
     ~SDL2OSService() override;
+    void getMonitorResolution(ui32 &width, ui32 &heigt) override;
     void showCursor(bool enabled) override;
 };
 

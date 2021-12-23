@@ -44,14 +44,14 @@ INCLUDE_DIRECTORIES( BEFORE
     include/
     /usr/include/SDL2/
     /usr/include/
-    contrib/assimp/include
-    contrib/glm/
-    contrib/soil/src
+    ${CMAKE_HOME_DIRECTORY}/contrib/assimp/include
+    ${CMAKE_HOME_DIRECTORY}/contrib/glm/
+    ${CMAKE_HOME_DIRECTORY}/contrib/soil/src
     ${CMAKE_HOME_DIRECTORY}/contrib/glew/include
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/include
+    ${CMAKE_HOME_DIRECTORY}/contrib/assimp/contrib/zlib
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/include
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/
-    ${CMAKE_HOME_DIRECTORY}/contrib/zlib
     ${CMAKE_HOME_DIRECTORY}/contrib/jsoncpp-1.8.4/include
     ${CMAKE_HOME_DIRECTORY}/contrib/lua-5.3.5/src
     "c:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include"
@@ -134,15 +134,15 @@ IF ( OSRE_BUILD_SAMPLES )
 ENDIF(OSRE_BUILD_SAMPLES)
 
 ADD_SUBDIRECTORY( contrib/glew )
+
+set(CPPCORE_BUILD_UNITTESTS OFF CACHE BOOL "no cppcore unittests")
 ADD_SUBDIRECTORY( contrib/cppcore )
-ADD_SUBDIRECTORY( contrib/zlib )
 ADD_SUBDIRECTORY( contrib/unzip )
 ADD_SUBDIRECTORY( contrib/soil )
 set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "no assimp tools")
 set(ASSIMP_BUILD_ZLIB ON CACHE BOOL "no assimp tools" )
 set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "no assimp tools" )
 ADD_SUBDIRECTORY( contrib/assimp )
-ADD_SUBDIRECTORY( contrib/jsoncpp-1.8.4 )
 
 # Include the doc component
 IF( OSRE_BUILD_DOC )

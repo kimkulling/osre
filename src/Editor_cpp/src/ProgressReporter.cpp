@@ -23,16 +23,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ProgressReporter.h"
 
 #include <osre/Platform/AbstractWindow.h>
+#include "src/Engine/Platform/win32/Win32Window.h"
+#include "Gui/UIElements.h"
+#include <osre/Platform/Windows/MinWindows.h>
+#include <osre/Platform/AbstractOSService.h>
+#include <osre/Platform/PlatformInterface.h>
 
 namespace OSRE {
 namespace Editor {
 
 ProgressReporter::ProgressReporter(Platform::AbstractWindow *window) :
-        mWindow(window) {
-
+        mWindow(window),
+        mProgress(0),
+        mProgressBar(nullptr) {
+    // empty
 }
 
 ProgressReporter::~ProgressReporter() {
+    if (nullptr != mProgressBar) {
+        UIElements::deleteProgressBar(mProgressBar);
+        mProgressBar = nullptr;
+    }
     mWindow = nullptr;
 }
 
@@ -40,17 +51,40 @@ void ProgressReporter::start() {
     if (nullptr != mWindow) {
         mWindow->setWindowsMouseCursor(Platform::DefaultMouseCursorType::WaitCursor);
     }
+    
+    if (nullptr != mProgressBar) {
+        return;
+    }
+    ui32 width, heihgt;
+    Platform::PlatformInterface::getInstance()->getOSServices()->getMonitorResolution(width, heihgt);
+    ui32 x = width / 2 - 50;
+    ui32 y = heihgt / 2 - 10;
+    Rect2ui r(x, y, 300, 20);
+    Platform::Win32Window *w = (Platform::Win32Window*) mWindow;
+    if (nullptr == w) {
+        return;
+    }
+
+    mProgressBar = UIElements::createProgressBar(1, w->getHWnd(), r);
 }
 
 void ProgressReporter::stop() {
     if (nullptr != mWindow) {
         mWindow->setWindowsMouseCursor(Platform::DefaultMouseCursorType::ComonCursor);
+        UIElements::deleteProgressBar(mProgressBar);
+        mProgressBar = nullptr;
     }
 }
 
-void ProgressReporter::update() {
-
+void ProgressReporter::update(i32 percent) {
+    mProgress = percent;
+    UIElements::updateProgressBar(mProgressBar, percent);
 }
+
+void ProgressReporter::reset() {
+    mProgress = 0;
+}
+
 
 } // namespace Editor
 } // namespace OSRE 

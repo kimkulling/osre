@@ -27,21 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Properties {
 
-Property::Property( ui32 id, const String &name, const CPPCore::Variant &value ) 
-: m_Id( id )
-, m_Name( name )
-, m_Value( value ) {
-    // empty
-}
-
-Property::Property( const Property &rhs ) 
-: m_Id( rhs.m_Id )
-, m_Name( rhs.m_Name )
-, m_Value( rhs.m_Value ) {
-    // empty
-}
-
-Property::~Property() {
+Property::Property( ui32 id, const String &name, const CPPCore::Variant &value ) : 
+        m_Id( id ), m_Name( name ), m_Value( value ) {
     // empty
 }
 
@@ -69,17 +56,6 @@ ui32 Property::getPropertyId() const {
 
 const CPPCore::Variant &Property::getValue( ) const {
     return m_Value;
-}
-
-Property &Property::operator = ( const Property &rhs ) {
-    if ( rhs == *this ) {
-        return *this;
-    }
-
-    m_Id = rhs.m_Id;
-    m_Value = rhs.m_Value;
-
-    return *this;
 }
 
 bool Property::operator == ( const Property &rhs ) const {

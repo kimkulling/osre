@@ -34,9 +34,9 @@ static const i32 NeedsUpdate = 1;
 
 MeshProcessor::MeshProcessor() :
         AbstractProcessor(),
-        m_geoArray(),
-        m_aabb(),
-        m_dirty(0) {
+        mMeshArray(),
+        mAabb(),
+        mDirty(0) {
     // empty
 }
 
@@ -45,36 +45,36 @@ MeshProcessor::~MeshProcessor() {
 }
 
 bool MeshProcessor::execute() {
-    if (m_geoArray.isEmpty()) {
+    if (mMeshArray.isEmpty()) {
         return true;
     }
 
-    if (m_dirty &= NeedsUpdate) {
-        for (ui32 i = 0; i < m_geoArray.size(); i++) {
-            handleGeometry(m_geoArray[i]);
+    if (mDirty &= NeedsUpdate) {
+        for (ui32 i = 0; i < mMeshArray.size(); i++) {
+            handleMesh(mMeshArray[i]);
         }
     }
 
-    m_dirty = 0;
+    mDirty = 0;
 
     return true;
 }
 
-void MeshProcessor::addGeo(Mesh *geo) {
-    if (nullptr == geo) {
+void MeshProcessor::addMesh(Mesh *mesh) {
+    if (nullptr == mesh) {
         return;
     }
 
-    m_geoArray.add(geo);
+    mMeshArray.add(mesh);
 
-    m_dirty |= NeedsUpdate;
+    mDirty |= NeedsUpdate;
 }
 
 const Scene::Node::AABB &MeshProcessor::getAABB() const {
-    return m_aabb;
+    return mAabb;
 }
 
-void MeshProcessor::handleGeometry(Mesh *geo) {
+void MeshProcessor::handleMesh(Mesh *geo) {
     if (nullptr == geo) {
         return;
     }
@@ -105,7 +105,7 @@ void MeshProcessor::handleGeometry(Mesh *geo) {
         uc8 *ptr = (uc8 *)data->getData();
         ::memcpy(&pos.x, &ptr[offset], sizeof(glm::vec3));
         offset += stride;
-        m_aabb.merge(pos.x, pos.y, pos.z);
+        mAabb.merge(pos.x, pos.y, pos.z);
     }
 }
 

@@ -6,7 +6,8 @@ namespace OSRE {
 namespace RenderBackend {
     class Pipeline;
     class RenderPass;
-}
+    class RenderBackendService;
+    }
 namespace Scene {
 
 namespace ShaderToken {
@@ -17,7 +18,7 @@ namespace ShaderToken {
 
 class PipelineBuilder {
 public:
-    PipelineBuilder();
+    PipelineBuilder(RenderBackend::RenderBackendService *rbService);
     ~PipelineBuilder();
     void clear();
     PipelineBuilder &create(const String &name);
@@ -26,6 +27,7 @@ public:
 
 private:
     RenderBackend::Pipeline *mPipeline;
+    RenderBackend::RenderBackendService *mRbService;
 };
 
 } // namespace Scene

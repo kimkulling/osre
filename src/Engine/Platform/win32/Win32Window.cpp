@@ -59,11 +59,11 @@ void Win32Window::setWindowsMouseCursor(DefaultMouseCursorType ct){
 
     HCURSOR c;
     if (ct == DefaultMouseCursorType::WaitCursor) {
-        c = LoadCursorA(mInstance, IDC_WAIT);
+        c = LoadCursorA(nullptr, IDC_APPSTARTING);
     } else if ( ct == DefaultMouseCursorType::SelectCursor) {
-        c = LoadCursorA(mInstance, IDC_CROSS);
+        c = LoadCursorA(nullptr, IDC_CROSS);
     } else {
-        c = LoadCursorA(mInstance, IDC_ARROW);
+        c = LoadCursorA(nullptr, IDC_ARROW);
     }
     SetCursor(c);
 }
@@ -128,7 +128,7 @@ HWND Win32Window::createStatusBar(UINT ResID, ui32 numFields) {
             SBARS_SIZEGRIP | // includes a sizing grip
             WS_CHILD | WS_VISIBLE, // window styles
             0, 0, 0, 0, // x, y, width, height
-            mWnd, (HMENU) 1000, mInstance, NULL);
+            mWnd, (HMENU) ResID, mInstance, NULL);
     CPPCore::TArray<ui32> fields;
     for (ui32 i = 0; i < numFields; ++i) {
         mStatusBarContent.StatusBarWidths.add(100);

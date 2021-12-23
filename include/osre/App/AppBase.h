@@ -55,6 +55,7 @@ namespace RenderBackend {
 
 namespace App {
 
+class Stage;
 class World;
 class AppBase;
 
@@ -185,24 +186,7 @@ public:
     /// @return The global settings.
     virtual Properties::Settings *getSettings() const;
 
-    /// @brief  Will create a new world instance.
-    /// @param  name    [in] The name for the world.
-    /// @return The new created world instance.
-    virtual World *createWorld(const String &name);
-
-    /// @brief  Will look for an existing world described by its name.
-    /// @param  name    [in9 The name to look for.
-    /// @return The found world of nullptr if nothing was found.
-    virtual World *findWorld(const String &name) const;
-    
-    /// @brief  Will set a world to the active on.
-    /// @param  name    [in] The name of the world for activation.
-    /// @return true if the world was activated, false if not.
-    virtual bool setActiveWorld(const String &name);
-    
-    /// @brief  Will return the activated world.
-    /// @return The activated world or a nullptr if none was activated.
-    virtual World *getActiveWorld() const;
+    virtual Stage *getStage() const;
 
     /// @brief  Will activate the given view in the active world instance.
     /// @param  view        [in] A pointer showing to the view.
@@ -237,8 +221,9 @@ public:
     virtual Common::Ids *getIdContainer() const;
 
     /// @brief  Will create the default pipeline for rendering.
+    /// @param  rbService   The renderbackend service instance.
     /// @return The default pipeline.
-    static RenderBackend::Pipeline *createDefaultPipeline();
+    static RenderBackend::Pipeline *createDefaultPipeline(RenderBackend::RenderBackendService *rbService);
 
     /// @brief  Will create a new render pipeline.
     /// @param  name        [in] The name for the new pipeline. 
@@ -246,9 +231,9 @@ public:
     ///         same name already exists this instance will be returned.
     virtual RenderBackend::Pipeline *createPipeline(const String &name);
 
-    /// @brief 
-    /// @param  
-    virtual void addPipeline(RenderBackend::Pipeline *);
+    /// @brief  Will add a new render pipeline to the render pipelines.
+    /// @param  pipeline    The new pipeline.
+    virtual void addPipeline(RenderBackend::Pipeline *pipeline);
 
     /// @brief  Will search for < pipeline by its name.
     /// @param  name        [in] The name of the pipeline to look for.
@@ -276,13 +261,13 @@ public:
     /// @return The transform controller or nullptr if none is there.
     virtual Scene::AnimationControllerBase *getTransformController(RenderBackend::TransformMatrixBlock &tmb);
 
-    MouseEventListener *getMouseEventListener() const {
-        return m_mouseEvListener;
-    }
+    ///	@brief
+    /// @return
+    virtual MouseEventListener *getMouseEventListener() const;
 
-    KeyboardEventListener *getKeyboardEventListener() const {
-        return m_keyboardEvListener;
-    }
+    ///	@brief
+    /// @return
+    virtual KeyboardEventListener *getKeyboardEventListener() const;
 
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
@@ -319,13 +304,25 @@ private:
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
     CPPCore::TArray<World*> m_worlds;
-    World *m_activeWorld;
+    Stage *mStage;
     CPPCore::TArray<RenderBackend::Pipeline *> mPipelines;
     MouseEventListener *m_mouseEvListener;
     KeyboardEventListener *m_keyboardEvListener;
     Common::Ids *m_ids;
     bool m_shutdownRequested;
 };
+
+inline Stage *AppBase::getStage() const {
+    return mStage;
+}
+
+inline MouseEventListener *AppBase::getMouseEventListener() const {
+    return m_mouseEvListener;
+}
+
+inline KeyboardEventListener *AppBase::getKeyboardEventListener() const {
+    return m_keyboardEvListener;
+}
 
 //-------------------------------------------------------------------------------------------------
 ///	@brief  Shortcut to get a OSRE-main function.

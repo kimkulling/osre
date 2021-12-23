@@ -44,13 +44,21 @@ SET( scripting_src
     src/Scripting/PythonInterface.h
 )
 
-SOURCE_GROUP( Gui                      FILES ${gui_src})
-SOURCE_GROUP( Modules\\InspectorModule FILES ${inspector_module_src} )
-SOURCE_GROUP( Modules\\LogModule       FILES ${log_module_src} )
-SOURCE_GROUP( Modules\\EditorModule    FILES ${editor_module_src} )
+SET (main_src
+    src/ProgressReporter.cpp
+    src/ProgressReporter.h
+    src/OsreEdApp.cpp
+    src/OsreEdApp.h
+    src/main.cpp
+)
+SOURCE_GROUP(Gui                      FILES ${gui_src})
+SOURCE_GROUP(Modules\\InspectorModule FILES ${inspector_module_src} )
+SOURCE_GROUP(Modules\\LogModule       FILES ${log_module_src} )
+SOURCE_GROUP(Modules\\EditorModule    FILES ${editor_module_src} )
 
-SOURCE_GROUP( Modules\\                FILES ${modules_src} )
-SOURCE_GROUP( Scripting\\              FILES ${scripting_src} )
+SOURCE_GROUP(Modules\\                FILES ${modules_src} )
+SOURCE_GROUP(Scripting\\              FILES ${scripting_src} )
+SOURCE_GROUP(Main\\                   FILES ${main_src})
 
 ADD_EXECUTABLE( osre_ed
     ${gui_src}
@@ -59,11 +67,7 @@ ADD_EXECUTABLE( osre_ed
     ${editor_module_src}
     ${modules_src}
     ${scripting_src}
-    src/ProgressReporter.cpp
-    src/ProgressReporter.h
-    src/OsreEdApp.cpp
-    src/OsreEdApp.h
-    src/main.cpp
+    ${main_src}
 )
 
 target_link_libraries ( osre_ed osre )

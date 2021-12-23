@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Common/osre_common.h>
 #include <osre/RenderBackend/Pipeline.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -160,9 +161,10 @@ bool RenderPass::operator!=(const RenderPass &rhs) const {
     return !(*this == rhs);
 }
 
-Pipeline::Pipeline(const String &pipelineName) :
+Pipeline::Pipeline(const String &pipelineName, RenderBackend::RenderBackendService *rbService) :
         Object(pipelineName),
         mPasses(),
+        mRbService(),
         mCurrentPassId(InvalidPassIdx),
         mInFrame(false) {
     // empty

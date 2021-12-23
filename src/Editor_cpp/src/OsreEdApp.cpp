@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AssimpWrapper.h>
 #include <osre/App/AssetRegistry.h>
 #include <osre/App/Entity.h>
+#include <osre/App/Stage.h>
 #include <osre/IO/Directory.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/File.h>
@@ -108,27 +109,27 @@ namespace Colors {
     const glm::vec3 Blue(0, 0, 1);
 }
 
-static Mesh *createCoordAxis() {
+static Mesh *createCoordAxis(ui32 size) {
     Mesh *axis = Mesh::create(1, VertexType::ColorVertex);
     ColorVert v1, v2, v3, v4, v5, v6;
     v1.position.x = v1.position.y = v1.position.z = 0;
     v1.color0 = Colors::Red;
 
-    v2.position.x = 1000;
+    v2.position.x = size;
     v2.position.y = v2.position.z = 0;
     v2.color0 = Colors::Red;
 
     v3.position.x = v3.position.y = v3.position.z = 0;
     v3.color0 = Colors::Green;
 
-    v4.position.y = 1000;
+    v4.position.y = size;
     v4.position.x = v4.position.z = 0;
     v4.color0 = Colors::Green;
 
     v5.position.x = v5.position.y = v5.position.z = 0;
     v5.color0 = Colors::Blue;
 
-    v6.position.z = 1000;
+    v6.position.z = size;
     v6.position.x = v6.position.y = 0;
     v6.color0 = Colors::Blue;
 
@@ -263,9 +264,7 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         mResolution(),
         mMesh2D(nullptr),
         mPythonInterface(nullptr),
-        mTransformController(nullptr),
-        mLastMouseX(0),
-        mLastMouseY(0) {
+        mTransformController(nullptr) {
     // empty
 }
 
@@ -315,15 +314,16 @@ bool OsreEdApp::onCreate() {
 
     AppBase::getRenderBackendService()->enableAutoResizing(false);
 
-    World *world = getActiveWorld();
+    World *world = getStage()->getActiveWorld();
     if (nullptr == world) {
         return false;
     }
 
     Entity *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
     Mesh *grid = createGrid(60);
-    editorEntity->addStaticMesh(grid);
-    editorEntity->addStaticMesh(createCoordAxis());
+    RenderComponent *rc = (RenderComponent *)editorEntity->getComponent(ComponentType::RenderComponentType);
+    rc->addStaticMesh(grid);
+    //editorEntity->addStaticMesh(createCoordAxis(1000));
     //createUI();
 
     mPythonInterface = new PythonInterface;
@@ -353,12 +353,13 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     
     ProgressReporter reporter(rootWindow);
     reporter.start();
-    AssimpWrapper assimpWrapper(*getIdContainer(), getActiveWorld());
+    reporter.update(10);
+    AssimpWrapper assimpWrapper(*getIdContainer(), getStage()->getActiveWorld());
     if (!assimpWrapper.importAsset(modelLoc, 0)) {
         reporter.stop();
         return;
     }
-
+    reporter.update(10);
     RenderBackendService *rbSrv = getRenderBackendService();
     if (nullptr == rbSrv) {
         reporter.stop();
@@ -367,11 +368,12 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
 
     Rect2ui windowsRect;
     rootWindow->getWindowsRect(windowsRect);
-    World *world = getActiveWorld();
+    World *world = getStage()->getActiveWorld();
     mSceneData.mCamera = world->addCamera("camera_1");
     mSceneData.mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
     Entity *entity = assimpWrapper.getEntity();
 
+    reporter.update(10);
     world->addEntity(entity);
     mSceneData.mCamera->observeBoundingBox(entity->getAABB());
     mSceneData.m_modelNode = entity->getNode();
@@ -382,15 +384,14 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     rootWindow->setWindowsTitle(title);
 
     setStatusBarText("View", mSceneData.AssetName, 1, 1);
+    reporter.update(70);
     reporter.stop();
 }
 
 void OsreEdApp::newProjectCmd(ui32, void *) {
     mProject = new App::Project();
-    mProject->create("New project", 0, 1);
-    const String &projectName = mProject->getProjectName();
-    
-    String title;
+    mProject->setProjectName("New project");    
+    String title = mProject->getProjectName();
     createTitleString(mSceneData, title);
     AppBase::setWindowsTitle(title);
 }
@@ -515,17 +516,6 @@ void OsreEdApp::onUpdate() {
     glm::mat4 rot(1.0);
     MouseEventListener *listener = AppBase::getMouseEventListener();
     TArray<TransformCommandType> transformCmds;
-    if (listener->leftButttonPressed()) {
-        i32 x = listener->getAbsoluteX();
-        i32 y = listener->getAbsoluteY();
-        getMouseBinding(x, mLastMouseX, y, mLastMouseY, transformCmds);
-        mLastMouseX = x;
-        mLastMouseY = y;
-
-        char buffer[512];
-        sprintf(buffer, "x: %d, y:%d", x, y);
-        osre_info(Tag, "Pressed! "  + String(buffer));
-    }
     mTransformController->update(TransformController::getKeyBinding(key));
     for (ui32 i = 0; i < transformCmds.size(); ++i) {
         mTransformController->update(transformCmds[i]);
@@ -563,7 +553,7 @@ bool OsreEdApp::onDestroy() {
     return true;
 }
 
-bool OsreEdApp::loadSceneData(const IO::Uri &filename, SceneData &sd) {
+bool OsreEdApp::loadSceneData(const IO::Uri &filename, SceneData&) {
     if (filename.isEmpty()) {
         return false;
     }

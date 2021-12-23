@@ -86,6 +86,10 @@ Mesh *RenderComponent::getMeshAt(size_t idx) const {
     return m_newGeo[idx];
 }
 
+void RenderComponent::getMeshArray(RenderBackend::MeshArray &meshArray) {
+    meshArray = m_newGeo;
+}
+
 bool RenderComponent::onPreprocess() {
     return true;
 }

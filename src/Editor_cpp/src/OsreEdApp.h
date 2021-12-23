@@ -38,6 +38,7 @@ namespace OSRE {
 namespace App {
 class Project;
 class World;
+
 } // namespace App
 
 namespace IO {
@@ -170,7 +171,6 @@ private:
     RenderBackend::Mesh *mMesh2D;
     PythonInterface *mPythonInterface;
     Scene::AnimationControllerBase *mTransformController;
-    i32 mLastMouseX, mLastMouseY;
 };
 
 inline bool OsreEdApp::hasModel() const {

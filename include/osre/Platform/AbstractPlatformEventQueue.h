@@ -101,6 +101,8 @@ public:
     /// @param  ev      [in] The event to enqueue.
     virtual void enqueueEvent(const Common::Event &ev, Common::EventData *data);
 
+    Common::EventBus *getEventBus() const;
+
 protected:
     /// @brief  The class constructor.
     AbstractPlatformEventQueue();
@@ -130,6 +132,10 @@ private:
     RenderBackend::RenderBackendService *mRenderBackendSrv;
     Common::EventBus *mEventBus;
 };
+
+inline Common::EventBus *AbstractPlatformEventQueue::getEventBus() const {
+    return mEventBus;
+}
 
 } // Namespace Platform
 } // Namespace OSRE

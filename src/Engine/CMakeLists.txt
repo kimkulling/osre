@@ -44,8 +44,8 @@ SET( app_inc
     ${HEADER_PATH}/App/ResourceCacheService.h
     ${HEADER_PATH}/App/AssetsCommon.h
     ${HEADER_PATH}/App/AssetRegistry.h
-    ${HEADER_PATH}/App/AssetDataArchive.h
     ${HEADER_PATH}/App/AssimpWrapper.h
+    ${HEADER_PATH}/App/Stage.h
     ${HEADER_PATH}/App/World.h
 )
 
@@ -56,9 +56,9 @@ SET( app_src
     App/ServiceProvider.cpp
     App/Project.cpp
     App/AssetRegistry.cpp
-    App/AssetDataArchive.cpp
     App/AssimpWrapper.cpp
     App/World.cpp
+    App/Stage.cpp
     App/MouseEventListener.cpp
     App/MouseEventListener.h
 )
@@ -78,6 +78,7 @@ SET( common_inc
     ${HEADER_PATH}/Common/Event.h
     ${HEADER_PATH}/Common/EventBus.h
     ${HEADER_PATH}/Common/EventTriggerer.h
+    ${HEADER_PATH}/Common/Frustum.h
     ${HEADER_PATH}/Common/Ids.h
     ${HEADER_PATH}/Common/Logger.h
     ${HEADER_PATH}/Common/Object.h
@@ -89,9 +90,12 @@ SET( common_inc
     ${HEADER_PATH}/Common/Tokenizer.h
     ${HEADER_PATH}/Common/osre_common.h
     ${HEADER_PATH}/Common/glm_common.h
+    ${HEADER_PATH}/Common/BaseMath.h
+    ${HEADER_PATH}/Common/TRay.h
 )
 SET( common_src
     Common/ArgumentParser.cpp
+    Common/BaseMath.cpp
     Common/Common.cpp
     Common/DateTime.cpp
     Common/Event.cpp
@@ -116,13 +120,6 @@ SET( debugging_src
     Debugging/Debug.cpp
     Debugging/AssertHandler.cpp
     Debugging/MeshDiagnostic.cpp
-)
-
-#==============================================================================
-# Documentation
-#==============================================================================
-SET( doc_inc
-    ${CMAKE_HOME_DIRECTORY}/doc/Doxygen/osre_doc.h
 )
 
 #==============================================================================
@@ -154,17 +151,6 @@ SET( io_inc
     ${HEADER_PATH}/IO/IOService.h
     ${HEADER_PATH}/IO/IOSystemInfo.h
     ${HEADER_PATH}/IO/Uri.h
-)
-
-#==============================================================================
-# Math
-#==============================================================================
-SET( math_src
-    Math/BaseMath.cpp
-)
-SET( math_inc
-    ${HEADER_PATH}/Math/BaseMath.h
-    ${HEADER_PATH}/Math/TRay.h
 )
 
 #==============================================================================
@@ -323,7 +309,6 @@ SET(scene_shader_src
 SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
     ${HEADER_PATH}/RenderBackend/Mesh.h
-    ${HEADER_PATH}/RenderBackend/THWBufferManager.h
     ${HEADER_PATH}/RenderBackend/TransformMatrixBlock.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
@@ -335,7 +320,6 @@ SET( renderbackend_src
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
     RenderBackend/Pipeline.cpp
-    RenderBackend/THWBufferManager.cpp
     RenderBackend/TransformMatrixBlock.cpp
     RenderBackend/Shader.cpp
 )
@@ -464,7 +448,6 @@ ADD_LIBRARY( osre SHARED
     ../../README.md
     ${app_inc}
     ${debugging_inc}
-    ${doc_inc}
     ${common_inc}
     ${common_src}
     ${collision_inc}
@@ -485,7 +468,6 @@ ADD_LIBRARY( osre SHARED
 	${scripting_mono_inc}
     ${threading_inc}
     ${renderbackend_inc}
-    ${math_inc}
 
     ${app_src}
     ${Common_src}
@@ -493,7 +475,6 @@ ADD_LIBRARY( osre SHARED
     ${debugging_src}
         ${debugging_windows_src}
     ${io_src}
-    ${math_src}
     ${memory_src}
     ${system_src}
         ${system_impl_src}
@@ -513,5 +494,5 @@ ADD_LIBRARY( osre SHARED
     ${winmanager_src}
 )
 
-target_link_libraries ( osre cppcore zlib Unzip glew soil jsoncpp_lib_static ${platform_libs} assimp )
+target_link_libraries ( osre cppcore zlibstatic Unzip glew soil ${platform_libs} assimp )
 set_target_properties(  osre PROPERTIES FOLDER Engine )

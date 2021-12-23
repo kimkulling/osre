@@ -79,7 +79,7 @@ TEST_F(EventBusTest, createTest) {
     EXPECT_FALSE(bus.destroy());
 }
 
-TEST_F(EventBusTest, enqueueEventTest) {
+TEST_F(EventBusTest, publishTest) {
     EventBus bus;
     bus.create();
     AbstractEventHandler *handler = new TestEventHandler;
@@ -87,10 +87,10 @@ TEST_F(EventBusTest, enqueueEventTest) {
     EXPECT_EQ(0, h->EventCount1);
     EXPECT_EQ(0, h->EventCount1);
 
-    bus.suscribeEventHandler(handler, TestEvent1);
-    bus.suscribeEventHandler(handler, TestEvent2);
-    bus.enqueueEvent(TestEvent1, nullptr);
-    bus.enqueueEvent(TestEvent2, nullptr);
+    bus.subscribeEventHandler(handler, TestEvent1);
+    bus.subscribeEventHandler(handler, TestEvent2);
+    bus.publish(TestEvent1, nullptr);
+    bus.publish(TestEvent2, nullptr);
     bus.update();
     EXPECT_EQ(1, h->EventCount1);
     EXPECT_EQ(1, h->EventCount1);

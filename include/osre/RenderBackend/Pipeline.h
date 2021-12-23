@@ -31,6 +31,7 @@ namespace RenderBackend {
 
 // Forward declarations
 class Shader;
+class RenderBackendService;
 
 using CPPCore::TArray;
 
@@ -108,7 +109,7 @@ namespace DefaultPipelines {
 class OSRE_EXPORT Pipeline : public Common::Object {
 public:
     /// @brief
-    Pipeline(const String &pipelineName);
+    Pipeline(const String &pipelineName, RenderBackend::RenderBackendService *rbService);
     ~Pipeline();
 
     /// @brief
@@ -137,6 +138,7 @@ private:
 private:
     using PipelinePassArray = TArray<RenderPass*>;
     PipelinePassArray mPasses;
+    RenderBackend::RenderBackendService *mRbService;
     i32 mCurrentPassId;
     bool mInFrame;
 };

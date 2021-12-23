@@ -184,6 +184,7 @@ struct ApplicationContext {
     AbstractTimer *m_timer;
     AbstractDynamicLoader *m_dynLoader;
     AbstractSystemInfo *m_systemInfo;
+    AbstractOSService *mAbstractOSService;
 
     ApplicationContext(const Properties::Settings *config);
     ~ApplicationContext();
@@ -207,6 +208,7 @@ public:
     AbstractTimer *getTimer() const;
     AbstractDynamicLoader *getDynamicLoader() const;
     AbstractSystemInfo *getSystemInfo() const;
+    AbstractOSService *getOSServices() const;
     const String &getDefaultFontName() const;
 
 protected:
