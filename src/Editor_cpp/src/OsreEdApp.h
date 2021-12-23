@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AppBase.h>
 #include <osre/App/World.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
 #include <osre/Scene/Camera.h>
 #include <osre/Scene/Node.h>
 
@@ -169,6 +170,7 @@ private:
     RenderBackend::Mesh *mMesh2D;
     PythonInterface *mPythonInterface;
     Scene::AnimationControllerBase *mTransformController;
+    i32 mLastMouseX, mLastMouseY;
 };
 
 inline bool OsreEdApp::hasModel() const {

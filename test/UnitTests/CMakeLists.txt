@@ -40,6 +40,7 @@ SET ( unittest_common_src
     src/Common/CommonTest.cpp
     src/Common/ObjectTest.cpp
     src/Common/EventTest.cpp
+    src/Common/EventBusTest.cpp
     src/Common/IdsTest.cpp
 )
 

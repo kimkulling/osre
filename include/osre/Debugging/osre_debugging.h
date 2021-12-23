@@ -41,15 +41,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /// @def    OSRE_CHECK_NOENTRY
 /// @brief  If you want to validate a statement no to be performed use this macro. It will abort the application.
 #ifdef _DEBUG
-#  define OSRE_ASSERT( statement )        if ( !(statement) ) ::OSRE::Debugging::handleAssert( __FILE__, __LINE__,  #statement );
-#  define OSRE_ASSERT2( statement, msg )  if ( !(statement) ) ::OSRE::Debugging::handleAssert( __FILE__, __LINE__,  #statement###msg );
-#  define OSRE_VALIDATE( statement, msg ) if ( !(statement) ) ::OSRE::Debugging::handleFatal( __FILE__, __LINE__,  ( msg ) );
+#  define osre_assert( statement )        if ( !(statement) ) ::OSRE::Debugging::handleAssert( __FILE__, __LINE__,  #statement );
+#  define osre_assert2( statement, msg )  if ( !(statement) ) ::OSRE::Debugging::handleAssert( __FILE__, __LINE__,  #statement###msg );
+#  define osre_validate( statement, msg ) if ( !(statement) ) ::OSRE::Debugging::handleFatal( __FILE__, __LINE__,  ( msg ) );
 #  define OSRE_CHECK_NOENTRY()                                ::OSRE::Debugging::handleAssert( __FILE__, __LINE__, "Happened!" );
 #  define OSRE_CHECK_NOENTRY2( msg )                          ::OSRE::Debugging::handleAssert( __FILE__, __LINE__, ( msg ) );
 #else
-#  define OSRE_ASSERT( statement )
-#  define OSRE_ASSERT2( statement, msg )  if ( !(statement) ) (::OSRE::Common::warnPrint( __FILE__ ,__FILE__, __LINE__, msg ) );
-#  define OSRE_VALIDATE( statement, msg ) statement
+#  define osre_assert( statement )
+#  define osre_assert2( statement, msg )  if ( !(statement) ) (::OSRE::Common::warnPrint( __FILE__ ,__FILE__, __LINE__, msg ) );
+#  define osre_validate( statement, msg ) statement
 #  define OSRE_CHECK_NOENTRY()
 #  define OSRE_CHECK_NOENTRY2( msg )
 #endif

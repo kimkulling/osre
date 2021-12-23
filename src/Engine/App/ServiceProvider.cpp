@@ -33,7 +33,7 @@ using namespace ::OSRE::RenderBackend;
 ServiceProvider *ServiceProvider::s_instance = nullptr;
 
 ServiceProvider *ServiceProvider::create(RenderBackendService *rbService, ResourceCacheService *resCacheService, IO::IOService *ioService) {
-    OSRE_ASSERT(nullptr != rbService);
+    osre_assert(nullptr != rbService);
 
     if (nullptr == s_instance) {
         s_instance = new ServiceProvider(rbService, resCacheService, ioService);
@@ -71,8 +71,8 @@ IO::IOService *ServiceProvider::getIOService() {
 
 ServiceProvider::ServiceProvider(RenderBackend::RenderBackendService *rbService, ResourceCacheService *resCacheService, IO::IOService *ioService) :
         m_rbService(rbService), m_resCacheService(resCacheService), mIOService(ioService) {
-    OSRE_ASSERT(nullptr != m_rbService);
-    OSRE_ASSERT(nullptr != m_resCacheService);
+    osre_assert(nullptr != m_rbService);
+    osre_assert(nullptr != m_resCacheService);
 }
 
 ServiceProvider::~ServiceProvider() {

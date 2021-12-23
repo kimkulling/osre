@@ -54,7 +54,7 @@ class KeyboardEventListener : public Platform::OSEventListener {
 public:
     KeyboardEventListener(RenderTestSuite *renderTestSuite) :
             OSEventListener("rendertest/keyboardeventlistener"), m_testSuite(renderTestSuite) {
-        OSRE_ASSERT(nullptr != renderTestSuite);
+        osre_assert(nullptr != renderTestSuite);
     }
 
     ~KeyboardEventListener() {
@@ -181,7 +181,7 @@ bool RenderTestSuite::teardown() {
 }
 
 void RenderTestSuite::kill() {
-    OSRE_ASSERT(nullptr != s_pInstance);
+    osre_assert(nullptr != s_pInstance);
     if (s_pInstance) {
         s_pInstance->teardown();
         delete s_pInstance;
@@ -191,7 +191,7 @@ void RenderTestSuite::kill() {
 }
 
 void RenderTestSuite::attachRenderTest(AbstractRenderTest *pRenderTest) {
-    OSRE_ASSERT(nullptr != pRenderTest);
+    osre_assert(nullptr != pRenderTest);
 
     m_attachedRenderTests.add(pRenderTest);
 }
@@ -329,7 +329,7 @@ RenderTestSuite::RenderTestSuite(const String &suiteName) :
         m_pRenderBackendServer(nullptr),
         m_renderAPI("none"),
         m_mediaPath() {
-    OSRE_ASSERT(!suiteName.empty());
+    osre_assert(!suiteName.empty());
 }
 
 RenderTestSuite::~RenderTestSuite() {

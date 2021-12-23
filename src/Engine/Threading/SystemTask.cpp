@@ -72,7 +72,7 @@ public:
             m_stopEvent(nullptr),
             m_activeJobQueue(jobQueue),
             m_eventHandler(nullptr) {
-        OSRE_ASSERT(nullptr != jobQueue);
+        osre_assert(nullptr != jobQueue);
 
         m_updateEvent = new ThreadEvent();
         m_stopEvent = new ThreadEvent();
@@ -129,7 +129,7 @@ public:
 
 protected:
     i32 run() {
-        OSRE_ASSERT(nullptr != m_activeJobQueue);
+        osre_assert(nullptr != m_activeJobQueue);
 
         osre_debug(Tag, "SystemThread::run");
         bool running = true;
@@ -148,7 +148,7 @@ protected:
                 const Common::Event *ev = job->getEvent();
                 if (nullptr == ev) {
                     running = false;
-                    OSRE_ASSERT(nullptr != ev);
+                    osre_assert(nullptr != ev);
                     continue;
                 }
 
@@ -191,7 +191,7 @@ SystemTask::SystemTask(const String &taskName) :
 }
 
 SystemTask::~SystemTask() {
-    OSRE_ASSERT(!isRunning());
+    osre_assert(!isRunning());
 }
 
 void SystemTask::setWorkingMode(AbstractTask::WorkingMode mode) {
@@ -281,13 +281,13 @@ void SystemTask::setThreadInstance(Thread *threadInstance) {
 }
 
 void SystemTask::attachEventHandler(AbstractEventHandler *eventHandler) {
-    OSRE_ASSERT(nullptr != m_taskThread);
+    osre_assert(nullptr != m_taskThread);
 
     m_taskThread->setEventHandler(eventHandler);
 }
 
 void SystemTask::detachEventHandler() {
-    OSRE_ASSERT(nullptr != m_taskThread);
+    osre_assert(nullptr != m_taskThread);
     if (nullptr == m_taskThread) {
         osre_debug(Tag, "TaskThread is nullptr.");
         return;
@@ -300,8 +300,8 @@ void SystemTask::detachEventHandler() {
 }
 
 bool SystemTask::sendEvent(const Event *ev, const EventData *eventData) {
-    OSRE_ASSERT(nullptr != m_asyncQueue);
-    OSRE_ASSERT(nullptr != ev);
+    osre_assert(nullptr != m_asyncQueue);
+    osre_assert(nullptr != ev);
 
     TaskJob *taskJob = TaskJobAlloc(ev, eventData);
     m_asyncQueue->enqueue(taskJob);
@@ -310,13 +310,13 @@ bool SystemTask::sendEvent(const Event *ev, const EventData *eventData) {
 }
 
 size_t SystemTask::getEvetQueueSize() const {
-    OSRE_ASSERT(nullptr != m_asyncQueue);
+    osre_assert(nullptr != m_asyncQueue);
 
     return m_asyncQueue->size();
 }
 
 void SystemTask::onUpdate() {
-    OSRE_ASSERT(nullptr != m_taskThread);
+    osre_assert(nullptr != m_taskThread);
 
     if (nullptr == m_asyncQueue) {
         m_asyncQueue = m_taskThread->getActiveJobQueue();
@@ -324,7 +324,7 @@ void SystemTask::onUpdate() {
 }
 
 void SystemTask::awaitUpdate() {
-    OSRE_ASSERT(nullptr != m_taskThread);
+    osre_assert(nullptr != m_taskThread);
 
     if (nullptr != m_taskThread) {
         ThreadEvent *threadEvent = m_taskThread->getUpdateEvent();

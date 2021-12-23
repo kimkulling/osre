@@ -73,7 +73,7 @@ AbstractPlatformEventQueue *PlatformPluginFactory::createPlatformEventHandler(Ab
     eventHandler = new SDL2EventHandler(rootSurface);
 #endif // OSRE_WINDOWS
 
-    OSRE_ASSERT(nullptr != eventHandler);
+    osre_assert(nullptr != eventHandler);
 
     return eventHandler;
 }
@@ -85,7 +85,7 @@ AbstractWindow *PlatformPluginFactory::createSurface(WindowsProperties *props) {
 #else
     surface = new SDL2Surface(props);
 #endif // OSRE_WINDOWS
-    OSRE_ASSERT(nullptr != surface);
+    osre_assert(nullptr != surface);
 
     return surface;
 }
@@ -97,7 +97,7 @@ AbstractOGLRenderContext *PlatformPluginFactory::createRenderContext() {
 #else
     renderCtx = new SDL2RenderContext();
 #endif // OSRE_WINDOWS
-    OSRE_ASSERT(nullptr != renderCtx);
+    osre_assert(nullptr != renderCtx);
 
     return renderCtx;
 }

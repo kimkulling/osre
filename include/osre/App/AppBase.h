@@ -284,10 +284,6 @@ public:
         return m_keyboardEvListener;
     }
 
-    Common::CommandQueue *getCommandQueue() const {
-        return mCommandQueue;
-    }
-
  protected:
     /// @brief  The onCreate callback, override this for your own creation stuff.
     /// @return true if successful,  false if not.
@@ -318,7 +314,6 @@ private:
     State mAppState;
     Common::ArgumentParser m_argParser;
     Common::Environment* m_environment;
-    Common::CommandQueue *mCommandQueue;
     Properties::Settings *m_settings;
     Platform::PlatformInterface *m_platformInterface;
     Platform::AbstractTimer *m_timer;

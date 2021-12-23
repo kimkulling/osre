@@ -43,7 +43,6 @@ template <class T>
 class TAsyncQueue {
 public:
     ///	@brief	The constructor with the thread factory.
-    ///	@param	pThreadFactory	The thread factory.
     TAsyncQueue();
 
     ///	@brief	The destructor, not virtual.
@@ -108,7 +107,7 @@ inline TAsyncQueue<T>::~TAsyncQueue() {
 
 template <class T>
 inline void TAsyncQueue<T>::enqueue(const T &item) {
-    OSRE_ASSERT(nullptr != m_criticalSection);
+    osre_assert(nullptr != m_criticalSection);
 
     m_criticalSection->enter();
 
@@ -120,11 +119,11 @@ inline void TAsyncQueue<T>::enqueue(const T &item) {
 
 template <class T>
 inline T TAsyncQueue<T>::dequeue() {
-    OSRE_ASSERT(nullptr != m_criticalSection);
+    osre_assert(nullptr != m_criticalSection);
 
     m_criticalSection->enter();
 
-    OSRE_ASSERT(!m_ItemQueue.isEmpty());
+    osre_assert(!m_ItemQueue.isEmpty());
     T item;
     m_ItemQueue.dequeue(item);
 
@@ -135,7 +134,7 @@ inline T TAsyncQueue<T>::dequeue() {
 
 template <class T>
 inline void TAsyncQueue<T>::dequeueAll(CPPCore::TList<T> &data) {
-    OSRE_ASSERT(nullptr != m_criticalSection);
+    osre_assert(nullptr != m_criticalSection);
 
     if (!data.isEmpty()) {
         data.clear();
@@ -151,14 +150,14 @@ inline void TAsyncQueue<T>::dequeueAll(CPPCore::TList<T> &data) {
 
 template <class T>
 inline void TAsyncQueue<T>::signalEnqueuedItem() {
-    OSRE_ASSERT(nullptr != m_enqueueEvent);
+    osre_assert(nullptr != m_enqueueEvent);
 
     m_enqueueEvent->signal();
 }
 
 template <class T>
 inline size_t TAsyncQueue<T>::size() {
-    OSRE_ASSERT(nullptr != m_criticalSection);
+    osre_assert(nullptr != m_criticalSection);
 
     m_criticalSection->enter();
     const size_t size = m_ItemQueue.size();
@@ -169,7 +168,7 @@ inline size_t TAsyncQueue<T>::size() {
 
 template <class T>
 inline void TAsyncQueue<T>::awaitEnqueuedItem() {
-    OSRE_ASSERT(nullptr != m_enqueueEvent);
+    osre_assert(nullptr != m_enqueueEvent);
 
     if (m_ItemQueue.isEmpty()) {
         m_enqueueEvent->waitForOne();
@@ -178,7 +177,7 @@ inline void TAsyncQueue<T>::awaitEnqueuedItem() {
 
 template <class T>
 inline bool TAsyncQueue<T>::isEmpty() {
-    OSRE_ASSERT(nullptr != m_criticalSection);
+    osre_assert(nullptr != m_criticalSection);
     if (nullptr == m_criticalSection) {
         return false;
     }
@@ -191,7 +190,7 @@ inline bool TAsyncQueue<T>::isEmpty() {
 
 template <class T>
 inline void TAsyncQueue<T>::clear() {
-    OSRE_ASSERT(nullptr != m_criticalSection);
+    osre_assert(nullptr != m_criticalSection);
 
     m_criticalSection->enter();
 

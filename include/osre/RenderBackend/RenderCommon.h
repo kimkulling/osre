@@ -549,26 +549,6 @@ struct OSRE_EXPORT TransformState {
 };
 
 ///	@brief
-struct OSRE_EXPORT TransformMatrixBlock {
-    glm::mat4 m_projection;
-    glm::mat4 m_model;
-    glm::mat4 m_view;
-    glm::mat4 m_normal;
-    glm::mat4 m_mvp;
-
-    TransformMatrixBlock();
-    ~TransformMatrixBlock();
-    void init();
-    void update();
-    const float *getModel();
-    const float *getView();
-    const float *getProjection();
-    const float *getMVP();
-
-    OSRE_NON_COPYABLE(TransformMatrixBlock)
-};
-
-///	@brief
 struct OSRE_EXPORT Viewport {
     i32 m_x;
     i32 m_y;

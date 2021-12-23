@@ -384,10 +384,10 @@ static size_t getNumTextIndices(const String &text) {
 
 static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const String &text, 
         glm::vec3 **textPos, glm::vec3 **colors, glm::vec2 **tex0, GLushort **textIndices) {
-    OSRE_ASSERT(nullptr != textPos);
-    OSRE_ASSERT(nullptr != colors);
-    OSRE_ASSERT(nullptr != tex0);
-    OSRE_ASSERT(nullptr != textIndices);
+    osre_assert(nullptr != textPos);
+    osre_assert(nullptr != colors);
+    osre_assert(nullptr != tex0);
+    osre_assert(nullptr != textIndices);
 
     glm::vec3 col[NumQuadVert];
     col[0] = glm::vec3(0, 0, 0);
@@ -663,8 +663,8 @@ void MeshBuilder::updateTextVertices( size_t numVerts, ::glm::vec2 *tex0, Buffer
     if (0 == numVerts) {
         return;
     }
-    OSRE_ASSERT(nullptr != tex0);
-    OSRE_ASSERT(nullptr != vb);
+    osre_assert(nullptr != tex0);
+    osre_assert(nullptr != vb);
 
     RenderVert *vert = new RenderVert[ numVerts ];
     ::memcpy( &vert[ 0 ].position, vb->getData(), vb->getSize() );

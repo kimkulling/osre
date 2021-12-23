@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,27 +32,25 @@ class EventTest : public ::testing::Test {
     // empty
 };
 
-TEST_F( EventTest, createTest ) {
+TEST_F(EventTest, createTest) {
     const String name( "test_event" );
-    Event myEvent( name );
-    //EXPECT_EQ( name, myEvent.getIDAsStr() );
-    EXPECT_NE( static_cast<ui32>( 0 ), myEvent.getHash() );
-
-    Event myEvent1( name );
+    Event myEvent(name);
+    EXPECT_NE( static_cast<ui32>(0), myEvent.getHash() );
+    Event myEvent1(name);
     EXPECT_EQ( myEvent, myEvent1 );
 }
 
-TEST_F( EventTest, calculateHashFromEventNameTest ) {
-    const String name( "test_event" );
-    Event myEvent( name );
-    const ui32 hash( myEvent.getHash() );
+TEST_F(EventTest, calculateHashFromEventNameTest) {
+    const String name("test_event");
+    Event myEvent(name);
+    const ui32 hash = myEvent.getHash();
     EXPECT_NE( hash, (ui32) 0 );
 
-    const String empty_name( "" );
-    Event myEvent1( empty_name );
+    const String empty_name;
+    Event myEvent1(empty_name);
 
-    const ui32 hash_empty( myEvent1.getHash() );
-    EXPECT_EQ( hash_empty, (ui32) 0  );
+    const ui32 hash_empty = myEvent1.getHash();
+    EXPECT_EQ(hash_empty, static_cast<ui32>(0));
 }
 
 } // Namespace UnitTest

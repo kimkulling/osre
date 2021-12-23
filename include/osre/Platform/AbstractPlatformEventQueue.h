@@ -32,9 +32,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
+namespace Common {
+    class EventBus;
+}
+
 namespace RenderBackend {
-class RenderBackendService;
+    class RenderBackendService;
 }
 
 namespace Platform {
@@ -124,72 +128,8 @@ private:
     Common::EventDataList m_eventQueues[numEventQueues];
     ui32 mActiveList;
     RenderBackend::RenderBackendService *mRenderBackendSrv;
+    Common::EventBus *mEventBus;
 };
-
-inline AbstractPlatformEventQueue::AbstractPlatformEventQueue() :
-        Object("Platform/AbstractPlatformEventQueue"), 
-    mActiveList(0), 
-    mRenderBackendSrv(nullptr) {
-    // empty
-}
-
-inline AbstractPlatformEventQueue::~AbstractPlatformEventQueue() {
-    // empty
-}
-
-inline void AbstractPlatformEventQueue::processEvents(Common::EventTriggerer *triggerer) {
-    if (nullptr == triggerer) {
-        return;
-    }
-
-    Common::EventDataList *theList = getActiveEventDataList();
-    if (nullptr == theList) {
-        return;
-    }
-
-    while (!theList->isEmpty()) {
-        Common::EventData *eventData = theList->front();
-        if (nullptr != eventData) {
-            triggerer->triggerEvent(eventData->getEvent(), eventData);
-            theList->removeFront();
-            eventData->release();
-        }
-    }
-    switchEventDataList();
-}
-
-inline Common::EventDataList *AbstractPlatformEventQueue::getActiveEventDataList() {
-    Common::EventDataList *activeEventQueue(&m_eventQueues[mActiveList]);
-    return activeEventQueue;
-}
-
-inline Common::EventDataList *AbstractPlatformEventQueue::getPendingEventDataList() {
-    ui32 queueToProcess = (mActiveList + 1) % numEventQueues;
-    m_eventQueues[queueToProcess].clear();
-    Common::EventDataList *pendingEventQueue(&m_eventQueues[queueToProcess]);
-
-    return pendingEventQueue;
-}
-
-inline void AbstractPlatformEventQueue::switchEventDataList() {
-    mActiveList = (mActiveList + 1) % numEventQueues;
-}
-
-inline void AbstractPlatformEventQueue::setRenderBackendService(RenderBackend::RenderBackendService *rbSrv) {
-    mRenderBackendSrv = rbSrv;
-}
-
-inline RenderBackend::RenderBackendService *AbstractPlatformEventQueue::getRenderBackendService() const {
-    return mRenderBackendSrv;
-}
-
-inline void AbstractPlatformEventQueue::enqueueEvent(const Common::Event &ev, Common::EventData *data) {
-    OSRE_ASSERT(nullptr != data);
-
-    if (ev == data->getEvent()) {
-        getActiveEventDataList()->addBack(data);
-    }
-}
 
 } // Namespace Platform
 } // Namespace OSRE

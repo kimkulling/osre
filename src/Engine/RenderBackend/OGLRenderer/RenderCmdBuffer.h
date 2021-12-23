@@ -75,7 +75,7 @@ public:
     /// The class constructor.
     RenderCmdBuffer(OGLRenderBackend *renderBackend, Platform::AbstractOGLRenderContext *ctx, Pipeline *pipeline);
     /// The class destructor.
-    virtual ~RenderCmdBuffer();
+    ~RenderCmdBuffer();
     /// Will set the active shader.
     void setActiveShader(OGLShader *oglShader);
     /// Will return the active shader.

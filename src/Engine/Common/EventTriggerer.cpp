@@ -98,7 +98,7 @@ void EventTriggerer::addTriggerableEvent(const Event &ev) {
 }
 
 void EventTriggerer::triggerEvent(const Event &ev, const EventData *data) {
-    OSRE_ASSERT(0 != mEventList.count(ev.getHash()));
+    osre_assert(0 != mEventList.count(ev.getHash()));
 
     if (1 != mEventList.count(ev.getHash())) {
         return;

@@ -27,7 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/World.h>
 #include <osre/Common/Environment.h>
 #include <osre/Common/TObjPtr.h>
-#include <osre/Common/CommandQueue.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/IOService.h>
 #include <osre/Platform/AbstractPlatformEventQueue.h>
@@ -37,6 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/Pipeline.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
 #include <osre/Scene/Camera.h>
 #include <osre/Scene/MaterialBuilder.h>
 
@@ -114,13 +114,21 @@ void TransformController::update(TransformCommandType cmdType) {
     if (cmdType == Scene::TransformCommandType::RotateZCommandPositive) {
         mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 0, 1));
     }
+
+    glm::mat4 scale(1.0);
+    if (cmdType == Scene::TransformCommandType::ScaleInCommand) {
+        mTransform.m_model *= glm::scale(scale, glm::vec3(1.01, 1.01, 1.01));    
+    }
+
+    if (cmdType == Scene::TransformCommandType::ScaleOutCommand) {
+        mTransform.m_model *= glm::scale(scale, glm::vec3(0.99, 0.99, 0.99));
+    }
 }
 
 AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
         mAppState(State::Uninited),
         m_argParser(argc, argv, supportedArgs, desc),
         m_environment(nullptr),
-        mCommandQueue(nullptr),
         m_settings(nullptr),
         m_platformInterface(nullptr),
         m_timer(nullptr),
@@ -144,7 +152,7 @@ AppBase::~AppBase() {
 
 bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &title, bool fullscreen,
         RenderBackendType renderer) {
-    OSRE_ASSERT(nullptr != m_settings);
+    osre_assert(nullptr != m_settings);
 
     m_settings->setInt(Properties::Settings::WinX, x);
     m_settings->setInt(Properties::Settings::WinY, y);
@@ -197,7 +205,7 @@ void AppBase::resize(i32 x, i32 y, i32 w, i32 h) {
 }
 
 void AppBase::requestNextFrame() {
-    OSRE_ASSERT(nullptr != m_rbService);
+    osre_assert(nullptr != m_rbService);
 
     if (nullptr == m_activeWorld) {
         return;
@@ -344,8 +352,6 @@ bool AppBase::onCreate() {
         Logger::getInstance()->registerLogStream(stream);
     }
 
-    mCommandQueue = new Common::CommandQueue();
-
     // create the render back-end
     m_rbService = new RenderBackendService();
     m_rbService->setSettings(m_settings, false);
@@ -427,12 +433,6 @@ bool AppBase::onDestroy() {
     AssetRegistry::destroy();
     ServiceProvider::destroy();
 
-    if (!mCommandQueue->isEmpty()) {
-        mCommandQueue->clear();
-    }
-    delete mCommandQueue;
-    mCommandQueue = nullptr;
-
     if (m_platformInterface) {
         Platform::PlatformInterface::destroy();
         m_platformInterface = nullptr;
@@ -463,12 +463,7 @@ static const i64 Conversion2Micro = 1000;
 void AppBase::onUpdate() {
     i64 microsecs = m_timer->getMilliCurrentSeconds() * Conversion2Micro;
     Time dt(microsecs);    
-    while (!mCommandQueue->isEmpty()) {
-        Command *cmd = mCommandQueue->dequeue();
-        if (nullptr != cmd) {
-            (*cmd)(nullptr, nullptr);
-        }
-    }
+
     if (nullptr != m_activeWorld) {
         m_activeWorld->update(dt);
     }

@@ -25,11 +25,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 namespace Common {
-        
-Event::Event( const String &id ) :
-        m_numRefs( 1 ), 
-        m_hash( StringUtils::hashName( id.c_str() ) ),
-        m_eventData( nullptr ) {
+
+Event::Event(const String &id) :
+        m_numRefs(1),
+        m_hash(StringUtils::hashName(id.c_str())),
+        mId(id),
+        m_eventData(nullptr) {
     // empty
 }
 
@@ -37,7 +38,7 @@ Event::~Event() {
     // empty
 }
 
-void Event::setEventData( const EventData *pData ) {
+void Event::setEventData(const EventData *pData) {
     m_eventData = pData;
 }
 
@@ -49,25 +50,30 @@ ui32 Event::getHash() const {
     return m_hash;
 }
 
+const String &Event::getId() const {
+    return mId;
+}
+
 void Event::get() {
     ++m_numRefs;
 }
 
 void Event::release() {
     --m_numRefs;
-    if ( 0 == m_numRefs ) {
+    if (0 == m_numRefs) {
         delete this;
     }
 }
 
-bool Event::operator == ( const Event &rhs ) const {
-    return ( m_hash == rhs.m_hash );
+bool Event::operator == (const Event &rhs) const {
+    return (m_hash == rhs.m_hash);
 }
 
-EventData::EventData( const Event& e, EventTriggerer* c ) :
-        m_Event( e ),
-        m_Source( c ), m_timestamp( 0.0 ),
-        m_numRefs( 1 ) {
+EventData::EventData(const Event &e, EventTriggerer *c) :
+        m_Event(e),
+        m_Source(c),
+        m_timestamp(0.0),
+        m_numRefs(1) {
     // empty
 }
 
@@ -75,11 +81,11 @@ EventData::~EventData() {
     // empty
 }
 
-const Event& EventData::getEvent() const {
+const Event &EventData::getEvent() const {
     return m_Event;
 }
 
-EventTriggerer* EventData::getEventSender() const {
+EventTriggerer *EventData::getEventSender() const {
     return m_Source;
 }
 
@@ -88,16 +94,16 @@ void EventData::get() {
 }
 
 void EventData::release() {
-    if ( m_numRefs ) {
+    if (m_numRefs) {
         --m_numRefs;
-        if ( 0 == m_numRefs ) {
+        if (0 == m_numRefs) {
             delete this;
         }
     }
 }
 
-bool EventData::operator == ( const EventData &other ) const {
-    return ( m_Event == other.m_Event && m_Source == other.m_Source );
+bool EventData::operator==(const EventData &other) const {
+    return (m_Event == other.m_Event && m_Source == other.m_Source);
 }
 
 } // Namespace Common

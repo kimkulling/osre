@@ -20,53 +20,67 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#pragma once
-
-#include <cppcore/Container/TArray.h>
-#include <cppcore/Container/THashMap.h>
-#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/Scene/SceneCommon.h>
-#include <osre/Scene/TAABB.h>
 
 namespace OSRE {
+namespace RenderBackend {
 
-namespace UI {
-
-class FontRenderer;
+TransformMatrixBlock::TransformMatrixBlock() :
+        m_projection(1.0f),
+        m_model(1.0f),
+        m_view(1.0f),
+        m_normal(1.0f),
+        m_mvp(1.0f) {
+    init();
 }
 
-namespace Scene {
+TransformMatrixBlock::~TransformMatrixBlock() {
+    // empty
+}
 
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT DbgRenderer {
-public:
-    void renderDbgText(ui32 x, ui32 y, ui32 id, const String &text);
-    void renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb);
-    void clear();
-    void addLine(const RenderBackend::ColorVert &v0, const RenderBackend::ColorVert &v1);
+void TransformMatrixBlock::init() {
+    m_projection = glm::mat4(1.0f);
+    m_model = glm::mat4(1.0f);
+    m_view = glm::mat4(1.0f);
+    m_normal = glm::mat4(1.0f);
+    m_mvp = glm::mat4(1.0f);
+}
 
-    static bool create(RenderBackend::RenderBackendService *rbSrv);
-    static bool destroy();
-    static DbgRenderer *getInstance();
+void TransformMatrixBlock::update() {
+    const glm::mat4 modelView = m_view * m_model;
+    m_normal = transpose(inverse(modelView));
+}
 
-private:
-    DbgRenderer(RenderBackend::RenderBackendService *rbSrv);
-    ~DbgRenderer();
+const glm::mat4 &TransformMatrixBlock::getModel() const {
+    return m_model;
+}
 
-private:
-    static DbgRenderer *s_instance;
+const glm::mat4 &TransformMatrixBlock::getView() const {
+    return m_view;
+}
 
-    RenderBackend::RenderBackendService *mRbSrv;
-    RenderBackend::TransformMatrixBlock mTransformMatrix;
-    UI::FontRenderer *mFontRenderer;
-    RenderBackend::Mesh *mDebugGeometry;
-    ui16 mLastIndex;
-};
+const glm::mat4 &TransformMatrixBlock::getProjection() const {
+    return m_projection;
+}
 
-} // Namespace Scene
+const float *TransformMatrixBlock::getModelPtr() const {
+    return glm::value_ptr(m_model);
+}
+
+const float *TransformMatrixBlock::getViewPtr() const {
+    return glm::value_ptr(m_view);
+}
+
+const float *TransformMatrixBlock::getProjectionPtr() const {
+    return glm::value_ptr(m_projection);
+}
+
+const float *TransformMatrixBlock::getMVP() {
+    const glm::mat4 modelView = m_view * m_model;
+    m_mvp = m_projection * modelView;
+    return glm::value_ptr(m_mvp);
+}
+
+
+} // namespace RenderBackend
 } // namespace OSRE

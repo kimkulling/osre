@@ -32,7 +32,7 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief  This build-class takes care of all material creation steps.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT MaterialBuilder {
 public:
@@ -46,9 +46,25 @@ public:
     /// @param  type    The vertx type.
     /// @return The build-in material instance.
     static RenderBackend::Material *createBuildinMaterial( RenderBackend::VertexType type );
+    
+    /// @brief 
+    /// @return 
     static RenderBackend::Material *createBuildinUiMaterial();
+    
+    /// @brief 
+    /// @param matName 
+    /// @param texResArray 
+    /// @param type 
+    /// @return 
     static RenderBackend::Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
         RenderBackend::VertexType type );
+    
+    /// @brief 
+    /// @param matName 
+    /// @param texResArray 
+    /// @param VsSrc 
+    /// @param FsSrc 
+    /// @return 
     static RenderBackend::Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
         const String& VsSrc, const String& FsSrc);
 
