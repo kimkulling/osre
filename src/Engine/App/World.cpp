@@ -215,8 +215,8 @@ void World::updateEntities() {
         }
         Scene::MeshProcessor processor;
         RenderComponent *rc = (RenderComponent *)entity->getComponent(ComponentType::RenderComponentType);
-        for (ui32 i = 0; i < rc->getNumGeometry(); ++i) {
-            processor.addMesh(rc->getMeshAt(i));
+        for (ui32 j = 0; j < rc->getNumGeometry(); ++j) {
+            processor.addMesh(rc->getMeshAt(j));
         }
         if (processor.execute()) {
             entity->setAABB(processor.getAABB());

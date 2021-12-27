@@ -102,7 +102,7 @@ static size_t getNumNodes(Node *node, size_t currentNodeCount) {
     return currentNodeCount;
 }
 
-static void storeAABB(const Scene::Node::AABB &aabb, NodeData &nd) {
+/* static void storeAABB(const Scene::Node::AABB &aabb, NodeData &nd) {
     TVec3<f32> min = aabb.getMin();
     TVec3<f32> max = aabb.getMax();
     nd.mAABB[0] = min.getX();
@@ -112,7 +112,7 @@ static void storeAABB(const Scene::Node::AABB &aabb, NodeData &nd) {
     nd.mAABB[3] = max.getX();
     nd.mAABB[4] = max.getY();
     nd.mAABB[5] = max.getZ();
-}
+}*/
 
 static size_t getPropertyDataSize(const ::CPPCore::TArray<Properties::Property *> &propArray) {
     if (propArray.isEmpty()) {
@@ -158,7 +158,7 @@ static void storeNodes(Node *currentNode, NodeData *nd, size_t &index) {
 
     NodeData &curNodeData = nd[index];    
     setNameChunk(currentNode->getName(), curNodeData.mNodeName);
-    storeAABB(currentNode->getAABB(), curNodeData);
+    //storeAABB(currentNode->getAABB(), curNodeData);
     ::CPPCore::TArray<Properties::Property *> propArray;
     currentNode->getPropertyArray(propArray);
     if (!propArray.isEmpty()) {
