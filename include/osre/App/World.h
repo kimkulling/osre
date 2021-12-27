@@ -120,6 +120,8 @@ public:
     /// @return The Id container.    
     const Common::Ids &getIds() const;
     
+protected:
+    void updateEntities();
 
 private:
     CPPCore::TArray<Scene::Camera*> m_views;
@@ -130,6 +132,7 @@ private:
     Common::Ids m_ids;
     RenderBackend::Pipeline *mPipeline;
     RenderMode m_renderMode;
+    bool mDirtry;
 };
 
 inline size_t World::getNumCameras() const {

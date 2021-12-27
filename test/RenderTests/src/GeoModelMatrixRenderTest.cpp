@@ -57,7 +57,7 @@ public:
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
         Scene::MeshBuilder myBuilder;
-        myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+        myBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
         Mesh *mesh1 = myBuilder.getMesh();
         mesh1->m_localMatrix = true;
         TransformState transform;
@@ -71,7 +71,7 @@ public:
             {
                 rbSrv->addMesh(mesh1, 0);
 
-                myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+                myBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
                 Mesh *mesh2 = myBuilder.getMesh();
                 mesh2->m_localMatrix = true;
                 transform.setTranslation(-0.5f, 0, 0);

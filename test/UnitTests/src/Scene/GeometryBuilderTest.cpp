@@ -60,7 +60,7 @@ TEST_F( MeshBuilderTest, allocEmptyGeometryTest ) {
 
 TEST_F( MeshBuilderTest, allocTrianglesTest ) {
     MeshBuilder meshBuilder;
-    meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+    meshBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
     Mesh *mesh = meshBuilder.getMesh();
     ASSERT_NE( mesh, nullptr );
     EXPECT_EQ( mesh->m_vertextype, VertexType::ColorVertex );

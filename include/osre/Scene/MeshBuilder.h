@@ -50,7 +50,7 @@ public:
     /// @brief  Will allocate a triangle mesh.
     ///	@param  type        [in] The vertex type.
     /// @return The created mesh.
-    MeshBuilder& allocTriangles( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
+    MeshBuilder& createTriangle(RenderBackend::VertexType type, RenderBackend::BufferAccessType access);
 
     ///	@brief  Will allocate vertices for a quad primitive.
     ///	@param  type        [in] The vertex type.

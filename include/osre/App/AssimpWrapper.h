@@ -90,7 +90,6 @@ protected:
     void importMaterial( aiMaterial *material );
     void importAnimation( aiAnimation *animation );
     void optimizeVertexBuffer();
-    void postProcess();
 
 private:
     struct AssetContext {

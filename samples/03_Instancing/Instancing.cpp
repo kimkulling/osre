@@ -99,8 +99,7 @@ protected:
         mEntity = new App::Entity("instance", world->getIds(), world);
         Scene::MeshBuilder meshBuilder;
         AppBase::getStage()->getActiveWorld()->addEntity(mEntity);
-//        RenderBackend::Mesh *mesh = meshBuilder.allocCube(VertexType::RenderVertex, 1, 2, 3, BufferAccessType::ReadWrite).getMesh();
-        RenderBackend::Mesh *mesh = meshBuilder.allocTriangles(VertexType::RenderVertex, BufferAccessType::ReadWrite).getMesh();
+        RenderBackend::Mesh *mesh = meshBuilder.createTriangle(VertexType::RenderVertex, BufferAccessType::ReadWrite).getMesh();
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);

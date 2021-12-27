@@ -106,7 +106,7 @@ public:
             rbSrv->beginRenderBatch("b1");
             {
                 Scene::MeshBuilder myBuilder;
-                myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+                myBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
                 Mesh *mesh = myBuilder.getMesh();
                 rbSrv->addMesh(mesh, NumInstances);
 

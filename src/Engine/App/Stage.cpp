@@ -30,7 +30,7 @@ namespace App {
 static const c8 *Tag = "Stage";
 
 Stage::Stage(const String &stageName) :
-        Object( stageName ),
+        Object(stageName),
         mWorld(nullptr),
         mWorlds() {
     // empty
@@ -92,7 +92,7 @@ void Stage::update( Time dt ) {
     }
 }
 
-void Stage::draw( RenderBackend::RenderBackendService *rbService ) {
+void Stage::draw(RenderBackend::RenderBackendService *rbService) {
     if (nullptr == rbService) {
         return;
     }

@@ -102,7 +102,7 @@ MeshBuilder &MeshBuilder::allocEmptyMesh( VertexType type, ui32 numMeshes ) {
     return *this;
 }
 
-MeshBuilder &MeshBuilder::allocTriangles( VertexType type, BufferAccessType access ) {
+MeshBuilder &MeshBuilder::createTriangle( VertexType type, BufferAccessType access ) {
     Mesh *mesh = Mesh::create(1, VertexType::RenderVertex);
     mesh->m_vertextype = type;
     mesh->m_indextype = IndexType::UnsignedShort;
