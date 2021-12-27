@@ -133,8 +133,6 @@ void RenderCmdBuffer::onRenderFrame(const EventData *) {
         m_renderbackend->setFixedPipelineStates(states);
 
         for (OGLRenderCmd *renderCmd : m_cmdbuffer) {
-            // only valid pointers are allowed
-            osre_assert(nullptr != renderCmd);
             if (nullptr == renderCmd) {
                 continue;
             }

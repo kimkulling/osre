@@ -61,7 +61,7 @@ public:
 
         CPPCore::TArray<Mesh *> meshArray;
         MeshBuilder meshBuilder;
-        meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+        meshBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
         meshArray.add(meshBuilder.getMesh());
 
         m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));

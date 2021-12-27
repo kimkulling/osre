@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Common/StringUtils.h>
 #include <osre/Debugging/osre_debugging.h>
+#include <osre/Scene/MeshProcessor.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/Camera.h>
 
@@ -58,7 +59,8 @@ World::World(const String &worldName, RenderMode renderMode) :
         mRoot(nullptr),
         m_ids(),
         mPipeline(nullptr),
-        m_renderMode(renderMode) {
+        m_renderMode(renderMode),
+        mDirtry(false) {
     // empty
 }
 
@@ -73,7 +75,7 @@ Scene::Camera *World::addCamera(const String &name) {
     m_views.add(m_activeCamera);
     const ui32 hash = StringUtils::hashName(m_activeCamera->getName());
     m_lookupViews.insert(hash, m_activeCamera);
-    
+    mDirtry = true;
     return m_activeCamera;
 }
 
@@ -122,7 +124,7 @@ void World::addEntity(Entity *entity) {
         osre_debug(Tag, "Pointer to entity are nullptr");
         return;
     }
-
+    mDirtry = true;
     m_entities.add(entity);
 }
 
@@ -136,6 +138,7 @@ bool World::removeEntity(Entity *entity) {
     if (m_entities.end() != it) {
         m_entities.remove(it);
         found = true;
+        mDirtry = true;
     }
 
     return found;
@@ -164,6 +167,7 @@ void World::setSceneRoot(Node *root ) {
     }
 
     mRoot = root;
+    mDirtry = true;
 }
 
 
@@ -172,6 +176,9 @@ void World::update(Time dt) {
         m_activeCamera->update(dt);
     }
 
+    if (mDirtry) {
+        updateEntities();
+    }
     for (Entity *entity : m_entities) {
         if (nullptr == entity) {
             entity->update(dt);
@@ -200,6 +207,23 @@ void World::draw(RenderBackendService *rbSrv) {
     rbSrv->endPass();
 }
 
+void World::updateEntities() {
+    for (ui32 i = 0; i < m_entities.size(); ++i) {
+        auto *entity = m_entities[i];
+        if (entity == nullptr) {
+            continue;
+        }
+        Scene::MeshProcessor processor;
+        RenderComponent *rc = (RenderComponent *)entity->getComponent(ComponentType::RenderComponentType);
+        for (ui32 i = 0; i < rc->getNumGeometry(); ++i) {
+            processor.addMesh(rc->getMeshAt(i));
+        }
+        if (processor.execute()) {
+            entity->setAABB(processor.getAABB());
+        }
+    }
+    mDirtry = false;
+}
 
 } // Namespace App
 } // namespace OSRE

@@ -159,10 +159,6 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
     convertScene();
     osre_debug(Tag, "Converting " + filename + " finished.");
     
-    osre_debug(Tag, "Starting post-processing " + filename);
-    postProcess();
-    osre_debug(Tag, "Post-processing " + filename + " finished.");
-
     return true;
 }
 
@@ -515,21 +511,6 @@ void AssimpWrapper::importAnimation(aiAnimation *animation) {
     }
 }
 
-void AssimpWrapper::postProcess() {
-    if (mAssetContext.mEntity == nullptr) {
-        return;
-    }
-
-    Scene::MeshProcessor processor;
-    RenderComponent *rc = (RenderComponent *) mAssetContext.mEntity->getComponent(ComponentType::RenderComponentType);
-    for (ui32 i = 0; i < rc->getNumGeometry(); ++i) {
-        processor.addMesh(rc->getMeshAt(i));
-    }
-
-    if (processor.execute()) {
-        mAssetContext.mEntity->setAABB(processor.getAABB());
-    }
-}
 
 } // namespace App
 } // Namespace OSRE
