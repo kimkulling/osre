@@ -109,8 +109,6 @@ public:
     virtual void releaseChildren();
     virtual void update(Time dt);
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
-    virtual void setAABB(const AABB &aabb);
-    virtual const AABB &getAABB() const;
     virtual void setActive(bool isActive);
     virtual bool isActive() const;
     virtual void setProperty(Properties::Property *prop);
@@ -141,7 +139,6 @@ private:
     Common::Ids *m_ids;
     ::CPPCore::TArray<Properties::Property *> mPropertyArray;
     PropertyMap m_propMap;
-    AABB m_aabb;
     glm::mat4 m_localTransform;
 };
 
@@ -153,13 +150,13 @@ inline bool Node::isActive() const {
     return m_isActive;
 }
 
-inline void Node::setAABB(const AABB &aabb) {
+/* inline void Node::setAABB(const AABB &aabb) {
     m_aabb = aabb;
 }
 
 inline const Node::AABB &Node::getAABB() const {
     return m_aabb;
-}
+}*/
 
 } // Namespace Scene
 } // namespace OSRE

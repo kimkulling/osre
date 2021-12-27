@@ -103,14 +103,9 @@ protected:
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
-            Scene::MeshProcessor process;
-            process.addMesh(mesh);
-            process.execute();
-            Scene::Node::AABB aabb = process.getAABB();
-            Node *root = getStage()->getActiveWorld()->getRootNode();
-            Node *geoNode = root->createChild("mesh_node");
-            geoNode->setAABB(aabb);
-            camera->observeBoundingBox(aabb);
+            Time dt;
+            world->update(dt);
+            camera->observeBoundingBox(mEntity->getAABB());
         }
 
         return true;
