@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/App/AppCommon.h>
+#include <osre/App/TAbstractCtrlBase.h>
 #include <osre/Platform/PlatformCommon.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Common/ArgumentParser.h>
@@ -109,6 +110,7 @@ public:
     TransformController(RenderBackend::TransformMatrixBlock &tmb);
     ~TransformController() override;
     static Scene::TransformCommandType getKeyBinding(Platform::Key key);
+    static Scene::TransformCommandType getMouseBinding();
     void update(Scene::TransformCommandType cmdType) override;
 
 private:

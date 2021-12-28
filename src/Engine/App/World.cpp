@@ -177,7 +177,7 @@ void World::update(Time dt) {
     }
 
     if (mDirtry) {
-        updateEntities();
+        updateBoundingTrees();
     }
     for (Entity *entity : m_entities) {
         if (nullptr == entity) {
@@ -207,7 +207,7 @@ void World::draw(RenderBackendService *rbSrv) {
     rbSrv->endPass();
 }
 
-void World::updateEntities() {
+void World::updateBoundingTrees() {
     for (ui32 i = 0; i < m_entities.size(); ++i) {
         auto *entity = m_entities[i];
         if (entity == nullptr) {
