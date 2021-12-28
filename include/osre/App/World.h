@@ -121,7 +121,7 @@ public:
     const Common::Ids &getIds() const;
     
 protected:
-    void updateEntities();
+    void updateBoundingTrees();
 
 private:
     CPPCore::TArray<Scene::Camera*> m_views;
