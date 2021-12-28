@@ -347,7 +347,6 @@ bool AppBase::onCreate() {
 
     m_timer = Platform::PlatformInterface::getInstance()->getTimer();
 
-    RenderMode mode = static_cast<RenderMode>(m_settings->get(Properties::Settings::RenderMode).getInt());
     Scene::MaterialBuilder::create();
     ResourceCacheService *rcSrv = new ResourceCacheService;
 

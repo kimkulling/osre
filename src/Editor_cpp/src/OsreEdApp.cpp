@@ -55,6 +55,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #   include <windows.h>
 #   include <commctrl.h>
 #   include <strsafe.h>
+#   include "shellapi.h"
 #endif
 #include <osre/Common/glm_common.h>
 
@@ -436,7 +437,7 @@ void OsreEdApp::quitEditorCmd(ui32, void *) {
 }
 
 void OsreEdApp::gettingHelpCmd(ui32 cmdId, void *data) {
-
+    ShellExecute(NULL, "open", "https://github.com/kimkulling/osre/issues", NULL, NULL, SW_SHOWNORMAL);
 }
 
 void OsreEdApp::showVersionCmd(ui32 cmdId, void *data) {

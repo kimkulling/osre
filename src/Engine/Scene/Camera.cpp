@@ -136,7 +136,7 @@ const glm::mat4 &Camera::getProjection() const {
     return m_projection;
 }
 
-void Camera::onUpdate(Time dt) {
+void Camera::onUpdate(Time) {
     const CameraModel cm = getCameraModel();
     if (cm == CameraModel::Perspective) {
         m_projection = glm::perspective(m_fov, m_aspectRatio, m_near, m_far);

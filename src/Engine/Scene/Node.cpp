@@ -229,7 +229,7 @@ glm::mat4 Node::getWorlTransformMatrix() {
     return wt;
 }
 
-void Node::onUpdate(Time dt) {
+void Node::onUpdate(Time) {
     // empty
 }
 
