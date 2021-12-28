@@ -31,55 +31,102 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 
-class MouseEventListener : public Platform::OSEventListener {
-public:
-    MouseEventListener();
-    ~MouseEventListener() override;
-    void onOSEvent(const Common::Event &osEvent, const Common::EventData *data) override;
-    bool leftButttonPressed() const;
-    bool middleButttonPressed() const;
-    bool rightButttonPressed() const;
-    i32 getRelativeX() const;
-    i32 getRelativeY() const;
-    i32 getAbsoluteX() const;
-    i32 getAbsoluteY() const;
-
-private:
-    const ui32 LeftButton = 1;
-    const ui32 MiddleButton = 2;
-    const ui32 RightButton = 3;
+struct MouseInputState {
     i32 mRelX, mRelY, mAbsX, mAbsY;
     ui32 mLastX, mLastY;
     CPPCore::TBitField<ui32> mMouseButtonState;
+
+    MouseInputState();
+};
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+/// @brief
+//-------------------------------------------------------------------------------------------------
+class MouseEventListener : public Platform::OSEventListener {
+public:
+    static const ui32 LeftButton = 1;
+    static const ui32 MiddleButton = 2;
+    static const ui32 RightButton = 3;
+
+    ///	@brief  The default class constructor.
+    MouseEventListener();
+
+    ///	@brief  The class destructor.
+    ~MouseEventListener() override;
+
+    /// @brief  The event-callback.
+    /// @param osEvent  The event id.
+    /// @param data     The event data.
+    void onOSEvent(const Common::Event &osEvent, const Common::EventData *data) override;
+
+    ///	@brief  Will return true, if the left mouse-button was pressed,
+    /// @return true if the left mouse button was pressed.
+    bool leftButttonPressed() const;
+
+    ///	@brief  Will return true, if the middle mouse-button was pressed,
+    /// @return true if the middle mouse button was pressed.
+    bool middleButttonPressed() const;
+    
+    ///	@brief  Will return true, if the right mouse-button was pressed,
+    /// @return true if the right mouse button was pressed.
+    bool rightButttonPressed() const;
+
+    /// @brief Will return the relative X-movement.
+    /// @return The relative X-movement.
+    i32 getRelativeX() const;
+
+    /// @brief Will return the relative Y-movement.
+    /// @return The relative Y-movement.
+    i32 getRelativeY() const;
+
+    /// @brief Will return the absolute X-movement.
+    /// @return The absolute X-movement.
+    i32 getAbsoluteX() const;
+
+    /// @brief  Will return the absolute Y-movement.
+    /// @return The absolute Y-movement.
+    i32 getAbsoluteY() const;
+
+    /// @brief Will return the mouse input state as a const reference.
+    /// @return  The mouse input state.
+    const MouseInputState &getMouseInputState() const;
+
+private:
+    MouseInputState mMouseInputState;
 };
 
 inline bool MouseEventListener::leftButttonPressed() const {
-    return mMouseButtonState.getBit(LeftButton);
+    return mMouseInputState.mMouseButtonState.getBit(LeftButton);
 }
 
 inline bool MouseEventListener::middleButttonPressed() const {
-    return mMouseButtonState.getBit(MiddleButton);
+    return mMouseInputState.mMouseButtonState.getBit(MiddleButton);
 }
 
 inline bool MouseEventListener::rightButttonPressed() const {
-    return mMouseButtonState.getBit(RightButton);
+    return mMouseInputState.mMouseButtonState.getBit(RightButton);
 }
 
 inline i32 MouseEventListener::getRelativeX() const {
-    return mRelX;
+    return mMouseInputState.mRelX;
 }
 
 inline i32 MouseEventListener::getRelativeY() const {
-    return mRelY;
+    return mMouseInputState.mRelY;
 }
 
 inline i32 MouseEventListener::getAbsoluteX() const {
-    return mAbsX;
+    return mMouseInputState.mAbsX;
 }
 
 inline i32 MouseEventListener::getAbsoluteY() const {
-    return mAbsY;
+    return mMouseInputState.mAbsY;
 }
 
+inline const MouseInputState &MouseEventListener::getMouseInputState() const {
+    return mMouseInputState;
+}
 } // Namespace App
 } // Namespace OSRE

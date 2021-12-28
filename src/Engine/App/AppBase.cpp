@@ -238,7 +238,14 @@ Scene::Camera *AppBase::setActiveCamera(Scene::Camera *view) {
         osre_debug(Tag, "No world to activate state to.");
         return nullptr;
     }
-    return getStage()->getActiveWorld()->setActiveCamera(view);
+
+    World *activeWorld = getStage()->getActiveWorld();
+    if (activeWorld == nullptr) {
+        return nullptr;
+    }
+    
+    return activeWorld->setActiveCamera(view);
+
 }
 
 void AppBase::requestShutdown() {

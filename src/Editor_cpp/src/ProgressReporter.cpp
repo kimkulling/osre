@@ -85,6 +85,5 @@ void ProgressReporter::reset() {
     mProgress = 0;
 }
 
-
 } // namespace Editor
 } // namespace OSRE 

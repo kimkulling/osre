@@ -219,7 +219,7 @@ void createRect2D(const Rect2ui &r, Mesh *mesh2D, Style &style) {
     }
 
     glm::vec2 p0(r.x1, r.y1), p1(r.getX1(), r.getY2()), p2(r.getX2(), r.getY2()), p3(r.getX2(), r.getY2());
-    UIVert edges[4];
+    UIVert edges[4] = {};
     edges[0].position = p0;
     edges[1].position = p1;
     edges[2].position = p2;
@@ -272,6 +272,17 @@ OsreEdApp::~OsreEdApp() {
     // empty
 }
 
+void createEditorElements(RenderComponent *rc) {
+    if (rc == nullptr) {
+        return;
+    }
+
+    Mesh *grid = createGrid(60);
+    rc->addStaticMesh(grid);
+    Mesh *axis = createCoordAxis(100);
+    rc->addStaticMesh(axis);
+}
+
 bool OsreEdApp::onCreate() {
     if (!AppBase::onCreate()) {
         return false;
@@ -320,11 +331,7 @@ bool OsreEdApp::onCreate() {
     }
 
     Entity *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
-    Mesh *grid = createGrid(60);
-    RenderComponent *rc = (RenderComponent *)editorEntity->getComponent(ComponentType::RenderComponentType);
-    rc->addStaticMesh(grid);
-    //editorEntity->addStaticMesh(createCoordAxis(1000));
-    //createUI();
+    createEditorElements((RenderComponent *)editorEntity->getComponent(ComponentType::RenderComponentType));
 
     mPythonInterface = new PythonInterface;
     if (!mPythonInterface->create()) {
@@ -497,24 +504,9 @@ void OsreEdApp::setStatusBarText(const String &mode, const String &model, i32 nu
     }
 }
 
-void getMouseBinding(i32 x, i32 lastX, i32 y, i32 lastY, TArray<TransformCommandType> &transformCmds) {
-    i32 dX = lastX - x;
-    i32 dY = lastY - y;
-    if (dX > 0)
-        transformCmds.add(TransformCommandType::RotateXCommandPositive);
-    else if (dX < 0)
-        transformCmds.add(TransformCommandType::RotateXCommandNegative);
-
-    if (dY > 0)
-        transformCmds.add(TransformCommandType::RotateZCommandPositive);
-    else if (dY < 0)
-        transformCmds.add(TransformCommandType::RotateZCommandNegative);
-}
-
 void OsreEdApp::onUpdate() {
     Key key = AppBase::getKeyboardEventListener()->getLastKey();
     glm::mat4 rot(1.0);
-    MouseEventListener *listener = AppBase::getMouseEventListener();
     TArray<TransformCommandType> transformCmds;
     mTransformController->update(TransformController::getKeyBinding(key));
     for (ui32 i = 0; i < transformCmds.size(); ++i) {

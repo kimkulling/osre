@@ -40,7 +40,7 @@ struct AnimationBase {
 };
 
 enum class TransformCommandType {
-    RotateXCommandPositive,
+    RotateXCommandPositive = 0,
     RotateXCommandNegative,
     RotateYCommandPositive,
     RotateYCommandNegative,

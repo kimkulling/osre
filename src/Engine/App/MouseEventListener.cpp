@@ -29,15 +29,14 @@ namespace App {
 using namespace OSRE::Common;
 using namespace OSRE::Platform;
 
+MouseInputState::MouseInputState() :
+        mRelX( 0 ), mRelY( 0 ), mAbsX( 0 ), mAbsY( 0 ), mLastX( 0 ), mLastY( 0 ), mMouseButtonState() {
+    // empty
+}
+
 MouseEventListener::MouseEventListener() :
         OSEventListener("App/MouseEventListener"),
-        mRelX(0),
-        mRelY(0),
-        mAbsX(0),
-        mAbsY(0),
-        mLastX(0),
-        mLastY(0),
-        mMouseButtonState() {
+        mMouseInputState() {
     // empty
 }
 
@@ -46,42 +45,42 @@ MouseEventListener::~MouseEventListener() {
 }
 
 void MouseEventListener::onOSEvent(const Event &ev, const EventData *data) {
-    mLastX = mAbsX;
-    mLastY = mAbsY;
+    mMouseInputState.mLastX = mMouseInputState.mAbsX;
+    mMouseInputState.mLastY = mMouseInputState.mAbsY;
     if (!(ev == MouseButtonDownEvent) && !(ev == MouseButtonUpEvent)) {
         MouseMoveEventData *evData = (MouseMoveEventData *)data;
-        mAbsX = evData->m_absX;
-        mAbsY = evData->m_absY;
+        mMouseInputState.mAbsX = evData->m_absX;
+        mMouseInputState.mAbsY = evData->m_absY;
     } else {
         MouseButtonEventData *mouseEventData = (MouseButtonEventData *)data;
-        mAbsX = mouseEventData->m_AbsX;
-        mAbsY = mouseEventData->m_AbsY;
+        mMouseInputState.mAbsX = mouseEventData->m_AbsX;
+        mMouseInputState.mAbsY = mouseEventData->m_AbsY;
         if (mouseEventData->m_Button == MouseButtonEventData::LeftButton) {
             if (mouseEventData->m_Pressed) {
-                mMouseButtonState.setBit(LeftButton);
+                mMouseInputState.mMouseButtonState.setBit(LeftButton);
             } else {
-                mMouseButtonState.clearBit(LeftButton);
+                mMouseInputState.mMouseButtonState.clearBit(LeftButton);
             }
         }
 
         if (mouseEventData->m_Button == MouseButtonEventData::MiddleButton) {
             if (mouseEventData->m_Pressed) {
-                mMouseButtonState.setBit(MiddleButton);
+                mMouseInputState.mMouseButtonState.setBit(MiddleButton);
             } else {
-                mMouseButtonState.clearBit(MiddleButton);
+                mMouseInputState.mMouseButtonState.clearBit(MiddleButton);
             }
         }
 
         if (mouseEventData->m_Button == MouseButtonEventData::RightButton) {
             if (mouseEventData->m_Pressed) {
-                mMouseButtonState.setBit(RightButton);
+                mMouseInputState.mMouseButtonState.setBit(RightButton);
             } else {
-                mMouseButtonState.clearBit(RightButton);
+                mMouseInputState.mMouseButtonState.clearBit(RightButton);
             }
         }
     }
-    mRelX = mLastX - mAbsX;
-    mRelY = mLastY - mAbsY;
+    mMouseInputState.mRelX = mMouseInputState.mLastX - mMouseInputState.mAbsX;
+    mMouseInputState.mRelY = mMouseInputState.mLastY - mMouseInputState.mAbsY;
 }
 
 } // Namespace App

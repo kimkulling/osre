@@ -36,13 +36,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 namespace App {
-class Project;
-class World;
-
+    class Project;
+    class World;
 } // namespace App
 
 namespace IO {
-class Uri;
+    class Uri;
 }
 
 namespace Editor {
