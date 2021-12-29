@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "PythonInterface.h"
 #include <osre/Common/Logger.h>
-#include <osre/app/World.h>
+#include <osre/App/World.h>
 
 #include <Python.h>
 #include <structmember.h> // defines a python class in C++
@@ -168,7 +168,6 @@ PyMODINIT_FUNC PyInit_custom() {
 
     return m;
 }
-
 
 PythonInterface::PythonInterface() :
         mCreated(false),

@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Modules/ModuleRegistry.h"
-
+#include "SceneData.h"
 #include <osre/App/AppBase.h>
 #include <osre/App/World.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -47,17 +47,7 @@ namespace IO {
 namespace Editor {
 
 class PythonInterface;
-
-struct SceneData {
-    String Name;
-    String ProjectName;
-    String AssetName;
-    Scene::Node::NodePtr m_modelNode;
-    Scene::Camera *mCamera;
-    App::World *mWorld;
-
-    SceneData();
-};
+class MainRenderView;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor
@@ -161,6 +151,7 @@ protected:
     bool saveSceneData(const IO::Uri &filename, SceneData &sd);
 
 private:
+    MainRenderView *mMainRenderView;
     glm::mat4 m_model;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
     SceneData mSceneData;

@@ -20,43 +20,40 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "OsreEdApp.h"
-#include <osre/Platform/AbstractOSService.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <iostream>
+#pragma once
 
-using namespace ::OSRE;
-using namespace ::OSRE::App;
-using namespace ::OSRE::Editor;
-using namespace ::OSRE::Platform;
+#include "Actions/ActionBase.h"
 
-#include <osre/Platform/Windows/MinWindows.h>
+namespace OSRE {
 
-void getMonitorResolution(ui32 &width, ui32 &heigt) {
-#ifdef OSRE_WINDOWS
-    width = GetSystemMetrics(SM_CXSCREEN);
-    heigt = GetSystemMetrics(SM_CYSCREEN);
-#else
-    width = heigt = 0;
-#endif
+namespace Common {
+    class Ids;
 }
 
-int main(int argc, char *argv[]) {
-    OsreEdApp app(argc, argv);
-
-    const ui32 Margin = 100;
-    ui32 width = 0, height = 0;
-    getMonitorResolution(width, height);
-    if (!app.initWindow(10, 10, width - Margin, height - Margin, "OSRE-Ed", false, RenderBackendType::OpenGLRenderBackend)) {
-        return 1;
-    }
-
-    while (app.handleEvents()) {
-        app.update();
-        app.requestNextFrame();
-    }
-
-    MemoryStatistics::showStatistics();
-
-    return 0;
+namespace App {
+    class World;
+    class Entity;
 }
+namespace Editor {
+
+class ImportAction : public ActionBase {
+public:
+    ImportAction(Common::Ids *ids, App::World *activeWorld);
+    ~ImportAction() override;
+    App::Entity *getEntity() const;
+
+protected:
+    bool onRun(const ArgumentList &args) override;
+
+private:
+    Common::Ids *mIds;
+    App::World *mActiveWorld;
+    App::Entity *mEntity;
+};
+
+inline App::Entity *ImportAction::getEntity() const {
+    return mEntity;
+}
+
+} // namespace Editor
+} // namespace OSRE

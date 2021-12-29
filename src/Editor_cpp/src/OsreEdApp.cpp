@@ -22,11 +22,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "OsreEdApp.h"
 #include "ProgressReporter.h"
+#include "RenderView/MainRenderView.h"
 #include "Gui/UIElements.h"
 #include "Modules/InspectorModule/InspectorModule.h"
 #include "Modules/ModuleBase.h"
 #include "Scripting/PythonInterface.h"
+#include "Actions/ImportAction.h"
+#include <cppcore/Common/Variant.h>
 #include "Engine/App/MouseEventListener.h"
+
 #include <osre/App/AssimpWrapper.h>
 #include <osre/App/AssetRegistry.h>
 #include <osre/App/Entity.h>
@@ -74,16 +78,16 @@ static const ui32 VerticalMargin = 2;
 
 #ifdef OSRE_WINDOWS
 
-#define IDM_FILE_NEW 1
-#define IDM_FILE_OPEN 2
-#define IDM_FILE_SAVE 3
-#define IDM_FILE_IMPORT 4
-#define IDM_FILE_QUIT 5
+constexpr int IDM_FILE_NEW = 1;
+constexpr int IDM_FILE_OPEN = 2;
+constexpr int IDM_FILE_SAVE = 3;
+constexpr int IDM_FILE_IMPORT = 4;
+constexpr int IDM_FILE_QUIT = 5;
 
-#define IDM_GETTING_HELP 6
-#define IDM_INFO_VERSION 7
+constexpr int IDM_GETTING_HELP = 6;
+constexpr int IDM_INFO_VERSION = 7;
 
-#define ID_STATIC 8
+//#define ID_STATIC 8
 
 
 #endif // OSRE_WINDOWS
@@ -245,16 +249,6 @@ void createRect2D(const Rect2ui &r, Mesh *mesh2D, Style &style) {
 }
 
 
-SceneData::SceneData() :
-        Name(),
-        ProjectName("none"),
-        AssetName("none"),
-        m_modelNode(),
-        mCamera( nullptr ),
-        mWorld( nullptr ) {
-    // empty
-}
-
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         AppBase(argc, (const char **)argv, "api", "The render API"),
         m_model(),
@@ -331,6 +325,7 @@ bool OsreEdApp::onCreate() {
         return false;
     }
 
+    mMainRenderView = new MainRenderView();
     Entity *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
     createEditorElements((RenderComponent *)editorEntity->getComponent(ComponentType::RenderComponentType));
 
@@ -362,8 +357,10 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     ProgressReporter reporter(rootWindow);
     reporter.start();
     reporter.update(10);
-    AssimpWrapper assimpWrapper(*getIdContainer(), getStage()->getActiveWorld());
-    if (!assimpWrapper.importAsset(modelLoc, 0)) {
+    ImportAction action(getIdContainer(), getStage()->getActiveWorld());
+    ArgumentList args;
+    args.add(CPPCore::Variant::createFromString(modelLoc.getAbsPath()));
+    if (!action.run(args)) {
         reporter.stop();
         return;
     }
@@ -379,7 +376,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     World *world = getStage()->getActiveWorld();
     mSceneData.mCamera = world->addCamera("camera_1");
     mSceneData.mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
-    Entity *entity = assimpWrapper.getEntity();
+    Entity *entity = action.getEntity();
 
     reporter.update(10);
     world->addEntity(entity);
@@ -531,6 +528,7 @@ void OsreEdApp::onUpdate() {
 
 void OsreEdApp::onRender() {
     mModuleRegistry.render();
+    
     AppBase::onRender();
 }
 
@@ -539,6 +537,9 @@ bool OsreEdApp::onDestroy() {
 
     delete mPythonInterface;
     mPythonInterface = nullptr;
+
+    delete mMainRenderView;
+    mMainRenderView = nullptr;
 
     Mesh::destroy(&mMesh2D);
     mMesh2D = nullptr;

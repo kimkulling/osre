@@ -32,7 +32,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Editor {
 
-ProgressReporter::ProgressReporter(Platform::AbstractWindow *window) :
+using namespace ::OSRE::Platform;
+
+ProgressReporter::ProgressReporter(AbstractWindow *window) :
         mWindow(window),
         mProgress(0),
         mProgressBar(nullptr) {
@@ -49,14 +51,14 @@ ProgressReporter::~ProgressReporter() {
 
 void ProgressReporter::start() {
     if (nullptr != mWindow) {
-        mWindow->setWindowsMouseCursor(Platform::DefaultMouseCursorType::WaitCursor);
+        mWindow->setWindowsMouseCursor(DefaultMouseCursorType::WaitCursor);
     }
     
     if (nullptr != mProgressBar) {
         return;
     }
-    ui32 width, heihgt;
-    Platform::PlatformInterface::getInstance()->getOSServices()->getMonitorResolution(width, heihgt);
+    ui32 width = 0 , heihgt = 0;
+    PlatformInterface::getInstance()->getOSServices()->getMonitorResolution(width, heihgt);
     ui32 x = width / 2 - 50;
     ui32 y = heihgt / 2 - 10;
     Rect2ui r(x, y, 300, 20);

@@ -238,7 +238,7 @@ struct Color4 {
     }
 
     glm::vec4 toVec4() {
-        glm::vec4 col;
+        glm::vec4 col = {};
         col.r = m_r;
         col.g = m_g;
         col.b = m_b;

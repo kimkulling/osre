@@ -20,43 +20,56 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "OsreEdApp.h"
-#include <osre/Platform/AbstractOSService.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <iostream>
+#include "Actions/ImportAction.h"
+#include <osre/Common/osre_common.h>
+#include <osre/App/AssimpWrapper.h>
+#include <osre/IO/Uri.h>
 
-using namespace ::OSRE;
+#include <cppcore//Common/Variant.h>
+#include <osre/Common/Ids.h>
+
+namespace OSRE {
+namespace Editor {
+
+using namespace ::OSRE::Common;
 using namespace ::OSRE::App;
-using namespace ::OSRE::Editor;
-using namespace ::OSRE::Platform;
 
-#include <osre/Platform/Windows/MinWindows.h>
+using namespace ::CPPCore;
 
-void getMonitorResolution(ui32 &width, ui32 &heigt) {
-#ifdef OSRE_WINDOWS
-    width = GetSystemMetrics(SM_CXSCREEN);
-    heigt = GetSystemMetrics(SM_CYSCREEN);
-#else
-    width = heigt = 0;
-#endif
+ImportAction::ImportAction(Ids *ids, World *activeWorld) :
+        ActionBase(), 
+        mIds(ids),
+        mActiveWorld(activeWorld),
+        mEntity(nullptr) {
+    // empty
 }
 
-int main(int argc, char *argv[]) {
-    OsreEdApp app(argc, argv);
-
-    const ui32 Margin = 100;
-    ui32 width = 0, height = 0;
-    getMonitorResolution(width, height);
-    if (!app.initWindow(10, 10, width - Margin, height - Margin, "OSRE-Ed", false, RenderBackendType::OpenGLRenderBackend)) {
-        return 1;
-    }
-
-    while (app.handleEvents()) {
-        app.update();
-        app.requestNextFrame();
-    }
-
-    MemoryStatistics::showStatistics();
-
-    return 0;
+ImportAction::~ImportAction() {
+    mIds = nullptr;
+    mActiveWorld = nullptr;
+    mEntity = nullptr;
 }
+
+bool ImportAction::onRun(const ArgumentList &args) {
+    if (args.isEmpty()) {
+        return false;
+    }
+    
+    const Variant *modelPath = args[0];
+    if (modelPath == nullptr) {
+        return false;
+    }
+
+    String path = modelPath->getString();
+    IO::Uri loc(path);
+    AssimpWrapper assimpWrapper(*mIds, mActiveWorld);
+    if (!assimpWrapper.importAsset(loc, 0)) {
+        return false;
+    }
+    mEntity = assimpWrapper.getEntity();
+    
+    return (mEntity != nullptr);
+}
+
+} // namespace Editor
+} // namespace OSRE

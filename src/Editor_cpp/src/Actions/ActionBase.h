@@ -20,43 +20,42 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "OsreEdApp.h"
-#include <osre/Platform/AbstractOSService.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <iostream>
+#pragma once
 
-using namespace ::OSRE;
-using namespace ::OSRE::App;
-using namespace ::OSRE::Editor;
-using namespace ::OSRE::Platform;
+#include <cppcore/Container/TArray.h>
+#include <cppcore/Common/Variant.h>
 
-#include <osre/Platform/Windows/MinWindows.h>
+namespace OSRE {
+namespace Editor {
 
-void getMonitorResolution(ui32 &width, ui32 &heigt) {
-#ifdef OSRE_WINDOWS
-    width = GetSystemMetrics(SM_CXSCREEN);
-    heigt = GetSystemMetrics(SM_CYSCREEN);
-#else
-    width = heigt = 0;
-#endif
+using ArgumentList = ::CPPCore::TArray<::CPPCore::Variant*>;
+
+class ActionBase {
+public:
+    virtual ~ActionBase();
+    virtual bool run(const ArgumentList &args);
+
+protected:
+    ActionBase();
+    virtual bool onRun(const ArgumentList &args);
+};
+
+inline ActionBase::~ActionBase() {
+    // empty
 }
 
-int main(int argc, char *argv[]) {
-    OsreEdApp app(argc, argv);
-
-    const ui32 Margin = 100;
-    ui32 width = 0, height = 0;
-    getMonitorResolution(width, height);
-    if (!app.initWindow(10, 10, width - Margin, height - Margin, "OSRE-Ed", false, RenderBackendType::OpenGLRenderBackend)) {
-        return 1;
-    }
-
-    while (app.handleEvents()) {
-        app.update();
-        app.requestNextFrame();
-    }
-
-    MemoryStatistics::showStatistics();
-
-    return 0;
+inline bool ActionBase::run(const ArgumentList &args) {
+    const bool result = onRun(args);
+    return result;
 }
+
+inline ActionBase::ActionBase() {
+    // empty
+}
+
+inline bool ActionBase::onRun(const ArgumentList &) {
+    return true;
+}
+
+} // namespace Editor
+} // namespace OSRE
