@@ -69,6 +69,18 @@ World *Stage::findWorld(const String &name) const {
     return nullptr;
 }
 
+ui32 Stage::getNumberOfWorlds() const {
+    return mWorlds.size();
+}
+
+World *Stage::getWorldAt( ui32 index ) const {
+    if (index >= mWorlds.size()) {
+        return nullptr;
+    }
+
+    return mWorlds[index];
+}
+
 bool Stage::setActiveWorld(const String &name) {
     if (name.empty()) {
         return false;

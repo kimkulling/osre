@@ -364,6 +364,10 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
         reporter.stop();
         return;
     }
+    if (mProject == nullptr) {
+        newProjectCmd(1, CPPCore::Variant::createFromString(modelLoc.getResource()));
+        mProject->setStage(AppBase::getStage());
+    }
     reporter.update(10);
     RenderBackendService *rbSrv = getRenderBackendService();
     if (nullptr == rbSrv) {
@@ -393,9 +397,14 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     reporter.stop();
 }
 
-void OsreEdApp::newProjectCmd(ui32, void *) {
+void OsreEdApp::newProjectCmd(ui32, void *data) {
     mProject = new App::Project();
-    mProject->setProjectName("New project");    
+    std::string name = "New project";
+    if (data != nullptr) {
+        CPPCore::Variant *v = (CPPCore::Variant*)data;
+        name = v->getString();
+    }
+    mProject->setProjectName(name);
     String title = mProject->getProjectName();
     createTitleString(mSceneData, title);
     AppBase::setWindowsTitle(title);
@@ -572,7 +581,11 @@ bool OsreEdApp::saveSceneData(const IO::Uri &filename, SceneData &sd) {
         return false;
     }
 
-
+    if (mProject == nullptr) {
+        CPPCore::Variant *v = CPPCore::Variant::createFromString(filename.getResource());
+        newProjectCmd(1, (void *)v);
+    }
+    mProject->save(filename.getAbsPath());
     stream->close();
 
     return true;

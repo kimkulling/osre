@@ -45,7 +45,7 @@ static const ui32 MinorProjectVerion = 1;
 Project::Project() :
         Object("App/Project"),
         mProjectName(),
-        mStage("") {
+        mStage(nullptr) {
     // empty
 }
 
@@ -61,6 +61,16 @@ void Project::setProjectName(const String &projectName) {
 
 const String &Project::getProjectName() const {
     return mProjectName;
+}
+
+void Project::setStage( Stage *stage ) {
+    if (stage != mStage) {
+        mStage = stage;
+    }
+}
+
+Stage *Project::getStage() const {
+    return mStage;
 }
 
 bool Project::load(const String &name) {
@@ -101,18 +111,6 @@ static size_t getNumNodes(Node *node, size_t currentNodeCount) {
 
     return currentNodeCount;
 }
-
-/* static void storeAABB(const Scene::Node::AABB &aabb, NodeData &nd) {
-    TVec3<f32> min = aabb.getMin();
-    TVec3<f32> max = aabb.getMax();
-    nd.mAABB[0] = min.getX();
-    nd.mAABB[1] = min.getY();
-    nd.mAABB[2] = min.getZ();
-
-    nd.mAABB[3] = max.getX();
-    nd.mAABB[4] = max.getY();
-    nd.mAABB[5] = max.getZ();
-}*/
 
 static size_t getPropertyDataSize(const ::CPPCore::TArray<Properties::Property *> &propArray) {
     if (propArray.isEmpty()) {
@@ -158,7 +156,6 @@ static void storeNodes(Node *currentNode, NodeData *nd, size_t &index) {
 
     NodeData &curNodeData = nd[index];    
     setNameChunk(currentNode->getName(), curNodeData.mNodeName);
-    //storeAABB(currentNode->getAABB(), curNodeData);
     ::CPPCore::TArray<Properties::Property *> propArray;
     currentNode->getPropertyArray(propArray);
     if (!propArray.isEmpty()) {
@@ -251,14 +248,24 @@ static bool saveStage(const String &name, const Stage &stage, StageData *sd) {
     setNameChunk(stageName, sd->mStageName);
     sd->mMajorVersion = MajorProjectVerion;
     sd->mMinorVersion = MinorProjectVerion;
-    World *world = stage.getActiveWorld();
-    if (world == nullptr) {
+    World *activeWorld = stage.getActiveWorld();
+    if (activeWorld == nullptr) {
         return true;
     }
 
-    sd->mNumWorlds = 1;
+    setNameChunk(activeWorld->getName(), sd->mActiveWorld);
+    sd->mNumWorlds = stage.getNumberOfWorlds();
     sd->mWorldData = new WorldData[sd->mNumWorlds];
-    return saveWorld(world, *(sd->mWorldData));
+    bool result = true;
+    for (i32 i = 0; i < sd->mNumWorlds; ++i) {
+        World *world = stage.getWorldAt(i);
+        result |= saveWorld(world, *(sd->mWorldData));
+        if (!result) {
+            osre_error(Tag, "Error while storing world " + world->getName() + ".");
+        }
+    }
+    
+    return result;
 }
 
 bool Project::save(const String &name) {
@@ -266,13 +273,13 @@ bool Project::save(const String &name) {
         return false;
     }
 
-    if (mStage.isEmpty()) {
+    if (mStage == nullptr) {
         return true;
     }
     
     StageData *sd = new StageData;
     
-    return saveStage(name, mStage, sd);
+    return saveStage(name, *mStage, sd);
 }
 
 } // Namespace App

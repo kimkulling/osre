@@ -139,6 +139,7 @@ struct StageData {
     i32 mMajorVersion;
     i32 mMinorVersion;
     ChunkName mStageName;
+    ChunkName mActiveWorld;
     i32 mNumWorlds;
     WorldData *mWorldData;
 
@@ -146,6 +147,7 @@ struct StageData {
             mMajorVersion(NotInited),
             mMinorVersion(NotInited),
             mStageName(),
+            mActiveWorld(),
             mNumWorlds(NotInited),
             mWorldData(nullptr) {
         // empty
@@ -158,12 +160,14 @@ public:
 	~Project();
     void setProjectName(const String& projectName);
     const String& getProjectName() const;
+    void setStage(Stage *stage);
+    Stage *getStage() const;
     bool load(const String& name);
 	bool save( const String &name);
 
 private:
     String mProjectName;
-    Stage mStage;
+    Stage *mStage;
 };
 
 } // Namespace App
