@@ -43,8 +43,8 @@ public:
     virtual ~AbstractLogStream();
 
     ///	@brief	Will write a message into the attached log stream.
-    ///	@param	rMessage	The message to log.
-    virtual void write( const String &rMessage ) = 0;
+    ///	@param	message	The message to log.
+    virtual void write( const String &message ) = 0;
 
     ///	@brief	The stream will be activated.
     virtual void activate();

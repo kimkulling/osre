@@ -25,6 +25,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <iostream>
 
+#include "windows.h"
+#include <commctrl.h>
+#include <windowsx.h>
+
 using namespace ::OSRE;
 using namespace ::OSRE::App;
 using namespace ::OSRE::Editor;
@@ -43,6 +47,12 @@ void getMonitorResolution(ui32 &width, ui32 &heigt) {
 
 int main(int argc, char *argv[]) {
     OsreEdApp app(argc, argv);
+
+    // needed for the RichEdit control in the about/help dialog
+    LoadLibrary("riched20.dll");
+    // load windows common controls library to get XP style
+    InitCommonControls();
+
 
     const ui32 Margin = 100;
     ui32 width = 0, height = 0;
