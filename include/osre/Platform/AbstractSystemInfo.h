@@ -33,7 +33,7 @@ namespace Platform {
 ///	@brief  This abstract base class represents the interface for all system-specific information 
 ///         calls.
 //-------------------------------------------------------------------------------------------------
-class AbstractSystemInfo {
+class OSRE_EXPORT AbstractSystemInfo {
 public:
     /// @brief  The class destructor, virtual.
     virtual ~AbstractSystemInfo();
