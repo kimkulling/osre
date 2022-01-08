@@ -61,6 +61,10 @@ bool ImportAction::onRun(const ArgumentList &args) {
     }
 
     String path = modelPath->getString();
+    if (path.empty()) {
+        return false;
+    }
+
     IO::Uri loc(path);
     AssimpWrapper assimpWrapper(*mIds, mActiveWorld);
     if (!assimpWrapper.importAsset(loc, 0)) {

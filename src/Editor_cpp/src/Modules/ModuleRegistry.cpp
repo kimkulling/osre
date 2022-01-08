@@ -53,6 +53,7 @@ bool ModuleRegistry::registerModule(ModuleBase *mod) {
 
     if (nullptr == findModule(mod->getName())) {
         mModules.add(mod);
+        mod->load();
     }
 
     return true;
@@ -81,6 +82,7 @@ bool ModuleRegistry::unregisterModule(ModuleBase *mod) {
     if (it == mModules.end()) {
         return false;
     }
+    (*it)->unload();
     mModules.remove(it);
 
     return true;

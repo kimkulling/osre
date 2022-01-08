@@ -41,6 +41,7 @@ using namespace ::OSRE::RenderBackend;
 static const c8 *Tag = "Project";
 static const ui32 MajorProjectVerion = 0;
 static const ui32 MinorProjectVerion = 1;
+static const c8 *Ext = "osre";
 
 Project::Project() :
         Object("App/Project"),
@@ -51,6 +52,10 @@ Project::Project() :
 
 Project::~Project() {
     // empty}
+}
+
+const c8 *Project::getExtension() {
+    return Ext;
 }
 
 void Project::setProjectName(const String &projectName) {
@@ -138,6 +143,10 @@ static void storeProperties(const ::CPPCore::TArray<Properties::Property *> &pro
     size_t idx = 0;
     for (ui32 i = 0; i < propArray.size(); ++i) {
         Properties::Property *p = propArray[i];
+        if (p == nullptr) {
+            continue;
+        }
+
         const size_t nameLen = p->getPropertyName().size();
         memcpy(&curNodeData.mPropertyData[idx], &nameLen, sizeof(i32));
         idx += sizeof(i32);
@@ -160,9 +169,9 @@ static void storeNodes(Node *currentNode, NodeData *nd, size_t &index) {
     currentNode->getPropertyArray(propArray);
     if (!propArray.isEmpty()) {
         storeProperties(propArray, curNodeData);
-        
     }
-    curNodeData.mNumChildren = (ui32) currentNode->getNumChildren();
+
+    curNodeData.mNumChildren = (i32) currentNode->getNumChildren();
     curNodeData.mChildrenIndices = new i32[curNodeData.mNumChildren];
     size_t current_child = 0;
     for (size_t i = 0; i < curNodeData.mNumChildren; i++) {
@@ -173,6 +182,9 @@ static void storeNodes(Node *currentNode, NodeData *nd, size_t &index) {
         storeNodes(child, nd, index);
     }
 }
+static void storeMaterials() {
+    // todo!
+}
 
 static void storeMeshes(MeshArray &meshes, MeshData *md) {
     osre_assert(md != nullptr);
@@ -182,6 +194,7 @@ static void storeMeshes(MeshArray &meshes, MeshData *md) {
         if (mesh == nullptr) {
             continue;
         }
+        setNameChunk(mesh->m_name, md->mMeshName);
         
         // Todo!
     }

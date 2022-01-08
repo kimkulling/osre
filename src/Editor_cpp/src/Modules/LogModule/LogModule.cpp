@@ -29,12 +29,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Platform/AbstractWindow.h>
 
-#include "windows.h"
-#include "winuser.h"
-//#include <vector>
-#include <osre/Platform/Windows/MinWindows.h>
-
+#include "richedit.h"
 #include "src/Engine/Platform/win32/Win32Window.h"
+#include "resource.h"
+
 
 namespace OSRE {
 namespace Editor {
@@ -43,8 +41,6 @@ static const c8 *Tag = "LogModule";
 
 using namespace OSRE::App;
 using namespace OSRE::Platform;
-
-#define IDC_LOG 1024
 
 INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM lParam) {
     (void)lParam;
@@ -56,7 +52,7 @@ INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM l
             int x = LOWORD(lParam);
             int y = HIWORD(lParam);
 
-            SetWindowPos(GetDlgItem(hWnd, IDC_LOG), nullptr, 0, 0,
+            SetWindowPos(GetDlgItem(hWnd, IDC_EDIT1), nullptr, 0, 0,
                     x - 10, y - 12, SWP_NOMOVE | SWP_NOZORDER);
 
             return TRUE;
@@ -69,69 +65,47 @@ INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM l
     return FALSE;
 }
 
-HWND initLogWindow(HWND hParent, HINSTANCE hInstance) {
-    HWND hWnd = ::CreateWindow("Log",
-            NULL,
-            WS_VISIBLE | WS_CHILD | SS_CENTER,
-            10,
-            10,
-            100,
-            20,
-            hParent,
-            NULL,
-            hInstance,
-            NULL);
-
-    return hWnd;
-}
-
-enum class Severity {
-    Info,
-    Warn,
-    Error
-};
-
-namespace Details {
-
-static Color4 getColorBySeverity( Severity sev ) {
-    Color4 col;
-    switch (sev) {
-        case Severity::Info:
-            col.m_r = col.m_g = col.m_b = 1;
-            break;
-        case Severity::Warn:
-            col.m_r = col.m_g = 1;
-            break;
-        case Severity::Error:
-            col.m_r=1;
-            break;
-            
-        default:
-            break;
-    }
-    return col;
-}
-
-}
-
-struct LogEntry {
-    LogEntry() :
-            mText(),
-            mColor(0xFF, 0xFF, 0xFF, 0x00),
-            mStartTicks(0) {
-        // empty
+std::string GetLastErrorAsString() {
+    //Get the error message ID, if any.
+    DWORD errorMessageID = ::GetLastError();
+    if (errorMessageID == 0) {
+        return std::string(); //No error message has been recorded
     }
 
-    std::string mText;
-    Color4 mColor;
-    ui32 mStartTicks;
-};
+    LPSTR messageBuffer = nullptr;
+
+    //Ask Win32 to give us the string version of that message ID.
+    //The parameters we pass in, tell Win32 to create the buffer that holds the message for us (because we don't yet know how long the message string will be).
+    size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+            NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
+
+    //Copy the error message into a std::string.
+    std::string message(messageBuffer, size);
+
+    //Free the Win32's string's buffer.
+    LocalFree(messageBuffer);
+
+    return message;
+}
+
+static HWND initLogWindow(HINSTANCE hInstance) {
+    HWND hwnd = ::CreateDialog(hInstance, MAKEINTRESOURCE(IDD_LOGVIEW),
+            nullptr, &LogDialogProc);
+
+    if (hwnd == nullptr) {
+        auto err = GetLastErrorAsString();
+        osre_error(Tag, "Unable to create log window.");
+        return nullptr;
+    }
+
+    return hwnd;
+}
 
 class LogView : public IModuleView {
 public:
     LogView(Platform::AbstractWindow *window) :
-            IModuleView( "logview" ),
-            mEntries(),
+            IModuleView("logview" ),
+            mText(),    
             mRect(),
             mRootWindow(window),
             mLogWndHandle(nullptr) {
@@ -139,42 +113,77 @@ public:
     }
 
     ~LogView() override {
-        mEntries.clear();
+        mText = "";
     }
 
-    void addEntry(Severity sev, String text, ui32 time) {
-        LogEntry entry;
-        entry.mColor = Details::getColorBySeverity(sev);
-        entry.mText = text;
-        entry.mStartTicks = time;
-        mEntries.add(entry);
+    void clear() {
+        mText.clear();
+        onUpdate();
+    }
+
+    void addEntry(String text) {
+        mText.append(text);
+        mText.append("\r\n");
+        onUpdate();
     }
 
 protected:
     void onCreate( Rect2ui rect ) override {
         Win32Window *w = (Win32Window *)mRootWindow;
-        mLogWndHandle = initLogWindow(w->getHWnd(), w->getModuleHandle());
-        mRect = rect;
-    }
+        if (w == nullptr) {
+            osre_error(Tag, "Cannot create log module view.");
+            return;
+        }
 
-    void onUpdate() override {
-        for (size_t i = 0; i < mEntries.size(); ++i) {
-            const LogEntry &entry = mEntries[i];
-            HDC dc = GetDC(mLogWndHandle);
-            RECT rect;
-            DrawText(dc, entry.mText.c_str(), -1, &rect, DT_SINGLELINE | DT_NOCLIP);
+        mLogWndHandle = initLogWindow(w->getModuleHandle());
+        if (mLogWndHandle != nullptr) {
+            ShowWindow(mLogWndHandle, SW_SHOW);
+            mRect = rect;
+        } else {
+            osre_error(Tag, "Cannot create log module view.");
         }
     }
 
+    void onUpdate() override {
+        SETTEXTEX sInfo = {};
+        sInfo.flags = ST_DEFAULT;
+        sInfo.codepage = CP_ACP;
+        SendDlgItemMessage(mLogWndHandle, IDC_EDIT1, EM_SETTEXTEX, (WPARAM)&sInfo, (LPARAM)mText.c_str());
+    }
+
 private:
-    CPPCore::TArray<LogEntry> mEntries;
+    String mText;
     Platform::AbstractWindow *mRootWindow;
     Rect2ui mRect;
     HWND mLogWndHandle;
 };
 
+class LogStream : public Common::AbstractLogStream {
+public:
+    LogStream(LogView *lv) :
+            AbstractLogStream(), mThreadId(999999), mLogView(lv) {
+        mThreadId = :: GetCurrentThreadId();
+    }
+
+    ~LogStream() override {
+        mLogView = nullptr;
+    }
+
+    void write(const String &rMessage) override {
+        if (mThreadId == ::GetCurrentThreadId()) {
+            if (mLogView != nullptr) {
+                mLogView->addEntry(rMessage);
+            }
+        }
+    }
+
+private:
+    DWORD mThreadId;
+    LogView *mLogView;
+};
+
 LogModule::LogModule(AppBase *parentApp) :
-        ModuleBase( "log.module", parentApp ),
+        ModuleBase("log.module", parentApp),
         mLogView(nullptr) {
     // empty
 }
@@ -194,6 +203,10 @@ bool LogModule::onLoad() {
     }
 
     mLogView = new LogView(rootWindow);
+    Rect2ui rect;
+    rootWindow->getWindowsRect(rect);
+    mLogView->create(rect);
+    Common::Logger::getInstance()->registerLogStream(new LogStream(mLogView));
 
     return true;
 }
@@ -206,7 +219,7 @@ bool LogModule::onUnload() {
 }
 
 void LogModule::onUpdate() {
-    mLogView->update();
+    //mLogView->update();
 }
 
 } // namespace Editor

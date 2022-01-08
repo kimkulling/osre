@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderView/MainRenderView.h"
 #include "Gui/UIElements.h"
 #include "Modules/InspectorModule/InspectorModule.h"
+#include "Modules/LogModule/LogModule.h"
 #include "Modules/ModuleBase.h"
 #include "Scripting/PythonInterface.h"
 #include "Actions/ImportAction.h"
@@ -284,6 +285,8 @@ bool OsreEdApp::onCreate() {
     }
 
     mModuleRegistry.registerModule(new InspectorModule(this));
+    mModuleRegistry.registerModule(new LogModule(this));
+    
     String title;
     createTitleString(mSceneData, title);
     AppBase::setWindowsTitle(title);
