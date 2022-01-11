@@ -49,7 +49,6 @@ protected:
     void onRender() override;
 
 private:
-    UI::Panel *mPanel;
 };
 
 } // namespace Editor

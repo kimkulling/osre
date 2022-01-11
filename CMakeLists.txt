@@ -44,34 +44,33 @@ INCLUDE_DIRECTORIES( BEFORE
     include/
     /usr/include/SDL2/
     /usr/include/
-    ${CMAKE_HOME_DIRECTORY}/contrib/assimp/include
-    ${CMAKE_HOME_DIRECTORY}/contrib/glm/
-    ${CMAKE_HOME_DIRECTORY}/contrib/soil/src
-    ${CMAKE_HOME_DIRECTORY}/contrib/glew/include
-    ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/include
-    ${CMAKE_HOME_DIRECTORY}/contrib/assimp/contrib/zlib
-    ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/include
-    ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/
-    ${CMAKE_HOME_DIRECTORY}/contrib/jsoncpp-1.8.4/include
-    ${CMAKE_HOME_DIRECTORY}/contrib/lua-5.3.5/src
+    ${CMAKE_CURRENT_BINARY_DIR}/contrib/assimp/include
+    ${CMAKE_CURRENT_BINARY_DIR}/contrib/glm/
+    ${CMAKE_CURRENT_BINARY_DIR}/contrib/soil/src
+    ${CMAKE_CURRENT_BINARY_DIR}/contrib/glew/include
+    ${CMAKE_CURRENT_BINARY_DIR}/contrib/cppcore/include
+    ${CMAKE_CURRENT_BINARY_DIR}/contrib/assimp/contrib/zlib
+    ${CMAKE_CURRENT_BINARY_DIR}/contrib/cppcore/contrib/gtest-1.7.0/include
+    ${CMAKE_CURRENT_BINARY_DIR}/contrib/cppcore/contrib/gtest-1.7.0/
+    ${CMAKE_CURRENT_BINARY_DIR}/contrib/jsoncpp-1.8.4/include
+    ${CMAKE_CURRENT_BINARY_DIR}/contrib/lua-5.3.5/src
     "c:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include"
-    ${CMAKE_HOME_DIRECTORY}/contrib/soil/src
-    ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/include
-    ${CMAKE_HOME_DIRECTORY}/src/
-    ${CMAKE_HOME_DIRECTORY}/
+    ${CMAKE_CURRENT_BINARY_DIR}/contrib/soil/src
+    ${CMAKE_CURRENT_BINARY_DIR}/contrib/sdl2/include
+    ${CMAKE_CURRENT_BINARY_DIR}/src/
+    ${CMAKE_CURRENT_BINARY_DIR}/
 )
 
 if( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR "${CMAKE_GENERATOR}" MATCHES "16 2019" OR "${CMAKE_GENERATOR}" MATCHES "15 2017")
     link_directories(
-    ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x64
-            ${CMAKE_HOME_DIRECTORY}/lib
-            ${CMAKE_HOME_DIRECTORY}/bin
-    )
+        ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x64
+        ${CMAKE_HOME_DIRECTORY}/lib
+        ${CMAKE_HOME_DIRECTORY}/bin)
 else()
     link_directories(
-    ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x86
-    ${CMAKE_HOME_DIRECTORY}/lib
-            ${CMAKE_HOME_DIRECTORY}/bin
+        ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x86
+        ${CMAKE_HOME_DIRECTORY}/lib
+        ${CMAKE_HOME_DIRECTORY}/bin
     )
 endif()
 

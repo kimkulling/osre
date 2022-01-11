@@ -195,6 +195,7 @@ bool LogModule::onLoad() {
 bool LogModule::onUnload() {
     Common::Logger::getInstance()->unregisterLogStream(mLogStream);
     delete mLogStream;
+    mLogStream = nullptr;
     delete mLogView;
     mLogView = nullptr;
 
@@ -202,7 +203,7 @@ bool LogModule::onUnload() {
 }
 
 void LogModule::onUpdate() {
-    //mLogView->update();
+    // empty
 }
 
 } // namespace Editor
