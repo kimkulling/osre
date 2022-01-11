@@ -163,7 +163,8 @@ private:
 
 LogModule::LogModule(AppBase *parentApp) :
         ModuleBase("log.module", parentApp),
-        mLogView(nullptr) {
+        mLogView(nullptr),
+        mLogStream(nullptr) {
     // empty
 }
                 
@@ -185,12 +186,16 @@ bool LogModule::onLoad() {
     Rect2ui rect;
     rootWindow->getWindowsRect(rect);
     mLogView->create(rect);
-    Common::Logger::getInstance()->registerLogStream(new LogStream(mLogView));
+    mLogStream = new LogStream(mLogView);
+    Common::Logger::getInstance()->registerLogStream(mLogStream);
 
     return true;
 }
 
 bool LogModule::onUnload() {
+    Common::Logger::getInstance()->unregisterLogStream(mLogStream);
+    delete mLogStream;
+    mLogStream = nullptr;
     delete mLogView;
     mLogView = nullptr;
 
@@ -198,7 +203,7 @@ bool LogModule::onUnload() {
 }
 
 void LogModule::onUpdate() {
-    //mLogView->update();
+    // empty
 }
 
 } // namespace Editor

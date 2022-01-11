@@ -26,6 +26,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+namespace Common {
+    class AbstractLogStream;    
+}
+
 namespace Editor {
 
 class LogView;
@@ -47,6 +51,7 @@ protected:
 
 private:
     LogView *mLogView;
+    Common::AbstractLogStream *mLogStream;
 };
 
 } // namespace Editor
