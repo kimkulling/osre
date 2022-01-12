@@ -27,11 +27,6 @@ OPTION( OSRE_BUILD_DOC
   OFF
 )
 
-OPTION( OSRE_BUILD_CSHARP_EDITOR
-  "Build the c# editor of OSRE."
-  OFF
-)
-
 # Cache these to allow the user to override them manually.
 set( LIB_INSTALL_DIR "lib" CACHE PATH
     "Path the built library files are installed to." )
@@ -63,15 +58,15 @@ INCLUDE_DIRECTORIES( BEFORE
 
 if( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR "${CMAKE_GENERATOR}" MATCHES "16 2019" OR "${CMAKE_GENERATOR}" MATCHES "15 2017")
     link_directories(
-    ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x64
-            ${CMAKE_HOME_DIRECTORY}/lib
-            ${CMAKE_HOME_DIRECTORY}/bin
-    )
+        ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x64
+        ${CMAKE_HOME_DIRECTORY}/lib
+        ${CMAKE_HOME_DIRECTORY}/bin
+)
 else()
     link_directories(
-    ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x86
-    ${CMAKE_HOME_DIRECTORY}/lib
-            ${CMAKE_HOME_DIRECTORY}/bin
+        ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x86
+        ${CMAKE_HOME_DIRECTORY}/lib
+        ${CMAKE_HOME_DIRECTORY}/bin
     )
 endif()
 
