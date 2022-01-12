@@ -158,6 +158,7 @@ class OSRE_EXPORT Project : public Common::Object {
 public:
 	Project();
 	~Project();
+    static const c8 *getExtension();
     void setProjectName(const String& projectName);
     const String& getProjectName() const;
     void setStage(Stage *stage);

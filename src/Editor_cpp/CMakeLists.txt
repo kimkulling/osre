@@ -62,6 +62,7 @@ SET (main_src
     src/OsreEdApp.cpp
     src/OsreEdApp.h
     src/main.cpp
+
 )
 SOURCE_GROUP(Gui                      FILES ${gui_src})
 SOURCE_GROUP(RenderView               FILES ${renderview_src})
@@ -75,6 +76,8 @@ SOURCE_GROUP(Scripting\\              FILES ${scripting_src} )
 SOURCE_GROUP(Main\\                   FILES ${main_src})
 
 ADD_EXECUTABLE( osre_ed
+    OSRE_Ed.rc    
+    resource.h
     ${gui_src}
     ${actions_src}
     ${inspector_module_src}
@@ -86,4 +89,4 @@ ADD_EXECUTABLE( osre_ed
     ${main_src}
 )
 
-target_link_libraries ( osre_ed osre )
+target_link_libraries ( osre_ed osre comctl32.lib winmm.lib )

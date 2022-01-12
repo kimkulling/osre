@@ -161,7 +161,7 @@ bool Win32Window::onCreate() {
         return false;
     }
 
-    WNDCLASS sWC;
+    WNDCLASS sWC = {}; 
     DWORD dwExStyle(0), dwStyle(0);
     RECT clientSize;
     clientSize.left = prop->m_x;

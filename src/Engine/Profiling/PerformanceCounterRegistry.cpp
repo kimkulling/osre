@@ -30,8 +30,7 @@ using namespace ::OSRE::Common;
 
 PerformanceCounterRegistry *PerformanceCounterRegistry::s_instance = nullptr;
 
-PerformanceCounterRegistry::CounterMeasure::CounterMeasure()
-: m_count( 0 ) {
+PerformanceCounterRegistry::CounterMeasure::CounterMeasure() : m_count( 0 ) {
     // empty
 }
 
@@ -39,13 +38,12 @@ PerformanceCounterRegistry::CounterMeasure::~CounterMeasure() {
     // empty
 }
 
-PerformanceCounterRegistry::PerformanceCounterRegistry()
-: m_counters() {
-
+PerformanceCounterRegistry::PerformanceCounterRegistry() : m_counters() {
+    // empty
 }
     
 PerformanceCounterRegistry::~PerformanceCounterRegistry() {
-
+    // empty
 }
     
 bool PerformanceCounterRegistry::create() {
@@ -69,41 +67,40 @@ bool PerformanceCounterRegistry::destroy() {
     return true;
 }
 
-bool PerformanceCounterRegistry::registerCounter( const String &name ) {
+bool PerformanceCounterRegistry::registerCounter(const String &name) {
     if ( nullptr == s_instance ) {
         return false;
     }
 
-    const ui32 hash( StringUtils::hashName( name.c_str() ) );
-    if ( s_instance->m_counters.hasKey( hash ) ) {
+    const ui32 hash = StringUtils::hashName(name.c_str());
+    if (s_instance->m_counters.hasKey(hash)) {
         return false;
     }
-    CounterMeasure *cm( new CounterMeasure );
-    s_instance->m_counters.insert( hash, cm );
+    CounterMeasure *cm = new CounterMeasure;
+    s_instance->m_counters.insert(hash, cm);
 
     return true;
 }
     
-bool PerformanceCounterRegistry::unregisterCounter( const String &name ) {
-    if ( nullptr == s_instance ) {
+bool PerformanceCounterRegistry::unregisterCounter(const String &name) {
+    if (nullptr == s_instance) {
         return false;
     }
 
-    const ui32 hash( StringUtils::hashName( name.c_str() ) );
-    if ( !s_instance->m_counters.hasKey( hash ) ) {
+    const ui32 hash = StringUtils::hashName(name.c_str());
+    if (!s_instance->m_counters.hasKey(hash)) {
         return false;
     }
 
-    CounterMeasure *cm( nullptr );
+    CounterMeasure *cm = nullptr; 
     s_instance->m_counters.getValue( hash, cm );
 
     if ( nullptr == cm ) {
         return false;
-    } else {
-        delete cm;
-    }
+    } 
+    delete cm;
 
-    return s_instance->m_counters.remove( hash );
+    return s_instance->m_counters.remove(hash);
 }
 
 bool PerformanceCounterRegistry::setCounter( const String &name, ui32 value ) {
@@ -111,12 +108,12 @@ bool PerformanceCounterRegistry::setCounter( const String &name, ui32 value ) {
         return false;
     }
 
-    const ui32 hash( StringUtils::hashName( name.c_str() ) );
-    if ( !s_instance->m_counters.hasKey( hash ) ) {
+    const ui32 hash = StringUtils::hashName(name.c_str());
+    if (!s_instance->m_counters.hasKey(hash)) {
         return false;
     }
-    CounterMeasure *cm( nullptr );
-    s_instance->m_counters.getValue( hash, cm );
+    CounterMeasure *cm = nullptr;
+    s_instance->m_counters.getValue(hash, cm);
     cm->m_count = value;
 
     return true;
@@ -131,12 +128,12 @@ bool PerformanceCounterRegistry::addValueToCounter( const String &name, ui32 val
         return false;
     }
 
-    const ui32 hash( StringUtils::hashName( name.c_str() ) );
-    if ( !s_instance->m_counters.hasKey( hash ) ) {
+    const ui32 hash = StringUtils::hashName(name.c_str());
+    if ( !s_instance->m_counters.hasKey(hash)) {
         return false;
     }
 
-    CounterMeasure *cm( nullptr );
+    CounterMeasure *cm = nullptr;
     s_instance->m_counters.getValue( hash, cm );
     if ( nullptr == cm ) {
         return false;
@@ -148,16 +145,16 @@ bool PerformanceCounterRegistry::addValueToCounter( const String &name, ui32 val
 }
 
 bool PerformanceCounterRegistry::queryCounter( const String &name, ui32 &counterValue ) {
-    if ( nullptr == s_instance ) {
+    if (nullptr == s_instance) {
         return false;
     }
 
-    const ui32 hash( StringUtils::hashName( name.c_str() ) );
+    const ui32 hash = StringUtils::hashName( name.c_str() );
     if ( !s_instance->m_counters.hasKey( hash ) ) {
         return false;
     }
 
-    CounterMeasure *cm( nullptr );
+    CounterMeasure *cm = nullptr;
     s_instance->m_counters.getValue( hash, cm );
     if ( nullptr == cm ) {
         return false;

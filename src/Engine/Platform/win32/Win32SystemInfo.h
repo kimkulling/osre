@@ -33,7 +33,7 @@ namespace Platform {
 ///
 ///	@brief  This class implements the System Information API for Win32-based systems.
 //-------------------------------------------------------------------------------------------------
-class Win32SystemInfo : public AbstractSystemInfo {
+class OSRE_EXPORT Win32SystemInfo : public AbstractSystemInfo {
 public:
     Win32SystemInfo();
     virtual ~Win32SystemInfo();
