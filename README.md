@@ -1,4 +1,4 @@
-![OSRE-Ed](assets/Icons/Low%20Resolution%20Logo.png=250x250)
+![OSRE-Ed](assets/Icons/Low Resolution Logo.png=250x250)
 # OSRE - Just another Open Source Render Engine
 
 This is just another open-source render-engine made by Kim Kulling. This is a playground project for myself to work on my own side-projects.
