@@ -1,10 +1,4 @@
-![OSRE-Ed](assets/Icons/osre_logo.png)
-<style type="text/css">
-    img {
-        width: 250px;
-        height: 250px;
-    }
-</style>
+![OSRE](assets/Icons/osre_logo1.png)
 
 # OSRE - Just another Open Source Render Engine
 
