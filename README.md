@@ -1,4 +1,11 @@
 ![OSRE-Ed](assets/Icons/osre_logo.png)
+<style type="text/css">
+    img {
+        width: 250px;
+        height: 250px;
+    }
+</style>
+
 # OSRE - Just another Open Source Render Engine
 
 This is just another open-source render-engine made by Kim Kulling. This is a playground project for myself to work on my own side-projects.
