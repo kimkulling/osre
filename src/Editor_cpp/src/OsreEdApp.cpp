@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Gui/UIElements.h"
 #include "Modules/InspectorModule/InspectorModule.h"
 #include "Modules/LogModule/LogModule.h"
-#include "Modules/ModuleBase.h"
+#include <osre/App/ModuleBase.h>
 #include "Scripting/PythonInterface.h"
 #include "Actions/ImportAction.h"
 #include <cppcore/Common/Variant.h>

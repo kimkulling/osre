@@ -47,8 +47,6 @@ INCLUDE_DIRECTORIES( BEFORE
     ${CMAKE_HOME_DIRECTORY}/contrib/assimp/contrib/zlib
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/include
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/
-    ${CMAKE_HOME_DIRECTORY}/contrib/jsoncpp-1.8.4/include
-    ${CMAKE_HOME_DIRECTORY}/contrib/lua-5.3.5/src
     "c:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include"
     ${CMAKE_HOME_DIRECTORY}/contrib/soil/src
     ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/include
@@ -115,6 +113,7 @@ add_definitions( -DGLM_ENABLE_EXPERIMENTAL )
 
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
+ADD_SUBDIRECTORY( src/Player )
 IF(WIN32)
     ADD_SUBDIRECTORY( src/Editor_cpp )
     set_target_properties(  osre_ed       PROPERTIES FOLDER Editor )

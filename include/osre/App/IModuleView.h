@@ -26,14 +26,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 
 namespace OSRE {
-namespace Editor {
+namespace App {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor
 ///
 /// @brief
 //-------------------------------------------------------------------------------------------------
-class IModuleView : Common::Object {
+class OSRE_EXPORT IModuleView : Common::Object {
 public:
     virtual ~IModuleView();
     virtual void create(Rect2ui rect);
@@ -81,5 +81,5 @@ inline void IModuleView::onDestroy() {
     // empty
 }
 
-} // namespace Editor
+} // namespace App
 } // namespace OSRE

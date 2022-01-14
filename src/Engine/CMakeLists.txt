@@ -38,6 +38,8 @@ SET( app_inc
     ${HEADER_PATH}/App/AppBase.h
     ${HEADER_PATH}/App/Component.h
     ${HEADER_PATH}/App/Entity.h
+    ${HEADER_PATH}/App/ModuleBase.h
+    ${HEADER_PATH}/App/IModuleView.h
     ${HEADER_PATH}/App/ServiceProvider.h
     ${HEADER_PATH}/App/Project.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
@@ -53,6 +55,7 @@ SET( app_src
     App/AppBase.cpp
     App/Component.cpp
     App/Entity.cpp
+    App/ModuleBase.cpp
     App/ServiceProvider.cpp
     App/Project.cpp
     App/AssetRegistry.cpp

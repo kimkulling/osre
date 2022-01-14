@@ -27,9 +27,6 @@ SET( editor_module_src
 )
 
 SET( modules_src 
-    src/Modules/IModuleView.h
-    src/Modules/ModuleBase.cpp
-    src/Modules/ModuleBase.h
     src/Modules/ModuleRegistry.h
     src/Modules/ModuleRegistry.cpp
 )

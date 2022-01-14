@@ -27,15 +27,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
-
-// clang-format off
 namespace App {
-    class AppBase;
-}
-// clang-format on
 
-namespace Editor {
-
+class AppBase;
 class OsreEdApp;
 class IModuleView;
 
@@ -44,7 +38,7 @@ class IModuleView;
 ///
 /// @brief
 //-------------------------------------------------------------------------------------------------
-class ModuleBase : public Common::Object {
+class OSRE_EXPORT ModuleBase : public Common::Object {
 public:
     virtual ~ModuleBase();
     virtual void setModulelView(IModuleView *view);
