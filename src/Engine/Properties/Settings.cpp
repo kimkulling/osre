@@ -55,7 +55,8 @@ static const String ConfigKeyStringTable[Settings::MaxKonfigKey] = {
     "ChildWindow",
     "PollingMode",
     "DefaultFont",
-    "RenderMode"
+    "RenderMode",
+    "PluginDllName"
 };
 
 Settings::Settings() :

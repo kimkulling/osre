@@ -88,9 +88,6 @@ constexpr int IDM_FILE_QUIT = 5;
 constexpr int IDM_GETTING_HELP = 6;
 constexpr int IDM_INFO_VERSION = 7;
 
-//#define ID_STATIC 8
-
-
 #endif // OSRE_WINDOWS
 
 static const c8 *Tag = "OsreApp";

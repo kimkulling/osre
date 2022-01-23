@@ -67,7 +67,8 @@ public:
         ChildWindow,            ///<
         PollingMode,            ///< Polling mode, true for polling requested.
         DefaultFont,            ///< The default font for rendering.
-        RenderMode,             ///> The requested render mode ( 2D or 3D, default 3D ).
+        RenderMode,             ///< The requested render mode (2D or 3D, default 3D).
+        PluginDllName,          ///< The name for the child application.
         MaxKonfigKey			///< The upper limit.
     };
 
@@ -88,23 +89,59 @@ public:
     ///	@param	rValue	The assigned value.
     ///	@return	true, of set was successful, false if not.
     bool setString( ConfigKey key, const String &rValue );
+    
+    /// @brief 
+    /// @param key 
+    /// @return 
     String getString( ConfigKey key ) const;
+    
+    /// @brief 
+    /// @param key 
+    /// @param value 
+    /// @return 
     bool setInt( ConfigKey key, i32 value );
+    
+    /// @brief 
+    /// @param key 
+    /// @return 
     i32 getInt( ConfigKey key ) const;
+    
+    /// @brief 
+    /// @param key 
+    /// @param value 
+    /// @return 
     bool setBool( ConfigKey key, bool value );
+    
+    /// @brief 
+    /// @param key 
+    /// @return 
     bool getBool( ConfigKey key ) const;
+    
+    /// @brief 
+    /// @param key 
+    /// @param value 
+    /// @return 
     bool setFloat( ConfigKey key, f32 value );
+    
+    /// @brief 
+    /// @param key 
+    /// @return 
     f32 getFloat( ConfigKey key ) const;
+    
     ///	@brief	Returns the value for the key.
     ///	@param	key	Key to look for.
     ///	@return	The assigned variant.
     const CPPCore::Variant &get( ConfigKey key ) const;
     
+    /// @brief 
+    /// @param key 
+    /// @return 
     const String &getKeyAsString( ConfigKey key ) const;
 
     ///	@brief	Clears the whole map.
     void clear();
 
+    // No copying allowed.
     Settings( const Settings & ) = delete;
     Settings &operator = ( const Settings & ) = delete;
 
