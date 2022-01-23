@@ -34,7 +34,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "src/Engine/Platform/win32/Win32OSService.h"
 #include "resource.h"
 
-
 namespace OSRE {
 namespace Editor {
 
@@ -53,7 +52,7 @@ INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM l
             int x = LOWORD(lParam);
             int y = HIWORD(lParam);
 
-            SetWindowPos(GetDlgItem(hWnd, IDC_EDIT1), nullptr, 0, 0,
+            ::SetWindowPos(GetDlgItem(hWnd, IDC_EDIT1), nullptr, 0, 0,
                     x - 10, y - 12, SWP_NOMOVE | SWP_NOZORDER);
 
             return TRUE;
@@ -65,7 +64,6 @@ INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM l
 
     return FALSE;
 }
-
 
 static HWND initLogWindow(HINSTANCE hInstance) {
     HWND hwnd = ::CreateDialog(hInstance, MAKEINTRESOURCE(IDD_LOGVIEW),

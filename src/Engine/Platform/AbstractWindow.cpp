@@ -62,6 +62,7 @@ Resolution::~Resolution() {
 
 AbstractWindow::AbstractWindow(WindowsProperties *properties) :
         mFlags((ui32)SurfaceFlagType::SF_PropertiesClean),
+        mShowState(ShowState::Hidden),
         mProperties(properties),
         mIsCreated(false) {
     // empty

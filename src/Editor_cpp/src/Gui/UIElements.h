@@ -39,7 +39,17 @@ public:
     static void deleteProgressBar(ProgressBar *pb);
 };
 
-struct Widget {
+struct Canvas {
+    ui32 mX, mY, mWidth, mHeight;
+
+    void drawLine(ui32 x1, ui32 y1, ui32 x2, ui32 y2);
+    void drawRect(ui32 x, ui32 y, ui32 w, ui32 h);
+    void drawImage();
+    void clear();
+    void render();
+};
+
+struct Widget : Canvas {
     Widget *mParent;
     CPPCore::TArray<Widget*> mChildren;
     Rect2ui mRect;

@@ -44,6 +44,21 @@ Win32Window::~Win32Window() {
     // empty
 }
 
+void Win32Window::showWindow(ShowState showState) {
+    if (mWnd == nullptr) {
+        return;
+    }
+
+    if (showState != getShowState()) {
+        setShowState(showState);
+        int ws = SW_HIDE;
+        if (showState == ShowState::Visible) {
+            ws = SW_SHOW;
+        }    
+        ::ShowWindow(mWnd, ws);
+    }
+}
+
 void Win32Window::setWindowsTitle(const String &title) {
     if (nullptr == mWnd) {
         return;

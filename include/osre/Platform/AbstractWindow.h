@@ -149,6 +149,13 @@ public:
     /// @param  title       [in] The new windows title.
     virtual void setWindowsTitle(const String &title) = 0;
 
+    enum class ShowState {
+        Visible,
+        Hidden
+    };
+
+    virtual void showWindow(ShowState showState) = 0;
+
     /// @brief  Will resize the window.
     /// @param  x   [in] The x-coordinate of the upper left edge-
     /// @param  y   [in] The y-coordinate of the upper left edge.
@@ -171,12 +178,25 @@ protected:
     virtual bool onUpdateProperies() = 0;
     /// @brief  The onResize callback.
     virtual void onResize(ui32 x, ui32 y, ui32 w, ui32 h) = 0;
+    /// @brief 
+    void setShowState(ShowState showState);
+    /// @brief 
+    ShowState getShowState() const;
 
 private:
     ui32 mFlags;
+    ShowState mShowState;
     WindowsProperties *mProperties;
     bool mIsCreated;
 };
+
+inline void AbstractWindow::setShowState( ShowState showState ) {
+    mShowState = showState;
+}
+
+inline AbstractWindow::ShowState AbstractWindow::getShowState() const {
+    return mShowState;
+}
 
 } // Namespace Platform
 } // Namespace OSRE

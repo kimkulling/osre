@@ -58,6 +58,8 @@ public:
     Win32Window(WindowsProperties *properties);
     /// The class destructor, virtual.
     ~Win32Window() override;
+    ///
+    void showWindow(ShowState showState) override;
     /// Will set the windows title.
     void setWindowsTitle(const String &title) override;
     /// Will set the windows mouse cursor.
