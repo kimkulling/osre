@@ -6,14 +6,19 @@
 
 using namespace ::OSRE;
 using namespace ::OSRE::Common;
+using namespace ::OSRE::Platform;
 using namespace ::OSRE::App;
 
 static const c8 *Tag = "player";
 
+typedef void(__stdcall *createModuleFn)(void);
+
 class PlayerApplication : public AppBase {
 public:
     PlayerApplication(int argc, c8 *argv[]) :
-            AppBase(argc, (const char **)argv) {
+            AppBase(argc, (const char **)argv),
+            mDllName(),    
+            mModule(nullptr) {
         // empty
     }
 
@@ -24,8 +29,8 @@ public:
 protected:
     bool onCreate() override {
         const ArgumentParser &ap = AppBase::getArgumentParser();
-        String dllName = ap.getArgument("run_dll");
-        if (dllName.empty()) {
+        mDllName = ap.getArgument("run_dll");
+        if (mDllName.empty()) {
             osre_error(Tag, "Dll name is empty.");
             osre_info(Tag, ap.showHelp());
             return false;
@@ -35,10 +40,21 @@ protected:
             return false;
         }
 
-        Platform::AbstractDynamicLoader *dynLoader = Platform::PlatformInterface::getInstance()->getDynamicLoader();
-        Platform::LibHandle *lib = dynLoader->load(dllName);
-        if (lib == nullptr) {
-            osre_error(Tag, "Cannot load library " + dllName + ".");
+        AbstractDynamicLoader *dynLoader = PlatformInterface::getInstance()->getDynamicLoader();
+        if (dynLoader == nullptr) {
+            osre_error(Tag, "Invalid dyn-loader detected.");
+            return false;
+        }
+
+        mModule = dynLoader->load(mDllName);
+        if (mModule == nullptr) {
+            osre_error(Tag, "Cannot load library " + mDllName + ".");
+            return false;
+        }
+
+        createModuleFn func = (createModuleFn)dynLoader->loadFunction("createModule");
+        if (func == nullptr) {
+            osre_error(Tag, "Cannot find factory method");
             return false;
         }
 
@@ -46,6 +62,9 @@ protected:
     }
 
     bool onDestroy() override {
+        AbstractDynamicLoader *dynLoader = PlatformInterface::getInstance()->getDynamicLoader();
+        dynLoader->removeLib(mDllName);
+
         return AppBase::onDestroy();
     }
 
@@ -56,6 +75,10 @@ protected:
     void onUpdate() override {
 
     }
+
+private:
+    String mDllName;
+    LibHandle *mModule;
 };
 
 int main(int argc, char *argv[]) {
