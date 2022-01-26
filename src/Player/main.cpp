@@ -56,6 +56,8 @@ protected:
         if (func == nullptr) {
             osre_error(Tag, "Cannot find factory method");
             return false;
+        } else {
+            osre_info(Tag, "Loading " + mDllName + " successful.");
         }
 
         return true;
