@@ -37,6 +37,7 @@ protected:
         }
 
         if (!AppBase::onCreate()) {
+            osre_error(Tag, "Error while creating app.");
             return false;
         }
 
