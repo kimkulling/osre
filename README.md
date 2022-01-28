@@ -1,4 +1,4 @@
-![OSRE](assets/Icons/osre_logo1.png =250x100)
+![OSRE](assets/Icons/osre_logo1.png)
 
 # OSRE - Just another Open Source Render Engine
 
