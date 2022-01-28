@@ -83,7 +83,7 @@ struct OSRE_EXPORT Event {
 
     ///	@brief	the class constructor with description id.
     ///	@param	id	Id description, will be used to describe the event type.
-    Event(const String &id);
+    Event(const c8 *id);
 
     ///	@brief The class destructor, virtual.
     virtual ~Event();

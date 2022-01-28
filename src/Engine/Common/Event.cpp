@@ -26,9 +26,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
-Event::Event(const String &id) :
+Event::Event(const c8 *id) :
         m_numRefs(1),
-        m_hash(StringUtils::hashName(id.c_str())),
+        m_hash(StringUtils::hashName(id)),
         mId(id),
         m_eventData(nullptr) {
     // empty
