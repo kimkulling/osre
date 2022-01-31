@@ -125,12 +125,12 @@ protected:
     /// @brief  Callback for attaching a new view onto a stage.
     /// @param  eventData	The event state data
     /// @return true if successful, false if not.
-    bool onAttachView( const Common::EventData *eventData ) override;
+    bool onAttachView( const Common::EventData *eventData );
 
     /// @brief  Callback for detaching a new view onto a stage.
     /// @param  eventData	The event state data
     /// @return true if successful, false if not.
-    bool onDetachView( const Common::EventData *eventData ) override;
+    bool onDetachView( const Common::EventData *eventData );
 
     /// @brief  Callback for clearing all geometry from a stage.
     /// @param  eventData	The event state data
