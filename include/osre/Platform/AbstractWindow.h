@@ -149,11 +149,14 @@ public:
     /// @param  title       [in] The new windows title.
     virtual void setWindowsTitle(const String &title) = 0;
 
+    /// @brief  Will describe the show-state for the window.
     enum class ShowState {
-        Visible,
-        Hidden
+        Visible,    ///< Window is visible.
+        Hidden      ///< Window is hidden.
     };
 
+    /// @brief WIll set the windows show state
+    /// @param[in]  showState The new show.state
     virtual void showWindow(ShowState showState) = 0;
 
     /// @brief  Will resize the window.
