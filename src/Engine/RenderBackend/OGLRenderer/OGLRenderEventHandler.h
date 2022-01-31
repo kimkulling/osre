@@ -73,17 +73,17 @@ public:
     ~OGLRenderEventHandler() override;
 
     /// @brief The OnEvent-callback.
-    /// @param ev 
-    /// @param pEventData 
-    /// @return 
+    /// @param ev           The event for handling.
+    /// @param pEventData   The event data.
+    /// @return The result from the handler.
     bool onEvent( const Common::Event &ev, const Common::EventData *pEventData ) override;
 
     /// @brief Will set the active shader.
-    /// @param pOGLShader 
+    /// @param pOGLShader  The acitve shader.
     void setActiveShader( OGLShader *pOGLShader );
     
     /// @brief Will enqueue a new render command.
-    /// @param pOGLRenderCmd 
+    /// @param pOGLRenderCmd	The render command will enqued
     void enqueueRenderCmd( OGLRenderCmd *pOGLRenderCmd );
 
     /// @brief Will set all parameters.
@@ -94,61 +94,73 @@ public:
     /// @return Pointer showing to the render command buffer.
     RenderCmdBuffer *getRenderCmdBuffer() const;
 
-    /// @brief 
-    /// @param id 
-    /// @param primGroups 
-    /// @param currentMeshEntry 
-    /// @return 
+    /// @brief	Will add meshed to a given mesh entry descrbed by its id.
+    /// @param  id                The id of the mesh entry
+    /// @param  primGroups        The primitive groups to add
+    /// @param  currentMeshEntry  The mesh entry
+    /// @return true if successful, false if not.
     bool addMeshes(const c8 *id, CPPCore::TArray<size_t> &primGroups, MeshEntry *currentMeshEntry);
 
 protected:
-    /// @brief Callback for attaching the event handler.
-    /// @param eventData 
-    /// @return 
+    /// @brief  Callback for attaching the event handler.
+    /// @param  eventData	The event state data
+    /// @return true if successful, false if not.
     bool onAttached( const Common::EventData *eventData ) override;
 
-	/// @brief Callback for detaching the event handler.
-	/// @param eventData 
-	/// @return 
-	bool onDetached( const Common::EventData *eventData ) override;
+    /// @brief  Callback for detaching the event handler.
+    /// @param  eventData	The event state data
+    /// @return true if successful, false if not.
+    bool onDetached( const Common::EventData *eventData ) override;
 
-	/// @brief Callback for render backend creation.
-	/// @param eventData 
-	/// @return 
-	bool onCreateRenderer( const Common::EventData *eventData );
+    /// @brief  Callback for render backend creation.
+    /// @param  eventData	The event state data
+    /// @return true if successful, false if not.
+    bool onCreateRenderer( const Common::EventData *eventData );
 
-	/// @brief Callback for render backend destroying.
-	/// @param eventData 
-	/// @return 
-	bool onDestroyRenderer( const Common::EventData *eventData );
+    /// @brief  Callback for render backend destroying.
+    /// @param  eventData	The event state data
+    /// @return true if successful, false if not.
+    bool onDestroyRenderer( const Common::EventData *eventData );
 
-	/// @brief Callback for attaching a new view onto a stage.
-	/// @param eventData 
-	/// @return 
-	virtual bool onAttachView( const Common::EventData *eventData );
+    /// @brief  Callback for attaching a new view onto a stage.
+    /// @param  eventData	The event state data
+    /// @return true if successful, false if not.
+    bool onAttachView( const Common::EventData *eventData ) override;
 
-    /// @brief Callback for detaching a new view onto a stage.
-    /// @param eventData 
-    /// @return 
-    virtual bool onDetachView( const Common::EventData *eventData );
+    /// @brief  Callback for detaching a new view onto a stage.
+    /// @param  eventData	The event state data
+    /// @return true if successful, false if not.
+    bool onDetachView( const Common::EventData *eventData ) override;
 
-	/// @brief Callback for clearing all geometry from a stage.
-	/// @param eventData 
-	/// @return 
-	virtual bool onClearGeo( const Common::EventData *eventData );
+    /// @brief  Callback for clearing all geometry from a stage.
+    /// @param  eventData	The event state data
+    /// @return true if successful, false if not.
+    bool onClearGeo( const Common::EventData *eventData );
 
-	/// @brief Callback for the render frame.
-	/// @param eventData 
-	/// @return 
-	virtual bool onRenderFrame( const Common::EventData *eventData );
+    /// @brief  Callback for the render frame.
+    /// @param  eventData	The event state data
+    /// @return true if successful, false if not.
+    bool onRenderFrame( const Common::EventData *eventData );
+	
     /// @brief  Callback to init the passes.
-    virtual bool onInitRenderPasses(const Common::EventData *eventData);
+    /// @param eventData	The event state data
+    /// @return true if successful, false if not.
+    bool onInitRenderPasses(const Common::EventData *eventData);
+    
     /// @brief  Callback to commit the next frame.
-    virtual bool onCommitNexFrame( const Common::EventData *eventData );
+    /// @param  eventData	The event state data
+    /// @return true if successful, false if not.
+    bool onCommitNexFrame( const Common::EventData *eventData );
+    
     /// @brief  Callback for dealing with a shutdown request.
-    virtual bool onShutdownRequest( const Common::EventData *eventData );
+    /// @param  eventData	The event state data
+    /// @return true if successful, false if not.
+    bool onShutdownRequest( const Common::EventData *eventData );
+    
     /// @brief  Callback for dealing with resize events.
-    virtual bool onResizeRenderTarget( const Common::EventData *eventData );
+    /// @param  eventData	The event state data
+    /// @return true if successful, false if not.
+    bool onResizeRenderTarget( const Common::EventData *eventData );
 
 private:
     bool m_isRunning;
