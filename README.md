@@ -128,7 +128,6 @@ protected:
         rbSrv->beginRenderBatch("b1");
 
         rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
-A
 
         rbSrv->endRenderBatch();
         rbSrv->endPass();
