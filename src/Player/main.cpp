@@ -35,7 +35,7 @@ using namespace ::OSRE::App;
 
 static const c8 *Tag = "player";
 
-typedef void(*createModuleFn)(void);
+typedef void* (*createModuleFn)(void);
 
 class PlayerApplication : public AppBase {
 public:
@@ -92,7 +92,7 @@ protected:
             osre_info(Tag, "Loading " + mDllName + " successful.");
         }
 
-        App::ModuleBase *module = (App::ModuleBase*)( * func)();
+        App::ModuleBase *module = (App::ModuleBase*) (func)();
         if (module == nullptr) {
             osre_error(Tag, "Cannot create instance of modeule from " + mDllName);
             return false;
