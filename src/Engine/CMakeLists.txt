@@ -5,7 +5,7 @@ add_definitions( -DOSRE_BUILD_EXPORT )
 
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
-	${HEADER_PATH}
+    ${HEADER_PATH}
     ${PROJECT_SOURCE_DIR}/contrib/cppcore/include
     ${PROJECT_SOURCE_DIR}/contrib/glew/include
     ${PROJECT_SOURCE_DIR}/contrib/glm/
@@ -33,6 +33,7 @@ ENDIF( WIN32 )
 # App
 #==============================================================================
 SET( app_inc
+    ${HEADER_PATH}/App/App.h
     ${HEADER_PATH}/App/AppCommon.h
     ${HEADER_PATH}/App/AbstractBehaviour.h
     ${HEADER_PATH}/App/AppBase.h
