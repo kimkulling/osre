@@ -52,7 +52,6 @@ public:
         Argument( const String &arg, const String &desc, ui32 numArgs );
     };
 
-public:
     ///	@brief	The class constructor with arguments and the requested argument support.
     ///	@param	argc            [in] The number of incoming arguments.
     ///	@param	ppArgv          [in] The arguments itself.

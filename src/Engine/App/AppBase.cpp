@@ -425,7 +425,7 @@ bool AppBase::onDestroy() {
     return true;
 }
 
-static const i64 Conversion2Micro = 1000;
+static constexpr i64 Conversion2Micro = 1000;
 
 void AppBase::onUpdate() {
     i64 microsecs = m_timer->getMilliCurrentSeconds() * Conversion2Micro;

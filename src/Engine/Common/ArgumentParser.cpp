@@ -46,7 +46,8 @@ ArgumentParser::Argument::Argument(const String &arg, const String &desc, ui32 n
     // empty
 }
 
-static void parseExpectedArgs(const String &userDefinedArgs, const String &desc, TArray<ArgumentParser::Argument> &supportedArgs) {
+static void parseExpectedArgs(const String &userDefinedArgs, const String &desc, 
+        TArray<ArgumentParser::Argument> &supportedArgs) {
     TArray<String> extractedArgs, extractedDescs;
     Tokenizer::tokenize(userDefinedArgs, extractedArgs, ":");
     Tokenizer::tokenize(desc, extractedDescs, ":");
@@ -55,7 +56,8 @@ static void parseExpectedArgs(const String &userDefinedArgs, const String &desc,
         String arg = extractedArgs[i];
         String currentDesc = extractedDescs[i];
         if (ArgumentParser::parseArgParameter(arg, numParam)) {
-            supportedArgs.add(ArgumentParser::Argument(ArgumentParser::getBlankArgument(arg), currentDesc, numParam));
+            supportedArgs.add(ArgumentParser::Argument(ArgumentParser::getBlankArgument(arg), 
+                currentDesc, numParam));
         }
     }
 }
@@ -92,6 +94,9 @@ ArgumentParser::ArgumentParser(i32 argc, const c8 *ppArgv[], const String &suppo
                             m_detectedArgs.add(argument);
                             String content(ppArgv[m_CurrentIndex]);
                             m_StoredArguments.add(content);
+                        } else {
+                            m_detectedArgs.add(argument);
+                            m_StoredArguments.add("");
                         }
                     }
                 } else {
@@ -206,9 +211,7 @@ bool ArgumentParser::hasArgument(const String &argument) const {
     bool result(false);
     for (ui32 idx = 0; idx < m_detectedArgs.size(); ++idx) {
         if (m_detectedArgs[idx] == argument) {
-            if (!m_StoredArguments[idx].empty()) {
-                result = true;
-            }
+            result = true;
             break;
         }
     }

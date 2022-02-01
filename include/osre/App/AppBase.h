@@ -140,8 +140,8 @@ public:
     /// @param  argv            [in] The argument array.
     /// @param  supportedArgs   [in] A list of supported arguments, separated by a :
     /// @param  desc            [in] The description for the arguments.
-    AppBase(i32 argc, const c8 *argv[], const String &supportedArgs = "api:run_dll", 
-        const String &desc = "The render API:The module to run");
+    AppBase(i32 argc, const c8 *argv[], const String &supportedArgs = "api:run_dll:break_on_startup", 
+        const String &desc = "The render API:The module to run:Breakpoint of startup");
 
     /// @brief  The class destructor, virtual.
     virtual ~AppBase();
