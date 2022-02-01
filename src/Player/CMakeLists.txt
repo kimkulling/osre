@@ -1,8 +1,13 @@
-
-ADD_EXECUTABLE( osre_player
+ADD_EXECUTABLE(osre_player
     main.cpp
 )
 
-target_link_libraries ( osre_player osre comctl32.lib winmm.lib )
+IF(WIN32)
+    SET(platform_libs comctl32.lib Winmm.lib SDL2)
+ELSE(WIN32)
+    SET(platform_libs SDL2)
+ENDIF(WIN32)
 
-set_target_properties(  osre_player PROPERTIES FOLDER Player )
+target_link_libraries(osre_player osre ${platform_libs})
+
+set_target_properties(osre_player PROPERTIES FOLDER Player)

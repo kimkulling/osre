@@ -35,7 +35,7 @@ using namespace ::OSRE::App;
 
 static const c8 *Tag = "player";
 
-typedef void*(__stdcall *createModuleFn)(void);
+typedef void(*createModuleFn)(void);
 
 class PlayerApplication : public AppBase {
 public:

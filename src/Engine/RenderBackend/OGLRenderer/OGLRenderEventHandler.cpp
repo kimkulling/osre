@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -100,14 +100,17 @@ bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
 }
 
 void OGLRenderEventHandler::setActiveShader(OGLShader *oglShader) {
+    osre_assert(m_renderCmdBuffer != nullptr);
     m_renderCmdBuffer->setActiveShader(oglShader);
 }
 
 void OGLRenderEventHandler::enqueueRenderCmd(OGLRenderCmd *oglRenderCmd) {
+    osre_assert(m_renderCmdBuffer != nullptr);
     m_renderCmdBuffer->enqueueRenderCmd(oglRenderCmd);
 }
 
 void OGLRenderEventHandler::setParameter(const ::CPPCore::TArray<OGLParameter *> &paramArray) {
+    osre_assert(m_renderCmdBuffer != nullptr);   
     m_renderCmdBuffer->setParameter(paramArray);
 }
 
@@ -123,8 +126,8 @@ bool OGLRenderEventHandler::onAttached(const EventData *) {
 }
 
 bool OGLRenderEventHandler::onDetached(const EventData *) {
-    if (m_renderCmdBuffer) {
-        osre_error(Tag, "Renderer not destroyed.");
+    if (m_renderCmdBuffer != nullptr) {
+        osre_error(Tag, "Render-Commandbuffer was not destroyed before detaching.");
         delete m_renderCmdBuffer;
         m_renderCmdBuffer = nullptr;
     }
@@ -241,18 +244,11 @@ bool OGLRenderEventHandler::onClearGeo(const EventData *) {
 
 bool OGLRenderEventHandler::onRenderFrame(const EventData *eventData) {
     osre_assert(nullptr != m_oglBackend);
-
-    if (nullptr == m_renderCtx) {
-        osre_debug(Tag, "Render context is nullptr.");
-        return false;
-    }
-
     osre_assert(nullptr != m_renderCmdBuffer);
+    osre_assert(m_renderCtx != nullptr);
 
     m_renderCmdBuffer->onPreRenderFrame();
-
     m_renderCmdBuffer->onRenderFrame(eventData);
-
     m_renderCmdBuffer->onPostRenderFrame();
 
     return true;
@@ -293,7 +289,6 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, CPPCore::TArray<size_t> &pri
         }
 
         primGroups.resize(0);
-
     }
 
     return true;

@@ -52,6 +52,18 @@ void SDL2Surface::setWindowsMouseCursor(DefaultMouseCursorType ct) {
 
 }
 
+void SDL2Surface::showWindow(ShowState showState) {
+    if ( nullptr == m_surface ) {
+        return;
+    }
+        
+    if (showState == ShowState::Visible) {
+        ::SDL_ShowWindow(m_surface);
+    } else {
+        SDL_HideWindow(m_surface);
+    }
+}
+        
 SDL_Window *SDL2Surface::getSDLSurface() const {
     return m_surface;
 }
