@@ -36,10 +36,7 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 # Quick Start
 
 ```cpp
-#include <osre/App/AppBase.h>
-#include <osre/App/Component.h>
-#include <osre/App/Entity.h>
-#include <osre/App/World.h>
+#include <osre/App/App.h>
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/MeshBuilder.h>
