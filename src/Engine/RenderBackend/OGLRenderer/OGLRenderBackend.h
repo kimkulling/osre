@@ -146,7 +146,6 @@ public:
 	void releaseFrameBuffer(OGLFrameBuffer *oglFB);
 	void render(size_t grimpGrpIdx);
 	void render(size_t primpGrpIdx, size_t numInstances);
-    void render2DPanels(const Rect2ui &panel);
 	void renderFrame();
 	void setFixedPipelineStates(const RenderStates &states);
     void setExtensions(const String &extensions);

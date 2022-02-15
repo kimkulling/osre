@@ -1067,7 +1067,8 @@ void OGLRenderBackend::releaseAllPrimitiveGroups() {
     ContainerClear(mPrimitives);
 }
 
-OGLFrameBuffer *OGLRenderBackend::createFrameBuffer(const String &name, ui32 width, ui32 height, PixelFormatType pixelFormat, bool depthBuffer) {
+OGLFrameBuffer *OGLRenderBackend::createFrameBuffer(const String &name, ui32 width, ui32 height, 
+        PixelFormatType pixelFormat, bool depthBuffer) {
     OGLFrameBuffer *oglFB = new OGLFrameBuffer(name.c_str(), width, height);
     glGenFramebuffers(1, &oglFB->m_bufferId);
     glBindFramebuffer(GL_FRAMEBUFFER, oglFB->m_bufferId);
@@ -1085,7 +1086,8 @@ OGLFrameBuffer *OGLRenderBackend::createFrameBuffer(const String &name, ui32 wid
         glGenRenderbuffers(1, &oglFB->m_depthrenderbufferId);
         glBindRenderbuffer(GL_RENDERBUFFER, oglFB->m_depthrenderbufferId);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, oglFB->m_depthrenderbufferId);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 
+            oglFB->m_depthrenderbufferId);
     }
 
     glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, oglFB->m_renderedTexture, 0);
@@ -1172,10 +1174,6 @@ void OGLRenderBackend::render(size_t primpGrpIdx, size_t numInstances) {
                 (GLsizei)grp->m_numIndices,
                 (GLsizei)numInstances);
     }
-}
-
-void OGLRenderBackend::render2DPanels(const Rect2ui &panel) {
-    
 }
 
 void OGLRenderBackend::renderFrame() {

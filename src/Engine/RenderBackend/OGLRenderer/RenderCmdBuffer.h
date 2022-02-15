@@ -65,42 +65,63 @@ struct OGLParameter;
 //-------------------------------------------------------------------------------------------------
 class RenderCmdBuffer {
 public:
-    /// @brief  Describes the requested enqueue type.
-    enum class EnqueueType {
-        PushBack, ///< Enqueue render command at the end.
-        PushFront
-    };
+    /// @brief The class constructor.
+    /// @param renderBackend    Pointer showing to the render backend.
+    /// @param ctx              The render context.
+    RenderCmdBuffer(OGLRenderBackend *renderBackend, Platform::AbstractOGLRenderContext *ctx);
 
-public:
-    /// The class constructor.
-    RenderCmdBuffer(OGLRenderBackend *renderBackend, Platform::AbstractOGLRenderContext *ctx, Pipeline *pipeline);
-    /// The class destructor.
+    /// @brief  The class destructor.
     ~RenderCmdBuffer();
-    /// Will set the active shader.
-    void setActiveShader(OGLShader *oglShader);
-    /// Will return the active shader.
+    
+    /// @brief  Will set the active shader.
+    /// @param  activeShader    The active shader.
+    void setActiveShader(OGLShader *activeShader);
+    
+    /// @brief  Will return the active shader.
+    /// @return The active shader, equal nullptr if none.
     OGLShader *getActiveShader() const;
-    /// Will enqueue a new render command.
-    void enqueueRenderCmd(OGLRenderCmd *renderCmd, EnqueueType type = EnqueueType::PushBack);
-    /// Will enqueue a new render command group.
-    void enqueueRenderCmdGroup(const String &groupName, CPPCore::TArray<OGLRenderCmd *> &cmdGroup, EnqueueType type = EnqueueType::PushBack);
-    /// The callback before rendering.
-    void onPreRenderFrame();
-    /// The render callback.
-    void onRenderFrame(const Common::EventData *eventData);
-    /// The callback after rendering.
+    
+    /// @brief Will enqueue a new render command.
+    /// @param renderCmd    The render command to enqueue.
+    void enqueueRenderCmd(OGLRenderCmd *renderCmd);
+
+    /// @brief Will enqueue a new render command group.
+    /// @param groupName    The group name
+    /// @param cmdGroup     The command group.
+    void enqueueRenderCmdGroup(const String &groupName, CPPCore::TArray<OGLRenderCmd *> &cmdGroup);
+    
+    /// @brief  The callback before rendering.
+    /// @param  pipeline         The pipeline to use.
+    void onPreRenderFrame(Pipeline *pipeline);
+
+    /// @brief  The render callback.
+    void onRenderFrame();
+    
+    /// @brief  The callback after rendering.
     void onPostRenderFrame();
-    /// The buffer and all attached commands will be cleared.
+
+    /// @brief  The buffer and all attached commands will be cleared.
     void clear();
-    /// Will add one parameter to the setup of the pipeline
+
+    /// @brief Will add one parameter to the setup of the pipeline
     void setParameter(OGLParameter *param);
-    /// Will add an array of parameters to the setup of the pipeline
+    
+    /// @brief Will add an array of parameters to the setup of the pipeline
+    /// @param paramArray   The array with the assigned parameters.
     void setParameter(const ::CPPCore::TArray<OGLParameter *> &paramArray);
-    ///
+    
+    /// @brief Commits all assigned parameters to the active shader.
     void commitParameters();
-    ///
+
+    /// @brief  Will assign the default matrices.
+    /// @param model    The model matrix.
+    /// @param view     The view matrix
+    /// @param proj     The projection matrix.
     void setMatrixes(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj);
-    ///
+    
+    ///	@brief  Will assign a matrix buffer.
+    /// @param  id      The matrix buffer id
+    /// @param  buffer  The matrix buffer itself.
     void setMatrixBuffer(const c8 *id, MatrixBuffer *buffer);
 
 protected:
@@ -108,30 +129,25 @@ protected:
     virtual bool onDrawPrimitivesCmd(DrawPrimitivesCmdData *data);
     /// The draw primitive instances callback.
     virtual bool onDrawPrimitivesInstancesCmd(DrawInstancePrimitivesCmdData *data);
-    ///
-    virtual bool onDrawPanelCmd(DrawPanelsCmdData *data);
     /// The set render target callback.
     virtual bool onSetRenderTargetCmd(SetRenderTargetCmdData *data);
     /// The set material callback.
     virtual bool onSetMaterialStageCmd(SetMaterialStageCmdData *data);
 
 private:
-    OGLRenderBackend *m_renderbackend;
-    ClearState m_clearState;
-    Platform::AbstractOGLRenderContext *m_renderCtx;
-    ::CPPCore::TArray<OGLRenderCmd *> m_cmdbuffer;
-    OGLShader *m_activeShader;
-    OGLShader *m_2dShader;
-    ::CPPCore::TArray<PrimitiveGroup *> m_primitives;
-    ::CPPCore::TArray<Material *> m_materials;
-    ::CPPCore::TArray<OGLParameter *> m_paramArray;
-
-    std::map<const char *, MatrixBuffer *> m_matrixBuffer;
-
-    glm::mat4 m_model;
-    glm::mat4 m_view;
-    glm::mat4 m_proj;
-    Pipeline *m_pipeline;
+    OGLRenderBackend *mRBService;
+    ClearState mClearState;
+    Platform::AbstractOGLRenderContext *mRenderCtx;
+    ::CPPCore::TArray<OGLRenderCmd *> mCommandQueue;
+    OGLShader *mActiveShader;
+    ::CPPCore::TArray<PrimitiveGroup *> mPrimitives;
+    ::CPPCore::TArray<Material *> mMaterials;
+    ::CPPCore::TArray<OGLParameter *> mParamArray;
+    std::map<const char *, MatrixBuffer *> mMatrixBuffer;
+    glm::mat4 mModel;
+    glm::mat4 mView;
+    glm::mat4 mProj;
+    Pipeline *mPipeline;
 };
 
 } // Namespace RenderBackend

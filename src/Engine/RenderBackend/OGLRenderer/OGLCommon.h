@@ -34,6 +34,8 @@ namespace RenderBackend {
 //  Forward declarations
 class OGLShader;
 
+struct OGLFrameBuffer;
+
 void checkOGLErrorState(const c8 *file, ui32 line);
 
 //-------------------------------------------------------------------------------------------------
@@ -166,7 +168,14 @@ struct SetMaterialStageCmdData {
 
 ///	@brief
 struct SetRenderTargetCmdData {
-    ClearState m_clearState;
+    ClearState mClearState;
+    OGLFrameBuffer *mFrameBuffer;
+
+    SetRenderTargetCmdData() :
+            mClearState( 0 ),
+            mFrameBuffer( nullptr ) {
+        // empty
+    }
 };
 
 ///	@brief

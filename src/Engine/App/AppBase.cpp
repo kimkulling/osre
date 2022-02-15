@@ -484,14 +484,16 @@ RenderBackend::Pipeline *AppBase::findPipeline(const String &name) {
     if (name.empty()) {
         return nullptr;
     }
-    
+
+    RenderBackend::Pipeline *pl = nullptr;
     for (ui32 i = 0; i < mPipelines.size(); ++i) {
         if (mPipelines[i]->getName() == name) {
-            return mPipelines[i];
+            pl = mPipelines[i];
+            break;
         }
     }
 
-    return nullptr;
+    return pl;
 }
 
 bool AppBase::destroyPipeline(const String &name) {

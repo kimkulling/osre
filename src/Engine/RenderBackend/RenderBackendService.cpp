@@ -330,6 +330,20 @@ RenderBatchData *RenderBackendService::beginRenderBatch(const c8 *id) {
     return m_currentBatch;
 }
 
+void RenderBackendService::setRenderTarget(FrameBuffer *fb) {
+    if (m_currentPass == nullptr) {
+        osre_warn(Tag, "No active pass, cannot add render target.");
+        return;
+    }
+    
+    if (fb == nullptr) {
+        osre_error(Tag, "Framebuffer is nullptr, aborted.");
+        return;
+    }
+
+    m_currentPass->m_renderTarget = fb;
+}
+
 void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
     if (nullptr == m_currentBatch) {
         osre_error(Tag, "No active batch.");

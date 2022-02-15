@@ -168,6 +168,7 @@ private:
     RenderCmdBuffer *m_renderCmdBuffer;
     Platform::AbstractOGLRenderContext *m_renderCtx;
     OGLVertexArray *m_vertexArray;
+    Pipeline *mPipeline;
 };
 
 inline RenderCmdBuffer *OGLRenderEventHandler::getRenderCmdBuffer() const {

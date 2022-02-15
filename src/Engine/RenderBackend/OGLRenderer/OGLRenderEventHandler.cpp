@@ -56,7 +56,8 @@ OGLRenderEventHandler::OGLRenderEventHandler() :
         m_oglBackend(nullptr),
         m_renderCmdBuffer(nullptr),
         m_renderCtx(nullptr),
-        m_vertexArray(nullptr) {
+        m_vertexArray(nullptr),
+        mPipeline(nullptr) {
     // empty
 }
 
@@ -183,7 +184,7 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
     String root = App::AssetRegistry::getPath("media");
     String path = App::AssetRegistry::resolvePathFromUri(fontUri);
     fontUri.setPath(path);
-    m_renderCmdBuffer = new RenderCmdBuffer(m_oglBackend, m_renderCtx, createRendererEvData->m_pipeline);
+    m_renderCmdBuffer = new RenderCmdBuffer(m_oglBackend, m_renderCtx);
 
     bool ok = Profiling::PerformanceCounterRegistry::create();
     if (!ok) {
@@ -191,6 +192,7 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
         return false;
     }
 
+    mPipeline = createRendererEvData->m_pipeline;
     Profiling::PerformanceCounterRegistry::registerCounter("fps");
 
     return true;
@@ -247,8 +249,8 @@ bool OGLRenderEventHandler::onRenderFrame(const EventData *eventData) {
     osre_assert(nullptr != m_renderCmdBuffer);
     osre_assert(m_renderCtx != nullptr);
 
-    m_renderCmdBuffer->onPreRenderFrame();
-    m_renderCmdBuffer->onRenderFrame(eventData);
+    m_renderCmdBuffer->onPreRenderFrame(mPipeline);
+    m_renderCmdBuffer->onRenderFrame();
     m_renderCmdBuffer->onPostRenderFrame();
 
     return true;

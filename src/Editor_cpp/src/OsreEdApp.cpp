@@ -455,7 +455,7 @@ ModuleRegistry &OsreEdApp::getModuleRegistry() {
     return mModuleRegistry;
 }
 
-void OsreEdApp::createUI() {
+void OsreEdApp::createCanvas() {
     return;
     mMesh2D = Mesh::create(1, VertexType::RenderVertex);
     Rect2ui r(100, 100, 200, 200);

@@ -187,6 +187,8 @@ public:
 
     RenderBatchData *beginRenderBatch(const c8 *id);
 
+    void setRenderTarget(FrameBuffer *fb);
+
     void setMatrix(MatrixType type, const glm::mat4 &m);
 
     void setMatrix(const String &name, const glm::mat4 &matrix);
@@ -219,7 +221,7 @@ public:
 
     void syncRenderThread();
 
-    Texture *getDefaultTexture() const;
+    //Texture *getDefaultTexture() const;
 
 protected:
     /// @brief  The open callback.

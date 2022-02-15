@@ -115,7 +115,7 @@ public:
     ModuleRegistry &getModuleRegistry();
 
     /// @brief  Will create the ui.
-    void createUI();
+    void createCanvas();
 
     /// @brief 
     /// @param mode 
