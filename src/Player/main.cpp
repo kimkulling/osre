@@ -43,7 +43,8 @@ public:
             AppBase(argc, (const char **)argv),
             mDllName(),
             mBreakOnStartup(false),
-            mModule(nullptr) {
+            mModule(nullptr),
+            mUpdateFunc(nullptr) {
         // empty
     }
 
@@ -84,15 +85,15 @@ protected:
             return false;
         }
 
-        createModuleFn func = (createModuleFn)dynLoader->loadFunction("createModule");
-        if (func == nullptr) {
+        mUpdateFunc = (createModuleFn)dynLoader->loadFunction("createModule");
+        if (mUpdateFunc == nullptr) {
             osre_error(Tag, "Cannot find factory method");
             return false;
         } else {
             osre_info(Tag, "Loading " + mDllName + " successful.");
         }
 
-        App::ModuleBase *module = (App::ModuleBase*) (func)();
+        App::ModuleBase *module = (App::ModuleBase *)(mUpdateFunc)();
         if (module == nullptr) {
             osre_error(Tag, "Cannot create instance of modeule from " + mDllName);
             return false;
@@ -113,13 +114,17 @@ protected:
     }
 
     void onUpdate() override {
-
+        if (mUpdateFunc == nullptr) {
+            AppBase::onUpdate();
+            return;
+        }
     }
 
 private:
     String mDllName;
     bool mBreakOnStartup;
     LibHandle *mModule;
+    createModuleFn mUpdateFunc;
 };
 
 int main(int argc, char *argv[]) {
