@@ -66,11 +66,12 @@ OGLRenderEventHandler::~OGLRenderEventHandler() {
 }
 
 bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
-    bool result(false);
+    osre_assert(nullptr != data);
     if (!m_isRunning) {
         return true;
     }
 
+    bool result(false);
     if (OnAttachEventHandlerEvent == ev) {
         result = onAttached(data);
     } else if (OnDetatachEventHandlerEvent == ev) {
@@ -102,16 +103,19 @@ bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
 
 void OGLRenderEventHandler::setActiveShader(OGLShader *oglShader) {
     osre_assert(m_renderCmdBuffer != nullptr);
+
     m_renderCmdBuffer->setActiveShader(oglShader);
 }
 
 void OGLRenderEventHandler::enqueueRenderCmd(OGLRenderCmd *oglRenderCmd) {
     osre_assert(m_renderCmdBuffer != nullptr);
+
     m_renderCmdBuffer->enqueueRenderCmd(oglRenderCmd);
 }
 
 void OGLRenderEventHandler::setParameter(const ::CPPCore::TArray<OGLParameter *> &paramArray) {
-    osre_assert(m_renderCmdBuffer != nullptr);   
+    osre_assert(m_renderCmdBuffer != nullptr);
+
     m_renderCmdBuffer->setParameter(paramArray);
 }
 
@@ -201,11 +205,11 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
 bool OGLRenderEventHandler::onDestroyRenderer(const Common::EventData *) {
     osre_assert(nullptr != m_oglBackend);
 
-    if (nullptr != m_renderCtx) {
+    if (nullptr == m_renderCtx) {
         return false;
     }
 
-    bool ok(Profiling::PerformanceCounterRegistry::destroy());
+    bool ok = Profiling::PerformanceCounterRegistry::destroy();
     if (!ok) {
         osre_error(Tag, "Error while destroying performance counters.");
     }
@@ -234,6 +238,7 @@ bool OGLRenderEventHandler::onDetachView(const EventData *) {
 
 bool OGLRenderEventHandler::onClearGeo(const EventData *) {
     osre_assert(nullptr != m_oglBackend);
+    osre_assert(nullptr != m_renderCmdBuffer);
 
     m_oglBackend->releaseAllBuffers();
     m_oglBackend->releaseAllShaders();
@@ -391,6 +396,18 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
     return true;
 }
 
+
+static void setName(c8 *name, size_t bufferSize, FrameSubmitCmd *cmd) {
+    ::memset(name, '\0', bufferSize);
+    size_t bufferLen = cmd->m_data[0];
+    if (bufferLen > bufferSize-1) {
+        bufferLen = bufferSize - 1;
+    }
+    ::strncpy(name, &cmd->m_data[1], bufferLen);
+}
+
+static const size_t BufferSize = 256;
+
 bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
     CommitFrameEventData *data = (CommitFrameEventData *)eventData;
     if (nullptr == data) {
@@ -409,11 +426,10 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
             MatrixBuffer *buffer = (MatrixBuffer *)cmd->m_data;
             m_renderCmdBuffer->setMatrixBuffer(cmd->m_batchId, buffer);
         } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateUniforms) {
-            c8 name[255];
-            ::memset(name, '\0', 255);
-            ::strncpy(name, &cmd->m_data[1], cmd->m_data[0]);
-            ui32 offset = cmd->m_data[0] + 1;
-            size_t size = cmd->m_size - offset;
+            c8 name[BufferSize];
+            setName(name, BufferSize, cmd);
+            const ui32 offset = cmd->m_data[0] + 1;
+            const size_t size = cmd->m_size - offset;
             OGLParameter *oglParam = m_oglBackend->getParameter(name);
             ::memcpy(oglParam->m_data->getData(), &cmd->m_data[offset], size);
         } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateBuffer) {
