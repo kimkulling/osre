@@ -25,20 +25,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 
 namespace OSRE {
-namespace Collision {
+namespace Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  This class describes a ray. Ray have a starting point (origin) and a direction.
+///
+/// You can use rays to see if any bounding objects will intersect with the ray.
 //-------------------------------------------------------------------------------------------------
 template<class T>
 class TRay {
 public:
+    /// @brief The default class constructor.
     TRay();
+    /// @brief The class constructor with the parameters.
+    /// @param origin       The origin of the ray.
+    /// @param direction    The direction of the ray.
     TRay( const TVec3<T> &origin, const TVec3<T> &direction );
-    ~TRay();
-    TVec3<T> validate( T time );
+    
+    ///	@brief  The class destructor.
+    ~TRay() = default;
     const TVec3<T> &getOrigin() const;
     const TVec3<T> &getDirection() const;
     bool operator == ( const TRay<T> &rhs) const;
@@ -50,57 +57,34 @@ private:
 };
 
 template<class T>
-inline
-TRay<T>::TRay()
-: m_origin()
-, m_direction() {
+inline TRay<T>::TRay() : m_origin(), m_direction() {
     // empty
 }
 
 template<class T>
-inline
-TRay<T>::TRay( const TVec3<T> &origin, const TVec3<T> &direction )
-: m_origin( origin )
-, m_direction( direction ) {
+inline TRay<T>::TRay( const TVec3<T> &origin, const TVec3<T> &direction ) : m_origin( origin ), m_direction( direction ) {
     // empty
 }
 
 template<class T>
-inline
-TRay<T>::~TRay() {
-    // empty
-}
-
-template<class T>
-inline
-TVec3<T> TRay<T>::validate( T time ) {
-    const TVec3<T> res = m_origin + time * m_direction;
-    return res;
-}
-
-template<class T>
-inline
-const TVec3<T> &TRay<T>::getOrigin() const {
+inline const TVec3<T> &TRay<T>::getOrigin() const {
     return m_origin;
 }
 
 template<class T>
-inline
-const TVec3<T> &TRay<T>::getDirection() const {
+inline const TVec3<T> &TRay<T>::getDirection() const {
     return m_direction;
 }
 
 template<class T>
-inline
-bool TRay<T>::operator == (const TRay<T> &rhs) const {
+inline bool TRay<T>::operator == (const TRay<T> &rhs) const {
     return ( m_origin == rhs.m_origin && m_direction == rhs.m_direction );
 }
 
 template<class T>
-inline
-bool TRay<T>::operator != (const TRay<T> &rhs) const {
+inline bool TRay<T>::operator != (const TRay<T> &rhs) const {
     return !( *this == rhs );
 }
 
-} // Namespace Collision
+} // Namespace Common
 } // Namespace OSRE
