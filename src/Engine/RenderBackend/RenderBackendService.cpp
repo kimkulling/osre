@@ -87,7 +87,8 @@ RenderBackendService::RenderBackendService() :
         m_dirty(false),
         m_passes(),
         m_currentPass(nullptr),
-        m_currentBatch(nullptr) {
+        m_currentBatch(nullptr),
+        mPipelines() {
     // empty
 }
 
@@ -96,6 +97,11 @@ RenderBackendService::~RenderBackendService() {
         delete m_settings;
         m_settings = nullptr;
     }
+
+    for (ui32 i = 0; i < mPipelines.size(); ++i) {
+        delete mPipelines[i];
+    }
+    mPipelines.clear();
 }
 
 bool RenderBackendService::onOpen() {
@@ -279,6 +285,58 @@ void RenderBackendService::sendEvent(const Event *ev, const EventData *eventData
     if (m_renderTaskPtr.isValid()) {
         m_renderTaskPtr->sendEvent(ev, eventData);
     }
+}
+
+Pipeline *RenderBackendService::createDefaultPipeline() {
+    Pipeline *pipeline = new Pipeline(DefaultPipelines::Pipeline_Default);
+    RenderPass *renderPass = RenderPass::create(RenderPassId, nullptr);
+    CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
+    renderPass->setCullState(cullState);
+    pipeline->addPass(renderPass);
+    mPipelines.add(pipeline);
+
+    return pipeline;
+}
+
+Pipeline *RenderBackendService::createPipeline(const String &name) {
+    Pipeline *p = findPipeline(name);
+    if (nullptr == p) {
+        p = new Pipeline(name);
+        mPipelines.add(p);
+    }
+
+    return p;
+}
+
+Pipeline *RenderBackendService::findPipeline(const String &name) {
+    if (name.empty()) {
+        return nullptr;
+    }
+
+    RenderBackend::Pipeline *pl = nullptr;
+    for (ui32 i = 0; i < mPipelines.size(); ++i) {
+        if (mPipelines[i]->getName() == name) {
+            pl = mPipelines[i];
+            break;
+        }
+    }
+
+    return pl;
+}
+
+bool RenderBackendService::destroyPipeline(const String &name) {
+    if (name.empty()) {
+        return false;
+    }
+
+    for (ui32 i = 0; i < mPipelines.size(); ++i) {
+        if (mPipelines[i]->getName() == name) {
+            mPipelines.remove(i);
+            return true;
+        }
+    }
+
+    return false;
 }
 
 PassData *RenderBackendService::getPassById(const c8 *id) const {

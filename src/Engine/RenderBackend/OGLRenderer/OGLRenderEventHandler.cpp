@@ -66,7 +66,7 @@ OGLRenderEventHandler::~OGLRenderEventHandler() {
 }
 
 bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
-    osre_assert(nullptr != data);
+    //osre_assert(nullptr != data);
     if (!m_isRunning) {
         return true;
     }

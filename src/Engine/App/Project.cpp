@@ -182,9 +182,6 @@ static void storeNodes(Node *currentNode, NodeData *nd, size_t &index) {
         storeNodes(child, nd, index);
     }
 }
-static void storeMaterials() {
-    // todo!
-}
 
 static void storeMeshes(MeshArray &meshes, MeshData *md) {
     osre_assert(md != nullptr);

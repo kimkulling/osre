@@ -109,7 +109,7 @@ namespace DefaultPipelines {
 class OSRE_EXPORT Pipeline : public Common::Object {
 public:
     /// @brief
-    Pipeline(const String &pipelineName, RenderBackend::RenderBackendService *rbService);
+    Pipeline(const String &pipelineName);
     ~Pipeline();
 
     /// @brief

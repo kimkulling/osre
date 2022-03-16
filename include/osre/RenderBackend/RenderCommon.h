@@ -51,26 +51,27 @@ static const i32 UnsetHandle = -1;
 /// Upper limits for names.
 static const ui32 MaxEntNameLen = 256;
 
-///	@brief  This enum describes the usage of a buffer object.
+///	@brief  This enum describes the usage of a GPU-buffer-object.
+///
+/// Buffer objects are used to store vertex-, index- or image data on the GPU-memory
+/// 
 enum class BufferType {
-    EmptyBuffer = 0, ///< Empty buffer, no special use.
-    VertexBuffer, ///< Vertex buffer, stores vertex data inside.
-    IndexBuffer, ///< Index buffer, stores indices inside.
-    InstanceBuffer, ///< Instance buffer, will store instance-specific data.
-    UniformBuffer, ///< Uniform buffer, used for structured uniform data.
-    NumBufferTypes, ///< Number of enums.
-
-    InvalidBufferType ///< Enum for invalid enum.
+    InvalidType = -1,   ///< Enum for invalid enum.
+    EmptyBuffer = 0,    ///< Empty buffer, no special use.
+    VertexBuffer,       ///< Vertex buffer, stores vertex data inside.
+    IndexBuffer,        ///< Index buffer, stores indices inside.
+    InstanceBuffer,     ///< Instance buffer, will store instance-specific data.
+    UniformBuffer,      ///< Uniform buffer, used for structured uniform data.
+    NumBufferTypes      ///< Number of enums.
 };
 
 /// @brief  This enum describes the supported access types for render buffers.
 enum class BufferAccessType {
+    InvalidType = -1, ///< Enum for invalid enum.
     ReadOnly = 0, ///< Read only access.
     WriteOnly, ///< Write only access.
     ReadWrite, ///< Read and write access.
-    NumBufferAccessTypes, ///< Number of enum's.
-
-    InvalidBufferAccessType ///< Enum for invalid enum.
+    NumBufferAccessTypes ///< Number of enum's.
 };
 
 enum class PixelFormatType {

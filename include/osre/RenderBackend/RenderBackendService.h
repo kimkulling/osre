@@ -181,6 +181,24 @@ public:
     /// @param  eventData   [in] The event data.
     void sendEvent(const Common::Event *ev, const Common::EventData *eventData);
 
+    Pipeline *createDefaultPipeline();
+
+    /// @brief  Will create a new render pipeline.
+    /// @param  name        [in] The name for the new pipeline.
+    /// @return The new created instance will be returned. If a pipeline with the
+    ///         same name already exists this instance will be returned.
+    Pipeline *createPipeline(const String &name);
+
+    /// @brief  Will search for pipeline by its name.
+    /// @param  name        [in] The name of the pipeline to look for.
+    /// @return The found pipeline instance or nullptr if no pipeline with this name was found.
+    virtual Pipeline *findPipeline(const String &name);
+
+    /// @brief  Will destroy a stored pipeline described by its name.
+    /// @param  name        [in] The name for the pipeline to destroy.
+    /// @return true if the pipeline was destroyed, false if not.
+    virtual bool destroyPipeline(const String &name);
+
     PassData *getPassById(const c8 *id) const;
 
     PassData *beginPass(const c8 *id);
@@ -257,6 +275,7 @@ private:
 
         Behaviour() : ResizeViewport(true) {}
     } mBehaviour;
+    CPPCore::TArray<RenderBackend::Pipeline *> mPipelines;
 };
 
 inline void RenderBackendService::setUiScreen(UI::Widget *screen) {

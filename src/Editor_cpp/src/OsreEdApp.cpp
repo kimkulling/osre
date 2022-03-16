@@ -457,27 +457,6 @@ ModuleRegistry &OsreEdApp::getModuleRegistry() {
 
 void OsreEdApp::createCanvas() {
     return;
-    mMesh2D = Mesh::create(1, VertexType::RenderVertex);
-    Rect2ui r(100, 100, 200, 200);
-    Style style;
-    style.BG.m_r = 1;
-    style.BG.m_g = 1;
-    createRect2D(r, mMesh2D, style);
-
-    Pipeline *pl = AppBase::findPipeline(DefaultPipelines::Pipeline_Default);
-    if (nullptr != pl) {
-        RenderBackend::Shader *shader = nullptr;
-        RenderPass *uiPass = RenderPass::create(UiPassId, shader);
-        pl->addPass(uiPass);
-        RenderBackendService *rbSrv = AppBase::getRenderBackendService();
-        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
-        {
-            rbSrv->beginRenderBatch("ui");
-            rbSrv->addMesh(mMesh2D, 1);
-            rbSrv->endRenderBatch();
-        }
-        rbSrv->endPass();
-    }
 }
 
 void OsreEdApp::setStatusBarText(const String &mode, const String &model, i32 numVertices, i32 numTriangles) {

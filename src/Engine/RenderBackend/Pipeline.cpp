@@ -161,7 +161,7 @@ bool RenderPass::operator!=(const RenderPass &rhs) const {
     return !(*this == rhs);
 }
 
-Pipeline::Pipeline(const String &pipelineName, RenderBackend::RenderBackendService *rbService) :
+Pipeline::Pipeline(const String &pipelineName) :
         Object(pipelineName),
         mPasses(),
         mRbService(),
