@@ -44,10 +44,10 @@ struct RenderTarget {
     // empty
 };
 
-static const ui32 RenderPassId = 0;
-static const ui32 UiPassId = 1;
-static const ui32 DbgPassId = 2;
-static const ui32 MaxDbgPasses = 3;
+static constexpr ui32 RenderPassId = 0;
+static constexpr ui32 UiPassId = 1;
+static constexpr ui32 DbgPassId = 2;
+static constexpr ui32 MaxDbgPasses = 3;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -108,32 +108,41 @@ namespace DefaultPipelines {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Pipeline : public Common::Object {
 public:
-    /// @brief
-    Pipeline(const String &pipelineName);
+    /// @brief  The class constructor.
+    /// @param  name    The name for the pipeline.
+    Pipeline(const String &name);
+    
+    ///	@brief  The class destructor.
     ~Pipeline();
 
-    /// @brief
+    /// @brief  Will add a new render-pass to the pipeline.
+    /// @param  pass    The pass to add.
     void addPass(RenderPass *pass);
 
-    /// @brief
+    /// @brief  Will return the number of passes.
+    /// @return The number of passes in the pipeline.
     size_t getNumPasses() const;
 
-    /// @brief
+    /// @brief  Will begin the frame-rendering in the current pipeline.
+    /// @return The number of render-passes within the pipeline.
+    /// @note   Use this to loop over all render-passes.
     size_t beginFrame();
 
-    /// @brief
+    /// @brief  Will begin the rendering for a given render-pass.
+    /// @param  passId  The render-pass id.
+    /// @return ´Pointer showing to the render-pass. Will be a nullptr when no render-pass exists.
     RenderPass *beginPass(ui32 passId);
 
-    /// @brief
+    /// @brief  Will end the current render-pass.
+    /// @param  passId  The render-pass id.
+    /// @return true if successful, false in case of an error.
     bool endPass(ui32 passId);
 
-    /// @brief
+    /// @brief  Will end the frame-rendering for the given pipeline.
     void endFrame();
 
-    /// @brief
+    /// @brief  Will clear the pipeline, all assigned render-passes will be removed.
     void clear();
-
-private:
 
 private:
     using PipelinePassArray = TArray<RenderPass*>;
