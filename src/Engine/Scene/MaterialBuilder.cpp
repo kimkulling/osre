@@ -315,9 +315,9 @@ void MaterialBuilder::destroy() {
 static void addMaterialParameter(Material *mat) {
     osre_assert(nullptr != mat);
 
-    mat->m_shader->m_parameters.add("Model");
-    mat->m_shader->m_parameters.add("View");
-    mat->m_shader->m_parameters.add("Projection");
+    mat->m_shader->addUniformBuffer("Model");
+    mat->m_shader->addUniformBuffer("View");
+    mat->m_shader->addUniformBuffer("Projection");
 }
 
 Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
@@ -347,11 +347,9 @@ Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
     // Setup shader attributes and variables
     if (nullptr != mat->m_shader) {
         if (type == VertexType::ColorVertex) {
-            mat->m_shader->m_attributes.add(ColorVert::getAttributes(),
-                    ColorVert::getNumAttributes());
+            mat->m_shader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
         } else if (type == VertexType::RenderVertex) {
-            mat->m_shader->m_attributes.add(RenderVert::getAttributes(),
-                    RenderVert::getNumAttributes());
+            mat->m_shader->addVertexAttributes(RenderVert::getAttributes(),RenderVert::getNumAttributes());
         }
 
         addMaterialParameter(mat);
@@ -377,7 +375,7 @@ Material *MaterialBuilder::createBuildinUiMaterial() {
         size_t numAttribs(RenderVert::getNumAttributes());
         const String *attribs(RenderVert::getAttributes());
         if (numAttribs > 0) {
-            mat->m_shader->m_attributes.add(attribs, numAttribs);
+            mat->m_shader->addVertexAttributes(attribs, numAttribs);
         }
         addMaterialParameter(mat);
     }
@@ -428,9 +426,9 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
     // Setup shader attributes and variables
     if (nullptr != mat->m_shader) {
         if (type == VertexType::ColorVertex) {
-            mat->m_shader->m_attributes.add(ColorVert::getAttributes(), ColorVert::getNumAttributes());
+            mat->m_shader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
         } else if (type == VertexType::RenderVertex) {
-            mat->m_shader->m_attributes.add(RenderVert::getAttributes(), RenderVert::getNumAttributes());
+            mat->m_shader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
         }
 
         addMaterialParameter(mat);

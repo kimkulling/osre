@@ -246,7 +246,7 @@ void OGLRenderBackend::clearRenderTarget(const ClearState &clearState) {
     }
 
     glClear(glTarget);
-    glClearColor(0.3, 0.3, 0.3, 0.3);
+    glClearColor(0.3f, 0.3f, 0.3f, 0.3f);
 }
 
 void OGLRenderBackend::setViewport(i32 x, i32 y, i32 w, i32 h) {
@@ -568,6 +568,18 @@ void OGLRenderBackend::releaseAllVertexArrays() {
     mVertexArrays.clear();
 }
 
+static bool loadShader(Shader *shaderInfo, OGLShader *oglShader, ShaderType type) {
+    if (!shaderInfo->hasSource(type)) {
+        bool result = oglShader->loadFromSource(ShaderType::SH_VertexShaderType, shaderInfo->getSource(type));
+        if (!result) {
+            osre_error(Tag, "Error while compiling VertexShader.");
+            return false;
+        }
+    }
+
+    return true;
+}
+
 OGLShader *OGLRenderBackend::createShader(const String &name, Shader *shaderInfo) {
     if (name.empty()) {
         osre_debug(Tag, "Name for shader is nullptr");
@@ -582,10 +594,13 @@ OGLShader *OGLRenderBackend::createShader(const String &name, Shader *shaderInfo
     oglShader = new OGLShader(name);
     mShaders.add(oglShader);
     if (shaderInfo) {
-        bool result(false);
-        if (!shaderInfo->m_src[static_cast<int>(ShaderType::SH_VertexShaderType)].empty()) {
-            result = oglShader->loadFromSource(ShaderType::SH_VertexShaderType,
-                    shaderInfo->m_src[static_cast<int>(ShaderType::SH_VertexShaderType)]);
+        loadShader(shaderInfo, oglShader, ShaderType::SH_VertexShaderType);
+        loadShader(shaderInfo, oglShader, ShaderType::SH_FragmentShaderType);
+        loadShader(shaderInfo, oglShader, ShaderType::SH_GeometryShaderType);
+
+        /* bool result(false);
+        if (!shaderInfo->hasSource(ShaderType::SH_VertexShaderType)) {
+            result = oglShader->loadFromSource(ShaderType::SH_VertexShaderType, shaderInfo->getSource(ShaderType::SH_VertexShaderType));
             if (!result) {
                 osre_error(Tag, "Error while compiling VertexShader.");
             }
@@ -605,9 +620,9 @@ OGLShader *OGLRenderBackend::createShader(const String &name, Shader *shaderInfo
             if (!result) {
                 osre_error(Tag, "Error while compiling GeometryShader.");
             }
-        }
+        }*/
 
-        result = oglShader->createAndLink();
+        bool result = oglShader->createAndLink();
         if (!result) {
             osre_error(Tag, "Error while linking shader");
         }

@@ -103,12 +103,12 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
             OGLShader *shader = rb->createShader(name, material->m_shader);
             if (nullptr != shader) {
                 matData->m_shader = shader;
-                for (const OSRE::String & attribute : material->m_shader->m_attributes) {
-                    shader->addAttribute(attribute);
+                for (size_t i = 0; i < material->m_shader->getNumVertexAttributes(); ++i) {
+                    shader->addAttribute(material->m_shader->getVertexAttributeAt(i));
                 }
 
-                for (auto & parameter : material->m_shader->m_parameters) {
-                    shader->addUniform(parameter);
+                for (size_t i = 0; i < material->m_shader->getNumUniformBuffer(); ++i) {
+                    shader->addUniform(material->m_shader->getUniformBufferAt(i));
                 }
 
                 // for setting up all buffer objects

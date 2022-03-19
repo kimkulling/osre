@@ -530,7 +530,7 @@ void Material::createShader(ShaderSourceArray &shaders) {
     m_shader = new Shader;
     for (ui32 i = 0; i < MaxShaderTypes; ++i) {
         if (!shaders[i].empty()) {
-            m_shader->m_src[i] = shaders[i];
+            m_shader->setSource(static_cast<ShaderType>(i), shaders[i]);
         }
     }
 }

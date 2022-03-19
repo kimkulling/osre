@@ -112,13 +112,14 @@ public:
 
                 // use a default material
                 mesh->m_material = AbstractRenderTest::createMaterial("ColorVertexMat", VsSrc, FsSrc);
-                if (nullptr != mesh->m_material->m_shader) {
-                    mesh->m_material->m_shader->m_attributes.add("position");
-                    mesh->m_material->m_shader->m_attributes.add("normal");
-                    mesh->m_material->m_shader->m_attributes.add("color0");
+                Shader *shader = mesh->m_material->m_shader;
+                if (shader != nullptr) {
+                    shader->addVertexAttribute("position");
+                    shader->addVertexAttribute("normal");
+                    shader->addVertexAttribute("color0");
 
-                    mesh->m_material->m_shader->m_parameters.add("VP");
-                    mesh->m_material->m_shader->m_parameters.add("M");
+                    shader->addUniformBuffer("VP");
+                    shader->addUniformBuffer("M");
                 }
 
                 m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));

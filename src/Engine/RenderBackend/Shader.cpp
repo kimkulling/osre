@@ -45,6 +45,10 @@ void Shader::setSource(ShaderType type, const String &src) {
     }
 }
 
+const c8 *Shader::getSource(ShaderType type) const {
+    return m_src[static_cast<size_t>(type)].c_str();
+}
+
 ShaderType Shader::getTypeFromeExtension( const String &extension ) {
     if (extension.empty()) {
         return ShaderType::InvalidShaderType;
@@ -97,8 +101,8 @@ size_t ShaderLoader::load( const IO::Uri &uri, Shader *shader ) {
         stream->close();
         return 0;
     }
-
-    shader->m_src[(size_t)type] = shaderSrc;
+    shader->setSource(type, shaderSrc);
+    //shader->m_src[(size_t)type] = shaderSrc;
     stream->close();
  
     return size;

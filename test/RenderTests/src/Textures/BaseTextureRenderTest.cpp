@@ -126,7 +126,7 @@ public:
                 TextureResourceArray texResArray;
                 TextureResource *texRes = new TextureResource("SpiderTex", IO::Uri("file://assets/Models/Obj/SpiderTex.jpg"));
                 texResArray.add(texRes);
-                mesh->m_material = Scene::MaterialBuilder::createTexturedMaterial("SpiderTex", texResArray, VsSrc, FsSrc);
+                mesh->setMaterial(Scene::MaterialBuilder::createTexturedMaterial("SpiderTex", texResArray, VsSrc, FsSrc));
                 if (nullptr != mesh->m_material->m_shader) {
                     mesh->m_material->m_shader->m_attributes.add("position");
                     mesh->m_material->m_shader->m_attributes.add("normal");

@@ -76,6 +76,7 @@ public:
     static void destroy(Mesh **geo);
     static size_t getVertexSize(VertexType vertextype);
 
+    void setMaterial(Material *mat);
     template <class T>
     void attachVertices(T *vertices, size_t size) {
         if (m_vb == nullptr) {
@@ -111,6 +112,10 @@ private:
     ::CPPCore::TArray<uc8> m_indexData;
     ui32 m_lastIndex;
 };
+
+inline void Mesh::setMaterial( Material *mat ) {
+    m_material = mat;
+}
 
 template <class TVertexType>
 inline size_t getVertexTypeSize() {
