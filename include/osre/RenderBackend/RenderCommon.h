@@ -520,9 +520,14 @@ struct OSRE_EXPORT Material {
     void setMaterialType(MaterialType matType);
     MaterialType getMaterialType() const;
     void createShader(ShaderSourceArray &shaders);
+    Shader *getShader() const;
 
     OSRE_NON_COPYABLE(Material)
 };
+
+inline Shader *Material::getShader() const {
+    return m_shader;
+}
 
 ///	@brief
 struct OSRE_EXPORT GeoInstanceData {

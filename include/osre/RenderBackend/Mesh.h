@@ -77,6 +77,7 @@ public:
     static size_t getVertexSize(VertexType vertextype);
 
     void setMaterial(Material *mat);
+    Material *getMaterial() const;
     template <class T>
     void attachVertices(T *vertices, size_t size) {
         if (m_vb == nullptr) {
@@ -115,6 +116,10 @@ private:
 
 inline void Mesh::setMaterial( Material *mat ) {
     m_material = mat;
+}
+
+inline Material *Mesh::getMaterial() const {
+    return m_material;
 }
 
 template <class TVertexType>
