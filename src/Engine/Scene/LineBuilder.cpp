@@ -97,9 +97,9 @@ Mesh *LineBuilder::getMesh() {
     }
 
     size_t size = 0;
-    if (m_activeMesh->m_vertextype == VertexType::RenderVertex) {
+    if (m_activeMesh->getVertexcType() == VertexType::RenderVertex) {
         size = sizeof(RenderVert) * m_posCache.size();
-    } else if (m_activeMesh->m_vertextype == VertexType::ColorVertex) {
+    } else if (m_activeMesh->getVertexcType() == VertexType::ColorVertex) {
         size = sizeof(ColorVert) * m_posCache.size();
     }
 
@@ -117,15 +117,16 @@ Mesh *LineBuilder::getMesh() {
         if (!m_tex0Cache.isEmpty()) {
             v.tex0 = m_tex0Cache[i];
         }
-        c8 *ptr = (c8 *)m_activeMesh->m_vb->getData();
+        c8 *ptr = (c8*) m_activeMesh->getVertexBuffer()->getData();
         ::memcpy(&ptr[offset], &v, sizeof(RenderVert));
         offset += sizeof(RenderVert);
     }
 
     // setup indices
     size = sizeof(ui16) * m_indexCache.size();
-    m_activeMesh->m_ib = BufferData::alloc(BufferType::IndexBuffer, size, BufferAccessType::ReadOnly);
-    m_activeMesh->m_ib->copyFrom(&m_indexCache[0], size);
+    m_activeMesh->createIndexBuffer(&m_indexCache[0], size, IndexType::UnsignedShort, BufferAccessType::ReadOnly)
+    //m_activeMesh->m_ib = BufferData::alloc(BufferType::IndexBuffer, size, BufferAccessType::ReadOnly);
+    //m_activeMesh->m_ib->copyFrom(&m_indexCache[0], size);
 
     // setup primitives
     m_activeMesh->m_numPrimGroups = m_primGroupCache.size();

@@ -269,13 +269,13 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, CPPCore::TArray<size_t> &pri
         }
 
         // register primitive groups to render
-        for (size_t i = 0; i < currentMesh->m_numPrimGroups; ++i) {
-            const size_t primIdx(m_oglBackend->addPrimitiveGroup(&currentMesh->m_primGroups[i]));
+        for (size_t i = 0; i < currentMesh->getNumberOfPrimitiveGroups(); ++i) {
+            const size_t primIdx(m_oglBackend->addPrimitiveGroup(currentMesh->getPrimitiveGroupAt(i)));
             primGroups.add(primIdx);
         }
 
         // create the default material
-        SetMaterialStageCmdData *data = setupMaterial(currentMesh->m_material, m_oglBackend, this);
+        SetMaterialStageCmdData *data = setupMaterial(currentMesh->getMaterial(), m_oglBackend, this);
 
         // setup vertex array, vertex and index buffers
         m_vertexArray = setupBuffers(currentMesh, m_oglBackend, m_renderCmdBuffer->getActiveShader());

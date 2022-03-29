@@ -158,13 +158,13 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
 
     OGLVertexArray *vertexArray = rb->createVertexArray();
     rb->bindVertexArray(vertexArray);
-    BufferData *vertices = mesh->m_vb;
+    BufferData *vertices = mesh->getVertexBuffer();
     if (nullptr == vertices) {
         osre_debug(Tag, "No vertex buffer data for setting up data.");
         return nullptr;
     }
 
-    BufferData *indices = mesh->m_ib;
+    BufferData *indices = mesh->getIndexBuffer();
     if (nullptr == indices) {
         osre_debug(Tag, "No index buffer data for setting up data.");
         return nullptr;
@@ -172,20 +172,20 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
 
     // create vertex buffer and  and pass triangle vertex to buffer object
     OGLBuffer *vb = rb->createBuffer(vertices->m_type);
-    vb->m_geoId = mesh->m_id;
+    vb->m_geoId = mesh->getId();
     rb->bindBuffer(vb);
     rb->copyDataToBuffer(vb, vertices->getData(), vertices->getSize(), vertices->m_access);
 
     // enable vertex attribute arrays
     TArray<OGLVertexAttribute *> attributes;
-    rb->createVertexCompArray(mesh->m_vertextype, oglShader, attributes);
-    const size_t stride = Mesh::getVertexSize(mesh->m_vertextype);
+    rb->createVertexCompArray(mesh->getVertexcType(), oglShader, attributes);
+    const size_t stride = Mesh::getVertexSize(mesh->getVertexcType());
     rb->bindVertexLayout(vertexArray, oglShader, stride, attributes);
     rb->releaseVertexCompArray(attributes);
 
     // create index buffer and pass indices to element array buffer
     OGLBuffer *ib = rb->createBuffer(indices->m_type);
-    ib->m_geoId = mesh->m_id;
+    ib->m_geoId = mesh->getId();
     rb->bindBuffer(ib);
     rb->copyDataToBuffer(ib, indices->getData(), indices->getSize(), indices->m_access);
 

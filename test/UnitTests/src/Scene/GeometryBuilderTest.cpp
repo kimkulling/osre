@@ -107,7 +107,7 @@ TEST_F( MeshBuilderTest, allocLineListTest ) {
     geoBuilder.allocLineList(VertexType::ColorVertex, BufferAccessType::ReadOnly, numLines, pos, col, indices);
     Mesh *mesh = geoBuilder.getMesh();
     EXPECT_NE( nullptr, mesh );
-    Mesh::destroy( &mesh );
+    delete mesh;
 }
 
 TEST_F( MeshBuilderTest, allocPointsTest ) {
@@ -140,7 +140,7 @@ TEST_F( MeshBuilderTest, allocPointsTest ) {
     meshBuilder.allocPoints(VertexType::ColorVertex, BufferAccessType::ReadOnly, numPoints, pos, col);
     Mesh *mesh = meshBuilder.getMesh();
     EXPECT_NE( nullptr, mesh );
-    Mesh::destroy( &mesh );
+    delete mesh;
 }
 
 class GeometryDiagnosticUtilsTest : public ::testing::Test {

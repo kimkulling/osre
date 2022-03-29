@@ -257,10 +257,10 @@ void RenderBackendService::commitNextFrame() {
                     cmd->m_batchId = currentBatch->m_id;
                     cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateBuffer;
                     Mesh *currentMesh = currentBatch->m_updateMeshArray[k];
-                    cmd->m_meshId = currentMesh->m_id;
-                    cmd->m_size = currentMesh->m_vb->getSize();
+                    cmd->m_meshId = currentMesh->getId();
+                    cmd->m_size = currentMesh->getVertexBuffer()->getSize();
                     cmd->m_data = new c8[cmd->m_size];
-                    ::memcpy(cmd->m_data, currentMesh->m_vb->getData(), cmd->m_size);
+                    ::memcpy(cmd->m_data, currentMesh->getVertexBuffer()->getData(), cmd->m_size);
                 }
             } 
             if (currentBatch->m_dirtyFlag & RenderBatchData::MeshDirty) {

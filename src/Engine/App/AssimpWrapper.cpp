@@ -386,7 +386,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
             newMesh.createVertexBuffer(&vertices[0], vbSize, BufferAccessType::ReadOnly);
 
             const size_t ibSize = sizeof(ui32) * indexArray.size();
-            newMesh.createIndexBuffer(&indexArray[0], ibSize, BufferAccessType::ReadOnly);
+            newMesh.createIndexBuffer(&indexArray[0], ibSize, IndexType::UnsignedInt, BufferAccessType::ReadOnly);
             //            Debugging::MeshDiagnostic::dumpIndices( indexArray );
 
             newMesh.createPrimitiveGroup(IndexType::UnsignedInt, indexArray.size(), PrimitiveType::TriangleList, 0);

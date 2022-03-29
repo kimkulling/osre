@@ -193,7 +193,7 @@ Common::ResourceState ShaderResource::onLoad( const IO::Uri &uri, ShaderLoader &
     return getState();
 }
 
-Common::ResourceState ShaderResource::onUnload( ShaderLoader &loader ) {
+Common::ResourceState ShaderResource::onUnload( ShaderLoader &) {
     return getState();
 }
 

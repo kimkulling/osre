@@ -83,6 +83,9 @@ public:
     BufferData *getVertexBuffer() const;
     void createIndexBuffer(void *indices, size_t ibSize, IndexType indexType, BufferAccessType accessType);
     BufferData *getIndexBuffer() const;
+    ui64 getId() const;
+    size_t getNumberOfPrimitiveGroups() const;
+    PrimitiveGroup *getPrimitiveGroupAt(size_t index) const;
     template <class T>
     void attachVertices(T *vertices, size_t size) {
         if (m_vb == nullptr) {
@@ -145,6 +148,22 @@ inline const String &Mesh::getName() const {
 template <class TVertexType>
 inline size_t getVertexTypeSize() {
     return sizeof(TVertexType);
+}
+
+inline ui64 Mesh::getId() const {
+    return m_id;
+}
+
+inline size_t Mesh::getNumberOfPrimitiveGroups() const {
+    return m_numPrimGroups;
+}
+
+inline PrimitiveGroup *Mesh::getPrimitiveGroupAt( size_t index ) const {
+    if (index >= m_numPrimGroups) {
+        return nullptr;
+    }
+
+    return &m_primGroups[index];
 }
 
 } // Namespace RenderBackend
