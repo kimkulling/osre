@@ -280,7 +280,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
     }
 
     for (size_t mat2MeshIdx = 0; mat2MeshIdx < mat2MeshMap.size(); ++mat2MeshIdx) {
-        mAssetContext.mMeshArray.add(Mesh::create(1, VertexType::RenderVertex));
+        mAssetContext.mMeshArray.add(new Mesh("m1", VertexType::RenderVertex));
     }
 
     size_t i = 0;
@@ -382,20 +382,16 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
 
             indexOffset += currentMesh->mNumVertices;
 
-            const size_t vbSize(sizeof(RenderVert) * numVerts);
-            newMesh.m_vb = BufferData::alloc(BufferType::VertexBuffer, vbSize, BufferAccessType::ReadOnly);
-            newMesh.m_vb->copyFrom(&vertices[0], vbSize);
+            const size_t vbSize = sizeof(RenderVert) * numVerts;
+            newMesh.createVertexBuffer(&vertices[0], vbSize, BufferAccessType::ReadOnly);
 
-            newMesh.m_ib = BufferData::alloc(BufferType::IndexBuffer, sizeof(ui32) * indexArray.size(), BufferAccessType::ReadOnly);
-            newMesh.m_ib->copyFrom(&indexArray[0], newMesh.m_ib->getSize());
-
+            const size_t ibSize = sizeof(ui32) * indexArray.size();
+            newMesh.createIndexBuffer(&indexArray[0], ibSize, BufferAccessType::ReadOnly);
             //            Debugging::MeshDiagnostic::dumpIndices( indexArray );
 
             newMesh.createPrimitiveGroup(IndexType::UnsignedInt, indexArray.size(), PrimitiveType::TriangleList, 0);
 
-            const size_t matIdx = currentMesh->mMaterialIndex;
-            Material *osreMat = mAssetContext.mMatArray[matIdx];
-            newMesh.m_material = osreMat;
+            newMesh.setMaterial(mAssetContext.mMatArray[currentMesh->mMaterialIndex]);
         }
 
         ++i;

@@ -46,11 +46,13 @@ struct OSRE_EXPORT VertexWeight {
 struct OSRE_EXPORT Bone {
     using VertexWeightArray = CPPCore::TArray<VertexWeight>;
 
+    i32 mParent;
     String m_name;
     VertexWeightArray m_vertexWeights;
     glm::mat4 m_offsetMatrix;
 
     Bone() :
+            mParent(-1),    
             m_name(),
             m_vertexWeights(),
             m_offsetMatrix() {
@@ -58,26 +60,29 @@ struct OSRE_EXPORT Bone {
     }
 };
 
+struct OSRE_EXPORT Skeleton {
+    using BoneArray = CPPCore::TArray<Bone*>;
+
+    String mName;
+    i32 mRootBone;
+    BoneArray mBones;
+
+    Skeleton() {}
+};
+
 class OSRE_EXPORT Mesh {
 public:
-    String m_name;
-    bool m_localMatrix;
-    glm::mat4 m_model;
-    Material *m_material;
-    VertexType m_vertextype;
-    BufferData *m_vb;
-    IndexType m_indextype;
-    BufferData *m_ib;
-    size_t m_numPrimGroups;
-    PrimitiveGroup *m_primGroups;
-    ui64 m_id;
-
-    static Mesh *create(size_t numGeo, VertexType type);
-    static void destroy(Mesh **geo);
+    Mesh(const String &name, VertexType vertextype);
+    ~Mesh();
     static size_t getVertexSize(VertexType vertextype);
-
     void setMaterial(Material *mat);
     Material *getMaterial() const;
+    VertexType getVertexcType() const;
+    const String &getName() const;
+    void createVertexBuffer(void *vertices, size_t vbSize, BufferAccessType accessType);
+    BufferData *getVertexBuffer() const;
+    void createIndexBuffer(void *indices, size_t ibSize, IndexType indexType, BufferAccessType accessType);
+    BufferData *getIndexBuffer() const;
     template <class T>
     void attachVertices(T *vertices, size_t size) {
         if (m_vb == nullptr) {
@@ -104,13 +109,20 @@ public:
     OSRE_NON_COPYABLE(Mesh)
 
 private:
-    Mesh();
-    Mesh(VertexType type);
-    ~Mesh();
+    String mName;
+    bool m_localMatrix;
+    glm::mat4 m_model;
+    Material *m_material;
+    VertexType m_vertextype;
+    BufferData *m_vb;
+    IndexType m_indextype;
+    BufferData *m_ib;
+    size_t m_numPrimGroups;
+    PrimitiveGroup *m_primGroups;
+    ui64 m_id;
 
-private:
-    ::CPPCore::TArray<uc8> m_vertexData;
-    ::CPPCore::TArray<uc8> m_indexData;
+    ::CPPCore::TArray<uc8> mVertexData;
+    ::CPPCore::TArray<uc8> mIndexData;
     ui32 m_lastIndex;
 };
 
@@ -120,6 +132,14 @@ inline void Mesh::setMaterial( Material *mat ) {
 
 inline Material *Mesh::getMaterial() const {
     return m_material;
+}
+
+inline VertexType Mesh::getVertexcType() const {
+    return m_vertextype;
+}
+
+inline const String &Mesh::getName() const {
+    return mName;
 }
 
 template <class TVertexType>

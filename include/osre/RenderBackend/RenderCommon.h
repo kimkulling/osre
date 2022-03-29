@@ -993,5 +993,14 @@ struct FrameBuffer {
     FrameBuffer &operator=(const FrameBuffer &) = delete;
 };
 
+enum RenderPassType : ui32 {
+    StaticRenderPass,
+    UiRenderPass
+};
+
+struct RenderTarget {
+    // empty
+};
+
 } // Namespace RenderBackend
 } // Namespace OSRE

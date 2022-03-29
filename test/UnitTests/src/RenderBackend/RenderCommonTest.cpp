@@ -211,9 +211,9 @@ TEST_F( RenderCommonTest, accessMaterialTest ) {
 TEST_F(RenderCommonTest, access_material_param_Test) {
     Material *mat( new Material( "test" ) );
     mat->m_shader = new Shader;
-    mat->m_shader->m_parameters.add( "MVP" );
+    mat->m_shader->addUniformBuffer("MVP");
 
-    EXPECT_EQ(1u, mat->m_shader->m_parameters.size());
+    EXPECT_EQ(1u, mat->m_shader->getNumUniformBuffer());
     delete mat;
 }
 

@@ -36,25 +36,21 @@ static Ids s_Ids;
 // The log tag for messages
 static const c8 *Tag = "Mesh";
 
-Mesh::Mesh() :
-        Mesh(VertexType::RenderVertex) {
-    // empty
-}
-
-Mesh::Mesh(VertexType type) :
+Mesh::Mesh(const String &name, VertexType vertexType) :
+        mName(name),
         m_localMatrix(false),
         m_model(1.0f),
         m_material(nullptr),
-        m_vertextype(type),
+        m_vertextype(vertexType),
         m_vb(nullptr),
         m_ib(nullptr),
         m_numPrimGroups(0),
         m_primGroups(nullptr),
         m_id(99999999),
-        m_vertexData(),
-        m_indexData(),
+        mVertexData(),
+        mIndexData(),
         m_lastIndex(0) {
-    // empty
+    m_id = s_Ids.getUniqueId();
 }
 
 Mesh::~Mesh() {
@@ -72,24 +68,23 @@ Mesh::~Mesh() {
     s_Ids.releaseId(m_id);
 }
 
-Mesh *Mesh::create(size_t numGeo, VertexType type) {
-    if (0 == numGeo) {
-        osre_debug(Tag, "Number of static geo to create is zero.");
-        return nullptr;
-    }
-
-    Mesh *geoArray = new Mesh[numGeo];
-    for (ui32 i = 0; i < numGeo; i++) {
-        geoArray[i].m_vertextype = type;
-        geoArray[i].m_id = s_Ids.getUniqueId();
-    }
-
-    return geoArray;
+void Mesh::createVertexBuffer(void *vertices, size_t vbSize, BufferAccessType accessType) {
+    m_vb = BufferData::alloc(BufferType::VertexBuffer, vbSize, accessType);
+    m_vb->copyFrom(vertices, vbSize);
 }
 
-void Mesh::destroy(Mesh **meshes) {
-    delete[] * meshes;
-    (*meshes) = nullptr;
+BufferData *Mesh::getVertexBuffer() const {
+    return m_vb;
+}
+
+void Mesh::createIndexBuffer(void *indices, size_t ibSize, IndexType indexType, BufferAccessType accessType) {
+    m_ib = BufferData::alloc(BufferType::IndexBuffer, ibSize, accessType);
+    m_indextype = indexType;
+    m_ib->copyFrom(indices, ibSize);
+}
+
+BufferData *Mesh::getIndexBuffer() const {
+    return m_ib;
 }
 
 size_t Mesh::getVertexSize(VertexType vertextype) {
@@ -115,11 +110,6 @@ PrimitiveGroup *Mesh::createPrimitiveGroups(size_t numPrimGroups, IndexType *typ
     if (0 == numPrimGroups || nullptr == types || nullptr == numIndices || nullptr == primTypes || nullptr == startIndices) {
         return nullptr;
     }
-
-    osre_assert(nullptr != types);
-    osre_assert(nullptr != numIndices);
-    osre_assert(nullptr != primTypes);
-    osre_assert(nullptr != startIndices);
 
     m_numPrimGroups = numPrimGroups;
     m_primGroups = new PrimitiveGroup[m_numPrimGroups];

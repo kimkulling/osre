@@ -126,14 +126,16 @@ public:
                 TextureResourceArray texResArray;
                 TextureResource *texRes = new TextureResource("SpiderTex", IO::Uri("file://assets/Models/Obj/SpiderTex.jpg"));
                 texResArray.add(texRes);
-                mesh->setMaterial(Scene::MaterialBuilder::createTexturedMaterial("SpiderTex", texResArray, VsSrc, FsSrc));
-                if (nullptr != mesh->m_material->m_shader) {
-                    mesh->m_material->m_shader->m_attributes.add("position");
-                    mesh->m_material->m_shader->m_attributes.add("normal");
-                    mesh->m_material->m_shader->m_attributes.add("color0");
-                    mesh->m_material->m_shader->m_attributes.add("texcoord0");
+                Material *material = Scene::MaterialBuilder::createTexturedMaterial("SpiderTex", texResArray, VsSrc, FsSrc);
+                mesh->setMaterial(material);
+                Shader *shader = material->getShader();
+                if (shader != nullptr) {
+                    shader->addVertexAttribute("position");
+                    shader->addVertexAttribute("normal");
+                    shader->addVertexAttribute("color0");
+                    shader->addVertexAttribute("texcoord0");
 
-                    mesh->m_material->m_shader->m_parameters.add("MVP");
+                    shader->addUniformBuffer("MVP");
                 }
 
                 m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, m_angle, glm::vec3(1, 1, 0));

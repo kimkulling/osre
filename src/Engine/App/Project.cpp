@@ -191,7 +191,7 @@ static void storeMeshes(MeshArray &meshes, MeshData *md) {
         if (mesh == nullptr) {
             continue;
         }
-        setNameChunk(mesh->m_name, md->mMeshName);
+        setNameChunk(mesh->getName(), md->mMeshName);
         
         // Todo!
     }

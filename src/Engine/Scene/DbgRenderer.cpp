@@ -46,7 +46,7 @@ DbgRenderer::DbgRenderer(RenderBackend::RenderBackendService *rbSrv) :
 }
 
 DbgRenderer::~DbgRenderer() {
-    Mesh::destroy(&mDebugGeometry);
+    delete mDebugGeometry;
 }
 
 bool DbgRenderer::create(RenderBackend::RenderBackendService *rbSrv) {
@@ -143,12 +143,14 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb)
     vertices[7].position.z = z1;
 
     const size_t vertexSize(sizeof(ColorVert) * NumVertices);
-    mesh->m_vb = BufferData::alloc(BufferType::VertexBuffer, vertexSize, BufferAccessType::ReadOnly);
-    mesh->m_vb->copyFrom(&vertices[0], vertexSize);
+    mesh->createVertexBuffer(&vertices[0], vertexSize, BufferAccessType::ReadOnly);
+    //mesh->m_vb = BufferData::alloc(BufferType::VertexBuffer, vertexSize, BufferAccessType::ReadOnly);
+    //mesh->m_vb->copyFrom(&vertices[0], vertexSize);
     const size_t indexSize(sizeof(ui16) * NumIndices);
-    mesh->m_ib = BufferData::alloc(BufferType::IndexBuffer, indexSize, BufferAccessType::ReadOnly);
-    mesh->m_indextype = IndexType::UnsignedShort;
-    mesh->m_ib->copyFrom(&indices[0], indexSize);
+    mesh->createIndexBuffer(&indices[0], indexSize, IndexType::UnsignedShort, BufferAccessType::ReadOnly)
+    //mesh->m_ib = BufferData::alloc(BufferType::IndexBuffer, indexSize, BufferAccessType::ReadOnly);
+    //mesh->m_indextype = IndexType::UnsignedShort;
+    //mesh->m_ib->copyFrom(&indices[0], indexSize);
 
     // setup primitives
     mesh->m_model = transform;

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -30,25 +30,51 @@ namespace OSRE {
 namespace RenderBackend {
 
 ///	@brief  This class represents a container for all used shaders in the OSRE-runtime.
+///
+/// This class defines shader which will build a representation with the used API in the render thread.
+/// You can think of this like a facade to access data in the shader itself.
 class OSRE_EXPORT Shader {
 public:
     /// @brief The default class constructor.
     Shader();
 
     ///	@brief  The class destructor.
-    ~Shader();
+    ~Shader() = default;
 
+    /// @brief  Will a a new vertex attribute.
+    /// @param  name    The name of the vertex attribute.
     void addVertexAttribute(const String &name);
+
+    /// @brief  Will add an array of vertex attributes to the shader.
+    /// @param  names           The names of the vertex attributes.
+    /// @param  numAttribues    The number of attributes.
     void addVertexAttributes(const String *names, size_t numAttribues);
 
+    /// @brief Will return the number of assigned vertex attributes.
+    /// @return The number of assigned vertex attributes.
     size_t getNumVertexAttributes() const;
 
-    const c8 *getVertexAttributeAt(size_t index) const;
+    /// @brief Will return the vertex attribute name at the given index.
+    /// @param location     The index to look for.
+    /// @return The name of the vertex attribute.
+    const c8 *getVertexAttributeAt(size_t location) const;
 
+    /// @brief Will return the vertex location of the vertex attribute.
+    /// @param vertexAttribute  The vertex attribute to look for.
+    /// @return The location used in the shader.
+    size_t getLocation(const c8 *vertexAttribute) const;
+
+    /// @brief 
+    /// @param name 
     void addUniformBuffer(const String &name);
 
+    /// @brief 
+    /// @return 
     size_t getNumUniformBuffer() const;
 
+    /// @brief 
+    /// @param index 
+    /// @return 
     const c8 *getUniformBufferAt(size_t index) const;
 
     /// @brief  Will set the sours for a given shader type.
@@ -56,8 +82,14 @@ public:
     /// @param  src     The source for the shader type.
     void setSource(ShaderType type, const String &src);
 
+    /// @brief Will return true, if the shader type was assigned to source.
+    /// @param type     The shader type.
+    /// @return true, if source was assigned, else false.
     bool hasSource(ShaderType type) const;
 
+    /// @brief Will return the assigned shader source for the given shader type
+    /// @param type     The shader type.
+    /// @return The assigned source or an empty string.
     const c8 *getSource(ShaderType type) const;
 
     /// @brief  Will return the type of a shader from its extension.
@@ -65,6 +97,7 @@ public:
     /// @return The shader type.
     static ShaderType getTypeFromeExtension(const String &extension);
 
+    // No copying
     OSRE_NON_COPYABLE(Shader)
 
 private:
@@ -81,52 +114,17 @@ private:
     CompileState m_compileState[MaxCompileState];
 };
 
-inline void Shader::addVertexAttribute( const String &name ) {
-    mVertexAttributes.add(name);
-}
-
-inline void Shader::addVertexAttributes( const String *names, size_t numAttributes ) {
-    if (numAttributes == 0 || nullptr == names) {
-        return;
-    }
-
-    for (size_t i = 0; i < numAttributes; ++i) {
-        mVertexAttributes.add(names[i]);
-    }
-}
-
 inline size_t Shader::getNumVertexAttributes() const {
     return mVertexAttributes.size();
-}
-
-inline const c8 *Shader::getVertexAttributeAt( size_t index ) const {
-    if (index >= mVertexAttributes.size()) {
-        return nullptr;
-    }
-
-    return mVertexAttributes[index].c_str();
-}
-
-inline void Shader::addUniformBuffer(const String &name) {
-    mUniformBuffer.add(name);
 }
 
 inline size_t Shader::getNumUniformBuffer() const {
     return mUniformBuffer.size();
 }
 
-inline const c8 *Shader::getUniformBufferAt(size_t index) const {
-    if (index >= mUniformBuffer.size()) {
-        return nullptr;
-    }
-
-    return mUniformBuffer[index].c_str();
-}
-
 inline bool Shader::hasSource(ShaderType type) const {
     return !m_src[static_cast<size_t>(type)].empty();
 }
-
 
 ///	@brief  This class is sued to load a shader.
 class OSRE_EXPORT ShaderLoader {
