@@ -275,6 +275,7 @@ SET ( properties_src
 # Scene
 #==============================================================================
 SET( scene_inc
+    ${HEADER_PATH}/Scene/Scene.h
     ${HEADER_PATH}/Scene/SceneCommon.h
     ${HEADER_PATH}/Scene/PipelineBuilder.h
     ${HEADER_PATH}/Scene/MeshProcessor.h

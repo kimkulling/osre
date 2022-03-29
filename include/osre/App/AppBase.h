@@ -60,7 +60,7 @@ class Stage;
 class World;
 class AppBase;
 
-class KeyboardEventListener : public Platform::OSEventListener {
+class OSRE_EXPORT KeyboardEventListener : public Platform::OSEventListener {
 public:
     KeyboardEventListener() :
             OSEventListener("App/KeyboardEventListener"),

@@ -32,10 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Common/Variant.h>
 #include "Engine/App/MouseEventListener.h"
 
-#include <osre/App/AssimpWrapper.h>
-#include <osre/App/AssetRegistry.h>
-#include <osre/App/Entity.h>
-#include <osre/App/Stage.h>
+#include <osre/App/App.h>
 #include <osre/IO/Directory.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/File.h>
@@ -46,11 +43,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
-#include <osre/App/Project.h>
-#include <osre/Scene/MaterialBuilder.h>
 #include <osre/Platform/PlatformInterface.h>
-#include <osre/Scene/MeshBuilder.h>
-#include <osre/Scene/AnimatorBase.h>
+#include <osre/Scene/Scene.h>
 
 #ifdef OSRE_WINDOWS
 #   include "Engine/Platform/win32/Win32EventQueue.h"
