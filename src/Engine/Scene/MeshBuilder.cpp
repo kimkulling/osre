@@ -85,7 +85,7 @@ const String TextFsSrc =
 
 MeshBuilder::MeshBuilder() 
 : mIsDirty( false )
-, mActiveGeo( nullptr ) {
+, mActiveMesh( nullptr ) {
     // empty
 }
 
@@ -93,84 +93,80 @@ MeshBuilder::~MeshBuilder() {
     // empty
 }
 
-MeshBuilder &MeshBuilder::allocEmptyMesh( VertexType type, ui32 numMeshes ) {
-    mActiveGeo = Mesh::create(numMeshes, type);
-    for (ui32 i = 0; i < numMeshes; ++i) {
-        mActiveGeo[ i ].m_indextype = IndexType::UnsignedShort;
-    }
+MeshBuilder &MeshBuilder::allocEmptyMesh(const String &name, VertexType type) {
+    mActiveMesh = new Mesh(name, type, IndexType::UnsignedShort);
 
     return *this;
 }
 
-MeshBuilder &MeshBuilder::createTriangle( VertexType type, BufferAccessType access ) {
-    Mesh *mesh = Mesh::create(1, VertexType::RenderVertex);
-    mesh->m_vertextype = type;
-    mesh->m_indextype = IndexType::UnsignedShort;
+MeshBuilder &MeshBuilder::createTriangle(VertexType type, BufferAccessType access ) {
+    Mesh *mesh = new Mesh("", VertexType::RenderVertex, IndexType::UnsignedShort);
+    mesh->setIndexType(IndexType::UnsignedShort);
 
     // setup triangle vertices    
     static const ui32 NumVert = 3;
-    glm::vec3 col[ NumVert ];
+    glm::vec3 col[NumVert] = {};
     col[ 0 ] = glm::vec3( 1, 0, 0 );
     col[ 1 ] = glm::vec3( 0, 1, 0 );
     col[ 2 ] = glm::vec3( 0, 0, 1 );
 
-    glm::vec3 pos[ NumVert ];
+    glm::vec3 pos[NumVert] = {};
     pos[ 0 ] = glm::vec3( -1, -1, 0 );
     pos[ 1 ] = glm::vec3( 0, 1, 0 );
     pos[ 2 ] = glm::vec3( 1, -1, 0 );
-    mesh->m_vb = allocVertices( mesh->m_vertextype,  NumVert, pos, col, nullptr, access );
+    
+    allocVertices(mesh, mesh->getVertexType(), NumVert, pos, col, nullptr, access);
 
     // setup triangle indices
     static const size_t NumIndices = 3;
-    GLushort  indices[ NumIndices ];
+    GLushort indices[NumIndices] = {};
     indices[ 0 ] = 0;
     indices[ 1 ] = 2;
     indices[ 2 ] = 1;
 
     size_t size = sizeof( GLushort ) * NumIndices;
-    mesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, access );
-    ::memcpy( mesh->m_ib->getData(), indices, size );
-
+    mesh->createIndexBuffer(indices, size, IndexType::UnsignedShort, access);
+    //mesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, access );
+    //::memcpy(mesh->m_ib->getData(), indices, size);
     // setup primitives
-    mesh->createPrimitiveGroup(IndexType::UnsignedShort, 3, PrimitiveType::TriangleList, 0);
+    mesh->createPrimitiveGroup(3, PrimitiveType::TriangleList, 0);
 
     // setup material
-    mesh->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
+    mesh->setMaterial(MaterialBuilder::createBuildinMaterial(type));
 
-    mActiveGeo = mesh;
+    mActiveMesh = mesh;
 
     return *this;
 }
 
 MeshBuilder &MeshBuilder::allocQuads( VertexType type, BufferAccessType access ) {
-    Mesh *mesh = Mesh::create(1, type);
-    mesh->m_indextype = IndexType::UnsignedShort;
+    Mesh *mesh = new Mesh("", type, IndexType::UnsignedShort);
 
     // setup triangle vertices    
     static const ui32 NumVert = 4;
-    glm::vec3 col[ NumVert ];
+    glm::vec3 col[NumVert] = {};
     col[ 0 ] = glm::vec3( 1, 0, 0 );
     col[ 1 ] = glm::vec3( 0, 1, 0 );
     col[ 2 ] = glm::vec3( 0, 0, 1 );
     col[ 3 ] = glm::vec3( 1, 0, 0 );
 
-    glm::vec3 pos[ NumVert ];
+    glm::vec3 pos[NumVert] = {};
     pos[ 0 ] = glm::vec3( -1, -1, 0 );
     pos[ 1 ] = glm::vec3( -1, 1, 0 );
     pos[ 2 ] = glm::vec3( 1, -1, 0 );
     pos[ 3 ] = glm::vec3( 1, 1, 0 );
 
-    glm::vec2 tex0[ NumVert ];
+    glm::vec2 tex0[NumVert] = {};
     tex0[ 0 ] = glm::vec2( 0, 0 );
     tex0[ 1 ] = glm::vec2( 0, 1 );
     tex0[ 2 ] = glm::vec2( 1, 0 );
     tex0[ 3 ] = glm::vec2( 1, 1 );
 
-    mesh->m_vb = allocVertices( mesh->m_vertextype, NumVert, pos, col, tex0, access );
+    allocVertices(mesh, mesh->getVertexType(), NumVert, pos, col, tex0, access);
 
     // setup triangle indices
     static const ui32 NumIndices = 6;
-    GLushort  indices[ NumIndices ];
+    GLushort indices[NumIndices] = {};
     indices[ 0 ] = 0;
     indices[ 1 ] = 2;
     indices[ 2 ] = 1;
@@ -180,41 +176,40 @@ MeshBuilder &MeshBuilder::allocQuads( VertexType type, BufferAccessType access )
     indices[ 5 ] = 3;
 
     ui32 size = sizeof( GLushort ) * NumIndices;
-    mesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
-    ::memcpy( mesh->m_ib->getData(), indices, size );
+    mesh->createIndexBuffer(indices, size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
     // setup primitives
-    mesh->createPrimitiveGroup(IndexType::UnsignedShort, NumIndices, PrimitiveType::TriangleList, 0);
+    mesh->createPrimitiveGroup(NumIndices, PrimitiveType::TriangleList, 0);
 
     // setup material
-    mesh->m_material = Scene::MaterialBuilder::createBuildinMaterial( type );
+    mesh->setMaterial(MaterialBuilder::createBuildinMaterial(type));
 
-    mActiveGeo = mesh;
+    mActiveMesh = mesh;
 
     return *this;
 }
 
 MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, RenderBackend::UiIndexCache &ic ) {
-    const f32 x = (f32) dim.getX1();
-    const f32 y = (f32) dim.getY1();
-    const f32 w = (f32) dim.getWidth();
-    const f32 h = (f32) dim.getHeight();
+    const f32 x = static_cast<f32>(dim.getX1());
+    const f32 y = static_cast<f32>(dim.getY1());
+    const f32 w = static_cast<f32>(dim.getWidth());
+    const f32 h = static_cast<f32>(dim.getHeight());
 
     // setup triangle vertices    
     static const ui32 NumVert = 4;
-    glm::vec3 col[ NumVert ];
+    glm::vec3 col[NumVert] = {};
     col[ 0 ] = glm::vec3( 1, 0, 0 );
     col[ 1 ] = glm::vec3( 0, 1, 0 );
     col[ 2 ] = glm::vec3( 0, 0, 1 );
     col[ 3 ] = glm::vec3( 1, 0, 0 );
 
-    glm::vec3 pos[ NumVert ];
+    glm::vec3 pos[NumVert] = {};
     pos[ 0 ] = glm::vec3( x, y, 0 );
     pos[ 1 ] = glm::vec3( x, y+h, 0 );
     pos[ 2 ] = glm::vec3( x+w, y, 0 );
     pos[ 3 ] = glm::vec3( x+h, y+h, 0 );
 
-    glm::vec2 tex0[ NumVert ];
+    glm::vec2 tex0[NumVert] = {};
     tex0[ 0 ] = glm::vec2( 0, 0 );
     tex0[ 1 ] = glm::vec2( 0, 1 );
     tex0[ 2 ] = glm::vec2( 1, 0 );
@@ -230,7 +225,7 @@ MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, Re
 
     // setup triangle indices
     static const ui32 NumIndices = 6;
-    GLushort  indices[ NumIndices ];
+    GLushort indices[NumIndices] = {};
     indices[ 0 ] = 0;
     indices[ 1 ] = 2;
     indices[ 2 ] = 1;
@@ -247,8 +242,8 @@ MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, Re
 }
 
 MeshBuilder &MeshBuilder::allocCube(VertexType type, f32 w, f32 h, f32 d, BufferAccessType access ) {
-    mActiveGeo = Mesh::create(1,VertexType::RenderVertex);
-    RenderVert v[8];
+    mActiveMesh = new Mesh("cube", VertexType::RenderVertex, IndexType::UnsignedShort);
+    RenderVert v[8] = {};
 
     //glm::vec3 v[8];
     v[0].position.x = v[0].position.y = v[0].position.z = 0.0f;
@@ -298,41 +293,28 @@ MeshBuilder &MeshBuilder::allocCube(VertexType type, f32 w, f32 h, f32 d, Buffer
         6,7,4
     }; 
 
-    mActiveGeo->m_vertextype = type;
-    mActiveGeo->m_indextype = IndexType::UnsignedShort;
-    mActiveGeo->m_numPrimGroups = 1;
-    mActiveGeo->m_primGroups = new PrimitiveGroup[mActiveGeo->m_numPrimGroups];
-    mActiveGeo->m_primGroups[0].init(IndexType::UnsignedShort, 12, PrimitiveType::TriangleList, 0);
+    mActiveMesh->createPrimitiveGroup(12, PrimitiveType::TriangleList, 0);
 
     const size_t vbSize = sizeof(RenderVert) * 8;
-    mActiveGeo->m_vb = BufferData::alloc(BufferType::VertexBuffer, vbSize, access);
-    mActiveGeo->m_vb->copyFrom(&v[0].position.x, vbSize);
+    mActiveMesh->createVertexBuffer(v, vbSize, access);
 
     const size_t ibSize = sizeof(GLushort) * 36;
-    mActiveGeo->m_ib = BufferData::alloc(BufferType::IndexBuffer, ibSize, BufferAccessType::ReadOnly);
-    mActiveGeo->m_ib->copyFrom(indices, ibSize);
-
-    mActiveGeo->m_material = Scene::MaterialBuilder::createBuildinMaterial(type);
+    mActiveMesh->createIndexBuffer(indices, ibSize, IndexType::UnsignedShort, access);
+    mActiveMesh->setMaterial(Scene::MaterialBuilder::createBuildinMaterial(type));
 
     return *this;
 }
 
 MeshBuilder &MeshBuilder::allocLineList( VertexType type, BufferAccessType access, ui32 numLines,
                                           glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices ) {
-    Mesh *geo = Mesh::create(1, type);
-    geo->m_indextype = IndexType::UnsignedShort;
+    Mesh *mesh = new Mesh("", type, IndexType::UnsignedShort);
+    mesh->createPrimitiveGroup(2 * numLines, PrimitiveType::LineList, 0);
 
-    geo->m_numPrimGroups = 1;
-    geo->m_primGroups = new PrimitiveGroup[ geo->m_numPrimGroups ];
-    geo->m_primGroups[ 0 ].init( IndexType::UnsignedShort, 2 * numLines, PrimitiveType::LineList, 0 );
-
-    geo->m_vb = Scene::MeshBuilder::allocVertices( type, numLines, posArray, colorArray, nullptr, access );
-    geo->m_indextype = IndexType::UnsignedShort;
+    MeshBuilder::allocVertices( mesh, type, numLines, posArray, colorArray, nullptr, access );
     ui32 size = sizeof( GLushort ) * numLines*2;
-    geo->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
-    geo->m_ib->copyFrom( indices, size );
+    mesh->createIndexBuffer(indices, size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
-    mActiveGeo = geo;
+    mActiveMesh = mesh;
 
     return *this;
 }
@@ -346,29 +328,25 @@ MeshBuilder &MeshBuilder::allocPoints( VertexType type, BufferAccessType access,
         indices[ i ] = i;
     }
 
-    Mesh *ptGeo = Mesh::create(1, type);
+    Mesh *pointMesh = new Mesh("", type, IndexType::UnsignedShort);
 
-    ptGeo->m_vb = Scene::MeshBuilder::allocVertices(VertexType::ColorVertex, numPoints, posArray, 
+    MeshBuilder::allocVertices(pointMesh, VertexType::ColorVertex, numPoints, posArray, 
                         colorArray, nullptr, access );
-    ptGeo->m_indextype = IndexType::UnsignedShort;
-    ui32 pt_size = sizeof( GLushort ) * numPoints;
-    ptGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, access );
-    ptGeo->m_ib->copyFrom( &indices[0], pt_size );
+    const ui32 pt_size = sizeof( GLushort ) * numPoints;
+    pointMesh->createIndexBuffer(&indices[0], pt_size, IndexType::UnsignedShort, access);
 
     // setup primitives
-    ptGeo->m_numPrimGroups = 1;
-    ptGeo->m_primGroups = new PrimitiveGroup[ ptGeo->m_numPrimGroups ];
-    ptGeo->m_primGroups[ 0 ].init( IndexType::UnsignedShort, 3, PrimitiveType::PointList, 0 );
+    pointMesh->createPrimitiveGroup(3, PrimitiveType::PointList, 0);
 
     // setup material
-    ptGeo->m_material = MaterialBuilder::createBuildinMaterial( type );;
+    pointMesh->setMaterial(MaterialBuilder::createBuildinMaterial(type));
 
-    mActiveGeo = ptGeo;
+    mActiveMesh = pointMesh;
 
     return *this;
 }
 
-static const size_t NumQuadVert = 4;
+static constexpr size_t NumQuadVert = 4;
 
 static size_t getNumTextVerts( const String &text ) {
     const size_t NumTextVerts = NumQuadVert * text.size();
@@ -389,13 +367,13 @@ static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const 
     osre_assert(nullptr != tex0);
     osre_assert(nullptr != textIndices);
 
-    glm::vec3 col[NumQuadVert];
+    glm::vec3 col[NumQuadVert] = {};
     col[0] = glm::vec3(0, 0, 0);
     col[1] = glm::vec3(0, 0, 0);
     col[2] = glm::vec3(0, 0, 0);
     col[3] = glm::vec3(0, 0, 0);
 
-    glm::vec3 pos[NumQuadVert];
+    glm::vec3 pos[NumQuadVert] = {};
     pos[0] = glm::vec3(x, y, 0);
     pos[1] = glm::vec3(x, y + textSize, 0);
     pos[2] = glm::vec3(x + textSize, y, 0);
@@ -477,8 +455,8 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
 		return *this;
 	}
 
-    Mesh *mesh = Mesh::create(1, VertexType::RenderVertex);
-    mesh->m_indextype = IndexType::UnsignedShort;
+    Mesh *mesh = new Mesh("", VertexType::RenderVertex, IndexType::UnsignedShort);
+    //mesh->m_indextype = IndexType::UnsignedShort;
 
     glm::vec3 *textPos(nullptr), *colors(nullptr);
     glm::vec2 *tex0(nullptr);
@@ -487,27 +465,21 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
 
     //GeometryDiagnosticUtils::dumpIndices( textIndices, 6 * text.size() );
 
-    mesh->m_vb = allocVertices( mesh->m_vertextype, text.size() * NumQuadVert, textPos, colors, tex0, access );
+    allocVertices(mesh, mesh->getVertexType(), text.size() * NumQuadVert, textPos, colors, tex0, access);
 
     // setup triangle indices
     size_t size = sizeof( GLushort ) * 6 * text.size();
-    mesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, BufferAccessType::ReadOnly );
-    mesh->m_ib->copyFrom(textIndices, size);
+    mesh->createIndexBuffer(textIndices, size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
     // setup primitives
-    mesh->m_numPrimGroups = 1;
-    mesh->m_primGroups = new PrimitiveGroup[ 1 ];
-    mesh->m_primGroups[ 0 ].m_indexType = IndexType::UnsignedShort;
-    mesh->m_primGroups[ 0 ].m_numIndices = 6 * text.size();
-    mesh->m_primGroups[ 0 ].m_primitive = PrimitiveType::TriangleList;
-    mesh->m_primGroups[ 0 ].m_startIndex = 0;
+    mesh->createPrimitiveGroup(6 * text.size(), PrimitiveType::TriangleList, 0);
 
     // setup material
     CPPCore::TArray<TextureResource*> texResArray;;
     TextureResource* texRes = new TextureResource("buildin_arial", IO::Uri("file://assets/Textures/Fonts/buildin_arial.bmp"));
     texResArray.add(texRes);
-    mesh->m_material = Scene::MaterialBuilder::createTexturedMaterial("text_box_tex", texResArray, VertexType::RenderVertex );
-    mActiveGeo = mesh;
+    mesh->setMaterial(MaterialBuilder::createTexturedMaterial("text_box_tex", texResArray, VertexType::RenderVertex));
+    mActiveMesh = mesh;
 
     return *this;
 }
@@ -558,13 +530,13 @@ void MeshBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text ) {
     glm::vec2 *tex0 = new glm::vec2[ numTextVerts ];
 
     // setup triangle vertices    
-    glm::vec3 col[ NumQuadVert ];
+    glm::vec3 col[NumQuadVert] = {};
     col[ 0 ] = glm::vec3( 1, 0, 0 );
     col[ 1 ] = glm::vec3( 0, 1, 0 );
     col[ 2 ] = glm::vec3( 0, 0, 1 );
     col[ 3 ] = glm::vec3( 1, 0, 0 );
 
-    glm::vec3 pos[ NumQuadVert ];
+    glm::vec3 pos[NumQuadVert] = {};
     pos[ 0 ] = glm::vec3( 0, 0, 0 );
     pos[ 1 ] = glm::vec3( 0, textSize, 0 );
     pos[ 2 ] = glm::vec3( textSize, 0, 0 );
@@ -598,15 +570,15 @@ void MeshBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text ) {
         tex0[ VertexOffset + 3 ].y = 1.0f - t + 1.0f / 16.0f;
     }
 
-    updateTextVertices(  numTextVerts, tex0, geo->m_vb );
+    updateTextVertices(  numTextVerts, tex0, geo->getVertexBuffer() );
 
     delete[] tex0;
 }
 
-BufferData *MeshBuilder::allocVertices( VertexType type, size_t numVerts, glm::vec3 *pos,
+void MeshBuilder::allocVertices(Mesh *mesh, VertexType type, size_t numVerts, glm::vec3 *pos,
                                             glm::vec3 *col1, glm::vec2 *tex0, BufferAccessType access ) {
-    BufferData *data( nullptr );
-    size_t size( 0 );
+    //BufferData *data( nullptr );
+    size_t size = 0;
     switch (type) {
         case VertexType::ColorVertex: {
             ColorVert *colVerts = new ColorVert[ numVerts ];
@@ -621,8 +593,9 @@ BufferData *MeshBuilder::allocVertices( VertexType type, size_t numVerts, glm::v
                 }
             }
             size = sizeof( ColorVert ) * numVerts;
-            data = BufferData::alloc( BufferType::VertexBuffer, size, access );
-            ::memcpy( data->getData(), colVerts, size );
+            mesh->createVertexBuffer(&colVerts[0], size, access);
+            //data = BufferData::alloc( BufferType::VertexBuffer, size, access );
+            //::memcpy( data->getData(), colVerts, size );
             delete [] colVerts;
         }
         break;
@@ -646,8 +619,9 @@ BufferData *MeshBuilder::allocVertices( VertexType type, size_t numVerts, glm::v
             }
 
             size = sizeof( RenderVert ) * numVerts;
-            data = BufferData::alloc( BufferType::VertexBuffer, size, BufferAccessType::ReadOnly );
-            ::memcpy( data->getData(), renderVerts, size );
+            mesh->createVertexBuffer(&renderVerts[0], size, access);
+            //data = BufferData::alloc(BufferType::VertexBuffer, size, BufferAccessType::ReadOnly);
+            //::memcpy( data->getData(), renderVerts, size );
             delete [] renderVerts;
         }
         break;
@@ -655,8 +629,6 @@ BufferData *MeshBuilder::allocVertices( VertexType type, size_t numVerts, glm::v
         default:
             break;
     }
-
-    return data;
 }
 
 void MeshBuilder::updateTextVertices( size_t numVerts, ::glm::vec2 *tex0, BufferData *vb ) {
@@ -676,7 +648,7 @@ void MeshBuilder::updateTextVertices( size_t numVerts, ::glm::vec2 *tex0, Buffer
 }
 
 RenderBackend::Mesh *MeshBuilder::getMesh() {
-    return mActiveGeo;
+    return mActiveMesh;
 }
 
 } // Namespace Scene

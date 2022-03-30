@@ -287,7 +287,7 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, CPPCore::TArray<size_t> &pri
 
         // setup the draw calls
         if (0 == currentMeshEntry->numInstances) {
-            setupPrimDrawCmd(id, currentMesh->m_localMatrix, currentMesh->m_model,
+            setupPrimDrawCmd(id, currentMesh->isLocal(), currentMesh->getLocalMatrix(),
                     primGroups, m_oglBackend, this, m_vertexArray);
         } else {
             setupInstancedDrawCmd(id, primGroups, m_oglBackend, this, m_vertexArray,
@@ -355,13 +355,13 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
                     }
 
                     // register primitive groups to render
-                    for (size_t i = 0; i < currentMesh->m_numPrimGroups; ++i) {
-                        const size_t primIdx(m_oglBackend->addPrimitiveGroup(&currentMesh->m_primGroups[i]));
+                    for (size_t i = 0; i < currentMesh->getNumberOfPrimitiveGroups(); ++i) {
+                        const size_t primIdx(m_oglBackend->addPrimitiveGroup(currentMesh->getPrimitiveGroupAt(i)));
                         primGroups.add(primIdx);
                     }
 
                     // create the default material
-                    SetMaterialStageCmdData *data = setupMaterial(currentMesh->m_material, m_oglBackend, this);
+                    SetMaterialStageCmdData *data = setupMaterial(currentMesh->getMaterial(), m_oglBackend, this);
 
                     // setup vertex array, vertex and index buffers
                     m_vertexArray = setupBuffers(currentMesh, m_oglBackend, m_renderCmdBuffer->getActiveShader());
@@ -373,7 +373,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
 
                     // setup the draw calls
                     if (0 == currentMeshEntry->numInstances) {
-                        setupPrimDrawCmd(currentBatchData->m_id, currentMesh->m_localMatrix, currentMesh->m_model,
+                        setupPrimDrawCmd(currentBatchData->m_id, currentMesh->isLocal(), currentMesh->getLocalMatrix(),
                                 primGroups, m_oglBackend, this, m_vertexArray);
                     } else {
                         setupInstancedDrawCmd(currentBatchData->m_id, primGroups, m_oglBackend, this, m_vertexArray,

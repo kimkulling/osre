@@ -97,13 +97,14 @@ Mesh *LineBuilder::getMesh() {
     }
 
     size_t size = 0;
-    if (m_activeMesh->getVertexcType() == VertexType::RenderVertex) {
+    if (m_activeMesh->getVertexType() == VertexType::RenderVertex) {
         size = sizeof(RenderVert) * m_posCache.size();
-    } else if (m_activeMesh->getVertexcType() == VertexType::ColorVertex) {
+    } else if (m_activeMesh->getVertexType() == VertexType::ColorVertex) {
         size = sizeof(ColorVert) * m_posCache.size();
     }
 
-    m_activeMesh->m_vb = BufferData::alloc(BufferType::VertexBuffer, size, BufferAccessType::ReadOnly);
+    c8 *ptr  = (c8*) m_activeMesh->mapVertexBuffer(size, BufferAccessType::ReadOnly);
+    //m_activeMesh->m_vb = BufferData::alloc(BufferType::VertexBuffer, size, BufferAccessType::ReadOnly);
     ui32 offset = 0;
     for (ui32 i = 0; i < m_posCache.size(); ++i) {
         RenderVert v;
@@ -117,21 +118,22 @@ Mesh *LineBuilder::getMesh() {
         if (!m_tex0Cache.isEmpty()) {
             v.tex0 = m_tex0Cache[i];
         }
-        c8 *ptr = (c8*) m_activeMesh->getVertexBuffer()->getData();
+        //c8 *ptr = (c8*) m_activeMesh->getVertexBuffer()->getData();
         ::memcpy(&ptr[offset], &v, sizeof(RenderVert));
         offset += sizeof(RenderVert);
     }
-
+    m_activeMesh->unmapVertexBuffer();
     // setup indices
     size = sizeof(ui16) * m_indexCache.size();
-    m_activeMesh->createIndexBuffer(&m_indexCache[0], size, IndexType::UnsignedShort, BufferAccessType::ReadOnly)
+    m_activeMesh->createIndexBuffer(&m_indexCache[0], size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
     //m_activeMesh->m_ib = BufferData::alloc(BufferType::IndexBuffer, size, BufferAccessType::ReadOnly);
     //m_activeMesh->m_ib->copyFrom(&m_indexCache[0], size);
 
     // setup primitives
-    m_activeMesh->m_numPrimGroups = m_primGroupCache.size();
-    m_activeMesh->m_primGroups = new PrimitiveGroup[m_activeMesh->m_numPrimGroups];
-    ::memcpy(m_activeMesh->m_primGroups, &m_primGroupCache[0], m_primGroupCache.size());
+    PrimitiveGroup *grp = new PrimitiveGroup[m_primGroupCache.size()];
+    ::memcpy(grp, &m_primGroupCache[0], m_primGroupCache.size());
+    m_activeMesh->setPrimitiveGroups(m_primGroupCache.size(), grp);
+    //m_activeMesh->m_numPrimGroups = m_primGroupCache.size();
     m_isDirty = false;
 
     return m_activeMesh;
@@ -144,14 +146,14 @@ void LineBuilder::preparePrimGroups() {
             pg->m_primitive = PrimitiveType::LineList;
             m_primGroupCache.add(pg);
             m_activePrimGroup = pg;
-            m_activePrimGroup->m_indexType = m_activeMesh->m_indextype;
+            m_activePrimGroup->m_indexType = m_activeMesh->getIndexType();
         }
     } else {
         PrimitiveGroup *pg = new PrimitiveGroup;
         pg->m_primitive = PrimitiveType::LineList;
         m_primGroupCache.add(pg);
         m_activePrimGroup = pg;
-        m_activePrimGroup->m_indexType = m_activeMesh->m_indextype;
+        m_activePrimGroup->m_indexType = m_activeMesh->getIndexType();
         m_activePrimGroup->m_startIndex = m_indexCache.size();
     }
 }

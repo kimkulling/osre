@@ -280,7 +280,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
     }
 
     for (size_t mat2MeshIdx = 0; mat2MeshIdx < mat2MeshMap.size(); ++mat2MeshIdx) {
-        mAssetContext.mMeshArray.add(new Mesh("m1", VertexType::RenderVertex));
+        mAssetContext.mMeshArray.add(new Mesh("m1", VertexType::RenderVertex, IndexType::UnsignedInt));
     }
 
     size_t i = 0;
@@ -389,7 +389,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
             newMesh.createIndexBuffer(&indexArray[0], ibSize, IndexType::UnsignedInt, BufferAccessType::ReadOnly);
             //            Debugging::MeshDiagnostic::dumpIndices( indexArray );
 
-            newMesh.createPrimitiveGroup(IndexType::UnsignedInt, indexArray.size(), PrimitiveType::TriangleList, 0);
+            newMesh.createPrimitiveGroup(indexArray.size(), PrimitiveType::TriangleList, 0);
 
             newMesh.setMaterial(mAssetContext.mMatArray[currentMesh->mMaterialIndex]);
         }

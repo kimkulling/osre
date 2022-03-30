@@ -48,9 +48,7 @@ public:
         // empty
     }
 
-    ~AABBDbgRenderTest() override {
-        // empty
-    }
+    ~AABBDbgRenderTest() override = default;
 
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);

@@ -80,7 +80,7 @@ void MeshProcessor::handleMesh(Mesh *mesh) {
     }
 
     ui32 stride(0);
-    switch (mesh->getVertexcType()) {
+    switch (mesh->getVertexType()) {
         case VertexType::RenderVertex:
             stride = sizeof(RenderVert);
             break;

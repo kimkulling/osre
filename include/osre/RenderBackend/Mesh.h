@@ -72,13 +72,17 @@ struct OSRE_EXPORT Skeleton {
 
 class OSRE_EXPORT Mesh {
 public:
-    Mesh(const String &name, VertexType vertextype);
+    Mesh(const String &name, VertexType vertextype, IndexType indextype);
     ~Mesh();
     static size_t getVertexSize(VertexType vertextype);
     void setMaterial(Material *mat);
     Material *getMaterial() const;
-    VertexType getVertexcType() const;
+    VertexType getVertexType() const;
+    void setIndexType(IndexType indextype);
+    IndexType getIndexType() const;
     const String &getName() const;
+    void *mapVertexBuffer(size_t vbSize, BufferAccessType accessType);
+    void unmapVertexBuffer();
     void createVertexBuffer(void *vertices, size_t vbSize, BufferAccessType accessType);
     BufferData *getVertexBuffer() const;
     void createIndexBuffer(void *indices, size_t ibSize, IndexType indexType, BufferAccessType accessType);
@@ -86,6 +90,9 @@ public:
     ui64 getId() const;
     size_t getNumberOfPrimitiveGroups() const;
     PrimitiveGroup *getPrimitiveGroupAt(size_t index) const;
+    void setModelMatrix(bool islocal, const glm::mat4 &model);
+    bool isLocal() const;
+    const glm::mat4 &getLocalMatrix() const;
     template <class T>
     void attachVertices(T *vertices, size_t size) {
         if (m_vb == nullptr) {
@@ -107,8 +114,8 @@ public:
     }
 
     PrimitiveGroup *createPrimitiveGroups(size_t numPrimGroups, IndexType *types, size_t *numIndices, PrimitiveType *primTypes, ui32 *startIndices);
-    PrimitiveGroup *createPrimitiveGroup(IndexType type, size_t numIndices, PrimitiveType primTypes, ui32 startIndex);
-
+    PrimitiveGroup *createPrimitiveGroup(size_t numIndices, PrimitiveType primTypes, ui32 startIndex);
+    void setPrimitiveGroups(size_t numPrimGroups, PrimitiveGroup *primGroups);
     OSRE_NON_COPYABLE(Mesh)
 
 private:
@@ -137,8 +144,16 @@ inline Material *Mesh::getMaterial() const {
     return m_material;
 }
 
-inline VertexType Mesh::getVertexcType() const {
+inline VertexType Mesh::getVertexType() const {
     return m_vertextype;
+}
+
+inline void Mesh::setIndexType( IndexType indextype ) {
+    m_indextype = indextype;
+}
+
+inline IndexType Mesh::getIndexType() const {
+    return m_indextype;
 }
 
 inline const String &Mesh::getName() const {
@@ -164,6 +179,19 @@ inline PrimitiveGroup *Mesh::getPrimitiveGroupAt( size_t index ) const {
     }
 
     return &m_primGroups[index];
+}
+
+inline void Mesh::setModelMatrix( bool islocal, const glm::mat4 &model ) {
+    m_localMatrix = islocal;
+    m_model = model;
+}
+
+inline const glm::mat4 &Mesh::getLocalMatrix() const {
+    return m_model;
+}
+
+inline bool Mesh::isLocal() const {
+    return m_localMatrix;
 }
 
 } // Namespace RenderBackend

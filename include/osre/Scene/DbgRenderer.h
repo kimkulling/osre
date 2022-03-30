@@ -64,7 +64,7 @@ private:
     RenderBackend::RenderBackendService *mRbSrv;
     RenderBackend::TransformMatrixBlock mTransformMatrix;
     UI::FontRenderer *mFontRenderer;
-    RenderBackend::Mesh *mDebugGeometry;
+    RenderBackend::Mesh *mDebugMesh;
     ui16 mLastIndex;
 };
 

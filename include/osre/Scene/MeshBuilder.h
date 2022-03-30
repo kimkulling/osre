@@ -44,8 +44,9 @@ public:
     ~MeshBuilder();
 
     /// @brief  Will allocate an empty mesh.
-    ///	@param  type        [in] The vertex type.
-    MeshBuilder &allocEmptyMesh( RenderBackend::VertexType type, ui32 numMeshes );
+    /// @param[in] name     The name for the mesh.
+    ///	@param[in] type     The vertex type.
+    MeshBuilder &allocEmptyMesh(const String &name, RenderBackend::VertexType type);
 
     /// @brief  Will allocate a triangle mesh.
     ///	@param  type        [in] The vertex type.
@@ -106,7 +107,7 @@ public:
     ///	@param  pos         [in] Pointer to array with vec3-positions, set to nullptr if nothing shall prepared
     ///	@param  col1        [in] Pointer to array with vec3-diffuse colors, set to nullptr if nothing shall prepared
     /// @return The allocated buffer data.
-    static RenderBackend::BufferData *allocVertices(RenderBackend::VertexType type, size_t numVerts, ::glm::vec3 *pos,
+    static void allocVertices(RenderBackend::Mesh *mesh, RenderBackend::VertexType type, size_t numVerts, ::glm::vec3 *pos,
             ::glm::vec3 *col1, ::glm::vec2 *tex0, RenderBackend::BufferAccessType access );
 
     static void updateTextVertices( size_t numVerts, ::glm::vec2 *tex0, RenderBackend::BufferData *vb );
@@ -129,7 +130,7 @@ private:
     CPPCore::TArray<ui32> mIndexCache;
     CPPCore::TArray<RenderBackend::PrimitiveGroup*> mPrimGroupCache;
     bool mIsDirty;
-    RenderBackend::Mesh *mActiveGeo;
+    RenderBackend::Mesh *mActiveMesh;
 };
 
 } // Namespace Scene

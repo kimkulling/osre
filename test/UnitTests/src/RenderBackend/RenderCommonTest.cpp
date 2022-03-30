@@ -147,39 +147,13 @@ TEST_F( RenderCommonTest, copyBufferDataTest ) {
     BufferData::free(data);
 }
 
-TEST_F( RenderCommonTest, accessGeometryTest ) {
-    Mesh *geo = nullptr;
-    geo = Mesh::create(0, VertexType::RenderVertex);
-    EXPECT_EQ( geo, nullptr );
-    geo = Mesh::create(1, VertexType::RenderVertex);
-    EXPECT_NE( geo, nullptr );
-    Mesh::destroy( &geo );
-    EXPECT_EQ( geo, nullptr );
-    Mesh::destroy(&geo);
-}
-
 TEST_F(RenderCommonTest, initGeometryTest) {
-    Mesh *mesh = Mesh::create(1, VertexType::RenderVertex);
-    EXPECT_NE( mesh, nullptr );
-    EXPECT_EQ( VertexType::RenderVertex, mesh->m_vertextype );
-    EXPECT_EQ( nullptr, mesh->m_ib );
-    EXPECT_EQ( nullptr, mesh->m_vb );
-    EXPECT_EQ( nullptr, mesh->m_material );
-    Mesh::destroy(&mesh);
-}
-
-TEST_F( RenderCommonTest, geometryIdTest ) {
-    static const ui32 NumGeo = 10;
-    ui32 ids[ NumGeo ];
-    ::memset( ids, 0, sizeof( ui32 ) * NumGeo );
-    Mesh *mesh = Mesh::create(NumGeo, VertexType::RenderVertex);
-    ui64 oldId = mesh[0].m_id;
-    for ( ui32 i = 1; i < NumGeo; i++ ) {
-        ui64 id = mesh[ i ].m_id;
-        EXPECT_EQ( id, oldId + 1 );
-        oldId = id;
-    }
-    Mesh::destroy(&mesh);
+    Mesh *mesh = new Mesh("test", VertexType::RenderVertex, IndexType::UnsignedShort);
+    EXPECT_EQ(VertexType::RenderVertex, mesh->getVertexType());
+    EXPECT_EQ(nullptr, mesh->getIndexBuffer());
+    EXPECT_EQ(nullptr, mesh->getVertexBuffer());
+    EXPECT_EQ(nullptr, mesh->getMaterial());
+    delete mesh;
 }
 
 TEST_F( RenderCommonTest, accessTransformMatrixBlockTest ) {
@@ -188,7 +162,7 @@ TEST_F( RenderCommonTest, accessTransformMatrixBlockTest ) {
     block.m_projection = glm::translate( block.m_model, glm::vec3( 1, 2, 3 ) );
     block.m_view = glm::translate( block.m_model, glm::vec3( 1, 2, 3 ) );
 
-    glm::mat4 identity;
+    glm::mat4 identity = {};
     block.init();
     EXPECT_FLOAT_EQ( static_cast<f32>( identity.length() ), static_cast<f32>( block.m_model.length() ) );
     EXPECT_FLOAT_EQ( static_cast<f32>( identity.length() ), static_cast<f32>( block.m_projection.length() ) );

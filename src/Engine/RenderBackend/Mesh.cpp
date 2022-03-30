@@ -36,13 +36,14 @@ static Ids s_Ids;
 // The log tag for messages
 static const c8 *Tag = "Mesh";
 
-Mesh::Mesh(const String &name, VertexType vertexType) :
+Mesh::Mesh(const String &name, VertexType vertexType, IndexType indextype) :
         mName(name),
         m_localMatrix(false),
         m_model(1.0f),
         m_material(nullptr),
         m_vertextype(vertexType),
         m_vb(nullptr),
+        m_indextype(indextype),
         m_ib(nullptr),
         m_numPrimGroups(0),
         m_primGroups(nullptr),
@@ -66,6 +67,15 @@ Mesh::~Mesh() {
     m_primGroups = nullptr;
 
     s_Ids.releaseId(m_id);
+}
+
+void *Mesh::mapVertexBuffer( size_t vbSize, BufferAccessType accessType ) {
+    m_vb = BufferData::alloc(BufferType::VertexBuffer, vbSize, accessType);
+    return m_vb->getData();
+}
+
+void Mesh::unmapVertexBuffer() {
+    // empty
 }
 
 void Mesh::createVertexBuffer(void *vertices, size_t vbSize, BufferAccessType accessType) {
@@ -123,15 +133,19 @@ PrimitiveGroup *Mesh::createPrimitiveGroups(size_t numPrimGroups, IndexType *typ
     return m_primGroups;
 }
 
-PrimitiveGroup *Mesh::createPrimitiveGroup(IndexType type, size_t numIndices, PrimitiveType primType, ui32 startIndex) {
+PrimitiveGroup *Mesh::createPrimitiveGroup(size_t numIndices, PrimitiveType primType, ui32 startIndex) {
     m_numPrimGroups = 1;
     m_primGroups = new PrimitiveGroup[m_numPrimGroups];
-    m_primGroups[0].m_indexType = type;
     m_primGroups[0].m_numIndices = numIndices;
     m_primGroups[0].m_primitive = primType;
     m_primGroups[0].m_startIndex = startIndex;
 
     return m_primGroups;
+}
+
+void Mesh::setPrimitiveGroups( size_t numPrimGroups, PrimitiveGroup *primGroups ) {
+    m_numPrimGroups = numPrimGroups;
+    m_primGroups = primGroups;
 }
 
 } // Namespace RenderBackend

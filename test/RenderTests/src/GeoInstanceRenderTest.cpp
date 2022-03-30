@@ -94,9 +94,7 @@ public:
         }
     }
 
-    ~GeoInstanceRenderTest() override {
-        // empty
-    }
+    ~GeoInstanceRenderTest() override = default;
 
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
@@ -111,8 +109,8 @@ public:
                 rbSrv->addMesh(mesh, NumInstances);
 
                 // use a default material
-                mesh->m_material = AbstractRenderTest::createMaterial("ColorVertexMat", VsSrc, FsSrc);
-                Shader *shader = mesh->m_material->m_shader;
+                mesh->setMaterial(AbstractRenderTest::createMaterial("ColorVertexMat", VsSrc, FsSrc));
+                Shader *shader = mesh->getMaterial()->getShader();
                 if (shader != nullptr) {
                     shader->addVertexAttribute("position");
                     shader->addVertexAttribute("normal");

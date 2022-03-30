@@ -62,25 +62,25 @@ public:
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
         // colors
-        glm::vec3 col[NumPoints];
+        glm::vec3 col[NumPoints] = {};
         col[0] = glm::vec3(1, 0, 0);
         col[1] = glm::vec3(0, 1, 0);
         col[2] = glm::vec3(0, 0, 1);
 
         // point coordinates
-        glm::vec3 points[NumPoints];
+        glm::vec3 points[NumPoints] = {};
         points[0] = glm::vec3(-0.5, -0.5, 0);
         points[1] = glm::vec3(0, 0.5, 0);
         points[2] = glm::vec3(0.5, -0.5, 0);
 
         // line segment coordinates
-        glm::vec3 pos[NumPoints];
+        glm::vec3 pos[NumPoints] = {};
         pos[0] = glm::vec3(-1, -1, 0);
         pos[1] = glm::vec3(0, 1, 0);
         pos[2] = glm::vec3(1, -1, 0);
 
         static const ui32 NumIndices = 6;
-        ui16 indices[NumIndices];
+        ui16 indices[NumIndices] = {};
         indices[0] = 0;
         indices[1] = 1;
 
@@ -101,22 +101,17 @@ public:
             rbSrv->beginRenderBatch("batch1");
             {
                 rbSrv->addMesh(ptMesh, 0);
-                meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 1);
+                meshBuilder.allocEmptyMesh("empty_mesh", VertexType::ColorVertex);
                 Mesh *lineMesh = meshBuilder.getMesh();
-                lineMesh->m_vb = MeshBuilder::allocVertices(VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly);
-                lineMesh->m_indextype = IndexType::UnsignedShort;
+                MeshBuilder::allocVertices(lineMesh, VertexType::ColorVertex, 3, pos, col, nullptr, BufferAccessType::ReadOnly);
                 size_t size = sizeof(ui16) * static_cast<size_t>(NumIndices);
-                lineMesh->m_ib = BufferData::alloc(BufferType::IndexBuffer, size, BufferAccessType::ReadOnly);
-                lineMesh->m_ib->copyFrom(indices, size);
+                lineMesh->createIndexBuffer(indices, size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
                 // setup primitives
-                lineMesh->m_numPrimGroups = 1;
-                lineMesh->m_primGroups = new PrimitiveGroup[lineMesh->m_numPrimGroups];
-                lineMesh->m_primGroups[0].init(IndexType::UnsignedShort, 2 * 3, PrimitiveType::LineList, 0);
+                lineMesh->createPrimitiveGroup(6, PrimitiveType::LineList, 0);
 
                 // setup material
-                Material *mat = MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex);
-                lineMesh->m_material = mat;
+                lineMesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
                 rbSrv->addMesh(lineMesh, 0);
 
                 m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));

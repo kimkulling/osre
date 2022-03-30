@@ -300,10 +300,6 @@ PrimitiveGroup::PrimitiveGroup() :
     // empty
 }
 
-PrimitiveGroup::~PrimitiveGroup() {
-    // empty
-}
-
 void PrimitiveGroup::init(IndexType indexType, size_t numPrimitives, PrimitiveType primType, size_t startIdx) {
     m_indexType = indexType;
     m_numIndices = numPrimitives;

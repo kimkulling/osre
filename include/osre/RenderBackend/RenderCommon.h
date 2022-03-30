@@ -46,7 +46,7 @@ class Pipeline;
 using MeshArray = CPPCore::TArray<RenderBackend::Mesh *>;
 
 /// Describes an unset id.
-static const i32 UnsetHandle = -1;
+static constexpr i32 UnsetHandle = -1;
 
 /// Upper limits for names.
 static const ui32 MaxEntNameLen = 256;
@@ -438,7 +438,7 @@ struct OSRE_EXPORT PrimitiveGroup {
     IndexType m_indexType;
 
     PrimitiveGroup();
-    ~PrimitiveGroup();
+    ~PrimitiveGroup() = default;
     void init(IndexType indexType, size_t numPrimitives, PrimitiveType primType, size_t startIdx);
 
     OSRE_NON_COPYABLE(PrimitiveGroup)

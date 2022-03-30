@@ -39,14 +39,14 @@ DbgRenderer *DbgRenderer::s_instance = nullptr;
 
 DbgRenderer::DbgRenderer(RenderBackend::RenderBackendService *rbSrv) :
         mRbSrv(rbSrv),
-        mDebugGeometry(nullptr),
+        mDebugMesh(nullptr),
         mFontRenderer(nullptr),
         mLastIndex(0) {
     osre_assert(nullptr != mRbSrv);
 }
 
 DbgRenderer::~DbgRenderer() {
-    delete mDebugGeometry;
+    delete mDebugMesh;
 }
 
 bool DbgRenderer::create(RenderBackend::RenderBackendService *rbSrv) {
@@ -102,7 +102,7 @@ static ui16 indices[NumIndices] = {
 
 void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb) {
     MeshBuilder meshBuilder;
-    meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 1);
+    meshBuilder.allocEmptyMesh("aabb", VertexType::ColorVertex);
     Mesh *mesh = meshBuilder.getMesh();
 
     static const ui32 NumVertices = 8;
@@ -144,25 +144,17 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb)
 
     const size_t vertexSize(sizeof(ColorVert) * NumVertices);
     mesh->createVertexBuffer(&vertices[0], vertexSize, BufferAccessType::ReadOnly);
-    //mesh->m_vb = BufferData::alloc(BufferType::VertexBuffer, vertexSize, BufferAccessType::ReadOnly);
-    //mesh->m_vb->copyFrom(&vertices[0], vertexSize);
     const size_t indexSize(sizeof(ui16) * NumIndices);
-    mesh->createIndexBuffer(&indices[0], indexSize, IndexType::UnsignedShort, BufferAccessType::ReadOnly)
-    //mesh->m_ib = BufferData::alloc(BufferType::IndexBuffer, indexSize, BufferAccessType::ReadOnly);
-    //mesh->m_indextype = IndexType::UnsignedShort;
-    //mesh->m_ib->copyFrom(&indices[0], indexSize);
+    mesh->createIndexBuffer(&indices[0], indexSize, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
     // setup primitives
-    mesh->m_model = transform;
-    mesh->m_numPrimGroups = 1;
-
-    mesh->m_primGroups = new PrimitiveGroup[1];
-    mesh->m_primGroups[0].init(IndexType::UnsignedShort, NumIndices, PrimitiveType::LineList, 0);
+    mesh->setModelMatrix(false, transform);
+    
+    mesh->createPrimitiveGroup(NumIndices, PrimitiveType::LineList, 0);
 
     // setup material
-    mesh->m_material = MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex);
+    mesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
 
-    mesh->m_model = transform;
 
     mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
     mRbSrv->beginRenderBatch("dbgFontBatch");
@@ -178,25 +170,32 @@ void DbgRenderer::clear() {
 }
 
 void DbgRenderer::addLine(const ColorVert &v0, const ColorVert &v1) {
-    if (nullptr == mDebugGeometry) {
-        mDebugGeometry = Mesh::create(1, VertexType::ColorVertex);
+    if (nullptr == mDebugMesh) {
+        mDebugMesh = new Mesh("debugMesh", VertexType::ColorVertex, IndexType::UnsignedShort);
     }
 
     ColorVert vertices[2];
     vertices[0] = v0;
     vertices[1] = v1;
-
-    mDebugGeometry->m_vb->attach(&vertices[0], sizeof(ColorVert) * 2);
-    ui16 lineIndices[2];
+    BufferData *vb = mDebugMesh->getVertexBuffer();
+    if (vb == nullptr) {
+        mDebugMesh->createVertexBuffer(&vertices[0], sizeof(ColorVert) * 2, RenderBackend::BufferAccessType::ReadOnly);
+    } else {
+        vb->attach(&vertices[0], sizeof(ColorVert) * 2);
+    }
+    ui16 lineIndices[2] = {};
     lineIndices[0] = mLastIndex;
     mLastIndex++;
     lineIndices[1] = mLastIndex;
     mLastIndex++;
+    BufferData *ib = mDebugMesh->getIndexBuffer();
+    if (ib == nullptr) {
+        mDebugMesh->createIndexBuffer(&lineIndices[0], sizeof(ui16) * 2, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
+    } else {
+        ib->attach(&lineIndices[0], sizeof(ui16) * 2);
+    }
 
-    mDebugGeometry->m_ib->attach(&lineIndices[0], sizeof(ui16) * 2);
-
-    mDebugGeometry->m_primGroups = new PrimitiveGroup[1];
-    mDebugGeometry->m_primGroups[0].init(IndexType::UnsignedShort, NumIndices, PrimitiveType::LineList, 0);
+    mDebugMesh->createPrimitiveGroup(NumIndices, PrimitiveType::LineList, 0);
 }
 
 } // Namespace Scene

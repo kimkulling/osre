@@ -39,6 +39,7 @@ namespace OSRE {
 namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Scene;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
@@ -78,13 +79,13 @@ public:
             m_pos[i] = glm::vec3(x, y, z);
         }
 
-        GLushort pt_indices[NumPts];
+        GLushort pt_indices[NumPts] = {};
         for (ui32 i = 0; i < NumPts; i++) {
             pt_indices[i] = static_cast<GLushort>(i);
         }
 
         Scene::MeshBuilder meshBuilder;
-        meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 1);
+        meshBuilder.allocEmptyMesh("empty", VertexType::ColorVertex);
         m_pointMesh = meshBuilder.getMesh();
 
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
@@ -92,20 +93,15 @@ public:
             rbSrv->beginRenderBatch("particle");
             {
                 rbSrv->addMesh(m_pointMesh, 0);
-                m_pointMesh->m_vb = Scene::MeshBuilder::allocVertices(VertexType::ColorVertex, NumPts, m_pos, m_col, nullptr, BufferAccessType::ReadOnly);
-                m_pointMesh->m_indextype = IndexType::UnsignedShort;
+                MeshBuilder::allocVertices(m_pointMesh, VertexType::ColorVertex, NumPts, m_pos, m_col, nullptr, BufferAccessType::ReadOnly);
                 ui32 pt_size = sizeof(GLushort) * NumPts;
-                m_pointMesh->m_ib = BufferData::alloc(BufferType::IndexBuffer, pt_size, BufferAccessType::ReadOnly);
-                m_pointMesh->m_ib->copyFrom(pt_indices, pt_size);
+                m_pointMesh->createIndexBuffer(pt_indices, pt_size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
                 // setup primitives
-                m_pointMesh->m_numPrimGroups = 1;
-                m_pointMesh->m_primGroups = new PrimitiveGroup[m_pointMesh->m_numPrimGroups];
-                m_pointMesh->m_primGroups[0].init(IndexType::UnsignedShort, NumPts, PrimitiveType::PointList, 0);
+                m_pointMesh->createPrimitiveGroup(NumPts, PrimitiveType::PointList, 0);
 
                 // setup material
-                Material *mat = Scene::MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex);
-                m_pointMesh->m_material = mat;
+                m_pointMesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
 
                 m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
                 m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, glm::vec3(.5, .5, .5));
@@ -133,7 +129,7 @@ public:
 
         size_t offset = 0;
         for (ui32 i = 0; i < NumPts; i++) {
-            uc8 *ptr = (uc8 *)m_pointMesh->m_vb->getData();
+            uc8 *ptr = (uc8 *)m_pointMesh->getVertexBuffer()->getData();
             ::memcpy(&ptr[offset], &m_pos[i], sizeof(glm::vec3));
             offset += sizeof(ColorVert);
         }

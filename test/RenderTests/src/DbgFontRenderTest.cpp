@@ -50,9 +50,7 @@ public:
         // empty
     }
 
-    ~DbgFontRenderTest() override {
-        // empty
-    }
+    ~DbgFontRenderTest() override = default;
 
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);

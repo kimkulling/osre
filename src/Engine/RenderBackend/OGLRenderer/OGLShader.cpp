@@ -29,8 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-static const GLint InvalidLocationId = -1;
-static const String Tag = "OGLShader";
+static const c8 *Tag = "OGLShader";
 
 OGLShader::OGLShader(const String &name) :
         Object(name),
