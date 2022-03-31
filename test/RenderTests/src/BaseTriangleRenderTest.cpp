@@ -52,9 +52,7 @@ public:
         // empty
     }
 
-    ~BaseTriangleRenderTest() override {
-        // empty
-    }
+    ~BaseTriangleRenderTest() override = default;
 
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);

@@ -69,19 +69,15 @@ private:
     String m_name;
 };
 
-inline
-AbstractTestFixture::AbstractTestFixture( const String &name )
-: m_name( name ) {
+inline AbstractTestFixture::AbstractTestFixture( const String &name ) : m_name( name ) {
     // empty
 }
 
-inline
-AbstractTestFixture::~AbstractTestFixture() {
+inline AbstractTestFixture::~AbstractTestFixture() {
     // empty
 }
 
-inline
-const String &AbstractTestFixture::getName() const {
+inline const String &AbstractTestFixture::getName() const {
     return m_name;
 }
 

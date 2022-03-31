@@ -208,8 +208,7 @@ bool OGLRenderEventHandler::onDestroyRenderer(const Common::EventData *) {
         return false;
     }
 
-    bool ok = Profiling::PerformanceCounterRegistry::destroy();
-    if (!ok) {
+    if (!Profiling::PerformanceCounterRegistry::destroy()) {
         osre_error(Tag, "Error while destroying performance counters.");
     }
 

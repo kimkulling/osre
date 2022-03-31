@@ -101,7 +101,6 @@ MeshBuilder &MeshBuilder::allocEmptyMesh(const String &name, VertexType type) {
 
 MeshBuilder &MeshBuilder::createTriangle(VertexType type, BufferAccessType access ) {
     Mesh *mesh = new Mesh("", VertexType::RenderVertex, IndexType::UnsignedShort);
-    mesh->setIndexType(IndexType::UnsignedShort);
 
     // setup triangle vertices    
     static const ui32 NumVert = 3;
@@ -124,10 +123,9 @@ MeshBuilder &MeshBuilder::createTriangle(VertexType type, BufferAccessType acces
     indices[ 1 ] = 2;
     indices[ 2 ] = 1;
 
-    size_t size = sizeof( GLushort ) * NumIndices;
+    size_t size = sizeof(GLushort) * NumIndices;
     mesh->createIndexBuffer(indices, size, IndexType::UnsignedShort, access);
-    //mesh->m_ib = BufferData::alloc( BufferType::IndexBuffer, size, access );
-    //::memcpy(mesh->m_ib->getData(), indices, size);
+
     // setup primitives
     mesh->createPrimitiveGroup(3, PrimitiveType::TriangleList, 0);
 

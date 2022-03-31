@@ -57,7 +57,7 @@ const String VsSrc =
         "\n"
         "    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
         "    //vertex position\n"
-        "    gl_Position = VP*M[ gl_InstanceID ]*vec4(position,1);\n"
+        "    gl_Position = VP * M[gl_InstanceID] * vec4(position,1);\n"
         "}\n";
 
 const String FsSrc =
@@ -79,7 +79,7 @@ const String FsSrc =
 ///	@brief  A instancing render-call - rendering test
 //-------------------------------------------------------------------------------------------------
 class GeoInstanceRenderTest : public AbstractRenderTest {
-    static const ui32 NumInstances = 25;
+    static constexpr ui32 NumInstances = 25;
     f32 m_angle;
     glm::mat4 m_mat[NumInstances];
     TransformMatrixBlock m_transformMatrix;
