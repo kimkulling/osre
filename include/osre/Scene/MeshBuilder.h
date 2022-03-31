@@ -43,6 +43,9 @@ public:
     /// @brief  The class destructor.
     ~MeshBuilder();
 
+    /// @brief Will clear the current mesh.
+    void clear();
+
     /// @brief  Will allocate an empty mesh.
     /// @param[in] name     The name for the mesh.
     ///	@param[in] type     The vertex type.

@@ -302,7 +302,7 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, CPPCore::TArray<size_t> &pri
 bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventData) {
     osre_assert(nullptr != m_oglBackend);
 
-    InitPassesEventData *frameToCommitData = (InitPassesEventData *)eventData;
+    InitPassesEventData *frameToCommitData = (InitPassesEventData*) eventData;
     if (nullptr == frameToCommitData) {
         return false;
     }
@@ -352,6 +352,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
                         osre_assert(nullptr != currentMesh);
                         continue;
                     }
+
 
                     // register primitive groups to render
                     for (size_t i = 0; i < currentMesh->getNumberOfPrimitiveGroups(); ++i) {
