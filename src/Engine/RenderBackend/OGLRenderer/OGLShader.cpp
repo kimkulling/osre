@@ -178,10 +178,10 @@ void OGLShader::addUniform(const String &uniform) {
 
 static i32 getActiveParam(ui32 progId, GLenum type) {
     if (0 == progId) {
-        return -1;
+        return InvalidLocationId;
     }
 
-    i32 params(-1);
+    i32 params(InvalidLocationId);
     glGetProgramiv(progId, type, &params);
 
     return params;

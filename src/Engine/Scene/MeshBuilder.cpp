@@ -100,19 +100,19 @@ MeshBuilder &MeshBuilder::allocEmptyMesh(const String &name, VertexType type) {
 }
 
 MeshBuilder &MeshBuilder::createTriangle(VertexType type, BufferAccessType access ) {
-    Mesh *mesh = new Mesh("", VertexType::RenderVertex, IndexType::UnsignedShort);
+    Mesh *mesh = new Mesh("", type, IndexType::UnsignedShort);
 
     // setup triangle vertices    
     static const ui32 NumVert = 3;
     glm::vec3 col[NumVert] = {};
-    col[ 0 ] = glm::vec3( 1, 0, 0 );
-    col[ 1 ] = glm::vec3( 0, 1, 0 );
-    col[ 2 ] = glm::vec3( 0, 0, 1 );
+    col[ 0 ] = glm::vec3(1, 0, 0);
+    col[ 1 ] = glm::vec3(0, 1, 0);
+    col[ 2 ] = glm::vec3(0, 0, 1);
 
     glm::vec3 pos[NumVert] = {};
-    pos[ 0 ] = glm::vec3( -1, -1, 0 );
-    pos[ 1 ] = glm::vec3( 0, 1, 0 );
-    pos[ 2 ] = glm::vec3( 1, -1, 0 );
+    pos[ 0 ] = glm::vec3(-1, -1, 0);
+    pos[ 1 ] = glm::vec3(0, 1, 0);
+    pos[ 2 ] = glm::vec3(1, -1, 0);
     
     allocVertices(mesh, mesh->getVertexType(), NumVert, pos, col, nullptr, access);
 
@@ -575,31 +575,28 @@ void MeshBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text ) {
 
 void MeshBuilder::allocVertices(Mesh *mesh, VertexType type, size_t numVerts, glm::vec3 *pos,
                                             glm::vec3 *col1, glm::vec2 *tex0, BufferAccessType access ) {
-    //BufferData *data( nullptr );
     size_t size = 0;
     switch (type) {
         case VertexType::ColorVertex: {
-            ColorVert *colVerts = new ColorVert[ numVerts ];
+            ColorVert *colVerts = new ColorVert[numVerts];
             if (nullptr != pos) {
-                for (ui32 i = 0; i < numVerts; i++) {
-                    colVerts[ i ].position = pos[ i ];
+                for (ui32 i = 0; i < numVerts; ++i) {
+                    colVerts[ i ].position = pos[i];
                 }
             }
             if (nullptr != col1 ) {
-                for (ui32 i = 0; i < numVerts; i++) {
-                    colVerts[ i ].color0 = col1[ i ];
+                for (ui32 i = 0; i < numVerts; ++i) {
+                    colVerts[ i ].color0 = col1[i];
                 }
             }
             size = sizeof( ColorVert ) * numVerts;
             mesh->createVertexBuffer(&colVerts[0], size, access);
-            //data = BufferData::alloc( BufferType::VertexBuffer, size, access );
-            //::memcpy( data->getData(), colVerts, size );
             delete [] colVerts;
         }
         break;
 
         case VertexType::RenderVertex: {
-            RenderVert *renderVerts = new RenderVert[ numVerts ];
+            RenderVert *renderVerts = new RenderVert[numVerts];
             if (nullptr != pos) {
                 for (ui32 i = 0; i < numVerts; i++) {
                     renderVerts[ i ].position = pos[ i ];
@@ -618,8 +615,6 @@ void MeshBuilder::allocVertices(Mesh *mesh, VertexType type, size_t numVerts, gl
 
             size = sizeof( RenderVert ) * numVerts;
             mesh->createVertexBuffer(&renderVerts[0], size, access);
-            //data = BufferData::alloc(BufferType::VertexBuffer, size, BufferAccessType::ReadOnly);
-            //::memcpy( data->getData(), renderVerts, size );
             delete [] renderVerts;
         }
         break;
@@ -629,7 +624,7 @@ void MeshBuilder::allocVertices(Mesh *mesh, VertexType type, size_t numVerts, gl
     }
 }
 
-void MeshBuilder::updateTextVertices( size_t numVerts, ::glm::vec2 *tex0, BufferData *vb ) {
+void MeshBuilder::updateTextVertices(size_t numVerts, ::glm::vec2 *tex0, BufferData *vb) {
     if (0 == numVerts) {
         return;
     }
