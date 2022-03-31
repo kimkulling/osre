@@ -38,7 +38,7 @@ public:
     using ProcessorArray = ::CPPCore::TArray<AbstractProcessor*>;
 
     /// @brief  The class destructor, virtual.
-    virtual ~AbstractProcessor();
+    virtual ~AbstractProcessor() = default;
 
     /// @brief  Will add a precondition.
     /// @param  precondition    [in] Process which need to get executed before this.
@@ -57,30 +57,21 @@ protected:
     AbstractProcessor();
 
 private:
-    ProcessorArray m_preconditions;
+    ProcessorArray mPreconditions;
 };
 
-inline
-AbstractProcessor::AbstractProcessor() 
-: m_preconditions() {
+inline AbstractProcessor::AbstractProcessor() : mPreconditions() {
     // empty
 }
 
-inline
-AbstractProcessor::~AbstractProcessor() {
-    // empty    
-}
-
-inline
-void AbstractProcessor::addDependency( AbstractProcessor *precondition ) {
+inline void AbstractProcessor::addDependency( AbstractProcessor *precondition ) {
     if ( nullptr != precondition ) {
-        m_preconditions.add( precondition );
+        mPreconditions.add( precondition );
     }
 }
 
-inline
-const AbstractProcessor::ProcessorArray &AbstractProcessor::getPreconditions() const {
-    return m_preconditions;
+inline const AbstractProcessor::ProcessorArray &AbstractProcessor::getPreconditions() const {
+    return mPreconditions;
 }
 
 } // Namespace Common

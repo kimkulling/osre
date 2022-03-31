@@ -75,46 +75,39 @@ protected:
     virtual bool onUpdate() = 0;
 
 private:
-    bool m_isOpen;
+    bool mIsOpen;
 };
 
-inline
-AbstractService::AbstractService( const String &serverName )
-: Object( serverName )
-, m_isOpen( false ) {
+inline AbstractService::AbstractService( const String &serverName ) : Object( serverName ), mIsOpen( false ) {
     // empty
 }
 
-inline 
-AbstractService::~AbstractService() {
-    osre_assert( !m_isOpen );
+inline AbstractService::~AbstractService() {
+    osre_assert( !mIsOpen );
 }
 
-inline
-bool AbstractService::open() {
-    if ( m_isOpen ) {
+inline bool AbstractService::open() {
+    if ( mIsOpen ) {
         osre_debug( getName(), "Cannot open, service already opened." );
         return false;
     }
-    m_isOpen = onOpen();
+    mIsOpen = onOpen();
 
-    return m_isOpen;
+    return mIsOpen;
 }
 
-inline
-bool AbstractService::close() {
-    if ( m_isOpen )	{
+inline bool AbstractService::close() {
+    if ( mIsOpen )	{
         osre_debug( getName(), "Cannot close, service not open." );
-        m_isOpen = false;
+        mIsOpen = false;
         return onClose();
     }
 
     return false;
 }
 
-inline
-bool AbstractService::isOpen() {
-    return m_isOpen;
+inline bool AbstractService::isOpen() {
+    return mIsOpen;
 }
 
 inline

@@ -137,13 +137,11 @@ private:
     bool m_isValid;							        // The valid flag
 };
 
-inline 
-bool ArgumentParser::hasSupportedArguments() const {
+inline bool ArgumentParser::hasSupportedArguments() const {
     return ( !m_SupportedArguments.isEmpty() );
 }
 
-inline
-void ArgumentParser::reset() {
+inline void ArgumentParser::reset() {
     m_CurrentIndex = 0;
 }
 
