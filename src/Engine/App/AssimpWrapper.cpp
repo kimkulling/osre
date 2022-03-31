@@ -63,9 +63,6 @@ const unsigned int DefaultImportFlags = aiProcess_CalcTangentSpace | aiProcess_G
                                         aiProcess_ImproveCacheLocality | aiProcess_LimitBoneWeights | aiProcess_RemoveRedundantMaterials |
                                         aiProcess_SplitLargeMeshes | aiProcess_Triangulate | aiProcess_GenUVCoords | aiProcess_SortByPType;
 
-struct BoneInfo {
-};
-
 static void setColor4(const aiColor4D &aiCol, Color4 &col) {
     col.m_r = aiCol.r;
     col.m_g = aiCol.g;

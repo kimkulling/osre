@@ -35,49 +35,52 @@ namespace Scene {
 
 using namespace ::OSRE::RenderBackend;
 
-DbgRenderer *DbgRenderer::s_instance = nullptr;
+DbgRenderer *DbgRenderer::sInstance = nullptr;
 
 DbgRenderer::DbgRenderer(RenderBackend::RenderBackendService *rbSrv) :
         mRbSrv(rbSrv),
         mDebugMesh(nullptr),
-        mFontRenderer(nullptr),
         mLastIndex(0) {
     osre_assert(nullptr != mRbSrv);
 }
 
 DbgRenderer::~DbgRenderer() {
-    delete mDebugMesh;
+    clear();
 }
 
 bool DbgRenderer::create(RenderBackend::RenderBackendService *rbSrv) {
-    if (nullptr != s_instance) {
+    if (nullptr != sInstance) {
         return false;
     }
 
-    s_instance = new DbgRenderer(rbSrv);
+    sInstance = new DbgRenderer(rbSrv);
     return true;
 }
 
 bool DbgRenderer::destroy() {
-    if (nullptr == s_instance) {
+    if (nullptr == sInstance) {
         return false;
     }
-    delete s_instance;
-    s_instance = nullptr;
+    delete sInstance;
+    sInstance = nullptr;
     return true;
 }
 
 DbgRenderer *DbgRenderer::getInstance() {
-    return s_instance;
+    return sInstance;
 }
 
+c8 *DbgRenderer::getDebugRenderBatchName() {
+    static constexpr c8 *name = "dbgBatch";
+    return name;
+}
 void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui32 id, const String &text) {
     if (text.empty()) {
         return;
     }
 
     mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
-    mRbSrv->beginRenderBatch("dbgFontBatch");
+    mRbSrv->beginRenderBatch(DbgRenderer::getDebugRenderBatchName());
 
     mRbSrv->endRenderBatch();
     mRbSrv->endPass();
@@ -157,7 +160,7 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb)
 
 
     mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
-    mRbSrv->beginRenderBatch("dbgFontBatch");
+    mRbSrv->beginRenderBatch(DbgRenderer::getDebugRenderBatchName());
 
     mRbSrv->setMatrix(MatrixType::Model, transform);
     mRbSrv->addMesh(mesh, 0);
@@ -167,6 +170,8 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb)
 }
 
 void DbgRenderer::clear() {
+    delete mDebugMesh;
+    mDebugMesh = nullptr;
 }
 
 void DbgRenderer::addLine(const ColorVert &v0, const ColorVert &v1) {

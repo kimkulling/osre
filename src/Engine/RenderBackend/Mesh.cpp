@@ -39,39 +39,39 @@ static const c8 *Tag = "Mesh";
 Mesh::Mesh(const String &name, VertexType vertexType, IndexType indextype) :
         mName(name),
         m_localMatrix(false),
-        m_model(1.0f),
-        m_material(nullptr),
-        m_vertextype(vertexType),
-        m_vb(nullptr),
-        m_indextype(indextype),
-        m_ib(nullptr),
-        m_numPrimGroups(0),
-        m_primGroups(nullptr),
-        m_id(99999999),
+        mModel(1.0f),
+        mMaterial(nullptr),
+        mVertexType(vertexType),
+        mVertexBuffer(nullptr),
+        mIndexType(indextype),
+        mIndexBuffer(nullptr),
+        mNumPrimGroups(0),
+        mPrimGroups(nullptr),
+        mId(99999999),
         mVertexData(),
         mIndexData(),
-        m_lastIndex(0) {
-    m_id = s_Ids.getUniqueId();
+        mLastIndex(0) {
+    mId = s_Ids.getUniqueId();
 }
 
 Mesh::~Mesh() {
-    m_material = nullptr;
+    mMaterial = nullptr;
 
-    BufferData::free(m_vb);
-    m_vb = nullptr;
+    BufferData::free(mVertexBuffer);
+    mVertexBuffer = nullptr;
 
-    BufferData::free(m_ib);
-    m_ib = nullptr;
+    BufferData::free(mIndexBuffer);
+    mIndexBuffer = nullptr;
 
-    delete[] m_primGroups;
-    m_primGroups = nullptr;
+    delete[] mPrimGroups;
+    mPrimGroups = nullptr;
 
-    s_Ids.releaseId(m_id);
+    s_Ids.releaseId(mId);
 }
 
 void *Mesh::mapVertexBuffer( size_t vbSize, BufferAccessType accessType ) {
-    m_vb = BufferData::alloc(BufferType::VertexBuffer, vbSize, accessType);
-    return m_vb->getData();
+    mVertexBuffer = BufferData::alloc(BufferType::VertexBuffer, vbSize, accessType);
+    return mVertexBuffer->getData();
 }
 
 void Mesh::unmapVertexBuffer() {
@@ -79,22 +79,22 @@ void Mesh::unmapVertexBuffer() {
 }
 
 void Mesh::createVertexBuffer(void *vertices, size_t vbSize, BufferAccessType accessType) {
-    m_vb = BufferData::alloc(BufferType::VertexBuffer, vbSize, accessType);
-    m_vb->copyFrom(vertices, vbSize);
+    mVertexBuffer = BufferData::alloc(BufferType::VertexBuffer, vbSize, accessType);
+    mVertexBuffer->copyFrom(vertices, vbSize);
 }
 
 BufferData *Mesh::getVertexBuffer() const {
-    return m_vb;
+    return mVertexBuffer;
 }
 
 void Mesh::createIndexBuffer(void *indices, size_t ibSize, IndexType indexType, BufferAccessType accessType) {
-    m_ib = BufferData::alloc(BufferType::IndexBuffer, ibSize, accessType);
-    m_indextype = indexType;
-    m_ib->copyFrom(indices, ibSize);
+    mIndexBuffer = BufferData::alloc(BufferType::IndexBuffer, ibSize, accessType);
+    mIndexType = indexType;
+    mIndexBuffer->copyFrom(indices, ibSize);
 }
 
 BufferData *Mesh::getIndexBuffer() const {
-    return m_ib;
+    return mIndexBuffer;
 }
 
 size_t Mesh::getVertexSize(VertexType vertextype) {
@@ -115,37 +115,37 @@ size_t Mesh::getVertexSize(VertexType vertextype) {
     return vertexSize;
 }
 
-PrimitiveGroup *Mesh::createPrimitiveGroups(size_t numPrimGroups, IndexType *types, size_t *numIndices,
-        PrimitiveType *primTypes, ui32 *startIndices) {
-    if (0 == numPrimGroups || nullptr == types || nullptr == numIndices || nullptr == primTypes || nullptr == startIndices) {
+PrimitiveGroup *Mesh::createPrimitiveGroups(size_t numPrimGroups, size_t *numIndices, PrimitiveType *primTypes, ui32 *startIndices) {
+    if (0 == numPrimGroups || nullptr == numIndices || nullptr == primTypes || nullptr == startIndices) {
         return nullptr;
     }
 
-    m_numPrimGroups = numPrimGroups;
-    m_primGroups = new PrimitiveGroup[m_numPrimGroups];
-    for (size_t i = 0; i < m_numPrimGroups; ++i) {
-        m_primGroups[i].m_indexType = types[i];
-        m_primGroups[i].m_numIndices = numIndices[i];
-        m_primGroups[i].m_primitive = primTypes[i];
-        m_primGroups[i].m_startIndex = startIndices[i];
+    mNumPrimGroups = numPrimGroups;
+    mPrimGroups = new PrimitiveGroup[mNumPrimGroups];
+    for (size_t i = 0; i < mNumPrimGroups; ++i) {
+        mPrimGroups[i].m_indexType = mIndexType;
+        mPrimGroups[i].m_numIndices = numIndices[i];
+        mPrimGroups[i].m_primitive = primTypes[i];
+        mPrimGroups[i].m_startIndex = startIndices[i];
     }
 
-    return m_primGroups;
+    return mPrimGroups;
 }
 
 PrimitiveGroup *Mesh::createPrimitiveGroup(size_t numIndices, PrimitiveType primType, ui32 startIndex) {
-    m_numPrimGroups = 1;
-    m_primGroups = new PrimitiveGroup[m_numPrimGroups];
-    m_primGroups[0].m_numIndices = numIndices;
-    m_primGroups[0].m_primitive = primType;
-    m_primGroups[0].m_startIndex = startIndex;
+    mNumPrimGroups = 1;
+    mPrimGroups = new PrimitiveGroup[mNumPrimGroups];
+    mPrimGroups[0].m_numIndices = numIndices;
+    mPrimGroups[0].m_indexType = mIndexType;
+    mPrimGroups[0].m_primitive = primType;
+    mPrimGroups[0].m_startIndex = startIndex;
 
-    return m_primGroups;
+    return mPrimGroups;
 }
 
 void Mesh::setPrimitiveGroups( size_t numPrimGroups, PrimitiveGroup *primGroups ) {
-    m_numPrimGroups = numPrimGroups;
-    m_primGroups = primGroups;
+    mNumPrimGroups = numPrimGroups;
+    mPrimGroups = primGroups;
 }
 
 } // Namespace RenderBackend

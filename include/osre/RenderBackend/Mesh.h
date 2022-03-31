@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -95,25 +95,25 @@ public:
     const glm::mat4 &getLocalMatrix() const;
     template <class T>
     void attachVertices(T *vertices, size_t size) {
-        if (m_vb == nullptr) {
-            m_vb = BufferData::alloc(BufferType::VertexBuffer, size, BufferAccessType::ReadWrite);
-            ::memcpy(m_vb->getData(), vertices, size);
+        if (mVertexBuffer == nullptr) {
+            mVertexBuffer = BufferData::alloc(BufferType::VertexBuffer, size, BufferAccessType::ReadWrite);
+            ::memcpy(mVertexBuffer->getData(), vertices, size);
         } else {
-            m_vb->attach(vertices, size);
+            mVertexBuffer->attach(vertices, size);
         }
     }
 
     template <class T>
     void attachIndices(T *indices, size_t size) {
-        if (m_ib == nullptr) {
-            m_ib = BufferData::alloc(BufferType::IndexBuffer, size, BufferAccessType::ReadWrite);
-            ::memcpy(m_ib->getData(), indices, size);
+        if (mIndexBuffer == nullptr) {
+            mIndexBuffer = BufferData::alloc(BufferType::IndexBuffer, size, BufferAccessType::ReadWrite);
+            ::memcpy(mIndexBuffer->getData(), indices, size);
         } else {
-            m_vb->attach(indices, size);
+            mVertexBuffer->attach(indices, size);
         }
     }
 
-    PrimitiveGroup *createPrimitiveGroups(size_t numPrimGroups, IndexType *types, size_t *numIndices, PrimitiveType *primTypes, ui32 *startIndices);
+    PrimitiveGroup *createPrimitiveGroups(size_t numPrimGroups, size_t *numIndices, PrimitiveType *primTypes, ui32 *startIndices);
     PrimitiveGroup *createPrimitiveGroup(size_t numIndices, PrimitiveType primTypes, ui32 startIndex);
     void setPrimitiveGroups(size_t numPrimGroups, PrimitiveGroup *primGroups);
     OSRE_NON_COPYABLE(Mesh)
@@ -121,39 +121,38 @@ public:
 private:
     String mName;
     bool m_localMatrix;
-    glm::mat4 m_model;
-    Material *m_material;
-    VertexType m_vertextype;
-    BufferData *m_vb;
-    IndexType m_indextype;
-    BufferData *m_ib;
-    size_t m_numPrimGroups;
-    PrimitiveGroup *m_primGroups;
-    ui64 m_id;
-
+    glm::mat4 mModel;
+    Material *mMaterial;
+    VertexType mVertexType;
+    BufferData *mVertexBuffer;
+    IndexType mIndexType;
+    BufferData *mIndexBuffer;
+    size_t mNumPrimGroups;
+    PrimitiveGroup *mPrimGroups;
+    ui64 mId;
     ::CPPCore::TArray<uc8> mVertexData;
     ::CPPCore::TArray<uc8> mIndexData;
-    ui32 m_lastIndex;
+    ui32 mLastIndex;
 };
 
 inline void Mesh::setMaterial( Material *mat ) {
-    m_material = mat;
+    mMaterial = mat;
 }
 
 inline Material *Mesh::getMaterial() const {
-    return m_material;
+    return mMaterial;
 }
 
 inline VertexType Mesh::getVertexType() const {
-    return m_vertextype;
+    return mVertexType;
 }
 
 inline void Mesh::setIndexType( IndexType indextype ) {
-    m_indextype = indextype;
+    mIndexType = indextype;
 }
 
 inline IndexType Mesh::getIndexType() const {
-    return m_indextype;
+    return mIndexType;
 }
 
 inline const String &Mesh::getName() const {
@@ -166,28 +165,28 @@ inline size_t getVertexTypeSize() {
 }
 
 inline ui64 Mesh::getId() const {
-    return m_id;
+    return mId;
 }
 
 inline size_t Mesh::getNumberOfPrimitiveGroups() const {
-    return m_numPrimGroups;
+    return mNumPrimGroups;
 }
 
 inline PrimitiveGroup *Mesh::getPrimitiveGroupAt( size_t index ) const {
-    if (index >= m_numPrimGroups) {
+    if (index >= mNumPrimGroups) {
         return nullptr;
     }
 
-    return &m_primGroups[index];
+    return &mPrimGroups[index];
 }
 
 inline void Mesh::setModelMatrix( bool islocal, const glm::mat4 &model ) {
     m_localMatrix = islocal;
-    m_model = model;
+    mModel = model;
 }
 
 inline const glm::mat4 &Mesh::getLocalMatrix() const {
-    return m_model;
+    return mModel;
 }
 
 inline bool Mesh::isLocal() const {
