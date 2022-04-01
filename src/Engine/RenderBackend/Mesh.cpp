@@ -134,7 +134,6 @@ void Mesh::addPrimitiveGroup(size_t numIndices, PrimitiveType primType, ui32 sta
 
     if (numIndices == 0) {
         mPrimGroups.clear();
-        //mNumPrimGroups = 0;
         return;
     }
 

@@ -29,13 +29,11 @@ using namespace ::CPPCore;
 
 static const String EmptyToken = "";
 
-Tokenizer::Tokenizer() 
-: m_Token() {
+Tokenizer::Tokenizer() : m_Token() {
     // empty
 }
 
-Tokenizer::Tokenizer( const Tokenizer &rhs ) 
-: m_Token( rhs.m_Token ) {
+Tokenizer::Tokenizer( const Tokenizer &rhs ) : m_Token( rhs.m_Token ) {
     // empty
 }
 

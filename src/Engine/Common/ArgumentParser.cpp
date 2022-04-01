@@ -29,10 +29,10 @@ namespace Common {
 
 using namespace ::CPPCore;
 
-static const String option = "--";
+static const c8* option = "--";
 static const c8 tokenArgIn = '<';
 static const c8 tokenArgOut = '>';
-static const String dummy = "";
+static const c8* dummy = "";
 
 ArgumentParser::Argument::Argument() :
         mArgument(""), mDesc(""), mNumArgs(0) {
@@ -71,7 +71,7 @@ static bool parseExpectedArgs(const String &userDefinedArgs, const String &desc,
 ArgumentParser::ArgumentParser(i32 argc, const c8 *ppArgv[], const String &supportedArgs, const String &desc) :
         mSupportedArguments(), mStoredArguments(), mCurrentIndex(0), mIsValid(true) {
     // Parse and store the expected arguments
-    const size_t optionLen = static_cast<size_t>(option.size());
+    const size_t optionLen = ::strlen(option);
     String error;
     if (!parseExpectedArgs(supportedArgs, desc, mSupportedArguments, error)) {
         return;

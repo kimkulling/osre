@@ -40,13 +40,14 @@ using namespace ::OSRE::RenderBackend;
 /// @brief  A debug font - rendering test
 //-------------------------------------------------------------------------------------------------
 class DbgFontRenderTest : public AbstractRenderTest {
-    TransformMatrixBlock m_transformMatrix;
-    ui32 m_frameCount;
+    TransformMatrixBlock mTransformMatrix;
+    ui32 mFrameCount;
 
 public:
     DbgFontRenderTest() :
             AbstractRenderTest("rendertest/DbgFontRenderTest"),
-            m_frameCount(0) {
+            mTransformMatrix(),
+            mFrameCount(0) {
         // empty
     }
 
@@ -66,9 +67,9 @@ public:
     }
 
     bool onRender(RenderBackend::RenderBackendService *) override {
-        m_frameCount++;
+        mFrameCount++;
         std::stringstream stream;
-        stream << std::setfill('0') << std::setw(3) << m_frameCount;
+        stream << std::setfill('0') << std::setw(3) << mFrameCount;
         Scene::DbgRenderer::getInstance()->renderDbgText(10, 10, 1, stream.str());
         return true;
     }

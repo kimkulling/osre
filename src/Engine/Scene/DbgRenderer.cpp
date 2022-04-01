@@ -37,7 +37,7 @@ using namespace ::OSRE::RenderBackend;
 
 DbgRenderer *DbgRenderer::sInstance = nullptr;
 
-DbgRenderer::DbgRenderer(RenderBackend::RenderBackendService *rbSrv) :
+DbgRenderer::DbgRenderer(RenderBackendService *rbSrv) :
         mRbSrv(rbSrv),
         mDebugMesh(nullptr),
         mLastIndex(0) {
@@ -48,7 +48,7 @@ DbgRenderer::~DbgRenderer() {
     clear();
 }
 
-bool DbgRenderer::create(RenderBackend::RenderBackendService *rbSrv) {
+bool DbgRenderer::create(RenderBackendService *rbSrv) {
     if (nullptr != sInstance) {
         return false;
     }
@@ -74,6 +74,7 @@ c8 *DbgRenderer::getDebugRenderBatchName() {
     static constexpr c8 *name = "dbgBatch";
     return name;
 }
+
 void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui32 id, const String &text) {
     if (text.empty()) {
         return;
@@ -82,11 +83,12 @@ void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui32 id, const String &text) {
     mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
     mRbSrv->beginRenderBatch(DbgRenderer::getDebugRenderBatchName());
 
+
     mRbSrv->endRenderBatch();
     mRbSrv->endPass();
 }
 
-static const ui32 NumIndices = 24;
+static constexpr size_t NumIndices = 24;
 
 static ui16 indices[NumIndices] = {
     0, 1,

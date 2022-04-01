@@ -83,6 +83,13 @@ public:
     MeshBuilder& allocLineList( RenderBackend::VertexType type, RenderBackend::BufferAccessType access,
             ui32 numLines, glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices );
 
+    /// @brief 
+    /// @param type 
+    /// @param access 
+    /// @param numPoints 
+    /// @param posArray 
+    /// @param colorArray 
+    /// @return 
     MeshBuilder& allocPoints( RenderBackend::VertexType type, RenderBackend::BufferAccessType access,
             ui32 numPoints, glm::vec3 *posArray, glm::vec3 *colorArray );
 
@@ -116,7 +123,8 @@ public:
     static void updateTextVertices( size_t numVerts, ::glm::vec2 *tex0, RenderBackend::BufferData *vb );
 
     /// @brief  Will return the mesh instance.
-    /// @return The mesh instance.
+    /// @return The pointer showing to the active mesh. The ownership will be moved to the
+    ///         customer of the active mesh.
     RenderBackend::Mesh *getMesh();
 
     /// No copying.

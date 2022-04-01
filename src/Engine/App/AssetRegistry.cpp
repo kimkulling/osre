@@ -56,7 +56,7 @@ bool AssetRegistry::registerAssetPath( const String &mount, const String &path )
     if ( nullptr == s_instance ) {
         return false;
     }
-    const ui32 hashId( StringUtils::hashName( mount ) );
+    const ui32 hashId = StringUtils::hashName(mount);
     s_instance->m_name2pathMap.insert( hashId, path );
 
     return true;

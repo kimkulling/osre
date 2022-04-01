@@ -62,7 +62,7 @@ static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataAr
     return IdxNotFound;
 }
 
-static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<RenderBatchData *> &batchDataArray) {
+static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<RenderBatchData*> &batchDataArray) {
     if (nullptr == id) {
         return IdxNotFound;
     }
@@ -102,6 +102,11 @@ RenderBackendService::~RenderBackendService() {
         delete mPipelines[i];
     }
     mPipelines.clear();
+
+    for (ui32 i = 0; i < m_passes.size(); ++i) {
+        delete m_passes[i];
+    }
+    m_passes.clear();
 }
 
 bool RenderBackendService::onOpen() {
