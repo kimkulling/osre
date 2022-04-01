@@ -44,11 +44,11 @@ float angle = 0.0f;
 ///	@brief  This class implements a base triangle render test.
 //-------------------------------------------------------------------------------------------------
 class BaseTriangleRenderTest : public AbstractRenderTest {
-    TransformMatrixBlock m_transformMatrix;
+    TransformMatrixBlock mTransformMatrix;
 
 public:
     BaseTriangleRenderTest() :
-            AbstractRenderTest("rendertest/basetrianglerendertest") {
+            AbstractRenderTest("rendertest/basetrianglerendertest"), mTransformMatrix() {
         // empty
     }
 
@@ -62,13 +62,13 @@ public:
         meshBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
         meshArray.add(meshBuilder.getMesh());
 
-        m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
+        mTransformMatrix.m_model = glm::rotate(mTransformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
 
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("b1");
             {
-                rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+                rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
                 rbSrv->addMesh(meshArray, 0);
             }
             rbSrv->endRenderBatch();

@@ -49,6 +49,8 @@ public:
         // empty
     }
 
+    ~RenderTargetRenderTest() override = default;
+
 protected:
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);

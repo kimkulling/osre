@@ -59,9 +59,7 @@ public:
         // empty
     }
 
-    virtual ~RenderBufferAccessTest() {
-        // empty
-    }
+    ~RenderBufferAccessTest() override = default;
 
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);

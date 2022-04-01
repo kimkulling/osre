@@ -46,7 +46,7 @@ class PrimTypeRenderTest : public AbstractRenderTest {
     static const ui32 NumPoints = 3;
     static const ui32 PtNumIndices = 3;
 
-    TransformMatrixBlock m_transformMatrix;
+    TransformMatrixBlock mTransformMatrix;
 
 public:
     PrimTypeRenderTest() :
@@ -54,9 +54,7 @@ public:
         // empty
     }
 
-    virtual ~PrimTypeRenderTest() {
-        // empty
-    }
+    ~PrimTypeRenderTest() override = default;
 
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
@@ -114,9 +112,9 @@ public:
                 lineMesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
                 rbSrv->addMesh(lineMesh, 0);
 
-                m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
-                m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, glm::vec3(.5, .5, .5));
-                rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+                mTransformMatrix.m_model = glm::rotate(mTransformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
+                mTransformMatrix.m_model = glm::scale(mTransformMatrix.m_model, glm::vec3(.5, .5, .5));
+                rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
             }
             rbSrv->endRenderBatch();
         }

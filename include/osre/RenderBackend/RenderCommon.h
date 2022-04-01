@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/TResource.h>
 #include <osre/Common/osre_common.h>
+#include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Uri.h>
 #include <osre/Common/glm_common.h>
 
@@ -755,7 +756,7 @@ struct MatrixBuffer {
 struct MeshEntry {
     ui32 numInstances;
     bool m_isDirty;
-    CPPCore::TArray<Mesh *> m_geo;
+    CPPCore::TArray<Mesh*> m_geo;
 };
 
 struct RenderBatchData {
@@ -780,7 +781,7 @@ struct RenderBatchData {
             m_meshArray(),
             m_updateMeshArray(),
             m_dirtyFlag(0) {
-        // empty
+        osre_assert(id != nullptr);
     }
 
     MeshEntry *getMeshEntryByName(const c8 *name);

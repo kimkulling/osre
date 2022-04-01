@@ -58,7 +58,7 @@ protected:
     AbstractTestFixture( const String &name );
 
     /// @brief  The class destructor.
-    virtual ~AbstractTestFixture();
+    virtual ~AbstractTestFixture() = default;
 
     // Avoid copying
     AbstractTestFixture() = delete;
@@ -70,10 +70,6 @@ private:
 };
 
 inline AbstractTestFixture::AbstractTestFixture( const String &name ) : m_name( name ) {
-    // empty
-}
-
-inline AbstractTestFixture::~AbstractTestFixture() {
     // empty
 }
 

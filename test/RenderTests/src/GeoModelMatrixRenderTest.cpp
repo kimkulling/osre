@@ -49,37 +49,41 @@ public:
         // empty
     }
 
-    ~GeoModelMatrixRenderTest() override {
-        // empty
-    }
+    ~GeoModelMatrixRenderTest() override = default;
 
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
         Scene::MeshBuilder myBuilder;
-        myBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
-        Mesh *mesh1 = myBuilder.getMesh();
-        //mesh1->m_localMatrix = true;
         TransformState transform;
-        transform.setTranslation(0.5f, 0, 0);
-        transform.setScale(0.2f, 0.2f, 0.2f);
-        glm::mat4 model;
-        transform.toMatrix(model);
-        mesh1->setModelMatrix(true, model);
-
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
-            rbSrv->beginRenderBatch("b1");
+            rbSrv->beginRenderBatch("batch_1");
             {
-                rbSrv->addMesh(mesh1, 0);
+                glm::mat4 model(1);
+                myBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+                Mesh *mesh1 = myBuilder.getMesh();
 
+                transform.setTranslation(0.5f, 0, 0);
+                transform.setScale(0.2f, 0.2f, 0.2f);
+                transform.toMatrix(model);
+
+                rbSrv->setMatrix(MatrixType::Model, model);
+                rbSrv->addMesh(mesh1, 0);
+            }
+            rbSrv->endRenderBatch();
+
+            rbSrv->beginRenderBatch("batch_1");
+            {
+                glm::mat4 model(1);
                 myBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
                 Mesh *mesh2 = myBuilder.getMesh();
-                //mesh2->m_localMatrix = true;
+
                 transform.setTranslation(-0.5f, 0, 0);
                 transform.setScale(0.2f, 0.2f, 0.2f);
                 transform.toMatrix(model);
-                mesh2->setModelMatrix(true, model);
+
+                rbSrv->setMatrix(MatrixType::Model, model);
                 rbSrv->addMesh(mesh2, 0);
             }
             rbSrv->endRenderBatch();
