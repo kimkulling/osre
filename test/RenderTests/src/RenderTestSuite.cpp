@@ -53,13 +53,11 @@ static const ui32 AllTestsDone = 999999;
 class KeyboardEventListener : public Platform::OSEventListener {
 public:
     KeyboardEventListener(RenderTestSuite *renderTestSuite) :
-            OSEventListener("rendertest/keyboardeventlistener"), m_testSuite(renderTestSuite) {
+            OSEventListener("rendertest/keyboardeventlistener"), mTestSuite(renderTestSuite) {
         osre_assert(nullptr != renderTestSuite);
     }
 
-    ~KeyboardEventListener() {
-        // empty
-    }
+    ~KeyboardEventListener() override = default;
 
     void onOSEvent(const Event &osEvent, const EventData *data) override {
         if (osEvent == KeyboardButtonDownEvent) {
@@ -68,7 +66,7 @@ public:
                 ui32 next(0);
                 Key key = reinterpret_cast<const KeyboardButtonEventData *>(data)->m_key;
                 if (key == KEY_SPACE) {
-                    result = m_testSuite->requestNextTest(next);
+                    result = mTestSuite->requestNextTest(next);
                     if (!result) {
                         osre_info(Tag, "All tests done.");
                     }
@@ -78,7 +76,7 @@ public:
     }
 
 private:
-    RenderTestSuite *m_testSuite;
+    RenderTestSuite *mTestSuite;
 };
 
 RenderTestSuite *RenderTestSuite::create(const String &suiteName) {
@@ -300,6 +298,21 @@ bool RenderTestSuite::clearTestEnv() {
 }
 
 bool RenderTestSuite::requestNextTest(ui32 &next) {
+    if (!mSelectedTest.empty()) {
+        if (m_activeTestIdx == AllTestsDone) {
+            return false;
+        }
+        m_activeTestIdx = AllTestsDone;
+        for (size_t i = 0; i < m_attachedRenderTests.size(); ++i) {
+            String::size_type pos = m_attachedRenderTests[i]->getTestName().find(mSelectedTest);
+            if (pos != String::npos) {
+                next = i;
+                return true;
+            }
+        }
+        return false;
+    }
+
     ++m_activeTestIdx;
     if (m_activeTestIdx >= m_attachedRenderTests.size()) {
         m_activeTestIdx = AllTestsDone;

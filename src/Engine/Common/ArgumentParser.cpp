@@ -35,20 +35,24 @@ static const c8 tokenArgOut = '>';
 static const String dummy = "";
 
 ArgumentParser::Argument::Argument() :
-        m_argument(""),
-        m_desc(""),
-        m_numArgs(0) {
+        mArgument(""), mDesc(""), mNumArgs(0) {
     // empty
 }
 
 ArgumentParser::Argument::Argument(const String &arg, const String &desc, ui32 numArgs) :
-        m_argument(arg), m_desc(desc), m_numArgs(numArgs) {
+        mArgument(arg), mDesc(desc), mNumArgs(numArgs) {
     // empty
 }
 
-static void parseExpectedArgs(const String &userDefinedArgs, const String &desc, 
-        TArray<ArgumentParser::Argument> &supportedArgs) {
+static bool parseExpectedArgs(const String &userDefinedArgs, const String &desc, 
+        TArray<ArgumentParser::Argument> &supportedArgs, String &error) {
+    error.clear();
     TArray<String> extractedArgs, extractedDescs;
+    if (extractedDescs.size() != extractedArgs.size()) {
+        error += "Missing description for arguments";
+        return false;
+    }
+
     Tokenizer::tokenize(userDefinedArgs, extractedArgs, ":");
     Tokenizer::tokenize(desc, extractedDescs, ":");
     ui32 numParam(0);
@@ -60,16 +64,22 @@ static void parseExpectedArgs(const String &userDefinedArgs, const String &desc,
                 currentDesc, numParam));
         }
     }
+
+    return true;
 }
 
 ArgumentParser::ArgumentParser(i32 argc, const c8 *ppArgv[], const String &supportedArgs, const String &desc) :
-        m_SupportedArguments(), m_StoredArguments(), m_CurrentIndex(0), m_isValid(true) {
+        mSupportedArguments(), mStoredArguments(), mCurrentIndex(0), mIsValid(true) {
     // Parse and store the expected arguments
     const size_t optionLen = static_cast<size_t>(option.size());
-    parseExpectedArgs(supportedArgs, desc, m_SupportedArguments);
+    String error;
+    if (!parseExpectedArgs(supportedArgs, desc, mSupportedArguments, error)) {
+        return;
+    }
+
     if (argc > 1) {
-        while (m_CurrentIndex < static_cast<ui32>(argc)) {
-            String argument(ppArgv[m_CurrentIndex]);
+        while (mCurrentIndex < static_cast<ui32>(argc)) {
+            String argument(ppArgv[mCurrentIndex]);
             const String::size_type pos = argument.find(option);
             if (String::npos != pos) {
                 argument = argument.substr(pos + optionLen, argument.size() - (pos + optionLen));
@@ -77,7 +87,7 @@ ArgumentParser::ArgumentParser(i32 argc, const c8 *ppArgv[], const String &suppo
                     const ui32 numValues = getNumValues(argument);
                     if (numValues) {
                         // Check the number of expected values for being a new option
-                        for (ui32 valIdx = m_CurrentIndex + 1; valIdx < m_CurrentIndex + numValues + 1; valIdx++) {
+                        for (ui32 valIdx = mCurrentIndex + 1; valIdx < mCurrentIndex + numValues + 1; valIdx++) {
                             String tmpVal(ppArgv[valIdx]);
                             String::size_type pos1 = tmpVal.find(option);
                             if (pos1 != String::npos) {
@@ -88,22 +98,22 @@ ArgumentParser::ArgumentParser(i32 argc, const c8 *ppArgv[], const String &suppo
                     }
 
                     // Store the data if its valid
-                    if (m_isValid) {
-                        if ((m_CurrentIndex + 1) < static_cast<ui32>(argc)) {
-                            ++m_CurrentIndex;
-                            m_detectedArgs.add(argument);
-                            String content(ppArgv[m_CurrentIndex]);
-                            m_StoredArguments.add(content);
+                    if (mIsValid) {
+                        if ((mCurrentIndex + 1) < static_cast<ui32>(argc)) {
+                            ++mCurrentIndex;
+                            mDetectedArgs.add(argument);
+                            String content(ppArgv[mCurrentIndex]);
+                            mStoredArguments.add(content);
                         } else {
-                            m_detectedArgs.add(argument);
-                            m_StoredArguments.add("");
+                            mDetectedArgs.add(argument);
+                            mStoredArguments.add("");
                         }
                     }
                 } else {
                     setInvalid();
                 }
             }
-            ++m_CurrentIndex;
+            ++mCurrentIndex;
         }
     }
 
@@ -111,24 +121,20 @@ ArgumentParser::ArgumentParser(i32 argc, const c8 *ppArgv[], const String &suppo
     if (!validateArguments(argc, ppArgv)) {
         setInvalid();
     }
-    m_CurrentIndex = 0;
-}
-
-ArgumentParser::~ArgumentParser() {
-    // empty
+    mCurrentIndex = 0;
 }
 
 String ArgumentParser::showHelp() const {
-    if (m_SupportedArguments.isEmpty()) {
+    if (mSupportedArguments.isEmpty()) {
         return String("");
     }
 
     String helpMsg;
-    for (ui32 i = 0; i < m_SupportedArguments.size(); i++) {
-        Argument argument = m_SupportedArguments[i];
-        const String arg = argument.m_argument;
-        const String desc = argument.m_desc;
-        const ui32 numargs = argument.m_numArgs;
+    for (ui32 i = 0; i < mSupportedArguments.size(); i++) {
+        Argument argument = mSupportedArguments[i];
+        const String arg = argument.mArgument;
+        const String desc = argument.mDesc;
+        const ui32 numargs = argument.mNumArgs;
 
         helpMsg += arg + "\t:";
         helpMsg += desc;
@@ -136,7 +142,7 @@ String ArgumentParser::showHelp() const {
             helpMsg += "\n\tNumber of arguments: ";
             c8 buffer[512];
             ::memset(buffer, '\0', 512);
-            sprintf(buffer, "%d", numargs);
+            ::sprintf(buffer, "%d", numargs);
             helpMsg += String(buffer);
         }
     }
@@ -145,30 +151,30 @@ String ArgumentParser::showHelp() const {
 }
 
 bool ArgumentParser::getNext(String &arg, String &value) {
-    if (m_SupportedArguments.isEmpty() || m_StoredArguments.isEmpty() ||
-            m_CurrentIndex >= m_SupportedArguments.size()) {
+    if (mSupportedArguments.isEmpty() || mStoredArguments.isEmpty() ||
+            mCurrentIndex >= mSupportedArguments.size()) {
         return false;
     }
 
-    arg = m_SupportedArguments[m_CurrentIndex].m_argument;
-    value = m_StoredArguments[m_CurrentIndex];
-    ++m_CurrentIndex;
+    arg = mSupportedArguments[mCurrentIndex].mArgument;
+    value = mStoredArguments[mCurrentIndex];
+    ++mCurrentIndex;
 
     return true;
 }
 
 void ArgumentParser::clear() {
-    m_SupportedArguments.clear();
-    m_detectedArgs.clear();
-    m_StoredArguments.clear();
-    m_CurrentIndex = 0;
-    m_isValid = true;
+    mSupportedArguments.clear();
+    mDetectedArgs.clear();
+    mStoredArguments.clear();
+    mCurrentIndex = 0;
+    mIsValid = true;
 }
 
 bool ArgumentParser::isSupported(const String &arg) const {
     bool res(false);
-    for (ui32 index = 0; index < m_SupportedArguments.size(); ++index) {
-        if (arg == m_SupportedArguments[index].m_argument) {
+    for (ui32 index = 0; index < mSupportedArguments.size(); ++index) {
+        if (arg == mSupportedArguments[index].mArgument) {
             res = true;
             break;
         }
@@ -183,9 +189,9 @@ ui32 ArgumentParser::getNumValues(const String &argument) const {
     }
 
     ui32 numValues(0);
-    for (ui32 index = 0; index < m_SupportedArguments.size(); ++index) {
-        if (m_SupportedArguments[index].m_argument == argument) {
-            numValues = m_SupportedArguments[index].m_numArgs;
+    for (ui32 index = 0; index < mSupportedArguments.size(); ++index) {
+        if (mSupportedArguments[index].mArgument == argument) {
+            numValues = mSupportedArguments[index].mNumArgs;
             break;
         }
     }
@@ -198,9 +204,9 @@ const String &ArgumentParser::getArgument(const String &arg) const {
         return dummy;
     }
 
-    for (ui32 index = 0; index < m_detectedArgs.size(); ++index) {
-        if (m_detectedArgs[index] == arg) {
-            return m_StoredArguments[index];
+    for (ui32 index = 0; index < mDetectedArgs.size(); ++index) {
+        if (mDetectedArgs[index] == arg) {
+            return mStoredArguments[index];
         }
     }
 
@@ -209,8 +215,8 @@ const String &ArgumentParser::getArgument(const String &arg) const {
 
 bool ArgumentParser::hasArgument(const String &argument) const {
     bool result(false);
-    for (ui32 idx = 0; idx < m_detectedArgs.size(); ++idx) {
-        if (m_detectedArgs[idx] == argument) {
+    for (ui32 idx = 0; idx < mDetectedArgs.size(); ++idx) {
+        if (mDetectedArgs[idx] == argument) {
             result = true;
             break;
         }
@@ -219,7 +225,7 @@ bool ArgumentParser::hasArgument(const String &argument) const {
 }
 
 bool ArgumentParser::hasValidArgs() const {
-    return m_isValid;
+    return mIsValid;
 }
 
 bool ArgumentParser::parseArgParameter(const String &argument, ui32 &numPara) {
@@ -290,8 +296,8 @@ bool ArgumentParser::validateArguments(i32 argc, const c8 *ppArgv[]) {
         String::size_type pos = incomingArg.find("--");
         if (String::npos != pos) {
             bool supported(false);
-            for (ui32 j = 0; j < m_SupportedArguments.size(); ++j) {
-                const String searchFor("--" + m_SupportedArguments[j].m_argument);
+            for (ui32 j = 0; j < mSupportedArguments.size(); ++j) {
+                const String searchFor("--" + mSupportedArguments[j].mArgument);
                 if (incomingArg == searchFor) {
                     supported = true;
                     break;
@@ -308,7 +314,7 @@ bool ArgumentParser::validateArguments(i32 argc, const c8 *ppArgv[]) {
 }
 
 void ArgumentParser::setInvalid() {
-    m_isValid = false;
+    mIsValid = false;
 }
 
 } // Namespace Common
