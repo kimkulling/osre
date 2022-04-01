@@ -30,12 +30,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/TAABB.h>
 
 namespace OSRE {
-
-namespace UI {
-
-class FontRenderer;
-}
-
 namespace Scene {
 
 //-------------------------------------------------------------------------------------------------
@@ -53,18 +47,18 @@ public:
     static bool create(RenderBackend::RenderBackendService *rbSrv);
     static bool destroy();
     static DbgRenderer *getInstance();
+    static c8 *getDebugRenderBatchName();
 
 private:
     DbgRenderer(RenderBackend::RenderBackendService *rbSrv);
     ~DbgRenderer();
 
 private:
-    static DbgRenderer *s_instance;
+    static DbgRenderer *sInstance;
 
     RenderBackend::RenderBackendService *mRbSrv;
     RenderBackend::TransformMatrixBlock mTransformMatrix;
-    UI::FontRenderer *mFontRenderer;
-    RenderBackend::Mesh *mDebugGeometry;
+    RenderBackend::Mesh *mDebugMesh;
     ui16 mLastIndex;
 };
 

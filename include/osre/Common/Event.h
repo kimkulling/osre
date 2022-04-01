@@ -119,7 +119,7 @@ struct OSRE_EXPORT Event {
 
     ui32 m_numRefs;
     HashId m_hash;
-    const String mId;
+    const c8 *mId;
     const EventData *m_eventData;
 };
 

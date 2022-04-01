@@ -30,18 +30,18 @@ namespace System {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief	This class offers some system-specific functions.
+///	@brief	This class offers some system-specific functions like sleep etc. .
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT SystemUtils {
 public:
 	///	@brief	The class default constructor.
-	SystemUtils();
+	SystemUtils() = default;
 
 	///	@brief	The class destructor, non virtual.
-	~SystemUtils();
+	~SystemUtils() = default;
 
 	///	@brief	The current thread will be sleeping for the given number of ms.
-	///	@param	ms	ms to sleep.
+	///	@param[in] ms	ms to sleep.
 	static void sleep( ui32 ms );
 };
 

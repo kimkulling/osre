@@ -35,40 +35,44 @@ namespace Scene {
 
 using namespace ::OSRE::RenderBackend;
 
-DbgRenderer *DbgRenderer::s_instance = nullptr;
+DbgRenderer *DbgRenderer::sInstance = nullptr;
 
-DbgRenderer::DbgRenderer(RenderBackend::RenderBackendService *rbSrv) :
+DbgRenderer::DbgRenderer(RenderBackendService *rbSrv) :
         mRbSrv(rbSrv),
-        mDebugGeometry(nullptr),
-        mFontRenderer(nullptr),
+        mDebugMesh(nullptr),
         mLastIndex(0) {
     osre_assert(nullptr != mRbSrv);
 }
 
 DbgRenderer::~DbgRenderer() {
-    Mesh::destroy(&mDebugGeometry);
+    clear();
 }
 
-bool DbgRenderer::create(RenderBackend::RenderBackendService *rbSrv) {
-    if (nullptr != s_instance) {
+bool DbgRenderer::create(RenderBackendService *rbSrv) {
+    if (nullptr != sInstance) {
         return false;
     }
 
-    s_instance = new DbgRenderer(rbSrv);
+    sInstance = new DbgRenderer(rbSrv);
     return true;
 }
 
 bool DbgRenderer::destroy() {
-    if (nullptr == s_instance) {
+    if (nullptr == sInstance) {
         return false;
     }
-    delete s_instance;
-    s_instance = nullptr;
+    delete sInstance;
+    sInstance = nullptr;
     return true;
 }
 
 DbgRenderer *DbgRenderer::getInstance() {
-    return s_instance;
+    return sInstance;
+}
+
+c8 *DbgRenderer::getDebugRenderBatchName() {
+    static constexpr c8 *name = "dbgBatch";
+    return name;
 }
 
 void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui32 id, const String &text) {
@@ -77,13 +81,14 @@ void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui32 id, const String &text) {
     }
 
     mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
-    mRbSrv->beginRenderBatch("dbgFontBatch");
+    mRbSrv->beginRenderBatch(DbgRenderer::getDebugRenderBatchName());
+
 
     mRbSrv->endRenderBatch();
     mRbSrv->endPass();
 }
 
-static const ui32 NumIndices = 24;
+static constexpr size_t NumIndices = 24;
 
 static ui16 indices[NumIndices] = {
     0, 1,
@@ -102,7 +107,7 @@ static ui16 indices[NumIndices] = {
 
 void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb) {
     MeshBuilder meshBuilder;
-    meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 1);
+    meshBuilder.allocEmptyMesh("aabb", VertexType::ColorVertex);
     Mesh *mesh = meshBuilder.getMesh();
 
     static const ui32 NumVertices = 8;
@@ -143,27 +148,21 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb)
     vertices[7].position.z = z1;
 
     const size_t vertexSize(sizeof(ColorVert) * NumVertices);
-    mesh->m_vb = BufferData::alloc(BufferType::VertexBuffer, vertexSize, BufferAccessType::ReadOnly);
-    mesh->m_vb->copyFrom(&vertices[0], vertexSize);
+    mesh->createVertexBuffer(&vertices[0], vertexSize, BufferAccessType::ReadOnly);
     const size_t indexSize(sizeof(ui16) * NumIndices);
-    mesh->m_ib = BufferData::alloc(BufferType::IndexBuffer, indexSize, BufferAccessType::ReadOnly);
-    mesh->m_indextype = IndexType::UnsignedShort;
-    mesh->m_ib->copyFrom(&indices[0], indexSize);
+    mesh->createIndexBuffer(&indices[0], indexSize, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
     // setup primitives
-    mesh->m_model = transform;
-    mesh->m_numPrimGroups = 1;
-
-    mesh->m_primGroups = new PrimitiveGroup[1];
-    mesh->m_primGroups[0].init(IndexType::UnsignedShort, NumIndices, PrimitiveType::LineList, 0);
+    mesh->setModelMatrix(false, transform);
+    
+    mesh->addPrimitiveGroup(NumIndices, PrimitiveType::LineList, 0);
 
     // setup material
-    mesh->m_material = MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex);
+    mesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
 
-    mesh->m_model = transform;
 
     mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
-    mRbSrv->beginRenderBatch("dbgFontBatch");
+    mRbSrv->beginRenderBatch(DbgRenderer::getDebugRenderBatchName());
 
     mRbSrv->setMatrix(MatrixType::Model, transform);
     mRbSrv->addMesh(mesh, 0);
@@ -173,28 +172,37 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb)
 }
 
 void DbgRenderer::clear() {
+    delete mDebugMesh;
+    mDebugMesh = nullptr;
 }
 
 void DbgRenderer::addLine(const ColorVert &v0, const ColorVert &v1) {
-    if (nullptr == mDebugGeometry) {
-        mDebugGeometry = Mesh::create(1, VertexType::ColorVertex);
+    if (nullptr == mDebugMesh) {
+        mDebugMesh = new Mesh("debugMesh", VertexType::ColorVertex, IndexType::UnsignedShort);
     }
 
     ColorVert vertices[2];
     vertices[0] = v0;
     vertices[1] = v1;
-
-    mDebugGeometry->m_vb->attach(&vertices[0], sizeof(ColorVert) * 2);
-    ui16 lineIndices[2];
+    BufferData *vb = mDebugMesh->getVertexBuffer();
+    if (vb == nullptr) {
+        mDebugMesh->createVertexBuffer(&vertices[0], sizeof(ColorVert) * 2, RenderBackend::BufferAccessType::ReadOnly);
+    } else {
+        vb->attach(&vertices[0], sizeof(ColorVert) * 2);
+    }
+    ui16 lineIndices[2] = {};
     lineIndices[0] = mLastIndex;
     mLastIndex++;
     lineIndices[1] = mLastIndex;
     mLastIndex++;
+    BufferData *ib = mDebugMesh->getIndexBuffer();
+    if (ib == nullptr) {
+        mDebugMesh->createIndexBuffer(&lineIndices[0], sizeof(ui16) * 2, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
+    } else {
+        ib->attach(&lineIndices[0], sizeof(ui16) * 2);
+    }
 
-    mDebugGeometry->m_ib->attach(&lineIndices[0], sizeof(ui16) * 2);
-
-    mDebugGeometry->m_primGroups = new PrimitiveGroup[1];
-    mDebugGeometry->m_primGroups[0].init(IndexType::UnsignedShort, NumIndices, PrimitiveType::LineList, 0);
+    mDebugMesh->addPrimitiveGroup(NumIndices, PrimitiveType::LineList, 0);
 }
 
 } // Namespace Scene

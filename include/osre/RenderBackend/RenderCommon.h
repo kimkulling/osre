@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/TResource.h>
 #include <osre/Common/osre_common.h>
+#include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Uri.h>
 #include <osre/Common/glm_common.h>
 
@@ -35,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 struct UniformVar;
 struct FrameBuffer;
 
@@ -43,13 +44,13 @@ class Mesh;
 class Shader;
 class Pipeline;
 
-using MeshArray = CPPCore::TArray<RenderBackend::Mesh *>;
+using MeshArray = CPPCore::TArray<RenderBackend::Mesh*>;
 
 /// Describes an unset id.
-static const i32 UnsetHandle = -1;
+static constexpr i32 UnsetHandle = -1;
 
 /// Upper limits for names.
-static const ui32 MaxEntNameLen = 256;
+static constexpr ui32 MaxEntNameLen = 256;
 
 ///	@brief  This enum describes the usage of a GPU-buffer-object.
 ///
@@ -74,10 +75,12 @@ enum class BufferAccessType {
     NumBufferAccessTypes ///< Number of enum's.
 };
 
+/// @brief The enum is used to describe the different pixel formats
 enum class PixelFormatType {
+    InvaliTextureType=-1,
     R8G8B8,
     R8G8B8A8,
-    InvaliTextureType
+    NumPixelFormatTypes
 };
 
 ///	@brief  This enum describes the build-in vertex types provided by OSRE, mainly used for demos and examples.
@@ -438,7 +441,7 @@ struct OSRE_EXPORT PrimitiveGroup {
     IndexType m_indexType;
 
     PrimitiveGroup();
-    ~PrimitiveGroup();
+    ~PrimitiveGroup() = default;
     void init(IndexType indexType, size_t numPrimitives, PrimitiveType primType, size_t startIdx);
 
     OSRE_NON_COPYABLE(PrimitiveGroup)
@@ -520,9 +523,14 @@ struct OSRE_EXPORT Material {
     void setMaterialType(MaterialType matType);
     MaterialType getMaterialType() const;
     void createShader(ShaderSourceArray &shaders);
+    Shader *getShader() const;
 
     OSRE_NON_COPYABLE(Material)
 };
+
+inline Shader *Material::getShader() const {
+    return m_shader;
+}
 
 ///	@brief
 struct OSRE_EXPORT GeoInstanceData {
@@ -750,7 +758,7 @@ struct MatrixBuffer {
 struct MeshEntry {
     ui32 numInstances;
     bool m_isDirty;
-    CPPCore::TArray<Mesh *> m_geo;
+    CPPCore::TArray<Mesh*> mMeshArray;
 };
 
 struct RenderBatchData {
@@ -775,7 +783,7 @@ struct RenderBatchData {
             m_meshArray(),
             m_updateMeshArray(),
             m_dirtyFlag(0) {
-        // empty
+        osre_assert(id != nullptr);
     }
 
     MeshEntry *getMeshEntryByName(const c8 *name);
@@ -986,6 +994,15 @@ struct FrameBuffer {
     FrameBuffer(const FrameBuffer &) = delete;
     FrameBuffer(FrameBuffer &&) = delete;
     FrameBuffer &operator=(const FrameBuffer &) = delete;
+};
+
+enum RenderPassType : ui32 {
+    StaticRenderPass,
+    UiRenderPass
+};
+
+struct RenderTarget {
+    // empty
 };
 
 } // Namespace RenderBackend

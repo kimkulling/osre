@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -38,21 +38,18 @@ static const c8 *Tag = "Win32Eventhandler";
 
 // The interface for the event update.
 struct AbstractInputUpdate {
-    virtual ~AbstractInputUpdate() {
-        // empty
-    }
+    /// @brief The class destructor, virtual.
+    virtual ~AbstractInputUpdate() = default;
 
+    /// @brief The update queue handler.
+    /// @param rProgram     The program message.
+    /// @return true when handled.
     virtual bool update(MSG &rProgram) = 0;
 };
 
 struct Win32GetInputUpdate : public AbstractInputUpdate {
-    Win32GetInputUpdate() {
-        // empty
-    }
-
-    ~Win32GetInputUpdate() override {
-        // empty
-    }
+    Win32GetInputUpdate() = default;
+    ~Win32GetInputUpdate() override = default;
 
     bool update(MSG &program) override {
         if (1 == ::GetMessage(&program, NULL, 0, 0)) {
@@ -64,13 +61,8 @@ struct Win32GetInputUpdate : public AbstractInputUpdate {
 };
 
 struct Win32PeekInputUpdate : public AbstractInputUpdate {
-    Win32PeekInputUpdate() {
-        // empty
-    }
-
-    ~Win32PeekInputUpdate() override {
-        // empty
-    }
+    Win32PeekInputUpdate() = default;
+    ~Win32PeekInputUpdate() override = default;
 
     bool update(MSG &rProgram) override {
         if (1 == ::PeekMessage(&rProgram, NULL, 0, 0, PM_REMOVE)) {

@@ -69,7 +69,7 @@ void SystemInfo::getMemoryStatus( ui32 &totalPhysicMem, ui32 &memInUse ) {
 
 #ifdef OSRE_WINDOWS
     // windows specific memory statistics
-    MEMORYSTATUSEX statex;
+    MEMORYSTATUSEX statex = {};
     statex.dwLength = sizeof( statex );
     if ( ::GlobalMemoryStatusEx( &statex ) ) {
         totalPhysicMem = static_cast<ui32>( statex.ullTotalPhys / KBSize );

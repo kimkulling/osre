@@ -75,26 +75,20 @@ void ParticleEmitter::init( ui32 numPoints ) {
     }
 
     Scene::MeshBuilder meshBuilder;
-    meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 1 );
+    meshBuilder.allocEmptyMesh("", VertexType::ColorVertex);
     m_ptGeo = meshBuilder.getMesh();
     m_rbSrv->addMesh( m_ptGeo, 0 );
-    m_ptGeo->m_vb = Scene::MeshBuilder::allocVertices( VertexType::ColorVertex, m_numPoints, m_pos, m_col, nullptr, BufferAccessType::ReadOnly );
-    m_ptGeo->m_indextype = IndexType::UnsignedShort;
+    Scene::MeshBuilder::allocVertices(m_ptGeo, VertexType::ColorVertex, m_numPoints, m_pos, m_col, nullptr, BufferAccessType::ReadOnly);
     ui32 pt_size = sizeof( GLushort ) * m_numPoints;
-    m_ptGeo->m_ib = BufferData::alloc( BufferType::IndexBuffer, pt_size, BufferAccessType::ReadOnly );
-    m_ptGeo->m_ib->copyFrom( m_pt_indices, pt_size );
+    m_ptGeo->createIndexBuffer(m_pt_indices, pt_size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
     // setup primitives
-    m_ptGeo->m_numPrimGroups = 1;
-    m_ptGeo->m_primGroups = new PrimitiveGroup[ m_ptGeo->m_numPrimGroups ];
-    m_ptGeo->m_primGroups[ 0 ].init( IndexType::UnsignedShort, m_numPoints, PrimitiveType::PointList, 0 );
-
-    m_ptGeo->m_localMatrix = true;
-    m_ptGeo->m_model = glm::mat4(1.0f);
+    m_ptGeo->addPrimitiveGroup(m_numPoints, PrimitiveType::PointList, 0);
+    m_ptGeo->setModelMatrix(true, glm::mat4(1.0f));
 
     // setup material
     Material *mat = Scene::MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
-    m_ptGeo->m_material = mat;
+    m_ptGeo->setMaterial(mat);
 }
 
 void ParticleEmitter::update( d32 /*tick*/ ) {
@@ -115,7 +109,7 @@ void ParticleEmitter::update( d32 /*tick*/ ) {
 
     ui32 offset( 0 );
     for ( ui32 i = 0; i < m_numPoints; i++ ) {
-        uc8 *ptr = ( uc8* )m_ptGeo->m_vb->getData();
+        uc8 *ptr = ( uc8* )m_ptGeo->getVertexBuffer()->getData();
         ::memcpy( &ptr[ offset ], &m_pos[ i ], sizeof( glm::vec3 ) );
         offset += sizeof( ColorVert );
     }

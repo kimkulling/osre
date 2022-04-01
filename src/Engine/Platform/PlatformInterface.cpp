@@ -68,7 +68,7 @@ ApplicationContext::~ApplicationContext() {
     mSettings = nullptr;
 }
 
-static const String PlatformPluginName[static_cast<i32>(PluginType::MaxPlugin)] = {
+static const c8 *PlatformPluginName[static_cast<i32>(PluginType::MaxPlugin)] = {
 #ifdef OSRE_WINDOWS
     "WindowsPlugin"
 #else

@@ -74,13 +74,13 @@ const Scene::Node::AABB &MeshProcessor::getAABB() const {
     return mAabb;
 }
 
-void MeshProcessor::handleMesh(Mesh *geo) {
-    if (nullptr == geo) {
+void MeshProcessor::handleMesh(Mesh *mesh) {
+    if (nullptr == mesh) {
         return;
     }
 
     ui32 stride(0);
-    switch (geo->m_vertextype) {
+    switch (mesh->getVertexType()) {
         case VertexType::RenderVertex:
             stride = sizeof(RenderVert);
             break;
@@ -93,16 +93,16 @@ void MeshProcessor::handleMesh(Mesh *geo) {
             break;
     }
 
-    BufferData *data = geo->m_vb;
+    BufferData *data = mesh->getVertexBuffer();
     if (nullptr == data || 0L == data->getSize()) {
         return;
     }
 
-    ui32 offset(0);
+    ui32 offset = 0;
     const ui32 numVertices = (ui32)data->getSize() / stride;
     for (ui32 i = 0; i < numVertices; i++) {
-        glm::vec3 pos;
-        uc8 *ptr = (uc8 *)data->getData();
+        glm::vec3 pos = {};
+        uc8 *ptr = (uc8*) data->getData();
         ::memcpy(&pos.x, &ptr[offset], sizeof(glm::vec3));
         offset += stride;
         mAabb.merge(pos.x, pos.y, pos.z);

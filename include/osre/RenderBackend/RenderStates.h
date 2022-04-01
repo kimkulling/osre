@@ -32,9 +32,9 @@ namespace RenderBackend {
 struct ClearState {
     /// The provided clear buffer bits
     enum class ClearBitType : int {
-        ColorBit = 1 << 0, ///< Clear the color buffer.
-        DepthBit = 1 << 1, ///< Clear the depth buffer.
-        StencilBit = 1 << 2 ///< Clear the stencil buffer.
+        ColorBit = 1 << 0,    ///< Clear the color buffer.
+        DepthBit = 1 << 1,    ///< Clear the depth buffer.
+        StencilBit = 1 << 2   ///< Clear the stencil buffer.
     };
 
     /// The clear buffer states bit coded.
@@ -46,8 +46,10 @@ struct ClearState {
     /// @brief  The class constructor with the requested clear states.
     /// @param  states      [in] The requested clear states.
     explicit ClearState(ui32 states);
-    bool operator==(const ClearState &rhs) const;
-    bool operator!=(const ClearState &rhs) const;
+    
+    //  Compare operators.
+    bool operator == (const ClearState &rhs) const;
+    bool operator != (const ClearState &rhs) const;
 };
 
 inline ClearState::ClearState() :

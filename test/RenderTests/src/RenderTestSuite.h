@@ -62,6 +62,7 @@ public:
     void showTestReport();
     void setRenderAPI( const String &renderAPI );
     const String &getRenderAPI() const;
+    void setSelectedTest(const String &selectedTest) { mSelectedTest = selectedTest; }
     void setMediaPath( const String &mediaPath );
     const String &getMediaPath() const;
     Platform::AbstractTimer *getTimer( ) const;
@@ -90,6 +91,7 @@ private:
     RenderBackend::RenderBackendService *m_pRenderBackendServer;
     String m_renderAPI;
     String m_mediaPath;
+    String mSelectedTest;
 };
 
 } // Namespace RenderTest

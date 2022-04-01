@@ -28,15 +28,13 @@ namespace OSRE {
 
 // Forward declarations
 namespace Platform {
-
-class AbstractWindow;
-
+    class AbstractWindow;
 }
 
 namespace RenderBackend {
+    class RenderBackendService;
 
-class RenderBackendService;
-struct Material;
+    struct Material;
 
 } // namespace RenderBackend
 
@@ -45,34 +43,55 @@ namespace RenderTest {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
 ///
-///	@brief	The abstract base interface for a render test. Render tests shall be used to define a
-///	reference rendering behavior for the validation.
+///	@brief	The abstract base interface for a render test. 
+/// Render tests shall be used to define reference rendering behavior for validation. Each test 
+/// will follow this state machine:
+/// Inited -> Created -> Rendering -> Destroyed
+///  \          |          |            /
+///   \         |          |           /
+///    +--------+----------+----------+
+///                   |
+///                 Error
+/// 
+/// In the beginning the render-tests is in init state. All registered render-tests will be initialized 
+/// after their creation. When the render-window is ready and the GPU-driver is initiated the test 
+/// framework will loop though all render-tests. For each test the 
+/// create-method shall try to generate all GPU-bound resources. If this was successful the 
+/// render-loop will be started. By pressing a button the rendering will be stopped and the 
+/// resources will be released by the destroy-method.
 //-------------------------------------------------------------------------------------------------
 class AbstractRenderTest {
 public:
-    ///	@brief	Destructor, virtual.
-    virtual ~AbstractRenderTest();
+    ///	@brief	The class destructor, virtual.
+    virtual ~AbstractRenderTest() = default;
 
-    /// @brief  Will create the rendertest.
-    /// @param  rbSrv       [in] The render backend to use.
-    /// @return true if successful.
+    /// @brief  Will create the render-test. 
+    /// 
+    /// When creating your own render test place all creation code for any GPU-based resource here. 
+    /// Examples could be resources like shaders, GPU-buffers or any other GPU-bounded resource.
+    ///
+    /// @param[in] rbSrv    The render backend to use.
+    /// @return true if successful, false in case of an error. Typical error will be shader compilation
+    ///         errors or a not available GPU-feature.
     bool create(RenderBackend::RenderBackendService *rbSrv);
 
     /// @brief  Will destroy the rendertest.
-    /// @param  rbSrv       [in] The render backend to use.
+    /// @param[in] rbSrv    The render backend to use.
     /// @return true if successful.
     bool destroy(RenderBackend::RenderBackendService *rbSrv);
 
     /// @brief  Will render the rendertest.
-    /// @param  rbSrv       [in] The render backend to use.
+    /// @param[in] rbSrv    The render backend to use.
     /// @return true if successful.
     bool render(RenderBackend::RenderBackendService *rbSrv);
 
     ///	@brief	Will create the render data.
+    /// @param[in] rbSrv    The render backend to use.
     ///	@return	true if creation was successful, false if not.
     virtual void setup(RenderBackend::RenderBackendService *rbSrv);
 
     ///	@brief	Will destroy the render data.
+    /// @param[in] rbSrv    The render backend to use.
     ///	@return	true if destroying was successful, false if not.
     virtual void teardown(RenderBackend::RenderBackendService *rbSrv);
 
@@ -81,9 +100,9 @@ public:
     const String &getTestName() const;
 
     /// @brief  Creates a new material based on vertex- and fragment-shader.
-    /// @param  matName     [in] The material name.
-    /// @param  VsSrc       [in] The vertex-shader-code.
-    /// @param  FsSrc       [in] The fragment-shader-code.
+    /// @param[in] matName  The material name.
+    /// @param[in] VsSrc    The vertex-shader-code.
+    /// @param[in] FsSrc    The fragment-shader-code.
     /// @return The new created material.
     RenderBackend::Material *createMaterial(const String &matName, const String &VsSrc, const String &FsSrc);
 
@@ -93,21 +112,21 @@ public:
 
 protected:
     /// @brief  The class constructor.
-    /// @param  renderTestName  [in] The name for the render test.
+    /// @param[in] renderTestName   The name for the render test.
     explicit AbstractRenderTest(const String &renderTestName);
 
     /// @brief  The onCreate-callback.
-    /// @param  rbSrv   [in] The render backend to use.
+    /// @param[in] rbSrv    The render backend to use.
     /// @return true if successful.
     virtual bool onCreate(RenderBackend::RenderBackendService *rbSrv);
 
     /// @brief  The onDestroy-callback.
-    /// @param  rbSrv   [in] The render backend to use.
+    /// @param[in] rbSrv    The render backend to use.
     /// @return true if successful.
     virtual bool onDestroy(RenderBackend::RenderBackendService *rbSrv);
 
     /// @brief  The onRender-callback.
-    /// @param  rbSrv       [in] The render backend to use.
+    /// @param[in] rbSrv    The render backend to use.
     /// @return true if successful.
     virtual bool onRender(RenderBackend::RenderBackendService *rbSrv);
 

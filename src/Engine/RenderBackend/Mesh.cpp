@@ -36,60 +36,61 @@ static Ids s_Ids;
 // The log tag for messages
 static const c8 *Tag = "Mesh";
 
-Mesh::Mesh() :
-        Mesh(VertexType::RenderVertex) {
-    // empty
-}
-
-Mesh::Mesh(VertexType type) :
+Mesh::Mesh(const String &name, VertexType vertexType, IndexType indextype) :
+        mName(name),
         m_localMatrix(false),
-        m_model(1.0f),
-        m_material(nullptr),
-        m_vertextype(type),
-        m_vb(nullptr),
-        m_ib(nullptr),
-        m_numPrimGroups(0),
-        m_primGroups(nullptr),
-        m_id(99999999),
-        m_vertexData(),
-        m_indexData(),
-        m_lastIndex(0) {
-    // empty
+        mModel(1.0f),
+        mMaterial(nullptr),
+        mVertexType(vertexType),
+        mVertexBuffer(nullptr),
+        mIndexType(indextype),
+        mIndexBuffer(nullptr),
+        mPrimGroups(),
+        mId(99999999),
+        mVertexData(),
+        mIndexData(),
+        mLastIndex(0) {
+    mId = s_Ids.getUniqueId();
 }
 
 Mesh::~Mesh() {
-    m_material = nullptr;
+    mMaterial = nullptr;
 
-    BufferData::free(m_vb);
-    m_vb = nullptr;
+    BufferData::free(mVertexBuffer);
+    mVertexBuffer = nullptr;
 
-    BufferData::free(m_ib);
-    m_ib = nullptr;
+    BufferData::free(mIndexBuffer);
+    mIndexBuffer = nullptr;
 
-    delete[] m_primGroups;
-    m_primGroups = nullptr;
-
-    s_Ids.releaseId(m_id);
+    s_Ids.releaseId(mId);
 }
 
-Mesh *Mesh::create(size_t numGeo, VertexType type) {
-    if (0 == numGeo) {
-        osre_debug(Tag, "Number of static geo to create is zero.");
-        return nullptr;
-    }
-
-    Mesh *geoArray = new Mesh[numGeo];
-    for (ui32 i = 0; i < numGeo; i++) {
-        geoArray[i].m_vertextype = type;
-        geoArray[i].m_id = s_Ids.getUniqueId();
-    }
-
-    return geoArray;
+void *Mesh::mapVertexBuffer( size_t vbSize, BufferAccessType accessType ) {
+    mVertexBuffer = BufferData::alloc(BufferType::VertexBuffer, vbSize, accessType);
+    return mVertexBuffer->getData();
 }
 
-void Mesh::destroy(Mesh **meshes) {
-    delete[] * meshes;
-    (*meshes) = nullptr;
+void Mesh::unmapVertexBuffer() {
+    // empty
+}
+
+void Mesh::createVertexBuffer(void *vertices, size_t vbSize, BufferAccessType accessType) {
+    mVertexBuffer = BufferData::alloc(BufferType::VertexBuffer, vbSize, accessType);
+    mVertexBuffer->copyFrom(vertices, vbSize);
+}
+
+BufferData *Mesh::getVertexBuffer() const {
+    return mVertexBuffer;
+}
+
+void Mesh::createIndexBuffer(void *indices, size_t ibSize, IndexType indexType, BufferAccessType accessType) {
+    mIndexBuffer = BufferData::alloc(BufferType::IndexBuffer, ibSize, accessType);
+    mIndexType = indexType;
+    mIndexBuffer->copyFrom(indices, ibSize);
+}
+
+BufferData *Mesh::getIndexBuffer() const {
+    return mIndexBuffer;
 }
 
 size_t Mesh::getVertexSize(VertexType vertextype) {
@@ -110,38 +111,46 @@ size_t Mesh::getVertexSize(VertexType vertextype) {
     return vertexSize;
 }
 
-PrimitiveGroup *Mesh::createPrimitiveGroups(size_t numPrimGroups, IndexType *types, size_t *numIndices,
-        PrimitiveType *primTypes, ui32 *startIndices) {
-    if (0 == numPrimGroups || nullptr == types || nullptr == numIndices || nullptr == primTypes || nullptr == startIndices) {
-        return nullptr;
+void Mesh::addPrimitiveGroups(size_t numPrimGroups, size_t *numIndices, PrimitiveType *primTypes, ui32 *startIndices) {
+    if (0 == numPrimGroups || nullptr == numIndices || nullptr == primTypes || nullptr == startIndices) {
+        return;
     }
 
-    osre_assert(nullptr != types);
-    osre_assert(nullptr != numIndices);
-    osre_assert(nullptr != primTypes);
-    osre_assert(nullptr != startIndices);
-
-    m_numPrimGroups = numPrimGroups;
-    m_primGroups = new PrimitiveGroup[m_numPrimGroups];
-    for (size_t i = 0; i < m_numPrimGroups; ++i) {
-        m_primGroups[i].m_indexType = types[i];
-        m_primGroups[i].m_numIndices = numIndices[i];
-        m_primGroups[i].m_primitive = primTypes[i];
-        m_primGroups[i].m_startIndex = startIndices[i];
+    //mNumPrimGroups = numPrimGroups;
+//    mPrimGroups = new PrimitiveGroup[mNumPrimGroups];
+    const size_t index = mPrimGroups.size();
+    for (size_t i = 0; i < numPrimGroups; ++i) {
+        mPrimGroups.add(new PrimitiveGroup);
+        mPrimGroups[index + i]->m_indexType = mIndexType;
+        mPrimGroups[index + i]->m_numIndices = numIndices[i];
+        mPrimGroups[index + i]->m_primitive = primTypes[i];
+        mPrimGroups[index + i]->m_startIndex = startIndices[i];
     }
 
-    return m_primGroups;
 }
 
-PrimitiveGroup *Mesh::createPrimitiveGroup(IndexType type, size_t numIndices, PrimitiveType primType, ui32 startIndex) {
-    m_numPrimGroups = 1;
-    m_primGroups = new PrimitiveGroup[m_numPrimGroups];
-    m_primGroups[0].m_indexType = type;
-    m_primGroups[0].m_numIndices = numIndices;
-    m_primGroups[0].m_primitive = primType;
-    m_primGroups[0].m_startIndex = startIndex;
+void Mesh::addPrimitiveGroup(size_t numIndices, PrimitiveType primType, ui32 startIndex) {
+    osre_assert(numIndices != 0);
 
-    return m_primGroups;
+    if (numIndices == 0) {
+        mPrimGroups.clear();
+        return;
+    }
+
+    const size_t index = mPrimGroups.size();
+    mPrimGroups.add(new PrimitiveGroup);
+    mPrimGroups[index]->m_numIndices = numIndices;
+    mPrimGroups[index]->m_indexType = mIndexType;
+    mPrimGroups[index]->m_primitive = primType;
+    mPrimGroups[index]->m_startIndex = startIndex;
+}
+
+void Mesh::addPrimitiveGroup( PrimitiveGroup *group ) {
+    if (group == nullptr) {
+        return;
+    }
+
+    mPrimGroups.add(group);
 }
 
 } // Namespace RenderBackend

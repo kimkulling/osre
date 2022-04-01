@@ -89,7 +89,10 @@ const String *ColorVert::getAttributes() {
 static const ui32 NumRenderVertAttributes = 4;
 
 static const String RenderVertAttributes[NumRenderVertAttributes] = {
-    "position", "normal", "color0", "texcoord0"
+    "position", 
+    "normal", 
+    "color0", 
+    "texcoord0"
 };
 
 RenderVert::RenderVert() :
@@ -297,10 +300,6 @@ BufferAccessType BufferData::getBufferAccessType() const {
 
 PrimitiveGroup::PrimitiveGroup() :
         m_primitive(PrimitiveType::LineList), m_startIndex(0), m_numIndices(0), m_indexType(IndexType::UnsignedShort) {
-    // empty
-}
-
-PrimitiveGroup::~PrimitiveGroup() {
     // empty
 }
 
@@ -530,7 +529,7 @@ void Material::createShader(ShaderSourceArray &shaders) {
     m_shader = new Shader;
     for (ui32 i = 0; i < MaxShaderTypes; ++i) {
         if (!shaders[i].empty()) {
-            m_shader->m_src[i] = shaders[i];
+            m_shader->setSource(static_cast<ShaderType>(i), shaders[i]);
         }
     }
 }
@@ -546,9 +545,9 @@ GeoInstanceData::~GeoInstanceData() {
 }
 
 TransformState::TransformState() :
-        m_translate(),
+        m_translate(1.0f),
         m_scale(1.0f),
-        m_rotation() {
+        m_rotation(1.0f) {
     // empty
 }
 
@@ -578,7 +577,6 @@ bool TransformState::operator!=(const TransformState &rhs) const {
 }
 
 void TransformState::toMatrix(mat4 &m) const {
-    glm::mat4 local(1);
     m *= glm::translate(m, m_translate);
     m *= glm::scale(m, m_scale);
     m *= m_rotation;
@@ -627,8 +625,8 @@ MeshEntry *RenderBatchData::getMeshEntryByName(const c8 *name) {
     }
 
     for (auto &i : m_meshArray) {
-        for (ui32 j = 0; j < i->m_geo.size(); ++j) {
-            if (i->m_geo[j]->m_name == name) {
+        for (ui32 j = 0; j < i->mMeshArray.size(); ++j) {
+            if (i->mMeshArray[j]->getName() == name) {
                 return i;
             }
         }
@@ -665,7 +663,7 @@ RenderBatchData *PassData::getBatchById(const c8 *id) const {
     return nullptr;
 }
 
-static const ui32 MaxSubmitCmds = 500;
+static const size_t MaxSubmitCmds = 500;
 
 Frame::Frame() :
         m_newPasses(),

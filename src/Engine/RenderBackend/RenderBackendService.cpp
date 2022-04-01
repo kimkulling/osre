@@ -62,7 +62,7 @@ static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataAr
     return IdxNotFound;
 }
 
-static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<RenderBatchData *> &batchDataArray) {
+static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<RenderBatchData*> &batchDataArray) {
     if (nullptr == id) {
         return IdxNotFound;
     }
@@ -102,6 +102,11 @@ RenderBackendService::~RenderBackendService() {
         delete mPipelines[i];
     }
     mPipelines.clear();
+
+    for (ui32 i = 0; i < m_passes.size(); ++i) {
+        delete m_passes[i];
+    }
+    m_passes.clear();
 }
 
 bool RenderBackendService::onOpen() {
@@ -257,10 +262,10 @@ void RenderBackendService::commitNextFrame() {
                     cmd->m_batchId = currentBatch->m_id;
                     cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateBuffer;
                     Mesh *currentMesh = currentBatch->m_updateMeshArray[k];
-                    cmd->m_meshId = currentMesh->m_id;
-                    cmd->m_size = currentMesh->m_vb->getSize();
+                    cmd->m_meshId = currentMesh->getId();
+                    cmd->m_size = currentMesh->getVertexBuffer()->getSize();
                     cmd->m_data = new c8[cmd->m_size];
-                    ::memcpy(cmd->m_data, currentMesh->m_vb->getData(), cmd->m_size);
+                    ::memcpy(cmd->m_data, currentMesh->getVertexBuffer()->getData(), cmd->m_size);
                 }
             } 
             if (currentBatch->m_dirtyFlag & RenderBatchData::MeshDirty) {
@@ -482,7 +487,7 @@ void RenderBackendService::addMesh(Mesh *mesh, ui32 numInstances) {
     }
 
     MeshEntry *entry = new MeshEntry;
-    entry->m_geo.add(mesh);
+    entry->mMeshArray.add(mesh);
     entry->numInstances = numInstances;
     m_currentBatch->m_meshArray.add(entry);
     m_currentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
@@ -496,7 +501,7 @@ void RenderBackendService::addMesh(const CPPCore::TArray<Mesh *> &geoArray, ui32
 
     MeshEntry *entry = new MeshEntry;
     entry->numInstances = numInstances;
-    entry->m_geo.add(&geoArray[0], geoArray.size());
+    entry->mMeshArray.add(&geoArray[0], geoArray.size());
     m_currentBatch->m_meshArray.add(entry);
     m_currentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
 }
