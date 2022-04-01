@@ -96,7 +96,7 @@ public:
                 m_pointMesh->createIndexBuffer(pt_indices, pt_size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
                 // setup primitives
-                m_pointMesh->createPrimitiveGroup(NumPts, PrimitiveType::PointList, 0);
+                m_pointMesh->addPrimitiveGroup(NumPts, PrimitiveType::PointList, 0);
 
                 // setup material
                 m_pointMesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));

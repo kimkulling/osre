@@ -83,7 +83,7 @@ void ParticleEmitter::init( ui32 numPoints ) {
     m_ptGeo->createIndexBuffer(m_pt_indices, pt_size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
     // setup primitives
-    m_ptGeo->createPrimitiveGroup(m_numPoints, PrimitiveType::PointList, 0);
+    m_ptGeo->addPrimitiveGroup(m_numPoints, PrimitiveType::PointList, 0);
     m_ptGeo->setModelMatrix(true, glm::mat4(1.0f));
 
     // setup material

@@ -34,9 +34,9 @@ class MeshTest : public ::testing::Test {
 
 TEST_F(MeshTest, createPrimitiveGroupsTest) {
     Mesh *mesh = new Mesh("test", VertexType::RenderVertex, IndexType::UnsignedByte);
-    PrimitiveGroup* group = mesh->createPrimitiveGroup(10, PrimitiveType::TriangleList, 0);
+    mesh->addPrimitiveGroup(10, PrimitiveType::TriangleList, 0);
     EXPECT_EQ(1, mesh->getNumberOfPrimitiveGroups());
-    EXPECT_NE(nullptr, group);
+    EXPECT_NE(nullptr, mesh->getPrimitiveGroupAt(0));
 }
 
 }

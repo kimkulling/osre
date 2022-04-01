@@ -89,7 +89,10 @@ const String *ColorVert::getAttributes() {
 static const ui32 NumRenderVertAttributes = 4;
 
 static const String RenderVertAttributes[NumRenderVertAttributes] = {
-    "position", "normal", "color0", "texcoord0"
+    "position", 
+    "normal", 
+    "color0", 
+    "texcoord0"
 };
 
 RenderVert::RenderVert() :
@@ -622,8 +625,8 @@ MeshEntry *RenderBatchData::getMeshEntryByName(const c8 *name) {
     }
 
     for (auto &i : m_meshArray) {
-        for (ui32 j = 0; j < i->m_geo.size(); ++j) {
-            if (i->m_geo[j]->getName() == name) {
+        for (ui32 j = 0; j < i->mMeshArray.size(); ++j) {
+            if (i->mMeshArray[j]->getName() == name) {
                 return i;
             }
         }
@@ -660,7 +663,7 @@ RenderBatchData *PassData::getBatchById(const c8 *id) const {
     return nullptr;
 }
 
-static const ui32 MaxSubmitCmds = 500;
+static const size_t MaxSubmitCmds = 500;
 
 Frame::Frame() :
         m_newPasses(),

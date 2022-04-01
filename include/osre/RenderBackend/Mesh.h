@@ -78,7 +78,7 @@ public:
     void setMaterial(Material *mat);
     Material *getMaterial() const;
     VertexType getVertexType() const;
-    void setIndexType(IndexType indextype);
+    //void setIndexType(IndexType indextype);
     IndexType getIndexType() const;
     const String &getName() const;
     void *mapVertexBuffer(size_t vbSize, BufferAccessType accessType);
@@ -113,9 +113,11 @@ public:
         }
     }
 
-    PrimitiveGroup *createPrimitiveGroups(size_t numPrimGroups, size_t *numIndices, PrimitiveType *primTypes, ui32 *startIndices);
-    PrimitiveGroup *createPrimitiveGroup(size_t numIndices, PrimitiveType primTypes, ui32 startIndex);
-    void setPrimitiveGroups(size_t numPrimGroups, PrimitiveGroup *primGroups);
+    void addPrimitiveGroups(size_t numPrimGroups, size_t *numIndices, PrimitiveType *primTypes, ui32 *startIndices);
+    void addPrimitiveGroup(size_t numIndices, PrimitiveType primTypes, ui32 startIndex);
+    void addPrimitiveGroup(PrimitiveGroup *group);
+
+    
     OSRE_NON_COPYABLE(Mesh)
 
 private:
@@ -127,15 +129,16 @@ private:
     BufferData *mVertexBuffer;
     IndexType mIndexType;
     BufferData *mIndexBuffer;
-    size_t mNumPrimGroups;
-    PrimitiveGroup *mPrimGroups;
+    //size_t mNumPrimGroups;
+    using PrimGroupArray = ::CPPCore::TArray<PrimitiveGroup*>;
+    PrimGroupArray mPrimGroups;
     ui64 mId;
     ::CPPCore::TArray<uc8> mVertexData;
     ::CPPCore::TArray<uc8> mIndexData;
     ui32 mLastIndex;
 };
 
-inline void Mesh::setMaterial( Material *mat ) {
+inline void Mesh::setMaterial(Material *mat) {
     mMaterial = mat;
 }
 
@@ -147,10 +150,10 @@ inline VertexType Mesh::getVertexType() const {
     return mVertexType;
 }
 
-inline void Mesh::setIndexType( IndexType indextype ) {
+/* inline void Mesh::setIndexType(IndexType indextype) {
     mIndexType = indextype;
 }
-
+*/
 inline IndexType Mesh::getIndexType() const {
     return mIndexType;
 }
@@ -169,15 +172,15 @@ inline ui64 Mesh::getId() const {
 }
 
 inline size_t Mesh::getNumberOfPrimitiveGroups() const {
-    return mNumPrimGroups;
+    return mPrimGroups.size();
 }
 
 inline PrimitiveGroup *Mesh::getPrimitiveGroupAt( size_t index ) const {
-    if (index >= mNumPrimGroups) {
+    if (index >= mPrimGroups.size()) {
         return nullptr;
     }
 
-    return &mPrimGroups[index];
+    return mPrimGroups[index];
 }
 
 inline void Mesh::setModelMatrix( bool islocal, const glm::mat4 &model ) {

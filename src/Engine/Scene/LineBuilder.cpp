@@ -130,9 +130,12 @@ Mesh *LineBuilder::getMesh() {
     //m_activeMesh->m_ib->copyFrom(&m_indexCache[0], size);
 
     // setup primitives
-    PrimitiveGroup *grp = new PrimitiveGroup[m_primGroupCache.size()];
-    ::memcpy(grp, &m_primGroupCache[0], m_primGroupCache.size());
-    m_activeMesh->setPrimitiveGroups(m_primGroupCache.size(), grp);
+    //PrimitiveGroup *grp = new PrimitiveGroup[m_primGroupCache.size()];
+    //::memcpy(grp, &m_primGroupCache[0], m_primGroupCache.size());
+    for (size_t i = 0; i < m_primGroupCache.size(); ++i) {
+        m_activeMesh->addPrimitiveGroup(m_primGroupCache[i]);
+    }
+    //m_activeMesh->setPrimitiveGroups(m_primGroupCache.size(), grp);
     //m_activeMesh->m_numPrimGroups = m_primGroupCache.size();
     m_isDirty = false;
 

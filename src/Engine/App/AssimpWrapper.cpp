@@ -103,14 +103,11 @@ AssimpWrapper::AssetContext::AssetContext(Common::Ids &ids, World *world) :
         mIds(ids),
         mRoot(),
         mAbsPathWithFile(),
-        mBoneInfoArray(),
         mBone2NodeMap() {
     // empty
 }
  
 AssimpWrapper::AssetContext::~AssetContext() {
-    ::CPPCore::ContainerClear(mBoneInfoArray);
-
     delete mDefaultTexture;
     mDefaultTexture = nullptr;
 }
@@ -386,7 +383,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
             newMesh.createIndexBuffer(&indexArray[0], ibSize, IndexType::UnsignedInt, BufferAccessType::ReadOnly);
             //            Debugging::MeshDiagnostic::dumpIndices( indexArray );
 
-            newMesh.createPrimitiveGroup(indexArray.size(), PrimitiveType::TriangleList, 0);
+            newMesh.addPrimitiveGroup(indexArray.size(), PrimitiveType::TriangleList, 0);
 
             newMesh.setMaterial(mAssetContext.mMatArray[currentMesh->mMaterialIndex]);
         }

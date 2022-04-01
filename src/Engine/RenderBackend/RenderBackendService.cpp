@@ -482,7 +482,7 @@ void RenderBackendService::addMesh(Mesh *mesh, ui32 numInstances) {
     }
 
     MeshEntry *entry = new MeshEntry;
-    entry->m_geo.add(mesh);
+    entry->mMeshArray.add(mesh);
     entry->numInstances = numInstances;
     m_currentBatch->m_meshArray.add(entry);
     m_currentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
@@ -496,7 +496,7 @@ void RenderBackendService::addMesh(const CPPCore::TArray<Mesh *> &geoArray, ui32
 
     MeshEntry *entry = new MeshEntry;
     entry->numInstances = numInstances;
-    entry->m_geo.add(&geoArray[0], geoArray.size());
+    entry->mMeshArray.add(&geoArray[0], geoArray.size());
     m_currentBatch->m_meshArray.add(entry);
     m_currentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
 }

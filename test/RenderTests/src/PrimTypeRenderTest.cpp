@@ -106,7 +106,7 @@ public:
                 lineMesh->createIndexBuffer(indices, size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
                 // setup primitives
-                lineMesh->createPrimitiveGroup(6, PrimitiveType::LineList, 0);
+                lineMesh->addPrimitiveGroup(6, PrimitiveType::LineList, 0);
 
                 // setup material
                 lineMesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));

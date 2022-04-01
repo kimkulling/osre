@@ -260,8 +260,8 @@ bool OGLRenderEventHandler::onRenderFrame(const EventData *eventData) {
 }
 
 bool OGLRenderEventHandler::addMeshes(const c8 *id, CPPCore::TArray<size_t> &primGroups, MeshEntry *currentMeshEntry) {
-    for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->m_geo.size(); ++meshIdx) {
-        Mesh *currentMesh = currentMeshEntry->m_geo[meshIdx];
+    for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->mMeshArray.size(); ++meshIdx) {
+        Mesh *currentMesh = currentMeshEntry->mMeshArray[meshIdx];
         if (nullptr == currentMesh) {
             osre_assert(nullptr != currentMesh);
             continue;
@@ -346,8 +346,8 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
                     continue;
                 }
 
-                for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->m_geo.size(); ++meshIdx) {
-                    Mesh *currentMesh = currentMeshEntry->m_geo[meshIdx];
+                for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->mMeshArray.size(); ++meshIdx) {
+                    Mesh *currentMesh = currentMeshEntry->mMeshArray[meshIdx];
                     if (nullptr == currentMesh) {
                         osre_assert(nullptr != currentMesh);
                         continue;

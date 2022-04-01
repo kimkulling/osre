@@ -36,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 struct UniformVar;
 struct FrameBuffer;
 
@@ -44,13 +44,13 @@ class Mesh;
 class Shader;
 class Pipeline;
 
-using MeshArray = CPPCore::TArray<RenderBackend::Mesh *>;
+using MeshArray = CPPCore::TArray<RenderBackend::Mesh*>;
 
 /// Describes an unset id.
 static constexpr i32 UnsetHandle = -1;
 
 /// Upper limits for names.
-static const ui32 MaxEntNameLen = 256;
+static constexpr ui32 MaxEntNameLen = 256;
 
 ///	@brief  This enum describes the usage of a GPU-buffer-object.
 ///
@@ -75,10 +75,12 @@ enum class BufferAccessType {
     NumBufferAccessTypes ///< Number of enum's.
 };
 
+/// @brief The enum is used to describe the different pixel formats
 enum class PixelFormatType {
+    InvaliTextureType=-1,
     R8G8B8,
     R8G8B8A8,
-    InvaliTextureType
+    NumPixelFormatTypes
 };
 
 ///	@brief  This enum describes the build-in vertex types provided by OSRE, mainly used for demos and examples.
@@ -756,7 +758,7 @@ struct MatrixBuffer {
 struct MeshEntry {
     ui32 numInstances;
     bool m_isDirty;
-    CPPCore::TArray<Mesh*> m_geo;
+    CPPCore::TArray<Mesh*> mMeshArray;
 };
 
 struct RenderBatchData {

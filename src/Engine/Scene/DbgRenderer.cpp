@@ -153,7 +153,7 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb)
     // setup primitives
     mesh->setModelMatrix(false, transform);
     
-    mesh->createPrimitiveGroup(NumIndices, PrimitiveType::LineList, 0);
+    mesh->addPrimitiveGroup(NumIndices, PrimitiveType::LineList, 0);
 
     // setup material
     mesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
@@ -200,7 +200,7 @@ void DbgRenderer::addLine(const ColorVert &v0, const ColorVert &v1) {
         ib->attach(&lineIndices[0], sizeof(ui16) * 2);
     }
 
-    mDebugMesh->createPrimitiveGroup(NumIndices, PrimitiveType::LineList, 0);
+    mDebugMesh->addPrimitiveGroup(NumIndices, PrimitiveType::LineList, 0);
 }
 
 } // Namespace Scene

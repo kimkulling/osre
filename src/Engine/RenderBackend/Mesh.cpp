@@ -45,8 +45,7 @@ Mesh::Mesh(const String &name, VertexType vertexType, IndexType indextype) :
         mVertexBuffer(nullptr),
         mIndexType(indextype),
         mIndexBuffer(nullptr),
-        mNumPrimGroups(0),
-        mPrimGroups(nullptr),
+        mPrimGroups(),
         mId(99999999),
         mVertexData(),
         mIndexData(),
@@ -62,9 +61,6 @@ Mesh::~Mesh() {
 
     BufferData::free(mIndexBuffer);
     mIndexBuffer = nullptr;
-
-    delete[] mPrimGroups;
-    mPrimGroups = nullptr;
 
     s_Ids.releaseId(mId);
 }
@@ -115,37 +111,47 @@ size_t Mesh::getVertexSize(VertexType vertextype) {
     return vertexSize;
 }
 
-PrimitiveGroup *Mesh::createPrimitiveGroups(size_t numPrimGroups, size_t *numIndices, PrimitiveType *primTypes, ui32 *startIndices) {
+void Mesh::addPrimitiveGroups(size_t numPrimGroups, size_t *numIndices, PrimitiveType *primTypes, ui32 *startIndices) {
     if (0 == numPrimGroups || nullptr == numIndices || nullptr == primTypes || nullptr == startIndices) {
-        return nullptr;
+        return;
     }
 
-    mNumPrimGroups = numPrimGroups;
-    mPrimGroups = new PrimitiveGroup[mNumPrimGroups];
-    for (size_t i = 0; i < mNumPrimGroups; ++i) {
-        mPrimGroups[i].m_indexType = mIndexType;
-        mPrimGroups[i].m_numIndices = numIndices[i];
-        mPrimGroups[i].m_primitive = primTypes[i];
-        mPrimGroups[i].m_startIndex = startIndices[i];
+    //mNumPrimGroups = numPrimGroups;
+//    mPrimGroups = new PrimitiveGroup[mNumPrimGroups];
+    const size_t index = mPrimGroups.size();
+    for (size_t i = 0; i < numPrimGroups; ++i) {
+        mPrimGroups.add(new PrimitiveGroup);
+        mPrimGroups[index + i]->m_indexType = mIndexType;
+        mPrimGroups[index + i]->m_numIndices = numIndices[i];
+        mPrimGroups[index + i]->m_primitive = primTypes[i];
+        mPrimGroups[index + i]->m_startIndex = startIndices[i];
     }
 
-    return mPrimGroups;
 }
 
-PrimitiveGroup *Mesh::createPrimitiveGroup(size_t numIndices, PrimitiveType primType, ui32 startIndex) {
-    mNumPrimGroups = 1;
-    mPrimGroups = new PrimitiveGroup[mNumPrimGroups];
-    mPrimGroups[0].m_numIndices = numIndices;
-    mPrimGroups[0].m_indexType = mIndexType;
-    mPrimGroups[0].m_primitive = primType;
-    mPrimGroups[0].m_startIndex = startIndex;
+void Mesh::addPrimitiveGroup(size_t numIndices, PrimitiveType primType, ui32 startIndex) {
+    osre_assert(numIndices != 0);
 
-    return mPrimGroups;
+    if (numIndices == 0) {
+        mPrimGroups.clear();
+        //mNumPrimGroups = 0;
+        return;
+    }
+
+    const size_t index = mPrimGroups.size();
+    mPrimGroups.add(new PrimitiveGroup);
+    mPrimGroups[index]->m_numIndices = numIndices;
+    mPrimGroups[index]->m_indexType = mIndexType;
+    mPrimGroups[index]->m_primitive = primType;
+    mPrimGroups[index]->m_startIndex = startIndex;
 }
 
-void Mesh::setPrimitiveGroups( size_t numPrimGroups, PrimitiveGroup *primGroups ) {
-    mNumPrimGroups = numPrimGroups;
-    mPrimGroups = primGroups;
+void Mesh::addPrimitiveGroup( PrimitiveGroup *group ) {
+    if (group == nullptr) {
+        return;
+    }
+
+    mPrimGroups.add(group);
 }
 
 } // Namespace RenderBackend

@@ -83,7 +83,9 @@ const String TextFsSrc =
     "    vFragColor = texture( tex0, UV );\n"
 	"};\n";
 
-MeshBuilder::MeshBuilder() : mIsDirty( false ), mActiveMesh( nullptr ) {
+MeshBuilder::MeshBuilder() :
+        mIsDirty( false ), 
+        mActiveMesh( nullptr ) {
     // empty
 }
 
@@ -104,7 +106,7 @@ MeshBuilder &MeshBuilder::allocEmptyMesh(const String &name, VertexType type) {
     return *this;
 }
 
-MeshBuilder &MeshBuilder::createTriangle(VertexType type, BufferAccessType access ) {
+MeshBuilder &MeshBuilder::createTriangle(VertexType type, BufferAccessType access) {
     clear();
     mActiveMesh = new Mesh("", type, IndexType::UnsignedShort);
 
@@ -123,17 +125,21 @@ MeshBuilder &MeshBuilder::createTriangle(VertexType type, BufferAccessType acces
     allocVertices(mActiveMesh, mActiveMesh->getVertexType(), NumVert, pos, col, nullptr, access);
 
     // setup triangle indices
-    static const size_t NumIndices = 3;
+    static const size_t NumIndices = 6;
     GLushort indices[NumIndices] = {};
     indices[ 0 ] = 0;
     indices[ 1 ] = 2;
     indices[ 2 ] = 1;
 
-    size_t size = sizeof(GLushort) * NumIndices;
+    indices[3] = 1;
+    indices[4] = 2;
+    indices[5] = 0;
+
+    size_t size = sizeof(ui16) * NumIndices;
     mActiveMesh->createIndexBuffer(indices, size, IndexType::UnsignedShort, access);
 
     // setup primitives
-    mActiveMesh->createPrimitiveGroup(3, PrimitiveType::TriangleList, 0);
+    mActiveMesh->addPrimitiveGroup(NumIndices, PrimitiveType::TriangleList, 0);
 
     // setup material
     mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial(type));
@@ -182,7 +188,7 @@ MeshBuilder &MeshBuilder::allocQuads( VertexType type, BufferAccessType access )
     mActiveMesh->createIndexBuffer(indices, size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
     // setup primitives
-    mActiveMesh->createPrimitiveGroup(NumIndices, PrimitiveType::TriangleList, 0);
+    mActiveMesh->addPrimitiveGroup(NumIndices, PrimitiveType::TriangleList, 0);
 
     // setup material
     mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial(type));
@@ -295,7 +301,7 @@ MeshBuilder &MeshBuilder::allocCube(VertexType type, f32 w, f32 h, f32 d, Buffer
         6,7,4
     }; 
 
-    mActiveMesh->createPrimitiveGroup(12, PrimitiveType::TriangleList, 0);
+    mActiveMesh->addPrimitiveGroup(12, PrimitiveType::TriangleList, 0);
 
     const size_t vbSize = sizeof(RenderVert) * 8;
     mActiveMesh->createVertexBuffer(v, vbSize, access);
@@ -311,7 +317,7 @@ MeshBuilder &MeshBuilder::allocLineList( VertexType type, BufferAccessType acces
                                           glm::vec3 *posArray, glm::vec3 *colorArray, ui32 *indices ) {
     clear();
     mActiveMesh = new Mesh("", type, IndexType::UnsignedShort);
-    mActiveMesh->createPrimitiveGroup(2 * numLines, PrimitiveType::LineList, 0);
+    mActiveMesh->addPrimitiveGroup(2 * numLines, PrimitiveType::LineList, 0);
 
     MeshBuilder::allocVertices(mActiveMesh, type, numLines, posArray, colorArray, nullptr, access);
     ui32 size = sizeof( GLushort ) * numLines*2;
@@ -338,7 +344,7 @@ MeshBuilder &MeshBuilder::allocPoints( VertexType type, BufferAccessType access,
     mActiveMesh->createIndexBuffer(&indices[0], pt_size, IndexType::UnsignedShort, access);
 
     // setup primitives
-    mActiveMesh->createPrimitiveGroup(3, PrimitiveType::PointList, 0);
+    mActiveMesh->addPrimitiveGroup(3, PrimitiveType::PointList, 0);
 
     // setup material
     mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial(type));
@@ -471,7 +477,7 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
     mesh->createIndexBuffer(textIndices, size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
     // setup primitives
-    mesh->createPrimitiveGroup(6 * text.size(), PrimitiveType::TriangleList, 0);
+    mesh->addPrimitiveGroup(6 * text.size(), PrimitiveType::TriangleList, 0);
 
     // setup material
     CPPCore::TArray<TextureResource*> texResArray;;

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -43,8 +43,7 @@ TEST_F( RenderCommonTest, createVertComponentTest ) {
         VertComponent comp2( VertexAttribute::Position, VertexFormat::Float3 );
         EXPECT_EQ( VertexAttribute::Position, comp2.m_attrib );
         EXPECT_EQ( VertexFormat::Float3,   comp2.m_format );
-    }
-    catch( ... ) {
+    } catch( ... ) {
         ok = false;
     }
     EXPECT_TRUE( ok );
@@ -137,14 +136,16 @@ TEST_F( RenderCommonTest, allocBufferDataTest ) {
 }
 
 TEST_F( RenderCommonTest, copyBufferDataTest ) {
-    BufferData *data = BufferData::alloc( BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite );
+    BufferData *data = BufferData::alloc(BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite);
 
     static const ui32 size = 100;
     static const unsigned char Value = 9;
-    void *buffer = new unsigned char[ size ];
+    void *buffer = new unsigned char[size];
     ::memset(buffer, Value, size);
     data->copyFrom(buffer, size);
     BufferData::free(data);
+
+    delete[] buffer;
 }
 
 TEST_F(RenderCommonTest, initGeometryTest) {
@@ -164,9 +165,9 @@ TEST_F( RenderCommonTest, accessTransformMatrixBlockTest ) {
 
     glm::mat4 identity = {};
     block.init();
-    EXPECT_FLOAT_EQ( static_cast<f32>( identity.length() ), static_cast<f32>( block.m_model.length() ) );
-    EXPECT_FLOAT_EQ( static_cast<f32>( identity.length() ), static_cast<f32>( block.m_projection.length() ) );
-    EXPECT_FLOAT_EQ( static_cast<f32>( identity.length() ), static_cast<f32>( block.m_view.length() ) );
+    EXPECT_FLOAT_EQ( static_cast<f32>(identity.length() ), static_cast<f32>( block.m_model.length()));
+    EXPECT_FLOAT_EQ( static_cast<f32>(identity.length() ), static_cast<f32>( block.m_projection.length()));
+    EXPECT_FLOAT_EQ( static_cast<f32>(identity.length() ), static_cast<f32>( block.m_view.length()));
 }
 
 TEST_F( RenderCommonTest, accessMaterialTest ) {

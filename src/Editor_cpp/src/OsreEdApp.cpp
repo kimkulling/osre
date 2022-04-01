@@ -157,7 +157,7 @@ static Mesh *createCoordAxis(ui32 size) {
     axisIndices.add(5);
 
     axis->attachIndices(&axisIndices[0], sizeof(ui16) * axisIndices.size());
-    axis->createPrimitiveGroup(axisData.size(), PrimitiveType::LineList, 0);
+    axis->addPrimitiveGroup(axisData.size(), PrimitiveType::LineList, 0);
     axis->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
 
     return axis;
@@ -210,7 +210,7 @@ static Mesh *createGrid(ui32 numLines) {
     }
     grid->attachVertices(&lineData[0], sizeof(ColorVert) * lineData.size());
     grid->attachIndices(&lineIndices[0], sizeof(ui16) * lineIndices.size());
-    grid->createPrimitiveGroup(lineData.size(), PrimitiveType::LineList, 0);
+    grid->addPrimitiveGroup(lineData.size(), PrimitiveType::LineList, 0);
     grid->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
 
     return grid;
@@ -245,7 +245,7 @@ void createRect2D(const Rect2ui &r, Mesh *mesh2D, Style &style) {
 
     mesh2D->attachVertices(&edges[0], sizeof(glm::vec2) * 4);
     mesh2D->attachIndices(&indices[0], sizeof(ui16) * NumIndices);
-    mesh2D->createPrimitiveGroup(6, PrimitiveType::TriangleList, NumIndices);
+    mesh2D->addPrimitiveGroup(6, PrimitiveType::TriangleList, NumIndices);
 }
 
 
