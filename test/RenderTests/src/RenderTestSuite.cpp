@@ -303,10 +303,10 @@ bool RenderTestSuite::requestNextTest(ui32 &next) {
             return false;
         }
         m_activeTestIdx = AllTestsDone;
-        for (size_t i = 0; i < m_attachedRenderTests.size(); ++i) {
-            String::size_type pos = m_attachedRenderTests[i]->getTestName().find(mSelectedTest);
+        for (size_t currentTestIdx = 0; currentTestIdx < m_attachedRenderTests.size(); ++currentTestIdx) {
+            String::size_type pos = m_attachedRenderTests[currentTestIdx]->getTestName().find(mSelectedTest);
             if (pos != String::npos) {
-                next = i;
+                next = static_cast<ui32>(currentTestIdx);
                 return true;
             }
         }

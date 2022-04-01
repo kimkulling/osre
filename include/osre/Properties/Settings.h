@@ -136,7 +136,7 @@ public:
     /// @brief 
     /// @param key 
     /// @return 
-    const String &getKeyAsString( ConfigKey key ) const;
+    String getKeyAsString( ConfigKey key ) const;
 
     ///	@brief	Clears the whole map.
     void clear();

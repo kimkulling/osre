@@ -41,11 +41,11 @@ using namespace ::CPPCore;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::IO;
 
-static const String Tag = "VlkRenderBackend";
+static const c8 *Tag = "VlkRenderBackend";
 #ifdef OSRE_WINDOWS
-static const String LibName = "vulkan-1.dll";
+static const c8 *LibName = "vulkan-1.dll";
 #else
-static const String LibName = "libvulkan-1.so";
+static const c8 *LibName = "libvulkan-1.so";
 #endif
 
 static AbstractDynamicLoader *getDynLoader() {
@@ -74,7 +74,7 @@ VlkRenderBackend::VlkRenderBackend() :
 VlkRenderBackend::~VlkRenderBackend() {
     if (m_state == State::Initialized) {
         AbstractDynamicLoader *dynLoader(getDynLoader());
-        dynLoader->unload(LibName.c_str());
+        dynLoader->unload(LibName);
         m_handle = nullptr;
         m_state = State::Uninitialized;
     }
@@ -549,7 +549,7 @@ bool VlkRenderBackend::loadVulkanLib() {
         return false;
     }
 
-    m_handle = dynLoader->load(LibName.c_str());
+    m_handle = dynLoader->load(LibName);
     if (nullptr == m_handle) {
         osre_debug(Tag, "Cannot load vulkan lib.");
         return false;
@@ -566,7 +566,7 @@ bool VlkRenderBackend::loadExportedEntryPoints() {
     }
 
     // select vulkan lib for lookup
-    if (nullptr == dynLoader->lookupLib(LibName.c_str())) {
+    if (nullptr == dynLoader->lookupLib(LibName)) {
         return false;
     }
 
@@ -676,7 +676,7 @@ bool VlkRenderBackend::loadInstanceLevelEntryPoints() {
     }
 
     // select vulkan lib for lookup
-    if (nullptr == dynLoader->lookupLib(LibName.c_str())) {
+    if (nullptr == dynLoader->lookupLib(LibName)) {
         return false;
     }
 
@@ -821,8 +821,8 @@ bool VlkRenderBackend::loadDeviceLevelEntryPoints() {
     }
 
     // select vulkan lib for lookup
-    if (nullptr == dynLoader->lookupLib(LibName.c_str())) {
-        osre_error(Tag, "Error while looking for " + LibName);
+    if (nullptr == dynLoader->lookupLib(LibName)) {
+        osre_error(Tag, "Error while looking for " + String(LibName));
         return false;
     }
 
