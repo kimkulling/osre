@@ -84,7 +84,7 @@ private:
     AbstractRenderTest *m_pActiveRenderTest;
     ui32 m_activeTestIdx;
     CPPCore::TArray<AbstractRenderTest*> m_attachedRenderTests;
-    CPPCore::TArray<String> m_FailureLog;
+    StringArray m_FailureLog;
     Platform::PlatformInterface *m_pPlatformInterface;
     KeyboardEventListener *m_pListener;
     Platform::AbstractTimer *m_pTimer;

@@ -61,7 +61,7 @@ void Tokenizer::clear() {
     m_Token.clear();
 }
 
-size_t Tokenizer::tokenize( const String& str, TArray<String>& tokens, const String& delimiters ) {
+size_t Tokenizer::tokenize(const String &str, StringArray &tokens, const String &delimiters) {
     // Skip delimiters at beginning.
     String::size_type lastPos = str.find_first_not_of( delimiters, 0 );
     

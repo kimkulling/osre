@@ -211,7 +211,7 @@ void RenderTestSuite::showTestReport() {
 
     std::cout << "Errors:" << std::endl
               << "=======" << std::endl;
-    for (TArray<String>::Iterator it = m_FailureLog.begin(); it != m_FailureLog.end(); ++it) {
+    for (StringArray::Iterator it = m_FailureLog.begin(); it != m_FailureLog.end(); ++it) {
         String msg(*it);
         std::cout << msg << std::endl;
     }

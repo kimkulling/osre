@@ -69,7 +69,7 @@ public:
     /// @param  mode        [in] The requested access mode.
     /// @param  searchPaths [in] The search paths to look in.
     /// @return A pointer showing to the opened stream.
-    virtual Stream *find(const Uri &filename, Stream::AccessMode mode, CPPCore::TArray<String> *searchPaths ) = 0;
+    virtual Stream *find(const Uri &filename, Stream::AccessMode mode, StringArray *searchPaths) = 0;
 
     ///	@brief	Returns the schema description of the file system.
     ///	@return	The schema description.

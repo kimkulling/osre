@@ -32,7 +32,6 @@ using namespace ::CPPCore;
 static const c8* option = "--";
 static const c8 tokenArgIn = '<';
 static const c8 tokenArgOut = '>';
-static const c8* dummy = "";
 
 ArgumentParser::Argument::Argument() :
         mArgument(""), mDesc(""), mNumArgs(0) {
@@ -47,7 +46,7 @@ ArgumentParser::Argument::Argument(const String &arg, const String &desc, ui32 n
 static bool parseExpectedArgs(const String &userDefinedArgs, const String &desc, 
         TArray<ArgumentParser::Argument> &supportedArgs, String &error) {
     error.clear();
-    TArray<String> extractedArgs, extractedDescs;
+    StringArray extractedArgs, extractedDescs;
     if (extractedDescs.size() != extractedArgs.size()) {
         error += "Missing description for arguments";
         return false;
@@ -200,8 +199,9 @@ ui32 ArgumentParser::getNumValues(const String &argument) const {
 }
 
 const String &ArgumentParser::getArgument(const String &arg) const {
+    static String Dummy;
     if (arg.empty()) {
-        return dummy;
+        return Dummy;
     }
 
     for (ui32 index = 0; index < mDetectedArgs.size(); ++index) {
@@ -210,7 +210,7 @@ const String &ArgumentParser::getArgument(const String &arg) const {
         }
     }
 
-    return dummy;
+    return Dummy;
 }
 
 bool ArgumentParser::hasArgument(const String &argument) const {

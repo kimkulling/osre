@@ -145,8 +145,8 @@ protected:
 
 private:
     CPPCore::TArray<Argument> mSupportedArguments;	// List with supported arguments
-    CPPCore::TArray<String> mDetectedArgs;		    // List with detected arguments
-    CPPCore::TArray<String> mStoredArguments;	    // List with store arguments
+    StringArray mDetectedArgs; // List with detected arguments
+    StringArray mStoredArguments; // List with store arguments
     ui32 mCurrentIndex;					            // The current index for iteration
     String mLastError;                              // The last errors
     bool mIsValid;							        // The valid flag

@@ -108,8 +108,8 @@ private:
         MaxCompileState
     };
 
-    CPPCore::TArray<String> mUniformBuffer;
-    CPPCore::TArray<String> mVertexAttributes;
+    StringArray mUniformBuffer;
+    StringArray mVertexAttributes;
     String m_src[MaxShaderTypes];
     CompileState m_compileState[MaxCompileState];
 };

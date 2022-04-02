@@ -44,7 +44,7 @@ struct MenuEntry {
 
 struct OSRE_EXPORT StatusBarContent {
     CPPCore::TArray<ui32> StatusBarWidths;
-    CPPCore::TArray<String> StatusBarTexts;
+    StringArray StatusBarTexts;
 };
 
 //-------------------------------------------------------------------------------------------------

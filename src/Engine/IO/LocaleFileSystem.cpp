@@ -106,7 +106,7 @@ bool LocaleFileSystem::fileExist( const Uri &filename ) {
     return File::exists(filename.getAbsPath());
 }
 
-Stream *LocaleFileSystem::find( const Uri &file, Stream::AccessMode mode,  TArray<String> *searchPaths ) {
+Stream *LocaleFileSystem::find(const Uri &file, Stream::AccessMode mode, StringArray *searchPaths) {
     if ( !searchPaths ) {
         return nullptr;
     }

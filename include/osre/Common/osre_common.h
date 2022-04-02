@@ -147,6 +147,8 @@ using guid = ui64;
 /// @brief  The data type for strings
 using String = std::string;
 
+using StringArray = ::CPPCore::TArray<String>;
+
 /// @brief  A handle struct.
 struct Handle {
     i32 m_idx;

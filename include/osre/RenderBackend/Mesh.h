@@ -78,7 +78,6 @@ public:
     void setMaterial(Material *mat);
     Material *getMaterial() const;
     VertexType getVertexType() const;
-    //void setIndexType(IndexType indextype);
     IndexType getIndexType() const;
     const String &getName() const;
     void *mapVertexBuffer(size_t vbSize, BufferAccessType accessType);
