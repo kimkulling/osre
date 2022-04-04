@@ -46,7 +46,7 @@ using namespace ::CPPCore;
 
 // static member initialization
 RenderTestSuite *RenderTestSuite::s_pInstance = nullptr;
-static const String Tag = "RenderTestSuite";
+static const c8 *Tag = "RenderTestSuite";
 static const ui32 AllTestsDone = 999999;
 
 // our base keyboard event listener, for switching to the next test case

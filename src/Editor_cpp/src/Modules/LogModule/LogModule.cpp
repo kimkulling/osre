@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -39,6 +39,7 @@ namespace Editor {
 
 static const c8 *Tag = "LogModule";
 
+using namespace OSRE::Common;
 using namespace OSRE::App;
 using namespace OSRE::Platform;
 
@@ -114,7 +115,7 @@ protected:
 
         mLogWndHandle = initLogWindow(w->getModuleHandle());
         if (mLogWndHandle != nullptr) {
-            ShowWindow(mLogWndHandle, SW_SHOW);
+            ::ShowWindow(mLogWndHandle, SW_SHOW);
             mRect = rect;
         } else {
             osre_error(Tag, "Cannot create log module view.");
@@ -125,7 +126,7 @@ protected:
         SETTEXTEX sInfo = {};
         sInfo.flags = ST_DEFAULT;
         sInfo.codepage = CP_ACP;
-        SendDlgItemMessage(mLogWndHandle, IDC_EDIT1, EM_SETTEXTEX, (WPARAM)&sInfo, (LPARAM)mText.c_str());
+        ::SendDlgItemMessage(mLogWndHandle, IDC_EDIT1, EM_SETTEXTEX, (WPARAM)&sInfo, (LPARAM)mText.c_str());
     }
 
 private:
@@ -135,10 +136,12 @@ private:
     HWND mLogWndHandle;
 };
 
-class LogStream : public Common::AbstractLogStream {
+class LogStream : public AbstractLogStream {
 public:
     LogStream(LogView *lv) :
             AbstractLogStream(), mThreadId(999999), mLogView(lv) {
+        osre_assert(mLogView != nullptr);
+
         mThreadId = :: GetCurrentThreadId();
     }
 
@@ -191,7 +194,7 @@ bool LogModule::onLoad() {
 }
 
 bool LogModule::onUnload() {
-    Common::Logger::getInstance()->unregisterLogStream(mLogStream);
+    Logger::getInstance()->unregisterLogStream(mLogStream);
     delete mLogStream;
     mLogStream = nullptr;
     delete mLogView;

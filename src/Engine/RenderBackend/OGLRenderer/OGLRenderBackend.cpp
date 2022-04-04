@@ -338,6 +338,7 @@ void OGLRenderBackend::releaseBuffer(OGLBuffer *buffer) {
         osre_debug(Tag, "Pointer to buffer instance is nullptr");
         return;
     }
+
     const size_t slot = buffer->m_handle;
     glDeleteBuffers(1, &buffer->m_oglId);
     buffer->m_handle = OGLNotSetId;

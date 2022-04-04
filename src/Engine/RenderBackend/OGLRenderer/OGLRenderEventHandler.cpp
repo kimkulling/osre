@@ -242,6 +242,7 @@ bool OGLRenderEventHandler::onClearGeo(const EventData *) {
     m_oglBackend->releaseAllShaders();
     m_oglBackend->releaseAllTextures();
     m_oglBackend->releaseAllParameters();
+    m_oglBackend->releaseAllPrimitiveGroups();
     m_renderCmdBuffer->clear();
 
     return true;
