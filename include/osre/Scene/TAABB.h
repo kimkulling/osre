@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <osre/Common/glm_common.h>
 
 namespace OSRE {
 namespace Scene {
@@ -33,155 +34,133 @@ namespace Scene {
 ///	@brief  This class is used to define a bounding volume, which is aligned at the axis of the
 /// global coordinate system.
 //-------------------------------------------------------------------------------------------------
-template <class T>
-class TAABB {
+class AABB {
 public:
-    using VecType = TVec3<T>;
-
-    TAABB();
-    TAABB(const VecType &min, const VecType &max);
-    ~TAABB();
+    AABB();
+    AABB(const glm::vec3 &min, const glm::vec3 &max);
+    ~AABB();
     void reset();
-    void set(const VecType &min, const VecType &max);
-    const TVec3<T> &getMin() const;
-    const TVec3<T> &getMax() const;
-    void merge(const VecType &vec);
-    void merge(T x, T y, T z);
-    void updateFromVector3Array(VecType *vecArray, ui32 numVectors);
-    T getDiameter() const;
-    TVec3<T> getCenter() const;
-    bool isIn(const VecType &pt) const;
-    bool operator==(const TAABB<T> &rhs) const;
-    bool operator!=(const TAABB<T> &rhs) const;
+    void set(const glm::vec3 &min, const glm::vec3 &max);
+    const glm::vec3 &getMin() const;
+    const glm::vec3 &getMax() const;
+    void merge(const glm::vec3 &vec);
+    void merge(f32 x, f32 y, f32 z);
+    void updateFromVector3Array(glm::vec3 *vecArray, ui32 numVectors);
+    f32 getDiameter() const;
+    glm::vec3 getCenter() const;
+    bool isIn(const glm::vec3 &pt) const;
+    bool operator==(const AABB &rhs) const;
+    bool operator!=(const AABB &rhs) const;
 
 private:
-    VecType m_min;
-    VecType m_max;
-    T m_diameter;
+    glm::vec3 m_min;
+    glm::vec3 m_max;
+    f32 m_diameter;
 };
 
-template <class T>
-inline TAABB<T>::TAABB() :
+inline AABB::AABB() :
         m_min(999999, 99999, 99999), m_max(-999999, -99999, -99999), m_diameter(0) {
     // empty
 }
 
-template <class T>
-inline TAABB<T>::TAABB(const VecType &min, const VecType &max) :
+inline AABB::AABB(const glm::vec3 &min, const glm::vec3 &max) :
         m_min(min), m_max(max), m_diameter(0) {
     // empty
 }
 
-template <class T>
-inline TAABB<T>::~TAABB() {
+inline AABB::~AABB() {
     // empty
 }
 
-template <class T>
-inline void TAABB<T>::reset() {
-    m_min.set(999999, 99999, 99999);
-    m_max.set(-999999, -99999, -99999);
+inline void AABB::reset() {
+    m_min.x = m_min.y = m_min.z =999999;
+    m_max.x = m_max.y = m_max.z = -999999;
 }
 
-template <class T>
-inline void TAABB<T>::set(const VecType &min, const VecType &max) {
+inline void AABB::set(const glm::vec3 &min, const glm::vec3 &max) {
     m_min = min;
     m_max = max;
 }
 
-template <class T>
-inline const TVec3<T> &TAABB<T>::getMin() const {
+inline const glm::vec3 &AABB::getMin() const {
     return m_min;
 }
 
-template <class T>
-inline const TVec3<T> &TAABB<T>::getMax() const {
+inline const glm::vec3 &AABB::getMax() const {
     return m_max;
 }
 
-template <class T>
-inline void TAABB<T>::merge(const VecType &vec) {
-    const T x(vec[0]);
-    const T y(vec[1]);
-    const T z(vec[2]);
-    merge(x, y, z);
+inline void AABB::merge(const glm::vec3 &vec) {
+    merge(vec[0], vec[1], vec[2]);
 }
 
-template <class T>
-inline void TAABB<T>::merge(T x, T y, T z) {
+inline void AABB::merge(f32 x, f32 y, f32 z) {
     // set min values
-    if (x < m_min.getX()) {
-        m_min.setX(x);
+    if (x < m_min.x) {
+        m_min.x = x;
     }
-    if (y < m_min.getY()) {
-        m_min.setY(y);
+    if (y < m_min.y) {
+        m_min.y = y;
     }
-    if (z < m_min.getZ()) {
-        m_min.setZ(z);
+    if (z < m_min.z) {
+        m_min.z = z;
     }
 
     // set max values
-    if (x > m_max.getX()) {
-        m_max.setX(x);
+    if (x > m_max.x) {
+        m_max.x = x;
     }
-    if (y > m_max.getY()) {
-        m_max.setY(y);
+    if (y > m_max.y) {
+        m_max.y = y;
     }
-    if (z > m_max.getZ()) {
-        m_max.setZ(z);
+    if (z > m_max.z) {
+        m_max.z =z;
     }
 }
 
-template <class T>
-inline void TAABB<T>::updateFromVector3Array(VecType *vecArray, ui32 numVectors) {
+inline void AABB::updateFromVector3Array(glm::vec3 *vecArray, ui32 numVectors) {
     if (nullptr == vecArray || 0 == numVectors) {
         return;
     }
 
     for (ui32 i = 0; i < numVectors; ++i) {
-        VecType &v(vecArray[i]);
+        glm::vec3 &v(vecArray[i]);
         merge(v);
     }
 }
 
-template <class T>
-inline T TAABB<T>::getDiameter() const {
+inline f32 AABB::getDiameter() const {
     if (0 != m_diameter) {
         return m_diameter;
     }
 
-    T len = (m_max - m_min).getLength();
+    f32 len = (f32)(m_max - m_min).length();
 
     return len;
 }
-
-template <class T>
-inline TVec3<T> TAABB<T>::getCenter() const {
-    TVec3<T> center = (m_min + m_max) * 0.5f;
+inline glm::vec3 AABB::getCenter() const {
+    glm::vec3 center = (m_min + m_max) * 0.5f;
 
     return center;
 }
 
-template <class T>
-inline bool TAABB<T>::isIn(const VecType &pt) const {
-    if (pt.v[0] < m_min.v[0] || pt.v[1] < m_min.v[1] || pt.v[2] < m_min.v[2]) {
+inline bool AABB::isIn(const glm::vec3 &pt) const {
+    if (pt.x < m_min.x || pt.y < m_min.y || pt.z < m_min.z) {
         return false;
     }
 
-    if (pt.v[0] > m_max.v[0] || pt.v[1] > m_max.v[1] || pt.v[2] > m_max.v[2]) {
+    if (pt.x > m_max.x || pt.y > m_max.y || pt.z > m_max.z) {
         return false;
     }
 
     return true;
 }
 
-template <class T>
-inline bool TAABB<T>::operator==(const TAABB<T> &rhs) const {
+inline bool AABB::operator==(const AABB &rhs) const {
     return (m_max == rhs.m_max && m_min == rhs.m_min);
 }
 
-template <class T>
-inline bool TAABB<T>::operator!=(const TAABB<T> &rhs) const {
+inline bool AABB::operator!=(const AABB &rhs) const {
     return !(*this == rhs);
 }
 

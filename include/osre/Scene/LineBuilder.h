@@ -59,7 +59,7 @@ public:
     /// @param pos1     Array with pos1 edges.
     /// @param numLines The number of lines.
     /// @return The line builder reference.
-    LineBuilder &addLines(Vec3f *pos0, Vec3f *pos1, ui32 numLines);
+    LineBuilder &addLines(glm::vec3 *pos0, glm::vec3 *pos1, ui32 numLines);
 
     /// @brief  Will return the active mesh or nullptr when no mesh is active
     /// @return The pointer showing to the active mesh. The ownership will be moved to the 

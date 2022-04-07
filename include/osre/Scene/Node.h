@@ -86,7 +86,6 @@ class OSRE_EXPORT Node : public Common::Object {
 public:
     using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::Scene::Node>;
     using NodeArray = CPPCore::TArray<Node *>;
-    using AABB = ::OSRE::Scene::TAABB<f32>;
     using MeshReferenceArray = ::CPPCore::TArray<size_t>;
     using PropertyMap = CPPCore::THashMap<ui32, Properties::Property *>;
 

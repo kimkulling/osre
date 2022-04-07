@@ -61,11 +61,11 @@ LineBuilder &LineBuilder::addLine(const glm::vec3 &pos0, const glm::vec3 &pos1) 
     return *this;
 }
 
-LineBuilder &LineBuilder::addLines(Vec3f *pos0, Vec3f *pos1, ui32 numLines) {
+LineBuilder &LineBuilder::addLines(glm::vec3 *pos0, glm::vec3 *pos1, ui32 numLines) {
     for (ui32 i = 0; i < numLines; ++i) {
-        glm::vec3 position0(pos0[i].getX(), pos0[i].getY(), pos0[i].getZ());
+        glm::vec3 position0(pos0[i].x, pos0[i].y, pos0[i].z);
         m_posCache.add(position0);
-        glm::vec3 position1(pos1[i].getX(), pos1[i].getY(), pos1[i].getZ());
+        glm::vec3 position1(pos1[i].x, pos1[i].y, pos1[i].z);
         m_posCache.add(position1);
     }
 

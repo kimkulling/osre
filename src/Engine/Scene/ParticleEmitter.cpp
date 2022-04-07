@@ -41,8 +41,8 @@ ParticleEmitter::ParticleEmitter( RenderBackendService *rbSrv )
 , m_pos( nullptr )
 , m_pt_indices( nullptr )
 , m_ptGeo( nullptr )
-, m_useBounds( false )
-, m_bounds() {
+, mUseBounds( false )
+, mBounds() {
     // empty
 }
 
@@ -98,9 +98,9 @@ void ParticleEmitter::update( d32 /*tick*/ ) {
         const f32 y = static_cast< f32 >( generator.get( -10, 10 ) ) / 100.0f;
         const f32 z = static_cast< f32 >( generator.get( -10, 10 ) ) / 100.0f;
         m_pos[ i ] += glm::vec3( x, y, z );
-        if (m_useBounds) {
-            TVec3<f32> pt(m_pos[i].x, m_pos[i].y, m_pos[i].z);
-            if (!m_bounds.isIn(pt)) {
+        if (mUseBounds) {
+            glm::vec3 pt(m_pos[i].x, m_pos[i].y, m_pos[i].z);
+            if (!mBounds.isIn(pt)) {
                 m_pos[i] -= m_pos[i];
                 m_pos[i] -= m_pos[i];
             }
@@ -115,9 +115,9 @@ void ParticleEmitter::update( d32 /*tick*/ ) {
     }
 }
 
-void ParticleEmitter::setBounds(const TAABB<f32>& bounds) {
-    m_useBounds = true;
-    m_bounds = bounds;
+void ParticleEmitter::setBounds(const AABB& bounds) {
+    mUseBounds = true;
+    mBounds = bounds;
 }
 
 Mesh* ParticleEmitter::getMesh() const {

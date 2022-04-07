@@ -54,8 +54,8 @@ public:
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
-        TVec3<f32> min(-1, -1, -1), max(1, 1, 1);
-        Scene::TAABB<f32> aabb(min, max);
+        glm::vec3 min(-1, -1, -1), max(1, 1, 1);
+        Scene::AABB aabb(min, max);
         m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
         m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, glm::vec3(.5, .5, .5));
         Scene::DbgRenderer::getInstance()->renderAABB(m_transformMatrix.m_model, aabb);

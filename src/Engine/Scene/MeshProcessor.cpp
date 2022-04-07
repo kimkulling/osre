@@ -70,7 +70,7 @@ void MeshProcessor::addMesh(Mesh *mesh) {
     mDirty |= NeedsUpdate;
 }
 
-const Scene::Node::AABB &MeshProcessor::getAABB() const {
+const AABB &MeshProcessor::getAABB() const {
     return mAabb;
 }
 

@@ -40,7 +40,7 @@ namespace Scene {
 class OSRE_EXPORT DbgRenderer {
 public:
     void renderDbgText(ui32 x, ui32 y, ui32 id, const String &text);
-    void renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb);
+    void renderAABB(const glm::mat4 &transform, const AABB &aabb);
     void clear();
     void addLine(const RenderBackend::ColorVert &v0, const RenderBackend::ColorVert &v1);
 

@@ -34,55 +34,49 @@ namespace Common {
 ///
 /// You can use rays to see if any bounding objects will intersect with the ray.
 //-------------------------------------------------------------------------------------------------
-template<class T>
-class TRay {
+class Ray {
 public:
     /// @brief The default class constructor.
-    TRay();
+    Ray();
     /// @brief The class constructor with the parameters.
     /// @param origin       The origin of the ray.
     /// @param direction    The direction of the ray.
-    TRay( const TVec3<T> &origin, const TVec3<T> &direction );
+    Ray(const glm::vec3 &origin, const glm::vec3 &direction);
     
     ///	@brief  The class destructor.
-    ~TRay() = default;
-    const TVec3<T> &getOrigin() const;
-    const TVec3<T> &getDirection() const;
-    bool operator == ( const TRay<T> &rhs) const;
-    bool operator != (const TRay<T> &rhs) const;
+    ~Ray() = default;
+    const glm::vec3 &getOrigin() const;
+    const glm::vec3 &getDirection() const;
+    bool operator == ( const Ray &rhs) const;
+    bool operator != (const Ray &rhs) const;
 
 private:
-    TVec3<T> m_origin;
-    TVec3<T> m_direction;
+    glm::vec3 m_origin;
+    glm::vec3 m_direction;
 };
 
-template<class T>
-inline TRay<T>::TRay() : m_origin(), m_direction() {
+inline Ray::Ray() : m_origin(), m_direction() {
     // empty
 }
 
-template<class T>
-inline TRay<T>::TRay( const TVec3<T> &origin, const TVec3<T> &direction ) : m_origin( origin ), m_direction( direction ) {
+inline Ray::Ray(const glm::vec3 &origin, const glm::vec3 &direction) :
+        m_origin(origin), m_direction(direction) {
     // empty
 }
 
-template<class T>
-inline const TVec3<T> &TRay<T>::getOrigin() const {
+inline const glm::vec3 &Ray::getOrigin() const {
     return m_origin;
 }
 
-template<class T>
-inline const TVec3<T> &TRay<T>::getDirection() const {
+inline const glm::vec3 &Ray::getDirection() const {
     return m_direction;
 }
 
-template<class T>
-inline bool TRay<T>::operator == (const TRay<T> &rhs) const {
+inline bool Ray::operator == (const Ray &rhs) const {
     return ( m_origin == rhs.m_origin && m_direction == rhs.m_direction );
 }
 
-template<class T>
-inline bool TRay<T>::operator != (const TRay<T> &rhs) const {
+inline bool Ray::operator != (const Ray &rhs) const {
     return !( *this == rhs );
 }
 

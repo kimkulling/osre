@@ -105,16 +105,16 @@ static ui16 indices[NumIndices] = {
     3, 7
 };
 
-void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb) {
+void DbgRenderer::renderAABB(const glm::mat4 &transform, const AABB &aabb) {
     MeshBuilder meshBuilder;
     meshBuilder.allocEmptyMesh("aabb", VertexType::ColorVertex);
     Mesh *mesh = meshBuilder.getMesh();
 
     static const ui32 NumVertices = 8;
     ColorVert vertices[NumVertices];
-    const OSRE::Vec3f &min(aabb.getMin());
-    const OSRE::Vec3f &max(aabb.getMax());
-    f32 x0(min.getX()), y0(min.getY()), z0(min.getZ()), x1(max.getX()), y1(max.getY()), z1(max.getZ());
+    const glm::vec3 &min(aabb.getMin());
+    const glm::vec3 &max(aabb.getMax());
+    f32 x0(min.x), y0(min.y), z0(min.z), x1(max.x), y1(max.y), z1(max.z);
     vertices[0].position.x = x0;
     vertices[0].position.y = y0;
     vertices[0].position.z = z0;

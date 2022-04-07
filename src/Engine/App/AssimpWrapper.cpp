@@ -247,7 +247,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
         return;
     }
 
-    TAABB<f32> aabb = mAssetContext.mEntity->getAABB();
+    AABB aabb = mAssetContext.mEntity->getAABB();
 
     Mat2MeshMap mat2MeshMap;
     for (ui32 meshIndex = 0; meshIndex < numMeshes; ++meshIndex) {
