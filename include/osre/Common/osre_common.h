@@ -283,6 +283,9 @@ struct TPoint2 {
         // empty
     }
 
+    ///	@brief  The class destructor.
+    ~TPoint2() = default;
+
     /// @brief  The compare operator.
     bool operator==(const TPoint2<T> &rhs) const {
         return (x == rhs.x && y == rhs.y);
@@ -329,9 +332,7 @@ struct TRectangle {
     }
 
     /// @brief  The class destructor.
-    ~TRectangle() {
-        // empty
-    }
+    ~TRectangle() = default;
 
     /// @brief  Will set the rectangle-geometry with the upper left corner, width and height.
     /// @param  x       [in] X coordinate of upper left corner.
@@ -486,6 +487,8 @@ struct TResolution {
         // empty
     }
 
+    ~TResolution() = default;
+
     T getArea() const {
         return Width * Height;
     }
@@ -506,8 +509,8 @@ inline String osre_to_string(T val) {
 }
 
 // Archive file version
-static const i32 CurrentMajorVersion = 0;
-static const i32 CurrentMinorVersion = 1;
+static constexpr i32 CurrentMajorVersion = 0;
+static constexpr i32 CurrentMinorVersion = 1;
 
 /// @brief  The version type
 struct Version {
@@ -519,6 +522,8 @@ struct Version {
             mMinor(minor) {
         // empty
     }
+
+    ~Version() = default;
 };
 
 class OSRE_EXPORT MemoryStatistics {

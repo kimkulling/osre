@@ -100,7 +100,7 @@ struct OSRE_EXPORT Event {
     /// @return The hash id.
     ui32 getHash() const;
 
-    const String &getId() const;
+    const String getId() const;
 
     ///	@brief	A reference ownership will be marked.
     void get();

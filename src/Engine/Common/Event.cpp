@@ -50,8 +50,9 @@ ui32 Event::getHash() const {
     return m_hash;
 }
 
-const String &Event::getId() const {
-    return mId;
+const String Event::getId() const {
+    String tmp(mId);
+    return tmp;
 }
 
 void Event::get() {
