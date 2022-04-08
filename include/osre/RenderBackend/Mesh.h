@@ -86,6 +86,7 @@ public:
     BufferData *getVertexBuffer() const;
     void createIndexBuffer(void *indices, size_t ibSize, IndexType indexType, BufferAccessType accessType);
     BufferData *getIndexBuffer() const;
+    void setId(ui64 id);
     ui64 getId() const;
     size_t getNumberOfPrimitiveGroups() const;
     PrimitiveGroup *getPrimitiveGroupAt(size_t index) const;
@@ -149,10 +150,6 @@ inline VertexType Mesh::getVertexType() const {
     return mVertexType;
 }
 
-/* inline void Mesh::setIndexType(IndexType indextype) {
-    mIndexType = indextype;
-}
-*/
 inline IndexType Mesh::getIndexType() const {
     return mIndexType;
 }
