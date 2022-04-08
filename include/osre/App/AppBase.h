@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/App/AppCommon.h>
 #include <osre/App/TAbstractCtrlBase.h>
+#include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/PlatformCommon.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Common/ArgumentParser.h>
