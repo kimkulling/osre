@@ -129,7 +129,6 @@ private:
     BufferData *mVertexBuffer;
     IndexType mIndexType;
     BufferData *mIndexBuffer;
-    //size_t mNumPrimGroups;
     using PrimGroupArray = ::CPPCore::TArray<PrimitiveGroup*>;
     PrimGroupArray mPrimGroups;
     ui64 mId;
