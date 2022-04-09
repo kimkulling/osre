@@ -162,6 +162,10 @@ inline size_t getVertexTypeSize() {
     return sizeof(TVertexType);
 }
 
+inline void Mesh::setId( ui64 id ) {
+    mId = id;
+}
+
 inline ui64 Mesh::getId() const {
     return mId;
 }
