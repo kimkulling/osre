@@ -38,8 +38,10 @@ namespace Scene {
 ///	@brief
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT DbgRenderer {
+    struct DebugText;
+
 public:
-    void renderDbgText(ui32 x, ui32 y, ui32 id, const String &text);
+    void renderDbgText(ui32 x, ui32 y, ui64 id, const String &text);
     void renderAABB(const glm::mat4 &transform, const AABB &aabb);
     void clear();
     void addLine(const RenderBackend::ColorVert &v0, const RenderBackend::ColorVert &v1);
@@ -52,6 +54,7 @@ public:
 private:
     DbgRenderer(RenderBackend::RenderBackendService *rbSrv);
     ~DbgRenderer();
+    DebugText *getDebugText(ui32 id) const;
 
 private:
     static DbgRenderer *sInstance;
@@ -59,6 +62,13 @@ private:
     RenderBackend::RenderBackendService *mRbSrv;
     RenderBackend::TransformMatrixBlock mTransformMatrix;
     RenderBackend::Mesh *mDebugMesh;
+    
+    struct DebugText {
+        RenderBackend::Mesh *mesh;
+        String text;
+    };
+
+    CPPCore::TArray<DebugText*> mDebugTextMeshes;
     ui16 mLastIndex;
 };
 

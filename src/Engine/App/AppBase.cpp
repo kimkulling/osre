@@ -51,7 +51,6 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
-using namespace ::OSRE::UI;
 using namespace ::OSRE::IO;
 
 static const c8 *Tag = "AppBase";

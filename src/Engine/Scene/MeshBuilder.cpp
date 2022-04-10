@@ -27,15 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Tokenizer.h>
 #include <osre/Debugging/osre_debugging.h>
 
-#include <GL/glew.h>
-#include <GL/gl.h>
-
-#include <vector>
-#include <sstream>
-#include <iostream>
-
-#include <cstdio>
-
 namespace OSRE {
 namespace Scene {
 
@@ -125,15 +116,11 @@ MeshBuilder &MeshBuilder::createTriangle(VertexType type, BufferAccessType acces
     allocVertices(mActiveMesh, mActiveMesh->getVertexType(), NumVert, pos, col, nullptr, access);
 
     // setup triangle indices
-    static const size_t NumIndices = 6;
-    GLushort indices[NumIndices] = {};
+    static const size_t NumIndices = 3;
+    ui16 indices[NumIndices] = {};
     indices[ 0 ] = 0;
     indices[ 1 ] = 2;
     indices[ 2 ] = 1;
-
-    indices[3] = 1;
-    indices[4] = 2;
-    indices[5] = 0;
 
     size_t size = sizeof(ui16) * NumIndices;
     mActiveMesh->createIndexBuffer(indices, size, IndexType::UnsignedShort, access);
@@ -175,7 +162,7 @@ MeshBuilder &MeshBuilder::allocQuads( VertexType type, BufferAccessType access )
 
     // setup triangle indices
     static const ui32 NumIndices = 6;
-    GLushort indices[NumIndices] = {};
+    ui16 indices[NumIndices] = {};
     indices[ 0 ] = 0;
     indices[ 1 ] = 2;
     indices[ 2 ] = 1;
@@ -184,7 +171,7 @@ MeshBuilder &MeshBuilder::allocQuads( VertexType type, BufferAccessType access )
     indices[ 4 ] = 2;
     indices[ 5 ] = 3;
 
-    ui32 size = sizeof( GLushort ) * NumIndices;
+    size_t size = sizeof(ui16) * NumIndices;
     mActiveMesh->createIndexBuffer(indices, size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
     // setup primitives
@@ -232,7 +219,7 @@ MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, Re
 
     // setup triangle indices
     static const ui32 NumIndices = 6;
-    GLushort indices[NumIndices] = {};
+    ui16 indices[NumIndices] = {};
     indices[ 0 ] = 0;
     indices[ 1 ] = 2;
     indices[ 2 ] = 1;
@@ -281,7 +268,7 @@ MeshBuilder &MeshBuilder::allocCube(VertexType type, f32 w, f32 h, f32 d, Buffer
     v[7].position.y = d;
     v[7].position.z = h;
 
-    GLushort indices[36] = {
+    ui16 indices[36] = {
         0,2,1, // bottom
         1,2,3,
 
@@ -306,7 +293,7 @@ MeshBuilder &MeshBuilder::allocCube(VertexType type, f32 w, f32 h, f32 d, Buffer
     const size_t vbSize = sizeof(RenderVert) * 8;
     mActiveMesh->createVertexBuffer(v, vbSize, access);
 
-    const size_t ibSize = sizeof(GLushort) * 36;
+    const size_t ibSize = sizeof(ui16) * 36;
     mActiveMesh->createIndexBuffer(indices, ibSize, IndexType::UnsignedShort, access);
     mActiveMesh->setMaterial(Scene::MaterialBuilder::createBuildinMaterial(type));
 
@@ -320,7 +307,7 @@ MeshBuilder &MeshBuilder::allocLineList( VertexType type, BufferAccessType acces
     mActiveMesh->addPrimitiveGroup(2 * numLines, PrimitiveType::LineList, 0);
 
     MeshBuilder::allocVertices(mActiveMesh, type, numLines, posArray, colorArray, nullptr, access);
-    ui32 size = sizeof( GLushort ) * numLines*2;
+    ui32 size = sizeof(ui16) * numLines * 2;
     mActiveMesh->createIndexBuffer(indices, size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
     return *this;
@@ -340,7 +327,7 @@ MeshBuilder &MeshBuilder::allocPoints( VertexType type, BufferAccessType access,
 
     MeshBuilder::allocVertices(mActiveMesh, VertexType::ColorVertex, numPoints, posArray, 
                         colorArray, nullptr, access );
-    const ui32 pt_size = sizeof( GLushort ) * numPoints;
+    const ui32 pt_size = sizeof(ui16) * numPoints;
     mActiveMesh->createIndexBuffer(&indices[0], pt_size, IndexType::UnsignedShort, access);
 
     // setup primitives
@@ -367,7 +354,7 @@ static size_t getNumTextIndices(const String &text) {
 }
 
 static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const String &text, 
-        glm::vec3 **textPos, glm::vec3 **colors, glm::vec2 **tex0, GLushort **textIndices) {
+        glm::vec3 **textPos, glm::vec3 **colors, glm::vec2 **tex0, ui16 **textIndices) {
     osre_assert(nullptr != textPos);
     osre_assert(nullptr != colors);
     osre_assert(nullptr != tex0);
@@ -389,7 +376,7 @@ static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const 
     *textPos = new glm::vec3[NumTextVerts];
     *colors = new glm::vec3[NumTextVerts];
     *tex0 = new glm::vec2[NumTextVerts];
-    *textIndices = new GLushort[getNumTextIndices(text)];
+    *textIndices = new ui16[getNumTextIndices(text)];
 
     const f32 invCol = 1.f / 16.f;
     const f32 invRow = 1.f / 16.f;
@@ -456,7 +443,7 @@ static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const 
     }
 }
 
-MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access ) {
+MeshBuilder &MeshBuilder::allocTextBox(f32 x, f32 y, f32 textSize, const String &text, BufferAccessType access) {
 	if ( text.empty() ) {
 		return *this;
 	}
@@ -465,7 +452,7 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
 
     glm::vec3 *textPos(nullptr), *colors(nullptr);
     glm::vec2 *tex0(nullptr);
-    GLushort *textIndices(nullptr);
+    ui16 *textIndices(nullptr);
     generateTextBoxVerticesAndIndices(x,y,textSize, text, &textPos, &colors, &tex0, &textIndices);
 
     //GeometryDiagnosticUtils::dumpIndices( textIndices, 6 * text.size() );
@@ -473,7 +460,7 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
     allocVertices(mesh, mesh->getVertexType(), text.size() * NumQuadVert, textPos, colors, tex0, access);
 
     // setup triangle indices
-    size_t size = sizeof( GLushort ) * 6 * text.size();
+    size_t size = sizeof(ui16) * 6 * text.size();
     mesh->createIndexBuffer(textIndices, size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
     // setup primitives
@@ -487,42 +474,6 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
     mActiveMesh = mesh;
 
     return *this;
-}
-
-static f32 getZbyStackIndex(f32 stackIndex) {
-    const f32 result = stackIndex * -0.1f;
-    return result;
-}
-
-void MeshBuilder::allocUiTextBox(f32 x, f32 y, i32 stackIndex, f32 textSize, const String &text, BufferAccessType access,
-        UiVertexCache &vc, UiIndexCache &ic) {
-    glm::vec3 *textPos(nullptr), *colors(nullptr);
-    glm::vec2 *tex0(nullptr);
-    GLushort *textIndices(nullptr);
-    generateTextBoxVerticesAndIndices(x, y, textSize, text, &textPos, &colors, &tex0, &textIndices);
-    const size_t offset = vc.numVertices();
-    const size_t numNewVerts = getNumTextVerts(text);
-    for (size_t i = 0; i < numNewVerts; i++) {
-
-        RenderVert v;
-        v.position = textPos[i];
-//        UI::WidgetCoordMapping::mapPosToWorld(static_cast<ui32>(v.position.x), static_cast<ui32>(v.position.y), v.position.x, v.position.y);
-
-
-        v.position.z = (f32) getZbyStackIndex((f32)stackIndex);
-        v.color0 = colors[i];
-        v.tex0 = tex0[i];
-        vc.add(v);
-    }
-
-    const size_t numIndices = getNumTextIndices(text);
-    for (size_t i = 0; i < numIndices; ++i) {
-        ic.add(textIndices[i] + ( GLushort ) offset);
-    }
-
-    delete[] textIndices;
-    delete[] tex0;
-    delete[] textPos;
 }
 
 void MeshBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text ) {
@@ -596,7 +547,7 @@ void MeshBuilder::allocVertices(Mesh *mesh, VertexType type, size_t numVerts, gl
                     colVerts[ i ].color0 = col1[i];
                 }
             }
-            size = sizeof( ColorVert ) * numVerts;
+            size = sizeof(ColorVert) * numVerts;
             mesh->createVertexBuffer(&colVerts[0], size, access);
             delete [] colVerts;
         }
@@ -620,7 +571,7 @@ void MeshBuilder::allocVertices(Mesh *mesh, VertexType type, size_t numVerts, gl
                 }
             }
 
-            size = sizeof( RenderVert ) * numVerts;
+            size = sizeof(RenderVert) * numVerts;
             mesh->createVertexBuffer(&renderVerts[0], size, access);
             delete [] renderVerts;
         }

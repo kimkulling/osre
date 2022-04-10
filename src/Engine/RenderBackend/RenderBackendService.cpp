@@ -79,6 +79,7 @@ RenderBackendService::RenderBackendService() :
         AbstractService("renderbackend/renderbackendserver"),
         m_renderTaskPtr(),
         m_settings(nullptr),
+        mViewport(),
         m_ownsSettingsConfig(false),
         m_frameCreated(false),
         m_renderFrame(&m_frames[0]),
@@ -115,6 +116,7 @@ bool RenderBackendService::onOpen() {
         m_ownsSettingsConfig = true;
     }
 
+    
     // Spawn the thread for our render task
     if (!m_renderTaskPtr.isValid()) {
         m_renderTaskPtr.init(SystemTask::create("render_task"));
@@ -578,6 +580,17 @@ void RenderBackendService::syncRenderThread() {
         osre_debug(Tag, "Error while requesting next frame.");
     }
     m_renderTaskPtr->awaitUpdate();
+}
+
+void RenderBackendService::setViewport( ui32 x, ui32 y, ui32 w, ui32 h ) {
+    mViewport.m_x = x;
+    mViewport.m_y = y;
+    mViewport.m_w = w;
+    mViewport.m_h = h;
+}
+
+const Viewport &RenderBackendService::getViewport() const {
+    return mViewport;
 }
 
 } // Namespace RenderBackend

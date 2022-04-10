@@ -133,8 +133,8 @@ inline f32 AABB::getDiameter() const {
     if (0 != m_diameter) {
         return m_diameter;
     }
-
-    f32 len = (f32)(m_max - m_min).length();
+    glm::vec3 diff = (m_max - m_min);
+    f32 len = glm::length(diff);
 
     return len;
 }

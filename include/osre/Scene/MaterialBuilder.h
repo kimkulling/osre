@@ -46,11 +46,7 @@ public:
     /// @param  type    The vertx type.
     /// @return The build-in material instance.
     static RenderBackend::Material *createBuildinMaterial( RenderBackend::VertexType type );
-    
-    /// @brief 
-    /// @return 
-    static RenderBackend::Material *createBuildinUiMaterial();
-    
+        
     /// @brief 
     /// @param matName 
     /// @param texResArray 
@@ -67,6 +63,8 @@ public:
     /// @return 
     static RenderBackend::Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
         const String& VsSrc, const String& FsSrc);
+
+    static RenderBackend::Material *createDebugRenderTextMaterial();
 
 private:
     /// @brief The default class constructor.

@@ -94,7 +94,7 @@ TEST_F( TAABBTest, getDiameterTest ) {
     AABB aabb( min, max );
     const f32 diam = aabb.getDiameter();
 	
-	EXPECT_FLOAT_EQ( max.length(), diam );
+	EXPECT_FLOAT_EQ( glm::length(max), diam );
 }
 
 TEST_F( TAABBTest, getCenterTest ) {

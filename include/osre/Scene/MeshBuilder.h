@@ -101,10 +101,6 @@ public:
     /// @return The created mesh.
     MeshBuilder& allocTextBox( f32 x, f32 y, f32 textSize, const String &text, RenderBackend::BufferAccessType access );
 
-    /// @brief  Helper method to create text-box mesh.
-    static void allocUiTextBox(f32 x, f32 y, i32 stackIndex, f32 textSize, const String &text, RenderBackend::BufferAccessType access,
-                RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic);
-
     /// @brief  Will update the vertices of a text box.
     /// @param  geo         [inout] The mesh to update.
     /// @param  textSize    [in] The new text size.

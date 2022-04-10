@@ -141,7 +141,7 @@ void TrackBall::mapToSphere(const glm::vec2 *pNewPt, glm::vec3 *newVector) {
 
 void TrackBall::computeRotation() {
     glm::vec3 perp = glm::cross(mStartVector, mEndVector);
-    if (perp.length() > Common::BaseMath::getSPEPS()) {
+    if (glm::length(perp) > Common::BaseMath::getSPEPS()) {
         m_rotation.x = perp.x;
         m_rotation.y = perp.y;
         m_rotation.z = perp.z;

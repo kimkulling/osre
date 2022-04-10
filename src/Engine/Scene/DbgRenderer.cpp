@@ -40,6 +40,7 @@ DbgRenderer *DbgRenderer::sInstance = nullptr;
 DbgRenderer::DbgRenderer(RenderBackendService *rbSrv) :
         mRbSrv(rbSrv),
         mDebugMesh(nullptr),
+        mDebugTextMeshes(),
         mLastIndex(0) {
     osre_assert(nullptr != mRbSrv);
 }
@@ -75,15 +76,30 @@ c8 *DbgRenderer::getDebugRenderBatchName() {
     return name;
 }
 
-void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui32 id, const String &text) {
+void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui64 id, const String &text) {
+    osre_assert(mRbSrv != nullptr);
+    
     if (text.empty()) {
         return;
     }
-
+    DebugText *foundDebugText = getInstance()->getDebugText(id);
     mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
     mRbSrv->beginRenderBatch(DbgRenderer::getDebugRenderBatchName());
-
-
+    glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
+    mRbSrv->setMatrix(MatrixType::Projection, projection);
+    if (foundDebugText == nullptr) {
+        MeshBuilder meshBuilder;
+        meshBuilder.allocTextBox(x, y, 20, text, BufferAccessType::ReadWrite);
+        DebugText *entry = new DebugText;
+        entry->mesh = meshBuilder.getMesh();
+        entry->mesh->setId(id);
+        getInstance()->mDebugTextMeshes.add(entry);
+        mRbSrv->setMatrix(MatrixType::Projection, projection);
+        mRbSrv->addMesh(entry->mesh, 0);
+    } else if (foundDebugText->text != text) {
+        MeshBuilder::updateTextBox(foundDebugText->mesh, 10, text);
+        mRbSrv->updateMesh(foundDebugText->mesh);
+    }
     mRbSrv->endRenderBatch();
     mRbSrv->endPass();
 }
@@ -106,6 +122,8 @@ static ui16 indices[NumIndices] = {
 };
 
 void DbgRenderer::renderAABB(const glm::mat4 &transform, const AABB &aabb) {
+    osre_assert(mRbSrv != nullptr);
+
     MeshBuilder meshBuilder;
     meshBuilder.allocEmptyMesh("aabb", VertexType::ColorVertex);
     Mesh *mesh = meshBuilder.getMesh();
@@ -203,6 +221,22 @@ void DbgRenderer::addLine(const ColorVert &v0, const ColorVert &v1) {
     }
 
     mDebugMesh->addPrimitiveGroup(NumIndices, PrimitiveType::LineList, 0);
+}
+
+DbgRenderer::DebugText *DbgRenderer::getDebugText(ui32 id) const {
+    if (mDebugTextMeshes.isEmpty()) {
+        return nullptr;
+    }
+
+    DebugText *found = nullptr;
+    for (size_t i = 0; i < mDebugTextMeshes.size(); ++i) {
+        if (mDebugTextMeshes[i]->mesh->getId() == id) {
+            found = mDebugTextMeshes[i];
+            break;
+        }
+    }
+
+    return found;
 }
 
 } // Namespace Scene

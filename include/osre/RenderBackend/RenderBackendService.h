@@ -41,10 +41,6 @@ namespace Properties {
     class Settings;
 }
 
-namespace UI {
-    class Widget;
-}
-
 namespace Threading {
     class SystemTask;
 }
@@ -235,11 +231,12 @@ public:
 
     void focusLost();
 
-    void setUiScreen(UI::Widget *screen);
 
     void syncRenderThread();
 
-    //Texture *getDefaultTexture() const;
+    void setViewport(ui32 x, ui32 y, ui32 w, ui32 h);
+
+    const Viewport &getViewport() const;
 
 protected:
     /// @brief  The open callback.
@@ -260,12 +257,12 @@ protected:
 private:
     Threading::SystemTaskPtr m_renderTaskPtr;
     const Properties::Settings *m_settings;
+    Viewport mViewport;
     bool m_ownsSettingsConfig;
     bool m_frameCreated;
     Frame m_frames[2];
     Frame *m_renderFrame;
     Frame *m_submitFrame;
-    UI::Widget *m_screen;
     bool m_dirty;
     CPPCore::TArray<PassData*> m_passes;
     PassData *m_currentPass;
@@ -277,14 +274,6 @@ private:
     } mBehaviour;
     CPPCore::TArray<RenderBackend::Pipeline *> mPipelines;
 };
-
-inline void RenderBackendService::setUiScreen(UI::Widget *screen) {
-    m_screen = screen;
-}
-
-inline void RenderBackendService::enableAutoResizing(bool enabled) {
-    mBehaviour.ResizeViewport = enabled;
-}
 
 } // Namespace RenderBackend
 } // Namespace OSRE
