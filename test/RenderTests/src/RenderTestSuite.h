@@ -62,6 +62,7 @@ public:
     void showTestReport();
     void setRenderAPI( const String &renderAPI );
     const String &getRenderAPI() const;
+    void setSelectedTest(const String &selectedTest) { mSelectedTest = selectedTest; }
     void setMediaPath( const String &mediaPath );
     const String &getMediaPath() const;
     Platform::AbstractTimer *getTimer( ) const;
@@ -83,13 +84,14 @@ private:
     AbstractRenderTest *m_pActiveRenderTest;
     ui32 m_activeTestIdx;
     CPPCore::TArray<AbstractRenderTest*> m_attachedRenderTests;
-    CPPCore::TArray<String> m_FailureLog;
+    StringArray m_FailureLog;
     Platform::PlatformInterface *m_pPlatformInterface;
     KeyboardEventListener *m_pListener;
     Platform::AbstractTimer *m_pTimer;
     RenderBackend::RenderBackendService *m_pRenderBackendServer;
     String m_renderAPI;
     String m_mediaPath;
+    String mSelectedTest;
 };
 
 } // Namespace RenderTest

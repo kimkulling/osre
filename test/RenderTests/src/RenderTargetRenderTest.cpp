@@ -23,11 +23,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "AbstractRenderTest.h"
 #include "RenderTestUtils.h"
 
+#include <osre/Common/glm_common.h>
+#include <osre/RenderBackend/Mesh.h>
+#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
+#include <osre/Scene/MaterialBuilder.h>
+#include <osre/Scene/MeshBuilder.h>
+
 namespace OSRE {
 namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
-
+using namespace ::OSRE::Scene;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
@@ -36,13 +44,41 @@ using namespace ::OSRE::RenderBackend;
 //-------------------------------------------------------------------------------------------------
 class RenderTargetRenderTest : public AbstractRenderTest {
 public:
-    RenderTargetRenderTest()
-    : AbstractRenderTest("rendertest/rendertargetrendertest") {
+    RenderTargetRenderTest() : 
+            AbstractRenderTest("rendertest/rendertargetrendertest") {
         // empty
     }
 
+    ~RenderTargetRenderTest() override = default;
+
 protected:
-    bool onCreate( RenderBackendService * ) override {
+    bool onCreate(RenderBackendService *rbSrv) override {
+        rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
+        
+        FrameBuffer *fb = new FrameBuffer(100, 100, 32);
+        
+        Scene::MeshBuilder meshBuilder;
+        rbSrv->beginPass("render_target");
+        {
+            rbSrv->setRenderTarget(fb);
+            rbSrv->beginRenderBatch("b1");
+            
+            Mesh *triangle = meshBuilder.createTriangle(VertexType::RenderVertex, BufferAccessType::ReadOnly).getMesh();
+            rbSrv->addMesh(triangle, 1);
+
+            rbSrv->endRenderBatch();
+        }
+        rbSrv->endPass();
+
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
+        {
+            rbSrv->beginRenderBatch("b2");
+            {
+                Mesh *quad = meshBuilder.allocQuads(VertexType::RenderVertex, BufferAccessType::ReadOnly).getMesh();
+                rbSrv->addMesh(quad, 1);
+            }
+        }
+
         return true;
     }
 

@@ -107,7 +107,7 @@ namespace Colors {
 }
 
 static Mesh *createCoordAxis(ui32 size) {
-    Mesh *axis = Mesh::create(1, VertexType::ColorVertex);
+    Mesh *axis = new Mesh("axis", VertexType::ColorVertex, IndexType::UnsignedShort);
     ColorVert v1, v2, v3, v4, v5, v6;
     v1.position.x = v1.position.y = v1.position.z = 0;
     v1.color0 = Colors::Red;
@@ -151,8 +151,8 @@ static Mesh *createCoordAxis(ui32 size) {
     axisIndices.add(5);
 
     axis->attachIndices(&axisIndices[0], sizeof(ui16) * axisIndices.size());
-    axis->createPrimitiveGroup(IndexType::UnsignedShort, axisData.size(), PrimitiveType::LineList, 0);
-    axis->m_material = Scene::MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex);
+    axis->addPrimitiveGroup(axisData.size(), PrimitiveType::LineList, 0);
+    axis->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
 
     return axis;
 }
@@ -162,7 +162,7 @@ static Mesh *createGrid(ui32 numLines) {
         return nullptr;
     }
 
-    Mesh *grid = Mesh::create(1, VertexType::ColorVertex);
+    Mesh *grid = new Mesh("grid", VertexType::ColorVertex, IndexType::UnsignedShort);
     f32 currentX = -300.0f, currentY = -300.0f;
     f32 diffX = 600.0f / numLines;
     f32 diffY = 600.0f / numLines;
@@ -204,8 +204,8 @@ static Mesh *createGrid(ui32 numLines) {
     }
     grid->attachVertices(&lineData[0], sizeof(ColorVert) * lineData.size());
     grid->attachIndices(&lineIndices[0], sizeof(ui16) * lineIndices.size());
-    grid->createPrimitiveGroup(IndexType::UnsignedShort, lineData.size(), PrimitiveType::LineList, 0);
-    grid->m_material = Scene::MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex);
+    grid->addPrimitiveGroup(lineData.size(), PrimitiveType::LineList, 0);
+    grid->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
 
     return grid;
 }
@@ -225,8 +225,10 @@ void createRect2D(const Rect2ui &r, Mesh *mesh2D, Style &style) {
     edges[1].color0 = style.BG.toVec4();
     edges[2].color0 = style.BG.toVec4();
     edges[3].color0 = style.BG.toVec4();
+    
+    constexpr size_t NumIndices = 6;
     CPPCore::TArray<ui16> indices;
-    indices.resize(6);
+    indices.resize(NumIndices);
     indices[0] = 0;
     indices[1] = 2;
     indices[2] = 1;
@@ -236,8 +238,8 @@ void createRect2D(const Rect2ui &r, Mesh *mesh2D, Style &style) {
     indices[5] = 3;
 
     mesh2D->attachVertices(&edges[0], sizeof(glm::vec2) * 4);
-    mesh2D->attachIndices(&indices[0], sizeof(ui16) * 6);
-    mesh2D->createPrimitiveGroup(IndexType::UnsignedShort, 6, PrimitiveType::TriangleList, 0);
+    mesh2D->attachIndices(&indices[0], sizeof(ui16) * NumIndices);
+    mesh2D->addPrimitiveGroup(6, PrimitiveType::TriangleList, NumIndices);
 }
 
 
@@ -449,29 +451,8 @@ ModuleRegistry &OsreEdApp::getModuleRegistry() {
     return mModuleRegistry;
 }
 
-void OsreEdApp::createUI() {
+void OsreEdApp::createCanvas() {
     return;
-    mMesh2D = Mesh::create(1, VertexType::RenderVertex);
-    Rect2ui r(100, 100, 200, 200);
-    Style style;
-    style.BG.m_r = 1;
-    style.BG.m_g = 1;
-    createRect2D(r, mMesh2D, style);
-
-    Pipeline *pl = AppBase::findPipeline(DefaultPipelines::Pipeline_Default);
-    if (nullptr != pl) {
-        RenderBackend::Shader *shader = nullptr;
-        RenderPass *uiPass = RenderPass::create(UiPassId, shader);
-        pl->addPass(uiPass);
-        RenderBackendService *rbSrv = AppBase::getRenderBackendService();
-        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
-        {
-            rbSrv->beginRenderBatch("ui");
-            rbSrv->addMesh(mMesh2D, 1);
-            rbSrv->endRenderBatch();
-        }
-        rbSrv->endPass();
-    }
 }
 
 void OsreEdApp::setStatusBarText(const String &mode, const String &model, i32 numVertices, i32 numTriangles) {
@@ -544,7 +525,7 @@ bool OsreEdApp::onDestroy() {
     delete mMainRenderView;
     mMainRenderView = nullptr;
 
-    Mesh::destroy(&mMesh2D);
+    delete mMesh2D;
     mMesh2D = nullptr;
 
     return true;

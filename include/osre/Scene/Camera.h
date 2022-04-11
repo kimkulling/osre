@@ -80,7 +80,7 @@ public:
     void draw(RenderBackend::RenderBackendService *renderBackendSrv);
 
     /// @brief
-    void observeBoundingBox(const TAABB<f32> &box);
+    void observeBoundingBox(const AABB &box);
 
     /// @brief
     void setLookAt(const glm::vec3 &eyePosition, const glm::vec3 &center, const glm::vec3 &up);

@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/osre_common.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Platform/Windows/MinWindows.h>
 #include <Commctrl.h>
 
@@ -39,17 +40,7 @@ public:
     static void deleteProgressBar(ProgressBar *pb);
 };
 
-struct Canvas {
-    ui32 mX, mY, mWidth, mHeight;
-
-    void drawLine(ui32 x1, ui32 y1, ui32 x2, ui32 y2);
-    void drawRect(ui32 x, ui32 y, ui32 w, ui32 h);
-    void drawImage();
-    void clear();
-    void render();
-};
-
-struct Widget : Canvas {
+struct Widget {
     Widget *mParent;
     CPPCore::TArray<Widget*> mChildren;
     Rect2ui mRect;
@@ -60,31 +51,6 @@ struct ProgressBar : Widget {
     ui32 mRange;
     ui32 mCurrent;
     HWND mHWnd;
-};
-
-struct Label : Widget {
-    String mLabel;
-};
-
-struct Headline : Widget {
-    Label mName;
-};
-struct Panel : Widget {
-    Headline mHeadline;
-};
-
-struct Button : Widget {
-    Label mLabel;
-};
-
-struct TreeViewItem {
-    String Name;
-    CPPCore::TArray<TreeViewItem *> Children;
-};
-
-struct TreeView : Widget {
-    Label mLabel;
-    TreeViewItem *mRoot;
 };
 
 struct Style {

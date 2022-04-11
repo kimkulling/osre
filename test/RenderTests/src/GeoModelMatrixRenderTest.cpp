@@ -42,47 +42,92 @@ using namespace ::OSRE::RenderBackend;
 //-------------------------------------------------------------------------------------------------
 class GeoModelMatrixRenderTest : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
+    f32 mAngle;
 
 public:
     GeoModelMatrixRenderTest() :
-            AbstractRenderTest("rendertest/GeoModelMatrixRenderTest") {
+            AbstractRenderTest("rendertest/GeoModelMatrixRenderTest"), mAngle(0.0f) {
         // empty
     }
 
-    ~GeoModelMatrixRenderTest() override {
-        // empty
-    }
+    ~GeoModelMatrixRenderTest() override = default;
 
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
         Scene::MeshBuilder myBuilder;
-        myBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
-        Mesh *mesh1 = myBuilder.getMesh();
-        mesh1->m_localMatrix = true;
         TransformState transform;
-        transform.setTranslation(0.5f, 0, 0);
-        transform.setScale(0.2f, 0.2f, 0.2f);
-        transform.toMatrix(mesh1->m_model);
-
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
-            rbSrv->beginRenderBatch("b1");
+            rbSrv->beginRenderBatch("batch_1");
             {
-                rbSrv->addMesh(mesh1, 0);
+                glm::mat4 model(1);
+                myBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+                Mesh *mesh1 = myBuilder.getMesh();
 
+                transform.setTranslation(0.25f, 0, 0);
+                transform.setScale(0.2f, 0.2f, 0.2f);
+                transform.toMatrix(model);
+
+                rbSrv->setMatrix(MatrixType::Model, model);
+                rbSrv->addMesh(mesh1, 0);
+            }
+            rbSrv->endRenderBatch();
+
+            rbSrv->beginRenderBatch("batch_2");
+            {
+                glm::mat4 model(1);
                 myBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
                 Mesh *mesh2 = myBuilder.getMesh();
-                mesh2->m_localMatrix = true;
-                transform.setTranslation(-0.5f, 0, 0);
+
+                transform.setTranslation(-0.25f, 0, 0);
                 transform.setScale(0.2f, 0.2f, 0.2f);
-                transform.toMatrix(mesh2->m_model);
+                transform.toMatrix(model);
+
+                rbSrv->setMatrix(MatrixType::Model, model);
                 rbSrv->addMesh(mesh2, 0);
             }
             rbSrv->endRenderBatch();
         }
         rbSrv->endPass();
 
+        return true;
+    }
+
+    bool onRender(RenderBackendService *rbSrv) override {
+        TransformState transform;
+
+        glm::mat4 rot(1.0);
+        mAngle += 0.01f;
+        rot = glm::rotate(rot, mAngle, glm::vec3(1, 1, 0));
+
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
+        {
+            rbSrv->beginRenderBatch("batch_1");
+            {
+                glm::mat4 model(1);
+                transform.setTranslation(0.25f, 0, 0);
+                transform.setScale(0.2f, 0.2f, 0.2f);
+                transform.m_rotation = rot;
+                transform.toMatrix(model);
+                rbSrv->setMatrix(MatrixType::Model, model);
+            }
+            rbSrv->endRenderBatch();
+            
+            rbSrv->beginRenderBatch("batch_2");
+            {
+                glm::mat4 model(1);
+                transform.setTranslation(-0.25f, 0, 0);
+                transform.setScale(0.2f, 0.2f, 0.2f);
+                transform.m_rotation = rot;
+                transform.toMatrix(model);
+                rbSrv->setMatrix(MatrixType::Model, model);
+            }
+            rbSrv->endRenderBatch();
+        }
+        rbSrv->endPass();
+
+        
         return true;
     }
 };

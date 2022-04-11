@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Common/BaseMath.h>
+#include <osre/Common/glm_common.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Scene/TrackBall.h>
 #include <osre/Scene/Node.h>
@@ -63,7 +64,7 @@ TrackBall::~TrackBall() {
     // empty
 }
 
-void TrackBall::rotate( const Vec2f &from, Vec2f &to ) {
+void TrackBall::rotate( const glm::vec2 &from, glm::vec2 &to ) {
     mapToSphere(&from, &mStartVector);
     mapToSphere(&to, &mEndVector);
     computeRotation();
@@ -81,7 +82,7 @@ void TrackBall::onOSEvent(const Common::Event &osEvent, const Common::EventData 
     if (osEvent == Platform::MouseButtonDownEvent) {
         Platform::MouseButtonEventData *pMBData = (Platform::MouseButtonEventData *)data;
         if ( 0 == pMBData->m_Button ) {
-            Vec2f pos( static_cast<f32>( pMBData->m_AbsX ), static_cast<f32>( pMBData->m_AbsY ) );
+            glm::vec2 pos( static_cast<f32>( pMBData->m_AbsX ), static_cast<f32>( pMBData->m_AbsY ) );
             mapToSphere( &pos, &mStartVector );
             m_bLeftMButtonClicked = true;
         } else if ( 1 == pMBData->m_Button ) {
@@ -92,7 +93,7 @@ void TrackBall::onOSEvent(const Common::Event &osEvent, const Common::EventData 
     } else if ( osEvent == Platform::MouseMoveEvent ) {
         const MouseMoveEventData *pMMData = (Platform::MouseMoveEventData*) (data);
         if ( m_bLeftMButtonClicked ) {
-            Vec2f pos(static_cast<f32>(pMMData->m_absX), static_cast<f32>(pMMData->m_absY));
+            glm::vec2 pos(static_cast<f32>(pMMData->m_absX), static_cast<f32>(pMMData->m_absY));
             mStartVector = mEndVector;
             mapToSphere( &pos, &mEndVector );
             computeRotation();
@@ -112,17 +113,18 @@ void TrackBall::onOSEvent(const Common::Event &osEvent, const Common::EventData 
     }
 }
 
-void TrackBall::mapToSphere(const Vec2f *pNewPt, Vec3f *newVector) {
+void TrackBall::mapToSphere(const glm::vec2 *pNewPt, glm::vec3 *newVector) {
     // copy parameter into temp point
-    Vec2f tempPt(*pNewPt);
+    glm::vec2 tempPt(*pNewPt);
 
     // adjust point coordinates and scale down to range of [-1 ... 1]
-    f32 x = (tempPt.getX() * m_adjWidth) - 1.0f;
-    f32 y = tempPt.getY() * m_adjHeight;
-    tempPt.set(x, y);
+    f32 x = (tempPt.x * m_adjWidth) - 1.0f;
+    f32 y = tempPt.y * m_adjHeight;
+    tempPt.x = x;
+    tempPt.y = y;
 
     // compute the square of the length of the vector to the point from the center
-    f32 length = (tempPt.getX() * tempPt.getX()) + (tempPt.getY() * tempPt.getY());
+    f32 length = (tempPt.x * tempPt.x) + (tempPt.y * tempPt.y);
 
     // if the point is mapped outside of the sphere... (length > radius squared)
     if (length > mRadius) {
@@ -130,20 +132,20 @@ void TrackBall::mapToSphere(const Vec2f *pNewPt, Vec3f *newVector) {
         f32 norm = mRadius / sqrt(length);
 
         // return the "normalized" vector, a point on the sphere
-        newVector->set(tempPt.getX() * norm, tempPt.getY() * norm, 0.0f);
+        *newVector = glm::vec3(tempPt.x * norm, tempPt.y * norm, 0.0f);
     } else { // else it's on the inside
         // return a vector to a point mapped inside the sphere sqrt(radius squared - length)
-        newVector->set(tempPt.getX(), tempPt.getY(), sqrt(mRadius - length));
+        *newVector = glm::vec3(tempPt.x, tempPt.y, sqrt(mRadius - length));
     }
 }
 
 void TrackBall::computeRotation() {
-    Vec3f perp = mStartVector.crossProduct(mEndVector);
-    if (perp.getLength() > Common::BaseMath::getSPEPS()) {
-        m_rotation.x = perp.getX();
-        m_rotation.y = perp.getX();
-        m_rotation.z = perp.getZ();
-        m_rotation.w = mStartVector.dotProduct(mEndVector);
+    glm::vec3 perp = glm::cross(mStartVector, mEndVector);
+    if (glm::length(perp) > Common::BaseMath::getSPEPS()) {
+        m_rotation.x = perp.x;
+        m_rotation.y = perp.y;
+        m_rotation.z = perp.z;
+        m_rotation.w = glm::dot(mStartVector, mEndVector);
     } else {
         m_rotation.x = 0;
         m_rotation.y = 0;

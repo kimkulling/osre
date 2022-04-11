@@ -48,14 +48,14 @@ public:
     ~MeshProcessor();
     bool execute() override;
     void addMesh( RenderBackend::Mesh *geo );
-    const Scene::Node::AABB &getAABB() const;
+    const AABB &getAABB() const;
 
 private:
     void handleMesh( RenderBackend::Mesh *mesh );
 
 private:
     RenderBackend::MeshArray mMeshArray;
-    Node::AABB mAabb;
+    AABB mAabb;
     i32 mDirty;
 };
 

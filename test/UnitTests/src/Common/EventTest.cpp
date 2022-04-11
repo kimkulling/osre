@@ -33,7 +33,7 @@ class EventTest : public ::testing::Test {
 };
 
 TEST_F(EventTest, createTest) {
-    const String name( "test_event" );
+    const c8 *name( "test_event" );
     Event myEvent(name);
     EXPECT_NE( static_cast<ui32>(0), myEvent.getHash() );
     Event myEvent1(name);
@@ -41,12 +41,12 @@ TEST_F(EventTest, createTest) {
 }
 
 TEST_F(EventTest, calculateHashFromEventNameTest) {
-    const String name("test_event");
+    const c8 *name("test_event");
     Event myEvent(name);
     const ui32 hash = myEvent.getHash();
     EXPECT_NE( hash, (ui32) 0 );
 
-    const String empty_name;
+    const char *empty_name = "";
     Event myEvent1(empty_name);
 
     const ui32 hash_empty = myEvent1.getHash();

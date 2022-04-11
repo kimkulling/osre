@@ -42,10 +42,6 @@ AbstractRenderTest::AbstractRenderTest(const String &renderTestName) :
     // empty
 }
 
-AbstractRenderTest::~AbstractRenderTest() {
-    // empty
-}
-
 bool AbstractRenderTest::create(RenderBackendService *rbSrv) {
     osre_assert(nullptr != rbSrv);
 

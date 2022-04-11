@@ -57,7 +57,7 @@ class MainRenderView;
 class OsreEdApp : public App::AppBase {
 public:
     /// brief   The module list
-    using ModulePathArray = ::CPPCore::TArray<String>;
+    using ModulePathArray = StringArray;
 
     /// @brief  The class constructor with the incoming command line arguments.
     /// @param  argc    [in] The number of command-line parameters.
@@ -115,7 +115,7 @@ public:
     ModuleRegistry &getModuleRegistry();
 
     /// @brief  Will create the ui.
-    void createUI();
+    void createCanvas();
 
     /// @brief 
     /// @param mode 

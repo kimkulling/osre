@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -33,6 +33,7 @@ namespace OSRE {
 namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Scene;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
@@ -48,15 +49,13 @@ public:
         // empty
     }
 
-    ~AABBDbgRenderTest() override {
-        // empty
-    }
+    ~AABBDbgRenderTest() override = default;
 
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
-        TVec3<f32> min(-1, -1, -1), max(1, 1, 1);
-        Scene::TAABB<f32> aabb(min, max);
+        glm::vec3 min(-1, -1, -1), max(1, 1, 1);
+        Scene::AABB aabb(min, max);
         m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
         m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, glm::vec3(.5, .5, .5));
         Scene::DbgRenderer::getInstance()->renderAABB(m_transformMatrix.m_model, aabb);
@@ -67,7 +66,7 @@ public:
     bool onRender(RenderBackendService *rbSrv) override {
         rbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
         {
-            rbSrv->beginRenderBatch("dbgFontBatch");
+            rbSrv->beginRenderBatch(DbgRenderer::getDebugRenderBatchName());
             {
                 m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.01f, glm::vec3(1, 1, 0));
                 rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);

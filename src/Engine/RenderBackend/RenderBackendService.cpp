@@ -62,7 +62,7 @@ static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataAr
     return IdxNotFound;
 }
 
-static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<RenderBatchData *> &batchDataArray) {
+static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<RenderBatchData*> &batchDataArray) {
     if (nullptr == id) {
         return IdxNotFound;
     }
@@ -79,6 +79,7 @@ RenderBackendService::RenderBackendService() :
         AbstractService("renderbackend/renderbackendserver"),
         m_renderTaskPtr(),
         m_settings(nullptr),
+        mViewport(),
         m_ownsSettingsConfig(false),
         m_frameCreated(false),
         m_renderFrame(&m_frames[0]),
@@ -87,7 +88,8 @@ RenderBackendService::RenderBackendService() :
         m_dirty(false),
         m_passes(),
         m_currentPass(nullptr),
-        m_currentBatch(nullptr) {
+        m_currentBatch(nullptr),
+        mPipelines() {
     // empty
 }
 
@@ -96,6 +98,16 @@ RenderBackendService::~RenderBackendService() {
         delete m_settings;
         m_settings = nullptr;
     }
+
+    for (ui32 i = 0; i < mPipelines.size(); ++i) {
+        delete mPipelines[i];
+    }
+    mPipelines.clear();
+
+    for (ui32 i = 0; i < m_passes.size(); ++i) {
+        delete m_passes[i];
+    }
+    m_passes.clear();
 }
 
 bool RenderBackendService::onOpen() {
@@ -104,6 +116,7 @@ bool RenderBackendService::onOpen() {
         m_ownsSettingsConfig = true;
     }
 
+    
     // Spawn the thread for our render task
     if (!m_renderTaskPtr.isValid()) {
         m_renderTaskPtr.init(SystemTask::create("render_task"));
@@ -251,10 +264,10 @@ void RenderBackendService::commitNextFrame() {
                     cmd->m_batchId = currentBatch->m_id;
                     cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateBuffer;
                     Mesh *currentMesh = currentBatch->m_updateMeshArray[k];
-                    cmd->m_meshId = currentMesh->m_id;
-                    cmd->m_size = currentMesh->m_vb->getSize();
+                    cmd->m_meshId = currentMesh->getId();
+                    cmd->m_size = currentMesh->getVertexBuffer()->getSize();
                     cmd->m_data = new c8[cmd->m_size];
-                    ::memcpy(cmd->m_data, currentMesh->m_vb->getData(), cmd->m_size);
+                    ::memcpy(cmd->m_data, currentMesh->getVertexBuffer()->getData(), cmd->m_size);
                 }
             } 
             if (currentBatch->m_dirtyFlag & RenderBatchData::MeshDirty) {
@@ -279,6 +292,58 @@ void RenderBackendService::sendEvent(const Event *ev, const EventData *eventData
     if (m_renderTaskPtr.isValid()) {
         m_renderTaskPtr->sendEvent(ev, eventData);
     }
+}
+
+Pipeline *RenderBackendService::createDefaultPipeline() {
+    Pipeline *pipeline = new Pipeline(DefaultPipelines::Pipeline_Default);
+    RenderPass *renderPass = RenderPass::create(RenderPassId, nullptr);
+    CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
+    renderPass->setCullState(cullState);
+    pipeline->addPass(renderPass);
+    mPipelines.add(pipeline);
+
+    return pipeline;
+}
+
+Pipeline *RenderBackendService::createPipeline(const String &name) {
+    Pipeline *p = findPipeline(name);
+    if (nullptr == p) {
+        p = new Pipeline(name);
+        mPipelines.add(p);
+    }
+
+    return p;
+}
+
+Pipeline *RenderBackendService::findPipeline(const String &name) {
+    if (name.empty()) {
+        return nullptr;
+    }
+
+    RenderBackend::Pipeline *pl = nullptr;
+    for (ui32 i = 0; i < mPipelines.size(); ++i) {
+        if (mPipelines[i]->getName() == name) {
+            pl = mPipelines[i];
+            break;
+        }
+    }
+
+    return pl;
+}
+
+bool RenderBackendService::destroyPipeline(const String &name) {
+    if (name.empty()) {
+        return false;
+    }
+
+    for (ui32 i = 0; i < mPipelines.size(); ++i) {
+        if (mPipelines[i]->getName() == name) {
+            mPipelines.remove(i);
+            return true;
+        }
+    }
+
+    return false;
 }
 
 PassData *RenderBackendService::getPassById(const c8 *id) const {
@@ -328,6 +393,20 @@ RenderBatchData *RenderBackendService::beginRenderBatch(const c8 *id) {
     }
 
     return m_currentBatch;
+}
+
+void RenderBackendService::setRenderTarget(FrameBuffer *fb) {
+    if (m_currentPass == nullptr) {
+        osre_warn(Tag, "No active pass, cannot add render target.");
+        return;
+    }
+    
+    if (fb == nullptr) {
+        osre_error(Tag, "Framebuffer is nullptr, aborted.");
+        return;
+    }
+
+    m_currentPass->m_renderTarget = fb;
 }
 
 void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
@@ -410,7 +489,7 @@ void RenderBackendService::addMesh(Mesh *mesh, ui32 numInstances) {
     }
 
     MeshEntry *entry = new MeshEntry;
-    entry->m_geo.add(mesh);
+    entry->mMeshArray.add(mesh);
     entry->numInstances = numInstances;
     m_currentBatch->m_meshArray.add(entry);
     m_currentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
@@ -424,7 +503,7 @@ void RenderBackendService::addMesh(const CPPCore::TArray<Mesh *> &geoArray, ui32
 
     MeshEntry *entry = new MeshEntry;
     entry->numInstances = numInstances;
-    entry->m_geo.add(&geoArray[0], geoArray.size());
+    entry->mMeshArray.add(&geoArray[0], geoArray.size());
     m_currentBatch->m_meshArray.add(entry);
     m_currentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
 }
@@ -501,6 +580,17 @@ void RenderBackendService::syncRenderThread() {
         osre_debug(Tag, "Error while requesting next frame.");
     }
     m_renderTaskPtr->awaitUpdate();
+}
+
+void RenderBackendService::setViewport( ui32 x, ui32 y, ui32 w, ui32 h ) {
+    mViewport.m_x = x;
+    mViewport.m_y = y;
+    mViewport.m_w = w;
+    mViewport.m_h = h;
+}
+
+const Viewport &RenderBackendService::getViewport() const {
+    return mViewport;
 }
 
 } // Namespace RenderBackend

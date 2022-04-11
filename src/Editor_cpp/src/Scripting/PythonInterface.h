@@ -49,7 +49,7 @@ public:
 
 private:
     bool mCreated;
-    ::CPPCore::TArray<String> mPaths;
+    StringArray mPaths;
 };
 
 } // Namespace Editor

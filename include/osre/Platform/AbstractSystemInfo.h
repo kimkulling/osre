@@ -49,8 +49,7 @@ public:
     virtual bool getDiskInfo( const c8 *drive, ui64 &freeSpaceInBytes) = 0;
 };
 
-inline
-AbstractSystemInfo::~AbstractSystemInfo() {
+inline AbstractSystemInfo::~AbstractSystemInfo() {
     // empty
 }
 

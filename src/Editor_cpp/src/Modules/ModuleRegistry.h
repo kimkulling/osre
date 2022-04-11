@@ -45,7 +45,7 @@ using ModuleArray = CPPCore::TArray<App::ModuleBase*>;
 class ModuleRegistry {
 public:
     /// @brief  Type to store the paths to the modules.
-    using ModulePathArray = ::CPPCore::TArray<String>;
+    using ModulePathArray = StringArray;
 
     /// @brief  The class constructor.
     ModuleRegistry();

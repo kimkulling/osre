@@ -113,7 +113,7 @@ bool ZipFileSystem::fileExist( const Uri &file ) {
     return true;
 }
 
-Stream *ZipFileSystem::find( const Uri &file, Stream::AccessMode mode, CPPCore::TArray<String> *searchPaths ) {
+Stream *ZipFileSystem::find(const Uri &file, Stream::AccessMode mode, StringArray *searchPaths) {
     if( !fileExist( file ) ) {
         return nullptr;
     }

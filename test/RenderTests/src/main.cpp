@@ -37,7 +37,7 @@ using namespace ::OSRE::RenderTest;
 using namespace ::OSRE::Platform;
 
 int main( int argc, char *argv[] ) {
-    Common::ArgumentParser argParser( argc, (const char**) argv, "api:media", "The render API:The media to load" );
+    Common::ArgumentParser argParser( argc, (const char**) argv, "api:media:test", "The render API:The media to load:A dedicated test" );
     String renderAPI( "opengl" );
     //String renderAPI( "vulkan" );
     if ( argParser.hasArgument( "api" ) ) {
@@ -52,11 +52,22 @@ int main( int argc, char *argv[] ) {
     if ( argParser.hasArgument( "media" ) ) {
         mediaPath = argParser.getArgument( "media" );
     }
-    RenderTestSuite::getInstance()->setMediaPath( mediaPath );
+    String test = "";
+    if (argParser.hasArgument("test")) {
+        test = argParser.getArgument("test");
+        std::cout << "Selected test: " << test << "\n";
+    } else {
+        std::cout << "Selected test: all\n";
+    }
 
-    RenderTestSuite *rtSuite = RenderTestSuite::create( "tests" );
+    RenderTestSuite::getInstance()->setMediaPath(mediaPath);
+
+    RenderTestSuite *rtSuite = RenderTestSuite::create("tests");
     rtSuite->setup( renderAPI );
-    RenderTestSuite::getInstance()->setRenderAPI( renderAPI );
+    RenderTestSuite::getInstance()->setRenderAPI(renderAPI);
+    if (!test.empty()) {
+        RenderTestSuite::getInstance()->setSelectedTest(test);
+    }
     
     AbstractTimer *timer( rtSuite->getTimer() );
     if( nullptr == timer ) {
@@ -68,6 +79,8 @@ int main( int argc, char *argv[] ) {
     }
 
     RenderTestSuite::kill();
+
+    MemoryStatistics::showStatistics();
 
     return 0;
 }

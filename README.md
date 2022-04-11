@@ -5,12 +5,9 @@
 This is just another open-source render-engine made by Kim Kulling. This is a playground project for myself to work on my own side-projects.
 
 # The Core-Features:
-- Multithreaded rendering 
-- Platform abstraction-layer
-- OS-independent task-support to make multi-threaded rendering more easy
-- Model-import provided by Asset-Importer-Lib (see https://github.com/assimp/assimp)
-- Bitmap-Font-Rendering
-- Simple scenegraph-module
+- My first Multithreaded Renderer 
+- Platform abstraction to support Windows, Linux and more platforms
+- Simple Asset-import provided by the Asset-Importer-Lib (see https://github.com/assimp/assimp)
 - Virtual file-system for reading zip-archives
 - CMake base build environment
 
@@ -36,10 +33,7 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 # Quick Start
 
 ```cpp
-#include <osre/App/AppBase.h>
-#include <osre/App/Component.h>
-#include <osre/App/Entity.h>
-#include <osre/App/World.h>
+#include <osre/App/App.h>
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/MeshBuilder.h>

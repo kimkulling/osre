@@ -39,6 +39,8 @@ namespace IO {
 
 namespace RenderBackend {
 
+static constexpr GLint InvalidLocationId = -1;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -48,6 +50,21 @@ namespace RenderBackend {
 //-------------------------------------------------------------------------------------------------
 class OGLShader : public Common::Object {
 public:
+    static constexpr ui32 MaxLen = 64u;
+
+    struct ActiveParameter {
+        c8 m_name[MaxLen];
+        GLint m_location;
+
+        ActiveParameter() :
+                m_name(), m_location(InvalidLocationId) {
+            ::memset(m_name, '\0', sizeof(c8) * MaxLen);
+        }
+    };
+
+    ///	@brief  Type for parameter shader arrays in OpenGL.
+    using ParameterArray = ::CPPCore::TArray<ActiveParameter *>;
+
     /// @brief  The class constructor.
     /// @param  name    [in9 The name for the shader.
     OGLShader( const String &name );
@@ -119,21 +136,8 @@ public:
     OGLShader &operator = ( const OGLShader & ) = delete;
 
 private:
-    static const ui32 MaxLen = 64u;
-
-    struct ActiveParameter {
-        c8 m_name[ MaxLen ];
-        GLint m_location;
-
-        ActiveParameter() 
-        : m_name()
-        , m_location( -1 ) {
-            ::memset(m_name, '\0', sizeof(c8)*MaxLen);
-        }
-    };
-
-    ::CPPCore::TArray<ActiveParameter*> m_attribParams;
-    ::CPPCore::TArray<ActiveParameter*> m_uniformParams;
+    ParameterArray m_attribParams;
+    ParameterArray m_uniformParams;
 
     ui32 m_shaderprog;
     ui32 m_numShader;

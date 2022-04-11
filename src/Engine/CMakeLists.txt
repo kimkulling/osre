@@ -277,7 +277,6 @@ SET ( properties_src
 SET( scene_inc
     ${HEADER_PATH}/Scene/Scene.h
     ${HEADER_PATH}/Scene/SceneCommon.h
-    ${HEADER_PATH}/Scene/PipelineBuilder.h
     ${HEADER_PATH}/Scene/MeshProcessor.h
     ${HEADER_PATH}/Scene/MeshBuilder.h
     ${HEADER_PATH}/Scene/AnimatorBase.h
@@ -292,7 +291,6 @@ SET( scene_inc
     ${HEADER_PATH}/Scene/ParticleEmitter.h
 )
 SET( scene_src
-    Scene/PipelineBuilder.cpp
     Scene/DbgRenderer.cpp
     Scene/MeshProcessor.cpp
     Scene/MeshBuilder.cpp
@@ -316,6 +314,7 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/Mesh.h
     ${HEADER_PATH}/RenderBackend/TransformMatrixBlock.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
+    ${HEADER_PATH}/RenderBackend/RenderPass.h
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
     ${HEADER_PATH}/RenderBackend/RenderStates.h
     ${HEADER_PATH}/RenderBackend/Shader.h

@@ -39,7 +39,7 @@ static const String GLSLVersionString_330 =
 static const String GLSLVersionString_400 =
         "#version 400 core\n";
 
-static const String GLSLRenderVertexLayout =
+static const c8 *GLSLRenderVertexLayout =
         "// RenderVertex layout\n"
         "layout(location = 0) in vec3 position;	  // object space vertex position\n"
         "layout(location = 1) in vec3 normal;	  // object space vertex normal\n"
@@ -47,7 +47,7 @@ static const String GLSLRenderVertexLayout =
         "layout(location = 3) in vec2 texcoord0;  // per-vertex tex coord, stage 0\n"
         "\n";
 
-static const String GLSLCombinedMVPUniformSrc =
+static const c8 *GLSLCombinedMVPUniformSrc =
         "// uniforms\n"
         "uniform mat4 Model;\n"
         "uniform mat4 View;\n"
@@ -315,9 +315,9 @@ void MaterialBuilder::destroy() {
 static void addMaterialParameter(Material *mat) {
     osre_assert(nullptr != mat);
 
-    mat->m_shader->m_parameters.add("Model");
-    mat->m_shader->m_parameters.add("View");
-    mat->m_shader->m_parameters.add("Projection");
+    mat->m_shader->addUniformBuffer("Model");
+    mat->m_shader->addUniformBuffer("View");
+    mat->m_shader->addUniformBuffer("Projection");
 }
 
 Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
@@ -347,38 +347,11 @@ Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
     // Setup shader attributes and variables
     if (nullptr != mat->m_shader) {
         if (type == VertexType::ColorVertex) {
-            mat->m_shader->m_attributes.add(ColorVert::getAttributes(),
-                    ColorVert::getNumAttributes());
+            mat->m_shader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
         } else if (type == VertexType::RenderVertex) {
-            mat->m_shader->m_attributes.add(RenderVert::getAttributes(),
-                    RenderVert::getNumAttributes());
+            mat->m_shader->addVertexAttributes(RenderVert::getAttributes(),RenderVert::getNumAttributes());
         }
 
-        addMaterialParameter(mat);
-    }
-
-    return mat;
-}
-
-Material *MaterialBuilder::createBuildinUiMaterial() {
-    Material *mat = s_materialCache->find("buildinUiShaderMaterial");
-    if (nullptr != mat) {
-        return mat;
-    }
-
-    mat = s_materialCache->create("buildinUiShaderMaterial", IO::Uri());
-    ShaderSourceArray arr;
-    arr[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = GLSLVsSrcUI;
-    arr[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = GLSLFsSrcUI;
-    mat->createShader(arr);
-
-    // setup shader attributes and variables
-    if (nullptr != mat->m_shader) {
-        size_t numAttribs(RenderVert::getNumAttributes());
-        const String *attribs(RenderVert::getAttributes());
-        if (numAttribs > 0) {
-            mat->m_shader->m_attributes.add(attribs, numAttribs);
-        }
         addMaterialParameter(mat);
     }
 
@@ -428,9 +401,9 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
     // Setup shader attributes and variables
     if (nullptr != mat->m_shader) {
         if (type == VertexType::ColorVertex) {
-            mat->m_shader->m_attributes.add(ColorVert::getAttributes(), ColorVert::getNumAttributes());
+            mat->m_shader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
         } else if (type == VertexType::RenderVertex) {
-            mat->m_shader->m_attributes.add(RenderVert::getAttributes(), RenderVert::getNumAttributes());
+            mat->m_shader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
         }
 
         addMaterialParameter(mat);
@@ -468,6 +441,23 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
     ShaderSourceArray shArray;
     shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = VsSrc;
     shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = FsSrc;
+    mat->createShader(shArray);
+
+    return mat;
+}
+
+const c8 *DefaultDebugTestMat = "debug_text_mat";
+RenderBackend::Material *MaterialBuilder::createDebugRenderTextMaterial() {
+    Material *mat = s_materialCache->find(DefaultDebugTestMat);
+    if (nullptr != mat) {
+        return mat;
+    }
+    mat = s_materialCache->create(DefaultDebugTestMat);
+    ShaderSourceArray shArray;
+    shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = 
+            "\n";
+    shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] =
+            "\n";
     mat->createShader(shArray);
 
     return mat;

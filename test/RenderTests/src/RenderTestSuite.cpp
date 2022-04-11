@@ -46,20 +46,18 @@ using namespace ::CPPCore;
 
 // static member initialization
 RenderTestSuite *RenderTestSuite::s_pInstance = nullptr;
-static const String Tag = "RenderTestSuite";
+static const c8 *Tag = "RenderTestSuite";
 static const ui32 AllTestsDone = 999999;
 
 // our base keyboard event listener, for switching to the next test case
 class KeyboardEventListener : public Platform::OSEventListener {
 public:
     KeyboardEventListener(RenderTestSuite *renderTestSuite) :
-            OSEventListener("rendertest/keyboardeventlistener"), m_testSuite(renderTestSuite) {
+            OSEventListener("rendertest/keyboardeventlistener"), mTestSuite(renderTestSuite) {
         osre_assert(nullptr != renderTestSuite);
     }
 
-    ~KeyboardEventListener() {
-        // empty
-    }
+    ~KeyboardEventListener() override = default;
 
     void onOSEvent(const Event &osEvent, const EventData *data) override {
         if (osEvent == KeyboardButtonDownEvent) {
@@ -68,7 +66,7 @@ public:
                 ui32 next(0);
                 Key key = reinterpret_cast<const KeyboardButtonEventData *>(data)->m_key;
                 if (key == KEY_SPACE) {
-                    result = m_testSuite->requestNextTest(next);
+                    result = mTestSuite->requestNextTest(next);
                     if (!result) {
                         osre_info(Tag, "All tests done.");
                     }
@@ -78,7 +76,7 @@ public:
     }
 
 private:
-    RenderTestSuite *m_testSuite;
+    RenderTestSuite *mTestSuite;
 };
 
 RenderTestSuite *RenderTestSuite::create(const String &suiteName) {
@@ -133,7 +131,7 @@ bool RenderTestSuite::setup(const String &API) {
         CreateRendererEventData *data = new CreateRendererEventData(m_pPlatformInterface->getRootWindow());
         data->m_defaultFont = m_pPlatformInterface->getDefaultFontName();
 
-        data->m_pipeline = App::AppBase::createDefaultPipeline(m_pRenderBackendServer);
+        data->m_pipeline = m_pRenderBackendServer->createDefaultPipeline();
         m_pRenderBackendServer->sendEvent(&OnCreateRendererEvent, data);
     }
 
@@ -213,7 +211,7 @@ void RenderTestSuite::showTestReport() {
 
     std::cout << "Errors:" << std::endl
               << "=======" << std::endl;
-    for (TArray<String>::Iterator it = m_FailureLog.begin(); it != m_FailureLog.end(); ++it) {
+    for (StringArray::Iterator it = m_FailureLog.begin(); it != m_FailureLog.end(); ++it) {
         String msg(*it);
         std::cout << msg << std::endl;
     }
@@ -300,6 +298,21 @@ bool RenderTestSuite::clearTestEnv() {
 }
 
 bool RenderTestSuite::requestNextTest(ui32 &next) {
+    if (!mSelectedTest.empty()) {
+        if (m_activeTestIdx == AllTestsDone) {
+            return false;
+        }
+        m_activeTestIdx = AllTestsDone;
+        for (size_t currentTestIdx = 0; currentTestIdx < m_attachedRenderTests.size(); ++currentTestIdx) {
+            String::size_type pos = m_attachedRenderTests[currentTestIdx]->getTestName().find(mSelectedTest);
+            if (pos != String::npos) {
+                next = static_cast<ui32>(currentTestIdx);
+                return true;
+            }
+        }
+        return false;
+    }
+
     ++m_activeTestIdx;
     if (m_activeTestIdx >= m_attachedRenderTests.size()) {
         m_activeTestIdx = AllTestsDone;

@@ -1,5 +1,29 @@
+/*-----------------------------------------------------------------------------------------------
+The MIT License (MIT)
+
+Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
+#include <osre/App/ModuleBase.h>
 #include <osre/Common/Logger.h>
+#include <osre/Debugging/Debug.h>
 #include <osre/Common/ArgumentParser.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Platform/AbstractDynamicLoader.h>
@@ -11,14 +35,16 @@ using namespace ::OSRE::App;
 
 static const c8 *Tag = "player";
 
-typedef void(*createModuleFn)(void);
+typedef void* (*createModuleFn)(void);
 
 class PlayerApplication : public AppBase {
 public:
     PlayerApplication(int argc, c8 *argv[]) :
             AppBase(argc, (const char **)argv),
-            mDllName(),    
-            mModule(nullptr) {
+            mDllName(),
+            mBreakOnStartup(false),
+            mModule(nullptr),
+            mUpdateFunc(nullptr) {
         // empty
     }
 
@@ -29,6 +55,12 @@ public:
 protected:
     bool onCreate() override {
         const ArgumentParser &ap = AppBase::getArgumentParser();
+        mBreakOnStartup = ap.hasArgument("break_on_startup");
+        if (mBreakOnStartup) {
+            osre_info(Tag, "Break");
+            Debugging::debugBreak();
+        }
+
         mDllName = ap.getArgument("run_dll");
         if (mDllName.empty()) {
             osre_error(Tag, "Dll name is empty.");
@@ -53,12 +85,18 @@ protected:
             return false;
         }
 
-        createModuleFn func = (createModuleFn)dynLoader->loadFunction("createModule");
-        if (func == nullptr) {
+        mUpdateFunc = (createModuleFn)dynLoader->loadFunction("createModule");
+        if (mUpdateFunc == nullptr) {
             osre_error(Tag, "Cannot find factory method");
             return false;
         } else {
             osre_info(Tag, "Loading " + mDllName + " successful.");
+        }
+
+        App::ModuleBase *module = (App::ModuleBase *)(mUpdateFunc)();
+        if (module == nullptr) {
+            osre_error(Tag, "Cannot create instance of modeule from " + mDllName);
+            return false;
         }
 
         return true;
@@ -76,12 +114,17 @@ protected:
     }
 
     void onUpdate() override {
-
+        if (mUpdateFunc == nullptr) {
+            AppBase::onUpdate();
+            return;
+        }
     }
 
 private:
     String mDllName;
+    bool mBreakOnStartup;
     LibHandle *mModule;
+    createModuleFn mUpdateFunc;
 };
 
 int main(int argc, char *argv[]) {
