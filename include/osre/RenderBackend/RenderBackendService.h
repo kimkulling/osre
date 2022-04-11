@@ -231,7 +231,6 @@ public:
 
     void focusLost();
 
-
     void syncRenderThread();
 
     void setViewport(ui32 x, ui32 y, ui32 w, ui32 h);
@@ -274,6 +273,10 @@ private:
     } mBehaviour;
     CPPCore::TArray<RenderBackend::Pipeline *> mPipelines;
 };
+
+inline void RenderBackendService::enableAutoResizing( bool enabled ) {
+    mBehaviour.ResizeViewport = enabled;
+}
 
 } // Namespace RenderBackend
 } // Namespace OSRE

@@ -57,6 +57,7 @@ public:
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
         Scene::DbgRenderer::getInstance()->renderDbgText(1, 1, 1U, "XXX");
+        Scene::DbgRenderer::getInstance()->renderDbgText(10, 10, 2U, "and another one");
 
         return true;
     }
