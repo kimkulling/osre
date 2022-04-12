@@ -30,7 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AppCommon.h>
 #include <osre/App/AssimpWrapper.h>
 #include <osre/App/IModuleView.h>
-#include <osre/App/MOduleBase.h>
+#include <osre/App/ModuleBase.h>
 #include <osre/App/Project.h>
 #include <osre/App/ServiceProvider.h>
 #include <osre/App/AssetRegistry.h>
