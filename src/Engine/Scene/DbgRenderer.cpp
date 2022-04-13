@@ -178,7 +178,6 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const AABB &aabb) {
     // setup material
     mesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
 
-
     mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
     mRbSrv->beginRenderBatch(DbgRenderer::getDebugRenderBatchName());
 

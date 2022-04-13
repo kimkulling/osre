@@ -22,8 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "RenderTestSuite.h"
 #include "AbstractRenderTest.h"
-#include <osre/App/AppBase.h>
-#include <osre/App/AssetRegistry.h>
+#include <osre/App/App.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/IOService.h>
 #include <osre/Platform/AbstractPlatformEventQueue.h>
@@ -139,11 +138,7 @@ bool RenderTestSuite::setup(const String &API) {
 
     App::AssetRegistry *registry(App::AssetRegistry::create());
     if (nullptr != registry) {
-#ifdef OSRE_WINDOWS
         registry->registerAssetPath("assets", getMediaPath());
-#else
-        registry->registerAssetPath("assets", getMediaPath());
-#endif
     }
 
     Scene::MaterialBuilder::create();

@@ -91,7 +91,7 @@ bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
         result = onCommitNexFrame(data);
     } else if (OnClearSceneEvent == ev) {
         result = onClearGeo(data);
-    } else if (OnShutdownRequest == ev) {
+    } else if (OnShutdownRequestEvent == ev) {
         result = onShutdownRequest(data);
     } else if (OnResizeEvent == ev) {
         result = onResizeRenderTarget(data);
@@ -243,6 +243,7 @@ bool OGLRenderEventHandler::onClearGeo(const EventData *) {
     m_oglBackend->releaseAllTextures();
     m_oglBackend->releaseAllParameters();
     m_oglBackend->releaseAllPrimitiveGroups();
+    m_oglBackend->releaseAllVertexArrays();
     m_renderCmdBuffer->clear();
 
     return true;

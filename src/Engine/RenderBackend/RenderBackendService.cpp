@@ -288,12 +288,19 @@ void RenderBackendService::commitNextFrame() {
 }
 
 void RenderBackendService::sendEvent(const Event *ev, const EventData *eventData) {
+    osre_assert(ev != nullptr);
+
     if (m_renderTaskPtr.isValid()) {
         m_renderTaskPtr->sendEvent(ev, eventData);
     }
 }
 
 Pipeline *RenderBackendService::createDefaultPipeline() {
+    auto *defaultPipeline = findPipeline(DefaultPipelines::Pipeline_Default);
+    if (defaultPipeline != nullptr) {
+        return defaultPipeline;
+    }
+
     Pipeline *pipeline = new Pipeline(DefaultPipelines::Pipeline_Default);
     RenderPass *renderPass = RenderPass::create(RenderPassId, nullptr);
     CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
