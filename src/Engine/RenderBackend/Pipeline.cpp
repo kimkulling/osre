@@ -27,139 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-namespace Details {
-
-static const c8 *RenderPassNames[] = {
-    "RenderPass",
-    "UiPass",
-    "DbgPass"
-};
-
-} // Namespace Details
-
 constexpr i32 InvalidPassIdx = -1;
 
-RenderPass *RenderPass::create(ui32 id, Shader *shader) {
-    return new RenderPass(id, shader);
-}
-
-void RenderPass::destroy(RenderPass *plp) {
-    if (nullptr != plp) {
-        delete plp;
-    }
-}
-
-RenderPass::RenderPass(ui32 id, Shader *shader) :
-        mId(id),
-        mRenderTarget(),
-        mStates(),
-        mShader(shader) {
-    // empty
-}
-
-RenderPass::~RenderPass() {
-    // empty
-}
-
-RenderPass &RenderPass::set(RenderTarget &rt, RenderStates &states) {
-    mRenderTarget = rt;
-    mStates = states;
-
-    return *this;
-}
-
-RenderPass &RenderPass::setPolygonState(PolygonState polyState) {
-    mStates.m_polygonState = polyState;
-
-    return *this;
-}
-
-PolygonState RenderPass::getPolygonState() const {
-    return mStates.m_polygonState;
-}
-
-RenderPass &RenderPass::setCullState(CullState &cullstate) {
-    mStates.m_cullState = cullstate;
-
-    return *this;
-}
-
-CullState RenderPass::getCullState() const {
-    return mStates.m_cullState;
-}
-
-RenderPass &RenderPass::setBlendState(BlendState &blendState) {
-    mStates.m_blendState = blendState;
-
-    return *this;
-}
-
-const BlendState &RenderPass::getBlendState() const {
-    return mStates.m_blendState;
-}
-
-RenderPass &RenderPass::setSamplerState(SamplerState &samplerState) {
-    mStates.m_samplerState = samplerState;
-
-    return *this;
-}
-
-const SamplerState &RenderPass::getSamplerState() const {
-    return mStates.m_samplerState;
-}
-
-RenderPass &RenderPass::setClearState(ClearState &clearState) {
-    mStates.m_clearState = clearState;
-
-    return *this;
-}
-
-const ClearState &RenderPass::getClearState() const {
-    return mStates.m_clearState;
-}
-
-RenderPass &RenderPass::setStencilState(StencilState &stencilState) {
-    mStates.m_stencilState = stencilState;
-
-    return *this;
-}
-
-const StencilState &RenderPass::getStencilState() const {
-    return mStates.m_stencilState;
-}
-
-RenderPass &RenderPass::setShader(Shader *shader) {
-    mShader = shader;
-
-    return *this;
-}
-
-Shader *RenderPass::getShader() const {
-    return mShader;
-}
-
-ui32 RenderPass::getId() const {
-    return mId;
-}
-
-const c8 *RenderPass::getPassNameById(ui32 id) {
-    if (id >= MaxDbgPasses) {
-        return nullptr;
-    }
-
-    return Details::RenderPassNames[id];
-}
-
-bool RenderPass::operator==(const RenderPass &rhs) const {
-    return (mId == rhs.mId && mStates.m_polygonState == rhs.mStates.m_polygonState &&
-            mStates.m_cullState == rhs.mStates.m_cullState && mStates.m_blendState == rhs.mStates.m_blendState &&
-            mStates.m_samplerState == rhs.mStates.m_samplerState && mStates.m_clearState == rhs.mStates.m_clearState &&
-            mStates.m_stencilState == rhs.mStates.m_stencilState);
-}
-
-bool RenderPass::operator!=(const RenderPass &rhs) const {
-    return !(*this == rhs);
-}
 
 Pipeline::Pipeline(const String &pipelineName) :
         Object(pipelineName),
@@ -171,9 +40,7 @@ Pipeline::Pipeline(const String &pipelineName) :
 }
 
 Pipeline::~Pipeline() {
-    for (ui32 i = 0; i < mPasses.size(); ++i) {
-        RenderPass::destroy(mPasses[i]);
-    }
+    clear();
 }
 
 void Pipeline::addPass(RenderPass *pass) {

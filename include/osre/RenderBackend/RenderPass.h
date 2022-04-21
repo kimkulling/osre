@@ -3,8 +3,23 @@
 #include <osre/RenderBackend/RenderStates.h>
 #include <cppcore/Container/TArray.h>
 
+
 namespace OSRE {
 namespace RenderBackend {
+
+class RenderPass;
+
+
+class OSRE_EXPORT RenderPassFactory {
+public:
+    static RenderPass *create(ui32 id);
+    static void registerPass(ui32 id, RenderPass *renderPass);
+    static void unregisterPass(ui32 id);
+
+private:
+    static CPPCore::TArray<RenderPass*> sPasses;
+};
+
 
 static constexpr ui32 RenderPassId = 0;
 static constexpr ui32 UiPassId = 1;
@@ -18,8 +33,8 @@ static constexpr ui32 MaxDbgPasses = 3;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT RenderPass {
 public:
-    static RenderPass *create(ui32 id, Shader *shader);
-    static void destroy(RenderPass *plp);
+    RenderPass(ui32 id, Shader *shader);
+    ~RenderPass() = default;
     RenderPass &set(RenderTarget &rt, RenderStates &states);
     RenderPass &setPolygonState(PolygonState polyState);
     PolygonState getPolygonState() const;
@@ -41,15 +56,15 @@ public:
     bool operator!=(const RenderPass &rhs) const;
 
 private:
-    RenderPass(ui32 id, Shader *shader);
-    ~RenderPass();
-
-private:
     ui32 mId;
     RenderTarget mRenderTarget;
     RenderStates mStates;
     Shader *mShader;
 };
+
+inline ui32 RenderPass::getId() const {
+    return mId;
+}
 
 } // namespace RenderBackend
 } // namespace OSRE

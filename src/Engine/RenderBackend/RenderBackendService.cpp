@@ -302,7 +302,7 @@ Pipeline *RenderBackendService::createDefaultPipeline() {
     }
 
     Pipeline *pipeline = new Pipeline(DefaultPipelines::Pipeline_Default);
-    RenderPass *renderPass = RenderPass::create(RenderPassId, nullptr);
+    RenderPass *renderPass = RenderPassFactory::create(RenderPassId);
     CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
     renderPass->setCullState(cullState);
     pipeline->addPass(renderPass);

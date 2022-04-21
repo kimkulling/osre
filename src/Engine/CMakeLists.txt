@@ -324,6 +324,7 @@ SET( renderbackend_src
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
     RenderBackend/Pipeline.cpp
+    RenderBackend/RenderPass.cpp
     RenderBackend/TransformMatrixBlock.cpp
     RenderBackend/Shader.cpp
 )

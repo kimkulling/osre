@@ -129,7 +129,7 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         mAppState(State::Uninited),
         m_argParser(argc, argv, supportedArgs, desc),
         m_environment(nullptr),
-        m_settings(nullptr),
+        m_settings(new Properties::Settings),
         m_platformInterface(nullptr),
         m_timer(nullptr),
         m_rbService(nullptr),
@@ -139,7 +139,6 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         m_keyboardEvListener(nullptr),
         m_ids(nullptr),
         m_shutdownRequested(false) {
-    m_settings = new Properties::Settings;
     m_settings->setString(Properties::Settings::RenderAPI, "opengl");
     m_settings->setBool(Properties::Settings::PollingMode, true);
 }
@@ -178,7 +177,10 @@ bool AppBase::create(Properties::Settings *config) {
 }
 
 bool AppBase::destroy() {
-    return onDestroy();
+    if (mAppState == State::Created || mAppState == State::Running) {
+        return onDestroy();
+    }
+    return false;
 }
 
 void AppBase::update() {
@@ -219,7 +221,7 @@ bool AppBase::handleEvents() {
         return false;
     }
 
-    bool result = m_platformInterface->update();
+    const bool result = m_platformInterface->update();
     if (shutdownRequested()) {
         return false;
     }
@@ -237,7 +239,7 @@ Scene::Camera *AppBase::setActiveCamera(Scene::Camera *view) {
         return nullptr;
     }
 
-    World *activeWorld = getStage()->getActiveWorld();
+    World *activeWorld = mStage->getActiveWorld();
     if (activeWorld == nullptr) {
         return nullptr;
     }
@@ -409,6 +411,12 @@ bool AppBase::onDestroy() {
 
     delete m_ids;
     m_ids = nullptr;
+
+    delete m_mouseEvListener;
+    m_mouseEvListener = nullptr;
+
+    delete m_keyboardEvListener;
+    m_keyboardEvListener = nullptr;
 
     osre_debug(Tag, "Set application state to destroyed.");
     mAppState = State::Destroyed;
