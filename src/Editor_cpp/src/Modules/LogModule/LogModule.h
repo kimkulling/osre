@@ -33,6 +33,7 @@ namespace Common {
 namespace Editor {
 
 class LogView;
+class AssimpLogStream;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor
@@ -63,6 +64,7 @@ protected:
 private:
     LogView *mLogView;
     Common::AbstractLogStream *mLogStream;
+    AssimpLogStream *mAssimpLogStream;
 };
 
 } // namespace Editor

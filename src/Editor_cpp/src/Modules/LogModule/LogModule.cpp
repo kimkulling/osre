@@ -28,6 +28,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 #include <osre/Common/Logger.h>
 #include <osre/Platform/AbstractWindow.h>
+#include <assimp/Logger.hpp>
+#include <assimp/DefaultLogger.hpp>
+#include <assimp/LogStream.hpp>
 
 #include "richedit.h"
 #include "src/Engine/Platform/win32/Win32Window.h"
@@ -42,7 +45,7 @@ static const c8 *Tag = "LogModule";
 using namespace OSRE::Common;
 using namespace OSRE::App;
 using namespace OSRE::Platform;
-
+                                
 INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM lParam) {
     (void)lParam;
     switch (uMsg) {
@@ -161,17 +164,36 @@ private:
     LogView *mLogView;
 };
 
+class AssimpLogStream : public Assimp::LogStream {
+public:
+    AssimpLogStream(LogView *logView) :
+            LogStream(), mLogView(logView) {
+        osre_assert(logView != nullptr);
+    }
+
+    ~AssimpLogStream() = default;
+
+    void write(const char *message) override {
+        String logMsg = String(message)+ " (Assimp)";
+        mLogView->addEntry(logMsg);
+    }
+
+private:
+    LogView *mLogView;
+};
+
 LogModule::LogModule(AppBase *parentApp) :
         ModuleBase("log.module", parentApp),
         mLogView(nullptr),
-        mLogStream(nullptr) {
+        mLogStream(nullptr),
+        mAssimpLogStream(nullptr) {
     // empty
 }
                 
 LogModule::~LogModule() {
     if (nullptr != mLogView) {
         osre_error(Tag, "LogModule not unloaded before release.");
-        delete mLogView;
+        onUnload();
     }
 }
 
@@ -189,6 +211,10 @@ bool LogModule::onLoad() {
     mLogStream = new LogStream(mLogView);
     Common::Logger::getInstance()->registerLogStream(mLogStream);
 
+    Assimp::DefaultLogger::create("log.txt");
+    mAssimpLogStream = new AssimpLogStream(mLogView);
+    Assimp::DefaultLogger::get()->attachStream(mAssimpLogStream);
+
     return true;
 }
 
@@ -196,8 +222,12 @@ bool LogModule::onUnload() {
     Logger::getInstance()->unregisterLogStream(mLogStream);
     delete mLogStream;
     mLogStream = nullptr;
+    Assimp::DefaultLogger::get()->detachStream(mAssimpLogStream);
+    delete mAssimpLogStream;
+    mAssimpLogStream = nullptr;
     delete mLogView;
     mLogView = nullptr;
+    Assimp::DefaultLogger::kill();
 
     return true;
 }
