@@ -46,11 +46,16 @@ struct Widget {
     Rect2ui mRect;
 };
 
+struct PlatformData {
+    HWND mHWnd;
+};
+
 ///	@brief  The progress-bar data.
 struct ProgressBar : Widget {
     ui32 mRange;
     ui32 mCurrent;
-    HWND mHWnd;
+
+    PlatformData mPlatformData;
 };
 
 struct Style {

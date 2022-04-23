@@ -21,6 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "OsreEdApp.h"
+#include "RenderView/MainRenderView.h"
 #include "ProgressReporter.h"
 #include "RenderView/MainRenderView.h"
 #include "Gui/UIElements.h"
@@ -97,152 +98,6 @@ static void createTitleString(const SceneData &sd, String &titleString) {
     titleString += sd.AssetName;
 }
 
-namespace Colors {
-    const glm::vec3 Black(0, 0, 0);
-    const glm::vec3 White(1, 1, 1);
-    const glm::vec3 Grey(0.5, 0.5, 0.5);
-    const glm::vec3 Red(1, 0, 0);
-    const glm::vec3 Green(0, 1, 0);
-    const glm::vec3 Blue(0, 0, 1);
-}
-
-static Mesh *createCoordAxis(ui32 size) {
-    Mesh *axis = new Mesh("axis", VertexType::ColorVertex, IndexType::UnsignedShort);
-    ColorVert v1, v2, v3, v4, v5, v6;
-    v1.position.x = v1.position.y = v1.position.z = 0;
-    v1.color0 = Colors::Red;
-
-    v2.position.x = size;
-    v2.position.y = v2.position.z = 0;
-    v2.color0 = Colors::Red;
-
-    v3.position.x = v3.position.y = v3.position.z = 0;
-    v3.color0 = Colors::Green;
-
-    v4.position.y = size;
-    v4.position.x = v4.position.z = 0;
-    v4.color0 = Colors::Green;
-
-    v5.position.x = v5.position.y = v5.position.z = 0;
-    v5.color0 = Colors::Blue;
-
-    v6.position.z = size;
-    v6.position.x = v6.position.y = 0;
-    v6.color0 = Colors::Blue;
-
-    CPPCore::TArray<RenderBackend::ColorVert> axisData;
-    axisData.add(v1);
-    axisData.add(v2);
-    axisData.add(v3);
-    axisData.add(v4);
-    axisData.add(v5);
-    axisData.add(v6);
-
-    axis->attachVertices(&axisData[0], sizeof(ColorVert) * axisData.size());
-    
-    CPPCore::TArray<ui16> axisIndices;
-    axisIndices.add(0);
-    axisIndices.add(1);
-
-    axisIndices.add(2);
-    axisIndices.add(3);
-
-    axisIndices.add(4);
-    axisIndices.add(5);
-
-    axis->attachIndices(&axisIndices[0], sizeof(ui16) * axisIndices.size());
-    axis->addPrimitiveGroup(axisData.size(), PrimitiveType::LineList, 0);
-    axis->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
-
-    return axis;
-}
- 
-static Mesh *createGrid(ui32 numLines) {
-    if (0 == numLines) {
-        return nullptr;
-    }
-
-    Mesh *grid = new Mesh("grid", VertexType::ColorVertex, IndexType::UnsignedShort);
-    f32 currentX = -300.0f, currentY = -300.0f;
-    f32 diffX = 600.0f / numLines;
-    f32 diffY = 600.0f / numLines;
-    CPPCore::TArray<RenderBackend::ColorVert> lineData;
-    CPPCore::TArray<ui16> lineIndices;
-    ui16 currentIndex = 0;
-    for (ui32 x = 0; x < numLines + 1; ++x) {
-        ColorVert v1, v2;
-        v1.position.x = v2.position.x = currentX;
-        currentX += diffX;
-
-        v1.position.y = -300;
-        v2.position.y = 300;
-
-        v1.position.z = v2.position.z = 0.0f;
-        v1.color0 = v2.color0 = Colors::Grey;
-
-        lineData.add(v1);
-        lineData.add(v2);
-        lineIndices.add(currentIndex);
-        ++currentIndex;
-        lineIndices.add(currentIndex);
-        ++currentIndex;
-    }
-    for (ui32 y = 0; y < numLines + 1; ++y) {
-        ColorVert v1, v2;
-        v1.position.x = -300;
-        v2.position.x = 300;
-        v1.position.y = v2.position.y = currentY;
-        currentY += diffY;
-        v1.position.z = v2.position.z = 0.0f;
-        v1.color0 = v2.color0 = Colors::Grey;
-        lineData.add(v1);
-        lineData.add(v2);        
-        lineIndices.add(currentIndex);
-        ++currentIndex;
-        lineIndices.add(currentIndex);
-        ++currentIndex;
-    }
-    grid->attachVertices(&lineData[0], sizeof(ColorVert) * lineData.size());
-    grid->attachIndices(&lineIndices[0], sizeof(ui16) * lineIndices.size());
-    grid->addPrimitiveGroup(lineData.size(), PrimitiveType::LineList, 0);
-    grid->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
-
-    return grid;
-}
-
-void createRect2D(const Rect2ui &r, Mesh *mesh2D, Style &style) {
-    if (nullptr == mesh2D) {
-        return;
-    }
-
-    glm::vec2 p0(r.x1, r.y1), p1(r.getX1(), r.getY2()), p2(r.getX2(), r.getY2()), p3(r.getX2(), r.getY2());
-    UIVert edges[4] = {};
-    edges[0].position = p0;
-    edges[1].position = p1;
-    edges[2].position = p2;
-    edges[3].position = p3;
-    edges[0].color0 = style.BG.toVec4();
-    edges[1].color0 = style.BG.toVec4();
-    edges[2].color0 = style.BG.toVec4();
-    edges[3].color0 = style.BG.toVec4();
-    
-    constexpr size_t NumIndices = 6;
-    CPPCore::TArray<ui16> indices;
-    indices.resize(NumIndices);
-    indices[0] = 0;
-    indices[1] = 2;
-    indices[2] = 1;
-
-    indices[3] = 1;
-    indices[4] = 2;
-    indices[5] = 3;
-
-    mesh2D->attachVertices(&edges[0], sizeof(glm::vec2) * 4);
-    mesh2D->attachIndices(&indices[0], sizeof(ui16) * NumIndices);
-    mesh2D->addPrimitiveGroup(6, PrimitiveType::TriangleList, NumIndices);
-}
-
-
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         AppBase(argc, (const char **)argv, "api", "The render API"),
         m_model(),
@@ -259,17 +114,6 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
 
 OsreEdApp::~OsreEdApp() {
     // empty
-}
-
-void createEditorElements(RenderComponent *rc) {
-    if (rc == nullptr) {
-        return;
-    }
-
-    Mesh *grid = createGrid(60);
-    rc->addStaticMesh(grid);
-    Mesh *axis = createCoordAxis(100);
-    rc->addStaticMesh(axis);
 }
 
 bool OsreEdApp::onCreate() {
@@ -323,7 +167,7 @@ bool OsreEdApp::onCreate() {
 
     mMainRenderView = new MainRenderView();
     Entity *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
-    createEditorElements((RenderComponent *)editorEntity->getComponent(ComponentType::RenderComponentType));
+    mMainRenderView->createEditorElements((RenderComponent *)editorEntity->getComponent(ComponentType::RenderComponentType));
 
     mPythonInterface = new PythonInterface;
     if (!mPythonInterface->create()) {
@@ -439,7 +283,8 @@ void OsreEdApp::quitEditorCmd(ui32, void *) {
 }
 
 void OsreEdApp::gettingHelpCmd(ui32 cmdId, void *data) {
-    ShellExecute(NULL, "open", "https://github.com/kimkulling/osre/issues", NULL, NULL, SW_SHOWNORMAL);
+
+    ::ShellExecute(nullptr, "open", "https://github.com/kimkulling/osre/issues", NULL, NULL, SW_SHOWNORMAL);
 }
 
 void OsreEdApp::showVersionCmd(ui32 cmdId, void *data) {
@@ -451,9 +296,6 @@ ModuleRegistry &OsreEdApp::getModuleRegistry() {
     return mModuleRegistry;
 }
 
-void OsreEdApp::createCanvas() {
-    return;
-}
 
 void OsreEdApp::setStatusBarText(const String &mode, const String &model, i32 numVertices, i32 numTriangles) {
     Win32Window *win = (Win32Window *)getRootWindow();
@@ -560,7 +402,7 @@ bool OsreEdApp::saveSceneData(const IO::Uri &filename, SceneData &sd) {
         CPPCore::Variant *v = CPPCore::Variant::createFromString(filename.getResource());
         newProjectCmd(1, (void *)v);
     }
-    mProject->save(filename.getAbsPath());
+    mProject->save(filename.getAbsPath(), getStage());
     stream->close();
 
     return true;

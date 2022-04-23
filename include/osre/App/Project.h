@@ -163,8 +163,8 @@ public:
     const String& getProjectName() const;
     void setStage(Stage *stage);
     Stage *getStage() const;
-    bool load(const String& name);
-	bool save( const String &name);
+    bool load(const String &name, Stage *stage);
+    bool save(const String &name, const Stage *stage);
 
 private:
     String mProjectName;

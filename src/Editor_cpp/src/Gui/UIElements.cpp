@@ -32,7 +32,7 @@ using namespace ::OSRE::RenderBackend;
 
 ProgressBar *UIElements::createProgressBar(int id, HWND hWnd, const Rect2ui &dimension) {
     ProgressBar *pb = new ProgressBar;
-    pb->mHWnd = CreateWindowEx(
+    pb->mPlatformData.mHWnd = CreateWindowEx(
             0,
             PROGRESS_CLASS,
             (LPSTR)NULL,
@@ -46,15 +46,15 @@ ProgressBar *UIElements::createProgressBar(int id, HWND hWnd, const Rect2ui &dim
             (HINSTANCE)GetWindowLong(hWnd, GWLP_HINSTANCE),
             NULL);
 
-    if (!pb->mHWnd) {
+    if (!pb->mPlatformData.mHWnd) {
         MessageBox(NULL, "Progress Bar Failed.", "Error", MB_OK | MB_ICONERROR);
         return nullptr;
     }
     pb->mRange=100;
     pb->mCurrent = 0;
     
-    SendMessage(pb->mHWnd, PBM_SETRANGE, 0, MAKELPARAM(0, 99));
-    SendMessage(pb->mHWnd, PBM_SETSTEP, (WPARAM)1, 0);
+    SendMessage(pb->mPlatformData.mHWnd, PBM_SETRANGE, 0, MAKELPARAM(0, 99));
+    SendMessage(pb->mPlatformData.mHWnd, PBM_SETSTEP, (WPARAM)1, 0);
 
     pb->mParent = nullptr;
     pb->mRect = dimension;
@@ -63,11 +63,11 @@ ProgressBar *UIElements::createProgressBar(int id, HWND hWnd, const Rect2ui &dim
 }
 
 void UIElements::updateProgressBar(ProgressBar *pb, ui32 step) {
-    SendMessage(pb->mHWnd, PBM_SETPOS, (WPARAM)step, 0);
+    SendMessage(pb->mPlatformData.mHWnd, PBM_SETPOS, (WPARAM)step, 0);
 }
     
 void UIElements::deleteProgressBar(ProgressBar *pb) {
-    ::CloseWindow(pb->mHWnd);
+    ::CloseWindow(pb->mPlatformData.mHWnd);
     delete pb;
 }
 

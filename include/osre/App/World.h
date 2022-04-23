@@ -48,7 +48,7 @@ public:
     /// @brief  The class constructor with the name and the requested render-mode.
     /// @param  worldName   [in] The world name.
     /// @param  renderMode  [in] The requested render mode. @see RenderMode
-    explicit World(const String &worldName, RenderMode renderMode = RenderMode::Render3D);
+    explicit World(const String &worldName);
 
     /// @brief  The class destructor.
     virtual ~World();
@@ -112,10 +112,6 @@ public:
     /// @param  rbService   [in] The renderbackend.
     void draw( RenderBackend::RenderBackendService *rbService );
 
-    /// @brief  Will return the active render mode.
-    /// @return The active render mode, @see RenderMode .
-    RenderMode getRenderMode() const;
-
     /// @brief  Will return the id container.
     /// @return The Id container.    
     const Common::Ids &getIds() const;
@@ -124,19 +120,18 @@ protected:
     void updateBoundingTrees();
 
 private:
-    CPPCore::TArray<Scene::Camera*> m_views;
-    CPPCore::THashMap<ui32, Scene::Camera*> m_lookupViews;
-    CPPCore::TArray<Entity*> m_entities;
-    Scene::Camera *m_activeCamera;
+    CPPCore::TArray<Scene::Camera*> mViews;
+    CPPCore::THashMap<ui32, Scene::Camera*> mLookupViews;
+    CPPCore::TArray<Entity*> mEntities;
+    Scene::Camera *mActiveCamera;
     Scene::Node *mRoot;
-    Common::Ids m_ids;
+    Common::Ids mIds;
     RenderBackend::Pipeline *mPipeline;
-    RenderMode m_renderMode;
     bool mDirtry;
 };
 
 inline size_t World::getNumCameras() const {
-    return m_views.size();
+    return mViews.size();
 }
 
 inline Scene::Node *World::getRootNode() const {
@@ -144,15 +139,11 @@ inline Scene::Node *World::getRootNode() const {
 }
 
 inline void World::getEntityArray(CPPCore::TArray<Entity *> &entities) {
-    entities = m_entities;
-}
-
-inline RenderMode World::getRenderMode() const {
-    return m_renderMode;
+    entities = mEntities;
 }
 
 inline const Common::Ids &World::getIds() const {
-    return m_ids;
+    return mIds;
 }
 
 } // Namespace App

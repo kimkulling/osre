@@ -114,9 +114,6 @@ public:
     /// @return The module registry.
     ModuleRegistry &getModuleRegistry();
 
-    /// @brief  Will create the ui.
-    void createCanvas();
-
     /// @brief 
     /// @param mode 
     /// @param Model 

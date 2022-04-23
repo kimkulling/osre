@@ -78,9 +78,14 @@ Stage *Project::getStage() const {
     return mStage;
 }
 
-bool Project::load(const String &name) {
+bool Project::load(const String &name, Stage *stage) {
     if (name.empty()) {
         osre_warn(Tag, "Project name is empty.");
+        return false;
+    }
+
+    if (stage == nullptr) {
+        osre_fatal(Tag, "Stage container is a nullptr.");
         return false;
     }
 
@@ -278,7 +283,7 @@ static bool saveStage(const String &name, const Stage &stage, StageData *sd) {
     return result;
 }
 
-bool Project::save(const String &name) {
+bool Project::save(const String &name, const Stage *stage) {
     if (name.empty()) {
         return false;
     }
@@ -287,9 +292,10 @@ bool Project::save(const String &name) {
         return true;
     }
     
-    StageData *sd = new StageData;
-    
-    return saveStage(name, *mStage, sd);
+    StageData sd;
+    const bool result = saveStage(name, *mStage, &sd);
+
+    return result;
 }
 
 } // Namespace App

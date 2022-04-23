@@ -35,7 +35,6 @@ struct SceneData {
     String AssetName;
     Scene::Node::NodePtr m_modelNode;
     Scene::Camera *mCamera;
-    App::World *mWorld;
 
     SceneData();
 };
@@ -45,8 +44,7 @@ inline SceneData::SceneData() :
         ProjectName("none"),
         AssetName("none"),
         m_modelNode(),
-        mCamera(nullptr),
-        mWorld(nullptr) {
+        mCamera(nullptr) {
     // empty
 }
 

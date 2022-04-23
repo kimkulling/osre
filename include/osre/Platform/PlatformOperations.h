@@ -51,7 +51,7 @@ public:
     static void getFileOpenDialog( const String &title, const c8 *extensions, IO::Uri &location );
     static void getFileSaveDialog(const String &title, const c8 *extensions, IO::Uri &location);
     static void getDialog( const String &title, const String &question, ui32 requestedButtons, DlgResults &result );
-
+    static i32 executeCommand();
     PlatformOperations() = delete;
     PlatformOperations(const PlatformOperations &) = delete;
     ~PlatformOperations() = delete;

@@ -170,7 +170,12 @@ public:
     /// @param  rect    [out] The windows rect.
     virtual void getWindowsRect(Rect2ui &rect) const;
 
+    /// @brief Will set the mouse cursor.
+    /// @param ct The mouse cursor type to use.
     virtual void setWindowsMouseCursor(DefaultMouseCursorType ct) = 0;
+
+    // Not used
+    AbstractWindow() = delete;
 
 protected:
     /// @brief  Callback to override on creation.

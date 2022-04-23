@@ -53,7 +53,7 @@ INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM l
             int x = LOWORD(lParam);
             int y = HIWORD(lParam);
 
-            ::SetWindowPos(GetDlgItem(hWnd, IDC_EDIT1), nullptr, 0, 0,
+            ::SetWindowPos(GetDlgItem(hWnd, IDC_EDIT1), nullptr, 10, 10,
                     x - 10, y - 12, SWP_NOMOVE | SWP_NOZORDER);
 
             return TRUE;
@@ -66,13 +66,13 @@ INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM l
     return FALSE;
 }
 
-static HWND initLogWindow(HINSTANCE hInstance) {
+static HWND initLogWindow(HINSTANCE hInstance, HWND hParent) {
     HWND hwnd = ::CreateDialog(hInstance, MAKEINTRESOURCE(IDD_LOGVIEW),
-            nullptr, &LogDialogProc);
+            hParent, &LogDialogProc);
 
     if (hwnd == nullptr) {
         auto err = Win32OSService::getLastErrorAsString();
-        osre_error(Tag, "Unable to create log window.");
+        osre_error(Tag, "Unable to create log window. Error : " + err);
         return nullptr;
     }
 
@@ -112,8 +112,7 @@ protected:
             osre_error(Tag, "Cannot create log module view.");
             return;
         }
-
-        mLogWndHandle = initLogWindow(w->getModuleHandle());
+        mLogWndHandle = initLogWindow(w->getModuleHandle(), w->getHWnd());
         if (mLogWndHandle != nullptr) {
             ::ShowWindow(mLogWndHandle, SW_SHOW);
             mRect = rect;
