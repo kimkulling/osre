@@ -42,7 +42,7 @@ namespace Common {
 //--------------------------------------------------------------------------------------------------------------------
 class OSRE_EXPORT ArgumentParser {
 public:
-    // struct to store a single argument in a container
+    ///	@brief Stores a single argument description.
     struct Argument {
         String mArgument;	///< The argument as a string.
         String mDesc;       ///< The description for the argument ( used for help texts ).

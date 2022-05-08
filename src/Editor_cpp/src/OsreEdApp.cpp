@@ -134,7 +134,9 @@ bool OsreEdApp::onCreate() {
         return false;
     }
 
-    w->beginMenu();
+    UIElements::createMenues(w, this, queue);
+
+    /* w->beginMenu();
     MenuEntry FileMenu[8] = {
         { MF_STRING, IDM_FILE_NEW, L"&New", MenuFunctor::Make(this, &OsreEdApp::newProjectCmd) },
         { MF_STRING, IDM_FILE_OPEN, L"&Open Project", MenuFunctor::Make(this, &OsreEdApp::loadProjectCmd) },
@@ -152,7 +154,7 @@ bool OsreEdApp::onCreate() {
     };
     w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
 
-    w->endMenu();
+    w->endMenu();*/
     w->createStatusBar(100, 4);
     w->setStatusText(0, "Test");
 

@@ -31,6 +31,8 @@ namespace Common {
 
 CPPCore::TStackAllocator<QueueEntry> QueueEntryAlloctor;
 
+static constexpr c8 *Tag = "EventBus";
+
 EventBus::EventBus() :
         mSuscribedHandler(), mQueueEntryArray(), mCreated(false) {
     // empty
@@ -132,6 +134,12 @@ void EventBus::publish( const Event &ev, const EventData *eventData ) {
     osre_assert(mCreated);
 
     QueueEntry *entry = QueueEntryAlloctor.alloc(1);
+    osre_assert(entry != nullptr);
+    if (entry == nullptr) {
+        osre_fatal(Tag, "CAnnot allocate any new Queue event entried.");
+        return;
+    }
+
     entry->mEvent = &ev;
     entry->mEventData = eventData;
     mQueueEntryArray.add(entry);

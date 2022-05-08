@@ -30,6 +30,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+namespace Platform {
+    class Win32Window;
+    class AbstractPlatformEventQueue;
+}
+
+namespace Editor {
+    class OsreEdApp;
+}
+
 struct ProgressBar;
         
 // OS-specific API
@@ -38,6 +47,7 @@ public:
     static ProgressBar *createProgressBar(int id, HWND hWnd, const Rect2ui &dimension);
     static void updateProgressBar(ProgressBar *pb, ui32 step);
     static void deleteProgressBar(ProgressBar *pb);
+    static void createMenues(Platform::Win32Window *w, Editor::OsreEdApp *app, Platform::AbstractPlatformEventQueue *queue);
 };
 
 struct Widget {

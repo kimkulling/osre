@@ -93,9 +93,7 @@ public:
         // empty
     }
 
-    ~LogView() override {
-        mText = "";
-    }
+    ~LogView() override = default;
 
     void clear() {
         mText.clear();

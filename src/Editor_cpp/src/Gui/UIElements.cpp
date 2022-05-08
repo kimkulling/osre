@@ -21,14 +21,39 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "UIElements.h"
+#include "OsreEdApp.h"
 #include <osre/Scene/MeshBuilder.h>
+#include <osre/Platform/PlatformOperations.h>
+#include <osre/Platform/PlatformInterface.h>
 
 #include <commoncontrols.h>
 #include <winuser.h>
 
+#ifdef OSRE_WINDOWS
+#include "Engine/Platform/win32/Win32EventQueue.h"
+#include "Engine/Platform/win32/Win32Window.h"
+#include "shellapi.h"
+#include <CommCtrl.h>
+#include <commctrl.h>
+#include <strsafe.h>
+#include <windows.h>
+#include <winuser.h>
+#endif
+
 namespace OSRE {
 
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Platform;
+using namespace ::OSRE::Editor;
+
+constexpr int IDM_FILE_NEW = 1;
+constexpr int IDM_FILE_OPEN = 2;
+constexpr int IDM_FILE_SAVE = 3;
+constexpr int IDM_FILE_IMPORT = 4;
+constexpr int IDM_FILE_QUIT = 5;
+
+constexpr int IDM_GETTING_HELP = 6;
+constexpr int IDM_INFO_VERSION = 7;
 
 ProgressBar *UIElements::createProgressBar(int id, HWND hWnd, const Rect2ui &dimension) {
     ProgressBar *pb = new ProgressBar;
@@ -69,6 +94,32 @@ void UIElements::updateProgressBar(ProgressBar *pb, ui32 step) {
 void UIElements::deleteProgressBar(ProgressBar *pb) {
     ::CloseWindow(pb->mPlatformData.mHWnd);
     delete pb;
+}
+
+void UIElements::createMenues(Win32Window *w, OsreEdApp *app, Platform::AbstractPlatformEventQueue *queue) {
+    osre_assert(w != nullptr);
+    osre_assert(app != nullptr);
+    osre_assert(queue != nullptr);
+
+    w->beginMenu();
+    MenuEntry FileMenu[8] = {
+        { MF_STRING, IDM_FILE_NEW, L"&New", MenuFunctor::Make(app, &OsreEdApp::newProjectCmd) },
+        { MF_STRING, IDM_FILE_OPEN, L"&Open Project", MenuFunctor::Make(app, &OsreEdApp::loadProjectCmd) },
+        { MF_STRING, IDM_FILE_SAVE, L"&Save Project", MenuFunctor::Make(app, &OsreEdApp::saveProjectCmd) },
+        { MF_SEPARATOR, 0, nullptr },
+        { MF_STRING, IDM_FILE_IMPORT, L"&Import Asset", MenuFunctor::Make(app, &OsreEdApp::importAssetCmd) },
+        { MF_SEPARATOR, 0, nullptr },
+        { MF_STRING, IDM_FILE_QUIT, L"&Quit", MenuFunctor::Make(app, &OsreEdApp::quitEditorCmd) },
+    };
+    w->addSubMenues(nullptr, queue, L"File", FileMenu, 8);
+
+    MenuEntry InfoMenu[2] = {
+        { MF_STRING, IDM_GETTING_HELP, L"&Getting Help", MenuFunctor::Make(app, &OsreEdApp::gettingHelpCmd) },
+        { MF_STRING, IDM_INFO_VERSION, L"&Version", MenuFunctor::Make(app, &OsreEdApp::showVersionCmd) }
+    };
+    w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
+
+    w->endMenu();
 }
 
 } // namespace OSRE
