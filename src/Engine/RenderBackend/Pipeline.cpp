@@ -35,6 +35,11 @@ static const c8 *RenderPassNames[] = {
     "DbgPass"
 };
 
+namespace DefaultPipelines {
+    const c8 *Pipeline_Default = "pipeline.default";
+}
+
+
 } // Namespace Details
 
 constexpr i32 InvalidPassIdx = -1;
