@@ -32,19 +32,19 @@ using namespace ::OSRE::RenderBackend;
 class PipelineTest : public ::testing::Test {
 protected:
     RenderBackendService *mRbService;
-    RenderPass *m_pass1;
-    RenderPass *m_pass2;
+    RenderPass *mPass1;
+    RenderPass *mPass2;
 
 protected:
     void SetUp() override {
         mRbService = new RenderBackendService;
-        m_pass1 = RenderPassFactory::create(RenderPassId);
-        m_pass2 = RenderPassFactory::create(DbgPassId);
+        mPass1 = RenderPassFactory::create(RenderPassId);
+        mPass2 = RenderPassFactory::create(DbgPassId);
     }
 
     void TearDown() override {
-        delete m_pass2;
-        delete m_pass1;
+        delete mPass2;
+        delete mPass1;
         delete mRbService;
     }
 };
@@ -65,7 +65,7 @@ TEST_F( PipelineTest, accessPass_success ) {
 
     size_t numPasses = pipeline->getNumPasses();
     EXPECT_EQ( 0u, numPasses );
-    pipeline->addPass( m_pass1 );
+    pipeline->addPass( mPass1 );
     numPasses = pipeline->getNumPasses();
     EXPECT_EQ( 1u, numPasses );
 
@@ -76,8 +76,8 @@ TEST_F( PipelineTest, accessPass_success ) {
 
 TEST_F( PipelineTest, iterateThroughPasses_success ) {
     Pipeline *pipeline = new Pipeline("p1");
-    pipeline->addPass(m_pass1);
-    pipeline->addPass(m_pass2);
+    pipeline->addPass(mPass1);
+    pipeline->addPass(mPass2);
 
     size_t numPasses = pipeline->beginFrame();
     EXPECT_EQ( 2u, numPasses );
@@ -94,7 +94,7 @@ TEST_F( PipelineTest, iterateThroughPasses_success ) {
 }
 
 TEST_F( PipelineTest, comparePipelinePasses_success ) {
-    EXPECT_NE( *m_pass1, *m_pass2 );
+    EXPECT_NE( *mPass1, *mPass2 );
 }
 
 } // Namespace UnitTest
