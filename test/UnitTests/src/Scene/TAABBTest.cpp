@@ -35,9 +35,9 @@ class TAABBTest : public ::testing::Test {
 TEST_F( TAABBTest, createTest ) {
     bool ok( true );
     try {
-        TAABB<f32> aabb1;
-        Vec3f min( 0, 0, 0 ), max( 1, 1, 1 );
-        TAABB<f32> aabb2( min, max );
+        AABB aabb1;
+        glm::vec3 min(0, 0, 0), max(1, 1, 1);
+        AABB aabb2(min, max);
     } catch ( ... ) {
         ok = false;
     }
@@ -45,8 +45,8 @@ TEST_F( TAABBTest, createTest ) {
 }
 
 TEST_F( TAABBTest, resetTest ) {
-    TAABB<f32> aabb;
-    Vec3f min( 0, 0, 0 ), max( 1, 1, 1 );
+    AABB aabb;
+    glm::vec3 min(0, 0, 0), max(1, 1, 1);
     aabb.set( min, max );
     aabb.reset();
     EXPECT_NE( min, aabb.getMin() );
@@ -54,95 +54,95 @@ TEST_F( TAABBTest, resetTest ) {
 }
 
 TEST_F( TAABBTest, get_set_Test ) {
-    TAABB<f32> aabb;
-    Vec3f min( 0, 0, 0 ), max( 1, 1, 1 );
+    AABB aabb;
+    glm::vec3 min(0, 0, 0), max(1, 1, 1);
     aabb.set( min, max );
     EXPECT_EQ( min, aabb.getMin() );
     EXPECT_EQ( max, aabb.getMax() );
 }
 
 TEST_F( TAABBTest, mergeTest ) {
-    Vec3f min( 1, 2, 3 ), max( 4, 5, 6 );
-    TAABB<f32> aabb( min, max );
+    glm::vec3 min(1, 2, 3), max(4, 5, 6);
+    AABB aabb( min, max );
 
-    Vec3f newMin( -1, -2, -3 );
+    glm::vec3 newMin( -1, -2, -3 );
     aabb.merge( newMin );
     EXPECT_EQ( newMin, aabb.getMin() );
 
-    Vec3f newMax( 40, 50, 60 );
+    glm::vec3 newMax(40, 50, 60);
     aabb.merge( newMax );
     EXPECT_EQ( newMax, aabb.getMax() );
 }
 
 TEST_F( TAABBTest, mergeArrayTest_Success ) {
-    Vec3f min( 1, 2, 3 ), max( 4, 5, 6 );
-    TAABB<f32> aabb( min, max );
+    glm::vec3 min(1, 2, 3), max(4, 5, 6);
+    AABB aabb(min, max);
 
     static const ui32 NumVectors = 100;
-    Vec3f v[ NumVectors ];
+    glm::vec3 v[NumVectors];
     for ( ui32 i = 0; i < NumVectors; i++ ) {
         const f32 val( static_cast< f32 >( i ) );
-        v[ i ].set( val, val, val );
+        v[i].x = v[i].y = v[i].z = val;
     }
     aabb.updateFromVector3Array( v, NumVectors );
-    Vec3f newMax( 99, 99, 99 );
+    glm::vec3 newMax(99, 99, 99);
     EXPECT_EQ( newMax, aabb.getMax() );
 }
 
 TEST_F( TAABBTest, getDiameterTest ) {
-    Vec3f min( 0, 0, 0 ), max( 1, 1, 1 );
-    TAABB<f32> aabb( min, max );
+    glm::vec3 min(0, 0, 0), max(1, 1, 1);
+    AABB aabb( min, max );
     const f32 diam = aabb.getDiameter();
 	
-	EXPECT_FLOAT_EQ( max.getLength(), diam );
+	EXPECT_FLOAT_EQ( glm::length(max), diam );
 }
 
 TEST_F( TAABBTest, getCenterTest ) {
-    Vec3f min( 0, 0, 0 ), max( 1, 1, 1 );
-    TAABB<f32> aabb( min, max );
-    Vec3f center = aabb.getCenter();
+    glm::vec3 min(0, 0, 0), max(1, 1, 1);
+    AABB aabb( min, max );
+    glm::vec3 center = aabb.getCenter();
 
-	Vec3f res( 0.5, 0.5, 0.5 );
+	glm::vec3 res(0.5, 0.5, 0.5);
 	EXPECT_EQ( res, center );
 }
 
 TEST_F(TAABBTest, isInTest) {
-    Vec3f min(-1, -1, -1), max(1, 1, 1);
-    TAABB<f32> aabb(min, max);
+    glm::vec3 min(-1, -1, -1), max(1, 1, 1);
+    AABB aabb(min, max);
 
-    Vec3f pt(0, 0, 0);
+    glm::vec3 pt(0, 0, 0);
     bool result = aabb.isIn(pt);
     EXPECT_TRUE(result);
 
-    pt.set(-2, -2, -2);
+    pt = glm::vec3(-2, -2, -2);
     result = aabb.isIn(pt);
     EXPECT_FALSE(result);
 
-    pt.set(-2, 0, 0);
+    pt = glm::vec3(-2, 0, 0);
     result = aabb.isIn(pt);
     EXPECT_FALSE(result);
 
-    pt.set(0, -2, 0);
+    pt = glm::vec3(0, -2, 0);
     result = aabb.isIn(pt);
     EXPECT_FALSE(result);
 
-    pt.set(0, 0, -2);
+    pt = glm::vec3(0, 0, -2);
     result = aabb.isIn(pt);
     EXPECT_FALSE(result);
 
-    pt.set(2, 2, 2);
+    pt = glm::vec3(2, 2, 2);
     result = aabb.isIn(pt);
     EXPECT_FALSE(result);
 
-    pt.set(2, 0, 0);
+    pt = glm::vec3(2, 0, 0);
     result = aabb.isIn(pt);
     EXPECT_FALSE(result);
 
-    pt.set(0, 2, 0);
+    pt = glm::vec3(0, 2, 0);
     result = aabb.isIn(pt);
     EXPECT_FALSE(result);
 
-    pt.set(0, 0, 2);
+    pt = glm::vec3(0, 0, 2);
     result = aabb.isIn(pt);
     EXPECT_FALSE(result);
 }

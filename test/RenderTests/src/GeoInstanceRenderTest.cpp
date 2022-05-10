@@ -57,7 +57,7 @@ const String VsSrc =
         "\n"
         "    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
         "    //vertex position\n"
-        "    gl_Position = VP*M[ gl_InstanceID ]*vec4(position,1);\n"
+        "    gl_Position = VP * M[gl_InstanceID] * vec4(position,1);\n"
         "}\n";
 
 const String FsSrc =
@@ -79,7 +79,7 @@ const String FsSrc =
 ///	@brief  A instancing render-call - rendering test
 //-------------------------------------------------------------------------------------------------
 class GeoInstanceRenderTest : public AbstractRenderTest {
-    static const ui32 NumInstances = 25;
+    static constexpr ui32 NumInstances = 25;
     f32 m_angle;
     glm::mat4 m_mat[NumInstances];
     TransformMatrixBlock m_transformMatrix;
@@ -94,9 +94,7 @@ public:
         }
     }
 
-    ~GeoInstanceRenderTest() override {
-        // empty
-    }
+    ~GeoInstanceRenderTest() override = default;
 
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
@@ -106,19 +104,20 @@ public:
             rbSrv->beginRenderBatch("b1");
             {
                 Scene::MeshBuilder myBuilder;
-                myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+                myBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
                 Mesh *mesh = myBuilder.getMesh();
                 rbSrv->addMesh(mesh, NumInstances);
 
                 // use a default material
-                mesh->m_material = AbstractRenderTest::createMaterial("ColorVertexMat", VsSrc, FsSrc);
-                if (nullptr != mesh->m_material->m_shader) {
-                    mesh->m_material->m_shader->m_attributes.add("position");
-                    mesh->m_material->m_shader->m_attributes.add("normal");
-                    mesh->m_material->m_shader->m_attributes.add("color0");
+                mesh->setMaterial(AbstractRenderTest::createMaterial("ColorVertexMat", VsSrc, FsSrc));
+                Shader *shader = mesh->getMaterial()->getShader();
+                if (shader != nullptr) {
+                    shader->addVertexAttribute("position");
+                    shader->addVertexAttribute("normal");
+                    shader->addVertexAttribute("color0");
 
-                    mesh->m_material->m_shader->m_parameters.add("VP");
-                    mesh->m_material->m_shader->m_parameters.add("M");
+                    shader->addUniformBuffer("VP");
+                    shader->addUniformBuffer("M");
                 }
 
                 m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));

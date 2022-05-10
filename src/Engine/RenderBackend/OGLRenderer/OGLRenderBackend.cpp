@@ -246,7 +246,7 @@ void OGLRenderBackend::clearRenderTarget(const ClearState &clearState) {
     }
 
     glClear(glTarget);
-    glClearColor(0.3, 0.3, 0.3, 0.3);
+    glClearColor(0.3f, 0.3f, 0.3f, 0.3f);
 }
 
 void OGLRenderBackend::setViewport(i32 x, i32 y, i32 w, i32 h) {
@@ -338,6 +338,7 @@ void OGLRenderBackend::releaseBuffer(OGLBuffer *buffer) {
         osre_debug(Tag, "Pointer to buffer instance is nullptr");
         return;
     }
+
     const size_t slot = buffer->m_handle;
     glDeleteBuffers(1, &buffer->m_oglId);
     buffer->m_handle = OGLNotSetId;
@@ -568,6 +569,18 @@ void OGLRenderBackend::releaseAllVertexArrays() {
     mVertexArrays.clear();
 }
 
+static void loadShader(Shader *shaderInfo, OGLShader *oglShader, ShaderType type) {
+    osre_assert(oglShader != nullptr);
+
+    if (shaderInfo->hasSource(type)) {
+        const bool result = oglShader->loadFromSource(type, shaderInfo->getSource(type));
+        if (!result) {
+            osre_error(Tag, "Error while compiling VertexShader.");
+            return;
+        }
+    }
+}
+
 OGLShader *OGLRenderBackend::createShader(const String &name, Shader *shaderInfo) {
     if (name.empty()) {
         osre_debug(Tag, "Name for shader is nullptr");
@@ -582,32 +595,11 @@ OGLShader *OGLRenderBackend::createShader(const String &name, Shader *shaderInfo
     oglShader = new OGLShader(name);
     mShaders.add(oglShader);
     if (shaderInfo) {
-        bool result(false);
-        if (!shaderInfo->m_src[static_cast<int>(ShaderType::SH_VertexShaderType)].empty()) {
-            result = oglShader->loadFromSource(ShaderType::SH_VertexShaderType,
-                    shaderInfo->m_src[static_cast<int>(ShaderType::SH_VertexShaderType)]);
-            if (!result) {
-                osre_error(Tag, "Error while compiling VertexShader.");
-            }
-        }
+        loadShader(shaderInfo, oglShader, ShaderType::SH_VertexShaderType);
+        loadShader(shaderInfo, oglShader, ShaderType::SH_FragmentShaderType);
+        loadShader(shaderInfo, oglShader, ShaderType::SH_GeometryShaderType);
 
-        if (!shaderInfo->m_src[static_cast<int>(ShaderType::SH_FragmentShaderType)].empty()) {
-            result = oglShader->loadFromSource(ShaderType::SH_FragmentShaderType,
-                    shaderInfo->m_src[static_cast<int>(ShaderType::SH_FragmentShaderType)]);
-            if (!result) {
-                osre_error(Tag, "Error while compiling FragmentShader.");
-            }
-        }
-
-        if (!shaderInfo->m_src[static_cast<int>(ShaderType::SH_GeometryShaderType)].empty()) {
-            result = oglShader->loadFromSource(ShaderType::SH_GeometryShaderType,
-                    shaderInfo->m_src[static_cast<int>(ShaderType::SH_GeometryShaderType)]);
-            if (!result) {
-                osre_error(Tag, "Error while compiling GeometryShader.");
-            }
-        }
-
-        result = oglShader->createAndLink();
+        bool result = oglShader->createAndLink();
         if (!result) {
             osre_error(Tag, "Error while linking shader");
         }
@@ -621,7 +613,7 @@ OGLShader *OGLRenderBackend::getShader(const String &name) {
         return nullptr;
     }
 
-    OGLShader *shader(nullptr);
+    OGLShader *shader = nullptr;
     for (ui32 i = 0; i < mShaders.size(); ++i) {
         if (mShaders[i]->getName() == name) {
             shader = mShaders[i];
@@ -702,7 +694,7 @@ OGLTexture *OGLRenderBackend::createEmptyTexture(const String &name, TextureTarg
 
     // lookup for texture
     OGLTexture *tex = findTexture(name);
-    if (tex) {
+    if (tex != nullptr) {
         return tex;
     }
 
@@ -1067,7 +1059,8 @@ void OGLRenderBackend::releaseAllPrimitiveGroups() {
     ContainerClear(mPrimitives);
 }
 
-OGLFrameBuffer *OGLRenderBackend::createFrameBuffer(const String &name, ui32 width, ui32 height, PixelFormatType pixelFormat, bool depthBuffer) {
+OGLFrameBuffer *OGLRenderBackend::createFrameBuffer(const String &name, ui32 width, ui32 height, 
+        PixelFormatType pixelFormat, bool depthBuffer) {
     OGLFrameBuffer *oglFB = new OGLFrameBuffer(name.c_str(), width, height);
     glGenFramebuffers(1, &oglFB->m_bufferId);
     glBindFramebuffer(GL_FRAMEBUFFER, oglFB->m_bufferId);
@@ -1085,7 +1078,8 @@ OGLFrameBuffer *OGLRenderBackend::createFrameBuffer(const String &name, ui32 wid
         glGenRenderbuffers(1, &oglFB->m_depthrenderbufferId);
         glBindRenderbuffer(GL_RENDERBUFFER, oglFB->m_depthrenderbufferId);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, oglFB->m_depthrenderbufferId);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 
+            oglFB->m_depthrenderbufferId);
     }
 
     glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, oglFB->m_renderedTexture, 0);
@@ -1172,10 +1166,6 @@ void OGLRenderBackend::render(size_t primpGrpIdx, size_t numInstances) {
                 (GLsizei)grp->m_numIndices,
                 (GLsizei)numInstances);
     }
-}
-
-void OGLRenderBackend::render2DPanels(const Rect2ui &panel) {
-    
 }
 
 void OGLRenderBackend::renderFrame() {

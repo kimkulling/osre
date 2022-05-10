@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -43,8 +43,7 @@ TEST_F( RenderCommonTest, createVertComponentTest ) {
         VertComponent comp2( VertexAttribute::Position, VertexFormat::Float3 );
         EXPECT_EQ( VertexAttribute::Position, comp2.m_attrib );
         EXPECT_EQ( VertexFormat::Float3,   comp2.m_format );
-    }
-    catch( ... ) {
+    } catch( ... ) {
         ok = false;
     }
     EXPECT_TRUE( ok );
@@ -137,49 +136,25 @@ TEST_F( RenderCommonTest, allocBufferDataTest ) {
 }
 
 TEST_F( RenderCommonTest, copyBufferDataTest ) {
-    BufferData *data = BufferData::alloc( BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite );
+    BufferData *data = BufferData::alloc(BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite);
 
     static const ui32 size = 100;
     static const unsigned char Value = 9;
-    void *buffer = new unsigned char[ size ];
+    void *buffer = new unsigned char[size];
     ::memset(buffer, Value, size);
     data->copyFrom(buffer, size);
     BufferData::free(data);
-}
 
-TEST_F( RenderCommonTest, accessGeometryTest ) {
-    Mesh *geo = nullptr;
-    geo = Mesh::create(0, VertexType::RenderVertex);
-    EXPECT_EQ( geo, nullptr );
-    geo = Mesh::create(1, VertexType::RenderVertex);
-    EXPECT_NE( geo, nullptr );
-    Mesh::destroy( &geo );
-    EXPECT_EQ( geo, nullptr );
-    Mesh::destroy(&geo);
+    delete[] buffer;
 }
 
 TEST_F(RenderCommonTest, initGeometryTest) {
-    Mesh *mesh = Mesh::create(1, VertexType::RenderVertex);
-    EXPECT_NE( mesh, nullptr );
-    EXPECT_EQ( VertexType::RenderVertex, mesh->m_vertextype );
-    EXPECT_EQ( nullptr, mesh->m_ib );
-    EXPECT_EQ( nullptr, mesh->m_vb );
-    EXPECT_EQ( nullptr, mesh->m_material );
-    Mesh::destroy(&mesh);
-}
-
-TEST_F( RenderCommonTest, geometryIdTest ) {
-    static const ui32 NumGeo = 10;
-    ui32 ids[ NumGeo ];
-    ::memset( ids, 0, sizeof( ui32 ) * NumGeo );
-    Mesh *mesh = Mesh::create(NumGeo, VertexType::RenderVertex);
-    ui64 oldId = mesh[0].m_id;
-    for ( ui32 i = 1; i < NumGeo; i++ ) {
-        ui64 id = mesh[ i ].m_id;
-        EXPECT_EQ( id, oldId + 1 );
-        oldId = id;
-    }
-    Mesh::destroy(&mesh);
+    Mesh *mesh = new Mesh("test", VertexType::RenderVertex, IndexType::UnsignedShort);
+    EXPECT_EQ(VertexType::RenderVertex, mesh->getVertexType());
+    EXPECT_EQ(nullptr, mesh->getIndexBuffer());
+    EXPECT_EQ(nullptr, mesh->getVertexBuffer());
+    EXPECT_EQ(nullptr, mesh->getMaterial());
+    delete mesh;
 }
 
 TEST_F( RenderCommonTest, accessTransformMatrixBlockTest ) {
@@ -188,11 +163,11 @@ TEST_F( RenderCommonTest, accessTransformMatrixBlockTest ) {
     block.m_projection = glm::translate( block.m_model, glm::vec3( 1, 2, 3 ) );
     block.m_view = glm::translate( block.m_model, glm::vec3( 1, 2, 3 ) );
 
-    glm::mat4 identity;
+    glm::mat4 identity = {};
     block.init();
-    EXPECT_FLOAT_EQ( static_cast<f32>( identity.length() ), static_cast<f32>( block.m_model.length() ) );
-    EXPECT_FLOAT_EQ( static_cast<f32>( identity.length() ), static_cast<f32>( block.m_projection.length() ) );
-    EXPECT_FLOAT_EQ( static_cast<f32>( identity.length() ), static_cast<f32>( block.m_view.length() ) );
+    EXPECT_FLOAT_EQ( static_cast<f32>(identity.length() ), static_cast<f32>( block.m_model.length()));
+    EXPECT_FLOAT_EQ( static_cast<f32>(identity.length() ), static_cast<f32>( block.m_projection.length()));
+    EXPECT_FLOAT_EQ( static_cast<f32>(identity.length() ), static_cast<f32>( block.m_view.length()));
 }
 
 TEST_F( RenderCommonTest, accessMaterialTest ) {
@@ -211,9 +186,9 @@ TEST_F( RenderCommonTest, accessMaterialTest ) {
 TEST_F(RenderCommonTest, access_material_param_Test) {
     Material *mat( new Material( "test" ) );
     mat->m_shader = new Shader;
-    mat->m_shader->m_parameters.add( "MVP" );
+    mat->m_shader->addUniformBuffer("MVP");
 
-    EXPECT_EQ(1u, mat->m_shader->m_parameters.size());
+    EXPECT_EQ(1u, mat->m_shader->getNumUniformBuffer());
     delete mat;
 }
 

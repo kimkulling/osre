@@ -35,39 +35,37 @@ using namespace ::OSRE::Platform;
 
 static const c8 *Tag = "RenderCmdBuffer";
 
-RenderCmdBuffer::RenderCmdBuffer(OGLRenderBackend *renderBackend, AbstractOGLRenderContext *ctx, Pipeline *pipeline) :
-        m_renderbackend(renderBackend),
-        m_renderCtx(ctx),
-        m_activeShader(nullptr),
-        m_2dShader(nullptr),
-        m_primitives(),
-        m_materials(),
-        m_paramArray(),
-        m_matrixBuffer(),
-        m_pipeline(pipeline) {
-    osre_assert(nullptr != m_renderbackend);
-    osre_assert(nullptr != m_renderCtx);
-    osre_assert(nullptr != m_pipeline);
+RenderCmdBuffer::RenderCmdBuffer(OGLRenderBackend *renderBackend, AbstractOGLRenderContext *ctx) :
+        mRBService(renderBackend),
+        mRenderCtx(ctx),
+        mActiveShader(nullptr),
+        mPrimitives(),
+        mMaterials(),
+        mParamArray(),
+        mMatrixBuffer(),
+        mPipeline(nullptr) {
+    osre_assert(nullptr != mRBService);
+    osre_assert(nullptr != mRenderCtx);
 
-    m_clearState.m_state = (i32)ClearState::ClearBitType::ColorBit | (i32)ClearState::ClearBitType::DepthBit;
+    mClearState.m_state = (i32)ClearState::ClearBitType::ColorBit | (i32)ClearState::ClearBitType::DepthBit;
 }
 
 RenderCmdBuffer::~RenderCmdBuffer() {
     clear();
 
-    m_renderbackend = nullptr;
-    m_renderCtx = nullptr;
+    mRBService = nullptr;
+    mRenderCtx = nullptr;
 }
 
 void RenderCmdBuffer::setActiveShader(OGLShader *oglShader) {
-    m_activeShader = oglShader;
+    mActiveShader = oglShader;
 }
 
 OGLShader *RenderCmdBuffer::getActiveShader() const {
-    return m_activeShader;
+    return mActiveShader;
 }
 
-void RenderCmdBuffer::enqueueRenderCmd(OGLRenderCmd *renderCmd, EnqueueType type) {
+void RenderCmdBuffer::enqueueRenderCmd(OGLRenderCmd *renderCmd) {
     if (nullptr == renderCmd) {
         osre_debug(Tag, "Nullptr to render-command detected.");
         return;
@@ -77,12 +75,10 @@ void RenderCmdBuffer::enqueueRenderCmd(OGLRenderCmd *renderCmd, EnqueueType type
         return;
     }
 
-    if (EnqueueType::PushBack == type) {
-        m_cmdbuffer.add(renderCmd);
-    }
+    mCommandQueue.add(renderCmd);
 }
 
-void RenderCmdBuffer::enqueueRenderCmdGroup(const String &groupName, CPPCore::TArray<OGLRenderCmd *> &cmdGroup, EnqueueType type) {
+void RenderCmdBuffer::enqueueRenderCmdGroup(const String &groupName, CPPCore::TArray<OGLRenderCmd *> &cmdGroup) {
     if (groupName.empty()) {
         osre_debug(Tag, "No name for render command group defined.");
         return;
@@ -93,32 +89,30 @@ void RenderCmdBuffer::enqueueRenderCmdGroup(const String &groupName, CPPCore::TA
         return;
     }
 
-    if (EnqueueType::PushBack == type) {
-        m_cmdbuffer.add(&cmdGroup[0], cmdGroup.size());
-    }
+    mCommandQueue.add(&cmdGroup[0], cmdGroup.size());
 }
 
-void RenderCmdBuffer::onPreRenderFrame() {
-    osre_assert(nullptr != m_renderbackend);
+void RenderCmdBuffer::onPreRenderFrame(Pipeline *pipeline) {
+    if (pipeline == nullptr) {
+        return;
+    }
+    mPipeline = pipeline;
+    mRenderCtx->activate();
+    mRBService->clearRenderTarget(mClearState);
+}
 
-    if (nullptr == m_renderCtx) {
+void RenderCmdBuffer::onRenderFrame() {
+    if (mPipeline == nullptr) {
         return;
     }
 
-    m_renderCtx->activate();
-    m_renderbackend->clearRenderTarget(m_clearState);
-}
-
-void RenderCmdBuffer::onRenderFrame(const EventData *) {
-    osre_assert(nullptr != m_renderbackend);
-
-    size_t numPasses = m_pipeline->beginFrame();
+    const size_t numPasses = mPipeline->beginFrame();
     if (0 == numPasses) {
         return;
     }
 
     for (ui32 passId = 0; passId < numPasses; passId++) {
-        RenderPass *pass = m_pipeline->beginPass(passId);
+        RenderPass *pass = mPipeline->beginPass(passId);
         if (nullptr == pass) {
             osre_debug(Tag, "Ponter to pipeline pass is nullptr.");
             continue;
@@ -130,11 +124,9 @@ void RenderCmdBuffer::onRenderFrame(const EventData *) {
         states.m_blendState = pass->getBlendState();
         states.m_samplerState = pass->getSamplerState();
         states.m_stencilState = pass->getStencilState();
-        m_renderbackend->setFixedPipelineStates(states);
+        mRBService->setFixedPipelineStates(states);
 
-        for (OGLRenderCmd *renderCmd : m_cmdbuffer) {
-            // only valid pointers are allowed
-            osre_assert(nullptr != renderCmd);
+        for (OGLRenderCmd *renderCmd : mCommandQueue) {
             if (nullptr == renderCmd) {
                 continue;
             }
@@ -152,24 +144,25 @@ void RenderCmdBuffer::onRenderFrame(const EventData *) {
             }
         }
 
-        m_pipeline->endPass(passId);
+        mPipeline->endPass(passId);
     }
-    m_pipeline->endFrame();
+    mPipeline->endFrame();
 
-    m_renderbackend->renderFrame();
+    mRBService->renderFrame();
 }
 
 void RenderCmdBuffer::onPostRenderFrame() {
-    osre_assert(nullptr != m_renderbackend);
-
+    
     // unbind the active shader
-    m_renderbackend->useShader(nullptr);
-    m_renderbackend->unbindVertexArray();
+    mRBService->useShader(nullptr);
+    mRBService->unbindVertexArray();
+
+    mPipeline = nullptr;
 }
 
 void RenderCmdBuffer::clear() {
-    ContainerClear(m_cmdbuffer);
-    m_paramArray.resize(0);
+    ContainerClear(mCommandQueue);
+    mParamArray.resize(0);
 }
 
 static bool hasParam(const String &name, const ::CPPCore::TArray<OGLParameter *> &paramArray) {
@@ -182,137 +175,103 @@ static bool hasParam(const String &name, const ::CPPCore::TArray<OGLParameter *>
 }
 
 void RenderCmdBuffer::setParameter(OGLParameter *param) {
-    if (!hasParam(param->m_name, m_paramArray)) {
-        m_paramArray.add(param);
+    if (hasParam(param->m_name, mParamArray)) {
+        return;
     }
+
+    mParamArray.add(param);
 }
 
 void RenderCmdBuffer::setParameter(const ::CPPCore::TArray<OGLParameter *> &paramArray) {
     for (ui32 i = 0; i < paramArray.size(); i++) {
-        if (!hasParam(paramArray[i]->m_name, m_paramArray)) {
-            m_paramArray.add(paramArray[i]);
+        if (!hasParam(paramArray[i]->m_name, mParamArray)) {
+            mParamArray.add(paramArray[i]);
         }
     }
 }
 
 void RenderCmdBuffer::commitParameters() {
-    m_renderbackend->setMatrix(MatrixType::Model, m_model);
-    m_renderbackend->setMatrix(MatrixType::View, m_view);
-    m_renderbackend->setMatrix(MatrixType::Projection, m_proj);
-    m_renderbackend->applyMatrix();
+    mRBService->setMatrix(MatrixType::Model, mModel);
+    mRBService->setMatrix(MatrixType::View, mView);
+    mRBService->setMatrix(MatrixType::Projection, mProj);
+    mRBService->applyMatrix();
 
-    for (ui32 i = 0; i < m_paramArray.size(); i++) {
-        m_renderbackend->setParameter(m_paramArray[i]);
+    for (ui32 i = 0; i < mParamArray.size(); i++) {
+        mRBService->setParameter(mParamArray[i]);
     }
 }
 
 void RenderCmdBuffer::setMatrixes(const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &proj) {
-    m_model = model;
-    m_view = view;
-    m_proj = proj;
+    mModel = model;
+    mView = view;
+    mProj = proj;
 }
 
 void RenderCmdBuffer::setMatrixBuffer(const c8 *id, MatrixBuffer *buffer) {
     osre_assert(nullptr != id);
 
-    m_matrixBuffer[id] = buffer;
+    mMatrixBuffer[id] = buffer;
 }
 
 bool RenderCmdBuffer::onDrawPrimitivesCmd(DrawPrimitivesCmdData *data) {
-    osre_assert(nullptr != m_renderbackend);
     if (nullptr == data) {
         return false;
     }
 
-    std::map<const char *, MatrixBuffer *>::iterator it = m_matrixBuffer.find(data->m_id);
-    if (it != m_matrixBuffer.end()) {
+    std::map<const char *, MatrixBuffer *>::iterator it = mMatrixBuffer.find(data->m_id);
+    if (it != mMatrixBuffer.end()) {
         MatrixBuffer *buffer = it->second;
         setMatrixes(buffer->m_model, buffer->m_view, buffer->m_proj);
     }
 
-    m_renderbackend->bindVertexArray(data->m_vertexArray);
+    mRBService->bindVertexArray(data->m_vertexArray);
     if (data->m_localMatrix) {
-        m_renderbackend->setMatrix(MatrixType::Model, data->m_model);
-        m_renderbackend->applyMatrix();
+        mRBService->setMatrix(MatrixType::Model, data->m_model);
+        mRBService->applyMatrix();
     }
     for (size_t i = 0; i < data->m_primitives.size(); ++i) {
-        m_renderbackend->render(data->m_primitives[i]);
+        mRBService->render(data->m_primitives[i]);
     }
 
     return true;
 }
 
 bool RenderCmdBuffer::onDrawPrimitivesInstancesCmd(DrawInstancePrimitivesCmdData *data) {
-    osre_assert(nullptr != m_renderbackend);
     if (nullptr == data) {
         return false;
     }
 
-    m_renderbackend->bindVertexArray(data->m_vertexArray);
+    mRBService->bindVertexArray(data->m_vertexArray);
     for (size_t i = 0; i < data->m_primitives.size(); i++) {
-        m_renderbackend->render(data->m_primitives[i], data->m_numInstances);
+        mRBService->render(data->m_primitives[i], data->m_numInstances);
     }
 
     return true;
 }
 
-const String shader_2d_vs = 
-		"#version 410\n"
-        "in vec2 vp;"
-        "uniform mat4 V, P;"
-        "out vec2 st;"
-        "void main () {"
-        "  st = (vp + 1.0) * 0.5;"
-        "  gl_Position = P * V * vec4 (10.0 * vp.x, -1.0, 10.0 * -vp.y, 1.0);"
-        "}";
-
-const String shader_2d_fs =
-        "in vec2 st;"
-        "uniform sampler2D tex;"
-        "out vec4 frag_colour;"
-        "void main () {"
-        "  frag_colour = texture (tex, st);"
-        "}";
-
-        
-bool RenderCmdBuffer::onDrawPanelCmd(DrawPanelsCmdData *data) {
-    osre_assert(nullptr != m_renderbackend);
-    if (nullptr == data) {
-        return false;
-    }
-    if (nullptr == m_2dShader) {
-        Shader shader_2d;
-        shader_2d.setSource(ShaderType::SH_VertexShaderType, shader_2d_vs);
-        shader_2d.setSource(ShaderType::SH_FragmentShaderType, shader_2d_fs);
-        m_2dShader = m_renderbackend->createShader("2d", &shader_2d);
-    }
-    m_renderbackend->useShader(m_2dShader); 
-    for (size_t i = 0; i < data->mNumPanels; ++i) {
+bool RenderCmdBuffer::onSetRenderTargetCmd(SetRenderTargetCmdData *data) {
+    if (data->mFrameBuffer == nullptr) {
+        return true;
     }
 
-    return true;
-}
-
-bool RenderCmdBuffer::onSetRenderTargetCmd(SetRenderTargetCmdData *) {
-    osre_assert(nullptr != m_renderbackend);
+    mRBService->bindFrameBuffer(data->mFrameBuffer);
+    mRBService->clearRenderTarget(data->mClearState);
 
     return true;
 }
 
 bool RenderCmdBuffer::onSetMaterialStageCmd(SetMaterialStageCmdData *data) {
-    osre_assert(nullptr != m_renderbackend);
-
-    m_renderbackend->bindVertexArray(data->m_vertexArray);
-    m_renderbackend->useShader(data->m_shader);
+    mRBService->bindVertexArray(data->m_vertexArray);
+    mRBService->useShader(data->m_shader);
 
     commitParameters();
 
     for (ui32 i = 0; i < data->m_textures.size(); ++i) {
         OGLTexture *oglTexture = data->m_textures[i];
         if (nullptr != oglTexture) {
-            m_renderbackend->bindTexture(oglTexture, (TextureStageType)i);
+            mRBService->bindTexture(oglTexture, (TextureStageType)i);
         } else {
-            m_renderbackend->unbindTexture((TextureStageType)i);
+            mRBService->unbindTexture((TextureStageType)i);
         }
     }
 

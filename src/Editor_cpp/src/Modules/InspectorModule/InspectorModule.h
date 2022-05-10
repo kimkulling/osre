@@ -22,7 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include "Modules/ModuleBase.h"
+#include <osre/App/IModuleView.h>
+#include <osre/app/ModuleBase.h>
+#include <osre/App/AppBase.h>
 
 namespace OSRE {
 
@@ -37,7 +39,7 @@ namespace Editor {
 ///
 /// @brief
 //-------------------------------------------------------------------------------------------------
-class InspectorModule : public ModuleBase {
+class InspectorModule : public App::ModuleBase {
 public:
     InspectorModule(App::AppBase *parentApp);
     ~InspectorModule() override;
@@ -49,7 +51,6 @@ protected:
     void onRender() override;
 
 private:
-    UI::Panel *mPanel;
 };
 
 } // namespace Editor

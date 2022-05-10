@@ -64,8 +64,6 @@ namespace App {
 class Entity;
 class World;
 
-struct BoneInfo;
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///
@@ -74,7 +72,6 @@ struct BoneInfo;
 class OSRE_EXPORT AssimpWrapper {
 public:
     using MaterialArray = CPPCore::TArray<RenderBackend::Material *>;
-    using BoneInfoArray = ::CPPCore::TArray<BoneInfo *>;
     using Bone2NodeMap = std::map<const char *, const aiNode *>;
 
     AssimpWrapper(Common::Ids &ids, World *world);
@@ -90,7 +87,6 @@ protected:
     void importMaterial( aiMaterial *material );
     void importAnimation( aiAnimation *animation );
     void optimizeVertexBuffer();
-    void postProcess();
 
 private:
     struct AssetContext {
@@ -104,7 +100,6 @@ private:
         Common::Ids &mIds;
         String mRoot;
         String mAbsPathWithFile;
-        BoneInfoArray mBoneInfoArray;
         Bone2NodeMap mBone2NodeMap;
 
         AssetContext(Common::Ids &ids, World *world);

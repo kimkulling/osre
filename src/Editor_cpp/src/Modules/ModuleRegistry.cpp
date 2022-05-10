@@ -21,12 +21,14 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "Modules/ModuleRegistry.h"
-#include "Modules/ModuleBase.h"
 
+#include <osre/App/ModuleBase.h>
 #include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
 namespace Editor {
+
+using namespace ::OSRE::App;
 
 ModuleRegistry::ModuleRegistry() :
         mModules(),
@@ -53,6 +55,7 @@ bool ModuleRegistry::registerModule(ModuleBase *mod) {
 
     if (nullptr == findModule(mod->getName())) {
         mModules.add(mod);
+        mod->load();
     }
 
     return true;
@@ -81,6 +84,7 @@ bool ModuleRegistry::unregisterModule(ModuleBase *mod) {
     if (it == mModules.end()) {
         return false;
     }
+    (*it)->unload();
     mModules.remove(it);
 
     return true;

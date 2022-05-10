@@ -22,8 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderStates.h>
-
+#include <osre/RenderBackend/RenderPass.h>
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
@@ -35,63 +36,8 @@ class RenderBackendService;
 
 using CPPCore::TArray;
 
-enum RenderPassType : ui32 {
-    StaticRenderPass,
-    UiRenderPass
-};
-
-struct RenderTarget {
-    // empty
-};
-
-static const ui32 RenderPassId = 0;
-static const ui32 UiPassId = 1;
-static const ui32 DbgPassId = 2;
-static const ui32 MaxDbgPasses = 3;
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  This class is used to describes one pass in a render pipeline.
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT RenderPass {
-public:
-    static RenderPass *create(ui32 id, Shader *shader);
-    static void destroy(RenderPass *plp);
-    RenderPass &set(RenderTarget &rt, RenderStates &states);
-    RenderPass &setPolygonState(PolygonState polyState);
-    PolygonState getPolygonState() const;
-    RenderPass &setCullState(CullState &cullstate);
-    CullState getCullState() const;
-    RenderPass &setBlendState(BlendState &blendState);
-    const BlendState &getBlendState() const;
-    RenderPass &setSamplerState(SamplerState &samplerState);
-    const SamplerState &getSamplerState() const;
-    RenderPass &setClearState(ClearState &clearState);
-    const ClearState &getClearState() const;
-    RenderPass &setStencilState(StencilState &stencilState);
-    const StencilState &getStencilState() const;
-    RenderPass &setShader(Shader *shader);
-    Shader *getShader() const;
-    ui32 getId() const;
-    static const c8 *getPassNameById(ui32 id);
-    bool operator==(const RenderPass &rhs) const;
-    bool operator!=(const RenderPass &rhs) const;
-
-private:
-    RenderPass(ui32 id, Shader *shader);
-    ~RenderPass();
-
-private:
-    ui32 mId;
-    RenderTarget mRenderTarget;
-    RenderStates mStates;
-    Shader *mShader;
-};
-
-
 namespace DefaultPipelines {
-    extern const c8 *Pipeline_Default;
+    OSRE_EXPORT const c8 *get_Pipeline_Default();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -108,32 +54,41 @@ namespace DefaultPipelines {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Pipeline : public Common::Object {
 public:
-    /// @brief
-    Pipeline(const String &pipelineName, RenderBackend::RenderBackendService *rbService);
+    /// @brief  The class constructor.
+    /// @param  name    The name for the pipeline.
+    Pipeline(const String &name);
+    
+    ///	@brief  The class destructor.
     ~Pipeline();
 
-    /// @brief
+    /// @brief  Will add a new render-pass to the pipeline.
+    /// @param  pass    The pass to add.
     void addPass(RenderPass *pass);
 
-    /// @brief
+    /// @brief  Will return the number of passes.
+    /// @return The number of passes in the pipeline.
     size_t getNumPasses() const;
 
-    /// @brief
+    /// @brief  Will begin the frame-rendering in the current pipeline.
+    /// @return The number of render-passes within the pipeline.
+    /// @note   Use this to loop over all render-passes.
     size_t beginFrame();
 
-    /// @brief
+    /// @brief  Will begin the rendering for a given render-pass.
+    /// @param  passId  The render-pass id.
+    /// @return �Pointer showing to the render-pass. Will be a nullptr when no render-pass exists.
     RenderPass *beginPass(ui32 passId);
 
-    /// @brief
+    /// @brief  Will end the current render-pass.
+    /// @param  passId  The render-pass id.
+    /// @return true if successful, false in case of an error.
     bool endPass(ui32 passId);
 
-    /// @brief
+    /// @brief  Will end the frame-rendering for the given pipeline.
     void endFrame();
 
-    /// @brief
+    /// @brief  Will clear the pipeline, all assigned render-passes will be removed.
     void clear();
-
-private:
 
 private:
     using PipelinePassArray = TArray<RenderPass*>;

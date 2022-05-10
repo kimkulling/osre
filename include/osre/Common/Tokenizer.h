@@ -39,7 +39,7 @@ namespace Common {
 ///	Here is a simple example:
 ///	@code
 ///	String tst = "/usr/bin/ls";
-///	TArray<String> token;
+///	StringArray token;
 ///	Tokenizer::tokenize( tst, token, "/" );
 ///	@endcode
 ///	This will return the strings usr, bin and ls.
@@ -78,7 +78,7 @@ public:
     ///	@param	tokens		[in] The result token list.
     ///	@param	delimiters	[in] The delimiter.
     ///	@return	The number of token.
-    static size_t tokenize( const String& str, CPPCore::TArray<String>& tokens, const String& delimiters );
+    static size_t tokenize(const String &str, StringArray &tokens, const String &delimiters);
 
     ///	@brief	Will tokenize a given string by a given delimiter.
     ///	@param	str			[in] The string to tokenize.
@@ -89,7 +89,7 @@ public:
     static bool isLineBreak( c8 c );
 
 private:
-    CPPCore::TArray<String> m_Token;
+    StringArray m_Token;
 };
 
 } // Namespace Common

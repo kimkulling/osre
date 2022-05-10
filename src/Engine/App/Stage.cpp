@@ -30,7 +30,7 @@ namespace App {
 static const c8 *Tag = "Stage";
 
 Stage::Stage(const String &stageName) :
-        Object( stageName ),
+        Object(stageName),
         mWorld(nullptr),
         mWorlds() {
     // empty
@@ -69,6 +69,18 @@ World *Stage::findWorld(const String &name) const {
     return nullptr;
 }
 
+ui32 Stage::getNumberOfWorlds() const {
+    return mWorlds.size();
+}
+
+World *Stage::getWorldAt( ui32 index ) const {
+    if (index >= mWorlds.size()) {
+        return nullptr;
+    }
+
+    return mWorlds[index];
+}
+
 bool Stage::setActiveWorld(const String &name) {
     if (name.empty()) {
         return false;
@@ -92,7 +104,7 @@ void Stage::update( Time dt ) {
     }
 }
 
-void Stage::draw( RenderBackend::RenderBackendService *rbService ) {
+void Stage::draw(RenderBackend::RenderBackendService *rbService) {
     if (nullptr == rbService) {
         return;
     }

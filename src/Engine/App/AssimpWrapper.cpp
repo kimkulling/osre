@@ -63,9 +63,6 @@ const unsigned int DefaultImportFlags = aiProcess_CalcTangentSpace | aiProcess_G
                                         aiProcess_ImproveCacheLocality | aiProcess_LimitBoneWeights | aiProcess_RemoveRedundantMaterials |
                                         aiProcess_SplitLargeMeshes | aiProcess_Triangulate | aiProcess_GenUVCoords | aiProcess_SortByPType;
 
-struct BoneInfo {
-};
-
 static void setColor4(const aiColor4D &aiCol, Color4 &col) {
     col.m_r = aiCol.r;
     col.m_g = aiCol.g;
@@ -106,14 +103,11 @@ AssimpWrapper::AssetContext::AssetContext(Common::Ids &ids, World *world) :
         mIds(ids),
         mRoot(),
         mAbsPathWithFile(),
-        mBoneInfoArray(),
         mBone2NodeMap() {
     // empty
 }
  
 AssimpWrapper::AssetContext::~AssetContext() {
-    ::CPPCore::ContainerClear(mBoneInfoArray);
-
     delete mDefaultTexture;
     mDefaultTexture = nullptr;
 }
@@ -159,10 +153,6 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
     convertScene();
     osre_debug(Tag, "Converting " + filename + " finished.");
     
-    osre_debug(Tag, "Starting post-processing " + filename);
-    postProcess();
-    osre_debug(Tag, "Post-processing " + filename + " finished.");
-
     return true;
 }
 
@@ -257,7 +247,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
         return;
     }
 
-    TAABB<f32> aabb = mAssetContext.mEntity->getAABB();
+    AABB aabb = mAssetContext.mEntity->getAABB();
 
     Mat2MeshMap mat2MeshMap;
     for (ui32 meshIndex = 0; meshIndex < numMeshes; ++meshIndex) {
@@ -284,7 +274,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
     }
 
     for (size_t mat2MeshIdx = 0; mat2MeshIdx < mat2MeshMap.size(); ++mat2MeshIdx) {
-        mAssetContext.mMeshArray.add(Mesh::create(1, VertexType::RenderVertex));
+        mAssetContext.mMeshArray.add(new Mesh("m1", VertexType::RenderVertex, IndexType::UnsignedInt));
     }
 
     size_t i = 0;
@@ -386,20 +376,16 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
 
             indexOffset += currentMesh->mNumVertices;
 
-            const size_t vbSize(sizeof(RenderVert) * numVerts);
-            newMesh.m_vb = BufferData::alloc(BufferType::VertexBuffer, vbSize, BufferAccessType::ReadOnly);
-            newMesh.m_vb->copyFrom(&vertices[0], vbSize);
+            const size_t vbSize = sizeof(RenderVert) * numVerts;
+            newMesh.createVertexBuffer(&vertices[0], vbSize, BufferAccessType::ReadOnly);
 
-            newMesh.m_ib = BufferData::alloc(BufferType::IndexBuffer, sizeof(ui32) * indexArray.size(), BufferAccessType::ReadOnly);
-            newMesh.m_ib->copyFrom(&indexArray[0], newMesh.m_ib->getSize());
-
+            const size_t ibSize = sizeof(ui32) * indexArray.size();
+            newMesh.createIndexBuffer(&indexArray[0], ibSize, IndexType::UnsignedInt, BufferAccessType::ReadOnly);
             //            Debugging::MeshDiagnostic::dumpIndices( indexArray );
 
-            newMesh.createPrimitiveGroup(IndexType::UnsignedInt, indexArray.size(), PrimitiveType::TriangleList, 0);
+            newMesh.addPrimitiveGroup(indexArray.size(), PrimitiveType::TriangleList, 0);
 
-            const size_t matIdx = currentMesh->mMaterialIndex;
-            Material *osreMat = mAssetContext.mMatArray[matIdx];
-            newMesh.m_material = osreMat;
+            newMesh.setMaterial(mAssetContext.mMatArray[currentMesh->mMaterialIndex]);
         }
 
         ++i;
@@ -515,21 +501,6 @@ void AssimpWrapper::importAnimation(aiAnimation *animation) {
     }
 }
 
-void AssimpWrapper::postProcess() {
-    if (mAssetContext.mEntity == nullptr) {
-        return;
-    }
-
-    Scene::MeshProcessor processor;
-    RenderComponent *rc = (RenderComponent *) mAssetContext.mEntity->getComponent(ComponentType::RenderComponentType);
-    for (ui32 i = 0; i < rc->getNumGeometry(); ++i) {
-        processor.addMesh(rc->getMeshAt(i));
-    }
-
-    if (processor.execute()) {
-        mAssetContext.mEntity->setAABB(processor.getAABB());
-    }
-}
 
 } // namespace App
 } // Namespace OSRE

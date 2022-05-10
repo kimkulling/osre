@@ -55,7 +55,7 @@ public:
     ///	Returns true, if file exists in this zip archive.
     virtual bool fileExist( const Uri &filename );
     /// Search for a given file.
-    virtual Stream *find( const Uri &file, Stream::AccessMode mode, CPPCore::TArray<String> *pSearchPaths );
+    virtual Stream *find(const Uri &file, Stream::AccessMode mode, StringArray *pSearchPaths);
     ///	Returns the zip schema description.
     virtual const c8 *getSchema() const;
     ///	Returns the working directory.

@@ -46,7 +46,7 @@ public:
 	///	Returns true, if the file exists.
 	virtual bool fileExist( const Uri &rFile );
 	///	Looks for a file and returns the stream.	
-	virtual Stream *find(const Uri &rFile, Stream::AccessMode mode, CPPCore::TArray<String> *pSearchPaths );
+	virtual Stream *find(const Uri &rFile, Stream::AccessMode mode, StringArray *pSearchPaths);
 	///	returns the schema description of the file system.
 	virtual const c8 *getSchema() const;
 	///	Returns the working directory.

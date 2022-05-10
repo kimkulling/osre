@@ -149,6 +149,16 @@ public:
     /// @param  title       [in] The new windows title.
     virtual void setWindowsTitle(const String &title) = 0;
 
+    /// @brief  Will describe the show-state for the window.
+    enum class ShowState {
+        Visible,    ///< Window is visible.
+        Hidden      ///< Window is hidden.
+    };
+
+    /// @brief WIll set the windows show state
+    /// @param[in]  showState The new show.state
+    virtual void showWindow(ShowState showState) = 0;
+
     /// @brief  Will resize the window.
     /// @param  x   [in] The x-coordinate of the upper left edge-
     /// @param  y   [in] The y-coordinate of the upper left edge.
@@ -160,7 +170,12 @@ public:
     /// @param  rect    [out] The windows rect.
     virtual void getWindowsRect(Rect2ui &rect) const;
 
+    /// @brief Will set the mouse cursor.
+    /// @param ct The mouse cursor type to use.
     virtual void setWindowsMouseCursor(DefaultMouseCursorType ct) = 0;
+
+    // Not used
+    AbstractWindow() = delete;
 
 protected:
     /// @brief  Callback to override on creation.
@@ -171,12 +186,25 @@ protected:
     virtual bool onUpdateProperies() = 0;
     /// @brief  The onResize callback.
     virtual void onResize(ui32 x, ui32 y, ui32 w, ui32 h) = 0;
+    /// @brief 
+    void setShowState(ShowState showState);
+    /// @brief 
+    ShowState getShowState() const;
 
 private:
     ui32 mFlags;
+    ShowState mShowState;
     WindowsProperties *mProperties;
     bool mIsCreated;
 };
+
+inline void AbstractWindow::setShowState( ShowState showState ) {
+    mShowState = showState;
+}
+
+inline AbstractWindow::ShowState AbstractWindow::getShowState() const {
+    return mShowState;
+}
 
 } // Namespace Platform
 } // Namespace OSRE

@@ -34,7 +34,7 @@ namespace IO {
 using namespace OSRE::Common;
 
 static const c8 *Tag = "IOService";
-static const String Zip_Extension = "zip";
+static const c8 *Zip_Extension = "zip";
 
 static AbstractFileSystem *createFS( const Uri &file ) {
     if ( !file.isValid() ) {

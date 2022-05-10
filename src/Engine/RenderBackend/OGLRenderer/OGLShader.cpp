@@ -29,8 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-static const GLint InvalidLocationId = -1;
-static const String Tag = "OGLShader";
+static const c8 *Tag = "OGLShader";
 
 OGLShader::OGLShader(const String &name) :
         Object(name),
@@ -179,10 +178,10 @@ void OGLShader::addUniform(const String &uniform) {
 
 static i32 getActiveParam(ui32 progId, GLenum type) {
     if (0 == progId) {
-        return -1;
+        return InvalidLocationId;
     }
 
-    i32 params(-1);
+    i32 params(InvalidLocationId);
     glGetProgramiv(progId, type, &params);
 
     return params;

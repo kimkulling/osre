@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Modules/ModuleRegistry.h"
-
+#include "SceneData.h"
 #include <osre/App/AppBase.h>
 #include <osre/App/World.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -36,29 +36,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 namespace App {
-class Project;
-class World;
-
+    class Project;
+    class World;
 } // namespace App
 
 namespace IO {
-class Uri;
+    class Uri;
 }
 
 namespace Editor {
 
 class PythonInterface;
-
-struct SceneData {
-    String Name;
-    String ProjectName;
-    String AssetName;
-    Scene::Node::NodePtr m_modelNode;
-    Scene::Camera *mCamera;
-    App::World *mWorld;
-
-    SceneData();
-};
+class MainRenderView;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor
@@ -68,7 +57,7 @@ struct SceneData {
 class OsreEdApp : public App::AppBase {
 public:
     /// brief   The module list
-    using ModulePathArray = ::CPPCore::TArray<String>;
+    using ModulePathArray = StringArray;
 
     /// @brief  The class constructor with the incoming command line arguments.
     /// @param  argc    [in] The number of command-line parameters.
@@ -125,9 +114,6 @@ public:
     /// @return The module registry.
     ModuleRegistry &getModuleRegistry();
 
-    /// @brief  Will create the ui.
-    void createUI();
-
     /// @brief 
     /// @param mode 
     /// @param Model 
@@ -162,6 +148,7 @@ protected:
     bool saveSceneData(const IO::Uri &filename, SceneData &sd);
 
 private:
+    MainRenderView *mMainRenderView;
     glm::mat4 m_model;
     RenderBackend::TransformMatrixBlock m_transformMatrix;
     SceneData mSceneData;

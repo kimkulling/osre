@@ -48,7 +48,7 @@ public:
     ~ParticleEmitter();
     void init( ui32 numPoints );
     void update( d32 tick );
-    void setBounds(const TAABB<f32>& bounds);
+    void setBounds(const AABB& bounds);
     RenderBackend::Mesh* getMesh() const;
 
 private:
@@ -58,8 +58,8 @@ private:
     glm::vec3 *m_pos;
     GLushort *m_pt_indices;
     RenderBackend::Mesh *m_ptGeo;
-    bool m_useBounds;
-    TAABB<f32> m_bounds;
+    bool mUseBounds;
+    AABB mBounds;
 };
 
 } // Namespace RenderBackend

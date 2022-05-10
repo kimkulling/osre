@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Platform/AbstractWindow.h>
 
+// Forward declarations ---------------------------------------------------------------------------
 struct SDL_Window;
 
 namespace OSRE {
@@ -32,14 +33,12 @@ namespace Platform {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  This class implements a SDL2-based window.
 //-------------------------------------------------------------------------------------------------
 class SDL2Surface : public AbstractWindow {
 public:
-    /// 
-
     /// @brief The class constructor.
-    /// @param props    [in] The windows title.
+    /// @param[in] props    The windows title.
     SDL2Surface( WindowsProperties *props );
 
     ///	@brief  The class destructor.
@@ -48,16 +47,19 @@ public:
     /// @brief Will return a pointer showing to the SDL_Window.
     /// @return The sdl surface pointer.
     SDL_Window *getSDLSurface() const;
-    /// 
 
     /// @brief Will set a new windows title.
-    /// @param title    [in] The new windows title.
+    /// @param[in] title    The new windows title.
     void setWindowsTitle( const String &title ) override;
     
-    /// @brief 
-    /// @param ct 
+    /// @brief  Will set the mouse cursor type.
+    /// @param[in] ct   The new cursor type.
     void setWindowsMouseCursor(DefaultMouseCursorType ct) override;
 
+    /// @brief  Will set the show window state.
+    /// @param[in]  showState The new show state.
+    void showWindow(ShowState showState) override;
+    
 protected:
     /// The onCreate callback implementation.
     virtual bool onCreate() override;
@@ -65,7 +67,7 @@ protected:
     virtual bool onDestroy() override;
     /// The onUpdateProperies callback implementation.
     virtual bool onUpdateProperies() override;
-    ///
+    /// The onResize handler.
     virtual void onResize( ui32 x, ui32 y, ui32 w, ui32 h ) override;
 
 private:

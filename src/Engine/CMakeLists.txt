@@ -5,7 +5,7 @@ add_definitions( -DOSRE_BUILD_EXPORT )
 
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
-	${HEADER_PATH}
+    ${HEADER_PATH}
     ${PROJECT_SOURCE_DIR}/contrib/cppcore/include
     ${PROJECT_SOURCE_DIR}/contrib/glew/include
     ${PROJECT_SOURCE_DIR}/contrib/glm/
@@ -33,11 +33,14 @@ ENDIF( WIN32 )
 # App
 #==============================================================================
 SET( app_inc
+    ${HEADER_PATH}/App/App.h
     ${HEADER_PATH}/App/AppCommon.h
     ${HEADER_PATH}/App/AbstractBehaviour.h
     ${HEADER_PATH}/App/AppBase.h
     ${HEADER_PATH}/App/Component.h
     ${HEADER_PATH}/App/Entity.h
+    ${HEADER_PATH}/App/ModuleBase.h
+    ${HEADER_PATH}/App/IModuleView.h
     ${HEADER_PATH}/App/ServiceProvider.h
     ${HEADER_PATH}/App/Project.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
@@ -53,6 +56,7 @@ SET( app_src
     App/AppBase.cpp
     App/Component.cpp
     App/Entity.cpp
+    App/ModuleBase.cpp
     App/ServiceProvider.cpp
     App/Project.cpp
     App/AssetRegistry.cpp
@@ -271,8 +275,8 @@ SET ( properties_src
 # Scene
 #==============================================================================
 SET( scene_inc
+    ${HEADER_PATH}/Scene/Scene.h
     ${HEADER_PATH}/Scene/SceneCommon.h
-    ${HEADER_PATH}/Scene/PipelineBuilder.h
     ${HEADER_PATH}/Scene/MeshProcessor.h
     ${HEADER_PATH}/Scene/MeshBuilder.h
     ${HEADER_PATH}/Scene/AnimatorBase.h
@@ -287,7 +291,6 @@ SET( scene_inc
     ${HEADER_PATH}/Scene/ParticleEmitter.h
 )
 SET( scene_src
-    Scene/PipelineBuilder.cpp
     Scene/DbgRenderer.cpp
     Scene/MeshProcessor.cpp
     Scene/MeshBuilder.cpp
@@ -311,6 +314,7 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/Mesh.h
     ${HEADER_PATH}/RenderBackend/TransformMatrixBlock.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
+    ${HEADER_PATH}/RenderBackend/RenderPass.h
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
     ${HEADER_PATH}/RenderBackend/RenderStates.h
     ${HEADER_PATH}/RenderBackend/Shader.h
@@ -320,6 +324,7 @@ SET( renderbackend_src
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
     RenderBackend/Pipeline.cpp
+    RenderBackend/RenderPass.cpp
     RenderBackend/TransformMatrixBlock.cpp
     RenderBackend/Shader.cpp
 )

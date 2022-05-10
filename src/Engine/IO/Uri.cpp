@@ -51,21 +51,12 @@ static String converRootFolder2Uri(const String &filename) {
     return uri;
 }
 
-Uri::Uri() 
-: m_URI( "" )
-, m_Scheme( "" )
-, m_Path( "" )
-, m_AbsPath( "" )
-, m_Resource( "" ) {
+Uri::Uri() : m_URI( "" ), m_Scheme( "" ), m_Path( "" ), m_AbsPath( "" ), m_Resource( "" ) {
 	// empty
 }
 
-Uri::Uri( const String &uri )
-: m_URI(uri)
-, m_Scheme( "" )
-, m_Path( "" )
-, m_AbsPath( "" )
-, m_Resource( "" ) {
+Uri::Uri( const String &uri ) :
+		m_URI(uri), m_Scheme( "" ), m_Path( "" ), m_AbsPath( "" ), m_Resource( "" ) {
     String normailizedStr;
     if (Uri::normalizePath( uri, '\\', normailizedStr )) {
         if (isWindowsRootFolder( normailizedStr )) {
@@ -75,12 +66,12 @@ Uri::Uri( const String &uri )
     }
 }
 
-Uri::Uri( const Uri &rhs ) 
-: m_URI( rhs.m_URI )
-, m_Scheme( rhs.m_Scheme )
-, m_Path( rhs.m_Path )
-, m_AbsPath( rhs.m_AbsPath )
-, m_Resource( rhs.m_Resource ) {
+Uri::Uri( const Uri &rhs ) :
+		m_URI( rhs.m_URI ),
+		m_Scheme( rhs.m_Scheme ),
+		m_Path( rhs.m_Path ),
+		m_AbsPath( rhs.m_AbsPath ),
+		m_Resource( rhs.m_Resource ) {
 	// empty
 }
 

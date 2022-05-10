@@ -30,19 +30,78 @@ namespace RenderBackend {
 using namespace ::OSRE::Common;  
 using namespace ::OSRE::IO;
 
-Shader::Shader() {
+Shader::Shader() :
+        mUniformBuffer(), mVertexAttributes(), m_src{}, m_compileState{} {
     ::memset(m_compileState, 0, sizeof(CompileState)*MaxCompileState);
 }
 
-Shader::~Shader() {
-    // empty
+void Shader::addVertexAttribute(const String &name) {
+    if (name.empty()) {
+        return;
+    }
+
+    mVertexAttributes.add(name);
+}
+
+void Shader::addVertexAttributes(const String *names, size_t numAttributes) {
+    if (numAttributes == 0 || nullptr == names) {
+        return;
+    }
+
+    for (size_t i = 0; i < numAttributes; ++i) {
+        mVertexAttributes.add(names[i]);
+    }
+}
+
+const c8 *Shader::getVertexAttributeAt(size_t index) const {
+    if (index >= mVertexAttributes.size()) {
+        return nullptr;
+    }
+
+    return mVertexAttributes[index].c_str();
+}
+
+void Shader::addUniformBuffer(const String &name) {
+    if (name.empty()) {
+        return;
+    }
+
+    mUniformBuffer.add(name);
+}
+
+const c8 *Shader::getUniformBufferAt(size_t index) const {
+    if (index >= mUniformBuffer.size()) {
+        return nullptr;
+    }
+
+    return mUniformBuffer[index].c_str();
 }
 
 void Shader::setSource(ShaderType type, const String &src) {
-    if (src != m_src[(ui32)type]) {
-        m_src[(ui32)type] = src;
-        m_compileState[(ui32)type] = Updated;
+    const size_t index = static_cast<size_t>(type);
+    if (src == m_src[index]) {
+        return;
     }
+ 
+    m_src[index] = src;
+    m_compileState[index] = Updated;
+}
+
+const c8 *Shader::getSource(ShaderType type) const {
+    return m_src[static_cast<size_t>(type)].c_str();
+}
+
+size_t Shader::getLocation( const c8 *vertexAttribute ) const {
+    if (mVertexAttributes.isEmpty()) {
+        return 9999;
+    }
+
+    for (size_t location = 0; location < mVertexAttributes.size(); ++location) {
+        if (mVertexAttributes[location] == vertexAttribute) {
+            return location;
+        }
+    }
+    return 9999;
 }
 
 ShaderType Shader::getTypeFromeExtension( const String &extension ) {
@@ -97,8 +156,7 @@ size_t ShaderLoader::load( const IO::Uri &uri, Shader *shader ) {
         stream->close();
         return 0;
     }
-
-    shader->m_src[(size_t)type] = shaderSrc;
+    shader->setSource(type, shaderSrc);
     stream->close();
  
     return size;
@@ -135,7 +193,7 @@ Common::ResourceState ShaderResource::onLoad( const IO::Uri &uri, ShaderLoader &
     return getState();
 }
 
-Common::ResourceState ShaderResource::onUnload( ShaderLoader &loader ) {
+Common::ResourceState ShaderResource::onUnload( ShaderLoader &) {
     return getState();
 }
 

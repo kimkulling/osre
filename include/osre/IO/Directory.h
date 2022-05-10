@@ -34,7 +34,7 @@ namespace IO {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Directory {
 public:
-    using FileList = ::CPPCore::TArray<String>;
+    using FileList = StringArray;
 
     /// @brief  Will return true, when the directory exists.
     /// @param  dir     [in] The name of the directory.

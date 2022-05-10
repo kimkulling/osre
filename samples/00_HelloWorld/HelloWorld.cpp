@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,16 +20,11 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/App/AppBase.h>
-#include <osre/App/Component.h>
-#include <osre/App/Entity.h>
-#include <osre/App/World.h>
-#include <osre/App/Stage.h>
+#include <osre/App/App.h>
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/Scene/MeshBuilder.h>
-#include <osre/Scene/Camera.h>
+#include <osre/Scene/Scene.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Common/glm_common.h>
 
@@ -46,7 +41,7 @@ class HelloWorldApp : public App::AppBase {
     TransformMatrixBlock m_transformMatrix;
     /// The entity to render
     Entity *mEntity;
-    /// 
+    /// The keyboard controller instance.
     Scene::AnimationControllerBase *mKeyboardTransCtrl;
 
 public:
@@ -61,10 +56,20 @@ public:
 
     /// The class destructor.
     ~HelloWorldApp() override {
-        // empty
+        mEntity = nullptr;
+        mKeyboardTransCtrl = nullptr;
     }
 
 protected:
+    Scene::Camera *setupCamera(World *world) {
+        Scene::Camera *camera = world->addCamera("camera_1");
+        ui32 w, h;
+        AppBase::getResolution(w, h);
+        camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
+        
+        return camera;
+    }
+
     bool onCreate() override {
         if (!AppBase::onCreate()) {
             return false;
@@ -73,17 +78,16 @@ protected:
         AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
         World *world = getStage()->getActiveWorld();
         mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
-        Scene::Camera *camera = world->addCamera("camera_1");
-        ui32 w, h;
-        AppBase::getResolution(w, h);        
-        camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
+        Scene::Camera *camera = setupCamera(world);
 
         Scene::MeshBuilder meshBuilder;
-        RenderBackend::Mesh *mesh = meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly).getMesh();
+        RenderBackend::Mesh *mesh = meshBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly).getMesh();
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
-            world->addEntity(mEntity);            
+
+            Time dt;
+            world->update(dt);
             camera->observeBoundingBox(mEntity->getAABB());
         }
         mKeyboardTransCtrl = AppBase::getTransformController(m_transformMatrix);
@@ -94,11 +98,10 @@ protected:
     }
 
     void onUpdate() override {
-        RenderBackendService *rbSrv = getRenderBackendService();
         Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey();
-                
         mKeyboardTransCtrl->update(TransformController::getKeyBinding(key));
 
+        RenderBackendService *rbSrv = getRenderBackendService();
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 

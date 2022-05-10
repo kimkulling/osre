@@ -27,12 +27,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-class Win32OSService : public AbstractOSService {
+class OSRE_EXPORT Win32OSService : public AbstractOSService {
 public:
     Win32OSService();
     ~Win32OSService() override;
     void getMonitorResolution(ui32 &width, ui32 &heigt) override;
     void showCursor(bool enabled) override;
+    static String getLastErrorAsString();
 };
 
 } // Namespace Platform

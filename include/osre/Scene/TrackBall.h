@@ -51,13 +51,13 @@ public:
     ///	@param	data		[in] The event data.
     void onOSEvent( const Common::Event &osEvent, const Common::EventData *data );
     
-    void rotate(const Vec2f &from, Vec2f &to);
+    void rotate(const glm::vec2 &from, glm::vec2 &to);
     void pan(f32 x, f32 y);
 
     ///	@brief	Maps a 2D-point to a sphere and returns the 3D-coordinate.
     ///	@param	pNewPt		[in] The 2D-point to map.
     ///	@param	NewVec		[out] The mapped 3D-point.
-    void mapToSphere( const Vec2f *pNewPt, Vec3f *NewVec );
+    void mapToSphere(const glm::vec2 *pNewPt, glm::vec3 *NewVec);
     
     ///	@brief	The current rotation will be calculated.
     void computeRotation();
@@ -70,7 +70,7 @@ public:
     void reset();
 
 private:
-    Vec3f mStartVector, mEndVector;
+    glm::vec3 mStartVector, mEndVector;
     TRectangle<ui32> m_Dimension;
     glm::quat m_rotation;
     bool m_bLeftMButtonClicked;

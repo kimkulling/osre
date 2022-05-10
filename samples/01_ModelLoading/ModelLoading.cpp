@@ -20,13 +20,8 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/App/AppBase.h>
-#include <osre/App/AssetRegistry.h>
-#include <osre/App/AssimpWrapper.h>
-#include <osre/App/Component.h>
-#include <osre/App/Entity.h>
-#include <osre/App/World.h>
-#include <osre/App/Stage.h>
+#include <osre/App/App.h>
+#include <osre/Scene/Scene.h>
 #include <osre/IO/Uri.h>
 #include <osre/Common/BaseMath.h>
 #include <osre/Platform/AbstractWindow.h>
@@ -34,10 +29,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/DbgRenderer.h>
-#include <osre/Scene/MeshBuilder.h>
-#include <osre/Scene/Node.h>
-#include <osre/Scene/Camera.h>
 
 using namespace ::OSRE;
 using namespace ::OSRE::App;

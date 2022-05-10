@@ -23,6 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/App/AppCommon.h>
+#include <osre/App/TAbstractCtrlBase.h>
+#include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/PlatformCommon.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Common/ArgumentParser.h>
@@ -59,7 +61,7 @@ class Stage;
 class World;
 class AppBase;
 
-class KeyboardEventListener : public Platform::OSEventListener {
+class OSRE_EXPORT KeyboardEventListener : public Platform::OSEventListener {
 public:
     KeyboardEventListener() :
             OSEventListener("App/KeyboardEventListener"),
@@ -109,6 +111,7 @@ public:
     TransformController(RenderBackend::TransformMatrixBlock &tmb);
     ~TransformController() override;
     static Scene::TransformCommandType getKeyBinding(Platform::Key key);
+    static Scene::TransformCommandType getMouseBinding();
     void update(Scene::TransformCommandType cmdType) override;
 
 private:
@@ -138,8 +141,8 @@ public:
     /// @param  argv            [in] The argument array.
     /// @param  supportedArgs   [in] A list of supported arguments, separated by a :
     /// @param  desc            [in] The description for the arguments.
-    AppBase( i32 argc, const c8 *argv[], const String &supportedArgs = "api", 
-        const String &desc = "The render API" );
+    AppBase(i32 argc, const c8 *argv[], const String &supportedArgs = "api:run_dll:break_on_startup", 
+        const String &desc = "The render API:The module to run:Breakpoint of startup");
 
     /// @brief  The class destructor, virtual.
     virtual ~AppBase();
@@ -223,27 +226,6 @@ public:
     /// @brief  Will create the default pipeline for rendering.
     /// @param  rbService   The renderbackend service instance.
     /// @return The default pipeline.
-    static RenderBackend::Pipeline *createDefaultPipeline(RenderBackend::RenderBackendService *rbService);
-
-    /// @brief  Will create a new render pipeline.
-    /// @param  name        [in] The name for the new pipeline. 
-    /// @return The new created instance will be returned. If a pipeline with the 
-    ///         same name already exists this instance will be returned.
-    virtual RenderBackend::Pipeline *createPipeline(const String &name);
-
-    /// @brief  Will add a new render pipeline to the render pipelines.
-    /// @param  pipeline    The new pipeline.
-    virtual void addPipeline(RenderBackend::Pipeline *pipeline);
-
-    /// @brief  Will search for < pipeline by its name.
-    /// @param  name        [in] The name of the pipeline to look for.
-    /// @return The found pipeline instance or nullptr if no pipeline with this name was found.
-    virtual RenderBackend::Pipeline *findPipeline(const String &name);
-
-    /// @brief  Will destroy a stored pipeline described by its name.
-    /// @param  name        [in9 The name for the pipeline to destroy.
-    /// @return true if the pipeline was destroyed, false if not.
-    virtual bool destroyPipeline(const String &name);
 
     /// @brief  Checks if the key was pressed in this frame.
     /// @param  key     [in] The key-code to look for.
@@ -305,7 +287,6 @@ private:
     RenderBackend::RenderBackendService *m_rbService;
     CPPCore::TArray<World*> m_worlds;
     Stage *mStage;
-    CPPCore::TArray<RenderBackend::Pipeline *> mPipelines;
     MouseEventListener *m_mouseEvListener;
     KeyboardEventListener *m_keyboardEvListener;
     Common::Ids *m_ids;

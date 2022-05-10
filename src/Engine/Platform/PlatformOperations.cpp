@@ -94,7 +94,7 @@ void PlatformOperations::getFileSaveDialog(const String &title, const c8 *extens
     // Display the Open dialog box. 
     if ( TRUE == GetSaveFileName( &ofn ) ) {
         String filename = ofn.lpstrFile;
-        location.setResource( filename );
+        location.setUri(String("file://") + filename);
     } else {
         location.clear();
     }

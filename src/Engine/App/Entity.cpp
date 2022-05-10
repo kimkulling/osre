@@ -103,11 +103,11 @@ Component *Entity::getComponent(ComponentType type) const {
     return nullptr;
 }
 
-void Entity::setAABB(const Node::AABB &aabb) {
+void Entity::setAABB(const AABB &aabb) {
     m_aabb = aabb;
 }
 
-const Node::AABB &Entity::getAABB() const {
+const AABB &Entity::getAABB() const {
     return m_aabb;
 }
 

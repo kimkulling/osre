@@ -36,18 +36,26 @@ namespace App {
 template <class TEnum>
 class TAbstractCtrlStateListener {
 public:
+    using ControlBase = TAbstractCtrlBase<TEnum>;
+
+    ///	@brief  The class destructor, virtual.
     virtual ~TAbstractCtrlStateListener();
+
+    /// @brief The state change callback.
+    /// @param newState The new state.
     virtual void onStateChanged(TEnum newState) = 0;
 
 protected:
-    TAbstractCtrlStateListener(TAbstractCtrlBase<TEnum> *ctrl);
+    /// @brief The class constructor.
+    /// @param ctrl The controller instance.
+    TAbstractCtrlStateListener(ControlBase *ctrl);
 
 private:
     TAbstractCtrlBase<TEnum> *m_instance;
 };
 
 template <class TEnum>
-inline TAbstractCtrlStateListener<TEnum>::TAbstractCtrlStateListener(TAbstractCtrlBase<TEnum> *ctrl) :
+inline TAbstractCtrlStateListener<TEnum>::TAbstractCtrlStateListener(ControlBase *ctrl) :
         m_instance(ctrl) {
     // empty
 }

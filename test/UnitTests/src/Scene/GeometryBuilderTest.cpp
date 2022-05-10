@@ -45,34 +45,21 @@ protected:
     }
 };
 
-TEST_F( MeshBuilderTest, allocEmptyGeometryTest ) {
-    MeshBuilder meshBuilder;
-    meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 2);
-    Mesh *meshArray = meshBuilder.getMesh();
-    EXPECT_NE( meshArray, nullptr );
-
-    for ( ui32 i = 0; i < 2; i++ ) {
-        Mesh &currentGeo( meshArray[ i ] );
-        EXPECT_EQ( currentGeo.m_vertextype, VertexType::ColorVertex );
-    }
-    Mesh::destroy( &meshArray );
-}
-
 TEST_F( MeshBuilderTest, allocTrianglesTest ) {
     MeshBuilder meshBuilder;
-    meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
+    meshBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
     Mesh *mesh = meshBuilder.getMesh();
-    ASSERT_NE( mesh, nullptr );
-    EXPECT_EQ( mesh->m_vertextype, VertexType::ColorVertex );
-    EXPECT_NE( mesh->m_vb, nullptr );
-    EXPECT_NE( mesh->m_ib, nullptr );
-    EXPECT_NE( mesh->m_material, nullptr );
-    Mesh::destroy( &mesh );
+    ASSERT_NE(mesh, nullptr);
+    EXPECT_EQ(mesh->getVertexType(), VertexType::ColorVertex);
+    EXPECT_NE(mesh->getVertexBuffer(), nullptr);
+    EXPECT_NE(mesh->getIndexBuffer(), nullptr);
+    EXPECT_NE(mesh->getMaterial(), nullptr);
+    delete  mesh;
 }
 
 TEST_F( MeshBuilderTest, allocLineListTest ) {
     const ui32 numLines = 2;
-    glm::vec3 pos[ 3 ], col[3];
+    glm::vec3 pos[3] = {}, col[3] = {};
     pos[ 0 ].x = 0;
     pos[ 0 ].y = 0;
     pos[ 0 ].z = 0;
@@ -97,7 +84,7 @@ TEST_F( MeshBuilderTest, allocLineListTest ) {
     col[ 2 ].y = 0.8f;
     col[ 2 ].z = 0.8f;
 
-    ui32 indices[ 4 ];
+    ui32 indices[4] = {};
     indices[ 0 ]=0;
     indices[ 1 ]=1;
     indices[ 2 ]=1;
@@ -107,12 +94,12 @@ TEST_F( MeshBuilderTest, allocLineListTest ) {
     geoBuilder.allocLineList(VertexType::ColorVertex, BufferAccessType::ReadOnly, numLines, pos, col, indices);
     Mesh *mesh = geoBuilder.getMesh();
     EXPECT_NE( nullptr, mesh );
-    Mesh::destroy( &mesh );
+    delete mesh;
 }
 
 TEST_F( MeshBuilderTest, allocPointsTest ) {
     const ui32 numPoints = 3;
-    glm::vec3 pos[ 3 ], col[ 3 ];
+    glm::vec3 pos[3] = {}, col[3] = {};
     pos[ 0 ].x = 0;
     pos[ 0 ].y = 0;
     pos[ 0 ].z = 0;
@@ -140,7 +127,7 @@ TEST_F( MeshBuilderTest, allocPointsTest ) {
     meshBuilder.allocPoints(VertexType::ColorVertex, BufferAccessType::ReadOnly, numPoints, pos, col);
     Mesh *mesh = meshBuilder.getMesh();
     EXPECT_NE( nullptr, mesh );
-    Mesh::destroy( &mesh );
+    delete mesh;
 }
 
 class GeometryDiagnosticUtilsTest : public ::testing::Test {

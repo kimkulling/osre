@@ -35,55 +35,76 @@ namespace Scene {
 
 using namespace ::OSRE::RenderBackend;
 
-DbgRenderer *DbgRenderer::s_instance = nullptr;
+DbgRenderer *DbgRenderer::sInstance = nullptr;
 
-DbgRenderer::DbgRenderer(RenderBackend::RenderBackendService *rbSrv) :
+DbgRenderer::DbgRenderer(RenderBackendService *rbSrv) :
         mRbSrv(rbSrv),
-        mDebugGeometry(nullptr),
-        mFontRenderer(nullptr),
+        mDebugMesh(nullptr),
+        mDebugTextMeshes(),
         mLastIndex(0) {
     osre_assert(nullptr != mRbSrv);
 }
 
 DbgRenderer::~DbgRenderer() {
-    Mesh::destroy(&mDebugGeometry);
+    clear();
 }
 
-bool DbgRenderer::create(RenderBackend::RenderBackendService *rbSrv) {
-    if (nullptr != s_instance) {
+bool DbgRenderer::create(RenderBackendService *rbSrv) {
+    if (nullptr != sInstance) {
         return false;
     }
 
-    s_instance = new DbgRenderer(rbSrv);
+    sInstance = new DbgRenderer(rbSrv);
     return true;
 }
 
 bool DbgRenderer::destroy() {
-    if (nullptr == s_instance) {
+    if (nullptr == sInstance) {
         return false;
     }
-    delete s_instance;
-    s_instance = nullptr;
+    delete sInstance;
+    sInstance = nullptr;
     return true;
 }
 
 DbgRenderer *DbgRenderer::getInstance() {
-    return s_instance;
+    return sInstance;
 }
 
-void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui32 id, const String &text) {
+c8 *DbgRenderer::getDebugRenderBatchName() {
+    static constexpr c8 *name = "dbgBatch";
+    return name;
+}
+
+void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui64 id, const String &text) {
+    osre_assert(mRbSrv != nullptr);
+    
     if (text.empty()) {
         return;
     }
-
+    DebugText *foundDebugText = getInstance()->getDebugText(id);
     mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
-    mRbSrv->beginRenderBatch("dbgFontBatch");
-
+    mRbSrv->beginRenderBatch(DbgRenderer::getDebugRenderBatchName());
+    glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
+    mRbSrv->setMatrix(MatrixType::Projection, projection);
+    if (foundDebugText == nullptr) {
+        MeshBuilder meshBuilder;
+        meshBuilder.allocTextBox(x, y, 20, text, BufferAccessType::ReadWrite);
+        DebugText *entry = new DebugText;
+        entry->mesh = meshBuilder.getMesh();
+        entry->mesh->setId(id);
+        getInstance()->mDebugTextMeshes.add(entry);
+        mRbSrv->setMatrix(MatrixType::Projection, projection);
+        mRbSrv->addMesh(entry->mesh, 0);
+    } else if (foundDebugText->text != text) {
+        MeshBuilder::updateTextBox(foundDebugText->mesh, 10, text);
+        mRbSrv->updateMesh(foundDebugText->mesh);
+    }
     mRbSrv->endRenderBatch();
     mRbSrv->endPass();
 }
 
-static const ui32 NumIndices = 24;
+static constexpr size_t NumIndices = 24;
 
 static ui16 indices[NumIndices] = {
     0, 1,
@@ -100,16 +121,18 @@ static ui16 indices[NumIndices] = {
     3, 7
 };
 
-void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb) {
+void DbgRenderer::renderAABB(const glm::mat4 &transform, const AABB &aabb) {
+    osre_assert(mRbSrv != nullptr);
+
     MeshBuilder meshBuilder;
-    meshBuilder.allocEmptyMesh(VertexType::ColorVertex, 1);
+    meshBuilder.allocEmptyMesh("aabb", VertexType::ColorVertex);
     Mesh *mesh = meshBuilder.getMesh();
 
     static const ui32 NumVertices = 8;
     ColorVert vertices[NumVertices];
-    const OSRE::Vec3f &min(aabb.getMin());
-    const OSRE::Vec3f &max(aabb.getMax());
-    f32 x0(min.getX()), y0(min.getY()), z0(min.getZ()), x1(max.getX()), y1(max.getY()), z1(max.getZ());
+    const glm::vec3 &min(aabb.getMin());
+    const glm::vec3 &max(aabb.getMax());
+    f32 x0(min.x), y0(min.y), z0(min.z), x1(max.x), y1(max.y), z1(max.z);
     vertices[0].position.x = x0;
     vertices[0].position.y = y0;
     vertices[0].position.z = z0;
@@ -143,27 +166,20 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb)
     vertices[7].position.z = z1;
 
     const size_t vertexSize(sizeof(ColorVert) * NumVertices);
-    mesh->m_vb = BufferData::alloc(BufferType::VertexBuffer, vertexSize, BufferAccessType::ReadOnly);
-    mesh->m_vb->copyFrom(&vertices[0], vertexSize);
+    mesh->createVertexBuffer(&vertices[0], vertexSize, BufferAccessType::ReadOnly);
     const size_t indexSize(sizeof(ui16) * NumIndices);
-    mesh->m_ib = BufferData::alloc(BufferType::IndexBuffer, indexSize, BufferAccessType::ReadOnly);
-    mesh->m_indextype = IndexType::UnsignedShort;
-    mesh->m_ib->copyFrom(&indices[0], indexSize);
+    mesh->createIndexBuffer(&indices[0], indexSize, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
     // setup primitives
-    mesh->m_model = transform;
-    mesh->m_numPrimGroups = 1;
-
-    mesh->m_primGroups = new PrimitiveGroup[1];
-    mesh->m_primGroups[0].init(IndexType::UnsignedShort, NumIndices, PrimitiveType::LineList, 0);
+    mesh->setModelMatrix(false, transform);
+    
+    mesh->addPrimitiveGroup(NumIndices, PrimitiveType::LineList, 0);
 
     // setup material
-    mesh->m_material = MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex);
-
-    mesh->m_model = transform;
+    mesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
 
     mRbSrv->beginPass(RenderPass::getPassNameById(DbgPassId));
-    mRbSrv->beginRenderBatch("dbgFontBatch");
+    mRbSrv->beginRenderBatch(DbgRenderer::getDebugRenderBatchName());
 
     mRbSrv->setMatrix(MatrixType::Model, transform);
     mRbSrv->addMesh(mesh, 0);
@@ -173,28 +189,53 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb)
 }
 
 void DbgRenderer::clear() {
+    delete mDebugMesh;
+    mDebugMesh = nullptr;
 }
 
 void DbgRenderer::addLine(const ColorVert &v0, const ColorVert &v1) {
-    if (nullptr == mDebugGeometry) {
-        mDebugGeometry = Mesh::create(1, VertexType::ColorVertex);
+    if (nullptr == mDebugMesh) {
+        mDebugMesh = new Mesh("debugMesh", VertexType::ColorVertex, IndexType::UnsignedShort);
     }
 
     ColorVert vertices[2];
     vertices[0] = v0;
     vertices[1] = v1;
-
-    mDebugGeometry->m_vb->attach(&vertices[0], sizeof(ColorVert) * 2);
-    ui16 lineIndices[2];
+    BufferData *vb = mDebugMesh->getVertexBuffer();
+    if (vb == nullptr) {
+        mDebugMesh->createVertexBuffer(&vertices[0], sizeof(ColorVert) * 2, RenderBackend::BufferAccessType::ReadOnly);
+    } else {
+        vb->attach(&vertices[0], sizeof(ColorVert) * 2);
+    }
+    ui16 lineIndices[2] = {};
     lineIndices[0] = mLastIndex;
     mLastIndex++;
     lineIndices[1] = mLastIndex;
     mLastIndex++;
+    BufferData *ib = mDebugMesh->getIndexBuffer();
+    if (ib == nullptr) {
+        mDebugMesh->createIndexBuffer(&lineIndices[0], sizeof(ui16) * 2, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
+    } else {
+        ib->attach(&lineIndices[0], sizeof(ui16) * 2);
+    }
 
-    mDebugGeometry->m_ib->attach(&lineIndices[0], sizeof(ui16) * 2);
+    mDebugMesh->addPrimitiveGroup(NumIndices, PrimitiveType::LineList, 0);
+}
 
-    mDebugGeometry->m_primGroups = new PrimitiveGroup[1];
-    mDebugGeometry->m_primGroups[0].init(IndexType::UnsignedShort, NumIndices, PrimitiveType::LineList, 0);
+DbgRenderer::DebugText *DbgRenderer::getDebugText(ui32 id) const {
+    if (mDebugTextMeshes.isEmpty()) {
+        return nullptr;
+    }
+
+    DebugText *found = nullptr;
+    for (size_t i = 0; i < mDebugTextMeshes.size(); ++i) {
+        if (mDebugTextMeshes[i]->mesh->getId() == id) {
+            found = mDebugTextMeshes[i];
+            break;
+        }
+    }
+
+    return found;
 }
 
 } // Namespace Scene

@@ -38,13 +38,13 @@ protected:
 protected:
     void SetUp() override {
         mRbService = new RenderBackendService;
-        m_pass1 = RenderPass::create(RenderPassId, nullptr);
-        m_pass2 = RenderPass::create(DbgPassId, nullptr);
+        m_pass1 = RenderPassFactory::create(RenderPassId);
+        m_pass2 = RenderPassFactory::create(DbgPassId);
     }
 
     void TearDown() override {
-        RenderPass::destroy(m_pass2);
-        RenderPass::destroy(m_pass1);
+        delete m_pass2;
+        delete m_pass1;
         delete mRbService;
     }
 };
@@ -52,7 +52,7 @@ protected:
 TEST_F( PipelineTest, create_success ) {
     bool ok( true );
     try {
-        Pipeline *pipeline = new Pipeline("p1", mRbService);
+        Pipeline *pipeline = new Pipeline("p1");
         delete (pipeline);
     } catch ( ... ) {
         ok = false;
@@ -61,7 +61,7 @@ TEST_F( PipelineTest, create_success ) {
 }
 
 TEST_F( PipelineTest, accessPass_success ) {
-    Pipeline *pipeline = new Pipeline("p1", mRbService);
+    Pipeline *pipeline = new Pipeline("p1");
 
     size_t numPasses = pipeline->getNumPasses();
     EXPECT_EQ( 0u, numPasses );
@@ -75,7 +75,7 @@ TEST_F( PipelineTest, accessPass_success ) {
 }
 
 TEST_F( PipelineTest, iterateThroughPasses_success ) {
-    Pipeline *pipeline = new Pipeline("p1", mRbService);
+    Pipeline *pipeline = new Pipeline("p1");
     pipeline->addPass(m_pass1);
     pipeline->addPass(m_pass2);
 

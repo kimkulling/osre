@@ -58,15 +58,15 @@ public:
     virtual bool render( RenderBackend::RenderBackendService *rbSrv );
     virtual bool postprocess();
     virtual Component *getComponent(ComponentType type) const;
-    virtual void setAABB( const Scene::Node::AABB &aabb );
-    virtual const Scene::Node::AABB &getAABB() const;
+    virtual void setAABB( const Scene::AABB &aabb );
+    virtual const Scene::AABB &getAABB() const;
 
 private:
     AbstractBehaviour *m_behaviour;
     RenderComponent *m_renderComponent;
     Scene::Node *m_node;
     const Common::Ids &m_ids;
-    Scene::Node::AABB m_aabb;
+    Scene::AABB m_aabb;
     World *mOwner;
 };
 

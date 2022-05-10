@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Common/StringUtils.h>
 #include <osre/Debugging/osre_debugging.h>
+#include <osre/Scene/MeshProcessor.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Scene/Camera.h>
 
@@ -49,50 +50,50 @@ void lookupMapDeleterFunc(TArray<T> &ctr) {
     ctr.clear();
 }
 
-World::World(const String &worldName, RenderMode renderMode) :
+World::World(const String &worldName) :
         Object(worldName),
-        m_views(),
-        m_lookupViews(),
-        m_entities(),
-        m_activeCamera(nullptr),
+        mViews(),
+        mLookupViews(),
+        mEntities(),
+        mActiveCamera(nullptr),
         mRoot(nullptr),
-        m_ids(),
+        mIds(),
         mPipeline(nullptr),
-        m_renderMode(renderMode) {
+        mDirtry(false) {
     // empty
 }
 
 World::~World() {
-    ContainerClear<TArray<Camera *>>(m_views, lookupMapDeleterFunc);
-    m_lookupViews.clear();
-    m_activeCamera = nullptr;
+    ContainerClear<TArray<Camera *>>(mViews, lookupMapDeleterFunc);
+    mLookupViews.clear();
+    mActiveCamera = nullptr;
 }
 
 Scene::Camera *World::addCamera(const String &name) {
-    m_activeCamera = new Scene::Camera(name, m_ids, mRoot);
-    m_views.add(m_activeCamera);
-    const ui32 hash = StringUtils::hashName(m_activeCamera->getName());
-    m_lookupViews.insert(hash, m_activeCamera);
-    
-    return m_activeCamera;
+    mActiveCamera = new Scene::Camera(name, mIds, mRoot);
+    mViews.add(mActiveCamera);
+    const ui32 hash = StringUtils::hashName(mActiveCamera->getName());
+    mLookupViews.insert(hash, mActiveCamera);
+    mDirtry = true;
+    return mActiveCamera;
 }
 
 Camera *World::getCameraAt(ui32 i) const {
-    if (i >= m_views.size()) {
+    if (i >= mViews.size()) {
         return nullptr;
     }
 
-    return m_views[i];
+    return mViews[i];
 }
 
 Camera *World::setActiveCamera(Camera *activeView) {
-    if (m_activeCamera == activeView) {
+    if (mActiveCamera == activeView) {
         return nullptr;
     }
 
-    m_activeCamera = activeView;
-    if (nullptr == m_views.find(activeView)) {
-        m_views.add(activeView);
+    mActiveCamera = activeView;
+    if (nullptr == mViews.find(activeView)) {
+        mViews.add(activeView);
     }
 
     return activeView;
@@ -100,12 +101,12 @@ Camera *World::setActiveCamera(Camera *activeView) {
 
 Camera *World::setActiveCamera(const String &viewName) {
     const ui32 hash(StringUtils::hashName(viewName));
-    if (!m_lookupViews.hasKey(hash)) {
+    if (!mLookupViews.hasKey(hash)) {
         return nullptr;
     }
 
     Camera *activeView(nullptr);
-    if (m_lookupViews.getValue(hash, activeView)) {
+    if (mLookupViews.getValue(hash, activeView)) {
         setActiveCamera(activeView);
         return activeView;
     }
@@ -114,7 +115,7 @@ Camera *World::setActiveCamera(const String &viewName) {
 }
 
 Camera *World::getActiveView() const {
-    return m_activeCamera;
+    return mActiveCamera;
 }
 
 void World::addEntity(Entity *entity) {
@@ -122,8 +123,8 @@ void World::addEntity(Entity *entity) {
         osre_debug(Tag, "Pointer to entity are nullptr");
         return;
     }
-
-    m_entities.add(entity);
+    mDirtry = true;
+    mEntities.add(entity);
 }
 
 bool World::removeEntity(Entity *entity) {
@@ -132,10 +133,11 @@ bool World::removeEntity(Entity *entity) {
     }
     
     bool found = false;
-    CPPCore::TArray<Entity*>::Iterator it = m_entities.find(entity);
-    if (m_entities.end() != it) {
-        m_entities.remove(it);
+    CPPCore::TArray<Entity*>::Iterator it = mEntities.find(entity);
+    if (mEntities.end() != it) {
+        mEntities.remove(it);
         found = true;
+        mDirtry = true;
     }
 
     return found;
@@ -146,10 +148,10 @@ Entity *World::getEntityByName(const String &name) const {
         return nullptr;
     }
 
-    for (size_t i = 0; i < m_entities.size(); ++i) {
-        if (nullptr != m_entities[i]) {
-            if (m_entities[i]->getName() == name) {
-                return m_entities[i];
+    for (size_t i = 0; i < mEntities.size(); ++i) {
+        if (nullptr != mEntities[i]) {
+            if (mEntities[i]->getName() == name) {
+                return mEntities[i];
             }
         }
     }
@@ -164,15 +166,19 @@ void World::setSceneRoot(Node *root ) {
     }
 
     mRoot = root;
+    mDirtry = true;
 }
 
 
 void World::update(Time dt) {
-    if (nullptr != m_activeCamera) {
-        m_activeCamera->update(dt);
+    if (nullptr != mActiveCamera) {
+        mActiveCamera->update(dt);
     }
 
-    for (Entity *entity : m_entities) {
+    if (mDirtry) {
+        updateBoundingTrees();
+    }
+    for (Entity *entity : mEntities) {
         if (nullptr == entity) {
             entity->update(dt);
         }
@@ -186,11 +192,11 @@ void World::draw(RenderBackendService *rbSrv) {
     rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
     rbSrv->beginRenderBatch("b1");
 
-    if (nullptr != m_activeCamera) {
-        m_activeCamera->draw(rbSrv);
+    if (nullptr != mActiveCamera) {
+        mActiveCamera->draw(rbSrv);
     }
 
-    for (Entity *entity : m_entities) {
+    for (Entity *entity : mEntities) {
         if (nullptr != entity) {
             entity->render(rbSrv);
         }
@@ -200,6 +206,23 @@ void World::draw(RenderBackendService *rbSrv) {
     rbSrv->endPass();
 }
 
+void World::updateBoundingTrees() {
+    for (ui32 i = 0; i < mEntities.size(); ++i) {
+        auto *entity = mEntities[i];
+        if (entity == nullptr) {
+            continue;
+        }
+        Scene::MeshProcessor processor;
+        RenderComponent *rc = (RenderComponent *)entity->getComponent(ComponentType::RenderComponentType);
+        for (ui32 j = 0; j < rc->getNumGeometry(); ++j) {
+            processor.addMesh(rc->getMeshAt(j));
+        }
+        if (processor.execute()) {
+            entity->setAABB(processor.getAABB());
+        }
+    }
+    mDirtry = false;
+}
 
 } // Namespace App
 } // namespace OSRE

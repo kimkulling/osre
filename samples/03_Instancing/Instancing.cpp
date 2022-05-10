@@ -20,13 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/App/AppBase.h>
-#include <osre/App/AssetRegistry.h>
-#include <osre/App/AssimpWrapper.h>
-#include <osre/App/Component.h>
-#include <osre/App/Entity.h>
-#include <osre/App/World.h>
-#include <osre/App/Stage.h>
+#include <osre/App/App.h>
 #include <osre/Common/Ids.h>
 #include <osre/IO/Uri.h>
 #include <osre/Common/BaseMath.h>
@@ -34,11 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/DbgRenderer.h>
-#include <osre/Scene/MeshBuilder.h>
-#include <osre/Scene/MeshProcessor.h>
-#include <osre/Scene/Node.h>
-#include <osre/Scene/Camera.h>
+#include <osre/Scene/Scene.h>
 
 using namespace ::OSRE;
 using namespace ::OSRE::App;
@@ -99,19 +89,13 @@ protected:
         mEntity = new App::Entity("instance", world->getIds(), world);
         Scene::MeshBuilder meshBuilder;
         AppBase::getStage()->getActiveWorld()->addEntity(mEntity);
-//        RenderBackend::Mesh *mesh = meshBuilder.allocCube(VertexType::RenderVertex, 1, 2, 3, BufferAccessType::ReadWrite).getMesh();
-        RenderBackend::Mesh *mesh = meshBuilder.allocTriangles(VertexType::RenderVertex, BufferAccessType::ReadWrite).getMesh();
+        RenderBackend::Mesh *mesh = meshBuilder.createTriangle(VertexType::RenderVertex, BufferAccessType::ReadWrite).getMesh();
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
-            Scene::MeshProcessor process;
-            process.addMesh(mesh);
-            process.execute();
-            Scene::Node::AABB aabb = process.getAABB();
-            Node *root = getStage()->getActiveWorld()->getRootNode();
-            Node *geoNode = root->createChild("mesh_node");
-            geoNode->setAABB(aabb);
-            camera->observeBoundingBox(aabb);
+            Time dt;
+            world->update(dt);
+            camera->observeBoundingBox(mEntity->getAABB());
         }
 
         return true;

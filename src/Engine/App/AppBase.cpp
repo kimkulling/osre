@@ -51,7 +51,6 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
-using namespace ::OSRE::UI;
 using namespace ::OSRE::IO;
 
 static const c8 *Tag = "AppBase";
@@ -130,18 +129,16 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         mAppState(State::Uninited),
         m_argParser(argc, argv, supportedArgs, desc),
         m_environment(nullptr),
-        m_settings(nullptr),
+        m_settings(new Properties::Settings),
         m_platformInterface(nullptr),
         m_timer(nullptr),
         m_rbService(nullptr),
         m_worlds(),
         mStage(nullptr),
-        mPipelines(),
         m_mouseEvListener(nullptr),
         m_keyboardEvListener(nullptr),
         m_ids(nullptr),
         m_shutdownRequested(false) {
-    m_settings = new Properties::Settings;
     m_settings->setString(Properties::Settings::RenderAPI, "opengl");
     m_settings->setBool(Properties::Settings::PollingMode, true);
 }
@@ -180,7 +177,10 @@ bool AppBase::create(Properties::Settings *config) {
 }
 
 bool AppBase::destroy() {
-    return onDestroy();
+    if (mAppState == State::Created || mAppState == State::Running) {
+        return onDestroy();
+    }
+    return false;
 }
 
 void AppBase::update() {
@@ -221,7 +221,7 @@ bool AppBase::handleEvents() {
         return false;
     }
 
-    bool result = m_platformInterface->update();
+    const bool result = m_platformInterface->update();
     if (shutdownRequested()) {
         return false;
     }
@@ -238,7 +238,14 @@ Scene::Camera *AppBase::setActiveCamera(Scene::Camera *view) {
         osre_debug(Tag, "No world to activate state to.");
         return nullptr;
     }
-    return getStage()->getActiveWorld()->setActiveCamera(view);
+
+    World *activeWorld = mStage->getActiveWorld();
+    if (activeWorld == nullptr) {
+        return nullptr;
+    }
+    
+    return activeWorld->setActiveCamera(view);
+
 }
 
 void AppBase::requestShutdown() {
@@ -334,13 +341,11 @@ bool AppBase::onCreate() {
 
     // enable render-back-end
     RenderBackend::CreateRendererEventData *data = new CreateRendererEventData(m_platformInterface->getRootWindow());
-    data->m_pipeline = createDefaultPipeline(m_rbService);
-    addPipeline(data->m_pipeline);
+    data->m_pipeline = m_rbService->createDefaultPipeline();
     m_rbService->sendEvent(&RenderBackend::OnCreateRendererEvent, data);
 
     m_timer = Platform::PlatformInterface::getInstance()->getTimer();
 
-    RenderMode mode = static_cast<RenderMode>(m_settings->get(Properties::Settings::RenderMode).getInt());
     Scene::MaterialBuilder::create();
     ResourceCacheService *rcSrv = new ResourceCacheService;
 
@@ -404,13 +409,14 @@ bool AppBase::onDestroy() {
     delete mStage;
     mStage = nullptr;
 
-    for (ui32 i = 0; i < mPipelines.size(); ++i) {
-        delete mPipelines[i];
-    }
-    mPipelines.clear();
-
     delete m_ids;
     m_ids = nullptr;
+
+    delete m_mouseEvListener;
+    m_mouseEvListener = nullptr;
+
+    delete m_keyboardEvListener;
+    m_keyboardEvListener = nullptr;
 
     osre_debug(Tag, "Set application state to destroyed.");
     mAppState = State::Destroyed;
@@ -419,7 +425,7 @@ bool AppBase::onDestroy() {
     return true;
 }
 
-static const i64 Conversion2Micro = 1000;
+static constexpr i64 Conversion2Micro = 1000;
 
 void AppBase::onUpdate() {
     i64 microsecs = m_timer->getMilliCurrentSeconds() * Conversion2Micro;
@@ -444,63 +450,6 @@ const ArgumentParser &AppBase::getArgumentParser() const {
 
 Ids *AppBase::getIdContainer() const {
     return m_ids;
-}
-
-Pipeline *AppBase::createDefaultPipeline(RenderBackendService *rbService) {
-    Pipeline *pipeline = new Pipeline(DefaultPipelines::Pipeline_Default, rbService);
-    RenderPass *renderPass = RenderPass::create(RenderPassId, nullptr);
-    CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
-    renderPass->setCullState(cullState);
-    pipeline->addPass(renderPass);
-
-    return pipeline;
-}
-
-RenderBackend::Pipeline *AppBase::createPipeline(const String &name) {
-    Pipeline *p = findPipeline(name);
-    if (nullptr == p) {
-        p = new Pipeline(name, m_rbService);
-        mPipelines.add(p);
-    }
-
-    return p;
-}
-
-void AppBase::addPipeline( RenderBackend::Pipeline *pipeline ) {
-    if (nullptr != findPipeline(pipeline->getName())) {
-        return;
-    }
-    mPipelines.add(pipeline);
-}
-
-
-RenderBackend::Pipeline *AppBase::findPipeline(const String &name) {
-    if (name.empty()) {
-        return nullptr;
-    }
-    
-    for (ui32 i = 0; i < mPipelines.size(); ++i) {
-        if (mPipelines[i]->getName() == name) {
-            return mPipelines[i];
-        }
-    }
-
-    return nullptr;
-}
-
-bool AppBase::destroyPipeline(const String &name) {
-    if (name.empty()) {
-        return false;
-    }
-
-    for (ui32 i = 0; i < mPipelines.size(); ++i) {
-        if (mPipelines[i]->getName() == name) {
-            mPipelines.remove(i);
-            return true;
-        }
-    }
-
-    return false;
 }
 
 bool AppBase::isKeyPressed(Key key) const {

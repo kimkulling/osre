@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "PythonInterface.h"
 #include <osre/Common/Logger.h>
-#include <osre/app/World.h>
+#include <osre/App/World.h>
 
 #include <Python.h>
 #include <structmember.h> // defines a python class in C++
@@ -34,23 +34,22 @@ static const c8 *Tag = "PythonInterface";
 
 using namespace ::OSRE::App;
 
-struct PyWorldObject {
+struct PyAppObject {
     PyObject_HEAD;
-    World *World;
+    c8 *AppName;
 };
 
-static void PyWorld_dealloc(PyWorldObject *self) {
-    delete self->World;
+static void PyApp_dealloc(PyAppObject *self) {
     Py_TYPE(self)->tp_free((PyObject *)self);
 }
 
-static PyObject *PyWorld_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
-    PyWorldObject *self;
-    self = (PyWorldObject*) type->tp_alloc(type, 0);
+static PyObject *PyApp_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
+    PyAppObject *self;
+    self = (PyAppObject *)type->tp_alloc(type, 0);
     return (PyObject*) self;
 }
 
-static int PyWorldObject_init(PyWorldObject *self, PyObject *args, PyObject *kwds) {
+static int PyAppObject_init(PyAppObject *self, PyObject *args, PyObject *kwds) {
     if (nullptr == self) {
         return -1;
     }
@@ -58,43 +57,38 @@ static int PyWorldObject_init(PyWorldObject *self, PyObject *args, PyObject *kwd
     return 0; // success (of init)
 }
 
-static PyObject *PyWorldObject_repr(PyWorldObject *self) {
-    const String &name = self->World->getName();
-    return Py_BuildValue("s", name.c_str());
+static PyObject *PyAppObject_repr(PyAppObject *self) {
+    return Py_BuildValue("s", self->AppName);
 };
 
-static int PyWorld_len(PyWorldObject *self) {
+static int PyApp_len(PyAppObject *self) {
     return 1;
 }
 
-static PyObject *PyWorld_getitem(PyWorldObject *self, PyObject *args) {
+static PyObject *PyApp_getitem(PyAppObject *self, PyObject *args) {
     c8 *type = nullptr;
     if (!PyArg_ParseTuple(args, "s", &type)) {
         return nullptr;
     }
 
-    if (0 == strncmp(type, "camera", sizeof("type"))) {
-        //
-    } else if (0 == strncmp(type, "entity", sizeof("entity")))  {
-        //
-    }
+    return nullptr;
 }
-static int PyWorld_setitem(PyWorldObject *self, PyObject *ix, PyObject *val) {
+
+static int PyApp_setitem(PyAppObject *self, PyObject *ix, PyObject *val) {
     return 0;
 }
 
 static PyMappingMethods PyWorld_mappings = {
-    (lenfunc)PyWorld_len,
-    (binaryfunc)PyWorld_getitem,
-    (objobjargproc)PyWorld_setitem
+    (lenfunc)PyApp_len,
+    (binaryfunc)PyApp_getitem,
+    (objobjargproc)PyApp_setitem
 };
 
-static PyMemberDef PyWorldObject_members[] = {
-    //{ "capacity", T_PYSSIZET, offsetof(PyWorldObject, len), READONLY, "" },
+static PyMemberDef PyAppObject_members[] = {
     { NULL, 0, 0, 0, NULL }
 };
 
-static PyObject *create_world(PyObject *self, PyObject *args) {
+static PyObject *create_application(PyObject *self, PyObject *args) {
     if (!PyArg_ParseTuple(args, "s")) {
         return nullptr;
     }
@@ -102,34 +96,23 @@ static PyObject *create_world(PyObject *self, PyObject *args) {
     return nullptr;
 }
 
-static PyObject *add_node(PyObject *self, PyObject *args) {
-    if (!PyArg_ParseTuple(args, "s")) {
-        return nullptr;
-    }
-}
 
-static PyObject *get_Node(PyObject *self, PyObject *args) {
-    if (!PyArg_ParseTuple(args, "s")) {
-        return nullptr;
-    }
-}
-
-static PyMethodDef PyWorld_methods[] = {
-    { "create_world", (PyCFunction)create_world, METH_VARARGS, "Randomly change bits in the chromosone" },
+static PyMethodDef PyApp_methods[] = {
+    { "create_application", (PyCFunction)create_application, METH_VARARGS, "Will create a new application object." },
     { NULL, NULL, 0, NULL }
 };
 
 static PyTypeObject WorldPyObject = {
     PyVarObject_HEAD_INIT(NULL, 0) 
-    "osre_ed.World",                /* tp_name */
-    sizeof(PyWorldObject), /* tp_basicsize */
+    "osre_ed.Application",                /* tp_name */
+    sizeof(PyAppObject), /* tp_basicsize */
     0,                              /* tp_itemsize */
-    (destructor) PyWorld_dealloc, /* tp_dealloc */
+    (destructor) PyApp_dealloc, /* tp_dealloc */
     0, /* tp_print */
     0, /* tp_getattr */
     0, /* tp_setattr */
     0, /* tp_reserved */
-    (reprfunc)PyWorldObject_repr, /* tp_repr */
+    (reprfunc)PyAppObject_repr, /* tp_repr */
     0, /* tp_as_number */
     0, /* tp_as_sequence */
     &PyWorld_mappings, /* tp_as_mapping */
@@ -140,7 +123,7 @@ static PyTypeObject WorldPyObject = {
     0, /* tp_setattro */
     0, /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /* tp_flags */
-    "PyWorld objects", /* tp_doc */
+    "OSRE Application objects", /* tp_doc */
     0, /* tp_traverse */
     0, /* tp_clear */
     0, /* tp_richcompare */
@@ -148,27 +131,27 @@ static PyTypeObject WorldPyObject = {
     // (getiterfunc)Chromosone_getiter, /* tp_iter */
     PyObject_SelfIter, /* tp_iter */
     0, /* tp_iternext */
-    PyWorld_methods, /* tp_methods */
-    PyWorldObject_members, /* tp_members */
+    PyApp_methods, /* tp_methods */
+    PyAppObject_members, /* tp_members */
     0, /* tp_getset */
     0, /* tp_base */
     0, /* tp_dict */
     0, /* tp_descr_get */
     0, /* tp_descr_set */
     0, /* tp_dictoffset */
-    (initproc)PyWorldObject_init, /* tp_init */
+    (initproc)PyAppObject_init, /* tp_init */
     0, /* tp_alloc */
-    PyWorld_new /* tp_new */
+    PyApp_new /* tp_new */
 };
 
 PyMODINIT_FUNC PyInit_custom() {
     PyObject *m;
-    if (PyType_Ready(&WorldPyObject) < 0)
-        return NULL;
+    if (PyType_Ready(&WorldPyObject) < 0) {
+        return nullptr;
+    }
 
     return m;
 }
-
 
 PythonInterface::PythonInterface() :
         mCreated(false),

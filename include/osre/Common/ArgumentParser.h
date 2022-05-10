@@ -42,17 +42,22 @@ namespace Common {
 //--------------------------------------------------------------------------------------------------------------------
 class OSRE_EXPORT ArgumentParser {
 public:
-    // struct to store a single argument in a container
+    ///	@brief Stores a single argument description.
     struct Argument {
-        String m_argument;	// The argument as a string.
-        String m_desc;      // The description for the argument ( used for help texts ).
-        ui32 m_numArgs;		// The number of expected arguments for it.
+        String mArgument;	///< The argument as a string.
+        String mDesc;       ///< The description for the argument ( used for help texts ).
+        ui32 mNumArgs;		///< The number of expected arguments for it.
 
+        /// @brief The default class constructor.
         Argument();
+
+        /// @brief The class constructor with all parameters.
+        /// @param arg      The argument.
+        /// @param desc     The argument description    
+        /// @param numArgs  The number of expected arguments.
         Argument( const String &arg, const String &desc, ui32 numArgs );
     };
 
-public:
     ///	@brief	The class constructor with arguments and the requested argument support.
     ///	@param	argc            [in] The number of incoming arguments.
     ///	@param	ppArgv          [in] The arguments itself.
@@ -61,7 +66,15 @@ public:
     ArgumentParser( i32 argc, const c8 *ppArgv[], const String &supportedArgs, const String &desc );
     
     ///	@brief	The class destructor.
-    ~ArgumentParser();
+    ~ArgumentParser() = default;
+
+    /// @brief Will add a new error string.
+    /// @param[in] error    The new error.
+    void addError(const String &error);
+
+    /// @brief Will return all error strings.
+    /// @return The error strings.
+    const String &getLastErrors() const;
 
     ///	@brief	Returns true, if any arguments are supported
     ///	@return	true, if arguments are supported.
@@ -125,27 +138,34 @@ public:
 
 protected:
     /// @brief	Will validate the args.
-    /// @param	iArgc	[in] Number of incomping args.
+    /// @param	iArgc	[in] Number of incoming arguments.
     ///	@param	ppArgv	[in] The arguments.
     bool validateArguments( i32 iArgc, const c8 *ppArgv[] );
     void setInvalid();
 
 private:
-    CPPCore::TArray<Argument> m_SupportedArguments;	// List with supported arguments
-    CPPCore::TArray<String> m_detectedArgs;		    // List with detected arguments
-    CPPCore::TArray<String> m_StoredArguments;	    // List with store arguments
-    ui32 m_CurrentIndex;					        // The current index for iteration
-    bool m_isValid;							        // The valid flag
+    CPPCore::TArray<Argument> mSupportedArguments;	// List with supported arguments
+    StringArray mDetectedArgs; // List with detected arguments
+    StringArray mStoredArguments; // List with store arguments
+    ui32 mCurrentIndex;					            // The current index for iteration
+    String mLastError;                              // The last errors
+    bool mIsValid;							        // The valid flag
 };
 
-inline 
-bool ArgumentParser::hasSupportedArguments() const {
-    return ( !m_SupportedArguments.isEmpty() );
+inline void ArgumentParser::addError( const String &error ) {
+    mLastError += error;
 }
 
-inline
-void ArgumentParser::reset() {
-    m_CurrentIndex = 0;
+inline const String &ArgumentParser::getLastErrors() const {
+    return mLastError;
+}
+
+inline bool ArgumentParser::hasSupportedArguments() const {
+    return ( !mSupportedArguments.isEmpty() );
+}
+
+inline void ArgumentParser::reset() {
+    mCurrentIndex = 0;
 }
 
 } // Namespace Common

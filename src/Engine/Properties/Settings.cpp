@@ -33,7 +33,7 @@ namespace Properties {
 using namespace ::OSRE::Platform;
 
 static const CPPCore::Variant EmptyVariant;
-static const String ConfigKeyStringTable[Settings::MaxKonfigKey] = {
+static const c8 *ConfigKeyStringTable[Settings::MaxKonfigKey] = {
     "AppName",
     "AppType",
     "AppVersionMajor",
@@ -55,7 +55,8 @@ static const String ConfigKeyStringTable[Settings::MaxKonfigKey] = {
     "ChildWindow",
     "PollingMode",
     "DefaultFont",
-    "RenderMode"
+    "RenderMode",
+    "PluginDllName"
 };
 
 Settings::Settings() :
@@ -150,8 +151,9 @@ const CPPCore::Variant &Settings::get(ConfigKey key) const {
     return pProperty->getValue();
 }
 
-const String &Settings::getKeyAsString(ConfigKey key) const {
-    return ConfigKeyStringTable[key];
+String Settings::getKeyAsString(ConfigKey key) const {
+    const String stringKey(ConfigKeyStringTable[key]);
+    return stringKey;
 }
 
 void Settings::clear() {

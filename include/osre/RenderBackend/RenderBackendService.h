@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -41,10 +41,6 @@ namespace Properties {
     class Settings;
 }
 
-namespace UI {
-    class Widget;
-}
-
 namespace Threading {
     class SystemTask;
 }
@@ -72,7 +68,7 @@ DECL_EVENT(OnRenderFrameEvent);
 DECL_EVENT(OnSetParameterEvent);
 DECL_EVENT(OnInitPassesEvent);
 DECL_EVENT(OnCommitFrameEvent);
-DECL_EVENT(OnShutdownRequest);
+DECL_EVENT(OnShutdownRequestEvent);
 DECL_EVENT(OnResizeEvent);
 
 //-------------------------------------------------------------------------------------------------
@@ -181,11 +177,31 @@ public:
     /// @param  eventData   [in] The event data.
     void sendEvent(const Common::Event *ev, const Common::EventData *eventData);
 
+    Pipeline *createDefaultPipeline();
+
+    /// @brief  Will create a new render pipeline.
+    /// @param  name        [in] The name for the new pipeline.
+    /// @return The new created instance will be returned. If a pipeline with the
+    ///         same name already exists this instance will be returned.
+    Pipeline *createPipeline(const String &name);
+
+    /// @brief  Will search for pipeline by its name.
+    /// @param  name        [in] The name of the pipeline to look for.
+    /// @return The found pipeline instance or nullptr if no pipeline with this name was found.
+    virtual Pipeline *findPipeline(const String &name);
+
+    /// @brief  Will destroy a stored pipeline described by its name.
+    /// @param  name        [in] The name for the pipeline to destroy.
+    /// @return true if the pipeline was destroyed, false if not.
+    virtual bool destroyPipeline(const String &name);
+
     PassData *getPassById(const c8 *id) const;
 
     PassData *beginPass(const c8 *id);
 
     RenderBatchData *beginRenderBatch(const c8 *id);
+
+    void setRenderTarget(FrameBuffer *fb);
 
     void setMatrix(MatrixType type, const glm::mat4 &m);
 
@@ -215,11 +231,11 @@ public:
 
     void focusLost();
 
-    void setUiScreen(UI::Widget *screen);
-
     void syncRenderThread();
 
-    Texture *getDefaultTexture() const;
+    void setViewport(ui32 x, ui32 y, ui32 w, ui32 h);
+
+    const Viewport &getViewport() const;
 
 protected:
     /// @brief  The open callback.
@@ -240,12 +256,12 @@ protected:
 private:
     Threading::SystemTaskPtr m_renderTaskPtr;
     const Properties::Settings *m_settings;
+    Viewport mViewport;
     bool m_ownsSettingsConfig;
     bool m_frameCreated;
     Frame m_frames[2];
     Frame *m_renderFrame;
     Frame *m_submitFrame;
-    UI::Widget *m_screen;
     bool m_dirty;
     CPPCore::TArray<PassData*> m_passes;
     PassData *m_currentPass;
@@ -255,13 +271,10 @@ private:
 
         Behaviour() : ResizeViewport(true) {}
     } mBehaviour;
+    CPPCore::TArray<RenderBackend::Pipeline *> mPipelines;
 };
 
-inline void RenderBackendService::setUiScreen(UI::Widget *screen) {
-    m_screen = screen;
-}
-
-inline void RenderBackendService::enableAutoResizing(bool enabled) {
+inline void RenderBackendService::enableAutoResizing( bool enabled ) {
     mBehaviour.ResizeViewport = enabled;
 }
 

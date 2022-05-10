@@ -85,19 +85,18 @@ void Camera::draw(RenderBackendService *rbSrv) {
     onRender(rbSrv);
 }
 
-void Camera::observeBoundingBox(const TAABB<f32> &aabb) {
+void Camera::observeBoundingBox(const AABB &aabb) {
     f32 diam = aabb.getDiameter();
     const f32 maxDist = m_far - m_near;
     if (diam > maxDist) {
         diam = maxDist - 100.0f;
     }
 
-    const Vec3f center = aabb.getCenter();
+    const glm::vec3 center = aabb.getCenter();
     
     glm::vec3 eye(-diam *0.5f, -diam *0.5f, diam *0.5f), up(0, 0, 1);
-    glm::vec3 c(center.getX(), center.getY(), center.getZ());
 
-    setLookAt(eye, c, up);
+    setLookAt(eye, center, up);
 }
 
 void Camera::setLookAt(const glm::vec3 &eyePosition, const glm::vec3 &center, const glm::vec3 &up) {
@@ -136,7 +135,7 @@ const glm::mat4 &Camera::getProjection() const {
     return m_projection;
 }
 
-void Camera::onUpdate(Time dt) {
+void Camera::onUpdate(Time) {
     const CameraModel cm = getCameraModel();
     if (cm == CameraModel::Perspective) {
         m_projection = glm::perspective(m_fov, m_aspectRatio, m_near, m_far);

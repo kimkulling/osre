@@ -24,10 +24,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/osre_common.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Platform/Windows/MinWindows.h>
 #include <Commctrl.h>
 
 namespace OSRE {
+
+namespace Platform {
+    class Win32Window;
+    class AbstractPlatformEventQueue;
+}
+
+namespace Editor {
+    class OsreEdApp;
+}
 
 struct ProgressBar;
         
@@ -37,6 +47,7 @@ public:
     static ProgressBar *createProgressBar(int id, HWND hWnd, const Rect2ui &dimension);
     static void updateProgressBar(ProgressBar *pb, ui32 step);
     static void deleteProgressBar(ProgressBar *pb);
+    static void createMenues(Platform::Win32Window *w, Editor::OsreEdApp *app, Platform::AbstractPlatformEventQueue *queue);
 };
 
 struct Widget {
@@ -45,36 +56,16 @@ struct Widget {
     Rect2ui mRect;
 };
 
+struct PlatformData {
+    HWND mHWnd;
+};
+
 ///	@brief  The progress-bar data.
 struct ProgressBar : Widget {
     ui32 mRange;
     ui32 mCurrent;
-    HWND mHWnd;
-};
 
-struct Label : Widget {
-    String mLabel;
-};
-
-struct Headline : Widget {
-    Label mName;
-};
-struct Panel : Widget {
-    Headline mHeadline;
-};
-
-struct Button : Widget {
-    Label mLabel;
-};
-
-struct TreeViewItem {
-    String Name;
-    CPPCore::TArray<TreeViewItem *> Children;
-};
-
-struct TreeView : Widget {
-    Label mLabel;
-    TreeViewItem *mRoot;
+    PlatformData mPlatformData;
 };
 
 struct Style {

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -56,7 +56,8 @@ OGLRenderEventHandler::OGLRenderEventHandler() :
         m_oglBackend(nullptr),
         m_renderCmdBuffer(nullptr),
         m_renderCtx(nullptr),
-        m_vertexArray(nullptr) {
+        m_vertexArray(nullptr),
+        mPipeline(nullptr) {
     // empty
 }
 
@@ -65,11 +66,11 @@ OGLRenderEventHandler::~OGLRenderEventHandler() {
 }
 
 bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
-    bool result(false);
     if (!m_isRunning) {
         return true;
     }
 
+    bool result(false);
     if (OnAttachEventHandlerEvent == ev) {
         result = onAttached(data);
     } else if (OnDetatachEventHandlerEvent == ev) {
@@ -90,7 +91,7 @@ bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
         result = onCommitNexFrame(data);
     } else if (OnClearSceneEvent == ev) {
         result = onClearGeo(data);
-    } else if (OnShutdownRequest == ev) {
+    } else if (OnShutdownRequestEvent == ev) {
         result = onShutdownRequest(data);
     } else if (OnResizeEvent == ev) {
         result = onResizeRenderTarget(data);
@@ -100,14 +101,20 @@ bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
 }
 
 void OGLRenderEventHandler::setActiveShader(OGLShader *oglShader) {
+    osre_assert(m_renderCmdBuffer != nullptr);
+
     m_renderCmdBuffer->setActiveShader(oglShader);
 }
 
 void OGLRenderEventHandler::enqueueRenderCmd(OGLRenderCmd *oglRenderCmd) {
+    osre_assert(m_renderCmdBuffer != nullptr);
+
     m_renderCmdBuffer->enqueueRenderCmd(oglRenderCmd);
 }
 
 void OGLRenderEventHandler::setParameter(const ::CPPCore::TArray<OGLParameter *> &paramArray) {
+    osre_assert(m_renderCmdBuffer != nullptr);
+
     m_renderCmdBuffer->setParameter(paramArray);
 }
 
@@ -123,8 +130,8 @@ bool OGLRenderEventHandler::onAttached(const EventData *) {
 }
 
 bool OGLRenderEventHandler::onDetached(const EventData *) {
-    if (m_renderCmdBuffer) {
-        osre_error(Tag, "Renderer not destroyed.");
+    if (m_renderCmdBuffer != nullptr) {
+        osre_error(Tag, "Render-Commandbuffer was not destroyed before detaching.");
         delete m_renderCmdBuffer;
         m_renderCmdBuffer = nullptr;
     }
@@ -180,7 +187,7 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
     String root = App::AssetRegistry::getPath("media");
     String path = App::AssetRegistry::resolvePathFromUri(fontUri);
     fontUri.setPath(path);
-    m_renderCmdBuffer = new RenderCmdBuffer(m_oglBackend, m_renderCtx, createRendererEvData->m_pipeline);
+    m_renderCmdBuffer = new RenderCmdBuffer(m_oglBackend, m_renderCtx);
 
     bool ok = Profiling::PerformanceCounterRegistry::create();
     if (!ok) {
@@ -188,6 +195,7 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
         return false;
     }
 
+    mPipeline = createRendererEvData->m_pipeline;
     Profiling::PerformanceCounterRegistry::registerCounter("fps");
 
     return true;
@@ -196,12 +204,11 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
 bool OGLRenderEventHandler::onDestroyRenderer(const Common::EventData *) {
     osre_assert(nullptr != m_oglBackend);
 
-    if (nullptr != m_renderCtx) {
+    if (nullptr == m_renderCtx) {
         return false;
     }
 
-    bool ok(Profiling::PerformanceCounterRegistry::destroy());
-    if (!ok) {
+    if (!Profiling::PerformanceCounterRegistry::destroy()) {
         osre_error(Tag, "Error while destroying performance counters.");
     }
 
@@ -229,11 +236,14 @@ bool OGLRenderEventHandler::onDetachView(const EventData *) {
 
 bool OGLRenderEventHandler::onClearGeo(const EventData *) {
     osre_assert(nullptr != m_oglBackend);
+    osre_assert(nullptr != m_renderCmdBuffer);
 
     m_oglBackend->releaseAllBuffers();
     m_oglBackend->releaseAllShaders();
     m_oglBackend->releaseAllTextures();
     m_oglBackend->releaseAllParameters();
+    m_oglBackend->releaseAllPrimitiveGroups();
+    m_oglBackend->releaseAllVertexArrays();
     m_renderCmdBuffer->clear();
 
     return true;
@@ -241,39 +251,32 @@ bool OGLRenderEventHandler::onClearGeo(const EventData *) {
 
 bool OGLRenderEventHandler::onRenderFrame(const EventData *eventData) {
     osre_assert(nullptr != m_oglBackend);
-
-    if (nullptr == m_renderCtx) {
-        osre_debug(Tag, "Render context is nullptr.");
-        return false;
-    }
-
     osre_assert(nullptr != m_renderCmdBuffer);
+    osre_assert(m_renderCtx != nullptr);
 
-    m_renderCmdBuffer->onPreRenderFrame();
-
-    m_renderCmdBuffer->onRenderFrame(eventData);
-
+    m_renderCmdBuffer->onPreRenderFrame(mPipeline);
+    m_renderCmdBuffer->onRenderFrame();
     m_renderCmdBuffer->onPostRenderFrame();
 
     return true;
 }
 
 bool OGLRenderEventHandler::addMeshes(const c8 *id, CPPCore::TArray<size_t> &primGroups, MeshEntry *currentMeshEntry) {
-    for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->m_geo.size(); ++meshIdx) {
-        Mesh *currentMesh = currentMeshEntry->m_geo[meshIdx];
+    for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->mMeshArray.size(); ++meshIdx) {
+        Mesh *currentMesh = currentMeshEntry->mMeshArray[meshIdx];
         if (nullptr == currentMesh) {
             osre_assert(nullptr != currentMesh);
             continue;
         }
 
         // register primitive groups to render
-        for (size_t i = 0; i < currentMesh->m_numPrimGroups; ++i) {
-            const size_t primIdx(m_oglBackend->addPrimitiveGroup(&currentMesh->m_primGroups[i]));
+        for (size_t i = 0; i < currentMesh->getNumberOfPrimitiveGroups(); ++i) {
+            const size_t primIdx(m_oglBackend->addPrimitiveGroup(currentMesh->getPrimitiveGroupAt(i)));
             primGroups.add(primIdx);
         }
 
         // create the default material
-        SetMaterialStageCmdData *data = setupMaterial(currentMesh->m_material, m_oglBackend, this);
+        SetMaterialStageCmdData *data = setupMaterial(currentMesh->getMaterial(), m_oglBackend, this);
 
         // setup vertex array, vertex and index buffers
         m_vertexArray = setupBuffers(currentMesh, m_oglBackend, m_renderCmdBuffer->getActiveShader());
@@ -285,7 +288,7 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, CPPCore::TArray<size_t> &pri
 
         // setup the draw calls
         if (0 == currentMeshEntry->numInstances) {
-            setupPrimDrawCmd(id, currentMesh->m_localMatrix, currentMesh->m_model,
+            setupPrimDrawCmd(id, currentMesh->isLocal(), currentMesh->getLocalMatrix(),
                     primGroups, m_oglBackend, this, m_vertexArray);
         } else {
             setupInstancedDrawCmd(id, primGroups, m_oglBackend, this, m_vertexArray,
@@ -293,7 +296,6 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, CPPCore::TArray<size_t> &pri
         }
 
         primGroups.resize(0);
-
     }
 
     return true;
@@ -302,7 +304,7 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, CPPCore::TArray<size_t> &pri
 bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventData) {
     osre_assert(nullptr != m_oglBackend);
 
-    InitPassesEventData *frameToCommitData = (InitPassesEventData *)eventData;
+    InitPassesEventData *frameToCommitData = (InitPassesEventData*) eventData;
     if (nullptr == frameToCommitData) {
         return false;
     }
@@ -346,21 +348,22 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
                     continue;
                 }
 
-                for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->m_geo.size(); ++meshIdx) {
-                    Mesh *currentMesh = currentMeshEntry->m_geo[meshIdx];
+                for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->mMeshArray.size(); ++meshIdx) {
+                    Mesh *currentMesh = currentMeshEntry->mMeshArray[meshIdx];
                     if (nullptr == currentMesh) {
                         osre_assert(nullptr != currentMesh);
                         continue;
                     }
 
+
                     // register primitive groups to render
-                    for (size_t i = 0; i < currentMesh->m_numPrimGroups; ++i) {
-                        const size_t primIdx(m_oglBackend->addPrimitiveGroup(&currentMesh->m_primGroups[i]));
+                    for (size_t i = 0; i < currentMesh->getNumberOfPrimitiveGroups(); ++i) {
+                        const size_t primIdx(m_oglBackend->addPrimitiveGroup(currentMesh->getPrimitiveGroupAt(i)));
                         primGroups.add(primIdx);
                     }
 
                     // create the default material
-                    SetMaterialStageCmdData *data = setupMaterial(currentMesh->m_material, m_oglBackend, this);
+                    SetMaterialStageCmdData *data = setupMaterial(currentMesh->getMaterial(), m_oglBackend, this);
 
                     // setup vertex array, vertex and index buffers
                     m_vertexArray = setupBuffers(currentMesh, m_oglBackend, m_renderCmdBuffer->getActiveShader());
@@ -372,7 +375,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
 
                     // setup the draw calls
                     if (0 == currentMeshEntry->numInstances) {
-                        setupPrimDrawCmd(currentBatchData->m_id, currentMesh->m_localMatrix, currentMesh->m_model,
+                        setupPrimDrawCmd(currentBatchData->m_id, currentMesh->isLocal(), currentMesh->getLocalMatrix(),
                                 primGroups, m_oglBackend, this, m_vertexArray);
                     } else {
                         setupInstancedDrawCmd(currentBatchData->m_id, primGroups, m_oglBackend, this, m_vertexArray,
@@ -394,6 +397,18 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
     return true;
 }
 
+
+static void setName(c8 *name, size_t bufferSize, FrameSubmitCmd *cmd) {
+    ::memset(name, '\0', bufferSize);
+    size_t bufferLen = cmd->m_data[0];
+    if (bufferLen > bufferSize-1) {
+        bufferLen = bufferSize - 1;
+    }
+    ::strncpy(name, &cmd->m_data[1], bufferLen);
+}
+
+static const size_t BufferSize = 256;
+
 bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
     CommitFrameEventData *data = (CommitFrameEventData *)eventData;
     if (nullptr == data) {
@@ -412,11 +427,10 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
             MatrixBuffer *buffer = (MatrixBuffer *)cmd->m_data;
             m_renderCmdBuffer->setMatrixBuffer(cmd->m_batchId, buffer);
         } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateUniforms) {
-            c8 name[255];
-            ::memset(name, '\0', 255);
-            ::strncpy(name, &cmd->m_data[1], cmd->m_data[0]);
-            ui32 offset = cmd->m_data[0] + 1;
-            size_t size = cmd->m_size - offset;
+            c8 name[BufferSize];
+            setName(name, BufferSize, cmd);
+            const ui32 offset = cmd->m_data[0] + 1;
+            const size_t size = cmd->m_size - offset;
             OGLParameter *oglParam = m_oglBackend->getParameter(name);
             ::memcpy(oglParam->m_data->getData(), &cmd->m_data[offset], size);
         } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateBuffer) {

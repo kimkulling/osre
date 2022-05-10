@@ -83,7 +83,7 @@ struct OSRE_EXPORT Event {
 
     ///	@brief	the class constructor with description id.
     ///	@param	id	Id description, will be used to describe the event type.
-    Event(const String &id);
+    Event(const c8 *id);
 
     ///	@brief The class destructor, virtual.
     virtual ~Event();
@@ -100,7 +100,7 @@ struct OSRE_EXPORT Event {
     /// @return The hash id.
     ui32 getHash() const;
 
-    const String &getId() const;
+    const String getId() const;
 
     ///	@brief	A reference ownership will be marked.
     void get();
@@ -119,7 +119,7 @@ struct OSRE_EXPORT Event {
 
     ui32 m_numRefs;
     HashId m_hash;
-    const String mId;
+    const c8 *mId;
     const EventData *m_eventData;
 };
 

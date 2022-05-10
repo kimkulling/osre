@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Modules/ModuleBase.h"
-
+#include <osre/App/ModuleBase.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
 
@@ -13,7 +12,7 @@ namespace Editor {
 ///
 /// @brief  
 //-------------------------------------------------------------------------------------------------
-class EditorModule : public ModuleBase {
+class EditorModule : public App::ModuleBase {
 public:
     EditorModule(App::AppBase *parentApp);
     ~EditorModule() override;

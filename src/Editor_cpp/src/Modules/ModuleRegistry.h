@@ -26,12 +26,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
+
+namespace App {
+    class ModuleBase;
+}
+
 namespace Editor {
 
-class ModuleBase;
 
 /// @brief  The type to store modules in an array.
-using ModuleArray = CPPCore::TArray<ModuleBase*>;
+using ModuleArray = CPPCore::TArray<App::ModuleBase*>;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor
@@ -41,7 +45,7 @@ using ModuleArray = CPPCore::TArray<ModuleBase*>;
 class ModuleRegistry {
 public:
     /// @brief  Type to store the paths to the modules.
-    using ModulePathArray = ::CPPCore::TArray<String>;
+    using ModulePathArray = StringArray;
 
     /// @brief  The class constructor.
     ModuleRegistry();
@@ -56,17 +60,17 @@ public:
     /// @brief  Will register a new module.
     /// @param  mod     [in] The module to register.
     /// @return true if successful. False in case of an error.
-    bool registerModule(ModuleBase *mod);
+    bool registerModule(App::ModuleBase *mod);
 
     /// @brief  Will search for a given module name.
     /// @param  name    [in] The module name to search for.
     /// @return The found module or a nullptr.
-    ModuleBase *findModule(const String &name) const;
+    App::ModuleBase *findModule(const String &name) const;
     
     /// @brief  Will unregister the given module.
     /// @param  mod     [in] The module to unregister.
     /// @return true if successful.
-    bool unregisterModule(ModuleBase *mod);
+    bool unregisterModule(App::ModuleBase *mod);
     
     /// @brief  All registered module will get an update.
     void update();

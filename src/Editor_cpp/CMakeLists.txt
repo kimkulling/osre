@@ -27,9 +27,6 @@ SET( editor_module_src
 )
 
 SET( modules_src 
-    src/Modules/IModuleView.h
-    src/Modules/ModuleBase.cpp
-    src/Modules/ModuleBase.h
     src/Modules/ModuleRegistry.h
     src/Modules/ModuleRegistry.cpp
 )
@@ -44,14 +41,29 @@ SET( scripting_src
     src/Scripting/PythonInterface.h
 )
 
+set(renderview_src
+    src/RenderView/MainRenderView.cpp
+    src/RenderView/MainRenderView.h    
+)
+
+set(actions_src
+    src/Actions/ActionBase.h
+    src/Actions/ImportAction.cpp
+    src/Actions/ImportAction.h
+)
+
 SET (main_src
+    src/SceneData.h
     src/ProgressReporter.cpp
     src/ProgressReporter.h
     src/OsreEdApp.cpp
     src/OsreEdApp.h
     src/main.cpp
+
 )
 SOURCE_GROUP(Gui                      FILES ${gui_src})
+SOURCE_GROUP(RenderView               FILES ${renderview_src})
+SOURCE_GROUP(Actions                  FILES ${actions_src})
 SOURCE_GROUP(Modules\\InspectorModule FILES ${inspector_module_src} )
 SOURCE_GROUP(Modules\\LogModule       FILES ${log_module_src} )
 SOURCE_GROUP(Modules\\EditorModule    FILES ${editor_module_src} )
@@ -61,13 +73,17 @@ SOURCE_GROUP(Scripting\\              FILES ${scripting_src} )
 SOURCE_GROUP(Main\\                   FILES ${main_src})
 
 ADD_EXECUTABLE( osre_ed
+    OSRE_Ed.rc    
+    resource.h
     ${gui_src}
+    ${actions_src}
     ${inspector_module_src}
     ${log_module_src}
     ${editor_module_src}
     ${modules_src}
     ${scripting_src}
+    ${renderview_src}
     ${main_src}
 )
 
-target_link_libraries ( osre_ed osre )
+target_link_libraries ( osre_ed osre comctl32.lib winmm.lib )

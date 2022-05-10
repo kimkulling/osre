@@ -35,13 +35,7 @@ enum class TestState {
 
 class TestCtrl : public TAbstractCtrlBase<TestState> {
 public:
-    TestCtrl()
-    : TAbstractCtrlBase<TestState>( TestState::Inited )
-    , m_entered( false )
-    , m_handled( false )
-    , m_leave( false )
-    , m_lastTimetick(0)
-    , m_enteredNewState( TestState::United ) {
+    TestCtrl() : TAbstractCtrlBase<TestState>( TestState::Inited ), m_entered( false ), m_handled( false ), m_leave( false ), m_lastTimetick(0), m_enteredNewState( TestState::United ) {
         // empty
     }
 

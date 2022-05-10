@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,7 +32,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Editor {
 
-ProgressReporter::ProgressReporter(Platform::AbstractWindow *window) :
+using namespace ::OSRE::Platform;
+
+ProgressReporter::ProgressReporter(AbstractWindow *window) :
         mWindow(window),
         mProgress(0),
         mProgressBar(nullptr) {
@@ -49,14 +51,15 @@ ProgressReporter::~ProgressReporter() {
 
 void ProgressReporter::start() {
     if (nullptr != mWindow) {
-        mWindow->setWindowsMouseCursor(Platform::DefaultMouseCursorType::WaitCursor);
+        mWindow->setWindowsMouseCursor(DefaultMouseCursorType::WaitCursor);
     }
     
     if (nullptr != mProgressBar) {
         return;
     }
-    ui32 width, heihgt;
-    Platform::PlatformInterface::getInstance()->getOSServices()->getMonitorResolution(width, heihgt);
+
+    ui32 width = 0, heihgt = 0;
+    PlatformInterface::getInstance()->getOSServices()->getMonitorResolution(width, heihgt);
     ui32 x = width / 2 - 50;
     ui32 y = heihgt / 2 - 10;
     Rect2ui r(x, y, 300, 20);
@@ -84,7 +87,6 @@ void ProgressReporter::update(i32 percent) {
 void ProgressReporter::reset() {
     mProgress = 0;
 }
-
 
 } // namespace Editor
 } // namespace OSRE 
