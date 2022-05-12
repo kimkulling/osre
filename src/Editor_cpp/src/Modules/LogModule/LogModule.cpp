@@ -62,7 +62,7 @@ INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM l
             return TRUE;
         }
         case WM_CLOSE:
-            CloseWindow(hWnd);
+            ::CloseWindow(hWnd);
             return TRUE;
     };
 
@@ -72,7 +72,10 @@ INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM l
 static HWND initLogWindow(HINSTANCE hInstance, HWND hParent) {
     HWND hwnd = ::CreateDialog(hInstance, MAKEINTRESOURCE(IDD_LOGVIEW),
             hParent, &LogDialogProc);
-
+    
+    RECT rect;
+    ::GetWindowRect(hParent, &rect);
+    ::MoveWindow(hwnd, rect.left+20, rect.bottom-300, rect.right-rect.left-20, 280, TRUE);
     if (hwnd == nullptr) {
         auto err = Win32OSService::getLastErrorAsString();
         osre_error(Tag, "Unable to create log window. Error : " + err);
