@@ -43,8 +43,6 @@ protected:
     }
 
     void TearDown() override {
-        delete mPass2;
-        delete mPass1;
         delete mRbService;
     }
 };
