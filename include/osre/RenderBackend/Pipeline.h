@@ -37,7 +37,7 @@ class RenderBackendService;
 using CPPCore::TArray;
 
 namespace DefaultPipelines {
-    static const c8 *Pipeline_Default = "pipeline.default";
+    OSRE_EXPORT const c8 *get_Pipeline_Default();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ public:
 
     /// @brief  Will begin the rendering for a given render-pass.
     /// @param  passId  The render-pass id.
-    /// @return ´Pointer showing to the render-pass. Will be a nullptr when no render-pass exists.
+    /// @return ï¿½Pointer showing to the render-pass. Will be a nullptr when no render-pass exists.
     RenderPass *beginPass(ui32 passId);
 
     /// @brief  Will end the current render-pass.

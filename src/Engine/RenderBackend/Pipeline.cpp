@@ -27,8 +27,24 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-constexpr i32 InvalidPassIdx = -1;
+namespace Details {
 
+static const c8 *RenderPassNames[] = {
+    "RenderPass",
+    "UiPass",
+    "DbgPass"
+};
+
+} // Namespace Details
+
+namespace DefaultPipelines {
+    const c8 *get_Pipeline_Default() {
+        static constexpr c8 Name[] = "pipeline.default";
+        return Name;
+    }
+}
+
+constexpr i32 InvalidPassIdx = -1;
 
 Pipeline::Pipeline(const String &pipelineName) :
         Object(pipelineName),

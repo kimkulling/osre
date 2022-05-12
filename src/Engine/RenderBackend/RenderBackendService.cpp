@@ -296,12 +296,12 @@ void RenderBackendService::sendEvent(const Event *ev, const EventData *eventData
 }
 
 Pipeline *RenderBackendService::createDefaultPipeline() {
-    auto *defaultPipeline = findPipeline(DefaultPipelines::Pipeline_Default);
+    auto *defaultPipeline = findPipeline(DefaultPipelines::get_Pipeline_Default());
     if (defaultPipeline != nullptr) {
         return defaultPipeline;
     }
 
-    Pipeline *pipeline = new Pipeline(DefaultPipelines::Pipeline_Default);
+    Pipeline *pipeline = new Pipeline(DefaultPipelines::get_Pipeline_Default());
     RenderPass *renderPass = RenderPassFactory::create(RenderPassId);
     CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
     renderPass->setCullState(cullState);

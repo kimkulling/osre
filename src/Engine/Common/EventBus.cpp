@@ -31,7 +31,7 @@ namespace Common {
 
 CPPCore::TStackAllocator<QueueEntry> QueueEntryAlloctor;
 
-static constexpr c8 *Tag = "EventBus";
+static constexpr c8 Tag[] = "EventBus";
 
 EventBus::EventBus() :
         mSuscribedHandler(), mQueueEntryArray(), mCreated(false) {

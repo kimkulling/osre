@@ -26,7 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Common/osre_common.h>
 #include <osre/Debugging/AssertHandler.h>
-///
+
+//-------------------------------------------------------------------------------------------------
 ///	@def	OSRE_ASSERT
 ///	@brief	The Open-Source-rendering-Engine assert macro. The system will exit in case of an assertion. 
 ///	        _Debug must be defined to have support. In release macro will be ignored.
@@ -39,7 +40,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ///	@param	msg	        [in] The error message to show in case of an error.
 ///
 /// @def    OSRE_CHECK_NOENTRY
-/// @brief  If you want to validate a statement no to be performed use this macro. It will abort the application.
+/// @brief  If you want to validate a statement no to be performed use this macro. It will abort 
+///         the application.
+//-------------------------------------------------------------------------------------------------
 #ifdef _DEBUG
 #  define osre_assert( statement )        if ( !(statement) ) ::OSRE::Debugging::handleAssert( __FILE__, __LINE__,  #statement );
 #  define osre_assert2( statement, msg )  if ( !(statement) ) ::OSRE::Debugging::handleAssert( __FILE__, __LINE__,  #statement###msg );
