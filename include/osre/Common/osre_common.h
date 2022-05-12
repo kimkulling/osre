@@ -342,10 +342,10 @@ struct TRectangle {
     void set(T x, T y, T width_, T height_) {
         x1 = x;
         y1 = y;
-        x2 = x + width;
-        y2 = y + height;
         width = width_;
         height = height_;
+        x2 = x + width;
+        y2 = y + height;
     }
 
     /// @brief  Will set the rectangle-geometry with the upper left corner and the lower right corner.

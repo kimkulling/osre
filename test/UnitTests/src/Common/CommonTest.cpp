@@ -32,7 +32,7 @@ class CommonTest : public ::testing::Test {
     //
 };
 
-TEST_F( CommonTest, TypesTest ) {
+TEST_F(CommonTest, TypesTest) {
     EXPECT_EQ( 4U, sizeof( ui32 ) );
     EXPECT_EQ( 4U, sizeof( i32 ) );
     EXPECT_EQ( 4U, sizeof( f32 ) );
@@ -82,6 +82,11 @@ TEST_F( CommonTest, TPoint2_Test ) {
     EXPECT_EQ( pt2, pt2 );
 }
 
+constexpr ui32 X = 10;
+constexpr ui32 Y = 10;
+constexpr ui32 W = 100;
+constexpr ui32 H = 200;
+
 TEST_F( CommonTest, TRect2D_Create ) {
     Rect2ui rect( 0, 0, 100, 20 );
     EXPECT_EQ( 0, rect.x1 );
@@ -98,6 +103,29 @@ TEST_F(CommonTest, TRect2D_IsIn ) {
     Point2ui pt2(102, 200);
     EXPECT_TRUE( rect.isIn( pt1 ) );
     EXPECT_FALSE( rect.isIn( pt2 ) );
+}
+
+
+TEST_F(CommonTest, TRect2D_set) {
+    Rect2ui rect(0, 0, 1, 1);
+
+    rect.set(X, Y, W, H);
+    EXPECT_EQ(rect.getX1(), X);
+    EXPECT_EQ(rect.getY1(), Y);
+    EXPECT_EQ(rect.getX2(), X + W);
+    EXPECT_EQ(rect.getY2(), X + H);
+    EXPECT_EQ(rect.getWidth(), W);
+    EXPECT_EQ(rect.getHeight(), H);
+}
+
+TEST_F(CommonTest, TRect2D_setEdges) {
+    Rect2ui rect(0, 0, 1, 1);
+
+    rect.setEdges(X, Y, X + W, Y + H);
+    EXPECT_EQ(rect.getX1(), X);
+    EXPECT_EQ(rect.getY1(), Y);
+    EXPECT_EQ(rect.getWidth(), W);
+    EXPECT_EQ(rect.getHeight(), H);
 }
 
 } // Namespace UnitTest

@@ -69,13 +69,15 @@ INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM l
     return FALSE;
 }
 
-static HWND initLogWindow(HINSTANCE hInstance, HWND hParent) {
+static HWND initLogWindow(HINSTANCE hInstance, HWND hParent, const Rect2ui &rect) {
     HWND hwnd = ::CreateDialog(hInstance, MAKEINTRESOURCE(IDD_LOGVIEW),
             hParent, &LogDialogProc);
-    
-    RECT rect;
-    ::GetWindowRect(hParent, &rect);
-    ::MoveWindow(hwnd, rect.left+20, rect.bottom-300, rect.right-rect.left-20, 280, TRUE);
+    if (hwnd == nullptr) {
+        osre_error(Tag, "Cannot create log window.");
+        return nullptr;
+    }
+
+    ::MoveWindow(hwnd, rect.getX1() + 20, rect.getY2() - 300, rect.getX2() - rect.getX1() - 20, 280, TRUE);
     if (hwnd == nullptr) {
         auto err = Win32OSService::getLastErrorAsString();
         osre_error(Tag, "Unable to create log window. Error : " + err);
@@ -110,19 +112,19 @@ public:
     }
 
 protected:
-    void onCreate( Rect2ui rect ) override {
+    void onCreate(Rect2ui rect) override {
         Win32Window *w = (Win32Window *)mRootWindow;
         if (w == nullptr) {
             osre_error(Tag, "Cannot create log module view.");
             return;
         }
-        mLogWndHandle = initLogWindow(w->getModuleHandle(), w->getHWnd());
-        if (mLogWndHandle != nullptr) {
-            ::ShowWindow(mLogWndHandle, SW_SHOW);
-            mRect = rect;
-        } else {
+        mLogWndHandle = initLogWindow(w->getModuleHandle(), w->getHWnd(), rect);
+        if (mLogWndHandle == nullptr) {
             osre_error(Tag, "Cannot create log module view.");
+            return;
         }
+        ::ShowWindow(mLogWndHandle, SW_SHOW);
+        mRect = rect;
     }
 
     void onUpdate() override {
@@ -145,7 +147,7 @@ public:
             AbstractLogStream(), mThreadId(999999), mLogView(lv) {
         osre_assert(mLogView != nullptr);
 
-        mThreadId = :: GetCurrentThreadId();
+        mThreadId = ::GetCurrentThreadId();
     }
 
     ~LogStream() override {
