@@ -51,10 +51,11 @@ TEST_F( FrustumTest, extractFromTest ) {
     f.extractFrom(vp);
     glm::vec3 point1(5, 5, 0);
     bool result = f.isIn(point1);
+    EXPECT_TRUE(result);
 
     glm::vec3 point2(-11, 5, 0);
     result = f.isIn(point2);
-    EXPECT_TRUE(result);
+    EXPECT_FALSE(result);
 }
 
 } // namespace UnitTest
