@@ -27,13 +27,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
+
+namespace App {
+    class AppBase;
+}
+
 namespace Editor {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor
 ///
 /// @brief This class implements the global python entry points. This class implements the main 
-/// fascade to the python scripting. 
+/// facade to the python scripting. 
 //-------------------------------------------------------------------------------------------------
 class PythonInterface {
 public:
@@ -42,7 +47,7 @@ public:
 
     /// @brief  The class destructor.
     ~PythonInterface();
-    bool create();
+    bool create(App::AppBase *app);
     bool destroy();
     void addPath(const String &path);
     bool runScript(const String &src);
@@ -50,6 +55,7 @@ public:
 private:
     bool mCreated;
     StringArray mPaths;
+    App::AppBase *mApp;
 };
 
 } // Namespace Editor

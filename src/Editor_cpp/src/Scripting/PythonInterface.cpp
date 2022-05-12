@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "PythonInterface.h"
 #include <osre/Common/Logger.h>
-#include <osre/App/World.h>
+#include <osre/App/Stage.h>
 
 #include <Python.h>
 #include <structmember.h> // defines a python class in C++
@@ -34,22 +34,23 @@ static const c8 *Tag = "PythonInterface";
 
 using namespace ::OSRE::App;
 
-struct PyAppObject {
+struct PyStageObject {
     PyObject_HEAD;
-    c8 *AppName;
+    c8 *StageName;
+    Stage *mStage;
 };
 
-static void PyApp_dealloc(PyAppObject *self) {
+static void PyStage_dealloc(PyStageObject *self) {
     Py_TYPE(self)->tp_free((PyObject *)self);
 }
 
-static PyObject *PyApp_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
-    PyAppObject *self;
-    self = (PyAppObject *)type->tp_alloc(type, 0);
+static PyObject *PyStage_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
+    PyStageObject *self;
+    self = (PyStageObject *)type->tp_alloc(type, 0);
     return (PyObject*) self;
 }
 
-static int PyAppObject_init(PyAppObject *self, PyObject *args, PyObject *kwds) {
+static int PyStageObject_init(PyStageObject *self, PyObject *args, PyObject *kwds) {
     if (nullptr == self) {
         return -1;
     }
@@ -57,15 +58,15 @@ static int PyAppObject_init(PyAppObject *self, PyObject *args, PyObject *kwds) {
     return 0; // success (of init)
 }
 
-static PyObject *PyAppObject_repr(PyAppObject *self) {
-    return Py_BuildValue("s", self->AppName);
+static PyObject *PyStageObject_repr(PyStageObject *self) {
+    return Py_BuildValue("s", self->StageName);
 };
 
-static int PyApp_len(PyAppObject *self) {
+static int PyStage_len(PyStageObject *self) {
     return 1;
 }
 
-static PyObject *PyApp_getitem(PyAppObject *self, PyObject *args) {
+static PyObject *PyStage_getitem(PyStageObject *self, PyObject *args) {
     c8 *type = nullptr;
     if (!PyArg_ParseTuple(args, "s", &type)) {
         return nullptr;
@@ -74,21 +75,21 @@ static PyObject *PyApp_getitem(PyAppObject *self, PyObject *args) {
     return nullptr;
 }
 
-static int PyApp_setitem(PyAppObject *self, PyObject *ix, PyObject *val) {
+static int PyStage_setitem(PyStageObject *self, PyObject *ix, PyObject *val) {
     return 0;
 }
 
 static PyMappingMethods PyWorld_mappings = {
-    (lenfunc)PyApp_len,
-    (binaryfunc)PyApp_getitem,
-    (objobjargproc)PyApp_setitem
+    (lenfunc)PyStage_len,
+    (binaryfunc)PyStage_getitem,
+    (objobjargproc)PyStage_setitem
 };
 
-static PyMemberDef PyAppObject_members[] = {
+static PyMemberDef PyStageObject_members[] = {
     { NULL, 0, 0, 0, NULL }
 };
 
-static PyObject *create_application(PyObject *self, PyObject *args) {
+static PyObject *create_stage(PyObject *self, PyObject *args) {
     if (!PyArg_ParseTuple(args, "s")) {
         return nullptr;
     }
@@ -97,22 +98,22 @@ static PyObject *create_application(PyObject *self, PyObject *args) {
 }
 
 
-static PyMethodDef PyApp_methods[] = {
-    { "create_application", (PyCFunction)create_application, METH_VARARGS, "Will create a new application object." },
+static PyMethodDef PyStage_methods[] = {
+    { "create_stage", (PyCFunction)create_stage, METH_VARARGS, "Will create a new stage object." },
     { NULL, NULL, 0, NULL }
 };
 
-static PyTypeObject WorldPyObject = {
+static PyTypeObject StagePyObject = {
     PyVarObject_HEAD_INIT(NULL, 0) 
     "osre_ed.Application",                /* tp_name */
-    sizeof(PyAppObject), /* tp_basicsize */
+    sizeof(PyStageObject), /* tp_basicsize */
     0,                              /* tp_itemsize */
-    (destructor) PyApp_dealloc, /* tp_dealloc */
+    (destructor)PyStage_dealloc, /* tp_dealloc */
     0, /* tp_print */
     0, /* tp_getattr */
     0, /* tp_setattr */
     0, /* tp_reserved */
-    (reprfunc)PyAppObject_repr, /* tp_repr */
+    (reprfunc)PyStageObject_repr, /* tp_repr */
     0, /* tp_as_number */
     0, /* tp_as_sequence */
     &PyWorld_mappings, /* tp_as_mapping */
@@ -131,22 +132,22 @@ static PyTypeObject WorldPyObject = {
     // (getiterfunc)Chromosone_getiter, /* tp_iter */
     PyObject_SelfIter, /* tp_iter */
     0, /* tp_iternext */
-    PyApp_methods, /* tp_methods */
-    PyAppObject_members, /* tp_members */
+    PyStage_methods, /* tp_methods */
+    PyStageObject_members, /* tp_members */
     0, /* tp_getset */
     0, /* tp_base */
     0, /* tp_dict */
     0, /* tp_descr_get */
     0, /* tp_descr_set */
     0, /* tp_dictoffset */
-    (initproc)PyAppObject_init, /* tp_init */
+    (initproc)PyStageObject_init, /* tp_init */
     0, /* tp_alloc */
-    PyApp_new /* tp_new */
+    PyStage_new /* tp_new */
 };
 
 PyMODINIT_FUNC PyInit_custom() {
     PyObject *m;
-    if (PyType_Ready(&WorldPyObject) < 0) {
+    if (PyType_Ready(&StagePyObject) < 0) {
         return nullptr;
     }
 
@@ -163,7 +164,7 @@ PythonInterface::~PythonInterface() {
     // empty
 }
 
-bool PythonInterface::create() {
+bool PythonInterface::create(App::AppBase *app) {
     if (mCreated) {
         osre_error(Tag, "Error while create, Python interface is already created.")
         return false;
@@ -172,7 +173,7 @@ bool PythonInterface::create() {
     const wchar_t *program = L"osre_ed";
     Py_SetProgramName(program); /* optional but recommended */
     Py_Initialize();
-
+    mApp = app;
     mCreated = true;
 
     return true;

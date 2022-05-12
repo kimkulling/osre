@@ -172,7 +172,7 @@ bool OsreEdApp::onCreate() {
     mMainRenderView->createEditorElements((RenderComponent *)editorEntity->getComponent(ComponentType::RenderComponentType));
 
     mPythonInterface = new PythonInterface;
-    if (!mPythonInterface->create()) {
+    if (!mPythonInterface->create(this)) {
         osre_error(Tag, "Error while creating Python Interface.");
         return false;
     }
