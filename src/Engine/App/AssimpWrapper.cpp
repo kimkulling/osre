@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Component.h>
 #include <osre/App/Entity.h>
 #include <osre/App/World.h>
+#include <osre/Animation/AnimatorBase.h>
 #include <osre/Common/Ids.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/StringUtils.h>
@@ -53,6 +54,7 @@ namespace App {
 
 using namespace ::Assimp;
 using namespace ::OSRE::Common;
+using namespace ::OSRE::Animation;
 using namespace ::OSRE::IO;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;

@@ -34,6 +34,8 @@ namespace UI {
 
 namespace Editor {
 
+class InspectorView;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor
 ///
@@ -51,6 +53,7 @@ protected:
     void onRender() override;
 
 private:
+    InspectorView *mInspectorView;
 };
 
 } // namespace Editor

@@ -49,6 +49,7 @@ SET( app_inc
     ${HEADER_PATH}/App/AssetRegistry.h
     ${HEADER_PATH}/App/AssimpWrapper.h
     ${HEADER_PATH}/App/Stage.h
+    ${HEADER_PATH}/App/TransformController.h
     ${HEADER_PATH}/App/World.h
 )
 
@@ -65,6 +66,7 @@ SET( app_src
     App/Stage.cpp
     App/MouseEventListener.cpp
     App/MouseEventListener.h
+    App/TransformController.cpp
 )
 
 #==============================================================================
@@ -272,6 +274,16 @@ SET ( properties_src
 )
 
 #==============================================================================
+# Animation
+#==============================================================================
+SET( animation_inc
+    ${HEADER_PATH}/Animation/AnimatorBase.h
+)
+
+SET( animation_src
+)
+
+#==============================================================================
 # Scene
 #==============================================================================
 SET( scene_inc
@@ -279,7 +291,6 @@ SET( scene_inc
     ${HEADER_PATH}/Scene/SceneCommon.h
     ${HEADER_PATH}/Scene/MeshProcessor.h
     ${HEADER_PATH}/Scene/MeshBuilder.h
-    ${HEADER_PATH}/Scene/AnimatorBase.h
     ${HEADER_PATH}/Scene/DbgRenderer.h
     ${HEADER_PATH}/Scene/MaterialBuilder.h
     ${HEADER_PATH}/Scene/Node.h
@@ -400,6 +411,7 @@ endif()
 # Defined Source groups
 #==============================================================================
 SOURCE_GROUP( App                 FILES ${app_src} )
+SOURCE_GROUP( Animation           FILES ${animation_src} )
 SOURCE_GROUP( Assets              FILES ${assets_src} )
 SOURCE_GROUP( Common              FILES ${common_src} )
 SOURCE_GROUP( Components          FILES ${components_src} )
@@ -424,6 +436,7 @@ SOURCE_GROUP( WinManager          FILES ${winmanager_src} )
 SOURCE_GROUP( UI\\Common          FILES ${ui_common_src} )
 
 SOURCE_GROUP( Include\\osre\\App        FILES ${app_inc} )
+SOURCE_GROUP( Include\\osre\\Animation  FILES ${animation_inc} )
 SOURCE_GROUP( Include\\osre\\Assets     FILES ${assets_inc} )
 SOURCE_GROUP( Include\\osre\\Debugging  FILES ${debugging_inc} )
 SOURCE_GROUP( Include\\osre\\Common     FILES ${common_inc} )
@@ -452,6 +465,7 @@ add_definitions( -D${USE_PLATFORM} )
 ADD_LIBRARY( osre SHARED
     ../../README.md
     ${app_inc}
+    ${animation_inc}
     ${debugging_inc}
     ${common_inc}
     ${common_src}
@@ -475,6 +489,7 @@ ADD_LIBRARY( osre SHARED
     ${renderbackend_inc}
 
     ${app_src}
+    ${animation_src}
     ${Common_src}
     ${components_src}
     ${debugging_src}

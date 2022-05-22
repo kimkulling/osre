@@ -34,6 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Engine/App/MouseEventListener.h"
 
 #include <osre/App/App.h>
+#include <osre/Animation/AnimatorBase.h>B
 #include <osre/IO/Directory.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/File.h>
@@ -63,6 +64,7 @@ namespace OSRE {
 namespace Editor {
 
 using namespace ::OSRE::App;
+using namespace ::OSRE::Animation;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Platform;

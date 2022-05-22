@@ -157,7 +157,7 @@ private:
     Rect2ui mResolution;
     RenderBackend::Mesh *mMesh2D;
     PythonInterface *mPythonInterface;
-    Scene::AnimationControllerBase *mTransformController;
+    Animation::AnimationControllerBase *mTransformController;
 };
 
 inline bool OsreEdApp::hasModel() const {

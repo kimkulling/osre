@@ -39,10 +39,6 @@ Component::Component(Entity *owner, ui32 id) :
     osre_assert(nullptr != owner);
 }
 
-Component::~Component() {
-    // empty
-}
-
 void Component::update(Time dt) {
     onUpdate(dt);
 }
@@ -53,10 +49,6 @@ void Component::render(RenderBackend::RenderBackendService *renderBackendSrv) {
 
 RenderComponent::RenderComponent(Entity *owner, ui32 id) :
         Component(owner, id), m_newGeo() {
-    // empty
-}
-
-RenderComponent::~RenderComponent() {
     // empty
 }
 

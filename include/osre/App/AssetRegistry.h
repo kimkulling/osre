@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
     
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 namespace IO {
     class Stream;
     class Uri;

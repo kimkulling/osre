@@ -186,6 +186,9 @@ void MainRenderView::createRect2D(const Rect2ui &r, Mesh *mesh2D, Style &style) 
     mesh2D->addPrimitiveGroup(6, PrimitiveType::TriangleList, NumIndices);
 }
 
+void MainRenderView::createBonesFromSkeleton(Skeleton *skeleton) {
+}
+
 void MainRenderView::createEditorElements(RenderComponent *rc) {
     if (rc == nullptr) {
         return;

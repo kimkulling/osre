@@ -42,7 +42,7 @@ class HelloWorldApp : public App::AppBase {
     /// The entity to render
     Entity *mEntity;
     /// The keyboard controller instance.
-    Scene::AnimationControllerBase *mKeyboardTransCtrl;
+    Animation::AnimationControllerBase *mKeyboardTransCtrl;
 
 public:
     /// The class constructor with the incoming arguments from the command line.
