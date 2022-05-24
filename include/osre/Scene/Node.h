@@ -149,13 +149,5 @@ inline bool Node::isActive() const {
     return m_isActive;
 }
 
-/* inline void Node::setAABB(const AABB &aabb) {
-    m_aabb = aabb;
-}
-
-inline const Node::AABB &Node::getAABB() const {
-    return m_aabb;
-}*/
-
 } // Namespace Scene
 } // namespace OSRE
