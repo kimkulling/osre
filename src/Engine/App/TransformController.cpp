@@ -1,7 +1,10 @@
 #include <osre/Common/osre_common.h>
 #include <osre/App/TransformController.h>
+#include <osre/App/AppCommon.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <OSRE/RenderBackend/TransformMatrixBlock.h>
+
+#include "src//Engine/App/MouseEventListener.h"
 
 namespace OSRE {
 namespace App {
@@ -42,6 +45,18 @@ TransformCommandType TransformController::getKeyBinding(Key key) {
     }
 
     return TransformCommandType::InvalidCommand;
+}
+
+void TransformController::getMouseUpdate(const MouseInputState &mis) {
+    f32 dirX = 0.0f, dirY = 0.0f;
+    if (mis.mRelX != 0 || mis.mRelY != 0) {
+        dirX = (f32)mis.mRelX;
+        dirY = (f32)mis.mRelY;
+        f32 len = sqrt(dirX * dirX + dirY * dirY);
+        if (mis.mMouseButtonState.getBit(MouseEventListener::LeftButton)) {
+            mTransform.m_model = glm::rotate(mTransform.m_model, 0.005f * len, glm::vec3(dirX, dirY, 1.0f));
+        }
+    }
 }
 
 void TransformController::update(TransformCommandType cmdType) {

@@ -25,7 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Component.h>
 #include <osre/App/Entity.h>
 #include <osre/App/World.h>
-#include <osre/Animation/AnimatorBase.h>
 #include <osre/Common/Ids.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/StringUtils.h>
@@ -190,16 +189,22 @@ Entity *AssimpWrapper::convertScene() {
     if (nullptr != mAssetContext.mScene->mRootNode) {
         importNode(mAssetContext.mScene->mRootNode, nullptr);
     }
-
+    AnimationMap animLookup;
     if (nullptr != mAssetContext.mScene->mAnimations) {
+        CPPCore::TArray<AnimationTrack> animationTracks;
+        animationTracks.resize(mAssetContext.mScene->mNumAnimations);
         for (ui32 i = 0; i < mAssetContext.mScene->mNumAnimations; ++i) {
-            importAnimation(mAssetContext.mScene->mAnimations[i]);
+            importAnimation(mAssetContext.mScene->mAnimations[i], animationTracks[i], animLookup);
         }
     }
 
     if (!mAssetContext.mMeshArray.isEmpty()) {
         RenderComponent *rc = (RenderComponent*) mAssetContext.mEntity->getComponent(ComponentType::RenderComponentType);
         rc->addStaticMeshArray(mAssetContext.mMeshArray);
+    }
+
+    if (mAssetContext.mScene->hasSkeletons()) {
+        importSkeletons(*mAssetContext.mScene->mSkeletons, mAssetContext.mScene->mNumSkeletons);
     }
 
     return mAssetContext.mEntity;
@@ -347,7 +352,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
                         }
 
                         Bone &bone = bones[l];
-                        bone.m_name = currentBone->mName.C_Str();
+                        bone.mName = currentBone->mName.C_Str();
                         copyAiMatrix4x4(currentBone->mOffsetMatrix, bone.m_offsetMatrix);
                         VertexWeight *wArray = new VertexWeight[currentBone->mNumWeights];
                         
@@ -358,9 +363,9 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
                             w.m_vertexWeight = aiVW.mWeight;
                         }
                         bone.m_vertexWeights.add(wArray, currentBone->mNumWeights);
-                        const aiNode *node = mAssetContext.mScene->mRootNode->FindNode(bone.m_name.c_str());
+                        const aiNode *node = mAssetContext.mScene->mRootNode->FindNode(bone.mName.c_str());
                         if (nullptr != node) {
-                            mAssetContext.mBone2NodeMap[bone.m_name.c_str()] = node;
+                            mAssetContext.mBone2NodeMap[bone.mName.c_str()] = node;
                         }
                     }
                 }
@@ -416,15 +421,15 @@ void AssimpWrapper::importNode(aiNode *node, Scene::Node *parent) {
     }
 
     if (node->mNumMeshes > 0) {
-        for (ui32 i = 0; i < node->mNumMeshes; ++i) {
-            const ui32 meshIdx(node->mMeshes[i]);
-            if (meshIdx >= mAssetContext.mMeshArray.size()) {
+        for (ui32 meshIdx = 0; meshIdx < node->mNumMeshes; ++meshIdx) {
+            const size_t curMeshIdx = node->mMeshes[meshIdx];
+            if (curMeshIdx >= mAssetContext.mMeshArray.size()) {
                 continue;
             }
 
-            Mesh *mesh = mAssetContext.mMeshArray[meshIdx];
+            Mesh *mesh = mAssetContext.mMeshArray[curMeshIdx];
             if (nullptr != mesh) {
-                newNode->addMeshReference(meshIdx);
+                newNode->addMeshReference(curMeshIdx);
             }
         }
     }
@@ -497,12 +502,39 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
     }
 }
 
-void AssimpWrapper::importAnimation(aiAnimation *animation) {
-    if (nullptr == animation) {
+using Bone2NodeMap = CPPCore::THashMap<int, Node*>;
+
+void AssimpWrapper::importSkeletons( aiSkeleton *skeletons, size_t numSkeletons) {
+    if (numSkeletons == 0 || skeletons == nullptr) {
         return;
+    }
+
+    Bone2NodeMap bone2NodeMap;
+    for (size_t skeletonIdx = 0; skeletonIdx < numSkeletons; ++skeletonIdx) {
+        aiSkeleton &currentSkeleton = skeletons[skeletonIdx];
+        for (size_t boneIdx = 0; boneIdx < currentSkeleton.mNumBones; ++boneIdx) {
+            aiSkeletonBone *bone = currentSkeleton.mBones[boneIdx];
+            if (bone == nullptr) {
+                continue;
+            }
+
+            aiMesh *mesh = bone->mMeshId;
+            if (mesh == nullptr) {
+                continue;
+            }
+
+
+        }
     }
 }
 
+void AssimpWrapper::importAnimation(aiAnimation *animation, AnimationTrack &currentAnimationTrack, AnimationMap &animLookup) {
+    if (nullptr == animation) {
+        return;
+    }
+
+    currentAnimationTrack.mName = animation->mName.C_Str();
+}
 
 } // namespace App
 } // Namespace OSRE

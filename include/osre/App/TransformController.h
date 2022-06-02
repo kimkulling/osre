@@ -12,6 +12,8 @@ namespace RenderBackend {
 
 namespace App {
 
+struct MouseInputState;
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -22,7 +24,7 @@ public:
     TransformController(RenderBackend::TransformMatrixBlock &tmb);
     ~TransformController() override;
     static Animation::TransformCommandType getKeyBinding(Platform::Key key);
-    static Animation::TransformCommandType getMouseBinding();
+    void getMouseUpdate(const MouseInputState &mis) override;
     void update(Animation::TransformCommandType cmdType) override;
 
 private:

@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "RenderView/MainRenderView.h"
-
+#include <osre/Animation/AnimatorBase.h>
 #include <osre/Scene/MaterialBuilder.h>
 #include <osre/RenderBackend/Mesh.h>
 
@@ -40,6 +40,7 @@ namespace Colors {
 using namespace OSRE::RenderBackend;
 using namespace OSRE::Scene;
 using namespace OSRE::App;
+using namespace OSRE::Animation;
 
 MainRenderView::MainRenderView() :
         mEditorElements() {
@@ -52,35 +53,36 @@ MainRenderView::~MainRenderView() {
 
 Mesh *MainRenderView::createCoordAxis(ui32 size) {
     Mesh *axis = new Mesh("axis", VertexType::ColorVertex, IndexType::UnsignedShort);
-    ColorVert v1, v2, v3, v4, v5, v6;
-    v1.position.x = v1.position.y = v1.position.z = 0;
-    v1.color0 = Colors::Red;
+    ColorVert v[6];
+    v[0].position.x = v[0].position.y = v[0].position.z = 0;
+    v[0].color0 = Colors::Red;
 
-    v2.position.x = static_cast<f32>(size);
-    v2.position.y = v2.position.z = 0;
-    v2.color0 = Colors::Red;
+    v[1].position.x = static_cast<f32>(size);
+    v[1].position.y = v[1].position.z = 0;
+    v[1].color0 = Colors::Red;
 
-    v3.position.x = v3.position.y = v3.position.z = 0;
-    v3.color0 = Colors::Green;
+    v[2].position.x = v[2].position.y = v[2].position.z = 0;
+    v[2].color0 = Colors::Green;
 
-    v4.position.y = static_cast<f32>(size);
-    v4.position.x = v4.position.z = 0;
-    v4.color0 = Colors::Green;
+    v[3].position.y = static_cast<f32>(size);
+    v[3].position.x = v[3].position.z = 0;
+    v[3].color0 = Colors::Green;
 
-    v5.position.x = v5.position.y = v5.position.z = 0;
-    v5.color0 = Colors::Blue;
+    v[4].position.x = v[4].position.y = v[4].position.z = 0;
+    v[4].color0 = Colors::Blue;
 
-    v6.position.z = static_cast<f32>(size);
-    v6.position.x = v6.position.y = 0;
-    v6.color0 = Colors::Blue;
+    v[5].position.z = static_cast<f32>(size);
+    v[5].position.x = v[5].position.y = 0;
+    v[5].color0 = Colors::Blue;
 
     CPPCore::TArray<RenderBackend::ColorVert> axisData;
-    axisData.add(v1);
+    axisData.add(v, 6);
+    /* axisData.add(v1);
     axisData.add(v2);
     axisData.add(v3);
     axisData.add(v4);
     axisData.add(v5);
-    axisData.add(v6);
+    axisData.add(v6);*/
 
     axis->attachVertices(&axisData[0], sizeof(ColorVert) * axisData.size());
 
@@ -186,7 +188,23 @@ void MainRenderView::createRect2D(const Rect2ui &r, Mesh *mesh2D, Style &style) 
     mesh2D->addPrimitiveGroup(6, PrimitiveType::TriangleList, NumIndices);
 }
 
+static void drawJoint(Bone *currentBone) {
+
+}
+
+static void drawBone(Bone *currentBone) {
+
+}
+
 void MainRenderView::createBonesFromSkeleton(Skeleton *skeleton) {
+    if (skeleton == nullptr) {
+        return;
+    }
+    for (ui32 i = 0; i < skeleton->mBones.size(); ++i) {
+        Bone *currentBone = skeleton->mBones[i];
+        drawJoint(currentBone);
+        drawBone(currentBone);
+    }
 }
 
 void MainRenderView::createEditorElements(RenderComponent *rc) {

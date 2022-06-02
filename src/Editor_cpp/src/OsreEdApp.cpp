@@ -138,25 +138,6 @@ bool OsreEdApp::onCreate() {
 
     UIElements::createMenues(w, this, queue);
 
-    /* w->beginMenu();
-    MenuEntry FileMenu[8] = {
-        { MF_STRING, IDM_FILE_NEW, L"&New", MenuFunctor::Make(this, &OsreEdApp::newProjectCmd) },
-        { MF_STRING, IDM_FILE_OPEN, L"&Open Project", MenuFunctor::Make(this, &OsreEdApp::loadProjectCmd) },
-        { MF_STRING, IDM_FILE_SAVE, L"&Save Project", MenuFunctor::Make(this, &OsreEdApp::saveProjectCmd) },
-        { MF_SEPARATOR, 0, nullptr },
-        { MF_STRING, IDM_FILE_IMPORT, L"&Import Asset", MenuFunctor::Make(this, &OsreEdApp::importAssetCmd) },
-        { MF_SEPARATOR, 0, nullptr },
-        { MF_STRING, IDM_FILE_QUIT, L"&Quit", MenuFunctor::Make(this, &OsreEdApp::quitEditorCmd) },
-    };
-    w->addSubMenues(nullptr, queue, L"File", FileMenu, 8);
-
-    MenuEntry InfoMenu[2] = {
-        { MF_STRING, IDM_GETTING_HELP, L"&Getting Help", MenuFunctor::Make(this, &OsreEdApp::gettingHelpCmd) },
-        { MF_STRING, IDM_INFO_VERSION, L"&Version", MenuFunctor::Make(this, &OsreEdApp::showVersionCmd) }
-    };
-    w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
-
-    w->endMenu();*/
     w->createStatusBar(100, 4);
     w->setStatusText(0, "Test");
 
@@ -333,9 +314,12 @@ void OsreEdApp::setStatusBarText(const String &mode, const String &model, i32 nu
 }
 
 void OsreEdApp::onUpdate() {
+    const MouseInputState & mis = AppBase::getMouseEventListener()->getMouseInputState();
+    
     Key key = AppBase::getKeyboardEventListener()->getLastKey();
     glm::mat4 rot(1.0);
     TArray<TransformCommandType> transformCmds;
+    mTransformController->getMouseUpdate(mis);
     mTransformController->update(TransformController::getKeyBinding(key));
     for (ui32 i = 0; i < transformCmds.size(); ++i) {
         mTransformController->update(transformCmds[i]);

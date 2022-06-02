@@ -114,5 +114,4 @@ protected:
     }
 };
 
-/// Will generate the main function.
 OSRE_MAIN(HelloWorldApp)

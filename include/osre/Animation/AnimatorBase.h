@@ -31,6 +31,10 @@ namespace RenderBackend {
     class RenderBackendService;
 }
 
+namespace App {
+    struct MouseInputState;
+}
+
 namespace Animation {
 
 struct OSRE_EXPORT VertexWeight {
@@ -50,17 +54,19 @@ struct OSRE_EXPORT Bone {
     using VertexWeightArray = CPPCore::TArray<VertexWeight>;
 
     i32 mParent;
-    String m_name;
+    String mName;
     VertexWeightArray m_vertexWeights;
     glm::mat4 m_offsetMatrix;
 
     Bone() :
             mParent(-1),
-            m_name(),
+            mName(),
             m_vertexWeights(),
             m_offsetMatrix() {
         // empty
     }
+
+    ~Bone() = default;
 };
 
 struct OSRE_EXPORT Skeleton {
@@ -70,11 +76,41 @@ struct OSRE_EXPORT Skeleton {
     i32 mRootBone;
     BoneArray mBones;
 
-    Skeleton() {}
+    Skeleton() {
+        // empty
+    }
+
+    ~Skeleton() = default;
+};
+
+struct VectorKey {
+    glm::vec3 mVector;
+    d32 mTime;
+};
+
+struct RotationKey {
+    glm::vec4 mQuad;
+    d32 mTime;
+};
+
+using VectorKeyArray = ::CPPCore::TArray<VectorKey>;
+using RotationKeyArray = ::CPPCore::TArray<RotationKey>;
+
+struct NodeAnimation {
+    VectorKeyArray mPositions;
+    VectorKeyArray mScalings;
+    RotationKeyArray mRotations;
+};
+
+struct AnimationTrack {
+    String mName;
+    double mDuration;
+    double mTicksPerSecond;
+    CPPCore::TArray<NodeAnimation *> mNodeAnimations;
 };
 
 template <class T>
-struct AnimationBase {
+struct AnimatorBase {
     void operator () ( T &out, const T &a, const T &b, f32 d ) const {
         out = a + ( b - a ) * d;
     }
@@ -90,6 +126,7 @@ enum class TransformCommandType {
     ScaleInCommand,
     ScaleOutCommand,
     TransformCommand,
+  
     MaxCommands,
     InvalidCommand
 };
@@ -105,6 +142,10 @@ class OSRE_EXPORT AnimationControllerBase {
 public:
     /// @brief  The class destructor, virtual.
     virtual ~AnimationControllerBase() = default;
+    
+    /// @brief 
+    /// @param mis 
+    virtual void getMouseUpdate(const App::MouseInputState &mis) =0;
 
     /// @brief  The update, override this for your own proposes.
     virtual void update(TransformCommandType cmdType) = 0;
