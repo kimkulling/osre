@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Common/ArgumentParser.h>
 #include <osre/Platform/KeyTypes.h>
-#include <osre/Scene/AnimatorBase.h>
+#include <osre/Animation/AnimatorBase.h>
 
 #include <cppcore/Container/TQueue.h>
 
@@ -99,23 +99,6 @@ public:
 private:
     Platform::Key mLast;
     char mKeymap[Platform::KEY_LAST];
-};
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief  This class implements the default keyboard controlling.
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT TransformController : public Scene::AnimationControllerBase {
-public:
-    TransformController(RenderBackend::TransformMatrixBlock &tmb);
-    ~TransformController() override;
-    static Scene::TransformCommandType getKeyBinding(Platform::Key key);
-    static Scene::TransformCommandType getMouseBinding();
-    void update(Scene::TransformCommandType cmdType) override;
-
-private:
-    RenderBackend::TransformMatrixBlock &mTransform;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -241,7 +224,7 @@ public:
     /// @param  type    [in] The requested controller type.
     /// @param  tmb     [in] The controlled transform block.
     /// @return The transform controller or nullptr if none is there.
-    virtual Scene::AnimationControllerBase *getTransformController(RenderBackend::TransformMatrixBlock &tmb);
+    virtual Animation::AnimationControllerBase *getTransformController(RenderBackend::TransformMatrixBlock &tmb);
 
     ///	@brief
     /// @return

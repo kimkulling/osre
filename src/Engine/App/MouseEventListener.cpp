@@ -29,11 +29,6 @@ namespace App {
 using namespace OSRE::Common;
 using namespace OSRE::Platform;
 
-MouseInputState::MouseInputState() :
-        mRelX( 0 ), mRelY( 0 ), mAbsX( 0 ), mAbsY( 0 ), mLastX( 0 ), mLastY( 0 ), mMouseButtonState() {
-    // empty
-}
-
 MouseEventListener::MouseEventListener() :
         OSEventListener("App/MouseEventListener"),
         mMouseInputState() {

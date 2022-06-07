@@ -34,9 +34,10 @@ namespace App {
 
 class Entity;
 
+///	@brief
 enum class ComponentType {
-    RenderComponentType, ///< Renderable component
-    ScriptComponent, ///< For scripting events
+    RenderComponentType, ///< Render-component
+    ScriptComponent,     ///< For scripting events
 
     MaxNumComponents,
     InvalidComponent
@@ -49,7 +50,7 @@ enum class ComponentType {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Component {
 public:
-    virtual ~Component();
+    virtual ~Component() = default;
     virtual void update(Time dt);
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
     virtual void setId(ui32 id);
@@ -88,7 +89,7 @@ inline Entity *Component::getOwner() const {
 class OSRE_EXPORT RenderComponent : public Component {
 public:
     RenderComponent(Entity *owner, ui32 id);
-    ~RenderComponent() override;
+    ~RenderComponent() override = default;
     size_t getNumGeometry() const;
     RenderBackend::Mesh *getMeshAt(size_t idx) const;
     void getMeshArray(RenderBackend::MeshArray &array);

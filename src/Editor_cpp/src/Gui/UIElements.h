@@ -40,7 +40,8 @@ namespace Editor {
 }
 
 struct ProgressBar;
-        
+struct TreeView;
+
 // OS-specific API
 class UIElements {
 public:
@@ -48,6 +49,7 @@ public:
     static void updateProgressBar(ProgressBar *pb, ui32 step);
     static void deleteProgressBar(ProgressBar *pb);
     static void createMenues(Platform::Win32Window *w, Editor::OsreEdApp *app, Platform::AbstractPlatformEventQueue *queue);
+    static TreeView *createTreeView(Platform::Win32Window *w);
 };
 
 struct Widget {
@@ -64,6 +66,19 @@ struct PlatformData {
 struct ProgressBar : Widget {
     ui32 mRange;
     ui32 mCurrent;
+
+    PlatformData mPlatformData;
+};
+
+struct TreeNode {
+    String mName;
+    TreeNode *mParent;
+    
+    PlatformData mPlatformData;
+};
+
+struct TreeView : Widget {
+    TreeNode *mRoot;
 
     PlatformData mPlatformData;
 };

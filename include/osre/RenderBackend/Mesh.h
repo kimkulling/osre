@@ -30,45 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-struct OSRE_EXPORT VertexWeight {
-    ui32 m_vertexIdx;
-    f32 m_vertexWeight;
 
-    bool operator == ( const VertexWeight &rhs ) {
-        return (m_vertexIdx == rhs.m_vertexIdx && m_vertexWeight == rhs.m_vertexWeight);
-    }
-
-    bool operator != (const VertexWeight &rhs) {
-        return !(*this == rhs);
-    }
-};
-
-struct OSRE_EXPORT Bone {
-    using VertexWeightArray = CPPCore::TArray<VertexWeight>;
-
-    i32 mParent;
-    String m_name;
-    VertexWeightArray m_vertexWeights;
-    glm::mat4 m_offsetMatrix;
-
-    Bone() :
-            mParent(-1),    
-            m_name(),
-            m_vertexWeights(),
-            m_offsetMatrix() {
-        // empty
-    }
-};
-
-struct OSRE_EXPORT Skeleton {
-    using BoneArray = CPPCore::TArray<Bone*>;
-
-    String mName;
-    i32 mRootBone;
-    BoneArray mBones;
-
-    Skeleton() {}
-};
 
 class OSRE_EXPORT Mesh {
 public:

@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
 
@@ -30,10 +31,86 @@ namespace RenderBackend {
     class RenderBackendService;
 }
 
-namespace Scene {
+namespace App {
+    struct MouseInputState;
+}
 
-template<class T>
-struct AnimationBase {
+namespace Animation {
+
+struct OSRE_EXPORT VertexWeight {
+    ui32 m_vertexIdx;
+    f32 m_vertexWeight;
+
+    bool operator==(const VertexWeight &rhs) {
+        return (m_vertexIdx == rhs.m_vertexIdx && m_vertexWeight == rhs.m_vertexWeight);
+    }
+
+    bool operator!=(const VertexWeight &rhs) {
+        return !(*this == rhs);
+    }
+};
+
+struct OSRE_EXPORT Bone {
+    using VertexWeightArray = CPPCore::TArray<VertexWeight>;
+
+    i32 mParent;
+    String mName;
+    VertexWeightArray m_vertexWeights;
+    glm::mat4 m_offsetMatrix;
+
+    Bone() :
+            mParent(-1),
+            mName(),
+            m_vertexWeights(),
+            m_offsetMatrix() {
+        // empty
+    }
+
+    ~Bone() = default;
+};
+
+struct OSRE_EXPORT Skeleton {
+    using BoneArray = CPPCore::TArray<Bone *>;
+
+    String mName;
+    i32 mRootBone;
+    BoneArray mBones;
+
+    Skeleton() {
+        // empty
+    }
+
+    ~Skeleton() = default;
+};
+
+struct VectorKey {
+    glm::vec3 mVector;
+    d32 mTime;
+};
+
+struct RotationKey {
+    glm::vec4 mQuad;
+    d32 mTime;
+};
+
+using VectorKeyArray = ::CPPCore::TArray<VectorKey>;
+using RotationKeyArray = ::CPPCore::TArray<RotationKey>;
+
+struct NodeAnimation {
+    VectorKeyArray mPositions;
+    VectorKeyArray mScalings;
+    RotationKeyArray mRotations;
+};
+
+struct AnimationTrack {
+    String mName;
+    double mDuration;
+    double mTicksPerSecond;
+    CPPCore::TArray<NodeAnimation *> mNodeAnimations;
+};
+
+template <class T>
+struct AnimatorBase {
     void operator () ( T &out, const T &a, const T &b, f32 d ) const {
         out = a + ( b - a ) * d;
     }
@@ -49,6 +126,7 @@ enum class TransformCommandType {
     ScaleInCommand,
     ScaleOutCommand,
     TransformCommand,
+  
     MaxCommands,
     InvalidCommand
 };
@@ -64,6 +142,10 @@ class OSRE_EXPORT AnimationControllerBase {
 public:
     /// @brief  The class destructor, virtual.
     virtual ~AnimationControllerBase() = default;
+    
+    /// @brief 
+    /// @param mis 
+    virtual void getMouseUpdate(const App::MouseInputState &mis) =0;
 
     /// @brief  The update, override this for your own proposes.
     virtual void update(TransformCommandType cmdType) = 0;
