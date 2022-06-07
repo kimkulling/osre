@@ -249,7 +249,7 @@ bool OGLRenderEventHandler::onClearGeo(const EventData *) {
     return true;
 }
 
-bool OGLRenderEventHandler::onRenderFrame(const EventData *eventData) {
+bool OGLRenderEventHandler::onRenderFrame(const EventData*) {
     osre_assert(nullptr != m_oglBackend);
     osre_assert(nullptr != m_renderCmdBuffer);
     osre_assert(m_renderCtx != nullptr);

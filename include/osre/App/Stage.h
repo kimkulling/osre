@@ -48,7 +48,7 @@ public:
     ~Stage() override;
     World *createWorld(const String &name);
     World *findWorld(const String &name) const;
-    ui32 getNumberOfWorlds() const;
+    size_t getNumberOfWorlds() const;
     World *getWorldAt(ui32 index) const;
     bool setActiveWorld(const String &name);
     void setActiveWorld(World * world);
