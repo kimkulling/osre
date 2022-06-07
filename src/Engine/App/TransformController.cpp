@@ -2,7 +2,7 @@
 #include <osre/App/TransformController.h>
 #include <osre/App/AppCommon.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <OSRE/RenderBackend/TransformMatrixBlock.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
 
 #include "src//Engine/App/MouseEventListener.h"
 
