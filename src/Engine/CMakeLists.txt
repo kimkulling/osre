@@ -329,6 +329,7 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
     ${HEADER_PATH}/RenderBackend/RenderStates.h
     ${HEADER_PATH}/RenderBackend/Shader.h
+    ${HEADER_PATH}/RenderBackend/ShapeRenderer.h
 )
 SET( renderbackend_src
     RenderBackend/Mesh.cpp
@@ -338,6 +339,7 @@ SET( renderbackend_src
     RenderBackend/RenderPass.cpp
     RenderBackend/TransformMatrixBlock.cpp
     RenderBackend/Shader.cpp
+    RenderBackend/ShapeRenderer.cpp
 )
 SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLCommon.h
