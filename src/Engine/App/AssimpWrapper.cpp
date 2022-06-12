@@ -504,7 +504,7 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
 
 using Bone2NodeMap = CPPCore::THashMap<int, Node*>;
 
-/*void AssimpWrapper::importSkeletons( aiSkeleton *skeletons, size_t numSkeletons) {
+void AssimpWrapper::importSkeletons( aiSkeleton *skeletons, size_t numSkeletons) {
     if (numSkeletons == 0 || skeletons == nullptr) {
         return;
     }
@@ -526,7 +526,7 @@ using Bone2NodeMap = CPPCore::THashMap<int, Node*>;
 
         }
     }
-}*/
+}
 
 void AssimpWrapper::importAnimation(aiAnimation *animation, AnimationTrack &currentAnimationTrack, AnimationMap &animLookup) {
     if (nullptr == animation) {

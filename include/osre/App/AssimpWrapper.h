@@ -85,7 +85,7 @@ public:
 protected:
     Entity *convertScene();
     void importMeshes( aiMesh **meshes, ui32 numMeshes );
-	void importBones(aiMesh* mesh);
+	//void importBones(aiMesh* mesh);
     void importNode( aiNode *node, Scene::Node *parent );
     void importMaterial( aiMaterial *material );
     void importSkeletons(aiSkeleton *skeletons, size_t numSkeletons);

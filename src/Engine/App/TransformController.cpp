@@ -3,6 +3,7 @@
 #include <osre/App/AppCommon.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
+#include <iostream>
 
 #include "src//Engine/App/MouseEventListener.h"
 
@@ -47,6 +48,35 @@ TransformCommandType TransformController::getKeyBinding(Key key) {
     return TransformCommandType::InvalidCommand;
 }
 
+void mapToSphere(const glm::vec2 &newPt, glm::vec3 *newVector, f32 w, f32 h, f32 r) {
+    // copy parameter into temp point
+    glm::vec2 tempPt(newPt);
+
+    // adjust point coordinates and scale down to range of [-1 ... 1]
+    f32 x = (tempPt.x * w) - 1.0f;
+    f32 y = tempPt.y * h;
+    tempPt.x = x;
+    tempPt.y = y;
+
+    // compute the square of the length of the vector to the point from the center
+    f32 length = (tempPt.x * tempPt.x) + (tempPt.y * tempPt.y);
+
+    *newVector = glm::vec3(tempPt.x, tempPt.y, sqrt(length));
+
+
+    if (length > r) {
+        // compute a normalizing factor (radius / sqrt(length))
+        f32 norm = r / sqrt(length);
+
+        // return the "normalized" vector, a point on the sphere
+        *newVector = glm::vec3(tempPt.x * norm, tempPt.y * norm, 0.0f);
+    } else { // else it's on the inside
+        // return a vector to a point mapped inside the sphere sqrt(radius squared - length)
+        *newVector = glm::vec3(tempPt.x, tempPt.y, sqrt(r - length));
+    }
+}
+
+
 void TransformController::getMouseUpdate(const MouseInputState &mis) {
     f32 dirX = 0.0f, dirY = 0.0f;
     if (mis.mRelX != 0 || mis.mRelY != 0) {
@@ -54,7 +84,24 @@ void TransformController::getMouseUpdate(const MouseInputState &mis) {
         dirY = (f32)mis.mRelY;
         f32 len = sqrt(dirX * dirX + dirY * dirY);
         if (mis.mMouseButtonState.getBit(MouseEventListener::LeftButton)) {
-            mTransform.m_model = glm::rotate(mTransform.m_model, 0.005f * len, glm::vec3(dirX, dirY, 1.0f));
+            glm::vec3 res;
+            mapToSphere(glm::vec2(dirX, dirY), &res, 1000, 768, 1);
+            mTransform.m_model = glm::rotate(mTransform.m_model, 0.005f * len, res);
+            //mTransform.m_model = glm::rotate(mTransform.m_model, 0.005f * len, glm::vec3(dirX, dirY, 1.0f));
+        }
+        if (mis.mMouseButtonState.getBit(MouseEventListener::MiddleButton)) {
+            glm::vec3 res;
+            mapToSphere(glm::vec2(dirX, dirY), &res, 1000, 768, 1);
+            std::cout << "res.x = " << res.x << "\t res.y = " << res.y << "\t res.z = " << res.z << "\n";
+            mTransform.m_model = glm::translate(mTransform.m_model, res);
+        }
+        if (mis.mMouseButtonState.getBit(MouseEventListener::RightButton)) {
+            f32 factor = 0.005f * len;
+            if (dirY > 0) {
+                mTransform.m_model = glm::scale(mTransform.m_model, glm::vec3(1.01 + factor, 1.01 + factor, 1.01 + factor));
+            } else {
+                mTransform.m_model = glm::scale(mTransform.m_model, glm::vec3(0.99 - factor, 0.99 - factor, 0.99 - factor));
+            }
         }
     }
 }
@@ -95,5 +142,5 @@ void TransformController::update(TransformCommandType cmdType) {
     }
 }
 
-}
-}
+} // namespace App
+} // namespace OSRE
