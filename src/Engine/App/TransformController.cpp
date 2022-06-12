@@ -1,11 +1,32 @@
+/*-----------------------------------------------------------------------------------------------
+The MIT License (MIT)
+
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-----------------------------------------------------------------------------------------------*/
 #include <osre/Common/osre_common.h>
 #include <osre/App/TransformController.h>
 #include <osre/App/AppCommon.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <iostream>
 
-#include "src//Engine/App/MouseEventListener.h"
+#include "src/Engine/App/MouseEventListener.h"
 
 namespace OSRE {
 namespace App {
@@ -90,7 +111,6 @@ void TransformController::getMouseUpdate(const MouseInputState &mis) {
         if (mis.mMouseButtonState.getBit(MouseEventListener::MiddleButton)) {
             glm::vec3 res;
             mapToSphere(glm::vec2(dirY, dirX), &res, 1000, 768, 1);
-            std::cout << "res.x = " << res.x << "\t res.y = " << res.y << "\t res.z = " << res.z << "\n";
             mTransform.m_model = glm::translate(mTransform.m_model, res);
         }
         if (mis.mMouseButtonState.getBit(MouseEventListener::RightButton)) {
@@ -138,10 +158,6 @@ void TransformController::update(TransformCommandType cmdType) {
     if (cmdType == TransformCommandType::ScaleOutCommand) {
         mTransform.m_model *= glm::scale(scale, glm::vec3(0.99, 0.99, 0.99));
     }
-}
-
-void TransformController::scaleAll() {
-
 }
 
 } // namespace App
