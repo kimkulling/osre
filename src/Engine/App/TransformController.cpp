@@ -76,7 +76,6 @@ void mapToSphere(const glm::vec2 &newPt, glm::vec3 *newVector, f32 w, f32 h, f32
     }
 }
 
-
 void TransformController::getMouseUpdate(const MouseInputState &mis) {
     f32 dirX = 0.0f, dirY = 0.0f;
     if (mis.mRelX != 0 || mis.mRelY != 0) {
@@ -85,13 +84,12 @@ void TransformController::getMouseUpdate(const MouseInputState &mis) {
         f32 len = sqrt(dirX * dirX + dirY * dirY);
         if (mis.mMouseButtonState.getBit(MouseEventListener::LeftButton)) {
             glm::vec3 res;
-            mapToSphere(glm::vec2(dirX, dirY), &res, 1000, 768, 1);
+            mapToSphere(glm::vec2(dirY, dirX), &res, 1000, 768, 1);
             mTransform.m_model = glm::rotate(mTransform.m_model, 0.005f * len, res);
-            //mTransform.m_model = glm::rotate(mTransform.m_model, 0.005f * len, glm::vec3(dirX, dirY, 1.0f));
         }
         if (mis.mMouseButtonState.getBit(MouseEventListener::MiddleButton)) {
             glm::vec3 res;
-            mapToSphere(glm::vec2(dirX, dirY), &res, 1000, 768, 1);
+            mapToSphere(glm::vec2(dirY, dirX), &res, 1000, 768, 1);
             std::cout << "res.x = " << res.x << "\t res.y = " << res.y << "\t res.z = " << res.z << "\n";
             mTransform.m_model = glm::translate(mTransform.m_model, res);
         }
@@ -140,6 +138,10 @@ void TransformController::update(TransformCommandType cmdType) {
     if (cmdType == TransformCommandType::ScaleOutCommand) {
         mTransform.m_model *= glm::scale(scale, glm::vec3(0.99, 0.99, 0.99));
     }
+}
+
+void TransformController::scaleAll() {
+
 }
 
 } // namespace App

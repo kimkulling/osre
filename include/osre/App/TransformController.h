@@ -7,8 +7,8 @@
 namespace OSRE {
 
 namespace RenderBackend {
-    struct TransformMatrixBlock;
-} 
+struct TransformMatrixBlock;
+}
 
 namespace App {
 
@@ -26,10 +26,11 @@ public:
     static Animation::TransformCommandType getKeyBinding(Platform::Key key);
     void getMouseUpdate(const MouseInputState &mis) override;
     void update(Animation::TransformCommandType cmdType) override;
+    void scaleAll();
 
 private:
     RenderBackend::TransformMatrixBlock &mTransform;
 };
 
-}
-}
+} // namespace App
+} // namespace OSRE
