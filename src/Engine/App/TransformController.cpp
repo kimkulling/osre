@@ -40,10 +40,6 @@ TransformController::TransformController(TransformMatrixBlock &tmb) :
     // empty
 }
 
-TransformController::~TransformController() {
-    // empty
-}
-
 TransformCommandType TransformController::getKeyBinding(Key key) {
     switch (key) {
         case Platform::KEY_A:

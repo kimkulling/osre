@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 namespace RenderBackend {
-struct TransformMatrixBlock;
+    struct TransformMatrixBlock;
 }
 
 namespace App {
@@ -48,7 +48,7 @@ public:
     TransformController(RenderBackend::TransformMatrixBlock &tmb);
 
     ///	@brief The class destructor.
-    ~TransformController() override;
+    ~TransformController() override = default;
 
     /// @brief Will return the command code from a key binding.
     /// @param key  The key binding
