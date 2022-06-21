@@ -56,10 +56,6 @@ Resolution::Resolution() :
     // empty
 }
 
-Resolution::~Resolution() {
-    // empty
-}
-
 AbstractWindow::AbstractWindow(WindowsProperties *properties) :
         mFlags((ui32)SurfaceFlagType::SF_PropertiesClean),
         mShowState(ShowState::Hidden),

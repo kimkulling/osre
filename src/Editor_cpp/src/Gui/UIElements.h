@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Platform/Windows/MinWindows.h>
+
 #include <Commctrl.h>
 
 namespace OSRE {
@@ -70,15 +71,24 @@ struct ProgressBar : Widget {
     PlatformData mPlatformData;
 };
 
-struct TreeNode {
+struct TreeItem {
+    using TreeItemArray = ::CPPCore::TArray<TreeItem *>;
+
     String mName;
-    TreeNode *mParent;
-    
+    TreeItem *mParent;
+    TreeItemArray mChildren;
+
+    String generateName();
+    TreeItem();
+    void addChild(TreeItem *item);
+    size_t numChildren() const;
+    TreeItem *getParent() const;
     PlatformData mPlatformData;
+
 };
 
 struct TreeView : Widget {
-    TreeNode *mRoot;
+    TreeItem *mRoot;
 
     PlatformData mPlatformData;
 };

@@ -55,6 +55,28 @@ constexpr int IDM_FILE_QUIT = 5;
 constexpr int IDM_GETTING_HELP = 6;
 constexpr int IDM_INFO_VERSION = 7;
 
+String TreeItem::generateName() {
+    return "newItem_" + std::to_string(mChildren.size());
+}
+
+TreeItem::TreeItem() : mName(generateName()), mParent(nullptr), mChildren() {}
+
+void TreeItem::addChild(TreeItem *item) {
+    if (item == nullptr) {
+        return;
+    }
+    
+    mChildren.add(item);
+}
+
+size_t TreeItem::numChildren() const {
+    return mChildren.size();
+}
+    
+TreeItem *TreeItem::getParent() const {
+    return mParent;
+}
+
 ProgressBar *UIElements::createProgressBar(int id, HWND hWnd, const Rect2ui &rect) {
     ProgressBar *pb = new ProgressBar;
     pb->mPlatformData.mHWnd = CreateWindowEx(

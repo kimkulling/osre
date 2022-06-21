@@ -33,8 +33,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Container/TList.h>
 
-#include <map>
-
 namespace OSRE {
 namespace Platform {
 
@@ -78,10 +76,9 @@ DECL_EVENT(WindowsResizeEvent);
 //-------------------------------------------------------------------------------------------------
 class WindowsMoveEventData : public Common::EventData {
 public:
-    WindowsMoveEventData(Common::EventTriggerer *c) :
-            Common::EventData(WindowsResizeEvent, c), m_x(0), m_y(0) {
-        // empty
-    }
+    /// @brief The class constructor.
+    /// @param c The event trigger.
+    WindowsMoveEventData(Common::EventTriggerer *c) : Common::EventData(WindowsResizeEvent, c), m_x(0), m_y(0) {}
 
     ui32 m_x, m_y;
 };
@@ -93,10 +90,9 @@ public:
 //-------------------------------------------------------------------------------------------------
 class WindowsResizeEventData : public Common::EventData {
 public:
-    WindowsResizeEventData(Common::EventTriggerer *c) :
-            Common::EventData(WindowsResizeEvent, c), m_x(0), m_y(0), m_w(0), m_h(0) {
-        // empty
-    }
+    /// @brief The class constructor.
+    /// @param c The event trigger.
+    WindowsResizeEventData(Common::EventTriggerer *c) : Common::EventData(WindowsResizeEvent, c), m_x(0), m_y(0), m_w(0), m_h(0) {}
 
     ui32 m_x, m_y, m_w, m_h;
 };
@@ -111,10 +107,7 @@ public:
     ///	@brief	The class constructor.
     ///	@param	down	[in] true, if button is pressed, false if button is releases.
     ///	@param	c		[in] The event trigger sender.
-    KeyboardButtonEventData(bool down, Common::EventTriggerer *c) :
-            Common::EventData(down ? KeyboardButtonDownEvent : KeyboardButtonUpEvent, c), m_key(KEY_UNKNOWN), m_unicode(0) {
-        // empty
-    }
+    KeyboardButtonEventData(bool down, Common::EventTriggerer *c) :  Common::EventData(down ? KeyboardButtonDownEvent : KeyboardButtonUpEvent, c), m_key(KEY_UNKNOWN), m_unicode(0) {}
 
     Key m_key; ///< Key code for the pressed/released keyboard button
     ui16 m_unicode; ///< The Unicode character for the pressed/released key
@@ -127,6 +120,7 @@ public:
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT MouseButtonEventData : public Common::EventData {
 public:
+    /// @brief An enum to descripe the button state.
     enum ButtonType {
         LeftButton = 0,
         MiddleButton,
@@ -176,7 +170,7 @@ public:
 /// @brief This struct is a container for all application-specific data.
 //-------------------------------------------------------------------------------------------------
 struct ApplicationContext {
-    const Properties::Settings *mSettings;
+    const Properties::Settings *mSettings;          ///<
     PluginType m_type;
     AbstractWindow *m_rootSurface;
     AbstractPlatformEventQueue *m_oseventHandler;
@@ -222,7 +216,7 @@ public:
     /// @return The root window.
     AbstractWindow *getRootWindow() const;
 
-    /// @brief Will return the platfomr event handler.
+    /// @brief Will return the platform event handler.
     /// @return The platform event handler.
     AbstractPlatformEventQueue *getPlatformEventHandler() const;
     
@@ -250,6 +244,7 @@ public:
     /// @return The name of the default font.
     const String &getDefaultFontName() const;
 
+    // No copying.
     PlatformInterface(const PlatformInterface &) = delete;
     PlatformInterface &operator=(const PlatformInterface &) = delete;
 

@@ -171,7 +171,6 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/AbstractWindow.h
     ${HEADER_PATH}/Platform/AbstractTimer.h
     ${HEADER_PATH}/Platform/AbstractSystemInfo.h
-    ${HEADER_PATH}/Platform/CPUInfo.h
     ${HEADER_PATH}/Platform/SystemInfo.h
     ${HEADER_PATH}/Platform/SystemUtils.h
     ${HEADER_PATH}/Platform/KeyTypes.h
@@ -185,7 +184,6 @@ SET( platform_win_inc
 )
 SET( platform_src
     Platform/AbstractPlatformEventQueue.cpp
-    Platform/CPUInfo.cpp
     Platform/SystemInfo.cpp
     Platform/SystemUtils.cpp
     Platform/AbstractWindow.cpp
