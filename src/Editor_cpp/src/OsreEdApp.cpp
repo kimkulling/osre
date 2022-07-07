@@ -21,18 +21,17 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "OsreEdApp.h"
+#include "Scripting/PythonInterface.h"
 #include "RenderView/MainRenderView.h"
 #include "ProgressReporter.h"
 #include "RenderView/MainRenderView.h"
 #include "Gui/UIElements.h"
 #include "Modules/InspectorModule/InspectorModule.h"
 #include "Modules/LogModule/LogModule.h"
-#include <osre/App/ModuleBase.h>
-#include "Scripting/PythonInterface.h"
 #include "Actions/ImportAction.h"
-#include <cppcore/Common/Variant.h>
 #include "Engine/App/MouseEventListener.h"
 
+#include <osre/App/ModuleBase.h>
 #include <osre/App/App.h>
 #include <osre/Animation/AnimatorBase.h>B
 #include <osre/IO/Directory.h>
@@ -41,11 +40,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/IOService.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/PlatformOperations.h>
+#include <osre/Platform/PlatformInterface.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
-#include <osre/Platform/PlatformInterface.h>
 #include <osre/Scene/Scene.h>
 
 #ifdef OSRE_WINDOWS
@@ -74,19 +73,6 @@ using namespace ::OSRE::Scene;
 static const ui32 HorizontalMargin = 2;
 static const ui32 VerticalMargin = 2;
 
-#ifdef OSRE_WINDOWS
-
-constexpr int IDM_FILE_NEW = 1;
-constexpr int IDM_FILE_OPEN = 2;
-constexpr int IDM_FILE_SAVE = 3;
-constexpr int IDM_FILE_IMPORT = 4;
-constexpr int IDM_FILE_QUIT = 5;
-
-constexpr int IDM_GETTING_HELP = 6;
-constexpr int IDM_INFO_VERSION = 7;
-
-#endif // OSRE_WINDOWS
-
 static const c8 *Tag = "OsreApp";
 
 static void createTitleString(const SceneData &sd, String &titleString) {
@@ -114,10 +100,6 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
     // empty
 }
 
-OsreEdApp::~OsreEdApp() {
-    // empty
-}
-
 bool OsreEdApp::onCreate() {
     if (!AppBase::onCreate()) {
         return false;
@@ -126,43 +108,10 @@ bool OsreEdApp::onCreate() {
     mModuleRegistry.registerModule(new InspectorModule(this));
     mModuleRegistry.registerModule(new LogModule(this));
     
-    String title;
-    createTitleString(mSceneData, title);
-    AppBase::setWindowsTitle(title);
 
-    Win32Window *w = (Win32Window *)getRootWindow();
-    AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
-    if (nullptr == w || nullptr == queue) {
-        return false;
-    }
-
-    UIElements::createMenues(w, this, queue);
-
-    w->createStatusBar(100, 4);
-    w->setStatusText(0, "Test");
-
-    w->getWindowsRect(mResolution);
-
-    AppBase::getRenderBackendService()->enableAutoResizing(false);
-
-    World *world = getStage()->getActiveWorld();
-    if (nullptr == world) {
-        return false;
-    }
-
-    mMainRenderView = new MainRenderView();
-    Entity *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
-    mMainRenderView->createEditorElements((RenderComponent *)editorEntity->getComponent(ComponentType::RenderComponentType));
-
-    mPythonInterface = new PythonInterface;
-    if (!mPythonInterface->create(this)) {
-        osre_error(Tag, "Error while creating Python Interface.");
-        return false;
-    }
-    const String src = "from time import time,ctime\n"
-                 "print('Today is', ctime(time()))\n";
-                 
-    mPythonInterface->runScript(src);
+    setupUserInterface();
+    setupRenderView();
+    setupPythonInterface();
 
     mTransformController = AppBase::getTransformController(m_transformMatrix);
 
@@ -268,7 +217,6 @@ void OsreEdApp::quitEditorCmd(ui32, void *) {
 }
 
 void OsreEdApp::gettingHelpCmd(ui32 cmdId, void *data) {
-
     ::ShellExecute(nullptr, "open", "https://github.com/kimkulling/osre/issues", NULL, NULL, SW_SHOWNORMAL);
 }
 
@@ -280,7 +228,6 @@ void OsreEdApp::showVersionCmd(ui32 cmdId, void *data) {
 ModuleRegistry &OsreEdApp::getModuleRegistry() {
     return mModuleRegistry;
 }
-
 
 void OsreEdApp::setStatusBarText(const String &mode, const String &model, i32 numVertices, i32 numTriangles) {
     Win32Window *win = (Win32Window *)getRootWindow();
@@ -392,6 +339,52 @@ bool OsreEdApp::saveSceneData(const IO::Uri &filename, SceneData &sd) {
     }
     mProject->save(filename.getAbsPath(), getStage());
     stream->close();
+
+    return true;
+}
+
+bool OsreEdApp::setupUserInterface() {
+    Win32Window *w = (Win32Window *)getRootWindow();
+    AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
+    if (nullptr == w || nullptr == queue) {
+        return false;
+    }
+    String title;
+    createTitleString(mSceneData, title);
+    AppBase::setWindowsTitle(title);
+
+    UIElements::createMenues(w, this, queue);
+    w->createStatusBar(100, 4);
+    w->getWindowsRect(mResolution);
+
+    AppBase::getRenderBackendService()->enableAutoResizing(false);
+
+    return true;
+}
+
+bool OsreEdApp::setupRenderView() {
+    World *world = getStage()->getActiveWorld();
+    if (nullptr == world) {
+        return false;
+    }
+
+    mMainRenderView = new MainRenderView();
+    Entity *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
+    mMainRenderView->createEditorElements((RenderComponent *)editorEntity->getComponent(ComponentType::RenderComponentType));
+
+    return true;
+}
+
+bool OsreEdApp::setupPythonInterface() {
+    mPythonInterface = new PythonInterface;
+    if (!mPythonInterface->create(this)) {
+        osre_error(Tag, "Error while creating Python Interface.");
+        return false;
+    }
+    const String src = "from time import time,ctime\n"
+                       "print('Today is', ctime(time()))\n";
+
+    mPythonInterface->runScript(src);
 
     return true;
 }

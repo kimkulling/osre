@@ -77,12 +77,6 @@ Mesh *MainRenderView::createCoordAxis(ui32 size) {
 
     CPPCore::TArray<RenderBackend::ColorVert> axisData;
     axisData.add(v, 6);
-    /* axisData.add(v1);
-    axisData.add(v2);
-    axisData.add(v3);
-    axisData.add(v4);
-    axisData.add(v5);
-    axisData.add(v6);*/
 
     axis->attachVertices(&axisData[0], sizeof(ColorVert) * axisData.size());
 
