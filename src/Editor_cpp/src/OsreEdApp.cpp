@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -81,9 +81,6 @@ static void createTitleString(const SceneData &sd, String &titleString) {
 
     titleString += " Project: ";
     titleString += sd.ProjectName;
-
-    titleString += " Current Asset: ";
-    titleString += sd.AssetName;
 }
 
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
@@ -210,7 +207,9 @@ void OsreEdApp::importAssetCmd(ui32, void *) {
 
 void OsreEdApp::quitEditorCmd(ui32, void *) {
     DlgResults result;
-    PlatformOperations::getDialog("Really quit?", "Do you really quite OSRE-Ed?", Platform::PlatformOperations::DlgButton_YesNo, result);
+    PlatformOperations::getDialog("Really quit?", 
+        "Do you really quite OSRE-Ed?", 
+        Platform::PlatformOperations::DlgButton_YesNo, result);
     if (result == Platform::DlgResults::DlgButtonRes_Yes) {
         AppBase::requestShutdown();
     }
