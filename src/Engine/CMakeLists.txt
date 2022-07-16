@@ -514,5 +514,5 @@ ADD_LIBRARY( osre SHARED
     ${winmanager_src}
 )
 
-target_link_libraries ( osre cppcore zlibstatic Unzip glew soil ${platform_libs} assimp )
+target_link_libraries ( osre cppcore zlibstatic Unzip glew ${platform_libs} assimp )
 set_target_properties(  osre PROPERTIES FOLDER Engine )
