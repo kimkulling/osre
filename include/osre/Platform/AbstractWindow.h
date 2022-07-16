@@ -48,7 +48,7 @@ struct OSRE_EXPORT Resolution {
 
     explicit Resolution(ResRequest req);
     Resolution();
-    ~Resolution();
+    ~Resolution() = default;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -78,13 +78,12 @@ inline void WindowsProperties::getDimension(Rect2ui &rect) {
     rect.set(m_x, m_y, m_width, m_height);
 }
 
+/// @brief 
 enum class DefaultMouseCursorType {
     ComonCursor,
     SelectCursor,
     WaitCursor
 };
-
-
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine

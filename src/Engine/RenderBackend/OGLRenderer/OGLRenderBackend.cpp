@@ -38,7 +38,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/CPPCoreCommon.h>
 #include <cppcore/Memory/MemUtils.h>
 
-#include "SOIL.h"
+#include "stb_image.h"
+//#include "SOIL.h"
 
 #include <iostream>
 
@@ -801,7 +802,8 @@ OGLTexture *OGLRenderBackend::createTextureFromFile(const String &name, const IO
     // import the texture
     const String filename = fileloc.getAbsPath();
     i32 width = 0, height = 0, channels = 0;
-    GLubyte *data = SOIL_load_image(filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
+    GLubyte *data = stbi_load(filename.c_str(), &width, &height, &channels, 0);
+    //GLubyte *data = SOIL_load_image(filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
     if (!data) {
         osre_debug(Tag, "Cannot load texture " + filename);
         return nullptr;
@@ -826,8 +828,8 @@ OGLTexture *OGLRenderBackend::createTextureFromFile(const String &name, const IO
     glTexImage2D(tex->m_target, 0, GL_RGB, width, height, 0, tex->m_format, GL_UNSIGNED_BYTE, data);
     glBindTexture(tex->m_target, 0);
 
-    SOIL_free_image_data(data);
-
+    //SOIL_free_image_data(data);
+    stbi_image_free(data);
     return tex;
 }
 

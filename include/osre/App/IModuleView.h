@@ -69,7 +69,7 @@ inline void IModuleView::destroy() {
 }
 
 
-inline void IModuleView::onCreate( Rect2ui rect ) {
+inline void IModuleView::onCreate( Rect2ui ) {
     // empty
 }
 

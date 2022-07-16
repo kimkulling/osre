@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <cppcore/Common/TBitField.h>
 
 // Forward declarations ---------------------------------------------------------------------------
 struct aiScene;
@@ -54,6 +55,19 @@ enum class RenderBackendType {
     OpenGLRenderBackend = 0,    ///< OpenGL render API.
     VulkanRenderBackend         ///< Vulkan render API.
 };
+
+struct MouseInputState {
+    i32 mRelX, mRelY, mAbsX, mAbsY;
+    ui32 mLastX, mLastY;
+    CPPCore::TBitField<ui32> mMouseButtonState;
+
+    MouseInputState();
+};
+
+inline MouseInputState::MouseInputState() :
+        mRelX(0), mRelY(0), mAbsX(0), mAbsY(0), mLastX(0), mLastY(0), mMouseButtonState() {
+    // empty
+}
 
 } // Namespace App
 } // Namespace OSRE

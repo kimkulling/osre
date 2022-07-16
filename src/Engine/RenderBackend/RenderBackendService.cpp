@@ -45,9 +45,9 @@ using namespace ::OSRE::Properties;
 
 static const c8 *Tag = "RenderBackendService";
 
-static const c8 *OGL_API = "opengl";
-static const c8 *Vulkan_API = "vulkan";
-static const i32 IdxNotFound = -1;
+static constexpr c8 OGL_API[] = "opengl";
+static constexpr c8 Vulkan_API[] = "vulkan";
+static constexpr i32 IdxNotFound = -1;
 
 static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataArray) {
     if (nullptr == id) {

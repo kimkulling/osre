@@ -22,7 +22,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <cppcore/Common/TBitField.h>
 #include <osre/App/AppBase.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/Common/osre_common.h>
@@ -30,14 +29,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 namespace App {
-
-struct MouseInputState {
-    i32 mRelX, mRelY, mAbsX, mAbsY;
-    ui32 mLastX, mLastY;
-    CPPCore::TBitField<ui32> mMouseButtonState;
-
-    MouseInputState();
-};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor

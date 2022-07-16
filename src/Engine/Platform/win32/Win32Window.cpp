@@ -141,17 +141,22 @@ HWND Win32Window::createStatusBar(UINT ResID, ui32 numFields) {
     mHandleStatusBar = CreateWindowEx(0L, // extended style
             STATUSCLASSNAME, (PCTSTR)NULL,
             SBARS_SIZEGRIP | // includes a sizing grip
-            WS_CHILD | WS_VISIBLE, // window styles
+                    WS_CHILD | WS_VISIBLE, // window styles
             0, 0, 0, 0, // x, y, width, height
-            mWnd, (HMENU) ResID, mInstance, NULL);
+            mWnd, (HMENU)ResID, mInstance, NULL);
     CPPCore::TArray<ui32> fields;
+    ui32 w[4] = { 100, 300, 600, 1000 };
     for (ui32 i = 0; i < numFields; ++i) {
-        mStatusBarContent.StatusBarWidths.add(100);
+        mStatusBarContent.StatusBarTexts.add("");
+        mStatusBarContent.StatusBarWidths.add(w[i]);
     }
 
-    SendMessage(mHandleStatusBar, SB_SETPARTS, mStatusBarContent.StatusBarWidths.size(), 
+    ::SendMessage(mHandleStatusBar, SB_SETPARTS, mStatusBarContent.StatusBarWidths.size(), 
         (LPARAM)&mStatusBarContent.StatusBarWidths[0]);
-
+    for (ui32 i = 0; i < numFields; ++i) {
+        ::SendMessage(mHandleStatusBar, SB_SETTEXT, i, (LPARAM) "");
+    }
+    SendMessage(mHandleStatusBar, SB_SIMPLE, 0, 0);
     return mHandleStatusBar;
 }
 
@@ -165,9 +170,12 @@ void Win32Window::setStatusText(ui32 index, const char *text) {
     }
 
     mStatusBarContent.StatusBarTexts[index] = text;
-    SendMessage(mHandleStatusBar, SB_SETPARTS, mStatusBarContent.StatusBarWidths.size(),
+    ::SendMessage(mHandleStatusBar, SB_SETPARTS, mStatusBarContent.StatusBarWidths.size(),
         (LPARAM)&mStatusBarContent.StatusBarWidths[0]);
-    ::SendMessage(mHandleStatusBar, SB_SETTEXT, index, (LPARAM) text);
+    for (ui32 i = 0; i < mStatusBarContent.StatusBarTexts.size(); ++i) {
+        ::SendMessage(mHandleStatusBar, SB_SETTEXT, i, (LPARAM)mStatusBarContent.StatusBarTexts[i].c_str());
+    }
+    SendMessage(mHandleStatusBar, SB_SIMPLE, 0, 0);
 }
 
 bool Win32Window::onCreate() {

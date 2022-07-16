@@ -41,14 +41,13 @@ INCLUDE_DIRECTORIES( BEFORE
     /usr/include/
     ${CMAKE_HOME_DIRECTORY}/contrib/assimp/include
     ${CMAKE_HOME_DIRECTORY}/contrib/glm/
-    ${CMAKE_HOME_DIRECTORY}/contrib/soil/src
+    ${CMAKE_HOME_DIRECTORY}/contrib/stb
     ${CMAKE_HOME_DIRECTORY}/contrib/glew/include
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/include
     ${CMAKE_HOME_DIRECTORY}/contrib/assimp/contrib/zlib
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/include
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/
     "c:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include"
-    ${CMAKE_HOME_DIRECTORY}/contrib/soil/src
     ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/include
     ${CMAKE_HOME_DIRECTORY}/src/
     ${CMAKE_HOME_DIRECTORY}/
@@ -132,7 +131,8 @@ ADD_SUBDIRECTORY( contrib/glew )
 set(CPPCORE_BUILD_UNITTESTS OFF CACHE BOOL "no cppcore unittests")
 ADD_SUBDIRECTORY( contrib/cppcore )
 ADD_SUBDIRECTORY( contrib/unzip )
-ADD_SUBDIRECTORY( contrib/soil )
+
+# Config for assimp
 set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "no assimp tools")
 set(ASSIMP_BUILD_ZLIB ON CACHE BOOL "no assimp tools" )
 set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "no assimp tools" )

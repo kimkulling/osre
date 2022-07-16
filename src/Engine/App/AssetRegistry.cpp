@@ -75,10 +75,10 @@ bool AssetRegistry::hasPath( const String &mount ) {
     return true;
 }
 
-static const String Dummy("");
 
 String AssetRegistry::getPath( const String &mount ) {
-    if ( nullptr == s_instance ) {
+    static const String Dummy("");
+    if (nullptr == s_instance) {
         return Dummy;
     }
 
@@ -96,7 +96,8 @@ String AssetRegistry::getPath( const String &mount ) {
 }
 
 String AssetRegistry::resolvePathFromUri( const IO::Uri &location ) {
-    if ( location.isEmpty() ) {
+    static const String Dummy("");
+    if (location.isEmpty()) {
         osre_debug(Tag, "Enpty path detected.");
         return Dummy;
     }

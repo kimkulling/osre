@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -22,50 +22,50 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <cppcore/Container/THashMap.h>
+#include <osre/Animation/AnimatorBase.h>
+#include <osre/Platform/PlatformCommon.h>
+#include <osre/Platform/KeyTypes.h>
 
 namespace OSRE {
-    
-// Forward declarations ---------------------------------------------------------------------------
-namespace IO {
-    class Stream;
-    class Uri;
-}
 
 namespace RenderBackend {
-    struct BufferData;
+    struct TransformMatrixBlock;
 }
 
 namespace App {
 
-class World;
+struct MouseInputState;
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup    Engine
+///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief  This class implements the default keyboard controlling.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT AssetRegistry {
+class OSRE_EXPORT TransformController : public Animation::AnimationControllerBase {
 public:
-    static AssetRegistry *create();
-    static void destroy();
-    static bool registerAssetPath( const String &mount, const String &path );
-    static bool hasPath( const String &mount );
-    static String getPath( const String &mount );
-    static String resolvePathFromUri( const IO::Uri &location );
-    static bool clear();
+    /// @brief The class constructor.
+    /// @param tmb  The transform matrix block to control.
+    TransformController(RenderBackend::TransformMatrixBlock &tmb);
+
+    ///	@brief The class destructor.
+    ~TransformController() override = default;
+
+    /// @brief Will return the command code from a key binding.
+    /// @param key  The key binding
+    /// @return The command code.
+    static Animation::TransformCommandType getKeyBinding(Platform::Key key);
+
+    /// @brief Will perform the mouse update.
+    /// @param mis  The mouse input state.
+    void getMouseUpdate(const MouseInputState &mis) override;
+
+    /// @brief Will update the transformation.
+    /// @param cmdType  The command.
+    void update(Animation::TransformCommandType cmdType) override;
 
 private:
-    AssetRegistry();
-    ~AssetRegistry();
-
-private:
-    static AssetRegistry *s_instance;
-
-    typedef CPPCore::THashMap<ui32, String> Name2PathMap;
-    Name2PathMap m_name2pathMap;
+    RenderBackend::TransformMatrixBlock &mTransform;
 };
 
-} // Namespace Assets
-} // Namespace OSRE
+} // namespace App
+} // namespace OSRE

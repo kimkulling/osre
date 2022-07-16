@@ -49,6 +49,7 @@ SET( app_inc
     ${HEADER_PATH}/App/AssetRegistry.h
     ${HEADER_PATH}/App/AssimpWrapper.h
     ${HEADER_PATH}/App/Stage.h
+    ${HEADER_PATH}/App/TransformController.h
     ${HEADER_PATH}/App/World.h
 )
 
@@ -65,6 +66,7 @@ SET( app_src
     App/Stage.cpp
     App/MouseEventListener.cpp
     App/MouseEventListener.h
+    App/TransformController.cpp
 )
 
 #==============================================================================
@@ -169,7 +171,6 @@ SET( platform_inc
     ${HEADER_PATH}/Platform/AbstractWindow.h
     ${HEADER_PATH}/Platform/AbstractTimer.h
     ${HEADER_PATH}/Platform/AbstractSystemInfo.h
-    ${HEADER_PATH}/Platform/CPUInfo.h
     ${HEADER_PATH}/Platform/SystemInfo.h
     ${HEADER_PATH}/Platform/SystemUtils.h
     ${HEADER_PATH}/Platform/KeyTypes.h
@@ -183,7 +184,6 @@ SET( platform_win_inc
 )
 SET( platform_src
     Platform/AbstractPlatformEventQueue.cpp
-    Platform/CPUInfo.cpp
     Platform/SystemInfo.cpp
     Platform/SystemUtils.cpp
     Platform/AbstractWindow.cpp
@@ -272,6 +272,16 @@ SET ( properties_src
 )
 
 #==============================================================================
+# Animation
+#==============================================================================
+SET( animation_inc
+    ${HEADER_PATH}/Animation/AnimatorBase.h
+)
+
+SET( animation_src
+)
+
+#==============================================================================
 # Scene
 #==============================================================================
 SET( scene_inc
@@ -279,7 +289,6 @@ SET( scene_inc
     ${HEADER_PATH}/Scene/SceneCommon.h
     ${HEADER_PATH}/Scene/MeshProcessor.h
     ${HEADER_PATH}/Scene/MeshBuilder.h
-    ${HEADER_PATH}/Scene/AnimatorBase.h
     ${HEADER_PATH}/Scene/DbgRenderer.h
     ${HEADER_PATH}/Scene/MaterialBuilder.h
     ${HEADER_PATH}/Scene/Node.h
@@ -318,6 +327,7 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
     ${HEADER_PATH}/RenderBackend/RenderStates.h
     ${HEADER_PATH}/RenderBackend/Shader.h
+    ${HEADER_PATH}/RenderBackend/ShapeRenderer.h
 )
 SET( renderbackend_src
     RenderBackend/Mesh.cpp
@@ -327,6 +337,7 @@ SET( renderbackend_src
     RenderBackend/RenderPass.cpp
     RenderBackend/TransformMatrixBlock.cpp
     RenderBackend/Shader.cpp
+    RenderBackend/ShapeRenderer.cpp
 )
 SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLCommon.h
@@ -400,6 +411,7 @@ endif()
 # Defined Source groups
 #==============================================================================
 SOURCE_GROUP( App                 FILES ${app_src} )
+SOURCE_GROUP( Animation           FILES ${animation_src} )
 SOURCE_GROUP( Assets              FILES ${assets_src} )
 SOURCE_GROUP( Common              FILES ${common_src} )
 SOURCE_GROUP( Components          FILES ${components_src} )
@@ -424,6 +436,7 @@ SOURCE_GROUP( WinManager          FILES ${winmanager_src} )
 SOURCE_GROUP( UI\\Common          FILES ${ui_common_src} )
 
 SOURCE_GROUP( Include\\osre\\App        FILES ${app_inc} )
+SOURCE_GROUP( Include\\osre\\Animation  FILES ${animation_inc} )
 SOURCE_GROUP( Include\\osre\\Assets     FILES ${assets_inc} )
 SOURCE_GROUP( Include\\osre\\Debugging  FILES ${debugging_inc} )
 SOURCE_GROUP( Include\\osre\\Common     FILES ${common_inc} )
@@ -452,6 +465,7 @@ add_definitions( -D${USE_PLATFORM} )
 ADD_LIBRARY( osre SHARED
     ../../README.md
     ${app_inc}
+    ${animation_inc}
     ${debugging_inc}
     ${common_inc}
     ${common_src}
@@ -475,6 +489,7 @@ ADD_LIBRARY( osre SHARED
     ${renderbackend_inc}
 
     ${app_src}
+    ${animation_src}
     ${Common_src}
     ${components_src}
     ${debugging_src}
@@ -499,5 +514,5 @@ ADD_LIBRARY( osre SHARED
     ${winmanager_src}
 )
 
-target_link_libraries ( osre cppcore zlibstatic Unzip glew soil ${platform_libs} assimp )
+target_link_libraries ( osre cppcore zlibstatic Unzip glew ${platform_libs} assimp )
 set_target_properties(  osre PROPERTIES FOLDER Engine )

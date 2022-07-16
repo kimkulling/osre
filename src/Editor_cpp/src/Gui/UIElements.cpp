@@ -55,17 +55,39 @@ constexpr int IDM_FILE_QUIT = 5;
 constexpr int IDM_GETTING_HELP = 6;
 constexpr int IDM_INFO_VERSION = 7;
 
-ProgressBar *UIElements::createProgressBar(int id, HWND hWnd, const Rect2ui &dimension) {
+String TreeItem::generateName() {
+    return "newItem_" + std::to_string(mChildren.size());
+}
+
+TreeItem::TreeItem() : mName(generateName()), mParent(nullptr), mChildren() {}
+
+void TreeItem::addChild(TreeItem *item) {
+    if (item == nullptr) {
+        return;
+    }
+    
+    mChildren.add(item);
+}
+
+size_t TreeItem::numChildren() const {
+    return mChildren.size();
+}
+    
+TreeItem *TreeItem::getParent() const {
+    return mParent;
+}
+
+ProgressBar *UIElements::createProgressBar(int id, HWND hWnd, const Rect2ui &rect) {
     ProgressBar *pb = new ProgressBar;
     pb->mPlatformData.mHWnd = CreateWindowEx(
             0,
             PROGRESS_CLASS,
             (LPSTR)NULL,
             WS_VISIBLE | WS_CHILD,
-            dimension.getX1(),
-            dimension.getY1(),
-            dimension.getWidth(),
-            dimension.getHeight(),
+            rect.getX1(),
+            rect.getY1(),
+            rect.getWidth(),
+            rect.getHeight(),
             hWnd,
             (HMENU)id,
             (HINSTANCE)GetWindowLong(hWnd, GWLP_HINSTANCE),
@@ -78,20 +100,27 @@ ProgressBar *UIElements::createProgressBar(int id, HWND hWnd, const Rect2ui &dim
     pb->mRange=100;
     pb->mCurrent = 0;
     
-    SendMessage(pb->mPlatformData.mHWnd, PBM_SETRANGE, 0, MAKELPARAM(0, 99));
-    SendMessage(pb->mPlatformData.mHWnd, PBM_SETSTEP, (WPARAM)1, 0);
+    auto wnd = pb->mPlatformData.mHWnd;
+    ::SendMessage(hWnd, PBM_SETRANGE, 0, MAKELPARAM(0, 99));
+    ::SendMessage(hWnd, PBM_SETSTEP, (WPARAM)1, 0);
 
     pb->mParent = nullptr;
-    pb->mRect = dimension;
+    pb->mRect = rect;
 
     return pb;
 }
 
 void UIElements::updateProgressBar(ProgressBar *pb, ui32 step) {
-    SendMessage(pb->mPlatformData.mHWnd, PBM_SETPOS, (WPARAM)step, 0);
+    if (pb == nullptr) {
+        return;
+    }
+    ::SendMessage(pb->mPlatformData.mHWnd, PBM_SETPOS, (WPARAM)step, 0);
 }
     
 void UIElements::deleteProgressBar(ProgressBar *pb) {
+    if (pb == nullptr) {
+        return;
+    }
     ::CloseWindow(pb->mPlatformData.mHWnd);
     delete pb;
 }
@@ -120,6 +149,12 @@ void UIElements::createMenues(Win32Window *w, OsreEdApp *app, Platform::Abstract
     w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
 
     w->endMenu();
+}
+
+TreeView *UIElements::createTreeView(Win32Window *w) {
+    if (w == nullptr) {
+        return nullptr;
+    }
 }
 
 } // namespace OSRE

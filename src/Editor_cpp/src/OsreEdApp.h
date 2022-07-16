@@ -65,7 +65,7 @@ public:
     OsreEdApp(int argc, char *argv[]);
 
     /// @brief  The class destructor.
-    ~OsreEdApp() override;
+    ~OsreEdApp() override = default;
 
     /// The New-project command.
     /// @param  cmdId   [in] The command id.
@@ -114,10 +114,11 @@ public:
     /// @return The module registry.
     ModuleRegistry &getModuleRegistry();
 
-    /// @brief 
-    /// @param mode 
-    /// @param Model 
-    /// @param numVertices 
+    /// @brief Will set the status bar text.
+    /// @param mode         The mode, describes the edit mode.
+    /// @param Model        The model name
+    /// @param numVertices  The number of vertices in the scene
+    /// @param numTriangles The number of triangles in the scene.
     void setStatusBarText(const String &mode, const String &Model, i32 numVertices, i32 numTriangles);
 
 protected:
@@ -135,17 +136,29 @@ protected:
     /// @return true, if successful, false in case of an error.
     bool onDestroy() override;
 
-    /// @brief
-    /// @param filename
-    /// @param sd
-    /// @return
+    /// @brief Will load a scene from a file.
+    /// @param filename The filename.
+    /// @param sd       The scene data container.
+    /// @return true, if successful, false if not.
     bool loadSceneData(const IO::Uri &filename, SceneData &sd);
 
-    /// @brief
-    /// @param filename
-    /// @param sd
-    /// @return
+    /// @brief Will save a scene from a file.
+    /// @param filename The filename.
+    /// @param sd       The scene data container.
+    /// @return true, if successful, false if not.
     bool saveSceneData(const IO::Uri &filename, SceneData &sd);
+
+    /// @brief Will setup the UI.
+    /// @return true, if successful, false if not.
+    bool setupUserInterface();
+
+    /// @brief  Will setup the render view.
+    /// @return true, if successful, false if not.
+    bool setupRenderView();
+
+    /// @brief Will setup the python interface.
+    /// @return true, if successful, false if not.
+    bool setupPythonInterface();
 
 private:
     MainRenderView *mMainRenderView;
@@ -157,7 +170,7 @@ private:
     Rect2ui mResolution;
     RenderBackend::Mesh *mMesh2D;
     PythonInterface *mPythonInterface;
-    Scene::AnimationControllerBase *mTransformController;
+    Animation::AnimationControllerBase *mTransformController;
 };
 
 inline bool OsreEdApp::hasModel() const {

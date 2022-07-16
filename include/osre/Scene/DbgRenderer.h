@@ -49,7 +49,7 @@ public:
     static bool create(RenderBackend::RenderBackendService *rbSrv);
     static bool destroy();
     static DbgRenderer *getInstance();
-    static c8 *getDebugRenderBatchName();
+    static const c8 *getDebugRenderBatchName();
 
 private:
     DbgRenderer(RenderBackend::RenderBackendService *rbSrv);

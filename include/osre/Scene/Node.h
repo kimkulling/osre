@@ -71,6 +71,13 @@ struct AbstractNodeFactory {
         return m_type;
     }
 
+    /// @brief Will create a new node instance.
+    /// @param name                 The node name.
+    /// @param ids                  The ids container.
+    /// @param transformEnabled     True for transformer node.
+    /// @param renderEnabled        True for rendering enabled
+    /// @param parent               The parent node, nullptr for root.
+    /// @return                     The new created node instance.
     virtual Node *create(const String &name, Common::Ids &ids, bool transformEnabled,
             bool renderEnabled, Node *parent) = 0;
 };
@@ -84,9 +91,13 @@ struct AbstractNodeFactory {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Node : public Common::Object {
 public:
+    /// @brief The node pointer type.
     using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::Scene::Node>;
+    /// @brief The node array type-
     using NodeArray = CPPCore::TArray<Node *>;
+    /// @brief USed to declare mesh-array instances.
     using MeshReferenceArray = ::CPPCore::TArray<size_t>;
+    /// @brief Used to declare properties.
     using PropertyMap = CPPCore::THashMap<ui32, Properties::Property *>;
 
     enum class TraverseMode {
@@ -148,14 +159,6 @@ inline void Node::setActive(bool isActive) {
 inline bool Node::isActive() const {
     return m_isActive;
 }
-
-/* inline void Node::setAABB(const AABB &aabb) {
-    m_aabb = aabb;
-}
-
-inline const Node::AABB &Node::getAABB() const {
-    return m_aabb;
-}*/
 
 } // Namespace Scene
 } // namespace OSRE

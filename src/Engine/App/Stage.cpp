@@ -69,7 +69,7 @@ World *Stage::findWorld(const String &name) const {
     return nullptr;
 }
 
-ui32 Stage::getNumberOfWorlds() const {
+size_t Stage::getNumberOfWorlds() const {
     return mWorlds.size();
 }
 

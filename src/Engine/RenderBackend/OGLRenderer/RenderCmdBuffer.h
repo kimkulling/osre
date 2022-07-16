@@ -58,9 +58,9 @@ struct Material;
 struct OGLParameter;
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
+/// @ingroup	Engine
 ///
-///	@brief  This class is used to manage a render command buffer. Render command buffers are used
+/// @brief  This class is used to manage a render command buffer. Render command buffers are used
 /// to store the list of render ops for rendering one single render frame.
 //-------------------------------------------------------------------------------------------------
 class RenderCmdBuffer {

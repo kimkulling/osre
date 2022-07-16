@@ -36,8 +36,17 @@ namespace App {
     class RenderComponent;
 }
 
+namespace Animation {
+    struct Skeleton;
+}
+
 namespace Editor {
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+/// @brief
+//-------------------------------------------------------------------------------------------------
 class MainRenderView {
 public:
     MainRenderView();
@@ -45,6 +54,7 @@ public:
     static RenderBackend::Mesh *MainRenderView::createCoordAxis(ui32 size);
     static RenderBackend::Mesh *MainRenderView::createGrid(ui32 numLines);
     static void createRect2D(const Rect2ui &r, RenderBackend::Mesh *mesh2D, Style &style);
+    static void createBonesFromSkeleton(Animation::Skeleton *skeleton);
     void createEditorElements(App::RenderComponent *rc);
 
 private:

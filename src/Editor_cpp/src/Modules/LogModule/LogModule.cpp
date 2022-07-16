@@ -150,9 +150,7 @@ public:
         mThreadId = ::GetCurrentThreadId();
     }
 
-    ~LogStream() override {
-        mLogView = nullptr;
-    }
+    ~LogStream() override = default;
 
     void write(const String &rMessage) override {
         if (mThreadId == ::GetCurrentThreadId()) {

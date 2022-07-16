@@ -480,10 +480,10 @@ public:
 class OSRE_EXPORT TextureResource : public Common::TResource<Texture, TextureLoader> {
 public:
     TextureResource(const String &name, const IO::Uri &uri);
-    ~TextureResource() override;
+    ~TextureResource() override = default;
     void setTargetType(TextureTargetType targetType);
     TextureTargetType getTargetType() const;
-    void(setTextureStage)(TextureStageType stage);
+    void setTextureStage(TextureStageType stage);
     TextureStageType setTextureStage() const;
 
 protected:

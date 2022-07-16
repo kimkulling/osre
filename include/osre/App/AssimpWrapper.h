@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/App/AssetsCommon.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/Animation/AnimatorBase.h>
 #include <osre/Common/Ids.h>
 #include <osre/Scene/TAABB.h>
 
@@ -37,6 +38,7 @@ struct aiMesh;
 struct aiNode;
 struct aiMaterial;
 struct aiAnimation;
+struct aiSkeleton;
 
 namespace OSRE {
 
@@ -73,6 +75,7 @@ class OSRE_EXPORT AssimpWrapper {
 public:
     using MaterialArray = CPPCore::TArray<RenderBackend::Material *>;
     using Bone2NodeMap = std::map<const char *, const aiNode *>;
+    using AnimationMap = std::map<const char*, Animation::AnimationTrack*>;
 
     AssimpWrapper(Common::Ids &ids, World *world);
     ~AssimpWrapper();
@@ -82,10 +85,11 @@ public:
 protected:
     Entity *convertScene();
     void importMeshes( aiMesh **meshes, ui32 numMeshes );
-	void importBones(aiMesh* mesh);
+	//void importBones(aiMesh* mesh);
     void importNode( aiNode *node, Scene::Node *parent );
     void importMaterial( aiMaterial *material );
-    void importAnimation( aiAnimation *animation );
+    void importSkeletons(aiSkeleton *skeletons, size_t numSkeletons);
+    void importAnimation(aiAnimation *animation, Animation::AnimationTrack &currentAnimationTrack, AnimationMap &animLookup);
     void optimizeVertexBuffer();
 
 private:

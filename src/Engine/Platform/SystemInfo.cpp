@@ -21,7 +21,6 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Platform/SystemInfo.h>
-#include <osre/Platform/CPUInfo.h>
 
 #include <cassert>
 
@@ -44,7 +43,6 @@ enum {
 };
 
 bool                      SystemInfo::m_IsInited  = false;
-CPUInfo                  *SystemInfo::m_pCPUInfo  = nullptr;
 SystemInfo::ThreadNameMap SystemInfo::s_threadNames;
 
 SystemInfo::SystemInfo() {
@@ -82,10 +80,6 @@ void SystemInfo::getMemoryStatus( ui32 &totalPhysicMem, ui32 &memInUse ) {
     totalPhysicMem = rusage.ru_maxrss;
     memInUse       = 0;
 #endif
-}
-
-CPUInfo *SystemInfo::getCPUInfo() {
-    return m_pCPUInfo;
 }
 
 bool SystemInfo::registerThreadName( const ThreadId &id, const String &name ) {
@@ -147,19 +141,7 @@ bool SystemInfo::init() {
     //TODO!
 #endif
 
-    bool success = true;
-    if ( !m_pCPUInfo ) {
-        if ( !CPUInfo::isInited() ) {
-            success = CPUInfo::init();
-        }
-
-        m_pCPUInfo = new CPUInfo;
-    }
-
-    // Set the init state
-    m_IsInited = success;
-
-    return success;
+    return true;
 }
 
 } // Namespace System

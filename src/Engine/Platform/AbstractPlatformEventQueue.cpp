@@ -61,6 +61,7 @@ void AbstractPlatformEventQueue::processEvents(Common::EventTriggerer *triggerer
         }
     }
     switchEventDataList();
+    eventBus->update();
 }
 
 Common::EventDataList *AbstractPlatformEventQueue::getActiveEventDataList() {

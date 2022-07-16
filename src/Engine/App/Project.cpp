@@ -50,10 +50,6 @@ Project::Project() :
     // empty
 }
 
-Project::~Project() {
-    // empty}
-}
-
 const c8 *Project::getExtension() {
     return Ext;
 }

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -21,30 +21,30 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "OsreEdApp.h"
+#include "Scripting/PythonInterface.h"
 #include "RenderView/MainRenderView.h"
 #include "ProgressReporter.h"
 #include "RenderView/MainRenderView.h"
 #include "Gui/UIElements.h"
 #include "Modules/InspectorModule/InspectorModule.h"
 #include "Modules/LogModule/LogModule.h"
-#include <osre/App/ModuleBase.h>
-#include "Scripting/PythonInterface.h"
 #include "Actions/ImportAction.h"
-#include <cppcore/Common/Variant.h>
 #include "Engine/App/MouseEventListener.h"
 
+#include <osre/App/ModuleBase.h>
 #include <osre/App/App.h>
+#include <osre/Animation/AnimatorBase.h>B
 #include <osre/IO/Directory.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/File.h>
 #include <osre/IO/IOService.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/PlatformOperations.h>
+#include <osre/Platform/PlatformInterface.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
-#include <osre/Platform/PlatformInterface.h>
 #include <osre/Scene/Scene.h>
 
 #ifdef OSRE_WINDOWS
@@ -63,6 +63,7 @@ namespace OSRE {
 namespace Editor {
 
 using namespace ::OSRE::App;
+using namespace ::OSRE::Animation;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Platform;
@@ -72,19 +73,6 @@ using namespace ::OSRE::Scene;
 static const ui32 HorizontalMargin = 2;
 static const ui32 VerticalMargin = 2;
 
-#ifdef OSRE_WINDOWS
-
-constexpr int IDM_FILE_NEW = 1;
-constexpr int IDM_FILE_OPEN = 2;
-constexpr int IDM_FILE_SAVE = 3;
-constexpr int IDM_FILE_IMPORT = 4;
-constexpr int IDM_FILE_QUIT = 5;
-
-constexpr int IDM_GETTING_HELP = 6;
-constexpr int IDM_INFO_VERSION = 7;
-
-#endif // OSRE_WINDOWS
-
 static const c8 *Tag = "OsreApp";
 
 static void createTitleString(const SceneData &sd, String &titleString) {
@@ -93,9 +81,6 @@ static void createTitleString(const SceneData &sd, String &titleString) {
 
     titleString += " Project: ";
     titleString += sd.ProjectName;
-
-    titleString += " Current Asset: ";
-    titleString += sd.AssetName;
 }
 
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
@@ -112,10 +97,6 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
     // empty
 }
 
-OsreEdApp::~OsreEdApp() {
-    // empty
-}
-
 bool OsreEdApp::onCreate() {
     if (!AppBase::onCreate()) {
         return false;
@@ -124,62 +105,10 @@ bool OsreEdApp::onCreate() {
     mModuleRegistry.registerModule(new InspectorModule(this));
     mModuleRegistry.registerModule(new LogModule(this));
     
-    String title;
-    createTitleString(mSceneData, title);
-    AppBase::setWindowsTitle(title);
 
-    Win32Window *w = (Win32Window *)getRootWindow();
-    AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
-    if (nullptr == w || nullptr == queue) {
-        return false;
-    }
-
-    UIElements::createMenues(w, this, queue);
-
-    /* w->beginMenu();
-    MenuEntry FileMenu[8] = {
-        { MF_STRING, IDM_FILE_NEW, L"&New", MenuFunctor::Make(this, &OsreEdApp::newProjectCmd) },
-        { MF_STRING, IDM_FILE_OPEN, L"&Open Project", MenuFunctor::Make(this, &OsreEdApp::loadProjectCmd) },
-        { MF_STRING, IDM_FILE_SAVE, L"&Save Project", MenuFunctor::Make(this, &OsreEdApp::saveProjectCmd) },
-        { MF_SEPARATOR, 0, nullptr },
-        { MF_STRING, IDM_FILE_IMPORT, L"&Import Asset", MenuFunctor::Make(this, &OsreEdApp::importAssetCmd) },
-        { MF_SEPARATOR, 0, nullptr },
-        { MF_STRING, IDM_FILE_QUIT, L"&Quit", MenuFunctor::Make(this, &OsreEdApp::quitEditorCmd) },
-    };
-    w->addSubMenues(nullptr, queue, L"File", FileMenu, 8);
-
-    MenuEntry InfoMenu[2] = {
-        { MF_STRING, IDM_GETTING_HELP, L"&Getting Help", MenuFunctor::Make(this, &OsreEdApp::gettingHelpCmd) },
-        { MF_STRING, IDM_INFO_VERSION, L"&Version", MenuFunctor::Make(this, &OsreEdApp::showVersionCmd) }
-    };
-    w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
-
-    w->endMenu();*/
-    w->createStatusBar(100, 4);
-    w->setStatusText(0, "Test");
-
-    w->getWindowsRect(mResolution);
-
-    AppBase::getRenderBackendService()->enableAutoResizing(false);
-
-    World *world = getStage()->getActiveWorld();
-    if (nullptr == world) {
-        return false;
-    }
-
-    mMainRenderView = new MainRenderView();
-    Entity *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
-    mMainRenderView->createEditorElements((RenderComponent *)editorEntity->getComponent(ComponentType::RenderComponentType));
-
-    mPythonInterface = new PythonInterface;
-    if (!mPythonInterface->create(this)) {
-        osre_error(Tag, "Error while creating Python Interface.");
-        return false;
-    }
-    const String src = "from time import time,ctime\n"
-                 "print('Today is', ctime(time()))\n";
-                 
-    mPythonInterface->runScript(src);
+    setupUserInterface();
+    setupRenderView();
+    setupPythonInterface();
 
     mTransformController = AppBase::getTransformController(m_transformMatrix);
 
@@ -278,14 +207,15 @@ void OsreEdApp::importAssetCmd(ui32, void *) {
 
 void OsreEdApp::quitEditorCmd(ui32, void *) {
     DlgResults result;
-    PlatformOperations::getDialog("Really quit?", "Do you really quite OSRE-Ed?", Platform::PlatformOperations::DlgButton_YesNo, result);
+    PlatformOperations::getDialog("Really quit?", 
+        "Do you really quite OSRE-Ed?", 
+        Platform::PlatformOperations::DlgButton_YesNo, result);
     if (result == Platform::DlgResults::DlgButtonRes_Yes) {
         AppBase::requestShutdown();
     }
 }
 
 void OsreEdApp::gettingHelpCmd(ui32 cmdId, void *data) {
-
     ::ShellExecute(nullptr, "open", "https://github.com/kimkulling/osre/issues", NULL, NULL, SW_SHOWNORMAL);
 }
 
@@ -297,7 +227,6 @@ void OsreEdApp::showVersionCmd(ui32 cmdId, void *data) {
 ModuleRegistry &OsreEdApp::getModuleRegistry() {
     return mModuleRegistry;
 }
-
 
 void OsreEdApp::setStatusBarText(const String &mode, const String &model, i32 numVertices, i32 numTriangles) {
     Win32Window *win = (Win32Window *)getRootWindow();
@@ -331,9 +260,12 @@ void OsreEdApp::setStatusBarText(const String &mode, const String &model, i32 nu
 }
 
 void OsreEdApp::onUpdate() {
+    const MouseInputState & mis = AppBase::getMouseEventListener()->getMouseInputState();
+    
     Key key = AppBase::getKeyboardEventListener()->getLastKey();
     glm::mat4 rot(1.0);
     TArray<TransformCommandType> transformCmds;
+    mTransformController->getMouseUpdate(mis);
     mTransformController->update(TransformController::getKeyBinding(key));
     for (ui32 i = 0; i < transformCmds.size(); ++i) {
         mTransformController->update(transformCmds[i]);
@@ -406,6 +338,52 @@ bool OsreEdApp::saveSceneData(const IO::Uri &filename, SceneData &sd) {
     }
     mProject->save(filename.getAbsPath(), getStage());
     stream->close();
+
+    return true;
+}
+
+bool OsreEdApp::setupUserInterface() {
+    Win32Window *w = (Win32Window *)getRootWindow();
+    AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
+    if (nullptr == w || nullptr == queue) {
+        return false;
+    }
+    String title;
+    createTitleString(mSceneData, title);
+    AppBase::setWindowsTitle(title);
+
+    UIElements::createMenues(w, this, queue);
+    w->createStatusBar(100, 4);
+    w->getWindowsRect(mResolution);
+
+    AppBase::getRenderBackendService()->enableAutoResizing(false);
+
+    return true;
+}
+
+bool OsreEdApp::setupRenderView() {
+    World *world = getStage()->getActiveWorld();
+    if (nullptr == world) {
+        return false;
+    }
+
+    mMainRenderView = new MainRenderView();
+    Entity *editorEntity = new Entity("editor.entity", *getIdContainer(), world);
+    mMainRenderView->createEditorElements((RenderComponent *)editorEntity->getComponent(ComponentType::RenderComponentType));
+
+    return true;
+}
+
+bool OsreEdApp::setupPythonInterface() {
+    mPythonInterface = new PythonInterface;
+    if (!mPythonInterface->create(this)) {
+        osre_error(Tag, "Error while creating Python Interface.");
+        return false;
+    }
+    const String src = "from time import time,ctime\n"
+                       "print('Today is', ctime(time()))\n";
+
+    mPythonInterface->runScript(src);
 
     return true;
 }

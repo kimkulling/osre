@@ -33,8 +33,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Container/TList.h>
 
-#include <map>
-
 namespace OSRE {
 namespace Platform {
 
@@ -48,9 +46,7 @@ namespace Platform {
 class OSRE_EXPORT OSEventListener : public Common::Object {
 public:
     ///	@brief	The class destructor, virtual.
-    virtual ~OSEventListener() {
-        // empty
-    }
+    virtual ~OSEventListener() = default;
 
     ///	@brief	The os-event callback, override this for your own implementation.
     ///	@param	osEvent			[in] The incoming event.
@@ -60,10 +56,7 @@ public:
 protected:
     ///	@brief	The class constructor.
     ///	@param	OSListenerName	[in] The instance name.
-    OSEventListener(const String &OSListenerName) :
-            Object(OSListenerName) {
-        // empty
-    }
+    OSEventListener(const String &OSListenerName) : Object(OSListenerName) {}
 };
 
 DECL_EVENT(KeyboardButtonDownEvent);
@@ -83,10 +76,9 @@ DECL_EVENT(WindowsResizeEvent);
 //-------------------------------------------------------------------------------------------------
 class WindowsMoveEventData : public Common::EventData {
 public:
-    WindowsMoveEventData(Common::EventTriggerer *c) :
-            Common::EventData(WindowsResizeEvent, c), m_x(0), m_y(0) {
-        // empty
-    }
+    /// @brief The class constructor.
+    /// @param c The event trigger.
+    WindowsMoveEventData(Common::EventTriggerer *c) : Common::EventData(WindowsResizeEvent, c), m_x(0), m_y(0) {}
 
     ui32 m_x, m_y;
 };
@@ -98,10 +90,9 @@ public:
 //-------------------------------------------------------------------------------------------------
 class WindowsResizeEventData : public Common::EventData {
 public:
-    WindowsResizeEventData(Common::EventTriggerer *c) :
-            Common::EventData(WindowsResizeEvent, c), m_x(0), m_y(0), m_w(0), m_h(0) {
-        // empty
-    }
+    /// @brief The class constructor.
+    /// @param c The event trigger.
+    WindowsResizeEventData(Common::EventTriggerer *c) : Common::EventData(WindowsResizeEvent, c), m_x(0), m_y(0), m_w(0), m_h(0) {}
 
     ui32 m_x, m_y, m_w, m_h;
 };
@@ -116,10 +107,7 @@ public:
     ///	@brief	The class constructor.
     ///	@param	down	[in] true, if button is pressed, false if button is releases.
     ///	@param	c		[in] The event trigger sender.
-    KeyboardButtonEventData(bool down, Common::EventTriggerer *c) :
-            Common::EventData(down ? KeyboardButtonDownEvent : KeyboardButtonUpEvent, c), m_key(KEY_UNKNOWN), m_unicode(0) {
-        // empty
-    }
+    KeyboardButtonEventData(bool down, Common::EventTriggerer *c) :  Common::EventData(down ? KeyboardButtonDownEvent : KeyboardButtonUpEvent, c), m_key(KEY_UNKNOWN), m_unicode(0) {}
 
     Key m_key; ///< Key code for the pressed/released keyboard button
     ui16 m_unicode; ///< The Unicode character for the pressed/released key
@@ -132,6 +120,7 @@ public:
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT MouseButtonEventData : public Common::EventData {
 public:
+    /// @brief An enum to descripe the button state.
     enum ButtonType {
         LeftButton = 0,
         MiddleButton,
@@ -175,8 +164,13 @@ public:
     i32 m_absY; ///< The absolute Y-position of the mouse cursor
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+/// @brief This struct is a container for all application-specific data.
+//-------------------------------------------------------------------------------------------------
 struct ApplicationContext {
-    const Properties::Settings *mSettings;
+    const Properties::Settings *mSettings;          ///<
     PluginType m_type;
     AbstractWindow *m_rootSurface;
     AbstractPlatformEventQueue *m_oseventHandler;
@@ -187,7 +181,7 @@ struct ApplicationContext {
     AbstractOSService *mAbstractOSService;
 
     ApplicationContext(const Properties::Settings *config);
-    ~ApplicationContext();
+    ~ApplicationContext() = default;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -197,19 +191,62 @@ struct ApplicationContext {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT PlatformInterface : public Common::AbstractService {
 public:
-    static PlatformInterface *create(const Properties::Settings *pConfiguration);
+    /// @brief Will create the platform service provider.
+    /// @param configuration   The configuration to use.
+    /// @return The new created service provider.
+    static PlatformInterface *create(const Properties::Settings *configuration);
+
+    /// @brief Will destroy the platform interface.
     static void destroy();
+
+    /// @brief Returns the only instance.
+    /// @return The only instance-
     static PlatformInterface *getInstance();
+
+    /// @brief Will return the type of plugin
+    /// @return The type of plugin
     static PluginType getOSPluginType();
+
+    /// @brief Will return the assigned name to a given plugin type.
+    /// @param type The plugin type.
+    /// @return The assigned name.
     static String getOSPluginName(PluginType type);
+
+    /// @brief Will return the root window.
+    /// @return The root window.
     AbstractWindow *getRootWindow() const;
+
+    /// @brief Will return the platform event handler.
+    /// @return The platform event handler.
     AbstractPlatformEventQueue *getPlatformEventHandler() const;
+    
+    /// @brief Will return the render context.
+    /// @return The render context.
     AbstractOGLRenderContext *getRenderContext() const;
+    
+    /// @brief Will return the timer.
+    /// @return The timer
     AbstractTimer *getTimer() const;
+    
+    /// @brief Will return the dynamic lib loader.
+    /// @return The dynamic lib loader.
     AbstractDynamicLoader *getDynamicLoader() const;
+    
+    /// @brief Will return the system info.
+    /// @return The system info.
     AbstractSystemInfo *getSystemInfo() const;
+    
+    /// @brief Will return special os-services.
+    /// @return The os-services.
     AbstractOSService *getOSServices() const;
+    
+    /// @brief Will return the name of the default font.
+    /// @return The name of the default font.
     const String &getDefaultFontName() const;
+
+    // No copying.
+    PlatformInterface(const PlatformInterface &) = delete;
+    PlatformInterface &operator=(const PlatformInterface &) = delete;
 
 protected:
     bool onOpen() override;
@@ -219,11 +256,10 @@ protected:
 
 private:
     explicit PlatformInterface(const Properties::Settings *configuration);
-    virtual ~PlatformInterface();
+    virtual ~PlatformInterface() override;
 
 private:
     static PlatformInterface *sInstance;
-
     ApplicationContext *mContext;
 };
 
