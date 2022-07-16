@@ -73,8 +73,10 @@ static void setColor4(const aiColor4D &aiCol, Color4 &col) {
 
 static void setTexture(const String &resolvedPath, const aiString &texPath, 
         TextureResourceArray &texResArray, TextureStageType stage) {
+    // Check for an embedded texture
     if (resolvedPath[0] == '*') {
-        
+        // todo!
+        return;
     }
     
     String texname;

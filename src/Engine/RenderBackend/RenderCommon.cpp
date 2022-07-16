@@ -29,7 +29,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Shader.h>
 #include <osre/Common/glm_common.h>
 
-#include "SOIL.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h" 
+//#include "SOIL.h"
 
 namespace OSRE {
 namespace RenderBackend {
@@ -338,11 +340,13 @@ size_t TextureLoader::load(const IO::Uri &uri, Texture *tex) {
     if (filename.find("$default") != String::npos) {
         tex = TextureLoader::getDefaultTexture();
     }
+
     String root = App::AssetRegistry::getPath("media");
     String path = App::AssetRegistry::resolvePathFromUri(uri);
 
     i32 width = 0, height = 0, channels = 0;
-    tex->m_data = SOIL_load_image(path.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
+    
+    tex->m_data = stbi_load(path.c_str(), &width, &height, &channels, 0);
     if (nullptr == tex->m_data) {
         osre_debug(Tag, "Cannot load texture " + filename);
         return 0;
@@ -395,7 +399,7 @@ bool TextureLoader::unload(Texture *tex) {
         return false;
     }
 
-    SOIL_free_image_data(tex->m_data);
+    stbi_image_free(tex->m_data);
     tex->m_data = nullptr;
     tex->m_width = 0;
     tex->m_height = 0;
@@ -408,10 +412,6 @@ TextureResource::TextureResource(const String &name, const IO::Uri &uri) :
         TResource(name, uri),
         m_targetType(TextureTargetType::Texture2D),
         m_stage(TextureStageType::TextureStage0) {
-    // empty
-}
-
-TextureResource::~TextureResource() {
     // empty
 }
 
