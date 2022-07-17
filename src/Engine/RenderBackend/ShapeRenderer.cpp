@@ -38,7 +38,7 @@ ShapeRenderer &ShapeRenderer::setShader(Shader *shader) {
     return *this;
 }
 
-ShapeRenderer &ShapeRenderer::renderRect(f32 x, f32 y, f32 w, f32 h, bool filled) {
+ShapeRenderer &ShapeRenderer::addRect(f32 x, f32 y, f32 w, f32 h, bool filled) {
     if (mMesh == nullptr) {
         mMesh = createMesh("shape");
         mDirtyMode = Created;

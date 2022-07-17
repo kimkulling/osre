@@ -95,5 +95,19 @@ TEST_F( PipelineTest, comparePipelinePasses_success ) {
     EXPECT_NE( *mPass1, *mPass2 );
 }
 
+TEST_F( PipelineTest, getPassByIndexTest ) {
+    Pipeline *pipeline = new Pipeline("p1");
+    pipeline->addPass(mPass1);    
+    pipeline->addPass(mPass2);
+
+    RenderPass *foundPass = pipeline->getPassById(mPass1->getId());
+    EXPECT_EQ(mPass1, foundPass);
+
+    foundPass = pipeline->getPassById(mPass2->getId());
+    EXPECT_EQ(mPass2, foundPass);
+
+    delete pipeline;
+}
+
 } // Namespace UnitTest
 } // Namespace OSRE
