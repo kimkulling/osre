@@ -67,6 +67,16 @@ void Pipeline::addPass(RenderPass *pass) {
     mPasses.add(pass);
 }
 
+RenderPass *Pipeline::getPassById(ui32 passId) const {
+    for (size_t i=0; i<mPasses.size(); i++) {
+        if (passId == mPasses[i]->getId()) {
+            return mPasses[i];
+        }
+    }
+    
+    return nullptr;
+}
+
 size_t Pipeline::getNumPasses() const {
     return mPasses.size();
 }
