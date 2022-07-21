@@ -50,10 +50,6 @@ Project::Project() :
     // empty
 }
 
-Project::~Project() {
-    // empty}
-}
-
 const c8 *Project::getExtension() {
     return Ext;
 }
@@ -78,9 +74,14 @@ Stage *Project::getStage() const {
     return mStage;
 }
 
-bool Project::load(const String &name) {
+bool Project::load(const String &name, Stage *stage) {
     if (name.empty()) {
         osre_warn(Tag, "Project name is empty.");
+        return false;
+    }
+
+    if (stage == nullptr) {
+        osre_fatal(Tag, "Stage container is a nullptr.");
         return false;
     }
 
@@ -174,7 +175,7 @@ static void storeNodes(Node *currentNode, NodeData *nd, size_t &index) {
     curNodeData.mNumChildren = (i32) currentNode->getNumChildren();
     curNodeData.mChildrenIndices = new i32[curNodeData.mNumChildren];
     size_t current_child = 0;
-    for (size_t i = 0; i < curNodeData.mNumChildren; i++) {
+    for (int i = 0; i < curNodeData.mNumChildren; i++) {
         Node *child = currentNode->getChildAt(i);
         curNodeData.mChildrenIndices[current_child] = (i32) i;
         current_child++;
@@ -278,7 +279,7 @@ static bool saveStage(const String &name, const Stage &stage, StageData *sd) {
     return result;
 }
 
-bool Project::save(const String &name) {
+bool Project::save(const String &name, const Stage *stage) {
     if (name.empty()) {
         return false;
     }
@@ -287,9 +288,10 @@ bool Project::save(const String &name) {
         return true;
     }
     
-    StageData *sd = new StageData;
-    
-    return saveStage(name, *mStage, sd);
+    StageData sd;
+    const bool result = saveStage(name, *mStage, &sd);
+
+    return result;
 }
 
 } // Namespace App

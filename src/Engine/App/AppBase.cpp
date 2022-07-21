@@ -21,11 +21,14 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
+#include <osre/Animation/AnimatorBase.h>
+
 #include <osre/App/AssetRegistry.h>
 #include <osre/App/ResourceCacheService.h>
 #include <osre/App/ServiceProvider.h>
 #include <osre/App/World.h>
-#include <osre/App//Stage.h>
+#include <osre/App/Stage.h>
+#include <osre/App/TransformController.h>
 #include <osre/Common/Environment.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/Debugging/osre_debugging.h>
@@ -51,85 +54,16 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
+using namespace ::OSRE::Animation;
 using namespace ::OSRE::IO;
 
 static const c8 *Tag = "AppBase";
-
-TransformController::TransformController(TransformMatrixBlock &tmb) :
-        mTransform(tmb) {
-    // empty
-}
-
-TransformController::~TransformController() {
-    // empty
-}
-
-TransformCommandType TransformController::getKeyBinding(Key key) {
-    switch (key) {
-        case Platform::KEY_A:
-            return TransformCommandType::RotateXCommandPositive;
-        case Platform::KEY_D:
-            return TransformCommandType::RotateXCommandNegative;
-        case Platform::KEY_W:
-            return TransformCommandType::RotateYCommandPositive;
-        case Platform::KEY_S:
-            return TransformCommandType::RotateYCommandNegative;
-        case Platform::KEY_Q:
-            return TransformCommandType::RotateZCommandPositive;
-        case Platform::KEY_E:
-            return TransformCommandType::RotateZCommandNegative;
-        case Platform::KEY_PLUS:
-            return TransformCommandType::ScaleInCommand;
-        case Platform::KEY_MINUS:
-            return TransformCommandType::ScaleOutCommand;
-        default:
-            break;
-    }
-
-    return TransformCommandType::InvalidCommand;
-}
-
-void TransformController::update(TransformCommandType cmdType) {
-    glm::mat4 rot(1.0);
-    if (cmdType == Scene::TransformCommandType::RotateXCommandPositive) {
-        mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
-    }
-
-    if (cmdType == Scene::TransformCommandType::RotateXCommandNegative) {
-        mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
-    }
-
-    if (cmdType == Scene::TransformCommandType::RotateYCommandPositive) {
-        mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
-    }
-
-    if (cmdType == Scene::TransformCommandType::RotateYCommandNegative) {
-        mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
-    }
-
-    if (cmdType == Scene::TransformCommandType::RotateZCommandNegative) {
-        mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 0, 1));
-    }
-
-    if (cmdType == Scene::TransformCommandType::RotateZCommandPositive) {
-        mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 0, 1));
-    }
-
-    glm::mat4 scale(1.0);
-    if (cmdType == Scene::TransformCommandType::ScaleInCommand) {
-        mTransform.m_model *= glm::scale(scale, glm::vec3(1.01, 1.01, 1.01));    
-    }
-
-    if (cmdType == Scene::TransformCommandType::ScaleOutCommand) {
-        mTransform.m_model *= glm::scale(scale, glm::vec3(0.99, 0.99, 0.99));
-    }
-}
 
 AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
         mAppState(State::Uninited),
         m_argParser(argc, argv, supportedArgs, desc),
         m_environment(nullptr),
-        m_settings(nullptr),
+        m_settings(new Properties::Settings),
         m_platformInterface(nullptr),
         m_timer(nullptr),
         m_rbService(nullptr),
@@ -139,7 +73,6 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         m_keyboardEvListener(nullptr),
         m_ids(nullptr),
         m_shutdownRequested(false) {
-    m_settings = new Properties::Settings;
     m_settings->setString(Properties::Settings::RenderAPI, "opengl");
     m_settings->setBool(Properties::Settings::PollingMode, true);
 }
@@ -178,7 +111,10 @@ bool AppBase::create(Properties::Settings *config) {
 }
 
 bool AppBase::destroy() {
-    return onDestroy();
+    if (mAppState == State::Created || mAppState == State::Running) {
+        return onDestroy();
+    }
+    return false;
 }
 
 void AppBase::update() {
@@ -219,7 +155,7 @@ bool AppBase::handleEvents() {
         return false;
     }
 
-    bool result = m_platformInterface->update();
+    const bool result = m_platformInterface->update();
     if (shutdownRequested()) {
         return false;
     }
@@ -237,7 +173,7 @@ Scene::Camera *AppBase::setActiveCamera(Scene::Camera *view) {
         return nullptr;
     }
 
-    World *activeWorld = getStage()->getActiveWorld();
+    World *activeWorld = mStage->getActiveWorld();
     if (activeWorld == nullptr) {
         return nullptr;
     }
@@ -409,6 +345,12 @@ bool AppBase::onDestroy() {
 
     delete m_ids;
     m_ids = nullptr;
+
+    delete m_mouseEvListener;
+    m_mouseEvListener = nullptr;
+
+    delete m_keyboardEvListener;
+    m_keyboardEvListener = nullptr;
 
     osre_debug(Tag, "Set application state to destroyed.");
     mAppState = State::Destroyed;

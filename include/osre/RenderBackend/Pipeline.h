@@ -37,7 +37,7 @@ class RenderBackendService;
 using CPPCore::TArray;
 
 namespace DefaultPipelines {
-    static const c8 *Pipeline_Default = "pipeline.default";
+    OSRE_EXPORT const c8 *get_Pipeline_Default();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -69,6 +69,11 @@ public:
     /// @return The number of passes in the pipeline.
     size_t getNumPasses() const;
 
+    /// @brief Will searc for a given render pass described by its id.
+    /// @param passId The pass id to look for.
+    /// @return The pass or a nullptr if the id was not assigned to a pass.
+    RenderPass *getPassById(ui32 passId) const;
+
     /// @brief  Will begin the frame-rendering in the current pipeline.
     /// @return The number of render-passes within the pipeline.
     /// @note   Use this to loop over all render-passes.
@@ -76,7 +81,7 @@ public:
 
     /// @brief  Will begin the rendering for a given render-pass.
     /// @param  passId  The render-pass id.
-    /// @return ´Pointer showing to the render-pass. Will be a nullptr when no render-pass exists.
+    /// @return ï¿½Pointer showing to the render-pass. Will be a nullptr when no render-pass exists.
     RenderPass *beginPass(ui32 passId);
 
     /// @brief  Will end the current render-pass.

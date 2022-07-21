@@ -42,7 +42,7 @@ struct EnvVar {
 
     EnvVar(const String &key, int value);
     EnvVar(const String &key, const String &value);
-    ~EnvVar();
+    ~EnvVar() = default;
     Type getType() const;
 };
 
@@ -54,10 +54,6 @@ inline EnvVar::EnvVar(const String &key, int value) :
 inline EnvVar::EnvVar(const String &key, const String &value) :
         m_name(key), m_value() {
     m_value.setStdString(value);
-}
-
-inline EnvVar::~EnvVar() {
-    // empty
 }
 
 inline EnvVar::Type EnvVar::getType() const {
@@ -82,10 +78,10 @@ inline EnvVar::Type EnvVar::getType() const {
 class Environment {
 public:
     /// @brief  The class constructor.
-    Environment();
+    Environment() = default;
 
     ///	@brief  The class destructor.
-    ~Environment();
+    ~Environment() = default;
 
     /// @brief  Will search for a variable by its name.
     /// @param[in] var     The variable name.

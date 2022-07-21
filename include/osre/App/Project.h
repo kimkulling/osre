@@ -157,14 +157,14 @@ struct StageData {
 class OSRE_EXPORT Project : public Common::Object {
 public:
 	Project();
-	~Project();
+	~Project() = default;
     static const c8 *getExtension();
     void setProjectName(const String& projectName);
     const String& getProjectName() const;
     void setStage(Stage *stage);
     Stage *getStage() const;
-    bool load(const String& name);
-	bool save( const String &name);
+    bool load(const String &name, Stage *stage);
+    bool save(const String &name, const Stage *stage);
 
 private:
     String mProjectName;

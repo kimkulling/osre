@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -35,7 +35,6 @@ struct SceneData {
     String AssetName;
     Scene::Node::NodePtr m_modelNode;
     Scene::Camera *mCamera;
-    App::World *mWorld;
 
     SceneData();
 };
@@ -45,8 +44,7 @@ inline SceneData::SceneData() :
         ProjectName("none"),
         AssetName("none"),
         m_modelNode(),
-        mCamera(nullptr),
-        mWorld(nullptr) {
+        mCamera(nullptr) {
     // empty
 }
 

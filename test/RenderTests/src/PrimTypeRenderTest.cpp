@@ -88,8 +88,6 @@ public:
         indices[4] = 2;
         indices[5] = 0;
 
-        static ui32 NumGeo(2);
-
         MeshBuilder meshBuilder;
         meshBuilder.allocPoints(VertexType::ColorVertex, BufferAccessType::ReadOnly, NumPoints, points, col);
         Mesh *ptMesh = meshBuilder.getMesh();

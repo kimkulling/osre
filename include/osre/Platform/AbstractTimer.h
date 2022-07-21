@@ -42,7 +42,7 @@ namespace Platform {
 class OSRE_EXPORT AbstractTimer : public Common::Object {
 public:
     ///	@brief	Destructor, virtual.
-    virtual ~AbstractTimer();
+    virtual ~AbstractTimer() = default;
 
     ///	@brief	Returns the milli-seconds since starting the application.
     ///	@return	Seconds past since starting the application.
@@ -62,24 +62,16 @@ protected:
     i64 getRequestedTimeStep() const;
 
 private:
-    i64 m_reqTimeSlice;
+    i64 mReqTimeSlice;
 };
 
-inline
-AbstractTimer::AbstractTimer( const String &name, i64 reqTimeSlice )
-: Object( name )
-, m_reqTimeSlice( reqTimeSlice ) {
+inline AbstractTimer::AbstractTimer(const String &name, i64 reqTimeSlice) :
+        Object( name ), mReqTimeSlice( reqTimeSlice ) {
     // empty
 }
 
-inline
-AbstractTimer::~AbstractTimer() {
-    // empty
-}
-
-inline
-i64 AbstractTimer::getRequestedTimeStep() const {
-    return m_reqTimeSlice;
+inline i64 AbstractTimer::getRequestedTimeStep() const {
+    return mReqTimeSlice;
 }
 
 } // Namespace Platform

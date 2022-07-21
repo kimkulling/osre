@@ -28,6 +28,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 #include <osre/Common/Logger.h>
 #include <osre/Platform/AbstractWindow.h>
+#include <assimp/Logger.hpp>
+#include <assimp/DefaultLogger.hpp>
+#include <assimp/LogStream.hpp>
 
 #include "richedit.h"
 #include "src/Engine/Platform/win32/Win32Window.h"
@@ -42,7 +45,7 @@ static const c8 *Tag = "LogModule";
 using namespace OSRE::Common;
 using namespace OSRE::App;
 using namespace OSRE::Platform;
-
+                                
 INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM lParam) {
     (void)lParam;
     switch (uMsg) {
@@ -53,26 +56,31 @@ INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM l
             int x = LOWORD(lParam);
             int y = HIWORD(lParam);
 
-            ::SetWindowPos(GetDlgItem(hWnd, IDC_EDIT1), nullptr, 0, 0,
+            ::SetWindowPos(GetDlgItem(hWnd, IDC_EDIT1), nullptr, 10, 10,
                     x - 10, y - 12, SWP_NOMOVE | SWP_NOZORDER);
 
             return TRUE;
         }
         case WM_CLOSE:
-            CloseWindow(hWnd);
+            ::CloseWindow(hWnd);
             return TRUE;
     };
 
     return FALSE;
 }
 
-static HWND initLogWindow(HINSTANCE hInstance) {
+static HWND initLogWindow(HINSTANCE hInstance, HWND hParent, const Rect2ui &rect) {
     HWND hwnd = ::CreateDialog(hInstance, MAKEINTRESOURCE(IDD_LOGVIEW),
-            nullptr, &LogDialogProc);
+            hParent, &LogDialogProc);
+    if (hwnd == nullptr) {
+        osre_error(Tag, "Cannot create log window.");
+        return nullptr;
+    }
 
+    ::MoveWindow(hwnd, rect.getX1() + 20, rect.getY2() - 300, rect.getX2() - rect.getX1() - 20, 280, TRUE);
     if (hwnd == nullptr) {
         auto err = Win32OSService::getLastErrorAsString();
-        osre_error(Tag, "Unable to create log window.");
+        osre_error(Tag, "Unable to create log window. Error : " + err);
         return nullptr;
     }
 
@@ -90,9 +98,7 @@ public:
         // empty
     }
 
-    ~LogView() override {
-        mText = "";
-    }
+    ~LogView() override = default;
 
     void clear() {
         mText.clear();
@@ -106,20 +112,19 @@ public:
     }
 
 protected:
-    void onCreate( Rect2ui rect ) override {
+    void onCreate(Rect2ui rect) override {
         Win32Window *w = (Win32Window *)mRootWindow;
         if (w == nullptr) {
             osre_error(Tag, "Cannot create log module view.");
             return;
         }
-
-        mLogWndHandle = initLogWindow(w->getModuleHandle());
-        if (mLogWndHandle != nullptr) {
-            ::ShowWindow(mLogWndHandle, SW_SHOW);
-            mRect = rect;
-        } else {
+        mLogWndHandle = initLogWindow(w->getModuleHandle(), w->getHWnd(), rect);
+        if (mLogWndHandle == nullptr) {
             osre_error(Tag, "Cannot create log module view.");
+            return;
         }
+        ::ShowWindow(mLogWndHandle, SW_SHOW);
+        mRect = rect;
     }
 
     void onUpdate() override {
@@ -142,12 +147,10 @@ public:
             AbstractLogStream(), mThreadId(999999), mLogView(lv) {
         osre_assert(mLogView != nullptr);
 
-        mThreadId = :: GetCurrentThreadId();
+        mThreadId = ::GetCurrentThreadId();
     }
 
-    ~LogStream() override {
-        mLogView = nullptr;
-    }
+    ~LogStream() override = default;
 
     void write(const String &rMessage) override {
         if (mThreadId == ::GetCurrentThreadId()) {
@@ -162,17 +165,36 @@ private:
     LogView *mLogView;
 };
 
+class AssimpLogStream : public Assimp::LogStream {
+public:
+    AssimpLogStream(LogView *logView) :
+            LogStream(), mLogView(logView) {
+        osre_assert(logView != nullptr);
+    }
+
+    ~AssimpLogStream() = default;
+
+    void write(const char *message) override {
+        String logMsg = String(message)+ " (Assimp)";
+        mLogView->addEntry(logMsg);
+    }
+
+private:
+    LogView *mLogView;
+};
+
 LogModule::LogModule(AppBase *parentApp) :
         ModuleBase("log.module", parentApp),
         mLogView(nullptr),
-        mLogStream(nullptr) {
+        mLogStream(nullptr),
+        mAssimpLogStream(nullptr) {
     // empty
 }
                 
 LogModule::~LogModule() {
     if (nullptr != mLogView) {
         osre_error(Tag, "LogModule not unloaded before release.");
-        delete mLogView;
+        onUnload();
     }
 }
 
@@ -190,6 +212,10 @@ bool LogModule::onLoad() {
     mLogStream = new LogStream(mLogView);
     Common::Logger::getInstance()->registerLogStream(mLogStream);
 
+    Assimp::DefaultLogger::create("log.txt");
+    mAssimpLogStream = new AssimpLogStream(mLogView);
+    Assimp::DefaultLogger::get()->attachStream(mAssimpLogStream);
+
     return true;
 }
 
@@ -197,8 +223,12 @@ bool LogModule::onUnload() {
     Logger::getInstance()->unregisterLogStream(mLogStream);
     delete mLogStream;
     mLogStream = nullptr;
+    Assimp::DefaultLogger::get()->detachStream(mAssimpLogStream);
+    delete mAssimpLogStream;
+    mAssimpLogStream = nullptr;
     delete mLogView;
     mLogView = nullptr;
+    Assimp::DefaultLogger::kill();
 
     return true;
 }

@@ -26,18 +26,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Platform/Windows/MinWindows.h>
+
 #include <Commctrl.h>
 
 namespace OSRE {
 
+namespace Platform {
+    class Win32Window;
+    class AbstractPlatformEventQueue;
+}
+
+namespace Editor {
+    class OsreEdApp;
+}
+
 struct ProgressBar;
-        
+struct TreeView;
+
 // OS-specific API
 class UIElements {
 public:
     static ProgressBar *createProgressBar(int id, HWND hWnd, const Rect2ui &dimension);
     static void updateProgressBar(ProgressBar *pb, ui32 step);
     static void deleteProgressBar(ProgressBar *pb);
+    static void createMenues(Platform::Win32Window *w, Editor::OsreEdApp *app, Platform::AbstractPlatformEventQueue *queue);
+    static TreeView *createTreeView(Platform::Win32Window *w);
 };
 
 struct Widget {
@@ -46,11 +59,38 @@ struct Widget {
     Rect2ui mRect;
 };
 
+struct PlatformData {
+    HWND mHWnd;
+};
+
 ///	@brief  The progress-bar data.
 struct ProgressBar : Widget {
     ui32 mRange;
     ui32 mCurrent;
-    HWND mHWnd;
+
+    PlatformData mPlatformData;
+};
+
+struct TreeItem {
+    using TreeItemArray = ::CPPCore::TArray<TreeItem *>;
+
+    String mName;
+    TreeItem *mParent;
+    TreeItemArray mChildren;
+
+    String generateName();
+    TreeItem();
+    void addChild(TreeItem *item);
+    size_t numChildren() const;
+    TreeItem *getParent() const;
+    PlatformData mPlatformData;
+
+};
+
+struct TreeView : Widget {
+    TreeItem *mRoot;
+
+    PlatformData mPlatformData;
 };
 
 struct Style {

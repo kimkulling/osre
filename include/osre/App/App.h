@@ -36,3 +36,4 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AssetRegistry.h>
 #include <osre/App/Stage.h>
 #include <osre/App/TAbstractCtrlBase.h>
+#include <osre/App/TransformController.h>

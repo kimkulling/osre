@@ -71,8 +71,8 @@ DbgRenderer *DbgRenderer::getInstance() {
     return sInstance;
 }
 
-c8 *DbgRenderer::getDebugRenderBatchName() {
-    static constexpr c8 *name = "dbgBatch";
+const c8 *DbgRenderer::getDebugRenderBatchName() {
+    static constexpr c8 name[] = "dbgBatch";
     return name;
 }
 

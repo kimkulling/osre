@@ -21,24 +21,55 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "Modules/InspectorModule/InspectorModule.h"
+#include <windows.h>
+#include <shellapi.h>
+#include <commctrl.h>
+#include "resource.h"
 
 namespace OSRE {
 namespace Editor {
 
 using namespace OSRE::App;
 
+class InspectorView : public IModuleView {
+public:
+    InspectorView() :
+            IModuleView("InspectorView"),
+            mRoot(nullptr) {
+        // empty
+    }
+
+    ~InspectorView() override = default;
+
+protected:
+    void onCreate(Rect2ui rect) override {
+    
+    }
+    void onUpdate() override {}
+    void onDestroy() override {}
+
+private:
+    HTREEITEM mRoot;
+};
+
 InspectorModule::InspectorModule(AppBase *parentApp) :
-        ModuleBase("inspector.module", parentApp) {
+        ModuleBase("inspector.module", parentApp),
+        mInspectorView(nullptr) {
+    // empty
 }
 
 InspectorModule::~InspectorModule() {
+    delete mInspectorView;
 }
 
 bool InspectorModule::onLoad() {
+    mInspectorView = new InspectorView;
     return true;
 }
 
 bool InspectorModule::onUnload() {
+    delete mInspectorView;
+    mInspectorView = nullptr;
     return true;
 }
 

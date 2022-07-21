@@ -22,50 +22,50 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/app/ModuleBase.h>
+#include <osre/Animation/AnimatorBase.h>
+#include <osre/Platform/PlatformCommon.h>
+#include <osre/Platform/KeyTypes.h>
 
 namespace OSRE {
 
-namespace Common {
-    class AbstractLogStream;    
+namespace RenderBackend {
+    struct TransformMatrixBlock;
 }
 
-namespace Editor {
+namespace App {
 
-class LogView;
-class AssimpLogStream;
+struct MouseInputState;
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup    Editor
+///	@ingroup	Engine
 ///
-/// @brief  This module implements the logic and the UI fr the log output.
+///	@brief  This class implements the default keyboard controlling.
 //-------------------------------------------------------------------------------------------------
-class LogModule : public App::ModuleBase {
+class OSRE_EXPORT TransformController : public Animation::AnimationControllerBase {
 public:
     /// @brief The class constructor.
-    /// @param[in] parentApp    The parent application.
-    LogModule(App::AppBase *parentApp);
+    /// @param tmb  The transform matrix block to control.
+    TransformController(RenderBackend::TransformMatrixBlock &tmb);
 
-    ///	@brief  The class destructor.
-    ~LogModule() override;
+    ///	@brief The class destructor.
+    ~TransformController() override = default;
 
-protected:
-    /// @brief The onLoad callback handler.
-    /// @return true if no error has occurred.
-    bool onLoad() override;
+    /// @brief Will return the command code from a key binding.
+    /// @param key  The key binding
+    /// @return The command code.
+    static Animation::TransformCommandType getKeyBinding(Platform::Key key);
 
-    /// @brief The onUnload callback handler.
-    /// @return true if no error has occurred.
-    bool onUnload() override;
+    /// @brief Will perform the mouse update.
+    /// @param mis  The mouse input state.
+    void getMouseUpdate(const MouseInputState &mis) override;
 
-    /// @brief The onUpdate callback handler, all log output will be written here.
-    void onUpdate() override;
+    /// @brief Will update the transformation.
+    /// @param cmdType  The command.
+    void update(Animation::TransformCommandType cmdType) override;
 
 private:
-    LogView *mLogView;
-    Common::AbstractLogStream *mLogStream;
-    AssimpLogStream *mAssimpLogStream;
+    RenderBackend::TransformMatrixBlock &mTransform;
 };
 
-} // namespace Editor
+} // namespace App
 } // namespace OSRE

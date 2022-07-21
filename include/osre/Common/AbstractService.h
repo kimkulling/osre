@@ -110,8 +110,7 @@ inline bool AbstractService::isOpen() {
     return mIsOpen;
 }
 
-inline
-bool AbstractService::update() {
+inline bool AbstractService::update() {
     if ( !isOpen() ) {
         osre_debug( getName(), "Cannot update, service not open." );
         return false;

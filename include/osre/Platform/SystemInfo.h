@@ -63,9 +63,6 @@ public:
     ///	@param	rMemInUse			[ out ] The memory in use in percent.
     static void getMemoryStatus( ui32 &rTotalPhysicMem, ui32 &rMemInUse );
 
-    ///	@brief	Returns the CPU info instance.
-    ///	@return	A pointer showing to the CPU info instance.
-    static CPUInfo *getCPUInfo();
 
     static bool registerThreadName( const ThreadId &id, const String &name );
     static bool unregisterThreadName( const ThreadId &id );
@@ -81,7 +78,6 @@ private:
 
 private:
     static bool m_IsInited;
-    static CPUInfo *m_pCPUInfo;
 
 #ifdef OSRE_WINDOWS
     typedef std::map<DWORD, String> ThreadNameMap;

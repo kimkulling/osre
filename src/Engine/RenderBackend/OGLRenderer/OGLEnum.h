@@ -66,8 +66,8 @@ public:
 
     OGLEnum() = delete;
     ~OGLEnum() = delete;
-    OGLEnum( const OGLEnum & ) = delete;
-    OGLEnum& operator = ( const OGLEnum & ) = delete;
+    OGLEnum(const OGLEnum &) = delete;
+    OGLEnum& operator = (const OGLEnum &) = delete;
 };
 
 } // Namespace RenderBackend
