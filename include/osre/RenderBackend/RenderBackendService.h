@@ -177,6 +177,9 @@ public:
     /// @param  eventData   [in] The event data.
     void sendEvent(const Common::Event *ev, const Common::EventData *eventData);
 
+
+    /// @brief  Will create the default render pipeline.
+    /// @return Pointer showing to the default render pipeline.
     Pipeline *createDefaultPipeline();
 
     /// @brief  Will create a new render pipeline.
@@ -254,10 +257,10 @@ protected:
     void commitNextFrame();
 
 private:
-    Threading::SystemTaskPtr m_renderTaskPtr;
-    const Properties::Settings *m_settings;
+    Threading::SystemTaskPtr mRenderTaskPtr;
+    const Properties::Settings *mSettings;
     Viewport mViewport;
-    bool m_ownsSettingsConfig;
+    bool mOwnsSettingsConfig;
     bool m_frameCreated;
     Frame m_frames[2];
     Frame *m_renderFrame;
