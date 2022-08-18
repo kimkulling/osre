@@ -72,7 +72,8 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
         m_mouseEvListener(nullptr),
         m_keyboardEvListener(nullptr),
         m_ids(nullptr),
-        m_shutdownRequested(false) {
+        m_shutdownRequested(false),
+        mOsreContext(nullptr) {
     m_settings->setString(Properties::Settings::RenderAPI, "opengl");
     m_settings->setBool(Properties::Settings::PollingMode, true);
 }

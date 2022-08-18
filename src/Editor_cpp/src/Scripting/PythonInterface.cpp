@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "PythonInterface.h"
 #include <osre/Common/Logger.h>
 #include <osre/App/Stage.h>
+#include <osre/App/App.h>
 
 #include "Actions/ImportAction.h"
 
@@ -35,6 +36,48 @@ namespace Editor {
 static const c8 *Tag = "PythonInterface";
 
 using namespace ::OSRE::App;
+
+OsreContext *sCurrentContext = nullptr;
+
+void setOsreContext( OsreContext *ctx ) {
+    sCurrentContext = ctx;
+}
+
+PyDoc_STRVAR(osre_app_create_doc, "ToDo.");
+static PyObject *osre_app_create(PyObject *self, PyObject *args, PyObject *keywds) {
+    static char *kwlist[] = { "app_name", NULL };
+    PyObject *appName = nullptr;
+    if (!PyArg_ParseTupleAndKeywords(args, keywds, "s", kwlist, &appName)) {
+        return nullptr;
+    }
+
+    OsreApp *app = new OsreApp("txt");
+
+    Py_RETURN_NONE;
+}
+
+PyDoc_STRVAR(osre_app_exit_doc, "ToDo.");
+static PyObject *osre_app_exit(PyObject *self, PyObject *args, PyObject *keywds) {
+    Py_RETURN_NONE;
+}
+
+static PyMethodDef osre_app_methods[] = {
+    { "create", (PyCFunction)osre_app_create, METH_VARARGS, "ToDo!" },
+    { "exit", (PyCFunction)osre_app_exit, METH_VARARGS, "ToDo!" },
+    { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static struct PyModuleDef osre_app_module = {
+    PyModuleDef_HEAD_INIT,
+    "osre.app", /* name of module */
+    NULL, /* module documentation, may be NULL */
+    -1, /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+    osre_app_methods
+};
+
+PyMODINIT_FUNC PyInit_osre_app() {
+    return PyModule_Create(&osre_app_module);
+}
 
 PyDoc_STRVAR(osre_project_new_doc, "ToDo.");
 static PyObject *osre_project_new(PyObject *self, PyObject *args, PyObject *keywds) {
@@ -129,6 +172,22 @@ bool PythonInterface::create(App::AppBase *app) {
     const wchar_t *program = L"osre_ed";
     Py_SetProgramName(program); /* optional but recommended */
     Py_Initialize();
+
+    PyObject *mod = nullptr;
+    mod = PyInit_osre_app();
+    if (mod == nullptr) {
+        osre_error(Tag, "Error while creating app-module.")
+    }
+
+    mod = PyInit_osre_project();
+    if (mod == nullptr) {
+        osre_error(Tag, "Error while creating project-module.")
+    }
+    mod = PyInit_osre_io();
+    if (mod == nullptr) {
+        osre_error(Tag, "Error while creating io-module.")
+    }
+
     mApp = app;
     mCreated = true;
 

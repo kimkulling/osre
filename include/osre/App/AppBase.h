@@ -101,6 +101,24 @@ private:
     char mKeymap[Platform::KEY_LAST];
 };
 
+struct OsreApp {
+    String mAppName;
+
+    OsreApp(const String &name) :
+            mAppName(name) {}
+};
+
+struct OsreContext {
+    OsreApp *mApp;
+
+    OsreContext(const String &name) :
+            mApp(new OsreApp(name)) {}
+
+    ~OsreContext() {
+        delete mApp;
+    }
+};
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -172,6 +190,8 @@ public:
     /// @return The global settings.
     virtual Properties::Settings *getSettings() const;
 
+    /// @brief Will return the current stage or nullptr if none is active.
+    /// @return The current stage or nullptr.
     virtual Stage *getStage() const;
 
     /// @brief  Will activate the given view in the active world instance.
@@ -219,6 +239,15 @@ public:
     /// @param  w       [out] The width.
     /// @param  height  [out] The width.
     virtual void getResolution(ui32 &w, ui32 &h);
+
+    virtual OsreContext *createContext( const String &name ) {
+        mOsreContext = new OsreContext(name);
+        return mOsreContext;
+    }
+
+    virtual OsreContext *getContext() const {
+        return mOsreContext;
+    }
 
     /// @brief  Will return the default transform controller.
     /// @param  type    [in] The requested controller type.
@@ -274,6 +303,7 @@ private:
     KeyboardEventListener *m_keyboardEvListener;
     Common::Ids *m_ids;
     bool m_shutdownRequested;
+    OsreContext *mOsreContext;
 };
 
 inline Stage *AppBase::getStage() const {

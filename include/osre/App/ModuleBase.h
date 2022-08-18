@@ -50,7 +50,7 @@ public:
     virtual App::AppBase *getParentApp() const;
 
 protected:
-    ModuleBase(const String &name, App::AppBase *parentApp);
+    ModuleBase(const String &name, AppBase *parentApp);
     virtual bool onLoad();
     virtual bool onUnload();
     virtual void onUpdate();

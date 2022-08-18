@@ -85,6 +85,7 @@ static void createTitleString(const SceneData &sd, String &titleString) {
 
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         AppBase(argc, (const char **)argv, "api", "The render API"),
+        mMainRenderView(nullptr),
         m_model(),
         m_transformMatrix(),
         mSceneData(),
@@ -102,13 +103,13 @@ bool OsreEdApp::onCreate() {
         return false;
     }
 
+    setupPythonInterface();
+
     mModuleRegistry.registerModule(new InspectorModule(this));
     mModuleRegistry.registerModule(new LogModule(this));
     
-
     setupUserInterface();
     setupRenderView();
-    setupPythonInterface();
 
     mTransformController = AppBase::getTransformController(m_transformMatrix);
 
