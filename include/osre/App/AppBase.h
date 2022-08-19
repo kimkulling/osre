@@ -111,8 +111,7 @@ struct OsreApp {
 struct OsreContext {
     OsreApp *mApp;
 
-    OsreContext(const String &name) :
-            mApp(new OsreApp(name)) {}
+    OsreContext(const String &name) : mApp(new OsreApp(name)) {}
 
     ~OsreContext() {
         delete mApp;
