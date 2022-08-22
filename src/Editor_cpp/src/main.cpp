@@ -25,38 +25,28 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <iostream>
 
-#include "windows.h"
-#include <commctrl.h>
-#include <windowsx.h>
+/*#include <commctrl.h>
+#include <windowsx.h>*/
+
+#include "Gui/UIElementsWin32.h"
 
 using namespace ::OSRE;
 using namespace ::OSRE::App;
 using namespace ::OSRE::Editor;
 using namespace ::OSRE::Platform;
 
-#include <osre/Platform/Windows/MinWindows.h>
 
-void getMonitorResolution(ui32 &width, ui32 &heigt) {
-#ifdef OSRE_WINDOWS
-    width = GetSystemMetrics(SM_CXSCREEN);
-    heigt = GetSystemMetrics(SM_CYSCREEN);
-#else
-    width = heigt = 0;
-#endif
-}
 
 int main(int argc, char *argv[]) {
     OsreEdApp app(argc, argv);
 
-    // needed for the RichEdit control in the about/help dialog
-    LoadLibrary("riched20.dll");
-    // load windows common controls library to get XP style
-    InitCommonControls();
-
+    if (!UIElementsWin32::init()) {
+        return -1;
+    }
 
     const ui32 Margin = 100;
     ui32 width = 0, height = 0;
-    getMonitorResolution(width, height);
+    UIElementsWin32::getMonitorResolution(width, height);
     if (!app.initWindow(10, 10, width - Margin, height - Margin, "OSRE-Ed", false, RenderBackendType::OpenGLRenderBackend)) {
         return 1;
     }

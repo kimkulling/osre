@@ -101,23 +101,6 @@ private:
     char mKeymap[Platform::KEY_LAST];
 };
 
-struct OsreApp {
-    String mAppName;
-
-    OsreApp(const String &name) :
-            mAppName(name) {}
-};
-
-struct OsreContext {
-    OsreApp *mApp;
-
-    OsreContext(const String &name) : mApp(new OsreApp(name)) {}
-
-    ~OsreContext() {
-        delete mApp;
-    }
-};
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -239,15 +222,6 @@ public:
     /// @param  height  [out] The width.
     virtual void getResolution(ui32 &w, ui32 &h);
 
-    virtual OsreContext *createContext( const String &name ) {
-        mOsreContext = new OsreContext(name);
-        return mOsreContext;
-    }
-
-    virtual OsreContext *getContext() const {
-        return mOsreContext;
-    }
-
     /// @brief  Will return the default transform controller.
     /// @param  type    [in] The requested controller type.
     /// @param  tmb     [in] The controlled transform block.
@@ -302,7 +276,6 @@ private:
     KeyboardEventListener *m_keyboardEvListener;
     Common::Ids *m_ids;
     bool m_shutdownRequested;
-    OsreContext *mOsreContext;
 };
 
 inline Stage *AppBase::getStage() const {
