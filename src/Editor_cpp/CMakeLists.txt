@@ -32,6 +32,8 @@ SET( modules_src
 )
 
 SET( gui_src
+    src/Gui/UIElementsWin32.h
+    src/Gui/UIElementsWin32.cpp
     src/Gui/UIElements.cpp
     src/Gui/UIElements.h
 )
