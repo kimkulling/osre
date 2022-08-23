@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -22,51 +22,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Object.h>
-
-#include <cppcore/Container/TArray.h>
+#include <osre/Common/osre_common.h>
+#include <osre/Platform/Windows/MinWindows.h>
 
 namespace OSRE {
-namespace App {
 
-class AppBase;
-class OsreEdApp;
-class IModuleView;
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup    Editor
-///
-/// @brief
-//-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT ModuleBase : public Common::Object {
+class UIElementsWin32 {
 public:
-    virtual ~ModuleBase();
-    virtual void setModulelView(IModuleView *view);
-    virtual IModuleView *getModuleView() const; 
-    virtual bool load();
-    virtual bool unload();
-    virtual void update();
-    virtual void render();
-    virtual App::AppBase *getParentApp() const;
-
-protected:
-    ModuleBase(const String &name, AppBase *parentApp);
-    virtual bool onLoad();
-    virtual bool onUnload();
-    virtual void onUpdate();
-    virtual void onRender();
+    static bool init();
+    static void getMonitorResolution(ui32 &width, ui32 &heigt);
 
 private:
-    enum class ModuleState {
-        Init,
-        Loaded,
-        Unloaded,
-        Error
-    } mState;
-    IModuleView *mView;
-    App::AppBase *mParentApp;
+    static bool sInited;
 };
 
-
-} // namespace Editor
 } // namespace OSRE

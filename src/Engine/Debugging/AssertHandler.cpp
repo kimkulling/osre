@@ -23,19 +23,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Debugging/AssertHandler.h>
 #include <osre/Common/Logger.h>
 
+#include <osre/Debugging/Debug.h>
+
 namespace OSRE {
 namespace Debugging {
         
-void handleFatal( const OSRE::String &file, int line, const OSRE::String &msg ) {
+void handleFatal( const String &file, int line, const OSRE::String &msg ) {
     ::OSRE::Common::fatalPrint( "Assertion", file, line, msg );
 }
 
-void handleAssert( const OSRE::String &file, int line, const char *msg ) {
+void handleAssert( const String &file, int line, const char *msg ) {
     handleFatal( file, line, msg );
-#ifdef OSRE_WINDOWS
-     ::__debugbreak();
-#endif
-    ::exit( 1 );
+    debugBreak();
+
+    ::exit(1);
 }
 
 } // Namespace Debugging

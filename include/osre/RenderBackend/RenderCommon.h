@@ -476,7 +476,7 @@ public:
     static RenderBackend::Texture *getDefaultTexture();
 };
 
-///	@brief
+///	@brief  This class is used to represent a texture resource.
 class OSRE_EXPORT TextureResource : public Common::TResource<Texture, TextureLoader> {
 public:
     TextureResource(const String &name, const IO::Uri &uri);

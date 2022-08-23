@@ -986,7 +986,7 @@ void OGLRenderBackend::setParameter(OGLParameter *param) {
         } break;
 
         case ParameterType::PT_Float2: {
-            GLfloat value[2];
+            GLfloat value[2] = {};
             ::memcpy(&value[0], param->m_data->getData(), sizeof(GLfloat) * 2);
             glUniform2f(param->m_loc, value[0], value[1]);
         } break;
@@ -996,7 +996,7 @@ void OGLRenderBackend::setParameter(OGLParameter *param) {
         } break;
 
         case ParameterType::PT_Float3: {
-            GLfloat value[3];
+            GLfloat value[3] = {};
             ::memcpy(&value[0], param->m_data->getData(), sizeof(GLfloat) * 3);
             glUniform3f(param->m_loc, value[0], value[1], value[2]);
         } break;
