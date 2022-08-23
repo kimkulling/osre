@@ -15,7 +15,7 @@ public:
     ~ShapeRenderer();
     ShapeRenderer &setColor(glm::vec4 color);
     ShapeRenderer &setShader(Shader *shader);
-    ShapeRenderer &renderRect(f32 x, f32 y, f32 w, f32 h, bool filled);
+    ShapeRenderer &addRect(f32 x, f32 y, f32 w, f32 h, bool filled);
     void commit();
 
 private:

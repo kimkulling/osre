@@ -175,7 +175,7 @@ static void storeNodes(Node *currentNode, NodeData *nd, size_t &index) {
     curNodeData.mNumChildren = (i32) currentNode->getNumChildren();
     curNodeData.mChildrenIndices = new i32[curNodeData.mNumChildren];
     size_t current_child = 0;
-    for (size_t i = 0; i < curNodeData.mNumChildren; i++) {
+    for (int i = 0; i < curNodeData.mNumChildren; i++) {
         Node *child = currentNode->getChildAt(i);
         curNodeData.mChildrenIndices[current_child] = (i32) i;
         current_child++;

@@ -69,6 +69,11 @@ public:
     /// @return The number of passes in the pipeline.
     size_t getNumPasses() const;
 
+    /// @brief Will searc for a given render pass described by its id.
+    /// @param passId The pass id to look for.
+    /// @return The pass or a nullptr if the id was not assigned to a pass.
+    RenderPass *getPassById(ui32 passId) const;
+
     /// @brief  Will begin the frame-rendering in the current pipeline.
     /// @return The number of render-passes within the pipeline.
     /// @note   Use this to loop over all render-passes.

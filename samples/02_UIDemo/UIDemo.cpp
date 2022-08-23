@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -23,14 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AppBase.h>
 #include <osre/App/AssetRegistry.h>
 #include <osre/Common/Logger.h>
-#include <osre/Platform/PlatformOperations.h>
-#include <osre/Properties/Settings.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/UI/ButtonBase.h>
-#include <osre/UI/Canvas.h>
-#include <osre/UI/Panel.h>
-#include <osre/UI/TextBase.h>
 
 using namespace ::OSRE;
 using namespace ::OSRE::RenderBackend;
