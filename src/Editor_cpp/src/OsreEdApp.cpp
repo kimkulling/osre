@@ -33,7 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/App/ModuleBase.h>
 #include <osre/App/App.h>
-#include <osre/Animation/AnimatorBase.h>B
+#include <osre/Animation/AnimatorBase.h>
 #include <osre/IO/Directory.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/File.h>
@@ -217,11 +217,11 @@ void OsreEdApp::quitEditorCmd(ui32, void *) {
     }
 }
 
-void OsreEdApp::gettingHelpCmd(ui32 cmdId, void *data) {
+void OsreEdApp::gettingHelpCmd(ui32, void *) {
     ::ShellExecute(nullptr, "open", "https://github.com/kimkulling/osre/issues", NULL, NULL, SW_SHOWNORMAL);
 }
 
-void OsreEdApp::showVersionCmd(ui32 cmdId, void *data) {
+void OsreEdApp::showVersionCmd(ui32, void*) {
     DlgResults res;
     PlatformOperations::getDialog("Version Info", "OSRE Version 0.0.1", PlatformOperations::DlgButton_ok, res);
 }
@@ -329,8 +329,13 @@ bool OsreEdApp::saveSceneData(const IO::Uri &filename, SceneData &sd) {
         return false;
     }
 
+    if (sd.AssetName.empty()) {
+        return false;
+    }
+
     Stream *stream = IOService::getInstance()->openStream(filename, Stream::AccessMode::WriteAccess);
     if (nullptr == stream) {
+        osre_error(Tag, "Cannot open file " + filename.getResource() + ".");
         return false;
     }
 
@@ -345,18 +350,19 @@ bool OsreEdApp::saveSceneData(const IO::Uri &filename, SceneData &sd) {
 }
 
 bool OsreEdApp::setupUserInterface() {
-    Win32Window *w = (Win32Window *)getRootWindow();
+    Win32Window *window = (Win32Window *)getRootWindow();
     AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
-    if (nullptr == w || nullptr == queue) {
+    if (nullptr == window || nullptr == queue) {
         return false;
     }
+
     String title;
     createTitleString(mSceneData, title);
     AppBase::setWindowsTitle(title);
 
-    UIElements::createMenues(w, this, queue);
-    w->createStatusBar(100, 4);
-    w->getWindowsRect(mResolution);
+    UIElements::createMenues(window, this, queue);
+    window->createStatusBar(100, 4);
+    window->getWindowsRect(mResolution);
 
     AppBase::getRenderBackendService()->enableAutoResizing(false);
 
