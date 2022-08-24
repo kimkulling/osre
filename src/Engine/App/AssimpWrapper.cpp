@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -58,9 +58,9 @@ using namespace ::OSRE::IO;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Scene;
 
-static const c8 *Tag = "AssimpWrapper";
+static constexpr c8 *Tag = "AssimpWrapper";
 
-const unsigned int DefaultImportFlags = aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices |
+constexpr unsigned int DefaultImportFlags = aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices |
                                         aiProcess_ImproveCacheLocality | aiProcess_LimitBoneWeights | aiProcess_RemoveRedundantMaterials |
                                         aiProcess_SplitLargeMeshes | aiProcess_Triangulate | aiProcess_GenUVCoords | aiProcess_SortByPType;
 
@@ -132,6 +132,7 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
         return false;
     }
 
+    // No flags, so use the default importer flags.
     if (0 == flags) {
         flags = DefaultImportFlags;
     }

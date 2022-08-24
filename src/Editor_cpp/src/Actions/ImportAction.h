@@ -27,6 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations ---------------------------------------------------------------------------
 namespace Common {
     class Ids;
 }
@@ -38,6 +39,11 @@ namespace App {
 
 namespace Editor {
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+///	@brief  This class will wrap the asset import command.
+//-------------------------------------------------------------------------------------------------
 class ImportAction : public ActionBase {
 public:
     ImportAction(Common::Ids *ids, App::World *activeWorld);
