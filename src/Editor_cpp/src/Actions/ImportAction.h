@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Actions/ActionBase.h"
+#include <osre/Common/osre_common.h>
 
 namespace OSRE {
 
@@ -34,6 +35,7 @@ namespace App {
     class World;
     class Entity;
 }
+
 namespace Editor {
 
 class ImportAction : public ActionBase {
@@ -41,7 +43,9 @@ public:
     ImportAction(Common::Ids *ids, App::World *activeWorld);
     ~ImportAction() override;
     App::Entity *getEntity() const;
-
+    ui32 getNumVertices() const;
+    ui32 getNumTriangles() const;
+    
 protected:
     bool onRun(const ArgumentList &args) override;
 
@@ -49,10 +53,19 @@ private:
     Common::Ids *mIds;
     App::World *mActiveWorld;
     App::Entity *mEntity;
+    ui32 mNumVertices, mNumTriangles;
 };
 
 inline App::Entity *ImportAction::getEntity() const {
     return mEntity;
+}
+
+inline ui32 ImportAction::getNumVertices() const {
+    return mNumVertices;
+}
+
+inline ui32 ImportAction::getNumTriangles() const {
+    return mNumTriangles;
 }
 
 } // namespace Editor

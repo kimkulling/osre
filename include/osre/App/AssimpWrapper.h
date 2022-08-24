@@ -81,6 +81,7 @@ public:
     ~AssimpWrapper();
     bool importAsset( const IO::Uri &file, ui32 flags );
     Entity *getEntity() const;
+    void getStatistics(ui32 &numVertices, ui32 &numTriangles);
 
 protected:
     Entity *convertScene();
@@ -105,7 +106,8 @@ private:
         String mRoot;
         String mAbsPathWithFile;
         Bone2NodeMap mBone2NodeMap;
-
+        ui32 mNumVertices;
+        ui32 mNumTriangles;
         AssetContext(Common::Ids &ids, World *world);
         ~AssetContext();
 

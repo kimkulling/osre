@@ -120,7 +120,7 @@ bool OsreEdApp::onCreate() {
     return true;
 }
 
-void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
+void OsreEdApp::loadAsset(const Uri &modelLoc) {
     Platform::AbstractWindow *rootWindow = getRootWindow();
     if (nullptr == rootWindow) {
         return;
@@ -164,7 +164,8 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     createTitleString(mSceneData, title);
     rootWindow->setWindowsTitle(title);
 
-    setStatusBarText("View", mSceneData.AssetName, 1, 1);
+    
+    setStatusBarText("View", mSceneData.AssetName, action.getNumVertices(), action.getNumTriangles());
     reporter.update(70);
     reporter.stop();
 }

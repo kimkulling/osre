@@ -106,7 +106,9 @@ AssimpWrapper::AssetContext::AssetContext(Common::Ids &ids, World *world) :
         mIds(ids),
         mRoot(),
         mAbsPathWithFile(),
-        mBone2NodeMap() {
+        mBone2NodeMap(),
+        mNumVertices(0),
+        mNumTriangles(0) {
     // empty
 }
  
@@ -161,6 +163,11 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
 
 Entity *AssimpWrapper::getEntity() const {
     return mAssetContext.mEntity;
+}
+
+void AssimpWrapper::getStatistics( ui32 &numVertices, ui32 &numTriangles ) {
+    numVertices = mAssetContext.mNumVertices;
+    numTriangles = mAssetContext.mNumTriangles;
 }
 
 Entity *AssimpWrapper::convertScene() {
@@ -308,6 +315,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
 
             for (ui32 k = 0; k < currentMesh->mNumVertices; ++k) {
                 if (currentMesh->HasPositions()) {
+                    mAssetContext.mNumVertices++;
                     const aiVector3D &vec3 = currentMesh->mVertices[k];
                     vertices[vertexOffset].position.x = vec3.x;
                     vertices[vertexOffset].position.y = vec3.y;
@@ -377,6 +385,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
 
             for (ui32 faceIdx = 0; faceIdx < currentMesh->mNumFaces; ++faceIdx) {
                 aiFace &currentFace = currentMesh->mFaces[faceIdx];
+                mAssetContext.mNumTriangles++;
                 for (ui32 idx = 0; idx < currentFace.mNumIndices; ++idx) {
                     const ui32 currentIndex = currentFace.mIndices[idx];
                     indexArray.add(static_cast<ui32>(currentIndex + indexOffset));
@@ -390,7 +399,6 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
 
             const size_t ibSize = sizeof(ui32) * indexArray.size();
             newMesh.createIndexBuffer(&indexArray[0], ibSize, IndexType::UnsignedInt, BufferAccessType::ReadOnly);
-            //            Debugging::MeshDiagnostic::dumpIndices( indexArray );
 
             newMesh.addPrimitiveGroup(indexArray.size(), PrimitiveType::TriangleList, 0);
 
@@ -405,8 +413,6 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
         delete it.second;
     }
     mat2MeshMap.clear();
-
-    //GeometryDiagnosticUtils::dumVertices( vertices, numVertices );
 }
 
 void AssimpWrapper::importNode(aiNode *node, Scene::Node *parent) {
@@ -524,8 +530,6 @@ void AssimpWrapper::importSkeletons( aiSkeleton *skeletons, size_t numSkeletons)
             if (mesh == nullptr) {
                 continue;
             }
-
-
         }
     }
 }

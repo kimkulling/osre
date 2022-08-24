@@ -40,7 +40,9 @@ ImportAction::ImportAction(Ids *ids, World *activeWorld) :
         ActionBase(), 
         mIds(ids),
         mActiveWorld(activeWorld),
-        mEntity(nullptr) {
+        mEntity(nullptr),
+        mNumVertices(0),
+        mNumTriangles(0) {
     // empty
 }
 
@@ -70,6 +72,7 @@ bool ImportAction::onRun(const ArgumentList &args) {
     if (!assimpWrapper.importAsset(loc, 0)) {
         return false;
     }
+    assimpWrapper.getStatistics(mNumVertices, mNumTriangles);
     mEntity = assimpWrapper.getEntity();
     
     return (mEntity != nullptr);
