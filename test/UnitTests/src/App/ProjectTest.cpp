@@ -29,6 +29,7 @@ namespace OSRE {
 namespace UnitTest {
     
 using namespace ::OSRE::App;
+using namespace ::OSRE::Scene;
 using namespace ::OSRE::IO;
 
 class ProjectTest : public ::testing::Test {
@@ -44,6 +45,40 @@ TEST_F(ProjectTest, createTest) {
         ok = false;
     }
     EXPECT_TRUE(ok);
+}
+
+TEST_F( ProjectTest, accessAssetTests ) {
+    Project myProject;
+    EXPECT_EQ(0u, myProject.getNumAssets());
+    
+    myProject.addAsset("model1");
+    EXPECT_EQ(1u, myProject.getNumAssets());
+    myProject.addAsset("model1");
+    EXPECT_EQ(1u, myProject.getNumAssets());
+
+    myProject.addAsset("model2");
+    EXPECT_EQ(2u, myProject.getNumAssets());
+
+    for (size_t i = 0; i < myProject.getNumAssets(); i++) {
+        String name = myProject.getAssetAt(i);
+        EXPECT_FALSE(name.empty());
+    }
+
+    bool ok = myProject.removeAsset("model2");
+    EXPECT_TRUE(ok);
+
+    ok = myProject.removeAsset("model2");
+    EXPECT_FALSE(ok);
+    EXPECT_EQ(1u, myProject.getNumAssets());
+}
+
+TEST_F( ProjectTest, accessStageTest ) {
+    Stage stage("test");
+    Project myProject;
+    EXPECT_EQ(nullptr, myProject.getStage());
+
+    myProject.setStage(&stage);
+    EXPECT_NE(nullptr, myProject.getStage());
 }
 
 TEST_F(ProjectTest, loadsaveTest) {

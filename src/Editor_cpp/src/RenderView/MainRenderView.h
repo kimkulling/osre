@@ -56,6 +56,7 @@ public:
     static void createRect2D(const Rect2ui &r, RenderBackend::Mesh *mesh2D, Style &style);
     static void createBonesFromSkeleton(Animation::Skeleton *skeleton);
     void createEditorElements(App::RenderComponent *rc);
+    void render(RenderBackend::RenderBackendService *rbSrb, glm::mat4 model);
 
 private:
     RenderBackend::MeshArray mEditorElements;

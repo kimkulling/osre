@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Actions/ActionBase.h"
-#include <osre/Common/osre_common.h>
 
 namespace OSRE {
 

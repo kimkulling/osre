@@ -75,12 +75,19 @@ static const ui32 VerticalMargin = 2;
 
 static const c8 *Tag = "OsreApp";
 
-static void createTitleString(const SceneData &sd, String &titleString) {
+static void createTitleString(const String &projectName, String &titleString) {
     titleString.clear();
     titleString += "OSRE ED!";
 
     titleString += " Project: ";
-    titleString += sd.ProjectName;
+    titleString += projectName;
+}
+
+static Project *createProject(const String &name) {
+    Project *project = new App::Project();
+    project->setProjectName(name);
+
+    return project;
 }
 
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
@@ -150,6 +157,9 @@ void OsreEdApp::loadAsset(const Uri &modelLoc) {
     Rect2ui windowsRect;
     rootWindow->getWindowsRect(windowsRect);
     World *world = getStage()->getActiveWorld();
+    if (mProject == nullptr) {
+        mProject = createProject(modelLoc.getAbsPath());
+    }
     mSceneData.mCamera = world->addCamera("camera_1");
     mSceneData.mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
     Entity *entity = action.getEntity();
@@ -159,27 +169,27 @@ void OsreEdApp::loadAsset(const Uri &modelLoc) {
     mSceneData.mCamera->observeBoundingBox(entity->getAABB());
     mSceneData.m_modelNode = entity->getNode();
 
-    mSceneData.AssetName = modelLoc.getResource();
+    String asset = modelLoc.getResource();
+    mProject->addAsset(asset);
     String title;
-    createTitleString(mSceneData, title);
+    createTitleString(mProject->getProjectName(), title);
     rootWindow->setWindowsTitle(title);
 
     
-    setStatusBarText("View", mSceneData.AssetName, action.getNumVertices(), action.getNumTriangles());
+    setStatusBarText("View", mProject->getProjectName(), action.getNumVertices(), action.getNumTriangles());
     reporter.update(70);
     reporter.stop();
 }
 
 void OsreEdApp::newProjectCmd(ui32, void *data) {
-    mProject = new App::Project();
     std::string name = "New project";
     if (data != nullptr) {
         CPPCore::Variant *v = (CPPCore::Variant*)data;
         name = v->getString();
     }
-    mProject->setProjectName(name);
+    mProject = createProject(name);
     String title = mProject->getProjectName();
-    createTitleString(mSceneData, title);
+    createTitleString(mProject->getProjectName(), title);
     AppBase::setWindowsTitle(title);
 }
 
@@ -274,16 +284,9 @@ void OsreEdApp::onUpdate() {
     }
     transformCmds.clear();
     RenderBackendService *rbSrv = getRenderBackendService();
-
-    rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
-    rbSrv->beginRenderBatch("b1");
-
-    rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
-    
     mModuleRegistry.update();
     
-    rbSrv->endRenderBatch();
-    rbSrv->endPass();
+    mMainRenderView->render(rbSrv, m_transformMatrix.m_model);
 
     AppBase::onUpdate();
 }
@@ -329,10 +332,6 @@ bool OsreEdApp::saveSceneData(const IO::Uri &filename, SceneData &sd) {
         return false;
     }
 
-    if (sd.AssetName.empty()) {
-        return false;
-    }
-
     Stream *stream = IOService::getInstance()->openStream(filename, Stream::AccessMode::WriteAccess);
     if (nullptr == stream) {
         osre_error(Tag, "Cannot open file " + filename.getResource() + ".");
@@ -356,8 +355,14 @@ bool OsreEdApp::setupUserInterface() {
         return false;
     }
 
-    String title;
-    createTitleString(mSceneData, title);
+    String title, projectName;
+    if (mProject == nullptr) {
+        projectName = "None";
+    } else {
+        projectName = mProject->getProjectName();
+    }
+
+    createTitleString(projectName, title);
     AppBase::setWindowsTitle(title);
 
     UIElements::createMenues(window, this, queue);
@@ -370,8 +375,20 @@ bool OsreEdApp::setupUserInterface() {
 }
 
 bool OsreEdApp::setupRenderView() {
+    if (mMainRenderView != nullptr) {
+        osre_error(Tag, "Renderview already initiated.");
+        return false;
+    }
+
+    Stage *stage = getStage();
+    if (stage == nullptr) {
+        osre_error(Tag, "Stage is nullptr.");
+        return false;
+    }
+    
     World *world = getStage()->getActiveWorld();
     if (nullptr == world) {
+        osre_error(Tag, "World is nullptr.");
         return false;
     }
 
