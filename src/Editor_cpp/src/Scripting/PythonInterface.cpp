@@ -21,11 +21,12 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "PythonInterface.h"
+#include "Actions/ImportAction.h"
+
 #include <osre/Common/Logger.h>
 #include <osre/App/Stage.h>
 #include <osre/App/App.h>
-
-#include "Actions/ImportAction.h"
+#include <osre/app/Project.h>
 
 #include <Python.h>
 #include <structmember.h> // defines a python class in C++
@@ -35,12 +36,15 @@ namespace Editor {
 
 static const c8 *Tag = "PythonInterface";
 
+using namespace ::OSRE::Common;
 using namespace ::OSRE::App;
 
 typedef struct Osre_Project {
-    String mProjectName;
-} Osre_App;
-
+    Stage *mStage;
+    Project *mProject;
+} Osre_Project;
+        
+Osre_Project *gActiceProject = nullptr;
 PyTypeObject Osre_project_Type;
 
 PyDoc_STRVAR(osre_project_new_doc, "ToDo.");
@@ -51,38 +55,68 @@ static PyObject *osre_project_new(PyObject *self, PyObject *args, PyObject *keyw
         return nullptr;
     }
 
-    Osre_Project *obj = PyObject_New(Osre_Project, &Osre_project_Type);
-    if (obj == nullptr) {
+    gActiceProject = PyObject_New(Osre_Project, &Osre_project_Type);
+    if (gActiceProject == nullptr) {
         return nullptr;
     }
 
-    obj->mProjectName = projectName;
+    gActiceProject->mProject = new Project();
+    gActiceProject->mProject->setProjectName(projectName);
 
-    return (PyObject *)obj;
+    Py_RETURN_NONE;
 }
 
-PyDoc_STRVAR(osre_project_new_load, "ToDo.");
+PyDoc_STRVAR(osre_project_load_doc, "ToDo.");
 static PyObject *osre_project_load(PyObject *self, PyObject *args, PyObject *keywds) {
-    static char *kwlist[] = { "project_name", NULL };
-    char *projectName = nullptr;
-    if (!PyArg_ParseTupleAndKeywords(args, keywds, "s", kwlist, &projectName)) {
+    static char *kwlist[] = { "project_file", NULL };
+    char *project_file = nullptr;
+    if (!PyArg_ParseTupleAndKeywords(args, keywds, "s", kwlist, &project_file)) {
         return nullptr;
     }
-    Osre_Project *obj = PyObject_New(Osre_Project, &Osre_project_Type);
-    if (obj == nullptr) {
-        return nullptr;
+    
+    if (gActiceProject == nullptr) {
+        gActiceProject = PyObject_New(Osre_Project, &Osre_project_Type);
+        if (gActiceProject == nullptr) {
+            return nullptr;
+        }
+    }
+
+    gActiceProject->mProject = new Project();
+    if (!gActiceProject->mProject->load(project_file, gActiceProject->mStage)) {
+        osre_error(Tag, "Error while loading project file " + String(project_file));
     }
 
     Py_RETURN_NONE;
 }
 
-PyDoc_STRVAR(osre_project_new_save, "ToDo.");
+PyDoc_STRVAR(osre_project_save_doc, "ToDo.");
 static PyObject *osre_project_save(PyObject *self, PyObject *args, PyObject *keywds) {
+    static char *kwlist[] = { "project_file", NULL };
+    char *project_file = nullptr;
+    if (!PyArg_ParseTupleAndKeywords(args, keywds, "s", kwlist, &project_file)) {
+        return nullptr;
+    }
+    if (gActiceProject == nullptr) {
+        return nullptr;
+    }
+
+    if (!gActiceProject->mProject->save(project_file, gActiceProject->mStage)) {
+        osre_error(Tag, "Error while saving project file " + String(project_file));
+    }
+
     Py_RETURN_NONE;
 }
 
-PyDoc_STRVAR(osre_project_new_close, "ToDo.");
+PyDoc_STRVAR(osre_project_close_doc, "ToDo.");
 static PyObject *osre_project_close(PyObject *self, PyObject *args, PyObject *keywds) {
+    if (gActiceProject==nullptr) {
+        return nullptr;
+    }
+    if (gActiceProject->mProject) {
+        delete gActiceProject->mProject;
+        gActiceProject->mProject = nullptr;
+    }
+
     Py_RETURN_NONE;
 }
 
