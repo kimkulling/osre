@@ -44,10 +44,10 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    const ui32 Margin = 100;
+    const ui32 Margin = 10;
     ui32 width = 0, height = 0;
     UIElementsWin32::getMonitorResolution(width, height);
-    if (!app.initWindow(10, 10, width - Margin, height - Margin, "OSRE-Ed", false, RenderBackendType::OpenGLRenderBackend)) {
+    if (!app.initWindow(Margin, Margin, width - Margin, height - Margin, "OSRE-Ed", false, RenderBackendType::OpenGLRenderBackend)) {
         return 1;
     }
 

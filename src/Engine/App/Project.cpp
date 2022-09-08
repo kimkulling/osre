@@ -45,6 +45,7 @@ static const c8 *Ext = "osre";
 
 Project::Project() :
         Object("App/Project"),
+        mProjectDirtyState(0),
         mProjectName(),
         mStage(nullptr) {
     // empty
@@ -112,6 +113,9 @@ void Project::setStage( Stage *stage ) {
 
 Stage *Project::getStage() const {
     return mStage;
+}
+
+void Project::clear() {
 }
 
 bool Project::load(const String &name, Stage *stage) {

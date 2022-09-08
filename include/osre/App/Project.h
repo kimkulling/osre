@@ -26,6 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Scene/SceneCommon.h>
 #include <osre/App/Stage.h>
 
+#include <cppcore/Common/TBitField.h>
+
 // Forward declarations ---------------------------------------------------------------------------
 namespace OSRE {
 namespace App {
@@ -33,6 +35,7 @@ namespace App {
 class World;
 
 constexpr i32 NotInited = -1;
+static constexpr ui32 ProjectDirty = 1;
 
 struct Chunk {
     i32 mSize;
@@ -161,7 +164,9 @@ struct StageData {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Project : public Common::Object {
 public:
-	/// @brief The default class constructor.
+    using ProjectDirtyState = CPPCore::TBitField<ui32>;
+
+    /// @brief The default class constructor.
 	Project();
 
     ///	@brief  The class destructor.
@@ -205,6 +210,13 @@ public:
     /// @return The assigned stage or nullptr.
     Stage *getStage() const;
     
+    /// @brief Will return true, if the project needs to get saved.
+    /// @return true for dirty.
+    bool dataNeedsSave() const;
+
+    /// @brief Will clear the project data.
+    void clear();
+
     /// @brief Will load the project file from IO.
     /// @param[in] name     The URI to load from.
     /// @param stage        The stage to load in.
@@ -218,10 +230,15 @@ public:
     bool save(const String &name, const Stage *stage);
 
 private:
+    ProjectDirtyState mProjectDirtyState;
     String mProjectName;
     Stage *mStage;
     StringArray mAssetArray;
 };
+
+inline bool Project::dataNeedsSave() const {
+    return mProjectDirtyState.getBit(ProjectDirty);
+}
 
 } // Namespace App
 } // Namespace OSRE

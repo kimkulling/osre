@@ -322,6 +322,13 @@ bool OsreEdApp::loadSceneData(const IO::Uri &filename, SceneData&) {
         return false;
     }
 
+    if (mProject != nullptr) {
+        if (mProject->dataNeedsSave()) {
+            // ToDo: Add dialog
+        }
+        mProject->clear();
+    }
+
     stream->close();
 
     return true;
