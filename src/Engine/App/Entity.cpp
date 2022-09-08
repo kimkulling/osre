@@ -66,6 +66,9 @@ Node *Entity::getNode() const {
 }
 
 bool Entity::preprocess() {
+    if (m_renderComponent != nullptr) {
+        m_renderComponent->preprocess();
+    }
     return true;
 }
 
@@ -84,6 +87,9 @@ bool Entity::render(RenderBackend::RenderBackendService *rbSrv) {
 }
 
 bool Entity::postprocess() {
+    if (m_renderComponent != nullptr) {
+        m_renderComponent->postprocess();
+    }
     return true;
 }
 
@@ -110,6 +116,15 @@ void Entity::setAABB(const AABB &aabb) {
 const AABB &Entity::getAABB() const {
     return m_aabb;
 }
+
+void Entity::serialize( IO::Stream *stream ) {
+    osre_assert(stream != nullptr);
+}
+
+void Entity::deserialize( IO::Stream *stream ) {
+    osre_assert(stream != nullptr);
+}
+
 
 } // Namespace App
 } // Namespace OSRE
