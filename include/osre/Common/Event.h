@@ -40,33 +40,6 @@ struct EventData;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///
-///	@brief	An object id, stores the hash id coing from a name as a string.
-//-------------------------------------------------------------------------------------------------
-struct ObjectId {
-    String m_id;
-    HashId m_hash;
-
-    /// @brief  The class constructor.
-    /// @param  id  [in] The object name.
-    ObjectId(const String &id) :
-            m_id(id), m_hash(0) {
-        m_hash = StringUtils::hashName(m_id.c_str());
-    }
-
-    /// @brief  The class destructor.
-    ~ObjectId() {
-        // empty
-    }
-
-    /// @brief  The hash value getter.
-    HashId getHash() const {
-        return m_hash;
-    }
-};
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup    Engine
-///
 ///	@brief	Event type declaration helper macro. This is a shortcut to define global events like
 ///	windows messages.
 //-------------------------------------------------------------------------------------------------
