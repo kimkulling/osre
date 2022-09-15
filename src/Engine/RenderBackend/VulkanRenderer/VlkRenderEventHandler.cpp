@@ -121,14 +121,11 @@ bool VlkRenderEventHandler::onCreateRenderer( const Common::EventData * ) {
         return false;
     }
     
-    if ( !m_vlkBackend->recordCommandBuffers() ) {
-        return false;
-    }
-
     return true;
 }
 
 bool VlkRenderEventHandler::onDestroyRenderer( const Common::EventData * ) {
+    m_vlkBackend->de
     delete m_vlkBackend;
     m_vlkBackend = nullptr;
 

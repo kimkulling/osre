@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -147,6 +147,7 @@ using guid = ui64;
 /// @brief  The data type for strings
 using String = std::string;
 
+/// @brief The data type for an array of strings.
 using StringArray = ::CPPCore::TArray<String>;
 
 /// @brief  A handle struct.
@@ -189,15 +190,9 @@ struct Time {
     i64 asMicroSeconds() const;
 };
 
-inline Time::Time() :
-        m_microseconds(0) {
-    // empty
-}
+inline Time::Time() : m_microseconds(0) {}
 
-inline Time::Time(i64 microseconds) :
-        m_microseconds(microseconds) {
-    // empty
-}
+inline Time::Time(i64 microseconds) : m_microseconds(microseconds) {}
 
 inline f32 Time::asSeconds() const {
     return m_microseconds / 1000000.f;
@@ -481,9 +476,7 @@ template <class T>
 struct TResolution {
     T Width, Height;
 
-    TResolution(T w, T h) :
-            Width(w),
-            Height(h) {
+    TResolution(T w, T h) : Width(w), Height(h) {
         // empty
     }
 
@@ -517,9 +510,7 @@ struct Version {
     i32 mMajor;
     i32 mMinor;
 
-    Version(i32 major, i32 minor) :
-            mMajor(major),
-            mMinor(minor) {
+    Version(i32 major, i32 minor) : mMajor(major), mMinor(minor) {
         // empty
     }
 

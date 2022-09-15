@@ -21,21 +21,15 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "OsreEdApp.h"
+#include "Gui/UIElementsWin32.h"
+
 #include <osre/Platform/AbstractOSService.h>
 #include <osre/Platform/PlatformInterface.h>
-#include <iostream>
-
-/*#include <commctrl.h>
-#include <windowsx.h>*/
-
-#include "Gui/UIElementsWin32.h"
 
 using namespace ::OSRE;
 using namespace ::OSRE::App;
 using namespace ::OSRE::Editor;
 using namespace ::OSRE::Platform;
-
-
 
 int main(int argc, char *argv[]) {
     OsreEdApp app(argc, argv);

@@ -52,7 +52,6 @@ static AbstractDynamicLoader *getDynLoader() {
     AbstractDynamicLoader *dynLoader = PlatformInterface::getInstance()->getDynamicLoader();
     if (nullptr == dynLoader) {
         osre_error(Tag, "No instance to dynloader.");
-        return nullptr;
     }
 
     return dynLoader;
@@ -73,7 +72,7 @@ VlkRenderBackend::VlkRenderBackend() :
 
 VlkRenderBackend::~VlkRenderBackend() {
     if (m_state == State::Initialized) {
-        AbstractDynamicLoader *dynLoader(getDynLoader());
+        AbstractDynamicLoader *dynLoader = getDynLoader();
         dynLoader->unload(LibName);
         m_handle = nullptr;
         m_state = State::Uninitialized;
@@ -137,6 +136,15 @@ bool VlkRenderBackend::create(Platform::AbstractWindow *rootSurface) {
     m_state = State::Initialized;
 
     return true;
+}
+
+bool VlkRenderBackend::destroy() {
+    if (m_state != State::Initialized) {
+        return false;
+    }
+
+    m_state = State::Uninitialized;
+    return false;
 }
 
 VkDevice VlkRenderBackend::getDevice() const {

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -44,6 +44,7 @@ class Mesh;
 class Shader;
 class Pipeline;
 
+/// @brief An array to stoer meshes.
 using MeshArray = CPPCore::TArray<RenderBackend::Mesh*>;
 
 /// Describes an unset id.
@@ -68,61 +69,58 @@ enum class BufferType {
 
 /// @brief  This enum describes the supported access types for render buffers.
 enum class BufferAccessType {
-    InvalidType = -1, ///< Enum for invalid enum.
-    ReadOnly = 0, ///< Read only access.
-    WriteOnly, ///< Write only access.
-    ReadWrite, ///< Read and write access.
-    NumBufferAccessTypes ///< Number of enum's.
+    InvalidType = -1,       ///< Enum for invalid enum.
+    ReadOnly = 0,           ///< Read only access.
+    WriteOnly,              ///< Write only access.
+    ReadWrite,              ///< Read and write access.
+    NumBufferAccessTypes    ///< Number of enum's.
 };
 
 /// @brief The enum is used to describe the different pixel formats
 enum class PixelFormatType {
-    InvaliTextureType=-1,
-    R8G8B8,
-    R8G8B8A8,
-    NumPixelFormatTypes
+    InvaliTextureType=-1,   ///< Marker for an invalid texture.
+    R8G8B8 = 0,             ///< 24 bit data, r, g, b
+    R8G8B8A8,               ///< 32 bit data, r, g, b, a
+    NumPixelFormatTypes     ///< The number of formats
 };
 
 ///	@brief  This enum describes the build-in vertex types provided by OSRE, mainly used for demos and examples.
 enum class VertexType {
-    ColorVertex = 0, ///< A simple vertex consisting of position and color.
-    RenderVertex, ///< A render vertex with position, color, normals and texture coordinates.
-    NumVertexTypes, ///< Number of enums.
-
-    InvalidVertexType ///< Enum for invalid enum.
+    InvalidVetexType = -1,  ///< Marker for an invalid data type.
+    ColorVertex = 0,        ///< A simple vertex consisting of position and color.
+    RenderVertex,           ///< A render vertex with position, color, normals and texture coordinates.
+    NumVertexTypes          ///< Number of enums.
 };
 
 ///	@brief  This enum describes the supported texture target types.
 enum class TextureTargetType {
-    Texture1D = 0, ///< 1D-textures, used for simple arrays in shaders.
-    Texture2D, ///< 2D-textures, used for images and render targets.
-    Texture3D, ///< 3D-textures, used for volume rendering.
-    NumTextureTargetTypes, ///< Number of enums.
+    InvalidTextureTargetType = -1,  ///< Enum for invalid enum.
+    Texture1D = 0,                  ///< 1D-textures, used for simple arrays in shaders.
+    Texture2D,                      ///< 2D-textures, used for images and render targets.
+    Texture3D,                      ///< 3D-textures, used for volume rendering.
+    NumTextureTargetTypes           ///< Number of enums.
 
-    InvalidTextureTargetType ///< Enum for invalid enum.
 };
 
 ///	@brief  This enum describes the supported texture stages. A texture stage describes one layer of
 /// a texture composition like a diffuse texture at stage0 and a lighting information at statge1.
 enum class TextureStageType {
-    TextureStage0 = 0, ///< Texture state level 0
-    TextureStage1, ///< Texture state level 1
-    TextureStage2, ///< Texture state level 2
-    TextureStage3, ///< Texture state level 3
-    NumTextureStageTypes, ///< Number of enums.
-
-    InvalidTextureStageType ///< Enum for invalid enum.
+    InvalidTextureStageType = -1,   ///< Enum for invalid enum.
+    TextureStage0 = 0,              ///< Texture state level 0
+    TextureStage1,                  ///< Texture state level 1
+    TextureStage2,                  ///< Texture state level 2
+    TextureStage3,                  ///< Texture state level 3
+    NumTextureStageTypes            ///< Number of enums.
 };
 
 ///	@brief  This enum describes different texture parameter names.
 enum class TextureParameterName {
-    TextureParamMinFilter = 0, ///< The min filter name.
-    TextureParamMagFilter, ///< The mag filter name.
-    TextureParamWrapS, ///< The wrap name for s
-    TextureParamWrapT, ///< The warp name for t.
-    NumTextureParameterNames, ///< Number of enums.
-
-    InvalidTextureParameterName, ///< Enum for invalid enum.
+    InvalidTextureParameterName = -1,   ///< Enum for invalid enum.
+    TextureParamMinFilter = 0,          ///< The min filter name.
+    TextureParamMagFilter,              ///< The mag filter name.
+    TextureParamWrapS,                  ///< The wrap name for s
+    TextureParamWrapT,                  ///< The warp name for t.
+    NumTextureParameterNames            ///< Number of enums.
 };
 
 ///	@brief  This enum describes the parameters which are related the the parameter names ( @see TextureParameterName ).
