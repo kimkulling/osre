@@ -125,7 +125,7 @@ bool VlkRenderEventHandler::onCreateRenderer( const Common::EventData * ) {
 }
 
 bool VlkRenderEventHandler::onDestroyRenderer( const Common::EventData * ) {
-    m_vlkBackend->de
+    m_vlkBackend->destroy();
     delete m_vlkBackend;
     m_vlkBackend = nullptr;
 
