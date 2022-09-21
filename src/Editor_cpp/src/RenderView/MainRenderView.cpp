@@ -214,5 +214,15 @@ void MainRenderView::createEditorElements(RenderComponent *rc) {
     mEditorElements.add(axis);
 }
 
+void MainRenderView::render( RenderBackendService *rbSrv, glm::mat4 model ) {
+    rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
+    rbSrv->beginRenderBatch("b1");
+
+    rbSrv->setMatrix(MatrixType::Model, model);
+
+    rbSrv->endRenderBatch();
+    rbSrv->endPass();
+}
+
 } // namespace Editor
 } // namespace OSRE

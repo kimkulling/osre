@@ -69,7 +69,7 @@ class World;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///
-///	@brief  
+///	@brief  This class will perform an import of model assets. 
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AssimpWrapper {
 public:
@@ -77,10 +77,28 @@ public:
     using Bone2NodeMap = std::map<const char *, const aiNode *>;
     using AnimationMap = std::map<const char*, Animation::AnimationTrack*>;
 
+    /// @brief The class constructor.
+    /// @param ids      The id container.
+    /// @param world    The world to put the imported entity in.
     AssimpWrapper(Common::Ids &ids, World *world);
+
+    ///	@brief  The class destructor.
     ~AssimpWrapper();
+
+    /// @brief Will perform the import operation.
+    /// @param file     The file to load.
+    /// @param flags    The flags for the import.
+    /// @return true, if successful. false if not.
     bool importAsset( const IO::Uri &file, ui32 flags );
+
+    /// @brief  Will return the imported entity.
+    /// @return The imported entity, nullptr if nothing was imported.
     Entity *getEntity() const;
+
+    /// @brief Will return the model statistics.
+    /// @param numVertices      The number of vertices in the model.
+    /// @param numTriangles     The number of triangles in the model.
+    void getStatistics(ui32 &numVertices, ui32 &numTriangles);
 
 protected:
     Entity *convertScene();
@@ -105,7 +123,8 @@ private:
         String mRoot;
         String mAbsPathWithFile;
         Bone2NodeMap mBone2NodeMap;
-
+        ui32 mNumVertices;
+        ui32 mNumTriangles;
         AssetContext(Common::Ids &ids, World *world);
         ~AssetContext();
 

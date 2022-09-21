@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Common/osre_common.h>
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Common/Variant.h>
 
@@ -30,31 +31,34 @@ namespace Editor {
 
 using ArgumentList = ::CPPCore::TArray<::CPPCore::Variant*>;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+///	@brief  This class declares the base interface for all actions.
+//-------------------------------------------------------------------------------------------------
 class ActionBase {
 public:
-    virtual ~ActionBase();
+    /// @brief The class destructor.
+    virtual ~ActionBase() = default;
+
+    /// @brief The runner.
+    /// @param args     Argument list for the action run.
+    /// @return The result.
     virtual bool run(const ArgumentList &args);
 
 protected:
-    ActionBase();
-    virtual bool onRun(const ArgumentList &args);
-};
+    /// @brief The default class constructor.
+    ActionBase() = default;
 
-inline ActionBase::~ActionBase() {
-    // empty
-}
+    /// @brief The on run method, override this for your own action runnings.
+    /// @param args     Argument list
+    /// @return The result, true for success, false for a failure.
+    virtual bool onRun(const ArgumentList &args) = 0;
+};
 
 inline bool ActionBase::run(const ArgumentList &args) {
     const bool result = onRun(args);
     return result;
-}
-
-inline ActionBase::ActionBase() {
-    // empty
-}
-
-inline bool ActionBase::onRun(const ArgumentList &) {
-    return true;
 }
 
 } // namespace Editor

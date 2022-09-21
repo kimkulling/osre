@@ -172,6 +172,8 @@ public:
     /// @return The global settings.
     virtual Properties::Settings *getSettings() const;
 
+    /// @brief Will return the current stage or nullptr if none is active.
+    /// @return The current stage or nullptr.
     virtual Stage *getStage() const;
 
     /// @brief  Will activate the given view in the active world instance.

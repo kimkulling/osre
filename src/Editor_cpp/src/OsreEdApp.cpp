@@ -33,7 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/App/ModuleBase.h>
 #include <osre/App/App.h>
-#include <osre/Animation/AnimatorBase.h>B
+#include <osre/Animation/AnimatorBase.h>
 #include <osre/IO/Directory.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/File.h>
@@ -75,16 +75,24 @@ static const ui32 VerticalMargin = 2;
 
 static const c8 *Tag = "OsreApp";
 
-static void createTitleString(const SceneData &sd, String &titleString) {
+static void createTitleString(const String &projectName, String &titleString) {
     titleString.clear();
     titleString += "OSRE ED!";
 
     titleString += " Project: ";
-    titleString += sd.ProjectName;
+    titleString += projectName;
+}
+
+static Project *createProject(const String &name) {
+    Project *project = new App::Project();
+    project->setProjectName(name);
+
+    return project;
 }
 
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         AppBase(argc, (const char **)argv, "api", "The render API"),
+        mMainRenderView(nullptr),
         m_model(),
         m_transformMatrix(),
         mSceneData(),
@@ -102,13 +110,13 @@ bool OsreEdApp::onCreate() {
         return false;
     }
 
+    setupPythonInterface();
+
     mModuleRegistry.registerModule(new InspectorModule(this));
     mModuleRegistry.registerModule(new LogModule(this));
     
-
     setupUserInterface();
     setupRenderView();
-    setupPythonInterface();
 
     mTransformController = AppBase::getTransformController(m_transformMatrix);
 
@@ -119,7 +127,7 @@ bool OsreEdApp::onCreate() {
     return true;
 }
 
-void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
+void OsreEdApp::loadAsset(const Uri &modelLoc) {
     Platform::AbstractWindow *rootWindow = getRootWindow();
     if (nullptr == rootWindow) {
         return;
@@ -149,6 +157,9 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     Rect2ui windowsRect;
     rootWindow->getWindowsRect(windowsRect);
     World *world = getStage()->getActiveWorld();
+    if (mProject == nullptr) {
+        mProject = createProject(modelLoc.getAbsPath());
+    }
     mSceneData.mCamera = world->addCamera("camera_1");
     mSceneData.mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
     Entity *entity = action.getEntity();
@@ -158,26 +169,27 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     mSceneData.mCamera->observeBoundingBox(entity->getAABB());
     mSceneData.m_modelNode = entity->getNode();
 
-    mSceneData.AssetName = modelLoc.getResource();
+    String asset = modelLoc.getResource();
+    mProject->addAsset(asset);
     String title;
-    createTitleString(mSceneData, title);
+    createTitleString(mProject->getProjectName(), title);
     rootWindow->setWindowsTitle(title);
 
-    setStatusBarText("View", mSceneData.AssetName, 1, 1);
+    
+    setStatusBarText("View", mProject->getProjectName(), action.getNumVertices(), action.getNumTriangles());
     reporter.update(70);
     reporter.stop();
 }
 
 void OsreEdApp::newProjectCmd(ui32, void *data) {
-    mProject = new App::Project();
     std::string name = "New project";
     if (data != nullptr) {
         CPPCore::Variant *v = (CPPCore::Variant*)data;
         name = v->getString();
     }
-    mProject->setProjectName(name);
+    mProject = createProject(name);
     String title = mProject->getProjectName();
-    createTitleString(mSceneData, title);
+    createTitleString(mProject->getProjectName(), title);
     AppBase::setWindowsTitle(title);
 }
 
@@ -215,11 +227,11 @@ void OsreEdApp::quitEditorCmd(ui32, void *) {
     }
 }
 
-void OsreEdApp::gettingHelpCmd(ui32 cmdId, void *data) {
+void OsreEdApp::gettingHelpCmd(ui32, void *) {
     ::ShellExecute(nullptr, "open", "https://github.com/kimkulling/osre/issues", NULL, NULL, SW_SHOWNORMAL);
 }
 
-void OsreEdApp::showVersionCmd(ui32 cmdId, void *data) {
+void OsreEdApp::showVersionCmd(ui32, void*) {
     DlgResults res;
     PlatformOperations::getDialog("Version Info", "OSRE Version 0.0.1", PlatformOperations::DlgButton_ok, res);
 }
@@ -272,16 +284,9 @@ void OsreEdApp::onUpdate() {
     }
     transformCmds.clear();
     RenderBackendService *rbSrv = getRenderBackendService();
-
-    rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
-    rbSrv->beginRenderBatch("b1");
-
-    rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
-    
     mModuleRegistry.update();
     
-    rbSrv->endRenderBatch();
-    rbSrv->endPass();
+    mMainRenderView->render(rbSrv, m_transformMatrix.m_model);
 
     AppBase::onUpdate();
 }
@@ -317,6 +322,13 @@ bool OsreEdApp::loadSceneData(const IO::Uri &filename, SceneData&) {
         return false;
     }
 
+    if (mProject != nullptr) {
+        if (mProject->dataNeedsSave()) {
+            // ToDo: Add dialog
+        }
+        mProject->clear();
+    }
+
     stream->close();
 
     return true;
@@ -329,6 +341,7 @@ bool OsreEdApp::saveSceneData(const IO::Uri &filename, SceneData &sd) {
 
     Stream *stream = IOService::getInstance()->openStream(filename, Stream::AccessMode::WriteAccess);
     if (nullptr == stream) {
+        osre_error(Tag, "Cannot open file " + filename.getResource() + ".");
         return false;
     }
 
@@ -343,18 +356,25 @@ bool OsreEdApp::saveSceneData(const IO::Uri &filename, SceneData &sd) {
 }
 
 bool OsreEdApp::setupUserInterface() {
-    Win32Window *w = (Win32Window *)getRootWindow();
+    Win32Window *window = (Win32Window *)getRootWindow();
     AbstractPlatformEventQueue *queue = PlatformInterface::getInstance()->getPlatformEventHandler();
-    if (nullptr == w || nullptr == queue) {
+    if (nullptr == window || nullptr == queue) {
         return false;
     }
-    String title;
-    createTitleString(mSceneData, title);
+
+    String title, projectName;
+    if (mProject == nullptr) {
+        projectName = "None";
+    } else {
+        projectName = mProject->getProjectName();
+    }
+
+    createTitleString(projectName, title);
     AppBase::setWindowsTitle(title);
 
-    UIElements::createMenues(w, this, queue);
-    w->createStatusBar(100, 4);
-    w->getWindowsRect(mResolution);
+    UIElements::createMenues(window, this, queue);
+    window->createStatusBar(100, 4);
+    window->getWindowsRect(mResolution);
 
     AppBase::getRenderBackendService()->enableAutoResizing(false);
 
@@ -362,8 +382,20 @@ bool OsreEdApp::setupUserInterface() {
 }
 
 bool OsreEdApp::setupRenderView() {
+    if (mMainRenderView != nullptr) {
+        osre_error(Tag, "Renderview already initiated.");
+        return false;
+    }
+
+    Stage *stage = getStage();
+    if (stage == nullptr) {
+        osre_error(Tag, "Stage is nullptr.");
+        return false;
+    }
+    
     World *world = getStage()->getActiveWorld();
     if (nullptr == world) {
+        osre_error(Tag, "World is nullptr.");
         return false;
     }
 

@@ -34,7 +34,6 @@ namespace RenderBackend {
 // Forward declarations
 class VlkRenderBackend;
 
-
 class VlkRenderEventHandler : public Common::AbstractEventHandler {
 public:
     VlkRenderEventHandler();

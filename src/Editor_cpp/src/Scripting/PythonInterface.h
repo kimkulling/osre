@@ -37,8 +37,9 @@ namespace Editor {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor
 ///
-/// @brief This class implements the global python entry points. This class implements the main 
-/// facade to the python scripting. 
+/// @brief This class implements the global python entry points.
+/// 
+/// This class implements the main facade to the python scripting.
 //-------------------------------------------------------------------------------------------------
 class PythonInterface {
 public:
@@ -46,10 +47,24 @@ public:
     PythonInterface();
 
     /// @brief  The class destructor.
-    ~PythonInterface();
+    ~PythonInterface() = default;
+
+    /// @brief 
+    /// @param app 
+    /// @return 
     bool create(App::AppBase *app);
+
+    /// @brief 
+    /// @return 
     bool destroy();
+    
+    /// @brief 
+    /// @param path 
     void addPath(const String &path);
+    
+    /// @brief 
+    /// @param src 
+    /// @return 
     bool runScript(const String &src);
 
 private:

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -21,8 +21,12 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "PythonInterface.h"
+#include "Actions/ImportAction.h"
+
 #include <osre/Common/Logger.h>
 #include <osre/App/Stage.h>
+#include <osre/App/App.h>
+#include <osre/app/Project.h>
 
 #include <Python.h>
 #include <structmember.h> // defines a python class in C++
@@ -32,135 +36,151 @@ namespace Editor {
 
 static const c8 *Tag = "PythonInterface";
 
+using namespace ::OSRE::Common;
 using namespace ::OSRE::App;
 
-struct PyStageObject {
-    PyObject_HEAD;
-    c8 *StageName;
+typedef struct Osre_Project {
     Stage *mStage;
-};
+    Project *mProject;
+} Osre_Project;
+        
+Osre_Project *gActiceProject = nullptr;
+PyTypeObject Osre_project_Type;
 
-static void PyStage_dealloc(PyStageObject *self) {
-    Py_TYPE(self)->tp_free((PyObject *)self);
-}
-
-static PyObject *PyStage_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
-    PyStageObject *self;
-    self = (PyStageObject *)type->tp_alloc(type, 0);
-    return (PyObject*) self;
-}
-
-static int PyStageObject_init(PyStageObject *self, PyObject *args, PyObject *kwds) {
-    if (nullptr == self) {
-        return -1;
-    }
-
-    return 0; // success (of init)
-}
-
-static PyObject *PyStageObject_repr(PyStageObject *self) {
-    return Py_BuildValue("s", self->StageName);
-};
-
-static int PyStage_len(PyStageObject *self) {
-    return 1;
-}
-
-static PyObject *PyStage_getitem(PyStageObject *self, PyObject *args) {
-    c8 *type = nullptr;
-    if (!PyArg_ParseTuple(args, "s", &type)) {
+PyDoc_STRVAR(osre_project_new_doc, "ToDo.");
+static PyObject *osre_project_new(PyObject *self, PyObject *args, PyObject *keywds) {
+    static char *kwlist[] = { "project_name", NULL };
+    char *projectName = nullptr;
+    if (!PyArg_ParseTupleAndKeywords(args, keywds, "s", kwlist, &projectName)) {
         return nullptr;
     }
 
-    return nullptr;
-}
-
-static int PyStage_setitem(PyStageObject *self, PyObject *ix, PyObject *val) {
-    return 0;
-}
-
-static PyMappingMethods PyWorld_mappings = {
-    (lenfunc)PyStage_len,
-    (binaryfunc)PyStage_getitem,
-    (objobjargproc)PyStage_setitem
-};
-
-static PyMemberDef PyStageObject_members[] = {
-    { NULL, 0, 0, 0, NULL }
-};
-
-static PyObject *create_stage(PyObject *self, PyObject *args) {
-    if (!PyArg_ParseTuple(args, "s")) {
+    gActiceProject = PyObject_New(Osre_Project, &Osre_project_Type);
+    if (gActiceProject == nullptr) {
         return nullptr;
     }
 
-    return nullptr;
+    gActiceProject->mProject = new Project();
+    gActiceProject->mProject->setProjectName(projectName);
+
+    Py_RETURN_NONE;
 }
 
+PyDoc_STRVAR(osre_project_load_doc, "ToDo.");
+static PyObject *osre_project_load(PyObject *self, PyObject *args, PyObject *keywds) {
+    static char *kwlist[] = { "project_file", NULL };
+    char *project_file = nullptr;
+    if (!PyArg_ParseTupleAndKeywords(args, keywds, "s", kwlist, &project_file)) {
+        return nullptr;
+    }
+    
+    if (gActiceProject == nullptr) {
+        gActiceProject = PyObject_New(Osre_Project, &Osre_project_Type);
+        if (gActiceProject == nullptr) {
+            return nullptr;
+        }
+    }
 
-static PyMethodDef PyStage_methods[] = {
-    { "create_stage", (PyCFunction)create_stage, METH_VARARGS, "Will create a new stage object." },
-    { NULL, NULL, 0, NULL }
-};
+    gActiceProject->mProject = new Project();
+    if (!gActiceProject->mProject->load(project_file, gActiceProject->mStage)) {
+        osre_error(Tag, "Error while loading project file " + String(project_file));
+    }
 
-static PyTypeObject StagePyObject = {
-    PyVarObject_HEAD_INIT(NULL, 0) 
-    "osre_ed.Application",                /* tp_name */
-    sizeof(PyStageObject), /* tp_basicsize */
-    0,                              /* tp_itemsize */
-    (destructor)PyStage_dealloc, /* tp_dealloc */
-    0, /* tp_print */
-    0, /* tp_getattr */
-    0, /* tp_setattr */
-    0, /* tp_reserved */
-    (reprfunc)PyStageObject_repr, /* tp_repr */
-    0, /* tp_as_number */
-    0, /* tp_as_sequence */
-    &PyWorld_mappings, /* tp_as_mapping */
-    0, /* tp_hash */
-    0, /* tp_call */
-    0, /* tp_str */
-    0, /* tp_getattro */
-    0, /* tp_setattro */
-    0, /* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /* tp_flags */
-    "OSRE Application objects", /* tp_doc */
-    0, /* tp_traverse */
-    0, /* tp_clear */
-    0, /* tp_richcompare */
-    0, /* tp_weaklistoffset */
-    // (getiterfunc)Chromosone_getiter, /* tp_iter */
-    PyObject_SelfIter, /* tp_iter */
-    0, /* tp_iternext */
-    PyStage_methods, /* tp_methods */
-    PyStageObject_members, /* tp_members */
-    0, /* tp_getset */
-    0, /* tp_base */
-    0, /* tp_dict */
-    0, /* tp_descr_get */
-    0, /* tp_descr_set */
-    0, /* tp_dictoffset */
-    (initproc)PyStageObject_init, /* tp_init */
-    0, /* tp_alloc */
-    PyStage_new /* tp_new */
-};
+    Py_RETURN_NONE;
+}
 
-PyMODINIT_FUNC PyInit_custom() {
-    PyObject *m;
-    if (PyType_Ready(&StagePyObject) < 0) {
+PyDoc_STRVAR(osre_project_save_doc, "ToDo.");
+static PyObject *osre_project_save(PyObject *self, PyObject *args, PyObject *keywds) {
+    static char *kwlist[] = { "project_file", NULL };
+    char *project_file = nullptr;
+    if (!PyArg_ParseTupleAndKeywords(args, keywds, "s", kwlist, &project_file)) {
+        return nullptr;
+    }
+    if (gActiceProject == nullptr) {
         return nullptr;
     }
 
-    return m;
+    if (!gActiceProject->mProject->save(project_file, gActiceProject->mStage)) {
+        osre_error(Tag, "Error while saving project file " + String(project_file));
+    }
+
+    Py_RETURN_NONE;
+}
+
+PyDoc_STRVAR(osre_project_close_doc, "ToDo.");
+static PyObject *osre_project_close(PyObject *self, PyObject *args, PyObject *keywds) {
+    if (gActiceProject==nullptr) {
+        return nullptr;
+    }
+    if (gActiceProject->mProject) {
+        delete gActiceProject->mProject;
+        gActiceProject->mProject = nullptr;
+    }
+
+    Py_RETURN_NONE;
+}
+
+static PyMethodDef osre_project_methods[] = {
+    { "new", (PyCFunction) osre_project_new, METH_VARARGS, "ToDo!" },
+    { "load", (PyCFunction) osre_project_load, METH_VARARGS, "ToDo!" },
+    { "save", (PyCFunction) osre_project_save, METH_VARARGS, "ToDo!" },
+    { "close", (PyCFunction) osre_project_close, METH_VARARGS, "ToDo!" },
+    { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static struct PyModuleDef osre_project_module = {
+    PyModuleDef_HEAD_INIT,
+    "osre.project", /* name of module */
+    NULL, /* module documentation, may be NULL */
+    -1, /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+    osre_project_methods
+};
+
+PyMODINIT_FUNC PyInit_osre_project() {
+    return PyModule_Create(&osre_project_module);
+}
+
+PyDoc_STRVAR(osre_io_import_doc, "ToDo.");
+static PyObject *osre_io_import(PyObject *self, PyObject *args, PyObject *keywds) {
+    int voltage;
+    const char *state = "a stiff";
+    const char *action = "voom";
+    const char *type = "Norwegian Blue";
+
+    static char *kwlist[] = { "voltage", "state", "action", "type", NULL };
+
+    if (!PyArg_ParseTupleAndKeywords(args, keywds, "i|sss", kwlist,
+                &voltage, &state, &action, &type))
+        return NULL;
+
+    printf("-- This parrot wouldn't %s if you put %i Volts through it.\n",
+            action, voltage);
+    printf("-- Lovely plumage, the %s -- It's %s!\n", type, state);
+
+    Py_RETURN_NONE;
+}
+
+static PyMethodDef osre_io_methods[] = {
+    { "import", (PyCFunction) osre_io_import, METH_VARARGS, "Imports a new asset." },
+    { NULL, NULL, 0, NULL } /* Sentinel */
+};
+
+static struct PyModuleDef osre_io_module = {
+    PyModuleDef_HEAD_INIT,
+    "osre.io", /* name of module */
+    NULL, /* module documentation, may be NULL */
+    -1, /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+    osre_io_methods
+};
+
+PyMODINIT_FUNC PyInit_osre_io() {
+    return PyModule_Create(&osre_io_module);
 }
 
 PythonInterface::PythonInterface() :
         mCreated(false),
-        mPaths() {
-    // empty
-}
-
-PythonInterface::~PythonInterface() {
+        mPaths(),
+        mApp(nullptr) {
     // empty
 }
 
@@ -173,6 +193,17 @@ bool PythonInterface::create(App::AppBase *app) {
     const wchar_t *program = L"osre_ed";
     Py_SetProgramName(program); /* optional but recommended */
     Py_Initialize();
+
+    PyObject *mod = nullptr;
+    mod = PyInit_osre_project();
+    if (mod == nullptr) {
+        osre_error(Tag, "Error while creating project-module.")
+    }
+    mod = PyInit_osre_io();
+    if (mod == nullptr) {
+        osre_error(Tag, "Error while creating io-module.")
+    }
+
     mApp = app;
     mCreated = true;
 

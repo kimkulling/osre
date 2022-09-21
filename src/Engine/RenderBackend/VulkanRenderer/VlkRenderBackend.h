@@ -56,6 +56,7 @@ public:
     VlkRenderBackend();
     ~VlkRenderBackend();
     bool create( Platform::AbstractWindow *rootSurface );
+    bool destroy();
     VkDevice getDevice() const;
     bool createRenderPass();
     bool createFramebuffers( ui32 width, ui32 height );

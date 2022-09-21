@@ -51,8 +51,10 @@ enum class ComponentType {
 class OSRE_EXPORT Component {
 public:
     virtual ~Component() = default;
+    virtual bool preprocess();
     virtual void update(Time dt);
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
+    virtual bool postprocess();
     virtual void setId(ui32 id);
     virtual ui32 getId() const;
     virtual Entity *getOwner() const;
@@ -68,6 +70,14 @@ private:
     Entity *m_owner;
     ui32 m_id;
 };
+
+inline bool Component::preprocess() {
+    return onPreprocess();
+}
+
+inline bool Component::postprocess() {
+    return onPostprocess();
+}
 
 inline void Component::setId(ui32 id) {
     m_id = id;

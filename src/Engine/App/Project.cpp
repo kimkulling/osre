@@ -45,6 +45,7 @@ static const c8 *Ext = "osre";
 
 Project::Project() :
         Object("App/Project"),
+        mProjectDirtyState(0),
         mProjectName(),
         mStage(nullptr) {
     // empty
@@ -64,6 +65,46 @@ const String &Project::getProjectName() const {
     return mProjectName;
 }
 
+void Project::addAsset( const String &assetName ) {
+    if (assetName.empty()) {
+        return;
+    }
+    
+    StringArray::Iterator it = mAssetArray.find(assetName);
+    if (it == mAssetArray.end()) {
+        mAssetArray.add(assetName);
+    }
+}
+size_t Project::getNumAssets() const {
+    return mAssetArray.size();
+}
+
+const String &Project::getAssetAt( size_t index ) const {
+    if (index >= mAssetArray.size()) {
+        static String none = "none";
+        return none;
+    }
+    
+    return mAssetArray[index];
+}
+
+bool Project::removeAsset( const String &assetName ) {
+    if (assetName.empty()) {
+        return false;
+    }
+
+    bool found = false;
+    for (size_t i = 0; i < mAssetArray.size(); i++) {
+        if (mAssetArray[i] == assetName) {
+            mAssetArray.remove(i);
+            found = true;
+            break;
+        }
+    }
+    
+    return found;
+}
+
 void Project::setStage( Stage *stage ) {
     if (stage != mStage) {
         mStage = stage;
@@ -72,6 +113,9 @@ void Project::setStage( Stage *stage ) {
 
 Stage *Project::getStage() const {
     return mStage;
+}
+
+void Project::clear() {
 }
 
 bool Project::load(const String &name, Stage *stage) {
@@ -265,7 +309,7 @@ static bool saveStage(const String &name, const Stage &stage, StageData *sd) {
     }
 
     setNameChunk(activeWorld->getName(), sd->mActiveWorld);
-    sd->mNumWorlds = stage.getNumberOfWorlds();
+    sd->mNumWorlds = (i32) stage.getNumberOfWorlds();
     sd->mWorldData = new WorldData[sd->mNumWorlds];
     bool result = true;
     for (i32 i = 0; i < sd->mNumWorlds; ++i) {

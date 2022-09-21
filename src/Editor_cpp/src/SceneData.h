@@ -32,7 +32,6 @@ namespace Editor {
 struct SceneData {
     String Name;
     String ProjectName;
-    String AssetName;
     Scene::Node::NodePtr m_modelNode;
     Scene::Camera *mCamera;
 
@@ -42,7 +41,6 @@ struct SceneData {
 inline SceneData::SceneData() :
         Name(),
         ProjectName("none"),
-        AssetName("none"),
         m_modelNode(),
         mCamera(nullptr) {
     // empty

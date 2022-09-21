@@ -30,8 +30,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations ---------------------------------------------------------------------------
 namespace Common {
     class Ids;
+}
+
+namespace IO {
+    class Stream;
 }
 
 namespace Scene {
@@ -46,20 +51,27 @@ class RenderComponent;
 class AppBase;
 class World;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Engine
+///
+///	@brief	
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Entity : public Common::Object {
 public:
     Entity( const String &name, const Common::Ids &ids, World *world );
-    virtual ~Entity();
-    virtual void setBehaviourControl(AbstractBehaviour *behaviour );
-    virtual void setNode( Scene::Node *node );
-    virtual Scene::Node *getNode() const;
-    virtual bool preprocess();
-    virtual bool update( Time dt );
-    virtual bool render( RenderBackend::RenderBackendService *rbSrv );
-    virtual bool postprocess();
-    virtual Component *getComponent(ComponentType type) const;
-    virtual void setAABB( const Scene::AABB &aabb );
-    virtual const Scene::AABB &getAABB() const;
+    ~Entity() override;
+    void setBehaviourControl(AbstractBehaviour *behaviour );
+    void setNode( Scene::Node *node );
+    Scene::Node *getNode() const;
+    bool preprocess();
+    bool update( Time dt );
+    bool render( RenderBackend::RenderBackendService *rbSrv );
+    bool postprocess();
+    Component *getComponent(ComponentType type) const;
+    void setAABB( const Scene::AABB &aabb );
+    const Scene::AABB &getAABB() const;
+    void serialize(IO::Stream *stream);
+    void deserialize(IO::Stream *stream);
 
 private:
     AbstractBehaviour *m_behaviour;

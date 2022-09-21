@@ -28,7 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 
-ModuleBase::ModuleBase(const String &name, App::AppBase *parentApp) :
+ModuleBase::ModuleBase(const String &name, AppBase *parentApp) :
         Object(name),
         mState(ModuleState::Init),
         mView(nullptr),

@@ -4,12 +4,17 @@
 
 This is just another open-source render-engine made by Kim Kulling. This is a playground project for myself to work on my own side-projects.
 
-# The Core-Features:
-- My first Multithreaded Renderer 
-- Platform abstraction to support Windows, Linux and more platforms
-- Simple Asset-import provided by the Asset-Importer-Lib (see https://github.com/assimp/assimp)
-- Virtual file-system for reading zip-archives
+# The Features:
 - CMake base build environment
+- Multithreaded Renderer 
+  - OpenGL
+- Platform abstraction to support Windows, Linux and more.
+  - Input
+  - UI
+- Event-System
+- More than 40 3D-formats supported thanks to Assimp
+- Virtual file-system for reading zip-archives
+- Instancing
 
 Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -142,6 +147,3 @@ The engine provdes an 3D-Editor called OSRE-Ed. It is still experimental:
 # Get involved
 If you want to contribute just use the github project page or reach us via Gitter:
 [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-# What is cooking?
-The project roadmap https://github.com/kimkulling/osre/projects/1

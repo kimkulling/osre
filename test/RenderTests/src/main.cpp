@@ -37,9 +37,10 @@ using namespace ::OSRE::RenderTest;
 using namespace ::OSRE::Platform;
 
 int main( int argc, char *argv[] ) {
-    Common::ArgumentParser argParser( argc, (const char**) argv, "api:media:test", "The render API:The media to load:A dedicated test" );
+    Common::ArgumentParser argParser( argc, (const char**) argv, 
+        "api:media:test", 
+        "The render API:The media to load:A dedicated test" );
     String renderAPI( "opengl" );
-    //String renderAPI( "vulkan" );
     if ( argParser.hasArgument( "api" ) ) {
         renderAPI = argParser.getArgument( "api" ); 
     }
@@ -69,12 +70,13 @@ int main( int argc, char *argv[] ) {
         RenderTestSuite::getInstance()->setSelectedTest(test);
     }
     
-    AbstractTimer *timer( rtSuite->getTimer() );
-    if( nullptr == timer ) {
+    AbstractTimer *timer = rtSuite->getTimer();
+    if (timer == nullptr) {
+        std::cerr << "Error: No valid timer instance, nullptr detected.\n";
         return 1;
     }
 
-    while( rtSuite->update() ) {
+    while (rtSuite->update()) {
         rtSuite->startTests();
     }
 
