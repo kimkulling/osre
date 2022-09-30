@@ -46,11 +46,11 @@ class OGLRenderContext;
 class OGLRenderBackend;
 class OGLShader;
 class RenderCmdBuffer;
+class Material;
 
 struct Vertex;
 struct OGLVertexArray;
 struct PrimitiveGroup;
-struct Material;
 struct OGLRenderCmd;
 struct DrawPrimitivesCmdData;
 struct SetTextureStageCmdData;

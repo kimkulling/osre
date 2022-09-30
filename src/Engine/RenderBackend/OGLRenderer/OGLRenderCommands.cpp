@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLRenderCommands.h"
 
 #include "OGLCommon.h"
+#include <osre/RenderBackend/Material.h>
 #include "OGLRenderBackend.h"
 #include "OGLRenderEventHandler.h"
 #include "OGLShader.h"

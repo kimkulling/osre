@@ -26,15 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
-Object::Object( const String &objectName )
-: m_objectName( objectName )
-, m_id(99999999)
-, m_Refcount( 1 ) {
+Object::Object( const String &objectName ) : m_objectName( objectName ), m_id(99999999), m_Refcount( 1 ) {
     m_id = StringUtils::hashName(objectName);
-}
-
-Object::~Object() {
-    // empty
 }
 
 void Object::get() {

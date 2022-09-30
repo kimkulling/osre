@@ -36,12 +36,12 @@ class OGLShader;
 class RenderCmdBuffer;
 class OGLRenderEventHandler;
 class Mesh;
+class Material;
 
 struct Vertex;
 struct OGLVertexArray;
 struct OGLTexture;
 struct PrimitiveGroup;
-struct Material;
 struct OGLRenderCmd;
 struct DrawPrimitivesCmdData;
 struct SetTextureStageCmdData;

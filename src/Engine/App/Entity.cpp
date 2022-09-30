@@ -41,7 +41,7 @@ Entity::Entity(const String &name, const Common::Ids &ids, World *world) :
         m_aabb(),
         mOwner(world) {
     m_renderComponent = new RenderComponent(this, 1);
-    if (nullptr != world) {
+    if (nullptr != mOwner) {
         mOwner->addEntity(this);
     }
 }

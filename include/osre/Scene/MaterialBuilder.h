@@ -23,6 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Scene/SceneCommon.h>
+#include <osre/RenderBackend/Material.h>
+
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Common/TResourceCache.h>
 
@@ -43,7 +45,7 @@ public:
     static void destroy();
     
     /// @brief  Will create the build-in material for the given type of vertex.
-    /// @param  type    The vertx type.
+    /// @param  type    The vertex type.
     /// @return The build-in material instance.
     static RenderBackend::Material *createBuildinMaterial( RenderBackend::VertexType type );
         

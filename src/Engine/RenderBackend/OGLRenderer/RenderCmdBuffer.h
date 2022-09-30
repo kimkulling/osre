@@ -44,6 +44,7 @@ namespace RenderBackend {
 class OGLRenderBackend;
 class OGLShader;
 class Pipeline;
+class Material;
 
 struct OGLVertexArray;
 struct OGLRenderCmd;
@@ -54,7 +55,6 @@ struct SetMaterialStageCmdData;
 struct SetRenderTargetCmdData;
 struct DrawTextCmdData;
 struct PrimitiveGroup;
-struct Material;
 struct OGLParameter;
 
 //-------------------------------------------------------------------------------------------------

@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/TransformMatrixBlock.h>
 #include <osre/RenderBackend/Shader.h>
 #include <osre/RenderBackend/Mesh.h>
+#include <osre/RenderBackend/Material.h>
 #include <osre/Common/glm_common.h>
 
 namespace OSRE {
@@ -173,7 +174,7 @@ TEST_F( RenderCommonTest, accessTransformMatrixBlockTest ) {
 TEST_F( RenderCommonTest, accessMaterialTest ) {
     bool ok = true;
     try {
-        Material *mat( new Material( "test" ) );
+        Material *mat( new Material( "test", IO::Uri() ) );
         EXPECT_EQ( MaterialType::ShaderMaterial, mat->m_type );
         EXPECT_EQ( mat->m_parameters, nullptr );
         EXPECT_EQ( mat->m_numParameters, 0u );
@@ -184,7 +185,7 @@ TEST_F( RenderCommonTest, accessMaterialTest ) {
 }
 
 TEST_F(RenderCommonTest, access_material_param_Test) {
-    Material *mat( new Material( "test" ) );
+    Material *mat( new Material( "test", IO::Uri() ) );
     mat->m_shader = new Shader;
     mat->m_shader->addUniformBuffer("MVP");
 

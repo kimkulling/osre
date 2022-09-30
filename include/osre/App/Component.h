@@ -30,17 +30,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
+
+namespace Scene {
+    class Node;
+}
+
 namespace App {
 
 class Entity;
 
 ///	@brief
 enum class ComponentType {
-    RenderComponentType, ///< Render-component
-    ScriptComponent,     ///< For scripting events
+    InvalidComponent = -1,
+    RenderComponentType = 0,    ///< Render-component
+    CameraComponentType,        ///<
+    TransformComponentType,     ///<
+    LightComponentType,         ///<
+    ScriptComponent,            ///< For scripting events
 
     MaxNumComponents,
-    InvalidComponent
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -113,7 +121,23 @@ protected:
     bool onPostprocess() override;
 
 private:
-    CPPCore::TArray<RenderBackend::Mesh *> m_newGeo;
+    CPPCore::TArray<RenderBackend::Mesh*> m_newGeo;
+};
+
+class OSRE_EXPORT TransformComponent final : public Component {
+public:
+    TransformComponent(Entity *owner, ui32 id);
+    ~TransformComponent() override = default;
+    void setNode(Scene::Node *node);
+
+protected:
+    bool onPreprocess() override;
+    bool onUpdate(Time dt) override;
+    bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
+    bool onPostprocess() override;
+
+private:
+    Scene::Node *mNode;
 };
 
 } // namespace App

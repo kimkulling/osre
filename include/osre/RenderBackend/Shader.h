@@ -25,9 +25,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <cppcore/Container/TArray.h>
+#include <cppcore/Container/TStaticArray.h>
 
 namespace OSRE {
 namespace RenderBackend {
+
+///	@brief  This enum describes the different shader types, which are supported by the OSRE-engine.
+enum class ShaderType {
+    SH_VertexShaderType = 0, ///< The shader is a vertex shader, used for each vertex.
+    SH_GeometryShaderType, ///< The shader is a geometry shader, used for tesselation.
+    SH_TesselationShaderType, ///< The tesselation evaluation shader.
+    SH_FragmentShaderType, ///< The shader is a fragment shader, used for rasterization.
+    NumShaderTypes, ///< Number of enums.
+
+    InvalidShaderType ///< Enum for invalid enum.
+};
+
+constexpr ui32 MaxShaderTypes = static_cast<ui32>(ShaderType::NumShaderTypes);
+using ShaderSourceArray = CPPCore::TStaticArray<String, MaxShaderTypes>;
+
 
 ///	@brief  This class represents a container for all used shaders in the OSRE-runtime.
 ///
@@ -155,7 +171,7 @@ public:
     /// @param uri 
     ShaderResource(const String &shaderName, const IO::Uri &uri);
     
-    ///	@brief
+    ///	@brief  The class destructor.
     ~ShaderResource() override;
 
 protected:

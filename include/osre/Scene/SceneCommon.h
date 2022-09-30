@@ -30,8 +30,7 @@ namespace OSRE {
 namespace RenderBackend {
     class RenderBackendService;
     class Mesh;
-
-    struct Material;
+    class Material;
 }
 
 namespace Scene {

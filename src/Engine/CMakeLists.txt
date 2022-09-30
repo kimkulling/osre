@@ -320,6 +320,7 @@ SET(scene_shader_src
 #==============================================================================
 SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
+    ${HEADER_PATH}/RenderBackend/Material.h
     ${HEADER_PATH}/RenderBackend/Mesh.h
     ${HEADER_PATH}/RenderBackend/TransformMatrixBlock.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
@@ -330,6 +331,7 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/ShapeRenderer.h
 )
 SET( renderbackend_src
+    RenderBackend/Material.cpp
     RenderBackend/Mesh.cpp
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp

@@ -48,9 +48,9 @@ namespace Common {
 
 namespace RenderBackend {
     class Mesh;
+    class Material;
 
     struct UniformVar;
-    struct Material;
 }
 
 namespace IO {

@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/TResource.h>
+#include <osre/RenderBackend/Shader.h>
 #include <osre/Common/osre_common.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Uri.h>
@@ -222,36 +223,6 @@ enum class VertexFormat : int {
     NumVertexFormats, ///< Number of enums.
 
     InvalidVertexFormat, ///< Enum for invalid enum.
-};
-
-///	@brief  This enum describes the kind of build-in material.
-enum class MaterialType {
-    ShaderMaterial = 0, ///< Material using a build-in shader assigned to its type of vertex.
-    NumMaterialTypes, ///< Number of enums.
-
-    InvalidMaterialType ///< Enum for invalid enum.
-};
-
-///	@brief  This enum describes the different shader types, which are supported by the OSRE-engine.
-enum class ShaderType {
-    SH_VertexShaderType = 0, ///< The shader is a vertex shader, used for each vertex.
-    SH_GeometryShaderType, ///< The shader is a geometry shader, used for tesselation.
-    SH_TesselationShaderType, ///< The tesselation evaluation shader.
-    SH_FragmentShaderType, ///< The shader is a fragment shader, used for rasterization.
-    NumShaderTypes, ///< Number of enums.
-
-    InvalidShaderType ///< Enum for invalid enum.
-};
-
-///	@brief  This enum describes the color type for the material.
-enum class MaterialColorType : ui32 {
-    Mat_Diffuse = 0, ///<
-    Mat_Specular, ///<
-    Mat_Ambient, ///<
-    Mat_Emission, ///<
-    NumMaterialColorTypes, ///< Number of enums.
-
-    InvalidMaterialColorType ///< Enum for invalid enum.
 };
 
 ///	@brief
@@ -493,42 +464,6 @@ private:
     TextureStageType m_stage;
 };
 
-using TextureResourceArray = CPPCore::TArray<RenderBackend::TextureResource *>;
-
-static const ui32 MaxShaderTypes = static_cast<ui32>(ShaderType::NumShaderTypes);
-
-static const ui32 MaxMatColorType = static_cast<ui32>(MaterialColorType::NumMaterialColorTypes);
-
-using ShaderSourceArray = CPPCore::TStaticArray<String, MaxShaderTypes>;
-
-///	@brief
-struct OSRE_EXPORT Material {
-    String m_name;
-    MaterialType m_type;
-    size_t m_numTextures;
-    Texture **m_textures;
-    Shader *m_shader;
-    ui32 m_numParameters;
-    UniformVar *m_parameters;
-    Color4 m_color[MaxMatColorType];
-    f32 mShineness;
-    f32 mShinenessStrength;
-    IO::Uri m_uri;
-
-    Material(const String &name);
-    Material(const String &name, const IO::Uri &uri);
-    ~Material();
-    void setMaterialType(MaterialType matType);
-    MaterialType getMaterialType() const;
-    void createShader(ShaderSourceArray &shaders);
-    Shader *getShader() const;
-
-    OSRE_NON_COPYABLE(Material)
-};
-
-inline Shader *Material::getShader() const {
-    return m_shader;
-}
 
 ///	@brief
 struct OSRE_EXPORT GeoInstanceData {

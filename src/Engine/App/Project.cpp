@@ -328,12 +328,12 @@ bool Project::save(const String &name, const Stage *stage) {
         return false;
     }
 
-    if (mStage == nullptr) {
+    if (stage == nullptr) {
         return true;
     }
     
     StageData sd;
-    const bool result = saveStage(name, *mStage, &sd);
+    const bool result = saveStage(name, *stage, &sd);
 
     return result;
 }
