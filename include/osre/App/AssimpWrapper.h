@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Animation/AnimatorBase.h>
 #include <osre/Common/Ids.h>
-#include <osre/Scene/TAABB.h>
+#include <osre/App/TAABB.h>
 
 #include <cppcore/Container/TArray.h>
 

@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Component.h>
 #include <osre/App/Entity.h>
 #include <osre/App/World.h>
-#include <osre/Scene/MeshProcessor.h>
+#include <osre/RenderBackend/MeshProcessor.h>
 
 namespace OSRE {
 namespace App {

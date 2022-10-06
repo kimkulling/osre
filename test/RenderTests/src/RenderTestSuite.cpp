@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/MaterialBuilder.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
 
 #include <iostream>
 

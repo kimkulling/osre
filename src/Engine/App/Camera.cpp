@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/Camera.h>
+#include <osre/App/Camera.h>
 #include <osre/Common/glm_common.h>
 
 namespace OSRE {

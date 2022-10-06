@@ -124,6 +124,11 @@ private:
     CPPCore::TArray<RenderBackend::Mesh*> m_newGeo;
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+/// @brief
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT TransformComponent final : public Component {
 public:
     TransformComponent(Entity *owner, ui32 id);

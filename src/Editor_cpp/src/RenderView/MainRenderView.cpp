@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "RenderView/MainRenderView.h"
 #include <osre/Animation/AnimatorBase.h>
-#include <osre/Scene/MaterialBuilder.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
 #include <osre/RenderBackend/Mesh.h>
 
 namespace OSRE {

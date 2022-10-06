@@ -80,12 +80,12 @@ public:
     /// @return A pointer showing to the active view or nullptr, if no view is currently active.
     Scene::Camera *getActiveView() const;
 
-    /// @brief 
-    /// @param entity 
+    /// @brief Will add a new entity.
+    /// @param entity   The entity to add.
     void addEntity( Entity *entity );
     
-    /// @brief 
-    /// @param entity 
+    /// @brief Will remove the entity from the world.
+    /// @param entity   The entity to remove.
     bool removeEntity(Entity *entity);
     
     /// @brief 

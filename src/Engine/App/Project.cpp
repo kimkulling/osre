@@ -28,8 +28,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/World.h>
 #include <osre/App/Entity.h>
 #include <osre/RenderBackend/Mesh.h>
-#include <osre/Scene/Node.h>
-#include <osre/Scene/TAABB.h>
+#include <osre/App/Node.h>
+#include <osre/App/TAABB.h>
 
 namespace OSRE {
 namespace App {

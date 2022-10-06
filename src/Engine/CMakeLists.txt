@@ -36,6 +36,12 @@ SET( app_inc
     ${HEADER_PATH}/App/App.h
     ${HEADER_PATH}/App/AppCommon.h
     ${HEADER_PATH}/App/AbstractBehaviour.h
+    ${HEADER_PATH}/App/Node.h
+    ${HEADER_PATH}/App/TrackBall.h
+    ${HEADER_PATH}/App/Camera.h
+    ${HEADER_PATH}/App/TAABB.h
+    ${HEADER_PATH}/App/TQuadTree.h
+    ${HEADER_PATH}/App/ParticleEmitter.h
     ${HEADER_PATH}/App/AppBase.h
     ${HEADER_PATH}/App/Component.h
     ${HEADER_PATH}/App/Entity.h
@@ -54,6 +60,10 @@ SET( app_inc
 )
 
 SET( app_src
+    App/Node.cpp
+    App/TrackBall.cpp
+    App/Camera.cpp
+    App/ParticleEmitter.cpp
     App/AppBase.cpp
     App/Component.cpp
     App/Entity.cpp
@@ -287,31 +297,11 @@ SET( animation_src
 SET( scene_inc
     ${HEADER_PATH}/Scene/Scene.h
     ${HEADER_PATH}/Scene/SceneCommon.h
-    ${HEADER_PATH}/Scene/MeshProcessor.h
-    ${HEADER_PATH}/Scene/MeshBuilder.h
-    ${HEADER_PATH}/Scene/DbgRenderer.h
-    ${HEADER_PATH}/Scene/MaterialBuilder.h
-    ${HEADER_PATH}/Scene/Node.h
-    ${HEADER_PATH}/Scene/TrackBall.h
-    ${HEADER_PATH}/Scene/Camera.h
-    ${HEADER_PATH}/Scene/LineBuilder.h
-    ${HEADER_PATH}/Scene/TAABB.h
-    ${HEADER_PATH}/Scene/TQuadTree.h
-    ${HEADER_PATH}/Scene/ParticleEmitter.h
 )
 SET( scene_src
-    Scene/DbgRenderer.cpp
-    Scene/MeshProcessor.cpp
-    Scene/MeshBuilder.cpp
-    Scene/LineBuilder.cpp
-    Scene/MaterialBuilder.cpp
-    Scene/Node.cpp
-    Scene/TrackBall.cpp
-    Scene/Camera.cpp
-    Scene/ParticleEmitter.cpp
 )
 
-SET(scene_shader_src
+SET(renderbackend_shader_src
     Scene/Shader/DefaultRenderVertex.vs
     Scene/Shader/DefaultRenderVertex.fs
 )
@@ -320,8 +310,13 @@ SET(scene_shader_src
 #==============================================================================
 SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
+    ${HEADER_PATH}/RenderBackend/DbgRenderer.h
     ${HEADER_PATH}/RenderBackend/Material.h
     ${HEADER_PATH}/RenderBackend/Mesh.h
+    ${HEADER_PATH}/RenderBackend/LineBuilder.h
+    ${HEADER_PATH}/RenderBackend/MeshProcessor.h
+    ${HEADER_PATH}/RenderBackend/MeshBuilder.h
+    ${HEADER_PATH}/RenderBackend/MaterialBuilder.h
     ${HEADER_PATH}/RenderBackend/TransformMatrixBlock.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
     ${HEADER_PATH}/RenderBackend/RenderPass.h
@@ -331,8 +326,13 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/ShapeRenderer.h
 )
 SET( renderbackend_src
+    RenderBackend/DbgRenderer.cpp
     RenderBackend/Material.cpp
     RenderBackend/Mesh.cpp
+    RenderBackend/MeshProcessor.cpp
+    RenderBackend/MeshBuilder.cpp
+    RenderBackend/LineBuilder.cpp
+    RenderBackend/MaterialBuilder.cpp
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
     RenderBackend/Pipeline.cpp
@@ -430,9 +430,9 @@ SOURCE_GROUP( Properties          FILES ${properties_src} )
 SOURCE_GROUP( RenderBackend       FILES ${renderbackend_src} )
 SOURCE_GROUP( RenderBackend\\OGLRenderer    FILES ${renderbackend_oglrenderer_src} )
 SOURCE_GROUP( RenderBackend\\VulkanRenderer FILES ${renderbackend_vulkanrenderer_src} )
+SOURCE_GROUP( RenderBackend\\Shader       FILES ${renderbackend_shader_src})
 SOURCE_GROUP( Resources           FILES ${resources_src} )
 SOURCE_GROUP( Scene               FILES ${scene_src} )
-SOURCE_GROUP( Scene\\Shader       FILES ${scene_shader_src})
 SOURCE_GROUP( Threading           FILES ${threading_src} )
 SOURCE_GROUP( WinManager          FILES ${winmanager_src} )
 SOURCE_GROUP( UI\\Common          FILES ${ui_common_src} )

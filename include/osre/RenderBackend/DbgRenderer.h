@@ -22,45 +22,55 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <cppcore/Container/TArray.h>
+#include <cppcore/Container/THashMap.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/TAABB.h>
-#include <osre/Common/BaseMath.h>
-
-#include <GL/glew.h>
-#include <GL/gl.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
+#include <osre/Scene/SceneCommon.h>
+#include <osre/App/TAABB.h>
 
 namespace OSRE {
-
-namespace RenderBackend {
-    class RenderBackendService;
-}
-
 namespace Scene {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief	This class offers some system-specific functions.
+///	@brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT ParticleEmitter {
+class OSRE_EXPORT DbgRenderer {
+    struct DebugText;
+
 public:
-    ParticleEmitter( RenderBackend::RenderBackendService *rbSrv );
-    ~ParticleEmitter();
-    void init( ui32 numPoints );
-    void update( d32 tick );
-    void setBounds(const AABB& bounds);
-    RenderBackend::Mesh* getMesh() const;
+    void renderDbgText(ui32 x, ui32 y, ui64 id, const String &text);
+    void renderAABB(const glm::mat4 &transform, const AABB &aabb);
+    void clear();
+    void addLine(const RenderBackend::ColorVert &v0, const RenderBackend::ColorVert &v1);
+
+    static bool create(RenderBackend::RenderBackendService *rbSrv);
+    static bool destroy();
+    static DbgRenderer *getInstance();
+    static const c8 *getDebugRenderBatchName();
 
 private:
-    RenderBackend::RenderBackendService *m_rbSrv;
-    ui32 m_numPoints;
-    glm::vec3 *m_col;
-    glm::vec3 *m_pos;
-    GLushort *m_pt_indices;
-    RenderBackend::Mesh *m_ptGeo;
-    bool mUseBounds;
-    AABB mBounds;
+    DbgRenderer(RenderBackend::RenderBackendService *rbSrv);
+    ~DbgRenderer();
+    DebugText *getDebugText(ui32 id) const;
+
+private:
+    static DbgRenderer *sInstance;
+
+    RenderBackend::RenderBackendService *mRbSrv;
+    RenderBackend::TransformMatrixBlock mTransformMatrix;
+    RenderBackend::Mesh *mDebugMesh;
+    
+    struct DebugText {
+        RenderBackend::Mesh *mesh;
+        String text;
+    };
+
+    CPPCore::TArray<DebugText*> mDebugTextMeshes;
+    ui16 mLastIndex;
 };
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // Namespace Scene
+} // namespace OSRE

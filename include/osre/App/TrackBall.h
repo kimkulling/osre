@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Scene/Camera.h>
+#include <osre/App/Camera.h>
 #include <osre/Platform/PlatformInterface.h>
 
 namespace OSRE {

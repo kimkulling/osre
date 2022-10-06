@@ -37,11 +37,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Material.h>
 #include <osre/RenderBackend/Shader.h>
-#include <osre/Scene/MaterialBuilder.h>
-#include <osre/Scene/MeshBuilder.h>
-#include <osre/Scene/MeshProcessor.h>
-#include <osre/Scene/Node.h>
-#include <osre/Scene/TAABB.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
+#include <osre/RenderBackend/MeshBuilder.h>
+#include <osre/RenderBackend/MeshProcessor.h>
+#include <osre/App/Node.h>
+#include <osre/App/TAABB.h>
 
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>

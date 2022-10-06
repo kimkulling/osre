@@ -24,8 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Object.h>
 #include <osre/App/AppCommon.h>
-#include <osre/Scene/Node.h>
-#include <osre/Scene/TAABB.h>
+#include <osre/App/Node.h>
+#include <osre/App/TAABB.h>
 #include <osre/App/Component.h>
 
 namespace OSRE {

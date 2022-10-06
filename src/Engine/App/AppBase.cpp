@@ -41,8 +41,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Pipeline.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/Scene/Camera.h>
-#include <osre/Scene/MaterialBuilder.h>
+#include <osre/App/Camera.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
 
 #include "src/Engine/App/MouseEventListener.h"
 #include "src/Engine/Platform/PlatformPluginFactory.h"

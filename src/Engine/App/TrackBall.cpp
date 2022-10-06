@@ -23,8 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/BaseMath.h>
 #include <osre/Common/glm_common.h>
 #include <osre/Platform/PlatformInterface.h>
-#include <osre/Scene/TrackBall.h>
-#include <osre/Scene/Node.h>
+#include <osre/App/TrackBall.h>
+#include <osre/App/Node.h>
 
 namespace OSRE {
 namespace Scene {

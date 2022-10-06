@@ -61,6 +61,11 @@ class Stage;
 class World;
 class AppBase;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+/// @brief
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT KeyboardEventListener : public Platform::OSEventListener {
 public:
     KeyboardEventListener() :

@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Component.h>
 #include <osre/App/Entity.h>
 #include <osre/Common/Ids.h>
-#include <osre/Scene/Node.h>
+#include <osre/App/Node.h>
 
 namespace OSRE {
 namespace UnitTest {
