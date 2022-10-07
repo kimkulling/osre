@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -24,7 +24,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Scene/SceneCommon.h>
 #include <osre/RenderBackend/Material.h>
-
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Common/TResourceCache.h>
 
@@ -34,7 +33,7 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This build-class takes care of all material creation steps.
+///	@brief  This class takes care of all default materials.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT MaterialBuilder {
 public:
@@ -46,26 +45,28 @@ public:
     
     /// @brief  Will create the build-in material for the given type of vertex.
     /// @param  type    The vertex type.
-    /// @return The build-in material instance.
+    /// @return The build-in material instance will be returned.
     static RenderBackend::Material *createBuildinMaterial( RenderBackend::VertexType type );
         
-    /// @brief 
-    /// @param matName 
-    /// @param texResArray 
-    /// @param type 
-    /// @return 
+    /// @brief  Will create the texture material instance.
+    /// @param  matName      The name for the material.
+    /// @param  texResArray  The array with all textures to use.
+    /// @param  type         The vertex type.
+    /// @return The created instance will be returned.
     static RenderBackend::Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
         RenderBackend::VertexType type );
     
-    /// @brief 
-    /// @param matName 
-    /// @param texResArray 
-    /// @param VsSrc 
-    /// @param FsSrc 
-    /// @return 
+    /// @brief  Will create the texture material instance with your own shader code.
+    /// @param  matName      The name for the material.
+    /// @param  texResArray  The array with all textures to use.
+    /// @param  VsSrc        The vertex shader source.
+    /// @param  FsSrc        The fragment shader source.
+    /// @return The created instance will be returned.
     static RenderBackend::Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 
         const String& VsSrc, const String& FsSrc);
 
+    /// @brief  Will create the debug render text material.
+    /// @return The instance of the material.
     static RenderBackend::Material *createDebugRenderTextMaterial();
 
 private:
