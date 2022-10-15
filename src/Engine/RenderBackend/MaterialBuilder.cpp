@@ -20,7 +20,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Scene/MaterialBuilder.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
 #include <osre/IO/Uri.h>
 #include <osre/RenderBackend/Shader.h>
 #include <osre/RenderBackend/Material.h>
@@ -28,7 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cstdio>
 
 namespace OSRE {
-namespace Scene {
+namespace RenderBackend {
 
 using namespace ::OSRE::RenderBackend;
 
@@ -464,5 +464,5 @@ RenderBackend::Material *MaterialBuilder::createDebugRenderTextMaterial() {
     return mat;
 }
 
-} // Namespace Scene
+} // Namespace RenderBackend
 } // namespace OSRE

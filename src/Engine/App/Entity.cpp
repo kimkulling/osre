@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 
-using namespace ::OSRE::Scene;
+using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
 Entity::Entity(const String &name, const Common::Ids &ids, World *world) :

@@ -24,8 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderTestUtils.h"
 
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/DbgRenderer.h>
-#include <osre/Scene/MeshBuilder.h>
+#include <osre/RenderBackend/DbgRenderer.h>
+#include <osre/RenderBackend/MeshBuilder.h>
 
 #include <iomanip>
 
@@ -56,14 +56,14 @@ public:
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
-        Scene::DbgRenderer::getInstance()->renderDbgText(1, 1, 1U, "XXX");
-        Scene::DbgRenderer::getInstance()->renderDbgText(10, 10, 2U, "and another one");
+        DbgRenderer::getInstance()->renderDbgText(1, 1, 1U, "XXX");
+        DbgRenderer::getInstance()->renderDbgText(10, 10, 2U, "and another one");
 
         return true;
     }
 
     bool onDestroy(RenderBackendService *) override {
-        Scene::DbgRenderer::getInstance()->clear();
+        DbgRenderer::getInstance()->clear();
         return true;
     }
 
@@ -71,7 +71,7 @@ public:
         mFrameCount++;
         std::stringstream stream;
         stream << std::setfill('0') << std::setw(3) << mFrameCount;
-        Scene::DbgRenderer::getInstance()->renderDbgText(10, 10, 1, stream.str());
+        DbgRenderer::getInstance()->renderDbgText(10, 10, 1, stream.str());
         return true;
     }
 };

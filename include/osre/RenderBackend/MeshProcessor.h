@@ -24,18 +24,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/AbstractProcessor.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/App/TAABB.h>
+#include <osre/Common/TAABB.h>
 #include <osre/App/Node.h>
 
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
-
 namespace RenderBackend {
-    class Mesh;
-}
-
-namespace Scene {
         
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -48,16 +43,16 @@ public:
     ~MeshProcessor();
     bool execute() override;
     void addMesh( RenderBackend::Mesh *geo );
-    const AABB &getAABB() const;
+    const Common::AABB &getAABB() const;
 
 private:
     void handleMesh( RenderBackend::Mesh *mesh );
 
 private:
     RenderBackend::MeshArray mMeshArray;
-    AABB mAabb;
+    Common::AABB mAabb;
     i32 mDirty;
 };
 
-} // Namespace Scene
+} // Namespace RenderBackend
 } // Namespace OSRE

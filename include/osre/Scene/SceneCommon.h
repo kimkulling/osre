@@ -33,7 +33,7 @@ namespace RenderBackend {
     class Material;
 }
 
-namespace Scene {
+namespace App {
 
 class Node;
 class Camera;

@@ -23,12 +23,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/MeshProcessor.h>
+#include <osre/RenderBackend/MeshProcessor.h>
 
 namespace OSRE {
-namespace Scene {
+namespace RenderBackend {
 
-using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Common;
 
 static const i32 NeedsUpdate = 1;
 
@@ -109,5 +109,5 @@ void MeshProcessor::handleMesh(Mesh *mesh) {
     }
 }
 
-} // namespace Scene
+} // namespace RenderBackend
 } // Namespace OSRE

@@ -34,12 +34,11 @@ using namespace ::OSRE;
 using namespace ::OSRE::App;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
-using namespace ::OSRE::Scene;
 
 /// The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
     String m_assetFolder;
-    Scene::Camera *m_camera;
+    App::Camera *m_camera;
     f32 m_angle;
     glm::mat4 m_model;
     TransformMatrixBlock m_transformMatrix;

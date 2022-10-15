@@ -25,8 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/DbgRenderer.h>
-#include <osre/Scene/MeshBuilder.h>
+#include <osre/RenderBackend/DbgRenderer.h>
+#include <osre/RenderBackend/MeshBuilder.h>
 
 #include <iomanip>
 
@@ -55,7 +55,7 @@ public:
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
-        Scene::MeshBuilder myBuilder;
+        MeshBuilder myBuilder;
         TransformState transform;
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {

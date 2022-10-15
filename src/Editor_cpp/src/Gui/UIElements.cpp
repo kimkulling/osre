@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "UIElements.h"
 #include "OsreEdApp.h"
-#include <osre/Scene/MeshBuilder.h>
+#include <osre/RenderBackend/MeshBuilder.h>
 #include <osre/Platform/PlatformOperations.h>
 #include <osre/Platform/PlatformInterface.h>
 

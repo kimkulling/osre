@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 
 namespace OSRE {
-namespace Scene {
+namespace App {
 
 class Node;
 
@@ -92,5 +92,5 @@ inline glm::vec3 TrackBall::getScale() const {
     return glm::vec3(mRadius, mRadius, mRadius);
 }
 
-} // Namespace Scene
+} // Namespace App
 } // namespace OSRE

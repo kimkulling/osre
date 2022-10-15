@@ -28,7 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/TResourceCache.h>
 
 namespace OSRE {
-namespace Scene {
+namespace RenderBackend {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -82,5 +82,5 @@ private:
     static MaterialCache *s_materialCache;
 };
 
-} // Namespace Scene
+} // Namespace RenderBackend
 } // Namespace OSRE

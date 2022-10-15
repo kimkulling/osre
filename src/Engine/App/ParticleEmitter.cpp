@@ -30,19 +30,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Random/RandomGenerator.h>
 
 namespace OSRE {
-namespace Scene {
+namespace App {
 
 using namespace ::OSRE::RenderBackend;
 
-ParticleEmitter::ParticleEmitter( RenderBackendService *rbSrv )
-: m_rbSrv( rbSrv )
-, m_numPoints( 0 )
-, m_col( nullptr )
-, m_pos( nullptr )
-, m_pt_indices( nullptr )
-, m_ptGeo( nullptr )
-, mUseBounds( false )
-, mBounds() {
+ParticleEmitter::ParticleEmitter( RenderBackendService *rbSrv ) : 
+        m_rbSrv( rbSrv ), 
+        m_numPoints( 0 ), 
+        m_col( nullptr ), 
+        m_pos( nullptr ), 
+        m_pt_indices( nullptr ), 
+        m_ptGeo( nullptr ), 
+        mUseBounds( false ), 
+        mBounds() {
     // empty
 }
 
@@ -74,11 +74,11 @@ void ParticleEmitter::init( ui32 numPoints ) {
         m_pt_indices[ i ] = static_cast< GLushort >( i );
     }
 
-    Scene::MeshBuilder meshBuilder;
+    MeshBuilder meshBuilder;
     meshBuilder.allocEmptyMesh("", VertexType::ColorVertex);
     m_ptGeo = meshBuilder.getMesh();
     m_rbSrv->addMesh( m_ptGeo, 0 );
-    Scene::MeshBuilder::allocVertices(m_ptGeo, VertexType::ColorVertex, m_numPoints, m_pos, m_col, nullptr, BufferAccessType::ReadOnly);
+    MeshBuilder::allocVertices(m_ptGeo, VertexType::ColorVertex, m_numPoints, m_pos, m_col, nullptr, BufferAccessType::ReadOnly);
     ui32 pt_size = sizeof( GLushort ) * m_numPoints;
     m_ptGeo->createIndexBuffer(m_pt_indices, pt_size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
@@ -87,7 +87,7 @@ void ParticleEmitter::init( ui32 numPoints ) {
     m_ptGeo->setModelMatrix(true, glm::mat4(1.0f));
 
     // setup material
-    Material *mat = Scene::MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
+    Material *mat = MaterialBuilder::createBuildinMaterial( VertexType::ColorVertex );
     m_ptGeo->setMaterial(mat);
 }
 
@@ -115,7 +115,7 @@ void ParticleEmitter::update( d32 /*tick*/ ) {
     }
 }
 
-void ParticleEmitter::setBounds(const AABB& bounds) {
+void ParticleEmitter::setBounds(const Common::AABB& bounds) {
     mUseBounds = true;
     mBounds = bounds;
 }

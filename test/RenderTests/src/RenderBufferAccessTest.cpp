@@ -30,8 +30,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/Scene/MaterialBuilder.h>
-#include <osre/Scene/MeshBuilder.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
+#include <osre/RenderBackend/MeshBuilder.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 #include <iostream>
 
@@ -39,7 +39,6 @@ namespace OSRE {
 namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
-using namespace ::OSRE::Scene;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
@@ -82,7 +81,7 @@ public:
             pt_indices[i] = static_cast<GLushort>(i);
         }
 
-        Scene::MeshBuilder meshBuilder;
+        MeshBuilder meshBuilder;
         meshBuilder.allocEmptyMesh("empty", VertexType::ColorVertex);
         m_pointMesh = meshBuilder.getMesh();
 

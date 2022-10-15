@@ -28,10 +28,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
-namespace Scene {
+namespace RenderBackend {
 
 using namespace ::OSRE::Common;
-using namespace ::OSRE::RenderBackend;
 
 static const c8 *Tag = "GeometryBuilder";
 
@@ -295,7 +294,7 @@ MeshBuilder &MeshBuilder::allocCube(VertexType type, f32 w, f32 h, f32 d, Buffer
 
     const size_t ibSize = sizeof(ui16) * 36;
     mActiveMesh->createIndexBuffer(indices, ibSize, IndexType::UnsignedShort, access);
-    mActiveMesh->setMaterial(Scene::MaterialBuilder::createBuildinMaterial(type));
+    mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial(type));
 
     return *this;
 }
@@ -602,5 +601,5 @@ RenderBackend::Mesh *MeshBuilder::getMesh() {
     return mActiveMesh;
 }
 
-} // Namespace Scene
+} // Namespace RenderBackend
 } // Namespace OSRE

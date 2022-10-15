@@ -29,7 +29,7 @@ namespace OSRE {
 namespace UnitTest {
     
 using namespace ::OSRE::App;
-using namespace ::OSRE::Scene;
+using namespace ::OSRE::Common;
 using namespace ::OSRE::IO;
 
 class ProjectTest : public ::testing::Test {

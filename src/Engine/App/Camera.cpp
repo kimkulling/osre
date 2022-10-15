@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/glm_common.h>
 
 namespace OSRE {
-namespace Scene {
+namespace App {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
@@ -52,10 +52,6 @@ Camera::Camera(const String &name, Ids &ids, Node *parent) :
         m_up(0, 0, 1),
         m_view(1),
         m_projection(1) {
-    // empty
-}
-
-Camera::~Camera() {
     // empty
 }
 
@@ -152,5 +148,5 @@ void Camera::onRender(RenderBackendService *rbSrv) {
     rbSrv->setMatrix(MatrixType::Projection, m_projection);
 }
 
-} // Namespace Scene
+} // Namespace App
 } // Namespace OSRE

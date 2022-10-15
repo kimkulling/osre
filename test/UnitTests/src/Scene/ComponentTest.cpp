@@ -31,7 +31,6 @@ namespace OSRE {
 namespace UnitTest {
 
 using namespace ::OSRE::App;
-using namespace ::OSRE::Scene;
 
 class ComponentTest : public ::testing::Test {
 protected:

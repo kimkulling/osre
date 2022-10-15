@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/App/TAABB.h>
+#include <osre/Common/TAABB.h>
 #include <osre/Common/BaseMath.h>
 
 #include <GL/glew.h>
@@ -35,7 +35,7 @@ namespace RenderBackend {
     class RenderBackendService;
 }
 
-namespace Scene {
+namespace App {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -48,7 +48,7 @@ public:
     ~ParticleEmitter();
     void init( ui32 numPoints );
     void update( d32 tick );
-    void setBounds(const AABB& bounds);
+    void setBounds(const Common::AABB& bounds);
     RenderBackend::Mesh* getMesh() const;
 
 private:
@@ -59,8 +59,8 @@ private:
     GLushort *m_pt_indices;
     RenderBackend::Mesh *m_ptGeo;
     bool mUseBounds;
-    AABB mBounds;
+    Common::AABB mBounds;
 };
 
-} // Namespace RenderBackend
+} // Namespace App
 } // Namespace OSRE

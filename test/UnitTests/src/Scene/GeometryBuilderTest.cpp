@@ -21,16 +21,15 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "osre_testcommon.h"
-#include <osre/Scene/MeshBuilder.h>
+#include <osre/RenderBackend/MeshBuilder.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Debugging/MeshDiagnostic.h>
-#include <osre/Scene/MaterialBuilder.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
 #include <osre/RenderBackend/Mesh.h>
 
 namespace OSRE {
 namespace UnitTest {
 
-using namespace ::OSRE::Scene;
 using namespace ::OSRE::Debugging;
 using namespace ::OSRE::RenderBackend;
 
@@ -90,7 +89,7 @@ TEST_F( MeshBuilderTest, allocLineListTest ) {
     indices[ 2 ]=1;
     indices[ 3 ]=2;
 
-    Scene::MeshBuilder geoBuilder;
+    MeshBuilder geoBuilder;
     geoBuilder.allocLineList(VertexType::ColorVertex, BufferAccessType::ReadOnly, numLines, pos, col, indices);
     Mesh *mesh = geoBuilder.getMesh();
     EXPECT_NE( nullptr, mesh );
@@ -123,7 +122,7 @@ TEST_F( MeshBuilderTest, allocPointsTest ) {
     col[ 2 ].x = 0.8f;
     col[ 2 ].y = 0.8f;
     col[ 2 ].z = 0.8f;
-    Scene::MeshBuilder meshBuilder;
+    MeshBuilder meshBuilder;
     meshBuilder.allocPoints(VertexType::ColorVertex, BufferAccessType::ReadOnly, numPoints, pos, col);
     Mesh *mesh = meshBuilder.getMesh();
     EXPECT_NE( nullptr, mesh );

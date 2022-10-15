@@ -141,7 +141,7 @@ bool RenderTestSuite::setup(const String &API) {
         registry->registerAssetPath("assets", getMediaPath());
     }
 
-    Scene::MaterialBuilder::create();
+    MaterialBuilder::create();
 
     return true;
 }
@@ -153,7 +153,7 @@ bool RenderTestSuite::teardown() {
         m_pRenderBackendServer = nullptr;
     }
 
-    Scene::MaterialBuilder::destroy();
+    MaterialBuilder::destroy();
 
     IO::IOService::getInstance()->close();
     IO::IOService::getInstance()->release();

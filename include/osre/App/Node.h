@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/TObjPtr.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/SceneCommon.h>
-#include <osre/App/TAABB.h>
+#include <osre/Common/TAABB.h>
 
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>
@@ -43,7 +43,7 @@ namespace RenderBackend {
     struct TransformState;
 }
 
-namespace Scene {
+namespace App {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -92,7 +92,7 @@ struct AbstractNodeFactory {
 class OSRE_EXPORT Node : public Common::Object {
 public:
     /// @brief The node pointer type.
-    using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::Scene::Node>;
+    using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::App::Node>;
     /// @brief The node array type-
     using NodeArray = CPPCore::TArray<Node *>;
     /// @brief USed to declare mesh-array instances.
@@ -160,5 +160,5 @@ inline bool Node::isActive() const {
     return m_isActive;
 }
 
-} // Namespace Scene
+} // Namespace App
 } // namespace OSRE

@@ -21,21 +21,21 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/Project.h>
+#include <osre/App/World.h>
+#include <osre/App/Entity.h>
+#include <osre/App/Node.h>
 #include <osre/Common/Logger.h>
+#include <osre/Common/TAABB.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Properties/Property.h>
 #include <osre/IO/Uri.h>
-#include <osre/App/World.h>
-#include <osre/App/Entity.h>
 #include <osre/RenderBackend/Mesh.h>
-#include <osre/App/Node.h>
-#include <osre/App/TAABB.h>
 
 namespace OSRE {
 namespace App {
 
 using namespace ::OSRE::IO;
-using namespace ::OSRE::Scene;
+using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
 static const c8 *Tag = "Project";
@@ -277,7 +277,7 @@ static void storeEntities(const CPPCore::TArray<Entity *> &entities, WorldData &
 static bool saveWorld(World *world, WorldData &wd) {
     setNameChunk(world->getName(), wd.mWorldName);
 
-    Scene::Node *root = world->getRootNode();
+    Node *root = world->getRootNode();
     if (nullptr == root) {
         return true;
     }

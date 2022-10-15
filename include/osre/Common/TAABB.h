@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/glm_common.h>
 
 namespace OSRE {
-namespace Scene {
+namespace Common {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -156,13 +156,13 @@ inline bool AABB::isIn(const glm::vec3 &pt) const {
     return true;
 }
 
-inline bool AABB::operator==(const AABB &rhs) const {
+inline bool AABB::operator == (const AABB &rhs) const {
     return (m_max == rhs.m_max && m_min == rhs.m_min);
 }
 
-inline bool AABB::operator!=(const AABB &rhs) const {
+inline bool AABB::operator != (const AABB &rhs) const {
     return !(*this == rhs);
 }
 
-} // namespace Scene
+} // namespace Common
 } // Namespace OSRE

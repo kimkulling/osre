@@ -35,7 +35,6 @@ namespace App {
 using namespace ::CPPCore;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
-using namespace ::OSRE::Scene;
 
 static const c8 *Tag = "World";
 
@@ -69,12 +68,17 @@ World::~World() {
     mActiveCamera = nullptr;
 }
 
-Scene::Camera *World::addCamera(const String &name) {
-    mActiveCamera = new Scene::Camera(name, mIds, mRoot);
+Camera *World::addCamera(const String &name) {
+    if (name.empty()) {
+        return nullptr;
+    }
+
+    mActiveCamera = new Camera(name, mIds, mRoot);
     mViews.add(mActiveCamera);
     const ui32 hash = StringUtils::hashName(mActiveCamera->getName());
     mLookupViews.insert(hash, mActiveCamera);
     mDirtry = true;
+
     return mActiveCamera;
 }
 
@@ -212,7 +216,7 @@ void World::updateBoundingTrees() {
         if (entity == nullptr) {
             continue;
         }
-        Scene::MeshProcessor processor;
+        MeshProcessor processor;
         RenderComponent *rc = (RenderComponent *)entity->getComponent(ComponentType::RenderComponentType);
         for (ui32 j = 0; j < rc->getNumGeometry(); ++j) {
             processor.addMesh(rc->getMeshAt(j));

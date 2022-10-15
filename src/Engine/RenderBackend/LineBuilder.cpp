@@ -22,10 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/Mesh.h>
-#include <osre/Scene/LineBuilder.h>
-
-//#include <GL/gl.h>
-//#include <GL/glew.h>
+#include <osre/RenderBackend/LineBuilder.h>
 
 namespace OSRE {
 namespace Scene {

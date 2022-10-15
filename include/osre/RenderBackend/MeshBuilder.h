@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/glm_common.h>
 
 namespace OSRE {
-namespace Scene {
+namespace RenderBackend {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -140,5 +140,5 @@ private:
     RenderBackend::Mesh *mActiveMesh;
 };
 
-} // Namespace Scene
+} // Namespace RenderBackend
 } // namespace OSRE

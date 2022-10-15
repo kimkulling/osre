@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Node.h>
 
 namespace OSRE {
-namespace Scene {
+namespace App {
 
 using namespace OSRE::Common;
 using namespace OSRE::Platform;
@@ -169,5 +169,5 @@ void TrackBall::reset() {
 }
 
 
-} // namespace Scene
+} // namespace App
 } // namespace OSRE

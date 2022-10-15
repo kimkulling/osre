@@ -28,14 +28,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/Scene/MaterialBuilder.h>
-#include <osre/Scene/MeshBuilder.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
+#include <osre/RenderBackend/MeshBuilder.h>
 
 namespace OSRE {
 namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
-using namespace ::OSRE::Scene;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
@@ -57,7 +56,7 @@ protected:
         
         FrameBuffer *fb = new FrameBuffer(100, 100, 32);
         
-        Scene::MeshBuilder meshBuilder;
+        MeshBuilder meshBuilder;
         rbSrv->beginPass("render_target");
         {
             rbSrv->setRenderTarget(fb);

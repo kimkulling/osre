@@ -30,14 +30,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
-
-namespace Scene {
-    class Node;
-}
-
 namespace App {
 
 class Entity;
+class Node;
 
 ///	@brief
 enum class ComponentType {
@@ -133,7 +129,7 @@ class OSRE_EXPORT TransformComponent final : public Component {
 public:
     TransformComponent(Entity *owner, ui32 id);
     ~TransformComponent() override = default;
-    void setNode(Scene::Node *node);
+    void setNode(Node *node);
 
 protected:
     bool onPreprocess() override;
@@ -142,7 +138,7 @@ protected:
     bool onPostprocess() override;
 
 private:
-    Scene::Node *mNode;
+    Node *mNode;
 };
 
 } // namespace App

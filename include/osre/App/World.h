@@ -55,17 +55,17 @@ public:
 
     /// @brief  Will add a new view.
     /// @param  view        [in] A pointer showing to the view.
-    Scene::Camera *addCamera(const String &name);
+    Camera *addCamera(const String &name);
 
     /// @brief  Will set the active view.
     /// @param  activeView  [i] A pointer showing to the active view.
     /// @return true, if set was successful, false if the view is not part of the world.
-    Scene::Camera *setActiveCamera( Scene::Camera *activeView );
+    Camera *setActiveCamera( Camera *activeView );
 
     /// @brief  Will set the active view.
     /// @param  viewName    [in] The name of the view.
     /// @return true, if set was successful, false if the view is not part of the world.
-    Scene::Camera *setActiveCamera( const String &viewName );
+    Camera *setActiveCamera( const String &viewName );
 
     /// @brief  Will return the number of assigned views.
     /// @return The number of assigned views.
@@ -74,11 +74,11 @@ public:
     /// @brief  Will return the view at the given index.
     /// @param  i       [in] The index.
     /// @return A pointer showing to the view or a nullptr in case of an error.
-    Scene::Camera *getCameraAt(ui32 i) const;
+    Camera *getCameraAt(ui32 i) const;
 
     /// @brief  Will return the active view.
     /// @return A pointer showing to the active view or nullptr, if no view is currently active.
-    Scene::Camera *getActiveView() const;
+    Camera *getActiveView() const;
 
     /// @brief Will add a new entity.
     /// @param entity   The entity to add.
@@ -98,11 +98,11 @@ public:
 
     ///	@brief
     /// @param root 
-    void setSceneRoot(Scene::Node *root);
+    void setSceneRoot(Node *root);
     
     /// @brief 
     /// @return 
-    Scene::Node *getRootNode() const;
+    Node *getRootNode() const;
 
     /// @brief  Will update the world.
     /// @param  dt      [in] The current delta time-tick.
@@ -120,11 +120,11 @@ protected:
     void updateBoundingTrees();
 
 private:
-    CPPCore::TArray<Scene::Camera*> mViews;
-    CPPCore::THashMap<ui32, Scene::Camera*> mLookupViews;
+    CPPCore::TArray<Camera*> mViews;
+    CPPCore::THashMap<ui32, Camera*> mLookupViews;
     CPPCore::TArray<Entity*> mEntities;
-    Scene::Camera *mActiveCamera;
-    Scene::Node *mRoot;
+    Camera *mActiveCamera;
+    Node *mRoot;
     Common::Ids mIds;
     RenderBackend::Pipeline *mPipeline;
     bool mDirtry;
@@ -134,7 +134,7 @@ inline size_t World::getNumCameras() const {
     return mViews.size();
 }
 
-inline Scene::Node *World::getRootNode() const {
+inline Node *World::getRootNode() const {
     return mRoot;
 }
 

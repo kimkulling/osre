@@ -26,10 +26,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/glm_common.h>
 #include <osre/App/Node.h>
 #include <osre/Scene/SceneCommon.h>
-#include <osre/App/TAABB.h>
+#include <osre/Common/TAABB.h>
 
 namespace OSRE {
-namespace Scene {
+namespace App {
 
 enum class CameraModel {
     Perspective,
@@ -53,7 +53,7 @@ public:
     Camera(const String &name, Common::Ids &ids, Node *parent = nullptr);
 
     /// @brief The class destructor.
-    ~Camera() override;
+    ~Camera() override = default;
 
     /// @brief  Will set the projection parameter.
     /// @param  fov         [in] The file of view, describes the angle of the view frustum.
@@ -80,7 +80,7 @@ public:
     void draw(RenderBackend::RenderBackendService *renderBackendSrv);
 
     /// @brief
-    void observeBoundingBox(const AABB &box);
+    void observeBoundingBox(const Common::AABB &box);
 
     /// @brief
     void setLookAt(const glm::vec3 &eyePosition, const glm::vec3 &center, const glm::vec3 &up);
@@ -176,5 +176,5 @@ inline const glm::vec3 &Camera::getUp() const {
     return m_up;
 }
 
-} // Namespace Scene
+} // Namespace App
 } // Namespace OSRE

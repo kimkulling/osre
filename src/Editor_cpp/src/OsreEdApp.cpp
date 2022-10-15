@@ -68,7 +68,6 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::IO;
-using namespace ::OSRE::Scene;
 
 static const ui32 HorizontalMargin = 2;
 static const ui32 VerticalMargin = 2;

@@ -24,8 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderTestUtils.h"
 
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/DbgRenderer.h>
-#include <osre/Scene/MeshBuilder.h>
+#include <osre/RenderBackend/DbgRenderer.h>
+#include <osre/RenderBackend/MeshBuilder.h>
 
 #include <iomanip>
 
@@ -33,7 +33,8 @@ namespace OSRE {
 namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
-using namespace ::OSRE::Scene;
+using namespace ::OSRE::Common;
+using namespace ::OSRE::App;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
@@ -55,10 +56,10 @@ public:
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
         glm::vec3 min(-1, -1, -1), max(1, 1, 1);
-        Scene::AABB aabb(min, max);
+        AABB aabb(min, max);
         m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
         m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, glm::vec3(.5, .5, .5));
-        Scene::DbgRenderer::getInstance()->renderAABB(m_transformMatrix.m_model, aabb);
+        DbgRenderer::getInstance()->renderAABB(m_transformMatrix.m_model, aabb);
 
         return true;
     }

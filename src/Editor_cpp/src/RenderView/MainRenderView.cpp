@@ -38,7 +38,6 @@ namespace Colors {
 } // namespace Colors
 
 using namespace OSRE::RenderBackend;
-using namespace OSRE::Scene;
 using namespace OSRE::App;
 using namespace OSRE::Animation;
 

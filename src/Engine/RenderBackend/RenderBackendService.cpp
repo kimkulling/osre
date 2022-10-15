@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/DbgRenderer.h>
+#include <osre/RenderBackend/DbgRenderer.h>
 #include <osre/Threading/SystemTask.h>
 
 #include "OGLRenderer/OGLRenderEventHandler.h"
@@ -140,7 +140,7 @@ bool RenderBackendService::onOpen() {
     }
 
     // Create the debug renderer instance
-    if (!Scene::DbgRenderer::create(this)) {
+    if (!DbgRenderer::create(this)) {
         osre_error(Tag, "Cannot create Debug renderer");
         ok = false;
     }
@@ -153,7 +153,7 @@ bool RenderBackendService::onClose() {
         return false;
     }
 
-    if (!Scene::DbgRenderer::destroy()) {
+    if (!DbgRenderer::destroy()) {
         osre_error(Tag, "Cannot destroy Debug renderer");
     }
     if (m_renderTaskPtr->isRunning()) {

@@ -26,14 +26,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Pipeline.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/DbgRenderer.h>
-#include <osre/Scene/MaterialBuilder.h>
-#include <osre/Scene/MeshBuilder.h>
+#include <osre/RenderBackend/DbgRenderer.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
+#include <osre/RenderBackend/MeshBuilder.h>
 
 namespace OSRE {
-namespace Scene {
+namespace RenderBackend {
 
-using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Common;
 
 DbgRenderer *DbgRenderer::sInstance = nullptr;
 
@@ -238,5 +238,5 @@ DbgRenderer::DebugText *DbgRenderer::getDebugText(ui32 id) const {
     return found;
 }
 
-} // Namespace Scene
+} // Namespace RenderBackend
 } // namespace OSRE

@@ -61,8 +61,8 @@ public:
     }
 
 protected:
-    Scene::Camera *setupCamera(World *world) {
-        Scene::Camera *camera = world->addCamera("camera_1");
+    Camera *setupCamera(World *world) {
+        Camera *camera = world->addCamera("camera_1");
         ui32 w, h;
         AppBase::getResolution(w, h);
         camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
@@ -78,9 +78,9 @@ protected:
         AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
         World *world = getStage()->getActiveWorld();
         mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
-        Scene::Camera *camera = setupCamera(world);
+        Camera *camera = setupCamera(world);
 
-        Scene::MeshBuilder meshBuilder;
+        MeshBuilder meshBuilder;
         RenderBackend::Mesh *mesh = meshBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly).getMesh();
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);

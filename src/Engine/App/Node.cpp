@@ -30,7 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/glm_common.h>
 
 namespace OSRE {
-namespace Scene {
+namespace App {
 
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Common;
@@ -256,5 +256,5 @@ size_t Node::getMeshReferenceAt(size_t index) const {
     return m_meshRefererenceArray[index];
 }
 
-} // Namespace Scene
+} // Namespace App
 } // namespace OSRE

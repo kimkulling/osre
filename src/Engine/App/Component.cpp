@@ -111,7 +111,7 @@ TransformComponent::TransformComponent( Entity *owner, ui32 id ) :
     // empty
 }
 
-void TransformComponent::setNode( Scene::Node *node ) {
+void TransformComponent::setNode(Node *node) {
     mNode = node;
 }
 

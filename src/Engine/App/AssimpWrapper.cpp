@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Ids.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/StringUtils.h>
+#include <osre/Common/TAABB.h>
 #include <osre/Debugging/MeshDiagnostic.h>
 #include <osre/IO/AbstractFileSystem.h>
 #include <osre/IO/Directory.h>
@@ -41,7 +42,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/MeshBuilder.h>
 #include <osre/RenderBackend/MeshProcessor.h>
 #include <osre/App/Node.h>
-#include <osre/App/TAABB.h>
 
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -58,7 +58,6 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Animation;
 using namespace ::OSRE::IO;
 using namespace ::OSRE::RenderBackend;
-using namespace ::OSRE::Scene;
 
 static constexpr c8 *Tag = "AssimpWrapper";
 
@@ -116,7 +115,6 @@ AssimpWrapper::AssetContext::AssetContext(Common::Ids &ids, World *world) :
  
 AssimpWrapper::AssetContext::~AssetContext() {
     delete mDefaultTexture;
-    mDefaultTexture = nullptr;
 }
 
 AssimpWrapper::AssimpWrapper( Common::Ids &ids, World *world ) :
@@ -418,7 +416,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
     mat2MeshMap.clear();
 }
 
-void AssimpWrapper::importNode(aiNode *node, Scene::Node *parent) {
+void AssimpWrapper::importNode(aiNode *node, Node *parent) {
     if (nullptr == node) {
         return;
     }

@@ -28,8 +28,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/World.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/Scene/Camera.h>
-#include <osre/Scene/Node.h>
+#include <osre/App/Camera.h>
+#include <osre/App/Node.h>
 
 #include <cppcore/Container/TArray.h>
 

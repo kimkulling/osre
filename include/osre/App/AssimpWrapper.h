@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Animation/AnimatorBase.h>
 #include <osre/Common/Ids.h>
-#include <osre/App/TAABB.h>
+#include <osre/Common/TAABB.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -56,15 +56,12 @@ namespace RenderBackend {
 namespace IO {
     class Uri;
 }
-
-namespace Scene {
-    class Node;
-}
     
 namespace App {
 
 class Entity;
 class World;
+class Node;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
@@ -104,7 +101,7 @@ protected:
     Entity *convertScene();
     void importMeshes( aiMesh **meshes, ui32 numMeshes );
 	//void importBones(aiMesh* mesh);
-    void importNode( aiNode *node, Scene::Node *parent );
+    void importNode( aiNode *node, Node *parent );
     void importMaterial( aiMaterial *material );
     void importSkeletons(aiSkeleton *skeletons, size_t numSkeletons);
     void importAnimation(aiAnimation *animation, Animation::AnimationTrack &currentAnimationTrack, AnimationMap &animLookup);
@@ -118,7 +115,7 @@ private:
         Entity *mEntity;
         World *mWorld;
         MaterialArray mMatArray;
-        Scene::Node *mParentNode;
+        App::Node *mParentNode;
         Common::Ids &mIds;
         String mRoot;
         String mAbsPathWithFile;
