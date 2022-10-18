@@ -39,7 +39,6 @@ SET( app_inc
     ${HEADER_PATH}/App/Node.h
     ${HEADER_PATH}/App/TrackBall.h
     ${HEADER_PATH}/App/Camera.h
-    ${HEADER_PATH}/App/TAABB.h
     ${HEADER_PATH}/App/TQuadTree.h
     ${HEADER_PATH}/App/ParticleEmitter.h
     ${HEADER_PATH}/App/AppBase.h
@@ -99,6 +98,7 @@ SET( common_inc
     ${HEADER_PATH}/Common/Logger.h
     ${HEADER_PATH}/Common/Object.h
     ${HEADER_PATH}/Common/StringUtils.h
+    ${HEADER_PATH}/Common/TAABB.h
     ${HEADER_PATH}/Common/TFunctor.h
     ${HEADER_PATH}/Common/TResource.h
     ${HEADER_PATH}/Common/TResourceCache.h
