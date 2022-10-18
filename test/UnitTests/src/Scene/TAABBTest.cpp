@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace UnitTest {
 
-using namespace ::OSRE::App;
+using namespace ::OSRE::Common;
 
 class TAABBTest : public ::testing::Test {
     // empty
