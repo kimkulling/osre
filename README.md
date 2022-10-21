@@ -11,7 +11,11 @@ This is just another open-source render-engine made by Kim Kulling. This is a pl
 - Platform abstraction to support Windows, Linux and more.
   - Input
   - UI
+- Component-based entity system
+  - Transformation components
+  - Render components
 - Event-System
+  - 
 - More than 40 3D-formats supported thanks to Assimp
 - Virtual file-system for reading zip-archives
 - Instancing
