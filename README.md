@@ -50,7 +50,7 @@ using namespace ::OSRE;
 using namespace ::OSRE::App;
 using namespace ::OSRE::RenderBackend;
 
-class QuickStartdApp : public App::AppBase {
+class QuickStartApp : public App::AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock m_transformMatrix;
     /// The entity to render
@@ -58,17 +58,15 @@ class QuickStartdApp : public App::AppBase {
 
 public:
     /// The class constructor with the incoming arguments from the command line.
-    QuickStartdApp(int argc, char *argv[]) :
+    QuickStartApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv),
             m_transformMatrix(),
             mEntity(nullptr) {
         // empty
     }
 
-    /// The class destructor.
-    ~QuickStartdApp() override {
-        // empty
-    }
+    /// The class destructor, default impl.
+    ~QuickStartApp() override = default;
 
 protected:
     bool onCreate() override {
@@ -76,25 +74,36 @@ protected:
             return false;
         }
 
+        // The window
         AppBase::setWindowsTitle("Quickstart! Rotate with wasd, scroll with qe");
+        
+        // The world to work in
         World *world = getActiveWorld();
+        
+        // The entity for your triangle
         mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
+        
+        // The camera to watch the scene
         Scene::Camera *camera = world->addCamera("camera_1");
         ui32 w, h;
         AppBase::getResolution(w, h);        
         camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
 
+        // Create and add the triangle 
         Scene::MeshBuilder meshBuilder;
         RenderBackend::Mesh *mesh = meshBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly).getMesh();
         if (nullptr != mesh) {
             mEntity->addStaticMesh(mesh);
             world->addEntity(mEntity);            
+            
+            // And observer the triangle
             camera->observeBoundingBox(mEntity->getAABB());
         }
 
         return true;
     }
 
+    /// The update, will be called for each render frame
     void onUpdate() override {
         glm::mat4 rot(1.0);
         if (AppBase::isKeyPressed(Platform::KEY_A)) {
