@@ -15,7 +15,7 @@ This is just another open-source render-engine made by Kim Kulling. This is a pl
   - Transformation components
   - Render components
 - Event-System
-  - 
+  - Event bus
 - More than 40 3D-formats supported thanks to Assimp
 - Virtual file-system for reading zip-archives
 - Instancing
