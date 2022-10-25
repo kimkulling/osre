@@ -44,7 +44,7 @@ namespace DefaultPipelines {
     }
 }
 
-constexpr i32 InvalidPassIdx = -1;
+constexpr guid InvalidPassIdx = -1;
 
 Pipeline::Pipeline(const String &pipelineName) :
         Object(pipelineName),
@@ -67,7 +67,7 @@ void Pipeline::addPass(RenderPass *pass) {
     mPasses.add(pass);
 }
 
-RenderPass *Pipeline::getPassById(ui32 passId) const {
+RenderPass *Pipeline::getPassById(guid passId) const {
     for (size_t i=0; i<mPasses.size(); i++) {
         if (passId == mPasses[i]->getId()) {
             return mPasses[i];
@@ -95,7 +95,7 @@ size_t Pipeline::beginFrame() {
     return mPasses.size();
 }
 
-RenderPass *Pipeline::beginPass(ui32 passId) {
+RenderPass *Pipeline::beginPass(guid passId) {
     if (!mInFrame) {
         return nullptr;
     }
@@ -109,7 +109,7 @@ RenderPass *Pipeline::beginPass(ui32 passId) {
     return pass;
 }
 
-bool Pipeline::endPass(ui32 passId) {
+bool Pipeline::endPass(guid passId) {
     if (static_cast<i32>(passId) != mCurrentPassId || !mInFrame) {
         return false;
     }

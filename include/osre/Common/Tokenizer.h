@@ -54,7 +54,7 @@ public:
     Tokenizer( const Tokenizer &rOther );
 
     ///	@brief	The class destructor.
-    ~Tokenizer();
+    ~Tokenizer() = default;
 
     ///	@brief	Returns the number of stored token.
     ///	@return	The number of stored token.

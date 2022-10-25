@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Common.h>
+#include <osre/Common/osre_common.h>
 #include <osre/Common/Object.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -35,6 +35,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 // Forward declarations ---------------------------------------------------------------------------
+namespace Common {
+    class Ids;
+}
+
 namespace Properties {
     class Property;
 }

@@ -130,7 +130,7 @@ using ui64 = uint64_t ;
 // clang-format on
 
 /// @brief  The data type for hash ids.
-using HashId = unsigned long;
+using HashId = ui64;
 
 /// @brief  The data type float, 4 byte long.
 using f32 = float;
@@ -150,12 +150,14 @@ using String = std::string;
 /// @brief The data type for an array of strings.
 using StringArray = ::CPPCore::TArray<String>;
 
+
 /// @brief  A handle struct.
 struct Handle {
+    static constexpr i32 Invalid = -1;
+    
     i32 m_idx;
 
-    Handle() :
-            m_idx(-1) {
+    Handle() : m_idx(Invalid) {
         // empty
     }
 
@@ -167,11 +169,15 @@ struct Handle {
         m_idx = idx;
     }
 
-    bool operator==(const Handle &rhs) const {
+    bool isValid() const {
+        return m_idx != Invalid;
+    }
+
+    bool operator == (const Handle &rhs) const {
         return m_idx == rhs.m_idx;
     }
 
-    bool operator!=(const Handle &rhs) const {
+    bool operator != (const Handle &rhs) const {
         return !(*this == rhs);
     }
 };

@@ -36,6 +36,8 @@ namespace Common {
 //-------------------------------------------------------------------------------------------------
 class AABB {
 public:
+    static constexpr f32 Invalid = 999999;
+
     AABB();
     AABB(const glm::vec3 &min, const glm::vec3 &max);
     ~AABB();
@@ -59,7 +61,7 @@ private:
 };
 
 inline AABB::AABB() :
-        m_min(999999, 99999, 99999), m_max(-999999, -99999, -99999), m_diameter(0) {
+        m_min(Invalid, Invalid, Invalid), m_max(-Invalid, -Invalid, -Invalid), m_diameter(0) {
     // empty
 }
 
@@ -73,8 +75,8 @@ inline AABB::~AABB() {
 }
 
 inline void AABB::reset() {
-    m_min.x = m_min.y = m_min.z =999999;
-    m_max.x = m_max.y = m_max.z = -999999;
+    m_min.x = m_min.y = m_min.z = Invalid;
+    m_max.x = m_max.y = m_max.z = -Invalid;
 }
 
 inline void AABB::set(const glm::vec3 &min, const glm::vec3 &max) {
@@ -133,13 +135,14 @@ inline f32 AABB::getDiameter() const {
     if (0 != m_diameter) {
         return m_diameter;
     }
-    glm::vec3 diff = (m_max - m_min);
-    f32 len = glm::length(diff);
+    const glm::vec3 diff = (m_max - m_min);
+    const f32 len = glm::length(diff);
 
     return len;
 }
+
 inline glm::vec3 AABB::getCenter() const {
-    glm::vec3 center = (m_min + m_max) * 0.5f;
+    const glm::vec3 center = (m_min + m_max) * 0.5f;
 
     return center;
 }

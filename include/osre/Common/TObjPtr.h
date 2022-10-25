@@ -98,15 +98,13 @@ private:
 
 template<class T>
 inline
-TObjPtr<T>::TObjPtr() 
-: m_ptr( nullptr ) {
+TObjPtr<T>::TObjPtr() : m_ptr( nullptr ) {
 	// empty
 }
 
 template<class T>
 inline
-TObjPtr<T>::TObjPtr( T *pPtr ) 
-: m_ptr( pPtr ) {
+TObjPtr<T>::TObjPtr( T *pPtr ) : m_ptr( pPtr ) {
 	if ( nullptr != m_ptr ) {
 		m_ptr->get();
 	}
@@ -114,8 +112,7 @@ TObjPtr<T>::TObjPtr( T *pPtr )
 
 template<class T>
 inline
-TObjPtr<T>::TObjPtr( const TObjPtr<T> &other ) 
-: m_ptr( other.m_ptr ) {
+TObjPtr<T>::TObjPtr( const TObjPtr<T> &other ) : m_ptr( other.m_ptr ) {
 	if ( nullptr != m_ptr ) {
 		m_ptr->get();
 	}

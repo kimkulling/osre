@@ -37,10 +37,6 @@ Tokenizer::Tokenizer( const Tokenizer &rhs ) : m_Token( rhs.m_Token ) {
     // empty
 }
 
-Tokenizer::~Tokenizer() {
-    // empty
-}
-
 size_t Tokenizer::getNumOfToken() const {
     return m_Token.size();
 }
