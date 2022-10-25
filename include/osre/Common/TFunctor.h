@@ -100,7 +100,7 @@ public:
     }
 
     /// @brief The class destructor.
-    virtual ~FunctorMember() = default
+    virtual ~FunctorMember() = default;
 
     /// @brief Calls the member
     ///	@param	P1		[in] UniformVar one.

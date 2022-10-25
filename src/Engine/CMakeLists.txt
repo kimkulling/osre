@@ -356,22 +356,10 @@ SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLShader.cpp
     RenderBackend/OGLRenderer/OGLShader.h
 )
-SET( renderbackend_vulkanrenderer_src
-    RenderBackend/VulkanRenderer/VlkFunctions.h
-    RenderBackend/VulkanRenderer/VlkFunctions.cpp
-    RenderBackend/VulkanRenderer/VlkExportedFunctions.inl
-    RenderBackend/VulkanRenderer/VlkCommon.h
-    RenderBackend/VulkanRenderer/VlkRenderBackend.cpp
-    RenderBackend/VulkanRenderer/VlkRenderBackend.h
-    RenderBackend/VulkanRenderer/VlkRenderEventHandler.h
-    RenderBackend/VulkanRenderer/VlkRenderEventHandler.cpp
-)
 
 #==============================================================================
 # Scripting with Mono
 #==============================================================================
-SET( scripting_mono_src
-)
 SET( scripting_mono_inc
 	${HEADER_PATH}/Scripting/osre_scripting.h
 )
@@ -400,14 +388,6 @@ SET( threading_src
     Threading/SystemTask.cpp
 )
 
-if( NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*" )
-	if( WIN32 )
-		set( USE_PLATFORM "VK_USE_PLATFORM_WIN32_KHR" )
-	elseif( UNIX )
-		set( USE_PLATFORM "VK_USE_PLATFORM_XCB_KHR" )
-	endif()
-endif()
-
 #==============================================================================
 # Defined Source groups
 #==============================================================================
@@ -428,7 +408,6 @@ SOURCE_GROUP( Profiling           FILES ${profiling_src} )
 SOURCE_GROUP( Properties          FILES ${properties_src} )
 SOURCE_GROUP( RenderBackend       FILES ${renderbackend_src} )
 SOURCE_GROUP( RenderBackend\\OGLRenderer    FILES ${renderbackend_oglrenderer_src} )
-SOURCE_GROUP( RenderBackend\\VulkanRenderer FILES ${renderbackend_vulkanrenderer_src} )
 SOURCE_GROUP( RenderBackend\\Shader       FILES ${renderbackend_shader_src})
 SOURCE_GROUP( Resources           FILES ${resources_src} )
 SOURCE_GROUP( Scene               FILES ${scene_src} )
@@ -507,7 +486,6 @@ ADD_LIBRARY( osre SHARED
     ${resources_src}
     ${renderbackend_src}
         ${renderbackend_oglrenderer_src}
-        ${renderbackend_vulkanrenderer_src}
     ${scene_src}
         ${scene_shader_src}
     ${threading_src}
@@ -517,3 +495,4 @@ ADD_LIBRARY( osre SHARED
 
 target_link_libraries ( osre cppcore zlibstatic Unzip glew ${platform_libs} assimp )
 set_target_properties(  osre PROPERTIES FOLDER Engine )
+
