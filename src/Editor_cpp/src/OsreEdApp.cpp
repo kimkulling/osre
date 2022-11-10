@@ -69,10 +69,10 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::IO;
 
-static const ui32 HorizontalMargin = 2;
-static const ui32 VerticalMargin = 2;
+static constexpr ui32 HorizontalMargin = 2;
+static constexpr ui32 VerticalMargin = 2;
 
-static const c8 *Tag = "OsreApp";
+static constexpr c8 Tag[] = "OsreApp";
 
 static void createTitleString(const String &projectName, String &titleString) {
     titleString.clear();

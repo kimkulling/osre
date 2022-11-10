@@ -22,6 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "UIElementsWin32.h"
 
+#include <osre/Debugging/osre_debugging.h>
+
 #include "windows.h"
 #include <commctrl.h>
 #include <windowsx.h>
@@ -29,6 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 
 bool UIElementsWin32::sInited = false;
+HMODULE lib = nullptr;
 
 bool UIElementsWin32::init() {
     if (sInited) {
@@ -36,11 +39,23 @@ bool UIElementsWin32::init() {
     }
 
     // needed for the RichEdit control in the about/help dialog
-    LoadLibrary("riched20.dll");
+    lib = LoadLibrary("riched20.dll");
+    osre_assert(lib != nullptr);
+
     // load windows common controls library to get XP style
     InitCommonControls();
 
     sInited = true;
+
+    return true;
+}
+
+bool UIElementsWin32::release() {
+    if (!sInited) {
+        return false;
+    }
+    FreeLibrary(lib);
+    lib = nullptr;
 
     return true;
 }

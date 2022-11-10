@@ -59,6 +59,10 @@ struct Widget {
     Rect2ui mRect;
 };
 
+struct Label : Widget {
+    String mText;
+};
+
 struct PlatformData {
     HWND mHWnd;
 };
