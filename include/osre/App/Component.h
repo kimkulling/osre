@@ -30,6 +30,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
+
+namespace RenderBackend {
+    struct Light;
+}
+
 namespace App {
 
 class Entity;
@@ -42,7 +47,7 @@ enum class ComponentType {
     CameraComponentType,        ///<
     TransformComponentType,     ///<
     LightComponentType,         ///<
-    ScriptComponent,            ///< For scripting events
+    ScriptComponentType,        ///< For scripting events
 
     MaxNumComponents,
 };
@@ -62,9 +67,10 @@ public:
     virtual void setId(ui32 id);
     virtual ui32 getId() const;
     virtual Entity *getOwner() const;
+    virtual ComponentType getType() const;
 
 protected:
-    Component(Entity *owner, ui32 id);
+    Component(Entity *owner, ui32 id, ComponentType type);
     virtual bool onPreprocess() = 0;
     virtual bool onUpdate(Time dt) = 0;
     virtual bool onRender(RenderBackend::RenderBackendService *renderBackendSrv) = 0;
@@ -73,6 +79,7 @@ protected:
 private:
     Entity *m_owner;
     ui32 m_id;
+    ComponentType mType;
 };
 
 inline bool Component::preprocess() {
@@ -93,6 +100,10 @@ inline ui32 Component::getId() const {
 
 inline Entity *Component::getOwner() const {
     return m_owner;
+}
+
+inline ComponentType Component::getType() const {
+    return mType;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -139,6 +150,36 @@ protected:
 
 private:
     Node *mNode;
+};
+
+class LightComponent final : public Component {
+public:
+    LightComponent(Entity *owner, ui32 id);
+    ~LightComponent() override = default;
+    void setLight(RenderBackend::Light *light);
+
+protected:
+    bool onPreprocess() override;
+    bool onUpdate(Time dt) override;
+    bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
+    bool onPostprocess() override;
+
+private:
+    RenderBackend::Light *mLight;
+};
+
+class ScriptComponent final : public Component {
+public:
+    ScriptComponent(Entity *owner, ui32 id);
+    ~ScriptComponent() override = default;
+
+protected:
+    bool onPreprocess() override;
+    bool onUpdate(Time dt) override;
+    bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
+    bool onPostprocess() override;
+
+private:
 };
 
 } // namespace App

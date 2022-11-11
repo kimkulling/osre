@@ -29,12 +29,12 @@ namespace OSRE {
 namespace Editor {
 
 namespace Colors {
-    const glm::vec3 Black(0, 0, 0);
-    const glm::vec3 White(1, 1, 1);
-    const glm::vec3 Grey(0.5, 0.5, 0.5);
-    const glm::vec3 Red(1, 0, 0);
-    const glm::vec3 Green(0, 1, 0);
-    const glm::vec3 Blue(0, 0, 1);
+    static constexpr glm::vec3 Black(0, 0, 0);
+    static constexpr glm::vec3 White(1, 1, 1);
+    static constexpr glm::vec3 Grey(0.5, 0.5, 0.5);
+    static constexpr glm::vec3 Red(1, 0, 0);
+    static constexpr glm::vec3 Green(0, 1, 0);
+    static constexpr glm::vec3 Blue(0, 0, 1);
 } // namespace Colors
 
 using namespace OSRE::RenderBackend;

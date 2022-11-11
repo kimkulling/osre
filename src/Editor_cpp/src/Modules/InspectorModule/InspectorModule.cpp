@@ -42,9 +42,7 @@ public:
     ~InspectorView() override = default;
 
 protected:
-    void onCreate(Rect2ui rect) override {
-    
-    }
+    void onCreate(Rect2ui rect) override {}
     void onUpdate() override {}
     void onDestroy() override {}
 
@@ -64,12 +62,14 @@ InspectorModule::~InspectorModule() {
 
 bool InspectorModule::onLoad() {
     mInspectorView = new InspectorView;
+    
     return true;
 }
 
 bool InspectorModule::onUnload() {
     delete mInspectorView;
     mInspectorView = nullptr;
+    
     return true;
 }
 

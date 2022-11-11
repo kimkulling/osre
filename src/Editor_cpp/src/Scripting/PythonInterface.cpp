@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Editor {
 
-static const c8 *Tag = "PythonInterface";
+static constexpr c8 Tag[] = "PythonInterface";
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::App;
@@ -48,7 +48,7 @@ Osre_Project *gActiceProject = nullptr;
 PyTypeObject Osre_project_Type;
 
 PyDoc_STRVAR(osre_project_new_doc, "ToDo.");
-static PyObject *osre_project_new(PyObject *self, PyObject *args, PyObject *keywds) {
+static PyObject *osre_project_new(PyObject*, PyObject *args, PyObject *keywds) {
     static char *kwlist[] = { "project_name", NULL };
     char *projectName = nullptr;
     if (!PyArg_ParseTupleAndKeywords(args, keywds, "s", kwlist, &projectName)) {
@@ -67,7 +67,7 @@ static PyObject *osre_project_new(PyObject *self, PyObject *args, PyObject *keyw
 }
 
 PyDoc_STRVAR(osre_project_load_doc, "ToDo.");
-static PyObject *osre_project_load(PyObject *self, PyObject *args, PyObject *keywds) {
+static PyObject *osre_project_load(PyObject*, PyObject *args, PyObject *keywds) {
     static char *kwlist[] = { "project_file", NULL };
     char *project_file = nullptr;
     if (!PyArg_ParseTupleAndKeywords(args, keywds, "s", kwlist, &project_file)) {
@@ -90,7 +90,7 @@ static PyObject *osre_project_load(PyObject *self, PyObject *args, PyObject *key
 }
 
 PyDoc_STRVAR(osre_project_save_doc, "ToDo.");
-static PyObject *osre_project_save(PyObject *self, PyObject *args, PyObject *keywds) {
+static PyObject *osre_project_save(PyObject*, PyObject *args, PyObject *keywds) {
     static char *kwlist[] = { "project_file", NULL };
     char *project_file = nullptr;
     if (!PyArg_ParseTupleAndKeywords(args, keywds, "s", kwlist, &project_file)) {
@@ -108,7 +108,7 @@ static PyObject *osre_project_save(PyObject *self, PyObject *args, PyObject *key
 }
 
 PyDoc_STRVAR(osre_project_close_doc, "ToDo.");
-static PyObject *osre_project_close(PyObject *self, PyObject *args, PyObject *keywds) {
+static PyObject *osre_project_close(PyObject*, PyObject*, PyObject*) {
     if (gActiceProject==nullptr) {
         return nullptr;
     }
@@ -141,7 +141,7 @@ PyMODINIT_FUNC PyInit_osre_project() {
 }
 
 PyDoc_STRVAR(osre_io_import_doc, "ToDo.");
-static PyObject *osre_io_import(PyObject *self, PyObject *args, PyObject *keywds) {
+static PyObject *osre_io_import(PyObject*, PyObject *args, PyObject *keywds) {
     int voltage;
     const char *state = "a stiff";
     const char *action = "voom";
@@ -166,10 +166,10 @@ static PyMethodDef osre_io_methods[] = {
 };
 
 static struct PyModuleDef osre_io_module = {
-    PyModuleDef_HEAD_INIT,
-    "osre.io", /* name of module */
-    NULL, /* module documentation, may be NULL */
-    -1, /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
+    PyModuleDef_HEAD_INIT,         /* init */
+    "osre.io",                     /* name of module */
+    NULL,                          /* module documentation, may be NULL */
+    -1,                            /* size of per-interpreter state of the module, or -1 if the module keeps state in global variables. */
     osre_io_methods
 };
 
@@ -225,16 +225,22 @@ bool PythonInterface::destroy() {
     return true;
 }
 
-void PythonInterface::addPath( const String &path ) {
+void PythonInterface::addPath(const String &path) {
     if (path.empty()) {
         return;
     }
+    
     mPaths.add(path);
 }
 
 bool PythonInterface::runScript(const String &src) {
     if (!mCreated) {
         osre_error(Tag, "Error while calling scrpt, Python interface is not created.")
+        return false;
+    }
+
+    if (src.empty()) {
+        osre_error(Tag, "Source is empty, cannot execute python script.")
         return false;
     }
 
