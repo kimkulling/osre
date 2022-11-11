@@ -97,7 +97,7 @@ Component *Entity::getComponent(ComponentType type) const {
     switch (type) {
         case OSRE::App::ComponentType::RenderComponentType:
             return m_renderComponent;
-        case OSRE::App::ComponentType::ScriptComponent:
+        case OSRE::App::ComponentType::ScriptComponentType:
             break;
         case OSRE::App::ComponentType::MaxNumComponents:
         case OSRE::App::ComponentType::InvalidComponent:

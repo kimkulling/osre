@@ -34,89 +34,81 @@ using namespace ::OSRE::App;
 
 class ComponentTest : public ::testing::Test {
 protected:
-	Common::Ids *m_ids;
+    Common::Ids *m_ids;
 
-	void SetUp() override {
-		m_ids = new Common::Ids;
-	}
+    void SetUp() override {
+        m_ids = new Common::Ids;
+    }
 
-	void TearDown() override {
-		delete m_ids;
-	}
+    void TearDown() override {
+        delete m_ids;
+    }
 };
 
 class MockComponent : public Component {
 public:
-	MockComponent(Entity *owner, ui32 id) :
-			Component(owner, id) {
-		// empty
-	}
+    MockComponent(Entity *owner, ui32 id, ComponentType type) 
+	    : Component(owner, id, type) {}
 
-	~MockComponent() {
-		// empty
-	}
+    ~MockComponent() = default{
 
-	void update(Time) {
-		// empty
-	}
+    void update(Time) {}
 
-	void render(RenderBackend::RenderBackendService *) override {
-		// empty
-	}
+    void render(RenderBackend::RenderBackendService *) override {}
 
 protected:
-	bool onPreprocess() override {
-		return true;
-	}
+    bool onPreprocess() override {
+        return true;
+    }
 
-	bool onUpdate(Time dt) override {
-		m_dt = dt;
+    bool onUpdate(Time dt) override {
+        m_dt = dt;
+        return true;
+    }
 
-		return true;
-	}
+    bool onRender(RenderBackend::RenderBackendService *renderBackendSrv) override {
+        EXPECT_NE(nullptr, renderBackendSrv);
 
-	bool onRender(RenderBackend::RenderBackendService *renderBackendSrv) override {
-		EXPECT_NE(nullptr, renderBackendSrv);
+        return true;
+    }
 
-		return true;
-	}
-
-	bool onPostprocess() override {
-		return true;
-	}
+    bool onPostprocess() override {
+        return true;
+    }
 
 private:
-	Time m_dt;
+    Time m_dt;
 };
 
 TEST_F(ComponentTest, createTest) {
-	bool ok(true);
-	try {
-		Common::Ids ids;
-		Entity entity("test", ids, nullptr);
-		MockComponent myComp(&entity, 0);
-	} catch (...) {
-		ok = false;
-	}
-	EXPECT_TRUE(ok);
+    bool ok(true);
+    try {
+        Common::Ids ids;
+        Entity entity("test", ids, nullptr);
+        MockComponent myComp(&entity, 0, ComponentType::ScriptComponentType);
+    } catch (...) {
+        ok = false;
+    }
+    EXPECT_TRUE(ok);
 }
 
 TEST_F(ComponentTest, accessNodeTest) {
-	String name = "test";
+    String name = "test";
 
-	Entity *entity = new Entity(name, *m_ids, nullptr);
-	MockComponent myComp(entity, 0);
+    Entity *entity = new Entity(name, *m_ids, nullptr);
+    MockComponent myComp(entity, 0, ComponentType::ScriptComponentType);
 
-	EXPECT_EQ(entity, myComp.getOwner());
+    EXPECT_EQ(entity, myComp.getOwner());
 }
 
 TEST_F(ComponentTest, accessIdTest) {
-	String name = "test";
+    String name = "test";
 
-	Entity *entity = new Entity(name, *m_ids, nullptr);
-	Component *rc = entity->getComponent(ComponentType::RenderComponentType);
-	EXPECT_NE(nullptr, rc);
+    Entity *entity = new Entity(name, *m_ids, nullptr);
+    Component *rc = entity->getComponent(ComponentType::RenderComponentType);
+    EXPECT_NE(nullptr, rc);
 }
 
 } // Namespace UnitTest
 } // Namespace OSRE
+
