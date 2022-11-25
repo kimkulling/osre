@@ -27,7 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Collision {
 
-
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -41,15 +40,14 @@ public:
 
     TQuadTree(const Rect& rc);
     ~TQuadTree();
-    void add(const Point& pt);
+    
 
 private:
     struct QuadNode {
         Rect m_rect;
         QuadNode*m_children[4];
         
-        QuadNode(const Rect &rc) 
-        : m_rect( rc ) {
+        QuadNode(const Rect &rc) : m_rect( rc ) {
             m_children[0] = m_children[1] = m_children[2] = m_children[3] = nullptr;
         }
         
@@ -66,28 +64,20 @@ private:
         }
     };
 
-    QuadNode*m_root;
+    QuadNod *m_root;
 };
 
 template<class T>
-inline
-TQuadTree<T>::TQuadTree(const Rect &rc)
-: m_root( nullptr ) {
+inline TQuadTree<T>::TQuadTree(const Rect &rc) : m_root( nullptr ) {
     m_root = new Entity(rc);
 }
 
 template<class T>
-inline
-TQuadTree<T>::~TQuadTree() {
+inline TQuadTree<T>::~TQuadTree() {
     delete m_root;
     m_root = nullptr;
 }
 
-template<class T>
-inline
-void TQuadTree<T>::add(const Point& pt) {
-
-}
 } // Namespace Collision
 } // Namespace OSRE
 
