@@ -216,6 +216,10 @@ void OsreEdApp::importAssetCmd(ui32, void *) {
     }
 }
 
+void OsreEdApp::newMeshCmd(ui32 cmdId, void* data) {
+    // ToDo!
+}
+
 void OsreEdApp::quitEditorCmd(ui32, void *) {
     DlgResults result;
     PlatformOperations::getDialog("Really quit?", 

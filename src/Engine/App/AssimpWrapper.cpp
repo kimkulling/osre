@@ -142,6 +142,7 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
 
     String filename;
     if (!Directory::getDirectoryAndFile(mAssetContext.mAbsPathWithFile, mAssetContext.mRoot, filename)) {
+        osre_error(Tag, "Error while separating folder and file from  " + mAssetContext.mAbsPathWithFile);
         return false;
     }
 
@@ -150,11 +151,12 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
     osre_debug(Tag, "Start importing " + filename);
     mAssetContext.mScene = myImporter.ReadFile(filename, flags);
     if (nullptr == mAssetContext.mScene) {
-        osre_error(Tag, "Start importing " + filename);
+        osre_error(Tag, "Cannot start importing " + filename + ", scene is nullptr.");
         mAssetContext.mRoot = "";
         mAssetContext.mAbsPathWithFile = "";
         return false;
     }
+
     osre_debug(Tag, "Importing " + filename + " finished.");
     convertScene();
     osre_debug(Tag, "Converting " + filename + " finished.");
@@ -544,4 +546,4 @@ void AssimpWrapper::importAnimation(aiAnimation *animation, AnimationTrack &curr
 }
 
 } // namespace App
-} // Namespace OSRE
+} // namespace OSRE
