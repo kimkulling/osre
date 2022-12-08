@@ -49,6 +49,12 @@ struct QueueEntry {
 ///	@ingroup    Engine
 ///
 ///	@brief	This class is used to provide global published events to other subscriptions.
+/// A publish suscripe model is in use to implement this. It works in the following way:
+/// 
+/// Sender -> broadcasring an event -> suscribed EventHandler 1
+///                                 -> suscribed EventHandler 2
+/// All event handlers, which has registered a suscribtion will get notified.
+/// If no event handler has registered before the event will get lost.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT EventBus {
 public:
