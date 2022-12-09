@@ -22,13 +22,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "Modules/ModuleRegistry.h"
 
-#include <osre/App/ModuleBase.h>
+#include <osre/Modules/ModuleBase.h>
 #include <osre/Debugging/osre_debugging.h>
 
 namespace OSRE {
 namespace Editor {
 
 using namespace ::OSRE::App;
+using namespace ::OSRE::Modules;
 
 ModuleRegistry::ModuleRegistry() :
         mModules(),

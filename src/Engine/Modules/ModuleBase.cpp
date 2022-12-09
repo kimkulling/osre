@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,13 +20,16 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/App/ModuleBase.h>
-#include <osre/App/IModuleView.h>
+#include <osre/Modules/ModuleBase.h>
+#include <osre/Modules/IModuleView.h>
 
 #include <osre/App/AppBase.h>
 
 namespace OSRE {
-namespace App {
+namespace Modules {
+
+using namespace ::OSRE::Common;
+using namespace ::OSRE::App;
 
 ModuleBase::ModuleBase(const String &name, AppBase *parentApp) :
         Object(name),
@@ -40,7 +43,7 @@ ModuleBase::~ModuleBase() {
     // empty
 }
 
-void ModuleBase::setModulelView( IModuleView *view ) {
+void ModuleBase::setModulelView(IModuleView *view) {
     mView = view;
 }
 
@@ -89,6 +92,11 @@ void ModuleBase::render() {
     onRender();
 }
 
+void bool ModuleBase::onEvent(const Event&, const EventData*){
+    // empty
+}
+
+
 App::AppBase *ModuleBase::getParentApp() const {
     return mParentApp;
 }
@@ -109,5 +117,5 @@ void ModuleBase::onRender() {
     // empty
 }
 
-} // namespace App
+} // namespace Modules
 } // namespace OSRE 

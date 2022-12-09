@@ -31,16 +31,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Actions/ImportAction.h"
 #include "Engine/App/MouseEventListener.h"
 
-#include <osre/App/ModuleBase.h>
+#include <osre/Modules/ModuleBase.h>
+
 #include <osre/App/App.h>
 #include <osre/Animation/AnimatorBase.h>
+
 #include <osre/IO/Directory.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/File.h>
 #include <osre/IO/IOService.h>
+
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/PlatformOperations.h>
 #include <osre/Platform/PlatformInterface.h>
+
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>

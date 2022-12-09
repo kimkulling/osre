@@ -29,16 +29,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
-CPPCore::TStackAllocator<QueueEntry> QueueEntryAlloctor;
+::CPPCore::TStackAllocator<QueueEntry> QueueEntryAlloctor;
 
 static constexpr c8 Tag[] = "EventBus";
 
 EventBus::EventBus() :
         mSuscribedHandler(), mQueueEntryArray(), mCreated(false) {
-    // empty
-}
-
-EventBus::~EventBus() {
     // empty
 }
 

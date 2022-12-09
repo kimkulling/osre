@@ -23,13 +23,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/Object.h>
+#include <osre/Common/AbstractEventHandler.h>
 
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
 namespace App {
+    class AppBase;
+}
 
-class AppBase;
+namespace Modules {
+
 class OsreEdApp;
 class IModuleView;
 
@@ -38,7 +42,7 @@ class IModuleView;
 ///
 /// @brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT ModuleBase : public Common::Object {
+class OSRE_EXPORT ModuleBase : public Common::Object, public Common::AbstractEventHandler {
 public:
     virtual ~ModuleBase();
     virtual void setModulelView(IModuleView *view);
@@ -48,9 +52,10 @@ public:
     virtual void update();
     virtual void render();
     virtual App::AppBase *getParentApp() const;
+    virtual bool onEvent( const Common::Event &ev, const Common::EventData *eventData );
 
 protected:
-    ModuleBase(const String &name, AppBase *parentApp);
+    ModuleBase(const String &name, App::AppBase *parentApp);
     virtual bool onLoad();
     virtual bool onUnload();
     virtual void onUpdate();
@@ -67,6 +72,6 @@ private:
     App::AppBase *mParentApp;
 };
 
-
-} // namespace Editor
+} // namespace Modules
 } // namespace OSRE
+

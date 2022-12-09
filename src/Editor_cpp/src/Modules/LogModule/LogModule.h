@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/app/ModuleBase.h>
+#include <osre/Modules/ModuleBase.h>
 
 namespace OSRE {
 
@@ -40,7 +40,7 @@ class AssimpLogStream;
 ///
 /// @brief  This module implements the logic and the UI fr the log output.
 //-------------------------------------------------------------------------------------------------
-class LogModule : public App::ModuleBase {
+class LogModule : public Modules::ModuleBase {
 public:
     /// @brief The class constructor.
     /// @param[in] parentApp    The parent application.

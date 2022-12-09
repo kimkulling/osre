@@ -22,14 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/App/IModuleView.h>
-#include <osre/app/ModuleBase.h>
-#include <osre/App/AppBase.h>
+#include <osre/Modules/IModuleView.h>
+#include <osre/Modules/ModuleBase.h>
 
 namespace OSRE {
 
-namespace UI {
-    class Panel;
+namespace App{
+    class AppBase;
 }
 
 namespace Editor {
@@ -41,7 +40,7 @@ class InspectorView;
 ///
 /// @brief
 //-------------------------------------------------------------------------------------------------
-class InspectorModule : public App::ModuleBase {
+class InspectorModule : public Modules::ModuleBase {
 public:
     InspectorModule(App::AppBase *parentApp);
     ~InspectorModule() override;

@@ -26,20 +26,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 
 namespace OSRE {
-namespace App {
+namespace Modules {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///
 /// @brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT IModuleView : Common::Object {
+class OSRE_EXPORT IModuleView : public Common::Object {
 public:
-    virtual ~IModuleView();
+    virtual ~IModuleView() = default;
     virtual void create(Rect2ui rect);
     virtual void update();
     virtual void destroy();
-
+    IModuleView(const IModuleView &) = delete;
+    IModuleView &operator = (const IModuleView &) = delete;
+    
 protected:
     IModuleView(const String &name);
     virtual void onCreate(Rect2ui rect);
@@ -47,12 +49,8 @@ protected:
     virtual void onDestroy();
 };
 
-inline IModuleView::IModuleView( const String &name ) :
-        Object( name ) {
-    // empty
-}
-
-inline IModuleView::~IModuleView() {
+inline IModuleView::IModuleView(const String &name) :
+        Object(name) {
     // empty
 }
 
@@ -81,5 +79,5 @@ inline void IModuleView::onDestroy() {
     // empty
 }
 
-} // namespace App
+} // namespace Modules
 } // namespace OSRE
