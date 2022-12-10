@@ -32,7 +32,13 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 using namespace ::glm;
 
-static const c8 *Tag = "Camera";
+static constexpr c8 Tag[] = "Camera";
+
+static const String CameraModelName[3] = {
+    "Perspective ",
+    "Orthogonal",
+    "Invalid"
+};
 
 Camera::Camera(const String &name, Ids &ids, Node *parent) :
         Node(name, ids, parent),
@@ -108,6 +114,12 @@ void Camera::setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farP
     m_far = farPlane;
 
     setCameraModel(CameraModel::Perspective);
+}
+
+void Camera::setCameraModel(CameraModel cm) {
+    osre_trace(Tag, "Set camera model to " + CameraModelName[static_cast<size_t>(cm)])
+
+    mCameraModel = cm;
 }
 
 void Camera::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane, f32 farPlane) {
