@@ -92,8 +92,8 @@ void ModuleBase::render() {
     onRender();
 }
 
-void bool ModuleBase::onEvent(const Event&, const EventData*){
-    // empty
+bool ModuleBase::onEvent(const Event&, const EventData*){
+    return true;
 }
 
 
@@ -115,6 +115,14 @@ void ModuleBase::onUpdate() {
 
 void ModuleBase::onRender() {
     // empty
+}
+
+bool ModuleBase::onAttached( const Common::EventData * ) {
+    return true;
+}
+
+bool ModuleBase::onDetached( const Common::EventData * ) {
+    return true;
 }
 
 } // namespace Modules

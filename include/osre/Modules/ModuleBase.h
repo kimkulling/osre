@@ -59,6 +59,9 @@ protected:
     virtual bool onUnload();
     virtual void onUpdate();
     virtual void onRender();
+    virtual bool onAttached(const Common::EventData *eventData);
+    virtual bool onDetached(const Common::EventData *eventData);
+
 
 private:
     enum class ModuleState {
