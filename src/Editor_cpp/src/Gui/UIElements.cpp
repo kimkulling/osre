@@ -52,6 +52,8 @@ constexpr int IDM_FILE_SAVE = 3;
 constexpr int IDM_FILE_IMPORT = 4;
 constexpr int IDM_FILE_QUIT = 5;
 
+constexpr int IDM_MESH_NEW = 100;
+
 constexpr int IDM_GETTING_HELP = 6;
 constexpr int IDM_INFO_VERSION = 7;
 
@@ -141,6 +143,11 @@ void UIElements::createMenues(Win32Window *w, OsreEdApp *app, Platform::Abstract
         { MF_STRING, IDM_FILE_QUIT, L"&Quit", MenuFunctor::Make(app, &OsreEdApp::quitEditorCmd) },
     };
     w->addSubMenues(nullptr, queue, L"File", FileMenu, 8);
+
+    MenuEntry SceneMenu[1] = {
+        { MF_STRING, IDM_MESH_NEW, L"&New Mesh", MenuFunctor::Make(app, &OsreEdApp::newMeshCmd) },
+    };
+    w->addSubMenues(nullptr, queue, L"Scene", SceneMenu, 1);
 
     MenuEntry InfoMenu[2] = {
         { MF_STRING, IDM_GETTING_HELP, L"&Getting Help", MenuFunctor::Make(app, &OsreEdApp::gettingHelpCmd) },
