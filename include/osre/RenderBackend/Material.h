@@ -39,7 +39,11 @@ using TextureResourceArray = CPPCore::TArray<RenderBackend::TextureResource *>;
 static constexpr ui32 MaxMatColorType = static_cast<ui32>(MaterialColorType::NumMaterialColorTypes);
 
 
-///	@brief
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Material {
 public:
     String m_name;

@@ -42,7 +42,7 @@ public:
 
 protected:
     IModuleView(const String &name);
-    virtual void onCreate(Rect2ui rect);
+    virtual void onCreate(const Rect2ui &rect);
     virtual void onUpdate();
     virtual void onDestroy();
 };
@@ -69,7 +69,7 @@ inline void IModuleView::destroy() {
 }
 
 
-inline void IModuleView::onCreate( Rect2ui ) {
+inline void IModuleView::onCreate(const Rect2ui& ) {
     // empty
 }
 

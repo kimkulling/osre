@@ -42,7 +42,7 @@ public:
     ~InspectorView() override = default;
 
 protected:
-    void onCreate(Rect2ui rect) override {}
+    void onCreate(const Rect2ui &rect) override {}
     void onUpdate() override {}
     void onDestroy() override {}
 

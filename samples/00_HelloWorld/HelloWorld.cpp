@@ -81,7 +81,8 @@ protected:
         Camera *camera = setupCamera(world);
 
         MeshBuilder meshBuilder;
-        RenderBackend::Mesh *mesh = meshBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly).getMesh();
+        //RenderBackend::Mesh *mesh = meshBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly).getMesh();
+        RenderBackend::Mesh *mesh = meshBuilder.allocCube(VertexType::ColorVertex, .5,.5,.5,BufferAccessType::ReadOnly).getMesh();
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);

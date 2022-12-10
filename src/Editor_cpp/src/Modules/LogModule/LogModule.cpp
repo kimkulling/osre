@@ -115,7 +115,7 @@ public:
     }
 
 protected:
-    void onCreate(Rect2ui rect) override {
+    void onCreate(const Rect2ui &rect) override {
         Win32Window *w = (Win32Window *)mRootWindow;
         if (w == nullptr) {
             osre_error(Tag, "Cannot create log module view.");

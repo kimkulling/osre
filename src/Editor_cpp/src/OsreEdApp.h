@@ -24,12 +24,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Modules/ModuleRegistry.h"
 #include "SceneData.h"
-#include <osre/App/AppBase.h>
-#include <osre/App/World.h>
+#include <osre/App/App.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/App/Camera.h>
-#include <osre/App/Node.h>
 
 #include <cppcore/Container/TArray.h>
 

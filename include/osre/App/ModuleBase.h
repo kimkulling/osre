@@ -30,7 +30,6 @@ namespace OSRE {
 namespace App {
 
 class AppBase;
-class OsreEdApp;
 class IModuleView;
 
 //-------------------------------------------------------------------------------------------------
