@@ -32,7 +32,8 @@ namespace App {
 using namespace ::OSRE::Common;
 
 AssetRegistry *AssetRegistry::s_instance = nullptr;
-static const c8 *Tag                = "AssetRegistry";
+
+static constexpr c8 Tag[] = "AssetRegistry";
 
 AssetRegistry *AssetRegistry::create() {
     if ( nullptr == s_instance ) {
@@ -43,7 +44,7 @@ AssetRegistry *AssetRegistry::create() {
 }
 
 void AssetRegistry::destroy() {
-    if ( nullptr==s_instance ) {
+    if ( nullptr == s_instance ) {
         return;
     }
 
@@ -56,7 +57,8 @@ bool AssetRegistry::registerAssetPath( const String &mount, const String &path )
     if ( nullptr == s_instance ) {
         return false;
     }
-    const ui32 hashId = StringUtils::hashName(mount);
+    
+    const HashId hashId = StringUtils::hashName(mount);
     s_instance->m_name2pathMap.insert( hashId, path );
 
     return true;

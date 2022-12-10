@@ -24,6 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/TObjPtr.h>
 #include <osre/Common/BaseMath.h>
+#include <osre/IO/Stream.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/SceneCommon.h>
 
@@ -75,6 +76,8 @@ protected:
     virtual bool onUpdate(Time dt) = 0;
     virtual bool onRender(RenderBackend::RenderBackendService *renderBackendSrv) = 0;
     virtual bool onPostprocess() = 0;
+    virtual void serialize(IO::Stream &stream);
+    virtual void deserialize(IO::Stream &stream);
 
 private:
     Entity *m_owner;

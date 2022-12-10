@@ -44,8 +44,16 @@ void Component::update(Time dt) {
     onUpdate(dt);
 }
 
-void Component::render(RenderBackend::RenderBackendService *renderBackendSrv) {
+void Component::render(RenderBackendService *renderBackendSrv) {
     onRender(renderBackendSrv);
+}
+
+void Component::serialize( IO::Stream &stream ) {
+    // empty
+}
+
+void Component::deserialize( IO::Stream &stream ) {
+    // empty
 }
 
 RenderComponent::RenderComponent(Entity *owner, ui32 id) :

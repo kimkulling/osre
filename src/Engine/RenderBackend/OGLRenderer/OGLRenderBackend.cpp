@@ -39,7 +39,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Memory/MemUtils.h>
 
 #include "stb_image.h"
-//#include "SOIL.h"
 
 #include <iostream>
 

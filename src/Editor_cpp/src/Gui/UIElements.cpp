@@ -162,6 +162,10 @@ TreeView *UIElements::createTreeView(Win32Window *w) {
     if (w == nullptr) {
         return nullptr;
     }
+
+    auto *t = new TreeView;
+    
+    return t;
 }
 
 } // namespace OSRE

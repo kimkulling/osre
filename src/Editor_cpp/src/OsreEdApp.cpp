@@ -200,7 +200,7 @@ void OsreEdApp::loadProjectCmd(ui32, void *) {
     IO::Uri projectLoc;
     PlatformOperations::getFileOpenDialog("Select project file", "*", projectLoc);
     if (projectLoc.isValid()) {
-        loadSceneData(projectLoc, mSceneData);
+        loadSceneData(projectLoc);
     }
 }
 
@@ -208,7 +208,7 @@ void OsreEdApp::saveProjectCmd(ui32, void *) {
     IO::Uri projectLoc;
     PlatformOperations::getFileSaveDialog("Select project file", "*", projectLoc);
     if (projectLoc.isValid()) {
-        saveSceneData(projectLoc, mSceneData);
+        saveSceneData(projectLoc);
     }
 }
 
@@ -319,7 +319,7 @@ bool OsreEdApp::onDestroy() {
     return true;
 }
 
-bool OsreEdApp::loadSceneData(const IO::Uri &filename, SceneData&) {
+bool OsreEdApp::loadSceneData(const IO::Uri &filename) {
     if (filename.isEmpty()) {
         return false;
     }
@@ -341,7 +341,7 @@ bool OsreEdApp::loadSceneData(const IO::Uri &filename, SceneData&) {
     return true;
 }
 
-bool OsreEdApp::saveSceneData(const IO::Uri &filename, SceneData &sd) {
+bool OsreEdApp::saveSceneData(const IO::Uri &filename) {
     if (filename.isEmpty()) {
         return false;
     }

@@ -34,7 +34,6 @@ namespace App {
 
 namespace Modules {
 
-class OsreEdApp;
 class IModuleView;
 
 //-------------------------------------------------------------------------------------------------
