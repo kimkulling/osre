@@ -23,49 +23,61 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/Object.h>
-
-#include <cppcore/Container/TArray.h>
+#include <osre/Common/osre_common.h>
 
 namespace OSRE {
-namespace App {
-
-class AppBase;
-class IModuleView;
+namespace Modules {
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///
 /// @brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT ModuleBase : public Common::Object {
+class OSRE_EXPORT IModuleView : public Common::Object {
 public:
-    virtual ~ModuleBase();
-    virtual void setModulelView(IModuleView *view);
-    virtual IModuleView *getModuleView() const; 
-    virtual bool load();
-    virtual bool unload();
+    virtual ~IModuleView() = default;
+    virtual void create(Rect2ui rect);
     virtual void update();
-    virtual void render();
-    virtual App::AppBase *getParentApp() const;
-
+    virtual void destroy();
+    IModuleView(const IModuleView &) = delete;
+    IModuleView &operator = (const IModuleView &) = delete;
+    
 protected:
-    ModuleBase(const String &name, AppBase *parentApp);
-    virtual bool onLoad();
-    virtual bool onUnload();
+    IModuleView(const String &name);
+    virtual void onCreate(const Rect2ui &rect);
     virtual void onUpdate();
-    virtual void onRender();
-
-private:
-    enum class ModuleState {
-        Init,
-        Loaded,
-        Unloaded,
-        Error
-    } mState;
-    IModuleView *mView;
-    App::AppBase *mParentApp;
+    virtual void onDestroy();
 };
 
+inline IModuleView::IModuleView(const String &name) :
+        Object(name) {
+    // empty
+}
 
-} // namespace Editor
+inline void IModuleView::create( Rect2ui rect ) {
+    onCreate(rect);
+}
+
+inline void IModuleView::update() {
+    // empty
+}
+
+inline void IModuleView::destroy() {
+    onDestroy();
+}
+
+
+inline void IModuleView::onCreate(const Rect2ui& ) {
+    // empty
+}
+
+inline void IModuleView::onUpdate() {
+    // empty
+}
+
+inline void IModuleView::onDestroy() {
+    // empty
+}
+
+} // namespace Modules
 } // namespace OSRE

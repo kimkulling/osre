@@ -1,6 +1,6 @@
 #pragma once
 
-#include <osre/App/ModuleBase.h>
+#include <osre/Modules/ModuleBase.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
 
@@ -8,14 +8,14 @@ namespace OSRE {
 namespace Editor {
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup    Editor
+/// @ingroup    Editor
 ///
-/// @brief  
+/// @brief  This module is used to ...
 //-------------------------------------------------------------------------------------------------
-class EditorModule : public App::ModuleBase {
+class EditorModule : public Modules::ModuleBase {
 public:
     EditorModule(App::AppBase *parentApp);
-    ~EditorModule() override;
+    ~EditorModule() override = default;
 
 protected:
     bool onLoad() override;
@@ -27,5 +27,5 @@ private:
     RenderBackend::TransformMatrixBlock mTransformMatrix;
 };
 
-}
+} // namepspace Editor
 } // namespace OSRE

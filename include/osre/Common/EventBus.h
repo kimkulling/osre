@@ -62,7 +62,7 @@ public:
     EventBus();
 
     ///	@brief  The class destructor.
-    ~EventBus();
+    ~EventBus() = default;
 
     ///	@brief  Will create the event bus, allocator will get prepared.
     /// @return true if successful, false in case of an error.

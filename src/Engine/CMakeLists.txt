@@ -44,8 +44,6 @@ SET( app_inc
     ${HEADER_PATH}/App/AppBase.h
     ${HEADER_PATH}/App/Component.h
     ${HEADER_PATH}/App/Entity.h
-    ${HEADER_PATH}/App/ModuleBase.h
-    ${HEADER_PATH}/App/IModuleView.h
     ${HEADER_PATH}/App/ServiceProvider.h
     ${HEADER_PATH}/App/Project.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
@@ -66,7 +64,6 @@ SET( app_src
     App/AppBase.cpp
     App/Component.cpp
     App/Entity.cpp
-    App/ModuleBase.cpp
     App/ServiceProvider.cpp
     App/Project.cpp
     App/AssetRegistry.cpp
@@ -76,6 +73,18 @@ SET( app_src
     App/MouseEventListener.cpp
     App/MouseEventListener.h
     App/TransformController.cpp
+)
+
+#==============================================================================
+# Modules
+#==============================================================================
+SET(modules_src
+    Modules/ModuleBase.cpp
+)
+
+SET(modules_inc
+    ${HEADER_PATH}/Modules/IModuleView.h
+    ${HEADER_PATH}/Modules/ModuleBase.h
 )
 
 #==============================================================================
@@ -401,6 +410,7 @@ SOURCE_GROUP( Debugging\\Win32    FILES ${debugging_windows_src} )
 SOURCE_GROUP( IO                  FILES ${io_src} )
 SOURCE_GROUP( Math                FILES ${math_src} )
 SOURCE_GROUP( Memory              FILES ${memory_src} )
+SOURCE_GROUP( Modules             FILES ${modules_src} )
 SOURCE_GROUP( Platform            FILES ${platform_src} )
 SOURCE_GROUP( Platform\\Win32     FILES ${platform_impl_src} )
 SOURCE_GROUP( Platform\\sdl2      FILES ${platform_sdl2_src} )
@@ -426,6 +436,7 @@ SOURCE_GROUP( Include\\osre\\Utils      FILES ${utils_inc} )
 SOURCE_GROUP( Include\\osre\\IO         FILES ${io_inc} )
 SOURCE_GROUP( Include\\osre\\Math              FILES ${math_inc} )
 SOURCE_GROUP( Include\\osre\\Memory            FILES ${memory_inc} )
+SOURCE_GROUP( Include\\osre\\Modules           FILES ${modules_inc} )
 SOURCE_GROUP( Include\\osre\\Properties        FILES ${properties_inc} )
 SOURCE_GROUP( Include\\osre\\Platform          FILES ${platform_inc} )
 SOURCE_GROUP( Include\\osre\\Platform\\Windows FILES ${platform_win_inc} )
@@ -457,6 +468,7 @@ ADD_LIBRARY( osre SHARED
     ${io_inc}
     ${math_inc}
     ${memory_inc}
+    ${modules_inc}    
     ${utils_inc}
     ${properties_inc}
     ${platform_inc}
@@ -467,7 +479,7 @@ ADD_LIBRARY( osre SHARED
 	${scripting_mono_inc}
     ${threading_inc}
     ${renderbackend_inc}
-
+    ${modules_src}
     ${app_src}
     ${animation_src}
     ${Common_src}

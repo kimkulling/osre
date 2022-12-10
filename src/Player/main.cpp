@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
-#include <osre/App/ModuleBase.h>
+#include <osre/Modules/ModuleBase.h>
 #include <osre/Common/Logger.h>
 #include <osre/Debugging/Debug.h>
 #include <osre/Common/ArgumentParser.h>
@@ -32,8 +32,9 @@ using namespace ::OSRE;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::App;
+using namespace ::OSRE::Modules;
 
-static const c8 *Tag = "player";
+static constexpr c8 Tag[] = "player";
 
 typedef void* (*createModuleFn)(void);
 
@@ -92,7 +93,7 @@ protected:
             osre_info(Tag, "Loading " + mDllName + " successful.");
         }
 
-        mModuleToPlay = (App::ModuleBase *)(mUpdateFunc)();
+        mModuleToPlay = (Modules::ModuleBase *)(mUpdateFunc)();
         if (mModuleToPlay == nullptr) {
             osre_error(Tag, "Cannot create instance of modeule from " + mDllName);
             return false;
@@ -137,7 +138,7 @@ private:
     bool mBreakOnStartup;
     LibHandle *mModule;
     createModuleFn mUpdateFunc;
-    App::ModuleBase *mModuleToPlay;
+    Modules::ModuleBase *mModuleToPlay;
 };
 
 int main(int argc, char *argv[]) {

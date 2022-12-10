@@ -33,9 +33,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 
+/// @brief This enum describes the used camera model.
 enum class CameraModel {
-    Perspective,
-    Orthogonal
+    Perspective = 0,
+    Orthogonal= 1,
+    InvalidModel
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -54,7 +56,7 @@ public:
     /// parent              [in] The parent node, nullptr for a root node.
     Camera(const String &name, Common::Ids &ids, Node *parent = nullptr);
 
-    /// @brief The class destructor.
+    /// @brief The class destructor, default.
     ~Camera() override = default;
 
     /// @brief  Will set the projection parameter.
@@ -65,7 +67,7 @@ public:
     /// @param  farPlane    [in] The distance to the far plane of the view frustum.
     void setProjectionParameters(f32 fov, f32 w, f32 h, f32 nearPlane, f32 farPlane);
 
-    ///	@brief
+    ///	@brief Will set the camera model.
     /// @param cm 
     void setCameraModel(CameraModel cm);
 
@@ -137,10 +139,6 @@ private:
     glm::vec3 m_eye, m_center, m_up;
     glm::mat4 m_view, m_projection;
 };
-
-inline void Camera::setCameraModel(CameraModel cm) {
-    mCameraModel = cm;
-}
 
 inline CameraModel Camera::getCameraModel() const {
     return mCameraModel;

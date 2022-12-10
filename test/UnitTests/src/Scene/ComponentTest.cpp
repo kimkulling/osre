@@ -50,7 +50,7 @@ public:
     MockComponent(Entity *owner, ui32 id, ComponentType type) 
 	    : Component(owner, id, type) {}
 
-    ~MockComponent() = default{
+    ~MockComponent() = default;
 
     void update(Time) {}
 

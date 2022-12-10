@@ -23,63 +23,57 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/Object.h>
-#include <osre/Common/osre_common.h>
+#include <osre/Common/AbstractEventHandler.h>
+
+#include <cppcore/Container/TArray.h>
 
 namespace OSRE {
 namespace App {
+    class AppBase;
+}
+
+namespace Modules {
+
+class IModuleView;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
 ///
 /// @brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT IModuleView : Common::Object {
+class OSRE_EXPORT ModuleBase : public Common::Object, public Common::AbstractEventHandler {
 public:
-    virtual ~IModuleView();
-    virtual void create(Rect2ui rect);
+    virtual ~ModuleBase();
+    virtual void setModulelView(IModuleView *view);
+    virtual IModuleView *getModuleView() const; 
+    virtual bool load();
+    virtual bool unload();
     virtual void update();
-    virtual void destroy();
+    virtual void render();
+    virtual App::AppBase *getParentApp() const;
+    virtual bool onEvent( const Common::Event &ev, const Common::EventData *eventData );
 
 protected:
-    IModuleView(const String &name);
-    virtual void onCreate(const Rect2ui &rect);
+    ModuleBase(const String &name, App::AppBase *parentApp);
+    virtual bool onLoad();
+    virtual bool onUnload();
     virtual void onUpdate();
-    virtual void onDestroy();
+    virtual void onRender();
+    virtual bool onAttached(const Common::EventData *eventData);
+    virtual bool onDetached(const Common::EventData *eventData);
+
+
+private:
+    enum class ModuleState {
+        Init,
+        Loaded,
+        Unloaded,
+        Error
+    } mState;
+    IModuleView *mView;
+    App::AppBase *mParentApp;
 };
 
-inline IModuleView::IModuleView( const String &name ) :
-        Object( name ) {
-    // empty
-}
-
-inline IModuleView::~IModuleView() {
-    // empty
-}
-
-inline void IModuleView::create( Rect2ui rect ) {
-    onCreate(rect);
-}
-
-inline void IModuleView::update() {
-    // empty
-}
-
-inline void IModuleView::destroy() {
-    onDestroy();
-}
-
-
-inline void IModuleView::onCreate(const Rect2ui& ) {
-    // empty
-}
-
-inline void IModuleView::onUpdate() {
-    // empty
-}
-
-inline void IModuleView::onDestroy() {
-    // empty
-}
-
-} // namespace App
+} // namespace Modules
 } // namespace OSRE
+

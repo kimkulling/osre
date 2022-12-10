@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "Modules/LogModule/LogModule.h"
-#include <osre/App/IModuleView.h>
+#include <osre/Modules/IModuleView.h>
 #include "OsreEdApp.h"
 
 #include <osre/Common/Logger.h>
@@ -42,9 +42,10 @@ namespace Editor {
 
 static constexpr c8 Tag[] = "LogModule";
 
-using namespace OSRE::Common;
-using namespace OSRE::App;
-using namespace OSRE::Platform;
+using namespace ::OSRE::Common;
+using namespace ::OSRE::App;
+using namespace ::OSRE::Modules;
+using namespace ::OSRE::Platform;
                                 
 INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM lParam) {
     (void)lParam;
