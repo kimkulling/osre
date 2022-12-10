@@ -44,7 +44,7 @@ namespace DefaultPipelines {
     }
 }
 
-constexpr guid InvalidPassIdx = -1;
+constexpr guid InvalidPassIdx = 99999999u;
 
 Pipeline::Pipeline(const String &pipelineName) :
         Object(pipelineName),
@@ -110,7 +110,7 @@ RenderPass *Pipeline::beginPass(guid passId) {
 }
 
 bool Pipeline::endPass(guid passId) {
-    if (static_cast<i32>(passId) != mCurrentPassId || !mInFrame) {
+    if (static_cast<ui32>(passId) != mCurrentPassId || !mInFrame) {
         return false;
     }
 
