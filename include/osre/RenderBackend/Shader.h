@@ -42,6 +42,7 @@ enum class ShaderType {
 };
 
 constexpr ui32 MaxShaderTypes = static_cast<ui32>(ShaderType::NumShaderTypes);
+
 using ShaderSourceArray = CPPCore::TStaticArray<String, MaxShaderTypes>;
 
 
@@ -80,17 +81,17 @@ public:
     /// @return The location used in the shader.
     size_t getLocation(const c8 *vertexAttribute) const;
 
-    /// @brief 
-    /// @param name 
+    /// @brief  Will add an uniform buffer.
+    /// @param  name    The buffer name.
     void addUniformBuffer(const String &name);
 
-    /// @brief 
-    /// @return 
+    /// @brief  Will return the number of attached uniform buffers.
+    /// @return The number of buffers.
     size_t getNumUniformBuffer() const;
 
-    /// @brief 
-    /// @param index 
-    /// @return 
+    /// @brief  Will return the uniform buffer at the given index.
+    /// @param  index       The index.
+    /// @return The buffer name or nullptr in case of an invalid index.
     const c8 *getUniformBufferAt(size_t index) const;
 
     /// @brief  Will set the sours for a given shader type.
@@ -98,13 +99,13 @@ public:
     /// @param  src     The source for the shader type.
     void setSource(ShaderType type, const String &src);
 
-    /// @brief Will return true, if the shader type was assigned to source.
-    /// @param type     The shader type.
+    /// @brief  Will return true, if the shader type was assigned to source.
+    /// @param  type     The shader type.
     /// @return true, if source was assigned, else false.
     bool hasSource(ShaderType type) const;
 
-    /// @brief Will return the assigned shader source for the given shader type
-    /// @param type     The shader type.
+    /// @brief  Will return the assigned shader source for the given shader type
+    /// @param  type     The shader type.
     /// @return The assigned source or an empty string.
     const c8 *getSource(ShaderType type) const;
 
@@ -142,48 +143,48 @@ inline bool Shader::hasSource(ShaderType type) const {
     return !m_src[static_cast<size_t>(type)].empty();
 }
 
-///	@brief  This class is sued to load a shader.
+///	@brief  This class is used to load a shader.
 class OSRE_EXPORT ShaderLoader {
 public:
     /// @brief  The default class constructor.
-    ShaderLoader();
+    ShaderLoader() = default;
     
-    /// @brief  The class destructor.
-    virtual ~ShaderLoader();
+    /// @brief  The default class destructor.
+    virtual ~ShaderLoader() = default;
     
-    /// @brief 
-    /// @param uri 
-    /// @param shader 
-    /// @return 
+    /// @brief  Will load a shader from a given uri.
+    /// @param  uri      The uri to load from.
+    /// @param  shader   The shader instance to load in.
+    /// @return The size in bytes.
     virtual size_t load(const IO::Uri &uri, Shader *shader);
     
-    /// @brief 
-    /// @param shader 
-    /// @return 
+    /// @brief  Will unload a loaded shader-
+    /// @param  shader   The shader to unload.
+    /// @return true, if unloaded.
     virtual bool unload(Shader *shader);
 };
 
-/// @brief 
+/// @brief  This class is used to represent the shader resource.
 class OSRE_EXPORT ShaderResource : public Common::TResource<Shader, ShaderLoader> {
 public:
-    /// @brief 
-    /// @param shaderName 
-    /// @param uri 
+    /// @brief  The class constructor with the name and the uri to load from.
+    /// @param  shaderName  The name for the shader.
+    /// @param  uri         The uri to load from.
     ShaderResource(const String &shaderName, const IO::Uri &uri);
     
-    ///	@brief  The class destructor.
-    ~ShaderResource() override;
+    ///	@brief  The default class destructor.
+    ~ShaderResource() override = default;
 
 protected:
-    /// @brief 
-    /// @param uri 
-    /// @param loader 
-    /// @return 
+    /// @brief  The load callback handler.
+    /// @param  uri     The uri to load from.
+    /// @param  loader  The shader loader instance.
+    /// @return The resource state.
     Common::ResourceState onLoad(const IO::Uri &uri, ShaderLoader &loader) override;
     
-    /// @brief 
-    /// @param loader 
-    /// @return 
+    /// @brief  The unload callback handler.
+    /// @param  loader   The shader loader instance.
+    /// @return The resource state.
     Common::ResourceState onUnload(ShaderLoader &loader) override;
 };
 

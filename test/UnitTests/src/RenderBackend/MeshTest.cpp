@@ -37,6 +37,8 @@ TEST_F(MeshTest, createPrimitiveGroupsTest) {
     mesh->addPrimitiveGroup(10, PrimitiveType::TriangleList, 0);
     EXPECT_EQ(1l, mesh->getNumberOfPrimitiveGroups());
     EXPECT_NE(nullptr, mesh->getPrimitiveGroupAt(0));
+
+    delete mesh;
 }
 
 }
