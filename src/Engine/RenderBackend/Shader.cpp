@@ -122,14 +122,6 @@ ShaderType Shader::getTypeFromeExtension( const String &extension ) {
     return ShaderType::InvalidShaderType;
 }
 
-ShaderLoader::ShaderLoader() {
-    // empty
-}
-
-ShaderLoader::~ShaderLoader() {
-    // empty
-}
-
 size_t ShaderLoader::load( const IO::Uri &uri, Shader *shader ) {
     if (nullptr == shader) {
         return 0;
@@ -177,10 +169,6 @@ bool ShaderLoader::unload( Shader *shader ) {
 
 ShaderResource::ShaderResource(const String &shaderName, const IO::Uri &uri) :
         TResource<Shader, ShaderLoader>(shaderName, uri) {
-    // empty
-}
-
-ShaderResource::~ShaderResource() {
     // empty
 }
 

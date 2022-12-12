@@ -42,7 +42,7 @@ struct OSRE_EXPORT TransformMatrixBlock {
     TransformMatrixBlock();
     
     ///	@brief The class destructor.
-    ~TransformMatrixBlock();
+    ~TransformMatrixBlock() = default;
     
     ///	@brief Will init the data, all matrixes ar unit-matrices again.
     void init();
