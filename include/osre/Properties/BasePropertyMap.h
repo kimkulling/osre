@@ -50,7 +50,7 @@ public:
     /// @param  id          [in] The property id.
     ///	@param	name	    [in] The name of the property.
     ///	@param	value	    [in] The value of the property.
-    virtual void setProperty(ui32 id, const String &name, const CPPCore::Variant &value);
+    virtual void setProperty(ui32 id, const String &name, const cppcore::Variant &value);
 
     /// @brief  A new property will be set.
     /// @param  id          [in] The property id.

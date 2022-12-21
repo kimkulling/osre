@@ -151,7 +151,7 @@ protected:
 private:
     Platform::AtomicInt *m_pRefCount;
     AbstractTask *m_pParent;
-    CPPCore::TArray<AbstractTask*> m_childTasks;
+    cppcore::TArray<AbstractTask*> m_childTasks;
 };
 
 } // Namespace Threading

@@ -70,7 +70,7 @@ class Node;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AssimpWrapper {
 public:
-    using MaterialArray = CPPCore::TArray<RenderBackend::Material *>;
+    using MaterialArray = cppcore::TArray<RenderBackend::Material *>;
     using Bone2NodeMap = std::map<const char *, const aiNode *>;
     using AnimationMap = std::map<const char*, Animation::AnimationTrack*>;
 

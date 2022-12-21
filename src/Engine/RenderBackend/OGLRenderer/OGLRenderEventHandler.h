@@ -88,7 +88,7 @@ public:
 
     /// @brief Will set all parameters.
     /// @param paramArray   [in]    The array with the parameters.
-    void setParameter(const CPPCore::TArray<OGLParameter*> &paramArray);
+    void setParameter(const cppcore::TArray<OGLParameter*> &paramArray);
 
     /// @brief  Will return the active render command buffer.
     /// @return Pointer showing to the render command buffer.
@@ -99,7 +99,7 @@ public:
     /// @param  primGroups        The primitive groups to add
     /// @param  currentMeshEntry  The mesh entry
     /// @return true if successful, false if not.
-    bool addMeshes(const c8 *id, CPPCore::TArray<size_t> &primGroups, MeshEntry *currentMeshEntry);
+    bool addMeshes(const c8 *id, cppcore::TArray<size_t> &primGroups, MeshEntry *currentMeshEntry);
 
 protected:
     /// @brief  Callback for attaching the event handler.

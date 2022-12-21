@@ -32,7 +32,7 @@ namespace Properties {
 
 using namespace ::OSRE::Platform;
 
-static const CPPCore::Variant EmptyVariant;
+static const cppcore::Variant EmptyVariant;
 static const c8 *ConfigKeyStringTable[Settings::MaxKonfigKey] = {
     "AppName",
     "AppType",
@@ -80,7 +80,7 @@ bool Settings::setString(Settings::ConfigKey key, const String &strValue) {
         return false;
     }
 
-    CPPCore::Variant value;
+    cppcore::Variant value;
     value.setStdString(strValue);
     m_propertyMap->setProperty(static_cast<ui32>(key), "", value);
 
@@ -88,7 +88,7 @@ bool Settings::setString(Settings::ConfigKey key, const String &strValue) {
 }
 
 String Settings::getString(ConfigKey key) const {
-    const CPPCore::Variant &v = get(key);
+    const cppcore::Variant &v = get(key);
     return v.getString();
 }
 
@@ -97,7 +97,7 @@ bool Settings::setInt(ConfigKey key, i32 intValue) {
         return false;
     }
 
-    CPPCore::Variant value;
+    cppcore::Variant value;
     value.setInt(intValue);
     m_propertyMap->setProperty(key, "", value);
 
@@ -105,7 +105,7 @@ bool Settings::setInt(ConfigKey key, i32 intValue) {
 }
 
 i32 Settings::getInt(ConfigKey key) const {
-    const CPPCore::Variant &v = get(key);
+    const cppcore::Variant &v = get(key);
     return v.getInt();
 }
 
@@ -114,7 +114,7 @@ bool Settings::setBool(ConfigKey key, bool val) {
         return false;
     }
 
-    CPPCore::Variant value;
+    cppcore::Variant value;
     value.setBool(val);
     m_propertyMap->setProperty(key, "", value);
 
@@ -122,7 +122,7 @@ bool Settings::setBool(ConfigKey key, bool val) {
 }
 
 bool Settings::getBool(ConfigKey key) const {
-    const CPPCore::Variant &v = get(key);
+    const cppcore::Variant &v = get(key);
     return v.getBool();
 }
 
@@ -130,7 +130,7 @@ bool Settings::setFloat(ConfigKey key, f32 floatValue) {
     if (key >= MaxKonfigKey) {
         return false;
     }
-    CPPCore::Variant value;
+    cppcore::Variant value;
     value.setFloat(floatValue);
     m_propertyMap->setProperty(key, "", value);
 
@@ -138,11 +138,11 @@ bool Settings::setFloat(ConfigKey key, f32 floatValue) {
 }
 
 f32 Settings::getFloat(ConfigKey key) const {
-    const CPPCore::Variant &v = get(key);
+    const cppcore::Variant &v = get(key);
     return v.getFloat();
 }
 
-const CPPCore::Variant &Settings::get(ConfigKey key) const {
+const cppcore::Variant &Settings::get(ConfigKey key) const {
     Properties::Property *pProperty = m_propertyMap->getProperty(key);
     if (!pProperty) {
         return EmptyVariant;
@@ -176,7 +176,7 @@ static i32 mapPlatformtype2Int(PluginType type) {
 }
 
 void Settings::initDefaults() {
-    CPPCore::Variant appName, windowsTitle, renderAPI, value;
+    cppcore::Variant appName, windowsTitle, renderAPI, value;
     appName.setStdString("OSRE Application");
     m_propertyMap->setProperty(AppName, ConfigKeyStringTable[AppName], appName);
 

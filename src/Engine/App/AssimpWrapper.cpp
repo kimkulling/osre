@@ -203,7 +203,7 @@ Entity *AssimpWrapper::convertScene() {
     }
     AnimationMap animLookup;
     if (nullptr != mAssetContext.mScene->mAnimations) {
-        CPPCore::TArray<AnimationTrack> animationTracks;
+        cppcore::TArray<AnimationTrack> animationTracks;
         animationTracks.resize(mAssetContext.mScene->mNumAnimations);
         for (ui32 i = 0; i < mAssetContext.mScene->mNumAnimations; ++i) {
             importAnimation(mAssetContext.mScene->mAnimations[i], animationTracks[i], animLookup);
@@ -244,7 +244,7 @@ static void copyAiMatrix4x4(const aiMatrix4x4 &aiMat, glm::mat4 &mat) {
     mat[3].w = aiMat.d4;
 }
 
-using MeshIdxArray = ::CPPCore::TArray<size_t>;
+using MeshIdxArray = ::cppcore::TArray<size_t>;
 using Mat2MeshMap = std::map<aiMaterial *, MeshIdxArray *>;
 
 static size_t countVertices(MeshIdxArray &miArray, const aiScene *scene) {
@@ -298,9 +298,9 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
 
     size_t i = 0;
     aiMesh *currentMesh = nullptr;
-    ::CPPCore::TArray<RenderVert> vertices;
+    ::cppcore::TArray<RenderVert> vertices;
     for (auto & it : mat2MeshMap) {
-        CPPCore::TArray<ui32> indexArray;
+        cppcore::TArray<ui32> indexArray;
         MeshIdxArray *miArray = it.second;
         if (nullptr == miArray) {
             continue;
@@ -513,7 +513,7 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
     }
 }
 
-using Bone2NodeMap = CPPCore::THashMap<int, Node*>;
+using Bone2NodeMap = cppcore::THashMap<int, Node*>;
 
 void AssimpWrapper::importSkeletons( aiSkeleton *skeletons, size_t numSkeletons) {
     if (numSkeletons == 0 || skeletons == nullptr) {

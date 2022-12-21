@@ -34,7 +34,7 @@ namespace RenderBackend {
 class Shader;
 class RenderBackendService;
 
-using CPPCore::TArray;
+using cppcore::TArray;
 
 namespace DefaultPipelines {
     OSRE_EXPORT const c8 *get_Pipeline_Default();

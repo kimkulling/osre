@@ -46,7 +46,7 @@ namespace RenderBackend {
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
-using namespace ::CPPCore;
+using namespace ::cppcore;
 
 static const c8 *Tag = "OGLRendeEventHandler";
 
@@ -112,7 +112,7 @@ void OGLRenderEventHandler::enqueueRenderCmd(OGLRenderCmd *oglRenderCmd) {
     m_renderCmdBuffer->enqueueRenderCmd(oglRenderCmd);
 }
 
-void OGLRenderEventHandler::setParameter(const ::CPPCore::TArray<OGLParameter *> &paramArray) {
+void OGLRenderEventHandler::setParameter(const ::cppcore::TArray<OGLParameter *> &paramArray) {
     osre_assert(m_renderCmdBuffer != nullptr);
 
     m_renderCmdBuffer->setParameter(paramArray);
@@ -261,7 +261,7 @@ bool OGLRenderEventHandler::onRenderFrame(const EventData*) {
     return true;
 }
 
-bool OGLRenderEventHandler::addMeshes(const c8 *id, CPPCore::TArray<size_t> &primGroups, MeshEntry *currentMeshEntry) {
+bool OGLRenderEventHandler::addMeshes(const c8 *id, cppcore::TArray<size_t> &primGroups, MeshEntry *currentMeshEntry) {
     for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->mMeshArray.size(); ++meshIdx) {
         Mesh *currentMesh = currentMeshEntry->mMeshArray[meshIdx];
         if (nullptr == currentMesh) {
@@ -309,7 +309,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
         return false;
     }
 
-    CPPCore::TArray<size_t> primGroups;
+    cppcore::TArray<size_t> primGroups;
     Frame *frame = frameToCommitData->m_frame;
     for (PassData *currentPass : frame->m_newPasses) {
         if (nullptr == currentPass) {
@@ -443,7 +443,7 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
                 PassData *pd = cmd->m_updatedPasses[i];
                 for (RenderBatchData *rbd : pd->m_geoBatches) {
                     for (MeshEntry *entry : rbd->m_meshArray) {
-                        CPPCore::TArray<size_t> primGroups;
+                        cppcore::TArray<size_t> primGroups;
                         addMeshes(cmd->m_batchId, primGroups, entry);
                     }
                 }

@@ -144,7 +144,7 @@ HWND Win32Window::createStatusBar(UINT ResID, ui32 numFields) {
                     WS_CHILD | WS_VISIBLE, // window styles
             0, 0, 0, 0, // x, y, width, height
             mWnd, (HMENU)ResID, mInstance, NULL);
-    CPPCore::TArray<ui32> fields;
+    cppcore::TArray<ui32> fields;
     ui32 w[4] = { 100, 300, 600, 1000 };
     for (ui32 i = 0; i < numFields; ++i) {
         mStatusBarContent.StatusBarTexts.add("");

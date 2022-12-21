@@ -29,7 +29,7 @@ namespace OSRE {
 namespace Common {
 
 using namespace ::std;
-using namespace ::CPPCore;
+using namespace ::cppcore;
 
 EventTriggerer::EventTriggerer() :
         mEventList() {

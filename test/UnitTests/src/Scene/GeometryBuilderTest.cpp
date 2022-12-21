@@ -136,7 +136,7 @@ class GeometryDiagnosticUtilsTest : public ::testing::Test {
 TEST_F( GeometryDiagnosticUtilsTest, dumpVerticesTest_invalidInput ) {
     EXPECT_NO_THROW( MeshDiagnostic::dumpVertices( nullptr, 1 ) );
     
-    CPPCore::TArray<RenderVert> vertices;
+    cppcore::TArray<RenderVert> vertices;
     EXPECT_NO_THROW(MeshDiagnostic::dumpVertices( vertices ) );
 }
 

@@ -48,7 +48,7 @@ static constexpr c8 OGL_API[] = "opengl";
 static constexpr c8 Vulkan_API[] = "vulkan";
 static constexpr i32 IdxNotFound = -1;
 
-static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataArray) {
+static i32 hasPass(const c8 *id, const ::cppcore::TArray<PassData *> &passDataArray) {
     if (nullptr == id) {
         return IdxNotFound;
     }
@@ -61,7 +61,7 @@ static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataAr
     return IdxNotFound;
 }
 
-static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<RenderBatchData*> &batchDataArray) {
+static i32 hasBatch(const c8 *id, const ::cppcore::TArray<RenderBatchData*> &batchDataArray) {
     if (nullptr == id) {
         return IdxNotFound;
     }
@@ -500,7 +500,7 @@ void RenderBackendService::addMesh(Mesh *mesh, ui32 numInstances) {
     m_currentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
 }
 
-void RenderBackendService::addMesh(const CPPCore::TArray<Mesh *> &geoArray, ui32 numInstances) {
+void RenderBackendService::addMesh(const cppcore::TArray<Mesh *> &geoArray, ui32 numInstances) {
     if (nullptr == m_currentBatch) {
         osre_error(Tag, "No active batch.");
         return;

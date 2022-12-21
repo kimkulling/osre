@@ -35,7 +35,7 @@ namespace Editor {
 
 
 /// @brief  The type to store modules in an array.
-using ModuleArray = CPPCore::TArray<Modules::ModuleBase*>;
+using ModuleArray = cppcore::TArray<Modules::ModuleBase*>;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor

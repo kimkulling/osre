@@ -131,7 +131,7 @@ public:
     ///	@brief	Returns the value for the key.
     ///	@param	key	Key to look for.
     ///	@return	The assigned variant.
-    const CPPCore::Variant &get( ConfigKey key ) const;
+    const cppcore::Variant &get( ConfigKey key ) const;
     
     /// @brief 
     /// @param key 

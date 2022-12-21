@@ -213,7 +213,7 @@ public:
 
     void addMesh(Mesh *geo, ui32 numInstances);
 
-    void addMesh(const CPPCore::TArray<Mesh *> &geoArray, ui32 numInstances);
+    void addMesh(const cppcore::TArray<Mesh *> &geoArray, ui32 numInstances);
 
     void updateMesh(Mesh *mesh);
 
@@ -263,7 +263,7 @@ private:
     Frame *m_renderFrame;
     Frame *m_submitFrame;
     bool m_dirty;
-    CPPCore::TArray<PassData*> m_passes;
+    cppcore::TArray<PassData*> m_passes;
     PassData *m_currentPass;
     RenderBatchData *m_currentBatch;
     struct Behaviour {
@@ -271,7 +271,7 @@ private:
 
         Behaviour() : ResizeViewport(true) {}
     } mBehaviour;
-    CPPCore::TArray<RenderBackend::Pipeline *> mPipelines;
+    cppcore::TArray<RenderBackend::Pipeline *> mPipelines;
 };
 
 inline void RenderBackendService::enableAutoResizing( bool enabled ) {

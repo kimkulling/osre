@@ -94,7 +94,7 @@ public:
     Entity *getEntityByName( const String &name ) const;
 
     ///	@brief
-    void getEntityArray(CPPCore::TArray<Entity *> &entities);
+    void getEntityArray(cppcore::TArray<Entity *> &entities);
 
     ///	@brief
     /// @param root 
@@ -120,9 +120,9 @@ protected:
     void updateBoundingTrees();
 
 private:
-    CPPCore::TArray<Camera*> mViews;
-    CPPCore::THashMap<ui32, Camera*> mLookupViews;
-    CPPCore::TArray<Entity*> mEntities;
+    cppcore::TArray<Camera*> mViews;
+    cppcore::THashMap<ui32, Camera*> mLookupViews;
+    cppcore::TArray<Entity*> mEntities;
     Camera *mActiveCamera;
     Node *mRoot;
     Common::Ids mIds;
@@ -138,7 +138,7 @@ inline Node *World::getRootNode() const {
     return mRoot;
 }
 
-inline void World::getEntityArray(CPPCore::TArray<Entity *> &entities) {
+inline void World::getEntityArray(cppcore::TArray<Entity *> &entities) {
     entities = mEntities;
 }
 

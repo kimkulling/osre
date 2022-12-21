@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
-using namespace ::CPPCore;
+using namespace ::cppcore;
 
 static const c8* option = "--";
 static const c8 tokenArgIn = '<';

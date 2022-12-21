@@ -96,8 +96,8 @@ protected:
     AbstractDynamicLoader();
 
 private:
-    CPPCore::THashMap<ui32, LibHandle*> m_libmap;
-    CPPCore::TArray<LibHandle*> m_handles;
+    cppcore::THashMap<ui32, LibHandle*> m_libmap;
+    cppcore::TArray<LibHandle*> m_handles;
     LibHandle *m_activeLib;
 };
 

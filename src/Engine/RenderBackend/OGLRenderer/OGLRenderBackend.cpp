@@ -35,7 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderStates.h>
 #include <osre/RenderBackend/Shader.h>
 
-#include <cppcore/CPPCoreCommon.h>
+#include <cppcore/cppcoreCommon.h>
 #include <cppcore/Memory/MemUtils.h>
 
 #include "stb_image.h"
@@ -45,7 +45,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-using namespace ::CPPCore;
+using namespace ::cppcore;
 
 static const String Tag = "OGLRenderBackend";
 static const ui32 NotInitedHandle = 9999999;

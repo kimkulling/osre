@@ -34,7 +34,7 @@ namespace Editor {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::App;
 
-using namespace ::CPPCore;
+using namespace ::cppcore;
 
 ImportAction::ImportAction(Ids *ids, World *activeWorld) :
         ActionBase(), 

@@ -46,7 +46,7 @@ class Shader;
 class Pipeline;
 
 /// @brief An array to stoer meshes.
-using MeshArray = CPPCore::TArray<RenderBackend::Mesh*>;
+using MeshArray = cppcore::TArray<RenderBackend::Mesh*>;
 
 /// Describes an unset id.
 static constexpr i32 UnsetHandle = -1;
@@ -350,8 +350,8 @@ struct OSRE_EXPORT VertComponent {
 struct OSRE_EXPORT VertexLayout {
     static VertComponent ErrorComp;
     String *m_attributes;
-    CPPCore::TArray<VertComponent *> m_components;
-    CPPCore::TArray<size_t> m_offsets;
+    cppcore::TArray<VertComponent *> m_components;
+    cppcore::TArray<size_t> m_offsets;
     size_t m_currentOffset;
     size_t m_sizeInBytes;
 
@@ -369,7 +369,7 @@ struct OSRE_EXPORT VertexLayout {
 
 ///	@brief  This struct is used to describe data for a GPU buffer.
 struct OSRE_EXPORT BufferData {
-    using BufferDataAllocator = ::CPPCore::TPoolAllocator<BufferData>;
+    using BufferDataAllocator = ::cppcore::TPoolAllocator<BufferData>;
     friend BufferDataAllocator;
     static BufferDataAllocator sBufferDataAllocator;
 
@@ -513,7 +513,7 @@ struct OSRE_EXPORT Viewport {
 //-------------------------------------------------------------------------------------------------
 template <class T>
 struct TVertexCache {
-    using CacheType = ::CPPCore::TArray<T>;
+    using CacheType = ::cppcore::TArray<T>;
     CacheType m_cache;
 
     /// @brief 
@@ -590,7 +590,7 @@ struct TVertexCache {
 //-------------------------------------------------------------------------------------------------
 template <class T>
 struct TIndexCache {
-    using CacheType = ::CPPCore::TArray<T>;
+    using CacheType = ::cppcore::TArray<T>;
 
     CacheType m_cache;
 
@@ -691,7 +691,7 @@ struct MatrixBuffer {
 struct MeshEntry {
     ui32 numInstances;
     bool m_isDirty;
-    CPPCore::TArray<Mesh*> mMeshArray;
+    cppcore::TArray<Mesh*> mMeshArray;
 };
 
 struct RenderBatchData {
@@ -704,9 +704,9 @@ struct RenderBatchData {
 
     const c8 *m_id;
     MatrixBuffer m_matrixBuffer;
-    CPPCore::TArray<UniformVar *> m_uniforms;
-    CPPCore::TArray<MeshEntry *> m_meshArray;
-    CPPCore::TArray<Mesh *> m_updateMeshArray;
+    cppcore::TArray<UniformVar *> m_uniforms;
+    cppcore::TArray<MeshEntry *> m_meshArray;
+    cppcore::TArray<Mesh *> m_updateMeshArray;
     ui32 m_dirtyFlag;
 
     RenderBatchData(const c8 *id) :
@@ -726,7 +726,7 @@ struct RenderBatchData {
 struct PassData {
     const c8 *m_id;
     FrameBuffer *m_renderTarget;
-    CPPCore::TArray<RenderBatchData *> m_geoBatches;
+    cppcore::TArray<RenderBatchData *> m_geoBatches;
     glm::mat4 mView;
     glm::mat4 mProj;
     bool m_isDirty;
@@ -793,8 +793,8 @@ struct FrameSubmitCmd {
     ui32 m_updateFlags;
     size_t m_size;
     c8 *m_data;
-    ::CPPCore::TArray<MeshEntry*> m_newMeshes;
-    ::CPPCore::TArray<PassData*> m_updatedPasses;
+    ::cppcore::TArray<MeshEntry*> m_newMeshes;
+    ::cppcore::TArray<PassData*> m_updatedPasses;
 
     FrameSubmitCmd() :
             m_meshId(999999),
@@ -808,7 +808,7 @@ struct FrameSubmitCmd {
     }
 };
 
-using FrameSubmitCmdAllocator = ::CPPCore::TPoolAllocator<FrameSubmitCmd>;
+using FrameSubmitCmdAllocator = ::cppcore::TPoolAllocator<FrameSubmitCmd>;
 
 struct UniformBuffer {
     UniformBuffer() :
@@ -894,15 +894,15 @@ struct UniformBuffer {
 };
 
 struct Frame {
-    ::CPPCore::TArray<PassData *> m_newPasses;
-    ::CPPCore::TArray<FrameSubmitCmd*> m_submitCmds;
+    cppcore::TArray<PassData *> m_newPasses;
+    cppcore::TArray<FrameSubmitCmd*> m_submitCmds;
     FrameSubmitCmdAllocator m_submitCmdAllocator;
     UniformBuffer *m_uniforBuffers;
     Pipeline *m_pipeline;
 
     Frame();
     ~Frame();
-    void init(::CPPCore::TArray<PassData *> &newPasses);
+    void init(::cppcore::TArray<PassData *> &newPasses);
     FrameSubmitCmd *enqueue();
 
     Frame(const Frame &) = delete;

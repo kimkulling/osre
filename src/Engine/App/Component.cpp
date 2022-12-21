@@ -29,7 +29,7 @@ namespace OSRE {
 namespace App {
 
 using namespace ::OSRE::RenderBackend;
-using namespace ::CPPCore;
+using namespace ::cppcore;
 
 static const glm::vec3 Dummy = glm::vec3(-1, -1, -1);
 

@@ -44,15 +44,15 @@ public:
     /// 
     static void dumpUiVertexCache(const RenderBackend::UiVertexCache& indexCache);
     /// @brief  Will dump the vertex data of given vertices.
-    static void dumpVertices(const CPPCore::TArray<RenderBackend::RenderVert>& renderVertices);
+    static void dumpVertices(const cppcore::TArray<RenderBackend::RenderVert>& renderVertices);
     /// @brief  Will dump the index data of given indices.
-    static void dumpIndices(const CPPCore::TArray<ui16>& indexArray);
+    static void dumpIndices(const cppcore::TArray<ui16>& indexArray);
     /// @brief  Will dump the index data of given indices.
     static void dumpIndices(ui16* indices, ui32 numIndices);
     /// @brief  Will dump an index cache
     static void dumpUiIndexCache(const RenderBackend::UiIndexCache &indexCache);
     /// @brief  Will dump the index data of given indices.
-    static void dumpIndices(const CPPCore::TArray<ui32>& indexArray);
+    static void dumpIndices(const cppcore::TArray<ui32>& indexArray);
 
     MeshDiagnostic() = delete;
     MeshDiagnostic(const MeshDiagnostic&) = delete;
