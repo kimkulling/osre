@@ -95,7 +95,7 @@ protected:
             const f32 diam = aabb.getDiameter();
             const Vec3f center = aabb.getCenter();
 
-            CPPCore::TArray<Geometry*> geoArray = model->getGeoArray();
+            cppcore::TArray<Geometry*> geoArray = model->getGeoArray();
             m_transformMatrix.m_model = glm::rotate( m_transformMatrix.m_model, 0.0f, glm::vec3( 1, 1, 0 ) );
             m_transformMatrix.update();
             RenderBackendService *rbSrv( getRenderBackendService() );

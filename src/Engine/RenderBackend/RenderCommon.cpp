@@ -36,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-using namespace ::CPPCore;
+using namespace ::cppcore;
 using namespace ::OSRE::Common;
 using namespace ::glm;
 

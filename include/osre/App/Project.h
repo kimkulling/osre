@@ -164,7 +164,7 @@ struct StageData {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Project : public Common::Object {
 public:
-    using ProjectDirtyState = CPPCore::TBitField<ui32>;
+    using ProjectDirtyState = cppcore::TBitField<ui32>;
 
     /// @brief The default class constructor.
 	Project();

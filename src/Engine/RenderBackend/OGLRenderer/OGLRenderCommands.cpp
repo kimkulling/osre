@@ -48,7 +48,7 @@ static const c8 *Tag = "OGLRenderCommands";
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
-using namespace ::CPPCore;
+using namespace ::cppcore;
 
 bool setupTextures(Material *mat, OGLRenderBackend *rb, TArray<OGLTexture *> &textures) {
     if (nullptr == mat) {
@@ -134,7 +134,7 @@ void setupParameter(UniformVar *param, OGLRenderBackend *rb, OGLRenderEventHandl
         return;
     }
 
-    ::CPPCore::TArray<OGLParameter *> paramArray;
+    ::cppcore::TArray<OGLParameter *> paramArray;
     OGLParameter *oglParam = rb->getParameter(param->m_name);
     if (nullptr == oglParam) {
         oglParam = rb->createParameter(param->m_name, param->m_type, &param->m_data, param->m_numItems);

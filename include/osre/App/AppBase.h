@@ -272,7 +272,7 @@ private:
     Platform::PlatformInterface *m_platformInterface;
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
-    CPPCore::TArray<World*> m_worlds;
+    cppcore::TArray<World*> m_worlds;
     Stage *mStage;
     MouseEventListener *m_mouseEvListener;
     KeyboardEventListener *m_keyboardEvListener;

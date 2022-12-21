@@ -51,14 +51,14 @@ struct OGLParameter;
 struct UniformVar;
 struct SetMaterialStageCmdData;
 
-bool setupTextures(Material* mat, OGLRenderBackend* rb, CPPCore::TArray<OGLTexture*>& textures);
+bool setupTextures(Material* mat, OGLRenderBackend* rb, cppcore::TArray<OGLTexture*>& textures);
 SetMaterialStageCmdData* setupMaterial(Material* material, OGLRenderBackend* rb, OGLRenderEventHandler* eh);
 void setupParameter(UniformVar* param, OGLRenderBackend* rb, OGLRenderEventHandler* ev);
 OGLVertexArray* setupBuffers(Mesh* mesh, OGLRenderBackend* rb, OGLShader* oglShader);
 void setupPrimDrawCmd(const char* id, bool useLocalMatrix, const glm::mat4& model,
-    const CPPCore::TArray<size_t>& primGroups, OGLRenderBackend* rb,
+    const cppcore::TArray<size_t>& primGroups, OGLRenderBackend* rb,
     OGLRenderEventHandler* eh, OGLVertexArray* va);
-void setupInstancedDrawCmd(const char* id, const CPPCore::TArray<size_t>& ids, OGLRenderBackend* rb,
+void setupInstancedDrawCmd(const char* id, const cppcore::TArray<size_t>& ids, OGLRenderBackend* rb,
     OGLRenderEventHandler* eh, OGLVertexArray* va, size_t numInstances);
 
 } // Namespace RenderBackend

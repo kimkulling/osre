@@ -98,11 +98,11 @@ public:
     /// @brief The node pointer type.
     using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::App::Node>;
     /// @brief The node array type-
-    using NodeArray = CPPCore::TArray<Node *>;
+    using NodeArray = cppcore::TArray<Node *>;
     /// @brief USed to declare mesh-array instances.
-    using MeshReferenceArray = ::CPPCore::TArray<size_t>;
+    using MeshReferenceArray = ::cppcore::TArray<size_t>;
     /// @brief Used to declare properties.
-    using PropertyMap = CPPCore::THashMap<ui32, Properties::Property *>;
+    using PropertyMap = cppcore::THashMap<ui32, Properties::Property *>;
 
     enum class TraverseMode {
         FlatMode,
@@ -126,7 +126,7 @@ public:
     virtual void setActive(bool isActive);
     virtual bool isActive() const;
     virtual void setProperty(Properties::Property *prop);
-    virtual void getPropertyArray(::CPPCore::TArray<Properties::Property *> &propArray);
+    virtual void getPropertyArray(::cppcore::TArray<Properties::Property *> &propArray);
     virtual Properties::Property *getProperty(const String name) const;
 
     void translate(const glm::vec3 &pos);
@@ -151,7 +151,7 @@ private:
     MeshReferenceArray m_meshRefererenceArray;
     bool m_isActive;
     Common::Ids *m_ids;
-    ::CPPCore::TArray<Properties::Property *> mPropertyArray;
+    ::cppcore::TArray<Properties::Property *> mPropertyArray;
     PropertyMap m_propMap;
     glm::mat4 m_localTransform;
 };

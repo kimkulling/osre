@@ -59,7 +59,7 @@ enum class RenderBackendType {
 struct MouseInputState {
     i32 mRelX, mRelY, mAbsX, mAbsY;
     ui32 mLastX, mLastY;
-    CPPCore::TBitField<ui32> mMouseButtonState;
+    cppcore::TBitField<ui32> mMouseButtonState;
 
     MouseInputState();
 };

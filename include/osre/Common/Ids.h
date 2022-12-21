@@ -58,7 +58,7 @@ public:
     Ids &operator = (const Ids &) = delete;
 
 private:
-    CPPCore::TArray<guid> m_freeIds;
+    cppcore::TArray<guid> m_freeIds;
     guid m_last;
 };
 

@@ -178,7 +178,7 @@ void Node::setProperty(Properties::Property *prop) {
     mPropertyArray.add(prop);
 }
 
-void Node::getPropertyArray( ::CPPCore::TArray<Properties::Property *> &propArray ) {
+void Node::getPropertyArray( ::cppcore::TArray<Properties::Property *> &propArray ) {
     propArray = mPropertyArray;
 }
 

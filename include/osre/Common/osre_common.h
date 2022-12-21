@@ -148,7 +148,7 @@ using guid = ui64;
 using String = std::string;
 
 /// @brief The data type for an array of strings.
-using StringArray = ::CPPCore::TArray<String>;
+using StringArray = ::cppcore::TArray<String>;
 
 
 /// @brief  A handle struct.
@@ -183,7 +183,7 @@ struct Handle {
 };
 
 /// @brief  This type shall be used to store binary data.
-using MemoryBuffer = CPPCore::TArray<c8>;
+using MemoryBuffer = cppcore::TArray<c8>;
 
 /// @brief  A time stamp.
 struct Time {

@@ -43,7 +43,7 @@ enum class ShaderType {
 
 constexpr ui32 MaxShaderTypes = static_cast<ui32>(ShaderType::NumShaderTypes);
 
-using ShaderSourceArray = CPPCore::TStaticArray<String, MaxShaderTypes>;
+using ShaderSourceArray = cppcore::TStaticArray<String, MaxShaderTypes>;
 
 
 ///	@brief  This class represents a container for all used shaders in the OSRE-runtime.

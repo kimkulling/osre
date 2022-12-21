@@ -40,7 +40,7 @@ public:
     bool getDisplayDPI(ui32 displayIndex, DisplayDPIInfo *ddpiinfo) override;
 
 private:
-    ::CPPCore::TArray<MonitorInfo *> m_monitorInfo;
+    ::cppcore::TArray<MonitorInfo *> m_monitorInfo;
 };
 
 } // namespace Platform

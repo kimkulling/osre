@@ -35,7 +35,7 @@ namespace Common {
 //-------------------------------------------------------------------------------------------------
 class AbstractProcessor {
 public:
-    using ProcessorArray = ::CPPCore::TArray<AbstractProcessor*>;
+    using ProcessorArray = ::cppcore::TArray<AbstractProcessor*>;
 
     /// @brief  The class destructor, virtual.
     virtual ~AbstractProcessor() = default;

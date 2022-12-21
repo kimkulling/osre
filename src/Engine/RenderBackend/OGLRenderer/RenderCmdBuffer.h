@@ -88,7 +88,7 @@ public:
     /// @brief Will enqueue a new render command group.
     /// @param groupName    The group name
     /// @param cmdGroup     The command group.
-    void enqueueRenderCmdGroup(const String &groupName, CPPCore::TArray<OGLRenderCmd *> &cmdGroup);
+    void enqueueRenderCmdGroup(const String &groupName, cppcore::TArray<OGLRenderCmd *> &cmdGroup);
     
     /// @brief  The callback before rendering.
     /// @param  pipeline         The pipeline to use.
@@ -108,7 +108,7 @@ public:
     
     /// @brief Will add an array of parameters to the setup of the pipeline
     /// @param paramArray   The array with the assigned parameters.
-    void setParameter(const ::CPPCore::TArray<OGLParameter *> &paramArray);
+    void setParameter(const ::cppcore::TArray<OGLParameter *> &paramArray);
     
     /// @brief Commits all assigned parameters to the active shader.
     void commitParameters();
@@ -138,11 +138,11 @@ private:
     OGLRenderBackend *mRBService;
     ClearState mClearState;
     Platform::AbstractOGLRenderContext *mRenderCtx;
-    ::CPPCore::TArray<OGLRenderCmd *> mCommandQueue;
+    ::cppcore::TArray<OGLRenderCmd *> mCommandQueue;
     OGLShader *mActiveShader;
-    ::CPPCore::TArray<PrimitiveGroup *> mPrimitives;
-    ::CPPCore::TArray<Material *> mMaterials;
-    ::CPPCore::TArray<OGLParameter *> mParamArray;
+    ::cppcore::TArray<PrimitiveGroup *> mPrimitives;
+    ::cppcore::TArray<Material *> mMaterials;
+    ::cppcore::TArray<OGLParameter *> mParamArray;
     std::map<const char *, MatrixBuffer *> mMatrixBuffer;
     glm::mat4 mModel;
     glm::mat4 mView;

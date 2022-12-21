@@ -141,13 +141,13 @@ void OsreEdApp::loadAsset(const Uri &modelLoc) {
     reporter.update(10);
     ImportAction action(getIdContainer(), getStage()->getActiveWorld());
     ArgumentList args;
-    args.add(CPPCore::Variant::createFromString(modelLoc.getAbsPath()));
+    args.add(cppcore::Variant::createFromString(modelLoc.getAbsPath()));
     if (!action.run(args)) {
         reporter.stop();
         return;
     }
     if (mProject == nullptr) {
-        newProjectCmd(1, CPPCore::Variant::createFromString(modelLoc.getResource()));
+        newProjectCmd(1, cppcore::Variant::createFromString(modelLoc.getResource()));
         mProject->setStage(AppBase::getStage());
     }
     reporter.update(10);
@@ -187,7 +187,7 @@ void OsreEdApp::loadAsset(const Uri &modelLoc) {
 void OsreEdApp::newProjectCmd(ui32, void *data) {
     std::string name = "New project";
     if (data != nullptr) {
-        CPPCore::Variant *v = (CPPCore::Variant*)data;
+        cppcore::Variant *v = (cppcore::Variant*)data;
         name = v->getString();
     }
     mProject = createProject(name);
@@ -353,7 +353,7 @@ bool OsreEdApp::saveSceneData(const IO::Uri &filename) {
     }
 
     if (mProject == nullptr) {
-        CPPCore::Variant *v = CPPCore::Variant::createFromString(filename.getResource());
+        cppcore::Variant *v = cppcore::Variant::createFromString(filename.getResource());
         newProjectCmd(1, (void *)v);
     }
     mProject->save(filename.getAbsPath(), getStage());

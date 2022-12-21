@@ -20,7 +20,7 @@ static void initRenderPasses() {
 
 } // Namespace Details
 
-CPPCore::TArray<RenderPass*> RenderPassFactory::sPasses;
+cppcore::TArray<RenderPass*> RenderPassFactory::sPasses;
 
 RenderPass *RenderPassFactory::create(guid id) {
     if (sPasses.isEmpty()) {

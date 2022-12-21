@@ -181,7 +181,7 @@ private:
 
     static Logger *sLogger;
 
-    using LogStreamArray = CPPCore::TArray<AbstractLogStream*>;
+    using LogStreamArray = cppcore::TArray<AbstractLogStream*>;
     LogStreamArray mLogStreams;
     VerboseMode mVerboseMode;
     ui32 mIntention;

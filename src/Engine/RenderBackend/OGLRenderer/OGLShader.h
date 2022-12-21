@@ -63,7 +63,7 @@ public:
     };
 
     ///	@brief  Type for parameter shader arrays in OpenGL.
-    using ParameterArray = ::CPPCore::TArray<ActiveParameter *>;
+    using ParameterArray = ::cppcore::TArray<ActiveParameter *>;
 
     /// @brief  The class constructor.
     /// @param  name    [in9 The name for the shader.

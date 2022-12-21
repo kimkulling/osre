@@ -150,8 +150,8 @@ private:
 ///	Base event functor.
 typedef Functor<void, const Event &, const EventData *> EventFunctor;
 
-using EventDataList = CPPCore::TList<Common::EventData *>;
-using EventPtrArray = CPPCore::TArray<const Common::Event *>;
+using EventDataList = cppcore::TList<Common::EventData *>;
+using EventPtrArray = cppcore::TArray<const Common::Event *>;
 
 } // Namespace Common
 } // Namespace OSRE

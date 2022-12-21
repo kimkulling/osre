@@ -43,7 +43,7 @@ struct MenuEntry {
 };
 
 struct OSRE_EXPORT StatusBarContent {
-    CPPCore::TArray<ui32> StatusBarWidths;
+    cppcore::TArray<ui32> StatusBarWidths;
     StringArray StatusBarTexts;
 };
 

@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Editor {
 
-using ArgumentList = ::CPPCore::TArray<::CPPCore::Variant*>;
+using ArgumentList = ::cppcore::TArray<::cppcore::Variant*>;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor

@@ -314,7 +314,7 @@ MeshBuilder &MeshBuilder::allocPoints( VertexType type, BufferAccessType access,
                                         glm::vec3 *posArray, glm::vec3 *colorArray ) {
     clear();
     // colors
-    CPPCore::TArray<ui16> indices;
+    cppcore::TArray<ui16> indices;
     indices.resize( numPoints );
     for ( ui16 i = 0; i < numPoints; i++ ) {
         indices[ i ] = i;
@@ -464,7 +464,7 @@ MeshBuilder &MeshBuilder::allocTextBox(f32 x, f32 y, f32 textSize, const String 
     mesh->addPrimitiveGroup(6 * text.size(), PrimitiveType::TriangleList, 0);
 
     // setup material
-    CPPCore::TArray<TextureResource*> texResArray;;
+    cppcore::TArray<TextureResource*> texResArray;;
     TextureResource* texRes = new TextureResource("buildin_arial", IO::Uri("file://assets/Textures/Fonts/buildin_arial.bmp"));
     texResArray.add(texRes);
     mesh->setMaterial(MaterialBuilder::createTexturedMaterial("text_box_tex", texResArray, VertexType::RenderVertex));

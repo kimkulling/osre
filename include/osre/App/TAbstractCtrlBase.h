@@ -89,8 +89,8 @@ protected:
     virtual bool onStateLeave(T oldState);
 
 private:
-    typedef typename CPPCore::TArray<TAbstractCtrlStateListener<T> *>::Iterator ListenerIt;
-    CPPCore::TArray<TAbstractCtrlStateListener<T> *> m_listener;
+    typedef typename cppcore::TArray<TAbstractCtrlStateListener<T> *>::Iterator ListenerIt;
+    cppcore::TArray<TAbstractCtrlStateListener<T> *> m_listener;
     T m_state;
 };
 

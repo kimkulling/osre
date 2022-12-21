@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Properties/PropertiesCommon.h>
 
-namespace CPPCore {
+namespace cppcore {
     class Variant;
 }
 
@@ -47,7 +47,7 @@ public:
     /// @param
     /// @param
     /// @param
-    virtual void setProperty( ui32 id, const String &rName, const CPPCore::Variant &value ) = 0;
+    virtual void setProperty( ui32 id, const String &rName, const cppcore::Variant &value ) = 0;
 
     /// @brief
     /// @param

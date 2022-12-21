@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Properties {
 
-using namespace ::CPPCore;
+using namespace ::cppcore;
 
 BasePropertyMap::BasePropertyMap() :
         m_PropertyLookupMap() {

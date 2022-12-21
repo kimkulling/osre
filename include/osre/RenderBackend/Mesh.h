@@ -96,11 +96,11 @@ private:
     BufferData *mVertexBuffer;
     IndexType mIndexType;
     BufferData *mIndexBuffer;
-    using PrimGroupArray = ::CPPCore::TArray<PrimitiveGroup*>;
+    using PrimGroupArray = ::cppcore::TArray<PrimitiveGroup*>;
     PrimGroupArray mPrimGroups;
     guid mId;
-    ::CPPCore::TArray<uc8> mVertexData;
-    ::CPPCore::TArray<uc8> mIndexData;
+    ::cppcore::TArray<uc8> mVertexData;
+    ::cppcore::TArray<uc8> mIndexData;
     ui32 mLastIndex;
 };
 
