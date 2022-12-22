@@ -83,7 +83,7 @@ private:
     static RenderTestSuite *s_pInstance;
     AbstractRenderTest *m_pActiveRenderTest;
     ui32 m_activeTestIdx;
-    CPPCore::TArray<AbstractRenderTest*> m_attachedRenderTests;
+    cppcore::TArray<AbstractRenderTest*> m_attachedRenderTests;
     StringArray m_FailureLog;
     Platform::PlatformInterface *m_pPlatformInterface;
     KeyboardEventListener *m_pListener;

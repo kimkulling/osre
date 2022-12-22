@@ -135,7 +135,7 @@ size_t ShaderLoader::load( const IO::Uri &uri, Shader *shader ) {
 
     const String &ext = uri.getExtension();
     size_t size = stream->getSize();
-    CPPCore::TArray<c8> buffer;
+    cppcore::TArray<c8> buffer;
     buffer.resize(size);
     size_t readSize = stream->read( &buffer[0], size);
     if (readSize == 0) {

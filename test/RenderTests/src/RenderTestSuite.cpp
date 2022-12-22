@@ -41,7 +41,7 @@ namespace RenderTest {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Platform;
-using namespace ::CPPCore;
+using namespace ::cppcore;
 
 // static member initialization
 RenderTestSuite *RenderTestSuite::s_pInstance = nullptr;

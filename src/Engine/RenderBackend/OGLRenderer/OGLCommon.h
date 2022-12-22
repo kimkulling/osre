@@ -147,7 +147,7 @@ struct OGLPrimGroup {
 ///         for the coming render calls.
 struct SetMaterialStageCmdData {
     OGLShader *m_shader;                        ///< The shader to use.
-    CPPCore::TArray<OGLTexture *> m_textures;   ///< All texture to set.
+    cppcore::TArray<OGLTexture *> m_textures;   ///< All texture to set.
     OGLVertexArray *m_vertexArray;              ///< Ther vertex array.
 
     /// @brief The default class constructor.
@@ -167,7 +167,7 @@ struct SetRenderTargetCmdData {
 struct DrawInstancePrimitivesCmdData {
     OGLVertexArray *m_vertexArray;          ///< The vertex array to use.
     size_t m_numInstances;                  ///< The number of instances to render.
-    CPPCore::TArray<size_t> m_primitives;   ///< The primitives to render.
+    cppcore::TArray<size_t> m_primitives;   ///< The primitives to render.
     const char *m_id;                       ///< The call id.
 
     /// @brief The default class constructor.
@@ -179,7 +179,7 @@ struct DrawPrimitivesCmdData {
     bool m_localMatrix;                     ///< true for a local model matrix. TODO: Remove me
     glm::mat4 m_model;                      ///< The model matrix. TODO: Remove me
     OGLVertexArray *m_vertexArray;          ///< The vertex array to use.
-    CPPCore::TArray<size_t> m_primitives;   ///< The primitives to render.
+    cppcore::TArray<size_t> m_primitives;   ///< The primitives to render.
     const char *m_id;                       ///< The id.
 
     /// @brief The default class constructor.

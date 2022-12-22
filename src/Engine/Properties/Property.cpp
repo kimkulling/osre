@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Properties {
 
-Property::Property( ui32 id, const String &name, const CPPCore::Variant &value ) : 
+Property::Property( ui32 id, const String &name, const cppcore::Variant &value ) : 
         m_Id( id ), m_Name( name ), m_Value( value ) {
     // empty
 }
@@ -40,7 +40,7 @@ const String &Property::getPropertyName() const {
     return m_Name;
 }
 
-void Property::set( ui32 id, const String &rName, const CPPCore::Variant &value ) {
+void Property::set( ui32 id, const String &rName, const cppcore::Variant &value ) {
     m_Id = id;
     m_Name = rName;
     m_Value = value;
@@ -54,7 +54,7 @@ ui32 Property::getPropertyId() const {
     return m_Id;
 }
 
-const CPPCore::Variant &Property::getValue( ) const {
+const cppcore::Variant &Property::getValue( ) const {
     return m_Value;
 }
 

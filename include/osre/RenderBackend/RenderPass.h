@@ -37,7 +37,7 @@ public:
     static void unregisterPass(guid id);
 
 private:
-    static CPPCore::TArray<RenderPass*> sPasses;
+    static cppcore::TArray<RenderPass*> sPasses;
 };
 
 

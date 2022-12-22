@@ -60,8 +60,8 @@ void SDL2SystemInfo::getDesktopResolution( Resolution &resolution ) {
 inline
 bool SDL2SystemInfo::getDiskInfo(const c8 *drive, ui64 &freeSpaceInBytes) {
     freeSpaceInBytes = 0;
-    CPPCore::FileSystem fs(drive);
-    CPPCore::FSSpace *space = fs.getFreeDiskSpace();
+    cppcore::FileSystem fs(drive);
+    cppcore::FSSpace *space = fs.getFreeDiskSpace();
     if (nullptr == space) {
         return false;
     }

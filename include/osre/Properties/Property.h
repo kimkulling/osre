@@ -40,14 +40,14 @@ public:
     static const ui32 NotSet = 999999999;
 
 public:
-    Property( ui32 id, const String &name, const CPPCore::Variant &value );
+    Property( ui32 id, const String &name, const cppcore::Variant &value );
     ~Property() = default;
     void setPropertyName( const String &rName );
     const String &getPropertyName() const;
-    void set( ui32 id, const String &rName, const CPPCore::Variant &rValue );
+    void set( ui32 id, const String &rName, const cppcore::Variant &rValue );
     void setPropertyId( ui32 id );
     ui32 getPropertyId() const;
-    const CPPCore::Variant &getValue( ) const;
+    const cppcore::Variant &getValue( ) const;
     bool operator == (const Property &rhs) const;
 
     // No copying
@@ -57,7 +57,7 @@ public:
 private:
     ui32 m_Id;
     String m_Name;
-    CPPCore::Variant m_Value;
+    cppcore::Variant m_Value;
 };
 
 } // Namespace Properties

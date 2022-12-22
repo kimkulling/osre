@@ -63,7 +63,7 @@ public:
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
-        CPPCore::RandomGenerator generator;
+        cppcore::RandomGenerator generator;
         for (ui32 i = 0; i < NumPts; i++) {
             const f32 r = static_cast<f32>(generator.get(1, 100)) / 100.0f;
             const f32 g = static_cast<f32>(generator.get(1, 100)) / 100.0f;
@@ -116,7 +116,7 @@ public:
     }
 
     bool onRender(RenderBackend::RenderBackendService *rbSrv) override {
-        CPPCore::RandomGenerator generator;
+        cppcore::RandomGenerator generator;
         for (ui32 i = 0; i < NumPts; i++) {
             const f32 x = static_cast<f32>(generator.get(-10, 10)) / 100.0f;
             const f32 y = static_cast<f32>(generator.get(-10, 10)) / 100.0f;

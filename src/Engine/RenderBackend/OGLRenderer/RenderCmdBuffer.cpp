@@ -78,7 +78,7 @@ void RenderCmdBuffer::enqueueRenderCmd(OGLRenderCmd *renderCmd) {
     mCommandQueue.add(renderCmd);
 }
 
-void RenderCmdBuffer::enqueueRenderCmdGroup(const String &groupName, CPPCore::TArray<OGLRenderCmd *> &cmdGroup) {
+void RenderCmdBuffer::enqueueRenderCmdGroup(const String &groupName, cppcore::TArray<OGLRenderCmd *> &cmdGroup) {
     if (groupName.empty()) {
         osre_debug(Tag, "No name for render command group defined.");
         return;
@@ -165,7 +165,7 @@ void RenderCmdBuffer::clear() {
     mParamArray.resize(0);
 }
 
-static bool hasParam(const String &name, const ::CPPCore::TArray<OGLParameter *> &paramArray) {
+static bool hasParam(const String &name, const ::cppcore::TArray<OGLParameter *> &paramArray) {
     for (ui32 i = 0; i < paramArray.size(); i++) {
         if (name == paramArray[i]->m_name) {
             return true;
@@ -182,7 +182,7 @@ void RenderCmdBuffer::setParameter(OGLParameter *param) {
     mParamArray.add(param);
 }
 
-void RenderCmdBuffer::setParameter(const ::CPPCore::TArray<OGLParameter *> &paramArray) {
+void RenderCmdBuffer::setParameter(const ::cppcore::TArray<OGLParameter *> &paramArray) {
     for (ui32 i = 0; i < paramArray.size(); i++) {
         if (!hasParam(paramArray[i]->m_name, mParamArray)) {
             mParamArray.add(paramArray[i]);

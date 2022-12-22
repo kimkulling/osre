@@ -37,7 +37,7 @@ using namespace ::OSRE;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-using namespace ::CPPCore;
+using namespace ::cppcore;
 
 static const c8 *Tag = "SDL2EventHandler";
 

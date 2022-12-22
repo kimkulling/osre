@@ -99,10 +99,10 @@ public:
     EventBus(const EventBus &) = delete;
 
 private:
-    using EventHandlerArray = CPPCore::TArray<AbstractEventHandler*>;
-    using SuscribedHandler = CPPCore::THashMap<ui32, EventHandlerArray*>;
+    using EventHandlerArray = cppcore::TArray<AbstractEventHandler*>;
+    using SuscribedHandler = cppcore::THashMap<ui32, EventHandlerArray*>;
     SuscribedHandler mSuscribedHandler;
-    using QueueEntryArray = CPPCore::TArray<QueueEntry*>;
+    using QueueEntryArray = cppcore::TArray<QueueEntry*>;
     QueueEntryArray mQueueEntryArray;
     bool mCreated;
 };

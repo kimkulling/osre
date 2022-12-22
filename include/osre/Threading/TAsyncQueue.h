@@ -58,7 +58,7 @@ public:
 
     ///	@brief	All enqueued items will be dequeued and stored in the list. The order of the items in
     ///			the queue will be not reordered.
-    void dequeueAll(CPPCore::TList<T> &rData);
+    void dequeueAll(cppcore::TList<T> &rData);
 
     ///	@brief	The queue event will be signaled.
     void signalEnqueuedItem();
@@ -84,7 +84,7 @@ public:
 private:
     Platform::CriticalSection *m_criticalSection;
     Platform::ThreadEvent *m_enqueueEvent;
-    CPPCore::TQueue<T> m_ItemQueue;
+    cppcore::TQueue<T> m_ItemQueue;
 };
 
 template <class T>
@@ -98,7 +98,7 @@ inline TAsyncQueue<T>::TAsyncQueue() :
 
 template <class T>
 inline TAsyncQueue<T>::~TAsyncQueue() {
-    CPPCore::TList<T> dummy;
+    cppcore::TList<T> dummy;
     dequeueAll(dummy);
 
     delete m_enqueueEvent;
@@ -133,7 +133,7 @@ inline T TAsyncQueue<T>::dequeue() {
 }
 
 template <class T>
-inline void TAsyncQueue<T>::dequeueAll(CPPCore::TList<T> &data) {
+inline void TAsyncQueue<T>::dequeueAll(cppcore::TList<T> &data) {
     osre_assert(nullptr != m_criticalSection);
 
     if (!data.isEmpty()) {

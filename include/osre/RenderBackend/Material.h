@@ -34,7 +34,7 @@ enum class MaterialColorType : ui32 {
     InvalidMaterialColorType ///< Enum for invalid enum.
 };
 
-using TextureResourceArray = CPPCore::TArray<RenderBackend::TextureResource *>;
+using TextureResourceArray = cppcore::TArray<RenderBackend::TextureResource *>;
 
 static constexpr ui32 MaxMatColorType = static_cast<ui32>(MaterialColorType::NumMaterialColorTypes);
 

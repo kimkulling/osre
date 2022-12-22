@@ -67,7 +67,7 @@ public:
 
 private:
     World *mWorld;
-    CPPCore::TArray<World*> mWorlds;
+    cppcore::TArray<World*> mWorlds;
 };
 
 } // namespace App

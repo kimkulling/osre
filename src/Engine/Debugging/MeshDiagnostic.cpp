@@ -87,7 +87,7 @@ void MeshDiagnostic::dumpUiVertexCache(const UiVertexCache& vertexCache) {
     osre_info(Tag, stream.str());
 }
 
-void MeshDiagnostic::dumpVertices(const CPPCore::TArray<RenderBackend::RenderVert>& renderVertices) {
+void MeshDiagnostic::dumpVertices(const cppcore::TArray<RenderBackend::RenderVert>& renderVertices) {
     if (renderVertices.isEmpty()) {
         return;
     }
@@ -96,7 +96,7 @@ void MeshDiagnostic::dumpVertices(const CPPCore::TArray<RenderBackend::RenderVer
     }
 }
 
-void MeshDiagnostic::dumpIndices(const CPPCore::TArray<ui16>& indexArray) {
+void MeshDiagnostic::dumpIndices(const cppcore::TArray<ui16>& indexArray) {
     if (indexArray.isEmpty()) {
         return;
     }
@@ -137,7 +137,7 @@ void MeshDiagnostic::dumpUiIndexCache(const UiIndexCache& indexCache) {
     osre_info(Tag, stream.str());
 }
 
-void MeshDiagnostic::dumpIndices(const CPPCore::TArray<ui32>& indexArray) {
+void MeshDiagnostic::dumpIndices(const cppcore::TArray<ui32>& indexArray) {
     if (indexArray.isEmpty()) {
         return;
     }

@@ -38,7 +38,7 @@ namespace OSRE {
 namespace IO {
 
 using namespace ::OSRE::Common;
-using namespace ::CPPCore;
+using namespace ::cppcore;
 
 static const c8 *BaseFileSchema = "file";
 static const c8 *Tag = "IOService";

@@ -56,7 +56,7 @@ void ParticleEmitter::init( ui32 numPoints ) {
     m_col = new glm::vec3[ numPoints ];
     m_pos = new glm::vec3[ numPoints ];
 
-    CPPCore::RandomGenerator generator;
+    cppcore::RandomGenerator generator;
     for ( ui32 i = 0; i < m_numPoints; i++ ) {
         const f32 r = static_cast< f32 >( generator.get( 1, 100 ) ) / 100.0f;
         const f32 g = static_cast< f32 >( generator.get( 1, 100 ) ) / 100.0f;
@@ -92,7 +92,7 @@ void ParticleEmitter::init( ui32 numPoints ) {
 }
 
 void ParticleEmitter::update( d32 /*tick*/ ) {
-    CPPCore::RandomGenerator generator;
+    cppcore::RandomGenerator generator;
     for ( ui32 i = 0; i < m_numPoints; i++ ) {
         const f32 x = static_cast< f32 >( generator.get( -10, 10 ) ) / 100.0f;
         const f32 y = static_cast< f32 >( generator.get( -10, 10 ) ) / 100.0f;

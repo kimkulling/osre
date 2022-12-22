@@ -129,13 +129,13 @@ public:
     MeshBuilder &operator = ( const MeshBuilder& ) = delete;
 
 private:
-    CPPCore::TArray<glm::vec3> mPosCache;
-    CPPCore::TArray<glm::vec3> mDiffuseColCache;
-    CPPCore::TArray<glm::vec3> mNormalCache;
-    CPPCore::TArray<glm::vec2> mTex0Cache;
+    cppcore::TArray<glm::vec3> mPosCache;
+    cppcore::TArray<glm::vec3> mDiffuseColCache;
+    cppcore::TArray<glm::vec3> mNormalCache;
+    cppcore::TArray<glm::vec2> mTex0Cache;
     RenderBackend::PrimitiveGroup *mActivePrimGroup;
-    CPPCore::TArray<ui32> mIndexCache;
-    CPPCore::TArray<RenderBackend::PrimitiveGroup*> mPrimGroupCache;
+    cppcore::TArray<ui32> mIndexCache;
+    cppcore::TArray<RenderBackend::PrimitiveGroup*> mPrimGroupCache;
     bool mIsDirty;
     RenderBackend::Mesh *mActiveMesh;
 };

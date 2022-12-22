@@ -131,7 +131,7 @@ protected:
     bool onPostprocess() override;
 
 private:
-    CPPCore::TArray<RenderBackend::Mesh*> m_newGeo;
+    cppcore::TArray<RenderBackend::Mesh*> m_newGeo;
 };
 
 //-------------------------------------------------------------------------------------------------

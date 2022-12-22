@@ -49,8 +49,8 @@ OGLShader::~OGLShader() {
         osre_warn(Tag, "Destroying shader which is still in use.");
     }
 
-    CPPCore::ContainerClear(m_attribParams);
-    CPPCore::ContainerClear(m_uniformParams);
+    cppcore::ContainerClear(m_attribParams);
+    cppcore::ContainerClear(m_uniformParams);
     for (ui32 i = 0; i < 3; ++i) {
         if (0 != m_shaders[i]) {
             glDeleteShader(m_shaders[i]);

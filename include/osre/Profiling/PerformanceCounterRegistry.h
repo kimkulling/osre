@@ -72,7 +72,7 @@ private:
         ~CounterMeasure();
     };
     static PerformanceCounterRegistry *s_instance;
-    CPPCore::THashMap<ui32, CounterMeasure*> m_counters;
+    cppcore::THashMap<ui32, CounterMeasure*> m_counters;
 };
 
 } // Namespace Profiling

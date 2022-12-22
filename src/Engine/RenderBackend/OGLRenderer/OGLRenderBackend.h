@@ -77,7 +77,7 @@ struct PrimitiveGroup;
 //-------------------------------------------------------------------------------------------------
 class OGLRenderBackend {
 public:
-	using VertAttribArray = CPPCore::TArray<OGLVertexAttribute *>;
+	using VertAttribArray = cppcore::TArray<OGLVertexAttribute *>;
 
 	/// The default class constructor.
 	OGLRenderBackend();
@@ -106,12 +106,12 @@ public:
 	void releaseAllBuffers();
 	bool createVertexCompArray(const VertexLayout *layout, OGLShader *pShader, VertAttribArray &attributes);
 	bool createVertexCompArray(VertexType type, OGLShader *pShader, VertAttribArray &attributes);
-	void releaseVertexCompArray(CPPCore::TArray<OGLVertexAttribute *> &attributes);
+	void releaseVertexCompArray(cppcore::TArray<OGLVertexAttribute *> &attributes);
 	OGLVertexArray *createVertexArray();
 	bool bindVertexLayout(OGLVertexArray *pVertexArray, OGLShader *pShader, size_t stride, GLint loc,
 			OGLVertexAttribute *attrib);
 	bool bindVertexLayout(OGLVertexArray *pVertexArray, OGLShader *pShader, size_t stride,
-			const CPPCore::TArray<OGLVertexAttribute *> &attributes);
+			const cppcore::TArray<OGLVertexAttribute *> &attributes);
 	void destroyVertexArray(OGLVertexArray *pVertexArray);
 	OGLVertexArray *getVertexArraybyId(ui32 id) const;
 	void bindVertexArray(OGLVertexArray *pVertexArray);
@@ -154,24 +154,24 @@ public:
 private:
     TransformMatrixBlock mMatrixBlock;
     Platform::AbstractOGLRenderContext *mRenderCtx;
-	CPPCore::TArray<OGLBuffer*> mBuffers;
+	cppcore::TArray<OGLBuffer*> mBuffers;
 	GLuint mActiveVB;
 	GLuint mActiveIB;
-	CPPCore::TArray<OGLVertexArray*> mVertexArrays;
+	cppcore::TArray<OGLVertexArray*> mVertexArrays;
 	GLuint mActiveVertexArray;
-	CPPCore::TArray<OGLShader *> mShaders;
-	CPPCore::TArray<OGLTexture *> mTextures;
-    CPPCore::TArray<OGLTexture *> mBindedTextures;
-	CPPCore::TArray<size_t> mFreeTexSlots;
+	cppcore::TArray<OGLShader *> mShaders;
+	cppcore::TArray<OGLTexture *> mTextures;
+    cppcore::TArray<OGLTexture *> mBindedTextures;
+	cppcore::TArray<size_t> mFreeTexSlots;
 	std::map<String, size_t> m_texLookupMap;
-	CPPCore::TArray<OGLParameter *> mParameters;
+	cppcore::TArray<OGLParameter *> mParameters;
 	OGLShader *mShaderInUse;
-	CPPCore::TArray<size_t> mFreeBufferSlots;
-	CPPCore::TArray<OGLPrimGroup*> mPrimitives;
+	cppcore::TArray<size_t> mFreeBufferSlots;
+	cppcore::TArray<OGLPrimGroup*> mPrimitives;
 	RenderStates *mFpState;
 	Profiling::FPSCounter *mFpsCounter;
 	OGLCapabilities mOglCapabilities;
-	CPPCore::TArray<OGLFrameBuffer*> mFrameFuffers;
+	cppcore::TArray<OGLFrameBuffer*> mFrameFuffers;
     String mExtensions;
     i32 mOpenGLVersion[2];
     Viewport mViewport;

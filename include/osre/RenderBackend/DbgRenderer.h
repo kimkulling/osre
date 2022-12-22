@@ -67,7 +67,7 @@ private:
         String text;
     };
 
-    CPPCore::TArray<DebugText*> mDebugTextMeshes;
+    cppcore::TArray<DebugText*> mDebugTextMeshes;
     ui16 mLastIndex;
 };
 

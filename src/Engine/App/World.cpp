@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 
-using namespace ::CPPCore;
+using namespace ::cppcore;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
@@ -137,7 +137,7 @@ bool World::removeEntity(Entity *entity) {
     }
     
     bool found = false;
-    CPPCore::TArray<Entity*>::Iterator it = mEntities.find(entity);
+    cppcore::TArray<Entity*>::Iterator it = mEntities.find(entity);
     if (mEntities.end() != it) {
         mEntities.remove(it);
         found = true;

@@ -74,14 +74,14 @@ protected:
     void preparePrimGroups();
 
 private:
-    CPPCore::TArray<glm::vec3> m_posCache;
-    CPPCore::TArray<glm::vec3> m_diffuseColCache;
-    CPPCore::TArray<glm::vec3> m_normalCache;
-    CPPCore::TArray<glm::vec2> m_tex0Cache;
+    cppcore::TArray<glm::vec3> m_posCache;
+    cppcore::TArray<glm::vec3> m_diffuseColCache;
+    cppcore::TArray<glm::vec3> m_normalCache;
+    cppcore::TArray<glm::vec2> m_tex0Cache;
     RenderBackend::PrimitiveGroup *m_activePrimGroup;
-    CPPCore::TArray<ui32> m_indexCache;
+    cppcore::TArray<ui32> m_indexCache;
 
-    CPPCore::TArray<RenderBackend::PrimitiveGroup*> m_primGroupCache;
+    cppcore::TArray<RenderBackend::PrimitiveGroup*> m_primGroupCache;
     bool m_isDirty;
     RenderBackend::Mesh *m_activeMesh;
 };
