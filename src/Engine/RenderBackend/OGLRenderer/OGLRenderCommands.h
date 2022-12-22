@@ -51,6 +51,7 @@ struct OGLParameter;
 struct UniformVar;
 struct SetMaterialStageCmdData;
 
+bool makeScreenShot(const c8 *filename, ui32 w, ui32 h);
 bool setupTextures(Material* mat, OGLRenderBackend* rb, CPPCore::TArray<OGLTexture*>& textures);
 SetMaterialStageCmdData* setupMaterial(Material* material, OGLRenderBackend* rb, OGLRenderEventHandler* eh);
 void setupParameter(UniformVar* param, OGLRenderBackend* rb, OGLRenderEventHandler* ev);

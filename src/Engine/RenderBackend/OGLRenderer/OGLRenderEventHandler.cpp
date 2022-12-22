@@ -61,10 +61,6 @@ OGLRenderEventHandler::OGLRenderEventHandler() :
     // empty
 }
 
-OGLRenderEventHandler::~OGLRenderEventHandler() {
-    // empty
-}
-
 bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
     if (!m_isRunning) {
         return true;
@@ -95,6 +91,8 @@ bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
         result = onShutdownRequest(data);
     } else if (OnResizeEvent == ev) {
         result = onResizeRenderTarget(data);
+    } else if (OnScreenshotEvent == ev) {
+        result = onScreenshot(data);
     }
 
     return result;
@@ -476,6 +474,18 @@ bool OGLRenderEventHandler::onResizeRenderTarget(const EventData *eventData) {
     }
 
     return true;
+}
+
+bool OGLRenderEventHandler::onScreenshot(const EventData *eventData) {
+    osre_assert(nullptr != eventData);
+
+    bool result = false;
+    ScreenshotEventData *data = (ScreenshotEventData*) eventData;
+    if (data != nullptr){
+        result = makeScreenShot(data->mFilename.c_str(), data->mWidth, data->mHeight);
+    }
+    return result;
+    
 }
 
 } // Namespace RenderBackend

@@ -39,6 +39,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Shader.h>
+#include "stb_image_write.h"
 
 namespace OSRE {
 namespace RenderBackend {
@@ -48,6 +49,23 @@ static const c8 *Tag = "OGLRenderCommands";
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::CPPCore;
+
+bool makeScreenShot(const c8 *filename, ui32 w, ui32 h) {
+    const size_t numberOfPixels = w * h * 3;
+    unsigned char *pixels = new uc8[numberOfPixels];
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    glReadBuffer(GL_FRONT);
+    glReadPixels(0, 0, w, h, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixels);
+    bool result = true;
+    if (0 != stbi_write_jpg(filename, w, h, 3, pixels, numberOfPixels)){
+        result = false;
+    }
+
+    delete pixels;
+
+    return result;
+}
 
 bool setupTextures(Material *mat, OGLRenderBackend *rb, TArray<OGLTexture *> &textures) {
     if (nullptr == mat) {

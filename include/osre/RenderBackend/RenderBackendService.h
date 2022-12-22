@@ -55,6 +55,7 @@ struct UniformVar;
 struct TransformMatrixBlock;
 
 // Event declarations
+DECL_EVENT(OnScreenshotEvent);
 DECL_EVENT(OnAttachEventHandlerEvent);
 DECL_EVENT(OnDetatachEventHandlerEvent);
 DECL_EVENT(OnCreateRendererEvent);
@@ -70,6 +71,18 @@ DECL_EVENT(OnInitPassesEvent);
 DECL_EVENT(OnCommitFrameEvent);
 DECL_EVENT(OnShutdownRequestEvent);
 DECL_EVENT(OnResizeEvent);
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  Will create a screenshot event.
+//-------------------------------------------------------------------------------------------------
+struct OSRE_EXPORT ScreenshotEventData : public Common::EventData {
+    ScreenshotEventData(String filename, ui32 w, ui32 h) : EventData(OnScreenshotEvent, nullptr), 
+            mFilename(filename), mWidth(w), mHeight(h) {}
+    String mFilename;
+    ui32 mWidth, mHeight;
+};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -90,7 +103,7 @@ struct OSRE_EXPORT CreateRendererEventData : public Common::EventData {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief This event will signal, that a new view shall be attached.
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT AttachViewEventData : public Common::EventData {
     AttachViewEventData() :

@@ -70,7 +70,7 @@ public:
     OGLRenderEventHandler();
 
     ///	@brief  The class destructor.
-    ~OGLRenderEventHandler() override;
+    ~OGLRenderEventHandler() override = default;
 
     /// @brief The OnEvent-callback.
     /// @param ev           The event for handling.
@@ -160,7 +160,12 @@ protected:
     /// @brief  Callback for dealing with resize events.
     /// @param  eventData	The event state data
     /// @return true if successful, false if not.
-    bool onResizeRenderTarget( const Common::EventData *eventData );
+    bool onResizeRenderTarget(const Common::EventData *eventData );
+
+    /// @brief Will create a screenshot.
+    /// @param data  The event data with the filename.
+    /// @return true if successful.
+    bool onScreenshot(const Common::EventData *data);
 
 private:
     bool m_isRunning;
