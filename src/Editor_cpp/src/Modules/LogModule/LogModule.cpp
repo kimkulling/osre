@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "Modules/LogModule/LogModule.h"
-#include <osre/App/IModuleView.h>
+#include <osre/Modules/IModuleView.h>
 #include "OsreEdApp.h"
 
 #include <osre/Common/Logger.h>
@@ -40,11 +40,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Editor {
 
-static const c8 *Tag = "LogModule";
+static constexpr c8 Tag[] = "LogModule";
 
-using namespace OSRE::Common;
-using namespace OSRE::App;
-using namespace OSRE::Platform;
+using namespace ::OSRE::Common;
+using namespace ::OSRE::App;
+using namespace ::OSRE::Modules;
+using namespace ::OSRE::Platform;
                                 
 INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM lParam) {
     (void)lParam;
@@ -53,8 +54,8 @@ INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM l
             return TRUE;
 
         case WM_SIZE: {
-            int x = LOWORD(lParam);
-            int y = HIWORD(lParam);
+            const int x = LOWORD(lParam);
+            const int y = HIWORD(lParam);
 
             ::SetWindowPos(GetDlgItem(hWnd, IDC_EDIT1), nullptr, 10, 10,
                     x - 10, y - 12, SWP_NOMOVE | SWP_NOZORDER);
@@ -69,6 +70,9 @@ INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM l
     return FALSE;
 }
 
+static constexpr int MarginWidth  = 20;
+static constexpr int MarginHeight = 300;
+
 static HWND initLogWindow(HINSTANCE hInstance, HWND hParent, const Rect2ui &rect) {
     HWND hwnd = ::CreateDialog(hInstance, MAKEINTRESOURCE(IDD_LOGVIEW),
             hParent, &LogDialogProc);
@@ -77,7 +81,7 @@ static HWND initLogWindow(HINSTANCE hInstance, HWND hParent, const Rect2ui &rect
         return nullptr;
     }
 
-    ::MoveWindow(hwnd, rect.getX1() + 20, rect.getY2() - 300, rect.getX2() - rect.getX1() - 20, 280, TRUE);
+    ::MoveWindow(hwnd, rect.getX1() + MarginWidth, rect.getY2() - 300, rect.getX2() - rect.getX1() - MarginWidth, 280, TRUE);
     if (hwnd == nullptr) {
         auto err = Win32OSService::getLastErrorAsString();
         osre_error(Tag, "Unable to create log window. Error : " + err);
@@ -112,17 +116,19 @@ public:
     }
 
 protected:
-    void onCreate(Rect2ui rect) override {
+    void onCreate(const Rect2ui &rect) override {
         Win32Window *w = (Win32Window *)mRootWindow;
         if (w == nullptr) {
             osre_error(Tag, "Cannot create log module view.");
             return;
         }
+
         mLogWndHandle = initLogWindow(w->getModuleHandle(), w->getHWnd(), rect);
         if (mLogWndHandle == nullptr) {
             osre_error(Tag, "Cannot create log module view.");
             return;
         }
+        
         ::ShowWindow(mLogWndHandle, SW_SHOW);
         mRect = rect;
     }

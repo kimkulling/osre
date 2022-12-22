@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
-#include <osre/App/ModuleBase.h>
+#include <osre/Modules/ModuleBase.h>
 #include <osre/Common/Logger.h>
 #include <osre/Debugging/Debug.h>
 #include <osre/Common/ArgumentParser.h>
@@ -32,8 +32,9 @@ using namespace ::OSRE;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::App;
+using namespace ::OSRE::Modules;
 
-static const c8 *Tag = "player";
+static constexpr c8 Tag[] = "player";
 
 typedef void* (*createModuleFn)(void);
 
@@ -44,20 +45,19 @@ public:
             mDllName(),
             mBreakOnStartup(false),
             mModule(nullptr),
-            mUpdateFunc(nullptr) {
+            mUpdateFunc(nullptr),
+            mModuleToPlay(nullptr) {
         // empty
     }
 
-    ~PlayerApplication() override {
-        // empty
-    }
+    ~PlayerApplication() override = default;
 
 protected:
     bool onCreate() override {
         const ArgumentParser &ap = AppBase::getArgumentParser();
         mBreakOnStartup = ap.hasArgument("break_on_startup");
         if (mBreakOnStartup) {
-            osre_info(Tag, "Break");
+            osre_info(Tag, "Starting debug-break");
             Debugging::debugBreak();
         }
 
@@ -93,8 +93,8 @@ protected:
             osre_info(Tag, "Loading " + mDllName + " successful.");
         }
 
-        App::ModuleBase *module = (App::ModuleBase *)(mUpdateFunc)();
-        if (module == nullptr) {
+        mModuleToPlay = (Modules::ModuleBase *)(mUpdateFunc)();
+        if (mModuleToPlay == nullptr) {
             osre_error(Tag, "Cannot create instance of modeule from " + mDllName);
             return false;
         }
@@ -104,17 +104,30 @@ protected:
 
     bool onDestroy() override {
         AbstractDynamicLoader *dynLoader = PlatformInterface::getInstance()->getDynamicLoader();
+        if (dynLoader == nullptr) {
+            return false;
+        }
+        
+        if (mModule != nullptr) {
+            mModuleToPlay->unload();
+            mModule = nullptr;
+        }
+
         dynLoader->removeLib(mDllName);
 
         return AppBase::onDestroy();
     }
 
     void onRender() override {
-
+        if (mModuleToPlay != nullptr) {
+            mModuleToPlay->render();
+        }
     }
 
     void onUpdate() override {
-        if (mUpdateFunc == nullptr) {
+        if (mModuleToPlay != nullptr) {
+            mModuleToPlay->update();
+        } else {
             AppBase::onUpdate();
             return;
         }
@@ -125,6 +138,7 @@ private:
     bool mBreakOnStartup;
     LibHandle *mModule;
     createModuleFn mUpdateFunc;
+    Modules::ModuleBase *mModuleToPlay;
 };
 
 int main(int argc, char *argv[]) {

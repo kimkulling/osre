@@ -41,8 +41,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Pipeline.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/Scene/Camera.h>
-#include <osre/Scene/MaterialBuilder.h>
+#include <osre/App/Camera.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
 
 #include "src/Engine/App/MouseEventListener.h"
 #include "src/Engine/Platform/PlatformPluginFactory.h"
@@ -53,7 +53,6 @@ namespace App {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::RenderBackend;
-using namespace ::OSRE::Scene;
 using namespace ::OSRE::Animation;
 using namespace ::OSRE::IO;
 
@@ -167,7 +166,7 @@ Properties::Settings *AppBase::getSettings() const {
     return m_settings;
 }
 
-Scene::Camera *AppBase::setActiveCamera(Scene::Camera *view) {
+Camera *AppBase::setActiveCamera(Camera *view) {
     if (nullptr == mStage) {
         osre_debug(Tag, "No world to activate state to.");
         return nullptr;
@@ -280,7 +279,7 @@ bool AppBase::onCreate() {
 
     m_timer = Platform::PlatformInterface::getInstance()->getTimer();
 
-    Scene::MaterialBuilder::create();
+    MaterialBuilder::create();
     ResourceCacheService *rcSrv = new ResourceCacheService;
 
     // Setup onMouse event-listener
@@ -338,7 +337,7 @@ bool AppBase::onDestroy() {
         m_platformInterface = nullptr;
     }
 
-    Scene::MaterialBuilder::destroy();
+    MaterialBuilder::destroy();
 
     delete mStage;
     mStage = nullptr;

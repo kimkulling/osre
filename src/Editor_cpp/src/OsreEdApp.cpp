@@ -31,16 +31,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Actions/ImportAction.h"
 #include "Engine/App/MouseEventListener.h"
 
-#include <osre/App/ModuleBase.h>
+#include <osre/Modules/ModuleBase.h>
+
 #include <osre/App/App.h>
 #include <osre/Animation/AnimatorBase.h>
+
 #include <osre/IO/Directory.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/File.h>
 #include <osre/IO/IOService.h>
+
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/PlatformOperations.h>
 #include <osre/Platform/PlatformInterface.h>
+
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -68,12 +72,11 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::IO;
-using namespace ::OSRE::Scene;
 
-static const ui32 HorizontalMargin = 2;
-static const ui32 VerticalMargin = 2;
+static constexpr ui32 HorizontalMargin = 2;
+static constexpr ui32 VerticalMargin = 2;
 
-static const c8 *Tag = "OsreApp";
+static constexpr c8 Tag[] = "OsreApp";
 
 static void createTitleString(const String &projectName, String &titleString) {
     titleString.clear();
@@ -138,13 +141,13 @@ void OsreEdApp::loadAsset(const Uri &modelLoc) {
     reporter.update(10);
     ImportAction action(getIdContainer(), getStage()->getActiveWorld());
     ArgumentList args;
-    args.add(CPPCore::Variant::createFromString(modelLoc.getAbsPath()));
+    args.add(cppcore::Variant::createFromString(modelLoc.getAbsPath()));
     if (!action.run(args)) {
         reporter.stop();
         return;
     }
     if (mProject == nullptr) {
-        newProjectCmd(1, CPPCore::Variant::createFromString(modelLoc.getResource()));
+        newProjectCmd(1, cppcore::Variant::createFromString(modelLoc.getResource()));
         mProject->setStage(AppBase::getStage());
     }
     reporter.update(10);
@@ -184,7 +187,7 @@ void OsreEdApp::loadAsset(const Uri &modelLoc) {
 void OsreEdApp::newProjectCmd(ui32, void *data) {
     std::string name = "New project";
     if (data != nullptr) {
-        CPPCore::Variant *v = (CPPCore::Variant*)data;
+        cppcore::Variant *v = (cppcore::Variant*)data;
         name = v->getString();
     }
     mProject = createProject(name);
@@ -197,7 +200,7 @@ void OsreEdApp::loadProjectCmd(ui32, void *) {
     IO::Uri projectLoc;
     PlatformOperations::getFileOpenDialog("Select project file", "*", projectLoc);
     if (projectLoc.isValid()) {
-        loadSceneData(projectLoc, mSceneData);
+        loadSceneData(projectLoc);
     }
 }
 
@@ -205,7 +208,7 @@ void OsreEdApp::saveProjectCmd(ui32, void *) {
     IO::Uri projectLoc;
     PlatformOperations::getFileSaveDialog("Select project file", "*", projectLoc);
     if (projectLoc.isValid()) {
-        saveSceneData(projectLoc, mSceneData);
+        saveSceneData(projectLoc);
     }
 }
 
@@ -215,6 +218,10 @@ void OsreEdApp::importAssetCmd(ui32, void *) {
     if (modelLoc.isValid()) {
         loadAsset(modelLoc);
     }
+}
+
+void OsreEdApp::newMeshCmd(ui32 cmdId, void* data) {
+    // ToDo!
 }
 
 void OsreEdApp::quitEditorCmd(ui32, void *) {
@@ -312,7 +319,7 @@ bool OsreEdApp::onDestroy() {
     return true;
 }
 
-bool OsreEdApp::loadSceneData(const IO::Uri &filename, SceneData&) {
+bool OsreEdApp::loadSceneData(const IO::Uri &filename) {
     if (filename.isEmpty()) {
         return false;
     }
@@ -334,7 +341,7 @@ bool OsreEdApp::loadSceneData(const IO::Uri &filename, SceneData&) {
     return true;
 }
 
-bool OsreEdApp::saveSceneData(const IO::Uri &filename, SceneData &sd) {
+bool OsreEdApp::saveSceneData(const IO::Uri &filename) {
     if (filename.isEmpty()) {
         return false;
     }
@@ -346,7 +353,7 @@ bool OsreEdApp::saveSceneData(const IO::Uri &filename, SceneData &sd) {
     }
 
     if (mProject == nullptr) {
-        CPPCore::Variant *v = CPPCore::Variant::createFromString(filename.getResource());
+        cppcore::Variant *v = cppcore::Variant::createFromString(filename.getResource());
         newProjectCmd(1, (void *)v);
     }
     mProject->save(filename.getAbsPath(), getStage());

@@ -27,6 +27,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+/// @brief
+//-------------------------------------------------------------------------------------------------
 class AbstractBehaviour {
 public:
     virtual ~AbstractBehaviour() {

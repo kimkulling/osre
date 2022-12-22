@@ -21,20 +21,21 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "osre_testcommon.h"
+
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/MaterialBuilder.h>
-#include <osre/Scene/DbgRenderer.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
+#include <osre/RenderBackend/DbgRenderer.h>
 
 namespace OSRE {
 namespace UnitTest {
 
+using namespace ::OSRE::RenderBackend;
+
 class TestRenderBackendService : public RenderBackend::RenderBackendService {
 public:
     TestRenderBackendService() : RenderBackendService() {}
-    ~TestRenderBackendService(){}
+    ~TestRenderBackendService() = default;
 };
-
-using namespace ::OSRE::Scene;
 
 class DbgRendererTest : public ::testing::Test {
 protected:

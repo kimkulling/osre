@@ -6,16 +6,13 @@
 namespace OSRE {
 namespace Editor {
 
-using namespace OSRE::App;
+using namespace ::OSRE::App;
+using namespace ::OSRE::Modules;
 using namespace ::OSRE::RenderBackend;
 
 EditorModule::EditorModule(App::AppBase *parentApp) :
         ModuleBase("editor.module", parentApp) {
-
-}
-
-EditorModule::~EditorModule() {
-
+    // empty
 }
 
 bool EditorModule::onLoad() {

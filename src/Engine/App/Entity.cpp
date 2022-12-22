@@ -24,12 +24,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Component.h>
 #include <osre/App/Entity.h>
 #include <osre/App/World.h>
-#include <osre/Scene/MeshProcessor.h>
+#include <osre/RenderBackend/MeshProcessor.h>
 
 namespace OSRE {
 namespace App {
 
-using namespace ::OSRE::Scene;
+using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
 Entity::Entity(const String &name, const Common::Ids &ids, World *world) :
@@ -41,7 +41,7 @@ Entity::Entity(const String &name, const Common::Ids &ids, World *world) :
         m_aabb(),
         mOwner(world) {
     m_renderComponent = new RenderComponent(this, 1);
-    if (nullptr != world) {
+    if (nullptr != mOwner) {
         mOwner->addEntity(this);
     }
 }
@@ -97,7 +97,7 @@ Component *Entity::getComponent(ComponentType type) const {
     switch (type) {
         case OSRE::App::ComponentType::RenderComponentType:
             return m_renderComponent;
-        case OSRE::App::ComponentType::ScriptComponent:
+        case OSRE::App::ComponentType::ScriptComponentType:
             break;
         case OSRE::App::ComponentType::MaxNumComponents:
         case OSRE::App::ComponentType::InvalidComponent:

@@ -46,25 +46,25 @@ public:
     /// @brief  The class constructor.
     PythonInterface();
 
-    /// @brief  The class destructor.
+    /// @brief  The class default destructor.
     ~PythonInterface() = default;
 
-    /// @brief 
-    /// @param app 
-    /// @return 
+    /// @brief Will create the python interface.
+    /// @param app  The application instance.
+    /// @return true, if succeded, false if not
     bool create(App::AppBase *app);
 
-    /// @brief 
-    /// @return 
+    /// @brief Will destroy the python interface.
+    /// @return true, if succeded, false if not
     bool destroy();
     
-    /// @brief 
-    /// @param path 
+    /// @brief Will add a python script path to the interpreter.
+    /// @param path  The new path
     void addPath(const String &path);
     
-    /// @brief 
-    /// @param src 
-    /// @return 
+    /// @brief Will execute a script.
+    /// @param src  The script to execute.
+    /// @return true, if succeded, false if not
     bool runScript(const String &src);
 
 private:

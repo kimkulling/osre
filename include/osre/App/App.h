@@ -25,12 +25,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // The public API from the App-layer
 #include <osre/App/AppBase.h>
 #include <osre/App/Component.h>
+#include <osre/App/Camera.h>
 #include <osre/App/Entity.h>
 #include <osre/App/World.h>
 #include <osre/App/AppCommon.h>
 #include <osre/App/AssimpWrapper.h>
-#include <osre/App/IModuleView.h>
-#include <osre/App/ModuleBase.h>
 #include <osre/App/Project.h>
 #include <osre/App/ServiceProvider.h>
 #include <osre/App/AssetRegistry.h>

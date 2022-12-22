@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/TResource.h>
+#include <osre/RenderBackend/Shader.h>
 #include <osre/Common/osre_common.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/Uri.h>
@@ -45,7 +46,7 @@ class Shader;
 class Pipeline;
 
 /// @brief An array to stoer meshes.
-using MeshArray = CPPCore::TArray<RenderBackend::Mesh*>;
+using MeshArray = cppcore::TArray<RenderBackend::Mesh*>;
 
 /// Describes an unset id.
 static constexpr i32 UnsetHandle = -1;
@@ -224,36 +225,6 @@ enum class VertexFormat : int {
     InvalidVertexFormat, ///< Enum for invalid enum.
 };
 
-///	@brief  This enum describes the kind of build-in material.
-enum class MaterialType {
-    ShaderMaterial = 0, ///< Material using a build-in shader assigned to its type of vertex.
-    NumMaterialTypes, ///< Number of enums.
-
-    InvalidMaterialType ///< Enum for invalid enum.
-};
-
-///	@brief  This enum describes the different shader types, which are supported by the OSRE-engine.
-enum class ShaderType {
-    SH_VertexShaderType = 0, ///< The shader is a vertex shader, used for each vertex.
-    SH_GeometryShaderType, ///< The shader is a geometry shader, used for tesselation.
-    SH_TesselationShaderType, ///< The tesselation evaluation shader.
-    SH_FragmentShaderType, ///< The shader is a fragment shader, used for rasterization.
-    NumShaderTypes, ///< Number of enums.
-
-    InvalidShaderType ///< Enum for invalid enum.
-};
-
-///	@brief  This enum describes the color type for the material.
-enum class MaterialColorType : ui32 {
-    Mat_Diffuse = 0, ///<
-    Mat_Specular, ///<
-    Mat_Ambient, ///<
-    Mat_Emission, ///<
-    NumMaterialColorTypes, ///< Number of enums.
-
-    InvalidMaterialColorType ///< Enum for invalid enum.
-};
-
 ///	@brief
 enum class LightType {
     Directional = 0,
@@ -379,8 +350,8 @@ struct OSRE_EXPORT VertComponent {
 struct OSRE_EXPORT VertexLayout {
     static VertComponent ErrorComp;
     String *m_attributes;
-    CPPCore::TArray<VertComponent *> m_components;
-    CPPCore::TArray<size_t> m_offsets;
+    cppcore::TArray<VertComponent *> m_components;
+    cppcore::TArray<size_t> m_offsets;
     size_t m_currentOffset;
     size_t m_sizeInBytes;
 
@@ -398,7 +369,7 @@ struct OSRE_EXPORT VertexLayout {
 
 ///	@brief  This struct is used to describe data for a GPU buffer.
 struct OSRE_EXPORT BufferData {
-    using BufferDataAllocator = ::CPPCore::TPoolAllocator<BufferData>;
+    using BufferDataAllocator = ::cppcore::TPoolAllocator<BufferData>;
     friend BufferDataAllocator;
     static BufferDataAllocator sBufferDataAllocator;
 
@@ -493,42 +464,6 @@ private:
     TextureStageType m_stage;
 };
 
-using TextureResourceArray = CPPCore::TArray<RenderBackend::TextureResource *>;
-
-static const ui32 MaxShaderTypes = static_cast<ui32>(ShaderType::NumShaderTypes);
-
-static const ui32 MaxMatColorType = static_cast<ui32>(MaterialColorType::NumMaterialColorTypes);
-
-using ShaderSourceArray = CPPCore::TStaticArray<String, MaxShaderTypes>;
-
-///	@brief
-struct OSRE_EXPORT Material {
-    String m_name;
-    MaterialType m_type;
-    size_t m_numTextures;
-    Texture **m_textures;
-    Shader *m_shader;
-    ui32 m_numParameters;
-    UniformVar *m_parameters;
-    Color4 m_color[MaxMatColorType];
-    f32 mShineness;
-    f32 mShinenessStrength;
-    IO::Uri m_uri;
-
-    Material(const String &name);
-    Material(const String &name, const IO::Uri &uri);
-    ~Material();
-    void setMaterialType(MaterialType matType);
-    MaterialType getMaterialType() const;
-    void createShader(ShaderSourceArray &shaders);
-    Shader *getShader() const;
-
-    OSRE_NON_COPYABLE(Material)
-};
-
-inline Shader *Material::getShader() const {
-    return m_shader;
-}
 
 ///	@brief
 struct OSRE_EXPORT GeoInstanceData {
@@ -578,7 +513,7 @@ struct OSRE_EXPORT Viewport {
 //-------------------------------------------------------------------------------------------------
 template <class T>
 struct TVertexCache {
-    using CacheType = ::CPPCore::TArray<T>;
+    using CacheType = ::cppcore::TArray<T>;
     CacheType m_cache;
 
     /// @brief 
@@ -655,7 +590,7 @@ struct TVertexCache {
 //-------------------------------------------------------------------------------------------------
 template <class T>
 struct TIndexCache {
-    using CacheType = ::CPPCore::TArray<T>;
+    using CacheType = ::cppcore::TArray<T>;
 
     CacheType m_cache;
 
@@ -756,7 +691,7 @@ struct MatrixBuffer {
 struct MeshEntry {
     ui32 numInstances;
     bool m_isDirty;
-    CPPCore::TArray<Mesh*> mMeshArray;
+    cppcore::TArray<Mesh*> mMeshArray;
 };
 
 struct RenderBatchData {
@@ -769,9 +704,9 @@ struct RenderBatchData {
 
     const c8 *m_id;
     MatrixBuffer m_matrixBuffer;
-    CPPCore::TArray<UniformVar *> m_uniforms;
-    CPPCore::TArray<MeshEntry *> m_meshArray;
-    CPPCore::TArray<Mesh *> m_updateMeshArray;
+    cppcore::TArray<UniformVar *> m_uniforms;
+    cppcore::TArray<MeshEntry *> m_meshArray;
+    cppcore::TArray<Mesh *> m_updateMeshArray;
     ui32 m_dirtyFlag;
 
     RenderBatchData(const c8 *id) :
@@ -791,7 +726,7 @@ struct RenderBatchData {
 struct PassData {
     const c8 *m_id;
     FrameBuffer *m_renderTarget;
-    CPPCore::TArray<RenderBatchData *> m_geoBatches;
+    cppcore::TArray<RenderBatchData *> m_geoBatches;
     glm::mat4 mView;
     glm::mat4 mProj;
     bool m_isDirty;
@@ -858,8 +793,8 @@ struct FrameSubmitCmd {
     ui32 m_updateFlags;
     size_t m_size;
     c8 *m_data;
-    ::CPPCore::TArray<MeshEntry*> m_newMeshes;
-    ::CPPCore::TArray<PassData*> m_updatedPasses;
+    ::cppcore::TArray<MeshEntry*> m_newMeshes;
+    ::cppcore::TArray<PassData*> m_updatedPasses;
 
     FrameSubmitCmd() :
             m_meshId(999999),
@@ -873,7 +808,7 @@ struct FrameSubmitCmd {
     }
 };
 
-using FrameSubmitCmdAllocator = ::CPPCore::TPoolAllocator<FrameSubmitCmd>;
+using FrameSubmitCmdAllocator = ::cppcore::TPoolAllocator<FrameSubmitCmd>;
 
 struct UniformBuffer {
     UniformBuffer() :
@@ -959,15 +894,15 @@ struct UniformBuffer {
 };
 
 struct Frame {
-    ::CPPCore::TArray<PassData *> m_newPasses;
-    ::CPPCore::TArray<FrameSubmitCmd*> m_submitCmds;
+    cppcore::TArray<PassData *> m_newPasses;
+    cppcore::TArray<FrameSubmitCmd*> m_submitCmds;
     FrameSubmitCmdAllocator m_submitCmdAllocator;
     UniformBuffer *m_uniforBuffers;
     Pipeline *m_pipeline;
 
     Frame();
     ~Frame();
-    void init(::CPPCore::TArray<PassData *> &newPasses);
+    void init(::cppcore::TArray<PassData *> &newPasses);
     FrameSubmitCmd *enqueue();
 
     Frame(const Frame &) = delete;

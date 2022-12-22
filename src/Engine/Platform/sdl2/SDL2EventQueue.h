@@ -45,7 +45,7 @@ class SDL2Surface;
 //-------------------------------------------------------------------------------------------------
 class SDL2EventHandler : public AbstractPlatformEventQueue {
 public:
-    using EventArray = CPPCore::TArray<const Common::Event*>;
+    using EventArray = cppcore::TArray<const Common::Event*>;
 
     SDL2EventHandler( AbstractWindow *window );
     virtual ~SDL2EventHandler();

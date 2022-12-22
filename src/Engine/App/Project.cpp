@@ -21,21 +21,21 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/Project.h>
+#include <osre/App/World.h>
+#include <osre/App/Entity.h>
+#include <osre/App/Node.h>
 #include <osre/Common/Logger.h>
+#include <osre/Common/TAABB.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Properties/Property.h>
 #include <osre/IO/Uri.h>
-#include <osre/App/World.h>
-#include <osre/App/Entity.h>
 #include <osre/RenderBackend/Mesh.h>
-#include <osre/Scene/Node.h>
-#include <osre/Scene/TAABB.h>
 
 namespace OSRE {
 namespace App {
 
 using namespace ::OSRE::IO;
-using namespace ::OSRE::Scene;
+using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
 static const c8 *Tag = "Project";
@@ -162,7 +162,7 @@ static size_t getNumNodes(Node *node, size_t currentNodeCount) {
     return currentNodeCount;
 }
 
-static size_t getPropertyDataSize(const ::CPPCore::TArray<Properties::Property *> &propArray) {
+static size_t getPropertyDataSize(const ::cppcore::TArray<Properties::Property *> &propArray) {
     if (propArray.isEmpty()) {
         return 0;
     }
@@ -174,14 +174,14 @@ static size_t getPropertyDataSize(const ::CPPCore::TArray<Properties::Property *
         }
         size += sizeof(i32);
         size += p->getPropertyName().size();
-        CPPCore::Variant v = p->getValue();
+        cppcore::Variant v = p->getValue();
         size += v.getSize();
     }
 
     return size;
 }
  
-static void storeProperties(const ::CPPCore::TArray<Properties::Property *> &propArray, NodeData &curNodeData) {
+static void storeProperties(const ::cppcore::TArray<Properties::Property *> &propArray, NodeData &curNodeData) {
     curNodeData.mNumProperties = (i32) propArray.size();
     curNodeData.mPropertyDataSize = (i32) getPropertyDataSize(propArray);
     curNodeData.mPropertyData = new c8[curNodeData.mPropertyDataSize];
@@ -210,7 +210,7 @@ static void storeNodes(Node *currentNode, NodeData *nd, size_t &index) {
 
     NodeData &curNodeData = nd[index];    
     setNameChunk(currentNode->getName(), curNodeData.mNodeName);
-    ::CPPCore::TArray<Properties::Property *> propArray;
+    ::cppcore::TArray<Properties::Property *> propArray;
     currentNode->getPropertyArray(propArray);
     if (!propArray.isEmpty()) {
         storeProperties(propArray, curNodeData);
@@ -242,7 +242,7 @@ static void storeMeshes(MeshArray &meshes, MeshData *md) {
     }
 }
 
-static void storeEntities(const CPPCore::TArray<Entity *> &entities, WorldData &wd) {
+static void storeEntities(const cppcore::TArray<Entity *> &entities, WorldData &wd) {
     if (entities.isEmpty()) {
         return;
     }
@@ -277,7 +277,7 @@ static void storeEntities(const CPPCore::TArray<Entity *> &entities, WorldData &
 static bool saveWorld(World *world, WorldData &wd) {
     setNameChunk(world->getName(), wd.mWorldName);
 
-    Scene::Node *root = world->getRootNode();
+    Node *root = world->getRootNode();
     if (nullptr == root) {
         return true;
     }
@@ -287,7 +287,7 @@ static bool saveWorld(World *world, WorldData &wd) {
     wd.mNodes = new NodeData[wd.mNumNodes];
     size_t index = 0;
     storeNodes(root, wd.mNodes, index);
-    CPPCore::TArray<Entity *> entities;
+    cppcore::TArray<Entity *> entities;
     world->getEntityArray(entities);
     storeEntities(entities, wd);
 
@@ -328,12 +328,12 @@ bool Project::save(const String &name, const Stage *stage) {
         return false;
     }
 
-    if (mStage == nullptr) {
+    if (stage == nullptr) {
         return true;
     }
     
     StageData sd;
-    const bool result = saveStage(name, *mStage, &sd);
+    const bool result = saveStage(name, *stage, &sd);
 
     return result;
 }

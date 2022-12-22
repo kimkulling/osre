@@ -22,23 +22,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "RenderView/MainRenderView.h"
 #include <osre/Animation/AnimatorBase.h>
-#include <osre/Scene/MaterialBuilder.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
 #include <osre/RenderBackend/Mesh.h>
 
 namespace OSRE {
 namespace Editor {
 
 namespace Colors {
-    const glm::vec3 Black(0, 0, 0);
-    const glm::vec3 White(1, 1, 1);
-    const glm::vec3 Grey(0.5, 0.5, 0.5);
-    const glm::vec3 Red(1, 0, 0);
-    const glm::vec3 Green(0, 1, 0);
-    const glm::vec3 Blue(0, 0, 1);
+    static const glm::vec3 Black(0, 0, 0);
+    static const glm::vec3 White(1, 1, 1);
+    static const glm::vec3 Grey(0.5, 0.5, 0.5);
+    static const glm::vec3 Red(1, 0, 0);
+    static const glm::vec3 Green(0, 1, 0);
+    static const glm::vec3 Blue(0, 0, 1);
 } // namespace Colors
 
 using namespace OSRE::RenderBackend;
-using namespace OSRE::Scene;
 using namespace OSRE::App;
 using namespace OSRE::Animation;
 
@@ -75,12 +74,12 @@ Mesh *MainRenderView::createCoordAxis(ui32 size) {
     v[5].position.x = v[5].position.y = 0;
     v[5].color0 = Colors::Blue;
 
-    CPPCore::TArray<RenderBackend::ColorVert> axisData;
+    cppcore::TArray<RenderBackend::ColorVert> axisData;
     axisData.add(v, 6);
 
     axis->attachVertices(&axisData[0], sizeof(ColorVert) * axisData.size());
 
-    CPPCore::TArray<ui16> axisIndices;
+    cppcore::TArray<ui16> axisIndices;
     axisIndices.add(0);
     axisIndices.add(1);
 
@@ -106,8 +105,8 @@ Mesh *MainRenderView::createGrid(ui32 numLines) {
     f32 currentX = -300.0f, currentY = -300.0f;
     f32 diffX = 600.0f / numLines;
     f32 diffY = 600.0f / numLines;
-    CPPCore::TArray<RenderBackend::ColorVert> lineData;
-    CPPCore::TArray<ui16> lineIndices;
+    cppcore::TArray<RenderBackend::ColorVert> lineData;
+    cppcore::TArray<ui16> lineIndices;
     ui16 currentIndex = 0;
     for (ui32 x = 0; x < numLines + 1; ++x) {
         ColorVert v1, v2;
@@ -167,7 +166,7 @@ void MainRenderView::createRect2D(const Rect2ui &r, Mesh *mesh2D, Style &style) 
     edges[3].color0 = style.BG.toVec4();
 
     constexpr size_t NumIndices = 6;
-    CPPCore::TArray<ui16> indices;
+    cppcore::TArray<ui16> indices;
     indices.resize(NumIndices);
     indices[0] = 0;
     indices[1] = 2;

@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderTestUtils.h"
 
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/DbgRenderer.h>
+#include <osre/RenderBackend/DbgRenderer.h>
 
 #include <iomanip>
 
@@ -43,26 +43,23 @@ class StaticTextRenderTest : public AbstractRenderTest {
     ui32 m_frameCount;
 
 public:
-    StaticTextRenderTest()
-    : AbstractRenderTest( "rendertest/StaticTextRenderTest" )
+    StaticTextRenderTest() : AbstractRenderTest( "rendertest/StaticTextRenderTest" )
         , m_frameCount( 0 ) {
         // empty
     }
 
-    virtual ~StaticTextRenderTest() {
-        // empty
-    }
+    virtual ~StaticTextRenderTest() = default;
 
     bool onCreate( RenderBackendService *rbSrv ) override {
         rbSrv->sendEvent( &OnAttachViewEvent, nullptr );
 
-        Scene::DbgRenderer::getInstance()->renderDbgText( 2U, 0, 0, "This is a test-text!\nAnd another one!" );
+        DbgRenderer::getInstance()->renderDbgText( 2U, 0, 0, "This is a test-text!\nAnd another one!" );
 
         return true;
     }
 
     bool onDestroy( RenderBackendService * ) override {
-        Scene::DbgRenderer::getInstance()->clear();
+        DbgRenderer::getInstance()->clear();
         return true;
     }
 };

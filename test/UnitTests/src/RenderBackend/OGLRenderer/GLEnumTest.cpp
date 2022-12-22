@@ -46,6 +46,12 @@ TEST_F( OGLEnumTest, access_cullFace_success ) {
     CullState state;
     state.m_cullFace = CullState::CullFace::Front;
     EXPECT_EQ( GL_FRONT, (GLint) OGLEnum::getOGLCullFace( state.m_cullFace ) );
+
+    state.m_cullFace = CullState::CullFace::Back;
+    EXPECT_EQ(GL_BACK, (GLint)OGLEnum::getOGLCullFace(state.m_cullFace));
+
+    state.m_cullFace = CullState::CullFace::FrontAndBack;
+    EXPECT_EQ(GL_FRONT_AND_BACK, (GLint)OGLEnum::getOGLCullFace(state.m_cullFace));
 }
 
 } // Namespace UnitTest

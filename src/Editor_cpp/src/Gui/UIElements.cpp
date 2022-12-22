@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "UIElements.h"
 #include "OsreEdApp.h"
-#include <osre/Scene/MeshBuilder.h>
+#include <osre/RenderBackend/MeshBuilder.h>
 #include <osre/Platform/PlatformOperations.h>
 #include <osre/Platform/PlatformInterface.h>
 
@@ -51,6 +51,8 @@ constexpr int IDM_FILE_OPEN = 2;
 constexpr int IDM_FILE_SAVE = 3;
 constexpr int IDM_FILE_IMPORT = 4;
 constexpr int IDM_FILE_QUIT = 5;
+
+constexpr int IDM_MESH_NEW = 100;
 
 constexpr int IDM_GETTING_HELP = 6;
 constexpr int IDM_INFO_VERSION = 7;
@@ -142,6 +144,11 @@ void UIElements::createMenues(Win32Window *w, OsreEdApp *app, Platform::Abstract
     };
     w->addSubMenues(nullptr, queue, L"File", FileMenu, 8);
 
+    MenuEntry SceneMenu[1] = {
+        { MF_STRING, IDM_MESH_NEW, L"&New Mesh", MenuFunctor::Make(app, &OsreEdApp::newMeshCmd) },
+    };
+    w->addSubMenues(nullptr, queue, L"Scene", SceneMenu, 1);
+
     MenuEntry InfoMenu[2] = {
         { MF_STRING, IDM_GETTING_HELP, L"&Getting Help", MenuFunctor::Make(app, &OsreEdApp::gettingHelpCmd) },
         { MF_STRING, IDM_INFO_VERSION, L"&Version", MenuFunctor::Make(app, &OsreEdApp::showVersionCmd) }
@@ -155,6 +162,10 @@ TreeView *UIElements::createTreeView(Win32Window *w) {
     if (w == nullptr) {
         return nullptr;
     }
+
+    auto *t = new TreeView;
+    
+    return t;
 }
 
 } // namespace OSRE

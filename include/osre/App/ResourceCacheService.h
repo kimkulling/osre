@@ -32,7 +32,11 @@ namespace App {
 using TextureResourceFactory = Common::TResourceFactory<RenderBackend::TextureResource>;
 using TextureResourceCache = Common::TResourceCache<TextureResourceFactory, RenderBackend::TextureResource>;
 
-///	@brief
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Engine
+///
+/// @brief
+//-------------------------------------------------------------------------------------------------
 class ResourceCacheService {
 public:
     ResourceCacheService();

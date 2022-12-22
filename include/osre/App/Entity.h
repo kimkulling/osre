@@ -24,8 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Object.h>
 #include <osre/App/AppCommon.h>
-#include <osre/Scene/Node.h>
-#include <osre/Scene/TAABB.h>
+#include <osre/App/Node.h>
+#include <osre/Common/TAABB.h>
 #include <osre/App/Component.h>
 
 namespace OSRE {
@@ -39,12 +39,9 @@ namespace IO {
     class Stream;
 }
 
-namespace Scene {
-    class Node;
-}
-
 namespace App {
 
+class Node;
 class AbstractBehaviour;
 class Component;
 class RenderComponent;
@@ -61,24 +58,24 @@ public:
     Entity( const String &name, const Common::Ids &ids, World *world );
     ~Entity() override;
     void setBehaviourControl(AbstractBehaviour *behaviour );
-    void setNode( Scene::Node *node );
-    Scene::Node *getNode() const;
+    void setNode( Node *node );
+    Node *getNode() const;
     bool preprocess();
     bool update( Time dt );
     bool render( RenderBackend::RenderBackendService *rbSrv );
     bool postprocess();
     Component *getComponent(ComponentType type) const;
-    void setAABB( const Scene::AABB &aabb );
-    const Scene::AABB &getAABB() const;
+    void setAABB( const Common::AABB &aabb );
+    const Common::AABB &getAABB() const;
     void serialize(IO::Stream *stream);
     void deserialize(IO::Stream *stream);
 
 private:
     AbstractBehaviour *m_behaviour;
     RenderComponent *m_renderComponent;
-    Scene::Node *m_node;
+    Node *m_node;
     const Common::Ids &m_ids;
-    Scene::AABB m_aabb;
+    Common::AABB m_aabb;
     World *mOwner;
 };
 

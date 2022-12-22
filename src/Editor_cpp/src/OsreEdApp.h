@@ -24,12 +24,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Modules/ModuleRegistry.h"
 #include "SceneData.h"
-#include <osre/App/AppBase.h>
-#include <osre/App/World.h>
+#include <osre/App/App.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/Scene/Camera.h>
-#include <osre/Scene/Node.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -67,25 +64,31 @@ public:
     /// @brief  The class destructor.
     ~OsreEdApp() override = default;
 
-    /// The New-project command.
+    /// @brief The New-project command.
     /// @param  cmdId   [in] The command id.
     /// @param  data    [in] The parameters.
     void newProjectCmd(ui32 cmdId, void *data);
 
-    /// The Load-project command.
+    /// @brief The Load-project command.
     /// @param  cmdId   [in] The command id.
     /// @param  data    [in] The parameters.
     void loadProjectCmd(ui32 cmdId, void *data);
 
-    /// The Save-project command.
+    /// @brief The Save-project command.
     /// @param  cmdId   [in] The command id.
     /// @param  data    [in] The parameters.
     void saveProjectCmd(ui32 cmdId, void *data);
 
-    /// The Import-Asset command.
+    /// @brief The Import-Asset command.
     /// @param  cmdId   [in] The command id.
     /// @param  data    [in] The parameters.
     void importAssetCmd(ui32 cmdId, void *data);
+
+    
+    /// @brief The New-Mesh command.
+    /// @param  cmdId   [in] The command id.
+    /// @param  data    [in] The parameters.
+    void newMeshCmd(ui32 cmdId, void *data);
 
     /// The Quit command.
     /// @param  cmdId   [in] The command id.
@@ -138,15 +141,13 @@ protected:
 
     /// @brief Will load a scene from a file.
     /// @param filename The filename.
-    /// @param sd       The scene data container.
     /// @return true, if successful, false if not.
-    bool loadSceneData(const IO::Uri &filename, SceneData &sd);
+    bool loadSceneData(const IO::Uri &filename);
 
     /// @brief Will save a scene from a file.
     /// @param filename The filename.
-    /// @param sd       The scene data container.
     /// @return true, if successful, false if not.
-    bool saveSceneData(const IO::Uri &filename, SceneData &sd);
+    bool saveSceneData(const IO::Uri &filename);
 
     /// @brief Will setup the UI.
     /// @return true, if successful, false if not.

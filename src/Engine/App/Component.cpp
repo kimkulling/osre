@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -29,13 +29,14 @@ namespace OSRE {
 namespace App {
 
 using namespace ::OSRE::RenderBackend;
-using namespace ::CPPCore;
+using namespace ::cppcore;
 
 static const glm::vec3 Dummy = glm::vec3(-1, -1, -1);
 
-Component::Component(Entity *owner, ui32 id) :
+Component::Component(Entity *owner, ui32 id, ComponentType type) :
         m_owner(owner),
-        m_id(id) {
+        m_id(id),
+        mType(type) {
     osre_assert(nullptr != owner);
 }
 
@@ -43,12 +44,20 @@ void Component::update(Time dt) {
     onUpdate(dt);
 }
 
-void Component::render(RenderBackend::RenderBackendService *renderBackendSrv) {
+void Component::render(RenderBackendService *renderBackendSrv) {
     onRender(renderBackendSrv);
 }
 
+void Component::serialize( IO::Stream &stream ) {
+    // empty
+}
+
+void Component::deserialize( IO::Stream &stream ) {
+    // empty
+}
+
 RenderComponent::RenderComponent(Entity *owner, ui32 id) :
-        Component(owner, id), m_newGeo() {
+        Component(owner, id, ComponentType::RenderComponentType), m_newGeo() {
     // empty
 }
 
@@ -102,6 +111,71 @@ bool RenderComponent::onRender(RenderBackendService *renderBackendSrv) {
 }
 
 bool RenderComponent::onPostprocess() {
+    return true;
+}
+
+TransformComponent::TransformComponent(Entity *owner, ui32 id) :
+        Component(owner, id, ComponentType::TransformComponentType), mNode( nullptr ) {}
+
+void TransformComponent::setNode(Node *node) {
+    mNode = node;
+}
+
+bool TransformComponent::onPreprocess() {
+    return true;
+}
+
+bool TransformComponent::onUpdate( Time dt ) {
+    return true;
+}
+
+bool TransformComponent::onRender(RenderBackend::RenderBackendService *rbSrv) {
+    return true;
+}
+
+bool TransformComponent::onPostprocess() {
+    return true;
+}
+
+LightComponent::LightComponent(Entity *owner, ui32 id) 
+        : Component(owner, id, ComponentType::LightComponentType), mLight(nullptr) {}
+
+void LightComponent::setLight(RenderBackend::Light *light) {
+    mLight = light;
+}
+
+bool LightComponent::onPreprocess() {
+    return true;
+}
+
+bool LightComponent::onUpdate(Time dt) {
+    return true;
+}
+
+bool LightComponent::onRender(RenderBackend::RenderBackendService *rbSrv) {
+    return true;
+}
+
+bool LightComponent::onPostprocess() {
+    return true;
+}
+
+ScriptComponent::ScriptComponent(Entity *owner, ui32 id) 
+        : Component(owner, id, ComponentType::ScriptComponentType) {}
+
+bool ScriptComponent::onPreprocess() {
+    return true;
+}
+
+bool ScriptComponent::onUpdate(Time dt) {
+    return true;
+}
+
+bool ScriptComponent::onRender(RenderBackend::RenderBackendService *rbSrv) {
+    return true;
+}
+
+bool ScriptComponent::onPostprocess() {
     return true;
 }
 

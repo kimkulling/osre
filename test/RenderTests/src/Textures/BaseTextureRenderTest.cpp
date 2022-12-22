@@ -26,12 +26,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/Mesh.h>
+#include <osre/RenderBackend/Material.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
 #include <osre/RenderBackend/Shader.h>
-#include <osre/Scene/MaterialBuilder.h>
-#include <osre/Scene/MeshBuilder.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
+#include <osre/RenderBackend/MeshBuilder.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 
 #include <iostream>
@@ -112,7 +113,7 @@ public:
 
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
-        Scene::MeshBuilder geoBuilder;
+        MeshBuilder geoBuilder;
         geoBuilder.allocQuads(VertexType::RenderVertex, BufferAccessType::ReadOnly);
         Mesh *mesh = geoBuilder.getMesh();
 
@@ -126,7 +127,7 @@ public:
                 TextureResourceArray texResArray;
                 TextureResource *texRes = new TextureResource("SpiderTex", IO::Uri("file://assets/Models/Obj/SpiderTex.jpg"));
                 texResArray.add(texRes);
-                Material *material = Scene::MaterialBuilder::createTexturedMaterial("SpiderTex", texResArray, VsSrc, FsSrc);
+                Material *material = MaterialBuilder::createTexturedMaterial("SpiderTex", texResArray, VsSrc, FsSrc);
                 mesh->setMaterial(material);
                 Shader *shader = material->getShader();
                 if (shader != nullptr) {

@@ -25,11 +25,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/Mesh.h>
+#include <osre/RenderBackend/Material.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
 #include <osre/RenderBackend/Shader.h>
-#include <osre/Scene/MeshBuilder.h>
+#include <osre/RenderBackend/MeshBuilder.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 
 namespace OSRE {
@@ -103,7 +104,7 @@ public:
         {
             rbSrv->beginRenderBatch("b1");
             {
-                Scene::MeshBuilder myBuilder;
+                MeshBuilder myBuilder;
                 myBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
                 Mesh *mesh = myBuilder.getMesh();
                 rbSrv->addMesh(mesh, NumInstances);

@@ -38,7 +38,7 @@ struct EnvVar {
     };
 
     String m_name;
-    CPPCore::Variant m_value;
+    cppcore::Variant m_value;
 
     EnvVar(const String &key, int value);
     EnvVar(const String &key, const String &value);
@@ -57,11 +57,11 @@ inline EnvVar::EnvVar(const String &key, const String &value) :
 }
 
 inline EnvVar::Type EnvVar::getType() const {
-    ::CPPCore::Variant::Type t = m_value.getType();
+    ::cppcore::Variant::Type t = m_value.getType();
     switch (t) {
-        case ::CPPCore::Variant::Int:
+        case ::cppcore::Variant::Int:
             return EnvVar::Int;
-        case ::CPPCore::Variant::String:
+        case ::cppcore::Variant::String:
             return EnvVar::Str;
         default:
             break;
@@ -104,7 +104,7 @@ public:
     void addVariable(EnvVar *var);
 
 private:
-    using EnvVariables = ::CPPCore::THashMap<ui32, EnvVar *>;
+    using EnvVariables = ::cppcore::THashMap<ui32, EnvVar *>;
     EnvVariables mEnvVariables;
 };
 

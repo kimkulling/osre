@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -30,18 +30,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+//  Forward declarations --------------------------------------------------------------------------
 class OGLRenderContext;
 class OGLRenderBackend;
 class OGLShader;
 class RenderCmdBuffer;
 class OGLRenderEventHandler;
 class Mesh;
+class Material;
 
 struct Vertex;
 struct OGLVertexArray;
 struct OGLTexture;
 struct PrimitiveGroup;
-struct Material;
 struct OGLRenderCmd;
 struct DrawPrimitivesCmdData;
 struct SetTextureStageCmdData;
@@ -57,9 +58,9 @@ SetMaterialStageCmdData* setupMaterial(Material* material, OGLRenderBackend* rb,
 void setupParameter(UniformVar* param, OGLRenderBackend* rb, OGLRenderEventHandler* ev);
 OGLVertexArray* setupBuffers(Mesh* mesh, OGLRenderBackend* rb, OGLShader* oglShader);
 void setupPrimDrawCmd(const char* id, bool useLocalMatrix, const glm::mat4& model,
-    const CPPCore::TArray<size_t>& primGroups, OGLRenderBackend* rb,
+    const cppcore::TArray<size_t>& primGroups, OGLRenderBackend* rb,
     OGLRenderEventHandler* eh, OGLVertexArray* va);
-void setupInstancedDrawCmd(const char* id, const CPPCore::TArray<size_t>& ids, OGLRenderBackend* rb,
+void setupInstancedDrawCmd(const char* id, const cppcore::TArray<size_t>& ids, OGLRenderBackend* rb,
     OGLRenderEventHandler* eh, OGLVertexArray* va, size_t numInstances);
 
 } // Namespace RenderBackend

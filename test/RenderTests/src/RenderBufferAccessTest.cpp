@@ -30,8 +30,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/Scene/MaterialBuilder.h>
-#include <osre/Scene/MeshBuilder.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
+#include <osre/RenderBackend/MeshBuilder.h>
 #include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
 #include <iostream>
 
@@ -39,7 +39,6 @@ namespace OSRE {
 namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
-using namespace ::OSRE::Scene;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
@@ -64,7 +63,7 @@ public:
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
-        CPPCore::RandomGenerator generator;
+        cppcore::RandomGenerator generator;
         for (ui32 i = 0; i < NumPts; i++) {
             const f32 r = static_cast<f32>(generator.get(1, 100)) / 100.0f;
             const f32 g = static_cast<f32>(generator.get(1, 100)) / 100.0f;
@@ -82,7 +81,7 @@ public:
             pt_indices[i] = static_cast<GLushort>(i);
         }
 
-        Scene::MeshBuilder meshBuilder;
+        MeshBuilder meshBuilder;
         meshBuilder.allocEmptyMesh("empty", VertexType::ColorVertex);
         m_pointMesh = meshBuilder.getMesh();
 
@@ -117,7 +116,7 @@ public:
     }
 
     bool onRender(RenderBackend::RenderBackendService *rbSrv) override {
-        CPPCore::RandomGenerator generator;
+        cppcore::RandomGenerator generator;
         for (ui32 i = 0; i < NumPts; i++) {
             const f32 x = static_cast<f32>(generator.get(-10, 10)) / 100.0f;
             const f32 y = static_cast<f32>(generator.get(-10, 10)) / 100.0f;

@@ -30,6 +30,7 @@ namespace OSRE {
 class UIElementsWin32 {
 public:
     static bool init();
+    static bool release();
     static void getMonitorResolution(ui32 &width, ui32 &heigt);
 
 private:

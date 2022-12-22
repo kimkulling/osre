@@ -23,14 +23,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "osre_testcommon.h"
 
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/Node.h>
+#include <osre/App/Node.h>
 #include <osre/App/Component.h>
 #include <osre/Common/Ids.h>
 
 namespace OSRE {
 namespace UnitTest {
 
-using namespace ::OSRE::Scene;
+using namespace ::OSRE::App;
 
 class NodeTest : public ::testing::Test {
 protected:

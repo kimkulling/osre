@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Ids.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/StringUtils.h>
+#include <osre/Common/TAABB.h>
 #include <osre/Debugging/MeshDiagnostic.h>
 #include <osre/IO/AbstractFileSystem.h>
 #include <osre/IO/Directory.h>
@@ -35,11 +36,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Uri.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/MaterialBuilder.h>
-#include <osre/Scene/MeshBuilder.h>
-#include <osre/Scene/MeshProcessor.h>
-#include <osre/Scene/Node.h>
-#include <osre/Scene/TAABB.h>
+#include <osre/RenderBackend/Material.h>
+#include <osre/RenderBackend/Shader.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
+#include <osre/RenderBackend/MeshBuilder.h>
+#include <osre/RenderBackend/MeshProcessor.h>
+#include <osre/App/Node.h>
 
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -56,7 +58,6 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Animation;
 using namespace ::OSRE::IO;
 using namespace ::OSRE::RenderBackend;
-using namespace ::OSRE::Scene;
 
 static constexpr c8 *Tag = "AssimpWrapper";
 
@@ -114,7 +115,6 @@ AssimpWrapper::AssetContext::AssetContext(Common::Ids &ids, World *world) :
  
 AssimpWrapper::AssetContext::~AssetContext() {
     delete mDefaultTexture;
-    mDefaultTexture = nullptr;
 }
 
 AssimpWrapper::AssimpWrapper( Common::Ids &ids, World *world ) :
@@ -142,6 +142,7 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
 
     String filename;
     if (!Directory::getDirectoryAndFile(mAssetContext.mAbsPathWithFile, mAssetContext.mRoot, filename)) {
+        osre_error(Tag, "Error while separating folder and file from  " + mAssetContext.mAbsPathWithFile);
         return false;
     }
 
@@ -150,11 +151,12 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
     osre_debug(Tag, "Start importing " + filename);
     mAssetContext.mScene = myImporter.ReadFile(filename, flags);
     if (nullptr == mAssetContext.mScene) {
-        osre_error(Tag, "Start importing " + filename);
+        osre_error(Tag, "Cannot start importing " + filename + ", scene is nullptr.");
         mAssetContext.mRoot = "";
         mAssetContext.mAbsPathWithFile = "";
         return false;
     }
+
     osre_debug(Tag, "Importing " + filename + " finished.");
     convertScene();
     osre_debug(Tag, "Converting " + filename + " finished.");
@@ -201,7 +203,7 @@ Entity *AssimpWrapper::convertScene() {
     }
     AnimationMap animLookup;
     if (nullptr != mAssetContext.mScene->mAnimations) {
-        CPPCore::TArray<AnimationTrack> animationTracks;
+        cppcore::TArray<AnimationTrack> animationTracks;
         animationTracks.resize(mAssetContext.mScene->mNumAnimations);
         for (ui32 i = 0; i < mAssetContext.mScene->mNumAnimations; ++i) {
             importAnimation(mAssetContext.mScene->mAnimations[i], animationTracks[i], animLookup);
@@ -242,7 +244,7 @@ static void copyAiMatrix4x4(const aiMatrix4x4 &aiMat, glm::mat4 &mat) {
     mat[3].w = aiMat.d4;
 }
 
-using MeshIdxArray = ::CPPCore::TArray<size_t>;
+using MeshIdxArray = ::cppcore::TArray<size_t>;
 using Mat2MeshMap = std::map<aiMaterial *, MeshIdxArray *>;
 
 static size_t countVertices(MeshIdxArray &miArray, const aiScene *scene) {
@@ -296,9 +298,9 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
 
     size_t i = 0;
     aiMesh *currentMesh = nullptr;
-    ::CPPCore::TArray<RenderVert> vertices;
+    ::cppcore::TArray<RenderVert> vertices;
     for (auto & it : mat2MeshMap) {
-        CPPCore::TArray<ui32> indexArray;
+        cppcore::TArray<ui32> indexArray;
         MeshIdxArray *miArray = it.second;
         if (nullptr == miArray) {
             continue;
@@ -416,7 +418,7 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
     mat2MeshMap.clear();
 }
 
-void AssimpWrapper::importNode(aiNode *node, Scene::Node *parent) {
+void AssimpWrapper::importNode(aiNode *node, Node *parent) {
     if (nullptr == node) {
         return;
     }
@@ -511,7 +513,7 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
     }
 }
 
-using Bone2NodeMap = CPPCore::THashMap<int, Node*>;
+using Bone2NodeMap = cppcore::THashMap<int, Node*>;
 
 void AssimpWrapper::importSkeletons( aiSkeleton *skeletons, size_t numSkeletons) {
     if (numSkeletons == 0 || skeletons == nullptr) {
@@ -544,4 +546,4 @@ void AssimpWrapper::importAnimation(aiAnimation *animation, AnimationTrack &curr
 }
 
 } // namespace App
-} // Namespace OSRE
+} // namespace OSRE

@@ -24,23 +24,33 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/TObjPtr.h>
 #include <osre/Common/BaseMath.h>
+#include <osre/IO/Stream.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Scene/SceneCommon.h>
 
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
+
+namespace RenderBackend {
+    struct Light;
+}
+
 namespace App {
 
 class Entity;
+class Node;
 
 ///	@brief
 enum class ComponentType {
-    RenderComponentType, ///< Render-component
-    ScriptComponent,     ///< For scripting events
+    InvalidComponent = -1,
+    RenderComponentType = 0,    ///< Render-component
+    CameraComponentType,        ///<
+    TransformComponentType,     ///<
+    LightComponentType,         ///<
+    ScriptComponentType,        ///< For scripting events
 
     MaxNumComponents,
-    InvalidComponent
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -58,17 +68,21 @@ public:
     virtual void setId(ui32 id);
     virtual ui32 getId() const;
     virtual Entity *getOwner() const;
+    virtual ComponentType getType() const;
 
 protected:
-    Component(Entity *owner, ui32 id);
+    Component(Entity *owner, ui32 id, ComponentType type);
     virtual bool onPreprocess() = 0;
     virtual bool onUpdate(Time dt) = 0;
     virtual bool onRender(RenderBackend::RenderBackendService *renderBackendSrv) = 0;
     virtual bool onPostprocess() = 0;
+    virtual void serialize(IO::Stream &stream);
+    virtual void deserialize(IO::Stream &stream);
 
 private:
     Entity *m_owner;
     ui32 m_id;
+    ComponentType mType;
 };
 
 inline bool Component::preprocess() {
@@ -89,6 +103,10 @@ inline ui32 Component::getId() const {
 
 inline Entity *Component::getOwner() const {
     return m_owner;
+}
+
+inline ComponentType Component::getType() const {
+    return mType;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -113,7 +131,58 @@ protected:
     bool onPostprocess() override;
 
 private:
-    CPPCore::TArray<RenderBackend::Mesh *> m_newGeo;
+    cppcore::TArray<RenderBackend::Mesh*> m_newGeo;
+};
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+/// @brief
+//-------------------------------------------------------------------------------------------------
+class OSRE_EXPORT TransformComponent final : public Component {
+public:
+    TransformComponent(Entity *owner, ui32 id);
+    ~TransformComponent() override = default;
+    void setNode(Node *node);
+
+protected:
+    bool onPreprocess() override;
+    bool onUpdate(Time dt) override;
+    bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
+    bool onPostprocess() override;
+
+private:
+    Node *mNode;
+};
+
+class LightComponent final : public Component {
+public:
+    LightComponent(Entity *owner, ui32 id);
+    ~LightComponent() override = default;
+    void setLight(RenderBackend::Light *light);
+
+protected:
+    bool onPreprocess() override;
+    bool onUpdate(Time dt) override;
+    bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
+    bool onPostprocess() override;
+
+private:
+    RenderBackend::Light *mLight;
+};
+
+class ScriptComponent final : public Component {
+public:
+    ScriptComponent(Entity *owner, ui32 id);
+    ~ScriptComponent() override = default;
+
+protected:
+    bool onPreprocess() override;
+    bool onUpdate(Time dt) override;
+    bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
+    bool onPostprocess() override;
+
+private:
 };
 
 } // namespace App

@@ -30,8 +30,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+class Material;
 
-
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Mesh {
 public:
     Mesh(const String &name, VertexType vertextype, IndexType indextype);
@@ -48,13 +53,14 @@ public:
     BufferData *getVertexBuffer() const;
     void createIndexBuffer(void *indices, size_t ibSize, IndexType indexType, BufferAccessType accessType);
     BufferData *getIndexBuffer() const;
-    void setId(ui64 id);
-    ui64 getId() const;
+    void setId(guid id);
+    guid getId() const;
     size_t getNumberOfPrimitiveGroups() const;
     PrimitiveGroup *getPrimitiveGroupAt(size_t index) const;
     void setModelMatrix(bool islocal, const glm::mat4 &model);
     bool isLocal() const;
     const glm::mat4 &getLocalMatrix() const;
+    
     template <class T>
     void attachVertices(T *vertices, size_t size) {
         if (mVertexBuffer == nullptr) {
@@ -79,23 +85,22 @@ public:
     void addPrimitiveGroup(size_t numIndices, PrimitiveType primTypes, ui32 startIndex);
     void addPrimitiveGroup(PrimitiveGroup *group);
 
-    
     OSRE_NON_COPYABLE(Mesh)
 
 private:
     String mName;
-    bool m_localMatrix;
+    bool mLocalModelMatrix;
     glm::mat4 mModel;
     Material *mMaterial;
     VertexType mVertexType;
     BufferData *mVertexBuffer;
     IndexType mIndexType;
     BufferData *mIndexBuffer;
-    using PrimGroupArray = ::CPPCore::TArray<PrimitiveGroup*>;
+    using PrimGroupArray = ::cppcore::TArray<PrimitiveGroup*>;
     PrimGroupArray mPrimGroups;
-    ui64 mId;
-    ::CPPCore::TArray<uc8> mVertexData;
-    ::CPPCore::TArray<uc8> mIndexData;
+    guid mId;
+    ::cppcore::TArray<uc8> mVertexData;
+    ::cppcore::TArray<uc8> mIndexData;
     ui32 mLastIndex;
 };
 
@@ -124,7 +129,7 @@ inline size_t getVertexTypeSize() {
     return sizeof(TVertexType);
 }
 
-inline void Mesh::setId( ui64 id ) {
+inline void Mesh::setId(guid id) {
     mId = id;
 }
 
@@ -145,7 +150,7 @@ inline PrimitiveGroup *Mesh::getPrimitiveGroupAt( size_t index ) const {
 }
 
 inline void Mesh::setModelMatrix( bool islocal, const glm::mat4 &model ) {
-    m_localMatrix = islocal;
+    mLocalModelMatrix = islocal;
     mModel = model;
 }
 
@@ -154,7 +159,7 @@ inline const glm::mat4 &Mesh::getLocalMatrix() const {
 }
 
 inline bool Mesh::isLocal() const {
-    return m_localMatrix;
+    return mLocalModelMatrix;
 }
 
 } // Namespace RenderBackend

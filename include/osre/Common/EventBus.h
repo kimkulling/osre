@@ -49,6 +49,12 @@ struct QueueEntry {
 ///	@ingroup    Engine
 ///
 ///	@brief	This class is used to provide global published events to other subscriptions.
+/// A publish suscripe model is in use to implement this. It works in the following way:
+/// 
+/// Sender -> broadcasring an event -> suscribed EventHandler 1
+///                                 -> suscribed EventHandler 2
+/// All event handlers, which has registered a suscribtion will get notified.
+/// If no event handler has registered before the event will get lost.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT EventBus {
 public:
@@ -56,7 +62,7 @@ public:
     EventBus();
 
     ///	@brief  The class destructor.
-    ~EventBus();
+    ~EventBus() = default;
 
     ///	@brief  Will create the event bus, allocator will get prepared.
     /// @return true if successful, false in case of an error.
@@ -93,10 +99,10 @@ public:
     EventBus(const EventBus &) = delete;
 
 private:
-    using EventHandlerArray = CPPCore::TArray<AbstractEventHandler*>;
-    using SuscribedHandler = CPPCore::THashMap<ui32, EventHandlerArray*>;
+    using EventHandlerArray = cppcore::TArray<AbstractEventHandler*>;
+    using SuscribedHandler = cppcore::THashMap<ui32, EventHandlerArray*>;
     SuscribedHandler mSuscribedHandler;
-    using QueueEntryArray = CPPCore::TArray<QueueEntry*>;
+    using QueueEntryArray = cppcore::TArray<QueueEntry*>;
     QueueEntryArray mQueueEntryArray;
     bool mCreated;
 };

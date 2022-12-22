@@ -6,7 +6,7 @@ namespace RenderBackend {
 
 namespace Details {
 
-static const c8 *RenderPassNames[] = {
+static constexpr c8 *RenderPassNames[] = {
     "RenderPass",
     "UiPass",
     "DbgPass"
@@ -20,9 +20,9 @@ static void initRenderPasses() {
 
 } // Namespace Details
 
-CPPCore::TArray<RenderPass*> RenderPassFactory::sPasses;
+cppcore::TArray<RenderPass*> RenderPassFactory::sPasses;
 
-RenderPass *RenderPassFactory::create(ui32 id) {
+RenderPass *RenderPassFactory::create(guid id) {
     if (sPasses.isEmpty()) {
         Details::initRenderPasses();
     }
@@ -35,7 +35,7 @@ RenderPass *RenderPassFactory::create(ui32 id) {
     return nullptr;
 }
 
-void RenderPassFactory::registerPass(ui32 id, RenderPass *renderPass) {
+void RenderPassFactory::registerPass(guid id, RenderPass *renderPass) {
     if (renderPass == nullptr) {
         return;
     }
@@ -48,7 +48,7 @@ void RenderPassFactory::registerPass(ui32 id, RenderPass *renderPass) {
     sPasses.add(renderPass);
 }
 
-void RenderPassFactory::unregisterPass( ui32 id ) {
+void RenderPassFactory::unregisterPass(guid id ) {
     for (size_t i = 0; i < sPasses.size(); ++i) {
         if (sPasses[i]->getId() == id) {
             sPasses.remove(i);
@@ -57,7 +57,7 @@ void RenderPassFactory::unregisterPass( ui32 id ) {
     }
 }
 
-RenderPass::RenderPass(ui32 id, Shader *shader) :
+RenderPass::RenderPass(guid id, Shader *shader) :
         mId(id),
         mRenderTarget(),
         mStates(),
@@ -142,7 +142,7 @@ Shader *RenderPass::getShader() const {
     return mShader;
 }
 
-const c8 *RenderPass::getPassNameById(ui32 id) {
+const c8 *RenderPass::getPassNameById(guid id) {
     if (id >= MaxDbgPasses) {
         return nullptr;
     }

@@ -55,8 +55,12 @@ public:
 
 struct Widget {
     Widget *mParent;
-    CPPCore::TArray<Widget*> mChildren;
+    cppcore::TArray<Widget*> mChildren;
     Rect2ui mRect;
+};
+
+struct Label : Widget {
+    String mText;
 };
 
 struct PlatformData {
@@ -72,7 +76,7 @@ struct ProgressBar : Widget {
 };
 
 struct TreeItem {
-    using TreeItemArray = ::CPPCore::TArray<TreeItem *>;
+    using TreeItemArray = ::cppcore::TArray<TreeItem *>;
 
     String mName;
     TreeItem *mParent;

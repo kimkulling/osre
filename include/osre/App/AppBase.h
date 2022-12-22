@@ -43,10 +43,6 @@ namespace Common {
     class CommandQueue;
 }
 
-namespace Scene {
-    class Camera;
-}
-
 namespace Properties {
     class Settings;
 }
@@ -57,10 +53,16 @@ namespace RenderBackend {
 
 namespace App {
 
+class Camera;
 class Stage;
 class World;
 class AppBase;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+/// @brief
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT KeyboardEventListener : public Platform::OSEventListener {
 public:
     KeyboardEventListener() :
@@ -179,7 +181,7 @@ public:
     /// @brief  Will activate the given view in the active world instance.
     /// @param  view        [in] A pointer showing to the view.
     /// @return true, if the view activation was successful, false if not.
-    virtual Scene::Camera *setActiveCamera(Scene::Camera *view);
+    virtual Camera *setActiveCamera(Camera *view);
 
     /// @brief  Will requested a shutdown.
     virtual void requestShutdown();
@@ -270,7 +272,7 @@ private:
     Platform::PlatformInterface *m_platformInterface;
     Platform::AbstractTimer *m_timer;
     RenderBackend::RenderBackendService *m_rbService;
-    CPPCore::TArray<World*> m_worlds;
+    cppcore::TArray<World*> m_worlds;
     Stage *mStage;
     MouseEventListener *m_mouseEvListener;
     KeyboardEventListener *m_keyboardEvListener;

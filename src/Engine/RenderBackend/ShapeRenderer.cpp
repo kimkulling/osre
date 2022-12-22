@@ -23,9 +23,6 @@ ShapeRenderer::ShapeRenderer(RenderBackendService *rbSrv) :
     // empty
 }
 
-ShapeRenderer::~ShapeRenderer() {
-}
-
 ShapeRenderer &ShapeRenderer::setColor(glm::vec4 color) {
     mColor = color;
 

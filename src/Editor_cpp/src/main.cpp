@@ -31,18 +31,23 @@ using namespace ::OSRE::App;
 using namespace ::OSRE::Editor;
 using namespace ::OSRE::Platform;
 
+static constexpr char Tag[] = "osre_ed_main";
+
 int main(int argc, char *argv[]) {
     OsreEdApp app(argc, argv);
 
     if (!UIElementsWin32::init()) {
+        osre_error(Tag, "Cannot init platform-specific ui.");
         return -1;
     }
 
     const ui32 Margin = 10;
     ui32 width = 0, height = 0;
     UIElementsWin32::getMonitorResolution(width, height);
-    if (!app.initWindow(Margin, Margin, width - Margin, height - Margin, "OSRE-Ed", false, RenderBackendType::OpenGLRenderBackend)) {
-        return 1;
+    if (!app.initWindow(Margin, Margin, width - Margin, height - Margin, "OSRE-Ed", false, 
+            RenderBackendType::OpenGLRenderBackend)) {
+        osre_error(Tag, "Cannot create window.");
+        return -1;
     }
 
     while (app.handleEvents()) {
@@ -51,6 +56,8 @@ int main(int argc, char *argv[]) {
     }
 
     MemoryStatistics::showStatistics();
+
+    UIElementsWin32::release();
 
     return 0;
 }

@@ -25,17 +25,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/Common/StringUtils.h>
 #include <osre/Debugging/osre_debugging.h>
-#include <osre/Scene/MeshProcessor.h>
+#include <osre/RenderBackend/MeshProcessor.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/Camera.h>
+#include <osre/App/Camera.h>
 
 namespace OSRE {
 namespace App {
 
-using namespace ::CPPCore;
+using namespace ::cppcore;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
-using namespace ::OSRE::Scene;
 
 static const c8 *Tag = "World";
 
@@ -69,12 +68,17 @@ World::~World() {
     mActiveCamera = nullptr;
 }
 
-Scene::Camera *World::addCamera(const String &name) {
-    mActiveCamera = new Scene::Camera(name, mIds, mRoot);
+Camera *World::addCamera(const String &name) {
+    if (name.empty()) {
+        return nullptr;
+    }
+
+    mActiveCamera = new Camera(name, mIds, mRoot);
     mViews.add(mActiveCamera);
     const ui32 hash = StringUtils::hashName(mActiveCamera->getName());
     mLookupViews.insert(hash, mActiveCamera);
     mDirtry = true;
+
     return mActiveCamera;
 }
 
@@ -133,7 +137,7 @@ bool World::removeEntity(Entity *entity) {
     }
     
     bool found = false;
-    CPPCore::TArray<Entity*>::Iterator it = mEntities.find(entity);
+    cppcore::TArray<Entity*>::Iterator it = mEntities.find(entity);
     if (mEntities.end() != it) {
         mEntities.remove(it);
         found = true;
@@ -212,7 +216,7 @@ void World::updateBoundingTrees() {
         if (entity == nullptr) {
             continue;
         }
-        Scene::MeshProcessor processor;
+        MeshProcessor processor;
         RenderComponent *rc = (RenderComponent *)entity->getComponent(ComponentType::RenderComponentType);
         for (ui32 j = 0; j < rc->getNumGeometry(); ++j) {
             processor.addMesh(rc->getMeshAt(j));

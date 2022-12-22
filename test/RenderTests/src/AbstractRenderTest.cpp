@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "AbstractRenderTest.h"
 
 #include <osre/Common/Logger.h>
+#include <osre/RenderBackend/Material.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/IOService.h>
 #include <osre/Platform/AbstractWindow.h>
@@ -98,7 +99,7 @@ Material *AbstractRenderTest::createMaterial(const String &matName, const String
         return nullptr;
     }
 
-    Material *mat = new Material(matName);
+    Material *mat = new Material(matName, IO::Uri());
     mat->m_numTextures = 0;
     mat->m_type = MaterialType::ShaderMaterial;
     ShaderSourceArray shArray;

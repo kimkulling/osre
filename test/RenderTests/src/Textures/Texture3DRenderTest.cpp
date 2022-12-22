@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/Scene/MeshBuilder.h>
+#include <osre/RenderBackend/MeshBuilder.h>
 
 namespace OSRE {
 namespace RenderTest {
@@ -46,15 +46,13 @@ public:
         // empty
     }
 
-    ~Texture3DRenderTest() override {
-        // empty
-    }
+    ~Texture3DRenderTest() override = default;
 
 protected:
     bool onCreate(RenderBackendService *rbSrv) override {
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
-        Scene::MeshBuilder meshBuilder;
+        MeshBuilder meshBuilder;
         meshBuilder.allocCube(VertexType::RenderVertex, 1, 1, 1, BufferAccessType::ReadOnly);
         Mesh *mesh = meshBuilder.getMesh();
 

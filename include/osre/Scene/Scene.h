@@ -1,8 +1,7 @@
 #pragma once
 
-#include <osre/Scene/MeshBuilder.h>
-#include <osre/Scene/Camera.h>
-#include <osre/Scene/Node.h>
-#include <osre/Scene/MaterialBuilder.h>
-#include <osre/Scene/DbgRenderer.h>
-#include <osre/Scene/Node.h>
+#include <osre/RenderBackend/MeshBuilder.h>
+#include <osre/App/Camera.h>
+#include <osre/App/Node.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
+#include <osre/RenderBackend/DbgRenderer.h>

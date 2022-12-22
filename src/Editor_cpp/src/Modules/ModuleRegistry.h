@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
-namespace App {
+namespace Modules {
     class ModuleBase;
 }
 
@@ -35,7 +35,7 @@ namespace Editor {
 
 
 /// @brief  The type to store modules in an array.
-using ModuleArray = CPPCore::TArray<App::ModuleBase*>;
+using ModuleArray = cppcore::TArray<Modules::ModuleBase*>;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor
@@ -60,17 +60,17 @@ public:
     /// @brief  Will register a new module.
     /// @param  mod     [in] The module to register.
     /// @return true if successful. False in case of an error.
-    bool registerModule(App::ModuleBase *mod);
+    bool registerModule(Modules::ModuleBase *mod);
 
     /// @brief  Will search for a given module name.
     /// @param  name    [in] The module name to search for.
     /// @return The found module or a nullptr.
-    App::ModuleBase *findModule(const String &name) const;
+    Modules::ModuleBase *findModule(const String &name) const;
     
     /// @brief  Will unregister the given module.
     /// @param  mod     [in] The module to unregister.
     /// @return true if successful.
-    bool unregisterModule(App::ModuleBase *mod);
+    bool unregisterModule(Modules::ModuleBase *mod);
     
     /// @brief  All registered module will get an update.
     void update();

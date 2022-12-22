@@ -36,11 +36,14 @@ SET( app_inc
     ${HEADER_PATH}/App/App.h
     ${HEADER_PATH}/App/AppCommon.h
     ${HEADER_PATH}/App/AbstractBehaviour.h
+    ${HEADER_PATH}/App/Node.h
+    ${HEADER_PATH}/App/TrackBall.h
+    ${HEADER_PATH}/App/Camera.h
+    ${HEADER_PATH}/App/TQuadTree.h
+    ${HEADER_PATH}/App/ParticleEmitter.h
     ${HEADER_PATH}/App/AppBase.h
     ${HEADER_PATH}/App/Component.h
     ${HEADER_PATH}/App/Entity.h
-    ${HEADER_PATH}/App/ModuleBase.h
-    ${HEADER_PATH}/App/IModuleView.h
     ${HEADER_PATH}/App/ServiceProvider.h
     ${HEADER_PATH}/App/Project.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
@@ -54,10 +57,13 @@ SET( app_inc
 )
 
 SET( app_src
+    App/Node.cpp
+    App/TrackBall.cpp
+    App/Camera.cpp
+    App/ParticleEmitter.cpp
     App/AppBase.cpp
     App/Component.cpp
     App/Entity.cpp
-    App/ModuleBase.cpp
     App/ServiceProvider.cpp
     App/Project.cpp
     App/AssetRegistry.cpp
@@ -70,10 +76,21 @@ SET( app_src
 )
 
 #==============================================================================
+# Modules
+#==============================================================================
+SET(modules_src
+    Modules/ModuleBase.cpp
+)
+
+SET(modules_inc
+    ${HEADER_PATH}/Modules/IModuleView.h
+    ${HEADER_PATH}/Modules/ModuleBase.h
+)
+
+#==============================================================================
 # Common
 #==============================================================================
 SET( common_inc
-    ${HEADER_PATH}/Common/Common.h
     ${HEADER_PATH}/Common/Environment.h
     ${HEADER_PATH}/Common/AbstractEventHandler.h
     ${HEADER_PATH}/Common/AbstractProcessor.h
@@ -89,6 +106,7 @@ SET( common_inc
     ${HEADER_PATH}/Common/Logger.h
     ${HEADER_PATH}/Common/Object.h
     ${HEADER_PATH}/Common/StringUtils.h
+    ${HEADER_PATH}/Common/TAABB.h
     ${HEADER_PATH}/Common/TFunctor.h
     ${HEADER_PATH}/Common/TResource.h
     ${HEADER_PATH}/Common/TResourceCache.h
@@ -287,31 +305,11 @@ SET( animation_src
 SET( scene_inc
     ${HEADER_PATH}/Scene/Scene.h
     ${HEADER_PATH}/Scene/SceneCommon.h
-    ${HEADER_PATH}/Scene/MeshProcessor.h
-    ${HEADER_PATH}/Scene/MeshBuilder.h
-    ${HEADER_PATH}/Scene/DbgRenderer.h
-    ${HEADER_PATH}/Scene/MaterialBuilder.h
-    ${HEADER_PATH}/Scene/Node.h
-    ${HEADER_PATH}/Scene/TrackBall.h
-    ${HEADER_PATH}/Scene/Camera.h
-    ${HEADER_PATH}/Scene/LineBuilder.h
-    ${HEADER_PATH}/Scene/TAABB.h
-    ${HEADER_PATH}/Scene/TQuadTree.h
-    ${HEADER_PATH}/Scene/ParticleEmitter.h
 )
 SET( scene_src
-    Scene/DbgRenderer.cpp
-    Scene/MeshProcessor.cpp
-    Scene/MeshBuilder.cpp
-    Scene/LineBuilder.cpp
-    Scene/MaterialBuilder.cpp
-    Scene/Node.cpp
-    Scene/TrackBall.cpp
-    Scene/Camera.cpp
-    Scene/ParticleEmitter.cpp
 )
 
-SET(scene_shader_src
+SET(renderbackend_shader_src
     Scene/Shader/DefaultRenderVertex.vs
     Scene/Shader/DefaultRenderVertex.fs
 )
@@ -320,7 +318,13 @@ SET(scene_shader_src
 #==============================================================================
 SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderCommon.h
+    ${HEADER_PATH}/RenderBackend/DbgRenderer.h
+    ${HEADER_PATH}/RenderBackend/Material.h
     ${HEADER_PATH}/RenderBackend/Mesh.h
+    ${HEADER_PATH}/RenderBackend/LineBuilder.h
+    ${HEADER_PATH}/RenderBackend/MeshProcessor.h
+    ${HEADER_PATH}/RenderBackend/MeshBuilder.h
+    ${HEADER_PATH}/RenderBackend/MaterialBuilder.h
     ${HEADER_PATH}/RenderBackend/TransformMatrixBlock.h
     ${HEADER_PATH}/RenderBackend/Pipeline.h
     ${HEADER_PATH}/RenderBackend/RenderPass.h
@@ -330,7 +334,13 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/ShapeRenderer.h
 )
 SET( renderbackend_src
+    RenderBackend/DbgRenderer.cpp
+    RenderBackend/Material.cpp
     RenderBackend/Mesh.cpp
+    RenderBackend/MeshProcessor.cpp
+    RenderBackend/MeshBuilder.cpp
+    RenderBackend/LineBuilder.cpp
+    RenderBackend/MaterialBuilder.cpp
     RenderBackend/RenderBackendService.cpp
     RenderBackend/RenderCommon.cpp
     RenderBackend/Pipeline.cpp
@@ -355,22 +365,10 @@ SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLShader.cpp
     RenderBackend/OGLRenderer/OGLShader.h
 )
-SET( renderbackend_vulkanrenderer_src
-    RenderBackend/VulkanRenderer/VlkFunctions.h
-    RenderBackend/VulkanRenderer/VlkFunctions.cpp
-    RenderBackend/VulkanRenderer/VlkExportedFunctions.inl
-    RenderBackend/VulkanRenderer/VlkCommon.h
-    RenderBackend/VulkanRenderer/VlkRenderBackend.cpp
-    RenderBackend/VulkanRenderer/VlkRenderBackend.h
-    RenderBackend/VulkanRenderer/VlkRenderEventHandler.h
-    RenderBackend/VulkanRenderer/VlkRenderEventHandler.cpp
-)
 
 #==============================================================================
 # Scripting with Mono
 #==============================================================================
-SET( scripting_mono_src
-)
 SET( scripting_mono_inc
 	${HEADER_PATH}/Scripting/osre_scripting.h
 )
@@ -399,14 +397,6 @@ SET( threading_src
     Threading/SystemTask.cpp
 )
 
-if( NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*" )
-	if( WIN32 )
-		set( USE_PLATFORM "VK_USE_PLATFORM_WIN32_KHR" )
-	elseif( UNIX )
-		set( USE_PLATFORM "VK_USE_PLATFORM_XCB_KHR" )
-	endif()
-endif()
-
 #==============================================================================
 # Defined Source groups
 #==============================================================================
@@ -420,6 +410,7 @@ SOURCE_GROUP( Debugging\\Win32    FILES ${debugging_windows_src} )
 SOURCE_GROUP( IO                  FILES ${io_src} )
 SOURCE_GROUP( Math                FILES ${math_src} )
 SOURCE_GROUP( Memory              FILES ${memory_src} )
+SOURCE_GROUP( Modules             FILES ${modules_src} )
 SOURCE_GROUP( Platform            FILES ${platform_src} )
 SOURCE_GROUP( Platform\\Win32     FILES ${platform_impl_src} )
 SOURCE_GROUP( Platform\\sdl2      FILES ${platform_sdl2_src} )
@@ -427,10 +418,9 @@ SOURCE_GROUP( Profiling           FILES ${profiling_src} )
 SOURCE_GROUP( Properties          FILES ${properties_src} )
 SOURCE_GROUP( RenderBackend       FILES ${renderbackend_src} )
 SOURCE_GROUP( RenderBackend\\OGLRenderer    FILES ${renderbackend_oglrenderer_src} )
-SOURCE_GROUP( RenderBackend\\VulkanRenderer FILES ${renderbackend_vulkanrenderer_src} )
+SOURCE_GROUP( RenderBackend\\Shader       FILES ${renderbackend_shader_src})
 SOURCE_GROUP( Resources           FILES ${resources_src} )
 SOURCE_GROUP( Scene               FILES ${scene_src} )
-SOURCE_GROUP( Scene\\Shader       FILES ${scene_shader_src})
 SOURCE_GROUP( Threading           FILES ${threading_src} )
 SOURCE_GROUP( WinManager          FILES ${winmanager_src} )
 SOURCE_GROUP( UI\\Common          FILES ${ui_common_src} )
@@ -446,6 +436,7 @@ SOURCE_GROUP( Include\\osre\\Utils      FILES ${utils_inc} )
 SOURCE_GROUP( Include\\osre\\IO         FILES ${io_inc} )
 SOURCE_GROUP( Include\\osre\\Math              FILES ${math_inc} )
 SOURCE_GROUP( Include\\osre\\Memory            FILES ${memory_inc} )
+SOURCE_GROUP( Include\\osre\\Modules           FILES ${modules_inc} )
 SOURCE_GROUP( Include\\osre\\Properties        FILES ${properties_inc} )
 SOURCE_GROUP( Include\\osre\\Platform          FILES ${platform_inc} )
 SOURCE_GROUP( Include\\osre\\Platform\\Windows FILES ${platform_win_inc} )
@@ -477,6 +468,7 @@ ADD_LIBRARY( osre SHARED
     ${io_inc}
     ${math_inc}
     ${memory_inc}
+    ${modules_inc}    
     ${utils_inc}
     ${properties_inc}
     ${platform_inc}
@@ -487,7 +479,7 @@ ADD_LIBRARY( osre SHARED
 	${scripting_mono_inc}
     ${threading_inc}
     ${renderbackend_inc}
-
+    ${modules_src}
     ${app_src}
     ${animation_src}
     ${Common_src}
@@ -506,7 +498,6 @@ ADD_LIBRARY( osre SHARED
     ${resources_src}
     ${renderbackend_src}
         ${renderbackend_oglrenderer_src}
-        ${renderbackend_vulkanrenderer_src}
     ${scene_src}
         ${scene_shader_src}
     ${threading_src}
@@ -516,3 +507,4 @@ ADD_LIBRARY( osre SHARED
 
 target_link_libraries ( osre cppcore zlibstatic Unzip glew ${platform_libs} assimp )
 set_target_properties(  osre PROPERTIES FOLDER Engine )
+

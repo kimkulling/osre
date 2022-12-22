@@ -34,7 +34,7 @@ namespace Editor {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::App;
 
-using namespace ::CPPCore;
+using namespace ::cppcore;
 
 ImportAction::ImportAction(Ids *ids, World *activeWorld) :
         ActionBase(), 
@@ -62,7 +62,7 @@ bool ImportAction::onRun(const ArgumentList &args) {
         return false;
     }
 
-    String path = modelPath->getString();
+    const String path = modelPath->getString();
     if (path.empty()) {
         return false;
     }
@@ -72,6 +72,7 @@ bool ImportAction::onRun(const ArgumentList &args) {
     if (!assimpWrapper.importAsset(loc, 0)) {
         return false;
     }
+    
     assimpWrapper.getStatistics(mNumVertices, mNumTriangles);
     mEntity = assimpWrapper.getEntity();
     

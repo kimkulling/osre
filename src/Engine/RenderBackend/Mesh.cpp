@@ -20,10 +20,12 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/Common/Ids.h>
 #include <osre/Common/Logger.h>
 #include <osre/Debugging/osre_debugging.h>
-#include <osre/RenderBackend/Mesh.h>
+#include <osre/RenderBackend/Material.h>
+
 
 namespace OSRE {
 namespace RenderBackend {
@@ -34,11 +36,11 @@ using namespace ::OSRE::Common;
 static Ids s_Ids;
 
 // The log tag for messages
-static const c8 *Tag = "Mesh";
+static constexpr c8 Tag[] = "Mesh";
 
 Mesh::Mesh(const String &name, VertexType vertexType, IndexType indextype) :
         mName(name),
-        m_localMatrix(false),
+        mLocalModelMatrix(false),
         mModel(1.0f),
         mMaterial(nullptr),
         mVertexType(vertexType),
@@ -116,8 +118,6 @@ void Mesh::addPrimitiveGroups(size_t numPrimGroups, size_t *numIndices, Primitiv
         return;
     }
 
-    //mNumPrimGroups = numPrimGroups;
-//    mPrimGroups = new PrimitiveGroup[mNumPrimGroups];
     const size_t index = mPrimGroups.size();
     for (size_t i = 0; i < numPrimGroups; ++i) {
         mPrimGroups.add(new PrimitiveGroup);

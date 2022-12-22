@@ -144,7 +144,7 @@ protected:
     void setInvalid();
 
 private:
-    CPPCore::TArray<Argument> mSupportedArguments;	// List with supported arguments
+    cppcore::TArray<Argument> mSupportedArguments;	// List with supported arguments
     StringArray mDetectedArgs; // List with detected arguments
     StringArray mStoredArguments; // List with store arguments
     ui32 mCurrentIndex;					            // The current index for iteration

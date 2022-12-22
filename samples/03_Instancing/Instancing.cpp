@@ -34,7 +34,6 @@ using namespace ::OSRE;
 using namespace ::OSRE::App;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
-using namespace ::OSRE::Scene;
 
 // To identify local log entries
 static const c8 *Tag = "InstancingApp";
@@ -42,7 +41,7 @@ static const c8 *Tag = "InstancingApp";
 /// The example application, will create the render environment and render a simple triangle onto it
 class InstancingApp : public App::AppBase {
     App::Entity *mEntity;
-    Scene::Camera *mCamera;
+    App::Camera *mCamera;
 
 public:
     InstancingApp(int argc, char *argv[]) :
@@ -87,7 +86,7 @@ protected:
         camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.0001f, 1000.f);
         World *world = getStage()->getActiveWorld();
         mEntity = new App::Entity("instance", world->getIds(), world);
-        Scene::MeshBuilder meshBuilder;
+        MeshBuilder meshBuilder;
         AppBase::getStage()->getActiveWorld()->addEntity(mEntity);
         RenderBackend::Mesh *mesh = meshBuilder.createTriangle(VertexType::RenderVertex, BufferAccessType::ReadWrite).getMesh();
         if (nullptr != mesh) {

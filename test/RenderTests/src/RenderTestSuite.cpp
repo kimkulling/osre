@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/Scene/MaterialBuilder.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
 
 #include <iostream>
 
@@ -41,7 +41,7 @@ namespace RenderTest {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Platform;
-using namespace ::CPPCore;
+using namespace ::cppcore;
 
 // static member initialization
 RenderTestSuite *RenderTestSuite::s_pInstance = nullptr;
@@ -141,7 +141,7 @@ bool RenderTestSuite::setup(const String &API) {
         registry->registerAssetPath("assets", getMediaPath());
     }
 
-    Scene::MaterialBuilder::create();
+    MaterialBuilder::create();
 
     return true;
 }
@@ -153,7 +153,7 @@ bool RenderTestSuite::teardown() {
         m_pRenderBackendServer = nullptr;
     }
 
-    Scene::MaterialBuilder::destroy();
+    MaterialBuilder::destroy();
 
     IO::IOService::getInstance()->close();
     IO::IOService::getInstance()->release();

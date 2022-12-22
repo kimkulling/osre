@@ -34,10 +34,6 @@ TransformMatrixBlock::TransformMatrixBlock() :
     init();
 }
 
-TransformMatrixBlock::~TransformMatrixBlock() {
-    // empty
-}
-
 void TransformMatrixBlock::init() {
     m_projection = glm::mat4(1.0f);
     m_model = glm::mat4(1.0f);

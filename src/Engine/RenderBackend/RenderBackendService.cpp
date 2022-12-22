@@ -25,11 +25,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/DbgRenderer.h>
+#include <osre/RenderBackend/DbgRenderer.h>
 #include <osre/Threading/SystemTask.h>
 
 #include "OGLRenderer/OGLRenderEventHandler.h"
-#include "VulkanRenderer/VlkRenderEventHandler.h"
 // clang-format off
 #ifdef OSRE_WINDOWS
 #   include <osre/Platform/Windows/MinWindows.h>
@@ -49,7 +48,7 @@ static constexpr c8 OGL_API[] = "opengl";
 static constexpr c8 Vulkan_API[] = "vulkan";
 static constexpr i32 IdxNotFound = -1;
 
-static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataArray) {
+static i32 hasPass(const c8 *id, const ::cppcore::TArray<PassData *> &passDataArray) {
     if (nullptr == id) {
         return IdxNotFound;
     }
@@ -62,7 +61,7 @@ static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataAr
     return IdxNotFound;
 }
 
-static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<RenderBatchData*> &batchDataArray) {
+static i32 hasBatch(const c8 *id, const ::cppcore::TArray<RenderBatchData*> &batchDataArray) {
     if (nullptr == id) {
         return IdxNotFound;
     }
@@ -133,14 +132,14 @@ bool RenderBackendService::onOpen() {
     if (api == OGL_API) {
         mRenderTaskPtr->attachEventHandler(new OGLRenderEventHandler);
     } else if (api == Vulkan_API) {
-        mRenderTaskPtr->attachEventHandler(new VlkRenderEventHandler);
+        // todo!
     } else {
         osre_error(Tag, "Requested render-api unknown: " + api);
         ok = false;
     }
 
     // Create the debug renderer instance
-    if (!Scene::DbgRenderer::create(this)) {
+    if (!DbgRenderer::create(this)) {
         osre_error(Tag, "Cannot create Debug renderer");
         ok = false;
     }
@@ -153,7 +152,7 @@ bool RenderBackendService::onClose() {
         return false;
     }
 
-    if (!Scene::DbgRenderer::destroy()) {
+    if (!DbgRenderer::destroy()) {
         osre_error(Tag, "Cannot destroy Debug renderer");
     }
     if (mRenderTaskPtr->isRunning()) {
@@ -501,7 +500,7 @@ void RenderBackendService::addMesh(Mesh *mesh, ui32 numInstances) {
     m_currentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
 }
 
-void RenderBackendService::addMesh(const CPPCore::TArray<Mesh *> &geoArray, ui32 numInstances) {
+void RenderBackendService::addMesh(const cppcore::TArray<Mesh *> &geoArray, ui32 numInstances) {
     if (nullptr == m_currentBatch) {
         osre_error(Tag, "No active batch.");
         return;

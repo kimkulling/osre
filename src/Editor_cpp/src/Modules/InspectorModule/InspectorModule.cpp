@@ -21,6 +21,8 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "Modules/InspectorModule/InspectorModule.h"
+#include <osre/App/AppBase.h>
+
 #include <windows.h>
 #include <shellapi.h>
 #include <commctrl.h>
@@ -30,6 +32,7 @@ namespace OSRE {
 namespace Editor {
 
 using namespace OSRE::App;
+using namespace OSRE::Modules;
 
 class InspectorView : public IModuleView {
 public:
@@ -42,9 +45,7 @@ public:
     ~InspectorView() override = default;
 
 protected:
-    void onCreate(Rect2ui rect) override {
-    
-    }
+    void onCreate(const Rect2ui &rect) override {}
     void onUpdate() override {}
     void onDestroy() override {}
 
@@ -64,12 +65,14 @@ InspectorModule::~InspectorModule() {
 
 bool InspectorModule::onLoad() {
     mInspectorView = new InspectorView;
+    
     return true;
 }
 
 bool InspectorModule::onUnload() {
     delete mInspectorView;
     mInspectorView = nullptr;
+    
     return true;
 }
 

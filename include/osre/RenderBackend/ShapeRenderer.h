@@ -12,7 +12,7 @@ class Shader;
 class ShapeRenderer {
 public:
     ShapeRenderer(RenderBackendService *rbSrv);
-    ~ShapeRenderer();
+    ~ShapeRenderer() = default;
     ShapeRenderer &setColor(glm::vec4 color);
     ShapeRenderer &setShader(Shader *shader);
     ShapeRenderer &addRect(f32 x, f32 y, f32 w, f32 h, bool filled);

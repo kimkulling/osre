@@ -38,7 +38,7 @@ namespace Common {
 class OSRE_EXPORT Object {
 public:
     ///	@brief	The class destructor, virtual.
-    virtual ~Object();
+    virtual ~Object() = default;
 
     ///	@brief	INcrease reference counter by one.
     void get();
@@ -52,14 +52,18 @@ public:
 
     ///	@brief	A new object name will be assigned.
     ///	@param	objName     [in] The new object name for the instance.
-    void setName( const String &objName );
+    void setName(const String &objName);
 
     ///	@brief	The name of the object will be returned.
     ///	@return	The name of the object.
     const String &getName() const;
 
+    /// @brief Will assign a new id to the object instance.
+    /// @param id   The new id-.
     void setId(HashId  id);
     
+    /// @brief Will return the object instance id.
+    /// @return The object instance id.
     HashId getId() const;
 
     /// No copying
@@ -70,7 +74,7 @@ public:
 protected:
     ///	@brief	The constructor with the name of the object.
     ///	@param	objectName  [in] The object name.
-    Object( const String &objectName );
+    Object(const String &objectName);
 
 private:
     String m_objectName;

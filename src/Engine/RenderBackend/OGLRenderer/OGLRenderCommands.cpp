@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLRenderCommands.h"
 
 #include "OGLCommon.h"
+#include <osre/RenderBackend/Material.h>
 #include "OGLRenderBackend.h"
 #include "OGLRenderEventHandler.h"
 #include "OGLShader.h"
@@ -48,7 +49,7 @@ static const c8 *Tag = "OGLRenderCommands";
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
-using namespace ::CPPCore;
+using namespace ::cppcore;
 
 bool makeScreenShot(const c8 *filename, ui32 w, ui32 h) {
     const size_t numberOfPixels = w * h * 3;
@@ -151,7 +152,7 @@ void setupParameter(UniformVar *param, OGLRenderBackend *rb, OGLRenderEventHandl
         return;
     }
 
-    ::CPPCore::TArray<OGLParameter *> paramArray;
+    ::cppcore::TArray<OGLParameter *> paramArray;
     OGLParameter *oglParam = rb->getParameter(param->m_name);
     if (nullptr == oglParam) {
         oglParam = rb->createParameter(param->m_name, param->m_type, &param->m_data, param->m_numItems);

@@ -1,23 +1,43 @@
+/*-----------------------------------------------------------------------------------------------
+The MIT License (MIT)
+
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-----------------------------------------------------------------------------------------------*/
 #pragma once
 
 #include <osre/RenderBackend/RenderStates.h>
 #include <cppcore/Container/TArray.h>
-
 
 namespace OSRE {
 namespace RenderBackend {
 
 class RenderPass;
 
-
 class OSRE_EXPORT RenderPassFactory {
 public:
-    static RenderPass *create(ui32 id);
-    static void registerPass(ui32 id, RenderPass *renderPass);
-    static void unregisterPass(ui32 id);
+    static RenderPass *create(guid id);
+    static void registerPass(guid id, RenderPass *renderPass);
+    static void unregisterPass(guid id);
 
 private:
-    static CPPCore::TArray<RenderPass*> sPasses;
+    static cppcore::TArray<RenderPass*> sPasses;
 };
 
 
@@ -33,7 +53,7 @@ static constexpr ui32 MaxDbgPasses = 3;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT RenderPass {
 public:
-    RenderPass(ui32 id, Shader *shader);
+    RenderPass(guid id, Shader *shader);
     ~RenderPass() = default;
     RenderPass &set(RenderTarget &rt, RenderStates &states);
     RenderPass &setPolygonState(PolygonState polyState);
@@ -50,19 +70,19 @@ public:
     const StencilState &getStencilState() const;
     RenderPass &setShader(Shader *shader);
     Shader *getShader() const;
-    ui32 getId() const;
-    static const c8 *getPassNameById(ui32 id);
+    guid getId() const;
+    static const c8 *getPassNameById(guid id);
     bool operator==(const RenderPass &rhs) const;
     bool operator!=(const RenderPass &rhs) const;
 
 private:
-    ui32 mId;
+    guid mId;
     RenderTarget mRenderTarget;
     RenderStates mStates;
     Shader *mShader;
 };
 
-inline ui32 RenderPass::getId() const {
+inline guid RenderPass::getId() const {
     return mId;
 }
 

@@ -51,7 +51,7 @@ struct OSRE_EXPORT VertexWeight {
 };
 
 struct OSRE_EXPORT Bone {
-    using VertexWeightArray = CPPCore::TArray<VertexWeight>;
+    using VertexWeightArray = cppcore::TArray<VertexWeight>;
 
     i32 mParent;
     String mName;
@@ -70,7 +70,7 @@ struct OSRE_EXPORT Bone {
 };
 
 struct OSRE_EXPORT Skeleton {
-    using BoneArray = CPPCore::TArray<Bone *>;
+    using BoneArray = cppcore::TArray<Bone *>;
 
     String mName;
     i32 mRootBone;
@@ -93,8 +93,8 @@ struct RotationKey {
     d32 mTime;
 };
 
-using VectorKeyArray = ::CPPCore::TArray<VectorKey>;
-using RotationKeyArray = ::CPPCore::TArray<RotationKey>;
+using VectorKeyArray = ::cppcore::TArray<VectorKey>;
+using RotationKeyArray = ::cppcore::TArray<RotationKey>;
 
 struct NodeAnimation {
     VectorKeyArray mPositions;
@@ -106,7 +106,7 @@ struct AnimationTrack {
     String mName;
     double mDuration;
     double mTicksPerSecond;
-    CPPCore::TArray<NodeAnimation *> mNodeAnimations;
+    cppcore::TArray<NodeAnimation *> mNodeAnimations;
 };
 
 template <class T>

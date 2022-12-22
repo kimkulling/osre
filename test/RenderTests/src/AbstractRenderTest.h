@@ -33,8 +33,7 @@ namespace Platform {
 
 namespace RenderBackend {
     class RenderBackendService;
-
-    struct Material;
+    class Material;
 
 } // namespace RenderBackend
 

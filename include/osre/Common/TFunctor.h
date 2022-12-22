@@ -62,9 +62,7 @@ public:
     typedef RET (*FunctorFunctionType)(P1, P2);
 
     /// @brief The constructor with the function type.
-    FunctorFunction(FunctorFunctionType func) :
-            m_Func(func) { /* empty */
-    }
+    FunctorFunction(FunctorFunctionType func) : m_Func(func) {}
 
     /// @brief Virtual destructor.
     virtual ~FunctorFunction() {
@@ -102,9 +100,7 @@ public:
     }
 
     /// @brief The class destructor.
-    virtual ~FunctorMember() {
-        // empty
-    }
+    virtual ~FunctorMember() = default;
 
     /// @brief Calls the member
     ///	@param	P1		[in] UniformVar one.
