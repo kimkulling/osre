@@ -26,7 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cppcore/Container/THashMap.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/Scene/SceneCommon.h>
 #include <osre/Common/TAABB.h>
 
 namespace OSRE {
@@ -41,7 +40,7 @@ class OSRE_EXPORT DbgRenderer {
     struct DebugText;
 
 public:
-    void renderDbgText(ui32 x, ui32 y, ui64 id, const String &text);
+    void renderDbgText(ui32 x, ui32 y, guid id, const String &text);
     void renderAABB(const glm::mat4 &transform, const Common::AABB &aabb);
     void clear();
     void addLine(const RenderBackend::ColorVert &v0, const RenderBackend::ColorVert &v1);
@@ -54,7 +53,7 @@ public:
 private:
     DbgRenderer(RenderBackend::RenderBackendService *rbSrv);
     ~DbgRenderer();
-    DebugText *getDebugText(ui32 id) const;
+    DebugText *getDebugText(guid id) const;
 
 private:
     static DbgRenderer *sInstance;

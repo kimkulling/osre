@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 namespace IO {
     class Uri;
 }
@@ -52,6 +52,7 @@ public:
     static void getFileSaveDialog(const String &title, const c8 *extensions, IO::Uri &location);
     static void getDialog( const String &title, const String &question, ui32 requestedButtons, DlgResults &result );
     static i32 executeCommand();
+    
     PlatformOperations() = delete;
     PlatformOperations(const PlatformOperations &) = delete;
     ~PlatformOperations() = delete;

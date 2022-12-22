@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-static const c8 *Tag = "SDL2DisplayInterface";
+static constexpr c8 Tag[] = "Win32DisplayInterface";
 
 struct MonitorInfo {
     int iIndex;
@@ -55,64 +55,61 @@ static i32 monitorCount() {
     return deviceNum; //signals an error
 }
 
-Win32DisplayInterface::Win32DisplayInterface() :
-        AbstractDisplayInterface(),
-        m_monitorInfo() {
-    // empty
-}
-
 Win32DisplayInterface::~Win32DisplayInterface() {
-    // empty
+    if (!mMonitorInfo.isEmpty()) {
+        for (size_t mi = 0; mi < mMonitorInfo.size(); ++mi) {
+            delete mMonitorInfo[mi];
+        }
+    }
 }
 
 i32 Win32DisplayInterface::getNumDisplays() {
-    const i32 displayCount = monitorCount();
+    const i32 displayCount{ monitorCount() };
 
     if (0 == displayCount) {
         return 0;
     }
 
-    m_monitorInfo.resize(displayCount);
+    mMonitorInfo.resize(displayCount);
     for (i32 i = 0; i < displayCount; ++i) {
         MonitorInfo *info = new MonitorInfo;
         info->iIndex = i;
         info->hMonitor = NULL;
         EnumDisplayMonitors(NULL, NULL, GetMonitorByIndex, (LPARAM)info);
-        m_monitorInfo[i] = info;
+        mMonitorInfo[i] = info;
     }
 
     return displayCount;
 }
 
 bool Win32DisplayInterface::getDisplayResolution(ui32 displayIndex, ui32 &width, ui32 &height) {
-    width = 0;
-    height = 0;
-    if (displayIndex >= m_monitorInfo.size()) {
+    width = height = 0;
+    if (displayIndex >= mMonitorInfo.size()) {
         return false;
     }
 
-    MONITORINFOEX monitorInfo;
+    MONITORINFOEX monitorInfo = {};
     monitorInfo.cbSize = sizeof(MONITORINFOEX);
-    if (FALSE == GetMonitorInfoA(m_monitorInfo[displayIndex]->hMonitor, &monitorInfo)) {
+    if (FALSE == GetMonitorInfoA(mMonitorInfo[displayIndex]->hMonitor, &monitorInfo)) {
         return false;
     }
 
     width = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
     height = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
 
-    return false;
+    return true;
 }
 
 bool Win32DisplayInterface::getDisplayDPI(ui32 displayIndex, DisplayDPIInfo *ddpiinfo) {
     if (nullptr == ddpiinfo) {
         return false;
     }
-    if (displayIndex >= m_monitorInfo.size()) {
+    if (displayIndex >= mMonitorInfo.size()) {
         return false;
     }
 
     ui32 dpiX, dpiY;
-    if (FALSE == ::GetDpiForMonitor(m_monitorInfo[displayIndex]->hMonitor, MDT_EFFECTIVE_DPI, &dpiX, &dpiY)) {
+    if (FALSE == ::GetDpiForMonitor(mMonitorInfo[displayIndex]->hMonitor, MDT_EFFECTIVE_DPI, &dpiX, &dpiY)) {
         return false;
     }
 
