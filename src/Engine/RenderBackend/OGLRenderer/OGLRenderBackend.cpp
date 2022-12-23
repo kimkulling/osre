@@ -47,8 +47,8 @@ namespace RenderBackend {
 
 using namespace cppcore;
 
-static const String Tag = "OGLRenderBackend";
-static const ui32 NotInitedHandle = 9999999;
+static constexpr c8 Tag[] = "OGLRenderBackend";
+static constexpr ui32 NotInitedHandle = 9999999;
 
 OGLRenderBackend::OGLRenderBackend() :
         mRenderCtx(nullptr),
