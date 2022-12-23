@@ -81,7 +81,7 @@ struct OGLVertexAttribute {
     const GLvoid *m_ptr;        ///< The data pointer for the attribute.
 
     /// @brief The default class constructor.
-    OGLVertexAttribute() : m_index(999999), m_pAttributeName(nullptr), m_size(0U), m_type(), m_ptr(nullptr);
+    OGLVertexAttribute() : m_index(999999), m_pAttributeName(nullptr), m_size(0U), m_type(), m_ptr(nullptr) {}
 
     /// @brief  The class destructor, default implementation.
     ~OGLVertexAttribute() = default;
@@ -223,6 +223,9 @@ struct DrawPrimitivesCmdData {
 
     /// @brief The default class constructor.
     DrawPrimitivesCmdData() : m_localMatrix(false), m_model(), m_vertexArray(nullptr), m_primitives(), m_id(nullptr) {}
+
+    /// @brief  The class destructor, default implementation.
+    ~DrawPrimitivesCmdData() = default;
 };
 
 /// @brief This struct declares the data structure of the GPU apabilities.
@@ -246,6 +249,9 @@ struct OGLCapabilities {
             mInstancing(true) {
         // empty
     }
+
+    /// @brief  The class destructor, default implementation.
+    ~OGLCapabilities() = default;
 };
 
 /// @brief This struct declares the data for an OpenGL framebuffer.
@@ -260,6 +266,9 @@ struct OGLFrameBuffer {
     /// @brief The default class constructor.
     OGLFrameBuffer(const char *name, ui32 w, ui32 h) : m_name(name), m_bufferId(0), m_depthrenderbufferId(0), m_renderedTexture(0),
                                                        m_width(w), m_height(h) {}
+
+    /// @brief  The class destructor, default implementation.
+    ~OGLFrameBuffer() = default;
 };
 
 } // namespace RenderBackend
