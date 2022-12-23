@@ -5,8 +5,6 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-  schedule:
-    - cron: "39 5 * * 1"
 
 jobs:
   analyze:
@@ -47,7 +45,7 @@ jobs:
 
       - name: Build
         # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+        run: cmake --build ${{github.workspace}}/build
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
