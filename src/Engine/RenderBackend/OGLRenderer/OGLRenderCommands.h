@@ -25,6 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 #include <osre/Common/BaseMath.h>
 
+#include "OGLCommon.h"
+
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
@@ -53,7 +55,7 @@ struct UniformVar;
 struct SetMaterialStageCmdData;
 
 bool makeScreenShot(const c8 *filename, ui32 w, ui32 h);
-bool setupTextures(Material* mat, OGLRenderBackend* rb, CPPCore::TArray<OGLTexture*>& textures);
+bool setupTextures(Material* mat, OGLRenderBackend* rb, OGLTextureArray& textures);
 SetMaterialStageCmdData* setupMaterial(Material* material, OGLRenderBackend* rb, OGLRenderEventHandler* eh);
 void setupParameter(UniformVar* param, OGLRenderBackend* rb, OGLRenderEventHandler* ev);
 OGLVertexArray* setupBuffers(Mesh* mesh, OGLRenderBackend* rb, OGLShader* oglShader);
