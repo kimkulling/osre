@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -35,7 +35,7 @@ class MeshTest : public ::testing::Test {
 TEST_F(MeshTest, createPrimitiveGroupsTest) {
     Mesh *mesh = new Mesh("test", VertexType::RenderVertex, IndexType::UnsignedByte);
     mesh->addPrimitiveGroup(10, PrimitiveType::TriangleList, 0);
-    EXPECT_EQ(1l, mesh->getNumberOfPrimitiveGroups());
+    EXPECT_EQ(1lU, mesh->getNumberOfPrimitiveGroups());
     EXPECT_NE(nullptr, mesh->getPrimitiveGroupAt(0));
 
     delete mesh;
