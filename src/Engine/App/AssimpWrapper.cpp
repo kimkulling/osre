@@ -59,7 +59,7 @@ using namespace ::OSRE::Animation;
 using namespace ::OSRE::IO;
 using namespace ::OSRE::RenderBackend;
 
-static constexpr c8 *Tag = "AssimpWrapper";
+static constexpr c8 Tag[] = "AssimpWrapper";
 
 constexpr unsigned int DefaultImportFlags = aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices |
                                         aiProcess_ImproveCacheLocality | aiProcess_LimitBoneWeights | aiProcess_RemoveRedundantMaterials |
