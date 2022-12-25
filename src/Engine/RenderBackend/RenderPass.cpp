@@ -6,7 +6,7 @@ namespace RenderBackend {
 
 namespace Details {
 
-static constexpr c8 *RenderPassNames[] = {
+static const c8 *RenderPassNames[] = {
     "RenderPass",
     "UiPass",
     "DbgPass"
