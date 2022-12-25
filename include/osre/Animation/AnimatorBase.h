@@ -58,14 +58,10 @@ struct OSRE_EXPORT Bone {
     VertexWeightArray m_vertexWeights;
     glm::mat4 m_offsetMatrix;
 
-    Bone() :
-            mParent(-1),
-            mName(),
-            m_vertexWeights(),
-            m_offsetMatrix() {
-        // empty
-    }
+    /// @brief The default constructor.
+    Bone() : mParent(-1), mName(), m_vertexWeights(), m_offsetMatrix() {}
 
+    ///	@brief The default destructor, default implementation.
     ~Bone() = default;
 };
 
@@ -76,10 +72,10 @@ struct OSRE_EXPORT Skeleton {
     i32 mRootBone;
     BoneArray mBones;
 
-    Skeleton() {
-        // empty
-    }
+    /// @brief The default constructor.
+    Skeleton() : mName(), mRootBone(-1), mBones(){}
 
+    ///	@brief The default destructor, default implementation.
     ~Skeleton() = default;
 };
 

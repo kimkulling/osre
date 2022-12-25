@@ -102,7 +102,7 @@ ProgressBar *UIElements::createProgressBar(int id, HWND hWnd, const Rect2ui &rec
     pb->mRange=100;
     pb->mCurrent = 0;
     
-    auto wnd = pb->mPlatformData.mHWnd;
+    pb->mPlatformData.mHWnd;
     ::SendMessage(hWnd, PBM_SETRANGE, 0, MAKELPARAM(0, 99));
     ::SendMessage(hWnd, PBM_SETSTEP, (WPARAM)1, 0);
 
