@@ -34,14 +34,10 @@ namespace Platform {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractOSService {
 public:
-    virtual ~AbstractOSService();
+    virtual ~AbstractOSService() = default;
     virtual void getMonitorResolution(ui32 &width, ui32 &heigth) = 0;
     virtual void showCursor(bool enabled) = 0;
 };
-
-inline AbstractOSService::~AbstractOSService() {
-    // empty
-}
 
 } // namespace Platform
 } // namespace OSRE

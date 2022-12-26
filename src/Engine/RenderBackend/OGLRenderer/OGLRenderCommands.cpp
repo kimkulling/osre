@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -41,6 +41,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Shader.h>
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
 namespace OSRE {
 namespace RenderBackend {
 
@@ -49,6 +52,23 @@ static const c8 *Tag = "OGLRenderCommands";
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::cppcore;
+
+bool makeScreenShot(const c8 *filename, ui32 w, ui32 h) {
+    const i32 numberOfPixels = w * h * 3;
+    unsigned char *pixels = new uc8[numberOfPixels];
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    glReadBuffer(GL_FRONT);
+    glReadPixels(0, 0, w, h, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixels);
+    bool result = true;
+    if (stbi_write_jpg(filename, w, h, 3, pixels, numberOfPixels) != 0){
+        result = false;
+    }
+
+    delete [] pixels;
+
+    return result;
+}
 
 bool setupTextures(Material *mat, OGLRenderBackend *rb, TArray<OGLTexture *> &textures) {
     if (nullptr == mat) {

@@ -36,7 +36,7 @@ namespace Platform {
 class OSRE_EXPORT AbstractOGLRenderContext {
 public:
     /// @brief  The class destructor, virtual.
-    virtual ~AbstractOGLRenderContext();
+    virtual ~AbstractOGLRenderContext() = default;
 
     /// @brief  Creates the context.
     /// @param  surface     [in] The render surface.
@@ -75,53 +75,37 @@ protected:
     AbstractOGLRenderContext();
 
 private:
-    bool m_isActive;
-    AbstractWindow *m_rootRenderSurface;
+    bool mIsActive;
+    AbstractWindow *mRootRenderSurface;
 };
 
-inline
-AbstractOGLRenderContext::AbstractOGLRenderContext() 
-: m_isActive( false )
-, m_rootRenderSurface( nullptr ) {
-    // empty
-}
+inline AbstractOGLRenderContext::AbstractOGLRenderContext() : mIsActive( false ), mRootRenderSurface( nullptr ) {}
 
-inline
-AbstractOGLRenderContext::~AbstractOGLRenderContext() {
-    // empty
-}
-
-inline
-bool AbstractOGLRenderContext::create( AbstractWindow *surface ) {
-    m_rootRenderSurface = surface;
+inline bool AbstractOGLRenderContext::create( AbstractWindow *surface ) {
+    mRootRenderSurface = surface;
     return onCreate( surface );
 }
 
-inline
-bool AbstractOGLRenderContext::destroy() {
+inline bool AbstractOGLRenderContext::destroy() {
     return onDestroy();
 }
 
-inline
-bool AbstractOGLRenderContext::activate() {
-    m_isActive = onActivate();
-    return m_isActive;
+inline bool AbstractOGLRenderContext::activate() {
+    mIsActive = onActivate();
+    return mIsActive;
 }
 
-inline
-bool AbstractOGLRenderContext::isActive() const {
-    return m_isActive;
+inline bool AbstractOGLRenderContext::isActive() const {
+    return mIsActive;
 }
 
-inline
-bool AbstractOGLRenderContext::update() {
+inline bool AbstractOGLRenderContext::update() {
     return onUpdate();
 }
 
-inline
-AbstractWindow *AbstractOGLRenderContext::getRenderSurface() const {
-    return m_rootRenderSurface;
+inline AbstractWindow *AbstractOGLRenderContext::getRenderSurface() const {
+    return mRootRenderSurface;
 }
 
-} // Namespace Platform
-} // Namespace OSRE
+} // namespace Platform
+} // namespace OSRE

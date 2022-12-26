@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2022 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -25,11 +25,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/osre_common.h>
 #include <osre/Common/BaseMath.h>
 
+#include "OGLCommon.h"
+
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
 namespace RenderBackend {
 
+//  Forward declarations --------------------------------------------------------------------------
 class OGLRenderContext;
 class OGLRenderBackend;
 class OGLShader;
@@ -51,7 +54,8 @@ struct OGLParameter;
 struct UniformVar;
 struct SetMaterialStageCmdData;
 
-bool setupTextures(Material* mat, OGLRenderBackend* rb, cppcore::TArray<OGLTexture*>& textures);
+bool makeScreenShot(const c8 *filename, ui32 w, ui32 h);
+bool setupTextures(Material* mat, OGLRenderBackend* rb, OGLTextureArray& textures);
 SetMaterialStageCmdData* setupMaterial(Material* material, OGLRenderBackend* rb, OGLRenderEventHandler* eh);
 void setupParameter(UniformVar* param, OGLRenderBackend* rb, OGLRenderEventHandler* ev);
 OGLVertexArray* setupBuffers(Mesh* mesh, OGLRenderBackend* rb, OGLShader* oglShader);

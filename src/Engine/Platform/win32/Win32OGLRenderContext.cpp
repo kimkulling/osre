@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <iostream>
 
-static const OSRE::c8 *Tag = "Win32RenderContext";
+static constexpr OSRE::c8 Tag[] = "Win32RenderContext";
 
 static void APIENTRY openglCallbackFunction(GLenum source, GLenum type, GLuint id, GLenum severity,
         GLsizei length, const GLchar *message, const void *) {
@@ -88,10 +88,6 @@ namespace Platform {
 
 Win32RenderContext::Win32RenderContext() :
         AbstractOGLRenderContext(), m_dc(nullptr), m_rc(nullptr), m_active(false) {
-    // empty
-}
-
-Win32RenderContext::~Win32RenderContext() {
     // empty
 }
 

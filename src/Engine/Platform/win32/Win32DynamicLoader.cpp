@@ -31,20 +31,12 @@ namespace Platform {
 
 using namespace ::OSRE::Common;
 
-Win32DynamicLoader::Win32DynamicLoader()
-: AbstractDynamicLoader() {
-    // empty
-}
-
-Win32DynamicLoader::~Win32DynamicLoader() {
-}
-
 LibHandle *Win32DynamicLoader::load( const String &libName ) {
     if ( libName.empty() ) {
         return nullptr;
     }
 
-    LibHandle *libHandle( lookupLib( libName ) );
+    LibHandle *libHandle{ lookupLib(libName)};
     if ( nullptr != libHandle ) {
         return libHandle;
     }
@@ -61,7 +53,7 @@ LibHandle *Win32DynamicLoader::load( const String &libName ) {
 }
     
 LibHandle *Win32DynamicLoader::lookupLib( const String &libName ) {
-    LibHandle *libHandle( AbstractDynamicLoader::findLib( libName ) );
+    LibHandle *libHandle{ AbstractDynamicLoader::findLib(libName) };
     AbstractDynamicLoader::setActiveLib( libHandle );
 
     return libHandle;
@@ -75,6 +67,7 @@ void *Win32DynamicLoader::loadFunction( const String &libName ) {
     if ( libName.empty() ) {
         return nullptr;
     }
+
     return ::GetProcAddress( ( HMODULE ) getActiveLib()->m_handle, libName.c_str() );
 }
 

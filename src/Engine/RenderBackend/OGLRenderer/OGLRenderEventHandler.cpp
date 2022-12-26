@@ -48,7 +48,7 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::cppcore;
 
-static const c8 *Tag = "OGLRendeEventHandler";
+static constexpr c8 Tag[] = "OGLRendeEventHandler";
 
 OGLRenderEventHandler::OGLRenderEventHandler() :
         AbstractEventHandler(),
@@ -58,10 +58,6 @@ OGLRenderEventHandler::OGLRenderEventHandler() :
         m_renderCtx(nullptr),
         m_vertexArray(nullptr),
         mPipeline(nullptr) {
-    // empty
-}
-
-OGLRenderEventHandler::~OGLRenderEventHandler() {
     // empty
 }
 
@@ -95,6 +91,8 @@ bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
         result = onShutdownRequest(data);
     } else if (OnResizeEvent == ev) {
         result = onResizeRenderTarget(data);
+    } else if (OnScreenshotEvent == ev) {
+        result = onScreenshot(data);
     }
 
     return result;
@@ -407,7 +405,7 @@ static void setName(c8 *name, size_t bufferSize, FrameSubmitCmd *cmd) {
     ::strncpy(name, &cmd->m_data[1], bufferLen);
 }
 
-static const size_t BufferSize = 256;
+static constexpr size_t BufferSize = 256;
 
 bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
     CommitFrameEventData *data = (CommitFrameEventData *)eventData;
@@ -476,6 +474,18 @@ bool OGLRenderEventHandler::onResizeRenderTarget(const EventData *eventData) {
     }
 
     return true;
+}
+
+bool OGLRenderEventHandler::onScreenshot(const EventData *eventData) {
+    osre_assert(nullptr != eventData);
+
+    bool result = false;
+    ScreenshotEventData *data = (ScreenshotEventData*) eventData;
+    if (data != nullptr){
+        result = makeScreenShot(data->mFilename.c_str(), data->mWidth, data->mHeight);
+    }
+    return result;
+    
 }
 
 } // Namespace RenderBackend

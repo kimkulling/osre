@@ -76,10 +76,10 @@ static i32 hasBatch(const c8 *id, const ::cppcore::TArray<RenderBatchData*> &bat
 
 RenderBackendService::RenderBackendService() :
         AbstractService("renderbackend/renderbackendserver"),
-        m_renderTaskPtr(),
-        m_settings(nullptr),
+        mRenderTaskPtr(),
+        mSettings(nullptr),
         mViewport(),
-        m_ownsSettingsConfig(false),
+        mOwnsSettingsConfig(false),
         m_frameCreated(false),
         m_renderFrame(&m_frames[0]),
         m_submitFrame(&m_frames[1]),
@@ -92,9 +92,9 @@ RenderBackendService::RenderBackendService() :
 }
 
 RenderBackendService::~RenderBackendService() {
-    if (m_ownsSettingsConfig) {
-        delete m_settings;
-        m_settings = nullptr;
+    if (mOwnsSettingsConfig) {
+        delete mSettings;
+        mSettings = nullptr;
     }
 
     for (ui32 i = 0; i < mPipelines.size(); ++i) {
@@ -109,28 +109,28 @@ RenderBackendService::~RenderBackendService() {
 }
 
 bool RenderBackendService::onOpen() {
-    if (nullptr == m_settings) {
-        m_settings = new Settings;
-        m_ownsSettingsConfig = true;
+    if (nullptr == mSettings) {
+        mSettings = new Settings;
+        mOwnsSettingsConfig = true;
     }
 
     
     // Spawn the thread for our render task
-    if (!m_renderTaskPtr.isValid()) {
-        m_renderTaskPtr.init(SystemTask::create("render_task"));
+    if (!mRenderTaskPtr.isValid()) {
+        mRenderTaskPtr.init(SystemTask::create("render_task"));
     }
 
     // Run the render task
-    bool ok = m_renderTaskPtr->start(nullptr);
+    bool ok = mRenderTaskPtr->start(nullptr);
     if (!ok) {
         osre_error(Tag, "Cannot run render task.");
         return ok;
     }
 
     // Create render event handler for back-end
-    const String api = m_settings->get(Settings::RenderAPI).getString();
+    const String api = mSettings->get(Settings::RenderAPI).getString();
     if (api == OGL_API) {
-        m_renderTaskPtr->attachEventHandler(new OGLRenderEventHandler);
+        mRenderTaskPtr->attachEventHandler(new OGLRenderEventHandler);
     } else if (api == Vulkan_API) {
         // todo!
     } else {
@@ -148,23 +148,23 @@ bool RenderBackendService::onOpen() {
 }
 
 bool RenderBackendService::onClose() {
-    if (!m_renderTaskPtr.isValid()) {
+    if (!mRenderTaskPtr.isValid()) {
         return false;
     }
 
     if (!DbgRenderer::destroy()) {
         osre_error(Tag, "Cannot destroy Debug renderer");
     }
-    if (m_renderTaskPtr->isRunning()) {
-        m_renderTaskPtr->detachEventHandler();
-        m_renderTaskPtr->stop();
+    if (mRenderTaskPtr->isRunning()) {
+        mRenderTaskPtr->detachEventHandler();
+        mRenderTaskPtr->stop();
     }
 
     return true;
 }
 
 bool RenderBackendService::onUpdate() {
-    if (!m_renderTaskPtr.isValid()) {
+    if (!mRenderTaskPtr.isValid()) {
         return false;
     }
 
@@ -176,28 +176,28 @@ bool RenderBackendService::onUpdate() {
     commitNextFrame();
 
     // Synchronizing event with render back-end
-    auto result = m_renderTaskPtr->sendEvent(&OnRenderFrameEvent, nullptr);
-    m_renderTaskPtr->awaitUpdate();
+    auto result = mRenderTaskPtr->sendEvent(&OnRenderFrameEvent, nullptr);
+    mRenderTaskPtr->awaitUpdate();
 
     return result;
 }
 
 void RenderBackendService::setSettings(const Settings *config, bool moveOwnership) {
-    if (m_ownsSettingsConfig && m_settings != nullptr) {
-        delete m_settings;
-        m_settings = nullptr;
-        m_ownsSettingsConfig = false;
+    if (mOwnsSettingsConfig && mSettings != nullptr) {
+        delete mSettings;
+        mSettings = nullptr;
+        mOwnsSettingsConfig = false;
     }
-    m_settings = config;
-    m_ownsSettingsConfig = moveOwnership;
+    mSettings = config;
+    mOwnsSettingsConfig = moveOwnership;
 }
 
 const Settings *RenderBackendService::getSettings() const {
-    return m_settings;
+    return mSettings;
 }
 
 void RenderBackendService::initPasses() {
-    if (!m_renderTaskPtr.isValid()) {
+    if (!mRenderTaskPtr.isValid()) {
         return;
     }
 
@@ -205,11 +205,11 @@ void RenderBackendService::initPasses() {
     m_submitFrame->init(m_passes);
     data->m_frame = m_submitFrame;
 
-    m_renderTaskPtr->sendEvent(&OnInitPassesEvent, data);
+    mRenderTaskPtr->sendEvent(&OnInitPassesEvent, data);
 }
 
 void RenderBackendService::commitNextFrame() {
-    if (!m_renderTaskPtr.isValid()) {
+    if (!mRenderTaskPtr.isValid()) {
         return;
     }
 
@@ -283,14 +283,14 @@ void RenderBackendService::commitNextFrame() {
     data->m_frame = m_submitFrame;
     std::swap(m_submitFrame, m_renderFrame);
 
-    m_renderTaskPtr->sendEvent(&OnCommitFrameEvent, data);
+    mRenderTaskPtr->sendEvent(&OnCommitFrameEvent, data);
 }
 
 void RenderBackendService::sendEvent(const Event *ev, const EventData *eventData) {
     osre_assert(ev != nullptr);
 
-    if (m_renderTaskPtr.isValid()) {
-        m_renderTaskPtr->sendEvent(ev, eventData);
+    if (mRenderTaskPtr.isValid()) {
+        mRenderTaskPtr->sendEvent(ev, eventData);
     }
 }
 
@@ -570,7 +570,7 @@ void RenderBackendService::attachView() {
 void RenderBackendService::resize(ui32 x, ui32 y, ui32 w, ui32 h) {
     if (mBehaviour.ResizeViewport) {
         ResizeEventData *data = new ResizeEventData(x, y, w, h);
-        m_renderTaskPtr->sendEvent(&OnResizeEvent, data);
+        mRenderTaskPtr->sendEvent(&OnResizeEvent, data);
     }
 }
 
@@ -580,11 +580,11 @@ void RenderBackendService::focusLost() {
 
 void RenderBackendService::syncRenderThread() {
     // Synchronizing event with render back-end
-    auto result = m_renderTaskPtr->sendEvent(&OnRenderFrameEvent, nullptr);
+    auto result = mRenderTaskPtr->sendEvent(&OnRenderFrameEvent, nullptr);
     if(!result) {
         osre_debug(Tag, "Error while requesting next frame.");
     }
-    m_renderTaskPtr->awaitUpdate();
+    mRenderTaskPtr->awaitUpdate();
 }
 
 void RenderBackendService::setViewport( ui32 x, ui32 y, ui32 w, ui32 h ) {

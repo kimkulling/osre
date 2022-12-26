@@ -176,12 +176,18 @@ Common::ResourceState ShaderResource::onLoad( const IO::Uri &uri, ShaderLoader &
     if (getState() == ResourceState::Loaded) {
         return getState();
     }
+
     Shader *shader = create();
     loader.load(uri, shader);
+
     return getState();
 }
 
 Common::ResourceState ShaderResource::onUnload( ShaderLoader &) {
+    if (getState() == ResourceState::Unloaded) {
+        return getState();
+    }
+
     return getState();
 }
 
