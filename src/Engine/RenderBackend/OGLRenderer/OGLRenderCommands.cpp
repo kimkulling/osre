@@ -40,6 +40,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Shader.h>
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
 namespace OSRE {
@@ -52,14 +54,14 @@ using namespace ::OSRE::Platform;
 using namespace ::cppcore;
 
 bool makeScreenShot(const c8 *filename, ui32 w, ui32 h) {
-    const size_t numberOfPixels = w * h * 3;
+    const i32 numberOfPixels = w * h * 3;
     unsigned char *pixels = new uc8[numberOfPixels];
 
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
     glReadBuffer(GL_FRONT);
     glReadPixels(0, 0, w, h, GL_BGR_EXT, GL_UNSIGNED_BYTE, pixels);
     bool result = true;
-    if (0 != stbi_write_jpg(filename, w, h, 3, pixels, numberOfPixels)){
+    if (stbi_write_jpg(filename, w, h, 3, pixels, numberOfPixels) != 0){
         result = false;
     }
 
