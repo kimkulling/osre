@@ -27,10 +27,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  This class implements common os services.
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Win32OSService : public AbstractOSService {
 public:
-    Win32OSService();
-    ~Win32OSService() override;
+    ///	@brief The class constructor, default impl.
+    Win32OSService() = default;
+
+    ///	@brief The class destructor, default impl.
+    ~Win32OSService() override = default;
+
+    /// @brief Will return the current monitor resolution.
+    /// @param width The width.
+    /// @param heigt The height.
     void getMonitorResolution(ui32 &width, ui32 &heigt) override;
     void showCursor(bool enabled) override;
     static String getLastErrorAsString();

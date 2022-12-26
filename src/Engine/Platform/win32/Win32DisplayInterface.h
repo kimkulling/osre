@@ -31,9 +31,14 @@ namespace Platform {
 
 struct MonitorInfo;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  
+//-------------------------------------------------------------------------------------------------
 class Win32DisplayInterface : public AbstractDisplayInterface {
 public:
-    Win32DisplayInterface();
+    Win32DisplayInterface() = default;
     ~Win32DisplayInterface() override;
     i32 getNumDisplays() override;
     bool getDisplayResolution(ui32 displayIndex, ui32 &width, ui32 &height) override;

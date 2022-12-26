@@ -34,7 +34,7 @@ namespace Platform {
 
 using namespace ::OSRE::Common;
 
-static const c8 *Tag = "Win32Eventhandler";
+static constexpr c8 Tag[] = "Win32Eventhandler";
 
 // The interface for the event update.
 struct AbstractInputUpdate {
@@ -47,8 +47,10 @@ struct AbstractInputUpdate {
     virtual bool update(MSG &rProgram) = 0;
 };
 
+/// @brief The get implementation.
 struct Win32GetInputUpdate : public AbstractInputUpdate {
     Win32GetInputUpdate() = default;
+
     ~Win32GetInputUpdate() override = default;
 
     bool update(MSG &program) override {
@@ -60,8 +62,10 @@ struct Win32GetInputUpdate : public AbstractInputUpdate {
     }
 };
 
+/// @brief The peek implementation.
 struct Win32PeekInputUpdate : public AbstractInputUpdate {
     Win32PeekInputUpdate() = default;
+
     ~Win32PeekInputUpdate() override = default;
 
     bool update(MSG &rProgram) override {

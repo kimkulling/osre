@@ -35,9 +35,9 @@ namespace Platform {
 class Win32DynamicLoader : public AbstractDynamicLoader {
 public:
     /// The class constructor.
-    Win32DynamicLoader();
+    Win32DynamicLoader() = default;
     /// The class destructor, virtual.
-    virtual ~Win32DynamicLoader();
+    virtual ~Win32DynamicLoader() override = default;
     /// Loads a dll.
     virtual LibHandle *load( const String &libName ) override;
     /// Performs a lookup for a dll.

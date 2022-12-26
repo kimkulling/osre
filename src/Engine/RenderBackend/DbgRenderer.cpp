@@ -76,7 +76,7 @@ const c8 *DbgRenderer::getDebugRenderBatchName() {
     return name;
 }
 
-void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui64 id, const String &text) {
+void DbgRenderer::renderDbgText(ui32 x, ui32 y, guid id, const String &text) {
     osre_assert(mRbSrv != nullptr);
     
     if (text.empty()) {
@@ -222,7 +222,7 @@ void DbgRenderer::addLine(const ColorVert &v0, const ColorVert &v1) {
     mDebugMesh->addPrimitiveGroup(NumIndices, PrimitiveType::LineList, 0);
 }
 
-DbgRenderer::DebugText *DbgRenderer::getDebugText(ui32 id) const {
+DbgRenderer::DebugText *DbgRenderer::getDebugText(guid id) const {
     if (mDebugTextMeshes.isEmpty()) {
         return nullptr;
     }

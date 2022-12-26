@@ -182,11 +182,20 @@ void MainRenderView::createRect2D(const Rect2ui &r, Mesh *mesh2D, Style &style) 
 }
 
 static void drawJoint(Bone *currentBone) {
+    if (currentBone == nullptr) {
+        return;
+    }
 
 }
 
 static void drawBone(Bone *currentBone) {
+    if (currentBone == nullptr) {
+        return;
+    }
 
+    if (currentBone->mParent != -1) {
+        drawJoint(currentBone);
+    }
 }
 
 void MainRenderView::createBonesFromSkeleton(Skeleton *skeleton) {
