@@ -335,7 +335,12 @@ void OGLRenderBackend::copyDataToBuffer(OGLBuffer *buffer, void *data, size_t si
 
 void OGLRenderBackend::releaseBuffer(OGLBuffer *buffer) {
     if (nullptr == buffer) {
-        osre_debug(Tag, "Pointer to buffer instance is nullptr");
+        osre_debug(Tag, "Pointer to buffer instance is nullptr, skipped.");
+        return;
+    }
+
+    if (buffer->m_oglId == OGLNotSetId) {
+        osre_debug(Tag, "OGL-Id was already released, skipped.");
         return;
     }
 
