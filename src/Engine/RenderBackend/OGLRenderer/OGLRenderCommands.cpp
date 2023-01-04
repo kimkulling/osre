@@ -65,7 +65,7 @@ bool makeScreenShot(const c8 *filename, ui32 w, ui32 h) {
         result = false;
     }
 
-    delete pixels;
+    delete [] pixels;
 
     return result;
 }
