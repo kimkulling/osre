@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2023 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -45,7 +45,7 @@ public:
     bool getDisplayDPI(ui32 displayIndex, DisplayDPIInfo *ddpiinfo) override;
 
 private:
-    ::cppcore::TArray<MonitorInfo *> m_monitorInfo;
+    ::cppcore::TArray<MonitorInfo*> mMonitorInfo;
 };
 
 } // namespace Platform
