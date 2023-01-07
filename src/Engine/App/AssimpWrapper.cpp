@@ -432,6 +432,9 @@ void AssimpWrapper::importNode(aiNode *node, Node *parent) {
     }
 
     if (node->mNumMeshes > 0) {
+        glm::mat4 nodeMatrix;
+        copyAiMatrix4x4(node->mTransformation, nodeMatrix);
+        newNode->setTransformationMatrix(nodeMatrix);
         for (ui32 meshIdx = 0; meshIdx < node->mNumMeshes; ++meshIdx) {
             const size_t curMeshIdx = node->mMeshes[meshIdx];
             if (curMeshIdx >= mAssetContext.mMeshArray.size()) {
@@ -441,6 +444,8 @@ void AssimpWrapper::importNode(aiNode *node, Node *parent) {
             Mesh *mesh = mAssetContext.mMeshArray[curMeshIdx];
             if (nullptr != mesh) {
                 newNode->addMeshReference(curMeshIdx);
+                glm::mat4 model = newNode->getWorlTransformMatrix();
+                mesh->setModelMatrix(true, model);
             }
         }
     }

@@ -44,7 +44,7 @@ Node::Node(const String &name, Ids &ids, Node *parent) :
         m_ids(&ids),
         mPropertyArray(),
         m_propMap(),
-        m_localTransform() {
+        m_localTransform(1.0f) {
     if (nullptr != m_parent) {
         m_parent->addChild(this);
     }
@@ -223,7 +223,7 @@ const glm::mat4 &Node::getTransformationMatrix() const {
 glm::mat4 Node::getWorlTransformMatrix() {
     glm::mat4 wt(1.0);
     for (const Node *node = this; node != nullptr; node = node->getParent()) {
-        wt = node->getTransformationMatrix() * wt;
+        wt *= node->getTransformationMatrix();
     }
 
     return wt;
