@@ -40,15 +40,19 @@ static const String CameraModelName[3] = {
     "Invalid"
 };
 
+static constexpr f32 DefaultNear = 0.001f;
+static constexpr f32 DefaultFar = 1000.0f;
+static constexpr f32 DefaultAspectRatio = 1.0f;
+
 Camera::Camera(const String &name, Ids &ids, Node *parent) :
         Node(name, ids, parent),
         mRecalculateRequested(true),
         mCameraModel(CameraModel::Perspective),
         m_fov(60.0f),
         mResolution(1.0f, 1.0f),
-        m_near(0.001f),
-        m_far(1000.0f),
-        m_aspectRatio(1.0),
+        m_near(DefaultNear),
+        m_far(DefaultFar),
+        m_aspectRatio(DefaultAspectRatio),
         m_left(0.0f),
         m_right(1.0f),
         m_top(0.0f),
@@ -67,7 +71,7 @@ void Camera::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar)
     mResolution.Height = h;
     m_near = zNear;
     m_far = zFar;
-    m_aspectRatio = 1.0f;
+    m_aspectRatio = DefaultAspectRatio;
     if (0.0f != h) {
         m_aspectRatio = w / h;
     }

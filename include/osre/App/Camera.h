@@ -51,20 +51,20 @@ enum class CameraModel {
 class OSRE_EXPORT Camera : public Node {
 public:
     /// @brief  The class constructor.
-    /// @param  name        [in] The name for the camera node instance.
-    /// @param  ids         [in] The id container, for unique ids.
-    /// parent              [in] The parent node, nullptr for a root node.
+    /// @param[in] name        [in] The name for the camera node instance.
+    /// @param[in] ids         [in] The id container, for unique ids.
+    /// @param[in] parent              [in] The parent node, nullptr for a root node.
     Camera(const String &name, Common::Ids &ids, Node *parent = nullptr);
 
     /// @brief The class destructor, default.
     ~Camera() override = default;
 
     /// @brief  Will set the projection parameter.
-    /// @param  fov         [in] The file of view, describes the angle of the view frustum.
-    /// @param  w           [in] The width of the viewport.
-    /// @param  h           [in] The height of the viewport.
-    /// @param  nearPlane   [in] The distance to the near plane of the view frustum.
-    /// @param  farPlane    [in] The distance to the far plane of the view frustum.
+    /// @param[in] fov         The file of view, describes the angle of the view frustum.
+    /// @param[in] w           The width of the viewport.
+    /// @param[in] h           The height of the viewport.
+    /// @param[in] nearPlane   The distance to the near plane of the view frustum.
+    /// @param[in] farPlane    The distance to the far plane of the view frustum.
     void setProjectionParameters(f32 fov, f32 w, f32 h, f32 nearPlane, f32 farPlane);
 
     ///	@brief Will set the camera model.
@@ -83,33 +83,52 @@ public:
     /// @param renderBackendSrv     [in] The RenderBackend-Server.
     void draw(RenderBackend::RenderBackendService *renderBackendSrv);
 
-    /// @brief
+    /// @brief  Will rearrange the camera view parameters, so that the given bounding box will be observed.
+    /// @param[in]  box     The bounding box to observe.
     void observeBoundingBox(const Common::AABB &box);
 
-    /// @brief
+    /// @brief  Will set the new lookAt parameters.
+    /// @param[in] eyePosition  The new eye position.
+    /// @param[in] center       The center to look at.
+    /// @param[in] up           The up vector of the camera.
     void setLookAt(const glm::vec3 &eyePosition, const glm::vec3 &center, const glm::vec3 &up);
 
+    /// @brief Will set the new eye position.
+    /// @param[in] eyePosition  The new eye position.
     void setEyePos(const glm::vec3 &eyePosistion);
 
-    /// @brief
+    /// @brief  Will set the new projection mode parameter.
+    /// @param[in] fov
+    /// @param[in] aspectRatio
+    /// @param[in] nearPlane
+    /// @param[in] farPlane
     void setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farPlane);
 
     /// @brief
+    /// @param[in]
+    /// @param[in]
+    /// @param[in]
+    /// @param[in]
     void setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane, f32 farPlane);
 
-    /// @brief
+    /// @brief  Will return the view matrix.
+    /// @return The view matrix.
     const glm::mat4 &getView() const;
 
-    /// @brief
+    /// @brief  Will return the projection matrix.
+    /// @return The projection matrix.
     const glm::mat4 &getProjection() const;
 
-    /// @brief
+    /// @brief  Will return the field of view.
+    /// @return The field of view.
     f32 getFov() const;
 
     /// @brief
+    /// @return 
     f32 getAspectRatio() const;
 
     /// @brief
+    /// @return 
     f32 getNear() const;
 
     /// @brief

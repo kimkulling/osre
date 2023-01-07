@@ -122,13 +122,9 @@ AssimpWrapper::AssimpWrapper( Common::Ids &ids, World *world ) :
     // empty
 }
 
-AssimpWrapper::~AssimpWrapper() {
-    // empty
-}
-
 bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
     if (!file.isValid()) {
-        osre_error(Tag, "URI " + file.getUri() + " is invalid ");
+        osre_error(Tag, "URI " + file.getUri() + " is invalid.");
         return false;
     }
 
@@ -148,7 +144,7 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
 
     filename = mAssetContext.mRoot + filename;
     Importer myImporter;
-    osre_debug(Tag, "Start importing " + filename);
+    osre_debug(Tag, "Start importing " + filename + ".");
     mAssetContext.mScene = myImporter.ReadFile(filename, flags);
     if (nullptr == mAssetContext.mScene) {
         osre_error(Tag, "Cannot start importing " + filename + ", scene is nullptr.");
@@ -160,7 +156,9 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
     osre_debug(Tag, "Importing " + filename + " finished.");
     convertScene();
     osre_debug(Tag, "Converting " + filename + " finished.");
-    
+
+    osre_debug(Tag, "Finish importing " + filename + ".");
+
     return true;
 }
 
@@ -168,7 +166,7 @@ Entity *AssimpWrapper::getEntity() const {
     return mAssetContext.mEntity;
 }
 
-void AssimpWrapper::getStatistics( ui32 &numVertices, ui32 &numTriangles ) {
+void AssimpWrapper::getStatistics(ui32 &numVertices, ui32 &numTriangles) {
     numVertices = mAssetContext.mNumVertices;
     numTriangles = mAssetContext.mNumTriangles;
 }
@@ -215,9 +213,9 @@ Entity *AssimpWrapper::convertScene() {
         rc->addStaticMeshArray(mAssetContext.mMeshArray);
     }
 
-    /*if (mAssetContext.mScene->hasSkeletons()) {
+    if (mAssetContext.mScene->hasSkeletons()) {
         importSkeletons(*mAssetContext.mScene->mSkeletons, mAssetContext.mScene->mNumSkeletons);
-    }*/
+    }
 
     return mAssetContext.mEntity;
 }

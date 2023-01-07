@@ -80,7 +80,7 @@ public:
     AssimpWrapper(Common::Ids &ids, World *world);
 
     ///	@brief  The class destructor.
-    ~AssimpWrapper();
+    ~AssimpWrapper() = default;
 
     /// @brief Will perform the import operation.
     /// @param file     The file to load.
