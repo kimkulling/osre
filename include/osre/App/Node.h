@@ -104,20 +104,52 @@ public:
     /// @brief Used to declare properties.
     using PropertyMap = cppcore::THashMap<ui32, Properties::Property *>;
 
+    ///	@brief  Describes the traversal mode.
     enum class TraverseMode {
-        FlatMode,
-        RecursiveMode
+        FlatMode,           ///< Flat, ignore children.
+        RecursiveMode       ///< Recursive, iterate through children.
     };
 
 public:
+    ///	@brief
+    /// @param name 
+    /// @param ids 
+    /// @param parent 
     Node(const String &name, Common::Ids &ids, Node *parent = nullptr);
+    
+    /// @brief 
     virtual ~Node();
+    
+    /// @brief 
+    /// @param parent 
     virtual void setParent(Node *parent);
+    
+    /// @brief 
+    /// @return 
     virtual Node *getParent() const;
+    
+    /// @brief 
+    /// @param name 
+    /// @return 
     virtual Node *createChild(const String &name);
+    
+    /// @brief 
+    /// @param child 
     virtual void addChild(Node *child);
+    
+    /// @brief 
+    /// @param name 
+    /// @param mode 
+    /// @return 
     virtual bool removeChild(const String &name, TraverseMode mode);
+    
+    /// @brief 
+    /// @param name 
+    /// @return 
     virtual Node *findChild(const String &name) const;
+    
+    /// @brief 
+    /// @return 
     virtual size_t getNumChildren() const;
     virtual Node *getChildAt(size_t idx) const;
     virtual void releaseChildren();
