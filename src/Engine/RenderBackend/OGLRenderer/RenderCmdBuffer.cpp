@@ -226,7 +226,8 @@ bool RenderCmdBuffer::onDrawPrimitivesCmd(DrawPrimitivesCmdData *data) {
 
     mRBService->bindVertexArray(data->m_vertexArray);
     if (data->m_localMatrix) {
-        mRBService->setMatrix(MatrixType::Model, data->m_model);
+        glm::mat4 model = mRBService->getMatrix(MatrixType::Model);
+        mRBService->setMatrix(MatrixType::Model, data->m_model*model);
         mRBService->applyMatrix();
     }
     for (size_t i = 0; i < data->m_primitives.size(); ++i) {

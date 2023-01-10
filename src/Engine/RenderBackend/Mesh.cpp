@@ -67,7 +67,7 @@ Mesh::~Mesh() {
     s_Ids.releaseId(mId);
 }
 
-void *Mesh::mapVertexBuffer( size_t vbSize, BufferAccessType accessType ) {
+void *Mesh::mapVertexBuffer(size_t vbSize, BufferAccessType accessType) {
     mVertexBuffer = BufferData::alloc(BufferType::VertexBuffer, vbSize, accessType);
     return mVertexBuffer->getData();
 }
@@ -77,6 +77,10 @@ void Mesh::unmapVertexBuffer() {
 }
 
 void Mesh::createVertexBuffer(void *vertices, size_t vbSize, BufferAccessType accessType) {
+    if (vertices == nullptr) {
+        return;
+    }
+
     mVertexBuffer = BufferData::alloc(BufferType::VertexBuffer, vbSize, accessType);
     mVertexBuffer->copyFrom(vertices, vbSize);
 }
@@ -86,6 +90,10 @@ BufferData *Mesh::getVertexBuffer() const {
 }
 
 void Mesh::createIndexBuffer(void *indices, size_t ibSize, IndexType indexType, BufferAccessType accessType) {
+    if (indices == nullptr) {
+        return;
+    }
+
     mIndexBuffer = BufferData::alloc(BufferType::IndexBuffer, ibSize, accessType);
     mIndexType = indexType;
     mIndexBuffer->copyFrom(indices, ibSize);
