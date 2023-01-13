@@ -33,9 +33,8 @@ using namespace ::cppcore;
 
 static const glm::vec3 Dummy = glm::vec3(-1, -1, -1);
 
-Component::Component(Entity *owner, ui32 id, ComponentType type) :
+Component::Component(Entity *owner, ComponentType type) :
         m_owner(owner),
-        m_id(id),
         mType(type) {
     osre_assert(nullptr != owner);
 }
@@ -56,8 +55,8 @@ void Component::deserialize( IO::Stream &stream ) {
     // empty
 }
 
-RenderComponent::RenderComponent(Entity *owner, ui32 id) :
-        Component(owner, id, ComponentType::RenderComponentType), m_newGeo() {
+RenderComponent::RenderComponent(Entity *owner) :
+        Component(owner, ComponentType::RenderComponentType), m_newGeo() {
     // empty
 }
 
@@ -114,8 +113,8 @@ bool RenderComponent::onPostprocess() {
     return true;
 }
 
-TransformComponent::TransformComponent(Entity *owner, ui32 id) :
-        Component(owner, id, ComponentType::TransformComponentType), mNode( nullptr ) {}
+TransformComponent::TransformComponent(Entity *owner) :
+        Component(owner, ComponentType::TransformComponentType), mNode( nullptr ) {}
 
 void TransformComponent::setNode(Node *node) {
     mNode = node;
@@ -137,8 +136,8 @@ bool TransformComponent::onPostprocess() {
     return true;
 }
 
-LightComponent::LightComponent(Entity *owner, ui32 id) 
-        : Component(owner, id, ComponentType::LightComponentType), mLight(nullptr) {}
+LightComponent::LightComponent(Entity *owner) 
+        : Component(owner, ComponentType::LightComponentType), mLight(nullptr) {}
 
 void LightComponent::setLight(RenderBackend::Light *light) {
     mLight = light;
@@ -160,8 +159,8 @@ bool LightComponent::onPostprocess() {
     return true;
 }
 
-ScriptComponent::ScriptComponent(Entity *owner, ui32 id) 
-        : Component(owner, id, ComponentType::ScriptComponentType) {}
+ScriptComponent::ScriptComponent(Entity *owner) 
+        : Component(owner, ComponentType::ScriptComponentType) {}
 
 bool ScriptComponent::onPreprocess() {
     return true;

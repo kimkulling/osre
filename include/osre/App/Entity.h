@@ -64,6 +64,7 @@ public:
     bool update( Time dt );
     bool render( RenderBackend::RenderBackendService *rbSrv );
     bool postprocess();
+    Component *createComponent(ComponentType type);
     Component *getComponent(ComponentType type) const;
     void setAABB( const Common::AABB &aabb );
     const Common::AABB &getAABB() const;
@@ -73,6 +74,8 @@ public:
 private:
     AbstractBehaviour *m_behaviour;
     RenderComponent *m_renderComponent;
+    using ComponentArray = cppcore::TArray<Component*>;
+    ComponentArray mComponentArray;
     Node *m_node;
     const Common::Ids &m_ids;
     Common::AABB m_aabb;

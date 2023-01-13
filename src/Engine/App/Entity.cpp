@@ -36,11 +36,12 @@ Entity::Entity(const String &name, const Common::Ids &ids, World *world) :
         Object(name),
         m_behaviour(nullptr),
         m_renderComponent(nullptr),
+        mComponentArray(),
         m_node(nullptr),
         m_ids(ids),
         m_aabb(),
         mOwner(world) {
-    m_renderComponent = new RenderComponent(this, 1);
+    m_renderComponent = (RenderComponent*) createComponent(ComponentType::RenderComponentType);
     if (nullptr != mOwner) {
         mOwner->addEntity(this);
     }
@@ -91,6 +92,37 @@ bool Entity::postprocess() {
         m_renderComponent->postprocess();
     }
     return true;
+}
+Component *Entity::createComponent(ComponentType type) {
+    Component *component = getComponent(type);
+    if (component != nullptr) {
+        return component;
+    }
+
+    switch (type) {
+        case OSRE::App::ComponentType::RenderComponentType:
+            component = new RenderComponent(this);
+            break;
+        case OSRE::App::ComponentType::CameraComponentType:
+            component = nullptr;
+            break;
+        case OSRE::App::ComponentType::TransformComponentType:
+            component = new TransformComponent(this); 
+            break;
+        case OSRE::App::ComponentType::LightComponentType:
+            component = new LightComponent(this);
+            break;
+        case OSRE::App::ComponentType::ScriptComponentType:
+            component = new ScriptComponent(this);
+            break;
+        case OSRE::App::ComponentType::InvalidComponent:
+        case OSRE::App::ComponentType::MaxNumComponents:
+            break;
+        default:
+            break;
+    }
+
+    return component;
 }
 
 Component *Entity::getComponent(ComponentType type) const {

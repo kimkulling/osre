@@ -47,8 +47,8 @@ protected:
 
 class MockComponent : public Component {
 public:
-    MockComponent(Entity *owner, ui32 id, ComponentType type) 
-	    : Component(owner, id, type) {}
+    MockComponent(Entity *owner, ComponentType type) 
+	    : Component(owner, type) {}
 
     ~MockComponent() = default;
 
@@ -85,7 +85,7 @@ TEST_F(ComponentTest, createTest) {
     try {
         Common::Ids ids;
         Entity entity("test", ids, nullptr);
-        MockComponent myComp(&entity, 0, ComponentType::ScriptComponentType);
+        MockComponent myComp(&entity, ComponentType::ScriptComponentType);
     } catch (...) {
         ok = false;
     }
@@ -96,7 +96,7 @@ TEST_F(ComponentTest, accessNodeTest) {
     String name = "test";
 
     Entity *entity = new Entity(name, *m_ids, nullptr);
-    MockComponent myComp(entity, 0, ComponentType::ScriptComponentType);
+    MockComponent myComp(entity, ComponentType::ScriptComponentType);
 
     EXPECT_EQ(entity, myComp.getOwner());
 }

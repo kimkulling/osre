@@ -65,13 +65,11 @@ public:
     virtual void update(Time dt);
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
     virtual bool postprocess();
-    virtual void setId(ui32 id);
-    virtual ui32 getId() const;
     virtual Entity *getOwner() const;
     virtual ComponentType getType() const;
 
 protected:
-    Component(Entity *owner, ui32 id, ComponentType type);
+    Component(Entity *owner, ComponentType type);
     virtual bool onPreprocess() = 0;
     virtual bool onUpdate(Time dt) = 0;
     virtual bool onRender(RenderBackend::RenderBackendService *renderBackendSrv) = 0;
@@ -81,7 +79,6 @@ protected:
 
 private:
     Entity *m_owner;
-    ui32 m_id;
     ComponentType mType;
 };
 
@@ -91,14 +88,6 @@ inline bool Component::preprocess() {
 
 inline bool Component::postprocess() {
     return onPostprocess();
-}
-
-inline void Component::setId(ui32 id) {
-    m_id = id;
-}
-
-inline ui32 Component::getId() const {
-    return m_id;
 }
 
 inline Entity *Component::getOwner() const {
@@ -116,7 +105,7 @@ inline ComponentType Component::getType() const {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT RenderComponent : public Component {
 public:
-    RenderComponent(Entity *owner, ui32 id);
+    RenderComponent(Entity *owner);
     ~RenderComponent() override = default;
     size_t getNumGeometry() const;
     RenderBackend::Mesh *getMeshAt(size_t idx) const;
@@ -141,7 +130,7 @@ private:
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT TransformComponent final : public Component {
 public:
-    TransformComponent(Entity *owner, ui32 id);
+    TransformComponent(Entity *owner);
     ~TransformComponent() override = default;
     void setNode(Node *node);
 
@@ -157,7 +146,7 @@ private:
 
 class LightComponent final : public Component {
 public:
-    LightComponent(Entity *owner, ui32 id);
+    LightComponent(Entity *owner);
     ~LightComponent() override = default;
     void setLight(RenderBackend::Light *light);
 
@@ -173,7 +162,7 @@ private:
 
 class ScriptComponent final : public Component {
 public:
-    ScriptComponent(Entity *owner, ui32 id);
+    ScriptComponent(Entity *owner);
     ~ScriptComponent() override = default;
 
 protected:
@@ -183,6 +172,7 @@ protected:
     bool onPostprocess() override;
 
 private:
+    // todo!
 };
 
 } // namespace App
