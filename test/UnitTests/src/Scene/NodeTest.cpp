@@ -47,9 +47,11 @@ protected:
     virtual void TearDown() {
         delete m_ids;
         m_ids = nullptr;
-        delete mEntity;
 
-        for ( auto current : m_nodes ) {
+        delete mEntity;
+        mEntity = nullptr;
+
+        for ( auto &current : m_nodes ) {
             current->release();
         }
         m_nodes.resize( 0 );
@@ -68,7 +70,7 @@ protected:
 };
 
 TEST_F( NodeTest, createTest ) {
-    bool ok( true );
+    bool ok = true;
     try {
         TransformComponent *myNode_transform_render = createNode("testnode1", mEntity, *m_ids, nullptr);
         EXPECT_NE( nullptr, myNode_transform_render );
@@ -78,7 +80,7 @@ TEST_F( NodeTest, createTest ) {
     EXPECT_TRUE( ok );
 }
 
-TEST_F( NodeTest, accessChilds ) {
+TEST_F( NodeTest, accessChildren ) {
     TransformComponent *parent = createNode("parent", mEntity, *m_ids, nullptr);
     TransformComponent *myNode1 = createNode("testnode1", mEntity, *m_ids, parent);
     TransformComponent *myNode2 = createNode("testnode2", mEntity, *m_ids, parent);
@@ -88,15 +90,13 @@ TEST_F( NodeTest, accessChilds ) {
     EXPECT_TRUE( nullptr != myNode2->getParent() );
     EXPECT_TRUE( nullptr == parent->getParent() );
 
-    TransformComponent *found(nullptr);
-    found = parent->findChild( "testnode1" );
+    TransformComponent *found = parent->findChild("testnode1");
     EXPECT_TRUE( nullptr != found );
 
     found = parent->findChild( "testnode3" );
     EXPECT_TRUE( nullptr == found );
 
-    bool ok( true );
-    ok = parent->removeChild("testnode1", TransformComponent::TraverseMode::FlatMode);
+    bool ok = parent->removeChild("testnode1", TransformComponent::TraverseMode::FlatMode);
     EXPECT_TRUE( ok );
 
     ok = parent->removeChild("testnode1", TransformComponent::TraverseMode::FlatMode);
