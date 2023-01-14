@@ -44,8 +44,8 @@ static constexpr f32 DefaultNear = 0.001f;
 static constexpr f32 DefaultFar = 1000.0f;
 static constexpr f32 DefaultAspectRatio = 1.0f;
 
-Camera::Camera(const String &name, Ids &ids, Node *parent) :
-        Node(name, ids, parent),
+Camera::Camera(const String &name, Entity *owner, Ids &ids, TransformComponent *parent) :
+        TransformComponent(name, owner, ids, parent),
         mRecalculateRequested(true),
         mCameraModel(CameraModel::Perspective),
         m_fov(60.0f),
@@ -147,7 +147,7 @@ const glm::mat4 &Camera::getProjection() const {
     return m_projection;
 }
 
-void Camera::onUpdate(Time) {
+bool Camera::onUpdate(Time) {
     const CameraModel cm = getCameraModel();
     if (cm == CameraModel::Perspective) {
         m_projection = glm::perspective(m_fov, m_aspectRatio, m_near, m_far);
@@ -155,13 +155,17 @@ void Camera::onUpdate(Time) {
         m_projection = glm::ortho(m_left, m_right, m_bottom, m_top, m_near, m_far);
     }
     m_view = glm::lookAt(m_eye, m_center, m_up);
+
+    return true;
 }
 
-void Camera::onRender(RenderBackendService *rbSrv) {
+bool Camera::onRender(RenderBackendService *rbSrv) {
     osre_assert(nullptr != rbSrv);
 
     rbSrv->setMatrix(MatrixType::View, m_view);
     rbSrv->setMatrix(MatrixType::Projection, m_projection);
+
+    return true;
 }
 
 } // Namespace App

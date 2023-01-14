@@ -28,7 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 
-class Node;
+class TransformComponent;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -41,7 +41,7 @@ public:
     ///	@param	objName		[in] The name for the instance.
     ///	@param	w			[in] The width of the view-port to navigate in
     ///	@param	h			[in] The height of the view-port to navigate in
-    TrackBall( const String &objName, ui32 w, ui32 h, Common::Ids &ids );
+    TrackBall(const String &objName, Entity *owner, ui32 w, ui32 h, Common::Ids &ids);
 
     ///	@brief	The class destructor.
     ~TrackBall() override;

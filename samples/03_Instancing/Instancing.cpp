@@ -82,10 +82,10 @@ protected:
         Rect2ui windowsRect;
         rootWindow->getWindowsRect(windowsRect);
 
-        Camera *camera = getStage()->getActiveWorld()->addCamera("cam1");
-        camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.0001f, 1000.f);
         World *world = getStage()->getActiveWorld();
         mEntity = new App::Entity("instance", world->getIds(), world);
+        Camera *camera = getStage()->getActiveWorld()->addCamera("cam1", mEntity);
+        camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.0001f, 1000.f);
         MeshBuilder meshBuilder;
         AppBase::getStage()->getActiveWorld()->addEntity(mEntity);
         RenderBackend::Mesh *mesh = meshBuilder.createTriangle(VertexType::RenderVertex, BufferAccessType::ReadWrite).getMesh();

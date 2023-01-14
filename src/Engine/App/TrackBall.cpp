@@ -32,8 +32,8 @@ namespace App {
 using namespace OSRE::Common;
 using namespace OSRE::Platform;
 
-TrackBall::TrackBall(const String &trackBallObjName, ui32 w, ui32 h, Ids &ids) :
-        Camera(trackBallObjName, ids),
+TrackBall::TrackBall(const String &trackBallObjName, Entity *owner, ui32 w, ui32 h, Ids &ids) :
+        Camera(trackBallObjName, owner, ids, nullptr),
         mStartVector(0, 0, 0),
         mEndVector(0, 0, 0),
         m_Dimension(0,0,w, h),

@@ -32,7 +32,7 @@ namespace Editor {
 struct SceneData {
     String Name;
     String ProjectName;
-    App::Node::NodePtr m_modelNode;
+    App::TransformComponent::NodePtr m_modelNode;
     App::Camera *mCamera;
 
     SceneData();

@@ -133,7 +133,7 @@ inline void Mesh::setId(guid id) {
     mId = id;
 }
 
-inline ui64 Mesh::getId() const {
+inline guid Mesh::getId() const {
     return mId;
 }
 

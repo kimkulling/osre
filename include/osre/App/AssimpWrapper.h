@@ -61,7 +61,7 @@ namespace App {
 
 class Entity;
 class World;
-class Node;
+class TransformComponent;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Engine
@@ -101,7 +101,7 @@ protected:
     Entity *convertScene();
     void importMeshes( aiMesh **meshes, ui32 numMeshes );
 	//void importBones(aiMesh* mesh);
-    void importNode( aiNode *node, Node *parent );
+    void importNode( aiNode *node, TransformComponent *parent );
     void importMaterial( aiMaterial *material );
     void importSkeletons(aiSkeleton *skeletons, size_t numSkeletons);
     void importAnimation(aiAnimation *animation, Animation::AnimationTrack &currentAnimationTrack, AnimationMap &animLookup);
@@ -115,7 +115,7 @@ private:
         Entity *mEntity;
         World *mWorld;
         MaterialArray mMatArray;
-        App::Node *mParentNode;
+        App::TransformComponent *mParentNode;
         Common::Ids &mIds;
         String mRoot;
         String mAbsPathWithFile;

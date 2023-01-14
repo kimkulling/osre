@@ -416,12 +416,12 @@ void AssimpWrapper::importMeshes(aiMesh **meshes, ui32 numMeshes) {
     mat2MeshMap.clear();
 }
 
-void AssimpWrapper::importNode(aiNode *node, Node *parent) {
+void AssimpWrapper::importNode(aiNode *node, TransformComponent *parent) {
     if (nullptr == node) {
         return;
     }
 
-    Node *newNode = new Node(node->mName.C_Str(), mAssetContext.mIds, parent);
+    TransformComponent *newNode = new TransformComponent(node->mName.C_Str(), mAssetContext.mEntity, mAssetContext.mIds, parent);
 
     // If this is the root-node of the model, set it as the root for the model
     if (nullptr == mAssetContext.mParentNode) {
@@ -516,7 +516,7 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
     }
 }
 
-using Bone2NodeMap = cppcore::THashMap<int, Node*>;
+using Bone2NodeMap = cppcore::THashMap<int, TransformComponent*>;
 
 void AssimpWrapper::importSkeletons( aiSkeleton *skeletons, size_t numSkeletons) {
     if (numSkeletons == 0 || skeletons == nullptr) {

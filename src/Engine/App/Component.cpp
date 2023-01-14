@@ -113,29 +113,6 @@ bool RenderComponent::onPostprocess() {
     return true;
 }
 
-TransformComponent::TransformComponent(Entity *owner) :
-        Component(owner, ComponentType::TransformComponentType), mNode( nullptr ) {}
-
-void TransformComponent::setNode(Node *node) {
-    mNode = node;
-}
-
-bool TransformComponent::onPreprocess() {
-    return true;
-}
-
-bool TransformComponent::onUpdate( Time dt ) {
-    return true;
-}
-
-bool TransformComponent::onRender(RenderBackend::RenderBackendService *rbSrv) {
-    return true;
-}
-
-bool TransformComponent::onPostprocess() {
-    return true;
-}
-
 LightComponent::LightComponent(Entity *owner) 
         : Component(owner, ComponentType::LightComponentType), mLight(nullptr) {}
 
