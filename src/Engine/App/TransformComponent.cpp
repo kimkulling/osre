@@ -174,7 +174,7 @@ void TransformComponent::setProperty(Properties::Property *prop) {
         return;
     }
 
-    const ui32 hashId = StringUtils::hashName(prop->getPropertyName().c_str());
+    const HashId hashId = StringUtils::hashName(prop->getPropertyName().c_str());
     m_propMap.insert(hashId, prop);
     mPropertyArray.add(prop);
 }

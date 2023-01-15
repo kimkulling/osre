@@ -73,7 +73,7 @@ Camera *World::addCamera(const String &name, Entity *owner) {
 
     mActiveCamera = new Camera(name, owner, mIds, mRoot);
     mViews.add(mActiveCamera);
-    const ui32 hash = StringUtils::hashName(mActiveCamera->getName());
+    const HashId hash = StringUtils::hashName(mActiveCamera->getName());
     mLookupViews.insert(hash, mActiveCamera);
     mDirtry = true;
 
@@ -102,7 +102,7 @@ Camera *World::setActiveCamera(Camera *activeView) {
 }
 
 Camera *World::setActiveCamera(const String &viewName) {
-    const ui32 hash(StringUtils::hashName(viewName));
+    const HashId hash(StringUtils::hashName(viewName));
     if (!mLookupViews.hasKey(hash)) {
         return nullptr;
     }
