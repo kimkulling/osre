@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/glm_common.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/App/TrackBall.h>
-#include <osre/App/Node.h>
+#include <osre/App/TransformComponent.h>
 
 namespace OSRE {
 namespace App {

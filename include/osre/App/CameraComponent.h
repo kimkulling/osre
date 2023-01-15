@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Ids.h>
 #include <osre/Common/Object.h>
 #include <osre/Common/glm_common.h>
-#include <osre/App/Node.h>
+#include <osre/App/TransformComponent.h>
 #include <osre/Scene/SceneCommon.h>
 #include <osre/Common/TAABB.h>
 

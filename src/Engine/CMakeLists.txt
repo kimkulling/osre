@@ -36,9 +36,9 @@ SET( app_inc
     ${HEADER_PATH}/App/App.h
     ${HEADER_PATH}/App/AppCommon.h
     ${HEADER_PATH}/App/AbstractBehaviour.h
-    ${HEADER_PATH}/App/Node.h
+    ${HEADER_PATH}/App/TransformComponent.h
     ${HEADER_PATH}/App/TrackBall.h
-    ${HEADER_PATH}/App/Camera.h
+    ${HEADER_PATH}/App/CameraComponent.h
     ${HEADER_PATH}/App/TQuadTree.h
     ${HEADER_PATH}/App/ParticleEmitter.h
     ${HEADER_PATH}/App/AppBase.h
@@ -57,9 +57,9 @@ SET( app_inc
 )
 
 SET( app_src
-    App/Node.cpp
+    App/TransformComponent.cpp
     App/TrackBall.cpp
-    App/Camera.cpp
+    App/CameraComponent.cpp
     App/ParticleEmitter.cpp
     App/AppBase.cpp
     App/Component.cpp

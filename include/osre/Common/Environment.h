@@ -30,19 +30,36 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
+/// @brief A struct to store variables.
 struct EnvVar {
+    /// @brief Describes the variable type.
     enum Type {
-        Int,
-        Str,
-        None
+        Int,    ///< Integer variable.
+        Str,    ///< String variable.
+        None    ///< Unknown, marks a not inited variable.
     };
 
+    /// The variable name.
     String m_name;
+
+    /// The variable value.
     cppcore::Variant m_value;
 
+    /// @brief Will init the variable with a valid name and an integer value.
+    /// @param[in] key      The name.
+    /// @param[in] value    The integer value.
     EnvVar(const String &key, int value);
+
+    /// @brief Will init the variable with a valid name and a string value.
+    /// @param[in] key      The name.
+    /// @param[in] value    The string value.
     EnvVar(const String &key, const String &value);
+    
+    /// @brief The class destructor, default implementation.
     ~EnvVar() = default;
+
+    /// @brief  Will return the variable type.
+    /// @return The variable type
     Type getType() const;
 };
 
@@ -104,7 +121,7 @@ public:
     void addVariable(EnvVar *var);
 
 private:
-    using EnvVariables = ::cppcore::THashMap<ui32, EnvVar *>;
+    using EnvVariables = ::cppcore::THashMap<HashId, EnvVar *>;
     EnvVariables mEnvVariables;
 };
 

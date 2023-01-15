@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/AbstractProcessor.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Common/TAABB.h>
-#include <osre/App/Node.h>
+#include <osre/App/TransformComponent.h>
 
 #include <cppcore/Container/TArray.h>
 

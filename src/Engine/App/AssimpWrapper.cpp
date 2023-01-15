@@ -41,7 +41,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/MaterialBuilder.h>
 #include <osre/RenderBackend/MeshBuilder.h>
 #include <osre/RenderBackend/MeshProcessor.h>
-#include <osre/App/Node.h>
+#include <osre/App/TransformComponent.h>
 
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>

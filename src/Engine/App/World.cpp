@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/RenderBackend/MeshProcessor.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/App/Camera.h>
+#include <osre/App/CameraComponent.h>
 
 namespace OSRE {
 namespace App {

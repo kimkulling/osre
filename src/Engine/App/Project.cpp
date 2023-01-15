@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Project.h>
 #include <osre/App/World.h>
 #include <osre/App/Entity.h>
-#include <osre/App/Node.h>
+#include <osre/App/TransformComponent.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/TAABB.h>
 #include <osre/Debugging/osre_debugging.h>
