@@ -148,9 +148,6 @@ protected:
     bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
     bool onPostprocess() override;
 
-/* virtual void onUpdate(Time dt);
-    virtual void onRender(RenderBackend::RenderBackendService *renderBackendSrv);*/
-
 private:
     NodeArray m_children;
     TransformComponent *m_parent;
