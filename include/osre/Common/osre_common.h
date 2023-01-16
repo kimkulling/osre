@@ -114,20 +114,11 @@ using ui16 = unsigned short;
 /// @brief  The data type signed int, 4 byte long.
 using ui32 = unsigned int;
 
-/// @brief  The data type for signed and unsigned int 8 bytes long.
-// clang-format off
-#ifdef OSRE_WINDOWS
-
-using i64 = __int64;
-using ui64 = unsigned __int64;
-
-#else
-
+/// @brief The data type for signed int 8 bytes long.
 using i64 = int64_t;
-using ui64 = uint64_t ;
 
-#endif
-// clang-format on
+/// @brief The data type for unsigned int 8 bytes long.
+using ui64 = uint64_t ;
 
 /// @brief  The data type for hash ids.
 using HashId = ui64;

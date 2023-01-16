@@ -69,7 +69,7 @@ bool AssetRegistry::hasPath( const String &mount ) {
         return false;
     }
 
-    const ui32 hashId( StringUtils::hashName( mount ) );
+    const HashId hashId = StringUtils::hashName(mount);
     if ( !s_instance->m_name2pathMap.hasKey( hashId ) ) {
         return false;
     }

@@ -173,7 +173,7 @@ void Node::setProperty(Properties::Property *prop) {
         return;
     }
 
-    const ui32 hashId = StringUtils::hashName(prop->getPropertyName().c_str());
+    const HashId hashId = StringUtils::hashName(prop->getPropertyName().c_str());
     m_propMap.insert(hashId, prop);
     mPropertyArray.add(prop);
 }
@@ -183,7 +183,7 @@ void Node::getPropertyArray( ::cppcore::TArray<Properties::Property *> &propArra
 }
 
 Properties::Property *Node::getProperty(const String name) const {
-    const ui32 hashId = StringUtils::hashName(name.c_str());
+    const HashId hashId = StringUtils::hashName(name.c_str());
     if (!m_propMap.hasKey(hashId)) {
         return nullptr;
     }
