@@ -184,7 +184,7 @@ void TransformComponent::getPropertyArray( ::cppcore::TArray<Properties::Propert
 }
 
 Properties::Property *TransformComponent::getProperty(const String name) const {
-    const ui32 hashId = StringUtils::hashName(name.c_str());
+    const HashId hashId = StringUtils::hashName(name.c_str());
     if (!m_propMap.hasKey(hashId)) {
         return nullptr;
     }

@@ -105,9 +105,10 @@ public:
     /// @brief Used to declare properties.
     using PropertyMap = cppcore::THashMap<ui32, Properties::Property *>;
 
+    ///	@brief  Describes the traversal mode.
     enum class TraverseMode {
-        FlatMode,
-        RecursiveMode
+        FlatMode,           ///< Flat, ignore children.
+        RecursiveMode       ///< Recursive, iterate through children.
     };
 
 public:
@@ -169,3 +170,4 @@ inline bool TransformComponent::isActive() const {
 
 } // Namespace App
 } // namespace OSRE
+
