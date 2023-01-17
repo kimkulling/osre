@@ -42,7 +42,7 @@ class ModelLoadingApp : public App::AppBase {
     f32 m_angle;
     glm::mat4 m_model;
     TransformMatrixBlock m_transformMatrix;
-    Node::NodePtr m_modelNode;
+    TransformComponent::NodePtr m_modelNode;
 
 public:
     ModelLoadingApp(int argc, char *argv[]) :
@@ -83,9 +83,9 @@ protected:
         Rect2ui windowsRect;
         rootWindow->getWindowsRect(windowsRect);
         World *world = getStage()->getActiveWorld();
-        m_camera = world->addCamera("camera");
-        m_camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
         Entity *entity = assimpWrapper.getEntity();
+        m_camera = world->addCamera("camera", entity);
+        m_camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
 
         world->addEntity(entity);
         m_camera->observeBoundingBox(entity->getAABB());

@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
+#include <osre/App/Component.h>
 #include <osre/Common/Object.h>
 #include <osre/Common/TObjPtr.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -82,8 +83,8 @@ struct AbstractNodeFactory {
     /// @param renderEnabled        True for rendering enabled
     /// @param parent               The parent node, nullptr for root.
     /// @return                     The new created node instance.
-    virtual Node *create(const String &name, Common::Ids &ids, bool transformEnabled,
-            bool renderEnabled, Node *parent) = 0;
+    virtual TransformComponent *create(const String &name, Common::Ids &ids, bool transformEnabled,
+            bool renderEnabled, TransformComponent *parent) = 0;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -93,12 +94,12 @@ struct AbstractNodeFactory {
 /// several functionalities by adding components to is. Each component implements functionality
 /// like render geometry or transformation information.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Node : public Common::Object {
+class OSRE_EXPORT TransformComponent : public Common::Object, public Component {
 public:
     /// @brief The node pointer type.
-    using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::App::Node>;
+    using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::App::TransformComponent>;
     /// @brief The node array type-
-    using NodeArray = cppcore::TArray<Node *>;
+    using NodeArray = cppcore::TArray<TransformComponent *>;
     /// @brief USed to declare mesh-array instances.
     using MeshReferenceArray = ::cppcore::TArray<size_t>;
     /// @brief Used to declare properties.
@@ -111,47 +112,16 @@ public:
     };
 
 public:
-    ///	@brief
-    /// @param name 
-    /// @param ids 
-    /// @param parent 
-    Node(const String &name, Common::Ids &ids, Node *parent = nullptr);
-    
-    /// @brief 
-    virtual ~Node();
-    
-    /// @brief 
-    /// @param parent 
-    virtual void setParent(Node *parent);
-    
-    /// @brief 
-    /// @return 
-    virtual Node *getParent() const;
-    
-    /// @brief 
-    /// @param name 
-    /// @return 
-    virtual Node *createChild(const String &name);
-    
-    /// @brief 
-    /// @param child 
-    virtual void addChild(Node *child);
-    
-    /// @brief 
-    /// @param name 
-    /// @param mode 
-    /// @return 
+    TransformComponent(const String &name, Entity *owner, Common::Ids &ids, TransformComponent *parent = nullptr);
+    virtual ~TransformComponent();
+    virtual void setParent(TransformComponent *parent);
+    virtual TransformComponent *getParent() const;
+    virtual TransformComponent *createChild(const String &name);
+    virtual void addChild(TransformComponent *child);
     virtual bool removeChild(const String &name, TraverseMode mode);
-    
-    /// @brief 
-    /// @param name 
-    /// @return 
-    virtual Node *findChild(const String &name) const;
-    
-    /// @brief 
-    /// @return 
+    virtual TransformComponent *findChild(const String &name) const;
     virtual size_t getNumChildren() const;
-    virtual Node *getChildAt(size_t idx) const;
+    virtual TransformComponent *getChildAt(size_t idx) const;
     virtual void releaseChildren();
     virtual void update(Time dt);
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
@@ -174,12 +144,14 @@ public:
     size_t getMeshReferenceAt(size_t index) const;
 
 protected:
-    virtual void onUpdate(Time dt);
-    virtual void onRender(RenderBackend::RenderBackendService *renderBackendSrv);
+    bool onPreprocess() override;
+    bool onUpdate(Time dt) override;
+    bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
+    bool onPostprocess() override;
 
 private:
     NodeArray m_children;
-    Node *m_parent;
+    TransformComponent *m_parent;
     MeshReferenceArray m_meshRefererenceArray;
     bool m_isActive;
     Common::Ids *m_ids;
@@ -188,13 +160,14 @@ private:
     glm::mat4 m_localTransform;
 };
 
-inline void Node::setActive(bool isActive) {
+inline void TransformComponent::setActive(bool isActive) {
     m_isActive = isActive;
 }
 
-inline bool Node::isActive() const {
+inline bool TransformComponent::isActive() const {
     return m_isActive;
 }
 
 } // Namespace App
 } // namespace OSRE
+

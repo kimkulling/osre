@@ -23,8 +23,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "osre_testcommon.h"
 
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/App/Node.h>
+#include <osre/App/TransformComponent.h>
 #include <osre/App/Component.h>
+#include <osre/App/Entity.h>
 #include <osre/Common/Ids.h>
 
 namespace OSRE {
@@ -34,39 +35,44 @@ using namespace ::OSRE::App;
 
 class NodeTest : public ::testing::Test {
 protected:
+    App::Entity *mEntity;
     Common::Ids *m_ids;
-    std::vector<Node*> m_nodes;
+    std::vector<TransformComponent*> m_nodes;
 
     virtual void SetUp() {
         m_ids = new Common::Ids( 0 );
+        mEntity = new App::Entity("test", *m_ids, nullptr);
     }
 
     virtual void TearDown() {
         delete m_ids;
         m_ids = nullptr;
 
-        for ( auto current : m_nodes ) {
+        delete mEntity;
+        mEntity = nullptr;
+
+        for ( auto &current : m_nodes ) {
             current->release();
         }
         m_nodes.resize( 0 );
     }
 
-    Node *createNode( const String &name, Common::Ids &ids, Node *parent ) {
-        Node *n( new Node( name, ids, parent ) );
+    TransformComponent *createNode(const String &name, Entity *owner, Common::Ids &ids, TransformComponent *parent) {
+        TransformComponent *n(new TransformComponent(name, owner, ids, parent));
         addNodeForRelease( n );
         
         return n;
     }
 
-    void addNodeForRelease( Node *node ) {
-        m_nodes.push_back( node );
+    void addNodeForRelease(TransformComponent *node) {
+        m_nodes.push_back(node);
     }
 };
 
 TEST_F( NodeTest, createTest ) {
-    bool ok( true );
+    bool ok = true;
     try {
-        Node *myNode_transform_render = createNode( "testnode1", *m_ids, nullptr );
+        TransformComponent *myNode_transform_render = createNode("testnode1", mEntity, *m_ids, nullptr);
         EXPECT_NE( nullptr, myNode_transform_render );
     } catch ( ... ) {
         ok = false;
@@ -74,33 +80,31 @@ TEST_F( NodeTest, createTest ) {
     EXPECT_TRUE( ok );
 }
 
-TEST_F( NodeTest, accessChilds ) {
-    Node *parent = createNode( "parent", *m_ids, nullptr );
-    Node *myNode1 = createNode( "testnode1", *m_ids, parent );
-    Node *myNode2 = createNode( "testnode2", *m_ids, parent );
+TEST_F( NodeTest, accessChildren ) {
+    TransformComponent *parent = createNode("parent", mEntity, *m_ids, nullptr);
+    TransformComponent *myNode1 = createNode("testnode1", mEntity, *m_ids, parent);
+    TransformComponent *myNode2 = createNode("testnode2", mEntity, *m_ids, parent);
 
     EXPECT_EQ( 2u, parent->getNumChildren() );
     EXPECT_TRUE( nullptr != myNode1->getParent() );
     EXPECT_TRUE( nullptr != myNode2->getParent() );
     EXPECT_TRUE( nullptr == parent->getParent() );
 
-    Node *found( nullptr );
-    found = parent->findChild( "testnode1" );
+    TransformComponent *found = parent->findChild("testnode1");
     EXPECT_TRUE( nullptr != found );
 
     found = parent->findChild( "testnode3" );
     EXPECT_TRUE( nullptr == found );
 
-    bool ok( true );
-    ok = parent->removeChild( "testnode1", Node::TraverseMode::FlatMode );
+    bool ok = parent->removeChild("testnode1", TransformComponent::TraverseMode::FlatMode);
     EXPECT_TRUE( ok );
 
-    ok = parent->removeChild( "testnode1", Node::TraverseMode::FlatMode );
+    ok = parent->removeChild("testnode1", TransformComponent::TraverseMode::FlatMode);
     EXPECT_FALSE( ok );
 }
 
 TEST_F( NodeTest, activeTest ) {
-    Node *myNode = createNode( "parent", *m_ids, nullptr );
+    TransformComponent *myNode = createNode("parent", mEntity, *m_ids, nullptr);
     EXPECT_TRUE( myNode->isActive() );
 
     myNode->setActive( false );
@@ -108,7 +112,7 @@ TEST_F( NodeTest, activeTest ) {
 }
 
 TEST_F( NodeTest, onUpdateTest ) {
-    Node *myNode = createNode( "parent", *m_ids, nullptr );
+    TransformComponent *myNode = createNode("parent", mEntity, *m_ids, nullptr);
     EXPECT_NE(nullptr, myNode);
 }
 

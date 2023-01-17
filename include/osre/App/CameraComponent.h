@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Ids.h>
 #include <osre/Common/Object.h>
 #include <osre/Common/glm_common.h>
-#include <osre/App/Node.h>
+#include <osre/App/TransformComponent.h>
 #include <osre/Scene/SceneCommon.h>
 #include <osre/Common/TAABB.h>
 
@@ -48,13 +48,13 @@ enum class CameraModel {
 /// 1. Perspective camera model
 /// 2. Orthogonal camera model
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Camera : public Node {
+class OSRE_EXPORT Camera : public TransformComponent {
 public:
     /// @brief  The class constructor.
     /// @param[in] name        [in] The name for the camera node instance.
     /// @param[in] ids         [in] The id container, for unique ids.
     /// @param[in] parent              [in] The parent node, nullptr for a root node.
-    Camera(const String &name, Common::Ids &ids, Node *parent = nullptr);
+    Camera(const String &name, Entity *owner, Common::Ids &ids, TransformComponent *parent = nullptr);
 
     /// @brief The class destructor, default.
     ~Camera() override = default;
@@ -144,8 +144,8 @@ public:
     const glm::vec3 &getUp() const;
 
 protected:
-    void onUpdate(Time dt) override;
-    void onRender(RenderBackend::RenderBackendService *renderBackendSrv) override;
+    bool onUpdate(Time dt) override;
+    bool onRender(RenderBackend::RenderBackendService *renderBackendSrv) override;
 
 private:
     bool mRecalculateRequested;

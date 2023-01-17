@@ -114,11 +114,11 @@ using ui16 = unsigned short;
 /// @brief  The data type signed int, 4 byte long.
 using ui32 = unsigned int;
 
-/// @brief The data type for signed int 8 bytes long.
+/// @brief  The data type for signed int 8 bytes long.
 using i64 = int64_t;
 
-/// @brief The data type for unsigned int 8 bytes long.
-using ui64 = uint64_t ;
+/// @brief  The data type for unsigned int 8 bytes long.
+using ui64 = uint64_t;
 
 /// @brief  The data type for hash ids.
 using HashId = ui64;

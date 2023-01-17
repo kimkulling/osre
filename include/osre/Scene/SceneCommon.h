@@ -35,7 +35,7 @@ namespace RenderBackend {
 
 namespace App {
 
-class Node;
+class TransformComponent;
 class Camera;
 
 } // Namespace Scene

@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/osre_common.h>
-#include <osre/App/Node.h>
+#include <osre/App/TransformComponent.h>
 #include <osre/App/World.h>
 
 namespace OSRE {
@@ -32,7 +32,7 @@ namespace Editor {
 struct SceneData {
     String Name;
     String ProjectName;
-    App::Node::NodePtr m_modelNode;
+    App::TransformComponent::NodePtr m_modelNode;
     App::Camera *mCamera;
 
     SceneData();

@@ -24,9 +24,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Object.h>
 #include <osre/App/AppCommon.h>
-#include <osre/App/Node.h>
-#include <osre/Common/TAABB.h>
 #include <osre/App/Component.h>
+#include <osre/App/TransformComponent.h>
+#include <osre/Common/TAABB.h>
 
 namespace OSRE {
 
@@ -41,7 +41,7 @@ namespace IO {
 
 namespace App {
 
-class Node;
+class TransformComponent;
 class AbstractBehaviour;
 class Component;
 class RenderComponent;
@@ -55,15 +55,16 @@ class World;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Entity : public Common::Object {
 public:
-    Entity( const String &name, const Common::Ids &ids, World *world );
+    Entity( const String &name, Common::Ids &ids, World *world );
     ~Entity() override;
     void setBehaviourControl(AbstractBehaviour *behaviour );
-    void setNode( Node *node );
-    Node *getNode() const;
+    void setNode( TransformComponent *node );
+    TransformComponent *getNode() const;
     bool preprocess();
     bool update( Time dt );
     bool render( RenderBackend::RenderBackendService *rbSrv );
     bool postprocess();
+    Component *createComponent(ComponentType type);
     Component *getComponent(ComponentType type) const;
     void setAABB( const Common::AABB &aabb );
     const Common::AABB &getAABB() const;
@@ -73,8 +74,10 @@ public:
 private:
     AbstractBehaviour *m_behaviour;
     RenderComponent *m_renderComponent;
-    Node *m_node;
-    const Common::Ids &m_ids;
+    using ComponentArray = cppcore::TArray<Component*>;
+    ComponentArray mComponentArray;
+    TransformComponent *m_node;
+    Common::Ids &m_ids;
     Common::AABB m_aabb;
     World *mOwner;
 };

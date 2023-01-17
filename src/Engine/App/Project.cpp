@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Project.h>
 #include <osre/App/World.h>
 #include <osre/App/Entity.h>
-#include <osre/App/Node.h>
+#include <osre/App/TransformComponent.h>
 #include <osre/Common/Logger.h>
 #include <osre/Common/TAABB.h>
 #include <osre/Debugging/osre_debugging.h>
@@ -146,14 +146,14 @@ static void setNameChunk(const String &name, ChunkName &cn) {
     ::memcpy(cn.mChunkName, name.c_str(), cn.mLenChunkName);
 }
     
-static size_t getNumNodes(Node *node, size_t currentNodeCount) {
+static size_t getNumNodes(TransformComponent *node, size_t currentNodeCount) {
     if (node->getNumChildren() == 0) {
         return currentNodeCount;
     }
     size_t numChildren = node->getNumChildren();
     currentNodeCount += numChildren;
     for (size_t i = 0; i < numChildren; ++i) {
-        Node *child = node->getChildAt(i);        
+        TransformComponent *child = node->getChildAt(i);        
         if (child != nullptr) {
             currentNodeCount = getNumNodes(child, currentNodeCount);
         }
@@ -203,7 +203,7 @@ static void storeProperties(const ::cppcore::TArray<Properties::Property *> &pro
     }
 }
 
-static void storeNodes(Node *currentNode, NodeData *nd, size_t &index) {
+static void storeNodes(TransformComponent *currentNode, NodeData *nd, size_t &index) {
     if (currentNode == nullptr || nd == nullptr) {
         return;
     }
@@ -220,7 +220,7 @@ static void storeNodes(Node *currentNode, NodeData *nd, size_t &index) {
     curNodeData.mChildrenIndices = new i32[curNodeData.mNumChildren];
     size_t current_child = 0;
     for (int i = 0; i < curNodeData.mNumChildren; i++) {
-        Node *child = currentNode->getChildAt(i);
+        TransformComponent *child = currentNode->getChildAt(i);
         curNodeData.mChildrenIndices[current_child] = (i32) i;
         current_child++;
         ++index;
@@ -277,7 +277,7 @@ static void storeEntities(const cppcore::TArray<Entity *> &entities, WorldData &
 static bool saveWorld(World *world, WorldData &wd) {
     setNameChunk(world->getName(), wd.mWorldName);
 
-    Node *root = world->getRootNode();
+    TransformComponent *root = world->getRootNode();
     if (nullptr == root) {
         return true;
     }

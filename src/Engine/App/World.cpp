@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/RenderBackend/MeshProcessor.h>
 #include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/App/Camera.h>
+#include <osre/App/CameraComponent.h>
 
 namespace OSRE {
 namespace App {
@@ -64,18 +64,16 @@ World::World(const String &worldName) :
 
 World::~World() {
     ContainerClear<TArray<Camera *>>(mViews, lookupMapDeleterFunc);
-    mLookupViews.clear();
-    mActiveCamera = nullptr;
 }
 
-Camera *World::addCamera(const String &name) {
+Camera *World::addCamera(const String &name, Entity *owner) {
     if (name.empty()) {
         return nullptr;
     }
 
-    mActiveCamera = new Camera(name, mIds, mRoot);
+    mActiveCamera = new Camera(name, owner, mIds, mRoot);
     mViews.add(mActiveCamera);
-    const ui32 hash = StringUtils::hashName(mActiveCamera->getName());
+    const HashId hash = StringUtils::hashName(mActiveCamera->getName());
     mLookupViews.insert(hash, mActiveCamera);
     mDirtry = true;
 
@@ -104,7 +102,7 @@ Camera *World::setActiveCamera(Camera *activeView) {
 }
 
 Camera *World::setActiveCamera(const String &viewName) {
-    const ui32 hash(StringUtils::hashName(viewName));
+    const HashId hash(StringUtils::hashName(viewName));
     if (!mLookupViews.hasKey(hash)) {
         return nullptr;
     }
@@ -163,7 +161,7 @@ Entity *World::getEntityByName(const String &name) const {
     return nullptr;
 }
 
-void World::setSceneRoot(Node *root ) {
+void World::setSceneRoot(TransformComponent *root ) {
     if (nullptr == root) {
         mRoot = nullptr;
         return;

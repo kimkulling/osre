@@ -39,13 +39,12 @@ namespace RenderBackend {
 namespace App {
 
 class Entity;
-class Node;
+class TransformComponent;
 
 ///	@brief
 enum class ComponentType {
     InvalidComponent = -1,
     RenderComponentType = 0,    ///< Render-component
-    CameraComponentType,        ///<
     TransformComponentType,     ///<
     LightComponentType,         ///<
     ScriptComponentType,        ///< For scripting events
@@ -60,28 +59,69 @@ enum class ComponentType {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Component {
 public:
+    /// @brief 
     virtual ~Component() = default;
+
+    /// @brief 
+    /// @return 
     virtual bool preprocess();
+    
+    /// @brief 
+    /// @param dt 
     virtual void update(Time dt);
+    
+    /// @brief 
+    /// @param renderBackendSrv 
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
+    
+    /// @brief 
+    /// @return 
     virtual bool postprocess();
-    virtual void setId(ui32 id);
-    virtual ui32 getId() const;
+    
+    /// @brief 
+    /// @return 
     virtual Entity *getOwner() const;
+    
+    /// @brief 
+    /// @return 
     virtual ComponentType getType() const;
 
+    static size_t getIndex(ComponentType type);
+
 protected:
-    Component(Entity *owner, ui32 id, ComponentType type);
+    /// @brief 
+    /// @param owner 
+    /// @param type 
+    Component(Entity *owner, ComponentType type);
+
+    /// @brief 
+    /// @return 
     virtual bool onPreprocess() = 0;
+    
+    /// @brief 
+    /// @param dt 
+    /// @return 
     virtual bool onUpdate(Time dt) = 0;
+    
+    /// @brief 
+    /// @param renderBackendSrv 
+    /// @return 
     virtual bool onRender(RenderBackend::RenderBackendService *renderBackendSrv) = 0;
+    
+    /// @brief 
+    /// @return 
     virtual bool onPostprocess() = 0;
+    
+    /// @brief 
+    /// @param stream 
     virtual void serialize(IO::Stream &stream);
+    
+    /// @brief 
+    /// @param stream 
     virtual void deserialize(IO::Stream &stream);
 
 private:
     Entity *m_owner;
-    ui32 m_id;
     ComponentType mType;
 };
 
@@ -93,20 +133,16 @@ inline bool Component::postprocess() {
     return onPostprocess();
 }
 
-inline void Component::setId(ui32 id) {
-    m_id = id;
-}
-
-inline ui32 Component::getId() const {
-    return m_id;
-}
-
 inline Entity *Component::getOwner() const {
     return m_owner;
 }
 
 inline ComponentType Component::getType() const {
     return mType;
+}
+
+inline size_t Component::getIndex( ComponentType type ) {
+    return static_cast<size_t>(type);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -116,16 +152,36 @@ inline ComponentType Component::getType() const {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT RenderComponent : public Component {
 public:
-    RenderComponent(Entity *owner, ui32 id);
+    /// @brief 
+    /// @param owner 
+    RenderComponent(Entity *owner);
+    
+    /// @brief 
     ~RenderComponent() override = default;
+    
+    /// @brief 
+    /// @return 
     size_t getNumGeometry() const;
+    
+    /// @brief 
+    /// @param idx 
+    /// @return 
     RenderBackend::Mesh *getMeshAt(size_t idx) const;
+    
+    /// @brief 
+    /// @param array 
     void getMeshArray(RenderBackend::MeshArray &array);
+    
+    /// @brief 
+    /// @param geo 
     void addStaticMesh(RenderBackend::Mesh *geo);
+    
+    /// @brief 
+    /// @param array 
     void addStaticMeshArray(const RenderBackend::MeshArray &array);
 
 protected:
-    bool onPreprocess() override;
+    bool onPreprocess() override;    
     bool onUpdate(Time dt) override;
     bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
     bool onPostprocess() override;
@@ -139,26 +195,17 @@ private:
 ///
 /// @brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT TransformComponent final : public Component {
-public:
-    TransformComponent(Entity *owner, ui32 id);
-    ~TransformComponent() override = default;
-    void setNode(Node *node);
-
-protected:
-    bool onPreprocess() override;
-    bool onUpdate(Time dt) override;
-    bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
-    bool onPostprocess() override;
-
-private:
-    Node *mNode;
-};
-
 class LightComponent final : public Component {
 public:
-    LightComponent(Entity *owner, ui32 id);
+    /// @brief 
+    /// @param owner 
+    LightComponent(Entity *owner);
+    
+    /// @brief 
     ~LightComponent() override = default;
+    
+    /// @brief 
+    /// @param light 
     void setLight(RenderBackend::Light *light);
 
 protected:
@@ -171,9 +218,18 @@ private:
     RenderBackend::Light *mLight;
 };
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+/// @brief
+//-------------------------------------------------------------------------------------------------
 class ScriptComponent final : public Component {
 public:
-    ScriptComponent(Entity *owner, ui32 id);
+    /// @brief 
+    /// @param owner 
+    ScriptComponent(Entity *owner);
+    
+    /// @brief 
     ~ScriptComponent() override = default;
 
 protected:
@@ -183,6 +239,7 @@ protected:
     bool onPostprocess() override;
 
 private:
+    // todo!
 };
 
 } // namespace App

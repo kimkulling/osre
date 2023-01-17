@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/glm_common.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/App/TrackBall.h>
-#include <osre/App/Node.h>
+#include <osre/App/TransformComponent.h>
 
 namespace OSRE {
 namespace App {
@@ -32,8 +32,8 @@ namespace App {
 using namespace OSRE::Common;
 using namespace OSRE::Platform;
 
-TrackBall::TrackBall(const String &trackBallObjName, ui32 w, ui32 h, Ids &ids) :
-        Camera(trackBallObjName, ids),
+TrackBall::TrackBall(const String &trackBallObjName, Entity *owner, ui32 w, ui32 h, Ids &ids) :
+        Camera(trackBallObjName, owner, ids, nullptr),
         mStartVector(0, 0, 0),
         mEndVector(0, 0, 0),
         m_Dimension(0,0,w, h),

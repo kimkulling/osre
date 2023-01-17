@@ -55,7 +55,7 @@ public:
 
     /// @brief  Will add a new view.
     /// @param  view        [in] A pointer showing to the view.
-    Camera *addCamera(const String &name);
+    Camera *addCamera(const String &name, Entity *owner);
 
     /// @brief  Will set the active view.
     /// @param  activeView  [i] A pointer showing to the active view.
@@ -98,11 +98,11 @@ public:
 
     ///	@brief
     /// @param root 
-    void setSceneRoot(Node *root);
+    void setSceneRoot(TransformComponent *root);
     
     /// @brief 
     /// @return 
-    Node *getRootNode() const;
+    TransformComponent *getRootNode() const;
 
     /// @brief  Will update the world.
     /// @param  dt      [in] The current delta time-tick.
@@ -114,7 +114,7 @@ public:
 
     /// @brief  Will return the id container.
     /// @return The Id container.    
-    const Common::Ids &getIds() const;
+    Common::Ids &getIds();
     
 protected:
     void updateBoundingTrees();
@@ -124,7 +124,7 @@ private:
     cppcore::THashMap<ui32, Camera*> mLookupViews;
     cppcore::TArray<Entity*> mEntities;
     Camera *mActiveCamera;
-    Node *mRoot;
+    TransformComponent *mRoot;
     Common::Ids mIds;
     RenderBackend::Pipeline *mPipeline;
     bool mDirtry;
@@ -134,7 +134,7 @@ inline size_t World::getNumCameras() const {
     return mViews.size();
 }
 
-inline Node *World::getRootNode() const {
+inline TransformComponent *World::getRootNode() const {
     return mRoot;
 }
 
@@ -142,7 +142,7 @@ inline void World::getEntityArray(cppcore::TArray<Entity *> &entities) {
     entities = mEntities;
 }
 
-inline const Common::Ids &World::getIds() const {
+inline Common::Ids &World::getIds() {
     return mIds;
 }
 

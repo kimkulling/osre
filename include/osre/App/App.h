@@ -25,7 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // The public API from the App-layer
 #include <osre/App/AppBase.h>
 #include <osre/App/Component.h>
-#include <osre/App/Camera.h>
+#include <osre/App/CameraComponent.h>
+#include <osre/App/TransformComponent.h>
 #include <osre/App/Entity.h>
 #include <osre/App/World.h>
 #include <osre/App/AppCommon.h>

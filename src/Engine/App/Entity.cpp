@@ -32,15 +32,18 @@ namespace App {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-Entity::Entity(const String &name, const Common::Ids &ids, World *world) :
+Entity::Entity(const String &name, Common::Ids &ids, World *world) :
         Object(name),
         m_behaviour(nullptr),
         m_renderComponent(nullptr),
+        mComponentArray(),
         m_node(nullptr),
         m_ids(ids),
         m_aabb(),
         mOwner(world) {
-    m_renderComponent = new RenderComponent(this, 1);
+    mComponentArray.resize(Component::getIndex(ComponentType::MaxNumComponents));
+    mComponentArray.set(nullptr);
+    m_renderComponent = (RenderComponent*) createComponent(ComponentType::RenderComponentType);
     if (nullptr != mOwner) {
         mOwner->addEntity(this);
     }
@@ -57,18 +60,21 @@ void Entity::setBehaviourControl(AbstractBehaviour *behaviour) {
     m_behaviour = behaviour;
 }
 
-void Entity::setNode(Node *node) {
+void Entity::setNode(TransformComponent *node) {
     m_node = node;
 }
 
-Node *Entity::getNode() const {
+TransformComponent *Entity::getNode() const {
     return m_node;
 }
 
 bool Entity::preprocess() {
-    if (m_renderComponent != nullptr) {
-        m_renderComponent->preprocess();
+    for (auto &it : mComponentArray) {
+        if (it != nullptr) {
+            it->preprocess();
+        }
     }
+
     return true;
 }
 
@@ -76,37 +82,70 @@ bool Entity::update(Time dt) {
     if (nullptr != m_behaviour) {
         m_behaviour->update(dt);
     }
+    for (auto &it : mComponentArray) {
+        if (it != nullptr) {
+            it->update(dt);
+        }
+    }
 
     return true;
 }
 
 bool Entity::render(RenderBackend::RenderBackendService *rbSrv) {
-    m_renderComponent->render(rbSrv);
-
+    for (auto &it : mComponentArray) {
+        if (it != nullptr) {
+            it->render(rbSrv);
+        }
+    }
     return true;
 }
 
 bool Entity::postprocess() {
-    if (m_renderComponent != nullptr) {
-        m_renderComponent->postprocess();
+    for (auto &it : mComponentArray) {
+        if (it != nullptr) {
+            it->postprocess();
+        }
     }
     return true;
 }
+Component *Entity::createComponent(ComponentType type) {
+    Component *component = getComponent(type);
+    if (component != nullptr) {
+        return component;
+    }
 
-Component *Entity::getComponent(ComponentType type) const {
     switch (type) {
         case OSRE::App::ComponentType::RenderComponentType:
-            return m_renderComponent;
-        case OSRE::App::ComponentType::ScriptComponentType:
+            component = new RenderComponent(this);
             break;
-        case OSRE::App::ComponentType::MaxNumComponents:
+        case OSRE::App::ComponentType::TransformComponentType: {
+                const String name = getName() + "_transform";
+                component = new TransformComponent(name, this, m_ids, nullptr); 
+            }
+            break;
+        case OSRE::App::ComponentType::LightComponentType:
+            component = new LightComponent(this);
+            break;
+        case OSRE::App::ComponentType::ScriptComponentType:
+            component = new ScriptComponent(this);
+            break;
         case OSRE::App::ComponentType::InvalidComponent:
+        case OSRE::App::ComponentType::MaxNumComponents:
             break;
         default:
             break;
     }
+    mComponentArray[static_cast<size_t>(type)] = component;
 
-    return nullptr;
+    return component;
+}
+
+Component *Entity::getComponent(ComponentType type) const {
+    if (type == ComponentType::MaxNumComponents || type == ComponentType::InvalidComponent) {
+        return nullptr;
+    }
+
+    return mComponentArray[Component::getIndex(type)];
 }
 
 void Entity::setAABB(const AABB &aabb) {

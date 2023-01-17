@@ -163,9 +163,9 @@ void OsreEdApp::loadAsset(const Uri &modelLoc) {
     if (mProject == nullptr) {
         mProject = createProject(modelLoc.getAbsPath());
     }
-    mSceneData.mCamera = world->addCamera("camera_1");
-    mSceneData.mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
     Entity *entity = action.getEntity();
+    mSceneData.mCamera = world->addCamera("camera_1", entity);
+    mSceneData.mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
 
     reporter.update(10);
     world->addEntity(entity);
