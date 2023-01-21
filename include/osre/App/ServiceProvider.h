@@ -27,7 +27,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 
+// Forward declarations ---------------------------------------------------------------------------
 class ResourceCacheService;
+
+/// @brief 
+enum class ServiceType {
+    InvalidService = -1,
+    
+    RenderService = 0,
+    IOService,
+    ResourceService,
+    
+    NumServices,
+};
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -36,24 +48,29 @@ class ResourceCacheService;
 //-------------------------------------------------------------------------------------------------
 class ServiceProvider {
 public:
-    static ServiceProvider *create( RenderBackend::RenderBackendService *rbService, 
-        ResourceCacheService *resCacheService, IO::IOService *ioService);
+    static ServiceProvider *create(Common::AbstractService *rbService, 
+        Common::AbstractService *resCacheService, Common::AbstractService *ioService);
     static void destroy();
-    static RenderBackend::RenderBackendService *getRenderBackendService();
-    static ResourceCacheService *getResourceCacheService();
-    static IO::IOService *getIOService();
+    
+    template<class T>
+    static T *getService(ServiceType type) {
+        if (type == ServiceType::InvalidService || type == ServiceType::NumServices) {
+            return nullptr;
+        }
+        return (T *) mServiceArray[static_cast<size_t>(type)];
+    }
 
 private:
-    explicit ServiceProvider(RenderBackend::RenderBackendService *rbService,
-            ResourceCacheService *resCacheService, IO::IOService *ioService);
-    ~ServiceProvider();
+    explicit ServiceProvider(Common::AbstractService *rbService,
+            Common::AbstractService *resCacheService, Common::AbstractService *ioService);
+    ~ServiceProvider() = default;
 
 private:
     static ServiceProvider *s_instance;
 
-    RenderBackend::RenderBackendService *m_rbService;
-    ResourceCacheService *m_resCacheService;
-    IO::IOService *mIOService;
+    using ServiceArray = cppcore::TArray<Common::AbstractService*>;
+    ServiceArray mServiceArray;
+
 };
 
 } // Namespace App

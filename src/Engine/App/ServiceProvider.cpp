@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/ResourceCacheService.h>
 #include <osre/App/ServiceProvider.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/IO/IOService.h>
 
@@ -29,10 +30,11 @@ namespace OSRE {
 namespace App {
 
 using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::Common;
 
 ServiceProvider *ServiceProvider::s_instance = nullptr;
 
-ServiceProvider *ServiceProvider::create(RenderBackendService *rbService, ResourceCacheService *resCacheService, IO::IOService *ioService) {
+ServiceProvider *ServiceProvider::create(AbstractService *rbService, AbstractService *resCacheService, AbstractService *ioService) {
     osre_assert(nullptr != rbService);
 
     if (nullptr == s_instance) {
@@ -48,36 +50,17 @@ void ServiceProvider::destroy() {
     }
 }
 
-RenderBackend::RenderBackendService *ServiceProvider::getRenderBackendService() {
-    if (nullptr == s_instance) {
-        return nullptr;
-    }
-    return s_instance->m_rbService;
-}
+ServiceProvider::ServiceProvider(AbstractService *rbService, AbstractService *resCacheService, AbstractService *ioService) :
+        mServiceArray() {
+    osre_assert(nullptr != rbService);
+    osre_assert(nullptr != resCacheService);
+    osre_assert(nullptr != ioService);
+    mServiceArray.resize(static_cast<size_t>(ServiceType::NumServices));
+    mServiceArray.set(nullptr);
 
-ResourceCacheService *ServiceProvider::getResourceCacheService() {
-    if (nullptr == s_instance) {
-        return nullptr;
-    }
-    return s_instance->m_resCacheService;
-}
-
-IO::IOService *ServiceProvider::getIOService() {
-    if (nullptr == s_instance) {
-        return nullptr;
-    }
-    return s_instance->mIOService;
-}
-
-ServiceProvider::ServiceProvider(RenderBackend::RenderBackendService *rbService, ResourceCacheService *resCacheService, IO::IOService *ioService) :
-        m_rbService(rbService), m_resCacheService(resCacheService), mIOService(ioService) {
-    osre_assert(nullptr != m_rbService);
-    osre_assert(nullptr != m_resCacheService);
-}
-
-ServiceProvider::~ServiceProvider() {
-    m_rbService = nullptr;
-    m_resCacheService = nullptr;
+    mServiceArray[static_cast<size_t>(ServiceType::RenderService)] = rbService;
+    mServiceArray[static_cast<size_t>(ServiceType::IOService)] = ioService;
+    mServiceArray[static_cast<size_t>(ServiceType::ResourceService)] = resCacheService;
 }
 
 } // Namespace App
