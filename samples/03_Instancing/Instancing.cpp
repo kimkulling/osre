@@ -37,7 +37,7 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
 // To identify local log entries
-static const c8 *Tag = "InstancingApp";
+static constexpr c8 Tag[] = "InstancingApp";
 
 /// The example application, will create the render environment and render a simple triangle onto it
 class InstancingApp : public App::AppBase {
@@ -52,9 +52,7 @@ public:
         // empty
     }
 
-    virtual ~InstancingApp() {
-        // empty
-    }
+    virtual ~InstancingApp() =default;
 
 protected:
     bool onCreate() override {
@@ -71,7 +69,6 @@ protected:
 #endif
 
         RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
-        // RenderBackendService *rbSrv = getRenderBackendService();
         if (nullptr == rbSrv) {
             return false;
         }
