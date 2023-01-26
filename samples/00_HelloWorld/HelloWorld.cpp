@@ -100,7 +100,6 @@ protected:
         mKeyboardTransCtrl->update(TransformController::getKeyBinding(key));
 
         RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
-        //RenderBackendService *rbSrv = getRenderBackendService();
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 
