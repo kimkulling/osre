@@ -32,6 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations ---------------------------------------------------------------------------
 namespace RenderBackend {
     struct Light;
 }
@@ -43,23 +44,23 @@ class TransformComponent;
 
 ///	@brief
 enum class ComponentType {
-    InvalidComponent = -1,
-    RenderComponentType = 0,    ///< Render-component
-    TransformComponentType,     ///<
-    LightComponentType,         ///<
-    ScriptComponentType,        ///< For scripting events
+    InvalidComponent = -1,      ///< Indicates an invalid component.
+    RenderComponentType = 0,    ///< A Render-component, will contain any render data.
+    TransformComponentType,     ///< For all transformation types.
+    LightComponentType,         ///< For light types.
+    ScriptComponentType,        ///< For scripting components.
 
-    MaxNumComponents,
+    MaxNumComponents,           ///< The number of components.
 };
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief Describes the render component
+///	@brief Describe the base class for all components.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Component {
 public:
-    /// @brief 
+    /// @brief The default class destructor.
     virtual ~Component() = default;
 
     /// @brief 
@@ -71,7 +72,7 @@ public:
     virtual void update(Time dt);
     
     /// @brief 
-    /// @param renderBackendSrv 
+    /// @param[in] renderBackendSrv 
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
     
     /// @brief 
@@ -86,6 +87,9 @@ public:
     /// @return 
     virtual ComponentType getType() const;
 
+    /// @brief 
+    /// @param type 
+    /// @return 
     static size_t getIndex(ComponentType type);
 
 protected:

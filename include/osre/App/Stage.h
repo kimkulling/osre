@@ -40,7 +40,8 @@ class World;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief 
+///	@brief A stage represents the global container for all render data. A stage can container one 
+/// or more worlds, which can be connected between each others. Entities are the render data. 
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Stage : public Common::Object {
 public:

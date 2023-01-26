@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Uri.h>
 #include <osre/Common/BaseMath.h>
 #include <osre/Platform/AbstractWindow.h>
+#include <osre/App/ServiceProvider.h>
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -69,7 +70,8 @@ protected:
         AssetRegistry::registerAssetPath("assets", "../assets");
 #endif
 
-        RenderBackendService *rbSrv = getRenderBackendService();
+        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        // RenderBackendService *rbSrv = getRenderBackendService();
         if (nullptr == rbSrv) {
             return false;
         }
@@ -104,7 +106,7 @@ protected:
         // Rotate the model
         glm::mat4 rot(1.0);
 
-        RenderBackendService *rbSrv(getRenderBackendService());
+        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
 
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");

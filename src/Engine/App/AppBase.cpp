@@ -193,10 +193,6 @@ Platform::AbstractTimer *AppBase::getActiveTimer() const {
     return m_timer;
 }
 
-RenderBackendService *AppBase::getRenderBackendService() const {
-    return m_rbService;
-}
-
 AnimationControllerBase *AppBase::getTransformController(TransformMatrixBlock &tmb) {
     return new TransformController(tmb);
 }
@@ -226,6 +222,7 @@ bool AppBase::onCreate() {
         return false;
     }
 
+    ServiceProvider::create();
     m_ids = new Common::Ids;
     m_environment = new Common::Environment;
 
@@ -255,6 +252,7 @@ bool AppBase::onCreate() {
 
     // create the render back-end
     m_rbService = new RenderBackendService();
+    ServiceProvider::setService(ServiceType::RenderService, m_rbService);
     m_rbService->setSettings(m_settings, false);
     if (!m_rbService->open()) {
         m_rbService->release();
@@ -265,7 +263,6 @@ bool AppBase::onCreate() {
     // Create our world
     mStage = new Stage("stage");
     mStage->createWorld("world");
-
 
     const String &api = m_rbService->getSettings()->getString(Properties::Settings::RenderAPI);
     m_environment->addStrVar("api", api.c_str());
@@ -281,7 +278,7 @@ bool AppBase::onCreate() {
 
     MaterialBuilder::create();
     ResourceCacheService *rcSrv = new ResourceCacheService;
-
+    ServiceProvider::setService(ServiceType::ResourceService, rcSrv);
     // Setup onMouse event-listener
     AbstractPlatformEventQueue *evHandler = m_platformInterface->getPlatformEventHandler();
     if (nullptr != evHandler) {
@@ -299,14 +296,14 @@ bool AppBase::onCreate() {
         evHandler->registerEventListener(eventArray, m_keyboardEvListener);
     }
 
-    IO::IOService::create();
+    Common::AbstractService *ioSrv = IO::IOService::create();
+    ServiceProvider::setService(ServiceType::IOService, ioSrv);
+
 #ifdef OSRE_WINDOWS
     App::AssetRegistry::registerAssetPath("assets", "../../assets");
 #else
     App::AssetRegistry::registerAssetPath("assets", "../assets");
 #endif
-
-    ServiceProvider::create(m_rbService, rcSrv, IOService::getInstance());
 
     mAppState = State::Created;
     osre_debug(Tag, "Set application state to Created.");

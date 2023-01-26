@@ -71,7 +71,9 @@ protected:
             return;
         }
 
-        RenderBackendService *rbSrv = getRenderBackendService();
+        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+
+        //RenderBackendService *rbSrv = getRenderBackendService();
         if (nullptr == rbSrv) {
             return;
         }
@@ -117,7 +119,7 @@ protected:
         if (AppBase::isKeyPressed(Platform::KEY_D)) {
             m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
         }
-        RenderBackendService *rbSrv = getRenderBackendService();
+        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
 
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");

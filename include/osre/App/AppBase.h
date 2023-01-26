@@ -194,10 +194,6 @@ public:
     /// @return Pointer showing to the active timer.
     virtual Platform::AbstractTimer *getActiveTimer() const;
     
-    /// @brief  Will return the render-backend-service instance.
-    /// @return A pointer showing to the render-backend service instance.
-    virtual RenderBackend::RenderBackendService *getRenderBackendService() const;
-
     /// @brief  Will return the Root-Surface instance.
     /// @return A pointer showing to the Root-Surface.
     virtual Platform::AbstractWindow *getRootWindow() const;
