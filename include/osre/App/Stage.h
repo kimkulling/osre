@@ -44,15 +44,47 @@ class World;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Stage : public Common::Object {
 public:
+    /// @brief 
+    /// @param stageName 
     Stage(const String &stageName);
+    
+    /// @brief 
     ~Stage() override;
+    
+    /// @brief 
+    /// @param name 
+    /// @return 
     World *createWorld(const String &name);
+    
+    /// @brief 
+    /// @param name 
+    /// @return 
     World *findWorld(const String &name) const;
+    
+    /// @brief 
+    /// @return 
     size_t getNumberOfWorlds() const;
+    
+    /// @brief 
+    /// @param index 
+    /// @return 
     World *getWorldAt(ui32 index) const;
+    
+    /// @brief 
+    /// @param name 
+    /// @return 
     bool setActiveWorld(const String &name);
+    
+    /// @brief 
+    /// @param world 
     void setActiveWorld(World * world);
+    
+    /// @brief 
+    /// @return 
     World *getActiveWorld() const;
+    
+    /// @brief 
+    /// @return 
     bool isEmpty() const {
         return mWorld == nullptr;
     }

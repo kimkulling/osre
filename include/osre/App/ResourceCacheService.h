@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include <osre/Common/AbstractService.h>
 #include <osre/Common/TResource.h>
 #include <osre/Common/TResourceCache.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -37,17 +38,29 @@ using TextureResourceCache = Common::TResourceCache<TextureResourceFactory, Rend
 ///
 /// @brief
 //-------------------------------------------------------------------------------------------------
-class ResourceCacheService {
+class ResourceCacheService : public Common::AbstractService {
 public:
     ResourceCacheService();
     ~ResourceCacheService();
     TextureResourceCache *getTextureResourceCache() const;
+
+protected:
+    bool onOpen() override {
+        return true;
+    }
+    bool onClose() override {
+        return true;
+    }
+    bool onUpdate() override {
+        return true;
+    }
 
 private:
     TextureResourceCache *m_texResCache;
 };
 
 inline ResourceCacheService::ResourceCacheService() :
+        AbstractService("resoursecacheservice"),
         m_texResCache(new TextureResourceCache) {
     //
 }
