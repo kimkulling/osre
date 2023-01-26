@@ -63,39 +63,39 @@ public:
     /// @brief The default class destructor.
     virtual ~Component() = default;
 
-    /// @brief 
-    /// @return 
+    /// @brief  The preprocess callback
+    /// @return true of performed, false if not.
     virtual bool preprocess();
     
-    /// @brief 
-    /// @param dt 
-    virtual void update(Time dt);
+    /// @brief The update callback
+    /// @param[in] timeSlice The time slice
+    virtual void update(Time timeSlice);
     
-    /// @brief 
-    /// @param[in] renderBackendSrv 
+    /// @brief The render callback.
+    /// @param[in] renderBackendSrv  The render backend service.
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
     
-    /// @brief 
-    /// @return 
+    /// @brief  The postprocess callback
+    /// @return true of performed, false if not.
     virtual bool postprocess();
     
-    /// @brief 
-    /// @return 
+    /// @brief  Will return the owning entity.
+    /// @return Pointer showing to the entity instance, nullptr in none.
     virtual Entity *getOwner() const;
     
-    /// @brief 
-    /// @return 
+    /// @brief  Will return the component type.
+    /// @return The component type.
     virtual ComponentType getType() const;
 
-    /// @brief 
-    /// @param type 
-    /// @return 
+    /// @brief  Will return the component type.
+    /// @param[in] The component type.
+    /// @return The type as the index.
     static size_t getIndex(ComponentType type);
 
 protected:
     /// @brief 
-    /// @param owner 
-    /// @param type 
+    /// @param[in] owner  The component type.
+    /// @param[in] type   The owning entity.
     Component(Entity *owner, ComponentType type);
 
     /// @brief 

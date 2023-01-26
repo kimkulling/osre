@@ -56,7 +56,7 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Animation;
 using namespace ::OSRE::IO;
 
-static const c8 *Tag = "AppBase";
+static constexpr c8 Tag[] = "AppBase";
 
 AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
         mAppState(State::Uninited),

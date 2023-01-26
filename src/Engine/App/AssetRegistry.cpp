@@ -132,14 +132,5 @@ bool AssetRegistry::clear() {
     return true;
 }
 
-AssetRegistry::AssetRegistry() :
-        m_name2pathMap() {
-    // empty
-}
-
-AssetRegistry::~AssetRegistry() {
-    // empty
-}
-
 } // Namespace Assets
 } // Namespace OSRE

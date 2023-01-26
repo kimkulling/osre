@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
-static const c8 *Tag = "Common";
+static constexpr c8 Tag[] = "Common";
 
 size_t MemoryStatistics::sAllocated = 0;
 size_t MemoryStatistics::sNumNew = 0;
@@ -36,6 +36,7 @@ void MemoryStatistics::addAllocated( size_t allocSize ) {
     sActiveAllocs++;
     sAllocated += allocSize;
 }
+
 void MemoryStatistics::releaseAlloc() {
     sActiveAllocs--;
 }

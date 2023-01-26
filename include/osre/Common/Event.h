@@ -58,8 +58,8 @@ struct OSRE_EXPORT Event {
     ///	@param	id	Id description, will be used to describe the event type.
     Event(const c8 *id);
 
-    ///	@brief The class destructor, virtual.
-    virtual ~Event();
+    ///	@brief The default class destructor, virtual.
+    virtual ~Event() = default;
 
     ///	@brief	Assigns a new event data instance to the event instance.
     ///	@param	pData	Pointer to event data instance.
@@ -113,8 +113,8 @@ struct OSRE_EXPORT EventData {
     ///	@brief	The class copy constructor.
     ///	@param	other	Instance to copy from.
 
-    ///	@brief The class destructor, virtual.
-    virtual ~EventData();
+    ///	@brief The default class destructor, virtual.
+    virtual ~EventData() = default;
 
     ///	@brief	Returns assigned event.
     ///	@return	Assigned event instance.

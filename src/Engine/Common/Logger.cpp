@@ -36,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
-static const c8 *Line =
+static constexpr c8 Line[] =
         "====================================================================================================";
 
 static void appendDomain(const String &domain, String &logMsg) {
@@ -49,10 +49,6 @@ static void appendDomain(const String &domain, String &logMsg) {
 
 AbstractLogStream::AbstractLogStream() :
         m_IsActive(true) {
-    // empty
-}
-
-AbstractLogStream::~AbstractLogStream() {
     // empty
 }
 

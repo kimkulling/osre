@@ -94,10 +94,10 @@ public:
 
 private:
     /// @brief The default class constructor.
-    AssetRegistry();
+    AssetRegistry() = default;
 
     /// @brief The class destructor.
-    ~AssetRegistry();
+    ~AssetRegistry() = default;
 
 private:
     static AssetRegistry *s_instance;

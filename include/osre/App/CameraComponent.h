@@ -56,7 +56,7 @@ public:
     /// @param[in] parent              [in] The parent node, nullptr for a root node.
     Camera(const String &name, Entity *owner, Common::Ids &ids, TransformComponent *parent = nullptr);
 
-    /// @brief The class destructor, default.
+    /// @brief The default class destructor, default.
     ~Camera() override = default;
 
     /// @brief  Will set the projection parameter.
