@@ -57,7 +57,7 @@ public:
         if (type == ServiceType::InvalidService || type == ServiceType::NumServices) {
             return nullptr;
         }
-        return (T *) mServiceArray[static_cast<size_t>(type)];
+        return (T *) s_instance->mServiceArray[static_cast<size_t>(type)];
     }
 
 private:
