@@ -42,9 +42,10 @@ struct MenuEntry {
     MenuFunctor Func; /// The functor which stores the command for the menu entry.
 };
 
+/// @brief This struct is used to manage the status bar sizes and texts.
 struct OSRE_EXPORT StatusBarContent {
-    cppcore::TArray<ui32> StatusBarWidths;
-    StringArray StatusBarTexts;
+    cppcore::TArray<ui32> StatusBarWidths; ///< The field sizes.
+    StringArray StatusBarTexts;            ///< Tje field context.
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -58,7 +59,7 @@ public:
     Win32Window(WindowsProperties *properties);
     /// The class destructor, virtual.
     ~Win32Window() override;
-    ///
+    /// Will manage the visibility of the window.
     void showWindow(ShowState showState) override;
     /// Will set the windows title.
     void setWindowsTitle(const String &title) override;
@@ -78,11 +79,11 @@ public:
     void addSubMenues(HMENU parent, AbstractPlatformEventQueue *queue, wchar_t *title, MenuEntry *menu_entries, size_t numItems);
     /// Will end the menu creation.
     void endMenu();
-    ///
+    /// Will create a status bar.
     HWND createStatusBar(UINT ResID, ui32 numFields);
-    ///
+    /// Will return the status bar handle.
     HWND getStatusBarHandle() const;
-    ///
+    /// Will set the status bar context.
     void setStatusText(ui32 index, const char *Text);
 
 protected:
