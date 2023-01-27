@@ -72,8 +72,6 @@ protected:
         }
 
         RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
-
-        //RenderBackendService *rbSrv = getRenderBackendService();
         if (nullptr == rbSrv) {
             return;
         }
