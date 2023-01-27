@@ -39,8 +39,8 @@ namespace Common {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractLogStream {
 public:
-    ///	@brief	The class destructor, virtual.
-    virtual ~AbstractLogStream();
+    ///	@brief	The default class destructor, virtual.
+    virtual ~AbstractLogStream() = default;
 
     ///	@brief	Will write a message into the attached log stream.
     ///	@param	message	The message to log.

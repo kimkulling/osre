@@ -25,10 +25,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/AppCommon.h>
 
 namespace OSRE {
-namespace App {
 
 // Forward declarations ---------------------------------------------------------------------------
-class ResourceCacheService;
+namespace Common {
+    class AbstractService;
+}
+
+namespace App {
 
 /// @brief 
 enum class ServiceType {
@@ -46,12 +49,11 @@ enum class ServiceType {
 ///
 ///	@brief  
 //-------------------------------------------------------------------------------------------------
-class ServiceProvider {
+class OSRE_EXPORT ServiceProvider {
 public:
-    static ServiceProvider *create(Common::AbstractService *rbService, 
-        Common::AbstractService *resCacheService, Common::AbstractService *ioService);
+    static ServiceProvider *create();
     static void destroy();
-    
+    static void setService(ServiceType type, Common::AbstractService *service);
     template<class T>
     static T *getService(ServiceType type) {
         if (type == ServiceType::InvalidService || type == ServiceType::NumServices) {
@@ -61,8 +63,7 @@ public:
     }
 
 private:
-    explicit ServiceProvider(Common::AbstractService *rbService,
-            Common::AbstractService *resCacheService, Common::AbstractService *ioService);
+    explicit ServiceProvider();
     ~ServiceProvider() = default;
 
 private:
@@ -70,8 +71,9 @@ private:
 
     using ServiceArray = cppcore::TArray<Common::AbstractService*>;
     ServiceArray mServiceArray;
-
 };
 
 } // Namespace App
 } // Namespace OSRE
+
+

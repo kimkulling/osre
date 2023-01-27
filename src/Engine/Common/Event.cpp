@@ -34,10 +34,6 @@ Event::Event(const c8 *id) :
     // empty
 }
 
-Event::~Event() {
-    // empty
-}
-
 void Event::setEventData(const EventData *pData) {
     m_eventData = pData;
 }
@@ -75,10 +71,6 @@ EventData::EventData(const Event &e, EventTriggerer *c) :
         m_Source(c),
         m_timestamp(0.0),
         m_numRefs(1) {
-    // empty
-}
-
-EventData::~EventData() {
     // empty
 }
 

@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Uri.h>
 #include <osre/Common/BaseMath.h>
 #include <osre/Platform/AbstractWindow.h>
+#include <osre/App/ServiceProvider.h>
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -36,7 +37,7 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
 // To identify local log entries
-static const c8 *Tag = "InstancingApp";
+static constexpr c8 Tag[] = "InstancingApp";
 
 /// The example application, will create the render environment and render a simple triangle onto it
 class InstancingApp : public App::AppBase {
@@ -51,9 +52,7 @@ public:
         // empty
     }
 
-    virtual ~InstancingApp() {
-        // empty
-    }
+    virtual ~InstancingApp() =default;
 
 protected:
     bool onCreate() override {
@@ -69,7 +68,7 @@ protected:
         AssetRegistry::registerAssetPath("assets", "../assets");
 #endif
 
-        RenderBackendService *rbSrv = getRenderBackendService();
+        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         if (nullptr == rbSrv) {
             return false;
         }
@@ -104,7 +103,7 @@ protected:
         // Rotate the model
         glm::mat4 rot(1.0);
 
-        RenderBackendService *rbSrv(getRenderBackendService());
+        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
 
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");

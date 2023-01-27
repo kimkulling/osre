@@ -33,13 +33,12 @@ using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Common;
 
 ServiceProvider *ServiceProvider::s_instance = nullptr;
-
-ServiceProvider *ServiceProvider::create(AbstractService *rbService, AbstractService *resCacheService, AbstractService *ioService) {
-    osre_assert(nullptr != rbService);
-
+        
+ServiceProvider *ServiceProvider::create() {
     if (nullptr == s_instance) {
-        s_instance = new ServiceProvider(rbService, resCacheService, ioService);
+        s_instance = new ServiceProvider;
     }
+    
     return s_instance;
 }
 
@@ -50,17 +49,14 @@ void ServiceProvider::destroy() {
     }
 }
 
-ServiceProvider::ServiceProvider(AbstractService *rbService, AbstractService *resCacheService, AbstractService *ioService) :
+void ServiceProvider::setService(ServiceType type, Common::AbstractService *service) {
+    s_instance->mServiceArray[static_cast<size_t>(type)] = service;
+}
+
+ServiceProvider::ServiceProvider() :
         mServiceArray() {
-    osre_assert(nullptr != rbService);
-    osre_assert(nullptr != resCacheService);
-    osre_assert(nullptr != ioService);
     mServiceArray.resize(static_cast<size_t>(ServiceType::NumServices));
     mServiceArray.set(nullptr);
-
-    mServiceArray[static_cast<size_t>(ServiceType::RenderService)] = rbService;
-    mServiceArray[static_cast<size_t>(ServiceType::IOService)] = ioService;
-    mServiceArray[static_cast<size_t>(ServiceType::ResourceService)] = resCacheService;
 }
 
 } // Namespace App

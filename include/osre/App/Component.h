@@ -32,6 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
+// Forward declarations ---------------------------------------------------------------------------
 namespace RenderBackend {
     struct Light;
 }
@@ -43,55 +44,58 @@ class TransformComponent;
 
 ///	@brief
 enum class ComponentType {
-    InvalidComponent = -1,
-    RenderComponentType = 0,    ///< Render-component
-    TransformComponentType,     ///<
-    LightComponentType,         ///<
-    ScriptComponentType,        ///< For scripting events
+    InvalidComponent = -1,      ///< Indicates an invalid component.
+    RenderComponentType = 0,    ///< A Render-component, will contain any render data.
+    TransformComponentType,     ///< For all transformation types.
+    LightComponentType,         ///< For light types.
+    ScriptComponentType,        ///< For scripting components.
 
-    MaxNumComponents,
+    MaxNumComponents,           ///< The number of components.
 };
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief Describes the render component
+///	@brief Describe the base class for all components.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Component {
 public:
-    /// @brief 
+    /// @brief The default class destructor.
     virtual ~Component() = default;
 
-    /// @brief 
-    /// @return 
+    /// @brief  The preprocess callback
+    /// @return true of performed, false if not.
     virtual bool preprocess();
     
-    /// @brief 
-    /// @param dt 
-    virtual void update(Time dt);
+    /// @brief The update callback
+    /// @param[in] timeSlice The time slice
+    virtual void update(Time timeSlice);
     
-    /// @brief 
-    /// @param renderBackendSrv 
+    /// @brief The render callback.
+    /// @param[in] renderBackendSrv  The render backend service.
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
     
-    /// @brief 
-    /// @return 
+    /// @brief  The postprocess callback
+    /// @return true of performed, false if not.
     virtual bool postprocess();
     
-    /// @brief 
-    /// @return 
+    /// @brief  Will return the owning entity.
+    /// @return Pointer showing to the entity instance, nullptr in none.
     virtual Entity *getOwner() const;
     
-    /// @brief 
-    /// @return 
+    /// @brief  Will return the component type.
+    /// @return The component type.
     virtual ComponentType getType() const;
 
+    /// @brief  Will return the component type.
+    /// @param[in] The component type.
+    /// @return The type as the index.
     static size_t getIndex(ComponentType type);
 
 protected:
     /// @brief 
-    /// @param owner 
-    /// @param type 
+    /// @param[in] owner  The component type.
+    /// @param[in] type   The owning entity.
     Component(Entity *owner, ComponentType type);
 
     /// @brief 

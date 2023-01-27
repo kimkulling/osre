@@ -70,8 +70,13 @@ class TransformComponent;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AssimpWrapper {
 public:
+    /// @brief Alias for material arrays.
     using MaterialArray = cppcore::TArray<RenderBackend::Material *>;
+
+    /// @brief Alias for bone to node relations.
     using Bone2NodeMap = std::map<const char *, const aiNode *>;
+
+    /// @brief Name to animation track relation alias.
     using AnimationMap = std::map<const char*, Animation::AnimationTrack*>;
 
     /// @brief The class constructor.
@@ -79,7 +84,7 @@ public:
     /// @param world    The world to put the imported entity in.
     AssimpWrapper(Common::Ids &ids, World *world);
 
-    ///	@brief  The class destructor.
+    ///	@brief  The default class destructor.
     ~AssimpWrapper() = default;
 
     /// @brief Will perform the import operation.

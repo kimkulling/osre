@@ -32,16 +32,32 @@ namespace Platform {
 struct MonitorInfo;
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
+/// @ingroup	Engine
 ///
-///	@brief  
+/// @brief This class implements the windows-specific display interface.
 //-------------------------------------------------------------------------------------------------
 class Win32DisplayInterface : public AbstractDisplayInterface {
 public:
+    /// @brief The default class constructor.
     Win32DisplayInterface() = default;
+    
+    /// @brief The class destructor.
     ~Win32DisplayInterface() override;
+    
+    /// @brief  Will return the number of detected display.
+    /// @return The number of detected displays.
     i32 getNumDisplays() override;
+    
+    /// @brief Will return the resolution for the requested display.
+    /// @param[in]  displayIndex   The requested display index.
+    /// @param[out] width          The width.
+    /// @param[out] height         The height.
+    /// @return true, if successful, false if not.
     bool getDisplayResolution(ui32 displayIndex, ui32 &width, ui32 &height) override;
+    
+    /// @brief Will return the dpi info for the requested display dpi info.
+    /// @param[out] ddpiinfo       The dpi info.
+    /// @return true, if successful, false if not.
     bool getDisplayDPI(ui32 displayIndex, DisplayDPIInfo *ddpiinfo) override;
 
 private:
@@ -50,4 +66,3 @@ private:
 
 } // namespace Platform
 } // namespace OSRE
-

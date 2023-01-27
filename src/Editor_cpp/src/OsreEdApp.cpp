@@ -151,7 +151,7 @@ void OsreEdApp::loadAsset(const Uri &modelLoc) {
         mProject->setStage(AppBase::getStage());
     }
     reporter.update(10);
-    RenderBackendService *rbSrv = getRenderBackendService();
+    RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
     if (nullptr == rbSrv) {
         reporter.stop();
         return;
@@ -290,7 +290,8 @@ void OsreEdApp::onUpdate() {
         mTransformController->update(transformCmds[i]);
     }
     transformCmds.clear();
-    RenderBackendService *rbSrv = getRenderBackendService();
+    RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+
     mModuleRegistry.update();
     
     mMainRenderView->render(rbSrv, m_transformMatrix.m_model);
@@ -383,7 +384,8 @@ bool OsreEdApp::setupUserInterface() {
     window->createStatusBar(100, 4);
     window->getWindowsRect(mResolution);
 
-    AppBase::getRenderBackendService()->enableAutoResizing(false);
+    RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+    rbSrv->enableAutoResizing(false);
 
     return true;
 }

@@ -29,9 +29,9 @@ namespace Common {
 
 using namespace ::cppcore;
 
-static const c8* option = "--";
-static const c8 tokenArgIn = '<';
-static const c8 tokenArgOut = '>';
+static constexpr c8 option[] = "--";
+static constexpr c8 tokenArgIn = '<';
+static constexpr c8 tokenArgOut = '>';
 
 ArgumentParser::Argument::Argument() :
         mArgument(""), mDesc(""), mNumArgs(0) {

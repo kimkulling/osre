@@ -55,10 +55,7 @@ public:
     }
 
     /// The class destructor.
-    ~HelloWorldApp() override {
-        mEntity = nullptr;
-        mKeyboardTransCtrl = nullptr;
-    }
+    ~HelloWorldApp() override = default;
 
 protected:
     Camera *setupCamera(World *world) {
@@ -102,7 +99,7 @@ protected:
         Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey();
         mKeyboardTransCtrl->update(TransformController::getKeyBinding(key));
 
-        RenderBackendService *rbSrv = getRenderBackendService();
+        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 

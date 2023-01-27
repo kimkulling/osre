@@ -1,6 +1,7 @@
 #include "Modules/EditorModule/EditorModule.h"
 
 #include <osre/App/AppBase.h>
+#include <osre/App/ServiceProvider.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 
 namespace OSRE {
@@ -32,8 +33,7 @@ void EditorModule::onUpdate() {
 }
 
 void EditorModule::onRender() {
-    AppBase *parentApp = getParentApp();
-    RenderBackend::RenderBackendService *rbService = parentApp->getRenderBackendService();
+    RenderBackendService *rbService = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
 
     rbService->beginPass(RenderPass::getPassNameById(RenderPassId));
     rbService->beginRenderBatch("b1");
