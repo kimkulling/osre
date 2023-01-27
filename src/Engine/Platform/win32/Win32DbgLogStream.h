@@ -36,21 +36,16 @@ namespace Platform {
 //-------------------------------------------------------------------------------------------------
 class Win32DbgLogStream : public Common::AbstractLogStream {
 public:
-    ///	The class constructor.
-    Win32DbgLogStream();
-    ///	The class destructor, non virtual.
-    ~Win32DbgLogStream();
+    ///	@brief The default class constructor.
+    Win32DbgLogStream() = default;
+    
+    ///	@brief The default class destructor.
+    ~Win32DbgLogStream() override = default;
+    
     ///	Writes the message into the debug output buffer.
+    /// @param[in] msg   Message to log.
     void write(const String &msg);
 };
-
-inline Win32DbgLogStream::Win32DbgLogStream() {
-    // empty
-}
-
-inline Win32DbgLogStream::~Win32DbgLogStream() {
-    // empty
-}
 
 inline void Win32DbgLogStream::write(const String &msg) {
     if (!msg.empty()) {
