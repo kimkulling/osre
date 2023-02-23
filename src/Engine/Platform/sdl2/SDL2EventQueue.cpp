@@ -110,11 +110,11 @@ SDL2EventHandler::SDL2EventHandler(AbstractWindow *window) :
         m_isPolling(false),
         m_shutdownRequested(false),
         m_inputUpdate(nullptr),
-        m_window(nullptr),
+        mWindow(nullptr),
         m_eventTriggerer(nullptr) {
     osre_assert(nullptr != window);
-    m_window = (SDL2Surface *)window;
-    osre_assert(nullptr != m_window);
+    mWindow = (SDL2Surface *)window;
+    osre_assert(nullptr != mWindow);
 
     m_inputUpdate = new SDL2GetInputUpdate;
     m_eventTriggerer = new EventTriggerer;
@@ -161,7 +161,7 @@ bool SDL2EventHandler::update() {
 
     SDL_Event ev;
     if (!m_shutdownRequested && m_inputUpdate->update(&ev)) {
-        const Uint32 windowID = SDL_GetWindowID(m_window->getSDLSurface());
+        const Uint32 windowID = SDL_GetWindowID(mWindow->getSDLSurface());
 
         switch (ev.type) {
             case SDL_KEYDOWN:
@@ -196,13 +196,13 @@ bool SDL2EventHandler::update() {
                         case SDL_WINDOWEVENT_MOVED: {
                             ui32 x = (ui32)ev.window.data1;
                             ui32 y = (ui32)ev.window.data2;
-                            getRenderBackendService()->resize(x, y, m_window->getProperties()->m_width, m_window->getProperties()->m_width);
+                            getRenderBackendService()->resize(x, y, mWindow->getProperties()->m_width, mWindow->getProperties()->m_width);
                         } break;
 
                         case SDL_WINDOWEVENT_SIZE_CHANGED: {
                             ui32 w = ev.window.data1;
                             ui32 h = ev.window.data2;
-                            getRenderBackendService()->resize(m_window->getProperties()->m_x, m_window->getProperties()->m_y, w, h);
+                            getRenderBackendService()->resize(mWindow->getProperties()->m_x, mWindow->getProperties()->m_y, w, h);
                         } break;
                     }
                 }

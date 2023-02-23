@@ -45,6 +45,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+using namespace ::OSRE::Platform;
 using namespace cppcore;
 
 static constexpr c8 Tag[] = "OGLRenderBackend";
@@ -166,7 +167,7 @@ void OGLRenderBackend::applyMatrix() {
     setParameter(projection);
 }
 
-bool OGLRenderBackend::create(Platform::AbstractOGLRenderContext *renderCtx) {
+bool OGLRenderBackend::create(AbstractOGLRenderContext *renderCtx) {
     setRenderContext(renderCtx);
 
     mFpState = new RenderStates;
@@ -572,6 +573,7 @@ void OGLRenderBackend::releaseAllVertexArrays() {
         destroyVertexArray(mVertexArrays[i]);
     }
     mVertexArrays.clear();
+    mActiveVertexArray = OGLNotSetId;
 }
 
 static void loadShader(Shader *shaderInfo, OGLShader *oglShader, ShaderType type) {
@@ -740,7 +742,7 @@ OGLTexture *OGLRenderBackend::createEmptyTexture(const String &name, TextureTarg
     return tex;
 }
 
-static const c8 *DefaultTextureName = "default_tex";
+static constexpr c8 DefaultTextureName[] = "default_tex";
 
 OGLTexture *OGLRenderBackend::createDefaultTexture(TextureTargetType target, PixelFormatType pixelFormat, ui32 width, ui32 height) {
     OGLTexture *glTex = createEmptyTexture(DefaultTextureName, target, pixelFormat, width, height, 1);
@@ -770,9 +772,9 @@ void OGLRenderBackend::updateTexture(OGLTexture *oglTextue, ui32 offsetX, ui32 o
         return;
     }
 
-    const ui32 diffX(oglTextue->m_width - offsetX);
-    const ui32 diffY(oglTextue->m_height - offsetY);
-    const ui32 subSize(diffX * diffY * oglTextue->m_channels);
+    const ui32 diffX = oglTextue->m_width - offsetX;
+    const ui32 diffY = oglTextue->m_height - offsetY;
+    const ui32 subSize = diffX * diffY * oglTextue->m_channels;
     osre_validate(size < subSize, "Invalid size");
     glTexSubImage2D(oglTextue->m_target, 0, offsetX, offsetY, oglTextue->m_width,
             oglTextue->m_height, oglTextue->m_format, GL_UNSIGNED_BYTE, data);
@@ -807,7 +809,6 @@ OGLTexture *OGLRenderBackend::createTextureFromFile(const String &name, const IO
     const String filename = fileloc.getAbsPath();
     i32 width = 0, height = 0, channels = 0;
     GLubyte *data = stbi_load(filename.c_str(), &width, &height, &channels, 0);
-    //GLubyte *data = SOIL_load_image(filename.c_str(), &width, &height, &channels, SOIL_LOAD_AUTO);
     if (!data) {
         osre_debug(Tag, "Cannot load texture " + filename);
         return nullptr;
@@ -879,6 +880,10 @@ bool OGLRenderBackend::unbindTexture( TextureStageType stageType ) {
 }
 
 void OGLRenderBackend::releaseTexture(OGLTexture *oglTexture) {
+    if (oglTexture == nullptr) {
+        return;
+    }
+
     if (nullptr == mTextures[oglTexture->m_slot]) {
         return;
     }
@@ -891,7 +896,7 @@ void OGLRenderBackend::releaseTexture(OGLTexture *oglTexture) {
 
     mFreeTexSlots.add(oglTexture->m_slot);
 
-    std::map<String, size_t>::iterator it(m_texLookupMap.find(oglTexture->m_name));
+    std::map<String, size_t>::iterator it = m_texLookupMap.find(oglTexture->m_name);
     if (m_texLookupMap.end() != it) {
         it = m_texLookupMap.erase(it);
     }
@@ -902,6 +907,7 @@ void OGLRenderBackend::releaseAllTextures() {
     for (ui32 i = 0; i < mTextures.size(); ++i) {
         if (mTextures[i]->m_textureId != OGLNotSetId) {
             releaseTexture(mTextures[i]);
+            delete mTextures[i];
         }
     }
     mFreeTexSlots.clear();

@@ -89,7 +89,8 @@ void DbgRenderer::renderDbgText(ui32 x, ui32 y, guid id, const String &text) {
     mRbSrv->setMatrix(MatrixType::Projection, projection);
     if (foundDebugText == nullptr) {
         MeshBuilder meshBuilder;
-        meshBuilder.allocTextBox(x, y, 20, text, BufferAccessType::ReadWrite);
+	const ui32 FontSize = 20;
+        meshBuilder.allocTextBox(static_cast<f32>(x), static_cast<f32>(y), 20, text, BufferAccessType::ReadWrite);
         DebugText *entry = new DebugText;
         entry->mesh = meshBuilder.getMesh();
         entry->mesh->setId(id);

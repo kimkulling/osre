@@ -66,7 +66,7 @@ private:
     bool m_isPolling;
     bool m_shutdownRequested;
     AbstractSDL2InputUpdate *m_inputUpdate;
-    SDL2Surface *m_window;
+    SDL2Surface *mWindow;
     Common::EventTriggerer *m_eventTriggerer;
 };
 
