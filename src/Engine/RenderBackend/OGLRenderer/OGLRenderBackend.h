@@ -73,7 +73,7 @@ struct PrimitiveGroup;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This class is used to wrap all OpenGL-specific calls ( version 4.x and higher ),
+///	@brief  This class is used to wrap all OpenGL-specific calls ( version 4.x and higher ).
 //-------------------------------------------------------------------------------------------------
 class OGLRenderBackend {
 public:

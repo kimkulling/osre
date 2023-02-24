@@ -165,9 +165,11 @@ void RenderCmdBuffer::clear() {
     mParamArray.resize(0);
 }
 
-static bool hasParam(const String &name, const ::cppcore::TArray<OGLParameter *> &paramArray) {
+static bool hasParam(const String &name, const ::cppcore::TArray<OGLParameter *> &paramArray, size_t &index) {
+    index = paramArray.size();
     for (ui32 i = 0; i < paramArray.size(); i++) {
         if (name == paramArray[i]->m_name) {
+            index = i;
             return true;
         }
     }
@@ -175,8 +177,9 @@ static bool hasParam(const String &name, const ::cppcore::TArray<OGLParameter *>
 }
 
 void RenderCmdBuffer::setParameter(OGLParameter *param) {
-    if (hasParam(param->m_name, mParamArray)) {
-        return;
+    size_t i = 0;
+    if (hasParam(param->m_name, mParamArray, i)) {
+        mParamArray[i] = param;
     }
 
     mParamArray.add(param);
@@ -184,9 +187,14 @@ void RenderCmdBuffer::setParameter(OGLParameter *param) {
 
 void RenderCmdBuffer::setParameter(const ::cppcore::TArray<OGLParameter *> &paramArray) {
     for (ui32 i = 0; i < paramArray.size(); i++) {
-        if (!hasParam(paramArray[i]->m_name, mParamArray)) {
-            mParamArray.add(paramArray[i]);
-        }
+        size_t index = 0;
+        OGLParameter *param = paramArray[i];
+        osre_assert(param != nullptr);
+        if (!hasParam(paramArray[i]->m_name, mParamArray, index)) {
+            mParamArray.add(param);
+            return;
+        } 
+        mParamArray[index] = param;
     }
 }
 

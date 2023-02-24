@@ -33,11 +33,14 @@ namespace Platform {
 
 /// @brief  A lib handle.
 struct OSRE_EXPORT LibHandle {
-    i32 m_index;
-    void *m_handle; ///< The lib handle.
+    i32 m_index;    ///< The index in the array.
+    void *m_handle; ///< The lib handle itself.
 
+    /// @brief The class constructor.
     LibHandle();
-    ~LibHandle();
+
+    /// @brief The class destuctor, default.
+    ~LibHandle() = default;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -96,10 +99,11 @@ protected:
     AbstractDynamicLoader();
 
 private:
-    cppcore::THashMap<ui32, LibHandle*> m_libmap;
+    cppcore::THashMap<HashId, LibHandle*> m_libmap;
     cppcore::TArray<LibHandle*> m_handles;
     LibHandle *m_activeLib;
 };
 
 } // Namespace Platform
 } // Namespace OSRE
+
