@@ -21,11 +21,11 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/App.h>
+#include <osre/App/ServiceProvider.h>
 #include <osre/Common/Ids.h>
 #include <osre/IO/Uri.h>
 #include <osre/Common/BaseMath.h>
 #include <osre/Platform/AbstractWindow.h>
-#include <osre/App/ServiceProvider.h>
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -52,7 +52,7 @@ public:
         // empty
     }
 
-    virtual ~InstancingApp() =default;
+    virtual ~InstancingApp() = default;
 
 protected:
     bool onCreate() override {
@@ -62,11 +62,7 @@ protected:
         }
         AppBase::setWindowsTitle("Instancing sample!");
 
-#ifdef OSRE_WINDOWS
-        AssetRegistry::registerAssetPath("assets", "../../assets");
-#else
-        AssetRegistry::registerAssetPath("assets", "../assets");
-#endif
+        AssetRegistry::registerAssetPathInBinFolder("assets", "assets");
 
         RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         if (nullptr == rbSrv) {
@@ -119,7 +115,7 @@ protected:
 
 int main(int argc, char *argv[]) {
     InstancingApp myApp(argc, argv);
-    if (!myApp.initWindow(10, 10, 1024, 768, "ModelLoader-Sample", false, App::RenderBackendType::OpenGLRenderBackend)) {
+    if (!myApp.initWindow(10, 10, 1024, 768, "Instancing-Sample", false, RenderBackendType::OpenGLRenderBackend)) {
         return 1;
     }
 

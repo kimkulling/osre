@@ -47,14 +47,6 @@ void Component::render(RenderBackendService *renderBackendSrv) {
     onRender(renderBackendSrv);
 }
 
-void Component::serialize( IO::Stream &stream ) {
-    // empty
-}
-
-void Component::deserialize( IO::Stream &stream ) {
-    // empty
-}
-
 RenderComponent::RenderComponent(Entity *owner) :
         Component(owner, ComponentType::RenderComponentType), m_newGeo() {
     // empty
@@ -90,10 +82,6 @@ void RenderComponent::getMeshArray(RenderBackend::MeshArray &meshArray) {
     meshArray = m_newGeo;
 }
 
-bool RenderComponent::onPreprocess() {
-    return true;
-}
-
 bool RenderComponent::onUpdate(Time) {
     return true;
 }
@@ -109,19 +97,11 @@ bool RenderComponent::onRender(RenderBackendService *renderBackendSrv) {
     return true;
 }
 
-bool RenderComponent::onPostprocess() {
-    return true;
-}
-
 LightComponent::LightComponent(Entity *owner) 
         : Component(owner, ComponentType::LightComponentType), mLight(nullptr) {}
 
 void LightComponent::setLight(RenderBackend::Light *light) {
     mLight = light;
-}
-
-bool LightComponent::onPreprocess() {
-    return true;
 }
 
 bool LightComponent::onUpdate(Time dt) {
@@ -132,26 +112,14 @@ bool LightComponent::onRender(RenderBackend::RenderBackendService *rbSrv) {
     return true;
 }
 
-bool LightComponent::onPostprocess() {
-    return true;
-}
-
 ScriptComponent::ScriptComponent(Entity *owner) 
         : Component(owner, ComponentType::ScriptComponentType) {}
-
-bool ScriptComponent::onPreprocess() {
-    return true;
-}
 
 bool ScriptComponent::onUpdate(Time dt) {
     return true;
 }
 
 bool ScriptComponent::onRender(RenderBackend::RenderBackendService *rbSrv) {
-    return true;
-}
-
-bool ScriptComponent::onPostprocess() {
     return true;
 }
 

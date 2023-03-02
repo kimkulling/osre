@@ -57,10 +57,6 @@ public:
     void render(RenderBackend::RenderBackendService *) override {}
 
 protected:
-    bool onPreprocess() override {
-        return true;
-    }
-
     bool onUpdate(Time dt) override {
         m_dt = dt;
         return true;
@@ -69,10 +65,6 @@ protected:
     bool onRender(RenderBackend::RenderBackendService *renderBackendSrv) override {
         EXPECT_NE(nullptr, renderBackendSrv);
 
-        return true;
-    }
-
-    bool onPostprocess() override {
         return true;
     }
 
@@ -111,4 +103,3 @@ TEST_F(ComponentTest, accessIdTest) {
 
 } // Namespace UnitTest
 } // Namespace OSRE
-

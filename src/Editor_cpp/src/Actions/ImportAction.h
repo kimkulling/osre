@@ -45,10 +45,24 @@ namespace Editor {
 //-------------------------------------------------------------------------------------------------
 class ImportAction : public ActionBase {
 public:
+    /// @brief The class constructor.
+    /// @param ids          The id container.
+    /// @param activeWorld  The active world to run the command in.
     ImportAction(Common::Ids *ids, App::World *activeWorld);
-    ~ImportAction() override;
+
+    /// @brief  The default class destructor.
+    ~ImportAction() override = default;
+
+    /// @brief Will return the new entity.
+    /// @return The new entity.
     App::Entity *getEntity() const;
+
+    /// @brief Will return the new number of vertices.
+    /// @return The new number of imported vertices.
     ui32 getNumVertices() const;
+
+    /// @brief Will return the number of new imported triangles.
+    /// @return The number of new imported triangles.
     ui32 getNumTriangles() const;
     
 protected:

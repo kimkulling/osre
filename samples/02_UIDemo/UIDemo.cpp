@@ -71,11 +71,7 @@ protected:
             return false;
         }
 
-#ifdef OSRE_WINDOWS
-        AssetRegistry::registerAssetPath("assets", "../../assets");
-#else
-        AssetRegistry::registerAssetPath("assets", "../assets");
-#endif
+        AssetRegistry::registerAssetPathInBinFolder("assets", "assets");
 
         m_canvas = AppBase::createScreen("UiDemo");
 

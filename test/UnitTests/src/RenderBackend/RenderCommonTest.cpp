@@ -47,7 +47,7 @@ TEST_F( RenderCommonTest, createVertComponentTest ) {
     } catch( ... ) {
         ok = false;
     }
-    EXPECT_TRUE( ok );
+    EXPECT_TRUE(ok);
 
 }
 
@@ -58,7 +58,7 @@ TEST_F( RenderCommonTest, createVertexLayoutTest ) {
     } catch( ... ) {
         ok = false;
     }
-    EXPECT_TRUE( ok );
+    EXPECT_TRUE(ok);
 }
 
 TEST_F( RenderCommonTest, addCompVertexLayoutTest ) {
@@ -205,30 +205,33 @@ static bool isEqual(c8 *buf, c8 v, ui32 size) {
     return equal;
 }
 
+static constexpr size_t BufferSize = 1024u;
+static constexpr size_t CharBuffer = 100u;
+
 TEST_F(RenderCommonTest, uniformBufferReadWriteTest) {
     UniformBuffer buffer;
     EXPECT_EQ(0u, buffer.getSize());
-    buffer.create(1024);
-    EXPECT_EQ(1024u, buffer.getSize());
+    buffer.create(BufferSize);
+    EXPECT_EQ(BufferSize, buffer.getSize());
 
-    c8 buf[100];
-    ::memset(buf, 1, 100);
-    buffer.write(buf, 100);
-    ::memset(buf, 2, 100);
-    buffer.write(buf, 100);
+    c8 buf[CharBuffer] = {};
+    ::memset(buf, 1, CharBuffer);
+    buffer.write(buf, CharBuffer);
+    ::memset(buf, 2, CharBuffer);
+    buffer.write(buf, CharBuffer);
 
     buffer.reset();
-    c8 buf_out[100];
-    buffer.read(buf_out, 100);
-    EXPECT_TRUE(isEqual( buf_out, 1, 100) );
+    c8 buf_out[CharBuffer];
+    buffer.read(buf_out, CharBuffer);
+    EXPECT_TRUE(isEqual(buf_out, 1, CharBuffer));
 
-    buffer.read(buf_out, 100);
-    EXPECT_TRUE(isEqual(buf_out, 2, 100) );
+    buffer.read(buf_out, CharBuffer);
+    EXPECT_TRUE(isEqual(buf_out, 2, CharBuffer));
 }
 
 TEST_F(RenderCommonTest, uniformBufferEncodeDecodeTest) {
     ui16 lenName = 10, lenName_out(0);
-    ui16 lenData = 100, lenData_out(0);
+    ui16 lenData = CharBuffer, lenData_out(0);
     ui32 data = UniformBuffer::encode(lenName, lenData);
     UniformBuffer::decode(data, lenName_out, lenData_out);
     EXPECT_EQ(lenName, lenName_out);
@@ -237,4 +240,3 @@ TEST_F(RenderCommonTest, uniformBufferEncodeDecodeTest) {
 
 } // Namespace UnitTest
 } // Namespace OSRE
-

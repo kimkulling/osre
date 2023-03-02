@@ -68,16 +68,6 @@ TransformComponent *Entity::getNode() const {
     return m_node;
 }
 
-bool Entity::preprocess() {
-    for (auto &it : mComponentArray) {
-        if (it != nullptr) {
-            it->preprocess();
-        }
-    }
-
-    return true;
-}
-
 bool Entity::update(Time dt) {
     if (nullptr != m_behaviour) {
         m_behaviour->update(dt);
@@ -100,14 +90,6 @@ bool Entity::render(RenderBackend::RenderBackendService *rbSrv) {
     return true;
 }
 
-bool Entity::postprocess() {
-    for (auto &it : mComponentArray) {
-        if (it != nullptr) {
-            it->postprocess();
-        }
-    }
-    return true;
-}
 Component *Entity::createComponent(ComponentType type) {
     Component *component = getComponent(type);
     if (component != nullptr) {

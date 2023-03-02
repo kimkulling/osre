@@ -53,43 +53,6 @@ namespace App {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This class is used to declare user-defined node factories.
-//-------------------------------------------------------------------------------------------------
-struct AbstractNodeFactory {
-    String m_type; ///< The type descriptor.
-
-    /// @brief  The class constructor.
-    /// @param  type    [in] The type descriptor.
-    AbstractNodeFactory(const String &type) :
-            m_type(type) {
-        // empty
-    }
-
-    /// @brief  The class destructor, virtual.
-    virtual ~AbstractNodeFactory() {
-        // empty
-    }
-
-    /// @brief  Will return the type.
-    /// @return The type.
-    virtual const String &getType() const {
-        return m_type;
-    }
-
-    /// @brief Will create a new node instance.
-    /// @param name                 The node name.
-    /// @param ids                  The ids container.
-    /// @param transformEnabled     True for transformer node.
-    /// @param renderEnabled        True for rendering enabled
-    /// @param parent               The parent node, nullptr for root.
-    /// @return                     The new created node instance.
-    virtual TransformComponent *create(const String &name, Common::Ids &ids, bool transformEnabled,
-            bool renderEnabled, TransformComponent *parent) = 0;
-};
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
 ///	@brief  This class is used to represents a simple node in the stage hierarchy. You can add
 /// several functionalities by adding components to is. Each component implements functionality
 /// like render geometry or transformation information.
@@ -127,9 +90,6 @@ public:
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
     virtual void setActive(bool isActive);
     virtual bool isActive() const;
-    virtual void setProperty(Properties::Property *prop);
-    virtual void getPropertyArray(::cppcore::TArray<Properties::Property *> &propArray);
-    virtual Properties::Property *getProperty(const String name) const;
 
     void translate(const glm::vec3 &pos);
     void scale(const glm::vec3 &pos);
@@ -144,28 +104,25 @@ public:
     size_t getMeshReferenceAt(size_t index) const;
 
 protected:
-    bool onPreprocess() override;
     bool onUpdate(Time dt) override;
     bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
-    bool onPostprocess() override;
 
 private:
-    NodeArray m_children;
-    TransformComponent *m_parent;
-    MeshReferenceArray m_meshRefererenceArray;
-    bool m_isActive;
-    Common::Ids *m_ids;
-    ::cppcore::TArray<Properties::Property *> mPropertyArray;
-    PropertyMap m_propMap;
-    glm::mat4 m_localTransform;
+    NodeArray mChildren;
+    TransformComponent *mParent;
+    MeshReferenceArray mMeshRefererenceArray;
+    bool mIsActive;
+    Common::Ids *mIds;
+    glm::mat4 mLocalTransform;
+    glm::mat4 mWorldTransform;
 };
 
 inline void TransformComponent::setActive(bool isActive) {
-    m_isActive = isActive;
+    mIsActive = isActive;
 }
 
 inline bool TransformComponent::isActive() const {
-    return m_isActive;
+    return mIsActive;
 }
 
 } // Namespace App
