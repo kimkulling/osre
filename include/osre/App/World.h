@@ -54,40 +54,15 @@ public:
     /// @brief  The class destructor.
     virtual ~World();
 
-    /// @brief  Will add a new view.
-    /// @param  view        [in] A pointer showing to the view.
-    Camera *addCamera(const String &name, Entity *owner);
-
-    /// @brief  Will set the active view.
-    /// @param  activeView  [i] A pointer showing to the active view.
-    /// @return true, if set was successful, false if the view is not part of the world.
-    Camera *setActiveCamera( Camera *activeView );
-
-    /// @brief  Will set the active view.
-    /// @param  viewName    [in] The name of the view.
-    /// @return true, if set was successful, false if the view is not part of the world.
-    Camera *setActiveCamera( const String &viewName );
-
-    /// @brief  Will return the number of assigned views.
-    /// @return The number of assigned views.
-    size_t getNumCameras() const;
-
-    /// @brief  Will return the view at the given index.
-    /// @param  i       [in] The index.
-    /// @return A pointer showing to the view or a nullptr in case of an error.
-    Camera *getCameraAt(ui32 i) const;
-
-    /// @brief  Will return the active view.
-    /// @return A pointer showing to the active view or nullptr, if no view is currently active.
-    Camera *getActiveView() const;
-
     /// @brief Will add a new entity.
     /// @param entity   The entity to add.
-    void addEntity( Entity *entity );
+    void addEntity(Entity *entity);
     
     /// @brief Will remove the entity from the world.
     /// @param entity   The entity to remove.
     bool removeEntity(Entity *entity);
+
+    bool setActiveCamera(Camera *camera);
     
     /// @brief 
     /// @param name 
@@ -121,8 +96,6 @@ protected:
     void updateBoundingTrees();
 
 private:
-    cppcore::TArray<Camera*> mViews;
-    cppcore::THashMap<ui32, Camera*> mLookupViews;
     cppcore::TArray<Entity*> mEntities;
     Camera *mActiveCamera;
     TransformComponent *mRoot;
@@ -130,10 +103,6 @@ private:
     RenderBackend::Pipeline *mPipeline;
     bool mDirtry;
 };
-
-inline size_t World::getNumCameras() const {
-    return mViews.size();
-}
 
 inline TransformComponent *World::getRootNode() const {
     return mRoot;

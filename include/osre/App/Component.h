@@ -49,6 +49,7 @@ enum class ComponentType {
     TransformComponentType,     ///< For all transformation types.
     LightComponentType,         ///< For light types.
     ScriptComponentType,        ///< For scripting components.
+    CameraComponentType,
 
     MaxNumComponents,           ///< The number of components.
 };

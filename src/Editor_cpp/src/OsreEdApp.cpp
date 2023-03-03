@@ -32,19 +32,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Engine/App/MouseEventListener.h"
 
 #include <osre/Modules/ModuleBase.h>
-
+#include <osre/App/CameraCOmponent.h>
 #include <osre/App/App.h>
 #include <osre/Animation/AnimatorBase.h>
-
 #include <osre/IO/Directory.h>
 #include <osre/IO/Uri.h>
 #include <osre/IO/File.h>
 #include <osre/IO/IOService.h>
-
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/PlatformOperations.h>
 #include <osre/Platform/PlatformInterface.h>
-
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
@@ -164,7 +161,10 @@ void OsreEdApp::loadAsset(const Uri &modelLoc) {
         mProject = createProject(modelLoc.getAbsPath());
     }
     Entity *entity = action.getEntity();
-    mSceneData.mCamera = world->addCamera("camera_1", entity);
+    Entity *camEntity = new Entity("camera_1");
+    Camera *camera = (Camera*) camEntity->createComponent(ComponentType::CameraComponentType);
+    world->setActiveCamera(camera);
+    mSceneData.mCamera = camera;
     mSceneData.mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
 
     reporter.update(10);
@@ -177,7 +177,6 @@ void OsreEdApp::loadAsset(const Uri &modelLoc) {
     String title;
     createTitleString(mProject->getProjectName(), title);
     rootWindow->setWindowsTitle(title);
-
     
     setStatusBarText("View", mProject->getProjectName(), action.getNumVertices(), action.getNumTriangles());
     reporter.update(70);
