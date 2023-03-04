@@ -42,30 +42,27 @@ namespace App {
 class Entity;
 class TransformComponent;
 
-///	@brief
+///	@brief This enum describes the component type.
 enum class ComponentType {
     InvalidComponent = -1,      ///< Indicates an invalid component.
     RenderComponentType = 0,    ///< A Render-component, will contain any render data.
     TransformComponentType,     ///< For all transformation types.
     LightComponentType,         ///< For light types.
     ScriptComponentType,        ///< For scripting components.
-
+    CameraComponentType,        ///< For camera components.
     MaxNumComponents,           ///< The number of components.
 };
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief Describe the base class for all components.
+///	@brief Describes the base class for all components.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Component {
 public:
     /// @brief The default class destructor.
     virtual ~Component() = default;
 
-    /// @brief  The preprocess callback
-    /// @return true of performed, false if not.
-    virtual bool preprocess();
     
     /// @brief The update callback
     /// @param[in] timeSlice The time slice
@@ -74,11 +71,7 @@ public:
     /// @brief The render callback.
     /// @param[in] renderBackendSrv  The render backend service.
     virtual void render(RenderBackend::RenderBackendService *renderBackendSrv);
-    
-    /// @brief  The postprocess callback
-    /// @return true of performed, false if not.
-    virtual bool postprocess();
-    
+        
     /// @brief  Will return the owning entity.
     /// @return Pointer showing to the entity instance, nullptr in none.
     virtual Entity *getOwner() const;
@@ -93,14 +86,10 @@ public:
     static size_t getIndex(ComponentType type);
 
 protected:
-    /// @brief 
+    /// @brief The class constructor.
     /// @param[in] owner  The component type.
     /// @param[in] type   The owning entity.
     Component(Entity *owner, ComponentType type);
-
-    /// @brief 
-    /// @return 
-    virtual bool onPreprocess() = 0;
     
     /// @brief 
     /// @param dt 
@@ -111,31 +100,11 @@ protected:
     /// @param renderBackendSrv 
     /// @return 
     virtual bool onRender(RenderBackend::RenderBackendService *renderBackendSrv) = 0;
-    
-    /// @brief 
-    /// @return 
-    virtual bool onPostprocess() = 0;
-    
-    /// @brief 
-    /// @param stream 
-    virtual void serialize(IO::Stream &stream);
-    
-    /// @brief 
-    /// @param stream 
-    virtual void deserialize(IO::Stream &stream);
 
 private:
     Entity *m_owner;
     ComponentType mType;
 };
-
-inline bool Component::preprocess() {
-    return onPreprocess();
-}
-
-inline bool Component::postprocess() {
-    return onPostprocess();
-}
 
 inline Entity *Component::getOwner() const {
     return m_owner;
@@ -185,10 +154,8 @@ public:
     void addStaticMeshArray(const RenderBackend::MeshArray &array);
 
 protected:
-    bool onPreprocess() override;    
     bool onUpdate(Time dt) override;
     bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
-    bool onPostprocess() override;
 
 private:
     cppcore::TArray<RenderBackend::Mesh*> m_newGeo;
@@ -213,10 +180,8 @@ public:
     void setLight(RenderBackend::Light *light);
 
 protected:
-    bool onPreprocess() override;
     bool onUpdate(Time dt) override;
     bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
-    bool onPostprocess() override;
 
 private:
     RenderBackend::Light *mLight;
@@ -237,10 +202,8 @@ public:
     ~ScriptComponent() override = default;
 
 protected:
-    bool onPreprocess() override;
     bool onUpdate(Time dt) override;
     bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
-    bool onPostprocess() override;
 
 private:
     // todo!

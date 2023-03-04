@@ -24,7 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/glm_common.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/App/TrackBall.h>
-#include <osre/App/TransformComponent.h>
+#include <osre/App/CameraComponent.h>
+#include <osre/Common/glm_common.h>
 
 namespace OSRE {
 namespace App {
@@ -32,10 +33,10 @@ namespace App {
 using namespace OSRE::Common;
 using namespace OSRE::Platform;
 
-TrackBall::TrackBall(const String &trackBallObjName, Entity *owner, ui32 w, ui32 h, Ids &ids) :
-        Camera(trackBallObjName, owner, ids, nullptr),
+TrackBall::TrackBall(Camera *cameraComponent, ui32 w, ui32 h) :
         mStartVector(0, 0, 0),
         mEndVector(0, 0, 0),
+        mCameraComponent(cameraComponent),
         m_Dimension(0,0,w, h),
         m_rotation(),
         m_bLeftMButtonClicked(false),
@@ -60,10 +61,6 @@ TrackBall::TrackBall(const String &trackBallObjName, Entity *owner, ui32 w, ui32
     }
 }
 
-TrackBall::~TrackBall() {
-    // empty
-}
-
 void TrackBall::rotate( const glm::vec2 &from, glm::vec2 &to ) {
     mapToSphere(&from, &mStartVector);
     mapToSphere(&to, &mEndVector);
@@ -71,8 +68,8 @@ void TrackBall::rotate( const glm::vec2 &from, glm::vec2 &to ) {
 }
 
 void TrackBall::pan( f32 x, f32 y ) {
-    glm::vec3 lookAt = normalize(getEye() - getCenter());
-    glm::vec3 up = getUp();
+    glm::vec3 lookAt = normalize(mCameraComponent->getEye() - mCameraComponent->getCenter());
+    glm::vec3 up = mCameraComponent->getUp();
     glm::vec3 right = glm::cross(lookAt, up);
     right *= x;
     up *= y;
@@ -167,7 +164,6 @@ void TrackBall::zoom(ui32 y) {
 void TrackBall::reset() {
     m_screenYOld = 0;
 }
-
 
 } // namespace App
 } // namespace OSRE

@@ -28,42 +28,43 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 
-class TransformComponent;
+// Forward declarations ---------------------------------------------------------------------------
+class Camera;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
 ///	@brief	this class implements a simple trackball. You can use it to rotate a model.
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT TrackBall : public Camera {
+class OSRE_EXPORT TrackBall {
 public:
     ///	@brief	The class constructor.
-    ///	@param	objName		[in] The name for the instance.
-    ///	@param	w			[in] The width of the view-port to navigate in
-    ///	@param	h			[in] The height of the view-port to navigate in
-    TrackBall(const String &objName, Entity *owner, ui32 w, ui32 h, Common::Ids &ids);
+    ///	@param[in]	cameraComponent The name for the instance.
+    ///	@param[in]	w               The width of the view-port to navigate in
+    ///	@param[in]	h               The height of the view-port to navigate in
+    TrackBall(Camera *cameraComponent, ui32 w, ui32 h);
 
     ///	@brief	The class destructor.
-    ~TrackBall() override;
+    ~TrackBall() = default;
 
     ///	@brief	The event callback.
-    ///	@param	osEvent		[in] The incoming event from the operation system.
-    ///	@param	data		[in] The event data.
+    ///	@param[in] osEvent  The incoming event from the operation system.
+    ///	@param[in] data     The event data.
     void onOSEvent( const Common::Event &osEvent, const Common::EventData *data );
     
     void rotate(const glm::vec2 &from, glm::vec2 &to);
     void pan(f32 x, f32 y);
 
     ///	@brief	Maps a 2D-point to a sphere and returns the 3D-coordinate.
-    ///	@param	pNewPt		[in] The 2D-point to map.
-    ///	@param	NewVec		[out] The mapped 3D-point.
+    ///	@param[in]	  pNewPt   The 2D-point to map.
+    ///	@param[inout] NewVec   The mapped 3D-point.
     void mapToSphere(const glm::vec2 *pNewPt, glm::vec3 *NewVec);
     
     ///	@brief	The current rotation will be calculated.
     void computeRotation();
 
     ///	@brief	Calculates the current scaling.
-    ///	@param	y			[in] The current y value for the scaling.
+    ///	@param[in] y   The current y value for the scaling.
     void zoom(ui32 y);
     const glm::quat &getRotation() const;
     glm::vec3 getScale() const;
@@ -71,6 +72,7 @@ public:
 
 private:
     glm::vec3 mStartVector, mEndVector;
+    Camera *mCameraComponent;
     TRectangle<ui32> m_Dimension;
     glm::quat m_rotation;
     bool m_bLeftMButtonClicked;
@@ -92,5 +94,5 @@ inline glm::vec3 TrackBall::getScale() const {
     return glm::vec3(mRadius, mRadius, mRadius);
 }
 
-} // Namespace App
+} // namespace App
 } // namespace OSRE

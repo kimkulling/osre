@@ -21,10 +21,12 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/App.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/MeshBuilder.h>
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/Scene/Scene.h>
+#include <osre/App/Entity.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Common/glm_common.h>
 
@@ -33,7 +35,7 @@ using namespace ::OSRE::App;
 using namespace ::OSRE::RenderBackend;
 
 // To identify local log entries we will define this tag.
-static const c8 *Tag = "HelloWorldApp";
+static constexpr c8 Tag[] = "HelloWorldApp";
 
 /// The example application, will create the render environment and render a simple triangle onto it
 class HelloWorldApp : public App::AppBase {
@@ -59,7 +61,10 @@ public:
 
 protected:
     Camera *setupCamera(World *world) {
-        Camera *camera = world->addCamera("camera_1", mEntity);
+        Entity *camEntity = new Entity("camera", *getIdContainer(), world);
+        world->addEntity(camEntity);
+        Camera *camera =(Camera*) camEntity->createComponent(ComponentType::CameraComponentType);
+        world->setActiveCamera(camera);
         ui32 w, h;
         AppBase::getResolution(w, h);
         camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
@@ -79,7 +84,7 @@ protected:
 
         MeshBuilder meshBuilder;
         //RenderBackend::Mesh *mesh = meshBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly).getMesh();
-        RenderBackend::Mesh *mesh = meshBuilder.allocCube(VertexType::ColorVertex, .5,.5,.5,BufferAccessType::ReadOnly).getMesh();
+        RenderBackend::Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5,.5,.5,BufferAccessType::ReadOnly).getMesh();
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);

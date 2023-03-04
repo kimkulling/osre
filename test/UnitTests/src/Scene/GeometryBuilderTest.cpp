@@ -134,10 +134,10 @@ class GeometryDiagnosticUtilsTest : public ::testing::Test {
 };
 
 TEST_F( GeometryDiagnosticUtilsTest, dumpVerticesTest_invalidInput ) {
-    EXPECT_NO_THROW( MeshDiagnostic::dumpVertices( nullptr, 1 ) );
+    EXPECT_NO_THROW(MeshDiagnostic::dumpVertices( nullptr, 1));
     
     cppcore::TArray<RenderVert> vertices;
-    EXPECT_NO_THROW(MeshDiagnostic::dumpVertices( vertices ) );
+    EXPECT_NO_THROW(MeshDiagnostic::dumpVertices(vertices));
 }
 
 } // Namespace UnitTest

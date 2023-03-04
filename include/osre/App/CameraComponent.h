@@ -48,13 +48,13 @@ enum class CameraModel {
 /// 1. Perspective camera model
 /// 2. Orthogonal camera model
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Camera : public TransformComponent {
+class OSRE_EXPORT Camera : public Component {
 public:
     /// @brief  The class constructor.
     /// @param[in] name        [in] The name for the camera node instance.
     /// @param[in] ids         [in] The id container, for unique ids.
     /// @param[in] parent              [in] The parent node, nullptr for a root node.
-    Camera(const String &name, Entity *owner, Common::Ids &ids, TransformComponent *parent = nullptr);
+    Camera(Entity *owner);
 
     /// @brief The default class destructor, default.
     ~Camera() override = default;

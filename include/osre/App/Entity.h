@@ -60,10 +60,8 @@ public:
     void setBehaviourControl(AbstractBehaviour *behaviour );
     void setNode( TransformComponent *node );
     TransformComponent *getNode() const;
-    bool preprocess();
     bool update( Time dt );
     bool render( RenderBackend::RenderBackendService *rbSrv );
-    bool postprocess();
     Component *createComponent(ComponentType type);
     Component *getComponent(ComponentType type) const;
     void setAABB( const Common::AABB &aabb );

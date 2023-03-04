@@ -38,10 +38,10 @@ using namespace ::OSRE::IO;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-static const c8 *Tag = "Project";
-static const ui32 MajorProjectVerion = 0;
-static const ui32 MinorProjectVerion = 1;
-static const c8 *Ext = "osre";
+static constexpr c8 Tag[] = "Project";
+static constexpr ui32 MajorProjectVerion = 0;
+static constexpr ui32 MinorProjectVerion = 1;
+static constexpr c8 Ext[] = "osre";
 
 Project::Project() :
         Object("App/Project"),
@@ -161,48 +161,7 @@ static size_t getNumNodes(TransformComponent *node, size_t currentNodeCount) {
 
     return currentNodeCount;
 }
-
-static size_t getPropertyDataSize(const ::cppcore::TArray<Properties::Property *> &propArray) {
-    if (propArray.isEmpty()) {
-        return 0;
-    }
-    size_t size = 0;
-    for (ui32 i = 0; i < propArray.size(); ++i) {
-        Properties::Property *p = propArray[i];
-        if (p == nullptr) {
-            continue;
-        }
-        size += sizeof(i32);
-        size += p->getPropertyName().size();
-        cppcore::Variant v = p->getValue();
-        size += v.getSize();
-    }
-
-    return size;
-}
  
-static void storeProperties(const ::cppcore::TArray<Properties::Property *> &propArray, NodeData &curNodeData) {
-    curNodeData.mNumProperties = (i32) propArray.size();
-    curNodeData.mPropertyDataSize = (i32) getPropertyDataSize(propArray);
-    curNodeData.mPropertyData = new c8[curNodeData.mPropertyDataSize];
-    size_t idx = 0;
-    for (ui32 i = 0; i < propArray.size(); ++i) {
-        Properties::Property *p = propArray[i];
-        if (p == nullptr) {
-            continue;
-        }
-
-        const size_t nameLen = p->getPropertyName().size();
-        memcpy(&curNodeData.mPropertyData[idx], &nameLen, sizeof(i32));
-        idx += sizeof(i32);
-        memcpy(&curNodeData.mPropertyData[idx], p->getPropertyName().c_str(), nameLen);
-        idx += nameLen;
-        
-        memcpy(&curNodeData.mPropertyData[idx], p->getValue().getPtr(), p->getValue().getSize());
-        idx += p->getValue().getSize();
-    }
-}
-
 static void storeNodes(TransformComponent *currentNode, NodeData *nd, size_t &index) {
     if (currentNode == nullptr || nd == nullptr) {
         return;
@@ -211,11 +170,7 @@ static void storeNodes(TransformComponent *currentNode, NodeData *nd, size_t &in
     NodeData &curNodeData = nd[index];    
     setNameChunk(currentNode->getName(), curNodeData.mNodeName);
     ::cppcore::TArray<Properties::Property *> propArray;
-    currentNode->getPropertyArray(propArray);
-    if (!propArray.isEmpty()) {
-        storeProperties(propArray, curNodeData);
-    }
-
+ 
     curNodeData.mNumChildren = (i32) currentNode->getNumChildren();
     curNodeData.mChildrenIndices = new i32[curNodeData.mNumChildren];
     size_t current_child = 0;

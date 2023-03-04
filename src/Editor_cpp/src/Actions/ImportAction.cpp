@@ -46,12 +46,6 @@ ImportAction::ImportAction(Ids *ids, World *activeWorld) :
     // empty
 }
 
-ImportAction::~ImportAction() {
-    mIds = nullptr;
-    mActiveWorld = nullptr;
-    mEntity = nullptr;
-}
-
 bool ImportAction::onRun(const ArgumentList &args) {
     if (args.isEmpty()) {
         return false;

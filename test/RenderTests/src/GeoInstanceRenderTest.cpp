@@ -38,7 +38,7 @@ namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
-const String VsSrc =
+static constexpr c8 VsSrc[] =
         "#version 400 core\n"
         "\n"
         "layout(location = 0) in vec3 position;	     // object space vertex position\n"
@@ -61,7 +61,7 @@ const String VsSrc =
         "    gl_Position = VP * M[gl_InstanceID] * vec4(position,1);\n"
         "}\n";
 
-const String FsSrc =
+static constexpr c8 FsSrc[] =
         "#version 400 core\n"
         "\n"
         "layout(location=0) out vec4 vFragColor; //fragment shader output\n"

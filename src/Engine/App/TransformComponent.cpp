@@ -21,16 +21,25 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/Component.h>
+#include <osre/App/TransformComponent.h>
 #include <osre/Common/Ids.h>
 #include <osre/Common/StringUtils.h>
+#include <osre/Common/glm_common.h>
 #include <osre/Properties/Property.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
-#include <osre/App/TransformComponent.h>
-#include <osre/Common/glm_common.h>
 
 namespace OSRE {
 namespace App {
+
+namespace {
+    static void releaseTransformComponent(TransformComponent *child) {
+        osre_assert(child != nullptr);
+
+        child->setParent(nullptr);
+        child->release();
+    }
+}
 
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Common;
@@ -39,41 +48,39 @@ static constexpr size_t NotFound = 99999999;
 TransformComponent::TransformComponent(const String &name, Entity *owner, Ids &ids, TransformComponent *parent) :
         Object(name),
         Component(owner, ComponentType::TransformComponentType),
-        m_children(),
-        m_parent(parent),
-        m_meshRefererenceArray(),
-        m_isActive(true),
-        m_ids(&ids),
-        mPropertyArray(),
-        m_propMap(),
-        m_localTransform(1.0f) {
-    if (nullptr != m_parent) {
-        m_parent->addChild(this);
+        mChildren(),
+        mParent(parent),
+        mMeshRefererenceArray(),
+        mIsActive(true),
+        mIds(&ids),
+        mLocalTransform(1.0f),
+        mWorldTransform(1.0f)  {
+    if (nullptr != mParent) {
+        mParent->addChild(this);
     }
 }
 
 TransformComponent::~TransformComponent() {
-    if (!m_children.isEmpty()) {
-        for (size_t i = 0; i < m_children.size(); i++) {
-            m_children[i]->setParent(nullptr);
-            m_children[i]->release();
+    if (!mChildren.isEmpty()) {
+        for (size_t i = 0; i < mChildren.size(); i++) {
+            releaseTransformComponent(mChildren[i]);
         }
-        m_children.clear();
+        mChildren.clear();
     }
 }
 
 void TransformComponent::setParent(TransformComponent *parent) {
     // weak reference
-    m_parent = parent;
+    mParent = parent;
 }
 
 TransformComponent *TransformComponent::getParent() const {
-    return m_parent;
+    return mParent;
 }
 
 TransformComponent *TransformComponent::createChild(const String &name) {
-    TransformComponent *child = new TransformComponent(name, getOwner(), * m_ids, this);
-    m_children.add(child);
+    TransformComponent *child = new TransformComponent(name, getOwner(), * mIds, this);
+    mChildren.add(child);
     child->get();
 
     return child;
@@ -81,7 +88,7 @@ TransformComponent *TransformComponent::createChild(const String &name) {
 
 void TransformComponent::addChild(TransformComponent *child) {
     if (nullptr != child) {
-        m_children.add(child);
+        mChildren.add(child);
         child->get();
     }
 }
@@ -91,15 +98,15 @@ bool TransformComponent::removeChild(const String &name, TraverseMode mode) {
         return false;
     }
 
-    bool found(false);
-    TransformComponent *currentNode(nullptr);
-    for (ui32 i = 0; i < m_children.size(); i++) {
-        currentNode = m_children[i];
+    bool found = false;
+    TransformComponent *currentNode = nullptr;
+    for (ui32 i = 0; i < mChildren.size(); i++) {
+        currentNode = mChildren[i];
         if (nullptr != currentNode) {
             if (currentNode->getName() == name) {
                 found = true;
-                m_children.remove(i);
-                currentNode->release();
+                mChildren.remove(i);
+                releaseTransformComponent(currentNode);
                 break;
             }
         }
@@ -120,9 +127,9 @@ TransformComponent *TransformComponent::findChild(const String &name) const {
         return nullptr;
     }
 
-    TransformComponent *currentNode(nullptr);
-    for (ui32 i = 0; i < m_children.size(); i++) {
-        currentNode = m_children[i];
+    TransformComponent *currentNode = nullptr;
+    for (ui32 i = 0; i < mChildren.size(); i++) {
+        currentNode = mChildren[i];
         if (nullptr != currentNode) {
             if (currentNode->getName() == name) {
                 return currentNode;
@@ -134,26 +141,25 @@ TransformComponent *TransformComponent::findChild(const String &name) const {
 }
 
 size_t TransformComponent::getNumChildren() const {
-    return m_children.size();
+    return mChildren.size();
 }
 
 TransformComponent *TransformComponent::getChildAt(size_t idx) const {
-    if (idx >= m_children.size()) {
+    if (idx >= mChildren.size()) {
         return nullptr;
     }
 
-    return m_children[idx];
+    return mChildren[idx];
 }
 
 void TransformComponent::releaseChildren() {
-    if (m_children.isEmpty()) {
+    if (mChildren.isEmpty()) {
         return;
     }
 
-    for (ui32 i = 0; i < m_children.size(); i++) {
-        if (nullptr != m_children[i]) {
-            m_children[i]->releaseChildren();
-            m_children[i]->release();
+    for (ui32 i = 0; i < mChildren.size(); i++) {
+        if (nullptr != mChildren[i]) {
+            releaseTransformComponent(mChildren[i]);
         }
     }
 }
@@ -170,44 +176,16 @@ void TransformComponent::render(RenderBackendService *renderBackendSrv) {
     onRender(renderBackendSrv);
 }
 
-void TransformComponent::setProperty(Properties::Property *prop) {
-    if (prop == nullptr) {
-        return;
-    }
-
-    const HashId hashId = StringUtils::hashName(prop->getPropertyName().c_str());
-    m_propMap.insert(hashId, prop);
-    mPropertyArray.add(prop);
-}
-
-void TransformComponent::getPropertyArray( ::cppcore::TArray<Properties::Property *> &propArray ) {
-    propArray = mPropertyArray;
-}
-
-Properties::Property *TransformComponent::getProperty(const String name) const {
-    const HashId hashId = StringUtils::hashName(name.c_str());
-    if (!m_propMap.hasKey(hashId)) {
-        return nullptr;
-    }
-
-    Properties::Property *prop = nullptr;
-    if (m_propMap.getValue(hashId, prop)) {
-        return prop;
-    }
-
-    return nullptr;
-}
-
 void TransformComponent::translate(const glm::vec3 &pos) {
-    m_localTransform = glm::translate(m_localTransform, pos);
+    mLocalTransform = glm::translate(mLocalTransform, pos);
 }
 
 void TransformComponent::scale(const glm::vec3 &scale) {
-    m_localTransform = glm::scale(m_localTransform, scale);
+    mLocalTransform = glm::scale(mLocalTransform, scale);
 }
 
 void TransformComponent::rotate(f32 angle, const glm::vec3 &axis) {
-    m_localTransform = glm::rotate(m_localTransform, angle, axis);
+    mLocalTransform = glm::rotate(mLocalTransform, angle, axis);
 }
 
 void TransformComponent::setRotation(glm::quat &rotation) {
@@ -215,11 +193,11 @@ void TransformComponent::setRotation(glm::quat &rotation) {
 }
 
 void TransformComponent::setTransformationMatrix(const glm::mat4 &m) {
-    m_localTransform = m;
+    mLocalTransform = m;
 }
 
 const glm::mat4 &TransformComponent::getTransformationMatrix() const {
-    return m_localTransform;
+    return mLocalTransform;
 }
 
 glm::mat4 TransformComponent::getWorlTransformMatrix() {
@@ -231,11 +209,9 @@ glm::mat4 TransformComponent::getWorlTransformMatrix() {
     return wt;
 }
 
-bool TransformComponent::onPreprocess() {
-    return true;
-}
-
 bool TransformComponent::onUpdate(Time) {
+    mWorldTransform = getWorlTransformMatrix();
+
     return true;
 }
 
@@ -243,27 +219,23 @@ bool TransformComponent::onRender(RenderBackendService *) {
     return true;
 }
 
-bool TransformComponent::onPostprocess() {
-    return true;
-}
-
 void TransformComponent::addMeshReference(size_t entityMeshIdx) {
-    MeshReferenceArray::Iterator it = m_meshRefererenceArray.find(entityMeshIdx);
-    if (m_meshRefererenceArray.end() == it) {
-        m_meshRefererenceArray.add(entityMeshIdx);
+    MeshReferenceArray::Iterator it = mMeshRefererenceArray.find(entityMeshIdx);
+    if (mMeshRefererenceArray.end() == it) {
+        mMeshRefererenceArray.add(entityMeshIdx);
     }
 }
 
 size_t TransformComponent::getNumMeshReferences() const {
-    return m_meshRefererenceArray.size();
+    return mMeshRefererenceArray.size();
 }
 
 size_t TransformComponent::getMeshReferenceAt(size_t index) const {
-    if (index >= m_meshRefererenceArray.size()) {
+    if (index >= mMeshRefererenceArray.size()) {
         return NotFound;
     }
 
-    return m_meshRefererenceArray[index];
+    return mMeshRefererenceArray[index];
 }
 
 } // Namespace App

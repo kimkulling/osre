@@ -44,8 +44,8 @@ static constexpr f32 DefaultNear = 0.001f;
 static constexpr f32 DefaultFar = 1000.0f;
 static constexpr f32 DefaultAspectRatio = 1.0f;
 
-Camera::Camera(const String &name, Entity *owner, Ids &ids, TransformComponent *parent) :
-        TransformComponent(name, owner, ids, parent),
+Camera::Camera(Entity *owner) :
+        Component(owner, ComponentType::CameraComponentType),
         mRecalculateRequested(true),
         mCameraModel(CameraModel::Perspective),
         m_fov(60.0f),

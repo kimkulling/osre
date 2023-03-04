@@ -84,8 +84,10 @@ protected:
         rootWindow->getWindowsRect(windowsRect);
         World *world = getStage()->getActiveWorld();
         Entity *entity = assimpWrapper.getEntity();
-        m_camera = world->addCamera("camera", entity);
+        Entity *camEntity = new Entity("camera", *getIdContainer(), world);
+        m_camera = (Camera*)camEntity->createComponent(ComponentType::CameraComponentType);
         m_camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
+        world->setActiveCamera(m_camera);
 
         world->addEntity(entity);
         m_camera->observeBoundingBox(entity->getAABB());

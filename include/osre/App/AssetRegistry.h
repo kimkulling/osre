@@ -88,6 +88,12 @@ public:
     /// @return The valid path.
     static String resolvePathFromUri( const IO::Uri &location );
 
+    /// @brief A utility method to register the asset folder used in the main repo more easy.
+    /// @param mount        The name of the mounting point.
+    /// @param foldername   The folder name to mount.
+    /// @return true, if successful, false if not.
+    static bool registerAssetPathInBinFolder(const String &mount, const String &foldername);
+
     /// @brief Will clear all data.
     /// @return false if not created before.
     static bool clear();
@@ -100,10 +106,10 @@ private:
     ~AssetRegistry() = default;
 
 private:
-    static AssetRegistry *s_instance;
+    static AssetRegistry *sInstance;
 
     using Name2PathMap = cppcore::THashMap<HashId, String>;
-    Name2PathMap m_name2pathMap;
+    Name2PathMap mName2pathMap;
 };
 
 } // Namespace Assets
