@@ -44,6 +44,7 @@ namespace {
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Common;
 
+static constexpr size_t NotFound = 99999999;
 TransformComponent::TransformComponent(const String &name, Entity *owner, Ids &ids, TransformComponent *parent) :
         Object(name),
         Component(owner, ComponentType::TransformComponentType),
@@ -230,8 +231,8 @@ size_t TransformComponent::getNumMeshReferences() const {
 }
 
 size_t TransformComponent::getMeshReferenceAt(size_t index) const {
-    if (index >= mMeshRefererenceArray.size()) {
-        return 99999999;
+    if (index >= m_meshRefererenceArray.size()) {
+        return NotFound;
     }
 
     return mMeshRefererenceArray[index];

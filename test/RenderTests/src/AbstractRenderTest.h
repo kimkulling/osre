@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 namespace Platform {
     class AbstractWindow;
 }
@@ -135,8 +135,8 @@ protected:
     AbstractRenderTest &operator=(const AbstractRenderTest &) = delete;
 
 private:
-    const String m_renderTestName;
-    Platform::AbstractWindow *m_window;
+    const String mRenderTestName;
+    Platform::AbstractWindow *mWindow;
 };
 
 } // namespace RenderTest

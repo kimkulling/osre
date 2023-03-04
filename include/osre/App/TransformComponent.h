@@ -63,7 +63,7 @@ public:
     using NodePtr = ::OSRE::Common::TObjPtr<::OSRE::App::TransformComponent>;
     /// @brief The node array type-
     using NodeArray = cppcore::TArray<TransformComponent *>;
-    /// @brief USed to declare mesh-array instances.
+    /// @brief Used to declare mesh-array instances.
     using MeshReferenceArray = ::cppcore::TArray<size_t>;
     /// @brief Used to declare properties.
     using PropertyMap = cppcore::THashMap<ui32, Properties::Property *>;
@@ -127,4 +127,3 @@ inline bool TransformComponent::isActive() const {
 
 } // Namespace App
 } // namespace OSRE
-

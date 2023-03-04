@@ -29,15 +29,11 @@ namespace Platform {
 
 using namespace ::OSRE::Common;
 
-static const i32 NotInitesHandle = -1;
+static constexpr i32 NotInitesHandle = -1;
 
 LibHandle::LibHandle() :
         m_index(NotInitesHandle),
         m_handle(nullptr) {
-    // empty
-}
-
-LibHandle::~LibHandle() {
     // empty
 }
 
@@ -49,28 +45,32 @@ AbstractDynamicLoader::AbstractDynamicLoader() :
 }
 
 AbstractDynamicLoader::~AbstractDynamicLoader() {
-    for (ui32 i = 0; i < m_handles.size(); i++) {
+    for (size_t i = 0; i < m_handles.size(); i++) {
         delete m_handles[i];
     }
     m_libmap.clear();
 }
 
 void AbstractDynamicLoader::addLib(const String &libName, LibHandle *libHandle) {
-    if (nullptr == libHandle) {
+    if (nullptr == libHandle || libName.empty()) {
         return;
     }
 
     libHandle->m_index = static_cast<i32>(m_handles.size());
     m_handles.add(libHandle);
-    ui32 key(Common::StringUtils::hashName(libName));
+    HashId key = Common::StringUtils::hashName(libName);
     m_libmap.insert(key, libHandle);
     setActiveLib(libHandle);
 }
 
 void AbstractDynamicLoader::removeLib(const String &libName) {
-    const ui32 key(StringUtils::hashName(libName));
+    if (libName.empty()){
+        return;
+    }
+
+    const HashId key = StringUtils::hashName(libName);
     if (m_libmap.hasKey(key)) {
-        LibHandle *libHandle(nullptr);
+        LibHandle *libHandle = nullptr;
         m_libmap.getValue(key, libHandle);
         if (nullptr != libHandle) {
             if (NotInitesHandle != libHandle->m_index) {
@@ -90,8 +90,8 @@ LibHandle *AbstractDynamicLoader::findLib(const String &libName) {
         return nullptr;
     }
 
-    LibHandle *libHandle(nullptr);
-    const ui32 key(Common::StringUtils::hashName(libName.c_str()));
+    LibHandle *libHandle = nullptr;
+    const HashId key = Common::StringUtils::hashName(libName.c_str());
     if (m_libmap.hasKey(key)) {
         m_libmap.getValue(key, libHandle);
     }
@@ -109,3 +109,4 @@ LibHandle *AbstractDynamicLoader::getActiveLib() const {
 
 } // Namespace Platform
 } // Namespace OSRE
+

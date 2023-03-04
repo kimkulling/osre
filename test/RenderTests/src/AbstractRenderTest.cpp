@@ -38,19 +38,19 @@ using namespace ::OSRE::RenderBackend;
 static const c8 *Tag = "AbstractRenderTest";
 
 AbstractRenderTest::AbstractRenderTest(const String &renderTestName) :
-        m_renderTestName(renderTestName),
-        m_window(nullptr) {
+        mRenderTestName(renderTestName),
+        mWindow(nullptr) {
     // empty
 }
 
 bool AbstractRenderTest::create(RenderBackendService *rbSrv) {
     osre_assert(nullptr != rbSrv);
 
-    osre_info(m_renderTestName, "=> Creating test.");
+    osre_info(mRenderTestName, "=> Creating test.");
     const String &name(getTestName());
-    m_window = Platform::PlatformInterface::getInstance()->getRootWindow();
-    if (nullptr != m_window) {
-        m_window->setWindowsTitle("Performing test " + name);
+    mWindow = Platform::PlatformInterface::getInstance()->getRootWindow();
+    if (nullptr != mWindow) {
+        mWindow->setWindowsTitle("Performing test " + name);
     }
 
     return onCreate(rbSrv);
@@ -59,7 +59,7 @@ bool AbstractRenderTest::create(RenderBackendService *rbSrv) {
 bool AbstractRenderTest::destroy(RenderBackendService *rbSrv) {
     osre_assert(nullptr != rbSrv);
 
-    osre_info(m_renderTestName, "<= Destroying test.");
+    osre_info(mRenderTestName, "<= Destroying test.");
 
     return onDestroy(rbSrv);
 }
@@ -91,7 +91,7 @@ void AbstractRenderTest::teardown(RenderBackendService *) {
 }
 
 const String &AbstractRenderTest::getTestName() const {
-    return m_renderTestName;
+    return mRenderTestName;
 }
 
 Material *AbstractRenderTest::createMaterial(const String &matName, const String &VsSrc, const String &FsSrc) {
@@ -111,7 +111,7 @@ Material *AbstractRenderTest::createMaterial(const String &matName, const String
 }
 
 Platform::AbstractWindow *AbstractRenderTest::getWindow() const {
-    return m_window;
+    return mWindow;
 }
 
 } // Namespace RenderTest

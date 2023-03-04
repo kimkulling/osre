@@ -30,8 +30,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-using namespace ::OSRE::RenderBackend;
-
 MaterialBuilder::MaterialCache *MaterialBuilder::s_materialCache = nullptr;
 
 static const String GLSLVersionString_330 =
