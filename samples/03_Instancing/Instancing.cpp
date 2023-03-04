@@ -29,6 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/App/CameraComponent.h>
 #include <osre/Scene/Scene.h>
 
 using namespace ::OSRE;
@@ -79,7 +80,9 @@ protected:
 
         World *world = getStage()->getActiveWorld();
         mEntity = new App::Entity("instance", world->getIds(), world);
-        Camera *camera = getStage()->getActiveWorld()->addCamera("cam1", mEntity);
+        Entity *camEntity = new App::Entity("camera", world->getIds(), world);
+        App::Camera *camera = (App::Camera*)camEntity->createComponent(ComponentType::CameraComponentType);
+        world->setActiveCamera(camera);
         camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.0001f, 1000.f);
         MeshBuilder meshBuilder;
         AppBase::getStage()->getActiveWorld()->addEntity(mEntity);

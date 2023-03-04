@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/AbstractBehaviour.h>
 #include <osre/App/Component.h>
+#include <osre/App/CameraComponent.h>
 #include <osre/App/Entity.h>
 #include <osre/App/World.h>
 #include <osre/RenderBackend/MeshProcessor.h>
@@ -110,6 +111,9 @@ Component *Entity::createComponent(ComponentType type) {
             break;
         case OSRE::App::ComponentType::ScriptComponentType:
             component = new ScriptComponent(this);
+            break;
+        case OSRE::App::ComponentType::CameraComponentType:
+            component = new Camera(this);
             break;
         case OSRE::App::ComponentType::InvalidComponent:
         case OSRE::App::ComponentType::MaxNumComponents:

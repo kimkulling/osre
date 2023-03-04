@@ -234,63 +234,64 @@ MeshBuilder &MeshBuilder::allocUiQuad( const Rect2ui &dim, UiVertexCache &vc, Re
     return *this;
 }
 
-MeshBuilder &MeshBuilder::allocCube(VertexType type, f32 w, f32 h, f32 d, BufferAccessType access ) {
+MeshBuilder &MeshBuilder::createCube(VertexType type, f32 w, f32 h, f32 d, BufferAccessType access ) {
     clear();
     mActiveMesh = new Mesh("cube", type, IndexType::UnsignedShort);
-    //RenderVert v[8] = {};
 
-    glm::vec3 pos[8];
-    pos[0] = glm::vec3(0, 0, 0);
-    pos[1] = glm::vec3(w, 0, 0);
-    pos[2] = glm::vec3(w, d, 0);
-    pos[3] = glm::vec3(0, d, 0);
+    static constexpr size_t Numvertices = 8;
+    glm::vec3 pos[Numvertices] = {};
+    pos[0] = glm::vec3(0, 0, h);
+    pos[1] = glm::vec3(w, 0, h);
+    pos[2] = glm::vec3(0, d, h);
+    pos[3] = glm::vec3(w, d, h);
     
-    pos[4] = glm::vec3(0, 0, h);
-    pos[5] = glm::vec3(w, 0, h);
-    pos[6] = glm::vec3(w, d, h);
-    pos[7] = glm::vec3(0, d, h);
+    pos[4] = glm::vec3(0, 0, 0);
+    pos[5] = glm::vec3(w, 0, 0);
+    pos[6] = glm::vec3(0, d, 0);
+    pos[7] = glm::vec3(w, d, 0);
 
-    glm::vec3 col[8] = {};
-    col[0] = glm::vec3(1, 0, 0);
-    col[1] = glm::vec3(0, 1, 0);
-    col[2] = glm::vec3(0, 0, 1);
-    col[3] = glm::vec3(1, 0, 0);
-    col[4] = glm::vec3(1, 0, 0);
-    col[5] = glm::vec3(0, 1, 0);
-    col[6] = glm::vec3(0, 0, 1);
-    col[7] = glm::vec3(1, 0, 0);
+    glm::vec3 col[Numvertices] = {};
+    col[0] = glm::vec3(0.5, 0.5, 0.5);
+    col[1] = glm::vec3(0.5, 0.5, 0.5);
+    col[2] = glm::vec3(0.5, 0.5, 0.5);
+    col[3] = glm::vec3(0.5, 0.5, 0.5);
+    col[4] = glm::vec3(0.5, 0.5, 0.5);
+    col[5] = glm::vec3(0.5, 0.5, 0.5);
+    col[6] = glm::vec3(0.5, 0.5, 0.5);
+    col[7] = glm::vec3(0.5, 0.5, 0.5);
 
-    allocVertices(mActiveMesh, mActiveMesh->getVertexType(), 8, pos, col, nullptr, access);
+    allocVertices(mActiveMesh, mActiveMesh->getVertexType(), Numvertices, pos, col, nullptr, access);
 
-    ui16 indices[36] = {
-        // bottom
-        0, 2, 1,
-        0, 3, 2,
-        
-        // top
-        4, 6, 5,
-        4, 7, 6,
-        
-        // left
-        0, 7, 3,
-        0, 4, 7,
-        
-        // right
-        1, 5, 6,
-        6, 2, 1,
-        
-        // front
+    static constexpr size_t NumIndices = 36;
+    ui16 indices[NumIndices] = {
+        // Top
+        2, 6, 7,
+        2, 7, 3,
+
+        // Bottom
         0, 4, 5,
-        5, 1, 0,
-        
-        // back
-        3, 7, 6,
-        6, 2, 3
+        0, 5, 1,
+
+        // Left
+        0, 2, 6,
+        0, 6, 4,
+
+        // Right
+        1, 3, 7,
+        1, 7, 5,
+
+        // Front
+        0, 3, 2,
+        0, 1, 3,
+
+        // Back
+        4, 6, 7,
+        4, 7, 5
     }; 
 
-    mActiveMesh->addPrimitiveGroup(12, PrimitiveType::TriangleList, 0);
+    mActiveMesh->addPrimitiveGroup(NumIndices, PrimitiveType::TriangleList, 0);
     
-    const size_t ibSize = sizeof(ui16) * 36;
+    const size_t ibSize = sizeof(ui16) * NumIndices;
     mActiveMesh->createIndexBuffer(indices, ibSize, IndexType::UnsignedShort, access);
     mActiveMesh->setMaterial(MaterialBuilder::createBuildinMaterial(type));
 

@@ -46,7 +46,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
-#include <osre/Scene/Scene.h>
+//#include <osre/Scene/Scene.h>
 
 #ifdef OSRE_WINDOWS
 #   include "Engine/Platform/win32/Win32EventQueue.h"
@@ -161,7 +161,7 @@ void OsreEdApp::loadAsset(const Uri &modelLoc) {
         mProject = createProject(modelLoc.getAbsPath());
     }
     Entity *entity = action.getEntity();
-    Entity *camEntity = new Entity("camera_1");
+    Entity *camEntity = new Entity(std::string("camera_1"), *getIdContainer(), world);
     Camera *camera = (Camera*) camEntity->createComponent(ComponentType::CameraComponentType);
     world->setActiveCamera(camera);
     mSceneData.mCamera = camera;

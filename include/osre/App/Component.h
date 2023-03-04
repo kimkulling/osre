@@ -42,22 +42,21 @@ namespace App {
 class Entity;
 class TransformComponent;
 
-///	@brief
+///	@brief This enum describes the component type.
 enum class ComponentType {
     InvalidComponent = -1,      ///< Indicates an invalid component.
     RenderComponentType = 0,    ///< A Render-component, will contain any render data.
     TransformComponentType,     ///< For all transformation types.
     LightComponentType,         ///< For light types.
     ScriptComponentType,        ///< For scripting components.
-    CameraComponentType,
-
+    CameraComponentType,        ///< For camera components.
     MaxNumComponents,           ///< The number of components.
 };
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief Describe the base class for all components.
+///	@brief Describes the base class for all components.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Component {
 public:
@@ -87,7 +86,7 @@ public:
     static size_t getIndex(ComponentType type);
 
 protected:
-    /// @brief 
+    /// @brief The class constructor.
     /// @param[in] owner  The component type.
     /// @param[in] type   The owning entity.
     Component(Entity *owner, ComponentType type);
