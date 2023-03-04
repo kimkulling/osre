@@ -231,7 +231,7 @@ size_t TransformComponent::getNumMeshReferences() const {
 }
 
 size_t TransformComponent::getMeshReferenceAt(size_t index) const {
-    if (index >= m_meshRefererenceArray.size()) {
+    if (index >= mMeshRefererenceArray.size()) {
         return NotFound;
     }
 
