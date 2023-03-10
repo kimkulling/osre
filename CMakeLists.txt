@@ -10,7 +10,6 @@ set ( PROJECT_VERSION "${OSRE_VERSION}" )
 set_property( GLOBAL PROPERTY CXX_STANDARD 11 )
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/contrib/assimp/cmake-modules/")
-message(${CMAKE_MODULE_PATH})
 
 OPTION( OSRE_BUILD_SAMPLES
   "Build the samples of OSRE."
