@@ -18,12 +18,12 @@ OPTION( OSRE_BUILD_SAMPLES
 )
 
 OPTION( OSRE_BUILD_TESTS
-  "Build the test suite of OSRE."
+  "Build the test suite for OSRE."
   ON
 )
 
 OPTION( OSRE_BUILD_DOC
-  "Build the doxygen-based documentationof OSRE."
+  "Build the doxygen-based documentation for OSRE."
   OFF
 )
 
