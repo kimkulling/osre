@@ -108,7 +108,7 @@ bool LightComponent::onUpdate(Time dt) {
     if (mLight == nullptr) {
         return true;
     }
-
+    
     return true;
 }
 
