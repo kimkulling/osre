@@ -52,7 +52,7 @@ public:
     explicit World(const String &worldName);
 
     /// @brief  The class destructor.
-    virtual ~World();
+    ~World() override;
 
     /// @brief Will add a new entity.
     /// @param entity   The entity to add.
@@ -84,9 +84,9 @@ public:
     /// @param  dt      [in] The current delta time-tick.
     void update( Time dt );
 
-    /// @brief  Will draw the world-
+    /// @brief  Will render the world-
     /// @param  rbService   [in] The renderbackend.
-    void draw( RenderBackend::RenderBackendService *rbService );
+    void render( RenderBackend::RenderBackendService *rbService );
 
     /// @brief  Will return the id container.
     /// @return The Id container.    

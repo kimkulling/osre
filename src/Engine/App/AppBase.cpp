@@ -144,7 +144,7 @@ void AppBase::requestNextFrame() {
         return;
     }
 
-    mStage->draw(mRbService);
+    mStage->render(mRbService);
     mRbService->update();
 }
 
@@ -373,7 +373,7 @@ void AppBase::onUpdate() {
 
 void AppBase::onRender() {
     if (nullptr != mStage) {
-        mStage->draw(mRbService);
+        mStage->render(mRbService);
     }
 }
 

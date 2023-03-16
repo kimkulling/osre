@@ -45,7 +45,7 @@ public:
     MouseEventListener();
 
     ///	@brief  The class destructor.
-    ~MouseEventListener() override;
+    ~MouseEventListener() override = default;
 
     /// @brief  The event-callback.
     /// @param osEvent  The event id.

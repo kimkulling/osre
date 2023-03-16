@@ -194,8 +194,6 @@ public:
     /// @return Pointer showing to the default render pipeline.
     Pipeline *createDefaultPipeline();
 
-    void setPipeline(Pipeline *pipeline);
-
     PassData *getPassById(const c8 *id) const;
 
     PassData *beginPass(const c8 *id);
@@ -272,7 +270,6 @@ private:
 
         Behaviour() : ResizeViewport(true) {}
     } mBehaviour;
-    Pipeline *mActivePipeline;
 };
 
 inline void RenderBackendService::enableAutoResizing(bool enabled) {

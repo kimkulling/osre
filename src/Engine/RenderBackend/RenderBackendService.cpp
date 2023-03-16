@@ -86,8 +86,7 @@ RenderBackendService::RenderBackendService() :
         m_dirty(false),
         m_passes(),
         m_currentPass(nullptr),
-        m_currentBatch(nullptr),
-        mActivePipeline(nullptr) {
+        m_currentBatch(nullptr) {
     // empty
 }
 
@@ -96,11 +95,6 @@ RenderBackendService::~RenderBackendService() {
         delete mSettings;
         mSettings = nullptr;
     }
-
-    /*for (ui32 i = 0; i < mPipelines.size(); ++i) {
-        delete mPipelines[i];
-    }*/
-    //mPipelines.clear();
 
     for (ui32 i = 0; i < m_passes.size(); ++i) {
         delete m_passes[i];
@@ -295,28 +289,13 @@ void RenderBackendService::sendEvent(const Event *ev, const EventData *eventData
 }
 
 Pipeline *RenderBackendService::createDefaultPipeline() {
-    if (mActivePipeline != nullptr){
-        if (mActivePipeline->getName() == DefaultPipelines::get_Pipeline_Default()) {
-            return mActivePipeline;
-        }
-    }
-    /*auto *defaultPipeline = findPipeline(DefaultPipelines::get_Pipeline_Default());
-    if (defaultPipeline != nullptr) {
-        return defaultPipeline;
-    }*/
-
     Pipeline *pipeline = new Pipeline(DefaultPipelines::get_Pipeline_Default());
     RenderPass *renderPass = RenderPassFactory::create(RenderPassId);
     CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
     renderPass->setCullState(cullState);
     pipeline->addPass(renderPass);
-    setPipeline(pipeline);
 
     return pipeline;
-}
-
-void RenderBackendService::setPipeline(Pipeline *pipeline){
-    mActivePipeline = pipeline;
 }
 
 PassData *RenderBackendService::getPassById(const c8 *id) const {

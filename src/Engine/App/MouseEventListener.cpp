@@ -35,10 +35,6 @@ MouseEventListener::MouseEventListener() :
     // empty
 }
 
-MouseEventListener::~MouseEventListener() {
-    // empty
-}
-
 void MouseEventListener::onOSEvent(const Event &ev, const EventData *data) {
     mMouseInputState.mLastX = mMouseInputState.mAbsX;
     mMouseInputState.mLastY = mMouseInputState.mAbsY;

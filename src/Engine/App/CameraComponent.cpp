@@ -83,7 +83,7 @@ void Camera::update(Time dt) {
     onUpdate(dt);
 }
 
-void Camera::draw(RenderBackendService *rbSrv) {
+void Camera::render(RenderBackendService *rbSrv) {
     if (nullptr == rbSrv) {
         return;
     }

@@ -127,7 +127,7 @@ void World::update(Time dt) {
     }
 }
 
-void World::draw(RenderBackendService *rbSrv) {
+void World::render(RenderBackendService *rbSrv) {
     osre_assert(nullptr != rbSrv);
 
     rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
