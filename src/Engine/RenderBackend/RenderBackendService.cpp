@@ -87,7 +87,7 @@ RenderBackendService::RenderBackendService() :
         m_passes(),
         m_currentPass(nullptr),
         m_currentBatch(nullptr),
-        mPipelines() {
+        mActivePipeline(nullptr) {
     // empty
 }
 
@@ -97,10 +97,10 @@ RenderBackendService::~RenderBackendService() {
         mSettings = nullptr;
     }
 
-    for (ui32 i = 0; i < mPipelines.size(); ++i) {
+    /*for (ui32 i = 0; i < mPipelines.size(); ++i) {
         delete mPipelines[i];
-    }
-    mPipelines.clear();
+    }*/
+    //mPipelines.clear();
 
     for (ui32 i = 0; i < m_passes.size(); ++i) {
         delete m_passes[i];
@@ -295,60 +295,28 @@ void RenderBackendService::sendEvent(const Event *ev, const EventData *eventData
 }
 
 Pipeline *RenderBackendService::createDefaultPipeline() {
-    auto *defaultPipeline = findPipeline(DefaultPipelines::get_Pipeline_Default());
+    if (mActivePipeline != nullptr){
+        if (mActivePipeline->getName() == DefaultPipelines::get_Pipeline_Default()) {
+            return mActivePipeline;
+        }
+    }
+    /*auto *defaultPipeline = findPipeline(DefaultPipelines::get_Pipeline_Default());
     if (defaultPipeline != nullptr) {
         return defaultPipeline;
-    }
+    }*/
 
     Pipeline *pipeline = new Pipeline(DefaultPipelines::get_Pipeline_Default());
     RenderPass *renderPass = RenderPassFactory::create(RenderPassId);
     CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
     renderPass->setCullState(cullState);
     pipeline->addPass(renderPass);
-    mPipelines.add(pipeline);
+    setPipeline(pipeline);
 
     return pipeline;
 }
 
-Pipeline *RenderBackendService::createPipeline(const String &name) {
-    Pipeline *p = findPipeline(name);
-    if (nullptr == p) {
-        p = new Pipeline(name);
-        mPipelines.add(p);
-    }
-
-    return p;
-}
-
-Pipeline *RenderBackendService::findPipeline(const String &name) {
-    if (name.empty()) {
-        return nullptr;
-    }
-
-    RenderBackend::Pipeline *pl = nullptr;
-    for (ui32 i = 0; i < mPipelines.size(); ++i) {
-        if (mPipelines[i]->getName() == name) {
-            pl = mPipelines[i];
-            break;
-        }
-    }
-
-    return pl;
-}
-
-bool RenderBackendService::destroyPipeline(const String &name) {
-    if (name.empty()) {
-        return false;
-    }
-
-    for (ui32 i = 0; i < mPipelines.size(); ++i) {
-        if (mPipelines[i]->getName() == name) {
-            mPipelines.remove(i);
-            return true;
-        }
-    }
-
-    return false;
+void RenderBackendService::setPipeline(Pipeline *pipeline){
+    mActivePipeline = pipeline;
 }
 
 PassData *RenderBackendService::getPassById(const c8 *id) const {

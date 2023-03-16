@@ -108,7 +108,7 @@ std::map<SDL_Window *, SDL2EventHandler *> SDL2EventHandler::s_windowsServerMap;
 SDL2EventHandler::SDL2EventHandler(AbstractWindow *window) :
         AbstractPlatformEventQueue(),
         m_isPolling(false),
-        m_shutdownRequested(false),
+        mShutdownRequested(false),
         m_inputUpdate(nullptr),
         mWindow(nullptr),
         m_eventTriggerer(nullptr) {
@@ -160,7 +160,7 @@ bool SDL2EventHandler::update() {
     }
 
     SDL_Event ev;
-    if (!m_shutdownRequested && m_inputUpdate->update(&ev)) {
+    if (!mShutdownRequested && m_inputUpdate->update(&ev)) {
         const Uint32 windowID = SDL_GetWindowID(mWindow->getSDLSurface());
 
         switch (ev.type) {
@@ -187,7 +187,7 @@ bool SDL2EventHandler::update() {
             } break;
 
             case SDL_QUIT: {
-                m_shutdownRequested = true;
+                mShutdownRequested = true;
             } break;
 
             case SDL_WINDOWEVENT: {
@@ -215,7 +215,7 @@ bool SDL2EventHandler::update() {
         processEvents(m_eventTriggerer);
     }
 
-    return !m_shutdownRequested;
+    return !mShutdownRequested;
 }
 
 void SDL2EventHandler::registerEventListener(const EventArray &events, OSEventListener *listener) {

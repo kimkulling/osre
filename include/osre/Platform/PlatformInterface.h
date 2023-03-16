@@ -175,7 +175,7 @@ struct ApplicationContext {
     AbstractWindow *m_rootSurface;
     AbstractPlatformEventQueue *m_oseventHandler;
     AbstractOGLRenderContext *m_renderContext;
-    AbstractTimer *m_timer;
+    AbstractTimer *mTimer;
     AbstractDynamicLoader *m_dynLoader;
     AbstractSystemInfo *m_systemInfo;
     AbstractOSService *mAbstractOSService;

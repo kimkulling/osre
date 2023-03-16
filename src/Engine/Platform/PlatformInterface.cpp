@@ -57,7 +57,7 @@ ApplicationContext::ApplicationContext(const Settings *settings) :
         m_rootSurface(nullptr),
         m_oseventHandler(nullptr),
         m_renderContext(nullptr),
-        m_timer(nullptr),
+        mTimer(nullptr),
         m_dynLoader(nullptr),
         m_systemInfo(nullptr),
         mAbstractOSService(nullptr) {
@@ -119,7 +119,7 @@ AbstractWindow *PlatformInterface::getRootWindow() const {
 }
 
 AbstractTimer *PlatformInterface::getTimer() const {
-    return mContext->m_timer;
+    return mContext->mTimer;
 }
 
 AbstractDynamicLoader *PlatformInterface::getDynamicLoader() const {
@@ -264,7 +264,7 @@ bool PlatformInterface::setupGfx(WindowsProperties *props, bool polls) {
         return false;
     }
     mContext->m_oseventHandler->enablePolling(polls);
-    mContext->m_timer = PlatformPluginFactory::createTimer();
+    mContext->mTimer = PlatformPluginFactory::createTimer();
 
     // setup the render context
     mContext->m_renderContext = PlatformPluginFactory::createRenderContext();

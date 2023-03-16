@@ -105,21 +105,14 @@ void LightComponent::setLight(RenderBackend::Light *light) {
 }
 
 bool LightComponent::onUpdate(Time dt) {
+    if (mLight == nullptr) {
+        return true;
+    }
+
     return true;
 }
 
 bool LightComponent::onRender(RenderBackend::RenderBackendService *rbSrv) {
-    return true;
-}
-
-ScriptComponent::ScriptComponent(Entity *owner) 
-        : Component(owner, ComponentType::ScriptComponentType) {}
-
-bool ScriptComponent::onUpdate(Time dt) {
-    return true;
-}
-
-bool ScriptComponent::onRender(RenderBackend::RenderBackendService *rbSrv) {
     return true;
 }
 

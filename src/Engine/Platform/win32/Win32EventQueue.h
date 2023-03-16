@@ -101,7 +101,7 @@ private:
     AbstractInputUpdate *m_updateInstance;
     Common::EventTriggerer *m_eventTriggerer;
     AbstractWindow *m_rootWindow;
-    bool m_shutdownRequested;
+    bool mShutdownRequested;
     bool m_isPolling;
 };
 

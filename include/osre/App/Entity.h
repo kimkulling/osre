@@ -75,7 +75,7 @@ private:
     using ComponentArray = cppcore::TArray<Component*>;
     ComponentArray mComponentArray;
     TransformComponent *m_node;
-    Common::Ids &m_ids;
+    Common::Ids &mIds;
     Common::AABB m_aabb;
     World *mOwner;
 };

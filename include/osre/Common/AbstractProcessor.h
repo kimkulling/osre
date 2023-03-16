@@ -41,7 +41,7 @@ public:
     virtual ~AbstractProcessor() = default;
 
     /// @brief  Will add a precondition.
-    /// @param  precondition    [in] Process which need to get executed before this.
+    /// @param[in] precondition   Process which need to get executed before this.
     virtual void addDependency( AbstractProcessor *precondition );
 
     /// @brief  Will return the list of preconditions.
@@ -66,7 +66,7 @@ inline AbstractProcessor::AbstractProcessor() : mPreconditions() {
 
 inline void AbstractProcessor::addDependency( AbstractProcessor *precondition ) {
     if ( nullptr != precondition ) {
-        mPreconditions.add( precondition );
+        mPreconditions.add(precondition);
     }
 }
 

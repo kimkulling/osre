@@ -60,50 +60,50 @@ static constexpr c8 Tag[] = "AppBase";
 
 AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
         mAppState(State::Uninited),
-        m_argParser(argc, argv, supportedArgs, desc),
-        m_environment(nullptr),
-        m_settings(new Properties::Settings),
-        m_platformInterface(nullptr),
-        m_timer(nullptr),
-        m_rbService(nullptr),
-        m_worlds(),
+        mArgParser(argc, argv, supportedArgs, desc),
+        mEnvironment(nullptr),
+        mSettings(new Properties::Settings),
+        mPlatformInterface(nullptr),
+        mTimer(nullptr),
+        mRbService(nullptr),
+        mWorlds(),
         mStage(nullptr),
-        m_mouseEvListener(nullptr),
-        m_keyboardEvListener(nullptr),
-        m_ids(nullptr),
-        m_shutdownRequested(false) {
-    m_settings->setString(Properties::Settings::RenderAPI, "opengl");
-    m_settings->setBool(Properties::Settings::PollingMode, true);
+        mMouseEvListener(nullptr),
+        mKeyboardEvListener(nullptr),
+        mIds(nullptr),
+        mShutdownRequested(false) {
+    mSettings->setString(Properties::Settings::RenderAPI, "opengl");
+    mSettings->setBool(Properties::Settings::PollingMode, true);
 }
 
 AppBase::~AppBase() {
-    delete m_settings;
-    m_settings = nullptr;
+    delete mSettings;
+    mSettings = nullptr;
 }
 
 bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &title, bool fullscreen,
         RenderBackendType renderer) {
-    osre_assert(nullptr != m_settings);
+    osre_assert(nullptr != mSettings);
 
-    m_settings->setInt(Properties::Settings::WinX, x);
-    m_settings->setInt(Properties::Settings::WinY, y);
-    m_settings->setInt(Properties::Settings::WinWidth, width);
-    m_settings->setInt(Properties::Settings::WinHeight, height);
-    m_settings->setBool(Properties::Settings::FullScreen, fullscreen);
-    m_settings->setString(Properties::Settings::WindowsTitle, title);
+    mSettings->setInt(Properties::Settings::WinX, x);
+    mSettings->setInt(Properties::Settings::WinY, y);
+    mSettings->setInt(Properties::Settings::WinWidth, width);
+    mSettings->setInt(Properties::Settings::WinHeight, height);
+    mSettings->setBool(Properties::Settings::FullScreen, fullscreen);
+    mSettings->setString(Properties::Settings::WindowsTitle, title);
     if (renderer == RenderBackendType::OpenGLRenderBackend) {
-        m_settings->setString(Properties::Settings::RenderAPI, "opengl");
+        mSettings->setString(Properties::Settings::RenderAPI, "opengl");
     } else if (renderer == RenderBackendType::VulkanRenderBackend) {
-        m_settings->setString(Properties::Settings::RenderAPI, "vulkan");
+        mSettings->setString(Properties::Settings::RenderAPI, "vulkan");
     }
 
     return onCreate();
 }
 
 bool AppBase::create(Properties::Settings *config) {
-    if (nullptr != config && config != m_settings) {
-        delete m_settings;
-        m_settings = config;
+    if (nullptr != config && config != mSettings) {
+        delete mSettings;
+        mSettings = config;
     }
 
     return onCreate();
@@ -125,11 +125,11 @@ void AppBase::update() {
 }
 
 void AppBase::resize(i32 x, i32 y, i32 w, i32 h) {
-    if (nullptr == m_platformInterface) {
+    if (nullptr == mPlatformInterface) {
         return;
     }
 
-    AbstractWindow *rootWindow = m_platformInterface->getRootWindow();
+    AbstractWindow *rootWindow = mPlatformInterface->getRootWindow();
     if (nullptr == rootWindow) {
         return;
     }
@@ -138,23 +138,23 @@ void AppBase::resize(i32 x, i32 y, i32 w, i32 h) {
 }
 
 void AppBase::requestNextFrame() {
-    osre_assert(nullptr != m_rbService);
+    osre_assert(nullptr != mRbService);
 
     if (mStage == nullptr) {
         return;
     }
 
-    mStage->draw(m_rbService);
-    m_rbService->update();
+    mStage->draw(mRbService);
+    mRbService->update();
 }
 
 bool AppBase::handleEvents() {
-    if (nullptr == m_platformInterface) {
+    if (nullptr == mPlatformInterface) {
         osre_debug(Tag, "AppBase::PlatforInterface not in proper state: not nullptr.");
         return false;
     }
 
-    const bool result = m_platformInterface->update();
+    const bool result = mPlatformInterface->update();
     if (shutdownRequested()) {
         return false;
     }
@@ -163,7 +163,7 @@ bool AppBase::handleEvents() {
 }
 
 Properties::Settings *AppBase::getSettings() const {
-    return m_settings;
+    return mSettings;
 }
 
 Camera *AppBase::setActiveCamera(Camera *camera) {
@@ -185,15 +185,15 @@ Camera *AppBase::setActiveCamera(Camera *camera) {
 }
 
 void AppBase::requestShutdown() {
-    m_shutdownRequested = true;
+    mShutdownRequested = true;
 }
 
 bool AppBase::shutdownRequested() const {
-    return m_shutdownRequested;
+    return mShutdownRequested;
 }
 
 Platform::AbstractTimer *AppBase::getActiveTimer() const {
-    return m_timer;
+    return mTimer;
 }
 
 AnimationControllerBase *AppBase::getTransformController(TransformMatrixBlock &tmb) {
@@ -201,19 +201,19 @@ AnimationControllerBase *AppBase::getTransformController(TransformMatrixBlock &t
 }
 
 Platform::AbstractWindow *AppBase::getRootWindow() const {
-    if (nullptr == m_platformInterface) {
+    if (nullptr == mPlatformInterface) {
         return nullptr;
     }
 
-    return m_platformInterface->getRootWindow();
+    return mPlatformInterface->getRootWindow();
 }
 
 void AppBase::setWindowsTitle(const String &title) {
-    if (nullptr == m_platformInterface) {
+    if (nullptr == mPlatformInterface) {
         return;
     }
 
-    AbstractWindow *rs = m_platformInterface->getRootWindow();
+    AbstractWindow *rs = mPlatformInterface->getRootWindow();
     if (nullptr != rs) {
         rs->setWindowsTitle(title);
     }
@@ -226,8 +226,8 @@ bool AppBase::onCreate() {
     }
 
     ServiceProvider::create();
-    m_ids = new Common::Ids;
-    m_environment = new Common::Environment;
+    mIds = new Common::Ids;
+    mEnvironment = new Common::Environment;
 
     // create the asset registry
     AssetRegistry *registry = AssetRegistry::create();
@@ -236,13 +236,13 @@ bool AppBase::onCreate() {
     }
 
     // create the platform interface instance
-    m_platformInterface = Platform::PlatformInterface::create(m_settings);
-    if (nullptr == m_platformInterface) {
+    mPlatformInterface = Platform::PlatformInterface::create(mSettings);
+    if (nullptr == mPlatformInterface) {
         osre_error(Tag, "Pointer to platform interface is nullptr.");
         return false;
     }
 
-    if (!m_platformInterface->open()) {
+    if (!mPlatformInterface->open()) {
         osre_error(Tag, "Error while opening platform interface.");
         return false;
     }
@@ -254,12 +254,12 @@ bool AppBase::onCreate() {
     }
 
     // create the render back-end
-    m_rbService = new RenderBackendService();
-    ServiceProvider::setService(ServiceType::RenderService, m_rbService);
-    m_rbService->setSettings(m_settings, false);
-    if (!m_rbService->open()) {
-        m_rbService->release();
-        m_rbService = nullptr;
+    mRbService = new RenderBackendService();
+    ServiceProvider::setService(ServiceType::RenderService, mRbService);
+    mRbService->setSettings(mSettings, false);
+    if (!mRbService->open()) {
+        mRbService->release();
+        mRbService = nullptr;
         return false;
     }
 
@@ -267,46 +267,42 @@ bool AppBase::onCreate() {
     mStage = new Stage("stage");
     mStage->createWorld("world");
 
-    const String &api = m_rbService->getSettings()->getString(Properties::Settings::RenderAPI);
-    m_environment->addStrVar("api", api.c_str());
+    const String &api = mRbService->getSettings()->getString(Properties::Settings::RenderAPI);
+    mEnvironment->addStrVar("api", api.c_str());
 
-    m_platformInterface->getPlatformEventHandler()->setRenderBackendService(m_rbService);
+    mPlatformInterface->getPlatformEventHandler()->setRenderBackendService(mRbService);
 
     // enable render-back-end
-    RenderBackend::CreateRendererEventData *data = new CreateRendererEventData(m_platformInterface->getRootWindow());
-    data->m_pipeline = m_rbService->createDefaultPipeline();
-    m_rbService->sendEvent(&RenderBackend::OnCreateRendererEvent, data);
+    RenderBackend::CreateRendererEventData *data = new CreateRendererEventData(mPlatformInterface->getRootWindow());
+    data->m_pipeline = mRbService->createDefaultPipeline();
+    mRbService->sendEvent(&RenderBackend::OnCreateRendererEvent, data);
 
-    m_timer = Platform::PlatformInterface::getInstance()->getTimer();
+    mTimer = Platform::PlatformInterface::getInstance()->getTimer();
 
     MaterialBuilder::create();
     ResourceCacheService *rcSrv = new ResourceCacheService;
     ServiceProvider::setService(ServiceType::ResourceService, rcSrv);
     // Setup onMouse event-listener
-    AbstractPlatformEventQueue *evHandler = m_platformInterface->getPlatformEventHandler();
+    AbstractPlatformEventQueue *evHandler = mPlatformInterface->getPlatformEventHandler();
     if (nullptr != evHandler) {
         TArray<const Common::Event *> eventArray;
         eventArray.add(&MouseButtonDownEvent);
         eventArray.add(&MouseButtonUpEvent);
         eventArray.add(&MouseMoveEvent);
-        m_mouseEvListener = new MouseEventListener;
-        evHandler->registerEventListener(eventArray, m_mouseEvListener);
+        mMouseEvListener = new MouseEventListener;
+        evHandler->registerEventListener(eventArray, mMouseEvListener);
 
         eventArray.resize(0);
         eventArray.add(&KeyboardButtonDownEvent);
         eventArray.add(&KeyboardButtonUpEvent);
-        m_keyboardEvListener = new KeyboardEventListener;
-        evHandler->registerEventListener(eventArray, m_keyboardEvListener);
+        mKeyboardEvListener = new KeyboardEventListener;
+        evHandler->registerEventListener(eventArray, mKeyboardEvListener);
     }
 
     Common::AbstractService *ioSrv = IO::IOService::create();
     ServiceProvider::setService(ServiceType::IOService, ioSrv);
 
-#ifdef OSRE_WINDOWS
-    App::AssetRegistry::registerAssetPath("assets", "../../assets");
-#else
-    App::AssetRegistry::registerAssetPath("assets", "../assets");
-#endif
+    App::AssetRegistry::registerAssetPathInBinFolder("assets", "assets");
 
     mAppState = State::Created;
     osre_debug(Tag, "Set application state to Created.");
@@ -320,7 +316,7 @@ bool AppBase::onDestroy() {
         return false;
     }
 
-    AbstractPlatformEventQueue *evHandler = m_platformInterface->getPlatformEventHandler();
+    AbstractPlatformEventQueue *evHandler = mPlatformInterface->getPlatformEventHandler();
     if (nullptr != evHandler) {
         Common::EventPtrArray eventArray;
         eventArray.add(&MouseButtonDownEvent);
@@ -330,11 +326,14 @@ bool AppBase::onDestroy() {
         evHandler->unregisterAllEventHandler(eventArray);
     }
     AssetRegistry::destroy();
+    ResourceCacheService *service = ServiceProvider::getService<ResourceCacheService>(ServiceType::ResourceService);
+    delete service;
+
     ServiceProvider::destroy();
 
-    if (m_platformInterface) {
+    if (mPlatformInterface) {
         Platform::PlatformInterface::destroy();
-        m_platformInterface = nullptr;
+        mPlatformInterface = nullptr;
     }
 
     MaterialBuilder::destroy();
@@ -342,15 +341,16 @@ bool AppBase::onDestroy() {
     delete mStage;
     mStage = nullptr;
 
-    delete m_ids;
-    m_ids = nullptr;
+    delete mIds;
+    mIds = nullptr;
 
-    delete m_mouseEvListener;
-    m_mouseEvListener = nullptr;
+    delete mMouseEvListener;
+    mMouseEvListener = nullptr;
 
-    delete m_keyboardEvListener;
-    m_keyboardEvListener = nullptr;
+    delete mKeyboardEvListener;
+    mKeyboardEvListener = nullptr;
 
+    
     osre_debug(Tag, "Set application state to destroyed.");
     mAppState = State::Destroyed;
     Logger::kill();
@@ -361,36 +361,36 @@ bool AppBase::onDestroy() {
 static constexpr i64 Conversion2Micro = 1000;
 
 void AppBase::onUpdate() {
-    i64 microsecs = m_timer->getMilliCurrentSeconds() * Conversion2Micro;
+    i64 microsecs = mTimer->getMilliCurrentSeconds() * Conversion2Micro;
     Time dt(microsecs);    
 
     if (nullptr != mStage) {
         mStage->update(dt);
     }
 
-    m_keyboardEvListener->clearKeyMap();
+    mKeyboardEvListener->clearKeyMap();
 }
 
 void AppBase::onRender() {
     if (nullptr != mStage) {
-        mStage->draw(m_rbService);
+        mStage->draw(mRbService);
     }
 }
 
 const ArgumentParser &AppBase::getArgumentParser() const {
-    return m_argParser;
+    return mArgParser;
 }
 
 Ids *AppBase::getIdContainer() const {
-    return m_ids;
+    return mIds;
 }
 
 bool AppBase::isKeyPressed(Key key) const {
-    if (nullptr == m_keyboardEvListener) {
+    if (nullptr == mKeyboardEvListener) {
         return false;
     }
 
-    return m_keyboardEvListener->isKeyPressed(key);
+    return mKeyboardEvListener->isKeyPressed(key);
 }
 
 void AppBase::getResolution(ui32 &width, ui32 &height) {

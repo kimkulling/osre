@@ -44,9 +44,7 @@ ProgressReporter::ProgressReporter(AbstractWindow *window) :
 ProgressReporter::~ProgressReporter() {
     if (nullptr != mProgressBar) {
         UIElements::deleteProgressBar(mProgressBar);
-        mProgressBar = nullptr;
     }
-    mWindow = nullptr;
 }
 
 void ProgressReporter::start() {
@@ -58,11 +56,11 @@ void ProgressReporter::start() {
         return;
     }
 
-    ui32 width = 0, heihgt = 0;
+    ui32 width = 0u, heihgt = 0u;
     PlatformInterface::getInstance()->getOSServices()->getMonitorResolution(width, heihgt);
-    ui32 x = width / 2 - 50;
-    ui32 y = heihgt / 2 - 10;
-    Rect2ui r(x, y, 300, 20);
+    ui32 x = width / 2u - 50u;
+    ui32 y = heihgt / 2u - 10u;
+    Rect2ui r(x, y, 300u, 20u);
     Platform::Win32Window *w = (Platform::Win32Window*) mWindow;
     if (nullptr == w) {
         return;

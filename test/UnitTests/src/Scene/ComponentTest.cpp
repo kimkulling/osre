@@ -34,14 +34,14 @@ using namespace ::OSRE::App;
 
 class ComponentTest : public ::testing::Test {
 protected:
-    Common::Ids *m_ids;
+    Common::Ids *mIds;
 
     void SetUp() override {
-        m_ids = new Common::Ids;
+        mIds = new Common::Ids;
     }
 
     void TearDown() override {
-        delete m_ids;
+        delete mIds;
     }
 };
 
@@ -77,7 +77,7 @@ TEST_F(ComponentTest, createTest) {
     try {
         Common::Ids ids;
         Entity entity("test", ids, nullptr);
-        MockComponent myComp(&entity, ComponentType::ScriptComponentType);
+        MockComponent myComp(&entity, ComponentType::LightComponentType);
     } catch (...) {
         ok = false;
     }
@@ -87,8 +87,8 @@ TEST_F(ComponentTest, createTest) {
 TEST_F(ComponentTest, accessNodeTest) {
     String name = "test";
 
-    Entity *entity = new Entity(name, *m_ids, nullptr);
-    MockComponent myComp(entity, ComponentType::ScriptComponentType);
+    Entity *entity = new Entity(name, *mIds, nullptr);
+    MockComponent myComp(entity, ComponentType::LightComponentType);
 
     EXPECT_EQ(entity, myComp.getOwner());
 }
@@ -96,7 +96,7 @@ TEST_F(ComponentTest, accessNodeTest) {
 TEST_F(ComponentTest, accessIdTest) {
     String name = "test";
 
-    Entity *entity = new Entity(name, *m_ids, nullptr);
+    Entity *entity = new Entity(name, *mIds, nullptr);
     Component *rc = entity->getComponent(ComponentType::RenderComponentType);
     EXPECT_NE(nullptr, rc);
 }
