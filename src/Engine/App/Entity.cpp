@@ -39,7 +39,7 @@ Entity::Entity(const String &name, Common::Ids &ids, World *world) :
         m_renderComponent(nullptr),
         mComponentArray(),
         m_node(nullptr),
-        m_ids(ids),
+        mIds(ids),
         m_aabb(),
         mOwner(world) {
     mComponentArray.resize(Component::getIndex(ComponentType::MaxNumComponents));
@@ -103,14 +103,11 @@ Component *Entity::createComponent(ComponentType type) {
             break;
         case OSRE::App::ComponentType::TransformComponentType: {
                 const String name = getName() + "_transform";
-                component = new TransformComponent(name, this, m_ids, nullptr); 
+                component = new TransformComponent(name, this, mIds, nullptr); 
             }
             break;
         case OSRE::App::ComponentType::LightComponentType:
             component = new LightComponent(this);
-            break;
-        case OSRE::App::ComponentType::ScriptComponentType:
-            component = new ScriptComponent(this);
             break;
         case OSRE::App::ComponentType::CameraComponentType:
             component = new Camera(this);

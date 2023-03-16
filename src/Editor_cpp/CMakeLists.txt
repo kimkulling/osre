@@ -1,14 +1,14 @@
-find_package(Python COMPONENTS Interpreter Development)
+find_package(Python3 COMPONENTS Interpreter Development)
 
 INCLUDE_DIRECTORIES(
     ./
     ./src
-    ${Python_INCLUDE_DIRS}
+    ${Python3_INCLUDE_DIRS}
     ${PROJECT_SOURCE_DIR}
 )
 
 link_directories(
-    ${Python_LIBRARY_DIRS}
+    ${Python3_LIBRARIES}
 )
 
 SET( inspector_module_src 
@@ -88,4 +88,4 @@ ADD_EXECUTABLE( osre_ed
     ${main_src}
 )
 
-target_link_libraries ( osre_ed osre comctl32.lib winmm.lib )
+target_link_libraries ( osre_ed osre ${Python3_LIBRARIES} comctl32.lib winmm.lib )

@@ -94,9 +94,9 @@ public:
     /// @param  dt      [in] The current delta time-tick.
     void update(Time dt);
 
-    /// @brief  Will draw the world-
+    /// @brief  Will render the world-
     /// @param  rbService   [in] The renderbackend.
-    void draw(RenderBackend::RenderBackendService *rbService);
+    void render(RenderBackend::RenderBackendService *rbService);
 
 private:
     World *mWorld;

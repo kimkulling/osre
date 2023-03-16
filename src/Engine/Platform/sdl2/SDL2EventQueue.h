@@ -64,7 +64,7 @@ protected:
 private:
     static std::map<SDL_Window*, SDL2EventHandler*> s_windowsServerMap;
     bool m_isPolling;
-    bool m_shutdownRequested;
+    bool mShutdownRequested;
     AbstractSDL2InputUpdate *m_inputUpdate;
     SDL2Surface *mWindow;
     Common::EventTriggerer *m_eventTriggerer;

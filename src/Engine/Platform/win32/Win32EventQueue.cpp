@@ -89,7 +89,7 @@ Win32EventQueue::Win32EventQueue(AbstractWindow *rootWindow) :
         m_updateInstance(nullptr),
         m_eventTriggerer(nullptr),
         m_rootWindow(rootWindow),
-        m_shutdownRequested(false),
+        mShutdownRequested(false),
         m_isPolling(true) {
     osre_assert(nullptr != rootWindow);
 
@@ -123,7 +123,7 @@ bool Win32EventQueue::update() {
         return false;
     }
     MSG Program;
-    if (!m_shutdownRequested && m_updateInstance->update(Program)) {
+    if (!mShutdownRequested && m_updateInstance->update(Program)) {
         switch (Program.message) {
             case WM_ACTIVATE: {
                 Common::EventData *data = new Common::EventData(AppFocusEvent, m_eventTriggerer);
@@ -133,7 +133,7 @@ bool Win32EventQueue::update() {
             case WM_QUIT:
             case WM_CLOSE: {
                 onQuit();
-                m_shutdownRequested = true;
+                mShutdownRequested = true;
             } break;
 
             case WM_SYSCOMMAND: {
@@ -234,7 +234,7 @@ bool Win32EventQueue::update() {
         ::DispatchMessage(&Program);
     }
 
-    return !m_shutdownRequested;
+    return !mShutdownRequested;
 }
 
 LRESULT Win32EventQueue::winproc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam) {
@@ -304,7 +304,7 @@ Win32EventQueue *Win32EventQueue::getInstance(HWND hWnd) {
 void Win32EventQueue::onQuit() {
     Common::EventData data(QuitEvent, m_eventTriggerer);
     m_eventTriggerer->triggerEvent(data.getEvent(), &data);
-    m_shutdownRequested = true;
+    mShutdownRequested = true;
 }
 
 void Win32EventQueue::setRootSurface(AbstractWindow *pSurface) {

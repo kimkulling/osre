@@ -285,7 +285,7 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, cppcore::TArray<size_t> &pri
         }
         data->m_vertexArray = m_vertexArray;
 
-        // setup the draw calls
+        // setup the render calls
         if (0 == currentMeshEntry->numInstances) {
             setupPrimDrawCmd(id, currentMesh->isLocal(), currentMesh->getLocalMatrix(),
                     primGroups, m_oglBackend, this, m_vertexArray);
@@ -372,7 +372,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
                     }
                     data->m_vertexArray = m_vertexArray;
 
-                    // setup the draw calls
+                    // setup the render calls
                     if (0 == currentMeshEntry->numInstances) {
                         setupPrimDrawCmd(currentBatchData->m_id, currentMesh->isLocal(), currentMesh->getLocalMatrix(),
                                 primGroups, m_oglBackend, this, m_vertexArray);

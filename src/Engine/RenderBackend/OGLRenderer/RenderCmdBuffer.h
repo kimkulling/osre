@@ -125,9 +125,9 @@ public:
     void setMatrixBuffer(const c8 *id, MatrixBuffer *buffer);
 
 protected:
-    /// The draw primitive callback.
+    /// The render primitive callback.
     virtual bool onDrawPrimitivesCmd(DrawPrimitivesCmdData *data);
-    /// The draw primitive instances callback.
+    /// The render primitive instances callback.
     virtual bool onDrawPrimitivesInstancesCmd(DrawInstancePrimitivesCmdData *data);
     /// The set render target callback.
     virtual bool onSetRenderTargetCmd(SetRenderTargetCmdData *data);

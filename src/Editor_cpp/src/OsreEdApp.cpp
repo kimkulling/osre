@@ -184,7 +184,7 @@ void OsreEdApp::loadAsset(const Uri &modelLoc) {
 }
 
 void OsreEdApp::newProjectCmd(ui32, void *data) {
-    std::string name = "New project";
+    String name = "New project";
     if (data != nullptr) {
         cppcore::Variant *v = (cppcore::Variant*)data;
         name = v->getString();

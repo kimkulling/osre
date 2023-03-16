@@ -104,13 +104,13 @@ void Stage::update( Time dt ) {
     }
 }
 
-void Stage::draw(RenderBackend::RenderBackendService *rbService) {
+void Stage::render(RenderBackend::RenderBackendService *rbService) {
     if (nullptr == rbService) {
         return;
     }
 
     if (nullptr != mWorld) {
-        mWorld->draw(rbService);
+        mWorld->render(rbService);
     }
 }
 

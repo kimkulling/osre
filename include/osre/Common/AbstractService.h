@@ -57,9 +57,9 @@ public:
     virtual bool update();
 
 protected:
-    ///	@brief	The default class constructor.
-    ///	@param	serverName	[in] The server name.
-    AbstractService( const String &serverName );
+    ///	@brief The default class constructor.
+    ///	@param[in] serviceName    The server name.
+    AbstractService( const String &serviceName );
 
     /// @brief  Will be called, when server access is opened.
     /// @return true for success, false for error.
@@ -70,7 +70,7 @@ protected:
     virtual bool onClose() = 0;
 
     /// @brief  Override this method for the update callback.
-    ///	@param	timeDiff	[in] The time difference since the last update callback.
+    ///	@param[in] timeDiff   The time difference since the last update callback.
     ///	@return	true, if update callback was successful
     virtual bool onUpdate() = 0;
 
@@ -124,14 +124,14 @@ inline bool AbstractService::update() {
 ///
 /// @brief  Helper macro to define a singleton and declare all needed methods.
 //-------------------------------------------------------------------------------------------------
-#define DECLARE_SINGLETON( type )                                                 \
-public:                                                                           \
+#define DECLARE_SINGLETON( type )                                            \
+public:                                                                      \
     static type * s_instance;                                                \
-    static type * getInstance() {                                                 \
-        osre_assert(nullptr != s_instance);                                \
+    static type * getInstance() {                                            \
+        osre_assert(nullptr != s_instance);                                  \
         return s_instance;                                                   \
-    }                                                                             \
-    static void setInstance( type *instance ) { s_instance = instance; } \
+    }                                                                        \
+    static void setInstance( type *instance ) { s_instance = instance; }     \
 private:
 
 //-------------------------------------------------------------------------------------------------
@@ -147,7 +147,7 @@ private:
 ///
 /// @brief  Helper macro to create a macro from a given class.
 //-------------------------------------------------------------------------------------------------
-#define CREATE_SINGLETON( type )                 \
+#define CREATE_SINGLETON( type )               \
     osre_assert(nullptr == s_instance);        \
     s_instance = this;         
 
@@ -156,7 +156,7 @@ private:
 ///
 /// @brief  Helper macro to destroy a macro from a given class.
 //-------------------------------------------------------------------------------------------------
-#define DESTROY_SINGLETON( type )                \
+#define DESTROY_SINGLETON( type )              \
     osre_assert(nullptr != s_instance);        \
     s_instance = nullptr;         
 

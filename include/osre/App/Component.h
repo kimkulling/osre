@@ -48,7 +48,6 @@ enum class ComponentType {
     RenderComponentType = 0,    ///< A Render-component, will contain any render data.
     TransformComponentType,     ///< For all transformation types.
     LightComponentType,         ///< For light types.
-    ScriptComponentType,        ///< For scripting components.
     CameraComponentType,        ///< For camera components.
     MaxNumComponents,           ///< The number of components.
 };
@@ -185,28 +184,6 @@ protected:
 
 private:
     RenderBackend::Light *mLight;
-};
-
-//-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-/// @brief
-//-------------------------------------------------------------------------------------------------
-class ScriptComponent final : public Component {
-public:
-    /// @brief 
-    /// @param owner 
-    ScriptComponent(Entity *owner);
-    
-    /// @brief 
-    ~ScriptComponent() override = default;
-
-protected:
-    bool onUpdate(Time dt) override;
-    bool onRender(RenderBackend::RenderBackendService *rbSrv) override;
-
-private:
-    // todo!
 };
 
 } // namespace App

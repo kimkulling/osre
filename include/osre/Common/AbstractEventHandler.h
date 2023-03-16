@@ -42,19 +42,21 @@ struct EventData;
 class OSRE_EXPORT AbstractEventHandler {
 public:
     ///	@brief	The class destructor, virtual.
-    virtual ~AbstractEventHandler();
+    virtual ~AbstractEventHandler() = default;
 
     /// @brief  Will be called when event handler is attached to a event sink.
-    /// @param  eventData   [in] The event data.
+    /// @param[in] eventData  The event data.
+    /// @return true if successful, false in case of an error.
     virtual bool attach( const Common::EventData *eventData );
 
     /// @brief  Will be called when event handler is detached from a event sink.
-    /// @param  eventData   [in] The event data.
+    /// @param[in] eventData  The event data.
+    /// @return true if successful, false in case of an error.
     virtual bool detach( const Common::EventData *eventData );
 
     ///	@brief	Override this method for your own event handling functions.
-    ///	@param	ev		    [in] The event.
-    ///	@param	eventData   [in] A pointer showing to the event data.
+    ///	@param[in] ev         The event.
+    ///	@param[in] eventData  A pointer showing to the event data.
     ///	@return	Will return true, if the event was handled, false if not.
     virtual bool onEvent( const Event &ev, const EventData *eventData ) = 0;
 
@@ -63,36 +65,27 @@ protected:
     AbstractEventHandler();
 
     /// @brief  Will be called when event handler is attached to a task.
-    ///	@param	eventData	[in] A pointer showing to the event data.
+    ///	@param[in] eventData    A pointer showing to the event data.
     ///	@return	Will return true, if the event was handled, false if not.
     virtual bool onAttached( const EventData *eventData ) = 0;
     
     /// @brief  Will be called when the event handler is detached from a task
-    ///	@param	eventData	[in] A pointer showing to the event data.
+    ///	@param[in] eventData    A pointer showing to the event data.
     ///	@return	Will return true, if the event was handled, false if not.
     virtual bool onDetached( const EventData *eventData ) = 0;
 };
 
-inline
-AbstractEventHandler::AbstractEventHandler() {
+inline AbstractEventHandler::AbstractEventHandler() {
     // empty
 }
 
-inline
-AbstractEventHandler::~AbstractEventHandler() {
-    // empty
-}
-
-inline
-bool AbstractEventHandler::attach( const EventData *eventData ) {
+inline bool AbstractEventHandler::attach(const EventData *eventData) {
     return onAttached( eventData );
 }
 
-inline
-bool AbstractEventHandler::detach( const EventData *eventData ) {
+inline bool AbstractEventHandler::detach(const EventData *eventData) {
     return onDetached( eventData );
 }
 
 } // Namespace Common
 } // Namespace OSRE
-

@@ -1096,7 +1096,7 @@ OGLFrameBuffer *OGLRenderBackend::createFrameBuffer(const String &name, ui32 wid
 
     glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, oglFB->m_renderedTexture, 0);
 
-    // Set the list of draw buffers.
+    // Set the list of render buffers.
     GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
     glDrawBuffers(1, DrawBuffers);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {

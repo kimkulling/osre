@@ -79,9 +79,9 @@ public:
     /// @param  dt  [in] The time tick diff since the last tick.
     void update(Time dt) override;
 
-    /// @brief The draw callback.
+    /// @brief The render callback.
     /// @param renderBackendSrv     [in] The RenderBackend-Server.
-    void draw(RenderBackend::RenderBackendService *renderBackendSrv);
+    void render(RenderBackend::RenderBackendService *renderBackendSrv);
 
     /// @brief  Will rearrange the camera view parameters, so that the given bounding box will be observed.
     /// @param[in]  box     The bounding box to observe.

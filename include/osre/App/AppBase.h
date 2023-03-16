@@ -262,18 +262,18 @@ private:
     };
 
     State mAppState;
-    Common::ArgumentParser m_argParser;
-    Common::Environment* m_environment;
-    Properties::Settings *m_settings;
-    Platform::PlatformInterface *m_platformInterface;
-    Platform::AbstractTimer *m_timer;
-    RenderBackend::RenderBackendService *m_rbService;
-    cppcore::TArray<World*> m_worlds;
+    Common::ArgumentParser mArgParser;
+    Common::Environment* mEnvironment;
+    Properties::Settings *mSettings;
+    Platform::PlatformInterface *mPlatformInterface;
+    Platform::AbstractTimer *mTimer;
+    RenderBackend::RenderBackendService *mRbService;
+    cppcore::TArray<World*> mWorlds;
     Stage *mStage;
-    MouseEventListener *m_mouseEvListener;
-    KeyboardEventListener *m_keyboardEvListener;
-    Common::Ids *m_ids;
-    bool m_shutdownRequested;
+    MouseEventListener *mMouseEvListener;
+    KeyboardEventListener *mKeyboardEvListener;
+    Common::Ids *mIds;
+    bool mShutdownRequested;
 };
 
 inline Stage *AppBase::getStage() const {
@@ -281,11 +281,11 @@ inline Stage *AppBase::getStage() const {
 }
 
 inline MouseEventListener *AppBase::getMouseEventListener() const {
-    return m_mouseEvListener;
+    return mMouseEvListener;
 }
 
 inline KeyboardEventListener *AppBase::getKeyboardEventListener() const {
-    return m_keyboardEvListener;
+    return mKeyboardEvListener;
 }
 
 //-------------------------------------------------------------------------------------------------
