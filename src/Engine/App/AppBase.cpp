@@ -172,13 +172,13 @@ Camera *AppBase::setActiveCamera(Camera *camera) {
         return nullptr;
     }
 
-    World *activeWorld = mStage->getActiveWorld();
-    if (activeWorld == nullptr) {
+    const Stage::WorldArray &worlds = mStage->getActiveWorlds();
+    if (worlds.isEmpty()) {
         return nullptr;
     }
-    
-    if (!activeWorld->setActiveCamera(camera)) {
-        return nullptr;
+
+    for (size_t i=0; i<worlds.size(); ++i) {
+        worlds[i]->setActiveCamera(camera);
     }
     
     return camera;

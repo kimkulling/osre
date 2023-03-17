@@ -78,7 +78,7 @@ protected:
         }
 
         AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
-        World *world = getStage()->getActiveWorld();
+        World *world = getStage()->getActiveWorld(0);
         mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
         Camera *camera = setupCamera(world);
 

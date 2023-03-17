@@ -31,16 +31,17 @@ static const c8 *Tag = "Stage";
 
 Stage::Stage(const String &stageName) :
         Object(stageName),
-        mWorld(nullptr),
-        mWorlds() {
+        mWorlds(),
+        mRenderWorlds() {
     // empty
 }
+
 Stage::~Stage() {
-    mWorld = nullptr;
     for (ui32 i = 0; i < mWorlds.size(); ++i) {
         mWorlds[i]->release();
     }
     mWorlds.clear();
+    mRenderWorlds.clear();
 }
     
 World *Stage::createWorld(const String &name) {
@@ -49,10 +50,10 @@ World *Stage::createWorld(const String &name) {
         return nullptr;
     }
 
-    mWorld = new World(name);
-    mWorlds.add(mWorld);
+    World *world = new World(name);
+    mWorlds.add(world);
 
-    return mWorld;
+    return world;
 }
 
 World *Stage::findWorld(const String &name) const {
@@ -81,26 +82,27 @@ World *Stage::getWorldAt( ui32 index ) const {
     return mWorlds[index];
 }
 
-bool Stage::setActiveWorld(const String &name) {
-    if (name.empty()) {
-        return false;
-    }
+World *Stage::addActiveWorld(const String &name) {
+    World *world = new World(name);
+    mRenderWorlds.add(world);
 
-    mWorld = findWorld(name);
-    return (nullptr != mWorld);
+    return world;
 }
 
-void Stage::setActiveWorld(World *world) {
-    mWorld = world;
+const Stage::WorldArray &Stage::getActiveWorlds() const {
+    return mRenderWorlds;
 }
 
-World *Stage::getActiveWorld() const {
-    return mWorld;
+World *getActiveWorld(size_t index) {
+    return mRenderWorlds[index];
 }
 
-void Stage::update( Time dt ) {
-    if (nullptr != mWorld) {
-        mWorld->update(dt);
+void Stage::update(Time dt) {
+    for (size_t i=0; i<mRenderWorlds.size(); ++i){
+        World *w = mRenderWorlds[i];
+        if (w != nullptr) {
+            w->update(dt);
+        }
     }
 }
 
@@ -109,8 +111,11 @@ void Stage::render(RenderBackend::RenderBackendService *rbService) {
         return;
     }
 
-    if (nullptr != mWorld) {
-        mWorld->render(rbService);
+    for (size_t i=0; i<mRenderWorlds.size(); ++i){
+        World *w = mRenderWorlds[i];
+        if (w != nullptr) {
+            w->render(rbService);
+        }
     }
 }
 

@@ -35,6 +35,7 @@ namespace Common {
 //-------------------------------------------------------------------------------------------------
 class AbstractProcessor {
 public:
+    /// @brief The alias for processor array types.
     using ProcessorArray = ::cppcore::TArray<AbstractProcessor*>;
 
     /// @brief  The class destructor, virtual.
@@ -42,7 +43,7 @@ public:
 
     /// @brief  Will add a precondition.
     /// @param[in] precondition   Process which need to get executed before this.
-    virtual void addDependency( AbstractProcessor *precondition );
+    virtual void addDependency(AbstractProcessor *precondition);
 
     /// @brief  Will return the list of preconditions.
     /// @return The list of preconditions.

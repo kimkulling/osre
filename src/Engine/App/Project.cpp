@@ -258,20 +258,23 @@ static bool saveStage(const String &name, const Stage &stage, StageData *sd) {
     setNameChunk(stageName, sd->mStageName);
     sd->mMajorVersion = MajorProjectVerion;
     sd->mMinorVersion = MinorProjectVerion;
-    World *activeWorld = stage.getActiveWorld();
-    if (activeWorld == nullptr) {
+    const Stage::WorldArray &worlds = stage.getActiveWorlds();
+    if (worlds.isEmpty()) {
         return true;
     }
 
-    setNameChunk(activeWorld->getName(), sd->mActiveWorld);
-    sd->mNumWorlds = (i32) stage.getNumberOfWorlds();
-    sd->mWorldData = new WorldData[sd->mNumWorlds];
     bool result = true;
-    for (i32 i = 0; i < sd->mNumWorlds; ++i) {
-        World *world = stage.getWorldAt(i);
-        result |= saveWorld(world, *(sd->mWorldData));
-        if (!result) {
-            osre_error(Tag, "Error while storing world " + world->getName() + ".");
+    for (size_t i=0; i<worlds.size(); ++i){
+        World *activeWorld = worlds[i];
+        setNameChunk(activeWorld->getName(), sd->mActiveWorld);
+        sd->mNumWorlds = (i32) stage.getNumberOfWorlds();
+        sd->mWorldData = new WorldData[sd->mNumWorlds];
+        for (i32 i = 0; i < sd->mNumWorlds; ++i) {
+            World *world = stage.getWorldAt(i);
+            result |= saveWorld(world, *(sd->mWorldData));
+            if (!result) {
+                osre_error(Tag, "Error while storing world " + world->getName() + ".");
+            }
         }
     }
     

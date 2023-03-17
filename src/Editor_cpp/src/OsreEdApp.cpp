@@ -156,7 +156,7 @@ void OsreEdApp::loadAsset(const Uri &modelLoc) {
 
     Rect2ui windowsRect;
     rootWindow->getWindowsRect(windowsRect);
-    World *world = getStage()->getActiveWorld();
+    World *world = getStage()->getActiveWorld(0);
     if (mProject == nullptr) {
         mProject = createProject(modelLoc.getAbsPath());
     }
