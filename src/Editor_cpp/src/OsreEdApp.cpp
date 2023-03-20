@@ -136,7 +136,7 @@ void OsreEdApp::loadAsset(const Uri &modelLoc) {
     ProgressReporter reporter(rootWindow);
     reporter.start();
     reporter.update(10);
-    ImportAction action(getIdContainer(), getStage()->getActiveWorld());
+    ImportAction action(getIdContainer(), getStage()->getActiveWorld(0));
     ArgumentList args;
     args.add(cppcore::Variant::createFromString(modelLoc.getAbsPath()));
     if (!action.run(args)) {
@@ -401,7 +401,7 @@ bool OsreEdApp::setupRenderView() {
         return false;
     }
     
-    World *world = getStage()->getActiveWorld();
+    World *world = getStage()->addActiveWorld("gui");
     if (nullptr == world) {
         osre_error(Tag, "World is nullptr.");
         return false;

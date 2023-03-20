@@ -81,6 +81,8 @@ public:
     /// @return 
     const WorldArray &getActiveWorlds() const;
 
+    World *getActiveWorld(size_t index) const;
+
     ///
     ///
     ///

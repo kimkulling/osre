@@ -93,7 +93,11 @@ const Stage::WorldArray &Stage::getActiveWorlds() const {
     return mRenderWorlds;
 }
 
-World *getActiveWorld(size_t index) {
+World *Stage::getActiveWorld(size_t index) const {
+    if (index >= mRenderWorlds.size()) {
+        return nullptr;
+    }
+
     return mRenderWorlds[index];
 }
 
