@@ -88,4 +88,6 @@ ADD_EXECUTABLE( osre_ed
     ${main_src}
 )
 
+
+message(${Python3_LIBRARIES})
 target_link_libraries ( osre_ed osre ${Python3_LIBRARIES} comctl32.lib winmm.lib )

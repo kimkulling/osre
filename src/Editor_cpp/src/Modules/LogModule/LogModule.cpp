@@ -111,7 +111,6 @@ public:
 
     void addEntry(String text) {
         mText.append(text);
-        mText.append("\r\n");
         onUpdate();
     }
 

@@ -39,10 +39,10 @@ namespace Common {
 class OSRE_EXPORT BaseMath {
 public:
     ///	@brief	The default class constructor.
-    BaseMath();
+    BaseMath() = default;
 
     ///	@brief	The class destructor.
-    ~BaseMath();
+    ~BaseMath() = default;
 
     ///	@brief	Returns the single precision boundary value.
     /// @return epsilon for float.

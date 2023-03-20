@@ -72,7 +72,7 @@ bool PerformanceCounterRegistry::registerCounter(const String &name) {
         return false;
     }
 
-    const ui32 hash = StringUtils::hashName(name.c_str());
+    const HashId hash = StringUtils::hashName(name.c_str());
     if (s_instance->m_counters.hasKey(hash)) {
         return false;
     }
@@ -87,7 +87,7 @@ bool PerformanceCounterRegistry::unregisterCounter(const String &name) {
         return false;
     }
 
-    const ui32 hash = StringUtils::hashName(name.c_str());
+    const HashId hash = StringUtils::hashName(name.c_str());
     if (!s_instance->m_counters.hasKey(hash)) {
         return false;
     }
@@ -108,7 +108,7 @@ bool PerformanceCounterRegistry::setCounter( const String &name, ui32 value ) {
         return false;
     }
 
-    const ui32 hash = StringUtils::hashName(name.c_str());
+    const HashId hash = StringUtils::hashName(name.c_str());
     if (!s_instance->m_counters.hasKey(hash)) {
         return false;
     }
@@ -128,7 +128,7 @@ bool PerformanceCounterRegistry::addValueToCounter( const String &name, ui32 val
         return false;
     }
 
-    const ui32 hash = StringUtils::hashName(name.c_str());
+    const HashId hash = StringUtils::hashName(name.c_str());
     if ( !s_instance->m_counters.hasKey(hash)) {
         return false;
     }
@@ -149,7 +149,7 @@ bool PerformanceCounterRegistry::queryCounter( const String &name, ui32 &counter
         return false;
     }
 
-    const ui32 hash = StringUtils::hashName( name.c_str() );
+    const HashId hash = StringUtils::hashName( name.c_str() );
     if ( !s_instance->m_counters.hasKey( hash ) ) {
         return false;
     }

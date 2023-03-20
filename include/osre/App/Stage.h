@@ -45,6 +45,8 @@ class World;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Stage : public Common::Object {
 public:
+    using WorldArray = cppcore::TArray<World*>;
+
     /// @brief 
     /// @param stageName 
     Stage(const String &stageName);
@@ -70,24 +72,26 @@ public:
     /// @param index 
     /// @return 
     World *getWorldAt(ui32 index) const;
-    
-    /// @brief 
-    /// @param name 
-    /// @return 
-    bool setActiveWorld(const String &name);
-    
+        
     /// @brief 
     /// @param world 
-    void setActiveWorld(World * world);
+    void addActiveWorld(World * world);
     
     /// @brief 
     /// @return 
-    World *getActiveWorld() const;
-    
+    const WorldArray &getActiveWorlds() const;
+
+    World *getActiveWorld(size_t index) const;
+
+    ///
+    ///
+    ///
+    World *addActiveWorld(const String &name);
+
     /// @brief 
     /// @return 
     bool isEmpty() const {
-        return mWorld == nullptr;
+        return mRenderWorlds.isEmpty();
     }
 
     /// @brief  Will update the world.
@@ -99,8 +103,8 @@ public:
     void render(RenderBackend::RenderBackendService *rbService);
 
 private:
-    World *mWorld;
-    cppcore::TArray<World*> mWorlds;
+    WorldArray mWorlds;
+    WorldArray mRenderWorlds;
 };
 
 } // namespace App

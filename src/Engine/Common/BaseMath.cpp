@@ -25,14 +25,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
-BaseMath::BaseMath() {
-    // empty
-}
-
-BaseMath::~BaseMath() {
-    // empty
-}
-
 f32 BaseMath::getSPEPS() {
     return 0.000001f;
 }

@@ -45,11 +45,12 @@ constexpr ui32 MaxShaderTypes = static_cast<ui32>(ShaderType::NumShaderTypes);
 
 using ShaderSourceArray = cppcore::TStaticArray<String, MaxShaderTypes>;
 
-
+//-------------------------------------------------------------------------------------------------
 ///	@brief  This class represents a container for all used shaders in the OSRE-runtime.
 ///
 /// This class defines shader which will build a representation with the used API in the render thread.
 /// You can think of this like a facade to access data in the shader itself.
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Shader {
 public:
     /// @brief The default class constructor.
