@@ -558,6 +558,7 @@ Light::Light() :
         m_ambient(1.0f, 1.0f, 1.0f),
         m_direction(0.0f, 0.0f, 1.0f, 1.0f),
         m_specularExp(1.0f),
+        mRadius(1.0f),
         m_type(LightType::InvalidLightType) {
     // empty
 }
@@ -610,7 +611,7 @@ RenderBatchData *PassData::getBatchById(const c8 *id) const {
     return nullptr;
 }
 
-static const size_t MaxSubmitCmds = 500;
+static constexpr size_t MaxSubmitCmds = 500;
 
 Frame::Frame() :
         m_newPasses(),

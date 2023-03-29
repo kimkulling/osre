@@ -242,6 +242,7 @@ struct OSRE_EXPORT ColorVert {
     glm::vec3 color0; ///< The diffuse color ( r|g|b )
 
     ColorVert();
+    ~ColorVert() = default;
 
     /// @brief  Returns the number of attributes.
     static size_t getNumAttributes();
@@ -332,6 +333,7 @@ struct ExtensionProperty {
         ::memset(m_extensionName, '\0', sizeof(c8) * MaxEntNameLen);
         m_version = 0;
     }
+    ~ExtensionProperty() = default;
 };
 
 ///	@brief
@@ -666,6 +668,7 @@ struct OSRE_EXPORT Light {
     glm::vec3 m_ambient;
     glm::vec4 m_direction;
     f32 m_specularExp;
+    f32 mRadius;
     LightType m_type;
 
     Light();
@@ -686,12 +689,16 @@ struct MatrixBuffer {
             m_proj(1.0f) {
         // empty
     }
+    ~MatrixBuffer() = default;
 };
 
 struct MeshEntry {
     ui32 numInstances;
     bool m_isDirty;
     cppcore::TArray<Mesh*> mMeshArray;
+
+    MeshEntry() = default;
+    ~MeshEntry() = default;
 };
 
 struct RenderBatchData {
@@ -719,7 +726,10 @@ struct RenderBatchData {
         osre_assert(id != nullptr);
     }
 
+    ~RenderBatchData() = default;
+
     MeshEntry *getMeshEntryByName(const c8 *name);
+    
     UniformVar *getVarByName(const c8 *name);
 };
 
@@ -741,9 +751,7 @@ struct PassData {
         // empty
     }
 
-    ~PassData() {
-        // empty
-    }
+    ~PassData() = default;
 
     RenderBatchData *getBatchById(const c8 *id) const;
 };
@@ -806,6 +814,8 @@ struct FrameSubmitCmd {
             m_newMeshes() {
         // empty
     }
+
+    ~FrameSubmitCmd() = default;
 };
 
 using FrameSubmitCmdAllocator = ::cppcore::TPoolAllocator<FrameSubmitCmd>;
@@ -817,6 +827,8 @@ struct UniformBuffer {
             m_buffer() {
         // empty
     }
+
+    ~UniformBuffer() = default;
 
     size_t getSize() const {
         return m_buffer.size();
@@ -920,9 +932,7 @@ struct FrameBuffer {
         // empty
     }
 
-    ~FrameBuffer() {
-        // empty
-    }
+    ~FrameBuffer() = default;
 
     FrameBuffer(const FrameBuffer &) = delete;
     FrameBuffer(FrameBuffer &&) = delete;
