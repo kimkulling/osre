@@ -333,6 +333,7 @@ struct ExtensionProperty {
         ::memset(m_extensionName, '\0', sizeof(c8) * MaxEntNameLen);
         m_version = 0;
     }
+    
     ~ExtensionProperty() = default;
 };
 
