@@ -51,20 +51,20 @@ INCLUDE_DIRECTORIES( BEFORE
     ${CMAKE_HOME_DIRECTORY}/src/
     ${CMAKE_HOME_DIRECTORY}/
 )
-
-if( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR "${CMAKE_GENERATOR}" MATCHES "16 2019" OR "${CMAKE_GENERATOR}" MATCHES "15 2017")
+message("${CMAKE_GENERATOR}")
+if( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR "${CMAKE_GENERATOR}" MATCHES "16 2019" OR "${CMAKE_GENERATOR}" MATCHES "15 2017" OR "${CMAKE_GENERATOR}" MATCHES "17 2022")
     link_directories(
         ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x64
-        ${CMAKE_HOME_DIRECTORY}/lib
-        ${CMAKE_HOME_DIRECTORY}/bin
-)
+    )
 else()
     link_directories(
         ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x86
-        ${CMAKE_HOME_DIRECTORY}/lib
-        ${CMAKE_HOME_DIRECTORY}/bin
     )
 endif()
+link_directories(
+    ${CMAKE_HOME_DIRECTORY}/lib
+    ${CMAKE_HOME_DIRECTORY}/bin
+)
 
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib )
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib )
@@ -112,6 +112,7 @@ add_definitions( -DGLM_ENABLE_EXPERIMENTAL )
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
 ADD_SUBDIRECTORY( src/Player )
+ADD_SUBDIRECTORY( src/Editor_imgui)
 IF(WIN32)
     ADD_SUBDIRECTORY( src/Editor_cpp )
     set_target_properties(  osre_ed       PROPERTIES FOLDER Editor )
