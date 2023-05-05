@@ -117,20 +117,20 @@ bool OGLShader::createAndLink() {
         glAttachShader(m_shaderprog, m_shaders[static_cast<i32>(ShaderType::SH_GeometryShaderType)]);
     }
 
-    bool result(true);
     GLint status(0);
     glLinkProgram(m_shaderprog);
     glGetProgramiv(m_shaderprog, GL_LINK_STATUS, &status);
     if (status == GL_FALSE) {
         logCompileOrLinkError(m_shaderprog);
-        result = false;
-    } else {
-        getActiveAttributeList();
-        getActiveUniformList();
-    }
-    m_isCompiledAndLinked = result;
+        m_isCompiledAndLinked = false;
+        return false;
+    } 
+    
+    getActiveAttributeList();
+    getActiveUniformList();    
+    m_isCompiledAndLinked = true;
 
-    return result;
+    return m_isCompiledAndLinked;
 }
 
 void OGLShader::use() {
