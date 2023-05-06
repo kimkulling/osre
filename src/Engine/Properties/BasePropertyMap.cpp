@@ -56,7 +56,7 @@ void BasePropertyMap::setProperty(ui32 id, const String &rName, const Variant &v
 }
 
 void BasePropertyMap::setProperty(ui32 id, Property *pProperty) {
-    osre_assert(NULL != pProperty);
+    osre_assert(nullptr != pProperty);
 
     if (hasProperty(id)) {
         removeProperty(id);
