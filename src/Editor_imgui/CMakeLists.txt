@@ -22,7 +22,7 @@ set(platform_backend
     ${CMAKE_HOME_DIRECTORY}/contrib/imgui/backends/imgui_impl_opengl3.h
 )
 
-SET (main_src
+set(imgui_src
     ${CMAKE_HOME_DIRECTORY}/contrib/imgui/imconfig.h
     ${CMAKE_HOME_DIRECTORY}/contrib/imgui/imgui.cpp
     ${CMAKE_HOME_DIRECTORY}/contrib/imgui/imgui.h
@@ -35,12 +35,18 @@ SET (main_src
     ${CMAKE_HOME_DIRECTORY}/contrib/imgui/imstb_textedit.h
     ${CMAKE_HOME_DIRECTORY}/contrib/imgui/imstb_truetype.h
     ${platform_backend}
+)
+
+set(main_src
+    ${imgui_src}
     src/main.cpp
 
 )
+SOURCE_GROUP(contrib\\Imgui           FILES ${imgui_src})
 SOURCE_GROUP(Main\\                   FILES ${main_src})
 
 ADD_EXECUTABLE( osre_ed_imgui
+    ${imgui_src}    
     ${main_src}
 )
 
