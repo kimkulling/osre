@@ -71,15 +71,15 @@ public:
 
 private:
     /// @brief The default class constructor.
-    MaterialBuilder();
+    MaterialBuilder() = default;
 
     ///	@brief The class destructor.
-    ~MaterialBuilder();
+    ~MaterialBuilder() = default;
 
 private:
     using MaterialFactory = Common::TResourceFactory<RenderBackend::Material>;
     using MaterialCache = Common::TResourceCache<MaterialFactory, RenderBackend::Material>;
-    static MaterialCache *s_materialCache;
+    static MaterialCache *sMaterialCache;
 };
 
 } // Namespace RenderBackend
