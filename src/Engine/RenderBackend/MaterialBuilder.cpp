@@ -30,7 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-MaterialBuilder::MaterialCache *MaterialBuilder::s_materialCache = nullptr;
+MaterialBuilder::MaterialCache *MaterialBuilder::sMaterialCache = nullptr;
 
 static const String GLSLVersionString_330 =
         "#version 330 core\n";
@@ -152,179 +152,41 @@ const String GLSLFragmentShaderSrcRV =
         "    frag_volor = texture(tex0, vUV) * vSmoothColor;\n"
         "}\n";
 
-const String GLSLVsSrcRV_Editor =
-        GLSLVersionString_400 +
-        "\n" + GLSLRenderVertexLayout +
-        "\n"
-        "// output from the vertex shader\n"
-        "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
-        "smooth out vec2 TexCoord;\n"
-        "out vec3 Position;\n"
-        "out vec3 Normal;\n"
-        "\n" +
-        GLSLCombinedMVPUniformSrc +
-        "\n"
-        "void main()\n"
-        "{\n"
-        "    //assign the per-vertex color to vSmoothColor varying\n"
-        "    vSmoothColor = vec4(color0,1);\n"
-        "\n"
-        "    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
-        "    //vertex position\n"
-        "    mat4 ModelView = View * Model;\n"
-        "    mat4 MVP = Projection * ModelView;\n"
-        "    Position = (MVP*vec4(position,1)).xyz;\n"
-        "    gl_Position = MVP*vec4(position,1);\n"
-        "    vSmoothColor = vec4( color0, 1 );\n"
-        "    TexCoord = texcoord0;\n"
-        "}\n";
-
-const String GLSLFsSrcRV_Editor =
-        GLSLVersionString_400 +
-        "\n"
-        "layout(location=0) out vec4 FragColor; //fragment shader output\n"
-        "\n"
-        "//input form the vertex shader\n"
-        "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
-        "smooth in vec2 TexCoord;\n"
-        "\n"
-        "in vec3 Position;\n"
-        "in vec3 Normal;\n"
-        "uniform sampler2D tex0;\n"
-        "\n"
-        "struct LightInfo {\n"
-        "    vec4 Position;\n"
-        "    vec3 La;\n"
-        "    vec3 Ld;\n"
-        "    vec3 Ls;\n"
-        "};\n"
-        "uniform LightInfo Light;\n"
-        "\n"
-        "struct MaterialInfo {\n"
-        "    vec3 Ka;\n"
-        "    vec3 Kd;\n"
-        "    vec3 Ks;\n"
-        "    float shineness;\n"
-        "};\n"
-        "uniform MaterialInfo Material;\n"
-        "\n"
-        "vec3 phongModel(vec3 position, vec3 normal) {\n"
-        "    vec3 s = normalize(Light.Position.xyz - position);\n"
-        "    vec3 v = normalize(-position);\n"
-        "    vec3 r = reflect(-s, normal);\n"
-        "    vec3 ambient = Light.La * Material.Ka;\n"
-        "    float sDotN = max(dot(s, normal),0.0);\n"
-        "    vec3 diffuse = Light.Ld * Material.Kd * sDotN;\n"
-        "    vec3 spec = vec3(0.0);\n"
-        "    if ( sDotN > 0.0)\n"
-        "        spec = Light.Ls * Material.Ks * pow(max(dot(r,v),0.0), Material.shineness);\n"
-        "    return ( ambient + diffuse + spec );\n"
-        "}\n"
-        "\n"
-        "void main()\n"
-        "{\n"
-        "    // set the interpolated color as the shader output\n"
-        "    vec3 ambAndDiff;\n"
-        "    vec4 texColor = texture( tex0, TexCoord );\n"
-
-        "    ambAndDiff = phongModel(Position, Normal);"
-        "    FragColor = vec4(ambAndDiff, 1.0) * texColor;\n"
-        "}\n";
-
-const String GLSLVsSrcUI =
-        GLSLVersionString_400 +
-        "\n" + GLSLRenderVertexLayout +
-        "\n"
-        "// fixed point light properties\n"
-        "vec3 light_position_world = vec3 (0.0, 0.0, 2.0);\n"
-        "vec3 Ls = vec3 (1.0, 1.0, 1.0); // white specular colour\n"
-        "vec3 Ld = vec3 (0.7, 0.7, 0.7); // dull white diffuse light colour\n"
-        "vec3 La = vec3 (0.2, 0.2, 0.2); // grey ambient colour\n"
-        "\n"
-        "// surface reflectance\n"
-        "vec3 Ks = vec3 (1.0, 1.0, 1.0); // fully reflect specular light\n"
-        "vec3 Kd = vec3 (1.0, 0.5, 0.0); // orange diffuse surface reflectance\n"
-        "vec3 Ka = vec3 (1.0, 1.0, 1.0); // fully reflect ambient light\n"
-        "float specular_exponent = 100.0; // specular 'power'\n"
-        "\n"
-        "// output from the vertex shader\n"
-        "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
-        "smooth out vec2 vUV;\n"
-        "\n" +
-        GLSLCombinedMVPUniformSrc +
-        "\n"
-        "void main() {\n"
-        "    //assign the per-vertex color to vSmoothColor varying\n"
-        "    vSmoothColor = vec4(color0,1);\n"
-        "\n"
-        "    //get the clip space position by multiplying the combined MVP matrix with the object space\n"
-        "    //vertex position\n"
-        "    gl_Position = MVP*vec4(position,1);\n"
-        "    vSmoothColor = vec4( color0, 1 );\n"
-        "    vUV = texcoord0;\n"
-        "}\n";
-
-const String GLSLFsSrcUI =
-        GLSLVersionString_400 +
-        "\n"
-        "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
-        "\n"
-        "//input form the vertex shader\n"
-        "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
-        "smooth in vec2 vUV;\n"
-        "uniform sampler2D tex0;\n"
-        "\n"
-        "void main() {\n"
-        "    // set the interpolated color as the shader output\n"
-        "    vFragColor = vSmoothColor;\n"
-        "}\n";
-
-static const String GLSLVSLightRenderVertexSrc =
-        "";
-
-static const String GLSLFSLightRenderVertexSrc =
-        "";
-
-static const String GLSLMaterialParameterStruct =
-        "struct MaterialParameter {\n"
-        "    vec3 ka;\n"
-        "    vec3 kd;\n"
-        "    vec3 ks;\n"
-        "}\n";
-
-MaterialBuilder::MaterialBuilder() {
-    // empty
-}
-
-MaterialBuilder::~MaterialBuilder() {
-    // empty
-}
-
 void MaterialBuilder::create() {
-    if (nullptr == s_materialCache) {
-        s_materialCache = new MaterialBuilder::MaterialCache;
+    if (nullptr == sMaterialCache) {
+        sMaterialCache = new MaterialBuilder::MaterialCache;
     }
 }
 
 void MaterialBuilder::destroy() {
-    delete s_materialCache;
-    s_materialCache = nullptr;
+    delete sMaterialCache;
+    sMaterialCache = nullptr;
 }
 
 static void addMaterialParameter(Material *mat) {
-    osre_assert(nullptr != mat);
+    if (mat == nullptr) {
+        osre_assert(false);
+        return;
+    }
 
-    mat->m_shader->addUniformBuffer("Model");
-    mat->m_shader->addUniformBuffer("View");
-    mat->m_shader->addUniformBuffer("Projection");
+    Shader *shader = mat->m_shader;
+    if (shader == nullptr) {
+        osre_assert(false);
+        return;
+    }
+    
+    shader->addUniformBuffer("Model");
+    shader->addUniformBuffer("View");
+    shader->addUniformBuffer("Projection");
 }
 
 Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
-    Material *mat = s_materialCache->find("buildinShaderMaterial");
+    Material *mat = sMaterialCache->find("buildinShaderMaterial");
     if (nullptr != mat) {
         return mat;
     }
-    mat = s_materialCache->create("buildinShaderMaterial", IO::Uri());
+
+    mat = sMaterialCache->create("buildinShaderMaterial", IO::Uri());
     String vs, fs;
     if (type == VertexType::ColorVertex) {
         vs = GLSLVsSrc;
@@ -344,7 +206,8 @@ Material *MaterialBuilder::createBuildinMaterial(VertexType type) {
     mat->createShader(arr);
 
     // Setup shader attributes and variables
-    if (nullptr != mat->m_shader) {
+    Shader *shader = mat->m_shader;
+    if (shader != nullptr) {
         if (type == VertexType::ColorVertex) {
             mat->m_shader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
         } else if (type == VertexType::RenderVertex) {
@@ -363,12 +226,12 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
         return nullptr;
     }
 
-    Material *mat = s_materialCache->find(matName);
+    Material *mat = sMaterialCache->find(matName);
     if (nullptr != mat) {
         return mat;
     }
 
-    mat = s_materialCache->create(matName);
+    mat = sMaterialCache->create(matName);
     mat->m_numTextures = texResArray.size();
     mat->m_textures = new Texture *[texResArray.size()];
     for (size_t i = 0; i < texResArray.size(); ++i) {
@@ -421,12 +284,12 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
         return nullptr;
     }
 
-    Material *mat = s_materialCache->find(matName);
+    Material *mat = sMaterialCache->find(matName);
     if (nullptr != mat) {
         return mat;
     }
 
-    mat = s_materialCache->create(matName);
+    mat = sMaterialCache->create(matName);
     mat->m_numTextures = texResArray.size();
     mat->m_textures = new Texture *[texResArray.size()];
     for (size_t i = 0; i < texResArray.size(); ++i) {
@@ -447,11 +310,11 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
 
 const c8 *DefaultDebugTestMat = "debug_text_mat";
 RenderBackend::Material *MaterialBuilder::createDebugRenderTextMaterial() {
-    Material *mat = s_materialCache->find(DefaultDebugTestMat);
+    Material *mat = sMaterialCache->find(DefaultDebugTestMat);
     if (nullptr != mat) {
         return mat;
     }
-    mat = s_materialCache->create(DefaultDebugTestMat);
+    mat = sMaterialCache->create(DefaultDebugTestMat);
     ShaderSourceArray shArray;
     shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = 
             "\n";

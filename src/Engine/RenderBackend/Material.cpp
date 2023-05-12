@@ -22,16 +22,13 @@ void Material::setMaterialType(MaterialType matType) {
     m_type = matType;
 }
 
-MaterialType Material::getMaterialType() const {
-    return m_type;
-}
-
 Material::~Material() {
     delete m_shader;
-    m_shader = nullptr;
-
     delete[] m_textures;
-    m_textures = nullptr;
+}
+
+MaterialType Material::getMaterialType() const {
+    return m_type;
 }
 
 void Material::createShader(ShaderSourceArray &shaders) {
