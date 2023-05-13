@@ -12,25 +12,106 @@
 
 #define main main
 
-#include <osre/App/AppBase.h>
+#include <osre/App/App.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/MeshBuilder.h>
+#include <osre/Common/Logger.h>
+#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
+#include <osre/App/Entity.h>
+#include <osre/Platform/AbstractWindow.h>
+#include <osre/Common/glm_common.h>
+
 
 using namespace OSRE;
+using namespace OSRE::RenderBackend;
+using namespace ::OSRE::App;
+
+static constexpr c8 Tag[] = "HelloWorldApp";
 
 class OsreEd : public App::AppBase {
+    TransformMatrixBlock m_transformMatrix;
+    /// The entity to render
+    Entity *mEntity;
+    /// The keyboard controller instance.
+    Animation::AnimationControllerBase *mKeyboardTransCtrl;
+
 public:
     OsreEd(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv, "api", "The render API") {}
     ~OsreEd() override = default;
+
+    Camera *setupCamera(World *world) {
+        Entity *camEntity = new Entity("camera", *getIdContainer(), world);
+        world->addEntity(camEntity);
+        Camera *camera = (Camera *)camEntity->createComponent(ComponentType::CameraComponentType);
+        world->setActiveCamera(camera);
+        ui32 w, h;
+        AppBase::getResolution(w, h);
+        camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
+
+        return camera;
+    }
+
+    bool onCreate() override {
+        if (!AppBase::onCreate()) {
+            return false;
+        }
+
+        AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
+        World *world = getStage()->addActiveWorld("hello_world");
+        mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
+        Camera *camera = setupCamera(world);
+
+        MeshBuilder meshBuilder;
+        RenderBackend::Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5, .5, .5, BufferAccessType::ReadOnly).getMesh();
+        if (nullptr != mesh) {
+            RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
+            rc->addStaticMesh(mesh);
+
+            Time dt;
+            world->update(dt);
+            camera->observeBoundingBox(mEntity->getAABB());
+        }
+        mKeyboardTransCtrl = AppBase::getTransformController(m_transformMatrix);
+
+        osre_info(Tag, "Creation finished.");
+
+        return true;
+    }
+
+    void onUpdate() override {
+        Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey();
+        mKeyboardTransCtrl->update(TransformController::getKeyBinding(key));
+
+        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
+        rbSrv->beginRenderBatch("b1");
+
+        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
+
+        AppBase::onUpdate();
+    }
+
+
+
 };
 
 int main(int argc, char *argv[]) {
     std::cout << "Editor version 0.1\n";
 
     OsreEd osreApp(argc, argv);
-    if (!osreApp.create(nullptr)) {
+    if (!osreApp.initWindow(100, 100, 200, 200, "test", false, App::RenderBackendType::OpenGLRenderBackend)) {
         return -1;
     }
 
+    osreApp.create(nullptr);
+
+    
+    
     // Setup SDL
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) {
         printf("Error: %s\n", SDL_GetError());
@@ -116,6 +197,10 @@ int main(int argc, char *argv[]) {
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(window);
+        osreApp.handleEvents();
+        osreApp.update();
+        osreApp.requestNextFrame();     \
+
     }
 #ifdef __EMSCRIPTEN__
     EMSCRIPTEN_MAINLOOP_END;

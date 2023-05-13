@@ -71,7 +71,7 @@ struct OSRE_EXPORT Event {
 
     /// @brief  Returns the hash id of the event id.
     /// @return The hash id.
-    ui32 getHash() const;
+    HashId getHash() const;
 
     const String getId() const;
 
