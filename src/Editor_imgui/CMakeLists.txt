@@ -8,6 +8,7 @@ INCLUDE_DIRECTORIES(
     ./
     ./src
     ${Python3_INCLUDE_DIRS}
+    ${SDL2_INCLUDE_DIRS}
     ${PROJECT_SOURCE_DIR}
 )
 
@@ -51,4 +52,4 @@ ADD_EXECUTABLE( osre_ed_imgui
 )
 
 message(${Python3_LIBRARIES})
-target_link_libraries ( osre_ed_imgui osre ${Python3_LIBRARIES} sdl2-config SDL2main )
+target_link_libraries ( osre_ed_imgui osre ${Python3_LIBRARIES} ${SDL2_LIBRARIES} SDL2main )
