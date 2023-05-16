@@ -51,4 +51,4 @@ ADD_EXECUTABLE( osre_ed_imgui
 )
 
 message(${Python3_LIBRARIES})
-target_link_libraries ( osre_ed_imgui osre ${Python3_LIBRARIES} SDL2 SDL2main )
+target_link_libraries ( osre_ed_imgui osre ${Python3_LIBRARIES} sdl2-config SDL2main )
