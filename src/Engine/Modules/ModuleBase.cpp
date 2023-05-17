@@ -39,10 +39,6 @@ ModuleBase::ModuleBase(const String &name, AppBase *parentApp) :
     // empty
 }
 
-ModuleBase::~ModuleBase() {
-    // empty
-}
-
 void ModuleBase::setModulelView(IModuleView *view) {
     mView = view;
 }

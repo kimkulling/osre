@@ -26,6 +26,8 @@ OPTION( OSRE_BUILD_DOC
   OFF
 )
 
+find_package(SDL2 REQUIRED)
+
 # Cache these to allow the user to override them manually.
 set( LIB_INSTALL_DIR "lib" CACHE PATH
     "Path the built library files are installed to." )
@@ -38,6 +40,7 @@ INCLUDE_DIRECTORIES( BEFORE
     include/
     /usr/include/SDL2/
     /usr/include/
+    ${SDL2_INCLUDE_DIRS}
     ${CMAKE_HOME_DIRECTORY}/contrib/assimp/include
     ${CMAKE_HOME_DIRECTORY}/contrib/glm/
     ${CMAKE_HOME_DIRECTORY}/contrib/stb
@@ -47,24 +50,24 @@ INCLUDE_DIRECTORIES( BEFORE
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/include
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/
     "c:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include"
-    ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/include
     ${CMAKE_HOME_DIRECTORY}/src/
     ${CMAKE_HOME_DIRECTORY}/
 )
 
 if( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR "${CMAKE_GENERATOR}" MATCHES "16 2019" OR "${CMAKE_GENERATOR}" MATCHES "15 2017" OR "${CMAKE_GENERATOR}" MATCHES "17 2022")
     link_directories(
-        ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x64
-        ${CMAKE_HOME_DIRECTORY}/lib
-        ${CMAKE_HOME_DIRECTORY}/bin
-)
+	${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x64
+    )
 else()
     link_directories(
         ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x86
-        ${CMAKE_HOME_DIRECTORY}/lib
-        ${CMAKE_HOME_DIRECTORY}/bin
     )
 endif()
+link_directories(
+    ${CMAKE_HOME_DIRECTORY}/lib
+    ${CMAKE_HOME_DIRECTORY}/bin
+    ${SDL2_LIBRARIES}
+)
 
 set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib )
 set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib )
@@ -112,6 +115,7 @@ add_definitions( -DGLM_ENABLE_EXPERIMENTAL )
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
 ADD_SUBDIRECTORY( src/Player )
+ADD_SUBDIRECTORY( src/Editor_imgui)
 IF(WIN32)
     ADD_SUBDIRECTORY( src/Editor_cpp )
     set_target_properties(  osre_ed       PROPERTIES FOLDER Editor )

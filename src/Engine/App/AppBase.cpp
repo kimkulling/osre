@@ -221,7 +221,7 @@ void AppBase::setWindowsTitle(const String &title) {
 
 bool AppBase::onCreate() {
     if (mAppState != State::Uninited) {
-        osre_debug(Tag, "AppBase::State not in proper state: Uninited.");
+        osre_debug(Tag, "AppBase::State not in expected state: Uninited.");
         return false;
     }
 

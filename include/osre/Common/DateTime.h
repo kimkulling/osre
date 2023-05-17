@@ -48,7 +48,7 @@ public:
     DateTime( ui32 year, ui32 month, ui32 day, ui32 hour, ui32 minute, ui32 seconds, ui32 ms );
 
     ///	@brief	The class destructor.
-    ~DateTime();
+    ~DateTime() = default;
 
     ///	@brief	Set the new current year.
     ///	@param	year	[in] The new current year

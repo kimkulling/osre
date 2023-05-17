@@ -31,10 +31,6 @@ DateTime::DateTime( ui32 year, ui32 month, ui32 day, ui32 hour, ui32 minute, ui3
     // empty
 }
 
-DateTime::~DateTime() {
-    // empty
-}
-
 void DateTime::setCurrentYear( ui32 year ) {
     m_Year = year;
 }
