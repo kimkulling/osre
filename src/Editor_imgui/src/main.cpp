@@ -17,7 +17,6 @@
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Common/glm_common.h>
 
-
 using namespace OSRE;
 using namespace OSRE::RenderBackend;
 using namespace ::OSRE::App;
@@ -25,7 +24,8 @@ using namespace ::OSRE::App;
 static constexpr c8 Tag[] = "HelloWorldApp";
 
 class OsreEd : public App::AppBase {
-    TransformMatrixBlock m_transformMatrix;
+    /// The transform matrix block
+    TransformMatrixBlock mTransformMatrix;
     /// The entity to render
     Entity *mEntity;
     /// The keyboard controller instance.
@@ -34,6 +34,7 @@ class OsreEd : public App::AppBase {
 public:
     OsreEd(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv, "api", "The render API") {}
+    
     ~OsreEd() override = default;
 
     Camera *setupCamera(World *world) {
@@ -101,8 +102,6 @@ int main(int argc, char *argv[]) {
     }
 
     osreApp.create(nullptr);
-
-    
     
     // Setup SDL
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0) {
@@ -161,8 +160,6 @@ int main(int argc, char *argv[]) {
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-
-
     // Our state
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -183,15 +180,12 @@ int main(int argc, char *argv[]) {
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
 
-
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
-            static float f = 0.0f;
             static int counter = 0;
 
             ImGui::Begin("OSRE-Viewer"); // Create a window called "Hello, world!" and append into it.
             ImGui::Text("World"); // Display some text (you can use a format strings too)
-
 
             ImGui::SameLine();
             ImGui::Text("counter = %d", counter);
@@ -209,8 +203,7 @@ int main(int argc, char *argv[]) {
         SDL_GL_SwapWindow(window);
         osreApp.handleEvents();
         osreApp.update();
-        osreApp.requestNextFrame();     \
-
+        osreApp.requestNextFrame();
     }
 #ifdef __EMSCRIPTEN__
     EMSCRIPTEN_MAINLOOP_END;
@@ -227,4 +220,3 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
-
