@@ -51,5 +51,11 @@ ADD_EXECUTABLE( osre_ed_imgui
     ${main_src}
 )
 
-message(${Python3_LIBRARIES})
-target_link_libraries ( osre_ed_imgui osre ${Python3_LIBRARIES} ${SDL2_LIBRARIES} SDL2main )
+IF(WIN32)
+  target_link_libraries( osre_ed_imgui osre ${Python3_LIBRARIES} Ws2_32 SDL2::SDL2 )
+ELSE()
+  target_link_libraries( osre_ed_imgui osre ${Python3_LIBRARIES} SDL2::SDL2 )
+ENDIF(WIN32)
+
+#//message(${Python3_LIBRARIES})
+#//target_link_libraries ( osre_ed_imgui osre ${Python3_LIBRARIES} ${SDL2_LIBRARIES} SDL2main )
