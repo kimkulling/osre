@@ -27,16 +27,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-namespace Details {
-
-static const c8 *RenderPassNames[] = {
-    "RenderPass",
-    "UiPass",
-    "DbgPass"
-};
-
-} // Namespace Details
-
 namespace DefaultPipelines {
     const c8 *get_Pipeline_Default() {
         static constexpr c8 Name[] = "pipeline.default";
