@@ -38,88 +38,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Entity.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Common/glm_common.h>
+#include <osre/Platform/PlatformOperations.h>
+#include <osre/Platform/PlatformInterface.h>
+
+#include "OSREEdApp.h"
 
 using namespace OSRE;
 using namespace OSRE::RenderBackend;
-using namespace ::OSRE::App;
+using namespace OSRE::App;
+using namespace OSRE::Platform;
+using namespace OSRE::Editor;
 
 static constexpr c8 Tag[] = "HelloWorldApp";
 
-class OsreEd : public App::AppBase {
-    /// The transform matrix block
-    TransformMatrixBlock mTransformMatrix;
-    /// The entity to render
-    Entity *mEntity;
-    /// The keyboard controller instance.
-    Animation::AnimationControllerBase *mKeyboardTransCtrl;
-
-public:
-    OsreEd(int argc, char *argv[]) :
-            AppBase(argc, (const char **)argv, "api", "The render API") {}
-    
-    ~OsreEd() override = default;
-
-    Camera *setupCamera(World *world) {
-        Entity *camEntity = new Entity("camera", *getIdContainer(), world);
-        world->addEntity(camEntity);
-        Camera *camera = (Camera *)camEntity->createComponent(ComponentType::CameraComponentType);
-        world->setActiveCamera(camera);
-        ui32 w, h;
-        AppBase::getResolution(w, h);
-        camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
-
-        return camera;
-    }
-
-    bool onCreate() override {
-        if (!AppBase::onCreate()) {
-            return false;
-        }
-
-        AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
-        World *world = getStage()->addActiveWorld("hello_world");
-        mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
-        Camera *camera = setupCamera(world);
-
-        MeshBuilder meshBuilder;
-        RenderBackend::Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5, .5, .5, BufferAccessType::ReadOnly).getMesh();
-        if (nullptr != mesh) {
-            RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
-            rc->addStaticMesh(mesh);
-
-            Time dt;
-            world->update(dt);
-            camera->observeBoundingBox(mEntity->getAABB());
-        }
-        mKeyboardTransCtrl = AppBase::getTransformController(mTransformMatrix);
-
-        osre_info(Tag, "Creation finished.");
-
-        return true;
-    }
-
-    void onUpdate() override {
-        Platform::Key key = AppBase::getKeyboardEventListener()->getLastKey();
-        mKeyboardTransCtrl->update(TransformController::getKeyBinding(key));
-
-        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
-        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
-        rbSrv->beginRenderBatch("b1");
-
-        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
-
-        rbSrv->endRenderBatch();
-        rbSrv->endPass();
-
-        AppBase::onUpdate();
-    }
-};
 
 int main(int argc, char *argv[]) {
     std::cout << "Editor version 0.1\n";
 
-    OsreEd osreApp(argc, argv);
-    if (!osreApp.initWindow(100, 100, 200, 200, "test", false, App::RenderBackendType::OpenGLRenderBackend)) {
+    OsreEdApp osreApp(argc, argv);
+    if (!osreApp.initWindow(100, 100, 1024, 768, "test", false, true, App::RenderBackendType::OpenGLRenderBackend)) {
         return -1;
     }
 
@@ -208,7 +145,13 @@ int main(int argc, char *argv[]) {
 
             ImGui::Begin("OSRE-Viewer"); // Create a window called "Hello, world!" and append into it.
             ImGui::Text("World"); // Display some text (you can use a format strings too)
-
+            if (ImGui::Button("Import")) {
+                IO::Uri modelLoc;
+                PlatformOperations::getFileOpenDialog("Select asset for import", "*", modelLoc);
+                if (modelLoc.isValid()) {
+                    osreApp.loadAsset(modelLoc);
+                }
+            }
             ImGui::SameLine();
             ImGui::Text("counter = %d", counter);
 
@@ -223,6 +166,7 @@ int main(int argc, char *argv[]) {
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(window);
+
         osreApp.handleEvents();
         osreApp.update();
         osreApp.requestNextFrame();

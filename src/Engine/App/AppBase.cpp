@@ -81,7 +81,7 @@ AppBase::~AppBase() {
     mSettings = nullptr;
 }
 
-bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &title, bool fullscreen,
+bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &title, bool fullscreen, bool childWindow,
         RenderBackendType renderer) {
     osre_assert(nullptr != mSettings);
 
@@ -90,6 +90,7 @@ bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &
     mSettings->setInt(Properties::Settings::WinWidth, width);
     mSettings->setInt(Properties::Settings::WinHeight, height);
     mSettings->setBool(Properties::Settings::FullScreen, fullscreen);
+    mSettings->setBool(Properties::Settings::ChildWindow, childWindow);
     mSettings->setString(Properties::Settings::WindowsTitle, title);
     if (renderer == RenderBackendType::OpenGLRenderBackend) {
         mSettings->setString(Properties::Settings::RenderAPI, "opengl");

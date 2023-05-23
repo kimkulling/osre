@@ -53,7 +53,6 @@ set( BIN_INSTALL_DIR "bin" CACHE PATH
 
 INCLUDE_DIRECTORIES( BEFORE
     include/
-    /usr/include/SDL2/
     /usr/include/
     ${SDL2_INCLUDE_DIRS}
     ${CMAKE_HOME_DIRECTORY}/contrib/assimp/include
@@ -71,13 +70,14 @@ INCLUDE_DIRECTORIES( BEFORE
 
 if( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR "${CMAKE_GENERATOR}" MATCHES "16 2019" OR "${CMAKE_GENERATOR}" MATCHES "15 2017" OR "${CMAKE_GENERATOR}" MATCHES "17 2022")
     link_directories(
-	${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x64
+	    ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x64
     )
 else()
     link_directories(
         ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x86
     )
 endif()
+
 link_directories(
     ${CMAKE_HOME_DIRECTORY}/lib
     ${CMAKE_HOME_DIRECTORY}/bin
@@ -131,10 +131,13 @@ add_definitions( -DGLM_ENABLE_EXPERIMENTAL )
 ADD_SUBDIRECTORY( src/Engine )
 ADD_SUBDIRECTORY( src/Player )
 ADD_SUBDIRECTORY( src/Editor_imgui)
-IF(WIN32)
-    ADD_SUBDIRECTORY( src/Editor_cpp )
-    set_target_properties(  osre_ed       PROPERTIES FOLDER Editor )
-ENDIF()
+set_target_properties(osre_ed_imgui       PROPERTIES FOLDER Editor)
+
+#IF(WIN32)
+##    ADD_SUBDIRECTORY( src/Editor_cpp )
+#    set_target_properties(  osre_ed       PROPERTIES FOLDER Editor )
+#ENDIF()
+
 IF ( OSRE_BUILD_TESTS )
     ADD_SUBDIRECTORY( test/RenderTests )
     ADD_SUBDIRECTORY( test/UnitTests )

@@ -21,7 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "UIElements.h"
-#include "OsreEdApp.h"
+//#include "OsreEdApp.h"
 #include <osre/RenderBackend/MeshBuilder.h>
 #include <osre/Platform/PlatformOperations.h>
 #include <osre/Platform/PlatformInterface.h>
@@ -132,7 +132,7 @@ void UIElements::createMenues(Win32Window *w, OsreEdApp *app, Platform::Abstract
     osre_assert(app != nullptr);
     osre_assert(queue != nullptr);
 
-    w->beginMenu();
+    /* w->beginMenu();
     MenuEntry FileMenu[8] = {
         { MF_STRING, IDM_FILE_NEW, L"&New", MenuFunctor::Make(app, &OsreEdApp::newProjectCmd) },
         { MF_STRING, IDM_FILE_OPEN, L"&Open Project", MenuFunctor::Make(app, &OsreEdApp::loadProjectCmd) },
@@ -155,7 +155,7 @@ void UIElements::createMenues(Win32Window *w, OsreEdApp *app, Platform::Abstract
     };
     w->addSubMenues(nullptr, queue, L"&Info", InfoMenu, 2);
 
-    w->endMenu();
+    w->endMenu();*/
 }
 
 TreeView *UIElements::createTreeView(Win32Window *w) {

@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Engine/App/MouseEventListener.h"
 
 #include <osre/Modules/ModuleBase.h>
-#include <osre/App/CameraCOmponent.h>
+#include <osre/App/CameraComponent.h>
 #include <osre/App/App.h>
 #include <osre/Animation/AnimatorBase.h>
 #include <osre/IO/Directory.h>
@@ -46,7 +46,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Mesh.h>
-//#include <osre/Scene/Scene.h>
 
 #ifdef OSRE_WINDOWS
 #   include "Engine/Platform/win32/Win32EventQueue.h"
