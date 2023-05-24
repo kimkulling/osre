@@ -82,8 +82,8 @@ set( gui_src
 )
 
 set(main_src
-    src/OSREEdApp.cpp
-    src/OSREEdApp.h
+    src/OsreEdApp.cpp
+    src/OsreEdApp.h
     src/SceneData.h
     src/ProgressReporter.cpp
     src/ProgressReporter.h
