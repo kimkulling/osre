@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <windows.h>
 #include <shellapi.h>
 #include <commctrl.h>
-#include "resource.h"
+//#include "resource.h"
 
 namespace OSRE {
 namespace Editor {

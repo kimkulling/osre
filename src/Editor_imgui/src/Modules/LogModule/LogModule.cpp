@@ -35,7 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "richedit.h"
 #include "src/Engine/Platform/win32/Win32Window.h"
 #include "src/Engine/Platform/win32/Win32OSService.h"
-#include "resource.h"
+//#include "resource.h"
 
 namespace OSRE {
 namespace Editor {
@@ -47,7 +47,7 @@ using namespace ::OSRE::App;
 using namespace ::OSRE::Modules;
 using namespace ::OSRE::Platform;
                                 
-INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM lParam) {
+/* INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM, LPARAM lParam) {
     (void)lParam;
     switch (uMsg) {
         case WM_INITDIALOG:
@@ -57,7 +57,7 @@ INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM l
             const int x = LOWORD(lParam);
             const int y = HIWORD(lParam);
 
-            ::SetWindowPos(GetDlgItem(hWnd, IDC_EDIT1), nullptr, 10, 10,
+             ::SetWindowPos(GetDlgItem(hWnd, IDC_EDIT1), nullptr, 10, 10,
                     x - 10, y - 12, SWP_NOMOVE | SWP_NOZORDER);
 
             return TRUE;
@@ -69,11 +69,11 @@ INT_PTR CALLBACK LogDialogProc(HWND hWnd, UINT uMsg, WPARAM /*wParam*/, LPARAM l
 
     return FALSE;
 }
-
+*/
 static constexpr int MarginWidth  = 20;
 static constexpr int MarginHeight = 300;
 
-static HWND initLogWindow(HINSTANCE hInstance, HWND hParent, const Rect2ui &rect) {
+/* static HWND initLogWindow(HINSTANCE hInstance, HWND hParent, const Rect2ui &rect) {
     HWND hwnd = ::CreateDialog(hInstance, MAKEINTRESOURCE(IDD_LOGVIEW),
             hParent, &LogDialogProc);
     if (hwnd == nullptr) {
@@ -90,7 +90,7 @@ static HWND initLogWindow(HINSTANCE hInstance, HWND hParent, const Rect2ui &rect
 
     return hwnd;
 }
-
+*/
 class LogView : public IModuleView {
 public:
     LogView(Platform::AbstractWindow *window) :
@@ -122,7 +122,7 @@ protected:
             return;
         }
 
-        mLogWndHandle = initLogWindow(w->getModuleHandle(), w->getHWnd(), rect);
+  //      mLogWndHandle = initLogWindow(w->getModuleHandle(), w->getHWnd(), rect);
         if (mLogWndHandle == nullptr) {
             osre_error(Tag, "Cannot create log module view.");
             return;
@@ -133,10 +133,10 @@ protected:
     }
 
     void onUpdate() override {
-        SETTEXTEX sInfo = {};
+        /* SETTEXTEX sInfo = {};
         sInfo.flags = ST_DEFAULT;
         sInfo.codepage = CP_ACP;
-        ::SendDlgItemMessage(mLogWndHandle, IDC_EDIT1, EM_SETTEXTEX, (WPARAM)&sInfo, (LPARAM)mText.c_str());
+        ::SendDlgItemMessage(mLogWndHandle, IDC_EDIT1, EM_SETTEXTEX, (WPARAM)&sInfo, (LPARAM)mText.c_str());*/
     }
 
 private:

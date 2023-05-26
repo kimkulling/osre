@@ -43,7 +43,7 @@ class IModuleView;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT ModuleBase : public Common::Object, public Common::AbstractEventHandler {
 public:
-    virtual ~ModuleBase();
+    virtual ~ModuleBase() = default;
     virtual void setModulelView(IModuleView *view);
     virtual IModuleView *getModuleView() const; 
     virtual bool load();

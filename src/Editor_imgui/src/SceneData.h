@@ -36,6 +36,7 @@ struct SceneData {
     App::Camera *mCamera;
 
     SceneData();
+    ~SceneData() = default;
 };
 
 inline SceneData::SceneData() :

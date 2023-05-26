@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Engine/App/MouseEventListener.h"
 
 #include <osre/Modules/ModuleBase.h>
-#include <osre/App/CameraCOmponent.h>
+#include <osre/App/CameraComponent.h>
 #include <osre/App/App.h>
 #include <osre/Animation/AnimatorBase.h>
 #include <osre/IO/Directory.h>

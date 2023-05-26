@@ -133,16 +133,17 @@ public:
     virtual ~AppBase();
 
     /// @brief  Will initialize a render window, the whole render engine will be started.
-    /// @param  x           [in] The left position of the render windows for windowed mode.
-    /// @param  y           [in] The top position of the render windows for windowed mode.
-    /// @param  width       [in] The width of the window.
-    /// @param  height      [in] The height of the render window.
-    /// @param  title       [in] The Windows title.
-    /// @param  fullscreen  [in] true for fullscreen mode, false for windowed mode.
-    /// @param  renderer    [in] The requested render mode.
+    /// @param[in] x           The left position of the render windows for windowed mode.
+    /// @param[in] y           The top position of the render windows for windowed mode.
+    /// @param[in] width       The width of the window.
+    /// @param[in] height      The height of the render window.
+    /// @param[in] title       The Windows title.
+    /// @param[in] fullscreen  true for fullscreen mode, false for windowed mode.
+    /// @param[in] childWindow true for child window.
+    /// @param  renderer       The requested render mode.
     /// @return true, if the window was generated.
     virtual bool initWindow( ui32 x, ui32 y, ui32 width, ui32 height, const String &title, 
-        bool fullscreen, RenderBackendType renderer );
+        bool fullscreen, bool childWindow, RenderBackendType renderer);
 
     /// @brief  Creates the application.
     /// @param  settings         [in] The user-defined settings.

@@ -33,14 +33,11 @@ Win32Window::Win32Window(WindowsProperties *properties) :
         mInstance(nullptr),
         mWnd(nullptr),
         mHandleStatusBar(nullptr),
+        mParent(nullptr),
         mDC(nullptr),
         mMenu(nullptr),
         mStatusBarContent(),
         mMenuCreateState(false) {
-    // empty
-}
-
-Win32Window::~Win32Window() {
     // empty
 }
 
@@ -141,7 +138,7 @@ HWND Win32Window::createStatusBar(UINT ResID, ui32 numFields) {
     mHandleStatusBar = CreateWindowEx(0L, // extended style
             STATUSCLASSNAME, (PCTSTR)NULL,
             SBARS_SIZEGRIP | // includes a sizing grip
-                    WS_CHILD | WS_VISIBLE, // window styles
+            WS_CHILD | WS_VISIBLE, // window styles
             0, 0, 0, 0, // x, y, width, height
             mWnd, (HMENU)ResID, mInstance, NULL);
     cppcore::TArray<ui32> fields;
@@ -178,6 +175,15 @@ void Win32Window::setStatusText(ui32 index, const char *text) {
     SendMessage(mHandleStatusBar, SB_SIMPLE, 0, 0);
 }
 
+void Win32Window::setParent( HWND hWnd ) { 
+    ::SetParent(getHWnd(), hWnd);
+    mParent = hWnd;
+}
+
+HWND Win32Window::getParent() const {
+    return mParent;
+}
+
 bool Win32Window::onCreate() {
     WindowsProperties *prop = getProperties();
     if (nullptr == prop) {
@@ -195,6 +201,8 @@ bool Win32Window::onCreate() {
     DWORD style = WS_POPUP;
     if (!prop->m_fullscreen) {
         style = WS_SYSMENU | WS_BORDER | WS_CAPTION | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+    } else if (prop->m_childWindow) {
+        style = WS_BORDER | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;    
     }
 
     ::AdjustWindowRect(&clientSize, style, FALSE);

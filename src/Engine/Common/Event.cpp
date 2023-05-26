@@ -42,7 +42,7 @@ const EventData *Event::getEventData() const {
     return m_eventData;
 }
 
-ui32 Event::getHash() const {
+HashId Event::getHash() const {
     return m_hash;
 }
 

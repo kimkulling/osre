@@ -66,7 +66,6 @@ Settings::Settings() :
 
 Settings::~Settings() {
     delete m_propertyMap;
-    m_propertyMap = nullptr;
 }
 
 bool Settings::configure(const String &initScriptFile) {

@@ -58,7 +58,7 @@ public:
     /// The class constructor.
     Win32Window(WindowsProperties *properties);
     /// The class destructor, virtual.
-    ~Win32Window() override;
+    ~Win32Window() override = default;
     /// Will manage the visibility of the window.
     void showWindow(ShowState showState) override;
     /// Will set the windows title.
@@ -85,6 +85,10 @@ public:
     HWND getStatusBarHandle() const;
     /// Will set the status bar context.
     void setStatusText(ui32 index, const char *Text);
+    /// 
+    void setParent(HWND hWnd);
+    /// 
+    HWND getParent() const;
 
 protected:
     /// The create callback implementation.
@@ -98,7 +102,7 @@ protected:
 
 private:
     HINSTANCE mInstance;
-    HWND mWnd, mHandleStatusBar;
+    HWND mWnd, mHandleStatusBar, mParent;
     HDC mDC;
     HMENU mMenu;
     StatusBarContent mStatusBarContent;

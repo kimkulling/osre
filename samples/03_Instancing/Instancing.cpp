@@ -118,7 +118,7 @@ protected:
 
 int main(int argc, char *argv[]) {
     InstancingApp myApp(argc, argv);
-    if (!myApp.initWindow(10, 10, 1024, 768, "Instancing-Sample", false, RenderBackendType::OpenGLRenderBackend)) {
+    if (!myApp.initWindow(10, 10, 1024, 768, "Instancing-Sample", false, false, RenderBackendType::OpenGLRenderBackend)) {
         return 1;
     }
 
