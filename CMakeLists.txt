@@ -40,6 +40,11 @@ OPTION( OSRE_BUILD_DOC
   OFF
 )
 
+OPTION( OSRE_BUILD_ED
+  "Build the OSRE Ed."
+  ON
+)
+
 hunter_add_package(SDL2)
 find_package(SDL2 REQUIRED)
 
@@ -130,13 +135,10 @@ add_definitions( -DGLM_ENABLE_EXPERIMENTAL )
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
 ADD_SUBDIRECTORY( src/Player )
-ADD_SUBDIRECTORY( src/Editor_imgui)
-set_target_properties(osre_ed_imgui       PROPERTIES FOLDER Editor)
-
-#IF(WIN32)
-##    ADD_SUBDIRECTORY( src/Editor_cpp )
-#    set_target_properties(  osre_ed       PROPERTIES FOLDER Editor )
-#ENDIF()
+if (OSRE_BUILD_ED)
+    ADD_SUBDIRECTORY( src/Editor_imgui)
+    set_target_properties(osre_ed_imgui       PROPERTIES FOLDER Editor)
+endif()
 
 IF ( OSRE_BUILD_TESTS )
     ADD_SUBDIRECTORY( test/RenderTests )
