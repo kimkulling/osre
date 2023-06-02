@@ -64,7 +64,6 @@ set( BIN_INSTALL_DIR "bin" CACHE PATH
 INCLUDE_DIRECTORIES( BEFORE
     include/
     /usr/include/
-    ${SDL2_INCLUDE_DIRS}
     ${CMAKE_HOME_DIRECTORY}/contrib/assimp/include
     ${CMAKE_HOME_DIRECTORY}/contrib/glm/
     ${CMAKE_HOME_DIRECTORY}/contrib/stb
