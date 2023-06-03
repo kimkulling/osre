@@ -40,6 +40,10 @@ struct aiMaterial;
 struct aiAnimation;
 struct aiSkeleton;
 
+namespace Assimp {
+class Importer;
+}
+
 namespace OSRE {
 
 namespace Common {
@@ -85,7 +89,7 @@ public:
     AssimpWrapper(Common::Ids &ids, World *world);
 
     ///	@brief  The default class destructor.
-    ~AssimpWrapper() = default;
+    ~AssimpWrapper();
 
     /// @brief Will perform the import operation.
     /// @param file     The file to load.
@@ -102,6 +106,8 @@ public:
     /// @param numTriangles     The number of triangles in the model.
     void getStatistics(ui32 &numVertices, ui32 &numTriangles);
 
+    const aiScene *getScene() const;
+
 protected:
     Entity *convertScene();
     void importMeshes( aiMesh **meshes, ui32 numMeshes );
@@ -113,6 +119,7 @@ protected:
     void optimizeVertexBuffer();
 
 private:
+    Assimp::Importer *mImporter;
     struct AssetContext {
         const aiScene *mScene;
         RenderBackend::MeshArray mMeshArray;
@@ -127,9 +134,9 @@ private:
         Bone2NodeMap mBone2NodeMap;
         ui32 mNumVertices;
         ui32 mNumTriangles;
+        
         AssetContext(Common::Ids &ids, World *world);
         ~AssetContext();
-
         AssetContext(const AssetContext &) = delete;
         AssetContext &operator=(const AssetContext&) = delete;
     };
