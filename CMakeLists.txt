@@ -22,8 +22,10 @@ set ( OSRE_VERSION_PATCH 0 )
 set ( OSRE_VERSION ${OSRE_VERSION_MAJOR}.${OSRE_VERSION_MINOR}.${OSRE_VERSION_PATCH} )
 set ( PROJECT_VERSION "${OSRE_VERSION}" )
 set_property( GLOBAL PROPERTY CXX_STANDARD 11 )
-
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/contrib/assimp/cmake-modules/")
+
+hunter_add_package(SDL2)
+find_package(SDL2 CONFIG REQUIRED)
 
 OPTION( OSRE_BUILD_PLAYER
   "Build the plyer of OSRE."
@@ -49,9 +51,6 @@ OPTION( OSRE_BUILD_ED
   "Build the OSRE Ed."
   ON
 )
-
-hunter_add_package(SDL2)
-find_package(SDL2 REQUIRED)
 
 # Cache these to allow the user to override them manually.
 set( LIB_INSTALL_DIR "lib" CACHE PATH
