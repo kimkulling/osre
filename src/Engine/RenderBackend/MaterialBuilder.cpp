@@ -38,7 +38,7 @@ static const String GLSLVersionString_330 =
 static const String GLSLVersionString_400 =
         "#version 400 core\n";
 
-static const c8 *GLSLRenderVertexLayout =
+static const String GLSLRenderVertexLayout =
         "// RenderVertex layout\n"
         "layout(location = 0) in vec3 position;	  // object space vertex position\n"
         "layout(location = 1) in vec3 normal;	  // object space vertex normal\n"
@@ -46,7 +46,7 @@ static const c8 *GLSLRenderVertexLayout =
         "layout(location = 3) in vec2 texcoord0;  // per-vertex tex coord, stage 0\n"
         "\n";
 
-static const c8 *GLSLCombinedMVPUniformSrc =
+static const String GLSLCombinedMVPUniformSrc =
         "// uniforms\n"
         "uniform mat4 Model;\n"
         "uniform mat4 View;\n"

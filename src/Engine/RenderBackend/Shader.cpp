@@ -101,6 +101,7 @@ size_t Shader::getLocation( const c8 *vertexAttribute ) const {
             return location;
         }
     }
+ 
     return 9999;
 }
 

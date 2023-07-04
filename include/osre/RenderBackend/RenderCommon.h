@@ -661,18 +661,21 @@ struct TIndexCache {
     }
 };
 
-///	@brief
+///	@brief This struct is used to desribe a light source.
 struct OSRE_EXPORT Light {
-    glm::vec4 m_position;
-    glm::vec3 m_specular;
-    glm::vec3 m_diffuse;
-    glm::vec3 m_ambient;
-    glm::vec4 m_direction;
-    f32 m_specularExp;
-    f32 mRadius;
-    LightType m_type;
+    glm::vec4 m_position;  ///< The position of the light
+    glm::vec3 m_specular;  ///< The specular colot.
+    glm::vec3 m_diffuse;   ///< The diffuse color.
+    glm::vec3 m_ambient;   ///< The ambient color.
+    glm::vec4 m_direction; ///< The direction vector.
+    f32 m_specularExp;     ///< The specular exponent.
+    f32 mRadius;           ///< The light radius.
+    LightType m_type;      ///< The light type.
 
+    /// @brief The class constructor.
     Light();
+
+    /// @brief The class destructor.
     ~Light();
 };
 
@@ -906,6 +909,7 @@ struct UniformBuffer {
     MemoryBuffer m_buffer;
 };
 
+/// @brief This struct is used to desribe a new frame to render.
 struct Frame {
     cppcore::TArray<PassData *> m_newPasses;
     cppcore::TArray<FrameSubmitCmd*> m_submitCmds;
@@ -923,6 +927,7 @@ struct Frame {
     Frame &operator=(const Frame &) = delete;
 };
 
+/// @brief This struct is used to descripe a frame buffer data structure.
 struct FrameBuffer {
     i32 m_width;
     i32 m_height;
