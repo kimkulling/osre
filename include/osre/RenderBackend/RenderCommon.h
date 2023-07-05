@@ -45,7 +45,7 @@ class Mesh;
 class Shader;
 class Pipeline;
 
-/// @brief An array to stoer meshes.
+/// @brief An array to store meshes.
 using MeshArray = cppcore::TArray<RenderBackend::Mesh*>;
 
 /// Describes an unset id.
@@ -100,7 +100,6 @@ enum class TextureTargetType {
     Texture2D,                      ///< 2D-textures, used for images and render targets.
     Texture3D,                      ///< 3D-textures, used for volume rendering.
     NumTextureTargetTypes           ///< Number of enums.
-
 };
 
 ///	@brief  This enum describes the supported texture stages. A texture stage describes one layer of
@@ -126,52 +125,49 @@ enum class TextureParameterName {
 
 ///	@brief  This enum describes the parameters which are related the the parameter names ( @see TextureParameterName ).
 enum class TextureParameterType {
-    TexturePTNearest = 0, ///< Use nearest filter mode.
-    TexturePTLinear, ///< Use linear interpolation mode.
-    TexturePTClamp, ///< Use clamp mode, texture data will be clamped.
-    TexturePTMirroredRepeat, ///< Use mirror repeat mode, texture will be repeated mirrored.
-    TexturePTRepeat, ///< Use repeat mode, texture will be repeated mirrored.
-    NumTextureParameterTypes, ///< Number of enums.
-
-    InvalidTextureParameterType, ///< Enum for invalid enum.
+    InvalidTextureParameterType = -1, ///< Enum for invalid enum.
+    TexturePTNearest = 0,             ///< Use nearest filter mode.
+    TexturePTLinear,                  ///< Use linear interpolation mode.
+    TexturePTClamp,                   ///< Use clamp mode, texture data will be clamped.
+    TexturePTMirroredRepeat,          ///< Use mirror repeat mode, texture will be repeated mirrored.
+    TexturePTRepeat,                  ///< Use repeat mode, texture will be repeated mirrored.
+    NumTextureParameterTypes          ///< Number of enums.
 };
 
 ///	@brief  This enum describes the index data type.
 enum class IndexType {
-    UnsignedByte = 0, ///< Bytes are used for the index data.
-    UnsignedShort, ///< Unsigned short for the index data.
-    UnsignedInt, ///< Unsigned int for the index data.
-    NumIndexTypes, ///< Number of enums.
-
-    InvalidIndexType, ///< Enum for invalid enum.
+    InvalidIndexType = -1, ///< Enum for invalid enum.
+    UnsignedByte = 0,      ///< Bytes are used for the index data.
+    UnsignedShort,         ///< Unsigned short for the index data.
+    UnsignedInt,           ///< Unsigned int for the index data.
+    NumIndexTypes          ///< Number of enums.
 };
 
 ///	@brief  This enum describes the primitive types for rendering vertex information.
 enum class PrimitiveType {
-    PointList = 0, ///< A list of points, one index per point.
-    LineList, ///< A list of separate lines, 2 indices per line.
-    LineStrip, ///< A line strip, Start and end-index and all indices between.
-    TriangleList, ///< A list of triangles, 3 indices per triangle.
-    TriangelStrip, ///< A strip of triangles
-    TriangleFan, ///< A triangle fan.
-    NumPrimitiveTypes, ///< Number of enums.
-
-    InvalidPrimitiveType, ///< Enum for invalid enum.
+    InvalidPrimitiveType = -1, ///< Enum for invalid enum.
+    PointList = 0,             ///< A list of points, one index per point.
+    LineList,                  ///< A list of separate lines, 2 indices per line.
+    LineStrip,                 ///< A line strip, Start and end-index and all indices between.
+    TriangleList,              ///< A list of triangles, 3 indices per triangle.
+    TriangelStrip,             ///< A strip of triangles
+    TriangleFan,               ///< A triangle fan.
+    NumPrimitiveTypes          ///< Number of enums.
 };
 
 /// @brief  This enum is used to describe the type of build-in matrices.
 enum class MatrixType {
-    Model = 0, ///<
-    View, ///<
-    Projection, ///<
-    Normal, ///<
-    NumMatrixTypes, ///< Number of matrix types-
-
-    InvalidMatrixType ///< Enum for invalid values.
+    InvalidMatrixType = -1, ///< Enum for invalid values.
+    Model = 0,              ///<
+    View,                   ///<
+    Projection,             ///<
+    Normal,                 ///<
+    NumMatrixTypes,         ///< Number of matrix types-
 };
 
 /// @brief  This enum is used to describe the data-type of a parameter.
 enum class ParameterType {
+    InvalidParameterType = -1,  ///<
     PT_None,
     PT_Int,
     PT_IntArray,
@@ -183,14 +179,14 @@ enum class ParameterType {
     PT_Float3Array,
     PT_Mat4,
     PT_Mat4Array,
-
-    InvalidParameterType
+    NumParameterTypes
 };
 
 ///	@brief  This enum to describes the type of the vertex attribute.
 enum class VertexAttribute : int {
-    Position = 0, ///< "position"
-    Normal, ///< "normal"
+    InvalidVertexAttr = 1,  ///< Enum for invalid enum.
+    Position = 0,           ///< "position"
+    Normal,                 ///< "normal"
     TexCoord0, ///< "texcoord0"
     TexCoord1, ///< "texcoord1"
     TexCoord2, ///< "texcoord2"
@@ -205,41 +201,37 @@ enum class VertexAttribute : int {
     Instance1, ///< "instance1"
     Instance2, ///< "instance2"
     Instance3, ///< "instance3"
-    NumVertexAttrs, ///< Number of enums.
-
-    InvalidVertexAttr ///< Enum for invalid enum.
+    NumVertexAttrs ///< Number of enums.
 };
 
 ///	@brief  This enum describes the vertex data format.
 enum class VertexFormat : int {
-    Float, ///< single component float, expanded to (x, 0, 0, 1)
-    Float2, ///< 2-component float, expanded to (x, y, 0, 1)
-    Float3, ///< 3-component float, expanded to (x, y, z, 1)
-    Float4, ///< 4-component float
-    Byte4, ///< 4-component float (-128.0f..+127.0f) mapped to byte (-128..+127)
-    UByte4, ///< 4-component float (0.0f..255.0f) mapped to byte (0..255)
-    Short2, ///< 2-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
-    Short4, ///< 4-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
-    NumVertexFormats, ///< Number of enums.
-
-    InvalidVertexFormat, ///< Enum for invalid enum.
+    InvalidVertexFormat = -1, ///< Enum for invalid enum.
+    Float,                    ///< single component float, expanded to (x, 0, 0, 1)
+    Float2,                   ///< 2-component float, expanded to (x, y, 0, 1)
+    Float3,                   ///< 3-component float, expanded to (x, y, z, 1)
+    Float4,                   ///< 4-component float
+    Byte4,                    ///< 4-component float (-128.0f..+127.0f) mapped to byte (-128..+127)
+    UByte4,                   ///< 4-component float (0.0f..255.0f) mapped to byte (0..255)
+    Short2,                   ///< 2-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
+    Short4,                   ///< 4-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
+    NumVertexFormats          ///< Number of enums.
 };
 
-///	@brief
+///	@brief  This enum is used to describe the light type.
 enum class LightType {
+    InvalidLightType = -1, ///< Enum for invalid enum.
     Directional = 0,
     Point,
     Spot,
-    NumLightTypes,
-
-    InvalidLightType ///< Enum for invalid enum.
+    NumLightTypes
 };
 
 ///	@brief  This struct declares a render vertex for textured geometry.
 struct OSRE_EXPORT ColorVert {
-    glm::vec3 position; ///< The position ( x|y|z )
-    glm::vec3 normal; ///< The normal vector ( x|y|z )
-    glm::vec3 color0; ///< The diffuse color ( r|g|b )
+    glm::vec3 position;   ///< The position ( x|y|z )
+    glm::vec3 normal;     ///< The normal vector ( x|y|z )
+    glm::vec3 color0;     ///< The diffuse color ( r|g|b )
 
     ColorVert();
     ~ColorVert() = default;
@@ -253,12 +245,12 @@ struct OSRE_EXPORT ColorVert {
 ///	@brief  This struct declares a render vertex for textured geometry.
 struct OSRE_EXPORT RenderVert {
     glm::vec3 position; ///< The position ( x|y|z )
-    glm::vec3 normal; ///< The normal vector ( x|y|z )
-    glm::vec3 color0; ///< The diffuse color ( r|g|b )
-    glm::vec2 tex0; ///< The texture color ( r|g|b )
+    glm::vec3 normal;   ///< The normal vector ( x|y|z )
+    glm::vec3 color0;   ///< The diffuse color ( r|g|b )
+    glm::vec2 tex0;     ///< The texture color ( r|g|b )
 
     RenderVert();
-    ~RenderVert();
+    ~RenderVert() = default;
     bool operator==(const RenderVert &rhs) const;
     bool operator!=(const RenderVert &rhs) const;
 
@@ -329,9 +321,8 @@ struct ExtensionProperty {
     c8 m_extensionName[MaxEntNameLen];
     ui32 m_version;
 
-    ExtensionProperty() {
+    ExtensionProperty() : m_version(0) {
         ::memset(m_extensionName, '\0', sizeof(c8) * MaxEntNameLen);
-        m_version = 0;
     }
     
     ~ExtensionProperty() = default;
@@ -344,7 +335,7 @@ struct OSRE_EXPORT VertComponent {
 
     VertComponent();
     VertComponent(VertexAttribute attrib, VertexFormat format);
-    ~VertComponent();
+    ~VertComponent() = default;
 
     OSRE_NON_COPYABLE(VertComponent)
 };
@@ -392,7 +383,7 @@ struct OSRE_EXPORT BufferData {
 
 private:
     BufferData();
-    ~BufferData();
+    ~BufferData() = default;
 
     OSRE_NON_COPYABLE(BufferData)
 };
@@ -441,8 +432,8 @@ struct OSRE_EXPORT Texture {
 ///	@brief
 class OSRE_EXPORT TextureLoader {
 public:
-    TextureLoader();
-    ~TextureLoader();
+    TextureLoader() = default;
+    ~TextureLoader() = default;
     size_t load(const IO::Uri &uri, Texture *tex);
     bool unload(Texture *tex);
     static RenderBackend::Texture *getDefaultTexture();
@@ -787,7 +778,7 @@ struct OSRE_EXPORT UniformVar {
 
 private:
     UniformVar();
-    ~UniformVar();
+    ~UniformVar() = default;
 };
 
 struct FrameSubmitCmd {

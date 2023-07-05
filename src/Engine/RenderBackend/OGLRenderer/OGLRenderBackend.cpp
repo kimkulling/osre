@@ -52,6 +52,7 @@ static constexpr c8 Tag[] = "OGLRenderBackend";
 static constexpr ui32 NotInitedHandle = 9999999;
 
 OGLRenderBackend::OGLRenderBackend() :
+        mClearColor(0.3f, 0.3f, 0.3f, 1.0f),
         mRenderCtx(nullptr),
         mBuffers(),
         mActiveVB(NotInitedHandle),
@@ -77,15 +78,7 @@ OGLRenderBackend::OGLRenderBackend() :
 }
 
 OGLRenderBackend::~OGLRenderBackend() {
-    delete mFpState;
-    mFpState = nullptr;
-
-    releaseAllShaders();
-    releaseAllTextures();
-    releaseAllVertexArrays();
-    releaseAllBuffers();
-    releaseAllParameters();
-    releaseAllPrimitiveGroups();
+    destroy();
 }
 
 void OGLRenderBackend::enumerateGPUCaps() {
@@ -95,6 +88,10 @@ void OGLRenderBackend::enumerateGPUCaps() {
     glGetIntegerv(GL_MAX_TEXTURE_UNITS, &mOglCapabilities.mMaxTextureUnits);
     glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &mOglCapabilities.mMaxTextureImageUnits);
     glGetIntegerv(GL_MAX_TEXTURE_COORDS, &mOglCapabilities.mMaxTextureCoords);
+}
+
+void OGLRenderBackend::setClearColor(const Color4& clearColor) {
+    mClearColor = clearColor;
 }
 
 void OGLRenderBackend::setMatrix(MatrixType type, const glm::mat4 &mat) {
@@ -215,6 +212,19 @@ bool OGLRenderBackend::create(AbstractOGLRenderContext *renderCtx) {
 }
 
 bool OGLRenderBackend::destroy() {
+    delete mFpState;
+    mFpState = nullptr;
+
+    releaseAllShaders();
+    releaseAllTextures();
+    releaseAllVertexArrays();
+    releaseAllBuffers();
+    releaseAllParameters();
+    releaseAllPrimitiveGroups();
+
+    delete mFpsCounter;
+    mFpsCounter = nullptr;
+
     return true;
 }
 
@@ -225,17 +235,19 @@ void OGLRenderBackend::setTimer(Platform::AbstractTimer *timer) {
 }
 
 void OGLRenderBackend::setRenderContext(Platform::AbstractOGLRenderContext *renderCtx) {
-    if (mRenderCtx != renderCtx) {
-        mRenderCtx = renderCtx;
-        if (nullptr != mRenderCtx) {
-            mRenderCtx->activate();
-        }
+    if (mRenderCtx == renderCtx) {
+        return;
+    }
+        
+    mRenderCtx = renderCtx;
+    if (nullptr != mRenderCtx) {
+        mRenderCtx->activate();
     }
 }
 
 void OGLRenderBackend::clearRenderTarget(const ClearState &clearState) {
-    GLbitfield glTarget(0);
-    const ui32 clear(clearState.m_state);
+    GLbitfield glTarget{ 0 };
+    const ui32 clear{ clearState.m_state };
     if (clear & (int)ClearState::ClearBitType::ColorBit) {
         glTarget |= GL_COLOR_BUFFER_BIT;
     }
@@ -247,7 +259,7 @@ void OGLRenderBackend::clearRenderTarget(const ClearState &clearState) {
     }
 
     glClear(glTarget);
-    glClearColor(0.3f, 0.3f, 0.3f, 0.3f);
+    glClearColor(mClearColor.m_r, mClearColor.m_g, mClearColor.m_b, mClearColor.m_a);
 }
 
 void OGLRenderBackend::setViewport(i32 x, i32 y, i32 w, i32 h) {
