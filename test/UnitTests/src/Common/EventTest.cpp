@@ -50,7 +50,7 @@ TEST_F(EventTest, calculateHashFromEventNameTest) {
     Event myEvent1(empty_name);
 
     const HashId hash_empty = myEvent1.getHash();
-    EXPECT_EQ(hash_empty, static_cast<ui32>(0));
+    EXPECT_EQ(hash_empty, static_cast<HashId>(0));
 }
 
 } // Namespace UnitTest
