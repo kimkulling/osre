@@ -51,7 +51,7 @@ OPTION( OSRE_BUILD_ED
 )
 
 hunter_add_package(SDL2)
-find_package(SDL2 REQUIRED)
+find_package(SDL2 CONFIG REQUIRED)
 
 # Cache these to allow the user to override them manually.
 set( LIB_INSTALL_DIR "lib" CACHE PATH
