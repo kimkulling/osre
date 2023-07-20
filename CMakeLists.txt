@@ -25,6 +25,11 @@ set_property( GLOBAL PROPERTY CXX_STANDARD 11 )
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/contrib/assimp/cmake-modules/")
 
+OPTION( OSRE_BUILD_PLAYER
+  "Build the plyer of OSRE."
+  ON
+)
+
 OPTION( OSRE_BUILD_SAMPLES
   "Build the samples of OSRE."
   ON
@@ -59,7 +64,6 @@ set( BIN_INSTALL_DIR "bin" CACHE PATH
 INCLUDE_DIRECTORIES( BEFORE
     include/
     /usr/include/
-    ${SDL2_INCLUDE_DIRS}
     ${CMAKE_HOME_DIRECTORY}/contrib/assimp/include
     ${CMAKE_HOME_DIRECTORY}/contrib/glm/
     ${CMAKE_HOME_DIRECTORY}/contrib/stb
@@ -134,7 +138,10 @@ add_definitions( -DGLM_ENABLE_EXPERIMENTAL )
 
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
-ADD_SUBDIRECTORY( src/Player )
+if (OSRE_BUILD_PLAYER)
+    ADD_SUBDIRECTORY( src/Player )
+endif()
+
 if (OSRE_BUILD_ED)
     ADD_SUBDIRECTORY( src/Editor_imgui)
     set_target_properties(osre_ed_imgui       PROPERTIES FOLDER Editor)

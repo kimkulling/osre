@@ -118,8 +118,13 @@ AssimpWrapper::AssetContext::~AssetContext() {
 }
 
 AssimpWrapper::AssimpWrapper( Common::Ids &ids, World *world ) :
+        mImporter(nullptr),
         mAssetContext(ids, world) {
     // empty
+}
+
+AssimpWrapper::~AssimpWrapper() {
+    delete mImporter;
 }
 
 bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
@@ -129,7 +134,7 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
     }
 
     // No flags, so use the default importer flags.
-    if (0 == flags) {
+    if (flags == 0) {
         flags = DefaultImportFlags;
     }
 
@@ -143,9 +148,12 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
     }
 
     filename = mAssetContext.mRoot + filename;
-    Importer myImporter;
+    if (mImporter != nullptr) {
+        delete mImporter;
+    }
+    mImporter = new Importer;
     osre_debug(Tag, "Start importing " + filename + ".");
-    mAssetContext.mScene = myImporter.ReadFile(filename, flags);
+    mAssetContext.mScene = mImporter->ReadFile(filename, flags);
     if (nullptr == mAssetContext.mScene) {
         osre_error(Tag, "Cannot start importing " + filename + ", scene is nullptr.");
         mAssetContext.mRoot = "";
@@ -171,12 +179,16 @@ void AssimpWrapper::getStatistics(ui32 &numVertices, ui32 &numTriangles) {
     numTriangles = mAssetContext.mNumTriangles;
 }
 
+const aiScene *AssimpWrapper::getScene() const {
+    return mAssetContext.mScene;
+}
+
 Entity *AssimpWrapper::convertScene() {
-    if (nullptr == mAssetContext.mScene) {
+    if (mAssetContext.mScene == nullptr) {
         return nullptr;
     }
 
-    if (nullptr == mAssetContext.mWorld) {
+    if (mAssetContext.mWorld == nullptr) {
         mAssetContext.mWorld = new World("scene");
     }
 
