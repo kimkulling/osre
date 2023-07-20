@@ -44,8 +44,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/CameraComponent.h>
 #include <osre/RenderBackend/MaterialBuilder.h>
 
-#include "src/Engine/App/MouseEventListener.h"
-#include "src/Engine/Platform/PlatformPluginFactory.h"
+#include "App/MouseEventListener.h"
+#include "Platform/PlatformPluginFactory.h"
 
 namespace OSRE {
 namespace App {

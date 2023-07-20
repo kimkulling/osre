@@ -53,39 +53,25 @@ public:
         // empty
     }
 
-    virtual ~InstancingApp() = default;
+    ~InstancingApp() = default;
 
 protected:
-    bool onCreate() override {
-        if (!AppBase::onCreate()) {
-            osre_debug(Tag, "Error while creating.");
-            return false;
-        }
-        AppBase::setWindowsTitle("Instancing sample!");
-
-        AssetRegistry::registerAssetPathInBinFolder("assets", "assets");
-
-        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
-        if (nullptr == rbSrv) {
-            return false;
-        }
-
+    bool setupScene() {
         Platform::AbstractWindow *rootWindow = getRootWindow();
         if (nullptr == rootWindow) {
             return false;
         }
-
-        Rect2ui windowsRect;
-        rootWindow->getWindowsRect(windowsRect);
-
         World *world = getStage()->getActiveWorld(0);
         mEntity = new App::Entity("instance", world->getIds(), world);
         Entity *camEntity = new App::Entity("camera", world->getIds(), world);
-        App::Camera *camera = (App::Camera*)camEntity->createComponent(ComponentType::CameraComponentType);
+        App::Camera *camera = (App::Camera *)camEntity->createComponent(ComponentType::CameraComponentType);
         world->setActiveCamera(camera);
+
+        Rect2ui windowsRect;
+        rootWindow->getWindowsRect(windowsRect);
         camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.0001f, 1000.f);
         MeshBuilder meshBuilder;
-        AppBase::getStage()->getActiveWorld(0)->addEntity(mEntity);
+        world->addEntity(mEntity);
         RenderBackend::Mesh *mesh = meshBuilder.createTriangle(VertexType::RenderVertex, BufferAccessType::ReadWrite).getMesh();
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
@@ -96,6 +82,16 @@ protected:
         }
 
         return true;
+    }
+
+    bool onCreate() override {
+        if (!AppBase::onCreate()) {
+            osre_debug(Tag, "Error while creating.");
+            return false;
+        }
+        AppBase::setWindowsTitle("Instancing sample!");
+
+        return setupScene();
     }
 
     void onUpdate() override {
@@ -110,7 +106,6 @@ protected:
         rbSrv->endRenderBatch();
         rbSrv->endPass();
 
-        // Scene::DbgRenderer::getInstance()->renderDbgText(0, 0, 2U, "XXX");
 
         AppBase::onUpdate();
     }
