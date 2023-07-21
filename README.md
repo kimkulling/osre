@@ -73,6 +73,7 @@ public:
     ~QuickStartApp() override = default;
 
 protected:
+    /// The creation callback, will get called on system startup.
     bool onCreate() override {
         if (!AppBase::onCreate()) {
             return false;
