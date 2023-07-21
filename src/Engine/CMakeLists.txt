@@ -26,7 +26,7 @@ endif()
 IF( WIN32 )
     SET( platform_libs comctl32.lib Winmm.lib opengl32.lib glu32.lib Shcore.lib SDL2::SDL2 )
 ELSE( WIN32 )
-    SET( platform_libs SDL2::SDL2 )
+    SET( platform_libs SDL2 )
 ENDIF( WIN32 )
 
 #==============================================================================
