@@ -21,24 +21,22 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "UIElements.h"
-//#include "OsreEdApp.h"
 #include <osre/RenderBackend/MeshBuilder.h>
 #include <osre/Platform/PlatformOperations.h>
 #include <osre/Platform/PlatformInterface.h>
 
-#include <commoncontrols.h>
-#include <winuser.h>
 
 #ifdef OSRE_WINDOWS
-#include "Engine/Platform/win32/Win32EventQueue.h"
-#include "Engine/Platform/win32/Win32Window.h"
-#include "shellapi.h"
-#include <CommCtrl.h>
-#include <commctrl.h>
-#include <strsafe.h>
-#include <windows.h>
-#include <winuser.h>
-#endif
+#   include <src/Engine/Platform/win32/Win32EventQueue.h>
+#   include <src/Engine/Platform/win32/Win32Window.h>
+#   include <shellapi.h>
+#   include <CommCtrl.h>
+#   include <commctrl.h>
+#   include <strsafe.h>
+#   include <windows.h>
+#   include <winuser.h>
+#   include <commoncontrols.h>
+#endif // OSRE_WINDOWS
 
 namespace OSRE {
 
