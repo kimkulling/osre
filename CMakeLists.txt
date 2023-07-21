@@ -8,11 +8,6 @@ IF (WIN32)
         URL "https://github.com/cpp-pm/hunter/archive/v0.24.0.tar.gz"
         SHA1 "a3d7f4372b1dcd52faa6ff4a3bd5358e1d0e5efd"
     )
-ELSE()
-    HunterGate(
-        URL "https://github.com/ruslo/hunter/archive/v0.23.111.tar.gz"
-        SHA1 "4189bbd869abe4eb69b5303d3f916c03d34dc154"
-    )
 ENDIF()
 
 PROJECT( osre )
@@ -25,41 +20,19 @@ set_property( GLOBAL PROPERTY CXX_STANDARD 11 )
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/contrib/assimp/cmake-modules/")
 
-OPTION( OSRE_BUILD_PLAYER
-  "Build the plyer of OSRE."
-  ON
-)
-
-OPTION( OSRE_BUILD_SAMPLES
-  "Build the samples of OSRE."
-  ON
-)
-
-OPTION( OSRE_BUILD_TESTS
-  "Build the test suite for OSRE."
-  ON
-)
-
-OPTION( OSRE_BUILD_DOC
-  "Build the doxygen-based documentation for OSRE."
-  OFF
-)
-
-OPTION( OSRE_BUILD_ED
-  "Build the OSRE Ed."
-  ON
-)
+OPTION( OSRE_BUILD_PLAYER "Build the plyer of OSRE." ON)
+OPTION( OSRE_BUILD_SAMPLES "Build the samples of OSRE." ON)
+OPTION( OSRE_BUILD_TESTS "Build the test suite for OSRE." ON)
+OPTION( OSRE_BUILD_DOC "Build the doxygen-based documentation for OSRE." OFF)
+OPTION( OSRE_BUILD_ED "Build the OSRE Ed." ON)
 
 hunter_add_package(SDL2)
 find_package(SDL2 CONFIG REQUIRED)
 
 # Cache these to allow the user to override them manually.
-set( LIB_INSTALL_DIR "lib" CACHE PATH
-    "Path the built library files are installed to." )
-set( INCLUDE_INSTALL_DIR "osre" CACHE PATH
-    "Path the header files are installed to." )
-set( BIN_INSTALL_DIR "bin" CACHE PATH
-    "Path the tool executables are installed to." )
+set( LIB_INSTALL_DIR "lib"      CACHE PATH "Path the built library files are installed to." )
+set( INCLUDE_INSTALL_DIR "osre" CACHE PATH "Path the header files are installed to." )
+set( BIN_INSTALL_DIR "bin"      CACHE PATH "Path the tool executables are installed to." )
 
 INCLUDE_DIRECTORIES( BEFORE
     include/
@@ -105,8 +78,8 @@ IF ((CMAKE_C_COMPILER_ID MATCHES "GNU") AND NOT CMAKE_COMPILER_IS_MINGW)
     SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
   ENDIF()
   # hide all not-exported symbols
-  SET(CMAKE_CXX_FLAGS "-fvisibility=hidden -fno-strict-aliasing -Wall ${CMAKE_CXX_FLAGS} -fPIC")
-  SET(CMAKE_C_FLAGS "-fno-strict-aliasing ${CMAKE_C_FLAGS}")
+  SET(CMAKE_CXX_FLAGS "-fvisibility=hidden -fno-strict-aliasing -Wall -fPIC ${CMAKE_CXX_FLAGS}")
+  SET(CMAKE_C_FLAGS "-fno-strict-aliasing -fPIC ${CMAKE_C_FLAGS}")
   SET(LIBSTDC++_LIBRARIES -lstdc++)
 ELSEIF(MSVC)
   FIND_PACKAGE( DirectX )
@@ -117,8 +90,8 @@ ELSEIF ( "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" )
     SET(CMAKE_CXX_STANDARD 11)
     SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
   ENDIF()
-  SET(CMAKE_CXX_FLAGS "-fvisibility=hidden -fno-strict-aliasing -Wall -Wno-long-long ${CMAKE_CXX_FLAGS} -fPIC" )
-  SET(CMAKE_C_FLAGS "-fno-strict-aliasing ${CMAKE_C_FLAGS}")
+  SET(CMAKE_CXX_FLAGS "-fvisibility=hidden -fno-strict-aliasing -Wall -Wno-long-long -fPIC ${CMAKE_CXX_FLAGS}" )
+  SET(CMAKE_C_FLAGS "-fno-strict-aliasing  -fPIC ${CMAKE_C_FLAGS}")
 ELSEIF( CMAKE_COMPILER_IS_MINGW )
   IF (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0)
     message(FATAL_ERROR "MinGW is too old to be supported. Please update MinGW and try again.")
@@ -130,7 +103,7 @@ ELSEIF( CMAKE_COMPILER_IS_MINGW )
     SET(CMAKE_C_FLAGS "-fPIC ${CMAKE_C_FLAGS}")
   ENDIF()
   SET(CMAKE_CXX_FLAGS "-fvisibility=hidden -fno-strict-aliasing -Wall -Wno-long-long -Wa,-mbig-obj -O3 ${CMAKE_CXX_FLAGS} -fPIC")
-  SET(CMAKE_C_FLAGS "-fno-strict-aliasing ${CMAKE_C_FLAGS}")
+  SET(CMAKE_C_FLAGS "-fno-strict-aliasing  -fPIC ${CMAKE_C_FLAGS}")
   ADD_DEFINITIONS( -U__STRICT_ANSI__ )
 ENDIF()
 
@@ -183,7 +156,7 @@ IF( OSRE_BUILD_DOC )
 ENDIF( OSRE_BUILD_DOC )
 
 IF ( OSRE_BUILD_DOC )  
-  set_target_properties(  doc                PROPERTIES FOLDER Documentation )
+  set_target_properties(doc PROPERTIES FOLDER Documentation )
 ENDIF( OSRE_BUILD_DOC )
-set_target_properties(  cppcore            PROPERTIES FOLDER Contrib )
-set_target_properties(  assimp             PROPERTIES FOLDER Contrib )
+set_target_properties(cppcore PROPERTIES FOLDER Contrib )
+set_target_properties(assimp  PROPERTIES FOLDER Contrib )
