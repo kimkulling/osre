@@ -26,7 +26,9 @@ OPTION( OSRE_BUILD_TESTS "Build the test suite for OSRE." ON)
 OPTION( OSRE_BUILD_DOC "Build the doxygen-based documentation for OSRE." OFF)
 OPTION( OSRE_BUILD_ED "Build the OSRE Ed." ON)
 
-hunter_add_package(SDL2)
+if (WIN32)
+  hunter_add_package(SDL2)
+endif()
 find_package(SDL2 CONFIG REQUIRED)
 
 # Cache these to allow the user to override them manually.
