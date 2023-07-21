@@ -1,11 +1,10 @@
-SET( LIBRARY_VERSION "0.1.0" )
+SET( LIBRARY_VERSION "0.1.1" )
 
 SET( HEADER_PATH ${PROJECT_SOURCE_DIR}/include/osre )
 add_definitions( -DOSRE_BUILD_EXPORT )
 
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}
-    ${PROJECT_SOURCE_DIR}/include
     ${HEADER_PATH}
     ${PROJECT_SOURCE_DIR}/contrib/cppcore/include
     ${PROJECT_SOURCE_DIR}/contrib/glew/include
@@ -25,7 +24,7 @@ if( NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*" )
 endif()
 
 IF( WIN32 )
-    SET( platform_libs comctl32.lib Winmm.lib opengl32.lib glu32.lib Shcore.lib )
+    SET( platform_libs comctl32.lib Winmm.lib opengl32.lib glu32.lib Shcore.lib SDL2::SDL2 )
 ELSE( WIN32 )
     SET( platform_libs SDL2 )
 ENDIF( WIN32 )

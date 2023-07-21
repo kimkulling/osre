@@ -27,8 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifdef OSRE_WINDOWS
 #include <src/Engine/Platform/win32/Win32OGLRenderContext.h>
 #endif // OSRE_WINDOWS
-#include "Engine/Platform/sdl2/SDL2EventQueue.h"
-#include "Engine/Platform/sdl2/SDL2Window.h"
+#include <src/Engine/Platform/sdl2/SDL2EventQueue.h>
+#include <src/Engine/Platform/sdl2/SDL2Window.h>
 #include <src/Engine/Platform/sdl2/SDL2OGLRenderContext.h>
 #include <src/Engine/Platform/sdl2/SDL2SystemInfo.h>
 #include <src/Engine/Platform/sdl2/SDL2Timer.h>
