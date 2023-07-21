@@ -1,4 +1,4 @@
-message(STATUS "The CMake version used is ${CMAKE_VERSION}")
+MESSAGE(STATUS "The CMake version used is ${CMAKE_VERSION}")
 cmake_minimum_required(VERSION 3.5...${CMAKE_VERSION})
 include("cmake/HunterGate.cmake")
 
@@ -11,14 +11,14 @@ IF (WIN32)
 ENDIF()
 
 PROJECT( osre )
-set ( OSRE_VERSION_MAJOR 0 )
-set ( OSRE_VERSION_MINOR 1 )
-set ( OSRE_VERSION_PATCH 0 )
-set ( OSRE_VERSION ${OSRE_VERSION_MAJOR}.${OSRE_VERSION_MINOR}.${OSRE_VERSION_PATCH} )
-set ( PROJECT_VERSION "${OSRE_VERSION}" )
+SET ( OSRE_VERSION_MAJOR 0 )
+SET ( OSRE_VERSION_MINOR 1 )
+SET ( OSRE_VERSION_PATCH 0 )
+SET ( OSRE_VERSION ${OSRE_VERSION_MAJOR}.${OSRE_VERSION_MINOR}.${OSRE_VERSION_PATCH} )
+SET ( PROJECT_VERSION "${OSRE_VERSION}" )
 set_property( GLOBAL PROPERTY CXX_STANDARD 11 )
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/contrib/assimp/cmake-modules/")
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/contrib/assimp/cmake-modules/")
 
 OPTION( OSRE_BUILD_PLAYER "Build the plyer of OSRE." ON)
 OPTION( OSRE_BUILD_SAMPLES "Build the samples of OSRE." ON)
@@ -26,15 +26,15 @@ OPTION( OSRE_BUILD_TESTS "Build the test suite for OSRE." ON)
 OPTION( OSRE_BUILD_DOC "Build the doxygen-based documentation for OSRE." OFF)
 OPTION( OSRE_BUILD_ED "Build the OSRE Ed." ON)
 
-if (WIN32)
+IF (WIN32)
   hunter_add_package(SDL2)
-endif()
+ENDIF()
 find_package(SDL2 CONFIG REQUIRED)
 
 # Cache these to allow the user to override them manually.
-set( LIB_INSTALL_DIR "lib"      CACHE PATH "Path the built library files are installed to." )
-set( INCLUDE_INSTALL_DIR "osre" CACHE PATH "Path the header files are installed to." )
-set( BIN_INSTALL_DIR "bin"      CACHE PATH "Path the tool executables are installed to." )
+SET( LIB_INSTALL_DIR "lib"      CACHE PATH "Path the built library files are installed to." )
+SET( INCLUDE_INSTALL_DIR "osre" CACHE PATH "Path the header files are installed to." )
+SET( BIN_INSTALL_DIR "bin"      CACHE PATH "Path the tool executables are installed to." )
 
 INCLUDE_DIRECTORIES( BEFORE
     include/
@@ -53,15 +53,15 @@ INCLUDE_DIRECTORIES( BEFORE
     ${CMAKE_HOME_DIRECTORY}/
 )
 
-if( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR "${CMAKE_GENERATOR}" MATCHES "16 2019" OR "${CMAKE_GENERATOR}" MATCHES "15 2017" OR "${CMAKE_GENERATOR}" MATCHES "17 2022")
+IF( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR "${CMAKE_GENERATOR}" MATCHES "16 2019" OR "${CMAKE_GENERATOR}" MATCHES "15 2017" OR "${CMAKE_GENERATOR}" MATCHES "17 2022")
     link_directories(
 	    ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x64
     )
-else()
+ELSE()
     link_directories(
         ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x86
     )
-endif()
+ENDIF()
 
 link_directories(
     ${CMAKE_HOME_DIRECTORY}/lib
@@ -69,9 +69,9 @@ link_directories(
     ${SDL2_LIBRARIES}
 )
 
-set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib )
-set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib )
-set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin )
+SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib )
+SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib )
+SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin )
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -86,7 +86,7 @@ IF ((CMAKE_C_COMPILER_ID MATCHES "GNU") AND NOT CMAKE_COMPILER_IS_MINGW)
   SET(LIBSTDC++_LIBRARIES -lstdc++)
 ELSEIF(MSVC)
   FIND_PACKAGE( DirectX )
-  add_definitions( -DWIN32_LEAN_AND_MEAN )
+  ADD_DEFINITIONS( -DWIN32_LEAN_AND_MEAN )
   ADD_COMPILE_OPTIONS(/MP /bigobj /W4)
 ELSEIF ( "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" )
   IF(NOT ASSIMP_HUNTER_ENABLED)
@@ -97,9 +97,9 @@ ELSEIF ( "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" )
   SET(CMAKE_C_FLAGS "-fno-strict-aliasing  -fPIC ${CMAKE_C_FLAGS}")
 ELSEIF( CMAKE_COMPILER_IS_MINGW )
   IF (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0)
-    message(FATAL_ERROR "MinGW is too old to be supported. Please update MinGW and try again.")
+    MESSAGE(FATAL_ERROR "MinGW is too old to be supported. Please update MinGW and try again.")
   ELSEIF(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.3)
-    message(WARNING "MinGW is old, if you experience errors, update MinGW.")
+    MESSAGE(WARNING "MinGW is old, if you experience errors, update MinGW.")
   ENDIF()
   IF(NOT ASSIMP_HUNTER_ENABLED)
     SET(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
@@ -110,7 +110,7 @@ ELSEIF( CMAKE_COMPILER_IS_MINGW )
   ADD_DEFINITIONS( -U__STRICT_ANSI__ )
 ENDIF()
 
-add_definitions( -DGLM_ENABLE_EXPERIMENTAL )
+ADD_DEFINITIONS( -DGLM_ENABLE_EXPERIMENTAL )
 
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
@@ -118,15 +118,17 @@ if (OSRE_BUILD_PLAYER)
     ADD_SUBDIRECTORY( src/Player )
 endif()
 
-if (OSRE_BUILD_ED)
-    ADD_SUBDIRECTORY( src/Editor_imgui)
-    set_target_properties(osre_ed_imgui       PROPERTIES FOLDER Editor)
+if (WIN32)
+    if (OSRE_BUILD_ED)
+        ADD_SUBDIRECTORY( src/Editor_imgui)
+        set_target_properties(osre_ed_imgui PROPERTIES FOLDER Editor)
+    endif()
 endif()
 
-IF ( OSRE_BUILD_TESTS )
+if (OSRE_BUILD_TESTS)
     ADD_SUBDIRECTORY( test/RenderTests )
     ADD_SUBDIRECTORY( test/UnitTests )
-ENDIF(OSRE_BUILD_TESTS)
+endif(OSRE_BUILD_TESTS)
 
 IF ( OSRE_BUILD_SAMPLES )
     ADD_SUBDIRECTORY( samples )
@@ -139,9 +141,9 @@ ADD_SUBDIRECTORY( contrib/cppcore )
 ADD_SUBDIRECTORY( contrib/unzip )
 
 # Config for assimp
-set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "no assimp tools")
-set(ASSIMP_BUILD_ZLIB ON CACHE BOOL "no assimp tools" )
-set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "no assimp tools" )
+SET(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "no assimp tools")
+SET(ASSIMP_BUILD_ZLIB ON CACHE BOOL "no assimp tools" )
+SET(ASSIMP_BUILD_TESTS OFF CACHE BOOL "no assimp tools" )
 ADD_SUBDIRECTORY( contrib/assimp )
 
 # Include the doc component
@@ -154,7 +156,7 @@ IF( OSRE_BUILD_DOC )
           COMMENT "Generating OSRE-API documentation with Doxygen" VERBATIM
       )
   else (DOXYGEN_FOUND)
-      message("Doxygen need to be installed to generate the doxygen documentation")
+      MESSAGE("Doxygen need to be installed to generate the doxygen documentation")
   ENDIF ( DOXYGEN_FOUND )
 ENDIF( OSRE_BUILD_DOC )
 
