@@ -47,6 +47,7 @@ INCLUDE_DIRECTORIES( BEFORE
     ${CMAKE_HOME_DIRECTORY}/contrib/assimp/contrib/zlib
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/include
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/contrib/gtest-1.7.0/
+    ${SDL2_INCLUDE_DIRS}
     "c:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include"
     ${CMAKE_HOME_DIRECTORY}/src/
     ${CMAKE_HOME_DIRECTORY}/
