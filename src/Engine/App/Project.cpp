@@ -269,8 +269,8 @@ static bool saveStage(const String &name, const Stage &stage, StageData *sd) {
         setNameChunk(activeWorld->getName(), sd->mActiveWorld);
         sd->mNumWorlds = (i32) stage.getNumberOfWorlds();
         sd->mWorldData = new WorldData[sd->mNumWorlds];
-        for (i32 i = 0; i < sd->mNumWorlds; ++i) {
-            World *world = stage.getWorldAt(i);
+        for (i32 j = 0; j < sd->mNumWorlds; ++j) {
+            World *world = stage.getWorldAt(j);
             result |= saveWorld(world, *(sd->mWorldData));
             if (!result) {
                 osre_error(Tag, "Error while storing world " + world->getName() + ".");
