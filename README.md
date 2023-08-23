@@ -54,7 +54,7 @@ using namespace ::OSRE;
 using namespace ::OSRE::App;
 using namespace ::OSRE::RenderBackend;
 
-class QuickStartApp : public App::AppBase {
+class QuickStartApp : public AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock m_transformMatrix;
     /// The entity to render
