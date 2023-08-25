@@ -308,7 +308,8 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
     return mat;
 }
 
-const c8 *DefaultDebugTestMat = "debug_text_mat";
+static constexpr c8 DefaultDebugTestMat[] = "debug_text_mat";
+
 RenderBackend::Material *MaterialBuilder::createDebugRenderTextMaterial() {
     Material *mat = sMaterialCache->find(DefaultDebugTestMat);
     if (nullptr != mat) {
