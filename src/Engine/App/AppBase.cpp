@@ -250,7 +250,7 @@ bool AppBase::onCreate() {
 
     // register any available platform-specific log streams
     Common::AbstractLogStream *stream = Platform::PlatformPluginFactory::createPlatformLogStream();
-    if (nullptr != stream) {
+    if (stream != nullptr) {
         Logger::getInstance()->registerLogStream(stream);
     }
 
@@ -283,6 +283,7 @@ bool AppBase::onCreate() {
     MaterialBuilder::create();
     ResourceCacheService *rcSrv = new ResourceCacheService;
     ServiceProvider::setService(ServiceType::ResourceService, rcSrv);
+    
     // Setup onMouse event-listener
     AbstractPlatformEventQueue *evHandler = mPlatformInterface->getPlatformEventHandler();
     if (nullptr != evHandler) {
@@ -351,7 +352,6 @@ bool AppBase::onDestroy() {
     delete mKeyboardEvListener;
     mKeyboardEvListener = nullptr;
 
-    
     osre_debug(Tag, "Set application state to destroyed.");
     mAppState = State::Destroyed;
     Logger::kill();

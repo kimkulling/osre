@@ -120,7 +120,7 @@ void Logger::debug(const String &domain, const String &msg) {
 }
 
 void Logger::info(const String &domain, const String &msg) {
-    if (getVerboseMode() == VerboseMode::Verbose || getVerboseMode() == VerboseMode::Debug || getVerboseMode() == VerboseMode::Trace) {
+    if (getVerboseMode() == VerboseMode::Normal || getVerboseMode() == VerboseMode::Verbose || getVerboseMode() == VerboseMode::Debug || getVerboseMode() == VerboseMode::Trace) {
         String logMsg;
 
         logMsg += "Info: ";
