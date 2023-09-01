@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-static const c8 *Tag = "OGLShader";
+static constexpr c8 Tag[] = "OGLShader";
 
 OGLShader::OGLShader(const String &name) :
         Object(name),

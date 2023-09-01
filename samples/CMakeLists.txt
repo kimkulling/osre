@@ -23,6 +23,10 @@ SET ( 03_instancing_src
 	03_Instancing/README.md
 )
 
+SET ( 04_terrain_src
+	04_terrain/TerrainRendering.cpp
+	04_terrain/README.md
+)
 
 ADD_EXECUTABLE( HelloWorld
     ${00_helloworld_src}
@@ -32,12 +36,16 @@ ADD_EXECUTABLE( ModelLoading
     ${01_modelloading_src}
 )
 
+ADD_EXECUTABLE( UIDemo
+    ${02_UIDemo_src}
+)
+
 ADD_EXECUTABLE( Instancing
     ${03_instancing_src}
 )
 
-ADD_EXECUTABLE(UIDemo
-    ${03_instancing_src}
+ADD_EXECUTABLE(Terrain
+    ${04_terrain_src}
 )
 
 link_directories(
@@ -49,6 +57,7 @@ target_link_libraries(HelloWorld   osre)
 target_link_libraries(ModelLoading osre)
 target_link_libraries(UIDemo       osre)
 target_link_libraries(Instancing   osre)
+target_link_libraries(Terrain   osre)
 
 set_target_properties(HelloWorld   PROPERTIES FOLDER Samples)
 set_target_properties(ModelLoading PROPERTIES FOLDER Samples)

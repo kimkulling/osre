@@ -233,7 +233,6 @@ bool OGLRenderEventHandler::onDetachView(const EventData *) {
 }
 
 bool OGLRenderEventHandler::onClearGeo(const EventData *) {
-    printf("OGLRenderEventHandler::onClearGeo\n");
     osre_assert(nullptr != m_oglBackend);
     osre_assert(nullptr != m_renderCmdBuffer);
 

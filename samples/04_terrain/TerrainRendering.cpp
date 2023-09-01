@@ -1,9 +1,6 @@
-///
-///
 // To identify local log entries we will define this tag.
 static constexpr c8 Tag[] = "TerrainRenderingApp";
 
-/// The example application, will create the render environment and render a simple triangle onto it
 class TerrainRenderingApp : public App::AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock mTransformMatrix;
@@ -21,9 +18,18 @@ public:
         // empty
     }
     
-    ~TerrainRenderingApp() override = default;
+    ~TerrainRenderingApp() override {
+        delete mEntity;
+    }
 
 protected:
+    bool loadHeightMap(const String &filename) {
+        if (filename.empty()) {
+            return false;
+        }
+
+        
+    }
     Camera *setupCamera(World *world) {
         Entity *camEntity = new Entity("camera", *getIdContainer(), world);
         world->addEntity(camEntity);
@@ -41,11 +47,12 @@ protected:
             return false;
         }
 
-        AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
+        AppBase::setWindowsTitle("Terrain sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
         World *world = getStage()->addActiveWorld("hello_world");
         mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
         Camera *camera = setupCamera(world);
 
+        
         MeshBuilder meshBuilder;
         RenderBackend::Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5,.5,.5,BufferAccessType::ReadOnly).getMesh();
         if (nullptr != mesh) {
