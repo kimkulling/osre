@@ -38,14 +38,22 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
 
 }
 
+constexpr float Near = 0.001f;
+constexpr float Far  = 1000.f;
+
 Camera *OsreEdApp::setupCamera(World *world) {
-    Entity *camEntity = new Entity("camera", *getIdContainer(), world);
+    Entity *camEntity = world->findEntity("camera");
+    if (camEntity != nullptr) {
+        return (Camera*) camEntity->getComponent(ComponentType::CameraComponentType);
+    }
+    
+    camEntity = new Entity("camera", *getIdContainer(), world);
     world->addEntity(camEntity);
-    Camera *camera = (Camera *)camEntity->createComponent(ComponentType::CameraComponentType);
+    Camera *camera = (Camera*) camEntity->createComponent(ComponentType::CameraComponentType);
     world->setActiveCamera(camera);
-    ui32 w, h;
+    ui32 w{0u}, h{0u};
     AppBase::getResolution(w, h);
-    camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
+    camera->setProjectionParameters(60.f, (f32)w, (f32)h, Near, Far);
 
     return camera;
 }
@@ -151,11 +159,13 @@ void OsreEdApp::onUpdate() {
 
     RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
     rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
-    rbSrv->beginRenderBatch("b1");
+    {
+        rbSrv->beginRenderBatch("b1");
 
-    rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
+        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
 
-    rbSrv->endRenderBatch();
+        rbSrv->endRenderBatch();
+    }
     rbSrv->endPass();
 
     AppBase::onUpdate();

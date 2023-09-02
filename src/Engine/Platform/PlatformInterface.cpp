@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <src/Engine/Platform/PlatformPluginFactory.h>
 #ifdef OSRE_WINDOWS
-#include <src/Engine/Platform/win32/Win32OGLRenderContext.h>
+#   include <src/Engine/Platform/win32/Win32OGLRenderContext.h>
 #endif // OSRE_WINDOWS
 #include <src/Engine/Platform/sdl2/SDL2EventQueue.h>
 #include <src/Engine/Platform/sdl2/SDL2Window.h>
@@ -72,7 +72,7 @@ static const c8 *PlatformPluginName[static_cast<i32>(PluginType::MaxPlugin)] = {
 #endif // OSRE_WINDOWS
 };
 
-static const c8 *Tag = "PlatformInterface";
+static constexpr c8 Tag[] = "PlatformInterface";
 
 PlatformInterface::PlatformInterface(const Settings *config) :
         AbstractService("platform/platforminterface"), mContext(nullptr) {
@@ -81,7 +81,6 @@ PlatformInterface::PlatformInterface(const Settings *config) :
 
 PlatformInterface::~PlatformInterface() {
     delete mContext;
-    mContext = nullptr;
 }
 
 PlatformInterface *PlatformInterface::create(const Settings *config) {

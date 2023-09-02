@@ -52,7 +52,7 @@ void AbstractPlatformEventQueue::processEvents(Common::EventTriggerer *triggerer
     EventBus *eventBus = getEventBus();
     osre_assert(nullptr != eventBus);
     while (!theList->isEmpty()) {
-        Common::EventData *eventData = theList->front();
+        EventData *eventData = theList->front();
         if (nullptr != eventData) {
             eventBus->publish(eventData->getEvent(), eventData);
             triggerer->triggerEvent(eventData->getEvent(), eventData);

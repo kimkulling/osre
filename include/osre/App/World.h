@@ -62,6 +62,14 @@ public:
     /// @param entity   The entity to remove.
     bool removeEntity(Entity *entity);
 
+    /// @brief Will search, if the entity is already part of the world instance.
+    /// @param[in] name  The entity name to look for.
+    /// @return A pointer showing ot the entity or nullptr, if nothing was found.
+    Entity *findEntity(const String &name);
+
+    /// @brief Will set the new active camera.
+    /// @param[in] camera   The new camera.
+    /// @return true if successful, false in case of an error.
     bool setActiveCamera(Camera *camera);
     
     /// @brief 

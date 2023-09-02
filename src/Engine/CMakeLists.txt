@@ -507,4 +507,3 @@ ADD_LIBRARY( osre SHARED
 
 target_link_libraries ( osre cppcore zlibstatic Unzip glew ${platform_libs} assimp )
 set_target_properties(  osre PROPERTIES FOLDER Engine )
-

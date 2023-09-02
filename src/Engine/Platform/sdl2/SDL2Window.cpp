@@ -118,14 +118,13 @@ bool SDL2Surface::onUpdateProperies() {
 }
 
 void SDL2Surface::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
-    printf("resizing\n");
     if ( nullptr == m_surface ) {
         return;
     }
 
     SDL_SetWindowPosition( m_surface, x, y );
     SDL_SetWindowSize( m_surface, w, h );
-    WindowsProperties *props( AbstractWindow::getProperties() );
+    WindowsProperties *props = AbstractWindow::getProperties();
     if ( nullptr != props ) {
         props->m_x = x;
         props->m_y = y;
