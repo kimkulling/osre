@@ -74,10 +74,17 @@ ShapeRenderer &ShapeRenderer::addRect(f32 x, f32 y, f32 w, f32 h, bool filled) {
     v[2].position.y = y + h;
     v[3].position.x = x;
     v[3].position.y = y + h;
-    ui32 indices[6] = { 0, 1, 2, 1, 2, 3 };
     setVertexColor(v, 4, mColor);
     mMesh->attachVertices(v, 4);
-    mMesh->attachIndices(indices, 6);
+    if (filled) {
+        constexpr ui32 FilledRectIndicesNo = 6;
+        const ui32 indices[FilledRectIndicesNo] = { 0, 1, 2, 1, 2, 3 };
+        mMesh->attachIndices(indices, FilledRectIndicesNo);
+    } else {
+        constexpr ui32 LineRectIndicesNo = 8;
+        const ui32 indices[LineRectIndicesNo] = { 0, 1, 1, 2, 2, 3, 3, 0 };
+        mMesh->attachIndices(indices, LineRectIndicesNo);
+    }
 
     return *this;
 }

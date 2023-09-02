@@ -53,15 +53,15 @@ INCLUDE_DIRECTORIES( BEFORE
     ${CMAKE_HOME_DIRECTORY}/
 )
 
-IF( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR "${CMAKE_GENERATOR}" MATCHES "16 2019" OR "${CMAKE_GENERATOR}" MATCHES "15 2017" OR "${CMAKE_GENERATOR}" MATCHES "17 2022")
-    link_directories(
-	    ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x64
-    )
-ELSE()
-    link_directories(
-        ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x86
-    )
-ENDIF()
+#IF( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR "${CMAKE_GENERATOR}" MATCHES "16 2019" OR "${CMAKE_GENERATOR}" MATCHES "15 2017" OR "${CMAKE_GENERATOR}" MATCHES "17 2022")
+#    link_directories(
+#	    ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x64
+#    )
+#ELSE()
+#    link_directories(
+#        ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x86
+#    )
+#ENDIF()
 
 link_directories(
     ${CMAKE_HOME_DIRECTORY}/lib
