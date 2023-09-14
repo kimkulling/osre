@@ -114,7 +114,7 @@ enum class TextureStageType {
     NumTextureStageTypes            ///< Number of enums.
 };
 
-///	@brief  This enum describes different texture parameter names.
+/// @brief  This enum describes different texture parameter names.
 enum class TextureParameterName {
     InvalidTextureParameterName = -1,   ///< Enum for invalid enum.
     TextureParamMinFilter = 0,          ///< The min filter name.
@@ -124,7 +124,7 @@ enum class TextureParameterName {
     NumTextureParameterNames            ///< Number of enums.
 };
 
-///	@brief  This enum describes the parameters which are related the the parameter names ( @see TextureParameterName ).
+/// @brief  This enum describes the parameters which are related the the parameter names ( @see TextureParameterName ).
 enum class TextureParameterType {
     TexturePTNearest = 0, ///< Use nearest filter mode.
     TexturePTLinear, ///< Use linear interpolation mode.
@@ -136,7 +136,7 @@ enum class TextureParameterType {
     InvalidTextureParameterType, ///< Enum for invalid enum.
 };
 
-///	@brief  This enum describes the index data type.
+/// @brief  This enum describes the index data type.
 enum class IndexType {
     UnsignedByte = 0, ///< Bytes are used for the index data.
     UnsignedShort, ///< Unsigned short for the index data.
@@ -146,7 +146,7 @@ enum class IndexType {
     InvalidIndexType, ///< Enum for invalid enum.
 };
 
-///	@brief  This enum describes the primitive types for rendering vertex information.
+/// @brief  This enum describes the primitive types for rendering vertex information.
 enum class PrimitiveType {
     PointList = 0, ///< A list of points, one index per point.
     LineList, ///< A list of separate lines, 2 indices per line.
@@ -187,7 +187,7 @@ enum class ParameterType {
     InvalidParameterType
 };
 
-///	@brief  This enum to describes the type of the vertex attribute.
+/// @brief  This enum to describes the type of the vertex attribute.
 enum class VertexAttribute : int {
     Position = 0, ///< "position"
     Normal, ///< "normal"
@@ -210,22 +210,22 @@ enum class VertexAttribute : int {
     InvalidVertexAttr ///< Enum for invalid enum.
 };
 
-///	@brief  This enum describes the vertex data format.
+/// @brief  This enum describes the vertex data format.
 enum class VertexFormat : int {
-    Float, ///< single component float, expanded to (x, 0, 0, 1)
-    Float2, ///< 2-component float, expanded to (x, y, 0, 1)
-    Float3, ///< 3-component float, expanded to (x, y, z, 1)
-    Float4, ///< 4-component float
-    Byte4, ///< 4-component float (-128.0f..+127.0f) mapped to byte (-128..+127)
-    UByte4, ///< 4-component float (0.0f..255.0f) mapped to byte (0..255)
-    Short2, ///< 2-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
-    Short4, ///< 4-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
+    Float,            ///< single component float, expanded to (x, 0, 0, 1)
+    Float2,           ///< 2-component float, expanded to (x, y, 0, 1)
+    Float3,           ///< 3-component float, expanded to (x, y, z, 1)
+    Float4,           ///< 4-component float
+    Byte4,            ///< 4-component float (-128.0f..+127.0f) mapped to byte (-128..+127)
+    UByte4,           ///< 4-component float (0.0f..255.0f) mapped to byte (0..255)
+    Short2,           ///< 2-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
+    Short4,           ///< 4-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
     NumVertexFormats, ///< Number of enums.
 
     InvalidVertexFormat, ///< Enum for invalid enum.
 };
 
-///	@brief
+/// @brief This enum describes the light type.
 enum class LightType {
     Directional = 0,
     Point,
@@ -238,8 +238,8 @@ enum class LightType {
 ///	@brief  This struct declares a render vertex for textured geometry.
 struct OSRE_EXPORT ColorVert {
     glm::vec3 position; ///< The position ( x|y|z )
-    glm::vec3 normal; ///< The normal vector ( x|y|z )
-    glm::vec3 color0; ///< The diffuse color ( r|g|b )
+    glm::vec3 normal;   ///< The normal vector ( x|y|z )
+    glm::vec3 color0;   ///< The diffuse color ( r|g|b )
 
     ColorVert();
 
@@ -249,7 +249,7 @@ struct OSRE_EXPORT ColorVert {
     static const String *getAttributes();
 };
 
-///	@brief  This struct declares a render vertex for textured geometry.
+/// @brief  This struct declares a render vertex for textured geometry.
 struct OSRE_EXPORT RenderVert {
     glm::vec3 position; ///< The position ( x|y|z )
     glm::vec3 normal; ///< The normal vector ( x|y|z )
@@ -334,7 +334,7 @@ struct ExtensionProperty {
     }
 };
 
-///	@brief
+/// @brief
 struct OSRE_EXPORT VertComponent {
     VertexAttribute m_attrib;
     VertexFormat m_format;
@@ -346,7 +346,7 @@ struct OSRE_EXPORT VertComponent {
     OSRE_NON_COPYABLE(VertComponent)
 };
 
-///	@brief
+/// @brief
 struct OSRE_EXPORT VertexLayout {
     static VertComponent ErrorComp;
     String *m_attributes;
@@ -367,7 +367,7 @@ struct OSRE_EXPORT VertexLayout {
     OSRE_NON_COPYABLE(VertexLayout)
 };
 
-///	@brief  This struct is used to describe data for a GPU buffer.
+/// @brief  This struct is used to describe data for a GPU buffer.
 struct OSRE_EXPORT BufferData {
     using BufferDataAllocator = ::cppcore::TPoolAllocator<BufferData>;
     friend BufferDataAllocator;
@@ -379,7 +379,6 @@ struct OSRE_EXPORT BufferData {
     BufferAccessType m_access; ///< Access token ( @see BufferAccessType )
 
     static BufferData *alloc(BufferType type, size_t sizeInBytes, BufferAccessType access);
-    static void free(BufferData *data);
     void copyFrom(void *data, size_t size);
     void attach(const void *data, size_t size);
     BufferType getBufferType() const;

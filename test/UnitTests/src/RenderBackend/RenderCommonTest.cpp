@@ -132,19 +132,16 @@ TEST_F( RenderCommonTest, allocBufferDataTest ) {
     EXPECT_EQ(data->m_access, BufferAccessType::ReadWrite);
     EXPECT_EQ(data->getSize(), 100u);
     EXPECT_EQ(data->m_type, BufferType::VertexBuffer);
-
-    BufferData::free(data);
 }
 
 TEST_F( RenderCommonTest, copyBufferDataTest ) {
     BufferData *data = BufferData::alloc(BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite);
 
-    static const ui32 size = 100;
-    static const unsigned char Value = 9;
-    void *buffer = new unsigned char[size];
+    static constexpr ui32 size = 100;
+    static constexpr unsigned char Value = 9;
+    unsigned char *buffer = new unsigned char[size];
     ::memset(buffer, Value, size);
     data->copyFrom(buffer, size);
-    BufferData::free(data);
 
     delete[] buffer;
 }

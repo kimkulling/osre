@@ -69,7 +69,7 @@ static const String
 static const String ErrorCmpName = "Error";
 
 // List of attributes for color vertices
-static const ui32 NumColorVertAttributes = 3;
+static constexpr ui32 NumColorVertAttributes = 3;
 static const String ColorVertAttributes[NumColorVertAttributes] = {
     "position", "normal", "color0"
 };
@@ -88,7 +88,7 @@ const String *ColorVert::getAttributes() {
 }
 
 // List of attributes for render vertices
-static const ui32 NumRenderVertAttributes = 4;
+static constexpr ui32 NumRenderVertAttributes = 4;
 
 static const String RenderVertAttributes[NumRenderVertAttributes] = {
     "position", 
@@ -264,12 +264,6 @@ BufferData *BufferData::alloc(BufferType type, size_t sizeInBytes, BufferAccessT
     buffer->m_buffer.resize(sizeInBytes);
 
     return buffer;
-}
-
-void BufferData::free(BufferData *data) {
-    if (nullptr == data) {
-        return;
-    }
 }
 
 void BufferData::copyFrom(void *data, size_t size) {
@@ -487,7 +481,6 @@ GeoInstanceData::GeoInstanceData() :
 }
 
 GeoInstanceData::~GeoInstanceData() {
-    BufferData::free(m_data);
     m_data = nullptr;
 }
 
