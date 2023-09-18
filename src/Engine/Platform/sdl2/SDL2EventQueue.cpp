@@ -46,9 +46,7 @@ static const c8 *Tag = "SDL2EventHandler";
 //-------------------------------------------------------------------------------------------------
 struct AbstractSDL2InputUpdate {
     //  The virtual destructor.
-    virtual ~AbstractSDL2InputUpdate() {
-        // empty
-    }
+    virtual ~AbstractSDL2InputUpdate() = default;
 
     //  Will perform the update.
     virtual bool update(SDL_Event *ev) = 0;

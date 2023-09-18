@@ -154,7 +154,7 @@ public:
         Hidden      ///< Window is hidden.
     };
 
-    /// @brief WIll set the windows show state
+    /// @brief Will set the windows show state
     /// @param[in]  showState The new show.state
     virtual void showWindow(ShowState showState) = 0;
 

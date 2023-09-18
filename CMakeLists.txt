@@ -1,14 +1,6 @@
 MESSAGE(STATUS "The CMake version used is ${CMAKE_VERSION}")
 cmake_minimum_required(VERSION 3.5...${CMAKE_VERSION})
-include("cmake/HunterGate.cmake")
 
-# Todo: we need to solve this more cleaner
-IF (WIN32)
-    HunterGate(
-        URL "https://github.com/cpp-pm/hunter/archive/v0.24.0.tar.gz"
-        SHA1 "a3d7f4372b1dcd52faa6ff4a3bd5358e1d0e5efd"
-    )
-ENDIF()
 
 PROJECT( osre )
 SET ( OSRE_VERSION_MAJOR 0 )
@@ -26,9 +18,6 @@ OPTION( OSRE_BUILD_TESTS "Build the test suite for OSRE." ON)
 OPTION( OSRE_BUILD_DOC "Build the doxygen-based documentation for OSRE." OFF)
 OPTION( OSRE_BUILD_ED "Build the OSRE Ed." ON)
 
-IF (WIN32)
-  hunter_add_package(SDL2)
-ENDIF()
 find_package(SDL2 CONFIG REQUIRED)
 
 # Cache these to allow the user to override them manually.
