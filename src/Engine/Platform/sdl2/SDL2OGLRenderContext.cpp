@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2023 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -30,29 +30,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-static const c8 *Tag = "SDL2RenderContext";
+static constexpr c8 Tag[] = "SDL2RenderContext";
 
-SDL2RenderContext::SDL2RenderContext()
-: AbstractOGLRenderContext()
-, m_renderContext( nullptr )
-, m_surface( nullptr )
-, m_isActive( false ) {
+SDL2RenderContext::SDL2RenderContext() : 
+        AbstractOGLRenderContext(), mRenderContext( nullptr ), mSurface( nullptr ), mIsActive( false ) {
     // empty
 }
 
-SDL2RenderContext::~SDL2RenderContext( ) {
-    // empty
-}
-
-bool SDL2RenderContext::onCreate( AbstractWindow *window ) {
-    if( !window ) {
+bool SDL2RenderContext::onCreate(AbstractWindow *window) {
+    printf("SDL2RenderContext::onCreate(AbstractWindow *window)\n");
+    if (window == nullptr) {
         osre_error( Tag, "Surface pointer is a nullptr." );
         return false;
     }
 
-    m_surface = reinterpret_cast< SDL2Surface* >( window );
-    m_renderContext = SDL_GL_CreateContext( m_surface->getSDLSurface() );
-    if( !m_renderContext ) {
+    mSurface = reinterpret_cast<SDL2Surface*>( window );
+    mRenderContext = SDL_GL_CreateContext( mSurface->getSDLSurface() );
+    if( mRenderContext == nullptr) {
         osre_error( Tag, "Error while creating GL-context.!" );
         return false;
     }
@@ -65,39 +59,39 @@ bool SDL2RenderContext::onCreate( AbstractWindow *window ) {
     }
 
     const GLubyte *version = glGetString( GL_VERSION );
-    osre_info( Tag, "OpenGL renderer initiated.")
-    osre_info( Tag, "Version : " + String( (c8*) version ) );
+    osre_info(Tag, "OpenGL renderer initiated.");
+    osre_info(Tag, "Version : " + String((c8*)version));
 
     return true;
 }
 
 //-------------------------------------------------------------------------------------------------
 bool SDL2RenderContext::onDestroy( ) {
-    if( !m_renderContext ) {
+    if (mRenderContext == nullptr) {
         osre_error( Tag, "Context pointer is a nullptr." );
         return false;
     }
 
-    SDL_GL_DeleteContext( m_renderContext );
-    m_renderContext = nullptr;
+    SDL_GL_DeleteContext( mRenderContext );
+    mRenderContext = nullptr;
 
     return true;
 }
 
 //-------------------------------------------------------------------------------------------------
 bool SDL2RenderContext::onUpdate( ) {
-    if ( !m_isActive ) {
+    if ( !mIsActive ) {
         osre_debug( Tag, "No active render context." );
     }
-    SDL_GL_SwapWindow( m_surface->getSDLSurface() );
+    SDL_GL_SwapWindow( mSurface->getSDLSurface() );
 
     return true;
 }
 
 //-------------------------------------------------------------------------------------------------
 bool SDL2RenderContext::onActivate( ) {
-    m_isActive = true;
-    const i32 retCode( SDL_GL_MakeCurrent( m_surface->getSDLSurface(), m_renderContext ) );
+    mIsActive = true;
+    const i32 retCode = SDL_GL_MakeCurrent( mSurface->getSDLSurface(), mRenderContext );
     return ( retCode == 0 );
 }
 

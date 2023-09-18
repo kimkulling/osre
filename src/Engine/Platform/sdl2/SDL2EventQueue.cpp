@@ -39,7 +39,7 @@ using namespace ::OSRE::RenderBackend;
 
 using namespace ::cppcore;
 
-static const c8 *Tag = "SDL2EventHandler";
+static constexpr c8 Tag[] = "SDL2EventHandler";
 
 //-------------------------------------------------------------------------------------------------
 //  The abstract interface for sdl2-based event updates.
@@ -55,19 +55,15 @@ struct AbstractSDL2InputUpdate {
 //-------------------------------------------------------------------------------------------------
 //  Implements a get update, waits for the next event.
 //-------------------------------------------------------------------------------------------------
-struct SDL2GetInputUpdate : public AbstractSDL2InputUpdate {
+struct SDL2GetInputUpdate final : public AbstractSDL2InputUpdate {
     //  The default constructor.
-    SDL2GetInputUpdate() {
-        // empty
-    }
+    SDL2GetInputUpdate() = default;
 
     //  The destructor.
-    ~SDL2GetInputUpdate() {
-        // empty
-    }
+    ~SDL2GetInputUpdate() override = default;
 
     //  Update implemented as a wait operation, will get the next upcoming event.
-    bool update(SDL_Event *ev) {
+    bool update(SDL_Event *ev) override {
         const i32 ret = SDL_WaitEvent(ev);
         if (0 == ret) {
             return false;
@@ -80,19 +76,15 @@ struct SDL2GetInputUpdate : public AbstractSDL2InputUpdate {
 //-------------------------------------------------------------------------------------------------
 //  Implements a peek update, polls for the next event.
 //-------------------------------------------------------------------------------------------------
-struct SDL2PeekInputUpdate : public AbstractSDL2InputUpdate {
+struct SDL2PeekInputUpdate final : public AbstractSDL2InputUpdate {
     //  The default constructor.
-    SDL2PeekInputUpdate() {
-        // empty
-    }
+    SDL2PeekInputUpdate() = default;
 
     //  The destructor.
-    ~SDL2PeekInputUpdate() {
-        // empty
-    }
+    ~SDL2PeekInputUpdate() override = default;
 
     //  Update implemented as a poll operation, will check for a new event.
-    bool update(SDL_Event *ev) {
+    bool update(SDL_Event *ev) override {
         const i32 ret = ::SDL_PollEvent(ev);
         if (0 == ret) {
             return false;
@@ -144,10 +136,7 @@ SDL2EventHandler::~SDL2EventHandler() {
     unregisterAllMenuCommands();
     
     delete m_eventTriggerer;
-    m_eventTriggerer = nullptr;
-
     delete m_inputUpdate;
-    m_inputUpdate = nullptr;
 }
 
 bool SDL2EventHandler::update() {
@@ -191,15 +180,13 @@ bool SDL2EventHandler::update() {
             case SDL_WINDOWEVENT: {
                 if (ev.window.windowID == windowID) {
                     switch (ev.window.event) {
-                        case SDL_WINDOWEVENT_MOVED: {
-                            ui32 x = (ui32)ev.window.data1;
-                            ui32 y = (ui32)ev.window.data2;
-                            getRenderBackendService()->resize(x, y, mWindow->getProperties()->m_width, mWindow->getProperties()->m_width);
+                        case SDL_WINDOWEVENT_EXPOSED: {
+                            getRenderBackendService()->resize(mWindow->getProperties()->m_x, mWindow->getProperties()->m_y, mWindow->getProperties()->m_width, mWindow->getProperties()->m_width);
                         } break;
-
+                        case SDL_WINDOWEVENT_SHOWN:
                         case SDL_WINDOWEVENT_SIZE_CHANGED: {
-                            ui32 w = ev.window.data1;
-                            ui32 h = ev.window.data2;
+                            const ui32 w = (ui32) ev.window.data1;
+                            const ui32 h = (ui32) ev.window.data2;
                             getRenderBackendService()->resize(mWindow->getProperties()->m_x, mWindow->getProperties()->m_y, w, h);
                         } break;
                     }
