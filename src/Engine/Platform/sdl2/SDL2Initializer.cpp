@@ -34,7 +34,7 @@ bool SDL2Initializer::init() {
         return false;
     }
 
-    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_TIMER ) < 0 ) {
+    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) < 0 ) {
         return false;
     }
     s_inited = true;

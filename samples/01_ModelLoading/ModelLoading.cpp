@@ -56,9 +56,7 @@ public:
         // empty
     }
 
-    ~ModelLoadingApp() override {
-        // empty
-    }
+    ~ModelLoadingApp() override = default;
 
     bool hasModel() const {
         return m_modelNode.isValid();
