@@ -78,7 +78,6 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
 
 AppBase::~AppBase() {
     delete mSettings;
-    mSettings = nullptr;
 }
 
 bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &title, bool fullscreen, bool childWindow,

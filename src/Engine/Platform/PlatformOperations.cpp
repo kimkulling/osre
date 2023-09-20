@@ -65,7 +65,7 @@ void PlatformOperations::getFileOpenDialog(const String &title, const c8 *extens
         location.clear();
     }
 #else
-    osre_warn( Tag, "Not supported," );
+    osre_error( Tag, "Not supported," );
 #endif // OSRE_WINDOWS
 }
 
