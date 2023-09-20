@@ -25,6 +25,9 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 # Documentation
 - Please check [OSRE-Docs](https://osre-doc.readthedocs.io/en/latest/).
 
+# Questions
+- Please check our [Reddit-Community](https://www.reddit.com/r/osre/)
+
 # Build Status
 [![Build status](https://github.com/kimkulling/osre/actions/workflows/cmake.yml/badge.svg)](https://github.com/kimkulling/osre/actions/workflows/cmake.yml)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/13242/badge.svg)](https://scan.coverity.com/projects/kimkulling-osre)
