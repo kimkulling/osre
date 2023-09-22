@@ -37,6 +37,12 @@ bool SDL2Initializer::init() {
     if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) < 0 ) {
         return false;
     }
+
+    if (0 == SDL_WasInit(SDL_INIT_JOYSTICK)) {
+        SDL_InitSubSystem(SDL_INIT_JOYSTICK);
+    }
+    SDL_JoystickEventState(SDL_ENABLE);
+
     s_inited = true;
 
     return true;
