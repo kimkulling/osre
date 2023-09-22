@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <src/Engine/Platform/sdl2/SDL2EventQueue.h>
 
+#include "SDL2Initializer.h"
 #include "SDL2Window.h"
 
 #include <SDL.h>
@@ -86,7 +87,7 @@ struct SDL2PeekInputUpdate final : public AbstractSDL2InputUpdate {
     //  Update implemented as a poll operation, will check for a new event.
     bool update(SDL_Event *ev) override {
         const i32 ret = ::SDL_PollEvent(ev);
-        if (0 == ret) {
+        if (ret == 0) {
             return false;
         }
 
@@ -118,22 +119,12 @@ SDL2EventHandler::SDL2EventHandler(AbstractWindow *window) :
     m_eventTriggerer->addTriggerableEvent(QuitEvent);
     m_eventTriggerer->addTriggerableEvent(AppFocusEvent);
 
-    if (0 == SDL_WasInit(SDL_INIT_EVERYTHING)) {
-        SDL_Init(SDL_INIT_EVERYTHING);
-    }
-
-    if (0 == SDL_WasInit(SDL_INIT_EVENTS)) {
-        SDL_InitSubSystem(SDL_INIT_EVENTS);
-    }
-
-    if (0 == SDL_WasInit(SDL_INIT_JOYSTICK)) {
-        SDL_InitSubSystem(SDL_INIT_JOYSTICK);
-    }
-
-    SDL_JoystickEventState(SDL_ENABLE);
+    SDL2Initializer::init();
 }
 
 SDL2EventHandler::~SDL2EventHandler() {
+    SDL2Initializer::release();
+
     unregisterAllMenuCommands();
     
     delete m_eventTriggerer;
