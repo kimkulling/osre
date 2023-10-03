@@ -38,7 +38,7 @@ public:
 	///	The class constructor.
 	Win32Timer();
 	///	The class destructor.
-	~Win32Timer();
+	~Win32Timer() override = default;
 	///	Seconds getter.
 	i64 getMilliCurrentSeconds() override;
 	///	Time difference getter.

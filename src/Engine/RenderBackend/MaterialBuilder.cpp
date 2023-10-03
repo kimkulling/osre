@@ -135,7 +135,6 @@ const String GLSLVertexShaderSrcRV =
         "    //vertex position\n" 
         "    gl_Position = Projection * vec4(position_eye, 1.0);\n"
         "    vSmoothColor = vec4(Is + Id + Ia, 1.0) * intensity;\n"
-        //"    vSmoothColor = vec4(Is + Id + Ia, 1.0);\n"
         "    vUV = texcoord0;\n"
         "}\n";
 

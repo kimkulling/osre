@@ -263,6 +263,7 @@ private:
     };
 
     State mAppState;
+    i64 mLastTime;
     Common::ArgumentParser mArgParser;
     Common::Environment* mEnvironment;
     Properties::Settings *mSettings;
