@@ -367,7 +367,7 @@ void AppBase::onUpdate() {
         mLastTime = mTimer->getMilliCurrentSeconds() * Conversion2Micro;
     } else {
         i64 microsecs = mTimer->getMilliCurrentSeconds() * Conversion2Micro;
-        i64 diff = mLastTime - microsecs;
+        diff = mLastTime - microsecs;
         mLastTime = microsecs;
     }
     Time dt(diff);
@@ -383,14 +383,6 @@ void AppBase::onRender() {
     if (nullptr != mStage) {
         mStage->render(mRbService);
     }
-}
-
-const ArgumentParser &AppBase::getArgumentParser() const {
-    return mArgParser;
-}
-
-Ids *AppBase::getIdContainer() const {
-    return mIds;
 }
 
 bool AppBase::isKeyPressed(Key key) const {

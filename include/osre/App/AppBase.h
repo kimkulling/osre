@@ -290,6 +290,14 @@ inline KeyboardEventListener *AppBase::getKeyboardEventListener() const {
     return mKeyboardEvListener;
 }
 
+inline const Common::ArgumentParser &AppBase::getArgumentParser() const {
+    return mArgParser;
+}
+
+inline Common::Ids *AppBase::getIdContainer() const {
+    return mIds;
+}
+
 //-------------------------------------------------------------------------------------------------
 ///	@brief  Shortcut to get a OSRE-main function.
 /// To use this you need to derive your application class from the ::OSRE::App::AppBase class and
