@@ -62,7 +62,6 @@ public:
     /// @brief The default class destructor.
     virtual ~Component() = default;
 
-    
     /// @brief The update callback
     /// @param[in] timeSlice The time slice
     virtual void update(Time timeSlice);

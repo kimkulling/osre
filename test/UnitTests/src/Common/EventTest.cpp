@@ -43,14 +43,14 @@ TEST_F(EventTest, createTest) {
 TEST_F(EventTest, calculateHashFromEventNameTest) {
     const c8 *name("test_event");
     Event myEvent(name);
-    const ui32 hash = myEvent.getHash();
+    const HashId hash = myEvent.getHash();
     EXPECT_NE( hash, (ui32) 0 );
 
     const char *empty_name = "";
     Event myEvent1(empty_name);
 
-    const ui32 hash_empty = myEvent1.getHash();
-    EXPECT_EQ(hash_empty, static_cast<ui32>(0));
+    const HashId hash_empty = myEvent1.getHash();
+    EXPECT_EQ(hash_empty, static_cast<HashId>(0));
 }
 
 } // Namespace UnitTest
