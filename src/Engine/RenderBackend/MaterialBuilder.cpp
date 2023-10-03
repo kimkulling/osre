@@ -100,7 +100,7 @@ const String GLSLVertexShaderSrcRV =
         "vec3 Ls        = vec3(1.0, 1.0, 1.0);\n"
         "vec3 Ld        = vec3(0.7, 0.7, 0.7);\n"
         "vec3 La        = vec3(0.7, 0.7, 0.7);\n"
-        "float radius    = 100.0; // todo: set this via uniform\n"
+        "float radius   = 100.0; // todo: set this via uniform\n"
         "\n"
         "vec3 Ks = vec3(1.0, 1.0, 1.0);\n"
         "vec3 Kd = vec3(1.0, 0.5, 0.0);\n"
@@ -118,7 +118,7 @@ const String GLSLVertexShaderSrcRV =
         "    vec3 light_position_eye = vec3(View * vec4(light_pos, 1.0));\n"
         "    vec3 distance_to_light_eye = light_position_eye - position_eye;\n" 
         "    float distance = length(distance_to_light_eye);\n" 
-        "    float intensity = cos(90° / radius * distance);\n"
+        "    float intensity = cos(90 / (radius * distance));\n"
         "    vec3 direction_to_light_eye = normalize(distance_to_light_eye);\n"
         "    vec3 reflection_eye = reflect(-direction_to_light_eye, normal_eye);\n"
         "    vec3 surface_to_viewer_eye = normalize(-position_eye);\n"
@@ -134,8 +134,8 @@ const String GLSLVertexShaderSrcRV =
         "\n"
         "    //vertex position\n" 
         "    gl_Position = Projection * vec4(position_eye, 1.0);\n"
-        //"    vSmoothColor = vec4(Is + Id + Ia, 1.0) * intensity;\n"
-        "    vSmoothColor = vec4(Is + Id + Ia, 1.0);\n"
+        "    vSmoothColor = vec4(Is + Id + Ia, 1.0) * intensity;\n"
+        //"    vSmoothColor = vec4(Is + Id + Ia, 1.0);\n"
         "    vUV = texcoord0;\n"
         "}\n";
 
