@@ -156,6 +156,18 @@ int main(int argc, char *argv[]) {
             ImGui::Text("counter = %d", counter);
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+            if (ImGui::TreeNode("Scene")) {
+                App::Stage *stage = osreApp.getStage();
+                if (stage != nullptr) {
+                    World *world = stage->getActiveWorld(0);
+                }
+
+                if (ImGui::TreeNode("aiNode")) {
+                    ImGui::Text("NodeName");
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
             ImGui::End();
         }
 

@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Debugging/osre_debugging.h>
 #include <src/Engine/Platform/PlatformPluginFactory.h>
 #ifdef OSRE_WINDOWS
-#    include "Engine/Platform/win32/Win32SystemInfo.h"
+#    include <src/Engine/Platform/win32/Win32SystemInfo.h>
 #    include <src/Engine/Platform/win32/Win32OGLRenderContext.h>
 #    include <src/Engine/Platform/win32/Win32Timer.h>
 #    include <src/Engine/Platform/win32/Win32DbgLogStream.h>

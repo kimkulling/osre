@@ -25,6 +25,9 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 # Documentation
 - Please check [OSRE-Docs](https://osre-doc.readthedocs.io/en/latest/).
 
+# Questions
+- Please check our [Reddit-Community](https://www.reddit.com/r/osre/)
+
 # Build Status
 [![Build status](https://github.com/kimkulling/osre/actions/workflows/cmake.yml/badge.svg)](https://github.com/kimkulling/osre/actions/workflows/cmake.yml)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/13242/badge.svg)](https://scan.coverity.com/projects/kimkulling-osre)
@@ -54,7 +57,7 @@ using namespace ::OSRE;
 using namespace ::OSRE::App;
 using namespace ::OSRE::RenderBackend;
 
-class QuickStartApp : public App::AppBase {
+class QuickStartApp : public AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock m_transformMatrix;
     /// The entity to render
@@ -73,6 +76,7 @@ public:
     ~QuickStartApp() override = default;
 
 protected:
+    /// The creation callback, will get called on system startup.
     bool onCreate() override {
         if (!AppBase::onCreate()) {
             return false;

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2023 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,28 +32,28 @@ namespace Platform {
 class SDL2Surface;
 
 //-------------------------------------------------------------------------------------------------
-///	@class		::OSRE::Platform::SDL2RenderContext
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  This class implements the SDL2 OpenGL render context generation.
 //-------------------------------------------------------------------------------------------------
 class SDL2RenderContext : public AbstractOGLRenderContext {
 public:
-    /// The class constructor.
+    /// @brief The class constructor.
     SDL2RenderContext();
-    ///  The class destructor.
-    virtual ~SDL2RenderContext();
+    
+    /// @brief The class destructor.
+    ~SDL2RenderContext() override = default;
 
 protected:
-    virtual bool onCreate( AbstractWindow *pSurface );
-    virtual bool onDestroy();
-    virtual bool onUpdate( );
-    virtual bool onActivate( );
+    bool onCreate( AbstractWindow *pSurface ) override;
+    bool onDestroy() override;
+    bool onUpdate( ) override;
+    bool onActivate() override;
 
 private:
-    SDL_GLContext m_renderContext;
-    SDL2Surface *m_surface;
-    bool m_isActive;
+    SDL_GLContext mRenderContext;
+    SDL2Surface *mSurface;
+    bool mIsActive;
 };
 
 } // Namespace Platform

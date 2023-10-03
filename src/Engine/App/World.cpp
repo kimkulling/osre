@@ -61,6 +61,24 @@ void World::addEntity(Entity *entity) {
     mEntities.add(entity);
 }
 
+Entity *World::findEntity(const String &name) {
+    if (name.empty()) {
+        return nullptr;
+    }
+
+    Entity *currentEntity{ nullptr };
+    for (size_t i=0; i<mEntities.size(); ++i ) {
+        currentEntity = mEntities[i];
+        if (currentEntity != nullptr) {
+            if (currentEntity->getName() == name) {
+                return currentEntity;
+            }
+        }
+    }
+
+    return nullptr;
+}
+
 bool World::removeEntity(Entity *entity) {
     if (nullptr == entity) {
         return false;

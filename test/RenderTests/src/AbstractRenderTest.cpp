@@ -35,8 +35,6 @@ namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
-static const c8 *Tag = "AbstractRenderTest";
-
 AbstractRenderTest::AbstractRenderTest(const String &renderTestName) :
         mRenderTestName(renderTestName),
         mWindow(nullptr) {

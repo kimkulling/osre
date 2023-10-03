@@ -44,8 +44,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/CameraComponent.h>
 #include <osre/RenderBackend/MaterialBuilder.h>
 
-#include "src/Engine/App/MouseEventListener.h"
-#include "src/Engine/Platform/PlatformPluginFactory.h"
+#include "App/MouseEventListener.h"
+#include "Platform/PlatformPluginFactory.h"
 
 namespace OSRE {
 namespace App {
@@ -78,7 +78,6 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
 
 AppBase::~AppBase() {
     delete mSettings;
-    mSettings = nullptr;
 }
 
 bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &title, bool fullscreen, bool childWindow,
@@ -250,7 +249,7 @@ bool AppBase::onCreate() {
 
     // register any available platform-specific log streams
     Common::AbstractLogStream *stream = Platform::PlatformPluginFactory::createPlatformLogStream();
-    if (nullptr != stream) {
+    if (stream != nullptr) {
         Logger::getInstance()->registerLogStream(stream);
     }
 
@@ -283,6 +282,7 @@ bool AppBase::onCreate() {
     MaterialBuilder::create();
     ResourceCacheService *rcSrv = new ResourceCacheService;
     ServiceProvider::setService(ServiceType::ResourceService, rcSrv);
+    
     // Setup onMouse event-listener
     AbstractPlatformEventQueue *evHandler = mPlatformInterface->getPlatformEventHandler();
     if (nullptr != evHandler) {
@@ -351,7 +351,6 @@ bool AppBase::onDestroy() {
     delete mKeyboardEvListener;
     mKeyboardEvListener = nullptr;
 
-    
     osre_debug(Tag, "Set application state to destroyed.");
     mAppState = State::Destroyed;
     Logger::kill();

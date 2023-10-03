@@ -56,9 +56,7 @@ public:
         // empty
     }
 
-    ~ModelLoadingApp() override {
-        // empty
-    }
+    ~ModelLoadingApp() override = default;
 
     bool hasModel() const {
         return m_modelNode.isValid();
@@ -135,7 +133,7 @@ protected:
 
 int main(int argc, char *argv[]) {
     ModelLoadingApp myApp(argc, argv);
-    if (!myApp.initWindow(10, 10, 1024, 768, "ModelLoader sample! Press o to import an Asset", false, false, App::RenderBackendType::OpenGLRenderBackend)) {
+    if (!myApp.initWindow(10, 10, 1024, 768, "ModelLoader sample! Press o to import an Asset", false, true, App::RenderBackendType::OpenGLRenderBackend)) {
         return 1;
     }
 

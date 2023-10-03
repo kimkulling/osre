@@ -20,8 +20,8 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
+#include <src/Engine/RenderBackend/OGLRenderer/RenderCmdBuffer.h>
 #include <osre/RenderBackend/Shader.h>
-#include "Engine/RenderBackend/OGLRenderer/RenderCmdBuffer.h"
 #include "OGLCommon.h"
 #include "OGLRenderBackend.h"
 #include <osre/Debugging/osre_debugging.h>
@@ -33,7 +33,7 @@ namespace RenderBackend {
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 
-static const c8 *Tag = "RenderCmdBuffer";
+static constexpr c8 Tag[] = "RenderCmdBuffer";
 
 RenderCmdBuffer::RenderCmdBuffer(OGLRenderBackend *renderBackend, AbstractOGLRenderContext *ctx) :
         mRBService(renderBackend),
