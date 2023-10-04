@@ -54,20 +54,15 @@ link_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../../ThirdParty/glew/Release
 )
 
-<<<<<<< HEAD
-target_link_libraries(HelloWorld   osre)
-target_link_libraries(ModelLoading osre)
-target_link_libraries(UIDemo       osre)
-target_link_libraries(Instancing   osre)
-target_link_libraries(Terrain   osre)
-=======
 target_link_libraries(helloworld   osre)
 target_link_libraries(modelloading osre)
 target_link_libraries(demo2d       osre)
 target_link_libraries(instancing   osre)
->>>>>>> master
+target_link_libraries(terrain      osre)
 
 set_target_properties(helloworld   PROPERTIES FOLDER Samples)
 set_target_properties(modelloading PROPERTIES FOLDER Samples)
 set_target_properties(demo2d       PROPERTIES FOLDER Samples)
 set_target_properties(instancing   PROPERTIES FOLDER Samples)
+set_target_properties(terrain      PROPERTIES FOLDER Samples)
+
