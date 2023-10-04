@@ -1,3 +1,18 @@
+#include <osre/App/AppBase.h>
+#include <osre/App/CameraComponent.h>
+#include <osre/App/Entity.h>
+#include <osre/App/World.h>
+#include <osre/App/Stage.h>
+#include <osre/App/ServiceProvider.h>
+#include <osre/App/TransformController.h>
+#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/MeshBuilder.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
+
+using namespace ::OSRE;
+using namespace ::OSRE::RenderBackend;
+using namespace ::OSRE::App;
+
 // To identify local log entries we will define this tag.
 static constexpr c8 Tag[] = "TerrainRenderingApp";
 
@@ -78,7 +93,7 @@ protected:
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 
-        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
 
         rbSrv->endRenderBatch();
         rbSrv->endPass();
@@ -86,3 +101,19 @@ protected:
         AppBase::onUpdate();
     }
 };
+
+int main(int argc, char *argv[]) {
+    TerrainRenderingApp myApp(argc, argv);
+    if (!myApp.initWindow(10, 10, 1024, 768, "Instancing-Sample", false, false, RenderBackendType::OpenGLRenderBackend)) {
+        return 1;
+    }
+
+    while (myApp.handleEvents()) {
+        myApp.update();
+        myApp.requestNextFrame();
+    }
+
+    myApp.destroy();
+
+    return 0;
+}

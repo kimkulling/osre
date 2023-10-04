@@ -1,4 +1,4 @@
-## Mesh Loader
+## Terrain renderer
 ![A simple model](../../assets/Images/01_box.png)
 This sample shows how to import a model using Assimp.
 

@@ -14,13 +14,11 @@ class TextureResource;
 struct Texture;
 struct UniformVar;
 
-
 ///	@brief  This enum describes the kind of build-in material.
 enum class MaterialType {
-    ShaderMaterial = 0, ///< Material using a build-in shader assigned to its type of vertex.
-    NumMaterialTypes, ///< Number of enums.
-
-    InvalidMaterialType ///< Enum for invalid enum.
+    InvalidMaterialType = -1, ///< Enum for invalid enum.
+    ShaderMaterial = 0,       ///< Material using a build-in shader assigned to its type of vertex.
+    NumMaterialTypes          ///< Number of enums.
 };
 
 ///	@brief  This enum describes the color type for the material.
@@ -37,7 +35,6 @@ enum class MaterialColorType : ui32 {
 using TextureResourceArray = cppcore::TArray<RenderBackend::TextureResource *>;
 
 static constexpr ui32 MaxMatColorType = static_cast<ui32>(MaterialColorType::NumMaterialColorTypes);
-
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
