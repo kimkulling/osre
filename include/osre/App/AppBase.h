@@ -263,6 +263,7 @@ private:
     };
 
     State mAppState;
+    i64 mLastTime;
     Common::ArgumentParser mArgParser;
     Common::Environment* mEnvironment;
     Properties::Settings *mSettings;
@@ -287,6 +288,14 @@ inline MouseEventListener *AppBase::getMouseEventListener() const {
 
 inline KeyboardEventListener *AppBase::getKeyboardEventListener() const {
     return mKeyboardEvListener;
+}
+
+inline const Common::ArgumentParser &AppBase::getArgumentParser() const {
+    return mArgParser;
+}
+
+inline Common::Ids *AppBase::getIdContainer() const {
+    return mIds;
 }
 
 //-------------------------------------------------------------------------------------------------

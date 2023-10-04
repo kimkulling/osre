@@ -110,7 +110,7 @@ void OGLRenderEventHandler::enqueueRenderCmd(OGLRenderCmd *oglRenderCmd) {
     m_renderCmdBuffer->enqueueRenderCmd(oglRenderCmd);
 }
 
-void OGLRenderEventHandler::setParameter(const ::cppcore::TArray<OGLParameter *> &paramArray) {
+void OGLRenderEventHandler::setParameter(const TArray<OGLParameter *> &paramArray) {
     osre_assert(m_renderCmdBuffer != nullptr);
 
     m_renderCmdBuffer->setParameter(paramArray);
@@ -299,7 +299,7 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, cppcore::TArray<size_t> &pri
     return true;
 }
  
-bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventData) {
+bool OGLRenderEventHandler:: onInitRenderPasses(const Common::EventData *eventData) {
     osre_assert(nullptr != m_oglBackend);
 
     InitPassesEventData *frameToCommitData = (InitPassesEventData*) eventData;

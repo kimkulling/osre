@@ -1,22 +1,13 @@
-MESSAGE(STATUS "The CMake version used is ${CMAKE_VERSION}")
+message(STATUS "The CMake version used is ${CMAKE_VERSION}")
 cmake_minimum_required(VERSION 3.5...${CMAKE_VERSION})
-include("cmake/HunterGate.cmake")
-
-# Todo: we need to solve this more cleaner
-IF (WIN32)
-    HunterGate(
-        URL "https://github.com/cpp-pm/hunter/archive/v0.24.0.tar.gz"
-        SHA1 "a3d7f4372b1dcd52faa6ff4a3bd5358e1d0e5efd"
-    )
-ENDIF()
 
 PROJECT( osre )
-SET ( OSRE_VERSION_MAJOR 0 )
-SET ( OSRE_VERSION_MINOR 1 )
-SET ( OSRE_VERSION_PATCH 0 )
-SET ( OSRE_VERSION ${OSRE_VERSION_MAJOR}.${OSRE_VERSION_MINOR}.${OSRE_VERSION_PATCH} )
-SET ( PROJECT_VERSION "${OSRE_VERSION}" )
-set_property( GLOBAL PROPERTY CXX_STANDARD 11 )
+SET( OSRE_VERSION_MAJOR 0 )
+SET( OSRE_VERSION_MINOR 1 )
+SET( OSRE_VERSION_PATCH 0 )
+SET( OSRE_VERSION ${OSRE_VERSION_MAJOR}.${OSRE_VERSION_MINOR}.${OSRE_VERSION_PATCH} )
+SET( PROJECT_VERSION "${OSRE_VERSION}" )
+set_property( GLOBAL PROPERTY CXX_STANDARD 14 )
 
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/contrib/assimp/cmake-modules/")
 
@@ -26,9 +17,6 @@ OPTION( OSRE_BUILD_TESTS "Build the test suite for OSRE." ON)
 OPTION( OSRE_BUILD_DOC "Build the doxygen-based documentation for OSRE." OFF)
 OPTION( OSRE_BUILD_ED "Build the OSRE Ed." ON)
 
-IF (WIN32)
-  hunter_add_package(SDL2)
-ENDIF()
 find_package(SDL2 CONFIG REQUIRED)
 
 # Cache these to allow the user to override them manually.
@@ -53,16 +41,6 @@ INCLUDE_DIRECTORIES( BEFORE
     ${CMAKE_HOME_DIRECTORY}/
 )
 
-IF( "${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)" OR "${CMAKE_GENERATOR}" MATCHES "16 2019" OR "${CMAKE_GENERATOR}" MATCHES "15 2017" OR "${CMAKE_GENERATOR}" MATCHES "17 2022")
-    link_directories(
-	    ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x64
-    )
-ELSE()
-    link_directories(
-        ${CMAKE_HOME_DIRECTORY}/contrib/sdl2/lib/x86
-    )
-ENDIF()
-
 link_directories(
     ${CMAKE_HOME_DIRECTORY}/lib
     ${CMAKE_HOME_DIRECTORY}/bin
@@ -77,7 +55,6 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 IF ((CMAKE_C_COMPILER_ID MATCHES "GNU") AND NOT CMAKE_COMPILER_IS_MINGW)
   IF(NOT ASSIMP_HUNTER_ENABLED)
-    SET(CMAKE_CXX_STANDARD 11)
     SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
   ENDIF()
   # hide all not-exported symbols
@@ -90,7 +67,6 @@ ELSEIF(MSVC)
   ADD_COMPILE_OPTIONS(/MP /bigobj /W4)
 ELSEIF ( "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" )
   IF(NOT ASSIMP_HUNTER_ENABLED)
-    SET(CMAKE_CXX_STANDARD 11)
     SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
   ENDIF()
   SET(CMAKE_CXX_FLAGS "-fvisibility=hidden -fno-strict-aliasing -Wall -Wno-long-long -fPIC ${CMAKE_CXX_FLAGS}" )
@@ -110,7 +86,7 @@ ELSEIF( CMAKE_COMPILER_IS_MINGW )
   ADD_DEFINITIONS( -U__STRICT_ANSI__ )
 ENDIF()
 
-ADD_DEFINITIONS( -DGLM_ENABLE_EXPERIMENTAL )
+#ADD_DEFINITIONS( -DGLM_ENABLE_EXPERIMENTAL )
 
 # Include all sub directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
@@ -130,7 +106,7 @@ if (OSRE_BUILD_TESTS)
     ADD_SUBDIRECTORY( test/UnitTests )
 endif(OSRE_BUILD_TESTS)
 
-IF ( OSRE_BUILD_SAMPLES )
+IF (OSRE_BUILD_SAMPLES)
     ADD_SUBDIRECTORY( samples )
 ENDIF(OSRE_BUILD_SAMPLES)
 
@@ -160,8 +136,8 @@ IF( OSRE_BUILD_DOC )
   ENDIF ( DOXYGEN_FOUND )
 ENDIF( OSRE_BUILD_DOC )
 
-IF ( OSRE_BUILD_DOC )  
+if(OSRE_BUILD_DOC)  
   set_target_properties(doc PROPERTIES FOLDER Documentation )
-ENDIF( OSRE_BUILD_DOC )
+endif(OSRE_BUILD_DOC)
 set_target_properties(cppcore PROPERTIES FOLDER Contrib )
 set_target_properties(assimp  PROPERTIES FOLDER Contrib )

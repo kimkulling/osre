@@ -172,7 +172,7 @@ private:
         StdLogStream();
 
         /// @brief  The class destructor.
-        ~StdLogStream();
+        ~StdLogStream() override = default;
 
         /// @brief  Will write a message into the stream.
         /// @param  msg     [in] The message to write.

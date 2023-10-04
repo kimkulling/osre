@@ -22,38 +22,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
 #include <osre/App/AssetRegistry.h>
+#include <osre/Properties/Settings.h>
 #include <osre/Common/Logger.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
 
 using namespace ::OSRE;
 using namespace ::OSRE::RenderBackend;
-using namespace ::OSRE::UI;
-using namespace ::OSRE::Platform;
 using namespace ::OSRE::App;
 
 // To identify local log entries
 static const c8 Tag[] = "ModelLoadingApp";
 
 // The example application, will create the render environment and render a simple triangle onto it
-class UIDemoApp : public App::AppBase {
-    Canvas *m_canvas;
-    TransformMatrixBlock m_transformMatrix;
+class Demo2DApp : public App::AppBase {
+    TransformMatrixBlock mTransformMatrix;
 
 public:
-    UIDemoApp(int argc, char *argv[]) :
+    Demo2DApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv),
-            m_canvas(nullptr),
-            m_transformMatrix() {
+            mTransformMatrix() {
         // empty
     }
 
-    ~UIDemoApp() override {
-        // empty
-    }
-
-    void openFileCallback(ui32, void *) {
-        IO::Uri loc;
-        PlatformOperations::getFileOpenDialog("All\0 *.*\0", loc);
-    }
+    ~Demo2DApp() override = default;
 
     void quitCallback(ui32, void *) {
         AppBase::requestShutdown();
@@ -66,33 +58,19 @@ protected:
             return false;
         }
 
-        baseSettings->setString(Properties::Settings::WindowsTitle, "Demo UI!");
+        baseSettings->setString(Properties::Settings::WindowsTitle, "Demo in 2D!");
         if (!AppBase::onCreate()) {
             return false;
         }
 
         AssetRegistry::registerAssetPathInBinFolder("assets", "assets");
 
-        m_canvas = AppBase::createScreen("UiDemo");
 
-        Panel *panel = new Panel("panel", m_canvas);
-        panel->setRect(10, 10, 500, 500);
         
-        ButtonBase *btnOpenFile = new ButtonBase( "Open file", panel);
-        btnOpenFile->registerCallback(WidgetState::Pressed, UiFunctor::Make(this, &UIDemoApp::openFileCallback));
-        btnOpenFile->setRect( 20, 20, 100, 20 );
-        btnOpenFile->setLabel("Open file");
-
-        ButtonBase *btnQuit  = new ButtonBase( "Quit", panel );
-        btnQuit->setRect( 400, 20, 100, 20 );
-        btnQuit->registerCallback(WidgetState::Pressed, UiFunctor::Make( this, &UIDemoApp::quitCallback ) );
-
-        TextBase *tb = new TextBase("test", panel);
-        tb->setLabel("Test");
-        tb->setRect(20, 20, 400, 60);
 
         return true;
     }
 };
 
-OSRE_MAIN(UIDemoApp)
+OSRE_MAIN(Demo2DApp)
+

@@ -52,9 +52,6 @@ RenderCmdBuffer::RenderCmdBuffer(OGLRenderBackend *renderBackend, AbstractOGLRen
 
 RenderCmdBuffer::~RenderCmdBuffer() {
     clear();
-
-    mRBService = nullptr;
-    mRenderCtx = nullptr;
 }
 
 void RenderCmdBuffer::setActiveShader(OGLShader *oglShader) {

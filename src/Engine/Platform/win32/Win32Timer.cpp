@@ -26,16 +26,9 @@ namespace OSRE {
 namespace Platform {
 
 Win32Timer::Win32Timer() 
-: AbstractTimer( "platform/win32timer" )
-, m_globeTime()
-, m_globeFrequency()
-, m_LastTime( 0 ) {
+: AbstractTimer( "platform/win32timer" ), m_globeTime(), m_globeFrequency(), m_LastTime( 0 ) {
     ::QueryPerformanceCounter( &m_globeTime );
     ::QueryPerformanceFrequency( &m_globeFrequency );
-}
-
-Win32Timer::~Win32Timer() {
-    // empty
 }
 
 i64 Win32Timer::getMilliCurrentSeconds() {

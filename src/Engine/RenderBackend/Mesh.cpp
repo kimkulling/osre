@@ -26,7 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/RenderBackend/Material.h>
 
-
 namespace OSRE {
 namespace RenderBackend {
 
@@ -56,14 +55,6 @@ Mesh::Mesh(const String &name, VertexType vertexType, IndexType indextype) :
 }
 
 Mesh::~Mesh() {
-    mMaterial = nullptr;
-
-    BufferData::free(mVertexBuffer);
-    mVertexBuffer = nullptr;
-
-    BufferData::free(mIndexBuffer);
-    mIndexBuffer = nullptr;
-
     s_Ids.releaseId(mId);
 }
 
@@ -161,5 +152,6 @@ void Mesh::addPrimitiveGroup( PrimitiveGroup *group ) {
     mPrimGroups.add(group);
 }
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // namespace RenderBackend
+} // namespace OSRE
+

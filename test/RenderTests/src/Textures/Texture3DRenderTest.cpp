@@ -32,8 +32,6 @@ namespace RenderTest {
 
 using namespace ::OSRE::RenderBackend;
 
-static const c8 *Tag = "Texture3DRenderTest";
-
 class Texture3DRenderTest : public AbstractRenderTest {
     f32 m_angle;
     TransformMatrixBlock m_transformMatrix;
@@ -90,3 +88,4 @@ ATTACH_RENDERTEST(Texture3DRenderTest)
 
 } // namespace RenderTest
 } // namespace OSRE
+

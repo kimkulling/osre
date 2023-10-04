@@ -47,6 +47,20 @@ static void appendDomain(const String &domain, String &logMsg) {
     }
 }
 
+static String stripFilename(const String &filename) {
+    if (filename.empty()) {
+        return filename;
+    }
+
+    String::size_type pos = filename.find_last_of("/");
+    if (pos == String::npos) {
+        return filename;
+    }
+    const String strippedName = filename.substr(pos + 1, filename.size() - pos - 1);
+
+    return strippedName;
+}
+
 AbstractLogStream::AbstractLogStream() :
         m_IsActive(true) {
     // empty
@@ -264,10 +278,6 @@ Logger::StdLogStream::StdLogStream() {
     // empty
 }
 
-Logger::StdLogStream::~StdLogStream() {
-    // empty
-}
-
 void Logger::StdLogStream::write(const String &msg) {
     std::cout << msg;
 }
@@ -276,7 +286,7 @@ void tracePrint(const String &domain, const String &file, int line, const String
     String message;
     message += msg;
     message += " (";
-    message += file;
+    message += stripFilename(file);
     message += ", ";
     std::stringstream ss;
     ss << line;
@@ -289,7 +299,7 @@ void debugPrint(const String &domain, const String &file, int line, const String
     String message;
     message += msg;
     message += " (";
-    message += file;
+    message += stripFilename(file);
     message += ", ";
     std::stringstream ss;
     ss << line;
@@ -302,7 +312,7 @@ void infoPrint(const String &domain, const String &file, int line, const String 
     String message;
     message += msg;
     message += " (";
-    message += file;
+    message += stripFilename(file);
     message += ", ";
     std::stringstream ss;
     ss << line;
@@ -313,7 +323,7 @@ void infoPrint(const String &domain, const String &file, int line, const String 
 
 void logPrint(const String &domain, const String &file, int line, const String &message) {
     String msg;
-    msg += file;
+    msg += stripFilename(file);
     msg += ", ";
     std::stringstream ss;
     ss << line;
@@ -330,7 +340,7 @@ void warnPrint(const String &domain, const String &file, int line, const String 
     String msg;
     msg += message;
     msg += " (";
-    msg += file;
+    msg += stripFilename(file);
     msg += ", ";
     std::stringstream ss;
     ss << line;
@@ -343,7 +353,7 @@ void errorPrint(const String &domain, const String &file, int line, const String
     String msg;
     msg += message;
     msg += " (";
-    msg += file;
+    msg += stripFilename(file);
     msg += ", ";
     std::stringstream ss;
     ss << line;
@@ -356,7 +366,7 @@ void fatalPrint(const String &domain, const String &file, int line, const String
     String msg;
     msg += message;
     msg += " (";
-    msg += file;
+    msg += stripFilename(file);
     msg += ", ";
     std::stringstream ss;
     ss << line;

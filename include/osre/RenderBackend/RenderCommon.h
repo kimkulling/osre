@@ -45,7 +45,7 @@ class Mesh;
 class Shader;
 class Pipeline;
 
-/// @brief An array to stoer meshes.
+/// @brief An array to store meshes.
 using MeshArray = cppcore::TArray<RenderBackend::Mesh*>;
 
 /// Describes an unset id.
@@ -100,7 +100,6 @@ enum class TextureTargetType {
     Texture2D,                      ///< 2D-textures, used for images and render targets.
     Texture3D,                      ///< 3D-textures, used for volume rendering.
     NumTextureTargetTypes           ///< Number of enums.
-
 };
 
 ///	@brief  This enum describes the supported texture stages. A texture stage describes one layer of
@@ -114,7 +113,7 @@ enum class TextureStageType {
     NumTextureStageTypes            ///< Number of enums.
 };
 
-///	@brief  This enum describes different texture parameter names.
+/// @brief  This enum describes different texture parameter names.
 enum class TextureParameterName {
     InvalidTextureParameterName = -1,   ///< Enum for invalid enum.
     TextureParamMinFilter = 0,          ///< The min filter name.
@@ -124,54 +123,51 @@ enum class TextureParameterName {
     NumTextureParameterNames            ///< Number of enums.
 };
 
-///	@brief  This enum describes the parameters which are related the the parameter names ( @see TextureParameterName ).
+/// @brief  This enum describes the parameters which are related the the parameter names ( @see TextureParameterName ).
 enum class TextureParameterType {
-    TexturePTNearest = 0, ///< Use nearest filter mode.
-    TexturePTLinear, ///< Use linear interpolation mode.
-    TexturePTClamp, ///< Use clamp mode, texture data will be clamped.
-    TexturePTMirroredRepeat, ///< Use mirror repeat mode, texture will be repeated mirrored.
-    TexturePTRepeat, ///< Use repeat mode, texture will be repeated mirrored.
-    NumTextureParameterTypes, ///< Number of enums.
-
-    InvalidTextureParameterType, ///< Enum for invalid enum.
+    InvalidTextureParameterType = -1, ///< Enum for invalid enum.
+    TexturePTNearest = 0,             ///< Use nearest filter mode.
+    TexturePTLinear,                  ///< Use linear interpolation mode.
+    TexturePTClamp,                   ///< Use clamp mode, texture data will be clamped.
+    TexturePTMirroredRepeat,          ///< Use mirror repeat mode, texture will be repeated mirrored.
+    TexturePTRepeat,                  ///< Use repeat mode, texture will be repeated mirrored.
+    NumTextureParameterTypes          ///< Number of enums.
 };
 
-///	@brief  This enum describes the index data type.
+/// @brief  This enum describes the index data type.
 enum class IndexType {
-    UnsignedByte = 0, ///< Bytes are used for the index data.
-    UnsignedShort, ///< Unsigned short for the index data.
-    UnsignedInt, ///< Unsigned int for the index data.
-    NumIndexTypes, ///< Number of enums.
-
-    InvalidIndexType, ///< Enum for invalid enum.
+    InvalidIndexType = -1, ///< Enum for invalid enum.
+    UnsignedByte = 0,      ///< Bytes are used for the index data.
+    UnsignedShort,         ///< Unsigned short for the index data.
+    UnsignedInt,           ///< Unsigned int for the index data.
+    NumIndexTypes          ///< Number of enums.
 };
 
-///	@brief  This enum describes the primitive types for rendering vertex information.
+/// @brief  This enum describes the primitive types for rendering vertex information.
 enum class PrimitiveType {
-    PointList = 0, ///< A list of points, one index per point.
-    LineList, ///< A list of separate lines, 2 indices per line.
-    LineStrip, ///< A line strip, Start and end-index and all indices between.
-    TriangleList, ///< A list of triangles, 3 indices per triangle.
-    TriangelStrip, ///< A strip of triangles
-    TriangleFan, ///< A triangle fan.
-    NumPrimitiveTypes, ///< Number of enums.
-
-    InvalidPrimitiveType, ///< Enum for invalid enum.
+    InvalidPrimitiveType = -1, ///< Enum for invalid enum.
+    PointList = 0,             ///< A list of points, one index per point.
+    LineList,                  ///< A list of separate lines, 2 indices per line.
+    LineStrip,                 ///< A line strip, Start and end-index and all indices between.
+    TriangleList,              ///< A list of triangles, 3 indices per triangle.
+    TriangelStrip,             ///< A strip of triangles
+    TriangleFan,               ///< A triangle fan.
+    NumPrimitiveTypes          ///< Number of enums.
 };
 
 /// @brief  This enum is used to describe the type of build-in matrices.
 enum class MatrixType {
-    Model = 0, ///<
-    View, ///<
-    Projection, ///<
-    Normal, ///<
-    NumMatrixTypes, ///< Number of matrix types-
-
-    InvalidMatrixType ///< Enum for invalid values.
+    InvalidMatrixType = -1, ///< Enum for invalid values.
+    Model = 0,              ///<
+    View,                   ///<
+    Projection,             ///<
+    Normal,                 ///<
+    NumMatrixTypes,         ///< Number of matrix types-
 };
 
 /// @brief  This enum is used to describe the data-type of a parameter.
 enum class ParameterType {
+    InvalidParameterType = -1,  ///<
     PT_None,
     PT_Int,
     PT_IntArray,
@@ -183,14 +179,14 @@ enum class ParameterType {
     PT_Float3Array,
     PT_Mat4,
     PT_Mat4Array,
-
-    InvalidParameterType
+    NumParameterTypes
 };
 
-///	@brief  This enum to describes the type of the vertex attribute.
+/// @brief  This enum to describes the type of the vertex attribute.
 enum class VertexAttribute : int {
-    Position = 0, ///< "position"
-    Normal, ///< "normal"
+    InvalidVertexAttr = 1,  ///< Enum for invalid enum.
+    Position = 0,           ///< "position"
+    Normal,                 ///< "normal"
     TexCoord0, ///< "texcoord0"
     TexCoord1, ///< "texcoord1"
     TexCoord2, ///< "texcoord2"
@@ -205,43 +201,40 @@ enum class VertexAttribute : int {
     Instance1, ///< "instance1"
     Instance2, ///< "instance2"
     Instance3, ///< "instance3"
-    NumVertexAttrs, ///< Number of enums.
-
-    InvalidVertexAttr ///< Enum for invalid enum.
+    NumVertexAttrs ///< Number of enums.
 };
 
-///	@brief  This enum describes the vertex data format.
+/// @brief  This enum describes the vertex data format.
 enum class VertexFormat : int {
-    Float, ///< single component float, expanded to (x, 0, 0, 1)
-    Float2, ///< 2-component float, expanded to (x, y, 0, 1)
-    Float3, ///< 3-component float, expanded to (x, y, z, 1)
-    Float4, ///< 4-component float
-    Byte4, ///< 4-component float (-128.0f..+127.0f) mapped to byte (-128..+127)
-    UByte4, ///< 4-component float (0.0f..255.0f) mapped to byte (0..255)
-    Short2, ///< 2-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
-    Short4, ///< 4-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
-    NumVertexFormats, ///< Number of enums.
-
-    InvalidVertexFormat, ///< Enum for invalid enum.
+    InvalidVertexFormat = -1, ///< Enum for invalid enum.
+    Float,                    ///< single component float, expanded to (x, 0, 0, 1)
+    Float2,                   ///< 2-component float, expanded to (x, y, 0, 1)
+    Float3,                   ///< 3-component float, expanded to (x, y, z, 1)
+    Float4,                   ///< 4-component float
+    Byte4,                    ///< 4-component float (-128.0f..+127.0f) mapped to byte (-128..+127)
+    UByte4,                   ///< 4-component float (0.0f..255.0f) mapped to byte (0..255)
+    Short2,                   ///< 2-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
+    Short4,                   ///< 4-component float (-32768.0f..+32767.0f) mapped to short (-32768..+32768)
+    NumVertexFormats          ///< Number of enums.
 };
 
-///	@brief
+/// @brief This enum describes the light type.
 enum class LightType {
+    InvalidLightType = -1, ///< Enum for invalid enum.
     Directional = 0,
     Point,
     Spot,
-    NumLightTypes,
-
-    InvalidLightType ///< Enum for invalid enum.
+    NumLightTypes
 };
 
 ///	@brief  This struct declares a render vertex for textured geometry.
 struct OSRE_EXPORT ColorVert {
     glm::vec3 position; ///< The position ( x|y|z )
-    glm::vec3 normal; ///< The normal vector ( x|y|z )
-    glm::vec3 color0; ///< The diffuse color ( r|g|b )
+    glm::vec3 normal;   ///< The normal vector ( x|y|z )
+    glm::vec3 color0;   ///< The diffuse color ( r|g|b )
 
     ColorVert();
+    ~ColorVert() = default;
 
     /// @brief  Returns the number of attributes.
     static size_t getNumAttributes();
@@ -249,15 +242,15 @@ struct OSRE_EXPORT ColorVert {
     static const String *getAttributes();
 };
 
-///	@brief  This struct declares a render vertex for textured geometry.
+/// @brief  This struct declares a render vertex for textured geometry.
 struct OSRE_EXPORT RenderVert {
     glm::vec3 position; ///< The position ( x|y|z )
-    glm::vec3 normal; ///< The normal vector ( x|y|z )
-    glm::vec3 color0; ///< The diffuse color ( r|g|b )
-    glm::vec2 tex0; ///< The texture color ( r|g|b )
+    glm::vec3 normal;   ///< The normal vector ( x|y|z )
+    glm::vec3 color0;   ///< The diffuse color ( r|g|b )
+    glm::vec2 tex0;     ///< The texture color ( r|g|b )
 
     RenderVert();
-    ~RenderVert();
+    ~RenderVert() = default;
     bool operator==(const RenderVert &rhs) const;
     bool operator!=(const RenderVert &rhs) const;
 
@@ -328,25 +321,26 @@ struct ExtensionProperty {
     c8 m_extensionName[MaxEntNameLen];
     ui32 m_version;
 
-    ExtensionProperty() {
+    ExtensionProperty() : m_version(0) {
         ::memset(m_extensionName, '\0', sizeof(c8) * MaxEntNameLen);
-        m_version = 0;
     }
+    
+    ~ExtensionProperty() = default;
 };
 
-///	@brief
+/// @brief
 struct OSRE_EXPORT VertComponent {
     VertexAttribute m_attrib;
     VertexFormat m_format;
 
     VertComponent();
     VertComponent(VertexAttribute attrib, VertexFormat format);
-    ~VertComponent();
+    ~VertComponent() = default;
 
     OSRE_NON_COPYABLE(VertComponent)
 };
 
-///	@brief
+/// @brief
 struct OSRE_EXPORT VertexLayout {
     static VertComponent ErrorComp;
     String *m_attributes;
@@ -367,7 +361,7 @@ struct OSRE_EXPORT VertexLayout {
     OSRE_NON_COPYABLE(VertexLayout)
 };
 
-///	@brief  This struct is used to describe data for a GPU buffer.
+/// @brief  This struct is used to describe data for a GPU buffer.
 struct OSRE_EXPORT BufferData {
     using BufferDataAllocator = ::cppcore::TPoolAllocator<BufferData>;
     friend BufferDataAllocator;
@@ -379,7 +373,6 @@ struct OSRE_EXPORT BufferData {
     BufferAccessType m_access; ///< Access token ( @see BufferAccessType )
 
     static BufferData *alloc(BufferType type, size_t sizeInBytes, BufferAccessType access);
-    static void free(BufferData *data);
     void copyFrom(void *data, size_t size);
     void attach(const void *data, size_t size);
     BufferType getBufferType() const;
@@ -389,7 +382,7 @@ struct OSRE_EXPORT BufferData {
 
 private:
     BufferData();
-    ~BufferData();
+    ~BufferData() = default;
 
     OSRE_NON_COPYABLE(BufferData)
 };
@@ -438,8 +431,8 @@ struct OSRE_EXPORT Texture {
 ///	@brief
 class OSRE_EXPORT TextureLoader {
 public:
-    TextureLoader();
-    ~TextureLoader();
+    TextureLoader() = default;
+    ~TextureLoader() = default;
     size_t load(const IO::Uri &uri, Texture *tex);
     bool unload(Texture *tex);
     static RenderBackend::Texture *getDefaultTexture();
@@ -658,17 +651,21 @@ struct TIndexCache {
     }
 };
 
-///	@brief
+///	@brief This struct is used to desribe a light source.
 struct OSRE_EXPORT Light {
-    glm::vec4 m_position;
-    glm::vec3 m_specular;
-    glm::vec3 m_diffuse;
-    glm::vec3 m_ambient;
-    glm::vec4 m_direction;
-    f32 m_specularExp;
-    LightType m_type;
+    glm::vec4 m_position;  ///< The position of the light
+    glm::vec3 m_specular;  ///< The specular colot.
+    glm::vec3 m_diffuse;   ///< The diffuse color.
+    glm::vec3 m_ambient;   ///< The ambient color.
+    glm::vec4 m_direction; ///< The direction vector.
+    f32 m_specularExp;     ///< The specular exponent.
+    f32 mRadius;           ///< The light radius.
+    LightType m_type;      ///< The light type.
 
+    /// @brief The class constructor.
     Light();
+
+    /// @brief The class destructor.
     ~Light();
 };
 
@@ -686,12 +683,16 @@ struct MatrixBuffer {
             m_proj(1.0f) {
         // empty
     }
+    ~MatrixBuffer() = default;
 };
 
 struct MeshEntry {
     ui32 numInstances;
     bool m_isDirty;
     cppcore::TArray<Mesh*> mMeshArray;
+
+    MeshEntry() = default;
+    ~MeshEntry() = default;
 };
 
 struct RenderBatchData {
@@ -719,7 +720,10 @@ struct RenderBatchData {
         osre_assert(id != nullptr);
     }
 
+    ~RenderBatchData() = default;
+
     MeshEntry *getMeshEntryByName(const c8 *name);
+    
     UniformVar *getVarByName(const c8 *name);
 };
 
@@ -741,9 +745,7 @@ struct PassData {
         // empty
     }
 
-    ~PassData() {
-        // empty
-    }
+    ~PassData() = default;
 
     RenderBatchData *getBatchById(const c8 *id) const;
 };
@@ -775,7 +777,7 @@ struct OSRE_EXPORT UniformVar {
 
 private:
     UniformVar();
-    ~UniformVar();
+    ~UniformVar() = default;
 };
 
 struct FrameSubmitCmd {
@@ -806,6 +808,8 @@ struct FrameSubmitCmd {
             m_newMeshes() {
         // empty
     }
+
+    ~FrameSubmitCmd() = default;
 };
 
 using FrameSubmitCmdAllocator = ::cppcore::TPoolAllocator<FrameSubmitCmd>;
@@ -817,6 +821,8 @@ struct UniformBuffer {
             m_buffer() {
         // empty
     }
+
+    ~UniformBuffer() = default;
 
     size_t getSize() const {
         return m_buffer.size();
@@ -893,6 +899,7 @@ struct UniformBuffer {
     MemoryBuffer m_buffer;
 };
 
+/// @brief This struct is used to desribe a new frame to render.
 struct Frame {
     cppcore::TArray<PassData *> m_newPasses;
     cppcore::TArray<FrameSubmitCmd*> m_submitCmds;
@@ -910,6 +917,7 @@ struct Frame {
     Frame &operator=(const Frame &) = delete;
 };
 
+/// @brief This struct is used to descripe a frame buffer data structure.
 struct FrameBuffer {
     i32 m_width;
     i32 m_height;
@@ -920,9 +928,7 @@ struct FrameBuffer {
         // empty
     }
 
-    ~FrameBuffer() {
-        // empty
-    }
+    ~FrameBuffer() = default;
 
     FrameBuffer(const FrameBuffer &) = delete;
     FrameBuffer(FrameBuffer &&) = delete;

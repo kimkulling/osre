@@ -335,6 +335,8 @@ SET( renderbackend_inc
 )
 SET( renderbackend_src
     RenderBackend/DbgRenderer.cpp
+    RenderBackend/CanvasRenderer.h
+    RenderBackend/CanvasRenderer.cpp
     RenderBackend/Material.cpp
     RenderBackend/Mesh.cpp
     RenderBackend/MeshProcessor.cpp

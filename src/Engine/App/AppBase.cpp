@@ -60,6 +60,7 @@ static constexpr c8 Tag[] = "AppBase";
 
 AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
         mAppState(State::Uninited),
+        mLastTime(0l),
         mArgParser(argc, argv, supportedArgs, desc),
         mEnvironment(nullptr),
         mSettings(new Properties::Settings),
@@ -78,7 +79,6 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
 
 AppBase::~AppBase() {
     delete mSettings;
-    mSettings = nullptr;
 }
 
 bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &title, bool fullscreen, bool childWindow,
@@ -362,8 +362,15 @@ bool AppBase::onDestroy() {
 static constexpr i64 Conversion2Micro = 1000;
 
 void AppBase::onUpdate() {
-    i64 microsecs = mTimer->getMilliCurrentSeconds() * Conversion2Micro;
-    Time dt(microsecs);    
+    i64 diff = 0l;
+    if (mLastTime == 0l) {
+        mLastTime = mTimer->getMilliCurrentSeconds() * Conversion2Micro;
+    } else {
+        i64 microsecs = mTimer->getMilliCurrentSeconds() * Conversion2Micro;
+        diff = mLastTime - microsecs;
+        mLastTime = microsecs;
+    }
+    Time dt(diff);
 
     if (nullptr != mStage) {
         mStage->update(dt);
@@ -376,14 +383,6 @@ void AppBase::onRender() {
     if (nullptr != mStage) {
         mStage->render(mRbService);
     }
-}
-
-const ArgumentParser &AppBase::getArgumentParser() const {
-    return mArgParser;
-}
-
-Ids *AppBase::getIdContainer() const {
-    return mIds;
 }
 
 bool AppBase::isKeyPressed(Key key) const {

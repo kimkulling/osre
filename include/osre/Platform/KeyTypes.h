@@ -57,7 +57,7 @@ enum Key {
     KEY_3 = 51,
     KEY_4 = 52,
     KEY_5 = 53,
-    EY_6 = 54,
+    KEY_6 = 54,
     KEY_7 = 55,
     KEY_8 = 56,
     KEY_9 = 57,
@@ -208,7 +208,7 @@ enum Key {
     KEY_UNDO = 322,	///< Atari keyboard has Undo
 
     /* Add any other keys here */
-    KEY_LAST = 323
+    KEY_LAST
 };
 
 } // Namespace Platform

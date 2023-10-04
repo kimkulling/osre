@@ -58,7 +58,6 @@ bool SDL2RenderContext::onCreate(AbstractWindow *window) {
         return false;
     }
 
-    printf("Creating\n");
     const GLubyte *version = glGetString( GL_VERSION );
     osre_info(Tag, "OpenGL renderer initiated.");
     osre_info(Tag, "Version : " + String((c8*)version));
