@@ -23,17 +23,26 @@ SET ( 03_instancing_src
     03_Instancing/README.md
 )
 
+SET ( 04_terrain_src
+	04_terrain/TerrainRendering.cpp
+	04_terrain/README.md
+)
 
-ADD_EXECUTABLE( helloworld
+ADD_EXECUTABLE(helloworld
     ${00_helloworld_src}
 )
 
-ADD_EXECUTABLE( modelloading
+ADD_EXECUTABLE(modelloading
     ${01_modelloading_src}
 )
 
-ADD_EXECUTABLE( instancing
+
+ADD_EXECUTABLE(instancing
     ${03_instancing_src}
+)
+
+ADD_EXECUTABLE(terrain
+    ${04_terrain_src}
 )
 
 ADD_EXECUTABLE(demo2d
@@ -49,8 +58,11 @@ target_link_libraries(helloworld   osre)
 target_link_libraries(modelloading osre)
 target_link_libraries(demo2d       osre)
 target_link_libraries(instancing   osre)
+target_link_libraries(terrain      osre)
 
 set_target_properties(helloworld   PROPERTIES FOLDER Samples)
 set_target_properties(modelloading PROPERTIES FOLDER Samples)
 set_target_properties(demo2d       PROPERTIES FOLDER Samples)
 set_target_properties(instancing   PROPERTIES FOLDER Samples)
+set_target_properties(terrain      PROPERTIES FOLDER Samples)
+
