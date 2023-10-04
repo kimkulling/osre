@@ -1,5 +1,7 @@
 #pragma once
 
+#include <osre/Common/osre_common.h>
+
 namespace OSRE {
 namespace RenderBackend {
 
@@ -14,7 +16,7 @@ class CanvasRenderer {
 public:
     CanvasRenderer(RenderBackendService *rbSrv);
     ~CanvasRenderer();
-    void drawRect(i32 x, i32, y, i32 w, i32 h);
+    void drawRect(i32 x, i32 y, i32 w, i32 h);
     void render();
 
 private:

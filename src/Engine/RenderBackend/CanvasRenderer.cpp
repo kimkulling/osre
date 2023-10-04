@@ -1,4 +1,6 @@
 #include "CanvasRenderer.h"
+#include <osre/RenderBackend/Mesh.h>
+#include <osre/RenderBackend/Shader.h>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -11,8 +13,8 @@ CanvasRenderer::~CanvasRenderer() {
 
 }
 
-void CanvasRenderer::drawRect(i32 x, i32, y, i32 w, i32 h) {
-    
+void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h) {
+
 }
 
 void CanvasRenderer::render() {
