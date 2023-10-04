@@ -43,7 +43,7 @@ protected:
             return false;
         }
 
-        
+        return true;        
     }
     Camera *setupCamera(World *world) {
         Entity *camEntity = new Entity("camera", *getIdContainer(), world);
