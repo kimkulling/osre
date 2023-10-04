@@ -63,11 +63,6 @@ protected:
             return false;
         }
 
-        AssetRegistry::registerAssetPathInBinFolder("assets", "assets");
-
-
-        
-
         return true;
     }
 };
