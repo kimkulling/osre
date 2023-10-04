@@ -90,7 +90,7 @@ bool OGLShader::loadFromStream(ShaderType type, IO::Stream &stream) {
     c8 *data = new c8[filesize];
     stream.read(data, filesize);
 
-    const bool retCode(loadFromSource(type, String(data)));
+    const bool retCode = loadFromSource(type, String(data));
     delete[] data;
 
     return retCode;
@@ -242,7 +242,7 @@ void OGLShader::logCompileOrLinkError(ui32 shaderprog) {
     ::memset(infoLog, 0, infoLogLength);
     glGetProgramInfoLog(shaderprog, infoLogLength, NULL, infoLog);
     String error(infoLog);
-    osre_debug(Tag, "Link log: " + error + "\n");
+    Common::Logger::getInstance()->print("Link log:\n" + error + "\n");
     delete[] infoLog;
 }
 
