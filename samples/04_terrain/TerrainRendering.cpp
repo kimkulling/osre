@@ -6,8 +6,16 @@
 #include <osre/App/ServiceProvider.h>
 #include <osre/App/TransformController.h>
 #include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/MaterialBuilder.h>
 #include <osre/RenderBackend/MeshBuilder.h>
+#include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
+
+#define STB_IMAGE_IMPLEMENTATION 
+#include "stb_image.h"
+
+#include <vector>
+#include <iostream>
 
 using namespace ::OSRE;
 using namespace ::OSRE::RenderBackend;
@@ -38,13 +46,64 @@ public:
     }
 
 protected:
-    bool loadHeightMap(const String &filename) {
+    Mesh *loadHeightMap(const String &filename) {
         if (filename.empty()) {
-            return false;
+            return nullptr;
         }
 
-        return true;        
+        int width = 0, height = 0, nChannels = 0;
+        unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nChannels, 0);
+        if (data == nullptr) {
+            return nullptr;
+        }
+
+        // vertex generation
+        const size_t numVertices = width * height;
+        size_t index = 0;
+        RenderVert *v = new RenderVert[numVertices];
+        std::vector<float> vertices;
+        float yScale = 64.0f / 256.0f, yShift = 16.0f;  // apply a scale+shift to the height data
+        for(unsigned int i = 0; i < height; i++) {
+            for(unsigned int j = 0; j < width; j++) {
+                // retrieve texel for (i,j) tex coord
+                unsigned char* texel = data + (j + width * i) * nChannels;
+                // raw height at coordinate
+                unsigned char y = texel[0];
+
+                // vertex position
+                v[index].position.x = -height/2.0f + i;
+                v[index].position.y = (int) y * yScale - yShift;
+                v[index].position.z = -width/2.0f + j;
+                ++index;
+            }
+        }
+        std::cout << "Number of vertices = " << numVertices << "\n";
+        stbi_image_free(data);
+
+        // Index generation
+        std::vector<unsigned int> indices;
+        for (int i = 0; i < height-1; i++) {      // for each row a.k.a. each strip
+            for (int j = 0; j < width; j++) {     // for each column
+                for (int k = 0; k < 2; k++)  {    // for each side of the strip
+                    indices.push_back(j + width * (i + k));
+                }
+            }
+        }
+        std::cout << "Number of indices = " << indices.size() << "\n";
+
+        MeshBuilder meshBuilder;
+        Mesh *mesh = meshBuilder.allocEmptyMesh("terrain", VertexType::RenderVertex).getMesh();
+        if (mesh == nullptr) {
+            return nullptr;
+        }
+
+        mesh->createVertexBuffer(v, numVertices * sizeof(RenderVert), BufferAccessType::ReadWrite);
+        mesh->createIndexBuffer(&indices[0], indices.size(), IndexType::UnsignedInt, BufferAccessType::ReadWrite);
+        mesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::RenderVertex));
+
+        return mesh;
     }
+
     Camera *setupCamera(World *world) {
         Entity *camEntity = new Entity("camera", *getIdContainer(), world);
         world->addEntity(camEntity);
@@ -67,9 +126,8 @@ protected:
         mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
         Camera *camera = setupCamera(world);
 
-        
-        MeshBuilder meshBuilder;
-        RenderBackend::Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5,.5,.5,BufferAccessType::ReadOnly).getMesh();
+        String filename = "world_heightmap.png";
+        RenderBackend::Mesh *mesh = loadHeightMap(filename);
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
@@ -91,7 +149,7 @@ protected:
 
         RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
-        rbSrv->beginRenderBatch("b1");
+        rbSrv->beginRenderBatch("terrain");
 
         rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
 

@@ -60,14 +60,14 @@ public:
     ///	@param  type        [in] The vertex type.
     /// @param  access      [in] The data access type.
     /// @return The created mesh.
-    MeshBuilder& allocQuads( RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
+    MeshBuilder& allocQuads(RenderBackend::VertexType type, RenderBackend::BufferAccessType access );
 
     /// @brief 
     /// @param dim 
     /// @param vc 
     /// @param ic 
     /// @return 
-    MeshBuilder& allocUiQuad( const Rect2ui &dim, RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic );
+    MeshBuilder& allocUiQuad(const Rect2ui &dim, RenderBackend::UiVertexCache &vc, RenderBackend::UiIndexCache &ic );
     
     /// @brief 
     /// @param type 
@@ -76,7 +76,7 @@ public:
     /// @param d 
     /// @param access 
     /// @return 
-    MeshBuilder& createCube( RenderBackend::VertexType type, f32 w, f32 h, f32 d, RenderBackend::BufferAccessType access );
+    MeshBuilder& createCube(RenderBackend::VertexType type, f32 w, f32 h, f32 d, RenderBackend::BufferAccessType access );
 
     ///	@brief  Will allocate vertices for a list of lines.
     ///	@param  type        [in] The vertex type.
