@@ -79,15 +79,15 @@ protected:
 
         AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
         World *world = getStage()->addActiveWorld("hello_world");
-        mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
-        Camera *camera = setupCamera(world);
 
+        mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
         MeshBuilder meshBuilder;
         RenderBackend::Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5,.5,.5,BufferAccessType::ReadOnly).getMesh();
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
 
+            Camera *camera = setupCamera(world);
             Time dt;
             world->update(dt);
             camera->observeBoundingBox(mEntity->getAABB());

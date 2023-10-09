@@ -172,7 +172,7 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const AABB &aabb) {
 
     // setup primitives
     mesh->setModelMatrix(false, transform);
-    
+
     mesh->addPrimitiveGroup(NumIndices, PrimitiveType::LineList, 0);
 
     // setup material

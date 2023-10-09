@@ -58,7 +58,7 @@ public:
     Entity( const String &name, Common::Ids &ids, World *world );
     ~Entity() override;
     void setBehaviourControl(AbstractBehaviour *behaviour );
-    void setNode( TransformComponent *node );
+    void setNode(TransformComponent *node);
     TransformComponent *getNode() const;
     bool update( Time dt );
     bool render( RenderBackend::RenderBackendService *rbSrv );
