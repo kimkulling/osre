@@ -58,7 +58,7 @@ protected:
         }
 
         // vertex generation
-        const size_t numVertices = width * height;
+        const int numVertices = width * height;
         size_t index = 0;
         RenderVert *v = new RenderVert[numVertices];
         std::vector<float> vertices;
@@ -97,7 +97,7 @@ protected:
             return nullptr;
         }
 
-        mesh->createVertexBuffer(v, numVertices * sizeof(RenderVert), BufferAccessType::ReadWrite);
+        mesh->createVertexBuffer(v, (size_t) numVertices * sizeof(RenderVert), BufferAccessType::ReadWrite);
         mesh->createIndexBuffer(&indices[0], indices.size(), IndexType::UnsignedInt, BufferAccessType::ReadWrite);
         mesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::RenderVertex));
 
