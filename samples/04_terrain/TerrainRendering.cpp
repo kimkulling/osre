@@ -99,6 +99,11 @@ protected:
 
         mesh->createVertexBuffer(v, (size_t) numVertices * sizeof(RenderVert), BufferAccessType::ReadWrite);
         mesh->createIndexBuffer(&indices[0], indices.size(), IndexType::UnsignedInt, BufferAccessType::ReadWrite);
+
+        // setup primitives
+        mesh->addPrimitiveGroup(indices.size(), PrimitiveType::TriangleList, 0);
+
+
         mesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::RenderVertex));
 
         return mesh;
