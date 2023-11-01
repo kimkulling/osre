@@ -28,16 +28,17 @@ namespace OSRE {
 namespace App {
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
+/// @ingroup Engine
 ///
-/// @brief
+/// @brief This class is used to implement behavior controls.
 //-------------------------------------------------------------------------------------------------
 class AbstractBehaviour {
 public:
-    virtual ~AbstractBehaviour() {
-        // empty
-    }
+    /// @brief The class destructor, virtual.
+    virtual ~AbstractBehaviour() = default;
 
+    /// @brief The update method.
+    /// @param[in] dt   The time difference.
     virtual bool update(Time dt ) {
         return onUpdate(dt);
     }
@@ -86,3 +87,4 @@ protected:
 
 } // Namespace App
 } // Namespace OSRE
+
