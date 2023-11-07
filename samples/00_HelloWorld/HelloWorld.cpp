@@ -40,7 +40,7 @@ static constexpr c8 Tag[] = "HelloWorldApp";
 /// The example application, will create the render environment and render a simple triangle onto it
 class HelloWorldApp : public App::AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
-    TransformMatrixBlock m_transformMatrix;
+    TransformMatrixBlock mTransformMatrix;
     /// The entity to render
     Entity *mEntity;
     /// The keyboard controller instance.
@@ -50,7 +50,7 @@ public:
     /// The class constructor with the incoming arguments from the command line.
     HelloWorldApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv),
-            m_transformMatrix(),
+            mTransformMatrix(),
             mEntity(nullptr),
             mKeyboardTransCtrl(nullptr) {
         // empty
@@ -92,7 +92,7 @@ protected:
             world->update(dt);
             camera->observeBoundingBox(mEntity->getAABB());
         }
-        mKeyboardTransCtrl = AppBase::getTransformController(m_transformMatrix);
+        mKeyboardTransCtrl = AppBase::getTransformController(mTransformMatrix);
 
         osre_info(Tag, "Creation finished.");
 
@@ -107,7 +107,7 @@ protected:
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 
-        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
 
         rbSrv->endRenderBatch();
         rbSrv->endPass();

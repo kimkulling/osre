@@ -42,7 +42,7 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Threading;
 using namespace ::OSRE::Properties;
 
-static const c8 *Tag = "RenderBackendService";
+static constexpr c8 Tag[] = "RenderBackendService";
 
 static constexpr c8 OGL_API[] = "opengl";
 static constexpr c8 Vulkan_API[] = "vulkan";
@@ -58,6 +58,7 @@ static i32 hasPass(const c8 *id, const ::cppcore::TArray<PassData *> &passDataAr
             return i;
         }
     }
+
     return IdxNotFound;
 }
 
@@ -71,6 +72,7 @@ static i32 hasBatch(const c8 *id, const ::cppcore::TArray<RenderBatchData*> &bat
             return i;
         }
     }
+    
     return IdxNotFound;
 }
 
@@ -93,7 +95,6 @@ RenderBackendService::RenderBackendService() :
 RenderBackendService::~RenderBackendService() {
     if (mOwnsSettingsConfig) {
         delete mSettings;
-        mSettings = nullptr;
     }
 
     for (ui32 i = 0; i < m_passes.size(); ++i) {

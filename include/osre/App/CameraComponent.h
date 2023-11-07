@@ -35,9 +35,10 @@ namespace App {
 
 /// @brief This enum describes the used camera model.
 enum class CameraModel {
+    InvalidModel = -1,
     Perspective = 0,
     Orthogonal= 1,
-    InvalidModel
+    NumModels
 };
 
 //-------------------------------------------------------------------------------------------------

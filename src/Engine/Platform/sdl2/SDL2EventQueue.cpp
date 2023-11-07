@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2023 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -43,13 +43,14 @@ using namespace ::cppcore;
 static constexpr c8 Tag[] = "SDL2EventHandler";
 
 //-------------------------------------------------------------------------------------------------
-//  The abstract interface for sdl2-based event updates.
+/// @brief  The abstract interface for sdl2-based event updates.
 //-------------------------------------------------------------------------------------------------
 struct AbstractSDL2InputUpdate {
-    //  The virtual destructor.
+    /// @brief  The virtual destructor.
     virtual ~AbstractSDL2InputUpdate() = default;
 
-    //  Will perform the update.
+    /// @brief Will perform the update.
+    /// @param[out] ev   The next event or a nullptr, if none.
     virtual bool update(SDL_Event *ev) = 0;
 };
 
