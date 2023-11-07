@@ -30,18 +30,18 @@ namespace RenderBackend {
 
 class RenderBackendService;
 
-class CanvasRenderer {
+class CanvasRenderer : IRenderer {
 public:
     CanvasRenderer(RenderBackendService *rbSrv, i32 numLayers);
-    ~CanvasRenderer();
+    ~CanvasRenderer() override;
     void setResolution(i32 x, i32 y, i32 w, i32 h);
     bool selectLayer(i32 layer);
     i32 getActiveLayer() const;
     void setcolor(const Color4 &color);
-    void drawline(i32 x1, i32 y1, i32 x2, i32 y2)
-    void drawTriangle(i32 x1, i32 y1, i32 x2 i32 y2, i32 x3, i32 y3, bool filled);
+    void drawline(i32 x1, i32 y1, i32 x2, i32 y2);
+    void drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3, bool filled);
     void drawRect(i32 x, i32 y, i32 w, i32 h, bool filled);
-    void render();
+    void render() override;
     void setDirty();
     void setClean();
     bool isDirty() const;
@@ -51,12 +51,13 @@ private:
     bool mDirty;
     
     struct DrawCmd {
+        PrimitiveType mPrimType;
         size_t NumVertices;
         ColorVert *Vertices;
     };
-    using DrawCmdArray = CPPCore::TArray<DrawCmd>;
+    using DrawCmdArray = cppcore::TArray<DrawCmd>;
     DrawCmdArray mDrawCmdArray;
-    Color4 mPenColor;
+    glm::vec3 mPenColor;
     Rect2i mResolution;
     i32 mActiveLayer;
     i32 mNumLayers;

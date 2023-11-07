@@ -48,10 +48,10 @@ class Pipeline;
 /// @brief An array to store meshes.
 using MeshArray = cppcore::TArray<RenderBackend::Mesh*>;
 
-/// Describes an unset id.
+/// @brief Describes an unset id.
 static constexpr i32 UnsetHandle = -1;
 
-/// Upper limits for names.
+/// @brief Upper limits for names.
 static constexpr ui32 MaxEntNameLen = 256;
 
 ///	@brief  This enum describes the usage of a GPU-buffer-object.
@@ -102,8 +102,10 @@ enum class TextureTargetType {
     NumTextureTargetTypes           ///< Number of enums.
 };
 
-///	@brief  This enum describes the supported texture stages. A texture stage describes one layer of
-/// a texture composition like a diffuse texture at stage0 and a lighting information at statge1.
+///	@brief  This enum describes the supported texture stages. 
+///
+/// A texture stage describes one layer of a texture composition like a diffuse texture at 
+/// stage0 and a lighting information at statge1.
 enum class TextureStageType {
     InvalidTextureStageType = -1,   ///< Enum for invalid enum.
     TextureStage0 = 0,              ///< Texture state level 0
@@ -942,6 +944,11 @@ enum RenderPassType : ui32 {
 
 struct RenderTarget {
     // empty
+};
+
+struct IRenderer {
+    virtual ~IRenderer() = default;
+    virtual void render() = 0;
 };
 
 } // Namespace RenderBackend

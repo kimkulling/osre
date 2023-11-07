@@ -25,6 +25,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Properties/Settings.h>
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderCommon.h>
+#include <osre/App/ServiceProvider.h>
+#include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
 
 using namespace ::OSRE;
@@ -54,7 +56,7 @@ public:
 protected:
     bool onCreate() override {
         Properties::Settings *baseSettings(AppBase::getSettings());
-        if (nullptr == baseSettings) {
+        if (baseSettings == nullptr) {
             return false;
         }
 
@@ -65,7 +67,19 @@ protected:
 
         return true;
     }
+
+    void onRender() {
+        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
+        rbSrv->beginRenderBatch("2d");
+
+        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
+
+        AppBase::onUpdate(); 
+    }
 };
 
 OSRE_MAIN(Demo2DApp)
-

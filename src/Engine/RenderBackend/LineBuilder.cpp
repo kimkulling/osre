@@ -31,29 +31,29 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
 LineBuilder::LineBuilder() :
-        m_posCache(),
-        m_diffuseColCache(),
-        m_normalCache(),
-        m_tex0Cache(),
-        m_activePrimGroup(nullptr),
-        m_indexCache(),
-        m_primGroupCache(),
-        m_isDirty(),
-        m_activeMesh(nullptr) {
+        mPosCache(),
+        mDiffuseColCache(),
+        mNormalCache(),
+        mTex0Cache(),
+        mActivePrimGroup(nullptr),
+        mIndexCache(),
+        mPrimGroupCache(),
+        mIsDirty(),
+        mActiveMesh(nullptr) {
     // empty
 }
 
 LineBuilder &LineBuilder::addLine(const glm::vec3 &pos0, const glm::vec3 &pos1) {
-    m_posCache.add(pos0);
-    m_posCache.add(pos1);
+    mPosCache.add(pos0);
+    mPosCache.add(pos1);
 
     preparePrimGroups();
 
-    m_activePrimGroup->m_startIndex = m_indexCache.size();
-    m_activePrimGroup->m_numIndices += 2;
+    mActivePrimGroup->m_startIndex = mIndexCache.size();
+    mActivePrimGroup->m_numIndices += 2;
 
-    m_indexCache.add((ui32) m_activePrimGroup->m_startIndex);
-    m_isDirty = true;
+    mIndexCache.add((ui32) mActivePrimGroup->m_startIndex);
+    mIsDirty = true;
 
     return *this;
 }
@@ -61,85 +61,85 @@ LineBuilder &LineBuilder::addLine(const glm::vec3 &pos0, const glm::vec3 &pos1) 
 LineBuilder &LineBuilder::addLines(glm::vec3 *pos0, glm::vec3 *pos1, ui32 numLines) {
     for (ui32 i = 0; i < numLines; ++i) {
         glm::vec3 position0(pos0[i].x, pos0[i].y, pos0[i].z);
-        m_posCache.add(position0);
+        mPosCache.add(position0);
         glm::vec3 position1(pos1[i].x, pos1[i].y, pos1[i].z);
-        m_posCache.add(position1);
+        mPosCache.add(position1);
     }
 
     preparePrimGroups();
 
-    m_activePrimGroup->m_startIndex = m_indexCache.size();
-    m_activePrimGroup->m_numIndices += numLines;
+    mActivePrimGroup->m_startIndex = mIndexCache.size();
+    mActivePrimGroup->m_numIndices += numLines;
     for (ui32 i = 0; i < numLines; ++i) {
-        m_indexCache.add((ui32)m_activePrimGroup->m_startIndex + i);
+        mIndexCache.add((ui32)mActivePrimGroup->m_startIndex + i);
     }
-    m_isDirty = true;
+    mIsDirty = true;
 
     return *this;
 }
 
 Mesh *LineBuilder::getMesh() {
-    if (!m_isDirty) {
-        return m_activeMesh;
+    if (!mIsDirty) {
+        return mActiveMesh;
     }
 
-    if (m_posCache.isEmpty()) {
-        return m_activeMesh;
+    if (mPosCache.isEmpty()) {
+        return mActiveMesh;
     }
 
-    size_t size = 0;
-    if (m_activeMesh->getVertexType() == VertexType::RenderVertex) {
-        size = sizeof(RenderVert) * m_posCache.size();
-    } else if (m_activeMesh->getVertexType() == VertexType::ColorVertex) {
-        size = sizeof(ColorVert) * m_posCache.size();
+    size_t size = 0u;
+    if (mActiveMesh->getVertexType() == VertexType::RenderVertex) {
+        size = sizeof(RenderVert) * mPosCache.size();
+    } else if (mActiveMesh->getVertexType() == VertexType::ColorVertex) {
+        size = sizeof(ColorVert) * mPosCache.size();
     }
 
-    c8 *ptr  = (c8*) m_activeMesh->mapVertexBuffer(size, BufferAccessType::ReadOnly);
-    ui32 offset = 0;
-    for (ui32 i = 0; i < m_posCache.size(); ++i) {
+    c8 *ptr  = (c8*) mActiveMesh->mapVertexBuffer(size, BufferAccessType::ReadOnly);
+    ui32 offset = 0u;
+    for (ui32 i = 0; i < mPosCache.size(); ++i) {
         RenderVert v;
-        v.position = m_posCache[i];
-        if (!m_diffuseColCache.isEmpty()) {
-            v.color0 = m_normalCache[i];
+        v.position = mPosCache[i];
+        if (!mDiffuseColCache.isEmpty()) {
+            v.color0 = mNormalCache[i];
         }
-        if (!m_normalCache.isEmpty()) {
-            v.normal = m_normalCache[i];
+        if (!mNormalCache.isEmpty()) {
+            v.normal = mNormalCache[i];
         }
-        if (!m_tex0Cache.isEmpty()) {
-            v.tex0 = m_tex0Cache[i];
+        if (!mTex0Cache.isEmpty()) {
+            v.tex0 = mTex0Cache[i];
         }
         ::memcpy(&ptr[offset], &v, sizeof(RenderVert));
         offset += sizeof(RenderVert);
     }
-    m_activeMesh->unmapVertexBuffer();
+    mActiveMesh->unmapVertexBuffer();
 
     // setup indices
-    size = sizeof(ui16) * m_indexCache.size();
-    m_activeMesh->createIndexBuffer(&m_indexCache[0], size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
+    size = sizeof(ui16) * mIndexCache.size();
+    mActiveMesh->createIndexBuffer(&mIndexCache[0], size, IndexType::UnsignedShort, BufferAccessType::ReadOnly);
 
     // setup primitives
-    for (size_t i = 0; i < m_primGroupCache.size(); ++i) {
-        m_activeMesh->addPrimitiveGroup(m_primGroupCache[i]);
+    for (size_t i = 0; i < mPrimGroupCache.size(); ++i) {
+        mActiveMesh->addPrimitiveGroup(mPrimGroupCache[i]);
     }
-    m_isDirty = false;
+    mIsDirty = false;
 
-    return m_activeMesh;
+    return mActiveMesh;
 }
 
 void LineBuilder::preparePrimGroups() {
     PrimitiveGroup *pg = new PrimitiveGroup;
     pg->m_primitive = PrimitiveType::LineList;
-    if (nullptr != m_activePrimGroup) {
-        if (PrimitiveType::LineList != m_activePrimGroup->m_primitive) {
-            m_primGroupCache.add(pg);
-            m_activePrimGroup = pg;
-            m_activePrimGroup->m_indexType = m_activeMesh->getIndexType();
+    if (mActivePrimGroup != nullptr) {
+        if (PrimitiveType::LineList != mActivePrimGroup->m_primitive) {
+            mPrimGroupCache.add(pg);
+            mActivePrimGroup = pg;
+            mActivePrimGroup->m_indexType = mActiveMesh->getIndexType();
         }
     } else {
-        m_primGroupCache.add(pg);
-        m_activePrimGroup = pg;
-        m_activePrimGroup->m_indexType = m_activeMesh->getIndexType();
-        m_activePrimGroup->m_startIndex = m_indexCache.size();
+        mPrimGroupCache.add(pg);
+        mActivePrimGroup = pg;
+        mActivePrimGroup->m_indexType = mActiveMesh->getIndexType();
+        mActivePrimGroup->m_startIndex = mIndexCache.size();
     }
 }
 

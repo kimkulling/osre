@@ -32,7 +32,7 @@ namespace Scene {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  
+///	@brief  This class is used to generate any kind of lines in 3d-space.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT LineBuilder {
 public:
@@ -74,16 +74,16 @@ protected:
     void preparePrimGroups();
 
 private:
-    cppcore::TArray<glm::vec3> m_posCache;
-    cppcore::TArray<glm::vec3> m_diffuseColCache;
-    cppcore::TArray<glm::vec3> m_normalCache;
-    cppcore::TArray<glm::vec2> m_tex0Cache;
-    RenderBackend::PrimitiveGroup *m_activePrimGroup;
-    cppcore::TArray<ui32> m_indexCache;
-
-    cppcore::TArray<RenderBackend::PrimitiveGroup*> m_primGroupCache;
-    bool m_isDirty;
-    RenderBackend::Mesh *m_activeMesh;
+    using Vec3Cache = cppcore::TArray<glm::vec3>;
+    Vec3Cache mPosCache;
+    Vec3Cache mDiffuseColCache;
+    Vec3Cache mNormalCache;
+    cppcore::TArray<glm::vec2> mTex0Cache;
+    RenderBackend::PrimitiveGroup *mActivePrimGroup;
+    cppcore::TArray<ui32> mIndexCache;
+    cppcore::TArray<RenderBackend::PrimitiveGroup*> mPrimGroupCache;
+    bool mIsDirty;
+    RenderBackend::Mesh *mActiveMesh;
 };
 
 } // Namespace Scene
