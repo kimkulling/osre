@@ -45,6 +45,7 @@ public:
         delete mEntity;
     }
 
+    
 protected:
     Mesh *loadHeightMap(const String &filename) {
         if (filename.empty()) {
@@ -63,10 +64,10 @@ protected:
         RenderVert *v = new RenderVert[numVertices];
         std::vector<float> vertices;
         float yScale = 64.0f / 256.0f, yShift = 16.0f;  // apply a scale+shift to the height data
-        for(unsigned int i = 0; i < height; i++) {
-            for(unsigned int j = 0; j < width; j++) {
+        for (int i = 0; i<height; ++i) {
+            for (int j = 0; j<width; ++j) {
                 // retrieve texel for (i,j) tex coord
-                unsigned char* texel = data + (j + width * i) * nChannels;
+                unsigned char *texel = data + (j + width * i) * nChannels;
                 // raw height at coordinate
                 unsigned char y = texel[0];
 
@@ -101,9 +102,7 @@ protected:
         mesh->createIndexBuffer(&indices[0], indices.size(), IndexType::UnsignedInt, BufferAccessType::ReadWrite);
 
         // setup primitives
-        mesh->addPrimitiveGroup(indices.size(), PrimitiveType::TriangleList, 0);
-
-
+        mesh->addPrimitiveGroup(indices.size(), PrimitiveType::TriangelStrip, 0);
         mesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::RenderVertex));
 
         return mesh;
@@ -117,7 +116,7 @@ protected:
         ui32 w, h;
         AppBase::getResolution(w, h);
         camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
-        
+
         return camera;
     }
 
@@ -131,13 +130,15 @@ protected:
         mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
         Camera *camera = setupCamera(world);
 
-        String filename = "world_heightmap.png";
+        //String filename = "world_heightmap.png";
+        String filename = "Rolling_Hills.png";
         RenderBackend::Mesh *mesh = loadHeightMap(filename);
-        if (nullptr != mesh) {
+        if (mesh != nullptr) {
             RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
 
-            Time dt;
+            // Initial update
+	        Time dt =;
             world->update(dt);
             camera->observeBoundingBox(mEntity->getAABB());
         }
@@ -180,3 +181,4 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
