@@ -138,7 +138,7 @@ protected:
             rc->addStaticMesh(mesh);
 
             // Initial update
-	        Time dt =;
+	        Time dt;
             world->update(dt);
             camera->observeBoundingBox(mEntity->getAABB());
         }

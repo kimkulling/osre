@@ -322,7 +322,7 @@ bool OGLRenderEventHandler:: onInitRenderPasses(const Common::EventData *eventDa
         // ToDo: create pipeline pass for the name.
         for (RenderBatchData * currentBatchData : currentPass->m_geoBatches) {
             if (nullptr == currentBatchData) {
-                continue;   
+                continue;
             }
 
             // set the matrix
@@ -485,7 +485,6 @@ bool OGLRenderEventHandler::onScreenshot(const EventData *eventData) {
         result = makeScreenShot(data->mFilename.c_str(), data->mWidth, data->mHeight);
     }
     return result;
-    
 }
 
 } // Namespace RenderBackend

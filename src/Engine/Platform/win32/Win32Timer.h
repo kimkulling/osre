@@ -42,11 +42,11 @@ public:
 	///	Seconds getter.
 	i64 getMilliCurrentSeconds() override;
 	///	Time difference getter.
-	i64 getTimeDiff() override;
+	Time getTimeDiff() override;
 
 private:
-	LARGE_INTEGER m_globeTime, m_globeFrequency;
-	i64 m_LastTime;
+	LARGE_INTEGER mGlobeTime, mGlobeFrequency;
+	i64 mLastTime;
 };
 
 } // Namespace Platform

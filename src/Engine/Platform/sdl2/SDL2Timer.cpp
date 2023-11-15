@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2023 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -27,13 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-SDL2Timer::SDL2Timer()
-: AbstractTimer( "platform/sdl2timer" )
-, m_lasttick( 0 ){
-    // empty
-}
-
-SDL2Timer::~SDL2Timer( ) {
+SDL2Timer::SDL2Timer() : AbstractTimer("platform/sdl2timer"), m_lasttick(0) {
     // empty
 }
 
@@ -42,7 +36,7 @@ i64 SDL2Timer::getMilliCurrentSeconds( ) {
     return ticks;
 }
 
-i64 SDL2Timer::getTimeDiff( ) {
+Time SDL2Timer::getTimeDiff( ) {
     i64 currentTime = getMilliCurrentSeconds();
     if ( m_lasttick == 0 ) {
         m_lasttick = currentTime;

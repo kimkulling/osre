@@ -50,7 +50,7 @@ public:
 
     ///	@brief	Returns the difference since the last call of getTimeDiff.
     ///	@return	The time difference.
-    virtual i64 getTimeDiff() = 0;
+    virtual Time getTimeDiff() = 0;
 
 protected:
     ///	@brief	The constructor with the name of the timer instance.
