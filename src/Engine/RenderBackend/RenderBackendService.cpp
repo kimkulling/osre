@@ -466,6 +466,7 @@ void RenderBackendService::updateMesh(Mesh *mesh) {
         osre_error(Tag, "No active batch.");
         return;
     }
+
     m_currentBatch->m_updateMeshArray.add(mesh);
     m_currentBatch->m_dirtyFlag |= RenderBatchData::MeshUpdateDirty;
 }
@@ -509,6 +510,7 @@ void RenderBackendService::clearPasses() {
     }
     m_passes.clear();
     m_frameCreated = false;
+    mRenderTaskPtr->sendEvent(&OnClearSceneEvent, nullptr);
 }
 
 void RenderBackendService::attachView() {    

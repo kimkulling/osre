@@ -230,7 +230,10 @@ void CanvasRenderer::render() {
     }
 
     for (size_t i=0; i<mDrawCmdArray.size(); ++i) {
-        const auto &dc = mDrawCmdArray[i];
+        const auto &drawCmd = mDrawCmdArray[i];
+        if (drawCmd.NumVertices == 0) {
+            continue;
+        }
     }
 
     setClean();

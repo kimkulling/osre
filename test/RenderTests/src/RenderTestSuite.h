@@ -49,7 +49,7 @@ class KeyboardEventListener;
 ///
 ///	@brief 
 //-------------------------------------------------------------------------------------------------
-class RenderTestSuite : public AbstractTestFixture {
+class RenderTestSuite final: public AbstractTestFixture {
 public:
     static RenderTestSuite *create(const String &suiteName );
     static RenderTestSuite *getInstance();
