@@ -359,8 +359,6 @@ bool AppBase::onDestroy() {
     return true;
 }
 
-static constexpr i64 Conversion2Micro = 1000;
-
 void AppBase::onUpdate() {
     const Time dt = mTimer->getTimeDiff();
     if (nullptr != mStage) {

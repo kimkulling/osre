@@ -30,7 +30,7 @@ Win32Timer::Win32Timer() : AbstractTimer( "platform/win32timer" ), mGlobeTime(),
     ::QueryPerformanceFrequency(&mGlobeFrequency);
 }
 
-i64 Win32Timer::getMilliCurrentSeconds() {
+i64 Win32Timer::getMicroCurrentSeconds() {
     LARGE_INTEGER currentTime = {};
     ::QueryPerformanceCounter(&currentTime);
     const i64 secs = static_cast<i64>( ( currentTime.QuadPart - mGlobeTime.QuadPart ) ) 

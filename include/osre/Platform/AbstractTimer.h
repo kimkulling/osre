@@ -41,28 +41,33 @@ namespace Platform {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AbstractTimer : public Common::Object {
 public:
+    static constexpr i64 Conversion2Micro = 1000;
+
     ///	@brief	Destructor, virtual.
     virtual ~AbstractTimer() = default;
 
     ///	@brief	Returns the milli-seconds since starting the application.
     ///	@return	Seconds past since starting the application.
-    virtual i64 getMilliCurrentSeconds() = 0;
+    virtual i64 getMicroCurrentSeconds() = 0;
 
     ///	@brief	Returns the difference since the last call of getTimeDiff.
-    ///	@return	The time difference.
+    ///	@return	The time difference in ms.
     Time getTimeDiff() {
-        const i64 currentTime = getMilliCurrentSeconds();
+        const i64 currentTime = getMicroCurrentSeconds();
         if (mLastTime == 0L) {
             mLastTime = currentTime;
-            return 1L;
+            return 0l;
         }
 
         i64 diff = currentTime - mLastTime;
-        if (diff > 1000L) {
-            diff = AbstractTimer::getRequestedTimeStep();
-        }
         mLastTime = currentTime;
         Time dt(diff);
+
+        if (mReqTimeSlice != -1) {
+            if (diff > 1000) {
+                diff = AbstractTimer::getRequestedTimeStep();
+            }
+        }
 
         return dt;
     }
@@ -70,8 +75,11 @@ public:
 protected:
     ///	@brief	The constructor with the name of the timer instance.
     ///	@param	name        [in] The name for the timer instance.
+    AbstractTimer(const String &name);
+
+    ///	@brief Will set the reuqested time step.
     /// @param  reqTimeStep [in] The time-step for the target FPS-value.
-    AbstractTimer(const String &name, i64 reqTimeStep = 1000L/60L);
+    void setMaxTimeDiff(i64 reqTimeStep = 1000L / 60L);
 
     /// @brief  Will return the target time slice for 
     i64 getRequestedTimeStep() const;
@@ -81,10 +89,7 @@ private:
     i64 mLastTime;
 };
 
-inline AbstractTimer::AbstractTimer(const String &name, i64 reqTimeSlice) :
-        Object(name), mReqTimeSlice(reqTimeSlice), mLastTime(0l) {
-    // empty
-}
+inline AbstractTimer::AbstractTimer(const String &name) : Object(name), mReqTimeSlice(-1), mLastTime(0l) {}
 
 inline i64 AbstractTimer::getRequestedTimeStep() const {
     return mReqTimeSlice;

@@ -316,9 +316,11 @@ size_t SystemTask::getEvetQueueSize() const {
 }
 
 void SystemTask::onUpdate() {
-    osre_assert(nullptr != m_taskThread);
+    if (m_taskThread == nullptr) {
+        return;
+    }
 
-    if (nullptr == m_asyncQueue) {
+    if (m_asyncQueue == nullptr) {
         m_asyncQueue = m_taskThread->getActiveJobQueue();
     }
 }

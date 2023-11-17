@@ -187,6 +187,10 @@ struct Time {
     /// @param[in] microseconds  The timestamp in microseconds.
     Time(i64 microseconds);
 
+    void setMilliSeconds(i64 ms) {
+        Microseconds = ms * 1000l; 
+    }
+
     /// @brief The class destructor.
     ~Time() = default;
 
