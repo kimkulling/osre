@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-Win32Timer::Win32Timer() : AbstractTimer( "platform/win32timer" ), mGlobeTime(), mGlobeFrequency(), mLastTime( 0 ) {
+Win32Timer::Win32Timer() : AbstractTimer( "platform/win32timer" ), mGlobeTime(), mGlobeFrequency() {
     ::QueryPerformanceCounter(&mGlobeTime);
     ::QueryPerformanceFrequency(&mGlobeFrequency);
 }
@@ -37,23 +37,6 @@ i64 Win32Timer::getMilliCurrentSeconds() {
         / static_cast<i64>(mGlobeFrequency.QuadPart );
 
     return secs;
-}
-
-Time Win32Timer::getTimeDiff() {
-    const i64 currentTime = getMilliCurrentSeconds();
-    if (mLastTime == 0L) {
-        mLastTime = currentTime;
-        return 0L;
-    }
-
-    i64 diff = currentTime - mLastTime;
-    if (diff > 1000L) {
-        diff = AbstractTimer::getRequestedTimeStep();
-    }
-    mLastTime = currentTime;
-    Time dt(diff);
-    
-    return dt;
 }
 
 } // namespace Platform

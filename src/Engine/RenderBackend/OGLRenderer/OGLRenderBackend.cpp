@@ -31,7 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Stream.h>
 #include <osre/IO/Uri.h>
 #include <osre/Platform/AbstractOGLRenderContext.h>
-#include <osre/Platform/AbstractImer.h>
+#include <osre/Platform/AbstractTimer.h>
 #include <osre/Profiling/PerformanceCounterRegistry.h>
 #include <osre/RenderBackend/RenderStates.h>
 #include <osre/RenderBackend/Shader.h>

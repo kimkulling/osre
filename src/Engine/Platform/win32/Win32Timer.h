@@ -35,18 +35,18 @@ namespace Platform {
 //-------------------------------------------------------------------------------------------------
 class Win32Timer : public AbstractTimer {
 public:
-	///	The class constructor.
+	///	@brief The class constructor.
 	Win32Timer();
-	///	The class destructor.
+
+	///	@brief The class destructor.
 	~Win32Timer() override = default;
-	///	Seconds getter.
-	i64 getMilliCurrentSeconds() override;
-	///	Time difference getter.
-	Time getTimeDiff() override;
+
+	/// @brief Will return the current milliseconds.
+    /// @return The current ,illiseconds.
+    i64 getMilliCurrentSeconds() override;
 
 private:
 	LARGE_INTEGER mGlobeTime, mGlobeFrequency;
-	i64 mLastTime;
 };
 
 } // Namespace Platform

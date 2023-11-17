@@ -97,36 +97,31 @@ private:
 };
 
 template<class T>
-inline
-TObjPtr<T>::TObjPtr() : m_ptr( nullptr ) {
+inline TObjPtr<T>::TObjPtr() : m_ptr( nullptr ) {
 	// empty
 }
 
 template<class T>
-inline
-TObjPtr<T>::TObjPtr( T *pPtr ) : m_ptr( pPtr ) {
+inline TObjPtr<T>::TObjPtr( T *pPtr ) : m_ptr( pPtr ) {
 	if ( nullptr != m_ptr ) {
 		m_ptr->get();
 	}
 }
 
 template<class T>
-inline
-TObjPtr<T>::TObjPtr( const TObjPtr<T> &other ) : m_ptr( other.m_ptr ) {
+inline TObjPtr<T>::TObjPtr( const TObjPtr<T> &other ) : m_ptr( other.m_ptr ) {
 	if ( nullptr != m_ptr ) {
 		m_ptr->get();
 	}
 }
 
 template<class T>
-inline
-TObjPtr<T>::~TObjPtr() {
+inline TObjPtr<T>::~TObjPtr() {
 	clear();
 }
 
 template<class T>
-inline
-void TObjPtr<T>::init( T *pPtr ) {
+inline void TObjPtr<T>::init( T *pPtr ) {
 	if ( m_ptr ) {
 		m_ptr->release();
 	}
@@ -137,8 +132,7 @@ void TObjPtr<T>::init( T *pPtr ) {
 }
 
 template<class T>
-inline
-void TObjPtr<T>::set( T *pPtr ) {
+inline void TObjPtr<T>::set( T *pPtr ) {
 	clear();
 	if ( nullptr != pPtr )	{
 		m_ptr = pPtr;
@@ -147,40 +141,34 @@ void TObjPtr<T>::set( T *pPtr ) {
 }
 
 template<class T>
-inline
-T *TObjPtr<T>::getPtr() const {
+inline T *TObjPtr<T>::getPtr() const {
 	return m_ptr;
 }
 
 template<class T>
-inline
-void TObjPtr<T>::clear() {
+inline void TObjPtr<T>::clear() {
 	if ( nullptr != m_ptr ) {
 		m_ptr->release();
 		m_ptr = nullptr;
 	}
 }
 template<class T>
-inline
-bool TObjPtr<T>::isValid() const {
+inline bool TObjPtr<T>::isValid() const {
 	return ( nullptr != m_ptr );
 }
 
 template<class T>
-inline
-T *TObjPtr<T>::operator -> () const {
+inline T *TObjPtr<T>::operator -> () const {
 	return m_ptr;
 }
 
 template<class T>
-inline
-T &TObjPtr<T>::operator *() const {
+inline T &TObjPtr<T>::operator *() const {
 	return *m_ptr;
 }
 
 template<class T>
-inline
-TObjPtr<T> &TObjPtr<T>::operator = ( const TObjPtr<T> &other ) {
+inline TObjPtr<T> &TObjPtr<T>::operator = ( const TObjPtr<T> &other ) {
 	if ( m_ptr == other.m_ptr ) {
 		return *this;
 	}
@@ -193,8 +181,7 @@ TObjPtr<T> &TObjPtr<T>::operator = ( const TObjPtr<T> &other ) {
 }
 
 template<class T>
-inline
-TObjPtr<T> &TObjPtr<T>::operator = ( T *pPtr ) {
+inline TObjPtr<T> &TObjPtr<T>::operator = ( T *pPtr ) {
 	clear();
 	if ( nullptr != pPtr ) {
 		m_ptr = pPtr;
@@ -205,14 +192,12 @@ TObjPtr<T> &TObjPtr<T>::operator = ( T *pPtr ) {
 }
 
 template<class T>
-inline
-bool TObjPtr<T>::operator == ( const TObjPtr<T> &rhs ) const {
+inline bool TObjPtr<T>::operator == ( const TObjPtr<T> &rhs ) const {
 	return ( m_ptr == rhs.m_ptr );
 }
 
 template<class T>
-inline
-bool TObjPtr<T>::operator != ( const TObjPtr<T> &rhs ) const {
+inline bool TObjPtr<T>::operator != ( const TObjPtr<T> &rhs ) const {
 	return !( m_ptr == rhs.m_ptr );
 }
 

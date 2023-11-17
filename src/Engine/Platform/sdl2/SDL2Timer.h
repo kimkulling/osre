@@ -34,13 +34,15 @@ namespace Platform {
 //-------------------------------------------------------------------------------------------------
 class SDL2Timer final : public AbstractTimer {
 public:
+    /// @brief The class constructor.
     SDL2Timer();
-    ~SDL2Timer() override = default;
-    i64 getMilliCurrentSeconds() override;
-    Time getTimeDiff() override;
 
-private:
-    i64 mLasttick;
+    /// @brief The class destructor.
+    ~SDL2Timer() override = default;
+
+    /// @brief Will return the current milliseconds.
+    /// @return The current ,illiseconds.
+    i64 getMilliCurrentSeconds() override;
 };
 
 } // Namespace Platform

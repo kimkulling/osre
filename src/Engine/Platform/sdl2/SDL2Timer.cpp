@@ -36,21 +36,5 @@ i64 SDL2Timer::getMilliCurrentSeconds( ) {
     return ticks;
 }
 
-Time SDL2Timer::getTimeDiff( ) {
-    i64 currentTime = getMilliCurrentSeconds();
-    if ( m_lasttick == 0 ) {
-        m_lasttick = currentTime;
-        return 0;
-    } else {
-        i64 diff( currentTime - m_lasttick );
-        if( diff > 1000 ) {
-            diff = AbstractTimer::getRequestedTimeStep();
-        }
-        m_lasttick = currentTime;
-        
-        return diff;
-    }
-}
-
 } // Namespace Platform
 } // Namespace OSRE

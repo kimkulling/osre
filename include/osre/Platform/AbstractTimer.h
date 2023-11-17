@@ -50,23 +50,39 @@ public:
 
     ///	@brief	Returns the difference since the last call of getTimeDiff.
     ///	@return	The time difference.
-    virtual Time getTimeDiff() = 0;
+    Time getTimeDiff() {
+        const i64 currentTime = getMilliCurrentSeconds();
+        if (mLastTime == 0L) {
+            mLastTime = currentTime;
+            return 0L;
+        }
+
+        i64 diff = currentTime - mLastTime;
+        if (diff > 1000L) {
+            diff = AbstractTimer::getRequestedTimeStep();
+        }
+        mLastTime = currentTime;
+        Time dt(diff);
+
+        return dt;
+    }
 
 protected:
     ///	@brief	The constructor with the name of the timer instance.
     ///	@param	name        [in] The name for the timer instance.
     /// @param  reqTimeStep [in] The time-step for the target FPS-value.
-    AbstractTimer( const String &name, i64 reqTimeStep = 1000L/60L );
+    AbstractTimer(const String &name, i64 reqTimeStep = 1000L/60L);
 
     /// @brief  Will return the target time slice for 
     i64 getRequestedTimeStep() const;
 
 private:
     i64 mReqTimeSlice;
+    i64 mLastTime;
 };
 
 inline AbstractTimer::AbstractTimer(const String &name, i64 reqTimeSlice) :
-        Object( name ), mReqTimeSlice( reqTimeSlice ) {
+        Object(name), mReqTimeSlice(reqTimeSlice), mLastTime(0l) {
     // empty
 }
 
