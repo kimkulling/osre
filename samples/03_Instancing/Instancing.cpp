@@ -76,8 +76,7 @@ protected:
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent *)mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
-            Time dt;
-            world->update(dt);
+            world->init();
             camera->observeBoundingBox(mEntity->getAABB());
         }
 

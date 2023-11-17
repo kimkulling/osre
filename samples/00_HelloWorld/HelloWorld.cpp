@@ -88,8 +88,7 @@ protected:
             rc->addStaticMesh(mesh);
 
             Camera *camera = setupCamera(world);
-            Time dt;
-            world->update(dt);
+            world->init();
             camera->observeBoundingBox(mEntity->getAABB());
         }
         mKeyboardTransCtrl = AppBase::getTransformController(mTransformMatrix);

@@ -129,6 +129,11 @@ void World::setSceneRoot(TransformComponent *root ) {
 }
 
 
+void World::init() {
+    Time dt;
+    update(dt);
+}
+
 void World::update(Time dt) {
     if (mActiveCamera != nullptr) {
         mActiveCamera->update(dt);

@@ -54,7 +54,7 @@ public:
         const i64 currentTime = getMilliCurrentSeconds();
         if (mLastTime == 0L) {
             mLastTime = currentTime;
-            return 0L;
+            return 1L;
         }
 
         i64 diff = currentTime - mLastTime;
