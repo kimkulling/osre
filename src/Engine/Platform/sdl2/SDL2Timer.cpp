@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-SDL2Timer::SDL2Timer() : AbstractTimer("platform/sdl2timer"), m_lasttick(0) {
+SDL2Timer::SDL2Timer() : AbstractTimer("platform/sdl2timer") {
     // empty
 }
 
