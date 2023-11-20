@@ -167,7 +167,7 @@ Properties::Settings *AppBase::getSettings() const {
     return mSettings;
 }
 
-Camera *AppBase::setActiveCamera(Camera *camera) {
+CameraComponent *AppBase::setActiveCamera(CameraComponent *camera) {
     if (nullptr == mStage) {
         osre_debug(Tag, "No world to activate state to.");
         return nullptr;

@@ -43,7 +43,7 @@ static constexpr c8 Tag[] = "InstancingApp";
 /// The example application, will create the render environment and render a simple triangle onto it
 class InstancingApp : public App::AppBase {
     App::Entity *mEntity;
-    App::Camera *mCamera;
+    App::CameraComponent *mCamera;
 
 public:
     InstancingApp(int argc, char *argv[]) :
@@ -64,7 +64,7 @@ protected:
         World *world = getStage()->getActiveWorld(0);
         mEntity = new App::Entity("instance", world->getIds(), world);
         Entity *camEntity = new App::Entity("camera", world->getIds(), world);
-        App::Camera *camera = (App::Camera *)camEntity->createComponent(ComponentType::CameraComponentType);
+        App::CameraComponent *camera = (App::CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
         world->setActiveCamera(camera);
 
         Rect2ui windowsRect;

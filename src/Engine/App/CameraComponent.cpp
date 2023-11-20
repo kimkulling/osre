@@ -44,7 +44,7 @@ static constexpr f32 DefaultNear = 0.001f;
 static constexpr f32 DefaultFar = 1000.0f;
 static constexpr f32 DefaultAspectRatio = 1.0f;
 
-Camera::Camera(Entity *owner) :
+CameraComponent::CameraComponent(Entity *owner) :
         Component(owner, ComponentType::CameraComponentType),
         mRecalculateRequested(true),
         mCameraModel(CameraModel::Perspective),
@@ -65,7 +65,7 @@ Camera::Camera(Entity *owner) :
     // empty
 }
 
-void Camera::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
+void CameraComponent::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
     m_fov = glm::radians(fov);
     mResolution.Width = w;
     mResolution.Height = h;
@@ -79,11 +79,11 @@ void Camera::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar)
     setCameraModel(CameraModel::Perspective);
 }
 
-void Camera::update(Time dt) {
+void CameraComponent::update(Time dt) {
     onUpdate(dt);
 }
 
-void Camera::render(RenderBackendService *rbSrv) {
+void CameraComponent::render(RenderBackendService *rbSrv) {
     if (nullptr == rbSrv) {
         return;
     }
@@ -91,7 +91,7 @@ void Camera::render(RenderBackendService *rbSrv) {
     onRender(rbSrv);
 }
 
-void Camera::observeBoundingBox(const AABB &aabb) {
+void CameraComponent::observeBoundingBox(const AABB &aabb) {
     f32 diam = aabb.getDiameter();
     const f32 maxDist = m_far - m_near;
     if (diam > maxDist) {
@@ -105,13 +105,13 @@ void Camera::observeBoundingBox(const AABB &aabb) {
     setLookAt(eye, center, up);
 }
 
-void Camera::setLookAt(const glm::vec3 &eyePosition, const glm::vec3 &center, const glm::vec3 &up) {
+void CameraComponent::setLookAt(const glm::vec3 &eyePosition, const glm::vec3 &center, const glm::vec3 &up) {
     m_eye = eyePosition;
     m_center = center;
     m_up = up;
 }
 
-void Camera::setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farPlane) {
+void CameraComponent::setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farPlane) {
     m_fov = fov;
     m_aspectRatio = aspectRatio;
     m_near = nearPlane;
@@ -120,13 +120,13 @@ void Camera::setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farP
     setCameraModel(CameraModel::Perspective);
 }
 
-void Camera::setCameraModel(CameraModel cm) {
+void CameraComponent::setCameraModel(CameraModel cm) {
     osre_trace(Tag, "Set camera model to " + CameraModelName[static_cast<size_t>(cm)])
 
     mCameraModel = cm;
 }
 
-void Camera::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane, f32 farPlane) {
+void CameraComponent::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane, f32 farPlane) {
     mResolution.Width = right - left;
     mResolution.Height = bottom - top;
     m_left = left;
@@ -139,15 +139,15 @@ void Camera::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlan
     setCameraModel(CameraModel::Orthogonal);
 }
 
-const glm::mat4 &Camera::getView() const {
+const glm::mat4 &CameraComponent::getView() const {
     return m_view;
 }
 
-const glm::mat4 &Camera::getProjection() const {
+const glm::mat4 &CameraComponent::getProjection() const {
     return m_projection;
 }
 
-bool Camera::onUpdate(Time) {
+bool CameraComponent::onUpdate(Time) {
     const CameraModel cm = getCameraModel();
     if (cm == CameraModel::Perspective) {
         m_projection = glm::perspective(m_fov, m_aspectRatio, m_near, m_far);
@@ -159,7 +159,7 @@ bool Camera::onUpdate(Time) {
     return true;
 }
 
-bool Camera::onRender(RenderBackendService *rbSrv) {
+bool CameraComponent::onRender(RenderBackendService *rbSrv) {
     osre_assert(nullptr != rbSrv);
 
     rbSrv->setMatrix(MatrixType::View, m_view);

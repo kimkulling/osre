@@ -49,16 +49,16 @@ enum class CameraModel {
 /// 1. Perspective camera model
 /// 2. Orthogonal camera model
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Camera : public Component {
+class OSRE_EXPORT CameraComponent : public Component {
 public:
     /// @brief  The class constructor.
     /// @param[in] name        [in] The name for the camera node instance.
     /// @param[in] ids         [in] The id container, for unique ids.
     /// @param[in] parent              [in] The parent node, nullptr for a root node.
-    Camera(Entity *owner);
+    CameraComponent(Entity *owner);
 
     /// @brief The default class destructor, default.
-    ~Camera() override = default;
+    ~CameraComponent() override = default;
 
     /// @brief  Will set the projection parameter.
     /// @param[in] fov         The file of view, describes the angle of the view frustum.
@@ -160,39 +160,39 @@ private:
     glm::mat4 m_view, m_projection;
 };
 
-inline CameraModel Camera::getCameraModel() const {
+inline CameraModel CameraComponent::getCameraModel() const {
     return mCameraModel;
 }
 
-inline void Camera::setEyePos(const glm::vec3 &eyePosistion) {
+inline void CameraComponent::setEyePos(const glm::vec3 &eyePosistion) {
     m_eye = eyePosistion;
 }
 
-inline f32 Camera::getFov() const {
+inline f32 CameraComponent::getFov() const {
     return m_fov;
 }
 
-inline f32 Camera::getAspectRatio() const {
+inline f32 CameraComponent::getAspectRatio() const {
     return m_aspectRatio;
 }
 
-inline f32 Camera::getNear() const {
+inline f32 CameraComponent::getNear() const {
     return m_near;
 }
 
-inline f32 Camera::getFar() const {
+inline f32 CameraComponent::getFar() const {
     return m_far;
 }
 
-inline const glm::vec3 &Camera::getEye() const {
+inline const glm::vec3 &CameraComponent::getEye() const {
     return m_eye;
 }
 
-inline const glm::vec3 &Camera::getCenter() const {
+inline const glm::vec3 &CameraComponent::getCenter() const {
     return m_center;
 }
 
-inline const glm::vec3 &Camera::getUp() const {
+inline const glm::vec3 &CameraComponent::getUp() const {
     return m_up;
 }
 

@@ -36,7 +36,7 @@ namespace RenderBackend {
 namespace App {
 
 class TransformComponent;
-class Camera;
+class CameraComponent;
 
 } // Namespace Scene
 } // Namespace OSRE

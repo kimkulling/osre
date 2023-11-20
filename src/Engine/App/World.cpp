@@ -95,7 +95,7 @@ bool World::removeEntity(Entity *entity) {
     return found;
 }
 
-bool World::setActiveCamera(Camera *camera) {
+bool World::setActiveCamera(CameraComponent *camera) {
     if (camera == nullptr) {
         return false;
     }

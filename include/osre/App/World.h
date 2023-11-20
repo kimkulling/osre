@@ -70,7 +70,7 @@ public:
     /// @brief Will set the new active camera.
     /// @param[in] camera   The new camera.
     /// @return true if successful, false in case of an error.
-    bool setActiveCamera(Camera *camera);
+    bool setActiveCamera(CameraComponent *camera);
     
     /// @brief 
     /// @param name 
@@ -109,7 +109,7 @@ protected:
 
 private:
     cppcore::TArray<Entity*> mEntities;
-    Camera *mActiveCamera;
+    CameraComponent *mActiveCamera;
     TransformComponent *mRoot;
     Common::Ids mIds;
     RenderBackend::Pipeline *mPipeline;

@@ -60,10 +60,10 @@ public:
     ~HelloWorldApp() override = default;
 
 protected:
-    Camera *setupCamera(World *world) {
+    CameraComponent *setupCamera(World *world) {
         Entity *camEntity = new Entity("camera", *getIdContainer(), world);
         world->addEntity(camEntity);
-        Camera *camera =(Camera*) camEntity->createComponent(ComponentType::CameraComponentType);
+        CameraComponent *camera =(CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
         world->setActiveCamera(camera);
         ui32 w, h;
         AppBase::getResolution(w, h);
@@ -87,7 +87,7 @@ protected:
             RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
 
-            Camera *camera = setupCamera(world);
+            CameraComponent *camera = setupCamera(world);
             world->init();
             camera->observeBoundingBox(mEntity->getAABB());
         }
