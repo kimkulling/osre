@@ -108,10 +108,10 @@ protected:
         return mesh;
     }
 
-    Camera *setupCamera(World *world) {
+    CameraComponent *setupCamera(World *world) {
         Entity *camEntity = new Entity("camera", *getIdContainer(), world);
         world->addEntity(camEntity);
-        Camera *camera =(Camera*) camEntity->createComponent(ComponentType::CameraComponentType);
+        CameraComponent *camera =(CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
         world->setActiveCamera(camera);
         ui32 w, h;
         AppBase::getResolution(w, h);
@@ -128,7 +128,7 @@ protected:
         AppBase::setWindowsTitle("Terrain sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
         World *world = getStage()->addActiveWorld("hello_world");
         mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
-        Camera *camera = setupCamera(world);
+        CameraComponent *camera = setupCamera(world);
 
         //String filename = "world_heightmap.png";
         String filename = "Rolling_Hills.png";
@@ -138,8 +138,7 @@ protected:
             rc->addStaticMesh(mesh);
 
             // Initial update
-	        Time dt;
-            world->update(dt);
+            world->init();
             camera->observeBoundingBox(mEntity->getAABB());
         }
         mKeyboardTransCtrl = AppBase::getTransformController(mTransformMatrix);

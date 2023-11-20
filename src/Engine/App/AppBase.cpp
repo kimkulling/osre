@@ -167,7 +167,7 @@ Properties::Settings *AppBase::getSettings() const {
     return mSettings;
 }
 
-Camera *AppBase::setActiveCamera(Camera *camera) {
+CameraComponent *AppBase::setActiveCamera(CameraComponent *camera) {
     if (nullptr == mStage) {
         osre_debug(Tag, "No world to activate state to.");
         return nullptr;
@@ -359,19 +359,8 @@ bool AppBase::onDestroy() {
     return true;
 }
 
-static constexpr i64 Conversion2Micro = 1000;
-
 void AppBase::onUpdate() {
-    i64 diff = 0l;
-    if (mLastTime == 0l) {
-        mLastTime = mTimer->getMilliCurrentSeconds() * Conversion2Micro;
-    } else {
-        i64 microsecs = mTimer->getMilliCurrentSeconds() * Conversion2Micro;
-        diff = mLastTime - microsecs;
-        mLastTime = microsecs;
-    }
-    Time dt(diff);
-
+    const Time dt = mTimer->getTimeDiff();
     if (nullptr != mStage) {
         mStage->update(dt);
     }

@@ -946,7 +946,7 @@ struct RenderTarget {
     // empty
 };
 
-struct IRenderer {
+struct OSRE_EXPORT IRenderer {
     virtual ~IRenderer() = default;
     virtual void render() = 0;
 };

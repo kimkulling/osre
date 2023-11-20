@@ -44,46 +44,46 @@ static constexpr f32 DefaultNear = 0.001f;
 static constexpr f32 DefaultFar = 1000.0f;
 static constexpr f32 DefaultAspectRatio = 1.0f;
 
-Camera::Camera(Entity *owner) :
+CameraComponent::CameraComponent(Entity *owner) :
         Component(owner, ComponentType::CameraComponentType),
         mRecalculateRequested(true),
         mCameraModel(CameraModel::Perspective),
-        m_fov(60.0f),
+        mFOV(60.0f),
         mResolution(1.0f, 1.0f),
-        m_near(DefaultNear),
-        m_far(DefaultFar),
-        m_aspectRatio(DefaultAspectRatio),
-        m_left(0.0f),
-        m_right(1.0f),
-        m_top(0.0f),
-        m_bottom(1.0f),
-        m_eye(1, 1, 1),
-        m_center(0, 0, 0),
-        m_up(0, 0, 1),
-        m_view(1),
-        m_projection(1) {
+        mNear(DefaultNear),
+        mFar(DefaultFar),
+        mAspectRatio(DefaultAspectRatio),
+        mLeft(0.0f),
+        mRight(1.0f),
+        mTop(0.0f),
+        mBottom(1.0f),
+        mEye(1, 1, 1),
+        mCenter(0, 0, 0),
+        mUp(0, 0, 1),
+        mView(1),
+        mProjection(1) {
     // empty
 }
 
-void Camera::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
-    m_fov = glm::radians(fov);
+void CameraComponent::setProjectionParameters(f32 fov, f32 w, f32 h, f32 zNear, f32 zFar) {
+    mFOV = glm::radians(fov);
     mResolution.Width = w;
     mResolution.Height = h;
-    m_near = zNear;
-    m_far = zFar;
-    m_aspectRatio = DefaultAspectRatio;
+    mNear = zNear;
+    mFar = zFar;
+    mAspectRatio = DefaultAspectRatio;
     if (0.0f != h) {
-        m_aspectRatio = w / h;
+        mAspectRatio = w / h;
     }
 
     setCameraModel(CameraModel::Perspective);
 }
 
-void Camera::update(Time dt) {
+void CameraComponent::update(Time dt) {
     onUpdate(dt);
 }
 
-void Camera::render(RenderBackendService *rbSrv) {
+void CameraComponent::render(RenderBackendService *rbSrv) {
     if (nullptr == rbSrv) {
         return;
     }
@@ -91,9 +91,9 @@ void Camera::render(RenderBackendService *rbSrv) {
     onRender(rbSrv);
 }
 
-void Camera::observeBoundingBox(const AABB &aabb) {
+void CameraComponent::observeBoundingBox(const AABB &aabb) {
     f32 diam = aabb.getDiameter();
-    const f32 maxDist = m_far - m_near;
+    const f32 maxDist = mFar - mNear;
     if (diam > maxDist) {
         diam = maxDist - 100.0f;
     }
@@ -105,65 +105,65 @@ void Camera::observeBoundingBox(const AABB &aabb) {
     setLookAt(eye, center, up);
 }
 
-void Camera::setLookAt(const glm::vec3 &eyePosition, const glm::vec3 &center, const glm::vec3 &up) {
-    m_eye = eyePosition;
-    m_center = center;
-    m_up = up;
+void CameraComponent::setLookAt(const glm::vec3 &eyePosition, const glm::vec3 &center, const glm::vec3 &up) {
+    mEye = eyePosition;
+    mCenter = center;
+    mUp = up;
 }
 
-void Camera::setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farPlane) {
-    m_fov = fov;
-    m_aspectRatio = aspectRatio;
-    m_near = nearPlane;
-    m_far = farPlane;
+void CameraComponent::setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farPlane) {
+    mFOV = fov;
+    mAspectRatio = aspectRatio;
+    mNear = nearPlane;
+    mFar = farPlane;
 
     setCameraModel(CameraModel::Perspective);
 }
 
-void Camera::setCameraModel(CameraModel cm) {
+void CameraComponent::setCameraModel(CameraModel cm) {
     osre_trace(Tag, "Set camera model to " + CameraModelName[static_cast<size_t>(cm)])
 
     mCameraModel = cm;
 }
 
-void Camera::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane, f32 farPlane) {
+void CameraComponent::setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane, f32 farPlane) {
     mResolution.Width = right - left;
     mResolution.Height = bottom - top;
-    m_left = left;
-    m_right = right;
-    m_bottom = bottom;
-    m_top = top;
-    m_near = nearPlane;
-    m_far = farPlane;
+    mLeft = left;
+    mRight = right;
+    mBottom = bottom;
+    mTop = top;
+    mNear = nearPlane;
+    mFar = farPlane;
 
     setCameraModel(CameraModel::Orthogonal);
 }
 
-const glm::mat4 &Camera::getView() const {
-    return m_view;
+const glm::mat4 &CameraComponent::getView() const {
+    return mView;
 }
 
-const glm::mat4 &Camera::getProjection() const {
-    return m_projection;
+const glm::mat4 &CameraComponent::getProjection() const {
+    return mProjection;
 }
 
-bool Camera::onUpdate(Time) {
+bool CameraComponent::onUpdate(Time) {
     const CameraModel cm = getCameraModel();
     if (cm == CameraModel::Perspective) {
-        m_projection = glm::perspective(m_fov, m_aspectRatio, m_near, m_far);
+        mProjection = glm::perspective(mFOV, mAspectRatio, mNear, mFar);
     } else if (cm == CameraModel::Orthogonal) {
-        m_projection = glm::ortho(m_left, m_right, m_bottom, m_top, m_near, m_far);
+        mProjection = glm::ortho(mLeft, mRight, mBottom, mTop, mNear, mFar);
     }
-    m_view = glm::lookAt(m_eye, m_center, m_up);
+    mView = glm::lookAt(mEye, mCenter, mUp);
 
     return true;
 }
 
-bool Camera::onRender(RenderBackendService *rbSrv) {
+bool CameraComponent::onRender(RenderBackendService *rbSrv) {
     osre_assert(nullptr != rbSrv);
 
-    rbSrv->setMatrix(MatrixType::View, m_view);
-    rbSrv->setMatrix(MatrixType::Projection, m_projection);
+    rbSrv->setMatrix(MatrixType::View, mView);
+    rbSrv->setMatrix(MatrixType::Projection, mProjection);
 
     return true;
 }

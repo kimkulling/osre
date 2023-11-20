@@ -33,7 +33,7 @@ struct SceneData {
     String Name;
     String ProjectName;
     App::TransformComponent::NodePtr m_modelNode;
-    App::Camera *mCamera;
+    App::CameraComponent *mCamera;
 
     SceneData();
     ~SceneData() = default;

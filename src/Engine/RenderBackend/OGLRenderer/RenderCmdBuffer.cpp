@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLRenderBackend.h"
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Platform/AbstractOGLRenderContext.h>
+#include <osre/Platform/AbstractTimer.h>
 
 namespace OSRE {
 namespace RenderBackend {

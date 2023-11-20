@@ -30,15 +30,10 @@ using namespace ::OSRE::Platform;
 
 class TestAbstractDynamicLoader : public AbstractDynamicLoader {
 public:
-    TestAbstractDynamicLoader() 
-    : AbstractDynamicLoader() {
-        // empty
-    }
+    TestAbstractDynamicLoader() : AbstractDynamicLoader() {}
 
-    virtual ~TestAbstractDynamicLoader() {
-        // empty
-    }
-
+    virtual ~TestAbstractDynamicLoader() override = default;
+    
     virtual LibHandle *load( const String & ) override {
         return nullptr;
     }
@@ -56,9 +51,7 @@ public:
     }
 };
 
-class AbstractDynamicLoaderTest : public ::testing::Test {
-    // empty
-};
+class AbstractDynamicLoaderTest : public ::testing::Test {};
 
 TEST_F( AbstractDynamicLoaderTest, createTest ) {
     bool ok( true );

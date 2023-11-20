@@ -29,6 +29,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
 
+#include "RenderBackend/CanvasRenderer.h"
+
 using namespace ::OSRE;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::App;
@@ -39,11 +41,13 @@ static const c8 Tag[] = "ModelLoadingApp";
 // The example application, will create the render environment and render a simple triangle onto it
 class Demo2DApp : public App::AppBase {
     TransformMatrixBlock mTransformMatrix;
+    CanvasRenderer *mCanvasRenderer;
 
 public:
     Demo2DApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv),
-            mTransformMatrix() {
+            mTransformMatrix(),
+            mCanvasRenderer(nullptr) {
         // empty
     }
 
@@ -65,6 +69,13 @@ protected:
             return false;
         }
 
+        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        mCanvasRenderer = new CanvasRenderer(rbSrv, 2);
+
+        Color4 green(0, 1, 0, 1);
+        mCanvasRenderer->setcolor(green);
+        mCanvasRenderer->drawRect(1, 1, 100, 100, true);
+
         return true;
     }
 
@@ -73,7 +84,9 @@ protected:
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("2d");
 
+        mCanvasRenderer->render();
         rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
+        mCanvasRenderer->render();        
 
         rbSrv->endRenderBatch();
         rbSrv->endPass();

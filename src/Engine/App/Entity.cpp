@@ -20,10 +20,10 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
+#include <osre/App/Entity.h>
 #include <osre/App/AbstractBehaviour.h>
 #include <osre/App/Component.h>
 #include <osre/App/CameraComponent.h>
-#include <osre/App/Entity.h>
 #include <osre/App/World.h>
 #include <osre/RenderBackend/MeshProcessor.h>
 
@@ -35,43 +35,43 @@ using namespace ::OSRE::RenderBackend;
 
 Entity::Entity(const String &name, Common::Ids &ids, World *world) :
         Object(name),
-        m_behaviour(nullptr),
-        m_renderComponent(nullptr),
+        mBehavior(nullptr),
+        mRenderComponent(nullptr),
         mComponentArray(),
-        m_node(nullptr),
+        mTransformNode(nullptr),
         mIds(ids),
-        m_aabb(),
+        mAabb(),
         mOwner(world) {
     mComponentArray.resize(Component::getIndex(ComponentType::MaxNumComponents));
     mComponentArray.set(nullptr);
-    m_renderComponent = (RenderComponent*) createComponent(ComponentType::RenderComponentType);
+    mRenderComponent = (RenderComponent*) createComponent(ComponentType::RenderComponentType);
     if (nullptr != mOwner) {
         mOwner->addEntity(this);
     }
 }
 
 Entity::~Entity() {
-    delete m_renderComponent;
+    delete mRenderComponent;
     if (nullptr != mOwner) {
         mOwner->removeEntity(this);
     }
 }
 
 void Entity::setBehaviourControl(AbstractBehaviour *behaviour) {
-    m_behaviour = behaviour;
+    mBehavior = behaviour;
 }
 
 void Entity::setNode(TransformComponent *node) {
-    m_node = node;
+    mTransformNode = node;
 }
 
 TransformComponent *Entity::getNode() const {
-    return m_node;
+    return mTransformNode;
 }
 
 bool Entity::update(Time dt) {
-    if (nullptr != m_behaviour) {
-        m_behaviour->update(dt);
+    if (nullptr != mBehavior) {
+        mBehavior->update(dt);
     }
     for (auto &it : mComponentArray) {
         if (it != nullptr) {
@@ -110,7 +110,7 @@ Component *Entity::createComponent(ComponentType type) {
             component = new LightComponent(this);
             break;
         case OSRE::App::ComponentType::CameraComponentType:
-            component = new Camera(this);
+            component = new CameraComponent(this);
             break;
         case OSRE::App::ComponentType::InvalidComponent:
         case OSRE::App::ComponentType::MaxNumComponents:
@@ -132,11 +132,11 @@ Component *Entity::getComponent(ComponentType type) const {
 }
 
 void Entity::setAABB(const AABB &aabb) {
-    m_aabb = aabb;
+    mAabb = aabb;
 }
 
 const AABB &Entity::getAABB() const {
-    return m_aabb;
+    return mAabb;
 }
 
 void Entity::serialize( IO::Stream *stream ) {
