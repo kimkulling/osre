@@ -94,15 +94,42 @@ void OGLRenderBackend::setClearColor(const Color4& clearColor) {
     mClearColor = clearColor;
 }
 
+static void dump_matrix(const glm::mat4 &mat) {
+    std::cout << mat[0].r << " ";
+    std::cout << mat[0].g << " ";
+    std::cout << mat[0].b << " ";
+    std::cout << mat[0].a << " ";
+    std::cout << "\n";
+    std::cout << mat[1].r << " ";
+    std::cout << mat[1].g << " ";
+    std::cout << mat[1].b << " ";
+    std::cout << mat[1].a << " ";
+    std::cout << "\n";
+    std::cout << mat[2].r << " ";
+    std::cout << mat[2].g << " ";
+    std::cout << mat[2].b << " ";
+    std::cout << mat[2].a << " ";
+    std::cout << "\n";
+    std::cout << mat[3].r << " ";
+    std::cout << mat[3].g << " ";
+    std::cout << mat[3].b << " ";
+    std::cout << mat[3].a << " ";
+    std::cout << "\n";
+}
+
 void OGLRenderBackend::setMatrix(MatrixType type, const glm::mat4 &mat) {
     switch (type) {
         case MatrixType::Model:
+//            osre_info(Tag, "Setting Model to Model")
             mMatrixBlock.m_model = mat;
             break;
         case MatrixType::View:
+            osre_info(Tag, "Setting Model to View")
+            dump_matrix(mat);
             mMatrixBlock.m_view = mat;
             break;
         case MatrixType::Projection:
+//            osre_info(Tag, "Setting Model to Proj")
             mMatrixBlock.m_projection = mat;
             break;
         case MatrixType::Normal:

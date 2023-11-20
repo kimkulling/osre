@@ -122,10 +122,10 @@ const String *RenderVert::getAttributes() {
 }
 
 const String &getVertCompName(VertexAttribute attrib) {
-    if (attrib > VertexAttribute::Instance3 || attrib == VertexAttribute::InvalidVertexAttr) {
+    if (attrib > VertexAttribute::Instance3  || attrib == VertexAttribute::InvalidVertexAttr) {
         return ErrorCmpName;
     }
-    return VertCompName[static_cast<int>(attrib)];
+    return VertCompName[static_cast<size_t>(attrib)];
 }
 
 const size_t NumUIVertAttributes = 2;
