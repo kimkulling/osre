@@ -33,6 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Uri.h>
 #include <osre/Platform/AbstractOGLRenderContext.h>
 #include <osre/Platform/AbstractWindow.h>
+#include <osre/Platform/AbstractTimer.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Profiling/PerformanceCounterRegistry.h>
 #include <osre/RenderBackend/Mesh.h>
@@ -322,7 +323,7 @@ bool OGLRenderEventHandler:: onInitRenderPasses(const Common::EventData *eventDa
         // ToDo: create pipeline pass for the name.
         for (RenderBatchData * currentBatchData : currentPass->m_geoBatches) {
             if (nullptr == currentBatchData) {
-                continue;   
+                continue;
             }
 
             // set the matrix
@@ -485,7 +486,6 @@ bool OGLRenderEventHandler::onScreenshot(const EventData *eventData) {
         result = makeScreenShot(data->mFilename.c_str(), data->mWidth, data->mHeight);
     }
     return result;
-    
 }
 
 } // Namespace RenderBackend

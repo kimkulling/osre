@@ -41,15 +41,15 @@ OsreEdApp::OsreEdApp(int argc, char *argv[]) :
 constexpr float Near = 0.001f;
 constexpr float Far  = 1000.f;
 
-Camera *OsreEdApp::setupCamera(World *world) {
+CameraComponent *OsreEdApp::setupCamera(World *world) {
     Entity *camEntity = world->findEntity("camera");
     if (camEntity != nullptr) {
-        return (Camera*) camEntity->getComponent(ComponentType::CameraComponentType);
+        return (CameraComponent*) camEntity->getComponent(ComponentType::CameraComponentType);
     }
     
     camEntity = new Entity("camera", *getIdContainer(), world);
     world->addEntity(camEntity);
-    Camera *camera = (Camera*) camEntity->createComponent(ComponentType::CameraComponentType);
+    CameraComponent *camera = (CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
     world->setActiveCamera(camera);
     ui32 w{0u}, h{0u};
     AppBase::getResolution(w, h);
@@ -105,7 +105,7 @@ void OsreEdApp::loadAsset(const IO::Uri &modelLoc) {
     }
     Entity *entity = action.getEntity();
     Entity *camEntity = new Entity(std::string("camera_1"), *getIdContainer(), world);
-    Camera *camera = (Camera *)camEntity->createComponent(ComponentType::CameraComponentType);
+    CameraComponent *camera = (CameraComponent *)camEntity->createComponent(ComponentType::CameraComponentType);
     world->setActiveCamera(camera);
     mSceneData.mCamera = camera;
     mSceneData.mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
@@ -134,7 +134,7 @@ bool OsreEdApp::onCreate() {
     AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
     World *world = getStage()->addActiveWorld("hello_world");
     mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
-    Camera *camera = setupCamera(world);
+    CameraComponent *camera = setupCamera(world);
 
     MeshBuilder meshBuilder;
     RenderBackend::Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5, .5, .5, BufferAccessType::ReadOnly).getMesh();

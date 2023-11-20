@@ -45,7 +45,6 @@ namespace IO {
 namespace Platform {
 	class AbstractOGLRenderContext;
 	class AbstractTimer;
-
 } // namespace Platform
 
 // clang-format on

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2023 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -28,24 +28,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-static const c8 *Tag = "SDL2Surface";
+static constexpr c8 Tag[] = "SDL2Surface";
 
 SDL2Surface::SDL2Surface(WindowsProperties *props) :
         AbstractWindow(props),
-        m_surface(nullptr) {
-    // empty
-}
-
-SDL2Surface::~SDL2Surface( ) {
+        mSurface(nullptr) {
     // empty
 }
 
 void SDL2Surface::setWindowsTitle(const String &title) {
-    if ( nullptr == m_surface ) {
+    if ( nullptr == mSurface ) {
         return;
     }
 
-    ::SDL_SetWindowTitle( m_surface, title.c_str() );
+    ::SDL_SetWindowTitle(mSurface, title.c_str());
 }
 
 void SDL2Surface::setWindowsMouseCursor(DefaultMouseCursorType ct) {
@@ -53,19 +49,19 @@ void SDL2Surface::setWindowsMouseCursor(DefaultMouseCursorType ct) {
 }
 
 void SDL2Surface::showWindow(ShowState showState) {
-    if ( nullptr == m_surface ) {
+    if ( nullptr == mSurface ) {
         return;
     }
         
     if (showState == ShowState::Visible) {
-        ::SDL_ShowWindow(m_surface);
+        ::SDL_ShowWindow(mSurface);
     } else {
-        SDL_HideWindow(m_surface);
+        SDL_HideWindow(mSurface);
     }
 }
         
 SDL_Window *SDL2Surface::getSDLSurface() const {
-    return m_surface;
+    return mSurface;
 }
 
 bool SDL2Surface::onCreate() {
@@ -79,8 +75,6 @@ bool SDL2Surface::onCreate() {
     SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, prop->m_depthbufferdepth );
 
     // Create our window centered at 512x512 resolution
-
-
     const ui32 w = prop->m_width;
     const ui32 h = prop->m_height;
     ui32 sdl2Flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
@@ -88,27 +82,26 @@ bool SDL2Surface::onCreate() {
         sdl2Flags |= SDL_WINDOW_RESIZABLE;
     }
         
-    m_surface = ::SDL_CreateWindow( prop->m_title.c_str(),
+    mSurface = ::SDL_CreateWindow(prop->m_title.c_str(),
                                   SDL_WINDOWPOS_CENTERED, 
                                   SDL_WINDOWPOS_CENTERED, 
-                                  w, h,
-                                  sdl2Flags );
-    if( nullptr == m_surface ) {
-        osre_error( Tag, "Error while creating window, error: " + std::string( SDL_GetError() ) );
+                                  w, h, sdl2Flags );
+    if( nullptr == mSurface ) {
+        osre_error(Tag, "Error while creating window, error: " + std::string(SDL_GetError()));
         return false;
     }
-    ::SDL_ShowWindow( m_surface );
+    ::SDL_ShowWindow(mSurface);
 
     return true;
 }
 
 bool SDL2Surface::onDestroy( ) {
-    if( !m_surface ) {
+    if (mSurface == nullptr) {
         return false;
     }
 
-    SDL_DestroyWindow( m_surface );
-    m_surface = nullptr;
+    SDL_DestroyWindow( mSurface );
+    mSurface = nullptr;
 
     return true;
 }
@@ -118,14 +111,14 @@ bool SDL2Surface::onUpdateProperies() {
 }
 
 void SDL2Surface::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
-    if ( nullptr == m_surface ) {
+    if ( nullptr == mSurface ) {
         return;
     }
 
-    SDL_SetWindowPosition( m_surface, x, y );
-    SDL_SetWindowSize( m_surface, w, h );
+    SDL_SetWindowPosition(mSurface, x, y);
+    SDL_SetWindowSize(mSurface, w, h);
     WindowsProperties *props = AbstractWindow::getProperties();
-    if ( nullptr != props ) {
+    if (nullptr != props) {
         props->m_x = x;
         props->m_y = y;
         props->m_width = w;

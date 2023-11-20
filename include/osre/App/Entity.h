@@ -55,7 +55,9 @@ class World;
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Entity : public Common::Object {
 public:
-    Entity( const String &name, Common::Ids &ids, World *world );
+    using ComponentArray = cppcore::TArray<Component*>;
+
+    Entity(const String &name, Common::Ids &ids, World *world);
     ~Entity() override;
     void setBehaviourControl(AbstractBehaviour *behaviour );
     void setNode(TransformComponent *node);
@@ -70,13 +72,12 @@ public:
     void deserialize(IO::Stream *stream);
 
 private:
-    AbstractBehaviour *m_behaviour;
-    RenderComponent *m_renderComponent;
-    using ComponentArray = cppcore::TArray<Component*>;
+    AbstractBehaviour *mBehavior;
+    RenderComponent *mRenderComponent;
     ComponentArray mComponentArray;
-    TransformComponent *m_node;
+    TransformComponent *mTransformNode;
     Common::Ids &mIds;
-    Common::AABB m_aabb;
+    Common::AABB mAabb;
     World *mOwner;
 };
 

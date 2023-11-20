@@ -29,7 +29,7 @@ namespace OSRE {
 namespace App {
 
 // Forward declarations ---------------------------------------------------------------------------
-class Camera;
+class CameraComponent;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -42,7 +42,7 @@ public:
     ///	@param[in]	cameraComponent The name for the instance.
     ///	@param[in]	w               The width of the view-port to navigate in
     ///	@param[in]	h               The height of the view-port to navigate in
-    TrackBall(Camera *cameraComponent, ui32 w, ui32 h);
+    TrackBall(CameraComponent *cameraComponent, ui32 w, ui32 h);
 
     ///	@brief	The class destructor.
     ~TrackBall() = default;
@@ -72,7 +72,7 @@ public:
 
 private:
     glm::vec3 mStartVector, mEndVector;
-    Camera *mCameraComponent;
+    CameraComponent *mCameraComponent;
     TRectangle<ui32> m_Dimension;
     glm::quat m_rotation;
     bool m_bLeftMButtonClicked;

@@ -70,7 +70,7 @@ public:
     /// @brief Will set the new active camera.
     /// @param[in] camera   The new camera.
     /// @return true if successful, false in case of an error.
-    bool setActiveCamera(Camera *camera);
+    bool setActiveCamera(CameraComponent *camera);
     
     /// @brief 
     /// @param name 
@@ -81,19 +81,22 @@ public:
     void getEntityArray(cppcore::TArray<Entity *> &entities);
 
     ///	@brief
-    /// @param root 
+    /// @param[in] root 
     void setSceneRoot(TransformComponent *root);
     
-    /// @brief 
-    /// @return 
+    /// @brief  Will return the root node of the world.
+    /// @return Pointer showing to the root node.
     TransformComponent *getRootNode() const;
 
+    /// @brief  
+    void init();
+
     /// @brief  Will update the world.
-    /// @param  dt      [in] The current delta time-tick.
+    /// @param[in] dt  The current delta time-tick.
     void update( Time dt );
 
     /// @brief  Will render the world-
-    /// @param  rbService   [in] The renderbackend.
+    /// @param[in] rbService  The renderbackend.
     void render( RenderBackend::RenderBackendService *rbService );
 
     /// @brief  Will return the id container.
@@ -101,11 +104,12 @@ public:
     Common::Ids &getIds();
     
 protected:
+    /// @brief Will update the whole bounding boxc hierarchy.
     void updateBoundingTrees();
 
 private:
     cppcore::TArray<Entity*> mEntities;
-    Camera *mActiveCamera;
+    CameraComponent *mActiveCamera;
     TransformComponent *mRoot;
     Common::Ids mIds;
     RenderBackend::Pipeline *mPipeline;

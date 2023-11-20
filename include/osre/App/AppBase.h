@@ -53,7 +53,7 @@ namespace RenderBackend {
 
 namespace App {
 
-class Camera;
+class CameraComponent;
 class Stage;
 class World;
 class AppBase;
@@ -182,7 +182,7 @@ public:
     /// @brief  Will activate the given view in the active world instance.
     /// @param  view        [in] A pointer showing to the view.
     /// @return true, if the view activation was successful, false if not.
-    virtual Camera *setActiveCamera(Camera *view);
+    virtual CameraComponent *setActiveCamera(CameraComponent *view);
 
     /// @brief  Will requested a shutdown.
     virtual void requestShutdown();

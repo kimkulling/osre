@@ -38,7 +38,7 @@ using namespace ::OSRE::RenderBackend;
 /// The example application, will create the render environment and render a simple triangle onto it
 class ModelLoadingApp : public App::AppBase {
     String m_assetFolder;
-    App::Camera *m_camera;
+    App::CameraComponent *m_camera;
     f32 m_angle;
     glm::mat4 m_model;
     TransformMatrixBlock m_transformMatrix;
@@ -83,7 +83,7 @@ protected:
         World *world = getStage()->addActiveWorld("model");
         Entity *entity = assimpWrapper.getEntity();
         Entity *camEntity = new Entity("camera", *getIdContainer(), world);
-        m_camera = (Camera*)camEntity->createComponent(ComponentType::CameraComponentType);
+        m_camera = (CameraComponent*)camEntity->createComponent(ComponentType::CameraComponentType);
         m_camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
         world->setActiveCamera(m_camera);
 

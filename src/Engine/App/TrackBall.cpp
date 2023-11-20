@@ -33,7 +33,7 @@ namespace App {
 using namespace OSRE::Common;
 using namespace OSRE::Platform;
 
-TrackBall::TrackBall(Camera *cameraComponent, ui32 w, ui32 h) :
+TrackBall::TrackBall(CameraComponent *cameraComponent, ui32 w, ui32 h) :
         mStartVector(0, 0, 0),
         mEndVector(0, 0, 0),
         mCameraComponent(cameraComponent),

@@ -24,10 +24,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Profiling/ProfilingCommon.h>
 
-
 namespace OSRE {
+
+namespace Platform {
+    class AbstractTimer;
+}
+
 namespace Profiling {
-        
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -37,10 +40,10 @@ class OSRE_EXPORT FPSCounter {
 public:
     ///	@brief  The class constructor.
     /// @param  timer   [in] The timer instance.
-    FPSCounter( Platform::AbstractTimer  *timer );
+    FPSCounter(Platform::AbstractTimer *timer);
     
     ///	@brief  The class destructor.
-    ~FPSCounter();
+    ~FPSCounter() = default;
 
     ///	@brief  Returns the counted frames per seconds.
     /// @return The counted frames per second.
@@ -52,7 +55,8 @@ public:
 
 private:
     Common::TObjPtr<Platform::AbstractTimer>  m_timerPtr;
-    i64 m_timeDiff, m_lastTime;
+    Time m_timeDiff;
+    i64 m_lastTime;
     ui32 m_fps, m_lastFPS;
 };
 

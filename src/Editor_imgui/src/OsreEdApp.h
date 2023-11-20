@@ -17,7 +17,7 @@ class OsreEdApp : public App::AppBase {
 public:
     OsreEdApp(int argc, char *argv[]);
     ~OsreEdApp() override = default;
-    App::Camera *setupCamera(App::World *world);
+    App::CameraComponent *setupCamera(App::World *world);
     bool onCreate() override;
     void onUpdate() override;
     void newProjectCmd(ui32, void *data);

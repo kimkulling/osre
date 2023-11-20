@@ -42,7 +42,7 @@ public:
     SDL2Surface( WindowsProperties *props );
 
     ///	@brief  The class destructor.
-    ~SDL2Surface() override;
+    ~SDL2Surface() override = default;
 
     /// @brief Will return a pointer showing to the SDL_Window.
     /// @return The sdl surface pointer.
@@ -71,7 +71,7 @@ protected:
     virtual void onResize( ui32 x, ui32 y, ui32 w, ui32 h ) override;
 
 private:
-    SDL_Window *m_surface;
+    SDL_Window *mSurface;
 };
 
 } // Namespace Platform
