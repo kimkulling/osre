@@ -52,25 +52,7 @@ public:
 
     ///	@brief	Returns the difference since the last call of getTimeDiff.
     ///	@return	The time difference in ms.
-    Time getTimeDiff() {
-        const i64 currentTime = getMicroCurrentSeconds();
-        if (mLastTime == 0L) {
-            mLastTime = currentTime;
-            return 0l;
-        }
-
-        i64 diff = currentTime - mLastTime;
-        mLastTime = currentTime;
-        Time dt(diff);
-
-        if (mReqTimeSlice != -1) {
-            if (diff > 1000) {
-                diff = AbstractTimer::getRequestedTimeStep();
-            }
-        }
-
-        return dt;
-    }
+    Time getTimeDiff();
 
 protected:
     ///	@brief	The constructor with the name of the timer instance.
@@ -93,6 +75,26 @@ inline AbstractTimer::AbstractTimer(const String &name) : Object(name), mReqTime
 
 inline i64 AbstractTimer::getRequestedTimeStep() const {
     return mReqTimeSlice;
+}
+
+inline Time AbstractTimer::getTimeDiff() {
+    const i64 currentTime = getMicroCurrentSeconds();
+    if (mLastTime == 0L) {
+        mLastTime = currentTime;
+        return 0l;
+    }
+
+    i64 diff = currentTime - mLastTime;
+    mLastTime = currentTime;
+    Time dt(diff);
+
+    if (mReqTimeSlice != -1) {
+        if (diff > 1000) {
+            diff = AbstractTimer::getRequestedTimeStep();
+        }
+    }
+
+    return dt;
 }
 
 } // Namespace Platform
