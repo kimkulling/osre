@@ -34,7 +34,7 @@ using namespace ::cppcore;
 static const glm::vec3 Dummy = glm::vec3(-1, -1, -1);
 
 Component::Component(Entity *owner, ComponentType type) :
-        m_owner(owner),
+        mOwner(owner),
         mType(type) {
     osre_assert(nullptr != owner);
 }

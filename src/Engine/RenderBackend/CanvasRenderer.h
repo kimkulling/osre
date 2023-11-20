@@ -30,7 +30,9 @@ namespace RenderBackend {
 
 class RenderBackendService;
 
-class CanvasRenderer : IRenderer {
+struct DrawCmd;
+
+class OSRE_EXPORT CanvasRenderer : IRenderer {
 public:
     CanvasRenderer(RenderBackendService *rbSrv, i32 numLayers);
     ~CanvasRenderer() override;
@@ -49,13 +51,7 @@ public:
 private:    
     RenderBackendService *mRbSrv;
     bool mDirty;
-    
-    struct DrawCmd {
-        PrimitiveType mPrimType;
-        size_t NumVertices;
-        ColorVert *Vertices;
-    };
-    using DrawCmdArray = cppcore::TArray<DrawCmd>;
+        using DrawCmdArray = cppcore::TArray<DrawCmd*>;
     DrawCmdArray mDrawCmdArray;
     glm::vec3 mPenColor;
     Rect2i mResolution;

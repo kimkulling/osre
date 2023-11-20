@@ -227,12 +227,12 @@ public:
     /// @return The transform controller or nullptr if none is there.
     virtual Animation::AnimationControllerBase *getTransformController(RenderBackend::TransformMatrixBlock &tmb);
 
-    ///	@brief
-    /// @return
+    ///	@brief  Will return the mouse event listener,
+    /// @return The mouse event listener.
     virtual MouseEventListener *getMouseEventListener() const;
 
-    ///	@brief
-    /// @return
+    ///	@brief  Will return the keyboard listener.
+    /// @return The keyboard listener.
     virtual KeyboardEventListener *getKeyboardEventListener() const;
 
  protected:

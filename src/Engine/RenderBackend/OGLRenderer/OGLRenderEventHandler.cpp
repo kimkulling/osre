@@ -67,7 +67,7 @@ bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
         return true;
     }
 
-    bool result(false);
+    bool result = false;
     if (OnAttachEventHandlerEvent == ev) {
         result = onAttached(data);
     } else if (OnDetatachEventHandlerEvent == ev) {
@@ -409,12 +409,12 @@ static void setName(c8 *name, size_t bufferSize, FrameSubmitCmd *cmd) {
 static constexpr size_t BufferSize = 256;
 
 bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
-    CommitFrameEventData *data = (CommitFrameEventData *)eventData;
-    if (nullptr == data) {
+    if (nullptr == m_oglBackend) {
         return false;
     }
 
-    if (nullptr == m_oglBackend) {
+    CommitFrameEventData *data = (CommitFrameEventData *)eventData;
+    if (nullptr == data) {
         return false;
     }
 
@@ -422,6 +422,7 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
         if (nullptr == cmd) {
             continue;
         }
+
         if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateMatrixes) {
             MatrixBuffer *buffer = (MatrixBuffer *)cmd->m_data;
             m_renderCmdBuffer->setMatrixBuffer(cmd->m_batchId, buffer);
@@ -450,6 +451,7 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
         }
         cmd->m_updateFlags = 0u;
     }
+    
     data->m_frame->m_submitCmds.resize(0);
     data->m_frame->m_submitCmdAllocator.release();
 
@@ -463,23 +465,15 @@ bool OGLRenderEventHandler::onShutdownRequest(const EventData*) {
 }
 
 bool OGLRenderEventHandler::onResizeRenderTarget(const EventData *eventData) {
-    osre_assert(nullptr != eventData);
-
     ResizeEventData *data = (ResizeEventData *)eventData;
-    if (nullptr != data) {
-        const ui32 x = data->m_x;
-        const ui32 y = data->m_y;
-        const ui32 w = data->m_w;
-        const ui32 h = data->m_h;
-        m_oglBackend->setViewport(x, y, w, h);
+    if (data != nullptr) {
+        m_oglBackend->setViewport(data->m_x, data->m_y, data->m_w, data->m_h);
     }
 
     return true;
 }
 
 bool OGLRenderEventHandler::onScreenshot(const EventData *eventData) {
-    osre_assert(nullptr != eventData);
-
     bool result = false;
     ScreenshotEventData *data = (ScreenshotEventData*) eventData;
     if (data != nullptr){

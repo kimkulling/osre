@@ -27,6 +27,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+struct DrawCmd {
+    PrimitiveType mPrimType;
+    size_t NumVertices;
+    ColorVert *Vertices;
+};
+
 inline void clip(const Rect2i &resolution, i32 x, i32 y, i32 &x_out, i32 &y_out) {
     x_out = x;
     y_out = y;
@@ -47,8 +53,13 @@ inline void clip(const Rect2i &resolution, i32 x, i32 y, i32 &x_out, i32 &y_out)
     }
 }
 
-CanvasRenderer::CanvasRenderer(RenderBackendService *rbSrv, i32 numLayers) : 
-        mRbSrv(rbSrv), mDirty(true), mPenColor(1, 1, 1), mResolution(), mActiveLayer(0), mNumLayers(0) {
+DrawCmd *alloc() {
+    DrawCmd *dc = new DrawCmd;
+    return dc;
+}
+
+CanvasRenderer::CanvasRenderer(RenderBackendService * rbSrv, i32 numLayers) : 
+        mRbSrv(rbSrv), mDirty(true), mPenColor(1, 1, 1), mResolution(), mActiveLayer(0), mNumLayers(numLayers) {
     osre_assert(mRbSrv != nullptr);
 }   
 
@@ -91,22 +102,22 @@ void CanvasRenderer::setcolor(const Color4 &color) {
 }
 
 void CanvasRenderer::drawline(i32 x1, i32 y1, i32 x2, i32 y2) {
-    DrawCmd dc;
+    DrawCmd *dc = alloc();
 
     i32 x_clipped, y_clipped;
     clip(mResolution, x1, y1, x_clipped, y_clipped);
-    dc.NumVertices = 2;
-    dc.Vertices = new ColorVert[dc.NumVertices];
-    dc.Vertices[0].color0 = mPenColor;
-    dc.Vertices[0].position.x = x_clipped;
-    dc.Vertices[0].position.y = y_clipped;
-    dc.Vertices[0].position.z = static_cast<f32>(mActiveLayer);
+    dc->NumVertices = 2;
+    dc->Vertices = new ColorVert[dc->NumVertices];
+    dc->Vertices[0].color0 = mPenColor;
+    dc->Vertices[0].position.x = (f32)x_clipped;
+    dc->Vertices[0].position.y = (f32)y_clipped;
+    dc->Vertices[0].position.z = static_cast<f32>(mActiveLayer);
     
     clip(mResolution, x2, y2, x_clipped, y_clipped);
-    dc.Vertices[1].color0 = mPenColor;
-    dc.Vertices[1].position.x = x_clipped;
-    dc.Vertices[1].position.y = y_clipped;
-    dc.Vertices[1].position.z = static_cast<f32>(mActiveLayer);
+    dc->Vertices[1].color0 = mPenColor;
+    dc->Vertices[1].position.x = (f32)x_clipped;
+    dc->Vertices[1].position.y = (f32)y_clipped;
+    dc->Vertices[1].position.z = static_cast<f32>(mActiveLayer);
 
     mDrawCmdArray.add(dc);
     
@@ -114,28 +125,28 @@ void CanvasRenderer::drawline(i32 x1, i32 y1, i32 x2, i32 y2) {
 }
 
 void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3, bool filled) {
-    DrawCmd dc;
-    dc.NumVertices = 3;
-    dc.Vertices = new ColorVert[dc.NumVertices];
+    DrawCmd *dc = alloc();
+    dc->NumVertices = 3;
+    dc->Vertices = new ColorVert[dc->NumVertices];
 
     i32 x_clipped, y_clipped;
     clip(mResolution, x1, y1, x_clipped, y_clipped);
-    dc.Vertices[0].color0 = mPenColor;
-    dc.Vertices[0].position.x = x_clipped;
-    dc.Vertices[0].position.y = y_clipped;
-    dc.Vertices[0].position.z = static_cast<f32>(mActiveLayer);
+    dc->Vertices[0].color0 = mPenColor;
+    dc->Vertices[0].position.x = (f32)x_clipped;
+    dc->Vertices[0].position.y = (f32)y_clipped;
+    dc->Vertices[0].position.z = static_cast<f32>(mActiveLayer);
 
     clip(mResolution, x2, y2, x_clipped, y_clipped);
-    dc.Vertices[1].color0 = mPenColor;
-    dc.Vertices[1].position.x = x_clipped;
-    dc.Vertices[1].position.y = y_clipped;
-    dc.Vertices[1].position.z = static_cast<f32>(mActiveLayer);
+    dc->Vertices[1].color0 = mPenColor;
+    dc->Vertices[1].position.x = (f32)x_clipped;
+    dc->Vertices[1].position.y = (f32)y_clipped;
+    dc->Vertices[1].position.z = static_cast<f32>(mActiveLayer);
 
     clip(mResolution, x3, y3, x_clipped, y_clipped);
-    dc.Vertices[2].color0 = mPenColor;
-    dc.Vertices[2].position.x = x_clipped;
-    dc.Vertices[2].position.y = y_clipped;
-    dc.Vertices[2].position.z = static_cast<f32>(mActiveLayer);
+    dc->Vertices[2].color0 = mPenColor;
+    dc->Vertices[2].position.x = (f32)x_clipped;
+    dc->Vertices[2].position.y = (f32)y_clipped;
+    dc->Vertices[2].position.z = static_cast<f32>(mActiveLayer);
 
     mDrawCmdArray.add(dc);
 
@@ -143,78 +154,78 @@ void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3
 }
 
 void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h, bool filled) {
-    DrawCmd dc;
+    DrawCmd *dc = alloc();
     
     if (filled) {
-        dc.mPrimType = PrimitiveType::TriangleList;
-        dc.NumVertices = 6;
-        dc.Vertices = new ColorVert[dc.NumVertices];
+        dc->mPrimType = PrimitiveType::TriangleList;
+        dc->NumVertices = 6;
+        dc->Vertices = new ColorVert[dc->NumVertices];
 
         i32 x_clipped, y_clipped;
         clip(mResolution, x, y, x_clipped, y_clipped);
-        dc.Vertices[0].color0 = mPenColor;
-        dc.Vertices[0].position.x = x_clipped;
-        dc.Vertices[0].position.y = y_clipped;
-        dc.Vertices[0].position.z = static_cast<f32>(mActiveLayer);
+        dc->Vertices[0].color0 = mPenColor;
+        dc->Vertices[0].position.x = (f32)x_clipped;
+        dc->Vertices[0].position.y = (f32)y_clipped;
+        dc->Vertices[0].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x+w, y, x_clipped, y_clipped);
-        dc.Vertices[1].color0 = mPenColor;
-        dc.Vertices[1].position.x = x_clipped;
-        dc.Vertices[1].position.y = y_clipped;
-        dc.Vertices[1].position.z = static_cast<f32>(mActiveLayer);
+        dc->Vertices[1].color0 = mPenColor;
+        dc->Vertices[1].position.x = (f32)x_clipped;
+        dc->Vertices[1].position.y = (f32)y_clipped;
+        dc->Vertices[1].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x+w, y+h, x_clipped, y_clipped);
-        dc.Vertices[2].color0 = mPenColor;
-        dc.Vertices[2].position.x = x_clipped;
-        dc.Vertices[2].position.y = y_clipped;
-        dc.Vertices[2].position.z = static_cast<f32>(mActiveLayer);
+        dc->Vertices[2].color0 = mPenColor;
+        dc->Vertices[2].position.x = (f32)x_clipped;
+        dc->Vertices[2].position.y = (f32)y_clipped;
+        dc->Vertices[2].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x+w, y+h, x_clipped, y_clipped);
-        dc.Vertices[3].color0 = mPenColor;
-        dc.Vertices[3].position.x = x_clipped;
-        dc.Vertices[3].position.y = y_clipped;
-        dc.Vertices[3].position.z = static_cast<f32>(mActiveLayer);
+        dc->Vertices[3].color0 = mPenColor;
+        dc->Vertices[3].position.x = (f32)x_clipped;
+        dc->Vertices[3].position.y = (f32)y_clipped;
+        dc->Vertices[3].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x, y+h, x_clipped, y_clipped);
-        dc.Vertices[4].color0 = mPenColor;
-        dc.Vertices[4].position.x = x_clipped;
-        dc.Vertices[4].position.y = y_clipped;
-        dc.Vertices[4].position.z = static_cast<f32>(mActiveLayer);
+        dc->Vertices[4].color0 = mPenColor;
+        dc->Vertices[4].position.x = (f32)x_clipped;
+        dc->Vertices[4].position.y = (f32)y_clipped;
+        dc->Vertices[4].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x, y, x_clipped, y_clipped);
-        dc.Vertices[5].color0 = mPenColor;
-        dc.Vertices[5].position.x = x_clipped;
-        dc.Vertices[5].position.y = y_clipped;
-        dc.Vertices[5].position.z = static_cast<f32>(mActiveLayer);
+        dc->Vertices[5].color0 = mPenColor;
+        dc->Vertices[5].position.x = (f32)x_clipped;
+        dc->Vertices[5].position.y = (f32)y_clipped;
+        dc->Vertices[5].position.z = static_cast<f32>(mActiveLayer);
     } else {
-        dc.NumVertices = 4;
-        dc.mPrimType = PrimitiveType::LineList;
-        dc.Vertices = new ColorVert[dc.NumVertices];
+        dc->NumVertices = 4;
+        dc->mPrimType = PrimitiveType::LineList;
+        dc->Vertices = new ColorVert[dc->NumVertices];
 
         i32 x_clipped, y_clipped;
         clip(mResolution, x, y, x_clipped, y_clipped);
-        dc.Vertices[0].color0 = mPenColor;
-        dc.Vertices[0].position.x = x_clipped;
-        dc.Vertices[0].position.y = y_clipped;
-        dc.Vertices[0].position.z = static_cast<f32>(mActiveLayer);
+        dc->Vertices[0].color0 = mPenColor;
+        dc->Vertices[0].position.x = (f32)x_clipped;
+        dc->Vertices[0].position.y = (f32)y_clipped;
+        dc->Vertices[0].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x, y, x_clipped, y_clipped);
-        dc.Vertices[1].color0 = mPenColor;
-        dc.Vertices[1].position.x = x_clipped+w;
-        dc.Vertices[1].position.y = y_clipped;
-        dc.Vertices[1].position.z = static_cast<f32>(mActiveLayer);
+        dc->Vertices[1].color0 = mPenColor;
+        dc->Vertices[1].position.x = (f32)x_clipped + w;
+        dc->Vertices[1].position.y = (f32)y_clipped;
+        dc->Vertices[1].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x, y, x_clipped, y_clipped);
-        dc.Vertices[2].color0 = mPenColor;
-        dc.Vertices[2].position.x = x_clipped + w;
-        dc.Vertices[2].position.y = y_clipped + h;
-        dc.Vertices[2].position.z = static_cast<f32>(mActiveLayer);
+        dc->Vertices[2].color0 = mPenColor;
+        dc->Vertices[2].position.x = (f32)x_clipped + w;
+        dc->Vertices[2].position.y = (f32)y_clipped + h;
+        dc->Vertices[2].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x, y, x_clipped, y_clipped);
-        dc.Vertices[3].color0 = mPenColor;
-        dc.Vertices[3].position.x = x_clipped;
-        dc.Vertices[3].position.y = y_clipped + h;
-        dc.Vertices[3].position.z = static_cast<f32>(mActiveLayer);
+        dc->Vertices[3].color0 = mPenColor;
+        dc->Vertices[3].position.x = (f32)x_clipped;
+        dc->Vertices[3].position.y = (f32)y_clipped + h;
+        dc->Vertices[3].position.z = static_cast<f32>(mActiveLayer);
     }
 
     mDrawCmdArray.add(dc);
@@ -230,7 +241,7 @@ void CanvasRenderer::render() {
     }
 
     for (size_t i=0; i<mDrawCmdArray.size(); ++i) {
-        const auto &dc = mDrawCmdArray[i];
+        const auto *dc = mDrawCmdArray[i];
     }
 
     setClean();

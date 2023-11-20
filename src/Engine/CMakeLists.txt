@@ -48,7 +48,6 @@ SET( app_inc
     ${HEADER_PATH}/App/Project.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
     ${HEADER_PATH}/App/ResourceCacheService.h
-    ${HEADER_PATH}/App/AssetsCommon.h
     ${HEADER_PATH}/App/AssetRegistry.h
     ${HEADER_PATH}/App/AssimpWrapper.h
     ${HEADER_PATH}/App/Stage.h
@@ -331,7 +330,6 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderBackendService.h
     ${HEADER_PATH}/RenderBackend/RenderStates.h
     ${HEADER_PATH}/RenderBackend/Shader.h
-    ${HEADER_PATH}/RenderBackend/ShapeRenderer.h
 )
 SET( renderbackend_src
     RenderBackend/DbgRenderer.cpp
@@ -349,7 +347,6 @@ SET( renderbackend_src
     RenderBackend/RenderPass.cpp
     RenderBackend/TransformMatrixBlock.cpp
     RenderBackend/Shader.cpp
-    RenderBackend/ShapeRenderer.cpp
 )
 SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLCommon.h
