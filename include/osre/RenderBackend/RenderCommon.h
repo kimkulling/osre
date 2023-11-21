@@ -494,11 +494,10 @@ struct OSRE_EXPORT Viewport {
 
     Viewport();
     Viewport(i32 x, i32 y, i32 w, i32 h);
-    ~Viewport();
+    Viewport(const Viewport &rhs);
+    ~Viewport() = default;
     bool operator==(const Viewport &rhs) const;
     bool operator!=(const Viewport &rhs) const;
-
-    OSRE_NON_COPYABLE(Viewport)
 };
 
 //-------------------------------------------------------------------------------------------------
