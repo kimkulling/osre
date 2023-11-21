@@ -186,7 +186,7 @@ enum class ParameterType {
 
 /// @brief  This enum to describes the type of the vertex attribute.
 enum class VertexAttribute : int {
-    InvalidVertexAttr = 1,  ///< Enum for invalid enum.
+    InvalidVertexAttr = -1,  ///< Enum for invalid enum.
     Position = 0,           ///< "position"
     Normal,                 ///< "normal"
     TexCoord0, ///< "texcoord0"
