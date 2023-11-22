@@ -122,10 +122,10 @@ const String *RenderVert::getAttributes() {
 }
 
 const String &getVertCompName(VertexAttribute attrib) {
-    if (attrib > VertexAttribute::Instance3 || attrib == VertexAttribute::InvalidVertexAttr) {
+    if (attrib > VertexAttribute::Instance3  || attrib == VertexAttribute::InvalidVertexAttr) {
         return ErrorCmpName;
     }
-    return VertCompName[static_cast<int>(attrib)];
+    return VertCompName[static_cast<size_t>(attrib)];
 }
 
 const size_t NumUIVertAttributes = 2;
@@ -509,10 +509,11 @@ Viewport::Viewport(i32 x, i32 y, i32 w, i32 h) :
     // empty
 }
 
-Viewport::~Viewport() {
+Viewport::Viewport(const Viewport &rhs) :
+        m_x(rhs.m_x), m_y(rhs.m_y), m_w(rhs.m_w), m_h(rhs.m_h) {
     // empty
 }
-
+        
 bool Viewport::operator==(const Viewport &rhs) const {
     return (m_x == rhs.m_x && m_y == rhs.m_y && m_w == rhs.m_w && m_h == rhs.m_h);
 }

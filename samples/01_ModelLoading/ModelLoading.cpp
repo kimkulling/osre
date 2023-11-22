@@ -35,31 +35,30 @@ using namespace ::OSRE::App;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
-/// The example application, will create the render environment and render a simple triangle onto it
+/// @brief The log-tag
+static constexpr c8 Tag[] = "ModelLoadingApp";
+
+/// @brief The example application, will create the renderer and loads a model.
 class ModelLoadingApp : public App::AppBase {
-    String m_assetFolder;
-    App::CameraComponent *m_camera;
-    f32 m_angle;
-    glm::mat4 m_model;
-    TransformMatrixBlock m_transformMatrix;
-    TransformComponent::NodePtr m_modelNode;
+    String mAssetFolder;                    ///< The asset folder, here we will locate our assets.
+    App::Camera *mCamera;                   ///< The camera component.
+    TransformMatrixBlock mTransformMatrix;  ///< The tansform block.
+    TransformComponent::NodePtr mModelNode; ///< The mode node.
 
 public:
     ModelLoadingApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv, "api", "The render API"),
-            m_assetFolder(),
-            m_camera(nullptr),
-            m_angle(0.0f),
-            m_model(),
-            m_transformMatrix(),
-            m_modelNode() {
+            mAssetFolder(),
+            mCamera(nullptr),
+            mTransformMatrix(),
+            mModelNode()  {
         // empty
     }
 
     ~ModelLoadingApp() override = default;
 
     bool hasModel() const {
-        return m_modelNode.isValid();
+        return mModelNode.isValid();
     }
 
 protected:
@@ -83,13 +82,13 @@ protected:
         World *world = getStage()->addActiveWorld("model");
         Entity *entity = assimpWrapper.getEntity();
         Entity *camEntity = new Entity("camera", *getIdContainer(), world);
-        m_camera = (CameraComponent*)camEntity->createComponent(ComponentType::CameraComponentType);
-        m_camera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
-        world->setActiveCamera(m_camera);
+        mCamera = (Camera*)camEntity->createComponent(ComponentType::CameraComponentType);
+        mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
+        world->setActiveCamera(mCamera);
 
         world->addEntity(entity);
-        m_camera->observeBoundingBox(entity->getAABB());
-        m_modelNode = entity->getNode();
+        mCamera->observeBoundingBox(entity->getAABB());
+        mModelNode = entity->getNode();
     }
     
     void onUpdate() override {
@@ -103,26 +102,26 @@ protected:
 
         glm::mat4 rot(1.0);
         if (AppBase::isKeyPressed(Platform::KEY_A)) {
-            m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
+            mTransformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
 
         }
         if (AppBase::isKeyPressed(Platform::KEY_S)) {
-            m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
+            mTransformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
         }
         
         if (AppBase::isKeyPressed(Platform::KEY_W)) {
-            m_transformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
+            mTransformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
         }
 
         if (AppBase::isKeyPressed(Platform::KEY_D)) {
-            m_transformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
+            mTransformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
         }
         RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
 
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 
-        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
 
         rbSrv->endRenderBatch();
         rbSrv->endPass();
@@ -133,18 +132,19 @@ protected:
 
 int main(int argc, char *argv[]) {
     ModelLoadingApp myApp(argc, argv);
-    if (!myApp.initWindow(10, 10, 1024, 768, "ModelLoader sample! Press o to import an Asset", false, true, App::RenderBackendType::OpenGLRenderBackend)) {
+    if (!myApp.initWindow(10, 10, 1024, 768, "ModelLoader sample! Press o to import an Asset", false, false, App::RenderBackendType::OpenGLRenderBackend)) {
         return 1;
     }
 
     while (myApp.handleEvents()) {
         myApp.update();
-        if (myApp.hasModel()) {
+        //if (myApp.hasModel()) {
             myApp.requestNextFrame();
-        }
+        //}
     }
 
     myApp.destroy();
 
     return 0;
 }
+

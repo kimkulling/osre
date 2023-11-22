@@ -77,10 +77,19 @@ void RenderPassFactory::unregisterPass(guid id ) {
 
 RenderPass::RenderPass(guid id, Shader *shader) :
         mId(id),
+        mViewport(),
         mRenderTarget(),
         mStates(),
         mShader(shader) {
     // empty
+}
+
+void RenderPass::setViewport(const Viewport& viewport) {
+    mViewport = viewport;
+}
+
+const Viewport& RenderPass::getViewport() const {
+    return mViewport;
 }
 
 RenderPass &RenderPass::set(RenderTarget &rt, RenderStates &states) {

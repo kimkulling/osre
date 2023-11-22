@@ -211,6 +211,7 @@ void RenderCmdBuffer::setMatrixes(const glm::mat4 &model, const glm::mat4 &view,
     mModel = model;
     mView = view;
     mProj = proj;
+    commitParameters();
 }
 
 void RenderCmdBuffer::setMatrixBuffer(const c8 *id, MatrixBuffer *buffer) {
@@ -224,7 +225,7 @@ bool RenderCmdBuffer::onDrawPrimitivesCmd(DrawPrimitivesCmdData *data) {
         return false;
     }
 
-    std::map<const char *, MatrixBuffer *>::iterator it = mMatrixBuffer.find(data->m_id);
+    auto it = mMatrixBuffer.find(data->m_id);
     if (it != mMatrixBuffer.end()) {
         MatrixBuffer *buffer = it->second;
         setMatrixes(buffer->m_model, buffer->m_view, buffer->m_proj);
