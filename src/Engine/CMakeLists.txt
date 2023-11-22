@@ -333,8 +333,6 @@ SET( renderbackend_inc
 )
 SET( renderbackend_src
     RenderBackend/DbgRenderer.cpp
-    RenderBackend/CanvasRenderer.h
-    RenderBackend/CanvasRenderer.cpp
     RenderBackend/Material.cpp
     RenderBackend/Mesh.cpp
     RenderBackend/MeshProcessor.cpp
@@ -348,6 +346,11 @@ SET( renderbackend_src
     RenderBackend/TransformMatrixBlock.cpp
     RenderBackend/Shader.cpp
 )
+SET( renderbackend_2d_src
+    RenderBackend/2D/CanvasRenderer.h
+    RenderBackend/2D/CanvasRenderer.cpp
+)
+
 SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLCommon.h
     RenderBackend/OGLRenderer/OGLCommon.cpp
@@ -399,30 +402,31 @@ SET( threading_src
 #==============================================================================
 # Defined Source groups
 #==============================================================================
-SOURCE_GROUP( App                 FILES ${app_src} )
-SOURCE_GROUP( Animation           FILES ${animation_src} )
-SOURCE_GROUP( Assets              FILES ${assets_src} )
-SOURCE_GROUP( Common              FILES ${common_src} )
-SOURCE_GROUP( Components          FILES ${components_src} )
-SOURCE_GROUP( Debugging           FILES ${debugging_src} )
-SOURCE_GROUP( Debugging\\Win32    FILES ${debugging_windows_src} )
-SOURCE_GROUP( IO                  FILES ${io_src} )
-SOURCE_GROUP( Math                FILES ${math_src} )
-SOURCE_GROUP( Memory              FILES ${memory_src} )
-SOURCE_GROUP( Modules             FILES ${modules_src} )
-SOURCE_GROUP( Platform            FILES ${platform_src} )
-SOURCE_GROUP( Platform\\Win32     FILES ${platform_impl_src} )
-SOURCE_GROUP( Platform\\sdl2      FILES ${platform_sdl2_src} )
-SOURCE_GROUP( Profiling           FILES ${profiling_src} )
-SOURCE_GROUP( Properties          FILES ${properties_src} )
-SOURCE_GROUP( RenderBackend       FILES ${renderbackend_src} )
-SOURCE_GROUP( RenderBackend\\OGLRenderer    FILES ${renderbackend_oglrenderer_src} )
+SOURCE_GROUP( App                         FILES ${app_src} )
+SOURCE_GROUP( Animation                   FILES ${animation_src} )
+SOURCE_GROUP( Assets                      FILES ${assets_src} )
+SOURCE_GROUP( Common                      FILES ${common_src} )
+SOURCE_GROUP( Components                  FILES ${components_src} )
+SOURCE_GROUP( Debugging                   FILES ${debugging_src} )
+SOURCE_GROUP( Debugging\\Win32            FILES ${debugging_windows_src} )
+SOURCE_GROUP( IO                          FILES ${io_src} )
+SOURCE_GROUP( Math                        FILES ${math_src} )
+SOURCE_GROUP( Memory                      FILES ${memory_src} )
+SOURCE_GROUP( Modules                     FILES ${modules_src} )
+SOURCE_GROUP( Platform                    FILES ${platform_src} )
+SOURCE_GROUP( Platform\\Win32             FILES ${platform_impl_src} )
+SOURCE_GROUP( Platform\\sdl2              FILES ${platform_sdl2_src} )
+SOURCE_GROUP( Profiling                   FILES ${profiling_src} )
+SOURCE_GROUP( Properties                  FILES ${properties_src} )
+SOURCE_GROUP( RenderBackend               FILES ${renderbackend_src} )
+SOURCE_GROUP( RenderBackend\\2D           FILES ${renderbackend_2d_src})
+SOURCE_GROUP( RenderBackend\\OGLRenderer  FILES ${renderbackend_oglrenderer_src} )
 SOURCE_GROUP( RenderBackend\\Shader       FILES ${renderbackend_shader_src})
-SOURCE_GROUP( Resources           FILES ${resources_src} )
-SOURCE_GROUP( Scene               FILES ${scene_src} )
-SOURCE_GROUP( Threading           FILES ${threading_src} )
-SOURCE_GROUP( WinManager          FILES ${winmanager_src} )
-SOURCE_GROUP( UI\\Common          FILES ${ui_common_src} )
+SOURCE_GROUP( Resources                   FILES ${resources_src} )
+SOURCE_GROUP( Scene                       FILES ${scene_src} )
+SOURCE_GROUP( Threading                   FILES ${threading_src} )
+SOURCE_GROUP( WinManager                  FILES ${winmanager_src} )
+SOURCE_GROUP( UI\\Common                  FILES ${ui_common_src} )
 
 SOURCE_GROUP( Include\\osre\\App        FILES ${app_inc} )
 SOURCE_GROUP( Include\\osre\\Animation  FILES ${animation_inc} )

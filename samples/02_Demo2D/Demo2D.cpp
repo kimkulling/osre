@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
 
-#include "RenderBackend/CanvasRenderer.h"
+#include "RenderBackend/2D/CanvasRenderer.h"
 
 using namespace ::OSRE;
 using namespace ::OSRE::RenderBackend;
