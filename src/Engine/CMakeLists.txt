@@ -501,6 +501,7 @@ ADD_LIBRARY( osre SHARED
     ${resources_src}
     ${renderbackend_src}
         ${renderbackend_oglrenderer_src}
+        ${renderbackend_2d_src}
     ${scene_src}
         ${scene_shader_src}
     ${threading_src}

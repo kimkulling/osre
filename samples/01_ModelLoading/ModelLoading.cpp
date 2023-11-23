@@ -41,7 +41,7 @@ static constexpr c8 Tag[] = "ModelLoadingApp";
 /// @brief The example application, will create the renderer and loads a model.
 class ModelLoadingApp : public App::AppBase {
     String mAssetFolder;                    ///< The asset folder, here we will locate our assets.
-    App::Camera *mCamera;                   ///< The camera component.
+    App::CameraComponent *mCamera;          ///< The camera component.
     TransformMatrixBlock mTransformMatrix;  ///< The tansform block.
     TransformComponent::NodePtr mModelNode; ///< The mode node.
 
@@ -82,7 +82,7 @@ protected:
         World *world = getStage()->addActiveWorld("model");
         Entity *entity = assimpWrapper.getEntity();
         Entity *camEntity = new Entity("camera", *getIdContainer(), world);
-        mCamera = (Camera*)camEntity->createComponent(ComponentType::CameraComponentType);
+        mCamera = (CameraComponent*)camEntity->createComponent(ComponentType::CameraComponentType);
         mCamera->setProjectionParameters(60.f, (f32)windowsRect.width, (f32)windowsRect.height, 0.01f, 1000.f);
         world->setActiveCamera(mCamera);
 
