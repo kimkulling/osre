@@ -61,10 +61,24 @@ DrawCmd *alloc() {
 CanvasRenderer::CanvasRenderer(RenderBackendService * rbSrv, i32 numLayers) : 
         mRbSrv(rbSrv), mDirty(true), mPenColor(1, 1, 1), mResolution(), mActiveLayer(0), mNumLayers(numLayers) {
     osre_assert(mRbSrv != nullptr);
-}   
+}
 
 CanvasRenderer::~CanvasRenderer() {
     // empty
+}
+
+void CanvasRenderer::render() {
+    osre_assert(mRbSrv != nullptr);
+
+    if (!isDirty()) {
+        return;
+    }
+
+    for (size_t i=0; i<mDrawCmdArray.size(); ++i) {
+        const auto *dc = mDrawCmdArray[i];
+    }
+
+    setClean();
 }
 
 void CanvasRenderer::setResolution(i32 x, i32 y, i32 w, i32 h) {
@@ -231,20 +245,6 @@ void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h, bool filled) {
     mDrawCmdArray.add(dc);
 
     setDirty();
-}
-
-void CanvasRenderer::render() {
-    osre_assert(mRbSrv != nullptr);
-
-    if (!isDirty()) {
-        return;
-    }
-
-    for (size_t i=0; i<mDrawCmdArray.size(); ++i) {
-        const auto *dc = mDrawCmdArray[i];
-    }
-
-    setClean();
 }
 
 } // namespace RenderBackend

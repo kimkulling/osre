@@ -36,6 +36,7 @@ class OSRE_EXPORT CanvasRenderer : IRenderer {
 public:
     CanvasRenderer(RenderBackendService *rbSrv, i32 numLayers);
     ~CanvasRenderer() override;
+    void render() override;
     void setResolution(i32 x, i32 y, i32 w, i32 h);
     bool selectLayer(i32 layer);
     i32 getActiveLayer() const;
@@ -43,7 +44,6 @@ public:
     void drawline(i32 x1, i32 y1, i32 x2, i32 y2);
     void drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3, bool filled);
     void drawRect(i32 x, i32 y, i32 w, i32 h, bool filled);
-    void render() override;
     void setDirty();
     void setClean();
     bool isDirty() const;
