@@ -352,6 +352,8 @@ SET( renderbackend_2d_src
 )
 
 SET( renderbackend_vulkan_src
+    RenderBackend/VulkanRenderer/VulkanRenderEventHandler.cpp
+    RenderBackend/VulkanRenderer/VulkanRenderEventHandler.h
     RenderBackend/VulkanRenderer/VulkanRendererBackend.cpp
     RenderBackend/VulkanRenderer/VulkanRendererBackend.h
 )

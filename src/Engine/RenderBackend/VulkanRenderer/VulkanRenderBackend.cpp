@@ -7,16 +7,16 @@ VulkanRenderBackend::VulkanRenderBackend() {
 
 }
 
-VulkanRenderBackend~VulkanRenderBackend() {
+VulkanRenderBackend::~VulkanRenderBackend() {
 
 }
 
 bool VulkanRenderBackendcreate() {
-
+    return true;
 }
 
 bool VulkanRenderBackend::destroy() {
-
+    return true;
 }
 
 }
