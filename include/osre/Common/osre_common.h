@@ -120,9 +120,6 @@ using i64 = int64_t;
 /// @brief  The data type for unsigned int 8 bytes long.
 using ui64 = uint64_t;
 
-/// @brief  The data type for hash ids.
-using HashId = ui64;
-
 /// @brief  The data type float, 4 byte long.
 using f32 = float;
 
@@ -141,6 +138,18 @@ using String = std::string;
 /// @brief The data type for an array of strings.
 using StringArray = ::cppcore::TArray<String>;
 
+/// @brief  The data type for hash ids.
+using HashId = ui64;
+
+/// @brief  The OSRE-String, contains its string and it hash id;
+struct OsreString {
+    String RawString;   ///< The pure String.
+    HashId Id;          ///< The hash id.
+
+    OsreString() = default;
+    OsreString(const String &str, HashId id) : RawString(str), Id(id) {}
+    ~OsreString() = default;
+};
 
 /// @brief  A handle struct.
 struct Handle {

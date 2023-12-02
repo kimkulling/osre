@@ -77,9 +77,8 @@ protected:
     Object(const String &objectName);
 
 private:
-    String m_objectName;
-    HashId m_id;
-    ui32 m_Refcount;
+    OsreString mObjectName;
+    ui32 mRefcount;
 };
 
 } // Namespace Common

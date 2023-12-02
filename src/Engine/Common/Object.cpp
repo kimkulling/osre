@@ -26,43 +26,46 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Common {
 
-Object::Object( const String &objectName ) : m_objectName( objectName ), m_id(99999999), m_Refcount( 1 ) {
-    m_id = StringUtils::hashName(objectName);
+Object::Object(const String &objName) :
+        mObjectName(objName, StringUtils::hashName(objName)), 
+        mRefcount(1) {
+    // empty
 }
 
 void Object::get() {
-    ++m_Refcount;
+    ++mRefcount;
 }
 
 void Object::release() {
-    if( m_Refcount > 0 ) {
-        --m_Refcount;
-        if( 0 == m_Refcount ) {
+    if( mRefcount > 0 ) {
+        --mRefcount;
+        if( 0 == mRefcount ) {
             delete this;
         }
     }
 }
 
 ui32 Object::getNumRefs() const {
-    return m_Refcount;
+    return mRefcount;
 }
 
 void Object::setName( const String &objName ) {
-    if( m_objectName != objName ) {
-        m_objectName = objName;
+    if( mObjectName.RawString != objName ) {
+        mObjectName.RawString = objName;
+        mObjectName.Id = StringUtils::hashName(objName);
     }
 }
 
 const String &Object::getName() const {
-    return m_objectName;
+    return mObjectName.RawString;
 }
 
 void Object::setId(HashId id) {
-    m_id = id;
+    mObjectName.Id = id;
 }
 
 HashId Object::getId() const {
-    return m_id;
+    return mObjectName.Id;
 }
 
 } // Namespace Common
