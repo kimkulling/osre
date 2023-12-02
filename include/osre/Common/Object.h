@@ -58,13 +58,13 @@ public:
     ///	@return	The name of the object.
     const String &getName() const;
 
-    /// @brief Will assign a new id to the object instance.
-    /// @param id   The new id-.
-    void setId(HashId  id);
-    
-    /// @brief Will return the object instance id.
-    /// @return The object instance id.
-    HashId getId() const;
+    /// @brief  Will assign the guid.
+    /// @param[in] id   The guid.
+    void setGuid(guid id);
+
+    /// @brief  Will return the Guid of the object instance.
+    /// @return the guid of the object instance.
+    guid getGuid() const;
 
     /// No copying
     Object(const Object &) = delete;
@@ -78,6 +78,7 @@ protected:
 
 private:
     OsreString mObjectName;
+    guid mId;
     ui32 mRefcount;
 };
 

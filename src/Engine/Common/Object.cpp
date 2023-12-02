@@ -28,6 +28,7 @@ namespace Common {
 
 Object::Object(const String &objName) :
         mObjectName(objName, StringUtils::hashName(objName)), 
+        mId(0),
         mRefcount(1) {
     // empty
 }
@@ -60,12 +61,12 @@ const String &Object::getName() const {
     return mObjectName.RawString;
 }
 
-void Object::setId(HashId id) {
-    mObjectName.Id = id;
+void Object::setGuid(guid id) {
+    mId = id;
 }
 
-HashId Object::getId() const {
-    return mObjectName.Id;
+guid Object::getGuid() const {
+    return mId;
 }
 
 } // Namespace Common
