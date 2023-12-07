@@ -428,7 +428,7 @@ SOURCE_GROUP( Properties                  FILES ${properties_src} )
 SOURCE_GROUP( RenderBackend               FILES ${renderbackend_src} )
 SOURCE_GROUP( RenderBackend\\2D           FILES ${renderbackend_2d_src})
 SOURCE_GROUP( RenderBackend\\OGLRenderer  FILES ${renderbackend_oglrenderer_src} )
-SOURCE_GROUP( RenderBackend\\Vulkan       FILES ${renderbackend_vulkanrenderer_src}
+SOURCE_GROUP( RenderBackend\\Vulkan       FILES ${renderbackend_vulkanrenderer_src} )
 SOURCE_GROUP( RenderBackend\\Shader       FILES ${renderbackend_shader_src})
 SOURCE_GROUP( Resources                   FILES ${resources_src} )
 SOURCE_GROUP( Scene                       FILES ${scene_src} )
