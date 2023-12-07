@@ -40,7 +40,7 @@ public:
     ///	@brief	The class destructor, virtual.
     virtual ~Object() = default;
 
-    ///	@brief	INcrease reference counter by one.
+    ///	@brief	Increase reference counter by one.
     void get();
 
     ///	@brief	Will release a shared ownership, the reference count will be decreased by one.
