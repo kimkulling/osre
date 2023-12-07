@@ -40,7 +40,7 @@ public:
     ///	@brief	The class destructor, virtual.
     virtual ~Object() = default;
 
-    ///	@brief	INcrease reference counter by one.
+    ///	@brief	Increase reference counter by one.
     void get();
 
     ///	@brief	Will release a shared ownership, the reference count will be decreased by one.
@@ -58,13 +58,13 @@ public:
     ///	@return	The name of the object.
     const String &getName() const;
 
-    /// @brief Will assign a new id to the object instance.
-    /// @param id   The new id-.
-    void setId(HashId  id);
-    
-    /// @brief Will return the object instance id.
-    /// @return The object instance id.
-    HashId getId() const;
+    /// @brief  Will assign the guid.
+    /// @param[in] id   The guid.
+    void setGuid(guid id);
+
+    /// @brief  Will return the Guid of the object instance.
+    /// @return the guid of the object instance.
+    guid getGuid() const;
 
     /// No copying
     Object(const Object &) = delete;
@@ -77,9 +77,9 @@ protected:
     Object(const String &objectName);
 
 private:
-    String m_objectName;
-    HashId m_id;
-    ui32 m_Refcount;
+    OsreString mObjectName;
+    guid mId;
+    ui32 mRefcount;
 };
 
 } // Namespace Common
