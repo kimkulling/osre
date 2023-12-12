@@ -34,6 +34,8 @@ struct DrawCmd;
 
 class OSRE_EXPORT CanvasRenderer : IRenderer {
 public:
+    using DrawCmdArray = cppcore::TArray<DrawCmd*>;
+
     CanvasRenderer(RenderBackendService *rbSrv, i32 numLayers);
     ~CanvasRenderer() override;
     void render() override;
@@ -51,7 +53,6 @@ public:
 private:    
     RenderBackendService *mRbSrv;
     bool mDirty;
-        using DrawCmdArray = cppcore::TArray<DrawCmd*>;
     DrawCmdArray mDrawCmdArray;
     glm::vec3 mPenColor;
     Rect2i mResolution;

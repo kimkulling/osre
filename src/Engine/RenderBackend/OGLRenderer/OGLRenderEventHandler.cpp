@@ -211,6 +211,7 @@ bool OGLRenderEventHandler::onDestroyRenderer(const Common::EventData *) {
         osre_error(Tag, "Error while destroying performance counters.");
     }
 
+    onClearGeo(nullptr);
     m_renderCtx->destroy();
     delete m_renderCtx;
     m_renderCtx = nullptr;
@@ -229,6 +230,7 @@ bool OGLRenderEventHandler::onAttachView(const EventData *) {
 
 bool OGLRenderEventHandler::onDetachView(const EventData *) {
     osre_assert(nullptr != m_oglBackend);
+    onClearGeo(nullptr);
 
     return true;
 }
