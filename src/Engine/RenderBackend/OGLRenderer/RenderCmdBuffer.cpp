@@ -237,6 +237,7 @@ bool RenderCmdBuffer::onDrawPrimitivesCmd(DrawPrimitivesCmdData *data) {
         mRBService->setMatrix(MatrixType::Model, data->m_model*model);
         mRBService->applyMatrix();
     }
+
     for (size_t i = 0; i < data->m_primitives.size(); ++i) {
         mRBService->render(data->m_primitives[i]);
     }
@@ -286,5 +287,5 @@ bool RenderCmdBuffer::onSetMaterialStageCmd(SetMaterialStageCmdData *data) {
     return true;
 }
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // namespace RenderBackend
+} // namespace OSRE

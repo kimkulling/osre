@@ -302,7 +302,7 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, cppcore::TArray<size_t> &pri
     return true;
 }
  
-bool OGLRenderEventHandler:: onInitRenderPasses(const Common::EventData *eventData) {
+bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventData) {
     osre_assert(nullptr != m_oglBackend);
 
     InitPassesEventData *frameToCommitData = (InitPassesEventData*) eventData;
@@ -410,22 +410,56 @@ static void setName(c8 *name, size_t bufferSize, FrameSubmitCmd *cmd) {
 
 static constexpr size_t BufferSize = 256;
 
+void OGLRenderEventHandler::onHandleCommit(FrameSubmitCmd *cmd) {
+    if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateMatrixes) {
+        MatrixBuffer *buffer = (MatrixBuffer *)cmd->m_data;
+        m_renderCmdBuffer->setMatrixBuffer(cmd->m_batchId, buffer);
+    } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateUniforms) {
+        c8 name[BufferSize];
+        setName(name, BufferSize, cmd);
+        const ui32 offset = cmd->m_data[0] + 1;
+        const size_t size = cmd->m_size - offset;
+        OGLParameter *oglParam = m_oglBackend->getParameter(name);
+        ::memcpy(oglParam->m_data->getData(), &cmd->m_data[offset], size);
+    } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateBuffer) {
+        OGLBuffer *buffer = m_oglBackend->getBufferById(cmd->m_meshId);
+        m_oglBackend->bindBuffer(buffer);
+        m_oglBackend->copyDataToBuffer(buffer, cmd->m_data, cmd->m_size, BufferAccessType::ReadWrite);
+        m_oglBackend->unbindBuffer(buffer);
+    } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::AddRenderData) {
+        for (ui32 i = 0; i < cmd->m_updatedPasses.size(); ++i) {
+            PassData *pd = cmd->m_updatedPasses[i];
+            if (pd == nullptr) {
+                continue;
+            }
+
+            for (RenderBatchData *rbd : pd->m_geoBatches) {
+                for (MeshEntry *entry : rbd->m_meshArray) {
+                    cppcore::TArray<size_t> primGroups;
+                    addMeshes(cmd->m_batchId, primGroups, entry);
+                }
+            }
+        }
+    }
+}
+
 bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
-    if (nullptr == m_oglBackend) {
+    if (m_oglBackend == nullptr) {
         return false;
     }
 
     CommitFrameEventData *data = (CommitFrameEventData *)eventData;
-    if (nullptr == data) {
+    if (data == nullptr) {
         return false;
     }
 
     for (FrameSubmitCmd *cmd : data->m_frame->m_submitCmds) {
-        if (nullptr == cmd) {
+        if (cmd == nullptr) {
             continue;
         }
 
-        if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateMatrixes) {
+        onHandleCommit(cmd);
+        /*if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateMatrixes) {
             MatrixBuffer *buffer = (MatrixBuffer *)cmd->m_data;
             m_renderCmdBuffer->setMatrixBuffer(cmd->m_batchId, buffer);
         } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateUniforms) {
@@ -443,6 +477,10 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
         } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::AddRenderData) {
             for (ui32 i = 0; i < cmd->m_updatedPasses.size(); ++i) {
                 PassData *pd = cmd->m_updatedPasses[i];
+                if (pd == nullptr) {
+                    continue;
+                }
+
                 for (RenderBatchData *rbd : pd->m_geoBatches) {
                     for (MeshEntry *entry : rbd->m_meshArray) {
                         cppcore::TArray<size_t> primGroups;
@@ -450,7 +488,7 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
                     }
                 }
             }
-        }
+        }*/
         cmd->m_updateFlags = 0u;
     }
     

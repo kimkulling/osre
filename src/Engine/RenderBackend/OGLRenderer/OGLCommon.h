@@ -264,8 +264,9 @@ struct OGLFrameBuffer {
     ui32 m_height;
 
     /// @brief The default class constructor.
-    OGLFrameBuffer(const char *name, ui32 w, ui32 h) : m_name(name), m_bufferId(0), m_depthrenderbufferId(0), m_renderedTexture(0),
-                                                       m_width(w), m_height(h) {}
+    OGLFrameBuffer(const char *name, ui32 w, ui32 h) : 
+        m_name(name), m_bufferId(0), m_depthrenderbufferId(0), 
+        m_renderedTexture(0), m_width(w), m_height(h) {}
 
     /// @brief  The class destructor, default implementation.
     ~OGLFrameBuffer() = default;
