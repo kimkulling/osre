@@ -147,17 +147,7 @@ bool SDL2EventHandler::update() {
             case SDL_KEYDOWN:
             case SDL_KEYUP: {
                 KeyboardButtonEventData *data = new KeyboardButtonEventData(SDL_KEYDOWN == ev.type, m_eventTriggerer);
-                if (ev.key.keysym.sym == SDLK_RCTRL) {
-                    data->m_key = KEY_RCTRL;
-                } else if (ev.key.keysym.sym == SDLK_LCTRL) {
-                    data->m_key = KEY_LCTRL;
-                } else if (ev.key.keysym.sym == SDLK_LSHIFT){
-                    data->m_key = KEY_LSHIFT;
-                } else if (ev.key.keysym.sym == SDLK_RSHIFT){
-                    data->m_key = KEY_RSHIFT;
-                } else {
-                    data->m_key = (Key)ev.key.keysym.sym;
-                }
+                data->m_key = SDL_GetKeyName(ev.key.keysym.sym);
                 activeEventQueue->addBack(data);
             } break;
 
