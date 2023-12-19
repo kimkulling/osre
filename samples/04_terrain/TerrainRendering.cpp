@@ -31,21 +31,31 @@ class TerrainRenderingApp : public App::AppBase {
     Entity *mEntity;
     /// The keyboard controller instance.
     Animation::AnimationControllerBase *mKeyboardTransCtrl;
+    /// The number of pixels used for one sample.
+    ui32 mPixelPerSample;
 
 public:
     TerrainRenderingApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv),
             mTransformMatrix(),
             mEntity(nullptr),
-            mKeyboardTransCtrl(nullptr) {
+            mKeyboardTransCtrl(nullptr),
+            mPixelPerSample(1) {
         // empty
     }
-    
+
     ~TerrainRenderingApp() override {
         delete mEntity;
     }
 
-    
+    void setPixelPerSample(ui32 pixelPerSample) {
+        mPixelPerSample = pixelPerSample;
+    }
+
+    ui32 getPixelPerSample() const {
+        return mPixelPerSample;
+    }
+
 protected:
     Mesh *loadHeightMap(const String &filename) {
         if (filename.empty()) {
@@ -64,8 +74,8 @@ protected:
         RenderVert *v = new RenderVert[numVertices];
         std::vector<float> vertices;
         float yScale = 64.0f / 256.0f, yShift = 16.0f;  // apply a scale+shift to the height data
-        for (int i = 0; i<height; ++i) {
-            for (int j = 0; j<width; ++j) {
+        for (int i = 0; i<height; i=i+mPixelPerSample) {
+            for (int j = 0; j<width; j=j+mPixelPerSample) {
                 // retrieve texel for (i,j) tex coord
                 unsigned char *texel = data + (j + width * i) * nChannels;
                 // raw height at coordinate
@@ -83,9 +93,9 @@ protected:
 
         // Index generation
         std::vector<unsigned int> indices;
-        for (int i = 0; i < height-1; i++) {      // for each row a.k.a. each strip
-            for (int j = 0; j < width; j++) {     // for each column
-                for (int k = 0; k < 2; k++)  {    // for each side of the strip
+        for (ui32 i = 0; i < (height/mPixelPerSample)-1; i++) {      // for each row a.k.a. each strip
+            for (ui32 j = 0; j < (width/mPixelPerSample); j++) {     // for each column
+                for (ui32 k = 0; k < 2; k++)  {    // for each side of the strip
                     indices.push_back(j + width * (i + k));
                 }
             }
@@ -130,8 +140,7 @@ protected:
         mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
         CameraComponent *camera = setupCamera(world);
 
-        //String filename = "world_heightmap.png";
-        String filename = "Rolling_Hills.png";
+        String filename = "world_heightmap.png";
         RenderBackend::Mesh *mesh = loadHeightMap(filename);
         if (mesh != nullptr) {
             RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);

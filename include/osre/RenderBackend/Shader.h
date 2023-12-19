@@ -77,8 +77,8 @@ public:
     /// @return The name of the vertex attribute.
     const c8 *getVertexAttributeAt(size_t location) const;
 
-    /// @brief Will return the vertex location of the vertex attribute.
-    /// @param vertexAttribute  The vertex attribute to look for.
+    /// @brief  Will return the vertex location of the vertex attribute.
+    /// @param  vertexAttribute  The vertex attribute to look for.
     /// @return The location used in the shader.
     size_t getLocation(const c8 *vertexAttribute) const;
 
@@ -128,8 +128,8 @@ private:
 
     StringArray mUniformBuffer;
     StringArray mVertexAttributes;
-    String m_src[MaxShaderTypes];
-    CompileState m_compileState[MaxCompileState];
+    String mSrc[MaxShaderTypes];
+    CompileState mCompileState[MaxCompileState];
 };
 
 inline size_t Shader::getNumVertexAttributes() const {
@@ -141,7 +141,7 @@ inline size_t Shader::getNumUniformBuffer() const {
 }
 
 inline bool Shader::hasSource(ShaderType type) const {
-    return !m_src[static_cast<size_t>(type)].empty();
+    return !mSrc[static_cast<size_t>(type)].empty();
 }
 
 ///	@brief  This class is used to load a shader.
