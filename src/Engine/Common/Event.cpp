@@ -27,23 +27,23 @@ namespace OSRE {
 namespace Common {
 
 Event::Event(const c8 *id) :
-        m_numRefs(1),
-        m_hash(StringUtils::hashName(id)),
+        mNumRefs(1),
+        mHash(StringUtils::hashName(id)),
         mId(id),
-        m_eventData(nullptr) {
+        mEventData(nullptr) {
     // empty
 }
 
 void Event::setEventData(const EventData *pData) {
-    m_eventData = pData;
+    mEventData = pData;
 }
 
 const EventData *Event::getEventData() const {
-    return m_eventData;
+    return mEventData;
 }
 
 HashId Event::getHash() const {
-    return m_hash;
+    return mHash;
 }
 
 const String Event::getId() const {
@@ -52,51 +52,51 @@ const String Event::getId() const {
 }
 
 void Event::get() {
-    ++m_numRefs;
+    ++mNumRefs;
 }
 
 void Event::release() {
-    --m_numRefs;
-    if (0 == m_numRefs) {
+    --mNumRefs;
+    if (0 == mNumRefs) {
         delete this;
     }
 }
 
 bool Event::operator == (const Event &rhs) const {
-    return (m_hash == rhs.m_hash);
+    return (mHash == rhs.mHash);
 }
 
 EventData::EventData(const Event &e, EventTriggerer *c) :
-        m_Event(e),
-        m_Source(c),
-        m_timestamp(0.0),
-        m_numRefs(1) {
+        mEvent(e),
+        mSource(c),
+        mTimestamp(0.0),
+        mNumRefs(1) {
     // empty
 }
 
 const Event &EventData::getEvent() const {
-    return m_Event;
+    return mEvent;
 }
 
 EventTriggerer *EventData::getEventSender() const {
-    return m_Source;
+    return mSource;
 }
 
 void EventData::get() {
-    ++m_numRefs;
+    ++mNumRefs;
 }
 
 void EventData::release() {
-    if (m_numRefs) {
-        --m_numRefs;
-        if (0 == m_numRefs) {
+    if (mNumRefs) {
+        --mNumRefs;
+        if (mNumRefs == 0) {
             delete this;
         }
     }
 }
 
 bool EventData::operator==(const EventData &other) const {
-    return (m_Event == other.m_Event && m_Source == other.m_Source);
+    return (mEvent == other.mEvent && mSource == other.mSource);
 }
 
 } // Namespace Common
