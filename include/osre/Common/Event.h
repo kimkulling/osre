@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/StringUtils.h>
 #include <osre/Common/TFunctor.h>
 
+// Container
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/TList.h>
 
@@ -38,23 +39,22 @@ struct Event;
 struct EventData;
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup    Engine
-///
-///	@brief	Event type declaration helper macro. This is a shortcut to define global events like
-///	windows messages.
+///	@brief	Event type declaration helper macro. 
+/// 
+/// This is a shortcut to define global events like windows messages.
 //-------------------------------------------------------------------------------------------------
 #define DECL_EVENT(NAME) const Common::Event NAME(#NAME)
 
 //-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
-///
-///	@brief	The base class of osre-events, describes type of an event. To create your own events
-///	it is possible to build derives from the base class.
+///	@brief	The base class of osre-events.
+/// 
+/// Describes type of an event. To create your own events it is possible to build derives 
+/// from the base class.
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT Event {
     friend class EventTriggerer;
 
-    ///	@brief	the class constructor with description id.
+    ///	@brief	The class constructor with description id.
     ///	@param	id	Id description, will be used to describe the event type.
     Event(const c8 *id);
 
@@ -114,7 +114,7 @@ struct OSRE_EXPORT EventData {
     ///	@param	other	Instance to copy from.
 
     ///	@brief The default class destructor, virtual.
-    virtual ~EventData() = default;
+    ~EventData() = default;
 
     ///	@brief	Returns assigned event.
     ///	@return	Assigned event instance.
@@ -141,14 +141,15 @@ struct OSRE_EXPORT EventData {
     EventData &operator=(const EventData &) = delete;
 
 private:
-    const Event &m_Event;
-    EventTriggerer *m_Source;
-    d32 m_timestamp;
-    ui32 m_numRefs;
+    const Event &mEvent;
+    EventTriggerer *mSource;
+    d32 mTimestamp;
+    ui32 mNumRefs;
+    void *mPayload;
 };
 
 ///	Base event functor.
-typedef Functor<void, const Event &, const EventData *> EventFunctor;
+using EventFunctor = Functor<void, const Event &, const EventData *>;
 
 using EventDataList = cppcore::TList<Common::EventData *>;
 using EventPtrArray = cppcore::TArray<const Common::Event *>;
