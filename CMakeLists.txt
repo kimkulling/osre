@@ -88,7 +88,7 @@ ENDIF()
 
 #ADD_DEFINITIONS( -DGLM_ENABLE_EXPERIMENTAL )
 
-# Include all sub directories of the engine code component
+# Include all sub-directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
 if (OSRE_BUILD_PLAYER)
     ADD_SUBDIRECTORY( src/Player )
@@ -132,7 +132,7 @@ IF( OSRE_BUILD_DOC )
           COMMENT "Generating OSRE-API documentation with Doxygen" VERBATIM
       )
   else (DOXYGEN_FOUND)
-      MESSAGE("Doxygen need to be installed to generate the doxygen documentation")
+      MESSAGE("Doxygen needs to be installed to generate the doxygen documentation")
   ENDIF ( DOXYGEN_FOUND )
 ENDIF( OSRE_BUILD_DOC )
 
