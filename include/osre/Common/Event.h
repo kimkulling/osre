@@ -41,14 +41,14 @@ struct EventData;
 //-------------------------------------------------------------------------------------------------
 ///	@brief	Event type declaration helper macro. 
 /// 
-/// This is a shortcut to define global events like windows messages.
+/// This is a shortcut to define global events like Windows messages.
 //-------------------------------------------------------------------------------------------------
 #define DECL_EVENT(NAME) const Common::Event NAME(#NAME)
 
 //-------------------------------------------------------------------------------------------------
 ///	@brief	The base class of osre-events.
 /// 
-/// Describes type of an event. To create your own events it is possible to build derives 
+/// Describes the type of an event. To create your events it is possible to build derives 
 /// from the base class.
 //-------------------------------------------------------------------------------------------------
 struct OSRE_EXPORT Event {
@@ -90,10 +90,10 @@ struct OSRE_EXPORT Event {
     Event(const Event &) = delete;
     Event &operator=(const Event &) = delete;
 
-    ui32 m_numRefs;
-    HashId m_hash;
+    ui32 mNumRefs;
+    HashId mHash;
     const c8 *mId;
-    const EventData *m_eventData;
+    const EventData *mEventData;
 };
 
 //--------------------------------------------------------------------------------------------------------------------
@@ -114,7 +114,7 @@ struct OSRE_EXPORT EventData {
     ///	@param	other	Instance to copy from.
 
     ///	@brief The default class destructor, virtual.
-    ~EventData() = default;
+    virtual ~EventData() = default;
 
     ///	@brief	Returns assigned event.
     ///	@return	Assigned event instance.
