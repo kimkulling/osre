@@ -88,7 +88,7 @@ public:
 ///
 ///	@brief	This class stores window-resizing events.
 //-------------------------------------------------------------------------------------------------
-class WindowsResizeEventData {
+class WindowsResizeEventData : public Common::EventData{
 public:
     /// @brief The class constructor.
     /// @param c The event trigger.
