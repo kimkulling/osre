@@ -88,7 +88,7 @@ public:
 ///
 ///	@brief	This class stores window-resizing events.
 //-------------------------------------------------------------------------------------------------
-class WindowsResizeEventData : public Common::EventData {
+class WindowsResizeEventData : public Common::EventData{
 public:
     /// @brief The class constructor.
     /// @param c The event trigger.
@@ -120,7 +120,7 @@ public:
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT MouseButtonEventData : public Common::EventData {
 public:
-    /// @brief An enum to descripe the button state.
+    /// @brief An enum to describe the button state.
     enum ButtonType {
         LeftButton = 0,
         MiddleButton,

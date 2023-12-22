@@ -11,6 +11,7 @@ INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}/contrib/glm/
     ${PROJECT_SOURCE_DIR}/contrib/unzip/
     ${PROJECT_SOURCE_DIR}/contrib/zlib/
+    ${CMAKE_CURRENT_BINARY_DIR}//contrib/zlib/
     ${PROJECT_SOURCE_DIR}/contrib/assimp/include
 )
 
