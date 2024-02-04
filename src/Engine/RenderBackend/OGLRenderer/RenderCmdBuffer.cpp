@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLRenderBackend.h"
 #include <osre/Debugging/osre_debugging.h>
 #include <osre/Platform/AbstractOGLRenderContext.h>
+#include <osre/Platform/AbstractTimer.h>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -52,9 +53,6 @@ RenderCmdBuffer::RenderCmdBuffer(OGLRenderBackend *renderBackend, AbstractOGLRen
 
 RenderCmdBuffer::~RenderCmdBuffer() {
     clear();
-
-    mRBService = nullptr;
-    mRenderCtx = nullptr;
 }
 
 void RenderCmdBuffer::setActiveShader(OGLShader *oglShader) {
@@ -213,6 +211,7 @@ void RenderCmdBuffer::setMatrixes(const glm::mat4 &model, const glm::mat4 &view,
     mModel = model;
     mView = view;
     mProj = proj;
+    commitParameters();
 }
 
 void RenderCmdBuffer::setMatrixBuffer(const c8 *id, MatrixBuffer *buffer) {
@@ -226,7 +225,7 @@ bool RenderCmdBuffer::onDrawPrimitivesCmd(DrawPrimitivesCmdData *data) {
         return false;
     }
 
-    std::map<const char *, MatrixBuffer *>::iterator it = mMatrixBuffer.find(data->m_id);
+    auto it = mMatrixBuffer.find(data->m_id);
     if (it != mMatrixBuffer.end()) {
         MatrixBuffer *buffer = it->second;
         setMatrixes(buffer->m_model, buffer->m_view, buffer->m_proj);
@@ -238,6 +237,7 @@ bool RenderCmdBuffer::onDrawPrimitivesCmd(DrawPrimitivesCmdData *data) {
         mRBService->setMatrix(MatrixType::Model, data->m_model*model);
         mRBService->applyMatrix();
     }
+
     for (size_t i = 0; i < data->m_primitives.size(); ++i) {
         mRBService->render(data->m_primitives[i]);
     }
@@ -287,5 +287,5 @@ bool RenderCmdBuffer::onSetMaterialStageCmd(SetMaterialStageCmdData *data) {
     return true;
 }
 
-} // Namespace RenderBackend
-} // Namespace OSRE
+} // namespace RenderBackend
+} // namespace OSRE

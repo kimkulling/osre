@@ -120,9 +120,6 @@ using i64 = int64_t;
 /// @brief  The data type for unsigned int 8 bytes long.
 using ui64 = uint64_t;
 
-/// @brief  The data type for hash ids.
-using HashId = ui64;
-
 /// @brief  The data type float, 4 byte long.
 using f32 = float;
 
@@ -141,6 +138,18 @@ using String = std::string;
 /// @brief The data type for an array of strings.
 using StringArray = ::cppcore::TArray<String>;
 
+/// @brief  The data type for hash ids.
+using HashId = ui64;
+
+/// @brief  The OSRE-String, contains its string and it hash id;
+struct OsreString {
+    String RawString;   ///< The pure String.
+    HashId Id;          ///< The hash id.
+
+    OsreString() = default;
+    OsreString(const String &str, HashId id) : RawString(str), Id(id) {}
+    ~OsreString() = default;
+};
 
 /// @brief  A handle struct.
 struct Handle {
@@ -178,29 +187,49 @@ using MemoryBuffer = cppcore::TArray<c8>;
 
 /// @brief  A time stamp.
 struct Time {
-    i64 m_microseconds;
+    i64 Microseconds; ///< The store time stamp in microseconds
 
+    /// @brief  The default constructor.
     Time();
+
+    /// @brief  The constructor with the timestamp in ms.
+    /// @param[in] microseconds  The timestamp in microseconds.
     Time(i64 microseconds);
+
+    void setMilliSeconds(i64 ms) {
+        Microseconds = ms * 1000l; 
+    }
+
+    /// @brief The class destructor.
+    ~Time() = default;
+
+    /// @brief Will return the timestamp in seconds.
+    /// @return The timestamp in secods.
     f32 asSeconds() const;
+
+    /// @brief Will return the timestamp in milliseconds.
+    /// @return The timestamp in millisecods.
     i32 asMilliSeconds() const;
+
+    /// @brief Will return the timestamp in microseconds.
+    /// @return The timestamp in microsecods.
     i64 asMicroSeconds() const;
 };
 
-inline Time::Time() : m_microseconds(0) {}
+inline Time::Time() : Microseconds(0L) {}
 
-inline Time::Time(i64 microseconds) : m_microseconds(microseconds) {}
+inline Time::Time(i64 microseconds) : Microseconds(microseconds) {}
 
 inline f32 Time::asSeconds() const {
-    return m_microseconds / 1000000.f;
+    return Microseconds / 1000000.f;
 }
 
 inline i32 Time::asMilliSeconds() const {
-    return static_cast<i32>(m_microseconds / 1000);
+    return static_cast<i32>(Microseconds / 1000);
 }
 
 inline i64 Time::asMicroSeconds() const {
-    return m_microseconds;
+    return Microseconds;
 }
 
 /// @brief  This type can be used to define a color with 4 colors.
@@ -299,20 +328,15 @@ struct TRectangle {
 
     /// @brief  The default class constructor.
     TRectangle() :
-            x1(0),
-            y1(0),
-            x2(0),
-            y2(0),
-            width(0),
-            height(0) {
+            x1(0), y1(0), x2(0), y2(0), width(0), height(0) {
         // empty
     }
 
     /// @brief  The class constructor with parameters
-    /// @param  x       [in] X coordinate of upper left corner.
-    /// @param  y       [in] Y coordinate of upper left corner.
-    /// @param  width   [in] The width of the rectangle.
-    /// @param  height  [in] The height of the rectangle.
+    /// @param[in] x       X coordinate of upper left corner.
+    /// @param[in] y       Y coordinate of upper left corner.
+    /// @param[in] width   The width of the rectangle.
+    /// @param[in] height  The height of the rectangle.
     TRectangle(T x, T y, T width, T height) :
             x1(x),
             y1(y),
@@ -327,10 +351,10 @@ struct TRectangle {
     ~TRectangle() = default;
 
     /// @brief  Will set the rectangle-geometry with the upper left corner, width and height.
-    /// @param  x       [in] X coordinate of upper left corner.
-    /// @param  y       [in] Y coordinate of upper left corner.
-    /// @param  width_  [in] The width of the rectangle.
-    /// @param  height_ [in] The height of the rectangle.
+    /// @param[in] x       X coordinate of upper left corner.
+    /// @param[in] y       Y coordinate of upper left corner.
+    /// @param[in] width_  The width of the rectangle.
+    /// @param[in] height_ The height of the rectangle.
     void set(T x, T y, T width_, T height_) {
         x1 = x;
         y1 = y;
@@ -341,10 +365,10 @@ struct TRectangle {
     }
 
     /// @brief  Will set the rectangle-geometry with the upper left corner and the lower right corner.
-    /// @param  x1_     [in] X coordinate of the upper left corner.
-    /// @param  y1_     [in] Y coordinate of the upper left corner.
-    /// @param  x2_     [in] X coordinate of the lower right corner.
-    /// @param  y2_     [in] Y coordinate of the lower right corner.
+    /// @param[in] x1_     X coordinate of the upper left corner.
+    /// @param[in] y1_     Y coordinate of the upper left corner.
+    /// @param[in] x2_     X coordinate of the lower right corner.
+    /// @param[in] y2_     Y coordinate of the lower right corner.
     void setEdges(T x1_, T y1_, T x2_, T y2_) {
         x1 = x1_;
         y1 = y1_;
@@ -355,43 +379,43 @@ struct TRectangle {
     }
 
     /// @brief  Return the X-coordinate of the upper left corner.
-    /// @brief  The x-coordinate.
+    /// @return The x-coordinate.
     T getX1() const {
         return x1;
     }
 
     /// @brief  Return the y-coordinate of the upper left corner.
-    /// @brief  The y-coordinate.
+    /// @return The y-coordinate.
     T getY1() const {
         return y1;
     }
 
     /// @brief  Return the X-coordinate of the lower right corner.
-    /// @brief  The x-coordinate.
+    /// @return The x-coordinate.
     T getX2() const {
         return x2;
     }
 
     /// @brief  Return the Y-coordinate of the lower right corner.
-    /// @brief  The y-coordinate.
+    /// @return The y-coordinate.
     T getY2() const {
         return y2;
     }
 
     /// @brief  Return the width of the rect.
-    /// @brief  The width.
+    /// @return The width.
     T getWidth() const {
         return width;
     }
 
     /// @brief  Return the height of the rect.
-    /// @brief  The height.
+    /// @return The height.
     T getHeight() const {
         return height;
     }
 
     /// @brief  Returns true, if he point is in the rect.
-    /// @param  pt  [in] The 2D-point to check.
+    /// @param[in] pt   The 2D-point to check.
     /// @return true if the point is in the rectangle, false if not.
     bool isIn(const TPoint2<T> &pt) const {
         if (pt.x >= x1 && pt.y >= y1 && pt.x <= x2 && pt.y <= y2) {

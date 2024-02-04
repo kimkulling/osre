@@ -25,42 +25,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-Win32Timer::Win32Timer() 
-: AbstractTimer( "platform/win32timer" )
-, m_globeTime()
-, m_globeFrequency()
-, m_LastTime( 0 ) {
-    ::QueryPerformanceCounter( &m_globeTime );
-    ::QueryPerformanceFrequency( &m_globeFrequency );
+Win32Timer::Win32Timer() : AbstractTimer( "platform/win32timer" ), mGlobeTime(), mGlobeFrequency() {
+    ::QueryPerformanceCounter(&mGlobeTime);
+    ::QueryPerformanceFrequency(&mGlobeFrequency);
 }
 
-Win32Timer::~Win32Timer() {
-    // empty
-}
-
-i64 Win32Timer::getMilliCurrentSeconds() {
-    LARGE_INTEGER currentTime;
-    QueryPerformanceCounter( &currentTime );
-    const i64 secs = static_cast<i64>( ( currentTime.QuadPart - m_globeTime.QuadPart ) ) 
-        / static_cast<i64>(m_globeFrequency.QuadPart );
+i64 Win32Timer::getMicroCurrentSeconds() {
+    LARGE_INTEGER currentTime = {};
+    ::QueryPerformanceCounter(&currentTime);
+    const i64 secs = static_cast<i64>( ( currentTime.QuadPart - mGlobeTime.QuadPart ) ) 
+        / static_cast<i64>(mGlobeFrequency.QuadPart );
 
     return secs;
 }
 
-i64 Win32Timer::getTimeDiff() {
-    i64 currentTime = getMilliCurrentSeconds();
-    if ( m_LastTime == 0L ) {
-        m_LastTime = currentTime;
-        return 0L;
-    } 
-      
-    i64 diff( currentTime - m_LastTime );
-    if( diff > 1000L ) {
-        diff = AbstractTimer::getRequestedTimeStep();
-    }
-    m_LastTime = currentTime;
-    return diff;
-}
-
-} // Namespace Platform
-} // Namespace OSRE
+} // namespace Platform
+} // namespace OSRE

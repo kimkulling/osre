@@ -62,7 +62,6 @@ public:
     /// @brief The default class destructor.
     virtual ~Component() = default;
 
-    
     /// @brief The update callback
     /// @param[in] timeSlice The time slice
     virtual void update(Time timeSlice);
@@ -90,23 +89,23 @@ protected:
     /// @param[in] type   The owning entity.
     Component(Entity *owner, ComponentType type);
     
-    /// @brief 
-    /// @param dt 
-    /// @return 
+    /// @brief The update callback.
+    /// @param[in] dt  The time diff.
+    /// @return true if successful.
     virtual bool onUpdate(Time dt) = 0;
     
-    /// @brief 
-    /// @param renderBackendSrv 
-    /// @return 
+    /// @brief The render callback.
+    /// @param renderBackendSrv   The render backend server.
+    /// @return true if successful.
     virtual bool onRender(RenderBackend::RenderBackendService *renderBackendSrv) = 0;
 
 private:
-    Entity *m_owner;
+    Entity *mOwner;
     ComponentType mType;
 };
 
 inline Entity *Component::getOwner() const {
-    return m_owner;
+    return mOwner;
 }
 
 inline ComponentType Component::getType() const {

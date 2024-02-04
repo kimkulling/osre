@@ -47,18 +47,18 @@ class OSRE_EXPORT Stage : public Common::Object {
 public:
     using WorldArray = cppcore::TArray<World*>;
 
-    /// @brief 
-    /// @param stageName 
+    /// @brief  The class constructor.
+    /// @param stageName  The stage name.
     Stage(const String &stageName);
-    
-    /// @brief 
+
+    /// @brief  The class destructor.
     ~Stage() override;
-    
-    /// @brief 
-    /// @param name 
-    /// @return 
+
+    /// @brief Will create a new world instance within the stage.
+    /// @param[in] name   The name of the stage.
+    /// @return The new created stage.
     World *createWorld(const String &name);
-    
+
     /// @brief 
     /// @param name 
     /// @return 

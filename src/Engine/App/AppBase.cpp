@@ -44,8 +44,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/CameraComponent.h>
 #include <osre/RenderBackend/MaterialBuilder.h>
 
-#include "Engine/App/MouseEventListener.h"
-#include "Engine/Platform/PlatformPluginFactory.h"
+#include "App/MouseEventListener.h"
+#include "Platform/PlatformPluginFactory.h"
 
 namespace OSRE {
 namespace App {
@@ -60,6 +60,7 @@ static constexpr c8 Tag[] = "AppBase";
 
 AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
         mAppState(State::Uninited),
+        mLastTime(0l),
         mArgParser(argc, argv, supportedArgs, desc),
         mEnvironment(nullptr),
         mSettings(new Properties::Settings),
@@ -78,7 +79,6 @@ AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const 
 
 AppBase::~AppBase() {
     delete mSettings;
-    mSettings = nullptr;
 }
 
 bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &title, bool fullscreen, bool childWindow,
@@ -167,7 +167,7 @@ Properties::Settings *AppBase::getSettings() const {
     return mSettings;
 }
 
-Camera *AppBase::setActiveCamera(Camera *camera) {
+CameraComponent *AppBase::setActiveCamera(CameraComponent *camera) {
     if (nullptr == mStage) {
         osre_debug(Tag, "No world to activate state to.");
         return nullptr;
@@ -359,12 +359,8 @@ bool AppBase::onDestroy() {
     return true;
 }
 
-static constexpr i64 Conversion2Micro = 1000;
-
 void AppBase::onUpdate() {
-    i64 microsecs = mTimer->getMilliCurrentSeconds() * Conversion2Micro;
-    Time dt(microsecs);    
-
+    const Time dt = mTimer->getTimeDiff();
     if (nullptr != mStage) {
         mStage->update(dt);
     }
@@ -376,14 +372,6 @@ void AppBase::onRender() {
     if (nullptr != mStage) {
         mStage->render(mRbService);
     }
-}
-
-const ArgumentParser &AppBase::getArgumentParser() const {
-    return mArgParser;
-}
-
-Ids *AppBase::getIdContainer() const {
-    return mIds;
 }
 
 bool AppBase::isKeyPressed(Key key) const {

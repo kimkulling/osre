@@ -45,7 +45,6 @@ namespace IO {
 namespace Platform {
 	class AbstractOGLRenderContext;
 	class AbstractTimer;
-
 } // namespace Platform
 
 // clang-format on
@@ -85,6 +84,8 @@ public:
 	~OGLRenderBackend();
 	///
 	void enumerateGPUCaps();
+	/// 
+	void setClearColor(const Color4 &clearColor); 
 	/// Will set the requested global matrix for the frame.
 	void setMatrix(MatrixType type, const glm::mat4 &mat);
 	/// All matrix values will be applied to the current frame.
@@ -152,6 +153,7 @@ public:
     const String &getExtensions() const;
     
 private:
+    Color4 mClearColor;
     TransformMatrixBlock mMatrixBlock;
     Platform::AbstractOGLRenderContext *mRenderCtx;
 	cppcore::TArray<OGLBuffer*> mBuffers;

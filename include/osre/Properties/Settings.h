@@ -138,6 +138,7 @@ public:
     /// @return 
     String getKeyAsString( ConfigKey key ) const;
 
+
     ///	@brief	Clears the whole map.
     void clear();
 

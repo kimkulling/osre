@@ -55,6 +55,8 @@ class OSRE_EXPORT RenderPass {
 public:
     RenderPass(guid id, Shader *shader);
     ~RenderPass() = default;
+    void setViewport(const Viewport &viewport);
+    const Viewport &getViewport() const;
     RenderPass &set(RenderTarget &rt, RenderStates &states);
     RenderPass &setPolygonState(PolygonState polyState);
     PolygonState getPolygonState() const;
@@ -77,6 +79,7 @@ public:
 
 private:
     guid mId;
+    Viewport mViewport;
     RenderTarget mRenderTarget;
     RenderStates mStates;
     Shader *mShader;

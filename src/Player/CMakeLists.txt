@@ -3,7 +3,7 @@ ADD_EXECUTABLE(osre_player
 )
 
 IF(WIN32)
-    SET(platform_libs comctl32.lib Winmm.lib SDL2)
+    SET(platform_libs comctl32.lib Winmm.lib)
 ELSE(WIN32)
     SET(platform_libs SDL2)
 ENDIF(WIN32)

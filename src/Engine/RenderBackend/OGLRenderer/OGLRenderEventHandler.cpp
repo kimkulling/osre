@@ -33,6 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Uri.h>
 #include <osre/Platform/AbstractOGLRenderContext.h>
 #include <osre/Platform/AbstractWindow.h>
+#include <osre/Platform/AbstractTimer.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Profiling/PerformanceCounterRegistry.h>
 #include <osre/RenderBackend/Mesh.h>
@@ -66,7 +67,7 @@ bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
         return true;
     }
 
-    bool result(false);
+    bool result = false;
     if (OnAttachEventHandlerEvent == ev) {
         result = onAttached(data);
     } else if (OnDetatachEventHandlerEvent == ev) {
@@ -210,6 +211,7 @@ bool OGLRenderEventHandler::onDestroyRenderer(const Common::EventData *) {
         osre_error(Tag, "Error while destroying performance counters.");
     }
 
+    onClearGeo(nullptr);
     m_renderCtx->destroy();
     delete m_renderCtx;
     m_renderCtx = nullptr;
@@ -228,6 +230,7 @@ bool OGLRenderEventHandler::onAttachView(const EventData *) {
 
 bool OGLRenderEventHandler::onDetachView(const EventData *) {
     osre_assert(nullptr != m_oglBackend);
+    onClearGeo(nullptr);
 
     return true;
 }
@@ -299,7 +302,7 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, cppcore::TArray<size_t> &pri
     return true;
 }
  
-bool OGLRenderEventHandler:: onInitRenderPasses(const Common::EventData *eventData) {
+bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventData) {
     osre_assert(nullptr != m_oglBackend);
 
     InitPassesEventData *frameToCommitData = (InitPassesEventData*) eventData;
@@ -322,7 +325,7 @@ bool OGLRenderEventHandler:: onInitRenderPasses(const Common::EventData *eventDa
         // ToDo: create pipeline pass for the name.
         for (RenderBatchData * currentBatchData : currentPass->m_geoBatches) {
             if (nullptr == currentBatchData) {
-                continue;   
+                continue;
             }
 
             // set the matrix
@@ -407,21 +410,56 @@ static void setName(c8 *name, size_t bufferSize, FrameSubmitCmd *cmd) {
 
 static constexpr size_t BufferSize = 256;
 
+void OGLRenderEventHandler::onHandleCommit(FrameSubmitCmd *cmd) {
+    if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateMatrixes) {
+        MatrixBuffer *buffer = (MatrixBuffer *)cmd->m_data;
+        m_renderCmdBuffer->setMatrixBuffer(cmd->m_batchId, buffer);
+    } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateUniforms) {
+        c8 name[BufferSize];
+        setName(name, BufferSize, cmd);
+        const ui32 offset = cmd->m_data[0] + 1;
+        const size_t size = cmd->m_size - offset;
+        OGLParameter *oglParam = m_oglBackend->getParameter(name);
+        ::memcpy(oglParam->m_data->getData(), &cmd->m_data[offset], size);
+    } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateBuffer) {
+        OGLBuffer *buffer = m_oglBackend->getBufferById(cmd->m_meshId);
+        m_oglBackend->bindBuffer(buffer);
+        m_oglBackend->copyDataToBuffer(buffer, cmd->m_data, cmd->m_size, BufferAccessType::ReadWrite);
+        m_oglBackend->unbindBuffer(buffer);
+    } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::AddRenderData) {
+        for (ui32 i = 0; i < cmd->m_updatedPasses.size(); ++i) {
+            PassData *pd = cmd->m_updatedPasses[i];
+            if (pd == nullptr) {
+                continue;
+            }
+
+            for (RenderBatchData *rbd : pd->m_geoBatches) {
+                for (MeshEntry *entry : rbd->m_meshArray) {
+                    cppcore::TArray<size_t> primGroups;
+                    addMeshes(cmd->m_batchId, primGroups, entry);
+                }
+            }
+        }
+    }
+}
+
 bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
-    CommitFrameEventData *data = (CommitFrameEventData *)eventData;
-    if (nullptr == data) {
+    if (m_oglBackend == nullptr) {
         return false;
     }
 
-    if (nullptr == m_oglBackend) {
+    CommitFrameEventData *data = (CommitFrameEventData *)eventData;
+    if (data == nullptr) {
         return false;
     }
 
     for (FrameSubmitCmd *cmd : data->m_frame->m_submitCmds) {
-        if (nullptr == cmd) {
+        if (cmd == nullptr) {
             continue;
         }
-        if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateMatrixes) {
+
+        onHandleCommit(cmd);
+        /*if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateMatrixes) {
             MatrixBuffer *buffer = (MatrixBuffer *)cmd->m_data;
             m_renderCmdBuffer->setMatrixBuffer(cmd->m_batchId, buffer);
         } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateUniforms) {
@@ -439,6 +477,10 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
         } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::AddRenderData) {
             for (ui32 i = 0; i < cmd->m_updatedPasses.size(); ++i) {
                 PassData *pd = cmd->m_updatedPasses[i];
+                if (pd == nullptr) {
+                    continue;
+                }
+
                 for (RenderBatchData *rbd : pd->m_geoBatches) {
                     for (MeshEntry *entry : rbd->m_meshArray) {
                         cppcore::TArray<size_t> primGroups;
@@ -446,9 +488,10 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
                     }
                 }
             }
-        }
+        }*/
         cmd->m_updateFlags = 0u;
     }
+    
     data->m_frame->m_submitCmds.resize(0);
     data->m_frame->m_submitCmdAllocator.release();
 
@@ -462,30 +505,21 @@ bool OGLRenderEventHandler::onShutdownRequest(const EventData*) {
 }
 
 bool OGLRenderEventHandler::onResizeRenderTarget(const EventData *eventData) {
-    osre_assert(nullptr != eventData);
-
     ResizeEventData *data = (ResizeEventData *)eventData;
-    if (nullptr != data) {
-        const ui32 x = data->m_x;
-        const ui32 y = data->m_y;
-        const ui32 w = data->m_w;
-        const ui32 h = data->m_h;
-        m_oglBackend->setViewport(x, y, w, h);
+    if (data != nullptr) {
+        m_oglBackend->setViewport(data->m_x, data->m_y, data->m_w, data->m_h);
     }
 
     return true;
 }
 
 bool OGLRenderEventHandler::onScreenshot(const EventData *eventData) {
-    osre_assert(nullptr != eventData);
-
     bool result = false;
     ScreenshotEventData *data = (ScreenshotEventData*) eventData;
     if (data != nullptr){
         result = makeScreenShot(data->mFilename.c_str(), data->mWidth, data->mHeight);
     }
     return result;
-    
 }
 
 } // Namespace RenderBackend

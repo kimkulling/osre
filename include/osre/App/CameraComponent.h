@@ -35,9 +35,10 @@ namespace App {
 
 /// @brief This enum describes the used camera model.
 enum class CameraModel {
+    InvalidModel = -1,
     Perspective = 0,
     Orthogonal= 1,
-    InvalidModel
+    NumModels
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -48,16 +49,16 @@ enum class CameraModel {
 /// 1. Perspective camera model
 /// 2. Orthogonal camera model
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Camera : public Component {
+class OSRE_EXPORT CameraComponent : public Component {
 public:
     /// @brief  The class constructor.
     /// @param[in] name        [in] The name for the camera node instance.
     /// @param[in] ids         [in] The id container, for unique ids.
     /// @param[in] parent              [in] The parent node, nullptr for a root node.
-    Camera(Entity *owner);
+    CameraComponent(Entity *owner);
 
     /// @brief The default class destructor, default.
-    ~Camera() override = default;
+    ~CameraComponent() override = default;
 
     /// @brief  Will set the projection parameter.
     /// @param[in] fov         The file of view, describes the angle of the view frustum.
@@ -98,17 +99,17 @@ public:
     void setEyePos(const glm::vec3 &eyePosistion);
 
     /// @brief  Will set the new projection mode parameter.
-    /// @param[in] fov
-    /// @param[in] aspectRatio
-    /// @param[in] nearPlane
-    /// @param[in] farPlane
+    /// @param[in] fov         The fiel-of-view.
+    /// @param[in] aspectRatio The aspect ratio.
+    /// @param[in] nearPlane   The distance to the near plance.
+    /// @param[in] farPlane    The distance to the far plane.
     void setProjectionMode(f32 fov, f32 aspectRatio, f32 nearPlane, f32 farPlane);
 
-    /// @brief
-    /// @param[in]
-    /// @param[in]
-    /// @param[in]
-    /// @param[in]
+    /// @brief Will set the camera parameters for an ortho camera model.
+    /// @param[in] left   The left corner.
+    /// @param[in] right  The right corner.
+    /// @param[in] bottom The bottom corner.
+    /// @param[in] top    The top corner.
     void setOrthoMode(f32 left, f32 right, f32 bottom, f32 top, f32 nearPlane, f32 farPlane);
 
     /// @brief  Will return the view matrix.
@@ -123,24 +124,28 @@ public:
     /// @return The field of view.
     f32 getFov() const;
 
-    /// @brief
-    /// @return 
+    /// @brief Will reutnr a aspects ratio
+    /// @return The aspect ratio.
     f32 getAspectRatio() const;
 
-    /// @brief
-    /// @return 
+    /// @brief  Will return the near distance of the view frustum.
+    /// @return The near distance of the view frustum.
     f32 getNear() const;
 
-    /// @brief
+    /// @brief  Will return the far distance of the view frustum.
+    /// @return The far distance of the view frustum.
     f32 getFar() const;
 
-    /// @brief
+    /// @brief  Will return the eye vector.
+    /// @return The exe vector.
     const glm::vec3 &getEye() const;
 
-    /// @brief
+    /// @brief  Will return the position / center vector.
+    /// @return The position / center vector.
     const glm::vec3 &getCenter() const;
 
-    /// @brief
+    /// @brief Will reutrn the up vector.
+    /// @return the up-vector.
     const glm::vec3 &getUp() const;
 
 protected:
@@ -150,49 +155,49 @@ protected:
 private:
     bool mRecalculateRequested;
     CameraModel mCameraModel;
-    f32 m_fov;
+    f32 mFOV;
     TResolution<f32> mResolution;
-    f32 m_near, m_far;
-    f32 m_aspectRatio;
-    f32 m_left, m_right, m_top, m_bottom;
-    glm::vec3 m_eye, m_center, m_up;
-    glm::mat4 m_view, m_projection;
+    f32 mNear, mFar;
+    f32 mAspectRatio;
+    f32 mLeft, mRight, mTop, mBottom;
+    glm::vec3 mEye, mCenter, mUp;
+    glm::mat4 mView, mProjection;
 };
 
-inline CameraModel Camera::getCameraModel() const {
+inline CameraModel CameraComponent::getCameraModel() const {
     return mCameraModel;
 }
 
-inline void Camera::setEyePos(const glm::vec3 &eyePosistion) {
-    m_eye = eyePosistion;
+inline void CameraComponent::setEyePos(const glm::vec3 &eyePosistion) {
+    mEye = eyePosistion;
 }
 
-inline f32 Camera::getFov() const {
-    return m_fov;
+inline f32 CameraComponent::getFov() const {
+    return mFOV;
 }
 
-inline f32 Camera::getAspectRatio() const {
-    return m_aspectRatio;
+inline f32 CameraComponent::getAspectRatio() const {
+    return mAspectRatio;
 }
 
-inline f32 Camera::getNear() const {
-    return m_near;
+inline f32 CameraComponent::getNear() const {
+    return mNear;
 }
 
-inline f32 Camera::getFar() const {
-    return m_far;
+inline f32 CameraComponent::getFar() const {
+    return mFar;
 }
 
-inline const glm::vec3 &Camera::getEye() const {
-    return m_eye;
+inline const glm::vec3 &CameraComponent::getEye() const {
+    return mEye;
 }
 
-inline const glm::vec3 &Camera::getCenter() const {
-    return m_center;
+inline const glm::vec3 &CameraComponent::getCenter() const {
+    return mCenter;
 }
 
-inline const glm::vec3 &Camera::getUp() const {
-    return m_up;
+inline const glm::vec3 &CameraComponent::getUp() const {
+    return mUp;
 }
 
 } // Namespace App

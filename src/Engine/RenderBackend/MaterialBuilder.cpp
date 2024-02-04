@@ -38,7 +38,7 @@ static const String GLSLVersionString_330 =
 static const String GLSLVersionString_400 =
         "#version 400 core\n";
 
-static const c8 *GLSLRenderVertexLayout =
+static const String GLSLRenderVertexLayout =
         "// RenderVertex layout\n"
         "layout(location = 0) in vec3 position;	  // object space vertex position\n"
         "layout(location = 1) in vec3 normal;	  // object space vertex normal\n"
@@ -46,7 +46,7 @@ static const c8 *GLSLRenderVertexLayout =
         "layout(location = 3) in vec2 texcoord0;  // per-vertex tex coord, stage 0\n"
         "\n";
 
-static const c8 *GLSLCombinedMVPUniformSrc =
+static const String GLSLCombinedMVPUniformSrc =
         "// uniforms\n"
         "uniform mat4 Model;\n"
         "uniform mat4 View;\n"
@@ -100,6 +100,7 @@ const String GLSLVertexShaderSrcRV =
         "vec3 Ls        = vec3(1.0, 1.0, 1.0);\n"
         "vec3 Ld        = vec3(0.7, 0.7, 0.7);\n"
         "vec3 La        = vec3(0.7, 0.7, 0.7);\n"
+        "float radius   = 100.0; // todo: set this via uniform\n"
         "\n"
         "vec3 Ks = vec3(1.0, 1.0, 1.0);\n"
         "vec3 Kd = vec3(1.0, 0.5, 0.0);\n"
@@ -116,6 +117,8 @@ const String GLSLVertexShaderSrcRV =
         "    // get the clip space position by multiplying the combined MVP matrix with the object space\n" 
         "    vec3 light_position_eye = vec3(View * vec4(light_pos, 1.0));\n"
         "    vec3 distance_to_light_eye = light_position_eye - position_eye;\n" 
+        "    float distance = length(distance_to_light_eye);\n" 
+        "    float intensity = cos(90 / (radius * distance));\n"
         "    vec3 direction_to_light_eye = normalize(distance_to_light_eye);\n"
         "    vec3 reflection_eye = reflect(-direction_to_light_eye, normal_eye);\n"
         "    vec3 surface_to_viewer_eye = normalize(-position_eye);\n"
@@ -131,7 +134,7 @@ const String GLSLVertexShaderSrcRV =
         "\n"
         "    //vertex position\n" 
         "    gl_Position = Projection * vec4(position_eye, 1.0);\n"
-        "    vSmoothColor = vec4(Is + Id + Ia, 1.0);\n"
+        "    vSmoothColor = vec4(Is + Id + Ia, 1.0) * intensity;\n"
         "    vUV = texcoord0;\n"
         "}\n";
 
@@ -308,7 +311,8 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
     return mat;
 }
 
-const c8 *DefaultDebugTestMat = "debug_text_mat";
+static constexpr c8 DefaultDebugTestMat[] = "debug_text_mat";
+
 RenderBackend::Material *MaterialBuilder::createDebugRenderTextMaterial() {
     Material *mat = sMaterialCache->find(DefaultDebugTestMat);
     if (nullptr != mat) {

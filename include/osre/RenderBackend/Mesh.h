@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+// Forward declarations ---------------------------------------------------------------------------
 class Material;
 
 //-------------------------------------------------------------------------------------------------
@@ -60,7 +61,7 @@ public:
     void setModelMatrix(bool islocal, const glm::mat4 &model);
     bool isLocal() const;
     const glm::mat4 &getLocalMatrix() const;
-    
+
     template <class T>
     void attachVertices(T *vertices, size_t size) {
         if (mVertexBuffer == nullptr) {

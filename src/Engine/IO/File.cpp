@@ -26,14 +26,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace IO {
 
-File::File() {
-    // empty
-}
-
-File::~File() {
-    // empty
-}
-
 bool File::exists(const String &filename) {
     bool exists = false;
     FILE *pFileStream = nullptr;

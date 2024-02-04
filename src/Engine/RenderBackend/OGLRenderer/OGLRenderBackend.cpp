@@ -31,6 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Stream.h>
 #include <osre/IO/Uri.h>
 #include <osre/Platform/AbstractOGLRenderContext.h>
+#include <osre/Platform/AbstractTimer.h>
 #include <osre/Profiling/PerformanceCounterRegistry.h>
 #include <osre/RenderBackend/RenderStates.h>
 #include <osre/RenderBackend/Shader.h>
@@ -52,6 +53,7 @@ static constexpr c8 Tag[] = "OGLRenderBackend";
 static constexpr ui32 NotInitedHandle = 9999999;
 
 OGLRenderBackend::OGLRenderBackend() :
+        mClearColor(0.3f, 0.3f, 0.3f, 1.0f),
         mRenderCtx(nullptr),
         mBuffers(),
         mActiveVB(NotInitedHandle),
@@ -77,15 +79,7 @@ OGLRenderBackend::OGLRenderBackend() :
 }
 
 OGLRenderBackend::~OGLRenderBackend() {
-    delete mFpState;
-    mFpState = nullptr;
-
-    releaseAllShaders();
-    releaseAllTextures();
-    releaseAllVertexArrays();
-    releaseAllBuffers();
-    releaseAllParameters();
-    releaseAllPrimitiveGroups();
+    destroy();
 }
 
 void OGLRenderBackend::enumerateGPUCaps() {
@@ -97,15 +91,46 @@ void OGLRenderBackend::enumerateGPUCaps() {
     glGetIntegerv(GL_MAX_TEXTURE_COORDS, &mOglCapabilities.mMaxTextureCoords);
 }
 
+void OGLRenderBackend::setClearColor(const Color4& clearColor) {
+    mClearColor = clearColor;
+}
+
+static void dump_matrix(const glm::mat4 &mat) {
+    std::cout << mat[0].r << " ";
+    std::cout << mat[0].g << " ";
+    std::cout << mat[0].b << " ";
+    std::cout << mat[0].a << " ";
+    std::cout << "\n";
+    std::cout << mat[1].r << " ";
+    std::cout << mat[1].g << " ";
+    std::cout << mat[1].b << " ";
+    std::cout << mat[1].a << " ";
+    std::cout << "\n";
+    std::cout << mat[2].r << " ";
+    std::cout << mat[2].g << " ";
+    std::cout << mat[2].b << " ";
+    std::cout << mat[2].a << " ";
+    std::cout << "\n";
+    std::cout << mat[3].r << " ";
+    std::cout << mat[3].g << " ";
+    std::cout << mat[3].b << " ";
+    std::cout << mat[3].a << " ";
+    std::cout << "\n";
+}
+
 void OGLRenderBackend::setMatrix(MatrixType type, const glm::mat4 &mat) {
     switch (type) {
         case MatrixType::Model:
+//            osre_info(Tag, "Setting Model to Model")
             mMatrixBlock.m_model = mat;
             break;
         case MatrixType::View:
+            osre_info(Tag, "Setting Model to View")
+            dump_matrix(mat);
             mMatrixBlock.m_view = mat;
             break;
         case MatrixType::Projection:
+//            osre_info(Tag, "Setting Model to Proj")
             mMatrixBlock.m_projection = mat;
             break;
         case MatrixType::Normal:
@@ -215,6 +240,19 @@ bool OGLRenderBackend::create(AbstractOGLRenderContext *renderCtx) {
 }
 
 bool OGLRenderBackend::destroy() {
+    delete mFpState;
+    mFpState = nullptr;
+
+    releaseAllShaders();
+    releaseAllTextures();
+    releaseAllVertexArrays();
+    releaseAllBuffers();
+    releaseAllParameters();
+    releaseAllPrimitiveGroups();
+
+    delete mFpsCounter;
+    mFpsCounter = nullptr;
+
     return true;
 }
 
@@ -225,17 +263,19 @@ void OGLRenderBackend::setTimer(Platform::AbstractTimer *timer) {
 }
 
 void OGLRenderBackend::setRenderContext(Platform::AbstractOGLRenderContext *renderCtx) {
-    if (mRenderCtx != renderCtx) {
-        mRenderCtx = renderCtx;
-        if (nullptr != mRenderCtx) {
-            mRenderCtx->activate();
-        }
+    if (mRenderCtx == renderCtx) {
+        return;
+    }
+        
+    mRenderCtx = renderCtx;
+    if (nullptr != mRenderCtx) {
+        mRenderCtx->activate();
     }
 }
 
 void OGLRenderBackend::clearRenderTarget(const ClearState &clearState) {
-    GLbitfield glTarget(0);
-    const ui32 clear(clearState.m_state);
+    GLbitfield glTarget{ 0 };
+    const ui32 clear{ clearState.m_state };
     if (clear & (int)ClearState::ClearBitType::ColorBit) {
         glTarget |= GL_COLOR_BUFFER_BIT;
     }
@@ -247,7 +287,7 @@ void OGLRenderBackend::clearRenderTarget(const ClearState &clearState) {
     }
 
     glClear(glTarget);
-    glClearColor(0.3f, 0.3f, 0.3f, 0.3f);
+    glClearColor(mClearColor.m_r, mClearColor.m_g, mClearColor.m_b, mClearColor.m_a);
 }
 
 void OGLRenderBackend::setViewport(i32 x, i32 y, i32 w, i32 h) {

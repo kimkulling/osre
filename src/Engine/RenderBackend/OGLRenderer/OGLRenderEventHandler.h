@@ -167,6 +167,8 @@ protected:
     /// @return true if successful.
     bool onScreenshot(const Common::EventData *data);
 
+    void onHandleCommit(FrameSubmitCmd *cmd);
+
 private:
     bool m_isRunning;
     OGLRenderBackend *m_oglBackend;

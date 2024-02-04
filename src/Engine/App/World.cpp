@@ -95,7 +95,7 @@ bool World::removeEntity(Entity *entity) {
     return found;
 }
 
-bool World::setActiveCamera(Camera *camera) {
+bool World::setActiveCamera(CameraComponent *camera) {
     if (camera == nullptr) {
         return false;
     }
@@ -128,6 +128,11 @@ void World::setSceneRoot(TransformComponent *root ) {
     mDirtry = true;
 }
 
+
+void World::init() {
+    Time dt;
+    update(dt);
+}
 
 void World::update(Time dt) {
     if (mActiveCamera != nullptr) {

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <src/Engine/Platform/sdl2/SDL2EventQueue.h>
 
+#include "SDL2Initializer.h"
 #include "SDL2Window.h"
 
 #include <SDL.h>
@@ -33,7 +34,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-using namespace ::OSRE;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::RenderBackend;
 
@@ -42,13 +42,14 @@ using namespace ::cppcore;
 static constexpr c8 Tag[] = "SDL2EventHandler";
 
 //-------------------------------------------------------------------------------------------------
-//  The abstract interface for sdl2-based event updates.
+/// @brief  The abstract interface for sdl2-based event updates.
 //-------------------------------------------------------------------------------------------------
 struct AbstractSDL2InputUpdate {
-    //  The virtual destructor.
+    /// @brief  The virtual destructor.
     virtual ~AbstractSDL2InputUpdate() = default;
 
-    //  Will perform the update.
+    /// @brief Will perform the update.
+    /// @param[out] ev   The next event or a nullptr, if none.
     virtual bool update(SDL_Event *ev) = 0;
 };
 
@@ -86,9 +87,10 @@ struct SDL2PeekInputUpdate final : public AbstractSDL2InputUpdate {
     //  Update implemented as a poll operation, will check for a new event.
     bool update(SDL_Event *ev) override {
         const i32 ret = ::SDL_PollEvent(ev);
-        if (0 == ret) {
+        if (ret == 0) {
             return false;
         }
+
         return true;
     }
 };
@@ -117,22 +119,12 @@ SDL2EventHandler::SDL2EventHandler(AbstractWindow *window) :
     m_eventTriggerer->addTriggerableEvent(QuitEvent);
     m_eventTriggerer->addTriggerableEvent(AppFocusEvent);
 
-    if (0 == SDL_WasInit(SDL_INIT_EVERYTHING)) {
-        SDL_Init(SDL_INIT_EVERYTHING);
-    }
-
-    if (0 == SDL_WasInit(SDL_INIT_EVENTS)) {
-        SDL_InitSubSystem(SDL_INIT_EVENTS);
-    }
-
-    if (0 == SDL_WasInit(SDL_INIT_JOYSTICK)) {
-        SDL_InitSubSystem(SDL_INIT_JOYSTICK);
-    }
-
-    SDL_JoystickEventState(SDL_ENABLE);
+    SDL2Initializer::init();
 }
 
 SDL2EventHandler::~SDL2EventHandler() {
+    SDL2Initializer::release();
+
     unregisterAllMenuCommands();
     
     delete m_eventTriggerer;
@@ -154,7 +146,8 @@ bool SDL2EventHandler::update() {
             case SDL_KEYDOWN:
             case SDL_KEYUP: {
                 KeyboardButtonEventData *data = new KeyboardButtonEventData(SDL_KEYDOWN == ev.type, m_eventTriggerer);
-                data->m_key = (Key) SDL_GetKeyName(ev.key.keysym.sym);
+                const char *c = SDL_GetKeyName(ev.key.keysym.sym);
+                data->m_key = (Key) *c;
                 activeEventQueue->addBack(data);
             } break;
 

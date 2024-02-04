@@ -53,7 +53,7 @@ namespace RenderBackend {
 
 namespace App {
 
-class Camera;
+class CameraComponent;
 class Stage;
 class World;
 class AppBase;
@@ -182,7 +182,7 @@ public:
     /// @brief  Will activate the given view in the active world instance.
     /// @param  view        [in] A pointer showing to the view.
     /// @return true, if the view activation was successful, false if not.
-    virtual Camera *setActiveCamera(Camera *view);
+    virtual CameraComponent *setActiveCamera(CameraComponent *view);
 
     /// @brief  Will requested a shutdown.
     virtual void requestShutdown();
@@ -227,12 +227,12 @@ public:
     /// @return The transform controller or nullptr if none is there.
     virtual Animation::AnimationControllerBase *getTransformController(RenderBackend::TransformMatrixBlock &tmb);
 
-    ///	@brief
-    /// @return
+    ///	@brief  Will return the mouse event listener,
+    /// @return The mouse event listener.
     virtual MouseEventListener *getMouseEventListener() const;
 
-    ///	@brief
-    /// @return
+    ///	@brief  Will return the keyboard listener.
+    /// @return The keyboard listener.
     virtual KeyboardEventListener *getKeyboardEventListener() const;
 
  protected:
@@ -263,6 +263,7 @@ private:
     };
 
     State mAppState;
+    i64 mLastTime;
     Common::ArgumentParser mArgParser;
     Common::Environment* mEnvironment;
     Properties::Settings *mSettings;
@@ -287,6 +288,14 @@ inline MouseEventListener *AppBase::getMouseEventListener() const {
 
 inline KeyboardEventListener *AppBase::getKeyboardEventListener() const {
     return mKeyboardEvListener;
+}
+
+inline const Common::ArgumentParser &AppBase::getArgumentParser() const {
+    return mArgParser;
+}
+
+inline Common::Ids *AppBase::getIdContainer() const {
+    return mIds;
 }
 
 //-------------------------------------------------------------------------------------------------

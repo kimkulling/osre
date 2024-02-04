@@ -20,18 +20,17 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
+#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/App/AssetRegistry.h>
 #include <osre/Common/Ids.h>
 #include <osre/Common/Logger.h>
 #include <osre/IO/Uri.h>
 #include <osre/RenderBackend/Mesh.h>
-#include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Shader.h>
 #include <osre/Common/glm_common.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h" 
-//#include "SOIL.h"
 
 namespace OSRE {
 namespace RenderBackend {
@@ -48,22 +47,22 @@ static const c8 *Tag = "RenderCommon";
 /// @brief  The corresponding names for vertex components in a vertex layout
 static const String
         VertCompName[static_cast<ui32>(VertexAttribute::NumVertexAttrs)] = {
-            "position", ///< Position
-            "normal", ///< Normal
+            "position",  ///< Position
+            "normal",    ///< Normal
             "texcoord0", ///< TexCoord0
             "texcoord1", ///< TexCoord1
             "texcoord2", ///< TexCoord2
             "texcoord3", ///< TexCoord3
-            "tangent", ///< Tangent
-            "binormal", ///< Binormal
-            "weights", ///< Weights
-            "indices", ///< Indices
-            "color0", ///< Color0
-            "color1", ///< Color1
+            "tangent",   ///< Tangent
+            "binormal",  ///< Binormal
+            "weights",   ///< Weights
+            "indices",   ///< Indices
+            "color0",    ///< Color0
+            "color1",    ///< Color1
             "instance0", ///< Instance0
             "instance1", ///< Instance1
             "instance2", ///< Instance2
-            "instance3" ///< Instance3
+            "instance3"  ///< Instance3
         };
 
 static const String ErrorCmpName = "Error";
@@ -105,10 +104,6 @@ RenderVert::RenderVert() :
     // empty
 }
 
-RenderVert::~RenderVert() {
-    // empty
-}
-
 bool RenderVert::operator==(const RenderVert &rhs) const {
     return (position == rhs.position && normal == rhs.normal &&
             color0 == rhs.color0 && tex0 == rhs.tex0);
@@ -127,10 +122,10 @@ const String *RenderVert::getAttributes() {
 }
 
 const String &getVertCompName(VertexAttribute attrib) {
-    if (attrib > VertexAttribute::Instance3) {
+    if (attrib > VertexAttribute::Instance3  || attrib == VertexAttribute::InvalidVertexAttr) {
         return ErrorCmpName;
     }
-    return VertCompName[static_cast<int>(attrib)];
+    return VertCompName[static_cast<size_t>(attrib)];
 }
 
 const size_t NumUIVertAttributes = 2;
@@ -159,10 +154,6 @@ VertComponent::VertComponent(VertexAttribute attrib, VertexFormat format) :
     // empty
 }
 
-VertComponent::~VertComponent() {
-    // empty
-}
-
 VertexLayout::VertexLayout() :
         m_attributes(nullptr),
         m_components(),
@@ -174,7 +165,6 @@ VertexLayout::VertexLayout() :
 
 VertexLayout::~VertexLayout() {
     delete[] m_attributes;
-    m_attributes = nullptr;
 }
 
 void VertexLayout::clear() {
@@ -252,10 +242,6 @@ BufferData::BufferData() :
     // empty
 }
 
-BufferData::~BufferData() {
-    m_cap = 0;
-}
-
 BufferData *BufferData::alloc(BufferType type, size_t sizeInBytes, BufferAccessType access) {
     BufferData *buffer = sBufferDataAllocator.alloc();
     buffer->m_cap = sizeInBytes;
@@ -322,7 +308,6 @@ Texture::Texture() :
 
 Texture::~Texture() {
     delete[] m_data;
-    m_data = nullptr;
 }
 
 size_t TextureLoader::load(const IO::Uri &uri, Texture *tex) {
@@ -425,14 +410,6 @@ TextureStageType TextureResource::setTextureStage() const {
     return m_stage;
 }
 
-TextureLoader::TextureLoader() {
-    // empty
-}
-
-TextureLoader::~TextureLoader() {
-    // empty
-}
-
 ResourceState TextureResource::onLoad(const IO::Uri &uri, TextureLoader &loader) {
     if (getState() == ResourceState::Loaded) {
         return getState();
@@ -532,10 +509,11 @@ Viewport::Viewport(i32 x, i32 y, i32 w, i32 h) :
     // empty
 }
 
-Viewport::~Viewport() {
+Viewport::Viewport(const Viewport &rhs) :
+        m_x(rhs.m_x), m_y(rhs.m_y), m_w(rhs.m_w), m_h(rhs.m_h) {
     // empty
 }
-
+        
 bool Viewport::operator==(const Viewport &rhs) const {
     return (m_x == rhs.m_x && m_y == rhs.m_y && m_w == rhs.m_w && m_h == rhs.m_h);
 }
@@ -551,6 +529,7 @@ Light::Light() :
         m_ambient(1.0f, 1.0f, 1.0f),
         m_direction(0.0f, 0.0f, 1.0f, 1.0f),
         m_specularExp(1.0f),
+        mRadius(1.0f),
         m_type(LightType::InvalidLightType) {
     // empty
 }
@@ -603,7 +582,7 @@ RenderBatchData *PassData::getBatchById(const c8 *id) const {
     return nullptr;
 }
 
-static const size_t MaxSubmitCmds = 500;
+static constexpr size_t MaxSubmitCmds = 500;
 
 Frame::Frame() :
         m_newPasses(),
@@ -694,10 +673,6 @@ UniformVar::UniformVar() :
         m_type(ParameterType::PT_None),
         m_numItems(1),
         m_next(nullptr) {
-    // empty
-}
-
-UniformVar::~UniformVar() {
     // empty
 }
 

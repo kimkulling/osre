@@ -20,44 +20,57 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "OsreEdApp.h"
-#include "Gui/UIElementsWin32.h"
+#pragma once
 
-#include <osre/Platform/AbstractOSService.h>
-#include <osre/Platform/PlatformInterface.h>
+#include <osre/Common/osre_common.h>
+#include <osre/RenderBackend/RenderCommon.h>
 
-using namespace ::OSRE;
-using namespace ::OSRE::App;
-using namespace ::OSRE::Editor;
-using namespace ::OSRE::Platform;
+namespace OSRE {
+namespace RenderBackend {
 
-static constexpr char Tag[] = "osre_ed_main";
+class RenderBackendService;
 
-int main(int argc, char *argv[]) {
-    OsreEdApp app(argc, argv);
+struct DrawCmd;
 
-    if (!UIElementsWin32::init()) {
-        osre_error(Tag, "Cannot init platform-specific ui.");
-        return -1;
-    }
+class OSRE_EXPORT CanvasRenderer : IRenderer {
+public:
+    using DrawCmdArray = cppcore::TArray<DrawCmd*>;
 
-    const ui32 Margin = 10;
-    ui32 width = 0, height = 0;
-    UIElementsWin32::getMonitorResolution(width, height);
-    if (!app.initWindow(Margin, Margin, width - Margin, height - Margin, "OSRE-Ed", false, 
-            RenderBackendType::OpenGLRenderBackend)) {
-        osre_error(Tag, "Cannot create window.");
-        return -1;
-    }
+    CanvasRenderer(RenderBackendService *rbSrv, i32 numLayers);
+    ~CanvasRenderer() override;
+    void render() override;
+    void setResolution(i32 x, i32 y, i32 w, i32 h);
+    bool selectLayer(i32 layer);
+    i32 getActiveLayer() const;
+    void setcolor(const Color4 &color);
+    void drawline(i32 x1, i32 y1, i32 x2, i32 y2);
+    void drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3, bool filled);
+    void drawRect(i32 x, i32 y, i32 w, i32 h, bool filled);
+    void setDirty();
+    void setClean();
+    bool isDirty() const;
 
-    while (app.handleEvents()) {
-        app.update();
-        app.requestNextFrame();
-    }
+private:    
+    RenderBackendService *mRbSrv;
+    bool mDirty;
+    DrawCmdArray mDrawCmdArray;
+    glm::vec3 mPenColor;
+    Rect2i mResolution;
+    i32 mActiveLayer;
+    i32 mNumLayers;
+};
 
-    MemoryStatistics::showStatistics();
-
-    UIElementsWin32::release();
-
-    return 0;
+inline void CanvasRenderer::setDirty() {
+    mDirty = true;
 }
+
+inline void CanvasRenderer::setClean() {
+    mDirty = false;
+}
+
+inline bool CanvasRenderer::isDirty() const {
+    return mDirty;
+}
+ 
+} // namespace RenderBackend
+} // namespace OSRE

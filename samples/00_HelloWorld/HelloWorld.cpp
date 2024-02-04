@@ -40,7 +40,7 @@ static constexpr c8 Tag[] = "HelloWorldApp";
 /// The example application, will create the render environment and render a simple triangle onto it
 class HelloWorldApp : public App::AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
-    TransformMatrixBlock m_transformMatrix;
+    TransformMatrixBlock mTransformMatrix;
     /// The entity to render
     Entity *mEntity;
     /// The keyboard controller instance.
@@ -50,7 +50,7 @@ public:
     /// The class constructor with the incoming arguments from the command line.
     HelloWorldApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv),
-            m_transformMatrix(),
+            mTransformMatrix(),
             mEntity(nullptr),
             mKeyboardTransCtrl(nullptr) {
         // empty
@@ -60,10 +60,10 @@ public:
     ~HelloWorldApp() override = default;
 
 protected:
-    Camera *setupCamera(World *world) {
+    CameraComponent *setupCamera(World *world) {
         Entity *camEntity = new Entity("camera", *getIdContainer(), world);
         world->addEntity(camEntity);
-        Camera *camera =(Camera*) camEntity->createComponent(ComponentType::CameraComponentType);
+        CameraComponent *camera =(CameraComponent*) camEntity->createComponent(ComponentType::CameraComponentType);
         world->setActiveCamera(camera);
         ui32 w, h;
         AppBase::getResolution(w, h);
@@ -79,20 +79,19 @@ protected:
 
         AppBase::setWindowsTitle("Hello-World sample! Rotate with keyboard: w, a, s, d, scroll with q, e");
         World *world = getStage()->addActiveWorld("hello_world");
-        mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
-        Camera *camera = setupCamera(world);
 
+        mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
         MeshBuilder meshBuilder;
         RenderBackend::Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5,.5,.5,BufferAccessType::ReadOnly).getMesh();
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
 
-            Time dt;
-            world->update(dt);
+            CameraComponent *camera = setupCamera(world);
+            world->init();
             camera->observeBoundingBox(mEntity->getAABB());
         }
-        mKeyboardTransCtrl = AppBase::getTransformController(m_transformMatrix);
+        mKeyboardTransCtrl = AppBase::getTransformController(mTransformMatrix);
 
         osre_info(Tag, "Creation finished.");
 
@@ -107,7 +106,7 @@ protected:
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 
-        rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
 
         rbSrv->endRenderBatch();
         rbSrv->endPass();

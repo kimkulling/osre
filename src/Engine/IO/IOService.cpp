@@ -33,8 +33,8 @@ namespace IO {
 
 using namespace OSRE::Common;
 
-static const c8 *Tag = "IOService";
-static const c8 *Zip_Extension = "zip";
+static constexpr c8 Tag[]           = "IOService";
+static constexpr c8 Zip_Extension[] = "zip";
 
 static AbstractFileSystem *createFS( const Uri &file ) {
     if ( !file.isValid() ) {
@@ -49,9 +49,7 @@ static AbstractFileSystem *createFS( const Uri &file ) {
     return nullptr;
 }
 
-IOService::IOService() 
-: AbstractService( "io/ioserver" )
-, m_mountedMap() {
+IOService::IOService() : AbstractService( "io/ioserver" ), m_mountedMap() {
     CREATE_SINGLETON( IOService );
 
     m_mountedMap["file"] = new LocaleFileSystem();
@@ -71,6 +69,9 @@ bool IOService::onOpen() {
 }
 
 bool IOService::onClose() {
+    for (MountedMap::iterator it = m_mountedMap.begin(); it != m_mountedMap.end(); ++it) {
+        delete it->second;
+    }
     return true;
 }
 

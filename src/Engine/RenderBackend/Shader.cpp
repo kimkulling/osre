@@ -27,12 +27,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-using namespace ::OSRE::Common;  
+using namespace ::OSRE::Common;
 using namespace ::OSRE::IO;
 
 Shader::Shader() :
-        mUniformBuffer(), mVertexAttributes(), m_src{}, m_compileState{} {
-    ::memset(m_compileState, 0, sizeof(CompileState)*MaxCompileState);
+        mUniformBuffer(), mVertexAttributes(), mSrc{}, mCompileState{} {
+    ::memset(mCompileState, 0, sizeof(CompileState)*MaxCompileState);
 }
 
 void Shader::addVertexAttribute(const String &name) {
@@ -79,21 +79,23 @@ const c8 *Shader::getUniformBufferAt(size_t index) const {
 
 void Shader::setSource(ShaderType type, const String &src) {
     const size_t index = static_cast<size_t>(type);
-    if (src == m_src[index]) {
+    if (src == mSrc[index]) {
         return;
     }
- 
-    m_src[index] = src;
-    m_compileState[index] = Updated;
+
+    mSrc[index] = src;
+    mCompileState[index] = Updated;
 }
 
 const c8 *Shader::getSource(ShaderType type) const {
-    return m_src[static_cast<size_t>(type)].c_str();
+    return mSrc[static_cast<size_t>(type)].c_str();
 }
+
+static constexpr size_t InvalidLocation = 9999;
 
 size_t Shader::getLocation( const c8 *vertexAttribute ) const {
     if (mVertexAttributes.isEmpty()) {
-        return 9999;
+        return InvalidLocation;
     }
 
     for (size_t location = 0; location < mVertexAttributes.size(); ++location) {
@@ -101,10 +103,11 @@ size_t Shader::getLocation( const c8 *vertexAttribute ) const {
             return location;
         }
     }
-    return 9999;
+
+    return InvalidLocation;
 }
 
-ShaderType Shader::getTypeFromeExtension( const String &extension ) {
+ShaderType Shader::getTypeFromeExtension(const String &extension) {
     if (extension.empty()) {
         return ShaderType::InvalidShaderType;
     }
@@ -150,7 +153,7 @@ size_t ShaderLoader::load( const IO::Uri &uri, Shader *shader ) {
     }
     shader->setSource(type, shaderSrc);
     stream->close();
- 
+
     return size;
 }
 

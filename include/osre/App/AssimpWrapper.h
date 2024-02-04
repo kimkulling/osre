@@ -22,7 +22,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/App/AssetsCommon.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/Animation/AnimatorBase.h>
 #include <osre/Common/Ids.h>

@@ -22,38 +22,36 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/App/AppBase.h>
 #include <osre/App/AssetRegistry.h>
+#include <osre/Properties/Settings.h>
 #include <osre/Common/Logger.h>
+#include <osre/RenderBackend/RenderCommon.h>
+#include <osre/App/ServiceProvider.h>
+#include <osre/RenderBackend/RenderBackendService.h>
+#include <osre/RenderBackend/TransformMatrixBlock.h>
+
+#include "RenderBackend/2D/CanvasRenderer.h"
 
 using namespace ::OSRE;
 using namespace ::OSRE::RenderBackend;
-using namespace ::OSRE::UI;
-using namespace ::OSRE::Platform;
 using namespace ::OSRE::App;
 
 // To identify local log entries
 static const c8 Tag[] = "ModelLoadingApp";
 
 // The example application, will create the render environment and render a simple triangle onto it
-class UIDemoApp : public App::AppBase {
-    Canvas *m_canvas;
-    TransformMatrixBlock m_transformMatrix;
+class Demo2DApp : public App::AppBase {
+    TransformMatrixBlock mTransformMatrix;
+    CanvasRenderer *mCanvasRenderer;
 
 public:
-    UIDemoApp(int argc, char *argv[]) :
+    Demo2DApp(int argc, char *argv[]) :
             AppBase(argc, (const char **)argv),
-            m_canvas(nullptr),
-            m_transformMatrix() {
+            mTransformMatrix(),
+            mCanvasRenderer(nullptr) {
         // empty
     }
 
-    ~UIDemoApp() override {
-        // empty
-    }
-
-    void openFileCallback(ui32, void *) {
-        IO::Uri loc;
-        PlatformOperations::getFileOpenDialog("All\0 *.*\0", loc);
-    }
+    ~Demo2DApp() override = default;
 
     void quitCallback(ui32, void *) {
         AppBase::requestShutdown();
@@ -62,37 +60,39 @@ public:
 protected:
     bool onCreate() override {
         Properties::Settings *baseSettings(AppBase::getSettings());
-        if (nullptr == baseSettings) {
+        if (baseSettings == nullptr) {
             return false;
         }
 
-        baseSettings->setString(Properties::Settings::WindowsTitle, "Demo UI!");
+        baseSettings->setString(Properties::Settings::WindowsTitle, "Demo in 2D!");
         if (!AppBase::onCreate()) {
             return false;
         }
 
-        AssetRegistry::registerAssetPathInBinFolder("assets", "assets");
+        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        mCanvasRenderer = new CanvasRenderer(rbSrv, 2);
 
-        m_canvas = AppBase::createScreen("UiDemo");
-
-        Panel *panel = new Panel("panel", m_canvas);
-        panel->setRect(10, 10, 500, 500);
-        
-        ButtonBase *btnOpenFile = new ButtonBase( "Open file", panel);
-        btnOpenFile->registerCallback(WidgetState::Pressed, UiFunctor::Make(this, &UIDemoApp::openFileCallback));
-        btnOpenFile->setRect( 20, 20, 100, 20 );
-        btnOpenFile->setLabel("Open file");
-
-        ButtonBase *btnQuit  = new ButtonBase( "Quit", panel );
-        btnQuit->setRect( 400, 20, 100, 20 );
-        btnQuit->registerCallback(WidgetState::Pressed, UiFunctor::Make( this, &UIDemoApp::quitCallback ) );
-
-        TextBase *tb = new TextBase("test", panel);
-        tb->setLabel("Test");
-        tb->setRect(20, 20, 400, 60);
+        Color4 green(0, 1, 0, 1);
+        mCanvasRenderer->setcolor(green);
+        mCanvasRenderer->drawRect(1, 1, 100, 100, true);
 
         return true;
     }
+
+    void onRender() {
+        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
+        rbSrv->beginRenderBatch("2d");
+
+        mCanvasRenderer->render();
+        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
+        mCanvasRenderer->render();        
+
+        rbSrv->endRenderBatch();
+        rbSrv->endPass();
+
+        AppBase::onUpdate(); 
+    }
 };
 
-OSRE_MAIN(UIDemoApp)
+OSRE_MAIN(Demo2DApp)

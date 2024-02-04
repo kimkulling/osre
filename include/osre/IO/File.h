@@ -29,8 +29,8 @@ namespace IO {
 
 class OSRE_EXPORT File {
 public:
-    File();
-    ~File();
+    File() = default;
+    ~File() = default;
     static bool exists(const String &filename);
 };
 
