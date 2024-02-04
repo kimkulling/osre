@@ -140,7 +140,7 @@ public:
     /// @param[in] title       The Windows title.
     /// @param[in] fullscreen  true for fullscreen mode, false for windowed mode.
     /// @param[in] childWindow true for child window.
-    /// @param  renderer       The requested render mode.
+    /// @param[in] renderer    The requested render mode.
     /// @return true, if the window was generated.
     virtual bool initWindow( ui32 x, ui32 y, ui32 width, ui32 height, const String &title, 
         bool fullscreen, bool childWindow, RenderBackendType renderer);

@@ -154,7 +154,7 @@ bool SDL2EventHandler::update() {
             case SDL_KEYDOWN:
             case SDL_KEYUP: {
                 KeyboardButtonEventData *data = new KeyboardButtonEventData(SDL_KEYDOWN == ev.type, m_eventTriggerer);
-                data->m_key = (Key)ev.key.keysym.sym;
+                data->m_key = (Key) SDL_GetKeyName(ev.key.keysym.sym);
                 activeEventQueue->addBack(data);
             } break;
 
