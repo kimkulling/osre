@@ -100,13 +100,13 @@ public:
                 // setup material
                 m_pointMesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
 
-                m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
-                m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, glm::vec3(.5, .5, .5));
+                m_transformMatrix.mModel = glm::rotate(m_transformMatrix.mModel, 0.0f, glm::vec3(1, 1, 0));
+                m_transformMatrix.mModel = glm::scale(m_transformMatrix.mModel, glm::vec3(.5, .5, .5));
                 UniformVar *parameter = UniformVar::create("MVP", ParameterType::PT_Mat4);
-                ::memcpy(parameter->m_data.m_data, glm::value_ptr(m_transformMatrix.m_projection * m_transformMatrix.m_view * m_transformMatrix.m_model), sizeof(glm::mat4));
+                ::memcpy(parameter->m_data.m_data, glm::value_ptr(m_transformMatrix.mProjection * m_transformMatrix.mView * m_transformMatrix.mModel), sizeof(glm::mat4));
 
                 m_transformMatrix.update();
-                rbSrv->setMatrix("MVP", m_transformMatrix.m_mvp);
+                rbSrv->setMatrix("MVP", m_transformMatrix.mMvp);
             }
             rbSrv->endRenderBatch();
         }

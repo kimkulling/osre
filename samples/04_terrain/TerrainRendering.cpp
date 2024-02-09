@@ -165,7 +165,7 @@ protected:
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("terrain");
 
-        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
+        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
 
         rbSrv->endRenderBatch();
         rbSrv->endPass();

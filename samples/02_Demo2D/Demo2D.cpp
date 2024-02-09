@@ -85,7 +85,7 @@ protected:
         rbSrv->beginRenderBatch("2d");
 
         mCanvasRenderer->render();
-        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
+        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
         mCanvasRenderer->render();        
 
         rbSrv->endRenderBatch();

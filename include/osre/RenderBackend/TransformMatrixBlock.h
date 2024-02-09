@@ -32,11 +32,11 @@ namespace RenderBackend {
 /// - You can get and set each matrix (model, view, projection, normal or the computed MVP).
 /// - You can use these matrices in your shader.
 struct OSRE_EXPORT TransformMatrixBlock {
-    glm::mat4 m_projection;
-    glm::mat4 m_model;
-    glm::mat4 m_view;
-    glm::mat4 m_normal;
-    glm::mat4 m_mvp;
+    glm::mat4 mProjection;
+    glm::mat4 mModel;
+    glm::mat4 mView;
+    glm::mat4 mNormal;
+    glm::mat4 mMvp;
 
     ///	@brief The class constructor.
     TransformMatrixBlock();

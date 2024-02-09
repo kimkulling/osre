@@ -136,6 +136,9 @@ void AppBase::resize(i32 x, i32 y, i32 w, i32 h) {
     }
 
     rootWindow->resize(x, y, w, h);
+    if (mRbService != nullptr) {
+        mRbService->resize(x, y, w, h);
+    }
 }
 
 void AppBase::requestNextFrame() {

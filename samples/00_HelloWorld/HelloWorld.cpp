@@ -106,7 +106,7 @@ protected:
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 
-        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
+        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
 
         rbSrv->endRenderBatch();
         rbSrv->endPass();

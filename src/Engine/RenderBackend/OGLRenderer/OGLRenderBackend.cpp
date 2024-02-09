@@ -122,19 +122,19 @@ void OGLRenderBackend::setMatrix(MatrixType type, const glm::mat4 &mat) {
     switch (type) {
         case MatrixType::Model:
 //            osre_info(Tag, "Setting Model to Model")
-            mMatrixBlock.m_model = mat;
+            mMatrixBlock.mModel = mat;
             break;
         case MatrixType::View:
-            osre_info(Tag, "Setting Model to View")
-            dump_matrix(mat);
-            mMatrixBlock.m_view = mat;
+//            osre_info(Tag, "Setting Model to View")
+//            dump_matrix(mat);
+            mMatrixBlock.mView = mat;
             break;
         case MatrixType::Projection:
 //            osre_info(Tag, "Setting Model to Proj")
-            mMatrixBlock.m_projection = mat;
+            mMatrixBlock.mProjection = mat;
             break;
         case MatrixType::Normal:
-            mMatrixBlock.m_normal = mat;
+            mMatrixBlock.mNormal = mat;
             break;
         default:
             osre_debug(Tag, "Not supported enum " + osre_to_string((i32)type));
@@ -146,18 +146,18 @@ void OGLRenderBackend::setMatrix(MatrixType type, const glm::mat4 &mat) {
 const glm::mat4 &OGLRenderBackend::getMatrix(MatrixType type) const {
     switch (type) {
         case MatrixType::Model:
-            return mMatrixBlock.m_model;
+            return mMatrixBlock.mModel;
         case MatrixType::View:
-            return mMatrixBlock.m_view;
+            return mMatrixBlock.mView;
         case MatrixType::Projection:
-            return mMatrixBlock.m_projection;
+            return mMatrixBlock.mProjection;
         case MatrixType::Normal:
-            return mMatrixBlock.m_normal;
+            return mMatrixBlock.mNormal;
         default:
             osre_debug(Tag, "Not supported enum " + osre_to_string((i32)type));
             break;
     }
-    return mMatrixBlock.m_model;
+    return mMatrixBlock.mModel;
 }
 
 void OGLRenderBackend::applyMatrix() {

@@ -102,26 +102,26 @@ protected:
 
         glm::mat4 rot(1.0);
         if (AppBase::isKeyPressed(Platform::KEY_A)) {
-            mTransformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
+            mTransformMatrix.mModel *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
 
         }
         if (AppBase::isKeyPressed(Platform::KEY_S)) {
-            mTransformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
+            mTransformMatrix.mModel *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
         }
         
         if (AppBase::isKeyPressed(Platform::KEY_W)) {
-            mTransformMatrix.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
+            mTransformMatrix.mModel *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
         }
 
         if (AppBase::isKeyPressed(Platform::KEY_D)) {
-            mTransformMatrix.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
+            mTransformMatrix.mModel *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
         }
         RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
 
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
 
-        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
+        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
 
         rbSrv->endRenderBatch();
         rbSrv->endPass();
