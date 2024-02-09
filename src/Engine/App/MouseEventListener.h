@@ -33,13 +33,13 @@ namespace App {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup    Editor
 ///
-/// @brief
+/// @brief This class implements an event listener for mouse events.
 //-------------------------------------------------------------------------------------------------
 class MouseEventListener : public Platform::OSEventListener {
 public:
-    static const ui32 LeftButton = 1;
-    static const ui32 MiddleButton = 2;
-    static const ui32 RightButton = 3;
+    static constexpr ui32 LeftButton = 1;
+    static constexpr ui32 MiddleButton = 2;
+    static constexpr ui32 RightButton = 3;
 
     ///	@brief  The default class constructor.
     MouseEventListener();

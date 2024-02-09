@@ -121,7 +121,7 @@ public:
                     shader->addUniformBuffer("M");
                 }
 
-                m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
+                m_transformMatrix.mModel = glm::rotate(m_transformMatrix.mModel, 0.0f, glm::vec3(1, 1, 0));
                 m_transformMatrix.update();
 
                 glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
@@ -137,7 +137,7 @@ public:
                     y += 2.0f;
                 }
 
-                rbSrv->setMatrix("VP", m_transformMatrix.m_mvp);
+                rbSrv->setMatrix("VP", m_transformMatrix.mMvp);
                 rbSrv->setMatrixArray("M", NumInstances, m_mat);
             }
             rbSrv->endRenderBatch();
@@ -158,7 +158,7 @@ public:
         {
             rbSrv->beginRenderBatch("b1");
             {
-                rbSrv->setMatrix("VP", m_transformMatrix.m_mvp);
+                rbSrv->setMatrix("VP", m_transformMatrix.mMvp);
                 rbSrv->setMatrixArray("M", NumInstances, m_mat);
             }
             rbSrv->endRenderBatch();

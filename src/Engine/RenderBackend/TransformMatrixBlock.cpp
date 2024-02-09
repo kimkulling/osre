@@ -26,55 +26,55 @@ namespace OSRE {
 namespace RenderBackend {
 
 TransformMatrixBlock::TransformMatrixBlock() :
-        m_projection(1.0f),
-        m_model(1.0f),
-        m_view(1.0f),
-        m_normal(1.0f),
-        m_mvp(1.0f) {
+        mProjection(1.0f),
+        mModel(1.0f),
+        mView(1.0f),
+        mNormal(1.0f),
+        mMvp(1.0f) {
     init();
 }
 
 void TransformMatrixBlock::init() {
-    m_projection = glm::mat4(1.0f);
-    m_model = glm::mat4(1.0f);
-    m_view = glm::mat4(1.0f);
-    m_normal = glm::mat4(1.0f);
-    m_mvp = glm::mat4(1.0f);
+    mProjection = glm::mat4(1.0f);
+    mModel = glm::mat4(1.0f);
+    mView = glm::mat4(1.0f);
+    mNormal = glm::mat4(1.0f);
+    mMvp = glm::mat4(1.0f);
 }
 
 void TransformMatrixBlock::update() {
-    const glm::mat4 modelView = m_view * m_model;
-    m_normal = transpose(inverse(modelView));
+    const glm::mat4 modelView = mView * mModel;
+    mNormal = transpose(inverse(modelView));
 }
 
 const glm::mat4 &TransformMatrixBlock::getModel() const {
-    return m_model;
+    return mModel;
 }
 
 const glm::mat4 &TransformMatrixBlock::getView() const {
-    return m_view;
+    return mView;
 }
 
 const glm::mat4 &TransformMatrixBlock::getProjection() const {
-    return m_projection;
+    return mProjection;
 }
 
 const float *TransformMatrixBlock::getModelPtr() const {
-    return glm::value_ptr(m_model);
+    return glm::value_ptr(mModel);
 }
 
 const float *TransformMatrixBlock::getViewPtr() const {
-    return glm::value_ptr(m_view);
+    return glm::value_ptr(mView);
 }
 
 const float *TransformMatrixBlock::getProjectionPtr() const {
-    return glm::value_ptr(m_projection);
+    return glm::value_ptr(mProjection);
 }
 
 const float *TransformMatrixBlock::getMVP() {
-    const glm::mat4 modelView = m_view * m_model;
-    m_mvp = m_projection * modelView;
-    return glm::value_ptr(m_mvp);
+    const glm::mat4 modelView = mView * mModel;
+    mMvp = mProjection * modelView;
+    return glm::value_ptr(mMvp);
 }
 
 

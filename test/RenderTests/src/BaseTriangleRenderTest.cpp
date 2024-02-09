@@ -61,13 +61,13 @@ public:
         meshBuilder.createTriangle(VertexType::ColorVertex, BufferAccessType::ReadOnly);
         meshArray.add(meshBuilder.getMesh());
 
-        mTransformMatrix.m_model = glm::rotate(mTransformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
+        mTransformMatrix.mModel = glm::rotate(mTransformMatrix.mModel, 0.0f, glm::vec3(1, 1, 0));
 
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("b1");
             {
-                rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
+                rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
                 rbSrv->addMesh(meshArray, 0);
             }
             rbSrv->endRenderBatch();

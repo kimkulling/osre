@@ -109,9 +109,9 @@ public:
                 lineMesh->setMaterial(MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex));
                 rbSrv->addMesh(lineMesh, 0);
 
-                mTransformMatrix.m_model = glm::rotate(mTransformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
-                mTransformMatrix.m_model = glm::scale(mTransformMatrix.m_model, glm::vec3(.5, .5, .5));
-                rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
+                mTransformMatrix.mModel = glm::rotate(mTransformMatrix.mModel, 0.0f, glm::vec3(1, 1, 0));
+                mTransformMatrix.mModel = glm::scale(mTransformMatrix.mModel, glm::vec3(.5, .5, .5));
+                rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
             }
             rbSrv->endRenderBatch();
         }
