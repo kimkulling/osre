@@ -292,10 +292,6 @@ void OGLRenderBackend::clearRenderTarget(const ClearState &clearState) {
 
 void OGLRenderBackend::setViewport(i32 x, i32 y, i32 w, i32 h) {
     glViewport(x, y, w, h);
-    mViewport.m_x = x;
-    mViewport.m_y = y;
-    mViewport.m_w = w;
-    mViewport.m_h = h;
 }
 
 OGLBuffer *OGLRenderBackend::createBuffer(BufferType type) {

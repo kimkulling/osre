@@ -348,6 +348,7 @@ SET( renderbackend_src
     RenderBackend/Shader.cpp
 )
 SET( renderbackend_2d_src
+    RenderBackend/2D/RenderPass2D.h
     RenderBackend/2D/CanvasRenderer.h
     RenderBackend/2D/CanvasRenderer.cpp
 )

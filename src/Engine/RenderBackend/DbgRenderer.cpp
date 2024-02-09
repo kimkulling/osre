@@ -49,6 +49,10 @@ DbgRenderer::~DbgRenderer() {
     clear();
 }
 
+void DbgRenderer::render() {
+
+}
+
 bool DbgRenderer::create(RenderBackendService *rbSrv) {
     if (nullptr != sInstance) {
         return false;

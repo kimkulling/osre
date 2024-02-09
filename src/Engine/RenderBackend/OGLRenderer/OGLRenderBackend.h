@@ -176,7 +176,6 @@ private:
 	cppcore::TArray<OGLFrameBuffer*> mFrameFuffers;
     String mExtensions;
     i32 mOpenGLVersion[2];
-    Viewport mViewport;
 };
 
 } // Namespace RenderBackend

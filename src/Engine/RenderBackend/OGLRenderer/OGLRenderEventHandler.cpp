@@ -318,12 +318,12 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
             continue;
         }
 
-        if (!currentPass->m_isDirty) {
+        if (!currentPass->mIsDirty) {
             continue;
         }
 
         // ToDo: create pipeline pass for the name.
-        for (RenderBatchData * currentBatchData : currentPass->m_geoBatches) {
+        for (RenderBatchData * currentBatchData : currentPass->mMeshBatches) {
             if (nullptr == currentBatchData) {
                 continue;
             }
@@ -433,7 +433,7 @@ void OGLRenderEventHandler::onHandleCommit(FrameSubmitCmd *cmd) {
                 continue;
             }
 
-            for (RenderBatchData *rbd : pd->m_geoBatches) {
+            for (RenderBatchData *rbd : pd->mMeshBatches) {
                 for (MeshEntry *entry : rbd->m_meshArray) {
                     cppcore::TArray<size_t> primGroups;
                     addMeshes(cmd->m_batchId, primGroups, entry);

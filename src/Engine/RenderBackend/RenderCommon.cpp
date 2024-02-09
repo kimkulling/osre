@@ -573,9 +573,9 @@ RenderBatchData *PassData::getBatchById(const c8 *id) const {
         return nullptr;
     }
 
-    for (ui32 i = 0; i < m_geoBatches.size(); ++i) {
-        if (0 == strncmp(m_geoBatches[i]->m_id, id, strlen(id))) {
-            return m_geoBatches[i];
+    for (ui32 i = 0; i < mMeshBatches.size(); ++i) {
+        if (0 == strncmp(mMeshBatches[i]->m_id, id, strlen(id))) {
+            return mMeshBatches[i];
         }
     }
 

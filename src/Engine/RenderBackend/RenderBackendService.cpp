@@ -82,13 +82,13 @@ RenderBackendService::RenderBackendService() :
         mSettings(nullptr),
         mViewport(),
         mOwnsSettingsConfig(false),
-        m_frameCreated(false),
-        m_renderFrame(&m_frames[0]),
-        m_submitFrame(&m_frames[1]),
-        m_dirty(false),
-        m_passes(),
-        m_currentPass(nullptr),
-        m_currentBatch(nullptr) {
+        mFrameCreated(false),
+        mRenderFrame(&mFrames[0]),
+        mSubmitFrame(&mFrames[1]),
+        mDirty(false),
+        mPasses(),
+        mCurrentPass(nullptr),
+        mCurrentBatch(nullptr) {
     // empty
 }
 
@@ -97,10 +97,10 @@ RenderBackendService::~RenderBackendService() {
         delete mSettings;
     }
 
-    for (ui32 i = 0; i < m_passes.size(); ++i) {
-        delete m_passes[i];
+    for (ui32 i = 0; i < mPasses.size(); ++i) {
+        delete mPasses[i];
     }
-    m_passes.clear();
+    mPasses.clear();
 }
 
 bool RenderBackendService::onOpen() {
@@ -163,9 +163,9 @@ bool RenderBackendService::onUpdate() {
         return false;
     }
 
-    if (!m_frameCreated) {
+    if (!mFrameCreated) {
         initPasses();
-        m_frameCreated = true;
+        mFrameCreated = true;
     }
 
     commitNextFrame();
@@ -197,8 +197,8 @@ void RenderBackendService::initPasses() {
     }
 
     InitPassesEventData *data = new InitPassesEventData;
-    m_submitFrame->init(m_passes);
-    data->m_frame = m_submitFrame;
+    mSubmitFrame->init(mPasses);
+    data->m_frame = mSubmitFrame;
 
     mRenderTaskPtr->sendEvent(&OnInitPassesEvent, data);
 }
@@ -209,13 +209,13 @@ void RenderBackendService::commitNextFrame() {
     }
 
     CommitFrameEventData *data = new CommitFrameEventData;
-    data->m_frame = m_submitFrame;
-    for (ui32 i = 0; i < m_passes.size(); ++i) {
-        PassData *currentPass = m_passes[i];
-        for (ui32 j = 0; j < currentPass->m_geoBatches.size(); ++j) {
-            RenderBatchData *currentBatch = currentPass->m_geoBatches[j];
+    data->m_frame = mSubmitFrame;
+    for (ui32 i = 0; i < mPasses.size(); ++i) {
+        PassData *currentPass = mPasses[i];
+        for (ui32 j = 0; j < currentPass->mMeshBatches.size(); ++j) {
+            RenderBatchData *currentBatch = currentPass->mMeshBatches[j];
             if (currentBatch->m_dirtyFlag & RenderBatchData::MatrixBufferDirty) {
-                FrameSubmitCmd *cmd = m_submitFrame->enqueue();
+                FrameSubmitCmd *cmd = mSubmitFrame->enqueue();
                 cmd->m_passId = currentPass->m_id;
                 cmd->m_batchId = currentBatch->m_id;
                 cmd->m_updateFlags |= (ui32) FrameSubmitCmd::UpdateMatrixes;
@@ -227,7 +227,7 @@ void RenderBackendService::commitNextFrame() {
             if (currentBatch->m_dirtyFlag & RenderBatchData::UniformBufferDirty) {
                 UniformBuffer &uniformBuffer = data->m_frame->m_uniforBuffers[i];
                 for (ui32 k = 0; k < currentBatch->m_uniforms.size(); ++k) {
-                    FrameSubmitCmd *cmd = m_submitFrame->enqueue();
+                    FrameSubmitCmd *cmd = mSubmitFrame->enqueue();
                     cmd->m_passId = currentPass->m_id;
                     cmd->m_batchId = currentBatch->m_id;
                     cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateUniforms;
@@ -252,7 +252,7 @@ void RenderBackendService::commitNextFrame() {
             
             if (currentBatch->m_dirtyFlag & RenderBatchData::MeshUpdateDirty) {
                 for (ui32 k = 0; k < currentBatch->m_updateMeshArray.size(); ++k) {
-                    FrameSubmitCmd *cmd = m_submitFrame->enqueue();
+                    FrameSubmitCmd *cmd = mSubmitFrame->enqueue();
                     cmd->m_passId = currentPass->m_id;
                     cmd->m_batchId = currentBatch->m_id;
                     cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateBuffer;
@@ -264,9 +264,9 @@ void RenderBackendService::commitNextFrame() {
                 }
             } 
             if (currentBatch->m_dirtyFlag & RenderBatchData::MeshDirty) {
-                FrameSubmitCmd *cmd = m_submitFrame->enqueue();
+                FrameSubmitCmd *cmd = mSubmitFrame->enqueue();
                 PassData *pd = new PassData(currentPass->m_id, nullptr);
-                pd->m_geoBatches.add(currentBatch);
+                pd->mMeshBatches.add(currentBatch);
                 cmd->m_updatedPasses.add(pd);
                 cmd->m_updateFlags |= (ui32)FrameSubmitCmd::AddRenderData;
             }
@@ -275,8 +275,8 @@ void RenderBackendService::commitNextFrame() {
         }
     }
 
-    data->m_frame = m_submitFrame;
-    std::swap(m_submitFrame, m_renderFrame);
+    data->m_frame = mSubmitFrame;
+    std::swap(mSubmitFrame, mRenderFrame);
 
     mRenderTaskPtr->sendEvent(&OnCommitFrameEvent, data);
 }
@@ -304,15 +304,15 @@ PassData *RenderBackendService::getPassById(const c8 *id) const {
         return nullptr;
     }
 
-    if (nullptr != m_currentPass) {
-        if (0 == ::strncmp(m_currentPass->m_id, id, strlen(id))) {
-            return m_currentPass;
+    if (nullptr != mCurrentPass) {
+        if (0 == ::strncmp(mCurrentPass->m_id, id, strlen(id))) {
+            return mCurrentPass;
         }
     }
 
-    for (ui32 i = 0; i < m_passes.size(); ++i) {
-        if (0 == ::strncmp(m_passes[i]->m_id, id, strlen(id))) {
-            return m_passes[i];
+    for (ui32 i = 0; i < mPasses.size(); ++i) {
+        if (0 == ::strncmp(mPasses[i]->m_id, id, strlen(id))) {
+            return mPasses[i];
         }
     }
 
@@ -320,36 +320,36 @@ PassData *RenderBackendService::getPassById(const c8 *id) const {
 }
 
 PassData *RenderBackendService::beginPass(const c8 *id) {
-    if (nullptr != m_currentPass) {
+    if (nullptr != mCurrentPass) {
         osre_warn(Tag, "Pass recording already active.");
         return nullptr;
     }
 
-    m_currentPass = getPassById(id);
-    if (nullptr == m_currentPass) {
-        m_currentPass = new PassData(id, nullptr);
+    mCurrentPass = getPassById(id);
+    if (nullptr == mCurrentPass) {
+        mCurrentPass = new PassData(id, nullptr);
     }
-    m_dirty = true;
+    mDirty = true;
 
-    return m_currentPass;
+    return mCurrentPass;
 }
 
 RenderBatchData *RenderBackendService::beginRenderBatch(const c8 *id) {
-    if (nullptr == m_currentPass) {
+    if (nullptr == mCurrentPass) {
         osre_warn(Tag, "Pass recording not active.");
         return nullptr;
     }
 
-    m_currentBatch = m_currentPass->getBatchById(id);
-    if (nullptr == m_currentBatch) {
-        m_currentBatch = new RenderBatchData(id);
+    mCurrentBatch = mCurrentPass->getBatchById(id);
+    if (nullptr == mCurrentBatch) {
+        mCurrentBatch = new RenderBatchData(id);
     }
 
-    return m_currentBatch;
+    return mCurrentBatch;
 }
 
 void RenderBackendService::setRenderTarget(FrameBuffer *fb) {
-    if (m_currentPass == nullptr) {
+    if (mCurrentPass == nullptr) {
         osre_warn(Tag, "No active pass, cannot add render target.");
         return;
     }
@@ -359,27 +359,29 @@ void RenderBackendService::setRenderTarget(FrameBuffer *fb) {
         return;
     }
 
-    m_currentPass->m_renderTarget = fb;
+    mCurrentPass->mRenderTarget = fb;
 }
 
 void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
-    if (nullptr == m_currentBatch) {
+    if (nullptr == mCurrentBatch) {
         osre_error(Tag, "No active batch.");
         return;
     }
 
     switch (type) {
         case MatrixType::Model:
-            m_currentBatch->m_matrixBuffer.m_model = m;
-            m_currentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
+            mCurrentBatch->m_matrixBuffer.m_model = m;
+            mCurrentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
             break;
         case MatrixType::View:
-            m_currentBatch->m_matrixBuffer.m_view = m;
-            m_currentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
+            mCurrentPass->mView = m;
+            mCurrentBatch->m_matrixBuffer.m_view = m;
+            mCurrentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
             break;
         case MatrixType::Projection:
-            m_currentBatch->m_matrixBuffer.m_proj = m;
-            m_currentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
+            mCurrentPass->mProj = m;
+            mCurrentBatch->m_matrixBuffer.m_proj = m;
+            mCurrentBatch->m_dirtyFlag |= RenderBatchData::MatrixBufferDirty;
             break;
         default:
             break;
@@ -387,18 +389,18 @@ void RenderBackendService::setMatrix(MatrixType type, const glm::mat4 &m) {
 }
 
 void RenderBackendService::setMatrix(const String &name, const glm::mat4 &matrix) {
-    if (nullptr == m_currentBatch) {
+    if (nullptr == mCurrentBatch) {
         osre_error(Tag, "No active batch.");
         return;
     }
 
-    UniformVar *var = m_currentBatch->getVarByName(name.c_str());
+    UniformVar *var = mCurrentBatch->getVarByName(name.c_str());
     if (nullptr == var) {
         var = UniformVar::create(name, ParameterType::PT_Mat4);
-        m_currentBatch->m_uniforms.add(var);
+        mCurrentBatch->m_uniforms.add(var);
     }
 
-    m_currentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
+    mCurrentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
     ::memcpy(var->m_data.m_data, glm::value_ptr(matrix), sizeof(glm::mat4));
 }
 
@@ -408,26 +410,26 @@ void RenderBackendService::setUniform(UniformVar *var) {
         return;
     }
 
-    if (nullptr != m_currentBatch) {
-        m_currentBatch->m_uniforms.add(var);
-        m_currentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
+    if (nullptr != mCurrentBatch) {
+        mCurrentBatch->m_uniforms.add(var);
+        mCurrentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
     }
 }
 
 void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const glm::mat4 *matrixArray) {
-    if (nullptr == m_currentBatch) {
+    if (nullptr == mCurrentBatch) {
         osre_error(Tag, "No active batch.");
         return;
     }
 
-    UniformVar *var = m_currentBatch->getVarByName(name.c_str());
+    UniformVar *var = mCurrentBatch->getVarByName(name.c_str());
     if (nullptr == var) {
         var = UniformVar::create(name, ParameterType::PT_Mat4Array, numMat);
-        m_currentBatch->m_uniforms.add(var);
+        mCurrentBatch->m_uniforms.add(var);
     }
 
     ::memcpy(var->m_data.m_data, glm::value_ptr(matrixArray[0]), sizeof(glm::mat4) * numMat);
-    m_currentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
+    mCurrentBatch->m_dirtyFlag |= RenderBatchData::UniformBufferDirty;
 }
 
 void RenderBackendService::addMesh(Mesh *mesh, ui32 numInstances) {
@@ -436,7 +438,7 @@ void RenderBackendService::addMesh(Mesh *mesh, ui32 numInstances) {
         return;
     }
 
-    if (nullptr == m_currentBatch) {
+    if (nullptr == mCurrentBatch) {
         osre_error(Tag, "No active batch.");
         return;
     }
@@ -444,71 +446,82 @@ void RenderBackendService::addMesh(Mesh *mesh, ui32 numInstances) {
     MeshEntry *entry = new MeshEntry;
     entry->mMeshArray.add(mesh);
     entry->numInstances = numInstances;
-    m_currentBatch->m_meshArray.add(entry);
-    m_currentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
+    mCurrentBatch->m_meshArray.add(entry);
+    mCurrentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
 }
 
-void RenderBackendService::addMesh(const cppcore::TArray<Mesh *> &geoArray, ui32 numInstances) {
-    if (nullptr == m_currentBatch) {
+void RenderBackendService::addMesh(const cppcore::TArray<Mesh *> &meshArray, ui32 numInstances) {
+    if (mCurrentBatch == nullptr) {
         osre_error(Tag, "No active batch.");
+        return;
+    }
+
+    if (meshArray.isEmpty()) {
+        osre_error(Tag, "Mesh array is empty.");
         return;
     }
 
     MeshEntry *entry = new MeshEntry;
     entry->numInstances = numInstances;
-    entry->mMeshArray.add(&geoArray[0], geoArray.size());
-    m_currentBatch->m_meshArray.add(entry);
-    m_currentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
+    entry->mMeshArray.add(&meshArray[0], meshArray.size());
+    mCurrentBatch->m_meshArray.add(entry);
+    mCurrentBatch->m_dirtyFlag |= RenderBatchData::MeshDirty;
 }
 
 void RenderBackendService::updateMesh(Mesh *mesh) {
-    if (nullptr == m_currentBatch) {
+    if (nullptr == mCurrentBatch) {
         osre_error(Tag, "No active batch.");
         return;
     }
-    m_currentBatch->m_updateMeshArray.add(mesh);
-    m_currentBatch->m_dirtyFlag |= RenderBatchData::MeshUpdateDirty;
+
+    if (mesh == nullptr) {
+        osre_error(Tag, "Mesh is nullptr.");
+        return;
+    }
+
+    mCurrentBatch->m_updateMeshArray.add(mesh);
+    mCurrentBatch->m_dirtyFlag |= RenderBatchData::MeshUpdateDirty;
 }
 
 bool RenderBackendService::endRenderBatch() {
-    if (nullptr == m_currentBatch) {
+    if (nullptr == mCurrentBatch) {
         return false;
     }
 
-    if (nullptr == m_currentPass) {
-        m_currentPass = new PassData("defaultPass", nullptr);
+    if (nullptr == mCurrentPass) {
+        mCurrentPass = new PassData("defaultPass", nullptr);
     }
 
-    if (-1 == hasBatch(m_currentBatch->m_id, m_currentPass->m_geoBatches)) {
-        m_currentPass->m_geoBatches.add(m_currentBatch);
+    if (-1 == hasBatch(mCurrentBatch->m_id, mCurrentPass->mMeshBatches)) {
+        mCurrentPass->mMeshBatches.add(mCurrentBatch);
     }
 
-    m_currentBatch = nullptr;
+    mCurrentBatch = nullptr;
 
     return true;
 }
 
 bool RenderBackendService::endPass() {
-    if (nullptr == m_currentPass) {
+    if (nullptr == mCurrentPass) {
         return false;
     }
 
-    if (-1 == hasPass(m_currentPass->m_id, m_passes)) {
-        m_passes.add(m_currentPass);
+    if (-1 == hasPass(mCurrentPass->m_id, mPasses)) {
+        mPasses.add(mCurrentPass);
     }
-    m_currentPass = nullptr;
+    mCurrentPass = nullptr;
 
     return true;
 }
 
 void RenderBackendService::clearPasses() {
-    m_currentPass = nullptr;
+    mCurrentPass = nullptr;
 
-    for (ui32 i = 0; i < m_passes.size(); ++i) {
-        delete m_passes[i];
+    for (ui32 i = 0; i < mPasses.size(); ++i) {
+        delete mPasses[i];
     }
-    m_passes.clear();
-    m_frameCreated = false;
+    mPasses.clear();
+    mFrameCreated = false;
 }
 
 void RenderBackendService::attachView() {    
