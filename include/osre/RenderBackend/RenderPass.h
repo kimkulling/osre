@@ -30,6 +30,11 @@ namespace RenderBackend {
 
 class RenderPass;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  This class is used to describes one pass in a render pipeline.
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT RenderPassFactory {
 public:
     static RenderPass *create(guid id);
@@ -49,12 +54,16 @@ static constexpr ui32 MaxDbgPasses = 3;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This class is used to describes one pass in a render pipeline.
+///	@brief  This class is used to describe a dedicated render pass.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT RenderPass {
 public:
+    RenderPass() = default;
     RenderPass(guid id, Shader *shader);
     ~RenderPass() = default;
+    void setViewProjection(const glm::mat4 &view, const glm::mat4 &projection);
+    const glm::mat4 &getView() const;
+    const glm::mat4 &getProjection() const;
     void setViewport(const Viewport &viewport);
     const Viewport &getViewport() const;
     RenderPass &set(RenderTarget &rt, RenderStates &states);
@@ -74,16 +83,31 @@ public:
     Shader *getShader() const;
     guid getId() const;
     static const c8 *getPassNameById(guid id);
-    bool operator==(const RenderPass &rhs) const;
-    bool operator!=(const RenderPass &rhs) const;
+    bool operator == (const RenderPass &rhs) const;
+    bool operator != (const RenderPass &rhs) const;
 
 private:
     guid mId;
+    glm::mat4 mProjection;
+    glm::mat4 mView;
     Viewport mViewport;
     RenderTarget mRenderTarget;
     RenderStates mStates;
     Shader *mShader;
 };
+
+inline void RenderPass::setViewProjection(const glm::mat4& view, const glm::mat4& projection) {
+    mView = view;
+    mProjection = projection;
+}
+
+inline const glm::mat4& RenderPass::getView() const {
+    return mView;
+}
+
+inline const glm::mat4& RenderPass::getProjection() const {
+    return mProjection;
+}
 
 inline guid RenderPass::getId() const {
     return mId;

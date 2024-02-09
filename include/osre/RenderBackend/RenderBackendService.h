@@ -257,14 +257,14 @@ private:
     const Properties::Settings *mSettings;
     Viewport mViewport;
     bool mOwnsSettingsConfig;
-    bool m_frameCreated;
-    Frame m_frames[2];
-    Frame *m_renderFrame;
-    Frame *m_submitFrame;
-    bool m_dirty;
-    cppcore::TArray<PassData*> m_passes;
-    PassData *m_currentPass;
-    RenderBatchData *m_currentBatch;
+    bool mFrameCreated;
+    Frame mFrames[2];
+    Frame *mRenderFrame;
+    Frame *mSubmitFrame;
+    bool mDirty;
+    cppcore::TArray<PassData*> mPasses;
+    PassData *mCurrentPass;
+    RenderBatchData *mCurrentBatch;
     struct Behaviour {
         bool ResizeViewport;
 

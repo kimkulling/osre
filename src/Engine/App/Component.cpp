@@ -104,15 +104,16 @@ void LightComponent::setLight(RenderBackend::Light *light) {
     mLight = light;
 }
 
-bool LightComponent::onUpdate(Time dt) {
+bool LightComponent::onUpdate(Time) {
     if (mLight == nullptr) {
         return true;
     }
+
     
     return true;
 }
 
-bool LightComponent::onRender(RenderBackend::RenderBackendService *rbSrv) {
+bool LightComponent::onRender(RenderBackend::RenderBackendService*) {
     return true;
 }
 

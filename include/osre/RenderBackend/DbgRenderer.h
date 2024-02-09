@@ -36,15 +36,15 @@ namespace RenderBackend {
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT DbgRenderer {
+class OSRE_EXPORT DbgRenderer : IRenderer {
     struct DebugText;
 
 public:
+    void render() override;
     void renderDbgText(ui32 x, ui32 y, guid id, const String &text);
     void renderAABB(const glm::mat4 &transform, const Common::AABB &aabb);
     void clear();
     void addLine(const RenderBackend::ColorVert &v0, const RenderBackend::ColorVert &v1);
-
     static bool create(RenderBackend::RenderBackendService *rbSrv);
     static bool destroy();
     static DbgRenderer *getInstance();

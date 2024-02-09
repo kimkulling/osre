@@ -35,7 +35,7 @@ static Project *createProject(const String &name) {
 
 OsreEdApp::OsreEdApp(int argc, char *argv[]) :
         AppBase(argc, (const char **)argv, "api", "The render API"), mProject(nullptr) {
-
+    // empty
 }
 
 constexpr float Near = 0.001f;
