@@ -42,7 +42,7 @@ using namespace ::OSRE::App;
 ///	@brief  A debug AABB - rendering test
 //-------------------------------------------------------------------------------------------------
 class AABBDbgRenderTest : public AbstractRenderTest {
-    TransformMatrixBlock m_transformMatrix;
+    TransformMatrixBlock mTransformMatrix;
 
 public:
     AABBDbgRenderTest() :
@@ -57,9 +57,9 @@ public:
 
         glm::vec3 min(-1, -1, -1), max(1, 1, 1);
         AABB aabb(min, max);
-        m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
-        m_transformMatrix.m_model = glm::scale(m_transformMatrix.m_model, glm::vec3(.5, .5, .5));
-        DbgRenderer::getInstance()->renderAABB(m_transformMatrix.m_model, aabb);
+        mTransformMatrix.m_model = glm::rotate(mTransformMatrix.m_model, 0.0f, glm::vec3(1, 1, 0));
+        mTransformMatrix.m_model = glm::scale(mTransformMatrix.m_model, glm::vec3(.5, .5, .5));
+        DbgRenderer::getInstance()->renderAABB(mTransformMatrix.m_model, aabb);
 
         return true;
     }
@@ -69,8 +69,8 @@ public:
         {
             rbSrv->beginRenderBatch(DbgRenderer::getDebugRenderBatchName());
             {
-                m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.01f, glm::vec3(1, 1, 0));
-                rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+                mTransformMatrix.m_model = glm::rotate(mTransformMatrix.m_model, 0.01f, glm::vec3(1, 1, 0));
+                rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.m_model);
             }
             rbSrv->endRenderBatch();
         }

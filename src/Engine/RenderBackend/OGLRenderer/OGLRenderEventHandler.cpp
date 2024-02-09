@@ -385,6 +385,7 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
 
                     primGroups.resize(0);
                 }
+                currentMeshEntry->mMeshArray.resize(0);
                 //addMeshes(currentBatchData, primGroups, currentMeshEntry);
                 currentMeshEntry->m_isDirty = false;
             }
@@ -459,36 +460,6 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
         }
 
         onHandleCommit(cmd);
-        /*if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateMatrixes) {
-            MatrixBuffer *buffer = (MatrixBuffer *)cmd->m_data;
-            m_renderCmdBuffer->setMatrixBuffer(cmd->m_batchId, buffer);
-        } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateUniforms) {
-            c8 name[BufferSize];
-            setName(name, BufferSize, cmd);
-            const ui32 offset = cmd->m_data[0] + 1;
-            const size_t size = cmd->m_size - offset;
-            OGLParameter *oglParam = m_oglBackend->getParameter(name);
-            ::memcpy(oglParam->m_data->getData(), &cmd->m_data[offset], size);
-        } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateBuffer) {
-            OGLBuffer *buffer = m_oglBackend->getBufferById(cmd->m_meshId);
-            m_oglBackend->bindBuffer(buffer);
-            m_oglBackend->copyDataToBuffer(buffer, cmd->m_data, cmd->m_size, BufferAccessType::ReadWrite);
-            m_oglBackend->unbindBuffer(buffer);
-        } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::AddRenderData) {
-            for (ui32 i = 0; i < cmd->m_updatedPasses.size(); ++i) {
-                PassData *pd = cmd->m_updatedPasses[i];
-                if (pd == nullptr) {
-                    continue;
-                }
-
-                for (RenderBatchData *rbd : pd->m_geoBatches) {
-                    for (MeshEntry *entry : rbd->m_meshArray) {
-                        cppcore::TArray<size_t> primGroups;
-                        addMeshes(cmd->m_batchId, primGroups, entry);
-                    }
-                }
-            }
-        }*/
         cmd->m_updateFlags = 0u;
     }
     
