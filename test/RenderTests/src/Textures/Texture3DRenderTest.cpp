@@ -73,8 +73,8 @@ protected:
             rbSrv->beginRenderBatch("b1");
             {
 
-                m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, m_angle, glm::vec3(1, 1, 0));
-                rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.m_model);
+                m_transformMatrix.mModel = glm::rotate(m_transformMatrix.mModel, m_angle, glm::vec3(1, 1, 0));
+                rbSrv->setMatrix(MatrixType::Model, m_transformMatrix.mModel);
             }
             rbSrv->endRenderBatch();
         }

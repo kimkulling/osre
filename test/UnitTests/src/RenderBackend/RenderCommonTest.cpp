@@ -157,15 +157,15 @@ TEST_F(RenderCommonTest, initGeometryTest) {
 
 TEST_F( RenderCommonTest, accessTransformMatrixBlockTest ) {
     TransformMatrixBlock block;
-    block.m_model = glm::translate( block.m_model, glm::vec3( 1, 2, 3 ) );
-    block.m_projection = glm::translate( block.m_model, glm::vec3( 1, 2, 3 ) );
-    block.m_view = glm::translate( block.m_model, glm::vec3( 1, 2, 3 ) );
+    block.mModel = glm::translate( block.mModel, glm::vec3( 1, 2, 3 ) );
+    block.mProjection = glm::translate( block.mModel, glm::vec3( 1, 2, 3 ) );
+    block.mView = glm::translate( block.mModel, glm::vec3( 1, 2, 3 ) );
 
     glm::mat4 identity = {};
     block.init();
-    EXPECT_FLOAT_EQ( static_cast<f32>(identity.length() ), static_cast<f32>( block.m_model.length()));
-    EXPECT_FLOAT_EQ( static_cast<f32>(identity.length() ), static_cast<f32>( block.m_projection.length()));
-    EXPECT_FLOAT_EQ( static_cast<f32>(identity.length() ), static_cast<f32>( block.m_view.length()));
+    EXPECT_FLOAT_EQ( static_cast<f32>(identity.length() ), static_cast<f32>( block.mModel.length()));
+    EXPECT_FLOAT_EQ( static_cast<f32>(identity.length() ), static_cast<f32>( block.mProjection.length()));
+    EXPECT_FLOAT_EQ( static_cast<f32>(identity.length() ), static_cast<f32>( block.mView.length()));
 }
 
 TEST_F( RenderCommonTest, accessMaterialTest ) {

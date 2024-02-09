@@ -102,19 +102,19 @@ void TransformController::getMouseUpdate(const MouseInputState &mis) {
         if (mis.mMouseButtonState.getBit(MouseEventListener::LeftButton)) {
             glm::vec3 res;
             mapToSphere(glm::vec2(dirY, dirX), &res, 1000, 768, 1);
-            mTransform.m_model = glm::rotate(mTransform.m_model, 0.005f * len, res);
+            mTransform.mModel = glm::rotate(mTransform.mModel, 0.005f * len, res);
         }
         if (mis.mMouseButtonState.getBit(MouseEventListener::MiddleButton)) {
             glm::vec3 res;
             mapToSphere(glm::vec2(dirY, dirX), &res, 1000, 768, 1);
-            mTransform.m_model = glm::translate(mTransform.m_model, res);
+            mTransform.mModel = glm::translate(mTransform.mModel, res);
         }
         if (mis.mMouseButtonState.getBit(MouseEventListener::RightButton)) {
             f32 factor = 0.005f * len;
             if (dirY > 0) {
-                mTransform.m_model = glm::scale(mTransform.m_model, glm::vec3(1.01 + factor, 1.01 + factor, 1.01 + factor));
+                mTransform.mModel = glm::scale(mTransform.mModel, glm::vec3(1.01 + factor, 1.01 + factor, 1.01 + factor));
             } else {
-                mTransform.m_model = glm::scale(mTransform.m_model, glm::vec3(0.99 - factor, 0.99 - factor, 0.99 - factor));
+                mTransform.mModel = glm::scale(mTransform.mModel, glm::vec3(0.99 - factor, 0.99 - factor, 0.99 - factor));
             }
         }
     }
@@ -123,36 +123,36 @@ void TransformController::getMouseUpdate(const MouseInputState &mis) {
 void TransformController::update(TransformCommandType cmdType) {
     glm::mat4 rot(1.0);
     if (cmdType == TransformCommandType::RotateXCommandPositive) {
-        mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
+        mTransform.mModel *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
     }
 
     if (cmdType == TransformCommandType::RotateXCommandNegative) {
-        mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
+        mTransform.mModel *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
     }
 
     if (cmdType == TransformCommandType::RotateYCommandPositive) {
-        mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
+        mTransform.mModel *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
     }
 
     if (cmdType == TransformCommandType::RotateYCommandNegative) {
-        mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
+        mTransform.mModel *= glm::rotate(rot, -0.01f, glm::vec3(0, 1, 0));
     }
 
     if (cmdType == TransformCommandType::RotateZCommandNegative) {
-        mTransform.m_model *= glm::rotate(rot, -0.01f, glm::vec3(0, 0, 1));
+        mTransform.mModel *= glm::rotate(rot, -0.01f, glm::vec3(0, 0, 1));
     }
 
     if (cmdType == TransformCommandType::RotateZCommandPositive) {
-        mTransform.m_model *= glm::rotate(rot, 0.01f, glm::vec3(0, 0, 1));
+        mTransform.mModel *= glm::rotate(rot, 0.01f, glm::vec3(0, 0, 1));
     }
 
     glm::mat4 scale(1.0);
     if (cmdType == TransformCommandType::ScaleInCommand) {
-        mTransform.m_model *= glm::scale(scale, glm::vec3(1.01, 1.01, 1.01));
+        mTransform.mModel *= glm::scale(scale, glm::vec3(1.01, 1.01, 1.01));
     }
 
     if (cmdType == TransformCommandType::ScaleOutCommand) {
-        mTransform.m_model *= glm::scale(scale, glm::vec3(0.99, 0.99, 0.99));
+        mTransform.mModel *= glm::scale(scale, glm::vec3(0.99, 0.99, 0.99));
     }
 }
 
