@@ -386,7 +386,6 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
                     primGroups.resize(0);
                 }
                 currentMeshEntry->mMeshArray.resize(0);
-                //addMeshes(currentBatchData, primGroups, currentMeshEntry);
                 currentMeshEntry->m_isDirty = false;
             }
         }
@@ -398,7 +397,6 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
 
     return true;
 }
-
 
 static void setName(c8 *name, size_t bufferSize, FrameSubmitCmd *cmd) {
     ::memset(name, '\0', bufferSize);

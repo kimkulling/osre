@@ -902,7 +902,7 @@ struct UniformBuffer {
     MemoryBuffer m_buffer;
 };
 
-/// @brief This struct is used to desribe a new frame to render.
+/// @brief This struct is used to describe a new frame to render.
 struct Frame {
     cppcore::TArray<PassData *> m_newPasses;
     cppcore::TArray<FrameSubmitCmd*> m_submitCmds;

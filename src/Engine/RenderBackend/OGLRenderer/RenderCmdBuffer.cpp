@@ -105,13 +105,13 @@ void RenderCmdBuffer::onRenderFrame() {
     }
 
     const size_t numPasses = mPipeline->beginFrame();
-    if (0 == numPasses) {
+    if (numPasses == 0) {
         return;
     }
 
-    for (ui32 passId = 0; passId < numPasses; passId++) {
+    for (ui32 passId = 0; passId < numPasses; ++passId) {
         RenderPass *pass = mPipeline->beginPass(passId);
-        if (nullptr == pass) {
+        if (pass == nullptr) {
             osre_debug(Tag, "Ponter to pipeline pass is nullptr.");
             continue;
         }
@@ -123,7 +123,8 @@ void RenderCmdBuffer::onRenderFrame() {
         states.m_samplerState = pass->getSamplerState();
         states.m_stencilState = pass->getStencilState();
         mRBService->setFixedPipelineStates(states);
-
+        mRBService->setMatrix(MatrixType::View, pass->getView());
+        mRBService->setMatrix(MatrixType::Projection, pass->getProjection());
         for (OGLRenderCmd *renderCmd : mCommandQueue) {
             if (nullptr == renderCmd) {
                 continue;

@@ -212,10 +212,13 @@ void RenderBackendService::commitNextFrame() {
     data->m_frame = mSubmitFrame;
     for (ui32 i = 0; i < mPasses.size(); ++i) {
         PassData *currentPass = mPasses[i];
+        
         for (ui32 j = 0; j < currentPass->mMeshBatches.size(); ++j) {
             RenderBatchData *currentBatch = currentPass->mMeshBatches[j];
             if (currentBatch->m_dirtyFlag & RenderBatchData::MatrixBufferDirty) {
                 FrameSubmitCmd *cmd = mSubmitFrame->enqueue();
+                currentBatch->m_matrixBuffer.m_view = currentPass->mView;
+                currentBatch->m_matrixBuffer.m_proj = currentPass->mProj;
                 cmd->m_passId = currentPass->m_id;
                 cmd->m_batchId = currentBatch->m_id;
                 cmd->m_updateFlags |= (ui32) FrameSubmitCmd::UpdateMatrixes;
