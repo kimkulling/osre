@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <map>
 
-// Forward declarations
+// Forward declarations ---------------------------------------------------------------------------
 struct SDL_Window;
 
 namespace OSRE {

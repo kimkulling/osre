@@ -29,8 +29,8 @@ namespace Platform {
 
 class SDL2DisplayInterface : public AbstractDisplayInterface {
 public:
-    SDL2DisplayInterface();
-    ~SDL2DisplayInterface() override;
+    SDL2DisplayInterface() = default;
+    ~SDL2DisplayInterface() override = default;
     i32 getNumDisplays() override;
     bool getDisplayResolution(ui32 displayIndex, ui32 &width, ui32 &height) override;
     bool getDisplayDPI(ui32 displayIndex, DisplayDPIInfo *ddpiinfo) override;
