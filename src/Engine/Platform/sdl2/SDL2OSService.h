@@ -27,11 +27,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-class SDL2OSService : public AbstractOSService {
+/// @brief This class will implement the OS-services by using SDL2.
+class SDL2OSService final : public AbstractOSService {
 public:
+    /// @brief The class constructor.
     SDL2OSService();
-    ~SDL2OSService() override = override;
-    void getMonitorResolution(ui32 &width, ui32 &heigt) override;
+
+    /// @brief The class destructor
+    ~SDL2OSService() override = default;
+
+    /// @brief Will return the monitor resolution.
+    /// @param[out] width  The width of the monitor.
+    /// @param[out} height The height of the monitor,
+    void getMonitorResolution(ui32 &width, ui32 &height) override;
+
+    /// @brief Will set the cursor visible state.
+    /// @param[in] enabled  true for visible, false for not visible.
     void showCursor(bool enabled) override;
 };
 
