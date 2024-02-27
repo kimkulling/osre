@@ -32,15 +32,6 @@ static const c8 *Tag = "SDL2DisplayInterface";
 static void logError() {
     osre_debug(Tag, "Error occurred : " + String(SDL_GetError()) + ".");
 }
-    
-SDL2DisplayInterface::SDL2DisplayInterface() :
-        AbstractDisplayInterface() {
-    // empty
-}
-
-SDL2DisplayInterface::~SDL2DisplayInterface() {
-    // empty
-}
 
 i32 SDL2DisplayInterface::getNumDisplays() {
     i32 numDisplays = SDL_GetNumVideoDisplays();

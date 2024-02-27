@@ -82,8 +82,9 @@ bool SDL2RenderContext::onDestroy( ) {
 bool SDL2RenderContext::onUpdate( ) {
     if ( !mIsActive ) {
         osre_debug( Tag, "No active render context." );
+        return false;
     }
-    SDL_GL_SwapWindow( mSurface->getSDLSurface() );
+    SDL_GL_SwapWindow(mSurface->getSDLSurface());
 
     return true;
 }

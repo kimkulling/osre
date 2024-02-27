@@ -131,6 +131,14 @@ SDL2EventHandler::~SDL2EventHandler() {
     delete m_inputUpdate;
 }
 
+static inline bool isLowerCaseKey(Uint16 mod) {
+    if (mod & KMOD_RSHIFT || mod &KMOD_LSHIFT) {
+        return true;
+    }
+
+    return false;
+}
+
 bool SDL2EventHandler::update() {
     EventDataList *activeEventQueue(getActiveEventDataList());
     if (nullptr == activeEventQueue) {
@@ -147,7 +155,12 @@ bool SDL2EventHandler::update() {
             case SDL_KEYUP: {
                 KeyboardButtonEventData *data = new KeyboardButtonEventData(SDL_KEYDOWN == ev.type, m_eventTriggerer);
                 const char *c = SDL_GetKeyName(ev.key.keysym.sym);
-                data->m_key = (Key) *c;
+                if (!isLowerCaseKey(ev.key.keysym.mod)) {
+                    const char l = tolower(*c);
+                    data->m_key = (Key) l;
+                } else {
+                    data->m_key = (Key) *c;
+                }
                 activeEventQueue->addBack(data);
             } break;
 

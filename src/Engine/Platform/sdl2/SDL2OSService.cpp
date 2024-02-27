@@ -32,14 +32,13 @@ SDL2OSService::SDL2OSService() :
     // empty
 }
 
-SDL2OSService::~SDL2OSService() {
-}
-
 void SDL2OSService::getMonitorResolution( ui32 &width, ui32 &height ) {
+    width = height = 0;
     SDL_DisplayMode DM;
-    SDL_GetCurrentDisplayMode(0, &DM);
-    width = DM.w;
-    height = DM.h;
+    if (SDL_GetCurrentDisplayMode(0, &DM) == 0) {
+        width = DM.w;
+        height = DM.h;
+    }
 }
 
 void SDL2OSService::showCursor(bool enabled) {
