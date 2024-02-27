@@ -125,6 +125,8 @@ void RenderCmdBuffer::onRenderFrame() {
         mRBService->setFixedPipelineStates(states);
         mRBService->setMatrix(MatrixType::View, pass->getView());
         mRBService->setMatrix(MatrixType::Projection, pass->getProjection());
+        const Viewport &v = pass->getViewport();
+        mRBService->setViewport(v.m_x, v.m_y, v.m_w, v.m_h);
         for (OGLRenderCmd *renderCmd : mCommandQueue) {
             if (nullptr == renderCmd) {
                 continue;

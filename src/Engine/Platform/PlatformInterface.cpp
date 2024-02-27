@@ -187,10 +187,10 @@ bool PlatformInterface::onOpen() {
         // get the configuration values for the window
         props = new WindowsProperties;
         bool fullscreen = false;
-        props->m_x = config->get(Settings::WinX).getInt();
-        props->m_y = config->get(Settings::WinY).getInt();
-        props->m_width = config->get(Settings::WinWidth).getInt();
-        props->m_height = config->get(Settings::WinHeight).getInt();
+        props->mRect.x1 = config->get(Settings::WinX).getInt();
+        props->mRect.y1 = config->get(Settings::WinY).getInt();
+        props->mRect.width = config->get(Settings::WinWidth).getInt();
+        props->mRect.height = config->get(Settings::WinHeight).getInt();
         props->m_colordepth = config->get(Settings::BPP).getByte();
         props->m_depthbufferdepth = config->get(Settings::DepthBufferDepth).getByte();
         props->m_stencildepth = config->get(Settings::StencilBufferDepth).getByte();

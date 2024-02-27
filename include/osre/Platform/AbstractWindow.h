@@ -57,10 +57,7 @@ struct OSRE_EXPORT Resolution {
 ///	@brief  This struct stores all surface related information.
 //-------------------------------------------------------------------------------------------------
 struct WindowsProperties {
-    ui32 m_x; ///< Upper left x coordinate.
-    ui32 m_y; ///< Upper left y coordinate.
-    ui32 m_width; ///< Width of the surface.
-    ui32 m_height; ///< Height of the surface.
+    Rect2ui mRect;
     uc8 m_colordepth; ///< Color depth.
     uc8 m_depthbufferdepth; ///< Z-Depth.
     uc8 m_stencildepth; ///< Stencil depth.
@@ -72,10 +69,15 @@ struct WindowsProperties {
 
     /// Will return the dimension as a rectangle.
     void getDimension(Rect2ui &rect);
+    void setRect(const Rect2ui &rect);
 };
 
 inline void WindowsProperties::getDimension(Rect2ui &rect) {
-    rect.set(m_x, m_y, m_width, m_height);
+    rect = mRect;
+}
+
+inline void WindowsProperties::setRect(const Rect2ui& rect) {
+    mRect = rect;
 }
 
 /// @brief 

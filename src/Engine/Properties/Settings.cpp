@@ -60,12 +60,12 @@ static const c8 *ConfigKeyStringTable[Settings::MaxKonfigKey] = {
 };
 
 Settings::Settings() :
-        m_propertyMap(new Properties::BasePropertyMap) {
+        mPropertyMap(new Properties::BasePropertyMap) {
     initDefaults();
 }
 
 Settings::~Settings() {
-    delete m_propertyMap;
+    delete mPropertyMap;
 }
 
 bool Settings::configure(const String &initScriptFile) {
@@ -81,7 +81,7 @@ bool Settings::setString(Settings::ConfigKey key, const String &strValue) {
 
     cppcore::Variant value;
     value.setStdString(strValue);
-    m_propertyMap->setProperty(static_cast<ui32>(key), "", value);
+    mPropertyMap->setProperty(static_cast<ui32>(key), "", value);
 
     return true;
 }
@@ -98,7 +98,7 @@ bool Settings::setInt(ConfigKey key, i32 intValue) {
 
     cppcore::Variant value;
     value.setInt(intValue);
-    m_propertyMap->setProperty(key, "", value);
+    mPropertyMap->setProperty(key, "", value);
 
     return true;
 }
@@ -115,7 +115,7 @@ bool Settings::setBool(ConfigKey key, bool val) {
 
     cppcore::Variant value;
     value.setBool(val);
-    m_propertyMap->setProperty(key, "", value);
+    mPropertyMap->setProperty(key, "", value);
 
     return true;
 }
@@ -131,7 +131,7 @@ bool Settings::setFloat(ConfigKey key, f32 floatValue) {
     }
     cppcore::Variant value;
     value.setFloat(floatValue);
-    m_propertyMap->setProperty(key, "", value);
+    mPropertyMap->setProperty(key, "", value);
 
     return true;
 }
@@ -142,7 +142,7 @@ f32 Settings::getFloat(ConfigKey key) const {
 }
 
 const cppcore::Variant &Settings::get(ConfigKey key) const {
-    Properties::Property *pProperty = m_propertyMap->getProperty(key);
+    Properties::Property *pProperty = mPropertyMap->getProperty(key);
     if (!pProperty) {
         return EmptyVariant;
     }
@@ -156,8 +156,8 @@ String Settings::getKeyAsString(ConfigKey key) const {
 }
 
 void Settings::clear() {
-    if (nullptr != m_propertyMap) {
-        m_propertyMap->clear();
+    if (nullptr != mPropertyMap) {
+        mPropertyMap->clear();
     }
 }
 
@@ -177,56 +177,56 @@ static i32 mapPlatformtype2Int(PluginType type) {
 void Settings::initDefaults() {
     cppcore::Variant appName, windowsTitle, renderAPI, value;
     appName.setStdString("OSRE Application");
-    m_propertyMap->setProperty(AppName, ConfigKeyStringTable[AppName], appName);
+    mPropertyMap->setProperty(AppName, ConfigKeyStringTable[AppName], appName);
 
     value.setInt(static_cast<i32>(GfxApp));
-    m_propertyMap->setProperty(AppType, ConfigKeyStringTable[AppName], value);
+    mPropertyMap->setProperty(AppType, ConfigKeyStringTable[AppName], value);
 
     // Set version 0.1.0 as default
     value.setInt(0);
-    m_propertyMap->setProperty(AppVersionMajor, ConfigKeyStringTable[AppVersionMajor], value);
+    mPropertyMap->setProperty(AppVersionMajor, ConfigKeyStringTable[AppVersionMajor], value);
     value.setInt(1);
-    m_propertyMap->setProperty(AppVersionMajor, ConfigKeyStringTable[AppVersionMinor], value);
+    mPropertyMap->setProperty(AppVersionMajor, ConfigKeyStringTable[AppVersionMinor], value);
     value.setInt(0);
-    m_propertyMap->setProperty(AppVersionPatch, ConfigKeyStringTable[AppVersionPatch], value);
+    mPropertyMap->setProperty(AppVersionPatch, ConfigKeyStringTable[AppVersionPatch], value);
 
     windowsTitle.setStdString("The OSRE experience");
     const i32 pluginType( mapPlatformtype2Int( Platform::PlatformInterface::getOSPluginType() ) );
     value.setInt( pluginType );
-    m_propertyMap->setProperty( WindowsTitle, ConfigKeyStringTable[ WindowsTitle ], windowsTitle );
+    mPropertyMap->setProperty( WindowsTitle, ConfigKeyStringTable[ WindowsTitle ], windowsTitle );
     renderAPI.setStdString("opengl");
-    m_propertyMap->setProperty( RenderAPI, ConfigKeyStringTable[ RenderAPI ], renderAPI );
+    mPropertyMap->setProperty( RenderAPI, ConfigKeyStringTable[ RenderAPI ], renderAPI );
 
     value.setInt( 0 );
-    m_propertyMap->setProperty( WinX, ConfigKeyStringTable[ WinX ], value );
-    m_propertyMap->setProperty( WinY, ConfigKeyStringTable[ WinY ], value );
+    mPropertyMap->setProperty( WinX, ConfigKeyStringTable[ WinX ], value );
+    mPropertyMap->setProperty( WinY, ConfigKeyStringTable[ WinY ], value );
     value.setInt( 1024 );
-    m_propertyMap->setProperty( WinWidth, ConfigKeyStringTable[ WinWidth ], value );
+    mPropertyMap->setProperty( WinWidth, ConfigKeyStringTable[ WinWidth ], value );
     value.setInt( 768 );
-    m_propertyMap->setProperty( WinHeight, ConfigKeyStringTable[ WinHeight ], value );
+    mPropertyMap->setProperty( WinHeight, ConfigKeyStringTable[ WinHeight ], value );
 
     value.setBool( true );
-    m_propertyMap->setProperty( WindowsResizable, ConfigKeyStringTable[ WindowsResizable ], value );
+    mPropertyMap->setProperty( WindowsResizable, ConfigKeyStringTable[ WindowsResizable ], value );
     value.setBool( false );
-    m_propertyMap->setProperty( ChildWindow, ConfigKeyStringTable[ ChildWindow ], value );
+    mPropertyMap->setProperty( ChildWindow, ConfigKeyStringTable[ ChildWindow ], value );
     value.setInt( 2 );
-    m_propertyMap->setProperty( FSAA, ConfigKeyStringTable[ FSAA ], value );
+    mPropertyMap->setProperty( FSAA, ConfigKeyStringTable[ FSAA ], value );
     value.setInt( 32 );
-    m_propertyMap->setProperty( BPP, ConfigKeyStringTable[ BPP ], value );
+    mPropertyMap->setProperty( BPP, ConfigKeyStringTable[ BPP ], value );
     value.setInt( 24 );
-    m_propertyMap->setProperty( DepthBufferDepth, ConfigKeyStringTable[ DepthBufferDepth ], value );
-    m_propertyMap->setProperty( StencilBufferDepth, ConfigKeyStringTable[ StencilBufferDepth ], value ); 
+    mPropertyMap->setProperty( DepthBufferDepth, ConfigKeyStringTable[ DepthBufferDepth ], value );
+    mPropertyMap->setProperty( StencilBufferDepth, ConfigKeyStringTable[ StencilBufferDepth ], value ); 
     
     value.setFloat4( 0, 0,0 ,0 );
-    m_propertyMap->setProperty( ClearColor, ConfigKeyStringTable[ ClearColor ], value );
+    mPropertyMap->setProperty( ClearColor, ConfigKeyStringTable[ ClearColor ], value );
     value.setBool( false );
-    m_propertyMap->setProperty( PollingMode, ConfigKeyStringTable[ PollingMode ], value );
+    mPropertyMap->setProperty( PollingMode, ConfigKeyStringTable[ PollingMode ], value );
 
     value.setStdString( "buildin_arial.bmp" );
-    m_propertyMap->setProperty( DefaultFont, ConfigKeyStringTable[ DefaultFont ], value );
+    mPropertyMap->setProperty( DefaultFont, ConfigKeyStringTable[ DefaultFont ], value );
 
     value.setInt( 1 );
-    m_propertyMap->setProperty( RenderMode, ConfigKeyStringTable[ RenderMode], value );
+    mPropertyMap->setProperty( RenderMode, ConfigKeyStringTable[ RenderMode], value );
 }
 
 } // Namespace Properties

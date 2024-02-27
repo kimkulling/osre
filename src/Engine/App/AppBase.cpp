@@ -54,6 +54,7 @@ using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
 using namespace ::OSRE::RenderBackend;
 using namespace ::OSRE::Animation;
+using namespace ::OSRE::Properties;
 using namespace ::OSRE::IO;
 
 static constexpr c8 Tag[] = "AppBase";
@@ -85,20 +86,20 @@ bool AppBase::initWindow(ui32 x, ui32 y, ui32 width, ui32 height, const String &
         RenderBackendType renderer) {
     osre_assert(nullptr != mSettings);
 
-    mSettings->setInt(Properties::Settings::WinX, x);
-    mSettings->setInt(Properties::Settings::WinY, y);
-    mSettings->setInt(Properties::Settings::WinWidth, width);
-    mSettings->setInt(Properties::Settings::WinHeight, height);
-    mSettings->setBool(Properties::Settings::FullScreen, fullscreen);
-    mSettings->setBool(Properties::Settings::ChildWindow, childWindow);
-    mSettings->setString(Properties::Settings::WindowsTitle, title);
+    mSettings->setInt(Settings::WinX, x);
+    mSettings->setInt(Settings::WinY, y);
+    mSettings->setInt(Settings::WinWidth, width);
+    mSettings->setInt(Settings::WinHeight, height);
+    mSettings->setBool(Settings::FullScreen, fullscreen);
+    mSettings->setBool(Settings::ChildWindow, childWindow);
+    mSettings->setString(Settings::WindowsTitle, title);
     if (renderer == RenderBackendType::OpenGLRenderBackend) {
-        mSettings->setString(Properties::Settings::RenderAPI, "opengl");
+        mSettings->setString(Settings::RenderAPI, "opengl");
     } else if (renderer == RenderBackendType::VulkanRenderBackend) {
-        mSettings->setString(Properties::Settings::RenderAPI, "vulkan");
+        mSettings->setString(Settings::RenderAPI, "vulkan");
     }
 
-    return onCreate();
+    return onCreate(); 
 }
 
 bool AppBase::create(Properties::Settings *config) {

@@ -193,10 +193,10 @@ bool Win32Window::onCreate() {
     WNDCLASS sWC = {}; 
     DWORD dwExStyle(0), dwStyle(0);
     RECT clientSize;
-    clientSize.left = prop->m_x;
-    clientSize.top = prop->m_y;
-    clientSize.right = prop->m_x + prop->m_width;
-    clientSize.bottom = prop->m_y + prop->m_height;
+    clientSize.left = prop->mRect.x1;
+    clientSize.top = prop->mRect.y1;
+    clientSize.right = prop->mRect.x1 + prop->mRect.width;
+    clientSize.bottom = prop->mRect.y1 + prop->mRect.height;
 
     DWORD style = WS_POPUP;
     if (!prop->m_fullscreen) {
@@ -209,8 +209,8 @@ bool Win32Window::onCreate() {
     const ui32 realWidth = clientSize.right - clientSize.left;
     const ui32 realHeight = clientSize.bottom - clientSize.top;
 
-    ui32 cx = prop->m_width / 2;
-    ui32 cy = prop->m_height / 2;
+    ui32 cx = prop->mRect.width / 2;
+    ui32 cy = prop->mRect.height / 2;
     mInstance = ::GetModuleHandle(NULL);
     sWC.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
     sWC.lpfnWndProc = (WNDPROC)Win32EventQueue::winproc;
@@ -262,8 +262,8 @@ bool Win32Window::onCreate() {
             prop->m_title.c_str(),
             prop->m_title.c_str(),
             dwStyle,
-            prop->m_x,
-            prop->m_y,
+            prop->mRect.x1,
+            prop->mRect.y1,
             realWidth,
             realHeight,
             NULL,
@@ -357,10 +357,12 @@ void Win32Window::onResize(ui32 x, ui32 y, ui32 w, ui32 h) {
     ::MoveWindow(mWnd, x, y, w, h, NULL);
     WindowsProperties *props = AbstractWindow::getProperties();
     if (nullptr != props) {
-        props->m_x = x;
-        props->m_y = y;
-        props->m_width = w;
-        props->m_height = h;
+        props->mRect.x1 = x;
+        props->mRect.y1 = y;
+        props->mRect.width = w;
+        props->mRect.height = h;
+        props->mRect.x2 = props->mRect.x1 + w;
+        props->mRect.y2 = props->mRect.y1 + h;
         AbstractWindow::setProperties(props);
     }
 }

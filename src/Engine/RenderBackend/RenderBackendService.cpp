@@ -185,6 +185,10 @@ void RenderBackendService::setSettings(const Settings *config, bool moveOwnershi
     }
     mSettings = config;
     mOwnsSettingsConfig = moveOwnership;
+    setViewport(mSettings->getInt(Properties::Settings::WinX),
+            mSettings->getInt(Properties::Settings::WinY),
+            mSettings->getInt(Properties::Settings::WinWidth),
+            mSettings->getInt(Properties::Settings::WinHeight));
 }
 
 const Settings *RenderBackendService::getSettings() const {
@@ -297,6 +301,7 @@ Pipeline *RenderBackendService::createDefaultPipeline() {
     RenderPass *renderPass = RenderPassFactory::create(RenderPassId);
     CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
     renderPass->setCullState(cullState);
+    renderPass->setViewport(mViewport);
     pipeline->addPass(renderPass);
 
     return pipeline;
@@ -331,6 +336,7 @@ PassData *RenderBackendService::beginPass(const c8 *id) {
     mCurrentPass = getPassById(id);
     if (nullptr == mCurrentPass) {
         mCurrentPass = new PassData(id, nullptr);
+        mCurrentPass->mViewport = mViewport;
     }
     mDirty = true;
 
@@ -436,12 +442,12 @@ void RenderBackendService::setMatrixArray(const String &name, ui32 numMat, const
 }
 
 void RenderBackendService::addMesh(Mesh *mesh, ui32 numInstances) {
-    if (nullptr == mesh) {
+    if (mesh == nullptr) {
         osre_debug(Tag, "Pointer to geometry is nullptr.");
         return;
     }
 
-    if (nullptr == mCurrentBatch) {
+    if (mCurrentBatch == nullptr) {
         osre_error(Tag, "No active batch.");
         return;
     }
@@ -533,7 +539,8 @@ void RenderBackendService::attachView() {
 
 void RenderBackendService::resize(ui32 x, ui32 y, ui32 w, ui32 h) {
     if (mBehaviour.ResizeViewport) {
-        ResizeEventData *data = new ResizeEventData(x, y, w, h);
+        printf(" resize to x=%d, y=%d, w=%d, h=%d\n", x, y, w, h);
+        ResizeEventData *data = new ResizeEventData(0, 0, w, h);
         mRenderTaskPtr->sendEvent(&OnResizeEvent, data);
     }
 }

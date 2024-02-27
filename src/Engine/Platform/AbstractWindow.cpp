@@ -134,7 +134,7 @@ void AbstractWindow::getWindowsRect(Rect2ui &rect) const {
         return;
     }
 
-    rect.set(mProperties->m_x, mProperties->m_y, mProperties->m_width, mProperties->m_height);
+    rect = mProperties->mRect;
 }
 
 } // Namespace Platform

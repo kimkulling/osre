@@ -735,6 +735,7 @@ struct PassData {
     cppcore::TArray<RenderBatchData *> mMeshBatches;
     glm::mat4 mView;
     glm::mat4 mProj;
+    Viewport mViewport;
     bool mIsDirty;
 
     ///	@brief
@@ -744,6 +745,7 @@ struct PassData {
             mMeshBatches(),
             mView(1),
             mProj(1),
+            mViewport(),
             mIsDirty(true) {
         // empty
     }
@@ -920,7 +922,7 @@ struct Frame {
     Frame &operator=(const Frame &) = delete;
 };
 
-/// @brief This struct is used to descripe a frame buffer data structure.
+/// @brief This struct is used to describe a frame buffer data structure.
 struct FrameBuffer {
     i32 m_width;
     i32 m_height;

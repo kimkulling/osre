@@ -150,7 +150,7 @@ protected:
     void initDefaults();
 
 private:
-    Properties::AbstractPropertyMap *m_propertyMap;
+    Properties::AbstractPropertyMap *mPropertyMap;
 };
 
 } // Namespace Properties
