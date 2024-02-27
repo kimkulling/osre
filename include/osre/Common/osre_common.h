@@ -434,6 +434,20 @@ struct TRectangle {
     const bool operator!=(const TRectangle<T> &rhs) const {
         return (x1 != rhs.x1 || y1 != rhs.y1 || width != rhs.width || height != rhs.height);
     }
+
+    ///	@brief  Will return the relative center of the rect.
+    /// @return The relative center as a point.
+    TPoint2<T> getRelativeCenter() const {
+        TPoint2<T> c(width / 2, height / 2);
+        return c;
+    }
+
+    ///	@brief  Will return the absolute center of the rect.
+    /// @return The absolute center as a point.
+    TPoint2<T> getAbsoluteCenter() const {
+        TPoint2<T> c(x+width / 2, y+height / 2);
+        return c;
+    }
 };
 
 using Rect2ui = TRectangle<ui32>;
