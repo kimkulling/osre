@@ -36,11 +36,11 @@ namespace RenderBackend {
 ///
 ///	@brief
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT DbgRenderer : IRenderer {
+class OSRE_EXPORT DbgRenderer {
     struct DebugText;
 
 public:
-    void render() override;
+    void render();
     void renderDbgText(ui32 x, ui32 y, guid id, const String &text);
     void renderAABB(const glm::mat4 &transform, const Common::AABB &aabb);
     void clear();

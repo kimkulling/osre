@@ -58,17 +58,17 @@ DrawCmd *alloc() {
     return dc;
 }
 
-CanvasRenderer::CanvasRenderer(RenderBackendService * rbSrv, i32 numLayers) : 
-        mRbSrv(rbSrv), mDirty(true), mPenColor(1, 1, 1), mResolution(), mActiveLayer(0), mNumLayers(numLayers) {
-    osre_assert(mRbSrv != nullptr);
+CanvasRenderer::CanvasRenderer(i32 numLayers) :
+        mDirty(true), mPenColor(1, 1, 1), mResolution(), mActiveLayer(0), mNumLayers(numLayers) {
+    // empty
 }
 
 CanvasRenderer::~CanvasRenderer() {
     // empty
 }
 
-void CanvasRenderer::render() {
-    osre_assert(mRbSrv != nullptr);
+void CanvasRenderer::render(RenderBackendService *rbSrv) {
+    osre_assert(rbSrv != nullptr);
 
     if (!isDirty()) {
         return;
@@ -82,10 +82,6 @@ void CanvasRenderer::render() {
 }
 
 void CanvasRenderer::setResolution(i32 x, i32 y, i32 w, i32 h) {
-    if (mRbSrv == nullptr) {
-        return;
-    }
-
     Rect2i newResolution(x, y, w, h);
     if (mResolution == newResolution) {
         return;
@@ -101,7 +97,7 @@ bool CanvasRenderer::selectLayer(i32 layer) {
     }
 
     mActiveLayer = layer;
-    
+
     return true;
 }
 

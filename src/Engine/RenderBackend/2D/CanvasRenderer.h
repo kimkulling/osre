@@ -32,13 +32,13 @@ class RenderBackendService;
 
 struct DrawCmd;
 
-class OSRE_EXPORT CanvasRenderer : IRenderer {
+class OSRE_EXPORT CanvasRenderer : IRenderPath {
 public:
     using DrawCmdArray = cppcore::TArray<DrawCmd*>;
 
-    CanvasRenderer(RenderBackendService *rbSrv, i32 numLayers);
+    CanvasRenderer(i32 numLayers);
     ~CanvasRenderer() override;
-    void render() override;
+    void render(RenderBackendService *rbSrv) override;
     void setResolution(i32 x, i32 y, i32 w, i32 h);
     bool selectLayer(i32 layer);
     i32 getActiveLayer() const;
@@ -50,8 +50,7 @@ public:
     void setClean();
     bool isDirty() const;
 
-private:    
-    RenderBackendService *mRbSrv;
+private:
     bool mDirty;
     DrawCmdArray mDrawCmdArray;
     glm::vec3 mPenColor;

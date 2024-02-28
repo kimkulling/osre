@@ -44,6 +44,7 @@ struct FrameBuffer;
 class Mesh;
 class Shader;
 class Pipeline;
+class RenderBackendService;
 
 /// @brief An array to store meshes.
 using MeshArray = cppcore::TArray<RenderBackend::Mesh*>;
@@ -949,10 +950,19 @@ struct RenderTarget {
     // empty
 };
 
-struct OSRE_EXPORT IRenderer {
-    virtual ~IRenderer() = default;
-    virtual void render() = 0;
+struct OSRE_EXPORT IRenderPath {
+    IRenderPath();
+    virtual ~IRenderPath() = default;
+    virtual void render(RenderBackendService *rbSrv) = 0;
+    void setShader(Shader *shader);
+
+private:
+    Shader *mShader;
 };
+
+inline IRenderPath::IRenderPath() : mShader(nullptr) {
+    // empty
+}
 
 } // Namespace RenderBackend
 } // Namespace OSRE

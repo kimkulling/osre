@@ -5,19 +5,21 @@
 namespace OSRE {
 namespace RenderBackend {
 
-    class RenderPass2D {
-    public:
-        RenderPass2D();
-        ~RenderPass2D();
-        RenderPass *build();
-    };
+class RenderPass2D {
+public:
+    RenderPass2D();
+    ~RenderPass2D();
+    RenderPass *build();
+};
 
-    inline RenderPass2D::RenderPass2D() {}
-    inline RenderPass2D::~RenderPass2D() {}
-    inline RenderPass *RenderPass2D::build() {
-        Shader 
-        RenderPass *pass = new RenderPass();
-    }
+inline RenderPass2D::RenderPass2D() {}
 
-    } // namespace RenderBackend
+inline RenderPass2D::~RenderPass2D() {}
+
+inline RenderPass *RenderPass2D::build() {
+    Shader 
+    RenderPass *pass = new RenderPass();
+}
+
+} // namespace RenderBackend
 } // namespace OSRE

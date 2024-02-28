@@ -70,7 +70,7 @@ protected:
         }
 
         RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
-        mCanvasRenderer = new CanvasRenderer(rbSrv, 2);
+        mCanvasRenderer = new CanvasRenderer(2);
 
         Color4 green(0, 1, 0, 1);
         mCanvasRenderer->setcolor(green);
@@ -80,18 +80,17 @@ protected:
     }
 
     void onRender() {
-        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
-        rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
-        rbSrv->beginRenderBatch("2d");
+        RenderBackendService *rbSerive = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+        rbSerive->beginPass(RenderPass::getPassNameById(RenderPassId));
+        rbSerive->beginRenderBatch("2d");
 
-        mCanvasRenderer->render();
-        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
-        mCanvasRenderer->render();        
+        rbSerive->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
+        mCanvasRenderer->render(rbSerive);
 
-        rbSrv->endRenderBatch();
-        rbSrv->endPass();
+        rbSerive->endRenderBatch();
+        rbSerive->endPass();
 
-        AppBase::onUpdate(); 
+        AppBase::onUpdate();
     }
 };
 
