@@ -101,6 +101,8 @@ public:
     /// @param  ev      [in] The event to enqueue.
     virtual void enqueueEvent(const Common::Event &ev, Common::EventData *data);
 
+    /// @brief  Will return the event bus.
+    /// @return Pointer showing to the event bus.
     Common::EventBus *getEventBus() const;
 
 protected:
@@ -111,8 +113,8 @@ protected:
     virtual void onQuit() = 0;
 
     ///	@brief  Will be called to process events.
-    /// @param  pTriggerer  The event trigger.
-    void processEvents(Common::EventTriggerer *pTriggerer);
+    /// @param[in] triggerer  The event trigger.
+    void processEvents(Common::EventTriggerer *triggerer);
 
     ///	@brief  Returns the active event data list.
     /// @return The active event data list.

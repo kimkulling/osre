@@ -185,10 +185,7 @@ void RenderBackendService::setSettings(const Settings *config, bool moveOwnershi
     }
     mSettings = config;
     mOwnsSettingsConfig = moveOwnership;
-    setViewport(mSettings->getInt(Properties::Settings::WinX),
-            mSettings->getInt(Properties::Settings::WinY),
-            mSettings->getInt(Properties::Settings::WinWidth),
-            mSettings->getInt(Properties::Settings::WinHeight));
+    setViewport(0, 0, mSettings->getInt(Properties::Settings::WinWidth),  mSettings->getInt(Properties::Settings::WinHeight));
 }
 
 const Settings *RenderBackendService::getSettings() const {
@@ -539,7 +536,7 @@ void RenderBackendService::attachView() {
 
 void RenderBackendService::resize(ui32 x, ui32 y, ui32 w, ui32 h) {
     if (mBehaviour.ResizeViewport) {
-        printf(" resize to x=%d, y=%d, w=%d, h=%d\n", x, y, w, h);
+        setViewport(0, 0, w, h);
         ResizeEventData *data = new ResizeEventData(0, 0, w, h);
         mRenderTaskPtr->sendEvent(&OnResizeEvent, data);
     }

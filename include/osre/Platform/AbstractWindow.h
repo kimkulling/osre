@@ -99,10 +99,19 @@ class OSRE_EXPORT AbstractWindow {
 public:
     /// @brief  The Windows flags.
     enum class SurfaceFlagType {
-        SF_PropertiesClean = 0,
-        SF_WinTitleDirty = (1 << 1),
-        SF_WinResize = (1 << 2),
-        SF_ChildWindow = (1 << 3)
+        Invalid,                        ///< Marks an invalid enum
+        SF_PropertiesClean = 0,         ///<
+        SF_WinTitleDirty = (1 << 1),    ///<
+        SF_WinResize = (1 << 2),        ///<
+        SF_ChildWindow = (1 << 3)       ///<
+    };
+
+    /// @brief  Will describe the show-state for the window.
+    enum class ShowState {
+        Invalid = -1,                   ///< Marks an invalid enum
+        Visible,                        ///< Window is visible.
+        Hidden,                         ///< Window is hidden.
+        Count                           ///< Number of enums
     };
 
     /// @brief  The class constructor.
@@ -149,12 +158,6 @@ public:
     /// @brief  Will set the windows title.
     /// @param  title       [in] The new windows title.
     virtual void setWindowsTitle(const String &title) = 0;
-
-    /// @brief  Will describe the show-state for the window.
-    enum class ShowState {
-        Visible,    ///< Window is visible.
-        Hidden      ///< Window is hidden.
-    };
 
     /// @brief Will set the windows show state
     /// @param[in]  showState The new show.state
