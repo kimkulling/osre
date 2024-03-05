@@ -89,7 +89,7 @@ public:
 
 private:
     using FunctorList = std::list<EventFunctor>;
-    using FunctorMap = std::map<ui32, FunctorList>;
+    using FunctorMap = std::map<HashId, FunctorList>;
     FunctorMap mEventList;
 };
 

@@ -41,7 +41,7 @@ EventTriggerer::~EventTriggerer() {
 }
 
 void EventTriggerer::addEventListener(const Event &ev, const EventFunctor &func) {
-    if (1 == mEventList.count(ev.getHash())) {
+    if (1u == mEventList.count(ev.getHash())) {
         mEventList[ev.getHash()].push_back(func);
     }
 }
@@ -58,8 +58,8 @@ void EventTriggerer::addEventListener(const TArray<const Event *> &events, const
 }
 
 void EventTriggerer::removeEventListener(const Event &ev, const EventFunctor &func) {
-    if (1 == mEventList.count(ev.getHash())) {
-        const ui32 id(ev.getHash());
+    if (1u == mEventList.count(ev.getHash())) {
+        const HashId id{ ev.getHash() };
         FunctorList functorlist(mEventList[id]);
         FunctorList::iterator it = find(functorlist.begin(), functorlist.end(), func);
         if (it != functorlist.end()) {
@@ -73,14 +73,14 @@ void EventTriggerer::removeEventListener(const TArray<const Event *> &events, co
         return;
     }
 
-    for (ui32 i = 0; i < events.size(); ++i) {
+    for (ui32 i = 0u; i < events.size(); ++i) {
         const Event &currentEvent = *events[i];
         removeEventListener(currentEvent, func);
     }
 }
 
 void EventTriggerer::removeAllEventListeners(const TArray<const Event *> &events) {
-    for (ui32 i = 0; i < events.size(); ++i) {
+    for (ui32 i = 0u; i < events.size(); ++i) {
         if (nullptr != events[i]) {
             mEventList[events[i]->getHash()].clear();
         }
@@ -88,23 +88,23 @@ void EventTriggerer::removeAllEventListeners(const TArray<const Event *> &events
 }
 
 bool EventTriggerer::isEventTriggerable(const Event &ev) {
-    return (1 == mEventList.count(ev.getHash()));
+    return (1u == mEventList.count(ev.getHash()));
 }
 
 void EventTriggerer::addTriggerableEvent(const Event &ev) {
-    if (mEventList.count(ev.getHash()) < 1) {
+    if (mEventList.count(ev.getHash()) < 1u) {
         mEventList[ev.getHash()].clear();
     }
 }
 
 void EventTriggerer::triggerEvent(const Event &ev, const EventData *data) {
-    osre_assert(0 != mEventList.count(ev.getHash()));
+    osre_assert(0u != mEventList.count(ev.getHash()));
 
-    if (1 != mEventList.count(ev.getHash())) {
+    if (1u != mEventList.count(ev.getHash())) {
         return;
     }
 
-    const ui32 &id(ev.getHash());
+    const HashId &id{ ev.getHash() };
     const FunctorList &functorlist(mEventList[id]);
     for (FunctorList::const_iterator it = functorlist.begin(); it != functorlist.end(); ++it) {
         (*it)(ev, data);
