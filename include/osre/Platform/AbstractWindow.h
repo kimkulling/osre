@@ -57,18 +57,22 @@ struct OSRE_EXPORT Resolution {
 ///	@brief  This struct stores all surface related information.
 //-------------------------------------------------------------------------------------------------
 struct WindowsProperties {
-    Rect2ui mRect;
-    uc8 m_colordepth; ///< Color depth.
+    Rect2ui mRect;          ///< The window rectangle.
+    uc8 m_colordepth;       ///< Color depth.
     uc8 m_depthbufferdepth; ///< Z-Depth.
-    uc8 m_stencildepth; ///< Stencil depth.
-    String m_title; ///< Window title.
-    bool m_fullscreen; ///< true for full screen.
-    bool m_resizable; ///< true, if window wan be resized.
-    bool m_childWindow; ///< true, if the window is a child window, for embedding
-    bool m_open; ///< Window is open flag.
+    uc8 m_stencildepth;     ///< Stencil depth.
+    String m_title;         ///< Window title.
+    bool m_fullscreen;      ///< true for full screen.
+    bool m_resizable;       ///< true, if window wan be resized.
+    bool m_childWindow;     ///< true, if the window is a child window, for embedding
+    bool m_open;            ///< Window is open flag.
 
-    /// Will return the dimension as a rectangle.
+    /// @brief Will return the dimension as a rectangle.
+    /// @param[out] rect  The window rect.
     void getDimension(Rect2ui &rect);
+
+    /// @brief WIll set the new rectangle geometry.
+    /// @param[in] rect   The new rectangle.
     void setRect(const Rect2ui &rect);
 };
 
@@ -80,11 +84,13 @@ inline void WindowsProperties::setRect(const Rect2ui& rect) {
     mRect = rect;
 }
 
-/// @brief 
+/// @brief This enum is used to describe the mouse cursor.
 enum class DefaultMouseCursorType {
+    Invali = -1,
     ComonCursor,
     SelectCursor,
-    WaitCursor
+    WaitCursor,
+    Count
 };
 
 //-------------------------------------------------------------------------------------------------

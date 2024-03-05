@@ -30,10 +30,14 @@ class DebuggingTest : public ::testing::Test {
     // empty
 };
 
+static bool returns_false() {
+    return false;
+}
+
 TEST_F(DebuggingTest, ValidateTest) {
     bool ok = true;
     try {
-        osre_validate(false, "haha");
+        osre_validate(returns_false(), "haha");
     } catch( ...) {
         ok = false;
     }

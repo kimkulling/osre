@@ -40,8 +40,8 @@ static const c8 Tag[] = "ModelLoadingApp";
 
 // The example application, will create the render environment and render a simple triangle onto it
 class Demo2DApp : public App::AppBase {
-    TransformMatrixBlock mTransformMatrix;
-    CanvasRenderer *mCanvasRenderer;
+    TransformMatrixBlock  mTransformMatrix;
+    CanvasRenderer       *mCanvasRenderer;
 
 public:
     Demo2DApp(int argc, char *argv[]) :
@@ -69,12 +69,18 @@ protected:
             return false;
         }
 
-        RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         mCanvasRenderer = new CanvasRenderer(2);
 
         Color4 green(0, 1, 0, 1);
         mCanvasRenderer->setcolor(green);
         mCanvasRenderer->drawRect(1, 1, 100, 100, true);
+
+        return true;
+    }
+
+    bool onDestroy() override {
+        delete mCanvasRenderer;
+        mCanvasRenderer = nullptr;
 
         return true;
     }

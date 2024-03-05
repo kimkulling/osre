@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2023 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -64,7 +64,6 @@ protected:
     ///	@brief	The default class constructor.
     AbstractLogStream();
 
-
 private:
     bool m_IsActive;
 };
@@ -81,9 +80,9 @@ private:
 ///	supported modes are normal ( no debug and info messages ), verbose ( all messages will be
 ///	logged ) and debug ( the debug messages will be logged as well, be careful with this option ).
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Logger {
+class OSRE_EXPORT Logger final {
 public:
-    ///	@brief	Describes the 
+    ///	@brief	Describes the verbode mode.
     enum class VerboseMode {
         Normal,		///< Only warnings and errors will be logged.
         Verbose,	///< Normal messages will be logged as well.
@@ -110,54 +109,56 @@ public:
     static void kill();
 
     ///	@brief	Set the severity of the logger.
-    ///	@param	sev		The new severity of the logger.
+    ///	@param[in] sev   The new severity of the logger.
     ///	@see	Severity
-    void setVerboseMode( VerboseMode sev );
+    void setVerboseMode(VerboseMode sev);
     
     ///	@brief	Returns	the current severity of the logger.
     ///	@return	The current severity.
     VerboseMode getVerboseMode() const;
 
     /// @brief  Logs a trace message.
-    /// @param  domain  [in] The domain.
-    ///	@param	msg     [in] The message to log.
+    /// @param[in] domain  The domain.
+    ///	@param[in] msg     The message to log.
     void trace(const String &domain, const String &msg);
 
     ///	@brief	Logs a debug message.
-    ///	@param	msg	The message to log.
+    /// @param[in] domain  The domain.
+    ///	@param[in] msg     The message to log.
     void debug(const String &domain, const String &msg);
 
     ///	@brief	Logs an info message.
-    /// @param  domain  [in] The domain.
-    ///	@param	msg     [in] The message to log.
+    /// @param[in] domain  The domain.
+    ///	@param[in] msg     The message to log.
     void info(const String &domain, const String &msg);
 
     ///	@brief	Logs a print message.
-    ///	@param	rMessage	The message to log.
-    void print( const String &rMessage, PrintMode mode = PrintMode::WithDateTime );
+    ///	@param[in] message  The message to log.
+    /// @param[in] mode     Logging mode
+    void print( const String &message, PrintMode mode = PrintMode::WithDateTime );
 
     ///	@brief	Logs a warn message.
-    /// @param  domain  [in] The domain.
-    ///	@param	msg     [in] The message to log.
+    /// @param[in] domain  The domain.
+    ///	@param[in] msg     The message to log.
     void warn( const String &domain, const String &msg );
 
     ///	@brief	Logs a error message.
-    /// @param  domain  [in] The domain.
-    ///	@param	msg     [in] The message to log.
+    /// @param[in] domain  The domain.
+    ///	@param[in] msg     The message to log.
     void error(const String &domain, const String &msg);
 
     ///	@brief	Logs a fatal error message.
-    /// @param  domain  [in] The domain.
-    ///	@param	msg     [in] The message to log.
+    /// @param[in] domain  The domain.
+    ///	@param[in] msg     The message to log.
     void fatal(const String &domain, const String &msg);
 
     ///	@brief	Registers a new log stream.
-    ///	@param	pLogStream	A pointer showing to the log stream.
-    void registerLogStream( AbstractLogStream *pLogStream );
+    ///	@param[in] pLogStream    A pointer showing to the log stream.
+    void registerLogStream(AbstractLogStream *pLogStream);
     
     ///	@brief	Unregisters a registered log stream.
-    ///	@param	pLogStream	A pointer showing to the log stream.
-    void unregisterLogStream( AbstractLogStream *pLogStream );
+    ///	@param[in] pLogStream    A pointer showing to the log stream.
+    void unregisterLogStream(AbstractLogStream *pLogStream);
 
 private:
     Logger();

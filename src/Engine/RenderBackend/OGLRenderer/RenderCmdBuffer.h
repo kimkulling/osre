@@ -32,11 +32,11 @@ namespace OSRE {
 
 // Forward declarations
 namespace Common {
-struct EventData;
+    struct EventData;
 }
 
 namespace Platform {
-class AbstractOGLRenderContext;
+    class AbstractOGLRenderContext;
 }
 
 namespace RenderBackend {
@@ -63,7 +63,7 @@ struct OGLParameter;
 /// @brief  This class is used to manage a render command buffer. Render command buffers are used
 /// to store the list of render ops for rendering one single render frame.
 //-------------------------------------------------------------------------------------------------
-class RenderCmdBuffer {
+class RenderCmdBuffer final {
 public:
     /// @brief The class constructor.
     /// @param renderBackend    Pointer showing to the render backend.

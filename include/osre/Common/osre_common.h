@@ -445,7 +445,7 @@ struct TRectangle {
     ///	@brief  Will return the absolute center of the rect.
     /// @return The absolute center as a point.
     TPoint2<T> getAbsoluteCenter() const {
-        TPoint2<T> c(x+width / 2, y+height / 2);
+        TPoint2<T> c(x1+width / 2, y1+height / 2);
         return c;
     }
 };
