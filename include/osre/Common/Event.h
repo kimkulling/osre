@@ -131,9 +131,9 @@ struct OSRE_EXPORT EventData {
     void release();
 
     ///	@brief	Equal operator implementation.
-    ///	@param	other	Instance to compare.
+    ///	@param	rhs	Instance to compare.
     ///	@return	true, if both instances are equal.
-    bool operator==(const EventData &other) const;
+    bool operator == (const EventData &rhs) const;
 
     // removed functions
     EventData() = delete;

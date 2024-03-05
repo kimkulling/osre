@@ -32,9 +32,9 @@ namespace OSRE {
 
 // Forward declarations
 namespace Common {
-struct Event;
-struct EventData;
-class EventTriggerer;
+    struct Event;
+    struct EventData;
+    class EventTriggerer;
 } // namespace Common
 
 namespace Platform {
@@ -80,7 +80,7 @@ public:
     ///
     static void unregisterEventQueue(Win32EventQueue *server, HWND hWnd);
     ///
-    static Win32EventQueue *getInstance(HWND hWnd);
+    static Win32EventQueue *getQueueByWndInstance(HWND hWnd);
     ///
     static LRESULT CALLBACK winproc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam);
 

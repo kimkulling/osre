@@ -238,7 +238,7 @@ bool Win32EventQueue::update() {
 }
 
 LRESULT Win32EventQueue::winproc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam) {
-    Win32EventQueue *pEventHandler = Win32EventQueue::getInstance(hWnd);
+    Win32EventQueue *pEventHandler = Win32EventQueue::getQueueByWndInstance(hWnd);
     switch (Message) {
         case WM_ACTIVATE: {
             return 0;
@@ -292,7 +292,7 @@ void Win32EventQueue::unregisterEventQueue(Win32EventQueue *server, HWND hWnd) {
     }
 }
 
-Win32EventQueue *Win32EventQueue::getInstance(HWND hWnd) {
+Win32EventQueue *Win32EventQueue::getQueueByWndInstance(HWND hWnd) {
     auto it = s_WindowsServerMap.find(hWnd);
     if (s_WindowsServerMap.end() != it) {
         return it->second;

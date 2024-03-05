@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-static const c8 *Tag = "Win32Window";
+static constexpr c8 Tag[] = "Win32Window";
 
 Win32Window::Win32Window(WindowsProperties *properties) :
         AbstractWindow(properties),
@@ -71,13 +71,13 @@ void Win32Window::setWindowsMouseCursor(DefaultMouseCursorType ct){
 
     HCURSOR c;
     if (ct == DefaultMouseCursorType::WaitCursor) {
-        c = LoadCursorA(nullptr, IDC_APPSTARTING);
+        c = ::LoadCursorA(nullptr, IDC_APPSTARTING);
     } else if ( ct == DefaultMouseCursorType::SelectCursor) {
-        c = LoadCursorA(nullptr, IDC_CROSS);
+        c = ::LoadCursorA(nullptr, IDC_CROSS);
     } else {
-        c = LoadCursorA(nullptr, IDC_ARROW);
+        c = ::LoadCursorA(nullptr, IDC_ARROW);
     }
-    SetCursor(c);
+    ::SetCursor(c);
 }
 
 HWND Win32Window::getHWnd() const {
@@ -119,18 +119,18 @@ void Win32Window::addSubMenues(HMENU parent, AbstractPlatformEventQueue *queue, 
     if (nullptr == parent) {
         parent = getMenuHandle();
     }
-    HMENU hMenu = CreateMenu();
+    HMENU hMenu = ::CreateMenu();
     for (size_t i = 0; i < numItems; ++i) {
-        AppendMenuW(hMenu, menu_entries[i].Type, menu_entries[i].Id, menu_entries[i].Name);
+        ::AppendMenuW(hMenu, menu_entries[i].Type, menu_entries[i].Id, menu_entries[i].Name);
         if (0 != menu_entries[i].Id) {
             queue->registerMenuCommand(menu_entries[i].Id, menu_entries[i].Func);
         }
     }
-    AppendMenuW(parent, MF_POPUP, (UINT_PTR)hMenu, title);
+    ::AppendMenuW(parent, MF_POPUP, (UINT_PTR)hMenu, title);
 }
 
 void Win32Window::endMenu() {
-    SetMenu(mWnd, mMenu);
+    ::SetMenu(mWnd, mMenu);
     mMenuCreateState = false;
 }
 
@@ -153,7 +153,7 @@ HWND Win32Window::createStatusBar(UINT ResID, ui32 numFields) {
     for (ui32 i = 0; i < numFields; ++i) {
         ::SendMessage(mHandleStatusBar, SB_SETTEXT, i, (LPARAM) "");
     }
-    SendMessage(mHandleStatusBar, SB_SIMPLE, 0, 0);
+    ::SendMessage(mHandleStatusBar, SB_SIMPLE, 0, 0);
     return mHandleStatusBar;
 }
 
@@ -172,15 +172,15 @@ void Win32Window::setStatusText(ui32 index, const char *text) {
     for (ui32 i = 0; i < mStatusBarContent.StatusBarTexts.size(); ++i) {
         ::SendMessage(mHandleStatusBar, SB_SETTEXT, i, (LPARAM)mStatusBarContent.StatusBarTexts[i].c_str());
     }
-    SendMessage(mHandleStatusBar, SB_SIMPLE, 0, 0);
+    ::SendMessage(mHandleStatusBar, SB_SIMPLE, 0, 0);
 }
 
-void Win32Window::setParent( HWND hWnd ) { 
+void Win32Window::setParentHandle( HWND hWnd ) { 
     ::SetParent(getHWnd(), hWnd);
     mParent = hWnd;
 }
 
-HWND Win32Window::getParent() const {
+HWND Win32Window::getParentHandle() const {
     return mParent;
 }
 
@@ -278,7 +278,7 @@ bool Win32Window::onCreate() {
     }
 
     if (prop->m_childWindow) {
-        SetWindowLong(mWnd, GWL_STYLE, 0);
+        ::SetWindowLong(mWnd, GWL_STYLE, 0);
     }
     mDC = ::GetDC(mWnd);
     if (!mDC) {

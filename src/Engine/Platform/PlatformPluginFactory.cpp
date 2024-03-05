@@ -64,17 +64,17 @@ bool PlatformPluginFactory::release() {
 }
 
 AbstractPlatformEventQueue *PlatformPluginFactory::createPlatformEventHandler(AbstractWindow *rootSurface) {
-    AbstractPlatformEventQueue *eventHandler(nullptr);
+    AbstractPlatformEventQueue *eventHandler = nullptr;
 #ifdef OSRE_WINDOWS
-    Win32Window *win32Surface = static_cast<Win32Window *>(rootSurface);
-    if (nullptr != win32Surface) {
-        eventHandler = new Win32EventQueue(win32Surface);
-        Win32EventQueue::registerEventQueue((Win32EventQueue *)eventHandler, win32Surface->getHWnd());
+    Win32Window *win32Window = static_cast<Win32Window *>(rootSurface);
+    if (nullptr != win32Window) {
+        eventHandler = new Win32EventQueue(win32Window);
+        Win32EventQueue::registerEventQueue((Win32EventQueue *)eventHandler, win32Window->getHWnd());
     }
 #else
     eventHandler = new SDL2EventHandler(rootSurface);
 #endif // OSRE_WINDOWS
-
+    rootSurface->setEventQueue(eventHandler);
     osre_assert(nullptr != eventHandler);
 
     return eventHandler;

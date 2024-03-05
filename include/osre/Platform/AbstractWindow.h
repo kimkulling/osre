@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2023 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -26,6 +26,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 namespace Platform {
+
+class AbstractPlatformEventQueue;
 
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
@@ -116,11 +118,13 @@ public:
 
     /// @brief  The class constructor.
     /// @param  props       [in] The surface properties.
-    explicit AbstractWindow(WindowsProperties *props);
+    explicit AbstractWindow(WindowsProperties *props, AbstractWindow *parent = nullptr);
 
     /// @brief  The class destructor, virtual.
     virtual ~AbstractWindow();
 
+    virtual void setParent(AbstractWindow *parent);
+    virtual AbstractWindow *getParent() const;
     /// @brief  Will create the surface.
     /// @return true will be returned, when creation was successful.
     virtual bool create();
@@ -146,6 +150,9 @@ public:
     ///         be called manually followed by updateProperties to apply changes.
     /// @return Pointer showing to the surface properties.
     virtual WindowsProperties *getProperties();
+
+    virtual void setEventQueue(AbstractPlatformEventQueue *queue);
+    virtual AbstractPlatformEventQueue *getEventQueue() const;
 
     /// @brief  Setting of a new flag.
     /// @param  flags       [in] The new flags.
@@ -196,11 +203,29 @@ protected:
     ShowState getShowState() const;
 
 private:
+    AbstractWindow *mParent;
+    AbstractPlatformEventQueue *mQueue;
     ui32 mFlags;
     ShowState mShowState;
     WindowsProperties *mProperties;
     bool mIsCreated;
 };
+
+inline void AbstractWindow::setParent(AbstractWindow* parent) {
+    mParent = parent;
+}
+
+inline AbstractWindow* AbstractWindow::getParent() const {
+    return mParent;
+}
+
+inline void AbstractWindow::setEventQueue(AbstractPlatformEventQueue* queue) {
+    mQueue = queue;
+}
+
+inline AbstractPlatformEventQueue* AbstractWindow::getEventQueue() const {
+    return mQueue;
+}
 
 inline void AbstractWindow::setShowState( ShowState showState ) {
     mShowState = showState;

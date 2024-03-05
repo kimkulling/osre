@@ -86,9 +86,9 @@ public:
     /// Will set the status bar context.
     void setStatusText(ui32 index, const char *Text);
     /// 
-    void setParent(HWND hWnd);
+    void setParentHandle(HWND hWnd);
     /// 
-    HWND getParent() const;
+    HWND getParentHandle() const;
 
 protected:
     /// The create callback implementation.

@@ -129,8 +129,8 @@ bool Win32RenderContext::onCreate(AbstractWindow *surface) {
         return false;
     }
 
-    HGLRC tempContext = wglCreateContext(dc);
-    bResult = wglMakeCurrent(dc, tempContext);
+    HGLRC tempContext = ::wglCreateContext(dc);
+    bResult = ::wglMakeCurrent(dc, tempContext);
     if (FALSE == bResult) {
         osre_error(Tag, "Calling wglMakeCurrent failed.");
         return false;
