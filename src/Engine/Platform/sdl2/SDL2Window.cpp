@@ -37,7 +37,7 @@ SDL2Surface::SDL2Surface(WindowsProperties *props) :
 }
 
 void SDL2Surface::setWindowsTitle(const String &title) {
-    if ( nullptr == mSurface ) {
+    if (mSurface == nullptr) {
         return;
     }
 
@@ -56,7 +56,7 @@ void SDL2Surface::showWindow(ShowState showState) {
     if (showState == ShowState::Visible) {
         ::SDL_ShowWindow(mSurface);
     } else {
-        SDL_HideWindow(mSurface);
+        ::SDL_HideWindow(mSurface);
     }
 }
         
@@ -66,17 +66,17 @@ SDL_Window *SDL2Surface::getSDLSurface() const {
 
 bool SDL2Surface::onCreate() {
     WindowsProperties *prop = getProperties();
-    if( nullptr == prop  ) {
+    if(prop == nullptr) {
         return false;
     }
 
     // Turn on double buffering with a 24bit Z buffer
-    SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
-    SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, prop->m_depthbufferdepth );
+    ::SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    ::SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, prop->m_depthbufferdepth);
 
     // Create our window centered at 512x512 resolution
-    const ui32 w = prop->m_width;
-    const ui32 h = prop->m_height;
+    const ui32 w = prop->mRect.getWidth();
+    const ui32 h = prop->mRect.getHeight();
     ui32 sdl2Flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
     if ( prop->m_resizable ) {
         sdl2Flags |= SDL_WINDOW_RESIZABLE;
@@ -100,7 +100,7 @@ bool SDL2Surface::onDestroy( ) {
         return false;
     }
 
-    SDL_DestroyWindow( mSurface );
+    ::SDL_DestroyWindow( mSurface );
     mSurface = nullptr;
 
     return true;
@@ -110,20 +110,20 @@ bool SDL2Surface::onUpdateProperies() {
     return true;
 }
 
-void SDL2Surface::onResize( ui32 x, ui32 y, ui32 w, ui32 h ) {
-    if ( nullptr == mSurface ) {
+void SDL2Surface::onResize(ui32 x, ui32 y, ui32 w, ui32 h) {
+    if (mSurface == nullptr ) {
         return;
     }
 
-    SDL_SetWindowPosition(mSurface, x, y);
-    SDL_SetWindowSize(mSurface, w, h);
+    ::SDL_SetWindowPosition(mSurface, x, y);
+    ::SDL_SetWindowSize(mSurface, w, h);
     WindowsProperties *props = AbstractWindow::getProperties();
-    if (nullptr != props) {
-        props->m_x = x;
-        props->m_y = y;
-        props->m_width = w;
-        props->m_height = h;
-        AbstractWindow::setProperties( props );
+    if (props != nullptr) {
+        props->mRect.x1 = x;
+        props->mRect.y1 = y;
+        props->mRect.width = w;
+        props->mRect.height = h;
+        AbstractWindow::setProperties(props);
     }
 }
 

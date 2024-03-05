@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2023 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -41,9 +41,9 @@ static constexpr c8 Line[] =
 
 static void appendDomain(const String &domain, String &logMsg) {
     if (!domain.empty()) {
-        logMsg += "( ";
+        logMsg += "(";
         logMsg += domain;
-        logMsg += " )";
+        logMsg += ")";
     }
 }
 
