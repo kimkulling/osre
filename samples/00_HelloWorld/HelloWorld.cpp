@@ -68,7 +68,7 @@ protected:
         ui32 w, h;
         AppBase::getResolution(w, h);
         camera->setProjectionParameters(60.f, (f32)w, (f32)h, 0.001f, 1000.f);
-        
+
         return camera;
     }
 

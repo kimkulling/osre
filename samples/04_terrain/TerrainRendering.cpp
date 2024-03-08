@@ -163,7 +163,7 @@ protected:
 
         RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
-        rbSrv->beginRenderBatch("terrain");
+        rbSrv->beginRenderBatch("b1");
 
         rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
 

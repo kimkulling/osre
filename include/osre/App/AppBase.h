@@ -302,6 +302,7 @@ inline Common::Ids *AppBase::getIdContainer() const {
 ///	@brief  Shortcut to get a OSRE-main function.
 /// To use this you need to derive your application class from the ::OSRE::App::AppBase class and
 /// put this into your main source file:
+///
 /// @code
 ///
 /// class MyApp : public ::OSRE::App::AppBase { ... };
