@@ -149,5 +149,28 @@ void MeshDiagnostic::dumpIndices(const cppcore::TArray<ui32>& indexArray) {
 
 }
 
+void MeshDiagnostic::dump_matrix(const glm::mat4 &mat) {
+    std::cout << mat[0].r << " ";
+    std::cout << mat[0].g << " ";
+    std::cout << mat[0].b << " ";
+    std::cout << mat[0].a << " ";
+    std::cout << "\n";
+    std::cout << mat[1].r << " ";
+    std::cout << mat[1].g << " ";
+    std::cout << mat[1].b << " ";
+    std::cout << mat[1].a << " ";
+    std::cout << "\n";
+    std::cout << mat[2].r << " ";
+    std::cout << mat[2].g << " ";
+    std::cout << mat[2].b << " ";
+    std::cout << mat[2].a << " ";
+    std::cout << "\n";
+    std::cout << mat[3].r << " ";
+    std::cout << mat[3].g << " ";
+    std::cout << mat[3].b << " ";
+    std::cout << mat[3].a << " ";
+    std::cout << "\n";
+}
+
 }
 }
