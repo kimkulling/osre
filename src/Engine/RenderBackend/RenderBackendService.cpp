@@ -87,6 +87,7 @@ RenderBackendService::RenderBackendService() :
         mSubmitFrame(&mFrames[1]),
         mDirty(false),
         mPasses(),
+        mPipeline(nullptr),
         mCurrentPass(nullptr),
         mCurrentBatch(nullptr) {
     // empty
@@ -123,7 +124,7 @@ bool RenderBackendService::onOpen() {
     }
 
     // Create render event handler for back-end
-    const String api = mSettings->get(Settings::RenderAPI).getString();
+    const String &api = mSettings->get(Settings::RenderAPI).getString();
     if (api == OGL_API) {
         mRenderTaskPtr->attachEventHandler(new OGLRenderEventHandler);
     } else if (api == Vulkan_API) {
@@ -150,9 +151,16 @@ bool RenderBackendService::onClose() {
     if (!DbgRenderer::destroy()) {
         osre_error(Tag, "Cannot destroy Debug renderer");
     }
+    
     if (mRenderTaskPtr->isRunning()) {
         mRenderTaskPtr->detachEventHandler();
         mRenderTaskPtr->stop();
+    }
+
+    if (mOwnsSettingsConfig) {
+        delete mSettings;
+        mSettings = nullptr;
+        mOwnsSettingsConfig = false;
     }
 
     return true;
@@ -267,6 +275,7 @@ void RenderBackendService::commitNextFrame() {
                     ::memcpy(cmd->m_data, currentMesh->getVertexBuffer()->getData(), cmd->m_size);
                 }
             } 
+            
             if (currentBatch->m_dirtyFlag & RenderBatchData::MeshDirty) {
                 FrameSubmitCmd *cmd = mSubmitFrame->enqueue();
                 PassData *pd = new PassData(currentPass->m_id, nullptr);
@@ -302,6 +311,10 @@ Pipeline *RenderBackendService::createDefaultPipeline() {
     pipeline->addPass(renderPass);
 
     return pipeline;
+}
+
+void RenderBackendService::setActivePipeline(Pipeline *pipeline) {
+    mPipeline = pipeline;
 }
 
 PassData *RenderBackendService::getPassById(const c8 *id) const {

@@ -194,6 +194,8 @@ public:
     /// @return Pointer showing to the default render pipeline.
     Pipeline *createDefaultPipeline();
 
+    void setActivePipeline(Pipeline *pipeline);
+
     PassData *getPassById(const c8 *id) const;
 
     PassData *beginPass(const c8 *id);
@@ -263,6 +265,7 @@ private:
     Frame *mSubmitFrame;
     bool mDirty;
     cppcore::TArray<PassData*> mPasses;
+    Pipeline *mPipeline;
     PassData *mCurrentPass;
     RenderBatchData *mCurrentBatch;
     struct Behaviour {
