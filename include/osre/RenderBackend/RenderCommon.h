@@ -941,7 +941,7 @@ struct FrameBuffer {
     FrameBuffer &operator=(const FrameBuffer &) = delete;
 };
 
-enum RenderPassType : ui32 {
+enum class RenderPassType : ui32 {
     StaticRenderPass,
     UiRenderPass
 };
@@ -960,9 +960,28 @@ private:
     Shader *mShader;
 };
 
-inline IRenderPath::IRenderPath() : mShader(nullptr) {
-    // empty
-}
+inline IRenderPath::IRenderPath() : mShader(nullptr) {}
+
+enum class GLSLVersion {
+    Invalid = -1,
+    GLSL_110,
+    GLSL_120,
+    GLSL_130,
+    GLSL_140,
+    GLSL_150,
+    GLSL_330,
+    GLSL_400,
+    GLSL_410,
+    GLSL_420,
+    GLSL_430,
+    GLSL_440,
+    GLSL_450,
+    GLSL_460,
+    Count
+};
+
+GLSLVersion getGlslVersionFromeString(const c8 *versionString);
+
 
 } // Namespace RenderBackend
 } // Namespace OSRE

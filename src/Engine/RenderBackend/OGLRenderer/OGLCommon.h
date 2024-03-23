@@ -228,15 +228,30 @@ struct DrawPrimitivesCmdData {
     ~DrawPrimitivesCmdData() = default;
 };
 
-/// @brief This struct declares the data structure of the GPU apabilities.
+struct OGLDriverInfo {
+    i32 mOpenGLVersion[2];
+    String mExtensions;
+    const c8 *mGLVendorString;
+    const c8 *mGLRendererString;
+    const c8 *mGLVersionString;
+
+    OGLDriverInfo() :
+            mGLVendorString(nullptr), mGLRendererString(nullptr), mGLVersionString(nullptr) {
+        ::memset(mOpenGLVersion, 0, sizeof(i32) * 2);
+    }
+};
+
+/// @brief This struct declares the data structure of the GPU capabilities.
 struct OGLCapabilities {
-    GLfloat mMaxAniso;          ///< ?
+    GLfloat mMaxAniso;          ///< Max value for aniso.
     i32 mContextMask;           ///< ?
     i32 mMax3DTextureSize;      ///< The upper limit for 3D textures.
     i32 mMaxTextureUnits;       ///< The maximal number of texture units.
     i32 mMaxTextureImageUnits;  ///< The maximal number of texture image units.
-    i32 mMaxTextureCoords;      ///< The maximal numberof texture coordinates.
+    i32 mMaxTextureCoords;      ///< The maximal number of texture coordinates.
     bool mInstancing;           ///< Instancing is supported.
+    c8 *mGLSLVersionAsStr;      ///< The GLSL version as a string
+    GLSLVersion mGLSLVersion;   ///< The GLSL version as an enum
 
     /// @brief The default class constructor.
     OGLCapabilities() :
@@ -246,7 +261,9 @@ struct OGLCapabilities {
             mMaxTextureUnits(-1),
             mMaxTextureImageUnits(-1),
             mMaxTextureCoords(-1),
-            mInstancing(true) {
+            mInstancing(true),
+            mGLSLVersionAsStr(nullptr),
+            mGLSLVersion(GLSLVersion::Invalid) {
         // empty
     }
 

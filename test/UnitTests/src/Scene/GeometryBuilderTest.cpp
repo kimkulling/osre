@@ -36,7 +36,7 @@ using namespace ::OSRE::RenderBackend;
 class MeshBuilderTest : public ::testing::Test {
 protected:
     void SetUp() override {
-        MaterialBuilder::create();
+        MaterialBuilder::create(GLSLVersion::GLSL_400);
     }
 
     void TearDown() override {

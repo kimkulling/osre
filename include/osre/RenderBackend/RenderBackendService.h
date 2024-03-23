@@ -226,7 +226,7 @@ public:
 
     void attachView();
 
-    void resize(ui32 x, ui32 y, ui32 w, ui32 h);
+    void resize(ui32 w, ui32 h);
 
     void enableAutoResizing(bool enabled);
 

@@ -42,7 +42,7 @@ Entity::Entity(const String &name, Common::Ids &ids, World *world) :
         mIds(ids),
         mAabb(),
         mOwner(world) {
-    mComponentArray.resize(Component::getIndex(ComponentType::MaxNumComponents));
+    mComponentArray.resize(Component::getIndex(ComponentType::Count));
     mComponentArray.set(nullptr);
     mRenderComponent = (RenderComponent*) createComponent(ComponentType::RenderComponentType);
     if (nullptr != mOwner) {
@@ -112,9 +112,8 @@ Component *Entity::createComponent(ComponentType type) {
         case OSRE::App::ComponentType::CameraComponentType:
             component = new CameraComponent(this);
             break;
-        case OSRE::App::ComponentType::InvalidComponent:
-        case OSRE::App::ComponentType::MaxNumComponents:
-            break;
+        case OSRE::App::ComponentType::Invalid:
+        case OSRE::App::ComponentType::Count:
         default:
             break;
     }
@@ -124,7 +123,7 @@ Component *Entity::createComponent(ComponentType type) {
 }
 
 Component *Entity::getComponent(ComponentType type) const {
-    if (type == ComponentType::MaxNumComponents || type == ComponentType::InvalidComponent) {
+    if (type == ComponentType::Count || type == ComponentType::Invalid) {
         return nullptr;
     }
 

@@ -735,5 +735,40 @@ size_t UniformVar::getSize() {
     return m_name.size() + 1 + m_data.m_size;
 }
 
+static const c8 *GlslVersionStringArray[(size_t)GLSLVersion::Count] = {
+    "1.10",
+    "1.20",
+    "1.30",
+    "1.40",
+    "1.50",
+    "3.30",
+    "4.00",
+    "4.10",
+    "4.20",
+    "4.30",
+    "4.40",
+    "4.50",
+    "4.60"
+};
+
+GLSLVersion getGlslVersionFromeString(const c8 *versionString) {
+    GLSLVersion version = GLSLVersion::Invalid;
+    if (versionString == nullptr) {
+        return version;
+    }
+
+    std::string str(versionString);
+    for (size_t i = 0; i < (size_t)GLSLVersion::Count; ++i) {
+        const String v = GlslVersionStringArray[i];
+        std::string::size_type pos = str.find(v);
+        if (pos != std::string::npos) {
+            version = static_cast<GLSLVersion>(i);
+            break;
+        }
+    }
+
+    return version;
+}
+
 } // Namespace RenderBackend
 } // Namespace OSRE

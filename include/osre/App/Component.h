@@ -44,12 +44,12 @@ class TransformComponent;
 
 ///	@brief This enum describes the component type.
 enum class ComponentType {
-    InvalidComponent = -1,      ///< Indicates an invalid component.
+    Invalid = -1,               ///< Indicates an invalid component.
     RenderComponentType = 0,    ///< A Render-component, will contain any render data.
     TransformComponentType,     ///< For all transformation types.
     LightComponentType,         ///< For light types.
     CameraComponentType,        ///< For camera components.
-    MaxNumComponents,           ///< The number of components.
+    Count                       ///< The number of components.
 };
 
 //-------------------------------------------------------------------------------------------------

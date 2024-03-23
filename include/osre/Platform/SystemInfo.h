@@ -43,16 +43,16 @@ public:
     ///	@enum	Platform
     ///	@brief	This enum describes the platform.
     enum class Platform {
-        Win32,		///< Windows platform, 32 bit
+        Windows,		///< Windows platform
         GNU_Linux	///< GNU Linux platform.
     };
 
 public:
     ///	@brief	The class default constructor.
-    SystemInfo();
+    SystemInfo() = default;
 
     ///	@brief	The class destructor.
-    ~SystemInfo();
+    ~SystemInfo() = default;
 
     ///	@brief	Returns the platform type.
     ///	@return	The platform type.

@@ -547,7 +547,7 @@ void RenderBackendService::attachView() {
     // empty
 }
 
-void RenderBackendService::resize(ui32 x, ui32 y, ui32 w, ui32 h) {
+void RenderBackendService::resize(ui32 w, ui32 h) {
     if (mBehaviour.ResizeViewport) {
         setViewport(0, 0, w, h);
         ResizeEventData *data = new ResizeEventData(0, 0, w, h);

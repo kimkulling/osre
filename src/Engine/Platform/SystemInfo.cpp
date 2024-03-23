@@ -45,17 +45,9 @@ enum {
 bool                      SystemInfo::m_IsInited  = false;
 SystemInfo::ThreadNameMap SystemInfo::s_threadNames;
 
-SystemInfo::SystemInfo() {
-    // empty
-}
-
-SystemInfo::~SystemInfo() {
-    // empty
-}
-
 SystemInfo::Platform SystemInfo::getPlatform() {
 #if defined( OSRE_WINDOWS )
-    return Platform::Win32;
+    return Platform::Windows;
 #elif defined(__linux__) || defined(__linux) || defined(linux) || defined(__gnu_linux__)
     return Platform::GNU_Linux;
 #endif

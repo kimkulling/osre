@@ -43,6 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "stb_image.h"
 
 #include <iostream>
+//#include <string_view>
 
 namespace OSRE {
 namespace RenderBackend {
@@ -72,7 +73,8 @@ OGLRenderBackend::OGLRenderBackend() :
         mFpState(nullptr),
         mFpsCounter(nullptr),
         mOglCapabilities(),
-        mFrameFuffers() {
+        mFrameFuffers(),
+        mOGLDriverInfo() {
     mBindedTextures.resize((size_t)TextureStageType::NumTextureStageTypes);
     for (size_t i = 0; i < (size_t)TextureStageType::NumTextureStageTypes; ++i) {
         mBindedTextures[i] = nullptr;
@@ -90,6 +92,9 @@ void OGLRenderBackend::enumerateGPUCaps() {
     glGetIntegerv(GL_MAX_TEXTURE_UNITS, &mOglCapabilities.mMaxTextureUnits);
     glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &mOglCapabilities.mMaxTextureImageUnits);
     glGetIntegerv(GL_MAX_TEXTURE_COORDS, &mOglCapabilities.mMaxTextureCoords);
+
+    mOglCapabilities.mGLSLVersionAsStr = (c8*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+    mOglCapabilities.mGLSLVersion = getGlslVersionFromeString(mOglCapabilities.mGLSLVersionAsStr);
 }
 
 void OGLRenderBackend::setClearColor(const Color4& clearColor) {
@@ -173,35 +178,34 @@ bool OGLRenderBackend::create(AbstractOGLRenderContext *renderCtx) {
 
     mFpState = new RenderStates;
     enumerateGPUCaps();
-    ::memset(mOpenGLVersion, 0, sizeof(i32) * 2);
 
     // checking the supported GL version
-    const char *GLVendorString = (const char *)glGetString(GL_VENDOR);
-    if (GLVendorString) {
-        String vendor(GLVendorString);
+    mOGLDriverInfo.mGLVendorString = (const c8 *)glGetString(GL_VENDOR);
+    if (mOGLDriverInfo.mGLVendorString) {
+        String vendor(mOGLDriverInfo.mGLVendorString);
         osre_info(Tag, vendor);
     }
-    const char *GLRendererString = (const char *)glGetString(GL_RENDERER);
-    if (GLRendererString) {
-        String renderer(GLRendererString);
+    mOGLDriverInfo.mGLRendererString = (const c8 *)glGetString(GL_RENDERER);
+    if (mOGLDriverInfo.mGLRendererString) {
+        String renderer(mOGLDriverInfo.mGLRendererString);
         osre_info(Tag, renderer);
     }
-    const char *GLVersionString = (const char *)glGetString(GL_VERSION);
-    if (GLVersionString) {
-        String version(GLVersionString);
+    mOGLDriverInfo.mGLVersionString = (const c8 *)glGetString(GL_VERSION);
+    if (mOGLDriverInfo.mGLVersionString) {
+        String version(mOGLDriverInfo.mGLVersionString);
         osre_info(Tag, version);
     }
-    const char *GLExtensions = (const char *)glGetString(GL_EXTENSIONS);
+    const char *GLExtensions = (const c8*) glGetString(GL_EXTENSIONS);
     if (GLExtensions) {
         String extensions(GLExtensions);
         setExtensions(extensions);
     }
     // or better yet, use the GL4.x way to get the version number
-    glGetIntegerv(GL_MAJOR_VERSION, &mOpenGLVersion[0]);
-    glGetIntegerv(GL_MINOR_VERSION, &mOpenGLVersion[1]);
+    glGetIntegerv(GL_MAJOR_VERSION, &mOGLDriverInfo.mOpenGLVersion[0]);
+    glGetIntegerv(GL_MINOR_VERSION, &mOGLDriverInfo.mOpenGLVersion[1]);
 
-    c8 *slv = (c8 *)glGetString(GL_SHADING_LANGUAGE_VERSION);
-    osre_debug(Tag, "Supported GLSL language " + String(slv));
+    c8 *slv = (c8 *) glGetString(GL_SHADING_LANGUAGE_VERSION);
+    osre_info(Tag, "Supported GLSL language " + String(slv));
 
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_TEXTURE_3D);
@@ -1237,11 +1241,11 @@ void OGLRenderBackend::setFixedPipelineStates(const RenderStates &states) {
 }
 
 void OGLRenderBackend::setExtensions(const String &extensions) {
-    mExtensions = extensions;
+    mOGLDriverInfo.mExtensions = extensions;
 }
 
 const String &OGLRenderBackend::getExtensions() const {
-    return mExtensions;
+    return mOGLDriverInfo.mExtensions;
 }
 
 } // Namespace RenderBackend

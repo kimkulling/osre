@@ -141,7 +141,7 @@ bool RenderTestSuite::setup(const String &API) {
         registry->registerAssetPath("assets", getMediaPath());
     }
 
-    MaterialBuilder::create();
+    MaterialBuilder::create(GLSLVersion::GLSL_400);
 
     return true;
 }

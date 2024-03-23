@@ -215,13 +215,11 @@ bool Win32EventQueue::update() {
                         SendMessage(s->getStatusBarHandle(), WM_SIZE, 0, 0);
                     }
                     GetClientRect(s->getHWnd(), &rcClient);
-                    ui32 x = rcClient.left;
-                    ui32 y = rcClient.top;
-                    ui32 w = rcClient.right - rcClient.left;
-                    ui32 h = rcClient.bottom - rcClient.top;
+                    const ui32 w = rcClient.right - rcClient.left;
+                    const ui32 h = rcClient.bottom - rcClient.top;
                     RenderBackend::RenderBackendService *rbSrv = getRenderBackendService();
                     if (nullptr != rbSrv) {
-                        rbSrv->resize(x, y, w, h);
+                        rbSrv->resize(w, h);
                     }
                     activeEventQueue->addBack(data);
                 }

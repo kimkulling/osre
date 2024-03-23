@@ -53,7 +53,7 @@ class World;
 ///
 ///	@brief	
 //-------------------------------------------------------------------------------------------------
-class OSRE_EXPORT Entity : public Common::Object {
+class OSRE_EXPORT Entity final : public Common::Object {
 public:
     using ComponentArray = cppcore::TArray<Component*>;
 

@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
@@ -37,8 +38,11 @@ namespace RenderBackend {
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT MaterialBuilder {
 public:
+    using MaterialFactory = Common::TResourceFactory<RenderBackend::Material>;
+    using MaterialCache = Common::TResourceCache<MaterialFactory, RenderBackend::Material>;
+
     /// @brief Will create the material builder instance.
-    static void create();
+    static void create(GLSLVersion glslVersion);
 
     /// @brief Will destroy the material builder instance.
     static void destroy();
@@ -76,10 +80,17 @@ private:
     ///	@brief The class destructor.
     ~MaterialBuilder() = default;
 
-private:
-    using MaterialFactory = Common::TResourceFactory<RenderBackend::Material>;
-    using MaterialCache = Common::TResourceCache<MaterialFactory, RenderBackend::Material>;
-    static MaterialCache *sMaterialCache;
+private:    
+    struct Data {
+        GLSLVersion mVersion;
+        MaterialCache *mMaterialCache;
+
+        ~Data() {
+            delete mMaterialCache;
+        }
+    };
+
+    static Data *sData;
 };
 
 } // Namespace RenderBackend

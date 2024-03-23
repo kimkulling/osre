@@ -174,8 +174,7 @@ private:
 	Profiling::FPSCounter *mFpsCounter;
 	OGLCapabilities mOglCapabilities;
 	cppcore::TArray<OGLFrameBuffer*> mFrameFuffers;
-    String mExtensions;
-    i32 mOpenGLVersion[2];
+    OGLDriverInfo mOGLDriverInfo;
 };
 
 } // Namespace RenderBackend
