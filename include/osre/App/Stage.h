@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2023 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -23,7 +23,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <osre/Common/Object.h>
-
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {
@@ -40,8 +39,10 @@ class World;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief A stage represents the global container for all render data. A stage can container one 
-/// or more worlds, which can be connected between each others. Entities are the render data. 
+///	@brief A stage represents the global container for all render data. 
+/// A stage can be a container for one or more worlds, which can be connected between each others. 
+/// Only one world can be active at one time.
+/// Entities are the render data, which are part of the worlds.
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT Stage : public Common::Object {
 public:
@@ -59,47 +60,47 @@ public:
     /// @return The new created stage.
     World *createWorld(const String &name);
 
-    /// @brief 
-    /// @param name 
-    /// @return 
+    /// @brief Will search for a given world by name.
+    /// @param[in] name   The name to look for.
+    /// @return The worls instance or nullptr if not found. 
     World *findWorld(const String &name) const;
     
-    /// @brief 
-    /// @return 
+    /// @brief Will return the number of assigned worlds.
+    /// @return The number of worlds.
     size_t getNumberOfWorlds() const;
     
-    /// @brief 
-    /// @param index 
-    /// @return 
+    /// @brief Will return the world at the given index.
+    /// @param[in] index    The index-
+    /// @return The worls instance or nullptr if not found. 
     World *getWorldAt(ui32 index) const;
         
-    /// @brief 
-    /// @param world 
+    /// @brief Will add a new world and mark it at active.
+    /// @param world    The new world to add.
     void addActiveWorld(World * world);
     
-    /// @brief 
-    /// @return 
+    /// @brief Will return the active worlds.
+    /// @return The active worlds.
     const WorldArray &getActiveWorlds() const;
 
     World *getActiveWorld(size_t index) const;
 
-    ///
-    ///
-    ///
+    /// @brief Will add a new created world.
+    /// @param[in] name     The name of the world.
+    /// @return The new created world.
     World *addActiveWorld(const String &name);
 
-    /// @brief 
-    /// @return 
+    /// @brief  Returns true if the stage is empty.
+    /// @return true, if the stage is empty, false if not.
     bool isEmpty() const {
         return mRenderWorlds.isEmpty();
     }
 
     /// @brief  Will update the world.
-    /// @param  dt      [in] The current delta time-tick.
+    /// @param[in] dt The current delta time-tick.
     void update(Time dt);
 
     /// @brief  Will render the world-
-    /// @param  rbService   [in] The renderbackend.
+    /// @param[in] rbService   The renderbackend.
     void render(RenderBackend::RenderBackendService *rbService);
 
 private:

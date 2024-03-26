@@ -25,6 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <osre/Common/Logger.h>
 #include <osre/App/Stage.h>
+#include <osre/App/World.h>
 #include <osre/App/App.h>
 #include <osre/app/Project.h>
 
@@ -32,12 +33,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <structmember.h> // defines a python class in C++
 
 namespace OSRE {
-namespace Editor {
+namespace Edito {
 
 static constexpr c8 Tag[] = "PythonInterface";
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::App;
+
+typedef struct Osre_World {
+    PyObject_HEAD
+    World *mWorld;
+} Osre_World;
 
 typedef struct Osre_Project {
     Stage *mStage;
