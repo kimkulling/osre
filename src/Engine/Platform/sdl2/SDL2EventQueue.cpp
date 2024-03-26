@@ -188,14 +188,13 @@ bool SDL2EventHandler::update() {
                     switch (ev.window.event) {
                         case SDL_WINDOWEVENT_EXPOSED: {
                             const auto &rect = mWindow->getProperties()->mRect;
-                            getRenderBackendService()->resize(rect.x1, rect.y1, rect.width, rect.height);
+                            getRenderBackendService()->resize(rect.width, rect.height);
                         } break;
                         case SDL_WINDOWEVENT_SHOWN:
                         case SDL_WINDOWEVENT_SIZE_CHANGED: {
                             const ui32 w = static_cast<ui32>(ev.window.data1);
                             const ui32 h = static_cast<ui32>(ev.window.data2);
-                            const auto &rect = mWindow->getProperties()->mRect;
-                            getRenderBackendService()->resize(rect.x1, rect.y1, w, h);
+                            getRenderBackendService()->resize(w, h);
                         } break;
                     }
                 }
