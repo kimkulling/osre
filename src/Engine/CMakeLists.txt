@@ -309,10 +309,6 @@ SET( scene_inc
 SET( scene_src
 )
 
-SET(renderbackend_shader_src
-    Scene/Shader/DefaultRenderVertex.vs
-    Scene/Shader/DefaultRenderVertex.fs
-)
 #==============================================================================
 # RenderBackend
 #==============================================================================
