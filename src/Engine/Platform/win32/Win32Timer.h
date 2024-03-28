@@ -33,7 +33,7 @@ namespace Platform {
 ///
 ///	@brief	This class implements the timer API by using the Win32-API.
 //-------------------------------------------------------------------------------------------------
-class Win32Timer : public AbstractTimer {
+class Win32Timer final : public AbstractTimer {
 public:
 	///	@brief The class constructor.
 	Win32Timer();

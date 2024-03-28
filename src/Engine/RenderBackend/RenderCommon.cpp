@@ -30,7 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/glm_common.h>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h" 
+#include "stb_image.h"
 
 namespace OSRE {
 namespace RenderBackend {

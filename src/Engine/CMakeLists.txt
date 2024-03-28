@@ -328,6 +328,7 @@ SET( renderbackend_inc
     ${HEADER_PATH}/RenderBackend/RenderStates.h
     ${HEADER_PATH}/RenderBackend/Shader.h
 )
+
 SET( renderbackend_src
     RenderBackend/DbgRenderer.cpp
     RenderBackend/Material.cpp
@@ -371,6 +372,10 @@ SET( renderbackend_oglrenderer_src
     RenderBackend/OGLRenderer/OGLRenderEventHandler.h
     RenderBackend/OGLRenderer/OGLShader.cpp
     RenderBackend/OGLRenderer/OGLShader.h
+)
+
+set(renderbackend_shader_src
+    RenderBackend/Shader/DefaultShader.h
 )
 
 #==============================================================================
@@ -507,8 +512,9 @@ ADD_LIBRARY( osre SHARED
     ${resources_src}
     ${renderbackend_src}
         ${renderbackend_oglrenderer_src}
-	${renderbackend_volkanrenderer_src}
+	    ${renderbackend_volkanrenderer_src}
         ${renderbackend_2d_src}
+        ${renderbackend_shader_src}
     ${scene_src}
         ${scene_shader_src}
     ${threading_src}

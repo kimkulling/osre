@@ -33,7 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <structmember.h> // defines a python class in C++
 
 namespace OSRE {
-namespace Edito {
+namespace Editor {
 
 static constexpr c8 Tag[] = "PythonInterface";
 

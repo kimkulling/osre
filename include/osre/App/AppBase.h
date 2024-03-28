@@ -186,15 +186,15 @@ public:
 
     /// @brief  Will requested a shutdown.
     virtual void requestShutdown();
-    
+
     /// @brief  Will return true, if a shutdown is requested by the user.
     /// @return true, if a shutdown is requested.
     virtual bool shutdownRequested() const;
-        
+
     /// @brief  Will return the active time or nullptr, if none is active.
     /// @return Pointer showing to the active timer.
     virtual Platform::AbstractTimer *getActiveTimer() const;
-    
+
     /// @brief  Will return the Root-Surface instance.
     /// @return A pointer showing to the Root-Surface.
     virtual Platform::AbstractWindow *getRootWindow() const;

@@ -32,38 +32,63 @@ namespace RenderBackend {
 
 MaterialBuilder::Data *MaterialBuilder::sData = nullptr;
 
-static const String GLSLVersionString_330 =
-        "#version 330 core\n";
+String getGLSLVersionString_330()  {
+    static const String GLSLVersionString_330 =
+            "#version 330 core\n";
+    return GLSLVersionString_330;
+}
 
-static const String GLSLVersionString_400 =
-        "#version 400 core\n";
+String  getGLSLVersionString_400() {
+    static const String GLSLVersionString_400 =
+            "#version 400 core\n";
+    return GLSLVersionString_400;
+}
 
-static const String GLSLRenderVertexLayout =
-        "// RenderVertex layout\n"
-        "layout(location = 0) in vec3 position;	  // object space vertex position\n"
-        "layout(location = 1) in vec3 normal;	  // object space vertex normal\n"
-        "layout(location = 2) in vec3 color0;     // per-vertex diffuse colour\n"
-        "layout(location = 3) in vec2 texcoord0;  // per-vertex tex coord, stage 0\n"
-        "\n";
+String getNewLine() {
+    static String NewLine = "\n";
+    return NewLine;
+}
 
-static const String GLSLCombinedMVPUniformSrc =
-        "// uniforms\n"
-        "uniform mat4 Model;\n"
-        "uniform mat4 View;\n"
-        "uniform mat4 Projection;\n";
+String getGLSLRenderVertexLayout() {
+    static const String GLSLRenderVertexLayout =
+            "// RenderVertex layout\n"
+            "layout(location = 0) in vec3 position;	  // object space vertex position\n"
+            "layout(location = 1) in vec3 normal;	  // object space vertex normal\n"
+            "layout(location = 2) in vec3 color0;     // per-vertex diffuse colour\n"
+            "layout(location = 3) in vec2 texcoord0;  // per-vertex tex coord, stage 0\n" +
+            getNewLine();
+    return GLSLRenderVertexLayout;
+}
 
-static const String GLSLVsSrc =
-        GLSLVersionString_400 +
-        "\n"
+String getGLSLColorVertexLayout() {
+    static const String GLSLColorVertexLayout =
+        "// Colorvertex layout\n"
         "layout(location = 0) in vec3 position;	 // object space vertex position\n"
         "layout(location = 1) in vec3 normal;    // object space vertex normal\n"
-        "layout(location = 2) in vec3 color0;    // per-vertex colour\n"
-        "\n"
+        "layout(location = 2) in vec3 color0;    // per-vertex colour\n" +
+        getNewLine();
+    return GLSLColorVertexLayout;
+}
+
+String getGLSLCombinedMVPUniformSrc() {
+    static const String GLSLCombinedMVPUniformSrc =
+            "// uniforms\n"
+            "uniform mat4 Model;\n"
+            "uniform mat4 View;\n"
+            "uniform mat4 Projection;\n";
+    return GLSLCombinedMVPUniformSrc;
+}
+
+static const String GLSLVsSrc =
+        getGLSLVersionString_400() +
+        getNewLine() +
+        getGLSLColorVertexLayout() +
+        getNewLine() +
         "// output from the vertex shader\n"
-        "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
-        "\n" +
-        GLSLCombinedMVPUniformSrc +
-        "\n"
+        "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n" +
+        getNewLine() +
+        getGLSLCombinedMVPUniformSrc() +
+        getNewLine() +
         "void main() {\n"
         "    mat4 ModelView = View * Model;\n"
         "    mat4 MVP = Projection * ModelView;\n"
@@ -75,40 +100,40 @@ static const String GLSLVsSrc =
         "}\n";
 
 const String GLSLFsSrc =
-        GLSLVersionString_400 +
-        "\n"
-        "layout(location=0) out vec4 vFragColor; //fragment shader output\n"
-        "\n"
+        getGLSLVersionString_400() +
+        getNewLine() +
+        "layout(location=0) out vec4 vFragColor; //fragment shader output\n" +
+        getNewLine() +
         "//input form the vertex shader\n"
-        "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
-        "\n"
+        "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n" +
+        getNewLine() +
         "void main() {\n"
         "    // set the interpolated color as the shader output\n"
         "    vFragColor = vSmoothColor;\n"
         "}\n";
 
 const String GLSLVertexShaderSrcRV =
-        GLSLVersionString_400 +
-        "\n" + GLSLRenderVertexLayout +
-        "\n"
+        getGLSLVersionString_400() +
+        "\n" + getGLSLRenderVertexLayout() +
+        getNewLine() +
         "out vec3 position_eye, normal_eye;\n"
         "// output from the vertex shader\n"
         "smooth out vec4 vSmoothColor;		//smooth colour to fragment shader\n"
-        "smooth out vec2 vUV;\n"
-        "\n"
+        "smooth out vec2 vUV;\n" +
+        getNewLine() +
         "vec3 light_pos = vec3(0.0, 0.0, 2.0);\n"
         "vec3 Ls        = vec3(1.0, 1.0, 1.0);\n"
         "vec3 Ld        = vec3(0.7, 0.7, 0.7);\n"
         "vec3 La        = vec3(0.7, 0.7, 0.7);\n"
-        "float radius   = 100.0; // todo: set this via uniform\n"
-        "\n"
+        "float radius   = 100.0; // todo: set this via uniform\n" +
+        getNewLine() +
         "vec3 Ks = vec3(1.0, 1.0, 1.0);\n"
         "vec3 Kd = vec3(1.0, 0.5, 0.0);\n"
         "vec3 Ka = vec3(1.0, 1.0, 1.0);\n"
-        "float specular_exponent = 100.0;\n"
-        "\n" +
-        GLSLCombinedMVPUniformSrc +
-        "\n"
+        "float specular_exponent = 100.0;\n" +
+        getNewLine() +
+        getGLSLCombinedMVPUniformSrc() +
+        getNewLine() +
         "void main()\n"
         "{\n" 
         "    position_eye = vec3(View * Model * vec4(position, 1.0));\n"
@@ -123,15 +148,15 @@ const String GLSLVertexShaderSrcRV =
         "    vec3 reflection_eye = reflect(-direction_to_light_eye, normal_eye);\n"
         "    vec3 surface_to_viewer_eye = normalize(-position_eye);\n"
         "    float dot_prod_specular = dot(reflection_eye, surface_to_viewer_eye);\n" 
-        "    dot_prod_specular = max(dot_prod_specular, 0.0);\n"
-
+        "    dot_prod_specular = max(dot_prod_specular, 0.0);\n" +
+        getNewLine() +
         "    float dot_prod = dot (direction_to_light_eye, normal_eye);\n"
-        "    dot_prod = max (dot_prod, 0.0); \n"
-
+        "    dot_prod = max (dot_prod, 0.0); \n" +
+        getNewLine() +
         "    float specular_factor = pow(dot_prod_specular, specular_exponent);\n"
         "    vec3 Is = Ls * Ks * specular_factor; // final specular intensity\n"
-        "    vec3 Id = Ld * Kd * dot_prod;\n"
-        "\n"
+        "    vec3 Id = Ld * Kd * dot_prod;\n" +
+        getNewLine() +
         "    //vertex position\n" 
         "    gl_Position = Projection * vec4(position_eye, 1.0);\n"
         "    vSmoothColor = vec4(Is + Id + Ia, 1.0) * intensity;\n"
@@ -139,16 +164,16 @@ const String GLSLVertexShaderSrcRV =
         "}\n";
 
 const String GLSLFragmentShaderSrcRV =
-        GLSLVersionString_400 +
-        "\n"
+        getGLSLVersionString_400() +
+        getNewLine() +
         "in vec3 position_eye, normal_eye;\n"
-        "layout(location=0) out vec4 frag_volor; //fragment shader output\n"
-        "\n"
+        "layout(location=0) out vec4 frag_volor; //fragment shader output\n" +
+        getNewLine() +
         "//input form the vertex shader\n"
         "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
         "smooth in vec2 vUV;\n"
-        "uniform sampler2D tex0;\n"
-        "\n"
+        "uniform sampler2D tex0;\n" +
+        getNewLine() +
         "void main()\n"
         "{\n"
         "    // set the interpolated color as the shader output\n"
@@ -179,7 +204,7 @@ static void addMaterialParameter(Material *mat) {
         osre_assert(false);
         return;
     }
-    
+
     shader->addUniformBuffer("Model");
     shader->addUniformBuffer("View");
     shader->addUniformBuffer("Projection");
@@ -290,7 +315,7 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
         return nullptr;
     }
 
-MaterialBuilder::MaterialCache *materialCache = sData->mMaterialCache;
+    MaterialBuilder::MaterialCache *materialCache = sData->mMaterialCache;
     Material *mat = materialCache->find(matName);
     if (nullptr != mat) {
         return mat;
