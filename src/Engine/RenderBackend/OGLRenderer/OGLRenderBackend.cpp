@@ -104,7 +104,8 @@ void OGLRenderBackend::setClearColor(const Color4& clearColor) {
 void OGLRenderBackend::setMatrix(MatrixType type, const glm::mat4 &mat) {
     switch (type) {
         case MatrixType::Model:
-            //Debugging::MeshDiagnostic::dump_matrix(mMatrixBlock.mModel);
+            printf("Modelmatrix in backend\n");
+            Debugging::MeshDiagnostic::dump_matrix(mMatrixBlock.mModel);
             mMatrixBlock.mModel = mat;
             break;
         case MatrixType::View:

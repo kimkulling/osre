@@ -151,6 +151,10 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
     if (mImporter != nullptr) {
         delete mImporter;
     }
+    
+    aiLogStream stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT,NULL);
+	aiAttachLogStream(&stream);
+
     mImporter = new Importer;
     osre_debug(Tag, "Start importing " + filename + ".");
     mAssetContext.mScene = mImporter->ReadFile(filename, flags);

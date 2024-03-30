@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/DbgRenderer.h>
 #include <osre/Threading/SystemTask.h>
 
+#include <osre/Debugging/MeshDiagnostic.h>
 #include "OGLRenderer/OGLRenderEventHandler.h"
 // clang-format off
 #ifdef OSRE_WINDOWS
@@ -225,6 +226,7 @@ void RenderBackendService::commitNextFrame() {
         for (ui32 j = 0; j < currentPass->mMeshBatches.size(); ++j) {
             RenderBatchData *currentBatch = currentPass->mMeshBatches[j];
             if (currentBatch->m_dirtyFlag & RenderBatchData::MatrixBufferDirty) {
+                printf("matrix_buffer_dirtry\n");
                 FrameSubmitCmd *cmd = mSubmitFrame->enqueue();
                 currentBatch->m_matrixBuffer.m_view = currentPass->mView;
                 currentBatch->m_matrixBuffer.m_proj = currentPass->mProj;
@@ -233,6 +235,8 @@ void RenderBackendService::commitNextFrame() {
                 cmd->m_updateFlags |= (ui32) FrameSubmitCmd::UpdateMatrixes;
                 cmd->m_size = sizeof(MatrixBuffer);
                 cmd->m_data = new c8[cmd->m_size];
+                Debugging::MeshDiagnostic::dump_matrix(currentBatch->m_matrixBuffer.m_model);
+
                 ::memcpy(cmd->m_data, &currentBatch->m_matrixBuffer, cmd->m_size);
             } 
             

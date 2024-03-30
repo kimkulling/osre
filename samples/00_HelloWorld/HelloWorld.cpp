@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
+#include <osre/Debugging/MeshDiagnostic.h>
 #include <osre/App/Entity.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Common/glm_common.h>
@@ -106,6 +107,8 @@ protected:
         
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
         rbSrv->beginRenderBatch("b1");
+        printf("applying matrix\n");
+        Debugging::MeshDiagnostic::dump_matrix(mTransformMatrix.mModel);
 
         rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
 

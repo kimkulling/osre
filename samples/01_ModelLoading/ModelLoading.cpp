@@ -92,7 +92,7 @@ protected:
     }
     
     void onUpdate() override {
-        if (AppBase::isKeyPressed(Platform::KEY_O)) {
+        if (AppBase::isKeyPressed(Platform::KEY_O) || AppBase::isKeyPressed(Platform::KEY_o)) {
             IO::Uri modelLoc;
             Platform::PlatformOperations::getFileOpenDialog("Choose asset for import", "*", modelLoc);
             if ( modelLoc.isValid()) {
