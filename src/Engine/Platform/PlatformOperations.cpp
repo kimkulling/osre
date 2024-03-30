@@ -65,7 +65,20 @@ void PlatformOperations::getFileOpenDialog(const String &title, const c8 *extens
         location.clear();
     }
 #else
-    osre_error( Tag, "Not supported," );
+    //osre_error( Tag, "Not supported," );
+    static constexpr size_t BufferSize = 1014;
+    char buffer[BufferSize] = {};
+    FILE *f = popen("zenity --file-selection", "r");
+    if (f == nullptr) {
+        location.clear();
+        return;
+    }
+    fgets(buffer, BufferSize, f);
+
+    String filename(buffer);
+    printf("buff = %s\n", buffer);
+    location.setResource(filename);
+    location.parse();
 #endif // OSRE_WINDOWS
 }
 
