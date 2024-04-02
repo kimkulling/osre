@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -30,15 +30,20 @@ namespace Platform {
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief
+///	@brief  Will init the SDL2 Library.
 //-------------------------------------------------------------------------------------------------
 class SDL2Initializer {
 public:
+    /// @brief Inits SLD2,
+    /// @return true if successful
     static bool init();
+
+    /// @brief Will release SDL2 
+    /// @return true if successful
     static bool release();
 
 private:
-    static bool s_inited;
+    static bool sInited;
 };
 
 } // Namespace Threading

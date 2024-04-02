@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2023 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Animation/AnimatorBase.h>
 #include <osre/Common/Ids.h>
 #include <osre/Common/TAABB.h>
+#include <assimp/cimport.h>
 
 #include <cppcore/Container/TArray.h>
 
@@ -40,7 +41,7 @@ struct aiAnimation;
 struct aiSkeleton;
 
 namespace Assimp {
-class Importer;
+    class Importer;
 }
 
 namespace OSRE {
@@ -105,6 +106,8 @@ public:
     /// @param numTriangles     The number of triangles in the model.
     void getStatistics(ui32 &numVertices, ui32 &numTriangles);
 
+    /// @brief Will return the scene.
+    /// @return The scene.
     const aiScene *getScene() const;
 
 protected:
@@ -118,6 +121,7 @@ protected:
     void optimizeVertexBuffer();
 
 private:
+    aiLogStream mStream;
     Assimp::Importer *mImporter;
     struct AssetContext {
         const aiScene *mScene;
@@ -138,9 +142,7 @@ private:
         ~AssetContext();
         AssetContext(const AssetContext &) = delete;
         AssetContext &operator=(const AssetContext&) = delete;
-    };
-
-    AssetContext mAssetContext;
+    } mAssetContext;
 };
 
 } // Namespace Assets

@@ -35,7 +35,7 @@ namespace Platform {
 ///
 ///	@brief  This class implements a SDL2-based window.
 //-------------------------------------------------------------------------------------------------
-class SDL2Surface : public AbstractWindow {
+class SDL2Surface final : public AbstractWindow {
 public:
     /// @brief The class constructor.
     /// @param[in] props    The windows title.

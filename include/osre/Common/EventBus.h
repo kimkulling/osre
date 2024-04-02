@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2023 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -34,15 +34,21 @@ class EventTriggerer;
 struct Event;
 struct EventData;
 
-struct QueueEntry {
-    const Event *mEvent;
+struct Action {
+    const Event     *mEvent;
     const EventData *mEventData;
+    i32              mRetCode;
 
-    QueueEntry() :
-            mEvent(nullptr),
-            mEventData(nullptr) {
-        // empty
-    }
+    Action() : mEvent(nullptr), mEventData(nullptr) {}
+    virtual ~Action() = default;
+    i32 getReturnCode() const {return mRetCode;}
+};
+
+struct QueueEntry {
+    Action mAction;
+
+    QueueEntry() = default;
+    ~QueueEntry() = default;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -93,6 +99,8 @@ public:
     /// @param[in] ev           The event type
     /// @param[in] eventData    The event data
     void publish(const Event &ev, const EventData *eventData);
+
+    void registerAction();
 
     // No copying.
     EventBus &operator = (const EventBus &) = delete;

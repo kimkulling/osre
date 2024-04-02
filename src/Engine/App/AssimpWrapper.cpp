@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2023 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -65,7 +65,7 @@ constexpr unsigned int DefaultImportFlags = aiProcess_CalcTangentSpace | aiProce
                                         aiProcess_ImproveCacheLocality | aiProcess_LimitBoneWeights | aiProcess_RemoveRedundantMaterials |
                                         aiProcess_SplitLargeMeshes | aiProcess_Triangulate | aiProcess_GenUVCoords | aiProcess_SortByPType;
 
-static void setColor4(const aiColor4D &aiCol, Color4 &col) {
+inline static void setColor4(const aiColor4D &aiCol, Color4 &col) {
     col.m_r = aiCol.r;
     col.m_g = aiCol.g;
     col.m_b = aiCol.b;
@@ -124,6 +124,8 @@ AssimpWrapper::AssimpWrapper( Common::Ids &ids, World *world ) :
 }
 
 AssimpWrapper::~AssimpWrapper() {
+    aiDetachLogStream(&mStream);
+
     delete mImporter;
 }
 
@@ -152,8 +154,8 @@ bool AssimpWrapper::importAsset(const IO::Uri &file, ui32 flags) {
         delete mImporter;
     }
     
-    aiLogStream stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT,NULL);
-	aiAttachLogStream(&stream);
+    mStream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT,NULL);
+	aiAttachLogStream(&mStream);
 
     mImporter = new Importer;
     osre_debug(Tag, "Start importing " + filename + ".");

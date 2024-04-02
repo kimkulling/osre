@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -27,13 +27,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-class SDL2DisplayInterface : public AbstractDisplayInterface {
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief  This class implements the Display API with SDL2.
+//-------------------------------------------------------------------------------------------------
+class SDL2DisplayInterface final : public AbstractDisplayInterface {
 public:
+    /// @brief The default class constructor.
     SDL2DisplayInterface() = default;
+
+    /// @brief The class destructor.
     ~SDL2DisplayInterface() override = default;
+    
+    /// @brief Returns the number of detected displays.
+    /// @return The number of detected displays.
     i32 getNumDisplays() override;
+
+    /// @brief Will return the resolution of the requested displays.
+    /// @param displayIndex     The display index.
+    /// @param width            The width.
+    /// @param height           The height.
+    /// @return true if display exists and is accessable.
     bool getDisplayResolution(ui32 displayIndex, ui32 &width, ui32 &height) override;
-    bool getDisplayDPI(ui32 displayIndex, DisplayDPIInfo *ddpiinfo) override;
+    
+    /// @brief Will return the DPI info of the requested display.
+    /// @param displayIndex     The display index.
+    /// @param ddpiinfo         The DPI info. 
+   /// @return true if display exists and is accessable.
+     bool getDisplayDPI(ui32 displayIndex, DisplayDPIInfo *ddpiinfo) override;
 };
 
 } // namespace Platform

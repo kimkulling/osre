@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -43,19 +43,49 @@ class SDL2Surface;
 ///
 ///	@brief  
 //-------------------------------------------------------------------------------------------------
-class SDL2EventHandler : public AbstractPlatformEventQueue {
+class SDL2EventHandler final : public AbstractPlatformEventQueue {
 public:
     using EventArray = cppcore::TArray<const Common::Event*>;
 
+    /// @brief The class constructor with the active window,
+    /// @param window   The active window.
     SDL2EventHandler( AbstractWindow *window );
-    virtual ~SDL2EventHandler();
+
+    /// @brief The class destructor.
+    ~SDL2EventHandler() override;
+
+    /// @brief The windows update function.
+    /// @return false for close requested,
     bool update() override;
+
+    /// @brief WIll register an event listener.
+    /// @param events   The list of event to listen to.
+    /// @param listener The listener.
     void registerEventListener( const Common::EventPtrArray &events, OSEventListener *listener ) override;
+    
+    /// @brief Will unregister a listener to a given array of events,
+    /// @param events   The events to unregister from.
+    /// @param listener The listener.
     void unregisterEventListener( const Common::EventPtrArray &events, OSEventListener *listener ) override;
+    
+    /// @brief All event listerner will be unregistered from an event array.
+    /// @param events   The evebt array.
     void unregisterAllEventHandler(const Common::EventPtrArray &events) override;
+    
+    /// @brief Will register a menu functor for a menu id.
+    /// @param id   The menu id.
+    /// @param func The functor for handling the menu entry.
     void registerMenuCommand(ui32 id, MenuFunctor func) override;
+    
+    /// @brief Will unregister all menu handler entries.
     void unregisterAllMenuCommands() override;
+
+    /// @brief Set the new polling state.
+    /// @param enabled  The polling state, true for polling.
     void enablePolling(bool enabled) override;
+
+    /// @brief Returns th e polling state.
+    /// @return The polling state, true for polling.
     bool isPolling() const override;
 
 protected:

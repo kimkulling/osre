@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -27,10 +27,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-bool SDL2Initializer::s_inited = false;
+bool SDL2Initializer::sInited = false;
 
 bool SDL2Initializer::init() {
-    if( s_inited ) {
+    if( sInited ) {
         return false;
     }
 
@@ -43,18 +43,18 @@ bool SDL2Initializer::init() {
     }
     SDL_JoystickEventState(SDL_ENABLE);
 
-    s_inited = true;
+    sInited = true;
 
     return true;
 }
 
 bool SDL2Initializer::release() {
-    if( !s_inited ) {
+    if( !sInited ) {
         return false;
     }
 
     SDL_Quit();
-    s_inited = false;
+    sInited = false;
 
     return true;
 }

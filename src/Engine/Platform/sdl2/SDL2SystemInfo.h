@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -29,26 +29,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace Platform {
 
-class SDL2SystemInfo : public AbstractSystemInfo {
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+/// @brief IMplaments system info queries.
+//-------------------------------------------------------------------------------------------------
+class SDL2SystemInfo final : public AbstractSystemInfo {
 public:
-    SDL2SystemInfo();
-    virtual ~SDL2SystemInfo();
+    /// @brief The class constructor.
+    SDL2SystemInfo() = default;
+
+    /// @brief The class destructor.
+    ~SDL2SystemInfo() = default;
+
+    /// @brief Returns the resolutions.
+    /// @param resolution   The resolution.
     void getDesktopResolution( Resolution &resolution ) override;
+    
+    /// @brief Returns the free space of a given disk,
+    /// @param drive             The drive.
+    /// @param freeSpaceInBytes  The free space.
+    /// @return 
     bool getDiskInfo(const c8 *drive, ui64 &freeSpaceInBytes) override;
 };
 
-inline
-SDL2SystemInfo::SDL2SystemInfo() {
-    // empty
-}
-
-inline
-SDL2SystemInfo::~SDL2SystemInfo() {
-    // empty
-}
-
-inline
-void SDL2SystemInfo::getDesktopResolution( Resolution &resolution ) {
+inline void SDL2SystemInfo::getDesktopResolution( Resolution &resolution ) {
     SDL_DisplayMode dm;
     if ( SDL_GetDesktopDisplayMode( 0, &dm ) != 0 ) {
         return;
@@ -57,8 +62,7 @@ void SDL2SystemInfo::getDesktopResolution( Resolution &resolution ) {
     resolution.m_height = dm.h;
 }
 
-inline
-bool SDL2SystemInfo::getDiskInfo(const c8 *drive, ui64 &freeSpaceInBytes) {
+inline bool SDL2SystemInfo::getDiskInfo(const c8 *drive, ui64 &freeSpaceInBytes) {
     freeSpaceInBytes = 0;
     cppcore::FileSystem fs(drive);
     cppcore::FSSpace *space = fs.getFreeDiskSpace();

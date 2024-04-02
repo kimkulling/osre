@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2023 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -48,7 +48,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-static const c8 *Tag = "OGLRenderCommands";
+static constexpr c8 Tag[] = "OGLRenderCommands";
 
 using namespace ::OSRE::Common;
 using namespace ::OSRE::Platform;
@@ -139,6 +139,7 @@ SetMaterialStageCmdData *setupMaterial(Material *material, OGLRenderBackend *rb,
             renderMatCmd->m_data = matData;
             eh->enqueueRenderCmd(renderMatCmd);
         } break;
+        
         default:
             break;
     }

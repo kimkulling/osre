@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2023 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -598,10 +598,11 @@ Frame::~Frame() {
     m_uniforBuffers = nullptr;
 }
 
-void Frame::init(TArray<PassData *> &newPasses) {
+void Frame::init(TArray<PassData*> &newPasses) {
     if (newPasses.isEmpty()) {
         return;
     }
+    
     for (auto newPasse : newPasses) {
         m_newPasses.add(newPasse);
     }

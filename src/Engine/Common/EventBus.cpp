@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2023 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2024 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -76,13 +76,13 @@ void EventBus::update() {
             continue;
         }
 
-        const ui32 id = entry->mEvent->getHash();
+        const ui32 id = entry->mAction.mEvent->getHash();
         if (mSuscribedHandler.hasKey(id)) {
             EventHandlerArray *ehArray = nullptr;
             mSuscribedHandler.getValue(id, ehArray);
             for (ui32 j = 0; j < ehArray->size(); ++j) {
                 AbstractEventHandler *eh = (*ehArray)[j];
-                eh->onEvent(*entry->mEvent, entry->mEventData);
+                eh->onEvent(*entry->mAction.mEvent, entry->mAction.mEventData);
             }
         }
     }
@@ -136,8 +136,8 @@ void EventBus::publish( const Event &ev, const EventData *eventData ) {
         return;
     }
 
-    entry->mEvent = &ev;
-    entry->mEventData = eventData;
+    entry->mAction.mEvent = &ev;
+    entry->mAction.mEventData = eventData;
     mQueueEntryArray.add(entry);
 }
 
