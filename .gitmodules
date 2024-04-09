@@ -4,9 +4,6 @@
 [submodule "contrib/assimp"]
 	path = contrib/assimp
 	url = https://github.com/assimp/assimp.git
-[submodule "contrib/stb"]
-	path = contrib/stb
-	url = https://github.com/nothings/stb.git
 [submodule "imgui"]
 	path = contrib/imgui
 	url = https://github.com/ocornut/imgui.git

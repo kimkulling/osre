@@ -28,7 +28,6 @@ INCLUDE_DIRECTORIES( BEFORE
     include/
     /usr/include/
     ${CMAKE_HOME_DIRECTORY}/contrib/assimp/include
-    ${CMAKE_HOME_DIRECTORY}/contrib/glm/
     ${CMAKE_HOME_DIRECTORY}/contrib/stb
     ${CMAKE_HOME_DIRECTORY}/contrib/glew/include
     ${CMAKE_HOME_DIRECTORY}/contrib/cppcore/include
