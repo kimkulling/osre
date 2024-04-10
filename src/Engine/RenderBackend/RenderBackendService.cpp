@@ -294,6 +294,7 @@ void RenderBackendService::commitNextFrame() {
 
     data->m_frame = mSubmitFrame;
     std::swap(mSubmitFrame, mRenderFrame);
+    osre_assert(mSubmitFrame != mRenderFrame);
 
     mRenderTaskPtr->sendEvent(&OnCommitFrameEvent, data);
 }

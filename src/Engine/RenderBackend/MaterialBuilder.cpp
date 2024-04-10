@@ -258,15 +258,22 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
     }
     MaterialBuilder::MaterialCache *materialCache = sData->mMaterialCache;
     Material *mat = materialCache->find(matName);
-    if (nullptr != mat) {
+    if (mat != nullptr) {
         return mat;
     }
 
     mat = materialCache->create(matName);
+    if (mat == nullptr) {
+        return nullptr;
+    }
+
     mat->m_numTextures = texResArray.size();
     mat->m_textures = new Texture *[texResArray.size()];
     for (size_t i = 0; i < texResArray.size(); ++i) {
         TextureResource *texRes = texResArray[i];
+        if (texRes == nullptr) {
+            continue;
+        }
         TextureLoader loader;
         texRes->load(loader);
         mat->m_textures[i] = texRes->get();

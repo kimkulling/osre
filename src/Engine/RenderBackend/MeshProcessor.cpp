@@ -40,10 +40,6 @@ MeshProcessor::MeshProcessor() :
     // empty
 }
 
-MeshProcessor::~MeshProcessor() {
-    // empty
-}
-
 bool MeshProcessor::execute() {
     if (mMeshArray.isEmpty()) {
         return true;
