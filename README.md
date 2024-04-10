@@ -22,6 +22,8 @@ This is just another open-source render-engine made by Kim Kulling. This is a pl
 
 Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+# Build instructions
+- See [Build instruction in the Wiki](https://github.com/kimkulling/osre/wiki/Build)
 # Documentation
 - Please check [OSRE-Docs](https://osre-doc.readthedocs.io/en/latest/).
 
@@ -35,7 +37,6 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 
 # Supported compilers
 - Windows:
-  - Visual Studio 2017
   - Visual Studio 2019
   - Visual Studio 2022
 - Linux:
