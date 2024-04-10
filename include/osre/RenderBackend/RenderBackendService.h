@@ -139,6 +139,13 @@ struct OSRE_EXPORT CommitFrameEventData : Common::EventData {
         // empty
     }
 
+    ~CommitFrameEventData() = default;
+
+    static CommitFrameEventData *create() {
+        CommitFrameEventData *data = new CommitFrameEventData;
+        return data;
+    }
+
     Frame *m_frame;
 };
 

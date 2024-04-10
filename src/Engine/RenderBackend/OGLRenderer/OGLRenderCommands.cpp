@@ -169,11 +169,7 @@ void setupParameter(UniformVar *param, OGLRenderBackend *rb, OGLRenderEventHandl
 }
 
 OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglShader) {
-    osre_assert(nullptr != mesh);
-    osre_assert(nullptr != rb);
-    osre_assert(nullptr != oglShader);
-
-    if (nullptr == mesh || nullptr == rb || nullptr == oglShader) {
+    if (mesh == nullptr || rb == nullptr || oglShader == nullptr) {
         return nullptr;
     }
 
@@ -182,13 +178,13 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
     OGLVertexArray *vertexArray = rb->createVertexArray();
     rb->bindVertexArray(vertexArray);
     BufferData *vertices = mesh->getVertexBuffer();
-    if (nullptr == vertices) {
+    if (vertices == nullptr) {
         osre_debug(Tag, "No vertex buffer data for setting up data.");
         return nullptr;
     }
 
     BufferData *indices = mesh->getIndexBuffer();
-    if (nullptr == indices) {
+    if (indices == nullptr) {
         osre_debug(Tag, "No index buffer data for setting up data.");
         return nullptr;
     }
@@ -220,26 +216,26 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
 void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat4 &model,
         const TArray<size_t> &primGroups, OGLRenderBackend *rb,
         OGLRenderEventHandler *eh, OGLVertexArray *va) {
-    osre_assert(nullptr != rb);
-    osre_assert(nullptr != eh);
-
+    if (rb == nullptr || eh == nullptr || va == nullptr) {
+        return;
+    }
     if (primGroups.isEmpty()) {
         return;
     }
 
     auto *renderCmd = new OGLRenderCmd(OGLRenderCmdType::DrawPrimitivesCmd);
-    auto *data = new DrawPrimitivesCmdData;
+    auto *drawPrimitiveCmdData = new DrawPrimitivesCmdData;
     if (useLocalMatrix) {
-        data->m_model = model;
-        data->m_localMatrix = useLocalMatrix;
+        drawPrimitiveCmdData->m_model = model;
+        drawPrimitiveCmdData->m_localMatrix = useLocalMatrix;
     }
-    data->m_id = id;
-    data->m_vertexArray = va;
-    data->m_primitives.reserve(primGroups.size());
+    drawPrimitiveCmdData->m_id = id;
+    drawPrimitiveCmdData->m_vertexArray = va;
+    drawPrimitiveCmdData->m_primitives.reserve(primGroups.size());
     for (ui32 i = 0; i < primGroups.size(); ++i) {
-        data->m_primitives.add(primGroups[i]);
+        drawPrimitiveCmdData->m_primitives.add(primGroups[i]);
     }
-    renderCmd->m_data = static_cast<void *>(data);
+    renderCmd->m_data = static_cast<void*>(drawPrimitiveCmdData);
 
     eh->enqueueRenderCmd(renderCmd);
 }

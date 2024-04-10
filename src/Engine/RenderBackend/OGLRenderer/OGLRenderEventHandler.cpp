@@ -413,6 +413,7 @@ static constexpr size_t BufferSize = 256;
 void OGLRenderEventHandler::onHandleCommit(FrameSubmitCmd *cmd) {
     if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateMatrixes) {
         MatrixBuffer *buffer = (MatrixBuffer *)cmd->m_data;
+        osre_assert(cmd->m_batchId != nullptr);
         m_renderCmdBuffer->setMatrixBuffer(cmd->m_batchId, buffer);
     } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::UpdateUniforms) {
         c8 name[BufferSize];

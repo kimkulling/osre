@@ -218,7 +218,7 @@ void RenderBackendService::commitNextFrame() {
         return;
     }
 
-    CommitFrameEventData *data = new CommitFrameEventData;
+    CommitFrameEventData *data = CommitFrameEventData::create();
     data->m_frame = mSubmitFrame;
     for (ui32 i = 0; i < mPasses.size(); ++i) {
         PassData *currentPass = mPasses[i];

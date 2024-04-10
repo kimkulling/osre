@@ -154,4 +154,3 @@ void Mesh::addPrimitiveGroup( PrimitiveGroup *group ) {
 
 } // namespace RenderBackend
 } // namespace OSRE
-
