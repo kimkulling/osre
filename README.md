@@ -35,7 +35,6 @@ Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badg
 
 # Supported compilers
 - Windows:
-  - Visual Studio 2017
   - Visual Studio 2019
   - Visual Studio 2022
 - Linux:
