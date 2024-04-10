@@ -40,7 +40,7 @@ namespace RenderBackend {
 class OSRE_EXPORT MeshProcessor : public Common::AbstractProcessor {
 public:
     MeshProcessor();
-    ~MeshProcessor();
+    ~MeshProcessor() = default;
     bool execute() override;
     void addMesh( RenderBackend::Mesh *geo );
     const Common::AABB &getAABB() const;
