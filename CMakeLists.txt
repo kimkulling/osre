@@ -18,6 +18,7 @@ OPTION( OSRE_BUILD_DOC "Build the doxygen-based documentation for OSRE." OFF)
 OPTION( OSRE_BUILD_ED "Build the OSRE Ed." ON)
 
 find_package(SDL2 CONFIG REQUIRED)
+find_package(glm REQUIRED)
 
 # Cache these to allow the user to override them manually.
 SET( LIB_INSTALL_DIR "lib"      CACHE PATH "Path the built library files are installed to." )
