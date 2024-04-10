@@ -1,7 +1,6 @@
 {
   "dependencies": [
     "glm",
-    "sdl2",
-    "stb"
+    "sdl2"
   ]
 }
