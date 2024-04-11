@@ -35,7 +35,7 @@ using namespace ::glm;
 static constexpr c8 Tag[] = "Camera";
 
 static const String CameraModelName[3] = {
-    "Perspective ",
+    "Perspective",
     "Orthogonal",
     "Invalid"
 };
@@ -154,6 +154,7 @@ bool CameraComponent::onUpdate(Time) {
     } else if (cm == CameraModel::Orthogonal) {
         mProjection = glm::ortho(mLeft, mRight, mBottom, mTop, mNear, mFar);
     }
+
     mView = glm::lookAt(mEye, mCenter, mUp);
 
     return true;
