@@ -47,7 +47,11 @@ TrackBall::TrackBall(CameraComponent *cameraComponent, ui32 w, ui32 h) :
         m_adjHeight(0.0f),
         m_screenY(0),
         m_screenYOld(0),
-        mRadius (1.0f) {
+        mLastX(0),
+        mLastY(0),
+        mRadius(1.0f),
+        mYaw(0.0f),
+        mPitch(0.0f) {
     // adjust the width for to sphere mapping
     const f32 width = static_cast<f32>(w);
     if (width) {
@@ -76,7 +80,37 @@ void TrackBall::pan( f32 x, f32 y ) {
 }
 
 void TrackBall::onOSEvent(const Common::Event &osEvent, const Common::EventData *data) {
+    Platform::MouseButtonEventData *pMBData = (Platform::MouseButtonEventData *)data;
+    if (!m_bStartPosInited) {
+        mLastX = pMBData->m_AbsX;
+        mLastY = pMBData->m_AbsY;
+        m_bStartPosInited = true;
+    }
     if (osEvent == Platform::MouseButtonDownEvent) {
+        f32 xoffset = static_cast<f32>(pMBData->m_AbsX - mLastX);
+        f32 yoffset = static_cast<f32>(mLastY - pMBData->m_AbsY);
+        mLastX = pMBData->m_AbsX;
+        mLastY = pMBData->m_AbsY;
+
+        const float sensitivity = 0.1f;
+        xoffset *= sensitivity;
+        yoffset *= sensitivity;
+
+        mYaw += xoffset;
+        mPitch += yoffset;
+
+        if (mPitch > 89.0f)
+            mPitch = 89.0f;
+        if (mPitch < -89.0f)
+            mPitch = -89.0f;
+
+        glm::vec3 direction;
+        direction.x = cos(glm::radians(mYaw)) * cos(glm::radians(mPitch));
+        direction.y = sin(glm::radians(mPitch));
+        direction.z = sin(glm::radians(mYaw)) * cos(glm::radians(mPitch));
+        mCameraFront = glm::normalize(direction);
+    }
+    /* if (osEvent == Platform::MouseButtonDownEvent) {
         Platform::MouseButtonEventData *pMBData = (Platform::MouseButtonEventData *)data;
         if ( 0 == pMBData->m_Button ) {
             glm::vec2 pos( static_cast<f32>( pMBData->m_AbsX ), static_cast<f32>( pMBData->m_AbsY ) );
@@ -107,7 +141,7 @@ void TrackBall::onOSEvent(const Common::Event &osEvent, const Common::EventData 
         } else {
             m_bRightMButtonClicked = false;
         }
-    }
+    }*/
 }
 
 void TrackBall::mapToSphere(const glm::vec2 *pNewPt, glm::vec3 *newVector) {

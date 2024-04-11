@@ -83,7 +83,12 @@ private:
     f32 m_adjHeight;
     ui32 m_screenY;
     ui32 m_screenYOld;
+    i32 mLastX;
+    i32 mLastY;
     f32 mRadius;
+    f32 mYaw;
+    f32 mPitch;
+    glm::vec3 mCameraFront;
 };
 
 inline const glm::quat &TrackBall::getRotation() const {
