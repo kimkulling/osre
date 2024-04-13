@@ -2,13 +2,15 @@
 
 # OSRE - Just another Open Source Render Engine
 
-This is just another open-source render-engine made by Kim Kulling. This is a playground project for myself to work on my own side-projects.
+This is just another open-source render engine / game engine made by Kim Kulling. This is a playground project for me to work on my side projects.
+Don't expect too much, I will not invest too much time into it. But If you are interested in playing around with 3D stuff feel free to discuss 
+these things on Reggit or in the Discussion Forum.
 
 # The Features:
 - CMake base build environment
 - Multithreaded Renderer 
   - OpenGL
-- Platform abstraction to support Windows, Linux and more.
+- Platform abstraction to support Windows, Linux, and more.
   - Input
   - UI
 - Component-based entity system
@@ -16,18 +18,20 @@ This is just another open-source render-engine made by Kim Kulling. This is a pl
   - Render components
 - Event-System
   - Event bus
-- More than 40 3D-formats supported thanks to Assimp
-- Virtual file-system for reading zip-archives
+- More than 40 3D formats supported thanks to Assimp
+- Virtual file system for reading zip-archives
 - Instancing
 
 Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Build instructions
 - See [Build instruction in the Wiki](https://github.com/kimkulling/osre/wiki/Build)
+
 # Documentation
 - Please check [OSRE-Docs](https://osre-doc.readthedocs.io/en/latest/).
 
 # Questions
+- Take a look into our [OSRE-Forum](https://github.com/kimkulling/osre/discussions)
 - Please check our [Reddit-Community](https://www.reddit.com/r/osre/)
 
 # Build Status
