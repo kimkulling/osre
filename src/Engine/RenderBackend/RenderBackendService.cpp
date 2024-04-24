@@ -222,20 +222,26 @@ void RenderBackendService::commitNextFrame() {
     data->m_frame = mSubmitFrame;
     for (ui32 i = 0; i < mPasses.size(); ++i) {
         PassData *currentPass = mPasses[i];
-        
+        if (currentPass == nullptr) {
+            continue;
+        }
+
         for (ui32 j = 0; j < currentPass->mMeshBatches.size(); ++j) {
             RenderBatchData *currentBatch = currentPass->mMeshBatches[j];
+            if (currentBatch == nullptr) {
+                continue;
+            }
+            
             if (currentBatch->m_dirtyFlag & RenderBatchData::MatrixBufferDirty) {
-                printf("matrix_buffer_dirtry\n");
                 FrameSubmitCmd *cmd = mSubmitFrame->enqueue();
                 currentBatch->m_matrixBuffer.m_view = currentPass->mView;
                 currentBatch->m_matrixBuffer.m_proj = currentPass->mProj;
                 cmd->m_passId = currentPass->m_id;
                 cmd->m_batchId = currentBatch->m_id;
+                assert(cmd->m_batchId != nullptr);
                 cmd->m_updateFlags |= (ui32) FrameSubmitCmd::UpdateMatrixes;
                 cmd->m_size = sizeof(MatrixBuffer);
                 cmd->m_data = new c8[cmd->m_size];
-                Debugging::MeshDiagnostic::dump_matrix(currentBatch->m_matrixBuffer.m_model);
 
                 ::memcpy(cmd->m_data, &currentBatch->m_matrixBuffer, cmd->m_size);
             } 
@@ -246,6 +252,7 @@ void RenderBackendService::commitNextFrame() {
                     FrameSubmitCmd *cmd = mSubmitFrame->enqueue();
                     cmd->m_passId = currentPass->m_id;
                     cmd->m_batchId = currentBatch->m_id;
+                    assert(cmd->m_batchId != nullptr);
                     cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateUniforms;
                     UniformVar *var = currentBatch->m_uniforms[k];
                     if (nullptr == var) {
@@ -270,7 +277,9 @@ void RenderBackendService::commitNextFrame() {
                 for (ui32 k = 0; k < currentBatch->m_updateMeshArray.size(); ++k) {
                     FrameSubmitCmd *cmd = mSubmitFrame->enqueue();
                     cmd->m_passId = currentPass->m_id;
+                    assert(currentBatch->m_id != nullptr);
                     cmd->m_batchId = currentBatch->m_id;
+                    assert(cmd->m_batchId!=nullptr);
                     cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateBuffer;
                     Mesh *currentMesh = currentBatch->m_updateMeshArray[k];
                     cmd->m_meshId = currentMesh->getId();
@@ -283,6 +292,8 @@ void RenderBackendService::commitNextFrame() {
             if (currentBatch->m_dirtyFlag & RenderBatchData::MeshDirty) {
                 FrameSubmitCmd *cmd = mSubmitFrame->enqueue();
                 PassData *pd = new PassData(currentPass->m_id, nullptr);
+                cmd->m_passId = currentPass->m_id;
+                cmd->m_batchId = currentBatch->m_id;
                 pd->mMeshBatches.add(currentBatch);
                 cmd->m_updatedPasses.add(pd);
                 cmd->m_updateFlags |= (ui32)FrameSubmitCmd::AddRenderData;
@@ -294,6 +305,7 @@ void RenderBackendService::commitNextFrame() {
 
     data->m_frame = mSubmitFrame;
     std::swap(mSubmitFrame, mRenderFrame);
+
     osre_assert(mSubmitFrame != mRenderFrame);
 
     mRenderTaskPtr->sendEvent(&OnCommitFrameEvent, data);

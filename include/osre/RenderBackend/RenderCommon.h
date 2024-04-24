@@ -674,6 +674,7 @@ struct OSRE_EXPORT Light {
 using UiVertexCache = RenderBackend::TVertexCache<RenderBackend::RenderVert>;
 using UiIndexCache = RenderBackend::TIndexCache<ui16>;
 
+/// @brief 
 struct MatrixBuffer {
     glm::mat4 m_model;
     glm::mat4 m_view;
@@ -688,6 +689,7 @@ struct MatrixBuffer {
     ~MatrixBuffer() = default;
 };
 
+/// @brief 
 struct MeshEntry {
     ui32 numInstances;
     bool m_isDirty;
@@ -697,6 +699,7 @@ struct MeshEntry {
     ~MeshEntry() = default;
 };
 
+/// @brief 
 struct RenderBatchData {
     enum DirtyMode {
         MatrixBufferDirty = 1,
@@ -756,6 +759,7 @@ struct PassData {
     RenderBatchData *getBatchById(const c8 *id) const;
 };
 
+/// @brief 
 struct OSRE_EXPORT UniformDataBlob {
     void *m_data;
     size_t m_size;
@@ -768,6 +772,7 @@ struct OSRE_EXPORT UniformDataBlob {
     static UniformDataBlob *create(ParameterType type, size_t arraySize);
 };
 
+/// @brief 
 struct OSRE_EXPORT UniformVar {
     String m_name;
     ParameterType m_type;
@@ -921,7 +926,7 @@ struct Frame {
 
     Frame(const Frame &) = delete;
     Frame(Frame &&) = delete;
-    Frame &operator=(const Frame &) = delete;
+    Frame &operator = (const Frame &) = delete;
 };
 
 /// @brief This struct is used to describe a frame buffer data structure.

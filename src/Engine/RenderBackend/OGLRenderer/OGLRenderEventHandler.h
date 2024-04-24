@@ -62,7 +62,8 @@ struct OGLBuffer;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	Engine
 ///
-///	@brief  This class is used to handle all incoming events for the render back-end.
+///	@brief  This class is used to handle all incoming events for the render back-end, which
+///         implements the OpenGL renderer.
 //-------------------------------------------------------------------------------------------------
 class OGLRenderEventHandler : public Common::AbstractEventHandler {
 public:
@@ -73,21 +74,21 @@ public:
     ~OGLRenderEventHandler() override = default;
 
     /// @brief The OnEvent-callback.
-    /// @param ev           The event for handling.
-    /// @param pEventData   The event data.
+    /// @param[in] ev           The event for handling.
+    /// @param[in] pEventData   The event data.
     /// @return The result from the handler.
     bool onEvent( const Common::Event &ev, const Common::EventData *pEventData ) override;
 
     /// @brief Will set the active shader.
-    /// @param pOGLShader  The acitve shader.
-    void setActiveShader( OGLShader *pOGLShader );
+    /// @param[in] oglShader  The acitve shader.
+    void setActiveShader( OGLShader *oglShader );
     
     /// @brief Will enqueue a new render command.
-    /// @param pOGLRenderCmd	The render command will enqued
-    void enqueueRenderCmd( OGLRenderCmd *pOGLRenderCmd );
+    /// @param[in] oglRenderCmd     The render command will enqued
+    void enqueueRenderCmd( OGLRenderCmd *oglRenderCmd );
 
     /// @brief Will set all parameters.
-    /// @param paramArray   [in]    The array with the parameters.
+    /// @param[in] paramArray   [in]    The array with the parameters.
     void setParameter(const cppcore::TArray<OGLParameter*> &paramArray);
 
     /// @brief  Will return the active render command buffer.
@@ -95,78 +96,80 @@ public:
     RenderCmdBuffer *getRenderCmdBuffer() const;
 
     /// @brief	Will add meshed to a given mesh entry descrbed by its id.
-    /// @param  id                The id of the mesh entry
-    /// @param  primGroups        The primitive groups to add
-    /// @param  currentMeshEntry  The mesh entry
+    /// @param[in] id                The id of the mesh entry
+    /// @param[in] primGroups        The primitive groups to add
+    /// @param[in] currentMeshEntry  The mesh entry
     /// @return true if successful, false if not.
     bool addMeshes(const c8 *id, cppcore::TArray<size_t> &primGroups, MeshEntry *currentMeshEntry);
 
 protected:
     /// @brief  Callback for attaching the event handler.
-    /// @param  eventData	The event state data
+    /// @param[in] eventData	The event state data
     /// @return true if successful, false if not.
     bool onAttached( const Common::EventData *eventData ) override;
 
     /// @brief  Callback for detaching the event handler.
-    /// @param  eventData	The event state data
+    /// @param[in] eventData	The event state data
     /// @return true if successful, false if not.
     bool onDetached( const Common::EventData *eventData ) override;
 
     /// @brief  Callback for render backend creation.
-    /// @param  eventData	The event state data
+    /// @param[in] eventData	The event state data
     /// @return true if successful, false if not.
     bool onCreateRenderer( const Common::EventData *eventData );
 
     /// @brief  Callback for render backend destroying.
-    /// @param  eventData	The event state data
+    /// @param[in] eventData	The event state data
     /// @return true if successful, false if not.
     bool onDestroyRenderer( const Common::EventData *eventData );
 
     /// @brief  Callback for attaching a new view onto a stage.
-    /// @param  eventData	The event state data
+    /// @param[in] eventData	The event state data
     /// @return true if successful, false if not.
     bool onAttachView( const Common::EventData *eventData );
 
     /// @brief  Callback for detaching a new view onto a stage.
-    /// @param  eventData	The event state data
+    /// @param[in] eventData	The event state data
     /// @return true if successful, false if not.
     bool onDetachView( const Common::EventData *eventData );
 
     /// @brief  Callback for clearing all geometry from a stage.
-    /// @param  eventData	The event state data
+    /// @param[in] eventData	The event state data
     /// @return true if successful, false if not.
     bool onClearGeo( const Common::EventData *eventData );
 
     /// @brief  Callback for the render frame.
-    /// @param  eventData	The event state data
+    /// @param[in] eventData	The event state data
     /// @return true if successful, false if not.
     bool onRenderFrame( const Common::EventData *eventData );
 	
     /// @brief  Callback to init the passes.
-    /// @param eventData	The event state data
+    /// @param[in] eventData	The event state data
     /// @return true if successful, false if not.
     bool onInitRenderPasses(const Common::EventData *eventData);
     
     /// @brief  Callback to commit the next frame.
-    /// @param  eventData	The event state data
+    /// @param[in] eventData	The event state data
     /// @return true if successful, false if not.
     bool onCommitNexFrame( const Common::EventData *eventData );
     
     /// @brief  Callback for dealing with a shutdown request.
-    /// @param  eventData	The event state data
+    /// @param[in] eventData	The event state data
     /// @return true if successful, false if not.
     bool onShutdownRequest( const Common::EventData *eventData );
     
     /// @brief  Callback for dealing with resize events.
-    /// @param  eventData	The event state data
+    /// @param[in] eventData	The event state data
     /// @return true if successful, false if not.
     bool onResizeRenderTarget(const Common::EventData *eventData );
 
     /// @brief Will create a screenshot.
-    /// @param data  The event data with the filename.
+    /// @param[in] data  The event data with the filename.
     /// @return true if successful.
     bool onScreenshot(const Common::EventData *data);
 
+    /// @brief Will handle a singke commit command.
+    /// @param[in] cmd      The submit command to handle.
     void onHandleCommit(FrameSubmitCmd *cmd);
 
 private:
@@ -175,7 +178,7 @@ private:
     RenderCmdBuffer *m_renderCmdBuffer;
     Platform::AbstractOGLRenderContext *m_renderCtx;
     OGLVertexArray *m_vertexArray;
-    Pipeline *mPipeline;
+    Pipeline *mActivePipeline;
 };
 
 inline RenderCmdBuffer *OGLRenderEventHandler::getRenderCmdBuffer() const {

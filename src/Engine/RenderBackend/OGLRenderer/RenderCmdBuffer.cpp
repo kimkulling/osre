@@ -68,6 +68,7 @@ void RenderCmdBuffer::enqueueRenderCmd(OGLRenderCmd *renderCmd) {
         osre_debug(Tag, "Nullptr to render-command detected.");
         return;
     }
+
     if (nullptr == renderCmd->m_data) {
         osre_debug(Tag, "Nullptr in render-command data detected.");
         return;
@@ -218,7 +219,7 @@ void RenderCmdBuffer::setMatrixes(const glm::mat4 &model, const glm::mat4 &view,
 }
 
 void RenderCmdBuffer::setMatrixBuffer(const c8 *id, MatrixBuffer *buffer) {
-    osre_assert(nullptr != id);
+    assert(nullptr != id);
 
     mMatrixBuffer[id] = buffer;
 }
@@ -228,6 +229,7 @@ bool RenderCmdBuffer::onDrawPrimitivesCmd(DrawPrimitivesCmdData *data) {
         return false;
     }
 
+    assert(data->m_id != nullptr);
     auto it = mMatrixBuffer.find(data->m_id);
     if (it != mMatrixBuffer.end()) {
         MatrixBuffer *buffer = it->second;

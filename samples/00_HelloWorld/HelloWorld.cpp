@@ -106,17 +106,29 @@ protected:
         RenderBackendService *rbSrv = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         
         rbSrv->beginPass(RenderPass::getPassNameById(RenderPassId));
-        rbSrv->beginRenderBatch("b1");
-        printf("applying matrix\n");
-        Debugging::MeshDiagnostic::dump_matrix(mTransformMatrix.mModel);
+        {
+            rbSrv->beginRenderBatch("b1");
+            rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
 
-        rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
+            rbSrv->endRenderBatch();
 
-        rbSrv->endRenderBatch();
+        }
         rbSrv->endPass();
 
         AppBase::onUpdate();
     }
 };
 
-OSRE_MAIN(HelloWorldApp)
+int main( int argc, char *argv[] )  {
+    HelloWorldApp myApp( argc, argv );
+    if ( !myApp.create() ) {
+        return 1;
+    }
+    while ( myApp.handleEvents() ) {
+        myApp.update();
+        myApp.requestNextFrame();
+    }
+    myApp.destroy();
+    return 0;
+}
+

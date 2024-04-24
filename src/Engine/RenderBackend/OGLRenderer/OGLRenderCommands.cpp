@@ -216,6 +216,7 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
 void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat4 &model,
         const TArray<size_t> &primGroups, OGLRenderBackend *rb,
         OGLRenderEventHandler *eh, OGLVertexArray *va) {
+    assert(id != nullptr);
     if (rb == nullptr || eh == nullptr || va == nullptr) {
         return;
     }

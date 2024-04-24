@@ -58,7 +58,7 @@ OGLRenderEventHandler::OGLRenderEventHandler() :
         m_renderCmdBuffer(nullptr),
         m_renderCtx(nullptr),
         m_vertexArray(nullptr),
-        mPipeline(nullptr) {
+        mActivePipeline(nullptr) {
     // empty
 }
 
@@ -195,7 +195,7 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
         return false;
     }
 
-    mPipeline = createRendererEvData->m_pipeline;
+    mActivePipeline = createRendererEvData->m_pipeline;
     Profiling::PerformanceCounterRegistry::registerCounter("fps");
 
     return true;
@@ -256,7 +256,7 @@ bool OGLRenderEventHandler::onRenderFrame(const EventData*) {
     osre_assert(nullptr != m_renderCmdBuffer);
     osre_assert(m_renderCtx != nullptr);
 
-    m_renderCmdBuffer->onPreRenderFrame(mPipeline);
+    m_renderCmdBuffer->onPreRenderFrame(mActivePipeline);
     m_renderCmdBuffer->onRenderFrame();
     m_renderCmdBuffer->onPostRenderFrame();
 
@@ -476,7 +476,7 @@ bool OGLRenderEventHandler::onShutdownRequest(const EventData*) {
 }
 
 bool OGLRenderEventHandler::onResizeRenderTarget(const EventData *eventData) {
-    ResizeEventData *data = (ResizeEventData *)eventData;
+    ResizeEventData *data = (ResizeEventData*) eventData;
     if (data != nullptr) {
         m_oglBackend->setViewport(data->m_x, data->m_y, data->m_w, data->m_h);
     }
@@ -490,6 +490,7 @@ bool OGLRenderEventHandler::onScreenshot(const EventData *eventData) {
     if (data != nullptr){
         result = makeScreenShot(data->mFilename.c_str(), data->mWidth, data->mHeight);
     }
+    
     return result;
 }
 
