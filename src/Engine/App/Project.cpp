@@ -31,6 +31,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/IO/Uri.h>
 #include <osre/RenderBackend/Mesh.h>
 
+#include "App/RenderComponent.h"
+
 namespace OSRE {
 namespace App {
 

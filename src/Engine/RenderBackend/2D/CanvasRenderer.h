@@ -32,6 +32,13 @@ class RenderBackendService;
 
 struct DrawCmd;
 
+struct Sprite {
+    Texture *mTexture;
+
+    Sprite(Texture *texture) :
+            mTexture(texture) {}
+};
+
 class OSRE_EXPORT CanvasRenderer : IRenderPath {
 public:
     using DrawCmdArray = cppcore::TArray<DrawCmd*>;

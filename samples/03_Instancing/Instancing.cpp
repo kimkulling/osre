@@ -32,6 +32,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/CameraComponent.h>
 #include <osre/Scene/Scene.h>
 
+#include "App/RenderComponent.h"
+
 using namespace ::OSRE;
 using namespace ::OSRE::App;
 using namespace ::OSRE::Common;

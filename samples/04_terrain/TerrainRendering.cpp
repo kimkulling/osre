@@ -11,6 +11,8 @@
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
 
+#include "App/RenderComponent.h"
+
 #define STB_IMAGE_IMPLEMENTATION 
 #include "stb_image.h"
 

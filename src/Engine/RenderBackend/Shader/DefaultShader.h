@@ -1,22 +1,37 @@
 #pragma once
 
-#inlcude <osre/Common/osre_common.h>
+#include <osre/Common/osre_common.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
 namespace OSRE {
-    namespace RenderBackend {
+namespace RenderBackend {
 
-        struct DefaultShader {
-            String VertexShader;
-            String FragmentShader;
+struct DefaultShaderBuilder {
+    String VertexShader;
+    String FragmentShader;
 
-            DefaultShader(): VertexShader(), FragmentShader() {
-                // eempty
-            }
-
-            bool build()  {
-                
-            }
-        }
+    DefaultShaderBuilder() :
+            VertexShader(), FragmentShader() {
+        // empty
     }
+
+    bool build() {
+        return true;
+    }
+};
+
+struct R2DShaderBuilder {
+    String VertexShader;
+    String FragmentShader;
+
+    R2DShaderBuilder() :
+            VertexShader(), FragmentShader() {
+        // empty
+    }
+
+    bool build() {
+    }
+};
+
+}
 }

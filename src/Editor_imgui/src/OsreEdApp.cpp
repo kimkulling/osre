@@ -6,6 +6,7 @@
 
 #include <osre/RenderBackend/MeshBuilder.h>
 #include <osre/App/Stage.h>
+#include "App/RenderComponent.h"
 #include <osre/App/TransformController.h>
 #include <osre/App/ServiceProvider.h>
 #include <osre/Common/Logger.h>

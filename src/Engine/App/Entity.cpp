@@ -27,6 +27,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/World.h>
 #include <osre/RenderBackend/MeshProcessor.h>
 
+#include "App/RenderComponent.h"
+
 namespace OSRE {
 namespace App {
 
@@ -145,7 +147,6 @@ void Entity::serialize( IO::Stream *stream ) {
 void Entity::deserialize( IO::Stream *stream ) {
     osre_assert(stream != nullptr);
 }
-
 
 } // Namespace App
 } // Namespace OSRE
