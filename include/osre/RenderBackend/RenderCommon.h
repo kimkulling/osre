@@ -922,7 +922,7 @@ struct Frame {
     Frame();
     ~Frame();
     void init(::cppcore::TArray<PassData *> &newPasses);
-    FrameSubmitCmd *enqueue();
+    FrameSubmitCmd *enqueue(const char *passId, const char *batchId);
 
     Frame(const Frame &) = delete;
     Frame(Frame &&) = delete;

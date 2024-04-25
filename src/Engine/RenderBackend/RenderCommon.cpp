@@ -609,9 +609,11 @@ void Frame::init(TArray<PassData*> &newPasses) {
     m_uniforBuffers = new UniformBuffer[newPasses.size()];
 }
 
-FrameSubmitCmd *Frame::enqueue() {
+FrameSubmitCmd *Frame::enqueue(const char *passId, const char *batchId) {
     FrameSubmitCmd *cmd = m_submitCmdAllocator.alloc();
     if (nullptr != cmd) {
+        cmd->m_passId = passId;
+        cmd->m_batchId = batchId;
         m_submitCmds.add(cmd);
     }
 

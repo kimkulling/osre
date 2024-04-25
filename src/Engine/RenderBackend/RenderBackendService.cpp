@@ -231,27 +231,23 @@ void RenderBackendService::commitNextFrame() {
             if (currentBatch == nullptr) {
                 continue;
             }
-            
+
             if (currentBatch->m_dirtyFlag & RenderBatchData::MatrixBufferDirty) {
-                FrameSubmitCmd *cmd = mSubmitFrame->enqueue();
+                FrameSubmitCmd *cmd = mSubmitFrame->enqueue(currentPass->m_id, currentBatch->m_id);
                 currentBatch->m_matrixBuffer.m_view = currentPass->mView;
                 currentBatch->m_matrixBuffer.m_proj = currentPass->mProj;
-                cmd->m_passId = currentPass->m_id;
-                cmd->m_batchId = currentBatch->m_id;
                 assert(cmd->m_batchId != nullptr);
                 cmd->m_updateFlags |= (ui32) FrameSubmitCmd::UpdateMatrixes;
                 cmd->m_size = sizeof(MatrixBuffer);
                 cmd->m_data = new c8[cmd->m_size];
 
                 ::memcpy(cmd->m_data, &currentBatch->m_matrixBuffer, cmd->m_size);
-            } 
-            
+            }
+
             if (currentBatch->m_dirtyFlag & RenderBatchData::UniformBufferDirty) {
                 UniformBuffer &uniformBuffer = data->m_frame->m_uniforBuffers[i];
                 for (ui32 k = 0; k < currentBatch->m_uniforms.size(); ++k) {
-                    FrameSubmitCmd *cmd = mSubmitFrame->enqueue();
-                    cmd->m_passId = currentPass->m_id;
-                    cmd->m_batchId = currentBatch->m_id;
+                    FrameSubmitCmd *cmd = mSubmitFrame->enqueue(currentPass->m_id, currentBatch->m_id);
                     assert(cmd->m_batchId != nullptr);
                     cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateUniforms;
                     UniformVar *var = currentBatch->m_uniforms[k];
@@ -271,15 +267,11 @@ void RenderBackendService::commitNextFrame() {
                     offset += var->m_name.size();
                     ::memcpy(&cmd->m_data[offset], var->m_data.getData(), var->m_data.m_size);
                 }
-            } 
-            
+            }
+
             if (currentBatch->m_dirtyFlag & RenderBatchData::MeshUpdateDirty) {
                 for (ui32 k = 0; k < currentBatch->m_updateMeshArray.size(); ++k) {
-                    FrameSubmitCmd *cmd = mSubmitFrame->enqueue();
-                    cmd->m_passId = currentPass->m_id;
-                    assert(currentBatch->m_id != nullptr);
-                    cmd->m_batchId = currentBatch->m_id;
-                    assert(cmd->m_batchId!=nullptr);
+                    FrameSubmitCmd *cmd = mSubmitFrame->enqueue(currentPass->m_id, currentBatch->m_id);
                     cmd->m_updateFlags |= (ui32)FrameSubmitCmd::UpdateBuffer;
                     Mesh *currentMesh = currentBatch->m_updateMeshArray[k];
                     cmd->m_meshId = currentMesh->getId();
@@ -287,13 +279,11 @@ void RenderBackendService::commitNextFrame() {
                     cmd->m_data = new c8[cmd->m_size];
                     ::memcpy(cmd->m_data, currentMesh->getVertexBuffer()->getData(), cmd->m_size);
                 }
-            } 
-            
+            }
+
             if (currentBatch->m_dirtyFlag & RenderBatchData::MeshDirty) {
-                FrameSubmitCmd *cmd = mSubmitFrame->enqueue();
+                FrameSubmitCmd *cmd = mSubmitFrame->enqueue(currentPass->m_id, currentBatch->m_id);
                 PassData *pd = new PassData(currentPass->m_id, nullptr);
-                cmd->m_passId = currentPass->m_id;
-                cmd->m_batchId = currentBatch->m_id;
                 pd->mMeshBatches.add(currentBatch);
                 cmd->m_updatedPasses.add(pd);
                 cmd->m_updateFlags |= (ui32)FrameSubmitCmd::AddRenderData;
@@ -305,7 +295,6 @@ void RenderBackendService::commitNextFrame() {
 
     data->m_frame = mSubmitFrame;
     std::swap(mSubmitFrame, mRenderFrame);
-
     osre_assert(mSubmitFrame != mRenderFrame);
 
     mRenderTaskPtr->sendEvent(&OnCommitFrameEvent, data);
@@ -560,7 +549,7 @@ void RenderBackendService::clearPasses() {
     mFrameCreated = false;
 }
 
-void RenderBackendService::attachView() {    
+void RenderBackendService::attachView() {
     // empty
 }
 
