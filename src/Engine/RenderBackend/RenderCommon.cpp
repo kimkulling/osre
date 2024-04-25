@@ -602,7 +602,7 @@ void Frame::init(TArray<PassData*> &newPasses) {
     if (newPasses.isEmpty()) {
         return;
     }
-    
+
     for (auto newPasse : newPasses) {
         m_newPasses.add(newPasse);
     }

@@ -41,10 +41,8 @@ TransformController::TransformController(TransformMatrixBlock &tmb) :
 }
 
 TransformCommandType TransformController::getKeyBinding(Key key) {
-    //printf("key = %c, code = %d\n", (char) key, key);
     switch (key) {
         case Platform::KEY_A:
-            printf("here\n");
             return TransformCommandType::RotateXCommandPositive;
         case Platform::KEY_D:
             return TransformCommandType::RotateXCommandNegative;
@@ -124,7 +122,6 @@ void TransformController::getMouseUpdate(const MouseInputState &mis) {
 void TransformController::update(TransformCommandType cmdType) {
     glm::mat4 rot(1.0);
     if (cmdType == TransformCommandType::RotateXCommandPositive) {
-        printf("rotating\n");
         mTransform.mModel *= glm::rotate(rot, 0.01f, glm::vec3(1, 0, 0));
     }
 
