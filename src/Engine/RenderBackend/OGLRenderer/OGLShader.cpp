@@ -124,10 +124,10 @@ bool OGLShader::createAndLink() {
         logCompileOrLinkError(m_shaderprog);
         m_isCompiledAndLinked = false;
         return false;
-    } 
-    
+    }
+
     getActiveAttributeList();
-    getActiveUniformList();    
+    getActiveUniformList();
     m_isCompiledAndLinked = true;
 
     return m_isCompiledAndLinked;

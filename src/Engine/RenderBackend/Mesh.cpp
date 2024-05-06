@@ -76,6 +76,11 @@ void Mesh::createVertexBuffer(void *vertices, size_t vbSize, BufferAccessType ac
     mVertexBuffer->copyFrom(vertices, vbSize);
 }
 
+void Mesh::resizeVertexBuffer(size_t vbSize) {
+    //todo!
+}
+
+
 BufferData *Mesh::getVertexBuffer() const {
     return mVertexBuffer;
 }

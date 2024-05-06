@@ -847,7 +847,6 @@ OGLTexture *OGLRenderBackend::createTextureFromFile(const String &name, const IO
     glTexImage2D(tex->m_target, 0, GL_RGB, width, height, 0, tex->m_format, GL_UNSIGNED_BYTE, data);
     glBindTexture(tex->m_target, 0);
 
-    //SOIL_free_image_data(data);
     stbi_image_free(data);
     return tex;
 }

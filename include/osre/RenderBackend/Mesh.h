@@ -51,6 +51,7 @@ public:
     void *mapVertexBuffer(size_t vbSize, BufferAccessType accessType);
     void unmapVertexBuffer();
     void createVertexBuffer(void *vertices, size_t vbSize, BufferAccessType accessType);
+    void resizeVertexBuffer(size_t vbSize);
     BufferData *getVertexBuffer() const;
     void createIndexBuffer(void *indices, size_t ibSize, IndexType indexType, BufferAccessType accessType);
     BufferData *getIndexBuffer() const;
@@ -89,6 +90,8 @@ public:
     OSRE_NON_COPYABLE(Mesh)
 
 private:
+    using PrimGroupArray = ::cppcore::TArray<PrimitiveGroup*>;
+
     String mName;
     bool mLocalModelMatrix;
     glm::mat4 mModel;
@@ -97,11 +100,10 @@ private:
     BufferData *mVertexBuffer;
     IndexType mIndexType;
     BufferData *mIndexBuffer;
-    using PrimGroupArray = ::cppcore::TArray<PrimitiveGroup*>;
     PrimGroupArray mPrimGroups;
     guid mId;
-    ::cppcore::TArray<uc8> mVertexData;
-    ::cppcore::TArray<uc8> mIndexData;
+    MemoryBuffer mVertexData;
+    MemoryBuffer mIndexData;
     ui32 mLastIndex;
 };
 

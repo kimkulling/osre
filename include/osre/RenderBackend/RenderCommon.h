@@ -58,7 +58,6 @@ static constexpr ui32 MaxEntNameLen = 256;
 ///	@brief  This enum describes the usage of a GPU-buffer-object.
 ///
 /// Buffer objects are used to store vertex-, index- or image data on the GPU-memory
-/// 
 enum class BufferType {
     InvalidType = -1,   ///< Enum for invalid enum.
     EmptyBuffer = 0,    ///< Empty buffer, no special use.

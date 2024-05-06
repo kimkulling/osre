@@ -31,6 +31,11 @@ struct DrawCmd {
     PrimitiveType mPrimType;
     size_t NumVertices;
     ColorVert *Vertices;
+    size_t NumIndices;
+    ui32 *Indices;
+
+    DrawCmd() = default;
+    ~DrawCmd() = default;
 };
 
 inline void clip(const Rect2i &resolution, i32 x, i32 y, i32 &x_out, i32 &y_out) {
@@ -58,8 +63,16 @@ DrawCmd *alloc() {
     return dc;
 }
 
+void dealloc(DrawCmd *cmd) {
+    if (cmd == nullptr) {
+        return;
+    }
+
+    delete cmd;
+}
+
 CanvasRenderer::CanvasRenderer(i32 numLayers) :
-        mDirty(true), mPenColor(1, 1, 1), mResolution(), mActiveLayer(0), mNumLayers(numLayers) {
+        mDirty(true), mPenColor(1, 1, 1), mResolution(), mActiveLayer(0), mNumLayers(numLayers), mMesh(nullptr) {
     // empty
 }
 
@@ -74,8 +87,12 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         return;
     }
 
+    if (mMesh == nullptr) {
+        mMesh = new Mesh("2d", VertexType::ColorVertex, IndexType::UnsignedInt);
+    }
     for (size_t i=0; i<mDrawCmdArray.size(); ++i) {
         const auto *dc = mDrawCmdArray[i];
+        mMesh->
     }
 
     setClean();
@@ -103,7 +120,7 @@ bool CanvasRenderer::selectLayer(i32 layer) {
 
 i32 CanvasRenderer::getActiveLayer() const {
     return mActiveLayer;
-} 
+}
 
 void CanvasRenderer::setcolor(const Color4 &color) {
     mPenColor.r = color.m_r;
@@ -122,15 +139,20 @@ void CanvasRenderer::drawline(i32 x1, i32 y1, i32 x2, i32 y2) {
     dc->Vertices[0].position.x = (f32)x_clipped;
     dc->Vertices[0].position.y = (f32)y_clipped;
     dc->Vertices[0].position.z = static_cast<f32>(mActiveLayer);
-    
+
     clip(mResolution, x2, y2, x_clipped, y_clipped);
     dc->Vertices[1].color0 = mPenColor;
     dc->Vertices[1].position.x = (f32)x_clipped;
     dc->Vertices[1].position.y = (f32)y_clipped;
     dc->Vertices[1].position.z = static_cast<f32>(mActiveLayer);
 
+    dc->NumIndices = 2;
+    dc->Indices = new ui32[dc->NumIndices];
+    dc->Indices[0] = 0;
+    dc->Indices[0] = 1;
+
     mDrawCmdArray.add(dc);
-    
+
     setDirty();
 }
 
@@ -158,6 +180,12 @@ void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3
     dc->Vertices[2].position.y = (f32)y_clipped;
     dc->Vertices[2].position.z = static_cast<f32>(mActiveLayer);
 
+    dc->NumIndices = 3;
+    dc->Indices = new ui32[dc->NumIndices];
+    dc->Indices[0] = 0;
+    dc->Indices[1] = 1;
+    dc->Indices[2] = 2;
+
     mDrawCmdArray.add(dc);
 
     setDirty();
@@ -165,7 +193,7 @@ void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3
 
 void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h, bool filled) {
     DrawCmd *dc = alloc();
-    
+
     if (filled) {
         dc->mPrimType = PrimitiveType::TriangleList;
         dc->NumVertices = 6;
@@ -207,6 +235,16 @@ void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h, bool filled) {
         dc->Vertices[5].position.x = (f32)x_clipped;
         dc->Vertices[5].position.y = (f32)y_clipped;
         dc->Vertices[5].position.z = static_cast<f32>(mActiveLayer);
+
+        dc->NumIndices = 6;
+        dc->Indices = new ui32[dc->NumIndices];
+        dc->Indices[0] = 0;
+        dc->Indices[1] = 1;
+        dc->Indices[2] = 2;
+
+        dc->Indices[3] = 2;
+        dc->Indices[4] = 3;
+        dc->Indices[5] = 0;
     } else {
         dc->NumVertices = 4;
         dc->mPrimType = PrimitiveType::LineList;
@@ -236,6 +274,20 @@ void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h, bool filled) {
         dc->Vertices[3].position.x = (f32)x_clipped;
         dc->Vertices[3].position.y = (f32)y_clipped + h;
         dc->Vertices[3].position.z = static_cast<f32>(mActiveLayer);
+
+        dc->NumIndices = 8;
+        dc->Indices = new ui32[dc->NumIndices];
+        dc->Indices[0] = 0;
+        dc->Indices[1] = 1;
+
+        dc->Indices[1] = 1;
+        dc->Indices[2] = 2;
+
+        dc->Indices[2] = 2;
+        dc->Indices[3] = 3;
+
+        dc->Indices[3] = 3;
+        dc->Indices[0] = 0;
     }
 
     mDrawCmdArray.add(dc);

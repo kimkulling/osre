@@ -165,7 +165,7 @@ bool OGLRenderEventHandler::onCreateRenderer(const EventData *eventData) {
         osre_debug(Tag, "Rendercontext is nullptr.");
         return result;
     }
-        
+
     if (!m_renderCtx->create(activeSurface)) {
         osre_debug(Tag, "Cannot create render-context.");
         return false;
@@ -302,7 +302,7 @@ bool OGLRenderEventHandler::addMeshes(const c8 *id, cppcore::TArray<size_t> &pri
 
     return true;
 }
- 
+
 bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventData) {
     osre_assert(nullptr != m_oglBackend);
 
@@ -462,7 +462,7 @@ bool OGLRenderEventHandler::onCommitNexFrame(const EventData *eventData) {
         onHandleCommit(cmd);
         cmd->m_updateFlags = 0u;
     }
-    
+
     data->m_frame->m_submitCmds.resize(0);
     data->m_frame->m_submitCmdAllocator.release();
 

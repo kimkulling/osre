@@ -1,6 +1,6 @@
 #pragma once
 
-#inlcude <osre/Common/osre_common.h>
+#include <osre/Common/osre_common.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
 namespace OSRE {
@@ -15,7 +15,7 @@ namespace OSRE {
             }
 
             bool build()  {
-                
+                return true;
             }
         }
     }

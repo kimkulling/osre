@@ -29,6 +29,7 @@ namespace OSRE {
 namespace RenderBackend {
 
 class RenderBackendService;
+class Mesh;
 
 struct DrawCmd;
 
@@ -57,6 +58,7 @@ private:
     Rect2i mResolution;
     i32 mActiveLayer;
     i32 mNumLayers;
+    Mesh *mMesh;
 };
 
 inline void CanvasRenderer::setDirty() {
