@@ -92,7 +92,6 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
     }
     for (size_t i=0; i<mDrawCmdArray.size(); ++i) {
         const auto *dc = mDrawCmdArray[i];
-        mMesh->
     }
 
     setClean();

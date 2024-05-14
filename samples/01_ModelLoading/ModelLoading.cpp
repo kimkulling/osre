@@ -30,6 +30,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/RenderCommon.h>
 
+#include <assimp/scene.h>
+
 using namespace ::OSRE;
 using namespace ::OSRE::App;
 using namespace ::OSRE::Common;
@@ -44,6 +46,7 @@ class ModelLoadingApp : public App::AppBase {
     App::CameraComponent *mCamera;          ///< The camera component.
     TransformMatrixBlock mTransformMatrix;  ///< The tansform block.
     TransformComponent::NodePtr mModelNode; ///< The mode node.
+    int mIntention;
 
 public:
     ModelLoadingApp(int argc, char *argv[]) :
@@ -51,7 +54,8 @@ public:
             mAssetFolder(),
             mCamera(nullptr),
             mTransformMatrix(),
-            mModelNode()  {
+            mModelNode(),
+            mIntention(0)  {
         // empty
     }
 
@@ -59,6 +63,47 @@ public:
 
     bool hasModel() const {
         return mModelNode.isValid();
+    }
+
+    void pushIntention() {
+        mIntention++;
+    }
+
+    void popIntention() {
+        mIntention--;
+    }
+
+    void checkName(String &name) {
+        if (name.empty()) {
+            name = "No Name";
+        }
+    }
+
+    void dumpNode(aiNode &node) {
+        String name = node.mName.C_Str();
+        checkName(name);
+        for (int i=0; i<mIntention; ++i) {
+            std::cout << "  ";
+        }
+        
+        std::cout << "Node name: " <<  name << "\n";
+        for (unsigned int i=0; i < node.mNumChildren; ++i) {
+            pushIntention();
+            dumpNode(*node.mChildren[i]);
+            popIntention();
+        }
+    }
+
+    void showStatistics(const aiScene &scene) {
+        std::cout << "Modelname: " << scene.mName.C_Str() << "\n";
+        std::cout << "=============================================================\n";
+
+        if (scene.mRootNode != nullptr) {
+            dumpNode(*scene.mRootNode);
+        }
+
+        std::cout << "Number of meshes    : " << scene.mNumMeshes << "\n";
+        std::cout << "Number of materials : " << scene.mNumMaterials << "\n";
     }
 
 protected:
@@ -89,8 +134,10 @@ protected:
         world->addEntity(entity);
         mCamera->observeBoundingBox(entity->getAABB());
         mModelNode = entity->getNode();
+
+        showStatistics(*assimpWrapper.getScene());
     }
-    
+
     void onUpdate() override {
         if (AppBase::isKeyPressed(Platform::KEY_O) || AppBase::isKeyPressed(Platform::KEY_o)) {
             IO::Uri modelLoc;
@@ -108,7 +155,7 @@ protected:
         if (AppBase::isKeyPressed(Platform::KEY_S)) {
             mTransformMatrix.mModel *= glm::rotate(rot, -0.01f, glm::vec3(1, 0, 0));
         }
-        
+
         if (AppBase::isKeyPressed(Platform::KEY_W)) {
             mTransformMatrix.mModel *= glm::rotate(rot, 0.01f, glm::vec3(0, 1, 0));
         }
@@ -138,13 +185,10 @@ int main(int argc, char *argv[]) {
 
     while (myApp.handleEvents()) {
         myApp.update();
-        //if (myApp.hasModel()) {
-            myApp.requestNextFrame();
-        //}
+        myApp.requestNextFrame();
     }
 
     myApp.destroy();
 
     return 0;
 }
-
