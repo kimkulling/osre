@@ -108,7 +108,7 @@ public:
 
 private:
     using EventHandlerArray = cppcore::TArray<AbstractEventHandler*>;
-    using SuscribedHandler = cppcore::THashMap<ui32, EventHandlerArray*>;
+    using SuscribedHandler = cppcore::THashMap<HashId, EventHandlerArray*>;
     SuscribedHandler mSuscribedHandler;
     using QueueEntryArray = cppcore::TArray<QueueEntry*>;
     QueueEntryArray mQueueEntryArray;

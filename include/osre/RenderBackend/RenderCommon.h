@@ -187,11 +187,11 @@ enum class ParameterType {
 /// @brief  This enum to describes the type of the vertex attribute.
 enum class VertexAttribute : int {
     InvalidVertexAttr = -1,  ///< Enum for invalid enum.
-    Position = 0,           ///< "position"
-    Normal,                 ///< "normal"
-    TexCoord0, ///< "texcoord0"
-    TexCoord1, ///< "texcoord1"
-    TexCoord2, ///< "texcoord2"
+    Position = 0,            ///< "position"
+    Normal,                  ///< "normal"
+    TexCoord0,               ///< "texcoord0"
+    TexCoord1,               ///< "texcoord1"
+    TexCoord2,               ///< "texcoord2"
     TexCoord3, ///< "texcoord3"
     Tangent, ///< "tangent
     Binormal, ///< "binormal"
@@ -958,7 +958,9 @@ struct RenderTarget {
 struct OSRE_EXPORT IRenderPath {
     IRenderPath();
     virtual ~IRenderPath() = default;
+    virtual void preRender(RenderBackendService *rbSrv) = 0;
     virtual void render(RenderBackendService *rbSrv) = 0;
+    virtual void postRender(RenderBackendService *rbSrv) = 0;
     void setShader(Shader *shader);
 
 private:
@@ -986,7 +988,6 @@ enum class GLSLVersion {
 };
 
 GLSLVersion getGlslVersionFromeString(const c8 *versionString);
-
 
 } // Namespace RenderBackend
 } // Namespace OSRE

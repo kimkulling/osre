@@ -86,6 +86,7 @@ public:
     void addPrimitiveGroups(size_t numPrimGroups, size_t *numIndices, PrimitiveType *primTypes, ui32 *startIndices);
     void addPrimitiveGroup(size_t numIndices, PrimitiveType primTypes, ui32 startIndex);
     void addPrimitiveGroup(PrimitiveGroup *group);
+    ui32 getLastIndex() const;
 
     OSRE_NON_COPYABLE(Mesh)
 
@@ -163,6 +164,10 @@ inline const glm::mat4 &Mesh::getLocalMatrix() const {
 
 inline bool Mesh::isLocal() const {
     return mLocalModelMatrix;
+}
+
+inline ui32 Mesh::getLastIndex() const {
+    return mLastIndex;
 }
 
 } // Namespace RenderBackend

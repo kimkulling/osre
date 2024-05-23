@@ -28,6 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
+// Forward declarations ---------------------------------------------------------------------------
 class RenderBackendService;
 class Mesh;
 
@@ -39,7 +40,9 @@ public:
 
     CanvasRenderer(i32 numLayers);
     ~CanvasRenderer() override;
+    void preRender(RenderBackendService *rbSrv) override;
     void render(RenderBackendService *rbSrv) override;
+    void postRender(RenderBackendService *rbSrv) override;
     void setResolution(i32 x, i32 y, i32 w, i32 h);
     bool selectLayer(i32 layer);
     i32 getActiveLayer() const;
@@ -72,6 +75,6 @@ inline void CanvasRenderer::setClean() {
 inline bool CanvasRenderer::isDirty() const {
     return mDirty;
 }
- 
+
 } // namespace RenderBackend
 } // namespace OSRE

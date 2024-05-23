@@ -490,7 +490,7 @@ bool OGLRenderEventHandler::onScreenshot(const EventData *eventData) {
     if (data != nullptr){
         result = makeScreenShot(data->mFilename.c_str(), data->mWidth, data->mHeight);
     }
-    
+
     return result;
 }
 

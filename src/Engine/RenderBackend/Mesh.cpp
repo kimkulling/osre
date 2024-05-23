@@ -134,8 +134,6 @@ void Mesh::addPrimitiveGroups(size_t numPrimGroups, size_t *numIndices, Primitiv
 }
 
 void Mesh::addPrimitiveGroup(size_t numIndices, PrimitiveType primType, ui32 startIndex) {
-    osre_assert(numIndices != 0);
-
     if (numIndices == 0) {
         mPrimGroups.clear();
         return;

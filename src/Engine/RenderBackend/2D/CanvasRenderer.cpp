@@ -23,9 +23,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "CanvasRenderer.h"
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/Shader.h>
+#include <cppcore/Memory/TPoolAllocator.h>
 
 namespace OSRE {
 namespace RenderBackend {
+
+using namespace cppcore;
 
 struct DrawCmd {
     PrimitiveType mPrimType;
@@ -58,8 +61,14 @@ inline void clip(const Rect2i &resolution, i32 x, i32 y, i32 &x_out, i32 &y_out)
     }
 }
 
+static TPoolAllocator<DrawCmd> sAllocator;
+
 DrawCmd *alloc() {
-    DrawCmd *dc = new DrawCmd;
+    if (sAllocator.capacity() == 0) {
+        sAllocator.reserve(1024);
+    }
+
+    DrawCmd *dc = sAllocator.alloc();
     return dc;
 }
 
@@ -80,6 +89,12 @@ CanvasRenderer::~CanvasRenderer() {
     // empty
 }
 
+void CanvasRenderer::preRender(RenderBackendService *rbSrv) {
+    osre_assert(rbSrv != nullptr);
+
+    //rbSrv->
+}
+
 void CanvasRenderer::render(RenderBackendService *rbSrv) {
     osre_assert(rbSrv != nullptr);
 
@@ -90,11 +105,26 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
     if (mMesh == nullptr) {
         mMesh = new Mesh("2d", VertexType::ColorVertex, IndexType::UnsignedInt);
     }
+
     for (size_t i=0; i<mDrawCmdArray.size(); ++i) {
-        const auto *dc = mDrawCmdArray[i];
+        const auto &dc = *mDrawCmdArray[i];
+        if (dc.Vertices == nullptr) {
+            continue;
+        }
+        const ui32 last = static_cast<ui32>(mMesh->getLastIndex());
+        mMesh->attachVertices(dc.Vertices, dc.NumVertices);
+        mMesh->attachIndices(dc.Indices, dc.NumIndices);
+        mMesh->addPrimitiveGroup(dc.NumIndices, dc.mPrimType, last);
     }
 
+    mDrawCmdArray.resize(0);
     setClean();
+}
+
+void CanvasRenderer::postRender(RenderBackendService *rbSrv) {
+    osre_assert(rbSrv != nullptr);
+
+    //rbSrv->
 }
 
 void CanvasRenderer::setResolution(i32 x, i32 y, i32 w, i32 h) {
@@ -178,6 +208,10 @@ void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3
     dc->Vertices[2].position.x = (f32)x_clipped;
     dc->Vertices[2].position.y = (f32)y_clipped;
     dc->Vertices[2].position.z = static_cast<f32>(mActiveLayer);
+
+    if (filled) {
+    } else {
+    }
 
     dc->NumIndices = 3;
     dc->Indices = new ui32[dc->NumIndices];

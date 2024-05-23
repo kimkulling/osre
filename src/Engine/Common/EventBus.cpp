@@ -76,7 +76,7 @@ void EventBus::update() {
             continue;
         }
 
-        const ui32 id = entry->mAction.mEvent->getHash();
+        const HashId id = entry->mAction.mEvent->getHash();
         if (mSuscribedHandler.hasKey(id)) {
             EventHandlerArray *ehArray = nullptr;
             mSuscribedHandler.getValue(id, ehArray);
@@ -96,7 +96,7 @@ void EventBus::subscribeEventHandler(AbstractEventHandler *handler, const Event 
         return;
     }
 
-    const ui32 id = ev.getHash();
+    const HashId id = ev.getHash();
     EventHandlerArray *ehArray = nullptr;
     if (mSuscribedHandler.hasKey(id)) {
         mSuscribedHandler.getValue(id, ehArray);            
@@ -114,7 +114,7 @@ void EventBus::unsubscribeEventHandler(AbstractEventHandler *handler, const Even
     if (nullptr == handler) {
         return;
     }
-    const ui32 id = ev.getHash();
+    const HashId id = ev.getHash();
     if (mSuscribedHandler.hasKey(id)) {
         EventHandlerArray *ehArray = nullptr;
         mSuscribedHandler.getValue(id, ehArray);

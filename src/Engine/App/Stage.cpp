@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace App {
 
-static const c8 *Tag = "Stage";
+static constexpr c8 Tag[] = "Stage";
 
 Stage::Stage(const String &stageName) :
         Object(stageName),
@@ -43,7 +43,7 @@ Stage::~Stage() {
     mWorlds.clear();
     mRenderWorlds.clear();
 }
-    
+
 World *Stage::createWorld(const String &name) {
     if (name.empty()) {
         osre_debug(Tag, "Invalid name for a new world.");
