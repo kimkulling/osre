@@ -45,9 +45,10 @@ class World;
 ///	@ingroup    Engine
 ///
 ///	@brief  This class is a helper to resolve mounting points to valid path names in a file system.
+///
 /// If you want to assign a folder called /home/me/data to the asset folder you can use this to
 /// register it to a mounting point asset:
-/// 
+///
 /// @code
 /// AssetRegistry::create();
 /// AssetRegistry::registerAssetPath("/home/me/data", "asset");
@@ -55,7 +56,7 @@ class World;
 /// IO::Uri myUri("assets/data.obj")
 /// String path = AssetRegistry::resolvePathFromeUri(myUri);
 /// @endcode
-/// 
+///
 /// This will return /home/me/data/data.obj
 //-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT AssetRegistry {

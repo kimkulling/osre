@@ -49,6 +49,7 @@ SET( app_inc
     ${HEADER_PATH}/App/Project.h
     ${HEADER_PATH}/App/TAbstractCtrlBase.h
     ${HEADER_PATH}/App/ResourceCacheService.h
+    ${HEADER_PATH}/App/AssetBundle.h
     ${HEADER_PATH}/App/AssetRegistry.h
     ${HEADER_PATH}/App/AssimpWrapper.h
     ${HEADER_PATH}/App/Stage.h

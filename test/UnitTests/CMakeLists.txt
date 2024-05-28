@@ -27,6 +27,7 @@ INCLUDE_DIRECTORIES(
 SET ( unittest_app_src
     src/App/TAbstractCtrlBaseTest.cpp
     src/App/ProjectTest.cpp
+    src/App/AssetBundleTest.cpp
     src/App/AssetRegistryTest.cpp
     src/App/AssetWrapperTest.cpp
 )

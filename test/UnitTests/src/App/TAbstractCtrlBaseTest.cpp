@@ -155,5 +155,5 @@ TEST_F( TAbstractCtrlBaseTest, notifyListenerTest ) {
     delete listener;
 }
 
-}
-}
+} // namespace App
+} // namespace OSRE

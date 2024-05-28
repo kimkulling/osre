@@ -27,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OSRE {
 namespace UnitTest {
-    
+
 using namespace ::OSRE::App;
 using namespace ::OSRE::Common;
 using namespace ::OSRE::IO;
@@ -86,5 +86,5 @@ TEST_F(ProjectTest, loadsaveTest) {
 
 }
 
-}
-}
+} // namespace App
+} // namespace OSRE

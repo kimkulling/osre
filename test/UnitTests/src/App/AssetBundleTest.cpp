@@ -21,28 +21,34 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
-#include <osre/App/AssimpWrapper.h>
-#include <osre/Common/Ids.h>
+#include <osre/App/AssetBundle.h>
+#include <osre/IO/Uri.h>
 
 namespace OSRE {
 namespace UnitTest {
 
 using namespace ::OSRE::App;
 
-class AssimpWrapperTest : public ::testing::Test {
-    // empty
-};
+class AssetBundleTest : public ::testing::Test {};
 
-TEST_F( AssimpWrapperTest, createTest ) {
-    bool ok( true );
-
+TEST_F(AssetBundleTest, createTest) {
+    bool ok = true;
     try {
-        Common::Ids ids;
-        AssimpWrapper assimpWrapper( ids, nullptr );
-    } catch (...) {
+        AssetBundle bundle("test.zip");
+    } catch ( ... ) {
         ok = false;
     }
-    EXPECT_TRUE( ok );
+    EXPECT_TRUE(ok);
+}
+
+TEST_F(AssetBundleTest, add_remove_Test) {
+    AssetBundle bundle("test.zip");
+    EXPECT_EQ(0u, bundle.getNumAssets());
+    bundle.add("spider.obj");
+    EXPECT_EQ(1u, bundle.getNumAssets());
+
+    bundle.remove("spider.obj");
+    EXPECT_EQ(0u, bundle.getNumAssets());
 }
 
 } // namespace App
