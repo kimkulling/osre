@@ -24,6 +24,11 @@ using namespace ::OSRE::App;
 // To identify local log entries we will define this tag.
 static constexpr c8 Tag[] = "TerrainRenderingApp";
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+/// @brief
+//-------------------------------------------------------------------------------------------------
 class TerrainRenderingApp : public App::AppBase {
     /// The transform block, contains the model-, view- and projection-matrix
     TransformMatrixBlock mTransformMatrix;

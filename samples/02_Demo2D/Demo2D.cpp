@@ -38,7 +38,11 @@ using namespace ::OSRE::App;
 // To identify local log entries
 static const c8 Tag[] = "ModelLoadingApp";
 
-// The example application, will create the render environment and render a simple triangle onto it
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+/// @brief 
+//-------------------------------------------------------------------------------------------------
 class Demo2DApp : public App::AppBase {
     TransformMatrixBlock  mTransformMatrix;
     CanvasRenderer       *mCanvasRenderer;

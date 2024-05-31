@@ -452,15 +452,6 @@ ResourceState TextureResource::onUnload(TextureLoader &loader) {
     return getState();
 }
 
-GeoInstanceData::GeoInstanceData() :
-        m_data(nullptr) {
-    // empty
-}
-
-GeoInstanceData::~GeoInstanceData() {
-    m_data = nullptr;
-}
-
 TransformState::TransformState() :
         m_translate(1.0f),
         m_scale(1.0f),

@@ -50,7 +50,6 @@ namespace RenderBackend {
 class Mesh;
 
 struct BufferData;
-struct GeoInstanceData;
 struct UniformVar;
 struct TransformMatrixBlock;
 

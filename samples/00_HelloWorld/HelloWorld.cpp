@@ -23,10 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/App.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/MeshBuilder.h>
-#include <osre/Common/Logger.h>
 #include <osre/RenderBackend/RenderBackendService.h>
 #include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/Debugging/MeshDiagnostic.h>
 #include <osre/App/Entity.h>
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Common/glm_common.h>
@@ -37,6 +35,12 @@ using namespace ::OSRE::RenderBackend;
 
 // To identify local log entries we will define this tag.
 static constexpr c8 Tag[] = "HelloWorldApp";
+
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+/// @brief This is
+//-------------------------------------------------------------------------------------------------
 
 /// The example application, will create the render environment and render a simple triangle onto it
 class HelloWorldApp : public App::AppBase {
@@ -83,7 +87,7 @@ protected:
 
         mEntity = new Entity("entity", *AppBase::getIdContainer(), world);
         MeshBuilder meshBuilder;
-        RenderBackend::Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5,.5,.5,BufferAccessType::ReadOnly).getMesh();
+        Mesh *mesh = meshBuilder.createCube(VertexType::ColorVertex, .5,.5,.5,BufferAccessType::ReadOnly).getMesh();
         if (nullptr != mesh) {
             RenderComponent *rc = (RenderComponent*) mEntity->getComponent(ComponentType::RenderComponentType);
             rc->addStaticMesh(mesh);
@@ -111,7 +115,6 @@ protected:
             rbSrv->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
 
             rbSrv->endRenderBatch();
-
         }
         rbSrv->endPass();
 

@@ -40,7 +40,11 @@ using namespace ::OSRE::RenderBackend;
 // To identify local log entries
 static constexpr c8 Tag[] = "InstancingApp";
 
-/// The example application, will create the render environment and render a simple triangle onto it
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+/// @brief
+//-------------------------------------------------------------------------------------------------
 class InstancingApp : public App::AppBase {
     App::Entity *mEntity;
     App::CameraComponent *mCamera;

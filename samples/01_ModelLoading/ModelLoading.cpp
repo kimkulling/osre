@@ -40,6 +40,12 @@ using namespace ::OSRE::RenderBackend;
 /// @brief The log-tag
 static constexpr c8 Tag[] = "ModelLoadingApp";
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup    Editor
+///
+/// @brief
+//-------------------------------------------------------------------------------------------------
+
 /// @brief The example application, will create the renderer and loads a model.
 class ModelLoadingApp : public App::AppBase {
     String mAssetFolder;                    ///< The asset folder, here we will locate our assets.

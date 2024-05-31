@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 // The public API from the App-layer
+#include <osre/App/AbstractBehaviour.h>
 #include <osre/App/AppBase.h>
 #include <osre/App/Component.h>
 #include <osre/App/CameraComponent.h>
@@ -30,10 +31,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/App/Entity.h>
 #include <osre/App/World.h>
 #include <osre/App/AppCommon.h>
-#include <osre/App/AssimpWrapper.h>
 #include <osre/App/Project.h>
 #include <osre/App/ServiceProvider.h>
 #include <osre/App/AssetRegistry.h>
+#include <osre/App/AssetBundle.h>
+#include <osre/App/AssimpWrapper.h>
 #include <osre/App/Stage.h>
+#include <osre/App/TrackBall.h>
 #include <osre/App/TAbstractCtrlBase.h>
 #include <osre/App/TransformController.h>
