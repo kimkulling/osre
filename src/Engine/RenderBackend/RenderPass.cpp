@@ -17,6 +17,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <osre/RenderBackend/RenderPass.h>
+#include "RenderBackend/2D/RenderPass2D.h"
 
 namespace OSRE {
 namespace RenderBackend {
@@ -26,13 +27,13 @@ namespace Details {
 
 static const c8 *RenderPassNames[] = {
     "RenderPass",
-    "UiPass",
+    "2D",
     "DbgPass"
 };
 
 static void initRenderPasses() {
     RenderPassFactory::registerPass(RenderPassId, new RenderPass(RenderPassId, nullptr));
-    RenderPassFactory::registerPass(UiPassId, new RenderPass(UiPassId, nullptr));
+    RenderPassFactory::registerPass(UiPassId, RenderPass2D::build(UiPassId));
     RenderPassFactory::registerPass(DbgPassId, new RenderPass(DbgPassId, nullptr));
 }
 

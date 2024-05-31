@@ -30,6 +30,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/RenderBackend/TransformMatrixBlock.h>
 
 #include "RenderBackend/2D/CanvasRenderer.h"
+#include "RenderBackend/2D/RenderPass2D.h"
 
 using namespace ::OSRE;
 using namespace ::OSRE::RenderBackend;
@@ -75,6 +76,8 @@ protected:
         mCanvasRenderer->setcolor(green);
         mCanvasRenderer->drawRect(1, 1, 100, 100, true);
 
+        RenderBackendService *rbSerive = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
+
         return true;
     }
 
@@ -85,10 +88,10 @@ protected:
         return true;
     }
 
-    void onRender() {
+    void onUpdate() {
         RenderBackendService *rbSerive = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
         rbSerive->beginPass(RenderPass::getPassNameById(RenderPassId));
-        rbSerive->beginRenderBatch("2d");
+        rbSerive->beginRenderBatch("2D");
 
         rbSerive->setMatrix(MatrixType::Model, mTransformMatrix.mModel);
         mCanvasRenderer->render(rbSerive);

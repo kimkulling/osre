@@ -9,16 +9,16 @@ class RenderPass2D {
 public:
     RenderPass2D();
     ~RenderPass2D();
-    static RenderPass *build();
+    static RenderPass *build(guid id);
 };
 
 inline RenderPass2D::RenderPass2D() {}
 
 inline RenderPass2D::~RenderPass2D() {}
 
-inline RenderPass *RenderPass2D::build() {
-    RenderPass *pass = new RenderPass();
-
+inline RenderPass *RenderPass2D::build(guid id) {
+    RenderPass *pass = new RenderPass(id, nullptr);
+    
     return pass;
 }
 

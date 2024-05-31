@@ -28,8 +28,13 @@ namespace OSRE {
 namespace RenderBackend {
 
 namespace DefaultPipelines {
-    const c8 *get_Pipeline_Default() {
-        static constexpr c8 Name[] = "pipeline.default";
+    const c8 *get3DPipelineDefault() {
+        static constexpr c8 Name[] = "pipeline.default.3d";
+        return Name;
+    }
+
+    const c8* get2DPipelineDefault() {
+        static constexpr c8 Name[] = "pipeline.default.2d";
         return Name;
     }
 }

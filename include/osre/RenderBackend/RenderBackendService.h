@@ -199,8 +199,9 @@ public:
 
     /// @brief  Will create the default render pipeline.
     /// @return Pointer showing to the default render pipeline.
-    Pipeline *createDefaultPipeline();
+    Pipeline *createDefault3DPipeline();
 
+    Pipeline *createDefault2DPipeline();
     void setActivePipeline(Pipeline *pipeline);
 
     PassData *getPassById(const c8 *id) const;

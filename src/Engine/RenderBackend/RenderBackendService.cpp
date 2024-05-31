@@ -308,9 +308,22 @@ void RenderBackendService::sendEvent(const Event *ev, const EventData *eventData
     }
 }
 
-Pipeline *RenderBackendService::createDefaultPipeline() {
-    Pipeline *pipeline = new Pipeline(DefaultPipelines::get_Pipeline_Default());
-    RenderPass *renderPass = RenderPassFactory::create(RenderPassId);
+Pipeline *RenderBackendService::createDefault3DPipeline() {
+    Pipeline *pipeline = new Pipeline(DefaultPipelines::get3DPipelineDefault());
+    RenderPass *renderPass = nullptr;
+    renderPass = RenderPassFactory::create(RenderPassId);
+    CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
+    renderPass->setCullState(cullState);
+    renderPass->setViewport(mViewport);
+    pipeline->addPass(renderPass);
+
+    return pipeline;
+}
+
+Pipeline* RenderBackendService::createDefault2DPipeline() {
+    Pipeline *pipeline = new Pipeline(DefaultPipelines::get2DPipelineDefault());
+    RenderPass *renderPass = nullptr;
+    renderPass = RenderPassFactory::create(UiPassId);
     CullState cullState(CullState::CullMode::CCW, CullState::CullFace::Back);
     renderPass->setCullState(cullState);
     renderPass->setViewport(mViewport);
