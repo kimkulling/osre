@@ -38,7 +38,7 @@ inline bool AssetBundle::isValid() const {
     return AssetBundle::isSupported(getName());
 }
 
-const String &AssetBundle::getName() const {
+inline const String &AssetBundle::getName() const {
     return mName;
 }
 

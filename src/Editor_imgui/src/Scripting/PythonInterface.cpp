@@ -67,6 +67,7 @@ static PyObject *osre_project_new(PyObject*, PyObject *args, PyObject *keywds) {
     }
 
     gActiceProject->mProject = new Project();
+    
     gActiceProject->mProject->setProjectName(projectName);
 
     Py_RETURN_NONE;

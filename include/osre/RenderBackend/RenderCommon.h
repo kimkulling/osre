@@ -459,17 +459,6 @@ private:
     TextureStageType m_stage;
 };
 
-
-///	@brief
-struct OSRE_EXPORT GeoInstanceData {
-    BufferData *m_data;
-
-    GeoInstanceData();
-    ~GeoInstanceData();
-
-    OSRE_NON_COPYABLE(GeoInstanceData)
-};
-
 ///	@brief
 struct OSRE_EXPORT TransformState {
     glm::vec3 m_translate;
@@ -588,23 +577,15 @@ struct TIndexCache {
 
     CacheType m_cache;
 
-    /// @brief 
-    /// @param size 
-    TIndexCache(size_t size) :
-            m_cache(size) {
-        // empty
-    }
+    /// @brief The class constructor with the buffer size.
+    /// @param size   The requested buffer size.
+    TIndexCache(size_t size) : m_cache(size) {}
 
     /// @brief 
-    TIndexCache() :
-            m_cache() {
-        // empty
-    }
+    TIndexCache() = default;
 
     ///	@brief
-    ~TIndexCache() {
-        // empty
-    }
+    ~TIndexCache() = default;
 
     ///	@brief
     void clear() {
