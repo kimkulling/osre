@@ -224,6 +224,17 @@ void AppBase::setWindowsTitle(const String &title) {
     }
 }
 
+static void attachMouseEventPtrs(EventPtrArray &eventArray) {
+    eventArray.add(&MouseButtonDownEvent);
+    eventArray.add(&MouseButtonUpEvent);
+    eventArray.add(&MouseMoveEvent);
+}
+
+static void attachKeyboardEventPtrs(EventPtrArray &eventArray) {
+    eventArray.add(&KeyboardButtonDownEvent);
+    eventArray.add(&KeyboardButtonUpEvent);
+}
+
 bool AppBase::onCreate() {
     if (mAppState != State::Uninited) {
         osre_debug(Tag, "AppBase::State not in expected state: Uninited.");
@@ -291,16 +302,13 @@ bool AppBase::onCreate() {
     // Setup onMouse event-listener
     AbstractPlatformEventQueue *evHandler = mPlatformInterface->getPlatformEventHandler();
     if (nullptr != evHandler) {
-        TArray<const Common::Event *> eventArray;
-        eventArray.add(&MouseButtonDownEvent);
-        eventArray.add(&MouseButtonUpEvent);
-        eventArray.add(&MouseMoveEvent);
+        EventPtrArray eventArray;
+        attachMouseEventPtrs(eventArray);
         mMouseEvListener = new MouseEventListener;
         evHandler->registerEventListener(eventArray, mMouseEvListener);
 
         eventArray.resize(0);
-        eventArray.add(&KeyboardButtonDownEvent);
-        eventArray.add(&KeyboardButtonUpEvent);
+        attachKeyboardEventPtrs(eventArray);
         mKeyboardEvListener = new KeyboardEventListener;
         evHandler->registerEventListener(eventArray, mKeyboardEvListener);
     }
@@ -317,18 +325,16 @@ bool AppBase::onCreate() {
 }
 
 bool AppBase::onDestroy() {
-    if (mAppState != State::Running) {
+    if (mAppState != State::Running || mAppState != State::Created) {
         osre_debug(Tag, "AppBase::State not in proper state: Running.");
         return false;
     }
 
     AbstractPlatformEventQueue *evHandler = mPlatformInterface->getPlatformEventHandler();
     if (nullptr != evHandler) {
-        Common::EventPtrArray eventArray;
-        eventArray.add(&MouseButtonDownEvent);
-        eventArray.add(&MouseButtonUpEvent);
-        eventArray.add(&KeyboardButtonDownEvent);
-        eventArray.add(&KeyboardButtonUpEvent);
+        EventPtrArray eventArray;
+        attachMouseEventPtrs(eventArray);
+        attachKeyboardEventPtrs(eventArray);
         evHandler->unregisterAllEventHandler(eventArray);
     }
     AssetRegistry::destroy();
