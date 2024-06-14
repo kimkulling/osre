@@ -20,12 +20,12 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/App/Entity.h>
-#include <osre/App/AbstractBehaviour.h>
-#include <osre/App/Component.h>
-#include <osre/App/CameraComponent.h>
-#include <osre/App/World.h>
-#include <osre/RenderBackend/MeshProcessor.h>
+#include "App/Entity.h"
+#include "App/AbstractBehaviour.h"
+#include "App/Component.h"
+#include "App/CameraComponent.h"
+#include "App/World.h"
+#include "RenderBackend/MeshProcessor.h"
 
 namespace OSRE {
 namespace App {

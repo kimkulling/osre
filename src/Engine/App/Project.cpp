@@ -20,16 +20,16 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/App/Project.h>
-#include <osre/App/World.h>
-#include <osre/App/Entity.h>
-#include <osre/App/TransformComponent.h>
-#include <osre/Common/Logger.h>
-#include <osre/Common/TAABB.h>
-#include <osre/Debugging/osre_debugging.h>
-#include <osre/Properties/Property.h>
-#include <osre/IO/Uri.h>
-#include <osre/RenderBackend/Mesh.h>
+#include "App/Project.h"
+#include "App/World.h"
+#include "App/Entity.h"
+#include "App/TransformComponent.h"
+#include "Common/Logger.h"
+#include "Common/TAABB.h"
+#include "Debugging/osre_debugging.h"
+#include "Properties/Property.h"
+#include "IO/Uri.h"
+#include "RenderBackend/Mesh.h"
 
 namespace OSRE {
 namespace App {
