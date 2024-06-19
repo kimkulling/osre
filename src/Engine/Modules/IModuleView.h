@@ -22,8 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Object.h>
-#include <osre/Common/osre_common.h>
+#include "Common/Object.h"
+#include "Common/osre_common.h"
 
 namespace OSRE {
 namespace Modules {

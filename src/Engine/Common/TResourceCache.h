@@ -22,29 +22,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Logger.h>
-#include <osre/Common/osre_common.h>
-#include <osre/IO/Uri.h>
+#include "Common/Logger.h"
+#include "Common/osre_common.h"
+#include "IO/Uri.h"
+
 #include <map>
 
 namespace OSRE {
 
 namespace Common {
 
-static const c8 *ResTag = "TResourceCache";
+static constexpr c8 ResTag[] = "TResourceCache";
 
 template <class TResource>
 class TResourceFactory {
 public:
-    TResourceFactory();
+    TResourceFactory() = default;
     virtual ~TResourceFactory() = default;
     virtual TResource *create(const String &name, const IO::Uri &uri);
 };
-
-template <class TResource>
-inline TResourceFactory<TResource>::TResourceFactory() {
-    // empty
-}
 
 template <class TResource>
 inline TResource *TResourceFactory<TResource>::create(const String &name, const IO::Uri &uri) {

@@ -22,7 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/RenderBackend/RenderStates.h>
+#include "RenderBackend/RenderStates.h"
+
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {

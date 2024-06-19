@@ -23,9 +23,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <cassert>
-#include <osre/Common/Logger.h>
-#include <osre/Common/osre_common.h>
-#include <osre/Debugging/AssertHandler.h>
+
+#include "Common/Logger.h"
+#include "Common/osre_common.h"
+#include "Debugging/AssertHandler.h"
 
 //-------------------------------------------------------------------------------------------------
 ///	@def	OSRE_ASSERT

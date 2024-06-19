@@ -22,9 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Scene/SceneCommon.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Common/glm_common.h>
+#include "Scene/SceneCommon.h"
+#include "RenderBackend/RenderCommon.h"
+#include "Common/glm_common.h"
 
 namespace OSRE {
 namespace RenderBackend {

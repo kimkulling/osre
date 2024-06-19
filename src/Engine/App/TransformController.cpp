@@ -20,13 +20,12 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Common/osre_common.h>
-#include <osre/App/TransformController.h>
-#include <osre/App/AppCommon.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/TransformMatrixBlock.h>
-
-#include "src/Engine/App/MouseEventListener.h"
+#include "Common/osre_common.h"
+#include "App/TransformController.h"
+#include "App/AppCommon.h"
+#include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/TransformMatrixBlock.h"
+#include "App/MouseEventListener.h"
 
 namespace OSRE {
 namespace App {

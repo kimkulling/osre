@@ -20,27 +20,27 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Common/Logger.h>
-#include <osre/Debugging/osre_debugging.h>
-#include <src/Engine/Platform/PlatformPluginFactory.h>
+#include "Common/Logger.h"
+#include "Debugging/osre_debugging.h"
+#include "Platform/PlatformPluginFactory.h"
 #ifdef OSRE_WINDOWS
-#    include <src/Engine/Platform/win32/Win32SystemInfo.h>
-#    include <src/Engine/Platform/win32/Win32OGLRenderContext.h>
-#    include <src/Engine/Platform/win32/Win32Timer.h>
-#    include <src/Engine/Platform/win32/Win32DbgLogStream.h>
-#    include <src/Engine/Platform/win32/Win32DynamicLoader.h>
-#    include <src/Engine/Platform/win32/Win32EventQueue.h>
-#    include <src/Engine/Platform/win32/Win32Window.h>
-#    include <src/Engine/Platform/win32/Win32OSService.h>
+#    include "Platform/win32/Win32SystemInfo.h"
+#    include "Platform/win32/Win32OGLRenderContext.h"
+#    include "Platform/win32/Win32Timer.h"
+#    include "Platform/win32/Win32DbgLogStream.h"
+#    include "Platform/win32/Win32DynamicLoader.h"
+#    include "Platform/win32/Win32EventQueue.h"
+#    include "Platform/win32/Win32Window.h"
+#    include "Platform/win32/Win32OSService.h"
 #else
-#    include <src/Engine/Platform/sdl2/SDL2DynamicLoader.h>
-#    include <src/Engine/Platform/sdl2/SDL2EventQueue.h>
-#    include <src/Engine/Platform/sdl2/SDL2Initializer.h>
-#    include <src/Engine/Platform/sdl2/SDL2OGLRenderContext.h>
-#    include <src/Engine/Platform/sdl2/SDL2SystemInfo.h>
-#    include <src/Engine/Platform/sdl2/SDL2Timer.h>
-#    include <src/Engine/Platform/sdl2/SDL2Window.h>
-#    include <src/Engine/Platform/sdl2/SDL2OSService.h>
+#    include "Platform/sdl2/SDL2DynamicLoader.h"
+#    include "Platform/sdl2/SDL2EventQueue.h"
+#    include "Platform/sdl2/SDL2Initializer.h"
+#    include "Platform/sdl2/SDL2OGLRenderContext.h"
+#    include "Platform/sdl2/SDL2SystemInfo.h"
+#    include "Platform/sdl2/SDL2Timer.h"
+#    include "Platform/sdl2/SDL2Window.h"
+#    include "Platform/sdl2/SDL2OSService.h"
 #endif
 
 namespace OSRE {

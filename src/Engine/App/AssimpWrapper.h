@@ -22,14 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Animation/AnimatorBase.h>
-#include <osre/Common/Ids.h>
-#include <osre/Common/TAABB.h>
+#include "RenderBackend/RenderCommon.h"
+#include "Animation/AnimatorBase.h"
+#include "Common/Ids.h"
+#include "Common/TAABB.h"
+
 #include <assimp/cimport.h>
-
 #include <cppcore/Container/TArray.h>
-
 #include <map>
 
 // Forward declarations ---------------------------------------------------------------------------

@@ -22,13 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <osre/App/Component.h>
-#include <osre/Common/Object.h>
-#include <osre/Common/TObjPtr.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Scene/SceneCommon.h>
-#include <osre/Common/TAABB.h>
+#include "Common/osre_common.h"
+#include "App/Component.h"
+#include "Common/Object.h"
+#include "Common/TObjPtr.h"
+#include "RenderBackend/RenderCommon.h"
+#include "App/SceneCommon.h"
+#include "Common/TAABB.h"
 
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>

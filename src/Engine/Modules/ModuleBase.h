@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Common/Object.h"
-#include "Common/AbstractEventHandler.h>"
+#include "Common/AbstractEventHandler.h"
 
 #include <cppcore/Container/TArray.h>
 

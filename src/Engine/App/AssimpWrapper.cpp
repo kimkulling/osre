@@ -20,28 +20,28 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/App/AssetRegistry.h>
-#include <osre/App/AssimpWrapper.h>
-#include <osre/App/Component.h>
-#include <osre/App/Entity.h>
-#include <osre/App/World.h>
-#include <osre/Common/Ids.h>
-#include <osre/Common/Logger.h>
-#include <osre/Common/StringUtils.h>
-#include <osre/Common/TAABB.h>
-#include <osre/Debugging/MeshDiagnostic.h>
-#include <osre/IO/AbstractFileSystem.h>
-#include <osre/IO/Directory.h>
-#include <osre/IO/IOService.h>
-#include <osre/IO/Uri.h>
-#include <osre/RenderBackend/Mesh.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Material.h>
-#include <osre/RenderBackend/Shader.h>
-#include <osre/RenderBackend/MaterialBuilder.h>
-#include <osre/RenderBackend/MeshBuilder.h>
-#include <osre/RenderBackend/MeshProcessor.h>
-#include <osre/App/TransformComponent.h>
+#include "App/AssetRegistry.h"
+#include "App/AssimpWrapper.h"
+#include "App/Component.h"
+#include "App/Entity.h"
+#include "App/World.h"
+#include "Common/Ids.h"
+#include "Common/Logger.h"
+#include "Common/StringUtils.h"
+#include "Common/TAABB.h"
+#include "Debugging/MeshDiagnostic.h"
+#include "IO/AbstractFileSystem.h"
+#include "IO/Directory.h"
+#include "IO/IOService.h"
+#include "IO/Uri.h"
+#include "RenderBackend/Mesh.h"
+#include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/Material.h"
+#include "RenderBackend/Shader.h"
+#include "RenderBackend/MaterialBuilder.h"
+#include "RenderBackend/MeshBuilder.h"
+#include "RenderBackend/MeshProcessor.h"
+#include "App/TransformComponent.h"
 
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
