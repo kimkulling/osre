@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Platform/AbstractWindow.h>
+#include "Platform/AbstractWindow.h"
 
 namespace OSRE {
 namespace Platform {
