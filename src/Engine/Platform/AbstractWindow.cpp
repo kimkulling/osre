@@ -20,13 +20,13 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Common/Logger.h>
-#include <osre/Platform/AbstractWindow.h>
+#include "Common/Logger.h"
+#include "Platform/AbstractWindow.h"
 
 namespace OSRE {
 namespace Platform {
 
-static const c8 *Tag = "AbstractSurface";
+static constexpr c8 Tag[] = "AbstractSurface";
 
 Resolution::Resolution(ResRequest req) :
         m_width(0), m_height(0) {

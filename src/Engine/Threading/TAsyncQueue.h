@@ -22,9 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Logger.h>
-#include <osre/Debugging/osre_debugging.h>
-#include <osre/Platform/Threading.h>
+#include "Common/Logger.h"
+#include "Debugging/osre_debugging.h"
+#include "Platform/Threading.h"
 
 #include <cppcore/Container/TQueue.h>
 

@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
 #include "App/AssetBundle.h"
-#include "osre/IO/Uri.h"
+#include "IO/Uri.h"
 
 namespace OSRE {
 namespace UnitTest {

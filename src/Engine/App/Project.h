@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Common/Object.h"
-#include "Scene/SceneCommon.h"
+#include "App/SceneCommon.h"
 #include "App/Stage.h"
 
 #include <cppcore/Common/TBitField.h>

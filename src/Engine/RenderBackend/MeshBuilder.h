@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "App/SceneCommon.h"
 #include "RenderBackend/RenderCommon.h"
-#include "osre/Common/glm_common.h"
+#include "Common/glm_common.h"
 
 namespace OSRE {
 namespace RenderBackend {

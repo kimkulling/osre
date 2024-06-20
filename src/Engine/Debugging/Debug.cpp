@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Debugging/Debug.h"
 
 #ifdef OSRE_WINDOWS
-#include <osre/Platform/Windows/MinWindows.h>
+#   include "Platform/Windows/MinWindows.h"
 #endif
 
 namespace OSRE {

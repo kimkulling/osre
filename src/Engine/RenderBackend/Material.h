@@ -1,9 +1,10 @@
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <osre/IO/Uri.h>
+#include "Common/osre_common.h"
+#include "IO/Uri.h"
+#include "RenderBackend/Shader.h"
+
 #include <cppcore/Container/TArray.h>
-#include <osre/RenderBackend/Shader.h>
 
 namespace OSRE {
 namespace RenderBackend {

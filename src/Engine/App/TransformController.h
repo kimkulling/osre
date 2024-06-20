@@ -22,9 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Animation/AnimatorBase.h>
-#include <osre/Platform/PlatformCommon.h>
-#include <osre/Platform/KeyTypes.h>
+#include "Animation/AnimatorBase.h"
+#include "Platform/PlatformCommon.h"
+#include "Platform/KeyTypes.h"
 
 namespace OSRE {
 

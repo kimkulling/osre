@@ -24,7 +24,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Gui/UIElements.h"
 
-#include <osre/App/Entity.h>
+#include "App/Entity.h"
 
 namespace OSRE {
 

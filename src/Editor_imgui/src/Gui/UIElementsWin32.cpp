@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "UIElementsWin32.h"
 
-#include <osre/Debugging/osre_debugging.h>
+#include "Debugging/osre_debugging.h"
 
 #include "windows.h"
 #include <commctrl.h>

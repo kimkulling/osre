@@ -20,17 +20,17 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/App/App.h>
-#include <osre/App/ServiceProvider.h>
-#include <osre/Common/Ids.h>
-#include <osre/IO/Uri.h>
-#include <osre/Common/BaseMath.h>
-#include <osre/Platform/AbstractWindow.h>
-#include <osre/Properties/Settings.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/App/CameraComponent.h>
-#include <osre/Scene/Scene.h>
+#include "App/App.h"
+#include "App/ServiceProvider.h"
+#include "Common/Ids.h"
+#include "IO/Uri.h"
+#include "Common/BaseMath.h"
+#include "Platform/AbstractWindow.h"
+#include "Properties/Settings.h"
+#include "RenderBackend/RenderBackendService.h"
+#include "RenderBackend/RenderCommon.h"
+#include "App/CameraComponent.h"
+#include "App/Scene.h"
 
 using namespace ::OSRE;
 using namespace ::OSRE::App;

@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Profiling/ProfilingCommon.h>
+#include "Profiling/ProfilingCommon.h"
 
 namespace OSRE {
 

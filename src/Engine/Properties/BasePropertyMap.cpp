@@ -20,9 +20,9 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Debugging/osre_debugging.h>
-#include <osre/Properties/BasePropertyMap.h>
-#include <osre/Properties/Property.h>
+#include "Debugging/osre_debugging.h"
+#include "Properties/BasePropertyMap.h"
+#include "Properties/Property.h"
 
 #include <cassert>
 
