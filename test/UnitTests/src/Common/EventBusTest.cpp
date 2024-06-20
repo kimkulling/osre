@@ -21,9 +21,9 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "osre_testcommon.h"
-#include <osre/Common/AbstractEventHandler.h>
-#include <osre/Common/Event.h>
-#include <osre/Common/EventBus.h>
+#include "Common/AbstractEventHandler.h"
+#include "Common/Event.h"
+#include "Common/EventBus.h"
 
 namespace OSRE {
 namespace UnitTest {

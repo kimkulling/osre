@@ -21,8 +21,8 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
-#include "src/Engine/RenderBackend/OGLRenderer/OGLEnum.h"
-#include <osre/RenderBackend/RenderStates.h>
+#include "RenderBackend/OGLRenderer/OGLEnum.h"
+#include "RenderBackend/RenderStates.h"
 
 namespace OSRE {
 namespace UnitTest {

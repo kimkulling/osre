@@ -24,9 +24,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/Common/TAABB.h>
+#include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/TransformMatrixBlock.h"
+#include "Common/TAABB.h"
 
 namespace OSRE {
 namespace RenderBackend {

@@ -22,8 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <osre/RenderBackend/RenderCommon.h>
+#include "Common/osre_common.h"
+#include "RenderBackend/RenderCommon.h"
 
 namespace OSRE {
 namespace Debugging {

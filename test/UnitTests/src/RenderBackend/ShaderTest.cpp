@@ -23,8 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "osre_testcommon.h"
 
-#include <osre/RenderBackend/Shader.h>
-#include <osre/IO/Uri.h>
+#include "RenderBackend/Shader.h"
+#include "IO/Uri.h"
 
 namespace OSRE {
 namespace UnitTest {

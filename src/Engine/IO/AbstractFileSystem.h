@@ -22,8 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/IO/IOCommon.h>
-#include <osre/IO/Stream.h>
+#include "IO/IOCommon.h"
+#include "IO/Stream.h"
 #include <cppcore/Container/TArray.h>
 
 #include <map>

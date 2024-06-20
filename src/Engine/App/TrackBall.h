@@ -22,8 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/App/CameraComponent.h>
-#include <osre/Platform/PlatformInterface.h>
+#include "App/CameraComponent.h"
+#include "Platform/PlatformInterface.h"
 
 namespace OSRE {
 namespace App {

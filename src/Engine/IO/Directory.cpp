@@ -26,7 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <sys/types.h>
 
 #ifdef OSRE_WINDOWS
-#    include <osre/Platform/Windows/MinWindows.h>
+#    include "Platform/Windows/MinWindows.h"
 #else
 #    include <dirent.h>
 #    include <unistd.h>

@@ -20,13 +20,13 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Common/Logger.h>
-#include <osre/Properties/Settings.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <osre/Platform/AbstractTimer.h>
-#include <osre/Common/TObjPtr.h>
-#include <osre/Common/ArgumentParser.h>
-#include <osre/App/AssetRegistry.h>
+#include "Common/Logger.h"
+#include "Properties/Settings.h"
+#include "Platform/PlatformInterface.h"
+#include "Platform/AbstractTimer.h"
+#include "Common/TObjPtr.h"
+#include "Common/ArgumentParser.h"
+#include "App/AssetRegistry.h"
 
 #include "RenderTestSuite.h"
 

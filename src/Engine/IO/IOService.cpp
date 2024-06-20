@@ -23,8 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "IO/IOService.h"
 #include "Common/Tokenizer.h"
 #include "Common/Logger.h"
-#include "Engine/IO/ZipFileSystem.h"
-#include "Engine/IO/LocaleFileSystem.h"
+#include "IO/ZipFileSystem.h"
+#include "IO/LocaleFileSystem.h"
 
 IMPLEMENT_SINGLETON( ::OSRE::IO::IOService )
 

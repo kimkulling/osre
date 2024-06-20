@@ -22,8 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Modules/IModuleView.h>
-#include <osre/Modules/ModuleBase.h>
+#include "Modules/IModuleView.h"
+#include "Modules/ModuleBase.h"
 
 namespace OSRE {
 

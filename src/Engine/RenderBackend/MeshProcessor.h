@@ -22,10 +22,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/AbstractProcessor.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Common/TAABB.h>
-#include <osre/App/TransformComponent.h>
+#include "Common/AbstractProcessor.h"
+#include "RenderBackend/RenderCommon.h"
+#include "Common/TAABB.h"
+#include "App/TransformComponent.h"
 
 #include <cppcore/Container/TArray.h>
 

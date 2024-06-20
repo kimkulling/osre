@@ -22,13 +22,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Platform/PlatformCommon.h>
-
-#include <osre/Common/AbstractEventHandler.h>
-#include <osre/Common/Event.h>
-#include <osre/Common/EventTriggerer.h>
-#include <osre/Common/Object.h>
-#include <osre/Debugging/osre_debugging.h>
+#include "Platform/PlatformCommon.h"
+#include "Common/AbstractEventHandler.h"
+#include "Common/Event.h"
+#include "Common/EventTriggerer.h"
+#include "Common/Object.h"
+#include "Debugging/osre_debugging.h"
 
 namespace OSRE {
 
