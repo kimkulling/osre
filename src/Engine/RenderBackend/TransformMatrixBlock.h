@@ -22,13 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <osre/Common/glm_common.h>
+#include "Common/osre_common.h"
+#include "Common/glm_common.h"
 
 namespace OSRE {
 namespace RenderBackend {
 
-///	@brief  This class is used to describe the global transformation matrixes.
+///	@brief  This class is used to describe the global transformation matrices.
 /// - You can get and set each matrix (model, view, projection, normal or the computed MVP).
 /// - You can use these matrices in your shader.
 struct OSRE_EXPORT TransformMatrixBlock {

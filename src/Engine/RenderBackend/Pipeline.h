@@ -22,9 +22,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/RenderStates.h>
-#include <osre/RenderBackend/RenderPass.h>
+#include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/RenderStates.h"
+#include "RenderBackend/RenderPass.h"
+
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {

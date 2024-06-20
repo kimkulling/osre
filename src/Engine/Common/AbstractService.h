@@ -22,8 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Object.h>
-#include <osre/Debugging/osre_debugging.h>
+#include "Common/Object.h"
+#include "Debugging/osre_debugging.h"
 
 namespace OSRE {
 namespace Common {

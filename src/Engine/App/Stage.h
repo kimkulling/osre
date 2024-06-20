@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Object.h>
+#include "osre/Common/Object.h"
 #include <cppcore/Container/TArray.h>
 
 namespace OSRE {

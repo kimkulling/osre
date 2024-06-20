@@ -22,9 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Object.h>
-#include <osre/Scene/SceneCommon.h>
-#include <osre/App/Stage.h>
+#include "Common/Object.h"
+#include "Scene/SceneCommon.h"
+#include "App/Stage.h"
 
 #include <cppcore/Common/TBitField.h>
 

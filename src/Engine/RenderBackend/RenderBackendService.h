@@ -22,13 +22,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include "Common/AbstractService.h"
+#include "Common/Event.h"
+#include "RenderBackend/Pipeline.h"
+#include "RenderBackend/RenderCommon.h"
+#include "Threading/SystemTask.h"
+#include "Common/glm_common.h"
+
 #include <cppcore/Container/THashMap.h>
-#include <osre/Common/AbstractService.h>
-#include <osre/Common/Event.h>
-#include <osre/RenderBackend/Pipeline.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/Threading/SystemTask.h>
-#include <osre/Common/glm_common.h>
 
 namespace OSRE {
 

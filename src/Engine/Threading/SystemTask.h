@@ -22,9 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Threading/AbstractTask.h>
-#include <osre/Threading/TAsyncQueue.h>
-#include <osre/Common/TObjPtr.h>
+#include "Threading/AbstractTask.h"
+#include "Threading/TAsyncQueue.h"
+#include "Common/TObjPtr.h"
 
 namespace OSRE {
 

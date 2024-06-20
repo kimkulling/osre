@@ -22,10 +22,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/AbstractService.h>
-#include <osre/Common/TResource.h>
-#include <osre/Common/TResourceCache.h>
-#include <osre/RenderBackend/RenderCommon.h>
+#include "Common/AbstractService.h"
+#include "Common/TResource.h"
+#include "Common/TResourceCache.h"
+#include "RenderBackend/RenderCommon.h"
 
 namespace OSRE {
 namespace App {

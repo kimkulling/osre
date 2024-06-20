@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <cppcore/Container/TArray.h>
-#include <osre/App/AppCommon.h>
+#include "App/AppCommon.h"
 
 namespace OSRE {
 namespace App {

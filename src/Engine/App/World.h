@@ -22,10 +22,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/App/AppCommon.h>
-#include <osre/Scene/SceneCommon.h>
-#include <osre/Common/Object.h>
-#include <osre/Common/Ids.h>
+#include "App/AppCommon.h"
+#include "App/SceneCommon.h"
+#include "Common/Object.h"
+#include "Common/Ids.h"
+
 #include <cppcore/Container/TArray.h>
 #include <cppcore/Container/THashMap.h>
 
