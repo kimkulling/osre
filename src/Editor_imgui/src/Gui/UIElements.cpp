@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "UIElements.h"
 #include "RenderBackend/MeshBuilder.h"
 #include "Platform/PlatformOperations.h"
-#include vPlatform/PlatformInterface.h"
+#include "Platform/PlatformInterface.h"
 
 #ifdef OSRE_WINDOWS
 #   include "Platform/win32/Win32EventQueue.h"

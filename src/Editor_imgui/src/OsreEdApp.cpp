@@ -4,11 +4,11 @@
 #include "ProgressReporter.h"
 #include "Actions/ImportAction.h"
 
-#include <osre/RenderBackend/MeshBuilder.h>
-#include <osre/App/Stage.h>
-#include <osre/App/TransformController.h>
-#include <osre/App/ServiceProvider.h>
-#include <osre/Common/Logger.h>
+#include "RenderBackend/MeshBuilder.h"
+#include "App/Stage.h"
+#include "App/TransformController.h"
+#include "App/ServiceProvider.h"
+#include "Common/Logger.h"
 
 namespace OSRE {
 namespace Editor {

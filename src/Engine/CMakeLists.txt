@@ -25,9 +25,9 @@ if( NOT USE_PLATFORM MATCHES "VK_USE_PLATFORM_.*" )
 endif()
 
 IF( WIN32 )
-    SET( platform_libs comctl32.lib Winmm.lib opengl32.lib glu32.lib Shcore.lib )
+    SET(platform_libs comctl32.lib Winmm.lib opengl32.lib glu32.lib Shcore.lib cppcore)
 ELSE( WIN32 )
-    SET( platform_libs SDL2 )
+    SET(platform_libs SDL2 cppcore)
 ENDIF( WIN32 )
 
 #==============================================================================

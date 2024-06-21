@@ -22,9 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "OGLShader.h"
 #include "OGLEnum.h"
-#include <osre/Common/Logger.h>
-#include <osre/Debugging/osre_debugging.h>
-#include <osre/IO/Stream.h>
+#include "Common/Logger.h"
+#include "Debugging/osre_debugging.h"
+#include "IO/Stream.h"
 
 namespace OSRE {
 namespace RenderBackend {

@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "OGLCommon.h"
 
-#include <osre/Common/Logger.h>
+#include "Common/Logger.h"
 
 namespace OSRE {
 namespace RenderBackend {

@@ -43,6 +43,8 @@ enum class DlgResults {
 
 class OSRE_EXPORT PlatformOperations {
 public:
+    static constexpr size_t BufferSize = 1024;
+
     enum {
         DlgButton_YesNo = 1,
         DlgButton_ok = 2

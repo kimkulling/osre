@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Platform/AbstractTimer.h"
-#include "Platform/Windows/MinWindows.h
+#include "Platform/Windows/MinWindows.h"
 
 namespace OSRE {
 namespace Platform {

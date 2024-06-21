@@ -27,18 +27,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "OGLShader.h"
 #include "RenderCmdBuffer.h"
 
-#include <osre/App/AssetRegistry.h>
-#include <osre/Common/Logger.h>
-#include <osre/Debugging/osre_debugging.h>
-#include <osre/IO/Uri.h>
-#include <osre/Platform/AbstractOGLRenderContext.h>
-#include <osre/Platform/AbstractWindow.h>
-#include <osre/Platform/AbstractTimer.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <osre/Profiling/PerformanceCounterRegistry.h>
-#include <osre/RenderBackend/Mesh.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Shader.h>
+#include "App/AssetRegistry.h"
+#include "Common/Logger.h"
+#include "Debugging/osre_debugging.h"
+#include "IO/Uri.h"
+#include "Platform/AbstractOGLRenderContext.h"
+#include "Platform/AbstractWindow.h"
+#include "Platform/AbstractTimer.h"
+#include "Platform/PlatformInterface.h"
+#include "Profiling/PerformanceCounterRegistry.h"
+#include "RenderBackend/Mesh.h"
+#include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/Shader.h"
 
 #include <cppcore/Container/TArray.h>
 

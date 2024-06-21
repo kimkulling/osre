@@ -23,20 +23,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 // The public API from the App-layer
-#include <osre/App/AbstractBehaviour.h>
-#include <osre/App/AppBase.h>
-#include <osre/App/Component.h>
-#include <osre/App/CameraComponent.h>
-#include <osre/App/TransformComponent.h>
-#include <osre/App/Entity.h>
-#include <osre/App/World.h>
-#include <osre/App/AppCommon.h>
-#include <osre/App/Project.h>
-#include <osre/App/ServiceProvider.h>
-#include <osre/App/AssetRegistry.h>
-#include <osre/App/AssetBundle.h>
-#include <osre/App/AssimpWrapper.h>
-#include <osre/App/Stage.h>
-#include <osre/App/TrackBall.h>
-#include <osre/App/TAbstractCtrlBase.h>
-#include <osre/App/TransformController.h>
+#include "App/AbstractBehaviour.h"
+#include "App/AppBase.h"
+#include "App/Component.h"
+#include "App/CameraComponent.h"
+#include "App/TransformComponent.h"
+#include "App/Entity.h"
+#include "App/World.h"
+#include "App/AppCommon.h"
+#include "App/Project.h"
+#include "App/ServiceProvider.h"
+#include "App/AssetRegistry.h"
+#include "App/AssetBundle.h"
+#include "App/AssimpWrapper.h"
+#include "App/Stage.h"
+#include "App/TrackBall.h"
+#include "App/TAbstractCtrlBase.h"
+#include "App/TransformController.h"

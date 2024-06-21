@@ -20,15 +20,15 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/App/App.h>
-#include <osre/Scene/Scene.h>
-#include <osre/IO/Uri.h>
-#include <osre/Common/BaseMath.h>
-#include <osre/Platform/AbstractWindow.h>
-#include <osre/Platform/PlatformOperations.h>
-#include <osre/Properties/Settings.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/RenderBackend/RenderCommon.h>
+#include "App/App.h"
+#include "App/Scene.h"
+#include "IO/Uri.h"
+#include "Common/BaseMath.h"
+#include "Platform/AbstractWindow.h"
+#include "Platform/PlatformOperations.h"
+#include "Properties/Settings.h"
+#include "RenderBackend/RenderBackendService.h"
+#include "RenderBackend/RenderCommon.h"
 
 #include <assimp/scene.h>
 

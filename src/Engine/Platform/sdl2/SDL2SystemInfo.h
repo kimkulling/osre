@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Platform/AbstractSystemInfo.h>
+#include "Platform/AbstractSystemInfo.h"
 #include <cppcore/IO/FileSystem.h>
 #include <SDL.h>
 

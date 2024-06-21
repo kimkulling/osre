@@ -22,9 +22,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
+#include "Common/BaseMath.h"
+#include "RenderBackend/RenderStates.h"
+
 #include <cppcore/Container/TArray.h>
-#include <osre/Common/BaseMath.h>
-#include <osre/RenderBackend/RenderStates.h>
+#include <cppcore/Container/THashMap.h>
 
 #include <map>
 

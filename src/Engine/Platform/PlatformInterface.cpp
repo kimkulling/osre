@@ -30,8 +30,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Platform/sdl2/SDL2EventQueue.h"
 #include "Platform/sdl2/SDL2Window.h"
 #include "Platform/sdl2/SDL2OGLRenderContext.h"
-#include "Platform/sdl2/SDL2SystemInfo.h
-#include <src/Engine/Platform/sdl2/SDL2Timer.h>
+#include "Platform/sdl2/SDL2SystemInfo.h"
+#include "Platform/sdl2/SDL2Timer.h"
 
 #include <GL/glew.h>
 #include <SDL.h>
@@ -45,15 +45,12 @@ using namespace ::OSRE::Properties;
 PlatformInterface *PlatformInterface::sInstance(nullptr);
 
 ApplicationContext::ApplicationContext(const Settings *settings) :
-        mSettings(settings)
+        mSettings(settings),
 #ifdef OSRE_WINDOWS
-        ,
-        m_type(PluginType::WindowsPlugin)
+        m_type(PluginType::WindowsPlugin),
 #else
-        ,
-        m_type(PluginType::SDL2Plugin)
+        m_type(PluginType::SDL2Plugin),
 #endif // OSRE_WINDOWS
-        ,
         m_rootSurface(nullptr),
         m_oseventHandler(nullptr),
         m_renderContext(nullptr),

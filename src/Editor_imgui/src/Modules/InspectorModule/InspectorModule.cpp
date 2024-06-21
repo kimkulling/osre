@@ -21,12 +21,11 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "Modules/InspectorModule/InspectorModule.h"
-#include <osre/App/AppBase.h>
+#include "App/AppBase.h"
 
 #include <windows.h>
 #include <shellapi.h>
 #include <commctrl.h>
-//#include "resource.h"
 
 namespace OSRE {
 namespace Editor {
