@@ -75,6 +75,7 @@ void PlatformOperations::getFileOpenDialog(const String &title, const c8 *extens
     fgets(buffer, BufferSize, f);
 
     String filename(buffer);
+    filename = filename.substr(0, filename.size()-1);
     location.setResource(filename);
     location.parse();
 #endif // OSRE_WINDOWS
