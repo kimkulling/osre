@@ -37,7 +37,7 @@ namespace Platform {
 static constexpr c8 Tag[] = "PlatformOperations";
 
 void PlatformOperations::getFileOpenDialog(const String &title, const c8 *extensions, IO::Uri &location) {
-    char szFile[PlatformOperations::BufferSize] = { '\0' };
+    c8 szFile[PlatformOperations::BufferSize] = { '\0' };
 
 #ifdef OSRE_WINDOWS
     // Initialize OPENFILENAME
@@ -67,6 +67,7 @@ void PlatformOperations::getFileOpenDialog(const String &title, const c8 *extens
         location.clear();
     }
 #else
+    c8 buffer[BufferSize] = {'\0'};
     FILE *f = popen("zenity --file-selection", "r");
     if (f == nullptr) {
         location.clear();
@@ -116,6 +117,7 @@ void PlatformOperations::getFileSaveDialog(const String &title, const c8 *extens
         location.clear();
         return;
     }
+    c8 buffer[BufferSize] = { '\0' };
     fgets(buffer, BufferSize, f);
 
     String filename(buffer);
