@@ -22,10 +22,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <cppcore/Container/TArray.h>
-#include <osre/Platform/AbstractPlatformEventQueue.h>
+#include "Platform/AbstractPlatformEventQueue.h"
+#include "Platform/Windows/MinWindows.h"
 
-#include <osre/Platform/Windows/MinWindows.h>
+#include <cppcore/Container/TArray.h>
 #include <map>
 
 namespace OSRE {

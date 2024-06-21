@@ -21,21 +21,20 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "Modules/LogModule/LogModule.h"
-#include <osre/Modules/IModuleView.h>
+#include "Modules/IModuleView.h"
 #include "OsreEdApp.h"
 
-#include <osre/Common/Logger.h>
-#include <osre/Common/osre_common.h>
-#include <osre/Common/Logger.h>
-#include <osre/Platform/AbstractWindow.h>
+#include "Common/Logger.h"
+#include "Common/osre_common.h"
+#include "Common/Logger.h"
+#include "Platform/AbstractWindow.h"
 #include <assimp/Logger.hpp>
 #include <assimp/DefaultLogger.hpp>
 #include <assimp/LogStream.hpp>
 
 #include "richedit.h"
-#include "src/Engine/Platform/win32/Win32Window.h"
-#include "src/Engine/Platform/win32/Win32OSService.h"
-//#include "resource.h"
+#include "Platform/win32/Win32Window.h"
+#include "Platform/win32/Win32OSService.h"
 
 namespace OSRE {
 namespace Editor {

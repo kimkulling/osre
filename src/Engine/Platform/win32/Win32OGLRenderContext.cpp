@@ -21,14 +21,13 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <GL/glew.h>
-#include <src/Engine/Platform/win32/Win32OGLRenderContext.h>
+#include "Platform/win32/Win32OGLRenderContext.h"
 #include <GL/wglew.h>
 
-#include <osre/Common/Logger.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <src/Engine/Platform/win32/Win32Window.h>
-
-#include "src/Engine/RenderBackend/OGLRenderer/OGLCommon.h"
+#include "Common/Logger.h"
+#include "Platform/PlatformInterface.h"
+#include "Platform/win32/Win32Window.h"
+#include "RenderBackend/OGLRenderer/OGLCommon.h"
 
 #include <iostream>
 

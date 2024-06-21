@@ -1,22 +1,15 @@
-#include <osre/Common/DateTime.h>
+#include "Common/DateTime.h"
 
 #include <ctime>
 
 #ifdef OSRE_WINDOWS
-#  include <osre/Platform/Windows/MinWindows.h>
+#  include "Platform/Windows/MinWindows.h"
 #endif // OSRE_WINDOWS
 
 namespace OSRE {
 namespace Common {
 
-DateTime::DateTime()
-: m_Year( 0 )
-, m_Month( 0 )
-, m_Day( 0 )
-, m_Hour( 0 )
-, m_Minute( 0 )
-, m_Seconds( 0 )
-, m_Milliseconds( 0 ) {
+DateTime::DateTime() : m_Year( 0 ), m_Month( 0 ), m_Day( 0 ), m_Hour( 0 ), m_Minute( 0 ), m_Seconds( 0 ), m_Milliseconds( 0 ) {
 
 }
 

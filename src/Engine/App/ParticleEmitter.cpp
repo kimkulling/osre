@@ -20,12 +20,12 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/App/ParticleEmitter.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/Mesh.h>
-#include <osre/RenderBackend/MeshBuilder.h>
-#include <osre/RenderBackend/MaterialBuilder.h>
+#include "App/ParticleEmitter.h"
+#include "RenderBackend/RenderBackendService.h"
+#include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/Mesh.h"
+#include "RenderBackend/MeshBuilder.h"
+#include "RenderBackend/MaterialBuilder.h"
 
 #include <cppcore/Random/RandomGenerator.h>
 

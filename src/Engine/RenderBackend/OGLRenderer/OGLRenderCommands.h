@@ -22,8 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <osre/Common/BaseMath.h>
+#include "Common/osre_common.h"
+#include "Common/BaseMath.h"
 
 #include "OGLCommon.h"
 

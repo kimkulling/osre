@@ -22,16 +22,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "RenderTestSuite.h"
 #include "AbstractRenderTest.h"
-#include <osre/App/App.h>
-#include <osre/Debugging/osre_debugging.h>
-#include <osre/IO/IOService.h>
-#include <osre/Platform/AbstractPlatformEventQueue.h>
-#include <osre/Platform/AbstractTimer.h>
-#include <osre/Platform/AbstractWindow.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <osre/Properties/Settings.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/RenderBackend/MaterialBuilder.h>
+#include "App/App.h"
+#include "Debugging/osre_debugging.h"
+#include "IO/IOService.h"
+#include "Platform/AbstractPlatformEventQueue.h"
+#include "Platform/AbstractTimer.h"
+#include "Platform/AbstractWindow.h"
+#include "Platform/PlatformInterface.h"
+#include "Properties/Settings.h"
+#include "RenderBackend/RenderBackendService.h"
+#include "RenderBackend/MaterialBuilder.h"
 
 #include <iostream>
 

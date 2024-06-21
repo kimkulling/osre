@@ -22,9 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "ZipFileSystem.h"
 #include "ZipFileStream.h"
-#include <osre/IO/IOSystemInfo.h>
-#include <osre/Common/Logger.h>
-#include <osre/Debugging/osre_debugging.h>
+#include "IO/IOSystemInfo.h"
+#include "Common/Logger.h"
+#include "Debugging/osre_debugging.h"
 
 #include <map>
 #include <algorithm>
@@ -35,8 +35,8 @@ namespace IO {
 
 using namespace ::cppcore;
 
-static const c8 *ZipSchema = "zip";
-static const c8 *Tag = "ZipFileSystem";
+static constexpr c8 ZipSchema[] = "zip";
+static constexpr c8 Tag[] = "ZipFileSystem";
 
 ZipFileSystem::ZipFileSystem( const Uri &archive ) 
 : m_FileMap()

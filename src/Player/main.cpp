@@ -20,13 +20,14 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/App/AppBase.h>
-#include <osre/Modules/ModuleBase.h>
-#include <osre/Common/Logger.h>
-#include <osre/Debugging/Debug.h>
-#include <osre/Common/ArgumentParser.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <osre/Platform/AbstractDynamicLoader.h>
+#include "App/AppBase.h"
+
+#include "Modules/ModuleBase.h"
+#include "Common/Logger.h"
+#include "Debugging/Debug.h"
+#include "Common/ArgumentParser.h"
+#include "Platform/PlatformInterface.h"
+#include "Platform/AbstractDynamicLoader.h"
 
 using namespace ::OSRE;
 using namespace ::OSRE::Common;

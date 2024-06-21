@@ -20,29 +20,29 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/App/AppBase.h>
-#include <osre/Animation/AnimatorBase.h>
+#include "App/AppBase.h"
+#include "Animation/AnimatorBase.h"
 
-#include <osre/App/AssetRegistry.h>
-#include <osre/App/ResourceCacheService.h>
-#include <osre/App/ServiceProvider.h>
-#include <osre/App/World.h>
-#include <osre/App/Stage.h>
-#include <osre/App/TransformController.h>
-#include <osre/Common/Environment.h>
-#include <osre/Common/TObjPtr.h>
-#include <osre/Debugging/osre_debugging.h>
-#include <osre/IO/IOService.h>
-#include <osre/Platform/AbstractPlatformEventQueue.h>
-#include <osre/Platform/AbstractTimer.h>
-#include <osre/Platform/AbstractWindow.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <osre/Properties/Settings.h>
-#include <osre/RenderBackend/Pipeline.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/App/CameraComponent.h>
-#include <osre/RenderBackend/MaterialBuilder.h>
+#include "App/AssetRegistry.h"
+#include "App/ResourceCacheService.h"
+#include "App/ServiceProvider.h"
+#include "App/World.h"
+#include "App/Stage.h"
+#include "App/TransformController.h"
+#include "Common/Environment.h"
+#include "Common/TObjPtr.h"
+#include "Debugging/osre_debugging.h"
+#include "IO/IOService.h"
+#include "Platform/AbstractPlatformEventQueue.h"
+#include "Platform/AbstractTimer.h"
+#include "Platform/AbstractWindow.h"
+#include "Platform/PlatformInterface.h"
+#include "Properties/Settings.h"
+#include "RenderBackend/Pipeline.h"
+#include "RenderBackend/RenderBackendService.h"
+#include "RenderBackend/TransformMatrixBlock.h"
+#include "App/CameraComponent.h"
+#include "RenderBackend/MaterialBuilder.h"
 
 #include "App/MouseEventListener.h"
 #include "Platform/PlatformPluginFactory.h"

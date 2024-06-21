@@ -21,8 +21,8 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "CanvasRenderer.h"
-#include <osre/RenderBackend/Mesh.h>
-#include <osre/RenderBackend/Shader.h>
+#include "RenderBackend/Mesh.h"
+#include "RenderBackend/Shader.h"
 #include <cppcore/Memory/TPoolAllocator.h>
 
 namespace OSRE {

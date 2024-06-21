@@ -22,10 +22,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/App/AppBase.h>
-#include <osre/Common/TObjPtr.h>
-#include <osre/Common/osre_common.h>
-#include <osre/Platform/PlatformInterface.h>
+#include "App/AppBase.h"
+#include "Common/TObjPtr.h"
+#include "Common/osre_common.h"
+#include "Platform/PlatformInterface.h"
 
 namespace OSRE {
 namespace App {

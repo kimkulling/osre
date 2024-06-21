@@ -22,12 +22,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "ProgressReporter.h"
 
-#include <osre/Platform/AbstractWindow.h>
-#include "src/Engine/Platform/win32/Win32Window.h"
+#include "Platform/AbstractWindow.h"
+#include "Platform/win32/Win32Window.h"
 #include "Gui/UIElements.h"
-#include <osre/Platform/Windows/MinWindows.h>
-#include <osre/Platform/AbstractOSService.h>
-#include <osre/Platform/PlatformInterface.h>
+#include "Platform/Windows/MinWindows.h"
+#include "Platform/AbstractOSService.h"
+#include "Platform/PlatformInterface.h"
 
 namespace OSRE {
 namespace Editor {

@@ -23,11 +23,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "PythonInterface.h"
 #include "Actions/ImportAction.h"
 
-#include <osre/Common/Logger.h>
-#include <osre/App/Stage.h>
-#include <osre/App/World.h>
-#include <osre/App/App.h>
-#include <osre/app/Project.h>
+#include "Common/Logger.h"
+#include "App/Stage.h"
+#include "App/World.h"
+#include "App/App.h"
+#include "App/Project.h"
 
 #include <Python.h>
 #include <structmember.h> // defines a python class in C++

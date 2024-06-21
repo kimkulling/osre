@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Platform/AbstractDynamicLoader.h>
+#include "Platform/AbstractDynamicLoader.h"
 
 namespace OSRE {
 namespace Platform {

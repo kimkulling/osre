@@ -20,35 +20,37 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Platform/PlatformOperations.h>
-#include <osre/IO/Uri.h>
-#include <osre/Common/Logger.h>
+#include "Platform/PlatformOperations.h"
+#include "IO/Uri.h"
+#include "Common/Logger.h"
+
+#include <cppcore/Memory/MemUtils.h>
 
 #ifdef OSRE_WINDOWS
-#   include <osre/Platform/Windows/MinWindows.h>
+#   include "Platform/Windows/MinWindows.h"
 #   include <Commdlg.h>
 #endif // OSRE_WINDOWS
 
 namespace OSRE {
 namespace Platform {
 
-static const c8 *Tag = "PlatformOperations";
+static constexpr c8 Tag[] = "PlatformOperations";
 
 void PlatformOperations::getFileOpenDialog(const String &title, const c8 *extensions, IO::Uri &location) {
-#ifdef OSRE_WINDOWS
-    OPENFILENAME ofn;  
-    char szFile[ 260 ];
+    c8 szFile[PlatformOperations::BufferSize] = { '\0' };
 
+#ifdef OSRE_WINDOWS
     // Initialize OPENFILENAME
-    ZeroMemory( &ofn, sizeof( ofn ) );
-    ofn.lStructSize = sizeof( ofn );
+    OPENFILENAME ofn;
+    cppcore::MemUtils::clearMemory(&ofn, sizeof(ofn));
+    ofn.lStructSize = sizeof(ofn);
     ofn.lpstrFile = szFile;
     
     // Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
     // use the contents of szFile to initialize itself.
     ofn.lpstrTitle = title.c_str();
     ofn.lpstrFile[ 0 ] = '\0';
-    ofn.nMaxFile = sizeof( szFile );
+    ofn.nMaxFile = sizeof(szFile);
     ofn.lpstrFilter = extensions;
     ofn.nFilterIndex = 1;
     ofn.lpstrFileTitle = nullptr;
@@ -57,7 +59,7 @@ void PlatformOperations::getFileOpenDialog(const String &title, const c8 *extens
     ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
     // Display the Open dialog box. 
-    if ( TRUE == GetOpenFileName( &ofn ) ) {
+    if (::GetOpenFileName( &ofn ) == TRUE) {
         String filename = ofn.lpstrFile;
         location.setResource( filename );
         location.parse();
@@ -65,9 +67,7 @@ void PlatformOperations::getFileOpenDialog(const String &title, const c8 *extens
         location.clear();
     }
 #else
-    //osre_error( Tag, "Not supported," );
-    static constexpr size_t BufferSize = 1014;
-    char buffer[BufferSize] = {};
+    c8 buffer[BufferSize] = {'\0'};
     FILE *f = popen("zenity --file-selection", "r");
     if (f == nullptr) {
         location.clear();
@@ -76,7 +76,6 @@ void PlatformOperations::getFileOpenDialog(const String &title, const c8 *extens
     fgets(buffer, BufferSize, f);
 
     String filename(buffer);
-    printf("buff = %s\n", buffer);
     filename = filename.substr(0, filename.size()-1);
     location.setResource(filename);
     location.parse();
@@ -84,13 +83,13 @@ void PlatformOperations::getFileOpenDialog(const String &title, const c8 *extens
 }
 
 void PlatformOperations::getFileSaveDialog(const String &title, const c8 *extensions, IO::Uri &location) {
-#ifdef OSRE_WINDOWS
-    OPENFILENAME ofn;
-    char szFile[ 260 ];
+    char szFile[PlatformOperations::BufferSize] = { '\0' };
 
+#ifdef OSRE_WINDOWS
     // Initialize OPENFILENAME
-    ZeroMemory( &ofn, sizeof( ofn ) );
-    ofn.lStructSize = sizeof( ofn );
+    OPENFILENAME ofn;
+    cppcore::MemUtils::clearMemory(&ofn, sizeof(ofn));
+    ofn.lStructSize = sizeof(ofn);
     ofn.lpstrFile = szFile;
 
     // Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
@@ -113,7 +112,17 @@ void PlatformOperations::getFileSaveDialog(const String &title, const c8 *extens
         location.clear();
     }
 #else
-    osre_warn(Tag, "Not supported,");
+    FILE *f = popen("zenity --file-selection", "w");
+    if (f == nullptr) {
+        location.clear();
+        return;
+    }
+    c8 buffer[BufferSize] = { '\0' };
+    fgets(buffer, BufferSize, f);
+
+    String filename(buffer);
+    location.setResource(filename);
+    location.parse();
 #endif // OSRE_WINDOWS
 }
 

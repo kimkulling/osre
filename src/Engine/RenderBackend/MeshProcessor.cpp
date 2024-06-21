@@ -20,10 +20,10 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Debugging/osre_debugging.h>
-#include <osre/RenderBackend/Mesh.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/MeshProcessor.h>
+#include "Debugging/osre_debugging.h"
+#include "RenderBackend/Mesh.h"
+#include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/MeshProcessor.h"
 
 namespace OSRE {
 namespace RenderBackend {

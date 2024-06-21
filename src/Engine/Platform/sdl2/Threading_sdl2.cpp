@@ -1,6 +1,6 @@
-#include <osre/Platform/Threading.h>
-#include <osre/Platform/SystemInfo.h>
-#include <osre/Debugging/osre_debugging.h>
+#include "Platform/Threading.h"
+#include "Platform/SystemInfo.h"
+#include "Debugging/osre_debugging.h"
 
 #include <SDL.h>
 #include <SDL_atomic.h>

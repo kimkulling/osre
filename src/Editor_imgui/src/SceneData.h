@@ -22,9 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <osre/App/TransformComponent.h>
-#include <osre/App/World.h>
+#include "Common/osre_common.h"
+#include "App/TransformComponent.h"
+#include "App/World.h"
 
 namespace OSRE {
 namespace Editor {
