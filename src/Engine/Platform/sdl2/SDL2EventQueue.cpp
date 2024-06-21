@@ -20,11 +20,11 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Common/EventTriggerer.h>
-#include <osre/Common/Logger.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <src/Engine/Platform/sdl2/SDL2EventQueue.h>
+#include "Common/EventTriggerer.h"
+#include "Common/Logger.h"
+#include "Platform/PlatformInterface.h"
+#include "RenderBackend/RenderBackendService.h"
+#include "Platform/sdl2/SDL2EventQueue.h"
 
 #include "SDL2Initializer.h"
 #include "SDL2Window.h"
