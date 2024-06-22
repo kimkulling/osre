@@ -20,14 +20,14 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/App/Component.h>
-#include <osre/App/TransformComponent.h>
-#include <osre/Common/Ids.h>
-#include <osre/Common/StringUtils.h>
-#include <osre/Common/glm_common.h>
-#include <osre/Properties/Property.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/RenderBackend/RenderCommon.h>
+#include "App/Component.h"
+#include "App/TransformComponent.h"
+#include "Common/Ids.h"
+#include "Common/StringUtils.h"
+#include "Common/glm_common.h"
+#include "Properties/Property.h"
+#include "RenderBackend/RenderBackendService.h"
+#include "RenderBackend/RenderCommon.h"
 
 namespace OSRE {
 namespace App {

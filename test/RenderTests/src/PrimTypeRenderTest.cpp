@@ -23,13 +23,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "AbstractRenderTest.h"
 #include "RenderTestUtils.h"
 
-#include <osre/Common/Logger.h>
-#include <osre/RenderBackend/Mesh.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/RenderBackend/MaterialBuilder.h>
-#include <osre/RenderBackend/MeshBuilder.h>
+#include "Common/Logger.h"
+#include "RenderBackend/Mesh.h"
+#include "RenderBackend/RenderBackendService.h"
+#include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/TransformMatrixBlock.h"
+#include "RenderBackend/MaterialBuilder.h"
+#include "RenderBackend/MeshBuilder.h"
 
 namespace OSRE {
 namespace RenderTest {

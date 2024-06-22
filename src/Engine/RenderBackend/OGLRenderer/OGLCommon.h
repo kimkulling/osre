@@ -23,10 +23,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include <GL/glew.h>
-#include <osre/Common/osre_common.h>
 
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/RenderStates.h>
+#include "Common/osre_common.h"
+#include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/RenderStates.h"
 
 namespace OSRE {
 namespace RenderBackend {

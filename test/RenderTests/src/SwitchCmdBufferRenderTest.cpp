@@ -23,14 +23,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "AbstractRenderTest.h"
 #include "RenderTestUtils.h"
 
-#include <osre/Common/Logger.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/App/ParticleEmitter.h>
-#include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
-#include <osre/RenderBackend/MeshBuilder.h>
-#include <osre/RenderBackend/MaterialBuilder.h>
+#include "Common/Logger.h"
+#include "RenderBackend/RenderBackendService.h"
+#include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/TransformMatrixBlock.h"
+#include "App/ParticleEmitter.h"
+#include "RenderBackend/OGLRenderer/OGLShader.h"
+#include "RenderBackend/MeshBuilder.h"
+#include "RenderBackend/MaterialBuilder.h"
 #include <cppcore/Random/RandomGenerator.h>
 
 namespace OSRE {

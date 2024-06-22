@@ -21,12 +21,12 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "Actions/ImportAction.h"
-#include <osre/Common/osre_common.h>
-#include <osre/App/AssimpWrapper.h>
-#include <osre/IO/Uri.h>
+#include "Common/osre_common.h"
+#include "App/AssimpWrapper.h"
+#include "IO/Uri.h"
+#include "Common/Ids.h"
 
 #include <cppcore//Common/Variant.h>
-#include <osre/Common/Ids.h>
 
 namespace OSRE {
 namespace Editor {

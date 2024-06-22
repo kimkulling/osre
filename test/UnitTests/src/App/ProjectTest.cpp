@@ -21,9 +21,10 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include <gtest/gtest.h>
-#include <osre/App/Project.h>
-#include <osre/Common/osre_common.h>
-#include <osre/IO/Directory.h>
+
+#include "App/Project.h"
+#include "Common/osre_common.h"
+#include "IO/Directory.h"
 
 namespace OSRE {
 namespace UnitTest {

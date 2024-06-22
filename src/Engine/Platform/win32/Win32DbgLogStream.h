@@ -22,8 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Logger.h>
-#include <osre/Platform/Windows/MinWindows.h>
+#include "Common/Logger.h"
+#include "Platform/Windows/MinWindows.h"
 
 namespace OSRE {
 namespace Platform {

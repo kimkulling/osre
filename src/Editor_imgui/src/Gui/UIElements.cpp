@@ -21,14 +21,13 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "UIElements.h"
-#include <osre/RenderBackend/MeshBuilder.h>
-#include <osre/Platform/PlatformOperations.h>
-#include <osre/Platform/PlatformInterface.h>
-
+#include "RenderBackend/MeshBuilder.h"
+#include "Platform/PlatformOperations.h"
+#include "Platform/PlatformInterface.h"
 
 #ifdef OSRE_WINDOWS
-#   include <src/Engine/Platform/win32/Win32EventQueue.h>
-#   include <src/Engine/Platform/win32/Win32Window.h>
+#   include "Platform/win32/Win32EventQueue.h"
+#   include "Platform/win32/Win32Window.h"
 #   include <shellapi.h>
 #   include <CommCtrl.h>
 #   include <commctrl.h>

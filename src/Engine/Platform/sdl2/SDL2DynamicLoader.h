@@ -22,15 +22,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Platform/AbstractDynamicLoader.h>
+#include "Platform/AbstractDynamicLoader.h"
 
 namespace OSRE {
 namespace Platform {
         
 //-------------------------------------------------------------------------------------------------
-///	@ingroup	Engine
+/// @ingroup	Engine
 ///
-///	@brief  This class implements how to load shared libs / dlls using the SDL"-platform 
+/// @brief  This class implements how to load shared libs / dlls using the SDL"-platform 
 /// abstraction.
 //-------------------------------------------------------------------------------------------------
 class SDL2DynamicLoader final : public AbstractDynamicLoader {

@@ -22,12 +22,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "LocaleFileSystem.h"
 #include "FileStream.h"
-#include <osre/IO/File.h>
-#include <osre/Common/Logger.h>
+#include "IO/File.h"
+#include "Common/Logger.h"
 #include <cassert>
 
 #ifdef OSRE_WINDOWS
-#  include <osre/Platform/Windows/MinWindows.h>
+#  include "Platform/Windows/MinWindows.h"
 #else
 #   include <stdio.h>
 #   include <unistd.h>

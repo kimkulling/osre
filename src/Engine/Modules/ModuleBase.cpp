@@ -20,10 +20,9 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Modules/ModuleBase.h>
-#include <osre/Modules/IModuleView.h>
-
-#include <osre/App/AppBase.h>
+#include "Modules/ModuleBase.h"
+#include "Modules/IModuleView.h"
+#include "App/AppBase.h"
 
 namespace OSRE {
 namespace Modules {

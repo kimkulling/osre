@@ -22,13 +22,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <cppcore/Container/TArray.h>
-#include <osre/Profiling/FPSCounter.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/TransformMatrixBlock.h>
+#include "Profiling/FPSCounter.h"
+#include "RenderBackend/RenderBackendService.h"
+#include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/TransformMatrixBlock.h"
+#include "RenderBackend/OGLRenderer/OGLCommon.h"
 
-#include "OGLCommon.h"
+#include <cppcore/Container/TArray.h>
+#include <cppcore/Container/THashMap.h>
+
 #include <map>
 
 namespace OSRE {

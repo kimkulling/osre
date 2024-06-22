@@ -22,7 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "FileStream.h"
 
-#include <osre/Debugging/osre_debugging.h>
+#include "Debugging/osre_debugging.h"
 #include <sys/stat.h>
 #include <sys/types.h>
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <osre/Platform/AbstractThreadLocalStorage.h>
-#include <osre/Debugging/osre_debugging.h>
+#include "Platform/AbstractThreadLocalStorage.h"
+#include "Debugging/osre_debugging.h"
 
 #include <SDL.h>
 
@@ -12,7 +12,7 @@ namespace Platform {
 ///	@class		::OSRE::Platform::SDL2ThreadLocalStorage
 ///	@ingroup	Engine
 ///
-///	@brief This class implements the SDL"-based Thread Local Storage API.
+///	@brief This class implements the SDL-based Thread Local Storage API.
 //-------------------------------------------------------------------------------------------------
 class SDL2ThreadLocalStorage : public AbstractThreadLocalStorage {
 public:

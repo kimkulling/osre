@@ -20,13 +20,13 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <src/Engine/RenderBackend/OGLRenderer/RenderCmdBuffer.h>
-#include <osre/RenderBackend/Shader.h>
-#include "OGLCommon.h"
-#include "OGLRenderBackend.h"
-#include <osre/Debugging/osre_debugging.h>
-#include <osre/Platform/AbstractOGLRenderContext.h>
-#include <osre/Platform/AbstractTimer.h>
+#include "RenderBackend/OGLRenderer/RenderCmdBuffer.h"
+#include "RenderBackend/Shader.h"
+#include "RenderBackend/OGLRenderer/OGLCommon.h"
+#include "RenderBackend/OGLRenderer/OGLRenderBackend.h"
+#include "Debugging/osre_debugging.h"
+#include "Platform/AbstractOGLRenderContext.h"
+#include "Platform/AbstractTimer.h"
 
 namespace OSRE {
 namespace RenderBackend {

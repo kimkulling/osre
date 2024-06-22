@@ -24,15 +24,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RenderTestUtils.h"
 
 #include <cppcore/Random/RandomGenerator.h>
-#include <osre/Common/Logger.h>
-#include <osre/Common/glm_common.h>
-#include <osre/RenderBackend/Mesh.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/RenderBackend/MaterialBuilder.h>
-#include <osre/RenderBackend/MeshBuilder.h>
-#include <src/Engine/RenderBackend/OGLRenderer/OGLShader.h>
+#include "Common/Logger.h"
+#include "Common/glm_common.h"
+#include "RenderBackend/Mesh.h"
+#include "RenderBackend/RenderBackendService.h"
+#include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/TransformMatrixBlock.h"
+#include "RenderBackend/MaterialBuilder.h"
+#include "RenderBackend/MeshBuilder.h"
+#include "RenderBackend/OGLRenderer/OGLShader.h"
 #include <iostream>
 
 namespace OSRE {

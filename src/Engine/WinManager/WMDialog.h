@@ -22,8 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/Object.h>
-#include <osre/IO/Uri.h>
+#include "Common/Object.h"
+#include "IO/Uri.h"
 
 namespace OSRE {
 namespace UI {

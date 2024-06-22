@@ -20,12 +20,13 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
+#include "Properties/Settings.h"
+#include "Platform/AbstractWindow.h"
+#include "Platform/PlatformInterface.h"
+#include "Properties/BasePropertyMap.h"
+#include "Properties/Property.h"
+
 #include <cppcore/Common/Variant.h>
-#include <osre/Platform/AbstractWindow.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <osre/Properties/BasePropertyMap.h>
-#include <osre/Properties/Property.h>
-#include <osre/Properties/Settings.h>
 
 namespace OSRE {
 namespace Properties {

@@ -22,8 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Platform/AbstractPlatformEventQueue.h>
-#include <osre/Common/Event.h>
+#include "Platform/AbstractPlatformEventQueue.h"
+#include "Common/Event.h"
 
 #include <map>
 

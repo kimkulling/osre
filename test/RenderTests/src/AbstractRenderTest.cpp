@@ -22,13 +22,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "AbstractRenderTest.h"
 
-#include <osre/Common/Logger.h>
-#include <osre/RenderBackend/Material.h>
-#include <osre/Debugging/osre_debugging.h>
-#include <osre/IO/IOService.h>
-#include <osre/Platform/AbstractWindow.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <osre/RenderBackend/RenderCommon.h>
+#include "Common/Logger.h"
+#include "RenderBackend/Material.h"
+#include "Debugging/osre_debugging.h"
+#include "IO/IOService.h"
+#include "Platform/AbstractWindow.h"
+#include "Platform/PlatformInterface.h"
+#include "RenderBackend/RenderCommon.h"
 
 namespace OSRE {
 namespace RenderTest {

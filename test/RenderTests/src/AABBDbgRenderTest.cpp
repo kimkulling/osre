@@ -23,9 +23,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "AbstractRenderTest.h"
 #include "RenderTestUtils.h"
 
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/RenderBackend/DbgRenderer.h>
-#include <osre/RenderBackend/MeshBuilder.h>
+#include "RenderBackend/RenderBackendService.h"
+#include "RenderBackend/DbgRenderer.h"
+#include "RenderBackend/MeshBuilder.h"
 
 #include <iomanip>
 

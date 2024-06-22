@@ -20,18 +20,18 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Common/EventTriggerer.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <osre/Properties/Settings.h>
-#include <src/Engine/Platform/PlatformPluginFactory.h>
+#include "Common/EventTriggerer.h"
+#include "Platform/PlatformInterface.h"
+#include "Properties/Settings.h"
+#include "Platform/PlatformPluginFactory.h"
 #ifdef OSRE_WINDOWS
-#   include <src/Engine/Platform/win32/Win32OGLRenderContext.h>
+#   include "Platform/win32/Win32OGLRenderContext.h"
 #endif // OSRE_WINDOWS
-#include <src/Engine/Platform/sdl2/SDL2EventQueue.h>
-#include <src/Engine/Platform/sdl2/SDL2Window.h>
-#include <src/Engine/Platform/sdl2/SDL2OGLRenderContext.h>
-#include <src/Engine/Platform/sdl2/SDL2SystemInfo.h>
-#include <src/Engine/Platform/sdl2/SDL2Timer.h>
+#include "Platform/sdl2/SDL2EventQueue.h"
+#include "Platform/sdl2/SDL2Window.h"
+#include "Platform/sdl2/SDL2OGLRenderContext.h"
+#include "Platform/sdl2/SDL2SystemInfo.h"
+#include "Platform/sdl2/SDL2Timer.h"
 
 #include <GL/glew.h>
 #include <SDL.h>
@@ -45,15 +45,12 @@ using namespace ::OSRE::Properties;
 PlatformInterface *PlatformInterface::sInstance(nullptr);
 
 ApplicationContext::ApplicationContext(const Settings *settings) :
-        mSettings(settings)
+        mSettings(settings),
 #ifdef OSRE_WINDOWS
-        ,
-        m_type(PluginType::WindowsPlugin)
+        m_type(PluginType::WindowsPlugin),
 #else
-        ,
-        m_type(PluginType::SDL2Plugin)
+        m_type(PluginType::SDL2Plugin),
 #endif // OSRE_WINDOWS
-        ,
         m_rootSurface(nullptr),
         m_oseventHandler(nullptr),
         m_renderContext(nullptr),

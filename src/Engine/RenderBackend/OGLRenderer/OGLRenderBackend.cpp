@@ -20,22 +20,21 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include "OGLRenderBackend.h"
-#include "OGLCommon.h"
-#include "OGLEnum.h"
-#include "OGLShader.h"
-
-#include <osre/Common/Logger.h>
-#include <osre/Common/glm_common.h>
-#include <osre/Debugging/osre_debugging.h>
-#include <osre/Debugging/MeshDiagnostic.h>
-#include <osre/IO/Stream.h>
-#include <osre/IO/Uri.h>
-#include <osre/Platform/AbstractOGLRenderContext.h>
-#include <osre/Platform/AbstractTimer.h>
-#include <osre/Profiling/PerformanceCounterRegistry.h>
-#include <osre/RenderBackend/RenderStates.h>
-#include <osre/RenderBackend/Shader.h>
+#include "RenderBackend/OGLRenderer/OGLRenderBackend.h"
+#include "RenderBackend/OGLRenderer/OGLCommon.h"
+#include "RenderBackend/OGLRenderer/OGLEnum.h"
+#include "RenderBackend/OGLRenderer/OGLShader.h"
+#include "Common/Logger.h"
+#include "Common/glm_common.h"
+#include "Debugging/osre_debugging.h"
+#include "Debugging/MeshDiagnostic.h"
+#include "IO/Stream.h"
+#include "IO/Uri.h"
+#include "Platform/AbstractOGLRenderContext.h"
+#include "Platform/AbstractTimer.h"
+#include "Profiling/PerformanceCounterRegistry.h"
+#include "RenderBackend/RenderStates.h"
+#include "RenderBackend/Shader.h"
 
 #include <cppcore/CPPCoreCommon.h>
 #include <cppcore/Memory/MemUtils.h>
@@ -43,7 +42,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "stb_image.h"
 
 #include <iostream>
-//#include <string_view>
 
 namespace OSRE {
 namespace RenderBackend {

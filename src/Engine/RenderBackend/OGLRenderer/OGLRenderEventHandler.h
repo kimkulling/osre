@@ -22,9 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <osre/Common/AbstractEventHandler.h>
-#include <osre/Common/Event.h>
-#include <osre/RenderBackend/RenderBackendService.h>
+#include "Common/AbstractEventHandler.h"
+#include "Common/Event.h"
+#include "RenderBackend/RenderBackendService.h"
 
 #include <GL/glew.h>
 #include <GL/gl.h>

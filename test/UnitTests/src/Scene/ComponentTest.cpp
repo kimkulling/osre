@@ -22,10 +22,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "osre_testcommon.h"
 
-#include <osre/App/Component.h>
-#include <osre/App/Entity.h>
-#include <osre/Common/Ids.h>
-#include <osre/App/TransformComponent.h>
+#include "App/Component.h"
+#include "App/Entity.h"
+#include "Common/Ids.h"
+#include "App/TransformComponent.h"
 
 namespace OSRE {
 namespace UnitTest {

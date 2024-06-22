@@ -20,12 +20,11 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Common/BaseMath.h>
-#include <osre/Common/glm_common.h>
-#include <osre/Platform/PlatformInterface.h>
-#include <osre/App/TrackBall.h>
-#include <osre/App/CameraComponent.h>
-#include <osre/Common/glm_common.h>
+#include "Common/BaseMath.h"
+#include "Common/glm_common.h"
+#include "Platform/PlatformInterface.h"
+#include "App/TrackBall.h"
+#include "App/CameraComponent.h"
 
 namespace OSRE {
 namespace App {

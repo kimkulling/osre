@@ -20,13 +20,14 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
-#include <osre/Common/DateTime.h>
-#include <osre/Common/Logger.h>
-#include <osre/Debugging/Debug.h>
+#include "Common/DateTime.h"
+#include "Common/Logger.h"
+#include "Debugging/Debug.h"
+
 #include <cassert>
 
 #ifdef OSRE_WINDOWS
-#    include <src/Engine/Platform/win32/Win32DbgLogStream.h>
+#    include "Platform/win32/Win32DbgLogStream.h"
 #endif // OSRE_WINDOWS
 
 #include <iomanip>

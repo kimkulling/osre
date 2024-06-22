@@ -1,14 +1,14 @@
 #pragma once
 
 #include "SceneData.h"
-#include <osre/App/AppBase.h>
-#include <osre/App/Project.h>
-#include <osre/App/CameraComponent.h>
-#include <osre/App/Entity.h>
-#include <osre/App/World.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/RenderBackend/RenderBackendService.h>
+#include "App/AppBase.h"
+#include "App/Project.h"
+#include "App/CameraComponent.h"
+#include "App/Entity.h"
+#include "App/World.h"
+#include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/TransformMatrixBlock.h"
+#include "RenderBackend/RenderBackendService.h"
 
 namespace OSRE {
 namespace Editor {

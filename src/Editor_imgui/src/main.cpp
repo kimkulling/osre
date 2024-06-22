@@ -29,17 +29,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define main main
 
-#include <osre/App/App.h>
-#include <osre/RenderBackend/RenderCommon.h>
-#include <osre/RenderBackend/MeshBuilder.h>
-#include <osre/Common/Logger.h>
-#include <osre/RenderBackend/RenderBackendService.h>
-#include <osre/RenderBackend/TransformMatrixBlock.h>
-#include <osre/App/Entity.h>
-#include <osre/Platform/AbstractWindow.h>
-#include <osre/Common/glm_common.h>
-#include <osre/Platform/PlatformOperations.h>
-#include <osre/Platform/PlatformInterface.h>
+#include "App/App.h"
+#include "RenderBackend/RenderCommon.h"
+#include "RenderBackend/MeshBuilder.h"
+#include "Common/Logger.h"
+#include "RenderBackend/RenderBackendService.h"
+#include "RenderBackend/TransformMatrixBlock.h"
+#include "App/Entity.h"
+#include "Platform/AbstractWindow.h"
+#include "Common/glm_common.h"
+#include "Platform/PlatformOperations.h"
+#include "Platform/PlatformInterface.h"
 
 #include "OSREEdApp.h"
 
