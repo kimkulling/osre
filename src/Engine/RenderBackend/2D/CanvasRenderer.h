@@ -34,6 +34,11 @@ class Mesh;
 
 struct DrawCmd;
 
+//-------------------------------------------------------------------------------------------------
+///	@ingroup	Engine
+///
+///	@brief
+//-------------------------------------------------------------------------------------------------
 class OSRE_EXPORT CanvasRenderer : IRenderPath {
 public:
     using DrawCmdArray = cppcore::TArray<DrawCmd*>;
