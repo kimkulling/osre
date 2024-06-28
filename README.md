@@ -6,6 +6,9 @@ This is just another open-source render engine / game engine made by Kim Kulling
 Don't expect too much, I will not invest too much time into it. But If you are interested in playing around with 3D stuff feel free to discuss 
 these things on Reggit or in the Discussion Forum.
 
+# Join out community
+We have a discord server at [Discord](https://discord.gg/kqJQW5dQ)
+
 # The Features:
 - CMake base build environment
 - Multithreaded Renderer 
