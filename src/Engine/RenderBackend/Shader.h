@@ -33,16 +33,15 @@ namespace RenderBackend {
 
 ///	@brief  This enum describes the different shader types, which are supported by the OSRE-engine.
 enum class ShaderType {
-    SH_VertexShaderType = 0, ///< The shader is a vertex shader, used for each vertex.
-    SH_GeometryShaderType, ///< The shader is a geometry shader, used for tesselation.
+    InvalidShaderType = -1,   ///< Enum for invalid enum.
+    SH_VertexShaderType = 0,  ///< The shader is a vertex shader, used for each vertex.
+    SH_GeometryShaderType,    ///< The shader is a geometry shader, used for tesselation.
     SH_TesselationShaderType, ///< The tesselation evaluation shader.
-    SH_FragmentShaderType, ///< The shader is a fragment shader, used for rasterization.
-    NumShaderTypes, ///< Number of enums.
-
-    InvalidShaderType ///< Enum for invalid enum.
+    SH_FragmentShaderType,    ///< The shader is a fragment shader, used for rasterization.
+    Count                     ///< Number of enums.
 };
 
-constexpr ui32 MaxShaderTypes = static_cast<ui32>(ShaderType::NumShaderTypes);
+constexpr ui32 MaxShaderTypes = static_cast<ui32>(ShaderType::Count);
 
 using ShaderSourceArray = cppcore::TStaticArray<String, MaxShaderTypes>;
 

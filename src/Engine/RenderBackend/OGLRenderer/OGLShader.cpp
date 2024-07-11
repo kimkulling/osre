@@ -51,7 +51,7 @@ OGLShader::~OGLShader() {
 
     cppcore::ContainerClear(m_attribParams);
     cppcore::ContainerClear(m_uniformParams);
-    for (ui32 i = 0; i < static_cast<ui32>(ShaderType::NumShaderTypes); ++i) {
+    for (ui32 i = 0; i < static_cast<ui32>(ShaderType::Count); ++i) {
         if (0 != m_shaders[i]) {
             glDeleteShader(m_shaders[i]);
             m_shaders[i] = 0;

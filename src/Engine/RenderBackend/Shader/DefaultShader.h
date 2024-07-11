@@ -1,22 +1,30 @@
 #pragma once
 
-#include <osre/Common/osre_common.h>
-#include <osre/RenderBackend/RenderCommon.h>
+#include "Common/osre_common.h"
+#include "RenderBackend/RenderCommon.h"
 
 namespace OSRE {
-    namespace RenderBackend {
+namespace RenderBackend {
 
-        struct DefaultShader {
-            String VertexShader;
-            String FragmentShader;
+String getGLSLVersionString_330();
+String  getGLSLVersionString_400();
+String getNewLine();
+String getGLSLRenderVertexLayout();
+String getGLSLColorVertexLayout();
+String getGLSLCombinedMVPUniformSrc();
 
-            DefaultShader(): VertexShader(), FragmentShader() {
-                // eempty
-            }
+struct DefaultShader {
+    String VertexShader;
+    String FragmentShader;
 
-            bool build()  {
-                return true;
-            }
-        }
+    DefaultShader(): VertexShader(), FragmentShader() {
+        // eempty
     }
+
+    bool build()  {
+        return true;
+    }
+};
+
+}
 }

@@ -344,6 +344,7 @@ SET( renderbackend_oglrenderer_src
 
 set(renderbackend_shader_src
     RenderBackend/Shader/DefaultShader.h
+    RenderBackend/Shader/DefaultShader.cpp
 )
 
 #==============================================================================
