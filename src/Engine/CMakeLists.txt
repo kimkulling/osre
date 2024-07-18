@@ -1,11 +1,9 @@
 SET( LIBRARY_VERSION "0.1.1" )
 
-SET( HEADER_PATH ${PROJECT_SOURCE_DIR}/include/osre )
 add_definitions( -DOSRE_BUILD_EXPORT )
 
 INCLUDE_DIRECTORIES(
-    ${PROJECT_SOURCE_DIR}
-    ${HEADER_PATH}
+    ${PROJECT_SOURCE_DIR}7engine
     ${PROJECT_SOURCE_DIR}/contrib/cppcore/include
     ${PROJECT_SOURCE_DIR}/contrib/glew/include
     ${PROJECT_SOURCE_DIR}/contrib/glm/
