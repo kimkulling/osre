@@ -25,7 +25,10 @@ endif()
 IF( WIN32 )
     SET(platform_libs comctl32.lib Winmm.lib opengl32.lib glu32.lib Shcore.lib cppcore)
 ELSE( WIN32 )
-    SET(platform_libs SDL2 cppcore)
+    SET(platform_libs 
+        $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
+        $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
+        cppcore)
 ENDIF( WIN32 )
 
 #==============================================================================
@@ -444,5 +447,5 @@ ADD_LIBRARY( osre SHARED
     ${winmanager_src}
 )
 
-target_link_libraries ( osre cppcore zlibstatic Unzip glew ${platform_libs} assimp )
+target_link_libraries ( osre cppcore zlibstatic Unzip GLEW::GLEW ${platform_libs} assimp )
 set_target_properties(  osre PROPERTIES FOLDER Engine )
