@@ -122,7 +122,7 @@ const String GLSLFragmentShaderSrcRV =
         getGLSLVersionString_400() +
         getNewLine() +
         "in vec3 position_eye, normal_eye;\n"
-        "layout(location=0) out vec4 frag_volor; //fragment shader output\n" +
+        "layout(location=0) out vec4 frag_color; //fragment shader output\n" +
         getNewLine() +
         "//input form the vertex shader\n"
         "smooth in vec4 vSmoothColor;		//interpolated colour to fragment shader\n"
@@ -132,7 +132,11 @@ const String GLSLFragmentShaderSrcRV =
         "void main()\n"
         "{\n"
         "    // set the interpolated color as the shader output\n"
-        "    frag_volor = texture(tex0, vUV) * vSmoothColor;\n"
+        "    vec4 tex_color = texture(tex0, vUV);\n"
+        "    if (tex_color.r >0.0 || tex_color.g >0.0 || tex_color.b>0.0)\n"
+        "        frag_color = texture(tex0, vUV) * vSmoothColor;\n"
+        "    else\n"
+        "        frag_color = vSmoothColor;\n"
         "}\n";
 
 void MaterialBuilder::create(GLSLVersion glslVersion) {
