@@ -3,7 +3,7 @@ SET( LIBRARY_VERSION "0.1.1" )
 add_definitions( -DOSRE_BUILD_EXPORT )
 
 INCLUDE_DIRECTORIES(
-    ${PROJECT_SOURCE_DIR}7engine
+    ${PROJECT_SOURCE_DIR}/engine
     ${PROJECT_SOURCE_DIR}/contrib/cppcore/include
     ${PROJECT_SOURCE_DIR}/contrib/glew/include
     ${PROJECT_SOURCE_DIR}/contrib/glm/
