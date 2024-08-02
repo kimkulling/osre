@@ -3,14 +3,14 @@ SET( LIBRARY_VERSION "0.1.1" )
 add_definitions( -DOSRE_BUILD_EXPORT )
 
 INCLUDE_DIRECTORIES(
-    ${PROJECT_SOURCE_DIR}/engine
-    ${PROJECT_SOURCE_DIR}/contrib/cppcore/include
-    ${PROJECT_SOURCE_DIR}/contrib/glew/include
-    ${PROJECT_SOURCE_DIR}/contrib/glm/
-    ${PROJECT_SOURCE_DIR}/contrib/unzip/
-    ${PROJECT_SOURCE_DIR}/contrib/zlib/
-    ${CMAKE_CURRENT_BINARY_DIR}//contrib/zlib/
-    ${PROJECT_SOURCE_DIR}/contrib/assimp/include
+    engine
+    contrib/cppcore/include
+    contrib/glew/include
+    contrib/glm/
+    contrib/unzip/
+    contrib/zlib/
+    contrib/zlib/
+    contrib/assimp/include
 )
 
 # For Vulkan support
