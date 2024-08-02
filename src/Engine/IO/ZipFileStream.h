@@ -23,8 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "IO/Stream.h"
-
-#include "contrib/unzip/unzip.h"
+#include "unzip.h"
 
 namespace OSRE {
 namespace IO {

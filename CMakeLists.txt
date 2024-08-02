@@ -29,16 +29,17 @@ SET( BIN_INSTALL_DIR "bin"      CACHE PATH "Path the tool executables are instal
 INCLUDE_DIRECTORIES( BEFORE
     include/
     /usr/include/
-    ${CMAKE_CURRENT_BINARY_DIR}/contrib/assimp/include
-    ${CMAKE_CURRENT_BINARY_DIR}/contrib/stb
-    ${CMAKE_CURRENT_BINARY_DIR}/contrib/glew/include
-    ${CMAKE_CURRENT_BINARY_DIR}/contrib/cppcore/include
-    ${CMAKE_CURRENT_BINARY_DIR}/contrib/assimp/contrib/zlib
-    ${CMAKE_CURRENT_BINARY_DIR}/contrib/cppcore/contrib/gtest-1.7.0/include
-    ${CMAKE_CURRENT_BINARY_DIR}/contrib/cppcore/contrib/gtest-1.7.0/
+    contrib/assimp/include
+    contrib/stb
+    contrib/glew/include
+	contrib/unzip
+    contrib/cppcore/include
+    contrib/assimp/contrib/zlib
+    contrib/cppcore/contrib/gtest-1.7.0/include
+    contrib/cppcore/contrib/gtest-1.7.0/
     ${SDL2_INCLUDE_DIRS}
     "c:/Program Files (x86)/Microsoft DirectX SDK (June 2010)/Include"
-    ${CMAKE_CURRENT_BINARY_DIR}/src/Engine
+    src/Engine
     ${CMAKE_CURRENT_BINARY_DIR}/
 )
 
