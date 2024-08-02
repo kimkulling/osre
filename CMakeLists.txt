@@ -32,6 +32,7 @@ INCLUDE_DIRECTORIES( BEFORE
     contrib/assimp/include
     contrib/stb
     contrib/glew/include
+	contrib/unzip
     contrib/cppcore/include
     contrib/assimp/contrib/zlib
     contrib/cppcore/contrib/gtest-1.7.0/include
