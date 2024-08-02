@@ -25,8 +25,6 @@ We have a discord server at [Discord](https://discord.gg/kqJQW5dQ)
 - Virtual file system for reading zip-archives
 - Instancing
 
-Discussions: [![Join the chat at https://gitter.im/kimkulling/osre](https://badges.gitter.im/kimkulling/osre.svg)](https://gitter.im/kimkulling/osre?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 # Build instructions
 - See [Build instruction in the Wiki](https://github.com/kimkulling/osre/wiki/Build)
 
