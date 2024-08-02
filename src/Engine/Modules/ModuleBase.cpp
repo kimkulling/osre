@@ -91,7 +91,6 @@ bool ModuleBase::onEvent(const Event&, const EventData*){
     return true;
 }
 
-
 App::AppBase *ModuleBase::getParentApp() const {
     return mParentApp;
 }

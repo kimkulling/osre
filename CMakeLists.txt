@@ -18,7 +18,8 @@ OPTION( OSRE_BUILD_DOC "Build the doxygen-based documentation for OSRE." OFF)
 OPTION( OSRE_BUILD_ED "Build the OSRE Ed." ON)
 
 find_package(SDL2 CONFIG REQUIRED)
-find_package(glm REQUIRED)
+find_package(glm         REQUIRED)
+find_package(GLEW        REQUIRED)
 
 # Cache these to allow the user to override them manually.
 SET( LIB_INSTALL_DIR "lib"      CACHE PATH "Path the built library files are installed to." )
@@ -86,8 +87,6 @@ ELSEIF( CMAKE_COMPILER_IS_MINGW )
   ADD_DEFINITIONS( -U__STRICT_ANSI__ )
 ENDIF()
 
-#ADD_DEFINITIONS( -DGLM_ENABLE_EXPERIMENTAL )
-
 # Include all sub-directories of the engine code component
 ADD_SUBDIRECTORY( src/Engine )
 if (OSRE_BUILD_PLAYER)
@@ -109,8 +108,6 @@ endif(OSRE_BUILD_TESTS)
 IF (OSRE_BUILD_SAMPLES)
     ADD_SUBDIRECTORY( samples )
 ENDIF(OSRE_BUILD_SAMPLES)
-
-ADD_SUBDIRECTORY( contrib/glew )
 
 set(cppcore_BUILD_UNITTESTS OFF CACHE BOOL "no cppcore unittests")
 ADD_SUBDIRECTORY( contrib/cppcore )
