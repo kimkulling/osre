@@ -135,13 +135,16 @@ String ArgumentParser::showHelp() const {
         const String desc = argument.mDesc;
         const ui32 numargs = argument.mNumArgs;
 
-        helpMsg += arg + "\t:";
+        helpMsg += "\t: ";
+        helpMsg += arg; 
+        helpMsg += "\t: ";
         helpMsg += desc;
+        helpMsg += "\n";
         if (numargs > 0) {
             helpMsg += "\n\tNumber of arguments: ";
             c8 buffer[512];
             ::memset(buffer, '\0', 512);
-            ::sprintf(buffer, "%d", numargs);
+            ::sprintf(buffer, "%d\n", numargs);
             helpMsg += String(buffer);
         }
     }
