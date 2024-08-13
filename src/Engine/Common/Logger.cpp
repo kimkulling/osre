@@ -167,15 +167,15 @@ void Logger::print(const String &msg, PrintMode mode) {
 
     logMsg += msg;
     if (PrintMode::WithDateTime == mode) {
-        logMsg += " ( ";
+        logMsg += " (";
         logMsg += this->getDateTime();
-        logMsg += " )";
+        logMsg += ")";
     }
 
     logMsg += " \n";
     for (ui32 i = 0; i < mLogStreams.size(); ++i) {
         AbstractLogStream *stream = mLogStreams[i];
-        if (stream) {
+        if (stream != nullptr) {
             stream->write(logMsg);
         }
     }
@@ -265,12 +265,12 @@ String Logger::getDateTime() {
     DateTime currentDateTime = DateTime::getCurrentUTCTime();
     std::stringstream stream;
     stream.fill('0');
-    stream << std::setw(Space) << currentDateTime.getCurrentMonth() << "."
-           << std::setw(Space) << currentDateTime.getCurrentDay() << "."
+    stream << std::setw(Space) << currentDateTime.getCurrentDay() << "."
+           << std::setw(Space) << currentDateTime.getCurrentMonth() << "."
            << std::setw(Space * 2) << currentDateTime.getCurrentYear() << " "
            << std::setw(Space) << currentDateTime.getCurrentHour() << ":"
            << std::setw(Space) << currentDateTime.getCurrentMinute() << ":"
-           << std::setw(Space) << currentDateTime.getCurrentSeconds() << " ";
+           << std::setw(Space) << currentDateTime.getCurrentSeconds();
 
     return stream.str();
 }
