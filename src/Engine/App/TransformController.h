@@ -36,19 +36,26 @@ namespace RenderBackend {
 
 namespace App {
 
+/// @brief The class to manage the keyboard mappings for transform commands.
 struct KeyboardMap {
-    cppcore::TStaticArray<Animation::TransformCommandType, Platform::KEY_LAST > KeyArray;
+    cppcore::TStaticArray<Animation::TransformCommandType, Platform::KEY_LAST> KeyArray;
 
+    /// @brief The class constructor.
     KeyboardMap() {
         init();
     }
 
+    /// @brief The class destructor.
+    ~KeyboardMap() = default;
+
+    /// @brief Will initialize the array, no mapping is stored.
     void init() {
         for (size_t i=0; i<Platform::KEY_LAST; ++i) {
             KeyArray[i] = Animation::TransformCommandType::Invalid;
         }
     }
 
+    /// @brief Enables the default mapping.
     void setDefault() {
         KeyArray[Platform::KEY_A] = Animation::TransformCommandType::RotateXCommandPositive;
         KeyArray[Platform::KEY_a] = Animation::TransformCommandType::RotateXCommandPositive;
@@ -66,15 +73,22 @@ struct KeyboardMap {
         KeyArray[Platform::KEY_MINUS] = Animation::TransformCommandType::ScaleOutCommand;
     }
 
+    /// @brief Set a new mapping.
+    /// @param[in] key   The key.
+    /// @param[in] type  The mapped transform command.
     void set(Platform::Key key, Animation::TransformCommandType type) {
         KeyArray[key] = type; 
     }
 
+    /// @brief Get the actieve mapping.
+    /// @param[in] key   The key.
+    /// @return The mapped command.
     Animation::TransformCommandType get(Platform::Key key) const {
         return KeyArray[key];
     }
 };
 
+// Forward declarations ---------------------------------------------------------------------------
 struct MouseInputState;
 
 //-------------------------------------------------------------------------------------------------
