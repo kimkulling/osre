@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
 #include "Common/osre_common.h"
+#include "Platform/KeyTypes.h"
 
 #include <cppcore/Container/TArray.h>
 
@@ -114,6 +115,7 @@ struct AnimatorBase {
 };
 
 enum class TransformCommandType {
+    Invalid = -1,
     RotateXCommandPositive = 0,
     RotateXCommandNegative,
     RotateYCommandPositive,
@@ -123,9 +125,7 @@ enum class TransformCommandType {
     ScaleInCommand,
     ScaleOutCommand,
     TransformCommand,
-  
-    MaxCommands,
-    InvalidCommand
+    Count
 };
 
 
@@ -140,11 +140,17 @@ public:
     /// @brief  The class destructor, virtual.
     virtual ~AnimationControllerBase() = default;
     
-    /// @brief 
-    /// @param mis 
-    virtual void getMouseUpdate(const App::MouseInputState &mis) =0;
+    /// @brief Will update the mouse input state.
+    /// @param mis   The mouse input.
+    virtual void getMouseUpdate(const App::MouseInputState &mis) = 0;
+
+    /// @brief Will return the command code from a key binding.
+    /// @param key  The key binding
+    /// @return The command code.
+    virtual Animation::TransformCommandType getKeyBinding(Platform::Key key) const = 0;
 
     /// @brief  The update, override this for your own proposes.
+    /// @param cmdType   The command type.
     virtual void update(TransformCommandType cmdType) = 0;
 
     AnimationControllerBase(const AnimationControllerBase &) = delete;

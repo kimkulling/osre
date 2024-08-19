@@ -24,7 +24,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "Animation/AnimatorBase.h"
 #include "Platform/PlatformCommon.h"
-#include "Platform/KeyTypes.h"
+#include "Animation/AnimatorBase.h"
+#include <cppcore/Container/TStaticArray.h>
 
 namespace OSRE {
 
@@ -34,6 +35,45 @@ namespace RenderBackend {
 }
 
 namespace App {
+
+struct KeyboardMap {
+    cppcore::TStaticArray<Animation::TransformCommandType, Platform::KEY_LAST > KeyArray;
+
+    KeyboardMap() {
+        init();
+    }
+
+    void init() {
+        for (size_t i=0; i<Platform::KEY_LAST; ++i) {
+            KeyArray[i] = Animation::TransformCommandType::Invalid;
+        }
+    }
+
+    void setDefault() {
+        KeyArray[Platform::KEY_A] = Animation::TransformCommandType::RotateXCommandPositive;
+        KeyArray[Platform::KEY_a] = Animation::TransformCommandType::RotateXCommandPositive;
+        KeyArray[Platform::KEY_D] = Animation::TransformCommandType::RotateXCommandNegative;
+        KeyArray[Platform::KEY_d] = Animation::TransformCommandType::RotateXCommandNegative;
+        KeyArray[Platform::KEY_W] = Animation::TransformCommandType::RotateYCommandPositive;
+        KeyArray[Platform::KEY_w] = Animation::TransformCommandType::RotateYCommandPositive;
+        KeyArray[Platform::KEY_S] = Animation::TransformCommandType::RotateYCommandNegative;
+        KeyArray[Platform::KEY_s] = Animation::TransformCommandType::RotateYCommandNegative;
+        KeyArray[Platform::KEY_Q] = Animation::TransformCommandType::RotateZCommandPositive;
+        KeyArray[Platform::KEY_q] = Animation::TransformCommandType::RotateZCommandPositive;
+        KeyArray[Platform::KEY_E] = Animation::TransformCommandType::RotateZCommandNegative;
+        KeyArray[Platform::KEY_e] = Animation::TransformCommandType::RotateZCommandNegative;
+        KeyArray[Platform::KEY_PLUS] = Animation::TransformCommandType::ScaleInCommand;
+        KeyArray[Platform::KEY_MINUS] = Animation::TransformCommandType::ScaleOutCommand;
+    }
+
+    void set(Platform::Key key, Animation::TransformCommandType type) {
+        KeyArray[key] = type; 
+    }
+
+    Animation::TransformCommandType get(Platform::Key key) const {
+        return KeyArray[key];
+    }
+};
 
 struct MouseInputState;
 
@@ -54,7 +94,7 @@ public:
     /// @brief Will return the command code from a key binding.
     /// @param key  The key binding
     /// @return The command code.
-    static Animation::TransformCommandType getKeyBinding(Platform::Key key);
+    Animation::TransformCommandType getKeyBinding(Platform::Key key) const override;
 
     /// @brief Will perform the mouse update.
     /// @param mis  The mouse input state.
@@ -65,6 +105,7 @@ public:
     void update(Animation::TransformCommandType cmdType) override;
 
 private:
+    KeyboardMap mKeyboardMap;
     RenderBackend::TransformMatrixBlock &mTransform;
 };
 
