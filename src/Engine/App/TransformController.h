@@ -77,10 +77,15 @@ struct KeyboardMap {
     /// @param[in] key   The key.
     /// @param[in] type  The mapped transform command.
     void set(Platform::Key key, Animation::TransformCommandType type) {
-        KeyArray[key] = type; 
+        void set(Platform::Key key, Animation::TransformCommandType type) {
+    if (key < 0 || key >= Platform::KEY_LAST) {
+        // Handle invalid key error
+        return;
     }
+    KeyArray[key] = type;
+}
 
-    /// @brief Get the actieve mapping.
+    /// @brief Get the active mapping.
     /// @param[in] key   The key.
     /// @return The mapped command.
     Animation::TransformCommandType get(Platform::Key key) const {
