@@ -34,6 +34,57 @@ namespace RenderBackend {
 
 MaterialBuilder::Data *MaterialBuilder::sData = nullptr;
 
+// see https://jasonliang.js.org/batch-renderer.html
+ const String vertex_2d =
+        getGLSLVersionString_400() + 
+        getGLSLColorVertexLayout() +
+        "layout(location=0) in vec2 position;\n"
+        "layout(location=1) in vec4 color;\n"
+        "layout(location=2) in vec2 texcoord0;\n"
+        "out vec2 v_texindex;\n"
+        "uniform mat4 Model;\n"
+        "uniform mat4 View;\n"
+        "uniform mat4 Projection;\n"
+        "void main() {\n"
+        "    mat4 u_mvp = Projection * View * Model;\n"
+        "    gl_Position = u_mvp * vec4(position, 0.0, 1.0);\n"
+        "    v_texindex = a_texindex;\n"
+        "}\n";
+
+const String fragment_2d = "#version 330 core\n"
+                       "in vec2 v_texindex;\n"
+                       "out vec4 f_color;\n"
+                       "uniform sampler2D u_texture;\n"
+                       "void main() {\n"
+                       "    f_color = texture(u_texture, v_texindex);\n"
+                       "}\n";
+
+static constexpr c8 Render2DMat[] = "2d_mat";
+
+Material *MaterialBuilder::create2DMaterial() {
+
+    MaterialBuilder::MaterialCache *materialCache = sData->mMaterialCache;
+    Material *mat = materialCache->find(Render2DMat);
+    if (nullptr != mat) {
+        return mat;
+    }
+
+    mat = materialCache->create(Render2DMat);
+
+    ShaderSourceArray shArray;
+    shArray[static_cast<ui32>(ShaderType::SH_VertexShaderType)] = vertex_2d;
+    shArray[static_cast<ui32>(ShaderType::SH_FragmentShaderType)] = fragment_2d;
+    mat->createShader(shArray);
+
+        // Setup shader attributes and variables
+    if (nullptr != mat->m_shader) {
+        mat->m_shader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
+        addMaterialParameter(mat);
+    }
+
+    return mat;
+}
+
 static const String GLSLVsSrc =
         getGLSLVersionString_400() +
         getNewLine() +
@@ -308,7 +359,7 @@ RenderBackend::Material *MaterialBuilder::createTexturedMaterial(const String &m
 
 static constexpr c8 DefaultDebugTestMat[] = "debug_text_mat";
 
-RenderBackend::Material *MaterialBuilder::createDebugRenderTextMaterial() {
+Material *MaterialBuilder::createDebugRenderTextMaterial() {
     MaterialBuilder::MaterialCache *materialCache = sData->mMaterialCache;
     Material *mat = materialCache->find(DefaultDebugTestMat);
     if (nullptr != mat) {

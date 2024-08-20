@@ -22,6 +22,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -----------------------------------------------------------------------------------------------*/
 #include "CanvasRenderer.h"
 #include "RenderBackend/Mesh.h"
+#include "RenderBackend/RenderBackendService.h"
+#include "RenderBackend/MaterialBuilder.h"
 #include "RenderBackend/Shader.h"
 #include <cppcore/Memory/TPoolAllocator.h>
 
@@ -104,6 +106,8 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
 
     if (mMesh == nullptr) {
         mMesh = new Mesh("2d", VertexType::ColorVertex, IndexType::UnsignedInt);
+        Material *mat2D = MaterialBuilder::create2DMaterial();
+        mMesh->setMaterial(mat2D);
     }
 
     for (size_t i=0; i<mDrawCmdArray.size(); ++i) {
@@ -117,14 +121,13 @@ void CanvasRenderer::render(RenderBackendService *rbSrv) {
         mMesh->addPrimitiveGroup(dc.NumIndices, dc.mPrimType, last);
     }
 
+    rbSrv->addMesh(mMesh, 0);
     mDrawCmdArray.resize(0);
     setClean();
 }
 
 void CanvasRenderer::postRender(RenderBackendService *rbSrv) {
     osre_assert(rbSrv != nullptr);
-
-    //rbSrv->
 }
 
 void CanvasRenderer::setResolution(i32 x, i32 y, i32 w, i32 h) {

@@ -77,7 +77,7 @@ protected:
 
         Color4 green(0, 1, 0, 1);
         mCanvasRenderer->setcolor(green);
-        mCanvasRenderer->drawRect(1, 1, 100, 100, true);
+        mCanvasRenderer->drawRect(1, 1, 100, 100, false);
 
         RenderBackendService *rbSerive = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
 
