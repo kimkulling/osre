@@ -121,7 +121,6 @@ const String *RenderVert::getAttributes() {
     return RenderVertAttributes;
 }
 
-
 const String &getVertCompName(VertexAttribute attrib) {
     if (attrib > VertexAttribute::Instance3  || attrib == VertexAttribute::InvalidVertexAttr) {
         return ErrorCmpName;

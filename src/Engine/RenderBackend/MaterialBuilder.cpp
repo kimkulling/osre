@@ -34,6 +34,23 @@ namespace RenderBackend {
 
 MaterialBuilder::Data *MaterialBuilder::sData = nullptr;
 
+static void addMaterialParameter(Material *mat) {
+    if (mat == nullptr) {
+        osre_assert(false);
+        return;
+    }
+
+    Shader *shader = mat->m_shader;
+    if (shader == nullptr) {
+        osre_assert(false);
+        return;
+    }
+
+    shader->addUniformBuffer("Model");
+    shader->addUniformBuffer("View");
+    shader->addUniformBuffer("Projection");
+}
+
 // see https://jasonliang.js.org/batch-renderer.html
  const String vertex_2d =
         getGLSLVersionString_400() + 
@@ -201,23 +218,6 @@ void MaterialBuilder::create(GLSLVersion glslVersion) {
 void MaterialBuilder::destroy() {
     delete sData;
     sData = nullptr;
-}
-
-static void addMaterialParameter(Material *mat) {
-    if (mat == nullptr) {
-        osre_assert(false);
-        return;
-    }
-
-    Shader *shader = mat->m_shader;
-    if (shader == nullptr) {
-        osre_assert(false);
-        return;
-    }
-
-    shader->addUniformBuffer("Model");
-    shader->addUniformBuffer("View");
-    shader->addUniformBuffer("Projection");
 }
 
 Material *MaterialBuilder::createBuildinMaterial(VertexType type) {

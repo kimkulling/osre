@@ -264,6 +264,8 @@ struct OSRE_EXPORT RenderVert {
     static const String *getAttributes();
 };
 
+OSRE_EXPORT const String &getVertCompName(VertexAttribute attrib);
+
 struct OSRE_EXPORT UIVert {
     glm::vec2 position; ///< The position ( x|y )
     glm::vec4 color0; ///< The diffuse color ( r|g|b|a )
