@@ -54,18 +54,15 @@ static void addMaterialParameter(Material *mat) {
 // see https://jasonliang.js.org/batch-renderer.html
  const String vertex_2d =
         getGLSLVersionString_400() + 
-        getGLSLColorVertexLayout() +
-        "layout(location=0) in vec2 position;\n"
-        "layout(location=1) in vec4 color;\n"
-        "layout(location=2) in vec2 texcoord0;\n"
+        getGLSLRenderVertexLayout() +
         "out vec2 v_texindex;\n"
         "uniform mat4 Model;\n"
         "uniform mat4 View;\n"
         "uniform mat4 Projection;\n"
         "void main() {\n"
         "    mat4 u_mvp = Projection * View * Model;\n"
-        "    gl_Position = u_mvp * vec4(position, 0.0, 1.0);\n"
-        "    v_texindex = a_texindex;\n"
+        "    gl_Position = u_mvp * vec4(position, 1.0);\n"
+        "    v_texindex = texcoord0;\n"
         "}\n";
 
 const String fragment_2d = "#version 330 core\n"
