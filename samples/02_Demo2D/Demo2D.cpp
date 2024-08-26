@@ -73,11 +73,11 @@ protected:
             return false;
         }
 
-        mCanvasRenderer = new CanvasRenderer(2);
-
+        mCanvasRenderer = new CanvasRenderer(2, 0, 0, 1024, 768);
+        mCanvasRenderer->selectLayer(0);
         Color4 green(0, 1, 0, 1);
         mCanvasRenderer->setcolor(green);
-        mCanvasRenderer->drawRect(1, 1, 100, 100, false);
+        mCanvasRenderer->drawRect(0, 0, 2, 4, false);
 
         RenderBackendService *rbSerive = ServiceProvider::getService<RenderBackendService>(ServiceType::RenderService);
 

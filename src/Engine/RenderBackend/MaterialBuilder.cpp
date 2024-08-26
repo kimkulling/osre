@@ -76,7 +76,6 @@ const String fragment_2d = "#version 330 core\n"
 static constexpr c8 Render2DMat[] = "2d_mat";
 
 Material *MaterialBuilder::create2DMaterial() {
-
     MaterialBuilder::MaterialCache *materialCache = sData->mMaterialCache;
     Material *mat = materialCache->find(Render2DMat);
     if (nullptr != mat) {
@@ -92,7 +91,7 @@ Material *MaterialBuilder::create2DMaterial() {
 
         // Setup shader attributes and variables
     if (nullptr != mat->m_shader) {
-        mat->m_shader->addVertexAttributes(ColorVert::getAttributes(), ColorVert::getNumAttributes());
+        mat->m_shader->addVertexAttributes(RenderVert::getAttributes(), RenderVert::getNumAttributes());
         addMaterialParameter(mat);
     }
 

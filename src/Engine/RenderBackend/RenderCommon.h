@@ -90,7 +90,6 @@ enum class VertexType {
     InvalidVetexType = -1,  ///< Marker for an invalid data type.
     ColorVertex = 0,        ///< A simple vertex consisting of position and color.
     RenderVertex,           ///< A render vertex with position, color, normals and texture coordinates.
-    Render2DVertex,         ///< A 2D render vertex.
     NumVertexTypes          ///< Number of enums.
 };
 

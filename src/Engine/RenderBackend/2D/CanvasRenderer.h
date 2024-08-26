@@ -43,7 +43,7 @@ class OSRE_EXPORT CanvasRenderer : IRenderPath {
 public:
     using DrawCmdArray = cppcore::TArray<DrawCmd*>;
 
-    CanvasRenderer(i32 numLayers);
+    CanvasRenderer(i32 numLayers, i32 x, i32 y, i32 w, i32 h);
     ~CanvasRenderer() override;
     void preRender(RenderBackendService *rbSrv) override;
     void render(RenderBackendService *rbSrv) override;
