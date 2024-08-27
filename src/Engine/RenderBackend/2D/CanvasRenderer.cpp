@@ -273,47 +273,52 @@ void CanvasRenderer::drawTriangle(i32 x1, i32 y1, i32 x2, i32 y2, i32 x3, i32 y3
 
 void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h, bool filled) {
     DrawCmd *drawCmd = alloc();
-
+    i32 x_clipped, y_clipped;
+    f32 x_model, y_model;
     if (filled) {
         drawCmd->mPrimType = PrimitiveType::TriangleList;
         drawCmd->NumVertices = 6;
         drawCmd->Vertices = new RenderVert[drawCmd->NumVertices];
-
-        i32 x_clipped, y_clipped;
         clip(mResolution, x, y, x_clipped, y_clipped);
+        mapCoordinates(mResolution, x_clipped, y_clipped, x_model, y_model);
         drawCmd->Vertices[0].color0 = mPenColor;
-        drawCmd->Vertices[0].position.x = (f32)x_clipped;
-        drawCmd->Vertices[0].position.y = (f32)y_clipped;
+        drawCmd->Vertices[0].position.x = x_model;
+        drawCmd->Vertices[0].position.y = y_model;
         drawCmd->Vertices[0].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x+w, y, x_clipped, y_clipped);
+        mapCoordinates(mResolution, x_clipped, y_clipped, x_model, y_model);
         drawCmd->Vertices[1].color0 = mPenColor;
-        drawCmd->Vertices[1].position.x = (f32)x_clipped;
-        drawCmd->Vertices[1].position.y = (f32)y_clipped;
+        drawCmd->Vertices[1].position.x = x_model;
+        drawCmd->Vertices[1].position.y = y_model;
         drawCmd->Vertices[1].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x+w, y+h, x_clipped, y_clipped);
+        mapCoordinates(mResolution, x_clipped, y_clipped, x_model, y_model);
         drawCmd->Vertices[2].color0 = mPenColor;
-        drawCmd->Vertices[2].position.x = (f32)x_clipped;
-        drawCmd->Vertices[2].position.y = (f32)y_clipped;
+        drawCmd->Vertices[2].position.x = x_model;
+        drawCmd->Vertices[2].position.y = y_model;
         drawCmd->Vertices[2].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x+w, y+h, x_clipped, y_clipped);
+        mapCoordinates(mResolution, x_clipped, y_clipped, x_model, y_model);
         drawCmd->Vertices[3].color0 = mPenColor;
-        drawCmd->Vertices[3].position.x = (f32)x_clipped;
-        drawCmd->Vertices[3].position.y = (f32)y_clipped;
+        drawCmd->Vertices[3].position.x = x_model;
+        drawCmd->Vertices[3].position.y = y_model;
         drawCmd->Vertices[3].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x, y+h, x_clipped, y_clipped);
+        mapCoordinates(mResolution, x_clipped, y_clipped, x_model, y_model);
         drawCmd->Vertices[4].color0 = mPenColor;
-        drawCmd->Vertices[4].position.x = (f32)x_clipped;
-        drawCmd->Vertices[4].position.y = (f32)y_clipped;
+        drawCmd->Vertices[4].position.x = x_model;
+        drawCmd->Vertices[4].position.y = y_model;
         drawCmd->Vertices[4].position.z = static_cast<f32>(mActiveLayer);
 
         clip(mResolution, x, y, x_clipped, y_clipped);
+        mapCoordinates(mResolution, x_clipped, y_clipped, x_model, y_model);
         drawCmd->Vertices[5].color0 = mPenColor;
-        drawCmd->Vertices[5].position.x = (f32)x_clipped;
-        drawCmd->Vertices[5].position.y = (f32)y_clipped;
+        drawCmd->Vertices[5].position.x = x_model;
+        drawCmd->Vertices[5].position.y = y_model;
         drawCmd->Vertices[5].position.z = static_cast<f32>(mActiveLayer);
 
         drawCmd->NumIndices = 6;
@@ -330,8 +335,6 @@ void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h, bool filled) {
         drawCmd->mPrimType = PrimitiveType::LineList;
         drawCmd->Vertices = new RenderVert[drawCmd->NumVertices];
 
-        i32 x_clipped, y_clipped;
-        f32 x_model, y_model;
         clip(mResolution, x, y, x_clipped, y_clipped);
         mapCoordinates(mResolution, x_clipped, y_clipped, x_model, y_model);
         drawCmd->Vertices[0].color0 = mPenColor;
@@ -369,8 +372,8 @@ void CanvasRenderer::drawRect(i32 x, i32 y, i32 w, i32 h, bool filled) {
         drawCmd->Indices[3] = 2;
 
         drawCmd->Indices[4] = 2;
-        drawCmd->Indices[5] = 3;
 
+        drawCmd->Indices[5] = 3;
         drawCmd->Indices[6] = 3;
         drawCmd->Indices[7] = 0;
     }
